@@ -89,3 +89,4 @@ typings/
 lerna.json
 nx.json
 packages/
+scripts/

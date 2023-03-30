@@ -8,12 +8,28 @@ React components using pure Bootstrap 5+ which does not contain any external sty
 
 ## Usage
 
+First, you need to install it:
+
+```sh
+$ npm i react-pure-bootstrap
+```
+
+Next, import required components as required
+
+```js
+import Input from 'react-pure-bootstrap/Input';
+import Textarea from 'react-pure-bootstrap/Textarea';
+```
+
+or 
+
 ```js
 import { 
     Input,
     Textarea
-} from 'react-pure-bootstrap';
+} from 'react-pure-bootstrap/all';
 ```
+
 
 
 ## Getting Started
