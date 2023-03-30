@@ -38,3 +38,5 @@ next-env.d.ts
 lerna-debug.log
 node_modules
 
+#lib
+/lib

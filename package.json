@@ -16,7 +16,8 @@
         "react-bootstrap",
         "react-components",
         "components",
-        "bootstrap-components",
+        "components-react",
+        "react-bootstrap-components",
         "react"
     ],
     "workspaces": [
