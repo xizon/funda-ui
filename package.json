@@ -1,0 +1,39 @@
+{
+    "author": "UIUX Lab",
+    "email": "uiuxlab@gmail.com",
+    "name": "react-pure-bootstrap",
+    "version": "0.0.1",
+    "description": "React components using pure Bootstrap 5+ which does not contain any external style and script libraries.",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/xizon/react-pure-bootstrap.git"
+    },
+    "scripts": {
+        "build:lib": "node scripts/build-lib.js"
+    },
+    "keywords": [
+        "bootstrap",
+        "react-bootstrap",
+        "react-components",
+        "components",
+        "bootstrap-components",
+        "react"
+    ],
+    "workspaces": [
+        "packages/*"
+    ],
+    "devDependencies": {
+        "lerna": "^6.5.1",
+        "nx": "15.7.2"
+    },
+    "bugs": {
+        "url": "https://github.com/xizon/react-pure-bootstrap/issues"
+    },
+    "homepage": "https://github.com/xizon/react-pure-bootstrap#readme",
+    "main": "lib/cjs/index.js",
+    "module": "lib/esm/index.js",
+    "publishConfig": {
+        "directory": "lib"
+    },
+    "license": "MIT"
+}
