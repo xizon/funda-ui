@@ -85,8 +85,8 @@ export default function Textarea(props: TextareaProps) {
 					  cols={cols || 20}
 					  rows={rows || 2}
                       {...attributes}
-					>
-					</textarea>
+					/>
+					
                     {required ? <><span className="input-group-text bg-transparent"><span className="text-danger">*</span></span></> : ''}
 
                 </div>

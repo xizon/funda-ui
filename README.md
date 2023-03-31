@@ -27,7 +27,14 @@ or
 import { 
     Input,
     Textarea
-} from 'react-pure-bootstrap/all';
+} from 'react-pure-bootstrap';
+```
+
+or
+
+```js
+const Input = require('react-pure-bootstrap').Input;
+const Textarea = require('react-pure-bootstrap').Textarea;
 ```
 
 
@@ -81,10 +88,13 @@ $ npx lerna exec npm run export --scope=plugin-2
 ```
   
 
-### Step 6: (optional) Publish the lib of components, it will hang on NPM:
+## Publish the lib of components, it will hang on NPM: 
+
 
 ```sh
 $ npm run build:lib
+$ npx -p typescript tsc lib/cjs/*.js --declaration --allowJs --emitDeclarationOnly
+$ npm run build:publish
 ```
   
 
