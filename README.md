@@ -93,10 +93,16 @@ $ npx lerna exec npm run export --scope=plugin-2
 
 ```sh
 $ npm run build:lib
-$ npx -p typescript tsc lib/cjs/*.js --declaration --allowJs --emitDeclarationOnly
 $ npm run build:publish
 ```
   
+> **(Optional) Manually generate `.d.ts` files, you can execute**
+> 
+> ```sh
+> $ npx -p typescript tsc lib/cjs/*.js --declaration --allowJs --emitDeclarationOnly
+> ```
+> 
+
 
 ## Contributing
 

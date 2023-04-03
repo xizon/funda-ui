@@ -28,16 +28,16 @@ fs.rmSync(path.resolve(__dirname, `../publish`), { recursive: true, force: true 
 // ----------------------------------
 const libEsmPath = path.resolve(__dirname, '../lib/esm');
 const libCjsPath = path.resolve(__dirname, '../lib/cjs');
-if (!fs.existsSync(libEsmPath)){
+if (!fs.existsSync(libEsmPath)) {
     fs.mkdirSync(libEsmPath, { recursive: true });
 }
-if (!fs.existsSync(libCjsPath)){
+if (!fs.existsSync(libCjsPath)) {
     fs.mkdirSync(libCjsPath, { recursive: true });
 }
 
 // iterates over all components
 // ----------------------------------
-let componentsList = fs.readdirSync( packagesPath );
+let componentsList = fs.readdirSync(packagesPath);
 componentsList = componentsList.filter(function (component) {
     return component !== '.DS_Store';
 });
@@ -47,7 +47,7 @@ componentsList = componentsList.filter(function (component) {
 // ----------------------------------
 const esmEntryPath = path.resolve(__dirname, '../lib/esm/index.js');
 let esmEntryFileContent = '';
-componentsList.forEach( function(component) {
+componentsList.forEach(function (component) {
     esmEntryFileContent += `export { default as ${component} } from './${component}';` + "\n";
 });
 fs.writeFileSync(esmEntryPath, esmEntryFileContent);
@@ -60,11 +60,22 @@ let cjsEntryFileContent = `
 var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
 exports.__esModule = true;
 `;
-componentsList.forEach( function(component) {
+componentsList.forEach(function (component) {
     cjsEntryFileContent += `exports.${component} = _interopRequireDefault(require("./${component}")).default;` + "\n";
 });
 fs.writeFileSync(cjsEntryPath, cjsEntryFileContent);
 console.log('\x1b[36m%s\x1b[0m', `--> Created "lib/cjs/index.js" successfully`);
+
+//
+const typesCjsEntryPath = path.resolve(__dirname, '../lib/cjs/index.d.ts');
+let typesCjsEntryFileContent = `
+export const __esModule: true;
+`;
+componentsList.forEach(function (component) {
+    typesCjsEntryFileContent += `export const ${component}: any;` + "\n";
+});
+fs.writeFileSync(typesCjsEntryPath, typesCjsEntryFileContent);
+console.log('\x1b[36m%s\x1b[0m', `--> Created "lib/cjs/index.d.ts" successfully`);
 
 
 
@@ -72,7 +83,7 @@ console.log('\x1b[36m%s\x1b[0m', `--> Created "lib/cjs/index.js" successfully`);
 // ----------------------------------
 const moveComponents = (type) => {
 
-    componentsList.forEach( function(component) {
+    componentsList.forEach(function (component) {
         fs.mkdirSync(path.resolve(__dirname, `../lib/${type}/${component}`), { recursive: true });
         const oPath = path.resolve(__dirname, `../packages/${component}/dist/${type}`);
         const targetPath = path.resolve(__dirname, `../lib/${type}/${component}`);
