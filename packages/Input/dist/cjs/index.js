@@ -184,7 +184,7 @@ function Input(props) {
   var typeRes = typeof type === 'undefined' ? 'text' : type;
   var idRes = id || uniqueID;
   return /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
-    className: wrapperClassName ? wrapperClassName : "app-form-group",
+    className: wrapperClassName ? wrapperClassName : "mb-3",
     ref: rootRef
   }, label ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("label", {
     htmlFor: idRes,

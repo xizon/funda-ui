@@ -70,7 +70,7 @@ export default function Input(props: InputProps) {
     return (
         <>
 
-            <div className={wrapperClassName ? wrapperClassName : "app-form-group"} ref={rootRef}>
+            <div className={wrapperClassName ? wrapperClassName : "mb-3"} ref={rootRef}>
                 {label ? <><label htmlFor={idRes} className="form-label">{label}</label></> : null}
 
                 <div className="input-group">
