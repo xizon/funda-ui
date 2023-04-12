@@ -4,23 +4,25 @@ declare module 'react' {
         children?: any;
     }
 }
-declare type TextareaProps = {
+declare type SearchBarProps = {
     wrapperClassName?: string;
+    appearance?: string;
     value?: string;
     label?: React.ReactNode | string;
     name?: string;
     maxLength?: any;
-    cols?: number;
-    rows?: number;
     disabled?: any;
     required?: any;
     placeholder?: string;
+    icon?: React.ReactNode | string;
+    btnId?: string;
     /** -- */
     id?: string;
     [key: `data-${string}`]: string | undefined;
+    onClick?: (e: any) => void;
     onChange?: (e: any) => void;
     onBlur?: (e: any) => void;
     onFocus?: (e: any) => void;
 };
-export default function Textarea(props: TextareaProps): JSX.Element;
+export default function SearchBar(props: SearchBarProps): JSX.Element;
 export {};

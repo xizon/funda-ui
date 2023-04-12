@@ -95,7 +95,7 @@ __webpack_require__.r(__webpack_exports__);
 
 // EXPORTS
 __webpack_require__.d(__webpack_exports__, {
-  "default": () => (/* binding */ Textarea)
+  "default": () => (/* binding */ SearchBar)
 });
 
 ;// CONCATENATED MODULE: ../../node_modules/@babel/runtime/helpers/esm/extends.js
@@ -149,28 +149,33 @@ var external_root_React_commonjs2_react_commonjs_react_amd_react_default = /*#__
 ;// CONCATENATED MODULE: ./src/index.tsx
 
 
-var _excluded = ["wrapperClassName", "cols", "rows", "disabled", "required", "placeholder", "value", "label", "name", "id", "maxLength", "onChange", "onBlur", "onFocus"];
+var _excluded = ["wrapperClassName", "appearance", "disabled", "required", "placeholder", "value", "label", "name", "btnId", "id", "maxLength", "icon", "onClick", "onChange", "onBlur", "onFocus"];
 
-function Textarea(props) {
+function SearchBar(props) {
   var wrapperClassName = props.wrapperClassName,
-    cols = props.cols,
-    rows = props.rows,
+    appearance = props.appearance,
     disabled = props.disabled,
     required = props.required,
     placeholder = props.placeholder,
     value = props.value,
     label = props.label,
     name = props.name,
+    btnId = props.btnId,
     id = props.id,
     maxLength = props.maxLength,
+    icon = props.icon,
+    onClick = props.onClick,
     onChange = props.onChange,
     onBlur = props.onBlur,
     onFocus = props.onFocus,
     attributes = _objectWithoutProperties(props, _excluded);
   var uniqueID = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useId)();
   var rootRef = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useRef)(null);
+  function handleSubmit(event) {
+    //
+    onClick === null || onClick === void 0 ? void 0 : onClick(event);
+  }
   function handleFocus(event) {
-    var el = event.target;
     rootRef.current.classList.add('is-active');
 
     //
@@ -211,8 +216,9 @@ function Textarea(props) {
     className: "form-label"
   }, label)) : null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
     className: "input-group"
-  }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("textarea", _extends({
-    className: "form-control",
+  }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("input", _extends({
+    type: appearance === 'pill' ? 'input' : 'search',
+    className: appearance === 'pill' ? 'form-control border rounded-pill' : 'form-control',
     id: idRes,
     name: name,
     placeholder: placeholder || '',
@@ -222,14 +228,26 @@ function Textarea(props) {
     onBlur: handleBlur,
     onChange: handleChange,
     disabled: disabled || null,
-    required: required || null,
-    cols: cols || 20,
-    rows: rows || 2
-  }, attributes)), required ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("span", {
-    className: "input-group-text bg-transparent"
-  }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("span", {
-    className: "text-danger"
-  }, "*"))) : '')));
+    required: required || null
+  }, attributes)), /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("span", {
+    className: appearance === 'pill' ? 'position-absolute end-0' : 'input-group-text m-0 p-0 border-start-0',
+    style: appearance === 'pill' ? {
+      zIndex: 5
+    } : {}
+  }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("button", {
+    id: btnId,
+    type: "button",
+    className: appearance === 'pill' ? 'btn border-end-0 rounded-pill' : 'btn btn-sm',
+    onClick: handleSubmit
+  }, icon ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, icon) : /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("svg", {
+    width: "20px",
+    height: "20px",
+    fill: "#333",
+    viewBox: "0 0 16 16"
+  }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("path", {
+    d: "M12.027 9.92L16 13.95 14 16l-4.075-3.976A6.465 6.465 0 0 1 6.5 13C2.91 13 0 10.083 0 6.5 0 2.91 2.917 0 6.5 0 10.09 0 13 2.917 13 6.5a6.463 6.463 0 0 1-.973 3.42zM1.997 6.452c0 2.48 2.014 4.5 4.5 4.5 2.48 0 4.5-2.015 4.5-4.5 0-2.48-2.015-4.5-4.5-4.5-2.48 0-4.5 2.014-4.5 4.5z",
+    "fill-rule": "evenodd"
+  }))))))));
 }
 })();
 

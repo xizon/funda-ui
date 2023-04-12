@@ -1,7 +1,7 @@
 import React, { useId, useRef } from 'react';
 
 declare module 'react' {
-    interface HTMLAttributes<T> {
+    interface ReactI18NextChildren<T> {
         children?: any;
     }
 }
@@ -21,30 +21,14 @@ type InputProps = {
     iconRight?: React.ReactNode | string;
     /** -- */
     id?: string;
+    [key: `data-${string}`]: string | undefined;
+    onChange?: (e: any) => void;
+    onBlur?: (e: any) => void;
+    onFocus?: (e: any) => void;
 };
 
 
 export default function Input(props: InputProps) {
-
-    const uniqueID = useId();
-    const rootRef = useRef<any>(null);
-
-    function handleFocus(event) {
-        rootRef.current.classList.add('is-active');
-    }
-
-    function handleBlurChange(event) {
-        const el = event.target;
-        const val = event.target.value;
-
-
-        //----
-        //remove focus style
-        if (val === '' || val === 'blank') {
-            rootRef.current.classList.remove('is-active');
-        }
-    }
-
 
     const {
         wrapperClassName,
@@ -60,9 +44,52 @@ export default function Input(props: InputProps) {
         maxLength,
         iconLeft,
         iconRight,
+        onChange,
+        onBlur,
+        onFocus,
         ...attributes
     } = props;
 
+
+    const uniqueID = useId();
+    const rootRef = useRef<any>(null);
+
+    function handleFocus(event: any) {
+        rootRef.current.classList.add('is-active');
+
+        //
+        onFocus?.(event);    
+    }
+
+    function handleChange(event: any) {
+        const el = event.target;
+        const val = event.target.value;
+
+
+        //----
+        //remove focus style
+        if (val === '' || val === 'blank') {
+            rootRef.current.classList.remove('is-active');
+        }
+
+        //
+        onChange?.(event);
+    }
+
+    function handleBlur(event: any) {
+        const el = event.target;
+        const val = event.target.value;
+
+
+        //----
+        //remove focus style
+        if (val === '' || val === 'blank') {
+            rootRef.current.classList.remove('is-active');
+        }
+
+        //
+        onBlur?.(event);
+    }
 
     const typeRes = typeof (type) === 'undefined' ? 'text' : type;
     const idRes = id || uniqueID;
@@ -85,8 +112,8 @@ export default function Input(props: InputProps) {
                         defaultValue={value || ''}
                         maxLength={maxLength || null}
                         onFocus={handleFocus}
-                        onBlur={handleBlurChange}
-                        onChange={handleBlurChange}
+                        onBlur={handleBlur}
+                        onChange={handleChange}
                         disabled={disabled || null}
                         required={required || null}
                         {...attributes}

@@ -1,6 +1,6 @@
 import React from 'react';
 declare module 'react' {
-    interface HTMLAttributes<T> {
+    interface ReactI18NextChildren<T> {
         children?: any;
     }
 }
@@ -19,6 +19,10 @@ declare type InputProps = {
     iconRight?: React.ReactNode | string;
     /** -- */
     id?: string;
+    [key: `data-${string}`]: string | undefined;
+    onChange?: (e: any) => void;
+    onBlur?: (e: any) => void;
+    onFocus?: (e: any) => void;
 };
 export default function Input(props: InputProps): JSX.Element;
 export {};

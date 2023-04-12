@@ -149,24 +149,9 @@ var external_root_React_commonjs2_react_commonjs_react_amd_react_default = /*#__
 ;// CONCATENATED MODULE: ./src/index.tsx
 
 
-var _excluded = ["wrapperClassName", "type", "disabled", "required", "placeholder", "value", "label", "units", "name", "id", "maxLength", "iconLeft", "iconRight"];
+var _excluded = ["wrapperClassName", "type", "disabled", "required", "placeholder", "value", "label", "units", "name", "id", "maxLength", "iconLeft", "iconRight", "onChange", "onBlur", "onFocus"];
 
 function Input(props) {
-  var uniqueID = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useId)();
-  var rootRef = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useRef)(null);
-  function handleFocus(event) {
-    rootRef.current.classList.add('is-active');
-  }
-  function handleBlurChange(event) {
-    var el = event.target;
-    var val = event.target.value;
-
-    //----
-    //remove focus style
-    if (val === '' || val === 'blank') {
-      rootRef.current.classList.remove('is-active');
-    }
-  }
   var wrapperClassName = props.wrapperClassName,
     type = props.type,
     disabled = props.disabled,
@@ -180,7 +165,44 @@ function Input(props) {
     maxLength = props.maxLength,
     iconLeft = props.iconLeft,
     iconRight = props.iconRight,
+    onChange = props.onChange,
+    onBlur = props.onBlur,
+    onFocus = props.onFocus,
     attributes = _objectWithoutProperties(props, _excluded);
+  var uniqueID = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useId)();
+  var rootRef = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useRef)(null);
+  function handleFocus(event) {
+    rootRef.current.classList.add('is-active');
+
+    //
+    onFocus === null || onFocus === void 0 ? void 0 : onFocus(event);
+  }
+  function handleChange(event) {
+    var el = event.target;
+    var val = event.target.value;
+
+    //----
+    //remove focus style
+    if (val === '' || val === 'blank') {
+      rootRef.current.classList.remove('is-active');
+    }
+
+    //
+    onChange === null || onChange === void 0 ? void 0 : onChange(event);
+  }
+  function handleBlur(event) {
+    var el = event.target;
+    var val = event.target.value;
+
+    //----
+    //remove focus style
+    if (val === '' || val === 'blank') {
+      rootRef.current.classList.remove('is-active');
+    }
+
+    //
+    onBlur === null || onBlur === void 0 ? void 0 : onBlur(event);
+  }
   var typeRes = typeof type === 'undefined' ? 'text' : type;
   var idRes = id || uniqueID;
   return /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
@@ -202,8 +224,8 @@ function Input(props) {
     defaultValue: value || '',
     maxLength: maxLength || null,
     onFocus: handleFocus,
-    onBlur: handleBlurChange,
-    onChange: handleBlurChange,
+    onBlur: handleBlur,
+    onChange: handleChange,
     disabled: disabled || null,
     required: required || null
   }, attributes)), units ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("span", {

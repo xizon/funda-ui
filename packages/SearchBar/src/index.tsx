@@ -6,44 +6,44 @@ declare module 'react' {
     }
 }
 
-type InputProps = {
+type SearchBarProps = {
     wrapperClassName?: string;
-    type?: string;
+    appearance?: string;
     value?: string;
     label?: React.ReactNode | string;
-    units?: string;
     name?: string;
     maxLength?: any;
     disabled?: any;
     required?: any;
     placeholder?: string;
-    iconLeft?: React.ReactNode | string;
-    iconRight?: React.ReactNode | string;
+    icon?: React.ReactNode | string;
+    btnId?: string;
     /** -- */
     id?: string;
     [key: `data-${string}`]: string | undefined;
+    onClick?: (e: any) => void;
     onChange?: (e: any) => void;
     onBlur?: (e: any) => void;
     onFocus?: (e: any) => void;
 };
 
 
-export default function Input(props: InputProps) {
+export default function SearchBar(props: SearchBarProps) {
 
     const {
         wrapperClassName,
-        type,
+        appearance,
         disabled,
         required,
         placeholder,
         value,
         label,
-        units,
         name,
+        btnId,
         id,
         maxLength,
-        iconLeft,
-        iconRight,
+        icon,
+        onClick,
         onChange,
         onBlur,
         onFocus,
@@ -54,11 +54,17 @@ export default function Input(props: InputProps) {
     const uniqueID = useId();
     const rootRef = useRef<any>(null);
 
+    function handleSubmit(event: any) {
+   
+        //
+        onClick?.(event);
+    }
+
     function handleFocus(event: any) {
         rootRef.current.classList.add('is-active');
 
         //
-        onFocus?.(event);    
+        onFocus?.(event);
     }
 
     function handleChange(event: any) {
@@ -91,21 +97,20 @@ export default function Input(props: InputProps) {
         onBlur?.(event);
     }
 
-    const typeRes = typeof (type) === 'undefined' ? 'text' : type;
     const idRes = id || uniqueID;
 
     return (
         <>
 
+
+
             <div className={wrapperClassName ? wrapperClassName : "mb-3"} ref={rootRef}>
                 {label ? <><label htmlFor={idRes} className="form-label">{label}</label></> : null}
 
                 <div className="input-group">
-                    
-                    {iconLeft ? <><span className="input-group-text">{iconLeft}</span></>: null}
                     <input
-                        type={typeRes}
-                        className="form-control"
+                        type={appearance === 'pill' ? 'input' : 'search'}
+                        className={appearance === 'pill' ? 'form-control border rounded-pill' : 'form-control'}
                         id={idRes}
                         name={name}
                         placeholder={placeholder || ''}
@@ -118,12 +123,16 @@ export default function Input(props: InputProps) {
                         required={required || null}
                         {...attributes}
                     />
-                    {units ? <><span className="input-group-text">{units}</span></>: null}
-                    {iconRight ? <><span className="input-group-text">{iconRight}</span></>: null}
-                    {required ? <><span className="input-group-text bg-transparent"><span className="text-danger">*</span></span></> : ''}
 
+                    <span className={appearance === 'pill' ? 'position-absolute end-0' : 'input-group-text m-0 p-0 border-start-0'} style={appearance === 'pill' ? { zIndex: 5 } : {}}>
+                        <button id={btnId} type="button" className={appearance === 'pill' ? 'btn border-end-0 rounded-pill' : 'btn btn-sm'} onClick={handleSubmit}>
+                            {icon ? <>{icon}</> : <><svg width="20px" height="20px" fill="#333" viewBox="0 0 16 16">
+                                <path d="M12.027 9.92L16 13.95 14 16l-4.075-3.976A6.465 6.465 0 0 1 6.5 13C2.91 13 0 10.083 0 6.5 0 2.91 2.917 0 6.5 0 10.09 0 13 2.917 13 6.5a6.463 6.463 0 0 1-.973 3.42zM1.997 6.452c0 2.48 2.014 4.5 4.5 4.5 2.48 0 4.5-2.015 4.5-4.5 0-2.48-2.015-4.5-4.5-4.5-2.48 0-4.5 2.014-4.5 4.5z" fill-rule="evenodd" />
+                            </svg></>}
+                        </button>
+
+                    </span>
                 </div>
-
             </div>
 
 

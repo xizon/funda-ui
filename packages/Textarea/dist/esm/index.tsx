@@ -1,15 +1,15 @@
 import React, { useId, useRef } from 'react';
 
+
 declare module 'react' {
-    interface HTMLAttributes<T> {
+    interface ReactI18NextChildren<T> {
         children?: any;
     }
 }
-
 type TextareaProps = {
     wrapperClassName?: string;
 	value?: string;
-	label?: string | object;
+	label?: React.ReactNode | string;
 	name?: string;
 	maxLength?: any;
 	cols?: number;
@@ -19,31 +19,14 @@ type TextareaProps = {
 	placeholder?: string;
 	/** -- */
 	id?: string;
+    [key: `data-${string}`]: string | undefined;
+    onChange?: (e: any) => void;
+    onBlur?: (e: any) => void;
+    onFocus?: (e: any) => void;
 };
 
 
 export default function Textarea(props: TextareaProps) {
-
-    const uniqueID = useId();
-    const rootRef = useRef<any>(null);
-
-    function handleFocus(event) {
-        const el = event.target;
-        rootRef.current.classList.add('is-active');
-    }
-
-    function handleBlurChange(event) {
-        const el = event.target;
-        const val = event.target.value;
-
-
-        //----
-        //remove focus style
-        if (val === '' || val === 'blank') {
-            rootRef.current.classList.remove('is-active');
-        }
-    }
-
 
     const {
         wrapperClassName,
@@ -57,8 +40,53 @@ export default function Textarea(props: TextareaProps) {
         name,
         id,
         maxLength,
+        onChange,
+        onBlur,
+        onFocus,
         ...attributes
     } = props;
+
+
+    const uniqueID = useId();
+    const rootRef = useRef<any>(null);
+
+    function handleFocus(event) {
+        const el = event.target;
+        rootRef.current.classList.add('is-active');
+
+        //
+        onFocus?.(event);     
+    }
+
+    function handleChange(event: any) {
+        const el = event.target;
+        const val = event.target.value;
+
+
+        //----
+        //remove focus style
+        if (val === '' || val === 'blank') {
+            rootRef.current.classList.remove('is-active');
+        }
+
+        //
+        onChange?.(event);
+    }
+
+    function handleBlur(event: any) {
+        const el = event.target;
+        const val = event.target.value;
+
+
+        //----
+        //remove focus style
+        if (val === '' || val === 'blank') {
+            rootRef.current.classList.remove('is-active');
+        }
+
+        //
+        onBlur?.(event);
+    }
 
     const idRes = id || uniqueID;
 
@@ -78,8 +106,8 @@ export default function Textarea(props: TextareaProps) {
 					  defaultValue={value || ''}
 					  maxLength={maxLength || null}
 			          onFocus={handleFocus}
-					  onBlur={handleBlurChange}
-			          onChange={handleBlurChange}
+					  onBlur={handleBlur}
+			          onChange={handleChange}
 			          disabled={disabled || null}
 					  required={required || null}
 					  cols={cols || 20}
