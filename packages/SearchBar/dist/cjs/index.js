@@ -95,7 +95,7 @@ __webpack_require__.r(__webpack_exports__);
 
 // EXPORTS
 __webpack_require__.d(__webpack_exports__, {
-  "default": () => (/* binding */ SearchBar)
+  "default": () => (/* binding */ src)
 });
 
 ;// CONCATENATED MODULE: ../../node_modules/@babel/runtime/helpers/esm/extends.js
@@ -151,7 +151,7 @@ var external_root_React_commonjs2_react_commonjs_react_amd_react_default = /*#__
 
 var _excluded = ["wrapperClassName", "appearance", "disabled", "required", "placeholder", "value", "label", "name", "btnId", "id", "maxLength", "icon", "onClick", "onChange", "onBlur", "onFocus"];
 
-function SearchBar(props) {
+var SearchBar = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_amd_react_.forwardRef)(function (props, ref) {
   var wrapperClassName = props.wrapperClassName,
     appearance = props.appearance,
     disabled = props.disabled,
@@ -217,6 +217,7 @@ function SearchBar(props) {
   }, label)) : null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
     className: "input-group"
   }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("input", _extends({
+    ref: ref,
     type: appearance === 'pill' ? 'input' : 'search',
     className: appearance === 'pill' ? 'form-control border rounded-pill' : 'form-control',
     id: idRes,
@@ -248,7 +249,8 @@ function SearchBar(props) {
     d: "M12.027 9.92L16 13.95 14 16l-4.075-3.976A6.465 6.465 0 0 1 6.5 13C2.91 13 0 10.083 0 6.5 0 2.91 2.917 0 6.5 0 10.09 0 13 2.917 13 6.5a6.463 6.463 0 0 1-.973 3.42zM1.997 6.452c0 2.48 2.014 4.5 4.5 4.5 2.48 0 4.5-2.015 4.5-4.5 0-2.48-2.015-4.5-4.5-4.5-2.48 0-4.5 2.014-4.5 4.5z",
     "fill-rule": "evenodd"
   }))))))));
-}
+});
+/* harmony default export */ const src = (SearchBar);
 })();
 
 /******/ 	return __webpack_exports__;

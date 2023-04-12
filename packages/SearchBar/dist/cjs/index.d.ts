@@ -24,5 +24,5 @@ declare type SearchBarProps = {
     onBlur?: (e: any) => void;
     onFocus?: (e: any) => void;
 };
-export default function SearchBar(props: SearchBarProps): JSX.Element;
-export {};
+declare const SearchBar: React.ForwardRefExoticComponent<SearchBarProps & React.RefAttributes<unknown>>;
+export default SearchBar;

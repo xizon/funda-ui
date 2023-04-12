@@ -1,4 +1,4 @@
-import React, { useId, useRef } from 'react';
+import React, { useId, useRef, forwardRef } from 'react';
 
 
 declare module 'react' {
@@ -26,8 +26,7 @@ type TextareaProps = {
 };
 
 
-export default function Textarea(props: TextareaProps) {
-
+const Textarea = forwardRef((props: TextareaProps, ref: any) => {
     const {
         wrapperClassName,
         cols,
@@ -99,6 +98,7 @@ export default function Textarea(props: TextareaProps) {
                 <div className="input-group">
                     
                     <textarea  
+                      ref={ref}
 					  className="form-control"
 			          id={idRes}
 					  name={name}
@@ -124,4 +124,7 @@ export default function Textarea(props: TextareaProps) {
 
         </>
     )
-}
+
+});
+
+export default Textarea;

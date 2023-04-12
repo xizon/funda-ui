@@ -24,5 +24,5 @@ declare type InputProps = {
     onBlur?: (e: any) => void;
     onFocus?: (e: any) => void;
 };
-export default function Input(props: InputProps): JSX.Element;
-export {};
+declare const Input: React.ForwardRefExoticComponent<InputProps & React.RefAttributes<unknown>>;
+export default Input;

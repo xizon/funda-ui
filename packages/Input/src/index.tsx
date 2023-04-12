@@ -1,4 +1,4 @@
-import React, { useId, useRef } from 'react';
+import React, { useId, useRef, forwardRef } from 'react';
 
 declare module 'react' {
     interface ReactI18NextChildren<T> {
@@ -27,9 +27,7 @@ type InputProps = {
     onFocus?: (e: any) => void;
 };
 
-
-export default function Input(props: InputProps) {
-
+const Input = forwardRef((props: InputProps, ref: any) => {
     const {
         wrapperClassName,
         type,
@@ -104,6 +102,7 @@ export default function Input(props: InputProps) {
                     
                     {iconLeft ? <><span className="input-group-text">{iconLeft}</span></>: null}
                     <input
+                        ref={ref}
                         type={typeRes}
                         className="form-control"
                         id={idRes}
@@ -129,4 +128,6 @@ export default function Input(props: InputProps) {
 
         </>
     )
-}
+});
+
+export default Input;

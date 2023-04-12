@@ -1,4 +1,4 @@
-import React, { useId, useRef } from 'react';
+import React, { useId, useRef, forwardRef } from 'react';
 
 declare module 'react' {
     interface ReactI18NextChildren<T> {
@@ -27,9 +27,7 @@ type SearchBarProps = {
     onFocus?: (e: any) => void;
 };
 
-
-export default function SearchBar(props: SearchBarProps) {
-
+const SearchBar = forwardRef((props: SearchBarProps, ref: any) => {
     const {
         wrapperClassName,
         appearance,
@@ -109,6 +107,7 @@ export default function SearchBar(props: SearchBarProps) {
 
                 <div className="input-group">
                     <input
+                        ref={ref}
                         type={appearance === 'pill' ? 'input' : 'search'}
                         className={appearance === 'pill' ? 'form-control border rounded-pill' : 'form-control'}
                         id={idRes}
@@ -137,5 +136,7 @@ export default function SearchBar(props: SearchBarProps) {
 
 
         </>
-    )
-}
+    )  
+});
+
+export default SearchBar;

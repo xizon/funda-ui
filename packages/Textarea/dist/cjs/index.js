@@ -95,7 +95,7 @@ __webpack_require__.r(__webpack_exports__);
 
 // EXPORTS
 __webpack_require__.d(__webpack_exports__, {
-  "default": () => (/* binding */ Textarea)
+  "default": () => (/* binding */ src)
 });
 
 ;// CONCATENATED MODULE: ../../node_modules/@babel/runtime/helpers/esm/extends.js
@@ -151,7 +151,7 @@ var external_root_React_commonjs2_react_commonjs_react_amd_react_default = /*#__
 
 var _excluded = ["wrapperClassName", "cols", "rows", "disabled", "required", "placeholder", "value", "label", "name", "id", "maxLength", "onChange", "onBlur", "onFocus"];
 
-function Textarea(props) {
+var Textarea = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_amd_react_.forwardRef)(function (props, ref) {
   var wrapperClassName = props.wrapperClassName,
     cols = props.cols,
     rows = props.rows,
@@ -212,6 +212,7 @@ function Textarea(props) {
   }, label)) : null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
     className: "input-group"
   }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("textarea", _extends({
+    ref: ref,
     className: "form-control",
     id: idRes,
     name: name,
@@ -230,7 +231,8 @@ function Textarea(props) {
   }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("span", {
     className: "text-danger"
   }, "*"))) : '')));
-}
+});
+/* harmony default export */ const src = (Textarea);
 })();
 
 /******/ 	return __webpack_exports__;

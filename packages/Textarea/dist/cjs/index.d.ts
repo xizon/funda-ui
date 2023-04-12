@@ -22,5 +22,5 @@ declare type TextareaProps = {
     onBlur?: (e: any) => void;
     onFocus?: (e: any) => void;
 };
-export default function Textarea(props: TextareaProps): JSX.Element;
-export {};
+declare const Textarea: React.ForwardRefExoticComponent<TextareaProps & React.RefAttributes<unknown>>;
+export default Textarea;

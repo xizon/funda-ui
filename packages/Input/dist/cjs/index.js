@@ -95,7 +95,7 @@ __webpack_require__.r(__webpack_exports__);
 
 // EXPORTS
 __webpack_require__.d(__webpack_exports__, {
-  "default": () => (/* binding */ Input)
+  "default": () => (/* binding */ src)
 });
 
 ;// CONCATENATED MODULE: ../../node_modules/@babel/runtime/helpers/esm/extends.js
@@ -151,7 +151,7 @@ var external_root_React_commonjs2_react_commonjs_react_amd_react_default = /*#__
 
 var _excluded = ["wrapperClassName", "type", "disabled", "required", "placeholder", "value", "label", "units", "name", "id", "maxLength", "iconLeft", "iconRight", "onChange", "onBlur", "onFocus"];
 
-function Input(props) {
+var Input = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_amd_react_.forwardRef)(function (props, ref) {
   var wrapperClassName = props.wrapperClassName,
     type = props.type,
     disabled = props.disabled,
@@ -216,6 +216,7 @@ function Input(props) {
   }, iconLeft ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("span", {
     className: "input-group-text"
   }, iconLeft)) : null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("input", _extends({
+    ref: ref,
     type: typeRes,
     className: "form-control",
     id: idRes,
@@ -237,7 +238,8 @@ function Input(props) {
   }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("span", {
     className: "text-danger"
   }, "*"))) : '')));
-}
+});
+/* harmony default export */ const src = (Input);
 })();
 
 /******/ 	return __webpack_exports__;
