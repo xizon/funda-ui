@@ -66,7 +66,7 @@ const Input = forwardRef((props: InputProps, ref: any) => {
 
         //----
         //remove focus style
-        if (val === '' || val === 'blank') {
+        if (val === '') {
             rootRef.current.classList.remove('is-active');
         }
 
@@ -81,7 +81,7 @@ const Input = forwardRef((props: InputProps, ref: any) => {
 
         //----
         //remove focus style
-        if (val === '' || val === 'blank') {
+        if (val === '') {
             rootRef.current.classList.remove('is-active');
         }
 
@@ -95,11 +95,10 @@ const Input = forwardRef((props: InputProps, ref: any) => {
     return (
         <>
 
-            <div className={wrapperClassName ? wrapperClassName : "mb-3"} ref={rootRef}>
+            <div className={wrapperClassName ? wrapperClassName : "mb-3 position-relative"} ref={rootRef}>
                 {label ? <><label htmlFor={idRes} className="form-label">{label}</label></> : null}
 
                 <div className="input-group">
-                    
                     {iconLeft ? <><span className="input-group-text">{iconLeft}</span></>: null}
                     <input
                         ref={ref}
@@ -119,9 +118,8 @@ const Input = forwardRef((props: InputProps, ref: any) => {
                     />
                     {units ? <><span className="input-group-text">{units}</span></>: null}
                     {iconRight ? <><span className="input-group-text">{iconRight}</span></>: null}
-                    {required ? <><span className="input-group-text bg-transparent"><span className="text-danger">*</span></span></> : ''}
-
                 </div>
+                {required ? <><span className="position-absolute end-0 bottom-0 my-1 mx-2"><span className="text-danger">*</span></span></> : ''}
 
             </div>
 

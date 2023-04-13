@@ -182,7 +182,7 @@ var Textarea = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_reac
 
     //----
     //remove focus style
-    if (val === '' || val === 'blank') {
+    if (val === '') {
       rootRef.current.classList.remove('is-active');
     }
 
@@ -195,7 +195,7 @@ var Textarea = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_reac
 
     //----
     //remove focus style
-    if (val === '' || val === 'blank') {
+    if (val === '') {
       rootRef.current.classList.remove('is-active');
     }
 
@@ -204,7 +204,7 @@ var Textarea = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_reac
   }
   var idRes = id || uniqueID;
   return /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
-    className: wrapperClassName ? wrapperClassName : "mb-3",
+    className: wrapperClassName ? wrapperClassName : "mb-3 position-relative",
     ref: rootRef
   }, label ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("label", {
     htmlFor: idRes,
@@ -226,11 +226,11 @@ var Textarea = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_reac
     required: required || null,
     cols: cols || 20,
     rows: rows || 2
-  }, attributes)), required ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("span", {
-    className: "input-group-text bg-transparent"
+  }, attributes))), required ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("span", {
+    className: "position-absolute end-0 bottom-0 my-1 mx-2"
   }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("span", {
     className: "text-danger"
-  }, "*"))) : '')));
+  }, "*"))) : ''));
 });
 /* harmony default export */ const src = (Textarea);
 })();

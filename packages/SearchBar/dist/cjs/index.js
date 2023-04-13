@@ -187,7 +187,7 @@ var SearchBar = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_rea
 
     //----
     //remove focus style
-    if (val === '' || val === 'blank') {
+    if (val === '') {
       rootRef.current.classList.remove('is-active');
     }
 
@@ -200,7 +200,7 @@ var SearchBar = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_rea
 
     //----
     //remove focus style
-    if (val === '' || val === 'blank') {
+    if (val === '') {
       rootRef.current.classList.remove('is-active');
     }
 
@@ -209,7 +209,7 @@ var SearchBar = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_rea
   }
   var idRes = id || uniqueID;
   return /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
-    className: wrapperClassName ? wrapperClassName : "mb-3",
+    className: wrapperClassName ? wrapperClassName : "mb-3 position-relative",
     ref: rootRef
   }, label ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("label", {
     htmlFor: idRes,

@@ -113,6 +113,16 @@ function _extends() {
   };
   return _extends.apply(this, arguments);
 }
+;// CONCATENATED MODULE: ../../node_modules/@babel/runtime/helpers/esm/typeof.js
+function _typeof(obj) {
+  "@babel/helpers - typeof";
+
+  return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) {
+    return typeof obj;
+  } : function (obj) {
+    return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;
+  }, _typeof(obj);
+}
 ;// CONCATENATED MODULE: ../../node_modules/@babel/runtime/helpers/esm/objectWithoutPropertiesLoose.js
 function _objectWithoutPropertiesLoose(source, excluded) {
   if (source == null) return {};
@@ -149,28 +159,45 @@ var external_root_React_commonjs2_react_commonjs_react_amd_react_default = /*#__
 ;// CONCATENATED MODULE: ./src/index.tsx
 
 
-var _excluded = ["wrapperClassName", "type", "disabled", "required", "placeholder", "value", "label", "units", "name", "id", "maxLength", "iconLeft", "iconRight", "onChange", "onBlur", "onFocus"];
 
-var Input = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_amd_react_.forwardRef)(function (props, ref) {
+var _excluded = ["wrapperClassName", "disabled", "required", "value", "label", "name", "id", "options", "onChange", "onBlur", "onFocus"];
+
+var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_amd_react_.forwardRef)(function (props, ref) {
   var wrapperClassName = props.wrapperClassName,
-    type = props.type,
     disabled = props.disabled,
     required = props.required,
-    placeholder = props.placeholder,
     value = props.value,
     label = props.label,
-    units = props.units,
     name = props.name,
     id = props.id,
-    maxLength = props.maxLength,
-    iconLeft = props.iconLeft,
-    iconRight = props.iconRight,
+    options = props.options,
     onChange = props.onChange,
     onBlur = props.onBlur,
     onFocus = props.onFocus,
     attributes = _objectWithoutProperties(props, _excluded);
   var uniqueID = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useId)();
   var rootRef = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useRef)(null);
+
+  // Determine whether it is in JSON format
+  function isJSON(str) {
+    if (typeof str === 'string' && str.length > 0) {
+      if (str.replace(/\"\"/g, '').replace(/\,/g, '') == '[{}]') {
+        return false;
+      } else {
+        if (/^[\],:{}\s]*$/.test(str.replace(/\\["\\\/bfnrtu]/g, '@').replace(/"[^"\\\n\r]*"|true|false|null|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?/g, ']').replace(/(?:^|:|,)(?:\s*\[)+/g, ''))) {
+          return true;
+        } else {
+          return false;
+        }
+      }
+    } else {
+      if (_typeof(str) === 'object' && Object.prototype.toString.call(str) === '[object Object]' && !str.length) {
+        return true;
+      } else {
+        return false;
+      }
+    }
+  }
   function handleFocus(event) {
     rootRef.current.classList.add('is-active');
 
@@ -188,7 +215,12 @@ var Input = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_a
     }
 
     //
-    onChange === null || onChange === void 0 ? void 0 : onChange(event);
+    if (typeof onChange === 'function') {
+      onChange(event, {
+        "name": name,
+        "value": event.target.value
+      });
+    }
   }
   function handleBlur(event) {
     var el = event.target;
@@ -203,43 +235,40 @@ var Input = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_a
     //
     onBlur === null || onBlur === void 0 ? void 0 : onBlur(event);
   }
-  var typeRes = typeof type === 'undefined' ? 'text' : type;
   var idRes = id || uniqueID;
+
+  // Get all options from option prop
+  var selectOptions = isJSON(options) ? JSON.parse(options) : {};
+  var optionKeys = Object.keys(selectOptions);
+  var optionValues = Object.values(selectOptions);
+
+  // Generate list of options
+  var selectOptionsList = optionKeys.map(function (selectOption, index) {
+    return /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("option", {
+      key: index,
+      value: optionValues[index]
+    }, selectOption);
+  });
   return /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
     className: wrapperClassName ? wrapperClassName : "mb-3 position-relative",
     ref: rootRef
   }, label ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("label", {
     htmlFor: idRes,
     className: "form-label"
-  }, label)) : null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
-    className: "input-group"
-  }, iconLeft ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("span", {
-    className: "input-group-text"
-  }, iconLeft)) : null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("input", _extends({
+  }, label)) : null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("select", _extends({
     ref: ref,
-    type: typeRes,
-    className: "form-control",
+    className: "form-select",
     id: idRes,
     name: name,
-    placeholder: placeholder || '',
     defaultValue: value || '',
-    maxLength: maxLength || null,
     onFocus: handleFocus,
     onBlur: handleBlur,
     onChange: handleChange,
     disabled: disabled || null,
     required: required || null
-  }, attributes)), units ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("span", {
-    className: "input-group-text"
-  }, units)) : null, iconRight ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("span", {
-    className: "input-group-text"
-  }, iconRight)) : null), required ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("span", {
-    className: "position-absolute end-0 bottom-0 my-1 mx-2"
-  }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("span", {
-    className: "text-danger"
-  }, "*"))) : ''));
+  }, attributes), selectOptionsList)));
 });
-/* harmony default export */ const src = (Input);
+/* harmony default export */ const src = (Select);
 })();
 
 /******/ 	return __webpack_exports__;

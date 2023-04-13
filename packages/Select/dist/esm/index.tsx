@@ -6,42 +6,38 @@ declare module 'react' {
     }
 }
 
-type InputProps = {
+type OptionChangeFnType = (arg1: any, arg2: any) => void;
+
+
+type SelectProps = {
     wrapperClassName?: string;
-    type?: string;
     value?: string;
     label?: React.ReactNode | string;
-    units?: string;
     name?: string;
-    maxLength?: any;
     disabled?: any;
     required?: any;
-    placeholder?: string;
-    iconLeft?: React.ReactNode | string;
-    iconRight?: React.ReactNode | string;
+    options: string;
     /** -- */
     id?: string;
     [key: `data-${string}`]: string | undefined;
-    onChange?: (e: any) => void;
+    /** This function is called whenever the data is updated.
+     *  Exposes the JSON format data about the option as an argument.
+     */
+    onChange?: OptionChangeFnType | null;
     onBlur?: (e: any) => void;
     onFocus?: (e: any) => void;
 };
 
-const Input = forwardRef((props: InputProps, ref: any) => {
+const Select = forwardRef((props: SelectProps, ref: any) => {
     const {
         wrapperClassName,
-        type,
         disabled,
         required,
-        placeholder,
         value,
         label,
-        units,
         name,
         id,
-        maxLength,
-        iconLeft,
-        iconRight,
+        options,
         onChange,
         onBlur,
         onFocus,
@@ -51,6 +47,43 @@ const Input = forwardRef((props: InputProps, ref: any) => {
 
     const uniqueID = useId();
     const rootRef = useRef<any>(null);
+
+	// Determine whether it is in JSON format
+	function isJSON( str: any ){
+		
+		if ( typeof(str) === 'string' && str.length > 0 ) {
+
+			if ( str.replace( /\"\"/g, '' ).replace( /\,/g, '' ) == '[{}]' ) {
+				return false;
+			} else {
+
+				if (/^[\],:{}\s]*$/.test( str.replace(/\\["\\\/bfnrtu]/g, '@' ).
+				replace(/"[^"\\\n\r]*"|true|false|null|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?/g, ']').
+				replace(/(?:^|:|,)(?:\s*\[)+/g, ''))) {
+
+					return true;
+
+				}else{
+					return false;
+				}	
+
+			}
+
+		} else {
+			
+			if ( 
+				typeof(str) === 'object' && 
+				Object.prototype.toString.call(str) === '[object Object]' &&
+			    ! str.length
+			   ) {
+				return true;
+			} else {
+				return false;
+			}
+			
+		}
+
+	} 
 
     function handleFocus(event: any) {
         rootRef.current.classList.add('is-active');
@@ -71,7 +104,13 @@ const Input = forwardRef((props: InputProps, ref: any) => {
         }
 
         //
-        onChange?.(event);
+		if ( typeof(onChange) === 'function' ) {
+			onChange(event, {
+                "name": name,
+				"value": event.target.value
+			});
+		}
+
     }
 
     function handleBlur(event: any) {
@@ -89,37 +128,40 @@ const Input = forwardRef((props: InputProps, ref: any) => {
         onBlur?.(event);
     }
 
-    const typeRes = typeof (type) === 'undefined' ? 'text' : type;
     const idRes = id || uniqueID;
+
+		// Get all options from option prop
+		const selectOptions = isJSON( options ) ? JSON.parse( options ) : {};
+		const optionKeys = Object.keys(selectOptions);
+		const optionValues = Object.values(selectOptions);
+		
+		
+		// Generate list of options
+		const selectOptionsList = optionKeys.map((selectOption, index) => {
+		    return <option key={index} value={optionValues[index] as string}>{selectOption}</option>;
+		});
+
 
     return (
         <>
 
             <div className={wrapperClassName ? wrapperClassName : "mb-3 position-relative"} ref={rootRef}>
                 {label ? <><label htmlFor={idRes} className="form-label">{label}</label></> : null}
-
-                <div className="input-group">
-                    {iconLeft ? <><span className="input-group-text">{iconLeft}</span></>: null}
-                    <input
+                <select  
                         ref={ref}
-                        type={typeRes}
-                        className="form-control"
+                        className="form-select"
                         id={idRes}
                         name={name}
-                        placeholder={placeholder || ''}
                         defaultValue={value || ''}
-                        maxLength={maxLength || null}
                         onFocus={handleFocus}
                         onBlur={handleBlur}
                         onChange={handleChange}
                         disabled={disabled || null}
                         required={required || null}
                         {...attributes}
-                    />
-                    {units ? <><span className="input-group-text">{units}</span></>: null}
-                    {iconRight ? <><span className="input-group-text">{iconRight}</span></>: null}
-                </div>
-                {required ? <><span className="position-absolute end-0 bottom-0 my-1 mx-2"><span className="text-danger">*</span></span></> : ''}
+					>
+			           {selectOptionsList}
+					</select>
 
             </div>
 
@@ -128,4 +170,4 @@ const Input = forwardRef((props: InputProps, ref: any) => {
     )
 });
 
-export default Input;
+export default Select;

@@ -72,7 +72,7 @@ const SearchBar = forwardRef((props: SearchBarProps, ref: any) => {
 
         //----
         //remove focus style
-        if (val === '' || val === 'blank') {
+        if (val === '') {
             rootRef.current.classList.remove('is-active');
         }
 
@@ -87,7 +87,7 @@ const SearchBar = forwardRef((props: SearchBarProps, ref: any) => {
 
         //----
         //remove focus style
-        if (val === '' || val === 'blank') {
+        if (val === '') {
             rootRef.current.classList.remove('is-active');
         }
 
@@ -102,7 +102,7 @@ const SearchBar = forwardRef((props: SearchBarProps, ref: any) => {
 
 
 
-            <div className={wrapperClassName ? wrapperClassName : "mb-3"} ref={rootRef}>
+            <div className={wrapperClassName ? wrapperClassName : "mb-3 position-relative"} ref={rootRef}>
                 {label ? <><label htmlFor={idRes} className="form-label">{label}</label></> : null}
 
                 <div className="input-group">
