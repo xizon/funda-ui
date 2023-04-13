@@ -13,6 +13,7 @@ type InputProps = {
     label?: React.ReactNode | string;
     units?: string;
     name?: string;
+    step?: number;
     maxLength?: any;
     disabled?: any;
     required?: any;
@@ -38,6 +39,7 @@ const Input = forwardRef((props: InputProps, ref: any) => {
         label,
         units,
         name,
+        step,
         id,
         maxLength,
         iconLeft,
@@ -106,6 +108,7 @@ const Input = forwardRef((props: InputProps, ref: any) => {
                         className="form-control"
                         id={idRes}
                         name={name}
+                        step={step || 1}
                         placeholder={placeholder || ''}
                         defaultValue={value || ''}
                         maxLength={maxLength || null}

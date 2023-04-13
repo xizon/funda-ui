@@ -149,7 +149,7 @@ var external_root_React_commonjs2_react_commonjs_react_amd_react_default = /*#__
 ;// CONCATENATED MODULE: ./src/index.tsx
 
 
-var _excluded = ["wrapperClassName", "type", "disabled", "required", "placeholder", "value", "label", "units", "name", "id", "maxLength", "iconLeft", "iconRight", "onChange", "onBlur", "onFocus"];
+var _excluded = ["wrapperClassName", "type", "disabled", "required", "placeholder", "value", "label", "units", "name", "step", "id", "maxLength", "iconLeft", "iconRight", "onChange", "onBlur", "onFocus"];
 
 var Input = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_amd_react_.forwardRef)(function (props, ref) {
   var wrapperClassName = props.wrapperClassName,
@@ -161,6 +161,7 @@ var Input = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_a
     label = props.label,
     units = props.units,
     name = props.name,
+    step = props.step,
     id = props.id,
     maxLength = props.maxLength,
     iconLeft = props.iconLeft,
@@ -221,6 +222,7 @@ var Input = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_a
     className: "form-control",
     id: idRes,
     name: name,
+    step: step || 1,
     placeholder: placeholder || '',
     defaultValue: value || '',
     maxLength: maxLength || null,

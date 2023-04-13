@@ -11,6 +11,7 @@ declare type InputProps = {
     label?: React.ReactNode | string;
     units?: string;
     name?: string;
+    step?: number;
     maxLength?: any;
     disabled?: any;
     required?: any;

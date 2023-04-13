@@ -15,6 +15,7 @@ import Input from 'react-pure-bootstrap/Input';
 | `label` | string \| ReactNode | - | It is used to specify a label for an element of a form. |
 | `units` | string | - | Specify a unit identification string. Such as `em`, `px`, and so on. |
 | `name` | string | - | Name is not deprecated when used with form fields. |
+| `step` | number | 1 | Specified legal number intervals. |
 | `placeholder` | string | - |  Specifies a short hint that describes. |
 | `maxLength` | number | - | Defines the maximum number of characters |
 | `disabled` | boolean | false | Whether it is disabled |
@@ -51,6 +52,16 @@ export default () => {
                 required
                 disabled
             />
+
+            <Input
+                name="String"
+                label="Date"
+                type="datetime-local"
+                onFocus={(e) => {
+                    e.target.setAttribute("max", new Date().toISOString().split("T")[0] + 'T00:00');
+                }}
+                step={1}
+            /> 
 
         </>
     );
