@@ -15,7 +15,9 @@ import Input from 'react-pure-bootstrap/Input';
 | `label` | string \| ReactNode | - | It is used to specify a label for an element of a form. |
 | `units` | string | - | Specify a unit identification string. Such as `em`, `px`, and so on. |
 | `name` | string | - | Name is not deprecated when used with form fields. |
-| `step` | number | 1 | Specified legal number intervals. |
+| `step` | number \| string | 1 | Specified legal number intervals. |
+| `min` | number \| string | - | The minimum value to accept |
+| `max` | number \| string | - | The maximum value to accept |
 | `placeholder` | string | - |  Specifies a short hint that describes. |
 | `maxLength` | number | - | Defines the maximum number of characters |
 | `disabled` | boolean | false | Whether it is disabled |

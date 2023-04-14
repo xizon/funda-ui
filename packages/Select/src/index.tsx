@@ -93,36 +93,27 @@ const Select = forwardRef((props: SelectProps, ref: any) => {
     }
 
     function handleChange(event: any) {
-        const el = event.target;
         const val = event.target.value;
 
 
         //----
         //remove focus style
-        if (val === '') {
-            rootRef.current.classList.remove('is-active');
-        }
+        rootRef.current.classList.remove('is-active');
 
         //
 		if ( typeof(onChange) === 'function' ) {
-			onChange(event, {
-                "name": name,
-				"value": event.target.value
-			});
+			onChange(event, val);
+
+            event.target.blur();
 		}
 
     }
 
     function handleBlur(event: any) {
-        const el = event.target;
-        const val = event.target.value;
-
 
         //----
         //remove focus style
-        if (val === '') {
-            rootRef.current.classList.remove('is-active');
-        }
+        rootRef.current.classList.remove('is-active');
 
         //
         onBlur?.(event);

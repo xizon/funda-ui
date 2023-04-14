@@ -205,32 +205,22 @@ var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_
     onFocus === null || onFocus === void 0 ? void 0 : onFocus(event);
   }
   function handleChange(event) {
-    var el = event.target;
     var val = event.target.value;
 
     //----
     //remove focus style
-    if (val === '') {
-      rootRef.current.classList.remove('is-active');
-    }
+    rootRef.current.classList.remove('is-active');
 
     //
     if (typeof onChange === 'function') {
-      onChange(event, {
-        "name": name,
-        "value": event.target.value
-      });
+      onChange(event, val);
+      event.target.blur();
     }
   }
   function handleBlur(event) {
-    var el = event.target;
-    var val = event.target.value;
-
     //----
     //remove focus style
-    if (val === '') {
-      rootRef.current.classList.remove('is-active');
-    }
+    rootRef.current.classList.remove('is-active');
 
     //
     onBlur === null || onBlur === void 0 ? void 0 : onBlur(event);

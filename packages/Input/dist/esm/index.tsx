@@ -13,7 +13,9 @@ type InputProps = {
     label?: React.ReactNode | string;
     units?: string;
     name?: string;
-    step?: number;
+    step?: number | string;
+	min?: number | string;
+	max?: number | string;
     maxLength?: any;
     disabled?: any;
     required?: any;
@@ -40,6 +42,8 @@ const Input = forwardRef((props: InputProps, ref: any) => {
         units,
         name,
         step,
+        min,
+        max,
         id,
         maxLength,
         iconLeft,
@@ -109,6 +113,8 @@ const Input = forwardRef((props: InputProps, ref: any) => {
                         id={idRes}
                         name={name}
                         step={step || 1}
+                        min={min || ''}
+                        max={max || ''}
                         placeholder={placeholder || ''}
                         defaultValue={value || ''}
                         maxLength={maxLength || null}

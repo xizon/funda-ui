@@ -113,6 +113,66 @@ function _extends() {
   };
   return _extends.apply(this, arguments);
 }
+;// CONCATENATED MODULE: ../../node_modules/@babel/runtime/helpers/esm/arrayWithHoles.js
+function _arrayWithHoles(arr) {
+  if (Array.isArray(arr)) return arr;
+}
+;// CONCATENATED MODULE: ../../node_modules/@babel/runtime/helpers/esm/iterableToArrayLimit.js
+function _iterableToArrayLimit(arr, i) {
+  var _i = null == arr ? null : "undefined" != typeof Symbol && arr[Symbol.iterator] || arr["@@iterator"];
+  if (null != _i) {
+    var _s,
+      _e,
+      _x,
+      _r,
+      _arr = [],
+      _n = !0,
+      _d = !1;
+    try {
+      if (_x = (_i = _i.call(arr)).next, 0 === i) {
+        if (Object(_i) !== _i) return;
+        _n = !1;
+      } else for (; !(_n = (_s = _x.call(_i)).done) && (_arr.push(_s.value), _arr.length !== i); _n = !0);
+    } catch (err) {
+      _d = !0, _e = err;
+    } finally {
+      try {
+        if (!_n && null != _i["return"] && (_r = _i["return"](), Object(_r) !== _r)) return;
+      } finally {
+        if (_d) throw _e;
+      }
+    }
+    return _arr;
+  }
+}
+;// CONCATENATED MODULE: ../../node_modules/@babel/runtime/helpers/esm/arrayLikeToArray.js
+function _arrayLikeToArray(arr, len) {
+  if (len == null || len > arr.length) len = arr.length;
+  for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i];
+  return arr2;
+}
+;// CONCATENATED MODULE: ../../node_modules/@babel/runtime/helpers/esm/unsupportedIterableToArray.js
+
+function _unsupportedIterableToArray(o, minLen) {
+  if (!o) return;
+  if (typeof o === "string") return _arrayLikeToArray(o, minLen);
+  var n = Object.prototype.toString.call(o).slice(8, -1);
+  if (n === "Object" && o.constructor) n = o.constructor.name;
+  if (n === "Map" || n === "Set") return Array.from(o);
+  if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen);
+}
+;// CONCATENATED MODULE: ../../node_modules/@babel/runtime/helpers/esm/nonIterableRest.js
+function _nonIterableRest() {
+  throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
+}
+;// CONCATENATED MODULE: ../../node_modules/@babel/runtime/helpers/esm/slicedToArray.js
+
+
+
+
+function _slicedToArray(arr, i) {
+  return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest();
+}
 ;// CONCATENATED MODULE: ../../node_modules/@babel/runtime/helpers/esm/objectWithoutPropertiesLoose.js
 function _objectWithoutPropertiesLoose(source, excluded) {
   if (source == null) return {};
@@ -149,31 +209,28 @@ var external_root_React_commonjs2_react_commonjs_react_amd_react_default = /*#__
 ;// CONCATENATED MODULE: ./src/index.tsx
 
 
-var _excluded = ["wrapperClassName", "type", "disabled", "required", "placeholder", "value", "label", "units", "name", "step", "min", "max", "id", "maxLength", "iconLeft", "iconRight", "onChange", "onBlur", "onFocus"];
 
-var Input = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_amd_react_.forwardRef)(function (props, ref) {
+var _excluded = ["wrapperClassName", "disabled", "required", "value", "label", "name", "id", "checked", "onChange", "onBlur", "onFocus"];
+
+var Checkbox = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_amd_react_.forwardRef)(function (props, ref) {
   var wrapperClassName = props.wrapperClassName,
-    type = props.type,
     disabled = props.disabled,
     required = props.required,
-    placeholder = props.placeholder,
     value = props.value,
     label = props.label,
-    units = props.units,
     name = props.name,
-    step = props.step,
-    min = props.min,
-    max = props.max,
     id = props.id,
-    maxLength = props.maxLength,
-    iconLeft = props.iconLeft,
-    iconRight = props.iconRight,
+    checked = props.checked,
     onChange = props.onChange,
     onBlur = props.onBlur,
     onFocus = props.onFocus,
     attributes = _objectWithoutProperties(props, _excluded);
   var uniqueID = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useId)();
   var rootRef = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useRef)(null);
+  var _useState = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)(checked ? true : false),
+    _useState2 = _slicedToArray(_useState, 2),
+    isChecked = _useState2[0],
+    setIsChecked = _useState2[1];
   function handleFocus(event) {
     rootRef.current.classList.add('is-active');
 
@@ -181,71 +238,61 @@ var Input = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_a
     onFocus === null || onFocus === void 0 ? void 0 : onFocus(event);
   }
   function handleChange(event) {
-    var el = event.target;
     var val = event.target.value;
 
     //----
     //remove focus style
-    if (val === '') {
-      rootRef.current.classList.remove('is-active');
-    }
+    rootRef.current.classList.remove('is-active');
 
     //
-    onChange === null || onChange === void 0 ? void 0 : onChange(event);
+    if (typeof onChange === 'function') {
+      onChange(event, !isChecked ? val : '');
+    }
+    setIsChecked(!isChecked);
   }
   function handleBlur(event) {
-    var el = event.target;
-    var val = event.target.value;
-
     //----
     //remove focus style
-    if (val === '') {
-      rootRef.current.classList.remove('is-active');
-    }
+    rootRef.current.classList.remove('is-active');
 
     //
     onBlur === null || onBlur === void 0 ? void 0 : onBlur(event);
   }
-  var typeRes = typeof type === 'undefined' ? 'text' : type;
   var idRes = id || uniqueID;
   return /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
     className: wrapperClassName ? wrapperClassName : "mb-3 position-relative",
     ref: rootRef
-  }, label ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("label", {
-    htmlFor: idRes,
-    className: "form-label"
-  }, label)) : null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
-    className: "input-group"
-  }, iconLeft ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("span", {
-    className: "input-group-text"
-  }, iconLeft)) : null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("input", _extends({
-    ref: ref,
-    type: typeRes,
-    className: "form-control",
+  }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
+    className: "form-check"
+  }, isChecked ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("input", _extends({
+    type: "checkbox",
+    className: "form-check-input",
     id: idRes,
     name: name,
-    step: step || 1,
-    min: min || '',
-    max: max || '',
-    placeholder: placeholder || '',
-    defaultValue: value || '',
-    maxLength: maxLength || null,
+    disabled: disabled || null,
+    required: required || null,
+    onChange: handleChange,
     onFocus: handleFocus,
     onBlur: handleBlur,
-    onChange: handleChange,
+    defaultValue: value || '',
+    defaultChecked: true
+  }, attributes)) : /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("input", _extends({
+    type: "checkbox",
+    className: "form-check-input",
+    id: idRes,
+    name: name,
     disabled: disabled || null,
-    required: required || null
-  }, attributes)), units ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("span", {
-    className: "input-group-text"
-  }, units)) : null, iconRight ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("span", {
-    className: "input-group-text"
-  }, iconRight)) : null), required ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("span", {
-    className: "position-absolute end-0 bottom-0 my-1 mx-2"
-  }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("span", {
-    className: "text-danger"
-  }, "*"))) : ''));
+    required: required || null,
+    onChange: handleChange,
+    onFocus: handleFocus,
+    onBlur: handleBlur,
+    defaultValue: value || ''
+  }, attributes)), label ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("label", {
+    htmlFor: idRes,
+    className: "form-label"
+  }, label)) : null)));
 });
-/* harmony default export */ const src = (Input);
+/* harmony default export */ const src = (Checkbox);
 })();
 
 /******/ 	return __webpack_exports__;
