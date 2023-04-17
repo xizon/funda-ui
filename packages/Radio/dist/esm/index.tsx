@@ -6,7 +6,7 @@ declare module 'react' {
     }
 }
 
-type OptionChangeFnType = (arg1: any, arg2: any) => void;
+type RadioOptionChangeFnType = (arg1: any, arg2: any) => void;
 
 
 type RadioProps = {
@@ -24,7 +24,7 @@ type RadioProps = {
     /** This function is called whenever the data is updated.
      *  Exposes the JSON format data about the option as an argument.
      */
-    onChange?: OptionChangeFnType | null;
+    onChange?: RadioOptionChangeFnType | null;
     onBlur?: (e: any) => void;
     onFocus?: (e: any) => void;
 };
@@ -46,8 +46,10 @@ const Radio = (props: RadioProps) => {
         ...attributes
     } = props;
 
-    const uniqueID = useId();
+    const uniqueID = useId().replace(/[^a-zA-Z ]/g, "-");;
+    const idRes = id || uniqueID;
     const rootRef = useRef<any>(null);
+    
 
 
     // Determine whether it is in JSON format
@@ -124,7 +126,6 @@ const Radio = (props: RadioProps) => {
     }
 
 
-    const idRes = id || uniqueID;
 
     // Get all options from option prop
     const selectOptions = isJSON(options) ? JSON.parse(options) : {};

@@ -49,8 +49,10 @@ const SearchBar = forwardRef((props: SearchBarProps, ref: any) => {
     } = props;
 
 
-    const uniqueID = useId();
+    const uniqueID = useId().replace(/[^a-zA-Z ]/g, "-");;
+    const idRes = id || uniqueID;
     const rootRef = useRef<any>(null);
+    
 
     function handleSubmit(event: any) {
    
@@ -95,7 +97,7 @@ const SearchBar = forwardRef((props: SearchBarProps, ref: any) => {
         onBlur?.(event);
     }
 
-    const idRes = id || uniqueID;
+    
 
     return (
         <>

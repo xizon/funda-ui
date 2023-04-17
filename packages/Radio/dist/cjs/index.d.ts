@@ -4,7 +4,7 @@ declare module 'react' {
         children?: any;
     }
 }
-declare type OptionChangeFnType = (arg1: any, arg2: any) => void;
+declare type RadioOptionChangeFnType = (arg1: any, arg2: any) => void;
 declare type RadioProps = {
     wrapperClassName?: string;
     value?: string;
@@ -20,7 +20,7 @@ declare type RadioProps = {
     /** This function is called whenever the data is updated.
      *  Exposes the JSON format data about the option as an argument.
      */
-    onChange?: OptionChangeFnType | null;
+    onChange?: RadioOptionChangeFnType | null;
     onBlur?: (e: any) => void;
     onFocus?: (e: any) => void;
 };

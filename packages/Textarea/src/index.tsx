@@ -46,7 +46,8 @@ const Textarea = forwardRef((props: TextareaProps, ref: any) => {
     } = props;
 
 
-    const uniqueID = useId();
+    const uniqueID = useId().replace(/[^a-zA-Z ]/g, "-");;
+    const idRes = id || uniqueID;
     const rootRef = useRef<any>(null);
 
     function handleFocus(event) {
@@ -87,7 +88,7 @@ const Textarea = forwardRef((props: TextareaProps, ref: any) => {
         onBlur?.(event);
     }
 
-    const idRes = id || uniqueID;
+    
 
     return (
         <>

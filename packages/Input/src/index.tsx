@@ -55,8 +55,11 @@ const Input = forwardRef((props: InputProps, ref: any) => {
     } = props;
 
 
-    const uniqueID = useId();
+    const uniqueID = useId().replace(/[^a-zA-Z ]/g, "-");;
+    const idRes = id || uniqueID;
     const rootRef = useRef<any>(null);
+    const typeRes = typeof (type) === 'undefined' ? 'text' : type;
+    
 
     function handleFocus(event: any) {
         rootRef.current.classList.add('is-active');
@@ -94,9 +97,6 @@ const Input = forwardRef((props: InputProps, ref: any) => {
         //
         onBlur?.(event);
     }
-
-    const typeRes = typeof (type) === 'undefined' ? 'text' : type;
-    const idRes = id || uniqueID;
 
     return (
         <>

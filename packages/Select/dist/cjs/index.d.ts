@@ -4,7 +4,7 @@ declare module 'react' {
         children?: any;
     }
 }
-declare type OptionChangeFnType = (arg1: any, arg2: any) => void;
+declare type SelectOptionChangeFnType = (arg1: any, arg2: any) => void;
 declare type SelectProps = {
     wrapperClassName?: string;
     value?: string;
@@ -19,7 +19,7 @@ declare type SelectProps = {
     /** This function is called whenever the data is updated.
      *  Exposes the JSON format data about the option as an argument.
      */
-    onChange?: OptionChangeFnType | null;
+    onChange?: SelectOptionChangeFnType | null;
     onBlur?: (e: any) => void;
     onFocus?: (e: any) => void;
 };

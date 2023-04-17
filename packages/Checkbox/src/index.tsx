@@ -6,7 +6,7 @@ declare module 'react' {
     }
 }
 
-type OptionChangeFnType = (arg1: any, arg2: any) => void;
+type CheckboxOptionChangeFnType = (arg1: any, arg2: any) => void;
 
 
 type CheckboxProps = {
@@ -23,7 +23,7 @@ type CheckboxProps = {
     /** This function is called whenever the data is updated.
      *  Exposes the JSON format data about the option as an argument.
      */
-    onChange?: OptionChangeFnType | null;
+    onChange?: CheckboxOptionChangeFnType | null;
     onBlur?: (e: any) => void;
     onFocus?: (e: any) => void;
 };
@@ -44,7 +44,8 @@ const Checkbox = forwardRef((props: CheckboxProps, ref: any) => {
         ...attributes
     } = props;
 
-    const uniqueID = useId();
+    const uniqueID = useId().replace(/[^a-zA-Z ]/g, "-");;
+    const idRes = id || uniqueID;
     const rootRef = useRef<any>(null);
     const [isChecked, setIsChecked] = useState<boolean>( checked ? true : false);
 
@@ -86,7 +87,7 @@ const Checkbox = forwardRef((props: CheckboxProps, ref: any) => {
     }
 
 
-    const idRes = id || uniqueID;
+    
 
     return (
         <>

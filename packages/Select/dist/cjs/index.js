@@ -175,7 +175,9 @@ var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_
     onBlur = props.onBlur,
     onFocus = props.onFocus,
     attributes = _objectWithoutProperties(props, _excluded);
-  var uniqueID = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useId)();
+  var uniqueID = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useId)().replace(/[^a-zA-Z ]/g, "-");
+  ;
+  var idRes = id || uniqueID;
   var rootRef = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useRef)(null);
 
   // Determine whether it is in JSON format
@@ -225,7 +227,6 @@ var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_
     //
     onBlur === null || onBlur === void 0 ? void 0 : onBlur(event);
   }
-  var idRes = id || uniqueID;
 
   // Get all options from option prop
   var selectOptions = isJSON(options) ? JSON.parse(options) : {};

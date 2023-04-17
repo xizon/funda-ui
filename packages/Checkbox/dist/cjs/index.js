@@ -225,7 +225,9 @@ var Checkbox = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_reac
     onBlur = props.onBlur,
     onFocus = props.onFocus,
     attributes = _objectWithoutProperties(props, _excluded);
-  var uniqueID = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useId)();
+  var uniqueID = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useId)().replace(/[^a-zA-Z ]/g, "-");
+  ;
+  var idRes = id || uniqueID;
   var rootRef = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useRef)(null);
   var _useState = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)(checked ? true : false),
     _useState2 = _slicedToArray(_useState, 2),
@@ -258,7 +260,6 @@ var Checkbox = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_reac
     //
     onBlur === null || onBlur === void 0 ? void 0 : onBlur(event);
   }
-  var idRes = id || uniqueID;
   return /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
     className: wrapperClassName ? wrapperClassName : "mb-3 position-relative",
     ref: rootRef

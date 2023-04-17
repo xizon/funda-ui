@@ -6,7 +6,7 @@ declare module 'react' {
     }
 }
 
-type OptionChangeFnType = (arg1: any, arg2: any) => void;
+type SelectOptionChangeFnType = (arg1: any, arg2: any) => void;
 
 
 type SelectProps = {
@@ -23,7 +23,7 @@ type SelectProps = {
     /** This function is called whenever the data is updated.
      *  Exposes the JSON format data about the option as an argument.
      */
-    onChange?: OptionChangeFnType | null;
+    onChange?: SelectOptionChangeFnType | null;
     onBlur?: (e: any) => void;
     onFocus?: (e: any) => void;
 };
@@ -45,7 +45,8 @@ const Select = forwardRef((props: SelectProps, ref: any) => {
     } = props;
 
 
-    const uniqueID = useId();
+    const uniqueID = useId().replace(/[^a-zA-Z ]/g, "-");;
+    const idRes = id || uniqueID;
     const rootRef = useRef<any>(null);
 
 	// Determine whether it is in JSON format
@@ -119,18 +120,17 @@ const Select = forwardRef((props: SelectProps, ref: any) => {
         onBlur?.(event);
     }
 
-    const idRes = id || uniqueID;
-
-		// Get all options from option prop
-		const selectOptions = isJSON( options ) ? JSON.parse( options ) : {};
-		const optionKeys = Object.keys(selectOptions);
-		const optionValues = Object.values(selectOptions);
-		
-		
-		// Generate list of options
-		const selectOptionsList = optionKeys.map((selectOption, index) => {
-		    return <option key={index} value={optionValues[index] as string}>{selectOption}</option>;
-		});
+    
+    // Get all options from option prop
+    const selectOptions = isJSON( options ) ? JSON.parse( options ) : {};
+    const optionKeys = Object.keys(selectOptions);
+    const optionValues = Object.values(selectOptions);
+    
+    
+    // Generate list of options
+    const selectOptionsList = optionKeys.map((selectOption, index) => {
+        return <option key={index} value={optionValues[index] as string}>{selectOption}</option>;
+    });
 
 
     return (
