@@ -210,7 +210,7 @@ var external_root_React_commonjs2_react_commonjs_react_amd_react_default = /*#__
 
 
 
-var _excluded = ["wrapperClassName", "disabled", "required", "value", "label", "name", "id", "checked", "onChange", "onBlur", "onFocus"];
+var _excluded = ["wrapperClassName", "disabled", "required", "value", "label", "name", "id", "checked", "style", "tabIndex", "onChange", "onBlur", "onFocus"];
 
 var Checkbox = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_amd_react_.forwardRef)(function (props, ref) {
   var wrapperClassName = props.wrapperClassName,
@@ -221,6 +221,8 @@ var Checkbox = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_reac
     name = props.name,
     id = props.id,
     checked = props.checked,
+    style = props.style,
+    tabIndex = props.tabIndex,
     onChange = props.onChange,
     onBlur = props.onBlur,
     onFocus = props.onFocus,
@@ -266,6 +268,7 @@ var Checkbox = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_reac
   }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
     className: "form-check"
   }, isChecked ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("input", _extends({
+    tabIndex: tabIndex || 0,
     type: "checkbox",
     className: "form-check-input",
     id: idRes,
@@ -276,8 +279,10 @@ var Checkbox = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_reac
     onFocus: handleFocus,
     onBlur: handleBlur,
     defaultValue: value || '',
-    defaultChecked: true
+    defaultChecked: true,
+    style: style
   }, attributes)) : /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("input", _extends({
+    tabIndex: tabIndex || 0,
     type: "checkbox",
     className: "form-check-input",
     id: idRes,
@@ -287,7 +292,8 @@ var Checkbox = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_reac
     onChange: handleChange,
     onFocus: handleFocus,
     onBlur: handleBlur,
-    defaultValue: value || ''
+    defaultValue: value || '',
+    style: style
   }, attributes)), label ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("label", {
     htmlFor: idRes,
     className: "form-label"

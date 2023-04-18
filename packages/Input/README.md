@@ -24,9 +24,10 @@ import Input from 'react-pure-bootstrap/Input';
 | `required` | boolean | false | When present, it specifies that a field must be filled out before submitting the form. |
 | `iconLeft` | ReactNode  | - | Set the left icon of this control |
 | `iconRight` | ReactNode  | - | Set the right icon of this control |
-| `onChange` | function  | - | Call a function when the value of an HTML element is changed. |
-| `onBlur` | function  | - | Call a function when a user leaves an form field. |
-| `onFocus` | function  | - | Call a function when an form field gets focus. |
+| `autoComplete` | string  | - | Turn off autocomplete for input fields. |
+| `onChange` | function  | - | Call a function when the value of an HTML element is changed. It returns two callback values, one is the control and the other is the composition event (a boolean) |
+| `onBlur` | function  | - | Call a function when a user leaves an form field. It returns two callback values, one is the control and the other is the composition event (a boolean) |
+| `onFocus` | function  | - | Call a function when an form field gets focus. It returns two callback values, one is the control and the other is the composition event (a boolean) |
 
 
 It accepts all props which this control support.
@@ -39,8 +40,12 @@ import Input from 'react-pure-bootstrap/Input';
 
 export default () => {
 
-    function handleChange(e) {
-        console.log(e.target.value);
+    function handleChange(e, onComposition) {
+
+        let temp = e.target.value;
+        if (!onComposition) {
+            console.log(temp);
+        }
     }
 
     return (

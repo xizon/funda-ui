@@ -15,6 +15,8 @@ declare type CheckboxProps = {
     checked?: boolean;
     /** -- */
     id?: string;
+    style?: React.CSSProperties;
+    tabIndex?: number;
     [key: `data-${string}`]: string | undefined;
     /** This function is called whenever the data is updated.
      *  Exposes the JSON format data about the option as an argument.

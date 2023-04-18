@@ -149,7 +149,7 @@ var external_root_React_commonjs2_react_commonjs_react_amd_react_default = /*#__
 ;// CONCATENATED MODULE: ./src/index.tsx
 
 
-var _excluded = ["wrapperClassName", "cols", "rows", "disabled", "required", "placeholder", "value", "label", "name", "id", "maxLength", "onChange", "onBlur", "onFocus"];
+var _excluded = ["wrapperClassName", "cols", "rows", "disabled", "required", "placeholder", "value", "label", "name", "id", "maxLength", "style", "tabIndex", "onChange", "onBlur", "onFocus"];
 
 var Textarea = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_amd_react_.forwardRef)(function (props, ref) {
   var wrapperClassName = props.wrapperClassName,
@@ -163,6 +163,8 @@ var Textarea = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_reac
     name = props.name,
     id = props.id,
     maxLength = props.maxLength,
+    style = props.style,
+    tabIndex = props.tabIndex,
     onChange = props.onChange,
     onBlur = props.onBlur,
     onFocus = props.onFocus,
@@ -214,6 +216,7 @@ var Textarea = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_reac
     className: "input-group"
   }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("textarea", _extends({
     ref: ref,
+    tabIndex: tabIndex || 0,
     className: "form-control",
     id: idRes,
     name: name,
@@ -226,7 +229,8 @@ var Textarea = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_reac
     disabled: disabled || null,
     required: required || null,
     cols: cols || 20,
-    rows: rows || 2
+    rows: rows || 2,
+    style: style
   }, attributes))), required ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("span", {
     className: "position-absolute end-0 bottom-0 my-1 mx-2"
   }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("span", {

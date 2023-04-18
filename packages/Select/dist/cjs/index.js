@@ -160,7 +160,7 @@ var external_root_React_commonjs2_react_commonjs_react_amd_react_default = /*#__
 
 
 
-var _excluded = ["wrapperClassName", "disabled", "required", "value", "label", "name", "id", "options", "onChange", "onBlur", "onFocus"];
+var _excluded = ["wrapperClassName", "disabled", "required", "value", "label", "name", "id", "options", "style", "tabIndex", "onChange", "onBlur", "onFocus"];
 
 var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_amd_react_.forwardRef)(function (props, ref) {
   var wrapperClassName = props.wrapperClassName,
@@ -171,6 +171,8 @@ var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_
     name = props.name,
     id = props.id,
     options = props.options,
+    style = props.style,
+    tabIndex = props.tabIndex,
     onChange = props.onChange,
     onBlur = props.onBlur,
     onFocus = props.onFocus,
@@ -248,6 +250,7 @@ var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_
     className: "form-label"
   }, label)) : null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("select", _extends({
     ref: ref,
+    tabIndex: tabIndex || 0,
     className: "form-select",
     id: idRes,
     name: name,
@@ -256,7 +259,8 @@ var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_
     onBlur: handleBlur,
     onChange: handleChange,
     disabled: disabled || null,
-    required: required || null
+    required: required || null,
+    style: style
   }, attributes), selectOptionsList)));
 });
 /* harmony default export */ const src = (Select);

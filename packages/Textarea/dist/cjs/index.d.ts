@@ -17,6 +17,8 @@ declare type TextareaProps = {
     placeholder?: string;
     /** -- */
     id?: string;
+    style?: React.CSSProperties;
+    tabIndex?: number;
     [key: `data-${string}`]: string | undefined;
     onChange?: (e: any) => void;
     onBlur?: (e: any) => void;

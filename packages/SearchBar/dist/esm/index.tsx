@@ -1,4 +1,4 @@
-import React, { useId, useRef, forwardRef } from 'react';
+import React, { useId, useState, useRef, forwardRef } from 'react';
 
 declare module 'react' {
     interface ReactI18NextChildren<T> {
@@ -20,11 +20,14 @@ type SearchBarProps = {
     btnId?: string;
     /** -- */
     id?: string;
+    style?: React.CSSProperties;
+    autoComplete?: string;
+    tabIndex?: number;
     [key: `data-${string}`]: string | undefined;
     onClick?: (e: any) => void;
-    onChange?: (e: any) => void;
-    onBlur?: (e: any) => void;
-    onFocus?: (e: any) => void;
+    onChange?: (e: any, param: any) => void;
+    onBlur?: (e: any, param: any) => void;
+    onFocus?: (e: any, param: any) => void;
 };
 
 const SearchBar = forwardRef((props: SearchBarProps, ref: any) => {
@@ -41,6 +44,9 @@ const SearchBar = forwardRef((props: SearchBarProps, ref: any) => {
         id,
         maxLength,
         icon,
+        autoComplete,
+        style,
+        tabIndex,
         onClick,
         onChange,
         onBlur,
@@ -54,6 +60,18 @@ const SearchBar = forwardRef((props: SearchBarProps, ref: any) => {
     const rootRef = useRef<any>(null);
     
 
+    const [onComposition, setOnComposition] = useState(false);
+
+    function handleComposition(event: any) {
+        if (event.type === 'compositionstart') {
+            setOnComposition(true);
+        }
+        if (event.type === 'compositionend') {
+            setOnComposition(false);
+        }
+    }
+
+
     function handleSubmit(event: any) {
    
         //
@@ -64,7 +82,7 @@ const SearchBar = forwardRef((props: SearchBarProps, ref: any) => {
         rootRef.current.classList.add('is-active');
 
         //
-        onFocus?.(event);
+        onFocus?.(event, onComposition);
     }
 
     function handleChange(event: any) {
@@ -79,7 +97,7 @@ const SearchBar = forwardRef((props: SearchBarProps, ref: any) => {
         }
 
         //
-        onChange?.(event);
+        onChange?.(event, onComposition);
     }
 
     function handleBlur(event: any) {
@@ -94,7 +112,7 @@ const SearchBar = forwardRef((props: SearchBarProps, ref: any) => {
         }
 
         //
-        onBlur?.(event);
+        onBlur?.(event, onComposition);
     }
 
     
@@ -110,6 +128,7 @@ const SearchBar = forwardRef((props: SearchBarProps, ref: any) => {
                 <div className="input-group">
                     <input
                         ref={ref}
+                        tabIndex={tabIndex || 0}
                         type={appearance === 'pill' ? 'input' : 'search'}
                         className={appearance === 'pill' ? 'form-control border rounded-pill' : 'form-control'}
                         id={idRes}
@@ -117,11 +136,16 @@ const SearchBar = forwardRef((props: SearchBarProps, ref: any) => {
                         placeholder={placeholder || ''}
                         defaultValue={value || ''}
                         maxLength={maxLength || null}
+                        autoComplete={autoComplete}
                         onFocus={handleFocus}
                         onBlur={handleBlur}
                         onChange={handleChange}
+                        onCompositionStart={handleComposition}
+                        onCompositionUpdate={handleComposition}
+                        onCompositionEnd={handleComposition}
                         disabled={disabled || null}
                         required={required || null}
+                        style={style}
                         {...attributes}
                     />
 

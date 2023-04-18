@@ -20,10 +20,11 @@ import SearchBar from 'react-pure-bootstrap/SearchBar';
 | `disabled` | boolean | false | Whether it is disabled |
 | `required` | boolean | false | When present, it specifies that a field must be filled out before submitting the form. |
 | `icon` | ReactNode  | - | Set the icon of search |
+| `autoComplete` | string  | - | Turn off autocomplete for input fields. |
 | `onClick` | function  | - | Call a function when a form is submitted. |
-| `onChange` | function  | - | Call a function when the value of an HTML element is changed. |
-| `onBlur` | function  | - | Call a function when a user leaves an form field. |
-| `onFocus` | function  | - | Call a function when an form field gets focus. |
+| `onChange` | function  | - | Call a function when the value of an HTML element is changed. It returns two callback values, one is the control and the other is the composition event (a boolean) |
+| `onBlur` | function  | - | Call a function when a user leaves an form field. It returns two callback values, one is the control and the other is the composition event (a boolean) |
+| `onFocus` | function  | - | Call a function when an form field gets focus. It returns two callback values, one is the control and the other is the composition event (a boolean) |
 
 
 It accepts all props which this control support.
@@ -35,6 +36,14 @@ import React from "react";
 import SearchBar from 'react-pure-bootstrap/SearchBar';
 
 export default () => {
+
+    function handleChange(e, onComposition) {
+
+        let temp = e.target.value;
+        if (!onComposition) {
+            console.log(temp);
+        }
+    }
 
     function handleSubmit() {
         console.log('submit');
@@ -54,6 +63,7 @@ export default () => {
                 name="app-searchfiled"
                 appearance="pill"
                 placeholder="Search..."
+                onChange={handleChange}
                 onClick={handleSubmit}
             />
 

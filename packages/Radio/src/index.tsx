@@ -20,6 +20,8 @@ type RadioProps = {
     inline?: boolean;
     /** -- */
     id?: string;
+    style?: React.CSSProperties;
+    tabIndex?: number;
     [key: `data-${string}`]: string | undefined;
     /** This function is called whenever the data is updated.
      *  Exposes the JSON format data about the option as an argument.
@@ -40,6 +42,8 @@ const Radio = (props: RadioProps) => {
         id,
         options,
         inline,
+        style,
+        tabIndex,
         onChange,
         onBlur,
         onFocus,
@@ -141,6 +145,7 @@ const Radio = (props: RadioProps) => {
         if (index === defaultValIndex) {
             return <div key={index} className={inline ? `form-check form-check-inline` : `form-check`}>
                     <input 
+                        tabIndex={tabIndex || 0}
                         type="radio" 
                         className="form-check-input"
                         id={`field-${uniqueID}-${index}`}
@@ -152,6 +157,7 @@ const Radio = (props: RadioProps) => {
                         onFocus={handleFocus}
                         onBlur={handleBlur}
                         defaultChecked
+                        style={style}
                         {...attributes}
                     />
                     <label className="form-check-label" htmlFor={`field-${uniqueID}-${index}`}>
@@ -162,6 +168,7 @@ const Radio = (props: RadioProps) => {
         } else {
             return <div key={index} className={inline ? `form-check form-check-inline` : `form-check`}>
                     <input 
+                        tabIndex={tabIndex || 0}
                         type="radio" 
                         className="form-check-input"
                         id={`field-${uniqueID}-${index}`}
@@ -172,6 +179,7 @@ const Radio = (props: RadioProps) => {
                         onChange={handleChange}
                         onFocus={handleFocus}
                         onBlur={handleBlur}
+                        style={style}
                         {...attributes}
                     />
                     <label className="form-check-label" htmlFor={`field-${uniqueID}-${index}`}>

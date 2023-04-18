@@ -19,6 +19,8 @@ type CheckboxProps = {
     checked?: boolean;
     /** -- */
     id?: string;
+    style?: React.CSSProperties;
+    tabIndex?: number;
     [key: `data-${string}`]: string | undefined;
     /** This function is called whenever the data is updated.
      *  Exposes the JSON format data about the option as an argument.
@@ -38,6 +40,8 @@ const Checkbox = forwardRef((props: CheckboxProps, ref: any) => {
         name,
         id,
         checked,
+        style,
+        tabIndex,
         onChange,
         onBlur,
         onFocus,
@@ -96,6 +100,7 @@ const Checkbox = forwardRef((props: CheckboxProps, ref: any) => {
                 <div className="form-check">
                     {isChecked ? (
                         <input 
+                            tabIndex={tabIndex || 0}
                             type="checkbox"
                             className="form-check-input"
                             id={idRes}
@@ -107,11 +112,13 @@ const Checkbox = forwardRef((props: CheckboxProps, ref: any) => {
                             onBlur={handleBlur}
                             defaultValue={value as string || ''}
                             defaultChecked
+                            style={style}
                             {...attributes}
                         />
         
                     ) : (
                         <input 
+                            tabIndex={tabIndex || 0}
                             type="checkbox"
                             className="form-check-input"
                             id={idRes}
@@ -122,6 +129,7 @@ const Checkbox = forwardRef((props: CheckboxProps, ref: any) => {
                             onFocus={handleFocus}
                             onBlur={handleBlur}
                             defaultValue={value as string || ''}
+                            style={style}
                             {...attributes}
                         />
                     )}

@@ -19,6 +19,8 @@ type SelectProps = {
     options: string;
     /** -- */
     id?: string;
+    style?: React.CSSProperties;
+    tabIndex?: number;
     [key: `data-${string}`]: string | undefined;
     /** This function is called whenever the data is updated.
      *  Exposes the JSON format data about the option as an argument.
@@ -38,6 +40,8 @@ const Select = forwardRef((props: SelectProps, ref: any) => {
         name,
         id,
         options,
+        style,
+        tabIndex,
         onChange,
         onBlur,
         onFocus,
@@ -140,6 +144,7 @@ const Select = forwardRef((props: SelectProps, ref: any) => {
                 {label ? <><label htmlFor={idRes} className="form-label">{label}</label></> : null}
                 <select  
                         ref={ref}
+                        tabIndex={tabIndex || 0}
                         className="form-select"
                         id={idRes}
                         name={name}
@@ -149,6 +154,7 @@ const Select = forwardRef((props: SelectProps, ref: any) => {
                         onChange={handleChange}
                         disabled={disabled || null}
                         required={required || null}
+                        style={style}
                         {...attributes}
 					>
 			           {selectOptionsList}

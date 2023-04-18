@@ -1,4 +1,4 @@
-import React, { useId, useRef, forwardRef } from 'react';
+import React, { useId, useState, useRef, forwardRef } from 'react';
 
 declare module 'react' {
     interface ReactI18NextChildren<T> {
@@ -24,11 +24,16 @@ type InputProps = {
     iconRight?: React.ReactNode | string;
     /** -- */
     id?: string;
+    style?: React.CSSProperties;
+    autoComplete?: string;
+    tabIndex?: number;
     [key: `data-${string}`]: string | undefined;
-    onChange?: (e: any) => void;
-    onBlur?: (e: any) => void;
-    onFocus?: (e: any) => void;
+    onChange?: (e: any, param: any) => void;
+    onBlur?: (e: any, param: any) => void;
+    onFocus?: (e: any, param: any) => void;
+
 };
+
 
 const Input = forwardRef((props: InputProps, ref: any) => {
     const {
@@ -48,6 +53,9 @@ const Input = forwardRef((props: InputProps, ref: any) => {
         maxLength,
         iconLeft,
         iconRight,
+        autoComplete,
+        style,
+        tabIndex,
         onChange,
         onBlur,
         onFocus,
@@ -59,13 +67,23 @@ const Input = forwardRef((props: InputProps, ref: any) => {
     const idRes = id || uniqueID;
     const rootRef = useRef<any>(null);
     const typeRes = typeof (type) === 'undefined' ? 'text' : type;
-    
+    const [onComposition, setOnComposition] = useState(false);
+
+    function handleComposition(event: any) {
+        if (event.type === 'compositionstart') {
+            setOnComposition(true);
+        }
+        if (event.type === 'compositionend') {
+            setOnComposition(false);
+        }
+    }
+
 
     function handleFocus(event: any) {
         rootRef.current.classList.add('is-active');
 
         //
-        onFocus?.(event);    
+        onFocus?.(event, onComposition);    
     }
 
     function handleChange(event: any) {
@@ -80,7 +98,7 @@ const Input = forwardRef((props: InputProps, ref: any) => {
         }
 
         //
-        onChange?.(event);
+        onChange?.(event, onComposition);
     }
 
     function handleBlur(event: any) {
@@ -95,7 +113,7 @@ const Input = forwardRef((props: InputProps, ref: any) => {
         }
 
         //
-        onBlur?.(event);
+        onBlur?.(event, onComposition);
     }
 
     return (
@@ -108,6 +126,7 @@ const Input = forwardRef((props: InputProps, ref: any) => {
                     {iconLeft ? <><span className="input-group-text">{iconLeft}</span></>: null}
                     <input
                         ref={ref}
+                        tabIndex={tabIndex || 0}
                         type={typeRes}
                         className="form-control"
                         id={idRes}
@@ -118,11 +137,16 @@ const Input = forwardRef((props: InputProps, ref: any) => {
                         placeholder={placeholder || ''}
                         defaultValue={value || ''}
                         maxLength={maxLength || null}
+                        autoComplete={autoComplete}
                         onFocus={handleFocus}
                         onBlur={handleBlur}
                         onChange={handleChange}
+                        onCompositionStart={handleComposition}
+                        onCompositionUpdate={handleComposition}
+                        onCompositionEnd={handleComposition}
                         disabled={disabled || null}
                         required={required || null}
+                        style={style}
                         {...attributes}
                     />
                     {units ? <><span className="input-group-text">{units}</span></>: null}

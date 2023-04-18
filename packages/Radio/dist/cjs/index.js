@@ -160,7 +160,7 @@ var external_root_React_commonjs2_react_commonjs_react_amd_react_default = /*#__
 
 
 
-var _excluded = ["wrapperClassName", "disabled", "required", "value", "label", "name", "id", "options", "inline", "onChange", "onBlur", "onFocus"];
+var _excluded = ["wrapperClassName", "disabled", "required", "value", "label", "name", "id", "options", "inline", "style", "tabIndex", "onChange", "onBlur", "onFocus"];
 
 var Radio = function Radio(props) {
   var wrapperClassName = props.wrapperClassName,
@@ -172,6 +172,8 @@ var Radio = function Radio(props) {
     id = props.id,
     options = props.options,
     inline = props.inline,
+    style = props.style,
+    tabIndex = props.tabIndex,
     onChange = props.onChange,
     onBlur = props.onBlur,
     onFocus = props.onFocus,
@@ -245,6 +247,7 @@ var Radio = function Radio(props) {
         key: index,
         className: inline ? "form-check form-check-inline" : "form-check"
       }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("input", _extends({
+        tabIndex: tabIndex || 0,
         type: "radio",
         className: "form-check-input",
         id: "field-".concat(uniqueID, "-").concat(index),
@@ -255,7 +258,8 @@ var Radio = function Radio(props) {
         onChange: handleChange,
         onFocus: handleFocus,
         onBlur: handleBlur,
-        defaultChecked: true
+        defaultChecked: true,
+        style: style
       }, attributes)), /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("label", {
         className: "form-check-label",
         htmlFor: "field-".concat(uniqueID, "-").concat(index)
@@ -265,6 +269,7 @@ var Radio = function Radio(props) {
         key: index,
         className: inline ? "form-check form-check-inline" : "form-check"
       }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("input", _extends({
+        tabIndex: tabIndex || 0,
         type: "radio",
         className: "form-check-input",
         id: "field-".concat(uniqueID, "-").concat(index),
@@ -274,7 +279,8 @@ var Radio = function Radio(props) {
         disabled: disabled || null,
         onChange: handleChange,
         onFocus: handleFocus,
-        onBlur: handleBlur
+        onBlur: handleBlur,
+        style: style
       }, attributes)), /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("label", {
         className: "form-check-label",
         htmlFor: "field-".concat(uniqueID, "-").concat(index)

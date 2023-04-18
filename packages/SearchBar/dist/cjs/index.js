@@ -113,6 +113,66 @@ function _extends() {
   };
   return _extends.apply(this, arguments);
 }
+;// CONCATENATED MODULE: ../../node_modules/@babel/runtime/helpers/esm/arrayWithHoles.js
+function _arrayWithHoles(arr) {
+  if (Array.isArray(arr)) return arr;
+}
+;// CONCATENATED MODULE: ../../node_modules/@babel/runtime/helpers/esm/iterableToArrayLimit.js
+function _iterableToArrayLimit(arr, i) {
+  var _i = null == arr ? null : "undefined" != typeof Symbol && arr[Symbol.iterator] || arr["@@iterator"];
+  if (null != _i) {
+    var _s,
+      _e,
+      _x,
+      _r,
+      _arr = [],
+      _n = !0,
+      _d = !1;
+    try {
+      if (_x = (_i = _i.call(arr)).next, 0 === i) {
+        if (Object(_i) !== _i) return;
+        _n = !1;
+      } else for (; !(_n = (_s = _x.call(_i)).done) && (_arr.push(_s.value), _arr.length !== i); _n = !0);
+    } catch (err) {
+      _d = !0, _e = err;
+    } finally {
+      try {
+        if (!_n && null != _i["return"] && (_r = _i["return"](), Object(_r) !== _r)) return;
+      } finally {
+        if (_d) throw _e;
+      }
+    }
+    return _arr;
+  }
+}
+;// CONCATENATED MODULE: ../../node_modules/@babel/runtime/helpers/esm/arrayLikeToArray.js
+function _arrayLikeToArray(arr, len) {
+  if (len == null || len > arr.length) len = arr.length;
+  for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i];
+  return arr2;
+}
+;// CONCATENATED MODULE: ../../node_modules/@babel/runtime/helpers/esm/unsupportedIterableToArray.js
+
+function _unsupportedIterableToArray(o, minLen) {
+  if (!o) return;
+  if (typeof o === "string") return _arrayLikeToArray(o, minLen);
+  var n = Object.prototype.toString.call(o).slice(8, -1);
+  if (n === "Object" && o.constructor) n = o.constructor.name;
+  if (n === "Map" || n === "Set") return Array.from(o);
+  if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen);
+}
+;// CONCATENATED MODULE: ../../node_modules/@babel/runtime/helpers/esm/nonIterableRest.js
+function _nonIterableRest() {
+  throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
+}
+;// CONCATENATED MODULE: ../../node_modules/@babel/runtime/helpers/esm/slicedToArray.js
+
+
+
+
+function _slicedToArray(arr, i) {
+  return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest();
+}
 ;// CONCATENATED MODULE: ../../node_modules/@babel/runtime/helpers/esm/objectWithoutPropertiesLoose.js
 function _objectWithoutPropertiesLoose(source, excluded) {
   if (source == null) return {};
@@ -149,7 +209,8 @@ var external_root_React_commonjs2_react_commonjs_react_amd_react_default = /*#__
 ;// CONCATENATED MODULE: ./src/index.tsx
 
 
-var _excluded = ["wrapperClassName", "appearance", "disabled", "required", "placeholder", "value", "label", "name", "btnId", "id", "maxLength", "icon", "onClick", "onChange", "onBlur", "onFocus"];
+
+var _excluded = ["wrapperClassName", "appearance", "disabled", "required", "placeholder", "value", "label", "name", "btnId", "id", "maxLength", "icon", "autoComplete", "style", "tabIndex", "onClick", "onChange", "onBlur", "onFocus"];
 
 var SearchBar = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_amd_react_.forwardRef)(function (props, ref) {
   var wrapperClassName = props.wrapperClassName,
@@ -164,6 +225,9 @@ var SearchBar = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_rea
     id = props.id,
     maxLength = props.maxLength,
     icon = props.icon,
+    autoComplete = props.autoComplete,
+    style = props.style,
+    tabIndex = props.tabIndex,
     onClick = props.onClick,
     onChange = props.onChange,
     onBlur = props.onBlur,
@@ -173,6 +237,18 @@ var SearchBar = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_rea
   ;
   var idRes = id || uniqueID;
   var rootRef = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useRef)(null);
+  var _useState = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)(false),
+    _useState2 = _slicedToArray(_useState, 2),
+    onComposition = _useState2[0],
+    setOnComposition = _useState2[1];
+  function handleComposition(event) {
+    if (event.type === 'compositionstart') {
+      setOnComposition(true);
+    }
+    if (event.type === 'compositionend') {
+      setOnComposition(false);
+    }
+  }
   function handleSubmit(event) {
     //
     onClick === null || onClick === void 0 ? void 0 : onClick(event);
@@ -181,7 +257,7 @@ var SearchBar = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_rea
     rootRef.current.classList.add('is-active');
 
     //
-    onFocus === null || onFocus === void 0 ? void 0 : onFocus(event);
+    onFocus === null || onFocus === void 0 ? void 0 : onFocus(event, onComposition);
   }
   function handleChange(event) {
     var el = event.target;
@@ -194,7 +270,7 @@ var SearchBar = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_rea
     }
 
     //
-    onChange === null || onChange === void 0 ? void 0 : onChange(event);
+    onChange === null || onChange === void 0 ? void 0 : onChange(event, onComposition);
   }
   function handleBlur(event) {
     var el = event.target;
@@ -207,7 +283,7 @@ var SearchBar = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_rea
     }
 
     //
-    onBlur === null || onBlur === void 0 ? void 0 : onBlur(event);
+    onBlur === null || onBlur === void 0 ? void 0 : onBlur(event, onComposition);
   }
   return /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
     className: wrapperClassName ? wrapperClassName : "mb-3 position-relative",
@@ -219,6 +295,7 @@ var SearchBar = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_rea
     className: "input-group"
   }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("input", _extends({
     ref: ref,
+    tabIndex: tabIndex || 0,
     type: appearance === 'pill' ? 'input' : 'search',
     className: appearance === 'pill' ? 'form-control border rounded-pill' : 'form-control',
     id: idRes,
@@ -226,11 +303,16 @@ var SearchBar = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_rea
     placeholder: placeholder || '',
     defaultValue: value || '',
     maxLength: maxLength || null,
+    autoComplete: autoComplete,
     onFocus: handleFocus,
     onBlur: handleBlur,
     onChange: handleChange,
+    onCompositionStart: handleComposition,
+    onCompositionUpdate: handleComposition,
+    onCompositionEnd: handleComposition,
     disabled: disabled || null,
-    required: required || null
+    required: required || null,
+    style: style
   }, attributes)), /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("span", {
     className: appearance === 'pill' ? 'position-absolute end-0' : 'input-group-text m-0 p-0 border-start-0',
     style: appearance === 'pill' ? {

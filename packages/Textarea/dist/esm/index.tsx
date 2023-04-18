@@ -19,6 +19,8 @@ type TextareaProps = {
 	placeholder?: string;
 	/** -- */
 	id?: string;
+    style?: React.CSSProperties;
+    tabIndex?: number;
     [key: `data-${string}`]: string | undefined;
     onChange?: (e: any) => void;
     onBlur?: (e: any) => void;
@@ -39,6 +41,8 @@ const Textarea = forwardRef((props: TextareaProps, ref: any) => {
         name,
         id,
         maxLength,
+        style,
+        tabIndex,
         onChange,
         onBlur,
         onFocus,
@@ -100,6 +104,7 @@ const Textarea = forwardRef((props: TextareaProps, ref: any) => {
                     
                     <textarea  
                       ref={ref}
+                      tabIndex={tabIndex || 0}
 					  className="form-control"
 			          id={idRes}
 					  name={name}
@@ -113,6 +118,7 @@ const Textarea = forwardRef((props: TextareaProps, ref: any) => {
 					  required={required || null}
 					  cols={cols || 20}
 					  rows={rows || 2}
+                      style={style}
                       {...attributes}
 					/>
                 </div>

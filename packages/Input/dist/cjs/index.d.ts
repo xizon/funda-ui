@@ -22,10 +22,13 @@ declare type InputProps = {
     iconRight?: React.ReactNode | string;
     /** -- */
     id?: string;
+    style?: React.CSSProperties;
+    autoComplete?: string;
+    tabIndex?: number;
     [key: `data-${string}`]: string | undefined;
-    onChange?: (e: any) => void;
-    onBlur?: (e: any) => void;
-    onFocus?: (e: any) => void;
+    onChange?: (e: any, param: any) => void;
+    onBlur?: (e: any, param: any) => void;
+    onFocus?: (e: any, param: any) => void;
 };
 declare const Input: React.ForwardRefExoticComponent<InputProps & React.RefAttributes<unknown>>;
 export default Input;
