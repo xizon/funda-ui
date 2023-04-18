@@ -48,7 +48,7 @@ const Checkbox = forwardRef((props: CheckboxProps, ref: any) => {
         ...attributes
     } = props;
 
-    const uniqueID = useId().replace(/[^a-zA-Z ]/g, "-");;
+    const uniqueID = useId();
     const idRes = id || uniqueID;
     const rootRef = useRef<any>(null);
     const [isChecked, setIsChecked] = useState<boolean>( checked ? true : false);

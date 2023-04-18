@@ -169,8 +169,7 @@ var Textarea = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_reac
     onBlur = props.onBlur,
     onFocus = props.onFocus,
     attributes = _objectWithoutProperties(props, _excluded);
-  var uniqueID = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useId)().replace(/[^a-zA-Z ]/g, "-");
-  ;
+  var uniqueID = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useId)();
   var idRes = id || uniqueID;
   var rootRef = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useRef)(null);
   function handleFocus(event) {

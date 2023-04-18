@@ -63,7 +63,7 @@ const Input = forwardRef((props: InputProps, ref: any) => {
     } = props;
 
 
-    const uniqueID = useId().replace(/[^a-zA-Z ]/g, "-");;
+    const uniqueID = useId();
     const idRes = id || uniqueID;
     const rootRef = useRef<any>(null);
     const typeRes = typeof (type) === 'undefined' ? 'text' : type;

@@ -77,10 +77,8 @@ const ModalDialog = (props: ModalDialogProps) => {
         children
     } = props;
 
-    window.curVideo = null;
-    window.setCloseModalDialog = null;
 
-    const uniqueID = useId().replace(/[^a-zA-Z ]/g, "-");
+    const uniqueID = useId().replace(/\:/g, "-");
     const modalRef = useRef<any>(null);
     const triggerRef = useRef<any>(null);
     const idRes = id || uniqueID;
@@ -113,7 +111,7 @@ const ModalDialog = (props: ModalDialogProps) => {
     function closeAction() {
         // pause video without controls
         //------------------------------------------
-        if (window.curVideo !== null) window.curVideo.pause();
+        if (window.curVideo !== null && typeof window.curVideo !== 'undefined') window.curVideo.pause();
 
 
         // close Modal Dialog

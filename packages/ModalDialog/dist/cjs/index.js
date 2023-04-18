@@ -455,9 +455,7 @@ var ModalDialog = function ModalDialog(props) {
     onSubmit = props.onSubmit,
     id = props.id,
     children = props.children;
-  window.curVideo = null;
-  window.setCloseModalDialog = null;
-  var uniqueID = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useId)().replace(/[^a-zA-Z ]/g, "-");
+  var uniqueID = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useId)().replace(/\:/g, "-");
   var modalRef = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useRef)(null);
   var triggerRef = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useRef)(null);
   var idRes = id || uniqueID;
@@ -487,7 +485,7 @@ var ModalDialog = function ModalDialog(props) {
   function closeAction() {
     // pause video without controls
     //------------------------------------------
-    if (window.curVideo !== null) window.curVideo.pause();
+    if (window.curVideo !== null && typeof window.curVideo !== 'undefined') window.curVideo.pause();
 
     // close Modal Dialog
     //------------------------------------------
