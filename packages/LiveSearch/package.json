@@ -1,6 +1,6 @@
 {
     "private": true,
-    "name": "rpb-searchbar",
+    "name": "rpb-livesearch",
     "version": "0.0.1",
     "description": "",
     "main": "./dist/cjs/index.js",
@@ -12,7 +12,8 @@
     },
     "dependencies": {
         "react": "^18.2.0",
-        "react-dom": "^18.2.0"
+        "react-dom": "^18.2.0",
+        "chinese-to-pinyin": "^1.3.1"
     },
     "devDependencies": {
         "@babel/core": "^7.2.0",
