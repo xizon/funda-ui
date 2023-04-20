@@ -243,6 +243,8 @@ const LiveSearch = (props: LiveSearchProps) => {
     }
 
     async function handleSelect(el: any) {
+        
+        if ( typeof el === 'undefined' ) return;
 
         const index: number | undefined | string = typeof el.target !== 'undefined' ? el.target.dataset.index : el.dataset.index;
         const res: any = await matchData(inputRef.current.value, false);

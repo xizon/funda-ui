@@ -792,15 +792,21 @@ var LiveSearch = function LiveSearch(props) {
       return _regeneratorRuntime().wrap(function _callee5$(_context5) {
         while (1) switch (_context5.prev = _context5.next) {
           case 0:
+            if (!(typeof el === 'undefined')) {
+              _context5.next = 2;
+              break;
+            }
+            return _context5.abrupt("return");
+          case 2:
             index = typeof el.target !== 'undefined' ? el.target.dataset.index : el.dataset.index;
-            _context5.next = 3;
+            _context5.next = 5;
             return matchData(inputRef.current.value, false);
-          case 3:
+          case 5:
             res = _context5.sent;
             //
             onSelect === null || onSelect === void 0 ? void 0 : onSelect(inputRef.current, res[index]);
             setData([]);
-          case 6:
+          case 8:
           case "end":
             return _context5.stop();
         }
