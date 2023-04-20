@@ -56,7 +56,7 @@ const Textarea = forwardRef((props: TextareaProps, ref: any) => {
 
     function handleFocus(event) {
         const el = event.target;
-        rootRef.current.classList.add('is-active');
+        rootRef.current.classList.add('focus');
 
         //
         onFocus?.(event);     
@@ -70,7 +70,7 @@ const Textarea = forwardRef((props: TextareaProps, ref: any) => {
         //----
         //remove focus style
         if (val === '') {
-            rootRef.current.classList.remove('is-active');
+            rootRef.current.classList.remove('focus');
         }
 
         //
@@ -85,7 +85,7 @@ const Textarea = forwardRef((props: TextareaProps, ref: any) => {
         //----
         //remove focus style
         if (val === '') {
-            rootRef.current.classList.remove('is-active');
+            rootRef.current.classList.remove('focus');
         }
 
         //

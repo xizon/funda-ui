@@ -148,7 +148,7 @@ var SearchBar = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(f
     onClick === null || onClick === void 0 ? void 0 : onClick(event);
   }
   function handleFocus(event) {
-    rootRef.current.classList.add('is-active');
+    rootRef.current.classList.add('focus');
 
     //
     onFocus === null || onFocus === void 0 ? void 0 : onFocus(event, onComposition);
@@ -160,7 +160,7 @@ var SearchBar = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(f
     //----
     //remove focus style
     if (val === '') {
-      rootRef.current.classList.remove('is-active');
+      rootRef.current.classList.remove('focus');
     }
 
     //
@@ -173,7 +173,7 @@ var SearchBar = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(f
     //----
     //remove focus style
     if (val === '') {
-      rootRef.current.classList.remove('is-active');
+      rootRef.current.classList.remove('focus');
     }
 
     //

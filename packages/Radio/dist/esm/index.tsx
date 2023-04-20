@@ -94,7 +94,7 @@ const Radio = (props: RadioProps) => {
     }
 
     function handleFocus(event: any) {
-        event.target.parentElement.classList.add('is-active');
+        event.target.parentElement.classList.add('focus');
 
         //
         onFocus?.(event);    
@@ -107,7 +107,7 @@ const Radio = (props: RadioProps) => {
         //----
         //remove focus style
         [].slice.call(rootRef.current.querySelectorAll('.form-check-input')).forEach( (el: any) => {
-            el.parentElement?.classList.remove('is-active');
+            el.parentElement?.classList.remove('focus');
         });
       
      
@@ -123,7 +123,7 @@ const Radio = (props: RadioProps) => {
 
         //----
         //remove focus style
-        event.target.parentElement.classList.remove('is-active');
+        event.target.parentElement.classList.remove('focus');
 
         //
         onBlur?.(event);

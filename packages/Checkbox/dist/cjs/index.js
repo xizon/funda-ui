@@ -130,7 +130,7 @@ var Checkbox = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(fu
     isChecked = _useState2[0],
     setIsChecked = _useState2[1];
   function handleFocus(event) {
-    rootRef.current.classList.add('is-active');
+    rootRef.current.classList.add('focus');
 
     //
     onFocus === null || onFocus === void 0 ? void 0 : onFocus(event);
@@ -140,7 +140,7 @@ var Checkbox = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(fu
 
     //----
     //remove focus style
-    rootRef.current.classList.remove('is-active');
+    rootRef.current.classList.remove('focus');
 
     //
     if (typeof onChange === 'function') {
@@ -151,7 +151,7 @@ var Checkbox = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(fu
   function handleBlur(event) {
     //----
     //remove focus style
-    rootRef.current.classList.remove('is-active');
+    rootRef.current.classList.remove('focus');
 
     //
     onBlur === null || onBlur === void 0 ? void 0 : onBlur(event);

@@ -143,7 +143,7 @@ var Radio = function Radio(props) {
     }
   }
   function handleFocus(event) {
-    event.target.parentElement.classList.add('is-active');
+    event.target.parentElement.classList.add('focus');
 
     //
     onFocus === null || onFocus === void 0 ? void 0 : onFocus(event);
@@ -155,7 +155,7 @@ var Radio = function Radio(props) {
     //remove focus style
     [].slice.call(rootRef.current.querySelectorAll('.form-check-input')).forEach(function (el) {
       var _el$parentElement;
-      (_el$parentElement = el.parentElement) === null || _el$parentElement === void 0 ? void 0 : _el$parentElement.classList.remove('is-active');
+      (_el$parentElement = el.parentElement) === null || _el$parentElement === void 0 ? void 0 : _el$parentElement.classList.remove('focus');
     });
 
     //
@@ -166,7 +166,7 @@ var Radio = function Radio(props) {
   function handleBlur(event) {
     //----
     //remove focus style
-    event.target.parentElement.classList.remove('is-active');
+    event.target.parentElement.classList.remove('focus');
 
     //
     onBlur === null || onBlur === void 0 ? void 0 : onBlur(event);

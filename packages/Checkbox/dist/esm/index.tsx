@@ -55,7 +55,7 @@ const Checkbox = forwardRef((props: CheckboxProps, ref: any) => {
 
 
     function handleFocus(event: any) {
-        rootRef.current.classList.add('is-active');
+        rootRef.current.classList.add('focus');
 
         //
         onFocus?.(event);    
@@ -67,7 +67,7 @@ const Checkbox = forwardRef((props: CheckboxProps, ref: any) => {
 
         //----
         //remove focus style
-        rootRef.current.classList.remove('is-active');
+        rootRef.current.classList.remove('focus');
 
         //
         if (typeof (onChange) === 'function') {
@@ -84,7 +84,7 @@ const Checkbox = forwardRef((props: CheckboxProps, ref: any) => {
 
         //----
         //remove focus style
-        rootRef.current.classList.remove('is-active');
+        rootRef.current.classList.remove('focus');
 
         //
         onBlur?.(event);

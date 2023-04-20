@@ -142,7 +142,7 @@ var Select = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(func
     }
   }
   function handleFocus(event) {
-    rootRef.current.classList.add('is-active');
+    rootRef.current.classList.add('focus');
 
     //
     onFocus === null || onFocus === void 0 ? void 0 : onFocus(event);
@@ -152,7 +152,7 @@ var Select = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(func
 
     //----
     //remove focus style
-    rootRef.current.classList.remove('is-active');
+    rootRef.current.classList.remove('focus');
 
     //
     if (typeof onChange === 'function') {
@@ -163,7 +163,7 @@ var Select = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(func
   function handleBlur(event) {
     //----
     //remove focus style
-    rootRef.current.classList.remove('is-active');
+    rootRef.current.classList.remove('focus');
 
     //
     onBlur === null || onBlur === void 0 ? void 0 : onBlur(event);

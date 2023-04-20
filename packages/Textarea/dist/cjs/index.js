@@ -124,7 +124,7 @@ var Textarea = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(fu
   var rootRef = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(null);
   function handleFocus(event) {
     var el = event.target;
-    rootRef.current.classList.add('is-active');
+    rootRef.current.classList.add('focus');
 
     //
     onFocus === null || onFocus === void 0 ? void 0 : onFocus(event);
@@ -136,7 +136,7 @@ var Textarea = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(fu
     //----
     //remove focus style
     if (val === '') {
-      rootRef.current.classList.remove('is-active');
+      rootRef.current.classList.remove('focus');
     }
 
     //
@@ -149,7 +149,7 @@ var Textarea = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(fu
     //----
     //remove focus style
     if (val === '') {
-      rootRef.current.classList.remove('is-active');
+      rootRef.current.classList.remove('focus');
     }
 
     //

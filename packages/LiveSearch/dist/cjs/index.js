@@ -304,7 +304,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
             onClick === null || onClick === void 0 ? void 0 : onClick(event);
           }
           function handleFocus(event) {
-            rootRef.current.classList.add('is-active');
+            rootRef.current.classList.add('focus');
 
             //
             onFocus === null || onFocus === void 0 ? void 0 : onFocus(event, onComposition);
@@ -316,7 +316,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
             //----
             //remove focus style
             if (val === '') {
-              rootRef.current.classList.remove('is-active');
+              rootRef.current.classList.remove('focus');
             }
 
             //
@@ -329,7 +329,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
             //----
             //remove focus style
             if (val === '') {
-              rootRef.current.classList.remove('is-active');
+              rootRef.current.classList.remove('focus');
             }
 
             //

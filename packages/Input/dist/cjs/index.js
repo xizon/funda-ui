@@ -148,7 +148,7 @@ var Input = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(funct
     }
   }
   function handleFocus(event) {
-    rootRef.current.classList.add('is-active');
+    rootRef.current.classList.add('focus');
 
     //
     onFocus === null || onFocus === void 0 ? void 0 : onFocus(event, onComposition);
@@ -160,7 +160,7 @@ var Input = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(funct
     //----
     //remove focus style
     if (val === '') {
-      rootRef.current.classList.remove('is-active');
+      rootRef.current.classList.remove('focus');
     }
 
     //
@@ -173,7 +173,7 @@ var Input = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(funct
     //----
     //remove focus style
     if (val === '') {
-      rootRef.current.classList.remove('is-active');
+      rootRef.current.classList.remove('focus');
     }
 
     //
