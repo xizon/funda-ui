@@ -513,6 +513,15 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 
 var pinyin = __webpack_require__(422);
+/**
+ * Check if an element is in the viewport
+ * @param {HTMLElement} elem 
+ * @returns {boolean}
+ */
+function isInViewport(elem) {
+  var bounding = elem.getBoundingClientRect();
+  return bounding.top >= 0 && bounding.left >= 0 && bounding.bottom <= (window.innerHeight || document.documentElement.clientHeight) && bounding.right <= (window.innerWidth || document.documentElement.clientWidth);
+}
 var LiveSearch = function LiveSearch(props) {
   var wrapperClassName = props.wrapperClassName,
     appearance = props.appearance,
@@ -565,6 +574,41 @@ var LiveSearch = function LiveSearch(props) {
     _useState10 = _slicedToArray(_useState9, 2),
     searchTrigger = _useState10[0],
     setSearchTrigger = _useState10[1];
+
+  //
+  function getPlacement(el) {
+    var restore = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
+    if (el === null) return;
+    var PLACEMENT_TOP = 'top-0';
+    var PLACEMENT_BOTTOMEND = 'bottom-0';
+    var PLACEMENT_RIGHT = 'end-0';
+    var PLACEMENT_LEFT = 'start-0';
+
+    // Determine whether the height of the window is smaller than the object
+    if ((window.innerHeight || document.documentElement.clientHeight) < el.clientHeight) {
+      el.classList.add('scroll-enabled');
+      el.style.maxHeight = window.innerHeight - 50 + 'px';
+      el.style.overflowY = 'auto';
+      return true;
+    } else {
+      el.classList.remove('scroll-enabled');
+      el.style.maxHeight = 'none';
+      el.style.overflowY = 'inherit';
+    }
+
+    //restore status
+    if (restore) {
+      listRef.current.classList.remove(PLACEMENT_BOTTOMEND, 'scroll-enabled');
+      return;
+    }
+
+    //
+    if (!isInViewport(el)) {
+      el.classList.add(PLACEMENT_BOTTOMEND);
+    } else {
+      el.classList.remove(PLACEMENT_BOTTOMEND);
+    }
+  }
 
   //
   function matchData() {
@@ -658,6 +702,11 @@ var LiveSearch = function LiveSearch(props) {
             //
             onChange === null || onChange === void 0 ? void 0 : onChange(inputRef.current, res);
           case 12:
+            // window position
+            setTimeout(function () {
+              getPlacement(listRef.current);
+            }, 0);
+          case 13:
           case "end":
             return _context2.stop();
         }
@@ -769,6 +818,7 @@ var LiveSearch = function LiveSearch(props) {
         //
         onBlur === null || onBlur === void 0 ? void 0 : onBlur(inputRef.current, data);
         setData([]);
+        getPlacement(listRef.current, true);
       }, 300);
     }
   }
@@ -788,6 +838,9 @@ var LiveSearch = function LiveSearch(props) {
     } else {
       nextIndex = (currentIndex < 0 ? options.length : currentIndex) - 1 % options.length;
     }
+
+    //only one
+    if (options.length === 1) nextIndex = 0;
     if (!isNaN(nextIndex)) {
       var _options$nextIndex;
       options.forEach(function (node, index) {
@@ -805,8 +858,9 @@ var LiveSearch = function LiveSearch(props) {
     //--------------
     var listener = function listener(event) {
       if (event.code === "Enter" || event.code === "NumpadEnter") {
+        var _listRef$current;
         // if option has active class
-        var activedOption = listRef.current.querySelector('.list-group-item.active');
+        var activedOption = (_listRef$current = listRef.current) === null || _listRef$current === void 0 ? void 0 : _listRef$current.querySelector('.list-group-item.active');
         if (activedOption === null) {
           triggerEv();
         } else {
@@ -858,20 +912,22 @@ var LiveSearch = function LiveSearch(props) {
     icon: !fetchTrigger ? '' : icon,
     btnId: btnId,
     autoComplete: "off"
-  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+  }), data && data.length > 0 ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
     ref: listRef,
-    className: "list-group position-absolute w-100",
+    className: "list-group position-absolute w-100 border shadow",
     style: {
       marginTop: '-1.1rem'
     },
     role: "tablist"
   }, data ? data.map(function (item, index) {
+    var startItemBorder = index === 0 ? 'border-top-0' : '';
+    var endItemBorder = index === data.length - 1 ? 'border-bottom-0' : '';
     return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", {
       onClick: handleSelect,
       type: "button",
       "data-index": index,
       key: index,
-      className: "list-group-item list-group-item-action",
+      className: "list-group-item list-group-item-action border-start-0 border-end-0 ".concat(startItemBorder, " ").concat(endItemBorder),
       "data-value": "".concat(item.value),
       role: "tab"
     }, item.label);
@@ -879,7 +935,7 @@ var LiveSearch = function LiveSearch(props) {
     type: "button",
     className: "list-group-item list-group-item-action",
     disabled: true
-  }, fetchNoneInfo || 'No match yet') : null)));
+  }, fetchNoneInfo || 'No match yet') : null)) : null));
 };
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (LiveSearch);
 })();

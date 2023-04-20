@@ -40,6 +40,24 @@ type LiveSearchProps = {
     onBlur?: (e: any, data: any) => void;
 };
 
+
+/**
+ * Check if an element is in the viewport
+ * @param {HTMLElement} elem 
+ * @returns {boolean}
+ */
+function isInViewport(elem: HTMLElement) {
+    const bounding = elem.getBoundingClientRect();
+    return (
+        bounding.top >= 0 &&
+        bounding.left >= 0 &&
+        bounding.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
+        bounding.right <= (window.innerWidth || document.documentElement.clientWidth)
+    );
+}
+
+
+
 const LiveSearch = (props: LiveSearchProps) => {
     const {
         wrapperClassName,
@@ -85,6 +103,45 @@ const LiveSearch = (props: LiveSearchProps) => {
 
 
     //
+    function getPlacement(el: HTMLElement, restore: boolean = false) {
+
+        if ( el === null ) return;
+
+        const PLACEMENT_TOP = 'top-0';
+        const PLACEMENT_BOTTOMEND = 'bottom-0';
+        const PLACEMENT_RIGHT = 'end-0';
+        const PLACEMENT_LEFT = 'start-0';
+
+        // Determine whether the height of the window is smaller than the object
+        if ( (window.innerHeight || document.documentElement.clientHeight) < el.clientHeight ) {
+            el.classList.add('scroll-enabled');
+            el.style.maxHeight = window.innerHeight - 50 + 'px';
+            el.style.overflowY = 'auto';
+
+            return true;
+        } else {
+            el.classList.remove('scroll-enabled');
+            el.style.maxHeight = 'none';
+            el.style.overflowY = 'inherit';
+        }
+    
+        //restore status
+        if ( restore ) {
+            listRef.current.classList.remove(PLACEMENT_BOTTOMEND, 'scroll-enabled');
+            return;
+        }
+
+        //
+        if ( !isInViewport(el) ) {
+            el.classList.add(PLACEMENT_BOTTOMEND);
+        } else {
+            el.classList.remove(PLACEMENT_BOTTOMEND);
+        }
+
+    }
+
+
+    //
     async function matchData(val: string = '', query: boolean = false) {
 
         let res: any[] = [];
@@ -117,7 +174,6 @@ const LiveSearch = (props: LiveSearchProps) => {
         }
 
 
-
     }
 
 
@@ -141,6 +197,10 @@ const LiveSearch = (props: LiveSearchProps) => {
             }
         }
 
+        // window position
+        setTimeout( ()=> {
+            getPlacement(listRef.current);
+        }, 0 );
 
     }
     
@@ -207,6 +267,7 @@ const LiveSearch = (props: LiveSearchProps) => {
                 //
                 onBlur?.(inputRef.current, data);
                 setData([]);
+                getPlacement(listRef.current, true);
 
             }, 300);
         }
@@ -229,6 +290,9 @@ const LiveSearch = (props: LiveSearchProps) => {
         } else {
             nextIndex = (currentIndex < 0 ? options.length : currentIndex) - 1 % options.length;
         }
+
+        //only one
+        if ( options.length === 1 ) nextIndex = 0;
         
     
         if ( !isNaN(nextIndex) ) {
@@ -249,11 +313,11 @@ const LiveSearch = (props: LiveSearchProps) => {
         // keyboard listener
         //--------------
         const listener = (event: any) => {
-       
+
             if (event.code === "Enter" || event.code === "NumpadEnter") {
 
                 // if option has active class
-                const activedOption = listRef.current.querySelector('.list-group-item.active');
+                const activedOption = listRef.current?.querySelector('.list-group-item.active');
                 if ( activedOption === null ) {
                     triggerEv();
                 } else {
@@ -317,13 +381,21 @@ const LiveSearch = (props: LiveSearchProps) => {
                     autoComplete='off'
                 />
 
-                <div ref={listRef} className="list-group position-absolute w-100" style={{ marginTop: '-1.1rem' }} role="tablist">
-                    {data ? data.map((item, index) => {
-                        return <button onClick={handleSelect} type="button" data-index={index} key={index} className="list-group-item list-group-item-action" data-value={`${item.value}`} role="tab">{item.label}</button>
-                    }) : null}
 
-                    {data.length === 0 && searchTrigger ? <button type="button" className="list-group-item list-group-item-action" disabled>{fetchNoneInfo || 'No match yet'}</button> : null}
-                </div>
+                {data && data.length > 0 ? <>
+                    <div ref={listRef} className="list-group position-absolute w-100 border shadow" style={{ marginTop: '-1.1rem'}} role="tablist">
+                        {data ? data.map((item, index) => {
+                            const startItemBorder = index === 0 ? 'border-top-0' : '';
+                            const endItemBorder = index === data.length-1 ? 'border-bottom-0' : '';
+
+                            return <button onClick={handleSelect} type="button" data-index={index} key={index} className={`list-group-item list-group-item-action border-start-0 border-end-0 ${startItemBorder} ${endItemBorder}`} data-value={`${item.value}`} role="tab">{item.label}</button>
+                        }) : null}
+
+                        {data.length === 0 && searchTrigger ? <button type="button" className="list-group-item list-group-item-action" disabled>{fetchNoneInfo || 'No match yet'}</button> : null}
+                    </div>
+
+                </> : null}
+
 
             </div>
 
