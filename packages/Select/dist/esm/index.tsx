@@ -1,9 +1,14 @@
-import React, { useId, useRef, forwardRef } from 'react';
+import React, { useId, useEffect, useState, useRef, forwardRef } from 'react';
 
 declare module 'react' {
     interface ReactI18NextChildren<T> {
         children?: any;
     }
+}
+
+export interface fetchResponseField {
+    label: string | undefined;
+    value: string | undefined;
 }
 
 type SelectOptionChangeFnType = (arg1: any, arg2: any) => void;
@@ -16,15 +21,17 @@ type SelectProps = {
     name?: string;
     disabled?: any;
     required?: any;
-    options: string;
+    options?: string;
     /** -- */
     id?: string;
     style?: React.CSSProperties;
     tabIndex?: number;
     [key: `data-${string}`]: string | undefined;
-    /** This function is called whenever the data is updated.
-     *  Exposes the JSON format data about the option as an argument.
-     */
+    fetchFuncAsync?: any;
+    fetchFuncMethod?: string;
+    fetchFuncMethodParams?: any[];
+    fetchResponseField?: fetchResponseField;
+    onFetch?: (data: any) => void;
     onChange?: SelectOptionChangeFnType | null;
     onBlur?: (e: any) => void;
     onFocus?: (e: any) => void;
@@ -42,6 +49,11 @@ const Select = forwardRef((props: SelectProps, ref: any) => {
         options,
         style,
         tabIndex,
+        fetchFuncAsync,
+        fetchFuncMethod,
+        fetchFuncMethodParams,
+        fetchResponseField,
+        onFetch,
         onChange,
         onBlur,
         onFocus,
@@ -52,7 +64,38 @@ const Select = forwardRef((props: SelectProps, ref: any) => {
     const uniqueID = useId();
     const idRes = id || uniqueID;
     const rootRef = useRef<any>(null);
+    const optionsRes = options ? options : '';
 
+    const [dataInit, setDataInit] = useState<any[]>([]);
+
+
+    async function fetchData(params: any) {
+
+        if ( typeof fetchFuncAsync === 'object' ) {
+
+            const response: any = await fetchFuncAsync[`${fetchFuncMethod}`](...params.split(','));
+            const data = response.data.map((item: any) => {
+                return {
+                    'label': item[`${fetchResponseField?.label}`],
+                    'value': item[`${fetchResponseField?.value}`]
+                }
+            }); 
+            
+            //
+            onFetch?.(data);
+            
+            //
+            setDataInit(data);
+    
+            return data;
+        } else {
+            return [];
+        }
+
+
+    }
+
+    
 	// Determine whether it is in JSON format
 	function isJSON( str: any ){
 		
@@ -90,6 +133,8 @@ const Select = forwardRef((props: SelectProps, ref: any) => {
 
 	} 
 
+
+    //
     function handleFocus(event: any) {
         rootRef.current.classList.add('focus');
 
@@ -126,15 +171,39 @@ const Select = forwardRef((props: SelectProps, ref: any) => {
 
     
     // Get all options from option prop
-    const selectOptions = isJSON( options ) ? JSON.parse( options ) : {};
-    const optionKeys = Object.keys(selectOptions);
-    const optionValues = Object.values(selectOptions);
+    let selectOptions: any[];
+    let optionKeys: string[];
+    let optionValues: string[];
+
+    // Use API data if database query exists
+    if ( dataInit.length > 0 ) {
+        selectOptions = dataInit;
+        optionKeys = dataInit.map( (item: any) => item.label);
+        optionValues = dataInit.map( (item: any) => item.value);
+    } else {
+        selectOptions =isJSON( optionsRes ) ? JSON.parse( optionsRes ) : {};
+        optionKeys = Object.keys(selectOptions);
+        optionValues = Object.values(selectOptions);
+    }
+
     
     
     // Generate list of options
     const selectOptionsList = optionKeys.map((selectOption, index) => {
         return <option key={index} value={optionValues[index] as string}>{selectOption}</option>;
     });
+
+
+
+    useEffect(() => {
+
+        // data init
+        //--------------
+        const _params: any[] = fetchFuncMethodParams || [];
+        fetchData((_params).join(','));
+
+
+    }, []);
 
 
     return (

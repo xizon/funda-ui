@@ -95,9 +95,9 @@ const LiveSearch = (props: LiveSearchProps) => {
 
 
     //
+    const [firstFetch, setFirstFetch] = useState<boolean>(false);
     const [dataInit, setDataInit] = useState<any[]>([]);
     const [data, setData] = useState<any[]>([]);
-    const [dataFetched, setDataFetched] = useState<boolean>(false);
     const [inputValue, setInputValue] = useState<string>('');
     const [searchTrigger, setSearchTrigger] = useState<boolean>(false);
 
@@ -134,10 +134,12 @@ const LiveSearch = (props: LiveSearchProps) => {
         //
         if ( !isInViewport(el) ) {
             el.classList.add(PLACEMENT_BOTTOMEND);
+            el.style.setProperty('bottom', inputRef.current.clientHeight + 'px', "important");
         } else {
             el.classList.remove(PLACEMENT_BOTTOMEND);
+            el.style.removeProperty('bottom');
         }
-
+        
     }
 
 
@@ -232,7 +234,6 @@ const LiveSearch = (props: LiveSearchProps) => {
             
             //
             setDataInit(data);
-            setDataFetched(true);
     
             return data;
         } else {
@@ -281,6 +282,8 @@ const LiveSearch = (props: LiveSearchProps) => {
     }
 
     function optionFocus(type: string) {
+
+        if ( listRef.current === null ) return;
         
         const options = [].slice.call(listRef.current.querySelectorAll('.list-group-item'));
         const currentIndex = options.findIndex((e) => e === listRef.current.querySelector('.list-group-item.active'));
@@ -310,7 +313,11 @@ const LiveSearch = (props: LiveSearchProps) => {
 
         // data init
         //--------------
-        fetchData((fetchFuncMethodParams as []).join(','));
+        if ( !firstFetch ) {
+            fetchData((fetchFuncMethodParams as []).join(','));
+            setFirstFetch(true);  // avoid triggering two data requests if the input value has not changed
+        }
+
 
         // keyboard listener
         //--------------
@@ -354,7 +361,7 @@ const LiveSearch = (props: LiveSearchProps) => {
             document.removeEventListener("keydown", listener);
         };
 
-    }, [dataFetched]);
+    }, [data]);
 
 
     return (

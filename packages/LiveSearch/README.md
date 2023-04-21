@@ -40,7 +40,7 @@ import LiveSearch from 'react-pure-bootstrap/LiveSearch';
 ```js
 import React from "react";
 import LiveSearch from 'react-pure-bootstrap/LiveSearch';
-
+import axios from 'axios';
 
 class DataService {
     
@@ -61,6 +61,14 @@ class DataService {
             ]
         };
     }
+
+
+    async getListUseAxios(searchStr = '', limit = 0) {
+        const response = await axios.get(`https://api?s=${searchStr}&limit=${limit}`);
+        return response;
+    }
+
+    	
 }
 
 export default () => {

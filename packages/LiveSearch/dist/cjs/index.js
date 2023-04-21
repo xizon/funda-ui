@@ -554,18 +554,18 @@ var LiveSearch = function LiveSearch(props) {
   var listRef = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(null);
 
   //
-  var _useState = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)([]),
+  var _useState = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(false),
     _useState2 = _slicedToArray(_useState, 2),
-    dataInit = _useState2[0],
-    setDataInit = _useState2[1];
+    firstFetch = _useState2[0],
+    setFirstFetch = _useState2[1];
   var _useState3 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)([]),
     _useState4 = _slicedToArray(_useState3, 2),
-    data = _useState4[0],
-    setData = _useState4[1];
-  var _useState5 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(false),
+    dataInit = _useState4[0],
+    setDataInit = _useState4[1];
+  var _useState5 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)([]),
     _useState6 = _slicedToArray(_useState5, 2),
-    dataFetched = _useState6[0],
-    setDataFetched = _useState6[1];
+    data = _useState6[0],
+    setData = _useState6[1];
   var _useState7 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(''),
     _useState8 = _slicedToArray(_useState7, 2),
     inputValue = _useState8[0],
@@ -605,8 +605,10 @@ var LiveSearch = function LiveSearch(props) {
     //
     if (!isInViewport(el)) {
       el.classList.add(PLACEMENT_BOTTOMEND);
+      el.style.setProperty('bottom', inputRef.current.clientHeight + 'px', "important");
     } else {
       el.classList.remove(PLACEMENT_BOTTOMEND);
+      el.style.removeProperty('bottom');
     }
   }
 
@@ -751,7 +753,7 @@ var LiveSearch = function LiveSearch(props) {
         while (1) switch (_context4.prev = _context4.next) {
           case 0:
             if (!(_typeof(fetchFuncAsync) === 'object')) {
-              _context4.next = 11;
+              _context4.next = 10;
               break;
             }
             _context4.next = 3;
@@ -771,11 +773,10 @@ var LiveSearch = function LiveSearch(props) {
 
             //
             setDataInit(_data);
-            setDataFetched(true);
             return _context4.abrupt("return", _data);
-          case 11:
+          case 10:
             return _context4.abrupt("return", []);
-          case 12:
+          case 11:
           case "end":
             return _context4.stop();
         }
@@ -832,6 +833,7 @@ var LiveSearch = function LiveSearch(props) {
     setSearchTrigger(false);
   }
   function optionFocus(type) {
+    if (listRef.current === null) return;
     var options = [].slice.call(listRef.current.querySelectorAll('.list-group-item'));
     var currentIndex = options.findIndex(function (e) {
       return e === listRef.current.querySelector('.list-group-item.active');
@@ -858,7 +860,10 @@ var LiveSearch = function LiveSearch(props) {
   (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(function () {
     // data init
     //--------------
-    fetchData(fetchFuncMethodParams.join(','));
+    if (!firstFetch) {
+      fetchData(fetchFuncMethodParams.join(','));
+      setFirstFetch(true); // avoid triggering two data requests if the input value has not changed
+    }
 
     // keyboard listener
     //--------------
@@ -894,7 +899,7 @@ var LiveSearch = function LiveSearch(props) {
     return function () {
       document.removeEventListener("keydown", listener);
     };
-  }, [dataFetched]);
+  }, [data]);
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
     className: "position-relative",
     onMouseLeave: handleMouseLeaveTrigger

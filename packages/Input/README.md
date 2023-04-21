@@ -52,7 +52,7 @@ export default () => {
         <>
             <Input
                 placeholder="String"
-                name="String"
+                name="name"
                 label="String"
                 onChange={handleChange}
                 iconRight={<><i className="fa fa-arrow-up" aria-hidden="true"></i></>}
@@ -60,8 +60,9 @@ export default () => {
                 disabled
             />
 
+
             <Input
-                name="String"
+                name="name"
                 label="Date"
                 type="datetime-local"
                 onFocus={(e) => {
@@ -69,6 +70,13 @@ export default () => {
                 }}
                 step={1}
             /> 
+
+            <Input
+                name="name"
+                label="Time"
+                type="time"
+                step={60}
+            />
 
         </>
     );

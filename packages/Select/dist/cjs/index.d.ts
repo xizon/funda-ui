@@ -4,6 +4,10 @@ declare module 'react' {
         children?: any;
     }
 }
+export interface fetchResponseField {
+    label: string | undefined;
+    value: string | undefined;
+}
 declare type SelectOptionChangeFnType = (arg1: any, arg2: any) => void;
 declare type SelectProps = {
     wrapperClassName?: string;
@@ -12,15 +16,17 @@ declare type SelectProps = {
     name?: string;
     disabled?: any;
     required?: any;
-    options: string;
+    options?: string;
     /** -- */
     id?: string;
     style?: React.CSSProperties;
     tabIndex?: number;
     [key: `data-${string}`]: string | undefined;
-    /** This function is called whenever the data is updated.
-     *  Exposes the JSON format data about the option as an argument.
-     */
+    fetchFuncAsync?: any;
+    fetchFuncMethod?: string;
+    fetchFuncMethodParams?: any[];
+    fetchResponseField?: fetchResponseField;
+    onFetch?: (data: any) => void;
     onChange?: SelectOptionChangeFnType | null;
     onBlur?: (e: any) => void;
     onFocus?: (e: any) => void;
