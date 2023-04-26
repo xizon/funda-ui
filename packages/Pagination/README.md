@@ -26,7 +26,7 @@ import Pagination from 'react-pure-bootstrap/Pagination';
 | `nextClass` | string  | next | The classname on tag li of the next button |
 | `firstClass` | string  | first | The classname on tag li of the first button |
 | `lastClass` | string  | last | The classname on tag li of the last button |
-| `disabledClass` | string  | is-disabled | The classname for disabled buttons |
+| `disabledClass` | string  | disabled | The classname for disabled buttons |
 | `symmetry` | boolean  | false | The activation button is symmetrical on the left and right sides |
 
 

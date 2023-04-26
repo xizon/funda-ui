@@ -55,9 +55,9 @@ class DataService {
             code: 0,
             message: 'OK',
             data: [
-                {item_name: 'foo', item_code: 'bar'},
-                {item_name: 'foo2', item_code: 'bar2'},
-                {item_name: 'foo3', item_code: 'bar3'}
+                {item_name: 'foo', item_code: 'bar', kb_code: 'fb,foobar'},
+                {item_name: 'foo2', item_code: 'bar2', kb_code: 'fb2,foobar2'},
+                {item_name: 'foo3', item_code: 'bar3', kb_code: 'fb3,foobar3'}
             ]
         };
     }
@@ -87,7 +87,8 @@ export default () => {
                 fetchFuncMethodParams={['',0]}
                 fetchResponseField={{
                     label: 'item_name',
-                    value: 'item_code'                        
+                    value: 'item_code',
+                    letter: 'kb_code'
                 }}
                 onFetch={(res) => {
                     console.log('onFetch: ', res);

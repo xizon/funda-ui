@@ -191,6 +191,7 @@ const Select = forwardRef((props: SelectProps, ref: any) => {
     // Generate list of options
     const selectOptionsList = optionKeys.map((selectOption, index) => {
         return <option key={index} value={optionValues[index] as string}>{selectOption}</option>;
+        
     });
 
 
@@ -217,7 +218,7 @@ const Select = forwardRef((props: SelectProps, ref: any) => {
                         className="form-select"
                         id={idRes}
                         name={name}
-                        defaultValue={value || ''}
+                        value={value || ''}  // do not use `defaultValue`
                         onFocus={handleFocus}
                         onBlur={handleBlur}
                         onChange={handleChange}

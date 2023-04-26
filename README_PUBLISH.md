@@ -18,7 +18,7 @@ Here is a table of the components and their status.
 | [Button ❏](packages/Button/README.md) | [Tag Input ❏](packages/TagInput/README.md#tag-input) | [Parallax ❏](packages/Parallax/README.md) |  | [Navigation ❏](packages/Navigation/README.md)  | 
 | [Card ❏](packages/Card/README.md) | [Textarea  ✅](packages/Textarea/README.md#textarea) | [Scroll Reveal ❏](packages/ScrollReveal/README.md) |  |  | 
 | [Content Placeholder ❏](packages/ContentPlaceholder/README.md) | [Select ✅](packages/Select/README.md#select) | [Sticky Elements ❏](packages/StickyElements/README.md) |  |  | 
-| [Counter ❏](packages/Counter/README.md) | [Custom Select ❏](packages/CustomSelect/README.md#custom-select) |  |  |  | 
+| [Counter ❏](packages/Counter/README.md) | [Cascading Select ✅](packages/CascadingSelect/README.md#custom-select) |  |  |  | 
 | [Hybrid Content Slider ❏](packages/HybridContentSlider/README.md) | [Checkbox ✅](packages/Checkbox/README.md#checkbox) |  |  |  | 
 | [Image Shapes ❏](packages/ImageShapes/README.md) | [Radio ✅](packages/Radio/README.md#radio) |  |  |  | 
 | [Lightbox ❏](packages/Lightbox/README.md) | [Multi Select ❏](packages/MultiSelect/README.md#multi-select) |  |  |  | 

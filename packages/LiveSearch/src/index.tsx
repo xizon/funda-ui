@@ -1,12 +1,12 @@
 import React, { useId, useEffect, useState, useRef } from 'react';
 
 import SearchBar from 'rpb-searchbar';
-const pinyin = require("chinese-to-pinyin");
 
 
 export interface fetchResponseField {
     label: string | undefined;
     value: string | undefined;
+    letter?: string | undefined;
 }
 
 
@@ -55,7 +55,6 @@ function isInViewport(elem: HTMLElement) {
         bounding.right <= (window.innerWidth || document.documentElement.clientWidth)
     );
 }
-
 
 
 const LiveSearch = (props: LiveSearchProps) => {
@@ -150,9 +149,11 @@ const LiveSearch = (props: LiveSearchProps) => {
         let filterRes = (data: any[]) => {
             return data.filter((item: any) => {
                 if (
-                    (item.letter.charAt(0) === val.toLowerCase() ||
-                        item.letter.replace(/ /g, '').indexOf(val.toLowerCase()) >= 0 ||
-                        item.label.indexOf(val) >= 0) &&
+                    (
+                        item.letter.split(',').some((l: any) => l.charAt(0) === val.toLowerCase()) ||
+                        item.letter.split(',').some((l: any) => l.replace(/ /g, '').indexOf(val.toLowerCase()) >= 0) ||
+                        item.label.indexOf(val) >= 0
+                    ) &&
                     val != ''
                 ) {
                     return true;
@@ -219,13 +220,13 @@ const LiveSearch = (props: LiveSearchProps) => {
     async function fetchData(params: any) {
 
         if ( typeof fetchFuncAsync === 'object' ) {
-
+            
             const response: any = await fetchFuncAsync[`${fetchFuncMethod}`](...params.split(','));
             const data = response.data.map((item: any) => {
                 return {
                     'label': item[`${fetchResponseField?.label}`],
                     'value': item[`${fetchResponseField?.value}`],
-                    'letter': pinyin(item[`${fetchResponseField?.label}`], { removeTone: true })
+                    'letter': item[`${fetchResponseField?.letter}`]
                 }
             }); 
             
@@ -397,7 +398,7 @@ const LiveSearch = (props: LiveSearchProps) => {
                             const startItemBorder = index === 0 ? 'border-top-0' : '';
                             const endItemBorder = index === data.length-1 ? 'border-bottom-0' : '';
 
-                            return <button onClick={handleSelect} type="button" data-index={index} key={index} className={`list-group-item list-group-item-action border-start-0 border-end-0 ${startItemBorder} ${endItemBorder}`} data-value={`${item.value}`} role="tab">{item.label}</button>
+                            return <button onClick={handleSelect} type="button" data-index={index} key={index} className={`list-group-item list-group-item-action border-start-0 border-end-0 ${startItemBorder} ${endItemBorder}`} data-value={`${item.value}`} data-letter={`${item.letter}`} role="tab">{item.label}</button>
                         }) : null}
 
                         {data.length === 0 && searchTrigger ? <button type="button" className="list-group-item list-group-item-action" disabled>{fetchNoneInfo || 'No match yet'}</button> : null}
@@ -411,5 +412,6 @@ const LiveSearch = (props: LiveSearchProps) => {
         </>
     )
 };
+
 
 export default LiveSearch;

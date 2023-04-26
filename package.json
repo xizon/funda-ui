@@ -2,7 +2,7 @@
     "author": "UIUX Lab",
     "email": "uiuxlab@gmail.com",
     "name": "react-pure-bootstrap",
-    "version": "1.0.159",
+    "version": "1.0.160",
     "description": "React components using pure Bootstrap 5+ which does not contain any external style and script libraries.",
     "repository": {
         "type": "git",
@@ -11,7 +11,6 @@
     "scripts": {
         "build:lib": "node scripts/build-lib.js",
         "build:publish": "node scripts/build-publish.js"
-        
     },
     "keywords": [
         "bootstrap",

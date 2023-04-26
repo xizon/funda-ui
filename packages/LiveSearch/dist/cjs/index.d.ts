@@ -2,6 +2,7 @@ import React from 'react';
 export interface fetchResponseField {
     label: string | undefined;
     value: string | undefined;
+    letter?: string | undefined;
 }
 declare type LiveSearchProps = {
     wrapperClassName?: string;

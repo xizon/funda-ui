@@ -556,14 +556,14 @@ function MenuList(props) {
   };
   function handleClick(e) {
     e.preventDefault();
-    var hyperlink = e.target;
+    var hyperlink = e.currentTarget;
     var url = hyperlink.getAttribute('href');
     var subElement = getNextSiblings(hyperlink, 'ul');
 
     // route switching
     //=====================
     var isRouter = typeof hyperlink.parentNode.dataset.router !== 'undefined' ? true : false;
-    onChange === null || onChange === void 0 ? void 0 : onChange(e.target, isRouter);
+    onChange === null || onChange === void 0 ? void 0 : onChange(e.currentTarget, isRouter);
 
     // hide child if expandedLink doesn't exist, on the contrary
     //=====================
@@ -637,9 +637,11 @@ function MenuList(props) {
       }), " ", item.title));
       if (item.link.indexOf('#') >= 0 || item.link.indexOf('http') >= 0) {
         return /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("li", {
+          "data-index": i,
           key: i,
           className: currentPath === item.link || currentPath.indexOf(item.link.replace(/\/[\d]+\.html|\.html/ig, '')) >= 0 && item.link !== '/' ? "nav-item active" : 'nav-item'
         }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("a", {
+          title: item.title,
           className: currentPath === item.link || currentPath.indexOf(item.link.replace(/\/[\d]+\.html|\.html/ig, '')) >= 0 && item.link !== '/' ? "nav-link active" : 'nav-link',
           href: item.link === '#' ? "".concat(item.link, "-").concat(i) : item.link,
           "aria-expanded": "false",
@@ -658,10 +660,12 @@ function MenuList(props) {
         }));
       } else {
         return /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("li", {
+          "data-index": i,
           "data-router": "true",
           key: i,
           className: currentPath === item.link || currentPath.indexOf(item.link.replace(/\/[\d]+\.html|\.html/ig, '')) >= 0 && item.link !== '/' ? "nav-item active" : 'nav-item'
         }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("a", {
+          title: item.title,
           className: currentPath === item.link || currentPath.indexOf(item.link.replace(/\/[\d]+\.html|\.html/ig, '')) >= 0 && item.link !== '/' ? "nav-link active" : 'nav-link',
           href: item.link === '#' ? "".concat(item.link, "-").concat(i) : item.link,
           onClick: handleClick,

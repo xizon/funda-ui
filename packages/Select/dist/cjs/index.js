@@ -275,7 +275,8 @@ var Select = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(func
     className: "form-select",
     id: idRes,
     name: name,
-    defaultValue: value || '',
+    value: value || '' // do not use `defaultValue`
+    ,
     onFocus: handleFocus,
     onBlur: handleBlur,
     onChange: handleChange,

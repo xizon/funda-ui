@@ -84,7 +84,7 @@ export default function MenuList(props: MenuListProps) {
 
     function handleClick(e: any) {
         e.preventDefault();
-        const hyperlink = e.target;
+        const hyperlink = e.currentTarget;
         const url = hyperlink.getAttribute('href');
         const subElement = getNextSiblings(hyperlink, 'ul');
 
@@ -92,7 +92,7 @@ export default function MenuList(props: MenuListProps) {
         // route switching
         //=====================
         const isRouter = typeof hyperlink.parentNode.dataset.router !== 'undefined' ? true : false;
-        onChange?.(e.target, isRouter);
+        onChange?.(e.currentTarget, isRouter);
 
         // hide child if expandedLink doesn't exist, on the contrary
         //=====================
@@ -181,8 +181,8 @@ export default function MenuList(props: MenuListProps) {
                     );
                     if (item.link.indexOf('#') >= 0 || item.link.indexOf('http') >= 0 ) {
                         return (
-                            <li key={i} className={ (currentPath === item.link || currentPath.indexOf(item.link.replace(/\/[\d]+\.html|\.html/ig,'')) >= 0 && item.link !== '/') ?  `nav-item active` : 'nav-item'}>
-                                <a className={ (currentPath === item.link || currentPath.indexOf(item.link.replace(/\/[\d]+\.html|\.html/ig,'')) >= 0 && item.link !== '/') ?  `nav-link active` : 'nav-link'} href={item.link === '#' ? `${item.link}-${i}` : item.link} aria-expanded="false" onClick={handleClick} data-slug={item.slug}>
+                            <li data-index={i} key={i} className={ (currentPath === item.link || currentPath.indexOf(item.link.replace(/\/[\d]+\.html|\.html/ig,'')) >= 0 && item.link !== '/') ?  `nav-item active` : 'nav-item'}>
+                                <a title={item.title} className={ (currentPath === item.link || currentPath.indexOf(item.link.replace(/\/[\d]+\.html|\.html/ig,'')) >= 0 && item.link !== '/') ?  `nav-link active` : 'nav-link'} href={item.link === '#' ? `${item.link}-${i}` : item.link} aria-expanded="false" onClick={handleClick} data-slug={item.slug}>
                                     {item.icon ? item.icon.indexOf('</svg>') < 0 ? <><i className={item.icon}></i> </> : <var dangerouslySetInnerHTML={{__html: `${item.icon}`}} /> : null}{item.title}
                                     {item.children ? <span className="arrow"></span> : ''}
                                 </a>
@@ -191,8 +191,8 @@ export default function MenuList(props: MenuListProps) {
                             );
                     } else {
                         return (
-                            <li  data-router="true" key={i} className={ (currentPath === item.link || currentPath.indexOf(item.link.replace(/\/[\d]+\.html|\.html/ig,'')) >= 0 && item.link !== '/') ?  `nav-item active` : 'nav-item'}>
-                                <a className={ (currentPath === item.link || currentPath.indexOf(item.link.replace(/\/[\d]+\.html|\.html/ig,'')) >= 0 && item.link !== '/') ?  `nav-link active` : 'nav-link'} href={item.link === '#' ? `${item.link}-${i}` : item.link} onClick={handleClick} data-slug={item.slug}>
+                            <li  data-index={i} data-router="true" key={i} className={ (currentPath === item.link || currentPath.indexOf(item.link.replace(/\/[\d]+\.html|\.html/ig,'')) >= 0 && item.link !== '/') ?  `nav-item active` : 'nav-item'}>
+                                <a title={item.title} className={ (currentPath === item.link || currentPath.indexOf(item.link.replace(/\/[\d]+\.html|\.html/ig,'')) >= 0 && item.link !== '/') ?  `nav-link active` : 'nav-link'} href={item.link === '#' ? `${item.link}-${i}` : item.link} onClick={handleClick} data-slug={item.slug}>
                                    {item.icon ? item.icon.indexOf('</svg>') < 0 ? <><i className={item.icon}></i> </> : <var dangerouslySetInnerHTML={{__html: `${item.icon}`}} /> : null}{item.title}
                                     {item.children ? <span className="arrow"></span> : ''}
                                 </a>
