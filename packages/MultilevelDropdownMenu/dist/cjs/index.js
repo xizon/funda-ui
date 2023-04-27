@@ -140,7 +140,7 @@ module.exports = function (item) {
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1___default()((_node_modules_css_loader_dist_runtime_sourceMaps_js__WEBPACK_IMPORTED_MODULE_0___default()));
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, ".navbar-nav a {\n  position: relative;\n}\n.navbar-nav .arrow {\n  transition: 0.1s ease-in-out;\n  display: inline-block;\n  text-align: center;\n  position: absolute;\n  right: 0.5em;\n  top: 1.5em;\n  transform: translateY(-50%) rotate(0deg);\n}\n.navbar-nav .arrow::before {\n  display: inline-block;\n  margin-left: 0.255em;\n  vertical-align: 0.255em;\n  content: \"\";\n  border-top: 0.3em solid;\n  border-right: 0.3em solid transparent;\n  border-bottom: 0;\n  border-left: 0.3em solid transparent;\n}\n.navbar-nav li {\n  position: relative;\n}\n.navbar-nav li > a.active > .arrow {\n  transform: translateY(-50%) rotate(-90deg);\n}\n.navbar-nav > li ul {\n  transition: max-height 0.25s ease;\n  overflow: hidden;\n  position: relative;\n}\n.navbar-nav > li:not(.active) ul {\n  max-height: 0;\n}\n.navbar-nav > li ul ul {\n  margin-top: auto;\n}", "",{"version":3,"sources":["webpack://./src/index.scss"],"names":[],"mappings":"AAEI;EACI,kBAAA;AADR;AAIC;EACO,4BAAA;EACN,qBAAA;EACA,kBAAA;EACA,kBAAA;EACM,YAAA;EACA,UAAA;EACA,wCAAA;AAFR;AAIE;EACU,qBAAA;EACA,oBAAA;EACA,uBAAA;EACA,WAAA;EACA,uBAAA;EACA,qCAAA;EACA,gBAAA;EACA,oCAAA;AAFZ;AAMC;EAEC,kBAAA;AALF;AAeK;EACA,0CAAA;AAbL;AA8BE;EACU,iCAAA;EACT,gBAAA;EACA,kBAAA;AA5BH;AAkCE;EACC,aAAA;AAhCH;AAqCC;EACO,gBAAA;AAnCR","sourcesContent":[".navbar-nav {\n\n    a {\n        position: relative;\n    }\n\n\t.arrow {\n        transition: .1s ease-in-out;\n\t\tdisplay: inline-block;\n\t\ttext-align: center;\n\t\tposition: absolute;\n        right: 0.5em;\n        top: 1.5em;\n        transform: translateY(-50%) rotate(0deg);\n\n\t\t&::before {\n            display: inline-block;\n            margin-left: 0.255em;\n            vertical-align: 0.255em;\n            content: \"\";\n            border-top: 0.3em solid;\n            border-right: 0.3em solid transparent;\n            border-bottom: 0;\n            border-left: 0.3em solid transparent;\n\t\t}\n\t}\n\n\tli {\n\n\t\tposition: relative;\n\n\t\t> a {\n\t\n\t\t\t&:hover {\n\t\t\t\t\n\t\t\t}\n\n\t\t\t&.active {\n\n\t\t\t\t > .arrow {\n\t\t\t\t\ttransform: translateY(-50%) rotate(-90deg);\n\t\t\t\t}\n\n\n\t\t\t}\n\n\t\t}\n\n        &.active > a {\n\n        }        \n\n\n\t}\n\n\t> li {\n\n\t\tul {\n            transition: max-height 0.25s ease;\n\t\t\toverflow: hidden;\n\t\t\tposition: relative;\n\t\t}\n\t}\n\n\t> li:not(.active) {\n\n\t\tul {\n\t\t\tmax-height: 0;\n\t\t}\n\t}\n\n\n\t> li ul ul {\n        margin-top: auto;\n\t}\n\n\n}\n"],"sourceRoot":""}]);
+___CSS_LOADER_EXPORT___.push([module.id, ".navbar-nav a {\n  position: relative;\n}\n.navbar-nav .arrow {\n  transition: 0.1s ease-in-out;\n  display: inline-block;\n  text-align: center;\n  position: absolute;\n  right: 0.5em;\n  top: 1.5em;\n  transform: translateY(-50%) rotate(0deg);\n}\n.navbar-nav li {\n  position: relative;\n}\n.navbar-nav li > a.active > .arrow {\n  transform: translateY(-50%) rotate(90deg);\n}\n.navbar-nav > li ul {\n  transition: max-height 0.25s ease;\n  overflow: hidden;\n  position: relative;\n}\n.navbar-nav > li:not(.active) ul {\n  max-height: 0;\n}\n.navbar-nav > li ul ul {\n  margin-top: auto;\n}", "",{"version":3,"sources":["webpack://./src/index.scss"],"names":[],"mappings":"AAEI;EACI,kBAAA;AADR;AAIC;EACO,4BAAA;EACN,qBAAA;EACA,kBAAA;EACA,kBAAA;EACM,YAAA;EACA,UAAA;EACA,wCAAA;AAFR;AAKC;EAEC,kBAAA;AAJF;AAcK;EACA,yCAAA;AAZL;AA6BE;EACU,iCAAA;EACT,gBAAA;EACA,kBAAA;AA3BH;AAiCE;EACC,aAAA;AA/BH;AAoCC;EACO,gBAAA;AAlCR","sourcesContent":[".navbar-nav {\n\n    a {\n        position: relative;\n    }\n\n\t.arrow {\n        transition: .1s ease-in-out;\n\t\tdisplay: inline-block;\n\t\ttext-align: center;\n\t\tposition: absolute;\n        right: 0.5em;\n        top: 1.5em;\n        transform: translateY(-50%) rotate(0deg);\n\t}\n\n\tli {\n\n\t\tposition: relative;\n\n\t\t> a {\n\t\n\t\t\t&:hover {\n\t\t\t\t\n\t\t\t}\n\n\t\t\t&.active {\n\n\t\t\t\t > .arrow {\n\t\t\t\t\ttransform: translateY(-50%) rotate(90deg);\n\t\t\t\t}\n\n\n\t\t\t}\n\n\t\t}\n\n        &.active > a {\n\n        }        \n\n\n\t}\n\n\t> li {\n\n\t\tul {\n            transition: max-height 0.25s ease;\n\t\t\toverflow: hidden;\n\t\t\tposition: relative;\n\t\t}\n\t}\n\n\t> li:not(.active) {\n\n\t\tul {\n\t\t\tmax-height: 0;\n\t\t}\n\t}\n\n\n\t> li ul ul {\n        margin-top: auto;\n\t}\n\n\n}\n"],"sourceRoot":""}]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -518,7 +518,8 @@ function getNextSiblings(el) {
   return sibs;
 }
 function MenuList(props) {
-  var childClassName = props.childClassName,
+  var arrow = props.arrow,
+    childClassName = props.childClassName,
     menuListData = props.menuListData,
     routerPath = props.routerPath,
     onChange = props.onChange;
@@ -593,6 +594,16 @@ function MenuList(props) {
       activeClass(e.target.parentElement, 'add');
     }
   }
+  function arrowGenerator() {
+    return arrow ? arrow : /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("svg", {
+      viewBox: "0 0 22 22",
+      width: "8"
+    }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("path", {
+      d: "m345.44 248.29l-194.29 194.28c-12.359 12.365-32.397 12.365-44.75 0-12.354-12.354-12.354-32.391 0-44.744l171.91-171.91-171.91-171.9c-12.354-12.359-12.354-32.394 0-44.748 12.354-12.359 32.391-12.359 44.75 0l194.29 194.28c6.177 6.18 9.262 14.271 9.262 22.366 0 8.099-3.091 16.196-9.267 22.373",
+      transform: "matrix(.03541-.00013.00013.03541 2.98 3.02)",
+      fill: "#a5a5a5"
+    }));
+  }
   (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useEffect)(function () {
     var allItems = vmenuRef.current ? [].slice.call(document.querySelectorAll(".".concat(childClassName, " a"))).map(function (item) {
       var _item$parentNode$clas;
@@ -655,7 +666,7 @@ function MenuList(props) {
           }
         }) : null, item.title, item.children ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("span", {
           className: "arrow"
-        }) : ''), item.children && /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement(MenuList, {
+        }, arrowGenerator()) : ''), item.children && /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement(MenuList, {
           menuListData: item.children
         }));
       } else {
@@ -678,7 +689,7 @@ function MenuList(props) {
           }
         }) : null, item.title, item.children ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("span", {
           className: "arrow"
-        }) : ''), item.children && /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement(MenuList, {
+        }, arrowGenerator()) : ''), item.children && /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement(MenuList, {
           menuListData: item.children
         }));
       }
@@ -741,7 +752,8 @@ var update = injectStylesIntoStyleTag_default()(cjs_ruleSet_1_rules_1_use_2_src/
 
 
 var MultilevelDropdownMenu = function MultilevelDropdownMenu(props) {
-  var navbarClassName = props.navbarClassName,
+  var arrow = props.arrow,
+    navbarClassName = props.navbarClassName,
     childClassName = props.childClassName,
     routerPath = props.routerPath,
     data = props.data,
@@ -758,6 +770,7 @@ var MultilevelDropdownMenu = function MultilevelDropdownMenu(props) {
   }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
     className: "container-fluid"
   }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement(MenuList, {
+    arrow: arrow,
     menuListData: data,
     childClassName: childClassName || 'navbar-nav',
     onChange: handleChange,

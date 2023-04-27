@@ -6,6 +6,8 @@ declare module 'react' {
     }
 }
 declare type MultilevelDropdownMenuProps = {
+    /** set an arrow */
+    arrow?: React.ReactNode;
     /** The class name of the navbar. */
     navbarClassName?: string;
     /** The class name of the child on <ul>. */

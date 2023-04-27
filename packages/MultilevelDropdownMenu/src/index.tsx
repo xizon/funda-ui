@@ -10,6 +10,8 @@ declare module 'react' {
 }
 
 type MultilevelDropdownMenuProps = {
+    /** set an arrow */
+    arrow?: React.ReactNode;
     /** The class name of the navbar. */
     navbarClassName?: string;
     /** The class name of the child on <ul>. */
@@ -27,6 +29,7 @@ type MultilevelDropdownMenuProps = {
 
 const MultilevelDropdownMenu = (props: MultilevelDropdownMenuProps) => {
     const {
+        arrow,
         navbarClassName,
         childClassName,
         routerPath,
@@ -48,7 +51,13 @@ const MultilevelDropdownMenu = (props: MultilevelDropdownMenuProps) => {
 
             <nav id={idRes} className={navbarClassName ? navbarClassName : "navbar"}>
                 <div className="container-fluid">
-                    <MenuList menuListData={data} childClassName={childClassName || 'navbar-nav'} onChange={handleChange} routerPath={routerPath}/>
+                    <MenuList 
+                        arrow={arrow}
+                        menuListData={data} 
+                        childClassName={childClassName || 'navbar-nav'} 
+                        onChange={handleChange} 
+                        routerPath={routerPath}
+                    />
                 </div>
             </nav>
 

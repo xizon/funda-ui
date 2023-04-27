@@ -576,15 +576,16 @@ var ModalDialog = function ModalDialog(props) {
     if (autoOpen) {
       openAction();
     }
+
+    // Remove the global list of events, especially as scroll and interval.
+    //--------------
     return function () {
       clearAllBodyScrollLocks();
 
       // Cancels a timeout previously established by calling setTimeout().
-      //------------------------------------------
       clearTimeout(window.setCloseModalDialog);
 
       // Remove all masks and modals
-      //------------------------------------------
       Array.prototype.forEach.call(document.querySelectorAll('.modal-backdrop, .modal'), function (node) {
         if (node.classList.contains('modal')) {
           node.remove();

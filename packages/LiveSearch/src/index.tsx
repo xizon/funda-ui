@@ -358,6 +358,9 @@ const LiveSearch = (props: LiveSearchProps) => {
         };
 
         document.addEventListener("keydown", listener);
+
+        // Remove the global list of events, especially as scroll and interval.
+        //--------------
         return () => {
             document.removeEventListener("keydown", listener);
         };
