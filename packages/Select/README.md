@@ -20,7 +20,7 @@ import Select from 'react-pure-bootstrap/Select';
 | `fetchFuncAsync` | Constructor | - | A method as a string from the constructor.  |
 | `fetchFuncMethod` | string  | - | When the property is *true*, every time the select changes, a data request will be triggered. <br /><blockquote>The methord must be a Promise Object.</blockquote> |
 | `fetchFuncMethodParams` | array  | - | The parameter passed by the method, it is an array. <br />Note: the first element is a query string, the second element is the number of queried data (usually a number), and then you can increase the third, or fourth, and more parameters. <br />Such as `['',0]`, `['',99,'string 1','string 2']` <br /><blockquote>There should be at least one parameter which is the query string.</blockquote> |
-| `fetchResponseField` | array  | - | Specify the field name of the response, it should match your backend data. <br /> Such as `{label: 'item_name',value: 'item_code'}` |
+| `fetchCallback` | function  | - | Return value from `fetchCallback` property to format the data of the API callback, which will match the data structure of the component. <br >At the same time it returns the original data, you will use this function and use the `return` keyword to return a new value. |
 | `onFetch` | function  | - | Call a function when  data is successfully fetched. It returns one callback value which is the fetched data (an array) |
 | `onChange` | function  | - | Call a function when the value of an HTML element is changed. |
 | `onBlur` | function  | - | Call a function when a user leaves a form field. |
@@ -30,6 +30,9 @@ import Select from 'react-pure-bootstrap/Select';
 It accepts all props which this control support.
 
 ## Examples
+
+You need to use a `fetchCallback` property to format the data of the API callback, which will match the data structure of the component.
+
 
 ```js
 import React from "react";
@@ -88,15 +91,31 @@ export default () => {
 
 
             <Select
-                value="value-2"
+                value="bar2"
                 name="name"
                 label="String"
                 fetchFuncAsync={new DataService}
                 fetchFuncMethod="getList"
                 fetchFuncMethodParams={['',0]}
-                fetchResponseField={{
-                    label: 'item_name',
-                    value: 'item_code'                        
+                fetchCallback={(res) => {
+
+                    const formattedData = res.map((item) => {
+                        return {
+                            label: item.item_name,
+                            value: item.item_code
+                        }
+                    }); 
+
+                    console.log(formattedData);
+                    /*
+                    [
+                        {"label": "foo","value": "bar"},
+                        {"label": "foo2","value": "bar2"},
+                        {"label": "foo3","value": "bar3"}
+                    ]  
+                    */
+
+                    return formattedData;
                 }}
                 onFetch={(res) => {
                     console.log('onFetch: ', res);

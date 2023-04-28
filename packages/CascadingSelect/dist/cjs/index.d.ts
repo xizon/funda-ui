@@ -44,7 +44,7 @@ declare type CascadingSelectProps = {
     fetchFuncAsync?: any;
     fetchFuncMethod?: string;
     fetchFuncMethodParams?: any[];
-    callback?: (data: any) => void;
+    fetchCallback?: (data: any) => void;
     onFetch?: (data: any) => void;
     onChange?: CascadingSelectOptionChangeFnType | null;
     onBlur?: (e: any) => void;

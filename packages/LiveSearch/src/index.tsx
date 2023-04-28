@@ -3,12 +3,6 @@ import React, { useId, useEffect, useState, useRef } from 'react';
 import SearchBar from 'rpb-searchbar';
 
 
-export interface fetchResponseField {
-    label: string | undefined;
-    value: string | undefined;
-    letter?: string | undefined;
-}
-
 
 type LiveSearchProps = {
     wrapperClassName?: string;
@@ -23,6 +17,9 @@ type LiveSearchProps = {
     icon?: React.ReactNode | string;
     btnId?: string;
     fetchTrigger?: boolean;
+    /** Set the depth value of the control to control the display of the pop-up layer appear above.
+     * Please set it when multiple controls are used at the same time. */
+    depth?: number;
     /** -- */
     id?: string;
     style?: React.CSSProperties;
@@ -33,7 +30,7 @@ type LiveSearchProps = {
     fetchFuncAsync?: any;
     fetchFuncMethod?: string;
     fetchFuncMethodParams?: any[];
-    fetchResponseField?: fetchResponseField;
+    fetchCallback?: (data: any) => void;
     onFetch?: (data: any) => void;
     onSelect?: (e: any, data: any) => void;
     onChange?: (e: any, data: any) => void;
@@ -71,6 +68,7 @@ const LiveSearch = (props: LiveSearchProps) => {
         icon,
         btnId,
         fetchTrigger,
+        depth,
         maxLength,
         style,
         tabIndex,
@@ -79,7 +77,7 @@ const LiveSearch = (props: LiveSearchProps) => {
         fetchFuncAsync,
         fetchFuncMethod,
         fetchFuncMethodParams,
-        fetchResponseField,
+        fetchCallback,
         onFetch,
         onSelect,
         onChange,
@@ -99,6 +97,7 @@ const LiveSearch = (props: LiveSearchProps) => {
     const [data, setData] = useState<any[]>([]);
     const [inputValue, setInputValue] = useState<string>('');
     const [searchTrigger, setSearchTrigger] = useState<boolean>(false);
+    const [hasErr, setHasErr] = useState<boolean>(false);
 
 
     //
@@ -222,21 +221,29 @@ const LiveSearch = (props: LiveSearchProps) => {
         if ( typeof fetchFuncAsync === 'object' ) {
             
             const response: any = await fetchFuncAsync[`${fetchFuncMethod}`](...params.split(','));
-            const data = response.data.map((item: any) => {
-                return {
-                    'label': item[`${fetchResponseField?.label}`],
-                    'value': item[`${fetchResponseField?.value}`],
-                    'letter': item[`${fetchResponseField?.letter}`]
-                }
-            }); 
+            let _ORGIN_DATA = response.data;
+  
+            // reset data structure
+            if (typeof (fetchCallback) === 'function') {
+                _ORGIN_DATA = fetchCallback(_ORGIN_DATA);
+            }
+
+            // Determine whether the data structure matches
+            if ( typeof _ORGIN_DATA[0].value === 'undefined' ) {
+                console.warn( 'The data structure does not match, please refer to the example in the component documentation.' );
+                setHasErr(true);
+                _ORGIN_DATA = [];
+            }
+            
+
             
             //
-            onFetch?.(data);
+            onFetch?.(_ORGIN_DATA);
             
             //
-            setDataInit(data);
+            setDataInit(_ORGIN_DATA);
     
-            return data;
+            return _ORGIN_DATA;
         } else {
             return [];
         }
@@ -395,8 +402,8 @@ const LiveSearch = (props: LiveSearchProps) => {
                 />
 
 
-                {data && data.length > 0 ? <>
-                    <div ref={listRef} className="list-group position-absolute w-100 border shadow" style={{ marginTop: '-1.1rem'}} role="tablist">
+                {data && data.length > 0 && !hasErr ? <>
+                    <div ref={listRef} className="list-group position-absolute w-100 border shadow" style={{ marginTop: '-1.1rem', zIndex: (depth ? depth : 100)}} role="tablist">
                         {data ? data.map((item, index) => {
                             const startItemBorder = index === 0 ? 'border-top-0' : '';
                             const endItemBorder = index === data.length-1 ? 'border-bottom-0' : '';

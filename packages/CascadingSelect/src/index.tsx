@@ -51,7 +51,7 @@ type CascadingSelectProps = {
     fetchFuncAsync?: any;
     fetchFuncMethod?: string;
     fetchFuncMethodParams?: any[];
-    callback?: (data: any) => void;
+    fetchCallback?: (data: any) => void;
     onFetch?: (data: any) => void;
     onChange?: CascadingSelectOptionChangeFnType | null;
     onBlur?: (e: any) => void;
@@ -83,7 +83,7 @@ const CascadingSelect = (props: CascadingSelectProps) => {
         fetchFuncAsync,
         fetchFuncMethod,
         fetchFuncMethodParams,
-        callback,
+        fetchCallback,
         onFetch,
         onChange,
         onBlur,
@@ -121,19 +121,18 @@ const CascadingSelect = (props: CascadingSelectProps) => {
             setLoading(true);
 
             const response: any = await fetchFuncAsync[`${fetchFuncMethod}`](...params.split(','));
-            let _alldata = response.data;
-            console.log(_alldata)
-
+            let _ORGIN_DATA = response.data;
+  
             // reset data structure
-            if (typeof (callback) === 'function') {
-                _alldata = callback(_alldata);
+            if (typeof (fetchCallback) === 'function') {
+                _ORGIN_DATA = fetchCallback(_ORGIN_DATA);
             }
 
             // Determine whether the data structure matches
-            if ( typeof _alldata[0].id === 'undefined' ) {
+            if ( typeof _ORGIN_DATA[0].id === 'undefined' ) {
                 console.warn( 'The data structure does not match, please refer to the example in the component documentation.' );
                 setHasErr(true);
-                _alldata = [];
+                _ORGIN_DATA = [];
             }
             
 
@@ -142,14 +141,14 @@ const CascadingSelect = (props: CascadingSelectProps) => {
             setLoading(false);
 
             // column titles
-            fillColumnTitle(_alldata);
+            fillColumnTitle(_ORGIN_DATA);
             
 
             // dictionary data (orginal)
-            setDictionaryData(_alldata);
+            setDictionaryData(_ORGIN_DATA);
 
             // Add an empty item to each list to support empty item selection
-            const _EMPTY_SUPPORTED_DATA = JSON.parse(JSON.stringify(_alldata));
+            const _EMPTY_SUPPORTED_DATA = JSON.parse(JSON.stringify(_ORGIN_DATA));
             addEmptyOpt(_EMPTY_SUPPORTED_DATA, 0);
 
     
@@ -593,7 +592,7 @@ const CascadingSelect = (props: CascadingSelectProps) => {
                 </> : null}
 
 
-                <div className="cascading-select" style={{ zIndex: (depth ? depth : 1) }}>
+                <div className="cascading-select" style={{ zIndex: (depth ? depth : 100) }}>
 
                     {isShow && !hasErr ? (
                         <div className="cascading-select__items">

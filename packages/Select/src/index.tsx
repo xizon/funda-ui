@@ -6,11 +6,6 @@ declare module 'react' {
     }
 }
 
-export interface fetchResponseField {
-    label: string | undefined;
-    value: string | undefined;
-}
-
 type SelectOptionChangeFnType = (arg1: any, arg2: any) => void;
 
 
@@ -21,7 +16,7 @@ type SelectProps = {
     name?: string;
     disabled?: any;
     required?: any;
-    options?: string;
+    options?: any;
     /** -- */
     id?: string;
     style?: React.CSSProperties;
@@ -30,7 +25,7 @@ type SelectProps = {
     fetchFuncAsync?: any;
     fetchFuncMethod?: string;
     fetchFuncMethodParams?: any[];
-    fetchResponseField?: fetchResponseField;
+    fetchCallback?: (data: any) => void;
     onFetch?: (data: any) => void;
     onChange?: SelectOptionChangeFnType | null;
     onBlur?: (e: any) => void;
@@ -52,7 +47,7 @@ const Select = forwardRef((props: SelectProps, ref: any) => {
         fetchFuncAsync,
         fetchFuncMethod,
         fetchFuncMethodParams,
-        fetchResponseField,
+        fetchCallback,
         onFetch,
         onChange,
         onBlur,
@@ -64,31 +59,63 @@ const Select = forwardRef((props: SelectProps, ref: any) => {
     const uniqueID = useId();
     const idRes = id || uniqueID;
     const rootRef = useRef<any>(null);
-    const optionsRes = options ? options : '';
+    const optionsRes = options ? isJSON( options ) ? JSON.parse( options ) : options : '';
 
-    const [dataInit, setDataInit] = useState<any[]>([]);
+    // return a array of options
+    let optionsDataInit: any[] = []; 
+    const optionKeys = Object.keys(optionsRes);
+    const optionValues = Object.values(optionsRes);
+    optionsDataInit = optionKeys.map((item: any, index: number) => {
+        return {
+            label: optionKeys[index],
+            value: optionValues[index]
+        }
+    });
 
+
+    //
+    const [dataInit, setDataInit] = useState<any[]>(optionsDataInit);
+    const [hasErr, setHasErr] = useState<boolean>(false);
+    const [controlValue, setControlValue] = useState<string | undefined>('');
+  
 
     async function fetchData(params: any) {
 
         if ( typeof fetchFuncAsync === 'object' ) {
 
             const response: any = await fetchFuncAsync[`${fetchFuncMethod}`](...params.split(','));
-            const data = response.data.map((item: any) => {
-                return {
-                    'label': item[`${fetchResponseField?.label}`],
-                    'value': item[`${fetchResponseField?.value}`]
-                }
-            }); 
-            
+            let _ORGIN_DATA = response.data;
+  
+            // reset data structure
+            if (typeof (fetchCallback) === 'function') {
+                _ORGIN_DATA = fetchCallback(_ORGIN_DATA);
+            }
+
+            // Determine whether the data structure matches
+            if ( typeof _ORGIN_DATA[0].value === 'undefined' ) {
+                console.warn( 'The data structure does not match, please refer to the example in the component documentation.' );
+                setHasErr(true);
+                _ORGIN_DATA = [];
+            }
+
             //
-            onFetch?.(data);
-            
+            setControlValue(value); // value must be initialized
+
             //
-            setDataInit(data);
+            setDataInit(_ORGIN_DATA); // data must be initialized
+
+            //
+            onFetch?.(_ORGIN_DATA);
     
-            return data;
+            return _ORGIN_DATA;
         } else {
+
+            //
+            setControlValue(value); // value must be initialized
+
+            //
+            setDataInit(optionsDataInit); // data must be initialized
+
             return [];
         }
 
@@ -145,6 +172,11 @@ const Select = forwardRef((props: SelectProps, ref: any) => {
     function handleChange(event: any) {
         const val = event.target.value;
 
+       
+        //----
+        // update value
+        setControlValue(val);
+
 
         //----
         //remove focus style
@@ -152,7 +184,7 @@ const Select = forwardRef((props: SelectProps, ref: any) => {
 
         //
 		if ( typeof(onChange) === 'function' ) {
-			onChange(event, val);
+			onChange(event, dataInit[event.target.selectedIndex]);
 
             event.target.blur();
 		}
@@ -170,27 +202,9 @@ const Select = forwardRef((props: SelectProps, ref: any) => {
     }
 
     
-    // Get all options from option prop
-    let selectOptions: any[];
-    let optionKeys: string[];
-    let optionValues: string[];
-
-    // Use API data if database query exists
-    if ( dataInit.length > 0 ) {
-        selectOptions = dataInit;
-        optionKeys = dataInit.map( (item: any) => item.label);
-        optionValues = dataInit.map( (item: any) => item.value);
-    } else {
-        selectOptions =isJSON( optionsRes ) ? JSON.parse( optionsRes ) : {};
-        optionKeys = Object.keys(selectOptions);
-        optionValues = Object.values(selectOptions);
-    }
-
-    
-    
     // Generate list of options
-    const selectOptionsList = optionKeys.map((selectOption, index) => {
-        return <option key={index} value={optionValues[index] as string}>{selectOption}</option>;
+    const selectOptionsList = dataInit.map((item: any, index: number) => {
+        return <option key={index} value={item.value as string}>{item.label}</option>;
         
     });
 
@@ -203,8 +217,7 @@ const Select = forwardRef((props: SelectProps, ref: any) => {
         const _params: any[] = fetchFuncMethodParams || [];
         fetchData((_params).join(','));
 
-
-    }, []);
+    }, [value]); // required `value` parameter
 
 
     return (
@@ -218,7 +231,7 @@ const Select = forwardRef((props: SelectProps, ref: any) => {
                         className="form-select"
                         id={idRes}
                         name={name}
-                        value={value || ''}  // do not use `defaultValue`
+                        value={controlValue}  // do not use `defaultValue`
                         onFocus={handleFocus}
                         onBlur={handleBlur}
                         onChange={handleChange}
@@ -227,7 +240,7 @@ const Select = forwardRef((props: SelectProps, ref: any) => {
                         style={style}
                         {...attributes}
 					>
-			           {selectOptionsList}
+			           {!hasErr ? selectOptionsList : null}
 					</select>
 
             </div>

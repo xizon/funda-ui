@@ -4,10 +4,6 @@ declare module 'react' {
         children?: any;
     }
 }
-export interface fetchResponseField {
-    label: string | undefined;
-    value: string | undefined;
-}
 declare type SelectOptionChangeFnType = (arg1: any, arg2: any) => void;
 declare type SelectProps = {
     wrapperClassName?: string;
@@ -16,7 +12,7 @@ declare type SelectProps = {
     name?: string;
     disabled?: any;
     required?: any;
-    options?: string;
+    options?: any;
     /** -- */
     id?: string;
     style?: React.CSSProperties;
@@ -25,7 +21,7 @@ declare type SelectProps = {
     fetchFuncAsync?: any;
     fetchFuncMethod?: string;
     fetchFuncMethodParams?: any[];
-    fetchResponseField?: fetchResponseField;
+    fetchCallback?: (data: any) => void;
     onFetch?: (data: any) => void;
     onChange?: SelectOptionChangeFnType | null;
     onBlur?: (e: any) => void;

@@ -520,6 +520,7 @@ var LiveSearch = function LiveSearch(props) {
     icon = props.icon,
     btnId = props.btnId,
     fetchTrigger = props.fetchTrigger,
+    depth = props.depth,
     maxLength = props.maxLength,
     style = props.style,
     tabIndex = props.tabIndex,
@@ -528,7 +529,7 @@ var LiveSearch = function LiveSearch(props) {
     fetchFuncAsync = props.fetchFuncAsync,
     fetchFuncMethod = props.fetchFuncMethod,
     fetchFuncMethodParams = props.fetchFuncMethodParams,
-    fetchResponseField = props.fetchResponseField,
+    fetchCallback = props.fetchCallback,
     onFetch = props.onFetch,
     onSelect = props.onSelect,
     onChange = props.onChange,
@@ -559,6 +560,10 @@ var LiveSearch = function LiveSearch(props) {
     _useState10 = _slicedToArray(_useState9, 2),
     searchTrigger = _useState10[0],
     setSearchTrigger = _useState10[1];
+  var _useState11 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(false),
+    _useState12 = _slicedToArray(_useState11, 2),
+    hasErr = _useState12[0],
+    setHasErr = _useState12[1];
 
   //
   function getPlacement(el) {
@@ -737,33 +742,39 @@ var LiveSearch = function LiveSearch(props) {
   }
   function _fetchData() {
     _fetchData = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee4(params) {
-      var response, _data;
+      var response, _ORGIN_DATA;
       return _regeneratorRuntime().wrap(function _callee4$(_context4) {
         while (1) switch (_context4.prev = _context4.next) {
           case 0:
             if (!(_typeof(fetchFuncAsync) === 'object')) {
-              _context4.next = 10;
+              _context4.next = 12;
               break;
             }
             _context4.next = 3;
             return fetchFuncAsync["".concat(fetchFuncMethod)].apply(fetchFuncAsync, _toConsumableArray(params.split(',')));
           case 3:
             response = _context4.sent;
-            _data = response.data.map(function (item) {
-              return {
-                'label': item["".concat(fetchResponseField === null || fetchResponseField === void 0 ? void 0 : fetchResponseField.label)],
-                'value': item["".concat(fetchResponseField === null || fetchResponseField === void 0 ? void 0 : fetchResponseField.value)],
-                'letter': item["".concat(fetchResponseField === null || fetchResponseField === void 0 ? void 0 : fetchResponseField.letter)]
-              };
-            }); //
-            onFetch === null || onFetch === void 0 ? void 0 : onFetch(_data);
+            _ORGIN_DATA = response.data; // reset data structure
+            if (typeof fetchCallback === 'function') {
+              _ORGIN_DATA = fetchCallback(_ORGIN_DATA);
+            }
+
+            // Determine whether the data structure matches
+            if (typeof _ORGIN_DATA[0].value === 'undefined') {
+              console.warn('The data structure does not match, please refer to the example in the component documentation.');
+              setHasErr(true);
+              _ORGIN_DATA = [];
+            }
 
             //
-            setDataInit(_data);
-            return _context4.abrupt("return", _data);
-          case 10:
+            onFetch === null || onFetch === void 0 ? void 0 : onFetch(_ORGIN_DATA);
+
+            //
+            setDataInit(_ORGIN_DATA);
+            return _context4.abrupt("return", _ORGIN_DATA);
+          case 12:
             return _context4.abrupt("return", []);
-          case 11:
+          case 13:
           case "end":
             return _context4.stop();
         }
@@ -913,11 +924,12 @@ var LiveSearch = function LiveSearch(props) {
     icon: !fetchTrigger ? '' : icon,
     btnId: btnId,
     autoComplete: "off"
-  }), data && data.length > 0 ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+  }), data && data.length > 0 && !hasErr ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
     ref: listRef,
     className: "list-group position-absolute w-100 border shadow",
     style: {
-      marginTop: '-1.1rem'
+      marginTop: '-1.1rem',
+      zIndex: depth ? depth : 100
     },
     role: "tablist"
   }, data ? data.map(function (item, index) {

@@ -28,10 +28,13 @@ import CascadingSelect from 'react-pure-bootstrap/CascadingSelect';
 | `fetchFuncAsync` | Constructor | - | A method as a string from the constructor.  |
 | `fetchFuncMethod` | string  | - | When the property is *true*, every time the select changes, a data request will be triggered. <br /><blockquote>The methord must be a Promise Object.</blockquote> |
 | `fetchFuncMethodParams` | array  | - | The parameter passed by the method, it is an array. <br />Note: the first element is a query string, the second element is the number of queried data (usually a number), and then you can increase the third, or fourth, and more parameters. <br />Such as `['',0]`, `['',99,'string 1','string 2']` <br /><blockquote>There should be at least one parameter which is the query string.</blockquote> |
+| `fetchCallback` | function  | - | Return value from `fetchCallback` property to format the data of the API callback, which will match the data structure of the component. <br >At the same time it returns the original data, you will use this function and use the `return` keyword to return a new value. |
 | `onFetch` | function  | - | Call a function when  data is successfully fetched. It returns one callback value which is the fetched data (an array) |
 | `onChange` | function  | - | Call a function when the value of an HTML element is changed. It returns five callback values. <br /> <ol><li>The one is the input control</li><li>The second parameter is the current option data (a JSON object)</li><li>The third parameter is the index of the current column group</li><li>The fourth parameter indicates the current column depth</li><li>The last is value of the current control.</li></ol> |
 | `onBlur` | function  | - | Call a function when a user leaves a form field. |
 | `onFocus` | function  | - | Call a function when an form field gets focus. |
+
+
 
 
 
@@ -329,10 +332,10 @@ export default () => {
                 onChange={(input, currentData, index, depth, value) => {
                     console.log('currentData: ', currentData);
 
-                    const $p: any = document.querySelector('[name="province"]'),
-                            $c: any = document.querySelector('[name="city"]'),
-                            $d: any = document.querySelector('[name="district"]'),
-                            $s: any = document.querySelector('[name="street"]');
+                    const $p = document.querySelector('[name="province"]'),
+                          $c = document.querySelector('[name="city"]'),
+                          $d = document.querySelector('[name="district"]'),
+                          $s = document.querySelector('[name="street"]');
 
                 
                     if ( depth < 1 ) $c.value = '';
@@ -366,7 +369,7 @@ export default () => {
 
 ## Examples (Use formatted data to match components)
 
-You need to use a `callback` attribute to format the data of the API callback, which will match the data structure of the component.
+You need to use a `fetchCallback` property to format the data of the API callback, which will match the data structure of the component.
 
 
 
@@ -440,12 +443,12 @@ export default () => {
                 fetchFuncAsync={new DataService}
                 fetchFuncMethod="getList"
                 fetchFuncMethodParams={['',0]}
-                callback={(res) => {
+                fetchCallback={(res) => {
 
-                    const coreData = res.filter( (item: any) => item.item_type !== 'web/ui' );
-                    const formattedData: any = [];
-                    const webUiData = res.filter( (item: any) => item.item_type === 'web/ui' );
-                    const formattedWebUiData: any = [];
+                    const coreData = res.filter( (item) => item.item_type !== 'web/ui' );
+                    const formattedData = [];
+                    const webUiData = res.filter( (item) => item.item_type === 'web/ui' );
+                    const formattedWebUiData = [];
                     for (const val of webUiData) {
                         formattedWebUiData.push({
                             id: val.item_code,

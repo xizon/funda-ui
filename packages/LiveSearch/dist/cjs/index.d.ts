@@ -1,9 +1,4 @@
 import React from 'react';
-export interface fetchResponseField {
-    label: string | undefined;
-    value: string | undefined;
-    letter?: string | undefined;
-}
 declare type LiveSearchProps = {
     wrapperClassName?: string;
     appearance?: string;
@@ -17,6 +12,9 @@ declare type LiveSearchProps = {
     icon?: React.ReactNode | string;
     btnId?: string;
     fetchTrigger?: boolean;
+    /** Set the depth value of the control to control the display of the pop-up layer appear above.
+     * Please set it when multiple controls are used at the same time. */
+    depth?: number;
     /** -- */
     id?: string;
     style?: React.CSSProperties;
@@ -27,7 +25,7 @@ declare type LiveSearchProps = {
     fetchFuncAsync?: any;
     fetchFuncMethod?: string;
     fetchFuncMethodParams?: any[];
-    fetchResponseField?: fetchResponseField;
+    fetchCallback?: (data: any) => void;
     onFetch?: (data: any) => void;
     onSelect?: (e: any, data: any) => void;
     onChange?: (e: any, data: any) => void;
