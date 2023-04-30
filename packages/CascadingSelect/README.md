@@ -445,6 +445,26 @@ export default () => {
                 fetchFuncMethodParams={['',0]}
                 fetchCallback={(res) => {
 
+                    /*
+                    // prevent orginal data
+                    let placesMap: any = {};
+                    for (const val of res) {
+                        placesMap[val.item_code] = [val.item_name, val.item_type];
+                    }
+
+                    //
+                    const data = [];
+                    for (const key in placesMap) {
+                        data.push({
+                            id: key,
+                            name: placesMap[key][0],
+                            type: placesMap[key][1]
+                        });
+                    }
+
+                    return data;
+                    */
+                   
                     const coreData = res.filter( (item) => item.item_type !== 'web/ui' );
                     const formattedData = [];
                     const webUiData = res.filter( (item) => item.item_type === 'web/ui' );

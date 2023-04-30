@@ -1,6 +1,6 @@
 import React from 'react';
 
-type GroupFnType = (arg1: any, arg2: number) => void;
+type GroupFnType = (arg1: any, arg2: any, arg3: number) => void;
 
 type GroupProps = {
     level: number;
@@ -22,9 +22,9 @@ export default function Group(props: GroupProps) {
         <>
             {data.map((item: any, index: number) => {
                 if ( item.id.toString().indexOf('$EMPTY_ID_') < 0 ) {
-                    return <div key={index} data-index={index} data-value={item.id} className={item.current ? 'cascading-select__opt active' : 'cascading-select__opt'} onClick={(e) => selectEv!(item, index)}>{item.name}</div>
+                    return <div key={index} data-index={index} data-value={item.id} className={item.current ? 'cascading-select__opt active' : 'cascading-select__opt'} onClick={(e) => selectEv!(e, item, index)}>{item.name}</div>
                 } else {
-                    return columnTitle[level] === '' ? null : <h3 key={index} data-index={index} data-value={item.id} onClick={(e) => selectEv!(item, index)} className={item.current ? 'cascading-select__opt-header active' : 'cascading-select__opt-header'} >{columnTitle[level]}</h3>
+                    return columnTitle[level] === '' ? null : <h3 key={index} data-index={index} data-value={item.id} onClick={(e) => selectEv!(e, item, index)} className={item.current ? 'cascading-select__opt-header active' : 'cascading-select__opt-header'} >{columnTitle[level]}</h3>
                 }
                 
             })}

@@ -122,7 +122,11 @@ const CascadingSelect = (props: CascadingSelectProps) => {
 
             const response: any = await fetchFuncAsync[`${fetchFuncMethod}`](...params.split(','));
             let _ORGIN_DATA = response.data;
-  
+
+
+            // loading 
+            setLoading(false);
+
             // reset data structure
             if (typeof (fetchCallback) === 'function') {
                 _ORGIN_DATA = fetchCallback(_ORGIN_DATA);
@@ -136,32 +140,31 @@ const CascadingSelect = (props: CascadingSelectProps) => {
             }
             
 
-
-            // loading 
-            setLoading(false);
-
+            // STEP 1: ===========
             // column titles
             fillColumnTitle(_ORGIN_DATA);
             
 
+            // STEP 2: ===========
             // dictionary data (orginal)
             setDictionaryData(_ORGIN_DATA);
 
+            // STEP 3: ===========
             // Add an empty item to each list to support empty item selection
             const _EMPTY_SUPPORTED_DATA = JSON.parse(JSON.stringify(_ORGIN_DATA));
             addEmptyOpt(_EMPTY_SUPPORTED_DATA, 0);
 
     
+            // STEP 4: ===========
             // Turn the data of each group into an array
             setData([_EMPTY_SUPPORTED_DATA]);
 
-            //Initialize options 
-            handleInitControl();
 
-
+            // STEP 5: ===========
             //Set a default value
             if (value) updateValue(_EMPTY_SUPPORTED_DATA, value);
 
+            // STEP 6: ===========
             //
             onFetch?.(_EMPTY_SUPPORTED_DATA);
 
@@ -219,21 +222,13 @@ const CascadingSelect = (props: CascadingSelectProps) => {
     }
 
 
-    function handleInitControl() {
-
-        // update result to input
-        const inputEl: any = valRef.current;
-        inputEl.value = '';
-
-    }
-
     function handleDisplayOptions(event: any) {
         event.preventDefault();
         setIsShow(true);
     }
 
 
-    function handleClickItem(resValue: any, index: number, level: number) {
+    function handleClickItem(e: any, resValue: any, index: number, level: number) {
 
         // update value
         //////////////////////////////////////////
@@ -364,9 +359,9 @@ const CascadingSelect = (props: CascadingSelectProps) => {
          // update selected data 
          //////////////////////////////////////////
         if (valueType === 'value') {
-            inputEl.value = valueTypeValue!.join(',');
+            if (inputEl !== null ) inputEl.value = valueTypeValue!.join(',');
         } else {
-            inputEl.value = valueTypeLabel!.join(',');
+            if (inputEl !== null ) inputEl.value = valueTypeLabel!.join(',');
         }
         
         return {
@@ -605,7 +600,7 @@ const CascadingSelect = (props: CascadingSelectProps) => {
                                                 level={level}
                                                 columnTitle={columnTitleData}
                                                 data={item} 
-                                                selectEv={(value, index) => handleClickItem(value, index, level)} 
+                                                selectEv={(e, value, index) => handleClickItem(e, value, index, level)} 
                                             />
                                         </li>
                                     )

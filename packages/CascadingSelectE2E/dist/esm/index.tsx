@@ -10,10 +10,17 @@ declare module 'react' {
 }
 
 
-type CascadingSelectOptionChangeFnType = (input: any, currentData: any, index: any, depth: any, value: any) => void;
+type CascadingSelectE2EOptionChangeFnType = (input: any, currentData: any, index: any, depth: any, value: any) => void;
 
 
-type CascadingSelectProps = {
+interface fetchArrayConfig {
+    fetchFuncAsync?: any | undefined;
+    fetchFuncMethod?: string | undefined;
+    fetchFuncMethodParams?: any[] | undefined;
+    fetchCallback?: (data: any) => void;
+}
+
+type CascadingSelectE2EProps = {
     wrapperClassName?: string;
     value?: string;
     label?: React.ReactNode | string;
@@ -43,23 +50,32 @@ type CascadingSelectProps = {
     triggerClassName?: string;
     /** Set a piece of text or HTML code for the trigger */
     triggerContent?: React.ReactNode;
+    /** Configuration for multiple requests */
+    fetchArray?: fetchArrayConfig[];
     /** -- */
     id?: string;
     style?: React.CSSProperties;
     tabIndex?: number;
     [key: `data-${string}`]: string | undefined;
-    fetchFuncAsync?: any;
-    fetchFuncMethod?: string;
-    fetchFuncMethodParams?: any[];
-    fetchCallback?: (data: any) => void;
-    onFetch?: (data: any) => void;
-    onChange?: CascadingSelectOptionChangeFnType | null;
+    onFetch?: (data: any, childrenData: any) => void;
+    onChange?: CascadingSelectE2EOptionChangeFnType | null;
     onBlur?: (e: any) => void;
     onFocus?: (e: any) => void;
 };
 
 
-const CascadingSelect = (props: CascadingSelectProps) => {
+// current data depth (GLOBAL)
+let currentDataDepth: number = 0;
+
+// all data from fetched data
+let allData: any[];
+
+// options data
+let optData: any[];
+
+
+
+const CascadingSelectE2E = (props: CascadingSelectE2EProps) => {
     const {
         wrapperClassName,
         disabled,
@@ -80,10 +96,7 @@ const CascadingSelect = (props: CascadingSelectProps) => {
         tabIndex,
         triggerClassName,
         triggerContent,
-        fetchFuncAsync,
-        fetchFuncMethod,
-        fetchFuncMethodParams,
-        fetchCallback,
+        fetchArray,
         onFetch,
         onChange,
         onBlur,
@@ -97,12 +110,13 @@ const CascadingSelect = (props: CascadingSelectProps) => {
     const rootRef = useRef<any>(null);
     const valRef = useRef<any>(null);
 
-
     const [dictionaryData, setDictionaryData] = useState<any[]>([]);
-    const [loading, setLoading] = useState<boolean>(true);
+    const [loading, setLoading] = useState<boolean>(false);
     const [columnTitleData, setColumnTitleData] = useState<any[]>([]);
     const [hasErr, setHasErr] = useState<boolean>(false);
-   
+    const [firstDataFeched, setFirstDataFeched] = useState<boolean>(false);
+    
+
 
     //for variable 
     const [data, setData] = useState<any[]>([]);
@@ -113,7 +127,12 @@ const CascadingSelect = (props: CascadingSelectProps) => {
     const [isShow, setIsShow] = useState<boolean>(false);
 
 
-    async function fetchData(params: any) {
+    async function fetchData(_fetchArray: any, params: string, dataDepth: number, parentId: number = 0) {
+
+        const fetchFuncAsync = _fetchArray.fetchFuncAsync;
+        const fetchFuncMethod = _fetchArray.fetchFuncMethod;
+        const fetchCallback = _fetchArray.fetchCallback;
+ 
 
         if (typeof fetchFuncAsync === 'object') {
 
@@ -123,14 +142,17 @@ const CascadingSelect = (props: CascadingSelectProps) => {
             const response: any = await fetchFuncAsync[`${fetchFuncMethod}`](...params.split(','));
             let _ORGIN_DATA = response.data;
 
-
+           
             // loading 
             setLoading(false);
+            
+            if ( typeof _ORGIN_DATA[0] === 'undefined' ) return;
 
             // reset data structure
             if (typeof (fetchCallback) === 'function') {
                 _ORGIN_DATA = fetchCallback(_ORGIN_DATA);
             }
+
 
             // Determine whether the data structure matches
             if ( typeof _ORGIN_DATA[0].id === 'undefined' ) {
@@ -139,37 +161,62 @@ const CascadingSelect = (props: CascadingSelectProps) => {
                 _ORGIN_DATA = [];
             }
             
+            // add data depth
+            _ORGIN_DATA.forEach( (item: any) => {
+                item.depth = dataDepth;
+            }); 
 
-            // STEP 1: ===========
-            // column titles
-            fillColumnTitle(_ORGIN_DATA);
             
-
+            // STEP 1: ===========
+            // all data from fetched data
+            if ( dataDepth === 0 ) {
+                allData = JSON.parse(JSON.stringify(_ORGIN_DATA)); 
+            }
+            if ( dataDepth > 0 ) {
+                addChildrenOpt(allData, parentId, _ORGIN_DATA);
+            }
+      
             // STEP 2: ===========
             // dictionary data (orginal)
-            setDictionaryData(_ORGIN_DATA);
+            setDictionaryData(allData);
 
             // STEP 3: ===========
             // Add an empty item to each list to support empty item selection
-            const _EMPTY_SUPPORTED_DATA = JSON.parse(JSON.stringify(_ORGIN_DATA));
+            const _EMPTY_SUPPORTED_DATA = JSON.parse(JSON.stringify(allData));
             addEmptyOpt(_EMPTY_SUPPORTED_DATA, 0);
 
-    
             // STEP 4: ===========
             // Turn the data of each group into an array
-            setData([_EMPTY_SUPPORTED_DATA]);
+            if ( dataDepth === 0 ) {
+                optData = [_EMPTY_SUPPORTED_DATA];
+                setData(optData);
+            }
+            if ( dataDepth > 0 ) {
+                optData = data;
+
+                // Add an empty item to each list to support empty item selection
+                addEmptyOpt(_ORGIN_DATA, 0);
+
+                const childList = _ORGIN_DATA;
+                optData[dataDepth] = childList;
+                
+                setData(optData);
+            }
 
 
             // STEP 5: ===========
             //Set a default value
             if (value) updateValue(_EMPTY_SUPPORTED_DATA, value);
 
+
             // STEP 6: ===========
             //
-            onFetch?.(_EMPTY_SUPPORTED_DATA);
-
-
+            onFetch?.(_EMPTY_SUPPORTED_DATA, _ORGIN_DATA);    
+            
             return _EMPTY_SUPPORTED_DATA;
+
+
+            
         } else {
             return [];
         }
@@ -179,6 +226,21 @@ const CascadingSelect = (props: CascadingSelectProps) => {
 
 
     //
+    function doFetch(dataDepthMax: boolean, dataDepth: number = 0, parentId: number = 0, emptyAction: boolean = false) {
+
+        // if empty selection is selected
+        if ( emptyAction ) return;
+
+        // If the depth is max, no more requests
+        if ( dataDepthMax ) return;
+
+        // data fetch action
+        const _oparams: any[] = fetchArray![dataDepth].fetchFuncMethodParams || [];
+        const _params: any[] = _oparams.map( (item: any) => item !== '$AUTO' ? item : parentId );
+        fetchData(fetchArray![dataDepth], (_params).join(','), dataDepth, parentId);
+    }
+
+
     function handleFocus(event: any) {
         rootRef.current.classList.add('focus');
 
@@ -218,18 +280,41 @@ const CascadingSelect = (props: CascadingSelectProps) => {
         ) {
 
             setIsShow(false);
+             
         }
     }
-
 
     function handleDisplayOptions(event: any) {
         event.preventDefault();
         setIsShow(true);
+        
+        // Execute the fetch task
+        if ( !firstDataFeched ) {
+            setLoading(true);
+            doFetch(false, currentDataDepth, 0, false);
+            setFirstDataFeched(true);
+        }
+
+        
     }
 
 
     function handleClickItem(e: any, resValue: any, index: number, level: number) {
 
+        const dataDepthMax: boolean = resValue.depth === fetchArray!.length-1;
+        const parentId = e.currentTarget.dataset.value;
+        const emptyAction = resValue.id.toString().indexOf('$EMPTY_ID_') < 0 ? false : true;
+
+
+        // update data depth
+         //////////////////////////////////////////
+        currentDataDepth = resValue.depth+1;
+
+        // Execute the fetch task
+        //////////////////////////////////////////
+        doFetch(dataDepthMax, currentDataDepth, parentId, emptyAction);
+        
+     
         // update value
         //////////////////////////////////////////
         const inputVal = updateValue(dictionaryData, resValue.id, level);
@@ -258,54 +343,55 @@ const CascadingSelect = (props: CascadingSelectProps) => {
         markCurrent(newData[level], index);
 
 
-        //
-        setData(newData);
-
-
         // close modal
         //////////////////////////////////////////
-        if (typeof resValue.children === 'undefined' && resValue.id.toString().indexOf('$EMPTY_ID_') < 0 ) {
+        if ( dataDepthMax && resValue.id.toString().indexOf('$EMPTY_ID_') < 0 ) {
             setIsShow(false);
+
+            // update data depth
+            currentDataDepth = 0;            
         }
         
     }
+
 
 
     /**
      * Active the selected item
-     * @param arr 
-     * @param index 
-     * @returns 
-     */
-    function markCurrent(arr: any[], index: number) {
+    * @param arr 
+    * @param index 
+    * @returns 
+    */
+   function markCurrent(arr: any[], index: number) {
 
-         // click an item
-         //////////////////////////////////////////
-        for (let i = 0; i < arr.length; i++) {
-            if (i === index) {
-                arr[i].current = true;
-            } else {
-                arr[i].current = false;
-            }
-        }
-        
-         // return result
-         //////////////////////////////////////////
-        return arr;
-    }
+        // click an item
+        //////////////////////////////////////////
+       for (let i = 0; i < arr.length; i++) {
+           if (i === index) {
+               arr[i].current = true;
+           } else {
+               arr[i].current = false;
+           }
+       }
+       
+        // return result
+        //////////////////////////////////////////
+       return arr;
+   }
 
-    /**
-     * Deactivate all items
-     * @param arr 
-     * @returns 
-     */
-    function markAllItems(arr: any[]) {
-        for (let i = 0; i < arr.length; i++) {
-            arr[i].current = false;
-        }
+   /**
+    * Deactivate all items
+    * @param arr 
+    * @returns 
+    */
+   function markAllItems(arr: any[]) {
+       for (let i = 0; i < arr.length; i++) {
+           arr[i].current = false;
+       }
 
-        return arr;
-    }
+       return arr;
+   }
+
 
 
 
@@ -314,7 +400,6 @@ const CascadingSelect = (props: CascadingSelectProps) => {
         const inputEl: any = valRef.current;
         let valueTypeValue, valueTypeLabel;
 
-    
         if ( targetVal.toString().indexOf('$EMPTY_ID_') >= 0 ) {
 
             // If clearing the current column
@@ -372,9 +457,9 @@ const CascadingSelect = (props: CascadingSelectProps) => {
     }
 
     
-    function fillColumnTitle(obj: any[]) {
+    function fillColumnTitle() {
 
-        const dataDepth = getDepth(obj);
+        const dataDepth = fetchArray!.length;
         const oldColumnTitleData = columnTitle ? columnTitle : [];
         const newColumnTitleData = new Array(dataDepth)?.fill('');
         oldColumnTitleData!.forEach( (item: any, index: number) => {
@@ -386,28 +471,20 @@ const CascadingSelect = (props: CascadingSelectProps) => {
             newColumnTitleData.splice(dataDepth, oldColumnTitleData.length-dataDepth);
         }
 
-
         setColumnTitleData(newColumnTitleData);
     }
 
 
-    function getDepth(obj: any[]) {
-        let depth = 0;
-
+    function addChildrenOpt(obj: any[], parentId: number, childrenData: any[]) {
+        
         obj.forEach((item: any) => {
+            if ( item.id === parentId ) item.children = childrenData;
+
             if (item.children) {
-                item.children.forEach(function (d: any) {
-                    const tmpDepth = getDepth(item.children);
-                    if (tmpDepth > depth) {
-                        depth = tmpDepth;
-                    }
-                });
+                addChildrenOpt(item.children, parentId, childrenData);
             }
         });
-
-        return 1 + depth;
     }
-
 
 
     function addEmptyOpt(obj: any[], index: number) {
@@ -416,7 +493,8 @@ const CascadingSelect = (props: CascadingSelectProps) => {
 
         obj.unshift({
             id: "$EMPTY_ID_" + index,
-            name: ""
+            name: "",
+            depth: obj[0].depth
         });
 
         obj.forEach((item: any, depth: number) => {
@@ -556,10 +634,9 @@ const CascadingSelect = (props: CascadingSelectProps) => {
 
     useEffect(() => {
 
-        // data init
+        // column titles
         //--------------
-        const _params: any[] = fetchFuncMethodParams || [];
-        fetchData((_params).join(','));
+        fillColumnTitle();
 
 
         //
@@ -593,7 +670,6 @@ const CascadingSelect = (props: CascadingSelectProps) => {
                         <div className="cascading-select__items">
                             <ul>
                                 {data.map((item: any, level: number) => {
-                                    
                                     return (
                                         <li key={level}>
                                             <Group 
@@ -662,4 +738,4 @@ const CascadingSelect = (props: CascadingSelectProps) => {
     )
 };
 
-export default CascadingSelect;
+export default CascadingSelectE2E;

@@ -13,25 +13,25 @@ Here is a table of the components and their status.
 
 | WEB ELEMENTS | FORMS | INTERACTION | LAYOUT | NAVIGATION |
 | --- | --- | --- | --- | --- |
-| [Accordion ❏](packages/Accordion/README.md) | [Input ✅](packages/Input/README.md#input) | [Infinite Scroll ❏](packages/InfiniteScroll/README.md) | [Grid ❏](packages/Grid/README.md) | [Navigation ❏](packages/Navigation/README.md) | 
-| [Accordion Slider ❏](packages/AccordionSlider/README.md) | [Password Input ❏](packages/PasswordInput/README.md#password-input) | [Image Perspective Hover ❏](packages/ImagePerspectiveHover/README.md) | [Gallery ❏](packages/Gallery/README.md) | [Dropdown Menu ❏](packages/DropdownMenu/README.md)  | 
-| [Back To Top ❏](packages/BackToTop/README.md) | [Merge Input ❏](packages/MergeInput/README.md#merge-input) | [Mousewheel Interaction ❏](packages/MousewheelInteraction/README.md) |  | [Multilevel Dropdown Menu ✅](packages/MultilevelDropdownMenu/README.md)  | 
-| [Button ❏](packages/Button/README.md) | [Tag Input ❏](packages/TagInput/README.md#tag-input) | [Parallax ❏](packages/Parallax/README.md) |  |  | 
-| [Card ❏](packages/Card/README.md) | [Textarea  ✅](packages/Textarea/README.md#textarea) | [Scroll Reveal ❏](packages/ScrollReveal/README.md) |  |  | 
-| [Content Placeholder ❏](packages/ContentPlaceholder/README.md) | [Select ✅](packages/Select/README.md#select) | [Sticky Elements ❏](packages/StickyElements/README.md) |  |  | 
-| [Counter ❏](packages/Counter/README.md) | [Cascading Select ✅](packages/CascadingSelect/README.md#custom-select) |  |  |  | 
-| [Hybrid Content Slider ❏](packages/HybridContentSlider/README.md) | [Checkbox ✅](packages/Checkbox/README.md#checkbox) |  |  |  | 
-| [Image Shapes ❏](packages/ImageShapes/README.md) | [Radio ✅](packages/Radio/README.md#radio) |  |  |  | 
-| [Lightbox ❏](packages/Lightbox/README.md) | [Multi Select ❏](packages/MultiSelect/README.md#multi-select) |  |  |  | 
-| [List Bulleted ❏](packages/ListBulleted/README.md) | [Single Select ❏](packages/SingleSelect/README.md#single-select) |  |  |  | 
-| [Modal Dialog ✅](packages/ModalDialog/README.md) | [LiveSearch ✅](packages/LiveSearch/README.md#date) |  |  |  | 
-| [Pagination ❏](packages/Pagination/README.md) | [Number ❏](packages/Number/README.md#number) |  |  |  | 
-| [Table ❏](packages/Table/README.md) | [SearchBar ✅](packages/SearchBar/README.md#number) |  |  |  | 
-| [Periodical Scroll ❏](packages/PeriodicalScroll/README.md) | [Switch ❏](packages/Switch/README.md#switch) |  |  |  | 
-| [Progress Bar ❏](packages/ProgressBar/README.md) | [Dynamic Fields ❏](packages/DynamicFields/README.md#dynamic-fields) |  |  |  | 
-| [Rating ❏](packages/Rating/README.md) | [File ❏](packages/File/README.md#file) |  |  |  | 
-| [Seamless Scrolling Element ❏](packages/SeamlessScrollingElement/README.md) | [File Field ❏](packages/FileField/README.md#file-field) |  |  |  | 
-| [Show More Less ❏](packages/ShowMoreLess/README.md) |  |  |  |  | 
+| [Accordion ❏](packages/Accordion/README.md) | [Input ✅](packages/Input/README.md) | [Infinite Scroll ❏](packages/InfiniteScroll/README.md) | [Grid ❏](packages/Grid/README.md) | [Navigation ❏](packages/Navigation/README.md) | 
+| [Accordion Slider ❏](packages/AccordionSlider/README.md) | [Password Input ❏](packages/PasswordInput/README.md) | [Image Perspective Hover ❏](packages/ImagePerspectiveHover/README.md) | [Gallery ❏](packages/Gallery/README.md) | [Dropdown Menu ❏](packages/DropdownMenu/README.md)  | 
+| [Back To Top ❏](packages/BackToTop/README.md) | [Merge Input ❏](packages/MergeInput/README.md) | [Mousewheel Interaction ❏](packages/MousewheelInteraction/README.md) |  | [Multilevel Dropdown Menu ✅](packages/MultilevelDropdownMenu/README.md)  | 
+| [Button ❏](packages/Button/README.md) | [Tag Input ❏](packages/TagInput/README.md) | [Parallax ❏](packages/Parallax/README.md) |  |  | 
+| [Card ❏](packages/Card/README.md) | [Textarea  ✅](packages/Textarea/README.md) | [Scroll Reveal ❏](packages/ScrollReveal/README.md) |  |  | 
+| [Content Placeholder ❏](packages/ContentPlaceholder/README.md) | [Select ✅](packages/Select/README.md) | [Sticky Elements ❏](packages/StickyElements/README.md) |  |  | 
+| [Counter ❏](packages/Counter/README.md) | [Cascading Select ✅](packages/CascadingSelect/README.md) |  |  |  | 
+| [Hybrid Content Slider ❏](packages/HybridContentSlider/README.md) | [Checkbox ✅](packages/Checkbox/README.md) |  |  |  | 
+| [Image Shapes ❏](packages/ImageShapes/README.md) | [Radio ✅](packages/Radio/README.md) |  |  |  | 
+| [Lightbox ❏](packages/Lightbox/README.md) | [Multi Select ❏](packages/MultiSelect/README.md) |  |  |  | 
+| [List Bulleted ❏](packages/ListBulleted/README.md) | [Single Select ❏](packages/SingleSelect/README.md) |  |  |  | 
+| [Modal Dialog ✅](packages/ModalDialog/README.md) | [LiveSearch ✅](packages/LiveSearch/README.md) |  |  |  | 
+| [Pagination ❏](packages/Pagination/README.md) | [Number ❏](packages/Number/README.md) |  |  |  | 
+| [Table ❏](packages/Table/README.md) | [SearchBar ✅](packages/SearchBar/README.md) |  |  |  | 
+| [Periodical Scroll ❏](packages/PeriodicalScroll/README.md) | [Switch ❏](packages/Switch/README.md) |  |  |  | 
+| [Progress Bar ❏](packages/ProgressBar/README.md) | [Dynamic Fields ❏](packages/DynamicFields/README.md) |  |  |  | 
+| [Rating ❏](packages/Rating/README.md) | [File ❏](packages/File/README.md) |  |  |  | 
+| [Seamless Scrolling Element ❏](packages/SeamlessScrollingElement/README.md) | [File Field ❏](packages/FileField/README.md) |  |  |  | 
+| [Show More Less ❏](packages/ShowMoreLess/README.md) | [Cascading Select End-to-end ✅](packages/CascadingSelectE2E/README.md) |  |  |  | 
 | [Slideshow ❏](packages/Slideshow/README.md) |  |  |  |  | 
 |  |  |  |  |  | 
 | [Table Grid ❏](packages/TableGrid/README.md) |  |  |  |  | 
@@ -41,7 +41,6 @@ Here is a table of the components and their status.
 | [Timeline ❏](packages/Timeline/README.md) |  |  |  |  | 
 | [Toaster ❏](packages/Toaster/README.md) |  |  |  |  | 
 | [Tooltip ❏](packages/Tooltip/README.md) |  |  |  |  | 
-
 
 
 
