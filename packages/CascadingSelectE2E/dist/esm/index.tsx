@@ -64,17 +64,6 @@ type CascadingSelectE2EProps = {
 };
 
 
-// current data depth (GLOBAL)
-let currentDataDepth: number = 0;
-
-// all data from fetched data
-let allData: any[];
-
-// options data
-let optData: any[];
-
-
-
 const CascadingSelectE2E = (props: CascadingSelectE2EProps) => {
     const {
         wrapperClassName,
@@ -109,6 +98,17 @@ const CascadingSelectE2E = (props: CascadingSelectE2EProps) => {
     const idRes = id || uniqueID;
     const rootRef = useRef<any>(null);
     const valRef = useRef<any>(null);
+
+    // current data depth (GLOBAL)
+    const [currentDataDepth, setCurrentDataDepth] = useState<number>(0);
+
+    // all data from fetched data (GLOBAL)
+    const [allData, setAllData] = useState<any[]>([]);
+
+    // options data (GLOBAL)
+    const [optData, setOptData] = useState<any[]>([]);
+
+
 
     const [dictionaryData, setDictionaryData] = useState<any[]>([]);
     const [loading, setLoading] = useState<boolean>(false);
@@ -166,40 +166,64 @@ const CascadingSelectE2E = (props: CascadingSelectE2EProps) => {
                 item.depth = dataDepth;
             }); 
 
-            
-            // STEP 1: ===========
-            // all data from fetched data
+
+
+            let _temp_allData;
             if ( dataDepth === 0 ) {
-                allData = JSON.parse(JSON.stringify(_ORGIN_DATA)); 
+
+                // STEP 1: ===========
+                // all data from fetched data 
+                _temp_allData = JSON.parse(JSON.stringify(_ORGIN_DATA)); 
+                setAllData(_temp_allData);
+
+                // STEP 2: ===========
+                // dictionary data (orginal)
+                setDictionaryData(_temp_allData);
+
+
             }
             if ( dataDepth > 0 ) {
-                addChildrenOpt(allData, parentId, _ORGIN_DATA);
+
+                // STEP 1: ===========
+                // all data from fetched data  
+                _temp_allData = allData; 
+                addChildrenOpt(_temp_allData, parentId, _ORGIN_DATA);
+
+                // STEP 2: ===========
+                // dictionary data (orginal)
+                setDictionaryData(_temp_allData);
+
+                
             }
       
-            // STEP 2: ===========
-            // dictionary data (orginal)
-            setDictionaryData(allData);
 
             // STEP 3: ===========
             // Add an empty item to each list to support empty item selection
-            const _EMPTY_SUPPORTED_DATA = JSON.parse(JSON.stringify(allData));
+            const _EMPTY_SUPPORTED_DATA = JSON.parse(JSON.stringify(_temp_allData));
             addEmptyOpt(_EMPTY_SUPPORTED_DATA, 0);
+
+
 
             // STEP 4: ===========
             // Turn the data of each group into an array
+            let _temp_optData;
             if ( dataDepth === 0 ) {
-                optData = [_EMPTY_SUPPORTED_DATA];
-                setData(optData);
+                
+                _temp_optData = [_EMPTY_SUPPORTED_DATA];
+                setOptData(_temp_optData);
+                setData(_temp_optData);
             }
+
             if ( dataDepth > 0 ) {
-                optData = data;
+                _temp_optData = data;
 
                 // Add an empty item to each list to support empty item selection
                 addEmptyOpt(_ORGIN_DATA, 0);
 
                 const childList = _ORGIN_DATA;
-                optData[dataDepth] = childList;
+                _temp_optData[dataDepth] = childList;
                 
+                setOptData(_temp_optData);
                 setData(optData);
             }
 
@@ -236,7 +260,7 @@ const CascadingSelectE2E = (props: CascadingSelectE2EProps) => {
 
         // data fetch action
         const _oparams: any[] = fetchArray![dataDepth].fetchFuncMethodParams || [];
-        const _params: any[] = _oparams.map( (item: any) => item !== '$AUTO' ? item : parentId );
+        const _params: any[] = _oparams.map( (item: any) => item !== '$QUERY_ID' ? item : parentId );
         fetchData(fetchArray![dataDepth], (_params).join(','), dataDepth, parentId);
     }
 
@@ -302,19 +326,24 @@ const CascadingSelectE2E = (props: CascadingSelectE2EProps) => {
     function handleClickItem(e: any, resValue: any, index: number, level: number) {
 
         const dataDepthMax: boolean = resValue.depth === fetchArray!.length-1;
-        const parentId = e.currentTarget.dataset.value;
+        const parentId = e.currentTarget.dataset.query;
         const emptyAction = resValue.id.toString().indexOf('$EMPTY_ID_') < 0 ? false : true;
 
 
         // update data depth
-         //////////////////////////////////////////
-        currentDataDepth = resValue.depth+1;
-
-        // Execute the fetch task
         //////////////////////////////////////////
-        doFetch(dataDepthMax, currentDataDepth, parentId, emptyAction);
+        setCurrentDataDepth(resValue.depth+1);
+        setCurrentDataDepth((prevState) => {
+            const _currentDataDepth = resValue.depth+1;
         
-     
+            // Execute the fetch task
+            //////////////////////////////////////////
+            doFetch(dataDepthMax, _currentDataDepth, parentId, emptyAction);
+        
+            return _currentDataDepth;
+
+        });
+
         // update value
         //////////////////////////////////////////
         const inputVal = updateValue(dictionaryData, resValue.id, level);
@@ -349,7 +378,7 @@ const CascadingSelectE2E = (props: CascadingSelectE2EProps) => {
             setIsShow(false);
 
             // update data depth
-            currentDataDepth = 0;            
+            setCurrentDataDepth(0);        
         }
         
     }
@@ -669,6 +698,7 @@ const CascadingSelectE2E = (props: CascadingSelectE2EProps) => {
                     {isShow && !hasErr ? (
                         <div className="cascading-select__items">
                             <ul>
+                                {loading ? <><div className="position-absolute top-0 start-0 mt-1 mx-1">{loader}</div></> : null}
                                 {data.map((item: any, level: number) => {
                                     return (
                                         <li key={level}>
@@ -691,8 +721,7 @@ const CascadingSelectE2E = (props: CascadingSelectE2EProps) => {
 
                 <div className="cascading-select__val" onClick={handleDisplayOptions}>
 
-                    {loading ? <><div>{loader}</div></> : null}
-
+                    
                     {displayResult ? (selectedData!.labels && selectedData!.labels.length > 0 ? <div className="cascading-select__result">{displayInfo()}</div> : null) : null}
 
                     <input

@@ -503,6 +503,7 @@ function Group(props) {
         key: index,
         "data-index": index,
         "data-value": item.id,
+        "data-query": item.queryId,
         className: item.current ? 'cascading-select__opt active' : 'cascading-select__opt',
         onClick: function onClick(e) {
           return selectEv(e, item, index);
@@ -513,6 +514,7 @@ function Group(props) {
         key: index,
         "data-index": index,
         "data-value": item.id,
+        "data-query": item.queryId,
         onClick: function onClick(e) {
           return selectEv(e, item, index);
         },
@@ -592,14 +594,6 @@ function _objectWithoutPropertiesLoose(source, excluded) { if (source == null) r
 
 
 
-// current data depth (GLOBAL)
-var currentDataDepth = 0;
-
-// all data from fetched data
-var allData;
-
-// options data
-var optData;
 var CascadingSelectE2E = function CascadingSelectE2E(props) {
   var wrapperClassName = props.wrapperClassName,
     disabled = props.disabled,
@@ -630,43 +624,61 @@ var CascadingSelectE2E = function CascadingSelectE2E(props) {
   var idRes = id || uniqueID;
   var rootRef = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useRef)(null);
   var valRef = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useRef)(null);
-  var _useState = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)([]),
+
+  // current data depth (GLOBAL)
+  var _useState = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)(0),
     _useState2 = _slicedToArray(_useState, 2),
-    dictionaryData = _useState2[0],
-    setDictionaryData = _useState2[1];
-  var _useState3 = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)(false),
+    currentDataDepth = _useState2[0],
+    setCurrentDataDepth = _useState2[1];
+
+  // all data from fetched data (GLOBAL)
+  var _useState3 = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)([]),
     _useState4 = _slicedToArray(_useState3, 2),
-    loading = _useState4[0],
-    setLoading = _useState4[1];
+    allData = _useState4[0],
+    setAllData = _useState4[1];
+
+  // options data (GLOBAL)
   var _useState5 = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)([]),
     _useState6 = _slicedToArray(_useState5, 2),
-    columnTitleData = _useState6[0],
-    setColumnTitleData = _useState6[1];
-  var _useState7 = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)(false),
+    optData = _useState6[0],
+    setOptData = _useState6[1];
+  var _useState7 = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)([]),
     _useState8 = _slicedToArray(_useState7, 2),
-    hasErr = _useState8[0],
-    setHasErr = _useState8[1];
+    dictionaryData = _useState8[0],
+    setDictionaryData = _useState8[1];
   var _useState9 = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)(false),
     _useState10 = _slicedToArray(_useState9, 2),
-    firstDataFeched = _useState10[0],
-    setFirstDataFeched = _useState10[1];
-
-  //for variable 
+    loading = _useState10[0],
+    setLoading = _useState10[1];
   var _useState11 = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)([]),
     _useState12 = _slicedToArray(_useState11, 2),
-    data = _useState12[0],
-    setData = _useState12[1];
-  var _useState13 = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)({
+    columnTitleData = _useState12[0],
+    setColumnTitleData = _useState12[1];
+  var _useState13 = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)(false),
+    _useState14 = _slicedToArray(_useState13, 2),
+    hasErr = _useState14[0],
+    setHasErr = _useState14[1];
+  var _useState15 = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)(false),
+    _useState16 = _slicedToArray(_useState15, 2),
+    firstDataFeched = _useState16[0],
+    setFirstDataFeched = _useState16[1];
+
+  //for variable 
+  var _useState17 = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)([]),
+    _useState18 = _slicedToArray(_useState17, 2),
+    data = _useState18[0],
+    setData = _useState18[1];
+  var _useState19 = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)({
       labels: [],
       values: []
     }),
-    _useState14 = _slicedToArray(_useState13, 2),
-    selectedData = _useState14[0],
-    setSelectedData = _useState14[1];
-  var _useState15 = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)(false),
-    _useState16 = _slicedToArray(_useState15, 2),
-    isShow = _useState16[0],
-    setIsShow = _useState16[1];
+    _useState20 = _slicedToArray(_useState19, 2),
+    selectedData = _useState20[0],
+    setSelectedData = _useState20[1];
+  var _useState21 = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)(false),
+    _useState22 = _slicedToArray(_useState21, 2),
+    isShow = _useState22[0],
+    setIsShow = _useState22[1];
   function fetchData(_x2, _x3, _x4) {
     return _fetchData.apply(this, arguments);
   } //
@@ -678,7 +690,9 @@ var CascadingSelectE2E = function CascadingSelectE2E(props) {
         fetchCallback,
         response,
         _ORGIN_DATA,
+        _temp_allData,
         _EMPTY_SUPPORTED_DATA,
+        _temp_optData,
         childList,
         _args = arguments;
       return _regeneratorRuntime().wrap(function _callee$(_context) {
@@ -689,7 +703,7 @@ var CascadingSelectE2E = function CascadingSelectE2E(props) {
             fetchFuncMethod = _fetchArray.fetchFuncMethod;
             fetchCallback = _fetchArray.fetchCallback;
             if (!(_typeof(fetchFuncAsync) === 'object')) {
-              _context.next = 28;
+              _context.next = 27;
               break;
             }
             //
@@ -722,38 +736,48 @@ var CascadingSelectE2E = function CascadingSelectE2E(props) {
             _ORGIN_DATA.forEach(function (item) {
               item.depth = dataDepth;
             });
-
-            // STEP 1: ===========
-            // all data from fetched data
             if (dataDepth === 0) {
-              allData = JSON.parse(JSON.stringify(_ORGIN_DATA));
+              // STEP 1: ===========
+              // all data from fetched data 
+              _temp_allData = JSON.parse(JSON.stringify(_ORGIN_DATA));
+              setAllData(_temp_allData);
+
+              // STEP 2: ===========
+              // dictionary data (orginal)
+              setDictionaryData(_temp_allData);
             }
             if (dataDepth > 0) {
-              addChildrenOpt(allData, parentId, _ORGIN_DATA);
-            }
+              // STEP 1: ===========
+              // all data from fetched data  
+              _temp_allData = allData;
+              addChildrenOpt(_temp_allData, parentId, _ORGIN_DATA);
 
-            // STEP 2: ===========
-            // dictionary data (orginal)
-            setDictionaryData(allData);
+              // STEP 2: ===========
+              // dictionary data (orginal)
+              setDictionaryData(_temp_allData);
+            }
 
             // STEP 3: ===========
             // Add an empty item to each list to support empty item selection
-            _EMPTY_SUPPORTED_DATA = JSON.parse(JSON.stringify(allData));
+            _EMPTY_SUPPORTED_DATA = JSON.parse(JSON.stringify(_temp_allData));
             addEmptyOpt(_EMPTY_SUPPORTED_DATA, 0);
 
             // STEP 4: ===========
             // Turn the data of each group into an array
+
             if (dataDepth === 0) {
-              optData = [_EMPTY_SUPPORTED_DATA];
-              setData(optData);
+              _temp_optData = [_EMPTY_SUPPORTED_DATA];
+              setOptData(_temp_optData);
+              setData(_temp_optData);
             }
             if (dataDepth > 0) {
-              optData = data;
+              _temp_optData = data;
 
               // Add an empty item to each list to support empty item selection
               addEmptyOpt(_ORGIN_DATA, 0);
               childList = _ORGIN_DATA;
-              optData[dataDepth] = childList;
+              _temp_optData[dataDepth] = childList;
+              setOptData(_temp_optData);
               setData(optData);
             }
 
@@ -765,9 +789,9 @@ var CascadingSelectE2E = function CascadingSelectE2E(props) {
             //
             onFetch === null || onFetch === void 0 ? void 0 : onFetch(_EMPTY_SUPPORTED_DATA, _ORGIN_DATA);
             return _context.abrupt("return", _EMPTY_SUPPORTED_DATA);
-          case 28:
+          case 27:
             return _context.abrupt("return", []);
-          case 29:
+          case 28:
           case "end":
             return _context.stop();
         }
@@ -788,7 +812,7 @@ var CascadingSelectE2E = function CascadingSelectE2E(props) {
     // data fetch action
     var _oparams = fetchArray[dataDepth].fetchFuncMethodParams || [];
     var _params = _oparams.map(function (item) {
-      return item !== '$AUTO' ? item : parentId;
+      return item !== '$QUERY_ID' ? item : parentId;
     });
     fetchData(fetchArray[dataDepth], _params.join(','), dataDepth, parentId);
   }
@@ -831,16 +855,20 @@ var CascadingSelectE2E = function CascadingSelectE2E(props) {
   }
   function handleClickItem(e, resValue, index, level) {
     var dataDepthMax = resValue.depth === fetchArray.length - 1;
-    var parentId = e.currentTarget.dataset.value;
+    var parentId = e.currentTarget.dataset.query;
     var emptyAction = resValue.id.toString().indexOf('$EMPTY_ID_') < 0 ? false : true;
 
     // update data depth
     //////////////////////////////////////////
-    currentDataDepth = resValue.depth + 1;
+    setCurrentDataDepth(resValue.depth + 1);
+    setCurrentDataDepth(function (prevState) {
+      var _currentDataDepth = resValue.depth + 1;
 
-    // Execute the fetch task
-    //////////////////////////////////////////
-    doFetch(dataDepthMax, currentDataDepth, parentId, emptyAction);
+      // Execute the fetch task
+      //////////////////////////////////////////
+      doFetch(dataDepthMax, _currentDataDepth, parentId, emptyAction);
+      return _currentDataDepth;
+    });
 
     // update value
     //////////////////////////////////////////
@@ -873,7 +901,7 @@ var CascadingSelectE2E = function CascadingSelectE2E(props) {
       setIsShow(false);
 
       // update data depth
-      currentDataDepth = 0;
+      setCurrentDataDepth(0);
     }
   }
 
@@ -1132,7 +1160,9 @@ var CascadingSelectE2E = function CascadingSelectE2E(props) {
     }
   }, isShow && !hasErr ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
     className: "cascading-select__items"
-  }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("ul", null, data.map(function (item, level) {
+  }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("ul", null, loading ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
+    className: "position-absolute top-0 start-0 mt-1 mx-1"
+  }, loader)) : null, data.map(function (item, level) {
     return /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("li", {
       key: level
     }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement(Group, {
@@ -1146,7 +1176,7 @@ var CascadingSelectE2E = function CascadingSelectE2E(props) {
   }))) : null), /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
     className: "cascading-select__val",
     onClick: handleDisplayOptions
-  }, loading ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", null, loader)) : null, displayResult ? selectedData.labels && selectedData.labels.length > 0 ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
+  }, displayResult ? selectedData.labels && selectedData.labels.length > 0 ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
     className: "cascading-select__result"
   }, displayInfo()) : null : null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("input", _extends({
     ref: valRef,

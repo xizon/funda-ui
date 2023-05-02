@@ -615,7 +615,7 @@ const CascadingSelect = (props: CascadingSelectProps) => {
 
                 <div className="cascading-select__val" onClick={handleDisplayOptions}>
 
-                    {loading ? <><div>{loader}</div></> : null}
+                    {loading ? <><div className="position-absolute top-0 start-0 mt-2 mx-2">{loader}</div></> : null}
 
                     {displayResult ? (selectedData!.labels && selectedData!.labels.length > 0 ? <div className="cascading-select__result">{displayInfo()}</div> : null) : null}
 

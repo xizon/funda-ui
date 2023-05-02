@@ -39,7 +39,7 @@ Array configuration properties of the `fetchArray`:
 | --- | --- | --- | --- |
 | `fetchFuncAsync` | Constructor | - | A method as a string from the constructor.  |
 | `fetchFuncMethod` | string  | - | When the property is *true*, every time the select changes, a data request will be triggered. <br /><blockquote>The methord must be a Promise Object.</blockquote> |
-| `fetchFuncMethodParams` | array  | - | The parameter passed by the method, it is an array. <br />Note: the first element is a query string, the second element is the number of queried data (usually a number), and then you can increase the third, or fourth, and more parameters. <br />Such as `['',0]`, `['',99,'string 1','string 2']`, `['',0,'$AUTO']` <br /><blockquote>There should be at least one parameter which is the query string. <br />`$AUTO` identifies the ID of the automatic query, and its value depends on the `id` attribute of the item.</blockquote> |
+| `fetchFuncMethodParams` | array  | - | The parameter passed by the method, it is an array. <br />Note: the first element is a query string, the second element is the number of queried data (usually a number), and then you can increase the third, or fourth, and more parameters. <br />Such as `['',0]`, `['',99,'string 1','string 2']`, `['',0,'$QUERY_ID']` <br /><blockquote>There should be at least one parameter which is the query string. <br />`$QUERY_ID` identifies the ID of the automatic query, and its value depends on the `id` attribute of the item.</blockquote> |
 | `fetchCallback` | function  | - | Return value from `fetchCallback` property to format the data of the API callback, which will match the data structure of the component. <br >At the same time it returns the original data, you will use this function and use the `return` keyword to return a new value. |
 
 
@@ -115,7 +115,7 @@ class DataService {
         ];   
 
         const res = demoData.filter( item => {
-            return item.parent_id === parentId;
+            return item.parent_id == parentId;
         } );
 
         return {
@@ -149,7 +149,8 @@ export default () => {
                 depth={100}
                 displayResult={true}
                 valueType="label"
-                loader={<><span className="position-absolute top-0 start-0 mt-2 mx-2">>Loading...</span></>}
+                columnTitle={['Heading 1','Heading 2']}
+                loader={<><span>Loading...</span></>}
                 triggerClassName="d-block w-100"
                 triggerContent={<>
                     <a href="#">Select</a>
@@ -164,7 +165,7 @@ export default () => {
                             // prevent orginal data
                             let placesMap: any = {};
                             for (const val of res) {
-                                placesMap[val.item_code] = [val.item_name, val.item_type];
+                                placesMap[val.item_code] = [val.item_name, val.item_type, val.item_code];
                             }
 
                             //
@@ -172,6 +173,7 @@ export default () => {
                             for (const key in placesMap) {
                                 data.push({
                                     id: key,
+                                    queryId: placesMap[key][2],
                                     name: placesMap[key][0],
                                     type: placesMap[key][1]
                                 });
@@ -184,13 +186,13 @@ export default () => {
                     {
                         "fetchFuncAsync": new DataService,
                         "fetchFuncMethod": "getListSecond",
-                        "fetchFuncMethodParams": ['', 0, '$AUTO'],
+                        "fetchFuncMethodParams": ['', 0, '$QUERY_ID'],
                         "fetchCallback": (res) => {
 
                             // prevent orginal data
                             let placesMap: any = {};
                             for (const val of res) {
-                                placesMap[val.item_code] = [val.item_name, val.item_type];
+                                placesMap[val.item_code] = [val.item_name, val.item_type, val.item_code];
                             }
 
                             //
@@ -198,36 +200,14 @@ export default () => {
                             for (const key in placesMap) {
                                 data.push({
                                     id: key,
+                                    queryId: placesMap[key][2],
                                     name: placesMap[key][0],
                                     type: placesMap[key][1]
                                 });
                             }
-
 
                             return data;
-                        }
-                    },
-                    {
-                        "fetchFuncAsync": new DataService,
-                        "fetchFuncMethod": "getListSecond",
-                        "fetchFuncMethodParams": ['', 0, '$AUTO'],
-                        "fetchCallback": (res) => {
 
-                            // prevent orginal data
-                            let placesMap: any = {};
-                            for (const val of res) {
-                                placesMap[val.item_code] = [val.item_name, val.item_type];
-                            }
-
-                            //
-                            const data = [];
-                            for (const key in placesMap) {
-                                data.push({
-                                    id: key,
-                                    name: placesMap[key][0],
-                                    type: placesMap[key][1]
-                                });
-                            }
 
                             return data;
                         }
@@ -240,28 +220,20 @@ export default () => {
                     console.log('currentData: ', currentData);
 
                     const $p = document.querySelector('[name="province"]'),
-                          $c = document.querySelector('[name="city"]'),
-                          $d = document.querySelector('[name="district"]'),
-                          $s = document.querySelector('[name="street"]');
+                          $c = document.querySelector('[name="city"]');
 
                 
                     if ( depth < 1 ) $c.value = '';
-                    if ( depth < 2 ) $d.value = '';
-                    if ( depth < 3 ) $s.value = '';
 
 
 
                     if ( depth === 0 ) $p.value = currentData.name;
                     if ( depth === 1 ) $c.value = currentData.name;
-                    if ( depth === 2 ) $d.value = currentData.name;
-                    if ( depth === 3 ) $s.value = currentData.name;
                 }}
             />
 
             <input name="province" type="hidden" value="" />
             <input name="city" type="hidden" value="" />
-            <input name="district" type="hidden" value="" />
-            <input name="street" type="hidden" value="" />
 
 
 

@@ -318,7 +318,7 @@ export default () => {
                 displayResult={true}
                 valueType="label"
                 columnTitle={['Heading 1', 'Heading 2', 'Heading 3', 'Heading 4']}
-                loader={<><span className="position-absolute top-0 start-0 mt-2 mx-2">>Loading...</span></>}
+                loader={<><span>Loading...</span></>}
                 triggerClassName="d-block w-100"
                 triggerContent={<>
                     <a href="#">Select</a>
@@ -435,7 +435,7 @@ export default () => {
                 depth={100}
                 displayResult={true}
                 valueType="label"
-                loader={<><span className="position-absolute top-0 start-0 mt-2 mx-2">>Loading...</span></>}
+                loader={<><span>Loading...</span></>}
                 triggerClassName="d-block w-100"
                 triggerContent={<>
                     <a href="#">Select</a>
