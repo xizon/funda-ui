@@ -35,6 +35,8 @@ type CascadingSelectE2EProps = {
      * Optional values: `label`, `value`
      */
     valueType?: string;
+    /** Whether to display the close button. */
+    showCloseBtn?: boolean;
     /** Set the depth value of the control to control the display of the pop-up layer appear above.
      * Please set it when multiple controls are used at the same time. */
     depth?: number;
@@ -82,6 +84,7 @@ const CascadingSelectE2E = (props: CascadingSelectE2EProps) => {
         displayResultArrow,
         controlArrow,
         valueType,
+        showCloseBtn,
         style,
         tabIndex,
         triggerClassName,
@@ -266,7 +269,7 @@ const CascadingSelectE2E = (props: CascadingSelectE2EProps) => {
         rootRef.current.classList.add('focus');
 
         //
-        setIsShow(true);
+        handleDisplayOptions(null);
 
         //
         onFocus?.(event);
@@ -290,13 +293,16 @@ const CascadingSelectE2E = (props: CascadingSelectE2EProps) => {
      */
     function handleClickOutside(event: any) {
 
+        // svg element
+        if ( typeof event.target.className === 'object' ) return;
+   
         if (
             event.target.className != '' && (
-                event.target.className.indexOf('cascading-select__wrapper') < 0 &&
+                event.target.className.indexOf('cascading-select-e2e__wrapper') < 0 &&
                 event.target.className.indexOf('form-control') < 0 &&
-                event.target.className.indexOf('cascading-select__trigger') < 0 &&
-                event.target.className.indexOf('cascading-select__items') < 0 &&
-                event.target.className.indexOf('cascading-select__opt') < 0
+                event.target.className.indexOf('cascading-select-e2e__trigger') < 0 &&
+                event.target.className.indexOf('cascading-select-e2e__items') < 0 &&
+                event.target.className.indexOf('cascading-select-e2e__opt') < 0
             )
         ) {
 
@@ -306,9 +312,8 @@ const CascadingSelectE2E = (props: CascadingSelectE2EProps) => {
     }
 
     function handleDisplayOptions(event: any) {
-        event.preventDefault();
+        if ( event ) event.preventDefault();
         setIsShow(true);
-
         
         // Execute the fetch task
         if (!firstDataFeched) {
@@ -853,20 +858,27 @@ const CascadingSelectE2E = (props: CascadingSelectE2EProps) => {
     return (
         <>
 
-            <div className={wrapperClassName ? `cascading-select__wrapper ${wrapperClassName}` : `cascading-select__wrapper mb-3 position-relative`} ref={rootRef}>
+            <div className={wrapperClassName ? `cascading-select-e2e__wrapper ${wrapperClassName}` : `cascading-select-e2e__wrapper mb-3 position-relative`} ref={rootRef}>
                 {label ? <><label htmlFor={idRes} className="form-label">{label}</label></> : null}
 
                 {triggerContent ? <>
-                    <div className={triggerClassName ? `cascading-select__trigger ${triggerClassName}` : `cascading-select__trigger d-inline w-auto`} onClick={handleDisplayOptions}>{triggerContent}</div>
+                    <div className={triggerClassName ? `cascading-select-e2e__trigger ${triggerClassName}` : `cascading-select-e2e__trigger d-inline w-auto`} onClick={handleDisplayOptions}>{triggerContent}</div>
                 </> : null}
 
 
-                <div className="cascading-select" style={{ zIndex: (depth ? depth : 100) }}>
+                <div className="cascading-select-e2e" style={{ zIndex: (depth ? depth : 100) }}>
 
                     {isShow && !hasErr ? (
-                        <div className="cascading-select__items">
+                        <div className="cascading-select-e2e__items">
                             <ul>
                                 {loading ? <><div className="position-absolute top-0 start-0 mt-1 mx-1">{loader}</div></> : null}
+                                {showCloseBtn ? <a href="#" onClick={(e)=> {
+                                    e.preventDefault(); 
+                                    setIsShow(false);
+                                }} className="cascading-select-e2e__close position-absolute top-0 end-0 mt-0 mx-1"><svg width="10px" height="10px" viewBox="0 0 1024 1024"><path fill="#000"  d="M195.2 195.2a64 64 0 0 1 90.496 0L512 421.504 738.304 195.2a64 64 0 0 1 90.496 90.496L602.496 512 828.8 738.304a64 64 0 0 1-90.496 90.496L512 602.496 285.696 828.8a64 64 0 0 1-90.496-90.496L421.504 512 195.2 285.696a64 64 0 0 1 0-90.496z"/></svg></a> : null}
+                                
+
+                                
                                 {data.map((item: any, level: number) => {
                                     return (
                                         <li key={level}>
@@ -887,10 +899,10 @@ const CascadingSelectE2E = (props: CascadingSelectE2EProps) => {
 
                 </div>
 
-                <div className="cascading-select__val" onClick={handleDisplayOptions}>
+                <div className="cascading-select-e2e__val" onClick={handleDisplayOptions}>
 
 
-                    {displayResult ? (selectedData!.labels && selectedData!.labels.length > 0 ? <div className="cascading-select__result">{displayInfo()}</div> : null) : null}
+                    {displayResult ? (selectedData!.labels && selectedData!.labels.length > 0 ? <div className="cascading-select-e2e__result">{displayInfo()}</div> : null) : null}
 
                     <input
                         ref={valRef}
@@ -908,6 +920,14 @@ const CascadingSelectE2E = (props: CascadingSelectE2EProps) => {
                         readOnly
                         {...attributes}
                     />
+
+                    {isShow ? <div 
+                    className="cascading-select-e2e__closemask" 
+                    onClick={(e)=> {
+                        e.preventDefault(); 
+                        setIsShow(false);
+                    }}></div> : null}
+                    
 
                     <span className="arrow">
                         {controlArrow ? controlArrow : <svg width="10px" height="10px" viewBox="0 -4.5 20 20">

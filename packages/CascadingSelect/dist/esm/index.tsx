@@ -27,6 +27,8 @@ type CascadingSelectProps = {
      * Optional values: `label`, `value`
      */
     valueType?: string;
+    /** Whether to display the close button. */
+    showCloseBtn?: boolean;
     /** Set the depth value of the control to control the display of the pop-up layer appear above.
      * Please set it when multiple controls are used at the same time. */
     depth?: number;
@@ -76,6 +78,7 @@ const CascadingSelect = (props: CascadingSelectProps) => {
         displayResultArrow,
         controlArrow,
         valueType,
+        showCloseBtn,
         style,
         tabIndex,
         triggerClassName,
@@ -198,6 +201,10 @@ const CascadingSelect = (props: CascadingSelectProps) => {
      * If clicked on outside of element
      */
     function handleClickOutside(event: any) {
+
+
+        // svg element
+        if ( typeof event.target.className === 'object' ) return;
 
         if (
             event.target.className != '' && (
@@ -697,6 +704,12 @@ const CascadingSelect = (props: CascadingSelectProps) => {
                     {isShow && !hasErr ? (
                         <div className="cascading-select__items">
                             <ul>
+
+                                {showCloseBtn ? <a href="#" onClick={(e) => {
+                                    e.preventDefault();
+                                    setIsShow(false);
+                                }} className="cascading-select__close position-absolute top-0 end-0 mt-0 mx-1"><svg width="10px" height="10px" viewBox="0 0 1024 1024"><path fill="#000" d="M195.2 195.2a64 64 0 0 1 90.496 0L512 421.504 738.304 195.2a64 64 0 0 1 90.496 90.496L602.496 512 828.8 738.304a64 64 0 0 1-90.496 90.496L512 602.496 285.696 828.8a64 64 0 0 1-90.496-90.496L421.504 512 195.2 285.696a64 64 0 0 1 0-90.496z" /></svg></a> : null}
+
                                 {data.map((item: any, level: number) => {
                                     
                                     return (
@@ -722,6 +735,7 @@ const CascadingSelect = (props: CascadingSelectProps) => {
 
                     {loading ? <><div className="position-absolute top-0 start-0 mt-2 mx-2">{loader}</div></> : null}
 
+                    
                     {displayResult ? (selectedData!.labels && selectedData!.labels.length > 0 ? <div className="cascading-select__result">{displayInfo()}</div> : null) : null}
 
                     <input
@@ -740,6 +754,14 @@ const CascadingSelect = (props: CascadingSelectProps) => {
                         readOnly
                         {...attributes}
                     />
+                    
+                    {isShow ? <div 
+                    className="cascading-select__closemask" 
+                    onClick={(e)=> {
+                        e.preventDefault(); 
+                        setIsShow(false);
+                    }}></div> : null}
+                                        
 
                     <span className="arrow">
                         {controlArrow ? controlArrow : <svg width="10px" height="10px" viewBox="0 -4.5 20 20">

@@ -20,6 +20,8 @@ declare type CascadingSelectProps = {
      * Optional values: `label`, `value`
      */
     valueType?: string;
+    /** Whether to display the close button. */
+    showCloseBtn?: boolean;
     /** Set the depth value of the control to control the display of the pop-up layer appear above.
      * Please set it when multiple controls are used at the same time. */
     depth?: number;

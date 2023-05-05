@@ -22,9 +22,9 @@ export default function Group(props: GroupProps) {
         <>
             {data.map((item: any, index: number) => {
                 if ( item.id.toString().indexOf('$EMPTY_ID_') < 0 ) {
-                    return <div key={index} data-index={index} data-value={item.id} data-query={item.queryId} className={item.current ? 'cascading-select__opt active' : 'cascading-select__opt'} onClick={(e) => selectEv!(e, item, index)}>{item.name}</div>
+                    return <div key={index} data-index={index} data-value={item.id} data-query={item.queryId} className={item.current ? 'cascading-select-e2e__opt active' : 'cascading-select-e2e__opt'} onClick={(e) => selectEv!(e, item, index)}>{item.name}</div>
                 } else {
-                    return columnTitle[level] === '' ? null : <h3 key={index} data-index={index} data-value={item.id} data-query={item.queryId} onClick={(e) => selectEv!(e, item, index)} className={item.current ? 'cascading-select__opt-header active' : 'cascading-select__opt-header'} >{columnTitle[level]}</h3>
+                    return columnTitle[level] === '' ? null : <h3 key={index} data-index={index} data-value={item.id} data-query={item.queryId} onClick={(e) => selectEv!(e, item, index)} className={item.current ? 'cascading-select-e2e__opt-header active' : 'cascading-select-e2e__opt-header'} >{columnTitle[level]}</h3>
                 }
                 
             })}

@@ -1,10 +1,10 @@
 /* ======================================================
-    <!-- Cascading Select -->
+    <!-- Cascading Select End-to-end -->
 /* ====================================================== */
 
-.cascading-select__wrapper {
+.cascading-select-e2e__wrapper {
 
-    .cascading-select__result {
+    .cascading-select-e2e__result {
         position: absolute;
         left: auto;
         z-index: 1;
@@ -28,7 +28,18 @@
 		}
 	}
 
-    .cascading-select__val {
+    .cascading-select-e2e__closemask {
+        position: absolute;
+        z-index: 1;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0,0,0,0);
+        user-select: none;
+    }
+
+    .cascading-select-e2e__val {
         position: relative;
         
 
@@ -45,7 +56,7 @@
         }
     }
 
-    .cascading-select {
+    .cascading-select-e2e {
         display: flex;
         align-items: center;
         position: relative;
@@ -59,12 +70,12 @@
 
 
 
-        .cascading-select__trigger {
+        .cascading-select-e2e__trigger {
             position: relative;
             z-index: 0;
         }
 
-        .cascading-select__items {
+        .cascading-select-e2e__items {
             box-shadow: 0 5px 15px 5px rgba(80, 102, 224, 0.08);
             position: absolute;
             left: auto;
@@ -77,6 +88,19 @@
             z-index: 1;
             top: 2.3rem;
             border-radius: 5px;
+
+            .cascading-select-e2e__close {
+                svg {
+                    opacity: .4;
+                }
+            }
+
+            .cascading-select-e2e__close:hover {
+                svg {
+                    transition: .2s ease-out;
+                    opacity: .7;
+                }
+            }
 
             /* each item */
             ul {
@@ -102,7 +126,7 @@
         }
 
 
-        .cascading-select__opt {
+        .cascading-select-e2e__opt {
             padding: .3rem .4rem;
             font-size: 0.875rem;
             border-radius: 2px;
@@ -116,7 +140,7 @@
             }
         }
 
-        .cascading-select__opt-header {
+        .cascading-select-e2e__opt-header {
             padding: .3rem .4rem;
             font-size: 0.875rem;
             opacity: .5;    
