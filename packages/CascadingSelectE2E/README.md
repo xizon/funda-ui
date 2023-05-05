@@ -9,7 +9,7 @@ import CascadingSelectE2E from 'react-pure-bootstrap/CascadingSelectE2E';
 ```
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |
-| `wrapperClassName` | string | `mb-3` | The class name of the control wrapper. |
+| `wrapperClassName` | string | `mb-3 position-relative` | The class name of the control wrapper. |
 | `columnTitle` | Array  | - | Set headers for each column group. Such as <br /> `['Heading 1', 'Heading 2', 'Heading 3', 'Heading 4']` |
 | `triggerClassName` | string  | - | Specify a class for your trigger |
 | `triggerContent` | ReactNode  | - | Set a piece of text or HTML code for the trigger |

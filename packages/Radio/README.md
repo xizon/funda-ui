@@ -9,7 +9,7 @@ import Radio from 'react-pure-bootstrap/Radio';
 ```
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |
-| `wrapperClassName` | string | `mb-3` | The class name of the control wrapper. |
+| `wrapperClassName` | string | `mb-3 position-relative` | The class name of the control wrapper. |
 | `inline` | boolean | false | If true the group checkboxes or radios are on the same horizontal row. |
 | `options` | JSON Object Literals | - | <strong>(Required)</strong> Set the default value using JSON string format for menu of options, like this: `{"Option 1":"value-1","Option 2":"value-2","Option 3":"value-3"}`|
 | `value` | string | - | Set a default value for this control |

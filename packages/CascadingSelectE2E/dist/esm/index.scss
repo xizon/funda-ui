@@ -28,6 +28,7 @@
 		}
 	}
 
+
     .cascading-select-e2e__closemask {
         position: absolute;
         z-index: 1;
@@ -105,6 +106,8 @@
             /* each item */
             ul {
                 transition: .2s ease-out;
+                min-width: 8px;
+                min-height: 9px;
 
                 > li {
                     position: relative;

@@ -670,7 +670,7 @@ const CascadingSelect = (props: CascadingSelectProps) => {
 
     useEffect(() => {
 
-        // // Initialize default value (request parameters for each level)
+        // Initialize default value (request parameters for each level)
         //--------------
         initDefaultValue();
 

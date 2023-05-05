@@ -9,7 +9,7 @@ import Select from 'react-pure-bootstrap/Select';
 ```
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |
-| `wrapperClassName` | string | `mb-3` | The class name of the control wrapper. |
+| `wrapperClassName` | string | `mb-3 position-relative` | The class name of the control wrapper. |
 | `options` | JSON Object Literals | - | Set the default value using JSON string format for menu of options, like this: `{"Option 1":"value-1","Option 2":"value-2","Option 3":"value-3"}` <br /> <blockquote>Note: Use API data if database query exists. That is, the attribute `fetchXXXX`</blockquote>|
 | `value` | string | - | Set a default value for this control |
 | `label` | string \| ReactNode | - | It is used to specify a label for an element of a form. |

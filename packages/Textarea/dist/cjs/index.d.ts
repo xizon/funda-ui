@@ -14,6 +14,7 @@ declare type TextareaProps = {
     rows?: number;
     disabled?: any;
     required?: any;
+    readOnly?: any;
     placeholder?: string;
     /** -- */
     id?: string;

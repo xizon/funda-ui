@@ -89,8 +89,8 @@ export default () => {
         onlyPrevNext={true}
         previousLabel={<><i className="fa fa-angle-left" aria-hidden="true"></i></>}
         nextLabel={<><i className="fa fa-angle-right" aria-hidden="true"></i></>}
-        previousClass="previous poemkit-f-l"
-        nextClass="next poemkit-f-r"
+        previousClass="previous float-start"
+        nextClass="next float-end"
       />	
         
         

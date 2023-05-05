@@ -16,6 +16,7 @@ type TextareaProps = {
 	rows?: number;
 	disabled?: any;
 	required?: any;
+    readOnly?: any;
 	placeholder?: string;
 	/** -- */
 	id?: string;
@@ -36,6 +37,7 @@ const Textarea = forwardRef((props: TextareaProps, ref: any) => {
         disabled,
         required,
         placeholder,
+        readOnly,
         value,
         label,
         name,
@@ -116,6 +118,7 @@ const Textarea = forwardRef((props: TextareaProps, ref: any) => {
 			          onChange={handleChange}
 			          disabled={disabled || null}
 					  required={required || null}
+                      readOnly={readOnly || null}
 					  cols={cols || 20}
 					  rows={rows || 2}
                       style={style}

@@ -9,7 +9,7 @@ import Checkbox from 'react-pure-bootstrap/Checkbox';
 ```
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |
-| `wrapperClassName` | string | `mb-3` | The class name of the control wrapper. |
+| `wrapperClassName` | string | `mb-3 position-relative` | The class name of the control wrapper. |
 | `checked` | boolean | false | Is it selected by default. |
 | `value` | string | - | Set a default value for this control |
 | `label` | string \| ReactNode | - | It is used to specify a label for an element of a form. |

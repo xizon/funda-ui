@@ -17,6 +17,7 @@ declare type InputProps = {
     maxLength?: any;
     disabled?: any;
     required?: any;
+    readOnly?: any;
     placeholder?: string;
     iconLeft?: React.ReactNode | string;
     iconRight?: React.ReactNode | string;

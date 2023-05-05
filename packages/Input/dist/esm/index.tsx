@@ -19,6 +19,7 @@ type InputProps = {
     maxLength?: any;
     disabled?: any;
     required?: any;
+    readOnly?: any;
     placeholder?: string;
     iconLeft?: React.ReactNode | string;
     iconRight?: React.ReactNode | string;
@@ -42,6 +43,7 @@ const Input = forwardRef((props: InputProps, ref: any) => {
         disabled,
         required,
         placeholder,
+        readOnly,
         value,
         label,
         units,
@@ -146,6 +148,7 @@ const Input = forwardRef((props: InputProps, ref: any) => {
                         onCompositionEnd={handleComposition}
                         disabled={disabled || null}
                         required={required || null}
+                        readOnly={readOnly || null}
                         style={style}
                         {...attributes}
                     />
