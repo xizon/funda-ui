@@ -670,7 +670,8 @@ var CascadingSelectE2E = function CascadingSelectE2E(props) {
     setData = _useState18[1];
   var _useState19 = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)({
       labels: [],
-      values: []
+      values: [],
+      queryIds: []
     }),
     _useState20 = _slicedToArray(_useState19, 2),
     selectedData = _useState20[0],
@@ -690,7 +691,7 @@ var CascadingSelectE2E = function CascadingSelectE2E(props) {
         fetchCallback,
         response,
         _ORGIN_DATA,
-        _temp_allData,
+        _TEMP_ALL_DATA,
         _EMPTY_SUPPORTED_DATA,
         _temp_optData,
         childList,
@@ -712,14 +713,15 @@ var CascadingSelectE2E = function CascadingSelectE2E(props) {
             return fetchFuncAsync["".concat(fetchFuncMethod)].apply(fetchFuncAsync, _toConsumableArray(params.split(',')));
           case 8:
             response = _context.sent;
-            _ORGIN_DATA = response.data; // loading 
+            _ORGIN_DATA = response.data;
+            _TEMP_ALL_DATA = []; // loading 
             setLoading(false);
             if (!(typeof _ORGIN_DATA[0] === 'undefined')) {
-              _context.next = 13;
+              _context.next = 14;
               break;
             }
             return _context.abrupt("return");
-          case 13:
+          case 14:
             // reset data structure
             if (typeof fetchCallback === 'function') {
               _ORGIN_DATA = fetchCallback(_ORGIN_DATA);
@@ -739,27 +741,27 @@ var CascadingSelectE2E = function CascadingSelectE2E(props) {
             if (dataDepth === 0) {
               // STEP 1: ===========
               // all data from fetched data 
-              _temp_allData = JSON.parse(JSON.stringify(_ORGIN_DATA));
-              setAllData(_temp_allData);
+              _TEMP_ALL_DATA = JSON.parse(JSON.stringify(_ORGIN_DATA));
+              setAllData(_TEMP_ALL_DATA);
 
               // STEP 2: ===========
               // dictionary data (orginal)
-              setDictionaryData(_temp_allData);
+              setDictionaryData(_TEMP_ALL_DATA);
             }
             if (dataDepth > 0) {
               // STEP 1: ===========
               // all data from fetched data  
-              _temp_allData = allData;
-              addChildrenOpt(_temp_allData, parentId, _ORGIN_DATA);
+              _TEMP_ALL_DATA = allData;
+              addChildrenOpt(_TEMP_ALL_DATA, parentId, _ORGIN_DATA);
 
               // STEP 2: ===========
               // dictionary data (orginal)
-              setDictionaryData(_temp_allData);
+              setDictionaryData(_TEMP_ALL_DATA);
             }
 
             // STEP 3: ===========
             // Add an empty item to each list to support empty item selection
-            _EMPTY_SUPPORTED_DATA = JSON.parse(JSON.stringify(_temp_allData));
+            _EMPTY_SUPPORTED_DATA = JSON.parse(JSON.stringify(_TEMP_ALL_DATA));
             addEmptyOpt(_EMPTY_SUPPORTED_DATA, 0);
 
             // STEP 4: ===========
@@ -782,13 +784,9 @@ var CascadingSelectE2E = function CascadingSelectE2E(props) {
             }
 
             // STEP 5: ===========
-            //Set a default value
-            if (value) updateValue(_EMPTY_SUPPORTED_DATA, value);
-
-            // STEP 6: ===========
             //
             onFetch === null || onFetch === void 0 ? void 0 : onFetch(_EMPTY_SUPPORTED_DATA, _ORGIN_DATA);
-            return _context.abrupt("return", _EMPTY_SUPPORTED_DATA);
+            return _context.abrupt("return", [_ORGIN_DATA, _EMPTY_SUPPORTED_DATA]);
           case 27:
             return _context.abrupt("return", []);
           case 28:
@@ -809,12 +807,17 @@ var CascadingSelectE2E = function CascadingSelectE2E(props) {
     // If the depth is max, no more requests
     if (dataDepthMax) return;
 
+    // other
+    if (typeof fetchArray[dataDepth] === 'undefined') return new Promise(function (resolve, reject) {
+      return resolve([[], []]);
+    });
+
     // data fetch action
     var _oparams = fetchArray[dataDepth].fetchFuncMethodParams || [];
     var _params = _oparams.map(function (item) {
       return item !== '$QUERY_ID' ? item : parentId;
     });
-    fetchData(fetchArray[dataDepth], _params.join(','), dataDepth, parentId);
+    return fetchData(fetchArray[dataDepth], _params.join(','), dataDepth, parentId);
   }
   function handleFocus(event) {
     rootRef.current.classList.add('focus');
@@ -849,8 +852,8 @@ var CascadingSelectE2E = function CascadingSelectE2E(props) {
     // Execute the fetch task
     if (!firstDataFeched) {
       setLoading(true);
-      doFetch(false, currentDataDepth, 0, false);
       setFirstDataFeched(true);
+      doFetch(false, currentDataDepth, 0, false);
     }
   }
   function handleClickItem(e, resValue, index, level) {
@@ -935,27 +938,30 @@ var CascadingSelectE2E = function CascadingSelectE2E(props) {
   function markAllItems(arr) {
     for (var i = 0; i < arr.length; i++) {
       arr[i].current = false;
+      if (arr[i].children) markAllItems(arr[i].children);
     }
-    return arr;
   }
   function updateValue(arr, targetVal) {
     var level = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
     var inputEl = valRef.current;
-    var valueTypeValue, valueTypeLabel;
+    var _valueData, _labelData, _queryIdsData;
     if (targetVal.toString().indexOf('$EMPTY_ID_') >= 0) {
       // If clearing the current column
       //////////////////////////////////////////
-      valueTypeValue = selectedData.values;
-      valueTypeLabel = selectedData.labels;
+      _valueData = selectedData.values;
+      _labelData = selectedData.labels;
+      _queryIdsData = selectedData.queryIds;
 
       // update result to input
-      valueTypeValue.splice(level);
-      valueTypeLabel.splice(level);
+      _valueData.splice(level);
+      _labelData.splice(level);
+      _queryIdsData.splice(level);
 
       //
       setSelectedData({
-        labels: valueTypeLabel,
-        values: valueTypeValue
+        labels: _labelData,
+        values: _valueData,
+        queryIds: _queryIdsData
       });
     } else {
       // click an item
@@ -963,33 +969,166 @@ var CascadingSelectE2E = function CascadingSelectE2E(props) {
       //search JSON key that contains specific string
       var _labels = queryResultOfJSON(arr, targetVal, 'value');
       var _values = queryResultOfJSON(arr, targetVal, 'key');
+      var _queryIds = queryResultOfJSON(arr, targetVal, 'query');
 
       // update result to input
-      valueTypeValue = _values ? _values.map(function (item) {
+      _valueData = _values ? _values.map(function (item) {
         return item;
       }) : [];
-      valueTypeLabel = _labels ? _labels.map(function (item) {
+      _labelData = _labels ? _labels.map(function (item) {
+        return item;
+      }) : [];
+      _queryIdsData = _queryIds ? _queryIds.map(function (item) {
         return item;
       }) : [];
 
       //
       setSelectedData({
-        labels: _labels,
-        values: _values
+        labels: _labelData,
+        values: _valueData,
+        queryIds: _queryIdsData
       });
     }
 
     // update selected data 
     //////////////////////////////////////////
+    var inputVal_0 = _valueData.map(function (item, i) {
+      return "".concat(item, "[").concat(_queryIdsData[i], "]");
+    }).join(',');
+    var inputVal_1 = _labelData.map(function (item, i) {
+      return "".concat(item, "[").concat(_queryIdsData[i], "]");
+    }).join(',');
     if (valueType === 'value') {
-      if (inputEl !== null) inputEl.value = valueTypeValue.join(',');
+      if (inputEl !== null) inputEl.value = inputVal_0;
     } else {
-      if (inputEl !== null) inputEl.value = valueTypeLabel.join(',');
+      if (inputEl !== null) inputEl.value = inputVal_1;
     }
     return {
-      0: valueTypeValue.join(','),
-      1: valueTypeLabel.join(',')
+      0: inputVal_0,
+      1: inputVal_1
     };
+  }
+  function initDefaultValue() {
+    var _doFetch;
+    if (typeof value === 'undefined' || value === '') return;
+    setFirstDataFeched(true);
+    (_doFetch = doFetch(false, 0, 0, false)) === null || _doFetch === void 0 ? void 0 : _doFetch.then(function (firstColResponse) {
+      var _ORGIN_DATA = firstColResponse[0];
+      var _CHILDREN_DATA = firstColResponse[1];
+      var activedIndex;
+      var allFetch = [];
+      var rowQueryAttr = valueType === 'value' ? 'id' : 'name';
+      var targetVal = value.match(/(\[.*?\])/gi).map(function (item, i) {
+        return value.split(',')[i].replace(item, '');
+      });
+      var queryIds = value.match(/[^\[]+(?=(\[ \])|\])/gi);
+
+      //
+      var _TEMP_ALL_DATA = [];
+
+      //
+      var _allColumnsData = [];
+      var _allLables = [];
+      var _allValues = [];
+
+      // loop over each column
+      //////////////////////////////////////////
+      var _loop = function _loop(col) {
+        if (col === 0) {
+          // STEP 1: ===========
+          //active item from current column
+          var newData = JSON.parse(JSON.stringify(_CHILDREN_DATA));
+          activedIndex = _CHILDREN_DATA.findIndex(function (item) {
+            return item[rowQueryAttr].toString() === targetVal[col].toString();
+          });
+          markAllItems(newData);
+          markCurrent(newData, activedIndex);
+
+          // STEP 2: ===========
+          // all data from fetched data 
+          _TEMP_ALL_DATA = _ORGIN_DATA;
+
+          // STEP 3: ===========
+          // dictionary data (orginal)
+          // Same as the `STEP 2`
+
+          // STEP 4: ===========
+          // update result data
+          _allLables.push(newData[activedIndex].name);
+          _allValues.push(newData[activedIndex].id);
+          _allColumnsData.push(newData);
+        }
+        if (col > 0) {
+          allFetch.push(doFetch(false, col, queryIds[col - 1], false));
+        }
+      };
+      for (var col = 0; col <= targetVal.length; col++) {
+        _loop(col);
+      }
+
+      // fetch all columns except the first
+      //////////////////////////////////////////
+      Promise.all(allFetch).then(function (values) {
+        values.forEach(function (colResponse, i) {
+          var _CURRENT_COL_DATA = colResponse[0];
+          var curDepth = i + 1;
+
+          // STEP 1: ===========
+          //active item from current column
+          var newData = JSON.parse(JSON.stringify(_CURRENT_COL_DATA));
+          activedIndex = newData.findIndex(function (item) {
+            if (typeof targetVal[curDepth] !== 'undefined') {
+              return item[rowQueryAttr].toString() === targetVal[curDepth].toString();
+            }
+          });
+          markAllItems(newData);
+          markCurrent(newData, activedIndex);
+
+          // STEP 2: ===========
+          // all data from fetched data 
+          if (typeof values[curDepth] !== 'undefined') {
+            var childList = values[curDepth][0];
+            newData[activedIndex].children = childList;
+          }
+          _TEMP_ALL_DATA.forEach(function (item) {
+            if (item.id === queryIds[i]) item.children = newData;
+          });
+
+          // STEP 3: ===========
+          // dictionary data (orginal)
+          setDictionaryData(newData);
+
+          // STEP 4: ===========
+          // update result data
+          if (activedIndex !== -1) {
+            _allLables.push(newData[activedIndex].name);
+            _allValues.push(newData[activedIndex].id);
+          }
+          _allColumnsData.push(newData);
+        });
+
+        // STEP 5: ===========
+        // all data from fetched data 
+        setAllData(_TEMP_ALL_DATA);
+
+        // STEP 6: ===========
+        // dictionary data (orginal)
+        setDictionaryData(_TEMP_ALL_DATA);
+
+        // STEP 7: ===========
+        //update data
+        setOptData(_allColumnsData);
+        setData(_allColumnsData);
+
+        // STEP 8: ===========
+        //Set a default value
+        setSelectedData({
+          labels: _allLables,
+          values: _allValues,
+          queryIds: queryIds
+        });
+      });
+    });
   }
   function fillColumnTitle() {
     var _Array;
@@ -1019,7 +1158,7 @@ var CascadingSelectE2E = function CascadingSelectE2E(props) {
     obj.unshift({
       id: "$EMPTY_ID_" + index,
       name: "",
-      depth: obj[0].depth
+      depth: obj.length === 0 ? 0 : obj[0].depth
     });
     obj.forEach(function (item, depth) {
       if (item.children) {
@@ -1032,11 +1171,10 @@ var CascadingSelectE2E = function CascadingSelectE2E(props) {
     var lastFirstLevelName = '';
     var loop = true;
     var resDepth = 0;
+    var rowQueryAttr = 'id';
     var getIndexOf = function getIndexOf(arr, val) {
       for (var i = 0; i < arr.length; i++) {
-        if (arr[i].id.toString() === val.toString()) {
-          return i;
-        }
+        if (arr[i][rowQueryAttr].toString() === val.toString()) return i;
       }
       return -1;
     };
@@ -1049,10 +1187,13 @@ var CascadingSelectE2E = function CascadingSelectE2E(props) {
       }
       for (var i = 0; i < list.length; i++) {
         var row = list[i];
-        var callbackValue = returnType === 'key' ? row.id.toString() : row.name.toString();
+        var callbackValue = void 0;
+        if (returnType === 'key') callbackValue = row[rowQueryAttr].toString();
+        if (returnType === 'value') callbackValue = row.name.toString();
+        if (returnType === 'query') callbackValue = typeof row.queryId !== 'undefined' ? row.queryId.toString() : '';
         if (loop) {
           // get first-level item
-          if (getIndexOf(data, row.id) !== -1) {
+          if (getIndexOf(data, row[rowQueryAttr]) !== -1) {
             callbackValueNested.push(callbackValue);
             lastFirstLevelName = callbackValue;
           }
@@ -1064,7 +1205,7 @@ var CascadingSelectE2E = function CascadingSelectE2E(props) {
         }
 
         //check the value
-        if (row.id.toString() === targetVal.toString()) {
+        if (row[rowQueryAttr].toString() === targetVal.toString()) {
           callbackValueNested.push(callbackValue);
           loop = false;
           resDepth = depth;
@@ -1132,6 +1273,10 @@ var CascadingSelectE2E = function CascadingSelectE2E(props) {
     // column titles
     //--------------
     fillColumnTitle();
+
+    // Initialize default value (request parameters for each level)
+    //--------------
+    initDefaultValue();
 
     //
     //--------------

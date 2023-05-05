@@ -143,10 +143,10 @@ export default () => {
         <>
 
             <CascadingSelectE2E
-                value=""
+                value="Title 2[2],Title 4[5]"
                 name="name"
                 label="String"
-                depth={100}
+                depth={103}
                 displayResult={true}
                 valueType="label"
                 columnTitle={['Heading 1','Heading 2']}
@@ -237,6 +237,28 @@ export default () => {
 
 
 
+
+
+
+             <CascadingSelectE2E
+                value="2[2]"
+                name="name"
+                label="String"
+                depth={102}
+                displayResult={true}
+                valueType="value"
+                .....
+            />
+
+             <CascadingSelectE2E
+                value=""
+                name="name"
+                label="String"
+                depth={101}
+                displayResult={true}
+                valueType="label"
+                .....
+            />
 
 
         </>

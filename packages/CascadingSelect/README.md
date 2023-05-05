@@ -429,7 +429,7 @@ export default () => {
         <>
 
             <CascadingSelect
-                value=""
+                value="Title 1,Title 3"
                 name="name"
                 label="String"
                 depth={100}

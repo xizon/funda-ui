@@ -668,7 +668,7 @@ var CascadingSelect = function CascadingSelect(props) {
         while (1) switch (_context.prev = _context.next) {
           case 0:
             if (!(_typeof(fetchFuncAsync) === 'object')) {
-              _context.next = 19;
+              _context.next = 17;
               break;
             }
             //
@@ -708,18 +708,10 @@ var CascadingSelect = function CascadingSelect(props) {
             // STEP 4: ===========
             // Turn the data of each group into an array
             setData([_EMPTY_SUPPORTED_DATA]);
-
-            // STEP 5: ===========
-            //Set a default value
-            if (value) updateValue(_EMPTY_SUPPORTED_DATA, value);
-
-            // STEP 6: ===========
-            //
-            onFetch === null || onFetch === void 0 ? void 0 : onFetch(_EMPTY_SUPPORTED_DATA);
-            return _context.abrupt("return", _EMPTY_SUPPORTED_DATA);
-          case 19:
+            return _context.abrupt("return", [_ORGIN_DATA, _EMPTY_SUPPORTED_DATA]);
+          case 17:
             return _context.abrupt("return", []);
-          case 20:
+          case 18:
           case "end":
             return _context.stop();
         }
@@ -809,10 +801,6 @@ var CascadingSelect = function CascadingSelect(props) {
         arr[i].current = false;
       }
     }
-
-    // return result
-    //////////////////////////////////////////
-    return arr;
   }
 
   /**
@@ -823,27 +811,27 @@ var CascadingSelect = function CascadingSelect(props) {
   function markAllItems(arr) {
     for (var i = 0; i < arr.length; i++) {
       arr[i].current = false;
+      if (arr[i].children) markAllItems(arr[i].children);
     }
-    return arr;
   }
   function updateValue(arr, targetVal) {
     var level = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
     var inputEl = valRef.current;
-    var valueTypeValue, valueTypeLabel;
+    var _valueData, _labelData;
     if (targetVal.toString().indexOf('$EMPTY_ID_') >= 0) {
       // If clearing the current column
       //////////////////////////////////////////
-      valueTypeValue = selectedData.values;
-      valueTypeLabel = selectedData.labels;
+      _valueData = selectedData.values;
+      _labelData = selectedData.labels;
 
       // update result to input
-      valueTypeValue.splice(level);
-      valueTypeLabel.splice(level);
+      _valueData.splice(level);
+      _labelData.splice(level);
 
       //
       setSelectedData({
-        labels: valueTypeLabel,
-        values: valueTypeValue
+        labels: _labelData,
+        values: _valueData
       });
     } else {
       // click an item
@@ -853,31 +841,108 @@ var CascadingSelect = function CascadingSelect(props) {
       var _values = queryResultOfJSON(arr, targetVal, 'key');
 
       // update result to input
-      valueTypeValue = _values ? _values.map(function (item) {
+      _valueData = _values ? _values.map(function (item) {
         return item;
       }) : [];
-      valueTypeLabel = _labels ? _labels.map(function (item) {
+      _labelData = _labels ? _labels.map(function (item) {
         return item;
       }) : [];
 
       //
       setSelectedData({
-        labels: _labels,
-        values: _values
+        labels: _labelData,
+        values: _valueData
       });
     }
 
     // update selected data 
     //////////////////////////////////////////
     if (valueType === 'value') {
-      if (inputEl !== null) inputEl.value = valueTypeValue.join(',');
+      if (inputEl !== null) inputEl.value = _valueData.join(',');
     } else {
-      if (inputEl !== null) inputEl.value = valueTypeLabel.join(',');
+      if (inputEl !== null) inputEl.value = _labelData.join(',');
     }
     return {
-      0: valueTypeValue.join(','),
-      1: valueTypeLabel.join(',')
+      0: _valueData.join(','),
+      1: _labelData.join(',')
     };
+  }
+  function initDefaultValue() {
+    var _params = fetchFuncMethodParams || [];
+    fetchData(_params.join(',')).then(function (response) {
+      var _data = response[1];
+      if (value) {
+        var rowQueryAttr = valueType === 'value' ? 'id' : 'name';
+        var targetVal = value.split(',');
+        //
+        var _allColumnsData = [];
+        var _allLables = [];
+
+        // loop over each column
+        var _loop = function _loop(col) {
+          if (col === 0) {
+            // STEP 1: ===========
+            //active item from current column
+            //////////////////////////////////////////
+            var newData = JSON.parse(JSON.stringify(_data));
+            var activedIndex = _data.findIndex(function (item) {
+              return item[rowQueryAttr].toString() === targetVal[col].toString();
+            });
+            markAllItems(newData);
+            markCurrent(newData, activedIndex);
+
+            //
+            _allLables.push(newData[activedIndex].name);
+            _allColumnsData.push(newData);
+          }
+          if (col > 0) {
+            var _findNode = searchObject(_data, function (value) {
+              return value != null && value != undefined && value[rowQueryAttr] == targetVal[col - 1];
+            });
+            var childList = _findNode[0].children;
+
+            // STEP 1: ===========
+            //active item from current column
+            //////////////////////////////////////////
+            var _newData = JSON.parse(JSON.stringify(childList));
+            var _activedIndex = _newData.findIndex(function (item) {
+              return item[rowQueryAttr].toString() === targetVal[col].toString();
+            });
+            markAllItems(_newData);
+            markCurrent(_newData, _activedIndex);
+
+            //
+            _allLables.push(_newData[_activedIndex].name);
+            _allColumnsData.push(_newData);
+          }
+        };
+        for (var col = 0; col < targetVal.length; col++) {
+          _loop(col);
+        }
+
+        // STEP 2: ===========
+        //update data
+        //////////////////////////////////////////
+        setData(_allColumnsData);
+
+        // STEP 3: ===========
+        //Set a default value
+        //////////////////////////////////////////
+        setSelectedData({
+          labels: _allLables
+        });
+
+        // STEP 4: ===========
+        // callback
+        //////////////////////////////////////////
+        onFetch === null || onFetch === void 0 ? void 0 : onFetch(_allColumnsData);
+      } else {
+        // STEP 4: ===========
+        // callback
+        //////////////////////////////////////////
+        onFetch === null || onFetch === void 0 ? void 0 : onFetch(_data);
+      }
+    });
   }
   function fillColumnTitle(obj) {
     var _Array;
@@ -920,16 +985,38 @@ var CascadingSelect = function CascadingSelect(props) {
       }
     });
   }
+  function searchObject(object, matchCallback) {
+    var result = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : [];
+    var searched = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : [];
+    if (searched.indexOf(object) !== -1 && object === Object(object)) {
+      return;
+    }
+    searched.push(object);
+    if (matchCallback(object)) {
+      result.push(object);
+    }
+    try {
+      if (object === Object(object)) {
+        for (var property in object) {
+          if (property.indexOf("$") !== 0) {
+            searchObject(object[property], matchCallback, result, searched);
+          }
+        }
+      }
+    } catch (e) {
+      throw e;
+    }
+    return result;
+  }
   function queryResultOfJSON(data, targetVal, returnType) {
     var callbackValueNested = [];
     var lastFirstLevelName = '';
     var loop = true;
     var resDepth = 0;
+    var rowQueryAttr = 'id';
     var getIndexOf = function getIndexOf(arr, val) {
       for (var i = 0; i < arr.length; i++) {
-        if (arr[i].id.toString() === val.toString()) {
-          return i;
-        }
+        if (arr[i][rowQueryAttr].toString() === val.toString()) return i;
       }
       return -1;
     };
@@ -945,7 +1032,7 @@ var CascadingSelect = function CascadingSelect(props) {
         var callbackValue = returnType === 'key' ? row.id.toString() : row.name.toString();
         if (loop) {
           // get first-level item
-          if (getIndexOf(data, row.id) !== -1) {
+          if (getIndexOf(data, row[rowQueryAttr]) !== -1) {
             callbackValueNested.push(callbackValue);
             lastFirstLevelName = callbackValue;
           }
@@ -957,7 +1044,7 @@ var CascadingSelect = function CascadingSelect(props) {
         }
 
         //check the value
-        if (row.id.toString() === targetVal.toString()) {
+        if (row[rowQueryAttr].toString() === targetVal.toString()) {
           callbackValueNested.push(callbackValue);
           loop = false;
           resDepth = depth;
@@ -1022,10 +1109,9 @@ var CascadingSelect = function CascadingSelect(props) {
     }));
   }
   (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useEffect)(function () {
-    // data init
+    // // Initialize default value (request parameters for each level)
     //--------------
-    var _params = fetchFuncMethodParams || [];
-    fetchData(_params.join(','));
+    initDefaultValue();
 
     //
     //--------------

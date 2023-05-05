@@ -123,7 +123,7 @@ const CascadingSelect = (props: CascadingSelectProps) => {
             const response: any = await fetchFuncAsync[`${fetchFuncMethod}`](...params.split(','));
             let _ORGIN_DATA = response.data;
 
-
+            
             // loading 
             setLoading(false);
 
@@ -140,6 +140,7 @@ const CascadingSelect = (props: CascadingSelectProps) => {
             }
             
 
+            
             // STEP 1: ===========
             // column titles
             fillColumnTitle(_ORGIN_DATA);
@@ -160,16 +161,7 @@ const CascadingSelect = (props: CascadingSelectProps) => {
             setData([_EMPTY_SUPPORTED_DATA]);
 
 
-            // STEP 5: ===========
-            //Set a default value
-            if (value) updateValue(_EMPTY_SUPPORTED_DATA, value);
-
-            // STEP 6: ===========
-            //
-            onFetch?.(_EMPTY_SUPPORTED_DATA);
-
-
-            return _EMPTY_SUPPORTED_DATA;
+            return [_ORGIN_DATA, _EMPTY_SUPPORTED_DATA];
         } else {
             return [];
         }
@@ -288,10 +280,6 @@ const CascadingSelect = (props: CascadingSelectProps) => {
                 arr[i].current = false;
             }
         }
-        
-         // return result
-         //////////////////////////////////////////
-        return arr;
     }
 
     /**
@@ -302,9 +290,8 @@ const CascadingSelect = (props: CascadingSelectProps) => {
     function markAllItems(arr: any[]) {
         for (let i = 0; i < arr.length; i++) {
             arr[i].current = false;
+            if (arr[i].children) markAllItems(arr[i].children);
         }
-
-        return arr;
     }
 
 
@@ -312,62 +299,162 @@ const CascadingSelect = (props: CascadingSelectProps) => {
     function updateValue(arr: any[], targetVal: any, level: number | boolean = false) {
 
         const inputEl: any = valRef.current;
-        let valueTypeValue, valueTypeLabel;
-
+        let _valueData, _labelData;
+    
     
         if ( targetVal.toString().indexOf('$EMPTY_ID_') >= 0 ) {
-
+    
             // If clearing the current column
             //////////////////////////////////////////
-            valueTypeValue = selectedData.values;
-            valueTypeLabel = selectedData.labels;
-
+            _valueData = selectedData.values;
+            _labelData = selectedData.labels;
+    
             // update result to input
-            valueTypeValue.splice(level);
-            valueTypeLabel.splice(level);
-
+            _valueData.splice(level);
+            _labelData.splice(level);
+    
             //
             setSelectedData({
-                labels: valueTypeLabel,
-                values: valueTypeValue
+                labels: _labelData,
+                values: _valueData
             });
-
-
+    
+    
         } else {
-
+    
+            
             // click an item
             //////////////////////////////////////////
             //search JSON key that contains specific string
             const _labels = queryResultOfJSON(arr, targetVal, 'value');
             const _values = queryResultOfJSON(arr, targetVal, 'key');
 
-            // update result to input
-            valueTypeValue = _values ? _values.map((item: any) => item) : [];
-            valueTypeLabel = _labels ? _labels.map((item: any) => item) : [];    
 
+            // update result to input
+            _valueData = _values ? _values.map((item: any) => item) : [];
+            _labelData = _labels ? _labels.map((item: any) => item) : [];    
+    
             //
             setSelectedData({
-                labels: _labels,
-                values: _values
+                labels: _labelData,
+                values: _valueData
             });
-
-
-
+    
+    
+    
         }
+
 
 
          // update selected data 
          //////////////////////////////////////////
         if (valueType === 'value') {
-            if (inputEl !== null ) inputEl.value = valueTypeValue!.join(',');
+            if (inputEl !== null ) inputEl.value = _valueData!.join(',');
         } else {
-            if (inputEl !== null ) inputEl.value = valueTypeLabel!.join(',');
+            if (inputEl !== null ) inputEl.value = _labelData!.join(',');
         }
         
         return {
-            0 : valueTypeValue!.join(','),
-            1 : valueTypeLabel!.join(',')
+            0 : _valueData!.join(','),
+            1 : _labelData!.join(',')
         }
+    
+    }
+    
+
+    function initDefaultValue() {
+
+        
+        const _params: any[] = fetchFuncMethodParams || [];
+        fetchData((_params).join(',')).then( (response: any) => {
+
+            const _data = response[1];
+
+            if ( value ) {
+
+                const rowQueryAttr = valueType === 'value' ? 'id' : 'name';
+                const targetVal = value.split(',');
+                //
+                const _allColumnsData: any[] = [];
+                const _allLables: any[] = [];
+
+                // loop over each column
+                for( let col = 0; col < targetVal.length; col++ ) {
+
+                    if ( col === 0 ) {
+
+                        // STEP 1: ===========
+                        //active item from current column
+                        //////////////////////////////////////////
+                        const newData: any[] = JSON.parse(JSON.stringify(_data));
+                        const activedIndex = _data.findIndex( (item: any) => {
+                            return item[rowQueryAttr].toString() === targetVal[col].toString();
+                        });
+
+                        markAllItems(newData);
+                        markCurrent(newData, activedIndex);
+                        
+                        //
+                        _allLables.push(newData[activedIndex].name);
+                        _allColumnsData.push(newData);
+                        
+                    } 
+
+                    if ( col > 0 ) {
+                        const _findNode: any = searchObject(_data, function (value: any) { return value != null && value != undefined && value[rowQueryAttr] == targetVal[col-1]; });
+
+                        const childList = _findNode[0].children; 
+
+                        // STEP 1: ===========
+                        //active item from current column
+                        //////////////////////////////////////////
+                        const newData: any[] = JSON.parse(JSON.stringify(childList));
+                        const activedIndex = newData.findIndex( (item: any) => {
+                            return item[rowQueryAttr].toString() === targetVal[col].toString();
+                        });
+
+                        markAllItems(newData);
+                        markCurrent(newData, activedIndex);
+                        
+                        //
+                        _allLables.push(newData[activedIndex].name);
+                        _allColumnsData.push(newData);
+                      
+                    } 
+
+                    
+                    
+                }
+
+                // STEP 2: ===========
+                //update data
+                //////////////////////////////////////////
+                setData(_allColumnsData);
+
+
+                // STEP 3: ===========
+                //Set a default value
+                //////////////////////////////////////////
+                setSelectedData({
+                    labels: _allLables
+                });  
+
+                // STEP 4: ===========
+                // callback
+                //////////////////////////////////////////
+                onFetch?.(_allColumnsData);
+
+            } else {
+
+                // STEP 4: ===========
+                // callback
+                //////////////////////////////////////////
+                onFetch?.(_data);
+
+                
+            }
+
+        });
 
     }
 
@@ -426,7 +513,29 @@ const CascadingSelect = (props: CascadingSelectProps) => {
         });
     }
 
-
+    function searchObject(object: any, matchCallback: any, result: any[] = [], searched: any[] = []) {
+        if (searched.indexOf(object as never) !== -1 && object === Object(object)) {
+            return;
+        }
+        searched.push(object as never);
+        if (matchCallback(object)) {
+            result.push(object as never);
+        }
+        try {
+            if (object === Object(object)) {
+                for (var property in object) {
+                    if (property.indexOf("$") !== 0) {
+                        searchObject(object[property], matchCallback, result, searched);
+                    }
+                }
+            }
+        }
+        catch (e) {
+            throw e;
+        }
+        return result;
+    }
+    
 
     function queryResultOfJSON(data: any[], targetVal: any, returnType: string) {
 
@@ -434,100 +543,98 @@ const CascadingSelect = (props: CascadingSelectProps) => {
         let lastFirstLevelName = '';
         let loop = true;
         let resDepth = 0;
-
+        const rowQueryAttr = 'id';
+    
         const getIndexOf = function (arr: any[], val: any) {
             for (let i = 0; i < arr.length; i++) {
-                if (arr[i].id.toString() === val.toString()) {
-                    return i;
-                }
+                if (arr[i][rowQueryAttr].toString() === val.toString()) return i;
             }
             return -1;
         };
-
-
+    
+    
         const searchJsonStr = function (list: any[], depth?: any) {
-
+    
             // `depth` is very important, it is used to accurately judge the final result
             if (typeof (depth) === 'undefined') {
                 depth = 0;
             } else {
                 depth++;
             }
-
+    
             for (let i = 0; i < list.length; i++) {
-
+    
                 const row = list[i];
                 const callbackValue: any = returnType === 'key' ? row.id.toString() : row.name.toString();
-
+    
+    
                 if (loop) {
                     // get first-level item
-                    if (getIndexOf(data, row.id) !== -1) {
+                    if (getIndexOf(data, row[rowQueryAttr]) !== -1) {
                         callbackValueNested.push(callbackValue as never);
                         lastFirstLevelName = callbackValue;
                     }
-
+    
                     // get child-level item
                     if (row.children) {
                         callbackValueNested.push(callbackValue as never);
                     }
-
+    
                 }
-
-
+    
                 //check the value
-                if (row.id.toString() === targetVal.toString()) {
+                if (row[rowQueryAttr].toString() === targetVal.toString()) {
                     callbackValueNested.push(callbackValue as never);
                     loop = false;
                     resDepth = depth;
                     break;
                 }
-
-
+    
                 // Note: Recursion must be placed here
                 if (loop) {
                     if (row.children) {
                         searchJsonStr(row.children, depth);
                     }
                 }
-
-
-
+    
+    
             }
-
-
+    
+    
         }
         searchJsonStr(data);
-
-
+    
+    
         // (1) Remove duplicate values
         //------------------------------------------
         callbackValueNested = callbackValueNested.filter(function (item, index, arr) {
             return arr.indexOf(item, 0) === index;
         });
-
-
+    
+    
         // (2) Delete needless first-level
         //------------------------------------------
         let resAll = callbackValueNested.slice(callbackValueNested.indexOf(lastFirstLevelName as never), callbackValueNested.length)
-
-
+    
+    
         // (3) Returns result
         //------------------------------------------
         if (resAll.length > 1) {
             // Get first-level item
             resAll.splice(1);
-
+    
             // Get child-level item
             let resChild = callbackValueNested.slice(-resDepth); // Get the last elements in reverse
-
+    
             // Combine
             resAll = resAll.concat(resChild);
-
+    
         }
-
+    
         return resAll;
-
+    
     }
+
 
     function displayInfo() {
 
@@ -556,11 +663,9 @@ const CascadingSelect = (props: CascadingSelectProps) => {
 
     useEffect(() => {
 
-        // data init
+        // // Initialize default value (request parameters for each level)
         //--------------
-        const _params: any[] = fetchFuncMethodParams || [];
-        fetchData((_params).join(','));
-
+        initDefaultValue();
 
         //
         //--------------

@@ -2,6 +2,7 @@ import React, { useId, useEffect, useState, useRef } from 'react';
 
 import Group from './Group';
 import './index.scss';
+import { type } from 'os';
 
 declare module 'react' {
     interface ReactI18NextChildren<T> {
@@ -115,14 +116,15 @@ const CascadingSelectE2E = (props: CascadingSelectE2EProps) => {
     const [columnTitleData, setColumnTitleData] = useState<any[]>([]);
     const [hasErr, setHasErr] = useState<boolean>(false);
     const [firstDataFeched, setFirstDataFeched] = useState<boolean>(false);
-    
+
 
 
     //for variable 
     const [data, setData] = useState<any[]>([]);
     const [selectedData, setSelectedData] = useState<any>({
         labels: [],
-        values: []
+        values: [],
+        queryIds: []
     });
     const [isShow, setIsShow] = useState<boolean>(false);
 
@@ -132,7 +134,7 @@ const CascadingSelectE2E = (props: CascadingSelectE2EProps) => {
         const fetchFuncAsync = _fetchArray.fetchFuncAsync;
         const fetchFuncMethod = _fetchArray.fetchFuncMethod;
         const fetchCallback = _fetchArray.fetchCallback;
- 
+
 
         if (typeof fetchFuncAsync === 'object') {
 
@@ -140,13 +142,13 @@ const CascadingSelectE2E = (props: CascadingSelectE2EProps) => {
             setLoading(true);
 
             const response: any = await fetchFuncAsync[`${fetchFuncMethod}`](...params.split(','));
-            let _ORGIN_DATA = response.data;
+            let _ORGIN_DATA: any[] = response.data;
+            let _TEMP_ALL_DATA: any[] = [];
 
-           
             // loading 
             setLoading(false);
-            
-            if ( typeof _ORGIN_DATA[0] === 'undefined' ) return;
+
+            if (typeof _ORGIN_DATA[0] === 'undefined') return;
 
             // reset data structure
             if (typeof (fetchCallback) === 'function') {
@@ -155,51 +157,49 @@ const CascadingSelectE2E = (props: CascadingSelectE2EProps) => {
 
 
             // Determine whether the data structure matches
-            if ( typeof _ORGIN_DATA[0].id === 'undefined' ) {
-                console.warn( 'The data structure does not match, please refer to the example in the component documentation.' );
+            if (typeof _ORGIN_DATA[0].id === 'undefined') {
+                console.warn('The data structure does not match, please refer to the example in the component documentation.');
                 setHasErr(true);
                 _ORGIN_DATA = [];
             }
-            
+
             // add data depth
-            _ORGIN_DATA.forEach( (item: any) => {
+            _ORGIN_DATA.forEach((item: any) => {
                 item.depth = dataDepth;
-            }); 
+            });
 
 
-
-            let _temp_allData;
-            if ( dataDepth === 0 ) {
+            if (dataDepth === 0) {
 
                 // STEP 1: ===========
                 // all data from fetched data 
-                _temp_allData = JSON.parse(JSON.stringify(_ORGIN_DATA)); 
-                setAllData(_temp_allData);
+                _TEMP_ALL_DATA = JSON.parse(JSON.stringify(_ORGIN_DATA));
+                setAllData(_TEMP_ALL_DATA);
 
                 // STEP 2: ===========
                 // dictionary data (orginal)
-                setDictionaryData(_temp_allData);
+                setDictionaryData(_TEMP_ALL_DATA);
 
 
             }
-            if ( dataDepth > 0 ) {
+            if (dataDepth > 0) {
 
                 // STEP 1: ===========
                 // all data from fetched data  
-                _temp_allData = allData; 
-                addChildrenOpt(_temp_allData, parentId, _ORGIN_DATA);
+                _TEMP_ALL_DATA = allData;
+                addChildrenOpt(_TEMP_ALL_DATA, parentId, _ORGIN_DATA);
 
                 // STEP 2: ===========
                 // dictionary data (orginal)
-                setDictionaryData(_temp_allData);
+                setDictionaryData(_TEMP_ALL_DATA);
 
-                
+
             }
-      
+
 
             // STEP 3: ===========
             // Add an empty item to each list to support empty item selection
-            const _EMPTY_SUPPORTED_DATA = JSON.parse(JSON.stringify(_temp_allData));
+            const _EMPTY_SUPPORTED_DATA = JSON.parse(JSON.stringify(_TEMP_ALL_DATA));
             addEmptyOpt(_EMPTY_SUPPORTED_DATA, 0);
 
 
@@ -207,14 +207,14 @@ const CascadingSelectE2E = (props: CascadingSelectE2EProps) => {
             // STEP 4: ===========
             // Turn the data of each group into an array
             let _temp_optData;
-            if ( dataDepth === 0 ) {
-                
+            if (dataDepth === 0) {
+
                 _temp_optData = [_EMPTY_SUPPORTED_DATA];
                 setOptData(_temp_optData);
                 setData(_temp_optData);
             }
 
-            if ( dataDepth > 0 ) {
+            if (dataDepth > 0) {
                 _temp_optData = data;
 
                 // Add an empty item to each list to support empty item selection
@@ -222,25 +222,19 @@ const CascadingSelectE2E = (props: CascadingSelectE2EProps) => {
 
                 const childList = _ORGIN_DATA;
                 _temp_optData[dataDepth] = childList;
-                
+
                 setOptData(_temp_optData);
                 setData(optData);
             }
 
 
             // STEP 5: ===========
-            //Set a default value
-            if (value) updateValue(_EMPTY_SUPPORTED_DATA, value);
-
-
-            // STEP 6: ===========
             //
-            onFetch?.(_EMPTY_SUPPORTED_DATA, _ORGIN_DATA);    
-            
-            return _EMPTY_SUPPORTED_DATA;
+            onFetch?.(_EMPTY_SUPPORTED_DATA, _ORGIN_DATA);
+
+            return [_ORGIN_DATA, _EMPTY_SUPPORTED_DATA];
 
 
-            
         } else {
             return [];
         }
@@ -253,15 +247,18 @@ const CascadingSelectE2E = (props: CascadingSelectE2EProps) => {
     function doFetch(dataDepthMax: boolean, dataDepth: number = 0, parentId: number = 0, emptyAction: boolean = false) {
 
         // if empty selection is selected
-        if ( emptyAction ) return;
+        if (emptyAction) return;
 
         // If the depth is max, no more requests
-        if ( dataDepthMax ) return;
+        if (dataDepthMax) return;
+
+        // other
+        if ( typeof fetchArray![dataDepth] === 'undefined' ) return new Promise((resolve, reject) => resolve([[],[]]) );
 
         // data fetch action
         const _oparams: any[] = fetchArray![dataDepth].fetchFuncMethodParams || [];
-        const _params: any[] = _oparams.map( (item: any) => item !== '$QUERY_ID' ? item : parentId );
-        fetchData(fetchArray![dataDepth], (_params).join(','), dataDepth, parentId);
+        const _params: any[] = _oparams.map((item: any) => item !== '$QUERY_ID' ? item : parentId);
+        return fetchData(fetchArray![dataDepth], (_params).join(','), dataDepth, parentId);
     }
 
 
@@ -304,42 +301,43 @@ const CascadingSelectE2E = (props: CascadingSelectE2EProps) => {
         ) {
 
             setIsShow(false);
-             
+
         }
     }
 
     function handleDisplayOptions(event: any) {
         event.preventDefault();
         setIsShow(true);
-        
-        // Execute the fetch task
-        if ( !firstDataFeched ) {
-            setLoading(true);
-            doFetch(false, currentDataDepth, 0, false);
-            setFirstDataFeched(true);
-        }
 
         
+        // Execute the fetch task
+        if (!firstDataFeched) {
+            setLoading(true);
+            setFirstDataFeched(true);
+            doFetch(false, currentDataDepth, 0, false);
+        }
+
+
     }
 
 
     function handleClickItem(e: any, resValue: any, index: number, level: number) {
 
-        const dataDepthMax: boolean = resValue.depth === fetchArray!.length-1;
-        const parentId = e.currentTarget.dataset.query;
-        const emptyAction = resValue.id.toString().indexOf('$EMPTY_ID_') < 0 ? false : true;
+        const dataDepthMax: boolean = resValue.depth === fetchArray!.length - 1;
+        const parentId: number = e.currentTarget.dataset.query;
+        const emptyAction: boolean = resValue.id.toString().indexOf('$EMPTY_ID_') < 0 ? false : true;
 
 
         // update data depth
         //////////////////////////////////////////
-        setCurrentDataDepth(resValue.depth+1);
+        setCurrentDataDepth(resValue.depth + 1);
         setCurrentDataDepth((prevState) => {
-            const _currentDataDepth = resValue.depth+1;
-        
+            const _currentDataDepth = resValue.depth + 1;
+
             // Execute the fetch task
             //////////////////////////////////////////
             doFetch(dataDepthMax, _currentDataDepth, parentId, emptyAction);
-        
+
             return _currentDataDepth;
 
         });
@@ -374,13 +372,14 @@ const CascadingSelectE2E = (props: CascadingSelectE2EProps) => {
 
         // close modal
         //////////////////////////////////////////
-        if ( dataDepthMax && resValue.id.toString().indexOf('$EMPTY_ID_') < 0 ) {
+        if (dataDepthMax && resValue.id.toString().indexOf('$EMPTY_ID_') < 0) {
             setIsShow(false);
 
             // update data depth
-            setCurrentDataDepth(0);        
+            setCurrentDataDepth(0);
         }
-        
+
+
     }
 
 
@@ -391,59 +390,60 @@ const CascadingSelectE2E = (props: CascadingSelectE2EProps) => {
     * @param index 
     * @returns 
     */
-   function markCurrent(arr: any[], index: number) {
+    function markCurrent(arr: any[], index: number) {
 
         // click an item
         //////////////////////////////////////////
-       for (let i = 0; i < arr.length; i++) {
-           if (i === index) {
-               arr[i].current = true;
-           } else {
-               arr[i].current = false;
-           }
-       }
-       
+        for (let i = 0; i < arr.length; i++) {
+            if (i === index) {
+                arr[i].current = true;
+            } else {
+                arr[i].current = false;
+            }
+        }
+
         // return result
         //////////////////////////////////////////
-       return arr;
-   }
+        return arr;
+    }
 
-   /**
-    * Deactivate all items
-    * @param arr 
-    * @returns 
-    */
-   function markAllItems(arr: any[]) {
-       for (let i = 0; i < arr.length; i++) {
-           arr[i].current = false;
-       }
-
-       return arr;
-   }
-
+    /**
+     * Deactivate all items
+     * @param arr 
+     * @returns 
+     */
+    function markAllItems(arr: any[]) {
+        for (let i = 0; i < arr.length; i++) {
+            arr[i].current = false;
+            if (arr[i].children) markAllItems(arr[i].children);
+        }
+    }
 
 
 
     function updateValue(arr: any[], targetVal: any, level: number | boolean = false) {
 
         const inputEl: any = valRef.current;
-        let valueTypeValue, valueTypeLabel;
+        let _valueData: any, _labelData: any, _queryIdsData: any;
 
-        if ( targetVal.toString().indexOf('$EMPTY_ID_') >= 0 ) {
+        if (targetVal.toString().indexOf('$EMPTY_ID_') >= 0) {
 
             // If clearing the current column
             //////////////////////////////////////////
-            valueTypeValue = selectedData.values;
-            valueTypeLabel = selectedData.labels;
+            _valueData = selectedData.values;
+            _labelData = selectedData.labels;
+            _queryIdsData = selectedData.queryIds;
 
             // update result to input
-            valueTypeValue.splice(level);
-            valueTypeLabel.splice(level);
+            _valueData.splice(level);
+            _labelData.splice(level);
+            _queryIdsData.splice(level);
 
             //
             setSelectedData({
-                labels: valueTypeLabel,
-                values: valueTypeValue
+                labels: _labelData,
+                values: _valueData,
+                queryIds: _queryIdsData,
             });
 
 
@@ -454,15 +454,18 @@ const CascadingSelectE2E = (props: CascadingSelectE2EProps) => {
             //search JSON key that contains specific string
             const _labels = queryResultOfJSON(arr, targetVal, 'value');
             const _values = queryResultOfJSON(arr, targetVal, 'key');
+            const _queryIds = queryResultOfJSON(arr, targetVal, 'query');
 
             // update result to input
-            valueTypeValue = _values ? _values.map((item: any) => item) : [];
-            valueTypeLabel = _labels ? _labels.map((item: any) => item) : [];    
+            _valueData = _values ? _values.map((item: any) => item) : [];
+            _labelData = _labels ? _labels.map((item: any) => item) : [];
+            _queryIdsData = _queryIds ? _queryIds.map((item: any) => item) : [];
 
             //
             setSelectedData({
-                labels: _labels,
-                values: _values
+                labels: _labelData,
+                values: _valueData,
+                queryIds: _queryIdsData,
             });
 
 
@@ -470,34 +473,193 @@ const CascadingSelectE2E = (props: CascadingSelectE2EProps) => {
         }
 
 
-         // update selected data 
-         //////////////////////////////////////////
+        // update selected data 
+        //////////////////////////////////////////
+        const inputVal_0 = _valueData.map((item: any, i: number) => `${item}[${_queryIdsData[i]}]`)!.join(',');
+        const inputVal_1 = _labelData.map((item: any, i: number) => `${item}[${_queryIdsData[i]}]`)!.join(',');
+
         if (valueType === 'value') {
-            if (inputEl !== null ) inputEl.value = valueTypeValue!.join(',');
+            if (inputEl !== null) inputEl.value = inputVal_0;
         } else {
-            if (inputEl !== null ) inputEl.value = valueTypeLabel!.join(',');
+            if (inputEl !== null) inputEl.value = inputVal_1;
         }
-        
+
         return {
-            0 : valueTypeValue!.join(','),
-            1 : valueTypeLabel!.join(',')
+            0: inputVal_0,
+            1: inputVal_1
         }
 
     }
 
+
+
+    function initDefaultValue() {
+        if ( typeof value === 'undefined' || value === '' ) return;
     
+        setFirstDataFeched(true);
+        doFetch(false, 0, 0, false)?.then((firstColResponse: any) => {
+    
+        
+            const _ORGIN_DATA: any[] = firstColResponse[0];
+            const _CHILDREN_DATA: any[] = firstColResponse[1];
+            let activedIndex: any;
+            const allFetch: any[] = [];
+    
+            const rowQueryAttr: string = valueType === 'value' ? 'id' : 'name';
+            const targetVal: any = value.match(/(\[.*?\])/gi)!.map((item: any, i: number) => value.split(',')[i].replace(item, ''));
+            const queryIds: any = value.match(/[^\[]+(?=(\[ \])|\])/gi);
+    
+            //
+            let _TEMP_ALL_DATA: any[] = [];
+    
+            //
+            const _allColumnsData: any[] = [];
+            const _allLables: any[] = [];
+            const _allValues: any[] = [];
+         
+    
+            // loop over each column
+            //////////////////////////////////////////
+            for (let col = 0; col <= targetVal.length; col++) {
+    
+                if (col === 0) {
+    
+                    // STEP 1: ===========
+                    //active item from current column
+                    const newData: any[] = JSON.parse(JSON.stringify(_CHILDREN_DATA));
+                    activedIndex = _CHILDREN_DATA.findIndex((item: any) => {
+                        return item[rowQueryAttr].toString() === targetVal[col].toString();
+                    });
+    
+                    markAllItems(newData);
+                    markCurrent(newData, activedIndex);
+    
+    
+                    // STEP 2: ===========
+                    // all data from fetched data 
+                    _TEMP_ALL_DATA = _ORGIN_DATA;
+    
+                    // STEP 3: ===========
+                    // dictionary data (orginal)
+                    // Same as the `STEP 2`
+    
+    
+                    // STEP 4: ===========
+                    // update result data
+                    _allLables.push(newData[activedIndex].name);
+                    _allValues.push(newData[activedIndex].id);
+                    _allColumnsData.push(newData);
+    
+
+    
+                }
+    
+                if (col > 0) {
+                    allFetch.push(doFetch(false, col, queryIds[col - 1], false));
+                }
+    
+    
+    
+            }
+    
+            // fetch all columns except the first
+            //////////////////////////////////////////
+            Promise.all(allFetch).then((values) => {
+                
+                values.forEach((colResponse: any, i: number) => {
+    
+              
+                    const _CURRENT_COL_DATA: any[] = colResponse[0];
+                    const curDepth: number = i+1;
+                    
+                    // STEP 1: ===========
+                    //active item from current column
+                    const newData: any[] = JSON.parse(JSON.stringify(_CURRENT_COL_DATA));
+                    activedIndex = newData.findIndex((item: any) => {
+                        if ( typeof targetVal[curDepth] !== 'undefined' ) {
+                            return item[rowQueryAttr].toString() === targetVal[curDepth].toString();
+                        }
+                    });
+    
+                    markAllItems(newData);
+                    markCurrent(newData, activedIndex);
+    
+                    // STEP 2: ===========
+                    // all data from fetched data 
+                    if ( typeof values[curDepth] !== 'undefined') {
+                        const childList = values[curDepth][0];
+                        newData[activedIndex].children = childList;
+                    }
+    
+                    _TEMP_ALL_DATA.forEach((item: any) => {
+                        if (item.id === queryIds[i]) item.children = newData;
+                    });             
+    
+                    
+                    // STEP 3: ===========
+                    // dictionary data (orginal)
+                    setDictionaryData(newData);
+    
+    
+                    // STEP 4: ===========
+                    // update result data
+                    if ( activedIndex !== -1 ) {
+                        _allLables.push(newData[activedIndex].name);
+                        _allValues.push(newData[activedIndex].id);
+                    }
+
+                    _allColumnsData.push(newData);
+
+    
+                });
+    
+             
+                // STEP 5: ===========
+                // all data from fetched data 
+                setAllData(_TEMP_ALL_DATA);
+    
+                // STEP 6: ===========
+                // dictionary data (orginal)
+                setDictionaryData(_TEMP_ALL_DATA);
+    
+                
+                // STEP 7: ===========
+                //update data
+                setOptData(_allColumnsData);
+                setData(_allColumnsData);
+    
+                
+                // STEP 8: ===========
+                //Set a default value
+                setSelectedData({
+                    labels: _allLables,
+                    values: _allValues,
+                    queryIds: queryIds,
+                });
+    
+            });
+    
+    
+    
+        });
+    
+    
+    }
+    
+
+
     function fillColumnTitle() {
 
         const dataDepth = fetchArray!.length;
         const oldColumnTitleData = columnTitle ? columnTitle : [];
         const newColumnTitleData = new Array(dataDepth)?.fill('');
-        oldColumnTitleData!.forEach( (item: any, index: number) => {
+        oldColumnTitleData!.forEach((item: any, index: number) => {
             newColumnTitleData[index] = item;
         });
 
         //
-        if ( oldColumnTitleData.length > dataDepth ) {
-            newColumnTitleData.splice(dataDepth, oldColumnTitleData.length-dataDepth);
+        if (oldColumnTitleData.length > dataDepth) {
+            newColumnTitleData.splice(dataDepth, oldColumnTitleData.length - dataDepth);
         }
 
         setColumnTitleData(newColumnTitleData);
@@ -505,9 +667,9 @@ const CascadingSelectE2E = (props: CascadingSelectE2EProps) => {
 
 
     function addChildrenOpt(obj: any[], parentId: number, childrenData: any[]) {
-        
+
         obj.forEach((item: any) => {
-            if ( item.id === parentId ) item.children = childrenData;
+            if (item.id === parentId) item.children = childrenData;
 
             if (item.children) {
                 addChildrenOpt(item.children, parentId, childrenData);
@@ -523,16 +685,15 @@ const CascadingSelectE2E = (props: CascadingSelectE2EProps) => {
         obj.unshift({
             id: "$EMPTY_ID_" + index,
             name: "",
-            depth: obj[0].depth
+            depth: obj.length === 0 ? 0 : obj[0].depth
         });
 
         obj.forEach((item: any, depth: number) => {
             if (item.children) {
-                addEmptyOpt(item.children, index * (depth+1));
+                addEmptyOpt(item.children, index * (depth + 1));
             }
         });
     }
-
 
 
     function queryResultOfJSON(data: any[], targetVal: any, returnType: string) {
@@ -541,12 +702,11 @@ const CascadingSelectE2E = (props: CascadingSelectE2EProps) => {
         let lastFirstLevelName = '';
         let loop = true;
         let resDepth = 0;
+        const rowQueryAttr = 'id';
 
         const getIndexOf = function (arr: any[], val: any) {
             for (let i = 0; i < arr.length; i++) {
-                if (arr[i].id.toString() === val.toString()) {
-                    return i;
-                }
+                if (arr[i][rowQueryAttr].toString() === val.toString()) return i;
             }
             return -1;
         };
@@ -564,11 +724,16 @@ const CascadingSelectE2E = (props: CascadingSelectE2EProps) => {
             for (let i = 0; i < list.length; i++) {
 
                 const row = list[i];
-                const callbackValue: any = returnType === 'key' ? row.id.toString() : row.name.toString();
+                let callbackValue: any;
+
+                if (returnType === 'key') callbackValue = row[rowQueryAttr].toString();
+                if (returnType === 'value') callbackValue = row.name.toString();
+                if (returnType === 'query') callbackValue = typeof row.queryId !== 'undefined' ? row.queryId.toString() : '';
+
 
                 if (loop) {
                     // get first-level item
-                    if (getIndexOf(data, row.id) !== -1) {
+                    if (getIndexOf(data, row[rowQueryAttr]) !== -1) {
                         callbackValueNested.push(callbackValue as never);
                         lastFirstLevelName = callbackValue;
                     }
@@ -582,13 +747,12 @@ const CascadingSelectE2E = (props: CascadingSelectE2EProps) => {
 
 
                 //check the value
-                if (row.id.toString() === targetVal.toString()) {
+                if (row[rowQueryAttr].toString() === targetVal.toString()) {
                     callbackValueNested.push(callbackValue as never);
                     loop = false;
                     resDepth = depth;
                     break;
                 }
-
 
                 // Note: Recursion must be placed here
                 if (loop) {
@@ -596,7 +760,6 @@ const CascadingSelectE2E = (props: CascadingSelectE2EProps) => {
                         searchJsonStr(row.children, depth);
                     }
                 }
-
 
 
             }
@@ -638,6 +801,7 @@ const CascadingSelectE2E = (props: CascadingSelectE2EProps) => {
 
     function displayInfo() {
 
+
         return selectedData!.labels ? selectedData!.labels.map((item: any, i: number, arr: any[]) => {
             if (arr.length - 1 === i) {
                 return (
@@ -666,6 +830,10 @@ const CascadingSelectE2E = (props: CascadingSelectE2EProps) => {
         // column titles
         //--------------
         fillColumnTitle();
+
+        // Initialize default value (request parameters for each level)
+        //--------------
+        initDefaultValue();
 
 
         //
@@ -702,11 +870,11 @@ const CascadingSelectE2E = (props: CascadingSelectE2EProps) => {
                                 {data.map((item: any, level: number) => {
                                     return (
                                         <li key={level}>
-                                            <Group 
+                                            <Group
                                                 level={level}
                                                 columnTitle={columnTitleData}
-                                                data={item} 
-                                                selectEv={(e, value, index) => handleClickItem(e, value, index, level)} 
+                                                data={item}
+                                                selectEv={(e, value, index) => handleClickItem(e, value, index, level)}
                                             />
                                         </li>
                                     )
@@ -721,7 +889,7 @@ const CascadingSelectE2E = (props: CascadingSelectE2EProps) => {
 
                 <div className="cascading-select__val" onClick={handleDisplayOptions}>
 
-                    
+
                     {displayResult ? (selectedData!.labels && selectedData!.labels.length > 0 ? <div className="cascading-select__result">{displayInfo()}</div> : null) : null}
 
                     <input
