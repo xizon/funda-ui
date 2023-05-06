@@ -9,6 +9,8 @@ import Pagination from 'react-pure-bootstrap/Pagination';
 ```
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |
+| `wrapperClassName` | string | `mb-3 position-relative` | The class name of the navigation wrapper. |
+| `navClassName` | string | `pagination` | The class name of the navigation. |
 | `apiUrl` | string  | - | <strong>(Required)</strong> An API URL Path. Use `{page}` characters to place a placeholder. such as `/mypage/{page}` |
 | `pageRangeDisplayed` | number  | 3 | <strong>(Required)</strong> The range of pages displayed |
 | `activePage` | number  | - | <strong>(Required)</strong> The currently selected page number.  |

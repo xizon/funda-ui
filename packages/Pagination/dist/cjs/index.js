@@ -167,7 +167,9 @@ function paginationNavigators(visibleNavigators, totalPages, activePage) {
 
 
 var Pagination = function Pagination(props) {
-  var apiUrl = props.apiUrl,
+  var wrapperClassName = props.wrapperClassName,
+    navClassName = props.navClassName,
+    apiUrl = props.apiUrl,
     pageRangeDisplayed = props.pageRangeDisplayed,
     activePage = props.activePage,
     totalPages = props.totalPages,
@@ -185,6 +187,7 @@ var Pagination = function Pagination(props) {
     lastClass = props.lastClass,
     disabledClass = props.disabledClass,
     symmetry = props.symmetry,
+    style = props.style,
     onChange = props.onChange;
   function handleClick(parameter) {
     switch (parameter) {
@@ -261,9 +264,10 @@ var Pagination = function Pagination(props) {
     }
   });
   return /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("nav", {
-    "aria-label": "Page navigation"
+    className: wrapperClassName ? wrapperClassName : "mb-3 position-relative",
+    style: style
   }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("ul", {
-    className: "pagination ".concat(alignClassName)
+    className: navClassName ? "".concat(navClassName, " ").concat(alignClassName) : "pagination ".concat(alignClassName)
   }, firstLabel ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("li", {
     className: activePage > 1 ? "page-item ".concat(_firstClassName) : "page-item ".concat(_firstClassName, " ").concat(_disabledClassName)
   }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("a", {

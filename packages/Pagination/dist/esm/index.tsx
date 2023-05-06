@@ -3,6 +3,10 @@ import { paginationNavigators } from './pagination-navigators';
 
 
 type PaginationProps = {
+    /** The class name of the navigation wrapper */
+    wrapperClassName?: string;
+    /** The class name of the navigation */
+    navClassName?: string;
     /** An API URL Path. Use `{page}` characters to place a placeholder. such as `/mypage/{page}` */
     apiUrl: string;
     /** The range of pages displayed */
@@ -39,6 +43,8 @@ type PaginationProps = {
     disabledClass?: string;
     /** The activation button is symmetrical on the left and right sides. */
     symmetry?: boolean;
+    /** -- */
+    style?: React.CSSProperties;
     /** The method to call when a page is clicked. Exposes the current page number as an argument. */
     onChange?: (param: any) => void;
     
@@ -47,6 +53,8 @@ type PaginationProps = {
 
 const Pagination = (props: PaginationProps) => {
     const {
+        wrapperClassName,
+        navClassName,
         apiUrl,
         pageRangeDisplayed,
         activePage,
@@ -65,6 +73,7 @@ const Pagination = (props: PaginationProps) => {
         lastClass,
         disabledClass,
         symmetry,
+        style,
         onChange
     } = props;
 
@@ -153,8 +162,8 @@ const Pagination = (props: PaginationProps) => {
     return (
         <>
 
-            <nav aria-label="Page navigation">
-                <ul className={`pagination ${alignClassName}`}>
+            <nav className={wrapperClassName ? wrapperClassName : "mb-3 position-relative"}  style={style}>
+                <ul className={navClassName ? `${navClassName} ${alignClassName}` : `pagination ${alignClassName}`}>
                     {firstLabel ? (
                         <li className={activePage > 1 ? `page-item ${_firstClassName}` : `page-item ${_firstClassName} ${_disabledClassName}`}>
                             <a tabIndex={activePage > 1 ? 0 : -1} aria-disabled={activePage > 1 ? 'false' : 'true'}className="page-link" href={apiUrl.replace('{page}', '1')} onClick={(e) => { e.preventDefault(); handleClick('first'); }}>

@@ -2,6 +2,7 @@ import React from 'react';
 
 interface TabListProps extends React.ComponentPropsWithoutRef<any> {
 	defaultActive?: string | boolean | undefined;
+    expandedActiveClassNameForNav?: string;
 	targetId?: string;
 	index?: number;
 	/** Handling events for collapsing item */
@@ -15,21 +16,20 @@ const TabList = (props: TabListProps) => {
 
     const { 
         defaultActive,
+        expandedActiveClassNameForNav,
         targetId,
         index,
         switchEv,
-        children,
-        ...attributes
+        children
     } = props;
     
-    const activedClassName = typeof(defaultActive) !== 'undefined' && defaultActive !== false ? ' active' : '';
-
+    const activedClassName = typeof(defaultActive) !== 'undefined' && defaultActive !== false ? ` ${expandedActiveClassNameForNav ? expandedActiveClassNameForNav : `active ${expandedActiveClassNameForNav}`}` : 'active';
     
     return (
         <>
 
             <li className={`nav-item ${activedClassName}`} role="presentation" onClick={switchEv} data-tab={targetId}>
-                <button className={`nav-link ${activedClassName}`} type="button" role="tab" {...attributes}>{children}</button>
+                {children}
             </li>
 
         </>

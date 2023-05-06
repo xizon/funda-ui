@@ -1,5 +1,9 @@
 import React from 'react';
 declare type PaginationProps = {
+    /** The class name of the navigation wrapper */
+    wrapperClassName?: string;
+    /** The class name of the navigation */
+    navClassName?: string;
     /** An API URL Path. Use `{page}` characters to place a placeholder. such as `/mypage/{page}` */
     apiUrl: string;
     /** The range of pages displayed */
@@ -36,6 +40,8 @@ declare type PaginationProps = {
     disabledClass?: string;
     /** The activation button is symmetrical on the left and right sides. */
     symmetry?: boolean;
+    /** -- */
+    style?: React.CSSProperties;
     /** The method to call when a page is clicked. Exposes the current page number as an argument. */
     onChange?: (param: any) => void;
 };

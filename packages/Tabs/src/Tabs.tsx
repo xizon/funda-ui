@@ -8,7 +8,10 @@ import TabPanel from './TabPanel';
 
 type TabsProps = {
     wrapperClassName?: string;
-    tabsClassName?: string;
+    navClassName?: string;
+    panelClassName?: string;
+    expandedActiveClassNameForNav?: string;
+    expandedActiveClassNameForPanel?: string;
     /** -- */
     style?: React.CSSProperties;
     onChange?: (nav: any, targetId: any, index: number) => void;
@@ -19,7 +22,10 @@ const Tabs = (props: TabsProps) => {
     
     const {
         wrapperClassName,
-        tabsClassName,
+        navClassName,
+        panelClassName,
+        expandedActiveClassNameForNav,
+        expandedActiveClassNameForPanel,
         style,
         onChange,
         children // the contents of the TabList and TabPanel in a loop
@@ -31,6 +37,7 @@ const Tabs = (props: TabsProps) => {
 
     function handleClickItem(e: any) {
         e.preventDefault();
+        
         const el = e.currentTarget;
         const currentIndex = Array.prototype.slice.call(el.parentElement.children).indexOf(el);
 
@@ -47,10 +54,22 @@ const Tabs = (props: TabsProps) => {
     function itemInit(targetEl: any, itemsInit: boolean) {
 
         const reactDomWrapperEl: any = rootRef.current;
-        const $li = reactDomWrapperEl.querySelectorAll('ul.nav-tabs > li'),
+        const $li = reactDomWrapperEl.querySelectorAll('ul > li'),
             $allContent = reactDomWrapperEl.querySelectorAll('.tab-pane');
         const tabID = targetEl.dataset.tab;
+        const _classNameNav = expandedActiveClassNameForNav ? expandedActiveClassNameForNav : '';
+        const _classNamePanel = expandedActiveClassNameForPanel ? expandedActiveClassNameForPanel : '';
 
+        const runExClassName = (node: HTMLElement, str: string, type: string) => {
+            if (str && node !== null) {
+                const _c = str.replace(/\s+(\W)/g, ' ').split(' ');
+                _c.forEach( (classname: any) => {
+                    if ( type === 'remove' ) node.classList.remove(classname);
+                    if ( type === 'add' ) node.classList.add(classname);
+                    
+                });
+            }
+        };
 
         //
 
@@ -58,22 +77,30 @@ const Tabs = (props: TabsProps) => {
         Array.prototype.forEach.call($li, (node) => {
             node.classList.remove('active');
             node.firstChild.classList.remove('active');
+
+            runExClassName(node, _classNameNav, 'remove');
+            runExClassName(node.firstChild, _classNameNav, 'remove');
         });
 
         Array.prototype.forEach.call($allContent, (node) => {
             node.classList.remove('show');
             setTimeout(() => {
                 node.classList.remove('active');
+                runExClassName(node, _classNamePanel, 'remove');
             }, 150); 
         });
 
         // currently active
         targetEl.classList.add('active');
         targetEl.firstChild.classList.add('active');
+
+        runExClassName(targetEl, _classNameNav, 'add');
+        runExClassName(targetEl.firstChild, _classNameNav, 'add');
+
         if (tabID !== undefined) {
-            document.getElementById(tabID)!.classList.add('active');
             setTimeout(() => {
                 document.getElementById(tabID)!.classList.add('active', 'show');
+                runExClassName(document.getElementById(tabID) as never, _classNamePanel, 'add');
             }, 150);  
         }
 
@@ -85,7 +112,7 @@ const Tabs = (props: TabsProps) => {
         // Initialize tabs
         //--------------
         const reactDomWrapperEl: any = rootRef.current;
-        const $li = reactDomWrapperEl.querySelectorAll('ul.nav-tabs > li');
+        const $li = reactDomWrapperEl.querySelectorAll('ul > li');
         itemInit($li[0], true);
 
     }, []);
@@ -97,7 +124,7 @@ const Tabs = (props: TabsProps) => {
         <>
 
             <div className={wrapperClassName ? wrapperClassName : "mb-3 position-relative"} ref={rootRef} style={style}>
-                <ul className={tabsClassName ? tabsClassName : "nav nav-tabs mb-3"} role="tablist">
+                <ul className={navClassName ? navClassName : "nav nav-tabs mb-3"} role="tablist">
 
                     {(() => {
                         if (children != null) {
@@ -123,6 +150,7 @@ const Tabs = (props: TabsProps) => {
                                     return <TabList
                                         key={item.key}
                                         index={tabListIndex}
+                                        expandedActiveClassNameForNav={expandedActiveClassNameForNav}
                                         switchEv={handleClickItem}
                                         targetId={`tabs-show-${uniqueID}-${tabListIndex}`}
                                         {...childProps} />;
@@ -136,7 +164,7 @@ const Tabs = (props: TabsProps) => {
 
                 </ul>
 
-                <div className="tab-content">
+                <div className={panelClassName ? panelClassName : "tab-content"}>
                     {(() => {
                         if (children != null) {
                             let tabPanelIndex = 0;
@@ -159,6 +187,7 @@ const Tabs = (props: TabsProps) => {
                                     tabPanelIndex++;
                                     return <TabPanel
                                         key={item.key}
+                                        expandedActiveClassNameForPanel={expandedActiveClassNameForPanel}
                                         targetId={`tabs-show-${uniqueID}-${tabPanelIndex}`}
                                         {...childProps} />;
                                 }

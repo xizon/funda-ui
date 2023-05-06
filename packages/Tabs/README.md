@@ -11,7 +11,10 @@ import { Tabs } from 'react-pure-bootstrap/Tabs';
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |
 | `wrapperClassName` | string | `mb-3 position-relative` | The class name of the tabs wrapper. |
-| `tabsClassName` | string | `nav nav-tabs mb-3` | The class name of the tabs. |
+| `navClassName` | string | `nav nav-tabs mb-3` | The class name of the navigation wrapper. |
+| `panelClassName` | string | `tab-content` | The class name of the content wrapper. |
+| `expandedActiveClassNameForNav` | string | - | specify an active class name for `<TabList />` |
+| `expandedActiveClassNameForPanel` | string | - | specify an active class name for `<TabPanel />` |
 | `onChange` | function  | - | Call a function when the value of an HTML element is changed. It returns three callback values, one is the trigger, the second is the target ID of each panel, and the last is the currently active index. |
 
 
@@ -25,6 +28,7 @@ import { TabList } from 'react-pure-bootstrap/Tabs';
 | `defaultActive` | boolean | false | Set an item to activate by default |
 
 
+
 ### Tab Panel
 ```js
 import { TabPanel } from 'react-pure-bootstrap/Tabs';
@@ -34,6 +38,7 @@ import { TabPanel } from 'react-pure-bootstrap/Tabs';
 | `key` | string \| `tab-panel-*` | - |  A “key” is a special string attribute you need to include when creating lists of elements. Let’s assign a key to our list of items. Must contain the string `tab-panel` |
 | `defaultActive` | boolean | false | Set an item to activate by default |
 | `tabpanelClass` | string | - | Additional style name, such as `shadow` |
+
 
 
 It accepts all props(include data-* attributes) which native div support.
@@ -57,10 +62,21 @@ export default () => {
   return (
     <>
 
-		<Tabs tabsClassName="nav nav-tabs mb-3" onChange={handleChange} style={{fontSize: '0.875rem'}}>
-			<TabList key="tab-list-1" defaultActive>Tab 1</TabList>
-			<TabList key="tab-list-2">Tab 2</TabList>
-			<TabList key="tab-list-3">Tab 3</TabList>
+		<Tabs 
+            navClassName="nav nav-tabs mb-3" 
+            onChange={handleChange} 
+            style={{fontSize: '0.875rem'}}
+        >
+            
+			<TabList key="tab-list-1" defaultActive>
+                <button className="nav-link active" type="button" role="tab">Tab 1</button>
+            </TabList>
+			<TabList key="tab-list-2">
+                <button className="nav-link" type="button" role="tab">Tab 2</button>
+            </TabList>
+			<TabList key="tab-list-3">
+                <button className="nav-link" type="button" role="tab">Tab 3</button>
+            </TabList>
 
 			<TabPanel key="tab-panel-1" tabpanelClass="fs-6" defaultActive>
 				<p>Hi, this is the first tab.</p>
@@ -77,14 +93,36 @@ export default () => {
 
 
 
-        <Tabs tabsClassName="nav nav-tabs mb-3" onChange={handleChange} style={{fontSize: '0.875rem'}}>
+        <Tabs 
+            expandedActiveClassNameForNav="border rounded-1 bg-light text-dark" 
+            expandedActiveClassNameForPanel="bg-info" 
+            wrapperClassName="mb-3 position-relative d-flex align-items-start" 
+            navClassName="nav flex-column nav-pills me-3 border-end px-3" 
+            panelClassName="tab-content flex-grow-1" 
+            onChange={handleChange}
+            >
             {[1,2,3].map((item: any, i: number) =>{
-                return <TabList key={`tab-list-${i}`} defaultActive={i === 0 ? true : false}>{item}</TabList>
+                return <TabList key={`tab-list-${i}`} defaultActive={i === 0 ? true : false}><button className={`btn btn-transparent btn-sm border-0 text-secondary ${i === 0 ? 'active border rounded-1 bg-light text-dark' : ''}`} type="button" role="tab">{item}</button></TabList>
             })}
 
             {[1,2,3].map((item: any, i: number) =>{
-                return <TabPanel key={`tab-panel-${i}`}  tabpanelClass="fs-6" defaultActive={i === 0 ? true : false}>{item}</TabPanel>
-            })}                  
+                return <TabPanel key={`tab-panel-${i}`}  tabpanelClass="fs-6" defaultActive={i === 0 ? true : false}><p>{item}</p></TabPanel>
+            })}    
+        </Tabs>	
+
+
+
+        <Tabs 
+            navClassName="nav nav-tabs mb-3" 
+            onChange={handleChange} 
+        >
+            {[1,2,3].map((item: any, i: number) =>{
+                return <TabList key={`tab-list-${i}`} defaultActive={i === 0 ? true : false}><button className={`nav-link ${i === 0 ? 'active' : ''}`} type="button" role="tab">{item}</button></TabList>
+            })}
+
+            {[1,2,3].map((item: any, i: number) =>{
+                return <TabPanel key={`tab-panel-${i}`}  tabpanelClass="fs-6" defaultActive={i === 0 ? true : false}><p>{item}</p></TabPanel>
+            })}                 
         </Tabs>
 
 
