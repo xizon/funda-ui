@@ -76,6 +76,19 @@ export default () => {
 		</Tabs>	
 
 
+
+        <Tabs tabsClassName="nav nav-tabs mb-3" onChange={handleChange} style={{fontSize: '0.875rem'}}>
+            {[1,2,3].map((item: any, i: number) =>{
+                return <TabList key={`tab-list-${i}`} defaultActive={i === 0 ? true : false}>{item}</TabList>
+            })}
+
+            {[1,2,3].map((item: any, i: number) =>{
+                return <TabPanel key={`tab-panel-${i}`}  tabpanelClass="fs-6" defaultActive={i === 0 ? true : false}>{item}</TabPanel>
+            })}                  
+        </Tabs>
+
+
+
     </>
   );
 }

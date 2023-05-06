@@ -12,7 +12,7 @@ type TabsProps = {
     /** -- */
     style?: React.CSSProperties;
     onChange?: (nav: any, targetId: any, index: number) => void;
-	children: React.ReactNode;
+	children: React.ReactNode | React.ReactNode[];
 };
 
 const Tabs = (props: TabsProps) => {
@@ -102,7 +102,19 @@ const Tabs = (props: TabsProps) => {
                     {(() => {
                         if (children != null) {
                             let tabListIndex = 0;
-                            return (children as any[]).map((item, i) => {
+
+                            // If <TabList /> uses map to return, it will be wrapped into an array
+                            /*
+                            Such as:
+
+                                {[1,2,3].map((item: any, i: number) =>{
+                                    return <TabList key={`tab-list-${i}`} defaultActive={i === 0 ? true : false}>{item}</TabList>
+                                })}
+                            */
+
+                            const elements: React.ReactNode | React.ReactNode[] = Array.isArray((children as any[])[0]) ? (children as any[])[0] : children;
+                         
+                            return (elements as any[]).map((item, i) => {
                                 const childProps = { ...item.props };
                                 delete childProps.key;
 
@@ -128,7 +140,18 @@ const Tabs = (props: TabsProps) => {
                     {(() => {
                         if (children != null) {
                             let tabPanelIndex = 0;
-                            return (children as any[]).map((item, i) => {
+
+                            // If <TabPanel /> uses map to return, it will be wrapped into an array
+                            /*
+                            Such as:
+
+                                {[1,2,3].map((item: any, i: number) =>{
+                                    return <TabPanel key={`tab-panel-${i}`}  tabpanelClass="fs-6" defaultActive={i === 0 ? true : false}>{item}</TabPanel>
+                                })}    
+                            */
+                            const elements: React.ReactNode | React.ReactNode[] = Array.isArray((children as any[])[1]) ? (children as any[])[1] : children;
+
+                            return (elements as any[]).map((item, i) => {
                                 const childProps = { ...item.props };
                                 delete childProps.key;
 

@@ -228,7 +228,17 @@ var Tabs = function Tabs(props) {
   }, function () {
     if (children != null) {
       var tabListIndex = 0;
-      return children.map(function (item, i) {
+
+      // If <TabList /> uses map to return, it will be wrapped into an array
+      /*
+      Such as:
+           {[1,2,3].map((item: any, i: number) =>{
+              return <TabList key={`tab-list-${i}`} defaultActive={i === 0 ? true : false}>{item}</TabList>
+          })}
+      */
+
+      var elements = Array.isArray(children[0]) ? children[0] : children;
+      return elements.map(function (item, i) {
         var childProps = _objectSpread({}, item.props);
         delete childProps.key;
         if (item.key.indexOf('tab-list') >= 0) {
@@ -247,7 +257,16 @@ var Tabs = function Tabs(props) {
   }, function () {
     if (children != null) {
       var tabPanelIndex = 0;
-      return children.map(function (item, i) {
+
+      // If <TabPanel /> uses map to return, it will be wrapped into an array
+      /*
+      Such as:
+           {[1,2,3].map((item: any, i: number) =>{
+              return <TabPanel key={`tab-panel-${i}`}  tabpanelClass="fs-6" defaultActive={i === 0 ? true : false}>{item}</TabPanel>
+          })}    
+      */
+      var elements = Array.isArray(children[1]) ? children[1] : children;
+      return elements.map(function (item, i) {
         var childProps = _objectSpread({}, item.props);
         delete childProps.key;
         if (item.key.indexOf('tab-panel') >= 0) {
