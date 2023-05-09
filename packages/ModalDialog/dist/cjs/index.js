@@ -379,6 +379,7 @@ var ModalDialog = function ModalDialog(props) {
     autoClose = props.autoClose,
     maskDisabled = props.maskDisabled,
     closeOnlyBtn = props.closeOnlyBtn,
+    onLoad = props.onLoad,
     onOpen = props.onOpen,
     onClose = props.onClose,
     onSubmit = props.onSubmit,
@@ -393,14 +394,14 @@ var ModalDialog = function ModalDialog(props) {
     winShow = _useState2[0],
     setWinShow = _useState2[1];
   function handleCloseWin(e) {
-    e.preventDefault();
+    if (false) {}
     closeAction();
 
     //
     onClose === null || onClose === void 0 ? void 0 : onClose(e);
   }
   function handleOpenWin(e) {
-    e.preventDefault();
+    if (false) {}
     openAction();
 
     //
@@ -509,6 +510,9 @@ var ModalDialog = function ModalDialog(props) {
     if (autoClose && !isNaN(autoClose)) {
       window.setCloseModalDialog = setTimeout(function () {
         closeAction();
+
+        //
+        onClose === null || onClose === void 0 ? void 0 : onClose(null);
       }, autoClose);
     }
   }
@@ -538,7 +542,6 @@ var ModalDialog = function ModalDialog(props) {
   (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useEffect)(function () {
     // Move HTML templates to tag end body </body>
     //------------------------------------------
-    modalRef.current.classList.add('is-loaded');
     document.body.appendChild(modalRef.current);
     [].slice.call(modalRef.current.querySelectorAll('[data-close]')).forEach(function (node) {
       node.addEventListener('pointerdown', function (e) {
@@ -575,7 +578,23 @@ var ModalDialog = function ModalDialog(props) {
     //------------------------------------------
     if (autoOpen) {
       openAction();
+
+      //
+      var _callback = function _callback(e) {
+        return function () {
+          handleCloseWin(e);
+        };
+      };
+      onOpen === null || onOpen === void 0 ? void 0 : onOpen(null, _callback(null));
     }
+
+    // Pass the function to be called
+    //------------------------------------------
+    onLoad === null || onLoad === void 0 ? void 0 : onLoad(function () {
+      return handleOpenWin;
+    }, function () {
+      return handleCloseWin;
+    });
 
     // Remove the global list of events, especially as scroll and interval.
     //--------------

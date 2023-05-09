@@ -41,6 +41,7 @@ declare type ModalDialogProps = {
     /** This function is called whenever the data is updated.
      *  Exposes the JSON format data about the option as an argument.
      */
+    onLoad?: (openFunc: any, closeFunc: any) => void;
     onOpen?: (e: any, callback: any) => void;
     onClose?: (e: any) => void;
     onSubmit?: (e: any, callback: any) => void;

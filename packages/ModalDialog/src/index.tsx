@@ -1,6 +1,7 @@
 import React, { useId, useState, useRef, useEffect } from 'react';
 //Destroys body scroll locking
 import { clearAllBodyScrollLocks, disableBodyScroll, enableBodyScroll } from './plugins/BSL';
+import { type } from 'os';
 
 
 declare module 'react' {
@@ -50,6 +51,7 @@ type ModalDialogProps = {
     /** This function is called whenever the data is updated.
      *  Exposes the JSON format data about the option as an argument.
      */
+    onLoad?: (openFunc: any, closeFunc: any) => void;
     onOpen?: (e: any, callback: any) => void;
     onClose?: (e: any) => void;
     onSubmit?: (e: any, callback: any) => void;
@@ -70,6 +72,7 @@ const ModalDialog = (props: ModalDialogProps) => {
         autoClose,
         maskDisabled,
         closeOnlyBtn,
+        onLoad,
         onOpen,
         onClose,
         onSubmit,
@@ -87,7 +90,8 @@ const ModalDialog = (props: ModalDialogProps) => {
 
 
     function handleCloseWin(e: any) {
-        e.preventDefault();
+        if ( typeof undefined !== 'undefined' && e !== null )  e.preventDefault();
+
         closeAction();
 
         //
@@ -96,7 +100,8 @@ const ModalDialog = (props: ModalDialogProps) => {
 
 
     function handleOpenWin(e: any) {
-        e.preventDefault();
+        if ( typeof undefined !== 'undefined' && e !== null )  e.preventDefault();
+
         openAction();
 
         //
@@ -238,6 +243,9 @@ const ModalDialog = (props: ModalDialogProps) => {
         if ( autoClose && !isNaN( autoClose as number ) ) {
             window.setCloseModalDialog = setTimeout( function() {
                 closeAction();
+
+                //
+                onClose?.(null);   
             }, autoClose as number );
         }
         
@@ -272,10 +280,13 @@ const ModalDialog = (props: ModalDialogProps) => {
     
     useEffect(() => {
 
+
         // Move HTML templates to tag end body </body>
         //------------------------------------------
-        modalRef.current.classList.add( 'is-loaded' );
         document.body.appendChild(modalRef.current);
+        
+
+
         [].slice.call(modalRef.current.querySelectorAll('[data-close]')).forEach( (node: HTMLElement) => {
             node.addEventListener('pointerdown', (e: any) => {
                 handleCloseWin(e);
@@ -314,9 +325,23 @@ const ModalDialog = (props: ModalDialogProps) => {
         //------------------------------------------
         if ( autoOpen ) {
             openAction();
+
+
+            //
+            const callback = (e: any) => {
+                return () => {
+                    handleCloseWin(e);
+                }
+            };
+            onOpen?.(null, callback(null));     
         }
 
 
+        // Pass the function to be called
+        //------------------------------------------
+        onLoad?.(() => handleOpenWin, () => handleCloseWin);
+
+        
         // Remove the global list of events, especially as scroll and interval.
         //--------------
         return () => {
