@@ -18,6 +18,7 @@ const copyRecursiveSync = (src, dest) => {
 };
 
 
+
 // copy `lib/` to `publish/` directory
 // ----------------------------------
 const pubPath = path.resolve(__dirname, `../publish`);
@@ -28,6 +29,7 @@ if (!fs.existsSync(pubPath)){
 if (fs.existsSync(pubPath)){
     copyRecursiveSync(path.resolve(__dirname, `../lib`), path.resolve(__dirname, `../publish/lib`));
     copyRecursiveSync(path.resolve(__dirname, `../lib/cjs`), pubPath);
+    copyRecursiveSync(path.resolve(__dirname, `../lib/css`), pubPath);
     fs.renameSync(path.resolve(__dirname, `../publish/index.js`), path.resolve(__dirname, `../publish/all.js`));
     fs.renameSync(path.resolve(__dirname, `../publish/index.d.ts`), path.resolve(__dirname, `../publish/all.d.ts`));
 

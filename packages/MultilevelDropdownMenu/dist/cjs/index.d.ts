@@ -1,5 +1,4 @@
 import React from 'react';
-import './index.scss';
 declare module 'react' {
     interface ReactI18NextChildren<T> {
         children?: any;

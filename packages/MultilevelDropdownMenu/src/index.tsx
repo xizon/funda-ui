@@ -1,7 +1,7 @@
 import React, { useId, memo } from 'react';
 
 import MenuList from './MenuList';
-import './index.scss';
+
 
 declare module 'react' {
     interface ReactI18NextChildren<T> {

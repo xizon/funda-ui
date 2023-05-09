@@ -1,0 +1,32 @@
+/* ======================================================
+    <!-- Multi-level Dropdown Menu -->
+/* ====================================================== */
+.navbar-nav a {
+  position: relative;
+}
+.navbar-nav .arrow {
+  transition: 0.1s ease-in-out;
+  display: inline-block;
+  text-align: center;
+  position: absolute;
+  right: 0.5em;
+  top: 1.5em;
+  transform: translateY(-50%) rotate(0deg);
+}
+.navbar-nav li {
+  position: relative;
+}
+.navbar-nav li > a.active > .arrow {
+  transform: translateY(-50%) rotate(90deg);
+}
+.navbar-nav > li ul {
+  transition: max-height 0.25s ease;
+  overflow: hidden;
+  position: relative;
+}
+.navbar-nav > li:not(.active) ul {
+  max-height: 0;
+}
+.navbar-nav > li ul ul {
+  margin-top: auto;
+}

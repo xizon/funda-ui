@@ -1,13 +1,13 @@
 {
     "private": true,
-    "name": "rpb-cascading-select-e2e-e2e",
+    "name": "rpb-cascading-select-e2e",
     "version": "0.0.1",
     "description": "",
     "main": "./dist/cjs/index.js",
     "module": "./dist/esm/index.js",
     "keywords": [],
     "scripts": {
-        "build": "webpack --progress --mode production --config build/config-cjs.js && node build/config-esm.js && tsc --build tsconfig.json && node build/types.js",
+        "build": "webpack --progress --mode production --config build/config-cjs.js && node build/config-esm.js && tsc --build tsconfig.json && node build/types.js && sass --no-source-map src/index.scss dist/css/index.css",
         "test": "echo \"Error: no test specified\" && exit 1"
     },
     "dependencies": {

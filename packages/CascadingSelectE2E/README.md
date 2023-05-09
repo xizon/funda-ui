@@ -56,6 +56,9 @@ import React from "react";
 import CascadingSelectE2E from 'react-pure-bootstrap/CascadingSelectE2E';
 import axios from 'axios';
 
+// component styles
+import 'react-pure-bootstrap/CascadingSelectE2E/index.css';
+
 
 class DataService {
     

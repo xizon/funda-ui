@@ -1,9 +1,9 @@
-# MultilevelDropdownMenu
+# Multi-level Dropdown Menu
 
 
 ## API
 
-### MultilevelDropdownMenu
+### Multi-level Dropdown Menu
 ```js
 import MultilevelDropdownMenu from 'react-pure-bootstrap/MultilevelDropdownMenu';
 ```
@@ -36,6 +36,8 @@ Array configuration properties of the `data`:
 import React from "react";
 import MultilevelDropdownMenu from 'react-pure-bootstrap/MultilevelDropdownMenu';
 
+// component styles
+import 'react-pure-bootstrap/MultilevelDropdownMenu/index.css';
 
 const menuListData = [
     {

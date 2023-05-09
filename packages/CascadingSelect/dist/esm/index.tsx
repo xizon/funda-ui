@@ -1,7 +1,6 @@
 import React, { useId, useEffect, useState, useRef } from 'react';
 
 import Group from './Group';
-import './index.scss';
 
 declare module 'react' {
     interface ReactI18NextChildren<T> {

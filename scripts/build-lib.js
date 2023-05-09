@@ -12,7 +12,11 @@ const copyRecursiveSync = (src, dest) => {
             copyRecursiveSync(path.join(src, childItemName), path.join(dest, childItemName));
         });
     } else {
-        fs.copyFileSync(src, dest);
+        if ( fs.existsSync(src) ) {
+            fs.copyFileSync(src, dest);
+        } else {
+            fs.rmSync(dest, { recursive: true, force: true });
+        }
     }
 };
 
@@ -28,11 +32,17 @@ fs.rmSync(path.resolve(__dirname, `../publish`), { recursive: true, force: true 
 // ----------------------------------
 const libEsmPath = path.resolve(__dirname, '../lib/esm');
 const libCjsPath = path.resolve(__dirname, '../lib/cjs');
+const libCssPath = path.resolve(__dirname, '../lib/css');
+
+
 if (!fs.existsSync(libEsmPath)) {
     fs.mkdirSync(libEsmPath, { recursive: true });
 }
 if (!fs.existsSync(libCjsPath)) {
     fs.mkdirSync(libCjsPath, { recursive: true });
+}
+if (!fs.existsSync(libCssPath)) {
+    fs.mkdirSync(libCssPath, { recursive: true });
 }
 
 // iterates over all components
@@ -94,4 +104,4 @@ const moveComponents = (type) => {
 
 moveComponents('esm');
 moveComponents('cjs');
-
+moveComponents('css');

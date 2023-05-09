@@ -161,6 +161,9 @@ import React from "react";
 import CascadingSelect from 'react-pure-bootstrap/CascadingSelect';
 import axios from 'axios';
 
+// component styles
+import 'react-pure-bootstrap/CascadingSelect/index.css';
+
 class DataService {
     
     // `getList()` must be a Promise Object
@@ -377,6 +380,9 @@ You need to use a `fetchCallback` property to format the data of the API callbac
 ```js
 import React from "react";
 import CascadingSelect from 'react-pure-bootstrap/CascadingSelect';
+
+// component styles
+import 'react-pure-bootstrap/CascadingSelect/index.css';
 
 
 class DataService {
