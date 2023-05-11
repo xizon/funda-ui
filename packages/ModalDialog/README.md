@@ -73,6 +73,11 @@ export default () => {
                     const myAppBtn = document.querySelector('#app-mybtn');
                     myAppBtn?.replaceWith(myAppBtn?.cloneNode(true));   
 
+                    // Modifying React State can ensure that the window content is updated in real time
+                    // setTimeout( ()=> {
+                    //     setState(...);
+                    // }, 350);
+
                 }}
                 onSubmit={(e, closewin) => {
                     console.log('submit: ', e.target);
@@ -142,7 +147,8 @@ export default () => {
                 triggerClassName=""
                 triggerContent=""
                 onLoad={(openFunc, closeFunc) => {
-                    //do something
+                    // do something
+                    // setState(openFunc);
                 }}
 
             >
