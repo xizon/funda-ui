@@ -6,6 +6,7 @@ declare module 'react' {
 }
 declare type InputProps = {
     wrapperClassName?: string;
+    controlClassName?: string;
     type?: string;
     value?: string;
     label?: React.ReactNode | string;

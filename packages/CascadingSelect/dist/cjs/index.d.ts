@@ -7,6 +7,7 @@ declare module 'react' {
 declare type CascadingSelectOptionChangeFnType = (input: any, currentData: any, index: any, depth: any, value: any) => void;
 declare type CascadingSelectProps = {
     wrapperClassName?: string;
+    controlClassName?: string;
     value?: string;
     label?: React.ReactNode | string;
     name?: string;

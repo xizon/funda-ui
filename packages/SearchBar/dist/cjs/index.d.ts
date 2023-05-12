@@ -6,6 +6,7 @@ declare module 'react' {
 }
 declare type SearchBarProps = {
     wrapperClassName?: string;
+    controlClassName?: string;
     appearance?: string;
     value?: string;
     label?: React.ReactNode | string;

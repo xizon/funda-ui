@@ -10,6 +10,7 @@ import SearchBar from 'react-pure-bootstrap/SearchBar';
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |
 | `wrapperClassName` | string | `mb-3 position-relative` | The class name of the control wrapper. |
+| `controlClassName` | string | `form-control` | The class name of the control. |
 | `btnId` | string  | - | ID of the specified button. |
 | `appearance` | string | - | The overlay style of the control. The optional values are:<br />**corners:**<br />`pill` |
 | `value` | string | - | Set a default value for this control |

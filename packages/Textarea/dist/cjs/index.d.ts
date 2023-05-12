@@ -6,6 +6,7 @@ declare module 'react' {
 }
 declare type TextareaProps = {
     wrapperClassName?: string;
+    controlClassName?: string;
     value?: string;
     label?: React.ReactNode | string;
     name?: string;

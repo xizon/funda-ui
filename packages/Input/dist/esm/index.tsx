@@ -8,6 +8,7 @@ declare module 'react' {
 
 type InputProps = {
     wrapperClassName?: string;
+    controlClassName?: string;
     type?: string;
     value?: string;
     label?: React.ReactNode | string;
@@ -39,6 +40,7 @@ type InputProps = {
 const Input = forwardRef((props: InputProps, ref: any) => {
     const {
         wrapperClassName,
+        controlClassName,
         type,
         disabled,
         required,
@@ -130,7 +132,7 @@ const Input = forwardRef((props: InputProps, ref: any) => {
                         ref={ref}
                         tabIndex={tabIndex || 0}
                         type={typeRes}
-                        className="form-control"
+                        className={controlClassName ? controlClassName : "form-control"}
                         id={idRes}
                         name={name}
                         step={step || 1}

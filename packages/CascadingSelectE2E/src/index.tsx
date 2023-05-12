@@ -22,6 +22,7 @@ interface fetchArrayConfig {
 
 type CascadingSelectE2EProps = {
     wrapperClassName?: string;
+    controlClassName?: string;
     value?: string;
     label?: React.ReactNode | string;
     name?: string;
@@ -69,6 +70,7 @@ type CascadingSelectE2EProps = {
 const CascadingSelectE2E = (props: CascadingSelectE2EProps) => {
     const {
         wrapperClassName,
+        controlClassName,
         disabled,
         required,
         value,
@@ -907,7 +909,7 @@ const CascadingSelectE2E = (props: CascadingSelectE2EProps) => {
                         ref={valRef}
                         id={idRes}
                         name={name}
-                        className="form-control"
+                        className={controlClassName ? controlClassName : "form-control"}
                         placeholder={placeholder}
                         defaultValue={value || ''}
                         onFocus={handleFocus}

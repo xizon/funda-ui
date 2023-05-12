@@ -10,6 +10,7 @@ import Textarea from 'react-pure-bootstrap/Textarea';
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |
 | `wrapperClassName` | string | `mb-3 position-relative` | The class name of the control wrapper. |
+| `controlClassName` | string | `form-control` | The class name of the control. |
 | `type` | string | text | The type of input. Such as \<input type="text" name="name"\> gives a text box. |
 | `value` | string | - | Set a default value for this control |
 | `label` | string \| ReactNode | - | It is used to specify a label for an element of a form. |

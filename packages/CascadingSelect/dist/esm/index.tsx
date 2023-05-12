@@ -14,6 +14,7 @@ type CascadingSelectOptionChangeFnType = (input: any, currentData: any, index: a
 
 type CascadingSelectProps = {
     wrapperClassName?: string;
+    controlClassName?: string;
     value?: string;
     label?: React.ReactNode | string;
     name?: string;
@@ -63,6 +64,7 @@ type CascadingSelectProps = {
 const CascadingSelect = (props: CascadingSelectProps) => {
     const {
         wrapperClassName,
+        controlClassName,
         disabled,
         required,
         value,
@@ -741,7 +743,7 @@ const CascadingSelect = (props: CascadingSelectProps) => {
                         ref={valRef}
                         id={idRes}
                         name={name}
-                        className="form-control"
+                        className={controlClassName ? controlClassName : "form-control"}
                         placeholder={placeholder}
                         defaultValue={value || ''}
                         onFocus={handleFocus}

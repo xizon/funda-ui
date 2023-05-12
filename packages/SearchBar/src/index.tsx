@@ -8,6 +8,7 @@ declare module 'react' {
 
 type SearchBarProps = {
     wrapperClassName?: string;
+    controlClassName?: string;
     appearance?: string;
     value?: string;
     label?: React.ReactNode | string;
@@ -33,6 +34,7 @@ type SearchBarProps = {
 const SearchBar = forwardRef((props: SearchBarProps, ref: any) => {
     const {
         wrapperClassName,
+        controlClassName,
         appearance,
         disabled,
         required,
@@ -121,7 +123,6 @@ const SearchBar = forwardRef((props: SearchBarProps, ref: any) => {
         <>
 
 
-
             <div className={wrapperClassName ? wrapperClassName : "mb-3 position-relative"} ref={rootRef}>
                 {label ? <><label htmlFor={idRes} className="form-label">{label}</label></> : null}
 
@@ -130,7 +131,7 @@ const SearchBar = forwardRef((props: SearchBarProps, ref: any) => {
                         ref={ref}
                         tabIndex={tabIndex || 0}
                         type={appearance === 'pill' ? 'input' : 'search'}
-                        className={appearance === 'pill' ? 'form-control border rounded-pill' : 'form-control'}
+                        className={appearance === 'pill' ? `${(controlClassName ? controlClassName : "form-control")} border rounded-pill` : (controlClassName ? controlClassName : "form-control")}
                         id={idRes}
                         name={name}
                         placeholder={placeholder || ''}

@@ -96,7 +96,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(787);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-var _excluded = ["wrapperClassName", "type", "disabled", "required", "placeholder", "readOnly", "value", "label", "units", "name", "step", "min", "max", "id", "maxLength", "iconLeft", "iconRight", "autoComplete", "style", "tabIndex", "onChange", "onBlur", "onFocus"];
+var _excluded = ["wrapperClassName", "controlClassName", "type", "disabled", "required", "placeholder", "readOnly", "value", "label", "units", "name", "step", "min", "max", "id", "maxLength", "iconLeft", "iconRight", "autoComplete", "style", "tabIndex", "onChange", "onBlur", "onFocus"];
 function _extends() { _extends = Object.assign ? Object.assign.bind() : function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
 function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
 function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
@@ -109,6 +109,7 @@ function _objectWithoutPropertiesLoose(source, excluded) { if (source == null) r
 
 var Input = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(function (props, ref) {
   var wrapperClassName = props.wrapperClassName,
+    controlClassName = props.controlClassName,
     type = props.type,
     disabled = props.disabled,
     required = props.required,
@@ -194,7 +195,7 @@ var Input = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(funct
     ref: ref,
     tabIndex: tabIndex || 0,
     type: typeRes,
-    className: "form-control",
+    className: controlClassName ? controlClassName : "form-control",
     id: idRes,
     name: name,
     step: step || 1,

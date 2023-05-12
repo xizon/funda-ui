@@ -13,6 +13,7 @@ interface fetchArrayConfig {
 }
 declare type CascadingSelectE2EProps = {
     wrapperClassName?: string;
+    controlClassName?: string;
     value?: string;
     label?: React.ReactNode | string;
     name?: string;

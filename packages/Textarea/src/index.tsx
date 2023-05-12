@@ -8,6 +8,7 @@ declare module 'react' {
 }
 type TextareaProps = {
     wrapperClassName?: string;
+    controlClassName?: string;
 	value?: string;
 	label?: React.ReactNode | string;
 	name?: string;
@@ -32,6 +33,7 @@ type TextareaProps = {
 const Textarea = forwardRef((props: TextareaProps, ref: any) => {
     const {
         wrapperClassName,
+        controlClassName,
         cols,
         rows,
         disabled,
@@ -107,7 +109,7 @@ const Textarea = forwardRef((props: TextareaProps, ref: any) => {
                     <textarea  
                       ref={ref}
                       tabIndex={tabIndex || 0}
-					  className="form-control"
+					  className={controlClassName ? controlClassName : "form-control"}
 			          id={idRes}
 					  name={name}
 					  placeholder={placeholder || ''}
