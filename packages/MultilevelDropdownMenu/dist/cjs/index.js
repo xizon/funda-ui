@@ -175,7 +175,7 @@ function MenuList(props) {
     // route switching
     //=====================
     var isRouter = typeof hyperlink.parentNode.dataset.router !== 'undefined' ? true : false;
-    onChange === null || onChange === void 0 ? void 0 : onChange(e.currentTarget, isRouter);
+    onChange === null || onChange === void 0 ? void 0 : onChange(e, isRouter);
 
     // hide child if expandedLink doesn't exist, on the contrary
     //=====================

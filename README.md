@@ -36,7 +36,7 @@ Here is a table of the components and their status.
 | [Table ❏](packages/Table/README.md) | [SearchBar ✅](packages/SearchBar/README.md) |  |  |  | 
 | [Periodical Scroll ❏](packages/PeriodicalScroll/README.md) | [Switch ❏](packages/Switch/README.md) |  |  |  | 
 | [Progress Bar ❏](packages/ProgressBar/README.md) | [Dynamic Fields ❏](packages/DynamicFields/README.md) |  |  |  | 
-| [Rating ❏](packages/Rating/README.md) | [File ❏](packages/File/README.md) |  |  |  | 
+| [Rating ❏](packages/Rating/README.md) | [File ✅](packages/File/README.md) |  |  |  | 
 | [Seamless Scrolling Element ❏](packages/SeamlessScrollingElement/README.md) | [File Field ❏](packages/FileField/README.md) |  |  |  | 
 | [Show More Less ✅](packages/ShowMoreLess/README.md) | [Cascading Select End-to-end ✅](packages/CascadingSelectE2E/README.md) |  |  |  | 
 | [Slideshow ❏](packages/Slideshow/README.md) |  |  |  |  | 
