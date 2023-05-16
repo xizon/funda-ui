@@ -124,6 +124,7 @@ var ShowMoreLess = function ShowMoreLess(props) {
     maskOpacity = props.maskOpacity,
     maskHeight = props.maskHeight,
     id = props.id,
+    tabIndex = props.tabIndex,
     children = props.children;
   var uniqueID = (0,react__WEBPACK_IMPORTED_MODULE_0__.useId)();
   var idRes = id || uniqueID;
@@ -181,10 +182,12 @@ var ShowMoreLess = function ShowMoreLess(props) {
       height: maskHeight ? maskHeight : '2em'
     }
   }) : null), !displayEnabled ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, triggerShowContent ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
+    tabIndex: tabIndex || 0,
     href: "#",
     className: triggerShowClassName ? "".concat(triggerShowClassName) : "d-inline w-auto",
     onClick: handleChange
   }, triggerShowContent)) : null) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, triggerHideContent ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
+    tabIndex: tabIndex || 0,
     href: "#",
     className: triggerHideClassName ? "".concat(triggerHideClassName) : "d-inline w-auto",
     onClick: handleChange

@@ -113,7 +113,8 @@ var TabList = function TabList(props) {
     index = props.index,
     switchEv = props.switchEv,
     children = props.children;
-  var activedClassName = typeof defaultActive !== 'undefined' && defaultActive !== false ? " ".concat(expandedActiveClassNameForNav ? expandedActiveClassNameForNav : "active ".concat(expandedActiveClassNameForNav)) : 'active';
+  var _expandClassName = typeof expandedActiveClassNameForNav !== 'undefined' ? expandedActiveClassNameForNav : '';
+  var activedClassName = typeof defaultActive !== 'undefined' && defaultActive !== false ? " ".concat(_expandClassName ? _expandClassName : "active ".concat(_expandClassName)) : 'active';
   return /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("li", {
     className: "nav-item ".concat(activedClassName),
     role: "presentation",
@@ -135,7 +136,8 @@ var TabPanel = function TabPanel(props) {
     tabpanelClass = props.tabpanelClass,
     targetId = props.targetId,
     attributes = _objectWithoutProperties(props, _excluded);
-  var activedClassName = typeof defaultActive !== 'undefined' && defaultActive !== false ? " ".concat(expandedActiveClassNameForPanel ? expandedActiveClassNameForPanel : "show active ".concat(expandedActiveClassNameForPanel)) : 'show active';
+  var _expandClassName = typeof expandedActiveClassNameForPanel !== 'undefined' ? expandedActiveClassNameForPanel : '';
+  var activedClassName = typeof defaultActive !== 'undefined' && defaultActive !== false ? " ".concat(_expandClassName ? _expandClassName : "show active ".concat(_expandClassName)) : 'show active';
   return /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", _extends({
     role: "tabpanel",
     id: targetId,
@@ -162,11 +164,13 @@ var Tabs = function Tabs(props) {
     panelClassName = props.panelClassName,
     expandedActiveClassNameForNav = props.expandedActiveClassNameForNav,
     expandedActiveClassNameForPanel = props.expandedActiveClassNameForPanel,
+    animTransitionDuration = props.animTransitionDuration,
     style = props.style,
     onChange = props.onChange,
     children = props.children;
   var uniqueID = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useId)().replace(/\:/g, "-");
   var rootRef = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useRef)(null);
+  var speed = animTransitionDuration ? animTransitionDuration : 150;
   function handleClickItem(e) {
     e.preventDefault();
     var el = e.currentTarget;
@@ -180,8 +184,8 @@ var Tabs = function Tabs(props) {
   }
   function itemInit(targetEl, itemsInit) {
     var reactDomWrapperEl = rootRef.current;
-    var $li = reactDomWrapperEl.querySelectorAll('ul > li'),
-      $allContent = reactDomWrapperEl.querySelectorAll('.tab-pane');
+    var $li = targetEl.parentElement.children;
+    var $allContent = [];
     var tabID = targetEl.dataset.tab;
     var _classNameNav = expandedActiveClassNameForNav ? expandedActiveClassNameForNav : '';
     var _classNamePanel = expandedActiveClassNameForPanel ? expandedActiveClassNameForPanel : '';
@@ -195,20 +199,25 @@ var Tabs = function Tabs(props) {
       }
     };
 
-    //
+    //get all panels of this wrapper
+    Array.prototype.forEach.call($li, function (node) {
+      var panelId = node.dataset.tab;
+      $allContent.push(reactDomWrapperEl.querySelector('#' + panelId));
+    });
 
+    //
     Array.prototype.forEach.call($li, function (node) {
       node.classList.remove('active');
       node.firstChild.classList.remove('active');
       runExClassName(node, _classNameNav, 'remove');
       runExClassName(node.firstChild, _classNameNav, 'remove');
     });
-    Array.prototype.forEach.call($allContent, function (node) {
+    $allContent.forEach(function (node) {
       node.classList.remove('show');
       setTimeout(function () {
         node.classList.remove('active');
         runExClassName(node, _classNamePanel, 'remove');
-      }, 150);
+      }, speed);
     });
 
     // currently active
@@ -220,7 +229,7 @@ var Tabs = function Tabs(props) {
       setTimeout(function () {
         document.getElementById(tabID).classList.add('active', 'show');
         runExClassName(document.getElementById(tabID), _classNamePanel, 'add');
-      }, 150);
+      }, speed);
     }
   }
   (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useEffect)(function () {

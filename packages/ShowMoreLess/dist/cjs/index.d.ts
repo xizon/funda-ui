@@ -23,6 +23,7 @@ declare type ShowMoreLessProps = {
     maskHeight?: string;
     /** -- */
     id?: string;
+    tabIndex?: number;
     children: React.ReactNode;
 };
 declare const ShowMoreLess: (props: ShowMoreLessProps) => JSX.Element;

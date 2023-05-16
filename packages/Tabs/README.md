@@ -15,6 +15,7 @@ import { Tabs } from 'react-pure-bootstrap/Tabs';
 | `panelClassName` | string | `tab-content` | The class name of the content wrapper. |
 | `expandedActiveClassNameForNav` | string | - | specify an active class name for `<TabList />` |
 | `expandedActiveClassNameForPanel` | string | - | specify an active class name for `<TabPanel />` |
+| `animTransitionDuration` | number | 150 | Transition duration for css activation animation. |
 | `onChange` | function  | - | Call a function when the value of an HTML element is changed. It returns three callback values, one is the trigger, the second is the target ID of each panel, and the last is the currently active index. |
 
 
@@ -63,6 +64,7 @@ export default () => {
     <>
 
 		<Tabs 
+            animTransitionDuration={150}
             navClassName="nav nav-tabs mb-3" 
             onChange={handleChange} 
             style={{fontSize: '0.875rem'}}

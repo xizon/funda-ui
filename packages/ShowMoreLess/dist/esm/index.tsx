@@ -34,6 +34,7 @@ type ShowMoreLessProps = {
     maskHeight?: string;
     /** -- */
     id?: string;
+    tabIndex?: number;
     children: React.ReactNode;
 };
 
@@ -51,6 +52,7 @@ const ShowMoreLess = (props: ShowMoreLessProps) => {
         maskOpacity,
         maskHeight,
         id,
+        tabIndex,
         children
     } = props;
 
@@ -120,12 +122,12 @@ const ShowMoreLess = (props: ShowMoreLessProps) => {
      
             {!displayEnabled ? <>
                 {triggerShowContent ? <>
-                    <a href="#" className={triggerShowClassName ? `${triggerShowClassName}` : `d-inline w-auto`} onClick={handleChange}>{triggerShowContent}</a>
+                    <a tabIndex={tabIndex || 0} href="#" className={triggerShowClassName ? `${triggerShowClassName}` : `d-inline w-auto`} onClick={handleChange}>{triggerShowContent}</a>
                 </> : null}
 
             </> : <>
                 {triggerHideContent ? <>
-                    <a href="#" className={triggerHideClassName ? `${triggerHideClassName}` : `d-inline w-auto`} onClick={handleChange}>{triggerHideContent}</a>
+                    <a tabIndex={tabIndex || 0} href="#" className={triggerHideClassName ? `${triggerHideClassName}` : `d-inline w-auto`} onClick={handleChange}>{triggerHideContent}</a>
                 </> : null}
             </>}
 

@@ -204,23 +204,27 @@ var CascadingSelect = function CascadingSelect(props) {
     _useState8 = _slicedToArray(_useState7, 2),
     hasErr = _useState8[0],
     setHasErr = _useState8[1];
+  var _useState9 = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)(value || ''),
+    _useState10 = _slicedToArray(_useState9, 2),
+    changedVal = _useState10[0],
+    setChangedVal = _useState10[1];
 
   //for variable 
-  var _useState9 = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)([]),
-    _useState10 = _slicedToArray(_useState9, 2),
-    data = _useState10[0],
-    setData = _useState10[1];
-  var _useState11 = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)({
+  var _useState11 = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)([]),
+    _useState12 = _slicedToArray(_useState11, 2),
+    data = _useState12[0],
+    setData = _useState12[1];
+  var _useState13 = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)({
       labels: [],
       values: []
     }),
-    _useState12 = _slicedToArray(_useState11, 2),
-    selectedData = _useState12[0],
-    setSelectedData = _useState12[1];
-  var _useState13 = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)(false),
     _useState14 = _slicedToArray(_useState13, 2),
-    isShow = _useState14[0],
-    setIsShow = _useState14[1];
+    selectedData = _useState14[0],
+    setSelectedData = _useState14[1];
+  var _useState15 = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)(false),
+    _useState16 = _slicedToArray(_useState15, 2),
+    isShow = _useState16[0],
+    setIsShow = _useState16[1];
   function fetchData(_x2) {
     return _fetchData.apply(this, arguments);
   } //
@@ -422,17 +426,33 @@ var CascadingSelect = function CascadingSelect(props) {
 
     // update selected data 
     //////////////////////////////////////////
+    var inputVal_0 = _valueData.join(',');
+    var inputVal_1 = _labelData.join(',');
     if (valueType === 'value') {
-      if (inputEl !== null) inputEl.value = _valueData.join(',');
+      if (inputEl !== null) setChangedVal(inputVal_0);
     } else {
-      if (inputEl !== null) inputEl.value = _labelData.join(',');
+      if (inputEl !== null) setChangedVal(inputVal_1);
     }
     return {
-      0: _valueData.join(','),
-      1: _labelData.join(',')
+      0: inputVal_0,
+      1: inputVal_1
     };
   }
   function initDefaultValue() {
+    // change the value to trigger component rendering
+    if (typeof value === 'undefined' || value === '') {
+      setSelectedData({
+        labels: [],
+        values: []
+      });
+      setDictionaryData([]);
+      setData([]);
+      setChangedVal('');
+    } else {
+      setChangedVal(value);
+    }
+
+    //
     var _params = fetchFuncMethodParams || [];
     fetchData(_params.join(',')).then(function (response) {
       var _data = response[1];
@@ -688,7 +708,7 @@ var CascadingSelect = function CascadingSelect(props) {
     return function () {
       document.removeEventListener('pointerdown', handleClickOutside);
     };
-  }, []);
+  }, [value]);
   return /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
     className: wrapperClassName ? "cascading-select__wrapper ".concat(wrapperClassName) : "cascading-select__wrapper mb-3 position-relative",
     ref: rootRef
@@ -743,7 +763,8 @@ var CascadingSelect = function CascadingSelect(props) {
     name: name,
     className: controlClassName ? controlClassName : "form-control",
     placeholder: placeholder,
-    defaultValue: value || '',
+    value: changedVal // placeholder will not change if defaultValue is used
+    ,
     onFocus: handleFocus,
     onBlur: handleBlur,
     disabled: disabled || null,

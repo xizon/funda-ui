@@ -120,6 +120,7 @@ const CascadingSelectE2E = (props: CascadingSelectE2EProps) => {
     const [columnTitleData, setColumnTitleData] = useState<any[]>([]);
     const [hasErr, setHasErr] = useState<boolean>(false);
     const [firstDataFeched, setFirstDataFeched] = useState<boolean>(false);
+    const [changedVal, setChangedVal] = useState<string>(value || '');
 
 
 
@@ -485,9 +486,9 @@ const CascadingSelectE2E = (props: CascadingSelectE2EProps) => {
         const inputVal_1 = _labelData.map((item: any, i: number) => `${item}[${_queryIdsData[i]}]`)!.join(',');
 
         if (valueType === 'value') {
-            if (inputEl !== null) inputEl.value = inputVal_0;
+            if (inputEl !== null) setChangedVal(inputVal_0);
         } else {
-            if (inputEl !== null) inputEl.value = inputVal_1;
+            if (inputEl !== null) setChangedVal(inputVal_1);
         }
 
         return {
@@ -500,8 +501,27 @@ const CascadingSelectE2E = (props: CascadingSelectE2EProps) => {
 
 
     function initDefaultValue() {
-        if ( typeof value === 'undefined' || value === '' ) return;
+        // change the value to trigger component rendering
+        if ( typeof value === 'undefined' || value === '' ) {
+            setSelectedData({
+                labels: [],
+                values: [],
+                queryIds: []
+            });
+
+            setAllData([]);
+            setDictionaryData([]);
+            setOptData([]);
+            setData([]);
+            setChangedVal('');
+            setFirstDataFeched(false);
+            return;
+        } else {
+            setChangedVal(value);
+        }
     
+
+        //
         setFirstDataFeched(true);
         doFetch(false, 0, 0, false)?.then((firstColResponse: any) => {
     
@@ -833,6 +853,7 @@ const CascadingSelectE2E = (props: CascadingSelectE2EProps) => {
 
     useEffect(() => {
 
+    
         // column titles
         //--------------
         fillColumnTitle();
@@ -854,7 +875,7 @@ const CascadingSelectE2E = (props: CascadingSelectE2EProps) => {
             document.removeEventListener('pointerdown', handleClickOutside);
         }
 
-    }, []);
+    }, [value]);
 
     return (
         <>
@@ -911,7 +932,7 @@ const CascadingSelectE2E = (props: CascadingSelectE2EProps) => {
                         name={name}
                         className={controlClassName ? controlClassName : "form-control"}
                         placeholder={placeholder}
-                        defaultValue={value || ''}
+                        value={changedVal} // placeholder will not change if defaultValue is used
                         onFocus={handleFocus}
                         onBlur={handleBlur}
                         disabled={disabled || null}

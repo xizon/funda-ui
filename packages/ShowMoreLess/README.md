@@ -37,6 +37,7 @@ export default () => {
           
             <ShowMoreLess 
                 speed={350}
+                tabIndex={-1}
                 easing="easeOut"
                 defaultHeight="130px"
                 maskColor="0 0 0"

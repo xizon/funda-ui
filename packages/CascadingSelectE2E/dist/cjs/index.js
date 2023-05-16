@@ -225,24 +225,28 @@ var CascadingSelectE2E = function CascadingSelectE2E(props) {
     _useState16 = _slicedToArray(_useState15, 2),
     firstDataFeched = _useState16[0],
     setFirstDataFeched = _useState16[1];
+  var _useState17 = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)(value || ''),
+    _useState18 = _slicedToArray(_useState17, 2),
+    changedVal = _useState18[0],
+    setChangedVal = _useState18[1];
 
   //for variable 
-  var _useState17 = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)([]),
-    _useState18 = _slicedToArray(_useState17, 2),
-    data = _useState18[0],
-    setData = _useState18[1];
-  var _useState19 = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)({
+  var _useState19 = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)([]),
+    _useState20 = _slicedToArray(_useState19, 2),
+    data = _useState20[0],
+    setData = _useState20[1];
+  var _useState21 = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)({
       labels: [],
       values: [],
       queryIds: []
     }),
-    _useState20 = _slicedToArray(_useState19, 2),
-    selectedData = _useState20[0],
-    setSelectedData = _useState20[1];
-  var _useState21 = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)(false),
     _useState22 = _slicedToArray(_useState21, 2),
-    isShow = _useState22[0],
-    setIsShow = _useState22[1];
+    selectedData = _useState22[0],
+    setSelectedData = _useState22[1];
+  var _useState23 = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)(false),
+    _useState24 = _slicedToArray(_useState23, 2),
+    isShow = _useState24[0],
+    setIsShow = _useState24[1];
   function fetchData(_x2, _x3, _x4) {
     return _fetchData.apply(this, arguments);
   } //
@@ -564,9 +568,9 @@ var CascadingSelectE2E = function CascadingSelectE2E(props) {
       return "".concat(item, "[").concat(_queryIdsData[i], "]");
     }).join(',');
     if (valueType === 'value') {
-      if (inputEl !== null) inputEl.value = inputVal_0;
+      if (inputEl !== null) setChangedVal(inputVal_0);
     } else {
-      if (inputEl !== null) inputEl.value = inputVal_1;
+      if (inputEl !== null) setChangedVal(inputVal_1);
     }
     return {
       0: inputVal_0,
@@ -575,7 +579,25 @@ var CascadingSelectE2E = function CascadingSelectE2E(props) {
   }
   function initDefaultValue() {
     var _doFetch;
-    if (typeof value === 'undefined' || value === '') return;
+    // change the value to trigger component rendering
+    if (typeof value === 'undefined' || value === '') {
+      setSelectedData({
+        labels: [],
+        values: [],
+        queryIds: []
+      });
+      setAllData([]);
+      setDictionaryData([]);
+      setOptData([]);
+      setData([]);
+      setChangedVal('');
+      setFirstDataFeched(false);
+      return;
+    } else {
+      setChangedVal(value);
+    }
+
+    //
     setFirstDataFeched(true);
     (_doFetch = doFetch(false, 0, 0, false)) === null || _doFetch === void 0 ? void 0 : _doFetch.then(function (firstColResponse) {
       var _ORGIN_DATA = firstColResponse[0];
@@ -853,7 +875,7 @@ var CascadingSelectE2E = function CascadingSelectE2E(props) {
     return function () {
       document.removeEventListener('pointerdown', handleClickOutside);
     };
-  }, []);
+  }, [value]);
   return /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
     className: wrapperClassName ? "cascading-select-e2e__wrapper ".concat(wrapperClassName) : "cascading-select-e2e__wrapper mb-3 position-relative",
     ref: rootRef
@@ -908,7 +930,8 @@ var CascadingSelectE2E = function CascadingSelectE2E(props) {
     name: name,
     className: controlClassName ? controlClassName : "form-control",
     placeholder: placeholder,
-    defaultValue: value || '',
+    value: changedVal // placeholder will not change if defaultValue is used
+    ,
     onFocus: handleFocus,
     onBlur: handleBlur,
     disabled: disabled || null,

@@ -12,6 +12,7 @@ type TabsProps = {
     panelClassName?: string;
     expandedActiveClassNameForNav?: string;
     expandedActiveClassNameForPanel?: string;
+    animTransitionDuration?: number;
     /** -- */
     style?: React.CSSProperties;
     onChange?: (nav: any, targetId: any, index: number) => void;
@@ -26,6 +27,7 @@ const Tabs = (props: TabsProps) => {
         panelClassName,
         expandedActiveClassNameForNav,
         expandedActiveClassNameForPanel,
+        animTransitionDuration,
         style,
         onChange,
         children // the contents of the TabList and TabPanel in a loop
@@ -33,6 +35,7 @@ const Tabs = (props: TabsProps) => {
 
     const uniqueID = useId().replace(/\:/g, "-");
     const rootRef = useRef<any>(null);
+    const speed = animTransitionDuration ? animTransitionDuration : 150;
 
 
     function handleClickItem(e: any) {
@@ -54,11 +57,12 @@ const Tabs = (props: TabsProps) => {
     function itemInit(targetEl: any, itemsInit: boolean) {
 
         const reactDomWrapperEl: any = rootRef.current;
-        const $li = reactDomWrapperEl.querySelectorAll('ul > li'),
-            $allContent = reactDomWrapperEl.querySelectorAll('.tab-pane');
+        const $li = targetEl.parentElement.children;
+        let $allContent: HTMLElement[] = [];
         const tabID = targetEl.dataset.tab;
         const _classNameNav = expandedActiveClassNameForNav ? expandedActiveClassNameForNav : '';
         const _classNamePanel = expandedActiveClassNameForPanel ? expandedActiveClassNameForPanel : '';
+
 
         const runExClassName = (node: HTMLElement, str: string, type: string) => {
             if (str && node !== null) {
@@ -71,9 +75,14 @@ const Tabs = (props: TabsProps) => {
             }
         };
 
+        //get all panels of this wrapper
+        Array.prototype.forEach.call($li, (node) => {
+            const panelId = node.dataset.tab;
+            $allContent.push(reactDomWrapperEl.querySelector('#' + panelId) as never);
+        });
+
+    
         //
-
-
         Array.prototype.forEach.call($li, (node) => {
             node.classList.remove('active');
             node.firstChild.classList.remove('active');
@@ -82,12 +91,14 @@ const Tabs = (props: TabsProps) => {
             runExClassName(node.firstChild, _classNameNav, 'remove');
         });
 
-        Array.prototype.forEach.call($allContent, (node) => {
+        
+
+        $allContent.forEach( (node) => {
             node.classList.remove('show');
             setTimeout(() => {
                 node.classList.remove('active');
                 runExClassName(node, _classNamePanel, 'remove');
-            }, 150); 
+            }, speed); 
         });
 
         // currently active
@@ -101,7 +112,7 @@ const Tabs = (props: TabsProps) => {
             setTimeout(() => {
                 document.getElementById(tabID)!.classList.add('active', 'show');
                 runExClassName(document.getElementById(tabID) as never, _classNamePanel, 'add');
-            }, 150);  
+            }, speed);  
         }
 
     }

@@ -106,6 +106,7 @@ const CascadingSelect = (props: CascadingSelectProps) => {
     const [loading, setLoading] = useState<boolean>(true);
     const [columnTitleData, setColumnTitleData] = useState<any[]>([]);
     const [hasErr, setHasErr] = useState<boolean>(false);
+    const [changedVal, setChangedVal] = useState<string>(value || '');
    
 
     //for variable 
@@ -356,23 +357,39 @@ const CascadingSelect = (props: CascadingSelectProps) => {
 
          // update selected data 
          //////////////////////////////////////////
-        if (valueType === 'value') {
-            if (inputEl !== null ) inputEl.value = _valueData!.join(',');
+         const inputVal_0 = _valueData!.join(',');
+         const inputVal_1 = _labelData!.join(',');
+
+         if (valueType === 'value') {
+            if (inputEl !== null) setChangedVal(inputVal_0);
         } else {
-            if (inputEl !== null ) inputEl.value = _labelData!.join(',');
+            if (inputEl !== null) setChangedVal(inputVal_1);
         }
-        
+
         return {
-            0 : _valueData!.join(','),
-            1 : _labelData!.join(',')
+            0: inputVal_0,
+            1: inputVal_1
         }
     
     }
     
 
     function initDefaultValue() {
+        // change the value to trigger component rendering
+        if ( typeof value === 'undefined' || value === '' ) {
+            setSelectedData({
+                labels: [],
+                values: []
+            });
 
+            setDictionaryData([]);
+            setData([]);
+            setChangedVal('');
+        } else {
+            setChangedVal(value);
+        }
         
+        //
         const _params: any[] = fetchFuncMethodParams || [];
         fetchData((_params).join(',')).then( (response: any) => {
 
@@ -687,7 +704,7 @@ const CascadingSelect = (props: CascadingSelectProps) => {
             document.removeEventListener('pointerdown', handleClickOutside);
         }
 
-    }, []);
+    }, [value]);
 
     return (
         <>
@@ -745,7 +762,7 @@ const CascadingSelect = (props: CascadingSelectProps) => {
                         name={name}
                         className={controlClassName ? controlClassName : "form-control"}
                         placeholder={placeholder}
-                        defaultValue={value || ''}
+                        value={changedVal} // placeholder will not change if defaultValue is used
                         onFocus={handleFocus}
                         onBlur={handleBlur}
                         disabled={disabled || null}
