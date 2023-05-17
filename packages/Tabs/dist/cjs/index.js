@@ -227,8 +227,11 @@ var Tabs = function Tabs(props) {
     runExClassName(targetEl.firstChild, _classNameNav, 'add');
     if (tabID !== undefined) {
       setTimeout(function () {
-        document.getElementById(tabID).classList.add('active', 'show');
-        runExClassName(document.getElementById(tabID), _classNamePanel, 'add');
+        var _panel = document.getElementById(tabID);
+        if (_panel !== null) {
+          _panel.classList.add('active', 'show');
+          runExClassName(_panel, _classNamePanel, 'add');
+        }
       }, speed);
     }
   }

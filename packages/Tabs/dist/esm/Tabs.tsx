@@ -110,8 +110,11 @@ const Tabs = (props: TabsProps) => {
 
         if (tabID !== undefined) {
             setTimeout(() => {
-                document.getElementById(tabID)!.classList.add('active', 'show');
-                runExClassName(document.getElementById(tabID) as never, _classNamePanel, 'add');
+                const _panel = document.getElementById(tabID) as HTMLElement;
+                if ( _panel !== null ) {
+                    _panel.classList.add('active', 'show');
+                    runExClassName(_panel, _classNamePanel, 'add');
+                }
             }, speed);  
         }
 
