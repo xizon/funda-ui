@@ -26,7 +26,7 @@ Here is a table of the components and their status.
 | [Button ❏](packages/Button/README.md) | [Tag Input ❏](packages/TagInput/README.md) | [Parallax ❏](packages/Parallax/README.md) |  |  | 
 | [Card ❏](packages/Card/README.md) | [Textarea  ✅](packages/Textarea/README.md) | [Scroll Reveal ❏](packages/ScrollReveal/README.md) |  |  | 
 | [Content Placeholder ❏](packages/ContentPlaceholder/README.md) | [Select ✅](packages/Select/README.md) | [Sticky Elements ❏](packages/StickyElements/README.md) |  |  | 
-| [Counter ❏](packages/Counter/README.md) | [Cascading Select ✅](packages/CascadingSelect/README.md) |  |  |  | 
+| [Counter ❏](packages/Counter/README.md) | [Cascading Select ✅](packages/CascadingSelect/README.md) | [Mode Switch ✅](packages/ModeSwitch/README.md) |  |  | 
 | [Hybrid Content Slider ❏](packages/HybridContentSlider/README.md) | [Checkbox ✅](packages/Checkbox/README.md) |  |  |  | 
 | [Image Shapes ❏](packages/ImageShapes/README.md) | [Radio ✅](packages/Radio/README.md) |  |  |  | 
 | [Lightbox ❏](packages/Lightbox/README.md) | [Multi Select ❏](packages/MultiSelect/README.md) |  |  |  | 
@@ -47,6 +47,7 @@ Here is a table of the components and their status.
 | [Timeline ❏](packages/Timeline/README.md) |  |  |  |  | 
 | [Toaster ❏](packages/Toaster/README.md) |  |  |  |  | 
 | [Tooltip ❏](packages/Tooltip/README.md) |  |  |  |  | 
+| [Digital Clock ✅](packages/DigitalClock/README.md) |  |  |  |  | 
 
 
 

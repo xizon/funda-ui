@@ -23,6 +23,8 @@ declare type DropdownMenuProps = {
     /** This function is called whenever the data is updated.
      *  Exposes the JSON format data about the option as an argument.
      */
+    /** -- */
+    tabIndex?: number;
     onChange?: OptionChangeFnType | null;
 };
 declare const DropdownMenu: (props: DropdownMenuProps) => JSX.Element;

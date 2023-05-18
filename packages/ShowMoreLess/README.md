@@ -19,6 +19,7 @@ import ShowMoreLess from 'react-pure-bootstrap/ShowMoreLess';
 | `maskColor` | string  | `255 255 255` | Specifies the color effect of the mask. It takes the value of rgb. |
 | `maskOpacity` | number  | `100` | Set the opacity of the mask. It is a percentage. |
 | `maskHeight` | string  | `2em` | Specifies the height of the mask. |
+| `tabIndex` | number  | 0 | This attribute allows developers to make HTML elements focusable. |
 
 
 ## Examples

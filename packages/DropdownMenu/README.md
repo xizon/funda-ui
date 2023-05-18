@@ -19,6 +19,7 @@ import DropdownMenu from 'react-pure-bootstrap/DropdownMenu';
 | `triggerContent` | string  | - | Set a piece of text for the trigger |
 | `options` | array  | - | Specify data of Dropdown Menu as a JSON string format. Such as: <br /> `[{"label":"Option 1","value":"option-1"},{"label":"Option 2","value":"option-2"}]` |
 | `onChange` | function \| null  | - | This function is called whenever the data is updated. Exposes the JSON format data about the option as an argument. You can use it like this: `(res) => console.log(res.value)` |
+| `tabIndex` | number  | -1 | This attribute allows developers to make HTML elements focusable. |
 
 
 Array configuration properties of the `options`:

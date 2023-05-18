@@ -28,6 +28,8 @@ type DropdownMenuProps = {
     /** This function is called whenever the data is updated.
      *  Exposes the JSON format data about the option as an argument.
      */
+    /** -- */
+    tabIndex?: number;
     onChange?: OptionChangeFnType | null;
 };
 
@@ -43,6 +45,7 @@ const DropdownMenu = (props: DropdownMenuProps) => {
         triggerClassName,
         triggerContent,
         options,
+        tabIndex,
         onChange
     } = props;
 
@@ -99,7 +102,7 @@ const DropdownMenu = (props: DropdownMenuProps) => {
 
             <div className={isOpen ? `dropdown__wrapper ${wrapperClassName ? wrapperClassName : 'dropdown-default'} active` : `dropdown__wrapper ${wrapperClassName ? wrapperClassName : 'dropdown-default'}`}>
 
-                {triggerButton ? <button className={triggerClassName ? `${triggerClassName}` : `d-inline w-auto`} type="button" onClick={handleClick} dangerouslySetInnerHTML={{ __html: selectedLabel }}></button> : <div className={triggerClassName ? `${triggerClassName}` : `d-inline w-auto`} onClick={handleClick} dangerouslySetInnerHTML={{ __html: selectedLabel }}></div>}
+                {triggerButton ? <button tabIndex={tabIndex || -1} className={triggerClassName ? `${triggerClassName}` : `d-inline w-auto`} type="button" onClick={handleClick} dangerouslySetInnerHTML={{ __html: selectedLabel }}></button> : <div className={triggerClassName ? `${triggerClassName}` : `d-inline w-auto`} onClick={handleClick} dangerouslySetInnerHTML={{ __html: selectedLabel }}></div>}
 
                 <input name={name || ''} type="hidden" value={selected?.value} />
                 <ul className={isOpen ? `${listClassName ? listClassName : 'dropdown-menu-default'} ${showClassName ? showClassName : 'show'}` : `${listClassName ? listClassName : 'dropdown-menu-default'}`}>
