@@ -29,7 +29,8 @@ declare type FileProps = {
     fetchCallback?: (data: any) => void;
     onFetch?: (data: any) => void;
     onChange?: (e: any, e2: any, value: any) => void;
-    onSubmit?: (e: any, callback: any) => void;
+    onComplete?: (e: any, callback: any) => void;
+    onProgress?: (files: any) => void;
 };
 declare const File: React.ForwardRefExoticComponent<FileProps & React.RefAttributes<unknown>>;
 export default File;

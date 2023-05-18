@@ -29,7 +29,8 @@ import File from 'react-pure-bootstrap/File';
 | `fetchCallback` | function  | - | Return value from `fetchCallback` property to format the data of the API callback, which will match the data structure of the component. <br >At the same time it returns the original data, you will use this function and use the `return` keyword to return a new value. |
 | `onFetch` | function  | - | Call a function when  data is successfully fetched. It returns one callback value which is the fetched data (an array) |
 | `onChange` | function  | - | Call a function when the value of an HTML element is changed. It returns three callback values, one is the control, the second is an HTMLElement of submit button, and the last is current value ([An object of FileList](https://developer.mozilla.org/en-US/docs/Web/API/FileList)) |
-| `onSubmit` | function  | - | Call a function when the modal is submitted. It returns two callback values, one is the trigger object and the other is the callback from backend (JSON Object Literals) |
+| `onProgress` | function  | - | Call a function when upload is in progress. It returns one callback value which is ([An object of FileList](https://developer.mozilla.org/en-US/docs/Web/API/FileList)) |
+| `onComplete` | function  | - | Call a function when the modal is submitted. It returns two callback values, one is the trigger object and the other is the callback from backend (JSON Object Literals) |
 
 
 It accepts all props which this control support.
@@ -49,8 +50,12 @@ export default () => {
         console.log(e, submitEl, value);
     }
 
-    function handleSubmit(e, value) {
+    function handleComplete(e, value) {
         console.log(e, value);
+    }
+
+    function handleProgress(files) {
+        console.log(files);
     }
 
     return (
@@ -64,7 +69,8 @@ export default () => {
                 submitLabel="Upload" 
                 submitClassName="btn btn-primary mt-2"
                 onChange={handleChange}
-                onSubmit={handleSubmit}
+                onComplete={handleComplete}
+                onProgress={handleProgress}
             />
 
         </>
@@ -110,9 +116,14 @@ export default () => {
         console.log(e, submitEl, value);
     }
 
-    function handleSubmit(e, value) {
+    function handleComplete(e, value) {
         console.log(e, value);
     }
+
+    function handleProgress(files) {
+        console.log(files);
+    }
+
 
     return (
         <>
@@ -126,7 +137,8 @@ export default () => {
                 submitLabel="Upload" 
                 submitClassName="btn btn-primary mt-2"
                 onChange={handleChange}
-                onSubmit={handleSubmit}
+                onComplete={handleComplete}
+                onProgress={handleProgress}
             />
 
         </>

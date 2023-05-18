@@ -31,7 +31,8 @@ type FileProps = {
     fetchCallback?: (data: any) => void;
     onFetch?: (data: any) => void;
     onChange?: (e: any, e2: any, value: any) => void;
-    onSubmit?: (e: any, callback: any) => void;
+    onComplete?: (e: any, callback: any) => void;
+    onProgress?: (files: any) => void;
 
 };
 
@@ -60,7 +61,8 @@ const File = forwardRef((props: FileProps, ref: any) => {
         fetchCallback,
         onFetch,
         onChange,
-        onSubmit,
+        onComplete,
+        onProgress,
         ...attributes
     } = props;
 
@@ -132,7 +134,10 @@ const File = forwardRef((props: FileProps, ref: any) => {
     function handleSubmit(event: any) {
         event.preventDefault();
 
+        
         const curFiles = fileInput.current.files;
+
+        onProgress?.(curFiles);
 
         if (fetchUrl) {
 
@@ -147,7 +152,7 @@ const File = forwardRef((props: FileProps, ref: any) => {
                 headers: { 'Content-Type': 'multipart/form-data' }
             }).then(function (response: any) {
                 const jsonData = response.data;
-                onSubmit?.(event, jsonData);
+                onComplete?.(event, jsonData);
             });
         } else {
 
