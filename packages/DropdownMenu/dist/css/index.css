@@ -1,0 +1,91 @@
+/* ======================================================
+   <!-- Dropdown Menu -->
+/* ====================================================== */
+/* Do not use <a> tag */
+.dropdown-default {
+  display: inline-block;
+  cursor: pointer;
+  position: relative;
+}
+.dropdown-default ul, .dropdown-default li {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.dropdown-default strong {
+  font-weight: normal;
+  display: inline-block;
+  margin-left: 0.3rem;
+}
+.dropdown-default > ul {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  margin-top: 8px;
+  min-width: 170px;
+  border-radius: 4px;
+  text-align: left;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  background: #fff;
+  transition: 0.1s ease-in-out;
+}
+.dropdown-default > ul::before {
+  content: "";
+  position: absolute;
+  top: -6px;
+  left: 20px;
+  width: 0;
+  height: 0;
+  box-shadow: 2px -2px 6px rgba(0, 0, 0, 0.05);
+  border-top: 6px solid #fff;
+  border-right: 6px solid #fff;
+  border-bottom: 6px solid transparent;
+  border-left: 6px solid transparent;
+  transform: rotate(-45deg);
+}
+.dropdown-default > ul li {
+  z-index: 1;
+  position: relative;
+  background: #fff;
+  padding: 0 0.75rem;
+}
+.dropdown-default > ul li:hover {
+  background: #FAFAFA;
+}
+.dropdown-default > ul li a {
+  display: block;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+  padding: 0.75rem 0;
+  color: #333;
+  font-size: 0.75rem;
+  text-decoration: none;
+}
+.dropdown-default > ul li a svg,
+.dropdown-default > ul li a i {
+  display: none;
+}
+.dropdown-default > ul li:first-child {
+  border-radius: 4px 4px 0 0;
+}
+.dropdown-default > ul li:last-child {
+  border-radius: 0 0 4px 4px;
+}
+.dropdown-default > ul li:last-child a {
+  border-bottom: 0;
+}
+.dropdown-default.active > ul {
+  animation: dropdown-display 0.4s cubic-bezier(0.73, 0.005, 0.22, 1);
+  display: block !important;
+}
+
+@keyframes dropdown-display {
+  0% {
+    opacity: 0;
+    transform: scale(0.98) translateY(-0.6em);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
