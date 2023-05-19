@@ -141,22 +141,144 @@ export default () => {
             </ModalDialog>
 
 
-            <h3>Expose the open and close functions</h3>
-            {/* ================================================================== */}
-            <ModalDialog
-                triggerClassName=""
-                triggerContent=""
-                onLoad={(openFunc, closeFunc) => {
-                    // do something
-                    // setState(openFunc);
-                }}
-
-            >
-                ...
-            </ModalDialog>
-
 
         </>
     );
 }
 ```
+
+
+## Using exposed OPEN and CLOSE methods
+
+Do not use trigger to bind Modal, and expose OPEN and CLOSE methods, which can be called in your code freely. It is usually used to process asynchronous data.
+
+
+```js
+import React, { useState, useEffect, useRef } from "react";
+import ModalDialog from 'react-pure-bootstrap/ModalDialog';
+
+class DataService {
+
+ 
+    // "Date.now()" is used to detect mutable asynchronous data
+    async getList() {
+        return {
+            code: 0,
+            message: 'OK',
+            data: [
+                { item_name: 'foo' + Date.now(), item_code: 'bar' },
+                { item_name: 'foo2' + Date.now(), item_code: 'bar2' },
+                { item_name: 'foo3' + Date.now(), item_code: 'bar3' }
+            ]
+        };
+    }
+
+}
+
+
+export default () => {
+
+    const timer = useRef<any>(null); // we can save timer in useRef and pass it to child
+    const [modalOpenFunc, setModalOpenFunc] = useState<any>(null);
+    const [modalCloseFunc, setModalCloseFunc] = useState<any>(null);
+    const [data, setData] = useState<any[]>([]);
+    const [fetchOk, setFetchOk] = useState<boolean>(false);
+    
+    
+    function fetchData() {
+        const service = new DataService();
+        service.getList().then(function (response: any) {
+            setData(response.data);
+            setFetchOk(true);
+            
+        });
+    }
+
+    function handleClick(e: any) {
+        e.preventDefault();
+        
+        fetchData();
+        if (modalOpenFunc) modalOpenFunc();
+
+        // auto close
+        timer.current = setTimeout(() => {
+            if (modalCloseFunc) modalCloseFunc();
+        }, 3000);
+
+    }
+
+    useEffect(() => {
+
+        if (!fetchOk) {
+            fetchData();
+        }
+
+    }, []);
+
+
+    return (
+        <>
+
+            <a href="#" onClick={handleClick}>click here to use external scripts to trigger Open and Close events</a>
+            <ModalDialog
+                heading="Choose a block"
+                triggerClassName=""
+                triggerContent=""
+                onLoad={(openFunc, closeFunc) => {
+                    setModalOpenFunc(openFunc);
+                    setModalCloseFunc(closeFunc);
+                }}
+                onOpen={(e, closewin) => {
+
+                    // Use "setTimeout()" to ensure asynchronous data exists
+                    setTimeout(() => {
+                        const btns = document.querySelectorAll('#app-mydata-list > a');
+
+                        [].slice.call(btns).forEach((node: any) => {
+                            node?.addEventListener('click', (e: any) => {
+                                e.preventDefault();
+
+                                // do something
+                                console.log(e.currentTarget.dataset.name);
+
+                            });
+                        });
+                    }, 0);
+
+                }}
+                onClose={(e) => {
+
+                    clearTimeout(timer.current);
+
+                    // Remove all Event Listeners
+                    const btns = document.querySelectorAll('#app-mydata-list > a');
+                    [].slice.call(btns).forEach((node: any) => {
+                        node?.replaceWith(node?.cloneNode(true));
+                    });
+
+                    // Modifying React State can ensure that the window content is updated in real time
+                    setTimeout(() => {
+                        setData([]);
+                    }, 350);
+
+
+                }}
+            >
+                {data.length > 0 ? <>
+
+                    <div id="app-mydata-list">
+                        {data ? data.map((item, i) => {
+                            return <a href="#" key={i} data-name={`${item.item_code}`} style={{display: 'block'}}>{item.item_name}</a>;
+                        }) : null}
+
+                    </div>
+
+                </> : null}
+
+            </ModalDialog>
+
+        </>
+    )
+}
+```
+

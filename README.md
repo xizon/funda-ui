@@ -32,7 +32,7 @@ Here is a table of the components and their status.
 | [Lightbox ❏](packages/Lightbox/README.md) | [Multi Select ❏](packages/MultiSelect/README.md) |  |  |  | 
 | [List Bulleted ❏](packages/ListBulleted/README.md) | [Single Select ❏](packages/SingleSelect/README.md) |  |  |  | 
 | [Modal Dialog ✅](packages/ModalDialog/README.md) | [LiveSearch ✅](packages/LiveSearch/README.md) |  |  |  | 
-| [Pagination ❏](packages/Pagination/README.md) | [Number ❏](packages/Number/README.md) |  |  |  | 
+| [Pagination ✅](packages/Pagination/README.md) | [Number ❏](packages/Number/README.md) |  |  |  | 
 | [Table ❏](packages/Table/README.md) | [SearchBar ✅](packages/SearchBar/README.md) |  |  |  | 
 | [Periodical Scroll ❏](packages/PeriodicalScroll/README.md) | [Switch ❏](packages/Switch/README.md) |  |  |  | 
 | [Progress Bar ❏](packages/ProgressBar/README.md) | [Dynamic Fields ❏](packages/DynamicFields/README.md) |  |  |  | 
@@ -45,7 +45,7 @@ Here is a table of the components and their status.
 | [Table Sorter ❏](packages/TableSorter/README.md) |  |  |  |  | 
 | [Tabs ✅](packages/Tabs/README.md) |  |  |  |  | 
 | [Timeline ❏](packages/Timeline/README.md) |  |  |  |  | 
-| [Toaster ❏](packages/Toaster/README.md) |  |  |  |  | 
+| [Toaster ✅](packages/Toaster/README.md) |  |  |  |  | 
 | [Tooltip ❏](packages/Tooltip/README.md) |  |  |  |  | 
 | [Digital Clock ✅](packages/DigitalClock/README.md) |  |  |  |  | 
 
@@ -64,6 +64,10 @@ Next, import required components as required
 ```js
 import Input from 'react-pure-bootstrap/Input';
 import Textarea from 'react-pure-bootstrap/Textarea';
+import CascadingSelect from 'react-pure-bootstrap/CascadingSelect';
+
+// component styles
+import 'react-pure-bootstrap/CascadingSelect/index.css';
 ```
 
 or 
@@ -71,8 +75,12 @@ or
 ```js
 import { 
     Input,
-    Textarea
+    Textarea,
+    CascadingSelect
 } from 'react-pure-bootstrap';
+
+// component styles
+import 'react-pure-bootstrap/CascadingSelect/index.css';
 ```
 
 or
@@ -80,8 +88,11 @@ or
 ```js
 const Input = require('react-pure-bootstrap').Input;
 const Textarea = require('react-pure-bootstrap').Textarea;
-```
+const CascadingSelect = require('react-pure-bootstrap').CascadingSelect;
 
+// component styles
+import 'react-pure-bootstrap/CascadingSelect/index.css';
+```
 
 
 ## Getting Started

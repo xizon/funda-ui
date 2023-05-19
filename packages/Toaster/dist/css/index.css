@@ -1,0 +1,86 @@
+/* ======================================================
+   <!-- Toaster -->
+/* ====================================================== */
+.toaster__container {
+  --bs-toast-zindex: 1090;
+  width: 350px;
+  position: fixed;
+  left: 50%;
+  bottom: 0;
+  z-index: var(--bs-toast-zindex);
+  pointer-events: none;
+}
+.toaster__container--bottom-left {
+  left: 15px;
+}
+.toaster__container--bottom-right {
+  left: auto;
+  right: 15px;
+}
+.toaster__container--bottom-center {
+  left: 50%;
+  transform: translateX(-50%);
+}
+.toaster__container--top-left {
+  left: 15px;
+  bottom: auto;
+  top: 35px;
+}
+.toaster__container--top-right {
+  left: auto;
+  right: 15px;
+  top: 35px;
+}
+.toaster__container--top-center {
+  left: 50%;
+  transform: translateX(-50%);
+  top: 35px;
+}
+.toaster__container--vertical-center {
+  left: 50%;
+  transform: translate(-50%, -50%);
+  top: 50%;
+  margin-top: 5%;
+}
+
+.toaster {
+  position: relative;
+  width: 100%;
+  bottom: 15px;
+  display: flex;
+  flex-flow: column-reverse nowrap;
+}
+.toaster::before {
+  content: "";
+  top: -80px;
+  bottom: 0;
+  left: -8px;
+  right: -8px;
+  position: absolute;
+  background-color: transparent;
+  pointer-events: none;
+}
+.toaster:hover .toast-container {
+  transform: perspective(100px) translateZ(0) !important;
+}
+
+/* Bootstrap toast here */
+.toast-container {
+  width: 100%;
+  height: auto;
+  position: relative;
+  transition: all 0.25s;
+  pointer-events: auto;
+}
+.toast-container .btn-close:focus {
+  box-shadow: none;
+}
+.toast-container .btn-close svg {
+  vertical-align: top;
+}
+.toast-container .btn-close:hover svg path {
+  fill: #f00;
+}
+.toast-container.hide {
+  opacity: 0;
+}

@@ -541,6 +541,7 @@ var ModalDialog = function ModalDialog(props) {
   }
   (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useEffect)(function () {
     // Move HTML templates to tag end body </body>
+    // prevent "transform", "filter", "perspective" attribute destruction fixed viewport orientation
     //------------------------------------------
     document.body.appendChild(modalRef.current);
     [].slice.call(modalRef.current.querySelectorAll('[data-close]')).forEach(function (node) {

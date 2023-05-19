@@ -282,6 +282,7 @@ const ModalDialog = (props: ModalDialogProps) => {
 
 
         // Move HTML templates to tag end body </body>
+        // prevent "transform", "filter", "perspective" attribute destruction fixed viewport orientation
         //------------------------------------------
         document.body.appendChild(modalRef.current);
         
