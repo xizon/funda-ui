@@ -11,6 +11,7 @@
     bottom: 0;
     z-index: var(--bs-toast-zindex);
     pointer-events: none;
+    transition: .1s ease-in-out;
 
     &--bottom-left {
         left: 15px;
@@ -87,20 +88,33 @@
     transition: all .25s;
     pointer-events: auto;
 
-    .btn-close:focus {
+    [data-close] {
+        background: none;
+    }
+
+    [data-close]:focus {
         box-shadow: none;
     }
 
-    .btn-close svg {
+    [data-close] svg {
         vertical-align: top;
+
+        path {
+            transition: .3s ease-in-out;
+        }
     }
 
-    .btn-close:hover svg path {
+    [data-close]:hover svg path {
         fill: #f00;
     }
 
-    &.hide {
+    &.hide-start {
         opacity: 0;
     }
+    
+    &.hide-end {
+        display: none;
+    }
+
 }
 

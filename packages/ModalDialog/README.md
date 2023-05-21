@@ -13,6 +13,7 @@ import ModalDialog from 'react-pure-bootstrap/ModalDialog';
 | `maskDisabled` | boolean  | false | Disable mask |
 | `maxWidth` | number \| string  | false | Custom modal max-width whick need a unit string. Such as: `200px` |
 | `closeOnlyBtn` | boolean  | false | Disable mask to close the window |
+| `closeDisabled` | boolean  | false | Disable the close button. |
 | `triggerClassName` | string  | - | Specify a class for your trigger |
 | `triggerContent` | ReactNode  | - | Set a piece of text or HTML code for the trigger |
 | `autoClose` | number \| boolean  | false | Specify auto-close time. This function is not enabled when this value is false. If the value is `2000`, it will automatically close after 2 seconds. |
@@ -141,6 +142,19 @@ export default () => {
             </ModalDialog>
 
 
+            <h3>Modal that cannot be closed</h3>
+            {/* ================================================================== */}
+            <ModalDialog
+                autoOpen={true}
+                closeOnlyBtn
+                closeDisabled
+            >
+                <h4>This is a modal that cannot be closed</h4>
+                <p>...</p>
+                <p>...</p>
+                <p>...</p>
+            </ModalDialog>
+
 
         </>
     );
@@ -148,7 +162,7 @@ export default () => {
 ```
 
 
-## Using exposed OPEN and CLOSE methods
+## Asynchronous Usage
 
 Do not use trigger to bind Modal, and expose OPEN and CLOSE methods, which can be called in your code freely. It is usually used to process asynchronous data.
 
@@ -225,6 +239,7 @@ export default () => {
                 triggerClassName=""
                 triggerContent=""
                 onLoad={(openFunc, closeFunc) => {
+                    // Using exposed OPEN and CLOSE methods
                     setModalOpenFunc(openFunc);
                     setModalCloseFunc(closeFunc);
                 }}

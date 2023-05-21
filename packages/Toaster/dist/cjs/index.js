@@ -114,6 +114,7 @@ var Item = function Item(props) {
     schemeBody = props.schemeBody,
     schemeHeader = props.schemeHeader,
     closeBtnColor = props.closeBtnColor,
+    closeDisabled = props.closeDisabled,
     closeEv = props.closeEv;
   return /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
     className: "toast-container",
@@ -131,15 +132,12 @@ var Item = function Item(props) {
     className: "me-auto"
   }, title === '' || title === false ? '' : /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, title)), /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("small", {
     className: "text-muted"
-  }, note === '' || note === false ? '' : /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, note)), !lock ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("button", {
+  }, note === '' || note === false ? '' : /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, note)), !lock ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, !closeDisabled ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("button", {
     "data-close": "1",
     "data-index": index,
     tabIndex: -1,
     type: "button",
-    className: "btn-close",
-    style: {
-      background: 'none'
-    }
+    className: "btn-close"
   }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("svg", {
     width: "12px",
     height: "12px",
@@ -148,22 +146,31 @@ var Item = function Item(props) {
     fill: "".concat(closeBtnColor ? closeBtnColor : '#000000'),
     d: "M9.41 8l3.29-3.29c.19-.18.3-.43.3-.71a1.003 1.003 0 00-1.71-.71L8 6.59l-3.29-3.3a1.003 1.003 0 00-1.42 1.42L6.59 8 3.3 11.29c-.19.18-.3.43-.3.71a1.003 1.003 0 001.71.71L8 9.41l3.29 3.29c.18.19.43.3.71.3a1.003 1.003 0 00.71-1.71L9.41 8z",
     fillRule: "evenodd"
-  })))) : null)), /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
+  }))) : null) : null)), /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
     className: "toast-body"
-  }, message))));
+  }, message, (title === '' || title === false) && (note === '' || note === false) ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, !closeDisabled ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("button", {
+    "data-close": "1",
+    "data-index": index,
+    tabIndex: -1,
+    type: "button",
+    className: "btn-close position-absolute top-0 end-0 me-2 mt-2"
+  }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("svg", {
+    width: "12px",
+    height: "12px",
+    viewBox: "0 0 16 16"
+  }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("path", {
+    fill: "".concat(closeBtnColor ? closeBtnColor : '#000000'),
+    d: "M9.41 8l3.29-3.29c.19-.18.3-.43.3-.71a1.003 1.003 0 00-1.71-.71L8 6.59l-3.29-3.3a1.003 1.003 0 00-1.42 1.42L6.59 8 3.3 11.29c-.19.18-.3.43-.3.71a1.003 1.003 0 001.71.71L8 9.41l3.29 3.29c.18.19.43.3.71.3a1.003 1.003 0 00.71-1.71L9.41 8z",
+    fillRule: "evenodd"
+  }))) : null) : null))));
 };
 /* harmony default export */ const src_Item = (Item);
 ;// CONCATENATED MODULE: ./src/index.tsx
-function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
-function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
-function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
-function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i]; return arr2; }
-function _iterableToArrayLimit(arr, i) { var _i = null == arr ? null : "undefined" != typeof Symbol && arr[Symbol.iterator] || arr["@@iterator"]; if (null != _i) { var _s, _e, _x, _r, _arr = [], _n = !0, _d = !1; try { if (_x = (_i = _i.call(arr)).next, 0 === i) { if (Object(_i) !== _i) return; _n = !1; } else for (; !(_n = (_s = _x.call(_i)).done) && (_arr.push(_s.value), _arr.length !== i); _n = !0); } catch (err) { _d = !0, _e = err; } finally { try { if (!_n && null != _i["return"] && (_r = _i["return"](), Object(_r) !== _r)) return; } finally { if (_d) throw _e; } } return _arr; } }
-function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 
 var Toast = function Toast(props) {
-  var direction = props.direction,
+  var async = props.async,
+    direction = props.direction,
     autoCloseTime = props.autoCloseTime,
     autoCloseReverse = props.autoCloseReverse,
     lock = props.lock,
@@ -171,60 +178,16 @@ var Toast = function Toast(props) {
     schemeBody = props.schemeBody,
     schemeHeader = props.schemeHeader,
     closeBtnColor = props.closeBtnColor,
-    id = props.id;
+    closeDisabled = props.closeDisabled,
+    id = props.id,
+    onClose = props.onClose;
   var uniqueID = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useId)().replace(/\:/g, "-");
   var idRes = id || uniqueID;
   var rootRef = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useRef)(null);
-  var _useState = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)(data ? data : []),
-    _useState2 = _slicedToArray(_useState, 2),
-    toasts = _useState2[0],
-    setToasts = _useState2[1];
-  var depth = toasts.length + 1;
-  var autoHideTimeout = null;
-  function handleClose(index) {
-    var items = JSON.parse(JSON.stringify(toasts));
-    if (items[index] !== undefined) {
-      var _list = rootRef.current.querySelectorAll('.toast-container');
-      _list[index].classList.add('hide');
-
-      //Let the removed animation show
-      setTimeout(function () {
-        [].slice.call(_list).forEach(function (node) {
-          node.classList.remove('hide');
-        });
-        items.splice(index, 1); //delete one item
-        setToasts(items);
-      }, 300);
-    }
-  }
-  function autoClose(index, items) {
-    var delay = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 3000;
-    if (items.length === 0) return;
-    autoHideTimeout = setTimeout(function () {
-      var _list = rootRef.current.querySelectorAll('.toast-container');
-      if (autoCloseReverse) {
-        _list[items.length - 1].classList.add('hide');
-      } else {
-        _list[0].classList.add('hide');
-      }
-
-      //Let the removed animation show
-      setTimeout(function () {
-        [].slice.call(_list).forEach(function (node) {
-          node.classList.remove('hide');
-        });
-        if (autoCloseReverse) {
-          items.splice(items.length - 1, 1);
-        } else {
-          items.splice(0, 1);
-        }
-        setToasts(items);
-        autoClose(index++, items, delay);
-      }, 300);
-    }, delay * (index + 1));
-  }
-  (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useEffect)(function () {
+  var depth = data.length + 1;
+  function init() {
     // Move HTML templates to tag end body </body>
+    // render() don't use "Fragment", in order to avoid error "Failed to execute 'insertBefore' on 'Node'"
     // prevent "transform", "filter", "perspective" attribute destruction fixed viewport orientation
     //------------------------------------------
     document.body.appendChild(rootRef.current);
@@ -235,26 +198,121 @@ var Toast = function Toast(props) {
       });
     });
 
+    // Initialize data
+    //--------------
+    var $toast = document.querySelector("#".concat(rootRef.current.id));
+    if ($toast !== null) {
+      if ($toast.dataset.async == 'true') {
+        var _list = rootRef.current.querySelectorAll('.toast-container');
+        [].slice.call(_list).forEach(function (node, i) {
+          node.classList.remove('hide-end');
+          // rearrange
+          node.style.transform = "perspective(100px) translateZ(-".concat(2 * i, "px) translateY(").concat(35 * i, "px)");
+        });
+      }
+    }
+
     // Auto hide
     //--------------
     var _autoCloseTime = typeof autoCloseTime === 'undefined' || autoCloseTime === false ? false : autoCloseTime;
     if (_autoCloseTime !== false) {
-      var items = JSON.parse(JSON.stringify(toasts));
+      var items = JSON.parse(JSON.stringify(data));
       autoClose(0, items, _autoCloseTime);
     }
+  }
+  function handleClose(index) {
+    var items = JSON.parse(JSON.stringify(data));
+    if (items[index] !== undefined) {
+      var _list = rootRef.current.querySelectorAll('.toast-container');
+      _list[index].classList.add('hide-start');
+
+      //Let the removed animation show
+      setTimeout(function () {
+        [].slice.call(_list).forEach(function (node, i) {
+          node.classList.remove('hide-start');
+        });
+
+        // remove current
+        _list[index].classList.add('hide-end');
+
+        // rearrange
+        [].slice.call(_list).filter(function (node) {
+          return !node.classList.contains('hide-end');
+        }).forEach(function (node, index) {
+          node.style.transform = "perspective(100px) translateZ(-".concat(2 * index, "px) translateY(").concat(35 * index, "px)");
+        });
+
+        //
+        onClose === null || onClose === void 0 ? void 0 : onClose(rootRef.current, items);
+      }, 300);
+    }
+  }
+  function autoClose(index, items) {
+    var delay = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 3000;
+    if (items.length === index) {
+      //
+      onClose === null || onClose === void 0 ? void 0 : onClose(rootRef.current, items);
+
+      //
+      clearTimeout(window.setCloseToast);
+      return;
+    }
+    window.setCloseToast = setTimeout(function () {
+      var _list = rootRef.current.querySelectorAll('.toast-container');
+      if (autoCloseReverse) {
+        _list[items.length - index].classList.add('hide-start');
+      } else {
+        _list[index - 1].classList.add('hide-start');
+      }
+
+      //Let the removed animation show
+      setTimeout(function () {
+        [].slice.call(_list).forEach(function (node) {
+          node.classList.remove('hide-start');
+        });
+
+        // remove current
+        if (autoCloseReverse) {
+          _list[items.length - index].classList.add('hide-end');
+        } else {
+          _list[index - 1].classList.add('hide-end');
+        }
+
+        // rearrange
+        [].slice.call(_list).filter(function (node) {
+          return !node.classList.contains('hide-end');
+        }).forEach(function (node, i) {
+          node.style.transform = "perspective(100px) translateZ(-".concat(2 * i, "px) translateY(").concat(35 * i, "px)");
+        });
+        autoClose(index, items, delay);
+      }, 300);
+    }, delay * (index + 1));
+    index++;
+  }
+  (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useEffect)(function () {
+    // Initialize 
+    //------------------------------------------
+    init();
+
+    // Remove the global list of events, especially as scroll and interval.
+    //--------------
     return function () {
       // Cancels a timeout previously established by calling setTimeout().
-      //--------------
-      clearTimeout(autoHideTimeout);
+      clearTimeout(window.setCloseToast);
+
+      // Remove all toasts
+      var _el = document.querySelector("#toaster-".concat(idRes));
+      if (_el !== null) _el.remove();
     };
-  }, [toasts]);
-  return /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
+  }, [data]);
+  return /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
     id: "toaster-".concat(idRes),
+    "data-async": async ? async : false,
     className: "toaster__container toaster__container--".concat(direction ? direction : 'bottom-center'),
     ref: rootRef
   }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
     className: "toaster"
-  }, toasts.map(function (item, i) {
+  }, data.map(function (item, i) {
     return /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement(src_Item, {
       depth: depth - i,
       key: i,
@@ -265,6 +323,7 @@ var Toast = function Toast(props) {
       schemeBody: schemeBody,
       schemeHeader: schemeHeader,
       closeBtnColor: closeBtnColor,
+      closeDisabled: closeDisabled,
       message: item.message,
       closeEv: handleClose
     });

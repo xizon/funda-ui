@@ -379,6 +379,7 @@ var ModalDialog = function ModalDialog(props) {
     autoClose = props.autoClose,
     maskDisabled = props.maskDisabled,
     closeOnlyBtn = props.closeOnlyBtn,
+    closeDisabled = props.closeDisabled,
     onLoad = props.onLoad,
     onOpen = props.onOpen,
     onClose = props.onClose,
@@ -541,6 +542,7 @@ var ModalDialog = function ModalDialog(props) {
   }
   (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useEffect)(function () {
     // Move HTML templates to tag end body </body>
+    // render() don't use "Fragment", in order to avoid error "Failed to execute 'insertBefore' on 'Node'"
     // prevent "transform", "filter", "perspective" attribute destruction fixed viewport orientation
     //------------------------------------------
     document.body.appendChild(modalRef.current);
@@ -615,7 +617,7 @@ var ModalDialog = function ModalDialog(props) {
       });
     };
   }, []);
-  return /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, triggerContent ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
+  return /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", null, triggerContent ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
     className: triggerClassName ? triggerClassName : 'd-inline w-auto',
     ref: triggerRef,
     onClick: handleOpenWin
@@ -635,15 +637,15 @@ var ModalDialog = function ModalDialog(props) {
     } : {}
   }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
     className: enableVideo ? 'modal-content bg-transparent shadow-none border-0' : 'modal-content'
-  }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
+  }, (!heading || heading === '') && closeDisabled ? null : /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
     className: enableVideo ? 'modal-header border-0 px-0' : 'modal-header'
   }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("h5", {
     className: "modal-title"
-  }, heading || ''), /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("button", {
+  }, heading || ''), !closeDisabled ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("button", {
     type: "button",
     className: enableVideo ? 'btn-close btn-close-white' : 'btn-close',
     "data-close": "1"
-  })), /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
+  }) : null)), /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
     className: enableVideo ? 'modal-body m-0 p-0' : 'modal-body'
   }, enableVideo ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
     className: "modal-dialog__video"
@@ -651,11 +653,11 @@ var ModalDialog = function ModalDialog(props) {
     className: "ratio ratio-16x9"
   }, children))) : children), closeBtnLabel || submitBtnLabel ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
     className: "modal-footer"
-  }, closeBtnLabel ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("button", {
+  }, !closeDisabled ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, closeBtnLabel ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("button", {
     "data-close": "1",
     type: "button",
     className: closeBtnClassName ? closeBtnClassName : 'btn btn-secondary'
-  }, closeBtnLabel) : null, submitBtnLabel ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("button", {
+  }, closeBtnLabel) : null) : null, submitBtnLabel ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("button", {
     "data-submit": "1",
     type: "button",
     className: submitBtnClassName ? submitBtnClassName : 'btn btn-primary'

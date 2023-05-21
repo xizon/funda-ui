@@ -1,5 +1,15 @@
 /// <reference types="react" />
+declare global {
+    interface Window {
+        setCloseToast?: any;
+    }
+}
 declare type ToastProps = {
+    /** Specify data of toasts as a JSON string format.
+     * Such as: `[{"title":"Title 1","message":"description..."},{"title":"Title 2","message":"description..."}]` */
+    data: any[any];
+    /** Use asynchronous triggering */
+    async?: boolean;
     /** The direction of the toaster. */
     direction?: string;
     /** Set an automatic closing time, multiple items will be accumulated in order.
@@ -10,17 +20,17 @@ declare type ToastProps = {
     autoCloseReverse?: boolean;
     /** You can not close pop-win when it is enabled */
     lock?: boolean;
-    /** Specify data of toasts as a JSON string format.
-     * Such as: `[{"title":"Title 1","message":"description..."},{"title":"Title 2","message":"description..."}]` */
-    data?: any[any];
     /** Self-defined class name for body*/
     schemeBody?: string;
     /** Self-defined class name for header */
     schemeHeader?: string;
     /** Set the color of the close button */
     closeBtnColor?: string;
+    /** Disable the close button. */
+    closeDisabled?: boolean;
     /** -- */
     id?: string;
+    onClose?: (e: any, data: any[]) => void;
 };
 declare const Toast: (props: ToastProps) => JSX.Element;
 export default Toast;

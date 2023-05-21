@@ -9,6 +9,7 @@
   bottom: 0;
   z-index: var(--bs-toast-zindex);
   pointer-events: none;
+  transition: 0.1s ease-in-out;
 }
 .toaster__container--bottom-left {
   left: 15px;
@@ -72,15 +73,24 @@
   transition: all 0.25s;
   pointer-events: auto;
 }
-.toast-container .btn-close:focus {
+.toast-container [data-close] {
+  background: none;
+}
+.toast-container [data-close]:focus {
   box-shadow: none;
 }
-.toast-container .btn-close svg {
+.toast-container [data-close] svg {
   vertical-align: top;
 }
-.toast-container .btn-close:hover svg path {
+.toast-container [data-close] svg path {
+  transition: 0.3s ease-in-out;
+}
+.toast-container [data-close]:hover svg path {
   fill: #f00;
 }
-.toast-container.hide {
+.toast-container.hide-start {
   opacity: 0;
+}
+.toast-container.hide-end {
+  display: none;
 }

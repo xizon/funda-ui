@@ -35,7 +35,7 @@ type ModalDialogProps = {
     closeBtnLabel?: string | React.ReactNode;
     /** set submit button */
     submitBtnClassName?: string;
-    submitBtnLabel?: string |React.ReactNode;
+    submitBtnLabel?: string | React.ReactNode;
     /** Automatically open the component, you can use it with the `autoClose` property at the same time */
     autoOpen?: boolean;
     /** Specify auto-close time. This function is not enabled when this value is false. If the value is 2000, it will automatically close after 2 seconds. */
@@ -44,7 +44,8 @@ type ModalDialogProps = {
     maskDisabled?: boolean;
     /** Disable mask to close the window */
     closeOnlyBtn?: boolean;
-
+    /** Disable the close button. */
+    closeDisabled?: boolean;
     /** -- */
     id?: string;
     children: React.ReactNode;
@@ -72,6 +73,7 @@ const ModalDialog = (props: ModalDialogProps) => {
         autoClose,
         maskDisabled,
         closeOnlyBtn,
+        closeDisabled,
         onLoad,
         onOpen,
         onClose,
@@ -85,22 +87,22 @@ const ModalDialog = (props: ModalDialogProps) => {
     const modalRef = useRef<any>(null);
     const triggerRef = useRef<any>(null);
     const idRes = id || uniqueID;
-    
+
     const [winShow, setWinShow] = useState<boolean>(false);
 
 
     function handleCloseWin(e: any) {
-        if ( typeof undefined !== 'undefined' && e !== null )  e.preventDefault();
+        if (typeof undefined !== 'undefined' && e !== null) e.preventDefault();
 
         closeAction();
 
         //
-        onClose?.(e);            
+        onClose?.(e);
     }
 
 
     function handleOpenWin(e: any) {
-        if ( typeof undefined !== 'undefined' && e !== null )  e.preventDefault();
+        if (typeof undefined !== 'undefined' && e !== null) e.preventDefault();
 
         openAction();
 
@@ -110,7 +112,7 @@ const ModalDialog = (props: ModalDialogProps) => {
                 handleCloseWin(e);
             }
         };
-        onOpen?.(e, callback(e));  
+        onOpen?.(e, callback(e));
     }
 
     function closeAction() {
@@ -123,31 +125,31 @@ const ModalDialog = (props: ModalDialogProps) => {
         //------------------------------------------
         const $mask: HTMLElement | null = document.querySelector(`#mask-${idRes} > .modal-backdrop`);
         setWinShow(false);
-        if ( $mask !== null ) $mask.classList.remove('show');
+        if ($mask !== null) $mask.classList.remove('show');
 
-        setTimeout( () => {
+        setTimeout(() => {
             modalRef.current.style.display = 'none';
-            if ( $mask !== null ) $mask.style.display = 'none';
+            if ($mask !== null) $mask.style.display = 'none';
         }, 300);
-        
+
 
 
         // Unlocks the page
         //------------------------------------------
-        enableBodyScroll( document.querySelector( 'body' ) );
+        enableBodyScroll(document.querySelector('body'));
 
-        
+
         // Cancels a timeout previously established by calling setTimeout().
         //------------------------------------------
-        clearTimeout( window.setCloseModalDialog );	
+        clearTimeout(window.setCloseModalDialog);
 
-        
+
     }
 
 
     function openAction() {
 
-  
+
         // Video PopUp Interaction
         //------------------------------------------
         const hasVideo = modalRef.current.classList.contains('is-video') ? true : false;
@@ -156,9 +158,9 @@ const ModalDialog = (props: ModalDialogProps) => {
 
             const windowWidth = window.innerWidth;
             const windowHeight = window.innerHeight;
-            const $videoWrapper =  modalRef.current.querySelector('.modal-dialog__video');
+            const $videoWrapper = modalRef.current.querySelector('.modal-dialog__video');
             const isIframe = $videoWrapper.getElementsByTagName('iframe').length > 0 ? true : false;
-            let $video: any = isIframe ? $videoWrapper.getElementsByTagName('iframe')[0] :$videoWrapper.getElementsByTagName('video')[0];
+            let $video: any = isIframe ? $videoWrapper.getElementsByTagName('iframe')[0] : $videoWrapper.getElementsByTagName('video')[0];
 
             //
             const setVideo = function (currentWidth: number, currentHeight: number, obj: any) {
@@ -185,8 +187,8 @@ const ModalDialog = (props: ModalDialogProps) => {
                     newH = currentHeight * (newW / currentWidth);
                 }
 
-                obj.height =  newH + 'px';
-                obj.width =  newW + 'px';
+                obj.height = newH + 'px';
+                obj.width = newW + 'px';
 
                 //
                 modalRef.current.querySelector('.modal-dialog').style.width = newW + 'px';
@@ -196,9 +198,9 @@ const ModalDialog = (props: ModalDialogProps) => {
 
             if (isIframe) {
                 let _w = parseFloat(modalRef.current.querySelector('.modal-dialog').style.maxWidth);
-                if ( isNaN(_w) ) _w = 500;
+                if (isNaN(_w)) _w = 500;
                 const _h = _w * 0.5625;
-                
+
                 setVideo(_w, _h, $video);
             } else {
 
@@ -220,12 +222,12 @@ const ModalDialog = (props: ModalDialogProps) => {
         //------------------------------------------
         const $mask: HTMLElement | null = document.querySelector(`#mask-${idRes} > .modal-backdrop`);
         modalRef.current.style.display = 'block';
-        if ( $mask !== null ) $mask.style.display = 'block';
-        setTimeout( () => {
+        if ($mask !== null) $mask.style.display = 'block';
+        setTimeout(() => {
             setWinShow(true);
-            if ( $mask !== null ) $mask.classList.add('show');
+            if ($mask !== null) $mask.classList.add('show');
         }, 0);
-        
+
 
 
         // Locks the page
@@ -234,25 +236,25 @@ const ModalDialog = (props: ModalDialogProps) => {
         // Get a target element that you want to persist scrolling for (such as a modal/lightbox/flyout/nav).
         // Specifically, the target element is the one we would like to allow scroll on (NOT a parent of that element).
         // This is also the element to apply the CSS '-webkit-overflow-scrolling: touch;' if desired.
-        disableBodyScroll( document.querySelector( 'body' ) );
+        disableBodyScroll(document.querySelector('body'));
 
 
-        
+
         //auto close
         //------------------------------------------
-        if ( autoClose && !isNaN( autoClose as number ) ) {
-            window.setCloseModalDialog = setTimeout( function() {
+        if (autoClose && !isNaN(autoClose as number)) {
+            window.setCloseModalDialog = setTimeout(function () {
                 closeAction();
 
                 //
-                onClose?.(null);   
-            }, autoClose as number );
+                onClose?.(null);
+            }, autoClose as number);
         }
-        
+
     }
 
 
- 
+
 
     //Returns the dimensions of a video asynchrounsly.
     function getVideoDimensions(url: string) {
@@ -277,54 +279,53 @@ const ModalDialog = (props: ModalDialogProps) => {
         });
     }
 
-    
+
     useEffect(() => {
 
 
         // Move HTML templates to tag end body </body>
+        // render() don't use "Fragment", in order to avoid error "Failed to execute 'insertBefore' on 'Node'"
         // prevent "transform", "filter", "perspective" attribute destruction fixed viewport orientation
         //------------------------------------------
         document.body.appendChild(modalRef.current);
-        
 
-
-        [].slice.call(modalRef.current.querySelectorAll('[data-close]')).forEach( (node: HTMLElement) => {
+        [].slice.call(modalRef.current.querySelectorAll('[data-close]')).forEach((node: HTMLElement) => {
             node.addEventListener('pointerdown', (e: any) => {
                 handleCloseWin(e);
             });
         });
-        [].slice.call(modalRef.current.querySelectorAll('[data-submit]')).forEach( (node: HTMLElement) => {
+        [].slice.call(modalRef.current.querySelectorAll('[data-submit]')).forEach((node: HTMLElement) => {
             node.addEventListener('pointerdown', (e: any) => {
                 const callback = (e: any) => {
                     return () => {
                         handleCloseWin(e);
                     }
                 };
-                onSubmit?.(e, callback(e));        
+                onSubmit?.(e, callback(e));
             });
         });
 
         // add mask
         //------------------------------------------
-        if ( document.getElementById(`mask-${idRes}`) === null && !maskDisabled ) {
+        if (document.getElementById(`mask-${idRes}`) === null && !maskDisabled) {
             const maskDiv = document.createElement('div');
             maskDiv.id = `mask-${idRes}`;
             maskDiv.innerHTML = `<div class="${winShow ? 'modal-backdrop fade show' : 'modal-backdrop fade'}" style="display:none"></div>`;
-            document.body.appendChild(maskDiv);   
+            document.body.appendChild(maskDiv);
 
-            if ( !closeOnlyBtn ) {
+            if (!closeOnlyBtn) {
                 const $mask: HTMLElement | null = document.querySelector(`#mask-${idRes} > .modal-backdrop`);
-                if ( $mask !== null ) $mask.addEventListener('pointerdown', (e: any) => {
-                    handleCloseWin(e); 
+                if ($mask !== null) $mask.addEventListener('pointerdown', (e: any) => {
+                    handleCloseWin(e);
                 });
             }
 
         }
-        
-        
+
+
         // auto open
         //------------------------------------------
-        if ( autoOpen ) {
+        if (autoOpen) {
             openAction();
 
 
@@ -334,7 +335,7 @@ const ModalDialog = (props: ModalDialogProps) => {
                     handleCloseWin(e);
                 }
             };
-            onOpen?.(null, callback(null));     
+            onOpen?.(null, callback(null));
         }
 
 
@@ -342,44 +343,49 @@ const ModalDialog = (props: ModalDialogProps) => {
         //------------------------------------------
         onLoad?.(() => handleOpenWin, () => handleCloseWin);
 
-        
+
         // Remove the global list of events, especially as scroll and interval.
         //--------------
         return () => {
-            clearAllBodyScrollLocks();  
+            clearAllBodyScrollLocks();
 
             // Cancels a timeout previously established by calling setTimeout().
-            clearTimeout( window.setCloseModalDialog );	
+            clearTimeout(window.setCloseModalDialog);
 
             // Remove all masks and modals
             Array.prototype.forEach.call(document.querySelectorAll('.modal-backdrop, .modal'), (node) => {
-                if ( node.classList.contains('modal') ) {
+                if (node.classList.contains('modal')) {
                     node.remove();
                 } else {
                     node.parentElement.remove();
                 }
-                
+
             });
 
 
         }
 
     }, []);
-    
+
     return (
-        <>
+        <div>
             {triggerContent ? <>
                 <div className={triggerClassName ? triggerClassName : 'd-inline w-auto'} ref={triggerRef} onClick={handleOpenWin}>{triggerContent}</div>
             </> : null}
-            
-             {/* Modal */}
-            <div ref={modalRef} className={enableVideo ? `modal fade is-video ${winShow ? 'show' : ''}` : `modal fade ${winShow ? 'show' : ''}`} id="exampleModal" tabIndex={-1} aria-hidden="true" style={{pointerEvents: 'none'}}>
-                <div className="modal-dialog modal-dialog-centered modal-dialog-scrollable" style={maxWidth ? {maxWidth: `${maxWidth}`} : {}}>
+
+            {/* Modal */}
+            <div ref={modalRef} className={enableVideo ? `modal fade is-video ${winShow ? 'show' : ''}` : `modal fade ${winShow ? 'show' : ''}`} id="exampleModal" tabIndex={-1} aria-hidden="true" style={{ pointerEvents: 'none' }}>
+                <div className="modal-dialog modal-dialog-centered modal-dialog-scrollable" style={maxWidth ? { maxWidth: `${maxWidth}` } : {}}>
                     <div className={enableVideo ? 'modal-content bg-transparent shadow-none border-0' : 'modal-content'}>
-                        <div className={enableVideo ? 'modal-header border-0 px-0' : 'modal-header'}>
-                            <h5 className="modal-title">{heading || ''}</h5>
-                            <button type="button" className={enableVideo ? 'btn-close btn-close-white' : 'btn-close'} data-close="1"></button>
-                        </div>
+                        {(!heading || heading === '') && closeDisabled ? null : <>
+
+                            <div className={enableVideo ? 'modal-header border-0 px-0' : 'modal-header'}>
+                                <h5 className="modal-title">{heading || ''}</h5>
+                                {!closeDisabled ? <button type="button" className={enableVideo ? 'btn-close btn-close-white' : 'btn-close'} data-close="1"></button> : null}
+
+                            </div>
+                        </>}
+
                         <div className={enableVideo ? 'modal-body m-0 p-0' : 'modal-body'}>
                             {/*<!-- ////////  content  begin //////// -->*/}
                             {enableVideo ? <>
@@ -394,17 +400,18 @@ const ModalDialog = (props: ModalDialogProps) => {
 
                         {closeBtnLabel || submitBtnLabel ? <>
                             <div className="modal-footer">
-                                {closeBtnLabel ? <button data-close="1" type="button" className={closeBtnClassName ? closeBtnClassName : 'btn btn-secondary'}>{closeBtnLabel}</button> : null}
+                                {!closeDisabled ? <>{closeBtnLabel ? <button data-close="1" type="button" className={closeBtnClassName ? closeBtnClassName : 'btn btn-secondary'}>{closeBtnLabel}</button> : null}</> : null}
+
                                 {submitBtnLabel ? <button data-submit="1" type="button" className={submitBtnClassName ? submitBtnClassName : 'btn btn-primary'}>{submitBtnLabel}</button> : null}
-                            </div> 
-                        </> : null }
+                            </div>
+                        </> : null}
 
                     </div>
                 </div>
-            </div> 
+            </div>
 
-   
-        </>
+
+        </div>
     )
 };
 

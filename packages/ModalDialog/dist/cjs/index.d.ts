@@ -35,6 +35,8 @@ declare type ModalDialogProps = {
     maskDisabled?: boolean;
     /** Disable mask to close the window */
     closeOnlyBtn?: boolean;
+    /** Disable the close button. */
+    closeDisabled?: boolean;
     /** -- */
     id?: string;
     children: React.ReactNode;
