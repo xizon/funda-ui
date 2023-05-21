@@ -10,7 +10,7 @@ declare type ToastProps = {
     data: any[any];
     /** Use asynchronous triggering */
     async?: boolean;
-    /** The direction of the toaster. */
+    /** The direction of the toast. */
     direction?: string;
     /** Set an automatic closing time, multiple items will be accumulated in order.
      * Amount of time measured in milliseconds. If false or without this attribute, Auto-Close will be disabled.

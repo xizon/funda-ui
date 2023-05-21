@@ -1,11 +1,11 @@
-# Toaster
+# Toast
 
 
 ## API
 
-### Toaster
+### Toast
 ```js
-import Toaster from 'react-pure-bootstrap/Toaster';
+import Toast from 'react-pure-bootstrap/Toast';
 ```
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |
@@ -16,7 +16,7 @@ import Toaster from 'react-pure-bootstrap/Toaster';
 | `schemeHeader` | string  | - | Self-defined class name for header, such as: `text-white bg-dark` |
 | `closeBtnColor` | string  | - | Set the color of the close button. |
 | `closeDisabled` | boolean  | false | Disable the close button. |
-| `direction` | `bottom-left` \| `bottom-center` \| `bottom-right` \| `top-left` \| `top-center` \| `top-right` \| `vertical-center`  | bottom-center | The direction of the toaster |
+| `direction` | `bottom-left` \| `bottom-center` \| `bottom-right` \| `top-left` \| `top-center` \| `top-right` \| `vertical-center`  | bottom-center | The direction of the toast |
 | `autoCloseTime` | boolean \| number  | false | Set an automatic closing time, multiple items will be accumulated in order. Amount of time measured in milliseconds. If false or without this attribute, Auto-Close will be disabled. |
 | `autoCloseReverse` | boolean  | false | Starts from the top position of the Array when we use the automatic close. |
 | `onClose` | function  | - | Call a function when the modal is opened. It returns two callback values, one is the current element and the other is the current value. |
@@ -36,17 +36,17 @@ Array configuration properties of the `data`:
 
 ```js
 import React from "react";
-import Toaster from 'react-pure-bootstrap/Toaster';
+import Toast from 'react-pure-bootstrap/Toast';
 
 // component styles
-import 'react-pure-bootstrap/Toaster/index.css';
+import 'react-pure-bootstrap/Toast/index.css';
 
 export default () => {
 
     return (
         <>
           
-        <Toaster 
+        <Toast 
             direction="bottom-right" 
             autoCloseTime={3000} 
             data={[
@@ -57,7 +57,7 @@ export default () => {
             ]} 
         />
                 
-        <Toaster 
+        <Toast 
             direction="bottom-center" 
             autoCloseTime={false} data={[
                 { title: false, note: "11 mins ago", message: <><div style={{fontSize:"14px"}}>This is <span style={{color:"orange"}}>orange</span> text <p>...</p></div></> }
@@ -65,7 +65,7 @@ export default () => {
         />	
 
 
-        <Toaster 
+        <Toast 
             direction="vertical-center" 
             schemeHeader="text-white bg-dark" 
             closeBtnColor="#fff"  
@@ -75,7 +75,7 @@ export default () => {
         />	
 
 
-       <Toaster 
+       <Toast 
             direction="bottom-center" 
             schemeBody="align-items-center text-white bg-dark border-0" 
             closeBtnColor="#fff" 
@@ -99,10 +99,10 @@ Use asynchronous toast information to dynamically display notifications
 
 ```js
 import React, { useState } from "react";
-import Toaster from 'react-pure-bootstrap/Toaster';
+import Toast from 'react-pure-bootstrap/Toast';
 
 // component styles
-import 'react-pure-bootstrap/Toaster/index.css';
+import 'react-pure-bootstrap/Toast/index.css';
 
 export default () => {
 
@@ -122,7 +122,7 @@ export default () => {
         <>
 
             <a href="#" onClick={handleClick}>Click here to display Toast information dynamically</a>
-            <Toaster 
+            <Toast 
                 autoCloseTime={3000} 
                 direction="bottom-center" 
                 schemeBody="align-items-center text-white bg-dark border-0" 

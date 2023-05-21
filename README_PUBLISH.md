@@ -48,7 +48,7 @@ Here is a table of the components and their status.
 | [Table Sorter ❏](packages/TableSorter/README.md) |  |  |  |  | 
 | [Tabs ✅](packages/Tabs/README.md) |  |  |  |  | 
 | [Timeline ❏](packages/Timeline/README.md) |  |  |  |  | 
-| [Toaster ✅](packages/Toaster/README.md) |  |  |  |  | 
+| [Toast ✅](packages/Toast/README.md) |  |  |  |  | 
 | [Tooltip ❏](packages/Tooltip/README.md) |  |  |  |  | 
 | [Digital Clock ✅](packages/DigitalClock/README.md) |  |  |  |  | 
 

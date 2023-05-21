@@ -1,7 +1,7 @@
 /* ======================================================
-   <!-- Toaster -->
+   <!-- Toast -->
 /* ====================================================== */
-.toaster__container {
+.toasts__wrapper {
   --bs-toast-zindex: 1090;
   width: 350px;
   position: fixed;
@@ -11,47 +11,46 @@
   pointer-events: none;
   transition: 0.1s ease-in-out;
 }
-.toaster__container--bottom-left {
+.toasts__wrapper--bottom-left {
   left: 15px;
 }
-.toaster__container--bottom-right {
+.toasts__wrapper--bottom-right {
   left: auto;
   right: 15px;
 }
-.toaster__container--bottom-center {
+.toasts__wrapper--bottom-center {
   left: 50%;
   transform: translateX(-50%);
 }
-.toaster__container--top-left {
+.toasts__wrapper--top-left {
   left: 15px;
   bottom: auto;
   top: 35px;
 }
-.toaster__container--top-right {
+.toasts__wrapper--top-right {
   left: auto;
   right: 15px;
   top: 35px;
 }
-.toaster__container--top-center {
+.toasts__wrapper--top-center {
   left: 50%;
   transform: translateX(-50%);
   top: 35px;
 }
-.toaster__container--vertical-center {
+.toasts__wrapper--vertical-center {
   left: 50%;
   transform: translate(-50%, -50%);
   top: 50%;
   margin-top: 5%;
 }
-
-.toaster {
+.toasts__wrapper .toasts {
   position: relative;
   width: 100%;
   bottom: 15px;
   display: flex;
   flex-flow: column-reverse nowrap;
 }
-.toaster::before {
+.toasts__wrapper .toasts::before {
   content: "";
   top: -80px;
   bottom: 0;
@@ -61,7 +60,7 @@
   background-color: transparent;
   pointer-events: none;
 }
-.toaster:hover .toast-container {
+.toasts__wrapper .toasts:hover .toast-container {
   transform: perspective(100px) translateZ(0) !important;
 }
 

@@ -15,7 +15,7 @@ type ToastProps = {
     data: any[any];
     /** Use asynchronous triggering */
     async?: boolean;
-    /** The direction of the toaster. */
+    /** The direction of the toast. */
     direction?: string;
     /** Set an automatic closing time, multiple items will be accumulated in order. 
      * Amount of time measured in milliseconds. If false or without this attribute, Auto-Close will be disabled.
@@ -204,7 +204,7 @@ const Toast = (props: ToastProps) => {
             clearTimeout(window.setCloseToast);
 
             // Remove all toasts
-            const _el = document.querySelector(`#toaster-${idRes}`);
+            const _el = document.querySelector(`#toast-${idRes}`);
             if ( _el !== null ) _el.remove();
 
 
@@ -215,8 +215,8 @@ const Toast = (props: ToastProps) => {
     return (
         <div>
 
-            <div id={`toaster-${idRes}`} data-async={async ? async : false} className={`toaster__container toaster__container--${direction ? direction : 'bottom-center'}`} ref={rootRef}>
-                <div className="toaster">
+            <div id={`toasts__wrapper-${idRes}`} data-async={async ? async : false} className={`toasts__wrapper toasts__wrapper--${direction ? direction : 'bottom-center'}`} ref={rootRef}>
+                <div className="toasts">
                     {data.map((item, i) => {
                         return <Item
                             depth={depth - i}

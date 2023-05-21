@@ -1,9 +1,9 @@
 
 /* ======================================================
-   <!-- Toaster -->
+   <!-- Toast -->
 /* ====================================================== */
 
-.toaster__container {
+.toasts__wrapper {
     --bs-toast-zindex: 1090;
     width: 350px;
     position: fixed;
@@ -52,32 +52,32 @@
         margin-top: 5%;
     }  
 
-}
-  
-.toaster {
-    position: relative;
-    width: 100%;
-    bottom: 15px;
-    display: flex;
-    flex-flow: column-reverse nowrap;
+    .toasts {
+        position: relative;
+        width: 100%;
+        bottom: 15px;
+        display: flex;
+        flex-flow: column-reverse nowrap;
 
 
-    &::before {
-        content: '';
-        top: -80px;
-        bottom: 0;
-        left: -8px;
-        right: -8px;
-        position: absolute;
-        background-color: transparent;
-        pointer-events: none;
-    }
+        &::before {
+            content: '';
+            top: -80px;
+            bottom: 0;
+            left: -8px;
+            right: -8px;
+            position: absolute;
+            background-color: transparent;
+            pointer-events: none;
+        }
 
-    &:hover {
-        .toast-container {
-            transform: perspective(100px) translateZ(0) !important;
+        &:hover {
+            .toast-container {
+                transform: perspective(100px) translateZ(0) !important;
+            }
         }
     }
+
 }
   
 /* Bootstrap toast here */

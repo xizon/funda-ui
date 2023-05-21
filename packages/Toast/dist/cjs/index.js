@@ -301,17 +301,17 @@ var Toast = function Toast(props) {
       clearTimeout(window.setCloseToast);
 
       // Remove all toasts
-      var _el = document.querySelector("#toaster-".concat(idRes));
+      var _el = document.querySelector("#toast-".concat(idRes));
       if (_el !== null) _el.remove();
     };
   }, [data]);
   return /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
-    id: "toaster-".concat(idRes),
+    id: "toasts__wrapper-".concat(idRes),
     "data-async": async ? async : false,
-    className: "toaster__container toaster__container--".concat(direction ? direction : 'bottom-center'),
+    className: "toasts__wrapper toasts__wrapper--".concat(direction ? direction : 'bottom-center'),
     ref: rootRef
   }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
-    className: "toaster"
+    className: "toasts"
   }, data.map(function (item, i) {
     return /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement(src_Item, {
       depth: depth - i,
