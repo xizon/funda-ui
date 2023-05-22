@@ -366,7 +366,8 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 //Destroys body scroll locking
 
 var ModalDialog = function ModalDialog(props) {
-  var maxWidth = props.maxWidth,
+  var show = props.show,
+    maxWidth = props.maxWidth,
     enableVideo = props.enableVideo,
     heading = props.heading,
     triggerClassName = props.triggerClassName,
@@ -375,7 +376,6 @@ var ModalDialog = function ModalDialog(props) {
     closeBtnLabel = props.closeBtnLabel,
     submitBtnClassName = props.submitBtnClassName,
     submitBtnLabel = props.submitBtnLabel,
-    autoOpen = props.autoOpen,
     autoClose = props.autoClose,
     maskDisabled = props.maskDisabled,
     closeOnlyBtn = props.closeOnlyBtn,
@@ -577,9 +577,9 @@ var ModalDialog = function ModalDialog(props) {
       }
     }
 
-    // auto open
+    // show
     //------------------------------------------
-    if (autoOpen) {
+    if (show) {
       openAction();
 
       //
@@ -616,7 +616,7 @@ var ModalDialog = function ModalDialog(props) {
         }
       });
     };
-  }, []);
+  }, [show]);
   return /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", null, triggerContent ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
     className: triggerClassName ? triggerClassName : 'd-inline w-auto',
     ref: triggerRef,

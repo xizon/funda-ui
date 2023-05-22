@@ -11,6 +11,8 @@ declare global {
     }
 }
 declare type ModalDialogProps = {
+    /** Whether the modal dialog is visible or not, you can use it with the `autoClose` property at the same time */
+    show: boolean;
     /** Custom modal max-width whick need a unit string. */
     maxWidth?: number | string;
     /** Adapt the video to the window */
@@ -27,8 +29,6 @@ declare type ModalDialogProps = {
     /** set submit button */
     submitBtnClassName?: string;
     submitBtnLabel?: string | React.ReactNode;
-    /** Automatically open the component, you can use it with the `autoClose` property at the same time */
-    autoOpen?: boolean;
     /** Specify auto-close time. This function is not enabled when this value is false. If the value is 2000, it will automatically close after 2 seconds. */
     autoClose?: number | boolean;
     /** Disable mask */

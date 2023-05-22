@@ -9,6 +9,8 @@ import ModalDialog from 'react-pure-bootstrap/ModalDialog';
 ```
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |
+| `show` | boolean  | false | **(required)** Whether the modal dialog is visible or not, you can use it with the `autoClose` property at the same time |
+| `autoClose` | number \| boolean  | false | Specify auto-close time. This function is not enabled when this value is false. If the value is `2000`, it will automatically close after 2 seconds. |
 | `heading` | ReactNode  | - | Set a window title |
 | `maskDisabled` | boolean  | false | Disable mask |
 | `maxWidth` | number \| string  | false | Custom modal max-width whick need a unit string. Such as: `200px` |
@@ -16,8 +18,6 @@ import ModalDialog from 'react-pure-bootstrap/ModalDialog';
 | `closeDisabled` | boolean  | false | Disable the close button. |
 | `triggerClassName` | string  | - | Specify a class for your trigger |
 | `triggerContent` | ReactNode  | - | Set a piece of text or HTML code for the trigger |
-| `autoClose` | number \| boolean  | false | Specify auto-close time. This function is not enabled when this value is false. If the value is `2000`, it will automatically close after 2 seconds. |
-| `autoOpen` | boolean  | false | Automatically open the component, you can use it with the `autoClose` property at the same time |
 | `closeBtnClassName` | string  | - | Specify a class for close button |
 | `closeBtnLabel` | string \| ReactNode  | - | Set a piece of text or HTML code for the close button |
 | `submitBtnClassName` | string  | - | Specify a class for submit button |
@@ -45,6 +45,7 @@ export default () => {
             <p>Allows user to interact with it before they can go back to using the parent application.</p>
             {/* ================================================================== */}
             <ModalDialog
+                show={false}
                 heading="Title Here"
                 triggerClassName="d-inline w-auto"
                 triggerContent={<>
@@ -74,11 +75,6 @@ export default () => {
                     const myAppBtn = document.querySelector('#app-mybtn');
                     myAppBtn?.replaceWith(myAppBtn?.cloneNode(true));   
 
-                    // Modifying React State can ensure that the window content is updated in real time
-                    // setTimeout( ()=> {
-                    //     setState(...);
-                    // }, 350);
-
                 }}
                 onSubmit={(e, closewin) => {
                     console.log('submit: ', e.target);
@@ -103,6 +99,7 @@ export default () => {
             <p>Use the following HTML code to fire video.</p>
             {/* ================================================================== */}
             <ModalDialog
+                show={false}
                 enableVideo={true}
                 maxWidth="1200px"
                 triggerClassName="d-inline w-auto"
@@ -115,6 +112,7 @@ export default () => {
             
 
             <ModalDialog
+                show={false}
                 enableVideo={true}
                 maxWidth="1200px"
                 triggerClassName="d-inline w-auto"
@@ -129,7 +127,7 @@ export default () => {
             <h3>Automatically open&close the pop-up window</h3>
             {/* ================================================================== */}
             <ModalDialog
-                autoOpen={true}
+                show={true}
                 autoClose={3000}
                 triggerClassName="d-inline w-auto"
                 triggerContent={<>
@@ -145,14 +143,11 @@ export default () => {
             <h3>Modal that cannot be closed</h3>
             {/* ================================================================== */}
             <ModalDialog
-                autoOpen={true}
+                show={true}
                 closeOnlyBtn
                 closeDisabled
             >
                 <h4>This is a modal that cannot be closed</h4>
-                <p>...</p>
-                <p>...</p>
-                <p>...</p>
             </ModalDialog>
 
 
@@ -193,8 +188,7 @@ class DataService {
 export default () => {
 
     const timer = useRef<any>(null); // we can save timer in useRef and pass it to child
-    const [modalOpenFunc, setModalOpenFunc] = useState<any>(null);
-    const [modalCloseFunc, setModalCloseFunc] = useState<any>(null);
+    const [show, setShow] = useState<boolean>(false);
     const [data, setData] = useState<any[]>([]);
     const [fetchOk, setFetchOk] = useState<boolean>(false);
     
@@ -212,11 +206,11 @@ export default () => {
         e.preventDefault();
         
         fetchData();
-        if (modalOpenFunc) modalOpenFunc();
+        setShow(true);
 
         // auto close
         timer.current = setTimeout(() => {
-            if (modalCloseFunc) modalCloseFunc();
+            setShow(false);
         }, 3000);
 
     }
@@ -233,16 +227,12 @@ export default () => {
     return (
         <>
 
-            <a href="#" onClick={handleClick}>click here to use external scripts to trigger Open and Close events</a>
+            <a href="#" onClick={handleClick}>click here to open</a>
             <ModalDialog
+                show={show}
                 heading="Choose a block"
                 triggerClassName=""
                 triggerContent=""
-                onLoad={(openFunc, closeFunc) => {
-                    // Using exposed OPEN and CLOSE methods
-                    setModalOpenFunc(openFunc);
-                    setModalCloseFunc(closeFunc);
-                }}
                 onOpen={(e, closewin) => {
 
                     // Use "setTimeout()" to ensure asynchronous data exists
@@ -255,6 +245,7 @@ export default () => {
 
                                 // do something
                                 console.log(e.currentTarget.dataset.name);
+                                closewin();
 
                             });
                         });
@@ -274,6 +265,7 @@ export default () => {
                     // Modifying React State can ensure that the window content is updated in real time
                     setTimeout(() => {
                         setData([]);
+                        setShow(false);
                     }, 350);
 
 
@@ -297,3 +289,41 @@ export default () => {
 }
 ```
 
+
+
+## Using exposed OPEN and CLOSE methods
+
+
+```js
+import React, { useState } from "react";
+import ModalDialog from 'react-pure-bootstrap/ModalDialog';
+
+export default () => {
+
+    const [modalOpenFunc, setModalOpenFunc] = useState<any>(null);
+
+    function handleClick(e: any) {
+        e.preventDefault();
+        if ( modalOpenFunc ) modalOpenFunc();
+    }
+
+
+    return (
+        <>
+
+            <a href="#" onClick={handleClick}>click here to use external scripts to trigger Open and Close events</a>
+            <ModalDialog
+                show={false}
+                onLoad={(openFunc, closeFunc) => {
+                    setModalOpenFunc(openFunc);
+                }}
+            >
+                <h4>This is a modal</h4>
+            </ModalDialog>
+
+
+
+        </>
+    );
+}
+```

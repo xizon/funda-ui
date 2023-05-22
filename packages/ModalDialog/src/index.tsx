@@ -20,6 +20,8 @@ declare global {
 
 
 type ModalDialogProps = {
+    /** Whether the modal dialog is visible or not, you can use it with the `autoClose` property at the same time */
+    show: boolean;
     /** Custom modal max-width whick need a unit string. */
     maxWidth?: number | string;
     /** Adapt the video to the window */
@@ -36,8 +38,6 @@ type ModalDialogProps = {
     /** set submit button */
     submitBtnClassName?: string;
     submitBtnLabel?: string | React.ReactNode;
-    /** Automatically open the component, you can use it with the `autoClose` property at the same time */
-    autoOpen?: boolean;
     /** Specify auto-close time. This function is not enabled when this value is false. If the value is 2000, it will automatically close after 2 seconds. */
     autoClose?: number | boolean;
     /** Disable mask */
@@ -60,6 +60,7 @@ type ModalDialogProps = {
 
 const ModalDialog = (props: ModalDialogProps) => {
     const {
+        show,
         maxWidth,
         enableVideo,
         heading,
@@ -69,7 +70,6 @@ const ModalDialog = (props: ModalDialogProps) => {
         closeBtnLabel,
         submitBtnClassName,
         submitBtnLabel,
-        autoOpen,
         autoClose,
         maskDisabled,
         closeOnlyBtn,
@@ -282,7 +282,7 @@ const ModalDialog = (props: ModalDialogProps) => {
 
     useEffect(() => {
 
-
+ 
         // Move HTML templates to tag end body </body>
         // render() don't use "Fragment", in order to avoid error "Failed to execute 'insertBefore' on 'Node'"
         // prevent "transform", "filter", "perspective" attribute destruction fixed viewport orientation
@@ -323,9 +323,9 @@ const ModalDialog = (props: ModalDialogProps) => {
         }
 
 
-        // auto open
+        // show
         //------------------------------------------
-        if (autoOpen) {
+        if (show) {
             openAction();
 
 
@@ -362,10 +362,9 @@ const ModalDialog = (props: ModalDialogProps) => {
 
             });
 
-
         }
 
-    }, []);
+    }, [show]);
 
     return (
         <div>

@@ -9,7 +9,7 @@ import Toast from 'react-pure-bootstrap/Toast';
 ```
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |
-| `data` | array | - | **(required)** Specify data of toasts as a JSON string format. Such as: <br />`[{"title":"Title 1","note":"","message":"description..."},{"title":"Title 2","note":"","message":"description..."}]` <br /> <blockquote>Note: If the data is asynchronous, the attribute `async` needs to be set to `true`</blockquote> |
+| `data` | array | - | **(required)** Specify data of toasts as a JSON string format. Such as: <br />`[{"title":"Title 1","note":"","message":"description..."},{"title":"Title 2","note":"","message":"description..."}]`. <br />If its value is an empty array `[]`, the Toast will not be displayed. <br /> <blockquote>Note: If the data is asynchronous, the attribute `async` needs to be set to `true`</blockquote> |
 | `async` | boolean  | false | Use asynchronous triggering. |
 | `lock` | boolean  | false | You can not close pop-win when it is enabled. |
 | `schemeBody` | string  | - | Self-defined class name for body, such as: `align-items-center text-white bg-primary border-0` |
