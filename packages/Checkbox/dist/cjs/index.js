@@ -125,10 +125,10 @@ var Checkbox = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(fu
   var uniqueID = (0,react__WEBPACK_IMPORTED_MODULE_0__.useId)();
   var idRes = id || uniqueID;
   var rootRef = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(null);
-  var _useState = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(checked ? true : false),
+  var _useState = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(null),
     _useState2 = _slicedToArray(_useState, 2),
-    isChecked = _useState2[0],
-    setIsChecked = _useState2[1];
+    val = _useState2[0],
+    setVal = _useState2[1];
   function handleFocus(event) {
     rootRef.current.classList.add('focus');
 
@@ -136,7 +136,8 @@ var Checkbox = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(fu
     onFocus === null || onFocus === void 0 ? void 0 : onFocus(event);
   }
   function handleChange(event) {
-    var val = event.target.value;
+    var _val = event.target.checked;
+    setVal(_val);
 
     //----
     //remove focus style
@@ -144,9 +145,8 @@ var Checkbox = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(fu
 
     //
     if (typeof onChange === 'function') {
-      onChange(event, !isChecked ? val : '');
+      onChange(event, _val);
     }
-    setIsChecked(!isChecked);
   }
   function handleBlur(event) {
     //----
@@ -156,12 +156,15 @@ var Checkbox = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(fu
     //
     onBlur === null || onBlur === void 0 ? void 0 : onBlur(event);
   }
+  (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(function () {
+    setVal(checked);
+  }, [checked]);
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
     className: wrapperClassName ? wrapperClassName : "mb-3 position-relative",
     ref: rootRef
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
     className: "form-check"
-  }, isChecked ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("input", _extends({
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("input", _extends({
     tabIndex: tabIndex || 0,
     type: "checkbox",
     className: "form-check-input",
@@ -173,20 +176,8 @@ var Checkbox = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(fu
     onFocus: handleFocus,
     onBlur: handleBlur,
     defaultValue: value || '',
-    defaultChecked: true,
-    style: style
-  }, attributes)) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("input", _extends({
-    tabIndex: tabIndex || 0,
-    type: "checkbox",
-    className: "form-check-input",
-    id: idRes,
-    name: name,
-    disabled: disabled || null,
-    required: required || null,
-    onChange: handleChange,
-    onFocus: handleFocus,
-    onBlur: handleBlur,
-    defaultValue: value || '',
+    checked: val // component status will not change if defaultChecked is used
+    ,
     style: style
   }, attributes)), label ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("label", {
     htmlFor: idRes,

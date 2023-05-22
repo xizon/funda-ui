@@ -1,4 +1,4 @@
-import React, { useId, useRef } from 'react';
+import React, { useId, useRef, useState, useEffect } from 'react';
 
 declare module 'react' {
     interface ReactI18NextChildren<T> {
@@ -53,9 +53,9 @@ const Radio = (props: RadioProps) => {
     const uniqueID = useId();
     const idRes = id || uniqueID;
     const rootRef = useRef<any>(null);
-    
+    const [val, setVal] = useState<any>(null);
 
-
+  
     // Determine whether it is in JSON format
     function isJSON(str: any) {
 
@@ -102,7 +102,9 @@ const Radio = (props: RadioProps) => {
 
 
     function handleChange(event: any) {
-        const val = event.target.value;
+        const _val = event.target.value;
+
+        setVal(_val);
 
         //----
         //remove focus style
@@ -113,7 +115,7 @@ const Radio = (props: RadioProps) => {
      
         //
         if (typeof (onChange) === 'function') {
-            onChange(event, val);
+            onChange(event, _val);
         }
 
     }
@@ -132,64 +134,46 @@ const Radio = (props: RadioProps) => {
 
 
     // Get all options from option prop
-    const selectOptions = isJSON(options) ? JSON.parse(options) : {};
-    const optionKeys = Object.keys(selectOptions);
-    const optionValues = Object.values(selectOptions);
+    const selectOptions = isJSON(options) ? JSON.parse(options) : null;
+    const optionKeys = selectOptions === null ? [] : Object.keys(selectOptions);
+    const optionValues = selectOptions === null ? [] : Object.values(selectOptions).map((item: any) => item.toString() );
 
 
-    // Generate list of options
-    const defaultValIndex = value ? optionValues.indexOf(value) : false; //get index from default value
+
     const radioOptionsList = optionKeys.map((radioOption, index) => {
         const requiredVal = index === 0 ? required || null : null;
 
-        if (index === defaultValIndex) {
-            return <div key={index} className={inline ? `form-check form-check-inline` : `form-check`}>
-                    <input 
-                        tabIndex={tabIndex || 0}
-                        type="radio" 
-                        className="form-check-input"
-                        id={`field-${uniqueID}-${index}`}
-                        name={name} 
-                        value={optionValues[index] as string} 
-                        required={requiredVal} 
-                        disabled={disabled || null}
-                        onChange={handleChange}
-                        onFocus={handleFocus}
-                        onBlur={handleBlur}
-                        defaultChecked
-                        style={style}
-                        {...attributes}
-                    />
-                    <label className="form-check-label" htmlFor={`field-${uniqueID}-${index}`}>
-                        {radioOption}
-                    </label>
-                </div>;
-            
-        } else {
-            return <div key={index} className={inline ? `form-check form-check-inline` : `form-check`}>
-                    <input 
-                        tabIndex={tabIndex || 0}
-                        type="radio" 
-                        className="form-check-input"
-                        id={`field-${uniqueID}-${index}`}
-                        name={name} 
-                        value={optionValues[index] as string} 
-                        required={requiredVal} 
-                        disabled={disabled || null}
-                        onChange={handleChange}
-                        onFocus={handleFocus}
-                        onBlur={handleBlur}
-                        style={style}
-                        {...attributes}
-                    />
-                    <label className="form-check-label" htmlFor={`field-${uniqueID}-${index}`}>
-                        {radioOption}
-                    </label>
-                </div>;
-        }
-
+      
+        return <div key={index} className={inline ? `form-check form-check-inline` : `form-check`}>
+                <input 
+                    tabIndex={tabIndex || 0}
+                    type="radio" 
+                    className="form-check-input"
+                    id={`field-${uniqueID}-${index}`}
+                    name={name} 
+                    value={optionValues[index] as string} 
+                    required={requiredVal} 
+                    disabled={disabled || null}
+                    onChange={handleChange}
+                    onFocus={handleFocus}
+                    onBlur={handleBlur}
+                    checked={val == optionValues[index]}   // component status will not change if defaultChecked is used
+                    style={style}
+                    {...attributes}
+                />
+                <label className="form-check-label" htmlFor={`field-${uniqueID}-${index}`}>
+                    {radioOption}
+                </label>
+            </div>;
 
     });
+
+
+
+    useEffect(() => {
+        setVal(value);
+    }, [value]);
+
 
 
     return (

@@ -99,6 +99,12 @@ __webpack_require__.r(__webpack_exports__);
 var _excluded = ["wrapperClassName", "disabled", "required", "value", "label", "name", "id", "options", "inline", "style", "tabIndex", "onChange", "onBlur", "onFocus"];
 function _extends() { _extends = Object.assign ? Object.assign.bind() : function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
 function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
+function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i]; return arr2; }
+function _iterableToArrayLimit(arr, i) { var _i = null == arr ? null : "undefined" != typeof Symbol && arr[Symbol.iterator] || arr["@@iterator"]; if (null != _i) { var _s, _e, _x, _r, _arr = [], _n = !0, _d = !1; try { if (_x = (_i = _i.call(arr)).next, 0 === i) { if (Object(_i) !== _i) return; _n = !1; } else for (; !(_n = (_s = _x.call(_i)).done) && (_arr.push(_s.value), _arr.length !== i); _n = !0); } catch (err) { _d = !0, _e = err; } finally { try { if (!_n && null != _i["return"] && (_r = _i["return"](), Object(_r) !== _r)) return; } finally { if (_d) throw _e; } } return _arr; } }
+function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 function _objectWithoutProperties(source, excluded) { if (source == null) return {}; var target = _objectWithoutPropertiesLoose(source, excluded); var key, i; if (Object.getOwnPropertySymbols) { var sourceSymbolKeys = Object.getOwnPropertySymbols(source); for (i = 0; i < sourceSymbolKeys.length; i++) { key = sourceSymbolKeys[i]; if (excluded.indexOf(key) >= 0) continue; if (!Object.prototype.propertyIsEnumerable.call(source, key)) continue; target[key] = source[key]; } } return target; }
 function _objectWithoutPropertiesLoose(source, excluded) { if (source == null) return {}; var target = {}; var sourceKeys = Object.keys(source); var key, i; for (i = 0; i < sourceKeys.length; i++) { key = sourceKeys[i]; if (excluded.indexOf(key) >= 0) continue; target[key] = source[key]; } return target; }
 
@@ -121,6 +127,10 @@ var Radio = function Radio(props) {
   var uniqueID = (0,react__WEBPACK_IMPORTED_MODULE_0__.useId)();
   var idRes = id || uniqueID;
   var rootRef = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(null);
+  var _useState = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(null),
+    _useState2 = _slicedToArray(_useState, 2),
+    val = _useState2[0],
+    setVal = _useState2[1];
 
   // Determine whether it is in JSON format
   function isJSON(str) {
@@ -149,7 +159,8 @@ var Radio = function Radio(props) {
     onFocus === null || onFocus === void 0 ? void 0 : onFocus(event);
   }
   function handleChange(event) {
-    var val = event.target.value;
+    var _val = event.target.value;
+    setVal(_val);
 
     //----
     //remove focus style
@@ -160,7 +171,7 @@ var Radio = function Radio(props) {
 
     //
     if (typeof onChange === 'function') {
-      onChange(event, val);
+      onChange(event, _val);
     }
   }
   function handleBlur(event) {
@@ -173,59 +184,39 @@ var Radio = function Radio(props) {
   }
 
   // Get all options from option prop
-  var selectOptions = isJSON(options) ? JSON.parse(options) : {};
-  var optionKeys = Object.keys(selectOptions);
-  var optionValues = Object.values(selectOptions);
-
-  // Generate list of options
-  var defaultValIndex = value ? optionValues.indexOf(value) : false; //get index from default value
+  var selectOptions = isJSON(options) ? JSON.parse(options) : null;
+  var optionKeys = selectOptions === null ? [] : Object.keys(selectOptions);
+  var optionValues = selectOptions === null ? [] : Object.values(selectOptions).map(function (item) {
+    return item.toString();
+  });
   var radioOptionsList = optionKeys.map(function (radioOption, index) {
     var requiredVal = index === 0 ? required || null : null;
-    if (index === defaultValIndex) {
-      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-        key: index,
-        className: inline ? "form-check form-check-inline" : "form-check"
-      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("input", _extends({
-        tabIndex: tabIndex || 0,
-        type: "radio",
-        className: "form-check-input",
-        id: "field-".concat(uniqueID, "-").concat(index),
-        name: name,
-        value: optionValues[index],
-        required: requiredVal,
-        disabled: disabled || null,
-        onChange: handleChange,
-        onFocus: handleFocus,
-        onBlur: handleBlur,
-        defaultChecked: true,
-        style: style
-      }, attributes)), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("label", {
-        className: "form-check-label",
-        htmlFor: "field-".concat(uniqueID, "-").concat(index)
-      }, radioOption));
-    } else {
-      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-        key: index,
-        className: inline ? "form-check form-check-inline" : "form-check"
-      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("input", _extends({
-        tabIndex: tabIndex || 0,
-        type: "radio",
-        className: "form-check-input",
-        id: "field-".concat(uniqueID, "-").concat(index),
-        name: name,
-        value: optionValues[index],
-        required: requiredVal,
-        disabled: disabled || null,
-        onChange: handleChange,
-        onFocus: handleFocus,
-        onBlur: handleBlur,
-        style: style
-      }, attributes)), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("label", {
-        className: "form-check-label",
-        htmlFor: "field-".concat(uniqueID, "-").concat(index)
-      }, radioOption));
-    }
+    return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+      key: index,
+      className: inline ? "form-check form-check-inline" : "form-check"
+    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("input", _extends({
+      tabIndex: tabIndex || 0,
+      type: "radio",
+      className: "form-check-input",
+      id: "field-".concat(uniqueID, "-").concat(index),
+      name: name,
+      value: optionValues[index],
+      required: requiredVal,
+      disabled: disabled || null,
+      onChange: handleChange,
+      onFocus: handleFocus,
+      onBlur: handleBlur,
+      checked: val == optionValues[index] // component status will not change if defaultChecked is used
+      ,
+      style: style
+    }, attributes)), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("label", {
+      className: "form-check-label",
+      htmlFor: "field-".concat(uniqueID, "-").concat(index)
+    }, radioOption));
   });
+  (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(function () {
+    setVal(value);
+  }, [value]);
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
     className: wrapperClassName ? wrapperClassName : "mb-3 position-relative",
     ref: rootRef

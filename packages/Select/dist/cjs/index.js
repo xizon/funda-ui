@@ -143,7 +143,9 @@ var Select = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(func
   // return a array of options
   var optionsDataInit = [];
   var optionKeys = Object.keys(optionsRes);
-  var optionValues = Object.values(optionsRes);
+  var optionValues = Object.values(optionsRes).map(function (item) {
+    return item.toString();
+  });
   optionsDataInit = optionKeys.map(function (item, index) {
     return {
       label: optionKeys[index],

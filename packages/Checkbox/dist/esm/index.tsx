@@ -1,4 +1,4 @@
-import React, { useId, useState, useRef, forwardRef } from 'react';
+import React, { useId, useState, useEffect, useRef, forwardRef } from 'react';
 
 declare module 'react' {
     interface ReactI18NextChildren<T> {
@@ -51,8 +51,7 @@ const Checkbox = forwardRef((props: CheckboxProps, ref: any) => {
     const uniqueID = useId();
     const idRes = id || uniqueID;
     const rootRef = useRef<any>(null);
-    const [isChecked, setIsChecked] = useState<boolean>( checked ? true : false);
-
+    const [val, setVal] = useState<any>(null);
 
     function handleFocus(event: any) {
         rootRef.current.classList.add('focus');
@@ -63,19 +62,20 @@ const Checkbox = forwardRef((props: CheckboxProps, ref: any) => {
 
 
     function handleChange(event: any) {
-        const val = event.target.value;
+        const _val = event.target.checked;
 
+        setVal(_val);
+        
         //----
         //remove focus style
         rootRef.current.classList.remove('focus');
 
         //
         if (typeof (onChange) === 'function') {
-            onChange(event, !isChecked ? val : '');
-            
+            onChange(event, _val);
         }
 
-        setIsChecked(!isChecked);
+        
 
     }
 
@@ -91,48 +91,32 @@ const Checkbox = forwardRef((props: CheckboxProps, ref: any) => {
     }
 
 
-    
+    useEffect(() => {
+        setVal(checked);
+    }, [checked]);
+
 
     return (
         <>
 
             <div className={wrapperClassName ? wrapperClassName : "mb-3 position-relative"} ref={rootRef}>
                 <div className="form-check">
-                    {isChecked ? (
-                        <input 
-                            tabIndex={tabIndex || 0}
-                            type="checkbox"
-                            className="form-check-input"
-                            id={idRes}
-                            name={name}
-                            disabled={disabled || null}
-                            required={required || null}
-                            onChange={handleChange}
-                            onFocus={handleFocus}
-                            onBlur={handleBlur}
-                            defaultValue={value as string || ''}
-                            defaultChecked
-                            style={style}
-                            {...attributes}
-                        />
-        
-                    ) : (
-                        <input 
-                            tabIndex={tabIndex || 0}
-                            type="checkbox"
-                            className="form-check-input"
-                            id={idRes}
-                            name={name}
-                            disabled={disabled || null}
-                            required={required || null}
-                            onChange={handleChange}
-                            onFocus={handleFocus}
-                            onBlur={handleBlur}
-                            defaultValue={value as string || ''}
-                            style={style}
-                            {...attributes}
-                        />
-                    )}
+                    <input 
+                        tabIndex={tabIndex || 0}
+                        type="checkbox"
+                        className="form-check-input"
+                        id={idRes}
+                        name={name}
+                        disabled={disabled || null}
+                        required={required || null}
+                        onChange={handleChange}
+                        onFocus={handleFocus}
+                        onBlur={handleBlur}
+                        defaultValue={value as string || ''}
+                        checked={val}   // component status will not change if defaultChecked is used
+                        style={style}
+                        {...attributes}
+                    />
                     {label ? <><label htmlFor={idRes} className="form-label">{label}</label></> : null}
                 </div>
             </div>

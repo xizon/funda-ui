@@ -58,3 +58,62 @@ export default () => {
     );
 }
 ```
+
+
+
+
+## Asynchronous Usage
+
+
+```js
+import React, { useState } from "react";
+import Radio from 'react-pure-bootstrap/Radio';
+
+export default () => {
+
+    const [val, setVal] = useState<string>('value-2');
+    const [opt, setOpt] = useState<any>({
+        "Option 1":"value-1",
+        "Option 2":"value-2",
+        "Option 3":"value-3",
+        "Option 4":"value-4"
+    });
+
+    
+   
+    function handleClick1(e: any) {
+        e.preventDefault();
+        setVal('value-4');
+    }
+
+    function handleClick2(e: any) {
+        e.preventDefault();
+        setOpt({
+            "Custom Option 1":"value-1",
+            "Custom Option 2":"value-2",
+            "Custom Option 3":"value-3",
+            "Custom Option 4":"value-4",
+            "Custom Option 5":"value-5"
+        });
+    }
+
+    return (
+        <>
+
+            <a href="#" onClick={handleClick1}>change value</a>
+            <a href="#" onClick={handleClick2}>change options</a>
+            
+
+            <Radio
+                inline={true}
+                value={val}
+                name="String"
+                label="String"
+                options={JSON.stringify(opt)}
+            />
+                   
+            
+        </>
+    )
+}
+```

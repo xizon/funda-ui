@@ -91,6 +91,7 @@
             z-index: 1;
             top: 2.3rem;
             border-radius: 5px;
+            width: max-content; /* required -> the content will not wrap at all even if it causes overflows*/
 
 
             .cascading-select__close {

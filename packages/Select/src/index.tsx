@@ -64,7 +64,8 @@ const Select = forwardRef((props: SelectProps, ref: any) => {
     // return a array of options
     let optionsDataInit: any[] = []; 
     const optionKeys = Object.keys(optionsRes);
-    const optionValues = Object.values(optionsRes);
+    const optionValues = Object.values(optionsRes).map((item: any) => item.toString() );
+    
     optionsDataInit = optionKeys.map((item: any, index: number) => {
         return {
             label: optionKeys[index],

@@ -72,6 +72,7 @@
   z-index: 1;
   top: 2.3rem;
   border-radius: 5px;
+  width: max-content; /* required -> the content will not wrap at all even if it causes overflows*/
   /* each item */
 }
 .cascading-select-e2e__wrapper .cascading-select-e2e .cascading-select-e2e__items .cascading-select-e2e__close svg {

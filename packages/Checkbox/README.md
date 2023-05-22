@@ -10,7 +10,7 @@ import Checkbox from 'react-pure-bootstrap/Checkbox';
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |
 | `wrapperClassName` | string | `mb-3 position-relative` | The class name of the control wrapper. |
-| `checked` | boolean | false | Is it selected by default. |
+| `checked` | boolean | false | Is it selected. |
 | `value` | string | - | Set a default value for this control |
 | `label` | string \| ReactNode | - | It is used to specify a label for an element of a form. |
 | `name` | string | - | Name is not deprecated when used with form fields. |
@@ -38,6 +38,7 @@ export default () => {
     return (
         <>
 
+
             <Checkbox
                 name="string"
                 label='Label'
@@ -61,5 +62,48 @@ export default () => {
 
         </>
     );
+}
+```
+
+
+
+
+## Asynchronous Usage
+
+
+```js
+import React, { useState } from "react";
+import Checkbox from 'react-pure-bootstrap/Checkbox';
+
+export default () => {
+
+    const [checked, setChecked] = useState<any>(null);
+   
+    function handleClick1(e: any) {
+        e.preventDefault();
+        setChecked(true);
+    }
+
+    function handleClick2(e: any) {
+        e.preventDefault();
+        setChecked(false);
+    }  
+
+    return (
+        <>
+
+            <a href="#" onClick={handleClick1}>checked</a>
+            <a href="#" onClick={handleClick2}>unchecked</a>
+            
+            <Checkbox
+                name="string"
+                label='Label'
+                value="v1"
+                checked={checked}
+            />
+            
+
+        </>
+    )
 }
 ```
