@@ -123,7 +123,7 @@ const Input = forwardRef((props: InputProps, ref: any) => {
     return (
         <>
 
-            <div className={wrapperClassName ? wrapperClassName : "mb-3 position-relative"} ref={rootRef}>
+            <div className={wrapperClassName || wrapperClassName === '' ? wrapperClassName : "mb-3 position-relative"} ref={rootRef}>
                 {label ? <><label htmlFor={idRes} className="form-label">{label}</label></> : null}
 
                 <div className="input-group">
@@ -132,7 +132,7 @@ const Input = forwardRef((props: InputProps, ref: any) => {
                         ref={ref}
                         tabIndex={tabIndex || 0}
                         type={typeRes}
-                        className={controlClassName ? controlClassName : "form-control"}
+                        className={controlClassName || controlClassName === '' ? controlClassName : "form-control"}
                         id={idRes}
                         name={name}
                         step={step || 1}
@@ -141,7 +141,7 @@ const Input = forwardRef((props: InputProps, ref: any) => {
                         placeholder={placeholder || ''}
                         defaultValue={value || ''}
                         maxLength={maxLength || null}
-                        autoComplete={autoComplete}
+                        autoComplete={autoComplete ? 'on' : 'off'}
                         onFocus={handleFocus}
                         onBlur={handleBlur}
                         onChange={handleChange}

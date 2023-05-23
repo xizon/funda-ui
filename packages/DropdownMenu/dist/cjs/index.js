@@ -149,11 +149,11 @@ var DropdownMenu = function DropdownMenu(props) {
     _useState4 = _slicedToArray(_useState3, 2),
     selected = _useState4[0],
     setSelected = _useState4[1];
-  function handleClick(e) {
+  function handleClick(event) {
     setIsOpen(!isOpen);
   }
-  function handleClose(e) {
-    if (e.target.closest(".".concat(wrapperClassName ? wrapperClassName : 'dropdown__wrapper')) === null) {
+  function handleClose(event) {
+    if (event.target.closest(".".concat(wrapperClassName || wrapperClassName === '' ? wrapperClassName : 'dropdown__wrapper')) === null) {
       setIsOpen(false);
     }
   }
@@ -183,7 +183,7 @@ var DropdownMenu = function DropdownMenu(props) {
     });
   });
   return /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
-    className: isOpen ? "dropdown__wrapper ".concat(wrapperClassName ? wrapperClassName : 'dropdown-default', " active") : "dropdown__wrapper ".concat(wrapperClassName ? wrapperClassName : 'dropdown-default')
+    className: isOpen ? "dropdown__wrapper ".concat(wrapperClassName || wrapperClassName === '' ? wrapperClassName : 'dropdown-default', " active") : "dropdown__wrapper ".concat(wrapperClassName || wrapperClassName === '' ? wrapperClassName : 'dropdown-default')
   }, triggerButton ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("button", {
     tabIndex: tabIndex || -1,
     className: triggerClassName ? "".concat(triggerClassName) : "d-inline w-auto",

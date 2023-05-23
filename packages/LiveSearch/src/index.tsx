@@ -2,10 +2,9 @@ import React, { useId, useEffect, useState, useRef } from 'react';
 
 import SearchBar from 'rpb-searchbar';
 
-
-
 type LiveSearchProps = {
     wrapperClassName?: string;
+    controlClassName?: string;
     appearance?: string;
     value?: string;
     label?: React.ReactNode | string;
@@ -38,25 +37,10 @@ type LiveSearchProps = {
 };
 
 
-/**
- * Check if an element is in the viewport
- * @param {HTMLElement} elem 
- * @returns {boolean}
- */
-function isInViewport(elem: HTMLElement) {
-    const bounding = elem.getBoundingClientRect();
-    return (
-        bounding.top >= 0 &&
-        bounding.left >= 0 &&
-        bounding.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
-        bounding.right <= (window.innerWidth || document.documentElement.clientWidth)
-    );
-}
-
-
 const LiveSearch = (props: LiveSearchProps) => {
     const {
         wrapperClassName,
+        controlClassName,
         appearance,
         disabled,
         required,
@@ -87,6 +71,7 @@ const LiveSearch = (props: LiveSearchProps) => {
 
     const uniqueID = useId();
     const idRes = id || uniqueID;
+    const rootRef = useRef<any>(null);
     const inputRef = useRef<any>(null);
     const listRef = useRef<any>(null);
 
@@ -96,8 +81,25 @@ const LiveSearch = (props: LiveSearchProps) => {
     const [dataInit, setDataInit] = useState<any[]>([]);
     const [data, setData] = useState<any[]>([]);
     const [inputValue, setInputValue] = useState<string>('');
-    const [searchTrigger, setSearchTrigger] = useState<boolean>(false);
+    const [isOpen, setIsOpen] = useState<boolean>(false);
     const [hasErr, setHasErr] = useState<boolean>(false);
+
+
+    /**
+     * Check if an element is in the viewport
+     * @param {HTMLElement} elem 
+     * @returns {boolean}
+     */
+    function isInViewport(elem: HTMLElement) {
+        const bounding = elem.getBoundingClientRect();
+        return (
+            bounding.top >= 0 &&
+            bounding.left >= 0 &&
+            bounding.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
+            bounding.right <= (window.innerWidth || document.documentElement.clientWidth)
+        );
+    }
+
 
 
     //
@@ -132,7 +134,7 @@ const LiveSearch = (props: LiveSearchProps) => {
         //
         if ( !isInViewport(el) ) {
             el.classList.add(PLACEMENT_BOTTOMEND);
-            el.style.setProperty('bottom', inputRef.current.clientHeight + 'px', "important");
+            el.style.setProperty('bottom', inputRef.current.clientHeight + 5 + 'px', "important");
         } else {
             el.classList.remove(PLACEMENT_BOTTOMEND);
             el.style.removeProperty('bottom');
@@ -188,7 +190,6 @@ const LiveSearch = (props: LiveSearchProps) => {
         if ( !val.replace(/\s/g, '').length === true ) return;
 
         //
-        setSearchTrigger(false);
         if ( !fetchTrigger ) {
             if (onComposition || !onComposition) {
                 const res: any = await matchData(val, fetchUpdate);
@@ -196,6 +197,9 @@ const LiveSearch = (props: LiveSearchProps) => {
 
                 //
                 onChange?.(inputRef.current, res); 
+
+                //
+                setIsOpen(true);
             }
         }
 
@@ -207,12 +211,13 @@ const LiveSearch = (props: LiveSearchProps) => {
     }
     
 
-    async function triggerEv() {
+    async function activate() {
         if ( fetchTrigger ) {
             const res: any = await matchData(inputValue, fetchUpdate);
             setData(res);
-            
-            setSearchTrigger(res.length === 0 ? true : false);
+
+            //
+            setIsOpen(res.length === 0 ? true : false);
         }   
     }
 
@@ -251,28 +256,39 @@ const LiveSearch = (props: LiveSearchProps) => {
 
     }
 
-    async function handleSelect(el: any) {
+    async function handleSelect(el: any, dataInput: any = false) {
         
         if ( typeof el === 'undefined' ) return;
 
-        const index: number | undefined | string = typeof el.target !== 'undefined' ? el.target.dataset.index : el.dataset.index;
-        const res: any = await matchData(inputRef.current.value, false);
+        let index: number | undefined | string;
 
-        //
-        onSelect?.(inputRef.current, res[index as never]);
+        
+        // update value
+        if ( dataInput ) {
+            const _data = JSON.parse(dataInput);
+
+            onSelect?.(inputRef.current, _data);
+        
+        } else {
+            index = typeof el.target !== 'undefined' ? el.target.dataset.index : el.dataset.index;
+
+            const res: any = await matchData(inputRef.current.value, false);
+            onSelect?.(inputRef.current, res[index as never]);
+        }
+
         setData([]);
 
     }
 
 
     function handleSearch() {
-        triggerEv();
+        activate();
     }
 
 
     function handleBlur(e: any) {
         
-        setSearchTrigger(false);
+        setIsOpen(false);
         if ( !fetchTrigger ) {
             setTimeout(() => {
                 //
@@ -286,35 +302,51 @@ const LiveSearch = (props: LiveSearchProps) => {
     }
 
     function handleMouseLeaveTrigger() {
-        setSearchTrigger(false);
+        setIsOpen(false);
     }
 
     function optionFocus(type: string) {
 
-        if ( listRef.current === null ) return;
-        
-        const options = [].slice.call(listRef.current.querySelectorAll('.list-group-item'));
-        const currentIndex = options.findIndex((e) => e === listRef.current.querySelector('.list-group-item.active'));
+        return new Promise(function (resolve) {
 
-        // get the next element in the list, "%" will loop around to 0
-        let nextIndex;
-        if ( type === 'increase' ) {
-            nextIndex = currentIndex + 1 % options.length;
-        } else {
-            nextIndex = (currentIndex < 0 ? options.length : currentIndex) - 1 % options.length;
-        }
+            // Determine the "active" class name to avoid listening to other unused components of the same type
+            if ( listRef.current === null || !rootRef.current.classList.contains('active') ) return;
 
-        //only one
-        if ( options.length === 1 ) nextIndex = 0;
         
-    
-        if ( !isNaN(nextIndex) ) {
-            options.forEach( (node: any, index: number) => {
-                node?.classList.remove('active');
-            });
-            (options[nextIndex] as HTMLElement)?.classList.add('active');
-        }
+            const options = [].slice.call(listRef.current.querySelectorAll('.list-group-item'));
+            const currentIndex = options.findIndex((e) => e === listRef.current.querySelector('.list-group-item.active'));
+
+
+            // get the next element in the list, "%" will loop around to 0
+            let nextIndex;
+            if ( type === 'increase' ) {
+                nextIndex = currentIndex + 1 % options.length;
+            } else {
+                nextIndex = (currentIndex < 0 ? options.length : currentIndex) - 1 % options.length;
+            }
+
+            
+            //only one
+            if ( options.length === 1 ) nextIndex = 0;
+            
+        
+            if ( !isNaN(nextIndex) ) {
+                options.forEach( (node: any, index: number) => {
+                    node?.classList.remove('active');
+                });
+
+                const targetOption = options[nextIndex] as HTMLElement;
+                if ( typeof targetOption !== 'undefined' && !targetOption.classList.contains('no-match') ) {
+                    targetOption.classList.add('active');
+                    resolve(targetOption);
+                }
+
+            }
+        });
+
+
     }
+
 
 
     useEffect(() => {
@@ -329,18 +361,24 @@ const LiveSearch = (props: LiveSearchProps) => {
 
         // keyboard listener
         //--------------
-        const listener = (event: any) => {
+        const listener = async (event: any) => {
 
+       
+            let res: any = null;
+ 
             if (event.code === "Enter" || event.code === "NumpadEnter") {
-
-                // if option has active class
-                const activedOption = listRef.current?.querySelector('.list-group-item.active');
-                if ( activedOption === null ) {
-                    triggerEv();
-                } else {
-                    handleSelect(activedOption);
+                if ( listRef.current !== null ) {
+                    const currentData = listRef.current.dataset.data;
+                    if ( typeof currentData !== 'undefined' ) {
+                        handleSelect(null, currentData);
+                        const options = [].slice.call(listRef.current.querySelectorAll('.list-group-item'));
+                        options.forEach((node: any) => {
+                            node.classList.remove('active');
+                        });
+                    }  
                 }
 
+                return;
             }
 
             switch (event.code) {
@@ -352,18 +390,25 @@ const LiveSearch = (props: LiveSearchProps) => {
                     break;
                 case "ArrowUp":
                     // Up pressed
-                    optionFocus('decrease');
-
+                    res = await optionFocus('decrease');
                     break;
                 case "ArrowDown":
                     // Down pressed
-                    optionFocus('increase');
-
+                    res = await optionFocus('increase');
                     break;
             }
+            
+            // temporary data
+            if ( res !== null ) listRef.current.dataset.data = JSON.stringify({
+                value: res.dataset.value, 
+                label: res.dataset.label,
+                letter: res.dataset.letter
+            });
+            
 
         };
 
+        document.removeEventListener("keydown", listener);
         document.addEventListener("keydown", listener);
 
         // Remove the global list of events, especially as scroll and interval.
@@ -378,9 +423,10 @@ const LiveSearch = (props: LiveSearchProps) => {
     return (
         <>
 
-            <div className="position-relative" onMouseLeave={handleMouseLeaveTrigger}>
+            <div className={isOpen ? `livesearch__wrapper ${wrapperClassName || wrapperClassName === '' ? wrapperClassName : 'mb-3 position-relative'} active` : `livesearch__wrapper ${wrapperClassName || wrapperClassName === '' ? wrapperClassName : 'mb-3 position-relative'}`} ref={rootRef} onMouseLeave={handleMouseLeaveTrigger}>
                 <SearchBar
-                    wrapperClassName={wrapperClassName}
+                    wrapperClassName=""
+                    controlClassName={controlClassName}
                     ref={inputRef}
                     value={value}
                     label={label}
@@ -403,17 +449,22 @@ const LiveSearch = (props: LiveSearchProps) => {
 
 
                 {data && data.length > 0 && !hasErr ? <>
-                    <div ref={listRef} className="list-group position-absolute w-100 border shadow" style={{ marginTop: '-1.1rem', zIndex: (depth ? depth : 100)}} role="tablist">
+                    <div ref={listRef} className="list-group position-absolute w-100 border shadow small" style={{ marginTop: '0.2rem', zIndex: (depth ? depth : 100)}} role="tablist">
                         {data ? data.map((item, index) => {
                             const startItemBorder = index === 0 ? 'border-top-0' : '';
                             const endItemBorder = index === data.length-1 ? 'border-bottom-0' : '';
 
-                            return <button onClick={handleSelect} type="button" data-index={index} key={index} className={`list-group-item list-group-item-action border-start-0 border-end-0 ${startItemBorder} ${endItemBorder}`} data-value={`${item.value}`} data-letter={`${item.letter}`} role="tab">{item.label}</button>
+                            return <button tabIndex={-1} onClick={handleSelect} type="button" data-index={index} key={index} className={`list-group-item list-group-item-action border-start-0 border-end-0 ${startItemBorder} ${endItemBorder}`} data-value={`${item.value}`} data-label={`${item.label}`} data-letter={`${item.letter}`} role="tab">{item.label}</button>
                         }) : null}
 
-                        {data.length === 0 && searchTrigger ? <button type="button" className="list-group-item list-group-item-action" disabled>{fetchNoneInfo || 'No match yet'}</button> : null}
                     </div>
 
+                </> : null}
+
+                {data && data.length === 0 && !hasErr && isOpen ? <>
+                    <div ref={listRef} className="list-group position-absolute w-100 border shadow small" style={{ marginTop: '0.2rem', zIndex: (depth ? depth : 100)}} role="tablist">
+                        <button tabIndex={-1} type="button" className="list-group-item list-group-item-action no-match" disabled>{fetchNoneInfo || 'No match yet'}</button>
+                    </div>
                 </> : null}
 
 

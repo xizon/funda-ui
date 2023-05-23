@@ -150,7 +150,7 @@ var File = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(functi
   var uniqueID = (0,react__WEBPACK_IMPORTED_MODULE_0__.useId)();
   var idRes = id || uniqueID;
   var rootRef = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(null);
-  var fileInput = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(null);
+  var fileInputRef = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(null);
   var labelRef = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(null);
   var submitRef = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(null);
   var _useState = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(false),
@@ -162,10 +162,10 @@ var File = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(functi
     defaultValue = _useState4[0],
     setDefaultValue = _useState4[1];
   function clickFileInput(event) {
-    if (fileInput.current.nextSibling.contains(document.activeElement)) {
+    if (fileInputRef.current.nextSibling.contains(document.activeElement)) {
       // Bind space to trigger clicking of the button when focused
       if (event.keyCode === 32) {
-        fileInput.current.click();
+        fileInputRef.current.click();
       }
     }
   }
@@ -263,7 +263,7 @@ var File = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(functi
   }
   function handleSubmit(event) {
     event.preventDefault();
-    var curFiles = fileInput.current.files;
+    var curFiles = fileInputRef.current.files;
     onProgress === null || onProgress === void 0 ? void 0 : onProgress(curFiles);
     if (fetchUrl) {
       var formData = new FormData();
@@ -361,10 +361,10 @@ var File = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(functi
     }
 
     //
-    onChange === null || onChange === void 0 ? void 0 : onChange(event, submitRef.current, fileInput.current.files);
+    onChange === null || onChange === void 0 ? void 0 : onChange(event, submitRef.current, fileInputRef.current.files);
   }
   function fileNames() {
-    var current = fileInput.current;
+    var current = fileInputRef.current;
     if (current && current.files.length > 0) {
       var messages = [];
       var _iterator = _createForOfIteratorHelper(current.files),
@@ -393,7 +393,7 @@ var File = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(functi
     };
   }, []);
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-    className: wrapperClassName ? wrapperClassName : "mb-3 position-relative upload-control",
+    className: wrapperClassName || wrapperClassName === '' ? wrapperClassName : "mb-3 position-relative upload-control",
     ref: rootRef
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("label", {
     ref: labelRef,
@@ -426,7 +426,7 @@ var File = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(functi
     className: "input-group"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("input", _extends({
     ref: function ref(node) {
-      fileInput.current = node;
+      fileInputRef.current = node;
       if (typeof _ref3 === 'function') {
         _ref3(node);
       } else if (_ref3) {
@@ -434,7 +434,7 @@ var File = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(functi
       }
     },
     tabIndex: tabIndex || 0,
-    className: controlClassName ? controlClassName : "form-control",
+    className: controlClassName || controlClassName === '' ? controlClassName : "form-control",
     id: idRes,
     type: "file"
     // The onChange should trigger updates whenever

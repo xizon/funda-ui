@@ -1,6 +1,7 @@
 import React from 'react';
 declare type LiveSearchProps = {
     wrapperClassName?: string;
+    controlClassName?: string;
     appearance?: string;
     value?: string;
     label?: React.ReactNode | string;

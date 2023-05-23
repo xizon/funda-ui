@@ -709,7 +709,7 @@ const CascadingSelect = (props: CascadingSelectProps) => {
     return (
         <>
 
-            <div className={wrapperClassName ? `cascading-select__wrapper ${wrapperClassName}` : `cascading-select__wrapper mb-3 position-relative`} ref={rootRef}>
+            <div className={wrapperClassName || wrapperClassName === '' ? `cascading-select__wrapper ${wrapperClassName}` : `cascading-select__wrapper mb-3 position-relative`} ref={rootRef}>
                 {label ? <><label htmlFor={idRes} className="form-label">{label}</label></> : null}
 
                 {triggerContent ? <>
@@ -720,7 +720,7 @@ const CascadingSelect = (props: CascadingSelectProps) => {
                 <div className="cascading-select" style={{ zIndex: (depth ? depth : 100) }}>
 
                     {isShow && !hasErr ? (
-                        <div className="cascading-select__items">
+                        <div className="cascading-select__items shadow">
                             <ul>
 
                                 {showCloseBtn ? <a href="#" onClick={(e) => {
@@ -760,7 +760,7 @@ const CascadingSelect = (props: CascadingSelectProps) => {
                         ref={valRef}
                         id={idRes}
                         name={name}
-                        className={controlClassName ? controlClassName : "form-control"}
+                        className={controlClassName || controlClassName === '' ? controlClassName : "form-control"}
                         placeholder={placeholder}
                         value={changedVal} // placeholder will not change if defaultValue is used
                         onFocus={handleFocus}
@@ -781,7 +781,7 @@ const CascadingSelect = (props: CascadingSelectProps) => {
                     }}></div> : null}
                                         
 
-                    <span className="arrow">
+                    <span className="arrow" style={{pointerEvents: 'none'}}>
                         {controlArrow ? controlArrow : <svg width="10px" height="10px" viewBox="0 -4.5 20 20">
                             <g stroke="none" stroke-width="1" fill="none">
                                 <g transform="translate(-180.000000, -6684.000000)" fill="#a5a5a5">

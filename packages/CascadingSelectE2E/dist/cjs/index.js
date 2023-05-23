@@ -877,7 +877,7 @@ var CascadingSelectE2E = function CascadingSelectE2E(props) {
     };
   }, [value]);
   return /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
-    className: wrapperClassName ? "cascading-select-e2e__wrapper ".concat(wrapperClassName) : "cascading-select-e2e__wrapper mb-3 position-relative",
+    className: wrapperClassName || wrapperClassName === '' ? "cascading-select-e2e__wrapper ".concat(wrapperClassName) : "cascading-select-e2e__wrapper mb-3 position-relative",
     ref: rootRef
   }, label ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("label", {
     htmlFor: idRes,
@@ -891,7 +891,7 @@ var CascadingSelectE2E = function CascadingSelectE2E(props) {
       zIndex: depth ? depth : 100
     }
   }, isShow && !hasErr ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
-    className: "cascading-select-e2e__items"
+    className: "cascading-select-e2e__items shadow"
   }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("ul", null, loading ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
     className: "position-absolute top-0 start-0 mt-1 mx-1"
   }, loader)) : null, showCloseBtn ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("a", {
@@ -928,7 +928,7 @@ var CascadingSelectE2E = function CascadingSelectE2E(props) {
     ref: valRef,
     id: idRes,
     name: name,
-    className: controlClassName ? controlClassName : "form-control",
+    className: controlClassName || controlClassName === '' ? controlClassName : "form-control",
     placeholder: placeholder,
     value: changedVal // placeholder will not change if defaultValue is used
     ,
@@ -946,7 +946,10 @@ var CascadingSelectE2E = function CascadingSelectE2E(props) {
       setIsShow(false);
     }
   }) : null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("span", {
-    className: "arrow"
+    className: "arrow",
+    style: {
+      pointerEvents: 'none'
+    }
   }, controlArrow ? controlArrow : /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("svg", {
     width: "10px",
     height: "10px",

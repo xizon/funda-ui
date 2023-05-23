@@ -137,7 +137,7 @@ const Tabs = (props: TabsProps) => {
     return (
         <>
 
-            <div className={wrapperClassName ? wrapperClassName : "mb-3 position-relative"} ref={rootRef} style={style}>
+            <div className={wrapperClassName || wrapperClassName === '' ? wrapperClassName : "mb-3 position-relative"} ref={rootRef} style={style}>
                 <ul className={navClassName ? navClassName : "nav nav-tabs mb-3"} role="tablist">
 
                     {(() => {

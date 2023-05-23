@@ -127,13 +127,7 @@ const BackToTop = (props: BackToTopProps) => {
         //Hide other pages button of back-to-top
         btnRef.current?.classList.remove('active');
 
-        // Remove scroll events from window
-        // Add a scroll event listener to window
-        window.removeEventListener('scroll', windowScrollUpdate);
-        window.removeEventListener('touchmove', windowScrollUpdate);
-
-
-
+        
         // Add function to the element that should be used as the scrollable area.
         window.removeEventListener('scroll', windowScrollUpdate);
         window.removeEventListener('touchmove', windowScrollUpdate);

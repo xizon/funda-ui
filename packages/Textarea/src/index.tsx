@@ -101,7 +101,7 @@ const Textarea = forwardRef((props: TextareaProps, ref: any) => {
     return (
         <>
 
-            <div className={wrapperClassName ? wrapperClassName : "mb-3 position-relative"} ref={rootRef}>
+            <div className={wrapperClassName || wrapperClassName === '' ? wrapperClassName : "mb-3 position-relative"} ref={rootRef}>
                 {label ? <><label htmlFor={idRes} className="form-label">{label}</label></> : null}
 
                 <div className="input-group">
@@ -109,7 +109,7 @@ const Textarea = forwardRef((props: TextareaProps, ref: any) => {
                     <textarea  
                       ref={ref}
                       tabIndex={tabIndex || 0}
-					  className={controlClassName ? controlClassName : "form-control"}
+					  className={controlClassName || controlClassName === '' ? controlClassName : "form-control"}
 			          id={idRes}
 					  name={name}
 					  placeholder={placeholder || ''}

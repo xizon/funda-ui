@@ -284,6 +284,7 @@ const CascadingSelectE2E = (props: CascadingSelectE2EProps) => {
         //remove focus style
         rootRef.current.classList.remove('focus');
 
+
         //
         onBlur?.(event);
     }
@@ -880,7 +881,7 @@ const CascadingSelectE2E = (props: CascadingSelectE2EProps) => {
     return (
         <>
 
-            <div className={wrapperClassName ? `cascading-select-e2e__wrapper ${wrapperClassName}` : `cascading-select-e2e__wrapper mb-3 position-relative`} ref={rootRef}>
+            <div className={wrapperClassName || wrapperClassName === '' ? `cascading-select-e2e__wrapper ${wrapperClassName}` : `cascading-select-e2e__wrapper mb-3 position-relative`} ref={rootRef}>
                 {label ? <><label htmlFor={idRes} className="form-label">{label}</label></> : null}
 
                 {triggerContent ? <>
@@ -891,7 +892,7 @@ const CascadingSelectE2E = (props: CascadingSelectE2EProps) => {
                 <div className="cascading-select-e2e" style={{ zIndex: (depth ? depth : 100) }}>
 
                     {isShow && !hasErr ? (
-                        <div className="cascading-select-e2e__items">
+                        <div className="cascading-select-e2e__items shadow">
                             <ul>
                                 {loading ? <><div className="position-absolute top-0 start-0 mt-1 mx-1">{loader}</div></> : null}
                                 {showCloseBtn ? <a href="#" onClick={(e)=> {
@@ -930,7 +931,7 @@ const CascadingSelectE2E = (props: CascadingSelectE2EProps) => {
                         ref={valRef}
                         id={idRes}
                         name={name}
-                        className={controlClassName ? controlClassName : "form-control"}
+                        className={controlClassName || controlClassName === '' ? controlClassName : "form-control"}
                         placeholder={placeholder}
                         value={changedVal} // placeholder will not change if defaultValue is used
                         onFocus={handleFocus}
@@ -951,7 +952,7 @@ const CascadingSelectE2E = (props: CascadingSelectE2EProps) => {
                     }}></div> : null}
                     
 
-                    <span className="arrow">
+                    <span className="arrow" style={{pointerEvents: 'none'}}>
                         {controlArrow ? controlArrow : <svg width="10px" height="10px" viewBox="0 -4.5 20 20">
                             <g stroke="none" stroke-width="1" fill="none">
                                 <g transform="translate(-180.000000, -6684.000000)" fill="#a5a5a5">

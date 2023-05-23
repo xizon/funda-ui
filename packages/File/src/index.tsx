@@ -70,17 +70,17 @@ const File = forwardRef((props: FileProps, ref: any) => {
     const uniqueID = useId();
     const idRes = id || uniqueID;
     const rootRef = useRef<any>(null);
-    const fileInput = useRef<any>(null);
+    const fileInputRef = useRef<any>(null);
     const labelRef = useRef<any>(null);
     const submitRef = useRef<any>(null);
     const [forceUpdate, setForceUpdate] = useState<Boolean>(false);
     const [defaultValue, setDefaultValue] = useState<any>(null);
 
     function clickFileInput(event: any) {
-        if (fileInput.current.nextSibling.contains(document.activeElement)) {
+        if (fileInputRef.current.nextSibling.contains(document.activeElement)) {
             // Bind space to trigger clicking of the button when focused
             if (event.keyCode === 32) {
-                fileInput.current.click();
+                fileInputRef.current.click();
             }
         }
     }
@@ -135,7 +135,7 @@ const File = forwardRef((props: FileProps, ref: any) => {
         event.preventDefault();
 
         
-        const curFiles = fileInput.current.files;
+        const curFiles = fileInputRef.current.files;
 
         onProgress?.(curFiles);
 
@@ -206,12 +206,12 @@ const File = forwardRef((props: FileProps, ref: any) => {
         }
 
         //
-        onChange?.(event, submitRef.current, fileInput.current.files);
+        onChange?.(event, submitRef.current, fileInputRef.current.files);
     }
 
     function fileNames() {
 
-        const { current } = fileInput;
+        const { current } = fileInputRef;
 
         if (current && current.files.length > 0) {
             let messages = [];
@@ -241,7 +241,7 @@ const File = forwardRef((props: FileProps, ref: any) => {
         <>
 
 
-            <div className={wrapperClassName ? wrapperClassName : "mb-3 position-relative upload-control"} ref={rootRef}>
+            <div className={wrapperClassName || wrapperClassName === '' ? wrapperClassName : "mb-3 position-relative upload-control"} ref={rootRef}>
                 <label
                     ref={labelRef}
                     onMouseEnter={handleLabelEnter}
@@ -255,7 +255,7 @@ const File = forwardRef((props: FileProps, ref: any) => {
                 <div className="input-group">
                     <input
                         ref={(node) => {
-                            fileInput.current = node;
+                            fileInputRef.current = node;
                             if (typeof ref === 'function') {
                                 ref(node);
                             } else if (ref) {
@@ -263,7 +263,7 @@ const File = forwardRef((props: FileProps, ref: any) => {
                             }
                         }}
                         tabIndex={tabIndex || 0}
-                        className={controlClassName ? controlClassName : "form-control"}
+                        className={controlClassName || controlClassName === '' ? controlClassName : "form-control"}
                         id={idRes}
                         type="file"
                         // The onChange should trigger updates whenever

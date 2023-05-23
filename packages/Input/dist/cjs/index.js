@@ -182,7 +182,7 @@ var Input = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(funct
     onBlur === null || onBlur === void 0 ? void 0 : onBlur(event, onComposition);
   }
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-    className: wrapperClassName ? wrapperClassName : "mb-3 position-relative",
+    className: wrapperClassName || wrapperClassName === '' ? wrapperClassName : "mb-3 position-relative",
     ref: rootRef
   }, label ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("label", {
     htmlFor: idRes,
@@ -195,7 +195,7 @@ var Input = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(funct
     ref: ref,
     tabIndex: tabIndex || 0,
     type: typeRes,
-    className: controlClassName ? controlClassName : "form-control",
+    className: controlClassName || controlClassName === '' ? controlClassName : "form-control",
     id: idRes,
     name: name,
     step: step || 1,
@@ -204,7 +204,7 @@ var Input = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(funct
     placeholder: placeholder || '',
     defaultValue: value || '',
     maxLength: maxLength || null,
-    autoComplete: autoComplete,
+    autoComplete: autoComplete ? 'on' : 'off',
     onFocus: handleFocus,
     onBlur: handleBlur,
     onChange: handleChange,

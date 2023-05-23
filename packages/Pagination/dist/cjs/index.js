@@ -264,7 +264,7 @@ var Pagination = function Pagination(props) {
     }
   });
   return /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("nav", {
-    className: wrapperClassName ? wrapperClassName : "mb-3 position-relative",
+    className: wrapperClassName || wrapperClassName === '' ? wrapperClassName : "mb-3 position-relative",
     style: style
   }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("ul", {
     className: navClassName ? "".concat(navClassName, " ").concat(alignClassName) : "pagination ".concat(alignClassName)

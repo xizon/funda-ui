@@ -123,7 +123,7 @@ const SearchBar = forwardRef((props: SearchBarProps, ref: any) => {
         <>
 
 
-            <div className={wrapperClassName ? wrapperClassName : "mb-3 position-relative"} ref={rootRef}>
+            <div className={wrapperClassName || wrapperClassName === '' ? wrapperClassName : "mb-3 position-relative"} ref={rootRef}>
                 {label ? <><label htmlFor={idRes} className="form-label">{label}</label></> : null}
 
                 <div className="input-group">
@@ -131,13 +131,13 @@ const SearchBar = forwardRef((props: SearchBarProps, ref: any) => {
                         ref={ref}
                         tabIndex={tabIndex || 0}
                         type={appearance === 'pill' ? 'input' : 'search'}
-                        className={appearance === 'pill' ? `${(controlClassName ? controlClassName : "form-control")} border rounded-pill` : (controlClassName ? controlClassName : "form-control")}
+                        className={appearance === 'pill' ? `${(controlClassName || controlClassName === '' ? controlClassName : "form-control")} border rounded-pill` : (controlClassName || controlClassName === '' ? controlClassName : "form-control")}
                         id={idRes}
                         name={name}
                         placeholder={placeholder || ''}
                         defaultValue={value || ''}
                         maxLength={maxLength || null}
-                        autoComplete={autoComplete}
+                        autoComplete={autoComplete ? 'on' : 'off'}
                         onFocus={handleFocus}
                         onBlur={handleBlur}
                         onChange={handleChange}

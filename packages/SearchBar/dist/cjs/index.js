@@ -181,7 +181,7 @@ var SearchBar = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(f
     onBlur === null || onBlur === void 0 ? void 0 : onBlur(event, onComposition);
   }
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-    className: wrapperClassName ? wrapperClassName : "mb-3 position-relative",
+    className: wrapperClassName || wrapperClassName === '' ? wrapperClassName : "mb-3 position-relative",
     ref: rootRef
   }, label ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("label", {
     htmlFor: idRes,
@@ -192,13 +192,13 @@ var SearchBar = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(f
     ref: ref,
     tabIndex: tabIndex || 0,
     type: appearance === 'pill' ? 'input' : 'search',
-    className: appearance === 'pill' ? "".concat(controlClassName ? controlClassName : "form-control", " border rounded-pill") : controlClassName ? controlClassName : "form-control",
+    className: appearance === 'pill' ? "".concat(controlClassName || controlClassName === '' ? controlClassName : "form-control", " border rounded-pill") : controlClassName || controlClassName === '' ? controlClassName : "form-control",
     id: idRes,
     name: name,
     placeholder: placeholder || '',
     defaultValue: value || '',
     maxLength: maxLength || null,
-    autoComplete: autoComplete,
+    autoComplete: autoComplete ? 'on' : 'off',
     onFocus: handleFocus,
     onBlur: handleBlur,
     onChange: handleChange,

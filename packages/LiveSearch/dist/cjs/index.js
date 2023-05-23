@@ -323,7 +323,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
             onBlur === null || onBlur === void 0 ? void 0 : onBlur(event, onComposition);
           }
           return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react__WEBPACK_IMPORTED_MODULE_0___default().Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-            className: wrapperClassName ? wrapperClassName : "mb-3 position-relative",
+            className: wrapperClassName || wrapperClassName === '' ? wrapperClassName : "mb-3 position-relative",
             ref: rootRef
           }, label ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react__WEBPACK_IMPORTED_MODULE_0___default().Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("label", {
             htmlFor: idRes,
@@ -334,13 +334,13 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
             ref: ref,
             tabIndex: tabIndex || 0,
             type: appearance === 'pill' ? 'input' : 'search',
-            className: appearance === 'pill' ? "".concat(controlClassName ? controlClassName : "form-control", " border rounded-pill") : controlClassName ? controlClassName : "form-control",
+            className: appearance === 'pill' ? "".concat(controlClassName || controlClassName === '' ? controlClassName : "form-control", " border rounded-pill") : controlClassName || controlClassName === '' ? controlClassName : "form-control",
             id: idRes,
             name: name,
             placeholder: placeholder || '',
             defaultValue: value || '',
             maxLength: maxLength || null,
-            autoComplete: autoComplete,
+            autoComplete: autoComplete ? 'on' : 'off',
             onFocus: handleFocus,
             onBlur: handleBlur,
             onChange: handleChange,
@@ -499,17 +499,9 @@ function _iterableToArrayLimit(arr, i) { var _i = null == arr ? null : "undefine
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 
-/**
- * Check if an element is in the viewport
- * @param {HTMLElement} elem 
- * @returns {boolean}
- */
-function isInViewport(elem) {
-  var bounding = elem.getBoundingClientRect();
-  return bounding.top >= 0 && bounding.left >= 0 && bounding.bottom <= (window.innerHeight || document.documentElement.clientHeight) && bounding.right <= (window.innerWidth || document.documentElement.clientWidth);
-}
 var LiveSearch = function LiveSearch(props) {
   var wrapperClassName = props.wrapperClassName,
+    controlClassName = props.controlClassName,
     appearance = props.appearance,
     disabled = props.disabled,
     required = props.required,
@@ -537,6 +529,7 @@ var LiveSearch = function LiveSearch(props) {
     onBlur = props.onBlur;
   var uniqueID = (0,react__WEBPACK_IMPORTED_MODULE_0__.useId)();
   var idRes = id || uniqueID;
+  var rootRef = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(null);
   var inputRef = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(null);
   var listRef = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(null);
 
@@ -559,12 +552,22 @@ var LiveSearch = function LiveSearch(props) {
     setInputValue = _useState8[1];
   var _useState9 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(false),
     _useState10 = _slicedToArray(_useState9, 2),
-    searchTrigger = _useState10[0],
-    setSearchTrigger = _useState10[1];
+    isOpen = _useState10[0],
+    setIsOpen = _useState10[1];
   var _useState11 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(false),
     _useState12 = _slicedToArray(_useState11, 2),
     hasErr = _useState12[0],
     setHasErr = _useState12[1];
+
+  /**
+   * Check if an element is in the viewport
+   * @param {HTMLElement} elem 
+   * @returns {boolean}
+   */
+  function isInViewport(elem) {
+    var bounding = elem.getBoundingClientRect();
+    return bounding.top >= 0 && bounding.left >= 0 && bounding.bottom <= (window.innerHeight || document.documentElement.clientHeight) && bounding.right <= (window.innerWidth || document.documentElement.clientWidth);
+  }
 
   //
   function getPlacement(el) {
@@ -596,7 +599,7 @@ var LiveSearch = function LiveSearch(props) {
     //
     if (!isInViewport(el)) {
       el.classList.add(PLACEMENT_BOTTOMEND);
-      el.style.setProperty('bottom', inputRef.current.clientHeight + 'px', "important");
+      el.style.setProperty('bottom', inputRef.current.clientHeight + 5 + 'px', "important");
     } else {
       el.classList.remove(PLACEMENT_BOTTOMEND);
       el.style.removeProperty('bottom');
@@ -608,7 +611,7 @@ var LiveSearch = function LiveSearch(props) {
     return _matchData.apply(this, arguments);
   }
   function _matchData() {
-    _matchData = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee() {
+    _matchData = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee2() {
       var val,
         query,
         res,
@@ -616,12 +619,12 @@ var LiveSearch = function LiveSearch(props) {
         paramsFromUser,
         params,
         response,
-        _args = arguments;
-      return _regeneratorRuntime().wrap(function _callee$(_context) {
-        while (1) switch (_context.prev = _context.next) {
+        _args2 = arguments;
+      return _regeneratorRuntime().wrap(function _callee2$(_context2) {
+        while (1) switch (_context2.prev = _context2.next) {
           case 0:
-            val = _args.length > 0 && _args[0] !== undefined ? _args[0] : '';
-            query = _args.length > 1 && _args[1] !== undefined ? _args[1] : false;
+            val = _args2.length > 0 && _args2[0] !== undefined ? _args2[0] : '';
+            query = _args2.length > 1 && _args2[1] !== undefined ? _args2[1] : false;
             res = [];
             filterRes = function filterRes(data) {
               return data.filter(function (item) {
@@ -637,27 +640,27 @@ var LiveSearch = function LiveSearch(props) {
               });
             };
             if (!query) {
-              _context.next = 16;
+              _context2.next = 16;
               break;
             }
             paramsFromUser = fetchFuncMethodParams;
             paramsFromUser.shift();
             paramsFromUser.unshift(val);
             params = paramsFromUser.join(',');
-            _context.next = 11;
+            _context2.next = 11;
             return fetchData(params);
           case 11:
-            response = _context.sent;
+            response = _context2.sent;
             res = filterRes(response);
-            return _context.abrupt("return", res);
+            return _context2.abrupt("return", res);
           case 16:
             res = filterRes(dataInit);
-            return _context.abrupt("return", res);
+            return _context2.abrupt("return", res);
           case 18:
           case "end":
-            return _context.stop();
+            return _context2.stop();
         }
-      }, _callee);
+      }, _callee2);
     }));
     return _matchData.apply(this, arguments);
   }
@@ -665,39 +668,40 @@ var LiveSearch = function LiveSearch(props) {
     return _handleChange.apply(this, arguments);
   }
   function _handleChange() {
-    _handleChange = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee2(e, onComposition) {
+    _handleChange = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee3(e, onComposition) {
       var val, res;
-      return _regeneratorRuntime().wrap(function _callee2$(_context2) {
-        while (1) switch (_context2.prev = _context2.next) {
+      return _regeneratorRuntime().wrap(function _callee3$(_context3) {
+        while (1) switch (_context3.prev = _context3.next) {
           case 0:
             val = e.target.value;
             setInputValue(val);
 
             // detect string which contains only spaces
             if (!(!val.replace(/\s/g, '').length === true)) {
-              _context2.next = 4;
+              _context3.next = 4;
               break;
             }
-            return _context2.abrupt("return");
+            return _context3.abrupt("return");
           case 4:
-            //
-            setSearchTrigger(false);
             if (fetchTrigger) {
-              _context2.next = 12;
+              _context3.next = 12;
               break;
             }
             if (!(onComposition || !onComposition)) {
-              _context2.next = 12;
+              _context3.next = 12;
               break;
             }
-            _context2.next = 9;
+            _context3.next = 8;
             return matchData(val, fetchUpdate);
-          case 9:
-            res = _context2.sent;
+          case 8:
+            res = _context3.sent;
             setData(res);
 
             //
             onChange === null || onChange === void 0 ? void 0 : onChange(inputRef.current, res);
+
+            //
+            setIsOpen(true);
           case 12:
             // window position
             setTimeout(function () {
@@ -705,56 +709,58 @@ var LiveSearch = function LiveSearch(props) {
             }, 0);
           case 13:
           case "end":
-            return _context2.stop();
-        }
-      }, _callee2);
-    }));
-    return _handleChange.apply(this, arguments);
-  }
-  function triggerEv() {
-    return _triggerEv.apply(this, arguments);
-  }
-  function _triggerEv() {
-    _triggerEv = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee3() {
-      var res;
-      return _regeneratorRuntime().wrap(function _callee3$(_context3) {
-        while (1) switch (_context3.prev = _context3.next) {
-          case 0:
-            if (!fetchTrigger) {
-              _context3.next = 6;
-              break;
-            }
-            _context3.next = 3;
-            return matchData(inputValue, fetchUpdate);
-          case 3:
-            res = _context3.sent;
-            setData(res);
-            setSearchTrigger(res.length === 0 ? true : false);
-          case 6:
-          case "end":
             return _context3.stop();
         }
       }, _callee3);
     }));
-    return _triggerEv.apply(this, arguments);
+    return _handleChange.apply(this, arguments);
+  }
+  function activate() {
+    return _activate.apply(this, arguments);
+  }
+  function _activate() {
+    _activate = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee4() {
+      var res;
+      return _regeneratorRuntime().wrap(function _callee4$(_context4) {
+        while (1) switch (_context4.prev = _context4.next) {
+          case 0:
+            if (!fetchTrigger) {
+              _context4.next = 6;
+              break;
+            }
+            _context4.next = 3;
+            return matchData(inputValue, fetchUpdate);
+          case 3:
+            res = _context4.sent;
+            setData(res);
+
+            //
+            setIsOpen(res.length === 0 ? true : false);
+          case 6:
+          case "end":
+            return _context4.stop();
+        }
+      }, _callee4);
+    }));
+    return _activate.apply(this, arguments);
   }
   function fetchData(_x4) {
     return _fetchData.apply(this, arguments);
   }
   function _fetchData() {
-    _fetchData = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee4(params) {
+    _fetchData = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee5(params) {
       var response, _ORGIN_DATA;
-      return _regeneratorRuntime().wrap(function _callee4$(_context4) {
-        while (1) switch (_context4.prev = _context4.next) {
+      return _regeneratorRuntime().wrap(function _callee5$(_context5) {
+        while (1) switch (_context5.prev = _context5.next) {
           case 0:
             if (!(_typeof(fetchFuncAsync) === 'object')) {
-              _context4.next = 12;
+              _context5.next = 12;
               break;
             }
-            _context4.next = 3;
+            _context5.next = 3;
             return fetchFuncAsync["".concat(fetchFuncMethod)].apply(fetchFuncAsync, _toConsumableArray(params.split(',')));
           case 3:
-            response = _context4.sent;
+            response = _context5.sent;
             _ORGIN_DATA = response.data; // reset data structure
             if (typeof fetchCallback === 'function') {
               _ORGIN_DATA = fetchCallback(_ORGIN_DATA);
@@ -772,14 +778,14 @@ var LiveSearch = function LiveSearch(props) {
 
             //
             setDataInit(_ORGIN_DATA);
-            return _context4.abrupt("return", _ORGIN_DATA);
+            return _context5.abrupt("return", _ORGIN_DATA);
           case 12:
-            return _context4.abrupt("return", []);
+            return _context5.abrupt("return", []);
           case 13:
           case "end":
-            return _context4.stop();
+            return _context5.stop();
         }
-      }, _callee4);
+      }, _callee5);
     }));
     return _fetchData.apply(this, arguments);
   }
@@ -787,38 +793,52 @@ var LiveSearch = function LiveSearch(props) {
     return _handleSelect.apply(this, arguments);
   }
   function _handleSelect() {
-    _handleSelect = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee5(el) {
-      var index, res;
-      return _regeneratorRuntime().wrap(function _callee5$(_context5) {
-        while (1) switch (_context5.prev = _context5.next) {
+    _handleSelect = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee6(el) {
+      var dataInput,
+        index,
+        _data,
+        res,
+        _args6 = arguments;
+      return _regeneratorRuntime().wrap(function _callee6$(_context6) {
+        while (1) switch (_context6.prev = _context6.next) {
           case 0:
+            dataInput = _args6.length > 1 && _args6[1] !== undefined ? _args6[1] : false;
             if (!(typeof el === 'undefined')) {
-              _context5.next = 2;
+              _context6.next = 3;
               break;
             }
-            return _context5.abrupt("return");
-          case 2:
-            index = typeof el.target !== 'undefined' ? el.target.dataset.index : el.dataset.index;
-            _context5.next = 5;
-            return matchData(inputRef.current.value, false);
-          case 5:
-            res = _context5.sent;
-            //
-            onSelect === null || onSelect === void 0 ? void 0 : onSelect(inputRef.current, res[index]);
-            setData([]);
+            return _context6.abrupt("return");
+          case 3:
+            if (!dataInput) {
+              _context6.next = 8;
+              break;
+            }
+            _data = JSON.parse(dataInput);
+            onSelect === null || onSelect === void 0 ? void 0 : onSelect(inputRef.current, _data);
+            _context6.next = 13;
+            break;
           case 8:
+            index = typeof el.target !== 'undefined' ? el.target.dataset.index : el.dataset.index;
+            _context6.next = 11;
+            return matchData(inputRef.current.value, false);
+          case 11:
+            res = _context6.sent;
+            onSelect === null || onSelect === void 0 ? void 0 : onSelect(inputRef.current, res[index]);
+          case 13:
+            setData([]);
+          case 14:
           case "end":
-            return _context5.stop();
+            return _context6.stop();
         }
-      }, _callee5);
+      }, _callee6);
     }));
     return _handleSelect.apply(this, arguments);
   }
   function handleSearch() {
-    triggerEv();
+    activate();
   }
   function handleBlur(e) {
-    setSearchTrigger(false);
+    setIsOpen(false);
     if (!fetchTrigger) {
       setTimeout(function () {
         //
@@ -829,32 +849,38 @@ var LiveSearch = function LiveSearch(props) {
     }
   }
   function handleMouseLeaveTrigger() {
-    setSearchTrigger(false);
+    setIsOpen(false);
   }
   function optionFocus(type) {
-    if (listRef.current === null) return;
-    var options = [].slice.call(listRef.current.querySelectorAll('.list-group-item'));
-    var currentIndex = options.findIndex(function (e) {
-      return e === listRef.current.querySelector('.list-group-item.active');
-    });
-
-    // get the next element in the list, "%" will loop around to 0
-    var nextIndex;
-    if (type === 'increase') {
-      nextIndex = currentIndex + 1 % options.length;
-    } else {
-      nextIndex = (currentIndex < 0 ? options.length : currentIndex) - 1 % options.length;
-    }
-
-    //only one
-    if (options.length === 1) nextIndex = 0;
-    if (!isNaN(nextIndex)) {
-      var _options$nextIndex;
-      options.forEach(function (node, index) {
-        node === null || node === void 0 ? void 0 : node.classList.remove('active');
+    return new Promise(function (resolve) {
+      // Determine the "active" class name to avoid listening to other unused components of the same type
+      if (listRef.current === null || !rootRef.current.classList.contains('active')) return;
+      var options = [].slice.call(listRef.current.querySelectorAll('.list-group-item'));
+      var currentIndex = options.findIndex(function (e) {
+        return e === listRef.current.querySelector('.list-group-item.active');
       });
-      (_options$nextIndex = options[nextIndex]) === null || _options$nextIndex === void 0 ? void 0 : _options$nextIndex.classList.add('active');
-    }
+
+      // get the next element in the list, "%" will loop around to 0
+      var nextIndex;
+      if (type === 'increase') {
+        nextIndex = currentIndex + 1 % options.length;
+      } else {
+        nextIndex = (currentIndex < 0 ? options.length : currentIndex) - 1 % options.length;
+      }
+
+      //only one
+      if (options.length === 1) nextIndex = 0;
+      if (!isNaN(nextIndex)) {
+        options.forEach(function (node, index) {
+          node === null || node === void 0 ? void 0 : node.classList.remove('active');
+        });
+        var targetOption = options[nextIndex];
+        if (typeof targetOption !== 'undefined' && !targetOption.classList.contains('no-match')) {
+          targetOption.classList.add('active');
+          resolve(targetOption);
+        }
+      }
+    });
   }
   (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(function () {
     // data init
@@ -866,34 +892,66 @@ var LiveSearch = function LiveSearch(props) {
 
     // keyboard listener
     //--------------
-    var listener = function listener(event) {
-      if (event.code === "Enter" || event.code === "NumpadEnter") {
-        var _listRef$current;
-        // if option has active class
-        var activedOption = (_listRef$current = listRef.current) === null || _listRef$current === void 0 ? void 0 : _listRef$current.querySelector('.list-group-item.active');
-        if (activedOption === null) {
-          triggerEv();
-        } else {
-          handleSelect(activedOption);
-        }
-      }
-      switch (event.code) {
-        case "ArrowLeft":
-          // Left pressed
-          break;
-        case "ArrowRight":
-          // Right pressed
-          break;
-        case "ArrowUp":
-          // Up pressed
-          optionFocus('decrease');
-          break;
-        case "ArrowDown":
-          // Down pressed
-          optionFocus('increase');
-          break;
-      }
-    };
+    var listener = /*#__PURE__*/function () {
+      var _ref = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee(event) {
+        var res, currentData, options;
+        return _regeneratorRuntime().wrap(function _callee$(_context) {
+          while (1) switch (_context.prev = _context.next) {
+            case 0:
+              res = null;
+              if (!(event.code === "Enter" || event.code === "NumpadEnter")) {
+                _context.next = 4;
+                break;
+              }
+              if (listRef.current !== null) {
+                currentData = listRef.current.dataset.data;
+                if (typeof currentData !== 'undefined') {
+                  handleSelect(null, currentData);
+                  options = [].slice.call(listRef.current.querySelectorAll('.list-group-item'));
+                  options.forEach(function (node) {
+                    node.classList.remove('active');
+                  });
+                }
+              }
+              return _context.abrupt("return");
+            case 4:
+              _context.t0 = event.code;
+              _context.next = _context.t0 === "ArrowLeft" ? 7 : _context.t0 === "ArrowRight" ? 8 : _context.t0 === "ArrowUp" ? 9 : _context.t0 === "ArrowDown" ? 13 : 17;
+              break;
+            case 7:
+              return _context.abrupt("break", 17);
+            case 8:
+              return _context.abrupt("break", 17);
+            case 9:
+              _context.next = 11;
+              return optionFocus('decrease');
+            case 11:
+              res = _context.sent;
+              return _context.abrupt("break", 17);
+            case 13:
+              _context.next = 15;
+              return optionFocus('increase');
+            case 15:
+              res = _context.sent;
+              return _context.abrupt("break", 17);
+            case 17:
+              // temporary data
+              if (res !== null) listRef.current.dataset.data = JSON.stringify({
+                value: res.dataset.value,
+                label: res.dataset.label,
+                letter: res.dataset.letter
+              });
+            case 18:
+            case "end":
+              return _context.stop();
+          }
+        }, _callee);
+      }));
+      return function listener(_x6) {
+        return _ref.apply(this, arguments);
+      };
+    }();
+    document.removeEventListener("keydown", listener);
     document.addEventListener("keydown", listener);
 
     // Remove the global list of events, especially as scroll and interval.
@@ -903,10 +961,12 @@ var LiveSearch = function LiveSearch(props) {
     };
   }, [data]);
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-    className: "position-relative",
+    className: isOpen ? "livesearch__wrapper ".concat(wrapperClassName || wrapperClassName === '' ? wrapperClassName : 'mb-3 position-relative', " active") : "livesearch__wrapper ".concat(wrapperClassName || wrapperClassName === '' ? wrapperClassName : 'mb-3 position-relative'),
+    ref: rootRef,
     onMouseLeave: handleMouseLeaveTrigger
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((rpb_searchbar__WEBPACK_IMPORTED_MODULE_1___default()), {
-    wrapperClassName: wrapperClassName,
+    wrapperClassName: "",
+    controlClassName: controlClassName,
     ref: inputRef,
     value: value,
     label: label,
@@ -927,9 +987,9 @@ var LiveSearch = function LiveSearch(props) {
     autoComplete: "off"
   }), data && data.length > 0 && !hasErr ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
     ref: listRef,
-    className: "list-group position-absolute w-100 border shadow",
+    className: "list-group position-absolute w-100 border shadow small",
     style: {
-      marginTop: '-1.1rem',
+      marginTop: '0.2rem',
       zIndex: depth ? depth : 100
     },
     role: "tablist"
@@ -937,20 +997,31 @@ var LiveSearch = function LiveSearch(props) {
     var startItemBorder = index === 0 ? 'border-top-0' : '';
     var endItemBorder = index === data.length - 1 ? 'border-bottom-0' : '';
     return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", {
+      tabIndex: -1,
       onClick: handleSelect,
       type: "button",
       "data-index": index,
       key: index,
       className: "list-group-item list-group-item-action border-start-0 border-end-0 ".concat(startItemBorder, " ").concat(endItemBorder),
       "data-value": "".concat(item.value),
+      "data-label": "".concat(item.label),
       "data-letter": "".concat(item.letter),
       role: "tab"
     }, item.label);
-  }) : null, data.length === 0 && searchTrigger ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", {
+  }) : null)) : null, data && data.length === 0 && !hasErr && isOpen ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+    ref: listRef,
+    className: "list-group position-absolute w-100 border shadow small",
+    style: {
+      marginTop: '0.2rem',
+      zIndex: depth ? depth : 100
+    },
+    role: "tablist"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", {
+    tabIndex: -1,
     type: "button",
-    className: "list-group-item list-group-item-action",
+    className: "list-group-item list-group-item-action no-match",
     disabled: true
-  }, fetchNoneInfo || 'No match yet') : null)) : null));
+  }, fetchNoneInfo || 'No match yet'))) : null));
 };
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (LiveSearch);
 })();

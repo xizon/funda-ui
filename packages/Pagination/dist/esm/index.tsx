@@ -162,7 +162,7 @@ const Pagination = (props: PaginationProps) => {
     return (
         <>
 
-            <nav className={wrapperClassName ? wrapperClassName : "mb-3 position-relative"}  style={style}>
+            <nav className={wrapperClassName || wrapperClassName === '' ? wrapperClassName : "mb-3 position-relative"}  style={style}>
                 <ul className={navClassName ? `${navClassName} ${alignClassName}` : `pagination ${alignClassName}`}>
                     {firstLabel ? (
                         <li className={activePage > 1 ? `page-item ${_firstClassName}` : `page-item ${_firstClassName} ${_disabledClassName}`}>

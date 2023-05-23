@@ -54,13 +54,13 @@ const DropdownMenu = (props: DropdownMenuProps) => {
 
 
 
-    function handleClick(e) {
+    function handleClick(event: any) {
         setIsOpen(!isOpen);
     }
 
 
-    function handleClose(e) {
-        if (e.target.closest(`.${wrapperClassName ? wrapperClassName : 'dropdown__wrapper'}`) === null) {
+    function handleClose(event: any) {
+        if (event.target.closest(`.${wrapperClassName || wrapperClassName === '' ? wrapperClassName : 'dropdown__wrapper'}`) === null) {
             setIsOpen(false);
         }
     }
@@ -100,7 +100,7 @@ const DropdownMenu = (props: DropdownMenuProps) => {
     return (
         <>
 
-            <div className={isOpen ? `dropdown__wrapper ${wrapperClassName ? wrapperClassName : 'dropdown-default'} active` : `dropdown__wrapper ${wrapperClassName ? wrapperClassName : 'dropdown-default'}`}>
+            <div className={isOpen ? `dropdown__wrapper ${wrapperClassName || wrapperClassName === '' ? wrapperClassName : 'dropdown-default'} active` : `dropdown__wrapper ${wrapperClassName || wrapperClassName === '' ? wrapperClassName : 'dropdown-default'}`}>
 
                 {triggerButton ? <button tabIndex={tabIndex || -1} className={triggerClassName ? `${triggerClassName}` : `d-inline w-auto`} type="button" onClick={handleClick} dangerouslySetInnerHTML={{ __html: selectedLabel }}></button> : <div className={triggerClassName ? `${triggerClassName}` : `d-inline w-auto`} onClick={handleClick} dangerouslySetInnerHTML={{ __html: selectedLabel }}></div>}
 

@@ -14,7 +14,6 @@ import Select from 'react-pure-bootstrap/Select';
 | `value` | string | - | Set a default value for this control |
 | `label` | string \| ReactNode | - | It is used to specify a label for an element of a form. |
 | `name` | string | - | Name is not deprecated when used with form fields. |
-| `placeholder` | string | - |  Specifies a short hint that describes. |
 | `disabled` | boolean | false | Whether it is disabled |
 | `required` | boolean | false | When present, it specifies that a field must be filled out before submitting the form. |
 | `fetchFuncAsync` | Constructor | - | A method as a string from the constructor.  |

@@ -710,7 +710,7 @@ var CascadingSelect = function CascadingSelect(props) {
     };
   }, [value]);
   return /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
-    className: wrapperClassName ? "cascading-select__wrapper ".concat(wrapperClassName) : "cascading-select__wrapper mb-3 position-relative",
+    className: wrapperClassName || wrapperClassName === '' ? "cascading-select__wrapper ".concat(wrapperClassName) : "cascading-select__wrapper mb-3 position-relative",
     ref: rootRef
   }, label ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("label", {
     htmlFor: idRes,
@@ -724,7 +724,7 @@ var CascadingSelect = function CascadingSelect(props) {
       zIndex: depth ? depth : 100
     }
   }, isShow && !hasErr ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
-    className: "cascading-select__items"
+    className: "cascading-select__items shadow"
   }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("ul", null, showCloseBtn ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("a", {
     href: "#",
     onClick: function onClick(e) {
@@ -761,7 +761,7 @@ var CascadingSelect = function CascadingSelect(props) {
     ref: valRef,
     id: idRes,
     name: name,
-    className: controlClassName ? controlClassName : "form-control",
+    className: controlClassName || controlClassName === '' ? controlClassName : "form-control",
     placeholder: placeholder,
     value: changedVal // placeholder will not change if defaultValue is used
     ,
@@ -779,7 +779,10 @@ var CascadingSelect = function CascadingSelect(props) {
       setIsShow(false);
     }
   }) : null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("span", {
-    className: "arrow"
+    className: "arrow",
+    style: {
+      pointerEvents: 'none'
+    }
   }, controlArrow ? controlArrow : /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("svg", {
     width: "10px",
     height: "10px",
