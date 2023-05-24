@@ -132,10 +132,14 @@ var SearchBar = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(f
   var uniqueID = (0,react__WEBPACK_IMPORTED_MODULE_0__.useId)();
   var idRes = id || uniqueID;
   var rootRef = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(null);
-  var _useState = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(false),
+  var _useState = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(value || ''),
     _useState2 = _slicedToArray(_useState, 2),
-    onComposition = _useState2[0],
-    setOnComposition = _useState2[1];
+    changedVal = _useState2[0],
+    setChangedVal = _useState2[1];
+  var _useState3 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(false),
+    _useState4 = _slicedToArray(_useState3, 2),
+    onComposition = _useState4[0],
+    setOnComposition = _useState4[1];
   function handleComposition(event) {
     if (event.type === 'compositionstart') {
       setOnComposition(true);
@@ -155,8 +159,8 @@ var SearchBar = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(f
     onFocus === null || onFocus === void 0 ? void 0 : onFocus(event, onComposition);
   }
   function handleChange(event) {
-    var el = event.target;
     var val = event.target.value;
+    setChangedVal(val);
 
     //----
     //remove focus style
@@ -180,6 +184,11 @@ var SearchBar = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(f
     //
     onBlur === null || onBlur === void 0 ? void 0 : onBlur(event, onComposition);
   }
+  (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(function () {
+    // update default value
+    //--------------
+    setChangedVal(value || '');
+  }, [value]);
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
     className: wrapperClassName || wrapperClassName === '' ? wrapperClassName : "mb-3 position-relative",
     ref: rootRef
@@ -196,7 +205,7 @@ var SearchBar = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(f
     id: idRes,
     name: name,
     placeholder: placeholder || '',
-    defaultValue: value || '',
+    value: changedVal,
     maxLength: maxLength || null,
     autoComplete: autoComplete ? 'on' : 'off',
     onFocus: handleFocus,

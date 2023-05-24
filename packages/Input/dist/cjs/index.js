@@ -141,6 +141,10 @@ var Input = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(funct
     _useState2 = _slicedToArray(_useState, 2),
     onComposition = _useState2[0],
     setOnComposition = _useState2[1];
+  var _useState3 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(value || ''),
+    _useState4 = _slicedToArray(_useState3, 2),
+    changedVal = _useState4[0],
+    setChangedVal = _useState4[1];
   function handleComposition(event) {
     if (event.type === 'compositionstart') {
       setOnComposition(true);
@@ -156,8 +160,8 @@ var Input = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(funct
     onFocus === null || onFocus === void 0 ? void 0 : onFocus(event, onComposition);
   }
   function handleChange(event) {
-    var el = event.target;
     var val = event.target.value;
+    setChangedVal(val);
 
     //----
     //remove focus style
@@ -181,6 +185,11 @@ var Input = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(funct
     //
     onBlur === null || onBlur === void 0 ? void 0 : onBlur(event, onComposition);
   }
+  (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(function () {
+    // update default value
+    //--------------
+    setChangedVal(value || '');
+  }, [value]);
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
     className: wrapperClassName || wrapperClassName === '' ? wrapperClassName : "mb-3 position-relative",
     ref: rootRef
@@ -202,7 +211,7 @@ var Input = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(funct
     min: min || '',
     max: max || '',
     placeholder: placeholder || '',
-    defaultValue: value || '',
+    value: changedVal,
     maxLength: maxLength || null,
     autoComplete: autoComplete ? 'on' : 'off',
     onFocus: handleFocus,

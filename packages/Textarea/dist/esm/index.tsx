@@ -1,4 +1,4 @@
-import React, { useId, useRef, forwardRef } from 'react';
+import React, { useId, useState, useEffect, useRef, forwardRef } from 'react';
 
 
 declare module 'react' {
@@ -57,8 +57,10 @@ const Textarea = forwardRef((props: TextareaProps, ref: any) => {
     const uniqueID = useId();
     const idRes = id || uniqueID;
     const rootRef = useRef<any>(null);
+    const textareaRef = useRef<any>(null);
+    const [changedVal, setChangedVal] = useState<string>(value || '');
 
-    function handleFocus(event) {
+    function handleFocus(event: any) {
         const el = event.target;
         rootRef.current.classList.add('focus');
 
@@ -67,9 +69,9 @@ const Textarea = forwardRef((props: TextareaProps, ref: any) => {
     }
 
     function handleChange(event: any) {
-        const el = event.target;
         const val = event.target.value;
 
+        setChangedVal(val);
 
         //----
         //remove focus style
@@ -96,6 +98,13 @@ const Textarea = forwardRef((props: TextareaProps, ref: any) => {
         onBlur?.(event);
     }
 
+    useEffect(() => {
+
+        // update default value
+        //--------------
+        setChangedVal(value || '');
+
+    }, [value]);    
     
 
     return (
@@ -107,13 +116,20 @@ const Textarea = forwardRef((props: TextareaProps, ref: any) => {
                 <div className="input-group">
                     
                     <textarea  
-                      ref={ref}
+                        ref={(node) => {
+                            textareaRef.current = node;
+                            if (typeof ref === 'function') {
+                                ref(node);
+                            } else if (ref) {
+                                ref.current = node;
+                            }
+                        }}
                       tabIndex={tabIndex || 0}
 					  className={controlClassName || controlClassName === '' ? controlClassName : "form-control"}
 			          id={idRes}
 					  name={name}
 					  placeholder={placeholder || ''}
-					  defaultValue={value || ''}
+					  value={changedVal}
 					  maxLength={maxLength || null}
 			          onFocus={handleFocus}
 					  onBlur={handleBlur}

@@ -301,7 +301,7 @@ var Toast = function Toast(props) {
       clearTimeout(window.setCloseToast);
 
       // Remove all toasts
-      var _el = document.querySelector("#toast-".concat(idRes));
+      var _el = document.querySelector("#toasts__wrapper-".concat(idRes));
       if (_el !== null) _el.remove();
     };
   }, [data]);

@@ -274,10 +274,14 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
           var uniqueID = (0, react__WEBPACK_IMPORTED_MODULE_0__.useId)();
           var idRes = id || uniqueID;
           var rootRef = (0, react__WEBPACK_IMPORTED_MODULE_0__.useRef)(null);
-          var _useState = (0, react__WEBPACK_IMPORTED_MODULE_0__.useState)(false),
+          var _useState = (0, react__WEBPACK_IMPORTED_MODULE_0__.useState)(value || ''),
             _useState2 = _slicedToArray(_useState, 2),
-            onComposition = _useState2[0],
-            setOnComposition = _useState2[1];
+            changedVal = _useState2[0],
+            setChangedVal = _useState2[1];
+          var _useState3 = (0, react__WEBPACK_IMPORTED_MODULE_0__.useState)(false),
+            _useState4 = _slicedToArray(_useState3, 2),
+            onComposition = _useState4[0],
+            setOnComposition = _useState4[1];
           function handleComposition(event) {
             if (event.type === 'compositionstart') {
               setOnComposition(true);
@@ -297,8 +301,8 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
             onFocus === null || onFocus === void 0 ? void 0 : onFocus(event, onComposition);
           }
           function handleChange(event) {
-            var el = event.target;
             var val = event.target.value;
+            setChangedVal(val);
 
             //----
             //remove focus style
@@ -322,6 +326,11 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
             //
             onBlur === null || onBlur === void 0 ? void 0 : onBlur(event, onComposition);
           }
+          (0, react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(function () {
+            // update default value
+            //--------------
+            setChangedVal(value || '');
+          }, [value]);
           return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react__WEBPACK_IMPORTED_MODULE_0___default().Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
             className: wrapperClassName || wrapperClassName === '' ? wrapperClassName : "mb-3 position-relative",
             ref: rootRef
@@ -338,7 +347,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
             id: idRes,
             name: name,
             placeholder: placeholder || '',
-            defaultValue: value || '',
+            value: changedVal,
             maxLength: maxLength || null,
             autoComplete: autoComplete ? 'on' : 'off',
             onFocus: handleFocus,
@@ -546,10 +555,10 @@ var LiveSearch = function LiveSearch(props) {
     _useState6 = _slicedToArray(_useState5, 2),
     data = _useState6[0],
     setData = _useState6[1];
-  var _useState7 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(''),
+  var _useState7 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(value || ''),
     _useState8 = _slicedToArray(_useState7, 2),
-    inputValue = _useState8[0],
-    setInputValue = _useState8[1];
+    changedVal = _useState8[0],
+    setChangedVal = _useState8[1];
   var _useState9 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(false),
     _useState10 = _slicedToArray(_useState9, 2),
     isOpen = _useState10[0],
@@ -664,17 +673,17 @@ var LiveSearch = function LiveSearch(props) {
     }));
     return _matchData.apply(this, arguments);
   }
-  function handleChange(_x2, _x3) {
+  function handleChange(_x2) {
     return _handleChange.apply(this, arguments);
   }
   function _handleChange() {
-    _handleChange = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee3(e, onComposition) {
+    _handleChange = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee3(e) {
       var val, res;
       return _regeneratorRuntime().wrap(function _callee3$(_context3) {
         while (1) switch (_context3.prev = _context3.next) {
           case 0:
             val = e.target.value;
-            setInputValue(val);
+            setChangedVal(val);
 
             // detect string which contains only spaces
             if (!(!val.replace(/\s/g, '').length === true)) {
@@ -684,16 +693,12 @@ var LiveSearch = function LiveSearch(props) {
             return _context3.abrupt("return");
           case 4:
             if (fetchTrigger) {
-              _context3.next = 12;
+              _context3.next = 11;
               break;
             }
-            if (!(onComposition || !onComposition)) {
-              _context3.next = 12;
-              break;
-            }
-            _context3.next = 8;
+            _context3.next = 7;
             return matchData(val, fetchUpdate);
-          case 8:
+          case 7:
             res = _context3.sent;
             setData(res);
 
@@ -702,12 +707,12 @@ var LiveSearch = function LiveSearch(props) {
 
             //
             setIsOpen(true);
-          case 12:
+          case 11:
             // window position
             setTimeout(function () {
               getPlacement(listRef.current);
             }, 0);
-          case 13:
+          case 12:
           case "end":
             return _context3.stop();
         }
@@ -729,7 +734,7 @@ var LiveSearch = function LiveSearch(props) {
               break;
             }
             _context4.next = 3;
-            return matchData(inputValue, fetchUpdate);
+            return matchData(changedVal, fetchUpdate);
           case 3:
             res = _context4.sent;
             setData(res);
@@ -744,7 +749,7 @@ var LiveSearch = function LiveSearch(props) {
     }));
     return _activate.apply(this, arguments);
   }
-  function fetchData(_x4) {
+  function fetchData(_x3) {
     return _fetchData.apply(this, arguments);
   }
   function _fetchData() {
@@ -789,7 +794,7 @@ var LiveSearch = function LiveSearch(props) {
     }));
     return _fetchData.apply(this, arguments);
   }
-  function handleSelect(_x5) {
+  function handleSelect(_x4) {
     return _handleSelect.apply(this, arguments);
   }
   function _handleSelect() {
@@ -810,23 +815,25 @@ var LiveSearch = function LiveSearch(props) {
             return _context6.abrupt("return");
           case 3:
             if (!dataInput) {
-              _context6.next = 8;
+              _context6.next = 9;
               break;
             }
             _data = JSON.parse(dataInput);
             onSelect === null || onSelect === void 0 ? void 0 : onSelect(inputRef.current, _data);
-            _context6.next = 13;
+            setChangedVal(_data.label);
+            _context6.next = 15;
             break;
-          case 8:
+          case 9:
             index = typeof el.target !== 'undefined' ? el.target.dataset.index : el.dataset.index;
-            _context6.next = 11;
+            _context6.next = 12;
             return matchData(inputRef.current.value, false);
-          case 11:
+          case 12:
             res = _context6.sent;
             onSelect === null || onSelect === void 0 ? void 0 : onSelect(inputRef.current, res[index]);
-          case 13:
+            setChangedVal(res[index].label);
+          case 15:
             setData([]);
-          case 14:
+          case 16:
           case "end":
             return _context6.stop();
         }
@@ -883,6 +890,10 @@ var LiveSearch = function LiveSearch(props) {
     });
   }
   (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(function () {
+    // update default value
+    //--------------
+    setChangedVal(value || '');
+
     // data init
     //--------------
     if (!firstFetch) {
@@ -947,7 +958,7 @@ var LiveSearch = function LiveSearch(props) {
           }
         }, _callee);
       }));
-      return function listener(_x6) {
+      return function listener(_x5) {
         return _ref.apply(this, arguments);
       };
     }();
@@ -959,7 +970,7 @@ var LiveSearch = function LiveSearch(props) {
     return function () {
       document.removeEventListener("keydown", listener);
     };
-  }, [data]);
+  }, [value]);
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
     className: isOpen ? "livesearch__wrapper ".concat(wrapperClassName || wrapperClassName === '' ? wrapperClassName : 'mb-3 position-relative', " active") : "livesearch__wrapper ".concat(wrapperClassName || wrapperClassName === '' ? wrapperClassName : 'mb-3 position-relative'),
     ref: rootRef,
@@ -968,7 +979,7 @@ var LiveSearch = function LiveSearch(props) {
     wrapperClassName: "",
     controlClassName: controlClassName,
     ref: inputRef,
-    value: value,
+    value: changedVal,
     label: label,
     tabIndex: tabIndex,
     id: idRes,

@@ -204,7 +204,7 @@ const Toast = (props: ToastProps) => {
             clearTimeout(window.setCloseToast);
 
             // Remove all toasts
-            const _el = document.querySelector(`#toast-${idRes}`);
+            const _el = document.querySelector(`#toasts__wrapper-${idRes}`);
             if ( _el !== null ) _el.remove();
 
 
@@ -217,7 +217,7 @@ const Toast = (props: ToastProps) => {
 
             <div id={`toasts__wrapper-${idRes}`} data-async={async ? async : false} className={`toasts__wrapper toasts__wrapper--${direction ? direction : 'bottom-center'}`} ref={rootRef}>
                 <div className="toasts">
-                    {data.map((item, i) => {
+                    {data.map((item: any, i: number) => {
                         return <Item
                             depth={depth - i}
                             key={i}

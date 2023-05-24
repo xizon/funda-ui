@@ -1,4 +1,4 @@
-import React, { useId, useState, useRef, forwardRef } from 'react';
+import React, { useId, useState, useEffect, useRef, forwardRef } from 'react';
 
 declare module 'react' {
     interface ReactI18NextChildren<T> {
@@ -60,6 +60,7 @@ const SearchBar = forwardRef((props: SearchBarProps, ref: any) => {
     const uniqueID = useId();
     const idRes = id || uniqueID;
     const rootRef = useRef<any>(null);
+    const [changedVal, setChangedVal] = useState<string>(value || '');
 
 
     const [onComposition, setOnComposition] = useState(false);
@@ -88,9 +89,9 @@ const SearchBar = forwardRef((props: SearchBarProps, ref: any) => {
     }
 
     function handleChange(event: any) {
-        const el = event.target;
         const val = event.target.value;
 
+        setChangedVal(val);
 
         //----
         //remove focus style
@@ -118,6 +119,14 @@ const SearchBar = forwardRef((props: SearchBarProps, ref: any) => {
     }
 
 
+    useEffect(() => {
+
+        // update default value
+        //--------------
+        setChangedVal(value || '');
+
+    }, [value]);
+
 
     return (
         <>
@@ -135,7 +144,7 @@ const SearchBar = forwardRef((props: SearchBarProps, ref: any) => {
                         id={idRes}
                         name={name}
                         placeholder={placeholder || ''}
-                        defaultValue={value || ''}
+                        value={changedVal}
                         maxLength={maxLength || null}
                         autoComplete={autoComplete ? 'on' : 'off'}
                         onFocus={handleFocus}

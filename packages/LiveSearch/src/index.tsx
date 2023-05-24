@@ -80,10 +80,10 @@ const LiveSearch = (props: LiveSearchProps) => {
     const [firstFetch, setFirstFetch] = useState<boolean>(false);
     const [dataInit, setDataInit] = useState<any[]>([]);
     const [data, setData] = useState<any[]>([]);
-    const [inputValue, setInputValue] = useState<string>('');
+    const [changedVal, setChangedVal] = useState<string>(value || '');
     const [isOpen, setIsOpen] = useState<boolean>(false);
     const [hasErr, setHasErr] = useState<boolean>(false);
-
+ 
 
     /**
      * Check if an element is in the viewport
@@ -181,26 +181,24 @@ const LiveSearch = (props: LiveSearchProps) => {
     }
 
 
-    async function handleChange(e: any, onComposition: any) {
+    async function handleChange(e: any) {
         const val = e.target.value;
 
-        setInputValue(val);
+        setChangedVal(val);
 
         // detect string which contains only spaces
         if ( !val.replace(/\s/g, '').length === true ) return;
 
         //
         if ( !fetchTrigger ) {
-            if (onComposition || !onComposition) {
-                const res: any = await matchData(val, fetchUpdate);
-                setData(res);
+            const res: any = await matchData(val, fetchUpdate);
+            setData(res);
 
-                //
-                onChange?.(inputRef.current, res); 
+            //
+            onChange?.(inputRef.current, res); 
 
-                //
-                setIsOpen(true);
-            }
+            //
+            setIsOpen(true);
         }
 
         // window position
@@ -213,8 +211,9 @@ const LiveSearch = (props: LiveSearchProps) => {
 
     async function activate() {
         if ( fetchTrigger ) {
-            const res: any = await matchData(inputValue, fetchUpdate);
+            const res: any = await matchData(changedVal, fetchUpdate);
             setData(res);
+            
 
             //
             setIsOpen(res.length === 0 ? true : false);
@@ -268,12 +267,14 @@ const LiveSearch = (props: LiveSearchProps) => {
             const _data = JSON.parse(dataInput);
 
             onSelect?.(inputRef.current, _data);
+            setChangedVal(_data.label);
         
         } else {
             index = typeof el.target !== 'undefined' ? el.target.dataset.index : el.dataset.index;
 
             const res: any = await matchData(inputRef.current.value, false);
             onSelect?.(inputRef.current, res[index as never]);
+            setChangedVal(res[index as never].label);
         }
 
         setData([]);
@@ -351,6 +352,11 @@ const LiveSearch = (props: LiveSearchProps) => {
 
     useEffect(() => {
 
+        // update default value
+        //--------------
+        setChangedVal(value || '');
+       
+
         // data init
         //--------------
         if ( !firstFetch ) {
@@ -358,6 +364,7 @@ const LiveSearch = (props: LiveSearchProps) => {
             setFirstFetch(true);  // avoid triggering two data requests if the input value has not changed
         }
 
+        
 
         // keyboard listener
         //--------------
@@ -414,10 +421,11 @@ const LiveSearch = (props: LiveSearchProps) => {
         // Remove the global list of events, especially as scroll and interval.
         //--------------
         return () => {
+
             document.removeEventListener("keydown", listener);
         };
 
-    }, [data]);
+    }, [value]);
 
 
     return (
@@ -428,7 +436,7 @@ const LiveSearch = (props: LiveSearchProps) => {
                     wrapperClassName=""
                     controlClassName={controlClassName}
                     ref={inputRef}
-                    value={value}
+                    value={changedVal}
                     label={label}
                     tabIndex={tabIndex}
                     id={idRes}
@@ -439,7 +447,7 @@ const LiveSearch = (props: LiveSearchProps) => {
                     required={required}
                     style={style}
                     appearance={appearance}
-                    onChange={handleChange}
+                    onChange={handleChange}    
                     onBlur={handleBlur}
                     onClick={handleSearch}
                     icon={!fetchTrigger ? '' : icon}

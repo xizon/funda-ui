@@ -1,4 +1,4 @@
-import React, { useId, useState, useRef, forwardRef } from 'react';
+import React, { useId, useState, useEffect, useRef, forwardRef } from 'react';
 
 declare module 'react' {
     interface ReactI18NextChildren<T> {
@@ -72,6 +72,7 @@ const Input = forwardRef((props: InputProps, ref: any) => {
     const rootRef = useRef<any>(null);
     const typeRes = typeof (type) === 'undefined' ? 'text' : type;
     const [onComposition, setOnComposition] = useState(false);
+    const [changedVal, setChangedVal] = useState<string>(value || '');
 
     function handleComposition(event: any) {
         if (event.type === 'compositionstart') {
@@ -91,8 +92,9 @@ const Input = forwardRef((props: InputProps, ref: any) => {
     }
 
     function handleChange(event: any) {
-        const el = event.target;
         const val = event.target.value;
+
+        setChangedVal(val);
 
 
         //----
@@ -120,6 +122,16 @@ const Input = forwardRef((props: InputProps, ref: any) => {
         onBlur?.(event, onComposition);
     }
 
+
+    useEffect(() => {
+
+        // update default value
+        //--------------
+        setChangedVal(value || '');
+
+    }, [value]);
+
+
     return (
         <>
 
@@ -139,7 +151,7 @@ const Input = forwardRef((props: InputProps, ref: any) => {
                         min={min || ''}
                         max={max || ''}
                         placeholder={placeholder || ''}
-                        defaultValue={value || ''}
+                        value={changedVal}
                         maxLength={maxLength || null}
                         autoComplete={autoComplete ? 'on' : 'off'}
                         onFocus={handleFocus}
