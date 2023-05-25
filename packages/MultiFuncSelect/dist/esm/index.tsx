@@ -206,7 +206,7 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
 	} 
 
 
-    async function fetchData(params: any) {
+    async function fetchData(params: any, defaultValue) {
 
         if ( typeof fetchFuncAsync === 'object' ) {
 
@@ -226,7 +226,7 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
             }
 
             // value & label must be initialized
-            setControlValue(value); 
+            setControlValue(defaultValue); 
 
             const filterRes = _ORGIN_DATA.filter((item: any) => item.value == value );
             if ( typeof filterRes[0] !== 'undefined' ) setControlLabel(filterRes[0].label);
@@ -247,9 +247,9 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
 
 
             // value & label must be initialized
-            setControlValue(value);
+            setControlValue(defaultValue);
 
-            const filterRes = optionsDataInit.filter((item: any) => item.value == value );
+            const filterRes = optionsDataInit.filter((item: any) => item.value == defaultValue );
             if ( typeof filterRes[0] !== 'undefined' ) setControlLabel(filterRes[0].label);
             
 
@@ -472,7 +472,16 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
         // data init
         //--------------
         const _params: any[] = fetchFuncMethodParams || [];
-        fetchData((_params).join(','));
+        fetchData((_params).join(','), value);
+
+
+        // If you use the dynamic form assignment (such as document.getElementById(xxx).value), 
+        // you need to judge the value of the input obtained by using the macrotask("setTimeout()")
+        setTimeout(() => {
+            if ( valueInputRef.current.value !== '' && ( typeof value === 'undefined' || value === '' ) ) {
+                fetchData((_params).join(','), valueInputRef.current.value);
+            }
+        }, 500);
 
 
 
@@ -568,57 +577,59 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
                 
                 {label ? <><label htmlFor={idRes} className="form-label">{label}</label></> : null}
 
-                    <input 
-                        ref={(node) => {
-                            selectInputRef.current = node;
-                            if (typeof ref === 'function') {
-                                ref(node);
-                            } else if (ref) {
-                                ref.current = node;
-                            }
-                        }}
-                        tabIndex={tabIndex || 0}
-                        type="text"
-                        name={`${name}-label`}
-                        placeholder={placeholder || ''}
-                        className={controlClassName || controlClassName === '' ? controlClassName : "form-control"}
-                        onFocus={handleFocus}
-                        onBlur={handleBlur}
-                        onClick={handleSearch}
-                        onChange={handleChange}
-                        onCompositionStart={handleComposition}
-                        onCompositionUpdate={handleComposition}
-                        onCompositionEnd={handleComposition}
-                        disabled={disabled || null}
-                        required={required || null}
-                        readOnly={readOnly || null}
-                        value={controlTempValue || controlTempValue === '' ? controlTempValue : controlLabel}  // do not use `defaultValue`
-                        style={{cursor: 'pointer', ...style}}
-                        autoComplete='off'
-                        {...attributes}
-                    />
+                    <div className="position-relative">
+                        <input 
+                            ref={(node) => {
+                                selectInputRef.current = node;
+                                if (typeof ref === 'function') {
+                                    ref(node);
+                                } else if (ref) {
+                                    ref.current = node;
+                                }
+                            }}
+                            tabIndex={tabIndex || 0}
+                            type="text"
+                            name={name?.match(/(\[.*?\])/gi) ? `${name.split('[')[0]}-label[]` : `${name}-label`}
+                            placeholder={placeholder || ''}
+                            className={controlClassName || controlClassName === '' ? controlClassName : "form-control"}
+                            onFocus={handleFocus}
+                            onBlur={handleBlur}
+                            onClick={handleSearch}
+                            onChange={handleChange}
+                            onCompositionStart={handleComposition}
+                            onCompositionUpdate={handleComposition}
+                            onCompositionEnd={handleComposition}
+                            disabled={disabled || null}
+                            required={required || null}
+                            readOnly={readOnly || null}
+                            value={controlTempValue || controlTempValue === '' ? controlTempValue : controlLabel}  // do not use `defaultValue`
+                            style={{cursor: 'pointer', ...style}}
+                            autoComplete='off'
+                            {...attributes}
+                        />
 
-                    <input 
-                        ref={valueInputRef}
-                        type="hidden"
-                        id={idRes}
-                        name={name}
-                        value={controlValue}  // do not use `defaultValue`
-                    />
+                        <input 
+                            ref={valueInputRef}
+                            type="hidden"
+                            id={idRes}
+                            name={name}
+                            value={controlValue}  // do not use `defaultValue`
+                        />
 
-                    <span className="arrow position-absolute top-0 end-0 me-2 mt-1" style={{translate: 'all .2s', transform: isOpen ? 'rotate(180deg) translateY(-4px)' : 'rotate(0) translateY(0)', pointerEvents: 'none'}}>
-                        {controlArrow ? controlArrow : <svg width="10px" height="10px" viewBox="0 -4.5 20 20">
-                            <g stroke="none" stroke-width="1" fill="none">
-                                <g transform="translate(-180.000000, -6684.000000)" fill="#a5a5a5">
-                                    <g transform="translate(56.000000, 160.000000)">
-                                        <path d="M144,6525.39 L142.594,6524 L133.987,6532.261 L133.069,6531.38 L133.074,6531.385 L125.427,6524.045 L124,6525.414 C126.113,6527.443 132.014,6533.107 133.987,6535 C135.453,6533.594 134.024,6534.965 144,6525.39" id="arrow_down-[#339]">
-                                        </path>
+                        <span className="arrow position-absolute top-0 end-0 me-2 mt-1" style={{translate: 'all .2s', transform: isOpen ? 'rotate(180deg) translateY(-4px)' : 'rotate(0) translateY(0)', pointerEvents: 'none'}}>
+                            {controlArrow ? controlArrow : <svg width="10px" height="10px" viewBox="0 -4.5 20 20">
+                                <g stroke="none" stroke-width="1" fill="none">
+                                    <g transform="translate(-180.000000, -6684.000000)" fill="#a5a5a5">
+                                        <g transform="translate(56.000000, 160.000000)">
+                                            <path d="M144,6525.39 L142.594,6524 L133.987,6532.261 L133.069,6531.38 L133.074,6531.385 L125.427,6524.045 L124,6525.414 C126.113,6527.443 132.014,6533.107 133.987,6535 C135.453,6533.594 134.024,6534.965 144,6525.39" id="arrow_down-[#339]">
+                                            </path>
+                                        </g>
                                     </g>
                                 </g>
-                            </g>
-                        </svg>}
-                    </span>
+                            </svg>}
+                        </span>
 
+                    </div>
 
 
                     {data && !hasErr ? <>

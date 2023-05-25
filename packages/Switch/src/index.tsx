@@ -6,10 +6,10 @@ declare module 'react' {
     }
 }
 
-type CheckboxOptionChangeFnType = (arg1: any, arg2: any) => void;
+type SwitchOptionChangeFnType = (arg1: any, arg2: any) => void;
 
 
-type CheckboxProps = {
+type SwitchProps = {
     wrapperClassName?: string;
     value?: string | boolean;
     label?: React.ReactNode | string;
@@ -25,12 +25,12 @@ type CheckboxProps = {
     /** This function is called whenever the data is updated.
      *  Exposes the JSON format data about the option as an argument.
      */
-    onChange?: CheckboxOptionChangeFnType | null;
+    onChange?: SwitchOptionChangeFnType | null;
     onBlur?: (e: any) => void;
     onFocus?: (e: any) => void;
 };
 
-const Checkbox = forwardRef((props: CheckboxProps, ref: any) => {
+const Switch = forwardRef((props: SwitchProps, ref: any) => {
     const {
         wrapperClassName,
         disabled,
@@ -100,7 +100,7 @@ const Checkbox = forwardRef((props: CheckboxProps, ref: any) => {
         <>
 
             <div className={wrapperClassName || wrapperClassName === '' ? wrapperClassName : "mb-3 position-relative"} ref={rootRef}>
-                <div className="form-check">
+                <div className="form-check form-switch">
                     <input 
                         ref={ref}
                         tabIndex={tabIndex || 0}
@@ -115,7 +115,7 @@ const Checkbox = forwardRef((props: CheckboxProps, ref: any) => {
                         onBlur={handleBlur}
                         defaultValue={value as string || ''}
                         checked={val}   // component status will not change if defaultChecked is used
-                        style={style}
+                        style={{cursor: 'pointer', ...style}}
                         {...attributes}
                     />
                     {label ? <><label htmlFor={idRes} className="form-check-label">{label}</label></> : null}
@@ -127,4 +127,4 @@ const Checkbox = forwardRef((props: CheckboxProps, ref: any) => {
     )
 });
 
-export default Checkbox;
+export default Switch;

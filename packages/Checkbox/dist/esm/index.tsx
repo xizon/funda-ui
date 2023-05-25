@@ -118,7 +118,7 @@ const Checkbox = forwardRef((props: CheckboxProps, ref: any) => {
                         style={style}
                         {...attributes}
                     />
-                    {label ? <><label htmlFor={idRes} className="form-label">{label}</label></> : null}
+                    {label ? <><label htmlFor={idRes} className="form-check-label">{label}</label></> : null}
                 </div>
             </div>
 

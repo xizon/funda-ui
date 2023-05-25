@@ -315,11 +315,11 @@ var MultiFuncSelect = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forward
       }
     }
   }
-  function fetchData(_x2) {
+  function fetchData(_x2, _x3) {
     return _fetchData.apply(this, arguments);
   }
   function _fetchData() {
-    _fetchData = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee2(params) {
+    _fetchData = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee2(params, defaultValue) {
       var response, _ORGIN_DATA, filterRes, _filterRes;
       return _regeneratorRuntime().wrap(function _callee2$(_context2) {
         while (1) switch (_context2.prev = _context2.next) {
@@ -345,7 +345,7 @@ var MultiFuncSelect = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forward
             }
 
             // value & label must be initialized
-            setControlValue(value);
+            setControlValue(defaultValue);
             filterRes = _ORGIN_DATA.filter(function (item) {
               return item.value == value;
             });
@@ -362,9 +362,9 @@ var MultiFuncSelect = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forward
             return _context2.abrupt("return", _ORGIN_DATA);
           case 16:
             // value & label must be initialized
-            setControlValue(value);
+            setControlValue(defaultValue);
             _filterRes = optionsDataInit.filter(function (item) {
-              return item.value == value;
+              return item.value == defaultValue;
             });
             if (typeof _filterRes[0] !== 'undefined') setControlLabel(_filterRes[0].label);
 
@@ -402,7 +402,7 @@ var MultiFuncSelect = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forward
     // update temporary value
     setControlTempValue('');
   }
-  function handleSelect(_x3) {
+  function handleSelect(_x4) {
     return _handleSelect.apply(this, arguments);
   }
   function _handleSelect() {
@@ -558,7 +558,15 @@ var MultiFuncSelect = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forward
     // data init
     //--------------
     var _params = fetchFuncMethodParams || [];
-    fetchData(_params.join(','));
+    fetchData(_params.join(','), value);
+
+    // If you use the dynamic form assignment (such as document.getElementById(xxx).value), 
+    // you need to judge the value of the input obtained by using the macrotask("setTimeout()")
+    setTimeout(function () {
+      if (valueInputRef.current.value !== '' && (typeof value === 'undefined' || value === '')) {
+        fetchData(_params.join(','), valueInputRef.current.value);
+      }
+    }, 500);
 
     // keyboard listener
     //--------------
@@ -623,7 +631,7 @@ var MultiFuncSelect = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forward
           }
         }, _callee);
       }));
-      return function listener(_x4) {
+      return function listener(_x5) {
         return _ref.apply(this, arguments);
       };
     }();
@@ -655,7 +663,9 @@ var MultiFuncSelect = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forward
   }, label ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("label", {
     htmlFor: idRes,
     className: "form-label"
-  }, label)) : null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("input", _extends({
+  }, label)) : null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+    className: "position-relative"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("input", _extends({
     ref: function ref(node) {
       selectInputRef.current = node;
       if (typeof _ref2 === 'function') {
@@ -666,7 +676,7 @@ var MultiFuncSelect = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forward
     },
     tabIndex: tabIndex || 0,
     type: "text",
-    name: "".concat(name, "-label"),
+    name: name !== null && name !== void 0 && name.match(/(\[.*?\])/gi) ? "".concat(name.split('[')[0], "-label[]") : "".concat(name, "-label"),
     placeholder: placeholder || '',
     className: controlClassName || controlClassName === '' ? controlClassName : "form-control",
     onFocus: handleFocus,
@@ -714,7 +724,7 @@ var MultiFuncSelect = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forward
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("path", {
     d: "M144,6525.39 L142.594,6524 L133.987,6532.261 L133.069,6531.38 L133.074,6531.385 L125.427,6524.045 L124,6525.414 C126.113,6527.443 132.014,6533.107 133.987,6535 C135.453,6533.594 134.024,6534.965 144,6525.39",
     id: "arrow_down-[#339]"
-  })))))), data && !hasErr ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+  }))))))), data && !hasErr ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
     ref: listRef,
     className: "list-group position-absolute w-100 border shadow small",
     style: {

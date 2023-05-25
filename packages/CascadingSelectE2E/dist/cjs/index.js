@@ -577,10 +577,10 @@ var CascadingSelectE2E = function CascadingSelectE2E(props) {
       1: inputVal_1
     };
   }
-  function initDefaultValue() {
+  function initDefaultValue(defaultValue) {
     var _doFetch;
     // change the value to trigger component rendering
-    if (typeof value === 'undefined' || value === '') {
+    if (typeof defaultValue === 'undefined' || defaultValue === '') {
       setSelectedData({
         labels: [],
         values: [],
@@ -594,7 +594,7 @@ var CascadingSelectE2E = function CascadingSelectE2E(props) {
       setFirstDataFeched(false);
       return;
     } else {
-      setChangedVal(value);
+      setChangedVal(defaultValue);
     }
 
     //
@@ -605,10 +605,10 @@ var CascadingSelectE2E = function CascadingSelectE2E(props) {
       var activedIndex;
       var allFetch = [];
       var rowQueryAttr = valueType === 'value' ? 'id' : 'name';
-      var targetVal = value.match(/(\[.*?\])/gi).map(function (item, i) {
-        return value.split(',')[i].replace(item, '');
+      var targetVal = defaultValue.match(/(\[.*?\])/gi).map(function (item, i) {
+        return defaultValue.split(',')[i].replace(item, '');
       });
-      var queryIds = value.match(/[^\[]+(?=(\[ \])|\])/gi);
+      var queryIds = defaultValue.match(/[^\[]+(?=(\[ \])|\])/gi);
 
       //
       var _TEMP_ALL_DATA = [];
@@ -863,7 +863,15 @@ var CascadingSelectE2E = function CascadingSelectE2E(props) {
 
     // Initialize default value (request parameters for each level)
     //--------------
-    initDefaultValue();
+    initDefaultValue(value);
+
+    // If you use the dynamic form assignment (such as document.getElementById(xxx).value), 
+    // you need to judge the value of the input obtained by using the macrotask("setTimeout()")
+    setTimeout(function () {
+      if (valRef.current.value !== '' && (typeof value === 'undefined' || value === '')) {
+        initDefaultValue(valRef.current.value);
+      }
+    }, 500);
 
     //
     //--------------

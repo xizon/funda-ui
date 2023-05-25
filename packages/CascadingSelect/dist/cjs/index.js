@@ -438,9 +438,9 @@ var CascadingSelect = function CascadingSelect(props) {
       1: inputVal_1
     };
   }
-  function initDefaultValue() {
+  function initDefaultValue(defaultValue) {
     // change the value to trigger component rendering
-    if (typeof value === 'undefined' || value === '') {
+    if (typeof defaultValue === 'undefined' || defaultValue === '') {
       setSelectedData({
         labels: [],
         values: []
@@ -449,16 +449,16 @@ var CascadingSelect = function CascadingSelect(props) {
       setData([]);
       setChangedVal('');
     } else {
-      setChangedVal(value);
+      setChangedVal(defaultValue);
     }
 
     //
     var _params = fetchFuncMethodParams || [];
     fetchData(_params.join(',')).then(function (response) {
       var _data = response[1];
-      if (value) {
+      if (defaultValue) {
         var rowQueryAttr = valueType === 'value' ? 'id' : 'name';
-        var targetVal = value.split(',');
+        var targetVal = defaultValue.split(',');
         //
         var _allColumnsData = [];
         var _allLables = [];
@@ -481,8 +481,8 @@ var CascadingSelect = function CascadingSelect(props) {
             _allColumnsData.push(newData);
           }
           if (col > 0) {
-            var _findNode = searchObject(_data, function (value) {
-              return value != null && value != undefined && value[rowQueryAttr] == targetVal[col - 1];
+            var _findNode = searchObject(_data, function (v) {
+              return v != null && v != undefined && v[rowQueryAttr] == targetVal[col - 1];
             });
             var childList = _findNode[0].children;
 
@@ -696,7 +696,15 @@ var CascadingSelect = function CascadingSelect(props) {
   (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useEffect)(function () {
     // Initialize default value (request parameters for each level)
     //--------------
-    initDefaultValue();
+    initDefaultValue(value);
+
+    // If you use the dynamic form assignment (such as document.getElementById(xxx).value), 
+    // you need to judge the value of the input obtained by using the macrotask("setTimeout()")
+    setTimeout(function () {
+      if (valRef.current.value !== '' && (typeof value === 'undefined' || value === '')) {
+        initDefaultValue(valRef.current.value);
+      }
+    }, 500);
 
     //
     //--------------

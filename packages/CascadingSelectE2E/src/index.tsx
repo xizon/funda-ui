@@ -1,6 +1,7 @@
 import React, { useId, useEffect, useState, useRef } from 'react';
 
 import Group from './Group';
+import { type } from 'os';
 
 
 declare module 'react' {
@@ -267,6 +268,7 @@ const CascadingSelectE2E = (props: CascadingSelectE2EProps) => {
     }
 
 
+
     function handleFocus(event: any) {
         rootRef.current.classList.add('focus');
 
@@ -499,11 +501,11 @@ const CascadingSelectE2E = (props: CascadingSelectE2EProps) => {
 
     }
 
+    function initDefaultValue(defaultValue) {
 
 
-    function initDefaultValue() {
         // change the value to trigger component rendering
-        if ( typeof value === 'undefined' || value === '' ) {
+        if ( typeof defaultValue === 'undefined' || defaultValue === '' ) {
             setSelectedData({
                 labels: [],
                 values: [],
@@ -518,7 +520,7 @@ const CascadingSelectE2E = (props: CascadingSelectE2EProps) => {
             setFirstDataFeched(false);
             return;
         } else {
-            setChangedVal(value);
+            setChangedVal(defaultValue);
         }
     
 
@@ -526,15 +528,15 @@ const CascadingSelectE2E = (props: CascadingSelectE2EProps) => {
         setFirstDataFeched(true);
         doFetch(false, 0, 0, false)?.then((firstColResponse: any) => {
     
-        
+
             const _ORGIN_DATA: any[] = firstColResponse[0];
             const _CHILDREN_DATA: any[] = firstColResponse[1];
             let activedIndex: any;
             const allFetch: any[] = [];
     
             const rowQueryAttr: string = valueType === 'value' ? 'id' : 'name';
-            const targetVal: any = value.match(/(\[.*?\])/gi)!.map((item: any, i: number) => value.split(',')[i].replace(item, ''));
-            const queryIds: any = value.match(/[^\[]+(?=(\[ \])|\])/gi);
+            const targetVal: any = defaultValue.match(/(\[.*?\])/gi)!.map((item: any, i: number) => defaultValue.split(',')[i].replace(item, ''));
+            const queryIds: any = defaultValue.match(/[^\[]+(?=(\[ \])|\])/gi);
     
             //
             let _TEMP_ALL_DATA: any[] = [];
@@ -861,7 +863,15 @@ const CascadingSelectE2E = (props: CascadingSelectE2EProps) => {
 
         // Initialize default value (request parameters for each level)
         //--------------
-        initDefaultValue();
+        initDefaultValue(value);
+
+        // If you use the dynamic form assignment (such as document.getElementById(xxx).value), 
+        // you need to judge the value of the input obtained by using the macrotask("setTimeout()")
+        setTimeout(() => {
+            if ( valRef.current.value !== '' && ( typeof value === 'undefined' || value === '' ) ) {
+                initDefaultValue(valRef.current.value);
+            }
+        }, 500);
 
 
         //
