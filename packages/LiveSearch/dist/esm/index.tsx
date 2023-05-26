@@ -1,6 +1,9 @@
 import React, { useId, useEffect, useState, useRef } from 'react';
 
+import { throttle } from './utils/performance';
+
 import SearchBar from 'rpb-searchbar';
+
 
 type LiveSearchProps = {
     wrapperClassName?: string;
@@ -74,6 +77,9 @@ const LiveSearch = (props: LiveSearchProps) => {
     const rootRef = useRef<any>(null);
     const inputRef = useRef<any>(null);
     const listRef = useRef<any>(null);
+    const listContentRef = useRef<any>(null);
+    const windowScrollUpdate = throttle(handleScrollEvent, 5);
+    
 
 
     //
@@ -101,44 +107,85 @@ const LiveSearch = (props: LiveSearchProps) => {
     }
 
 
+    function handleScrollEvent() {
+        getPlacement(listRef.current, true);
+    }
 
     //
-    function getPlacement(el: HTMLElement, restore: boolean = false) {
+    function getPlacement(el: HTMLElement, restorePos: boolean = false) {
 
         if ( el === null ) return;
+        
 
         const PLACEMENT_TOP = 'top-0';
         const PLACEMENT_BOTTOMEND = 'bottom-0';
         const PLACEMENT_RIGHT = 'end-0';
         const PLACEMENT_LEFT = 'start-0';
 
-        // Determine whether the height of the window is smaller than the object
-        if ( (window.innerHeight || document.documentElement.clientHeight) < el.clientHeight ) {
-            el.classList.add('scroll-enabled');
-            el.style.maxHeight = window.innerHeight - 50 + 'px';
-            el.style.overflowY = 'auto';
+        const elTop = el.getBoundingClientRect().top;
+        const elSpacing = 50 + inputRef.current.clientHeight*3;
+        const elMinWindowSpacing = inputRef.current.clientHeight*2;
 
-            return true;
-        } else {
-            el.classList.remove('scroll-enabled');
-            el.style.maxHeight = 'none';
-            el.style.overflowY = 'inherit';
-        }
-    
-        //restore status
-        if ( restore ) {
-            listRef.current.classList.remove(PLACEMENT_BOTTOMEND, 'scroll-enabled');
+
+        //restore position
+        if ( restorePos ) {
+            if ( isInViewport(el) ) {
+                el.classList.remove(PLACEMENT_BOTTOMEND);
+                el.style.removeProperty('bottom');
+            }
             return;
         }
+    
+        // STEP 1:
+        // If the content exceeds the height of the window, first limit height and add scrollbar
+        let maxHeight = window.innerHeight - elSpacing;
+        if ( maxHeight < inputRef.current.clientHeight ) maxHeight = elMinWindowSpacing;
+        
+        if ( el.offsetHeight > 0 && (el.offsetHeight > maxHeight) ) {
 
-        //
+            const newH = maxHeight - (elTop > window.innerHeight/2 ? 0 : elTop) + elMinWindowSpacing;
+
+            // default position
+            listContentRef.current.style.height = newH + 'px';
+            
+
+            // if it's on top
+            if ( newH > maxHeight ) {
+                listContentRef.current.style.height = elTop - elMinWindowSpacing + 'px';
+            }
+
+            //
+            listContentRef.current.style.overflowY = 'auto';
+
+        } else {
+            listContentRef.current.style.height = 'auto';
+            listContentRef.current.style.overflowY = 'inherit';
+        }
+        if ( isInViewport(el) ) {
+
+
+
+        }
+
+
+        // STEP 2:
+        // Adjust position
         if ( !isInViewport(el) ) {
             el.classList.add(PLACEMENT_BOTTOMEND);
             el.style.setProperty('bottom', inputRef.current.clientHeight + 5 + 'px', "important");
-        } else {
-            el.classList.remove(PLACEMENT_BOTTOMEND);
-            el.style.removeProperty('bottom');
         }
+
+
+
+        // STEP 3:
+        // It is on top when no scrollbars have been added
+        if ( !isInViewport(el) ) {
+            if ( el.getBoundingClientRect().top < 0 ) {
+                listContentRef.current.style.height = el.offsetHeight + el.getBoundingClientRect().top - elMinWindowSpacing + 'px';
+                listContentRef.current.style.overflowY = 'auto';
+            }
+        }
+  
         
     }
 
@@ -284,6 +331,12 @@ const LiveSearch = (props: LiveSearchProps) => {
 
     function handleSearch() {
         activate();
+
+
+        // window position
+        setTimeout( ()=> {
+            getPlacement(listRef.current);
+        }, 0 );     
     }
 
 
@@ -295,7 +348,6 @@ const LiveSearch = (props: LiveSearchProps) => {
                 //
                 onBlur?.(inputRef.current, data);
                 setData([]);
-                getPlacement(listRef.current, true);
 
             }, 300);
         }
@@ -418,11 +470,26 @@ const LiveSearch = (props: LiveSearchProps) => {
         document.removeEventListener("keydown", listener);
         document.addEventListener("keydown", listener);
 
+
+        // Add function to the element that should be used as the scrollable area.
+        //--------------
+        window.removeEventListener('scroll', windowScrollUpdate);
+        window.removeEventListener('touchmove', windowScrollUpdate);
+        window.addEventListener('scroll', windowScrollUpdate);
+        window.addEventListener('touchmove', windowScrollUpdate);
+        windowScrollUpdate();
+
+
+
+
         // Remove the global list of events, especially as scroll and interval.
         //--------------
         return () => {
 
             document.removeEventListener("keydown", listener);
+            window.removeEventListener('scroll', windowScrollUpdate);
+            window.removeEventListener('touchmove', windowScrollUpdate);
+
         };
 
     }, [value]);
@@ -458,12 +525,15 @@ const LiveSearch = (props: LiveSearchProps) => {
 
                 {data && data.length > 0 && !hasErr ? <>
                     <div ref={listRef} className="list-group position-absolute w-100 border shadow small" style={{ marginTop: '0.2rem', zIndex: (depth ? depth : 100)}} role="tablist">
-                        {data ? data.map((item, index) => {
-                            const startItemBorder = index === 0 ? 'border-top-0' : '';
-                            const endItemBorder = index === data.length-1 ? 'border-bottom-0' : '';
+                        <div className="rounded" ref={listContentRef}>
+                            {data ? data.map((item, index) => {
+                                const startItemBorder = index === 0 ? 'border-top-0' : '';
+                                const endItemBorder = index === data.length-1 ? 'border-bottom-0' : '';
 
-                            return <button tabIndex={-1} onClick={handleSelect} type="button" data-index={index} key={index} className={`list-group-item list-group-item-action border-start-0 border-end-0 ${startItemBorder} ${endItemBorder}`} data-value={`${item.value}`} data-label={`${item.label}`} data-letter={`${item.letter}`} role="tab">{item.label}</button>
-                        }) : null}
+                                return <button tabIndex={-1} onClick={handleSelect} type="button" data-index={index} key={index} className={`list-group-item list-group-item-action border-start-0 border-end-0 ${startItemBorder} ${endItemBorder}`} data-value={`${item.value}`} data-label={`${item.label}`} data-letter={`${item.letter}`} role="tab">{item.label}</button>
+                            }) : null}
+                        </div>
+
 
                     </div>
 
@@ -471,7 +541,12 @@ const LiveSearch = (props: LiveSearchProps) => {
 
                 {data && data.length === 0 && !hasErr && isOpen ? <>
                     <div ref={listRef} className="list-group position-absolute w-100 border shadow small" style={{ marginTop: '0.2rem', zIndex: (depth ? depth : 100)}} role="tablist">
-                        <button tabIndex={-1} type="button" className="list-group-item list-group-item-action no-match" disabled>{fetchNoneInfo || 'No match yet'}</button>
+
+                        <div className="rounded" ref={listContentRef}>
+                            <button tabIndex={-1} type="button" className="list-group-item list-group-item-action no-match" disabled>{fetchNoneInfo || 'No match yet'}</button>
+                        </div>
+
+
                     </div>
                 </> : null}
 

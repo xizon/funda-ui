@@ -74,12 +74,13 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
     } = props;
 
 
-    const uniqueID = useId();
+    const uniqueID = useId().replace(/\:/g, "-");
     const idRes = id || uniqueID;
     const rootRef = useRef<any>(null);
     const selectInputRef = useRef<any>(null);
     const valueInputRef = useRef<any>(null);
     const listRef = useRef<any>(null);
+    const listContentRef = useRef<any>(null);
     const optionsRes = options ? isJSON( options ) ? JSON.parse( options ) : options : '';
     const windowScrollUpdate = throttle(handleScrollEvent, 5);
     
@@ -131,6 +132,10 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
         const PLACEMENT_RIGHT = 'end-0';
         const PLACEMENT_LEFT = 'start-0';
 
+        const elTop = el.getBoundingClientRect().top;
+        const elSpacing = 50 + selectInputRef.current.clientHeight*3;
+        const elMinWindowSpacing = selectInputRef.current.clientHeight*2;
+
 
         //restore position
         if ( restorePos ) {
@@ -140,28 +145,57 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
             }
             return;
         }
+    
+        // STEP 1:
+        // If the content exceeds the height of the window, first limit height and add scrollbar
+        let maxHeight = window.innerHeight - elSpacing;
+        if ( maxHeight < selectInputRef.current.clientHeight ) maxHeight = elMinWindowSpacing;
+        
+        if ( el.offsetHeight > 0 && (el.offsetHeight > maxHeight) ) {
 
+            const newH = maxHeight - (elTop > window.innerHeight/2 ? 0 : elTop) + elMinWindowSpacing;
 
-        // Determine whether the height of the window is smaller than the object
-        if ( (window.innerHeight || document.documentElement.clientHeight) < el.clientHeight ) {
-            el.classList.add('scroll-enabled');
-            el.style.maxHeight = window.innerHeight - 50 + 'px';
-            el.style.overflowY = 'auto';
+            // default position
+            listContentRef.current.style.height = newH + 'px';
+            
 
-            return true;
+            // if it's on top
+            if ( newH > maxHeight ) {
+                listContentRef.current.style.height = elTop - elMinWindowSpacing + 'px';
+            }
+
+            //
+            listContentRef.current.style.overflowY = 'auto';
+
         } else {
-            el.classList.remove('scroll-enabled');
-            el.style.maxHeight = 'none';
-            el.style.overflowY = 'inherit';
+            listContentRef.current.style.height = 'auto';
+            listContentRef.current.style.overflowY = 'inherit';
+        }
+        if ( isInViewport(el) ) {
+
+
+
         }
 
-        //
+
+        // STEP 2:
+        // Adjust position
         if ( !isInViewport(el) ) {
             el.classList.add(PLACEMENT_BOTTOMEND);
             el.style.setProperty('bottom', selectInputRef.current.clientHeight + 5 + 'px', "important");
         }
 
- 
+
+
+        // STEP 3:
+        // It is on top when no scrollbars have been added
+        if ( !isInViewport(el) ) {
+            if ( el.getBoundingClientRect().top < 0 ) {
+                listContentRef.current.style.height = el.offsetHeight + el.getBoundingClientRect().top - elMinWindowSpacing + 'px';
+                listContentRef.current.style.overflowY = 'auto';
+            }
+        }
+  
         
     }
 
@@ -206,7 +240,7 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
 	} 
 
 
-    async function fetchData(params: any, defaultValue) {
+    async function fetchData(params: any, defaultValue: any) {
 
         if ( typeof fetchFuncAsync === 'object' ) {
 
@@ -259,7 +293,7 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
             //
             setOrginalData(optionsDataInit);   
 
-            return [];
+            return optionsDataInit;
         }
 
 
@@ -331,6 +365,7 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
 
 
     function handleSearch(event: any) {
+        if ( isOpen ) return;
 
         activate();
 
@@ -573,7 +608,7 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
     return (
         <>
 
-            <div className={isOpen ? `multifunc-select__wrapper ${wrapperClassName || wrapperClassName === '' ? wrapperClassName : 'mb-3 position-relative'} active` : `multifunc-select__wrapper ${wrapperClassName || wrapperClassName === '' ? wrapperClassName : 'mb-3 position-relative'}`} ref={rootRef}>
+            <div id={`multifunc-select__wrapper-${idRes}`} className={isOpen ? `multifunc-select__wrapper ${wrapperClassName || wrapperClassName === '' ? wrapperClassName : 'mb-3 position-relative'} active` : `multifunc-select__wrapper ${wrapperClassName || wrapperClassName === '' ? wrapperClassName : 'mb-3 position-relative'}`} ref={rootRef}>
                 
                 {label ? <><label htmlFor={idRes} className="form-label">{label}</label></> : null}
 
@@ -634,14 +669,18 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
 
                     {data && !hasErr ? <>
                     <div ref={listRef} className="list-group position-absolute w-100 border shadow small" style={{ marginTop: '0.2rem', zIndex: (depth ? depth : 100), display: isOpen ? 'block' : 'none'}} role="tablist">
-                        {data ? data.map((item, index) => {
-                            const startItemBorder = index === 0 ? 'border-top-0' : '';
-                            const endItemBorder = index === data.length-1 ? 'border-bottom-0' : '';
+                        <div className="rounded" ref={listContentRef}>
 
-                            return <button tabIndex={-1} onClick={handleSelect} type="button" data-index={index} key={index} className={`list-group-item list-group-item-action border-start-0 border-end-0 ${startItemBorder} ${endItemBorder} border-bottom-0`} data-value={`${item.value}`} data-label={`${item.label}`} data-letter={`${item.letter}`} role="tab">{item.label}</button>
-                        }) : null}
+                            {data ? data.map((item, index) => {
+                                const startItemBorder = index === 0 ? 'border-top-0' : '';
+                                const endItemBorder = index === data.length-1 ? 'border-bottom-0' : '';
 
-                        {controlTempValue !== null && data.length === 0 ? <button tabIndex={-1} type="button" className="list-group-item list-group-item-action no-match" disabled>{fetchNoneInfo || 'No match yet'}</button> : null}
+                                return <button tabIndex={-1} onClick={handleSelect} type="button" data-index={index} key={index} className={`list-group-item list-group-item-action border-start-0 border-end-0 ${startItemBorder} ${endItemBorder} border-bottom-0`} data-value={`${item.value}`} data-label={`${item.label}`} data-letter={`${item.letter}`} role="tab">{item.label}</button>
+                            }) : null}
+
+                            {controlTempValue !== null && data.length === 0 ? <button tabIndex={-1} type="button" className="list-group-item list-group-item-action no-match" disabled>{fetchNoneInfo || 'No match yet'}</button> : null}
+
+                        </div>
 
                     </div>
 

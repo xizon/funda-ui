@@ -210,7 +210,7 @@ var Select = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(func
 
             //
             setDataInit(optionsDataInit); // data must be initialized
-            return _context.abrupt("return", []);
+            return _context.abrupt("return", optionsDataInit);
           case 16:
           case "end":
             return _context.stop();

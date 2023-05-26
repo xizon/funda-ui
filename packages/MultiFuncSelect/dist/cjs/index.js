@@ -203,12 +203,13 @@ var MultiFuncSelect = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forward
     onBlur = props.onBlur,
     onFocus = props.onFocus,
     attributes = _objectWithoutProperties(props, _excluded);
-  var uniqueID = (0,react__WEBPACK_IMPORTED_MODULE_0__.useId)();
+  var uniqueID = (0,react__WEBPACK_IMPORTED_MODULE_0__.useId)().replace(/\:/g, "-");
   var idRes = id || uniqueID;
   var rootRef = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(null);
   var selectInputRef = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(null);
   var valueInputRef = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(null);
   var listRef = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(null);
+  var listContentRef = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(null);
   var optionsRes = options ? isJSON(options) ? JSON.parse(options) : options : '';
   var windowScrollUpdate = (0,_utils_performance__WEBPACK_IMPORTED_MODULE_1__.throttle)(handleScrollEvent, 5);
 
@@ -266,6 +267,9 @@ var MultiFuncSelect = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forward
     var PLACEMENT_BOTTOMEND = 'bottom-0';
     var PLACEMENT_RIGHT = 'end-0';
     var PLACEMENT_LEFT = 'start-0';
+    var elTop = el.getBoundingClientRect().top;
+    var elSpacing = 50 + selectInputRef.current.clientHeight * 3;
+    var elMinWindowSpacing = selectInputRef.current.clientHeight * 2;
 
     //restore position
     if (restorePos) {
@@ -276,22 +280,43 @@ var MultiFuncSelect = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forward
       return;
     }
 
-    // Determine whether the height of the window is smaller than the object
-    if ((window.innerHeight || document.documentElement.clientHeight) < el.clientHeight) {
-      el.classList.add('scroll-enabled');
-      el.style.maxHeight = window.innerHeight - 50 + 'px';
-      el.style.overflowY = 'auto';
-      return true;
-    } else {
-      el.classList.remove('scroll-enabled');
-      el.style.maxHeight = 'none';
-      el.style.overflowY = 'inherit';
-    }
+    // STEP 1:
+    // If the content exceeds the height of the window, first limit height and add scrollbar
+    var maxHeight = window.innerHeight - elSpacing;
+    if (maxHeight < selectInputRef.current.clientHeight) maxHeight = elMinWindowSpacing;
+    if (el.offsetHeight > 0 && el.offsetHeight > maxHeight) {
+      var newH = maxHeight - (elTop > window.innerHeight / 2 ? 0 : elTop) + elMinWindowSpacing;
 
-    //
+      // default position
+      listContentRef.current.style.height = newH + 'px';
+
+      // if it's on top
+      if (newH > maxHeight) {
+        listContentRef.current.style.height = elTop - elMinWindowSpacing + 'px';
+      }
+
+      //
+      listContentRef.current.style.overflowY = 'auto';
+    } else {
+      listContentRef.current.style.height = 'auto';
+      listContentRef.current.style.overflowY = 'inherit';
+    }
+    if (isInViewport(el)) {}
+
+    // STEP 2:
+    // Adjust position
     if (!isInViewport(el)) {
       el.classList.add(PLACEMENT_BOTTOMEND);
       el.style.setProperty('bottom', selectInputRef.current.clientHeight + 5 + 'px', "important");
+    }
+
+    // STEP 3:
+    // It is on top when no scrollbars have been added
+    if (!isInViewport(el)) {
+      if (el.getBoundingClientRect().top < 0) {
+        listContentRef.current.style.height = el.offsetHeight + el.getBoundingClientRect().top - elMinWindowSpacing + 'px';
+        listContentRef.current.style.overflowY = 'auto';
+      }
     }
   }
 
@@ -373,7 +398,7 @@ var MultiFuncSelect = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forward
 
             //
             setOrginalData(optionsDataInit);
-            return _context2.abrupt("return", []);
+            return _context2.abrupt("return", optionsDataInit);
           case 22:
           case "end":
             return _context2.stop();
@@ -454,6 +479,7 @@ var MultiFuncSelect = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forward
     return _handleSelect.apply(this, arguments);
   }
   function handleSearch(event) {
+    if (isOpen) return;
     activate();
 
     // window position
@@ -658,6 +684,7 @@ var MultiFuncSelect = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forward
   }, [value]); // required `value` parameter
 
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+    id: "multifunc-select__wrapper-".concat(idRes),
     className: isOpen ? "multifunc-select__wrapper ".concat(wrapperClassName || wrapperClassName === '' ? wrapperClassName : 'mb-3 position-relative', " active") : "multifunc-select__wrapper ".concat(wrapperClassName || wrapperClassName === '' ? wrapperClassName : 'mb-3 position-relative'),
     ref: rootRef
   }, label ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("label", {
@@ -733,6 +760,9 @@ var MultiFuncSelect = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forward
       display: isOpen ? 'block' : 'none'
     },
     role: "tablist"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+    className: "rounded",
+    ref: listContentRef
   }, data ? data.map(function (item, index) {
     var startItemBorder = index === 0 ? 'border-top-0' : '';
     var endItemBorder = index === data.length - 1 ? 'border-bottom-0' : '';
@@ -753,7 +783,7 @@ var MultiFuncSelect = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forward
     type: "button",
     className: "list-group-item list-group-item-action no-match",
     disabled: true
-  }, fetchNoneInfo || 'No match yet') : null)) : null));
+  }, fetchNoneInfo || 'No match yet') : null))) : null));
 });
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (MultiFuncSelect);
 })();

@@ -374,7 +374,7 @@ const CascadingSelect = (props: CascadingSelectProps) => {
     }
     
 
-    function initDefaultValue(defaultValue) {
+    function initDefaultValue(defaultValue: any) {
         // change the value to trigger component rendering
         if ( typeof defaultValue === 'undefined' || defaultValue === '' ) {
             setSelectedData({

@@ -11,6 +11,58 @@
 return /******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ({
 
+/***/ 342:
+/***/ ((module) => {
+
+/*
+* Debounce
+*
+* @param  {Function} fn    - A function to be executed within the time limit.
+* @param  {Number} limit   - Waiting time.
+* @return {Function}       - Returns a new function.
+*/
+function debounce(fn) {
+  var limit = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 300;
+  var timer;
+  return function () {
+    //Every time this returned function is called, the timer is cleared to ensure that fn is not executed
+    clearTimeout(timer);
+
+    // When the returned function is called for the last time (that is the user stops a continuous operation)
+    // Execute fn after another delay milliseconds
+    timer = setTimeout(function () {
+      fn.apply(this, arguments);
+    }, limit);
+  };
+}
+
+/*
+* Throttle
+*
+* @param  {Function} fn    - A function to be executed within the time limit.
+* @param  {Number} limit   - Waiting time.
+* @return {Function}       - Returns a new function.
+*/
+function throttle(fn) {
+  var limit = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 300;
+  var waiting = false;
+  return function () {
+    if (!waiting) {
+      fn.apply(this, arguments);
+      waiting = true;
+      setTimeout(function () {
+        waiting = false;
+      }, limit);
+    }
+  };
+}
+module.exports = {
+  debounce: debounce,
+  throttle: throttle
+};
+
+/***/ }),
+
 /***/ 962:
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -490,8 +542,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(787);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var rpb_searchbar__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(962);
-/* harmony import */ var rpb_searchbar__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(rpb_searchbar__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _utils_performance__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(342);
+/* harmony import */ var _utils_performance__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_utils_performance__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var rpb_searchbar__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(962);
+/* harmony import */ var rpb_searchbar__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(rpb_searchbar__WEBPACK_IMPORTED_MODULE_2__);
 function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
 function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
 function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter); }
@@ -506,6 +560,7 @@ function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o =
 function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i]; return arr2; }
 function _iterableToArrayLimit(arr, i) { var _i = null == arr ? null : "undefined" != typeof Symbol && arr[Symbol.iterator] || arr["@@iterator"]; if (null != _i) { var _s, _e, _x, _r, _arr = [], _n = !0, _d = !1; try { if (_x = (_i = _i.call(arr)).next, 0 === i) { if (Object(_i) !== _i) return; _n = !1; } else for (; !(_n = (_s = _x.call(_i)).done) && (_arr.push(_s.value), _arr.length !== i); _n = !0); } catch (err) { _d = !0, _e = err; } finally { try { if (!_n && null != _i["return"] && (_r = _i["return"](), Object(_r) !== _r)) return; } finally { if (_d) throw _e; } } return _arr; } }
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+
 
 
 var LiveSearch = function LiveSearch(props) {
@@ -541,6 +596,8 @@ var LiveSearch = function LiveSearch(props) {
   var rootRef = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(null);
   var inputRef = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(null);
   var listRef = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(null);
+  var listContentRef = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(null);
+  var windowScrollUpdate = (0,_utils_performance__WEBPACK_IMPORTED_MODULE_1__.throttle)(handleScrollEvent, 5);
 
   //
   var _useState = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(false),
@@ -577,41 +634,68 @@ var LiveSearch = function LiveSearch(props) {
     var bounding = elem.getBoundingClientRect();
     return bounding.top >= 0 && bounding.left >= 0 && bounding.bottom <= (window.innerHeight || document.documentElement.clientHeight) && bounding.right <= (window.innerWidth || document.documentElement.clientWidth);
   }
+  function handleScrollEvent() {
+    getPlacement(listRef.current, true);
+  }
 
   //
   function getPlacement(el) {
-    var restore = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
+    var restorePos = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
     if (el === null) return;
     var PLACEMENT_TOP = 'top-0';
     var PLACEMENT_BOTTOMEND = 'bottom-0';
     var PLACEMENT_RIGHT = 'end-0';
     var PLACEMENT_LEFT = 'start-0';
+    var elTop = el.getBoundingClientRect().top;
+    var elSpacing = 50 + inputRef.current.clientHeight * 3;
+    var elMinWindowSpacing = inputRef.current.clientHeight * 2;
 
-    // Determine whether the height of the window is smaller than the object
-    if ((window.innerHeight || document.documentElement.clientHeight) < el.clientHeight) {
-      el.classList.add('scroll-enabled');
-      el.style.maxHeight = window.innerHeight - 50 + 'px';
-      el.style.overflowY = 'auto';
-      return true;
-    } else {
-      el.classList.remove('scroll-enabled');
-      el.style.maxHeight = 'none';
-      el.style.overflowY = 'inherit';
-    }
-
-    //restore status
-    if (restore) {
-      listRef.current.classList.remove(PLACEMENT_BOTTOMEND, 'scroll-enabled');
+    //restore position
+    if (restorePos) {
+      if (isInViewport(el)) {
+        el.classList.remove(PLACEMENT_BOTTOMEND);
+        el.style.removeProperty('bottom');
+      }
       return;
     }
 
-    //
+    // STEP 1:
+    // If the content exceeds the height of the window, first limit height and add scrollbar
+    var maxHeight = window.innerHeight - elSpacing;
+    if (maxHeight < inputRef.current.clientHeight) maxHeight = elMinWindowSpacing;
+    if (el.offsetHeight > 0 && el.offsetHeight > maxHeight) {
+      var newH = maxHeight - (elTop > window.innerHeight / 2 ? 0 : elTop) + elMinWindowSpacing;
+
+      // default position
+      listContentRef.current.style.height = newH + 'px';
+
+      // if it's on top
+      if (newH > maxHeight) {
+        listContentRef.current.style.height = elTop - elMinWindowSpacing + 'px';
+      }
+
+      //
+      listContentRef.current.style.overflowY = 'auto';
+    } else {
+      listContentRef.current.style.height = 'auto';
+      listContentRef.current.style.overflowY = 'inherit';
+    }
+    if (isInViewport(el)) {}
+
+    // STEP 2:
+    // Adjust position
     if (!isInViewport(el)) {
       el.classList.add(PLACEMENT_BOTTOMEND);
       el.style.setProperty('bottom', inputRef.current.clientHeight + 5 + 'px', "important");
-    } else {
-      el.classList.remove(PLACEMENT_BOTTOMEND);
-      el.style.removeProperty('bottom');
+    }
+
+    // STEP 3:
+    // It is on top when no scrollbars have been added
+    if (!isInViewport(el)) {
+      if (el.getBoundingClientRect().top < 0) {
+        listContentRef.current.style.height = el.offsetHeight + el.getBoundingClientRect().top - elMinWindowSpacing + 'px';
+        listContentRef.current.style.overflowY = 'auto';
+      }
     }
   }
 
@@ -843,6 +927,11 @@ var LiveSearch = function LiveSearch(props) {
   }
   function handleSearch() {
     activate();
+
+    // window position
+    setTimeout(function () {
+      getPlacement(listRef.current);
+    }, 0);
   }
   function handleBlur(e) {
     setIsOpen(false);
@@ -851,7 +940,6 @@ var LiveSearch = function LiveSearch(props) {
         //
         onBlur === null || onBlur === void 0 ? void 0 : onBlur(inputRef.current, data);
         setData([]);
-        getPlacement(listRef.current, true);
       }, 300);
     }
   }
@@ -965,17 +1053,27 @@ var LiveSearch = function LiveSearch(props) {
     document.removeEventListener("keydown", listener);
     document.addEventListener("keydown", listener);
 
+    // Add function to the element that should be used as the scrollable area.
+    //--------------
+    window.removeEventListener('scroll', windowScrollUpdate);
+    window.removeEventListener('touchmove', windowScrollUpdate);
+    window.addEventListener('scroll', windowScrollUpdate);
+    window.addEventListener('touchmove', windowScrollUpdate);
+    windowScrollUpdate();
+
     // Remove the global list of events, especially as scroll and interval.
     //--------------
     return function () {
       document.removeEventListener("keydown", listener);
+      window.removeEventListener('scroll', windowScrollUpdate);
+      window.removeEventListener('touchmove', windowScrollUpdate);
     };
   }, [value]);
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
     className: isOpen ? "livesearch__wrapper ".concat(wrapperClassName || wrapperClassName === '' ? wrapperClassName : 'mb-3 position-relative', " active") : "livesearch__wrapper ".concat(wrapperClassName || wrapperClassName === '' ? wrapperClassName : 'mb-3 position-relative'),
     ref: rootRef,
     onMouseLeave: handleMouseLeaveTrigger
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((rpb_searchbar__WEBPACK_IMPORTED_MODULE_1___default()), {
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((rpb_searchbar__WEBPACK_IMPORTED_MODULE_2___default()), {
     wrapperClassName: "",
     controlClassName: controlClassName,
     ref: inputRef,
@@ -1004,6 +1102,9 @@ var LiveSearch = function LiveSearch(props) {
       zIndex: depth ? depth : 100
     },
     role: "tablist"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+    className: "rounded",
+    ref: listContentRef
   }, data ? data.map(function (item, index) {
     var startItemBorder = index === 0 ? 'border-top-0' : '';
     var endItemBorder = index === data.length - 1 ? 'border-bottom-0' : '';
@@ -1019,7 +1120,7 @@ var LiveSearch = function LiveSearch(props) {
       "data-letter": "".concat(item.letter),
       role: "tab"
     }, item.label);
-  }) : null)) : null, data && data.length === 0 && !hasErr && isOpen ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+  }) : null))) : null, data && data.length === 0 && !hasErr && isOpen ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
     ref: listRef,
     className: "list-group position-absolute w-100 border shadow small",
     style: {
@@ -1027,12 +1128,15 @@ var LiveSearch = function LiveSearch(props) {
       zIndex: depth ? depth : 100
     },
     role: "tablist"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+    className: "rounded",
+    ref: listContentRef
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", {
     tabIndex: -1,
     type: "button",
     className: "list-group-item list-group-item-action no-match",
     disabled: true
-  }, fetchNoneInfo || 'No match yet'))) : null));
+  }, fetchNoneInfo || 'No match yet')))) : null));
 };
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (LiveSearch);
 })();

@@ -117,7 +117,7 @@ const Select = forwardRef((props: SelectProps, ref: any) => {
             //
             setDataInit(optionsDataInit); // data must be initialized
 
-            return [];
+            return optionsDataInit;
         }
 
 

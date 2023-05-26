@@ -318,6 +318,7 @@ const CascadingSelectE2E = (props: CascadingSelectE2EProps) => {
 
     function handleDisplayOptions(event: any) {
         if ( event ) event.preventDefault();
+
         setIsShow(true);
         
         // Execute the fetch task
@@ -501,7 +502,7 @@ const CascadingSelectE2E = (props: CascadingSelectE2EProps) => {
 
     }
 
-    function initDefaultValue(defaultValue) {
+    function initDefaultValue(defaultValue: any) {
 
 
         // change the value to trigger component rendering
