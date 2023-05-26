@@ -245,6 +245,10 @@ var MultiFuncSelect = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forward
     _useState14 = _slicedToArray(_useState13, 2),
     isOpen = _useState14[0],
     setIsOpen = _useState14[1];
+  var _useState15 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(0),
+    _useState16 = _slicedToArray(_useState15, 2),
+    listContentHeight = _useState16[0],
+    setListContentHeight = _useState16[1];
 
   /**
    * Check if an element is in the viewport
@@ -279,12 +283,22 @@ var MultiFuncSelect = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forward
       }
       return;
     }
+    if (listContentRef.current === null) return;
+
+    // STEP 0:
+    // save content height (Suitable for initial data with unchanged open options)
+    var _contentHeight = el.offsetHeight;
+    if (listContentHeight === 0) {
+      setListContentHeight(el.offsetHeight);
+    } else {
+      _contentHeight = listContentHeight;
+    }
 
     // STEP 1:
     // If the content exceeds the height of the window, first limit height and add scrollbar
     var maxHeight = window.innerHeight - elSpacing;
     if (maxHeight < selectInputRef.current.clientHeight) maxHeight = elMinWindowSpacing;
-    if (el.offsetHeight > 0 && el.offsetHeight > maxHeight) {
+    if (_contentHeight > 0 && _contentHeight > maxHeight) {
       var newH = maxHeight - (elTop > window.innerHeight / 2 ? 0 : elTop) + elMinWindowSpacing;
 
       // default position
@@ -295,13 +309,19 @@ var MultiFuncSelect = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forward
         listContentRef.current.style.height = elTop - elMinWindowSpacing + 'px';
       }
 
+      // Adjust the overall height to fit the wrapper
+      var _displayedItems = listContentRef.current.querySelectorAll('.list-group-item');
+      var _displayedHeight = _displayedItems[0].clientHeight * _displayedItems.length;
+      if (_displayedHeight < listRef.current.clientHeight) {
+        listContentRef.current.style.height = _displayedHeight + 'px';
+      }
+
       //
       listContentRef.current.style.overflowY = 'auto';
     } else {
       listContentRef.current.style.height = 'auto';
       listContentRef.current.style.overflowY = 'inherit';
     }
-    if (isInViewport(el)) {}
 
     // STEP 2:
     // Adjust position
@@ -314,7 +334,7 @@ var MultiFuncSelect = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forward
     // It is on top when no scrollbars have been added
     if (!isInViewport(el)) {
       if (el.getBoundingClientRect().top < 0) {
-        listContentRef.current.style.height = el.offsetHeight + el.getBoundingClientRect().top - elMinWindowSpacing + 'px';
+        listContentRef.current.style.height = _contentHeight + el.getBoundingClientRect().top - elMinWindowSpacing + 'px';
         listContentRef.current.style.overflowY = 'auto';
       }
     }
@@ -519,12 +539,12 @@ var MultiFuncSelect = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forward
         });
       };
       setData(filterRes);
-
-      // window position
-      setTimeout(function () {
-        getPlacement(listRef.current);
-      }, 0);
     }
+
+    // window position
+    setTimeout(function () {
+      getPlacement(listRef.current);
+    }, 0);
   }
 
   //
@@ -760,8 +780,16 @@ var MultiFuncSelect = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forward
       display: isOpen ? 'block' : 'none'
     },
     role: "tablist"
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+  }, controlTempValue !== null && data.length === 0 ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", {
+    tabIndex: -1,
+    type: "button",
+    className: "list-group-item list-group-item-action no-match",
+    disabled: true
+  }, fetchNoneInfo || 'No match yet')) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
     className: "rounded",
+    style: {
+      backgroundColor: 'var(--bs-list-group-bg)'
+    },
     ref: listContentRef
   }, data ? data.map(function (item, index) {
     var startItemBorder = index === 0 ? 'border-top-0' : '';
@@ -778,12 +806,7 @@ var MultiFuncSelect = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forward
       "data-letter": "".concat(item.letter),
       role: "tab"
     }, item.label);
-  }) : null, controlTempValue !== null && data.length === 0 ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", {
-    tabIndex: -1,
-    type: "button",
-    className: "list-group-item list-group-item-action no-match",
-    disabled: true
-  }, fetchNoneInfo || 'No match yet') : null))) : null));
+  }) : null)))) : null));
 });
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (MultiFuncSelect);
 })();

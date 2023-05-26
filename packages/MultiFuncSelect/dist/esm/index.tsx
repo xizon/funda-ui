@@ -96,9 +96,9 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
     const [controlValue, setControlValue] = useState<string | undefined>('');
     const [controlTempValue, setControlTempValue] = useState<string | null>(null);
     const [isOpen, setIsOpen] = useState<boolean>(false);
+    const [listContentHeight, setListContentHeight] = useState<number>(0);
 
-
-
+    
 
     /**
      * Check if an element is in the viewport
@@ -145,13 +145,26 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
             }
             return;
         }
+
+        if ( listContentRef.current === null ) return;
+
+
+        // STEP 0:
+        // save content height (Suitable for initial data with unchanged open options)
+        let _contentHeight = el.offsetHeight;
+        if ( listContentHeight === 0 ) {
+            setListContentHeight(el.offsetHeight);
+        } else {
+            _contentHeight = listContentHeight;
+        }
+        
     
         // STEP 1:
         // If the content exceeds the height of the window, first limit height and add scrollbar
         let maxHeight = window.innerHeight - elSpacing;
         if ( maxHeight < selectInputRef.current.clientHeight ) maxHeight = elMinWindowSpacing;
         
-        if ( el.offsetHeight > 0 && (el.offsetHeight > maxHeight) ) {
+        if ( _contentHeight > 0 && (_contentHeight > maxHeight) ) {
 
             const newH = maxHeight - (elTop > window.innerHeight/2 ? 0 : elTop) + elMinWindowSpacing;
 
@@ -164,19 +177,24 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
                 listContentRef.current.style.height = elTop - elMinWindowSpacing + 'px';
             }
 
+            
+            // Adjust the overall height to fit the wrapper
+            const _displayedItems = listContentRef.current.querySelectorAll('.list-group-item');
+            const _displayedHeight = _displayedItems[0].clientHeight * _displayedItems.length;
+            if ( _displayedHeight < listRef.current.clientHeight ) {
+                listContentRef.current.style.height = _displayedHeight + 'px';
+            }
+
             //
             listContentRef.current.style.overflowY = 'auto';
+
+
 
         } else {
             listContentRef.current.style.height = 'auto';
             listContentRef.current.style.overflowY = 'inherit';
         }
-        if ( isInViewport(el) ) {
-
-
-
-        }
-
+    
 
         // STEP 2:
         // Adjust position
@@ -191,7 +209,7 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
         // It is on top when no scrollbars have been added
         if ( !isInViewport(el) ) {
             if ( el.getBoundingClientRect().top < 0 ) {
-                listContentRef.current.style.height = el.offsetHeight + el.getBoundingClientRect().top - elMinWindowSpacing + 'px';
+                listContentRef.current.style.height = _contentHeight + el.getBoundingClientRect().top - elMinWindowSpacing + 'px';
                 listContentRef.current.style.overflowY = 'auto';
             }
         }
@@ -416,13 +434,12 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
             }
 
             setData(filterRes);
-
-            // window position
-            setTimeout( ()=> {
-                getPlacement(listRef.current);
-            }, 0 );  
         }
 
+        // window position
+        setTimeout( ()=> {
+            getPlacement(listRef.current);
+        }, 0 );  
 
     }
 
@@ -669,18 +686,23 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
 
                     {data && !hasErr ? <>
                     <div ref={listRef} className="list-group position-absolute w-100 border shadow small" style={{ marginTop: '0.2rem', zIndex: (depth ? depth : 100), display: isOpen ? 'block' : 'none'}} role="tablist">
-                        <div className="rounded" ref={listContentRef}>
 
-                            {data ? data.map((item, index) => {
-                                const startItemBorder = index === 0 ? 'border-top-0' : '';
-                                const endItemBorder = index === data.length-1 ? 'border-bottom-0' : '';
+                        {controlTempValue !== null && data.length === 0 ? <>
+                            <button tabIndex={-1} type="button" className="list-group-item list-group-item-action no-match" disabled>{fetchNoneInfo || 'No match yet'}</button>
+                        </> : <>
+                            <div className="rounded" style={{backgroundColor: 'var(--bs-list-group-bg)'}} ref={listContentRef}>
 
-                                return <button tabIndex={-1} onClick={handleSelect} type="button" data-index={index} key={index} className={`list-group-item list-group-item-action border-start-0 border-end-0 ${startItemBorder} ${endItemBorder} border-bottom-0`} data-value={`${item.value}`} data-label={`${item.label}`} data-letter={`${item.letter}`} role="tab">{item.label}</button>
-                            }) : null}
+                                {data ? data.map((item, index) => {
+                                    const startItemBorder = index === 0 ? 'border-top-0' : '';
+                                    const endItemBorder = index === data.length - 1 ? 'border-bottom-0' : '';
 
-                            {controlTempValue !== null && data.length === 0 ? <button tabIndex={-1} type="button" className="list-group-item list-group-item-action no-match" disabled>{fetchNoneInfo || 'No match yet'}</button> : null}
+                                    return <button tabIndex={-1} onClick={handleSelect} type="button" data-index={index} key={index} className={`list-group-item list-group-item-action border-start-0 border-end-0 ${startItemBorder} ${endItemBorder} border-bottom-0`} data-value={`${item.value}`} data-label={`${item.label}`} data-letter={`${item.letter}`} role="tab">{item.label}</button>
+                                }) : null}
 
-                        </div>
+                            </div>
+
+                        </>}
+
 
                     </div>
 

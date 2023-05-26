@@ -161,12 +161,6 @@ const LiveSearch = (props: LiveSearchProps) => {
             listContentRef.current.style.height = 'auto';
             listContentRef.current.style.overflowY = 'inherit';
         }
-        if ( isInViewport(el) ) {
-
-
-
-        }
-
 
         // STEP 2:
         // Adjust position
