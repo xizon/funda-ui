@@ -11,7 +11,7 @@ import Switch from 'react-pure-bootstrap/Switch';
 | --- | --- | --- | --- |
 | `wrapperClassName` | string | `mb-3 position-relative` | The class name of the control wrapper. |
 | `checked` | boolean | false | Is it selected. |
-| `value` | string | - | Set a default value for this control |
+| `value` | string | - | **(required)** Set a default value for this control. If unchecked, it will pass an empty value |
 | `label` | string \| ReactNode | - | It is used to specify a label for an element of a form. |
 | `name` | string | - | Name is not deprecated when used with form fields. |
 | `disabled` | boolean | false | Whether it is disabled |
@@ -40,8 +40,8 @@ export default () => {
 
 		<Switch 
             label="Default switch"
-            label="Label"
             name="switch-name-1" 
+            value="ok"
             onChange={handleChange} 
         />
 
@@ -54,6 +54,7 @@ export default () => {
         <Switch
             label="Disabled switch"
             name="switch-name-3"
+            value="ok"
             disabled
         />
 
@@ -94,9 +95,9 @@ export default () => {
             <a href="#" onClick={handleClick2}>unchecked</a>
             
             <Switch
-                name="string"
                 label='Label'
                 name="switch-name-1" 
+                value="ok"
                 checked={checked}
             />
             

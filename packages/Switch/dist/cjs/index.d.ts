@@ -7,7 +7,7 @@ declare module 'react' {
 declare type SwitchOptionChangeFnType = (arg1: any, arg2: any) => void;
 declare type SwitchProps = {
     wrapperClassName?: string;
-    value?: string | boolean;
+    value: string | boolean;
     label?: React.ReactNode | string;
     name?: string;
     disabled?: any;

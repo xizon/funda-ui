@@ -132,6 +132,12 @@ var DynamicFields = function DynamicFields(props) {
     _useState4 = _slicedToArray(_useState3, 2),
     dataInit = _useState4[0],
     setDataInit = _useState4[1];
+  function groupByNum(arr, n) {
+    if (n === 0 || n === Infinity) return false;
+    var result = [];
+    for (var i = 0; i < arr.length; i += n) result.push(arr.slice(i, i + n));
+    return result;
+  }
   function handleClickAdd(event) {
     event.preventDefault();
 
@@ -177,50 +183,70 @@ var DynamicFields = function DynamicFields(props) {
       if (fieldsRef.current !== null) {
         var _val = value ? JSON.parse('[' + value + ']') : [];
         var controls = [].slice.call(document.querySelectorAll("#".concat(fieldsRef.current.id, " > .dynamic-fields__append [name]")));
-        var n = 0;
-        _val.map(function (row, index) {
-          row.map(function (item, i) {
-            var _control = controls[n];
-            if (_control) {
-              var controlType = '';
-              if (_control.tagName == "INPUT" || _control.tagName == "TEXTARTA") {
-                //not `radio`, `checkbox`
-                if (_control.type != 'checkbox' && _control.type != 'radio') {
-                  controlType = 'input-textarea';
-                }
-
-                //`checkbox`
-                if (_control.type == 'checkbox') {
-                  controlType = 'checkbox';
-                }
-
-                //`radio`
-                if (_control.type == 'radio') {
-                  controlType = 'radio';
-                }
-              }
-
-              //`select`
-              if (_control.tagName == "SELECT") {
-                controlType = 'select';
-              }
-              switch (controlType) {
-                case "input-textarea":
-                  _control.value = item;
-                  break;
-                case "checkbox":
-                  _control.checked = item;
-                  break;
-                case "select":
-                  _control.value = item;
-                  _control.dispatchEvent(new Event('change'));
-                  break;
-                default:
-                  _control.value = item;
-              } //end switch
+        var integratedControls = [];
+        var hasRadio = false;
+        controls.forEach(function (node) {
+          var controlType = '';
+          if (node.tagName == "INPUT" || node.tagName == "TEXTARTA") {
+            //not `radio`, `checkbox`
+            if (node.type != 'checkbox' && node.type != 'radio') {
+              controlType = 'input-textarea';
             }
 
-            n++;
+            //`checkbox`
+            if (node.type == 'checkbox') {
+              controlType = 'checkbox';
+            }
+
+            //`radio`
+            if (node.type == 'radio') {
+              controlType = 'radio';
+            }
+          }
+
+          //`select`
+          if (node.tagName == "SELECT") {
+            controlType = 'select';
+          }
+
+          //
+          if (controlType === 'radio') {
+            hasRadio = true;
+          }
+          integratedControls.push({
+            target: node,
+            type: controlType
+          });
+        });
+        if (hasRadio) {
+          console.error('<DynamicFields /> cannot use the "radio" type, because it will have multiple duplicate names! \nThe following components are recommended: <Input />, <Textarea />, <Checkbox />, <Switch />, <MultiFuncSelect />, <Select />, <CascadingSelectE2E />, <CascadingSelect />.');
+          return false;
+        }
+        var resControls = groupByNum(integratedControls, Math.floor(integratedControls.length / _val.length));
+        _val.map(function (row, i) {
+          row.map(function (val, j) {
+            var _control = resControls[i][j];
+            switch (_control.type) {
+              case "input-textarea":
+                _control.target.value = val;
+
+                // if it is checkbox
+                if (val === true) {
+                  var _checkbox = _control.target.parentElement.querySelector('[data-checkbox]');
+                  _checkbox.checked = val == true ? true : false;
+                  _control.target.value = _checkbox.value;
+                }
+                break;
+              case "checkbox":
+                _control.target.checked = val == true ? true : false;
+                break;
+              case "select":
+                _control.target.value = val;
+                _control.target.dispatchEvent(new Event('change'));
+                break;
+              default:
+                _control.target.value = val;
+            } //end switch
           });
         });
       }
@@ -253,16 +279,12 @@ var DynamicFields = function DynamicFields(props) {
     });
   }
   (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(function () {
-    if (!dataInit) {
-      setData(value ? _toConsumableArray(Array(JSON.parse('[' + value + ']').length - 1)).map(function () {
-        return [""];
-      }) : []);
-      updateDisplayedControls();
-      if (value !== '') {
-        setDataInit(true);
-      }
-    }
-  }, [data]);
+    setData(value ? _toConsumableArray(Array(JSON.parse('[' + value + ']').length - 1)).map(function () {
+      return [""];
+    }) : []);
+    updateDisplayedControls();
+    setDataInit(true);
+  }, [value]);
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
     className: wrapperClassName || wrapperClassName === '' ? wrapperClassName : "mb-3 position-relative",
     ref: rootRef

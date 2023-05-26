@@ -11,7 +11,7 @@ type SwitchOptionChangeFnType = (arg1: any, arg2: any) => void;
 
 type SwitchProps = {
     wrapperClassName?: string;
-    value?: string | boolean;
+    value: string | boolean;
     label?: React.ReactNode | string;
     name?: string;
     disabled?: any;
@@ -107,7 +107,10 @@ const Switch = forwardRef((props: SwitchProps, ref: any) => {
                         type="checkbox"
                         className="form-check-input"
                         id={idRes}
-                        name={name}
+
+                        // Don't use "name", it's just a container to display the label
+                        data-name={name?.match(/(\[.*?\])/gi) ? `${name.split('[')[0]}-label[]` : `${name}-label`}    
+                        data-checkbox
                         disabled={disabled || null}
                         required={required || null}
                         onChange={handleChange}
@@ -118,6 +121,15 @@ const Switch = forwardRef((props: SwitchProps, ref: any) => {
                         style={{cursor: 'pointer', ...style}}
                         {...attributes}
                     />
+
+
+                    <input 
+                        type="hidden"
+                        name={name}
+                        value={val ? value as string || '' : ''}  // do not use `defaultValue`
+                    />
+
+
                     {label ? <><label htmlFor={idRes} className="form-check-label">{label}</label></> : null}
                 </div>
             </div>

@@ -175,8 +175,12 @@ var Switch = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(func
     tabIndex: tabIndex || 0,
     type: "checkbox",
     className: "form-check-input",
-    id: idRes,
-    name: name,
+    id: idRes
+
+    // Don't use "name", it's just a container to display the label
+    ,
+    "data-name": name !== null && name !== void 0 && name.match(/(\[.*?\])/gi) ? "".concat(name.split('[')[0], "-label[]") : "".concat(name, "-label"),
+    "data-checkbox": true,
     disabled: disabled || null,
     required: required || null,
     onChange: handleChange,
@@ -188,7 +192,11 @@ var Switch = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(func
     style: _objectSpread({
       cursor: 'pointer'
     }, style)
-  }, attributes)), label ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("label", {
+  }, attributes)), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("input", {
+    type: "hidden",
+    name: name,
+    value: val ? value || '' : '' // do not use `defaultValue`
+  }), label ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("label", {
     htmlFor: idRes,
     className: "form-check-label"
   }, label)) : null)));

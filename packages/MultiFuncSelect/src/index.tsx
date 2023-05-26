@@ -641,7 +641,10 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
                             }}
                             tabIndex={tabIndex || 0}
                             type="text"
-                            name={name?.match(/(\[.*?\])/gi) ? `${name.split('[')[0]}-label[]` : `${name}-label`}
+
+                            // Don't use "name", it's just a container to display the label
+                            data-name={name?.match(/(\[.*?\])/gi) ? `${name.split('[')[0]}-label[]` : `${name}-label`}
+                            id={idRes}
                             placeholder={placeholder || ''}
                             className={controlClassName || controlClassName === '' ? controlClassName : "form-control"}
                             onFocus={handleFocus}
@@ -663,7 +666,6 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
                         <input 
                             ref={valueInputRef}
                             type="hidden"
-                            id={idRes}
                             name={name}
                             value={controlValue}  // do not use `defaultValue`
                         />

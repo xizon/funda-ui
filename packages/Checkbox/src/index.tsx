@@ -11,7 +11,7 @@ type CheckboxOptionChangeFnType = (arg1: any, arg2: any) => void;
 
 type CheckboxProps = {
     wrapperClassName?: string;
-    value?: string | boolean;
+    value: string | boolean;
     label?: React.ReactNode | string;
     name?: string;
     disabled?: any;
@@ -107,7 +107,10 @@ const Checkbox = forwardRef((props: CheckboxProps, ref: any) => {
                         type="checkbox"
                         className="form-check-input"
                         id={idRes}
-                        name={name}
+
+                        // Don't use "name", it's just a container to display the label
+                        data-name={name?.match(/(\[.*?\])/gi) ? `${name.split('[')[0]}-label[]` : `${name}-label`}    
+                        data-checkbox
                         disabled={disabled || null}
                         required={required || null}
                         onChange={handleChange}
@@ -115,9 +118,17 @@ const Checkbox = forwardRef((props: CheckboxProps, ref: any) => {
                         onBlur={handleBlur}
                         defaultValue={value as string || ''}
                         checked={val}   // component status will not change if defaultChecked is used
-                        style={style}
+                        style={{cursor: 'pointer', ...style}}
                         {...attributes}
                     />
+
+
+                    <input 
+                        type="hidden"
+                        name={name}
+                        value={val ? value as string || '' : ''}  // do not use `defaultValue`
+                    />
+
                     {label ? <><label htmlFor={idRes} className="form-check-label">{label}</label></> : null}
                 </div>
             </div>

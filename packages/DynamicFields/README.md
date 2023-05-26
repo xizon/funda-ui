@@ -21,6 +21,13 @@ import DynamicFields from 'react-pure-bootstrap/DynamicFields';
 | `onRemove` | function  | - | Call a function when remove a control. |
 
 
+> **Note:**
+> 
+> `<DynamicFields />` cannot use the "radio" type, because it will have multiple duplicate names! 
+> The following components are recommended: `<Input />`, `<Textarea />`, `<Checkbox />` , `<Switch />`, `<MultiFuncSelect />`, `<Select />`, `<CascadingSelectE2E />`, `<CascadingSelect />`.
+>
+
+
 ## Examples
 
 ```js

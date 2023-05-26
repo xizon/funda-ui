@@ -44,6 +44,16 @@ const DynamicFields = (props: DynamicFieldsProps) => {
     const [data, setData] = useState<any[]>([]);
     const [dataInit, setDataInit] = useState<boolean>(false);
 
+    function groupByNum(arr: any[], n: number) {
+        if ( n === 0 || n === Infinity ) return false;
+
+        let result: any[] = [];
+        for (let i = 0; i < arr.length; i += n) result.push(arr.slice(i, i + n) as never);
+        return result;
+    }
+
+    
+
     function handleClickAdd(event: any){
         event.preventDefault();
 
@@ -66,7 +76,7 @@ const DynamicFields = (props: DynamicFieldsProps) => {
 
 
     function handleClickRemove(param: any) { // param is the argument you passed to the function
-        return (e) => { // e is the event object that returned
+        return (e: any) => { // e is the event object that returned
             e.preventDefault();
 
             if ( confirm(confirmText || '') ) {
@@ -100,65 +110,86 @@ const DynamicFields = (props: DynamicFieldsProps) => {
         setTimeout(() => {
 
             if ( fieldsRef.current !== null ) {
-                const _val = value ? JSON.parse( '[' + value + ']' ) : [];
-                let controls = [].slice.call(document.querySelectorAll( `#${fieldsRef.current.id} > .dynamic-fields__append [name]` ));
+                const _val: any[] = value ? JSON.parse( '[' + value + ']' ) : [];
+                const controls: HTMLFormElement[] = [].slice.call(document.querySelectorAll( `#${fieldsRef.current.id} > .dynamic-fields__append [name]` ));
+                const integratedControls: HTMLFormElement[] = [];
 
-                
-                let n = 0;
-                _val.map((row: any, index: number) => {
-                    row.map((item: any, i: number) => {
-
-                        const _control: any = controls[n];
-                        if ( _control ) {
-
-
-                            let controlType = '';
-                            if (_control.tagName == "INPUT" || _control.tagName == "TEXTARTA") {
-                
-                                //not `radio`, `checkbox`
-                                if (_control.type != 'checkbox' && _control.type != 'radio') {
-                                    controlType = 'input-textarea';
-                                }
-                
-                                //`checkbox`
-                                if (_control.type == 'checkbox') {
-                                    controlType = 'checkbox';
-                                }
-                
-                                //`radio`
-                                if (_control.type == 'radio') {
-                                    controlType = 'radio';
-                                }
-                
-                            }
-                
-                            //`select`
-                            if (_control.tagName == "SELECT") {
-                                controlType = 'select';
-                            }
-
-
-                            switch (controlType) {
-                                case "input-textarea":
-                                    _control.value = item;
-                                    break;
-                                case "checkbox":
-                                    _control.checked = item;
-                                    break;
-                                case "select":
-                                    _control.value = item;
-                                    _control.dispatchEvent(new Event('change'));
-                                    
-                                    break;
-                                default:
-                                    _control.value = item;
-            
-                            }//end switch
-            
-
-                            
+                let hasRadio: boolean = false;
+                controls.forEach((node: any) => {
+                    let controlType = '';
+                    if (node.tagName == "INPUT" || node.tagName == "TEXTARTA") {
+        
+                        //not `radio`, `checkbox`
+                        if (node.type != 'checkbox' && node.type != 'radio') {
+                            controlType = 'input-textarea';
                         }
-                        n++;
+        
+                        //`checkbox`
+                        if (node.type == 'checkbox') {
+                            controlType = 'checkbox';
+                        }
+        
+                        //`radio`
+                        if (node.type == 'radio') {
+                            controlType = 'radio';
+                        }
+        
+                    }
+        
+                    //`select`
+                    if (node.tagName == "SELECT") {
+                        controlType = 'select';
+                    }
+
+                    //
+                    if ( controlType === 'radio' ) {
+                        hasRadio = true;
+                    }
+
+                    integratedControls.push({
+                        target: node,
+                        type: controlType
+                    } as never);
+
+                });
+
+                if ( hasRadio ) {
+                    console.error('<DynamicFields /> cannot use the "radio" type, because it will have multiple duplicate names! \nThe following components are recommended: <Input />, <Textarea />, <Checkbox />, <Switch />, <MultiFuncSelect />, <Select />, <CascadingSelectE2E />, <CascadingSelect />.');
+                    return false;
+                }
+                
+                const resControls: any = groupByNum(integratedControls, Math.floor(integratedControls.length / _val.length));
+            
+                _val.map((row: string[], i: number) => {
+                    row.map((val: any, j: number) => {
+                        
+                        const _control: any = resControls[i][j];
+
+                        switch (_control.type) {
+                            case "input-textarea":
+                                _control.target.value = val;
+
+                                // if it is checkbox
+                                if ( val === true ) {
+                                    const _checkbox = _control.target.parentElement.querySelector('[data-checkbox]');
+                                    _checkbox.checked = val == true ? true : false;
+                                    _control.target.value = _checkbox.value;
+                                }
+
+                                break;
+                            case "checkbox":
+                                _control.target.checked = val == true ? true : false;
+                                break;
+                            case "select":
+                                _control.target.value = val;
+                                _control.target.dispatchEvent(new Event('change'));
+                                
+                                break;
+                            default:
+                                _control.target.value = val;
+        
+                        }//end switch
+                        
                     })	
 
                 });
@@ -173,7 +204,7 @@ const DynamicFields = (props: DynamicFieldsProps) => {
         return data.map((el: any, i: number) =>
             <div key={i} className="dynamic-fields__tmpl__wrapper position-relative">
 
-                {el.map((data, index) => {
+                {el.map((data: any, index: number) => {
                     return (
                         <React.Fragment key={index}>
                             {tempHtmlString}
@@ -193,16 +224,11 @@ const DynamicFields = (props: DynamicFieldsProps) => {
 
     useEffect(() => {
 
-        if ( !dataInit ) {
-            setData(value ? [...Array(JSON.parse('[' + value + ']').length - 1)].map(() => [""]) : []);
-            updateDisplayedControls();
-            if ( value !== '' ) {
-                setDataInit(true);
-            }
-        }
+        setData(value ? [...Array(JSON.parse('[' + value + ']').length - 1)].map(() => [""]) : []);
+        updateDisplayedControls();
+        setDataInit(true);
 
-	
-    }, [data]);
+    }, [value]);
 
 
     return (
