@@ -11,7 +11,7 @@ import CascadingSelectE2E from 'react-pure-bootstrap/CascadingSelectE2E';
 | --- | --- | --- | --- |
 | `wrapperClassName` | string | `mb-3 position-relative` | The class name of the control wrapper. |
 | `controlClassName` | string | `form-control` | The class name of the control. |
-| `columnTitle` | Array  | - | Set headers for each column group. Such as <br /> `['Heading 1', 'Heading 2', 'Heading 3', 'Heading 4']` |
+| `columnTitle` | Array  | - | Set headers for each column group. Such as <br /> `['Heading 1', 'Heading 2', 'Heading 3', 'Heading 4']` <blockquote>Support html tags</blockquote> |
 | `triggerClassName` | string  | - | Specify a class for your trigger |
 | `triggerContent` | ReactNode  | - | Set a piece of text or HTML code for the trigger |
 | `depth` | number  | 100 | Set the depth value of the control to control the display of the pop-up layer appear above. Please set it when multiple controls are used at the same time. |
@@ -44,6 +44,33 @@ Array configuration properties of the `fetchArray`:
 | `fetchFuncMethodParams` | array  | - | The parameter passed by the method, it is an array. <br />Note: the first element is a query string, the second element is the number of queried data (usually a number), and then you can increase the third, or fourth, and more parameters. <br />Such as `['',0]`, `['',99,'string 1','string 2']`, `['',0,'$QUERY_ID']` <br /><blockquote>There should be at least one parameter which is the query string. <br />`$QUERY_ID` identifies the ID of the automatic query, and its value depends on the `id` attribute of the item.</blockquote> |
 | `fetchCallback` | function  | - | Return value from `fetchCallback` property to format the data of the API callback, which will match the data structure of the component. <br >At the same time it returns the original data, you will use this function and use the `return` keyword to return a new value. |
 
+
+
+### Create Callback 
+
+A successful response returns the details of the callback such as Sample Request Body:
+
+Among them, `id`, `queryId` and `name` are attributes used by the system, and other attributes can be added freely
+
+> The "name" attribute supports HTML tags
+
+```json
+[
+    {
+        "id": 1,
+        "queryId": 1,
+        "name": "Text 1",
+        "customAttr1": "a1"
+    },
+    {
+        "id": 2,
+        "queryId": 1,
+        "name": "Text 1_2",
+        "customAttr1": "a1"
+    },
+    ...
+]
+```
 
 
 ## Examples
@@ -179,7 +206,7 @@ export default () => {
                                 data.push({
                                     id: key,
                                     queryId: placesMap[key][2],
-                                    name: placesMap[key][0],
+                                    name: placesMap[key][0],   // The "name" attribute supports HTML tags
                                     type: placesMap[key][1]
                                 });
                             }
@@ -206,7 +233,7 @@ export default () => {
                                 data.push({
                                     id: key,
                                     queryId: placesMap[key][2],
-                                    name: placesMap[key][0],
+                                    name: placesMap[key][0], // The "name" attribute supports HTML tags
                                     type: placesMap[key][1]
                                 });
                             }

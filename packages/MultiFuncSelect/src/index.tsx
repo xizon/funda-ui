@@ -627,7 +627,7 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
 
             <div id={`multifunc-select__wrapper-${idRes}`} className={isOpen ? `multifunc-select__wrapper ${wrapperClassName || wrapperClassName === '' ? wrapperClassName : 'mb-3 position-relative'} active` : `multifunc-select__wrapper ${wrapperClassName || wrapperClassName === '' ? wrapperClassName : 'mb-3 position-relative'}`} ref={rootRef}>
                 
-                {label ? <><label htmlFor={idRes} className="form-label">{label}</label></> : null}
+                {label ? <><label htmlFor={`label-${idRes}`} className="form-label">{label}</label></> : null}
 
                     <div className="position-relative">
                         <input 
@@ -641,10 +641,11 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
                             }}
                             tabIndex={tabIndex || 0}
                             type="text"
+                            id={`label-${idRes}`}
 
                             // Don't use "name", it's just a container to display the label
                             data-name={name?.match(/(\[.*?\])/gi) ? `${name.split('[')[0]}-label[]` : `${name}-label`}
-                            id={idRes}
+                            data-select
                             placeholder={placeholder || ''}
                             className={controlClassName || controlClassName === '' ? controlClassName : "form-control"}
                             onFocus={handleFocus}
@@ -657,7 +658,7 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
                             disabled={disabled || null}
                             required={required || null}
                             readOnly={readOnly || null}
-                            value={controlTempValue || controlTempValue === '' ? controlTempValue : controlLabel}  // do not use `defaultValue`
+                            value={controlTempValue || controlTempValue === '' ? controlTempValue : controlLabel?.replace(/<\/?[^>]+(>|$)(.*?)<\/?[^>]+(>|$)/ig, '')}  // do not use `defaultValue`
                             style={{cursor: 'pointer', ...style}}
                             autoComplete='off'
                             {...attributes}
@@ -666,6 +667,7 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
                         <input 
                             ref={valueInputRef}
                             type="hidden"
+                            id={idRes}
                             name={name}
                             value={controlValue}  // do not use `defaultValue`
                         />
@@ -698,7 +700,9 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
                                     const startItemBorder = index === 0 ? 'border-top-0' : '';
                                     const endItemBorder = index === data.length - 1 ? 'border-bottom-0' : '';
 
-                                    return <button tabIndex={-1} onClick={handleSelect} type="button" data-index={index} key={index} className={`list-group-item list-group-item-action border-start-0 border-end-0 ${startItemBorder} ${endItemBorder} border-bottom-0`} data-value={`${item.value}`} data-label={`${item.label}`} data-letter={`${item.letter}`} role="tab">{item.label}</button>
+                                    return <button tabIndex={-1} onClick={handleSelect} type="button" data-index={index} key={index} className={`list-group-item list-group-item-action border-start-0 border-end-0 ${startItemBorder} ${endItemBorder} border-bottom-0`} data-value={`${item.value}`} data-label={`${item.label}`} data-letter={`${item.letter}`} role="tab" dangerouslySetInnerHTML={{
+                                        __html: item.label
+                                    }}></button>
                                 }) : null}
 
                             </div>

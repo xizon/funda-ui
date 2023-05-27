@@ -28,6 +28,10 @@ import Select from 'react-pure-bootstrap/Select';
 
 It accepts all props which this control support.
 
+
+
+
+
 ## Examples
 
 You need to use a `fetchCallback` property to format the data of the API callback, which will match the data structure of the component.

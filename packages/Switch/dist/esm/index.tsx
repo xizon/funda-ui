@@ -106,8 +106,8 @@ const Switch = forwardRef((props: SwitchProps, ref: any) => {
                         tabIndex={tabIndex || 0}
                         type="checkbox"
                         className="form-check-input"
-                        id={idRes}
-
+                        id={`label-${idRes}`}
+                        
                         // Don't use "name", it's just a container to display the label
                         data-name={name?.match(/(\[.*?\])/gi) ? `${name.split('[')[0]}-label[]` : `${name}-label`}    
                         data-checkbox
@@ -125,12 +125,13 @@ const Switch = forwardRef((props: SwitchProps, ref: any) => {
 
                     <input 
                         type="hidden"
+                        id={idRes}
                         name={name}
                         value={val ? value as string || '' : ''}  // do not use `defaultValue`
                     />
 
 
-                    {label ? <><label htmlFor={idRes} className="form-check-label">{label}</label></> : null}
+                    {label ? <><label htmlFor={`label-${idRes}`} className="form-check-label">{label}</label></> : null}
                 </div>
             </div>
 

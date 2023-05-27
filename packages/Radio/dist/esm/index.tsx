@@ -161,9 +161,9 @@ const Radio = (props: RadioProps) => {
                     style={style}
                     {...attributes}
                 />
-                <label className="form-check-label" htmlFor={`field-${uniqueID}-${index}`}>
-                    {radioOption}
-                </label>
+                <label className="form-check-label" htmlFor={`field-${uniqueID}-${index}`} dangerouslySetInnerHTML={{
+                    __html: radioOption
+                }}></label>
             </div>;
 
     });

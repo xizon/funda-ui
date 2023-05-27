@@ -118,8 +118,11 @@ function Group(props) {
         className: item.current ? 'cascading-select-e2e__opt active' : 'cascading-select-e2e__opt',
         onClick: function onClick(e) {
           return selectEv(e, item, index);
+        },
+        dangerouslySetInnerHTML: {
+          __html: item.name
         }
-      }, item.name);
+      });
     } else {
       return columnTitle[level] === '' ? null : /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("h3", {
         key: index,
@@ -129,8 +132,11 @@ function Group(props) {
         onClick: function onClick(e) {
           return selectEv(e, item, index);
         },
-        className: item.current ? 'cascading-select-e2e__opt-header active' : 'cascading-select-e2e__opt-header'
-      }, columnTitle[level]);
+        className: item.current ? 'cascading-select-e2e__opt-header active' : 'cascading-select-e2e__opt-header',
+        dangerouslySetInnerHTML: {
+          __html: columnTitle[level]
+        }
+      });
     }
   }));
 }
@@ -838,11 +844,19 @@ var CascadingSelectE2E = function CascadingSelectE2E(props) {
       if (arr.length - 1 === i) {
         return /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
           key: i
-        }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("span", null, item));
+        }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("span", {
+          dangerouslySetInnerHTML: {
+            __html: item
+          }
+        }));
       } else {
         return /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
           key: i
-        }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("span", null, item), arrowGenerator());
+        }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("span", {
+          dangerouslySetInnerHTML: {
+            __html: item
+          }
+        }), arrowGenerator());
       }
     }) : '';
   }

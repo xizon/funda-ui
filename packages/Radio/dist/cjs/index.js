@@ -211,8 +211,11 @@ var Radio = function Radio(props) {
       style: style
     }, attributes)), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("label", {
       className: "form-check-label",
-      htmlFor: "field-".concat(uniqueID, "-").concat(index)
-    }, radioOption));
+      htmlFor: "field-".concat(uniqueID, "-").concat(index),
+      dangerouslySetInnerHTML: {
+        __html: radioOption
+      }
+    }));
   });
   (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(function () {
     setVal(value);

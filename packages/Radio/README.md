@@ -11,7 +11,7 @@ import Radio from 'react-pure-bootstrap/Radio';
 | --- | --- | --- | --- |
 | `wrapperClassName` | string | `mb-3 position-relative` | The class name of the control wrapper. |
 | `inline` | boolean | false | If true the group checkboxes or radios are on the same horizontal row. |
-| `options` | JSON Object Literals | - | <strong>(Required)</strong> Set the default value using JSON string format for menu of options, like this: `{"Option 1":"value-1","Option 2":"value-2","Option 3":"value-3"}`|
+| `options` | JSON Object Literals | - | <strong>(Required)</strong> Set the default value using JSON string format for menu of options, like this: `{"Option 1":"value-1","<del style=color:red>deprecate</del>Option 2":"value-2","Option 3":"value-3"}`|
 | `value` | string | - | Set a default value for this control |
 | `label` | string \| ReactNode | - | It is used to specify a label for an element of a form. |
 | `name` | string | - | Name is not deprecated when used with form fields. |
@@ -23,6 +23,18 @@ import Radio from 'react-pure-bootstrap/Radio';
 
 
 It accepts all props which this control support.
+
+---
+
+JSON Object Literals configuration properties of the `options`:
+
+| Property | Type | Default | Description |
+| --- | --- | --- | --- |
+| `label` | string | - | Specify the label text for each option. <blockquote>Support html tags</blockquote> |
+| `value` | string | - | Specify the value for each option |
+
+
+
 
 ## Examples
 
@@ -46,7 +58,7 @@ export default () => {
                 label="String"
                 options={`{
                     "Option 1":"value-1",
-                    "Option 2":"value-2",
+                    "<del style=color:red>deprecate</del>Option 2":"value-2",
                     "Option 3":"value-3",
                     "Option 4":"value-4"
                 }`}

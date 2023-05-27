@@ -708,7 +708,7 @@ var MultiFuncSelect = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forward
     className: isOpen ? "multifunc-select__wrapper ".concat(wrapperClassName || wrapperClassName === '' ? wrapperClassName : 'mb-3 position-relative', " active") : "multifunc-select__wrapper ".concat(wrapperClassName || wrapperClassName === '' ? wrapperClassName : 'mb-3 position-relative'),
     ref: rootRef
   }, label ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("label", {
-    htmlFor: idRes,
+    htmlFor: "label-".concat(idRes),
     className: "form-label"
   }, label)) : null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
     className: "position-relative"
@@ -722,12 +722,13 @@ var MultiFuncSelect = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forward
       }
     },
     tabIndex: tabIndex || 0,
-    type: "text"
+    type: "text",
+    id: "label-".concat(idRes)
 
     // Don't use "name", it's just a container to display the label
     ,
     "data-name": name !== null && name !== void 0 && name.match(/(\[.*?\])/gi) ? "".concat(name.split('[')[0], "-label[]") : "".concat(name, "-label"),
-    id: idRes,
+    "data-select": true,
     placeholder: placeholder || '',
     className: controlClassName || controlClassName === '' ? controlClassName : "form-control",
     onFocus: handleFocus,
@@ -740,7 +741,7 @@ var MultiFuncSelect = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forward
     disabled: disabled || null,
     required: required || null,
     readOnly: readOnly || null,
-    value: controlTempValue || controlTempValue === '' ? controlTempValue : controlLabel // do not use `defaultValue`
+    value: controlTempValue || controlTempValue === '' ? controlTempValue : controlLabel === null || controlLabel === void 0 ? void 0 : controlLabel.replace(/<\/?[^>]+(>|$)(.*?)<\/?[^>]+(>|$)/ig, '') // do not use `defaultValue`
     ,
     style: _objectSpread({
       cursor: 'pointer'
@@ -749,6 +750,7 @@ var MultiFuncSelect = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forward
   }, attributes)), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("input", {
     ref: valueInputRef,
     type: "hidden",
+    id: idRes,
     name: name,
     value: controlValue // do not use `defaultValue`
   }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
@@ -807,8 +809,11 @@ var MultiFuncSelect = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forward
       "data-value": "".concat(item.value),
       "data-label": "".concat(item.label),
       "data-letter": "".concat(item.letter),
-      role: "tab"
-    }, item.label);
+      role: "tab",
+      dangerouslySetInnerHTML: {
+        __html: item.label
+      }
+    });
   }) : null)))) : null));
 });
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (MultiFuncSelect);

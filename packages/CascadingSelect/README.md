@@ -11,7 +11,7 @@ import CascadingSelect from 'react-pure-bootstrap/CascadingSelect';
 | --- | --- | --- | --- |
 | `wrapperClassName` | string | `mb-3 position-relative` | The class name of the control wrapper. |
 | `controlClassName` | string | `form-control` | The class name of the control. |
-| `columnTitle` | Array  | - | Set headers for each column group. Such as <br /> `['Heading 1', 'Heading 2', 'Heading 3', 'Heading 4']` |
+| `columnTitle` | Array  | - | Set headers for each column group. Such as <br /> `['Heading 1', 'Heading 2', 'Heading 3', 'Heading 4']` <blockquote>Support html tags</blockquote> |
 | `triggerClassName` | string  | - | Specify a class for your trigger |
 | `triggerContent` | ReactNode  | - | Set a piece of text or HTML code for the trigger |
 | `depth` | number  | 100 | Set the depth value of the control to control the display of the pop-up layer appear above. Please set it when multiple controls are used at the same time. |
@@ -45,6 +45,8 @@ import CascadingSelect from 'react-pure-bootstrap/CascadingSelect';
 A successful response returns the details of the callback such as Sample Request Body:
 
 Among them, `id`, `name` and `children` are attributes used by the system, and other attributes can be added freely
+
+> The "name" attribute supports HTML tags
 
 ```json
 [
@@ -465,7 +467,7 @@ export default () => {
                     for (const key in placesMap) {
                         data.push({
                             id: key,
-                            name: placesMap[key][0],
+                            name: placesMap[key][0],   // The "name" attribute supports HTML tags
                             type: placesMap[key][1]
                         });
                     }

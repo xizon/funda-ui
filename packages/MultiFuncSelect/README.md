@@ -11,7 +11,7 @@ import MultiFuncSelect from 'react-pure-bootstrap/MultiFuncSelect';
 | --- | --- | --- | --- |
 | `wrapperClassName` | string | `mb-3 position-relative` | The class name of the control wrapper. |
 | `controlClassName` | string | `form-control` | The class name of the control. |
-| `options` | JSON Object Literals | - | Set the default value using JSON string format for menu of options, like this: `[{"label": "Option 1","value": "value-1","letter": "option1"},{"label": "Option 2","value": "value-2","letter": "option2"},{"label": "Option 3","value": "value-3","letter": "option3"}]` <br /> <blockquote>Note: Use API data if database query exists. That is, the attribute `fetchXXXX`</blockquote>|
+| `options` | JSON Object Literals | - | Set the default value using JSON string format for menu of options, like this: `[{"label": "Option 1","value": "value-1","letter": "option1"},{"label": "<del style=color:red>deprecate</del>Option 2","value": "value-2","letter": "option2"},{"label": "Option 3","value": "value-3","letter": "option3"}]` <br /> <blockquote>Note: Use API data if database query exists. That is, the attribute `fetchXXXX`</blockquote>|
 | `depth` | number  | 100 | Set the depth value of the control to control the display of the pop-up layer appear above. Please set it when multiple controls are used at the same time. |
 | `value` | string | - | Set a default value for this control |
 | `label` | string \| ReactNode | - | It is used to specify a label for an element of a form. |
@@ -32,6 +32,19 @@ import MultiFuncSelect from 'react-pure-bootstrap/MultiFuncSelect';
 
 
 It accepts all props which this control support.
+
+
+---
+
+JSON Object Literals configuration properties of the `options`:
+
+| Property | Type | Default | Description |
+| --- | --- | --- | --- |
+| `label` | string | - | Specify the label text for each option. <blockquote>Support html tags</blockquote> |
+| `value` | string | - | Specify the value for each option |
+| `letter` | string | - | Quick query string, such as Chinese pinyin or English initials |
+
+
 
 ## Examples
 
@@ -88,7 +101,7 @@ export default () => {
                 options={`
                 [
                     {"label": "Option 1","value": "value-1","letter": "option1"},
-                    {"label": "Option 2","value": "value-2","letter": "option2"},
+                    {"label": "<del style=color:red>deprecate</del>Option 2","value": "value-2","letter": "option2"},
                     {"label": "Option 3","value": "value-3","letter": "option3"}
                 ]  
                 `}

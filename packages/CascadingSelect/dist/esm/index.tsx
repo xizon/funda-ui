@@ -667,13 +667,18 @@ const CascadingSelect = (props: CascadingSelectProps) => {
             if (arr.length - 1 === i) {
                 return (
                     <div key={i}>
-                        <span>{item}</span>
+                        <span dangerouslySetInnerHTML={{
+                            __html: item
+                        }}></span>
                     </div>
                 )
             } else {
                 return (
                     <div key={i}>
-                        <span>{item}</span>{arrowGenerator()}
+                        <span dangerouslySetInnerHTML={{
+                            __html: item
+                        }}></span>
+                        {arrowGenerator()}
                     </div>
                 )
             }
