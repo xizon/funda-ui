@@ -172,7 +172,7 @@ const Radio = (props: RadioProps) => {
 
     useEffect(() => {
         setVal(value);
-    }, [value]);
+    }, [value, options]);
 
 
 

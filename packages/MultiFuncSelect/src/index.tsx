@@ -81,7 +81,7 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
     const valueInputRef = useRef<any>(null);
     const listRef = useRef<any>(null);
     const listContentRef = useRef<any>(null);
-    const optionsRes = options ? isJSON( options ) ? JSON.parse( options ) : options : '';
+    const optionsRes = options ? isJSON( options ) ? JSON.parse( options ) : options : [];
     const windowScrollUpdate = throttle(handleScrollEvent, 5);
     
 
@@ -281,7 +281,7 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
             setControlValue(defaultValue); 
 
             const filterRes = _ORGIN_DATA.filter((item: any) => item.value == value );
-            if ( typeof filterRes[0] !== 'undefined' ) setControlLabel(filterRes[0].label);
+            setControlLabel(typeof filterRes[0] !== 'undefined' ? filterRes[0].label : '');
             
 
             //
@@ -302,7 +302,7 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
             setControlValue(defaultValue);
 
             const filterRes = optionsDataInit.filter((item: any) => item.value == defaultValue );
-            if ( typeof filterRes[0] !== 'undefined' ) setControlLabel(filterRes[0].label);
+            setControlLabel(typeof filterRes[0] !== 'undefined' ? filterRes[0].label : '');
             
 
             //
@@ -519,8 +519,7 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
 
 
     useEffect(() => {
-
-        
+  
         // data init
         //--------------
         const _params: any[] = fetchFuncMethodParams || [];
@@ -609,7 +608,6 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
         windowScrollUpdate();
 
 
-
         return () => {
             document.removeEventListener("keydown", listener);
             document.removeEventListener('pointerdown', handleClose);
@@ -619,7 +617,7 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
 
 
 
-    }, [value]); // required `value` parameter
+    }, [value, options]);
 
 
     return (

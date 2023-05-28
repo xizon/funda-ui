@@ -62,7 +62,7 @@ export default () => {
                 { label: "Option 3", value: "option-3" }
             ]}
             onChange={(res) => {
-                console.log(res.value); // {"label": "String","value": "abc"}
+                console.log(res.value); // {"label": "-","value": "-"}
             }}
         />
 
@@ -83,7 +83,7 @@ export default () => {
                 { label: "Option 3", value: "option-3" }
             ]}
             onChange={(res) => {
-                console.log(res.value); // {"label": "String","value": "abc"}
+                console.log(res.value); // {"label": "-","value": "-"}
             }}
         />
 

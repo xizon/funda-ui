@@ -210,7 +210,7 @@ var MultiFuncSelect = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forward
   var valueInputRef = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(null);
   var listRef = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(null);
   var listContentRef = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(null);
-  var optionsRes = options ? isJSON(options) ? JSON.parse(options) : options : '';
+  var optionsRes = options ? isJSON(options) ? JSON.parse(options) : options : [];
   var windowScrollUpdate = (0,_utils_performance__WEBPACK_IMPORTED_MODULE_1__.throttle)(handleScrollEvent, 5);
 
   // return a array of options
@@ -394,7 +394,7 @@ var MultiFuncSelect = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forward
             filterRes = _ORGIN_DATA.filter(function (item) {
               return item.value == value;
             });
-            if (typeof filterRes[0] !== 'undefined') setControlLabel(filterRes[0].label);
+            setControlLabel(typeof filterRes[0] !== 'undefined' ? filterRes[0].label : '');
 
             //
             setData(_ORGIN_DATA); // data must be initialized
@@ -411,7 +411,7 @@ var MultiFuncSelect = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forward
             _filterRes = optionsDataInit.filter(function (item) {
               return item.value == defaultValue;
             });
-            if (typeof _filterRes[0] !== 'undefined') setControlLabel(_filterRes[0].label);
+            setControlLabel(typeof _filterRes[0] !== 'undefined' ? _filterRes[0].label : '');
 
             //
             setData(optionsDataInit); // data must be initialized
@@ -701,8 +701,7 @@ var MultiFuncSelect = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forward
       window.removeEventListener('scroll', windowScrollUpdate);
       window.removeEventListener('touchmove', windowScrollUpdate);
     };
-  }, [value]); // required `value` parameter
-
+  }, [value, options]);
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
     id: "multifunc-select__wrapper-".concat(idRes),
     className: isOpen ? "multifunc-select__wrapper ".concat(wrapperClassName || wrapperClassName === '' ? wrapperClassName : 'mb-3 position-relative', " active") : "multifunc-select__wrapper ".concat(wrapperClassName || wrapperClassName === '' ? wrapperClassName : 'mb-3 position-relative'),

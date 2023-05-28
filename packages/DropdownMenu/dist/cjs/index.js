@@ -149,6 +149,15 @@ var DropdownMenu = function DropdownMenu(props) {
     _useState4 = _slicedToArray(_useState3, 2),
     selected = _useState4[0],
     setSelected = _useState4[1];
+  var selectedLabel = selected ? selected.label : triggerContent === undefined ? '' : triggerContent;
+  var selectOptionsListPresentation = options === null || options === void 0 ? void 0 : options.map(function (selectOption, index) {
+    return /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement(Option, {
+      key: index,
+      option: selectOption,
+      onSelect: handleSelect,
+      hyperlinkClassName: hyperlinkClassName ? hyperlinkClassName : 'dropdown-item-default'
+    });
+  });
   function handleClick(event) {
     setIsOpen(!isOpen);
   }
@@ -173,15 +182,6 @@ var DropdownMenu = function DropdownMenu(props) {
       document.removeEventListener('pointerdown', handleClose);
     };
   }, []);
-  var selectedLabel = selected ? selected.label : triggerContent === undefined ? '' : triggerContent;
-  var selectOptionsListPresentation = options === null || options === void 0 ? void 0 : options.map(function (selectOption, index) {
-    return /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement(Option, {
-      key: index,
-      option: selectOption,
-      onSelect: handleSelect,
-      hyperlinkClassName: hyperlinkClassName ? hyperlinkClassName : 'dropdown-item-default'
-    });
-  });
   return /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
     className: isOpen ? "dropdown__wrapper ".concat(wrapperClassName || wrapperClassName === '' ? wrapperClassName : 'dropdown-default', " active") : "dropdown__wrapper ".concat(wrapperClassName || wrapperClassName === '' ? wrapperClassName : 'dropdown-default')
   }, triggerButton ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("button", {

@@ -52,6 +52,10 @@ const DropdownMenu = (props: DropdownMenuProps) => {
     const [isOpen, setIsOpen] = useState<boolean>(false);
     const [selected, setSelected] = useState<any>(null);
 
+    const selectedLabel = selected ? selected.label : (triggerContent === undefined ? '' : triggerContent);
+    const selectOptionsListPresentation = options?.map((selectOption, index) => {
+        return <Option key={index} option={selectOption} onSelect={handleSelect} hyperlinkClassName={hyperlinkClassName ? hyperlinkClassName : 'dropdown-item-default'} />;
+    });
 
 
     function handleClick(event: any) {
@@ -78,7 +82,6 @@ const DropdownMenu = (props: DropdownMenuProps) => {
 
     }
 
-
     useEffect(() => {
 
 
@@ -91,11 +94,6 @@ const DropdownMenu = (props: DropdownMenuProps) => {
 
     }, []);
 
-
-    const selectedLabel = selected ? selected.label : (triggerContent === undefined ? '' : triggerContent);
-    const selectOptionsListPresentation = options?.map((selectOption, index) => {
-        return <Option key={index} option={selectOption} onSelect={handleSelect} hyperlinkClassName={hyperlinkClassName ? hyperlinkClassName : 'dropdown-item-default'} />;
-    });
 
     return (
         <>

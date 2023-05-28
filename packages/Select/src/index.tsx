@@ -218,7 +218,7 @@ const Select = forwardRef((props: SelectProps, ref: any) => {
         const _params: any[] = fetchFuncMethodParams || [];
         fetchData((_params).join(','));
 
-    }, [value]); // required `value` parameter
+    }, [value, options]);
 
 
     return (

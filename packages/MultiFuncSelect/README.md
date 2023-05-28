@@ -150,3 +150,238 @@ export default () => {
     );
 }
 ```
+
+
+## Multi-Level Cascading Select
+
+
+
+```js
+import React from "react";
+import MultiFuncSelect from 'react-pure-bootstrap/MultiFuncSelect';
+
+class DataService {
+    
+    // `getListFirst()` must be a Promise Object
+    async getListFirst(searchStr = '', limit = 0, otherParam = '') {
+
+        console.log('searchStr: ', searchStr);
+        console.log("limit: ", limit);
+        console.log("otherParam: ", otherParam);
+
+        const demoData = [
+            {
+                "parent_id": 0,
+                "item_code": 1,
+                "item_name": "Title 1",
+                "item_type": "web"
+            },
+            {
+                "parent_id": 0,
+                "item_code": 2,
+                "item_name": "Title 2",
+                "item_type": "dev"
+            }
+        ];   
+
+        return {
+            code: 0,
+            message: 'OK',
+            data: demoData
+        };
+    }
+
+
+    // `getListSecond()` must be a Promise Object
+    async getListSecond(searchStr = '', limit = 0, parentId = 0) {
+
+        console.log("parentId: ", parentId);
+
+        const demoData = [
+            {
+                "parent_id": 1,
+                "item_code": 3,
+                "item_name": "Title 3",
+                "item_type": "web/ui"
+            },
+            {
+                "parent_id": 1,
+                "item_code": 4,
+                "item_name": "Title 4",
+                "item_type": "web/ui"
+            },
+            {
+                "parent_id": 2,
+                "item_code": 5,
+                "item_name": "Title 5",
+                "item_type": "dev"
+            }
+        ];   
+
+        const res = demoData.filter( item => {
+            return item.parent_id == parentId;
+        } );
+
+        return {
+            code: 0,
+            message: 'OK',
+            data: res
+        };
+    }
+
+    // `getListThird()` must be a Promise Object
+    async getListThird(searchStr = '', limit = 0, parentId = 0) {
+
+        console.log("parentId: ", parentId);
+
+        const demoData = [
+            {
+                "parent_id": 5,
+                "item_code": 6,
+                "item_name": "Title 6",
+                "item_type": "dev"
+            },
+            {
+                "parent_id": 5,
+                "item_code": 7,
+                "item_name": "Title 7",
+                "item_type": "dev"
+            },
+            {
+                "parent_id": 3,
+                "item_code": 8,
+                "item_name": "Title 8",
+                "item_type": "web/ui"
+            }
+        ];   
+
+        const res = demoData.filter( item => {
+            return item.parent_id == parentId;
+        } );
+
+        return {
+            code: 0,
+            message: 'OK',
+            data: res
+        };
+    }
+}
+
+
+export default () => {
+
+    const service = new DataService;
+
+    const [secondValue, setSecondValue] = useState<string>('');
+    const [thirdValue, setThirdValue] = useState<string>('');
+
+    const [secondOptions, setSecondOptions] = useState<string>('');
+    const [thirdOptions, setThirdOptions] = useState<string>('');
+
+    function toSlug(str: string) {
+
+        return str
+            .toString()
+            .replace(/[^\w\s\-！￥【】\u4e00-\u9eff]/gi, '')
+            .replace(/\s/g, '-')
+            .replace(/(\-){2,}/g, '-')
+            .replace(/\-\s*$/, '')
+            .toLowerCase();
+    };
+    
+    
+
+    return (
+        <>
+
+            <MultiFuncSelect
+                placeholder="Select"
+                name="name-1"
+                label="Level 1"
+                fetchFuncAsync={service}
+                fetchFuncMethod="getListFirst"
+                fetchFuncMethodParams={['', 0, 1]}
+                fetchCallback={(res) => {
+                    const formattedData = res.map((item: any) => {
+                        return {
+                            label: item.item_name,
+                            value: toSlug(item.item_name),
+                            letter: '',
+                            queryId: item.item_code
+                        }
+                    }); 
+                    return formattedData;
+                }}
+                onChange={(e: any, val: any) => {
+                    const queryId = val.queryId;
+
+                    // value of "name-2" and "name-3"
+                    setSecondValue('');
+                    setThirdValue('');
+                    setThirdOptions('');
+
+
+                    // options of "name-2"
+                    service.getListSecond('', 0, queryId).then((res: any) => {
+                        const formattedData = res.data.map((item: any) => {
+                            return {
+                                label: item.item_name,
+                                value: toSlug(item.item_name),
+                                letter: '',
+                                queryId: item.item_code
+                            }
+                        }); 
+
+                        setSecondOptions(JSON.stringify(formattedData));
+
+                    });
+                  
+                }}
+            />
+
+
+            <MultiFuncSelect
+                value={secondValue}
+                placeholder="Select"
+                name="name-2"
+                label="Level 2"
+                options={secondOptions}
+                onChange={(e: any, val: any) => {
+                    const queryId = val.queryId;
+                
+                    // value of "name-3"
+                    setThirdValue('');
+
+                    // options of "name-3"
+                    service.getListThird('', 0, queryId).then((res: any) => {
+                        const formattedData = res.data.map((item: any) => {
+                            return {
+                                label: item.item_name,
+                                value: toSlug(item.item_name),
+                                letter: '',
+                                queryId: item.item_code
+                            }
+                        }); 
+
+                        setThirdOptions(JSON.stringify(formattedData));
+
+
+                    });  
+                }}
+            />
+
+
+            <MultiFuncSelect
+                value={thirdValue}
+                placeholder="Select"
+                name="name-3"
+                label="Level 3"
+                options={thirdOptions}
+            />
+
+
+
+        </>
+    );
+}
+```
