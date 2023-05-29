@@ -811,7 +811,7 @@ var CascadingSelect = function CascadingSelect(props) {
     viewBox: "0 -4.5 20 20"
   }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("g", {
     stroke: "none",
-    "stroke-width": "1",
+    strokeWidth: "1",
     fill: "none"
   }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("g", {
     transform: "translate(-180.000000, -6684.000000)",

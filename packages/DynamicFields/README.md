@@ -26,6 +26,8 @@ import DynamicFields from 'react-pure-bootstrap/DynamicFields';
 > `<DynamicFields />` cannot use the "radio" type, because it will have multiple duplicate names! 
 > The following components are recommended: `<Input />`, `<Textarea />`, `<Checkbox />` , `<Switch />`, `<MultiFuncSelect />`, `<Select />`, `<CascadingSelectE2E />`, `<CascadingSelect />`.
 >
+> To use `<MultiFuncSelect />` or `<Select />`, please use the **"options"** attribute (you can also use **"useState()"** to assign values), do not use the **"fetch"** attribute to assign values.
+> 
 
 
 ## Examples

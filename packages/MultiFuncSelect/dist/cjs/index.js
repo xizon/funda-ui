@@ -392,7 +392,7 @@ var MultiFuncSelect = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forward
             // value & label must be initialized
             setControlValue(defaultValue);
             filterRes = _ORGIN_DATA.filter(function (item) {
-              return item.value == value;
+              return item.value == defaultValue;
             });
             setControlLabel(typeof filterRes[0] !== 'undefined' ? filterRes[0].label : '');
 
@@ -765,7 +765,7 @@ var MultiFuncSelect = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forward
     viewBox: "0 -4.5 20 20"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("g", {
     stroke: "none",
-    "stroke-width": "1",
+    strokeWidth: "1",
     fill: "none"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("g", {
     transform: "translate(-180.000000, -6684.000000)",
