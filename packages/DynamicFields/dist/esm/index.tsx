@@ -15,6 +15,7 @@ type DynamicFieldsProps = {
     confirmText?: string;
     iconAdd?: React.ReactNode | string;
     iconRemove?: React.ReactNode | string;
+    startFromZero?: boolean;
     /** -- */
     id?: string;
     onAdd?: () => void;
@@ -30,6 +31,7 @@ const DynamicFields = (props: DynamicFieldsProps) => {
         maxFields,
         iconAdd,
         iconRemove,
+        startFromZero,
         id,
         confirmText,
         onAdd,
@@ -42,7 +44,6 @@ const DynamicFields = (props: DynamicFieldsProps) => {
     const fieldsRef = useRef<any>(null);
     const addBtnRef = useRef<any>(null);
     const [data, setData] = useState<any[]>([]);
-    const [dataInit, setDataInit] = useState<boolean>(false);
 
     function groupByNum(arr: any[], n: number) {
         if ( n === 0 || n === Infinity ) return false;
@@ -223,10 +224,9 @@ const DynamicFields = (props: DynamicFieldsProps) => {
     }
 
     useEffect(() => {
-
-        setData(value ? [...Array(JSON.parse('[' + value + ']').length - 1)].map(() => [""]) : []);
+ 
+        setData(value ? [...Array(JSON.parse('[' + value + ']').length - (!startFromZero ? 1 : 0))].map(() => [""]) : []);
         updateDisplayedControls();
-        setDataInit(true);
 
     }, [value]);
 
@@ -240,7 +240,7 @@ const DynamicFields = (props: DynamicFieldsProps) => {
 
                 <div ref={fieldsRef} className="dynamic-fields-container" data-max-fields={maxFields || 10} id={idRes}>
                     <div className="dynamic-fields__append">
-                        {tempHtmlString}
+                        {!startFromZero ? tempHtmlString : null}
                         {generateList()}
                     </div>
                     <a ref={addBtnRef} href="#" className="dynamic-fields__addbtn" onClick={handleClickAdd}>

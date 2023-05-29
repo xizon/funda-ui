@@ -13,6 +13,7 @@ declare type DynamicFieldsProps = {
     confirmText?: string;
     iconAdd?: React.ReactNode | string;
     iconRemove?: React.ReactNode | string;
+    startFromZero?: boolean;
     /** -- */
     id?: string;
     onAdd?: () => void;

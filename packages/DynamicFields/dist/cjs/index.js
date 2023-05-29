@@ -115,6 +115,7 @@ var DynamicFields = function DynamicFields(props) {
     maxFields = props.maxFields,
     iconAdd = props.iconAdd,
     iconRemove = props.iconRemove,
+    startFromZero = props.startFromZero,
     id = props.id,
     confirmText = props.confirmText,
     onAdd = props.onAdd,
@@ -128,10 +129,6 @@ var DynamicFields = function DynamicFields(props) {
     _useState2 = _slicedToArray(_useState, 2),
     data = _useState2[0],
     setData = _useState2[1];
-  var _useState3 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(false),
-    _useState4 = _slicedToArray(_useState3, 2),
-    dataInit = _useState4[0],
-    setDataInit = _useState4[1];
   function groupByNum(arr, n) {
     if (n === 0 || n === Infinity) return false;
     var result = [];
@@ -279,11 +276,10 @@ var DynamicFields = function DynamicFields(props) {
     });
   }
   (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(function () {
-    setData(value ? _toConsumableArray(Array(JSON.parse('[' + value + ']').length - 1)).map(function () {
+    setData(value ? _toConsumableArray(Array(JSON.parse('[' + value + ']').length - (!startFromZero ? 1 : 0))).map(function () {
       return [""];
     }) : []);
     updateDisplayedControls();
-    setDataInit(true);
   }, [value]);
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
     className: wrapperClassName || wrapperClassName === '' ? wrapperClassName : "mb-3 position-relative",
@@ -297,7 +293,7 @@ var DynamicFields = function DynamicFields(props) {
     id: idRes
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
     className: "dynamic-fields__append"
-  }, tempHtmlString, generateList()), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
+  }, !startFromZero ? tempHtmlString : null, generateList()), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
     ref: addBtnRef,
     href: "#",
     className: "dynamic-fields__addbtn",

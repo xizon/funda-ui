@@ -17,6 +17,7 @@ import DynamicFields from 'react-pure-bootstrap/DynamicFields';
 | `iconRemove` | ReactNode  | `<svg width="20px" height="20px" viewBox="0 0 24 24" fill="none"><path fillRule="evenodd" clipRule="evenodd" d="M22 12c0 5.523-4.477 10-10 10S2 17.523 2 12 6.477 2 12 2s10 4.477 10 10ZM8 11a1 1 0 1 0 0 2h8a1 1 0 1 0 0-2H8Z" fill="#000"/></svg>` | The label of the button to delete current item, if it is not set, only the SVG icon will be included |
 | `tempHtmlString` | string \| ReactNode | - | Control group are dynamically added after the button is triggered. Like this: <br />`<><Input placeholder="Title" name="your-title[]" /> <Input ui="medium" placeholder="URL" name="your-url[]" /></>` |
 | `maxFields` | number | 10 | Maximum number of control group allowed to be added |
+| `startFromZero` | boolean | false | Whether to start counting from zero (if true, initialize without any form) |
 | `onAdd` | function  | - | Call a function when add a control. |
 | `onRemove` | function  | - | Call a function when remove a control. |
 
