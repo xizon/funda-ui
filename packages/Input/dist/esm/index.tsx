@@ -70,6 +70,7 @@ const Input = forwardRef((props: InputProps, ref: any) => {
     const uniqueID = useId();
     const idRes = id || uniqueID;
     const rootRef = useRef<any>(null);
+    const valRef = useRef<any>(null);
     const typeRes = typeof (type) === 'undefined' ? 'text' : type;
     const [onComposition, setOnComposition] = useState(false);
     const [changedVal, setChangedVal] = useState<string>(value || '');
@@ -129,6 +130,17 @@ const Input = forwardRef((props: InputProps, ref: any) => {
         //--------------
         setChangedVal(value || '');
 
+        // If you use the dynamic form assignment (such as document.getElementById(xxx).value), 
+        // you need to judge the value of the input obtained by using the macrotask("setTimeout()")
+        setTimeout(() => {
+            if ( valRef.current.value !== '' && ( typeof value === 'undefined' || value === '' ) ) {
+                setChangedVal(valRef.current.value);
+            }
+        }, 500);
+
+
+
+
     }, [value]);
 
 
@@ -141,7 +153,14 @@ const Input = forwardRef((props: InputProps, ref: any) => {
                 <div className="input-group">
                     {iconLeft ? <><span className="input-group-text">{iconLeft}</span></>: null}
                     <input
-                        ref={ref}
+                        ref={(node) => {
+                            valRef.current = node;
+                            if (typeof ref === 'function') {
+                                ref(node);
+                            } else if (ref) {
+                                ref.current = node;
+                            }
+                        }}
                         tabIndex={tabIndex || 0}
                         type={typeRes}
                         className={controlClassName || controlClassName === '' ? controlClassName : "form-control"}

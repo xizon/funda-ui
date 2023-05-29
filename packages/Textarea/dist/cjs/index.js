@@ -130,7 +130,7 @@ var Textarea = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(fu
   var uniqueID = (0,react__WEBPACK_IMPORTED_MODULE_0__.useId)();
   var idRes = id || uniqueID;
   var rootRef = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(null);
-  var textareaRef = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(null);
+  var valRef = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(null);
   var _useState = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(value || ''),
     _useState2 = _slicedToArray(_useState, 2),
     changedVal = _useState2[0],
@@ -172,6 +172,14 @@ var Textarea = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(fu
     // update default value
     //--------------
     setChangedVal(value || '');
+
+    // If you use the dynamic form assignment (such as document.getElementById(xxx).value), 
+    // you need to judge the value of the input obtained by using the macrotask("setTimeout()")
+    setTimeout(function () {
+      if (valRef.current.value !== '' && (typeof value === 'undefined' || value === '')) {
+        setChangedVal(valRef.current.value);
+      }
+    }, 500);
   }, [value]);
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
     className: wrapperClassName || wrapperClassName === '' ? wrapperClassName : "mb-3 position-relative",
@@ -183,7 +191,7 @@ var Textarea = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(fu
     className: "input-group"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("textarea", _extends({
     ref: function ref(node) {
-      textareaRef.current = node;
+      valRef.current = node;
       if (typeof _ref === 'function') {
         _ref(node);
       } else if (_ref) {

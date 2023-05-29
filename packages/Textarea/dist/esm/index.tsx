@@ -57,7 +57,7 @@ const Textarea = forwardRef((props: TextareaProps, ref: any) => {
     const uniqueID = useId();
     const idRes = id || uniqueID;
     const rootRef = useRef<any>(null);
-    const textareaRef = useRef<any>(null);
+    const valRef = useRef<any>(null);
     const [changedVal, setChangedVal] = useState<string>(value || '');
 
     function handleFocus(event: any) {
@@ -104,6 +104,16 @@ const Textarea = forwardRef((props: TextareaProps, ref: any) => {
         //--------------
         setChangedVal(value || '');
 
+        // If you use the dynamic form assignment (such as document.getElementById(xxx).value), 
+        // you need to judge the value of the input obtained by using the macrotask("setTimeout()")
+        setTimeout(() => {
+            if ( valRef.current.value !== '' && ( typeof value === 'undefined' || value === '' ) ) {
+                setChangedVal(valRef.current.value);
+            }
+        }, 500);
+
+
+
     }, [value]);    
     
 
@@ -117,7 +127,7 @@ const Textarea = forwardRef((props: TextareaProps, ref: any) => {
                     
                     <textarea  
                         ref={(node) => {
-                            textareaRef.current = node;
+                            valRef.current = node;
                             if (typeof ref === 'function') {
                                 ref(node);
                             } else if (ref) {
