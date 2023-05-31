@@ -10,15 +10,17 @@ import DropdownMenu from 'react-pure-bootstrap/DropdownMenu';
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |
 | `wrapperClassName` | string | `dropdown-default` | The class name of the menu wrapper. |
+| `alignOptionsLayer` | string | `start` \| `center` \| `end` | Align the options layer in a drop-down field. By default it is "center". <blockquote>It only takes effect when when the `wrapperClassName` attribute is removed</blockquote> |
 | `listClassName` | string | `dropdown-menu-default` | The class name of the list. |
 | `hyperlinkClassName` | string | `dropdown-item-default` | The class name of the hyperlink of each item. |
 | `showClassName` | string | `show` | activates the class name for the display list |
 | `name` | string  | - | Set a name for the form field for this component. Name is not deprecated when used with form fields. |
 | `triggerButton` | boolean  | false | Whether to use button style, otherwise use "div" |
 | `triggerClassName` | string  | `d-inline w-auto` | Specify a class for your trigger |
-| `triggerContent` | string  | - | Set a piece of text for the trigger |
-| `options` | array  | - | Specify data of Dropdown Menu as a JSON string format. Such as: <br /> `[{"label":"Option 1","value":"option-1"},{"label":"Option 2","value":"option-2"}]` |
-| `onChange` | function \| null  | - | This function is called whenever the data is updated. Exposes the JSON format data about the option as an argument. You can use it like this: `(res) => console.log(res.value)` |
+| `triggerContent` | string  | - | Set a piece of text for the trigger <blockquote>Support html tags</blockquote> |
+| `triggerSwitchActive` | boolean  | false | When enabled, the corresponding option content will be displayed after selecting an option |
+| `options` | array  | - | Specify data of Dropdown Menu as a JSON string format. Such as: <br /> `[{"label":"Option 1","value":"option-1"},{"label":"Option 2","value":"option-2"}]` <blockquote>Support html tags</blockquote> |
+| `onChange` | function \| null  | - | This function is called whenever the data is updated. Exposes the JSON format data about the option as an argument. You can use it like this: `(res) => console.log(res)` |
 | `tabIndex` | number  | -1 | This attribute allows developers to make HTML elements focusable. |
 
 
@@ -55,6 +57,7 @@ export default () => {
             triggerButton={false}
             triggerClassName="d-inline w-auto"
             triggerContent={`Option 1`}
+            triggerSwitchActive={true}
             name="app-ddmenu-1"
             options={[
                 { label: "Option 1", value: "option-1" },
@@ -62,7 +65,7 @@ export default () => {
                 { label: "Option 3", value: "option-3" }
             ]}
             onChange={(res) => {
-                console.log(res.value); // {"label": "-","value": "-"}
+                console.log(res); // {"label": "-","value": "-"}
             }}
         />
 
@@ -75,7 +78,7 @@ export default () => {
             hyperlinkClassName="dropdown-item"
             triggerButton={true}
             triggerClassName="btn btn-secondary btn-sm"
-            triggerContent={`Option 1`}
+            triggerContent={`<img src="avatar.jpg" alt="" />`}
             name="app-ddmenu-2"
             options={[
                 { label: "Option 1", value: "option-1" },
@@ -83,7 +86,7 @@ export default () => {
                 { label: "Option 3", value: "option-3" }
             ]}
             onChange={(res) => {
-                console.log(res.value); // {"label": "-","value": "-"}
+                console.log(res); // {"label": "-","value": "-"}
             }}
         />
 

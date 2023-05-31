@@ -22,6 +22,10 @@ type DropdownMenuProps = {
     triggerClassName?: string;
     /** Set a piece of text or HTML code for the trigger */
     triggerContent?: string;
+    /** When enabled, the corresponding option content will be displayed after selecting an option */
+    triggerSwitchActive?: boolean;
+    /** Center align the options layer in a drop-down field. By default it is left aligned "start". */
+    alignOptionsLayer?: string;
     /** Specify data of Dropdown Menu as a JSON string format. 
      * Such as: `[{"label":"Option 1","value":"option-1"},{"label":"Option 2","value":"option-2"}]` */
     options?: OptionConfig[];
@@ -44,6 +48,8 @@ const DropdownMenu = (props: DropdownMenuProps) => {
         triggerButton,
         triggerClassName,
         triggerContent,
+        triggerSwitchActive,
+        alignOptionsLayer,
         options,
         tabIndex,
         onChange
@@ -52,7 +58,9 @@ const DropdownMenu = (props: DropdownMenuProps) => {
     const [isOpen, setIsOpen] = useState<boolean>(false);
     const [selected, setSelected] = useState<any>(null);
 
-    const selectedLabel = selected ? selected.label : (triggerContent === undefined ? '' : triggerContent);
+
+    const defaultLabel = triggerContent === undefined ? '' : triggerContent;
+    const selectedLabel = triggerSwitchActive ? (selected ? selected.label : defaultLabel) : defaultLabel;
     const selectOptionsListPresentation = options?.map((selectOption, index) => {
         return <Option key={index} option={selectOption} onSelect={handleSelect} hyperlinkClassName={hyperlinkClassName ? hyperlinkClassName : 'dropdown-item-default'} />;
     });
@@ -75,15 +83,12 @@ const DropdownMenu = (props: DropdownMenuProps) => {
         setSelected(option);
 
         if (typeof (onChange) === 'function') {
-            onChange({
-                "value": option
-            });
+            onChange(option);
         }
 
     }
 
     useEffect(() => {
-
 
         document.removeEventListener('pointerdown', handleClose);
         document.addEventListener('pointerdown', handleClose);
@@ -92,13 +97,13 @@ const DropdownMenu = (props: DropdownMenuProps) => {
             document.removeEventListener('pointerdown', handleClose);
         }
 
-    }, []);
-
+    }, [options]);
+    
 
     return (
         <>
 
-            <div className={isOpen ? `dropdown__wrapper ${wrapperClassName || wrapperClassName === '' ? wrapperClassName : 'dropdown-default'} active` : `dropdown__wrapper ${wrapperClassName || wrapperClassName === '' ? wrapperClassName : 'dropdown-default'}`}>
+            <div className={isOpen ? `dropdown__wrapper ${wrapperClassName || wrapperClassName === '' ? wrapperClassName : `dropdown-default dropdown-default--${alignOptionsLayer ? alignOptionsLayer : 'center'}`} active` : `dropdown__wrapper ${wrapperClassName || wrapperClassName === '' ? wrapperClassName : `dropdown-default dropdown-default--${alignOptionsLayer ? alignOptionsLayer : 'center'}`}`}>
 
                 {triggerButton ? <button tabIndex={tabIndex || -1} className={triggerClassName ? `${triggerClassName}` : `d-inline w-auto`} type="button" onClick={handleClick} dangerouslySetInnerHTML={{ __html: selectedLabel }}></button> : <div className={triggerClassName ? `${triggerClassName}` : `d-inline w-auto`} onClick={handleClick} dangerouslySetInnerHTML={{ __html: selectedLabel }}></div>}
 

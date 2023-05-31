@@ -17,6 +17,10 @@ declare type DropdownMenuProps = {
     triggerClassName?: string;
     /** Set a piece of text or HTML code for the trigger */
     triggerContent?: string;
+    /** When enabled, the corresponding option content will be displayed after selecting an option */
+    triggerSwitchActive?: boolean;
+    /** Center align the options layer in a drop-down field. By default it is left aligned "start". */
+    alignOptionsLayer?: string;
     /** Specify data of Dropdown Menu as a JSON string format.
      * Such as: `[{"label":"Option 1","value":"option-1"},{"label":"Option 2","value":"option-2"}]` */
     options?: OptionConfig[];

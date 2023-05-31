@@ -138,6 +138,8 @@ var DropdownMenu = function DropdownMenu(props) {
     triggerButton = props.triggerButton,
     triggerClassName = props.triggerClassName,
     triggerContent = props.triggerContent,
+    triggerSwitchActive = props.triggerSwitchActive,
+    alignOptionsLayer = props.alignOptionsLayer,
     options = props.options,
     tabIndex = props.tabIndex,
     onChange = props.onChange;
@@ -149,7 +151,8 @@ var DropdownMenu = function DropdownMenu(props) {
     _useState4 = _slicedToArray(_useState3, 2),
     selected = _useState4[0],
     setSelected = _useState4[1];
-  var selectedLabel = selected ? selected.label : triggerContent === undefined ? '' : triggerContent;
+  var defaultLabel = triggerContent === undefined ? '' : triggerContent;
+  var selectedLabel = triggerSwitchActive ? selected ? selected.label : defaultLabel : defaultLabel;
   var selectOptionsListPresentation = options === null || options === void 0 ? void 0 : options.map(function (selectOption, index) {
     return /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement(Option, {
       key: index,
@@ -170,9 +173,7 @@ var DropdownMenu = function DropdownMenu(props) {
     setIsOpen(false);
     setSelected(option);
     if (typeof onChange === 'function') {
-      onChange({
-        "value": option
-      });
+      onChange(option);
     }
   }
   (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useEffect)(function () {
@@ -181,9 +182,9 @@ var DropdownMenu = function DropdownMenu(props) {
     return function () {
       document.removeEventListener('pointerdown', handleClose);
     };
-  }, []);
+  }, [options]);
   return /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
-    className: isOpen ? "dropdown__wrapper ".concat(wrapperClassName || wrapperClassName === '' ? wrapperClassName : 'dropdown-default', " active") : "dropdown__wrapper ".concat(wrapperClassName || wrapperClassName === '' ? wrapperClassName : 'dropdown-default')
+    className: isOpen ? "dropdown__wrapper ".concat(wrapperClassName || wrapperClassName === '' ? wrapperClassName : "dropdown-default dropdown-default--".concat(alignOptionsLayer ? alignOptionsLayer : 'center'), " active") : "dropdown__wrapper ".concat(wrapperClassName || wrapperClassName === '' ? wrapperClassName : "dropdown-default dropdown-default--".concat(alignOptionsLayer ? alignOptionsLayer : 'center'))
   }, triggerButton ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("button", {
     tabIndex: tabIndex || -1,
     className: triggerClassName ? "".concat(triggerClassName) : "d-inline w-auto",

@@ -24,9 +24,10 @@
 		display: none;
 		position: absolute;
 		top: 100%;
-		left: 0;
+        left: 0;
 		margin-top: 8px;
-		min-width: 170px;
+		min-width: 50px;
+        white-space: nowrap;
 		border-radius: 4px;
 		text-align: left;
 		box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
@@ -37,15 +38,15 @@
 		&::before {
 			content: '';
 			position: absolute;
-			top: -6px;
-			left: 20px;
+			top: -3px;
+			left: 10px;
 			width: 0;
 			height: 0;
 			box-shadow: 2px -2px 6px rgba(0, 0, 0, 0.05);
-			border-top: 6px solid #fff;
-			border-right: 6px solid #fff;
-			border-bottom: 6px solid transparent;
-			border-left: 6px solid transparent;
+			border-top: 4px solid #fff;
+			border-right: 4px solid #fff;
+			border-bottom: 4px solid transparent;
+			border-left: 4px solid transparent;
 			transform: rotate(-45deg);
 		}
 
@@ -91,6 +92,37 @@
 
 	}
 
+    &.dropdown-default--start {
+        // default
+    }
+
+    &.dropdown-default--center {
+        > ul {
+            left: 50%;
+            transform: translateX(-50%);
+
+            &::before {
+                left: 50%;
+                transform: translateX(-50%) rotate(-45deg);
+            }
+
+        }
+    }
+
+    &.dropdown-default--end {
+        > ul {
+            left: auto;
+            right: 0;
+
+            &::before {
+                left: auto;
+                right: 10px;
+            }
+    
+        }
+
+    }
+
     &.active {
 		> ul {
             animation: dropdown-display 0.4s cubic-bezier(0.73, 0.005, 0.22, 1);
@@ -115,3 +147,5 @@
         transform: scale(1) translateY(0);
     }
 }
+
+  
