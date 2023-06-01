@@ -185,7 +185,7 @@ export default () => {
                 loader={<><span>Loading...</span></>}
                 triggerClassName="d-block w-100"
                 triggerContent={<>
-                    <a href="#">Select</a>
+                    <a href="#" tabIndex={-1}>Select</a>
                 </>}
                 fetchArray={[
                     {

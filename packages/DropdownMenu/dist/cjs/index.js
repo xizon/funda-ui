@@ -114,6 +114,7 @@ function Option(props) {
     className: props.hyperlinkClassName,
     "data-value": (_props$option = props.option) === null || _props$option === void 0 ? void 0 : _props$option.value,
     href: "#",
+    tabIndex: -1,
     onClick: handleSelect,
     dangerouslySetInnerHTML: {
       __html: "".concat((_props$option2 = props.option) === null || _props$option2 === void 0 ? void 0 : _props$option2.label)

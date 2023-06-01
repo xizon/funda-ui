@@ -700,7 +700,7 @@ const CascadingSelect = (props: CascadingSelectProps) => {
         // If you use the dynamic form assignment (such as document.getElementById(xxx).value), 
         // you need to judge the value of the input obtained by using the macrotask("setTimeout()")
         setTimeout(() => {
-            if ( valRef.current.value !== '' && ( typeof value === 'undefined' || value === '' ) ) {
+            if ( valRef.current !== null && valRef.current.value !== '' && ( typeof value === 'undefined' || value === '' ) ) {
                 initDefaultValue(valRef.current.value);
             }
         }, 500);
@@ -737,7 +737,7 @@ const CascadingSelect = (props: CascadingSelectProps) => {
                         <div className="cascading-select__items shadow">
                             <ul>
 
-                                {showCloseBtn ? <a href="#" onClick={(e) => {
+                                {showCloseBtn ? <a href="#" tabIndex={-1} onClick={(e) => {
                                     e.preventDefault();
                                     setIsShow(false);
                                 }} className="cascading-select__close position-absolute top-0 end-0 mt-0 mx-1"><svg width="10px" height="10px" viewBox="0 0 1024 1024"><path fill="#000" d="M195.2 195.2a64 64 0 0 1 90.496 0L512 421.504 738.304 195.2a64 64 0 0 1 90.496 90.496L602.496 512 828.8 738.304a64 64 0 0 1-90.496 90.496L512 602.496 285.696 828.8a64 64 0 0 1-90.496-90.496L421.504 512 195.2 285.696a64 64 0 0 1 0-90.496z" /></svg></a> : null}

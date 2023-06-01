@@ -107,7 +107,7 @@ const Textarea = forwardRef((props: TextareaProps, ref: any) => {
         // If you use the dynamic form assignment (such as document.getElementById(xxx).value), 
         // you need to judge the value of the input obtained by using the macrotask("setTimeout()")
         setTimeout(() => {
-            if ( valRef.current.value !== '' && ( typeof value === 'undefined' || value === '' ) ) {
+            if ( valRef.current !== null && valRef.current.value !== '' && ( typeof value === 'undefined' || value === '' ) ) {
                 setChangedVal(valRef.current.value);
             }
         }, 500);
@@ -153,7 +153,7 @@ const Textarea = forwardRef((props: TextareaProps, ref: any) => {
                       {...attributes}
 					/>
                 </div>
-                {required ? <><span className="position-absolute end-0 bottom-0 my-1 mx-2"><span className="text-danger">*</span></span></> : ''}
+                {required ? <><span className="position-absolute end-0 top-0 my-2 mx-2"><span className="text-danger">*</span></span></> : ''}
 
             </div>
 

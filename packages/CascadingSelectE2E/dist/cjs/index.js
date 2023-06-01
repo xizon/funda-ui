@@ -882,7 +882,7 @@ var CascadingSelectE2E = function CascadingSelectE2E(props) {
     // If you use the dynamic form assignment (such as document.getElementById(xxx).value), 
     // you need to judge the value of the input obtained by using the macrotask("setTimeout()")
     setTimeout(function () {
-      if (valRef.current.value !== '' && (typeof value === 'undefined' || value === '')) {
+      if (valRef.current !== null && valRef.current.value !== '' && (typeof value === 'undefined' || value === '')) {
         initDefaultValue(valRef.current.value);
       }
     }, 500);
@@ -918,6 +918,7 @@ var CascadingSelectE2E = function CascadingSelectE2E(props) {
     className: "position-absolute top-0 start-0 mt-1 mx-1"
   }, loader)) : null, showCloseBtn ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("a", {
     href: "#",
+    tabIndex: -1,
     onClick: function onClick(e) {
       e.preventDefault();
       setIsShow(false);

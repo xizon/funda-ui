@@ -21,7 +21,7 @@ export default function Option(props: OptionProps) {
     }
 
     return (
-        <li><a className={props.hyperlinkClassName} data-value={props.option?.value} href="#" onClick={handleSelect} dangerouslySetInnerHTML={{__html: `${props.option?.label}`}}></a></li>
+        <li><a className={props.hyperlinkClassName} data-value={props.option?.value} href="#" tabIndex={-1} onClick={handleSelect} dangerouslySetInnerHTML={{__html: `${props.option?.label}`}}></a></li>
     );
 }
 

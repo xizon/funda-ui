@@ -176,7 +176,7 @@ var Textarea = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(fu
     // If you use the dynamic form assignment (such as document.getElementById(xxx).value), 
     // you need to judge the value of the input obtained by using the macrotask("setTimeout()")
     setTimeout(function () {
-      if (valRef.current.value !== '' && (typeof value === 'undefined' || value === '')) {
+      if (valRef.current !== null && valRef.current.value !== '' && (typeof value === 'undefined' || value === '')) {
         setChangedVal(valRef.current.value);
       }
     }, 500);
@@ -215,7 +215,7 @@ var Textarea = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(fu
     rows: rows || 2,
     style: style
   }, attributes))), required ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
-    className: "position-absolute end-0 bottom-0 my-1 mx-2"
+    className: "position-absolute end-0 top-0 my-2 mx-2"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
     className: "text-danger"
   }, "*"))) : ''));

@@ -1,0 +1,107 @@
+/* ======================================================
+    <!-- Tag Input -->
+/* ====================================================== */
+
+.tag-input__wrapper {
+    display: flex;
+
+
+    ul,
+    li {
+        padding: 0;
+        margin: 0;
+        list-style: none;
+    }
+
+    
+    .tag-input__control-wrapper {
+        display: flex;
+
+        > div {
+            position: relative;
+            align-items: center;
+            display: flex;
+            flex-wrap: wrap;
+
+            /* bootstrap style that match ".form-control" */
+            padding: 0.375rem 0.75rem;
+            background-color: #fff;
+            background-clip: padding-box;
+            border: 1px solid #dee2e6;
+            appearance: none;
+            border-radius: 0.375rem;
+            transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+
+
+            .tag-input__control {
+                
+                input {
+                    background: transparent;
+                    border: none;
+                    outline: none;
+                    padding: 0;
+                    margin: 0;
+                    margin-left: .5rem;
+
+                    /* bootstrap style that match ".form-control" */
+                    font-size: 1rem;
+                    font-weight: 400;
+                    line-height: 1.5;
+                    color: #adb5bd;
+
+                    &:focus {
+                        outline: none;
+                        box-shadow: none;
+                    }
+                }
+
+            }
+
+        }
+
+    }
+
+
+    ul.tag-input__list {
+        li {
+            display: inline-block;
+            margin: 5px;
+            margin-bottom: 0;
+            padding: .1rem 1.5rem .1rem 1rem;
+            font-size: 0.875rem;
+            background: #efefef;
+            border-radius: 30px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            position: relative;
+
+            > a {
+                font-weight: 400;
+                opacity: .6;
+                font-size: 18px;
+                line-height: 20px;
+                position: absolute;
+                right: 8px;
+                top: 0;
+
+                &:hover {
+                    path {
+                        fill: #f00;
+                    }
+                }
+            }
+
+        }
+
+    }
+
+    &.focus {
+        .tag-input__control-wrapper {
+            > div {
+                box-shadow: 0 0 0 0.25rem rgba(13,110,253,.25);
+                border-color: #86b7fe;
+            } 
+        }
+    }
+
+}

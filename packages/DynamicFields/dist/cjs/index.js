@@ -260,6 +260,7 @@ var DynamicFields = function DynamicFields(props) {
         }, tempHtmlString);
       }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
         href: "#",
+        tabIndex: -1,
         className: "dynamic-fields__removebtn align-middle",
         onClick: handleClickRemove(i)
       }, iconRemove ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, iconRemove) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("svg", {
@@ -296,6 +297,7 @@ var DynamicFields = function DynamicFields(props) {
   }, !startFromZero ? tempHtmlString : null, generateList()), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
     ref: addBtnRef,
     href: "#",
+    tabIndex: -1,
     className: "dynamic-fields__addbtn align-middle",
     onClick: handleClickAdd
   }, iconAdd ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, iconAdd) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("svg", {

@@ -49,7 +49,7 @@ export default () => {
                 heading="Title Here"
                 triggerClassName="d-inline w-auto"
                 triggerContent={<>
-                    <a href="#">Launch demo modal</a>
+                    <a href="#" tabIndex={-1}>Launch demo modal</a>
                 </>}
                 closeBtnClassName="btn btn-secondary"
                 closeBtnLabel="Close"
@@ -104,7 +104,7 @@ export default () => {
                 maxWidth="1200px"
                 triggerClassName="d-inline w-auto"
                 triggerContent={<>
-                    <a href="#">Launch demo modal</a>
+                    <a href="#" tabIndex={-1}>Launch demo modal</a>
                 </>}
             >
                 <video playsInline controls poster="https://uiux.cc:3000/assets/videos/480x270/demo.jpg" src="https://uiux.cc:3000/assets/videos/480x270/demo.mp4"></video>
@@ -117,7 +117,7 @@ export default () => {
                 maxWidth="1200px"
                 triggerClassName="d-inline w-auto"
                 triggerContent={<>
-                    <a href="#">Launch demo modal</a>
+                    <a href="#" tabIndex={-1}>Launch demo modal</a>
                 </>}
             >
                 <iframe width="560" height="315" src="https://www.youtube.com/embed/xxxxxx" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowFullScreen></iframe>
@@ -131,7 +131,7 @@ export default () => {
                 autoClose={3000}
                 triggerClassName="d-inline w-auto"
                 triggerContent={<>
-                    <a href="#">Launch demo modal</a>
+                    <a href="#" tabIndex={-1}>Launch demo modal</a>
                 </>}
                 maskDisabled
             >
@@ -275,7 +275,7 @@ export default () => {
 
                     <div id="app-mydata-list">
                         {data ? data.map((item, i) => {
-                            return <a href="#" key={i} data-name={`${item.item_code}`} style={{display: 'block'}}>{item.item_name}</a>;
+                            return <a href="#" tabIndex={-1} key={i} data-name={`${item.item_code}`} style={{display: 'block'}}>{item.item_name}</a>;
                         }) : null}
 
                     </div>

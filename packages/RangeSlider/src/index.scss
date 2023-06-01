@@ -1,0 +1,158 @@
+/* ======================================================
+    <!-- Range Slider -->
+/* ====================================================== */
+
+$thumb-size: 16px;
+$control-height: 0.75rem;
+
+@mixin track-styles {
+    appearance: none;
+    background: transparent;
+    border: transparent;
+}
+
+@mixin thumb-styles {
+    appearance: none;
+    pointer-events: all;
+    width: $thumb-size;
+    height: $thumb-size;
+    border-radius: 0px;
+    border: 0 none;
+    cursor: grab;
+
+    &:active {
+        cursor: grabbing;
+    }
+}
+
+.range-slider__wrapper {
+
+    > div:not(.range-slider__control-wrapper) {
+        width: 49% !important;
+        display: inline-block !important;
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+        margin-block-start: 0 !important;
+        margin-block-end: 0 !important;
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+        padding-block-start: 0 !important;
+        padding-block-end: 0 !important;
+        opacity: 0;
+        pointer-events: none;
+    }
+
+    .range-slider__control-wrapper {
+        width: calc(100% - $thumb-size);
+
+        .range-slider__input {
+            width: calc(100% + #{$thumb-size});
+            margin: 0 calc(#{$thumb-size} / -2);
+            position: absolute;
+            height: $thumb-size;
+            
+            [type=range] {
+                position: absolute;
+                width: 100%;
+                pointer-events: none;
+                appearance: none;
+                height: 100%;
+                opacity: 0;
+                z-index: 3;
+                padding: 0;
+
+
+                &:disabled {
+                    display: none;
+                }
+
+                &::-ms-track {
+                    @include track-styles;
+                }
+
+                &::-moz-range-track {
+                    @include track-styles;
+                }
+
+                &:focus::-webkit-slider-runnable-track {
+                    @include track-styles;
+                }
+
+                &::-ms-thumb {
+                    @include thumb-styles;
+                }
+
+                &::-moz-range-thumb {
+                    @include thumb-styles;
+                }
+
+                &::-webkit-slider-thumb {
+                    @include thumb-styles;
+                }
+            }
+        }
+
+
+        .range-slider__placeholder {
+            width: 100%;
+            position: absolute;
+            height: $thumb-size;
+
+            .range-slider__placeholder-grab {
+                width: $thumb-size;
+                height: $thumb-size;
+                border-radius: 50%;
+                position: absolute;
+                background: #0b5ed7;
+                top: 50%;
+                margin-left: calc(#{$thumb-size} / -2);
+                transform: translate3d(0, -50%, 0);
+                z-index: 2;
+                transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+
+                &.active {
+                    box-shadow: 0 0 0 0.25rem rgba(13,110,253,.25);
+                    border-color: #86b7fe;
+                }
+
+                &.inactive {
+                    display: none;
+                }
+            }
+
+            .range-slider__placeholder-rail {
+                position: absolute;
+                width: 100%;
+                top: 50%;
+                transform: translateY(-50%);
+                height: 6px;
+                border-radius: 3px;
+                background: #e9ecef;
+
+                .range-slider__placeholder-inner-rail {
+                    position: absolute;
+                    height: 100%;
+                    background: #0d6efd;
+                    opacity: 0.5;
+                }
+
+
+            }
+
+        }
+
+        .range-slider__input,
+        .range-slider__placeholder {
+            top: $control-height;
+        }   
+
+
+        &.disabled .range-slider__placeholder {
+            filter: grayscale(1);
+        }
+
+
+
+    }
+
+}

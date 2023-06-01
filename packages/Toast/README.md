@@ -113,7 +113,7 @@ export default () => {
         kkk++;
         //
         setToastData([
-            { title: false, note: false, message: <><div>No.{kkk}: {Date.now()}</div></> }
+            { title: false, note: false, message: <><div dangerouslySetInnerHTML={{__html: `No.${kkk}: ${Date.now()}`}}></div></> }
         ]);
 
     }

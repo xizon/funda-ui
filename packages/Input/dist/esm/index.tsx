@@ -14,9 +14,9 @@ type InputProps = {
     label?: React.ReactNode | string;
     units?: string;
     name?: string;
-    step?: number | string;
-	min?: number | string;
-	max?: number | string;
+    step?: number;
+	min?: number;
+	max?: number;
     maxLength?: any;
     disabled?: any;
     required?: any;
@@ -133,7 +133,7 @@ const Input = forwardRef((props: InputProps, ref: any) => {
         // If you use the dynamic form assignment (such as document.getElementById(xxx).value), 
         // you need to judge the value of the input obtained by using the macrotask("setTimeout()")
         setTimeout(() => {
-            if ( valRef.current.value !== '' && ( typeof value === 'undefined' || value === '' ) ) {
+            if ( valRef.current !== null && valRef.current.value !== '' && ( typeof value === 'undefined' || value === '' ) ) {
                 setChangedVal(valRef.current.value);
             }
         }, 500);
@@ -188,7 +188,7 @@ const Input = forwardRef((props: InputProps, ref: any) => {
                     {units ? <><span className="input-group-text">{units}</span></>: null}
                     {iconRight ? <><span className="input-group-text">{iconRight}</span></>: null}
                 </div>
-                {required ? <><span className="position-absolute end-0 bottom-0 my-1 mx-2"><span className="text-danger">*</span></span></> : ''}
+                {required ? <><span className="position-absolute end-0 top-0 my-2 mx-2"><span className="text-danger">*</span></span></> : ''}
 
             </div>
 

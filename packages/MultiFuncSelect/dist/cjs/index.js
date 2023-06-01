@@ -609,7 +609,7 @@ var MultiFuncSelect = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forward
     // If you use the dynamic form assignment (such as document.getElementById(xxx).value), 
     // you need to judge the value of the input obtained by using the macrotask("setTimeout()")
     setTimeout(function () {
-      if (valueInputRef.current.value !== '' && (typeof value === 'undefined' || value === '')) {
+      if (valueInputRef.current !== null && valueInputRef.current.value !== '' && (typeof value === 'undefined' || value === '')) {
         fetchData(_params.join(','), valueInputRef.current.value);
       }
     }, 500);
