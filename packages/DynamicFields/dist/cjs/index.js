@@ -216,34 +216,36 @@ var DynamicFields = function DynamicFields(props) {
           });
         });
         if (hasRadio) {
-          console.error('<DynamicFields /> cannot use the "radio" type, because it will have multiple duplicate names! \nThe following components are recommended: <Input />, <Textarea />, <Checkbox />, <Switch />, <MultiFuncSelect />, <Select />, <CascadingSelectE2E />, <CascadingSelect />.');
+          console.error('<DynamicFields /> cannot use the "radio" type, because it will have multiple duplicate names! \nThe following components are recommended: <Input />, <Textarea />, <Checkbox />, <Switch />, <MultiFuncSelect />, <Select />, <CascadingSelectE2E />, <CascadingSelect />, <TagInput />, <RangeSlider />.');
           return false;
         }
         var resControls = groupByNum(integratedControls, Math.floor(integratedControls.length / _val.length));
         _val.map(function (row, i) {
           row.map(function (val, j) {
-            var _control = resControls[i][j];
-            switch (_control.type) {
-              case "input-textarea":
-                _control.target.value = val;
+            if (typeof resControls[i] !== 'undefined') {
+              var _control = resControls[i][j];
+              switch (_control.type) {
+                case "input-textarea":
+                  _control.target.value = val;
 
-                // if it is checkbox
-                if (val === true) {
-                  var _checkbox = _control.target.parentElement.querySelector('[data-checkbox]');
-                  _checkbox.checked = val == true ? true : false;
-                  _control.target.value = _checkbox.value;
-                }
-                break;
-              case "checkbox":
-                _control.target.checked = val == true ? true : false;
-                break;
-              case "select":
-                _control.target.value = val;
-                _control.target.dispatchEvent(new Event('change'));
-                break;
-              default:
-                _control.target.value = val;
-            } //end switch
+                  // if it is checkbox
+                  if (val === true) {
+                    var _checkbox = _control.target.parentElement.querySelector('[data-checkbox]');
+                    _checkbox.checked = val == true ? true : false;
+                    _control.target.value = _checkbox.value;
+                  }
+                  break;
+                case "checkbox":
+                  _control.target.checked = val == true ? true : false;
+                  break;
+                case "select":
+                  _control.target.value = val;
+                  _control.target.dispatchEvent(new Event('change'));
+                  break;
+                default:
+                  _control.target.value = val;
+              } //end switch  
+            }
           });
         });
       }
