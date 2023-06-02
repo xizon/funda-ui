@@ -75,6 +75,9 @@
   width: max-content; /* required -> the content will not wrap at all even if it causes overflows*/
   /* each item */
 }
+.cascading-select-e2e__wrapper .cascading-select-e2e .cascading-select-e2e__items.bottom-0 {
+  top: auto;
+}
 .cascading-select-e2e__wrapper .cascading-select-e2e .cascading-select-e2e__items .cascading-select-e2e__close svg {
   opacity: 0.4;
 }

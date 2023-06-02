@@ -1,7 +1,10 @@
 import React, { useId, useEffect, useState, useRef } from 'react';
 
+import { throttle } from './utils/performance';
+
 import Group from './Group';
-import { type } from 'os';
+
+
 
 
 declare module 'react' {
@@ -104,6 +107,8 @@ const CascadingSelectE2E = (props: CascadingSelectE2EProps) => {
     const idRes = id || uniqueID;
     const rootRef = useRef<any>(null);
     const valRef = useRef<any>(null);
+    const listRef = useRef<any>(null);
+
 
     // current data depth (GLOBAL)
     const [currentDataDepth, setCurrentDataDepth] = useState<number>(0);
@@ -122,6 +127,7 @@ const CascadingSelectE2E = (props: CascadingSelectE2EProps) => {
     const [hasErr, setHasErr] = useState<boolean>(false);
     const [firstDataFeched, setFirstDataFeched] = useState<boolean>(false);
     const [changedVal, setChangedVal] = useState<string>(value || '');
+    const windowScrollUpdate = throttle(handleScrollEvent, 5);
 
 
 
@@ -133,6 +139,62 @@ const CascadingSelectE2E = (props: CascadingSelectE2EProps) => {
         queryIds: []
     });
     const [isShow, setIsShow] = useState<boolean>(false);
+
+
+
+    /**
+     * Check if an element is in the viewport
+     * @param {HTMLElement} elem 
+     * @returns {boolean}
+     */
+    function isInViewport(elem: HTMLElement) {
+        const bounding = elem.getBoundingClientRect();
+        return (
+            bounding.top >= 0 &&
+            bounding.left >= 0 &&
+            bounding.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
+            bounding.right <= (window.innerWidth || document.documentElement.clientWidth)
+        );
+    }
+
+
+    function handleScrollEvent() {
+        getPlacement(listRef.current, true);
+    }
+
+
+    //
+    function getPlacement(el: HTMLElement, restorePos: boolean = false) {
+
+        if ( el === null ) return;
+        
+
+        const PLACEMENT_TOP = 'top-0';
+        const PLACEMENT_BOTTOMEND = 'bottom-0';
+        const PLACEMENT_RIGHT = 'end-0';
+        const PLACEMENT_LEFT = 'start-0';
+
+
+        //restore position
+        if ( restorePos ) {
+            if ( isInViewport(el) ) {
+                el.classList.remove(PLACEMENT_BOTTOMEND);
+                el.style.removeProperty('bottom');
+            }
+            return;
+        }
+
+
+        // Adjust position
+        if ( !isInViewport(el) ) {
+            el.classList.add(PLACEMENT_BOTTOMEND);
+            el.style.setProperty('bottom', -1 + 'px', "important");
+        }
+
+
+    }
+
+
 
 
     async function fetchData(_fetchArray: any, params: string, dataDepth: number, parentId: number = 0) {
@@ -328,6 +390,10 @@ const CascadingSelectE2E = (props: CascadingSelectE2EProps) => {
             doFetch(false, currentDataDepth, 0, false);
         }
 
+        // window position
+        setTimeout( ()=> {
+            getPlacement(listRef.current);
+        }, 0 );  
 
     }
 
@@ -886,11 +952,23 @@ const CascadingSelectE2E = (props: CascadingSelectE2EProps) => {
         document.addEventListener('pointerdown', handleClickOutside);
 
 
-        // Remove the global list of events, especially as scroll and interval.
+        // Add function to the element that should be used as the scrollable area.
         //--------------
+        window.removeEventListener('scroll', windowScrollUpdate);
+        window.removeEventListener('touchmove', windowScrollUpdate);
+        window.addEventListener('scroll', windowScrollUpdate);
+        window.addEventListener('touchmove', windowScrollUpdate);
+        windowScrollUpdate();
+
+
         return () => {
             document.removeEventListener('pointerdown', handleClickOutside);
+            window.removeEventListener('scroll', windowScrollUpdate);
+            window.removeEventListener('touchmove', windowScrollUpdate);
         }
+
+
+
 
     }, [value]);
 
@@ -908,7 +986,7 @@ const CascadingSelectE2E = (props: CascadingSelectE2EProps) => {
                 <div className="cascading-select-e2e" style={{ zIndex: (depth ? depth : 100) }}>
 
                     {isShow && !hasErr ? (
-                        <div className="cascading-select-e2e__items shadow">
+                        <div ref={listRef} className="cascading-select-e2e__items shadow">
                             <ul>
                                 {loading ? <><div className="position-absolute top-0 start-0 mt-1 mx-1">{loader}</div></> : null}
                                 {showCloseBtn ? <a href="#" tabIndex={-1} onClick={(e)=> {

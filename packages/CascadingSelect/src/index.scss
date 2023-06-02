@@ -94,6 +94,11 @@
             width: max-content; /* required -> the content will not wrap at all even if it causes overflows*/
 
 
+            &.bottom-0 {
+                top: auto;
+            }
+
+
             .cascading-select__close {
                 svg {
                     opacity: .4;

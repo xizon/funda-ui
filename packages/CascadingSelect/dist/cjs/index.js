@@ -9,12 +9,64 @@
 		root["RPB"] = factory(root["React"]);
 })(this, (__WEBPACK_EXTERNAL_MODULE__787__) => {
 return /******/ (() => { // webpackBootstrap
-/******/ 	"use strict";
 /******/ 	var __webpack_modules__ = ({
+
+/***/ 342:
+/***/ ((module) => {
+
+/*
+* Debounce
+*
+* @param  {Function} fn    - A function to be executed within the time limit.
+* @param  {Number} limit   - Waiting time.
+* @return {Function}       - Returns a new function.
+*/
+function debounce(fn) {
+  var limit = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 300;
+  var timer;
+  return function () {
+    //Every time this returned function is called, the timer is cleared to ensure that fn is not executed
+    clearTimeout(timer);
+
+    // When the returned function is called for the last time (that is the user stops a continuous operation)
+    // Execute fn after another delay milliseconds
+    timer = setTimeout(function () {
+      fn.apply(this, arguments);
+    }, limit);
+  };
+}
+
+/*
+* Throttle
+*
+* @param  {Function} fn    - A function to be executed within the time limit.
+* @param  {Number} limit   - Waiting time.
+* @return {Function}       - Returns a new function.
+*/
+function throttle(fn) {
+  var limit = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 300;
+  var waiting = false;
+  return function () {
+    if (!waiting) {
+      fn.apply(this, arguments);
+      waiting = true;
+      setTimeout(function () {
+        waiting = false;
+      }, limit);
+    }
+  };
+}
+module.exports = {
+  debounce: debounce,
+  throttle: throttle
+};
+
+/***/ }),
 
 /***/ 787:
 /***/ ((module) => {
 
+"use strict";
 module.exports = __WEBPACK_EXTERNAL_MODULE__787__;
 
 /***/ })
@@ -88,8 +140,9 @@ module.exports = __WEBPACK_EXTERNAL_MODULE__787__;
 /******/ 	
 /************************************************************************/
 var __webpack_exports__ = {};
-// This entry need to be wrapped in an IIFE because it need to be isolated against other modules in the chunk.
+// This entry need to be wrapped in an IIFE because it need to be in strict mode.
 (() => {
+"use strict";
 // ESM COMPAT FLAG
 __webpack_require__.r(__webpack_exports__);
 
@@ -101,6 +154,8 @@ __webpack_require__.d(__webpack_exports__, {
 // EXTERNAL MODULE: external {"root":"React","commonjs2":"react","commonjs":"react","amd":"react"}
 var external_root_React_commonjs2_react_commonjs_react_amd_react_ = __webpack_require__(787);
 var external_root_React_commonjs2_react_commonjs_react_amd_react_default = /*#__PURE__*/__webpack_require__.n(external_root_React_commonjs2_react_commonjs_react_amd_react_);
+// EXTERNAL MODULE: ./src/utils/performance.js
+var performance = __webpack_require__(342);
 ;// CONCATENATED MODULE: ./src/Group.tsx
 
 function Group(props) {
@@ -159,6 +214,7 @@ function _objectWithoutProperties(source, excluded) { if (source == null) return
 function _objectWithoutPropertiesLoose(source, excluded) { if (source == null) return {}; var target = {}; var sourceKeys = Object.keys(source); var key, i; for (i = 0; i < sourceKeys.length; i++) { key = sourceKeys[i]; if (excluded.indexOf(key) >= 0) continue; target[key] = source[key]; } return target; }
 
 
+
 var CascadingSelect = function CascadingSelect(props) {
   var wrapperClassName = props.wrapperClassName,
     controlClassName = props.controlClassName,
@@ -194,6 +250,7 @@ var CascadingSelect = function CascadingSelect(props) {
   var idRes = id || uniqueID;
   var rootRef = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useRef)(null);
   var valRef = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useRef)(null);
+  var listRef = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useRef)(null);
   var _useState = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)([]),
     _useState2 = _slicedToArray(_useState, 2),
     dictionaryData = _useState2[0],
@@ -214,6 +271,7 @@ var CascadingSelect = function CascadingSelect(props) {
     _useState10 = _slicedToArray(_useState9, 2),
     changedVal = _useState10[0],
     setChangedVal = _useState10[1];
+  var windowScrollUpdate = (0,performance.throttle)(handleScrollEvent, 5);
 
   //for variable 
   var _useState11 = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)([]),
@@ -231,6 +289,44 @@ var CascadingSelect = function CascadingSelect(props) {
     _useState16 = _slicedToArray(_useState15, 2),
     isShow = _useState16[0],
     setIsShow = _useState16[1];
+
+  /**
+   * Check if an element is in the viewport
+   * @param {HTMLElement} elem 
+   * @returns {boolean}
+   */
+  function isInViewport(elem) {
+    var bounding = elem.getBoundingClientRect();
+    return bounding.top >= 0 && bounding.left >= 0 && bounding.bottom <= (window.innerHeight || document.documentElement.clientHeight) && bounding.right <= (window.innerWidth || document.documentElement.clientWidth);
+  }
+  function handleScrollEvent() {
+    getPlacement(listRef.current, true);
+  }
+
+  //
+  function getPlacement(el) {
+    var restorePos = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
+    if (el === null) return;
+    var PLACEMENT_TOP = 'top-0';
+    var PLACEMENT_BOTTOMEND = 'bottom-0';
+    var PLACEMENT_RIGHT = 'end-0';
+    var PLACEMENT_LEFT = 'start-0';
+
+    //restore position
+    if (restorePos) {
+      if (isInViewport(el)) {
+        el.classList.remove(PLACEMENT_BOTTOMEND);
+        el.style.removeProperty('bottom');
+      }
+      return;
+    }
+
+    // Adjust position
+    if (!isInViewport(el)) {
+      el.classList.add(PLACEMENT_BOTTOMEND);
+      el.style.setProperty('bottom', -1 + 'px', "important");
+    }
+  }
   function fetchData(_x2) {
     return _fetchData.apply(this, arguments);
   } //
@@ -323,6 +419,11 @@ var CascadingSelect = function CascadingSelect(props) {
   function handleDisplayOptions(event) {
     event.preventDefault();
     setIsShow(true);
+
+    // window position
+    setTimeout(function () {
+      getPlacement(listRef.current);
+    }, 0);
   }
   function handleClickItem(e, resValue, index, level) {
     // update value
@@ -725,10 +826,17 @@ var CascadingSelect = function CascadingSelect(props) {
     document.removeEventListener('pointerdown', handleClickOutside);
     document.addEventListener('pointerdown', handleClickOutside);
 
-    // Remove the global list of events, especially as scroll and interval.
+    // Add function to the element that should be used as the scrollable area.
     //--------------
+    window.removeEventListener('scroll', windowScrollUpdate);
+    window.removeEventListener('touchmove', windowScrollUpdate);
+    window.addEventListener('scroll', windowScrollUpdate);
+    window.addEventListener('touchmove', windowScrollUpdate);
+    windowScrollUpdate();
     return function () {
       document.removeEventListener('pointerdown', handleClickOutside);
+      window.removeEventListener('scroll', windowScrollUpdate);
+      window.removeEventListener('touchmove', windowScrollUpdate);
     };
   }, [value]);
   return /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
@@ -746,6 +854,7 @@ var CascadingSelect = function CascadingSelect(props) {
       zIndex: depth ? depth : 100
     }
   }, isShow && !hasErr ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
+    ref: listRef,
     className: "cascading-select__items shadow"
   }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("ul", null, showCloseBtn ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("a", {
     href: "#",

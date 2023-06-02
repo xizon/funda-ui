@@ -280,7 +280,11 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
             // value & label must be initialized
             setControlValue(defaultValue); 
 
-            const filterRes = _ORGIN_DATA.filter((item: any) => item.value == defaultValue );
+            let filterRes: any = [];
+            const filterResQueryValue = _ORGIN_DATA.filter((item: any) => item.value == defaultValue );
+            const filterResQueryLabel = _ORGIN_DATA.filter((item: any) => item.label == defaultValue );
+            if ( filterResQueryValue.length === 0 ) filterRes = filterResQueryLabel;
+
             setControlLabel(typeof filterRes[0] !== 'undefined' ? filterRes[0].label : '');
             
 
@@ -301,7 +305,11 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
             // value & label must be initialized
             setControlValue(defaultValue);
 
-            const filterRes = optionsDataInit.filter((item: any) => item.value == defaultValue );
+            let filterRes: any = [];
+            const filterResQueryValue = optionsDataInit.filter((item: any) => item.value == defaultValue );
+            const filterResQueryLabel = optionsDataInit.filter((item: any) => item.label == defaultValue );
+            if ( filterResQueryValue.length === 0 ) filterRes = filterResQueryLabel;
+
             setControlLabel(typeof filterRes[0] !== 'undefined' ? filterRes[0].label : '');
             
 

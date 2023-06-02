@@ -365,12 +365,12 @@ var MultiFuncSelect = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forward
   }
   function _fetchData() {
     _fetchData = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee2(params, defaultValue) {
-      var response, _ORGIN_DATA, filterRes, _filterRes;
+      var response, _ORGIN_DATA, filterRes, filterResQueryValue, filterResQueryLabel, _filterRes, _filterResQueryValue, _filterResQueryLabel;
       return _regeneratorRuntime().wrap(function _callee2$(_context2) {
         while (1) switch (_context2.prev = _context2.next) {
           case 0:
             if (!(_typeof(fetchFuncAsync) === 'object')) {
-              _context2.next = 16;
+              _context2.next = 19;
               break;
             }
             _context2.next = 3;
@@ -391,9 +391,14 @@ var MultiFuncSelect = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forward
 
             // value & label must be initialized
             setControlValue(defaultValue);
-            filterRes = _ORGIN_DATA.filter(function (item) {
+            filterRes = [];
+            filterResQueryValue = _ORGIN_DATA.filter(function (item) {
               return item.value == defaultValue;
             });
+            filterResQueryLabel = _ORGIN_DATA.filter(function (item) {
+              return item.label == defaultValue;
+            });
+            if (filterResQueryValue.length === 0) filterRes = filterResQueryLabel;
             setControlLabel(typeof filterRes[0] !== 'undefined' ? filterRes[0].label : '');
 
             //
@@ -405,12 +410,17 @@ var MultiFuncSelect = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forward
             //
             onFetch === null || onFetch === void 0 ? void 0 : onFetch(_ORGIN_DATA);
             return _context2.abrupt("return", _ORGIN_DATA);
-          case 16:
+          case 19:
             // value & label must be initialized
             setControlValue(defaultValue);
-            _filterRes = optionsDataInit.filter(function (item) {
+            _filterRes = [];
+            _filterResQueryValue = optionsDataInit.filter(function (item) {
               return item.value == defaultValue;
             });
+            _filterResQueryLabel = optionsDataInit.filter(function (item) {
+              return item.label == defaultValue;
+            });
+            if (_filterResQueryValue.length === 0) _filterRes = _filterResQueryLabel;
             setControlLabel(typeof _filterRes[0] !== 'undefined' ? _filterRes[0].label : '');
 
             //
@@ -419,7 +429,7 @@ var MultiFuncSelect = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forward
             //
             setOrginalData(optionsDataInit);
             return _context2.abrupt("return", optionsDataInit);
-          case 22:
+          case 28:
           case "end":
             return _context2.stop();
         }

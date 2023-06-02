@@ -75,6 +75,9 @@
   width: max-content; /* required -> the content will not wrap at all even if it causes overflows*/
   /* each item */
 }
+.cascading-select__wrapper .cascading-select .cascading-select__items.bottom-0 {
+  top: auto;
+}
 .cascading-select__wrapper .cascading-select .cascading-select__items .cascading-select__close svg {
   opacity: 0.4;
 }

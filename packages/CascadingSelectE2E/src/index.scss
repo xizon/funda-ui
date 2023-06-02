@@ -91,6 +91,11 @@
             border-radius: 5px;
             width: max-content; /* required -> the content will not wrap at all even if it causes overflows*/
 
+            &.bottom-0 {
+                top: auto;
+            }
+            
+
             .cascading-select-e2e__close {
                 svg {
                     opacity: .4;
