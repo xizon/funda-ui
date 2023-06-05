@@ -1,7 +1,6 @@
 import React, { useId, useState, useRef, useEffect } from 'react';
 //Destroys body scroll locking
 import { clearAllBodyScrollLocks, disableBodyScroll, enableBodyScroll } from './plugins/BSL';
-import { type } from 'os';
 
 
 declare module 'react' {
@@ -22,6 +21,8 @@ declare global {
 type ModalDialogProps = {
     /** Whether the modal dialog is visible or not, you can use it with the `autoClose` property at the same time */
     show: boolean;
+    /** Prevent "transform", "filter", "perspective" attribute destruction fixed viewport orientation. Enabled by default, after enabling the default JS event will be invalid, you need to use the `onOpen` attribute to add some new events to elements. Please refer to the example. */
+    protectFixedViewport?: boolean;
     /** Custom modal max-width whick need a unit string. */
     maxWidth?: number | string;
     /** Adapt the video to the window */
@@ -61,6 +62,7 @@ type ModalDialogProps = {
 const ModalDialog = (props: ModalDialogProps) => {
     const {
         show,
+        protectFixedViewport,
         maxWidth,
         enableVideo,
         heading,
@@ -87,12 +89,13 @@ const ModalDialog = (props: ModalDialogProps) => {
     const modalRef = useRef<any>(null);
     const triggerRef = useRef<any>(null);
     const idRes = id || uniqueID;
+    const PROTECT_FIXED_VIEWPORT =  typeof protectFixedViewport === 'undefined' ? true : protectFixedViewport;
 
     const [winShow, setWinShow] = useState<boolean>(false);
 
 
     function handleCloseWin(e: any) {
-        if (typeof undefined !== 'undefined' && e !== null) e.preventDefault();
+        if (typeof e !== 'undefined' && e !== null) e.preventDefault();
 
         closeAction();
 
@@ -102,7 +105,7 @@ const ModalDialog = (props: ModalDialogProps) => {
 
 
     function handleOpenWin(e: any) {
-        if (typeof undefined !== 'undefined' && e !== null) e.preventDefault();
+        if (typeof e !== 'undefined' && e !== null) e.preventDefault();
 
         openAction();
 
@@ -287,27 +290,35 @@ const ModalDialog = (props: ModalDialogProps) => {
         // render() don't use "Fragment", in order to avoid error "Failed to execute 'insertBefore' on 'Node'"
         // prevent "transform", "filter", "perspective" attribute destruction fixed viewport orientation
         //------------------------------------------
-        document.body.appendChild(modalRef.current);
+        if ( PROTECT_FIXED_VIEWPORT ) {
+            if ( document.body !== null ) {
+                
+                document.body.appendChild(modalRef.current);
 
-        [].slice.call(modalRef.current.querySelectorAll('[data-close]')).forEach((node: HTMLElement) => {
-            node.addEventListener('pointerdown', (e: any) => {
-                handleCloseWin(e);
-            });
-        });
-        [].slice.call(modalRef.current.querySelectorAll('[data-submit]')).forEach((node: HTMLElement) => {
-            node.addEventListener('pointerdown', (e: any) => {
-                const callback = (e: any) => {
-                    return () => {
+                [].slice.call(modalRef.current.querySelectorAll('[data-close]')).forEach((node: HTMLElement) => {
+                    node.addEventListener('pointerdown', (e: any) => {
                         handleCloseWin(e);
-                    }
-                };
-                onSubmit?.(e, callback(e));
-            });
-        });
+                    });
+                });
+                [].slice.call(modalRef.current.querySelectorAll('[data-confirm]')).forEach((node: HTMLElement) => {
+                    node.addEventListener('pointerdown', (e: any) => {
+                        const callback = (e: any) => {
+                            return () => {
+                                handleCloseWin(e);
+                            }
+                        };
+                        onSubmit?.(e, callback(e));
+                    });
+                });  
+            }
+            
+
+        }
+
 
         // add mask
         //------------------------------------------
-        if (document.getElementById(`mask-${idRes}`) === null && !maskDisabled) {
+        if (document.getElementById(`mask-${idRes}`) === null && !maskDisabled && document.body !== null) {
             const maskDiv = document.createElement('div');
             maskDiv.id = `mask-${idRes}`;
             maskDiv.innerHTML = `<div class="${winShow ? 'modal-backdrop fade show' : 'modal-backdrop fade'}" style="display:none"></div>`;
@@ -351,12 +362,16 @@ const ModalDialog = (props: ModalDialogProps) => {
 
             // Cancels a timeout previously established by calling setTimeout().
             clearTimeout(window.setCloseModalDialog);
-
+            
             // Remove all masks and modals
             Array.prototype.forEach.call(document.querySelectorAll('.modal-backdrop, .modal'), (node) => {
-                if (node.classList.contains('modal')) {
-                    node.remove();
-                } else {
+                if ( PROTECT_FIXED_VIEWPORT ) {
+                    if (node.classList.contains('modal') && node.classList.contains('protect-fixed-viewport')) {
+                        node.remove();
+                    }
+                }
+
+                if (!node.classList.contains('modal')) {
                     node.parentElement.remove();
                 }
 
@@ -373,14 +388,14 @@ const ModalDialog = (props: ModalDialogProps) => {
             </> : null}
 
             {/* Modal */}
-            <div ref={modalRef} className={enableVideo ? `modal fade is-video ${winShow ? 'show' : ''}` : `modal fade ${winShow ? 'show' : ''}`} id="exampleModal" tabIndex={-1} aria-hidden="true" style={{ pointerEvents: 'none' }}>
+            <div ref={modalRef} className={enableVideo ? `modal ${PROTECT_FIXED_VIEWPORT ? 'protect-fixed-viewport' : ''} fade is-video ${winShow ? 'show' : ''}` : `modal ${PROTECT_FIXED_VIEWPORT ? 'protect-fixed-viewport' : ''} fade ${winShow ? 'show' : ''}`} tabIndex={-1} aria-hidden="true" style={{ pointerEvents: 'none' }}>
                 <div className="modal-dialog modal-dialog-centered modal-dialog-scrollable" style={maxWidth ? { maxWidth: `${maxWidth}` } : {}}>
-                    <div className={enableVideo ? 'modal-content bg-transparent shadow-none border-0' : 'modal-content'}>
+                    <div className={enableVideo ? 'modal-content bg-transparent shadow-none border-0' : 'modal-content'} style={{overflow: 'inherit'}}>
                         {(!heading || heading === '') && closeDisabled ? null : <>
 
                             <div className={enableVideo ? 'modal-header border-0 px-0' : 'modal-header'}>
                                 <h5 className="modal-title">{heading || ''}</h5>
-                                {!closeDisabled ? <button type="button" className={enableVideo ? 'btn-close btn-close-white' : 'btn-close'} data-close="1"></button> : null}
+                                {!closeDisabled ? <button type="button" className={enableVideo ? 'btn-close btn-close-white' : 'btn-close'} data-close="1" onClick={handleCloseWin}></button> : null}
 
                             </div>
                         </>}
@@ -399,9 +414,16 @@ const ModalDialog = (props: ModalDialogProps) => {
 
                         {closeBtnLabel || submitBtnLabel ? <>
                             <div className="modal-footer">
-                                {!closeDisabled ? <>{closeBtnLabel ? <button data-close="1" type="button" className={closeBtnClassName ? closeBtnClassName : 'btn btn-secondary'}>{closeBtnLabel}</button> : null}</> : null}
+                                {!closeDisabled ? <>{closeBtnLabel ? <button data-close="1" onClick={handleCloseWin} type="button" className={closeBtnClassName ? closeBtnClassName : 'btn btn-secondary'}>{closeBtnLabel}</button> : null}</> : null}
 
-                                {submitBtnLabel ? <button data-submit="1" type="button" className={submitBtnClassName ? submitBtnClassName : 'btn btn-primary'}>{submitBtnLabel}</button> : null}
+                                {submitBtnLabel ? <button data-confirm="1" onClick={(e: any) => {
+                                    const callback = (e: any) => {
+                                        return () => {
+                                            handleCloseWin(e);
+                                        }
+                                    };
+                                    onSubmit?.(e, callback(e));
+                                }} type="button" className={submitBtnClassName ? submitBtnClassName : 'btn btn-primary'}>{submitBtnLabel}</button> : null}
                             </div>
                         </> : null}
 

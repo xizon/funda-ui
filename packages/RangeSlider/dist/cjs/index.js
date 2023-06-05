@@ -592,8 +592,6 @@ var RangeSlider = function RangeSlider(props) {
     });
   }
   (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(function () {
-    console.log(1);
-
     // update default value
     //--------------
     initDefaultValue(value);

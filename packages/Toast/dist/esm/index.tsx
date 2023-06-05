@@ -68,13 +68,17 @@ const Toast = (props: ToastProps) => {
         // render() don't use "Fragment", in order to avoid error "Failed to execute 'insertBefore' on 'Node'"
         // prevent "transform", "filter", "perspective" attribute destruction fixed viewport orientation
         //------------------------------------------
-        document.body.appendChild(rootRef.current);
-        [].slice.call(rootRef.current.querySelectorAll('[data-close]')).forEach( (node: HTMLElement) => {
-            node.addEventListener('pointerdown', (e: any) => {
-                const index = node.dataset.index;
-                handleClose(index as never);
-            });
-        });
+        if ( document.body !== null ) {
+            document.body.appendChild(rootRef.current);
+            [].slice.call(rootRef.current.querySelectorAll('[data-close]')).forEach( (node: HTMLElement) => {
+                node.addEventListener('pointerdown', (e: any) => {
+                    const index = node.dataset.index;
+                    handleClose(index as never);
+                });
+            });     
+                
+        }
+
 
 
 

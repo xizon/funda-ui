@@ -13,6 +13,8 @@ declare global {
 declare type ModalDialogProps = {
     /** Whether the modal dialog is visible or not, you can use it with the `autoClose` property at the same time */
     show: boolean;
+    /** Prevent "transform", "filter", "perspective" attribute destruction fixed viewport orientation. Enabled by default, after enabling the default JS event will be invalid, you need to use the `onOpen` attribute to add some new events to elements. Please refer to the example. */
+    protectFixedViewport?: boolean;
     /** Custom modal max-width whick need a unit string. */
     maxWidth?: number | string;
     /** Adapt the video to the window */

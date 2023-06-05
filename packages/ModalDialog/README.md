@@ -10,6 +10,7 @@ import ModalDialog from 'react-pure-bootstrap/ModalDialog';
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |
 | `show` | boolean  | false | **(required)** Whether the modal dialog is visible or not, you can use it with the `autoClose` property at the same time |
+| `protectFixedViewport` | boolean  | true | Prevent "transform", "filter", "perspective" attribute destruction fixed viewport orientation. Enabled by default, after enabling the default JS event will be invalid, you need to use the `onOpen` attribute to add some new events to elements. Please refer to the example. <blockquote>When you use a component with its own events, you can turn it off to lose js events</blockquote> |
 | `autoClose` | number \| boolean  | false | Specify auto-close time. This function is not enabled when this value is false. If the value is `2000`, it will automatically close after 2 seconds. |
 | `heading` | ReactNode  | - | Set a window title |
 | `maskDisabled` | boolean  | false | Disable mask |
@@ -327,3 +328,65 @@ export default () => {
     );
 }
 ```
+
+
+## Import components with their own events
+
+Disable property `protectFixedViewport`.
+
+```js
+import React from "react";
+import ModalDialog from 'react-pure-bootstrap/ModalDialog';
+import Switch from 'react-pure-bootstrap/Switch';
+
+
+export default () => {
+
+    const LABEL_WIDTH = '100px';
+
+    return (
+        <>
+            <ModalDialog
+                show={false}
+                protectFixedViewport={false}
+                heading="Title Here"
+                triggerClassName="d-inline w-auto"
+                triggerContent={<>
+                    <a href="#" tabIndex={-1}>Launch demo modal</a>
+                </>}
+                onOpen={(e, closewin) => {
+
+                }}
+                onClose={(e) => {
+
+                    // Modifying React State can ensure that the window content is updated in real time
+                    setTimeout(() => {
+                        setShow(false);
+                    }, 350);
+
+                }}
+            >
+
+                <div className="row mb-3">
+                    <div className="text-end" style={{ width: LABEL_WIDTH }}>
+                        Title
+                    </div>
+                    <div className="col">
+                        <Switch
+                            value="ok"
+                            onChange={(e, val) => {
+                                console.log(val);
+                            }} 
+                        />
+                    </div>
+                </div>
+
+            </ModalDialog>
+
+        </>
+    );
+}
+```
+
+
+

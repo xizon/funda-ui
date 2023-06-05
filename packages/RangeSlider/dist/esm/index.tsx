@@ -107,7 +107,6 @@ const RangeSlider = (props: RangeSliderProps) => {
 
     useEffect(() => {
 
-        console.log(1);
 
         // update default value
         //--------------

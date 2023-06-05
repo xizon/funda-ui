@@ -367,6 +367,7 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 var ModalDialog = function ModalDialog(props) {
   var show = props.show,
+    protectFixedViewport = props.protectFixedViewport,
     maxWidth = props.maxWidth,
     enableVideo = props.enableVideo,
     heading = props.heading,
@@ -390,19 +391,20 @@ var ModalDialog = function ModalDialog(props) {
   var modalRef = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useRef)(null);
   var triggerRef = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useRef)(null);
   var idRes = id || uniqueID;
+  var PROTECT_FIXED_VIEWPORT = typeof protectFixedViewport === 'undefined' ? true : protectFixedViewport;
   var _useState = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)(false),
     _useState2 = _slicedToArray(_useState, 2),
     winShow = _useState2[0],
     setWinShow = _useState2[1];
   function handleCloseWin(e) {
-    if (false) {}
+    if (typeof e !== 'undefined' && e !== null) e.preventDefault();
     closeAction();
 
     //
     onClose === null || onClose === void 0 ? void 0 : onClose(e);
   }
   function handleOpenWin(e) {
-    if (false) {}
+    if (typeof e !== 'undefined' && e !== null) e.preventDefault();
     openAction();
 
     //
@@ -545,26 +547,30 @@ var ModalDialog = function ModalDialog(props) {
     // render() don't use "Fragment", in order to avoid error "Failed to execute 'insertBefore' on 'Node'"
     // prevent "transform", "filter", "perspective" attribute destruction fixed viewport orientation
     //------------------------------------------
-    document.body.appendChild(modalRef.current);
-    [].slice.call(modalRef.current.querySelectorAll('[data-close]')).forEach(function (node) {
-      node.addEventListener('pointerdown', function (e) {
-        handleCloseWin(e);
-      });
-    });
-    [].slice.call(modalRef.current.querySelectorAll('[data-submit]')).forEach(function (node) {
-      node.addEventListener('pointerdown', function (e) {
-        var callback = function callback(e) {
-          return function () {
+    if (PROTECT_FIXED_VIEWPORT) {
+      if (document.body !== null) {
+        document.body.appendChild(modalRef.current);
+        [].slice.call(modalRef.current.querySelectorAll('[data-close]')).forEach(function (node) {
+          node.addEventListener('pointerdown', function (e) {
             handleCloseWin(e);
-          };
-        };
-        onSubmit === null || onSubmit === void 0 ? void 0 : onSubmit(e, callback(e));
-      });
-    });
+          });
+        });
+        [].slice.call(modalRef.current.querySelectorAll('[data-confirm]')).forEach(function (node) {
+          node.addEventListener('pointerdown', function (e) {
+            var callback = function callback(e) {
+              return function () {
+                handleCloseWin(e);
+              };
+            };
+            onSubmit === null || onSubmit === void 0 ? void 0 : onSubmit(e, callback(e));
+          });
+        });
+      }
+    }
 
     // add mask
     //------------------------------------------
-    if (document.getElementById("mask-".concat(idRes)) === null && !maskDisabled) {
+    if (document.getElementById("mask-".concat(idRes)) === null && !maskDisabled && document.body !== null) {
       var maskDiv = document.createElement('div');
       maskDiv.id = "mask-".concat(idRes);
       maskDiv.innerHTML = "<div class=\"".concat(winShow ? 'modal-backdrop fade show' : 'modal-backdrop fade', "\" style=\"display:none\"></div>");
@@ -609,9 +615,12 @@ var ModalDialog = function ModalDialog(props) {
 
       // Remove all masks and modals
       Array.prototype.forEach.call(document.querySelectorAll('.modal-backdrop, .modal'), function (node) {
-        if (node.classList.contains('modal')) {
-          node.remove();
-        } else {
+        if (PROTECT_FIXED_VIEWPORT) {
+          if (node.classList.contains('modal') && node.classList.contains('protect-fixed-viewport')) {
+            node.remove();
+          }
+        }
+        if (!node.classList.contains('modal')) {
           node.parentElement.remove();
         }
       });
@@ -623,8 +632,7 @@ var ModalDialog = function ModalDialog(props) {
     onClick: handleOpenWin
   }, triggerContent)) : null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
     ref: modalRef,
-    className: enableVideo ? "modal fade is-video ".concat(winShow ? 'show' : '') : "modal fade ".concat(winShow ? 'show' : ''),
-    id: "exampleModal",
+    className: enableVideo ? "modal ".concat(PROTECT_FIXED_VIEWPORT ? 'protect-fixed-viewport' : '', " fade is-video ").concat(winShow ? 'show' : '') : "modal ".concat(PROTECT_FIXED_VIEWPORT ? 'protect-fixed-viewport' : '', " fade ").concat(winShow ? 'show' : ''),
     tabIndex: -1,
     "aria-hidden": "true",
     style: {
@@ -636,7 +644,10 @@ var ModalDialog = function ModalDialog(props) {
       maxWidth: "".concat(maxWidth)
     } : {}
   }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
-    className: enableVideo ? 'modal-content bg-transparent shadow-none border-0' : 'modal-content'
+    className: enableVideo ? 'modal-content bg-transparent shadow-none border-0' : 'modal-content',
+    style: {
+      overflow: 'inherit'
+    }
   }, (!heading || heading === '') && closeDisabled ? null : /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
     className: enableVideo ? 'modal-header border-0 px-0' : 'modal-header'
   }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("h5", {
@@ -644,7 +655,8 @@ var ModalDialog = function ModalDialog(props) {
   }, heading || ''), !closeDisabled ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("button", {
     type: "button",
     className: enableVideo ? 'btn-close btn-close-white' : 'btn-close',
-    "data-close": "1"
+    "data-close": "1",
+    onClick: handleCloseWin
   }) : null)), /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
     className: enableVideo ? 'modal-body m-0 p-0' : 'modal-body'
   }, enableVideo ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
@@ -655,10 +667,19 @@ var ModalDialog = function ModalDialog(props) {
     className: "modal-footer"
   }, !closeDisabled ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, closeBtnLabel ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("button", {
     "data-close": "1",
+    onClick: handleCloseWin,
     type: "button",
     className: closeBtnClassName ? closeBtnClassName : 'btn btn-secondary'
   }, closeBtnLabel) : null) : null, submitBtnLabel ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("button", {
-    "data-submit": "1",
+    "data-confirm": "1",
+    onClick: function onClick(e) {
+      var callback = function callback(e) {
+        return function () {
+          handleCloseWin(e);
+        };
+      };
+      onSubmit === null || onSubmit === void 0 ? void 0 : onSubmit(e, callback(e));
+    },
     type: "button",
     className: submitBtnClassName ? submitBtnClassName : 'btn btn-primary'
   }, submitBtnLabel) : null)) : null))));
