@@ -100,7 +100,7 @@ const Checkbox = forwardRef((props: CheckboxProps, ref: any) => {
         setVal(checked);
 
         // Set a checkbox to indeterminate state
-        if ( indeterminate ) {
+        if ( typeof indeterminate !== 'undefined' ) {
             valRef.current.indeterminate = indeterminate;
         }
 

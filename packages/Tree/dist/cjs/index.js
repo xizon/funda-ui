@@ -363,7 +363,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
             setVal(checked);
 
             // Set a checkbox to indeterminate state
-            if (indeterminate) {
+            if (typeof indeterminate !== 'undefined') {
               valRef.current.indeterminate = indeterminate;
             }
           }, [checked, indeterminate]);
@@ -721,6 +721,11 @@ function TreeList(props) {
       if (item.key === key) arr[index].checked = val;
     });
   };
+  var setCheckboxIndeterminateData = function setCheckboxIndeterminateData(arr, key, val) {
+    arr.forEach(function (item, index) {
+      if (item.key === key) arr[index].indeterminate = val;
+    });
+  };
   var setCheckboxIndeterminateStatus = function setCheckboxIndeterminateStatus(checkedData, printData, el) {
     var _parentsLi = [];
     if (el !== null) {
@@ -751,17 +756,15 @@ function TreeList(props) {
         return el.checked === true;
       }).length;
       if (_checkedLength === 0) {
-        _checkboxes[0].indeterminate = false;
+        setCheckboxIndeterminateData(checkedData, parentKey, false);
       } else {
         if (_checkedLength === _checkboxes.length - 1) {
-          _checkboxes[0].indeterminate = false;
-          //
+          setCheckboxIndeterminateData(checkedData, parentKey, false);
           setCheckboxCheckedData(checkedData, parentKey, true);
           printData.push(formatCheckboxControlVal(_checkboxes[0]));
         }
         if (_checkedLength < _checkboxes.length - 1) {
-          _checkboxes[0].indeterminate = true;
-          //
+          setCheckboxIndeterminateData(checkedData, parentKey, true);
           setCheckboxCheckedData(checkedData, parentKey, false);
           printData = removeItemOnce(printData, parentKey);
         }
@@ -937,7 +940,7 @@ function TreeList(props) {
         maxHeight: '0px'
       } : {}
     }, data.map(function (item, i) {
-      var _filter$;
+      var _filter$, _filter$2;
       var _async = item.childrenAsync ? 'async-ready' : '';
       var _cusIcons = arrowIcons ? 'custom-icons' : '';
       if (item.heading) return /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("li", {
@@ -981,9 +984,12 @@ function TreeList(props) {
         "data-key": item.key,
         "data-link": item.link,
         value: item.slug,
-        checked: (_filter$ = getCheckedData.filter(function (cur) {
+        indeterminate: (_filter$ = getCheckedData.filter(function (cur) {
           return cur.key === item.key;
-        })[0]) === null || _filter$ === void 0 ? void 0 : _filter$.checked,
+        })[0]) === null || _filter$ === void 0 ? void 0 : _filter$.indeterminate,
+        checked: (_filter$2 = getCheckedData.filter(function (cur) {
+          return cur.key === item.key;
+        })[0]) === null || _filter$2 === void 0 ? void 0 : _filter$2.checked,
         onChange: function onChange(e, val) {
           var _curKey = e.target.dataset.key;
           var _checkedData = getCheckedData;
@@ -994,6 +1000,7 @@ function TreeList(props) {
           //-----------
           if (val === true) {
             _res.push(formatCheckboxControlVal(e.target));
+            setCheckboxIndeterminateData(_checkedData, _curKey, false);
             setCheckboxCheckedData(_checkedData, _curKey, true);
           } else {
             setCheckboxCheckedData(_checkedData, _curKey, false);
@@ -1006,8 +1013,7 @@ function TreeList(props) {
           [].slice.call((0,dom.getChildren)(e.target.closest('li'), '[type="checkbox"]')).forEach(function (node) {
             if (val === true) {
               if (node.dataset.key !== _curKey) {
-                node.indeterminate = false;
-                //
+                setCheckboxIndeterminateData(_checkedData, node.dataset.key, false);
                 setCheckboxCheckedData(_checkedData, node.dataset.key, true);
                 _res.push(formatCheckboxControlVal(node));
               }
@@ -1236,7 +1242,8 @@ var Tree = function Tree(props) {
       setCheckedData(function (prevState) {
         return [{
           key: item.key,
-          checked: item.checked === true
+          checked: item.checked === true,
+          indeterminate: false
         }].concat(_toConsumableArray(prevState));
       });
       if (item.children) {
@@ -1277,7 +1284,8 @@ var Tree = function Tree(props) {
               setCheckedData(function (prevState) {
                 return [{
                   key: newitem.key,
-                  checked: newitem.checked === true
+                  checked: newitem.checked === true,
+                  indeterminate: false
                 }].concat(_toConsumableArray(prevState));
               });
             });

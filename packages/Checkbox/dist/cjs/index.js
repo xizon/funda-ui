@@ -169,7 +169,7 @@ var Checkbox = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(fu
     setVal(checked);
 
     // Set a checkbox to indeterminate state
-    if (indeterminate) {
+    if (typeof indeterminate !== 'undefined') {
       valRef.current.indeterminate = indeterminate;
     }
   }, [checked, indeterminate]);

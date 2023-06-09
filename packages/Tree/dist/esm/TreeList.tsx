@@ -74,6 +74,14 @@ export default function TreeList(props: TreeListProps) {
         });
     };
 
+    const setCheckboxIndeterminateData = (arr: any[], key: string, val: boolean) => {
+        arr.forEach((item: any, index: number) => {
+            if (item.key === key) arr[index].indeterminate = val;
+        });
+    };
+
+
+    
     const setCheckboxIndeterminateStatus = (checkedData: any[], printData: any[], el: HTMLFormElement | null) => {
         let _parentsLi: any = [];
 
@@ -108,19 +116,17 @@ export default function TreeList(props: TreeListProps) {
             }).length;
 
             if ( _checkedLength === 0 ) {
-                _checkboxes[0].indeterminate = false;
+                setCheckboxIndeterminateData(checkedData, parentKey, false);
             } else {
 
                 if ( _checkedLength === _checkboxes.length-1 )  {
-                    _checkboxes[0].indeterminate = false;
-                    //
+                    setCheckboxIndeterminateData(checkedData, parentKey, false);
                     setCheckboxCheckedData(checkedData, parentKey, true);
                     printData.push(formatCheckboxControlVal(_checkboxes[0])); 
                 }
                 
                 if ( _checkedLength < _checkboxes.length-1 )  {
-                    _checkboxes[0].indeterminate = true;
-                    //
+                    setCheckboxIndeterminateData(checkedData, parentKey, true);
                     setCheckboxCheckedData(checkedData, parentKey, false);
                     printData = removeItemOnce(printData, parentKey);  
                 }
@@ -358,6 +364,7 @@ export default function TreeList(props: TreeListProps) {
                                     data-key={item.key}
                                     data-link={item.link}
                                     value={item.slug}
+                                    indeterminate={getCheckedData!.filter((cur: any) => cur.key === item.key)[0]?.indeterminate}
                                     checked={getCheckedData!.filter((cur: any) => cur.key === item.key)[0]?.checked}
                                     onChange={(e: any, val: any) => {
                                       
@@ -371,6 +378,7 @@ export default function TreeList(props: TreeListProps) {
                                         //-----------
                                         if ( val === true ) {
                                             _res.push(formatCheckboxControlVal(e.target));
+                                            setCheckboxIndeterminateData(_checkedData, _curKey, false);
                                             setCheckboxCheckedData(_checkedData, _curKey, true);
 
                                         } else {
@@ -386,8 +394,7 @@ export default function TreeList(props: TreeListProps) {
                                         [].slice.call(getChildren(e.target.closest('li'), '[type="checkbox"]')).forEach((node: any) => {
                                             if ( val === true ) {
                                                 if ( node.dataset.key !== _curKey ) {
-                                                    node.indeterminate = false;
-                                                    //
+                                                    setCheckboxIndeterminateData(_checkedData, node.dataset.key, false);
                                                     setCheckboxCheckedData(_checkedData, node.dataset.key, true);
                                                     _res.push(formatCheckboxControlVal(node));
                                                 }
@@ -406,6 +413,7 @@ export default function TreeList(props: TreeListProps) {
                                         const [updatedCheckedData, updatedPrintData] = setCheckboxIndeterminateStatus(_checkedData, _res, e.target);
                                         let _updatedCheckedData: any[] = updatedCheckedData;
                                         let _updatedPrintData: any[] = updatedPrintData;
+
 
                                         // STEP 4:
                                         // Update checked data

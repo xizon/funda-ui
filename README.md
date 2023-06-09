@@ -33,16 +33,13 @@ Here is a table of the components and their status.
 | [List Bulleted ❏](packages/ListBulleted/README.md) | [Multifunction Select ✅](packages/MultiFuncSelect/README.md) |  |  |  | 
 | [Modal Dialog ✅](packages/ModalDialog/README.md) | [LiveSearch ✅](packages/LiveSearch/README.md) |  |  |  | 
 | [Pagination ✅](packages/Pagination/README.md) | [Number ❏](packages/Number/README.md) |  |  |  | 
-| [Table ❏](packages/Table/README.md) | [SearchBar ✅](packages/SearchBar/README.md) |  |  |  | 
+| [Table ✅](packages/Table/README.md) | [SearchBar ✅](packages/SearchBar/README.md) |  |  |  | 
 | [Periodical Scroll ❏](packages/PeriodicalScroll/README.md) | [Switch ✅](packages/Switch/README.md) |  |  |  | 
 | [Progress Bar ❏](packages/ProgressBar/README.md) | [Dynamic Fields ✅](packages/DynamicFields/README.md) |  |  |  | 
 | [Rating ❏](packages/Rating/README.md) | [File ✅](packages/File/README.md) |  |  |  | 
 | [Seamless Scrolling Element ❏](packages/SeamlessScrollingElement/README.md) | [File Field ❏](packages/FileField/README.md) |  |  |  | 
 | [Show More Less ✅](packages/ShowMoreLess/README.md) | [Range Slider ✅](packages/RangeSlider/README.md) |  |  |  | 
 | [Slideshow ❏](packages/Slideshow/README.md) |  |  |  |  | 
-|  |  |  |  |  | 
-| [Table Grid ❏](packages/TableGrid/README.md) |  |  |  |  | 
-| [Table Sorter ❏](packages/TableSorter/README.md) |  |  |  |  | 
 | [Tabs ✅](packages/Tabs/README.md) |  |  |  |  | 
 | [Timeline ❏](packages/Timeline/README.md) |  |  |  |  | 
 | [Toast ✅](packages/Toast/README.md) |  |  |  |  | 

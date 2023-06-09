@@ -1,0 +1,112 @@
+/* ======================================================
+    <!-- Table -->
+/* ====================================================== */
+.table__wrapper {
+  --table-alternant-bg: #f0f0f0;
+  --table-dark-bg: #212529;
+}
+.table__wrapper table.table-colgroup tbody tr td:first-child,
+.table__wrapper table.table-colgroup tbody tr th:first-child {
+  color: #fff;
+}
+.table__wrapper table.table-colgroup col:nth-child(odd) {
+  background-color: var(--table-alternant-bg);
+}
+.table__wrapper table.table-colgroup col:first-child {
+  background-color: var(--table-dark-bg);
+}
+
+@media all and (max-width: 768px) {
+  .table__wrapper {
+    --table-border-color: #dee2e6;
+    --table-per-shadow: 0 2px 4px 0 rgba(0,0,0,.1);
+    /*------ Enhanced Responsive ------*/
+    /*------ Enhanced Responsive with Scroll Bars ------*/
+  }
+  .table__wrapper.table-enhanced-responsive table thead {
+    display: none;
+  }
+  .table__wrapper.table-enhanced-responsive table tbody tr {
+    box-shadow: var(--table-per-shadow);
+    margin-bottom: 1rem;
+    display: block;
+  }
+  .table__wrapper.table-enhanced-responsive table tbody td,
+  .table__wrapper.table-enhanced-responsive table tbody th {
+    display: block;
+  }
+  .table__wrapper.table-enhanced-responsive table tbody td::before,
+  .table__wrapper.table-enhanced-responsive table tbody th::before {
+    content: attr(data-table);
+    display: block;
+    float: left;
+    width: 40%;
+    font-weight: bold;
+    border-right: 1px solid var(--table-border-color);
+    margin-right: 0.5rem;
+  }
+  .table__wrapper.table-enhanced-responsive table tbody td::after,
+  .table__wrapper.table-enhanced-responsive table tbody th::after {
+    content: "";
+    display: block;
+    clear: both;
+  }
+  .table__wrapper.js-table-enhanced-responsive-scrolled table {
+    display: block;
+    width: 100%;
+    border-bottom: 0 !important;
+    border-left: 0 !important;
+    border-right: 0 !important;
+    overflow: auto;
+  }
+  .table__wrapper.js-table-enhanced-responsive-scrolled table thead {
+    display: block;
+    float: left;
+    width: 100px;
+    border-bottom: 1px solid var(--table-border-color);
+  }
+  .table__wrapper.js-table-enhanced-responsive-scrolled table thead th {
+    display: block;
+  }
+  .table__wrapper.js-table-enhanced-responsive-scrolled table thead th:not(last-child) {
+    border-bottom: 0;
+  }
+  .table__wrapper.js-table-enhanced-responsive-scrolled table tbody {
+    width: calc(100% - 100px);
+    display: block;
+    float: left;
+    overflow-x: scroll;
+    border-bottom: 1px solid var(--table-border-color);
+    border-right: 1px solid var(--table-border-color);
+  }
+  .table__wrapper.js-table-enhanced-responsive-scrolled table thead tr,
+  .table__wrapper.js-table-enhanced-responsive-scrolled table tbody tr {
+    display: block;
+    border-color: var(--table-border-color);
+  }
+  .table__wrapper.js-table-enhanced-responsive-scrolled table th,
+  .table__wrapper.js-table-enhanced-responsive-scrolled table tbody td,
+  .table__wrapper.js-table-enhanced-responsive-scrolled table tbody th {
+    box-sizing: border-box;
+    overflow-x: hidden;
+    overflow-y: auto;
+  }
+  .table__wrapper.js-table-enhanced-responsive-scrolled table th:first-child,
+  .table__wrapper.js-table-enhanced-responsive-scrolled table tbody td:first-child,
+  .table__wrapper.js-table-enhanced-responsive-scrolled table tbody th:first-child {
+    border-top: 0;
+  }
+  .table__wrapper.js-table-enhanced-responsive-scrolled table th:not(last-child),
+  .table__wrapper.js-table-enhanced-responsive-scrolled table tbody td:not(last-child),
+  .table__wrapper.js-table-enhanced-responsive-scrolled table tbody th:not(last-child) {
+    border-bottom: 0;
+    border-right: 0;
+  }
+  .table__wrapper.js-table-enhanced-responsive-scrolled table tbody tr {
+    display: table-cell;
+  }
+  .table__wrapper.js-table-enhanced-responsive-scrolled table tbody td,
+  .table__wrapper.js-table-enhanced-responsive-scrolled table tbody th {
+    display: block;
+  }
+}

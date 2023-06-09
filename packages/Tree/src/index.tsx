@@ -169,7 +169,8 @@ const Tree = (props: TreeProps) => {
         obj.forEach((item: any) => {
             setCheckedData((prevState) => [{
                 key: item.key,
-                checked: item.checked === true
+                checked: item.checked === true,
+                indeterminate: false
             }, ...prevState]);
             
             if (item.children) {
@@ -214,7 +215,8 @@ const Tree = (props: TreeProps) => {
                         _childrenData.forEach((newitem: any) => {
                             setCheckedData((prevState) => [{
                                 key: newitem.key,
-                                checked: newitem.checked === true
+                                checked: newitem.checked === true,
+                                indeterminate: false
                             }, ...prevState]);
                         });
                     }
