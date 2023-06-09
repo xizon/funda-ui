@@ -16,6 +16,9 @@
 .navbar-nav li {
   position: relative;
 }
+.navbar-nav li i {
+  font-style: normal;
+}
 .navbar-nav li > a.active > .arrow {
   transform: translateY(-50%) rotate(90deg);
 }

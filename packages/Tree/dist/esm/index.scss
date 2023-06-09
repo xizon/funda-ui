@@ -1,0 +1,372 @@
+/* ======================================================
+    <!-- Tree -->
+/* ====================================================== */
+
+.tree-diagram-default {
+
+    --tree-padding-x: 1rem;
+    --tree-padding-y: 0.5rem;
+    --tree-font-line-height: 1.5;
+    --tree-dis-top: 1rem;
+    --tree-font-size: 0.875rem;
+    --tree-ident: var(--tree-font-size);
+    --tree-dis-start: -var(--tree-ident);
+    --tree-border-color: #ddd;
+    --tree-font-bg: #f6f6f6;
+    --tree-font-active-bg: #f0f8ff;
+    --tree-checkbox-indeterminate-color: #bbbbbb;
+
+
+    position: relative;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.5rem 0;
+    outline: none; /* When using "tabindex" please set */
+
+    ul, li {
+        list-style: none;
+    }
+
+    .tree-diagram-default-nav {
+        display: flex;
+        flex-direction: column;
+        padding-left: 0;
+        margin-bottom: 0;
+        list-style: none;
+
+        .nav-link {
+            position: relative;
+            display: block;
+            padding: var(--tree-padding-y) var(--tree-padding-x);
+            font-size: var(--tree-font-size);
+            font-weight: 400;
+            color: inherit;
+            text-decoration: none;
+            transition: .1s ease-in-out;
+            padding-left: calc(var(--tree-padding-x)*2);
+            z-index: 1;
+
+            > span {
+                transition: .1s ease-in-out;
+                display: inline-block;
+                border-radius: 2px;
+
+                var.loading-icon {
+                    position: absolute;
+                    margin-left: .2em;
+                }
+            }
+            
+
+            &:hover span {
+                background-color: var(--tree-font-bg);
+            }
+
+            &.selected span {
+                background-color: var(--tree-font-active-bg);
+            }
+
+            &.loading {
+
+                > span {
+                    var.loading-icon {
+                        display: inline-block;
+                    }
+                }
+                
+            }
+
+        }
+
+
+        var.loading-icon {
+            display: none;
+
+            svg {
+                animation: tree-diagram-ring 1.2s linear infinite;
+            }      
+        }
+
+
+
+        .checkbox-trigger {
+            display: none;
+            position: absolute;
+            left: calc(var(--tree-padding-x) + 1.5em);
+            top: calc(var(--tree-dis-top) - 8px);
+            z-index: 2;
+    
+            > div {
+                display: inline-block;
+    
+                .form-check {
+                    min-height: auto;
+                    margin-bottom: 0;
+
+                    [type=checkbox]:indeterminate {
+                        background-color: var(--tree-checkbox-indeterminate-color);
+                        border-color: var(--tree-checkbox-indeterminate-color);
+                    }
+
+                }
+            } 
+        }
+    
+
+
+        .arrow {
+            cursor: pointer;
+            transition: .1s ease-in-out;
+            display: inline-block;
+            text-align: center;
+            position: absolute;
+            left: calc(var(--tree-padding-x) + 0.2em);
+            top: calc(var(--tree-dis-top) - 5px);
+            transform: translateY(-50%) rotate(0deg);
+            z-index: 2;
+            width: 10px;
+            height: 10px;
+            transform-origin: 50% 125%;
+
+            > var > svg {
+                transition: .1s ease-in-out;
+            }
+
+            var.default-icon {
+                > span {
+
+                    &:last-child {
+                        display: none;
+                    }
+
+                }
+            }
+
+            &.loading {
+                var.default-icon {
+                    display: none;
+                }
+                var.loading-icon {
+                    display: inline-block;
+                }
+            }
+
+            &:hover {
+                opacity: .5;
+
+                > var > svg {
+                    transform: scale(1.4);
+                }
+            }
+
+        }
+
+
+        li {
+            position: relative;
+            padding-left: .2em;
+
+            i {
+                font-style: normal;
+            }
+            
+            > a {
+        
+                &:hover {
+                    
+                }
+            }
+
+
+            &.active {
+
+                > .arrow:not(.custom-icons) {
+                    transform: translateY(-50%) rotate(90deg);
+                }
+
+                > .arrow.custom-icons var.default-icon > span {
+
+                    &:first-child {
+                        display: none;
+                    }
+
+                    &:last-child {
+                        display: block;
+                    }
+    
+                }                
+            }
+
+            &.active > a {
+
+            }        
+
+        }
+
+        > li {
+
+            ul {
+                transition: max-height 0.25s ease;
+                overflow: hidden;
+                position: relative;
+            }
+        }
+
+        > li:not(.active) {
+
+            ul {
+                max-height: 0;
+            }
+        }
+
+
+        > li ul ul {
+            margin-top: auto;
+        }
+        
+    }
+
+    /*------ line ------*/
+    &.show-line .tree-diagram-default-nav {
+
+        li {
+            &::before,
+            &::after {
+                content: "";
+                position: absolute;
+                top: calc(0px - var(--tree-dis-top));
+                left: var(--tree-dis-start);
+                border-left-width: 1px;
+                border-left-style: solid;
+                border-left-color: var(--tree-border-color);
+                border-bottom-width: 1px;
+                border-bottom-style: solid;
+                border-bottom-color: var(--tree-border-color);
+
+                width: var(--tree-ident);
+                pointer-events: none;
+            }
+    
+            &::before {
+                height: calc(var(--tree-font-size)*var(--tree-font-line-height) + var(--tree-padding-y) + var(--tree-padding-y));
+            }
+    
+            &::after {
+                height: 100%;
+                border-bottom-width: 0;
+            }
+    
+            &:last-child::after {
+                display: none;
+            }
+     
+        }
+
+        > li {
+            &:first-child::before {
+                border-left-width: 0;
+            }
+            &:first-child::after {
+                top: calc(var(--tree-font-size)*var(--tree-font-line-height));
+             }
+
+        }
+
+    }
+
+    &.show-line.line--dotted .tree-diagram-default-nav {
+        li {
+            &::before,
+            &::after {
+                border-left-style: dotted;
+                border-bottom-style: dotted;
+            }
+        }
+    }
+
+    &.show-line.line--dashed .tree-diagram-default-nav {
+        li {
+            &::before,
+            &::after {
+                border-left-style: dashed;
+                border-bottom-style: dashed;
+            }
+        }
+    }
+
+    &.show-line.line--double .tree-diagram-default-nav {
+        li {
+            &::before,
+            &::after {
+                border-left-style: double;
+                border-bottom-style: double;
+            }
+        }
+    }
+
+
+    &.show-line.line--solid .tree-diagram-default-nav {
+        li {
+            &::before,
+            &::after {
+                border-left-style: solid;
+                border-bottom-style: solid;
+            }
+        }
+    }
+
+
+    /*------ has checkbox  ------*/
+    &.has-checkbox {
+        .checkbox-trigger {
+            display: inline-block;
+        }
+
+        .tree-diagram-default-nav {
+            .nav-link {
+                padding-left: calc(var(--tree-padding-x) + 2.7em);
+            }
+        } 
+
+    }
+    
+    /*------ hide arrow  ------*/
+    &.hide-arrow {
+        .arrow {
+            display: none;
+        }
+
+        .tree-diagram-default-nav {
+            .nav-link {
+                padding-left: var(--tree-padding-x);
+            }
+        }
+    
+    }
+
+    &.hide-arrow.has-checkbox {
+        
+        .tree-diagram-default-nav {
+            .checkbox-trigger {
+                left: calc(var(--tree-padding-x) + 0.5em);
+            }
+            .nav-link {
+                padding-left: calc(var(--tree-padding-x) + 1.5em);
+            }
+        } 
+
+    }
+
+}
+
+@keyframes tree-diagram-ring {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}

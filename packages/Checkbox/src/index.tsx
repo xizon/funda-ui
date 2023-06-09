@@ -17,6 +17,7 @@ type CheckboxProps = {
     disabled?: any;
     required?: any;
     checked?: boolean;
+    indeterminate?: boolean;
     /** -- */
     id?: string;
     style?: React.CSSProperties;
@@ -40,6 +41,7 @@ const Checkbox = forwardRef((props: CheckboxProps, ref: any) => {
         name,
         id,
         checked,
+        indeterminate,
         style,
         tabIndex,
         onChange,
@@ -51,6 +53,7 @@ const Checkbox = forwardRef((props: CheckboxProps, ref: any) => {
     const uniqueID = useId();
     const idRes = id || uniqueID;
     const rootRef = useRef<any>(null);
+    const valRef = useRef<any>(null);
     const [val, setVal] = useState<any>(null);
 
     function handleFocus(event: any) {
@@ -92,8 +95,16 @@ const Checkbox = forwardRef((props: CheckboxProps, ref: any) => {
 
 
     useEffect(() => {
+
+        // default value
         setVal(checked);
-    }, [checked]);
+
+        // Set a checkbox to indeterminate state
+        if ( indeterminate ) {
+            valRef.current.indeterminate = indeterminate;
+        }
+
+    }, [checked, indeterminate]);
 
 
     return (
@@ -102,7 +113,14 @@ const Checkbox = forwardRef((props: CheckboxProps, ref: any) => {
             <div className={wrapperClassName || wrapperClassName === '' ? wrapperClassName : "mb-3 position-relative"} ref={rootRef}>
                 <div className="form-check">
                     <input 
-                        ref={ref}
+                        ref={(node) => {
+                            valRef.current = node;
+                            if (typeof ref === 'function') {
+                                ref(node);
+                            } else if (ref) {
+                                ref.current = node;
+                            }
+                        }}
                         tabIndex={tabIndex || 0}
                         type="checkbox"
                         className="form-check-input"

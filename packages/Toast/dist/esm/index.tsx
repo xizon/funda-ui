@@ -10,8 +10,7 @@ declare global {
 
 
 type ToastProps = {
-    /** Specify data of toasts as a JSON string format. 
-     * Such as: `[{"title":"Title 1","message":"description..."},{"title":"Title 2","message":"description..."}]` */
+    /** Specify data of toasts as a JSON string format. */
     data: any[any];
     /** Use asynchronous triggering */
     async?: boolean;

@@ -1,57 +1,42 @@
 import React, { useEffect, useRef } from 'react';
 
+import { getNextSiblings } from './utils/dom'; 
+
 /* Recursively nested components to traverse nodes
 -------------------------------------------------*/		
 type MenuListProps = {
+    alternateCollapse?: boolean;
+    first?: boolean;
     arrow?: React.ReactNode;
     childClassName?: string;
-	menuListData: any[any];
+	data: any[any];
     routerPath?: string;
-    onChange?: (e: any, isRouter: boolean) => void;
+    onSelect?: (e: any, val: any) => void;
 };
-
-function matches(el: any, filter: string) {
-    if (el && el.nodeType === 1) {
-        if (filter) {
-            return el.matches(filter);
-        }
-        return true;
-    }
-    return false;
-}
-
-// the next siblings
-function getNextSiblings(el: any, filter = false || '') {
-    const sibs: any[] = [];
-    while (el = el.nextSibling) {
-        if (matches(el, filter)) {
-            sibs.push(el as never);
-        }
-    }
-    return sibs;
-}
 
 export default function MenuList(props: MenuListProps) {
 
     const {
+        alternateCollapse,
+        first,
         arrow,
         childClassName,
-        menuListData,
+        data,
         routerPath,
-        onChange
+        onSelect
     } = props;
 
-    const vmenuRef = useRef<any>(null);
+    const rootRef = useRef<any>(null);
     const currentPath = routerPath ? routerPath : '';
+    
 
     
-    const activeClass = (el: any, mode: string) => {
+    const activeClass = (el: any, mode: string, classname: string = 'active') => {
         if ( mode === 'add' ) {
-            el.classList.add('active', 'active');
+            el.classList.add(classname);
         } else {
-            el.classList.remove('active', 'active');
+            el.classList.remove(classname);
         }
-        
     };
 
     const closeChild = (hyperlink: HTMLElement, ul: HTMLAllCollection) => {
@@ -93,8 +78,12 @@ export default function MenuList(props: MenuListProps) {
 
         // route switching
         //=====================
-        const isRouter = typeof hyperlink.parentNode.dataset.router !== 'undefined' ? true : false;
-        onChange?.(e, isRouter);
+        onSelect?.(e, {
+            isRouter: hyperlink.dataset.router,
+            slug: hyperlink.dataset.slug,
+            link: hyperlink.dataset.link
+        });
+        
 
         // hide child if expandedLink doesn't exist, on the contrary
         //=====================
@@ -102,18 +91,21 @@ export default function MenuList(props: MenuListProps) {
 
 
             //Hide all other siblings of the selected <ul>
-            [].slice.call(vmenuRef.current.children).forEach(function(li: any){
+            if ( alternateCollapse ) {
+                [].slice.call(rootRef.current.children).forEach(function(li: any){
 
-                activeClass(li, 'remove');
-    
-                const _li = li.firstChild;
-                activeClass(_li, 'remove');
-                _li.setAttribute('aria-expanded', false);
-    
-                [].slice.call(getNextSiblings(_li, 'ul')).forEach(function(element: any){
-                    element.style.maxHeight = 0;
+                    activeClass(li, 'remove');
+        
+                    const _li = li.firstChild;
+                    activeClass(_li, 'remove');
+                    _li.setAttribute('aria-expanded', false);
+        
+                    [].slice.call(getNextSiblings(_li, 'ul')).forEach(function(element: any){
+                        element.style.maxHeight = 0;
+                    });
                 });
-            });
+            }
+
 
             //open current
             openChild(hyperlink, subElement as never);
@@ -143,7 +135,10 @@ export default function MenuList(props: MenuListProps) {
 
     useEffect(() => {
 
-        const allItems = vmenuRef.current ? [].slice.call(document.querySelectorAll(`.${childClassName} a`)).map( (item: any) => {
+
+        // Activate current item
+        //=====================
+        const allItems = rootRef.current ? [].slice.call(document.querySelectorAll(`.${childClassName} a`)).map( (item: any) => {
             return {
                 href: item.getAttribute('href'),
                 el: item,
@@ -152,60 +147,67 @@ export default function MenuList(props: MenuListProps) {
             }
         } ) : [];
 
-   
-        // Activate current item
-        //=====================
+        
         allItems.forEach( (hyperlink: any) => {
-            if ( hyperlink.actived && hyperlink.expandedLink ) {
-                const expandedLink: any = hyperlink.expandedLink;  // <a>
-                activeClass(expandedLink.parentNode, 'add');
-                expandedLink.setAttribute('aria-expanded', true);
+
+            // Expand the currently active item by default
+            if ( hyperlink.actived ) {
+
+                hyperlink.el.setAttribute('aria-expanded', 'true');
+
+                if ( hyperlink.expandedLink ) {
+                    const expandedLink: any = hyperlink.expandedLink;  // <a>
+                    activeClass(expandedLink.parentNode, 'add');
+                    expandedLink.setAttribute('aria-expanded', true);
+                }
+
 
                 // init <ul> height
-                const child = expandedLink.parentNode.querySelector('ul');
-                const calcH = child.scrollHeight + 1;
-                child.style.maxHeight = `${calcH}px`;
+                const ul = getNextSiblings(hyperlink.el, 'ul');
+                [].slice.call(ul).forEach(function(el: any){
+                    const calcH = el.querySelectorAll('li').length * el.querySelectorAll('li')[0].scrollHeight;
+                    el.style.maxHeight = `${calcH}px`;
+                });
             }
 
         });
 
-    }, []);
+    }, [data]);
 
 
-    if ( menuListData ) {
+    if ( data ) {
         
         return (
             <>
-            <ul className={childClassName}  ref={vmenuRef}>
+            <ul className={childClassName}  ref={rootRef} style={!first ? {maxHeight: '0px'} : {}}>
                 
-                {menuListData.map((item: any, i: number) => {
+                {data.map((item: any, i: number) => {
 
-                    if ( item.heading ) return (
+                    const _matchPath = currentPath === item.link || currentPath.indexOf(item.link.replace(/\/[\d]+\.html|\.html/ig, '')) >= 0 && item.link !== '/';
+
+                    if (item.heading) return (
                         <li className="nav-item" key={i}>
-                            <a className="nav-link disabled" href="#" tabIndex={-1} aria-disabled="true"><i className={item.icon}></i> {item.title}</a>
-                    </li>
+                            <a tabIndex={-1} className="nav-link disabled" href="#" aria-disabled="true" data-router="false" data-link={item.link} data-slug={item.slug}>
+                                {item.icon ? item.icon.indexOf('</svg>') < 0 ? <><i className={item.icon}></i> </> : <var dangerouslySetInnerHTML={{ __html: `${item.icon}` }} /> : null}<i dangerouslySetInnerHTML={{ __html: `${item.title}` }}></i>
+                            </a>
+                        </li>
                     );
-                    if (item.link.indexOf('#') >= 0 || item.link.indexOf('http') >= 0 ) {
-                        return (
-                            <li data-index={i} key={i} className={ (currentPath === item.link || currentPath.indexOf(item.link.replace(/\/[\d]+\.html|\.html/ig,'')) >= 0 && item.link !== '/') ?  `nav-item active` : 'nav-item'}>
-                                <a title={item.title} className={ (currentPath === item.link || currentPath.indexOf(item.link.replace(/\/[\d]+\.html|\.html/ig,'')) >= 0 && item.link !== '/') ?  `nav-link active` : 'nav-link'} href={item.link === '#' ? `${item.link}-${i}` : item.link} aria-expanded="false" onClick={handleClick} data-slug={item.slug}>
-                                    {item.icon ? item.icon.indexOf('</svg>') < 0 ? <><i className={item.icon}></i> </> : <var dangerouslySetInnerHTML={{__html: `${item.icon}`}} /> : null}{item.title}
-                                    {item.children ? <span className="arrow">{arrowGenerator()}</span> : ''}
-                                </a>
-                                {item.children && <MenuList menuListData={item.children}  />}
-                            </li>
-                            );
-                    } else {
-                        return (
-                            <li  data-index={i} data-router="true" key={i} className={ (currentPath === item.link || currentPath.indexOf(item.link.replace(/\/[\d]+\.html|\.html/ig,'')) >= 0 && item.link !== '/') ?  `nav-item active` : 'nav-item'}>
-                                <a title={item.title} className={ (currentPath === item.link || currentPath.indexOf(item.link.replace(/\/[\d]+\.html|\.html/ig,'')) >= 0 && item.link !== '/') ?  `nav-link active` : 'nav-link'} href={item.link === '#' ? `${item.link}-${i}` : item.link} onClick={handleClick} data-slug={item.slug}>
-                                   {item.icon ? item.icon.indexOf('</svg>') < 0 ? <><i className={item.icon}></i> </> : <var dangerouslySetInnerHTML={{__html: `${item.icon}`}} /> : null}{item.title}
-                                    {item.children ? <span className="arrow">{arrowGenerator()}</span> : ''}
-                                </a>
-                                {item.children && <MenuList menuListData={item.children}  />}
-                            </li>
-                            );
-                    }
+
+                    return (
+                        <li key={i} className={item.active ? `nav-item active` : (_matchPath ? `nav-item active` : 'nav-item')}>
+                            <a tabIndex={-1} title={item.title} className={item.active ? `nav-link active` : (_matchPath ? `nav-link active` : 'nav-link')} href={item.link === '#' ? `${item.link}-${i}` : item.link} onClick={handleClick} data-router={item.link.indexOf('#') >= 0 || item.link.indexOf('http') >= 0 ? 'false' : 'true'} data-link={item.link} data-slug={item.slug}>
+                                {item.icon ? item.icon.indexOf('</svg>') < 0 ? <><i className={item.icon}></i> </> : <var dangerouslySetInnerHTML={{ __html: `${item.icon}` }} /> : null}<i dangerouslySetInnerHTML={{ __html: `${item.title}` }}></i>
+                                {item.children ? <span className="arrow">{arrowGenerator()}</span> : ''}
+                            </a>
+                            {item.children && <MenuList 
+                                                data={item.children} 
+                                                first={false} 
+                                                arrow={arrow} 
+                                                onSelect={onSelect} 
+                                                routerPath={routerPath} 
+                                            />}
+                        </li>
+                    );
 
                 })}
             </ul>

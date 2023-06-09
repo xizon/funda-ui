@@ -13,6 +13,7 @@ declare type CheckboxProps = {
     disabled?: any;
     required?: any;
     checked?: boolean;
+    indeterminate?: boolean;
     /** -- */
     id?: string;
     style?: React.CSSProperties;

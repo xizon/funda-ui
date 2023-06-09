@@ -11,6 +11,7 @@ import Checkbox from 'react-pure-bootstrap/Checkbox';
 | --- | --- | --- | --- |
 | `wrapperClassName` | string | `mb-3 position-relative` | The class name of the control wrapper. |
 | `checked` | boolean | false | Is it selected. |
+| `indeterminate` | boolean | false | Set a checkbox to indeterminate state. |
 | `value` | string | - | **(required)** Set a default value for this control. If unchecked, it will pass an empty value |
 | `label` | string \| ReactNode | - | It is used to specify a label for an element of a form. |
 | `name` | string | - | Name is not deprecated when used with form fields. |
@@ -61,6 +62,15 @@ export default () => {
                 disabled
             />
 
+            
+            <Checkbox
+                name="string"
+                label='&nbsp;'
+                value="ok"
+                indeterminate
+            />
+
+
         </>
     );
 }
@@ -102,7 +112,7 @@ export default () => {
                 value="ok"
                 checked={checked}
             />
-            
+
 
         </>
     )

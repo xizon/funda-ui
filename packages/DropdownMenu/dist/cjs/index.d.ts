@@ -21,8 +21,7 @@ declare type DropdownMenuProps = {
     triggerSwitchActive?: boolean;
     /** Center align the options layer in a drop-down field. By default it is left aligned "start". */
     alignOptionsLayer?: string;
-    /** Specify data of Dropdown Menu as a JSON string format.
-     * Such as: `[{"label":"Option 1","value":"option-1"},{"label":"Option 2","value":"option-2"}]` */
+    /** Specify data of Dropdown Menu as a JSON string format. */
     options?: OptionConfig[];
     /** This function is called whenever the data is updated.
      *  Exposes the JSON format data about the option as an argument.

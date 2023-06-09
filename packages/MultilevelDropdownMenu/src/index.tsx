@@ -1,4 +1,4 @@
-import React, { useId, memo } from 'react';
+import React, { useState, useEffect, useId, memo } from 'react';
 
 import MenuList from './MenuList';
 
@@ -10,55 +10,58 @@ declare module 'react' {
 }
 
 type MultilevelDropdownMenuProps = {
+    /** Mutually exclusive alternate expansion between the first levels */
+    alternateCollapse?: boolean;
     /** set an arrow */
     arrow?: React.ReactNode;
     /** The class name of the navbar. */
     navbarClassName?: string;
     /** The class name of the child on <ul>. */
     childClassName?: string;
-    /** Specify data of Cascading DropDown List as a JSON string format. 
-     * Such as: `[{"heading":false,"slug":"pageslug1","title":"Top level 1",icon: "fa fa-window-restore","link":"#","children":[{"heading":false,"slug":"pageslug2","title":"Sub level 1","link":"#","children":[{"heading":false,"slug":"pageslug3","title":"Sub Sub Level 1","link":"#"}]}]},{"heading":false,"slug":"pageslug4","title":"Top level 2",icon: false,"link":"https://example.com"}]` */
+    /** Specify data of Cascading DropDown List as a JSON string format. */
     data?: any[any];
     /** Pass the current routing path into. It is used to determine whether to activate */
     routerPath?: string;
     /** -- */
     id?: string;
-    onChange?: (e: any, isRouter: boolean) => void;
+    onSelect?: (e: any, val: any) => void;
 };
 
 
 const MultilevelDropdownMenu = (props: MultilevelDropdownMenuProps) => {
     const {
+        alternateCollapse,
         arrow,
         navbarClassName,
         childClassName,
         routerPath,
         data,
         id,
-        onChange
+        onSelect
     } = props;
 
     const uniqueID = useId();
     const idRes = id || uniqueID;
+    const [val, setVal] = useState<any>(null);
 
-    function handleChange(event: any, isRouter: boolean) {
-        onChange?.(event, isRouter);
-    }
+    useEffect(() => {
+        setVal(data);
+    }, [data]);
 
    
     return (
         <>
 
             <nav id={idRes} className={navbarClassName ? navbarClassName : "navbar"}>
-                <div className="container-fluid">
-                    <MenuList 
-                        arrow={arrow}
-                        menuListData={data} 
-                        childClassName={childClassName || 'navbar-nav'} 
-                        onChange={handleChange} 
-                        routerPath={routerPath}
-                    />
-                </div>
+                <MenuList 
+                    alternateCollapse={alternateCollapse}
+                    first={true}
+                    arrow={arrow}
+                    data={val} 
+                    childClassName={childClassName || 'navbar-nav'} 
+                    onSelect={onSelect} 
+                    routerPath={routerPath}
+                />
             </nav>
 
         </>

@@ -58,6 +58,13 @@ export default () => {
             disabled
         />
 
+        <Switch
+            label='&nbsp;'
+            name="switch-name-2"
+            value="ok"
+        />
+
+        
 
         </>
     );
