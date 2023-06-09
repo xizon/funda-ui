@@ -9,9 +9,10 @@ React components using pure Bootstrap 5+ which does not contain any external sty
 
 ## Key Features
 
-1. Components are compatible with `gRPC`, `REST APIs`, `GraphQL` self-packaging, uniformly use [Classes](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Classes) and their methods to introduce interfaces
-2. Enhanced user interaction, flexible use in asynchronous and synchronous states
-3. Introduce appropriate component `.css` files as needed, only for some components with special needs. Most of them can directly use Bootstrap's official style sheet.
+1. Simplify the assignment method of diversified data.
+2. Components are compatible with `gRPC`, `REST APIs`, `GraphQL` self-packaging, uniformly use [Classes](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Classes) and their methods to introduce interfaces
+3. Enhanced user interaction, flexible use in asynchronous and synchronous states
+4. Introduce appropriate component `.css` files as needed, only for some components with special needs. Most of them can directly use Bootstrap's official style sheet.
 
 
 
