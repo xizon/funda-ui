@@ -5,8 +5,26 @@
 .table__wrapper {
     --table-alternant-bg: #f0f0f0;
     --table-dark-bg: #212529;
+    --table-padding-x: 1rem;
+    --table-padding-y: 0.5rem;
+    --table-dis-top: 1rem;
+    --table-checkbox-indeterminate-color: #bbbbbb;
+    --table-row-active-bg: #f0f8ff;
 
     table {
+        
+        td,
+        th {
+            position: relative;
+        }
+
+        tr {
+            transition: 0.1s ease-in-out;
+            
+            &.active {
+                background-color: var(--table-row-active-bg);
+            }
+        }
 
         &.table-colgroup {
             tbody tr td:first-child,
@@ -24,9 +42,171 @@
 
         }
 
+    }
+
+    .sort-trigger {
+        cursor: pointer;
+
+        svg {
+            transition: 0.1s ease-in-out;
+            opacity: .3;
+        }
+
+        &:hover svg {
+            transform: scale(1.2);
+            opacity: .7;
+        }
+        
+    }
+
+    .checkbox-trigger {
+        display: none;
+        position: absolute;
+        left: calc(var(--table-padding-x) / 2);
+        z-index: 2;
+
+        > div {
+            display: inline-block;
+
+            .form-check {
+                min-height: auto;
+                margin-bottom: 0;
+
+                [type=checkbox]:indeterminate {
+                    background-color: var(--table-checkbox-indeterminate-color);
+                    border-color: var(--table-checkbox-indeterminate-color);
+                }
+
+            }
+        } 
 
     }
+
+    .drag-trigger {
+        display: none;
+        position: absolute;
+        left: calc(var(--table-padding-x) / 2);
+        z-index: 3;
+        cursor: move;
+        opacity: .5;
+    }
+
+
+
+    /*------ enable sort  ------*/
+    .newsort {
+        animation: table-newsort .5s linear 1 forwards;
+        opacity: 0;
+    }
+    
+    @for $i from 1 to 100 {
+    
+        .newsort:nth-child(#{$i+1}) {
+            animation-delay: #{$i*50}ms;
+        }
+    }
+    
+    
+
+
+    /*------ has checkbox  ------*/
+    &.has-checkbox {
+        .checkbox-trigger {
+            display: inline-block;
+
+            ~span:not(.sort-trigger) {
+                display: inline-block;
+                padding-left: calc(var(--table-padding-x)*1.5);
+            }  
+        }
+
+
+    }
+    
+    
+    /*------ allow drag and drop  ------*/
+    &.allow-dragdrop {
+
+
+        /* Specify a drag trigger point */
+        tbody {
+
+            .row-obj-clonelast {
+
+                height: 0 !important;
+             
+                td {
+                    border: none;
+                    box-shadow: none;
+                }
+            }
+
+            td,
+            th {
+                pointer-events: none;
+                user-select: auto;
+            }
+
+            &.drag-trigger-mousedown {
+
+                td,
+                th {
+                    pointer-events: auto;
+                }
+            }
+
+        }
+
+        /* placeholder */
+        .row-placeholder {
+            border: 2px dotted #b5ba91;
+            background-color: #e4e9c3;
+        }
+        
+        /* trigger */
+        .drag-trigger {
+            display: inline-block;
+            pointer-events: auto;
+
+            ~span:not(.checkbox-trigger) {
+                display: inline-block;
+                padding-left: calc(var(--table-padding-x)*1.5);
+            }  
+        }
+    }
+    
+    &.allow-dragdrop.has-checkbox {
+        .drag-trigger {
+            ~span:not(.checkbox-trigger) {
+                padding-left: calc(var(--table-padding-x)*3);
+            }  
+        }
+        
+        tbody .checkbox-trigger {
+            padding-left: calc(var(--table-padding-x)*1.5);
+        }
+
+    }
+
+
 }
+
+
+@keyframes table-newsort {
+    0%   {
+        opacity: 0;
+        transform: translateX(10px);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+
+
+
 @media all and (max-width: 768px) {
 
     .table__wrapper {
@@ -61,7 +241,7 @@
 
 
                         &::before {
-                            content: attr(data-table);
+                            content: attr(data-table-text);
                             display: block;
                             float: left;
                             width: 40%;
@@ -81,11 +261,24 @@
 
 
             }
+
+            &.has-checkbox {
+                .checkbox-trigger {
+                    position: relative;
+                    left: auto;
+                    
+                    ~span {
+                        padding-left: 0;
+                    }  
+                }
+
+            } 
         }
 
 
+
         /*------ Enhanced Responsive with Scroll Bars ------*/
-        &.js-table-enhanced-responsive-scrolled {
+        &.table-enhanced-responsive-scrolled {
 
             table {
                 display: block;
@@ -157,7 +350,10 @@
                 }
 
             }
+
+
         }
     }
 
 }
+

@@ -716,6 +716,15 @@ function TreeList(props) {
       return item.key !== key;
     });
   };
+  var formatCheckboxControlVal = function formatCheckboxControlVal(el) {
+    var _el$dataset$name;
+    return {
+      name: (_el$dataset$name = el.dataset.name) === null || _el$dataset$name === void 0 ? void 0 : _el$dataset$name.replace(/-label$/, ''),
+      key: el.dataset.key,
+      slug: el.value,
+      link: el.dataset.link
+    };
+  };
   var setCheckboxCheckedData = function setCheckboxCheckedData(arr, key, val) {
     arr.forEach(function (item, index) {
       if (item.key === key) arr[index].checked = val;
@@ -771,15 +780,6 @@ function TreeList(props) {
       }
     });
     return [checkedData, printData];
-  };
-  var formatCheckboxControlVal = function formatCheckboxControlVal(el) {
-    var _el$dataset$name;
-    return {
-      name: (_el$dataset$name = el.dataset.name) === null || _el$dataset$name === void 0 ? void 0 : _el$dataset$name.replace(/-label$/, ''),
-      key: el.dataset.key,
-      slug: el.value,
-      link: el.dataset.link
-    };
   };
   var activeClass = function activeClass(el, mode) {
     var classname = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 'active';

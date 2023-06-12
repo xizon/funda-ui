@@ -11,9 +11,21 @@ type TableFieldProps = {
 
 const TableField = (props: TableFieldProps) => {
 
+    const {
+        cols,
+        columnHeader,
+        index,
+        content
+    } = props;
+
+
+    function handleTbodyLeave(e: any) {
+        e.target.closest('table').querySelector('tbody').classList.remove('drag-trigger-mousedown');
+    }
+
     return (
         <>
-            <td colSpan={props.cols} data-table={props.columnHeader} data-table-row={props.index}>{props.content}</td>
+            <td colSpan={cols} data-table-text={columnHeader} data-table-col={index}  onMouseEnter={handleTbodyLeave}>{content}</td>
         </>
     )
 }

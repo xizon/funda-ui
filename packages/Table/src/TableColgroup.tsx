@@ -9,12 +9,16 @@ type TableColgroupProps = {
 
 const TableColgroup = (props: TableColgroupProps) => {
 
+    const {
+        data
+    } = props;
+
     return (
         <>
             <colgroup>
                 <col></col>
-                {props.data ? props.data.map((el: any, i: number) => {
-                    return <col key={"colgroup-placeholder" + i}></col>;
+                {data ? data.map((el: any, i: number) => {
+                    return <col key={i}></col>;
                 }) : null}
             </colgroup>
         </>

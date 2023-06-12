@@ -10,13 +10,19 @@ type TableSummariesProps = {
 
 const TableSummaries = (props: TableSummariesProps) => {
 
-    return props.data ? (
+    const {
+        data,
+        footClassName
+    } = props;
+
+
+    return data ? (
         <>
            
-            <tfoot className={props.footClassName ? props.footClassName : ''}>
+            <tfoot className={footClassName ? footClassName : ''}>
                 <tr>
-                    {props.data!.map((item: any, i: number) => {
-                        return <th key={"summary" + i}>{item}</th>;
+                    {data!.map((item: any, i: number) => {
+                        return <th key={i}>{item}</th>;
                     })
                     }
                 </tr>

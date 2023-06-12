@@ -249,7 +249,7 @@ const File = forwardRef((props: FileProps, ref: any) => {
                     style={{ cursor: 'pointer', pointerEvents: disabled ? 'none' : 'auto', opacity: disabled ? 0.5 : 1 }}
                     htmlFor={idRes}
                     className="form-label d-inline"
-                ><button className={labelClassName ? labelClassName : 'btn btn-outline-secondary'} type="button" style={{ pointerEvents: 'none' }}>{label ? label : <svg width="25px" height="25px" viewBox="0 0 1024 1024"><path d="M512 256l144.8 144.8-36.2 36.2-83-83v311.6h-51.2V354l-83 83-36.2-36.2L512 256zM307.2 716.8V768h409.6v-51.2H307.2z" fill="#000000" fill-rule="evenodd" /></svg>} {required ? <><span className="text-danger">*</span></> : ''}</button></label>
+                ><button className={labelClassName ? labelClassName : 'btn btn-outline-secondary'} type="button" style={{ pointerEvents: 'none' }}>{label ? label : <svg width="25px" height="25px" viewBox="0 0 1024 1024"><path d="M512 256l144.8 144.8-36.2 36.2-83-83v311.6h-51.2V354l-83 83-36.2-36.2L512 256zM307.2 716.8V768h409.6v-51.2H307.2z" fill="#000000" fillRule="evenodd" /></svg>} {required ? <><span className="text-danger">*</span></> : ''}</button></label>
 
 
                 <div className="input-group">

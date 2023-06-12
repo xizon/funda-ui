@@ -14,12 +14,18 @@ import Table from 'react-pure-bootstrap/Table';
 | `bodyClassName` | string | - | The class name of `<tbody>`. |
 | `headClassName` | string | - | The class name of `<thead>`. |
 | `footClassName` | string | - | The class name of `<tfoot>`. |
-| `data` | JSON Object Literals | - | Specify data of Table as a JSON string format. Such as: <br />**usage 1:**<br />`{"fields":[[{"cols": 1, "content": "01" },{"cols": 1, "content": "David Lin" }],[{"cols": 1, "content": "02" },{"cols": 1, "content": "Tom McFarlin" }]]}` <br />**usage 2:**<br />`{"headers": ["No.","Name"],"fields":[[{"cols": 1, "content": "01" },{"cols": 1, "content": "David Lin" }],[{"cols": 1, "content": "02" },{"cols": 1, "content": "Tom McFarlin" }]]};` <br />**usage 3:**<br />`{"fields":[[{"cols": 1, "content": "01" },{"cols": 1, "content": "David Lin" }],[{"cols": 1, "content": "02" },{"cols": 1, "content": "Tom McFarlin" }],[{"cols": 4, "content": <><strong style={{background:"yellow"}}>A table cell that spans <span style={{color:"red"}}>4</span> columns</strong></> }]]}` |
+| `checkable` | boolean | false | Set TreeNode display Checkbox or not. |
+| `draggable` | boolean | false | Indicates whether the per row can be dragged. |
+| `sortable` | boolean | false | Sort by headers. |
+| `data` | JSON Object Literals | - | Specify data of Table as a JSON string format. Such as: <br />**usage 1:**<br />`{"fields":[[{"cols": 1, "content": "01" },{"cols": 1, "content": "David Lin" }],[{"cols": 1, "content": "02" },{"cols": 1, "content": "Tom McFarlin" }]]}` <br />**usage 2:**<br />`{"headers":[{"type":"number","content":"No."},{"type":false,"content":"Name"}],"fields":[[{"cols": 1, "content": "01" },{"cols": 1, "content": "David Lin" }],[{"cols": 1, "content": "02" },{"cols": 1, "content": "Tom McFarlin" }]]};` <br />**usage 3:**<br />`{"fields":[[{"cols": 1, "content": "01" },{"cols": 1, "content": "David Lin" }],[{"cols": 1, "content": "02" },{"cols": 1, "content": "Tom McFarlin" }],[{"cols": 4, "content": <><strong style={{background:"yellow"}}>A table cell that spans <span style={{color:"red"}}>4</span> columns</strong></> }]]}` |
 | `bordered` | boolean  | false | Adds borders on all sides of the table and cells |
 | `colGroup` | boolean  | false | Set the background color of the multiple columns with the `<colgroup>` and `<col>` tags |
 | `responsive` | boolean  | false | Create normal responsive tables up to a particular breakpoint. |
 | `enhancedResponsive` | boolean  | false | Create enhanced responsive tables up to a particular breakpoint. |
 | `enhancedResponsiveWithScrollBar` | boolean  | false | Create enhanced responsive tables up to a particular breakpoint. This property allows scroll bars to be created automatically in the table. <br />**Only one of the `responsive` and `responsiveWithScrollBar` properties is allowed, and both are invalid if set to true.** |
+| `onCheck` | function  | - | Call a function when changing the checkbox. It returns only one callback value (Array). <blockquote>Take effect when `checkable` is "true"</blockquote> |
+| `onDrag` | function  | - | As each row is dragged, it returns two functions. dragStart, dragEnd, they represent the callback events of drag start and drag end respectively. For example: `onDrag={(dragStart,dragEnd)=>{if(dragStart!==null)dragStart((el,data,printData)=>{console.log('dragStart: ',data,printData);});if(dragEnd!==null)dragEnd((el,data,printData)=>{console.log('dragEnd: ',data,printData);});}}`. <blockquote>Take effect when `draggable` is "true"</blockquote> |
+
 
 
 
@@ -28,7 +34,8 @@ JSON configuration properties of the `data`:
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |
 | `fields` | array | - | Table rows and columns. The key `cols` identifies the column (change the value if the column is merged). The key `content` to place the content of each cell. Eg. `[[{"cols": 1, "content": "01" },{"cols": 1, "content": "David Lin" }],[{"cols": 1, "content": "02" },{"cols": 1, "content": "Tom McFarlin" }]]` |
-| `headers` | array | - | Defines a header cell in an HTML table. Eg. `["No.","Name"]` |
+| `headers` | array | - | Defines a header cell in an HTML table. The key `type` is used to specify the type of sorting for each column (Type of sorted values: `false`, `'number'`, `'text'` or `'date'`). The key `content` is the value of each field. Eg. `[{"type": false, "content": "Index" },{"type": "number", "content": "Money" },{"type": "text", "content": "Name" },{"type": "number", "content": "No." },{"type": "date", "content": "Date1" },{"type": "date", "content": "Date2" }]` |
+
 
 
 
@@ -63,7 +70,11 @@ const tableData1 = {
 };
 
 const tableData2 = {
-	"headers": ["No.","Name",""],
+	"headers": [
+		{"type": false, "content": "No." },
+	    {"type": false, "content": "Name" },
+		{"type": false, "content": "" }
+	],
 	"fields": [
 		[
 		   {"cols": 1, "content": "01" },
@@ -85,39 +96,76 @@ const tableData2 = {
 };
 
 const tableData3 = {
-	"headers": ["No.","Name","Email"],
+	"headers": [
+		{"type": false, "content": "No." },
+	    {"type": "number", "content": "Money" },
+		{"type": "text", "content": "Name" },
+		{"type": "number", "content": "No." },
+		{"type": "date", "content": "Date1" },
+		{"type": "date", "content": "Date2" }
+	],
 	"fields": [
 		[
-		   {"cols": 1, "content": "01" },
-		   {"cols": 1, "content": "David Lin" },
-		   {"cols": 1, "content": "aaa@gmail.com"}
+			{"cols": 1, "content": "1" },
+			{"cols": 1, "content": "$55.134" },
+			{"cols": 1, "content": "David Lin" },
+			{"cols": 1, "content": "3453434"},
+			{"cols": 1, "content": "2012-09-25T12:10:46+00:00"},
+			{"cols": 1, "content": "May 22, 2003"}
+			
 		],
 		[
-		   {"cols": 1, "content": "02" },
-		   {"cols": 1, "content": "Tom McFarlin" },
-		   {"cols": 1, "content": "bbb@gmail.com"}
+			{"cols": 1, "content": "2" },
+			{"cols": 1, "content": "$255.12" },
+			{"cols": 1, "content": "Co Cheey" },
+			{"cols": 1, "content": "-2324.343"},
+			{"cols": 1, "content": "2013-09-10T12:10:46+00:00"},
+			{"cols": 1, "content": "September 13, 2013"}
 		],	
 		[
-		   {"cols": 1, "content": "03" },
-		   {"cols": 1, "content": "Chris Ames" },
-		   {"cols": 1, "content": "ccc@gmail.com"}
+			{"cols": 1, "content": "3" },
+			{"cols": 1, "content": "$21.134" },
+			{"cols": 1, "content": "Foristin" },
+			{"cols": 1, "content": "-34789.34"},
+			{"cols": 1, "content": "2018-09-24T12:10:46+00:00"},
+			{"cols": 1, "content": "January 2, 2019"}
 		],	
 		[
-		   {"cols": 1, "content": "04" },
-		   {"cols": 1, "content": "Dr. Wolverine Longer Text Test" },
-		   {"cols": 1, "content": "ddd@gmail.com"}
+			{"cols": 1, "content": "4" },
+			{"cols": 1, "content": "$3454.134" },
+			{"cols": 1, "content": "Alice" },
+			{"cols": 1, "content": "+224.5"},
+			{"cols": 1, "content": "2011-09-21T12:10:46+00:00"},
+			{"cols": 1, "content": "December 1, 2018"}
 		],	
 		[
-		   {"cols": 1, "content": "05" },
-		   {"cols": 1, "content": "Foristin" },
-		   {"cols": 1, "content": "eee@gmail.com"}
+			{"cols": 1, "content": "5" },
+			{"cols": 1, "content": "$224.0" },
+			{"cols": 1, "content": "Wooli" },
+			{"cols": 1, "content": "+33.6"},
+			{"cols": 1, "content": "2011-02-26T12:10:46+00:00"},
+			{"cols": 1, "content": "July 22, 2017"}
+		],	
+		[
+			{"cols": 1, "content": "6" },
+			{"cols": 1, "content": "$356.2" },
+			{"cols": 1, "content": "Spiter Low" },
+			{"cols": 1, "content": "278.23487"},
+			{"cols": 1, "content": "2019-01-01T12:10:46+00:00"},
+			{"cols": 1, "content": "July 28, 2017"}
 		]
+		
 	]
 };
 
 
 const tableData4 = {
-	"headers": ["No.","Name","Email","Phone"],
+	"headers": [
+		{"type": false, "content": "No." },
+	    {"type": false, "content": "Name" },
+		{"type": false, "content": "Email" },
+        {"type": false, "content": "Phone" }
+	],
 	"fields": [
 		[
 		   {"cols": 1, "content": "01" },
@@ -240,8 +288,34 @@ export default () => {
             
             <Table 
                 bodyClassName="table-group-divider" 
-                data={tableData2} 
+                data={tableData2}
+                checkable={true}
+                onCheck={(val) => {
+                    console.log(val);
+                }} 
             />
+
+            <Table
+                bodyClassName="table-group-divider"
+                data={tableData2}
+                draggable={true}
+                onDrag={(dragStart, dragEnd) => {
+                    if ( dragStart !== null ) dragStart((el, data, printData)=> {
+                        console.log('dragStart: ', data, printData);
+                    });
+
+                    if ( dragEnd !== null ) dragEnd((el, data, printData)=> {
+                        console.log('dragEnd: ', data, printData);
+                    });
+                }}
+            />
+
+            <Table
+                bodyClassName="table-group-divider"
+                data={tableData3}
+                sortable={true}
+            />
+
 
             <Table 
                 headClassName="table-dark" 

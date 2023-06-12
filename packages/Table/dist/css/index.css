@@ -4,6 +4,24 @@
 .table__wrapper {
   --table-alternant-bg: #f0f0f0;
   --table-dark-bg: #212529;
+  --table-padding-x: 1rem;
+  --table-padding-y: 0.5rem;
+  --table-dis-top: 1rem;
+  --table-checkbox-indeterminate-color: #bbbbbb;
+  --table-row-active-bg: #f0f8ff;
+  /*------ enable sort  ------*/
+  /*------ has checkbox  ------*/
+  /*------ allow drag and drop  ------*/
+}
+.table__wrapper table td,
+.table__wrapper table th {
+  position: relative;
+}
+.table__wrapper table tr {
+  transition: 0.1s ease-in-out;
+}
+.table__wrapper table tr.active {
+  background-color: var(--table-row-active-bg);
 }
 .table__wrapper table.table-colgroup tbody tr td:first-child,
 .table__wrapper table.table-colgroup tbody tr th:first-child {
@@ -15,7 +33,400 @@
 .table__wrapper table.table-colgroup col:first-child {
   background-color: var(--table-dark-bg);
 }
+.table__wrapper .sort-trigger {
+  cursor: pointer;
+}
+.table__wrapper .sort-trigger svg {
+  transition: 0.1s ease-in-out;
+  opacity: 0.3;
+}
+.table__wrapper .sort-trigger:hover svg {
+  transform: scale(1.2);
+  opacity: 0.7;
+}
+.table__wrapper .checkbox-trigger {
+  display: none;
+  position: absolute;
+  left: calc(var(--table-padding-x) / 2);
+  z-index: 2;
+}
+.table__wrapper .checkbox-trigger > div {
+  display: inline-block;
+}
+.table__wrapper .checkbox-trigger > div .form-check {
+  min-height: auto;
+  margin-bottom: 0;
+}
+.table__wrapper .checkbox-trigger > div .form-check [type=checkbox]:indeterminate {
+  background-color: var(--table-checkbox-indeterminate-color);
+  border-color: var(--table-checkbox-indeterminate-color);
+}
+.table__wrapper .drag-trigger {
+  display: none;
+  position: absolute;
+  left: calc(var(--table-padding-x) / 2);
+  z-index: 3;
+  cursor: move;
+  opacity: 0.5;
+}
+.table__wrapper .newsort {
+  animation: table-newsort 0.5s linear 1 forwards;
+  opacity: 0;
+}
+.table__wrapper .newsort:nth-child(2) {
+  animation-delay: 50ms;
+}
+.table__wrapper .newsort:nth-child(3) {
+  animation-delay: 100ms;
+}
+.table__wrapper .newsort:nth-child(4) {
+  animation-delay: 150ms;
+}
+.table__wrapper .newsort:nth-child(5) {
+  animation-delay: 200ms;
+}
+.table__wrapper .newsort:nth-child(6) {
+  animation-delay: 250ms;
+}
+.table__wrapper .newsort:nth-child(7) {
+  animation-delay: 300ms;
+}
+.table__wrapper .newsort:nth-child(8) {
+  animation-delay: 350ms;
+}
+.table__wrapper .newsort:nth-child(9) {
+  animation-delay: 400ms;
+}
+.table__wrapper .newsort:nth-child(10) {
+  animation-delay: 450ms;
+}
+.table__wrapper .newsort:nth-child(11) {
+  animation-delay: 500ms;
+}
+.table__wrapper .newsort:nth-child(12) {
+  animation-delay: 550ms;
+}
+.table__wrapper .newsort:nth-child(13) {
+  animation-delay: 600ms;
+}
+.table__wrapper .newsort:nth-child(14) {
+  animation-delay: 650ms;
+}
+.table__wrapper .newsort:nth-child(15) {
+  animation-delay: 700ms;
+}
+.table__wrapper .newsort:nth-child(16) {
+  animation-delay: 750ms;
+}
+.table__wrapper .newsort:nth-child(17) {
+  animation-delay: 800ms;
+}
+.table__wrapper .newsort:nth-child(18) {
+  animation-delay: 850ms;
+}
+.table__wrapper .newsort:nth-child(19) {
+  animation-delay: 900ms;
+}
+.table__wrapper .newsort:nth-child(20) {
+  animation-delay: 950ms;
+}
+.table__wrapper .newsort:nth-child(21) {
+  animation-delay: 1000ms;
+}
+.table__wrapper .newsort:nth-child(22) {
+  animation-delay: 1050ms;
+}
+.table__wrapper .newsort:nth-child(23) {
+  animation-delay: 1100ms;
+}
+.table__wrapper .newsort:nth-child(24) {
+  animation-delay: 1150ms;
+}
+.table__wrapper .newsort:nth-child(25) {
+  animation-delay: 1200ms;
+}
+.table__wrapper .newsort:nth-child(26) {
+  animation-delay: 1250ms;
+}
+.table__wrapper .newsort:nth-child(27) {
+  animation-delay: 1300ms;
+}
+.table__wrapper .newsort:nth-child(28) {
+  animation-delay: 1350ms;
+}
+.table__wrapper .newsort:nth-child(29) {
+  animation-delay: 1400ms;
+}
+.table__wrapper .newsort:nth-child(30) {
+  animation-delay: 1450ms;
+}
+.table__wrapper .newsort:nth-child(31) {
+  animation-delay: 1500ms;
+}
+.table__wrapper .newsort:nth-child(32) {
+  animation-delay: 1550ms;
+}
+.table__wrapper .newsort:nth-child(33) {
+  animation-delay: 1600ms;
+}
+.table__wrapper .newsort:nth-child(34) {
+  animation-delay: 1650ms;
+}
+.table__wrapper .newsort:nth-child(35) {
+  animation-delay: 1700ms;
+}
+.table__wrapper .newsort:nth-child(36) {
+  animation-delay: 1750ms;
+}
+.table__wrapper .newsort:nth-child(37) {
+  animation-delay: 1800ms;
+}
+.table__wrapper .newsort:nth-child(38) {
+  animation-delay: 1850ms;
+}
+.table__wrapper .newsort:nth-child(39) {
+  animation-delay: 1900ms;
+}
+.table__wrapper .newsort:nth-child(40) {
+  animation-delay: 1950ms;
+}
+.table__wrapper .newsort:nth-child(41) {
+  animation-delay: 2000ms;
+}
+.table__wrapper .newsort:nth-child(42) {
+  animation-delay: 2050ms;
+}
+.table__wrapper .newsort:nth-child(43) {
+  animation-delay: 2100ms;
+}
+.table__wrapper .newsort:nth-child(44) {
+  animation-delay: 2150ms;
+}
+.table__wrapper .newsort:nth-child(45) {
+  animation-delay: 2200ms;
+}
+.table__wrapper .newsort:nth-child(46) {
+  animation-delay: 2250ms;
+}
+.table__wrapper .newsort:nth-child(47) {
+  animation-delay: 2300ms;
+}
+.table__wrapper .newsort:nth-child(48) {
+  animation-delay: 2350ms;
+}
+.table__wrapper .newsort:nth-child(49) {
+  animation-delay: 2400ms;
+}
+.table__wrapper .newsort:nth-child(50) {
+  animation-delay: 2450ms;
+}
+.table__wrapper .newsort:nth-child(51) {
+  animation-delay: 2500ms;
+}
+.table__wrapper .newsort:nth-child(52) {
+  animation-delay: 2550ms;
+}
+.table__wrapper .newsort:nth-child(53) {
+  animation-delay: 2600ms;
+}
+.table__wrapper .newsort:nth-child(54) {
+  animation-delay: 2650ms;
+}
+.table__wrapper .newsort:nth-child(55) {
+  animation-delay: 2700ms;
+}
+.table__wrapper .newsort:nth-child(56) {
+  animation-delay: 2750ms;
+}
+.table__wrapper .newsort:nth-child(57) {
+  animation-delay: 2800ms;
+}
+.table__wrapper .newsort:nth-child(58) {
+  animation-delay: 2850ms;
+}
+.table__wrapper .newsort:nth-child(59) {
+  animation-delay: 2900ms;
+}
+.table__wrapper .newsort:nth-child(60) {
+  animation-delay: 2950ms;
+}
+.table__wrapper .newsort:nth-child(61) {
+  animation-delay: 3000ms;
+}
+.table__wrapper .newsort:nth-child(62) {
+  animation-delay: 3050ms;
+}
+.table__wrapper .newsort:nth-child(63) {
+  animation-delay: 3100ms;
+}
+.table__wrapper .newsort:nth-child(64) {
+  animation-delay: 3150ms;
+}
+.table__wrapper .newsort:nth-child(65) {
+  animation-delay: 3200ms;
+}
+.table__wrapper .newsort:nth-child(66) {
+  animation-delay: 3250ms;
+}
+.table__wrapper .newsort:nth-child(67) {
+  animation-delay: 3300ms;
+}
+.table__wrapper .newsort:nth-child(68) {
+  animation-delay: 3350ms;
+}
+.table__wrapper .newsort:nth-child(69) {
+  animation-delay: 3400ms;
+}
+.table__wrapper .newsort:nth-child(70) {
+  animation-delay: 3450ms;
+}
+.table__wrapper .newsort:nth-child(71) {
+  animation-delay: 3500ms;
+}
+.table__wrapper .newsort:nth-child(72) {
+  animation-delay: 3550ms;
+}
+.table__wrapper .newsort:nth-child(73) {
+  animation-delay: 3600ms;
+}
+.table__wrapper .newsort:nth-child(74) {
+  animation-delay: 3650ms;
+}
+.table__wrapper .newsort:nth-child(75) {
+  animation-delay: 3700ms;
+}
+.table__wrapper .newsort:nth-child(76) {
+  animation-delay: 3750ms;
+}
+.table__wrapper .newsort:nth-child(77) {
+  animation-delay: 3800ms;
+}
+.table__wrapper .newsort:nth-child(78) {
+  animation-delay: 3850ms;
+}
+.table__wrapper .newsort:nth-child(79) {
+  animation-delay: 3900ms;
+}
+.table__wrapper .newsort:nth-child(80) {
+  animation-delay: 3950ms;
+}
+.table__wrapper .newsort:nth-child(81) {
+  animation-delay: 4000ms;
+}
+.table__wrapper .newsort:nth-child(82) {
+  animation-delay: 4050ms;
+}
+.table__wrapper .newsort:nth-child(83) {
+  animation-delay: 4100ms;
+}
+.table__wrapper .newsort:nth-child(84) {
+  animation-delay: 4150ms;
+}
+.table__wrapper .newsort:nth-child(85) {
+  animation-delay: 4200ms;
+}
+.table__wrapper .newsort:nth-child(86) {
+  animation-delay: 4250ms;
+}
+.table__wrapper .newsort:nth-child(87) {
+  animation-delay: 4300ms;
+}
+.table__wrapper .newsort:nth-child(88) {
+  animation-delay: 4350ms;
+}
+.table__wrapper .newsort:nth-child(89) {
+  animation-delay: 4400ms;
+}
+.table__wrapper .newsort:nth-child(90) {
+  animation-delay: 4450ms;
+}
+.table__wrapper .newsort:nth-child(91) {
+  animation-delay: 4500ms;
+}
+.table__wrapper .newsort:nth-child(92) {
+  animation-delay: 4550ms;
+}
+.table__wrapper .newsort:nth-child(93) {
+  animation-delay: 4600ms;
+}
+.table__wrapper .newsort:nth-child(94) {
+  animation-delay: 4650ms;
+}
+.table__wrapper .newsort:nth-child(95) {
+  animation-delay: 4700ms;
+}
+.table__wrapper .newsort:nth-child(96) {
+  animation-delay: 4750ms;
+}
+.table__wrapper .newsort:nth-child(97) {
+  animation-delay: 4800ms;
+}
+.table__wrapper .newsort:nth-child(98) {
+  animation-delay: 4850ms;
+}
+.table__wrapper .newsort:nth-child(99) {
+  animation-delay: 4900ms;
+}
+.table__wrapper .newsort:nth-child(100) {
+  animation-delay: 4950ms;
+}
+.table__wrapper.has-checkbox .checkbox-trigger {
+  display: inline-block;
+}
+.table__wrapper.has-checkbox .checkbox-trigger ~ span:not(.sort-trigger) {
+  display: inline-block;
+  padding-left: calc(var(--table-padding-x) * 1.5);
+}
+.table__wrapper.allow-dragdrop {
+  /* Specify a drag trigger point */
+  /* placeholder */
+  /* trigger */
+}
+.table__wrapper.allow-dragdrop tbody .row-obj-clonelast {
+  height: 0 !important;
+}
+.table__wrapper.allow-dragdrop tbody .row-obj-clonelast td {
+  border: none;
+  box-shadow: none;
+}
+.table__wrapper.allow-dragdrop tbody td,
+.table__wrapper.allow-dragdrop tbody th {
+  pointer-events: none;
+  user-select: auto;
+}
+.table__wrapper.allow-dragdrop tbody.drag-trigger-mousedown td,
+.table__wrapper.allow-dragdrop tbody.drag-trigger-mousedown th {
+  pointer-events: auto;
+}
+.table__wrapper.allow-dragdrop .row-placeholder {
+  border: 2px dotted #b5ba91;
+  background-color: #e4e9c3;
+}
+.table__wrapper.allow-dragdrop .drag-trigger {
+  display: inline-block;
+  pointer-events: auto;
+}
+.table__wrapper.allow-dragdrop .drag-trigger ~ span:not(.checkbox-trigger) {
+  display: inline-block;
+  padding-left: calc(var(--table-padding-x) * 1.5);
+}
+.table__wrapper.allow-dragdrop.has-checkbox .drag-trigger ~ span:not(.checkbox-trigger) {
+  padding-left: calc(var(--table-padding-x) * 3);
+}
+.table__wrapper.allow-dragdrop.has-checkbox tbody .checkbox-trigger {
+  padding-left: calc(var(--table-padding-x) * 1.5);
+}
 
+@keyframes table-newsort {
+  0% {
+    opacity: 0;
+    transform: translateX(10px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
 @media all and (max-width: 768px) {
   .table__wrapper {
     --table-border-color: #dee2e6;
@@ -37,7 +448,7 @@
   }
   .table__wrapper.table-enhanced-responsive table tbody td::before,
   .table__wrapper.table-enhanced-responsive table tbody th::before {
-    content: attr(data-table);
+    content: attr(data-table-text);
     display: block;
     float: left;
     width: 40%;
@@ -51,7 +462,14 @@
     display: block;
     clear: both;
   }
-  .table__wrapper.js-table-enhanced-responsive-scrolled table {
+  .table__wrapper.table-enhanced-responsive.has-checkbox .checkbox-trigger {
+    position: relative;
+    left: auto;
+  }
+  .table__wrapper.table-enhanced-responsive.has-checkbox .checkbox-trigger ~ span {
+    padding-left: 0;
+  }
+  .table__wrapper.table-enhanced-responsive-scrolled table {
     display: block;
     width: 100%;
     border-bottom: 0 !important;
@@ -59,19 +477,19 @@
     border-right: 0 !important;
     overflow: auto;
   }
-  .table__wrapper.js-table-enhanced-responsive-scrolled table thead {
+  .table__wrapper.table-enhanced-responsive-scrolled table thead {
     display: block;
     float: left;
     width: 100px;
     border-bottom: 1px solid var(--table-border-color);
   }
-  .table__wrapper.js-table-enhanced-responsive-scrolled table thead th {
+  .table__wrapper.table-enhanced-responsive-scrolled table thead th {
     display: block;
   }
-  .table__wrapper.js-table-enhanced-responsive-scrolled table thead th:not(last-child) {
+  .table__wrapper.table-enhanced-responsive-scrolled table thead th:not(last-child) {
     border-bottom: 0;
   }
-  .table__wrapper.js-table-enhanced-responsive-scrolled table tbody {
+  .table__wrapper.table-enhanced-responsive-scrolled table tbody {
     width: calc(100% - 100px);
     display: block;
     float: left;
@@ -79,34 +497,34 @@
     border-bottom: 1px solid var(--table-border-color);
     border-right: 1px solid var(--table-border-color);
   }
-  .table__wrapper.js-table-enhanced-responsive-scrolled table thead tr,
-  .table__wrapper.js-table-enhanced-responsive-scrolled table tbody tr {
+  .table__wrapper.table-enhanced-responsive-scrolled table thead tr,
+  .table__wrapper.table-enhanced-responsive-scrolled table tbody tr {
     display: block;
     border-color: var(--table-border-color);
   }
-  .table__wrapper.js-table-enhanced-responsive-scrolled table th,
-  .table__wrapper.js-table-enhanced-responsive-scrolled table tbody td,
-  .table__wrapper.js-table-enhanced-responsive-scrolled table tbody th {
+  .table__wrapper.table-enhanced-responsive-scrolled table th,
+  .table__wrapper.table-enhanced-responsive-scrolled table tbody td,
+  .table__wrapper.table-enhanced-responsive-scrolled table tbody th {
     box-sizing: border-box;
     overflow-x: hidden;
     overflow-y: auto;
   }
-  .table__wrapper.js-table-enhanced-responsive-scrolled table th:first-child,
-  .table__wrapper.js-table-enhanced-responsive-scrolled table tbody td:first-child,
-  .table__wrapper.js-table-enhanced-responsive-scrolled table tbody th:first-child {
+  .table__wrapper.table-enhanced-responsive-scrolled table th:first-child,
+  .table__wrapper.table-enhanced-responsive-scrolled table tbody td:first-child,
+  .table__wrapper.table-enhanced-responsive-scrolled table tbody th:first-child {
     border-top: 0;
   }
-  .table__wrapper.js-table-enhanced-responsive-scrolled table th:not(last-child),
-  .table__wrapper.js-table-enhanced-responsive-scrolled table tbody td:not(last-child),
-  .table__wrapper.js-table-enhanced-responsive-scrolled table tbody th:not(last-child) {
+  .table__wrapper.table-enhanced-responsive-scrolled table th:not(last-child),
+  .table__wrapper.table-enhanced-responsive-scrolled table tbody td:not(last-child),
+  .table__wrapper.table-enhanced-responsive-scrolled table tbody th:not(last-child) {
     border-bottom: 0;
     border-right: 0;
   }
-  .table__wrapper.js-table-enhanced-responsive-scrolled table tbody tr {
+  .table__wrapper.table-enhanced-responsive-scrolled table tbody tr {
     display: table-cell;
   }
-  .table__wrapper.js-table-enhanced-responsive-scrolled table tbody td,
-  .table__wrapper.js-table-enhanced-responsive-scrolled table tbody th {
+  .table__wrapper.table-enhanced-responsive-scrolled table tbody td,
+  .table__wrapper.table-enhanced-responsive-scrolled table tbody th {
     display: block;
   }
 }

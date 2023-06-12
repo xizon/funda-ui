@@ -5,6 +5,9 @@ declare type TableProps = {
     bodyClassName?: string;
     headClassName?: string;
     footClassName?: string;
+    checkable?: boolean;
+    draggable?: boolean;
+    sortable?: boolean;
     data: any;
     bordered?: boolean;
     colGroup?: boolean;
@@ -13,6 +16,8 @@ declare type TableProps = {
     enhancedResponsiveWithScrollBar?: boolean;
     /** -- */
     id?: string;
+    onCheck?: (val: any) => void;
+    onDrag?: (dragStart: any, dragEnd: any) => void;
 };
 declare const Table: (props: TableProps) => JSX.Element;
 export default Table;

@@ -68,6 +68,17 @@ export default function TreeList(props: TreeListProps) {
         });
     };
       
+
+    const formatCheckboxControlVal = (el: HTMLFormElement) => {
+        return {
+            name: el.dataset.name?.replace(/-label$/, ''),
+            key: el.dataset.key,
+            slug: el.value,
+            link: el.dataset.link
+        }
+    };
+
+
     const setCheckboxCheckedData = (arr: any[], key: string, val: boolean) => {
         arr.forEach((item: any, index: number) => {
             if (item.key === key) arr[index].checked = val;
@@ -137,15 +148,6 @@ export default function TreeList(props: TreeListProps) {
 
         return [checkedData, printData];
 
-    };
-
-    const formatCheckboxControlVal = (el: HTMLFormElement) => {
-        return {
-            name: el.dataset.name?.replace(/-label$/, ''),
-            key: el.dataset.key,
-            slug: el.value,
-            link: el.dataset.link
-        }
     };
 
     const activeClass = (el: any, mode: string, classname: string = 'active') => {
