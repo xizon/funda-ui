@@ -39,6 +39,8 @@ declare type ModalDialogProps = {
     closeOnlyBtn?: boolean;
     /** Disable the close button. */
     closeDisabled?: boolean;
+    /** Incoming data, you can set the third parameter of `onSubmit` */
+    data?: string;
     /** -- */
     id?: string;
     children: React.ReactNode;
@@ -48,7 +50,7 @@ declare type ModalDialogProps = {
     onLoad?: (openFunc: any, closeFunc: any) => void;
     onOpen?: (e: any, callback: any) => void;
     onClose?: (e: any) => void;
-    onSubmit?: (e: any, callback: any) => void;
+    onSubmit?: (e: any, callback: any, incomingData: string | null | undefined) => void;
 };
 declare const ModalDialog: (props: ModalDialogProps) => JSX.Element;
 export default ModalDialog;

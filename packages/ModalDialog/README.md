@@ -24,10 +24,11 @@ import ModalDialog from 'react-pure-bootstrap/ModalDialog';
 | `submitBtnClassName` | string  | - | Specify a class for submit button |
 | `submitBtnLabel` | string \| ReactNode  | - | Set a piece of text or HTML code for the submit button |
 | `enableVideo` | boolean  | false | Adapt the video to the window. For example, the content of the component can be written as: `<iframe width="560" height="315" src="https://www.youtube.com/embed/xxxxxx" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowFullScreen></iframe>` <br /> or <br />`<video playsInline controls poster="/assets/videos/480x270/demo.jpg" src="/assets/videos/480x270/demo.mp4"></video>` |
+| `data` | string  | - | Incoming data, you can set the third parameter of `onSubmit` |
 | `onLoad` | function  | - | Call a function when the modal is rendered. It returns two callback values, One is the function of open, and the other is the function of close, they can be called separately. |
 | `onOpen` | function  | - | Call a function when the modal is opened. It returns two callback values, one is the trigger object and the other is the closing event (a function). |
 | `onClose` | function  | - | Call a function when the modal is closed. It returns a callback value which is the trigger object. |
-| `onSubmit` | function  | - | Call a function when the modal is submitted. It returns two callback values, one is the trigger object and the other is the closing event (a function) |
+| `onSubmit` | function  | - | Call a function when the modal is submitted. It returns three callback values, one is the trigger object, the second is the closing event (a function), adn the last is a string passed by the `data` attribute |
 
 
 
@@ -47,6 +48,7 @@ export default () => {
             {/* ================================================================== */}
             <ModalDialog
                 show={false}
+                data="mydata"
                 heading="Title Here"
                 triggerClassName="d-inline w-auto"
                 triggerContent={<>
@@ -77,8 +79,8 @@ export default () => {
                     myAppBtn?.replaceWith(myAppBtn?.cloneNode(true));   
 
                 }}
-                onSubmit={(e, closewin) => {
-                    console.log('submit: ', e.target);
+                onSubmit={(e, closewin, data) => {
+                    console.log('submit: ', e.target, data);
                     e.target.disabled = true;
                     e.target.innerHTML = '<i class="fa fa-spinner fa-spin fa-fw"></i> Loading...'
 

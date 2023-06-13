@@ -47,6 +47,8 @@ type ModalDialogProps = {
     closeOnlyBtn?: boolean;
     /** Disable the close button. */
     closeDisabled?: boolean;
+    /** Incoming data, you can set the third parameter of `onSubmit` */
+    data?: string;
     /** -- */
     id?: string;
     children: React.ReactNode;
@@ -56,7 +58,7 @@ type ModalDialogProps = {
     onLoad?: (openFunc: any, closeFunc: any) => void;
     onOpen?: (e: any, callback: any) => void;
     onClose?: (e: any) => void;
-    onSubmit?: (e: any, callback: any) => void;
+    onSubmit?: (e: any, callback: any, incomingData: string | null | undefined) => void;
 };
 
 const ModalDialog = (props: ModalDialogProps) => {
@@ -76,6 +78,7 @@ const ModalDialog = (props: ModalDialogProps) => {
         maskDisabled,
         closeOnlyBtn,
         closeDisabled,
+        data,
         onLoad,
         onOpen,
         onClose,
@@ -92,6 +95,7 @@ const ModalDialog = (props: ModalDialogProps) => {
     const PROTECT_FIXED_VIEWPORT =  typeof protectFixedViewport === 'undefined' ? true : protectFixedViewport;
 
     const [winShow, setWinShow] = useState<boolean>(false);
+    const [incomingData, setIncomingData] = useState<string | null | undefined>(null);
 
 
     function handleCloseWin(e: any) {
@@ -285,6 +289,11 @@ const ModalDialog = (props: ModalDialogProps) => {
 
     useEffect(() => {
 
+
+        // update incoming data
+        //------------------------------------------
+        setIncomingData(data);
+
  
         // Move HTML templates to tag end body </body>
         // render() don't use "Fragment", in order to avoid error "Failed to execute 'insertBefore' on 'Node'"
@@ -296,19 +305,29 @@ const ModalDialog = (props: ModalDialogProps) => {
                 document.body.appendChild(modalRef.current);
 
                 [].slice.call(modalRef.current.querySelectorAll('[data-close]')).forEach((node: HTMLElement) => {
-                    node.addEventListener('pointerdown', (e: any) => {
-                        handleCloseWin(e);
-                    });
+                    if ( typeof node.dataset.ev === 'undefined' ) {
+                        node.dataset.ev = 'true';
+                        node.addEventListener('pointerdown', (e: any) => {
+                            handleCloseWin(e);
+                        });
+                    }
+
                 });
                 [].slice.call(modalRef.current.querySelectorAll('[data-confirm]')).forEach((node: HTMLElement) => {
-                    node.addEventListener('pointerdown', (e: any) => {
-                        const callback = (e: any) => {
-                            return () => {
-                                handleCloseWin(e);
-                            }
-                        };
-                        onSubmit?.(e, callback(e));
-                    });
+                    if ( typeof node.dataset.ev === 'undefined' ) {
+                        node.dataset.ev = 'true';
+                        node.addEventListener('pointerdown', (e: any) => {
+                            const callback = (e: any) => {
+                                return () => {
+                                    handleCloseWin(e);
+                                }
+                            };
+
+                            const _incomingData = node.dataset.incomingData;
+                            onSubmit?.(e, callback(e), _incomingData);
+                        });
+                    }
+
                 });  
             }
             
@@ -347,6 +366,7 @@ const ModalDialog = (props: ModalDialogProps) => {
                 }
             };
             onOpen?.(null, callback(null));
+
         }
 
 
@@ -379,7 +399,8 @@ const ModalDialog = (props: ModalDialogProps) => {
 
         }
 
-    }, [show]);
+
+    }, [show, data]);
 
     return (
         <div>
@@ -414,15 +435,16 @@ const ModalDialog = (props: ModalDialogProps) => {
 
                         {closeBtnLabel || submitBtnLabel ? <>
                             <div className="modal-footer">
+
                                 {!closeDisabled ? <>{closeBtnLabel ? <button data-close="1" onClick={handleCloseWin} type="button" className={closeBtnClassName ? closeBtnClassName : 'btn btn-secondary'}>{closeBtnLabel}</button> : null}</> : null}
 
-                                {submitBtnLabel ? <button data-confirm="1" onClick={(e: any) => {
+                                {submitBtnLabel ? <button data-confirm="1" data-incoming-data={`${incomingData}`} onClick={(e: any) => {
                                     const callback = (e: any) => {
                                         return () => {
                                             handleCloseWin(e);
                                         }
                                     };
-                                    onSubmit?.(e, callback(e));
+                                    onSubmit?.(e, callback(e), incomingData);
                                 }} type="button" className={submitBtnClassName ? submitBtnClassName : 'btn btn-primary'}>{submitBtnLabel}</button> : null}
                             </div>
                         </> : null}

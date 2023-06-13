@@ -381,6 +381,7 @@ var ModalDialog = function ModalDialog(props) {
     maskDisabled = props.maskDisabled,
     closeOnlyBtn = props.closeOnlyBtn,
     closeDisabled = props.closeDisabled,
+    data = props.data,
     onLoad = props.onLoad,
     onOpen = props.onOpen,
     onClose = props.onClose,
@@ -396,6 +397,10 @@ var ModalDialog = function ModalDialog(props) {
     _useState2 = _slicedToArray(_useState, 2),
     winShow = _useState2[0],
     setWinShow = _useState2[1];
+  var _useState3 = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)(null),
+    _useState4 = _slicedToArray(_useState3, 2),
+    incomingData = _useState4[0],
+    setIncomingData = _useState4[1];
   function handleCloseWin(e) {
     if (typeof e !== 'undefined' && e !== null) e.preventDefault();
     closeAction();
@@ -543,6 +548,10 @@ var ModalDialog = function ModalDialog(props) {
     });
   }
   (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useEffect)(function () {
+    // update incoming data
+    //------------------------------------------
+    setIncomingData(data);
+
     // Move HTML templates to tag end body </body>
     // render() don't use "Fragment", in order to avoid error "Failed to execute 'insertBefore' on 'Node'"
     // prevent "transform", "filter", "perspective" attribute destruction fixed viewport orientation
@@ -551,19 +560,26 @@ var ModalDialog = function ModalDialog(props) {
       if (document.body !== null) {
         document.body.appendChild(modalRef.current);
         [].slice.call(modalRef.current.querySelectorAll('[data-close]')).forEach(function (node) {
-          node.addEventListener('pointerdown', function (e) {
-            handleCloseWin(e);
-          });
+          if (typeof node.dataset.ev === 'undefined') {
+            node.dataset.ev = 'true';
+            node.addEventListener('pointerdown', function (e) {
+              handleCloseWin(e);
+            });
+          }
         });
         [].slice.call(modalRef.current.querySelectorAll('[data-confirm]')).forEach(function (node) {
-          node.addEventListener('pointerdown', function (e) {
-            var callback = function callback(e) {
-              return function () {
-                handleCloseWin(e);
+          if (typeof node.dataset.ev === 'undefined') {
+            node.dataset.ev = 'true';
+            node.addEventListener('pointerdown', function (e) {
+              var callback = function callback(e) {
+                return function () {
+                  handleCloseWin(e);
+                };
               };
-            };
-            onSubmit === null || onSubmit === void 0 ? void 0 : onSubmit(e, callback(e));
-          });
+              var _incomingData = node.dataset.incomingData;
+              onSubmit === null || onSubmit === void 0 ? void 0 : onSubmit(e, callback(e), _incomingData);
+            });
+          }
         });
       }
     }
@@ -625,7 +641,7 @@ var ModalDialog = function ModalDialog(props) {
         }
       });
     };
-  }, [show]);
+  }, [show, data]);
   return /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", null, triggerContent ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
     className: triggerClassName ? triggerClassName : 'd-inline w-auto',
     ref: triggerRef,
@@ -672,13 +688,14 @@ var ModalDialog = function ModalDialog(props) {
     className: closeBtnClassName ? closeBtnClassName : 'btn btn-secondary'
   }, closeBtnLabel) : null) : null, submitBtnLabel ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("button", {
     "data-confirm": "1",
+    "data-incoming-data": "".concat(incomingData),
     onClick: function onClick(e) {
       var callback = function callback(e) {
         return function () {
           handleCloseWin(e);
         };
       };
-      onSubmit === null || onSubmit === void 0 ? void 0 : onSubmit(e, callback(e));
+      onSubmit === null || onSubmit === void 0 ? void 0 : onSubmit(e, callback(e), incomingData);
     },
     type: "button",
     className: submitBtnClassName ? submitBtnClassName : 'btn btn-primary'
