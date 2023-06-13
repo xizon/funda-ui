@@ -748,8 +748,10 @@ var CascadingSelectE2E = function CascadingSelectE2E(props) {
 
           // STEP 4: ===========
           // update result data
-          _allLables.push(newData[activedIndex].name);
-          _allValues.push(newData[activedIndex].id);
+          if (activedIndex !== -1) {
+            _allLables.push(newData[activedIndex].name);
+            _allValues.push(newData[activedIndex].id);
+          }
           _allColumnsData.push(newData);
         }
         if (col > 0) {
@@ -763,7 +765,9 @@ var CascadingSelectE2E = function CascadingSelectE2E(props) {
       // fetch all columns except the first
       //////////////////////////////////////////
       Promise.all(allFetch).then(function (values) {
-        values.forEach(function (colResponse, i) {
+        values.filter(function (v) {
+          return typeof v !== 'undefined';
+        }).forEach(function (colResponse, i) {
           var _CURRENT_COL_DATA = colResponse[0];
           var curDepth = i + 1;
 
@@ -799,6 +803,7 @@ var CascadingSelectE2E = function CascadingSelectE2E(props) {
             _allValues.push(newData[activedIndex].id);
           }
           _allColumnsData.push(newData);
+          return true;
         });
 
         // STEP 5: ===========

@@ -626,7 +626,7 @@ const CascadingSelectE2E = (props: CascadingSelectE2EProps) => {
                     activedIndex = _CHILDREN_DATA.findIndex((item: any) => {
                         return item[rowQueryAttr].toString() === targetVal[col].toString();
                     });
-    
+                    
                     markAllItems(newData);
                     markCurrent(newData, activedIndex);
     
@@ -642,8 +642,11 @@ const CascadingSelectE2E = (props: CascadingSelectE2EProps) => {
     
                     // STEP 4: ===========
                     // update result data
-                    _allLables.push(newData[activedIndex].name);
-                    _allValues.push(newData[activedIndex].id);
+                    if ( activedIndex !== -1 ) {
+                        _allLables.push(newData[activedIndex].name);
+                        _allValues.push(newData[activedIndex].id);
+                    }
+
                     _allColumnsData.push(newData);
     
 
@@ -662,9 +665,8 @@ const CascadingSelectE2E = (props: CascadingSelectE2EProps) => {
             //////////////////////////////////////////
             Promise.all(allFetch).then((values) => {
                 
-                values.forEach((colResponse: any, i: number) => {
+                values.filter((v: any) => typeof v !== 'undefined').forEach((colResponse: any, i: number) => {
     
-              
                     const _CURRENT_COL_DATA: any[] = colResponse[0];
                     const curDepth: number = i+1;
                     
@@ -707,6 +709,8 @@ const CascadingSelectE2E = (props: CascadingSelectE2EProps) => {
                     _allColumnsData.push(newData);
 
     
+                    return true;
+
                 });
     
              

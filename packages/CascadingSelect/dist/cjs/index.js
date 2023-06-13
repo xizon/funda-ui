@@ -584,7 +584,9 @@ var CascadingSelect = function CascadingSelect(props) {
             markCurrent(newData, activedIndex);
 
             //
-            _allLables.push(newData[activedIndex].name);
+            if (activedIndex !== -1) {
+              _allLables.push(newData[activedIndex].name);
+            }
             _allColumnsData.push(newData);
           }
           if (col > 0) {
@@ -604,7 +606,9 @@ var CascadingSelect = function CascadingSelect(props) {
             markCurrent(_newData, _activedIndex);
 
             //
-            _allLables.push(_newData[_activedIndex].name);
+            if (_activedIndex !== -1) {
+              _allLables.push(_newData[_activedIndex].name);
+            }
             _allColumnsData.push(_newData);
           }
         };

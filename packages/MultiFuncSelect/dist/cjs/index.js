@@ -370,7 +370,7 @@ var MultiFuncSelect = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forward
         while (1) switch (_context2.prev = _context2.next) {
           case 0:
             if (!(_typeof(fetchFuncAsync) === 'object')) {
-              _context2.next = 19;
+              _context2.next = 20;
               break;
             }
             _context2.next = 3;
@@ -398,6 +398,7 @@ var MultiFuncSelect = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forward
             filterResQueryLabel = _ORGIN_DATA.filter(function (item) {
               return item.label == defaultValue;
             });
+            filterRes = filterResQueryValue;
             if (filterResQueryValue.length === 0) filterRes = filterResQueryLabel;
             setControlLabel(typeof filterRes[0] !== 'undefined' ? filterRes[0].label : '');
 
@@ -410,7 +411,7 @@ var MultiFuncSelect = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forward
             //
             onFetch === null || onFetch === void 0 ? void 0 : onFetch(_ORGIN_DATA);
             return _context2.abrupt("return", _ORGIN_DATA);
-          case 19:
+          case 20:
             // value & label must be initialized
             setControlValue(defaultValue);
             _filterRes = [];
@@ -420,6 +421,7 @@ var MultiFuncSelect = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forward
             _filterResQueryLabel = optionsDataInit.filter(function (item) {
               return item.label == defaultValue;
             });
+            _filterRes = _filterResQueryValue;
             if (_filterResQueryValue.length === 0) _filterRes = _filterResQueryLabel;
             setControlLabel(typeof _filterRes[0] !== 'undefined' ? _filterRes[0].label : '');
 
@@ -429,7 +431,7 @@ var MultiFuncSelect = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forward
             //
             setOrginalData(optionsDataInit);
             return _context2.abrupt("return", optionsDataInit);
-          case 28:
+          case 30:
           case "end":
             return _context2.stop();
         }

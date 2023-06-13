@@ -486,7 +486,10 @@ const CascadingSelect = (props: CascadingSelectProps) => {
                         markCurrent(newData, activedIndex);
                         
                         //
-                        _allLables.push(newData[activedIndex].name);
+                        if ( activedIndex !== -1 ) {
+                            _allLables.push(newData[activedIndex].name);
+                        }
+                        
                         _allColumnsData.push(newData);
                         
                     } 
@@ -508,7 +511,10 @@ const CascadingSelect = (props: CascadingSelectProps) => {
                         markCurrent(newData, activedIndex);
                         
                         //
-                        _allLables.push(newData[activedIndex].name);
+                        if ( activedIndex !== -1 ) {
+                            _allLables.push(newData[activedIndex].name);
+                        } 
+                        
                         _allColumnsData.push(newData);
                       
                     } 
