@@ -26,6 +26,7 @@ import Input from 'react-pure-bootstrap/Input';
 | `iconLeft` | ReactNode  | - | Set the left icon of this control |
 | `iconRight` | ReactNode  | - | Set the right icon of this control |
 | `autoComplete` | string  | - | Turn off autocomplete for input fields. |
+| `onChangeCallback` | function  | - | Return value from `onChangeCallback` property to format the data of the control element, which will match the data structure of the component. <br >At the same time it returns the current control, you will use this function and use the `return` keyword to return a new value. |
 | `onChange` | function  | - | Call a function when the value of an HTML element is changed. It returns two callback values, one is the control and the other is the composition event (a boolean) |
 | `onBlur` | function  | - | Call a function when a user leaves an form field. It returns two callback values, one is the control and the other is the composition event (a boolean) |
 | `onFocus` | function  | - | Call a function when an form field gets focus. It returns two callback values, one is the control and the other is the composition event (a boolean) |
@@ -78,6 +79,19 @@ export default () => {
                 type="time"
                 step={60}
             />
+
+
+            <Input
+                name="name"
+                onChangeCallback={(e: any) => {
+                    // only numeric
+                    const newVal = e.target.value.replace(/[^0-9]/g, '');
+                    return newVal;
+                }}
+            />
+
+
+
 
         </>
     );

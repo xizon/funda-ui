@@ -158,7 +158,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
         var react__WEBPACK_IMPORTED_MODULE_0__ = __nested_webpack_require_1465__(787);
         /* harmony import */
         var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__nested_webpack_require_1465__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-        var _excluded = ["wrapperClassName", "controlClassName", "type", "disabled", "required", "placeholder", "readOnly", "value", "label", "units", "name", "step", "min", "max", "id", "maxLength", "iconLeft", "iconRight", "autoComplete", "style", "tabIndex", "onChange", "onBlur", "onFocus"];
+        var _excluded = ["wrapperClassName", "controlClassName", "type", "disabled", "required", "placeholder", "pattern", "readOnly", "value", "label", "units", "name", "step", "min", "max", "src", "size", "minLength", "maxLength", "alt", "id", "iconLeft", "iconRight", "autoComplete", "style", "tabIndex", "onChangeCallback", "onChange", "onBlur", "onFocus"];
         function _extends() {
           _extends = Object.assign ? Object.assign.bind() : function (target) {
             for (var i = 1; i < arguments.length; i++) {
@@ -256,6 +256,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
             disabled = props.disabled,
             required = props.required,
             placeholder = props.placeholder,
+            pattern = props.pattern,
             readOnly = props.readOnly,
             value = props.value,
             label = props.label,
@@ -264,13 +265,18 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
             step = props.step,
             min = props.min,
             max = props.max,
-            id = props.id,
+            src = props.src,
+            size = props.size,
+            minLength = props.minLength,
             maxLength = props.maxLength,
+            alt = props.alt,
+            id = props.id,
             iconLeft = props.iconLeft,
             iconRight = props.iconRight,
             autoComplete = props.autoComplete,
             style = props.style,
             tabIndex = props.tabIndex,
+            onChangeCallback = props.onChangeCallback,
             onChange = props.onChange,
             onBlur = props.onBlur,
             onFocus = props.onFocus,
@@ -314,6 +320,10 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 
             //
             onChange === null || onChange === void 0 ? void 0 : onChange(event, onComposition);
+            if (typeof onChangeCallback === 'function') {
+              var newData = onChangeCallback(event);
+              setChangedVal(newData);
+            }
           }
           function handleBlur(event) {
             var el = event.target;
@@ -365,11 +375,16 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
             className: controlClassName || controlClassName === '' ? controlClassName : "form-control",
             id: idRes,
             name: name,
-            step: step || 1,
-            min: min || '',
-            max: max || '',
+            step: step || null,
+            min: min || null,
+            max: max || null,
+            src: src || null,
+            size: size || null,
+            alt: alt || null,
+            pattern: pattern || null,
             placeholder: placeholder || '',
             value: changedVal,
+            minLength: minLength || null,
             maxLength: maxLength || null,
             autoComplete: autoComplete ? 'on' : 'off',
             onFocus: handleFocus,

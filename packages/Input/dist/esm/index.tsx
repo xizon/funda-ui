@@ -14,14 +14,19 @@ type InputProps = {
     label?: React.ReactNode | string;
     units?: string;
     name?: string;
-    step?: number;
-	min?: number;
-	max?: number;
+    step?: any;
+	min?: any;
+	max?: any;
+    src?: any;
+    size?: any;
+    minLength?: any;
     maxLength?: any;
+    alt?: any;
     disabled?: any;
     required?: any;
     readOnly?: any;
     placeholder?: string;
+    pattern?: any;
     iconLeft?: React.ReactNode | string;
     iconRight?: React.ReactNode | string;
     /** -- */
@@ -30,6 +35,7 @@ type InputProps = {
     autoComplete?: string;
     tabIndex?: number;
     [key: `data-${string}`]: string | undefined;
+    onChangeCallback?: (e: any) => void;
     onChange?: (e: any, param: any) => void;
     onBlur?: (e: any, param: any) => void;
     onFocus?: (e: any, param: any) => void;
@@ -45,6 +51,7 @@ const Input = forwardRef((props: InputProps, ref: any) => {
         disabled,
         required,
         placeholder,
+        pattern,
         readOnly,
         value,
         label,
@@ -53,13 +60,18 @@ const Input = forwardRef((props: InputProps, ref: any) => {
         step,
         min,
         max,
-        id,
+        src,
+        size,
+        minLength,
         maxLength,
+        alt,
+        id,
         iconLeft,
         iconRight,
         autoComplete,
         style,
         tabIndex,
+        onChangeCallback,
         onChange,
         onBlur,
         onFocus,
@@ -106,6 +118,11 @@ const Input = forwardRef((props: InputProps, ref: any) => {
 
         //
         onChange?.(event, onComposition);
+        if (typeof (onChangeCallback) === 'function') {
+            const newData: any = onChangeCallback(event);
+            setChangedVal(newData);
+        }
+
     }
 
     function handleBlur(event: any) {
@@ -166,11 +183,16 @@ const Input = forwardRef((props: InputProps, ref: any) => {
                         className={controlClassName || controlClassName === '' ? controlClassName : "form-control"}
                         id={idRes}
                         name={name}
-                        step={step || 1}
-                        min={min || ''}
-                        max={max || ''}
+                        step={step || null}
+                        min={min || null}
+                        max={max || null}
+                        src={src || null}
+                        size={size || null}
+                        alt={alt || null}
+                        pattern={pattern || null}
                         placeholder={placeholder || ''}
                         value={changedVal}
+                        minLength={minLength || null}
                         maxLength={maxLength || null}
                         autoComplete={autoComplete ? 'on' : 'off'}
                         onFocus={handleFocus}

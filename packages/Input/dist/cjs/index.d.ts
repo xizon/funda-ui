@@ -12,14 +12,19 @@ declare type InputProps = {
     label?: React.ReactNode | string;
     units?: string;
     name?: string;
-    step?: number;
-    min?: number;
-    max?: number;
+    step?: any;
+    min?: any;
+    max?: any;
+    src?: any;
+    size?: any;
+    minLength?: any;
     maxLength?: any;
+    alt?: any;
     disabled?: any;
     required?: any;
     readOnly?: any;
     placeholder?: string;
+    pattern?: any;
     iconLeft?: React.ReactNode | string;
     iconRight?: React.ReactNode | string;
     /** -- */
@@ -28,6 +33,7 @@ declare type InputProps = {
     autoComplete?: string;
     tabIndex?: number;
     [key: `data-${string}`]: string | undefined;
+    onChangeCallback?: (e: any) => void;
     onChange?: (e: any, param: any) => void;
     onBlur?: (e: any, param: any) => void;
     onFocus?: (e: any, param: any) => void;
