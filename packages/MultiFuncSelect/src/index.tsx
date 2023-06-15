@@ -26,6 +26,8 @@ type MultiFuncSelectProps = {
     /** Set the depth value of the control to control the display of the pop-up layer appear above.
      * Please set it when multiple controls are used at the same time. */
     depth?: number;
+    /** Incoming data, you can set the third parameter of `onFetch` */
+    data?: string;
     /** -- */
     id?: string;
     style?: React.CSSProperties;
@@ -36,7 +38,7 @@ type MultiFuncSelectProps = {
     fetchFuncMethod?: string;
     fetchFuncMethodParams?: any[];
     fetchCallback?: (data: any) => void;
-    onFetch?: (data: any) => void;
+    onFetch?: (data: any, incomingData: string | null | undefined) => void;
     onSelect?: (data: any) => void;
     onChange?: MultiFuncSelectOptionChangeFnType | null;
     onBlur?: (e: any) => void;
@@ -64,6 +66,7 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
         fetchFuncAsync,
         fetchFuncMethod,
         fetchFuncMethodParams,
+        data,
         fetchCallback,
         onFetch,
         onSelect,
@@ -90,13 +93,14 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
    
     //
     const [orginalData, setOrginalData] = useState<any[]>(optionsDataInit);
-    const [data, setData] = useState<any[]>(optionsDataInit);
+    const [optionsData, setOptionsData] = useState<any[]>(optionsDataInit);
     const [hasErr, setHasErr] = useState<boolean>(false);
     const [controlLabel, setControlLabel] = useState<string | undefined>('');
     const [controlValue, setControlValue] = useState<string | undefined>('');
     const [controlTempValue, setControlTempValue] = useState<string | null>(null);
     const [isOpen, setIsOpen] = useState<boolean>(false);
     const [listContentHeight, setListContentHeight] = useState<number>(0);
+    const [incomingData, setIncomingData] = useState<string | null | undefined>(null);
 
     
 
@@ -291,13 +295,13 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
             
 
             //
-            setData(_ORGIN_DATA); // data must be initialized
+            setOptionsData(_ORGIN_DATA); // data must be initialized
 
             //
             setOrginalData(_ORGIN_DATA);
 
             //
-            onFetch?.(_ORGIN_DATA);
+            onFetch?.(_ORGIN_DATA, incomingData);
 
         
             return _ORGIN_DATA;
@@ -318,7 +322,7 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
             
 
             //
-            setData(optionsDataInit); // data must be initialized
+            setOptionsData(optionsDataInit); // data must be initialized
 
             //
             setOrginalData(optionsDataInit);   
@@ -334,7 +338,7 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
         setIsOpen(false);
 
         // restore data
-        setData(orginalData);
+        setOptionsData(orginalData);
         
         // update temporary value
         setControlTempValue(null);
@@ -345,7 +349,7 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
         setIsOpen(true);
 
         // restore data
-        setData(orginalData);
+        setOptionsData(orginalData);
 
         // update temporary value
         setControlTempValue('');
@@ -377,11 +381,11 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
         } else {
             
             index = typeof el.target !== 'undefined' ? el.target.dataset.index : el.dataset.index;
-            setControlValue(data[index as never].value); 
-            setControlLabel(data[index as never].label); 
+            setControlValue(optionsData[index as never].value); 
+            setControlLabel(optionsData[index as never].label); 
 
             if ( typeof(onChange) === 'function' ) {
-                onChange?.(selectInputRef.current, data[index as never]);
+                onChange?.(selectInputRef.current, optionsData[index as never]);
                 selectInputRef.current.blur();
             }            
         }
@@ -425,7 +429,7 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
         if ( val === '' ) {
             // No elements found. Consider changing the search query.
             // restore data
-            setData(orginalData);
+            setOptionsData(orginalData);
         } else {
 
             const filterRes = (data: any[]) => {
@@ -445,7 +449,7 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
                 });
             }
 
-            setData(filterRes);
+            setOptionsData(filterRes);
         }
 
         // window position
@@ -531,6 +535,10 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
 
 
     useEffect(() => {
+
+        // update incoming data
+        //------------------------------------------
+        setIncomingData(data);        
   
         // data init
         //--------------
@@ -630,7 +638,7 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
 
 
 
-    }, [value, options]);
+    }, [value, options, data]);
 
 
     return (
@@ -699,17 +707,17 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
                     </div>
 
 
-                    {data && !hasErr ? <>
+                    {optionsData && !hasErr ? <>
                     <div ref={listRef} className="list-group position-absolute w-100 border shadow small" style={{ marginTop: '0.2rem', zIndex: (depth ? depth : 100), display: isOpen ? 'block' : 'none'}} role="tablist">
 
-                        {controlTempValue !== null && data.length === 0 ? <>
+                        {controlTempValue !== null && optionsData.length === 0 ? <>
                             <button tabIndex={-1} type="button" className="list-group-item list-group-item-action no-match" disabled>{fetchNoneInfo || 'No match yet'}</button>
                         </> : <>
                             <div className="rounded" style={{backgroundColor: 'var(--bs-list-group-bg)'}} ref={listContentRef}>
 
-                                {data ? data.map((item, index) => {
+                                {optionsData ? optionsData.map((item, index) => {
                                     const startItemBorder = index === 0 ? 'border-top-0' : '';
-                                    const endItemBorder = index === data.length - 1 ? 'border-bottom-0' : '';
+                                    const endItemBorder = index === optionsData.length - 1 ? 'border-bottom-0' : '';
 
                                     return <button tabIndex={-1} onClick={handleSelect} type="button" data-index={index} key={index} className={`list-group-item list-group-item-action border-start-0 border-end-0 ${startItemBorder} ${endItemBorder} border-bottom-0`} data-value={`${item.value}`} data-label={`${item.label}`} data-letter={`${item.letter}`} role="tab" dangerouslySetInnerHTML={{
                                         __html: item.label

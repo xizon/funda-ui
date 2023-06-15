@@ -151,7 +151,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _utils_performance__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(342);
 /* harmony import */ var _utils_performance__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_utils_performance__WEBPACK_IMPORTED_MODULE_1__);
-var _excluded = ["wrapperClassName", "controlClassName", "disabled", "required", "value", "label", "name", "readOnly", "placeholder", "id", "options", "style", "depth", "controlArrow", "tabIndex", "fetchNoneInfo", "fetchFuncAsync", "fetchFuncMethod", "fetchFuncMethodParams", "fetchCallback", "onFetch", "onSelect", "onChange", "onBlur", "onFocus"];
+var _excluded = ["wrapperClassName", "controlClassName", "disabled", "required", "value", "label", "name", "readOnly", "placeholder", "id", "options", "style", "depth", "controlArrow", "tabIndex", "fetchNoneInfo", "fetchFuncAsync", "fetchFuncMethod", "fetchFuncMethodParams", "data", "fetchCallback", "onFetch", "onSelect", "onChange", "onBlur", "onFocus"];
 function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
 function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
 function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter); }
@@ -196,6 +196,7 @@ var MultiFuncSelect = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forward
     fetchFuncAsync = props.fetchFuncAsync,
     fetchFuncMethod = props.fetchFuncMethod,
     fetchFuncMethodParams = props.fetchFuncMethodParams,
+    data = props.data,
     fetchCallback = props.fetchCallback,
     onFetch = props.onFetch,
     onSelect = props.onSelect,
@@ -223,8 +224,8 @@ var MultiFuncSelect = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forward
     setOrginalData = _useState2[1];
   var _useState3 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(optionsDataInit),
     _useState4 = _slicedToArray(_useState3, 2),
-    data = _useState4[0],
-    setData = _useState4[1];
+    optionsData = _useState4[0],
+    setOptionsData = _useState4[1];
   var _useState5 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(false),
     _useState6 = _slicedToArray(_useState5, 2),
     hasErr = _useState6[0],
@@ -249,6 +250,10 @@ var MultiFuncSelect = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forward
     _useState16 = _slicedToArray(_useState15, 2),
     listContentHeight = _useState16[0],
     setListContentHeight = _useState16[1];
+  var _useState17 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(null),
+    _useState18 = _slicedToArray(_useState17, 2),
+    incomingData = _useState18[0],
+    setIncomingData = _useState18[1];
 
   /**
    * Check if an element is in the viewport
@@ -403,13 +408,13 @@ var MultiFuncSelect = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forward
             setControlLabel(typeof filterRes[0] !== 'undefined' ? filterRes[0].label : '');
 
             //
-            setData(_ORGIN_DATA); // data must be initialized
+            setOptionsData(_ORGIN_DATA); // data must be initialized
 
             //
             setOrginalData(_ORGIN_DATA);
 
             //
-            onFetch === null || onFetch === void 0 ? void 0 : onFetch(_ORGIN_DATA);
+            onFetch === null || onFetch === void 0 ? void 0 : onFetch(_ORGIN_DATA, incomingData);
             return _context2.abrupt("return", _ORGIN_DATA);
           case 20:
             // value & label must be initialized
@@ -426,7 +431,7 @@ var MultiFuncSelect = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forward
             setControlLabel(typeof _filterRes[0] !== 'undefined' ? _filterRes[0].label : '');
 
             //
-            setData(optionsDataInit); // data must be initialized
+            setOptionsData(optionsDataInit); // data must be initialized
 
             //
             setOrginalData(optionsDataInit);
@@ -444,7 +449,7 @@ var MultiFuncSelect = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forward
     setIsOpen(false);
 
     // restore data
-    setData(orginalData);
+    setOptionsData(orginalData);
 
     // update temporary value
     setControlTempValue(null);
@@ -454,7 +459,7 @@ var MultiFuncSelect = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forward
     setIsOpen(true);
 
     // restore data
-    setData(orginalData);
+    setOptionsData(orginalData);
 
     // update temporary value
     setControlTempValue('');
@@ -492,10 +497,10 @@ var MultiFuncSelect = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forward
               }
             } else {
               index = typeof el.target !== 'undefined' ? el.target.dataset.index : el.dataset.index;
-              setControlValue(data[index].value);
-              setControlLabel(data[index].label);
+              setControlValue(optionsData[index].value);
+              setControlLabel(optionsData[index].label);
               if (typeof onChange === 'function') {
-                onChange === null || onChange === void 0 ? void 0 : onChange(selectInputRef.current, data[index]);
+                onChange === null || onChange === void 0 ? void 0 : onChange(selectInputRef.current, optionsData[index]);
                 selectInputRef.current.blur();
               }
             }
@@ -535,7 +540,7 @@ var MultiFuncSelect = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forward
     if (val === '') {
       // No elements found. Consider changing the search query.
       // restore data
-      setData(orginalData);
+      setOptionsData(orginalData);
     } else {
       var filterRes = function filterRes(data) {
         return orginalData.filter(function (item) {
@@ -550,7 +555,7 @@ var MultiFuncSelect = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forward
           }
         });
       };
-      setData(filterRes);
+      setOptionsData(filterRes);
     }
 
     // window position
@@ -613,6 +618,10 @@ var MultiFuncSelect = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forward
     });
   }
   (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(function () {
+    // update incoming data
+    //------------------------------------------
+    setIncomingData(data);
+
     // data init
     //--------------
     var _params = fetchFuncMethodParams || [];
@@ -713,7 +722,7 @@ var MultiFuncSelect = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forward
       window.removeEventListener('scroll', windowScrollUpdate);
       window.removeEventListener('touchmove', windowScrollUpdate);
     };
-  }, [value, options]);
+  }, [value, options, data]);
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
     id: "multifunc-select__wrapper-".concat(idRes),
     className: isOpen ? "multifunc-select__wrapper ".concat(wrapperClassName || wrapperClassName === '' ? wrapperClassName : 'mb-3 position-relative', " active") : "multifunc-select__wrapper ".concat(wrapperClassName || wrapperClassName === '' ? wrapperClassName : 'mb-3 position-relative'),
@@ -787,7 +796,7 @@ var MultiFuncSelect = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forward
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("path", {
     d: "M144,6525.39 L142.594,6524 L133.987,6532.261 L133.069,6531.38 L133.074,6531.385 L125.427,6524.045 L124,6525.414 C126.113,6527.443 132.014,6533.107 133.987,6535 C135.453,6533.594 134.024,6534.965 144,6525.39",
     id: "arrow_down-[#339]"
-  }))))))), data && !hasErr ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+  }))))))), optionsData && !hasErr ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
     ref: listRef,
     className: "list-group position-absolute w-100 border shadow small",
     style: {
@@ -796,7 +805,7 @@ var MultiFuncSelect = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forward
       display: isOpen ? 'block' : 'none'
     },
     role: "tablist"
-  }, controlTempValue !== null && data.length === 0 ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", {
+  }, controlTempValue !== null && optionsData.length === 0 ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", {
     tabIndex: -1,
     type: "button",
     className: "list-group-item list-group-item-action no-match",
@@ -807,9 +816,9 @@ var MultiFuncSelect = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forward
       backgroundColor: 'var(--bs-list-group-bg)'
     },
     ref: listContentRef
-  }, data ? data.map(function (item, index) {
+  }, optionsData ? optionsData.map(function (item, index) {
     var startItemBorder = index === 0 ? 'border-top-0' : '';
-    var endItemBorder = index === data.length - 1 ? 'border-bottom-0' : '';
+    var endItemBorder = index === optionsData.length - 1 ? 'border-bottom-0' : '';
     return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", {
       tabIndex: -1,
       onClick: handleSelect,

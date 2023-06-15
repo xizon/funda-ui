@@ -20,6 +20,8 @@ declare type MultiFuncSelectProps = {
     /** Set the depth value of the control to control the display of the pop-up layer appear above.
      * Please set it when multiple controls are used at the same time. */
     depth?: number;
+    /** Incoming data, you can set the third parameter of `onFetch` */
+    data?: string;
     /** -- */
     id?: string;
     style?: React.CSSProperties;
@@ -30,7 +32,7 @@ declare type MultiFuncSelectProps = {
     fetchFuncMethod?: string;
     fetchFuncMethodParams?: any[];
     fetchCallback?: (data: any) => void;
-    onFetch?: (data: any) => void;
+    onFetch?: (data: any, incomingData: string | null | undefined) => void;
     onSelect?: (data: any) => void;
     onChange?: MultiFuncSelectOptionChangeFnType | null;
     onBlur?: (e: any) => void;
