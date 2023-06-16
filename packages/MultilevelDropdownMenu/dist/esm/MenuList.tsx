@@ -61,8 +61,11 @@ export default function MenuList(props: MenuListProps) {
 
         // init <ul> height
         [].slice.call(ul).forEach(function(el: any){
-            const calcH = el.querySelectorAll('li').length * el.querySelectorAll('li')[0].scrollHeight;
-            el.style.maxHeight = `${calcH}px`;
+            if ( typeof el.querySelectorAll('li')[0] !== 'undefined' ) {
+                const calcH = el.querySelectorAll('li').length * el.querySelectorAll('li')[0].scrollHeight;
+                el.style.maxHeight = `${calcH}px`;
+            }
+
         });
 
     };
@@ -165,8 +168,11 @@ export default function MenuList(props: MenuListProps) {
                 // init <ul> height
                 const ul = getNextSiblings(hyperlink.el, 'ul');
                 [].slice.call(ul).forEach(function(el: any){
-                    const calcH = el.querySelectorAll('li').length * el.querySelectorAll('li')[0].scrollHeight;
-                    el.style.maxHeight = `${calcH}px`;
+                    if ( typeof el.querySelectorAll('li')[0] !== 'undefined' ) {
+                        const calcH = el.querySelectorAll('li').length * el.querySelectorAll('li')[0].scrollHeight;
+                        el.style.maxHeight = `${calcH}px`;
+                    }
+
                 });
             }
 

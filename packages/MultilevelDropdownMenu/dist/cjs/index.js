@@ -255,8 +255,10 @@ function MenuList(props) {
 
     // init <ul> height
     [].slice.call(ul).forEach(function (el) {
-      var calcH = el.querySelectorAll('li').length * el.querySelectorAll('li')[0].scrollHeight;
-      el.style.maxHeight = "".concat(calcH, "px");
+      if (typeof el.querySelectorAll('li')[0] !== 'undefined') {
+        var calcH = el.querySelectorAll('li').length * el.querySelectorAll('li')[0].scrollHeight;
+        el.style.maxHeight = "".concat(calcH, "px");
+      }
     });
   };
   function handleClick(e) {
@@ -338,8 +340,10 @@ function MenuList(props) {
         // init <ul> height
         var ul = (0,dom.getNextSiblings)(hyperlink.el, 'ul');
         [].slice.call(ul).forEach(function (el) {
-          var calcH = el.querySelectorAll('li').length * el.querySelectorAll('li')[0].scrollHeight;
-          el.style.maxHeight = "".concat(calcH, "px");
+          if (typeof el.querySelectorAll('li')[0] !== 'undefined') {
+            var calcH = el.querySelectorAll('li').length * el.querySelectorAll('li')[0].scrollHeight;
+            el.style.maxHeight = "".concat(calcH, "px");
+          }
         });
       }
     });

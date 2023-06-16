@@ -18,6 +18,7 @@ import Tree from 'react-pure-bootstrap/Tree';
 | `arrow` | ReactNode  | `<svg width="0.75em" height="0.75em" viewBox="0 0 20 20" fill="none"><path d="M15.795 11.272L7.795 16.272C6.79593 16.8964 5.5 16.1782 5.5 15L5.5 5.00002C5.5 3.82186 6.79593 3.1036 7.795 3.72802L15.795 8.72802C16.735 9.31552 16.735 10.6845 15.795 11.272Z" fill="currentColor"/></svg>` | Set an arrow of control |
 | `arrowIcons` | React.ReactNode[] | - | Set collapse/expand icon. Use an array to set two icons, if only one is set, the icon animation is activated, and if two are set, the animation is canceled. <br /> such as: `[<><svg width="1em" height="1em" viewBox="0 0 24 24">...</svg></>,<><svg width="1em" height="1em" viewBox="0 0 24 24">...</svg></>]` <blockquote>`arrow` will have no effect when using this attribute.</blockquote> |
 | `disableArrow` | boolean | false | Disable arrow. |
+| `disableCollapse` | boolean | false | Disable the collapse effect. |
 | `data` | array | - | Specify data of Cascading DropDown List as a JSON string format. Such as: <br />`[{title:"Top level 1",link:"#",slug:'level-1'},{title:"Top level 2",link:"/s",slug:'level-2',},{title:"Top level 3",link:"https://example.com",slug:'level-3',active:true,children:[{title:"Sub level 3_1",link:"#3-1",slug:'level-3_1'},{title:"Sub level 3_2",link:"#3-2",slug:'level-3_2'},{title:"Sub level 3_3",link:"#3-3",slug:'level-3_3'}]},{title:"Top level 4 (heading)",link:"#",slug:'level-4',}]` |
 | `onSelect` | function  | - | Call a function when clicking an item. It returns three callback values, one is the current hyperlink and the second is the data (JSON Object), the last is a callback function, which can initiate an asynchronous request to load children (usage: Please refer to the documentation example). |
 | `onCollapse` | function  | - | Call a function when collapsing/expanding. The return value is same with `onSelect`. <blockquote>When `disableArrow` is "true", click on the content to trigger it</blockquote> |
@@ -185,6 +186,16 @@ export default () => {
             }} 
         />
 
+        <Tree 
+            data={treeData} 
+            showLine={false}
+            disableArrow={true}
+            disableCollapse={true}
+            onSelect={(e, val) => {
+                console.log(val);
+            }} 
+        />
+        
 
         <Tree
             data={treeData}

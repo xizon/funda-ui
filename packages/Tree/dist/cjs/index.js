@@ -656,6 +656,7 @@ function TreeList(props) {
     alternateCollapse = props.alternateCollapse,
     first = props.first,
     disableArrow = props.disableArrow,
+    disableCollapse = props.disableCollapse,
     arrow = props.arrow,
     arrowIcons = props.arrowIcons,
     childClassName = props.childClassName,
@@ -808,11 +809,14 @@ function TreeList(props) {
 
     // init <ul> height
     [].slice.call(ul).forEach(function (el) {
-      var calcH = el.querySelectorAll('li').length * el.querySelectorAll('li')[0].scrollHeight;
-      el.style.maxHeight = "".concat(calcH, "px");
+      if (typeof el.querySelectorAll('li')[0] !== 'undefined') {
+        var calcH = el.querySelectorAll('li').length * el.querySelectorAll('li')[0].scrollHeight;
+        el.style.maxHeight = "".concat(calcH, "px");
+      }
     });
   };
   function handleCollapse(e) {
+    if (disableCollapse) return;
     e.preventDefault();
     var hyperlink = e.currentTarget;
     var url = hyperlink.getAttribute('href');
@@ -922,8 +926,10 @@ function TreeList(props) {
         // init <ul> height
         var ul = (0,dom.getNextSiblings)(hyperlink.el, 'ul');
         [].slice.call(ul).forEach(function (el) {
-          var calcH = el.querySelectorAll('li').length * el.querySelectorAll('li')[0].scrollHeight;
-          el.style.maxHeight = "".concat(calcH, "px");
+          if (typeof el.querySelectorAll('li')[0] !== 'undefined') {
+            var calcH = el.querySelectorAll('li').length * el.querySelectorAll('li')[0].scrollHeight;
+            el.style.maxHeight = "".concat(calcH, "px");
+          }
         });
       }
     });
@@ -968,7 +974,7 @@ function TreeList(props) {
       return /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("li", {
         key: item.key,
         className: item.active ? 'nav-item active' : 'nav-item'
-      }, item.children || item.childrenAsync ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("span", {
+      }, item.children && item.children.length || item.childrenAsync ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("span", {
         "aria-expanded": item.active ? 'true' : 'false',
         className: item.active ? "arrow active ".concat(_async, " ").concat(_cusIcons) : "arrow ".concat(_async, " ").concat(_cusIcons),
         onClick: handleCollapse,
@@ -1059,7 +1065,6 @@ function TreeList(props) {
         }
       })), /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("a", {
         tabIndex: -1,
-        title: item.title,
         className: item.active ? "nav-link active ".concat(_async) : "nav-link ".concat(_async),
         href: item.link === '#' ? "".concat(item.link, "-").concat(i) : item.link,
         "aria-expanded": "false",
@@ -1077,7 +1082,7 @@ function TreeList(props) {
         dangerouslySetInnerHTML: {
           __html: "".concat(item.title)
         }
-      }), titleArrowGenerator())), item.children && /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement(TreeList, {
+      }), titleArrowGenerator())), item.children && item.children.length > 0 && /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement(TreeList, {
         checkboxNamePrefix: checkboxNamePrefix,
         data: item.children,
         first: false,
@@ -1086,6 +1091,7 @@ function TreeList(props) {
         onCollapse: onCollapse,
         onCheck: onCheck,
         disableArrow: disableArrow,
+        disableCollapse: disableCollapse,
         arrowIcons: arrowIcons,
         evInitValue: evInitValue,
         getCheckedPrint: getCheckedPrint,
@@ -1127,6 +1133,7 @@ var Tree = function Tree(props) {
     lineStyle = props.lineStyle,
     alternateCollapse = props.alternateCollapse,
     disableArrow = props.disableArrow,
+    disableCollapse = props.disableCollapse,
     arrow = props.arrow,
     arrowIcons = props.arrowIcons,
     treeClassName = props.treeClassName,
@@ -1150,7 +1157,7 @@ var Tree = function Tree(props) {
     _useState6 = src_slicedToArray(_useState5, 2),
     checkedData = _useState6[0],
     setCheckedData = _useState6[1];
-  var expandClassName = "".concat(showLine ? 'show-line' : '', " ").concat(disableArrow ? 'hide-arrow' : '', " ").concat(lineStyle ? "line--".concat(lineStyle) : '', " ").concat(checkable ? 'has-checkbox' : '');
+  var expandClassName = "".concat(showLine ? 'show-line' : '', " ").concat(disableArrow ? 'hide-arrow' : '', " ").concat(disableCollapse ? 'collapse-disabled' : '', " ").concat(lineStyle ? "line--".concat(lineStyle) : '', " ").concat(checkable ? 'has-checkbox' : '');
   var updateTreeData = function updateTreeData(list, key, children) {
     return list ? list.map(function (node) {
       if (node.key === key) {
@@ -1318,6 +1325,7 @@ var Tree = function Tree(props) {
     alternateCollapse: alternateCollapse,
     first: true,
     disableArrow: disableArrow,
+    disableCollapse: disableCollapse,
     arrow: arrow,
     arrowIcons: arrowIcons,
     data: val,

@@ -47,6 +47,8 @@ type TreeProps = {
     arrowIcons?: React.ReactNode[];
     /** Disable arrow */
     disableArrow?: boolean;
+    /** Disable the collapse effect */
+    disableCollapse?: boolean;
     /** The class name of the tree. */
     treeClassName?: string;
     /** The class name of the child on <ul>. */
@@ -69,6 +71,7 @@ const Tree = (props: TreeProps) => {
         lineStyle,
         alternateCollapse,
         disableArrow,
+        disableCollapse,
         arrow,
         arrowIcons,
         treeClassName,
@@ -85,9 +88,9 @@ const Tree = (props: TreeProps) => {
     const [val, setVal] = useState<DataNode[] | null>(null);
     const [checkedPrint, setCheckedPrint] = useState<any[]>([]);
     const [checkedData, setCheckedData] = useState<any[]>([]);
-    const expandClassName = `${showLine ? 'show-line' : ''} ${disableArrow ? 'hide-arrow' : ''} ${lineStyle ? `line--${lineStyle}` : ''} ${checkable ? 'has-checkbox' : ''}`;
+    const expandClassName = `${showLine ? 'show-line' : ''} ${disableArrow ? 'hide-arrow' : ''} ${disableCollapse ? 'collapse-disabled' : ''} ${lineStyle ? `line--${lineStyle}` : ''} ${checkable ? 'has-checkbox' : ''}`;
 
-
+    
     const updateTreeData = (list: DataNode[] | null, key: React.Key, children: DataNode[]): DataNode[] => {
         
         return list ? list.map((node) => {
@@ -257,6 +260,7 @@ const Tree = (props: TreeProps) => {
                     alternateCollapse={alternateCollapse}
                     first={true}
                     disableArrow={disableArrow}
+                    disableCollapse={disableCollapse}
                     arrow={arrow}
                     arrowIcons={arrowIcons}
                     data={val} 

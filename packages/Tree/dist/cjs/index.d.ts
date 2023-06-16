@@ -19,6 +19,8 @@ declare type TreeProps = {
     arrowIcons?: React.ReactNode[];
     /** Disable arrow */
     disableArrow?: boolean;
+    /** Disable the collapse effect */
+    disableCollapse?: boolean;
     /** The class name of the tree. */
     treeClassName?: string;
     /** The class name of the child on <ul>. */

@@ -2,6 +2,7 @@ import React, { useEffect, useRef } from 'react';
 
 import Checkbox from 'rpb-checkbox';
 
+
 import { getNextSiblings, getParents, getChildren } from './utils/dom'; 
 
 interface fetchConfig {
@@ -19,6 +20,7 @@ type TreeListProps = {
     alternateCollapse?: boolean;
     first?: boolean;
     disableArrow?: boolean;
+    disableCollapse?: boolean;
     arrow?: React.ReactNode;
     arrowIcons?: React.ReactNode[];
     childClassName?: string;
@@ -40,6 +42,7 @@ export default function TreeList(props: TreeListProps) {
         alternateCollapse,
         first,
         disableArrow,
+        disableCollapse,
         arrow,
         arrowIcons,
         childClassName,
@@ -180,13 +183,18 @@ export default function TreeList(props: TreeListProps) {
 
         // init <ul> height
         [].slice.call(ul).forEach(function(el: any){
-            const calcH = el.querySelectorAll('li').length * el.querySelectorAll('li')[0].scrollHeight;
-            el.style.maxHeight = `${calcH}px`;
+            if ( typeof el.querySelectorAll('li')[0] !== 'undefined' ) {
+                const calcH = el.querySelectorAll('li').length * el.querySelectorAll('li')[0].scrollHeight;
+                el.style.maxHeight = `${calcH}px`;       
+            }
+
         });
 
     };
 
     function handleCollapse(e: any) {
+        if ( disableCollapse ) return;
+
         e.preventDefault();
         const hyperlink = e.currentTarget;
         const url = hyperlink.getAttribute('href');
@@ -317,8 +325,11 @@ export default function TreeList(props: TreeListProps) {
                 // init <ul> height
                 const ul = getNextSiblings(hyperlink.el, 'ul');
                 [].slice.call(ul).forEach(function(el: any){
-                    const calcH = el.querySelectorAll('li').length * el.querySelectorAll('li')[0].scrollHeight;
-                    el.style.maxHeight = `${calcH}px`;
+                    if ( typeof el.querySelectorAll('li')[0] !== 'undefined' ) {
+                        const calcH = el.querySelectorAll('li').length * el.querySelectorAll('li')[0].scrollHeight;
+                        el.style.maxHeight = `${calcH}px`;
+                    }
+
                 });
             }
 
@@ -328,8 +339,7 @@ export default function TreeList(props: TreeListProps) {
         // Initialize indeterminate status of all checkboxes 
         //=====================
         setCheckboxIndeterminateStatus(getCheckedData as never, getCheckedPrint as never, null);
-                                        
-
+                                
 
     }, [data]);
 
@@ -356,7 +366,7 @@ export default function TreeList(props: TreeListProps) {
                     return (
                         <li key={item.key} className={item.active ? 'nav-item active' : 'nav-item'}>
 
-                            {item.children || item.childrenAsync ? <span aria-expanded={item.active ? 'true' : 'false'} className={item.active ? `arrow active ${_async} ${_cusIcons}` : `arrow ${_async} ${_cusIcons}`} onClick={handleCollapse} data-link={item.link} data-slug={item.slug} data-key={item.key}>{arrowGenerator()}</span> : ''}
+                            {(item.children && item.children.length) || item.childrenAsync ? <span aria-expanded={item.active ? 'true' : 'false'} className={item.active ? `arrow active ${_async} ${_cusIcons}` : `arrow ${_async} ${_cusIcons}`} onClick={handleCollapse} data-link={item.link} data-slug={item.slug} data-key={item.key}>{arrowGenerator()}</span> : ''}
 
                             <span className="checkbox-trigger">
                                 <Checkbox
@@ -443,10 +453,10 @@ export default function TreeList(props: TreeListProps) {
                                 />
                             </span>
                             
-                            <a tabIndex={-1} title={item.title} className={item.active ? `nav-link active ${_async}` : `nav-link ${_async}`} href={item.link === '#' ? `${item.link}-${i}` : item.link} aria-expanded="false" onClick={handleClick} data-link={item.link} data-slug={item.slug} data-key={item.key}>
+                            <a tabIndex={-1} className={item.active ? `nav-link active ${_async}` : `nav-link ${_async}`} href={item.link === '#' ? `${item.link}-${i}` : item.link} aria-expanded="false" onClick={handleClick} data-link={item.link} data-slug={item.slug} data-key={item.key}>
                                 <span>{item.icon ? item.icon.indexOf('</svg>') < 0 ? <><i className={item.icon}></i> </> : <var dangerouslySetInnerHTML={{ __html: `${item.icon}` }} /> : null}<i dangerouslySetInnerHTML={{ __html: `${item.title}` }}></i>{titleArrowGenerator()}</span>
                             </a>
-                            {item.children && <TreeList 
+                            {item.children && item.children.length > 0 && <TreeList 
                                                 checkboxNamePrefix={checkboxNamePrefix}
                                                 data={item.children} 
                                                 first={false} 
@@ -455,6 +465,7 @@ export default function TreeList(props: TreeListProps) {
                                                 onCollapse={onCollapse} 
                                                 onCheck={onCheck}
                                                 disableArrow={disableArrow} 
+                                                disableCollapse={disableCollapse}
                                                 arrowIcons={arrowIcons} 
                                                 evInitValue={evInitValue} 
                                                 getCheckedPrint={getCheckedPrint}
