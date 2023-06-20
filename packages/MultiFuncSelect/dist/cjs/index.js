@@ -208,6 +208,9 @@ var MultiFuncSelect = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forward
   var uniqueID = (0,react__WEBPACK_IMPORTED_MODULE_0__.useId)().replace(/\:/g, "-");
   var idRes = id || uniqueID;
   var rootRef = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(null);
+  var rootSingleRef = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(null);
+  var rootMultiRef = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(null);
+  var multiListPlaceholderRef = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(null);
   var selectInputRef = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(null);
   var valueInputRef = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(null);
   var listRef = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(null);
@@ -270,7 +273,7 @@ var MultiFuncSelect = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forward
    * @param {string} str 
    * @returns {string}
    */
-  function removeHtml(str) {
+  function stripHTML(str) {
     return str.replace(/<\/?[^>]+(>|$)(.*?)<\/?[^>]+(>|$)/ig, '');
   }
 
@@ -401,6 +404,17 @@ var MultiFuncSelect = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forward
       }
     }
   }
+  function adjustMultiControlContainerHeight() {
+    setTimeout(function () {
+      rootSingleRef.current.style.height = rootMultiRef.current.clientHeight + 'px';
+      selectInputRef.current.style.height = rootMultiRef.current.clientHeight + 'px';
+    }, 0);
+  }
+  function adjustMultiControlBlinkingWidth() {
+    if (multiSelect) {
+      multiListPlaceholderRef.current.querySelector('.multifunc-select-multi__control-blinking-cursor').style.width = multiListPlaceholderRef.current.clientWidth + 'px';
+    }
+  }
   function fetchData(_x2, _x3) {
     return _fetchData.apply(this, arguments);
   }
@@ -471,6 +485,9 @@ var MultiFuncSelect = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forward
                   });
                 }
               });
+
+              // Appropriate multi-item container height
+              adjustMultiControlContainerHeight();
             }
 
             //
@@ -524,6 +541,9 @@ var MultiFuncSelect = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forward
                   });
                 }
               });
+
+              // Appropriate multi-item container height
+              adjustMultiControlContainerHeight();
             }
 
             //
@@ -643,6 +663,9 @@ var MultiFuncSelect = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forward
                   currentControlValueArr.push(_value);
                   currentControlLabelArr.push(_label);
                 }
+
+                // Appropriate multi-item container height
+                adjustMultiControlContainerHeight();
               }
 
               //
@@ -699,6 +722,9 @@ var MultiFuncSelect = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forward
                   _currentControlValueArr.push(_value2);
                   _currentControlLabelArr.push(_label2);
                 }
+
+                // Appropriate multi-item container height
+                adjustMultiControlContainerHeight();
               }
 
               //
@@ -723,6 +749,45 @@ var MultiFuncSelect = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forward
       }, _callee3);
     }));
     return _handleSelect.apply(this, arguments);
+  }
+  function handleMultiControlItemRemove(event) {
+    event.preventDefault();
+    var valueToRemove = String(event.currentTarget.dataset.item);
+    var getCurrentIndex = controlValueArr.findIndex(function (item) {
+      return item.toString() === valueToRemove;
+    });
+    var currentControlValueArr = JSON.parse(JSON.stringify(controlValueArr));
+    var currentControlLabelArr = JSON.parse(JSON.stringify(controlLabelArr));
+    var _value = valueToRemove;
+    var _label = controlLabelArr[getCurrentIndex];
+    setControlValueArr(function (prevState) {
+      return removeItemOnce(prevState, _value);
+    });
+    setControlLabelArr(function (prevState) {
+      // update temporary value
+      setControlTempValue(prevState.length >= 0 ? null : prevState.join(','));
+      return removeItemOnce(prevState, _label);
+    });
+    currentControlValueArr = removeItemOnce(currentControlValueArr, _value);
+    currentControlLabelArr = removeItemOnce(currentControlLabelArr, _label);
+
+    // Appropriate multi-item container height
+    adjustMultiControlContainerHeight();
+
+    //
+    if (typeof onChange === 'function') {
+      onChange === null || onChange === void 0 ? void 0 : onChange(selectInputRef.current, {
+        labels: currentControlLabelArr.map(function (v) {
+          return v.toString();
+        }),
+        values: currentControlValueArr.map(function (v) {
+          return v.toString();
+        })
+      });
+
+      //
+      selectInputRef.current.blur();
+    }
   }
   function handleSearch(event) {
     if (isOpen) return;
@@ -776,6 +841,9 @@ var MultiFuncSelect = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forward
   //
   function handleFocus(event) {
     rootRef.current.classList.add('focus');
+
+    // update temporary value
+    setControlTempValue('');
 
     //
     onFocus === null || onFocus === void 0 ? void 0 : onFocus(event);
@@ -831,6 +899,10 @@ var MultiFuncSelect = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forward
     });
   }
   (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(function () {
+    // initialize blinking-cursor container width of Multiple selection Control
+    //------------------------------------------
+    adjustMultiControlBlinkingWidth();
+
     // update incoming data
     //------------------------------------------
     setIncomingData(data);
@@ -959,6 +1031,7 @@ var MultiFuncSelect = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forward
     htmlFor: "label-".concat(idRes),
     className: "form-label"
   }, label)) : null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+    ref: rootSingleRef,
     className: "position-relative"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("input", _extends({
     ref: function ref(node) {
@@ -990,12 +1063,13 @@ var MultiFuncSelect = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forward
     required: required || null,
     readOnly: readOnly || null,
     value: controlTempValue || controlTempValue === '' ? controlTempValue : multiSelect ? controlLabelArr.map(function (v) {
-      return removeHtml(v);
-    }).join(',') : removeHtml(controlLabel) // do not use `defaultValue`
+      return stripHTML(v);
+    }).join(',') : stripHTML(controlLabel) // do not use `defaultValue`
     ,
 
     style: _objectSpread({
-      cursor: 'pointer'
+      cursor: 'pointer',
+      borderBottomWidth: multiSelect ? '0' : '1px'
     }, style),
     autoComplete: "off"
   }, attributes)), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("input", _extends({
@@ -1027,7 +1101,58 @@ var MultiFuncSelect = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forward
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("path", {
     d: "M144,6525.39 L142.594,6524 L133.987,6532.261 L133.069,6531.38 L133.074,6531.385 L125.427,6524.045 L124,6525.414 C126.113,6527.443 132.014,6533.107 133.987,6535 C135.453,6533.594 134.024,6534.965 144,6525.39",
     id: "arrow_down-[#339]"
-  }))))))), optionsData && !hasErr ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+  }))))))), multiSelect ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+    ref: rootMultiRef,
+    className: "multifunc-select-multi__wrapper"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+    className: "multifunc-select-multi__control-wrapper"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("ul", {
+    className: "multifunc-select-multi__list"
+  }, controlLabelArr.map(function (item, index) {
+    return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("li", {
+      key: index
+    }, item, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
+      href: "#",
+      tabIndex: -1,
+      onClick: handleMultiControlItemRemove,
+      "data-item": controlValueArr[index]
+    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("svg", {
+      width: "10px",
+      height: "10px",
+      viewBox: "0 0 1024 1024"
+    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("path", {
+      fill: "#000",
+      d: "M195.2 195.2a64 64 0 0 1 90.496 0L512 421.504 738.304 195.2a64 64 0 0 1 90.496 90.496L602.496 512 828.8 738.304a64 64 0 0 1-90.496 90.496L512 602.496 285.696 828.8a64 64 0 0 1-90.496-90.496L421.504 512 195.2 285.696a64 64 0 0 1 0-90.496z"
+    }))));
+  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("li", {
+    ref: multiListPlaceholderRef,
+    className: "multifunc-select-multi__list-item-placeholder ".concat(typeof placeholder === 'undefined' || placeholder === '' ? 'hide' : '')
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
+    className: "multifunc-select-multi__control-blinking-cursor"
+  }, controlTempValue || controlTempValue === '' ? controlTempValue.length === 0 ? '|' : controlTempValue : placeholder || ''))))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
+    className: "arrow position-absolute top-0 end-0 me-2 mt-1",
+    style: {
+      translate: 'all .2s',
+      transform: isOpen ? 'rotate(180deg) translateY(-4px)' : 'rotate(0) translateY(0)',
+      pointerEvents: 'none'
+    }
+  }, controlArrow ? controlArrow : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("svg", {
+    width: "10px",
+    height: "10px",
+    viewBox: "0 -4.5 20 20"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("g", {
+    stroke: "none",
+    strokeWidth: "1",
+    fill: "none"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("g", {
+    transform: "translate(-180.000000, -6684.000000)",
+    fill: "#a5a5a5"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("g", {
+    transform: "translate(56.000000, 160.000000)"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("path", {
+    d: "M144,6525.39 L142.594,6524 L133.987,6532.261 L133.069,6531.38 L133.074,6531.385 L125.427,6524.045 L124,6525.414 C126.113,6527.443 132.014,6533.107 133.987,6535 C135.453,6533.594 134.024,6534.965 144,6525.39",
+    id: "arrow_down-[#339]"
+  }))))))) : null, optionsData && !hasErr ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
     ref: listRef,
     className: "list-group position-absolute w-100 border shadow small",
     style: {
@@ -1050,7 +1175,26 @@ var MultiFuncSelect = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forward
   }, optionsData ? optionsData.map(function (item, index) {
     var startItemBorder = index === 0 ? 'border-top-0' : '';
     var endItemBorder = index === optionsData.length - 1 ? 'border-bottom-0' : '';
-    if (multiSelect) {
+    if (!multiSelect) {
+      // ++++++++++++++++++++
+      // Single
+      // ++++++++++++++++++++
+      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", {
+        tabIndex: -1,
+        onClick: handleSelect,
+        type: "button",
+        "data-index": index,
+        key: index,
+        className: "list-group-item list-group-item-action border-start-0 border-end-0 ".concat(startItemBorder, " ").concat(endItemBorder, " border-bottom-0"),
+        "data-value": "".concat(item.value),
+        "data-label": "".concat(item.label),
+        "data-letter": "".concat(item.letter),
+        role: "tab",
+        dangerouslySetInnerHTML: {
+          __html: item.label
+        }
+      });
+    } else {
       // ++++++++++++++++++++
       // Multiple selection
       // ++++++++++++++++++++
@@ -1094,25 +1238,6 @@ var MultiFuncSelect = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forward
           __html: item.label
         }
       }));
-    } else {
-      // ++++++++++++++++++++
-      // Single
-      // ++++++++++++++++++++
-      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", {
-        tabIndex: -1,
-        onClick: handleSelect,
-        type: "button",
-        "data-index": index,
-        key: index,
-        className: "list-group-item list-group-item-action border-start-0 border-end-0 ".concat(startItemBorder, " ").concat(endItemBorder, " border-bottom-0"),
-        "data-value": "".concat(item.value),
-        "data-label": "".concat(item.label),
-        "data-letter": "".concat(item.letter),
-        role: "tab",
-        dangerouslySetInnerHTML: {
-          __html: item.label
-        }
-      });
     }
   }) : null)))) : null));
 });

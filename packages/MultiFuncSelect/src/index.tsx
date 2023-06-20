@@ -82,6 +82,9 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
     const uniqueID = useId().replace(/\:/g, "-");
     const idRes = id || uniqueID;
     const rootRef = useRef<any>(null);
+    const rootSingleRef = useRef<any>(null);
+    const rootMultiRef = useRef<any>(null);
+    const multiListPlaceholderRef = useRef<any>(null);
     const selectInputRef = useRef<any>(null);
     const valueInputRef = useRef<any>(null);
     const listRef = useRef<any>(null);
@@ -117,7 +120,7 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
      * @param {string} str 
      * @returns {string}
      */
-    function removeHtml(str: string) {
+    function stripHTML(str: string) {
         return str.replace(/<\/?[^>]+(>|$)(.*?)<\/?[^>]+(>|$)/ig, '');
     }
 
@@ -296,6 +299,20 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
 	} 
 
 
+    function adjustMultiControlContainerHeight() {
+        setTimeout(() => {
+            rootSingleRef.current.style.height = rootMultiRef.current.clientHeight + 'px';
+            selectInputRef.current.style.height = rootMultiRef.current.clientHeight + 'px';
+        },0);              
+    }
+
+    function adjustMultiControlBlinkingWidth() {
+        if ( multiSelect ) {
+            multiListPlaceholderRef.current.querySelector('.multifunc-select-multi__control-blinking-cursor').style.width = multiListPlaceholderRef.current.clientWidth + 'px';       
+        }
+    }
+
+
     async function fetchData(params: any, defaultValue: any) {
 
         if ( typeof fetchFuncAsync === 'object' ) {
@@ -357,8 +374,13 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
 
                     }
                 });
-            }
 
+
+                // Appropriate multi-item container height
+                adjustMultiControlContainerHeight();
+                
+      
+            }
 
 
             
@@ -420,6 +442,11 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
 
                     }
                 });
+
+                // Appropriate multi-item container height
+                adjustMultiControlContainerHeight();
+                
+
             }
 
 
@@ -528,6 +555,10 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
                     currentControlLabelArr.push(_label);
 
                 }
+
+                // Appropriate multi-item container height
+                adjustMultiControlContainerHeight();
+
             }
 
             //
@@ -588,6 +619,10 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
                     currentControlLabelArr.push(_label);
 
                 }
+
+                // Appropriate multi-item container height
+                adjustMultiControlContainerHeight();
+
             }
 
             //
@@ -600,13 +635,57 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
         }
 
 
+
     }
+
+
+
+    function handleMultiControlItemRemove(event: any) {
+        event.preventDefault();
+
+        const valueToRemove = String(event.currentTarget.dataset.item);
+        const getCurrentIndex = controlValueArr.findIndex((item: any) => item.toString() === valueToRemove );
+
+        let currentControlValueArr: any[] = JSON.parse(JSON.stringify(controlValueArr));
+        let currentControlLabelArr: any[] = JSON.parse(JSON.stringify(controlLabelArr));
+        
+        const _value = valueToRemove;
+        const _label = controlLabelArr[getCurrentIndex];
+
+        setControlValueArr((prevState: any) => removeItemOnce(prevState, _value)); 
+        setControlLabelArr((prevState: any) => {
+
+            // update temporary value
+            setControlTempValue(prevState.length >= 0 ? null : prevState.join(','));
+
+            return removeItemOnce(prevState, _label);
+        }); 
+
+        currentControlValueArr = removeItemOnce(currentControlValueArr, _value);
+        currentControlLabelArr = removeItemOnce(currentControlLabelArr, _label);
+
+
+        // Appropriate multi-item container height
+        adjustMultiControlContainerHeight();
+
+
+        //
+        if ( typeof(onChange) === 'function' ) {
+            onChange?.(selectInputRef.current, {labels: currentControlLabelArr.map((v: any) => v.toString()), values: currentControlValueArr.map((v: any) => v.toString())});
+
+            //
+            selectInputRef.current.blur();
+        }        
+
+    }
+
 
 
     function handleSearch(event: any) {
         if ( isOpen ) return;
 
         activate();
+        
 
         // window position
         setTimeout( ()=> {
@@ -668,6 +747,9 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
     function handleFocus(event: any) {
         rootRef.current.classList.add('focus');
 
+        // update temporary value
+        setControlTempValue('');
+
         //
         onFocus?.(event);    
     }
@@ -700,6 +782,8 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
         }
     }
 
+
+    
 
     function optionFocus(type: string) {
 
@@ -746,6 +830,12 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
 
 
     useEffect(() => {
+
+
+        // initialize blinking-cursor container width of Multiple selection Control
+        //------------------------------------------
+        adjustMultiControlBlinkingWidth();
+
 
         // update incoming data
         //------------------------------------------
@@ -879,7 +969,13 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
                 
                 {label ? <><label htmlFor={`label-${idRes}`} className="form-label">{label}</label></> : null}
 
-                    <div className="position-relative">
+
+                    {/*
+                    // ++++++++++++++++++++
+                    // Single Control (includes result container)
+                    // ++++++++++++++++++++
+                    */}
+                    <div ref={rootSingleRef} className="position-relative">
                         <input 
                             ref={(node) => {
                                 selectInputRef.current = node;
@@ -908,9 +1004,9 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
                             disabled={disabled || null}
                             required={required || null}
                             readOnly={readOnly || null}
-                            value={controlTempValue || controlTempValue === '' ? controlTempValue : (multiSelect ? controlLabelArr.map((v: any) => removeHtml(v)).join(',') :  removeHtml(controlLabel as never))}  // do not use `defaultValue`
-                            
-                            style={{cursor: 'pointer', ...style}}
+                            value={controlTempValue || controlTempValue === '' ? controlTempValue : (multiSelect ? controlLabelArr.map((v: any) => stripHTML(v)).join(',') :  stripHTML(controlLabel as never))}  // do not use `defaultValue`
+                          
+                            style={{cursor: 'pointer', borderBottomWidth: multiSelect? '0' : '1px', ...style}}
                             autoComplete='off'
                             {...attributes}
                         />
@@ -940,6 +1036,55 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
 
                     </div>
 
+                    
+                    {/*
+                    // ++++++++++++++++++++
+                    // Multiple selection Control
+                    // ++++++++++++++++++++
+                    */}
+                    {multiSelect ? <div ref={rootMultiRef} className="multifunc-select-multi__wrapper">
+
+                        <div className="multifunc-select-multi__control-wrapper">
+                            <div>
+                                <ul className="multifunc-select-multi__list">
+                                    
+                                    {controlLabelArr.map((item: any, index: number) => (
+                                        <li key={index}>
+                                            {item}
+
+                                            <a href="#" tabIndex={-1} onClick={handleMultiControlItemRemove} data-item={controlValueArr[index]}><svg width="10px" height="10px" viewBox="0 0 1024 1024"><path fill="#000" d="M195.2 195.2a64 64 0 0 1 90.496 0L512 421.504 738.304 195.2a64 64 0 0 1 90.496 90.496L602.496 512 828.8 738.304a64 64 0 0 1-90.496 90.496L512 602.496 285.696 828.8a64 64 0 0 1-90.496-90.496L421.504 512 195.2 285.696a64 64 0 0 1 0-90.496z" /></svg></a>
+                                        </li>
+                                    ))}
+                                    
+                                    <li ref={multiListPlaceholderRef} className={`multifunc-select-multi__list-item-placeholder ${typeof placeholder === 'undefined' || placeholder === '' ? 'hide' : ''}`}>
+                                        <span className="multifunc-select-multi__control-blinking-cursor">
+                                            {controlTempValue || controlTempValue === '' ? (controlTempValue.length === 0 ? '|' : controlTempValue) : (placeholder || '')}
+                                        </span>
+                                    </li>
+                                </ul>
+
+                            </div>
+
+                        </div>
+
+                        <span className="arrow position-absolute top-0 end-0 me-2 mt-1" style={{ translate: 'all .2s', transform: isOpen ? 'rotate(180deg) translateY(-4px)' : 'rotate(0) translateY(0)', pointerEvents: 'none' }}>
+                            {controlArrow ? controlArrow : <svg width="10px" height="10px" viewBox="0 -4.5 20 20">
+                                <g stroke="none" strokeWidth="1" fill="none">
+                                    <g transform="translate(-180.000000, -6684.000000)" fill="#a5a5a5">
+                                        <g transform="translate(56.000000, 160.000000)">
+                                            <path d="M144,6525.39 L142.594,6524 L133.987,6532.261 L133.069,6531.38 L133.074,6531.385 L125.427,6524.045 L124,6525.414 C126.113,6527.443 132.014,6533.107 133.987,6535 C135.453,6533.594 134.024,6534.965 144,6525.39" id="arrow_down-[#339]">
+                                            </path>
+                                        </g>
+                                    </g>
+                                </g>
+                            </svg>}
+                        </span>
+
+
+                    </div> : null}
+
+
+
 
                     {optionsData && !hasErr ? <>
                     <div ref={listRef} className="list-group position-absolute w-100 border shadow small" style={{ marginTop: '0.2rem', zIndex: (depth ? depth : 100), display: isOpen ? 'block' : 'none'}} role="tablist">
@@ -955,7 +1100,16 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
                                     
                                     
 
-                                    if (multiSelect) {
+                                    if (!multiSelect) {
+
+                                        // ++++++++++++++++++++
+                                        // Single
+                                        // ++++++++++++++++++++
+                                        return <button tabIndex={-1} onClick={handleSelect} type="button" data-index={index} key={index} className={`list-group-item list-group-item-action border-start-0 border-end-0 ${startItemBorder} ${endItemBorder} border-bottom-0`} data-value={`${item.value}`} data-label={`${item.label}`} data-letter={`${item.letter}`} role="tab" dangerouslySetInnerHTML={{
+                                            __html: item.label
+                                        }}></button>
+
+                                    } else {
 
                                         // ++++++++++++++++++++
                                         // Multiple selection
@@ -972,14 +1126,7 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
                                                 __html: item.label
                                             }}></span>
                                         </button>
-                                    } else {
 
-                                        // ++++++++++++++++++++
-                                        // Single
-                                        // ++++++++++++++++++++
-                                        return <button tabIndex={-1} onClick={handleSelect} type="button" data-index={index} key={index} className={`list-group-item list-group-item-action border-start-0 border-end-0 ${startItemBorder} ${endItemBorder} border-bottom-0`} data-value={`${item.value}`} data-label={`${item.label}`} data-letter={`${item.letter}`} role="tab" dangerouslySetInnerHTML={{
-                                            __html: item.label
-                                        }}></button>
                                     }
 
 

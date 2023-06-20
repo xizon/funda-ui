@@ -58,6 +58,9 @@ import React from "react";
 import MultiFuncSelect from 'react-pure-bootstrap/MultiFuncSelect';
 import axios from 'axios';
 
+// component styles
+import 'react-pure-bootstrap/MultiFuncSelect/index.css';
+
 class DataService {
     
     // `getList()` must be a Promise Object
@@ -183,6 +186,9 @@ export default () => {
 ```js
 import React from "react";
 import MultiFuncSelect from 'react-pure-bootstrap/MultiFuncSelect';
+
+// component styles
+import 'react-pure-bootstrap/MultiFuncSelect/index.css';
 
 class DataService {
     
