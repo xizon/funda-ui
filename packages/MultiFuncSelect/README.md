@@ -12,6 +12,7 @@ import MultiFuncSelect from 'react-pure-bootstrap/MultiFuncSelect';
 | `wrapperClassName` | string | `mb-3 position-relative` | The class name of the control wrapper. |
 | `controlClassName` | string | `form-control` | The class name of the control. |
 | `options` | JSON Object Literals | - | Set the default value using JSON string format for menu of options, like this: `[{"label": "Option 1","value": "value-1","letter": "option1"},{"label": "<del style=color:red>deprecate</del>Option 2","value": "value-2","letter": "option2"},{"label": "Option 3","value": "value-3","letter": "option3"}]` <br /> <blockquote>Note: Use API data if database query exists. That is, the attribute `fetchXXXX`</blockquote>|
+| `multiSelect` | boolean | false | Allow multiple selection |
 | `depth` | number  | 100 | Set the depth value of the control to control the display of the pop-up layer appear above. Please set it when multiple controls are used at the same time. |
 | `value` | string | - | Set a default value for this control |
 | `label` | string \| ReactNode | - | It is used to specify a label for an element of a form. |
@@ -27,7 +28,7 @@ import MultiFuncSelect from 'react-pure-bootstrap/MultiFuncSelect';
 | `fetchFuncMethodParams` | array  | - | The parameter passed by the method, it is an array. <br />Note: the first element is a query string, the second element is the number of queried data (usually a number), and then you can increase the third, or fourth, and more parameters. <br />Such as `['',0]`, `['',99,'string 1','string 2']` <br /><blockquote>There should be at least one parameter which is the query string.</blockquote> |
 | `fetchCallback` | function  | - | Return value from `fetchCallback` property to format the data of the API callback, which will match the data structure of the component. <br >At the same time it returns the original data, you will use this function and use the `return` keyword to return a new value. |
 | `onFetch` | function  | - | Call a function when  data is successfully fetched. It returns two callback values, one is the fetched data (an array), adn the last is a string passed by the `data` attribute |
-| `onChange` | function \| null  | - | Call a function when the value of an HTML element is changed. It returns two callback values, one is the control and the other is the data (Exposes the JSON format data about the option as an argument. You can use it like this: `(res) => console.log(res.value)`). |
+| `onChange` | function \| null  | - | Call a function when the value of an HTML element is changed. It returns two callback values, one is the control and the other is the data (Exposes the JSON (Returns an Array Collection when `multiSelect` is enabled) format data about the option as an argument. You can use it like this: `(res) => console.log(res.value)`). |
 | `onBlur` | function  | - | Call a function when a user leaves a form field. |
 | `onFocus` | function  | - | Call a function when an form field gets focus. |
 
@@ -89,7 +90,8 @@ class DataService {
 export default () => {
 
     function handleChange(e, val) {
-        console.log(e.target, val);
+        console.log(e.target, e.nextSibling, val);
+        
     }
 
     return (
@@ -108,6 +110,26 @@ export default () => {
                 `}
                 onChange={handleChange}
             />
+
+
+            <MultiFuncSelect
+                value="value-3,value-2"
+                multiSelect={true}
+                placeholder="Select"
+                name="name"
+                label="String"
+                options={`
+                [
+                    {"label": "Option 1","value": "value-1","letter": "option1"},
+                    {"label": "<del style=color:red>deprecate</del>Option 2","value": "value-2","letter": "option2"},
+                    {"label": "Option 3","value": "value-3","letter": "option3"}
+                ]  
+                `}
+                onChange={handleChange}
+            />
+
+
+
 
 
             <MultiFuncSelect

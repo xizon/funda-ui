@@ -344,10 +344,19 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
             setChangedVal(value || '');
 
             // If you use the dynamic form assignment (such as document.getElementById(xxx).value), 
-            // you need to judge the value of the input obtained by using the macrotask("setTimeout()")
-            setTimeout(function () {
-              if (valRef.current !== null && valRef.current.value !== '' && (typeof value === 'undefined' || value === '')) {
-                setChangedVal(valRef.current.value);
+            // you need to judge the value of the input obtained by using the macrotask "setInterval()"
+            var timer = null;
+            var initTimes = 0;
+            var hasValue = false;
+            timer = setInterval(function () {
+              if (initTimes > 5 || hasValue) {
+                clearInterval(timer);
+              } else {
+                if (valRef.current !== null && valRef.current.value !== '' && (typeof value === 'undefined' || value === '')) {
+                  setChangedVal(valRef.current.value);
+                  hasValue = true;
+                }
+                initTimes++;
               }
             }, 500);
           }, [value]);
@@ -612,13 +621,22 @@ var RangeSlider = function RangeSlider(props) {
     initDefaultValue(value);
 
     // If you use the dynamic form assignment (such as document.getElementById(xxx).value), 
-    // you need to judge the value of the input obtained by using the macrotask("setTimeout()")
-    setTimeout(function () {
-      if (typeof value === 'undefined' || value === '') {
-        if (valMinRef.current !== null && valMaxRef.current !== null && valMinRef.current.value !== '' && valMaxRef.current.value !== '') initDefaultValue({
-          min: valMinRef.current.value,
-          max: valMaxRef.current.value
-        });
+    // you need to judge the value of the input obtained by using the macrotask "setInterval()"
+    var timer = null;
+    var initTimes = 0;
+    var hasValue = false;
+    timer = setInterval(function () {
+      if (initTimes > 5 || hasValue) {
+        clearInterval(timer);
+      } else {
+        if (typeof value === 'undefined' || value === '') {
+          if (valMinRef.current !== null && valMaxRef.current !== null && valMinRef.current.value !== '' && valMaxRef.current.value !== '') initDefaultValue({
+            min: valMinRef.current.value,
+            max: valMaxRef.current.value
+          });
+          hasValue = true;
+        }
+        initTimes++;
       }
     }, 500);
   }, [value]);

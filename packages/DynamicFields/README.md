@@ -15,7 +15,7 @@ import DynamicFields from 'react-pure-bootstrap/DynamicFields';
 | `confirmText` | string | - | The text to display in the confirm box. |
 | `iconAdd` | ReactNode  | `<svg width="20px" height="20px" viewBox="0 0 24 24" fill="none"><path d="M12 2C6.49 2 2 6.49 2 12C2 17.51 6.49 22 12 22C17.51 22 22 17.51 22 12C22 6.49 17.51 2 12 2ZM16 12.75H12.75V16C12.75 16.41 12.41 16.75 12 16.75C11.59 16.75 11.25 16.41 11.25 16V12.75H8C7.59 12.75 7.25 12.41 7.25 12C7.25 11.59 7.59 11.25 8 11.25H11.25V8C11.25 7.59 11.59 7.25 12 7.25C12.41 7.25 12.75 7.59 12.75 8V11.25H16C16.41 11.25 16.75 11.59 16.75 12C16.75 12.41 16.41 12.75 16 12.75Z" fill="#000" /></svg>` | The label of the button to add a new item |
 | `iconRemove` | ReactNode  | `<svg width="20px" height="20px" viewBox="0 0 24 24" fill="none"><path fillRule="evenodd" clipRule="evenodd" d="M22 12c0 5.523-4.477 10-10 10S2 17.523 2 12 6.477 2 12 2s10 4.477 10 10ZM8 11a1 1 0 1 0 0 2h8a1 1 0 1 0 0-2H8Z" fill="#000"/></svg>` | The label of the button to delete current item, if it is not set, only the SVG icon will be included |
-| `tempHtmlString` | string \| ReactNode | - | Control group are dynamically added after the button is triggered. Like this: <br />`<><Input placeholder="Title" name="your-title[]" /> <Input ui="medium" placeholder="URL" name="your-url[]" /></>` |
+| `tempHtmlString` | string \| ReactNode | - | Control group are dynamically added after the button is triggered. Like this: <br />`<><Input placeholder="Title" name="your-title[]" /> <Input ui="medium" placeholder="URL" name="your-url[]" /></>` <blockquote>You can use the placeholder `%i%` instead of the index number. <br />Note: it can only be valid in `id`, `name`, `data-id`, `data-name` attributes</blockquote> |
 | `maxFields` | number | 10 | Maximum number of control group allowed to be added |
 | `startFromZero` | boolean | false | Whether to start counting from zero (if true, initialize without any form) |
 | `onAdd` | function  | - | Call a function when add a control. |
@@ -37,13 +37,13 @@ import DynamicFields from 'react-pure-bootstrap/DynamicFields';
 import React from "react";
 import DynamicFields from 'react-pure-bootstrap/DynamicFields';
 import Input from 'react-pure-bootstrap/Input';
+import MultiFuncSelect from 'react-pure-bootstrap/MultiFuncSelect';
 
 
 export default () => {
 
     return (
         <>
-
             <DynamicFields
                 label="String"
                 maxFields="10"
@@ -56,14 +56,38 @@ export default () => {
                         <div className="row">
                             <div className="col">
                                 {/* CONTROL */}
-                                <Input placeholder="Title" name="appnotice-title[]"/>
+                                <MultiFuncSelect
+                                    data-id="appnotice-url-%i%"
+                                    placeholder="Select"
+                                    name="appnotice-title[]"
+                                    options={`
+                                    [
+                                        {"label": "URL 1","value": "http://a","letter": ""},
+                                        {"label": "URL 2","value": "http://b","letter": ""}
+                                    ]  
+                                    `}
+                                    onChange={((e: any, val: any) => {
+                                        const targetId = e.nextSibling.dataset.id;
+                                        [].slice.call(document.querySelectorAll(`[name="appnotice-url[]"]`)).forEach((node: any) => {
+                                            if (node.id === targetId) {
+                                                node.value = val.label;
+                                            }
+                                        });
+                                    })}
+                                />  
                                 {/* /CONTROL */}
                             </div>
                             <div className="col">
                                 {/* CONTROL */}
-                                <Input placeholder="URL" name="appnotice-url[]" />
+                                <Input placeholder="URL" name="appnotice-url[]" id="appnotice-url-%i%" />
                                 {/* /CONTROL */}
                             </div>
+                            <div className="col">
+                                {/* CONTROL */}
+                                <Input placeholder="Tag" name="appnotice-tag[]" />
+                                {/* /CONTROL */}
+                            </div>
+
                             <div style={{width: '40px'}}></div>
                         </div>
 

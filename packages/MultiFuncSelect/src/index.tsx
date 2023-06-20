@@ -14,6 +14,7 @@ type MultiFuncSelectOptionChangeFnType = (arg1: any, arg2: any) => void;
 type MultiFuncSelectProps = {
     wrapperClassName?: string;
     controlClassName?: string;
+    multiSelect?: boolean;
     value?: string;
     label?: React.ReactNode | string;
     name?: string;
@@ -49,6 +50,7 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
     const {
         wrapperClassName,
         controlClassName,
+        multiSelect,
         disabled,
         required,
         value,
@@ -76,7 +78,7 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
         ...attributes
     } = props;
 
-
+    
     const uniqueID = useId().replace(/\:/g, "-");
     const idRes = id || uniqueID;
     const rootRef = useRef<any>(null);
@@ -97,12 +99,44 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
     const [hasErr, setHasErr] = useState<boolean>(false);
     const [controlLabel, setControlLabel] = useState<string | undefined>('');
     const [controlValue, setControlValue] = useState<string | undefined>('');
+
+    const [controlLabelArr, setControlLabelArr] = useState<string[]>([]);
+    const [controlValueArr, setControlValueArr] = useState<string[]>([]);
+
     const [controlTempValue, setControlTempValue] = useState<string | null>(null);
     const [isOpen, setIsOpen] = useState<boolean>(false);
     const [listContentHeight, setListContentHeight] = useState<number>(0);
     const [incomingData, setIncomingData] = useState<string | null | undefined>(null);
 
+    const needInitControlValueArr = typeof value === 'undefined' || value === '' ? false : true;
+
+
     
+    /**
+     * Remove html tag content
+     * @param {string} str 
+     * @returns {string}
+     */
+    function removeHtml(str: string) {
+        return str.replace(/<\/?[^>]+(>|$)(.*?)<\/?[^>]+(>|$)/ig, '');
+    }
+
+
+    /**
+     * Remove a specific item from an array
+     * @param {array} arr 
+     * @param {string} value 
+     * @returns {array}
+     */
+    function removeItemOnce(arr: any[], value: string | number) {
+        const arrFormat = arr.map((v: any) => v.toString());
+        const index = arrFormat.indexOf(value.toString());
+        if (index > -1) {
+            arrFormat.splice(index, 1);
+        }
+        return arrFormat;
+    }
+
 
     /**
      * Check if an element is in the viewport
@@ -275,15 +309,13 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
             }
 
             // Determine whether the data structure matches
-            if ( typeof _ORGIN_DATA[0].value === 'undefined' ) {
+            if ( _ORGIN_DATA.length > 0 && typeof _ORGIN_DATA[0].value === 'undefined' ) {
                 console.warn( 'The data structure does not match, please refer to the example in the component documentation.' );
                 setHasErr(true);
                 _ORGIN_DATA = [];
             }
 
             // value & label must be initialized
-            setControlValue(defaultValue); 
-
             let filterRes: any = [];
             const filterResQueryValue = _ORGIN_DATA.filter((item: any) => item.value == defaultValue );
             const filterResQueryLabel = _ORGIN_DATA.filter((item: any) => item.label == defaultValue );
@@ -291,7 +323,44 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
             filterRes = filterResQueryValue;
             if ( filterResQueryValue.length === 0 ) filterRes = filterResQueryLabel;
 
+
+            // ++++++++++++++++++++
+            // Single
+            // ++++++++++++++++++++
+            setControlValue(typeof filterRes[0] !== 'undefined' ? filterRes[0].value : ''); 
             setControlLabel(typeof filterRes[0] !== 'undefined' ? filterRes[0].label : '');
+
+            // ++++++++++++++++++++
+            // Multiple selection
+            // ++++++++++++++++++++
+            if ( multiSelect && needInitControlValueArr ) {
+
+                const _values: string[] = typeof defaultValue !== 'undefined' ? defaultValue.split(',') : [];
+                _values.forEach((_value: string) => {
+
+                    if ( !controlValueArr.includes(_value) )  {
+                        
+
+                        let filterRes: any = [];
+                        const filterResQueryValue = _ORGIN_DATA.filter((item: any) => item.value == _value );
+                        const filterResQueryLabel = _ORGIN_DATA.filter((item: any) => item.label == _value );
+            
+                        filterRes = filterResQueryValue;
+                        if ( filterResQueryValue.length === 0 ) filterRes = filterResQueryLabel;
+            
+                        setControlValueArr((prevState: any) => {
+                            return [...prevState, typeof filterRes[0] !== 'undefined' ? filterRes[0].value : ''];
+                        }); 
+                        setControlLabelArr((prevState: any) => {
+                            return [...prevState, typeof filterRes[0] !== 'undefined' ? filterRes[0].label : ''];
+                        }); 
+
+                    }
+                });
+            }
+
+
+
             
 
             //
@@ -309,8 +378,6 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
 
 
             // value & label must be initialized
-            setControlValue(defaultValue);
-
             let filterRes: any = [];
             const filterResQueryValue = optionsDataInit.filter((item: any) => item.value == defaultValue );
             const filterResQueryLabel = optionsDataInit.filter((item: any) => item.label == defaultValue );
@@ -318,8 +385,44 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
             filterRes = filterResQueryValue;
             if ( filterResQueryValue.length === 0 ) filterRes = filterResQueryLabel;
 
+            // ++++++++++++++++++++
+            // Single
+            // ++++++++++++++++++++
+            setControlValue(typeof filterRes[0] !== 'undefined' ? filterRes[0].value : ''); 
             setControlLabel(typeof filterRes[0] !== 'undefined' ? filterRes[0].label : '');
             
+
+
+            // ++++++++++++++++++++
+            // Multiple selection
+            // ++++++++++++++++++++
+            if ( multiSelect && needInitControlValueArr ) {
+
+                const _values: string[] = typeof defaultValue !== 'undefined' ? defaultValue.split(',') : [];
+                _values.forEach((_value: string) => {
+
+                    if ( !controlValueArr.includes(_value) )  {
+                        
+
+                        let filterRes: any = [];
+                        const filterResQueryValue = optionsDataInit.filter((item: any) => item.value == _value );
+                        const filterResQueryLabel = optionsDataInit.filter((item: any) => item.label == _value );
+            
+                        filterRes = filterResQueryValue;
+                        if ( filterResQueryValue.length === 0 ) filterRes = filterResQueryLabel;
+            
+                        setControlValueArr((prevState: any) => {
+                            return [...prevState, typeof filterRes[0] !== 'undefined' ? filterRes[0].value : ''];
+                        }); 
+                        setControlLabelArr((prevState: any) => {
+                            return [...prevState, typeof filterRes[0] !== 'undefined' ? filterRes[0].label : ''];
+                        }); 
+
+                    }
+                });
+            }
+
+
 
             //
             setOptionsData(optionsDataInit); // data must be initialized
@@ -357,7 +460,7 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
     }
 
 
-    async function handleSelect(el: any, dataInput: any = false) {
+    async function handleSelect(el: any, dataInput: any = false, valueArr: any[] = [], labelArr: any[] = []) {
         
         if ( typeof el === 'undefined' ) return;
         
@@ -365,34 +468,136 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
         
 
         // cancel
-        cancel();
+        if ( !multiSelect ) {
+            cancel();
+        }
+
+        //remove focus style
+        if ( !multiSelect ) {
+            rootRef.current.classList.remove('focus');
+        }
+
+
 
         // update value * label
         if ( dataInput ) {
-            const _data = JSON.parse(dataInput);
-            setControlValue(_data.value); 
-            setControlLabel(_data.label); 
 
+            // using keyboard
+            const _data = JSON.parse(dataInput);
+            const _value = _data.value;
+            const _label = _data.label;
+
+            // ++++++++++++++++++++
+            // Single
+            // ++++++++++++++++++++
+            setControlValue(_value); 
+            setControlLabel(_label); 
+
+            // ++++++++++++++++++++
+            // Multiple selection
+            // ++++++++++++++++++++
+            let currentControlValueArr: any[] = JSON.parse(JSON.stringify(valueArr));
+            let currentControlLabelArr: any[] = JSON.parse(JSON.stringify(labelArr));
+
+            if ( multiSelect ) {
+
+                if ( valueArr.map((v: any) => v.toString()).includes(_value.toString()) ) {
+                    setControlValueArr((prevState: any) => removeItemOnce(prevState, _value)); 
+                    setControlLabelArr((prevState: any) => {
+
+                        // update temporary value
+                        setControlTempValue(prevState.length >= 0 ? null : prevState.join(','));
+
+                        return removeItemOnce(prevState, _label);
+                    }); 
+
+                    currentControlValueArr = removeItemOnce(currentControlValueArr, _value);
+                    currentControlLabelArr = removeItemOnce(currentControlLabelArr, _label);
+
+                } else {
+                    setControlValueArr((prevState: any) => [...prevState, _value]); 
+                    setControlLabelArr((prevState: any) => {
+
+                        // update temporary value
+                        setControlTempValue(prevState.length >= 0 ? null : prevState.join(','));
+
+                        return [...prevState, _label];
+                    }); 
+
+                    currentControlValueArr.push(_value);
+                    currentControlLabelArr.push(_label);
+
+                }
+            }
+
+            //
             if ( typeof(onChange) === 'function' ) {
-                onChange?.(selectInputRef.current, _data);
+                onChange?.(selectInputRef.current, !multiSelect ? optionsData[index as never] : {labels: currentControlLabelArr.map((v: any) => v.toString()), values: currentControlValueArr.map((v: any) => v.toString())});
+                
+                //
                 selectInputRef.current.blur();
             }
 
         } else {
-            
-            index = typeof el.target !== 'undefined' ? el.target.dataset.index : el.dataset.index;
-            setControlValue(optionsData[index as never].value); 
-            setControlLabel(optionsData[index as never].label); 
 
+            index = typeof el.currentTarget !== 'undefined' ? el.currentTarget.dataset.index : el.dataset.index;
+
+            const _value = optionsData[index as never].value;
+            const _label = optionsData[index as never].label;
+
+            // ++++++++++++++++++++
+            // Single
+            // ++++++++++++++++++++
+            setControlValue(_value); 
+            setControlLabel(_label); 
+
+
+            // ++++++++++++++++++++
+            // Multiple selection
+            // ++++++++++++++++++++
+            let currentControlValueArr: any[] = JSON.parse(JSON.stringify(controlValueArr));
+            let currentControlLabelArr: any[] = JSON.parse(JSON.stringify(controlLabelArr));
+            
+            if ( multiSelect ) {
+
+                if ( controlValueArr.map((v: any) => v.toString()).includes(_value.toString()) ) {
+                    setControlValueArr((prevState: any) => removeItemOnce(prevState, _value)); 
+                    setControlLabelArr((prevState: any) => {
+
+                        // update temporary value
+                        setControlTempValue(prevState.length >= 0 ? null : prevState.join(','));
+
+                        return removeItemOnce(prevState, _label);
+                    }); 
+
+                    currentControlValueArr = removeItemOnce(currentControlValueArr, _value);
+                    currentControlLabelArr = removeItemOnce(currentControlLabelArr, _label);
+
+
+                } else {
+                    setControlValueArr((prevState: any) => [...prevState, _value]); 
+                    setControlLabelArr((prevState: any) => {
+
+                        // update temporary value
+                        setControlTempValue(prevState.length >= 0 ? null : prevState.join(','));
+
+                        return [...prevState, _label];
+                    }); 
+
+                    currentControlValueArr.push(_value);
+                    currentControlLabelArr.push(_label);
+
+                }
+            }
+
+            //
             if ( typeof(onChange) === 'function' ) {
-                onChange?.(selectInputRef.current, optionsData[index as never]);
+                onChange?.(selectInputRef.current, !multiSelect ? optionsData[index as never] : {labels: currentControlLabelArr.map((v: any) => v.toString()), values: currentControlValueArr.map((v: any) => v.toString())});
+
+                //
                 selectInputRef.current.blur();
             }            
         }
-
-
-        //remove focus style
-        rootRef.current.classList.remove('focus');
 
 
     }
@@ -470,11 +675,17 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
     function handleBlur(event: any) {
 
         //remove focus style
-        rootRef.current.classList.remove('focus');
-
+        if ( !multiSelect ) {
+            rootRef.current.classList.remove('focus');
+        }
+        
         setTimeout(() => {
+
             // cancel
-            cancel();
+            if ( !multiSelect ) {
+                cancel();
+            }
+            
             onBlur?.(event);
         }, 300);
 
@@ -546,15 +757,23 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
         fetchData((_params).join(','), value);
 
 
-
         // If you use the dynamic form assignment (such as document.getElementById(xxx).value), 
-        // you need to judge the value of the input obtained by using the macrotask("setTimeout()")
-        setTimeout(() => {
-            if ( valueInputRef.current !== null &&  valueInputRef.current.value !== '' && ( typeof value === 'undefined' || value === '' ) ) {
-                fetchData((_params).join(','), valueInputRef.current.value);
+        // you need to judge the value of the input obtained by using the macrotask "setInterval()"
+        let timer: any = null;
+        let initTimes: number = 0;
+        let hasValue: boolean = false;
+        timer = setInterval( () => {
+            if ( initTimes > 5 || hasValue ) {
+                clearInterval(timer);
+            } else {
+                if ( valueInputRef.current !== null &&  valueInputRef.current.value !== '' && ( typeof value === 'undefined' || value === '' ) ) {
+                    fetchData((_params).join(','), valueInputRef.current.value);
+                    hasValue = true;
+                }
+                initTimes++;
+
             }
         }, 500);
-
 
 
         // keyboard listener
@@ -567,11 +786,23 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
                 if ( listRef.current !== null ) {
                     const currentData = await listRef.current.dataset.data;
                     if ( typeof currentData !== 'undefined' ) {
-                        handleSelect(null, currentData);
+
+                        const currentControlValueArr: any[] = [];
+                        const currentControlLabelArr: any[] = [];
+
                         const options = [].slice.call(listRef.current.querySelectorAll('.list-group-item'));
                         options.forEach((node: any) => {
                             node.classList.remove('active');
+
+                            if ( node.classList.contains('item-selected') ) {
+                                currentControlValueArr.push(node.dataset.value);
+                                currentControlLabelArr.push(node.dataset.label)
+                            }
+                        
                         });
+
+                        handleSelect(null, currentData, currentControlValueArr, currentControlLabelArr);
+
                         
                     }
                 }
@@ -677,7 +908,8 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
                             disabled={disabled || null}
                             required={required || null}
                             readOnly={readOnly || null}
-                            value={controlTempValue || controlTempValue === '' ? controlTempValue : controlLabel?.replace(/<\/?[^>]+(>|$)(.*?)<\/?[^>]+(>|$)/ig, '')}  // do not use `defaultValue`
+                            value={controlTempValue || controlTempValue === '' ? controlTempValue : (multiSelect ? controlLabelArr.map((v: any) => removeHtml(v)).join(',') :  removeHtml(controlLabel as never))}  // do not use `defaultValue`
+                            
                             style={{cursor: 'pointer', ...style}}
                             autoComplete='off'
                             {...attributes}
@@ -688,9 +920,11 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
                             type="hidden"
                             id={idRes}
                             name={name}
-                            value={controlValue}  // do not use `defaultValue`
+                            value={multiSelect ? controlValueArr.join(',') : controlValue}  // do not use `defaultValue`
+                            {...attributes}
                         />
 
+                        
                         <span className="arrow position-absolute top-0 end-0 me-2 mt-1" style={{translate: 'all .2s', transform: isOpen ? 'rotate(180deg) translateY(-4px)' : 'rotate(0) translateY(0)', pointerEvents: 'none'}}>
                             {controlArrow ? controlArrow : <svg width="10px" height="10px" viewBox="0 -4.5 20 20">
                                 <g stroke="none" strokeWidth="1" fill="none">
@@ -718,10 +952,37 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
                                 {optionsData ? optionsData.map((item, index) => {
                                     const startItemBorder = index === 0 ? 'border-top-0' : '';
                                     const endItemBorder = index === optionsData.length - 1 ? 'border-bottom-0' : '';
+                                    
+                                    
 
-                                    return <button tabIndex={-1} onClick={handleSelect} type="button" data-index={index} key={index} className={`list-group-item list-group-item-action border-start-0 border-end-0 ${startItemBorder} ${endItemBorder} border-bottom-0`} data-value={`${item.value}`} data-label={`${item.label}`} data-letter={`${item.letter}`} role="tab" dangerouslySetInnerHTML={{
-                                        __html: item.label
-                                    }}></button>
+                                    if (multiSelect) {
+
+                                        // ++++++++++++++++++++
+                                        // Multiple selection
+                                        // ++++++++++++++++++++
+                                        const itemSelected = controlValueArr.map((v: any) => v.toString()).includes(item.value.toString()) ? true : false;
+                                        return <button tabIndex={-1} onClick={handleSelect} type="button" data-index={index} key={index} className={`list-group-item list-group-item-action border-start-0 border-end-0 ${startItemBorder} ${endItemBorder} border-bottom-0 ${itemSelected ? 'list-group-item-secondary item-selected' : ''}`} data-value={`${item.value}`} data-label={`${item.label}`} data-letter={`${item.letter}`} role="tab">
+                                            <var className="d-inline-block me-1 ">
+                                                {!itemSelected ? <svg width="1.2em" height="1.2em" viewBox="0 0 24 24" fill="none">
+                                                    <path id="Vector" d="M4 7.2002V16.8002C4 17.9203 4 18.4801 4.21799 18.9079C4.40973 19.2842 4.71547 19.5905 5.0918 19.7822C5.5192 20 6.07899 20 7.19691 20H16.8031C17.921 20 18.48 20 18.9074 19.7822C19.2837 19.5905 19.5905 19.2842 19.7822 18.9079C20 18.4805 20 17.9215 20 16.8036V7.19691C20 6.07899 20 5.5192 19.7822 5.0918C19.5905 4.71547 19.2837 4.40973 18.9074 4.21799C18.4796 4 17.9203 4 16.8002 4H7.2002C6.08009 4 5.51962 4 5.0918 4.21799C4.71547 4.40973 4.40973 4.71547 4.21799 5.0918C4 5.51962 4 6.08009 4 7.2002Z" stroke="#000000" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                                                </svg> : <svg width="1.2em" height="1.2em" fill="#000000" viewBox="0 0 24 24"><path d="M19 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.11 0 2-.9 2-2V5c0-1.1-.89-2-2-2zm-9 14l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" /></svg>}
+                                                
+                                            </var>
+                                            <span dangerouslySetInnerHTML={{
+                                                __html: item.label
+                                            }}></span>
+                                        </button>
+                                    } else {
+
+                                        // ++++++++++++++++++++
+                                        // Single
+                                        // ++++++++++++++++++++
+                                        return <button tabIndex={-1} onClick={handleSelect} type="button" data-index={index} key={index} className={`list-group-item list-group-item-action border-start-0 border-end-0 ${startItemBorder} ${endItemBorder} border-bottom-0`} data-value={`${item.value}`} data-label={`${item.label}`} data-letter={`${item.letter}`} role="tab" dangerouslySetInnerHTML={{
+                                            __html: item.label
+                                        }}></button>
+                                    }
+
+
                                 }) : null}
 
                             </div>

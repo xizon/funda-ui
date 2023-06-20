@@ -151,7 +151,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _utils_performance__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(342);
 /* harmony import */ var _utils_performance__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_utils_performance__WEBPACK_IMPORTED_MODULE_1__);
-var _excluded = ["wrapperClassName", "controlClassName", "disabled", "required", "value", "label", "name", "readOnly", "placeholder", "id", "options", "style", "depth", "controlArrow", "tabIndex", "fetchNoneInfo", "fetchFuncAsync", "fetchFuncMethod", "fetchFuncMethodParams", "data", "fetchCallback", "onFetch", "onSelect", "onChange", "onBlur", "onFocus"];
+var _excluded = ["wrapperClassName", "controlClassName", "multiSelect", "disabled", "required", "value", "label", "name", "readOnly", "placeholder", "id", "options", "style", "depth", "controlArrow", "tabIndex", "fetchNoneInfo", "fetchFuncAsync", "fetchFuncMethod", "fetchFuncMethodParams", "data", "fetchCallback", "onFetch", "onSelect", "onChange", "onBlur", "onFocus"];
 function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
 function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
 function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter); }
@@ -179,6 +179,7 @@ function _objectWithoutPropertiesLoose(source, excluded) { if (source == null) r
 var MultiFuncSelect = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(function (props, _ref2) {
   var wrapperClassName = props.wrapperClassName,
     controlClassName = props.controlClassName,
+    multiSelect = props.multiSelect,
     disabled = props.disabled,
     required = props.required,
     value = props.value,
@@ -238,22 +239,57 @@ var MultiFuncSelect = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forward
     _useState10 = _slicedToArray(_useState9, 2),
     controlValue = _useState10[0],
     setControlValue = _useState10[1];
-  var _useState11 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(null),
+  var _useState11 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)([]),
     _useState12 = _slicedToArray(_useState11, 2),
-    controlTempValue = _useState12[0],
-    setControlTempValue = _useState12[1];
-  var _useState13 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(false),
+    controlLabelArr = _useState12[0],
+    setControlLabelArr = _useState12[1];
+  var _useState13 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)([]),
     _useState14 = _slicedToArray(_useState13, 2),
-    isOpen = _useState14[0],
-    setIsOpen = _useState14[1];
-  var _useState15 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(0),
+    controlValueArr = _useState14[0],
+    setControlValueArr = _useState14[1];
+  var _useState15 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(null),
     _useState16 = _slicedToArray(_useState15, 2),
-    listContentHeight = _useState16[0],
-    setListContentHeight = _useState16[1];
-  var _useState17 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(null),
+    controlTempValue = _useState16[0],
+    setControlTempValue = _useState16[1];
+  var _useState17 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(false),
     _useState18 = _slicedToArray(_useState17, 2),
-    incomingData = _useState18[0],
-    setIncomingData = _useState18[1];
+    isOpen = _useState18[0],
+    setIsOpen = _useState18[1];
+  var _useState19 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(0),
+    _useState20 = _slicedToArray(_useState19, 2),
+    listContentHeight = _useState20[0],
+    setListContentHeight = _useState20[1];
+  var _useState21 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(null),
+    _useState22 = _slicedToArray(_useState21, 2),
+    incomingData = _useState22[0],
+    setIncomingData = _useState22[1];
+  var needInitControlValueArr = typeof value === 'undefined' || value === '' ? false : true;
+
+  /**
+   * Remove html tag content
+   * @param {string} str 
+   * @returns {string}
+   */
+  function removeHtml(str) {
+    return str.replace(/<\/?[^>]+(>|$)(.*?)<\/?[^>]+(>|$)/ig, '');
+  }
+
+  /**
+   * Remove a specific item from an array
+   * @param {array} arr 
+   * @param {string} value 
+   * @returns {array}
+   */
+  function removeItemOnce(arr, value) {
+    var arrFormat = arr.map(function (v) {
+      return v.toString();
+    });
+    var index = arrFormat.indexOf(value.toString());
+    if (index > -1) {
+      arrFormat.splice(index, 1);
+    }
+    return arrFormat;
+  }
 
   /**
    * Check if an element is in the viewport
@@ -370,12 +406,12 @@ var MultiFuncSelect = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forward
   }
   function _fetchData() {
     _fetchData = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee2(params, defaultValue) {
-      var response, _ORGIN_DATA, filterRes, filterResQueryValue, filterResQueryLabel, _filterRes, _filterResQueryValue, _filterResQueryLabel;
+      var response, _ORGIN_DATA, filterRes, filterResQueryValue, filterResQueryLabel, _values, _filterRes2, _filterResQueryValue2, _filterResQueryLabel2, _values2;
       return _regeneratorRuntime().wrap(function _callee2$(_context2) {
         while (1) switch (_context2.prev = _context2.next) {
           case 0:
             if (!(_typeof(fetchFuncAsync) === 'object')) {
-              _context2.next = 20;
+              _context2.next = 21;
               break;
             }
             _context2.next = 3;
@@ -388,14 +424,13 @@ var MultiFuncSelect = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forward
             }
 
             // Determine whether the data structure matches
-            if (typeof _ORGIN_DATA[0].value === 'undefined') {
+            if (_ORGIN_DATA.length > 0 && typeof _ORGIN_DATA[0].value === 'undefined') {
               console.warn('The data structure does not match, please refer to the example in the component documentation.');
               setHasErr(true);
               _ORGIN_DATA = [];
             }
 
             // value & label must be initialized
-            setControlValue(defaultValue);
             filterRes = [];
             filterResQueryValue = _ORGIN_DATA.filter(function (item) {
               return item.value == defaultValue;
@@ -405,7 +440,38 @@ var MultiFuncSelect = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forward
             });
             filterRes = filterResQueryValue;
             if (filterResQueryValue.length === 0) filterRes = filterResQueryLabel;
+
+            // ++++++++++++++++++++
+            // Single
+            // ++++++++++++++++++++
+            setControlValue(typeof filterRes[0] !== 'undefined' ? filterRes[0].value : '');
             setControlLabel(typeof filterRes[0] !== 'undefined' ? filterRes[0].label : '');
+
+            // ++++++++++++++++++++
+            // Multiple selection
+            // ++++++++++++++++++++
+            if (multiSelect && needInitControlValueArr) {
+              _values = typeof defaultValue !== 'undefined' ? defaultValue.split(',') : [];
+              _values.forEach(function (_value) {
+                if (!controlValueArr.includes(_value)) {
+                  var _filterRes = [];
+                  var _filterResQueryValue = _ORGIN_DATA.filter(function (item) {
+                    return item.value == _value;
+                  });
+                  var _filterResQueryLabel = _ORGIN_DATA.filter(function (item) {
+                    return item.label == _value;
+                  });
+                  _filterRes = _filterResQueryValue;
+                  if (_filterResQueryValue.length === 0) _filterRes = _filterResQueryLabel;
+                  setControlValueArr(function (prevState) {
+                    return [].concat(_toConsumableArray(prevState), [typeof _filterRes[0] !== 'undefined' ? _filterRes[0].value : '']);
+                  });
+                  setControlLabelArr(function (prevState) {
+                    return [].concat(_toConsumableArray(prevState), [typeof _filterRes[0] !== 'undefined' ? _filterRes[0].label : '']);
+                  });
+                }
+              });
+            }
 
             //
             setOptionsData(_ORGIN_DATA); // data must be initialized
@@ -416,19 +482,49 @@ var MultiFuncSelect = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forward
             //
             onFetch === null || onFetch === void 0 ? void 0 : onFetch(_ORGIN_DATA, incomingData);
             return _context2.abrupt("return", _ORGIN_DATA);
-          case 20:
+          case 21:
             // value & label must be initialized
-            setControlValue(defaultValue);
-            _filterRes = [];
-            _filterResQueryValue = optionsDataInit.filter(function (item) {
+            _filterRes2 = [];
+            _filterResQueryValue2 = optionsDataInit.filter(function (item) {
               return item.value == defaultValue;
             });
-            _filterResQueryLabel = optionsDataInit.filter(function (item) {
+            _filterResQueryLabel2 = optionsDataInit.filter(function (item) {
               return item.label == defaultValue;
             });
-            _filterRes = _filterResQueryValue;
-            if (_filterResQueryValue.length === 0) _filterRes = _filterResQueryLabel;
-            setControlLabel(typeof _filterRes[0] !== 'undefined' ? _filterRes[0].label : '');
+            _filterRes2 = _filterResQueryValue2;
+            if (_filterResQueryValue2.length === 0) _filterRes2 = _filterResQueryLabel2;
+
+            // ++++++++++++++++++++
+            // Single
+            // ++++++++++++++++++++
+            setControlValue(typeof _filterRes2[0] !== 'undefined' ? _filterRes2[0].value : '');
+            setControlLabel(typeof _filterRes2[0] !== 'undefined' ? _filterRes2[0].label : '');
+
+            // ++++++++++++++++++++
+            // Multiple selection
+            // ++++++++++++++++++++
+            if (multiSelect && needInitControlValueArr) {
+              _values2 = typeof defaultValue !== 'undefined' ? defaultValue.split(',') : [];
+              _values2.forEach(function (_value) {
+                if (!controlValueArr.includes(_value)) {
+                  var _filterRes3 = [];
+                  var _filterResQueryValue3 = optionsDataInit.filter(function (item) {
+                    return item.value == _value;
+                  });
+                  var _filterResQueryLabel3 = optionsDataInit.filter(function (item) {
+                    return item.label == _value;
+                  });
+                  _filterRes3 = _filterResQueryValue3;
+                  if (_filterResQueryValue3.length === 0) _filterRes3 = _filterResQueryLabel3;
+                  setControlValueArr(function (prevState) {
+                    return [].concat(_toConsumableArray(prevState), [typeof _filterRes3[0] !== 'undefined' ? _filterRes3[0].value : '']);
+                  });
+                  setControlLabelArr(function (prevState) {
+                    return [].concat(_toConsumableArray(prevState), [typeof _filterRes3[0] !== 'undefined' ? _filterRes3[0].label : '']);
+                  });
+                }
+              });
+            }
 
             //
             setOptionsData(optionsDataInit); // data must be initialized
@@ -436,7 +532,7 @@ var MultiFuncSelect = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forward
             //
             setOrginalData(optionsDataInit);
             return _context2.abrupt("return", optionsDataInit);
-          case 30:
+          case 32:
           case "end":
             return _context2.stop();
         }
@@ -470,44 +566,157 @@ var MultiFuncSelect = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forward
   function _handleSelect() {
     _handleSelect = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee3(el) {
       var dataInput,
+        valueArr,
+        labelArr,
         index,
         _data,
+        _value,
+        _label,
+        currentControlValueArr,
+        currentControlLabelArr,
+        _value2,
+        _label2,
+        _currentControlValueArr,
+        _currentControlLabelArr,
         _args3 = arguments;
       return _regeneratorRuntime().wrap(function _callee3$(_context3) {
         while (1) switch (_context3.prev = _context3.next) {
           case 0:
             dataInput = _args3.length > 1 && _args3[1] !== undefined ? _args3[1] : false;
+            valueArr = _args3.length > 2 && _args3[2] !== undefined ? _args3[2] : [];
+            labelArr = _args3.length > 3 && _args3[3] !== undefined ? _args3[3] : [];
             if (!(typeof el === 'undefined')) {
-              _context3.next = 3;
+              _context3.next = 5;
               break;
             }
             return _context3.abrupt("return");
-          case 3:
+          case 5:
             // cancel
-            cancel();
-
-            // update value * label
-            if (dataInput) {
-              _data = JSON.parse(dataInput);
-              setControlValue(_data.value);
-              setControlLabel(_data.label);
-              if (typeof onChange === 'function') {
-                onChange === null || onChange === void 0 ? void 0 : onChange(selectInputRef.current, _data);
-                selectInputRef.current.blur();
-              }
-            } else {
-              index = typeof el.target !== 'undefined' ? el.target.dataset.index : el.dataset.index;
-              setControlValue(optionsData[index].value);
-              setControlLabel(optionsData[index].label);
-              if (typeof onChange === 'function') {
-                onChange === null || onChange === void 0 ? void 0 : onChange(selectInputRef.current, optionsData[index]);
-                selectInputRef.current.blur();
-              }
+            if (!multiSelect) {
+              cancel();
             }
 
             //remove focus style
-            rootRef.current.classList.remove('focus');
-          case 6:
+            if (!multiSelect) {
+              rootRef.current.classList.remove('focus');
+            }
+
+            // update value * label
+            if (dataInput) {
+              // using keyboard
+              _data = JSON.parse(dataInput);
+              _value = _data.value;
+              _label = _data.label; // ++++++++++++++++++++
+              // Single
+              // ++++++++++++++++++++
+              setControlValue(_value);
+              setControlLabel(_label);
+
+              // ++++++++++++++++++++
+              // Multiple selection
+              // ++++++++++++++++++++
+              currentControlValueArr = JSON.parse(JSON.stringify(valueArr));
+              currentControlLabelArr = JSON.parse(JSON.stringify(labelArr));
+              if (multiSelect) {
+                if (valueArr.map(function (v) {
+                  return v.toString();
+                }).includes(_value.toString())) {
+                  setControlValueArr(function (prevState) {
+                    return removeItemOnce(prevState, _value);
+                  });
+                  setControlLabelArr(function (prevState) {
+                    // update temporary value
+                    setControlTempValue(prevState.length >= 0 ? null : prevState.join(','));
+                    return removeItemOnce(prevState, _label);
+                  });
+                  currentControlValueArr = removeItemOnce(currentControlValueArr, _value);
+                  currentControlLabelArr = removeItemOnce(currentControlLabelArr, _label);
+                } else {
+                  setControlValueArr(function (prevState) {
+                    return [].concat(_toConsumableArray(prevState), [_value]);
+                  });
+                  setControlLabelArr(function (prevState) {
+                    // update temporary value
+                    setControlTempValue(prevState.length >= 0 ? null : prevState.join(','));
+                    return [].concat(_toConsumableArray(prevState), [_label]);
+                  });
+                  currentControlValueArr.push(_value);
+                  currentControlLabelArr.push(_label);
+                }
+              }
+
+              //
+              if (typeof onChange === 'function') {
+                onChange === null || onChange === void 0 ? void 0 : onChange(selectInputRef.current, !multiSelect ? optionsData[index] : {
+                  labels: currentControlLabelArr.map(function (v) {
+                    return v.toString();
+                  }),
+                  values: currentControlValueArr.map(function (v) {
+                    return v.toString();
+                  })
+                });
+
+                //
+                selectInputRef.current.blur();
+              }
+            } else {
+              index = typeof el.currentTarget !== 'undefined' ? el.currentTarget.dataset.index : el.dataset.index;
+              _value2 = optionsData[index].value;
+              _label2 = optionsData[index].label; // ++++++++++++++++++++
+              // Single
+              // ++++++++++++++++++++
+              setControlValue(_value2);
+              setControlLabel(_label2);
+
+              // ++++++++++++++++++++
+              // Multiple selection
+              // ++++++++++++++++++++
+              _currentControlValueArr = JSON.parse(JSON.stringify(controlValueArr));
+              _currentControlLabelArr = JSON.parse(JSON.stringify(controlLabelArr));
+              if (multiSelect) {
+                if (controlValueArr.map(function (v) {
+                  return v.toString();
+                }).includes(_value2.toString())) {
+                  setControlValueArr(function (prevState) {
+                    return removeItemOnce(prevState, _value2);
+                  });
+                  setControlLabelArr(function (prevState) {
+                    // update temporary value
+                    setControlTempValue(prevState.length >= 0 ? null : prevState.join(','));
+                    return removeItemOnce(prevState, _label2);
+                  });
+                  _currentControlValueArr = removeItemOnce(_currentControlValueArr, _value2);
+                  _currentControlLabelArr = removeItemOnce(_currentControlLabelArr, _label2);
+                } else {
+                  setControlValueArr(function (prevState) {
+                    return [].concat(_toConsumableArray(prevState), [_value2]);
+                  });
+                  setControlLabelArr(function (prevState) {
+                    // update temporary value
+                    setControlTempValue(prevState.length >= 0 ? null : prevState.join(','));
+                    return [].concat(_toConsumableArray(prevState), [_label2]);
+                  });
+                  _currentControlValueArr.push(_value2);
+                  _currentControlLabelArr.push(_label2);
+                }
+              }
+
+              //
+              if (typeof onChange === 'function') {
+                onChange === null || onChange === void 0 ? void 0 : onChange(selectInputRef.current, !multiSelect ? optionsData[index] : {
+                  labels: _currentControlLabelArr.map(function (v) {
+                    return v.toString();
+                  }),
+                  values: _currentControlValueArr.map(function (v) {
+                    return v.toString();
+                  })
+                });
+
+                //
+                selectInputRef.current.blur();
+              }
+            }
+          case 8:
           case "end":
             return _context3.stop();
         }
@@ -573,10 +782,14 @@ var MultiFuncSelect = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forward
   }
   function handleBlur(event) {
     //remove focus style
-    rootRef.current.classList.remove('focus');
+    if (!multiSelect) {
+      rootRef.current.classList.remove('focus');
+    }
     setTimeout(function () {
       // cancel
-      cancel();
+      if (!multiSelect) {
+        cancel();
+      }
       onBlur === null || onBlur === void 0 ? void 0 : onBlur(event);
     }, 300);
   }
@@ -628,10 +841,19 @@ var MultiFuncSelect = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forward
     fetchData(_params.join(','), value);
 
     // If you use the dynamic form assignment (such as document.getElementById(xxx).value), 
-    // you need to judge the value of the input obtained by using the macrotask("setTimeout()")
-    setTimeout(function () {
-      if (valueInputRef.current !== null && valueInputRef.current.value !== '' && (typeof value === 'undefined' || value === '')) {
-        fetchData(_params.join(','), valueInputRef.current.value);
+    // you need to judge the value of the input obtained by using the macrotask "setInterval()"
+    var timer = null;
+    var initTimes = 0;
+    var hasValue = false;
+    timer = setInterval(function () {
+      if (initTimes > 5 || hasValue) {
+        clearInterval(timer);
+      } else {
+        if (valueInputRef.current !== null && valueInputRef.current.value !== '' && (typeof value === 'undefined' || value === '')) {
+          fetchData(_params.join(','), valueInputRef.current.value);
+          hasValue = true;
+        }
+        initTimes++;
       }
     }, 500);
 
@@ -639,7 +861,7 @@ var MultiFuncSelect = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forward
     //--------------
     var listener = /*#__PURE__*/function () {
       var _ref = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee(event) {
-        var res, currentData, _options;
+        var res, currentData, currentControlValueArr, currentControlLabelArr, _options;
         return _regeneratorRuntime().wrap(function _callee$(_context) {
           while (1) switch (_context.prev = _context.next) {
             case 0:
@@ -657,11 +879,17 @@ var MultiFuncSelect = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forward
             case 5:
               currentData = _context.sent;
               if (typeof currentData !== 'undefined') {
-                handleSelect(null, currentData);
+                currentControlValueArr = [];
+                currentControlLabelArr = [];
                 _options = [].slice.call(listRef.current.querySelectorAll('.list-group-item'));
                 _options.forEach(function (node) {
                   node.classList.remove('active');
+                  if (node.classList.contains('item-selected')) {
+                    currentControlValueArr.push(node.dataset.value);
+                    currentControlLabelArr.push(node.dataset.label);
+                  }
                 });
+                handleSelect(null, currentData, currentControlValueArr, currentControlLabelArr);
               }
             case 7:
               return _context.abrupt("return");
@@ -761,19 +989,22 @@ var MultiFuncSelect = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forward
     disabled: disabled || null,
     required: required || null,
     readOnly: readOnly || null,
-    value: controlTempValue || controlTempValue === '' ? controlTempValue : controlLabel === null || controlLabel === void 0 ? void 0 : controlLabel.replace(/<\/?[^>]+(>|$)(.*?)<\/?[^>]+(>|$)/ig, '') // do not use `defaultValue`
+    value: controlTempValue || controlTempValue === '' ? controlTempValue : multiSelect ? controlLabelArr.map(function (v) {
+      return removeHtml(v);
+    }).join(',') : removeHtml(controlLabel) // do not use `defaultValue`
     ,
+
     style: _objectSpread({
       cursor: 'pointer'
     }, style),
     autoComplete: "off"
-  }, attributes)), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("input", {
+  }, attributes)), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("input", _extends({
     ref: valueInputRef,
     type: "hidden",
     id: idRes,
     name: name,
-    value: controlValue // do not use `defaultValue`
-  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
+    value: multiSelect ? controlValueArr.join(',') : controlValue // do not use `defaultValue`
+  }, attributes)), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
     className: "arrow position-absolute top-0 end-0 me-2 mt-1",
     style: {
       translate: 'all .2s',
@@ -819,21 +1050,70 @@ var MultiFuncSelect = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forward
   }, optionsData ? optionsData.map(function (item, index) {
     var startItemBorder = index === 0 ? 'border-top-0' : '';
     var endItemBorder = index === optionsData.length - 1 ? 'border-bottom-0' : '';
-    return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", {
-      tabIndex: -1,
-      onClick: handleSelect,
-      type: "button",
-      "data-index": index,
-      key: index,
-      className: "list-group-item list-group-item-action border-start-0 border-end-0 ".concat(startItemBorder, " ").concat(endItemBorder, " border-bottom-0"),
-      "data-value": "".concat(item.value),
-      "data-label": "".concat(item.label),
-      "data-letter": "".concat(item.letter),
-      role: "tab",
-      dangerouslySetInnerHTML: {
-        __html: item.label
-      }
-    });
+    if (multiSelect) {
+      // ++++++++++++++++++++
+      // Multiple selection
+      // ++++++++++++++++++++
+      var itemSelected = controlValueArr.map(function (v) {
+        return v.toString();
+      }).includes(item.value.toString()) ? true : false;
+      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", {
+        tabIndex: -1,
+        onClick: handleSelect,
+        type: "button",
+        "data-index": index,
+        key: index,
+        className: "list-group-item list-group-item-action border-start-0 border-end-0 ".concat(startItemBorder, " ").concat(endItemBorder, " border-bottom-0 ").concat(itemSelected ? 'list-group-item-secondary item-selected' : ''),
+        "data-value": "".concat(item.value),
+        "data-label": "".concat(item.label),
+        "data-letter": "".concat(item.letter),
+        role: "tab"
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("var", {
+        className: "d-inline-block me-1 "
+      }, !itemSelected ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("svg", {
+        width: "1.2em",
+        height: "1.2em",
+        viewBox: "0 0 24 24",
+        fill: "none"
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("path", {
+        id: "Vector",
+        d: "M4 7.2002V16.8002C4 17.9203 4 18.4801 4.21799 18.9079C4.40973 19.2842 4.71547 19.5905 5.0918 19.7822C5.5192 20 6.07899 20 7.19691 20H16.8031C17.921 20 18.48 20 18.9074 19.7822C19.2837 19.5905 19.5905 19.2842 19.7822 18.9079C20 18.4805 20 17.9215 20 16.8036V7.19691C20 6.07899 20 5.5192 19.7822 5.0918C19.5905 4.71547 19.2837 4.40973 18.9074 4.21799C18.4796 4 17.9203 4 16.8002 4H7.2002C6.08009 4 5.51962 4 5.0918 4.21799C4.71547 4.40973 4.40973 4.71547 4.21799 5.0918C4 5.51962 4 6.08009 4 7.2002Z",
+        stroke: "#000000",
+        strokeWidth: "2",
+        strokeLinecap: "round",
+        strokeLinejoin: "round"
+      })) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("svg", {
+        width: "1.2em",
+        height: "1.2em",
+        fill: "#000000",
+        viewBox: "0 0 24 24"
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("path", {
+        d: "M19 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.11 0 2-.9 2-2V5c0-1.1-.89-2-2-2zm-9 14l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"
+      }))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
+        dangerouslySetInnerHTML: {
+          __html: item.label
+        }
+      }));
+    } else {
+      // ++++++++++++++++++++
+      // Single
+      // ++++++++++++++++++++
+      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", {
+        tabIndex: -1,
+        onClick: handleSelect,
+        type: "button",
+        "data-index": index,
+        key: index,
+        className: "list-group-item list-group-item-action border-start-0 border-end-0 ".concat(startItemBorder, " ").concat(endItemBorder, " border-bottom-0"),
+        "data-value": "".concat(item.value),
+        "data-label": "".concat(item.label),
+        "data-letter": "".concat(item.letter),
+        role: "tab",
+        dangerouslySetInnerHTML: {
+          __html: item.label
+        }
+      });
+    }
   }) : null)))) : null));
 });
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (MultiFuncSelect);

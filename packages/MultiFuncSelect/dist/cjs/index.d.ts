@@ -8,6 +8,7 @@ declare type MultiFuncSelectOptionChangeFnType = (arg1: any, arg2: any) => void;
 declare type MultiFuncSelectProps = {
     wrapperClassName?: string;
     controlClassName?: string;
+    multiSelect?: boolean;
     value?: string;
     label?: React.ReactNode | string;
     name?: string;

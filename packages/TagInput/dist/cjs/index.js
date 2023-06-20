@@ -247,10 +247,19 @@ var TagInput = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(fu
     initDefaultValue(value);
 
     // If you use the dynamic form assignment (such as document.getElementById(xxx).value), 
-    // you need to judge the value of the input obtained by using the macrotask("setTimeout()")
-    setTimeout(function () {
-      if (valRef.current !== null && valRef.current.value !== '' && (typeof value === 'undefined' || value === '')) {
-        initDefaultValue(valRef.current.value);
+    // you need to judge the value of the input obtained by using the macrotask "setInterval()"
+    var timer = null;
+    var initTimes = 0;
+    var hasValue = false;
+    timer = setInterval(function () {
+      if (initTimes > 5 || hasValue) {
+        clearInterval(timer);
+      } else {
+        if (valRef.current !== null && valRef.current.value !== '' && (typeof value === 'undefined' || value === '')) {
+          initDefaultValue(valRef.current.value);
+          hasValue = true;
+        }
+        initTimes++;
       }
     }, 500);
   }, [value]);

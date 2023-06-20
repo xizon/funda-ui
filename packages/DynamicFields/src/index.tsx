@@ -44,6 +44,18 @@ const DynamicFields = (props: DynamicFieldsProps) => {
     const fieldsRef = useRef<any>(null);
     const addBtnRef = useRef<any>(null);
     const [data, setData] = useState<any[]>([]);
+    const controlRefreshValDelay = 1000;
+
+    function replacePlaceholderStr(node: any) {
+        const _wapper = node.closest('.dynamic-fields__tmpl__wrapper');
+        if ( _wapper === null ) return;
+
+        const perKey = _wapper.dataset.key;
+        if (typeof node.id !== 'undefined' ) node.id = node.id.replace('%i%', perKey);
+        if (typeof node.name !== 'undefined' ) node.name = node.name.replace('%i%', perKey);
+        if (typeof node.dataset.id !== 'undefined' ) node.dataset.id = node.dataset.id.replace('%i%', perKey);
+        if (typeof node.dataset.name !== 'undefined' ) node.dataset.name = node.dataset.name.replace('%i%', perKey);
+    }
 
     function groupByNum(arr: any[], n: number) {
         if ( n === 0 || n === Infinity ) return false;
@@ -53,15 +65,20 @@ const DynamicFields = (props: DynamicFieldsProps) => {
         return result;
     }
 
+
+    function checkMaxStatus() {
+        //button status
+        if (rootRef.current.querySelector('.dynamic-fields__append').children.length+1 >= parseFloat(maxFields)) {
+            addBtnRef.current.style.setProperty('display', 'none', 'important');
+        }
+    }
     
 
     function handleClickAdd(event: any){
         event.preventDefault();
 
         //button status
-        if (rootRef.current.querySelector('.dynamic-fields__append').children.length+1 >= parseFloat(maxFields)) {
-            addBtnRef.current.style.setProperty('display', 'none', 'important');
-        }
+        checkMaxStatus();
 
         //
         setData((prevState: any[]) => {
@@ -71,6 +88,20 @@ const DynamicFields = (props: DynamicFieldsProps) => {
         //
         onAdd?.();
 
+
+        // update placeholder string
+        setTimeout(() => {
+
+            if ( fieldsRef.current !== null ) {
+                const controls: HTMLFormElement[] = [].slice.call(document.querySelectorAll( `#${fieldsRef.current.id} > .dynamic-fields__append [name]` ));
+                controls.forEach((node: any, i: number) => {
+                    // replace placeholder string
+                    replacePlaceholderStr(node);
+                });
+
+            }
+
+        }, controlRefreshValDelay);
 
 
     }
@@ -109,14 +140,16 @@ const DynamicFields = (props: DynamicFieldsProps) => {
 		// update values for all displayed controls
         // You need to wait for the asynchronous component to render
         setTimeout(() => {
-
+        
             if ( fieldsRef.current !== null ) {
                 const _val: any[] = value ? JSON.parse( '[' + value + ']' ) : [];
                 const controls: HTMLFormElement[] = [].slice.call(document.querySelectorAll( `#${fieldsRef.current.id} > .dynamic-fields__append [name]` ));
                 const integratedControls: HTMLFormElement[] = [];
 
                 let hasRadio: boolean = false;
-                controls.forEach((node: any) => {
+                controls.forEach((node: any, i: number) => {
+
+
                     let controlType = '';
                     if (node.tagName == "INPUT" || node.tagName == "TEXTARTA") {
         
@@ -152,7 +185,11 @@ const DynamicFields = (props: DynamicFieldsProps) => {
                         type: controlType
                     } as never);
 
+                    // replace placeholder string
+                    replacePlaceholderStr(node);
                 });
+
+                
 
                 if ( hasRadio ) {
                     console.error('<DynamicFields /> cannot use the "radio" type, because it will have multiple duplicate names! \nThe following components are recommended: <Input />, <Textarea />, <Checkbox />, <Switch />, <MultiFuncSelect />, <Select />, <CascadingSelectE2E />, <CascadingSelect />, <TagInput />, <RangeSlider />.');
@@ -160,15 +197,17 @@ const DynamicFields = (props: DynamicFieldsProps) => {
                 }
                 
                 const resControls: any = groupByNum(integratedControls, Math.floor(integratedControls.length / _val.length));
-            
-                _val.map((row: string[], i: number) => {
-                    row.map((val: any, j: number) => {
+
+                _val.forEach((row: string[], i: number) => {
+                    row.forEach((val: any, j: number) => {
                         
                         if ( typeof resControls[i] !== 'undefined' ) {
                             const _control: any = resControls[i][j];
-                     
+                            
+
                             switch (_control.type) {
                                 case "input-textarea":
+
                                     _control.target.value = val;
 
                                     // if it is checkbox
@@ -197,16 +236,20 @@ const DynamicFields = (props: DynamicFieldsProps) => {
                     })	
 
                 });
+
+                //button status
+                checkMaxStatus(); 
+
             }
 
-        }, 250);
+        }, controlRefreshValDelay);
 
     }
 
     function generateList() {
 
         return data.map((el: any, i: number) =>
-            <div key={i} className="dynamic-fields__tmpl__wrapper position-relative">
+            <div key={i} className="dynamic-fields__tmpl__wrapper position-relative" data-key={i}>
 
                 {el.map((data: any, index: number) => {
                     return (
@@ -227,7 +270,7 @@ const DynamicFields = (props: DynamicFieldsProps) => {
     }
 
     useEffect(() => {
- 
+
         setData(value ? [...Array(JSON.parse('[' + value + ']').length - (!startFromZero ? 1 : 0))].map(() => [""]) : []);
         updateDisplayedControls();
 

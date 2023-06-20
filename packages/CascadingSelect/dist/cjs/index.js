@@ -355,7 +355,7 @@ var CascadingSelect = function CascadingSelect(props) {
             }
 
             // Determine whether the data structure matches
-            if (typeof _ORGIN_DATA[0].id === 'undefined') {
+            if (_ORGIN_DATA.length > 0 && typeof _ORGIN_DATA[0].id === 'undefined') {
               console.warn('The data structure does not match, please refer to the example in the component documentation.');
               setHasErr(true);
               _ORGIN_DATA = [];
@@ -818,10 +818,19 @@ var CascadingSelect = function CascadingSelect(props) {
     initDefaultValue(value);
 
     // If you use the dynamic form assignment (such as document.getElementById(xxx).value), 
-    // you need to judge the value of the input obtained by using the macrotask("setTimeout()")
-    setTimeout(function () {
-      if (valRef.current !== null && valRef.current.value !== '' && (typeof value === 'undefined' || value === '')) {
-        initDefaultValue(valRef.current.value);
+    // you need to judge the value of the input obtained by using the macrotask "setInterval()"
+    var timer = null;
+    var initTimes = 0;
+    var hasValue = false;
+    timer = setInterval(function () {
+      if (initTimes > 5 || hasValue) {
+        clearInterval(timer);
+      } else {
+        if (valRef.current !== null && valRef.current.value !== '' && (typeof value === 'undefined' || value === '')) {
+          initDefaultValue(valRef.current.value);
+          hasValue = true;
+        }
+        initTimes++;
       }
     }, 500);
 

@@ -124,7 +124,7 @@ const Tree = (props: TreeProps) => {
                 }
 
                 // Determine whether the data structure matches
-                if ( typeof _ORGIN_DATA[0].title === 'undefined' ) {
+                if ( _ORGIN_DATA.length > 0 && typeof _ORGIN_DATA[0].title === 'undefined' ) {
                     console.warn( 'The data structure does not match, please refer to the example in the component documentation.' );
                     _ORGIN_DATA = [];
                 }

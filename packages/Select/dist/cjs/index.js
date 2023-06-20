@@ -189,7 +189,7 @@ var Select = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(func
             }
 
             // Determine whether the data structure matches
-            if (typeof _ORGIN_DATA[0].value === 'undefined') {
+            if (_ORGIN_DATA.length > 0 && typeof _ORGIN_DATA[0].value === 'undefined') {
               console.warn('The data structure does not match, please refer to the example in the component documentation.');
               setHasErr(true);
               _ORGIN_DATA = [];

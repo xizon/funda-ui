@@ -129,19 +129,33 @@ var DynamicFields = function DynamicFields(props) {
     _useState2 = _slicedToArray(_useState, 2),
     data = _useState2[0],
     setData = _useState2[1];
+  var controlRefreshValDelay = 1000;
+  function replacePlaceholderStr(node) {
+    var _wapper = node.closest('.dynamic-fields__tmpl__wrapper');
+    if (_wapper === null) return;
+    var perKey = _wapper.dataset.key;
+    if (typeof node.id !== 'undefined') node.id = node.id.replace('%i%', perKey);
+    if (typeof node.name !== 'undefined') node.name = node.name.replace('%i%', perKey);
+    if (typeof node.dataset.id !== 'undefined') node.dataset.id = node.dataset.id.replace('%i%', perKey);
+    if (typeof node.dataset.name !== 'undefined') node.dataset.name = node.dataset.name.replace('%i%', perKey);
+  }
   function groupByNum(arr, n) {
     if (n === 0 || n === Infinity) return false;
     var result = [];
     for (var i = 0; i < arr.length; i += n) result.push(arr.slice(i, i + n));
     return result;
   }
-  function handleClickAdd(event) {
-    event.preventDefault();
-
+  function checkMaxStatus() {
     //button status
     if (rootRef.current.querySelector('.dynamic-fields__append').children.length + 1 >= parseFloat(maxFields)) {
       addBtnRef.current.style.setProperty('display', 'none', 'important');
     }
+  }
+  function handleClickAdd(event) {
+    event.preventDefault();
+
+    //button status
+    checkMaxStatus();
 
     //
     setData(function (prevState) {
@@ -150,6 +164,17 @@ var DynamicFields = function DynamicFields(props) {
 
     //
     onAdd === null || onAdd === void 0 ? void 0 : onAdd();
+
+    // update placeholder string
+    setTimeout(function () {
+      if (fieldsRef.current !== null) {
+        var controls = [].slice.call(document.querySelectorAll("#".concat(fieldsRef.current.id, " > .dynamic-fields__append [name]")));
+        controls.forEach(function (node, i) {
+          // replace placeholder string
+          replacePlaceholderStr(node);
+        });
+      }
+    }, controlRefreshValDelay);
   }
   function handleClickRemove(param) {
     // param is the argument you passed to the function
@@ -182,7 +207,7 @@ var DynamicFields = function DynamicFields(props) {
         var controls = [].slice.call(document.querySelectorAll("#".concat(fieldsRef.current.id, " > .dynamic-fields__append [name]")));
         var integratedControls = [];
         var hasRadio = false;
-        controls.forEach(function (node) {
+        controls.forEach(function (node, i) {
           var controlType = '';
           if (node.tagName == "INPUT" || node.tagName == "TEXTARTA") {
             //not `radio`, `checkbox`
@@ -214,14 +239,17 @@ var DynamicFields = function DynamicFields(props) {
             target: node,
             type: controlType
           });
+
+          // replace placeholder string
+          replacePlaceholderStr(node);
         });
         if (hasRadio) {
           console.error('<DynamicFields /> cannot use the "radio" type, because it will have multiple duplicate names! \nThe following components are recommended: <Input />, <Textarea />, <Checkbox />, <Switch />, <MultiFuncSelect />, <Select />, <CascadingSelectE2E />, <CascadingSelect />, <TagInput />, <RangeSlider />.');
           return false;
         }
         var resControls = groupByNum(integratedControls, Math.floor(integratedControls.length / _val.length));
-        _val.map(function (row, i) {
-          row.map(function (val, j) {
+        _val.forEach(function (row, i) {
+          row.forEach(function (val, j) {
             if (typeof resControls[i] !== 'undefined') {
               var _control = resControls[i][j];
               switch (_control.type) {
@@ -248,14 +276,18 @@ var DynamicFields = function DynamicFields(props) {
             }
           });
         });
+
+        //button status
+        checkMaxStatus();
       }
-    }, 250);
+    }, controlRefreshValDelay);
   }
   function generateList() {
     return data.map(function (el, i) {
       return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
         key: i,
-        className: "dynamic-fields__tmpl__wrapper position-relative"
+        className: "dynamic-fields__tmpl__wrapper position-relative",
+        "data-key": i
       }, el.map(function (data, index) {
         return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), {
           key: index

@@ -83,7 +83,7 @@ export default () => {
 
             <Input
                 name="name"
-                onChangeCallback={(e: any) => {
+                onChangeCallback={(e) => {
                     // only numeric
                     const newVal = e.target.value.replace(/[^0-9]/g, '');
                     return newVal;
