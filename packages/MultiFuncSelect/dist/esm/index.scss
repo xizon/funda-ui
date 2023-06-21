@@ -2,6 +2,15 @@
     <!-- Multifunction Select -->
 /* ====================================================== */
 
+
+.multifunc-select-multi__control-select-all {
+    .btn {
+        font-size: 0.75rem;
+        padding: 0.1rem 0.5rem;
+    }
+}
+
+
 .multifunc-select-multi__wrapper {
 
     --multi-sel-placeholder-color: rgba(33, 37, 41, 0.75);
@@ -96,7 +105,6 @@
         color: var(--multi-sel-placeholder-color);
         // animation: 1s multi-sel-blink step-end infinite;
     }
-
 
     &.focus {
         .multifunc-select-multi__control-wrapper {

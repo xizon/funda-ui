@@ -12,7 +12,7 @@ import MultiFuncSelect from 'react-pure-bootstrap/MultiFuncSelect';
 | `wrapperClassName` | string | `mb-3 position-relative` | The class name of the control wrapper. |
 | `controlClassName` | string | `form-control` | The class name of the control. |
 | `options` | JSON Object Literals | - | Set the default value using JSON string format for menu of options, like this: `[{"label": "Option 1","value": "value-1","letter": "option1"},{"label": "<del style=color:red>deprecate</del>Option 2","value": "value-2","letter": "option2"},{"label": "Option 3","value": "value-3","letter": "option3"}]` <br /> <blockquote>Note: Use API data if database query exists. That is, the attribute `fetchXXXX`</blockquote>|
-| `multiSelect` | boolean | false | Allow multiple selection |
+| `multiSelect` | JSON Object | `{"valid": true, "selectAll": true, "selectAllLabel": "Select all options"}` | <blockquote>**Parameters Description:** <br />`valid` -->  (Boolean) Set component in which multiple options can be selected at once to be valid.  <br />`selectAll` --> (Boolean) Enables select all button. <br />`selectAllLabel` -->  (String) Sets the select all button label. (Support html tags)</blockquote> |
 | `depth` | number  | 100 | Set the depth value of the control to control the display of the pop-up layer appear above. Please set it when multiple controls are used at the same time. |
 | `value` | string | - | Set a default value for this control |
 | `label` | string \| ReactNode | - | It is used to specify a label for an element of a form. |
@@ -117,7 +117,11 @@ export default () => {
 
             <MultiFuncSelect
                 value="value-3,value-2"
-                multiSelect={true}
+                multiSelect={{
+                    valid: true, 
+                    selectAll: true, 
+                    selectAllLabel: "Select all options"
+                }}
                 placeholder="Select"
                 name="name"
                 label="String"

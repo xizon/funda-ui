@@ -5,10 +5,15 @@ declare module 'react' {
     }
 }
 declare type MultiFuncSelectOptionChangeFnType = (arg1: any, arg2: any) => void;
+interface MultiSelectConfig {
+    valid: boolean;
+    selectAll: boolean;
+    selectAllLabel?: string;
+}
 declare type MultiFuncSelectProps = {
     wrapperClassName?: string;
     controlClassName?: string;
-    multiSelect?: boolean;
+    multiSelect?: MultiSelectConfig;
     value?: string;
     label?: React.ReactNode | string;
     name?: string;
