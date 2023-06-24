@@ -1,7 +1,7 @@
 import React, { useId, useEffect, useState, useRef, forwardRef } from 'react';
 
 import { throttle } from './utils/performance';
-import { type } from 'os';
+
 
 declare module 'react' {
     interface ReactI18NextChildren<T> {
@@ -588,12 +588,12 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
         
 
         // cancel
-        if ( !MULTI_SEL_VALID ) {
+        if ( !(MULTI_SEL_VALID && isOpen) ) {
             cancel();
         }
 
         //remove focus style
-        if ( !MULTI_SEL_VALID ) {
+        if ( !(MULTI_SEL_VALID && isOpen) ) {
             rootRef.current.classList.remove('focus');
         }
 
@@ -873,6 +873,8 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
 
     //
     function handleFocus(event: any) {
+
+        rootRef.current.classList.add('focus');
   
         // update temporary value
         setControlTempValue('');
@@ -884,11 +886,17 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
     function handleBlur(event: any) {
 
         //remove focus style
-        if ( !MULTI_SEL_VALID ) {
+        if ( !(MULTI_SEL_VALID && isOpen) ) {
             rootRef.current.classList.remove('focus');
         }
         
         setTimeout(() => {
+
+            // cancel
+            if ( !(MULTI_SEL_VALID && isOpen) ) {
+                cancel();
+            }
+
             onBlur?.(event);
         }, 300);
 
@@ -1000,7 +1008,10 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
                 // Determine the "active" class name to avoid listening to other unused components of the same type
                 if ( listRef.current === null || !rootRef.current.classList.contains('active') ) return;
 
-                if ( fetchTrigger ) return;
+                if ( fetchTrigger ) {
+                    handleFetch();
+                    return;
+                }
     
                 if ( listRef.current !== null ) {
                     const currentData = await listRef.current.dataset.data;

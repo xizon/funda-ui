@@ -6,6 +6,10 @@
 
 .multifunc-select__wrapper {
 
+    --multi-sel-focus-border-color:#86b7fe;
+    --multi-sel-focus-boxshadow: 0 0 0 0.25rem rgba(13,110,253,.25);
+    
+
     /*------ Input ------*/
     [data-select]:focus {
         box-shadow: none;
@@ -158,6 +162,19 @@
 
 
     /*------------*/
+    [data-select]:focus {
+        cursor: text !important;
+    }
+
+    &:not(.multiple-selection) {
+        [data-select]:focus {
+            box-shadow: var(--multi-sel-focus-boxshadow);
+            border-color: var(--multi-sel-focus-border-color);
+            outline: 0;
+        }
+    }
+
+
     &.active {
         .list-group {
             display: block;
@@ -167,24 +184,10 @@
 
     &.focus {
 
-        [data-select] {
-            cursor: text !important;
-        }
-
-        &:not(.multiple-selection) {
-            [data-select] {
-                box-shadow: 0 0 0 0.25rem rgba(13,110,253,.25);
-                border-color: #86b7fe;
-                outline: 0;
-            }
-        }
-
-        
-   
         .multifunc-select-multi__control-wrapper {
             > div {
-                box-shadow: 0 0 0 0.25rem rgba(13,110,253,.25);
-                border-color: #86b7fe;
+                box-shadow: var(--multi-sel-focus-boxshadow);
+                border-color: var(--multi-sel-focus-border-color);
                 outline: 0;
                 
             } 

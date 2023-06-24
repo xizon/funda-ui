@@ -708,12 +708,12 @@ var MultiFuncSelect = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forward
             return _context3.abrupt("return");
           case 5:
             // cancel
-            if (!MULTI_SEL_VALID) {
+            if (!(MULTI_SEL_VALID && isOpen)) {
               cancel();
             }
 
             //remove focus style
-            if (!MULTI_SEL_VALID) {
+            if (!(MULTI_SEL_VALID && isOpen)) {
               rootRef.current.classList.remove('focus');
             }
 
@@ -979,6 +979,8 @@ var MultiFuncSelect = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forward
 
   //
   function handleFocus(event) {
+    rootRef.current.classList.add('focus');
+
     // update temporary value
     setControlTempValue('');
 
@@ -987,10 +989,14 @@ var MultiFuncSelect = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forward
   }
   function handleBlur(event) {
     //remove focus style
-    if (!MULTI_SEL_VALID) {
+    if (!(MULTI_SEL_VALID && isOpen)) {
       rootRef.current.classList.remove('focus');
     }
     setTimeout(function () {
+      // cancel
+      if (!(MULTI_SEL_VALID && isOpen)) {
+        cancel();
+      }
       onBlur === null || onBlur === void 0 ? void 0 : onBlur(event);
     }, 300);
   }
@@ -1075,7 +1081,7 @@ var MultiFuncSelect = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forward
             case 0:
               res = null;
               if (!(event.code === "Enter" || event.code === "NumpadEnter")) {
-                _context.next = 12;
+                _context.next = 13;
                 break;
               }
               if (!(listRef.current === null || !rootRef.current.classList.contains('active'))) {
@@ -1085,18 +1091,19 @@ var MultiFuncSelect = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forward
               return _context.abrupt("return");
             case 4:
               if (!fetchTrigger) {
-                _context.next = 6;
+                _context.next = 7;
                 break;
               }
+              handleFetch();
               return _context.abrupt("return");
-            case 6:
+            case 7:
               if (!(listRef.current !== null)) {
-                _context.next = 11;
+                _context.next = 12;
                 break;
               }
-              _context.next = 9;
+              _context.next = 10;
               return listRef.current.dataset.data;
-            case 9:
+            case 10:
               currentData = _context.sent;
               if (typeof currentData !== 'undefined') {
                 currentControlValueArr = [];
@@ -1111,36 +1118,36 @@ var MultiFuncSelect = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forward
                 });
                 handleSelect(null, currentData, currentControlValueArr, currentControlLabelArr);
               }
-            case 11:
-              return _context.abrupt("return");
             case 12:
+              return _context.abrupt("return");
+            case 13:
               _context.t0 = event.code;
-              _context.next = _context.t0 === "ArrowLeft" ? 15 : _context.t0 === "ArrowRight" ? 16 : _context.t0 === "ArrowUp" ? 17 : _context.t0 === "ArrowDown" ? 21 : 25;
+              _context.next = _context.t0 === "ArrowLeft" ? 16 : _context.t0 === "ArrowRight" ? 17 : _context.t0 === "ArrowUp" ? 18 : _context.t0 === "ArrowDown" ? 22 : 26;
               break;
-            case 15:
-              return _context.abrupt("break", 25);
             case 16:
-              return _context.abrupt("break", 25);
+              return _context.abrupt("break", 26);
             case 17:
-              _context.next = 19;
+              return _context.abrupt("break", 26);
+            case 18:
+              _context.next = 20;
               return optionFocus('decrease');
-            case 19:
+            case 20:
               res = _context.sent;
-              return _context.abrupt("break", 25);
-            case 21:
-              _context.next = 23;
+              return _context.abrupt("break", 26);
+            case 22:
+              _context.next = 24;
               return optionFocus('increase');
-            case 23:
+            case 24:
               res = _context.sent;
-              return _context.abrupt("break", 25);
-            case 25:
+              return _context.abrupt("break", 26);
+            case 26:
               // temporary data
               if (res !== null) listRef.current.dataset.data = JSON.stringify({
                 value: res.dataset.value,
                 label: res.dataset.label,
                 letter: res.dataset.letter
               });
-            case 26:
+            case 27:
             case "end":
               return _context.stop();
           }

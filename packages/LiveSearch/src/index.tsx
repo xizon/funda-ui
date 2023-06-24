@@ -206,11 +206,10 @@ const LiveSearch = (props: LiveSearchProps) => {
         }
 
         if (query) {
-            const paramsFromUser = fetchFuncMethodParams as [];
-            paramsFromUser.shift();
-            paramsFromUser.unshift(val as never);
-            const params = (paramsFromUser as []).join(',');
-            const response: any = await fetchData(params);
+
+            const _oparams: any[] = fetchFuncMethodParams || [];
+            const _params: any[] = _oparams.map((item: any) => item !== '$QUERY_STRING' ? item : val);
+            const response: any = await fetchData((_params).join(','));
             res = filterRes(response) as never;
             return res;
         } else {
@@ -323,7 +322,7 @@ const LiveSearch = (props: LiveSearchProps) => {
     }
 
 
-    function handleSearch() {
+    function handleFetch() {
         activate();
 
 
@@ -405,8 +404,10 @@ const LiveSearch = (props: LiveSearchProps) => {
 
         // data init
         //--------------
+        const _oparams: any[] = fetchFuncMethodParams || [];
+        const _params: any[] = _oparams.map((item: any) => item !== '$QUERY_STRING' ? item : '-');
         if ( !firstFetch ) {
-            fetchData((fetchFuncMethodParams as []).join(','));
+            fetchData((_params).join(','));
             setFirstFetch(true);  // avoid triggering two data requests if the input value has not changed
         }
 
@@ -424,6 +425,10 @@ const LiveSearch = (props: LiveSearchProps) => {
                 // Determine the "active" class name to avoid listening to other unused components of the same type
                 if ( listRef.current === null || !rootRef.current.classList.contains('active') ) return;
 
+                if ( fetchTrigger ) {
+                    handleFetch();
+                    return;
+                }
 
                 if ( listRef.current !== null ) {
                     const currentData = listRef.current.dataset.data;
@@ -515,7 +520,7 @@ const LiveSearch = (props: LiveSearchProps) => {
                     appearance={appearance}
                     onChange={handleChange}    
                     onBlur={handleBlur}
-                    onClick={handleSearch}
+                    onClick={handleFetch}
                     icon={!fetchTrigger ? '' : icon}
                     btnId={btnId}
                     autoComplete='off'

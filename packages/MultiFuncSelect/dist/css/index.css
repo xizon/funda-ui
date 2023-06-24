@@ -2,6 +2,8 @@
     <!-- Multifunction Select -->
 /* ====================================================== */
 .multifunc-select__wrapper {
+  --multi-sel-focus-border-color:#86b7fe;
+  --multi-sel-focus-boxshadow: 0 0 0 0.25rem rgba(13,110,253,.25);
   /*------ Input ------*/
   /*------ List ------*/
   /*------ Multiple selection ------*/
@@ -108,19 +110,19 @@
     color: black;
   }
 }
+.multifunc-select__wrapper [data-select]:focus {
+  cursor: text !important;
+}
+.multifunc-select__wrapper:not(.multiple-selection) [data-select]:focus {
+  box-shadow: var(--multi-sel-focus-boxshadow);
+  border-color: var(--multi-sel-focus-border-color);
+  outline: 0;
+}
 .multifunc-select__wrapper.active .list-group {
   display: block;
 }
-.multifunc-select__wrapper.focus [data-select] {
-  cursor: text !important;
-}
-.multifunc-select__wrapper.focus:not(.multiple-selection) [data-select] {
-  box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
-  border-color: #86b7fe;
-  outline: 0;
-}
 .multifunc-select__wrapper.focus .multifunc-select-multi__control-wrapper > div {
-  box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
-  border-color: #86b7fe;
+  box-shadow: var(--multi-sel-focus-boxshadow);
+  border-color: var(--multi-sel-focus-border-color);
   outline: 0;
 }

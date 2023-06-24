@@ -708,8 +708,8 @@ var LiveSearch = function LiveSearch(props) {
         query,
         res,
         filterRes,
-        paramsFromUser,
-        params,
+        _oparams,
+        _params,
         response,
         _args2 = arguments;
       return _regeneratorRuntime().wrap(function _callee2$(_context2) {
@@ -732,23 +732,23 @@ var LiveSearch = function LiveSearch(props) {
               });
             };
             if (!query) {
-              _context2.next = 16;
+              _context2.next = 14;
               break;
             }
-            paramsFromUser = fetchFuncMethodParams;
-            paramsFromUser.shift();
-            paramsFromUser.unshift(val);
-            params = paramsFromUser.join(',');
-            _context2.next = 11;
-            return fetchData(params);
-          case 11:
+            _oparams = fetchFuncMethodParams || [];
+            _params = _oparams.map(function (item) {
+              return item !== '$QUERY_STRING' ? item : val;
+            });
+            _context2.next = 9;
+            return fetchData(_params.join(','));
+          case 9:
             response = _context2.sent;
             res = filterRes(response);
             return _context2.abrupt("return", res);
-          case 16:
+          case 14:
             res = filterRes(dataInit);
             return _context2.abrupt("return", res);
-          case 18:
+          case 16:
           case "end":
             return _context2.stop();
         }
@@ -924,7 +924,7 @@ var LiveSearch = function LiveSearch(props) {
     }));
     return _handleSelect.apply(this, arguments);
   }
-  function handleSearch() {
+  function handleFetch() {
     activate();
 
     // window position
@@ -983,8 +983,12 @@ var LiveSearch = function LiveSearch(props) {
 
     // data init
     //--------------
+    var _oparams = fetchFuncMethodParams || [];
+    var _params = _oparams.map(function (item) {
+      return item !== '$QUERY_STRING' ? item : '-';
+    });
     if (!firstFetch) {
-      fetchData(fetchFuncMethodParams.join(','));
+      fetchData(_params.join(','));
       setFirstFetch(true); // avoid triggering two data requests if the input value has not changed
     }
 
@@ -998,7 +1002,7 @@ var LiveSearch = function LiveSearch(props) {
             case 0:
               res = null;
               if (!(event.code === "Enter" || event.code === "NumpadEnter")) {
-                _context.next = 6;
+                _context.next = 9;
                 break;
               }
               if (!(listRef.current === null || !rootRef.current.classList.contains('active'))) {
@@ -1007,6 +1011,13 @@ var LiveSearch = function LiveSearch(props) {
               }
               return _context.abrupt("return");
             case 4:
+              if (!fetchTrigger) {
+                _context.next = 7;
+                break;
+              }
+              handleFetch();
+              return _context.abrupt("return");
+            case 7:
               if (listRef.current !== null) {
                 currentData = listRef.current.dataset.data;
                 if (typeof currentData !== 'undefined') {
@@ -1018,34 +1029,34 @@ var LiveSearch = function LiveSearch(props) {
                 }
               }
               return _context.abrupt("return");
-            case 6:
-              _context.t0 = event.code;
-              _context.next = _context.t0 === "ArrowLeft" ? 9 : _context.t0 === "ArrowRight" ? 10 : _context.t0 === "ArrowUp" ? 11 : _context.t0 === "ArrowDown" ? 15 : 19;
-              break;
             case 9:
-              return _context.abrupt("break", 19);
-            case 10:
-              return _context.abrupt("break", 19);
-            case 11:
-              _context.next = 13;
-              return optionFocus('decrease');
+              _context.t0 = event.code;
+              _context.next = _context.t0 === "ArrowLeft" ? 12 : _context.t0 === "ArrowRight" ? 13 : _context.t0 === "ArrowUp" ? 14 : _context.t0 === "ArrowDown" ? 18 : 22;
+              break;
+            case 12:
+              return _context.abrupt("break", 22);
             case 13:
+              return _context.abrupt("break", 22);
+            case 14:
+              _context.next = 16;
+              return optionFocus('decrease');
+            case 16:
               res = _context.sent;
-              return _context.abrupt("break", 19);
-            case 15:
-              _context.next = 17;
+              return _context.abrupt("break", 22);
+            case 18:
+              _context.next = 20;
               return optionFocus('increase');
-            case 17:
+            case 20:
               res = _context.sent;
-              return _context.abrupt("break", 19);
-            case 19:
+              return _context.abrupt("break", 22);
+            case 22:
               // temporary data
               if (res !== null) listRef.current.dataset.data = JSON.stringify({
                 value: res.dataset.value,
                 label: res.dataset.label,
                 letter: res.dataset.letter
               });
-            case 20:
+            case 23:
             case "end":
               return _context.stop();
           }
@@ -1095,7 +1106,7 @@ var LiveSearch = function LiveSearch(props) {
     appearance: appearance,
     onChange: handleChange,
     onBlur: handleBlur,
-    onClick: handleSearch,
+    onClick: handleFetch,
     icon: !fetchTrigger ? '' : icon,
     btnId: btnId,
     autoComplete: "off"
