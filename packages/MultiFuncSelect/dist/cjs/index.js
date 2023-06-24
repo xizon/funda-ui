@@ -929,13 +929,38 @@ var MultiFuncSelect = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forward
     }
   }
   function handleFetch() {
-    // data init
-    var searchStr = controlTempValue || controlTempValue === '' ? controlTempValue : '';
-    var _oparams = fetchFuncMethodParams || [];
-    var _params = _oparams.map(function (item) {
-      return item !== '$QUERY_STRING' ? item : searchStr;
-    });
-    fetchData(_params.join(','), value, false);
+    return _handleFetch.apply(this, arguments);
+  }
+  function _handleFetch() {
+    _handleFetch = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee4() {
+      var searchStr, _oparams, _params, res;
+      return _regeneratorRuntime().wrap(function _callee4$(_context4) {
+        while (1) switch (_context4.prev = _context4.next) {
+          case 0:
+            // data init
+            searchStr = controlTempValue || controlTempValue === '' ? controlTempValue : '';
+            _oparams = fetchFuncMethodParams || [];
+            _params = _oparams.map(function (item) {
+              return item !== '$QUERY_STRING' ? item : searchStr;
+            }); // if empty
+            if (!(searchStr.replace(/\s/g, "") === '')) {
+              _context4.next = 5;
+              break;
+            }
+            return _context4.abrupt("return", []);
+          case 5:
+            _context4.next = 7;
+            return fetchData(_params.join(','), value, false);
+          case 7:
+            res = _context4.sent;
+            return _context4.abrupt("return", res);
+          case 9:
+          case "end":
+            return _context4.stop();
+        }
+      }, _callee4);
+    }));
+    return _handleFetch.apply(this, arguments);
   }
   function handleComposition(event) {
     if (event.type === 'compositionstart' || event.type === 'compositionend') {
@@ -943,41 +968,70 @@ var MultiFuncSelect = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forward
       handleChange(event);
     }
   }
-  function handleChange(event) {
-    var val = event.target.value;
+  function handleChange(_x5) {
+    return _handleChange.apply(this, arguments);
+  } //
+  function _handleChange() {
+    _handleChange = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee5(event) {
+      var val, _orginalData, filterRes;
+      return _regeneratorRuntime().wrap(function _callee5$(_context5) {
+        while (1) switch (_context5.prev = _context5.next) {
+          case 0:
+            val = event.target.value; // update temporary value
+            setControlTempValue(val);
 
-    // update temporary value
-    setControlTempValue(val);
-
-    //
-    if (val === '') {
-      // No elements found. Consider changing the search query.
-      // restore data
-      setOptionsData(orginalData);
-    } else {
-      var filterRes = function filterRes(data) {
-        return orginalData.filter(function (item) {
-          if ((item.letter.split(',').some(function (l) {
-            return l.charAt(0) === val.toLowerCase();
-          }) || item.letter.split(',').some(function (l) {
-            return l.replace(/ /g, '').indexOf(val.toLowerCase()) >= 0;
-          }) || item.label.indexOf(val) >= 0) && val != '') {
-            return true;
-          } else {
-            return false;
-          }
-        });
-      };
-      setOptionsData(filterRes);
-    }
-
-    // window position
-    setTimeout(function () {
-      getPlacement(listRef.current);
-    }, 0);
+            //
+            if (!(val.replace(/\s/g, "") === '')) {
+              _context5.next = 6;
+              break;
+            }
+            // No elements found. Consider changing the search query.
+            // restore data
+            setOptionsData(orginalData);
+            _context5.next = 16;
+            break;
+          case 6:
+            _orginalData = [];
+            if (!fetchUpdate) {
+              _context5.next = 13;
+              break;
+            }
+            _context5.next = 10;
+            return handleFetch();
+          case 10:
+            _orginalData = _context5.sent;
+            _context5.next = 14;
+            break;
+          case 13:
+            _orginalData = orginalData;
+          case 14:
+            filterRes = function filterRes(data) {
+              return _orginalData.filter(function (item) {
+                if ((item.letter.split(',').some(function (l) {
+                  return l.charAt(0) === val.toLowerCase();
+                }) || item.letter.split(',').some(function (l) {
+                  return l.replace(/ /g, '').indexOf(val.toLowerCase()) >= 0;
+                }) || item.label.indexOf(val) >= 0) && val != '') {
+                  return true;
+                } else {
+                  return false;
+                }
+              });
+            };
+            setOptionsData(filterRes);
+          case 16:
+            // window position
+            setTimeout(function () {
+              getPlacement(listRef.current);
+            }, 0);
+          case 17:
+          case "end":
+            return _context5.stop();
+        }
+      }, _callee5);
+    }));
+    return _handleChange.apply(this, arguments);
   }
-
-  //
   function handleFocus(event) {
     rootRef.current.classList.add('focus');
 
@@ -1050,7 +1104,7 @@ var MultiFuncSelect = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forward
     //--------------
     var _oparams = fetchFuncMethodParams || [];
     var _params = _oparams.map(function (item) {
-      return item !== '$QUERY_STRING' ? item : '-';
+      return item !== '$QUERY_STRING' ? item : fetchTrigger ? '-' : '';
     });
     fetchData(_params.join(','), value);
 
@@ -1153,7 +1207,7 @@ var MultiFuncSelect = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forward
           }
         }, _callee);
       }));
-      return function listener(_x5) {
+      return function listener(_x6) {
         return _ref.apply(this, arguments);
       };
     }();

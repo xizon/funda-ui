@@ -194,6 +194,7 @@ export default () => {
                 placeholder="Search Options"
                 name="name"
                 data="mydata"
+                fetchUpdate={true}
                 fetchTrigger={true}
                 fetchTriggerForDefaultData={{
                     values: ['bar2'],
@@ -278,6 +279,7 @@ export default () => {
                 name="target_user_id"
                 placeholder="Select"
                 data="mydata"
+                fetchUpdate={true}
                 fetchTrigger={true}
                 fetchTriggerForDefaultData={{
                     values: ['bar2'],

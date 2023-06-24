@@ -405,7 +405,7 @@ const LiveSearch = (props: LiveSearchProps) => {
         // data init
         //--------------
         const _oparams: any[] = fetchFuncMethodParams || [];
-        const _params: any[] = _oparams.map((item: any) => item !== '$QUERY_STRING' ? item : '-');
+        const _params: any[] = _oparams.map((item: any) => item !== '$QUERY_STRING' ? item : (fetchTrigger ? '-' : ''));
         if ( !firstFetch ) {
             fetchData((_params).join(','));
             setFirstFetch(true);  // avoid triggering two data requests if the input value has not changed

@@ -985,7 +985,7 @@ var LiveSearch = function LiveSearch(props) {
     //--------------
     var _oparams = fetchFuncMethodParams || [];
     var _params = _oparams.map(function (item) {
-      return item !== '$QUERY_STRING' ? item : '-';
+      return item !== '$QUERY_STRING' ? item : fetchTrigger ? '-' : '';
     });
     if (!firstFetch) {
       fetchData(_params.join(','));

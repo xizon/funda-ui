@@ -813,13 +813,17 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
     }
 
 
-    function handleFetch() {
+    async function handleFetch() {
         // data init
         const searchStr: string = controlTempValue || controlTempValue === '' ? controlTempValue : '';
         const _oparams: any[] = fetchFuncMethodParams || [];
         const _params: any[] = _oparams.map((item: any) => item !== '$QUERY_STRING' ? item : searchStr);
 
-        fetchData((_params).join(','), value, false);
+        // if empty
+        if ( searchStr.replace(/\s/g, "") === '' ) return [];
+
+        const res = await fetchData((_params).join(','), value, false);
+        return res;
     }
 
     
@@ -831,21 +835,30 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
         }
     }
 
-    function handleChange(event: any) {
+    async function handleChange(event: any) {
         const val = event.target.value;
 
         // update temporary value
         setControlTempValue(val);
 
         //
-        if ( val === '' ) {
+        if ( val.replace(/\s/g, "") === '' ) {
             // No elements found. Consider changing the search query.
             // restore data
             setOptionsData(orginalData);
         } else {
 
+            let _orginalData: any[] = [];
+   
+            if ( fetchUpdate ) {
+                _orginalData = await handleFetch();
+            } else {
+                _orginalData = orginalData;
+            }
+
+
             const filterRes = (data: any[]) => {
-                return orginalData.filter((item: any) => {
+                return _orginalData.filter((item: any) => {
                     if (
                         (
                             item.letter.split(',').some((l: any) => l.charAt(0) === val.toLowerCase()) ||
@@ -974,7 +987,7 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
         // data init
         //--------------
         const _oparams: any[] = fetchFuncMethodParams || [];
-        const _params: any[] = _oparams.map((item: any) => item !== '$QUERY_STRING' ? item : '-');
+        const _params: any[] = _oparams.map((item: any) => item !== '$QUERY_STRING' ? item : (fetchTrigger ? '-' : ''));
         fetchData((_params).join(','), value);
 
 
