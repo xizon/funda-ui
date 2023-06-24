@@ -420,11 +420,16 @@ const LiveSearch = (props: LiveSearchProps) => {
             let res: any = null;
  
             if (event.code === "Enter" || event.code === "NumpadEnter") {
+
+                // Determine the "active" class name to avoid listening to other unused components of the same type
+                if ( listRef.current === null || !rootRef.current.classList.contains('active') ) return;
+
+
                 if ( listRef.current !== null ) {
                     const currentData = listRef.current.dataset.data;
                     if ( typeof currentData !== 'undefined' ) {
                         handleSelect(null, currentData);
-                        const options = [].slice.call(listRef.current.querySelectorAll('.list-group-item'));
+                        const options = [].slice.call(listRef.current.querySelectorAll('.list-group-item:not(.no-match)'));
                         options.forEach((node: any) => {
                             node.classList.remove('active');
                         });

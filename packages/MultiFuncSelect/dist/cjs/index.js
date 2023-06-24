@@ -151,11 +151,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _utils_performance__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(342);
 /* harmony import */ var _utils_performance__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_utils_performance__WEBPACK_IMPORTED_MODULE_1__);
-var _excluded = ["wrapperClassName", "controlClassName", "multiSelect", "disabled", "required", "value", "label", "name", "readOnly", "placeholder", "id", "options", "style", "depth", "controlArrow", "tabIndex", "fetchNoneInfo", "fetchFuncAsync", "fetchFuncMethod", "fetchFuncMethodParams", "data", "fetchCallback", "onFetch", "onSelect", "onChange", "onBlur", "onFocus"];
-function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
-function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
-function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter); }
-function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
+var _excluded = ["wrapperClassName", "controlClassName", "multiSelect", "disabled", "required", "value", "label", "name", "readOnly", "placeholder", "id", "options", "style", "depth", "controlArrow", "tabIndex", "fetchTrigger", "fetchTriggerForDefaultData", "fetchNoneInfo", "fetchUpdate", "fetchFuncAsync", "fetchFuncMethod", "fetchFuncMethodParams", "data", "fetchCallback", "onFetch", "onSelect", "onChange", "onBlur", "onFocus"];
 function _extends() { _extends = Object.assign ? Object.assign.bind() : function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
 function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys(Object(source), !0).forEach(function (key) { _defineProperty(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
@@ -163,6 +159,10 @@ function _defineProperty(obj, key, value) { key = _toPropertyKey(key); if (key i
 function _toPropertyKey(arg) { var key = _toPrimitive(arg, "string"); return _typeof(key) === "symbol" ? key : String(key); }
 function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input === null) return input; var prim = input[Symbol.toPrimitive]; if (prim !== undefined) { var res = prim.call(input, hint || "default"); if (_typeof(res) !== "object") return res; throw new TypeError("@@toPrimitive must return a primitive value."); } return (hint === "string" ? String : Number)(input); }
 function _regeneratorRuntime() { "use strict"; /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/facebook/regenerator/blob/main/LICENSE */ _regeneratorRuntime = function _regeneratorRuntime() { return exports; }; var exports = {}, Op = Object.prototype, hasOwn = Op.hasOwnProperty, defineProperty = Object.defineProperty || function (obj, key, desc) { obj[key] = desc.value; }, $Symbol = "function" == typeof Symbol ? Symbol : {}, iteratorSymbol = $Symbol.iterator || "@@iterator", asyncIteratorSymbol = $Symbol.asyncIterator || "@@asyncIterator", toStringTagSymbol = $Symbol.toStringTag || "@@toStringTag"; function define(obj, key, value) { return Object.defineProperty(obj, key, { value: value, enumerable: !0, configurable: !0, writable: !0 }), obj[key]; } try { define({}, ""); } catch (err) { define = function define(obj, key, value) { return obj[key] = value; }; } function wrap(innerFn, outerFn, self, tryLocsList) { var protoGenerator = outerFn && outerFn.prototype instanceof Generator ? outerFn : Generator, generator = Object.create(protoGenerator.prototype), context = new Context(tryLocsList || []); return defineProperty(generator, "_invoke", { value: makeInvokeMethod(innerFn, self, context) }), generator; } function tryCatch(fn, obj, arg) { try { return { type: "normal", arg: fn.call(obj, arg) }; } catch (err) { return { type: "throw", arg: err }; } } exports.wrap = wrap; var ContinueSentinel = {}; function Generator() {} function GeneratorFunction() {} function GeneratorFunctionPrototype() {} var IteratorPrototype = {}; define(IteratorPrototype, iteratorSymbol, function () { return this; }); var getProto = Object.getPrototypeOf, NativeIteratorPrototype = getProto && getProto(getProto(values([]))); NativeIteratorPrototype && NativeIteratorPrototype !== Op && hasOwn.call(NativeIteratorPrototype, iteratorSymbol) && (IteratorPrototype = NativeIteratorPrototype); var Gp = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(IteratorPrototype); function defineIteratorMethods(prototype) { ["next", "throw", "return"].forEach(function (method) { define(prototype, method, function (arg) { return this._invoke(method, arg); }); }); } function AsyncIterator(generator, PromiseImpl) { function invoke(method, arg, resolve, reject) { var record = tryCatch(generator[method], generator, arg); if ("throw" !== record.type) { var result = record.arg, value = result.value; return value && "object" == _typeof(value) && hasOwn.call(value, "__await") ? PromiseImpl.resolve(value.__await).then(function (value) { invoke("next", value, resolve, reject); }, function (err) { invoke("throw", err, resolve, reject); }) : PromiseImpl.resolve(value).then(function (unwrapped) { result.value = unwrapped, resolve(result); }, function (error) { return invoke("throw", error, resolve, reject); }); } reject(record.arg); } var previousPromise; defineProperty(this, "_invoke", { value: function value(method, arg) { function callInvokeWithMethodAndArg() { return new PromiseImpl(function (resolve, reject) { invoke(method, arg, resolve, reject); }); } return previousPromise = previousPromise ? previousPromise.then(callInvokeWithMethodAndArg, callInvokeWithMethodAndArg) : callInvokeWithMethodAndArg(); } }); } function makeInvokeMethod(innerFn, self, context) { var state = "suspendedStart"; return function (method, arg) { if ("executing" === state) throw new Error("Generator is already running"); if ("completed" === state) { if ("throw" === method) throw arg; return doneResult(); } for (context.method = method, context.arg = arg;;) { var delegate = context.delegate; if (delegate) { var delegateResult = maybeInvokeDelegate(delegate, context); if (delegateResult) { if (delegateResult === ContinueSentinel) continue; return delegateResult; } } if ("next" === context.method) context.sent = context._sent = context.arg;else if ("throw" === context.method) { if ("suspendedStart" === state) throw state = "completed", context.arg; context.dispatchException(context.arg); } else "return" === context.method && context.abrupt("return", context.arg); state = "executing"; var record = tryCatch(innerFn, self, context); if ("normal" === record.type) { if (state = context.done ? "completed" : "suspendedYield", record.arg === ContinueSentinel) continue; return { value: record.arg, done: context.done }; } "throw" === record.type && (state = "completed", context.method = "throw", context.arg = record.arg); } }; } function maybeInvokeDelegate(delegate, context) { var methodName = context.method, method = delegate.iterator[methodName]; if (undefined === method) return context.delegate = null, "throw" === methodName && delegate.iterator["return"] && (context.method = "return", context.arg = undefined, maybeInvokeDelegate(delegate, context), "throw" === context.method) || "return" !== methodName && (context.method = "throw", context.arg = new TypeError("The iterator does not provide a '" + methodName + "' method")), ContinueSentinel; var record = tryCatch(method, delegate.iterator, context.arg); if ("throw" === record.type) return context.method = "throw", context.arg = record.arg, context.delegate = null, ContinueSentinel; var info = record.arg; return info ? info.done ? (context[delegate.resultName] = info.value, context.next = delegate.nextLoc, "return" !== context.method && (context.method = "next", context.arg = undefined), context.delegate = null, ContinueSentinel) : info : (context.method = "throw", context.arg = new TypeError("iterator result is not an object"), context.delegate = null, ContinueSentinel); } function pushTryEntry(locs) { var entry = { tryLoc: locs[0] }; 1 in locs && (entry.catchLoc = locs[1]), 2 in locs && (entry.finallyLoc = locs[2], entry.afterLoc = locs[3]), this.tryEntries.push(entry); } function resetTryEntry(entry) { var record = entry.completion || {}; record.type = "normal", delete record.arg, entry.completion = record; } function Context(tryLocsList) { this.tryEntries = [{ tryLoc: "root" }], tryLocsList.forEach(pushTryEntry, this), this.reset(!0); } function values(iterable) { if (iterable) { var iteratorMethod = iterable[iteratorSymbol]; if (iteratorMethod) return iteratorMethod.call(iterable); if ("function" == typeof iterable.next) return iterable; if (!isNaN(iterable.length)) { var i = -1, next = function next() { for (; ++i < iterable.length;) if (hasOwn.call(iterable, i)) return next.value = iterable[i], next.done = !1, next; return next.value = undefined, next.done = !0, next; }; return next.next = next; } } return { next: doneResult }; } function doneResult() { return { value: undefined, done: !0 }; } return GeneratorFunction.prototype = GeneratorFunctionPrototype, defineProperty(Gp, "constructor", { value: GeneratorFunctionPrototype, configurable: !0 }), defineProperty(GeneratorFunctionPrototype, "constructor", { value: GeneratorFunction, configurable: !0 }), GeneratorFunction.displayName = define(GeneratorFunctionPrototype, toStringTagSymbol, "GeneratorFunction"), exports.isGeneratorFunction = function (genFun) { var ctor = "function" == typeof genFun && genFun.constructor; return !!ctor && (ctor === GeneratorFunction || "GeneratorFunction" === (ctor.displayName || ctor.name)); }, exports.mark = function (genFun) { return Object.setPrototypeOf ? Object.setPrototypeOf(genFun, GeneratorFunctionPrototype) : (genFun.__proto__ = GeneratorFunctionPrototype, define(genFun, toStringTagSymbol, "GeneratorFunction")), genFun.prototype = Object.create(Gp), genFun; }, exports.awrap = function (arg) { return { __await: arg }; }, defineIteratorMethods(AsyncIterator.prototype), define(AsyncIterator.prototype, asyncIteratorSymbol, function () { return this; }), exports.AsyncIterator = AsyncIterator, exports.async = function (innerFn, outerFn, self, tryLocsList, PromiseImpl) { void 0 === PromiseImpl && (PromiseImpl = Promise); var iter = new AsyncIterator(wrap(innerFn, outerFn, self, tryLocsList), PromiseImpl); return exports.isGeneratorFunction(outerFn) ? iter : iter.next().then(function (result) { return result.done ? result.value : iter.next(); }); }, defineIteratorMethods(Gp), define(Gp, toStringTagSymbol, "Generator"), define(Gp, iteratorSymbol, function () { return this; }), define(Gp, "toString", function () { return "[object Generator]"; }), exports.keys = function (val) { var object = Object(val), keys = []; for (var key in object) keys.push(key); return keys.reverse(), function next() { for (; keys.length;) { var key = keys.pop(); if (key in object) return next.value = key, next.done = !1, next; } return next.done = !0, next; }; }, exports.values = values, Context.prototype = { constructor: Context, reset: function reset(skipTempReset) { if (this.prev = 0, this.next = 0, this.sent = this._sent = undefined, this.done = !1, this.delegate = null, this.method = "next", this.arg = undefined, this.tryEntries.forEach(resetTryEntry), !skipTempReset) for (var name in this) "t" === name.charAt(0) && hasOwn.call(this, name) && !isNaN(+name.slice(1)) && (this[name] = undefined); }, stop: function stop() { this.done = !0; var rootRecord = this.tryEntries[0].completion; if ("throw" === rootRecord.type) throw rootRecord.arg; return this.rval; }, dispatchException: function dispatchException(exception) { if (this.done) throw exception; var context = this; function handle(loc, caught) { return record.type = "throw", record.arg = exception, context.next = loc, caught && (context.method = "next", context.arg = undefined), !!caught; } for (var i = this.tryEntries.length - 1; i >= 0; --i) { var entry = this.tryEntries[i], record = entry.completion; if ("root" === entry.tryLoc) return handle("end"); if (entry.tryLoc <= this.prev) { var hasCatch = hasOwn.call(entry, "catchLoc"), hasFinally = hasOwn.call(entry, "finallyLoc"); if (hasCatch && hasFinally) { if (this.prev < entry.catchLoc) return handle(entry.catchLoc, !0); if (this.prev < entry.finallyLoc) return handle(entry.finallyLoc); } else if (hasCatch) { if (this.prev < entry.catchLoc) return handle(entry.catchLoc, !0); } else { if (!hasFinally) throw new Error("try statement without catch or finally"); if (this.prev < entry.finallyLoc) return handle(entry.finallyLoc); } } } }, abrupt: function abrupt(type, arg) { for (var i = this.tryEntries.length - 1; i >= 0; --i) { var entry = this.tryEntries[i]; if (entry.tryLoc <= this.prev && hasOwn.call(entry, "finallyLoc") && this.prev < entry.finallyLoc) { var finallyEntry = entry; break; } } finallyEntry && ("break" === type || "continue" === type) && finallyEntry.tryLoc <= arg && arg <= finallyEntry.finallyLoc && (finallyEntry = null); var record = finallyEntry ? finallyEntry.completion : {}; return record.type = type, record.arg = arg, finallyEntry ? (this.method = "next", this.next = finallyEntry.finallyLoc, ContinueSentinel) : this.complete(record); }, complete: function complete(record, afterLoc) { if ("throw" === record.type) throw record.arg; return "break" === record.type || "continue" === record.type ? this.next = record.arg : "return" === record.type ? (this.rval = this.arg = record.arg, this.method = "return", this.next = "end") : "normal" === record.type && afterLoc && (this.next = afterLoc), ContinueSentinel; }, finish: function finish(finallyLoc) { for (var i = this.tryEntries.length - 1; i >= 0; --i) { var entry = this.tryEntries[i]; if (entry.finallyLoc === finallyLoc) return this.complete(entry.completion, entry.afterLoc), resetTryEntry(entry), ContinueSentinel; } }, "catch": function _catch(tryLoc) { for (var i = this.tryEntries.length - 1; i >= 0; --i) { var entry = this.tryEntries[i]; if (entry.tryLoc === tryLoc) { var record = entry.completion; if ("throw" === record.type) { var thrown = record.arg; resetTryEntry(entry); } return thrown; } } throw new Error("illegal catch attempt"); }, delegateYield: function delegateYield(iterable, resultName, nextLoc) { return this.delegate = { iterator: values(iterable), resultName: resultName, nextLoc: nextLoc }, "next" === this.method && (this.arg = undefined), ContinueSentinel; } }, exports; }
+function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter); }
+function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
 function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
 function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
 function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
@@ -193,7 +193,10 @@ var MultiFuncSelect = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forward
     depth = props.depth,
     controlArrow = props.controlArrow,
     tabIndex = props.tabIndex,
+    fetchTrigger = props.fetchTrigger,
+    fetchTriggerForDefaultData = props.fetchTriggerForDefaultData,
     fetchNoneInfo = props.fetchNoneInfo,
+    fetchUpdate = props.fetchUpdate,
     fetchFuncAsync = props.fetchFuncAsync,
     fetchFuncMethod = props.fetchFuncMethod,
     fetchFuncMethodParams = props.fetchFuncMethodParams,
@@ -302,6 +305,24 @@ var MultiFuncSelect = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forward
       arrFormat.splice(index, 1);
     }
     return arrFormat;
+  }
+
+  /**
+   * Remove multiple items from an array
+   * @param {array} arr 
+   * @param {array} value 
+   * @returns {array}
+   */
+  function removeItems(arr, value) {
+    var arrFormat = arr.map(function (v) {
+      return v.toString();
+    });
+    var valueFormat = value.map(function (v) {
+      return v.toString();
+    });
+    return arrFormat.filter(function (v) {
+      return !valueFormat.includes(v);
+    });
   }
 
   /**
@@ -424,18 +445,33 @@ var MultiFuncSelect = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forward
     return _fetchData.apply(this, arguments);
   }
   function _fetchData() {
-    _fetchData = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee2(params, defaultValue) {
-      var response, _ORGIN_DATA, filterRes, filterResQueryValue, filterResQueryLabel, _values, _filterRes2, _filterResQueryValue2, _filterResQueryLabel2, _values2;
+    _fetchData = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee2(params, inputDefaultValue) {
+      var init,
+        defaultValue,
+        response,
+        _ORGIN_DATA,
+        filterRes,
+        filterResQueryValue,
+        filterResQueryLabel,
+        _values,
+        _filterRes2,
+        _filterResQueryValue,
+        _filterResQueryLabel,
+        _values2,
+        _args2 = arguments;
       return _regeneratorRuntime().wrap(function _callee2$(_context2) {
         while (1) switch (_context2.prev = _context2.next) {
           case 0:
+            init = _args2.length > 2 && _args2[2] !== undefined ? _args2[2] : true;
+            // Determine whether the default value is user query input or default input
+            defaultValue = init ? inputDefaultValue : '';
             if (!(_typeof(fetchFuncAsync) === 'object')) {
-              _context2.next = 21;
+              _context2.next = 19;
               break;
             }
-            _context2.next = 3;
+            _context2.next = 5;
             return fetchFuncAsync["".concat(fetchFuncMethod)].apply(fetchFuncAsync, _toConsumableArray(params.split(',')));
-          case 3:
+          case 5:
             response = _context2.sent;
             _ORGIN_DATA = response.data; // reset data structure
             if (typeof fetchCallback === 'function') {
@@ -451,44 +487,62 @@ var MultiFuncSelect = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forward
 
             // value & label must be initialized
             filterRes = [];
-            filterResQueryValue = _ORGIN_DATA.filter(function (item) {
-              return item.value == defaultValue;
-            });
-            filterResQueryLabel = _ORGIN_DATA.filter(function (item) {
-              return item.label == defaultValue;
-            });
-            filterRes = filterResQueryValue;
-            if (filterResQueryValue.length === 0) filterRes = filterResQueryLabel;
+            if (fetchTrigger) {
+              // If a manual action is used to trigger the request
+              if (typeof fetchTriggerForDefaultData !== 'undefined' && fetchTriggerForDefaultData !== null && typeof (fetchTriggerForDefaultData === null || fetchTriggerForDefaultData === void 0 ? void 0 : fetchTriggerForDefaultData.values[0]) !== 'undefined') {
+                filterRes = [{
+                  value: fetchTriggerForDefaultData === null || fetchTriggerForDefaultData === void 0 ? void 0 : fetchTriggerForDefaultData.values[0],
+                  label: fetchTriggerForDefaultData === null || fetchTriggerForDefaultData === void 0 ? void 0 : fetchTriggerForDefaultData.labels[0],
+                  letter: fetchTriggerForDefaultData === null || fetchTriggerForDefaultData === void 0 ? void 0 : fetchTriggerForDefaultData.letters[0]
+                }];
+              }
+            } else {
+              filterResQueryValue = _ORGIN_DATA.filter(function (item) {
+                return item.value == defaultValue;
+              });
+              filterResQueryLabel = _ORGIN_DATA.filter(function (item) {
+                return item.label == defaultValue;
+              });
+              filterRes = filterResQueryValue;
+              if (filterResQueryValue.length === 0) filterRes = filterResQueryLabel;
+            }
 
             // ++++++++++++++++++++
             // Single
             // ++++++++++++++++++++
-            setControlValue(typeof filterRes[0] !== 'undefined' ? filterRes[0].value : '');
-            setControlLabel(typeof filterRes[0] !== 'undefined' ? filterRes[0].label : '');
+            if (typeof defaultValue === 'undefined' || defaultValue === '') {
+              // Do not use `init`, otherwise the query will revert to the default value if there is no value
+              setControlValue('');
+              setControlLabel('');
+            } else {
+              if (filterRes.length > 0) {
+                setControlValue(filterRes[0].value);
+                setControlLabel(filterRes[0].label);
+              }
+            }
 
             // ++++++++++++++++++++
             // Multiple selection
             // ++++++++++++++++++++
             if (MULTI_SEL_VALID) {
-              // data must be initialized
-              setControlValueArr([]);
-              setControlLabelArr([]);
-              setItemSelectedAll(false);
-
-              //
-              if (typeof defaultValue !== 'undefined' && defaultValue !== '') {
+              if ((typeof defaultValue === 'undefined' || defaultValue === '') && init) {
+                setControlValueArr([]);
+                setControlLabelArr([]);
+                setItemSelectedAll(false);
+              }
+              if (typeof defaultValue !== 'undefined' && defaultValue !== '' && (multiSelect === null || multiSelect === void 0 ? void 0 : multiSelect.data) !== null) {
+                //
                 _values = defaultValue.split(',');
-                _values.forEach(function (_value) {
-                  if (!multiSelControlOptionExist(controlValueArr, _value)) {
+                _values.forEach(function (_value, _index) {
+                  var _multiSelect$data;
+                  if (!multiSelControlOptionExist(controlValueArr, _value) && typeof (multiSelect === null || multiSelect === void 0 ? void 0 : (_multiSelect$data = multiSelect.data) === null || _multiSelect$data === void 0 ? void 0 : _multiSelect$data.values[_index]) !== 'undefined') {
+                    var _multiSelect$data2, _multiSelect$data3, _multiSelect$data4;
                     var _filterRes = [];
-                    var _filterResQueryValue = _ORGIN_DATA.filter(function (item) {
-                      return item.value == _value;
-                    });
-                    var _filterResQueryLabel = _ORGIN_DATA.filter(function (item) {
-                      return item.label == _value;
-                    });
-                    _filterRes = _filterResQueryValue;
-                    if (_filterResQueryValue.length === 0) _filterRes = _filterResQueryLabel;
+                    _filterRes = [{
+                      value: multiSelect === null || multiSelect === void 0 ? void 0 : (_multiSelect$data2 = multiSelect.data) === null || _multiSelect$data2 === void 0 ? void 0 : _multiSelect$data2.values[_index],
+                      label: multiSelect === null || multiSelect === void 0 ? void 0 : (_multiSelect$data3 = multiSelect.data) === null || _multiSelect$data3 === void 0 ? void 0 : _multiSelect$data3.labels[_index],
+                      letter: multiSelect === null || multiSelect === void 0 ? void 0 : (_multiSelect$data4 = multiSelect.data) === null || _multiSelect$data4 === void 0 ? void 0 : _multiSelect$data4.letters[_index]
+                    }];
                     setControlValueArr(function (prevState) {
                       return [].concat(_toConsumableArray(prevState), [typeof _filterRes[0] !== 'undefined' ? _filterRes[0].value : '']).filter(function (v) {
                         return v !== '';
@@ -516,47 +570,53 @@ var MultiFuncSelect = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forward
             //
             onFetch === null || onFetch === void 0 ? void 0 : onFetch(_ORGIN_DATA, incomingData);
             return _context2.abrupt("return", _ORGIN_DATA);
-          case 21:
+          case 19:
             // value & label must be initialized
             _filterRes2 = [];
-            _filterResQueryValue2 = optionsDataInit.filter(function (item) {
+            _filterResQueryValue = optionsDataInit.filter(function (item) {
               return item.value == defaultValue;
             });
-            _filterResQueryLabel2 = optionsDataInit.filter(function (item) {
+            _filterResQueryLabel = optionsDataInit.filter(function (item) {
               return item.label == defaultValue;
             });
-            _filterRes2 = _filterResQueryValue2;
-            if (_filterResQueryValue2.length === 0) _filterRes2 = _filterResQueryLabel2;
+            _filterRes2 = _filterResQueryValue;
+            if (_filterResQueryValue.length === 0) _filterRes2 = _filterResQueryLabel;
 
             // ++++++++++++++++++++
             // Single
             // ++++++++++++++++++++
-            setControlValue(typeof _filterRes2[0] !== 'undefined' ? _filterRes2[0].value : '');
-            setControlLabel(typeof _filterRes2[0] !== 'undefined' ? _filterRes2[0].label : '');
+            if (typeof defaultValue === 'undefined' || defaultValue === '') {
+              // Do not use `init`, otherwise the query will revert to the default value if there is no value
+              setControlValue('');
+              setControlLabel('');
+            } else {
+              if (_filterRes2.length > 0) {
+                setControlValue(_filterRes2[0].value);
+                setControlLabel(_filterRes2[0].label);
+              }
+            }
 
             // ++++++++++++++++++++
             // Multiple selection
             // ++++++++++++++++++++
             if (MULTI_SEL_VALID) {
-              // data must be initialized
-              setControlValueArr([]);
-              setControlLabelArr([]);
-              setItemSelectedAll(false);
-
-              //
-              if (typeof defaultValue !== 'undefined' && defaultValue !== '') {
+              if ((typeof defaultValue === 'undefined' || defaultValue === '') && init) {
+                setControlValueArr([]);
+                setControlLabelArr([]);
+                setItemSelectedAll(false);
+              }
+              if (typeof defaultValue !== 'undefined' && defaultValue !== '' && (multiSelect === null || multiSelect === void 0 ? void 0 : multiSelect.data) !== null) {
                 _values2 = typeof defaultValue !== 'undefined' ? defaultValue.split(',') : [];
-                _values2.forEach(function (_value) {
-                  if (!multiSelControlOptionExist(controlValueArr, _value)) {
+                _values2.forEach(function (_value, _index) {
+                  var _multiSelect$data5;
+                  if (!multiSelControlOptionExist(controlValueArr, _value) && typeof (multiSelect === null || multiSelect === void 0 ? void 0 : (_multiSelect$data5 = multiSelect.data) === null || _multiSelect$data5 === void 0 ? void 0 : _multiSelect$data5.values[_index]) !== 'undefined') {
+                    var _multiSelect$data6, _multiSelect$data7, _multiSelect$data8;
                     var _filterRes3 = [];
-                    var _filterResQueryValue3 = optionsDataInit.filter(function (item) {
-                      return item.value == _value;
-                    });
-                    var _filterResQueryLabel3 = optionsDataInit.filter(function (item) {
-                      return item.label == _value;
-                    });
-                    _filterRes3 = _filterResQueryValue3;
-                    if (_filterResQueryValue3.length === 0) _filterRes3 = _filterResQueryLabel3;
+                    _filterRes3 = [{
+                      value: multiSelect === null || multiSelect === void 0 ? void 0 : (_multiSelect$data6 = multiSelect.data) === null || _multiSelect$data6 === void 0 ? void 0 : _multiSelect$data6.values[_index],
+                      label: multiSelect === null || multiSelect === void 0 ? void 0 : (_multiSelect$data7 = multiSelect.data) === null || _multiSelect$data7 === void 0 ? void 0 : _multiSelect$data7.labels[_index],
+                      letter: multiSelect === null || multiSelect === void 0 ? void 0 : (_multiSelect$data8 = multiSelect.data) === null || _multiSelect$data8 === void 0 ? void 0 : _multiSelect$data8.letters[_index]
+                    }];
                     setControlValueArr(function (prevState) {
                       return [].concat(_toConsumableArray(prevState), [typeof _filterRes3[0] !== 'undefined' ? _filterRes3[0].value : '']).filter(function (v) {
                         return v !== '';
@@ -581,7 +641,7 @@ var MultiFuncSelect = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forward
             //
             setOrginalData(optionsDataInit);
             return _context2.abrupt("return", optionsDataInit);
-          case 32:
+          case 29:
           case "end":
             return _context2.stop();
         }
@@ -608,6 +668,13 @@ var MultiFuncSelect = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forward
 
     // update temporary value
     setControlTempValue('');
+  }
+  function rootWrapperSwitch() {
+    // remove active styles from the root container and activate current wrapper
+    [].slice.call(document.querySelectorAll('.multifunc-select__wrapper')).forEach(function (node) {
+      node.classList.remove('active', 'focus');
+    });
+    rootRef.current.classList.add('active', 'focus');
   }
   function handleSelect(_x4) {
     return _handleSelect.apply(this, arguments);
@@ -779,15 +846,31 @@ var MultiFuncSelect = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forward
     event.preventDefault();
     setItemSelectedAll(function (prevState) {
       if (!prevState) {
-        setControlValueArr(orginalData.map(function (v) {
-          return v.value;
-        }));
-        setControlLabelArr(orginalData.map(function (v) {
-          return v.label;
-        }));
+        setControlValueArr(function (prevData) {
+          return [].concat(_toConsumableArray(prevData), _toConsumableArray(optionsData.map(function (v) {
+            return v.value;
+          }))).filter(function (item, index, arr) {
+            return arr.indexOf(item, 0) === index;
+          });
+        });
+        setControlLabelArr(function (prevData) {
+          return [].concat(_toConsumableArray(prevData), _toConsumableArray(optionsData.map(function (v) {
+            return v.label;
+          }))).filter(function (item, index, arr) {
+            return arr.indexOf(item, 0) === index;
+          });
+        });
       } else {
-        setControlValueArr([]);
-        setControlLabelArr([]);
+        setControlValueArr(function (prevState) {
+          return removeItems(prevState, optionsData.map(function (v) {
+            return v.value;
+          }));
+        });
+        setControlLabelArr(function (prevState) {
+          return removeItems(prevState, optionsData.map(function (v) {
+            return v.label;
+          }));
+        });
       }
       return !prevState;
     });
@@ -831,14 +914,28 @@ var MultiFuncSelect = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forward
       selectInputRef.current.blur();
     }
   }
-  function handleSearch(event) {
-    if (isOpen) return;
-    activate();
+  function handleShowList() {
+    //
+    rootWrapperSwitch();
 
-    // window position
-    setTimeout(function () {
-      getPlacement(listRef.current);
-    }, 0);
+    //
+    if (!isOpen) {
+      activate();
+
+      // window position
+      setTimeout(function () {
+        getPlacement(listRef.current);
+      }, 0);
+    }
+  }
+  function handleFetch() {
+    // data init
+    var searchStr = controlTempValue || controlTempValue === '' ? controlTempValue : '';
+    var _oparams = fetchFuncMethodParams || [];
+    var _params = _oparams.map(function (item) {
+      return item !== '$QUERY_STRING' ? item : searchStr;
+    });
+    fetchData(_params.join(','), value, false);
   }
   function handleComposition(event) {
     if (event.type === 'compositionstart' || event.type === 'compositionend') {
@@ -882,8 +979,6 @@ var MultiFuncSelect = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forward
 
   //
   function handleFocus(event) {
-    rootRef.current.classList.add('focus');
-
     // update temporary value
     setControlTempValue('');
 
@@ -896,10 +991,6 @@ var MultiFuncSelect = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forward
       rootRef.current.classList.remove('focus');
     }
     setTimeout(function () {
-      // cancel
-      if (!MULTI_SEL_VALID) {
-        cancel();
-      }
       onBlur === null || onBlur === void 0 ? void 0 : onBlur(event);
     }, 300);
   }
@@ -909,10 +1000,14 @@ var MultiFuncSelect = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forward
       cancel();
     }
   }
+  function generateInputFocusStr() {
+    return controlTempValue || controlTempValue === '' ? controlTempValue.length === 0 ? '|' : controlTempValue : placeholder || '';
+  }
   function optionFocus(type) {
     return new Promise(function (resolve) {
       // Determine the "active" class name to avoid listening to other unused components of the same type
       if (listRef.current === null || !rootRef.current.classList.contains('active')) return;
+      if (fetchTrigger) return;
       var options = [].slice.call(listRef.current.querySelectorAll('.list-group-item'));
       var currentIndex = options.findIndex(function (e) {
         return e === listRef.current.querySelector('.list-group-item.active');
@@ -947,7 +1042,10 @@ var MultiFuncSelect = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forward
 
     // data init
     //--------------
-    var _params = fetchFuncMethodParams || [];
+    var _oparams = fetchFuncMethodParams || [];
+    var _params = _oparams.map(function (item) {
+      return item !== '$QUERY_STRING' ? item : '-';
+    });
     fetchData(_params.join(','), value);
 
     // If you use the dynamic form assignment (such as document.getElementById(xxx).value), 
@@ -977,21 +1075,33 @@ var MultiFuncSelect = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forward
             case 0:
               res = null;
               if (!(event.code === "Enter" || event.code === "NumpadEnter")) {
-                _context.next = 8;
+                _context.next = 12;
                 break;
               }
+              if (!(listRef.current === null || !rootRef.current.classList.contains('active'))) {
+                _context.next = 4;
+                break;
+              }
+              return _context.abrupt("return");
+            case 4:
+              if (!fetchTrigger) {
+                _context.next = 6;
+                break;
+              }
+              return _context.abrupt("return");
+            case 6:
               if (!(listRef.current !== null)) {
-                _context.next = 7;
+                _context.next = 11;
                 break;
               }
-              _context.next = 5;
+              _context.next = 9;
               return listRef.current.dataset.data;
-            case 5:
+            case 9:
               currentData = _context.sent;
               if (typeof currentData !== 'undefined') {
                 currentControlValueArr = [];
                 currentControlLabelArr = [];
-                _options = [].slice.call(listRef.current.querySelectorAll('.list-group-item'));
+                _options = [].slice.call(listRef.current.querySelectorAll('.list-group-item:not(.no-match)'));
                 _options.forEach(function (node) {
                   node.classList.remove('active');
                   if (node.classList.contains('item-selected')) {
@@ -1001,36 +1111,36 @@ var MultiFuncSelect = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forward
                 });
                 handleSelect(null, currentData, currentControlValueArr, currentControlLabelArr);
               }
-            case 7:
-              return _context.abrupt("return");
-            case 8:
-              _context.t0 = event.code;
-              _context.next = _context.t0 === "ArrowLeft" ? 11 : _context.t0 === "ArrowRight" ? 12 : _context.t0 === "ArrowUp" ? 13 : _context.t0 === "ArrowDown" ? 17 : 21;
-              break;
             case 11:
-              return _context.abrupt("break", 21);
+              return _context.abrupt("return");
             case 12:
-              return _context.abrupt("break", 21);
-            case 13:
-              _context.next = 15;
-              return optionFocus('decrease');
+              _context.t0 = event.code;
+              _context.next = _context.t0 === "ArrowLeft" ? 15 : _context.t0 === "ArrowRight" ? 16 : _context.t0 === "ArrowUp" ? 17 : _context.t0 === "ArrowDown" ? 21 : 25;
+              break;
             case 15:
-              res = _context.sent;
-              return _context.abrupt("break", 21);
+              return _context.abrupt("break", 25);
+            case 16:
+              return _context.abrupt("break", 25);
             case 17:
               _context.next = 19;
-              return optionFocus('increase');
+              return optionFocus('decrease');
             case 19:
               res = _context.sent;
-              return _context.abrupt("break", 21);
+              return _context.abrupt("break", 25);
             case 21:
+              _context.next = 23;
+              return optionFocus('increase');
+            case 23:
+              res = _context.sent;
+              return _context.abrupt("break", 25);
+            case 25:
               // temporary data
               if (res !== null) listRef.current.dataset.data = JSON.stringify({
                 value: res.dataset.value,
                 label: res.dataset.label,
                 letter: res.dataset.letter
               });
-            case 22:
+            case 26:
             case "end":
               return _context.stop();
           }
@@ -1061,14 +1171,16 @@ var MultiFuncSelect = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forward
       window.removeEventListener('touchmove', windowScrollUpdate);
     };
   }, [value, options, data]);
-  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-    id: "multifunc-select__wrapper-".concat(idRes),
-    className: isOpen ? "multifunc-select__wrapper ".concat(wrapperClassName || wrapperClassName === '' ? wrapperClassName : 'mb-3 position-relative', " active") : "multifunc-select__wrapper ".concat(wrapperClassName || wrapperClassName === '' ? wrapperClassName : 'mb-3 position-relative'),
-    ref: rootRef
-  }, label ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("label", {
+  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, label ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+    className: "multifunc-select__label"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("label", {
     htmlFor: "label-".concat(idRes),
     className: "form-label"
-  }, label)) : null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+  }, label))) : null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+    id: "multifunc-select__wrapper-".concat(idRes),
+    className: "multifunc-select__wrapper ".concat(wrapperClassName || wrapperClassName === '' ? wrapperClassName : 'mb-3 position-relative', " ").concat(MULTI_SEL_VALID ? 'multiple-selection' : '', " ").concat(isOpen ? 'active focus' : ''),
+    ref: rootRef
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
     ref: rootSingleRef,
     className: "position-relative"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("input", _extends({
@@ -1092,7 +1204,7 @@ var MultiFuncSelect = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forward
     className: controlClassName || controlClassName === '' ? controlClassName : "form-control",
     onFocus: handleFocus,
     onBlur: handleBlur,
-    onClick: handleSearch,
+    onClick: handleShowList,
     onChange: handleChange,
     onCompositionStart: handleComposition,
     onCompositionUpdate: handleComposition,
@@ -1121,7 +1233,8 @@ var MultiFuncSelect = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forward
     style: {
       translate: 'all .2s',
       transform: isOpen ? 'rotate(180deg) translateY(-4px)' : 'rotate(0) translateY(0)',
-      pointerEvents: 'none'
+      pointerEvents: 'none',
+      display: fetchTrigger ? 'none' : 'inline-block'
     }
   }, controlArrow ? controlArrow : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("svg", {
     width: "10px",
@@ -1139,7 +1252,21 @@ var MultiFuncSelect = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forward
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("path", {
     d: "M144,6525.39 L142.594,6524 L133.987,6532.261 L133.069,6531.38 L133.074,6531.385 L125.427,6524.045 L124,6525.414 C126.113,6527.443 132.014,6533.107 133.987,6535 C135.453,6533.594 134.024,6534.965 144,6525.39",
     id: "arrow_down-[#339]"
-  }))))))), MULTI_SEL_VALID ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+  })))))), fetchTrigger ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
+    className: "multifunc-select-multi__control-searchbtn position-absolute top-0 end-0"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", {
+    type: "button",
+    className: 'btn border-end-0 rounded-pill',
+    onClick: handleFetch
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("svg", {
+    width: "1em",
+    height: "1em",
+    fill: "#a5a5a5",
+    viewBox: "0 0 16 16"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("path", {
+    d: "M12.027 9.92L16 13.95 14 16l-4.075-3.976A6.465 6.465 0 0 1 6.5 13C2.91 13 0 10.083 0 6.5 0 2.91 2.917 0 6.5 0 10.09 0 13 2.917 13 6.5a6.463 6.463 0 0 1-.973 3.42zM1.997 6.452c0 2.48 2.014 4.5 4.5 4.5 2.48 0 4.5-2.015 4.5-4.5 0-2.48-2.015-4.5-4.5-4.5-2.48 0-4.5 2.014-4.5 4.5z",
+    fillRule: "evenodd"
+  }))))) : null), MULTI_SEL_VALID ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
     ref: rootMultiRef,
     className: "multifunc-select-multi__wrapper"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
@@ -1165,13 +1292,14 @@ var MultiFuncSelect = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forward
   }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("li", {
     className: "multifunc-select-multi__list-item-placeholder ".concat(typeof placeholder === 'undefined' || placeholder === '' ? 'hide' : '')
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
-    className: "multifunc-select-multi__control-blinking-cursor"
-  }, controlTempValue || controlTempValue === '' ? controlTempValue.length === 0 ? '|' : controlTempValue : placeholder || ''))))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
+    className: "multifunc-select-multi__control-blinking-cursor ".concat(generateInputFocusStr() === '|' ? 'animated' : '')
+  }, generateInputFocusStr()))))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
     className: "arrow position-absolute top-0 end-0 me-2 mt-1",
     style: {
       translate: 'all .2s',
       transform: isOpen ? 'rotate(180deg) translateY(-4px)' : 'rotate(0) translateY(0)',
-      pointerEvents: 'none'
+      pointerEvents: 'none',
+      display: fetchTrigger ? 'none' : 'inline-block'
     }
   }, controlArrow ? controlArrow : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("svg", {
     width: "10px",
@@ -1189,13 +1317,26 @@ var MultiFuncSelect = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forward
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("path", {
     d: "M144,6525.39 L142.594,6524 L133.987,6532.261 L133.069,6531.38 L133.074,6531.385 L125.427,6524.045 L124,6525.414 C126.113,6527.443 132.014,6533.107 133.987,6535 C135.453,6533.594 134.024,6534.965 144,6525.39",
     id: "arrow_down-[#339]"
-  }))))))) : null, optionsData && !hasErr ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+  })))))), fetchTrigger ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
+    className: "multifunc-select-multi__control-searchbtn position-absolute top-0 end-0"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", {
+    type: "button",
+    className: 'btn border-end-0 rounded-pill',
+    onClick: handleFetch
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("svg", {
+    width: "1em",
+    height: "1em",
+    fill: "#a5a5a5",
+    viewBox: "0 0 16 16"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("path", {
+    d: "M12.027 9.92L16 13.95 14 16l-4.075-3.976A6.465 6.465 0 0 1 6.5 13C2.91 13 0 10.083 0 6.5 0 2.91 2.917 0 6.5 0 10.09 0 13 2.917 13 6.5a6.463 6.463 0 0 1-.973 3.42zM1.997 6.452c0 2.48 2.014 4.5 4.5 4.5 2.48 0 4.5-2.015 4.5-4.5 0-2.48-2.015-4.5-4.5-4.5-2.48 0-4.5 2.014-4.5 4.5z",
+    fillRule: "evenodd"
+  }))))) : null) : null, optionsData && !hasErr ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
     ref: listRef,
     className: "list-group position-absolute w-100 border shadow small",
     style: {
       marginTop: '0.2rem',
-      zIndex: depth ? depth : 100,
-      display: isOpen ? 'block' : 'none'
+      zIndex: depth ? depth : 100
     },
     role: "tablist"
   }, controlTempValue !== null && optionsData.length === 0 ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", {
@@ -1223,7 +1364,7 @@ var MultiFuncSelect = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forward
     onClick: handleSelectAll,
     className: "btn btn-secondary",
     dangerouslySetInnerHTML: {
-      __html: "".concat(multiSelect === null || multiSelect === void 0 ? void 0 : multiSelect.selectAllLabel)
+      __html: "".concat((multiSelect === null || multiSelect === void 0 ? void 0 : multiSelect.selectAllLabel) || 'Select all options')
     }
   }))) : null, optionsData ? optionsData.map(function (item, index) {
     var startItemBorder = index === 0 ? 'border-top-0' : '';

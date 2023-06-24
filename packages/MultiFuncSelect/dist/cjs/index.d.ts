@@ -5,10 +5,16 @@ declare module 'react' {
     }
 }
 declare type MultiFuncSelectOptionChangeFnType = (arg1: any, arg2: any) => void;
+interface MultiSelectDataConfig {
+    values: string[] | number[];
+    labels: string[] | number[];
+    letters: string[] | number[];
+}
 interface MultiSelectConfig {
     valid: boolean;
     selectAll: boolean;
     selectAllLabel?: string;
+    data: MultiSelectDataConfig | null;
 }
 declare type MultiFuncSelectProps = {
     wrapperClassName?: string;
@@ -23,6 +29,8 @@ declare type MultiFuncSelectProps = {
     placeholder?: string;
     options?: any;
     controlArrow?: React.ReactNode;
+    fetchTrigger?: boolean;
+    fetchTriggerForDefaultData?: MultiSelectDataConfig | null;
     /** Set the depth value of the control to control the display of the pop-up layer appear above.
      * Please set it when multiple controls are used at the same time. */
     depth?: number;
@@ -34,6 +42,7 @@ declare type MultiFuncSelectProps = {
     tabIndex?: number;
     [key: `data-${string}`]: string | undefined;
     fetchNoneInfo?: string;
+    fetchUpdate?: boolean;
     fetchFuncAsync?: any;
     fetchFuncMethod?: string;
     fetchFuncMethodParams?: any[];

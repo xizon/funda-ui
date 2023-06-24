@@ -422,8 +422,8 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
             className: appearance === 'pill' ? 'btn border-end-0 rounded-pill' : 'btn btn-sm',
             onClick: handleSubmit
           }, icon ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react__WEBPACK_IMPORTED_MODULE_0___default().Fragment, null, icon) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react__WEBPACK_IMPORTED_MODULE_0___default().Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("svg", {
-            width: "20px",
-            height: "20px",
+            width: "1.2em",
+            height: "1.2em",
             fill: "#333",
             viewBox: "0 0 16 16"
           }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("path", {
@@ -998,48 +998,54 @@ var LiveSearch = function LiveSearch(props) {
             case 0:
               res = null;
               if (!(event.code === "Enter" || event.code === "NumpadEnter")) {
+                _context.next = 6;
+                break;
+              }
+              if (!(listRef.current === null || !rootRef.current.classList.contains('active'))) {
                 _context.next = 4;
                 break;
               }
+              return _context.abrupt("return");
+            case 4:
               if (listRef.current !== null) {
                 currentData = listRef.current.dataset.data;
                 if (typeof currentData !== 'undefined') {
                   handleSelect(null, currentData);
-                  options = [].slice.call(listRef.current.querySelectorAll('.list-group-item'));
+                  options = [].slice.call(listRef.current.querySelectorAll('.list-group-item:not(.no-match)'));
                   options.forEach(function (node) {
                     node.classList.remove('active');
                   });
                 }
               }
               return _context.abrupt("return");
-            case 4:
+            case 6:
               _context.t0 = event.code;
-              _context.next = _context.t0 === "ArrowLeft" ? 7 : _context.t0 === "ArrowRight" ? 8 : _context.t0 === "ArrowUp" ? 9 : _context.t0 === "ArrowDown" ? 13 : 17;
+              _context.next = _context.t0 === "ArrowLeft" ? 9 : _context.t0 === "ArrowRight" ? 10 : _context.t0 === "ArrowUp" ? 11 : _context.t0 === "ArrowDown" ? 15 : 19;
               break;
-            case 7:
-              return _context.abrupt("break", 17);
-            case 8:
-              return _context.abrupt("break", 17);
             case 9:
-              _context.next = 11;
-              return optionFocus('decrease');
+              return _context.abrupt("break", 19);
+            case 10:
+              return _context.abrupt("break", 19);
             case 11:
-              res = _context.sent;
-              return _context.abrupt("break", 17);
+              _context.next = 13;
+              return optionFocus('decrease');
             case 13:
-              _context.next = 15;
-              return optionFocus('increase');
-            case 15:
               res = _context.sent;
-              return _context.abrupt("break", 17);
+              return _context.abrupt("break", 19);
+            case 15:
+              _context.next = 17;
+              return optionFocus('increase');
             case 17:
+              res = _context.sent;
+              return _context.abrupt("break", 19);
+            case 19:
               // temporary data
               if (res !== null) listRef.current.dataset.data = JSON.stringify({
                 value: res.dataset.value,
                 label: res.dataset.label,
                 letter: res.dataset.letter
               });
-            case 18:
+            case 20:
             case "end":
               return _context.stop();
           }

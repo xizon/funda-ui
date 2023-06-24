@@ -3,129 +3,194 @@
 /* ====================================================== */
 
 
-.multifunc-select-multi__control-select-all {
-    .btn {
-        font-size: 0.75rem;
-        padding: 0.1rem 0.5rem;
-    }
-}
 
+.multifunc-select__wrapper {
 
-.multifunc-select-multi__wrapper {
-
-    --multi-sel-placeholder-color: rgba(33, 37, 41, 0.75);
-
-    position: absolute;
-    top: 0;
-    width: 100%;
-    pointer-events: none;
-
-
-    ul,
-    li {
-        padding: 0;
-        margin: 0;
-        list-style: none;
+    /*------ Input ------*/
+    [data-select]:focus {
+        box-shadow: none;
+        border-color: transparent;
+        outline: 0;
     }
 
+    /*------ List ------*/
+    .list-group {
+        display: none;
+    }
+
+
+    &.active {
+        .list-group {
+            display: block;
+        }
+    }
+
+
+    /*------ Multiple selection ------*/
+    .multifunc-select-multi__control-select-all {
+        .btn {
+            font-size: 0.75rem;
+            padding: 0.1rem 0.5rem;
+        }
+    }
+
+    .multifunc-select-multi__wrapper {
+
+        --multi-sel-placeholder-color: rgba(33, 37, 41, 0.75);
+
+        position: absolute;
+        top: 0;
+        width: 100%;
+        pointer-events: none;
+
+
+        ul,
+        li {
+            padding: 0;
+            margin: 0;
+            list-style: none;
+        }
+
+        .multifunc-select-multi__control-searchbtn {
+            z-index: 5;
+            pointer-events: auto;
+
+            &:hover {
+                svg,
+                path {
+                    fill: #333;
+                }
+            }
+        }
+        
+        .multifunc-select-multi__control-wrapper {
     
-    .multifunc-select-multi__control-wrapper {
-   
-        > div {
-            position: relative;
-    
-            /* bootstrap style that match ".form-control" */
-            //padding: 0.375rem 0.75rem;
-            background-color: #fff;
-            background-clip: padding-box;
-            border: 1px solid #dee2e6;
-            appearance: none;
-            border-radius: 0.375rem;
-            transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
-            padding-bottom: 1px;
+            > div {
+                position: relative;
+        
+                /* bootstrap style that match ".form-control" */
+                //padding: 0.375rem 0.75rem;
+                background-color: #fff;
+                background-clip: padding-box;
+                border: 1px solid #dee2e6;
+                appearance: none;
+                border-radius: 0.375rem;
+                transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+                padding-bottom: 1px;
+
+            }
 
         }
 
-    }
 
+        ul.multifunc-select-multi__list {
+            margin-right: 1rem;
 
-    ul.multifunc-select-multi__list {
-        margin-right: 1rem;
+            li {
+                display: inline-block;
+                margin: 5px;
+                margin-bottom: 0;
+                padding: .1rem 1.5rem .1rem 1rem;
+                font-size: 0.875rem;
+                background: #efefef;
+                border-radius: 30px;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                position: relative;
 
-        li {
-            display: inline-block;
-            margin: 5px;
-            margin-bottom: 0;
-            padding: .1rem 1.5rem .1rem 1rem;
-            font-size: 0.875rem;
-            background: #efefef;
-            border-radius: 30px;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            position: relative;
+                &.multifunc-select-multi__list-item-placeholder {
+                    background: transparent;
+                    color: var(--multi-sel-placeholder-color);
+                    padding-left: 0.75rem;
+                    padding-right: 0;
+                    margin-left: 0;
+                    white-space: nowrap;
 
-            &.multifunc-select-multi__list-item-placeholder {
-                background: transparent;
-                color: var(--multi-sel-placeholder-color);
-                padding-left: 0.75rem;
-                padding-right: 0;
-                margin-left: 0;
-                white-space: nowrap;
-
-                &.hide {
-                    min-width: 100px;
-                }
-            }
-            
-
-            > a {
-                font-weight: 400;
-                opacity: .6;
-                font-size: 18px;
-                line-height: 20px;
-                position: absolute;
-                right: 8px;
-                top: 0;
-                pointer-events: auto;
-
-                &:hover {
-                    path {
-                        fill: #f00;
+                    &.hide {
+                        min-width: 100px;
                     }
                 }
+                
+
+                > a {
+                    font-weight: 400;
+                    opacity: .6;
+                    font-size: 18px;
+                    line-height: 20px;
+                    position: absolute;
+                    right: 8px;
+                    top: 0;
+                    pointer-events: auto;
+
+                    &:hover {
+                        path {
+                            fill: #f00;
+                        }
+                    }
+                }
+
             }
 
+        }
+
+        .multifunc-select-multi__control-blinking-cursor {
+            display: inline-block;
+            color: var(--multi-sel-placeholder-color);
+
+            &.animated {
+                animation: 1s multi-sel-blink step-end infinite;
+            }
+        }
+
+
+        @keyframes multi-sel-blink {
+            from,
+            to {
+                color: transparent;
+            }
+
+            50% {
+                color: black;
+            }
         }
 
     }
 
 
-    .multifunc-select-multi__control-blinking-cursor {
-        display: inline-block;
-        color: var(--multi-sel-placeholder-color);
-        // animation: 1s multi-sel-blink step-end infinite;
+    /*------------*/
+    &.active {
+        .list-group {
+            display: block;
+        }
     }
 
+
     &.focus {
+
+        [data-select] {
+            cursor: text !important;
+        }
+
+        &:not(.multiple-selection) {
+            [data-select] {
+                box-shadow: 0 0 0 0.25rem rgba(13,110,253,.25);
+                border-color: #86b7fe;
+                outline: 0;
+            }
+        }
+
+        
+   
         .multifunc-select-multi__control-wrapper {
             > div {
                 box-shadow: 0 0 0 0.25rem rgba(13,110,253,.25);
                 border-color: #86b7fe;
+                outline: 0;
+                
             } 
         }
     }
-
-
-    @keyframes multi-sel-blink {
-        from,
-        to {
-            color: transparent;
-        }
-
-        50% {
-            color: black;
-        }
-    }
-
+ 
 
 }
+
