@@ -11,6 +11,8 @@ declare type DynamicFieldsProps = {
     tempHtmlString?: any;
     maxFields?: any;
     confirmText?: string;
+    iconAddBefore?: React.ReactNode | string;
+    iconAddAfter?: React.ReactNode | string;
     iconAdd?: React.ReactNode | string;
     iconRemove?: React.ReactNode | string;
     startFromZero?: boolean;
