@@ -11,8 +11,8 @@ import MultiFuncSelect from 'react-pure-bootstrap/MultiFuncSelect';
 | --- | --- | --- | --- |
 | `wrapperClassName` | string | `mb-3 position-relative` | The class name of the control wrapper. |
 | `controlClassName` | string | `form-control` | The class name of the control. |
-| `options` | JSON Object Literals | - | Set the default value using JSON string format for menu of options, like this: `[{"label": "Option 1","value": "value-1","letter": "option1"},{"label": "<del style=color:red>deprecate</del>Option 2","value": "value-2","letter": "option2"},{"label": "Option 3","value": "value-3","letter": "option3"}]` <br /> <blockquote>Note: Use API data if database query exists. That is, the attribute `fetchXXXX`</blockquote>|
-| `multiSelect` | JSON Object | `{"valid": true, "selectAll": true, "selectAllLabel": "Select all options"}` | Enable multi-select. <blockquote>**Parameters Description:** <br />`valid` -->  *(Boolean)* *(required)* Set component in which multiple options can be selected at once to be valid.  <br />`selectAll` --> *(Boolean)* *(required)* Enables select all button. <br />`selectAllLabel` -->  *(String)* Sets the select all button label. (Support html tags) <br />`data` -->  *(JSON Object \| null)* *(required)* Sets a default data for control's values. (such as `{values: ['value-1','value-3'], labels: ['Option 1','Option 3'], letters: ['','']}`)</blockquote> |
+| `options` | JSON Object Literals | - | Set the default value using JSON string format for menu of options, like this: `[{"label": "Option 1","value": "value-1","queryString": "option1"},{"label": "<del style=color:red>deprecate</del>Option 2","value": "value-2","queryString": "option2"},{"label": "Option 3","value": "value-3","queryString": "option3"}]` <br /> <blockquote>Note: Use API data if database query exists. That is, the attribute `fetchXXXX`</blockquote>|
+| `multiSelect` | JSON Object | `{"valid": true, "selectAll": true, "selectAllLabel": "Select all options"}` | Enable multi-select. <blockquote>**Parameters Description:** <br />`valid` -->  *(Boolean)* *(required)* Set component in which multiple options can be selected at once to be valid.  <br />`selectAll` --> *(Boolean)* *(required)* Enables select all button. <br />`selectAllLabel` -->  *(String)* Sets the select all button label. (Support html tags) <br />`data` -->  *(JSON Object \| null)* *(required)* Sets a default data for control's values. (such as `{values: ['value-1','value-3'], labels: ['Option 1','Option 3'], queryStrings: ['','']}`)</blockquote> |
 | `depth` | number  | 100 | Set the depth value of the control to control the display of the pop-up layer appear above. Please set it when multiple controls are used at the same time. |
 | `value` | string | - | Set a default value for this control |
 | `label` | string \| ReactNode | - | It is used to specify a label for an element of a form. |
@@ -23,7 +23,7 @@ import MultiFuncSelect from 'react-pure-bootstrap/MultiFuncSelect';
 | `controlArrow` | ReactNode  | `<svg width="10px" height="10px" viewBox="0 -4.5 20 20"><g stroke="none" strokeWidth="1" fill="none"><g transform="translate(-180.000000, -6684.000000)" fill="#a5a5a5"><g transform="translate(56.000000, 160.000000)"><path d="M144,6525.39 L142.594,6524 L133.987,6532.261 L133.069,6531.38 L133.074,6531.385 L125.427,6524.045 L124,6525.414 C126.113,6527.443 132.014,6533.107 133.987,6535 C135.453,6533.594 134.024,6534.965 144,6525.39" id="arrow_down-[#339]"></path></g></g></g></svg>` | Set an arrow of control |
 | `data` | string  | - | Incoming data, you can set the third parameter of `onFetch`. <blockquote>Changes in the `data` value will cause the component to re-render. It will be used when the value or content does not change when switching routes and needs to re-render the component or get the request.</blockquote> |
 | `fetchTrigger` | boolean  | false | Use buttons to trigger data queries. |
-| `fetchTriggerForDefaultData` | JSON Object \| null  | null | Sets a default data for control's values. (such as `{values: ['value-1','value-3'], labels: ['Option 1','Option 3'], letters: ['','']}`) <br />Only takes effect when `fetchTrigger` is *true* and `value` is not empty. |
+| `fetchTriggerForDefaultData` | JSON Object \| null  | null | Sets a default data for control's values. (such as `{values: ['value-1','value-3'], labels: ['Option 1','Option 3'], queryStrings: ['','']}`) <br />Only takes effect when `fetchTrigger` is *true* and `value` is not empty. |
 | `fetchNoneInfo` | string  | - | The text of the data not fetched. |
 | `fetchUpdate` | boolean  | false | When the property is *true*, every time the input changes or the search button is clicked, a data request will be triggered. |
 | `fetchFuncAsync` | Constructor | - | A method as a string from the constructor.  |
@@ -47,7 +47,7 @@ JSON Object Literals configuration properties of the `options`:
 | --- | --- | --- | --- |
 | `label` | string | - | Specify the label text for each option. <blockquote>Support html tags</blockquote> |
 | `value` | string | - | Specify the value for each option |
-| `letter` | string | - | Quick query string, such as Chinese pinyin or English initials |
+| `queryString` | string | - | Quick query string, such as Chinese pinyin or English initials |
 
 
 
@@ -108,9 +108,9 @@ export default () => {
                 name="name"
                 options={`
                 [
-                    {"label": "Option 1","value": "value-1","letter": "option1"},
-                    {"label": "<del style=color:red>deprecate</del>Option 2","value": "value-2","letter": "option2"},
-                    {"label": "Option 3","value": "value-3","letter": "option3"}
+                    {"label": "Option 1","value": "value-1","queryString": "option1"},
+                    {"label": "<del style=color:red>deprecate</del>Option 2","value": "value-2","queryString": "option2"},
+                    {"label": "Option 3","value": "value-3","queryString": "option3"}
                 ]  
                 `}
                 onChange={(e, val) => {
@@ -129,16 +129,16 @@ export default () => {
                     data: {
                         values: ['value-3','value-2'],
                         labels: ['Option 3','<del style=color:red>deprecate</del>Option 2'],
-                        letters: ['option3','option2']
+                        queryStrings: ['option3','option2']
                     }
                 }}
                 placeholder="Select"
                 name="name"
                 options={`
                 [
-                    {"label": "Option 1","value": "value-1","letter": "option1"},
-                    {"label": "<del style=color:red>deprecate</del>Option 2","value": "value-2","letter": "option2"},
-                    {"label": "Option 3","value": "value-3","letter": "option3"}
+                    {"label": "Option 1","value": "value-1","queryString": "option1"},
+                    {"label": "<del style=color:red>deprecate</del>Option 2","value": "value-2","queryString": "option2"},
+                    {"label": "Option 3","value": "value-3","queryString": "option3"}
                 ]  
                 `}
                 onChange={(e, val) => {
@@ -164,16 +164,16 @@ export default () => {
                         return {
                             label: item.item_name,
                             value: item.item_code,
-                            letter: item.kb_code
+                            queryString: item.kb_code
                         }
                     }); 
 
                     console.log(formattedData);
                     /*
                     [
-                        {"label": "foo","value": "bar","letter": "fb,foobar"},
-                        {"label": "foo2","value": "bar2","letter": "fb2,foobar2"},
-                        {"label": "foo3","value": "bar3","letter": "fb3,foobar3"}
+                        {"label": "foo","value": "bar","queryString": "fb,foobar"},
+                        {"label": "foo2","value": "bar2","queryString": "fb2,foobar2"},
+                        {"label": "foo3","value": "bar3","queryString": "fb3,foobar3"}
                     ]   
                     */
 
@@ -199,7 +199,7 @@ export default () => {
                 fetchTriggerForDefaultData={{
                     values: ['bar2'],
                     labels: ['foo2'],
-                    letters: ['fb2,foobar2']
+                    queryStrings: ['fb2,foobar2']
                 }}
                 fetchFuncAsync={new DataService}
                 fetchFuncMethod="getList"
@@ -210,7 +210,7 @@ export default () => {
                         return {
                             label: item.item_name,
                             value: item.item_code,
-                            letter: item.kb_code
+                            queryString: item.kb_code
                         }
                     }); 
                     return formattedData;
@@ -234,7 +234,7 @@ export default () => {
                     data: {
                         values: ['bar2'],
                         labels: ['foo2'],
-                        letters: ['fb2,foobar2']
+                        queryStrings: ['fb2,foobar2']
                     }
                 }}
                 name="target_user_id"
@@ -249,7 +249,7 @@ export default () => {
                         return {
                             label: item.item_name,
                             value: item.item_code,
-                            letter: item.kb_code
+                            queryString: item.kb_code
                         }
                     }); 
                     return formattedData;
@@ -273,7 +273,7 @@ export default () => {
                     data: {
                         values: ['bar2'],
                         labels: ['foo2'],
-                        letters: ['fb2,foobar2']
+                        queryStrings: ['fb2,foobar2']
                     }
                 }}
                 name="target_user_id"
@@ -284,7 +284,7 @@ export default () => {
                 fetchTriggerForDefaultData={{
                     values: ['bar2'],
                     labels: ['foo2'],
-                    letters: ['fb2,foobar2']
+                    queryStrings: ['fb2,foobar2']
                 }}
                 fetchFuncAsync={new DataService}
                 fetchFuncMethod="getList"
@@ -295,7 +295,7 @@ export default () => {
                         return {
                             label: item.item_name,
                             value: item.item_code,
-                            letter: item.kb_code
+                            queryString: item.kb_code
                         }
                     }); 
                     return formattedData;
@@ -469,7 +469,7 @@ export default () => {
                         return {
                             label: item.item_name,
                             value: toSlug(item.item_name),
-                            letter: '',
+                            queryString: '',
                             queryId: item.item_code
                         }
                     }); 
@@ -490,7 +490,7 @@ export default () => {
                             return {
                                 label: item.item_name,
                                 value: toSlug(item.item_name),
-                                letter: '',
+                                queryString: '',
                                 queryId: item.item_code
                             }
                         }); 
@@ -521,7 +521,7 @@ export default () => {
                             return {
                                 label: item.item_name,
                                 value: toSlug(item.item_name),
-                                letter: '',
+                                queryString: '',
                                 queryId: item.item_code
                             }
                         }); 

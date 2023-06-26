@@ -720,9 +720,9 @@ var LiveSearch = function LiveSearch(props) {
             res = [];
             filterRes = function filterRes(data) {
               return data.filter(function (item) {
-                if ((item.letter.split(',').some(function (l) {
+                if ((item.queryString.split(',').some(function (l) {
                   return l.charAt(0) === val.toLowerCase();
-                }) || item.letter.split(',').some(function (l) {
+                }) || item.queryString.split(',').some(function (l) {
                   return l.replace(/ /g, '').indexOf(val.toLowerCase()) >= 0;
                 }) || item.label.indexOf(val) >= 0) && val != '') {
                   return true;
@@ -1054,7 +1054,7 @@ var LiveSearch = function LiveSearch(props) {
               if (res !== null) listRef.current.dataset.data = JSON.stringify({
                 value: res.dataset.value,
                 label: res.dataset.label,
-                letter: res.dataset.letter
+                queryString: res.dataset.querystring
               });
             case 23:
             case "end":
@@ -1133,7 +1133,7 @@ var LiveSearch = function LiveSearch(props) {
       className: "list-group-item list-group-item-action border-start-0 border-end-0 ".concat(startItemBorder, " ").concat(endItemBorder),
       "data-value": "".concat(item.value),
       "data-label": "".concat(item.label),
-      "data-letter": "".concat(item.letter),
+      "data-querystring": "".concat(item.queryString),
       role: "tab"
     }, item.label);
   }) : null))) : null, data && data.length === 0 && !hasErr && isOpen ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {

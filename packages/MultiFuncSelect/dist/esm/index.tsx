@@ -14,7 +14,7 @@ type MultiFuncSelectOptionChangeFnType = (arg1: any, arg2: any) => void;
 interface MultiSelectDataConfig {
     values: string[] | number[];
     labels: string[] | number[];
-    letters: string[] | number[];
+    queryStrings: string[] | number[];
 }
 
 
@@ -376,7 +376,7 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
                     filterRes = [{
                         value: fetchTriggerForDefaultData?.values[0],
                         label: fetchTriggerForDefaultData?.labels[0],
-                        letter: fetchTriggerForDefaultData?.letters[0]
+                        queryString: fetchTriggerForDefaultData?.queryStrings[0]
                     }];
                 }
 
@@ -426,7 +426,7 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
                             filterRes = [{
                                 value: multiSelect?.data?.values[_index],
                                 label: multiSelect?.data?.labels[_index],
-                                letter: multiSelect?.data?.letters[_index]
+                                queryString: multiSelect?.data?.queryStrings[_index]
                             }];
 
                             setControlValueArr((prevState: any) => {
@@ -513,7 +513,7 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
                             filterRes = [{
                                 value: multiSelect?.data?.values[_index],
                                 label: multiSelect?.data?.labels[_index],
-                                letter: multiSelect?.data?.letters[_index]
+                                queryString: multiSelect?.data?.queryStrings[_index]
                             }];
                 
                             setControlValueArr((prevState: any) => {
@@ -861,8 +861,8 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
                 return _orginalData.filter((item: any) => {
                     if (
                         (
-                            item.letter.split(',').some((l: any) => l.charAt(0) === val.toLowerCase()) ||
-                            item.letter.split(',').some((l: any) => l.replace(/ /g, '').indexOf(val.toLowerCase()) >= 0) ||
+                            item.queryString.split(',').some((l: any) => l.charAt(0) === val.toLowerCase()) ||
+                            item.queryString.split(',').some((l: any) => l.replace(/ /g, '').indexOf(val.toLowerCase()) >= 0) ||
                             item.label.indexOf(val) >= 0
                         ) &&
                         val != ''
@@ -1075,7 +1075,7 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
             if ( res !== null ) listRef.current.dataset.data = JSON.stringify({
                 value: res.dataset.value, 
                 label: res.dataset.label,
-                letter: res.dataset.letter
+                queryString: res.dataset.querystring
             });
             
        
@@ -1292,7 +1292,7 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
                                         // ++++++++++++++++++++
                                         // Single
                                         // ++++++++++++++++++++
-                                        return <button tabIndex={-1} onClick={handleSelect} type="button" data-index={index} key={index} className={`list-group-item list-group-item-action border-start-0 border-end-0 ${startItemBorder} ${endItemBorder} border-bottom-0`} data-value={`${item.value}`} data-label={`${item.label}`} data-letter={`${item.letter}`} role="tab" dangerouslySetInnerHTML={{
+                                        return <button tabIndex={-1} onClick={handleSelect} type="button" data-index={index} key={index} className={`list-group-item list-group-item-action border-start-0 border-end-0 ${startItemBorder} ${endItemBorder} border-bottom-0`} data-value={`${item.value}`} data-label={`${item.label}`} data-querystring={`${item.queryString}`} role="tab" dangerouslySetInnerHTML={{
                                             __html: item.label
                                         }}></button>
 
@@ -1303,7 +1303,7 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
                                         // ++++++++++++++++++++
                                         const itemSelected = multiSelControlOptionExist(controlValueArr, item.value) ? true : false;
 
-                                        return <button tabIndex={-1} onClick={handleSelect} type="button" data-index={index} key={index} className={`list-group-item list-group-item-action border-start-0 border-end-0 ${startItemBorder} ${endItemBorder} border-bottom-0 ${itemSelected ? 'list-group-item-secondary item-selected' : ''}`} data-value={`${item.value}`} data-label={`${item.label}`} data-letter={`${item.letter}`} role="tab">
+                                        return <button tabIndex={-1} onClick={handleSelect} type="button" data-index={index} key={index} className={`list-group-item list-group-item-action border-start-0 border-end-0 ${startItemBorder} ${endItemBorder} border-bottom-0 ${itemSelected ? 'list-group-item-secondary item-selected' : ''}`} data-value={`${item.value}`} data-label={`${item.label}`} data-querystring={`${item.queryString}`} role="tab">
                                             <var className="d-inline-block me-1 ">
                                                 {!itemSelected ? <svg width="1.2em" height="1.2em" viewBox="0 0 24 24" fill="none">
                                                     <path id="Vector" d="M4 7.2002V16.8002C4 17.9203 4 18.4801 4.21799 18.9079C4.40973 19.2842 4.71547 19.5905 5.0918 19.7822C5.5192 20 6.07899 20 7.19691 20H16.8031C17.921 20 18.48 20 18.9074 19.7822C19.2837 19.5905 19.5905 19.2842 19.7822 18.9079C20 18.4805 20 17.9215 20 16.8036V7.19691C20 6.07899 20 5.5192 19.7822 5.0918C19.5905 4.71547 19.2837 4.40973 18.9074 4.21799C18.4796 4 17.9203 4 16.8002 4H7.2002C6.08009 4 5.51962 4 5.0918 4.21799C4.71547 4.40973 4.40973 4.71547 4.21799 5.0918C4 5.51962 4 6.08009 4 7.2002Z" stroke="#000000" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />

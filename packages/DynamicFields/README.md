@@ -64,8 +64,8 @@ export default () => {
                                     name="appnotice-title[]"
                                     options={`
                                     [
-                                        {"label": "URL 1","value": "http://a","letter": ""},
-                                        {"label": "URL 2","value": "http://b","letter": ""}
+                                        {"label": "URL 1","value": "http://a","queryString": ""},
+                                        {"label": "URL 2","value": "http://b","queryString": ""}
                                     ]  
                                     `}
                                     onChange={((e: any, val: any) => {
@@ -313,9 +313,9 @@ export default () => {
                                     name="appnotice-select[]"
                                     options={`
                                         [
-                                            {"label": "Option 1","value": "value-1","letter": "option1"},
-                                            {"label": "Option 2","value": "value-2","letter": "option2"},
-                                            {"label": "Option 3","value": "value-3","letter": "option3"}
+                                            {"label": "Option 1","value": "value-1","queryString": "option1"},
+                                            {"label": "Option 2","value": "value-2","queryString": "option2"},
+                                            {"label": "Option 3","value": "value-3","queryString": "option3"}
                                         ]  
                                     `}
                                 />

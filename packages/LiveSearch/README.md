@@ -97,16 +97,16 @@ export default () => {
                         return {
                             label: item.item_name,
                             value: item.item_code,
-                            letter: item.kb_code
+                            queryString: item.kb_code
                         }
                     }); 
 
                     console.log(formattedData);
                     /*
                     [
-                        {"label": "foo","value": "bar","letter": "fb,foobar"},
-                        {"label": "foo2","value": "bar2","letter": "fb2,foobar2"},
-                        {"label": "foo3","value": "bar3","letter": "fb3,foobar3"}
+                        {"label": "foo","value": "bar","queryString": "fb,foobar"},
+                        {"label": "foo2","value": "bar2","queryString": "fb2,foobar2"},
+                        {"label": "foo3","value": "bar3","queryString": "fb3,foobar3"}
                     ]  
                     */
 

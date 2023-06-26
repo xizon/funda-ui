@@ -8,7 +8,7 @@ declare type MultiFuncSelectOptionChangeFnType = (arg1: any, arg2: any) => void;
 interface MultiSelectDataConfig {
     values: string[] | number[];
     labels: string[] | number[];
-    letters: string[] | number[];
+    queryStrings: string[] | number[];
 }
 interface MultiSelectConfig {
     valid: boolean;

@@ -493,7 +493,7 @@ var MultiFuncSelect = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forward
                 filterRes = [{
                   value: fetchTriggerForDefaultData === null || fetchTriggerForDefaultData === void 0 ? void 0 : fetchTriggerForDefaultData.values[0],
                   label: fetchTriggerForDefaultData === null || fetchTriggerForDefaultData === void 0 ? void 0 : fetchTriggerForDefaultData.labels[0],
-                  letter: fetchTriggerForDefaultData === null || fetchTriggerForDefaultData === void 0 ? void 0 : fetchTriggerForDefaultData.letters[0]
+                  queryString: fetchTriggerForDefaultData === null || fetchTriggerForDefaultData === void 0 ? void 0 : fetchTriggerForDefaultData.queryStrings[0]
                 }];
               }
             } else {
@@ -541,7 +541,7 @@ var MultiFuncSelect = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forward
                     _filterRes = [{
                       value: multiSelect === null || multiSelect === void 0 ? void 0 : (_multiSelect$data2 = multiSelect.data) === null || _multiSelect$data2 === void 0 ? void 0 : _multiSelect$data2.values[_index],
                       label: multiSelect === null || multiSelect === void 0 ? void 0 : (_multiSelect$data3 = multiSelect.data) === null || _multiSelect$data3 === void 0 ? void 0 : _multiSelect$data3.labels[_index],
-                      letter: multiSelect === null || multiSelect === void 0 ? void 0 : (_multiSelect$data4 = multiSelect.data) === null || _multiSelect$data4 === void 0 ? void 0 : _multiSelect$data4.letters[_index]
+                      queryString: multiSelect === null || multiSelect === void 0 ? void 0 : (_multiSelect$data4 = multiSelect.data) === null || _multiSelect$data4 === void 0 ? void 0 : _multiSelect$data4.queryStrings[_index]
                     }];
                     setControlValueArr(function (prevState) {
                       return [].concat(_toConsumableArray(prevState), [typeof _filterRes[0] !== 'undefined' ? _filterRes[0].value : '']).filter(function (v) {
@@ -615,7 +615,7 @@ var MultiFuncSelect = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forward
                     _filterRes3 = [{
                       value: multiSelect === null || multiSelect === void 0 ? void 0 : (_multiSelect$data6 = multiSelect.data) === null || _multiSelect$data6 === void 0 ? void 0 : _multiSelect$data6.values[_index],
                       label: multiSelect === null || multiSelect === void 0 ? void 0 : (_multiSelect$data7 = multiSelect.data) === null || _multiSelect$data7 === void 0 ? void 0 : _multiSelect$data7.labels[_index],
-                      letter: multiSelect === null || multiSelect === void 0 ? void 0 : (_multiSelect$data8 = multiSelect.data) === null || _multiSelect$data8 === void 0 ? void 0 : _multiSelect$data8.letters[_index]
+                      queryString: multiSelect === null || multiSelect === void 0 ? void 0 : (_multiSelect$data8 = multiSelect.data) === null || _multiSelect$data8 === void 0 ? void 0 : _multiSelect$data8.queryStrings[_index]
                     }];
                     setControlValueArr(function (prevState) {
                       return [].concat(_toConsumableArray(prevState), [typeof _filterRes3[0] !== 'undefined' ? _filterRes3[0].value : '']).filter(function (v) {
@@ -1007,9 +1007,9 @@ var MultiFuncSelect = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forward
           case 14:
             filterRes = function filterRes(data) {
               return _orginalData.filter(function (item) {
-                if ((item.letter.split(',').some(function (l) {
+                if ((item.queryString.split(',').some(function (l) {
                   return l.charAt(0) === val.toLowerCase();
-                }) || item.letter.split(',').some(function (l) {
+                }) || item.queryString.split(',').some(function (l) {
                   return l.replace(/ /g, '').indexOf(val.toLowerCase()) >= 0;
                 }) || item.label.indexOf(val) >= 0) && val != '') {
                   return true;
@@ -1199,7 +1199,7 @@ var MultiFuncSelect = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forward
               if (res !== null) listRef.current.dataset.data = JSON.stringify({
                 value: res.dataset.value,
                 label: res.dataset.label,
-                letter: res.dataset.letter
+                queryString: res.dataset.querystring
               });
             case 27:
             case "end":
@@ -1443,7 +1443,7 @@ var MultiFuncSelect = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forward
         className: "list-group-item list-group-item-action border-start-0 border-end-0 ".concat(startItemBorder, " ").concat(endItemBorder, " border-bottom-0"),
         "data-value": "".concat(item.value),
         "data-label": "".concat(item.label),
-        "data-letter": "".concat(item.letter),
+        "data-querystring": "".concat(item.queryString),
         role: "tab",
         dangerouslySetInnerHTML: {
           __html: item.label
@@ -1463,7 +1463,7 @@ var MultiFuncSelect = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forward
         className: "list-group-item list-group-item-action border-start-0 border-end-0 ".concat(startItemBorder, " ").concat(endItemBorder, " border-bottom-0 ").concat(itemSelected ? 'list-group-item-secondary item-selected' : ''),
         "data-value": "".concat(item.value),
         "data-label": "".concat(item.label),
-        "data-letter": "".concat(item.letter),
+        "data-querystring": "".concat(item.queryString),
         role: "tab"
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("var", {
         className: "d-inline-block me-1 "

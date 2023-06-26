@@ -192,8 +192,8 @@ const LiveSearch = (props: LiveSearchProps) => {
             return data.filter((item: any) => {
                 if (
                     (
-                        item.letter.split(',').some((l: any) => l.charAt(0) === val.toLowerCase()) ||
-                        item.letter.split(',').some((l: any) => l.replace(/ /g, '').indexOf(val.toLowerCase()) >= 0) ||
+                        item.queryString.split(',').some((l: any) => l.charAt(0) === val.toLowerCase()) ||
+                        item.queryString.split(',').some((l: any) => l.replace(/ /g, '').indexOf(val.toLowerCase()) >= 0) ||
                         item.label.indexOf(val) >= 0
                     ) &&
                     val != ''
@@ -465,7 +465,7 @@ const LiveSearch = (props: LiveSearchProps) => {
             if ( res !== null ) listRef.current.dataset.data = JSON.stringify({
                 value: res.dataset.value, 
                 label: res.dataset.label,
-                letter: res.dataset.letter
+                queryString: res.dataset.querystring
             });
             
 
@@ -534,7 +534,7 @@ const LiveSearch = (props: LiveSearchProps) => {
                                 const startItemBorder = index === 0 ? 'border-top-0' : '';
                                 const endItemBorder = index === data.length-1 ? 'border-bottom-0' : '';
 
-                                return <button tabIndex={-1} onClick={handleSelect} type="button" data-index={index} key={index} className={`list-group-item list-group-item-action border-start-0 border-end-0 ${startItemBorder} ${endItemBorder}`} data-value={`${item.value}`} data-label={`${item.label}`} data-letter={`${item.letter}`} role="tab">{item.label}</button>
+                                return <button tabIndex={-1} onClick={handleSelect} type="button" data-index={index} key={index} className={`list-group-item list-group-item-action border-start-0 border-end-0 ${startItemBorder} ${endItemBorder}`} data-value={`${item.value}`} data-label={`${item.label}`} data-querystring={`${item.queryString}`} role="tab">{item.label}</button>
                             }) : null}
                         </div>
 
