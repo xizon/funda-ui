@@ -20,6 +20,7 @@ declare type DynamicFieldsProps = {
     id?: string;
     onAdd?: () => void;
     onRemove?: () => void;
+    onComplete?: () => void;
 };
 declare const DynamicFields: (props: DynamicFieldsProps) => JSX.Element;
 export default DynamicFields;

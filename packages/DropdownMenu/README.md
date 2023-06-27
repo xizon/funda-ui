@@ -20,7 +20,7 @@ import DropdownMenu from 'react-pure-bootstrap/DropdownMenu';
 | `triggerContent` | string  | - | Set a piece of text for the trigger <blockquote>Support html tags</blockquote> |
 | `triggerSwitchActive` | boolean  | false | When enabled, the corresponding option content will be displayed after selecting an option |
 | `options` | array  | - | Specify data of Dropdown Menu as a JSON string format. Such as: <br /> `[{"label":"Option 1","value":"option-1"},{"label":"Option 2","value":"option-2"}]` <blockquote>Support html tags</blockquote> |
-| `onChange` | function \| null  | - | This function is called whenever the data is updated. Exposes the JSON format data about the option as an argument. You can use it like this: `(res) => console.log(res)` |
+| `onChange` | function  | - | This function is called whenever the data is updated. Exposes the JSON format data about the option as an argument. You can use it like this: `(res) => console.log(res)` |
 | `tabIndex` | number  | -1 | This attribute allows developers to make HTML elements focusable. |
 
 

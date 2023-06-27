@@ -6,6 +6,12 @@ declare module 'react' {
     }
 }
 
+interface OptionConfig {
+    [propName: string]: string | number;
+}
+
+
+
 type SelectOptionChangeFnType = (arg1: any, arg2: any) => void;
 
 
@@ -16,7 +22,7 @@ type SelectProps = {
     name?: string;
     disabled?: any;
     required?: any;
-    options?: any;
+    options?: OptionConfig[] | string;
     /** -- */
     id?: string;
     style?: React.CSSProperties;
@@ -59,10 +65,10 @@ const Select = forwardRef((props: SelectProps, ref: any) => {
     const uniqueID = useId();
     const idRes = id || uniqueID;
     const rootRef = useRef<any>(null);
-    const optionsRes = options ? isJSON( options ) ? JSON.parse( options ) : options : '';
+    const optionsRes = options ? isJSON( options ) ? JSON.parse( options as string ) : options : '';
 
     // return a array of options
-    let optionsDataInit: any[] = []; 
+    let optionsDataInit: OptionConfig[] = []; 
     const optionKeys = Object.keys(optionsRes);
     const optionValues = Object.values(optionsRes).map((item: any) => item.toString() );
     
@@ -75,7 +81,7 @@ const Select = forwardRef((props: SelectProps, ref: any) => {
 
 
     //
-    const [dataInit, setDataInit] = useState<any[]>(optionsDataInit);
+    const [dataInit, setDataInit] = useState<OptionConfig[]>(optionsDataInit);
     const [hasErr, setHasErr] = useState<boolean>(false);
     const [controlValue, setControlValue] = useState<string | undefined>('');
   
@@ -116,6 +122,9 @@ const Select = forwardRef((props: SelectProps, ref: any) => {
 
             //
             setDataInit(optionsDataInit); // data must be initialized
+
+            //
+            onFetch?.(optionsDataInit);
 
             return optionsDataInit;
         }

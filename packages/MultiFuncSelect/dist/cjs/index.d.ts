@@ -4,11 +4,16 @@ declare module 'react' {
         children?: any;
     }
 }
-declare type MultiFuncSelectOptionChangeFnType = (arg1: any, arg2: any) => void;
+declare type MultiFuncSelectOptionChangeFnType = (arg1: any, arg2: any, arg3: any) => void;
 interface MultiSelectDataConfig {
     values: string[] | number[];
     labels: string[] | number[];
     queryStrings: string[] | number[];
+}
+interface OptionConfig {
+    label: any;
+    value: any;
+    queryString: string | number;
 }
 interface MultiSelectConfig {
     valid: boolean;
@@ -27,7 +32,7 @@ declare type MultiFuncSelectProps = {
     required?: any;
     readOnly?: any;
     placeholder?: string;
-    options?: any;
+    options?: OptionConfig[] | string;
     controlArrow?: React.ReactNode;
     fetchTrigger?: boolean;
     fetchTriggerForDefaultData?: MultiSelectDataConfig | null;
@@ -47,7 +52,7 @@ declare type MultiFuncSelectProps = {
     fetchFuncMethod?: string;
     fetchFuncMethodParams?: any[];
     fetchCallback?: (data: any) => void;
-    onFetch?: (data: any, incomingData: string | null | undefined) => void;
+    onFetch?: (e: any, e2: any, value: string, data: any, incomingData: string | null | undefined) => void;
     onSelect?: (data: any) => void;
     onChange?: MultiFuncSelectOptionChangeFnType | null;
     onBlur?: (e: any) => void;

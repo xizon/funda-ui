@@ -210,8 +210,11 @@ var Select = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(func
 
             //
             setDataInit(optionsDataInit); // data must be initialized
+
+            //
+            onFetch === null || onFetch === void 0 ? void 0 : onFetch(optionsDataInit);
             return _context.abrupt("return", optionsDataInit);
-          case 16:
+          case 17:
           case "end":
             return _context.stop();
         }

@@ -447,6 +447,7 @@ var MultiFuncSelect = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forward
   function _fetchData() {
     _fetchData = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee2(params, inputDefaultValue) {
       var init,
+        incomingOptionsData,
         defaultValue,
         response,
         _ORGIN_DATA,
@@ -463,15 +464,17 @@ var MultiFuncSelect = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forward
         while (1) switch (_context2.prev = _context2.next) {
           case 0:
             init = _args2.length > 2 && _args2[2] !== undefined ? _args2[2] : true;
-            // Determine whether the default value is user query input or default input
+            // get incoming options from `data-options` of component
+            // It is usually used for complex cascading `<MultiFuncSelect />` components
+            incomingOptionsData = valueInputRef.current.dataset.options; // Determine whether the default value is user query input or default input
             defaultValue = init ? inputDefaultValue : '';
             if (!(_typeof(fetchFuncAsync) === 'object')) {
-              _context2.next = 19;
+              _context2.next = 21;
               break;
             }
-            _context2.next = 5;
+            _context2.next = 6;
             return fetchFuncAsync["".concat(fetchFuncMethod)].apply(fetchFuncAsync, _toConsumableArray(params.split(',')));
-          case 5:
+          case 6:
             response = _context2.sent;
             _ORGIN_DATA = response.data; // reset data structure
             if (typeof fetchCallback === 'function') {
@@ -485,6 +488,16 @@ var MultiFuncSelect = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forward
               _ORGIN_DATA = [];
             }
 
+            // STEP 1: ===========
+            // get incoming options from `data-options` of component
+            if (typeof incomingOptionsData !== 'undefined') {
+              _ORGIN_DATA = JSON.parse(incomingOptionsData);
+
+              // set value if the attribute `data-options` of component exists, only valid for single selection (it may be an empty array)
+              if (typeof defaultValue !== 'undefined' && defaultValue !== '') valueInputRef.current.dataset.value = defaultValue;
+            }
+
+            // STEP 2: ===========
             // value & label must be initialized
             filterRes = [];
             if (fetchTrigger) {
@@ -507,8 +520,9 @@ var MultiFuncSelect = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forward
               if (filterResQueryValue.length === 0) filterRes = filterResQueryLabel;
             }
 
+            // STEP 3: ===========
             // ++++++++++++++++++++
-            // Single
+            // Single selection
             // ++++++++++++++++++++
             if (typeof defaultValue === 'undefined' || defaultValue === '') {
               // Do not use `init`, otherwise the query will revert to the default value if there is no value
@@ -561,16 +575,30 @@ var MultiFuncSelect = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forward
               }
             }
 
+            // STEP 4: ===========
             //
             setOptionsData(_ORGIN_DATA); // data must be initialized
 
             //
             setOrginalData(_ORGIN_DATA);
 
+            // STEP 5: ===========
             //
-            onFetch === null || onFetch === void 0 ? void 0 : onFetch(_ORGIN_DATA, incomingData);
+            onFetch === null || onFetch === void 0 ? void 0 : onFetch(selectInputRef.current, valueInputRef.current, defaultValue, _ORGIN_DATA, incomingData);
+
+            //
             return _context2.abrupt("return", _ORGIN_DATA);
-          case 19:
+          case 21:
+            // STEP 1: ===========
+            // get incoming options from `data-options` of component
+            if (typeof incomingOptionsData !== 'undefined') {
+              optionsDataInit = JSON.parse(incomingOptionsData);
+
+              // set value if the attribute `data-options` of component exists, only valid for single selection (it may be an empty array)
+              if (typeof defaultValue !== 'undefined' && defaultValue !== '') valueInputRef.current.dataset.value = defaultValue;
+            }
+
+            // STEP 2: ===========
             // value & label must be initialized
             _filterRes2 = [];
             _filterResQueryValue = optionsDataInit.filter(function (item) {
@@ -582,8 +610,9 @@ var MultiFuncSelect = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forward
             _filterRes2 = _filterResQueryValue;
             if (_filterResQueryValue.length === 0) _filterRes2 = _filterResQueryLabel;
 
+            // STEP 3: ===========
             // ++++++++++++++++++++
-            // Single
+            // Single selection
             // ++++++++++++++++++++
             if (typeof defaultValue === 'undefined' || defaultValue === '') {
               // Do not use `init`, otherwise the query will revert to the default value if there is no value
@@ -635,13 +664,20 @@ var MultiFuncSelect = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forward
               }
             }
 
+            // STEP 4: ===========
             //
             setOptionsData(optionsDataInit); // data must be initialized
 
             //
             setOrginalData(optionsDataInit);
+
+            // STEP 5: ===========
+            //
+            onFetch === null || onFetch === void 0 ? void 0 : onFetch(selectInputRef.current, valueInputRef.current, defaultValue, optionsDataInit, incomingData);
+
+            //
             return _context2.abrupt("return", optionsDataInit);
-          case 29:
+          case 33:
           case "end":
             return _context2.stop();
         }
@@ -688,10 +724,12 @@ var MultiFuncSelect = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forward
         _data,
         _value,
         _label,
+        incomingOptionsData,
         currentControlValueArr,
         currentControlLabelArr,
         _value2,
         _label2,
+        _incomingOptionsData,
         _currentControlValueArr,
         _currentControlLabelArr,
         _args3 = arguments;
@@ -723,10 +761,16 @@ var MultiFuncSelect = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forward
               _data = JSON.parse(dataInput);
               _value = _data.value;
               _label = _data.label; // ++++++++++++++++++++
-              // Single
+              // Single selection
               // ++++++++++++++++++++
               setControlValue(_value);
               setControlLabel(_label);
+
+              // set value if the attribute `data-options` of component exists, only valid for single selection (it may be an empty array)
+              incomingOptionsData = valueInputRef.current.dataset.options;
+              if (typeof incomingOptionsData !== 'undefined') {
+                valueInputRef.current.dataset.value = _value;
+              }
 
               // ++++++++++++++++++++
               // Multiple selection
@@ -764,7 +808,7 @@ var MultiFuncSelect = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forward
 
               //
               if (typeof onChange === 'function') {
-                onChange === null || onChange === void 0 ? void 0 : onChange(selectInputRef.current, !MULTI_SEL_VALID ? optionsData[index] : {
+                onChange === null || onChange === void 0 ? void 0 : onChange(selectInputRef.current, valueInputRef.current, !MULTI_SEL_VALID ? optionsData[index] : {
                   labels: currentControlLabelArr.map(function (v) {
                     return v.toString();
                   }),
@@ -780,10 +824,16 @@ var MultiFuncSelect = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forward
               index = typeof el.currentTarget !== 'undefined' ? el.currentTarget.dataset.index : el.dataset.index;
               _value2 = optionsData[index].value;
               _label2 = optionsData[index].label; // ++++++++++++++++++++
-              // Single
+              // Single selection
               // ++++++++++++++++++++
               setControlValue(_value2);
               setControlLabel(_label2);
+
+              // set value if the attribute `data-options` of component exists, only valid for single selection (it may be an empty array)
+              _incomingOptionsData = valueInputRef.current.dataset.options;
+              if (typeof _incomingOptionsData !== 'undefined') {
+                valueInputRef.current.dataset.value = _value2;
+              }
 
               // ++++++++++++++++++++
               // Multiple selection
@@ -821,7 +871,7 @@ var MultiFuncSelect = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forward
 
               //
               if (typeof onChange === 'function') {
-                onChange === null || onChange === void 0 ? void 0 : onChange(selectInputRef.current, !MULTI_SEL_VALID ? optionsData[index] : {
+                onChange === null || onChange === void 0 ? void 0 : onChange(selectInputRef.current, valueInputRef.current, !MULTI_SEL_VALID ? optionsData[index] : {
                   labels: _currentControlLabelArr.map(function (v) {
                     return v.toString();
                   }),
@@ -901,7 +951,7 @@ var MultiFuncSelect = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forward
 
     //
     if (typeof onChange === 'function') {
-      onChange === null || onChange === void 0 ? void 0 : onChange(selectInputRef.current, {
+      onChange === null || onChange === void 0 ? void 0 : onChange(selectInputRef.current, valueInputRef.current, {
         labels: currentControlLabelArr.map(function (v) {
           return v.toString();
         }),
@@ -1117,6 +1167,14 @@ var MultiFuncSelect = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forward
       if (initTimes > 5 || hasValue) {
         clearInterval(timer);
       } else {
+        // get value if the attribute `data-value` of component exists
+        // Using `<DynamicFields />` will assign values ​​according to `data-options`
+        if (valueInputRef.current !== null && typeof valueInputRef.current.dataset.value !== 'undefined' && valueInputRef.current.dataset.value !== '') {
+          fetchData(_params.join(','), valueInputRef.current.dataset.value);
+          hasValue = true;
+        }
+
+        //
         if (valueInputRef.current !== null && valueInputRef.current.value !== '' && (typeof value === 'undefined' || value === '')) {
           fetchData(_params.join(','), valueInputRef.current.value);
           hasValue = true;
@@ -1432,7 +1490,7 @@ var MultiFuncSelect = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forward
     var endItemBorder = index === optionsData.length - 1 ? 'border-bottom-0' : '';
     if (!MULTI_SEL_VALID) {
       // ++++++++++++++++++++
-      // Single
+      // Single selection
       // ++++++++++++++++++++
       return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", {
         tabIndex: -1,

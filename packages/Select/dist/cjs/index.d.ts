@@ -4,6 +4,9 @@ declare module 'react' {
         children?: any;
     }
 }
+interface OptionConfig {
+    [propName: string]: string | number;
+}
 declare type SelectOptionChangeFnType = (arg1: any, arg2: any) => void;
 declare type SelectProps = {
     wrapperClassName?: string;
@@ -12,7 +15,7 @@ declare type SelectProps = {
     name?: string;
     disabled?: any;
     required?: any;
-    options?: any;
+    options?: OptionConfig[] | string;
     /** -- */
     id?: string;
     style?: React.CSSProperties;

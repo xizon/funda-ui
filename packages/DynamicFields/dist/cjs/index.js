@@ -121,7 +121,8 @@ var DynamicFields = function DynamicFields(props) {
     id = props.id,
     confirmText = props.confirmText,
     onAdd = props.onAdd,
-    onRemove = props.onRemove;
+    onRemove = props.onRemove,
+    onComplete = props.onComplete;
   var uniqueID = (0,react__WEBPACK_IMPORTED_MODULE_0__.useId)().replace(/\:/g, "-");
   var idRes = id || uniqueID;
   var rootRef = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(null);
@@ -132,6 +133,142 @@ var DynamicFields = function DynamicFields(props) {
     data = _useState2[0],
     setData = _useState2[1];
   var controlRefreshValDelay = 1000;
+
+  //timer
+  var timeoutIdRef = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(null);
+  var startTimer = function startTimer() {
+    return new Promise(function (resolve, reject) {
+      //
+      timeoutIdRef.current = setTimeout(function () {
+        if (fieldsRef.current !== null) {
+          var _val = value ? JSON.parse('[' + value + ']') : [];
+          var controls = [].slice.call(document.querySelectorAll("#".concat(fieldsRef.current.id, " > .dynamic-fields__append [name]")));
+          var integratedControls = [];
+          var hasRadio = false;
+          controls.forEach(function (node, i) {
+            var controlType = '';
+            if (node.tagName == "INPUT" || node.tagName == "TEXTARTA") {
+              //not `radio`, `checkbox`
+              if (node.type != 'checkbox' && node.type != 'radio') {
+                controlType = 'input-textarea';
+              }
+
+              //`checkbox`
+              if (node.type == 'checkbox') {
+                controlType = 'checkbox';
+              }
+
+              //`radio`
+              if (node.type == 'radio') {
+                controlType = 'radio';
+              }
+            }
+
+            //`select`
+            if (node.tagName == "SELECT") {
+              controlType = 'select';
+            }
+
+            //
+            if (controlType === 'radio') {
+              hasRadio = true;
+            }
+            integratedControls.push({
+              target: node,
+              type: controlType
+            });
+
+            // replace placeholder string
+            replacePlaceholderStr(node);
+          });
+          if (hasRadio) {
+            console.error('<DynamicFields /> cannot use the "radio" type, because it will have multiple duplicate names! \nThe following components are recommended: <Input />, <Textarea />, <Checkbox />, <Switch />, <MultiFuncSelect />, <Select />, <CascadingSelectE2E />, <CascadingSelect />, <TagInput />, <RangeSlider />.');
+            return false;
+          }
+          var resControls = groupByNum(integratedControls, Math.floor(integratedControls.length / _val.length));
+          _val.forEach(function (row, i) {
+            row.forEach(function (val, j) {
+              if (typeof resControls[i] !== 'undefined' && typeof resControls[i][j] !== 'undefined') {
+                var _control = resControls[i][j];
+                switch (_control.type) {
+                  case "input-textarea":
+                    // normal
+                    _control.target.value = val;
+
+                    // if it is checkbox
+                    if (val === true) {
+                      var _checkbox = _control.target.parentElement.querySelector('[data-checkbox]');
+                      _checkbox.checked = val == true ? true : false;
+                      _control.target.value = _checkbox.value;
+                    }
+
+                    // set value if the attribute `data-options` of component exists, only valid for single selection (it may be an empty array)
+                    // Components that use the `data-options` attribute include: `<MultiFuncSelect />`
+                    if (typeof _control.target.dataset.options !== 'undefined') {
+                      _control.target.dataset.value = val;
+                    }
+                    break;
+                  case "checkbox":
+                    _control.target.checked = val == true ? true : false;
+                    break;
+                  case "select":
+                    _control.target.value = val;
+                    _control.target.dispatchEvent(new Event('change'));
+                    break;
+                  default:
+                    _control.target.value = val;
+                } //end switch  
+              }
+            });
+          });
+
+          //button status
+          checkMaxStatus();
+
+          //
+          resolve(timeoutIdRef.current);
+        }
+      }, controlRefreshValDelay);
+    });
+  };
+  var stopTimer = function stopTimer() {
+    clearTimeout(timeoutIdRef.current);
+    timeoutIdRef.current = null;
+  };
+
+  //timer add
+  var timeoutAddIdRef = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(null);
+  var startTimerAdd = function startTimerAdd() {
+    timeoutAddIdRef.current = setTimeout(function () {
+      if (fieldsRef.current !== null) {
+        var controls = [].slice.call(document.querySelectorAll("#".concat(fieldsRef.current.id, " > .dynamic-fields__append [name]")));
+        controls.forEach(function (node, i) {
+          // replace placeholder string
+          replacePlaceholderStr(node);
+        });
+      }
+    }, controlRefreshValDelay);
+  };
+  var stopTimerAdd = function stopTimerAdd() {
+    clearTimeout(timeoutAddIdRef.current);
+    timeoutAddIdRef.current = null;
+  };
+
+  //timer onComplete
+  var timeoutHandleCompleteIdRef = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(null);
+  var startTimerHandleComplete = function startTimerHandleComplete() {
+    timeoutHandleCompleteIdRef.current = setTimeout(function () {
+      // Call a function when all dynamic components are rendered. 
+      // It is usually used for cascading asynchronous components (can be triggered by routing updates)
+      onComplete === null || onComplete === void 0 ? void 0 : onComplete();
+    }, 500);
+  };
+  var stopTimerHandleComplete = function stopTimerHandleComplete() {
+    clearTimeout(timeoutHandleCompleteIdRef.current);
+    timeoutHandleCompleteIdRef.current = null;
+  };
+
+  //
   function replacePlaceholderStr(node) {
     var _wapper = node.closest('.dynamic-fields__tmpl__wrapper');
     if (_wapper === null) return;
@@ -168,15 +305,7 @@ var DynamicFields = function DynamicFields(props) {
     onAdd === null || onAdd === void 0 ? void 0 : onAdd();
 
     // update placeholder string
-    setTimeout(function () {
-      if (fieldsRef.current !== null) {
-        var controls = [].slice.call(document.querySelectorAll("#".concat(fieldsRef.current.id, " > .dynamic-fields__append [name]")));
-        controls.forEach(function (node, i) {
-          // replace placeholder string
-          replacePlaceholderStr(node);
-        });
-      }
-    }, controlRefreshValDelay);
+    startTimerAdd();
   }
   function handleClickRemove(param) {
     // param is the argument you passed to the function
@@ -203,86 +332,9 @@ var DynamicFields = function DynamicFields(props) {
   function updateDisplayedControls() {
     // update values for all displayed controls
     // You need to wait for the asynchronous component to render
-    setTimeout(function () {
-      if (fieldsRef.current !== null) {
-        var _val = value ? JSON.parse('[' + value + ']') : [];
-        var controls = [].slice.call(document.querySelectorAll("#".concat(fieldsRef.current.id, " > .dynamic-fields__append [name]")));
-        var integratedControls = [];
-        var hasRadio = false;
-        controls.forEach(function (node, i) {
-          var controlType = '';
-          if (node.tagName == "INPUT" || node.tagName == "TEXTARTA") {
-            //not `radio`, `checkbox`
-            if (node.type != 'checkbox' && node.type != 'radio') {
-              controlType = 'input-textarea';
-            }
-
-            //`checkbox`
-            if (node.type == 'checkbox') {
-              controlType = 'checkbox';
-            }
-
-            //`radio`
-            if (node.type == 'radio') {
-              controlType = 'radio';
-            }
-          }
-
-          //`select`
-          if (node.tagName == "SELECT") {
-            controlType = 'select';
-          }
-
-          //
-          if (controlType === 'radio') {
-            hasRadio = true;
-          }
-          integratedControls.push({
-            target: node,
-            type: controlType
-          });
-
-          // replace placeholder string
-          replacePlaceholderStr(node);
-        });
-        if (hasRadio) {
-          console.error('<DynamicFields /> cannot use the "radio" type, because it will have multiple duplicate names! \nThe following components are recommended: <Input />, <Textarea />, <Checkbox />, <Switch />, <MultiFuncSelect />, <Select />, <CascadingSelectE2E />, <CascadingSelect />, <TagInput />, <RangeSlider />.');
-          return false;
-        }
-        var resControls = groupByNum(integratedControls, Math.floor(integratedControls.length / _val.length));
-        _val.forEach(function (row, i) {
-          row.forEach(function (val, j) {
-            if (typeof resControls[i] !== 'undefined' && typeof resControls[i][j] !== 'undefined') {
-              var _control = resControls[i][j];
-              switch (_control.type) {
-                case "input-textarea":
-                  _control.target.value = val;
-
-                  // if it is checkbox
-                  if (val === true) {
-                    var _checkbox = _control.target.parentElement.querySelector('[data-checkbox]');
-                    _checkbox.checked = val == true ? true : false;
-                    _control.target.value = _checkbox.value;
-                  }
-                  break;
-                case "checkbox":
-                  _control.target.checked = val == true ? true : false;
-                  break;
-                case "select":
-                  _control.target.value = val;
-                  _control.target.dispatchEvent(new Event('change'));
-                  break;
-                default:
-                  _control.target.value = val;
-              } //end switch  
-            }
-          });
-        });
-
-        //button status
-        checkMaxStatus();
-      }
-    }, controlRefreshValDelay);
+    startTimer().then(function () {
+      startTimerHandleComplete();
+    });
   }
   function generateList() {
     return data.map(function (el, i) {
@@ -317,6 +369,11 @@ var DynamicFields = function DynamicFields(props) {
       return [""];
     }) : []);
     updateDisplayedControls();
+    return function () {
+      stopTimer();
+      stopTimerAdd();
+      stopTimerHandleComplete();
+    };
   }, [value]);
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
     className: wrapperClassName || wrapperClassName === '' ? wrapperClassName : "mb-3 position-relative",

@@ -30,8 +30,8 @@ import MultiFuncSelect from 'react-pure-bootstrap/MultiFuncSelect';
 | `fetchFuncMethod` | string  | - | When the property is *true*, every time the select changes, a data request will be triggered. <br /><blockquote>The methord must be a Promise Object.</blockquote> |
 | `fetchFuncMethodParams` | array  | - | The parameter passed by the method, it is an array. <br />Note: the first element is a query string, the second element is the number of queried data (usually a number), and then you can increase the third, or fourth, and more parameters. <br />Such as `['',0]`, `['',99,'string 1','string 2']`, `['',99,'string 1','$QUERY_STRING']` <br /><blockquote>There should be at least one parameter which is the query string. <br />`$QUERY_STRING` identifies the ID of the automatic query, and its value depends on the user input string.</blockquote> |
 | `fetchCallback` | function  | - | Return value from `fetchCallback` property to format the data of the API callback, which will match the data structure of the component. <br >At the same time it returns the original data, you will use this function and use the `return` keyword to return a new value. |
-| `onFetch` | function  | - | Call a function when  data is successfully fetched. It returns two callback values, one is the fetched data (an array), adn the last is a string passed by the `data` attribute |
-| `onChange` | function \| null  | - | Call a function when the value of an HTML element is changed. It returns two callback values, one is the control and the other is the data (Exposes the JSON (Returns an Array Collection when `multiSelect` is enabled) format data about the option as an argument. You can use it like this: `(res) => console.log(res.value)`). |
+| `onFetch` | function  | - | Call a function when  data is successfully fetched. It returns five callback values. <br /> <ol><li>The first is the current control</li><li>The second is the control of the value save</li><li> The third is the current value (a string)</li><li>The fourth is the fetched data (an array)</li><li>The last is a string passed by the `data` attribute</li></ol> |
+| `onChange` | function  | - | Call a function when the value of an HTML element is changed. It returns three callback values. <br /> <ol><li>The first is the current control</li><li>The second is the control of the value save</li><li>The last is the data (Exposes the JSON (Returns an Array Collection when `multiSelect` is enabled) format data about the option as an argument.</li></ol> |
 | `onBlur` | function  | - | Call a function when a user leaves a form field. |
 | `onFocus` | function  | - | Call a function when an form field gets focus. |
 
@@ -113,8 +113,8 @@ export default () => {
                     {"label": "Option 3","value": "value-3","queryString": "option3"}
                 ]  
                 `}
-                onChange={(e, val) => {
-                    console.log(e.target, e.nextSibling, val);
+                onChange={(e, e2, val) => {
+                    console.log(e, e2, val);
                 }}
             />
 
@@ -141,8 +141,8 @@ export default () => {
                     {"label": "Option 3","value": "value-3","queryString": "option3"}
                 ]  
                 `}
-                onChange={(e, val) => {
-                    console.log(e.target, e.nextSibling, val);
+                onChange={(e, e2, val) => {
+                    console.log(e, e2, val);
                 }}
             />
 
@@ -179,9 +179,8 @@ export default () => {
 
                     return formattedData;
                 }}
-                onFetch={(res, data) => {
-                    console.log('onFetch: ', res, data);
-
+                onFetch={(e, e2, value, res, data) => {
+                    console.log('onFetch: ', e, e2, value, res, data);
                 }}
             />
 
@@ -215,9 +214,8 @@ export default () => {
                     }); 
                     return formattedData;
                 }}
-                onFetch={(res, data) => {
-                    console.log('onFetch: ', res, data);
-
+                onFetch={(e, e2, value, res, data) => {
+                    console.log('onFetch: ', e, e2, value, res, data);
                 }}
             />
 
@@ -254,9 +252,8 @@ export default () => {
                     }); 
                     return formattedData;
                 }}
-                onFetch={(res, data) => {
-                    console.log('onFetch: ', res, data);
-
+                onFetch={(e, e2, value, res, data) => {
+                    console.log('onFetch: ', e, e2, value, res, data);
                 }}
             />
            
@@ -300,9 +297,8 @@ export default () => {
                     }); 
                     return formattedData;
                 }}
-                onFetch={(res, data) => {
-                    console.log('onFetch: ', res, data);
-
+                onFetch={(e, e2, value, res, data) => {
+                    console.log('onFetch: ', e, e2, value, res, data);
                 }}
             />
 
@@ -312,8 +308,7 @@ export default () => {
 ```
 
 
-## Multi-Level Cascading Select
-
+## Multi-Level Cascading Select (Implemented using `useState()`)
 
 
 ```js
@@ -475,7 +470,7 @@ export default () => {
                     }); 
                     return formattedData;
                 }}
-                onChange={(e: any, val: any) => {
+                onChange={(e: any, e2: any, val: any) => {
                     const queryId = val.queryId;
 
                     // value of "name-2" and "name-3"
@@ -509,7 +504,7 @@ export default () => {
                 name="name-2"
                 label="Level 2"
                 options={secondOptions}
-                onChange={(e: any, val: any) => {
+                onChange={(e: any, e2: any, val: any) => {
                     const queryId = val.queryId;
                 
                     // value of "name-3"
@@ -546,5 +541,169 @@ export default () => {
 
         </>
     );
+}
+```
+
+
+
+## Multi-Level Cascading Select (Implemented using `data-options` of component)
+
+It is usually used for complex cascading `<MultiFuncSelect />` components
+
+
+```js
+import React from "react";
+import MultiFuncSelect from 'react-pure-bootstrap/MultiFuncSelect';
+
+// component styles
+import 'react-pure-bootstrap/MultiFuncSelect/index.css';
+
+class DataService {
+    
+    // `getListFirst()` must be a Promise Object
+    async getListFirst(searchStr = '', limit = 0, otherParam = '') {
+
+        console.log('searchStr: ', searchStr);
+        console.log("limit: ", limit);
+        console.log("otherParam: ", otherParam);
+
+        const demoData = [
+            {
+                "parent_id": 0,
+                "item_code": 1,
+                "item_name": "Title 1",
+                "item_type": "web"
+            },
+            {
+                "parent_id": 0,
+                "item_code": 2,
+                "item_name": "Title 2",
+                "item_type": "dev"
+            }
+        ];   
+
+        return {
+            code: 0,
+            message: 'OK',
+            data: demoData
+        };
+    }
+
+
+    // `getListSecond()` must be a Promise Object
+    async getListSecond(searchStr = '', limit = 0, parentId = 0) {
+
+        console.log("parentId: ", parentId);
+
+        const demoData = [
+            {
+                "parent_id": 1,
+                "item_code": 3,
+                "item_name": "Title 3",
+                "item_type": "web/ui"
+            },
+            {
+                "parent_id": 1,
+                "item_code": 4,
+                "item_name": "Title 4",
+                "item_type": "web/ui"
+            },
+            {
+                "parent_id": 2,
+                "item_code": 5,
+                "item_name": "Title 5",
+                "item_type": "dev"
+            }
+        ];   
+
+        const res = demoData.filter( item => {
+            return item.parent_id == parentId;
+        } );
+
+        return {
+            code: 0,
+            message: 'OK',
+            data: res
+        };
+    }
+
+}
+
+
+export default () => {
+
+    const service = new DataService;
+    const [dynamicData, setDynamicData] = useState<string>('');
+
+    function toSlug(str: string) {
+
+        return str
+            .toString()
+            .replace(/[^\w\s\-！￥【】\u4e00-\u9eff]/gi, '')
+            .replace(/\s/g, '-')
+            .replace(/(\-){2,}/g, '-')
+            .replace(/\-\s*$/, '')
+            .toLowerCase();
+    };
+    
+    return (
+        <>
+
+            <MultiFuncSelect
+                placeholder="Select"
+                name="name-1"
+                label="Level 1"
+                fetchFuncAsync={service}
+                fetchFuncMethod="getListFirst"
+                fetchFuncMethodParams={['', 0, 1]}
+                fetchCallback={(res) => {
+                    const formattedData = res.map((item: any) => {
+                        return {
+                            label: item.item_name,
+                            value: toSlug(item.item_name),
+                            queryString: '',
+                            queryId: item.item_code
+                        }
+                    }); 
+                    return formattedData;
+                }}
+                onChange={(e: any, e2: any, val: any) => {
+                    const queryId = val.queryId;
+
+
+                    // options of "name-2"
+                    service.getListSecond('', 0, queryId).then((res: any) => {
+                        const formattedData = res.data.map((item: any) => {
+                            return {
+                                label: item.item_name,
+                                value: toSlug(item.item_name),
+                                queryString: '',
+                                queryId: item.item_code
+                            }
+                        }); 
+
+                        setDynamicData(queryId);
+                        document.querySelector(`#select-level-2`).dataset.options = JSON.stringify(formattedData);
+
+                    });
+                  
+                }}
+            />
+
+
+            <MultiFuncSelect
+                id="select-level-2"
+                value={''}
+                data={dynamicData}  // `data` attribute will trigger component update
+                placeholder="Select"
+                name="name-2"
+                label="Level 2"
+                options={''}
+                
+            />
+
+        </>
+    );
+
 }
 ```

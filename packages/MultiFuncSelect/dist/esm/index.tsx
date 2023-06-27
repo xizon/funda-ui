@@ -1,6 +1,7 @@
 import React, { useId, useEffect, useState, useRef, forwardRef } from 'react';
 
 import { throttle } from './utils/performance';
+import { type } from 'os';
 
 
 declare module 'react' {
@@ -9,12 +10,18 @@ declare module 'react' {
     }
 }
 
-type MultiFuncSelectOptionChangeFnType = (arg1: any, arg2: any) => void;
+type MultiFuncSelectOptionChangeFnType = (arg1: any, arg2: any, arg3: any) => void;
 
 interface MultiSelectDataConfig {
     values: string[] | number[];
     labels: string[] | number[];
     queryStrings: string[] | number[];
+}
+
+interface OptionConfig {
+    label: any;
+    value: any;
+    queryString: string | number;
 }
 
 
@@ -37,7 +44,7 @@ type MultiFuncSelectProps = {
     required?: any;
     readOnly?: any;
     placeholder?: string;
-    options?: any;
+    options?: OptionConfig[] | string;
     controlArrow?: React.ReactNode;
     fetchTrigger?: boolean;
     fetchTriggerForDefaultData?: MultiSelectDataConfig | null;
@@ -57,7 +64,7 @@ type MultiFuncSelectProps = {
     fetchFuncMethod?: string;
     fetchFuncMethodParams?: any[];
     fetchCallback?: (data: any) => void;
-    onFetch?: (data: any, incomingData: string | null | undefined) => void;
+    onFetch?: (e: any, e2: any, value: string, data: any, incomingData: string | null | undefined) => void;
     onSelect?: (data: any) => void;
     onChange?: MultiFuncSelectOptionChangeFnType | null;
     onBlur?: (e: any) => void;
@@ -109,16 +116,16 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
     const valueInputRef = useRef<any>(null);
     const listRef = useRef<any>(null);
     const listContentRef = useRef<any>(null);
-    const optionsRes = options ? isJSON( options ) ? JSON.parse( options ) : options : [];
+    const optionsRes = options ? isJSON( options ) ? JSON.parse( options as string ) : options : [];
     const windowScrollUpdate = throttle(handleScrollEvent, 5);
     
 
     // return a array of options
-    let optionsDataInit: any[] = optionsRes; 
+    let optionsDataInit: OptionConfig[] = optionsRes; 
    
     //
-    const [orginalData, setOrginalData] = useState<any[]>(optionsDataInit);
-    const [optionsData, setOptionsData] = useState<any[]>(optionsDataInit);
+    const [orginalData, setOrginalData] = useState<OptionConfig[]>(optionsDataInit);
+    const [optionsData, setOptionsData] = useState<OptionConfig[]>(optionsDataInit);
     const [hasErr, setHasErr] = useState<boolean>(false);
     const [controlLabel, setControlLabel] = useState<string | undefined>('');
     const [controlValue, setControlValue] = useState<string | undefined>('');
@@ -345,6 +352,11 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
 
     async function fetchData(params: any, inputDefaultValue: any, init: boolean = true) {
 
+        // get incoming options from `data-options` of component
+        // It is usually used for complex cascading `<MultiFuncSelect />` components
+        const incomingOptionsData = valueInputRef.current.dataset.options;
+
+
         // Determine whether the default value is user query input or default input
         const defaultValue = init ? inputDefaultValue : '';
 
@@ -365,6 +377,17 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
                 _ORGIN_DATA = [];
             }
 
+            
+            // STEP 1: ===========
+            // get incoming options from `data-options` of component
+            if ( typeof incomingOptionsData !== 'undefined' ) {
+                _ORGIN_DATA = JSON.parse( incomingOptionsData );
+
+                // set value if the attribute `data-options` of component exists, only valid for single selection (it may be an empty array)
+                if (typeof defaultValue !== 'undefined' && defaultValue !== '') valueInputRef.current.dataset.value = defaultValue;
+            }
+
+            // STEP 2: ===========
             // value & label must be initialized
             let filterRes: any = [];
 
@@ -388,8 +411,10 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
                 if ( filterResQueryValue.length === 0 ) filterRes = filterResQueryLabel;
             }
 
+
+            // STEP 3: ===========
             // ++++++++++++++++++++
-            // Single
+            // Single selection
             // ++++++++++++++++++++
             if ( typeof defaultValue === 'undefined' || defaultValue === '' ) {  // Do not use `init`, otherwise the query will revert to the default value if there is no value
                 setControlValue(''); 
@@ -448,22 +473,39 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
 
     
             }
-            
 
+
+            // STEP 4: ===========
             //
             setOptionsData(_ORGIN_DATA); // data must be initialized
 
             //
             setOrginalData(_ORGIN_DATA);
 
+
+            // STEP 5: ===========
             //
-            onFetch?.(_ORGIN_DATA, incomingData);
+            onFetch?.(selectInputRef.current, valueInputRef.current, defaultValue, _ORGIN_DATA, incomingData);
 
         
+            //
             return _ORGIN_DATA;
+
+            
         } else {
 
+            // STEP 1: ===========
+            // get incoming options from `data-options` of component
+            if ( typeof incomingOptionsData !== 'undefined' ) {
+                optionsDataInit = JSON.parse( incomingOptionsData );
 
+                // set value if the attribute `data-options` of component exists, only valid for single selection (it may be an empty array)
+                if (typeof defaultValue !== 'undefined' && defaultValue !== '') valueInputRef.current.dataset.value = defaultValue;
+
+            }
+
+
+            // STEP 2: ===========
             // value & label must be initialized
             let filterRes: any = [];
             const filterResQueryValue = optionsDataInit.filter((item: any) => item.value == defaultValue );
@@ -472,8 +514,9 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
             filterRes = filterResQueryValue;
             if ( filterResQueryValue.length === 0 ) filterRes = filterResQueryLabel;
 
+            // STEP 3: ===========
             // ++++++++++++++++++++
-            // Single
+            // Single selection
             // ++++++++++++++++++++
             if ( typeof defaultValue === 'undefined' || defaultValue === '' ) {  // Do not use `init`, otherwise the query will revert to the default value if there is no value
                 setControlValue(''); 
@@ -487,7 +530,6 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
             }
 
             
-
 
             // ++++++++++++++++++++
             // Multiple selection
@@ -534,13 +576,18 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
             }
 
 
-
+            // STEP 4: ===========
             //
             setOptionsData(optionsDataInit); // data must be initialized
 
             //
             setOrginalData(optionsDataInit);   
 
+            // STEP 5: ===========
+            //
+            onFetch?.(selectInputRef.current, valueInputRef.current, defaultValue, optionsDataInit, incomingData);
+
+            //
             return optionsDataInit;
         }
 
@@ -598,7 +645,6 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
         }
 
 
-
         // update value * label
         if ( dataInput ) {
 
@@ -608,10 +654,18 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
             const _label = _data.label;
 
             // ++++++++++++++++++++
-            // Single
+            // Single selection
             // ++++++++++++++++++++
             setControlValue(_value); 
             setControlLabel(_label); 
+
+
+            // set value if the attribute `data-options` of component exists, only valid for single selection (it may be an empty array)
+            const incomingOptionsData = valueInputRef.current.dataset.options;
+            if ( typeof incomingOptionsData !== 'undefined' ) {
+                valueInputRef.current.dataset.value = _value;
+            }  
+
 
             // ++++++++++++++++++++
             // Multiple selection
@@ -656,7 +710,7 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
 
             //
             if ( typeof(onChange) === 'function' ) {
-                onChange?.(selectInputRef.current, !MULTI_SEL_VALID ? optionsData[index as never] : {labels: currentControlLabelArr.map((v: any) => v.toString()), values: currentControlValueArr.map((v: any) => v.toString())});
+                onChange?.(selectInputRef.current, valueInputRef.current, !MULTI_SEL_VALID ? optionsData[index as never] : {labels: currentControlLabelArr.map((v: any) => v.toString()), values: currentControlValueArr.map((v: any) => v.toString())});
                 
                 //
                 selectInputRef.current.blur();
@@ -670,10 +724,16 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
             const _label = optionsData[index as never].label;
 
             // ++++++++++++++++++++
-            // Single
+            // Single selection
             // ++++++++++++++++++++
             setControlValue(_value); 
             setControlLabel(_label); 
+
+            // set value if the attribute `data-options` of component exists, only valid for single selection (it may be an empty array)
+            const incomingOptionsData = valueInputRef.current.dataset.options;
+            if ( typeof incomingOptionsData !== 'undefined' ) {
+                valueInputRef.current.dataset.value = _value;
+            }  
 
 
             // ++++++++++++++++++++
@@ -721,7 +781,7 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
 
             //
             if ( typeof(onChange) === 'function' ) {
-                onChange?.(selectInputRef.current, !MULTI_SEL_VALID ? optionsData[index as never] : {labels: currentControlLabelArr.map((v: any) => v.toString()), values: currentControlValueArr.map((v: any) => v.toString())});
+                onChange?.(selectInputRef.current, valueInputRef.current, !MULTI_SEL_VALID ? optionsData[index as never] : {labels: currentControlLabelArr.map((v: any) => v.toString()), values: currentControlValueArr.map((v: any) => v.toString())});
 
                 //
                 selectInputRef.current.blur();
@@ -784,7 +844,7 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
 
         //
         if ( typeof(onChange) === 'function' ) {
-            onChange?.(selectInputRef.current, {labels: currentControlLabelArr.map((v: any) => v.toString()), values: currentControlValueArr.map((v: any) => v.toString())});
+            onChange?.(selectInputRef.current, valueInputRef.current, {labels: currentControlLabelArr.map((v: any) => v.toString()), values: currentControlValueArr.map((v: any) => v.toString())});
 
             //
             selectInputRef.current.blur();
@@ -848,7 +908,7 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
             setOptionsData(orginalData);
         } else {
 
-            let _orginalData: any[] = [];
+            let _orginalData: OptionConfig[] = [];
    
             if ( fetchUpdate ) {
                 _orginalData = await handleFetch();
@@ -979,7 +1039,7 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
 
     useEffect(() => {
 
-
+    
         // update incoming data
         //------------------------------------------
         setIncomingData(data);        
@@ -1000,6 +1060,15 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
             if ( initTimes > 5 || hasValue ) {
                 clearInterval(timer);
             } else {
+
+                // get value if the attribute `data-value` of component exists
+                // Using `<DynamicFields />` will assign values ​​according to `data-options`
+                if ( valueInputRef.current !== null && typeof valueInputRef.current.dataset.value !== 'undefined' && valueInputRef.current.dataset.value !== '') {
+                    fetchData((_params).join(','), valueInputRef.current.dataset.value);
+                    hasValue = true;
+                }
+
+                //
                 if ( valueInputRef.current !== null &&  valueInputRef.current.value !== '' && ( typeof value === 'undefined' || value === '' ) ) {
                     fetchData((_params).join(','), valueInputRef.current.value);
                     hasValue = true;
@@ -1008,6 +1077,7 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
 
             }
         }, 500);
+
 
 
         // keyboard listener
@@ -1110,8 +1180,6 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
             window.removeEventListener('touchmove', windowScrollUpdate);
         }
 
-
-
     }, [value, options, data]);
 
 
@@ -1124,7 +1192,7 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
                 
                     {/*
                     // ++++++++++++++++++++
-                    // Single Control (includes result container)
+                    // Single selection Control (includes result container)
                     // ++++++++++++++++++++
                     */}
                     <div ref={rootSingleRef} className="position-relative">
@@ -1290,7 +1358,7 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
                                     if (!MULTI_SEL_VALID) {
 
                                         // ++++++++++++++++++++
-                                        // Single
+                                        // Single selection
                                         // ++++++++++++++++++++
                                         return <button tabIndex={-1} onClick={handleSelect} type="button" data-index={index} key={index} className={`list-group-item list-group-item-action border-start-0 border-end-0 ${startItemBorder} ${endItemBorder} border-bottom-0`} data-value={`${item.value}`} data-label={`${item.label}`} data-querystring={`${item.queryString}`} role="tab" dangerouslySetInnerHTML={{
                                             __html: item.label

@@ -22,6 +22,8 @@ import DynamicFields from 'react-pure-bootstrap/DynamicFields';
 | `startFromZero` | boolean | false | Whether to start counting from zero (if true, initialize without any form) |
 | `onAdd` | function  | - | Call a function when add a control. |
 | `onRemove` | function  | - | Call a function when remove a control. |
+| `onComplete` | function  | - | Call a function when all dynamic components are rendered. It is usually used for cascading asynchronous components (can be triggered by routing updates) |
+
 
 
 > **Note:**
@@ -40,6 +42,9 @@ import React from "react";
 import DynamicFields from 'react-pure-bootstrap/DynamicFields';
 import Input from 'react-pure-bootstrap/Input';
 import MultiFuncSelect from 'react-pure-bootstrap/MultiFuncSelect';
+
+// component styles
+import 'react-pure-bootstrap/MultiFuncSelect/index.css';
 
 
 export default () => {
@@ -68,8 +73,8 @@ export default () => {
                                         {"label": "URL 2","value": "http://b","queryString": ""}
                                     ]  
                                     `}
-                                    onChange={((e: any, val: any) => {
-                                        const targetId = e.nextSibling.dataset.id;
+                                    onChange={((e: any, e2: any, val: any) => {
+                                        const targetId = e2.dataset.id;
                                         [].slice.call(document.querySelectorAll(`[name="appnotice-url[]"]`)).forEach((node: any) => {
                                             if (node.id === targetId) {
                                                 node.value = val.label;
