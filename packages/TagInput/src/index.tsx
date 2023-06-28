@@ -61,6 +61,7 @@ const TagInput = forwardRef((props: TagInputProps, ref: any) => {
     const [userInput, setUserInput] = useState<string>('');
     const [items, setItems] = useState<any[]>([]);
     const [alreadyInItems, setAlreadyInItems] = useState<boolean>(false);
+    const [onComposition, setOnComposition] = useState(false);
 
 
     function initDefaultValue(defaultValue: any) {
@@ -87,6 +88,10 @@ const TagInput = forwardRef((props: TagInputProps, ref: any) => {
     }
 
     function handleKeypress(event: any) {
+        
+        // Avoid adding results before when the user enters text is not complete
+        if ( onComposition ) return;
+        
 
         if (event.code == "Enter" || event.code == "Space") {
             event.preventDefault();
@@ -121,10 +126,20 @@ const TagInput = forwardRef((props: TagInputProps, ref: any) => {
         }
     }
 
+    function handleComposition(event: any) {
+        if (event.type === 'compositionstart') {
+            setOnComposition(true);
+        }
+        if (event.type === 'compositionend') {
+            setOnComposition(false);
+        }
+    }
+
+
     function handleChange(event: any) {
 
         const val = event.target.value;
-
+        
         //----
         //remove focus style
         if (val === '') {
@@ -244,6 +259,9 @@ const TagInput = forwardRef((props: TagInputProps, ref: any) => {
                                 disabled={disabled || null}
                                 readOnly={readOnly || null}
                                 onChange={handleChange}
+                                onCompositionStart={handleComposition}
+                                onCompositionUpdate={handleComposition}
+                                onCompositionEnd={handleComposition}
                                 onKeyDown={handleKeypress}
                                 onFocus={handleFocus}
                                 onBlur={handleBlur}

@@ -147,6 +147,10 @@ var TagInput = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(fu
     _useState8 = _slicedToArray(_useState7, 2),
     alreadyInItems = _useState8[0],
     setAlreadyInItems = _useState8[1];
+  var _useState9 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(false),
+    _useState10 = _slicedToArray(_useState9, 2),
+    onComposition = _useState10[0],
+    setOnComposition = _useState10[1];
   function initDefaultValue(defaultValue) {
     if (defaultValue) {
       setItems(defaultValue.trim().replace(/^\,|\,$/g, '').split(',').map(function (item, index) {
@@ -169,6 +173,8 @@ var TagInput = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(fu
     onChange === null || onChange === void 0 ? void 0 : onChange(inputRef.current, newArray);
   }
   function handleKeypress(event) {
+    // Avoid adding results before when the user enters text is not complete
+    if (onComposition) return;
     if (event.code == "Enter" || event.code == "Space") {
       event.preventDefault();
       if (alreadyInItems) return false;
@@ -196,6 +202,14 @@ var TagInput = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(fu
 
       //
       onChange === null || onChange === void 0 ? void 0 : onChange(inputRef.current, items);
+    }
+  }
+  function handleComposition(event) {
+    if (event.type === 'compositionstart') {
+      setOnComposition(true);
+    }
+    if (event.type === 'compositionend') {
+      setOnComposition(false);
     }
   }
   function handleChange(event) {
@@ -311,6 +325,9 @@ var TagInput = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(fu
     disabled: disabled || null,
     readOnly: readOnly || null,
     onChange: handleChange,
+    onCompositionStart: handleComposition,
+    onCompositionUpdate: handleComposition,
+    onCompositionEnd: handleComposition,
     onKeyDown: handleKeypress,
     onFocus: handleFocus,
     onBlur: handleBlur,

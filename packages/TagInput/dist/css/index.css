@@ -19,6 +19,7 @@
   display: flex;
   flex-wrap: wrap;
   /* bootstrap style that match ".form-control" */
+  padding: 0.375rem;
   background-color: #fff;
   background-clip: padding-box;
   border: 1px solid #dee2e6;
@@ -38,7 +39,7 @@
   margin: 0;
   margin-left: 0.5rem;
   /* bootstrap style that match ".form-control" */
-  font-size: 1rem;
+  font-size: 0.875rem;
   font-weight: 400;
   line-height: 1.5;
   color: #adb5bd;
