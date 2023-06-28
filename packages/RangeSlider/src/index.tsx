@@ -3,6 +3,7 @@ import React, { useId, useEffect, useState, useRef } from 'react';
 import Input from 'rpb-input';
 
 
+
 type RangeSliderProps = {
     wrapperClassName?: string;
     controlClassName?: string;
@@ -65,7 +66,12 @@ const RangeSlider = (props: RangeSliderProps) => {
 
 
     function initDefaultValue(defaultValue: any) {
-        if (defaultValue) {
+
+        // change the value to trigger component rendering
+        if ( typeof defaultValue === 'undefined' || defaultValue === '' ) {
+            setMinValue(min);
+            setMaxValue(max);
+        } else {
             setMinValue(defaultValue.min);
             setMaxValue(defaultValue.max);
         }
@@ -138,11 +144,10 @@ const RangeSlider = (props: RangeSliderProps) => {
     return (
         <>
 
+            {label ? <><div className="range-slider__label"><label htmlFor={`label-${idRes}`} className="form-label">{label}</label></div></> : null}
+
 
             <div className={wrapperClassName || wrapperClassName === '' ? `range-slider__wrapper ${wrapperClassName}` : `range-slider__wrapper mb-3 position-relative`} ref={rootRef}>
-
-                {label ? <><label className="form-label">{label}</label></> : null}
-
 
                 {/* The <Input /> component is a placeholder that ensures the same height and alignment as other form components */}
                 <Input

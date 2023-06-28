@@ -65,7 +65,11 @@ const TagInput = forwardRef((props: TagInputProps, ref: any) => {
 
 
     function initDefaultValue(defaultValue: any) {
-        if (defaultValue) {
+
+        // change the value to trigger component rendering
+        if ( typeof defaultValue === 'undefined' || defaultValue === '' ) {
+            setItems([]);
+        } else {
             setItems(defaultValue.trim().replace(/^\,|\,$/g, '').split(',').map((item: any, index: number) => {
                 return {
                     content: item,
@@ -193,6 +197,7 @@ const TagInput = forwardRef((props: TagInputProps, ref: any) => {
 
 
     useEffect(() => {
+
 
         // update default value
         //--------------

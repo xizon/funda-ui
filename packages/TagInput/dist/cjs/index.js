@@ -152,7 +152,10 @@ var TagInput = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(fu
     onComposition = _useState10[0],
     setOnComposition = _useState10[1];
   function initDefaultValue(defaultValue) {
-    if (defaultValue) {
+    // change the value to trigger component rendering
+    if (typeof defaultValue === 'undefined' || defaultValue === '') {
+      setItems([]);
+    } else {
       setItems(defaultValue.trim().replace(/^\,|\,$/g, '').split(',').map(function (item, index) {
         return {
           content: item,

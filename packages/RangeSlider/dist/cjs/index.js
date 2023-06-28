@@ -580,7 +580,11 @@ var RangeSlider = function RangeSlider(props) {
   var minPos = (minValue - min) / (max - min) * 100;
   var maxPos = (maxValue - min) / (max - min) * 100;
   function initDefaultValue(defaultValue) {
-    if (defaultValue) {
+    // change the value to trigger component rendering
+    if (typeof defaultValue === 'undefined' || defaultValue === '') {
+      setMinValue(min);
+      setMaxValue(max);
+    } else {
       setMinValue(defaultValue.min);
       setMaxValue(defaultValue.max);
     }
@@ -640,12 +644,15 @@ var RangeSlider = function RangeSlider(props) {
       }
     }, 500);
   }, [value]);
-  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, label ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+    className: "range-slider__label"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("label", {
+    htmlFor: "label-".concat(idRes),
+    className: "form-label"
+  }, label))) : null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
     className: wrapperClassName || wrapperClassName === '' ? "range-slider__wrapper ".concat(wrapperClassName) : "range-slider__wrapper mb-3 position-relative",
     ref: rootRef
-  }, label ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("label", {
-    className: "form-label"
-  }, label)) : null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((rpb_input__WEBPACK_IMPORTED_MODULE_1___default()), {
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((rpb_input__WEBPACK_IMPORTED_MODULE_1___default()), {
     ref: valMinRef,
     wrapperClassName: wrapperClassName || wrapperClassName === '' ? wrapperClassName : "mb-3 position-relative",
     controlClassName: controlClassName || controlClassName === '' ? controlClassName : "form-control",
