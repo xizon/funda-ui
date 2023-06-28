@@ -19,6 +19,8 @@ declare type FileProps = {
     name?: string;
     disabled?: any;
     required?: any;
+    /** Incoming data, you can set the third parameter of `onComplete` */
+    data?: string;
     /** -- */
     id?: string;
     tabIndex?: number;
@@ -26,10 +28,8 @@ declare type FileProps = {
     fetchFuncAsync?: any;
     fetchFuncMethod?: string;
     fetchFuncMethodParams?: any[];
-    fetchCallback?: (data: any) => void;
-    onFetch?: (data: any) => void;
     onChange?: (e: any, e2: any, value: any) => void;
-    onComplete?: (e: any, callback: any) => void;
+    onComplete?: (e: any, callback: any, incomingData: string | null | undefined) => void;
     onProgress?: (files: any) => void;
 };
 declare const File: React.ForwardRefExoticComponent<FileProps & React.RefAttributes<unknown>>;

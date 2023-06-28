@@ -23,11 +23,10 @@ import File from 'react-pure-bootstrap/File';
 | `name` | string | - | Name is not deprecated when used with form fields. |
 | `disabled` | boolean | false | Whether it is disabled |
 | `required` | boolean | false | When present, it specifies that a field must be filled out before submitting the form. |
+| `data` | string  | - | Incoming data, you can set the third parameter of `onComplete`. <blockquote>Changes in the `data` value will cause the component to re-render. It will be used when the value or content does not change when switching routes and needs to re-render the component or get the request.</blockquote> |
 | `fetchFuncAsync` | Constructor | - | A method as a string from the constructor.  |
 | `fetchFuncMethod` | string  | - | When the property is *true*, every time the select changes, a data request will be triggered. <br /><blockquote>The methord must be a Promise Object.</blockquote> |
 | `fetchFuncMethodParams` | array  | - | The parameter passed by the method, it is an array. <br />Note: the first element is a query string, the second element is the number of queried data (usually a number), and then you can increase the third, or fourth, and more parameters. <br />Such as `['',0]`, `['',99,'string 1','string 2']` <br /><blockquote>There should be at least one parameter which is the query string.</blockquote> |
-| `fetchCallback` | function  | - | Return value from `fetchCallback` property to format the data of the API callback, which will match the data structure of the component. <br >At the same time it returns the original data, you will use this function and use the `return` keyword to return a new value. |
-| `onFetch` | function  | - | Call a function when  data is successfully fetched. It returns one callback value which is the fetched data (an array) |
 | `onChange` | function  | - | Call a function when the value of an HTML element is changed. It returns three callback values, one is the control, the second is an HTMLElement of submit button, and the last is current value ([An object of FileList](https://developer.mozilla.org/en-US/docs/Web/API/FileList)) |
 | `onProgress` | function  | - | Call a function when upload is in progress. It returns one callback value which is ([An object of FileList](https://developer.mozilla.org/en-US/docs/Web/API/FileList)) |
 | `onComplete` | function  | - | Call a function when the modal is submitted. It returns two callback values, one is the trigger object and the other is the callback from backend (JSON Object Literals) |

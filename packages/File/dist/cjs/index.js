@@ -96,7 +96,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(787);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-var _excluded = ["wrapperClassName", "controlClassName", "labelClassName", "labelHoverClassName", "fetchUrl", "fetchMethod", "multiple", "submitLabel", "submitClassName", "disabled", "required", "value", "label", "name", "id", "tabIndex", "fetchFuncAsync", "fetchFuncMethod", "fetchFuncMethodParams", "fetchCallback", "onFetch", "onChange", "onComplete", "onProgress"];
+var _excluded = ["wrapperClassName", "controlClassName", "labelClassName", "labelHoverClassName", "fetchUrl", "fetchMethod", "multiple", "submitLabel", "submitClassName", "disabled", "required", "value", "label", "name", "id", "data", "tabIndex", "fetchFuncAsync", "fetchFuncMethod", "fetchFuncMethodParams", "onChange", "onComplete", "onProgress"];
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
 function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys(Object(source), !0).forEach(function (key) { _defineProperty(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
 function _defineProperty(obj, key, value) { key = _toPropertyKey(key); if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
@@ -137,12 +137,11 @@ var File = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(functi
     label = props.label,
     name = props.name,
     id = props.id,
+    data = props.data,
     tabIndex = props.tabIndex,
     fetchFuncAsync = props.fetchFuncAsync,
     fetchFuncMethod = props.fetchFuncMethod,
     fetchFuncMethodParams = props.fetchFuncMethodParams,
-    fetchCallback = props.fetchCallback,
-    onFetch = props.onFetch,
     onChange = props.onChange,
     onComplete = props.onComplete,
     onProgress = props.onProgress,
@@ -161,6 +160,10 @@ var File = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(functi
     _useState4 = _slicedToArray(_useState3, 2),
     defaultValue = _useState4[0],
     setDefaultValue = _useState4[1];
+  var _useState5 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(null),
+    _useState6 = _slicedToArray(_useState5, 2),
+    incomingData = _useState6[0],
+    setIncomingData = _useState6[1];
   function clickFileInput(event) {
     if (fileInputRef.current.nextSibling.contains(document.activeElement)) {
       // Bind space to trigger clicking of the button when focused
@@ -277,7 +280,11 @@ var File = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(functi
         }
       }).then(function (response) {
         var jsonData = response.data;
-        onComplete === null || onComplete === void 0 ? void 0 : onComplete(event, jsonData);
+        onComplete === null || onComplete === void 0 ? void 0 : onComplete(event, jsonData, incomingData);
+
+        // update default value
+        setDefaultValue(undefined);
+        fileInputRef.current.value = '';
       });
     } else {
       var streamToText = /*#__PURE__*/function () {
@@ -384,6 +391,10 @@ var File = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(functi
     return null;
   }
   (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(function () {
+    // update incoming data
+    //------------------------------------------
+    setIncomingData(data);
+
     // update default value
     //--------------
     setDefaultValue(value);
@@ -391,7 +402,7 @@ var File = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(functi
     return function () {
       return window.removeEventListener("keyup", clickFileInput);
     };
-  }, []);
+  }, [data]);
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
     className: wrapperClassName || wrapperClassName === '' ? wrapperClassName : "mb-3 position-relative upload-control",
     ref: rootRef
@@ -449,7 +460,7 @@ var File = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(functi
     style: {
       display: 'none'
     }
-  }, attributes)), fileNames(), defaultValue), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", {
+  }, attributes)), typeof defaultValue !== 'undefined' ? fileNames() : null, defaultValue), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", {
     ref: submitRef,
     className: submitClassName ? submitClassName + " ".concat(disabled ? 'disabled' : '') : 'btn btn-primary mt-2' + " ".concat(disabled ? 'disabled' : ''),
     type: "button",

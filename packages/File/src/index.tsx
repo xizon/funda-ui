@@ -21,6 +21,8 @@ type FileProps = {
     name?: string;
     disabled?: any;
     required?: any;
+    /** Incoming data, you can set the third parameter of `onComplete` */
+    data?: string;
     /** -- */
     id?: string;
     tabIndex?: number;
@@ -28,10 +30,8 @@ type FileProps = {
     fetchFuncAsync?: any;
     fetchFuncMethod?: string;
     fetchFuncMethodParams?: any[];
-    fetchCallback?: (data: any) => void;
-    onFetch?: (data: any) => void;
     onChange?: (e: any, e2: any, value: any) => void;
-    onComplete?: (e: any, callback: any) => void;
+    onComplete?: (e: any, callback: any, incomingData: string | null | undefined) => void;
     onProgress?: (files: any) => void;
 
 };
@@ -54,12 +54,11 @@ const File = forwardRef((props: FileProps, ref: any) => {
         label,
         name,
         id,
+        data,
         tabIndex,
         fetchFuncAsync,
         fetchFuncMethod,
         fetchFuncMethodParams,
-        fetchCallback,
-        onFetch,
         onChange,
         onComplete,
         onProgress,
@@ -75,6 +74,7 @@ const File = forwardRef((props: FileProps, ref: any) => {
     const submitRef = useRef<any>(null);
     const [forceUpdate, setForceUpdate] = useState<Boolean>(false);
     const [defaultValue, setDefaultValue] = useState<any>(null);
+    const [incomingData, setIncomingData] = useState<string | null | undefined>(null);
 
     function clickFileInput(event: any) {
         if (fileInputRef.current.nextSibling.contains(document.activeElement)) {
@@ -96,7 +96,7 @@ const File = forwardRef((props: FileProps, ref: any) => {
 
     }
 
-    async function fetchDataDefault(url: string, data: any = {}, methord: string = 'GET', ...rest) {
+    async function fetchDataDefault(url: string, data: any = {}, methord: string = 'GET', ...rest: any) {
 
         let res = {};
         if (typeof window === 'undefined') return res;
@@ -152,11 +152,16 @@ const File = forwardRef((props: FileProps, ref: any) => {
                 headers: { 'Content-Type': 'multipart/form-data' }
             }).then(function (response: any) {
                 const jsonData = response.data;
-                onComplete?.(event, jsonData);
+                onComplete?.(event, jsonData, incomingData);
+
+                // update default value
+                setDefaultValue(undefined);
+                fileInputRef.current.value = '';
+
             });
         } else {
 
-            const streamToText = async (blob) => {
+            const streamToText = async (blob: any) => {
                 const readableStream = await blob.getReader();
                 const chunk = await readableStream.read();
 
@@ -214,7 +219,7 @@ const File = forwardRef((props: FileProps, ref: any) => {
         const { current } = fileInputRef;
 
         if (current && current.files.length > 0) {
-            let messages = [];
+            let messages: string[] = [];
             for (let file of current.files) {
                 messages = messages.concat(file.name);
             }
@@ -226,6 +231,10 @@ const File = forwardRef((props: FileProps, ref: any) => {
 
     useEffect(() => {
 
+        // update incoming data
+        //------------------------------------------
+        setIncomingData(data);       
+
         // update default value
         //--------------
         setDefaultValue(value);
@@ -233,7 +242,7 @@ const File = forwardRef((props: FileProps, ref: any) => {
         window.addEventListener("keyup", clickFileInput);
         return () => window.removeEventListener("keyup", clickFileInput);
 
-    }, []);
+    }, [data]);
 
 
 
@@ -277,7 +286,7 @@ const File = forwardRef((props: FileProps, ref: any) => {
                         style={{ display: 'none' }}
                         {...attributes}
                     />
-                    {fileNames()}
+                    {typeof defaultValue !== 'undefined' ? fileNames() : null}
                     {defaultValue}
 
                 </div>
