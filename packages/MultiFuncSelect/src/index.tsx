@@ -633,6 +633,10 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
         
         let index: number | undefined | string;
         
+        // get incoming options from `data-options` of component
+        // It is usually used for complex cascading `<MultiFuncSelect />` components
+        const incomingOptionsData = valueInputRef.current.dataset.options;
+
 
         // cancel
         if ( !(MULTI_SEL_VALID && isOpen) ) {
@@ -661,7 +665,6 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
 
 
             // set value if the attribute `data-options` of component exists, only valid for single selection (it may be an empty array)
-            const incomingOptionsData = valueInputRef.current.dataset.options;
             if ( typeof incomingOptionsData !== 'undefined' ) {
                 valueInputRef.current.dataset.value = _value;
             }  
@@ -730,7 +733,6 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
             setControlLabel(_label); 
 
             // set value if the attribute `data-options` of component exists, only valid for single selection (it may be an empty array)
-            const incomingOptionsData = valueInputRef.current.dataset.options;
             if ( typeof incomingOptionsData !== 'undefined' ) {
                 valueInputRef.current.dataset.value = _value;
             }  
@@ -1062,8 +1064,9 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
             } else {
 
                 // get value if the attribute `data-value` of component exists
-                // Using `<DynamicFields />` will assign values ​​according to `data-options`
-                if ( valueInputRef.current !== null && typeof valueInputRef.current.dataset.value !== 'undefined' && valueInputRef.current.dataset.value !== '') {
+                // Using `<DynamicFields />` will assign values ​​according to `data-value`
+                const incomingOptionsData = valueInputRef.current.dataset.options;
+                if ( valueInputRef.current !== null && typeof incomingOptionsData !== 'undefined' && typeof valueInputRef.current.dataset.value !== 'undefined' && valueInputRef.current.dataset.value !== '') {
                     fetchData((_params).join(','), valueInputRef.current.dataset.value);
                     hasValue = true;
                 }
@@ -1178,6 +1181,9 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
             document.removeEventListener('pointerdown', handleClose);
             window.removeEventListener('scroll', windowScrollUpdate);
             window.removeEventListener('touchmove', windowScrollUpdate);
+            
+            //
+            clearInterval(timer); 
         }
 
     }, [value, options, data]);

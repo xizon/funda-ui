@@ -1018,6 +1018,9 @@ var CascadingSelectE2E = function CascadingSelectE2E(props) {
       document.removeEventListener('pointerdown', handleClickOutside);
       window.removeEventListener('scroll', windowScrollUpdate);
       window.removeEventListener('touchmove', windowScrollUpdate);
+
+      //
+      clearInterval(timer);
     };
   }, [value]);
   return /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {

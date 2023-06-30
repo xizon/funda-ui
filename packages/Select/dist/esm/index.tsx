@@ -65,6 +65,7 @@ const Select = forwardRef((props: SelectProps, ref: any) => {
     const uniqueID = useId();
     const idRes = id || uniqueID;
     const rootRef = useRef<any>(null);
+    const selectRef = useRef<any>(null);
     const optionsRes = options ? isJSON( options ) ? JSON.parse( options as string ) : options : '';
 
     // return a array of options
@@ -87,7 +88,11 @@ const Select = forwardRef((props: SelectProps, ref: any) => {
   
 
     async function fetchData(params: any) {
+        
+        // set default value
+        if (typeof value !== 'undefined' && value !== '') selectRef.current.dataset.value = value;
 
+        //
         if ( typeof fetchFuncAsync === 'object' ) {
 
             const response: any = await fetchFuncAsync[`${fetchFuncMethod}`](...params.split(','));
@@ -108,6 +113,7 @@ const Select = forwardRef((props: SelectProps, ref: any) => {
             //
             setControlValue(value); // value must be initialized
 
+
             //
             setDataInit(_ORGIN_DATA); // data must be initialized
 
@@ -119,7 +125,7 @@ const Select = forwardRef((props: SelectProps, ref: any) => {
 
             //
             setControlValue(value); // value must be initialized
-
+            
             //
             setDataInit(optionsDataInit); // data must be initialized
 
@@ -236,7 +242,14 @@ const Select = forwardRef((props: SelectProps, ref: any) => {
             <div className={wrapperClassName || wrapperClassName === '' ? wrapperClassName : "mb-3 position-relative"} ref={rootRef}>
                 {label ? <><label htmlFor={idRes} className="form-label">{label}</label></> : null}
                 <select  
-                        ref={ref}
+                        ref={(node) => {
+                            selectRef.current = node;
+                            if (typeof ref === 'function') {
+                                ref(node);
+                            } else if (ref) {
+                                ref.current = node;
+                            }
+                        }}
                         tabIndex={tabIndex || 0}
                         className="form-select"
                         id={idRes}

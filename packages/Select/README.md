@@ -132,3 +132,97 @@ export default () => {
     );
 }
 ```
+
+
+
+
+## Examples (Using Vanilla JavaScript to assignment)
+
+Modify options or value with Vanilla JavaScript, which is generally used for dynamic forms with cascading relationships.
+
+```js
+import React from "react";
+import Select from 'react-pure-bootstrap/Select';
+
+export default () => {
+
+    function addOptions(data: any[], defaultValue = '', node: HTMLElement) {
+        if ( !Array.isArray(data) ) return;
+    
+        node.innerHTML = '';
+        for(let i = 0; i < data.length; i++) {
+            const opt = document.createElement("option");
+            opt.textContent = data[i].label;
+            opt.value = data[i].value;
+    
+            //
+            if ( 
+                (typeof node.dataset.value !== 'undefined' && node.dataset.value == data[i].value) ||
+                (defaultValue !== '' && data[i].value == defaultValue)
+            ) {
+                opt.selected = true;
+            }
+    
+            node.appendChild(opt);
+        }
+    }
+    
+    
+
+    function handleAssign1(e: any) {
+        e.preventDefault();
+
+        const optionsData = [
+            {"label": "foo","value": "bar"},
+            {"label": "foo2","value": "bar2"},
+            {"label": "foo3","value": "bar3"}
+        ];
+        
+        optionsData.unshift({"label": "Select","value": ""});
+
+        const el = document.querySelector('#my-select') as HTMLElement;
+        addOptions(optionsData, 'bar2', el);
+
+    }
+
+    function handleAssign2(e) {
+        e.preventDefault();
+
+
+        // If the `data-value` attribute exists
+        const optionsData = [
+            {"label": "foo","value": "bar"},
+            {"label": "foo2","value": "bar2"}
+        ];
+        
+        optionsData.unshift({"label": "Select","value": ""});
+
+        const el = document.querySelector('#my-select2') as HTMLElement;
+        addOptions(optionsData, '', el);
+
+    }
+
+    return (
+        <>
+            <a href="#" onClick={handleAssign1}>Assign1 ("bar2" will be selected)</a>
+            <Select
+                value=""
+                id="my-select"
+                name="name1"
+                options={``}
+            />
+
+
+            <a href="#" onClick={handleAssign2}>Assign2 ("bar2" will be selected)</a>
+            <Select
+                data-value="bar2"
+                value=""
+                id="my-select2"
+                name="name2"
+                options={``}
+            />
+
+        </>
+    );
+}
+```

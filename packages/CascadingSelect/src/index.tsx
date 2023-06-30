@@ -808,6 +808,9 @@ const CascadingSelect = (props: CascadingSelectProps) => {
             document.removeEventListener('pointerdown', handleClickOutside);
             window.removeEventListener('scroll', windowScrollUpdate);
             window.removeEventListener('touchmove', windowScrollUpdate);
+            
+            //
+            clearInterval(timer);
         }
 
 

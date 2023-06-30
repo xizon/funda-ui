@@ -122,7 +122,9 @@ const Textarea = forwardRef((props: TextareaProps, ref: any) => {
             }
         }, 500);
 
-
+        return () => {
+            clearInterval(timer);
+        }
 
     }, [value]);    
     

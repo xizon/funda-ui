@@ -222,6 +222,10 @@ const TagInput = forwardRef((props: TagInputProps, ref: any) => {
             }
         }, 500);
 
+        return () => {
+            clearInterval(timer);
+        }
+
 
     }, [value]);
 

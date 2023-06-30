@@ -190,6 +190,10 @@ var DynamicFields = function DynamicFields(props) {
             row.forEach(function (val, j) {
               if (typeof resControls[i] !== 'undefined' && typeof resControls[i][j] !== 'undefined') {
                 var _control = resControls[i][j];
+
+                // set default value
+                // It is generally used for `<CascadingSelect />` and cascading `<Select />`
+                _control.target.dataset.value = val;
                 switch (_control.type) {
                   case "input-textarea":
                     // normal
@@ -200,12 +204,6 @@ var DynamicFields = function DynamicFields(props) {
                       var _checkbox = _control.target.parentElement.querySelector('[data-checkbox]');
                       _checkbox.checked = val == true ? true : false;
                       _control.target.value = _checkbox.value;
-                    }
-
-                    // set value if the attribute `data-options` of component exists, only valid for single selection (it may be an empty array)
-                    // Components that use the `data-options` attribute include: `<MultiFuncSelect />`
-                    if (typeof _control.target.dataset.options !== 'undefined') {
-                      _control.target.dataset.value = val;
                     }
                     break;
                   case "checkbox":

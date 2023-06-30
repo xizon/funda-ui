@@ -279,6 +279,9 @@ var TagInput = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(fu
         initTimes++;
       }
     }, 500);
+    return function () {
+      clearInterval(timer);
+    };
   }, [value]);
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
     className: wrapperClassName || wrapperClassName === '' ? "tag-input__wrapper ".concat(wrapperClassName) : "tag-input__wrapper mb-3 position-relative",

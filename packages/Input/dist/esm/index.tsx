@@ -165,7 +165,9 @@ const Input = forwardRef((props: InputProps, ref: any) => {
             }
         }, 500);
 
-
+        return () => {
+            clearInterval(timer);
+        }
 
     }, [value]);
 

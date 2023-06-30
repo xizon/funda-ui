@@ -138,6 +138,10 @@ const RangeSlider = (props: RangeSliderProps) => {
             }
         }, 500);
 
+        return () => {
+            clearInterval(timer);
+        }
+
 
     }, [value]);
 

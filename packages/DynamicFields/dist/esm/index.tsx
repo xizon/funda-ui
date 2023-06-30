@@ -124,10 +124,14 @@ const DynamicFields = (props: DynamicFieldsProps) => {
                             
                             if ( typeof resControls[i] !== 'undefined' && typeof resControls[i][j] !== 'undefined' ) {
                                 const _control: any = resControls[i][j];
-    
+
+                                // set default value
+                                // It is generally used for `<CascadingSelect />` and cascading `<Select />`
+                                _control.target.dataset.value = val;
+
                                 switch (_control.type) {
                                     case "input-textarea":
-    
+
                                         // normal
                                         _control.target.value = val;
     
@@ -137,12 +141,7 @@ const DynamicFields = (props: DynamicFieldsProps) => {
                                             _checkbox.checked = val == true ? true : false;
                                             _control.target.value = _checkbox.value;
                                         }
-    
-                                        // set value if the attribute `data-options` of component exists, only valid for single selection (it may be an empty array)
-                                        // Components that use the `data-options` attribute include: `<MultiFuncSelect />`
-                                        if ( typeof _control.target.dataset.options !== 'undefined' ) {
-                                            _control.target.dataset.value = val;
-                                        }
+
     
                                         break;
                                     case "checkbox":

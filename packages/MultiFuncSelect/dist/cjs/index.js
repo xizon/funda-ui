@@ -721,15 +721,14 @@ var MultiFuncSelect = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forward
         valueArr,
         labelArr,
         index,
+        incomingOptionsData,
         _data,
         _value,
         _label,
-        incomingOptionsData,
         currentControlValueArr,
         currentControlLabelArr,
         _value2,
         _label2,
-        _incomingOptionsData,
         _currentControlValueArr,
         _currentControlLabelArr,
         _args3 = arguments;
@@ -745,7 +744,9 @@ var MultiFuncSelect = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forward
             }
             return _context3.abrupt("return");
           case 5:
-            // cancel
+            // get incoming options from `data-options` of component
+            // It is usually used for complex cascading `<MultiFuncSelect />` components
+            incomingOptionsData = valueInputRef.current.dataset.options; // cancel
             if (!(MULTI_SEL_VALID && isOpen)) {
               cancel();
             }
@@ -767,7 +768,6 @@ var MultiFuncSelect = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forward
               setControlLabel(_label);
 
               // set value if the attribute `data-options` of component exists, only valid for single selection (it may be an empty array)
-              incomingOptionsData = valueInputRef.current.dataset.options;
               if (typeof incomingOptionsData !== 'undefined') {
                 valueInputRef.current.dataset.value = _value;
               }
@@ -830,8 +830,7 @@ var MultiFuncSelect = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forward
               setControlLabel(_label2);
 
               // set value if the attribute `data-options` of component exists, only valid for single selection (it may be an empty array)
-              _incomingOptionsData = valueInputRef.current.dataset.options;
-              if (typeof _incomingOptionsData !== 'undefined') {
+              if (typeof incomingOptionsData !== 'undefined') {
                 valueInputRef.current.dataset.value = _value2;
               }
 
@@ -884,7 +883,7 @@ var MultiFuncSelect = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forward
                 selectInputRef.current.blur();
               }
             }
-          case 8:
+          case 9:
           case "end":
             return _context3.stop();
         }
@@ -1168,8 +1167,9 @@ var MultiFuncSelect = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forward
         clearInterval(timer);
       } else {
         // get value if the attribute `data-value` of component exists
-        // Using `<DynamicFields />` will assign values ​​according to `data-options`
-        if (valueInputRef.current !== null && typeof valueInputRef.current.dataset.value !== 'undefined' && valueInputRef.current.dataset.value !== '') {
+        // Using `<DynamicFields />` will assign values ​​according to `data-value`
+        var incomingOptionsData = valueInputRef.current.dataset.options;
+        if (valueInputRef.current !== null && typeof incomingOptionsData !== 'undefined' && typeof valueInputRef.current.dataset.value !== 'undefined' && valueInputRef.current.dataset.value !== '') {
           fetchData(_params.join(','), valueInputRef.current.dataset.value);
           hasValue = true;
         }
@@ -1288,6 +1288,9 @@ var MultiFuncSelect = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forward
       document.removeEventListener('pointerdown', handleClose);
       window.removeEventListener('scroll', windowScrollUpdate);
       window.removeEventListener('touchmove', windowScrollUpdate);
+
+      //
+      clearInterval(timer);
     };
   }, [value, options, data]);
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, label ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {

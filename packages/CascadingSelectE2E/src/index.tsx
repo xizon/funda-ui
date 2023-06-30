@@ -980,9 +980,10 @@ const CascadingSelectE2E = (props: CascadingSelectE2EProps) => {
             document.removeEventListener('pointerdown', handleClickOutside);
             window.removeEventListener('scroll', windowScrollUpdate);
             window.removeEventListener('touchmove', windowScrollUpdate);
+
+            //
+            clearInterval(timer);
         }
-
-
 
 
     }, [value]);
