@@ -1,6 +1,13 @@
 /* ======================================================
     <!-- Range Slider -->
 /* ====================================================== */
+.range-slider__wrapper {
+  --range-slider-grab: #0b5ed7;
+  --range-slider-active-grab-box-shadow: 0 0 0 0.25rem rgba(13,110,253,.25);
+  --range-slider-active-grab-border-color: #86b7fe;
+  --range-slider-rail: #e9ecef;
+  --range-slider-inner-rail: #0d6efd;
+}
 .range-slider__wrapper > div:not(.range-slider__control-wrapper) {
   width: 49% !important;
   display: inline-block !important;
@@ -98,7 +105,7 @@
   height: 16px;
   border-radius: 50%;
   position: absolute;
-  background: #0b5ed7;
+  background: var(--range-slider-grab);
   top: 50%;
   margin-left: calc(16px / -2);
   transform: translate3d(0, -50%, 0);
@@ -106,8 +113,8 @@
   transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
 }
 .range-slider__wrapper .range-slider__control-wrapper .range-slider__placeholder .range-slider__placeholder-grab.active {
-  box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
-  border-color: #86b7fe;
+  box-shadow: var(--range-slider-active-grab-box-shadow);
+  border-color: var(--range-slider-active-grab-border-color);
 }
 .range-slider__wrapper .range-slider__control-wrapper .range-slider__placeholder .range-slider__placeholder-grab.inactive {
   display: none;
@@ -119,12 +126,12 @@
   transform: translateY(-50%);
   height: 6px;
   border-radius: 3px;
-  background: #e9ecef;
+  background: var(--range-slider-rail);
 }
 .range-slider__wrapper .range-slider__control-wrapper .range-slider__placeholder .range-slider__placeholder-rail .range-slider__placeholder-inner-rail {
   position: absolute;
   height: 100%;
-  background: #0d6efd;
+  background: var(--range-slider-inner-rail);
   opacity: 0.5;
 }
 .range-slider__wrapper .range-slider__control-wrapper .range-slider__input,
@@ -133,4 +140,10 @@
 }
 .range-slider__wrapper .range-slider__control-wrapper.disabled .range-slider__placeholder {
   filter: grayscale(1);
+}
+.range-slider__wrapper.only-one .range-slider__control-wrapper .range-slider__placeholder .range-slider__placeholder-rail {
+  background: var(--range-slider-rail);
+}
+.range-slider__wrapper.only-one .range-slider__control-wrapper .range-slider__placeholder .range-slider__placeholder-rail .range-slider__placeholder-inner-rail {
+  background: var(--range-slider-rail);
 }

@@ -76,7 +76,7 @@ const File = forwardRef((props: FileProps, ref: any) => {
     const [defaultValue, setDefaultValue] = useState<any>(null);
     const [incomingData, setIncomingData] = useState<string | null | undefined>(null);
 
-    function clickFileInput(event: any) {
+    function handleFileInput(event: any) {
         if (fileInputRef.current.nextSibling.contains(document.activeElement)) {
             // Bind space to trigger clicking of the button when focused
             if (event.keyCode === 32) {
@@ -239,9 +239,6 @@ const File = forwardRef((props: FileProps, ref: any) => {
         //--------------
         setDefaultValue(value);
 
-        window.addEventListener("keyup", clickFileInput);
-        return () => window.removeEventListener("keyup", clickFileInput);
-
     }, [data]);
 
 
@@ -280,6 +277,7 @@ const File = forwardRef((props: FileProps, ref: any) => {
                         // Try to select a file, then try selecting another one.
                         multiple={multiple || false}
                         name={name}
+                        onKeyUp={handleFileInput}
                         onChange={handleChange}
                         disabled={disabled || null}
                         required={required || null}

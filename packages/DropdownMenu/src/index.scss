@@ -4,6 +4,22 @@
 
 /* Do not use <a> tag */
 .dropdown-default {
+
+   
+    --dropdown-ul-box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    --dropdown-ul-bg: #fff;
+
+    --dropdown-ulbefore-box-shadow: 2px -2px 6px rgba(0, 0, 0, 0.05);
+    --dropdown-ulbefore-border-color: #fff;
+    
+    --dropdown-li-bg: #fff;
+    --dropdown-li-hover-bg: #FAFAFA;
+    
+    --dropdown-link-border-color: rgba(0, 0, 0, 0.05);
+    --dropdown-link-color: #333;
+
+    
+
 	display: inline-block;
 	cursor: pointer;
 	position: relative;
@@ -30,8 +46,8 @@
         white-space: nowrap;
 		border-radius: 4px;
 		text-align: left;
-		box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-        background: #fff;
+		box-shadow: var(--dropdown-ul-box-shadow);
+        background: var(--dropdown-ul-bg);
 		transition: .1s ease-in-out;
 
 
@@ -42,9 +58,9 @@
 			left: 10px;
 			width: 0;
 			height: 0;
-			box-shadow: 2px -2px 6px rgba(0, 0, 0, 0.05);
-			border-top: 4px solid #fff;
-			border-right: 4px solid #fff;
+			box-shadow: var(--dropdown-ulbefore-box-shadow);
+			border-top: 4px solid var(--dropdown-ulbefore-border-color);
+			border-right: 4px solid var(--dropdown-ulbefore-border-color);
 			border-bottom: 4px solid transparent;
 			border-left: 4px solid transparent;
 			transform: rotate(-45deg);
@@ -53,19 +69,19 @@
 		li {
 			z-index: 1;
 			position: relative;
-			background: #fff;
+			background: var(--dropdown-li-bg);
 			padding: 0 .75rem;
 
 
             &:hover {
-                background: #FAFAFA;
+                background: var(--dropdown-li-hover-bg);
             }
 
 			a {
 				display: block;
-				border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+				border-bottom: 1px solid var(--dropdown-link-border-color);
 				padding: .75rem 0;
-				color: #333;
+				color: var(--dropdown-link-color);
 				font-size: 0.75rem;
 				text-decoration: none;
 

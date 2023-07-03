@@ -3,11 +3,27 @@
 /* ====================================================== */
 .multifunc-select__wrapper {
   --multi-sel-focus-border-color:#86b7fe;
-  --multi-sel-focus-boxshadow: 0 0 0 0.25rem rgba(13,110,253,.25);
+  --multi-sel-focus-box-shadow: 0 0 0 0.25rem rgba(13,110,253,.25);
+  --multi-sel-placeholder-color: rgba(33, 37, 41, 0.75);
+  --multi-sel-control-wrapper-bg: #fff;
+  --multi-sel-control-wrapper-border-color: #dee2e6;
+  --multi-sel-control-list-bg: #efefef;
+  --multi-sel-arrow-fill: #a5a5a5;
+  --multi-sel-searchbtn-fill: #a5a5a5;
+  --multi-sel-searchbtn-hover-fill: #333;
+  --multi-sel-removebtn-fill: #000;
+  --multi-sel-removebtn-hover-fill: #f00;
+  --multi-sel-listgroup-tool-bg: rgb(248,249,250);
+  --multi-sel-listgroup-checkbox: #a5a5a5;
+  --multi-sel-listgroup-item-hover-focus-bg: rgba(0,0,0,.1);
+  /*------ Arrow ------*/
   /*------ Input ------*/
   /*------ List ------*/
   /*------ Multiple selection ------*/
   /*------------*/
+}
+.multifunc-select__wrapper .arrow svg .arrow-fill-g {
+  fill: var(--multi-sel-arrow-fill);
 }
 .multifunc-select__wrapper [data-select]:focus {
   box-shadow: none;
@@ -17,6 +33,24 @@
 .multifunc-select__wrapper .list-group {
   display: none;
 }
+.multifunc-select__wrapper .list-group .bg-light {
+  background-color: var(--multi-sel-listgroup-tool-bg) !important;
+}
+.multifunc-select__wrapper .list-group .list-group-item svg {
+  fill: transparent;
+}
+.multifunc-select__wrapper .list-group .list-group-item svg path {
+  stroke: var(--multi-sel-listgroup-checkbox);
+}
+.multifunc-select__wrapper .list-group .list-group-item.item-selected svg {
+  fill: var(--multi-sel-listgroup-checkbox);
+}
+.multifunc-select__wrapper .list-group .list-group-item.item-selected svg path {
+  stroke: var(--multi-sel-listgroup-checkbox);
+}
+.multifunc-select__wrapper .list-group .list-group-item:hover, .multifunc-select__wrapper .list-group .list-group-item:focus {
+  background-color: var(--multi-sel-listgroup-item-hover-focus-bg);
+}
 .multifunc-select__wrapper.active .list-group {
   display: block;
 }
@@ -25,7 +59,6 @@
   padding: 0.1rem 0.5rem;
 }
 .multifunc-select__wrapper .multifunc-select-multi__wrapper {
-  --multi-sel-placeholder-color: rgba(33, 37, 41, 0.75);
   position: absolute;
   top: 0;
   width: 100%;
@@ -41,16 +74,20 @@
   z-index: 5;
   pointer-events: auto;
 }
+.multifunc-select__wrapper .multifunc-select-multi__wrapper .multifunc-select-multi__control-searchbtn svg,
+.multifunc-select__wrapper .multifunc-select-multi__wrapper .multifunc-select-multi__control-searchbtn path {
+  fill: var(--multi-sel-searchbtn-fill);
+}
 .multifunc-select__wrapper .multifunc-select-multi__wrapper .multifunc-select-multi__control-searchbtn:hover svg,
 .multifunc-select__wrapper .multifunc-select-multi__wrapper .multifunc-select-multi__control-searchbtn:hover path {
-  fill: #333;
+  fill: var(--multi-sel-searchbtn-hover-fill);
 }
 .multifunc-select__wrapper .multifunc-select-multi__wrapper .multifunc-select-multi__control-wrapper > div {
   position: relative;
   /* bootstrap style that match ".form-control" */
-  background-color: #fff;
+  background-color: var(--multi-sel-control-wrapper-bg);
   background-clip: padding-box;
-  border: 1px solid #dee2e6;
+  border: 1px solid var(--multi-sel-control-wrapper-border-color);
   appearance: none;
   border-radius: 0.375rem;
   transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
@@ -65,7 +102,7 @@
   margin-bottom: 0;
   padding: 0.1rem 1.5rem 0.1rem 1rem;
   font-size: 0.875rem;
-  background: #efefef;
+  background: var(--multi-sel-control-list-bg);
   border-radius: 30px;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -92,8 +129,11 @@
   top: 0;
   pointer-events: auto;
 }
+.multifunc-select__wrapper .multifunc-select-multi__wrapper ul.multifunc-select-multi__list li > a path {
+  fill: var(--multi-sel-removebtn-fill);
+}
 .multifunc-select__wrapper .multifunc-select-multi__wrapper ul.multifunc-select-multi__list li > a:hover path {
-  fill: #f00;
+  fill: var(--multi-sel-removebtn-hover-fill);
 }
 .multifunc-select__wrapper .multifunc-select-multi__wrapper .multifunc-select-multi__control-blinking-cursor {
   display: inline-block;
@@ -107,14 +147,14 @@
     color: transparent;
   }
   50% {
-    color: black;
+    color: var(--multi-sel-placeholder-color);
   }
 }
 .multifunc-select__wrapper [data-select]:focus {
   cursor: text !important;
 }
 .multifunc-select__wrapper:not(.multiple-selection) [data-select]:focus {
-  box-shadow: var(--multi-sel-focus-boxshadow);
+  box-shadow: var(--multi-sel-focus-box-shadow);
   border-color: var(--multi-sel-focus-border-color);
   outline: 0;
 }
@@ -122,7 +162,7 @@
   display: block;
 }
 .multifunc-select__wrapper.focus .multifunc-select-multi__control-wrapper > div {
-  box-shadow: var(--multi-sel-focus-boxshadow);
+  box-shadow: var(--multi-sel-focus-box-shadow);
   border-color: var(--multi-sel-focus-border-color);
   outline: 0;
 }

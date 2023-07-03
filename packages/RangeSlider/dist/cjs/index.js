@@ -549,9 +549,6 @@ var RangeSlider = function RangeSlider(props) {
     label = props.label,
     minName = props.minName,
     maxName = props.maxName,
-    trackColor = props.trackColor,
-    inactiveTrackColor = props.inactiveTrackColor,
-    grabColor = props.grabColor,
     onlyOne = props.onlyOne,
     step = props.step,
     min = props.min,
@@ -656,7 +653,7 @@ var RangeSlider = function RangeSlider(props) {
     htmlFor: "label-".concat(idRes),
     className: "form-label"
   }, label))) : null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-    className: wrapperClassName || wrapperClassName === '' ? "range-slider__wrapper ".concat(wrapperClassName) : "range-slider__wrapper mb-3 position-relative",
+    className: wrapperClassName || wrapperClassName === '' ? "range-slider__wrapper ".concat(onlyOne ? 'only-one' : '', " ").concat(wrapperClassName) : "range-slider__wrapper ".concat(onlyOne ? 'only-one' : '', " mb-3 position-relative"),
     ref: rootRef
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((rpb_input__WEBPACK_IMPORTED_MODULE_1___default()), {
     ref: valMinRef,
@@ -707,20 +704,15 @@ var RangeSlider = function RangeSlider(props) {
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
     className: "range-slider__placeholder-grab ".concat(minActive ? 'active' : ''),
     style: {
-      left: "".concat(minPos, "%"),
-      background: grabColor ? grabColor : '#0b5ed7'
+      left: "".concat(minPos, "%")
     }
   }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-    className: "range-slider__placeholder-rail",
-    style: {
-      background: inactiveTrackColor ? inactiveTrackColor : '#e9ecef'
-    }
+    className: "range-slider__placeholder-rail"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
     className: "range-slider__placeholder-inner-rail",
     style: {
       left: "".concat(minPos, "%"),
-      right: "".concat(100 - maxPos, "%"),
-      background: onlyOne ? inactiveTrackColor ? inactiveTrackColor : '#e9ecef' : trackColor ? trackColor : '#0d6efd'
+      right: "".concat(100 - maxPos, "%")
     }
   })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
     className: "range-slider__placeholder-grab ".concat(maxActive ? 'active' : '', " ").concat(onlyOne ? 'inactive' : ''),

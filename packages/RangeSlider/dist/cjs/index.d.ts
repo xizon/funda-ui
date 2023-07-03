@@ -6,9 +6,6 @@ declare type RangeSliderProps = {
     label?: React.ReactNode | string;
     minName?: string;
     maxName?: string;
-    trackColor?: string;
-    inactiveTrackColor?: string;
-    grabColor?: string;
     onlyOne?: boolean;
     step: number;
     min: number;

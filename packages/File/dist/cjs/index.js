@@ -164,7 +164,7 @@ var File = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(functi
     _useState6 = _slicedToArray(_useState5, 2),
     incomingData = _useState6[0],
     setIncomingData = _useState6[1];
-  function clickFileInput(event) {
+  function handleFileInput(event) {
     if (fileInputRef.current.nextSibling.contains(document.activeElement)) {
       // Bind space to trigger clicking of the button when focused
       if (event.keyCode === 32) {
@@ -398,10 +398,6 @@ var File = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(functi
     // update default value
     //--------------
     setDefaultValue(value);
-    window.addEventListener("keyup", clickFileInput);
-    return function () {
-      return window.removeEventListener("keyup", clickFileInput);
-    };
   }, [data]);
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
     className: wrapperClassName || wrapperClassName === '' ? wrapperClassName : "mb-3 position-relative upload-control",
@@ -454,6 +450,7 @@ var File = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(functi
     ,
     multiple: multiple || false,
     name: name,
+    onKeyUp: handleFileInput,
     onChange: handleChange,
     disabled: disabled || null,
     required: required || null,

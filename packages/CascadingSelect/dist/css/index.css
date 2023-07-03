@@ -1,6 +1,18 @@
 /* ======================================================
     <!-- Cascading Select -->
 /* ====================================================== */
+.cascading-select__wrapper {
+  --cascading-select-opt-header-border-color: rgba(1, 1, 1, .2);
+  --cascading-select-opt-hover-bg: #f7f7f7;
+  --cascading-select-opt-active-bg: #eeeeee;
+  --cascading-select-items-box-shadow: 0 5px 15px 5px rgba(80, 102, 224, 0.08);
+  --cascading-select-items-bg: #fff;
+  --cascading-select-items-color: inherit;
+  --cascading-select-items-border-color: rgba(0, 0, 0, .1);
+  --cascading-select-items-li-border-color: #eee;
+  --cascading-select-arrow-fill: #a5a5a5;
+  --cascading-select-result-arrow-fill: #a5a5a5;
+}
 .cascading-select__wrapper .cascading-select__result {
   position: absolute;
   left: auto;
@@ -21,6 +33,9 @@
 .cascading-select__wrapper .cascading-select__result svg {
   margin: 0 0.3rem;
 }
+.cascading-select__wrapper .cascading-select__result svg path {
+  fill: var(--cascading-select-result-arrow-fill);
+}
 .cascading-select__wrapper .cascading-select__closemask {
   position: absolute;
   z-index: 1;
@@ -36,7 +51,10 @@
 }
 .cascading-select__wrapper .cascading-select__val input {
   cursor: pointer;
-  color: transparent;
+  color: transparent !important;
+}
+.cascading-select__wrapper .cascading-select__val input:focus {
+  color: transparent !important;
 }
 .cascading-select__wrapper .cascading-select__val .arrow {
   position: absolute;
@@ -44,13 +62,17 @@
   margin-top: 0.3rem;
   right: 0.5rem;
 }
+.cascading-select__wrapper .cascading-select__val .arrow svg .arrow-fill-g {
+  fill: var(--cascading-select-arrow-fill);
+}
 .cascading-select__wrapper .cascading-select {
   display: flex;
   align-items: center;
   position: relative;
   z-index: 1;
 }
-.cascading-select__wrapper .cascading-select ul, .cascading-select__wrapper .cascading-select li {
+.cascading-select__wrapper .cascading-select ul,
+.cascading-select__wrapper .cascading-select li {
   list-style: none;
   margin: 0;
   padding: 0;
@@ -60,19 +82,21 @@
   z-index: 0;
 }
 .cascading-select__wrapper .cascading-select .cascading-select__items {
-  box-shadow: 0 5px 15px 5px rgba(80, 102, 224, 0.08);
+  box-shadow: var(--cascading-select-items-box-shadow);
   position: absolute;
   left: auto;
   max-height: 350px;
-  border: 1px solid rgba(0, 0, 0, 0.1);
-  background: #fff;
+  border: 1px solid var(--cascading-select-items-border-color);
+  background: var(--cascading-select-items-bg);
   padding: 10px;
   overflow-y: auto;
   box-sizing: border-box;
   z-index: 1;
   top: 2.3rem;
   border-radius: 5px;
-  width: max-content; /* required -> the content will not wrap at all even if it causes overflows*/
+  width: max-content;
+  /* required -> the content will not wrap at all even if it causes overflows*/
+  color: var(--cascading-select-items-color);
   /* each item */
 }
 .cascading-select__wrapper .cascading-select .cascading-select__items.bottom-0 {
@@ -87,6 +111,8 @@
 }
 .cascading-select__wrapper .cascading-select .cascading-select__items ul {
   transition: 0.2s ease-out;
+  min-width: 8px;
+  min-height: 9px;
 }
 .cascading-select__wrapper .cascading-select .cascading-select__items ul > li {
   position: relative;
@@ -94,7 +120,7 @@
   float: left;
   padding: 0 10px;
   margin-right: 15px;
-  border-right: 1px dotted #eee;
+  border-right: 1px dotted var(--cascading-select-items-li-border-color);
   transition: 0.2s ease-out;
 }
 .cascading-select__wrapper .cascading-select .cascading-select__items ul > li:last-child {
@@ -107,21 +133,21 @@
   border-radius: 2px;
 }
 .cascading-select__wrapper .cascading-select .cascading-select__opt:hover {
-  background: #f7f7f7;
+  background: var(--cascading-select-opt-hover-bg);
 }
 .cascading-select__wrapper .cascading-select .cascading-select__opt.active {
-  background: #eeeeee;
+  background: var(--cascading-select-opt-active-bg);
 }
 .cascading-select__wrapper .cascading-select .cascading-select__opt-header {
   padding: 0.3rem 0.4rem;
   font-size: 0.875rem;
   opacity: 0.5;
-  border-bottom: 1px dotted rgba(1, 1, 1, 0.2);
+  border-bottom: 1px dotted var(--cascading-select-opt-header-border-color);
   border-radius: 2px;
 }
 .cascading-select__wrapper .cascading-select .cascading-select__opt-header:hover {
-  background: #f7f7f7;
+  background: var(--cascading-select-opt-hover-bg);
 }
 .cascading-select__wrapper .cascading-select .cascading-select__opt-header.active {
-  background: #eeeeee;
+  background: var(--cascading-select-opt-active-bg);
 }

@@ -3,6 +3,17 @@
 /* ====================================================== */
 
 .tag-input__wrapper {
+
+    --tag-input-control-wrapper-bg: #fff;
+    --tag-input-control-wrapper-border-color: #dee2e6;
+    --tag-input-control-color: #adb5bd;
+    --tag-input-list-bg: #efefef;
+    --tag-input-removebtn-fill: #000;
+    --tag-input-removebtn-hover-fill: #f00;
+    --tag-input-focus-border-color:#86b7fe;
+    --tag-input-focus-box-shadow: 0 0 0 0.25rem rgba(13,110,253,.25);
+
+
     display: flex;
 
 
@@ -25,9 +36,9 @@
 
             /* bootstrap style that match ".form-control" */
             padding: 0.375rem;
-            background-color: #fff;
+            background-color: var(--tag-input-control-wrapper-bg);
             background-clip: padding-box;
-            border: 1px solid #dee2e6;
+            border: 1px solid var(--tag-input-control-wrapper-border-color);
             appearance: none;
             border-radius: 0.375rem;
             transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
@@ -49,7 +60,7 @@
                     font-size: 0.875rem;
                     font-weight: 400;
                     line-height: 1.5;
-                    color: #adb5bd;
+                    color: var(--tag-input-control-color);
 
                     &:focus {
                         outline: none;
@@ -71,7 +82,7 @@
             margin-bottom: 0;
             padding: .1rem 1.5rem .1rem 1rem;
             font-size: 0.875rem;
-            background: #efefef;
+            background: var(--tag-input-list-bg);
             border-radius: 30px;
             overflow: hidden;
             text-overflow: ellipsis;
@@ -86,9 +97,13 @@
                 right: 8px;
                 top: 0;
 
+                path {
+                    fill: var(--tag-input-removebtn-fill);
+                }
+
                 &:hover {
                     path {
-                        fill: #f00;
+                        fill: var(--tag-input-removebtn-hover-fill);
                     }
                 }
             }
@@ -100,8 +115,8 @@
     &.focus {
         .tag-input__control-wrapper {
             > div {
-                box-shadow: 0 0 0 0.25rem rgba(13,110,253,.25);
-                border-color: #86b7fe;
+                box-shadow: var(--tag-input-focus-box-shadow);
+                border-color: var(--tag-input-focus-border-color);
             } 
         }
     }

@@ -16,9 +16,6 @@ import RangeSlider from 'react-pure-bootstrap/RangeSlider';
 | `label` | string \| ReactNode | - | It is used to specify a label for an element of a form. |
 | `minName` | string | - | Name is not deprecated when used with form fields. Specify the name of minimizing rang control. |
 | `maxName` | string | - | Name is not deprecated when used with form fields. Specify the name of maximizing rang control. |
-| `trackColor` | string | `#0d6efd` | Set control point color. |
-| `inactiveTrackColor` | string | `#e9ecef` | Set inactive track color. |
-| `grabColor` | string | `#0b5ed7` | Set track color. |
 | `step` | number \| string | 1 | Specified legal number intervals. |
 | `min` | number \| string | - | The minimum value to accept |
 | `max` | number \| string | - | The maximum value to accept |

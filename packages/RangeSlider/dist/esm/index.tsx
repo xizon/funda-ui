@@ -3,7 +3,6 @@ import React, { useId, useEffect, useState, useRef } from 'react';
 import Input from 'rpb-input';
 
 
-
 type RangeSliderProps = {
     wrapperClassName?: string;
     controlClassName?: string;
@@ -11,9 +10,6 @@ type RangeSliderProps = {
     label?: React.ReactNode | string;
     minName?: string;
     maxName?: string;
-    trackColor?: string;
-    inactiveTrackColor?: string;
-    grabColor?: string;
     onlyOne?: boolean;
     step: number;
     min: number;
@@ -37,9 +33,6 @@ const RangeSlider = (props: RangeSliderProps) => {
         label,
         minName,
         maxName,
-        trackColor,
-        inactiveTrackColor,
-        grabColor,
         onlyOne,
         step,
         min,
@@ -151,7 +144,7 @@ const RangeSlider = (props: RangeSliderProps) => {
             {label ? <><div className="range-slider__label"><label htmlFor={`label-${idRes}`} className="form-label">{label}</label></div></> : null}
 
 
-            <div className={wrapperClassName || wrapperClassName === '' ? `range-slider__wrapper ${wrapperClassName}` : `range-slider__wrapper mb-3 position-relative`} ref={rootRef}>
+            <div className={wrapperClassName || wrapperClassName === '' ? `range-slider__wrapper ${onlyOne ? 'only-one' : ''} ${wrapperClassName}` : `range-slider__wrapper ${onlyOne ? 'only-one' : ''} mb-3 position-relative`} ref={rootRef}>
 
                 {/* The <Input /> component is a placeholder that ensures the same height and alignment as other form components */}
                 <Input
@@ -208,11 +201,11 @@ const RangeSlider = (props: RangeSliderProps) => {
                     </div>
 
                     <div className="range-slider__placeholder">
-                        <div className={`range-slider__placeholder-grab ${minActive ? 'active' : ''}`} style={{ left: `${minPos}%`, background: grabColor ? grabColor : '#0b5ed7' }} />
-                        <div className="range-slider__placeholder-rail" style={{ background: inactiveTrackColor ? inactiveTrackColor : '#e9ecef' }}>
+                        <div className={`range-slider__placeholder-grab ${minActive ? 'active' : ''}`} style={{ left: `${minPos}%` }} />
+                        <div className="range-slider__placeholder-rail">
                             <div
                                 className="range-slider__placeholder-inner-rail"
-                                style={{ left: `${minPos}%`, right: `${100 - maxPos}%`, background: onlyOne ? (inactiveTrackColor ? inactiveTrackColor : '#e9ecef') : (trackColor ? trackColor : '#0d6efd') }}
+                                style={{ left: `${minPos}%`, right: `${100 - maxPos}%` }}
                             />
                         </div>
                         <div className={`range-slider__placeholder-grab ${maxActive ? 'active' : ''} ${onlyOne ? 'inactive' : ''}`} style={{ left: `${maxPos}%` }} />
