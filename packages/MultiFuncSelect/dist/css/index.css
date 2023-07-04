@@ -5,6 +5,7 @@
   --multi-sel-focus-border-color:#86b7fe;
   --multi-sel-focus-box-shadow: 0 0 0 0.25rem rgba(13,110,253,.25);
   --multi-sel-placeholder-color: rgba(33, 37, 41, 0.75);
+  --multi-sel-input-placeholder-color: #c5c9d1;
   --multi-sel-control-wrapper-bg: #fff;
   --multi-sel-control-wrapper-border-color: #dee2e6;
   --multi-sel-control-list-bg: #efefef;
@@ -16,11 +17,15 @@
   --multi-sel-listgroup-tool-bg: rgb(248,249,250);
   --multi-sel-listgroup-checkbox: #a5a5a5;
   --multi-sel-listgroup-item-hover-focus-bg: rgba(0,0,0,.1);
+  /*------ Placeholder for input ------*/
   /*------ Arrow ------*/
   /*------ Input ------*/
   /*------ List ------*/
   /*------ Multiple selection ------*/
   /*------------*/
+}
+.multifunc-select__wrapper input::placeholder {
+  color: var(--multi-sel-input-placeholder-color);
 }
 .multifunc-select__wrapper .arrow svg .arrow-fill-g {
   fill: var(--multi-sel-arrow-fill);
@@ -141,6 +146,9 @@
 }
 .multifunc-select__wrapper .multifunc-select-multi__wrapper .multifunc-select-multi__control-blinking-cursor.animated {
   animation: 1s multi-sel-blink step-end infinite;
+}
+.multifunc-select__wrapper .multifunc-select-multi__wrapper .multifunc-select-multi__control-blinking-cursor.control-placeholder {
+  color: var(--multi-sel-input-placeholder-color);
 }
 @keyframes multi-sel-blink {
   from, to {
