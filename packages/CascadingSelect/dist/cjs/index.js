@@ -169,7 +169,7 @@ function Group(props) {
         key: index,
         "data-index": index,
         "data-value": item.id,
-        className: item.current ? 'cascading-select__opt active' : 'cascading-select__opt',
+        className: "cascading-select__opt ".concat(item.current ? 'active' : ''),
         onClick: function onClick(e) {
           return selectEv(e, item, index);
         },
@@ -185,7 +185,7 @@ function Group(props) {
         onClick: function onClick(e) {
           return selectEv(e, item, index);
         },
-        className: item.current ? 'cascading-select__opt-header active' : 'cascading-select__opt-header',
+        className: "cascading-select__opt-header ".concat(item.current ? 'active' : ''),
         dangerouslySetInnerHTML: {
           __html: columnTitle[level]
         }

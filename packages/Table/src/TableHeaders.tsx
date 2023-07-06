@@ -46,7 +46,7 @@ const TableHeaders = (props: TableHeadersProps) => {
             <thead className={headClassName ? headClassName : ''}>
                 <tr>
                     {data.map((item: any, i: number) => {
-                        return <th key={i} scope="col" data-sort-type={item.type} data-table-text={item.content.replace(/(<([^>]+)>)/ig, '')} data-table-col={i}>
+                        return <th key={i} scope="col" data-sort-type={item.type} data-table-text={item.content.replace(/(<([^>]+)>)/ig, '')} data-table-col={i} style={item.style ? item.style : (item.width ? ((typeof window !== 'undefined' && window.innerWidth > 768) ? {width: item.width} : {}) : {})} className={item.className || ''}>
                             {i === 0 ? <span className="checkbox-trigger">
                                 <Checkbox
                                     wrapperClassName=""

@@ -107,7 +107,7 @@ const Table = (props: TableProps) => {
     // ================================================================
     // generic
     // ================================================================
-    const insertAfter = (newNode, existingNode) => {
+    const insertAfter = (newNode: any, existingNode: any) => {
         existingNode.parentNode.insertBefore(newNode, existingNode.nextSibling);
     };
     
@@ -373,7 +373,7 @@ const Table = (props: TableProps) => {
         
         
         // callback
-        const dragStart: Function = (callback) => {
+        const dragStart: Function = (callback: Function) => {
             callback.call(null, draggedObj, sortData, printData(sortData as never));
         };
         onDrag?.(dragStart, null);
@@ -434,7 +434,7 @@ const Table = (props: TableProps) => {
        
 
         // callback
-        const dragEnd: Function = (callback) => {
+        const dragEnd: Function = (callback: Function) => {
             callback.call(null, draggedObj, newData, printData(newData as never));
         };
         onDrag?.(null, dragEnd);

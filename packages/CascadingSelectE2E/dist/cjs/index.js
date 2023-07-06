@@ -170,7 +170,7 @@ function Group(props) {
         "data-index": index,
         "data-value": item.id,
         "data-query": item.queryId,
-        className: item.current ? 'cascading-select-e2e__opt active' : 'cascading-select-e2e__opt',
+        className: "cascading-select-e2e__opt ".concat(item.current ? 'active' : ''),
         onClick: function onClick(e) {
           return selectEv(e, item, index);
         },
@@ -187,7 +187,7 @@ function Group(props) {
         onClick: function onClick(e) {
           return selectEv(e, item, index);
         },
-        className: item.current ? 'cascading-select-e2e__opt-header active' : 'cascading-select-e2e__opt-header',
+        className: "cascading-select-e2e__opt-header ".concat(item.current ? 'active' : ''),
         dangerouslySetInnerHTML: {
           __html: columnTitle[level]
         }

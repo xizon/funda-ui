@@ -185,7 +185,7 @@ var DropdownMenu = function DropdownMenu(props) {
     };
   }, [options]);
   return /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
-    className: isOpen ? "dropdown__wrapper ".concat(wrapperClassName || wrapperClassName === '' ? wrapperClassName : "dropdown-default dropdown-default--".concat(alignOptionsLayer ? alignOptionsLayer : 'center'), " active") : "dropdown__wrapper ".concat(wrapperClassName || wrapperClassName === '' ? wrapperClassName : "dropdown-default dropdown-default--".concat(alignOptionsLayer ? alignOptionsLayer : 'center'))
+    className: "dropdown__wrapper ".concat(wrapperClassName || wrapperClassName === '' ? wrapperClassName : "dropdown-default dropdown-default--".concat(alignOptionsLayer ? alignOptionsLayer : 'center'), " ").concat(isOpen ? 'active' : '')
   }, triggerButton ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("button", {
     tabIndex: tabIndex || -1,
     className: triggerClassName ? "".concat(triggerClassName) : "d-inline w-auto",

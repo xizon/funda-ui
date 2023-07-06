@@ -105,7 +105,7 @@ const ShowMoreLess = (props: ShowMoreLessProps) => {
                 ref={rootRef}
                 id={idRes}
                 onTransitionEnd={() => updateAfterTransition()}
-                className={displayEnabled ? 'show-more-less__wrapper active' : 'show-more-less__wrapper'}
+                className={`show-more-less__wrapper ${displayEnabled ? 'active' : ''}`}
                 style={{
                     height: height,
                     overflow: "hidden",

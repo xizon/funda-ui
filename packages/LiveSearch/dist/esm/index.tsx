@@ -502,7 +502,7 @@ const LiveSearch = (props: LiveSearchProps) => {
     return (
         <>
 
-            <div className={isOpen ? `livesearch__wrapper ${wrapperClassName || wrapperClassName === '' ? wrapperClassName : 'mb-3 position-relative'} active` : `livesearch__wrapper ${wrapperClassName || wrapperClassName === '' ? wrapperClassName : 'mb-3 position-relative'}`} ref={rootRef} onMouseLeave={handleMouseLeaveTrigger}>
+            <div className={`livesearch__wrapper ${wrapperClassName || wrapperClassName === '' ? wrapperClassName : 'mb-3 position-relative'} ${isOpen ? 'active' : ''}`} ref={rootRef} onMouseLeave={handleMouseLeaveTrigger}>
                 <SearchBar
                     wrapperClassName=""
                     controlClassName={controlClassName}

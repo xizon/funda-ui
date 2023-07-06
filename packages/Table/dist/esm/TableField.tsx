@@ -5,6 +5,9 @@ import React from 'react';
 type TableFieldProps = {
 	cols?: number;
 	content?: any;
+    width?: string;
+    className?: string;
+    style?: React.CSSProperties;
 	columnHeader?: string;
 	index?: number;
 };
@@ -13,6 +16,9 @@ const TableField = (props: TableFieldProps) => {
 
     const {
         cols,
+        width,
+        className,
+        style,
         columnHeader,
         index,
         content
@@ -25,7 +31,7 @@ const TableField = (props: TableFieldProps) => {
 
     return (
         <>
-            <td colSpan={cols} data-table-text={columnHeader} data-table-col={index}  onMouseEnter={handleTbodyLeave}>{content}</td>
+            <td colSpan={cols} data-table-text={columnHeader} data-table-col={index}  onMouseEnter={handleTbodyLeave} style={style ? style : (width ? ((typeof window !== 'undefined' && window.innerWidth > 768) ? {width: width} : {}) : {})} className={className || ''}>{content}</td>
         </>
     )
 }

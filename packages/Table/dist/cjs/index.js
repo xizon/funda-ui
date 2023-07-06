@@ -698,6 +698,9 @@ var performance = __webpack_require__(342);
 
 var TableField = function TableField(props) {
   var cols = props.cols,
+    width = props.width,
+    className = props.className,
+    style = props.style,
     columnHeader = props.columnHeader,
     index = props.index,
     content = props.content;
@@ -708,7 +711,11 @@ var TableField = function TableField(props) {
     colSpan: cols,
     "data-table-text": columnHeader,
     "data-table-col": index,
-    onMouseEnter: handleTbodyLeave
+    onMouseEnter: handleTbodyLeave,
+    style: style ? style : width ? typeof window !== 'undefined' && window.innerWidth > 768 ? {
+      width: width
+    } : {} : {},
+    className: className || ''
   }, content));
 };
 /* harmony default export */ const src_TableField = (TableField);
@@ -775,6 +782,9 @@ var TableFieldRow = function TableFieldRow(props) {
   var _filter$;
   var draggable = props.draggable,
     cols = props.cols,
+    width = props.width,
+    className = props.className,
+    style = props.style,
     columnHeader = props.columnHeader,
     index = props.index,
     content = props.content,
@@ -797,7 +807,11 @@ var TableFieldRow = function TableFieldRow(props) {
     scope: "row",
     colSpan: cols,
     "data-table-text": columnHeader,
-    "data-table-col": index
+    "data-table-col": index,
+    style: style ? style : width ? typeof window !== 'undefined' && window.innerWidth > 768 ? {
+      width: width
+    } : {} : {},
+    className: className || ''
   }, draggable ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("span", {
     className: "drag-trigger",
     "data-id": rowIndex,
@@ -969,7 +983,7 @@ var TableRow = function TableRow(props) {
     onDragStart: evDragStart,
     "data-id": index,
     "data-key": rowKey,
-    className: rowChecked ? 'row-obj active' : 'row-obj'
+    className: "row-obj ".concat(rowChecked ? 'active' : '')
   }, data ? data.map(function (el, i) {
     var headerItem = headerLabel[i];
     if (headerItem === undefined) headerItem = {
@@ -982,6 +996,7 @@ var TableRow = function TableRow(props) {
         columnHeader: headerItem.content.replace(/(<([^>]+)>)/ig, ''),
         cols: el.cols,
         content: el.content,
+        width: el.width,
         index: i,
         checkboxNamePrefix: checkboxNamePrefix,
         rowKey: rowKey,
@@ -1000,6 +1015,7 @@ var TableRow = function TableRow(props) {
         columnHeader: headerItem.content.replace(/(<([^>]+)>)/ig, ''),
         cols: el.cols,
         content: el.content,
+        width: el.width,
         index: i
       });
     }
@@ -1037,7 +1053,11 @@ var TableHeaders = function TableHeaders(props) {
       scope: "col",
       "data-sort-type": item.type,
       "data-table-text": item.content.replace(/(<([^>]+)>)/ig, ''),
-      "data-table-col": i
+      "data-table-col": i,
+      style: item.style ? item.style : item.width ? typeof window !== 'undefined' && window.innerWidth > 768 ? {
+        width: item.width
+      } : {} : {},
+      className: item.className || ''
     }, i === 0 ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("span", {
       className: "checkbox-trigger"
     }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((cjs_default()), {

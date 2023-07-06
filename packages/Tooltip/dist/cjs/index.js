@@ -103,97 +103,95 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
 function _iterableToArrayLimit(arr, i) { var _i = null == arr ? null : "undefined" != typeof Symbol && arr[Symbol.iterator] || arr["@@iterator"]; if (null != _i) { var _s, _e, _x, _r, _arr = [], _n = !0, _d = !1; try { if (_x = (_i = _i.call(arr)).next, 0 === i) { if (Object(_i) !== _i) return; _n = !1; } else for (; !(_n = (_s = _x.call(_i)).done) && (_arr.push(_s.value), _arr.length !== i); _n = !0); } catch (err) { _d = !0, _e = err; } finally { try { if (!_n && null != _i["return"] && (_r = _i["return"](), Object(_r) !== _r)) return; } finally { if (_d) throw _e; } } return _arr; } }
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
-
-// Adapt the easing parameters of CSS3
-var EasingList = /*#__PURE__*/function (EasingList) {
-  EasingList["linear"] = "linear";
-  EasingList["easeIn"] = "ease-in";
-  EasingList["easeOut"] = "ease-out";
-  EasingList["easeInOut"] = "ease-in-out";
-  return EasingList;
-}(EasingList || {});
-var ShowMoreLess = function ShowMoreLess(props) {
-  var speed = props.speed,
-    easing = props.easing,
-    defaultHeight = props.defaultHeight,
-    triggerShowClassName = props.triggerShowClassName,
-    triggerHideClassName = props.triggerHideClassName,
-    triggerShowContent = props.triggerShowContent,
-    triggerHideContent = props.triggerHideContent,
-    maskColor = props.maskColor,
-    maskOpacity = props.maskOpacity,
-    maskHeight = props.maskHeight,
+var Tooltip = function Tooltip(props) {
+  var wrapperClassName = props.wrapperClassName,
+    direction = props.direction,
+    size = props.size,
+    hoverDelay = props.hoverDelay,
+    mouseOutDelay = props.mouseOutDelay,
+    content = props.content,
     id = props.id,
-    tabIndex = props.tabIndex,
     children = props.children;
   var uniqueID = (0,react__WEBPACK_IMPORTED_MODULE_0__.useId)();
   var idRes = id || uniqueID;
   var rootRef = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(null);
-  var color = maskColor ? maskColor.replace(/\,/g, '') : '255 255 255';
-  var opacity = maskOpacity ? parseFloat(maskOpacity) : 100;
-  var duration = speed ? speed / 1000 : 0.5;
-  var ease = EasingList[easing];
-  var initHeight = defaultHeight ? defaultHeight : '8.5rem';
+  var HOVER_DELAY = hoverDelay ? hoverDelay : 200;
+  var MOUSE_OUT_DELAY = mouseOutDelay ? mouseOutDelay : HOVER_DELAY;
   var _useState = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(false),
     _useState2 = _slicedToArray(_useState, 2),
-    displayEnabled = _useState2[0],
-    setDisplayEnabled = _useState2[1];
-  var _useState3 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(initHeight),
+    hasBeenShown = _useState2[0],
+    setHasBeenShown = _useState2[1];
+  var _useState3 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(false),
     _useState4 = _slicedToArray(_useState3, 2),
-    height = _useState4[0],
-    setHeight = _useState4[1];
-  var handleChange = (0,react__WEBPACK_IMPORTED_MODULE_0__.useCallback)(function (e) {
-    e.preventDefault();
-    setDisplayEnabled(!displayEnabled);
-    if (height !== "auto") {
-      setHeight(rootRef.current.scrollHeight);
-    } else {
-      // If the height value is `auto` when hiding the content, there needs to be a delay 
-      // (at least 1 millisecond), otherwise, the transition effect of translate cannot be presented
-      setHeight(rootRef.current.scrollHeight);
-      setTimeout(function () {
-        return setHeight(initHeight);
-      }, 1);
-    }
-  }, [height]);
+    isShow = _useState4[0],
+    setIsShow = _useState4[1];
 
-  // Handling events when the animation execution is complete
-  function updateAfterTransition() {
-    if (displayEnabled) {
-      setHeight('auto');
-    }
+  //timer hover
+  var timeoutHoverIdRef = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(null);
+  var startTimerHover = function startTimerHover() {
+    timeoutHoverIdRef.current = setTimeout(function () {
+      if (!hasBeenShown) {
+        // this will render once, then fire componentDidUpdate, which will show the tip
+        setHasBeenShown(true);
+      }
+      if (!isShow) setIsShow(true);
+    }, HOVER_DELAY);
+  };
+  var stopTimerHover = function stopTimerHover() {
+    clearTimeout(timeoutHoverIdRef.current);
+    timeoutHoverIdRef.current = null;
+  };
+
+  //timer mouseout
+  var timeoutMouseoutIdRef = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(null);
+  var startTimerMouseout = function startTimerMouseout() {
+    timeoutMouseoutIdRef.current = setTimeout(function () {
+      hideTip();
+    }, MOUSE_OUT_DELAY);
+  };
+  var stopTimerMouseout = function stopTimerMouseout() {
+    clearTimeout(timeoutMouseoutIdRef.current);
+    timeoutMouseoutIdRef.current = null;
+  };
+  function handleMouseEnter() {
+    stopTimerHover();
+    stopTimerMouseout();
+    startTimerHover();
   }
+  function handleMouseLeave() {
+    stopTimerHover();
+    stopTimerMouseout();
+    startTimerMouseout();
+  }
+  function hideTip() {
+    if (isShow) setIsShow(false);
+  }
+  function handleTouchStart(e) {
+    hideTip();
+  }
+  (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(function () {
+    window.removeEventListener('touchstart', handleTouchStart);
+    window.addEventListener('touchstart', handleTouchStart);
+    return function () {
+      stopTimerHover();
+      stopTimerMouseout();
+      window.removeEventListener('touchstart', handleTouchStart);
+    };
+  }, []);
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
     ref: rootRef,
     id: idRes,
-    onTransitionEnd: function onTransitionEnd() {
-      return updateAfterTransition();
-    },
-    className: "show-more-less__wrapper ".concat(displayEnabled ? 'active' : ''),
-    style: {
-      height: height,
-      overflow: "hidden",
-      transition: "all ".concat(duration, "s ").concat(ease, " 0s")
-    }
-  }, children, maskOpacity !== 0 ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
-    className: "show-more-less__mask",
-    style: {
-      background: "linear-gradient(to bottom, rgb(".concat(color, " / 0%), rgb(").concat(color, " / ").concat(opacity, "%))"),
-      height: maskHeight ? maskHeight : '2em'
-    }
-  }) : null), !displayEnabled ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, triggerShowContent ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
-    tabIndex: tabIndex || 0,
-    href: "#",
-    className: triggerShowClassName ? "".concat(triggerShowClassName) : "d-inline w-auto",
-    onClick: handleChange
-  }, triggerShowContent)) : null) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, triggerHideContent ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
-    tabIndex: tabIndex || 0,
-    href: "#",
-    className: triggerHideClassName ? "".concat(triggerHideClassName) : "d-inline w-auto",
-    onClick: handleChange
-  }, triggerHideContent)) : null));
+    className: "".concat(wrapperClassName || wrapperClassName === '' ? "tooltip__wrapper ".concat(wrapperClassName) : "tooltip__wrapper d-inline-block", " ").concat(isShow ? 'active' : ''),
+    onMouseEnter: handleMouseEnter,
+    onMouseLeave: handleMouseLeave,
+    role: "tooltip",
+    "data-microtip-position": direction || 'top',
+    "data-microtip-size": size || 'auto'
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+    className: "tooltip__content"
+  }, content), children));
 };
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (ShowMoreLess);
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Tooltip);
 })();
 
 /******/ 	return __webpack_exports__;

@@ -17,14 +17,22 @@
     --cascading-select-arrow-fill: #a5a5a5;
     --cascading-select-result-arrow-fill: #a5a5a5;
 
+    --cascading-select-result-font-size: 1rem;
+    --cascading-select-result-padding-x: 0.75rem;
+    --cascading-select-result-padding-y: 0.375rem;
+
+    --cascading-select-opt-font-size: 0.875rem;
+    --cascading-select-opt-padding-x: .4rem;
+    --cascading-select-opt-padding-y: .3rem;
+
 
     .cascading-select__result {
         position: absolute;
         left: auto;
         z-index: 1;
         top: 0;
-        padding: 0.375rem 0.75rem;
-        font-size: 1rem;
+        padding: var(--cascading-select-result-padding-y) var(--cascading-select-result-padding-x);
+        font-size: var(--cascading-select-result-font-size);
         font-weight: 400;
         line-height: 1.5;
         color: inherit;
@@ -169,8 +177,8 @@
 
 
         .cascading-select__opt {
-            padding: .3rem .4rem;
-            font-size: 0.875rem;
+            padding: var(--cascading-select-opt-padding-y) var(--cascading-select-opt-padding-x);
+            font-size: var(--cascading-select-opt-font-size);
             border-radius: 2px;
 
             &:hover {
@@ -183,8 +191,8 @@
         }
 
         .cascading-select__opt-header {
-            padding: .3rem .4rem;
-            font-size: 0.875rem;
+            padding: var(--cascading-select-opt-padding-y) var(--cascading-select-opt-padding-x);
+            font-size: var(--cascading-select-opt-font-size);        
             opacity: .5;
             border-bottom: 1px dotted var(--cascading-select-opt-header-border-color);
             border-radius: 2px;

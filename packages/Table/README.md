@@ -33,8 +33,8 @@ JSON configuration properties of the `data`:
 
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |
-| `fields` | array | - | Table rows and columns. The key `cols` identifies the column (change the value if the column is merged). The key `content` to place the content of each cell. Eg. `[[{"cols": 1, "content": "01" },{"cols": 1, "content": "David Lin" }],[{"cols": 1, "content": "02" },{"cols": 1, "content": "Tom McFarlin" }]]` |
-| `headers` | array | - | Defines a header cell in an HTML table. The key `type` is used to specify the type of sorting for each column (Type of sorted values: `false`, `'number'`, `'text'` or `'date'`). The key `content` is the value of each field. Eg. `[{"type": false, "content": "Index" },{"type": "number", "content": "Money" },{"type": "text", "content": "Name" },{"type": "number", "content": "No." },{"type": "date", "content": "Date1" },{"type": "date", "content": "Date2" }]` |
+| `fields` | array | - | Table rows and columns. Eg. `[[{"cols": 1, "width": "50px", "content": "01" },{"cols": 1, "content": "David Lin" }],[{"cols": 1, "width": "50px","content": "02" },{"cols": 1, "content": "Tom McFarlin" }]]` <blockquote><ol><li>The key `cols` identifies the column (change the value if the column is merged). </li><li>The key `content` to place the content of each cell. </li><li>The key `width` to set the width of each cell. It will fail when the breakpoint is less than or equal to 768px.</li><li>The key `className` to set the classes of each cell.</li><li>The key `style` to set the style which type is *React.CSSProperties*, and it will cover `width`.</li></ol><blockquote>|
+| `headers` | array | - | Defines a header cell in an HTML table. Eg. `[{"type": false, "style": {width: '50px', background: 'black', color: 'white'}, "content": "Index" },{"type": "number", "content": "Money" },{"type": "text", "content": "Name" },{"type": "number", "content": "No." },{"type": "date", "content": "Date1" },{"type": "date", "content": "Date2" }]` <blockquote><ol><li>The key `type` is used to specify the type of sorting for each column (Type of sorted values: `false`, `'number'`, `'text'` or `'date'`). </li><li>The key `content` is the value of each field.</li><li>The key `width` to set the width of each field. It will fail when the breakpoint is less than or equal to 768px.</li><li>The key `className` to set the classes of each field.</li><li>The key `style` to set the style which type is *React.CSSProperties*, and it will cover `width`.</li></ol><blockquote>|
 
 
 
@@ -71,23 +71,23 @@ const tableData1 = {
 
 const tableData2 = {
 	"headers": [
-		{"type": false, "content": "No." },
+		{"type": false, "style": {width: '50px', background: 'black', color: 'white'}, "content": "No." },
 	    {"type": false, "content": "Name" },
 		{"type": false, "content": "" }
 	],
 	"fields": [
 		[
-		   {"cols": 1, "content": "01" },
+		   {"cols": 1, "width": "50px", "content": "01" },
 		   {"cols": 1, "content": "David Lin" },
 		   {"cols": 1, "content": "Because that’s all Steve Job’ needed for a salary."}
 		],
 		[
-		   {"cols": 1, "content": "02" },
+		   {"cols": 1, "width": "50px", "content": "02" },
 		   {"cols": 1, "content": "Tom McFarlin" },
 		   {"cols": 1, "content": "Pictures are worth a thousand words, right? So Tom x 1,000."}
 		],	
 		[
-		   {"cols": 1, "content": "03" },
+		   {"cols": 1, "width": "50px", "content": "03" },
 		   {"cols": 1, "content": "Chris Ames" },
 		   {"cols": 1, "content": "With hair like that?! Enough said…"}
 		]

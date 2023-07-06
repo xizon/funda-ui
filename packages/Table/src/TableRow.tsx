@@ -50,7 +50,7 @@ const TableRow = (props: TableRowProps) => {
 
     return (
         <>
-            <tr draggable={draggable} onDragEnd={evDragEnd} onDragStart={evDragStart} data-id={index} data-key={rowKey} className={rowChecked ? 'row-obj active' : 'row-obj'}>
+            <tr draggable={draggable} onDragEnd={evDragEnd} onDragStart={evDragStart} data-id={index} data-key={rowKey} className={`row-obj ${rowChecked ? 'active' : ''}`}>
                 {data ? data.map((el: any, i: number) => {
                     let headerItem = headerLabel![i];
                     if (headerItem === undefined) headerItem = {type: false, content: ''};
@@ -61,6 +61,7 @@ const TableRow = (props: TableRowProps) => {
                                     columnHeader={headerItem.content.replace(/(<([^>]+)>)/ig, '')} 
                                     cols={el.cols} 
                                     content={el.content} 
+                                    width={el.width} 
                                     index={i} 
                                     checkboxNamePrefix={checkboxNamePrefix} 
                                     rowKey={rowKey} 
@@ -79,6 +80,7 @@ const TableRow = (props: TableRowProps) => {
                                     columnHeader={headerItem.content.replace(/(<([^>]+)>)/ig, '')} 
                                     cols={el.cols} 
                                     content={el.content} 
+                                    width={el.width} 
                                     index={i} 
                                 />;
                     }

@@ -11,6 +11,9 @@ type TableFieldRowProps = {
     draggable?: boolean;
     cols?: number;
     content?: any;
+    width?: string;
+    className?: string;
+    style?: React.CSSProperties;
     columnHeader?: string;
     index?: number;
     checkboxNamePrefix?: string;
@@ -30,6 +33,9 @@ const TableFieldRow = (props: TableFieldRowProps) => {
     const {
         draggable,
         cols,
+        width,
+        className,
+        style,
         columnHeader,
         index,
         content,
@@ -56,7 +62,7 @@ const TableFieldRow = (props: TableFieldRowProps) => {
 
     return (
         <>
-            <th scope="row" colSpan={cols} data-table-text={columnHeader} data-table-col={index}>
+            <th scope="row" colSpan={cols} data-table-text={columnHeader} data-table-col={index} style={style ? style : (width ? ((typeof window !== 'undefined' && window.innerWidth > 768) ? {width: width} : {}) : {})} className={className || ''}>
                 {draggable ? <span className="drag-trigger" data-id={rowIndex} onMouseEnter={handleTbodyEnter}>
                     <svg width="1em" height="1em" viewBox="0 0 24 24" fill="none">
                         <g>
