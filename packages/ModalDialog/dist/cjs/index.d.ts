@@ -17,6 +17,8 @@ declare type ModalDialogProps = {
     protectFixedViewport?: boolean;
     /** Custom modal max-width whick need a unit string. */
     maxWidth?: number | string;
+    /** Custom modal max-height whick need a unit string. */
+    minHeight?: number | string;
     /** Adapt the video to the window */
     enableVideo?: boolean;
     /** Set a window title */
@@ -35,6 +37,8 @@ declare type ModalDialogProps = {
     autoClose?: number | boolean;
     /** Disable mask */
     maskDisabled?: boolean;
+    /** Mask opacity */
+    maskOpacity?: string;
     /** Disable mask to close the window */
     closeOnlyBtn?: boolean;
     /** Disable the close button. */

@@ -25,6 +25,8 @@ type ModalDialogProps = {
     protectFixedViewport?: boolean;
     /** Custom modal max-width whick need a unit string. */
     maxWidth?: number | string;
+    /** Custom modal max-height whick need a unit string. */
+    minHeight?: number | string;
     /** Adapt the video to the window */
     enableVideo?: boolean;
     /** Set a window title */
@@ -43,6 +45,8 @@ type ModalDialogProps = {
     autoClose?: number | boolean;
     /** Disable mask */
     maskDisabled?: boolean;
+    /** Mask opacity */
+    maskOpacity?: string;
     /** Disable mask to close the window */
     closeOnlyBtn?: boolean;
     /** Disable the close button. */
@@ -66,6 +70,7 @@ const ModalDialog = (props: ModalDialogProps) => {
         show,
         protectFixedViewport,
         maxWidth,
+        minHeight,
         enableVideo,
         heading,
         triggerClassName,
@@ -76,6 +81,7 @@ const ModalDialog = (props: ModalDialogProps) => {
         submitBtnLabel,
         autoClose,
         maskDisabled,
+        maskOpacity,
         closeOnlyBtn,
         closeDisabled,
         data,
@@ -135,7 +141,7 @@ const ModalDialog = (props: ModalDialogProps) => {
         if ($mask !== null) $mask.classList.remove('show');
 
         setTimeout(() => {
-            modalRef.current.style.display = 'none';
+            if (modalRef.current !== null) modalRef.current.style.display = 'none';
             if ($mask !== null) $mask.style.display = 'none';
         }, 300);
 
@@ -340,7 +346,7 @@ const ModalDialog = (props: ModalDialogProps) => {
         if (document.getElementById(`mask-${idRes}`) === null && !maskDisabled && document.body !== null) {
             const maskDiv = document.createElement('div');
             maskDiv.id = `mask-${idRes}`;
-            maskDiv.innerHTML = `<div class="${winShow ? 'modal-backdrop fade show' : 'modal-backdrop fade'}" style="display:none"></div>`;
+            maskDiv.innerHTML = `<div class="${winShow ? 'modal-backdrop fade show' : 'modal-backdrop fade'}" style="display:none;${maskOpacity ? `opacity:${maskOpacity};` : ''}"></div>`;
             document.body.appendChild(maskDiv);
 
             if (!closeOnlyBtn) {
@@ -378,24 +384,33 @@ const ModalDialog = (props: ModalDialogProps) => {
         // Remove the global list of events, especially as scroll and interval.
         //--------------
         return () => {
+    
             clearAllBodyScrollLocks();
 
             // Cancels a timeout previously established by calling setTimeout().
             clearTimeout(window.setCloseModalDialog);
             
             // Remove all masks and modals
-            Array.prototype.forEach.call(document.querySelectorAll('.modal-backdrop, .modal'), (node) => {
+            Array.prototype.forEach.call(document.querySelectorAll('.modal'), (node: any) => {
+
                 if ( PROTECT_FIXED_VIEWPORT ) {
-                    if (node.classList.contains('modal') && node.classList.contains('protect-fixed-viewport')) {
+                    // for current actived modal
+                    if (node.classList.contains('protect-fixed-viewport') && node.classList.contains('show')) {
                         node.remove();
                     }
                 }
 
-                if (!node.classList.contains('modal')) {
-                    node.parentElement.remove();
-                }
-
             });
+            
+
+            // If there is no active modal, hide all masks
+            const existingModal = [].slice.call(document.querySelectorAll('.modal')).filter((node: any) => node.classList.contains('show')).length > 0;
+            if ( !existingModal ) {
+                Array.prototype.forEach.call(document.querySelectorAll('.modal-backdrop'), (mask: any) => {
+                    mask.classList.remove('show');
+                    mask.style.display = 'none';
+                });
+            }
 
         }
 
@@ -409,9 +424,9 @@ const ModalDialog = (props: ModalDialogProps) => {
             </> : null}
 
             {/* Modal */}
-            <div ref={modalRef} className={enableVideo ? `modal ${PROTECT_FIXED_VIEWPORT ? 'protect-fixed-viewport' : ''} fade is-video ${winShow ? 'show' : ''}` : `modal ${PROTECT_FIXED_VIEWPORT ? 'protect-fixed-viewport' : ''} fade ${winShow ? 'show' : ''}`} tabIndex={-1} aria-hidden="true" style={{ pointerEvents: 'none' }}>
+            <div ref={modalRef} className={enableVideo ? `modal ${PROTECT_FIXED_VIEWPORT ? 'protect-fixed-viewport' : ''} fade is-video ${winShow ? 'show' : ''}` : `modal ${PROTECT_FIXED_VIEWPORT ? 'protect-fixed-viewport' : ''} fade ${winShow ? 'show' : ''}`} tabIndex={-1} aria-hidden="true" style={{ pointerEvents: 'none' }} data-mask={`mask-${idRes}`}>
                 <div className="modal-dialog modal-dialog-centered modal-dialog-scrollable" style={maxWidth ? { maxWidth: `${maxWidth}` } : {}}>
-                    <div className={enableVideo ? 'modal-content bg-transparent shadow-none border-0' : 'modal-content'} style={{overflow: 'inherit'}}>
+                    <div className={enableVideo ? 'modal-content bg-transparent shadow-none border-0' : 'modal-content'} style={{overflow: 'inherit',minHeight: minHeight ? minHeight : 'auto'}}>
                         {(!heading || heading === '') && closeDisabled ? null : <>
 
                             <div className={enableVideo ? 'modal-header border-0 px-0' : 'modal-header'}>

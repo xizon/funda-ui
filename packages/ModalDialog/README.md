@@ -14,7 +14,9 @@ import ModalDialog from 'react-pure-bootstrap/ModalDialog';
 | `autoClose` | number \| boolean  | false | Specify auto-close time. This function is not enabled when this value is false. If the value is `2000`, it will automatically close after 2 seconds. |
 | `heading` | ReactNode  | - | Set a window title |
 | `maskDisabled` | boolean  | false | Disable mask |
+| `maskOpacity` | string  | - | The mask opacity. The value is in the range *0.0* to *1.0* |
 | `maxWidth` | number \| string  | false | Custom modal max-width whick need a unit string. Such as: `200px` |
+| `minHeight` | number \| string  | false | Custom modal max-height whick need a unit string. Such as: `auto` |
 | `closeOnlyBtn` | boolean  | false | Disable mask to close the window |
 | `closeDisabled` | boolean  | false | Disable the close button. |
 | `triggerClassName` | string  | - | Specify a class for your trigger |
@@ -118,6 +120,7 @@ export default () => {
                 show={false}
                 enableVideo={true}
                 maxWidth="1200px"
+                maskOpacity="0"
                 triggerClassName="d-inline w-auto"
                 triggerContent={<>
                     <a href="#" tabIndex={-1}>Launch demo modal</a>
