@@ -62,6 +62,7 @@ const TableRow = (props: TableRowProps) => {
                                     cols={el.cols} 
                                     content={el.content} 
                                     width={el.width} 
+                                    style={el.style} 
                                     index={i} 
                                     checkboxNamePrefix={checkboxNamePrefix} 
                                     rowKey={rowKey} 
@@ -81,6 +82,7 @@ const TableRow = (props: TableRowProps) => {
                                     cols={el.cols} 
                                     content={el.content} 
                                     width={el.width} 
+                                    style={el.style} 
                                     index={i} 
                                 />;
                     }

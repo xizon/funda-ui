@@ -2,6 +2,7 @@ import React from 'react';
 
 import Checkbox from 'rpb-checkbox';
 
+
 import { getChildren } from './utils/dom';
 import { formatCheckboxControlVal, setCheckboxCheckedData } from './table-utils';
 

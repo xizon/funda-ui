@@ -997,6 +997,7 @@ var TableRow = function TableRow(props) {
         cols: el.cols,
         content: el.content,
         width: el.width,
+        style: el.style,
         index: i,
         checkboxNamePrefix: checkboxNamePrefix,
         rowKey: rowKey,
@@ -1016,6 +1017,7 @@ var TableRow = function TableRow(props) {
         cols: el.cols,
         content: el.content,
         width: el.width,
+        style: el.style,
         index: i
       });
     }
