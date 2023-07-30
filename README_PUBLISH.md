@@ -27,7 +27,7 @@ Here is a table of the components and their status.
 | [Accordion Slider ❏](packages/AccordionSlider/README.md) | [Password Input ❏](packages/PasswordInput/README.md) | [Image Perspective Hover ❏](packages/ImagePerspectiveHover/README.md) | [Gallery ❏](packages/Gallery/README.md) | [Dropdown Menu ✅](packages/DropdownMenu/README.md)  | 
 | [Back To Top ✅](packages/BackToTop/README.md) | [Merge Input ❏](packages/MergeInput/README.md) | [Mousewheel Interaction ❏](packages/MousewheelInteraction/README.md) |  | [Multilevel Dropdown Menu ✅](packages/MultilevelDropdownMenu/README.md)  | 
 | [Button ❏](packages/Button/README.md) | [Tag Input ✅](packages/TagInput/README.md) | [Parallax ❏](packages/Parallax/README.md) |  |  | 
-| [Card ❏](packages/Card/README.md) | [Textarea  ✅](packages/Textarea/README.md) | [Scroll Reveal ❏](packages/ScrollReveal/README.md) |  |  | 
+| [Card ❏](packages/Card/README.md) | [Textarea  ✅](packages/Textarea/README.md) | [Scroll Reveal ✅](packages/ScrollReveal/README.md) |  |  | 
 | [Content Placeholder ❏](packages/ContentPlaceholder/README.md) | [Select ✅](packages/Select/README.md) | [Sticky Elements ❏](packages/StickyElements/README.md) |  |  | 
 | [Counter ❏](packages/Counter/README.md) | [Cascading Select ✅](packages/CascadingSelect/README.md) | [Mode Switch ✅](packages/ModeSwitch/README.md) |  |  | 
 | [Hybrid Content Slider ❏](packages/HybridContentSlider/README.md) | [Cascading Select End-to-end ✅](packages/CascadingSelectE2E/README.md) |  |  |  | 

@@ -53,6 +53,7 @@ declare type MultiFuncSelectProps = {
     fetchFuncMethodParams?: any[];
     fetchCallback?: (data: any) => void;
     onFetch?: (e: any, e2: any, value: string, data: any, incomingData: string | null | undefined) => void;
+    onLoad?: (e: any, e2: any, value: string | null | undefined) => void;
     onSelect?: (data: any) => void;
     onChange?: MultiFuncSelectOptionChangeFnType | null;
     onBlur?: (e: any) => void;

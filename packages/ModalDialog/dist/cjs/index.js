@@ -551,13 +551,13 @@ var ModalDialog = function ModalDialog(props) {
   }
   (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useEffect)(function () {
     // update incoming data
-    //------------------------------------------
+    //--------------
     setIncomingData(data);
 
     // Move HTML templates to tag end body </body>
     // render() don't use "Fragment", in order to avoid error "Failed to execute 'insertBefore' on 'Node'"
     // prevent "transform", "filter", "perspective" attribute destruction fixed viewport orientation
-    //------------------------------------------
+    //--------------
     if (PROTECT_FIXED_VIEWPORT) {
       if (document.body !== null) {
         document.body.appendChild(modalRef.current);
@@ -587,7 +587,7 @@ var ModalDialog = function ModalDialog(props) {
     }
 
     // add mask
-    //------------------------------------------
+    //--------------
     if (document.getElementById("mask-".concat(idRes)) === null && !maskDisabled && document.body !== null) {
       var maskDiv = document.createElement('div');
       maskDiv.id = "mask-".concat(idRes);
@@ -602,7 +602,7 @@ var ModalDialog = function ModalDialog(props) {
     }
 
     // show
-    //------------------------------------------
+    //--------------
     if (show) {
       openAction();
 
@@ -613,10 +613,12 @@ var ModalDialog = function ModalDialog(props) {
         };
       };
       onOpen === null || onOpen === void 0 ? void 0 : onOpen(null, _callback(null));
+    } else {
+      handleCloseWin(null);
     }
 
     // Pass the function to be called
-    //------------------------------------------
+    //--------------
     onLoad === null || onLoad === void 0 ? void 0 : onLoad(function () {
       return handleOpenWin;
     }, function () {

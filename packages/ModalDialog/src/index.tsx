@@ -295,16 +295,17 @@ const ModalDialog = (props: ModalDialogProps) => {
 
     useEffect(() => {
 
-
+        
+  
         // update incoming data
-        //------------------------------------------
+        //--------------
         setIncomingData(data);
 
  
         // Move HTML templates to tag end body </body>
         // render() don't use "Fragment", in order to avoid error "Failed to execute 'insertBefore' on 'Node'"
         // prevent "transform", "filter", "perspective" attribute destruction fixed viewport orientation
-        //------------------------------------------
+        //--------------
         if ( PROTECT_FIXED_VIEWPORT ) {
             if ( document.body !== null ) {
                 
@@ -342,7 +343,7 @@ const ModalDialog = (props: ModalDialogProps) => {
 
 
         // add mask
-        //------------------------------------------
+        //--------------
         if (document.getElementById(`mask-${idRes}`) === null && !maskDisabled && document.body !== null) {
             const maskDiv = document.createElement('div');
             maskDiv.id = `mask-${idRes}`;
@@ -360,7 +361,7 @@ const ModalDialog = (props: ModalDialogProps) => {
 
 
         // show
-        //------------------------------------------
+        //--------------
         if (show) {
             openAction();
 
@@ -373,11 +374,13 @@ const ModalDialog = (props: ModalDialogProps) => {
             };
             onOpen?.(null, callback(null));
 
+        } else {
+            handleCloseWin(null);
         }
 
 
         // Pass the function to be called
-        //------------------------------------------
+        //--------------
         onLoad?.(() => handleOpenWin, () => handleCloseWin);
 
 

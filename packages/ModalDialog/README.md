@@ -61,6 +61,8 @@ export default () => {
                 submitBtnClassName="btn btn-primary"
                 submitBtnLabel={<><i className="fa fa-paper-plane"></i> Save</>}
                 onOpen={(e, closewin) => {
+                    if (e === null) return;
+                    
                     console.log('open: ', e.target);
 
                     const myAppBtn = document.querySelector('#app-mybtn');
@@ -74,6 +76,8 @@ export default () => {
 
                 }}
                 onClose={(e) => {
+                    if (e === null) return;
+
                     console.log('close: ', e.target);
 
                     // Remove all Event Listeners
@@ -82,6 +86,8 @@ export default () => {
 
                 }}
                 onSubmit={(e, closewin, data) => {
+                    if (e === null) return;
+                    
                     console.log('submit: ', e.target, data);
                     e.target.disabled = true;
                     e.target.innerHTML = '<i class="fa fa-spinner fa-spin fa-fw"></i> Loading...'
