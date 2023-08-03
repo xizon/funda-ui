@@ -14,6 +14,9 @@ type DropdownMenuProps = {
     listClassName?: string;
     hyperlinkClassName?: string;
     showClassName?: string;
+    hoverOn?: boolean;
+    hoverOff?: boolean;
+    hoverDelay?: number;
     /** Set a name for the form field for this component  */
     name?: string;
     /** Whether to use button style, otherwise use "div" */
@@ -43,6 +46,9 @@ const DropdownMenu = (props: DropdownMenuProps) => {
         listClassName,
         hyperlinkClassName,
         showClassName,
+        hoverOn,
+        hoverOff,
+        hoverDelay,
         name,
         triggerButton,
         triggerClassName,
@@ -56,8 +62,9 @@ const DropdownMenu = (props: DropdownMenuProps) => {
 
     const [isOpen, setIsOpen] = useState<boolean>(false);
     const [selected, setSelected] = useState<any>(null);
+    const _hoverDelay = !isNaN(hoverDelay as never) && typeof hoverDelay !== 'undefined' ? hoverDelay : 150;
 
-
+   
     const defaultLabel = triggerContent === undefined ? '' : triggerContent;
     const selectedLabel = triggerSwitchActive ? (selected ? selected.label : defaultLabel) : defaultLabel;
     const selectOptionsListPresentation = options?.map((selectOption, index) => {
@@ -66,8 +73,27 @@ const DropdownMenu = (props: DropdownMenuProps) => {
 
 
     function handleClick(event: any) {
+        if (hoverOn) return;
         setIsOpen(!isOpen);
     }
+
+
+    function handleHoverOn(event: any) {
+        if (!hoverOn || typeof hoverOn === 'undefined') return;
+        setTimeout(() => {
+            setIsOpen(true);
+        }, _hoverDelay);
+        
+    }
+
+    function handleHoverOff(event: any) {
+        if (!hoverOff || typeof hoverOff === 'undefined') return;
+        setTimeout(() => {
+            setIsOpen(false);
+        }, _hoverDelay);
+        
+    }
+
 
 
     function handleClose(event: any) {
@@ -104,10 +130,10 @@ const DropdownMenu = (props: DropdownMenuProps) => {
 
             <div className={`dropdown__wrapper ${wrapperClassName || wrapperClassName === '' ? wrapperClassName : `dropdown-default dropdown-default--${alignOptionsLayer ? alignOptionsLayer : 'center'}`} ${isOpen ? 'active' : ''}`}>
 
-                {triggerButton ? <button tabIndex={tabIndex || -1} className={triggerClassName ? `${triggerClassName}` : `d-inline w-auto`} type="button" onClick={handleClick} dangerouslySetInnerHTML={{ __html: selectedLabel }}></button> : <div className={triggerClassName ? `${triggerClassName}` : `d-inline w-auto`} onClick={handleClick} dangerouslySetInnerHTML={{ __html: selectedLabel }}></div>}
+                {triggerButton ? <button tabIndex={tabIndex || -1} className={triggerClassName ? `${triggerClassName}` : `d-inline w-auto`} type="button" onMouseEnter={handleHoverOn} onClick={handleClick} dangerouslySetInnerHTML={{ __html: selectedLabel }}></button> : <div className={triggerClassName ? `${triggerClassName}` : `d-inline w-auto`} onMouseEnter={handleHoverOn} onClick={handleClick} dangerouslySetInnerHTML={{ __html: selectedLabel }}></div>}
 
                 <input name={name || ''} type="hidden" value={selected?.value} />
-                <ul className={isOpen ? `${listClassName ? listClassName : 'dropdown-menu-default'} ${showClassName ? showClassName : 'show'}` : `${listClassName ? listClassName : 'dropdown-menu-default'}`}>
+                <ul onMouseLeave={handleHoverOff} className={isOpen ? `${listClassName ? listClassName : 'dropdown-menu-default'} ${showClassName ? showClassName : 'show'}` : `${listClassName ? listClassName : 'dropdown-menu-default'}`}>
                     {selectOptionsListPresentation}
                 </ul>
             </div>

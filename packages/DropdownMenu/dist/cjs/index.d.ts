@@ -9,6 +9,9 @@ declare type DropdownMenuProps = {
     listClassName?: string;
     hyperlinkClassName?: string;
     showClassName?: string;
+    hoverOn?: boolean;
+    hoverOff?: boolean;
+    hoverDelay?: number;
     /** Set a name for the form field for this component  */
     name?: string;
     /** Whether to use button style, otherwise use "div" */

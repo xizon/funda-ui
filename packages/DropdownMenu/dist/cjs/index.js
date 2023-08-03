@@ -135,6 +135,9 @@ var DropdownMenu = function DropdownMenu(props) {
     listClassName = props.listClassName,
     hyperlinkClassName = props.hyperlinkClassName,
     showClassName = props.showClassName,
+    hoverOn = props.hoverOn,
+    hoverOff = props.hoverOff,
+    hoverDelay = props.hoverDelay,
     name = props.name,
     triggerButton = props.triggerButton,
     triggerClassName = props.triggerClassName,
@@ -152,6 +155,7 @@ var DropdownMenu = function DropdownMenu(props) {
     _useState4 = _slicedToArray(_useState3, 2),
     selected = _useState4[0],
     setSelected = _useState4[1];
+  var _hoverDelay = !isNaN(hoverDelay) && typeof hoverDelay !== 'undefined' ? hoverDelay : 150;
   var defaultLabel = triggerContent === undefined ? '' : triggerContent;
   var selectedLabel = triggerSwitchActive ? selected ? selected.label : defaultLabel : defaultLabel;
   var selectOptionsListPresentation = options === null || options === void 0 ? void 0 : options.map(function (selectOption, index) {
@@ -163,7 +167,20 @@ var DropdownMenu = function DropdownMenu(props) {
     });
   });
   function handleClick(event) {
+    if (hoverOn) return;
     setIsOpen(!isOpen);
+  }
+  function handleHoverOn(event) {
+    if (!hoverOn || typeof hoverOn === 'undefined') return;
+    setTimeout(function () {
+      setIsOpen(true);
+    }, _hoverDelay);
+  }
+  function handleHoverOff(event) {
+    if (!hoverOff || typeof hoverOff === 'undefined') return;
+    setTimeout(function () {
+      setIsOpen(false);
+    }, _hoverDelay);
   }
   function handleClose(event) {
     if (event.target.closest(".".concat(wrapperClassName || wrapperClassName === '' ? wrapperClassName : 'dropdown__wrapper')) === null) {
@@ -190,12 +207,14 @@ var DropdownMenu = function DropdownMenu(props) {
     tabIndex: tabIndex || -1,
     className: triggerClassName ? "".concat(triggerClassName) : "d-inline w-auto",
     type: "button",
+    onMouseEnter: handleHoverOn,
     onClick: handleClick,
     dangerouslySetInnerHTML: {
       __html: selectedLabel
     }
   }) : /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
     className: triggerClassName ? "".concat(triggerClassName) : "d-inline w-auto",
+    onMouseEnter: handleHoverOn,
     onClick: handleClick,
     dangerouslySetInnerHTML: {
       __html: selectedLabel
@@ -205,6 +224,7 @@ var DropdownMenu = function DropdownMenu(props) {
     type: "hidden",
     value: selected === null || selected === void 0 ? void 0 : selected.value
   }), /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("ul", {
+    onMouseLeave: handleHoverOff,
     className: isOpen ? "".concat(listClassName ? listClassName : 'dropdown-menu-default', " ").concat(showClassName ? showClassName : 'show') : "".concat(listClassName ? listClassName : 'dropdown-menu-default')
   }, selectOptionsListPresentation)));
 };

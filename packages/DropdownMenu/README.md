@@ -13,7 +13,10 @@ import DropdownMenu from 'react-pure-bootstrap/DropdownMenu';
 | `alignOptionsLayer` | string | `start` \| `center` \| `end` | Align the options layer in a drop-down field. By default it is "center". <blockquote>It only takes effect when when the `wrapperClassName` attribute is removed</blockquote> |
 | `listClassName` | string | `dropdown-menu-default` | The class name of the list. |
 | `hyperlinkClassName` | string | `dropdown-item-default` | The class name of the hyperlink of each item. |
-| `showClassName` | string | `show` | activates the class name for the display list |
+| `showClassName` | string | `show` | Activates the class name for the display list |
+| `hoverOn` | boolean | false | Use hover to trigger opening. |
+| `hoverOff` | boolean | false | Use hover to trigger closing. |
+| `hoverDelay` | number | 150 | This will delay applying the hover effects. |
 | `name` | string  | - | Set a name for the form field for this component. Name is not deprecated when used with form fields. |
 | `triggerButton` | boolean  | false | Whether to use button style, otherwise use "div" |
 | `triggerClassName` | string  | `d-inline w-auto` | Specify a class for your trigger |
@@ -22,6 +25,7 @@ import DropdownMenu from 'react-pure-bootstrap/DropdownMenu';
 | `options` | array  | - | Specify data of Dropdown Menu as a JSON string format. Such as: <br /> `[{"label":"Option 1","value":"option-1"},{"label":"Option 2","value":"option-2"}]` <blockquote>Support html tags</blockquote> |
 | `onChange` | function  | - | This function is called whenever the data is updated. Exposes the JSON format data about the option as an argument. You can use it like this: `(res) => console.log(res)` |
 | `tabIndex` | number  | -1 | This attribute allows developers to make HTML elements focusable. |
+
 
 
 Array configuration properties of the `options`:
@@ -73,6 +77,8 @@ export default () => {
         <h3>Using Bootstrap's styles</h3>
         {/* ================================================================== */}
         <DropdownMenu
+            hoverOn={true}
+            hoverOff={true}
             wrapperClassName="dropdown"
             listClassName="dropdown-menu"
             hyperlinkClassName="dropdown-item"
