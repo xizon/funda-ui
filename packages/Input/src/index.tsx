@@ -1,4 +1,4 @@
-import React, { useId, useState, useEffect, useRef, forwardRef } from 'react';
+import React, { useId, useState, useEffect, useRef, forwardRef, ChangeEvent, CompositionEvent } from 'react';
 
 declare module 'react' {
     interface ReactI18NextChildren<T> {
@@ -87,7 +87,7 @@ const Input = forwardRef((props: InputProps, ref: any) => {
     const [onComposition, setOnComposition] = useState(false);
     const [changedVal, setChangedVal] = useState<string>(value || '');
 
-    function handleComposition(event: any) {
+    function handleComposition(event: CompositionEvent<HTMLInputElement>) {
         if (event.type === 'compositionstart') {
             setOnComposition(true);
         }
@@ -97,14 +97,14 @@ const Input = forwardRef((props: InputProps, ref: any) => {
     }
 
 
-    function handleFocus(event: any) {
+    function handleFocus(event: ChangeEvent<HTMLInputElement>) {
         rootRef.current.classList.add('focus');
 
         //
         onFocus?.(event, onComposition);    
     }
 
-    function handleChange(event: any) {
+    function handleChange(event: ChangeEvent<HTMLInputElement>) {
         const val = event.target.value;
 
         setChangedVal(val);
@@ -125,7 +125,7 @@ const Input = forwardRef((props: InputProps, ref: any) => {
 
     }
 
-    function handleBlur(event: any) {
+    function handleBlur(event: ChangeEvent<HTMLInputElement>) {
         const el = event.target;
         const val = event.target.value;
 
