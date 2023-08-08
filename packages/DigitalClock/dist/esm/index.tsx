@@ -1,5 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 
+import useInterval from './utils/useInterval';
 
 type DigitalClockProps = {
     tmpl?: (date: any) => void;
@@ -26,49 +27,38 @@ const DigitalClock = (props: DigitalClockProps) => {
     let seconds: any = time.getSeconds();
     let hours: any = time.getHours();
     let amPm = time.getHours() > 12 ? "pm" : "am";
-    let tick;
+
+    useInterval(() => {
+        time = new Date();
+        minutes = time.getMinutes();
+        seconds = time.getSeconds();
+        hours = time.getHours();
+
+        if ( militaryTime ) {
+            amPm = 'NULL';
+        } else {
+            minutes = minutes < 10 ? "0" + minutes : minutes;
+            seconds = seconds < 10 ? "0" + seconds : seconds;
+            hours = hours < 10 ? "0" + hours : hours;
+            hours = hours > 12 ? hours - 12 : hours;
+            hours = hours == 0 ? 12 : hours;
+        }
 
 
-    useEffect(() => {
-
-        tick = setInterval(function () {
-            time = new Date();
-            minutes = time.getMinutes();
-            seconds = time.getSeconds();
-            hours = time.getHours();
-
-            if ( militaryTime ) {
-                amPm = 'NULL';
-            } else {
-                minutes = minutes < 10 ? "0" + minutes : minutes;
-                seconds = seconds < 10 ? "0" + seconds : seconds;
-                hours = hours < 10 ? "0" + hours : hours;
-                hours = hours > 12 ? hours - 12 : hours;
-                hours = hours == 0 ? 12 : hours;
-            }
-
-
-            const curData = {
-                minutes: minutes,
-                seconds: seconds,
-                hours: hours,
-                amPm: amPm
-            };
-
-            setDate(curData);
-
-            //callback
-            const res: any = tmpl?.(curData);
-            setClockAppearance(res);
-
-        }, 1000);
-
-
-        return () => {
-            clearInterval(tick);
+        const curData = {
+            minutes: minutes,
+            seconds: seconds,
+            hours: hours,
+            amPm: amPm
         };
 
-    }, []);
+        setDate(curData);
+
+        //callback
+        const res: any = tmpl?.(curData);
+        setClockAppearance(res);
+    }, 1000);
+
 
     return (
         <>

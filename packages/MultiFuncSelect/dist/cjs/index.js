@@ -143,14 +143,53 @@ var __webpack_exports__ = {};
 // This entry need to be wrapped in an IIFE because it need to be in strict mode.
 (() => {
 "use strict";
+// ESM COMPAT FLAG
 __webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
-/* harmony export */ });
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(787);
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _utils_performance__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(342);
-/* harmony import */ var _utils_performance__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_utils_performance__WEBPACK_IMPORTED_MODULE_1__);
+
+// EXPORTS
+__webpack_require__.d(__webpack_exports__, {
+  "default": () => (/* binding */ src)
+});
+
+// EXTERNAL MODULE: external {"root":"React","commonjs2":"react","commonjs":"react","amd":"react"}
+var external_root_React_commonjs2_react_commonjs_react_amd_react_ = __webpack_require__(787);
+var external_root_React_commonjs2_react_commonjs_react_amd_react_default = /*#__PURE__*/__webpack_require__.n(external_root_React_commonjs2_react_commonjs_react_amd_react_);
+// EXTERNAL MODULE: ./src/utils/performance.js
+var performance = __webpack_require__(342);
+;// CONCATENATED MODULE: ./src/utils/useThrottle.js
+/**
+ * Limiting the rate of execution
+ * 
+ * @usage:
+
+const App = () => {
+    const [count, setCount] = useState(0);
+    const handleClick = useThrottle(() => setCount(count + 1), 500, [count]);
+
+    return (
+        <div className="app">
+            <button onClick={handleClick}>click</button>
+            <p>click {count} time</p>
+        </div>
+    );
+};
+
+ */
+
+var useThrottle = function useThrottle(fn, delay, dependence) {
+  var ref = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useRef)({
+    lastTime: 0
+  });
+  return (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useCallback)(function () {
+    var now = Date.now();
+    if (now - ref.current.lastTime >= delay) {
+      fn.apply(void 0, arguments);
+      ref.current.lastTime = now;
+    }
+  }, dependence);
+};
+/* harmony default export */ const utils_useThrottle = (useThrottle);
+;// CONCATENATED MODULE: ./src/index.tsx
 var _excluded = ["wrapperClassName", "controlClassName", "multiSelect", "disabled", "required", "value", "label", "name", "readOnly", "placeholder", "id", "options", "style", "depth", "controlArrow", "tabIndex", "fetchTrigger", "fetchTriggerForDefaultData", "fetchNoneInfo", "fetchUpdate", "fetchFuncAsync", "fetchFuncMethod", "fetchFuncMethodParams", "data", "fetchCallback", "onFetch", "onLoad", "onSelect", "onChange", "onBlur", "onFocus"];
 function _extends() { _extends = Object.assign ? Object.assign.bind() : function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
@@ -176,7 +215,8 @@ function _objectWithoutProperties(source, excluded) { if (source == null) return
 function _objectWithoutPropertiesLoose(source, excluded) { if (source == null) return {}; var target = {}; var sourceKeys = Object.keys(source); var key, i; for (i = 0; i < sourceKeys.length; i++) { key = sourceKeys[i]; if (excluded.indexOf(key) >= 0) continue; target[key] = source[key]; } return target; }
 
 
-var MultiFuncSelect = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(function (props, _ref2) {
+
+var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_amd_react_.forwardRef)(function (props, _ref2) {
   var wrapperClassName = props.wrapperClassName,
     controlClassName = props.controlClassName,
     multiSelect = props.multiSelect,
@@ -209,69 +249,69 @@ var MultiFuncSelect = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forward
     onBlur = props.onBlur,
     onFocus = props.onFocus,
     attributes = _objectWithoutProperties(props, _excluded);
-  var uniqueID = (0,react__WEBPACK_IMPORTED_MODULE_0__.useId)().replace(/\:/g, "-");
+  var uniqueID = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useId)().replace(/\:/g, "-");
   var idRes = id || uniqueID;
-  var rootRef = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(null);
-  var rootSingleRef = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(null);
-  var rootMultiRef = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(null);
-  var selectInputRef = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(null);
-  var valueInputRef = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(null);
-  var listRef = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(null);
-  var listContentRef = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(null);
+  var rootRef = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useRef)(null);
+  var rootSingleRef = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useRef)(null);
+  var rootMultiRef = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useRef)(null);
+  var selectInputRef = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useRef)(null);
+  var valueInputRef = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useRef)(null);
+  var listRef = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useRef)(null);
+  var listContentRef = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useRef)(null);
   var optionsRes = options ? isJSON(options) ? JSON.parse(options) : options : [];
-  var windowScrollUpdate = (0,_utils_performance__WEBPACK_IMPORTED_MODULE_1__.throttle)(handleScrollEvent, 5);
+  var windowScrollUpdate = (0,performance.throttle)(handleScrollEvent, 5);
 
   // return a array of options
   var optionsDataInit = optionsRes;
 
   //
-  var _useState = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(optionsDataInit),
+  var _useState = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)(optionsDataInit),
     _useState2 = _slicedToArray(_useState, 2),
     orginalData = _useState2[0],
     setOrginalData = _useState2[1];
-  var _useState3 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(optionsDataInit),
+  var _useState3 = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)(optionsDataInit),
     _useState4 = _slicedToArray(_useState3, 2),
     optionsData = _useState4[0],
     setOptionsData = _useState4[1];
-  var _useState5 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(false),
+  var _useState5 = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)(false),
     _useState6 = _slicedToArray(_useState5, 2),
     hasErr = _useState6[0],
     setHasErr = _useState6[1];
-  var _useState7 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(''),
+  var _useState7 = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)(''),
     _useState8 = _slicedToArray(_useState7, 2),
     controlLabel = _useState8[0],
     setControlLabel = _useState8[1];
-  var _useState9 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(''),
+  var _useState9 = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)(''),
     _useState10 = _slicedToArray(_useState9, 2),
     controlValue = _useState10[0],
     setControlValue = _useState10[1];
-  var _useState11 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(null),
+  var _useState11 = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)(null),
     _useState12 = _slicedToArray(_useState11, 2),
     controlTempValue = _useState12[0],
     setControlTempValue = _useState12[1];
-  var _useState13 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(false),
+  var _useState13 = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)(false),
     _useState14 = _slicedToArray(_useState13, 2),
     isOpen = _useState14[0],
     setIsOpen = _useState14[1];
-  var _useState15 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(0),
+  var _useState15 = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)(0),
     _useState16 = _slicedToArray(_useState15, 2),
     listContentHeight = _useState16[0],
     setListContentHeight = _useState16[1];
-  var _useState17 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(null),
+  var _useState17 = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)(null),
     _useState18 = _slicedToArray(_useState17, 2),
     incomingData = _useState18[0],
     setIncomingData = _useState18[1];
 
   // Multiple selection
   var MULTI_SEL_VALID = multiSelect ? multiSelect.valid : false;
-  var _useState19 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)({
+  var _useState19 = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)({
       labels: [],
       values: []
     }),
     _useState20 = _slicedToArray(_useState19, 2),
     controlArr = _useState20[0],
     setControlArr = _useState20[1];
-  var _useState21 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(false),
+  var _useState21 = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)(false),
     _useState22 = _slicedToArray(_useState21, 2),
     itemSelectedAll = _useState22[0],
     setItemSelectedAll = _useState22[1];
@@ -280,6 +320,36 @@ var MultiFuncSelect = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forward
       return v.toString();
     }).includes(val.toString());
   };
+
+  //performance
+  var handleChangeFetchSafe = utils_useThrottle(function (val) {
+    var _orginalData = [];
+    var update = function update(inputData) {
+      var filterRes = function filterRes(data) {
+        return inputData.filter(function (item) {
+          if ((item.queryString.split(',').some(function (l) {
+            return l.charAt(0) === val.toLowerCase();
+          }) || item.queryString.split(',').some(function (l) {
+            return l.replace(/ /g, '').indexOf(val.toLowerCase()) >= 0;
+          }) || item.label.indexOf(val) >= 0) && val != '') {
+            return true;
+          } else {
+            return false;
+          }
+        });
+      };
+      setOptionsData(filterRes);
+    };
+    if (fetchUpdate) {
+      handleFetch(val).then(function (response) {
+        _orginalData = response;
+        update(_orginalData);
+      });
+    } else {
+      _orginalData = orginalData;
+      update(_orginalData);
+    }
+  }, 150, []);
 
   /**
    * Remove html tag content
@@ -1011,28 +1081,34 @@ var MultiFuncSelect = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forward
   }
   function _handleFetch() {
     _handleFetch = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee4() {
-      var searchStr, _oparams, _params, res;
+      var inputVal,
+        searchStr,
+        _oparams,
+        _params,
+        res,
+        _args4 = arguments;
       return _regeneratorRuntime().wrap(function _callee4$(_context4) {
         while (1) switch (_context4.prev = _context4.next) {
           case 0:
+            inputVal = _args4.length > 0 && _args4[0] !== undefined ? _args4[0] : null;
             // data init
-            searchStr = controlTempValue || controlTempValue === '' ? controlTempValue : '';
+            searchStr = typeof inputVal === 'string' ? inputVal : controlTempValue || controlTempValue === '' ? controlTempValue : '';
             _oparams = fetchFuncMethodParams || [];
             _params = _oparams.map(function (item) {
               return item !== '$QUERY_STRING' ? item : searchStr;
             }); // if empty
             if (!(searchStr.replace(/\s/g, "") === '')) {
-              _context4.next = 5;
+              _context4.next = 6;
               break;
             }
             return _context4.abrupt("return", []);
-          case 5:
-            _context4.next = 7;
+          case 6:
+            _context4.next = 8;
             return fetchData(_params.join(','), value, false);
-          case 7:
+          case 8:
             res = _context4.sent;
             return _context4.abrupt("return", res);
-          case 9:
+          case 10:
           case "end":
             return _context4.stop();
         }
@@ -1046,70 +1122,28 @@ var MultiFuncSelect = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forward
       handleChange(event);
     }
   }
-  function handleChange(_x5) {
-    return _handleChange.apply(this, arguments);
-  } //
-  function _handleChange() {
-    _handleChange = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee5(event) {
-      var val, _orginalData, filterRes;
-      return _regeneratorRuntime().wrap(function _callee5$(_context5) {
-        while (1) switch (_context5.prev = _context5.next) {
-          case 0:
-            val = event.target.value; // update temporary value
-            setControlTempValue(val);
+  function handleChange(event) {
+    var val = event.target.value;
 
-            //
-            if (!(val.replace(/\s/g, "") === '')) {
-              _context5.next = 6;
-              break;
-            }
-            // No elements found. Consider changing the search query.
-            // restore data
-            setOptionsData(orginalData);
-            _context5.next = 16;
-            break;
-          case 6:
-            _orginalData = [];
-            if (!fetchUpdate) {
-              _context5.next = 13;
-              break;
-            }
-            _context5.next = 10;
-            return handleFetch();
-          case 10:
-            _orginalData = _context5.sent;
-            _context5.next = 14;
-            break;
-          case 13:
-            _orginalData = orginalData;
-          case 14:
-            filterRes = function filterRes(data) {
-              return _orginalData.filter(function (item) {
-                if ((item.queryString.split(',').some(function (l) {
-                  return l.charAt(0) === val.toLowerCase();
-                }) || item.queryString.split(',').some(function (l) {
-                  return l.replace(/ /g, '').indexOf(val.toLowerCase()) >= 0;
-                }) || item.label.indexOf(val) >= 0) && val != '') {
-                  return true;
-                } else {
-                  return false;
-                }
-              });
-            };
-            setOptionsData(filterRes);
-          case 16:
-            // window position
-            setTimeout(function () {
-              getPlacement(listRef.current);
-            }, 0);
-          case 17:
-          case "end":
-            return _context5.stop();
-        }
-      }, _callee5);
-    }));
-    return _handleChange.apply(this, arguments);
+    // update temporary value
+    setControlTempValue(val);
+
+    //
+    if (val.replace(/\s/g, "") === '') {
+      // No elements found. Consider changing the search query.
+      // restore data
+      setOptionsData(orginalData);
+    } else {
+      handleChangeFetchSafe(val);
+    }
+
+    // window position
+    setTimeout(function () {
+      getPlacement(listRef.current);
+    }, 0);
   }
+
+  //
   function handleFocus(event) {
     rootRef.current.classList.add('focus');
 
@@ -1173,7 +1207,7 @@ var MultiFuncSelect = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forward
       }
     });
   }
-  (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(function () {
+  (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useEffect)(function () {
     // Call a function when the component has been rendered completely
     //--------------
     onLoad === null || onLoad === void 0 ? void 0 : onLoad(selectInputRef.current, valueInputRef.current, value);
@@ -1298,7 +1332,7 @@ var MultiFuncSelect = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forward
           }
         }, _callee);
       }));
-      return function listener(_x6) {
+      return function listener(_x5) {
         return _ref.apply(this, arguments);
       };
     }();
@@ -1326,19 +1360,19 @@ var MultiFuncSelect = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forward
       clearInterval(timer);
     };
   }, [value, options, data]);
-  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, label ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+  return /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, label ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
     className: "multifunc-select__label"
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("label", {
+  }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("label", {
     htmlFor: "label-".concat(idRes),
     className: "form-label"
-  }, label))) : null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+  }, label))) : null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
     id: "multifunc-select__wrapper-".concat(idRes),
     className: "multifunc-select__wrapper ".concat(wrapperClassName || wrapperClassName === '' ? wrapperClassName : 'mb-3 position-relative', " ").concat(MULTI_SEL_VALID ? 'multiple-selection' : '', " ").concat(isOpen ? 'active focus' : ''),
     ref: rootRef
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+  }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
     ref: rootSingleRef,
     className: "position-relative"
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("input", _extends({
+  }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("input", _extends({
     ref: function ref(node) {
       selectInputRef.current = node;
       if (typeof _ref2 === 'function') {
@@ -1377,13 +1411,13 @@ var MultiFuncSelect = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forward
       borderBottomWidth: MULTI_SEL_VALID ? '0' : '1px'
     }, style),
     autoComplete: "off"
-  }, attributes)), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("input", _extends({
+  }, attributes)), /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("input", _extends({
     ref: valueInputRef,
     type: "hidden",
     id: idRes,
     name: name,
     value: MULTI_SEL_VALID ? controlArr.values.join(',') : controlValue // do not use `defaultValue`
-  }, attributes)), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
+  }, attributes)), /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("span", {
     className: "arrow position-absolute top-0 end-0 me-2 mt-1",
     style: {
       translate: 'all .2s',
@@ -1391,64 +1425,64 @@ var MultiFuncSelect = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forward
       pointerEvents: 'none',
       display: fetchTrigger ? 'none' : 'inline-block'
     }
-  }, controlArrow ? controlArrow : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("svg", {
+  }, controlArrow ? controlArrow : /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("svg", {
     width: "10px",
     height: "10px",
     viewBox: "0 -4.5 20 20"
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("g", {
+  }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("g", {
     stroke: "none",
     strokeWidth: "1",
     fill: "none"
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("g", {
+  }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("g", {
     transform: "translate(-180.000000, -6684.000000)",
     className: "arrow-fill-g",
     fill: "#a5a5a5"
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("g", {
+  }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("g", {
     transform: "translate(56.000000, 160.000000)"
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("path", {
+  }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("path", {
     d: "M144,6525.39 L142.594,6524 L133.987,6532.261 L133.069,6531.38 L133.074,6531.385 L125.427,6524.045 L124,6525.414 C126.113,6527.443 132.014,6533.107 133.987,6535 C135.453,6533.594 134.024,6534.965 144,6525.39"
-  })))))), fetchTrigger ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
+  })))))), fetchTrigger ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("span", {
     className: "multifunc-select-multi__control-searchbtn position-absolute top-0 end-0"
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", {
+  }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("button", {
     type: "button",
     className: 'btn border-end-0 rounded-pill',
     onClick: handleFetch
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("svg", {
+  }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("svg", {
     width: "1em",
     height: "1em",
     fill: "#a5a5a5",
     viewBox: "0 0 16 16"
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("path", {
+  }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("path", {
     d: "M12.027 9.92L16 13.95 14 16l-4.075-3.976A6.465 6.465 0 0 1 6.5 13C2.91 13 0 10.083 0 6.5 0 2.91 2.917 0 6.5 0 10.09 0 13 2.917 13 6.5a6.463 6.463 0 0 1-.973 3.42zM1.997 6.452c0 2.48 2.014 4.5 4.5 4.5 2.48 0 4.5-2.015 4.5-4.5 0-2.48-2.015-4.5-4.5-4.5-2.48 0-4.5 2.014-4.5 4.5z",
     fillRule: "evenodd"
-  }))))) : null), MULTI_SEL_VALID ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+  }))))) : null), MULTI_SEL_VALID ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
     ref: rootMultiRef,
     className: "multifunc-select-multi__wrapper"
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+  }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
     className: "multifunc-select-multi__control-wrapper"
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("ul", {
+  }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("ul", {
     className: "multifunc-select-multi__list"
   }, controlArr.labels.map(function (item, index) {
-    return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("li", {
+    return /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("li", {
       key: index
-    }, stripHTML(item), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
+    }, stripHTML(item), /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("a", {
       href: "#",
       tabIndex: -1,
       onClick: handleMultiControlItemRemove,
       "data-item": controlArr.values[index]
-    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("svg", {
+    }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("svg", {
       width: "10px",
       height: "10px",
       viewBox: "0 0 1024 1024"
-    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("path", {
+    }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("path", {
       fill: "#000",
       d: "M195.2 195.2a64 64 0 0 1 90.496 0L512 421.504 738.304 195.2a64 64 0 0 1 90.496 90.496L602.496 512 828.8 738.304a64 64 0 0 1-90.496 90.496L512 602.496 285.696 828.8a64 64 0 0 1-90.496-90.496L421.504 512 195.2 285.696a64 64 0 0 1 0-90.496z"
     }))));
-  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("li", {
+  }), /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("li", {
     className: "multifunc-select-multi__list-item-placeholder ".concat(typeof placeholder === 'undefined' || placeholder === '' ? 'hide' : '')
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
+  }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("span", {
     className: "multifunc-select-multi__control-blinking-cursor ".concat(generateInputFocusStr() === placeholder && placeholder !== '' && typeof placeholder !== 'undefined' ? 'control-placeholder' : '', " ").concat(generateInputFocusStr() === '|' ? 'animated' : '')
-  }, generateInputFocusStr()))))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
+  }, generateInputFocusStr()))))), /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("span", {
     className: "arrow position-absolute top-0 end-0 me-2 mt-1",
     style: {
       translate: 'all .2s',
@@ -1456,37 +1490,37 @@ var MultiFuncSelect = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forward
       pointerEvents: 'none',
       display: fetchTrigger ? 'none' : 'inline-block'
     }
-  }, controlArrow ? controlArrow : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("svg", {
+  }, controlArrow ? controlArrow : /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("svg", {
     width: "10px",
     height: "10px",
     viewBox: "0 -4.5 20 20"
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("g", {
+  }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("g", {
     stroke: "none",
     strokeWidth: "1",
     fill: "none"
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("g", {
+  }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("g", {
     transform: "translate(-180.000000, -6684.000000)",
     className: "arrow-fill-g",
     fill: "#a5a5a5"
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("g", {
+  }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("g", {
     transform: "translate(56.000000, 160.000000)"
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("path", {
+  }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("path", {
     d: "M144,6525.39 L142.594,6524 L133.987,6532.261 L133.069,6531.38 L133.074,6531.385 L125.427,6524.045 L124,6525.414 C126.113,6527.443 132.014,6533.107 133.987,6535 C135.453,6533.594 134.024,6534.965 144,6525.39"
-  })))))), fetchTrigger ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
+  })))))), fetchTrigger ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("span", {
     className: "multifunc-select-multi__control-searchbtn position-absolute top-0 end-0"
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", {
+  }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("button", {
     type: "button",
     className: 'btn border-end-0 rounded-pill',
     onClick: handleFetch
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("svg", {
+  }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("svg", {
     width: "1em",
     height: "1em",
     fill: "#a5a5a5",
     viewBox: "0 0 16 16"
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("path", {
+  }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("path", {
     d: "M12.027 9.92L16 13.95 14 16l-4.075-3.976A6.465 6.465 0 0 1 6.5 13C2.91 13 0 10.083 0 6.5 0 2.91 2.917 0 6.5 0 10.09 0 13 2.917 13 6.5a6.463 6.463 0 0 1-.973 3.42zM1.997 6.452c0 2.48 2.014 4.5 4.5 4.5 2.48 0 4.5-2.015 4.5-4.5 0-2.48-2.015-4.5-4.5-4.5-2.48 0-4.5 2.014-4.5 4.5z",
     fillRule: "evenodd"
-  }))))) : null) : null, optionsData && !hasErr ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+  }))))) : null) : null, optionsData && !hasErr ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
     ref: listRef,
     className: "list-group position-absolute w-100 border shadow small",
     style: {
@@ -1494,18 +1528,18 @@ var MultiFuncSelect = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forward
       zIndex: depth ? depth : 100
     },
     role: "tablist"
-  }, controlTempValue !== null && optionsData.length === 0 ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", {
+  }, controlTempValue !== null && optionsData.length === 0 ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("button", {
     tabIndex: -1,
     type: "button",
     className: "list-group-item list-group-item-action no-match",
     disabled: true
-  }, fetchNoneInfo || 'No match yet')) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+  }, fetchNoneInfo || 'No match yet')) : /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
     className: "rounded",
     style: {
       backgroundColor: 'var(--bs-list-group-bg)'
     },
     ref: listContentRef
-  }, MULTI_SEL_VALID ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", {
+  }, MULTI_SEL_VALID ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("button", {
     tabIndex: -1,
     type: "button",
     className: "list-group-item list-group-item-action border-start-0 border-end-0 text-secondary bg-light multifunc-select-multi__control-select-all",
@@ -1513,7 +1547,7 @@ var MultiFuncSelect = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forward
     style: {
       display: multiSelect !== null && multiSelect !== void 0 && multiSelect.selectAll ? 'block' : 'none'
     }
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
+  }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("a", {
     tabIndex: -1,
     href: "#",
     onClick: handleSelectAll,
@@ -1528,7 +1562,7 @@ var MultiFuncSelect = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forward
       // ++++++++++++++++++++
       // Single selection
       // ++++++++++++++++++++
-      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", {
+      return /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("button", {
         tabIndex: -1,
         onClick: handleSelect,
         type: "button",
@@ -1548,7 +1582,7 @@ var MultiFuncSelect = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forward
       // Multiple selection
       // ++++++++++++++++++++
       var itemSelected = multiSelControlOptionExist(controlArr.values, item.value) ? true : false;
-      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", {
+      return /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("button", {
         tabIndex: -1,
         onClick: handleSelect,
         type: "button",
@@ -1559,28 +1593,28 @@ var MultiFuncSelect = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forward
         "data-label": "".concat(item.label),
         "data-querystring": "".concat(item.queryString),
         role: "tab"
-      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("var", {
+      }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("var", {
         className: "d-inline-block me-1 "
-      }, !itemSelected ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("svg", {
+      }, !itemSelected ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("svg", {
         width: "1.2em",
         height: "1.2em",
         viewBox: "0 0 24 24",
         fill: "none"
-      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("path", {
+      }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("path", {
         id: "Vector",
         d: "M4 7.2002V16.8002C4 17.9203 4 18.4801 4.21799 18.9079C4.40973 19.2842 4.71547 19.5905 5.0918 19.7822C5.5192 20 6.07899 20 7.19691 20H16.8031C17.921 20 18.48 20 18.9074 19.7822C19.2837 19.5905 19.5905 19.2842 19.7822 18.9079C20 18.4805 20 17.9215 20 16.8036V7.19691C20 6.07899 20 5.5192 19.7822 5.0918C19.5905 4.71547 19.2837 4.40973 18.9074 4.21799C18.4796 4 17.9203 4 16.8002 4H7.2002C6.08009 4 5.51962 4 5.0918 4.21799C4.71547 4.40973 4.40973 4.71547 4.21799 5.0918C4 5.51962 4 6.08009 4 7.2002Z",
         stroke: "#000000",
         strokeWidth: "2",
         strokeLinecap: "round",
         strokeLinejoin: "round"
-      })) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("svg", {
+      })) : /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("svg", {
         width: "1.2em",
         height: "1.2em",
         fill: "#000000",
         viewBox: "0 0 24 24"
-      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("path", {
+      }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("path", {
         d: "M19 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.11 0 2-.9 2-2V5c0-1.1-.89-2-2-2zm-9 14l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"
-      }))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
+      }))), /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("span", {
         dangerouslySetInnerHTML: {
           __html: item.label
         }
@@ -1588,7 +1622,7 @@ var MultiFuncSelect = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forward
     }
   }) : null)))) : null));
 });
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (MultiFuncSelect);
+/* harmony default export */ const src = (MultiFuncSelect);
 })();
 
 /******/ 	return __webpack_exports__;

@@ -202,7 +202,8 @@ var DropdownMenu = function DropdownMenu(props) {
     };
   }, [options]);
   return /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
-    className: "dropdown__wrapper ".concat(wrapperClassName || wrapperClassName === '' ? wrapperClassName : "dropdown-default dropdown-default--".concat(alignOptionsLayer ? alignOptionsLayer : 'center'), " ").concat(isOpen ? 'active' : '')
+    className: "dropdown__wrapper ".concat(wrapperClassName || wrapperClassName === '' ? wrapperClassName : "dropdown-default dropdown-default--".concat(alignOptionsLayer ? alignOptionsLayer : 'center'), " ").concat(isOpen ? 'active' : ''),
+    onMouseLeave: handleHoverOff
   }, triggerButton ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("button", {
     tabIndex: tabIndex || -1,
     className: triggerClassName ? "".concat(triggerClassName) : "d-inline w-auto",
@@ -224,7 +225,6 @@ var DropdownMenu = function DropdownMenu(props) {
     type: "hidden",
     value: selected === null || selected === void 0 ? void 0 : selected.value
   }), /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("ul", {
-    onMouseLeave: handleHoverOff,
     className: isOpen ? "".concat(listClassName ? listClassName : 'dropdown-menu-default', " ").concat(showClassName ? showClassName : 'show') : "".concat(listClassName ? listClassName : 'dropdown-menu-default')
   }, selectOptionsListPresentation)));
 };

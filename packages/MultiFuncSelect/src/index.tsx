@@ -1,6 +1,8 @@
 import React, { useId, useEffect, useState, useRef, forwardRef } from 'react';
 
 import { throttle } from './utils/performance';
+import useThrottle from './utils/useThrottle';
+
 
 
 declare module 'react' {
@@ -145,6 +147,45 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
     const [itemSelectedAll, setItemSelectedAll] = useState<boolean>(false);
     const multiSelControlOptionExist = (arr: any[], val: any) => arr.map((v: any) => v.toString()).includes(val.toString());
 
+
+    //performance
+    const handleChangeFetchSafe = useThrottle((val: any) => {
+        
+        let _orginalData: OptionConfig[] = [];
+        const update = (inputData: any) => {
+            const filterRes = (data: any[]) => {
+                return inputData.filter((item: any) => {
+                    if (
+                        (
+                            item.queryString.split(',').some((l: any) => l.charAt(0) === val.toLowerCase()) ||
+                            item.queryString.split(',').some((l: any) => l.replace(/ /g, '').indexOf(val.toLowerCase()) >= 0) ||
+                            item.label.indexOf(val) >= 0
+                        ) &&
+                        val != ''
+                    ) {
+                        return true;
+                    } else {
+                        return false;
+                    }
+                });
+            }
+
+            setOptionsData(filterRes);
+        };
+   
+        if ( fetchUpdate ) {
+      
+            handleFetch(val).then((response: any) => {
+                _orginalData = response;
+                update(_orginalData);
+            });
+        } else {
+            _orginalData = orginalData;
+            update(_orginalData);
+        }
+  
+
+    }, 150, []);
     
     
     /**
@@ -943,14 +984,17 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
     }
 
 
-    async function handleFetch() {
+    async function handleFetch(inputVal: any = null) {
+        
         // data init
-        const searchStr: string = controlTempValue || controlTempValue === '' ? controlTempValue : '';
+        const searchStr: string = typeof inputVal === 'string' ? inputVal : (controlTempValue || controlTempValue === '' ? controlTempValue : '');
         const _oparams: any[] = fetchFuncMethodParams || [];
         const _params: any[] = _oparams.map((item: any) => item !== '$QUERY_STRING' ? item : searchStr);
 
         // if empty
         if ( searchStr.replace(/\s/g, "") === '' ) return [];
+
+       
 
         const res = await fetchData((_params).join(','), value, false);
         return res;
@@ -965,7 +1009,7 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
         }
     }
 
-    async function handleChange(event: any) {
+    function handleChange(event: any) {
         const val = event.target.value;
 
         // update temporary value
@@ -977,34 +1021,7 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
             // restore data
             setOptionsData(orginalData);
         } else {
-
-            let _orginalData: OptionConfig[] = [];
-   
-            if ( fetchUpdate ) {
-                _orginalData = await handleFetch();
-            } else {
-                _orginalData = orginalData;
-            }
-
-
-            const filterRes = (data: any[]) => {
-                return _orginalData.filter((item: any) => {
-                    if (
-                        (
-                            item.queryString.split(',').some((l: any) => l.charAt(0) === val.toLowerCase()) ||
-                            item.queryString.split(',').some((l: any) => l.replace(/ /g, '').indexOf(val.toLowerCase()) >= 0) ||
-                            item.label.indexOf(val) >= 0
-                        ) &&
-                        val != ''
-                    ) {
-                        return true;
-                    } else {
-                        return false;
-                    }
-                });
-            }
-
-            setOptionsData(filterRes);
+            handleChangeFetchSafe(val);
         }
 
         // window position

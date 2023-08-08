@@ -38,6 +38,7 @@
   box-shadow: var(--dropdown-ul-box-shadow);
   background: var(--dropdown-ul-bg);
   transition: 0.1s ease-in-out;
+  /* Prevent the hover threshold from failing */
 }
 .dropdown-default > ul::before {
   content: "";
@@ -52,6 +53,16 @@
   border-bottom: 4px solid transparent;
   border-left: 4px solid transparent;
   transform: rotate(-45deg);
+}
+.dropdown-default > ul::after {
+  content: "";
+  display: block;
+  background-color: transparent;
+  position: absolute;
+  top: -10px;
+  left: 0;
+  width: 100%;
+  height: 20px;
 }
 .dropdown-default > ul li {
   z-index: 1;

@@ -536,16 +536,56 @@ var __webpack_exports__ = {};
 // This entry need to be wrapped in an IIFE because it need to be in strict mode.
 (() => {
 "use strict";
+// ESM COMPAT FLAG
 __webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
-/* harmony export */ });
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(787);
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _utils_performance__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(342);
-/* harmony import */ var _utils_performance__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_utils_performance__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var rpb_searchbar__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(962);
-/* harmony import */ var rpb_searchbar__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(rpb_searchbar__WEBPACK_IMPORTED_MODULE_2__);
+
+// EXPORTS
+__webpack_require__.d(__webpack_exports__, {
+  "default": () => (/* binding */ src)
+});
+
+// EXTERNAL MODULE: external {"root":"React","commonjs2":"react","commonjs":"react","amd":"react"}
+var external_root_React_commonjs2_react_commonjs_react_amd_react_ = __webpack_require__(787);
+var external_root_React_commonjs2_react_commonjs_react_amd_react_default = /*#__PURE__*/__webpack_require__.n(external_root_React_commonjs2_react_commonjs_react_amd_react_);
+// EXTERNAL MODULE: ./src/utils/performance.js
+var performance = __webpack_require__(342);
+;// CONCATENATED MODULE: ./src/utils/useThrottle.js
+/**
+ * Limiting the rate of execution
+ * 
+ * @usage:
+
+const App = () => {
+    const [count, setCount] = useState(0);
+    const handleClick = useThrottle(() => setCount(count + 1), 500, [count]);
+
+    return (
+        <div className="app">
+            <button onClick={handleClick}>click</button>
+            <p>click {count} time</p>
+        </div>
+    );
+};
+
+ */
+
+var useThrottle = function useThrottle(fn, delay, dependence) {
+  var ref = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useRef)({
+    lastTime: 0
+  });
+  return (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useCallback)(function () {
+    var now = Date.now();
+    if (now - ref.current.lastTime >= delay) {
+      fn.apply(void 0, arguments);
+      ref.current.lastTime = now;
+    }
+  }, dependence);
+};
+/* harmony default export */ const utils_useThrottle = (useThrottle);
+// EXTERNAL MODULE: ../SearchBar/dist/cjs/index.js
+var cjs = __webpack_require__(962);
+var cjs_default = /*#__PURE__*/__webpack_require__.n(cjs);
+;// CONCATENATED MODULE: ./src/index.tsx
 function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
 function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
 function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter); }
@@ -560,6 +600,7 @@ function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o =
 function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i]; return arr2; }
 function _iterableToArrayLimit(arr, i) { var _i = null == arr ? null : "undefined" != typeof Symbol && arr[Symbol.iterator] || arr["@@iterator"]; if (null != _i) { var _s, _e, _x, _r, _arr = [], _n = !0, _d = !1; try { if (_x = (_i = _i.call(arr)).next, 0 === i) { if (Object(_i) !== _i) return; _n = !1; } else for (; !(_n = (_s = _x.call(_i)).done) && (_arr.push(_s.value), _arr.length !== i); _n = !0); } catch (err) { _d = !0, _e = err; } finally { try { if (!_n && null != _i["return"] && (_r = _i["return"](), Object(_r) !== _r)) return; } finally { if (_d) throw _e; } } return _arr; } }
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+
 
 
 
@@ -591,39 +632,44 @@ var LiveSearch = function LiveSearch(props) {
     onSelect = props.onSelect,
     onChange = props.onChange,
     onBlur = props.onBlur;
-  var uniqueID = (0,react__WEBPACK_IMPORTED_MODULE_0__.useId)();
+  var uniqueID = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useId)();
   var idRes = id || uniqueID;
-  var rootRef = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(null);
-  var inputRef = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(null);
-  var listRef = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(null);
-  var listContentRef = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(null);
-  var windowScrollUpdate = (0,_utils_performance__WEBPACK_IMPORTED_MODULE_1__.throttle)(handleScrollEvent, 5);
+  var rootRef = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useRef)(null);
+  var inputRef = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useRef)(null);
+  var listRef = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useRef)(null);
+  var listContentRef = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useRef)(null);
+  var windowScrollUpdate = (0,performance.throttle)(handleScrollEvent, 5);
 
   //
-  var _useState = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(false),
+  var _useState = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)(false),
     _useState2 = _slicedToArray(_useState, 2),
     firstFetch = _useState2[0],
     setFirstFetch = _useState2[1];
-  var _useState3 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)([]),
+  var _useState3 = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)([]),
     _useState4 = _slicedToArray(_useState3, 2),
     dataInit = _useState4[0],
     setDataInit = _useState4[1];
-  var _useState5 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)([]),
+  var _useState5 = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)([]),
     _useState6 = _slicedToArray(_useState5, 2),
     data = _useState6[0],
     setData = _useState6[1];
-  var _useState7 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(value || ''),
+  var _useState7 = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)(value || ''),
     _useState8 = _slicedToArray(_useState7, 2),
     changedVal = _useState8[0],
     setChangedVal = _useState8[1];
-  var _useState9 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(false),
+  var _useState9 = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)(false),
     _useState10 = _slicedToArray(_useState9, 2),
     isOpen = _useState10[0],
     setIsOpen = _useState10[1];
-  var _useState11 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(false),
+  var _useState11 = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)(false),
     _useState12 = _slicedToArray(_useState11, 2),
     hasErr = _useState12[0],
     setHasErr = _useState12[1];
+
+  //performance
+  var handleChangeFetchSafe = utils_useThrottle(function (e) {
+    handleChange(e);
+  }, 150, [dataInit]);
 
   /**
    * Check if an element is in the viewport
@@ -756,99 +802,77 @@ var LiveSearch = function LiveSearch(props) {
     }));
     return _matchData.apply(this, arguments);
   }
-  function handleChange(_x2) {
-    return _handleChange.apply(this, arguments);
-  }
-  function _handleChange() {
-    _handleChange = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee3(e) {
-      var val, res;
-      return _regeneratorRuntime().wrap(function _callee3$(_context3) {
-        while (1) switch (_context3.prev = _context3.next) {
-          case 0:
-            val = e.target.value;
-            setChangedVal(val);
+  function handleChange(e) {
+    var val = e.target.value;
+    setChangedVal(val);
 
-            // detect string which contains only spaces
-            if (!(!val.replace(/\s/g, '').length === true)) {
-              _context3.next = 4;
-              break;
-            }
-            return _context3.abrupt("return");
-          case 4:
-            if (fetchTrigger) {
-              _context3.next = 11;
-              break;
-            }
-            _context3.next = 7;
-            return matchData(val, fetchUpdate);
-          case 7:
-            res = _context3.sent;
-            setData(res);
+    // detect string which contains only spaces
+    if (!val.replace(/\s/g, '').length === true) return;
 
-            //
-            onChange === null || onChange === void 0 ? void 0 : onChange(inputRef.current, res);
+    //
+    if (!fetchTrigger) {
+      matchData(val, fetchUpdate).then(function (response) {
+        setData(response);
 
-            //
-            setIsOpen(true);
-          case 11:
-            // window position
-            setTimeout(function () {
-              getPlacement(listRef.current);
-            }, 0);
-          case 12:
-          case "end":
-            return _context3.stop();
-        }
-      }, _callee3);
-    }));
-    return _handleChange.apply(this, arguments);
+        //
+        onChange === null || onChange === void 0 ? void 0 : onChange(inputRef.current, response);
+
+        //
+        setIsOpen(true);
+      });
+    }
+
+    // window position
+    setTimeout(function () {
+      getPlacement(listRef.current);
+    }, 0);
   }
   function activate() {
     return _activate.apply(this, arguments);
   }
   function _activate() {
-    _activate = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee4() {
+    _activate = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee3() {
       var res;
-      return _regeneratorRuntime().wrap(function _callee4$(_context4) {
-        while (1) switch (_context4.prev = _context4.next) {
+      return _regeneratorRuntime().wrap(function _callee3$(_context3) {
+        while (1) switch (_context3.prev = _context3.next) {
           case 0:
             if (!fetchTrigger) {
-              _context4.next = 6;
+              _context3.next = 6;
               break;
             }
-            _context4.next = 3;
+            _context3.next = 3;
             return matchData(changedVal, fetchUpdate);
           case 3:
-            res = _context4.sent;
+            res = _context3.sent;
             setData(res);
 
             //
             setIsOpen(res.length === 0 ? true : false);
           case 6:
           case "end":
-            return _context4.stop();
+            return _context3.stop();
         }
-      }, _callee4);
+      }, _callee3);
     }));
     return _activate.apply(this, arguments);
   }
-  function fetchData(_x3) {
+  function fetchData(_x2) {
     return _fetchData.apply(this, arguments);
   }
   function _fetchData() {
-    _fetchData = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee5(params) {
+    _fetchData = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee4(params) {
       var response, _ORGIN_DATA;
-      return _regeneratorRuntime().wrap(function _callee5$(_context5) {
-        while (1) switch (_context5.prev = _context5.next) {
+      return _regeneratorRuntime().wrap(function _callee4$(_context4) {
+        while (1) switch (_context4.prev = _context4.next) {
           case 0:
             if (!(_typeof(fetchFuncAsync) === 'object')) {
-              _context5.next = 12;
+              _context4.next = 12;
               break;
             }
-            _context5.next = 3;
+            _context4.next = 3;
             return fetchFuncAsync["".concat(fetchFuncMethod)].apply(fetchFuncAsync, _toConsumableArray(params.split(',')));
           case 3:
-            response = _context5.sent;
+            response = _context4.sent;
             _ORGIN_DATA = response.data; // reset data structure
             if (typeof fetchCallback === 'function') {
               _ORGIN_DATA = fetchCallback(_ORGIN_DATA);
@@ -866,61 +890,61 @@ var LiveSearch = function LiveSearch(props) {
 
             //
             setDataInit(_ORGIN_DATA);
-            return _context5.abrupt("return", _ORGIN_DATA);
+            return _context4.abrupt("return", _ORGIN_DATA);
           case 12:
-            return _context5.abrupt("return", []);
+            return _context4.abrupt("return", []);
           case 13:
           case "end":
-            return _context5.stop();
+            return _context4.stop();
         }
-      }, _callee5);
+      }, _callee4);
     }));
     return _fetchData.apply(this, arguments);
   }
-  function handleSelect(_x4) {
+  function handleSelect(_x3) {
     return _handleSelect.apply(this, arguments);
   }
   function _handleSelect() {
-    _handleSelect = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee6(el) {
+    _handleSelect = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee5(el) {
       var dataInput,
         index,
         _data,
         res,
-        _args6 = arguments;
-      return _regeneratorRuntime().wrap(function _callee6$(_context6) {
-        while (1) switch (_context6.prev = _context6.next) {
+        _args5 = arguments;
+      return _regeneratorRuntime().wrap(function _callee5$(_context5) {
+        while (1) switch (_context5.prev = _context5.next) {
           case 0:
-            dataInput = _args6.length > 1 && _args6[1] !== undefined ? _args6[1] : false;
+            dataInput = _args5.length > 1 && _args5[1] !== undefined ? _args5[1] : false;
             if (!(typeof el === 'undefined')) {
-              _context6.next = 3;
+              _context5.next = 3;
               break;
             }
-            return _context6.abrupt("return");
+            return _context5.abrupt("return");
           case 3:
             if (!dataInput) {
-              _context6.next = 9;
+              _context5.next = 9;
               break;
             }
             _data = JSON.parse(dataInput);
             onSelect === null || onSelect === void 0 ? void 0 : onSelect(inputRef.current, _data);
             setChangedVal(_data.label);
-            _context6.next = 15;
+            _context5.next = 15;
             break;
           case 9:
             index = typeof el.target !== 'undefined' ? el.target.dataset.index : el.dataset.index;
-            _context6.next = 12;
+            _context5.next = 12;
             return matchData(inputRef.current.value, false);
           case 12:
-            res = _context6.sent;
+            res = _context5.sent;
             onSelect === null || onSelect === void 0 ? void 0 : onSelect(inputRef.current, res[index]);
             setChangedVal(res[index].label);
           case 15:
             setData([]);
           case 16:
           case "end":
-            return _context6.stop();
+            return _context5.stop();
         }
-      }, _callee6);
+      }, _callee5);
     }));
     return _handleSelect.apply(this, arguments);
   }
@@ -976,7 +1000,7 @@ var LiveSearch = function LiveSearch(props) {
       }
     });
   }
-  (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(function () {
+  (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useEffect)(function () {
     // update default value
     //--------------
     setChangedVal(value || '');
@@ -1062,7 +1086,7 @@ var LiveSearch = function LiveSearch(props) {
           }
         }, _callee);
       }));
-      return function listener(_x5) {
+      return function listener(_x4) {
         return _ref.apply(this, arguments);
       };
     }();
@@ -1085,11 +1109,11 @@ var LiveSearch = function LiveSearch(props) {
       window.removeEventListener('touchmove', windowScrollUpdate);
     };
   }, [value]);
-  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+  return /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
     className: "livesearch__wrapper ".concat(wrapperClassName || wrapperClassName === '' ? wrapperClassName : 'mb-3 position-relative', " ").concat(isOpen ? 'active' : ''),
     ref: rootRef,
     onMouseLeave: handleMouseLeaveTrigger
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((rpb_searchbar__WEBPACK_IMPORTED_MODULE_2___default()), {
+  }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((cjs_default()), {
     wrapperClassName: "",
     controlClassName: controlClassName,
     ref: inputRef,
@@ -1104,13 +1128,15 @@ var LiveSearch = function LiveSearch(props) {
     required: required,
     style: style,
     appearance: appearance,
-    onChange: handleChange,
+    onChange: function onChange(e) {
+      handleChangeFetchSafe(e);
+    },
     onBlur: handleBlur,
     onClick: handleFetch,
     icon: !fetchTrigger ? '' : icon,
     btnId: btnId,
     autoComplete: "off"
-  }), data && data.length > 0 && !hasErr ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+  }), data && data.length > 0 && !hasErr ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
     ref: listRef,
     className: "list-group position-absolute w-100 border shadow small",
     style: {
@@ -1118,13 +1144,13 @@ var LiveSearch = function LiveSearch(props) {
       zIndex: depth ? depth : 100
     },
     role: "tablist"
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+  }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
     className: "rounded",
     ref: listContentRef
   }, data ? data.map(function (item, index) {
     var startItemBorder = index === 0 ? 'border-top-0' : '';
     var endItemBorder = index === data.length - 1 ? 'border-bottom-0' : '';
-    return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", {
+    return /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("button", {
       tabIndex: -1,
       onClick: handleSelect,
       type: "button",
@@ -1136,7 +1162,7 @@ var LiveSearch = function LiveSearch(props) {
       "data-querystring": "".concat(item.queryString),
       role: "tab"
     }, item.label);
-  }) : null))) : null, data && data.length === 0 && !hasErr && isOpen ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+  }) : null))) : null, data && data.length === 0 && !hasErr && isOpen ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
     ref: listRef,
     className: "list-group position-absolute w-100 border shadow small",
     style: {
@@ -1144,17 +1170,17 @@ var LiveSearch = function LiveSearch(props) {
       zIndex: depth ? depth : 100
     },
     role: "tablist"
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+  }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
     className: "rounded",
     ref: listContentRef
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", {
+  }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("button", {
     tabIndex: -1,
     type: "button",
     className: "list-group-item list-group-item-action no-match",
     disabled: true
   }, fetchNoneInfo || 'No match yet')))) : null));
 };
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (LiveSearch);
+/* harmony default export */ const src = (LiveSearch);
 })();
 
 /******/ 	return __webpack_exports__;

@@ -128,12 +128,12 @@ const DropdownMenu = (props: DropdownMenuProps) => {
     return (
         <>
 
-            <div className={`dropdown__wrapper ${wrapperClassName || wrapperClassName === '' ? wrapperClassName : `dropdown-default dropdown-default--${alignOptionsLayer ? alignOptionsLayer : 'center'}`} ${isOpen ? 'active' : ''}`}>
+            <div className={`dropdown__wrapper ${wrapperClassName || wrapperClassName === '' ? wrapperClassName : `dropdown-default dropdown-default--${alignOptionsLayer ? alignOptionsLayer : 'center'}`} ${isOpen ? 'active' : ''}`} onMouseLeave={handleHoverOff} >
 
                 {triggerButton ? <button tabIndex={tabIndex || -1} className={triggerClassName ? `${triggerClassName}` : `d-inline w-auto`} type="button" onMouseEnter={handleHoverOn} onClick={handleClick} dangerouslySetInnerHTML={{ __html: selectedLabel }}></button> : <div className={triggerClassName ? `${triggerClassName}` : `d-inline w-auto`} onMouseEnter={handleHoverOn} onClick={handleClick} dangerouslySetInnerHTML={{ __html: selectedLabel }}></div>}
 
                 <input name={name || ''} type="hidden" value={selected?.value} />
-                <ul onMouseLeave={handleHoverOff} className={isOpen ? `${listClassName ? listClassName : 'dropdown-menu-default'} ${showClassName ? showClassName : 'show'}` : `${listClassName ? listClassName : 'dropdown-menu-default'}`}>
+                <ul className={isOpen ? `${listClassName ? listClassName : 'dropdown-menu-default'} ${showClassName ? showClassName : 'show'}` : `${listClassName ? listClassName : 'dropdown-menu-default'}`}>
                     {selectOptionsListPresentation}
                 </ul>
             </div>

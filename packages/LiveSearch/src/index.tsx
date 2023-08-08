@@ -1,6 +1,7 @@
 import React, { useId, useEffect, useState, useRef } from 'react';
 
 import { throttle } from './utils/performance';
+import useThrottle from './utils/useThrottle';
 
 import SearchBar from 'rpb-searchbar';
 
@@ -90,6 +91,14 @@ const LiveSearch = (props: LiveSearchProps) => {
     const [isOpen, setIsOpen] = useState<boolean>(false);
     const [hasErr, setHasErr] = useState<boolean>(false);
  
+
+   //performance
+    const handleChangeFetchSafe = useThrottle((e: any) => {
+        handleChange(e);
+    }, 150, [dataInit]);
+
+
+
 
     /**
      * Check if an element is in the viewport
@@ -205,6 +214,7 @@ const LiveSearch = (props: LiveSearchProps) => {
             });
         }
 
+
         if (query) {
 
             const _oparams: any[] = fetchFuncMethodParams || [];
@@ -221,7 +231,7 @@ const LiveSearch = (props: LiveSearchProps) => {
     }
 
 
-    async function handleChange(e: any) {
+    function handleChange(e: any) {
         const val = e.target.value;
 
         setChangedVal(val);
@@ -231,14 +241,16 @@ const LiveSearch = (props: LiveSearchProps) => {
 
         //
         if ( !fetchTrigger ) {
-            const res: any = await matchData(val, fetchUpdate);
-            setData(res);
+            matchData(val, fetchUpdate).then((response: any) => {
 
-            //
-            onChange?.(inputRef.current, res); 
+                setData(response);
 
-            //
-            setIsOpen(true);
+                //
+                onChange?.(inputRef.current, response); 
+
+                //
+                setIsOpen(true);
+            });
         }
 
         // window position
@@ -518,7 +530,9 @@ const LiveSearch = (props: LiveSearchProps) => {
                     required={required}
                     style={style}
                     appearance={appearance}
-                    onChange={handleChange}    
+                    onChange={(e: any) => {
+                        handleChangeFetchSafe(e);
+                    }}    
                     onBlur={handleBlur}
                     onClick={handleFetch}
                     icon={!fetchTrigger ? '' : icon}
