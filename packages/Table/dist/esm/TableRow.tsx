@@ -3,6 +3,8 @@ import React from 'react';
 import TableField from './TableField';
 import TableFieldRow from './TableFieldRow';
 
+import { formatPerlineControlVal } from './table-utils';
+
 
 /* Table Row
 -------------------------------------------------*/
@@ -19,6 +21,7 @@ type TableRowProps = {
     updategetCheckedData?: any;
     getCheckedRootData?: any[];
     updategetCheckedRootData?: any;
+    onClick?: (el: any, val: any) => void;
     onCheck?: (val: any) => void;
     evDragEnd?: (option: any) => void | undefined;
     evDragStart?: (option: any) => void | undefined;
@@ -39,6 +42,7 @@ const TableRow = (props: TableRowProps) => {
         getCheckedRootData,
         updategetCheckedRootData,
         draggable,
+        onClick,
         onCheck,
         evDragEnd,
         evDragStart
@@ -47,17 +51,21 @@ const TableRow = (props: TableRowProps) => {
     
     const rowChecked = getCheckedData!.filter((cur: any) => cur.key === rowKey)[0]?.checked;
 
+    function handleClick(event: any) {
+        const curVal: any = formatPerlineControlVal(event.currentTarget)
+        onClick?.(event, curVal);
+    }
 
     return (
         <>
-            <tr draggable={draggable} onDragEnd={evDragEnd} onDragStart={evDragStart} data-id={index} data-key={rowKey} className={`row-obj ${rowChecked ? 'active' : ''}`}>
+            <tr draggable={draggable} onDragEnd={evDragEnd} onDragStart={evDragStart} data-id={index} data-key={rowKey} className={`row-obj ${rowChecked ? 'active' : ''} ${typeof onClick === 'undefined' ? '' : 'clickable'}`} onClick={handleClick}>
                 {data ? data.map((el: any, i: number) => {
                     let headerItem = headerLabel![i];
                     if (headerItem === undefined) headerItem = {type: false, content: ''};
 
                     if ( i === 0 ) {
                         return <TableFieldRow 
-                                    key={i} 
+                                    key={'th-row' + i} 
                                     columnHeader={headerItem.content.replace(/(<([^>]+)>)/ig, '')} 
                                     cols={el.cols} 
                                     content={el.content} 
@@ -77,7 +85,7 @@ const TableRow = (props: TableRowProps) => {
                                 />;
                     } else {
                         return <TableField 
-                                    key={i} 
+                                    key={'td-row' + i} 
                                     columnHeader={headerItem.content.replace(/(<([^>]+)>)/ig, '')} 
                                     cols={el.cols} 
                                     content={el.content} 

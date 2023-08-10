@@ -24,6 +24,11 @@
             &.active {
                 background-color: var(--table-row-active-bg);
             }
+
+            &.clickable {
+                cursor: pointer;
+            }
+
         }
 
         &.table-colgroup {

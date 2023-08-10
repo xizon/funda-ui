@@ -764,6 +764,19 @@ var formatRowControlVal = function formatRowControlVal(el, checkboxNamePrefix) {
     content: _restContent
   };
 };
+var formatPerlineControlVal = function formatPerlineControlVal(el) {
+  var $row = el;
+  var _restContent = [].slice.call($row.children).map(function (node, i) {
+    return node.innerHTML;
+  }).filter(function (item) {
+    return item !== undefined;
+  });
+  return {
+    index: Number(el.dataset.id),
+    key: el.dataset.key,
+    content: _restContent
+  };
+};
 var setCheckboxCheckedData = function setCheckboxCheckedData(arr, key, val) {
   arr.forEach(function (item, index) {
     if (item.key === key) arr[index].checked = val;
@@ -954,6 +967,7 @@ var TableFieldRow = function TableFieldRow(props) {
 
 
 
+
 /* Table Row
 -------------------------------------------------*/
 
@@ -971,19 +985,25 @@ var TableRow = function TableRow(props) {
     getCheckedRootData = props.getCheckedRootData,
     updategetCheckedRootData = props.updategetCheckedRootData,
     draggable = props.draggable,
+    onClick = props.onClick,
     onCheck = props.onCheck,
     evDragEnd = props.evDragEnd,
     evDragStart = props.evDragStart;
   var rowChecked = (_filter$ = getCheckedData.filter(function (cur) {
     return cur.key === rowKey;
   })[0]) === null || _filter$ === void 0 ? void 0 : _filter$.checked;
+  function handleClick(event) {
+    var curVal = formatPerlineControlVal(event.currentTarget);
+    onClick === null || onClick === void 0 ? void 0 : onClick(event, curVal);
+  }
   return /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("tr", {
     draggable: draggable,
     onDragEnd: evDragEnd,
     onDragStart: evDragStart,
     "data-id": index,
     "data-key": rowKey,
-    className: "row-obj ".concat(rowChecked ? 'active' : '')
+    className: "row-obj ".concat(rowChecked ? 'active' : '', " ").concat(typeof onClick === 'undefined' ? '' : 'clickable'),
+    onClick: handleClick
   }, data ? data.map(function (el, i) {
     var headerItem = headerLabel[i];
     if (headerItem === undefined) headerItem = {
@@ -992,7 +1012,7 @@ var TableRow = function TableRow(props) {
     };
     if (i === 0) {
       return /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement(src_TableFieldRow, {
-        key: i,
+        key: 'th-row' + i,
         columnHeader: headerItem.content.replace(/(<([^>]+)>)/ig, ''),
         cols: el.cols,
         content: el.content,
@@ -1012,7 +1032,7 @@ var TableRow = function TableRow(props) {
       });
     } else {
       return /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement(src_TableField, {
-        key: i,
+        key: 'td-row' + i,
         columnHeader: headerItem.content.replace(/(<([^>]+)>)/ig, ''),
         cols: el.cols,
         content: el.content,
@@ -1215,6 +1235,7 @@ var Table = function Table(props) {
     enhancedResponsive = props.enhancedResponsive,
     enhancedResponsiveWithScrollBar = props.enhancedResponsiveWithScrollBar,
     id = props.id,
+    onClick = props.onClick,
     onCheck = props.onCheck,
     onDrag = props.onDrag;
   var uniqueID = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useId)().replace(/\:/g, "-");
@@ -1237,6 +1258,10 @@ var Table = function Table(props) {
     _useState8 = _slicedToArray(_useState7, 2),
     sortData = _useState8[0],
     setSortData = _useState8[1];
+  var _useState9 = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)(false),
+    _useState10 = _slicedToArray(_useState9, 2),
+    mainUpdate = _useState10[0],
+    setMainUpdate = _useState10[1];
   var windowResizeUpdate = (0,performance.debounce)(handleWindowUpdate, 50);
   var _headers = data.hasOwnProperty('headers') ? data.headers : false;
   var _summaries = data.hasOwnProperty('summaries') ? data.summaries : false;
@@ -1547,6 +1572,12 @@ var Table = function Table(props) {
     onDrag === null || onDrag === void 0 ? void 0 : onDrag(null, dragEnd);
   }, [sortData]);
   (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useEffect)(function () {
+    // Update status of children components
+    //--------------
+    setMainUpdate(function (prevState) {
+      return !prevState;
+    });
+
     // Initialize sort list data
     //--------------
     var listIndexes = allRows().map(function (node, i) {
@@ -1613,7 +1644,8 @@ var Table = function Table(props) {
     onMouseLeave: handleTbodyLeave
   }, data.hasOwnProperty('fields') ? data.fields.map(function (item, i) {
     return /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement(src_TableRow, {
-      key: i,
+      key: i + String(mainUpdate) // Trigger child component update when prop of parent changes
+      ,
       index: i,
       rowKey: "row-".concat(i),
       headerLabel: _headers,
@@ -1625,6 +1657,7 @@ var Table = function Table(props) {
       getCheckedData: checkedData,
       updategetCheckedRootData: setCheckedRootData,
       getCheckedRootData: checkedRootData,
+      onClick: onClick,
       onCheck: onCheck,
       draggable: draggable || false,
       evDragEnd: handleDragEnd,

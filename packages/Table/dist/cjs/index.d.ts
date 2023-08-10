@@ -16,6 +16,7 @@ declare type TableProps = {
     enhancedResponsiveWithScrollBar?: boolean;
     /** -- */
     id?: string;
+    onClick?: (el: any, val: any) => void;
     onCheck?: (val: any) => void;
     onDrag?: (dragStart: any, dragEnd: any) => void;
 };

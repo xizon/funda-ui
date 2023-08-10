@@ -9,7 +9,7 @@ type TableFieldProps = {
     className?: string;
     style?: React.CSSProperties;
 	columnHeader?: string;
-	index?: number;
+	index?: React.Key;
 };
 
 const TableField = (props: TableFieldProps) => {

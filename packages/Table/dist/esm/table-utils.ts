@@ -41,6 +41,22 @@ export const formatRowControlVal = (el: HTMLFormElement, checkboxNamePrefix: str
 };
 
 
+
+export const formatPerlineControlVal = (el: HTMLFormElement) => {
+    const $row: any = el;
+    const _restContent: any[] = [].slice.call($row.children).map((node: any, i: number) => {
+        return node.innerHTML;
+    }).filter((item: any) => item !== undefined);
+
+    return {
+        index: Number(el.dataset.id),
+        key: el.dataset.key,
+        content: _restContent
+    }
+};
+
+
+
 export const setCheckboxCheckedData = (arr: any[], key: string, val: boolean) => {
     arr.forEach((item: any, index: number) => {
         if (item.key === key) arr[index].checked = val;

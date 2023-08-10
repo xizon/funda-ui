@@ -30,6 +30,7 @@ type TableProps = {
     enhancedResponsiveWithScrollBar?: boolean;
     /** -- */
     id?: string;
+    onClick?: (el: any, val: any) => void;
     onCheck?: (val: any) => void;
     onDrag?: (dragStart: any, dragEnd: any ) => void;
 };
@@ -52,6 +53,7 @@ const Table = (props: TableProps) => {
         enhancedResponsive,
         enhancedResponsiveWithScrollBar,
         id,
+        onClick,
         onCheck,
         onDrag
     } = props;
@@ -66,6 +68,7 @@ const Table = (props: TableProps) => {
     const [checkedData, setCheckedData] = useState<any[]>([]);
     const [checkedRootData, setCheckedRootData] = useState<any[]>([]);
     const [sortData, setSortData] = useState<any[] | undefined>([]);
+    const [mainUpdate, setMainUpdate] = useState<boolean>(false);
 
     const windowResizeUpdate = debounce(handleWindowUpdate, 50);
 
@@ -447,6 +450,12 @@ const Table = (props: TableProps) => {
 
     useEffect(() => {
 
+        
+        // Update status of children components
+        //--------------
+        setMainUpdate((prevState) => !prevState);
+
+
         // Initialize sort list data
         //--------------
         const listIndexes: any[] | undefined = allRows().map((node: any, i: number) => i);
@@ -523,7 +532,7 @@ const Table = (props: TableProps) => {
 
                         {data.hasOwnProperty('fields') ? data.fields.map((item: any, i: number) => {
                             return <TableRow 
-                                        key={i} 
+                                        key={i + String(mainUpdate)} // Trigger child component update when prop of parent changes
                                         index={i}
                                         rowKey={`row-${i}`} 
                                         headerLabel={_headers} 
@@ -535,6 +544,7 @@ const Table = (props: TableProps) => {
                                         getCheckedData={checkedData}
                                         updategetCheckedRootData={setCheckedRootData}
                                         getCheckedRootData={checkedRootData}
+                                        onClick={onClick}
                                         onCheck={onCheck}
                                         draggable={draggable || false} 
                                         evDragEnd={handleDragEnd}
