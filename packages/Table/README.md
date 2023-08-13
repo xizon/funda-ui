@@ -367,3 +367,102 @@ export default () => {
     );
 }
 ```
+
+
+
+
+## Safe Asynchronous Example
+
+When a `useState()` in a child component changes state, it will cause the entire parent component to re-render, resulting in invalidation such as **checkbox**.
+
+At this time, we need to use `useMemo()` to wrap this subcomponent to avoid problems caused when the child component triggers a method of `useState()` of the parent component.
+
+
+```js
+
+import { useEffect, useState, useMemo } from "react";
+
+// bootstrap components
+import Table from 'react-pure-bootstrap/Table';
+
+// component styles
+import 'react-pure-bootstrap/Table/index.css';
+
+
+
+// DO NOT move `useMemo` to component
+function ChildCom(props: any) {
+    const {callback, data} = props;
+    return useMemo(() => {
+        return <Table
+                    checkable={true}
+                    onCheck={(val) => {
+                        console.log(val);
+                        callback(val); //If `useMemo()` is not used, this method will cause the parent component to re-render, causing the checkbox to fail
+                    }}
+                    headClassName="table-light"
+                    tableClassName="table table-hover table-bordered table-striped"
+                    enhancedResponsive={true}
+                    data={{
+                        "headers": [
+                            { "type": false, "content": t('Id') },
+                            { "type": false, "content": t('Time') }
+                        ],
+                        "fields": data.map((item: any) => {
+
+                            return [
+                                { "cols": 1, "style": { fontWeight: 'normal' }, "content": item.id },
+                                { "cols": 1, "content": item.time },
+                            ];
+                        })
+                    }}
+                />
+    }, [data]);
+}
+
+
+
+const Main = (props: any) => {
+
+
+    const [tableData, setTableData] = useState<any[]>([]);
+    const [methord, setMethord] = useState<any[]>([]);
+
+
+    useEffect(() => {
+        
+        // set a default request
+        setTableData([
+            [
+                {"cols": 1, "content": "01" },
+                {"cols": 1, "content": "David Lin" }
+            ],
+            [
+                {"cols": 1, "content": "02" },
+                {"cols": 1, "content": "Tom McFarlin" }
+            ],	
+            [
+                {"cols": 1, "content": "03" },
+                {"cols": 1, "content": "Chris Ames" }
+            ]
+        ]);
+
+    }, [otherdeps, tableData]); // The Main component will be re-rendered due to `otherdeps`
+
+    return (
+        <>
+
+            {tableData.length > 0 ? <>
+                <ChildCom data={tableData} callback={setMethord}/>
+            </> : <>
+                No matching records
+            </>}
+
+        </>
+    );
+
+
+}
+
+export default Main;
+``
