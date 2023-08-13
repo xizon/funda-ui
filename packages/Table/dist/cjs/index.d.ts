@@ -6,6 +6,7 @@ declare type TableProps = {
     headClassName?: string;
     footClassName?: string;
     checkable?: boolean;
+    useRadio?: boolean;
     draggable?: boolean;
     sortable?: boolean;
     data: any;

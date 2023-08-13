@@ -22,6 +22,7 @@ declare type RadioProps = {
     /** This function is called whenever the data is updated.
      *  Exposes the JSON format data about the option as an argument.
      */
+    onClick?: RadioOptionChangeFnType | null;
     onChange?: RadioOptionChangeFnType | null;
     onBlur?: (e: any) => void;
     onFocus?: (e: any) => void;

@@ -1,6 +1,7 @@
 import React, { useRef } from 'react';
 
 import Checkbox from 'rpb-checkbox';
+import Radio from 'rpb-radio';
 
 
 import { getChildren } from './utils/dom'; 
@@ -10,6 +11,7 @@ import { removeItemOnce, formatCheckboxControlVal, setCheckboxCheckedData } from
 -------------------------------------------------*/
 type TableFieldRowProps = {
     draggable?: boolean;
+    useRadio?: boolean;
     cols?: number;
     content?: any;
     width?: string;
@@ -33,6 +35,7 @@ const TableFieldRow = (props: TableFieldRowProps) => {
     
     const {
         draggable,
+        useRadio,
         cols,
         width,
         className,
@@ -78,102 +81,126 @@ const TableFieldRow = (props: TableFieldRowProps) => {
                 </span> : null}
                 
                 <span className="checkbox-trigger">
-                    <Checkbox
-                        ref={checkboxRef}
-                        wrapperClassName=""
-                        name={`checkbox-${checkboxNamePrefix}-${rowIndex}`}
-                        tabIndex={-1}
-                        data-index={`${rowIndex}`}
-                        data-key={`${rowKey}`}
-                        value={`${rowKey}`}
-                        checked={getCheckedData!.filter((cur: any) => cur.key === rowKey)[0]?.checked}
-                        onChange={(e: any, val: any) => {
+                    {useRadio ? <>
+                        <Radio
+                            wrapperClassName=""
+                            options={`{
+                                "":"${rowKey}"}`}
+                            name={`checkbox-${checkboxNamePrefix}-0`}
+                            tabIndex={-1}
+                            data-index={`${rowIndex}`}
+                            data-key={`${rowKey}`}
+                            value={`${rowKey}`}
+                            onClick={(e: any, val: any) => {
 
-                            const _curKey: string = e.target.value;
-                            const _checkedData: any = getCheckedData;
-
-                            let _res: any = getCheckedPrint;
-                      
-                            
-                            // STEP 1:
-                            // Current checkbox
-                            //-----------
-                            if ( val === true ) {
-                                _res.push(formatCheckboxControlVal(e.target));
-                                setCheckboxCheckedData(_checkedData, _curKey, true);
-                            } else {
-                                setCheckboxCheckedData(_checkedData, _curKey, false);
-                                _res = removeItemOnce(_res, _curKey);
+                                // callback
+                                //-----------
+                                onCheck?.(formatCheckboxControlVal(e.target));
+                    
                                 
-                            }
+                            }}
 
-                            // STEP 2:
-                            // Array deduplication
-                            //-----------
-                            _res = _res.filter((item: any, index: number, self: any[]) => index === self.findIndex((t) => (t.key === item.key)))
+                        />
+                   
+                    </> : <>
+                    <Checkbox
+                            ref={checkboxRef}
+                            wrapperClassName=""
+                            name={`checkbox-${checkboxNamePrefix}-${rowIndex}`}
+                            tabIndex={-1}
+                            data-index={`${rowIndex}`}
+                            data-key={`${rowKey}`}
+                            value={`${rowKey}`}
+                            checked={getCheckedData!.filter((cur: any) => cur.key === rowKey)[0]?.checked}
+                            onChange={(e: any, val: any) => {
 
+                                const _curKey: string = e.target.value;
+                                const _checkedData: any = getCheckedData;
 
-
-                            
-                            // STEP 3:
-                            // ALl parent checkboxes
-                            //-----------
-                            const _headRow = e.target.closest('table').querySelectorAll('thead th')[0];
-                            if ( typeof _headRow !== 'undefined' ) {
-                                const _rootCheckbox = _headRow.querySelector('[type="checkbox"]');
-                                const _checkboxes = getChildren(e.target.closest('table').querySelector('tbody'), '[type="checkbox"]');
-                                const _checkedLength = _checkboxes.filter((el: any) => {
-                                    return el.checked === true;
-                                }).length;
-
-                                if ( _checkedLength === 0 ) {
-                                    _rootCheckbox.indeterminate = false;
-                                    updategetCheckedRootData([{
-                                        key: `row-all`,
-                                        checked: false
-                                    }]);
+                                let _res: any = getCheckedPrint;
+                        
+                                
+                                // STEP 1:
+                                // Current checkbox
+                                //-----------
+                                if ( val === true ) {
+                                    _res.push(formatCheckboxControlVal(e.target));
+                                    setCheckboxCheckedData(_checkedData, _curKey, true);
                                 } else {
-                                    if ( _checkedLength === _checkboxes.length )  {
-                                        _rootCheckbox.indeterminate = false;
-                                        updategetCheckedRootData([{
-                                            key: `row-all`,
-                                            checked: true
-                                        }]);
-                                    }
+                                    setCheckboxCheckedData(_checkedData, _curKey, false);
+                                    _res = removeItemOnce(_res, _curKey);
                                     
-                                    if ( _checkedLength < _checkboxes.length )  {
+                                }
+
+                                // STEP 2:
+                                // Array deduplication
+                                //-----------
+                                _res = _res.filter((item: any, index: number, self: any[]) => index === self.findIndex((t) => (t.key === item.key)))
+
+
+
+                                
+                                // STEP 3:
+                                // ALl parent checkboxes
+                                //-----------
+                                const _headRow = e.target.closest('table').querySelectorAll('thead th')[0];
+                                if ( typeof _headRow !== 'undefined' ) {
+                                    const _rootCheckbox = _headRow.querySelector('[type="checkbox"]');
+                                    const _checkboxes = getChildren(e.target.closest('table').querySelector('tbody'), '[type="checkbox"]');
+                                    const _checkedLength = _checkboxes.filter((el: any) => {
+                                        return el.checked === true;
+                                    }).length;
+
+                                    if ( _checkedLength === 0 ) {
+                                        _rootCheckbox.indeterminate = false;
                                         updategetCheckedRootData([{
                                             key: `row-all`,
                                             checked: false
                                         }]);
-                                        _rootCheckbox.indeterminate = true;
+                                    } else {
+                                        if ( _checkedLength === _checkboxes.length )  {
+                                            _rootCheckbox.indeterminate = false;
+                                            updategetCheckedRootData([{
+                                                key: `row-all`,
+                                                checked: true
+                                            }]);
+                                        }
                                         
+                                        if ( _checkedLength < _checkboxes.length )  {
+                                            updategetCheckedRootData([{
+                                                key: `row-all`,
+                                                checked: false
+                                            }]);
+                                            _rootCheckbox.indeterminate = true;
+                                            
+                                        }
                                     }
+
                                 }
 
-                            }
+
+                                // STEP 4:
+                                // Update checked data
+                                //-----------
+                                updategetCheckedData(_checkedData);    
 
 
-                            // STEP 4:
-                            // Update checked data
-                            //-----------
-                            updategetCheckedData(_checkedData);    
+                                // STEP 5:
+                                // Update checked print
+                                //-----------
+                                updateCheckedPrint(_res);
 
 
-                            // STEP 5:
-                            // Update checked print
-                            //-----------
-                            updateCheckedPrint(_res);
-
-
-                            // STEP 6:
-                            // callback
-                            //-----------
-                            onCheck?.(_res);
-                
-                            
-                        }}
-                    />
+                                // STEP 6:
+                                // callback
+                                //-----------
+                                onCheck?.(_res);
+                    
+                                
+                            }}
+                        />
+                    </>}
+                    
                 </span>
                 <span ref={contentRef}>{content}</span>
             </th>

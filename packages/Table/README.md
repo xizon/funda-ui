@@ -15,6 +15,7 @@ import Table from 'react-pure-bootstrap/Table';
 | `headClassName` | string | - | The class name of `<thead>`. |
 | `footClassName` | string | - | The class name of `<tfoot>`. |
 | `checkable` | boolean | false | Set TreeNode display Checkbox or not. |
+| `useRadio` | boolean | false | Use radio instead of Checkbox. <blockquote>Take effect when `checkable` is "true"</blockquote> |
 | `draggable` | boolean | false | Indicates whether the per row can be dragged. |
 | `sortable` | boolean | false | Sort by headers. |
 | `data` | JSON Object Literals | - | Specify data of Table as a JSON string format. Such as: <br />**usage 1:**<br />`{"fields":[[{"cols": 1, "content": "01" },{"cols": 1, "content": "David Lin" }],[{"cols": 1, "content": "02" },{"cols": 1, "content": "Tom McFarlin" }]]}` <br />**usage 2:**<br />`{"headers":[{"type":"number","content":"No."},{"type":false,"content":"Name"}],"fields":[[{"cols": 1, "content": "01" },{"cols": 1, "content": "David Lin" }],[{"cols": 1, "content": "02" },{"cols": 1, "content": "Tom McFarlin" }]]};` <br />**usage 3:**<br />`{"fields":[[{"cols": 1, "content": "01" },{"cols": 1, "content": "David Lin" }],[{"cols": 1, "content": "02" },{"cols": 1, "content": "Tom McFarlin" }],[{"cols": 4, "content": <><strong style={{background:"yellow"}}>A table cell that spans <span style={{color:"red"}}>4</span> columns</strong></> }]]}` |

@@ -20,6 +20,7 @@ type TableProps = {
     headClassName?: string;
     footClassName?: string;
     checkable?: boolean;
+    useRadio?: boolean;
     draggable?: boolean;
     sortable?: boolean;
     data: any;
@@ -44,6 +45,7 @@ const Table = (props: TableProps) => {
         headClassName,
         footClassName,
         checkable,
+        useRadio,
         draggable,
         sortable,
         data,
@@ -97,6 +99,12 @@ const Table = (props: TableProps) => {
     let checkableClasses = '';
     if (checkable) checkableClasses += ' has-checkbox';
 
+    //
+    let radioClasses = '';
+    if (useRadio) radioClasses += ' use-radio';
+
+
+    
     //
     let draggableClasses = '';
     if (draggable) draggableClasses += ' allow-dragdrop';
@@ -499,12 +507,13 @@ const Table = (props: TableProps) => {
     return (
         <>
 
-            <div ref={rootRef} id={idRes} className={`table__wrapper ${wrapperClassName || wrapperClassName === '' ? wrapperClassName : `mb-3 position-relative`} ${responsiveClasses} ${enhancedResponsiveClasses} ${checkableClasses} ${draggableClasses} ${sortableClasses}`}>
+            <div ref={rootRef} id={idRes} className={`table__wrapper ${wrapperClassName || wrapperClassName === '' ? wrapperClassName : `mb-3 position-relative`} ${responsiveClasses} ${enhancedResponsiveClasses} ${checkableClasses} ${radioClasses} ${draggableClasses} ${sortableClasses}`}>
 
                 <table className={`${tableClassName || tableClassName === '' ? tableClassName : "table"} ${tableClasses}`}>
 
                     <TableHeaders 
                         data={_headers} 
+                        useRadio={useRadio || false}
                         headClassName={headClassName} 
                         checkboxNamePrefix={idRes} 
                         sortable={sortable}
@@ -547,6 +556,7 @@ const Table = (props: TableProps) => {
                                         onClick={onClick}
                                         onCheck={onCheck}
                                         draggable={draggable || false} 
+                                        useRadio={useRadio || false}
                                         evDragEnd={handleDragEnd}
                                         evDragStart={handleDragStart}
                                     />;

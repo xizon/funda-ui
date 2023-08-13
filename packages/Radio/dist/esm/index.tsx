@@ -26,6 +26,7 @@ type RadioProps = {
     /** This function is called whenever the data is updated.
      *  Exposes the JSON format data about the option as an argument.
      */
+    onClick?: RadioOptionChangeFnType | null;
     onChange?: RadioOptionChangeFnType | null;
     onBlur?: (e: any) => void;
     onFocus?: (e: any) => void;
@@ -44,6 +45,7 @@ const Radio = (props: RadioProps) => {
         inline,
         style,
         tabIndex,
+        onClick,
         onChange,
         onBlur,
         onFocus,
@@ -55,7 +57,6 @@ const Radio = (props: RadioProps) => {
     const rootRef = useRef<any>(null);
     const [val, setVal] = useState<any>(null);
 
-  
     // Determine whether it is in JSON format
     function isJSON(str: any) {
 
@@ -105,6 +106,7 @@ const Radio = (props: RadioProps) => {
         const _val = event.target.value;
 
         setVal(_val);
+        
 
         //----
         //remove focus style
@@ -117,6 +119,10 @@ const Radio = (props: RadioProps) => {
         if (typeof (onChange) === 'function') {
             onChange(event, _val);
         }
+        if (typeof (onClick) === 'function') {
+            onClick(event, _val);
+        }
+
 
     }
 
@@ -155,6 +161,7 @@ const Radio = (props: RadioProps) => {
                     required={requiredVal} 
                     disabled={disabled || null}
                     onChange={handleChange}
+                    onClick={typeof (onClick) === 'function' ? handleChange : () => void(0)}
                     onFocus={handleFocus}
                     onBlur={handleBlur}
                     checked={val == optionValues[index]}   // component status will not change if defaultChecked is used

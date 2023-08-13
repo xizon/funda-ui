@@ -10,6 +10,7 @@ import { formatCheckboxControlVal, setCheckboxCheckedData } from './table-utils'
 -------------------------------------------------*/
 type TableHeadersProps = {
     data: any[];
+    useRadio?: boolean;
     headClassName?: string;
     checkboxNamePrefix?: string;
     sortable?: boolean;
@@ -27,6 +28,7 @@ const TableHeaders = (props: TableHeadersProps) => {
 
     const {
         data,
+        useRadio,
         headClassName,
         checkboxNamePrefix,
         sortable,
@@ -48,7 +50,7 @@ const TableHeaders = (props: TableHeadersProps) => {
                 <tr>
                     {data.map((item: any, i: number) => {
                         return <th key={i} scope="col" data-sort-type={item.type} data-table-text={item.content.replace(/(<([^>]+)>)/ig, '')} data-table-col={i} style={item.style ? item.style : (item.width ? ((typeof window !== 'undefined' && window.innerWidth > 768) ? {width: item.width} : {}) : {})} className={item.className || ''}>
-                            {i === 0 ? <span className="checkbox-trigger">
+                            {i === 0 ? <span className="checkbox-trigger" style={{visibility: useRadio ? 'hidden' : 'visible'}}>
                                 <Checkbox
                                     wrapperClassName=""
                                     name={`checkbox-${checkboxNamePrefix}-all`}
@@ -128,8 +130,11 @@ const TableHeaders = (props: TableHeadersProps) => {
                             </svg></span> : null}
 
                         </th>;
-                    })
-                    }
+                    })}
+
+                    {useRadio ? <>
+                        <th style={{display: 'none'}}></th>
+                    </> : null}
                 </tr>
             </thead>
         </>

@@ -21,7 +21,7 @@ import Textarea from 'react-pure-bootstrap/Textarea';
 | `required` | boolean | false | When present, it specifies that a field must be filled out before submitting the form. |
 | `cols` | number  | - | The cols attribute specifies the visible width of a text area. |
 | `rows` | number  | - | The rows attribute specifies the visible height of a text area, in lines. |
-| `onChange` | function  | - | Call a function when the value of an HTML element is changed. |
+| `onChange` | function  | - | Call a function when the value of an HTML element is changed. It returns only one callback value which is the current control. |
 | `onBlur` | function  | - | Call a function when a user leaves an form field. |
 | `onFocus` | function  | - | Call a function when an form field gets focus. |
 

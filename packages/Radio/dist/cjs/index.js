@@ -96,7 +96,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(787);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-var _excluded = ["wrapperClassName", "disabled", "required", "value", "label", "name", "id", "options", "inline", "style", "tabIndex", "onChange", "onBlur", "onFocus"];
+var _excluded = ["wrapperClassName", "disabled", "required", "value", "label", "name", "id", "options", "inline", "style", "tabIndex", "onClick", "onChange", "onBlur", "onFocus"];
 function _extends() { _extends = Object.assign ? Object.assign.bind() : function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
 function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
 function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
@@ -120,6 +120,7 @@ var Radio = function Radio(props) {
     inline = props.inline,
     style = props.style,
     tabIndex = props.tabIndex,
+    onClick = props.onClick,
     onChange = props.onChange,
     onBlur = props.onBlur,
     onFocus = props.onFocus,
@@ -173,6 +174,9 @@ var Radio = function Radio(props) {
     if (typeof onChange === 'function') {
       onChange(event, _val);
     }
+    if (typeof onClick === 'function') {
+      onClick(event, _val);
+    }
   }
   function handleBlur(event) {
     //----
@@ -204,6 +208,9 @@ var Radio = function Radio(props) {
       required: requiredVal,
       disabled: disabled || null,
       onChange: handleChange,
+      onClick: typeof onClick === 'function' ? handleChange : function () {
+        return void 0;
+      },
       onFocus: handleFocus,
       onBlur: handleBlur,
       checked: val == optionValues[index] // component status will not change if defaultChecked is used

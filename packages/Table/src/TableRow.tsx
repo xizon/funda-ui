@@ -1,5 +1,7 @@
 import React from 'react';
 
+import Radio from 'rpb-radio';
+
 import TableField from './TableField';
 import TableFieldRow from './TableFieldRow';
 
@@ -15,6 +17,7 @@ type TableRowProps = {
     checkboxNamePrefix?: string;
     rowKey?: string;
     draggable?: boolean;
+    useRadio?: boolean;
     getCheckedPrint?: any[];
     updateCheckedPrint?: any;
     getCheckedData?: any[];
@@ -42,6 +45,7 @@ const TableRow = (props: TableRowProps) => {
         getCheckedRootData,
         updategetCheckedRootData,
         draggable,
+        useRadio,
         onClick,
         onCheck,
         evDragEnd,
@@ -49,6 +53,7 @@ const TableRow = (props: TableRowProps) => {
     } = props;
 
     
+    const nonExistentRowKey = `row-null`;
     const rowChecked = getCheckedData!.filter((cur: any) => cur.key === rowKey)[0]?.checked;
 
     function handleClick(event: any) {
@@ -66,6 +71,7 @@ const TableRow = (props: TableRowProps) => {
                     if ( i === 0 ) {
                         return <TableFieldRow 
                                     key={'th-row' + i} 
+                                    useRadio={useRadio}
                                     columnHeader={headerItem.content.replace(/(<([^>]+)>)/ig, '')} 
                                     cols={el.cols} 
                                     content={el.content} 
@@ -96,6 +102,22 @@ const TableRow = (props: TableRowProps) => {
                     }
                     
                 }) : null}
+
+
+                {useRadio ? <>
+                    <td style={{display: 'none'}}>
+                        <Radio
+                            wrapperClassName=""
+                            options={`{
+                                "":"${nonExistentRowKey}"}`}
+                            name={`checkbox-${checkboxNamePrefix}-0`}
+                            tabIndex={-1}
+                            data-index={`${nonExistentRowKey?.replace('row-', '')}`}
+                            data-key={`${nonExistentRowKey}`}
+                            value={`${nonExistentRowKey}`}
+                        />
+                    </td>
+                </> : null}
             </tr>
 
         </>
