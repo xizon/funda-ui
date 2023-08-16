@@ -331,7 +331,7 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
             return l.charAt(0) === val.toLowerCase();
           }) || item.queryString.split(',').some(function (l) {
             return l.replace(/ /g, '').indexOf(val.toLowerCase()) >= 0;
-          }) || item.label.indexOf(val) >= 0) && val != '') {
+          }) || item.label.toLowerCase().indexOf(val.toLowerCase()) >= 0) && val != '') {
             return true;
           } else {
             return false;
@@ -349,7 +349,7 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
       _orginalData = orginalData;
       update(_orginalData);
     }
-  }, 150, []);
+  }, 150, [optionsData]);
 
   /**
    * Remove html tag content

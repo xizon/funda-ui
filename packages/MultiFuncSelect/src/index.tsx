@@ -159,7 +159,7 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
                         (
                             item.queryString.split(',').some((l: any) => l.charAt(0) === val.toLowerCase()) ||
                             item.queryString.split(',').some((l: any) => l.replace(/ /g, '').indexOf(val.toLowerCase()) >= 0) ||
-                            item.label.indexOf(val) >= 0
+                            item.label.toLowerCase().indexOf(val.toLowerCase()) >= 0
                         ) &&
                         val != ''
                     ) {
@@ -185,7 +185,7 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
         }
   
 
-    }, 150, []);
+    }, 150, [optionsData]);
     
     
     /**

@@ -770,7 +770,7 @@ var LiveSearch = function LiveSearch(props) {
                   return l.charAt(0) === val.toLowerCase();
                 }) || item.queryString.split(',').some(function (l) {
                   return l.replace(/ /g, '').indexOf(val.toLowerCase()) >= 0;
-                }) || item.label.indexOf(val) >= 0) && val != '') {
+                }) || item.label.toLowerCase().indexOf(val.toLowerCase()) >= 0) && val != '') {
                   return true;
                 } else {
                   return false;
