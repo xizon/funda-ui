@@ -31,8 +31,8 @@ type FileProps = {
     fetchFuncMethod?: string;
     fetchFuncMethodParams?: any[];
     onChange?: (e: any, e2: any, value: any) => void;
-    onComplete?: (e: any, callback: any, incomingData: string | null | undefined) => void;
-    onProgress?: (files: any) => void;
+    onComplete?: (e: any, e2: any, callback: any, incomingData: string | null | undefined) => void;
+    onProgress?: (files: any, e2: any) => void;
 
 };
 
@@ -137,7 +137,7 @@ const File = forwardRef((props: FileProps, ref: any) => {
         
         const curFiles = fileInputRef.current.files;
 
-        onProgress?.(curFiles);
+        onProgress?.(curFiles, submitRef.current);
 
         if (fetchUrl) {
 
@@ -152,7 +152,7 @@ const File = forwardRef((props: FileProps, ref: any) => {
                 headers: { 'Content-Type': 'multipart/form-data' }
             }).then(function (response: any) {
                 const jsonData = response.data;
-                onComplete?.(event, jsonData, incomingData);
+                onComplete?.(event, submitRef.current, jsonData, incomingData);
 
                 // update default value
                 setDefaultValue(undefined);

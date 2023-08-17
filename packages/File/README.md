@@ -28,8 +28,10 @@ import File from 'react-pure-bootstrap/File';
 | `fetchFuncMethod` | string  | - | When the property is *true*, every time the select changes, a data request will be triggered. <br /><blockquote>The methord must be a Promise Object.</blockquote> |
 | `fetchFuncMethodParams` | array  | - | The parameter passed by the method, it is an array. <br />Note: the first element is a query string, the second element is the number of queried data (usually a number), and then you can increase the third, or fourth, and more parameters. <br />Such as `['',0]`, `['',99,'string 1','string 2']` <br /><blockquote>There should be at least one parameter which is the query string.</blockquote> |
 | `onChange` | function  | - | Call a function when the value of an HTML element is changed. It returns three callback values, one is the control, the second is an HTMLElement of submit button, and the last is current value ([An object of FileList](https://developer.mozilla.org/en-US/docs/Web/API/FileList)) |
-| `onProgress` | function  | - | Call a function when upload is in progress. It returns one callback value which is ([An object of FileList](https://developer.mozilla.org/en-US/docs/Web/API/FileList)) |
-| `onComplete` | function  | - | Call a function when the modal is submitted. It returns two callback values, one is the trigger object and the other is the callback from backend (JSON Object Literals) |
+| `onProgress` | function  | - | Call a function when upload is in progress. It returns two callback values, one is ([An object of FileList](https://developer.mozilla.org/en-US/docs/Web/API/FileList)), the other is an HTMLElement of submit button. |
+| `onComplete` | function  | - | Call a function when the modal is submitted. It returns four callback values. <br /> <ol><li>The one is the trigger object</li><li>The second parameter is an HTMLElement of submit button</li><li>The third parameter is the callback from backend (JSON Object Literals)</li><li>The last is incoming data from attribute `data`.</li></ol> |
+
+
 
 
 It accepts all props which this control support.
@@ -49,11 +51,11 @@ export default () => {
         console.log(e, submitEl, value);
     }
 
-    function handleComplete(e, value) {
+    function handleComplete(e, submitEl, value) {
         console.log(e, value);
     }
 
-    function handleProgress(files) {
+    function handleProgress(files, submitEl) {
         console.log(files);
     }
 
@@ -115,11 +117,11 @@ export default () => {
         console.log(e, submitEl, value);
     }
 
-    function handleComplete(e, value) {
+    function handleComplete(e, submitEl, value) {
         console.log(e, value);
     }
 
-    function handleProgress(files) {
+    function handleProgress(files, submitEl) {
         console.log(files);
     }
 

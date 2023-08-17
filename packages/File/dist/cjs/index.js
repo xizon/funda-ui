@@ -267,7 +267,7 @@ var File = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(functi
   function handleSubmit(event) {
     event.preventDefault();
     var curFiles = fileInputRef.current.files;
-    onProgress === null || onProgress === void 0 ? void 0 : onProgress(curFiles);
+    onProgress === null || onProgress === void 0 ? void 0 : onProgress(curFiles, submitRef.current);
     if (fetchUrl) {
       var formData = new FormData();
       formData.append('action', 'upload_plug_action');
@@ -280,7 +280,7 @@ var File = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(functi
         }
       }).then(function (response) {
         var jsonData = response.data;
-        onComplete === null || onComplete === void 0 ? void 0 : onComplete(event, jsonData, incomingData);
+        onComplete === null || onComplete === void 0 ? void 0 : onComplete(event, submitRef.current, jsonData, incomingData);
 
         // update default value
         setDefaultValue(undefined);
