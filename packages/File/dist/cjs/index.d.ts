@@ -20,7 +20,7 @@ declare type FileProps = {
     disabled?: any;
     required?: any;
     /** Incoming data, you can set the third parameter of `onComplete` */
-    data?: string;
+    data?: any;
     /** -- */
     id?: string;
     tabIndex?: number;

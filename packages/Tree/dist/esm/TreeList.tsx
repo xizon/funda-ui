@@ -2,7 +2,6 @@ import React, { useEffect, useRef } from 'react';
 
 import Checkbox from 'rpb-checkbox';
 
-
 import { getNextSiblings, getParents, getChildren } from './utils/dom'; 
 
 interface fetchConfig {
@@ -16,6 +15,7 @@ interface fetchConfig {
 /* Recursively nested components to traverse nodes
 -------------------------------------------------*/		
 type TreeListProps = {
+    rootNode: React.RefObject<HTMLDivElement>;
     checkboxNamePrefix?: string;
     alternateCollapse?: boolean;
     first?: boolean;
@@ -38,6 +38,7 @@ type TreeListProps = {
 export default function TreeList(props: TreeListProps) {
 
     const {
+        rootNode,
         checkboxNamePrefix,
         alternateCollapse,
         first,
@@ -216,6 +217,8 @@ export default function TreeList(props: TreeListProps) {
             slug: hyperlink.dataset.slug,
             link: hyperlink.dataset.link
         }, fetchFunc);
+
+
 
         // hide child if expandedLink doesn't exist, on the contrary
         //=====================
@@ -457,6 +460,7 @@ export default function TreeList(props: TreeListProps) {
                                 <span>{item.icon ? item.icon.indexOf('</svg>') < 0 ? <><i className={item.icon}></i> </> : <var dangerouslySetInnerHTML={{ __html: `${item.icon}` }} /> : null}<i dangerouslySetInnerHTML={{ __html: `${item.title}` }}></i>{titleArrowGenerator()}</span>
                             </a>
                             {item.children && item.children.length > 0 && <TreeList 
+                                                rootNode={rootNode}
                                                 checkboxNamePrefix={checkboxNamePrefix}
                                                 data={item.children} 
                                                 first={false} 

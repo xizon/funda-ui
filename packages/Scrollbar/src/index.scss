@@ -1,0 +1,217 @@
+/* ======================================================
+    <!-- Custom Scrollbar -->
+/* ====================================================== */
+
+.custom-scrollbars__wrapper {
+
+    --custom-scrollbar-min-wrapper-height: 50px;
+    --custom-scrollbar-content-min-height: 25px;
+    --custom-scrollbar-columns-gap: 20px;
+    --custom-scrollbar-arrow-gap: .5rem;
+    --custom-scrollbars-border-radius: 12px;
+    --custom-scrollbars-control-size: 5px;
+    --custom-scrollbars-track-bg: #e9e9e9;
+    --custom-scrollbars-thumb-bg: #a6a6a6;
+    --custom-scrollbars-thumb-hover-bg: #878787;
+
+    
+    
+	display: grid;
+	min-height: var(--custom-scrollbar-min-wrapper-height);
+	grid-template-areas: "left1 right" "left2 right";
+	grid-template-rows: auto;
+	grid-template-columns: 1fr var(--custom-scrollbar-columns-gap);
+	overflow: hidden;
+	position: relative;
+
+    &.custom-scrollbars__wrapper--horizontal {
+        grid-template-columns: 1fr;
+    }
+
+
+
+    .custom-scrollbars__content {
+        min-height: var(--custom-scrollbar-content-min-height);
+        overflow: auto;
+        scrollbar-width: none;
+        grid-area: left1;
+        &::-webkit-scrollbar {
+            display: none;
+        }
+    }
+
+
+    .custom-scrollbars__scrollbar {
+        display: grid;
+        gap: var(--custom-scrollbar-arrow-gap) 0;
+        grid-auto-flow: row;
+        grid-template: auto 1fr auto / 1fr;
+        padding: 0;
+        place-items: center;
+        grid-area: right;
+
+
+        &.disabled {
+            pointer-events: none;
+            opacity: 0;
+            filter: grayscale(100%);
+        }
+
+
+        .custom-scrollbars__button {
+            padding: 0;
+            margin: 0;
+            background: none;
+            outline: none;
+            box-shadow: none;
+            border: none;
+            cursor: pointer;
+
+            &.disabled {
+                opacity: 0;
+                pointer-events: none;
+            }
+
+
+            svg path {
+                stroke: var(--custom-scrollbars-thumb-bg);
+            }
+
+            i {
+                color: var(--custom-scrollbars-thumb-bg);
+            }   
+            &:hover {
+                svg path {
+                    stroke: var(--custom-scrollbars-thumb-hover-bg);
+                }
+    
+                i {
+                    color: var(--custom-scrollbars-thumb-hover-bg);
+                }   
+            }
+    
+
+        }
+        .custom-scrollbars__track-and-thumb {
+            display: block;
+            height: 100%;
+            position: relative;
+            width: var(--custom-scrollbars-control-size);
+            .custom-scrollbars__track {
+                background-color: var(--custom-scrollbars-track-bg);
+                border-radius: var(--custom-scrollbars-border-radius);
+                bottom: 0;
+                cursor: pointer;
+                position: absolute;
+                top: 0;
+                width: var(--custom-scrollbars-control-size);
+            }
+            .custom-scrollbars__thumb {
+                border-radius: var(--custom-scrollbars-border-radius);
+                background-color: var(--custom-scrollbars-thumb-bg);
+                position: absolute;
+                width: var(--custom-scrollbars-control-size);
+
+                &:hover {
+                    background-color: var(--custom-scrollbars-thumb-hover-bg);
+                }
+            }
+        }
+    }
+    
+
+    .custom-scrollbars__scrollbar-horizontal {
+        display: grid;
+        grid-area: left2;
+        gap: 0 var(--custom-scrollbar-arrow-gap);
+        grid-auto-flow: row;
+        grid-template: auto 1fr auto / 1rem 1fr 1rem;
+        padding: 0;
+        place-items: center;
+
+        &.disabled {
+            pointer-events: none;
+            opacity: 0;
+            filter: grayscale(100%);
+        }
+
+
+        .custom-scrollbars__button {
+            padding: 0;
+            margin: 0;
+            background: none;
+            outline: none;
+            box-shadow: none;
+            border: none;
+            cursor: pointer;
+
+            &.disabled {
+                opacity: 0;
+                pointer-events: none;
+            }
+
+            svg path {
+                stroke: var(--custom-scrollbars-thumb-bg);
+            }
+
+            i {
+                color: var(--custom-scrollbars-thumb-bg);
+            }   
+            &:hover {
+                svg path {
+                    stroke: var(--custom-scrollbars-thumb-hover-bg);
+                }
+    
+                i {
+                    color: var(--custom-scrollbars-thumb-hover-bg);
+                }   
+            }
+    
+
+        }
+        .custom-scrollbars__track-and-thumb {
+            display: block;
+            width: 100%;
+            position: relative;
+            height: var(--custom-scrollbars-control-size);
+            .custom-scrollbars__track {
+                background-color: var(--custom-scrollbars-track-bg);
+                border-radius: var(--custom-scrollbars-border-radius);
+                bottom: 0;
+                cursor: pointer;
+                position: absolute;
+                top: 0;
+                height: var(--custom-scrollbars-control-size);
+                width: 100%;
+            }
+            .custom-scrollbars__thumb {
+                border-radius: var(--custom-scrollbars-border-radius);
+                background-color: var(--custom-scrollbars-thumb-bg);
+                position: absolute;
+                height: var(--custom-scrollbars-control-size);
+
+                &:hover {
+                    background-color: var(--custom-scrollbars-thumb-hover-bg);
+                }
+            }
+        }
+    }
+
+    &.arrow-disabled {
+
+        .custom-scrollbars__scrollbar {
+            gap: 0 0 var(--custom-scrollbar-arrow-gap) 0;
+            grid-template: 0 1fr 0 / 1fr;
+
+        }
+
+        .custom-scrollbars__scrollbar-horizontal {
+            gap: 0;
+            grid-template: auto 1fr auto / 0 1fr 0;
+
+        }
+    }
+
+
+}
+

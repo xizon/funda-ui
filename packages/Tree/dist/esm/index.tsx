@@ -256,6 +256,7 @@ const Tree = (props: TreeProps) => {
 
             <nav tabIndex={0} id={idRes} ref={rootRef} className={treeClassName ? `tree-diagram__wrapper ${treeClassName} ${expandClassName}` : `tree-diagram__wrapper tree-diagram-default ${expandClassName}`}>
                 <TreeList 
+                    rootNode={rootRef}
                     checkboxNamePrefix={idRes}
                     alternateCollapse={alternateCollapse}
                     first={true}

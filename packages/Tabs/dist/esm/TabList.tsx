@@ -25,8 +25,8 @@ const TabList = (props: TabListProps) => {
     
 
     const _expandClassName =  typeof(expandedActiveClassNameForNav) !== 'undefined' ? expandedActiveClassNameForNav : '';
-    const activedClassName = typeof(defaultActive) !== 'undefined' && defaultActive !== false ? ` ${_expandClassName ? _expandClassName : `active ${_expandClassName}`}` : 'active';
-    
+    const activedClassName = typeof(defaultActive) !== 'undefined' && defaultActive !== false ? ` active ${_expandClassName}` : ` ${_expandClassName}`;
+
     return (
         <>
 

@@ -652,7 +652,8 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 
 function TreeList(props) {
-  var checkboxNamePrefix = props.checkboxNamePrefix,
+  var rootNode = props.rootNode,
+    checkboxNamePrefix = props.checkboxNamePrefix,
     alternateCollapse = props.alternateCollapse,
     first = props.first,
     disableArrow = props.disableArrow,
@@ -1083,6 +1084,7 @@ function TreeList(props) {
           __html: "".concat(item.title)
         }
       }), titleArrowGenerator())), item.children && item.children.length > 0 && /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement(TreeList, {
+        rootNode: rootNode,
         checkboxNamePrefix: checkboxNamePrefix,
         data: item.children,
         first: false,
@@ -1321,6 +1323,7 @@ var Tree = function Tree(props) {
     ref: rootRef,
     className: treeClassName ? "tree-diagram__wrapper ".concat(treeClassName, " ").concat(expandClassName) : "tree-diagram__wrapper tree-diagram-default ".concat(expandClassName)
   }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement(TreeList, {
+    rootNode: rootRef,
     checkboxNamePrefix: idRes,
     alternateCollapse: alternateCollapse,
     first: true,

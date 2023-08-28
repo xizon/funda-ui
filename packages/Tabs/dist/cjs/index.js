@@ -114,7 +114,7 @@ var TabList = function TabList(props) {
     switchEv = props.switchEv,
     children = props.children;
   var _expandClassName = typeof expandedActiveClassNameForNav !== 'undefined' ? expandedActiveClassNameForNav : '';
-  var activedClassName = typeof defaultActive !== 'undefined' && defaultActive !== false ? " ".concat(_expandClassName ? _expandClassName : "active ".concat(_expandClassName)) : 'active';
+  var activedClassName = typeof defaultActive !== 'undefined' && defaultActive !== false ? " active ".concat(_expandClassName) : " ".concat(_expandClassName);
   return /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("li", {
     className: "nav-item ".concat(activedClassName),
     role: "presentation",
@@ -137,7 +137,7 @@ var TabPanel = function TabPanel(props) {
     targetId = props.targetId,
     attributes = _objectWithoutProperties(props, _excluded);
   var _expandClassName = typeof expandedActiveClassNameForPanel !== 'undefined' ? expandedActiveClassNameForPanel : '';
-  var activedClassName = typeof defaultActive !== 'undefined' && defaultActive !== false ? " ".concat(_expandClassName ? _expandClassName : "show active ".concat(_expandClassName)) : 'show active';
+  var activedClassName = typeof defaultActive !== 'undefined' && defaultActive !== false ? " show active ".concat(_expandClassName) : " ".concat(_expandClassName);
   return /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", _extends({
     role: "tabpanel",
     id: targetId,
@@ -239,8 +239,12 @@ var Tabs = function Tabs(props) {
     // Initialize tabs
     //--------------
     var reactDomWrapperEl = rootRef.current;
-    var $li = reactDomWrapperEl.querySelectorAll('ul > li');
-    itemInit($li[0], true);
+    var $li = [].slice.call(reactDomWrapperEl.querySelectorAll('ul > li'));
+    $li.forEach(function (el, i) {
+      if (el.classList.contains('active')) {
+        itemInit($li[i], true);
+      }
+    });
   }, []);
   return /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
     className: wrapperClassName || wrapperClassName === '' ? wrapperClassName : "mb-3 position-relative",

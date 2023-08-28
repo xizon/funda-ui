@@ -97,3 +97,39 @@ export default () => {
     );
 }
 ```
+
+
+
+
+## Asynchronous Usage
+
+
+```js
+import React, { useEffect, useState } from "react";
+import Input from 'react-pure-bootstrap/Input';
+
+export default () => {
+
+    const [inputValue, setInputValue] = useState('');
+
+    function handleChange(e) {
+        setInputValue(e.target.value);
+    }
+
+    useEffect(() => {
+       setInputValue('default);
+    }, []);
+
+
+    return (
+        <>
+            <Input
+                value={inputValue}
+                name="name"
+                onChange={handleChange}
+            />
+
+        </>
+    );
+}
+```

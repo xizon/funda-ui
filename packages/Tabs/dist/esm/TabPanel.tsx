@@ -19,7 +19,7 @@ const TabPanel = (props: TabPanelProps) => {
     } = props;
     
     const _expandClassName =  typeof(expandedActiveClassNameForPanel) !== 'undefined' ? expandedActiveClassNameForPanel : '';
-    const activedClassName = typeof(defaultActive) !== 'undefined' && defaultActive !== false ? ` ${_expandClassName ? _expandClassName : `show active ${_expandClassName}`}` : 'show active';
+    const activedClassName = typeof(defaultActive) !== 'undefined' && defaultActive !== false ? ` show active ${_expandClassName}` : ` ${_expandClassName}`;
 
     
     return (

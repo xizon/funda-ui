@@ -126,8 +126,12 @@ const Tabs = (props: TabsProps) => {
         // Initialize tabs
         //--------------
         const reactDomWrapperEl: any = rootRef.current;
-        const $li = reactDomWrapperEl.querySelectorAll('ul > li');
-        itemInit($li[0], true);
+        const $li = [].slice.call(reactDomWrapperEl.querySelectorAll('ul > li'));
+        $li.forEach((el: any, i: number) => {
+            if (el.classList.contains('active')) {
+                itemInit($li[i], true);
+            }
+        });
 
     }, []);
 

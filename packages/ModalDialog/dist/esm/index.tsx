@@ -52,7 +52,7 @@ type ModalDialogProps = {
     /** Disable the close button. */
     closeDisabled?: boolean;
     /** Incoming data, you can set the third parameter of `onSubmit` */
-    data?: string;
+    data?: any;
     /** -- */
     id?: string;
     children: React.ReactNode;

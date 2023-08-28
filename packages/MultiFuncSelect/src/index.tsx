@@ -53,7 +53,7 @@ type MultiFuncSelectProps = {
      * Please set it when multiple controls are used at the same time. */
     depth?: number;
     /** Incoming data, you can set the third parameter of `onFetch` */
-    data?: string;
+    data?: any;
     /** -- */
     id?: string;
     style?: React.CSSProperties;
