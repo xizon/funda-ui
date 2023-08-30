@@ -21,6 +21,7 @@ React components using pure Bootstrap 5+ which does not contain any external sty
 Here is a table of the components and their status.
 
 
+
 | WEB ELEMENTS | FORMS | INTERACTION | NAVIGATION |
 | --- | --- | --- | --- |
 | [Accordion ❏](packages/Accordion/README.md) | [Input ✅](packages/Input/README.md) | [Infinite Scroll ❏](packages/InfiniteScroll/README.md) |[Multilevel Dropdown Menu ✅](packages/MultilevelDropdownMenu/README.md)  | 
@@ -41,14 +42,15 @@ Here is a table of the components and their status.
 | [Progress Bar ❏](packages/ProgressBar/README.md) | [Dynamic Fields ✅](packages/DynamicFields/README.md) |  |  |
 | [Rating ❏](packages/Rating/README.md) | [File ✅](packages/File/README.md) |  |  |
 | [Seamless Scrolling Element ❏](packages/SeamlessScrollingElement/README.md) | [File Field ❏](packages/FileField/README.md) |  |  |
-| [Show More Less ✅](packages/ShowMoreLess/README.md) | [Range Slider ✅](packages/RangeSlider/README.md) |  |  |
-| [Slideshow ❏](packages/Slideshow/README.md) |  |  |  |
+| [Show More Less ✅](packages/ShowMoreLess/README.md) | [Range Slider ✅](packages/RangeSlider/README.md) | |  |
+| [Slideshow ❏](packages/Slideshow/README.md) | [Color Picker ✅](packages/ColorPicker/README.md) |  |  |
 | [Tabs ✅](packages/Tabs/README.md) |  |  |  |
 | [Timeline ❏](packages/Timeline/README.md) |  |  |  |
 | [Toast ✅](packages/Toast/README.md) |  |  |  |
 | [Tooltip ✅](packages/Tooltip/README.md) |  |  |  |
 | [Digital Clock ✅](packages/DigitalClock/README.md) |  |  |  |
 | [Tree ✅](packages/Tree/README.md) |  |  |  |
+
 
 
 

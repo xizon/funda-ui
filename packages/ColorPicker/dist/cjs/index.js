@@ -96,7 +96,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(787);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-var _excluded = ["wrapperClassName", "controlClassName", "cols", "rows", "disabled", "required", "placeholder", "readOnly", "value", "label", "name", "id", "maxLength", "style", "tabIndex", "onChange", "onBlur", "onFocus"];
+var _excluded = ["wrapperClassName", "controlClassName", "disabled", "required", "readOnly", "value", "label", "name", "shape", "id", "style", "tabIndex", "onChange", "onBlur", "onFocus"];
 function _extends() { _extends = Object.assign ? Object.assign.bind() : function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
 function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
 function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
@@ -108,20 +108,17 @@ function _objectWithoutProperties(source, excluded) { if (source == null) return
 function _objectWithoutPropertiesLoose(source, excluded) { if (source == null) return {}; var target = {}; var sourceKeys = Object.keys(source); var key, i; for (i = 0; i < sourceKeys.length; i++) { key = sourceKeys[i]; if (excluded.indexOf(key) >= 0) continue; target[key] = source[key]; } return target; }
 
 ;
-var Textarea = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(function (props, _ref) {
+var ColorPicker = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(function (props, _ref) {
   var wrapperClassName = props.wrapperClassName,
     controlClassName = props.controlClassName,
-    cols = props.cols,
-    rows = props.rows,
     disabled = props.disabled,
     required = props.required,
-    placeholder = props.placeholder,
     readOnly = props.readOnly,
     value = props.value,
     label = props.label,
     name = props.name,
+    shape = props.shape,
     id = props.id,
-    maxLength = props.maxLength,
     style = props.style,
     tabIndex = props.tabIndex,
     onChange = props.onChange,
@@ -136,8 +133,18 @@ var Textarea = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(fu
     _useState2 = _slicedToArray(_useState, 2),
     changedVal = _useState2[0],
     setChangedVal = _useState2[1];
+  var shapeClassName = '';
+  if (shape && typeof shape === 'string') {
+    switch (shape) {
+      case 'rounded':
+        shapeClassName = 'custom-form-control-color--rounded';
+        break;
+      case 'circle':
+        shapeClassName = 'custom-form-control-color--circle';
+        break;
+    }
+  }
   function handleFocus(event) {
-    var el = event.target;
     rootRef.current.classList.add('focus');
 
     //
@@ -202,7 +209,7 @@ var Textarea = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(fu
     className: "form-label"
   }, label)) : null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
     className: "input-group"
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("textarea", _extends({
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("input", _extends({
     ref: function ref(node) {
       valRef.current = node;
       if (typeof _ref === 'function') {
@@ -212,20 +219,17 @@ var Textarea = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(fu
       }
     },
     tabIndex: tabIndex || 0,
-    className: controlClassName || controlClassName === '' ? controlClassName : "form-control",
+    type: "color",
+    className: "".concat(controlClassName || controlClassName === '' ? controlClassName : "form-control custom-form-control-color flex-grow-0", " ").concat(shapeClassName),
     id: idRes,
     name: name,
-    placeholder: placeholder || '',
     value: changedVal,
-    maxLength: maxLength || null,
     onFocus: handleFocus,
     onBlur: handleBlur,
     onChange: handleChange,
     disabled: disabled || null,
     required: required || null,
     readOnly: readOnly || null,
-    cols: cols || 20,
-    rows: rows || 2,
     style: style
   }, attributes))), required ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
     className: "position-absolute end-0 top-0 my-2 mx-2"
@@ -233,7 +237,7 @@ var Textarea = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(fu
     className: "text-danger"
   }, "*"))) : ''));
 });
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Textarea);
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (ColorPicker);
 })();
 
 /******/ 	return __webpack_exports__;

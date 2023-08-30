@@ -1,50 +1,45 @@
-import React, { useId, useState, useEffect, useRef, forwardRef } from 'react';
-
+import React, { useId, useState, useEffect, useRef, forwardRef, ChangeEvent } from 'react';
 
 declare module 'react' {
     interface ReactI18NextChildren<T> {
         children?: any;
     }
 }
-interface TextareaProps extends React.ComponentPropsWithoutRef<"textarea"> {
+
+interface ColorPickerProps extends React.ComponentPropsWithoutRef<"input"> {
     wrapperClassName?: string;
     controlClassName?: string;
-	value?: string;
-	label?: React.ReactNode | string;
-	name?: string;
-	maxLength?: any;
-	cols?: number;
-	rows?: number;
-	disabled?: any;
-	required?: any;
+    value?: string;
+    label?: React.ReactNode | string;
+    name?: string;
+    disabled?: any;
+    required?: any;
     readOnly?: any;
-	placeholder?: string;
-	/** -- */
-	id?: string;
+    shape?: string;
+    /** -- */
+    id?: string;
     style?: React.CSSProperties;
     tabIndex?: number;
     [key: `data-${string}`]: string | undefined;
     onChange?: (e: any) => void;
     onBlur?: (e: any) => void;
     onFocus?: (e: any) => void;
+
 };
 
 
-const Textarea = forwardRef((props: TextareaProps, ref: any) => {
+const ColorPicker = forwardRef((props: ColorPickerProps, ref: any) => {
     const {
         wrapperClassName,
         controlClassName,
-        cols,
-        rows,
         disabled,
         required,
-        placeholder,
         readOnly,
         value,
         label,
         name,
+        shape,
         id,
-        maxLength,
         style,
         tabIndex,
         onChange,
@@ -59,19 +54,33 @@ const Textarea = forwardRef((props: TextareaProps, ref: any) => {
     const rootRef = useRef<any>(null);
     const valRef = useRef<any>(null);
     const [changedVal, setChangedVal] = useState<string>(value || '');
+    let shapeClassName = '';
 
-    function handleFocus(event: any) {
-        const el = event.target;
+    if (shape && typeof shape === 'string') {
+        switch (shape) {
+            case 'rounded':
+                shapeClassName = 'custom-form-control-color--rounded';
+                break;   
+            case 'circle':
+                shapeClassName = 'custom-form-control-color--circle';
+                break;    
+        }
+    }
+
+
+
+    function handleFocus(event: ChangeEvent<HTMLInputElement>) {
         rootRef.current.classList.add('focus');
 
         //
-        onFocus?.(event);     
+        onFocus?.(event);    
     }
 
-    function handleChange(event: any) {
+    function handleChange(event: ChangeEvent<HTMLInputElement>) {
         const val = event.target.value;
 
         setChangedVal(val);
+
 
         //----
         //remove focus style
@@ -81,9 +90,10 @@ const Textarea = forwardRef((props: TextareaProps, ref: any) => {
 
         //
         onChange?.(event);
+
     }
 
-    function handleBlur(event: any) {
+    function handleBlur(event: ChangeEvent<HTMLInputElement>) {
         const el = event.target;
         const val = event.target.value;
 
@@ -97,6 +107,7 @@ const Textarea = forwardRef((props: TextareaProps, ref: any) => {
         //
         onBlur?.(event);
     }
+
 
     useEffect(() => {
 
@@ -126,8 +137,8 @@ const Textarea = forwardRef((props: TextareaProps, ref: any) => {
             clearInterval(timer);
         }
 
-    }, [value]);    
-    
+    }, [value]);
+
 
     return (
         <>
@@ -136,8 +147,7 @@ const Textarea = forwardRef((props: TextareaProps, ref: any) => {
                 {label ? <><label htmlFor={idRes} className="form-label">{label}</label></> : null}
 
                 <div className="input-group">
-                    
-                    <textarea  
+                    <input
                         ref={(node) => {
                             valRef.current = node;
                             if (typeof ref === 'function') {
@@ -146,24 +156,24 @@ const Textarea = forwardRef((props: TextareaProps, ref: any) => {
                                 ref.current = node;
                             }
                         }}
-                      tabIndex={tabIndex || 0}
-					  className={controlClassName || controlClassName === '' ? controlClassName : "form-control"}
-			          id={idRes}
-					  name={name}
-					  placeholder={placeholder || ''}
-					  value={changedVal}
-					  maxLength={maxLength || null}
-			          onFocus={handleFocus}
-					  onBlur={handleBlur}
-			          onChange={handleChange}
-			          disabled={disabled || null}
-					  required={required || null}
-                      readOnly={readOnly || null}
-					  cols={cols || 20}
-					  rows={rows || 2}
-                      style={style}
-                      {...attributes}
-					/>
+                        
+                        
+                        tabIndex={tabIndex || 0}
+                        type='color'
+                        className={`${controlClassName || controlClassName === '' ? controlClassName : "form-control custom-form-control-color flex-grow-0"} ${shapeClassName}`}
+                        id={idRes}
+                        name={name}
+                        value={changedVal}
+                        onFocus={handleFocus}
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        disabled={disabled || null}
+                        required={required || null}
+                        readOnly={readOnly || null}
+                        style={style}
+                        {...attributes}
+                    />
+
                 </div>
                 {required ? <><span className="position-absolute end-0 top-0 my-2 mx-2"><span className="text-danger">*</span></span></> : ''}
 
@@ -172,7 +182,6 @@ const Textarea = forwardRef((props: TextareaProps, ref: any) => {
 
         </>
     )
-
 });
 
-export default Textarea;
+export default ColorPicker;

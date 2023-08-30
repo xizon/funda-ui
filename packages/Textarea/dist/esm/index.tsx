@@ -6,7 +6,7 @@ declare module 'react' {
         children?: any;
     }
 }
-type TextareaProps = {
+interface TextareaProps extends React.ComponentPropsWithoutRef<"textarea"> {
     wrapperClassName?: string;
     controlClassName?: string;
 	value?: string;

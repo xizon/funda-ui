@@ -2,6 +2,7 @@
     <!-- Tag Input -->
 /* ====================================================== */
 .tag-input__wrapper {
+  --tag-input-control-border-radius: 0.375rem;
   --tag-input-control-wrapper-bg: #fff;
   --tag-input-control-wrapper-border-color: #dee2e6;
   --tag-input-control-color: #adb5bd;
@@ -32,7 +33,7 @@
   background-clip: padding-box;
   border: 1px solid var(--tag-input-control-wrapper-border-color);
   appearance: none;
-  border-radius: 0.375rem;
+  border-radius: var(--tag-input-control-border-radius);
   transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
   padding-bottom: 1px;
 }

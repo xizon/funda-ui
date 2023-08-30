@@ -4,19 +4,16 @@ declare module 'react' {
         children?: any;
     }
 }
-interface TextareaProps extends React.ComponentPropsWithoutRef<"textarea"> {
+interface ColorPickerProps extends React.ComponentPropsWithoutRef<"input"> {
     wrapperClassName?: string;
     controlClassName?: string;
     value?: string;
     label?: React.ReactNode | string;
     name?: string;
-    maxLength?: any;
-    cols?: number;
-    rows?: number;
     disabled?: any;
     required?: any;
     readOnly?: any;
-    placeholder?: string;
+    shape?: string;
     /** -- */
     id?: string;
     style?: React.CSSProperties;
@@ -26,5 +23,5 @@ interface TextareaProps extends React.ComponentPropsWithoutRef<"textarea"> {
     onBlur?: (e: any) => void;
     onFocus?: (e: any) => void;
 }
-declare const Textarea: React.ForwardRefExoticComponent<TextareaProps & React.RefAttributes<unknown>>;
-export default Textarea;
+declare const ColorPicker: React.ForwardRefExoticComponent<ColorPickerProps & React.RefAttributes<unknown>>;
+export default ColorPicker;
