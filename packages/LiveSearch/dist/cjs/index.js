@@ -621,6 +621,7 @@ var LiveSearch = function LiveSearch(props) {
     depth = props.depth,
     maxLength = props.maxLength,
     style = props.style,
+    winWidth = props.winWidth,
     tabIndex = props.tabIndex,
     fetchNoneInfo = props.fetchNoneInfo,
     fetchUpdate = props.fetchUpdate,
@@ -632,13 +633,14 @@ var LiveSearch = function LiveSearch(props) {
     onSelect = props.onSelect,
     onChange = props.onChange,
     onBlur = props.onBlur;
+  var WIN_WIDTH = typeof winWidth === 'function' ? winWidth() : winWidth ? winWidth : 'auto';
   var uniqueID = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useId)();
   var idRes = id || uniqueID;
   var rootRef = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useRef)(null);
   var inputRef = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useRef)(null);
   var listRef = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useRef)(null);
   var listContentRef = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useRef)(null);
-  var windowScrollUpdate = (0,performance.throttle)(handleScrollEvent, 5);
+  var windowScrollUpdate = (0,performance.debounce)(handleScrollEvent, 500);
 
   //
   var _useState = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)(false),
@@ -1138,10 +1140,12 @@ var LiveSearch = function LiveSearch(props) {
     autoComplete: "off"
   }), data && data.length > 0 && !hasErr ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
     ref: listRef,
-    className: "list-group position-absolute w-100 border shadow small",
+    className: "list-group position-absolute border shadow small ".concat(winWidth ? '' : 'w-100'),
     style: {
       marginTop: '0.2rem',
-      zIndex: depth ? depth : 100
+      zIndex: depth ? depth : 100,
+      minWidth: '200px',
+      width: WIN_WIDTH
     },
     role: "tablist"
   }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
@@ -1164,10 +1168,12 @@ var LiveSearch = function LiveSearch(props) {
     }, item.label);
   }) : null))) : null, data && data.length === 0 && !hasErr && isOpen ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
     ref: listRef,
-    className: "list-group position-absolute w-100 border shadow small",
+    className: "list-group position-absolute border shadow small ".concat(winWidth ? '' : 'w-100'),
     style: {
       marginTop: '0.2rem',
-      zIndex: depth ? depth : 100
+      zIndex: depth ? depth : 100,
+      minWidth: '200px',
+      width: WIN_WIDTH
     },
     role: "tablist"
   }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {

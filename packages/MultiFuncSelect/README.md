@@ -11,9 +11,13 @@ import MultiFuncSelect from 'react-pure-bootstrap/MultiFuncSelect';
 | --- | --- | --- | --- |
 | `wrapperClassName` | string | `mb-3 position-relative` | The class name of the control wrapper. |
 | `controlClassName` | string | `form-control` | The class name of the control. |
-| `options` | JSON Object Literals | - | Set the default value using JSON string format for menu of options, like this: `[{"label": "Option 1","value": "value-1","queryString": "option1"},{"label": "<del style=color:red>deprecate</del>Option 2","value": "value-2","queryString": "option2"},{"label": "Option 3","value": "value-3","queryString": "option3"}]` <br /> <blockquote>Note: Use API data if database query exists. That is, the attribute `fetchXXXX`</blockquote>|
+| `options` | JSON Object Literals | - | Set the default value using JSON string format for menu of options, like this: `[{"label": "Option 1","value": "value-1","queryString": "option1"},{"label": "<del style=color:red>deprecate</del>Option 2","value": "value-2","queryString": "option2"},{"label": "Option 3","value": "value-3","queryString": "option3"}]` <br /> <blockquote>Note: Use API data if database query exists. That is, the attribute `fetchXXXX`</blockquote> <hr /> <blockquote>When the attribute `hierarchical` is true, you need to use a hierarchical structure to pass data, such as: `[{label:"Top level 1",value:'level-1',queryString:""},{label:"Top level 2",value:'level-2',queryString:""},{label:"Top level 3",value:'level-3',queryString:"",children:[{label:"Sub level 3_1",value:'level-3_1',queryString:""},{label:"Sub level 3_2",value:'level-3_2',queryString:"",children:[{label:"Sub level 3_2_1",value:'level-3_2_1',queryString:""}]},{label:"Sub level 3_3",value:'level-3_3',queryString:""}]}]`</blockquote>|
+| `hierarchical` | boolean  | false | Set hierarchical categories ( with sub-categories ) to attribute `options`. |
+| `indentation` | string  | - | Set hierarchical indentation placeholders, valid when the `hierarchical` is true. |
+| `doubleIndent` | boolean  | false | Set double indent effect, valid when the `hierarchical` is true. |
 | `multiSelect` | JSON Object | `{"valid": true, "selectAll": true, "selectAllLabel": "Select all options"}` | Enable multi-select. <blockquote>**Parameters Description:** <br />`valid` -->  *(Boolean)* *(required)* Set component in which multiple options can be selected at once to be valid.  <br />`selectAll` --> *(Boolean)* *(required)* Enables select all button. <br />`selectAllLabel` -->  *(String)* Sets the select all button label. (Support html tags) <br />`data` -->  *(JSON Object \| null)* *(required)* Sets a default data for control's values. (such as `{values: ['value-1','value-3'], labels: ['Option 1','Option 3'], queryStrings: ['','']}`)</blockquote> |
 | `depth` | number  | 100 | Set the depth value of the control to control the display of the pop-up layer appear above. Please set it when multiple controls are used at the same time. |
+| `winWidth` | number \| function  | `auto` | Set the container width of options. Such as: `500px` or `() => window.innerWidth/2 + 'px'`  |
 | `value` | string | - | Set a default value for this control |
 | `label` | string \| ReactNode | - | It is used to specify a label for an element of a form. |
 | `name` | string | - | Name is not deprecated when used with form fields. |
@@ -46,6 +50,8 @@ JSON Object Literals configuration properties of the `options`:
 
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |
+| `id` | string \| number | - | **(Optional)** Item ID. <blockquote>Valid when the `hierarchical` is true</blockquote> |
+| `parent_id` | string \| number | - | **(Optional)** Parent ID of item. <blockquote>Valid when the `hierarchical` is true</blockquote> |
 | `label` | string | - | Specify the label text for each option. <blockquote>Support html tags</blockquote> |
 | `value` | string | - | Specify the value for each option |
 | `queryString` | string | - | Quick query string, such as Chinese pinyin or English initials |
@@ -107,6 +113,7 @@ export default () => {
                 value="value-2"
                 placeholder="Select"
                 name="name"
+                winWidth={() => window.innerWidth/2 + 'px'}
                 options={`
                 [
                     {"label": "Option 1","value": "value-1","queryString": "option1"},
@@ -706,5 +713,399 @@ export default () => {
         </>
     );
 
+}
+```
+
+
+
+
+
+
+
+## Convert raw data into a tree structure
+
+Set hierarchical categories ( with sub-categories ) to attribute `options`.
+
+
+```js
+import React, { useEffect, useState } from "react";
+import MultiFuncSelect from 'react-pure-bootstrap/MultiFuncSelect';
+
+// component styles
+import 'react-pure-bootstrap/MultiFuncSelect/index.css';
+
+
+
+class DataService {
+
+    // `getList()` must be a Promise Object
+    async getList(searchStr: string = '', limit: number = 0, otherParam: string = '') {
+
+        const demoData = [
+            // level 1
+            {
+                "parent_id": 0,
+                "id": 1,
+                "label": "Top level 1",
+                "value": 'level-1',
+                "queryString": ""
+            },
+            {
+                "parent_id": 0,
+                "id": 2,
+                "label": "Top level 2",
+                "value": 'level-2',
+                "queryString": ""
+            },
+            {
+                "parent_id": 0,
+                "id": 3,
+                "label": "Top level 3",
+                "value": 'level-3',
+                "queryString": "",
+            },
+            // level 2
+            {
+                "parent_id": 3,
+                "id": 4,
+                "label": "Sub level 3_1",
+                "value": 'level-3_1',
+                "queryString": ""
+            },
+            {
+                "parent_id": 1,
+                "id": 5,
+                "label": "Sub level 3_2",
+                "value": 'level-3_2',
+                "queryString": "",
+            },
+            {
+                "parent_id": 2,
+                "id": 6,
+                "label": "Sub level 3_3",
+                "value": 'level-3_3',
+                "queryString": ""
+            },
+            // level 3
+            {
+                "parent_id": 5,
+                "id": 7,
+                "label": "Sub level 3_2_1",
+                "value": 'level-3_2_1',
+                "queryString": ""
+            },  
+        ];   
+
+        return {
+            code: 0,
+            message: 'OK',
+            data: demoData
+        };
+    }
+
+}
+
+
+export default () => {
+
+    const [data, setData] = useState<any[]>([]);
+
+    /**
+     * Convert Tree
+     * @param {Array} arr                    - Input array to convert
+     * @param  {?String | ?Number} parentId  - Parent id
+     * @param  {?String} keyId               - Key value of id.
+     * @param  {?String} keyParentId         - Key value of parent id.
+     * @returns Array
+     */
+    function convertTree(arr, parentId = '', keyId = 'id', keyParentId = 'parent_id') {
+        
+        if( !parentId ) {
+            
+            // If there is no parent id (when recursing for the first time), all parents will be queried
+            return arr.filter(item => !item[keyParentId]).map(item => {
+                // Query all child nodes by parent node ID
+                item.children = convertTree(arr, item[keyId], keyId, keyParentId);
+                return item;
+            })
+        } else {
+            return arr.filter(item => item[keyParentId] === parentId).map(item => {
+                // Query all child nodes by parent node ID
+                item.children = convertTree(arr, item[keyId], keyId, keyParentId);
+                return item;
+            })
+        }
+    }
+
+    useEffect(() => {
+        new DataService().getList('', 0, '').then((response: any) => {
+      
+            const _data: any[] = response.data.map((item: any, i: number) => {
+                return {
+                    id: item.id,
+                    parent_id: item.parent_id,
+                    label: `${item.label}`,
+                    value: `${item.value}`,
+                    queryString: `${item.queryString}`
+                }
+            });
+         
+
+            const treeData = convertTree(_data);
+            /*
+            [{
+                label: "Top level 1",
+                value: 'level-1',
+                queryString: ""
+                
+            },
+            {
+                label: "Top level 2",
+                value: 'level-2',
+                queryString: ""
+                
+            },
+            {
+                label: "Top level 3",
+                value: 'level-3',
+                queryString: "",
+                children: [{
+                    label: "Sub level 3_1",
+                    value: 'level-3_1',
+                    queryString: ""
+                },
+                {
+                    label: "Sub level 3_2",
+                    value: 'level-3_2',
+                    queryString: "",
+                    children: [{
+                        label: "Sub level 3_2_1",
+                        value: 'level-3_2_1',
+                        queryString: ""
+                    }]
+                },
+                {
+                    label: "Sub level 3_3",
+                    value: 'level-3_3',
+                    queryString: ""
+                }]
+            }]
+            */
+            setData(treeData);
+            
+            // do something, such as update `<Scrollbar />`
+            // ...
+
+        });
+    }, []);
+
+
+    return (
+        <>
+
+            <MultiFuncSelect
+                hierarchical={true}
+                value="level-3_2_1"
+                placeholder="Select"
+                name="name"
+                options={JSON.stringify(data)}
+                onChange={(e, e2, val) => {
+                    console.log(e, e2, val);
+                }}
+            />
+
+            <MultiFuncSelect
+                hierarchical={true}
+                value="level-1,level-3_1"
+                multiSelect={{
+                    valid: true, 
+                    selectAll: true, 
+                    selectAllLabel: "Select all options",
+                    data: {
+                        values: ['level-1','level-3_1'],
+                        labels: ['Top level 1','Sub level 3_1'],
+                        queryStrings: ['','']
+                    }
+                }}
+                placeholder="Select"
+                name="name"
+                options={JSON.stringify(data)}
+                onChange={(e, e2, val) => {
+                    console.log(e, e2, val);
+                }}
+            />
+
+
+
+        </>
+    )
+}
+```
+
+Automatic fetch request:
+
+```js
+import React from "react";
+import MultiFuncSelect from 'react-pure-bootstrap/MultiFuncSelect';
+
+// component styles
+import 'react-pure-bootstrap/MultiFuncSelect/index.css';
+
+class DataService {
+
+    // `getList()` must be a Promise Object
+    async getList(searchStr: string = '', limit: number = 0, otherParam: string = '') {
+
+        const demoData = [
+            // level 1
+            {
+                "parent_id": 0,
+                "id": 1,
+                "label": "Top level 1",
+                "value": 'level-1',
+                "queryString": ""
+            },
+            {
+                "parent_id": 0,
+                "id": 2,
+                "label": "Top level 2",
+                "value": 'level-2',
+                "queryString": ""
+            },
+            {
+                "parent_id": 0,
+                "id": 3,
+                "label": "Top level 3",
+                "value": 'level-3',
+                "queryString": "",
+            },
+            // level 2
+            {
+                "parent_id": 3,
+                "id": 4,
+                "label": "Sub level 3_1",
+                "value": 'level-3_1',
+                "queryString": ""
+            },
+            {
+                "parent_id": 1,
+                "id": 5,
+                "label": "Sub level 3_2",
+                "value": 'level-3_2',
+                "queryString": "",
+            },
+            {
+                "parent_id": 2,
+                "id": 6,
+                "label": "Sub level 3_3",
+                "value": 'level-3_3',
+                "queryString": ""
+            },
+            // level 3
+            {
+                "parent_id": 5,
+                "id": 7,
+                "label": "Sub level 3_2_1",
+                "value": 'level-3_2_1',
+                "queryString": ""
+            },  
+        ];   
+
+        return {
+            code: 0,
+            message: 'OK',
+            data: demoData
+        };
+    }
+
+}
+
+export default () => {
+
+    /**
+     * Convert Tree
+     * @param {Array} arr                    - Input array to convert
+     * @param  {?String | ?Number} parentId  - Parent id
+     * @param  {?String} keyId               - Key value of id.
+     * @param  {?String} keyParentId         - Key value of parent id.
+     * @returns Array
+     */
+    function convertTree(arr, parentId = '', keyId = 'id', keyParentId = 'parent_id') {
+        
+        if( !parentId ) {
+            
+            // If there is no parent id (when recursing for the first time), all parents will be queried
+            return arr.filter(item => !item[keyParentId]).map(item => {
+                // Query all child nodes by parent node ID
+                item.children = convertTree(arr, item[keyId], keyId, keyParentId);
+                return item;
+            })
+        } else {
+            return arr.filter(item => item[keyParentId] === parentId).map(item => {
+                // Query all child nodes by parent node ID
+                item.children = convertTree(arr, item[keyId], keyId, keyParentId);
+                return item;
+            })
+        }
+    }
+
+    return (
+        <>
+
+            
+            <MultiFuncSelect
+                hierarchical={true}
+                doubleIndent={true}
+                indentation="-"
+                value="level-1,level-3_1"
+                multiSelect={{
+                    valid: true, 
+                    selectAll: true, 
+                    selectAllLabel: "Select all options",
+                    data: {
+                        values: ['level-1','level-3_1'],
+                        labels: ['Top level 1','Sub level 3_1'],
+                        queryStrings: ['','']
+                    }
+                }}
+                placeholder="Select"
+                name="name"
+                fetchFuncAsync={new DataService}
+                fetchFuncMethod="getList"
+                fetchFuncMethodParams={['', 0, '']}
+                fetchCallback={(res) => {
+                    const formattedData = res.map((item: any) => {
+                        return {
+                            id: item.id,
+                            parent_id: item.parent_id,
+                            label: item.label,
+                            value: item.value,
+                            queryString: item.queryString
+                        }
+                    });
+
+                    const treeData = convertTree(formattedData);
+               
+                    treeData.unshift({
+                        id: 0,
+                        parent_id: 0,
+                        label: 'Root',
+                        value: '0',
+                        queryString: ''
+                    });
+
+
+                    return treeData;
+                }}
+                onChange={(e, e2, val) => {
+                    console.log(e, e2, val);
+                }}
+            />
+
+
+
+
+        </>
+    );
 }
 ```

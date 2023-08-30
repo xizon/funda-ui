@@ -1,6 +1,6 @@
 import React, { useId, useEffect, useState, useRef } from 'react';
 
-import { throttle } from './utils/performance';
+import { debounce } from './utils/performance';
 
 import Group from './Group';
 
@@ -109,7 +109,7 @@ const CascadingSelect = (props: CascadingSelectProps) => {
     const [columnTitleData, setColumnTitleData] = useState<any[]>([]);
     const [hasErr, setHasErr] = useState<boolean>(false);
     const [changedVal, setChangedVal] = useState<string>(value || '');
-    const windowScrollUpdate = throttle(handleScrollEvent, 5);
+    const windowScrollUpdate = debounce(handleScrollEvent, 500);
    
 
     //for variable 

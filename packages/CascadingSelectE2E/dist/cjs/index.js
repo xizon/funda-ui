@@ -292,7 +292,7 @@ var CascadingSelectE2E = function CascadingSelectE2E(props) {
     _useState18 = _slicedToArray(_useState17, 2),
     changedVal = _useState18[0],
     setChangedVal = _useState18[1];
-  var windowScrollUpdate = (0,performance.throttle)(handleScrollEvent, 5);
+  var windowScrollUpdate = (0,performance.debounce)(handleScrollEvent, 500);
 
   //for variable 
   var _useState19 = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)([]),

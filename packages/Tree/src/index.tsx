@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useId, memo } from 'react';
+import React, { useState, useEffect, useRef, useId } from 'react';
 
 import TreeList from './TreeList';
 
@@ -62,7 +62,6 @@ type TreeProps = {
     onCheck?: (val: any) => void;
 };
 
-
 const Tree = (props: TreeProps) => {
     const {
         id,
@@ -81,6 +80,7 @@ const Tree = (props: TreeProps) => {
         onCollapse,
         onCheck
     } = props;
+    
 
     const uniqueID = useId().replace(/\:/g, "-");
     const idRes = id || uniqueID;
@@ -90,7 +90,8 @@ const Tree = (props: TreeProps) => {
     const [checkedData, setCheckedData] = useState<any[]>([]);
     const expandClassName = `${showLine ? 'show-line' : ''} ${disableArrow ? 'hide-arrow' : ''} ${disableCollapse ? 'collapse-disabled' : ''} ${lineStyle ? `line--${lineStyle}` : ''} ${checkable ? 'has-checkbox' : ''}`;
 
-    
+
+
     const updateTreeData = (list: DataNode[] | null, key: React.Key, children: DataNode[]): DataNode[] => {
         
         return list ? list.map((node) => {
@@ -142,6 +143,22 @@ const Tree = (props: TreeProps) => {
 
 
     }
+
+
+
+    function setCollapseData(obj: DataNode[], key: string, val: boolean) {
+
+        obj.forEach((item: any) => {
+            if (item.key === key) {
+                item.active = val;
+            }
+            if (item.children && item.children.length > 0) {
+                setCollapseData(item.children, key, val);
+            }
+        });
+
+    }
+
 
     function addKey(obj: DataNode[], depth: string, init: number) {
         obj.forEach((item: any, index: number) => {
@@ -255,7 +272,9 @@ const Tree = (props: TreeProps) => {
         <>
 
             <nav tabIndex={0} id={idRes} ref={rootRef} className={treeClassName ? `tree-diagram__wrapper ${treeClassName} ${expandClassName}` : `tree-diagram__wrapper tree-diagram-default ${expandClassName}`}>
-                <TreeList 
+                
+                
+                <TreeList
                     rootNode={rootRef}
                     checkboxNamePrefix={idRes}
                     alternateCollapse={alternateCollapse}
@@ -274,13 +293,14 @@ const Tree = (props: TreeProps) => {
                     getCheckedPrint={checkedPrint}
                     updategetCheckedData={setCheckedData}
                     getCheckedData={checkedData}
-
+                    updateCollapseData={setCollapseData}
                     
                 />
+                
             </nav>
 
         </>
     )
 };
 
-export default memo(Tree);
+export default Tree;

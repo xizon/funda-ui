@@ -345,13 +345,13 @@ class DataService {
             demoData = [
                 {
                     "parent_id": 0,
-                    "item_code": 1,
+                    "id": 1,
                     "item_name": "Title 1",
                     "item_type": "web"
                 },
                 {
                     "parent_id": 0,
-                    "item_code": 2,
+                    "id": 2,
                     "item_name": "Title 2",
                     "item_type": "dev"
                 }
@@ -364,13 +364,13 @@ class DataService {
             demoData = [
                 {
                     "parent_id": 0,
-                    "item_code": 1,
+                    "id": 1,
                     "item_name": "Title 3",
                     "item_type": "web"
                 },
                 {
                     "parent_id": 0,
-                    "item_code": 2,
+                    "id": 2,
                     "item_name": "Title 4",
                     "item_type": "dev"
                 }
@@ -455,7 +455,7 @@ export default () => {
                             // prevent orginal data
                             let placesMap: any = {};
                             for (const val of res) {
-                                placesMap[val.item_code] = [val.item_name, val.item_type, val.item_code];
+                                placesMap[val.id] = [val.item_name, val.item_type, val.id];
                             }
 
                             //
@@ -503,15 +503,26 @@ const treeData = [
         title: "Top level 1",
         link: "#",
         slug: 'level-1',
-        checked: true,
-        childrenAsync: true
+        checked: true
     },
     {
         title: "Top level 2",
         link: "/s",
         slug: 'level-2',
         checked: false,
-        childrenAsync: true
+        children: [
+            {
+                title: "Sub level 2_1",
+                link: "#2-1",
+                slug: 'level-2_1',
+                checked: false
+            },
+            {
+                title: "Sub level 2_2",
+                link: "#2-2",
+                slug: 'level-2_2',
+                checked: false
+            }]
     },
     {
         title: "Top level 3",
@@ -524,8 +535,7 @@ const treeData = [
                 title: "Sub level 3_1",
                 link: "#3-1",
                 slug: 'level-3_1',
-                checked: false,
-                childrenAsync: true
+                checked: false
             },
             {
                 title: "Sub level 3_2",
@@ -565,5 +575,278 @@ export default () => {
     )
 }
 ```
+
+
+
+## Convert raw data into a tree structure
+
+
+```js
+import React, { useEffect, useState } from "react";
+import Tree from 'react-pure-bootstrap/Tree';
+
+// component styles
+import 'react-pure-bootstrap/Tree/index.css';
+
+
+class DataService {
+
+    // `getList()` must be a Promise Object
+    async getList(searchStr: string = '', limit: number = 0, otherParam: string = '') {
+
+        const demoData = [
+            // level 1
+            {
+                "parent_id": 0,
+                "id": 1,
+                "item_name": "Title 1",
+                "item_type": "web"
+            },
+            {
+                "parent_id": 0,
+                "id": 2,
+                "item_name": "Title 2",
+                "item_type": "dev"
+            },
+            // level 2
+            {
+                "parent_id": 1,
+                "id": 3,
+                "item_name": "Title 3",
+                "item_type": "web/ui"
+            },
+            {
+                "parent_id": 1,
+                "id": 4,
+                "item_name": "Title 4",
+                "item_type": "web/ui"
+            },
+            {
+                "parent_id": 2,
+                "id": 5,
+                "item_name": "Title 5",
+                "item_type": "dev"
+            },
+            // level 3
+            {
+                "parent_id": 4,
+                "id": 6,
+                "item_name": "Title 6",
+                "item_type": "web/ui/photoshop"
+            },  
+        ];   
+
+        return {
+            code: 0,
+            message: 'OK',
+            data: demoData
+        };
+    }
+
+}
+
+
+export default () => {
+
+    const [data, setData] = useState<any[]>([]);
+
+    /**
+     * Convert Tree
+     * @param {Array} arr                    - Input array to convert
+     * @param  {?String | ?Number} parentId  - Parent id
+     * @param  {?String} keyId               - Key value of id.
+     * @param  {?String} keyParentId         - Key value of parent id.
+     * @returns Array
+     */
+    function convertTree(arr, parentId = '', keyId = 'id', keyParentId = 'parent_id') {
+        
+        if( !parentId ) {
+            
+            // If there is no parent id (when recursing for the first time), all parents will be queried
+            return arr.filter(item => !item[keyParentId]).map(item => {
+                // Query all child nodes by parent node ID
+                item.children = convertTree(arr, item[keyId], keyId, keyParentId);
+                return item;
+            })
+        } else {
+            return arr.filter(item => item[keyParentId] === parentId).map(item => {
+                // Query all child nodes by parent node ID
+                item.children = convertTree(arr, item[keyId], keyId, keyParentId);
+                return item;
+            })
+        }
+    }
+
+    useEffect(() => {
+        new DataService().getList('', 0, '').then((response: any) => {
+      
+            const _data: any[] = response.data.map((item: any, i: number) => {
+                return {
+                    id: item.id,
+                    parent_id: item.parent_id,
+                    active: false,
+                    title: `${item.item_name}`,
+                    link: "#",
+                    slug: item.id
+                }
+            });
+         
+
+            const treeData = convertTree(_data);
+            setData(treeData);
+            
+            // do something, such as update `<Scrollbar />`
+            // ...
+
+        });
+    }, []);
+
+
+    return (
+        <>
+
+            <Tree 
+                data={data} 
+                showLine={true}
+                checkable={true}
+                onCheck={(val) => {
+                    console.log(val);
+                }} 
+                onSelect={(e, val) => {
+                    console.log(val);
+                }}  
+            />
+
+
+
+        </>
+    )
+}
+```
+
+
+## Complex State Problem Solving
+
+Prevent collapsing problems caused by re-rendering of sub-component. You need to use `useMemo()` hook to solve.
+
+> The usual scenario is: the left side is a list of tree, and the right side is other content. `onSelect()` triggers a method to modify routing and update the data of Tree. Since the data is updated, the collapsing effect of the tree will be wrong.
+
+
+```js
+import React, { useEffect, useState, useMemo } from "react";
+import { useNavigate, useLocation } from 'react-router-dom';
+import Tree from 'react-pure-bootstrap/Tree';
+
+// component styles
+import 'react-pure-bootstrap/Tree/index.css';
+
+
+const treeData = [
+    {
+        title: "Top level 1",
+        link: "#",
+        slug: 'level-1',
+        checked: true
+    },
+    {
+        title: "Top level 2",
+        link: "/s",
+        slug: 'level-2',
+        checked: false,
+        children: [
+            {
+                title: "Sub level 2_1",
+                link: "#2-1",
+                slug: 'level-2_1',
+                checked: false
+            },
+            {
+                title: "Sub level 2_2",
+                link: "#2-2",
+                slug: 'level-2_2',
+                checked: false
+            }]
+    },
+    {
+        title: "Top level 3",
+        link: "/k",
+        slug: 'level-3',
+        checked: false,
+        active: true,
+        children: [
+            {
+                title: "Sub level 3_1",
+                link: "#3-1",
+                slug: 'level-3_1',
+                checked: false
+            },
+            {
+                title: "Sub level 3_2",
+                link: "#3-2",
+                slug: 'level-3_2',
+                checked: false
+            },
+            {
+                title: "Sub level 3_3",
+                link: "#3-3",
+                slug: 'level-3_3',
+                checked: true
+            }]
+    }
+];
+
+
+// DO NOT move `useMemo` to component
+function TreeMemo(props: any) {
+    const {callback, data} = props;
+    const dependencies = props.data !== null && props.data.length === 0 ? props.data : '';
+    return useMemo(() => {
+        return    <Tree
+                    checkable={true}
+                    data={data}
+                    showLine={true}
+                    onSelect={callback}
+                    onCheck={(val) => {
+                        console.log(val);
+                    }} 
+                />
+    }, [dependencies]);
+}
+
+
+export default () => {
+
+    const navigate = useNavigate();
+    const location = useLocation();
+    const [count, setCount] = useState<number>(0);
+    const [data, setData] = useState<any[]>([]);
+
+    useEffect(() => {
+        console.log(count);
+        setData(treeData);
+    }, [location, count]);
+
+
+    return (
+        <>
+
+            <TreeMemo
+                data={data}
+                callback={(e: any, val: any) => {
+                    console.log(val);
+
+                    // execute on location change
+                    navigate(val.link);
+                    setCount((prevState: number) => prevState + 1);
+                    console.log('Location changed!', location.pathname);
+
+                }} />
+
+
+        </>
+    )
+}
+```
+
 
 

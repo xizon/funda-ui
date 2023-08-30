@@ -22,6 +22,7 @@ import LiveSearch from 'react-pure-bootstrap/LiveSearch';
 | `disabled` | boolean | false | Whether it is disabled |
 | `required` | boolean | false | When present, it specifies that a field must be filled out before submitting the form. |
 | `icon` | ReactNode  | - | Set the icon of search |
+| `winWidth` | number \| function  | `auto` | Set the container width of options. Such as: `500px` or `() => window.innerWidth/2 + 'px'`  |
 | `fetchTrigger` | boolean  | false | Use buttons to trigger data queries. |
 | `fetchNoneInfo` | string  | - | The text of the data not fetched. <br />Only takes effect when `fetchTrigger` is *true*. |
 | `fetchUpdate` | boolean  | false | When the property is *true*, every time the input changes or the search button is clicked, a data request will be triggered. |

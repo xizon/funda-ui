@@ -271,7 +271,7 @@ var CascadingSelect = function CascadingSelect(props) {
     _useState10 = _slicedToArray(_useState9, 2),
     changedVal = _useState10[0],
     setChangedVal = _useState10[1];
-  var windowScrollUpdate = (0,performance.throttle)(handleScrollEvent, 5);
+  var windowScrollUpdate = (0,performance.debounce)(handleScrollEvent, 500);
 
   //for variable 
   var _useState11 = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)([]),

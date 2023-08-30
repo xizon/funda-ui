@@ -1,8 +1,14 @@
 import React, { useId, useEffect, useState, useRef, forwardRef } from 'react';
 
-import { throttle } from './utils/performance';
+import { debounce } from './utils/performance';
 import useThrottle from './utils/useThrottle';
 
+
+import {
+    flatTree,
+    addTreeDepth,
+    addTreeIndent
+} from './utils/tree';
 
 
 declare module 'react' {
@@ -46,6 +52,10 @@ type MultiFuncSelectProps = {
     readOnly?: any;
     placeholder?: string;
     options?: OptionConfig[] | string;
+    hierarchical?: boolean;
+    indentation?: string;
+    winWidth?: string | Function;
+    doubleIndent?: boolean;
     controlArrow?: React.ReactNode;
     fetchTrigger?: boolean;
     fetchTriggerForDefaultData?: MultiSelectDataConfig | null;
@@ -87,9 +97,13 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
         placeholder,
         id,
         options,
+        hierarchical,
+        indentation,
+        doubleIndent,
         style,
         depth,
         controlArrow,
+        winWidth,
         tabIndex,
         fetchTrigger,
         fetchTriggerForDefaultData,
@@ -110,6 +124,9 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
     } = props;
 
     
+    const WIN_WIDTH = typeof winWidth === 'function' ? winWidth() : winWidth ? winWidth : 'auto';
+    const INDENT_PLACEHOLDER = doubleIndent ? `&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;` : `&nbsp;&nbsp;&nbsp;&nbsp;`;
+    const INDENT_LAST_PLACEHOLDER = `${typeof indentation !== 'undefined' && indentation !== '' ? `${indentation}&nbsp;&nbsp;` : ''}`;
     const uniqueID = useId().replace(/\:/g, "-");
     const idRes = id || uniqueID;
     const rootRef = useRef<any>(null);
@@ -120,7 +137,7 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
     const listRef = useRef<any>(null);
     const listContentRef = useRef<any>(null);
     const optionsRes = options ? isJSON( options ) ? JSON.parse( options as string ) : options : [];
-    const windowScrollUpdate = throttle(handleScrollEvent, 5);
+    const windowScrollUpdate = debounce(handleScrollEvent, 500);
     
 
     // return a array of options
@@ -186,8 +203,35 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
   
 
     }, 150, [optionsData]);
-    
-    
+
+
+
+    /**
+     * Format indent value
+     * @param {String|Array} str 
+     * @returns {String|Array}
+     */
+    function formatIndentVal(str: any) {
+        const reVar = new RegExp(INDENT_LAST_PLACEHOLDER, 'g');
+        if (Array.isArray(str)) {
+            return str.map((s: string) => s.replace(reVar,'').replace(/\&nbsp;/ig,''));
+        } else {
+            return str.replace(reVar,'').replace(/\&nbsp;/ig,'');
+        }
+        
+    }
+
+
+    /**
+     * Array unique
+     * @param {Array} str 
+     * @returns {Array}
+     */
+    function unique(arr: any[]) {
+        return Array.from(new Set(arr));
+    }
+
+
     /**
      * Remove html tag content
      * @param {string} str 
@@ -342,7 +386,6 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
             }
         }
   
-        
     }
 
 
@@ -406,6 +449,7 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
 
         if ( typeof fetchFuncAsync === 'object' ) {
 
+
             const response: any = await fetchFuncAsync[`${fetchFuncMethod}`](...params.split(','));
             let _ORGIN_DATA = response.data;
   
@@ -431,7 +475,19 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
                 if (typeof defaultValue !== 'undefined' && defaultValue !== '') valueInputRef.current.dataset.value = defaultValue;
             }
 
+            
             // STEP 2: ===========
+            // Set hierarchical categories ( with sub-categories )
+            if ( hierarchical ) {
+                addTreeDepth(_ORGIN_DATA);
+                _ORGIN_DATA = flatTree(_ORGIN_DATA);
+                addTreeIndent(_ORGIN_DATA, INDENT_PLACEHOLDER, INDENT_LAST_PLACEHOLDER, 'label');
+            }
+
+            
+
+
+            // STEP 3: ===========
             // value & label must be initialized
             let filterRes: any = [];
 
@@ -456,7 +512,8 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
             }
 
 
-            // STEP 3: ===========
+
+            // STEP 4: ===========
             // ++++++++++++++++++++
             // Single selection
             // ++++++++++++++++++++
@@ -466,7 +523,7 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
             } else {
                 if ( filterRes.length > 0 ) {
                     setControlValue(filterRes[0].value); 
-                    setControlLabel(filterRes[0].label);
+                    setControlLabel(formatIndentVal(filterRes[0].label) as string);
                 }
 
             }
@@ -476,6 +533,7 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
             // Multiple selection
             // ++++++++++++++++++++
             if ( MULTI_SEL_VALID ) {
+
 
                 if ( (typeof defaultValue === 'undefined' || defaultValue === '') && init ) {
                     setControlArr({
@@ -487,29 +545,41 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
 
                 if ( typeof defaultValue !== 'undefined' && defaultValue !== '' && multiSelect?.data !== null ) {
 
+                    
+                    // initialize default values of Multiple selection
+                    const _currentData: any = multiSelect?.data;
+
+                    setControlArr({
+                        labels: _currentData.labels,
+                        values: _currentData.values,
+                    });
+
+               
                     //
                     const _values: string[] = defaultValue.split(',');
                     _values.forEach((_value: string, _index: number) => {
 
-                        if ( !multiSelControlOptionExist(controlArr.values, _value) && typeof multiSelect?.data?.values[_index] !== 'undefined' )  {
+                        if ( !multiSelControlOptionExist(_currentData.values, _value) && typeof _currentData.values[_index] !== 'undefined' )  {
 
                             let filterRes: any = [];
                             filterRes = [{
-                                value: multiSelect?.data?.values[_index],
-                                label: multiSelect?.data?.labels[_index],
-                                queryString: multiSelect?.data?.queryStrings[_index]
+                                value: _currentData.values[_index],
+                                label: _currentData.labels[_index],
+                                queryString: _currentData.queryStrings[_index]
                             }];
 
                             setControlArr((prevState: any) => {
                                 return {
-                                    labels: [...prevState.labels, typeof filterRes[0] !== 'undefined' ? filterRes[0].label : ''].filter((v: any) => v !== ''),
-                                    values: [...prevState.values, typeof filterRes[0] !== 'undefined' ? filterRes[0].value : ''].filter((v: any) => v !== '')
+                                    labels: unique([...prevState.labels, typeof filterRes[0] !== 'undefined' ? filterRes[0].label : ''].filter((v: any) => v !== '')),
+                                    values: unique([...prevState.values, typeof filterRes[0] !== 'undefined' ? filterRes[0].value : ''].filter((v: any) => v !== ''))
                                 }
                             });
 
                         }
 
                     });
+
+
 
                     // Appropriate multi-item container height
                     adjustMultiControlContainerHeight();
@@ -521,7 +591,7 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
             }
 
 
-            // STEP 4: ===========
+            // STEP 5: ===========
             //
             setOptionsData(_ORGIN_DATA); // data must be initialized
 
@@ -529,7 +599,7 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
             setOrginalData(_ORGIN_DATA);
 
 
-            // STEP 5: ===========
+            // STEP 6: ===========
             //
             onFetch?.(selectInputRef.current, valueInputRef.current, defaultValue, _ORGIN_DATA, incomingData);
 
@@ -539,6 +609,7 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
 
             
         } else {
+            
 
             // STEP 1: ===========
             // get incoming options from `data-options` of component
@@ -552,6 +623,16 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
 
 
             // STEP 2: ===========
+            // Set hierarchical categories ( with sub-categories )
+            if ( hierarchical ) {
+                addTreeDepth(optionsDataInit);
+                optionsDataInit = flatTree(optionsDataInit);
+                addTreeIndent(optionsDataInit, INDENT_PLACEHOLDER, INDENT_LAST_PLACEHOLDER, 'label');
+            }
+
+
+
+            // STEP 3: ===========
             // value & label must be initialized
             let filterRes: any = [];
             const filterResQueryValue = optionsDataInit.filter((item: any) => item.value == defaultValue );
@@ -560,7 +641,7 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
             filterRes = filterResQueryValue;
             if ( filterResQueryValue.length === 0 ) filterRes = filterResQueryLabel;
 
-            // STEP 3: ===========
+            // STEP 4: ===========
             // ++++++++++++++++++++
             // Single selection
             // ++++++++++++++++++++
@@ -570,7 +651,7 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
             } else {
                 if ( filterRes.length > 0 ) {
                     setControlValue(filterRes[0].value); 
-                    setControlLabel(filterRes[0].label);
+                    setControlLabel(formatIndentVal(filterRes[0].label));
                 }
 
             }
@@ -593,23 +674,33 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
 
                 if ( typeof defaultValue !== 'undefined' && defaultValue !== '' && multiSelect?.data !== null ) {
 
+                    // initialize default values of Multiple selection
+                    const _currentData: any = multiSelect?.data;
+
+                    setControlArr({
+                        labels: _currentData.labels,
+                        values: _currentData.values,
+                    });
+
+
+                    //
                     const _values: string[] = typeof defaultValue !== 'undefined' ? defaultValue.split(',') : [];
                     _values.forEach((_value: string, _index: number) => {
 
-                        if ( !multiSelControlOptionExist(controlArr.values, _value) && typeof multiSelect?.data?.values[_index] !== 'undefined' )  {
+                        if ( !multiSelControlOptionExist(_currentData.values, _value) && typeof _currentData.values[_index] !== 'undefined' )  {
                             
 
                             let filterRes: any = [];
                             filterRes = [{
-                                value: multiSelect?.data?.values[_index],
-                                label: multiSelect?.data?.labels[_index],
-                                queryString: multiSelect?.data?.queryStrings[_index]
+                                value: _currentData.values[_index],
+                                label: _currentData.labels[_index],
+                                queryString: _currentData.queryStrings[_index]
                             }];
                 
                             setControlArr((prevState: any) => {
                                 return {
-                                    labels: [...prevState.labels, typeof filterRes[0] !== 'undefined' ? filterRes[0].label : ''].filter((v: any) => v !== ''),
-                                    values: [...prevState.values, typeof filterRes[0] !== 'undefined' ? filterRes[0].value : ''].filter((v: any) => v !== '')
+                                    labels: unique([...prevState.labels, typeof filterRes[0] !== 'undefined' ? filterRes[0].label : ''].filter((v: any) => v !== '')),
+                                    values: unique([...prevState.values, typeof filterRes[0] !== 'undefined' ? filterRes[0].value : ''].filter((v: any) => v !== ''))
                                 }
                             });
 
@@ -625,14 +716,14 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
             }
 
 
-            // STEP 4: ===========
+            // STEP 5: ===========
             //
             setOptionsData(optionsDataInit); // data must be initialized
 
             //
             setOrginalData(optionsDataInit);   
 
-            // STEP 5: ===========
+            // STEP 6: ===========
             //
             onFetch?.(selectInputRef.current, valueInputRef.current, defaultValue, optionsDataInit, incomingData);
 
@@ -710,7 +801,7 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
             // Single selection
             // ++++++++++++++++++++
             setControlValue(_value); 
-            setControlLabel(_label); 
+            setControlLabel(formatIndentVal(_label)); 
 
 
             // set value if the attribute `data-options` of component exists, only valid for single selection (it may be an empty array)
@@ -735,14 +826,16 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
                         setControlTempValue(prevState.labels.length >= 0 ? null : prevState.labels.join(','));
 
                         return {
-                            labels: removeItemOnce(prevState.labels, _label),
+                            labels: removeItemOnce(prevState.labels, formatIndentVal(_label)),
                             values: removeItemOnce(prevState.values, _value)
                         }
                     });
 
 
                     currentControlValueArr = removeItemOnce(currentControlValueArr, _value);
-                    currentControlLabelArr = removeItemOnce(currentControlLabelArr, _label);
+                    currentControlLabelArr = removeItemOnce(currentControlLabelArr, formatIndentVal(_label));
+                    
+                    
 
                 } else {
 
@@ -753,7 +846,7 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
                         setControlTempValue(prevState.labels.length >= 0 ? null : prevState.labels.join(','));
 
                         return {
-                            labels: [...prevState.labels, _label],
+                            labels: [...prevState.labels, formatIndentVal(_label)],
                             values: [...prevState.values, _value]
                         }
                     });
@@ -787,7 +880,7 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
             // Single selection
             // ++++++++++++++++++++
             setControlValue(_value); 
-            setControlLabel(_label); 
+            setControlLabel(formatIndentVal(_label)); 
 
             // set value if the attribute `data-options` of component exists, only valid for single selection (it may be an empty array)
             if ( typeof incomingOptionsData !== 'undefined' ) {
@@ -811,15 +904,13 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
                         setControlTempValue(prevState.labels.length >= 0 ? null : prevState.labels.join(','));
 
                         return {
-                            labels: removeItemOnce(prevState.labels, _label),
+                            labels: removeItemOnce(prevState.labels, formatIndentVal(_label)),
                             values: removeItemOnce(prevState.values, _value)
                         }
                     });
 
-
                     currentControlValueArr = removeItemOnce(currentControlValueArr, _value);
-                    currentControlLabelArr = removeItemOnce(currentControlLabelArr, _label);
-
+                    currentControlLabelArr = removeItemOnce(currentControlLabelArr, formatIndentVal(_label));
 
                 } else {
 
@@ -830,7 +921,7 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
                         setControlTempValue(prevState.labels.length >= 0 ? null : prevState.labels.join(','));
 
                         return {
-                            labels: [...prevState.labels, _label],
+                            labels: [...prevState.labels, formatIndentVal(_label)],
                             values: [...prevState.values, _value]
                         }
                     });
@@ -868,6 +959,7 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
             if ( typeof(onChange) === 'function' ) {
                 onChange?.(selectInputRef.current, valueInputRef.current, {labels: labelsArr.map((v: any) => v.toString()), values: valuesArr.map((v: any) => v.toString())});
 
+
                 //
                 selectInputRef.current.blur();
             }    
@@ -881,11 +973,11 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
                 setControlArr((prevData: any) => {
 
                     const currentControlValueArr = [...prevData.values, ...optionsData.map((v: any) => v.value)].filter((item: any, index: number, arr: any[]) => arr.indexOf(item, 0) === index );
-                    const currentControlLabelArr = [...prevData.labels, ...optionsData.map((v: any) => v.label)].filter((item: any, index: number, arr: any[]) => arr.indexOf(item, 0) === index );
+                    const currentControlLabelArr = [...formatIndentVal(prevData.labels), ...formatIndentVal(optionsData.map((v: any) => v.label))].filter((item: any, index: number, arr: any[]) => arr.indexOf(item, 0) === index );
 
                     //
                     onChangeSelectAll(currentControlLabelArr, currentControlValueArr);            
-                    
+          
                     return {
                         labels: currentControlLabelArr,
                         values: currentControlValueArr
@@ -896,15 +988,15 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
                 
             } else {
 
-
         
                 setControlArr((prevData: any) => {
 
                     const currentControlValueArr = removeItems(prevData.values, optionsData.map((v: any) => v.value));
-                    const currentControlLabelArr = removeItems(prevData.labels, optionsData.map((v: any) => v.label));
+                    const currentControlLabelArr = removeItems(formatIndentVal(prevData.labels), formatIndentVal(optionsData.map((v: any) => v.label)));
+
 
                     //
-                    onChangeSelectAll(currentControlLabelArr, currentControlValueArr);            
+                    onChangeSelectAll(currentControlLabelArr, currentControlValueArr);     
                     
                     return {
                         labels: currentControlLabelArr,
@@ -939,14 +1031,13 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
             setControlTempValue(prevState.labels.length >= 0 ? null : prevState.labels.join(','));
 
             return {
-                labels: removeItemOnce(prevState.labels, _label),
+                labels: removeItemOnce(prevState.labels, formatIndentVal(_label)),
                 values: removeItemOnce(prevState.values, _value)
             }
         });
 
-
         currentControlValueArr = removeItemOnce(currentControlValueArr, _value);
-        currentControlLabelArr = removeItemOnce(currentControlLabelArr, _label);
+        currentControlLabelArr = removeItemOnce(currentControlLabelArr, formatIndentVal(_label));
 
 
         // Appropriate multi-item container height
@@ -1126,6 +1217,7 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
 
     useEffect(() => {
 
+
         // Call a function when the component has been rendered completely
         //--------------
         onLoad?.(selectInputRef.current, valueInputRef.current, value);
@@ -1262,7 +1354,7 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
         window.removeEventListener('touchmove', windowScrollUpdate);
         window.addEventListener('scroll', windowScrollUpdate);
         window.addEventListener('touchmove', windowScrollUpdate);
-        windowScrollUpdate();
+       // windowScrollUpdate();
 
 
         return () => {
@@ -1319,7 +1411,7 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
                             disabled={disabled || null}
                             required={required || null}
                             readOnly={readOnly || null}
-                            value={controlTempValue || controlTempValue === '' ? controlTempValue : (MULTI_SEL_VALID ? controlArr.labels.map((v: any) => stripHTML(v)).join(',') :  stripHTML(controlLabel as never))}  // do not use `defaultValue`
+                            value={controlTempValue || controlTempValue === '' ? controlTempValue : (MULTI_SEL_VALID ? formatIndentVal(controlArr.labels).map((v: any) => stripHTML(v)).join(',') :  stripHTML(controlLabel as never))}  // do not use `defaultValue`
                           
                             style={{cursor: 'pointer', borderBottomWidth: MULTI_SEL_VALID? '0' : '1px', ...style}}
                             autoComplete='off'
@@ -1428,7 +1520,7 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
 
 
                     {optionsData && !hasErr ? <>
-                    <div ref={listRef} className="list-group position-absolute w-100 border shadow small" style={{ marginTop: '0.2rem', zIndex: (depth ? depth : 100)}} role="tablist">
+                    <div ref={listRef} className={`list-group position-absolute border shadow small ${winWidth ? '' : 'w-100'}`} style={{ marginTop: '0.2rem', zIndex: (depth ? depth : 100), width: WIN_WIDTH}} role="tablist">
 
                         {controlTempValue !== null && optionsData.length === 0 ? <>
                             <button tabIndex={-1} type="button" className="list-group-item list-group-item-action no-match" disabled>{fetchNoneInfo || 'No match yet'}</button>

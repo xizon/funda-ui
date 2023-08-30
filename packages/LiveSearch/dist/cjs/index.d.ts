@@ -10,6 +10,7 @@ declare type LiveSearchProps = {
     disabled?: any;
     required?: any;
     placeholder?: string;
+    winWidth?: string | Function;
     icon?: React.ReactNode | string;
     btnId?: string;
     fetchTrigger?: boolean;

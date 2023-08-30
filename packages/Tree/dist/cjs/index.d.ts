@@ -33,5 +33,5 @@ declare type TreeProps = {
     onCollapse?: (e: any, val: any, func: Function) => void;
     onCheck?: (val: any) => void;
 };
-declare const _default: React.MemoExoticComponent<(props: TreeProps) => JSX.Element>;
-export default _default;
+declare const Tree: (props: TreeProps) => JSX.Element;
+export default Tree;

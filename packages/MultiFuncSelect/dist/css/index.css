@@ -2,6 +2,7 @@
     <!-- Multifunction Select -->
 /* ====================================================== */
 .multifunc-select__wrapper {
+  --multi-sel-popwin-min-width: 200px;
   --multi-sel-focus-border-color:#86b7fe;
   --multi-sel-focus-box-shadow: 0 0 0 0.25rem rgba(13,110,253,.25);
   --multi-sel-placeholder-color: rgba(33, 37, 41, 0.75);
@@ -37,6 +38,7 @@
 }
 .multifunc-select__wrapper .list-group {
   display: none;
+  min-width: var(--multi-sel-popwin-min-width);
 }
 .multifunc-select__wrapper .list-group .bg-light {
   background-color: var(--multi-sel-listgroup-tool-bg) !important;

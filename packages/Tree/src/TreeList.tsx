@@ -1,6 +1,7 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useCallback } from 'react';
 
 import Checkbox from 'rpb-checkbox';
+
 
 import { getNextSiblings, getParents, getChildren } from './utils/dom'; 
 
@@ -29,6 +30,7 @@ type TreeListProps = {
     updateCheckedPrint?: any;
     getCheckedData?: any[];
     updategetCheckedData?: any;
+    updateCollapseData?: any;
     onSelect?: (e: any, val: any, func: Function) => void;
     onCollapse?: (e: any, val: any, func: Function) => void;
     onCheck?: (val: any) => void;
@@ -52,6 +54,7 @@ export default function TreeList(props: TreeListProps) {
         updateCheckedPrint,
         getCheckedData,
         updategetCheckedData,
+        updateCollapseData,
         onSelect,
         onCollapse,
         onCheck,
@@ -81,7 +84,6 @@ export default function TreeList(props: TreeListProps) {
             link: el.dataset.link
         }
     };
-
 
     const setCheckboxCheckedData = (arr: any[], key: string, val: boolean) => {
         arr.forEach((item: any, index: number) => {
@@ -183,31 +185,42 @@ export default function TreeList(props: TreeListProps) {
         activeClass(hyperlink.parentNode, 'add');
 
         // init <ul> height
-        [].slice.call(ul).forEach(function(el: any){
-            if ( typeof el.querySelectorAll('li')[0] !== 'undefined' ) {
-                const calcH = el.querySelectorAll('li').length * el.querySelectorAll('li')[0].scrollHeight;
-                el.style.maxHeight = `${calcH}px`;       
+        initUlHeight(ul);
+
+    };
+
+    const initUlHeight = (inputUl: HTMLAllCollection) => {
+        [].slice.call(inputUl).forEach(function(el: HTMLUListElement){
+            if (typeof el.dataset.maxwidth === 'undefined') {
+                const _li = [].slice.call(el.querySelectorAll('li'));
+                let _allHeight: number = 0;
+                _li.forEach(function(li: HTMLLIElement){
+                    _allHeight += li.scrollHeight;   
+                });
+                el.dataset.maxwidth = `${_allHeight}px`;
+                el.style.maxHeight = `${_allHeight}px`;
+            } else {
+                el.style.maxHeight = el.dataset.maxwidth;
             }
 
         });
-
     };
 
     function handleCollapse(e: any) {
         if ( disableCollapse ) return;
 
+        
         e.preventDefault();
         const hyperlink = e.currentTarget;
         const url = hyperlink.getAttribute('href');
         const subElement = getNextSiblings(hyperlink, 'ul');
-        
 
         // loading
         //=====================       
         if ( hyperlink.classList.contains('async-ready') ) {
             activeClass(hyperlink, 'add', 'loading');
         }
-        
+
 
         // calback
         //=====================
@@ -243,20 +256,28 @@ export default function TreeList(props: TreeListProps) {
                 });
             }
 
-
             //open current
             openChild(hyperlink, subElement as never);
+            
+
+            // update collapse data
+            updateCollapseData(data, hyperlink.dataset.key, true);
+            
 
         } else {
 
             //close current
             closeChild(hyperlink, subElement as never);
+
+            // update collapse data
+            updateCollapseData(data, hyperlink.dataset.key, false);
+
         }
 
 
     }
 
-    function handleClick(e: any) {
+    function handleSelect(e: any) {
         e.preventDefault();
         const hyperlink = e.currentTarget;
 
@@ -270,6 +291,21 @@ export default function TreeList(props: TreeListProps) {
         }
 
      
+        // Note: that component re-rendering (such as routing changes) will cause collapsing problems 
+        // with `onSelect()`, please use `useMemo()` to wrap `<Tree />`, like this:
+        /*
+        function TreeMemo(props: any) {
+            const {t, callback, data} = props;
+            const dependencies = props.data !== null && props.data.length === 0 ? props.data : '';
+            return useMemo(() => {
+                return    <Tree
+                            data={data}
+                            showLine={true}
+                            onSelect={callback}
+                        />
+            }, [dependencies]);
+        }
+        */
         onSelect?.(e, {
             key: hyperlink.dataset.key,
             slug: hyperlink.dataset.slug,
@@ -299,7 +335,6 @@ export default function TreeList(props: TreeListProps) {
 
     useEffect(() => {
 
-    
         // Activate current item
         //=====================
         const allItems = rootRef.current ? [].slice.call(document.querySelectorAll(`.${childClassName} a`)).map( (item: any) => {
@@ -311,6 +346,7 @@ export default function TreeList(props: TreeListProps) {
             }
         } ) : [];
 
+     
         allItems.forEach( (hyperlink: any) => {
 
             // Expand the currently active item by default
@@ -326,14 +362,8 @@ export default function TreeList(props: TreeListProps) {
 
 
                 // init <ul> height
-                const ul = getNextSiblings(hyperlink.el, 'ul');
-                [].slice.call(ul).forEach(function(el: any){
-                    if ( typeof el.querySelectorAll('li')[0] !== 'undefined' ) {
-                        const calcH = el.querySelectorAll('li').length * el.querySelectorAll('li')[0].scrollHeight;
-                        el.style.maxHeight = `${calcH}px`;
-                    }
-
-                });
+                const ul: any = getNextSiblings(hyperlink.el, 'ul');
+                initUlHeight(ul);
             }
 
         });
@@ -367,7 +397,7 @@ export default function TreeList(props: TreeListProps) {
                         </li>
                     );
                     return (
-                        <li key={item.key} className={item.active ? 'nav-item active' : 'nav-item'}>
+                        <li className={item.active ? 'nav-item active' : 'nav-item'} key={item.key} >
 
                             {(item.children && item.children.length) || item.childrenAsync ? <span aria-expanded={item.active ? 'true' : 'false'} className={item.active ? `arrow active ${_async} ${_cusIcons}` : `arrow ${_async} ${_cusIcons}`} onClick={handleCollapse} data-link={item.link} data-slug={item.slug} data-key={item.key}>{arrowGenerator()}</span> : ''}
 
@@ -456,7 +486,7 @@ export default function TreeList(props: TreeListProps) {
                                 />
                             </span>
                             
-                            <a tabIndex={-1} className={item.active ? `nav-link active ${_async}` : `nav-link ${_async}`} href={item.link === '#' ? `${item.link}-${i}` : item.link} aria-expanded="false" onClick={handleClick} data-link={item.link} data-slug={item.slug} data-key={item.key}>
+                            <a tabIndex={-1} className={item.active ? `nav-link active ${_async}` : `nav-link ${_async}`} href={item.link === '#' ? `${item.link}-${i}` : item.link} aria-expanded="false" onClick={handleSelect} data-link={item.link} data-slug={item.slug} data-key={item.key}>
                                 <span>{item.icon ? item.icon.indexOf('</svg>') < 0 ? <><i className={item.icon}></i> </> : <var dangerouslySetInnerHTML={{ __html: `${item.icon}` }} /> : null}<i dangerouslySetInnerHTML={{ __html: `${item.title}` }}></i>{titleArrowGenerator()}</span>
                             </a>
                             {item.children && item.children.length > 0 && <TreeList 
@@ -476,6 +506,7 @@ export default function TreeList(props: TreeListProps) {
                                                 updateCheckedPrint={updateCheckedPrint}
                                                 getCheckedData={getCheckedData}
                                                 updategetCheckedData={updategetCheckedData}
+                                                updateCollapseData={updateCollapseData}
 
                                             />}
                         </li>

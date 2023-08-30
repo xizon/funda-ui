@@ -1,6 +1,6 @@
 import React, { useId, useEffect, useState, useRef } from 'react';
 
-import { throttle } from './utils/performance';
+import { debounce } from './utils/performance';
 import useThrottle from './utils/useThrottle';
 
 import SearchBar from 'rpb-searchbar';
@@ -17,6 +17,7 @@ type LiveSearchProps = {
     disabled?: any;
     required?: any;
     placeholder?: string;
+    winWidth?: string | Function;
     icon?: React.ReactNode | string;
     btnId?: string;
     fetchTrigger?: boolean;
@@ -59,6 +60,7 @@ const LiveSearch = (props: LiveSearchProps) => {
         depth,
         maxLength,
         style,
+        winWidth,
         tabIndex,
         fetchNoneInfo,
         fetchUpdate,
@@ -73,13 +75,14 @@ const LiveSearch = (props: LiveSearchProps) => {
     } = props;
 
 
+    const WIN_WIDTH = typeof winWidth === 'function' ? winWidth() : winWidth ? winWidth : 'auto';
     const uniqueID = useId();
     const idRes = id || uniqueID;
     const rootRef = useRef<any>(null);
     const inputRef = useRef<any>(null);
     const listRef = useRef<any>(null);
     const listContentRef = useRef<any>(null);
-    const windowScrollUpdate = throttle(handleScrollEvent, 5);
+    const windowScrollUpdate = debounce(handleScrollEvent, 500);
     
 
 
@@ -542,7 +545,7 @@ const LiveSearch = (props: LiveSearchProps) => {
 
 
                 {data && data.length > 0 && !hasErr ? <>
-                    <div ref={listRef} className="list-group position-absolute w-100 border shadow small" style={{ marginTop: '0.2rem', zIndex: (depth ? depth : 100)}} role="tablist">
+                    <div ref={listRef} className={`list-group position-absolute border shadow small ${winWidth ? '' : 'w-100'}`} style={{ marginTop: '0.2rem', zIndex: (depth ? depth : 100), minWidth: '200px', width: WIN_WIDTH}} role="tablist">
                         <div className="rounded" ref={listContentRef}>
                             {data ? data.map((item, index) => {
                                 const startItemBorder = index === 0 ? 'border-top-0' : '';
@@ -558,7 +561,7 @@ const LiveSearch = (props: LiveSearchProps) => {
                 </> : null}
 
                 {data && data.length === 0 && !hasErr && isOpen ? <>
-                    <div ref={listRef} className="list-group position-absolute w-100 border shadow small" style={{ marginTop: '0.2rem', zIndex: (depth ? depth : 100)}} role="tablist">
+                    <div ref={listRef} className={`list-group position-absolute border shadow small ${winWidth ? '' : 'w-100'}`} style={{ marginTop: '0.2rem', zIndex: (depth ? depth : 100), minWidth: '200px', width: WIN_WIDTH}} role="tablist">
 
                         <div className="rounded" ref={listContentRef}>
                             <button tabIndex={-1} type="button" className="list-group-item list-group-item-action no-match" disabled>{fetchNoneInfo || 'No match yet'}</button>

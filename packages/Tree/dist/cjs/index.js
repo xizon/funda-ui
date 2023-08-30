@@ -666,6 +666,7 @@ function TreeList(props) {
     updateCheckedPrint = props.updateCheckedPrint,
     getCheckedData = props.getCheckedData,
     updategetCheckedData = props.updategetCheckedData,
+    updateCollapseData = props.updateCollapseData,
     onSelect = props.onSelect,
     onCollapse = props.onCollapse,
     onCheck = props.onCheck,
@@ -809,10 +810,20 @@ function TreeList(props) {
     activeClass(hyperlink.parentNode, 'add');
 
     // init <ul> height
-    [].slice.call(ul).forEach(function (el) {
-      if (typeof el.querySelectorAll('li')[0] !== 'undefined') {
-        var calcH = el.querySelectorAll('li').length * el.querySelectorAll('li')[0].scrollHeight;
-        el.style.maxHeight = "".concat(calcH, "px");
+    initUlHeight(ul);
+  };
+  var initUlHeight = function initUlHeight(inputUl) {
+    [].slice.call(inputUl).forEach(function (el) {
+      if (typeof el.dataset.maxwidth === 'undefined') {
+        var _li = [].slice.call(el.querySelectorAll('li'));
+        var _allHeight = 0;
+        _li.forEach(function (li) {
+          _allHeight += li.scrollHeight;
+        });
+        el.dataset.maxwidth = "".concat(_allHeight, "px");
+        el.style.maxHeight = "".concat(_allHeight, "px");
+      } else {
+        el.style.maxHeight = el.dataset.maxwidth;
       }
     });
   };
@@ -861,12 +872,18 @@ function TreeList(props) {
 
       //open current
       openChild(hyperlink, subElement);
+
+      // update collapse data
+      updateCollapseData(data, hyperlink.dataset.key, true);
     } else {
       //close current
       closeChild(hyperlink, subElement);
+
+      // update collapse data
+      updateCollapseData(data, hyperlink.dataset.key, false);
     }
   }
-  function handleClick(e) {
+  function handleSelect(e) {
     e.preventDefault();
     var hyperlink = e.currentTarget;
     if (hyperlink.classList.contains('selected')) {
@@ -877,6 +894,22 @@ function TreeList(props) {
       });
       activeClass(hyperlink, 'add', 'selected');
     }
+
+    // Note: that component re-rendering (such as routing changes) will cause collapsing problems 
+    // with `onSelect()`, please use `useMemo()` to wrap `<Tree />`, like this:
+    /*
+    function TreeMemo(props: any) {
+        const {t, callback, data} = props;
+        const dependencies = props.data !== null && props.data.length === 0 ? props.data : '';
+        return useMemo(() => {
+            return    <Tree
+                        data={data}
+                        showLine={true}
+                        onSelect={callback}
+                    />
+        }, [dependencies]);
+    }
+    */
     onSelect === null || onSelect === void 0 ? void 0 : onSelect(e, {
       key: hyperlink.dataset.key,
       slug: hyperlink.dataset.slug,
@@ -926,12 +959,7 @@ function TreeList(props) {
 
         // init <ul> height
         var ul = (0,dom.getNextSiblings)(hyperlink.el, 'ul');
-        [].slice.call(ul).forEach(function (el) {
-          if (typeof el.querySelectorAll('li')[0] !== 'undefined') {
-            var calcH = el.querySelectorAll('li').length * el.querySelectorAll('li')[0].scrollHeight;
-            el.style.maxHeight = "".concat(calcH, "px");
-          }
-        });
+        initUlHeight(ul);
       }
     });
 
@@ -973,8 +1001,8 @@ function TreeList(props) {
         }
       }))));
       return /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("li", {
-        key: item.key,
-        className: item.active ? 'nav-item active' : 'nav-item'
+        className: item.active ? 'nav-item active' : 'nav-item',
+        key: item.key
       }, item.children && item.children.length || item.childrenAsync ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("span", {
         "aria-expanded": item.active ? 'true' : 'false',
         className: item.active ? "arrow active ".concat(_async, " ").concat(_cusIcons) : "arrow ".concat(_async, " ").concat(_cusIcons),
@@ -1069,7 +1097,7 @@ function TreeList(props) {
         className: item.active ? "nav-link active ".concat(_async) : "nav-link ".concat(_async),
         href: item.link === '#' ? "".concat(item.link, "-").concat(i) : item.link,
         "aria-expanded": "false",
-        onClick: handleClick,
+        onClick: handleSelect,
         "data-link": item.link,
         "data-slug": item.slug,
         "data-key": item.key
@@ -1099,7 +1127,8 @@ function TreeList(props) {
         getCheckedPrint: getCheckedPrint,
         updateCheckedPrint: updateCheckedPrint,
         getCheckedData: getCheckedData,
-        updategetCheckedData: updategetCheckedData
+        updategetCheckedData: updategetCheckedData,
+        updateCollapseData: updateCollapseData
       }));
     })));
   } else {
@@ -1223,6 +1252,16 @@ var Tree = function Tree(props) {
     }));
     return _fetchData.apply(this, arguments);
   }
+  function setCollapseData(obj, key, val) {
+    obj.forEach(function (item) {
+      if (item.key === key) {
+        item.active = val;
+      }
+      if (item.children && item.children.length > 0) {
+        setCollapseData(item.children, key, val);
+      }
+    });
+  }
   function addKey(obj, depth, init) {
     obj.forEach(function (item, index) {
       item.key = "".concat(depth, "-").concat(index).substring(1);
@@ -1340,10 +1379,11 @@ var Tree = function Tree(props) {
     updateCheckedPrint: setCheckedPrint,
     getCheckedPrint: checkedPrint,
     updategetCheckedData: setCheckedData,
-    getCheckedData: checkedData
+    getCheckedData: checkedData,
+    updateCollapseData: setCollapseData
   })));
 };
-/* harmony default export */ const src = (/*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_amd_react_.memo)(Tree));
+/* harmony default export */ const src = (Tree);
 })();
 
 /******/ 	return __webpack_exports__;

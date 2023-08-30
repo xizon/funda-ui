@@ -63,6 +63,135 @@ module.exports = {
 
 /***/ }),
 
+/***/ 602:
+/***/ ((module) => {
+
+function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys(Object(source), !0).forEach(function (key) { _defineProperty(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
+function _defineProperty(obj, key, value) { key = _toPropertyKey(key); if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+function _toPropertyKey(arg) { var key = _toPrimitive(arg, "string"); return _typeof(key) === "symbol" ? key : String(key); }
+function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input === null) return input; var prim = input[Symbol.toPrimitive]; if (prim !== undefined) { var res = prim.call(input, hint || "default"); if (_typeof(res) !== "object") return res; throw new TypeError("@@toPrimitive must return a primitive value."); } return (hint === "string" ? String : Number)(input); }
+function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter); }
+function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i]; return arr2; }
+function _objectDestructuringEmpty(obj) { if (obj == null) throw new TypeError("Cannot destructure " + obj); }
+function _extends() { _extends = Object.assign ? Object.assign.bind() : function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
+/**
+ * Convert Tree
+ * @param {Array} arr                    - Flat array
+ * @param  {?String | ?Number} parentId  - Parent id
+ * @param  {?String} keyId               - Key value of id.
+ * @param  {?String} keyParentId         - Key value of parent id.
+ * @returns Array
+ */
+function convertTree(arr) {
+  var parentId = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '';
+  var keyId = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 'id';
+  var keyParentId = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : 'parent_id';
+  if (!parentId) {
+    // If there is no parent id (when recursing for the first time), all parents will be queried
+    return arr.filter(function (item) {
+      return !item[keyParentId];
+    }).map(function (item) {
+      // Query all child nodes by parent node ID
+      item.children = convertTree(arr, item[keyId], keyId, keyParentId);
+      return item;
+    });
+  } else {
+    return arr.filter(function (item) {
+      return item[keyParentId] === parentId;
+    }).map(function (item) {
+      // Query all child nodes by parent node ID
+      item.children = convertTree(arr, item[keyId], keyId, keyParentId);
+      return item;
+    });
+  }
+}
+
+/**
+ * Flat tree
+ * @param {Array} arr                    - Hierarchical array
+ * @returns Array
+ */
+function flatTree(arr) {
+  var flatData = function flatData(_ref) {
+    var rest = _extends({}, (_objectDestructuringEmpty(_ref), _ref));
+    var _rest$children = rest.children,
+      children = _rest$children === void 0 ? [] : _rest$children;
+    return [_objectSpread({}, rest)].concat(_toConsumableArray(children.flatMap(flatData)));
+  };
+  var result = arr.flatMap(flatData);
+
+  //remove children from item
+  result = result.map(function (item) {
+    delete item.children;
+    return item;
+  });
+  return result;
+}
+
+/**
+ * Add depth to each item in the tree
+ * @param {Array} arr                    - Hierarchical array
+ * @param  {?String | ?Number} parentId  - Parent id
+ * @param  {?String} keyId               - Key value of id.
+ * @param  {?String} keyParentId         - Key value of parent id.
+ * @param  {?Number} depth               - Depth of the item.
+ * @returns 
+ */
+function addTreeDepth(arr) {
+  var parentId = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '';
+  var keyId = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 'id';
+  var keyParentId = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : 'parent_id';
+  var depth = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : 0;
+  arr.forEach(function (item) {
+    item.depth = depth;
+    // Query all child nodes by parent node ID
+    if (item.children && item.children.length > 0) {
+      addTreeDepth(item.children, item[keyId], keyId, keyParentId, ++depth);
+    } else {
+      depth = 0;
+    }
+  });
+}
+
+/**
+ * Add indent placeholder
+ * @param {Array} arr                    - Flat array
+ * @param  {?String} placeholder         - String of placeholder
+ * @param  {?String} lastPlaceholder     - Last String of placeholder
+ * @param  {?String} keyName             - Key value of name.
+ * @returns Array
+ */
+function addTreeIndent(arr) {
+  var placeholder = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '&nbsp;&nbsp;&nbsp;&nbsp;';
+  var lastPlaceholder = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : '';
+  var keyName = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : 'label';
+  arr.forEach(function (item) {
+    var indent = '';
+    if (item.depth) {
+      Array(item.depth).fill(0).forEach(function (k, i) {
+        indent += placeholder;
+        if (i === item.depth - 1) {
+          item[keyName] = indent + lastPlaceholder + item[keyName];
+        }
+      });
+    }
+  });
+}
+module.exports = {
+  convertTree: convertTree,
+  flatTree: flatTree,
+  addTreeDepth: addTreeDepth,
+  addTreeIndent: addTreeIndent
+};
+
+/***/ }),
+
 /***/ 787:
 /***/ ((module) => {
 
@@ -189,8 +318,10 @@ var useThrottle = function useThrottle(fn, delay, dependence) {
   }, dependence);
 };
 /* harmony default export */ const utils_useThrottle = (useThrottle);
+// EXTERNAL MODULE: ./src/utils/tree.js
+var tree = __webpack_require__(602);
 ;// CONCATENATED MODULE: ./src/index.tsx
-var _excluded = ["wrapperClassName", "controlClassName", "multiSelect", "disabled", "required", "value", "label", "name", "readOnly", "placeholder", "id", "options", "style", "depth", "controlArrow", "tabIndex", "fetchTrigger", "fetchTriggerForDefaultData", "fetchNoneInfo", "fetchUpdate", "fetchFuncAsync", "fetchFuncMethod", "fetchFuncMethodParams", "data", "fetchCallback", "onFetch", "onLoad", "onSelect", "onChange", "onBlur", "onFocus"];
+var _excluded = ["wrapperClassName", "controlClassName", "multiSelect", "disabled", "required", "value", "label", "name", "readOnly", "placeholder", "id", "options", "hierarchical", "indentation", "doubleIndent", "style", "depth", "controlArrow", "winWidth", "tabIndex", "fetchTrigger", "fetchTriggerForDefaultData", "fetchNoneInfo", "fetchUpdate", "fetchFuncAsync", "fetchFuncMethod", "fetchFuncMethodParams", "data", "fetchCallback", "onFetch", "onLoad", "onSelect", "onChange", "onBlur", "onFocus"];
 function _extends() { _extends = Object.assign ? Object.assign.bind() : function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
 function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys(Object(source), !0).forEach(function (key) { _defineProperty(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
@@ -216,6 +347,7 @@ function _objectWithoutPropertiesLoose(source, excluded) { if (source == null) r
 
 
 
+
 var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_amd_react_.forwardRef)(function (props, _ref2) {
   var wrapperClassName = props.wrapperClassName,
     controlClassName = props.controlClassName,
@@ -229,9 +361,13 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
     placeholder = props.placeholder,
     id = props.id,
     options = props.options,
+    hierarchical = props.hierarchical,
+    indentation = props.indentation,
+    doubleIndent = props.doubleIndent,
     style = props.style,
     depth = props.depth,
     controlArrow = props.controlArrow,
+    winWidth = props.winWidth,
     tabIndex = props.tabIndex,
     fetchTrigger = props.fetchTrigger,
     fetchTriggerForDefaultData = props.fetchTriggerForDefaultData,
@@ -249,6 +385,9 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
     onBlur = props.onBlur,
     onFocus = props.onFocus,
     attributes = _objectWithoutProperties(props, _excluded);
+  var WIN_WIDTH = typeof winWidth === 'function' ? winWidth() : winWidth ? winWidth : 'auto';
+  var INDENT_PLACEHOLDER = doubleIndent ? "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" : "&nbsp;&nbsp;&nbsp;&nbsp;";
+  var INDENT_LAST_PLACEHOLDER = "".concat(typeof indentation !== 'undefined' && indentation !== '' ? "".concat(indentation, "&nbsp;&nbsp;") : '');
   var uniqueID = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useId)().replace(/\:/g, "-");
   var idRes = id || uniqueID;
   var rootRef = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useRef)(null);
@@ -259,7 +398,7 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
   var listRef = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useRef)(null);
   var listContentRef = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useRef)(null);
   var optionsRes = options ? isJSON(options) ? JSON.parse(options) : options : [];
-  var windowScrollUpdate = (0,performance.throttle)(handleScrollEvent, 5);
+  var windowScrollUpdate = (0,performance.debounce)(handleScrollEvent, 500);
 
   // return a array of options
   var optionsDataInit = optionsRes;
@@ -350,6 +489,31 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
       update(_orginalData);
     }
   }, 150, [optionsData]);
+
+  /**
+   * Format indent value
+   * @param {String|Array} str 
+   * @returns {String|Array}
+   */
+  function formatIndentVal(str) {
+    var reVar = new RegExp(INDENT_LAST_PLACEHOLDER, 'g');
+    if (Array.isArray(str)) {
+      return str.map(function (s) {
+        return s.replace(reVar, '').replace(/\&nbsp;/ig, '');
+      });
+    } else {
+      return str.replace(reVar, '').replace(/\&nbsp;/ig, '');
+    }
+  }
+
+  /**
+   * Array unique
+   * @param {Array} str 
+   * @returns {Array}
+   */
+  function unique(arr) {
+    return Array.from(new Set(arr));
+  }
 
   /**
    * Remove html tag content
@@ -524,10 +688,12 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
         filterRes,
         filterResQueryValue,
         filterResQueryLabel,
+        _currentData,
         _values,
         _filterRes2,
         _filterResQueryValue,
         _filterResQueryLabel,
+        _currentData2,
         _values2,
         _args2 = arguments;
       return _regeneratorRuntime().wrap(function _callee2$(_context2) {
@@ -539,7 +705,7 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
             incomingOptionsData = valueInputRef.current.dataset.options; // Determine whether the default value is user query input or default input
             defaultValue = init ? inputDefaultValue : '';
             if (!(_typeof(fetchFuncAsync) === 'object')) {
-              _context2.next = 21;
+              _context2.next = 22;
               break;
             }
             _context2.next = 6;
@@ -568,6 +734,14 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
             }
 
             // STEP 2: ===========
+            // Set hierarchical categories ( with sub-categories )
+            if (hierarchical) {
+              (0,tree.addTreeDepth)(_ORGIN_DATA);
+              _ORGIN_DATA = (0,tree.flatTree)(_ORGIN_DATA);
+              (0,tree.addTreeIndent)(_ORGIN_DATA, INDENT_PLACEHOLDER, INDENT_LAST_PLACEHOLDER, 'label');
+            }
+
+            // STEP 3: ===========
             // value & label must be initialized
             filterRes = [];
             if (fetchTrigger) {
@@ -590,7 +764,7 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
               if (filterResQueryValue.length === 0) filterRes = filterResQueryLabel;
             }
 
-            // STEP 3: ===========
+            // STEP 4: ===========
             // ++++++++++++++++++++
             // Single selection
             // ++++++++++++++++++++
@@ -601,7 +775,7 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
             } else {
               if (filterRes.length > 0) {
                 setControlValue(filterRes[0].value);
-                setControlLabel(filterRes[0].label);
+                setControlLabel(formatIndentVal(filterRes[0].label));
               }
             }
 
@@ -617,26 +791,31 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
                 setItemSelectedAll(false);
               }
               if (typeof defaultValue !== 'undefined' && defaultValue !== '' && (multiSelect === null || multiSelect === void 0 ? void 0 : multiSelect.data) !== null) {
+                // initialize default values of Multiple selection
+                _currentData = multiSelect === null || multiSelect === void 0 ? void 0 : multiSelect.data;
+                setControlArr({
+                  labels: _currentData.labels,
+                  values: _currentData.values
+                });
+
                 //
                 _values = defaultValue.split(',');
                 _values.forEach(function (_value, _index) {
-                  var _multiSelect$data;
-                  if (!multiSelControlOptionExist(controlArr.values, _value) && typeof (multiSelect === null || multiSelect === void 0 ? void 0 : (_multiSelect$data = multiSelect.data) === null || _multiSelect$data === void 0 ? void 0 : _multiSelect$data.values[_index]) !== 'undefined') {
-                    var _multiSelect$data2, _multiSelect$data3, _multiSelect$data4;
+                  if (!multiSelControlOptionExist(_currentData.values, _value) && typeof _currentData.values[_index] !== 'undefined') {
                     var _filterRes = [];
                     _filterRes = [{
-                      value: multiSelect === null || multiSelect === void 0 ? void 0 : (_multiSelect$data2 = multiSelect.data) === null || _multiSelect$data2 === void 0 ? void 0 : _multiSelect$data2.values[_index],
-                      label: multiSelect === null || multiSelect === void 0 ? void 0 : (_multiSelect$data3 = multiSelect.data) === null || _multiSelect$data3 === void 0 ? void 0 : _multiSelect$data3.labels[_index],
-                      queryString: multiSelect === null || multiSelect === void 0 ? void 0 : (_multiSelect$data4 = multiSelect.data) === null || _multiSelect$data4 === void 0 ? void 0 : _multiSelect$data4.queryStrings[_index]
+                      value: _currentData.values[_index],
+                      label: _currentData.labels[_index],
+                      queryString: _currentData.queryStrings[_index]
                     }];
                     setControlArr(function (prevState) {
                       return {
-                        labels: [].concat(_toConsumableArray(prevState.labels), [typeof _filterRes[0] !== 'undefined' ? _filterRes[0].label : '']).filter(function (v) {
+                        labels: unique([].concat(_toConsumableArray(prevState.labels), [typeof _filterRes[0] !== 'undefined' ? _filterRes[0].label : '']).filter(function (v) {
                           return v !== '';
-                        }),
-                        values: [].concat(_toConsumableArray(prevState.values), [typeof _filterRes[0] !== 'undefined' ? _filterRes[0].value : '']).filter(function (v) {
+                        })),
+                        values: unique([].concat(_toConsumableArray(prevState.values), [typeof _filterRes[0] !== 'undefined' ? _filterRes[0].value : '']).filter(function (v) {
                           return v !== '';
-                        })
+                        }))
                       };
                     });
                   }
@@ -647,20 +826,20 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
               }
             }
 
-            // STEP 4: ===========
+            // STEP 5: ===========
             //
             setOptionsData(_ORGIN_DATA); // data must be initialized
 
             //
             setOrginalData(_ORGIN_DATA);
 
-            // STEP 5: ===========
+            // STEP 6: ===========
             //
             onFetch === null || onFetch === void 0 ? void 0 : onFetch(selectInputRef.current, valueInputRef.current, defaultValue, _ORGIN_DATA, incomingData);
 
             //
             return _context2.abrupt("return", _ORGIN_DATA);
-          case 21:
+          case 22:
             // STEP 1: ===========
             // get incoming options from `data-options` of component
             if (typeof incomingOptionsData !== 'undefined') {
@@ -671,6 +850,14 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
             }
 
             // STEP 2: ===========
+            // Set hierarchical categories ( with sub-categories )
+            if (hierarchical) {
+              (0,tree.addTreeDepth)(optionsDataInit);
+              optionsDataInit = (0,tree.flatTree)(optionsDataInit);
+              (0,tree.addTreeIndent)(optionsDataInit, INDENT_PLACEHOLDER, INDENT_LAST_PLACEHOLDER, 'label');
+            }
+
+            // STEP 3: ===========
             // value & label must be initialized
             _filterRes2 = [];
             _filterResQueryValue = optionsDataInit.filter(function (item) {
@@ -682,7 +869,7 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
             _filterRes2 = _filterResQueryValue;
             if (_filterResQueryValue.length === 0) _filterRes2 = _filterResQueryLabel;
 
-            // STEP 3: ===========
+            // STEP 4: ===========
             // ++++++++++++++++++++
             // Single selection
             // ++++++++++++++++++++
@@ -693,7 +880,7 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
             } else {
               if (_filterRes2.length > 0) {
                 setControlValue(_filterRes2[0].value);
-                setControlLabel(_filterRes2[0].label);
+                setControlLabel(formatIndentVal(_filterRes2[0].label));
               }
             }
 
@@ -709,25 +896,31 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
                 setItemSelectedAll(false);
               }
               if (typeof defaultValue !== 'undefined' && defaultValue !== '' && (multiSelect === null || multiSelect === void 0 ? void 0 : multiSelect.data) !== null) {
+                // initialize default values of Multiple selection
+                _currentData2 = multiSelect === null || multiSelect === void 0 ? void 0 : multiSelect.data;
+                setControlArr({
+                  labels: _currentData2.labels,
+                  values: _currentData2.values
+                });
+
+                //
                 _values2 = typeof defaultValue !== 'undefined' ? defaultValue.split(',') : [];
                 _values2.forEach(function (_value, _index) {
-                  var _multiSelect$data5;
-                  if (!multiSelControlOptionExist(controlArr.values, _value) && typeof (multiSelect === null || multiSelect === void 0 ? void 0 : (_multiSelect$data5 = multiSelect.data) === null || _multiSelect$data5 === void 0 ? void 0 : _multiSelect$data5.values[_index]) !== 'undefined') {
-                    var _multiSelect$data6, _multiSelect$data7, _multiSelect$data8;
+                  if (!multiSelControlOptionExist(_currentData2.values, _value) && typeof _currentData2.values[_index] !== 'undefined') {
                     var _filterRes3 = [];
                     _filterRes3 = [{
-                      value: multiSelect === null || multiSelect === void 0 ? void 0 : (_multiSelect$data6 = multiSelect.data) === null || _multiSelect$data6 === void 0 ? void 0 : _multiSelect$data6.values[_index],
-                      label: multiSelect === null || multiSelect === void 0 ? void 0 : (_multiSelect$data7 = multiSelect.data) === null || _multiSelect$data7 === void 0 ? void 0 : _multiSelect$data7.labels[_index],
-                      queryString: multiSelect === null || multiSelect === void 0 ? void 0 : (_multiSelect$data8 = multiSelect.data) === null || _multiSelect$data8 === void 0 ? void 0 : _multiSelect$data8.queryStrings[_index]
+                      value: _currentData2.values[_index],
+                      label: _currentData2.labels[_index],
+                      queryString: _currentData2.queryStrings[_index]
                     }];
                     setControlArr(function (prevState) {
                       return {
-                        labels: [].concat(_toConsumableArray(prevState.labels), [typeof _filterRes3[0] !== 'undefined' ? _filterRes3[0].label : '']).filter(function (v) {
+                        labels: unique([].concat(_toConsumableArray(prevState.labels), [typeof _filterRes3[0] !== 'undefined' ? _filterRes3[0].label : '']).filter(function (v) {
                           return v !== '';
-                        }),
-                        values: [].concat(_toConsumableArray(prevState.values), [typeof _filterRes3[0] !== 'undefined' ? _filterRes3[0].value : '']).filter(function (v) {
+                        })),
+                        values: unique([].concat(_toConsumableArray(prevState.values), [typeof _filterRes3[0] !== 'undefined' ? _filterRes3[0].value : '']).filter(function (v) {
                           return v !== '';
-                        })
+                        }))
                       };
                     });
                   }
@@ -738,20 +931,20 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
               }
             }
 
-            // STEP 4: ===========
+            // STEP 5: ===========
             //
             setOptionsData(optionsDataInit); // data must be initialized
 
             //
             setOrginalData(optionsDataInit);
 
-            // STEP 5: ===========
+            // STEP 6: ===========
             //
             onFetch === null || onFetch === void 0 ? void 0 : onFetch(selectInputRef.current, valueInputRef.current, defaultValue, optionsDataInit, incomingData);
 
             //
             return _context2.abrupt("return", optionsDataInit);
-          case 33:
+          case 35:
           case "end":
             return _context2.stop();
         }
@@ -839,7 +1032,7 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
               // Single selection
               // ++++++++++++++++++++
               setControlValue(_value);
-              setControlLabel(_label);
+              setControlLabel(formatIndentVal(_label));
 
               // set value if the attribute `data-options` of component exists, only valid for single selection (it may be an empty array)
               if (typeof incomingOptionsData !== 'undefined') {
@@ -857,18 +1050,18 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
                     // update temporary value
                     setControlTempValue(prevState.labels.length >= 0 ? null : prevState.labels.join(','));
                     return {
-                      labels: removeItemOnce(prevState.labels, _label),
+                      labels: removeItemOnce(prevState.labels, formatIndentVal(_label)),
                       values: removeItemOnce(prevState.values, _value)
                     };
                   });
                   currentControlValueArr = removeItemOnce(currentControlValueArr, _value);
-                  currentControlLabelArr = removeItemOnce(currentControlLabelArr, _label);
+                  currentControlLabelArr = removeItemOnce(currentControlLabelArr, formatIndentVal(_label));
                 } else {
                   setControlArr(function (prevState) {
                     // update temporary value
                     setControlTempValue(prevState.labels.length >= 0 ? null : prevState.labels.join(','));
                     return {
-                      labels: [].concat(_toConsumableArray(prevState.labels), [_label]),
+                      labels: [].concat(_toConsumableArray(prevState.labels), [formatIndentVal(_label)]),
                       values: [].concat(_toConsumableArray(prevState.values), [_value])
                     };
                   });
@@ -901,7 +1094,7 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
               // Single selection
               // ++++++++++++++++++++
               setControlValue(_value2);
-              setControlLabel(_label2);
+              setControlLabel(formatIndentVal(_label2));
 
               // set value if the attribute `data-options` of component exists, only valid for single selection (it may be an empty array)
               if (typeof incomingOptionsData !== 'undefined') {
@@ -919,18 +1112,18 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
                     // update temporary value
                     setControlTempValue(prevState.labels.length >= 0 ? null : prevState.labels.join(','));
                     return {
-                      labels: removeItemOnce(prevState.labels, _label2),
+                      labels: removeItemOnce(prevState.labels, formatIndentVal(_label2)),
                       values: removeItemOnce(prevState.values, _value2)
                     };
                   });
                   _currentControlValueArr = removeItemOnce(_currentControlValueArr, _value2);
-                  _currentControlLabelArr = removeItemOnce(_currentControlLabelArr, _label2);
+                  _currentControlLabelArr = removeItemOnce(_currentControlLabelArr, formatIndentVal(_label2));
                 } else {
                   setControlArr(function (prevState) {
                     // update temporary value
                     setControlTempValue(prevState.labels.length >= 0 ? null : prevState.labels.join(','));
                     return {
-                      labels: [].concat(_toConsumableArray(prevState.labels), [_label2]),
+                      labels: [].concat(_toConsumableArray(prevState.labels), [formatIndentVal(_label2)]),
                       values: [].concat(_toConsumableArray(prevState.values), [_value2])
                     };
                   });
@@ -990,9 +1183,9 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
           }))).filter(function (item, index, arr) {
             return arr.indexOf(item, 0) === index;
           });
-          var currentControlLabelArr = [].concat(_toConsumableArray(prevData.labels), _toConsumableArray(optionsData.map(function (v) {
+          var currentControlLabelArr = [].concat(_toConsumableArray(formatIndentVal(prevData.labels)), _toConsumableArray(formatIndentVal(optionsData.map(function (v) {
             return v.label;
-          }))).filter(function (item, index, arr) {
+          })))).filter(function (item, index, arr) {
             return arr.indexOf(item, 0) === index;
           });
 
@@ -1008,9 +1201,9 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
           var currentControlValueArr = removeItems(prevData.values, optionsData.map(function (v) {
             return v.value;
           }));
-          var currentControlLabelArr = removeItems(prevData.labels, optionsData.map(function (v) {
+          var currentControlLabelArr = removeItems(formatIndentVal(prevData.labels), formatIndentVal(optionsData.map(function (v) {
             return v.label;
-          }));
+          })));
 
           //
           onChangeSelectAll(currentControlLabelArr, currentControlValueArr);
@@ -1037,12 +1230,12 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
       // update temporary value
       setControlTempValue(prevState.labels.length >= 0 ? null : prevState.labels.join(','));
       return {
-        labels: removeItemOnce(prevState.labels, _label),
+        labels: removeItemOnce(prevState.labels, formatIndentVal(_label)),
         values: removeItemOnce(prevState.values, _value)
       };
     });
     currentControlValueArr = removeItemOnce(currentControlValueArr, _value);
-    currentControlLabelArr = removeItemOnce(currentControlLabelArr, _label);
+    currentControlLabelArr = removeItemOnce(currentControlLabelArr, formatIndentVal(_label));
 
     // Appropriate multi-item container height
     adjustMultiControlContainerHeight();
@@ -1349,7 +1542,8 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
     window.removeEventListener('touchmove', windowScrollUpdate);
     window.addEventListener('scroll', windowScrollUpdate);
     window.addEventListener('touchmove', windowScrollUpdate);
-    windowScrollUpdate();
+    // windowScrollUpdate();
+
     return function () {
       document.removeEventListener("keydown", listener);
       document.removeEventListener('pointerdown', handleClose);
@@ -1401,7 +1595,7 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
     disabled: disabled || null,
     required: required || null,
     readOnly: readOnly || null,
-    value: controlTempValue || controlTempValue === '' ? controlTempValue : MULTI_SEL_VALID ? controlArr.labels.map(function (v) {
+    value: controlTempValue || controlTempValue === '' ? controlTempValue : MULTI_SEL_VALID ? formatIndentVal(controlArr.labels).map(function (v) {
       return stripHTML(v);
     }).join(',') : stripHTML(controlLabel) // do not use `defaultValue`
     ,
@@ -1522,10 +1716,11 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
     fillRule: "evenodd"
   }))))) : null) : null, optionsData && !hasErr ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
     ref: listRef,
-    className: "list-group position-absolute w-100 border shadow small",
+    className: "list-group position-absolute border shadow small ".concat(winWidth ? '' : 'w-100'),
     style: {
       marginTop: '0.2rem',
-      zIndex: depth ? depth : 100
+      zIndex: depth ? depth : 100,
+      width: WIN_WIDTH
     },
     role: "tablist"
   }, controlTempValue !== null && optionsData.length === 0 ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("button", {
