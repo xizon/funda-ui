@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useRef, useId } from 'react';
 
 import TreeList from './TreeList';
-
+import { initUlHeight, initAsyncItems } from './init-height';
+import { type } from 'os';
 
 declare module 'react' {
     interface ReactI18NextChildren<T> {
@@ -129,6 +130,7 @@ const Tree = (props: TreeProps) => {
                     console.warn( 'The data structure does not match, please refer to the example in the component documentation.' );
                     _ORGIN_DATA = [];
                 }
+
         
                 return _ORGIN_DATA;
 
@@ -144,20 +146,6 @@ const Tree = (props: TreeProps) => {
 
     }
 
-
-
-    function setCollapseData(obj: DataNode[], key: string, val: boolean) {
-
-        obj.forEach((item: any) => {
-            if (item.key === key) {
-                item.active = val;
-            }
-            if (item.children && item.children.length > 0) {
-                setCollapseData(item.children, key, val);
-            }
-        });
-
-    }
 
 
     function addKey(obj: DataNode[], depth: string, init: number) {
@@ -252,7 +240,15 @@ const Tree = (props: TreeProps) => {
                             node.click();
                         }
                     });
-                    
+
+
+                    // init <ul> height
+                    // Initialize async items
+                    const ul: any = [].slice.call(rootRef.current.querySelectorAll('ul'));
+                    initAsyncItems(ul as never).then(() => {
+                        initUlHeight(ul);
+                    });
+
                 }, 500);
 
           
@@ -293,7 +289,6 @@ const Tree = (props: TreeProps) => {
                     getCheckedPrint={checkedPrint}
                     updategetCheckedData={setCheckedData}
                     getCheckedData={checkedData}
-                    updateCollapseData={setCollapseData}
                     
                 />
                 

@@ -5,6 +5,8 @@ import Checkbox from 'rpb-checkbox';
 
 import { getNextSiblings, getParents, getChildren } from './utils/dom'; 
 
+import { initUlHeight } from './init-height';
+
 interface fetchConfig {
     fetchFuncAsync?: any | undefined;
     fetchFuncMethod?: string | undefined;
@@ -30,7 +32,6 @@ type TreeListProps = {
     updateCheckedPrint?: any;
     getCheckedData?: any[];
     updategetCheckedData?: any;
-    updateCollapseData?: any;
     onSelect?: (e: any, val: any, func: Function) => void;
     onCollapse?: (e: any, val: any, func: Function) => void;
     onCheck?: (val: any) => void;
@@ -54,7 +55,6 @@ export default function TreeList(props: TreeListProps) {
         updateCheckedPrint,
         getCheckedData,
         updategetCheckedData,
-        updateCollapseData,
         onSelect,
         onCollapse,
         onCheck,
@@ -189,23 +189,6 @@ export default function TreeList(props: TreeListProps) {
 
     };
 
-    const initUlHeight = (inputUl: HTMLAllCollection) => {
-        [].slice.call(inputUl).forEach(function(el: HTMLUListElement){
-            if (typeof el.dataset.maxwidth === 'undefined') {
-                const _li = [].slice.call(el.querySelectorAll('li'));
-                let _allHeight: number = 0;
-                _li.forEach(function(li: HTMLLIElement){
-                    _allHeight += li.scrollHeight;   
-                });
-                el.dataset.maxwidth = `${_allHeight}px`;
-                el.style.maxHeight = `${_allHeight}px`;
-            } else {
-                el.style.maxHeight = el.dataset.maxwidth;
-            }
-
-        });
-    };
-
     function handleCollapse(e: any) {
         if ( disableCollapse ) return;
 
@@ -220,7 +203,6 @@ export default function TreeList(props: TreeListProps) {
         if ( hyperlink.classList.contains('async-ready') ) {
             activeClass(hyperlink, 'add', 'loading');
         }
-
 
         // calback
         //=====================
@@ -259,18 +241,12 @@ export default function TreeList(props: TreeListProps) {
             //open current
             openChild(hyperlink, subElement as never);
             
-
-            // update collapse data
-            updateCollapseData(data, hyperlink.dataset.key, true);
             
 
         } else {
 
             //close current
             closeChild(hyperlink, subElement as never);
-
-            // update collapse data
-            updateCollapseData(data, hyperlink.dataset.key, false);
 
         }
 
@@ -506,7 +482,6 @@ export default function TreeList(props: TreeListProps) {
                                                 updateCheckedPrint={updateCheckedPrint}
                                                 getCheckedData={getCheckedData}
                                                 updategetCheckedData={updategetCheckedData}
-                                                updateCollapseData={updateCollapseData}
 
                                             />}
                         </li>
