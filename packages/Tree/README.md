@@ -725,7 +725,7 @@ export default () => {
 ```
 
 
-## Complex State Problem Solving
+## Complex State Problem Solving (1)
 
 Prevent collapsing problems caused by re-rendering of sub-component. You need to use `useMemo()` hook to solve.
 
@@ -744,7 +744,7 @@ import 'funda-ui/Tree/index.css';
 const treeData = [
     {
         title: "Top level 1",
-        link: "#",
+        link: "/0",
         slug: 'level-1',
         checked: true
     },
@@ -756,13 +756,13 @@ const treeData = [
         children: [
             {
                 title: "Sub level 2_1",
-                link: "#2-1",
+                link: "/2-1",
                 slug: 'level-2_1',
                 checked: false
             },
             {
                 title: "Sub level 2_2",
-                link: "#2-2",
+                link: "/2-2",
                 slug: 'level-2_2',
                 checked: false
             }]
@@ -776,19 +776,19 @@ const treeData = [
         children: [
             {
                 title: "Sub level 3_1",
-                link: "#3-1",
+                link: "/3-1",
                 slug: 'level-3_1',
                 checked: false
             },
             {
                 title: "Sub level 3_2",
-                link: "#3-2",
+                link: "/3-2",
                 slug: 'level-3_2',
                 checked: false
             },
             {
                 title: "Sub level 3_3",
-                link: "#3-3",
+                link: "/3-3",
                 slug: 'level-3_3',
                 checked: true
             }]
@@ -848,5 +848,156 @@ export default () => {
 }
 ```
 
+
+
+
+## Complex State Problem Solving (2)
+
+Based on `Complex State Problem Solving (1)`, update the `<TreeMemo />` component.
+
+
+```js
+import React, { useEffect, useState, useMemo } from "react";
+import { useNavigate, useLocation } from 'react-router-dom';
+import Tree from 'funda-ui/Tree';
+
+// component styles
+import 'funda-ui/Tree/index.css';
+
+
+const treeData = [
+    {
+        title: "Top level 1",
+        link: "/0",
+        slug: 'level-1',
+        checked: true
+    },
+    {
+        title: "Top level 2",
+        link: "/s",
+        slug: 'level-2',
+        checked: false,
+        children: [
+            {
+                title: "Sub level 2_1",
+                link: "/2-1",
+                slug: 'level-2_1',
+                checked: false
+            },
+            {
+                title: "Sub level 2_2",
+                link: "/2-2",
+                slug: 'level-2_2',
+                checked: false
+            }]
+    },
+    {
+        title: "Top level 3",
+        link: "/k",
+        slug: 'level-3',
+        checked: false,
+        active: true,
+        children: [
+            {
+                title: "Sub level 3_1",
+                link: "/3-1",
+                slug: 'level-3_1',
+                checked: false
+            },
+            {
+                title: "Sub level 3_2",
+                link: "/3-2",
+                slug: 'level-3_2',
+                checked: false
+            },
+            {
+                title: "Sub level 3_3",
+                link: "/3-3",
+                slug: 'level-3_3',
+                checked: true
+            }]
+    }
+];
+
+
+const treeDataNew = [
+    {
+        title: "(new) Title 1",
+        link: "/new1",
+        slug: 'new-title-1',
+        checked: false
+    },
+    {
+        title: "(new) Title 2",
+        link: "/new2",
+        slug: 'new-title-2',
+        checked: true
+    },
+];
+function TreeMemo(props: any) {
+    const {callback, data, update} = props;
+    console.log(update.cache); // Every time <a> is clicked, the cache will change
+    const dependencies = props.data !== null && props.data.length === 0 ? props.data : '';
+    return useMemo(() => {
+        return    <Tree
+                    checkable={true}
+                    data={update.cache === 0 ? data : update.data}
+                    showLine={true}
+                    onSelect={callback}
+                    onCheck={(val) => {
+                        console.log(val);
+                    }} 
+                />
+    }, [dependencies, update]);
+}
+
+export default () => {
+
+    const navigate = useNavigate();
+    const location = useLocation();
+    const [count, setCount] = useState<number>(0);
+    const [data, setData] = useState<any[]>([]);
+    const [updateTreeMemo, setUpdateTreeMemo] = useState<any>({
+        cache: 0,
+        data: []
+    });
+
+
+    useEffect(() => {
+        console.log(count);
+        setData(treeData);
+    }, [location, count]);
+
+                                                            
+    return (
+        <>
+
+            <a href="#" onClick={(e: React.MouseEvent) => {
+                e.preventDefault();
+
+                setUpdateTreeMemo({
+                    cache: Math.random(),
+                    data: treeDataNew
+                });
+            }}>update {`<TreeMemo />`}</a>
+
+            <TreeMemo
+                update={updateTreeMemo}
+                data={data}
+                callback={(e: any, val: any) => {
+                    console.log(val);
+
+                    // execute on location change
+                    navigate(val.link);
+                    setCount((prevState: number) => prevState + 1);
+                    console.log('Location changed!', location.pathname);
+
+                }} />
+
+
+        </>
+    )
+}
+```
 
 
