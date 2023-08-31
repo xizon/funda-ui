@@ -732,6 +732,11 @@ Prevent collapsing problems caused by re-rendering of sub-component. You need to
 > The usual scenario is: the left side is a list of tree, and the right side is other content. `onSelect()` triggers a method to modify routing and update the data of Tree. Since the data is updated, the collapsing effect of the tree will be wrong.
 
 
+> [!NOTE]
+> Try not to use nested `<Tree />` in the child component in this scene where this route triggers re-rendering, but it is not absolute.
+
+
+
 ```js
 import React, { useEffect, useState, useMemo } from "react";
 import { useNavigate, useLocation } from 'react-router-dom';
