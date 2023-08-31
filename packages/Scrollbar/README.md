@@ -14,6 +14,7 @@ import Scrollbar from 'funda-ui/Scrollbar';
 | `data` | any  | - | Incoming data. <blockquote>Changes in the `data` value will cause the component to re-render. It will be used when the value or content does not change when switching routes and needs to re-render the component or get the request.</blockquote> |
 | `arrowIcons` | React.ReactNode[] | `[<><svg width="16px" height="16px" viewBox="0 0 24 24" fill="none"> <path d="M12 5V19M12 5L6 11M12 5L18 11" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /> </svg></>,<><svg width="16px" height="16px" viewBox="0 0 24 24" fill="none"> <path d="M12 6V18M12 18L7 13M12 18L17 13" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /> </svg></>,<><svg width="16px" height="16px" viewBox="0 0 24 24" fill="none" transform="translate(0 -2)"> <path d="M6 12H18M6 12L11 7M6 12L11 17" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /> </svg></>,<><svg width="16px" height="16px" viewBox="0 0 24 24" fill="none" transform="translate(0 -2)"> <path d="M6 12H18M18 12L13 7M18 12L13 17" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /> </svg></>]` | Set up/down/left/right icon. Use an array to set four icons. |
 | `disableArrow` | boolean | false | Disable arrow. |
+| `horizontallyWithWheel` | boolean | false | Horizontally with mouse wheel. <blockquote>Take effect when `onlyHorizontal` is "true"</blockquote> |
 | `onMove` | function  | - | This function is called whenever the content is moved. Exposes the JSON format data about the option as an argument. You can use it like this: `(res) => console.log(res)` |
 
 
@@ -474,7 +475,7 @@ export default () => {
             
 
             
-            <Scrollbar onlyHorizontal>
+            <Scrollbar onlyHorizontal horizontallyWithWheel>
                 <p style={{whiteSpace: 'nowrap'}}>
                 appens/To/Be/Strangely/Named/appens/To/Be/Strangely/Named/appens/To/Be/Strangely/Named/appens/To/Be/Strangely/Named/appens/To/Be/Strangely/Named/appens/To/Be/Strangely/Named/appens/To/Be/Strangely/Named/appens/To/Be/Strangely/Named/appens/To/Be/Strangely/Named/appens/To/Be/Strangely/Named/appens/To/Be/Strangely/Named/appens/To/Be/Strangely/Named/appens/To/Be/Strangely/Named/appens/To/Be/Strangely/Named/appens/To/Be/Strangely/Named/appens/To/Be/Strangely/Named/appens/To/Be/Strangely/Named/appens/To/Be/Strangely/Named/appens/To/Be/Strangely/Named/Supercalifragilisticexpialidocious.txt
                 </p>

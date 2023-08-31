@@ -4,6 +4,7 @@ declare type ScrollbarProps = {
     onlyHorizontal?: boolean;
     arrowIcons?: React.ReactNode[];
     disableArrow?: boolean;
+    horizontallyWithWheel?: boolean;
     /** Incoming data, changes in the `data` value will cause the component to re-render. */
     data?: any;
     onMove?: (data: any) => void;

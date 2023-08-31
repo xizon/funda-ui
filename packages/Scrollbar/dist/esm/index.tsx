@@ -7,6 +7,7 @@ type ScrollbarProps = {
     onlyHorizontal?: boolean;
     arrowIcons?: React.ReactNode[];
     disableArrow?: boolean;
+    horizontallyWithWheel?: boolean;
     /** Incoming data, changes in the `data` value will cause the component to re-render. */
     data?: any;
     onMove?: (data: any) => void;
@@ -22,6 +23,7 @@ const Scrollbar = (props: ScrollbarProps) => {
         onlyHorizontal,
         arrowIcons,
         disableArrow,
+        horizontallyWithWheel,
         data,
         onMove,
         id,
@@ -75,7 +77,7 @@ const Scrollbar = (props: ScrollbarProps) => {
         const scrollLeft = contentRef.current?.scrollLeft;
         const scrollTop = contentRef.current?.scrollTop;
 
-        if (onlyHorizontal) {
+        if (onlyHorizontal && horizontallyWithWheel) {
             const direction = e.deltaY < 0 ? 'left' : 'right';
             horizontalContentScrollTo(direction, false);  //do not use `smooth`
         }

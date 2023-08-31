@@ -164,6 +164,7 @@ var Scrollbar = function Scrollbar(props) {
     onlyHorizontal = props.onlyHorizontal,
     arrowIcons = props.arrowIcons,
     disableArrow = props.disableArrow,
+    horizontallyWithWheel = props.horizontallyWithWheel,
     data = props.data,
     onMove = props.onMove,
     id = props.id,
@@ -270,7 +271,7 @@ var Scrollbar = function Scrollbar(props) {
     if (typeof e === 'undefined') return;
     var scrollLeft = (_contentRef$current = contentRef.current) === null || _contentRef$current === void 0 ? void 0 : _contentRef$current.scrollLeft;
     var scrollTop = (_contentRef$current2 = contentRef.current) === null || _contentRef$current2 === void 0 ? void 0 : _contentRef$current2.scrollTop;
-    if (onlyHorizontal) {
+    if (onlyHorizontal && horizontallyWithWheel) {
       var direction = e.deltaY < 0 ? 'left' : 'right';
       horizontalContentScrollTo(direction, false); //do not use `smooth`
     }
