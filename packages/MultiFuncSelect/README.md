@@ -5,7 +5,7 @@
 
 ### Multifunction Select
 ```js
-import MultiFuncSelect from 'react-pure-bootstrap/MultiFuncSelect';
+import MultiFuncSelect from 'funda-ui/MultiFuncSelect';
 ```
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |
@@ -65,11 +65,11 @@ You need to use a `fetchCallback` property to format the data of the API callbac
 
 ```js
 import React from "react";
-import MultiFuncSelect from 'react-pure-bootstrap/MultiFuncSelect';
+import MultiFuncSelect from 'funda-ui/MultiFuncSelect';
 import axios from 'axios';
 
 // component styles
-import 'react-pure-bootstrap/MultiFuncSelect/index.css';
+import 'funda-ui/MultiFuncSelect/index.css';
 
 class DataService {
     
@@ -321,10 +321,10 @@ export default () => {
 
 ```js
 import React from "react";
-import MultiFuncSelect from 'react-pure-bootstrap/MultiFuncSelect';
+import MultiFuncSelect from 'funda-ui/MultiFuncSelect';
 
 // component styles
-import 'react-pure-bootstrap/MultiFuncSelect/index.css';
+import 'funda-ui/MultiFuncSelect/index.css';
 
 class DataService {
     
@@ -561,10 +561,10 @@ It is usually used for complex cascading `<MultiFuncSelect />` components
 
 ```js
 import React from "react";
-import MultiFuncSelect from 'react-pure-bootstrap/MultiFuncSelect';
+import MultiFuncSelect from 'funda-ui/MultiFuncSelect';
 
 // component styles
-import 'react-pure-bootstrap/MultiFuncSelect/index.css';
+import 'funda-ui/MultiFuncSelect/index.css';
 
 class DataService {
     
@@ -729,10 +729,10 @@ Set hierarchical categories ( with sub-categories ) to attribute `options`.
 
 ```js
 import React, { useEffect, useState } from "react";
-import MultiFuncSelect from 'react-pure-bootstrap/MultiFuncSelect';
+import MultiFuncSelect from 'funda-ui/MultiFuncSelect';
 
 // component styles
-import 'react-pure-bootstrap/MultiFuncSelect/index.css';
+import 'funda-ui/MultiFuncSelect/index.css';
 
 
 
@@ -946,10 +946,10 @@ Automatic fetch request:
 
 ```js
 import React from "react";
-import MultiFuncSelect from 'react-pure-bootstrap/MultiFuncSelect';
+import MultiFuncSelect from 'funda-ui/MultiFuncSelect';
 
 // component styles
-import 'react-pure-bootstrap/MultiFuncSelect/index.css';
+import 'funda-ui/MultiFuncSelect/index.css';
 
 class DataService {
 

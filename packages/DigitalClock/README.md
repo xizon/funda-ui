@@ -5,7 +5,7 @@
 
 ### Digital Clock
 ```js
-import DigitalClock from 'react-pure-bootstrap/DigitalClock';
+import DigitalClock from 'funda-ui/DigitalClock';
 ```
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |
@@ -17,7 +17,7 @@ import DigitalClock from 'react-pure-bootstrap/DigitalClock';
 
 ```js
 import React from "react";
-import DigitalClock from 'react-pure-bootstrap/DigitalClock';
+import DigitalClock from 'funda-ui/DigitalClock';
 
 
 export default () => {

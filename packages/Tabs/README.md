@@ -6,7 +6,7 @@
 
 ### Tabs
 ```js
-import { Tabs } from 'react-pure-bootstrap/Tabs';
+import { Tabs } from 'funda-ui/Tabs';
 ```
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |
@@ -21,7 +21,7 @@ import { Tabs } from 'react-pure-bootstrap/Tabs';
 
 ### Tab List
 ```js
-import { TabList } from 'react-pure-bootstrap/Tabs';
+import { TabList } from 'funda-ui/Tabs';
 ```
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |
@@ -32,7 +32,7 @@ import { TabList } from 'react-pure-bootstrap/Tabs';
 
 ### Tab Panel
 ```js
-import { TabPanel } from 'react-pure-bootstrap/Tabs';
+import { TabPanel } from 'funda-ui/Tabs';
 ```
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |
@@ -51,7 +51,7 @@ It accepts all props(include data-* attributes) which native div support.
 
 ```js
 import React from "react";
-import { Tabs, TabList, TabPanel } from 'react-pure-bootstrap/Tabs';
+import { Tabs, TabList, TabPanel } from 'funda-ui/Tabs';
 
 
 export default () => {

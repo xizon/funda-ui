@@ -5,7 +5,7 @@
 
 ### Scroll Reveal
 ```js
-import ScrollReveal from 'react-pure-bootstrap/ScrollReveal';
+import ScrollReveal from 'funda-ui/ScrollReveal';
 ```
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |
@@ -26,7 +26,7 @@ import ScrollReveal from 'react-pure-bootstrap/ScrollReveal';
 
 ```js
 import React from "react";
-import ScrollReveal from 'react-pure-bootstrap/ScrollReveal';
+import ScrollReveal from 'funda-ui/ScrollReveal';
 
 
 export default () => {

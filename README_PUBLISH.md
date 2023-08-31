@@ -1,4 +1,4 @@
-# React Pure Bootstrap
+# Funda UI
 
 React components using pure Bootstrap 5+ which does not contain any external style and script libraries. You can load Bootstrap css libraries separately in your project.
 
@@ -61,18 +61,18 @@ Here is a table of the components and their status.
 First, you need to install it:
 
 ```sh
-$ npm i react-pure-bootstrap
+$ npm i funda-ui
 ```
 
 Next, import required components as required
 
 ```js
-import Input from 'react-pure-bootstrap/Input';
-import Textarea from 'react-pure-bootstrap/Textarea';
-import CascadingSelect from 'react-pure-bootstrap/CascadingSelect';
+import Input from 'funda-ui/Input';
+import Textarea from 'funda-ui/Textarea';
+import CascadingSelect from 'funda-ui/CascadingSelect';
 
 // component styles
-import 'react-pure-bootstrap/CascadingSelect/index.css';
+import 'funda-ui/CascadingSelect/index.css';
 ```
 
 or 
@@ -82,21 +82,21 @@ import {
     Input,
     Textarea,
     CascadingSelect
-} from 'react-pure-bootstrap';
+} from 'funda-ui';
 
 // component styles
-import 'react-pure-bootstrap/CascadingSelect/index.css';
+import 'funda-ui/CascadingSelect/index.css';
 ```
 
 or
 
 ```js
-const Input = require('react-pure-bootstrap').Input;
-const Textarea = require('react-pure-bootstrap').Textarea;
-const CascadingSelect = require('react-pure-bootstrap').CascadingSelect;
+const Input = require('funda-ui').Input;
+const Textarea = require('funda-ui').Textarea;
+const CascadingSelect = require('funda-ui').CascadingSelect;
 
 // component styles
-import 'react-pure-bootstrap/CascadingSelect/index.css';
+import 'funda-ui/CascadingSelect/index.css';
 ```
 
 

@@ -5,7 +5,7 @@
 
 ### Pagination
 ```js
-import Pagination from 'react-pure-bootstrap/Pagination';
+import Pagination from 'funda-ui/Pagination';
 ```
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |
@@ -36,7 +36,7 @@ import Pagination from 'react-pure-bootstrap/Pagination';
 
 ```js
 import React from "react";
-import Pagination from 'react-pure-bootstrap/Pagination';
+import Pagination from 'funda-ui/Pagination';
 
 
 export default () => {

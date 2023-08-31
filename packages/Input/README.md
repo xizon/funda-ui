@@ -5,7 +5,7 @@
 
 ### Input
 ```js
-import Input from 'react-pure-bootstrap/Input';
+import Input from 'funda-ui/Input';
 ```
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |
@@ -38,7 +38,7 @@ It accepts all props which this control support.
 
 ```js
 import React from "react";
-import Input from 'react-pure-bootstrap/Input';
+import Input from 'funda-ui/Input';
 
 export default () => {
 
@@ -106,7 +106,7 @@ export default () => {
 
 ```js
 import React, { useEffect, useState } from "react";
-import Input from 'react-pure-bootstrap/Input';
+import Input from 'funda-ui/Input';
 
 export default () => {
 

@@ -5,7 +5,7 @@
 
 ### Custom Scrollbar
 ```js
-import Scrollbar from 'react-pure-bootstrap/Scrollbar';
+import Scrollbar from 'funda-ui/Scrollbar';
 ```
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |
@@ -23,10 +23,10 @@ import Scrollbar from 'react-pure-bootstrap/Scrollbar';
 
 ```js
 import React from "react";
-import Scrollbar from 'react-pure-bootstrap/Scrollbar';
+import Scrollbar from 'funda-ui/Scrollbar';
 
 // component styles
-import 'react-pure-bootstrap/Scrollbar/index.css';
+import 'funda-ui/Scrollbar/index.css';
 
 export default () => {
 
@@ -589,10 +589,10 @@ Please use the `data` attribute to recompute the scrollbar state when updating d
 
 ```js
 import React, { useEffect, useState } from "react";
-import Scrollbar from 'react-pure-bootstrap/Scrollbar';
+import Scrollbar from 'funda-ui/Scrollbar';
 
 // component styles
-import 'react-pure-bootstrap/Scrollbar/index.css';
+import 'funda-ui/Scrollbar/index.css';
 
 export default () => {
 

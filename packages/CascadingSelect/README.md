@@ -5,7 +5,7 @@
 
 ### Cascading Select
 ```js
-import CascadingSelect from 'react-pure-bootstrap/CascadingSelect';
+import CascadingSelect from 'funda-ui/CascadingSelect';
 ```
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |
@@ -161,11 +161,11 @@ Among them, `id`, `name` and `children` are attributes used by the system, and o
 
 ```js
 import React from "react";
-import CascadingSelect from 'react-pure-bootstrap/CascadingSelect';
+import CascadingSelect from 'funda-ui/CascadingSelect';
 import axios from 'axios';
 
 // component styles
-import 'react-pure-bootstrap/CascadingSelect/index.css';
+import 'funda-ui/CascadingSelect/index.css';
 
 class DataService {
     
@@ -382,10 +382,10 @@ You need to use a `fetchCallback` property to format the data of the API callbac
 
 ```js
 import React from "react";
-import CascadingSelect from 'react-pure-bootstrap/CascadingSelect';
+import CascadingSelect from 'funda-ui/CascadingSelect';
 
 // component styles
-import 'react-pure-bootstrap/CascadingSelect/index.css';
+import 'funda-ui/CascadingSelect/index.css';
 
 
 class DataService {

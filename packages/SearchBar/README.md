@@ -5,7 +5,7 @@
 
 ### Search Bar
 ```js
-import SearchBar from 'react-pure-bootstrap/SearchBar';
+import SearchBar from 'funda-ui/SearchBar';
 ```
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |
@@ -34,7 +34,7 @@ It accepts all props which this control support.
 
 ```js
 import React from "react";
-import SearchBar from 'react-pure-bootstrap/SearchBar';
+import SearchBar from 'funda-ui/SearchBar';
 
 export default () => {
 

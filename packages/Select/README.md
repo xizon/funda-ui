@@ -5,7 +5,7 @@
 
 ### Select
 ```js
-import Select from 'react-pure-bootstrap/Select';
+import Select from 'funda-ui/Select';
 ```
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |
@@ -39,7 +39,7 @@ You need to use a `fetchCallback` property to format the data of the API callbac
 
 ```js
 import React from "react";
-import Select from 'react-pure-bootstrap/Select';
+import Select from 'funda-ui/Select';
 import axios from 'axios';
 
 class DataService {
@@ -142,7 +142,7 @@ Modify options or value with Vanilla JavaScript, which is generally used for dyn
 
 ```js
 import React from "react";
-import Select from 'react-pure-bootstrap/Select';
+import Select from 'funda-ui/Select';
 
 export default () => {
 

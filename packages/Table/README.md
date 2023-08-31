@@ -5,7 +5,7 @@
 
 ### Table
 ```js
-import Table from 'react-pure-bootstrap/Table';
+import Table from 'funda-ui/Table';
 ```
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |
@@ -45,10 +45,10 @@ JSON configuration properties of the `data`:
 
 ```js
 import React from "react";
-import Table from 'react-pure-bootstrap/Table';
+import Table from 'funda-ui/Table';
 
 // component styles
-import 'react-pure-bootstrap/Table/index.css';
+import 'funda-ui/Table/index.css';
 
 
 const tableData1 = {
@@ -384,10 +384,10 @@ At this time, we need to use `useMemo()` to wrap this subcomponent to avoid prob
 import { useEffect, useState, useMemo } from "react";
 
 // bootstrap components
-import Table from 'react-pure-bootstrap/Table';
+import Table from 'funda-ui/Table';
 
 // component styles
-import 'react-pure-bootstrap/Table/index.css';
+import 'funda-ui/Table/index.css';
 
 
 

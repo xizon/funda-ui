@@ -5,7 +5,7 @@
 
 ### Dynamic Fields
 ```js
-import DynamicFields from 'react-pure-bootstrap/DynamicFields';
+import DynamicFields from 'funda-ui/DynamicFields';
 ```
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |
@@ -39,12 +39,12 @@ import DynamicFields from 'react-pure-bootstrap/DynamicFields';
 
 ```js
 import React from "react";
-import DynamicFields from 'react-pure-bootstrap/DynamicFields';
-import Input from 'react-pure-bootstrap/Input';
-import MultiFuncSelect from 'react-pure-bootstrap/MultiFuncSelect';
+import DynamicFields from 'funda-ui/DynamicFields';
+import Input from 'funda-ui/Input';
+import MultiFuncSelect from 'funda-ui/MultiFuncSelect';
 
 // component styles
-import 'react-pure-bootstrap/MultiFuncSelect/index.css';
+import 'funda-ui/MultiFuncSelect/index.css';
 
 
 export default () => {
@@ -123,14 +123,14 @@ Multiple complex components are used.
 
 ```js
 import React, { useState, useEffect, useRef } from "react";
-import DynamicFields from 'react-pure-bootstrap/DynamicFields';
-import Input from 'react-pure-bootstrap/Input';
-import MultiFuncSelect from 'react-pure-bootstrap/MultiFuncSelect';
-import Switch from 'react-pure-bootstrap/Switch';
-import CascadingSelectE2E from 'react-pure-bootstrap/CascadingSelectE2E';
+import DynamicFields from 'funda-ui/DynamicFields';
+import Input from 'funda-ui/Input';
+import MultiFuncSelect from 'funda-ui/MultiFuncSelect';
+import Switch from 'funda-ui/Switch';
+import CascadingSelectE2E from 'funda-ui/CascadingSelectE2E';
 
 // component styles
-import 'react-pure-bootstrap/CascadingSelectE2E/index.css';
+import 'funda-ui/CascadingSelectE2E/index.css';
 
 
 

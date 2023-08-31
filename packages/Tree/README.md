@@ -5,7 +5,7 @@
 
 ### Tree
 ```js
-import Tree from 'react-pure-bootstrap/Tree';
+import Tree from 'funda-ui/Tree';
 ```
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |
@@ -73,10 +73,10 @@ The property list of the last parameter (Function) in the return value of `onCol
 
 ```js
 import React from "react";
-import Tree from 'react-pure-bootstrap/Tree';
+import Tree from 'funda-ui/Tree';
 
 // component styles
-import 'react-pure-bootstrap/Tree/index.css';
+import 'funda-ui/Tree/index.css';
 
 const treeData = [
     {
@@ -224,10 +224,10 @@ export default () => {
 
 ```js
 import React, { useState } from "react";
-import Tree from 'react-pure-bootstrap/Tree';
+import Tree from 'funda-ui/Tree';
 
 // component styles
-import 'react-pure-bootstrap/Tree/index.css';
+import 'funda-ui/Tree/index.css';
 
 const treeData = [
     {
@@ -323,10 +323,10 @@ To load data asynchronously when click to expand a treeNode.
 import React from "react";
 import axios from "axios";
 
-import Tree from 'react-pure-bootstrap/Tree';
+import Tree from 'funda-ui/Tree';
 
 // component styles
-import 'react-pure-bootstrap/Tree/index.css';
+import 'funda-ui/Tree/index.css';
 
 
 class DataService {
@@ -492,10 +492,10 @@ Add a Checkbox before the tree nodes.
 
 ```js
 import React from "react";
-import Tree from 'react-pure-bootstrap/Tree';
+import Tree from 'funda-ui/Tree';
 
 // component styles
-import 'react-pure-bootstrap/Tree/index.css';
+import 'funda-ui/Tree/index.css';
 
 
 const treeData = [
@@ -583,10 +583,10 @@ export default () => {
 
 ```js
 import React, { useEffect, useState } from "react";
-import Tree from 'react-pure-bootstrap/Tree';
+import Tree from 'funda-ui/Tree';
 
 // component styles
-import 'react-pure-bootstrap/Tree/index.css';
+import 'funda-ui/Tree/index.css';
 
 
 class DataService {
@@ -735,10 +735,10 @@ Prevent collapsing problems caused by re-rendering of sub-component. You need to
 ```js
 import React, { useEffect, useState, useMemo } from "react";
 import { useNavigate, useLocation } from 'react-router-dom';
-import Tree from 'react-pure-bootstrap/Tree';
+import Tree from 'funda-ui/Tree';
 
 // component styles
-import 'react-pure-bootstrap/Tree/index.css';
+import 'funda-ui/Tree/index.css';
 
 
 const treeData = [

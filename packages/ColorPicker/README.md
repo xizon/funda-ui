@@ -5,7 +5,7 @@
 
 ### Color Picker
 ```js
-import ColorPicker from 'react-pure-bootstrap/ColorPicker';
+import ColorPicker from 'funda-ui/ColorPicker';
 ```
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |
@@ -28,10 +28,10 @@ It accepts all props which this control support.
 
 ```js
 import React from "react";
-import ColorPicker from 'react-pure-bootstrap/ColorPicker';
+import ColorPicker from 'funda-ui/ColorPicker';
 
 // component styles
-import 'react-pure-bootstrap/ColorPicker/index.css';
+import 'funda-ui/ColorPicker/index.css';
 
 export default () => {
 
@@ -64,11 +64,11 @@ export default () => {
 
 ```js
 import React, { useEffect, useState } from "react";
-import ColorPicker from 'react-pure-bootstrap/ColorPicker';
+import ColorPicker from 'funda-ui/ColorPicker';
 
 
 // component styles
-import 'react-pure-bootstrap/ColorPicker/index.css';
+import 'funda-ui/ColorPicker/index.css';
 
 export default () => {
 

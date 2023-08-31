@@ -5,7 +5,7 @@
 
 ### Switch
 ```js
-import Switch from 'react-pure-bootstrap/Switch';
+import Switch from 'funda-ui/Switch';
 ```
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |
@@ -27,7 +27,7 @@ It accepts all props which this control support.
 
 ```js
 import React from "react";
-import Switch from 'react-pure-bootstrap/Switch';
+import Switch from 'funda-ui/Switch';
 
 export default () => {
 
@@ -79,7 +79,7 @@ export default () => {
 
 ```js
 import React, { useState } from "react";
-import Switch from 'react-pure-bootstrap/Switch';
+import Switch from 'funda-ui/Switch';
 
 export default () => {
 

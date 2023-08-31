@@ -1,12 +1,12 @@
 {
     "author": "UIUX Lab",
     "email": "uiuxlab@gmail.com",
-    "name": "react-pure-bootstrap",
-    "version": "1.0.272",
+    "name": "funda-ui",
+    "version": "1.0.275",
     "description": "React components using pure Bootstrap 5+ which does not contain any external style and script libraries.",
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/xizon/react-pure-bootstrap.git"
+        "url": "git+https://github.com/xizon/funda-ui.git"
     },
     "scripts": {
         "build:lib": "node scripts/build-lib.js",
@@ -19,7 +19,12 @@
         "components",
         "components-react",
         "react-bootstrap-components",
-        "react"
+        "react",
+        "funda-ui",
+        "fundaui",
+        "uikit",
+        "ui-kit",
+        "ui-components"
     ],
     "workspaces": [
         "packages/*"
@@ -29,9 +34,9 @@
         "nx": "15.7.2"
     },
     "bugs": {
-        "url": "https://github.com/xizon/react-pure-bootstrap/issues"
+        "url": "https://github.com/xizon/funda-ui/issues"
     },
-    "homepage": "https://github.com/xizon/react-pure-bootstrap#readme",
+    "homepage": "https://github.com/xizon/funda-ui#readme",
     "main": "none",
     "license": "MIT"
 }

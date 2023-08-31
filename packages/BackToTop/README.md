@@ -5,7 +5,7 @@
 
 ### Back To Top
 ```js
-import BackToTop from 'react-pure-bootstrap/BackToTop';
+import BackToTop from 'funda-ui/BackToTop';
 ```
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |
@@ -21,10 +21,10 @@ Scroll the page down to preview. The button is in the bottom right corner of the
 
 ```js
 import React from "react";
-import BackToTop from 'react-pure-bootstrap/BackToTop';
+import BackToTop from 'funda-ui/BackToTop';
 
 // component styles
-import 'react-pure-bootstrap/BackToTop/index.css';
+import 'funda-ui/BackToTop/index.css';
 
 export default () => {
 

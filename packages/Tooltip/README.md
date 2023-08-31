@@ -5,7 +5,7 @@
 
 ### Tooltip
 ```js
-import Tooltip from 'react-pure-bootstrap/Tooltip';
+import Tooltip from 'funda-ui/Tooltip';
 ```
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |
@@ -22,10 +22,10 @@ import Tooltip from 'react-pure-bootstrap/Tooltip';
 
 ```js
 import React from "react";
-import Tooltip from 'react-pure-bootstrap/Tooltip';
+import Tooltip from 'funda-ui/Tooltip';
 
 // component styles
-import 'react-pure-bootstrap/Tooltip/index.css';
+import 'funda-ui/Tooltip/index.css';
 
 export default () => {
 

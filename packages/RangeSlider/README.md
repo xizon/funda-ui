@@ -5,7 +5,7 @@
 
 ### Range Slider
 ```js
-import RangeSlider from 'react-pure-bootstrap/RangeSlider';
+import RangeSlider from 'funda-ui/RangeSlider';
 ```
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |
@@ -27,10 +27,10 @@ import RangeSlider from 'react-pure-bootstrap/RangeSlider';
 
 ```js
 import React from "react";
-import RangeSlider from 'react-pure-bootstrap/RangeSlider';
+import RangeSlider from 'funda-ui/RangeSlider';
 
 // component styles
-import 'react-pure-bootstrap/RangeSlider/index.css';
+import 'funda-ui/RangeSlider/index.css';
 
 export default () => {
 

@@ -5,7 +5,7 @@
 
 ### Tag Input
 ```js
-import TagInput from 'react-pure-bootstrap/TagInput';
+import TagInput from 'funda-ui/TagInput';
 ```
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |
@@ -30,10 +30,10 @@ It accepts all props which this control support.
 
 ```js
 import React from "react";
-import TagInput from 'react-pure-bootstrap/TagInput';
+import TagInput from 'funda-ui/TagInput';
 
 // component styles
-import 'react-pure-bootstrap/TagInput/index.css';
+import 'funda-ui/TagInput/index.css';
 
 export default () => {
 

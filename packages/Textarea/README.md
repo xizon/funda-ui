@@ -5,7 +5,7 @@
 
 ### Textarea
 ```js
-import Textarea from 'react-pure-bootstrap/Textarea';
+import Textarea from 'funda-ui/Textarea';
 ```
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |
@@ -32,7 +32,7 @@ It accepts all props which this control support.
 
 ```js
 import React from "react";
-import Textarea from 'react-pure-bootstrap/Textarea';
+import Textarea from 'funda-ui/Textarea';
 
 export default () => {
     return (

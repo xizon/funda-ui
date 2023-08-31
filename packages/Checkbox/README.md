@@ -5,7 +5,7 @@
 
 ### Checkbox
 ```js
-import Checkbox from 'react-pure-bootstrap/Checkbox';
+import Checkbox from 'funda-ui/Checkbox';
 ```
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |
@@ -28,7 +28,7 @@ It accepts all props which this control support.
 
 ```js
 import React from "react";
-import Checkbox from 'react-pure-bootstrap/Checkbox';
+import Checkbox from 'funda-ui/Checkbox';
 
 export default () => {
 
@@ -84,7 +84,7 @@ export default () => {
 
 ```js
 import React, { useState } from "react";
-import Checkbox from 'react-pure-bootstrap/Checkbox';
+import Checkbox from 'funda-ui/Checkbox';
 
 export default () => {
 

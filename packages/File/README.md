@@ -5,7 +5,7 @@
 
 ### File
 ```js
-import File from 'react-pure-bootstrap/File';
+import File from 'funda-ui/File';
 ```
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |
@@ -42,7 +42,7 @@ It accepts all props which this control support.
 
 ```js
 import React from "react";
-import File from 'react-pure-bootstrap/File';
+import File from 'funda-ui/File';
 
 
 export default () => {
@@ -86,7 +86,7 @@ export default () => {
 
 ```js
 import React from "react";
-import File from 'react-pure-bootstrap/File';
+import File from 'funda-ui/File';
 
 
 class UploadService {

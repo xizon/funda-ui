@@ -5,7 +5,7 @@
 
 ### Show More Less
 ```js
-import ShowMoreLess from 'react-pure-bootstrap/ShowMoreLess';
+import ShowMoreLess from 'funda-ui/ShowMoreLess';
 ```
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |
@@ -26,10 +26,10 @@ import ShowMoreLess from 'react-pure-bootstrap/ShowMoreLess';
 
 ```js
 import React from "react";
-import ShowMoreLess from 'react-pure-bootstrap/ShowMoreLess';
+import ShowMoreLess from 'funda-ui/ShowMoreLess';
 
 // component styles
-import 'react-pure-bootstrap/ShowMoreLess/index.css';
+import 'funda-ui/ShowMoreLess/index.css';
 
 export default () => {
 

@@ -5,7 +5,7 @@
 
 ### Multi-level Dropdown Menu
 ```js
-import MultilevelDropdownMenu from 'react-pure-bootstrap/MultilevelDropdownMenu';
+import MultilevelDropdownMenu from 'funda-ui/MultilevelDropdownMenu';
 ```
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |
@@ -36,10 +36,10 @@ Array configuration properties of the `data`:
 
 ```js
 import React from "react";
-import MultilevelDropdownMenu from 'react-pure-bootstrap/MultilevelDropdownMenu';
+import MultilevelDropdownMenu from 'funda-ui/MultilevelDropdownMenu';
 
 // component styles
-import 'react-pure-bootstrap/MultilevelDropdownMenu/index.css';
+import 'funda-ui/MultilevelDropdownMenu/index.css';
 
 const menuListData = [
     {
@@ -138,10 +138,10 @@ export default () => {
 
 ```js
 import React, { useState } from "react";
-import MultilevelDropdownMenu from 'react-pure-bootstrap/MultilevelDropdownMenu';
+import MultilevelDropdownMenu from 'funda-ui/MultilevelDropdownMenu';
 
 // component styles
-import 'react-pure-bootstrap/MultilevelDropdownMenu/index.css';
+import 'funda-ui/MultilevelDropdownMenu/index.css';
 
 const menuListData = [
     {

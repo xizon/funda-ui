@@ -5,7 +5,7 @@
 
 ### Toast
 ```js
-import Toast from 'react-pure-bootstrap/Toast';
+import Toast from 'funda-ui/Toast';
 ```
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |
@@ -36,10 +36,10 @@ Array configuration properties of the `data`:
 
 ```js
 import React from "react";
-import Toast from 'react-pure-bootstrap/Toast';
+import Toast from 'funda-ui/Toast';
 
 // component styles
-import 'react-pure-bootstrap/Toast/index.css';
+import 'funda-ui/Toast/index.css';
 
 export default () => {
 
@@ -99,10 +99,10 @@ Use asynchronous toast information to dynamically display notifications
 
 ```js
 import React, { useState } from "react";
-import Toast from 'react-pure-bootstrap/Toast';
+import Toast from 'funda-ui/Toast';
 
 // component styles
-import 'react-pure-bootstrap/Toast/index.css';
+import 'funda-ui/Toast/index.css';
 
 export default () => {
 

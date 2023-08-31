@@ -5,7 +5,7 @@
 
 ### Modal Dialog
 ```js
-import ModalDialog from 'react-pure-bootstrap/ModalDialog';
+import ModalDialog from 'funda-ui/ModalDialog';
 ```
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |
@@ -38,7 +38,7 @@ import ModalDialog from 'react-pure-bootstrap/ModalDialog';
 
 ```js
 import React from "react";
-import ModalDialog from 'react-pure-bootstrap/ModalDialog';
+import ModalDialog from 'funda-ui/ModalDialog';
 
 export default () => {
 
@@ -176,7 +176,7 @@ Do not use trigger to bind Modal, and expose OPEN and CLOSE methods, which can b
 
 ```js
 import React, { useState, useEffect, useRef } from "react";
-import ModalDialog from 'react-pure-bootstrap/ModalDialog';
+import ModalDialog from 'funda-ui/ModalDialog';
 
 class DataService {
 
@@ -308,7 +308,7 @@ export default () => {
 
 ```js
 import React, { useState } from "react";
-import ModalDialog from 'react-pure-bootstrap/ModalDialog';
+import ModalDialog from 'funda-ui/ModalDialog';
 
 export default () => {
 
@@ -347,8 +347,8 @@ Disable property `protectFixedViewport`.
 
 ```js
 import React from "react";
-import ModalDialog from 'react-pure-bootstrap/ModalDialog';
-import Switch from 'react-pure-bootstrap/Switch';
+import ModalDialog from 'funda-ui/ModalDialog';
+import Switch from 'funda-ui/Switch';
 
 
 export default () => {

@@ -5,7 +5,7 @@
 
 ### Dropdown Menu
 ```js
-import DropdownMenu from 'react-pure-bootstrap/DropdownMenu';
+import DropdownMenu from 'funda-ui/DropdownMenu';
 ```
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |
@@ -41,10 +41,10 @@ Array configuration properties of the `options`:
 
 ```js
 import React from "react";
-import DropdownMenu from 'react-pure-bootstrap/DropdownMenu';
+import DropdownMenu from 'funda-ui/DropdownMenu';
 
 // component styles
-import 'react-pure-bootstrap/DropdownMenu/index.css';
+import 'funda-ui/DropdownMenu/index.css';
 
 export default () => {
 

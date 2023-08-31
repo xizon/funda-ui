@@ -5,7 +5,7 @@
 
 ### Cascading Select End-to-end
 ```js
-import CascadingSelectE2E from 'react-pure-bootstrap/CascadingSelectE2E';
+import CascadingSelectE2E from 'funda-ui/CascadingSelectE2E';
 ```
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |
@@ -81,11 +81,11 @@ You need to use a `fetchCallback` property to format the data of the API callbac
 
 ```js
 import React from "react";
-import CascadingSelectE2E from 'react-pure-bootstrap/CascadingSelectE2E';
+import CascadingSelectE2E from 'funda-ui/CascadingSelectE2E';
 import axios from 'axios';
 
 // component styles
-import 'react-pure-bootstrap/CascadingSelectE2E/index.css';
+import 'funda-ui/CascadingSelectE2E/index.css';
 
 
 class DataService {

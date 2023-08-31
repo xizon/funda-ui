@@ -5,7 +5,7 @@
 
 ### Mode Switch
 ```js
-import ModeSwitch from 'react-pure-bootstrap/ModeSwitch';
+import ModeSwitch from 'funda-ui/ModeSwitch';
 ```
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |
@@ -22,7 +22,7 @@ import ModeSwitch from 'react-pure-bootstrap/ModeSwitch';
 
 ```js
 import React from "react";
-import ModeSwitch from 'react-pure-bootstrap/ModeSwitch';
+import ModeSwitch from 'funda-ui/ModeSwitch';
 
 
 export default () => {

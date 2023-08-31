@@ -5,7 +5,7 @@
 
 ### Live Search
 ```js
-import LiveSearch from 'react-pure-bootstrap/LiveSearch';
+import LiveSearch from 'funda-ui/LiveSearch';
 ```
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |
@@ -45,7 +45,7 @@ You need to use a `fetchCallback` property to format the data of the API callbac
 
 ```js
 import React from "react";
-import LiveSearch from 'react-pure-bootstrap/LiveSearch';
+import LiveSearch from 'funda-ui/LiveSearch';
 import axios from 'axios';
 
 class DataService {

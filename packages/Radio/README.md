@@ -5,7 +5,7 @@
 
 ### Radio
 ```js
-import Radio from 'react-pure-bootstrap/Radio';
+import Radio from 'funda-ui/Radio';
 ```
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |
@@ -41,7 +41,7 @@ JSON Object Literals configuration properties of the `options`:
 
 ```js
 import React from "react";
-import Radio from 'react-pure-bootstrap/Radio';
+import Radio from 'funda-ui/Radio';
 
 export default () => {
 
@@ -80,7 +80,7 @@ export default () => {
 
 ```js
 import React, { useState } from "react";
-import Radio from 'react-pure-bootstrap/Radio';
+import Radio from 'funda-ui/Radio';
 
 export default () => {
 
