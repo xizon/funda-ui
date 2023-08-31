@@ -28,11 +28,11 @@ Here is a table of the components and their status.
 | [Card ❏](packages/Card/README.md) | [Textarea  ✅](packages/Textarea/README.md) | [Scroll Reveal ✅](packages/ScrollReveal/README.md) |  | 
 | [Content Placeholder ❏](packages/ContentPlaceholder/README.md) | [Select ✅](packages/Select/README.md) | [Sticky Elements ❏](packages/StickyElements/README.md) |  |
 | [Counter ❏](packages/Counter/README.md) | [Cascading Select ✅](packages/CascadingSelect/README.md) | [Mode Switch ✅](packages/ModeSwitch/README.md) |  |
-| [Hybrid Content Slider ❏](packages/HybridContentSlider/README.md) | [Cascading Select End-to-end ✅](packages/CascadingSelectE2E/README.md) | [Custom Scrollbar ✅](packages/Scrollbar/README.md) |  |
+| [Hybrid Content Slider ❏](packages/HybridContentSlider/README.md) | [Cascading Select End-to-end ✅🔥](packages/CascadingSelectE2E/README.md) | [Custom Scrollbar ✅](packages/Scrollbar/README.md) |  |
 | [Image Shapes ❏](packages/ImageShapes/README.md) | [Radio ✅](packages/Radio/README.md) |  |  |
 | [Lightbox ❏](packages/Lightbox/README.md) | [Checkbox ✅](packages/Checkbox/README.md) |  |  |
-| [List Bulleted ❏](packages/ListBulleted/README.md) | [Multifunction Select ✅](packages/MultiFuncSelect/README.md) |  |  |
-| [Modal Dialog ✅](packages/ModalDialog/README.md) | [LiveSearch ✅](packages/LiveSearch/README.md) |  |  |
+| [List Bulleted ❏](packages/ListBulleted/README.md) | [Multifunction Select ✅🔥](packages/MultiFuncSelect/README.md) |  |  |
+| [Modal Dialog ✅🔥](packages/ModalDialog/README.md) | [LiveSearch ✅](packages/LiveSearch/README.md) |  |  |
 | [Pagination ✅](packages/Pagination/README.md) | [Number ❏](packages/Number/README.md) |  |  |
 | [Table ✅](packages/Table/README.md) | [SearchBar ✅](packages/SearchBar/README.md) |  |  |
 | [Periodical Scroll ❏](packages/PeriodicalScroll/README.md) | [Switch ✅](packages/Switch/README.md) |  |  |
@@ -46,7 +46,7 @@ Here is a table of the components and their status.
 | [Toast ✅](packages/Toast/README.md) |  |  |  |
 | [Tooltip ✅](packages/Tooltip/README.md) |  |  |  |
 | [Digital Clock ✅](packages/DigitalClock/README.md) |  |  |  |
-| [Tree ✅](packages/Tree/README.md) |  |  |  |
+| [Tree ✅🔥](packages/Tree/README.md) |  |  |  |
 
 
 
