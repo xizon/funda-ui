@@ -1417,32 +1417,6 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
     });
     fetchData(_params.join(','), value);
 
-    // If you use the dynamic form assignment (such as document.getElementById(xxx).value), 
-    // you need to judge the value of the input obtained by using the macrotask "setInterval()"
-    var timer = null;
-    var initTimes = 0;
-    var hasValue = false;
-    timer = setInterval(function () {
-      if (initTimes > 5 || hasValue) {
-        clearInterval(timer);
-      } else {
-        // get value if the attribute `data-value` of component exists
-        // Using `<DynamicFields />` will assign values ​​according to `data-value`
-        var incomingOptionsData = valueInputRef.current.dataset.options;
-        if (valueInputRef.current !== null && typeof incomingOptionsData !== 'undefined' && typeof valueInputRef.current.dataset.value !== 'undefined' && valueInputRef.current.dataset.value !== '') {
-          fetchData(_params.join(','), valueInputRef.current.dataset.value);
-          hasValue = true;
-        }
-
-        //
-        if (valueInputRef.current !== null && valueInputRef.current.value !== '' && (typeof value === 'undefined' || value === '')) {
-          fetchData(_params.join(','), valueInputRef.current.value);
-          hasValue = true;
-        }
-        initTimes++;
-      }
-    }, 500);
-
     // keyboard listener
     //--------------
     var listener = /*#__PURE__*/function () {
@@ -1549,9 +1523,6 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
       document.removeEventListener('pointerdown', handleClose);
       window.removeEventListener('scroll', windowScrollUpdate);
       window.removeEventListener('touchmove', windowScrollUpdate);
-
-      //
-      clearInterval(timer);
     };
   }, [value, options, data]);
   return /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, label ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {

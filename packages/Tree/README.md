@@ -20,9 +20,12 @@ import Tree from 'funda-ui/Tree';
 | `disableArrow` | boolean | false | Disable arrow. |
 | `disableCollapse` | boolean | false | Disable the collapse effect. |
 | `data` | array | - | Specify data of Cascading DropDown List as a JSON string format. Such as: <br />`[{title:"Top level 1",link:"#",slug:'level-1'},{title:"Top level 2",link:"/s",slug:'level-2',},{title:"Top level 3",link:"https://example.com",slug:'level-3',active:true,children:[{title:"Sub level 3_1",link:"#3-1",slug:'level-3_1'},{title:"Sub level 3_2",link:"#3-2",slug:'level-3_2'},{title:"Sub level 3_3",link:"#3-3",slug:'level-3_3'}]},{title:"Top level 4 (heading)",link:"#",slug:'level-4',}]` |
-| `onSelect` | function  | - | Call a function when clicking an item. It returns three callback values, one is the current hyperlink and the second is the data (JSON Object), the last is a callback function, which can initiate an asynchronous request to load children (usage: Please refer to the documentation example). |
+| `onSelect` | function  | - | Call a function when clicking an item. It returns three callback values. <br /> <ol><li>The first is the current hyperlink</li><li>The second is the data (JSON Object)</li><li> The third is a callback function, which can initiate an asynchronous request to load children (usage: Please refer to the documentation example)</li></ol> |
 | `onCollapse` | function  | - | Call a function when collapsing/expanding. The return value is same with `onSelect`. <blockquote>When `disableArrow` is "true", click on the content to trigger it</blockquote> |
 | `onCheck` | function  | - | Call a function when changing the checkbox. It returns only one callback value (Array). <blockquote>Take effect when `checkable` is "true"</blockquote> |
+
+
+
 
 
 

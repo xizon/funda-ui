@@ -6,350 +6,161 @@ declare module 'react' {
     }
 }
 
+type DynamicFieldsValueProps = {
+    init: React.ReactNode[];
+    tmpl: React.ReactNode;
+};
+
+
 type DynamicFieldsProps = {
     wrapperClassName?: string;
     value?: string;
     label?: React.ReactNode | string;
-    tempHtmlString?: any;
+    data: DynamicFieldsValueProps | null;
     maxFields?: any;
     confirmText?: string;
+    doNotRemoveDom?: boolean;
     iconAddBefore?: React.ReactNode | string;
     iconAddAfter?: React.ReactNode | string;
     iconAdd?: React.ReactNode | string;
     iconRemove?: React.ReactNode | string;
-    startFromZero?: boolean;
     /** -- */
     id?: string;
-    onAdd?: () => void;
-    onRemove?: () => void;
-    onComplete?: () => void;
-    
+    onAdd?: (items: HTMLDivElement[]) => void;
+    onRemove?: (items: HTMLDivElement[], key: number | string, index: number | string) => void;
+
 };
 
 const DynamicFields = (props: DynamicFieldsProps) => {
     const {
         wrapperClassName,
-        value,
         label,
-        tempHtmlString,
+        data,
         maxFields,
         iconAddBefore,
         iconAddAfter,
         iconAdd,
         iconRemove,
-        startFromZero,
+        doNotRemoveDom,
         id,
         confirmText,
         onAdd,
-        onRemove,
-        onComplete
+        onRemove
     } = props;
 
+    const DO_NOT_REMOVE_DOM = typeof doNotRemoveDom === 'undefined' ? false : true;
     const uniqueID = useId().replace(/\:/g, "-");
     const idRes = id || uniqueID;
     const rootRef = useRef<any>(null);
     const fieldsRef = useRef<any>(null);
     const addBtnRef = useRef<any>(null);
-    const [data, setData] = useState<any[]>([]);
-    const controlRefreshValDelay = 1000;
-
-    //timer
-    const timeoutIdRef = useRef<any>(null);
-    const startTimer = () => {
-
-        return new Promise(function (resolve, reject) {
-          
-            //
-            timeoutIdRef.current = setTimeout(() => {
-
-                if ( fieldsRef.current !== null ) {
-                    const _val: any[] = value ? JSON.parse( '[' + value + ']' ) : [];
-                    const controls: HTMLFormElement[] = [].slice.call(document.querySelectorAll( `#${fieldsRef.current.id} > .dynamic-fields__append [name]` ));
-                    const integratedControls: HTMLFormElement[] = [];
-    
-                    let hasRadio: boolean = false;
-                    controls.forEach((node: any, i: number) => {
-    
-    
-                        let controlType = '';
-                        if (node.tagName == "INPUT" || node.tagName == "TEXTARTA") {
-            
-                            //not `radio`, `checkbox`
-                            if (node.type != 'checkbox' && node.type != 'radio') {
-                                controlType = 'input-textarea';
-                            }
-            
-                            //`checkbox`
-                            if (node.type == 'checkbox') {
-                                controlType = 'checkbox';
-                            }
-            
-                            //`radio`
-                            if (node.type == 'radio') {
-                                controlType = 'radio';
-                            }
-            
-                        }
-            
-                        //`select`
-                        if (node.tagName == "SELECT") {
-                            controlType = 'select';
-                        }
-    
-                        //
-                        if ( controlType === 'radio' ) {
-                            hasRadio = true;
-                        }
-    
-                        integratedControls.push({
-                            target: node,
-                            type: controlType
-                        } as never);
-    
-                        // replace placeholder string
-                        replacePlaceholderStr(node);
-                    });
-    
-                    
-    
-                    if ( hasRadio ) {
-                        console.error('<DynamicFields /> cannot use the "radio" type, because it will have multiple duplicate names! \nThe following components are recommended: <Input />, <Textarea />, <Checkbox />, <Switch />, <MultiFuncSelect />, <Select />, <CascadingSelectE2E />, <CascadingSelect />, <TagInput />, <RangeSlider />.');
-                        return false;
-                    }
-                    
-                    const resControls: any = groupByNum(integratedControls, Math.floor(integratedControls.length / _val.length));
-    
-                    _val.forEach((row: string[], i: number) => {
-                        row.forEach((val: any, j: number) => {
-                            
-                            if ( typeof resControls[i] !== 'undefined' && typeof resControls[i][j] !== 'undefined' ) {
-                                const _control: any = resControls[i][j];
-
-                                // set default value
-                                // It is generally used for `<CascadingSelect />` and cascading `<Select />`
-                                _control.target.dataset.value = val;
-
-                                switch (_control.type) {
-                                    case "input-textarea":
-
-                                        // normal
-                                        _control.target.value = val;
-    
-                                        // if it is checkbox
-                                        if ( val === true ) {
-                                            const _checkbox = _control.target.parentElement.querySelector('[data-checkbox]');
-                                            _checkbox.checked = val == true ? true : false;
-                                            _control.target.value = _checkbox.value;
-                                        }
-
-    
-                                        break;
-                                    case "checkbox":
-                                        _control.target.checked = val == true ? true : false;
-                                        break;
-                                    case "select":
-                                        _control.target.value = val;
-                                        _control.target.dispatchEvent(new Event('change'));
-                                        
-                                        break;
-                                    default:
-                                        _control.target.value = val;
-                
-                                }//end switch  
-                            }
-    
-                            
-                        })	
-    
-                    });
-    
-                    //button status
-                    checkMaxStatus(); 
-
-                    //
-                    resolve(timeoutIdRef.current);
-    
-                }
-                
-
-            }, controlRefreshValDelay);
-
-            
-
-        });
-    };
-
-    const stopTimer = () => {
-        clearTimeout(timeoutIdRef.current);
-        timeoutIdRef.current = null;
-    };
-
-
-    //timer add
-    const timeoutAddIdRef = useRef<any>(null);
-    const startTimerAdd = () => {
-        timeoutAddIdRef.current = setTimeout(() => {
-
-            if ( fieldsRef.current !== null ) {
-                const controls: HTMLFormElement[] = [].slice.call(document.querySelectorAll( `#${fieldsRef.current.id} > .dynamic-fields__append [name]` ));
-                controls.forEach((node: any, i: number) => {
-                    // replace placeholder string
-                    replacePlaceholderStr(node);
-                });
-
-            }
-        }, controlRefreshValDelay);
-    };
-
-    const stopTimerAdd = () => {
-        clearTimeout(timeoutAddIdRef.current);
-        timeoutAddIdRef.current = null;
-    };
-
-
-    //timer onComplete
-    const timeoutHandleCompleteIdRef = useRef<any>(null);
-    const startTimerHandleComplete = () => {
-        timeoutHandleCompleteIdRef.current = setTimeout(() => {
-
-            // Call a function when all dynamic components are rendered. 
-            // It is usually used for cascading asynchronous components (can be triggered by routing updates)
-            onComplete?.();
-
-        }, 500);
-    };
-
-    const stopTimerHandleComplete = () => {
-        clearTimeout(timeoutHandleCompleteIdRef.current);
-        timeoutHandleCompleteIdRef.current = null;
-    };
-
-
-
-
-    //
-    function replacePlaceholderStr(node: any) {
-        const _wapper = node.closest('.dynamic-fields__tmpl__wrapper');
-        if ( _wapper === null ) return;
-
-        const perKey = _wapper.dataset.key;
-        if (typeof node.id !== 'undefined' ) node.id = node.id.replace('%i%', perKey);
-        if (typeof node.name !== 'undefined' ) node.name = node.name.replace('%i%', perKey);
-        if (typeof node.dataset.id !== 'undefined' ) node.dataset.id = node.dataset.id.replace('%i%', perKey);
-        if (typeof node.dataset.name !== 'undefined' ) node.dataset.name = node.dataset.name.replace('%i%', perKey);
-    }
-
-    function groupByNum(arr: any[], n: number) {
-        if ( n === 0 || n === Infinity ) return false;
-
-        let result: any[] = [];
-        for (let i = 0; i < arr.length; i += n) result.push(arr.slice(i, i + n) as never);
-        return result;
-    }
-
+    const [val, setVal] = useState<React.ReactNode[]>([]);
+    const [tmpl, setTmpl] = useState<React.ReactNode>([]);
 
     function checkMaxStatus() {
         //button status
-        if (rootRef.current.querySelector('.dynamic-fields__append').children.length+1 >= parseFloat(maxFields)) {
+        if (rootRef.current.querySelector('.dynamic-fields__append').children.length + 1 >= parseFloat(maxFields)) {
             addBtnRef.current.style.setProperty('display', 'none', 'important');
         }
     }
-    
 
-    function handleClickAdd(event: any){
+
+    function handleClickAdd(event: any) {
         event.preventDefault();
 
         //button status
         checkMaxStatus();
 
         //
-        setData((prevState: any[]) => {
-            return [...prevState, [""]];
-        });
+        setVal((prevState: any[]) => [...prevState, ...generateGroup(tmpl)]);
+
 
         //
-        onAdd?.();
+        setTimeout(() => {
+            const perRow = [].slice.call(rootRef.current.querySelector('.dynamic-fields__append').children);
 
+            // update index
+            perRow.forEach((el: HTMLDivElement, i: number) => {
+                el.dataset.index = i.toString();
+            });
 
-        // update placeholder string
-        startTimerAdd();
-
-
+            //
+            onAdd?.(perRow);
+        }, 0);
     }
 
 
-    function handleClickRemove(param: any) { // param is the argument you passed to the function
-        return (e: any) => { // e is the event object that returned
-            e.preventDefault();
+    function handleClickRemove(e: React.MouseEvent) {
+        e.preventDefault();
 
-            if ( confirm(confirmText || '') ) {
+        const curKey = (e.currentTarget.closest('.dynamic-fields__data__wrapper') as HTMLDivElement).dataset.key;
+        
 
-                //button status
-                if (rootRef.current.querySelector('.dynamic-fields__append').children.length <= parseFloat(maxFields)) {
-                    addBtnRef.current.style.setProperty('display', 'inline', 'important');
-                }
-    
+        if (confirm(confirmText || '')) {
 
-                //
-                let newData = [...data];
-                newData.splice(param, 1);
-                //console.log(newData); //[[""],[""],[""],[""]]
-                setData(newData);
-
-                //
-                onRemove?.();  
+            //button status
+            if (rootRef.current.querySelector('.dynamic-fields__append').children.length <= parseFloat(maxFields)) {
+                addBtnRef.current.style.setProperty('display', 'inline', 'important');
             }
 
-        };
+            
+            const curItem = rootRef.current.querySelector(`.dynamic-fields__append [data-key="${curKey}"]`);
+            const curIndex = curItem.dataset.index;
+            if (curItem !== null && !DO_NOT_REMOVE_DOM) curItem.remove();
+
+
+            //
+            setTimeout(() => {
+                const perRow = [].slice.call(rootRef.current.querySelector('.dynamic-fields__append').children);
+
+                // update index
+                perRow.forEach((el: HTMLDivElement, i: number) => {
+                    el.dataset.index = i.toString();
+                });
+
+                //
+                onRemove?.(perRow, curKey as never, curIndex as number);
+            }, 0);
+        }
 
     }
 
-    function updateDisplayedControls() {
+    function generateGroup(inputData: React.ReactNode[] | React.ReactNode) {
+        const isNew = !Array.isArray(inputData);
+        const _data = Array.isArray(inputData) ? inputData : [inputData];
 
-		// update values for all displayed controls
-        // You need to wait for the asynchronous component to render
-        startTimer().then(() => {
-            startTimerHandleComplete();
-        });
-
-    }
-
-    function generateList() {
-
-        return data.map((el: any, i: number) =>
-            <div key={i} className="dynamic-fields__tmpl__wrapper position-relative" data-key={i}>
-
-                {el.map((data: any, index: number) => {
-                    return (
-                        <React.Fragment key={index}>
-                            {tempHtmlString}
-                        </React.Fragment>
-                    )
-                })
-                }
-
-                <a href="#" tabIndex={-1} className="dynamic-fields__removebtn align-middle" onClick={handleClickRemove(i)}>
+        return (
+            _data.map((item: any, i: number) => {
+                const addBtn = <><a href="#" tabIndex={-1} className="dynamic-fields__removebtn align-middle" onClick={handleClickRemove}>
                     {iconRemove ? <>{iconRemove}</> : <><svg width="20px" height="20px" viewBox="0 0 24 24" fill="none"><path fillRule="evenodd" clipRule="evenodd" d="M22 12c0 5.523-4.477 10-10 10S2 17.523 2 12 6.477 2 12 2s10 4.477 10 10ZM8 11a1 1 0 1 0 0 2h8a1 1 0 1 0 0-2H8Z" fill="#000" /></svg></>}
-                </a>
+                </a></>;
 
-            </div>
-        );
+                return <div key={'tmpl-' + i}>
+                    {isNew ? <>
+                        {item}
+                        {addBtn}
+                    </> : <>
+                        <div className="dynamic-fields__data__wrapper position-relative" data-key={i} data-index={i}>
+                            {item}
+                            {addBtn}
+                        </div>
+                    </>}
+
+                </div>
+
+            })
+
+        )
 
     }
+
 
     useEffect(() => {
 
-        setData(value ? [...Array(JSON.parse('[' + value + ']').length - (!startFromZero ? 1 : 0))].map(() => [""]) : []);
-        updateDisplayedControls();
+        setVal(data ? data.init : []);
+        setTmpl(data ? data.tmpl : null);
 
-        return () => {
-            stopTimer();
-            stopTimerAdd();
-            stopTimerHandleComplete();
-        };
-
-  
-    }, [value]);
+    }, [data]);
 
 
     return (
@@ -361,10 +172,9 @@ const DynamicFields = (props: DynamicFieldsProps) => {
 
                 <div ref={fieldsRef} className="dynamic-fields-container" data-max-fields={maxFields || 10} id={idRes}>
                     <div className="dynamic-fields__append">
-                        {!startFromZero ? tempHtmlString : null}
-                        {generateList()}
+                        {generateGroup(val)}
                     </div>
-                    
+
                     <div className="dynamic-fields__btns">
                         {iconAddBefore ? iconAddBefore : null}
                         <a ref={addBtnRef} href="#" tabIndex={-1} className="dynamic-fields__addbtn align-middle" onClick={handleClickAdd}>
@@ -372,7 +182,7 @@ const DynamicFields = (props: DynamicFieldsProps) => {
                         </a>
                         {iconAddAfter ? iconAddAfter : null}
                     </div>
-                    
+
                 </div>
 
             </div>

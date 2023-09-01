@@ -342,26 +342,6 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
             // update default value
             //--------------
             setChangedVal(value || '');
-
-            // If you use the dynamic form assignment (such as document.getElementById(xxx).value), 
-            // you need to judge the value of the input obtained by using the macrotask "setInterval()"
-            var timer = null;
-            var initTimes = 0;
-            var hasValue = false;
-            timer = setInterval(function () {
-              if (initTimes > 5 || hasValue) {
-                clearInterval(timer);
-              } else {
-                if (valRef.current !== null && valRef.current.value !== '' && (typeof value === 'undefined' || value === '')) {
-                  setChangedVal(valRef.current.value);
-                  hasValue = true;
-                }
-                initTimes++;
-              }
-            }, 500);
-            return function () {
-              clearInterval(timer);
-            };
           }, [value]);
           return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react__WEBPACK_IMPORTED_MODULE_0___default().Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
             className: wrapperClassName || wrapperClassName === '' ? wrapperClassName : "mb-3 position-relative",
@@ -623,29 +603,6 @@ var RangeSlider = function RangeSlider(props) {
     // update default value
     //--------------
     initDefaultValue(value);
-
-    // If you use the dynamic form assignment (such as document.getElementById(xxx).value), 
-    // you need to judge the value of the input obtained by using the macrotask "setInterval()"
-    var timer = null;
-    var initTimes = 0;
-    var hasValue = false;
-    timer = setInterval(function () {
-      if (initTimes > 5 || hasValue) {
-        clearInterval(timer);
-      } else {
-        if (typeof value === 'undefined' || value === '') {
-          if (valMinRef.current !== null && valMaxRef.current !== null && valMinRef.current.value !== '' && valMaxRef.current.value !== '') initDefaultValue({
-            min: valMinRef.current.value,
-            max: valMaxRef.current.value
-          });
-          hasValue = true;
-        }
-        initTimes++;
-      }
-    }, 500);
-    return function () {
-      clearInterval(timer);
-    };
   }, [value]);
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, label ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
     className: "range-slider__label"

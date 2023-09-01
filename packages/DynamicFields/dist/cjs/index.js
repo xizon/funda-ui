@@ -109,20 +109,19 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 var DynamicFields = function DynamicFields(props) {
   var wrapperClassName = props.wrapperClassName,
-    value = props.value,
     label = props.label,
-    tempHtmlString = props.tempHtmlString,
+    data = props.data,
     maxFields = props.maxFields,
     iconAddBefore = props.iconAddBefore,
     iconAddAfter = props.iconAddAfter,
     iconAdd = props.iconAdd,
     iconRemove = props.iconRemove,
-    startFromZero = props.startFromZero,
+    doNotRemoveDom = props.doNotRemoveDom,
     id = props.id,
     confirmText = props.confirmText,
     onAdd = props.onAdd,
-    onRemove = props.onRemove,
-    onComplete = props.onComplete;
+    onRemove = props.onRemove;
+  var DO_NOT_REMOVE_DOM = typeof doNotRemoveDom === 'undefined' ? false : true;
   var uniqueID = (0,react__WEBPACK_IMPORTED_MODULE_0__.useId)().replace(/\:/g, "-");
   var idRes = id || uniqueID;
   var rootRef = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(null);
@@ -130,158 +129,12 @@ var DynamicFields = function DynamicFields(props) {
   var addBtnRef = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(null);
   var _useState = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)([]),
     _useState2 = _slicedToArray(_useState, 2),
-    data = _useState2[0],
-    setData = _useState2[1];
-  var controlRefreshValDelay = 1000;
-
-  //timer
-  var timeoutIdRef = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(null);
-  var startTimer = function startTimer() {
-    return new Promise(function (resolve, reject) {
-      //
-      timeoutIdRef.current = setTimeout(function () {
-        if (fieldsRef.current !== null) {
-          var _val = value ? JSON.parse('[' + value + ']') : [];
-          var controls = [].slice.call(document.querySelectorAll("#".concat(fieldsRef.current.id, " > .dynamic-fields__append [name]")));
-          var integratedControls = [];
-          var hasRadio = false;
-          controls.forEach(function (node, i) {
-            var controlType = '';
-            if (node.tagName == "INPUT" || node.tagName == "TEXTARTA") {
-              //not `radio`, `checkbox`
-              if (node.type != 'checkbox' && node.type != 'radio') {
-                controlType = 'input-textarea';
-              }
-
-              //`checkbox`
-              if (node.type == 'checkbox') {
-                controlType = 'checkbox';
-              }
-
-              //`radio`
-              if (node.type == 'radio') {
-                controlType = 'radio';
-              }
-            }
-
-            //`select`
-            if (node.tagName == "SELECT") {
-              controlType = 'select';
-            }
-
-            //
-            if (controlType === 'radio') {
-              hasRadio = true;
-            }
-            integratedControls.push({
-              target: node,
-              type: controlType
-            });
-
-            // replace placeholder string
-            replacePlaceholderStr(node);
-          });
-          if (hasRadio) {
-            console.error('<DynamicFields /> cannot use the "radio" type, because it will have multiple duplicate names! \nThe following components are recommended: <Input />, <Textarea />, <Checkbox />, <Switch />, <MultiFuncSelect />, <Select />, <CascadingSelectE2E />, <CascadingSelect />, <TagInput />, <RangeSlider />.');
-            return false;
-          }
-          var resControls = groupByNum(integratedControls, Math.floor(integratedControls.length / _val.length));
-          _val.forEach(function (row, i) {
-            row.forEach(function (val, j) {
-              if (typeof resControls[i] !== 'undefined' && typeof resControls[i][j] !== 'undefined') {
-                var _control = resControls[i][j];
-
-                // set default value
-                // It is generally used for `<CascadingSelect />` and cascading `<Select />`
-                _control.target.dataset.value = val;
-                switch (_control.type) {
-                  case "input-textarea":
-                    // normal
-                    _control.target.value = val;
-
-                    // if it is checkbox
-                    if (val === true) {
-                      var _checkbox = _control.target.parentElement.querySelector('[data-checkbox]');
-                      _checkbox.checked = val == true ? true : false;
-                      _control.target.value = _checkbox.value;
-                    }
-                    break;
-                  case "checkbox":
-                    _control.target.checked = val == true ? true : false;
-                    break;
-                  case "select":
-                    _control.target.value = val;
-                    _control.target.dispatchEvent(new Event('change'));
-                    break;
-                  default:
-                    _control.target.value = val;
-                } //end switch  
-              }
-            });
-          });
-
-          //button status
-          checkMaxStatus();
-
-          //
-          resolve(timeoutIdRef.current);
-        }
-      }, controlRefreshValDelay);
-    });
-  };
-  var stopTimer = function stopTimer() {
-    clearTimeout(timeoutIdRef.current);
-    timeoutIdRef.current = null;
-  };
-
-  //timer add
-  var timeoutAddIdRef = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(null);
-  var startTimerAdd = function startTimerAdd() {
-    timeoutAddIdRef.current = setTimeout(function () {
-      if (fieldsRef.current !== null) {
-        var controls = [].slice.call(document.querySelectorAll("#".concat(fieldsRef.current.id, " > .dynamic-fields__append [name]")));
-        controls.forEach(function (node, i) {
-          // replace placeholder string
-          replacePlaceholderStr(node);
-        });
-      }
-    }, controlRefreshValDelay);
-  };
-  var stopTimerAdd = function stopTimerAdd() {
-    clearTimeout(timeoutAddIdRef.current);
-    timeoutAddIdRef.current = null;
-  };
-
-  //timer onComplete
-  var timeoutHandleCompleteIdRef = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(null);
-  var startTimerHandleComplete = function startTimerHandleComplete() {
-    timeoutHandleCompleteIdRef.current = setTimeout(function () {
-      // Call a function when all dynamic components are rendered. 
-      // It is usually used for cascading asynchronous components (can be triggered by routing updates)
-      onComplete === null || onComplete === void 0 ? void 0 : onComplete();
-    }, 500);
-  };
-  var stopTimerHandleComplete = function stopTimerHandleComplete() {
-    clearTimeout(timeoutHandleCompleteIdRef.current);
-    timeoutHandleCompleteIdRef.current = null;
-  };
-
-  //
-  function replacePlaceholderStr(node) {
-    var _wapper = node.closest('.dynamic-fields__tmpl__wrapper');
-    if (_wapper === null) return;
-    var perKey = _wapper.dataset.key;
-    if (typeof node.id !== 'undefined') node.id = node.id.replace('%i%', perKey);
-    if (typeof node.name !== 'undefined') node.name = node.name.replace('%i%', perKey);
-    if (typeof node.dataset.id !== 'undefined') node.dataset.id = node.dataset.id.replace('%i%', perKey);
-    if (typeof node.dataset.name !== 'undefined') node.dataset.name = node.dataset.name.replace('%i%', perKey);
-  }
-  function groupByNum(arr, n) {
-    if (n === 0 || n === Infinity) return false;
-    var result = [];
-    for (var i = 0; i < arr.length; i += n) result.push(arr.slice(i, i + n));
-    return result;
-  }
+    val = _useState2[0],
+    setVal = _useState2[1];
+  var _useState3 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)([]),
+    _useState4 = _slicedToArray(_useState3, 2),
+    tmpl = _useState4[0],
+    setTmpl = _useState4[1];
   function checkMaxStatus() {
     //button status
     if (rootRef.current.querySelector('.dynamic-fields__append').children.length + 1 >= parseFloat(maxFields)) {
@@ -295,60 +148,58 @@ var DynamicFields = function DynamicFields(props) {
     checkMaxStatus();
 
     //
-    setData(function (prevState) {
-      return [].concat(_toConsumableArray(prevState), [[""]]);
+    setVal(function (prevState) {
+      return [].concat(_toConsumableArray(prevState), _toConsumableArray(generateGroup(tmpl)));
     });
 
     //
-    onAdd === null || onAdd === void 0 ? void 0 : onAdd();
+    setTimeout(function () {
+      var perRow = [].slice.call(rootRef.current.querySelector('.dynamic-fields__append').children);
 
-    // update placeholder string
-    startTimerAdd();
+      // update index
+      perRow.forEach(function (el, i) {
+        el.dataset.index = i.toString();
+      });
+
+      //
+      onAdd === null || onAdd === void 0 ? void 0 : onAdd(perRow);
+    }, 0);
   }
-  function handleClickRemove(param) {
-    // param is the argument you passed to the function
-    return function (e) {
-      // e is the event object that returned
-      e.preventDefault();
-      if (confirm(confirmText || '')) {
-        //button status
-        if (rootRef.current.querySelector('.dynamic-fields__append').children.length <= parseFloat(maxFields)) {
-          addBtnRef.current.style.setProperty('display', 'inline', 'important');
-        }
-
-        //
-        var newData = _toConsumableArray(data);
-        newData.splice(param, 1);
-        //console.log(newData); //[[""],[""],[""],[""]]
-        setData(newData);
-
-        //
-        onRemove === null || onRemove === void 0 ? void 0 : onRemove();
+  function handleClickRemove(e) {
+    e.preventDefault();
+    var curKey = e.currentTarget.closest('.dynamic-fields__data__wrapper').dataset.key;
+    if (confirm(confirmText || '')) {
+      //button status
+      if (rootRef.current.querySelector('.dynamic-fields__append').children.length <= parseFloat(maxFields)) {
+        addBtnRef.current.style.setProperty('display', 'inline', 'important');
       }
-    };
+      var curItem = rootRef.current.querySelector(".dynamic-fields__append [data-key=\"".concat(curKey, "\"]"));
+      var curIndex = curItem.dataset.index;
+      if (curItem !== null && !DO_NOT_REMOVE_DOM) curItem.remove();
+
+      //
+      setTimeout(function () {
+        var perRow = [].slice.call(rootRef.current.querySelector('.dynamic-fields__append').children);
+
+        // update index
+        perRow.forEach(function (el, i) {
+          el.dataset.index = i.toString();
+        });
+
+        //
+        onRemove === null || onRemove === void 0 ? void 0 : onRemove(perRow, curKey, curIndex);
+      }, 0);
+    }
   }
-  function updateDisplayedControls() {
-    // update values for all displayed controls
-    // You need to wait for the asynchronous component to render
-    startTimer().then(function () {
-      startTimerHandleComplete();
-    });
-  }
-  function generateList() {
-    return data.map(function (el, i) {
-      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-        key: i,
-        className: "dynamic-fields__tmpl__wrapper position-relative",
-        "data-key": i
-      }, el.map(function (data, index) {
-        return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), {
-          key: index
-        }, tempHtmlString);
-      }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
+  function generateGroup(inputData) {
+    var isNew = !Array.isArray(inputData);
+    var _data = Array.isArray(inputData) ? inputData : [inputData];
+    return _data.map(function (item, i) {
+      var addBtn = /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
         href: "#",
         tabIndex: -1,
         className: "dynamic-fields__removebtn align-middle",
-        onClick: handleClickRemove(i)
+        onClick: handleClickRemove
       }, iconRemove ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, iconRemove) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("svg", {
         width: "20px",
         height: "20px",
@@ -360,19 +211,19 @@ var DynamicFields = function DynamicFields(props) {
         d: "M22 12c0 5.523-4.477 10-10 10S2 17.523 2 12 6.477 2 12 2s10 4.477 10 10ZM8 11a1 1 0 1 0 0 2h8a1 1 0 1 0 0-2H8Z",
         fill: "#000"
       })))));
+      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+        key: 'tmpl-' + i
+      }, isNew ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, item, addBtn) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+        className: "dynamic-fields__data__wrapper position-relative",
+        "data-key": i,
+        "data-index": i
+      }, item, addBtn)));
     });
   }
   (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(function () {
-    setData(value ? _toConsumableArray(Array(JSON.parse('[' + value + ']').length - (!startFromZero ? 1 : 0))).map(function () {
-      return [""];
-    }) : []);
-    updateDisplayedControls();
-    return function () {
-      stopTimer();
-      stopTimerAdd();
-      stopTimerHandleComplete();
-    };
-  }, [value]);
+    setVal(data ? data.init : []);
+    setTmpl(data ? data.tmpl : null);
+  }, [data]);
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
     className: wrapperClassName || wrapperClassName === '' ? wrapperClassName : "mb-3 position-relative",
     ref: rootRef
@@ -385,7 +236,7 @@ var DynamicFields = function DynamicFields(props) {
     id: idRes
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
     className: "dynamic-fields__append"
-  }, !startFromZero ? tempHtmlString : null, generateList()), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+  }, generateGroup(val)), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
     className: "dynamic-fields__btns"
   }, iconAddBefore ? iconAddBefore : null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
     ref: addBtnRef,

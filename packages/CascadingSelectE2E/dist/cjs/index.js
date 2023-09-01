@@ -985,23 +985,6 @@ var CascadingSelectE2E = function CascadingSelectE2E(props) {
     //--------------
     initDefaultValue(value);
 
-    // If you use the dynamic form assignment (such as document.getElementById(xxx).value), 
-    // you need to judge the value of the input obtained by using the macrotask "setInterval()"
-    var timer = null;
-    var initTimes = 0;
-    var hasValue = false;
-    timer = setInterval(function () {
-      if (initTimes > 5 || hasValue) {
-        clearInterval(timer);
-      } else {
-        if (valRef.current !== null && valRef.current.value !== '' && (typeof value === 'undefined' || value === '')) {
-          initDefaultValue(valRef.current.value);
-          hasValue = true;
-        }
-        initTimes++;
-      }
-    }, 500);
-
     //
     //--------------
     document.removeEventListener('pointerdown', handleClickOutside);
@@ -1018,9 +1001,6 @@ var CascadingSelectE2E = function CascadingSelectE2E(props) {
       document.removeEventListener('pointerdown', handleClickOutside);
       window.removeEventListener('scroll', windowScrollUpdate);
       window.removeEventListener('touchmove', windowScrollUpdate);
-
-      //
-      clearInterval(timer);
     };
   }, [value]);
   return /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {

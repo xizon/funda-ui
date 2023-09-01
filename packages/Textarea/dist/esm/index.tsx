@@ -104,28 +104,6 @@ const Textarea = forwardRef((props: TextareaProps, ref: any) => {
         //--------------
         setChangedVal(value || '');
 
-        // If you use the dynamic form assignment (such as document.getElementById(xxx).value), 
-        // you need to judge the value of the input obtained by using the macrotask "setInterval()"
-        let timer: any = null;
-        let initTimes: number = 0;
-        let hasValue: boolean = false;
-        timer = setInterval( () => {
-            if ( initTimes > 5 || hasValue ) {
-                clearInterval(timer);
-            } else {
-                if ( valRef.current !== null && valRef.current.value !== '' && ( typeof value === 'undefined' || value === '' ) ) {
-                    setChangedVal(valRef.current.value);
-                    hasValue = true;
-                }
-                initTimes++;
-
-            }
-        }, 500);
-
-        return () => {
-            clearInterval(timer);
-        }
-
     }, [value]);    
     
 

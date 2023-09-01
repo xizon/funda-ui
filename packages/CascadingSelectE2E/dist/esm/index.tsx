@@ -941,25 +941,6 @@ const CascadingSelectE2E = (props: CascadingSelectE2EProps) => {
         //--------------
         initDefaultValue(value);
 
-        // If you use the dynamic form assignment (such as document.getElementById(xxx).value), 
-        // you need to judge the value of the input obtained by using the macrotask "setInterval()"
-        let timer: any = null;
-        let initTimes: number = 0;
-        let hasValue: boolean = false;
-        timer = setInterval( () => {
-            if ( initTimes > 5 || hasValue ) {
-                clearInterval(timer);
-            } else {
-                if ( valRef.current !== null && valRef.current.value !== '' && ( typeof value === 'undefined' || value === '' ) ) {
-                    initDefaultValue(valRef.current.value);
-                    hasValue = true;
-                }
-                initTimes++;
-
-            }
-        }, 500);
-
-
 
         //
         //--------------
@@ -981,8 +962,6 @@ const CascadingSelectE2E = (props: CascadingSelectE2EProps) => {
             window.removeEventListener('scroll', windowScrollUpdate);
             window.removeEventListener('touchmove', windowScrollUpdate);
 
-            //
-            clearInterval(timer);
         }
 
 

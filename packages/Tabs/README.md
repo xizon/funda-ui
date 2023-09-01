@@ -16,7 +16,8 @@ import { Tabs } from 'funda-ui/Tabs';
 | `expandedActiveClassNameForNav` | string | - | specify an active class name for `<TabList />` |
 | `expandedActiveClassNameForPanel` | string | - | specify an active class name for `<TabPanel />` |
 | `animTransitionDuration` | number | 150 | Transition duration for css activation animation. |
-| `onChange` | function  | - | Call a function when the value of an HTML element is changed. It returns three callback values, one is the trigger, the second is the target ID of each panel, and the last is the currently active index. |
+| `onChange` | function  | - | Call a function when the value of an HTML element is changed. It returns three callback values. <br /> <ol><li>The first is the trigger object</li><li>The second is the target ID of each panel</li><li> The third is the currently active index</li></ol> |
+
 
 
 ### Tab List

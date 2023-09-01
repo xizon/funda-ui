@@ -111,30 +111,6 @@ const RangeSlider = (props: RangeSliderProps) => {
         //--------------
         initDefaultValue(value);
 
-        // If you use the dynamic form assignment (such as document.getElementById(xxx).value), 
-        // you need to judge the value of the input obtained by using the macrotask "setInterval()"
-        let timer: any = null;
-        let initTimes: number = 0;
-        let hasValue: boolean = false;
-        timer = setInterval( () => {
-            if ( initTimes > 5 || hasValue ) {
-                clearInterval(timer);
-            } else {
-                if ((typeof value === 'undefined' || value === '')) {
-                    if (valMinRef.current !== null && valMaxRef.current !== null && valMinRef.current.value !== '' && valMaxRef.current.value !== '')
-                        initDefaultValue({ min: valMinRef.current.value, max: valMaxRef.current.value });
-                        hasValue = true;
-                }
-          
-                initTimes++;
-
-            }
-        }, 500);
-
-        return () => {
-            clearInterval(timer);
-        }
-
 
     }, [value]);
 

@@ -1234,36 +1234,6 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
         fetchData((_params).join(','), value);
 
 
-        // If you use the dynamic form assignment (such as document.getElementById(xxx).value), 
-        // you need to judge the value of the input obtained by using the macrotask "setInterval()"
-        let timer: any = null;
-        let initTimes: number = 0;
-        let hasValue: boolean = false;
-        timer = setInterval( () => {
-            if ( initTimes > 5 || hasValue ) {
-                clearInterval(timer);
-            } else {
-
-                // get value if the attribute `data-value` of component exists
-                // Using `<DynamicFields />` will assign values ​​according to `data-value`
-                const incomingOptionsData = valueInputRef.current.dataset.options;
-                if ( valueInputRef.current !== null && typeof incomingOptionsData !== 'undefined' && typeof valueInputRef.current.dataset.value !== 'undefined' && valueInputRef.current.dataset.value !== '') {
-                    fetchData((_params).join(','), valueInputRef.current.dataset.value);
-                    hasValue = true;
-                }
-
-                //
-                if ( valueInputRef.current !== null &&  valueInputRef.current.value !== '' && ( typeof value === 'undefined' || value === '' ) ) {
-                    fetchData((_params).join(','), valueInputRef.current.value);
-                    hasValue = true;
-                }
-                initTimes++;
-
-            }
-        }, 500);
-
-
-
         // keyboard listener
         //--------------
         const listener = async (event: any) => {
@@ -1363,8 +1333,6 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
             window.removeEventListener('scroll', windowScrollUpdate);
             window.removeEventListener('touchmove', windowScrollUpdate);
             
-            //
-            clearInterval(timer); 
         }
 
     }, [value, options, data]);
