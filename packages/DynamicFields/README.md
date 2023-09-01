@@ -578,6 +578,29 @@ export default () => {
         console.log('rawData: ', inputData);
     };
 
+
+    const updateJsonNode = (inputData: any[], curIndex: number, nodes: any) => {
+        
+        return inputData.map((v: any, i: number) => {
+            if (i === curIndex) {
+
+                const params: any[] = Object.keys(nodes);
+                params.forEach((key: string) => {
+                    delete v[key];
+                });
+
+                const {...rest} = v;
+                return {
+                    ...nodes,
+                    ...rest
+                }
+            } else {
+                return v;
+            }
+
+        });
+    };
+
     const addNewRow = () => {
         // updata row data
         setRawData((prevState: any[]) => {
@@ -642,19 +665,11 @@ export default () => {
 
                                 // updata row data
                                 setRawData((prevState: any[]) => {
-                                    const newData = prevState.map((v: any, i: number) => {
-                                        if (i === curIndex) {
-                                            const {user_name, ...rest} = v;
-                                            return {
-                                                user_name: e.currentTarget.value,
-                                                ...rest
-                                            }
-                                        } else {
-                                            return v;
-                                        }
-    
-                                    });
 
+                                    const newData = updateJsonNode(prevState, curIndex, {
+                                        user_name: e.currentTarget.value
+                                    });
+                                
                                     // data of Dynamic Fields
                                     updateComponentData(newData);
 
@@ -688,20 +703,11 @@ export default () => {
 
                                 // updata row data
                                 setRawData((prevState: any[]) => {
-                                    const newData = prevState.map((v: any, i: number) => {
-                                        if (i === curIndex) {
-                                            const {role_id, role_name, ...rest} = v;
-                                            return {
-                                                role_id: val.value,
-                                                role_name: val.label,
-                                                ...rest
-                                            }
-                                        } else {
-                                            return v;
-                                        }
-    
-                                    });
 
+                                    const newData = updateJsonNode(prevState, curIndex, {
+                                        role_id: val.value,
+                                        role_name: val.label,
+                                    });
 
                                     // data of Dynamic Fields
                                     updateComponentData(newData);
