@@ -17,6 +17,7 @@ type ScrollbarProps = {
 };
 
 
+
 const Scrollbar = (props: ScrollbarProps) => {
     const {
         onlyVerticle,
@@ -419,8 +420,14 @@ const Scrollbar = (props: ScrollbarProps) => {
                 </div>
 
                 {/* SCROLLBAR */}
+                {/*
+                !!! IMPORTANT:
+                Button needs to specify type to prevent the "Enter" key event from interfering with the page outside the component
+                */}
                 <div ref={scrollBarRef} className="custom-scrollbars__scrollbar" style={onlyHorizontal ? { display: 'none' } : {}}>
                     <button
+                        tabIndex={-1}
+                        type="button"
                         className={`custom-scrollbars__button ${disableArrow ? 'disabled' : ''}`}
                         onClick={() => handleScrollButton('up')}
                     >
@@ -444,6 +451,8 @@ const Scrollbar = (props: ScrollbarProps) => {
                         ></div>
                     </div>
                     <button
+                        tabIndex={-1}
+                        type="button"
                         className={`custom-scrollbars__button ${disableArrow ? 'disabled' : ''}`}
                         onClick={() => handleScrollButton('down')}
                     >
@@ -458,6 +467,8 @@ const Scrollbar = (props: ScrollbarProps) => {
                 {/* SCROLLBAR HORIZONTAL */}
                 <div ref={scrollBarHorizontalRef} className="custom-scrollbars__scrollbar-horizontal" style={onlyVerticle ? { display: 'none' } : {}}>
                     <button
+                        tabIndex={-1}
+                        type="button"
                         className={`custom-scrollbars__button ${disableArrow ? 'disabled' : ''}`}
                         onClick={() => handleHorizontalScrollButton('left')}
                     >
@@ -481,6 +492,8 @@ const Scrollbar = (props: ScrollbarProps) => {
                         ></div>
                     </div>
                     <button
+                        tabIndex={-1}
+                        type="button"
                         className={`custom-scrollbars__button ${disableArrow ? 'disabled' : ''}`}
                         onClick={() => handleHorizontalScrollButton('right')}
                     >

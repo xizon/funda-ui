@@ -536,6 +536,8 @@ var Scrollbar = function Scrollbar(props) {
       display: 'none'
     } : {}
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", {
+    tabIndex: -1,
+    type: "button",
     className: "custom-scrollbars__button ".concat(disableArrow ? 'disabled' : ''),
     onClick: function onClick() {
       return handleScrollButton('up');
@@ -558,6 +560,8 @@ var Scrollbar = function Scrollbar(props) {
       cursor: isDragging ? 'grabbing' : 'grab'
     }
   })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", {
+    tabIndex: -1,
+    type: "button",
     className: "custom-scrollbars__button ".concat(disableArrow ? 'disabled' : ''),
     onClick: function onClick() {
       return handleScrollButton('down');
@@ -569,6 +573,8 @@ var Scrollbar = function Scrollbar(props) {
       display: 'none'
     } : {}
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", {
+    tabIndex: -1,
+    type: "button",
     className: "custom-scrollbars__button ".concat(disableArrow ? 'disabled' : ''),
     onClick: function onClick() {
       return handleHorizontalScrollButton('left');
@@ -591,6 +597,8 @@ var Scrollbar = function Scrollbar(props) {
       cursor: isHorizontalDragging ? 'grabbing' : 'grab'
     }
   })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", {
+    tabIndex: -1,
+    type: "button",
     className: "custom-scrollbars__button ".concat(disableArrow ? 'disabled' : ''),
     onClick: function onClick() {
       return handleHorizontalScrollButton('right');
