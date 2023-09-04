@@ -121,6 +121,7 @@ var DynamicFields = function DynamicFields(props) {
     confirmText = props.confirmText,
     onAdd = props.onAdd,
     onRemove = props.onRemove;
+  var PER_ROW_DOM_STRING = '.dynamic-fields__append .dynamic-fields__data__wrapper';
   var DO_NOT_REMOVE_DOM = typeof doNotRemoveDom === 'undefined' ? false : true;
   var uniqueID = (0,react__WEBPACK_IMPORTED_MODULE_0__.useId)().replace(/\:/g, "-");
   var idRes = id || uniqueID;
@@ -137,7 +138,7 @@ var DynamicFields = function DynamicFields(props) {
     setTmpl = _useState4[1];
   function checkMaxStatus() {
     //button status
-    if (rootRef.current.querySelector('.dynamic-fields__append').children.length + 1 >= parseFloat(maxFields)) {
+    if (rootRef.current.querySelectorAll(PER_ROW_DOM_STRING).length + 1 >= parseFloat(maxFields)) {
       addBtnRef.current.style.setProperty('display', 'none', 'important');
     }
   }
@@ -154,11 +155,13 @@ var DynamicFields = function DynamicFields(props) {
 
     //
     setTimeout(function () {
-      var perRow = [].slice.call(rootRef.current.querySelector('.dynamic-fields__append').children);
+      var perRow = [].slice.call(rootRef.current.querySelectorAll(PER_ROW_DOM_STRING));
 
       // update index
       perRow.forEach(function (el, i) {
         el.dataset.index = i.toString();
+        var pnode = el.firstChild;
+        if (pnode !== null) pnode.dataset.index = i.toString();
       });
 
       //
@@ -170,20 +173,22 @@ var DynamicFields = function DynamicFields(props) {
     var curKey = e.currentTarget.closest('.dynamic-fields__data__wrapper').dataset.key;
     if (confirm(confirmText || '')) {
       //button status
-      if (rootRef.current.querySelector('.dynamic-fields__append').children.length <= parseFloat(maxFields)) {
+      if (rootRef.current.querySelectorAll(PER_ROW_DOM_STRING).length <= parseFloat(maxFields)) {
         addBtnRef.current.style.setProperty('display', 'inline', 'important');
       }
       var curItem = rootRef.current.querySelector(".dynamic-fields__append [data-key=\"".concat(curKey, "\"]"));
       var curIndex = curItem.dataset.index;
-      if (curItem !== null && !DO_NOT_REMOVE_DOM) curItem.remove();
+      if (curItem !== null && !DO_NOT_REMOVE_DOM) curItem.remove(); // Do not delete the parent node, otherwise an error may be reported when using routing: DOMException: Failed to execute 'removeChild' on 'Node'
 
       //
       setTimeout(function () {
-        var perRow = [].slice.call(rootRef.current.querySelector('.dynamic-fields__append').children);
+        var perRow = [].slice.call(rootRef.current.querySelectorAll(PER_ROW_DOM_STRING));
 
         // update index
         perRow.forEach(function (el, i) {
           el.dataset.index = i.toString();
+          var pnode = el.firstChild;
+          if (pnode !== null) pnode.dataset.index = i.toString();
         });
 
         //
@@ -212,7 +217,8 @@ var DynamicFields = function DynamicFields(props) {
         fill: "#000"
       })))));
       return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-        key: 'tmpl-' + i
+        key: 'tmpl-' + i,
+        "data-index": i
       }, isNew ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, item, addBtn) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
         className: "dynamic-fields__data__wrapper position-relative",
         "data-key": i,

@@ -48,6 +48,7 @@ const DynamicFields = (props: DynamicFieldsProps) => {
         onRemove
     } = props;
 
+    const PER_ROW_DOM_STRING = '.dynamic-fields__append .dynamic-fields__data__wrapper';
     const DO_NOT_REMOVE_DOM = typeof doNotRemoveDom === 'undefined' ? false : true;
     const uniqueID = useId().replace(/\:/g, "-");
     const idRes = id || uniqueID;
@@ -59,7 +60,7 @@ const DynamicFields = (props: DynamicFieldsProps) => {
 
     function checkMaxStatus() {
         //button status
-        if (rootRef.current.querySelector('.dynamic-fields__append').children.length + 1 >= parseFloat(maxFields)) {
+        if (rootRef.current.querySelectorAll(PER_ROW_DOM_STRING).length + 1 >= parseFloat(maxFields)) {
             addBtnRef.current.style.setProperty('display', 'none', 'important');
         }
     }
@@ -77,11 +78,14 @@ const DynamicFields = (props: DynamicFieldsProps) => {
 
         //
         setTimeout(() => {
-            const perRow = [].slice.call(rootRef.current.querySelector('.dynamic-fields__append').children);
+            const perRow = [].slice.call(rootRef.current.querySelectorAll(PER_ROW_DOM_STRING));
 
             // update index
             perRow.forEach((el: HTMLDivElement, i: number) => {
                 el.dataset.index = i.toString();
+
+                const pnode = el.firstChild as HTMLDivElement;
+                if (pnode !== null) pnode.dataset.index = i.toString();
             });
 
             //
@@ -99,23 +103,27 @@ const DynamicFields = (props: DynamicFieldsProps) => {
         if (confirm(confirmText || '')) {
 
             //button status
-            if (rootRef.current.querySelector('.dynamic-fields__append').children.length <= parseFloat(maxFields)) {
+            if (rootRef.current.querySelectorAll(PER_ROW_DOM_STRING).length <= parseFloat(maxFields)) {
                 addBtnRef.current.style.setProperty('display', 'inline', 'important');
             }
 
             
             const curItem = rootRef.current.querySelector(`.dynamic-fields__append [data-key="${curKey}"]`);
             const curIndex = curItem.dataset.index;
-            if (curItem !== null && !DO_NOT_REMOVE_DOM) curItem.remove();
+            if (curItem !== null && !DO_NOT_REMOVE_DOM) curItem.remove(); // Do not delete the parent node, otherwise an error may be reported when using routing: DOMException: Failed to execute 'removeChild' on 'Node'
 
-
+       
             //
-            setTimeout(() => {
-                const perRow = [].slice.call(rootRef.current.querySelector('.dynamic-fields__append').children);
+            setTimeout(() => { 
+                const perRow = [].slice.call(rootRef.current.querySelectorAll(PER_ROW_DOM_STRING));
 
                 // update index
                 perRow.forEach((el: HTMLDivElement, i: number) => {
                     el.dataset.index = i.toString();
+
+                    const pnode = el.firstChild as HTMLDivElement;
+                    if (pnode !== null) pnode.dataset.index = i.toString();
+                    
                 });
 
                 //
@@ -135,7 +143,7 @@ const DynamicFields = (props: DynamicFieldsProps) => {
                     {iconRemove ? <>{iconRemove}</> : <><svg width="20px" height="20px" viewBox="0 0 24 24" fill="none"><path fillRule="evenodd" clipRule="evenodd" d="M22 12c0 5.523-4.477 10-10 10S2 17.523 2 12 6.477 2 12 2s10 4.477 10 10ZM8 11a1 1 0 1 0 0 2h8a1 1 0 1 0 0-2H8Z" fill="#000" /></svg></>}
                 </a></>;
 
-                return <div key={'tmpl-' + i}>
+                return <div key={'tmpl-' + i} data-index={i}>
                     {isNew ? <>
                         {item}
                         {addBtn}

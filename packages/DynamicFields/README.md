@@ -9,6 +9,7 @@ import DynamicFields from 'funda-ui/DynamicFields';
 ```
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |
+| `key` | React.key | - | Trigger child component update when prop of parent changes. <blockquote>Ensure that complex dynamic form components update in real time on the page.</blockquote> |
 | `wrapperClassName` | string | `mb-3 position-relative` | The class name of the control wrapper. |
 | `label` | string \| ReactNode | - | It is used to specify a label for an element of a form. |
 | `data` | JSON Object | - | <strong>(Required)</strong> Control group are dynamically added after the button is triggered |
@@ -21,6 +22,7 @@ import DynamicFields from 'funda-ui/DynamicFields';
 | `maxFields` | number | 10 | Maximum number of control group allowed to be added |
 | `onAdd` | function  | - | Call a function when add a control. It returns one callback value which is each group of fields (HTMLDivElement[]) |
 | `onRemove` | function  | - | Call a function when remove a control. It returns three callback values. <br /> <ol><li>The first is each group of fields (HTMLDivElement[])</li><li>The second is the current key of removed item (number \| string)</li><li> The third is the current index of removed item (number \| string)</li></ol> |
+
 
 
 
@@ -286,7 +288,7 @@ export default () => {
     const location = useLocation();
     const LABEL_WIDTH = '200px';
     const [dynamicFieldsValue, setDynamicFieldsValue] = useState<DynamicFieldsValueProps | null>(null);
-
+    const [dynamicFieldsJsonValue, setDynamicFieldsJsonValue] = useState<any[]>([]);
 
     //initialize default value
     const tmpl = (val: any, init: boolean = true) => {
@@ -456,6 +458,21 @@ export default () => {
 
     useEffect(() => {
 
+
+        //initialize JSON value
+        setDynamicFieldsJsonValue(myData.map((item: any, index: number) => (
+            {
+                user_name: item.user_name,
+                role_id: item.role_id,
+                role_name: item.role_name,
+                role_cat: item.role_cat,
+                role_disabled: item.role_disabled
+            }
+        )));
+
+
+
+        //initialize default value
         const initData = myData.map((item: any, index: number) => {
             const {...rest} = item;
             return tmpl({...rest, index});
@@ -475,6 +492,7 @@ export default () => {
     return (
         <>
             <DynamicFields
+                key={JSON.stringify(dynamicFieldsJsonValue)}  // Trigger child component update when prop of parent changes
                 data={dynamicFieldsValue}
                 maxFields="10"
                 confirmText="Are you sure?"
