@@ -671,8 +671,11 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
   }
   function adjustMultiControlContainerHeight() {
     setTimeout(function () {
-      rootSingleRef.current.style.height = rootMultiRef.current.clientHeight + 'px';
-      selectInputRef.current.style.height = rootMultiRef.current.clientHeight + 'px';
+      // Sometimes you may get 0, you need to judge
+      if (rootMultiRef.current.clientHeight > 0) {
+        rootSingleRef.current.style.height = rootMultiRef.current.clientHeight + 'px';
+        selectInputRef.current.style.height = rootMultiRef.current.clientHeight + 'px';
+      }
     }, 0);
   }
   function fetchData(_x2, _x3) {

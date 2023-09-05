@@ -431,8 +431,13 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
 
     function adjustMultiControlContainerHeight() {
         setTimeout(() => {
-            rootSingleRef.current.style.height = rootMultiRef.current.clientHeight + 'px';
-            selectInputRef.current.style.height = rootMultiRef.current.clientHeight + 'px';
+
+            // Sometimes you may get 0, you need to judge
+            if (rootMultiRef.current.clientHeight > 0) {
+                rootSingleRef.current.style.height = rootMultiRef.current.clientHeight + 'px';
+                selectInputRef.current.style.height = rootMultiRef.current.clientHeight + 'px';
+            }
+
         },0);              
     }
 
