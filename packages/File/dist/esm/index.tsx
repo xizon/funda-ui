@@ -13,6 +13,7 @@ type FileProps = {
     labelHoverClassName?: string;
     fetchUrl?: string;
     fetchMethod?: string;
+    fetchParams?: any;
     multiple?: boolean;
     submitLabel?: React.ReactNode | string;
     submitClassName?: string;
@@ -45,6 +46,7 @@ const File = forwardRef((props: FileProps, ref: any) => {
         labelHoverClassName,
         fetchUrl,
         fetchMethod,
+        fetchParams,
         multiple,
         submitLabel,
         submitClassName,
@@ -100,9 +102,10 @@ const File = forwardRef((props: FileProps, ref: any) => {
 
         let res = {};
         if (typeof window === 'undefined') return res;
-
+        
+   
         try {
-            const response = await fetch(url, {
+            const response = await fetch(url + '?' + new URLSearchParams(fetchParams as any), {
                 method: methord,
                 body: data,
                 ...rest

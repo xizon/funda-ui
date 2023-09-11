@@ -15,8 +15,9 @@ import File from 'funda-ui/File';
 | `labelHoverClassName` | string | `btn btn-primary` | The class name of the select button on hover. |
 | `submitLabel` | string \| ReactNode | - | Specifies a label for submit button |
 | `submitClassName` | string | `btn btn-primary mt-2` | The class name of the submit button. |
-| `fetchUrl` | string | - | If the URL exists, it is passed using the default fetch method. |
-| `fetchMethod` | string | `POST` | The request's method (GET, POST, etc.) |
+| `fetchUrl` | string | - | If the URL exists, it is passed using the default fetch method ([Fetch API](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch)). |
+| `fetchMethod` | string | `POST` | The request's method (GET, POST, etc.) <blockquote>Valid when the `fetchUrl` attribute is not empty</blockquote>|
+| `fetchParams` | JSON Object | - | Set of query parameters in the request <blockquote>Valid when the `fetchUrl` attribute is not empty</blockquote> |
 | `multiple` | boolean | false | A file upload field that accepts multiple values |
 | `value` | string | - | Set a default value for this control |
 | `label` | string \| ReactNode | `<svg width="25px" height="25px" viewBox="0 0 1024 1024"><path d="M512 256l144.8 144.8-36.2 36.2-83-83v311.6h-51.2V354l-83 83-36.2-36.2L512 256zM307.2 716.8V768h409.6v-51.2H307.2z" fill="#000000" fillRule="evenodd"/></svg>` | It is used to specify a label for an element of a form. |
@@ -64,6 +65,9 @@ export default () => {
             <File 
                 fetchUrl="http://api"
                 fetchMethod="POST"
+                fetchParams={{
+                    Authorization: `Bearer xxxx-xxxx-xxxx-xxxx`,
+                }}
                 label="Select file" 
                 labelClassName="btn btn-outline-secondary"       
                 labelHoverClassName="btn btn-primary"

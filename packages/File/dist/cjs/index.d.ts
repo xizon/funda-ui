@@ -11,6 +11,7 @@ declare type FileProps = {
     labelHoverClassName?: string;
     fetchUrl?: string;
     fetchMethod?: string;
+    fetchParams?: any;
     multiple?: boolean;
     submitLabel?: React.ReactNode | string;
     submitClassName?: string;
