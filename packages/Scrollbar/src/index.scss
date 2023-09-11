@@ -39,13 +39,13 @@
             display: none;
         }
     }
-
+    
 
     .custom-scrollbars__scrollbar {
         display: grid;
-        gap: var(--custom-scrollbar-arrow-gap) 0;
+        gap: 0 0;
         grid-auto-flow: row;
-        grid-template: auto 1fr auto / 1fr;
+        grid-template: calc(var(--custom-scrollbar-arrow-gap) * 1.5) 1fr calc(var(--custom-scrollbar-arrow-gap) / 2) 1rem / 1fr;
         padding: 0;
         place-items: center;
         grid-area: right;
@@ -66,6 +66,7 @@
             box-shadow: none;
             border: none;
             cursor: pointer;
+            transition: .1s ease-in-out;
 
             &.disabled {
                 opacity: 0;
@@ -74,15 +75,16 @@
 
 
             svg path {
-                stroke: var(--custom-scrollbars-thumb-bg);
+                fill: var(--custom-scrollbars-thumb-bg);
             }
 
             i {
                 color: var(--custom-scrollbars-thumb-bg);
             }   
             &:hover {
+                transform: scale(1.3);
                 svg path {
-                    stroke: var(--custom-scrollbars-thumb-hover-bg);
+                    fill: var(--custom-scrollbars-thumb-hover-bg);
                 }
     
                 i {
@@ -119,13 +121,13 @@
         }
     }
     
-
+    
     .custom-scrollbars__scrollbar-horizontal {
         display: grid;
         grid-area: left2;
-        gap: 0 var(--custom-scrollbar-arrow-gap);
+        gap: 0 0;
         grid-auto-flow: row;
-        grid-template: auto 1fr auto / 1rem 1fr 1rem;
+        grid-template: 1rem / var(--custom-scrollbar-arrow-gap) 1fr var(--custom-scrollbar-arrow-gap);
         padding: 0;
         place-items: center;
 
@@ -144,6 +146,7 @@
             box-shadow: none;
             border: none;
             cursor: pointer;
+            transition: .1s ease-in-out;
 
             &.disabled {
                 opacity: 0;
@@ -151,15 +154,16 @@
             }
 
             svg path {
-                stroke: var(--custom-scrollbars-thumb-bg);
+                fill: var(--custom-scrollbars-thumb-bg);
             }
 
             i {
                 color: var(--custom-scrollbars-thumb-bg);
             }   
             &:hover {
+                transform: scale(1.3);
                 svg path {
-                    stroke: var(--custom-scrollbars-thumb-hover-bg);
+                    fill: var(--custom-scrollbars-thumb-hover-bg);
                 }
     
                 i {
@@ -201,7 +205,7 @@
 
         .custom-scrollbars__scrollbar {
             gap: 0 0 var(--custom-scrollbar-arrow-gap) 0;
-            grid-template: 0 1fr 0 / 1fr;
+            grid-template: 0 1fr 1rem / 1fr;
 
         }
 
