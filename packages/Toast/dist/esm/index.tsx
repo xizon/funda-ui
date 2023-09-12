@@ -24,6 +24,8 @@ type ToastProps = {
     autoCloseReverse?: boolean;
     /** You can not close pop-win when it is enabled */
     lock?: boolean;
+    /** Whether to use cascading styles */
+    cascading?: boolean;
     /** Self-defined class name for body*/
     schemeBody?: string;
     /** Self-defined class name for header */
@@ -34,7 +36,7 @@ type ToastProps = {
     closeDisabled?: boolean;
     /** -- */
     id?: string;
-    onClose?: (e: any, data: any[]) => void;
+    onClose?: (e: HTMLDivElement, currentIndex: number, data: HTMLDivElement[]) => void;
 };
 
 
@@ -45,6 +47,7 @@ const Toast = (props: ToastProps) => {
         autoCloseTime,
         autoCloseReverse,
         lock,
+        cascading,
         data,
         schemeBody,
         schemeHeader,
@@ -59,6 +62,7 @@ const Toast = (props: ToastProps) => {
     const idRes = id || uniqueID;
     const rootRef = useRef<any>(null);
     let depth: number = data.length + 1;
+    const cascadingEnabled = typeof cascading === 'undefined' ? true : cascading;
 
     function init() {
 
@@ -72,10 +76,10 @@ const Toast = (props: ToastProps) => {
             [].slice.call(rootRef.current.querySelectorAll('[data-close]')).forEach( (node: HTMLElement) => {
                 node.addEventListener('pointerdown', (e: any) => {
                     const index = node.dataset.index;
-                    handleClose(index as never);
+                    const currentItem = node.closest('.toast-container');
+                    handleClose(index as never, currentItem as never);
                 });
-            });     
-                
+            });       
         }
 
 
@@ -87,11 +91,11 @@ const Toast = (props: ToastProps) => {
         if ( $toast !== null ) {
             if ( $toast.dataset.async == 'true' ) {
 
-                const _list = rootRef.current.querySelectorAll('.toast-container');
-                [].slice.call(_list).forEach((node: any, i: number) => {
+                const _list: HTMLDivElement[] = [].slice.call(rootRef.current.querySelectorAll('.toast-container'));
+                _list.forEach((node: any, i: number) => {
                     node.classList.remove('hide-end');
                     // rearrange
-                    node.style.transform = `perspective(100px) translateZ(-${2 * i}px) translateY(${35 * i}px)`;
+                    if (cascadingEnabled) node.style.transform = `perspective(100px) translateZ(-${2 * i}px) translateY(${35 * i}px)`;
 
                 });
 
@@ -113,48 +117,45 @@ const Toast = (props: ToastProps) => {
 
     }
 
-    function handleClose(index: number) {
+    function handleClose(index: number, currentItem: HTMLDivElement) {
 
-        const items = JSON.parse(JSON.stringify(data));
-        if (items[index] !== undefined) {
-            const _list = rootRef.current.querySelectorAll('.toast-container');
-            _list[index].classList.add('hide-start');
+  
+        const _list: HTMLDivElement[] = [].slice.call(rootRef.current.querySelectorAll('.toast-container'));
+        currentItem.classList.add('hide-start');
 
-            //Let the removed animation show
-            setTimeout(() => {
+        //Let the removed animation show
+        setTimeout(() => {
 
-                [].slice.call(_list).forEach((node: any, i: number) => {
-                    node.classList.remove('hide-start');
-                });
+            _list.forEach((node: any, i: number) => {
+                node.classList.remove('hide-start');
+            });
 
-                // remove current
-                _list[index].classList.add('hide-end');
+            // remove current
+            currentItem.classList.add('hide-end');
 
-                // rearrange
-                [].slice.call(_list).filter((node: any) => !node.classList.contains('hide-end')).forEach((node: any, index: number) => {
+            // rearrange
+            if (cascadingEnabled) {
+                _list.filter((node: any) => !node.classList.contains('hide-end')).forEach((node: any, index: number) => {
                     node.style.transform = `perspective(100px) translateZ(-${2 * index}px) translateY(${35 * index}px)`;
                 });
+            }
 
-                //
-                onClose?.(rootRef.current, items);          
 
-            }, 300);
-        }
+            //
+            onClose?.(rootRef.current, Number(index), _list.filter((node: HTMLDivElement) => !node.classList.contains('hide-end') ));          
+
+        }, 300);
     }
 
     function autoClose(index: number, items: any[], delay: number = 3000) {
         if ( items.length  === index ) {
-
-            //
-            onClose?.(rootRef.current, items);     
-            
-            //
             clearTimeout(window.setCloseToast);
             return;
         }
+        
 
         window.setCloseToast = setTimeout(() => {
-            const _list = rootRef.current.querySelectorAll('.toast-container');
+            const _list: HTMLDivElement[] = [].slice.call(rootRef.current.querySelectorAll('.toast-container'));
 
             if ( autoCloseReverse ) {
                 _list[items.length-index].classList.add('hide-start');
@@ -166,26 +167,36 @@ const Toast = (props: ToastProps) => {
             //Let the removed animation show
             setTimeout(() => {
                 
-                [].slice.call(_list).forEach((node: any) => {
+                _list.forEach((node: any) => {
                     node.classList.remove('hide-start');
                 });
 
                 // remove current
                 if ( autoCloseReverse ) {
                     _list[items.length-index].classList.add('hide-end');
+
+                    //
+                    onClose?.(rootRef.current, Number(items.length-index), _list.filter((node: HTMLDivElement) => !node.classList.contains('hide-end') ));
+
                 } else {
                     _list[index-1].classList.add('hide-end');
+                    //
+                    onClose?.(rootRef.current, Number(index-1), _list.filter((node: HTMLDivElement) => !node.classList.contains('hide-end') ));
                 }
                 
                 // rearrange
-                [].slice.call(_list).filter((node: any) => !node.classList.contains('hide-end')).forEach((node: any, i: number) => {
-                    node.style.transform = `perspective(100px) translateZ(-${2 * i}px) translateY(${35 * i}px)`;
-                });           
-                
+                if (cascadingEnabled) {
+                    _list.filter((node: any) => !node.classList.contains('hide-end')).forEach((node: any, i: number) => {
+                        node.style.transform = `perspective(100px) translateZ(-${2 * i}px) translateY(${35 * i}px)`;
+                    });    
+                }
+
+
+                //
                 autoClose(index, items, delay);
 
             }, 300); 
-        }, delay * (index + 1));
+        }, delay);
      
         index++;
     }
@@ -210,6 +221,10 @@ const Toast = (props: ToastProps) => {
             const _el = document.querySelector(`#toasts__wrapper-${idRes}`);
             if ( _el !== null ) _el.remove();
 
+            // remove all events
+            [].slice.call(rootRef.current.querySelectorAll('[data-close]')).forEach( (node: HTMLElement) => {
+                node.replaceWith(node.cloneNode(true));
+            });    
 
         }
 
@@ -218,7 +233,7 @@ const Toast = (props: ToastProps) => {
     return (
         <div>
 
-            <div id={`toasts__wrapper-${idRes}`} data-async={async ? async : false} className={`toasts__wrapper toasts__wrapper--${direction ? direction : 'bottom-center'}`} ref={rootRef}>
+            <div id={`toasts__wrapper-${idRes}`} data-async={async ? async : false} className={`toasts__wrapper toasts__wrapper--${direction ? direction : 'bottom-center'} ${cascadingEnabled ? 'toasts__wrapper--cascading' : ''}`} ref={rootRef}>
                 <div className="toasts">
                     {data.map((item: any, i: number) => {
                         return <Item
@@ -228,12 +243,12 @@ const Toast = (props: ToastProps) => {
                             title={item.title}
                             note={item.note}
                             lock={lock}
+                            cascading={cascadingEnabled}
                             schemeBody={schemeBody}
                             schemeHeader={schemeHeader}
                             closeBtnColor={closeBtnColor}
                             closeDisabled={closeDisabled}
                             message={item.message}
-                            closeEv={handleClose}
                         /> 
 
                     })}

@@ -5,7 +5,15 @@
 
 .toasts__wrapper {
     --bs-toast-zindex: 1090;
-    width: 350px;
+    --toasts-offset-top: 35px;
+    --toasts-offset-bottom: 15px;
+    --toasts-offset-bothsides: 15px;
+    --toasts-container-gap: 0.5rem;
+    --toasts-container-width: 350px;
+    
+
+
+    width: var(--toasts-container-width);
     position: fixed;
     left: 50%;
     bottom: 0;
@@ -14,12 +22,12 @@
     transition: .1s ease-in-out;
 
     &--bottom-left {
-        left: 15px;
+        left: var(--toasts-offset-bothsides);
     }
 
     &--bottom-right {
         left: auto;
-        right: 15px;
+        right: var(--toasts-offset-bothsides);
     }
 
     &--bottom-center {
@@ -28,21 +36,21 @@
     }
 
     &--top-left {
-        left: 15px;
+        left: var(--toasts-offset-bothsides);
         bottom: auto;
-        top: 35px;
+        top: var(--toasts-offset-top);
     }
 
     &--top-right {
         left: auto;
-        right: 15px;
-        top: 35px;
+        right: var(--toasts-offset-bothsides);
+        top: var(--toasts-offset-top);
     }
 
     &--top-center {
         left: 50%;
         transform: translateX(-50%);
-        top: 35px;
+        top: var(--toasts-offset-top);
     }
 
     &--vertical-center {
@@ -55,7 +63,7 @@
     .toasts {
         position: relative;
         width: 100%;
-        bottom: 15px;
+        bottom: var(--toasts-offset-bottom);
         display: flex;
         flex-flow: column-reverse nowrap;
 
@@ -71,9 +79,24 @@
             pointer-events: none;
         }
 
-        &:hover {
-            .toast-container {
-                transform: perspective(100px) translateZ(0) !important;
+    }
+
+    .toast-container {
+        margin-bottom: var(--toasts-container-gap);
+    }
+
+    /* cascading divs */
+    &.toasts__wrapper--cascading {
+
+        .toast-container {
+            margin-bottom: 0;
+        }
+
+        .toasts {
+            &:hover {
+                .toast-container {
+                    transform: perspective(100px) translateZ(0) !important;
+                }
             }
         }
     }
@@ -117,4 +140,3 @@
     }
 
 }
-

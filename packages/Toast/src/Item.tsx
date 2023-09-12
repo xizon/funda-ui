@@ -11,8 +11,7 @@ interface ItemProps extends React.ComponentPropsWithoutRef<any> {
     closeBtnColor?: string;
     closeDisabled?: boolean;
     lock?: boolean;
-    /** Handling events for close it */
-    closeEv?: (index: number) => void | undefined;
+    cascading?: boolean;
 };
 
 const Item = (props: ItemProps) => {
@@ -24,12 +23,14 @@ const Item = (props: ItemProps) => {
         message,
         depth,
         lock,
+        cascading,
         schemeBody,
         schemeHeader,
         closeBtnColor,
-        closeDisabled,
-        closeEv
+        closeDisabled
     } = props;
+
+    
 
     return (
         <>
@@ -37,8 +38,10 @@ const Item = (props: ItemProps) => {
             <div
                 className={`toast-container`}
                 data-index={index}
-                style={{
+                style={cascading ? {
                     transform: `perspective(100px) translateZ(-${2 * index}px) translateY(${35 * index}px)`,
+                    zIndex: depth
+                } : {
                     zIndex: depth
                 }}>
 

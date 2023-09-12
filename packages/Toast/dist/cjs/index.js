@@ -111,16 +111,18 @@ var Item = function Item(props) {
     message = props.message,
     depth = props.depth,
     lock = props.lock,
+    cascading = props.cascading,
     schemeBody = props.schemeBody,
     schemeHeader = props.schemeHeader,
     closeBtnColor = props.closeBtnColor,
-    closeDisabled = props.closeDisabled,
-    closeEv = props.closeEv;
+    closeDisabled = props.closeDisabled;
   return /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
     className: "toast-container",
     "data-index": index,
-    style: {
+    style: cascading ? {
       transform: "perspective(100px) translateZ(-".concat(2 * index, "px) translateY(").concat(35 * index, "px)"),
+      zIndex: depth
+    } : {
       zIndex: depth
     }
   }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
@@ -174,6 +176,7 @@ var Toast = function Toast(props) {
     autoCloseTime = props.autoCloseTime,
     autoCloseReverse = props.autoCloseReverse,
     lock = props.lock,
+    cascading = props.cascading,
     data = props.data,
     schemeBody = props.schemeBody,
     schemeHeader = props.schemeHeader,
@@ -185,6 +188,7 @@ var Toast = function Toast(props) {
   var idRes = id || uniqueID;
   var rootRef = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useRef)(null);
   var depth = data.length + 1;
+  var cascadingEnabled = typeof cascading === 'undefined' ? true : cascading;
   function init() {
     // Move HTML templates to tag end body </body>
     // render() don't use "Fragment", in order to avoid error "Failed to execute 'insertBefore' on 'Node'"
@@ -195,7 +199,8 @@ var Toast = function Toast(props) {
       [].slice.call(rootRef.current.querySelectorAll('[data-close]')).forEach(function (node) {
         node.addEventListener('pointerdown', function (e) {
           var index = node.dataset.index;
-          handleClose(index);
+          var currentItem = node.closest('.toast-container');
+          handleClose(index, currentItem);
         });
       });
     }
@@ -205,11 +210,11 @@ var Toast = function Toast(props) {
     var $toast = document.querySelector("#".concat(rootRef.current.id));
     if ($toast !== null) {
       if ($toast.dataset.async == 'true') {
-        var _list = rootRef.current.querySelectorAll('.toast-container');
-        [].slice.call(_list).forEach(function (node, i) {
+        var _list = [].slice.call(rootRef.current.querySelectorAll('.toast-container'));
+        _list.forEach(function (node, i) {
           node.classList.remove('hide-end');
           // rearrange
-          node.style.transform = "perspective(100px) translateZ(-".concat(2 * i, "px) translateY(").concat(35 * i, "px)");
+          if (cascadingEnabled) node.style.transform = "perspective(100px) translateZ(-".concat(2 * i, "px) translateY(").concat(35 * i, "px)");
         });
       }
     }
@@ -222,45 +227,42 @@ var Toast = function Toast(props) {
       autoClose(0, items, _autoCloseTime);
     }
   }
-  function handleClose(index) {
-    var items = JSON.parse(JSON.stringify(data));
-    if (items[index] !== undefined) {
-      var _list = rootRef.current.querySelectorAll('.toast-container');
-      _list[index].classList.add('hide-start');
+  function handleClose(index, currentItem) {
+    var _list = [].slice.call(rootRef.current.querySelectorAll('.toast-container'));
+    currentItem.classList.add('hide-start');
 
-      //Let the removed animation show
-      setTimeout(function () {
-        [].slice.call(_list).forEach(function (node, i) {
-          node.classList.remove('hide-start');
-        });
+    //Let the removed animation show
+    setTimeout(function () {
+      _list.forEach(function (node, i) {
+        node.classList.remove('hide-start');
+      });
 
-        // remove current
-        _list[index].classList.add('hide-end');
+      // remove current
+      currentItem.classList.add('hide-end');
 
-        // rearrange
-        [].slice.call(_list).filter(function (node) {
+      // rearrange
+      if (cascadingEnabled) {
+        _list.filter(function (node) {
           return !node.classList.contains('hide-end');
         }).forEach(function (node, index) {
           node.style.transform = "perspective(100px) translateZ(-".concat(2 * index, "px) translateY(").concat(35 * index, "px)");
         });
+      }
 
-        //
-        onClose === null || onClose === void 0 ? void 0 : onClose(rootRef.current, items);
-      }, 300);
-    }
+      //
+      onClose === null || onClose === void 0 ? void 0 : onClose(rootRef.current, Number(index), _list.filter(function (node) {
+        return !node.classList.contains('hide-end');
+      }));
+    }, 300);
   }
   function autoClose(index, items) {
     var delay = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 3000;
     if (items.length === index) {
-      //
-      onClose === null || onClose === void 0 ? void 0 : onClose(rootRef.current, items);
-
-      //
       clearTimeout(window.setCloseToast);
       return;
     }
     window.setCloseToast = setTimeout(function () {
-      var _list = rootRef.current.querySelectorAll('.toast-container');
+      var _list = [].slice.call(rootRef.current.querySelectorAll('.toast-container'));
       if (autoCloseReverse) {
         _list[items.length - index].classList.add('hide-start');
       } else {
@@ -269,26 +271,39 @@ var Toast = function Toast(props) {
 
       //Let the removed animation show
       setTimeout(function () {
-        [].slice.call(_list).forEach(function (node) {
+        _list.forEach(function (node) {
           node.classList.remove('hide-start');
         });
 
         // remove current
         if (autoCloseReverse) {
           _list[items.length - index].classList.add('hide-end');
+
+          //
+          onClose === null || onClose === void 0 ? void 0 : onClose(rootRef.current, Number(items.length - index), _list.filter(function (node) {
+            return !node.classList.contains('hide-end');
+          }));
         } else {
           _list[index - 1].classList.add('hide-end');
+          //
+          onClose === null || onClose === void 0 ? void 0 : onClose(rootRef.current, Number(index - 1), _list.filter(function (node) {
+            return !node.classList.contains('hide-end');
+          }));
         }
 
         // rearrange
-        [].slice.call(_list).filter(function (node) {
-          return !node.classList.contains('hide-end');
-        }).forEach(function (node, i) {
-          node.style.transform = "perspective(100px) translateZ(-".concat(2 * i, "px) translateY(").concat(35 * i, "px)");
-        });
+        if (cascadingEnabled) {
+          _list.filter(function (node) {
+            return !node.classList.contains('hide-end');
+          }).forEach(function (node, i) {
+            node.style.transform = "perspective(100px) translateZ(-".concat(2 * i, "px) translateY(").concat(35 * i, "px)");
+          });
+        }
+
+        //
         autoClose(index, items, delay);
       }, 300);
-    }, delay * (index + 1));
+    }, delay);
     index++;
   }
   (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useEffect)(function () {
@@ -305,12 +320,17 @@ var Toast = function Toast(props) {
       // Remove all toasts
       var _el = document.querySelector("#toasts__wrapper-".concat(idRes));
       if (_el !== null) _el.remove();
+
+      // remove all events
+      [].slice.call(rootRef.current.querySelectorAll('[data-close]')).forEach(function (node) {
+        node.replaceWith(node.cloneNode(true));
+      });
     };
   }, [data]);
   return /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
     id: "toasts__wrapper-".concat(idRes),
     "data-async": async ? async : false,
-    className: "toasts__wrapper toasts__wrapper--".concat(direction ? direction : 'bottom-center'),
+    className: "toasts__wrapper toasts__wrapper--".concat(direction ? direction : 'bottom-center', " ").concat(cascadingEnabled ? 'toasts__wrapper--cascading' : ''),
     ref: rootRef
   }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
     className: "toasts"
@@ -322,12 +342,12 @@ var Toast = function Toast(props) {
       title: item.title,
       note: item.note,
       lock: lock,
+      cascading: cascadingEnabled,
       schemeBody: schemeBody,
       schemeHeader: schemeHeader,
       closeBtnColor: closeBtnColor,
       closeDisabled: closeDisabled,
-      message: item.message,
-      closeEv: handleClose
+      message: item.message
     });
   }))));
 };

@@ -12,6 +12,7 @@ import Toast from 'funda-ui/Toast';
 | `data` | array | - | **(required)** Specify data of toasts as a JSON string format. Such as: <br />`[{"title":"Title 1","note":"","message":"description..."},{"title":"Title 2","note":"","message":"description..."}]`. <br />If its value is an empty array `[]`, the Toast will not be displayed. <br /> <blockquote>Note: If the data is asynchronous, the attribute `async` needs to be set to `true`</blockquote> |
 | `async` | boolean  | false | Use asynchronous triggering. |
 | `lock` | boolean  | false | You can not close pop-win when it is enabled. |
+| `cascading` | boolean  | true | Whether to use cascading styles. |
 | `schemeBody` | string  | - | Self-defined class name for body, such as: `align-items-center text-white bg-primary border-0` |
 | `schemeHeader` | string  | - | Self-defined class name for header, such as: `text-white bg-dark` |
 | `closeBtnColor` | string  | - | Set the color of the close button. |
@@ -19,7 +20,7 @@ import Toast from 'funda-ui/Toast';
 | `direction` | `bottom-left` \| `bottom-center` \| `bottom-right` \| `top-left` \| `top-center` \| `top-right` \| `vertical-center`  | bottom-center | The direction of the toast |
 | `autoCloseTime` | boolean \| number  | false | Set an automatic closing time, multiple items will be accumulated in order. Amount of time measured in milliseconds. If false or without this attribute, Auto-Close will be disabled. |
 | `autoCloseReverse` | boolean  | false | Starts from the top position of the Array when we use the automatic close. |
-| `onClose` | function  | - | Call a function when the modal is opened. It returns two callback values, one is the current element and the other is the current value. |
+| `onClose` | function  | - | Call a function when the modal is opened. It returns three callback values.  <br /> <ol><li>The first is the current element (HTMLDivElement)</li><li>The second is the current index of removed item (number)</li><li> The third is the all displayed elements (HTMLDivElement[])</li></ol>|
 
 
 Array configuration properties of the `data`:
@@ -55,7 +56,26 @@ export default () => {
                 { title: "Toast three", message: "ok!" },
                 { title: "Toast four", message: "Last item here..." }
             ]} 
+            onClose={(e, currentIndex, displayedElements) => {
+                console.log(e, currentIndex, displayedElements);
+            }}
         />
+
+          
+        <Toast
+            cascading={false}
+            direction="top-center"
+            schemeBody="align-items-center text-white bg-dark border-0 p-2"
+            closeBtnColor="#fff"
+            autoCloseTime={5000}
+            data={[
+                { title: false, note: false, message: "First..." },
+                { title: false, note: false, message: "Source of radiant heat." },
+                { title: false, note: false, message: "ok!" },
+                { title: false, note: false, message: "Last item here..." }
+            ]}
+        />
+    
                 
         <Toast 
             direction="bottom-center" 
@@ -98,22 +118,25 @@ Use asynchronous toast information to dynamically display notifications
 
 
 ```js
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import Toast from 'funda-ui/Toast';
 
 // component styles
 import 'funda-ui/Toast/index.css';
 
+
 export default () => {
 
+    const counter = useRef<any>({ num: 0 });
     const [toastData, setToastData] = useState<any[]>([]);
     
     function handleClick(e) {
         e.preventDefault();
-        kkk++;
+        counter.current.num++;
         //
-        setToastData([
-            { title: false, note: false, message: <><div dangerouslySetInnerHTML={{__html: `No.${kkk}: ${Date.now()}`}}></div></> }
+        setToastData((prevState) => [
+            ...prevState,
+            { title: false, note: false, message: <><div dangerouslySetInnerHTML={{__html: `No.${counter.current.num}: ${Date.now()}`}}></div></> }
         ]);
 
     }
@@ -123,12 +146,22 @@ export default () => {
 
             <a href="#" onClick={handleClick}>Click here to display Toast information dynamically</a>
             <Toast 
+                cascading={false}
                 autoCloseTime={3000} 
                 direction="bottom-center" 
                 schemeBody="align-items-center text-white bg-dark border-0" 
                 closeBtnColor="#fff" 
                 data={toastData} 
                 async
+                onClose={(e, currentIndex, displayedElements) => {
+                    setToastData((prevState: any) => {
+                        prevState.splice(displayedElements.length - 1, 1);
+                        return prevState;
+
+                    });
+                    console.log(e, currentIndex, displayedElements);
+
+                }}
             />
 
         </>

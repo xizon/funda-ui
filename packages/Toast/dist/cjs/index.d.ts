@@ -19,6 +19,8 @@ declare type ToastProps = {
     autoCloseReverse?: boolean;
     /** You can not close pop-win when it is enabled */
     lock?: boolean;
+    /** Whether to use cascading styles */
+    cascading?: boolean;
     /** Self-defined class name for body*/
     schemeBody?: string;
     /** Self-defined class name for header */
@@ -29,7 +31,7 @@ declare type ToastProps = {
     closeDisabled?: boolean;
     /** -- */
     id?: string;
-    onClose?: (e: any, data: any[]) => void;
+    onClose?: (e: HTMLDivElement, currentIndex: number, data: HTMLDivElement[]) => void;
 };
 declare const Toast: (props: ToastProps) => JSX.Element;
 export default Toast;
