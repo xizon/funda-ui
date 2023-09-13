@@ -322,9 +322,11 @@ var Toast = function Toast(props) {
       if (_el !== null) _el.remove();
 
       // remove all events
-      [].slice.call(rootRef.current.querySelectorAll('[data-close]')).forEach(function (node) {
-        node.replaceWith(node.cloneNode(true));
-      });
+      if (rootRef.current !== null) {
+        [].slice.call(rootRef.current.querySelectorAll('[data-close]')).forEach(function (node) {
+          node.replaceWith(node.cloneNode(true));
+        });
+      }
     };
   }, [data]);
   return /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {

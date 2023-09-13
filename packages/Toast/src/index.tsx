@@ -222,9 +222,12 @@ const Toast = (props: ToastProps) => {
             if ( _el !== null ) _el.remove();
 
             // remove all events
-            [].slice.call(rootRef.current.querySelectorAll('[data-close]')).forEach( (node: HTMLElement) => {
-                node.replaceWith(node.cloneNode(true));
-            });    
+            if (rootRef.current !== null) {
+                [].slice.call(rootRef.current.querySelectorAll('[data-close]')).forEach( (node: HTMLElement) => {
+                    node.replaceWith(node.cloneNode(true));
+                });   
+            }
+ 
 
         }
 
