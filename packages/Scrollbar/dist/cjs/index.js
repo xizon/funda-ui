@@ -165,6 +165,7 @@ var Scrollbar = function Scrollbar(props) {
     arrowIcons = props.arrowIcons,
     disableArrow = props.disableArrow,
     horizontallyWithWheel = props.horizontallyWithWheel,
+    autoScrollTo = props.autoScrollTo,
     data = props.data,
     onMove = props.onMove,
     id = props.id,
@@ -173,6 +174,7 @@ var Scrollbar = function Scrollbar(props) {
   var idRes = id || uniqueID;
   var rootRef = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(null);
   var contentRef = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(null);
+  var AUTO_SCROLL_TO_DIR = typeof autoScrollTo === 'undefined' ? false : autoScrollTo;
   var icons = typeof arrowIcons === 'undefined' || !arrowIcons ? [/*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("svg", {
     width: "10px",
     height: "10px",
@@ -276,14 +278,21 @@ var Scrollbar = function Scrollbar(props) {
 
   function contentScrollTo(dir) {
     var smooth = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : true;
+    var max = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
     var current = contentRef.current;
     if (current) {
-      var scrollAmount = dir === 'down' ? 200 : -200;
+      var pivot = current.scrollHeight / 10;
+      var speed = pivot >= 200 ? 200 : pivot;
+      speed = !max ? speed : current.scrollHeight;
+      var scrollAmount = dir === 'down' ? speed : -speed;
       current.scrollBy({
         top: scrollAmount,
         behavior: smooth ? 'smooth' : 'auto'
       });
     }
+  }
+  function contentScrollToMax(dir) {
+    contentScrollTo(dir, true, true);
   }
   function handleResize(ref, trackSize) {
     var clientHeight = ref.clientHeight,
@@ -366,16 +375,21 @@ var Scrollbar = function Scrollbar(props) {
 
   function horizontalContentScrollTo(dir) {
     var smooth = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : true;
+    var max = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
     var current = contentRef.current;
     if (current) {
-      var pivot = current.clientWidth / 10;
+      var pivot = current.scrollWidth / 10;
       var speed = pivot >= 200 ? 200 : pivot;
+      speed = !max ? speed : current.scrollWidth;
       var scrollAmount = dir === 'right' ? speed : -speed;
       current.scrollBy({
         left: scrollAmount,
         behavior: smooth ? 'smooth' : 'auto'
       });
     }
+  }
+  function horizontalContentScrollToMax(dir) {
+    horizontalContentScrollTo(dir, true, true);
   }
   function handleHorizontalResize(ref, trackSize) {
     var clientWidth = ref.clientWidth,
@@ -455,6 +469,7 @@ var Scrollbar = function Scrollbar(props) {
 
   // If the content and the scrollbar track exist, use a ResizeObserver to adjust height of thumb and listen for scroll event to move the thumb
   (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(function () {
+    //
     if (contentRef.current && scrollTrackRef.current && scrollTrackHorizontalRef.current) {
       // Vertical
       var ref = contentRef.current;
@@ -473,6 +488,16 @@ var Scrollbar = function Scrollbar(props) {
       });
       horizontalObserver.current.observe(horizontalRef);
       horizontalRef.addEventListener('scroll', handleHorizontalThumbPosition);
+
+      // auto scroll to some position
+      setTimeout(function () {
+        if (AUTO_SCROLL_TO_DIR !== false && (AUTO_SCROLL_TO_DIR == 'down' || AUTO_SCROLL_TO_DIR == 'up')) {
+          contentScrollToMax(AUTO_SCROLL_TO_DIR);
+        }
+        if (AUTO_SCROLL_TO_DIR !== false && (AUTO_SCROLL_TO_DIR == 'left' || AUTO_SCROLL_TO_DIR == 'right')) {
+          horizontalContentScrollToMax(AUTO_SCROLL_TO_DIR);
+        }
+      }, 50);
       return function () {
         var _observer$current, _horizontalObserver$c;
         (_observer$current = observer.current) === null || _observer$current === void 0 ? void 0 : _observer$current.unobserve(ref);

@@ -8,6 +8,7 @@ type ScrollbarProps = {
     arrowIcons?: React.ReactNode[];
     disableArrow?: boolean;
     horizontallyWithWheel?: boolean;
+    autoScrollTo?: boolean | string;
     /** Incoming data, changes in the `data` value will cause the component to re-render. */
     data?: any;
     onMove?: (data: any) => void;
@@ -25,6 +26,7 @@ const Scrollbar = (props: ScrollbarProps) => {
         arrowIcons,
         disableArrow,
         horizontallyWithWheel,
+        autoScrollTo,
         data,
         onMove,
         id,
@@ -36,6 +38,7 @@ const Scrollbar = (props: ScrollbarProps) => {
     const idRes = id || uniqueID;
     const rootRef = useRef<HTMLDivElement>(null);
     const contentRef = useRef<HTMLDivElement>(null);
+    const AUTO_SCROLL_TO_DIR = typeof autoScrollTo === 'undefined' ? false : autoScrollTo;
     const icons = typeof arrowIcons === 'undefined' || !arrowIcons ? [
         <><svg width="10px" height="10px" viewBox="0 0 24 24" fill="none"> <path d="M18.2929 15.2893C18.6834 14.8988 18.6834 14.2656 18.2929 13.8751L13.4007 8.98766C12.6195 8.20726 11.3537 8.20757 10.5729 8.98835L5.68257 13.8787C5.29205 14.2692 5.29205 14.9024 5.68257 15.2929C6.0731 15.6835 6.70626 15.6835 7.09679 15.2929L11.2824 11.1073C11.673 10.7168 12.3061 10.7168 12.6966 11.1073L16.8787 15.2893C17.2692 15.6798 17.9024 15.6798 18.2929 15.2893Z"/> </svg></>,
         <><svg width="10px" height="10px" viewBox="0 0 24 24" fill="none"> <path d="M5.70711 9.71069C5.31658 10.1012 5.31658 10.7344 5.70711 11.1249L10.5993 16.0123C11.3805 16.7927 12.6463 16.7924 13.4271 16.0117L18.3174 11.1213C18.708 10.7308 18.708 10.0976 18.3174 9.70708C17.9269 9.31655 17.2937 9.31655 16.9032 9.70708L12.7176 13.8927C12.3271 14.2833 11.6939 14.2832 11.3034 13.8927L7.12132 9.71069C6.7308 9.32016 6.09763 9.32016 5.70711 9.71069Z" /> </svg></>,
@@ -95,14 +98,21 @@ const Scrollbar = (props: ScrollbarProps) => {
     // Vertical --> functions
     //========================================
 
-    function contentScrollTo(dir: string, smooth: boolean = true) {
+    function contentScrollTo(dir: string, smooth: boolean = true, max: boolean = false) {
         const { current } = contentRef;
         if (current) {
-            const scrollAmount = dir === 'down' ? 200 : -200;
+            const pivot = current.scrollHeight/10;
+            let speed = pivot >= 200 ? 200 : pivot;
+            speed = !max ? speed : current.scrollHeight;
+            const scrollAmount = dir === 'down' ? speed : -speed;
             current.scrollBy({ top: scrollAmount, behavior: smooth ? 'smooth' : 'auto' });
         }
     }
 
+
+    function contentScrollToMax(dir: string) {
+        contentScrollTo(dir, true, true);
+    }
 
 
     function handleResize(ref: HTMLDivElement, trackSize: number) {
@@ -212,15 +222,21 @@ const Scrollbar = (props: ScrollbarProps) => {
     // Horizontal  --> functions
     //========================================    
 
-    function horizontalContentScrollTo(dir: string, smooth: boolean = true) {
+    function horizontalContentScrollTo(dir: string, smooth: boolean = true, max: boolean = false) {
         const { current } = contentRef;
         if (current) {
-            const pivot = current.clientWidth/10;
-            const speed = pivot >= 200 ? 200 : pivot;
+            const pivot = current.scrollWidth/10;
+            let speed = pivot >= 200 ? 200 : pivot;
+            speed = !max ? speed : current.scrollWidth;
             const scrollAmount = dir === 'right' ? speed : -speed;
             current.scrollBy({ left: scrollAmount, behavior: smooth ? 'smooth' : 'auto' });
         }
     }
+
+    function horizontalContentScrollToMax(dir: string) {
+        horizontalContentScrollTo(dir, true, true);
+    }
+
 
     
     function handleHorizontalResize(ref: HTMLDivElement, trackSize: number) {
@@ -332,7 +348,8 @@ const Scrollbar = (props: ScrollbarProps) => {
     // If the content and the scrollbar track exist, use a ResizeObserver to adjust height of thumb and listen for scroll event to move the thumb
     useEffect(() => {
 
-        
+
+        //
         if (contentRef.current && scrollTrackRef.current && scrollTrackHorizontalRef.current) {
 
             // Vertical
@@ -353,6 +370,25 @@ const Scrollbar = (props: ScrollbarProps) => {
             });
             horizontalObserver.current.observe(horizontalRef);
             horizontalRef.addEventListener('scroll', handleHorizontalThumbPosition);
+
+
+            // auto scroll to some position
+            setTimeout(() => {
+                if (
+                    AUTO_SCROLL_TO_DIR !== false && 
+                    (AUTO_SCROLL_TO_DIR == 'down' || AUTO_SCROLL_TO_DIR == 'up')
+                ) {
+                    contentScrollToMax(AUTO_SCROLL_TO_DIR);
+                }
+                if (
+                    AUTO_SCROLL_TO_DIR !== false && 
+                    (AUTO_SCROLL_TO_DIR == 'left' || AUTO_SCROLL_TO_DIR == 'right')
+                ) {
+                    horizontalContentScrollToMax(AUTO_SCROLL_TO_DIR);
+                }
+                
+            }, 50);
+                
 
 
             return () => {
