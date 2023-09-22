@@ -3,6 +3,7 @@ import React, { useEffect, useRef, useCallback } from 'react';
 import Checkbox from 'rpb-checkbox';
 
 
+
 import { getNextSiblings, getParents, getChildren } from './utils/dom'; 
 
 import { initUlHeight } from './init-height';
@@ -461,8 +462,10 @@ export default function TreeList(props: TreeListProps) {
                                     }}
                                 />
                             </span>
+
+                            {console.log(item.selected)}
                             
-                            <a tabIndex={-1} className={item.active ? `nav-link active ${_async}` : `nav-link ${_async}`} href={item.link === '#' ? `${item.link}-${i}` : item.link} aria-expanded="false" onClick={handleSelect} data-link={item.link} data-slug={item.slug} data-key={item.key}>
+                            <a tabIndex={-1} className={item.active ? `nav-link active ${_async} ${item.selected ? 'selected' : ''}` : `nav-link ${_async} ${item.selected ? 'selected' : ''}`} href={item.link === '#' ? `${item.link}-${i}` : item.link} aria-expanded="false" onClick={handleSelect} data-link={item.link} data-slug={item.slug} data-key={item.key}>
                                 <span>{item.icon ? item.icon.indexOf('</svg>') < 0 ? <><i className={item.icon}></i> </> : <var dangerouslySetInnerHTML={{ __html: `${item.icon}` }} /> : null}<i dangerouslySetInnerHTML={{ __html: `${item.title}` }}></i>{titleArrowGenerator()}</span>
                             </a>
                             {item.children && item.children.length > 0 && <TreeList 

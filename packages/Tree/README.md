@@ -37,6 +37,7 @@ Array configuration properties of the `data`:
 | `title` | string | - | The title attribute is used to provide the label text of the hyperlink. <blockquote>Support html tags</blockquote> |
 | `link` | string | - | Specify a URL address. |
 | `active` | boolean | - | Activate current item. |
+| `selected` | boolean | - | Selected current item. |
 | `checked` | boolean | - | Whether the checkbox of the current item is selected. |
 | `heading` | string | - | Is it just plain text. Usually used as a separator. |
 | `icon` | string | - | Specify an icon string, which can be svg or classname. |

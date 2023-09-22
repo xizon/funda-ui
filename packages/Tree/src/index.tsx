@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef, useId } from 'react';
 
 import TreeList from './TreeList';
 import { initUlHeight, initAsyncItems } from './init-height';
-import { type } from 'os';
+
 
 declare module 'react' {
     interface ReactI18NextChildren<T> {
