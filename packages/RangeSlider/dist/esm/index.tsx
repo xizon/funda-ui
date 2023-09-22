@@ -1,6 +1,6 @@
 import React, { useId, useEffect, useState, useRef } from 'react';
 
-import Input from 'rpb-input';
+import Input from 'funda-input';
 
 
 type RangeSliderProps = {

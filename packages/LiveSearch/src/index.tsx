@@ -3,7 +3,7 @@ import React, { useId, useEffect, useState, useRef } from 'react';
 import { debounce } from './utils/performance';
 import useThrottle from './utils/useThrottle';
 
-import SearchBar from 'rpb-searchbar';
+import SearchBar from 'funda-searchbar';
 
 
 type LiveSearchProps = {

@@ -1,6 +1,6 @@
 {
     "private": true,
-    "name": "rpb-backtotop",
+    "name": "funda-backtotop",
     "version": "0.0.1",
     "description": "",
     "main": "./dist/cjs/index.js",

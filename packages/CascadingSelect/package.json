@@ -1,6 +1,6 @@
 {
     "private": true,
-    "name": "rpb-cascading-select",
+    "name": "funda-cascading-select",
     "version": "0.0.1",
     "description": "",
     "main": "./dist/cjs/index.js",

@@ -1,6 +1,6 @@
 {
     "private": true,
-    "name": "rpb-scroll-reveal",
+    "name": "funda-scroll-reveal",
     "version": "0.0.1",
     "description": "",
     "main": "./dist/cjs/index.js",

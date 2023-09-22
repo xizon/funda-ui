@@ -1,6 +1,6 @@
 {
     "private": true,
-    "name": "rpb-textarea",
+    "name": "funda-textarea",
     "version": "0.0.1",
     "description": "",
     "main": "./dist/cjs/index.js",

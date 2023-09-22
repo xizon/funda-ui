@@ -1,6 +1,6 @@
 {
     "private": true,
-    "name": "rpb-digital-clock",
+    "name": "funda-digital-clock",
     "version": "0.0.1",
     "description": "",
     "main": "./dist/cjs/index.js",

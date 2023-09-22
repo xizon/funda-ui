@@ -1,6 +1,6 @@
 import React from 'react';
 
-import Radio from 'rpb-radio';
+import Radio from 'funda-radio';
 
 import TableField from './TableField';
 import TableFieldRow from './TableFieldRow';

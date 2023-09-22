@@ -1,6 +1,6 @@
 {
     "private": true,
-    "name": "rpb-showmoreless",
+    "name": "funda-showmoreless",
     "version": "0.0.1",
     "description": "",
     "main": "./dist/cjs/index.js",

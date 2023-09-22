@@ -1,6 +1,6 @@
 {
     "private": true,
-    "name": "rpb-switch",
+    "name": "funda-switch",
     "version": "0.0.1",
     "description": "",
     "main": "./dist/cjs/index.js",

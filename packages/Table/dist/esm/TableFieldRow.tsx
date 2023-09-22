@@ -1,7 +1,7 @@
 import React, { useRef } from 'react';
 
-import Checkbox from 'rpb-checkbox';
-import Radio from 'rpb-radio';
+import Checkbox from 'funda-checkbox';
+import Radio from 'funda-radio';
 
 
 import { getChildren } from './utils/dom'; 

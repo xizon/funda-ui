@@ -1,6 +1,6 @@
 {
     "private": true,
-    "name": "rpb-livesearch",
+    "name": "funda-livesearch",
     "version": "0.0.1",
     "description": "",
     "main": "./dist/cjs/index.js",
@@ -13,7 +13,7 @@
     "dependencies": {
         "react": "^18.2.0",
         "react-dom": "^18.2.0",
-        "rpb-searchbar": "*"
+        "funda-searchbar": "*"
     },
     "devDependencies": {
         "@babel/core": "^7.2.0",

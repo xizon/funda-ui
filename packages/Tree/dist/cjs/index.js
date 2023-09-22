@@ -1110,7 +1110,7 @@ function TreeList(props) {
           //----------- 
           onCheck === null || onCheck === void 0 ? void 0 : onCheck(_updatedPrintData);
         }
-      })), console.log(item.selected), /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("a", {
+      })), /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("a", {
         tabIndex: -1,
         className: item.active ? "nav-link active ".concat(_async, " ").concat(item.selected ? 'selected' : '') : "nav-link ".concat(_async, " ").concat(item.selected ? 'selected' : ''),
         href: item.link === '#' ? "".concat(item.link, "-").concat(i) : item.link,

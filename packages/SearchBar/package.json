@@ -1,6 +1,6 @@
 {
     "private": true,
-    "name": "rpb-searchbar",
+    "name": "funda-searchbar",
     "version": "0.0.1",
     "description": "",
     "main": "./dist/cjs/index.js",

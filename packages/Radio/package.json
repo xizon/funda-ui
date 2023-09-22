@@ -1,6 +1,6 @@
 {
     "private": true,
-    "name": "rpb-radio",
+    "name": "funda-radio",
     "version": "0.0.1",
     "description": "",
     "main": "./dist/cjs/index.js",

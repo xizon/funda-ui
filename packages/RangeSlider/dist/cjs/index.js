@@ -510,8 +510,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(787);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var rpb_input__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(390);
-/* harmony import */ var rpb_input__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(rpb_input__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var funda_input__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(390);
+/* harmony import */ var funda_input__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(funda_input__WEBPACK_IMPORTED_MODULE_1__);
 function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
 function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
 function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
@@ -612,7 +612,7 @@ var RangeSlider = function RangeSlider(props) {
   }, label))) : null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
     className: wrapperClassName || wrapperClassName === '' ? "range-slider__wrapper ".concat(onlyOne ? 'only-one' : '', " ").concat(wrapperClassName) : "range-slider__wrapper ".concat(onlyOne ? 'only-one' : '', " mb-3 position-relative"),
     ref: rootRef
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((rpb_input__WEBPACK_IMPORTED_MODULE_1___default()), {
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((funda_input__WEBPACK_IMPORTED_MODULE_1___default()), {
     ref: valMinRef,
     wrapperClassName: wrapperClassName || wrapperClassName === '' ? wrapperClassName : "mb-3 position-relative",
     controlClassName: controlClassName || controlClassName === '' ? controlClassName : "form-control",
@@ -621,7 +621,7 @@ var RangeSlider = function RangeSlider(props) {
     id: idRes + '-min',
     name: minName,
     value: minValue.toString() //  Convert to a string to ensure that 0 can also be filled
-  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((rpb_input__WEBPACK_IMPORTED_MODULE_1___default()), {
+  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((funda_input__WEBPACK_IMPORTED_MODULE_1___default()), {
     ref: valMaxRef,
     wrapperClassName: wrapperClassName || wrapperClassName === '' ? wrapperClassName : "mb-3 position-relative",
     controlClassName: controlClassName || controlClassName === '' ? controlClassName : "form-control",
