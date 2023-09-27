@@ -20,6 +20,15 @@ declare type DynamicFieldsProps = {
     iconAddAfter?: React.ReactNode | string;
     iconAdd?: React.ReactNode | string;
     iconRemove?: React.ReactNode | string;
+    innerAppendClassName?: string;
+    innerAppendCellClassName?: string;
+    innerAppendLastCellClassName?: string;
+    innerAppendHideClassName?: string;
+    innerAppendBodyClassName?: string;
+    innerAppendHeadData?: React.ReactNode[] | string[];
+    innerAppendHeadRowClassName?: string;
+    innerAppendHeadCellClassName?: string;
+    innerAppendEmptyContent?: React.ReactNode;
     /** -- */
     id?: string;
     onAdd?: (items: HTMLDivElement[]) => void;

@@ -119,15 +119,28 @@ var DynamicFields = function DynamicFields(props) {
     doNotRemoveDom = props.doNotRemoveDom,
     id = props.id,
     confirmText = props.confirmText,
+    innerAppendClassName = props.innerAppendClassName,
+    innerAppendCellClassName = props.innerAppendCellClassName,
+    innerAppendLastCellClassName = props.innerAppendLastCellClassName,
+    innerAppendHideClassName = props.innerAppendHideClassName,
+    innerAppendBodyClassName = props.innerAppendBodyClassName,
+    innerAppendHeadData = props.innerAppendHeadData,
+    innerAppendHeadRowClassName = props.innerAppendHeadRowClassName,
+    innerAppendHeadCellClassName = props.innerAppendHeadCellClassName,
+    innerAppendEmptyContent = props.innerAppendEmptyContent,
     onAdd = props.onAdd,
     onRemove = props.onRemove;
+  var ITEM_LAST_CLASSNAME = innerAppendLastCellClassName || 'last';
+  var ITEM_HIDE_CLASSNAME = innerAppendHideClassName || 'd-none';
   var PER_ROW_DOM_STRING = '.dynamic-fields__append .dynamic-fields__data__wrapper';
+  var PER_INNER_BODY_DOM_STRING = '.dynamic-fields__append .dynamic-fields__inner__body';
   var DO_NOT_REMOVE_DOM = typeof doNotRemoveDom === 'undefined' ? false : true;
   var uniqueID = (0,react__WEBPACK_IMPORTED_MODULE_0__.useId)().replace(/\:/g, "-");
   var idRes = id || uniqueID;
   var rootRef = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(null);
   var fieldsRef = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(null);
   var addBtnRef = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(null);
+  var emptyRef = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(null);
   var _useState = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)([]),
     _useState2 = _slicedToArray(_useState, 2),
     val = _useState2[0],
@@ -136,6 +149,42 @@ var DynamicFields = function DynamicFields(props) {
     _useState4 = _slicedToArray(_useState3, 2),
     tmpl = _useState4[0],
     setTmpl = _useState4[1];
+  function updateLastItemCls(el, type) {
+    if (typeof el === 'undefined') return;
+    if (type === 'add') {
+      var _el$parentElement;
+      var perInnerBody = [].slice.call(rootRef.current.querySelectorAll(PER_INNER_BODY_DOM_STRING));
+      perInnerBody.forEach(function (el, i) {
+        var _el$firstChild;
+        el.classList.remove(ITEM_LAST_CLASSNAME);
+        (_el$firstChild = el.firstChild) === null || _el$firstChild === void 0 ? void 0 : _el$firstChild.classList.remove(ITEM_LAST_CLASSNAME);
+      });
+      el.classList.add(ITEM_LAST_CLASSNAME);
+      (_el$parentElement = el.parentElement) === null || _el$parentElement === void 0 ? void 0 : _el$parentElement.classList.add(ITEM_LAST_CLASSNAME);
+    } else {
+      var _el$parentElement2;
+      el.classList.remove(ITEM_LAST_CLASSNAME);
+      (_el$parentElement2 = el.parentElement) === null || _el$parentElement2 === void 0 ? void 0 : _el$parentElement2.classList.remove(ITEM_LAST_CLASSNAME);
+    }
+  }
+  function updateHeadCls(type) {
+    var el = rootRef.current.querySelector('.dynamic-fields__inner__head');
+    if (el === null) return;
+    if (type === 'add') {
+      el.classList.add(ITEM_HIDE_CLASSNAME);
+    } else {
+      el.classList.remove(ITEM_HIDE_CLASSNAME);
+    }
+  }
+  function emptyContentEnabled(type) {
+    if (innerAppendEmptyContent === '' || typeof innerAppendEmptyContent === 'undefined') return false;
+    if (type === 'add') {
+      emptyRef.current.classList.add(ITEM_HIDE_CLASSNAME);
+    } else {
+      emptyRef.current.classList.remove(ITEM_HIDE_CLASSNAME);
+    }
+    return true;
+  }
   function checkMaxStatus() {
     //button status
     if (rootRef.current.querySelectorAll(PER_ROW_DOM_STRING).length + 1 >= parseFloat(maxFields)) {
@@ -160,9 +209,18 @@ var DynamicFields = function DynamicFields(props) {
       // update index
       perRow.forEach(function (el, i) {
         el.dataset.index = i.toString();
-        var pnode = el.firstChild;
-        if (pnode !== null) pnode.dataset.index = i.toString();
       });
+
+      // update last element
+      if (perRow.length > 1) {
+        updateLastItemCls(perRow[0], 'remove');
+        updateLastItemCls(perRow[perRow.length - 1], 'add');
+      }
+
+      // update inner elements
+      if (perRow.length > 0) {
+        if (!emptyContentEnabled('add')) updateHeadCls('remove');
+      }
 
       //
       onAdd === null || onAdd === void 0 ? void 0 : onAdd(perRow);
@@ -178,7 +236,12 @@ var DynamicFields = function DynamicFields(props) {
       }
       var curItem = rootRef.current.querySelector(".dynamic-fields__append [data-key=\"".concat(curKey, "\"]"));
       var curIndex = curItem.dataset.index;
-      if (curItem !== null && !DO_NOT_REMOVE_DOM) curItem.remove(); // Do not delete the parent node, otherwise an error may be reported when using routing: DOMException: Failed to execute 'removeChild' on 'Node'
+
+      // Do not delete the parent node `innerAppendBodyClassName`, otherwise an error may be reported when 
+      // using routing: DOMException: Failed to execute 'removeChild' on 'Node'
+      if (curItem !== null && !DO_NOT_REMOVE_DOM) {
+        curItem.remove();
+      }
 
       //
       setTimeout(function () {
@@ -187,9 +250,19 @@ var DynamicFields = function DynamicFields(props) {
         // update index
         perRow.forEach(function (el, i) {
           el.dataset.index = i.toString();
-          var pnode = el.firstChild;
-          if (pnode !== null) pnode.dataset.index = i.toString();
         });
+
+        // update last element
+        if (perRow.length === 1) {
+          updateLastItemCls(perRow[0], 'add');
+        } else {
+          updateLastItemCls(perRow[perRow.length - 1], 'add');
+        }
+
+        // update inner elements
+        if (perRow.length === 0) {
+          if (!emptyContentEnabled('remove')) updateHeadCls('add');
+        }
 
         //
         onRemove === null || onRemove === void 0 ? void 0 : onRemove(perRow, curKey, curIndex);
@@ -200,7 +273,7 @@ var DynamicFields = function DynamicFields(props) {
     var isNew = !Array.isArray(inputData);
     var _data = Array.isArray(inputData) ? inputData : [inputData];
     return _data.map(function (item, i) {
-      var addBtn = /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
+      var removeBtyn = /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
         href: "#",
         tabIndex: -1,
         className: "dynamic-fields__removebtn align-middle",
@@ -216,14 +289,17 @@ var DynamicFields = function DynamicFields(props) {
         d: "M22 12c0 5.523-4.477 10-10 10S2 17.523 2 12 6.477 2 12 2s10 4.477 10 10ZM8 11a1 1 0 1 0 0 2h8a1 1 0 1 0 0-2H8Z",
         fill: "#000"
       })))));
-      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), {
+        key: 'tmpl-' + i
+      }, isNew ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, item) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
         key: 'tmpl-' + i,
-        "data-index": i
-      }, isNew ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, item, addBtn) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-        className: "dynamic-fields__data__wrapper position-relative",
+        className: "dynamic-fields__inner__body ".concat(innerAppendBodyClassName || '', " ").concat(i === _data.length - 1 ? ITEM_LAST_CLASSNAME : ''),
+        "data-body-index": i
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+        className: "dynamic-fields__data__wrapper position-relative ".concat(innerAppendCellClassName || '', " ").concat(i === _data.length - 1 ? ITEM_LAST_CLASSNAME : ''),
         "data-key": i,
         "data-index": i
-      }, item, addBtn)));
+      }, item, removeBtyn))));
     });
   }
   (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(function () {
@@ -241,8 +317,18 @@ var DynamicFields = function DynamicFields(props) {
     "data-max-fields": maxFields || 10,
     id: idRes
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-    className: "dynamic-fields__append"
-  }, generateGroup(val)), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+    className: "dynamic-fields__append ".concat(innerAppendClassName || '')
+  }, innerAppendHeadData && Array.isArray(innerAppendHeadData) && val.length > 0 ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+    className: "dynamic-fields__inner__head ".concat(innerAppendHeadRowClassName || '')
+  }, innerAppendHeadData.map(function (item, i) {
+    return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+      key: 'inner-header-row' + i,
+      className: "".concat(innerAppendHeadCellClassName || '', " ").concat(i === innerAppendHeadData.length - 1 ? ITEM_LAST_CLASSNAME : '')
+    }, item);
+  }))) : null, generateGroup(val)), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+    ref: emptyRef,
+    className: "".concat(ITEM_HIDE_CLASSNAME)
+  }, innerAppendEmptyContent || null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
     className: "dynamic-fields__btns"
   }, iconAddBefore ? iconAddBefore : null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
     ref: addBtnRef,
