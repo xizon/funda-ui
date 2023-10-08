@@ -7,8 +7,8 @@ declare global {
 declare type ToastProps = {
     /** Specify data of toasts as a JSON string format. */
     data: any[any];
-    /** Use asynchronous triggering */
-    async?: boolean;
+    /** Automatically hide multiple items */
+    autoHideMultiple?: boolean;
     /** The direction of the toast. */
     direction?: string;
     /** Set an automatic closing time, multiple items will be accumulated in order.
@@ -29,6 +29,8 @@ declare type ToastProps = {
     closeBtnColor?: string;
     /** Disable the close button. */
     closeDisabled?: boolean;
+    /**  */
+    async?: boolean;
     /** -- */
     id?: string;
     onClose?: (e: HTMLDivElement, currentIndex: number, data: HTMLDivElement[]) => void;

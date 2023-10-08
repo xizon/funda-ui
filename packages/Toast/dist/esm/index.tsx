@@ -1,6 +1,7 @@
-import React, { useId, useEffect, useState, useRef } from 'react';
+import React, { useId, useEffect, useRef } from 'react';
 
 import Item from './Item';
+
 
 declare global {
     interface Window {
@@ -12,8 +13,8 @@ declare global {
 type ToastProps = {
     /** Specify data of toasts as a JSON string format. */
     data: any[any];
-    /** Use asynchronous triggering */
-    async?: boolean;
+    /** Automatically hide multiple items */
+    autoHideMultiple?: boolean;
     /** The direction of the toast. */
     direction?: string;
     /** Set an automatic closing time, multiple items will be accumulated in order. 
@@ -34,6 +35,8 @@ type ToastProps = {
     closeBtnColor?: string;
     /** Disable the close button. */
     closeDisabled?: boolean;
+    /**  */
+    async?: boolean;
     /** -- */
     id?: string;
     onClose?: (e: HTMLDivElement, currentIndex: number, data: HTMLDivElement[]) => void;
@@ -43,6 +46,7 @@ type ToastProps = {
 const Toast = (props: ToastProps) => {
     const {
         async,
+        autoHideMultiple,
         direction,
         autoCloseTime,
         autoCloseReverse,
@@ -61,11 +65,11 @@ const Toast = (props: ToastProps) => {
     const uniqueID = useId().replace(/\:/g, "-");
     const idRes = id || uniqueID;
     const rootRef = useRef<any>(null);
-    let depth: number = data.length + 1;
+    let depth: number = autoHideMultiple ? data.slice(-2).length + 1 : data.length + 1;
     const cascadingEnabled = typeof cascading === 'undefined' ? true : cascading;
 
     function init() {
-
+        
 
         // Move HTML templates to tag end body </body>
         // render() don't use "Fragment", in order to avoid error "Failed to execute 'insertBefore' on 'Node'"
@@ -79,7 +83,25 @@ const Toast = (props: ToastProps) => {
                     const currentItem = node.closest('.toast-container');
                     handleClose(index as never, currentItem as never);
                 });
-            });       
+            });      
+            
+            
+            // Automatically hide multiple items
+            // It creates a transition animation effect with multiple records and only one displayed.
+            if (autoHideMultiple) {
+                const _list: HTMLDivElement[] = [].slice.call(rootRef.current.querySelectorAll('.toast-container'));
+                _list.forEach((node: any, i: number) => {
+                    if (i !== _list.length - 1) {
+                        node.classList.add('auto-anim-switch');
+                    } else {
+                        node.classList.add('auto-anim-switch--initfirst');
+                        node.classList.add('auto-anim-switch--first');
+                    }
+                });
+            }
+
+
+
         }
 
 
@@ -110,6 +132,7 @@ const Toast = (props: ToastProps) => {
         const _autoCloseTime: any = typeof (autoCloseTime) === 'undefined' || autoCloseTime === false ? false : autoCloseTime;
         if (_autoCloseTime !== false) {
             const items = JSON.parse(JSON.stringify(data));
+
             autoClose(0, items, _autoCloseTime);
 
         }
@@ -158,9 +181,9 @@ const Toast = (props: ToastProps) => {
             const _list: HTMLDivElement[] = [].slice.call(rootRef.current.querySelectorAll('.toast-container'));
 
             if ( autoCloseReverse ) {
-                _list[items.length-index].classList.add('hide-start');
+                _list[items.length-index]?.classList.add('hide-start');
             } else {
-                _list[index-1].classList.add('hide-start');
+                _list[index-1]?.classList.add('hide-start');
             }
             
 
@@ -179,7 +202,7 @@ const Toast = (props: ToastProps) => {
                     onClose?.(rootRef.current, Number(items.length-index), _list.filter((node: HTMLDivElement) => !node.classList.contains('hide-end') ));
 
                 } else {
-                    _list[index-1].classList.add('hide-end');
+                    _list[index-1]?.classList.add('hide-end');
                     //
                     onClose?.(rootRef.current, Number(index-1), _list.filter((node: HTMLDivElement) => !node.classList.contains('hide-end') ));
                 }
@@ -204,6 +227,7 @@ const Toast = (props: ToastProps) => {
 
 
     useEffect(() => {
+
 
         // Initialize 
         //------------------------------------------
@@ -238,8 +262,9 @@ const Toast = (props: ToastProps) => {
 
             <div id={`toasts__wrapper-${idRes}`} data-async={async ? async : false} className={`toasts__wrapper toasts__wrapper--${direction ? direction : 'bottom-center'} ${cascadingEnabled ? 'toasts__wrapper--cascading' : ''}`} ref={rootRef}>
                 <div className="toasts">
-                    {data.map((item: any, i: number) => {
+                    {(autoHideMultiple ? data.slice(-2) : data).map((item: any, i: number) => {
                         return <Item
+                            onlyOne={data.length === 1 ? true : false}
                             depth={depth - i}
                             key={i}
                             index={i}

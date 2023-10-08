@@ -1,6 +1,7 @@
 import React from 'react';
 
 interface ItemProps extends React.ComponentPropsWithoutRef<any> {
+    onlyOne?: boolean;
     index: number;
     title?: string | React.ReactNode | boolean;
     note?: string | React.ReactNode | boolean;
@@ -17,6 +18,7 @@ interface ItemProps extends React.ComponentPropsWithoutRef<any> {
 const Item = (props: ItemProps) => {
 
     const {
+        onlyOne,
         index,
         title,
         note,
@@ -36,7 +38,7 @@ const Item = (props: ItemProps) => {
         <>
 
             <div
-                className={`toast-container`}
+                className={`toast-container ${onlyOne ? 'only-one' : ''}`}
                 data-index={index}
                 style={cascading ? {
                     transform: `perspective(100px) translateZ(-${2 * index}px) translateY(${35 * index}px)`,

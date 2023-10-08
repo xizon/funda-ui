@@ -105,7 +105,8 @@ var external_root_React_commonjs2_react_commonjs_react_amd_react_default = /*#__
 
 ;
 var Item = function Item(props) {
-  var index = props.index,
+  var onlyOne = props.onlyOne,
+    index = props.index,
     title = props.title,
     note = props.note,
     message = props.message,
@@ -117,7 +118,7 @@ var Item = function Item(props) {
     closeBtnColor = props.closeBtnColor,
     closeDisabled = props.closeDisabled;
   return /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
-    className: "toast-container",
+    className: "toast-container ".concat(onlyOne ? 'only-one' : ''),
     "data-index": index,
     style: cascading ? {
       transform: "perspective(100px) translateZ(-".concat(2 * index, "px) translateY(").concat(35 * index, "px)"),
@@ -172,6 +173,7 @@ var Item = function Item(props) {
 
 var Toast = function Toast(props) {
   var async = props.async,
+    autoHideMultiple = props.autoHideMultiple,
     direction = props.direction,
     autoCloseTime = props.autoCloseTime,
     autoCloseReverse = props.autoCloseReverse,
@@ -187,7 +189,7 @@ var Toast = function Toast(props) {
   var uniqueID = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useId)().replace(/\:/g, "-");
   var idRes = id || uniqueID;
   var rootRef = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useRef)(null);
-  var depth = data.length + 1;
+  var depth = autoHideMultiple ? data.slice(-2).length + 1 : data.length + 1;
   var cascadingEnabled = typeof cascading === 'undefined' ? true : cascading;
   function init() {
     // Move HTML templates to tag end body </body>
@@ -203,6 +205,20 @@ var Toast = function Toast(props) {
           handleClose(index, currentItem);
         });
       });
+
+      // Automatically hide multiple items
+      // It creates a transition animation effect with multiple records and only one displayed.
+      if (autoHideMultiple) {
+        var _list = [].slice.call(rootRef.current.querySelectorAll('.toast-container'));
+        _list.forEach(function (node, i) {
+          if (i !== _list.length - 1) {
+            node.classList.add('auto-anim-switch');
+          } else {
+            node.classList.add('auto-anim-switch--initfirst');
+            node.classList.add('auto-anim-switch--first');
+          }
+        });
+      }
     }
 
     // Initialize data
@@ -210,8 +226,8 @@ var Toast = function Toast(props) {
     var $toast = document.querySelector("#".concat(rootRef.current.id));
     if ($toast !== null) {
       if ($toast.dataset.async == 'true') {
-        var _list = [].slice.call(rootRef.current.querySelectorAll('.toast-container'));
-        _list.forEach(function (node, i) {
+        var _list2 = [].slice.call(rootRef.current.querySelectorAll('.toast-container'));
+        _list2.forEach(function (node, i) {
           node.classList.remove('hide-end');
           // rearrange
           if (cascadingEnabled) node.style.transform = "perspective(100px) translateZ(-".concat(2 * i, "px) translateY(").concat(35 * i, "px)");
@@ -264,9 +280,11 @@ var Toast = function Toast(props) {
     window.setCloseToast = setTimeout(function () {
       var _list = [].slice.call(rootRef.current.querySelectorAll('.toast-container'));
       if (autoCloseReverse) {
-        _list[items.length - index].classList.add('hide-start');
+        var _list3;
+        (_list3 = _list[items.length - index]) === null || _list3 === void 0 ? void 0 : _list3.classList.add('hide-start');
       } else {
-        _list[index - 1].classList.add('hide-start');
+        var _list4;
+        (_list4 = _list[index - 1]) === null || _list4 === void 0 ? void 0 : _list4.classList.add('hide-start');
       }
 
       //Let the removed animation show
@@ -284,7 +302,8 @@ var Toast = function Toast(props) {
             return !node.classList.contains('hide-end');
           }));
         } else {
-          _list[index - 1].classList.add('hide-end');
+          var _list5;
+          (_list5 = _list[index - 1]) === null || _list5 === void 0 ? void 0 : _list5.classList.add('hide-end');
           //
           onClose === null || onClose === void 0 ? void 0 : onClose(rootRef.current, Number(index - 1), _list.filter(function (node) {
             return !node.classList.contains('hide-end');
@@ -336,8 +355,9 @@ var Toast = function Toast(props) {
     ref: rootRef
   }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
     className: "toasts"
-  }, data.map(function (item, i) {
+  }, (autoHideMultiple ? data.slice(-2) : data).map(function (item, i) {
     return /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement(src_Item, {
+      onlyOne: data.length === 1 ? true : false,
       depth: depth - i,
       key: i,
       index: i,

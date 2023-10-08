@@ -11,6 +11,7 @@ import Toast from 'funda-ui/Toast';
 | --- | --- | --- | --- |
 | `data` | array | - | **(required)** Specify data of toasts as a JSON string format. Such as: <br />`[{"title":"Title 1","note":"","message":"description..."},{"title":"Title 2","note":"","message":"description..."}]`. <br />If its value is an empty array `[]`, the Toast will not be displayed. <br /> <blockquote>Note: If the data is asynchronous, the attribute `async` needs to be set to `true`</blockquote> |
 | `async` | boolean  | false | Use asynchronous triggering. |
+| `autoHideMultiple` | boolean  | false | Automatically hide multiple items. It creates a transition animation effect with multiple records and only one displayed. |
 | `lock` | boolean  | false | You can not close pop-win when it is enabled. |
 | `cascading` | boolean  | true | Whether to use cascading styles. |
 | `schemeBody` | string  | - | Self-defined class name for body, such as: `align-items-center text-white bg-primary border-0` |
@@ -114,7 +115,9 @@ export default () => {
 
 ## Asynchronous Usage
 
-Use asynchronous toast information to dynamically display notifications
+Use asynchronous toast information to dynamically display notifications.
+
+> If you delete the `autoHideMultiple` attribute, all records will stay on the page.
 
 
 ```js
@@ -162,6 +165,7 @@ export default () => {
                     console.log(e, currentIndex, displayedElements);
 
                 }}
+                autoHideMultiple
             />
 
         </>
