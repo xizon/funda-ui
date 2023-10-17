@@ -67,6 +67,9 @@ module.exports = {
 /***/ ((module) => {
 
 function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
+var _excluded = ["children"];
+function _objectWithoutProperties(source, excluded) { if (source == null) return {}; var target = _objectWithoutPropertiesLoose(source, excluded); var key, i; if (Object.getOwnPropertySymbols) { var sourceSymbolKeys = Object.getOwnPropertySymbols(source); for (i = 0; i < sourceSymbolKeys.length; i++) { key = sourceSymbolKeys[i]; if (excluded.indexOf(key) >= 0) continue; if (!Object.prototype.propertyIsEnumerable.call(source, key)) continue; target[key] = source[key]; } } return target; }
+function _objectWithoutPropertiesLoose(source, excluded) { if (source == null) return {}; var target = {}; var sourceKeys = Object.keys(source); var key, i; for (i = 0; i < sourceKeys.length; i++) { key = sourceKeys[i]; if (excluded.indexOf(key) >= 0) continue; target[key] = source[key]; } return target; }
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
 function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys(Object(source), !0).forEach(function (key) { _defineProperty(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
 function _defineProperty(obj, key, value) { key = _toPropertyKey(key); if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
@@ -135,28 +138,44 @@ function flatTree(arr) {
 }
 
 /**
- * Add depth to each item in the tree
- * @param {Array} arr                    - Hierarchical array
- * @param  {?String | ?Number} parentId  - Parent id
- * @param  {?String} keyId               - Key value of id.
- * @param  {?String} keyParentId         - Key value of parent id.
- * @param  {?Number} depth               - Depth of the item.
- * @returns 
+ * Get all depth
+ * @param {Object} node 
+ * @returns Number
  */
+function getAllDepth(arr) {
+  var count = function count(children) {
+    return children.reduce(function (depth, child) {
+      return Math.max(depth, 1 + count(child.children)); // increment depth of children by 1, and compare it with accumulated depth of other children within the same element
+    }, 0); //default value 0 that's returned if there are no children
+  };
+
+  return count(arr);
+}
+
+/**
+* Add depth to each item in the tree
+* @param {Array} arr       - Hierarchical array
+* @param  {?String} keyId               - Key value of id.
+* @param  {?String} keyParentId         - Key value of parent id.
+* @param  {?Number} depth               - Depth of the item.
+* @returns Number
+*/
 function addTreeDepth(arr) {
-  var parentId = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '';
-  var keyId = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 'id';
-  var keyParentId = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : 'parent_id';
-  var depth = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : 0;
-  arr.forEach(function (item) {
-    item.depth = depth;
-    // Query all child nodes by parent node ID
-    if (item.children && item.children.length > 0) {
-      addTreeDepth(item.children, item[keyId], keyId, keyParentId, ++depth);
-    } else {
-      depth = 0;
+  var keyId = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'id';
+  var parentItem = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : '';
+  var depth = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : 0;
+  return arr.reduce(function (acc, el) {
+    var children = el.children,
+      otherProps = _objectWithoutProperties(el, _excluded);
+    acc.push(_objectSpread(_objectSpread({}, otherProps), {}, {
+      parentItem: parentItem,
+      depth: depth
+    }));
+    if (children) {
+      return acc.concat(addTreeDepth(children, keyId, el[keyId], depth + 1));
     }
-  });
+    return acc;
+  }, []);
 }
 
 /**
@@ -184,6 +203,7 @@ function addTreeIndent(arr) {
   });
 }
 module.exports = {
+  getAllDepth: getAllDepth,
   convertTree: convertTree,
   flatTree: flatTree,
   addTreeDepth: addTreeDepth,
@@ -739,8 +759,7 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
             // STEP 2: ===========
             // Set hierarchical categories ( with sub-categories )
             if (hierarchical) {
-              (0,tree.addTreeDepth)(_ORGIN_DATA);
-              _ORGIN_DATA = (0,tree.flatTree)(_ORGIN_DATA);
+              _ORGIN_DATA = (0,tree.addTreeDepth)(_ORGIN_DATA);
               (0,tree.addTreeIndent)(_ORGIN_DATA, INDENT_PLACEHOLDER, INDENT_LAST_PLACEHOLDER, 'label');
             }
 
@@ -855,8 +874,7 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
             // STEP 2: ===========
             // Set hierarchical categories ( with sub-categories )
             if (hierarchical) {
-              (0,tree.addTreeDepth)(optionsDataInit);
-              optionsDataInit = (0,tree.flatTree)(optionsDataInit);
+              optionsDataInit = (0,tree.addTreeDepth)(optionsDataInit);
               (0,tree.addTreeIndent)(optionsDataInit, INDENT_PLACEHOLDER, INDENT_LAST_PLACEHOLDER, 'label');
             }
 

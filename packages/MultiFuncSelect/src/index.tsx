@@ -5,7 +5,6 @@ import useThrottle from './utils/useThrottle';
 
 
 import {
-    flatTree,
     addTreeDepth,
     addTreeIndent
 } from './utils/tree';
@@ -479,13 +478,12 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
                 // set value if the attribute `data-options` of component exists, only valid for single selection (it may be an empty array)
                 if (typeof defaultValue !== 'undefined' && defaultValue !== '') valueInputRef.current.dataset.value = defaultValue;
             }
-
+            
             
             // STEP 2: ===========
             // Set hierarchical categories ( with sub-categories )
             if ( hierarchical ) {
-                addTreeDepth(_ORGIN_DATA);
-                _ORGIN_DATA = flatTree(_ORGIN_DATA);
+                _ORGIN_DATA = addTreeDepth(_ORGIN_DATA);
                 addTreeIndent(_ORGIN_DATA, INDENT_PLACEHOLDER, INDENT_LAST_PLACEHOLDER, 'label');
             }
 
@@ -630,8 +628,7 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
             // STEP 2: ===========
             // Set hierarchical categories ( with sub-categories )
             if ( hierarchical ) {
-                addTreeDepth(optionsDataInit);
-                optionsDataInit = flatTree(optionsDataInit);
+                optionsDataInit = addTreeDepth(optionsDataInit);
                 addTreeIndent(optionsDataInit, INDENT_PLACEHOLDER, INDENT_LAST_PLACEHOLDER, 'label');
             }
 
