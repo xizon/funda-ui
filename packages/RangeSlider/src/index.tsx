@@ -2,7 +2,6 @@ import React, { useId, useEffect, useState, useRef } from 'react';
 
 import Input from 'funda-input';
 
-
 type RangeSliderProps = {
     wrapperClassName?: string;
     controlClassName?: string;
@@ -131,7 +130,7 @@ const RangeSlider = (props: RangeSliderProps) => {
                     type="text"
                     id={idRes + '-min'}
                     name={minName}
-                    value={minValue.toString()}  //  Convert to a string to ensure that 0 can also be filled
+                    value={typeof minValue !== 'undefined' ? minValue.toString() : min}  //  Convert to a string to ensure that 0 can also be filled
                 />
 
                 <Input
@@ -142,7 +141,7 @@ const RangeSlider = (props: RangeSliderProps) => {
                     type="text"
                     id={idRes + '-max'}
                     name={maxName}
-                    value={maxValue.toString()}  //  Convert to a string to ensure that 0 can also be filled
+                    value={typeof maxValue !== 'undefined' ? maxValue.toString() : max}  //  Convert to a string to ensure that 0 can also be filled
                 />                
 
 

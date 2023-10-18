@@ -620,7 +620,7 @@ var RangeSlider = function RangeSlider(props) {
     type: "text",
     id: idRes + '-min',
     name: minName,
-    value: minValue.toString() //  Convert to a string to ensure that 0 can also be filled
+    value: typeof minValue !== 'undefined' ? minValue.toString() : min //  Convert to a string to ensure that 0 can also be filled
   }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((funda_input__WEBPACK_IMPORTED_MODULE_1___default()), {
     ref: valMaxRef,
     wrapperClassName: wrapperClassName || wrapperClassName === '' ? wrapperClassName : "mb-3 position-relative",
@@ -629,7 +629,7 @@ var RangeSlider = function RangeSlider(props) {
     type: "text",
     id: idRes + '-max',
     name: maxName,
-    value: maxValue.toString() //  Convert to a string to ensure that 0 can also be filled
+    value: typeof maxValue !== 'undefined' ? maxValue.toString() : max //  Convert to a string to ensure that 0 can also be filled
   }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
     className: "range-slider__control-wrapper ".concat(disabled ? 'disabled' : '')
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {

@@ -175,7 +175,7 @@ const Scrollbar = (props: ScrollbarProps) => {
         thumb.style.top = `${newTop}px`;
     }, []);
 
-    const handleThumbMousedown = useCallback((e: React.MouseEvent) => {
+    const handleThumbMouseDown = useCallback((e: React.MouseEvent) => {
         e.preventDefault();
         e.stopPropagation();
         setScrollStartPosition(e.clientY);
@@ -183,40 +183,37 @@ const Scrollbar = (props: ScrollbarProps) => {
         setIsDragging(true);
     }, []);
 
-    const handleThumbMouseup = useCallback(
-        (e: React.MouseEvent) => {
-            e.preventDefault();
-            e.stopPropagation();
-            if (isDragging) {
-                setIsDragging(false);
-            }
-        },
-        [isDragging]
-    ) as any;
+    const handleThumbMouseMove = useCallback((e: React.MouseEvent) => {
+        e.preventDefault();
+        e.stopPropagation();
+        if (isDragging && contentRef.current && scrollStartPosition) {
+            const {
+                scrollHeight: contentScrollHeight,
+                offsetHeight: contentOffsetHeight,
+            } = contentRef.current;
 
-    const handleThumbMousemove = useCallback(
-        (e: React.MouseEvent) => {
-            e.preventDefault();
-            e.stopPropagation();
-            if (isDragging && contentRef.current && scrollStartPosition) {
-                const {
-                    scrollHeight: contentScrollHeight,
-                    offsetHeight: contentOffsetHeight,
-                } = contentRef.current;
+            const deltaY =
+                (e.clientY - scrollStartPosition) *
+                (contentOffsetHeight / thumbHeight);
+            const newScrollTop = Math.min(
+                initialScrollTop + deltaY,
+                contentScrollHeight - contentOffsetHeight
+            );
 
-                const deltaY =
-                    (e.clientY - scrollStartPosition) *
-                    (contentOffsetHeight / thumbHeight);
-                const newScrollTop = Math.min(
-                    initialScrollTop + deltaY,
-                    contentScrollHeight - contentOffsetHeight
-                );
+            contentRef.current.scrollTop = newScrollTop;
+        }
+    }, [isDragging, scrollStartPosition, thumbHeight]);
 
-                contentRef.current.scrollTop = newScrollTop;
-            }
-        },
-        [isDragging, scrollStartPosition, thumbHeight]
-    ) as any;
+
+    const handleThumbMouseUp = useCallback((e: React.MouseEvent) => {
+        e.preventDefault();
+        e.stopPropagation();
+        if (isDragging) {
+            setIsDragging(false);
+        }
+    }, [isDragging]);
+
+
 
 
     // Horizontal  --> functions
@@ -300,7 +297,7 @@ const Scrollbar = (props: ScrollbarProps) => {
         thumb.style.left = `${newLeft}px`;
     }, []);
 
-    const handleHorizontalThumbMousedown = useCallback((e: React.MouseEvent) => {
+    const handleHorizontalThumbMouseDown = useCallback((e: React.MouseEvent) => {
         e.preventDefault();
         e.stopPropagation();
         setScrollHorizontalStartPosition(e.clientX);
@@ -308,7 +305,7 @@ const Scrollbar = (props: ScrollbarProps) => {
         setIsHorizontalDragging(true);
     }, []);
 
-    const handleHorizontalThumbMouseup = useCallback(
+    const handleHorizontalThumbMouseUp = useCallback(
         (e: React.MouseEvent) => {
             e.preventDefault();
             e.stopPropagation();
@@ -317,9 +314,9 @@ const Scrollbar = (props: ScrollbarProps) => {
             }
         },
         [isHorizontalDragging]
-    ) as any;
+    );
 
-    const handleHorizontalThumbMousemove = useCallback(
+    const handleHorizontalThumbMouseMove = useCallback(
         (e: React.MouseEvent) => {
             e.preventDefault();
             e.stopPropagation();
@@ -341,7 +338,7 @@ const Scrollbar = (props: ScrollbarProps) => {
             }
         },
         [isHorizontalDragging, scrollHorizontalStartPosition, thumbWidth]
-    ) as any;
+    );
 
 
 
@@ -405,13 +402,6 @@ const Scrollbar = (props: ScrollbarProps) => {
 
     // Listen for mouse events to handle scrolling by dragging the thumb
     useEffect(() => {
-        document.addEventListener('mousemove', handleThumbMousemove);
-        document.addEventListener('mouseup', handleThumbMouseup);
-        document.addEventListener('mouseleave', handleThumbMouseup);
-
-        document.addEventListener('mousemove', handleHorizontalThumbMousemove);
-        document.addEventListener('mouseup', handleHorizontalThumbMouseup);
-        document.addEventListener('mouseleave', handleHorizontalThumbMouseup);
 
 
         // Add function to the element that should be used as the scrollable area.
@@ -422,15 +412,7 @@ const Scrollbar = (props: ScrollbarProps) => {
         }
 
 
-
         return () => {
-            document.removeEventListener('mousemove', handleThumbMousemove);
-            document.removeEventListener('mouseup', handleThumbMouseup);
-            document.removeEventListener('mouseleave', handleThumbMouseup);
-
-            document.removeEventListener('mousemove', handleHorizontalThumbMousemove);
-            document.removeEventListener('mouseup', handleHorizontalThumbMouseup);
-            document.removeEventListener('mouseleave', handleHorizontalThumbMouseup);
 
             if (contentRef.current) {
                 contentRef.current.removeEventListener('wheel', contentAreaScrollUpdate);
@@ -440,7 +422,7 @@ const Scrollbar = (props: ScrollbarProps) => {
         };
 
 
-    }, [handleThumbMousemove, handleThumbMouseup, handleHorizontalThumbMousemove, handleHorizontalThumbMouseup]);
+    }, [handleThumbMouseMove, handleThumbMouseUp, handleHorizontalThumbMouseMove, handleHorizontalThumbMouseUp]);
 
 
     return (
@@ -454,6 +436,7 @@ const Scrollbar = (props: ScrollbarProps) => {
                 <div className="custom-scrollbars__content" ref={contentRef}>
                     {children}
                 </div>
+
 
                 {/* SCROLLBAR */}
                 {/*
@@ -479,7 +462,9 @@ const Scrollbar = (props: ScrollbarProps) => {
                         <div
                             className="custom-scrollbars__thumb"
                             ref={scrollThumbRef}
-                            onMouseDown={handleThumbMousedown}
+                            onMouseDown={handleThumbMouseDown}
+                            onMouseMove={handleThumbMouseMove}
+                            onMouseUp={handleThumbMouseUp}
                             style={{
                                 height: `${thumbHeight}px`,
                                 cursor: isDragging ? 'grabbing' : 'grab',
@@ -520,7 +505,9 @@ const Scrollbar = (props: ScrollbarProps) => {
                         <div
                             className="custom-scrollbars__thumb"
                             ref={scrollThumbHorizontalRef}
-                            onMouseDown={handleHorizontalThumbMousedown}
+                            onMouseDown={handleHorizontalThumbMouseDown}
+                            onMouseMove={handleHorizontalThumbMouseMove}
+                            onMouseUp={handleHorizontalThumbMouseUp}
                             style={{
                                 width: `${thumbWidth}px`,
                                 cursor: isHorizontalDragging ? 'grabbing' : 'grab',

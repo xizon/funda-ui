@@ -343,21 +343,14 @@ var Scrollbar = function Scrollbar(props) {
     var thumb = scrollThumbRef.current;
     thumb.style.top = "".concat(newTop, "px");
   }, []);
-  var handleThumbMousedown = (0,react__WEBPACK_IMPORTED_MODULE_0__.useCallback)(function (e) {
+  var handleThumbMouseDown = (0,react__WEBPACK_IMPORTED_MODULE_0__.useCallback)(function (e) {
     e.preventDefault();
     e.stopPropagation();
     setScrollStartPosition(e.clientY);
     if (contentRef.current) setInitialScrollTop(contentRef.current.scrollTop);
     setIsDragging(true);
   }, []);
-  var handleThumbMouseup = (0,react__WEBPACK_IMPORTED_MODULE_0__.useCallback)(function (e) {
-    e.preventDefault();
-    e.stopPropagation();
-    if (isDragging) {
-      setIsDragging(false);
-    }
-  }, [isDragging]);
-  var handleThumbMousemove = (0,react__WEBPACK_IMPORTED_MODULE_0__.useCallback)(function (e) {
+  var handleThumbMouseMove = (0,react__WEBPACK_IMPORTED_MODULE_0__.useCallback)(function (e) {
     e.preventDefault();
     e.stopPropagation();
     if (isDragging && contentRef.current && scrollStartPosition) {
@@ -369,6 +362,13 @@ var Scrollbar = function Scrollbar(props) {
       contentRef.current.scrollTop = newScrollTop;
     }
   }, [isDragging, scrollStartPosition, thumbHeight]);
+  var handleThumbMouseUp = (0,react__WEBPACK_IMPORTED_MODULE_0__.useCallback)(function (e) {
+    e.preventDefault();
+    e.stopPropagation();
+    if (isDragging) {
+      setIsDragging(false);
+    }
+  }, [isDragging]);
 
   // Horizontal  --> functions
   //========================================    
@@ -440,21 +440,21 @@ var Scrollbar = function Scrollbar(props) {
     var thumb = scrollThumbHorizontalRef.current;
     thumb.style.left = "".concat(newLeft, "px");
   }, []);
-  var handleHorizontalThumbMousedown = (0,react__WEBPACK_IMPORTED_MODULE_0__.useCallback)(function (e) {
+  var handleHorizontalThumbMouseDown = (0,react__WEBPACK_IMPORTED_MODULE_0__.useCallback)(function (e) {
     e.preventDefault();
     e.stopPropagation();
     setScrollHorizontalStartPosition(e.clientX);
     if (contentRef.current) setInitialScrollLeft(contentRef.current.scrollLeft);
     setIsHorizontalDragging(true);
   }, []);
-  var handleHorizontalThumbMouseup = (0,react__WEBPACK_IMPORTED_MODULE_0__.useCallback)(function (e) {
+  var handleHorizontalThumbMouseUp = (0,react__WEBPACK_IMPORTED_MODULE_0__.useCallback)(function (e) {
     e.preventDefault();
     e.stopPropagation();
     if (isHorizontalDragging) {
       setIsHorizontalDragging(false);
     }
   }, [isHorizontalDragging]);
-  var handleHorizontalThumbMousemove = (0,react__WEBPACK_IMPORTED_MODULE_0__.useCallback)(function (e) {
+  var handleHorizontalThumbMouseMove = (0,react__WEBPACK_IMPORTED_MODULE_0__.useCallback)(function (e) {
     e.preventDefault();
     e.stopPropagation();
     if (isHorizontalDragging && contentRef.current && scrollHorizontalStartPosition) {
@@ -510,13 +510,6 @@ var Scrollbar = function Scrollbar(props) {
 
   // Listen for mouse events to handle scrolling by dragging the thumb
   (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(function () {
-    document.addEventListener('mousemove', handleThumbMousemove);
-    document.addEventListener('mouseup', handleThumbMouseup);
-    document.addEventListener('mouseleave', handleThumbMouseup);
-    document.addEventListener('mousemove', handleHorizontalThumbMousemove);
-    document.addEventListener('mouseup', handleHorizontalThumbMouseup);
-    document.addEventListener('mouseleave', handleHorizontalThumbMouseup);
-
     // Add function to the element that should be used as the scrollable area.
     if (contentRef.current) {
       contentRef.current.removeEventListener('wheel', contentAreaScrollUpdate);
@@ -524,17 +517,11 @@ var Scrollbar = function Scrollbar(props) {
       contentAreaScrollUpdate();
     }
     return function () {
-      document.removeEventListener('mousemove', handleThumbMousemove);
-      document.removeEventListener('mouseup', handleThumbMouseup);
-      document.removeEventListener('mouseleave', handleThumbMouseup);
-      document.removeEventListener('mousemove', handleHorizontalThumbMousemove);
-      document.removeEventListener('mouseup', handleHorizontalThumbMouseup);
-      document.removeEventListener('mouseleave', handleHorizontalThumbMouseup);
       if (contentRef.current) {
         contentRef.current.removeEventListener('wheel', contentAreaScrollUpdate);
       }
     };
-  }, [handleThumbMousemove, handleThumbMouseup, handleHorizontalThumbMousemove, handleHorizontalThumbMouseup]);
+  }, [handleThumbMouseMove, handleThumbMouseUp, handleHorizontalThumbMouseMove, handleHorizontalThumbMouseUp]);
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
     id: idRes,
     ref: rootRef,
@@ -567,7 +554,9 @@ var Scrollbar = function Scrollbar(props) {
   }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
     className: "custom-scrollbars__thumb",
     ref: scrollThumbRef,
-    onMouseDown: handleThumbMousedown,
+    onMouseDown: handleThumbMouseDown,
+    onMouseMove: handleThumbMouseMove,
+    onMouseUp: handleThumbMouseUp,
     style: {
       height: "".concat(thumbHeight, "px"),
       cursor: isDragging ? 'grabbing' : 'grab'
@@ -604,7 +593,9 @@ var Scrollbar = function Scrollbar(props) {
   }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
     className: "custom-scrollbars__thumb",
     ref: scrollThumbHorizontalRef,
-    onMouseDown: handleHorizontalThumbMousedown,
+    onMouseDown: handleHorizontalThumbMouseDown,
+    onMouseMove: handleHorizontalThumbMouseMove,
+    onMouseUp: handleHorizontalThumbMouseUp,
     style: {
       width: "".concat(thumbWidth, "px"),
       cursor: isHorizontalDragging ? 'grabbing' : 'grab'
