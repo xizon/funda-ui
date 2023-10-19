@@ -971,7 +971,7 @@ const CascadingSelectE2E = (props: CascadingSelectE2EProps) => {
         <>
 
             <div className={wrapperClassName || wrapperClassName === '' ? `cascading-select-e2e__wrapper ${wrapperClassName}` : `cascading-select-e2e__wrapper mb-3 position-relative`} ref={rootRef}>
-                {label ? <><label htmlFor={idRes} className="form-label">{label}</label></> : null}
+                {label ? <><label htmlFor={idRes} className="form-label" dangerouslySetInnerHTML={{__html: `${label}`}}></label></> : null}
 
                 {triggerContent ? <>
                     <div className={triggerClassName ? `cascading-select-e2e__trigger ${triggerClassName}` : `cascading-select-e2e__trigger d-inline w-auto`} onClick={handleDisplayOptions}>{triggerContent}</div>

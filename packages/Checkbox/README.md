@@ -13,7 +13,7 @@ import Checkbox from 'funda-ui/Checkbox';
 | `checked` | boolean | false | Is it selected. |
 | `indeterminate` | boolean | false | Set a checkbox to indeterminate state. |
 | `value` | string | - | **(required)** Set a default value for this control. If unchecked, it will pass an empty value |
-| `label` | string \| ReactNode | - | It is used to specify a label for an element of a form. |
+| `label` | string \| ReactNode | - | It is used to specify a label for an element of a form.<blockquote>Support html tags</blockquote> |
 | `name` | string | - | Name is not deprecated when used with form fields. |
 | `disabled` | boolean | false | Whether it is disabled |
 | `required` | boolean | false | When present, it specifies that a field must be filled out before submitting the form. |

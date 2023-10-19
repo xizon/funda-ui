@@ -12,7 +12,7 @@ import ColorPicker from 'funda-ui/ColorPicker';
 | `wrapperClassName` | string | `mb-3 position-relative` | The class name of the control wrapper. |
 | `controlClassName` | string | `form-control custom-form-control-color flex-grow-0` | The class name of the control. |
 | `value` | string | - | Set a default value for this control |
-| `label` | string \| ReactNode | - | It is used to specify a label for an element of a form. |
+| `label` | string \| ReactNode | - | It is used to specify a label for an element of a form.<blockquote>Support html tags</blockquote> |
 | `name` | string | - | Name is not deprecated when used with form fields. |
 | `shape` | string | `circle` \| `rounded` | Set shape of this control. |
 | `disabled` | boolean | false | Whether it is disabled |

@@ -212,7 +212,7 @@ const TagInput = forwardRef((props: TagInputProps, ref: any) => {
 
             <div className={wrapperClassName || wrapperClassName === '' ? `tag-input__wrapper ${wrapperClassName}` : `tag-input__wrapper mb-3 position-relative`} ref={rootRef}>
 
-                {label ? <><label htmlFor={`label-${idRes}`} className="form-label">{label}</label></> : null}
+                {label ? <><label htmlFor={`label-${idRes}`} className="form-label" dangerouslySetInnerHTML={{__html: `${label}`}}></label></> : null}
 
 
                 <div className="tag-input__control-wrapper">

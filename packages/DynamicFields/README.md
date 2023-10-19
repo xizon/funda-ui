@@ -11,7 +11,7 @@ import DynamicFields from 'funda-ui/DynamicFields';
 | --- | --- | --- | --- |
 | `key` | React.key | - | Trigger child component update when prop of parent changes. <blockquote>Ensure that complex dynamic form components update in real time on the page.</blockquote> |
 | `wrapperClassName` | string | `mb-3 position-relative` | The class name of the control wrapper. |
-| `label` | string \| ReactNode | - | It is used to specify a label for an element of a form. |
+| `label` | string \| ReactNode | - | It is used to specify a label for an element of a form.<blockquote>Support html tags</blockquote> |
 | `data` | JSON Object | - | <strong>(Required)</strong> Control group are dynamically added after the button is triggered |
 | `confirmText` | string | - | The text to display in the confirm box. |
 | `doNotRemoveDom` | boolean | false | Click the delete button without removing the Dom element. You can customize the status to delete each group. |

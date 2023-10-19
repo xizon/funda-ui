@@ -19,7 +19,7 @@ import MultiFuncSelect from 'funda-ui/MultiFuncSelect';
 | `depth` | number  | 100 | Set the depth value of the control to control the display of the pop-up layer appear above. Please set it when multiple controls are used at the same time. |
 | `winWidth` | number \| function  | `auto` | Set the container width of options. Such as: `500px` or `() => window.innerWidth/2 + 'px'`  |
 | `value` | string | - | Set a default value for this control |
-| `label` | string \| ReactNode | - | It is used to specify a label for an element of a form. |
+| `label` | string \| ReactNode | - | It is used to specify a label for an element of a form.<blockquote>Support html tags</blockquote> |
 | `name` | string | - | Name is not deprecated when used with form fields. |
 | `placeholder` | string | - |  Specifies a short hint that describes. |
 | `disabled` | boolean | false | Whether it is disabled |

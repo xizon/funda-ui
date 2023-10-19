@@ -240,7 +240,7 @@ const Select = forwardRef((props: SelectProps, ref: any) => {
         <>
 
             <div className={wrapperClassName || wrapperClassName === '' ? wrapperClassName : "mb-3 position-relative"} ref={rootRef}>
-                {label ? <><label htmlFor={idRes} className="form-label">{label}</label></> : null}
+                {label ? <><label htmlFor={idRes} className="form-label" dangerouslySetInnerHTML={{__html: `${label}`}}></label></> : null}
                 <select  
                         ref={(node) => {
                             selectRef.current = node;

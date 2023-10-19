@@ -41,7 +41,7 @@ Here is a table of the components and their status.
 | [Seamless Scrolling Element ❏](packages/SeamlessScrollingElement/README.md) | [File Field ❏](packages/FileField/README.md) |  |  |
 | [Show More Less ✅](packages/ShowMoreLess/README.md) | [Range Slider ✅](packages/RangeSlider/README.md) | |  |
 | [Slideshow ❏](packages/Slideshow/README.md) | [Color Picker ✅](packages/ColorPicker/README.md) |  |  |
-| [Tabs ✅](packages/Tabs/README.md) |  |  |  |
+| [Tabs ✅](packages/Tabs/README.md) | [MultipleCheckboxes ✅](packages/MultipleCheckboxes/README.md) |  |  |
 | [Timeline ❏](packages/Timeline/README.md) |  |  |  |
 | [Toast ✅](packages/Toast/README.md) |  |  |  |
 | [Tooltip ✅](packages/Tooltip/README.md) |  |  |  |

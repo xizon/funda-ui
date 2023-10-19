@@ -410,8 +410,11 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
             value: val ? value || '' : '' // do not use `defaultValue`
           }), label ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react__WEBPACK_IMPORTED_MODULE_0___default().Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("label", {
             htmlFor: "label-".concat(idRes),
-            className: "form-check-label"
-          }, label)) : null)));
+            className: "form-check-label",
+            dangerouslySetInnerHTML: {
+              __html: "".concat(label)
+            }
+          })) : null)));
         });
         /* harmony default export */
         var __WEBPACK_DEFAULT_EXPORT__ = Checkbox;
@@ -798,8 +801,11 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
             ref: rootRef
           }, label ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react__WEBPACK_IMPORTED_MODULE_0___default().Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("label", {
             htmlFor: idRes,
-            className: "form-label"
-          }, label)) : null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+            className: "form-label",
+            dangerouslySetInnerHTML: {
+              __html: "".concat(label)
+            }
+          })) : null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
             id: idRes
           }, radioOptionsList)));
         };

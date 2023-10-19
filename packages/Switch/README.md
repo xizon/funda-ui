@@ -12,7 +12,7 @@ import Switch from 'funda-ui/Switch';
 | `wrapperClassName` | string | `mb-3 position-relative` | The class name of the control wrapper. |
 | `checked` | boolean | false | Is it selected. |
 | `value` | string | - | **(required)** Set a default value for this control. If unchecked, it will pass an empty value |
-| `label` | string \| ReactNode | - | It is used to specify a label for an element of a form. |
+| `label` | string \| ReactNode | - | It is used to specify a label for an element of a form.<blockquote>Support html tags</blockquote> |
 | `name` | string | - | Name is not deprecated when used with form fields. |
 | `disabled` | boolean | false | Whether it is disabled |
 | `required` | boolean | false | When present, it specifies that a field must be filled out before submitting the form. |

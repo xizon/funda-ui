@@ -12,7 +12,7 @@ import TagInput from 'funda-ui/TagInput';
 | `wrapperClassName` | string | `mb-3 position-relative` | The class name of the control wrapper. |
 | `maxTags` | number | 10 | Maximum number of tags that can be added. |
 | `value` | string | - | Set a default value for this control. Please separate multiple values with commas. Such as `tag1,tag2,tag3` |
-| `label` | string \| ReactNode | - | It is used to specify a label for an element of a form. |
+| `label` | string \| ReactNode | - | It is used to specify a label for an element of a form.<blockquote>Support html tags</blockquote> |
 | `name` | string | - | Name is not deprecated when used with form fields. |
 | `placeholder` | string | - |  Specifies a short hint that describes. |
 | `maxLength` | number | - | Defines the maximum number of characters |

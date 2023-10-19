@@ -13,7 +13,7 @@ import RangeSlider from 'funda-ui/RangeSlider';
 | `controlClassName` | string | `form-control` | The class name of the control. |
 | `onlyOne` | boolean | false | Only one numeric control is allowed. |
 | `value` | JSON Object | - | Set a default value for this control. Such as `{ min: 0, max: 100 }` |
-| `label` | string \| ReactNode | - | It is used to specify a label for an element of a form. |
+| `label` | string \| ReactNode | - | It is used to specify a label for an element of a form.<blockquote>Support html tags</blockquote> |
 | `minName` | string | - | Name is not deprecated when used with form fields. Specify the name of minimizing rang control. |
 | `maxName` | string | - | Name is not deprecated when used with form fields. Specify the name of maximizing rang control. |
 | `step` | number \| string | 1 | Specified legal number intervals. |

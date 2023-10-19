@@ -60,7 +60,7 @@ const Checkbox = forwardRef((props: CheckboxProps, ref: any) => {
         rootRef.current.classList.add('focus');
 
         //
-        onFocus?.(event);    
+        onFocus?.(event);
     }
 
 
@@ -68,7 +68,7 @@ const Checkbox = forwardRef((props: CheckboxProps, ref: any) => {
         const _val = event.target.checked;
 
         setVal(_val);
-        
+
         //----
         //remove focus style
         rootRef.current.classList.remove('focus');
@@ -78,7 +78,7 @@ const Checkbox = forwardRef((props: CheckboxProps, ref: any) => {
             onChange(event, _val);
         }
 
-        
+
 
     }
 
@@ -100,7 +100,7 @@ const Checkbox = forwardRef((props: CheckboxProps, ref: any) => {
         setVal(checked);
 
         // Set a checkbox to indeterminate state
-        if ( typeof indeterminate !== 'undefined' ) {
+        if (typeof indeterminate !== 'undefined') {
             valRef.current.indeterminate = indeterminate;
         }
 
@@ -112,7 +112,7 @@ const Checkbox = forwardRef((props: CheckboxProps, ref: any) => {
 
             <div className={wrapperClassName || wrapperClassName === '' ? wrapperClassName : "mb-3 position-relative"} ref={rootRef}>
                 <div className="form-check">
-                    <input 
+                    <input
                         ref={(node) => {
                             valRef.current = node;
                             if (typeof ref === 'function') {
@@ -125,9 +125,9 @@ const Checkbox = forwardRef((props: CheckboxProps, ref: any) => {
                         type="checkbox"
                         className="form-check-input"
                         id={`label-${idRes}`}
-                        
+
                         // Don't use "name", it's just a container to display the label
-                        data-name={name?.match(/(\[.*?\])/gi) ? `${name.split('[')[0]}-label[]` : `${name}-label`}    
+                        data-name={name?.match(/(\[.*?\])/gi) ? `${name.split('[')[0]}-label[]` : `${name}-label`}
                         data-checkbox
                         disabled={disabled || null}
                         required={required || null}
@@ -136,19 +136,19 @@ const Checkbox = forwardRef((props: CheckboxProps, ref: any) => {
                         onBlur={handleBlur}
                         defaultValue={value as string || ''}
                         checked={val}   // component status will not change if defaultChecked is used
-                        style={{cursor: 'pointer', ...style}}
+                        style={{ cursor: 'pointer', ...style }}
                         {...attributes}
                     />
 
 
-                    <input 
+                    <input
                         type="hidden"
                         id={idRes}
                         name={name}
                         value={val ? value as string || '' : ''}  // do not use `defaultValue`
                     />
 
-                    {label ? <><label htmlFor={`label-${idRes}`} className="form-check-label">{label}</label></> : null}
+                    {label ? <><label htmlFor={`label-${idRes}`} className="form-check-label" dangerouslySetInnerHTML={{__html: `${label}`}}></label></> : null}
                 </div>
             </div>
 

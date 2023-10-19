@@ -1343,7 +1343,7 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
     return (
         <>
 
-            {label ? <><div className="multifunc-select__label"><label htmlFor={`label-${idRes}`} className="form-label">{label}</label></div></> : null}
+            {label ? <><div className="multifunc-select__label"><label htmlFor={`label-${idRes}`} className="form-label" dangerouslySetInnerHTML={{__html: `${label}`}}></label></div></> : null}
 
             <div id={`multifunc-select__wrapper-${idRes}`} className={`multifunc-select__wrapper ${wrapperClassName || wrapperClassName === '' ? wrapperClassName : 'mb-3 position-relative'} ${MULTI_SEL_VALID ? 'multiple-selection' : ''} ${isOpen ? 'active focus' : ''}`} ref={rootRef}>
                 

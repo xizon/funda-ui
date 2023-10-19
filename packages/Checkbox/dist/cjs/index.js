@@ -214,8 +214,11 @@ var Checkbox = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(fu
     value: val ? value || '' : '' // do not use `defaultValue`
   }), label ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("label", {
     htmlFor: "label-".concat(idRes),
-    className: "form-check-label"
-  }, label)) : null)));
+    className: "form-check-label",
+    dangerouslySetInnerHTML: {
+      __html: "".concat(label)
+    }
+  })) : null)));
 });
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Checkbox);
 })();

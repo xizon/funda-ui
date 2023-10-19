@@ -13,7 +13,7 @@ import Radio from 'funda-ui/Radio';
 | `inline` | boolean | false | If true the group checkboxes or radios are on the same horizontal row. |
 | `options` | JSON Object Literals | - | <strong>(Required)</strong> Set the default value using JSON string format for menu of options, like this: `{"Option 1":"value-1","<del style=color:red>deprecate</del>Option 2":"value-2","Option 3":"value-3"}`|
 | `value` | string | - | Set a default value for this control |
-| `label` | string \| ReactNode | - | It is used to specify a label for an element of a form. |
+| `label` | string \| ReactNode | - | It is used to specify a label for an element of a form.<blockquote>Support html tags</blockquote> |
 | `name` | string | - | Name is not deprecated when used with form fields. |
 | `disabled` | boolean | false | Whether it is disabled |
 | `required` | boolean | false | When present, it specifies that a field must be filled out before submitting the form. |

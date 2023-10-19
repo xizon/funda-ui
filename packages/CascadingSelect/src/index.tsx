@@ -801,7 +801,7 @@ const CascadingSelect = (props: CascadingSelectProps) => {
         <>
 
             <div className={wrapperClassName || wrapperClassName === '' ? `cascading-select__wrapper ${wrapperClassName}` : `cascading-select__wrapper mb-3 position-relative`} ref={rootRef}>
-                {label ? <><label htmlFor={idRes} className="form-label">{label}</label></> : null}
+                {label ? <><label htmlFor={idRes} className="form-label" dangerouslySetInnerHTML={{__html: `${label}`}}></label></> : null}
 
                 {triggerContent ? <>
                     <div className={triggerClassName ? `cascading-select__trigger ${triggerClassName}` : `cascading-select__trigger d-inline w-auto`} onClick={handleDisplayOptions}>{triggerContent}</div>
