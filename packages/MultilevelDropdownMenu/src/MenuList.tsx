@@ -170,7 +170,9 @@ export default function MenuList(props: MenuListProps) {
                 [].slice.call(ul).forEach(function(el: any){
                     if ( typeof el.querySelectorAll('li')[0] !== 'undefined' ) {
                         const calcH = el.querySelectorAll('li').length * el.querySelectorAll('li')[0].scrollHeight;
-                        el.style.maxHeight = `${calcH}px`;
+                        
+                        // Prevent the use of iframe or other situations where the height is 0
+                        el.style.maxHeight = `${calcH == 0 ? 999 : calcH}px`;
                     }
 
                 });
