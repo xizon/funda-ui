@@ -82,3 +82,91 @@ export default () => {
     );
 }
 ```
+
+
+
+
+
+## Asynchronous & Complex State Problem Solving
+
+Prevent collapsing problems caused by re-rendering of sub-component. You need to use `useMemo()` hook to solve.
+
+
+```js
+import React, { useEffect, useState, useMemo } from "react";
+import RangeSlider from 'funda-ui/RangeSlider';
+
+// component styles
+import 'funda-ui/RangeSlider/index.css';
+
+// DO NOT move `useMemo` to component
+function RangeSliderMemo(props: any) {
+    const {callback, data} = props;
+    return useMemo(() => {
+        return <>
+       
+            <RangeSlider
+                minName="age_min"
+                maxName="age_max"
+                min={0}
+                max={100}
+                step={1}
+                value={{ min: data ? data.age_min : 3, max: data ? data.age_max : 80 }}
+                onChange={(e, res) => {
+                    callback({
+                        min: res.min,
+                        max: res.max
+                    });
+                }}
+            />
+
+        </>
+        
+        
+    }, [data, callback]);
+}
+
+
+
+export default () => {
+
+    
+    const [data, setData] = useState<any>({
+        age_min: 15,
+        age_max: 75
+    });
+    const [age, setAge] = useState<any>({
+        min: data ? data.age_min : 3,
+        max: data ? data.age_max : 80
+    });
+
+    useEffect(() => {
+        
+        // update age
+        setAge({
+            min: data.age_min,
+            max: data.age_max
+        });
+
+    }, [data]);
+
+
+    return (
+        <>
+
+
+            <div className="row">
+                <div className="col-auto" style={{width: '150px'}}>
+                    Age: {age.min} ~ {age.max}
+                </div>
+           
+                <div className="col">
+                    <RangeSliderMemo data={data} callback={setAge}/>
+                </div>
+            </div>
+        </>
+    )
+}
+```
+
+
