@@ -16,6 +16,9 @@ declare type SelectProps = {
     disabled?: any;
     required?: any;
     options?: OptionConfig[] | string;
+    hierarchical?: boolean;
+    indentation?: string;
+    doubleIndent?: boolean;
     /** -- */
     id?: string;
     style?: React.CSSProperties;

@@ -1,5 +1,12 @@
 import React, { useId, useEffect, useState, useRef, forwardRef } from 'react';
 
+
+import {
+    addTreeDepth,
+    addTreeIndent
+} from './utils/tree';
+
+
 declare module 'react' {
     interface ReactI18NextChildren<T> {
         children?: any;
@@ -23,6 +30,9 @@ type SelectProps = {
     disabled?: any;
     required?: any;
     options?: OptionConfig[] | string;
+    hierarchical?: boolean;
+    indentation?: string;
+    doubleIndent?: boolean;
     /** -- */
     id?: string;
     style?: React.CSSProperties;
@@ -48,6 +58,9 @@ const Select = forwardRef((props: SelectProps, ref: any) => {
         name,
         id,
         options,
+        hierarchical,
+        indentation,
+        doubleIndent,
         style,
         tabIndex,
         fetchFuncAsync,
@@ -62,6 +75,8 @@ const Select = forwardRef((props: SelectProps, ref: any) => {
     } = props;
 
 
+    const INDENT_PLACEHOLDER = doubleIndent ? `&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;` : `&nbsp;&nbsp;&nbsp;&nbsp;`;
+    const INDENT_LAST_PLACEHOLDER = `${typeof indentation !== 'undefined' && indentation !== '' ? `${indentation}&nbsp;&nbsp;` : ''}`;
     const uniqueID = useId();
     const idRes = id || uniqueID;
     const rootRef = useRef<any>(null);
@@ -87,6 +102,7 @@ const Select = forwardRef((props: SelectProps, ref: any) => {
     const [controlValue, setControlValue] = useState<string | undefined>('');
   
 
+    
     async function fetchData(params: any) {
         
         // set default value
@@ -112,6 +128,12 @@ const Select = forwardRef((props: SelectProps, ref: any) => {
 
             //
             setControlValue(value); // value must be initialized
+
+            // Set hierarchical categories ( with sub-categories )
+            if ( hierarchical ) {
+                _ORGIN_DATA = addTreeDepth(_ORGIN_DATA);
+                addTreeIndent(_ORGIN_DATA, INDENT_PLACEHOLDER, INDENT_LAST_PLACEHOLDER, 'label');
+            }
 
 
             //
@@ -177,6 +199,22 @@ const Select = forwardRef((props: SelectProps, ref: any) => {
 	} 
 
 
+    /**
+     * Format indent value
+     * @param {String|Array} str 
+     * @returns {String|Array}
+     */
+    function formatIndentVal(str: any) {
+        const reVar = new RegExp(INDENT_LAST_PLACEHOLDER, 'g');
+        if (Array.isArray(str)) {
+            return str.map((s: string) => s.replace(reVar,'').replace(/\&nbsp;/ig,''));
+        } else {
+            return str.replace(reVar,'').replace(/\&nbsp;/ig,'');
+        }
+        
+    }
+
+
     //
     function handleFocus(event: any) {
         rootRef.current.classList.add('focus');
@@ -220,10 +258,12 @@ const Select = forwardRef((props: SelectProps, ref: any) => {
     
     // Generate list of options
     const selectOptionsList = dataInit.map((item: any, index: number) => {
-        return <option key={index} value={item.value as string}>{item.label}</option>;
+        return <option key={index} value={item.value as string} dangerouslySetInnerHTML={{
+            __html: `${item.label}`,
+        }}></option>;
         
     });
-
+    
 
 
     useEffect(() => {
