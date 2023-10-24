@@ -3,6 +3,7 @@ import React, { useEffect, useRef, useCallback } from 'react';
 import Checkbox from 'funda-checkbox';
 
 
+
 import { getNextSiblings, getParents, getChildren } from './utils/dom'; 
 
 import { initUlHeight } from './init-height';
@@ -357,23 +358,28 @@ export default function TreeList(props: TreeListProps) {
         
         return (
             <>
-            <ul className={childClassName}  ref={rootRef} style={!first ? {maxHeight: '0px'} : {}}>
+            <ul className={`${typeof childClassName !== 'undefined' ? childClassName : ''} ${first ? 'first' : ''}`}  ref={rootRef} style={!first ? {maxHeight: '0px'} : {}}>
                 
                 {data.map((item: any, i: number) => {
 
                     const _async = item.childrenAsync ? 'async-ready' : '';
                     const _cusIcons = arrowIcons ? 'custom-icons' : '';
-              
+                
                     
                     if ( item.heading ) return (
-                        <li className="nav-item" key={item.key}>
+                        <li className="nav-item ${first ? 'first' : ''}" key={item.key}>
                             <a tabIndex={-1} className="nav-link disabled" href="#" aria-disabled="true" data-link={item.link} data-slug={item.slug} data-key={item.key}>
                                 <span>{item.icon ? item.icon.indexOf('</svg>') < 0 ? <><i className={item.icon}></i> </> : <var dangerouslySetInnerHTML={{ __html: `${item.icon}` }} /> : null}<i dangerouslySetInnerHTML={{ __html: `${item.title}` }}></i></span>
                             </a>
                         </li>
                     );
                     return (
-                        <li className={item.active ? 'nav-item active' : 'nav-item'} key={item.key} >
+                        <li 
+                            className={`nav-item ${first ? 'first' : ''} ${item.active ? 'active' : ''}`} 
+                            key={item.key} 
+                            onMouseEnter={typeof item.itemMouseEnterCallback !== 'undefined' ? item.itemMouseEnterCallback : () => void(0)} 
+                            onMouseLeave={typeof item.itemMouseLeaveCallback !== 'undefined' ? item.itemMouseLeaveCallback : () => void(0)}
+                        >
 
                             {(item.children && item.children.length) || item.childrenAsync ? <span aria-expanded={item.active ? 'true' : 'false'} className={item.active ? `arrow active ${_async} ${_cusIcons}` : `arrow ${_async} ${_cusIcons}`} onClick={handleCollapse} data-link={item.link} data-slug={item.slug} data-key={item.key}>{arrowGenerator()}</span> : ''}
 
@@ -463,10 +469,34 @@ export default function TreeList(props: TreeListProps) {
                             </span>
 
                       
-                            <a tabIndex={-1} className={item.active ? `nav-link active ${_async} ${item.selected ? 'selected' : ''}` : `nav-link ${_async} ${item.selected ? 'selected' : ''}`} href={item.link === '#' ? `${item.link}-${i}` : item.link} aria-expanded="false" onClick={handleSelect} data-link={item.link} data-slug={item.slug} data-key={item.key}>
+                            <a 
+                                tabIndex={-1} 
+                                className={item.active ? `nav-link active ${_async} ${item.selected ? 'selected' : ''}` : `nav-link ${_async} ${item.selected ? 'selected' : ''}`} 
+                                href={item.link === '#' ? `${item.link}-${i}` : item.link} 
+                                aria-expanded="false" 
+                                onClick={handleSelect} 
+                                data-link={item.link} 
+                                data-slug={item.slug} 
+                                data-key={item.key}
+                                onMouseEnter={typeof item.itemLinkMouseEnterCallback !== 'undefined' ? item.itemLinkMouseEnterCallback : () => void(0)} 
+                                onMouseLeave={typeof item.itemLinkMouseLeaveCallback !== 'undefined' ? item.itemLinkMouseLeaveCallback : () => void(0)}
+                            >
                                 <span>{item.icon ? item.icon.indexOf('</svg>') < 0 ? <><i className={item.icon}></i> </> : <var dangerouslySetInnerHTML={{ __html: `${item.icon}` }} /> : null}<i dangerouslySetInnerHTML={{ __html: `${item.title}` }}></i>{titleArrowGenerator()}</span>
-                                
+
+
+                                {/*<!-- CUSTOM CONTENT -->*/}
+                                {/** Add custom content to `<a class="nav-link">...</a>` */}
+                                {item.customContentToHyperlink}
+                                {/*<!-- /CUSTOM CONTENT -->*/}
+
                             </a>
+
+
+                            {/*<!-- CUSTOM CONTENT -->*/}
+                            {/** Add custom content to `<li class="nav-item">...</li>` */}
+                            {item.customContentToLiTag}
+                            {/*<!-- /CUSTOM CONTENT -->*/}
+
                             {item.children && item.children.length > 0 && <TreeList 
                                                 rootNode={rootNode}
                                                 checkboxNamePrefix={checkboxNamePrefix}

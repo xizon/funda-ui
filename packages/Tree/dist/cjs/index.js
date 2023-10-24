@@ -651,16 +651,16 @@ function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try
 function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
 var initUlHeight = function initUlHeight(inputUl) {
   [].slice.call(inputUl).forEach(function (el) {
-    if (typeof el.dataset.maxwidth === 'undefined') {
+    if (typeof el.dataset.maxheight === 'undefined') {
       var _li = [].slice.call(el.querySelectorAll('li'));
       var _allHeight = 0;
       _li.forEach(function (li) {
         _allHeight += li.scrollHeight;
       });
-      el.dataset.maxwidth = "".concat(_allHeight, "px");
+      el.dataset.maxheight = "".concat(_allHeight, "px");
       el.style.maxHeight = "".concat(_allHeight, "px");
     } else {
-      el.style.maxHeight = el.dataset.maxwidth;
+      el.style.maxHeight = el.dataset.maxheight;
     }
   });
 };
@@ -670,7 +670,7 @@ var initAsyncItems = /*#__PURE__*/function () {
       while (1) switch (_context.prev = _context.next) {
         case 0:
           [].slice.call(inputUl).forEach(function (el) {
-            el.removeAttribute('data-maxwidth');
+            el.removeAttribute('data-maxheight');
           });
         case 1:
         case "end":
@@ -990,7 +990,7 @@ function TreeList(props) {
   }, [data]);
   if (data) {
     return /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("ul", {
-      className: childClassName,
+      className: "".concat(typeof childClassName !== 'undefined' ? childClassName : '', " ").concat(first ? 'first' : ''),
       ref: rootRef,
       style: !first ? {
         maxHeight: '0px'
@@ -1000,7 +1000,7 @@ function TreeList(props) {
       var _async = item.childrenAsync ? 'async-ready' : '';
       var _cusIcons = arrowIcons ? 'custom-icons' : '';
       if (item.heading) return /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("li", {
-        className: "nav-item",
+        className: "nav-item ${first ? 'first' : ''}",
         key: item.key
       }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("a", {
         tabIndex: -1,
@@ -1022,8 +1022,14 @@ function TreeList(props) {
         }
       }))));
       return /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("li", {
-        className: item.active ? 'nav-item active' : 'nav-item',
-        key: item.key
+        className: "nav-item ".concat(first ? 'first' : '', " ").concat(item.active ? 'active' : ''),
+        key: item.key,
+        onMouseEnter: typeof item.itemMouseEnterCallback !== 'undefined' ? item.itemMouseEnterCallback : function () {
+          return void 0;
+        },
+        onMouseLeave: typeof item.itemMouseLeaveCallback !== 'undefined' ? item.itemMouseLeaveCallback : function () {
+          return void 0;
+        }
       }, item.children && item.children.length || item.childrenAsync ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("span", {
         "aria-expanded": item.active ? 'true' : 'false',
         className: item.active ? "arrow active ".concat(_async, " ").concat(_cusIcons) : "arrow ".concat(_async, " ").concat(_cusIcons),
@@ -1121,7 +1127,13 @@ function TreeList(props) {
         onClick: handleSelect,
         "data-link": item.link,
         "data-slug": item.slug,
-        "data-key": item.key
+        "data-key": item.key,
+        onMouseEnter: typeof item.itemLinkMouseEnterCallback !== 'undefined' ? item.itemLinkMouseEnterCallback : function () {
+          return void 0;
+        },
+        onMouseLeave: typeof item.itemLinkMouseLeaveCallback !== 'undefined' ? item.itemLinkMouseLeaveCallback : function () {
+          return void 0;
+        }
       }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("span", null, item.icon ? item.icon.indexOf('</svg>') < 0 ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("i", {
         className: item.icon
       }), " ") : /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("var", {
@@ -1132,7 +1144,7 @@ function TreeList(props) {
         dangerouslySetInnerHTML: {
           __html: "".concat(item.title)
         }
-      }), titleArrowGenerator())), item.children && item.children.length > 0 && /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement(TreeList, {
+      }), titleArrowGenerator()), item.customContentToHyperlink), item.customContentToLiTag, item.children && item.children.length > 0 && /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement(TreeList, {
         rootNode: rootNode,
         checkboxNamePrefix: checkboxNamePrefix,
         data: item.children,

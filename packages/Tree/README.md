@@ -44,6 +44,13 @@ Array configuration properties of the `data`:
 | `slug` | string | - | specify a slug. It can be used for data query parameters |
 | `childrenAsync` | boolean | - | Loading children asynchronously. Set to "true" to trigger loading event. |
 | `children` | array | - | Specify a set of sub-navigation, Eg. `[{"title":"Sub Sub Level 1","link":"#","slug":"level-1_0","active":true},{"title":"Sub Sub Level 2","link":"#","slug":"level-2_0"}]` |
+| `customContentToHyperlink` | React.ReactNode | - | Add custom content to `<a class="nav-link">...</a>` |
+| `customContentToLiTag` | React.ReactNode | - | Add custom content to `<li class="nav-item">...</li>` |
+| `itemLinkMouseEnterCallback` | function | - |  The mouseenter event of `<a class="nav-link"></a>`  |
+| `itemLinkMouseLeaveCallback` | function | - |  The mouseleave event of `<a class="nav-link"></a>`  |
+| `itemMouseEnterCallback` | function | - |  The mouseenter event of `<li class="nav-item"></li>`  |
+| `itemMouseLeaveCallback` | function | - |  The mouseleave event of `<li class="nav-item"></li>`  |
+
 
 
 ---

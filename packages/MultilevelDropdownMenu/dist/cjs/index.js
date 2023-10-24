@@ -342,7 +342,9 @@ function MenuList(props) {
         [].slice.call(ul).forEach(function (el) {
           if (typeof el.querySelectorAll('li')[0] !== 'undefined') {
             var calcH = el.querySelectorAll('li').length * el.querySelectorAll('li')[0].scrollHeight;
-            el.style.maxHeight = "".concat(calcH, "px");
+
+            // Prevent the use of iframe or other situations where the height is 0
+            el.style.maxHeight = "".concat(calcH == 0 ? 999 : calcH, "px");
           }
         });
       }

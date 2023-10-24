@@ -20,6 +20,12 @@ interface DataNode {
     heading?: string;
     icon?: string;
     slug?: string;
+    customContentToHyperlink?: React.ReactNode;
+    customContentToLiTag?: React.ReactNode;
+    itemMouseEnterCallback?: () => void;
+    itemMouseLeaveCallback?: () => void;
+    itemLinkMouseEnterCallback?: () => void;
+    itemLinkMouseLeaveCallback?: () => void;
     childrenAsync?: boolean;
     children?: DataNode[];
 }
