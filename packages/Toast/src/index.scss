@@ -3,13 +3,19 @@
    <!-- Toast -->
 /* ====================================================== */
 
+
 .toasts__wrapper {
     --bs-toast-zindex: 1090;
+    --bs-border-radius: 0.375rem;
+
     --toasts-offset-top: 35px;
     --toasts-offset-bottom: 15px;
     --toasts-offset-bothsides: 15px;
     --toasts-container-gap: 0.5rem;
     --toasts-container-width: 350px;
+    --toasts-progress-height: 5px;
+    --toasts-progress-bg: rgba(255,255,255,.6);
+    
     
 
 
@@ -135,6 +141,28 @@
         }
     }
 
+
+
+    /* progress */
+    .toast-progress {
+        position: absolute;
+        width: 100%;
+        bottom: 0px;
+        left: 0px;
+        height: var(--toasts-progress-height);
+        background: transparent;
+        border-radius: 0 0 var(--bs-border-radius) var(--bs-border-radius);
+        overflow: hidden;
+
+        .progress-bar {
+            background: var(--toasts-progress-bg);
+            width: 100%;
+            transition: all .1s;
+        }
+    }
+
+
+
 }
   
 /* Bootstrap toast here */
@@ -172,6 +200,7 @@
     &.hide-end {
         display: none;
     }
+
 
 }
 

@@ -15,8 +15,6 @@ declare type ToastProps = {
      * Amount of time measured in milliseconds. If false or without this attribute, Auto-Close will be disabled.
      */
     autoCloseTime?: boolean | number;
-    /** Starts from the top position of the Array when we use the automatic close. */
-    autoCloseReverse?: boolean;
     /** You can not close pop-win when it is enabled */
     lock?: boolean;
     /** Whether to use cascading styles */

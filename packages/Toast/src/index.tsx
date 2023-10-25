@@ -1,4 +1,4 @@
-import React, { useId, useEffect, useRef } from 'react';
+import React, { useId, useEffect, useRef, useCallback } from 'react';
 
 import Item from './Item';
 
@@ -21,8 +21,6 @@ type ToastProps = {
      * Amount of time measured in milliseconds. If false or without this attribute, Auto-Close will be disabled.
      */
     autoCloseTime?: boolean | number;
-    /** Starts from the top position of the Array when we use the automatic close. */
-    autoCloseReverse?: boolean;
     /** You can not close pop-win when it is enabled */
     lock?: boolean;
     /** Whether to use cascading styles */
@@ -49,7 +47,6 @@ const Toast = (props: ToastProps) => {
         autoHideMultiple,
         direction,
         autoCloseTime,
-        autoCloseReverse,
         lock,
         cascading,
         data,
@@ -62,12 +59,96 @@ const Toast = (props: ToastProps) => {
     } = props;
 
 
+    const DEFAULT_AUTO_CLOSE_TIME = 3000;
     const uniqueID = useId().replace(/\:/g, "-");
     const idRes = id || uniqueID;
     const rootRef = useRef<any>(null);
     let depth: number = autoHideMultiple ? data.slice(-2).length + 1 : data.length + 1;
     const cascadingEnabled = typeof cascading === 'undefined' ? true : cascading;
 
+    // auto close
+    const AUTO_CLOSE_TIME: any = typeof (autoCloseTime) === 'undefined' || autoCloseTime === false ? false : autoCloseTime;
+
+    // progress animation
+    const PROGRESS_TRANSITION_TIME: any = typeof (autoCloseTime) === 'undefined' || autoCloseTime === false ? DEFAULT_AUTO_CLOSE_TIME : autoCloseTime;
+
+    const progressPausedRef = useRef<any[]>([]);
+    const progressObjRef = useRef<any[]>([]);
+    const progressIntervalRef = useRef<any[]>([]);
+    const startProgressTimer = useCallback((el: any, i: number) => {
+
+        // init progress
+        let progressCurrentChunk = 100 / (PROGRESS_TRANSITION_TIME / 100);
+        el.firstChild.style.width = 100 + '%';
+        el.firstChild.ariaValueNow = 100;      
+
+
+        // animation
+        progressIntervalRef.current[i] = setInterval(() => {
+
+            if (!progressPausedRef.current[i]) {
+                
+                const progPercent = 100 - progressCurrentChunk;
+        
+                // console.log('interval');
+
+                el.firstChild.style.width = progPercent + '%';
+                el.firstChild.ariaValueNow = progPercent;
+                progressCurrentChunk++; 
+                
+        
+                //
+                if (progPercent <= 0) {
+                    el.classList.add('complete');
+
+                    //
+                    stopProgressTimer(i);
+
+                    // hide toast item
+                    const currentItem = el.closest('.toast-container');
+                    handleClose(i as never, currentItem as never);
+                }
+            }
+
+        }, PROGRESS_TRANSITION_TIME / 100);
+
+
+    }, []);
+
+
+    const stopProgressTimer = useCallback((index: number | undefined = undefined) => {
+        if (typeof index === 'undefined') {
+            data.forEach((item: any, i: number) => {
+                clearInterval(progressIntervalRef.current[i]);
+                progressIntervalRef.current[i] = null;
+            });
+        } else {
+            clearInterval(progressIntervalRef.current[index]);
+            progressIntervalRef.current[index] = null;
+        }
+
+    }, [data]);
+    
+
+    function progressAnimBegin() {
+        data.forEach((item: any, i: number) => {
+            const el = progressObjRef.current[i];
+            if (el !== null && typeof el !== 'undefined') startProgressTimer(el, i);
+        });
+    }
+
+
+    function handleProgressPaused(e: any) {
+        const _currentIndex = e.currentTarget.dataset.index;
+        progressPausedRef.current[_currentIndex] = true;
+    }
+
+    function handleProgressStart(e: any) {
+        const _currentIndex = e.currentTarget.dataset.index;
+        progressPausedRef.current[_currentIndex] = false;
+    }
+
+    //
     function init() {
         
 
@@ -85,6 +166,12 @@ const Toast = (props: ToastProps) => {
                 });
             });      
             
+            [].slice.call(rootRef.current.querySelectorAll('.toast-container')).forEach( (node: HTMLElement) => {
+                node.addEventListener('mouseenter', handleProgressPaused);
+                node.addEventListener('mouseleave', handleProgressStart);
+            });   
+
+
             
             // Automatically hide multiple items
             // It creates a transition animation effect with multiple records and only one displayed.
@@ -106,6 +193,7 @@ const Toast = (props: ToastProps) => {
 
 
 
+        
 
         // Initialize data
         //--------------
@@ -125,22 +213,28 @@ const Toast = (props: ToastProps) => {
 
         }
 
+    }
 
+
+    function autoClose() {
 
         // Auto hide
         //--------------
-        const _autoCloseTime: any = typeof (autoCloseTime) === 'undefined' || autoCloseTime === false ? false : autoCloseTime;
-        if (_autoCloseTime !== false) {
-            const items = JSON.parse(JSON.stringify(data));
+        if (AUTO_CLOSE_TIME !== false) {
+            
+            //
+            progressIntervalRef.current = data.map((v: any) => null);
+            progressPausedRef.current = data.map((v: any) => false);
 
-            autoClose(0, items, _autoCloseTime);
-
+            //
+            progressAnimBegin();
         }
-
 
     }
 
     function handleClose(index: number, currentItem: HTMLDivElement) {
+
+        if (rootRef.current === null) return;
 
   
         const _list: HTMLDivElement[] = [].slice.call(rootRef.current.querySelectorAll('.toast-container'));
@@ -168,70 +262,27 @@ const Toast = (props: ToastProps) => {
             onClose?.(rootRef.current, Number(index), _list.filter((node: HTMLDivElement) => !node.classList.contains('hide-end') ));          
 
         }, 300);
-    }
 
-    function autoClose(index: number, items: any[], delay: number = 3000) {
-        if ( items.length  === index ) {
-            clearTimeout(window.setCloseToast);
-            return;
-        }
         
-
-        window.setCloseToast = setTimeout(() => {
-            const _list: HTMLDivElement[] = [].slice.call(rootRef.current.querySelectorAll('.toast-container'));
-
-            if ( autoCloseReverse ) {
-                _list[items.length-index]?.classList.add('hide-start');
-            } else {
-                _list[index-1]?.classList.add('hide-start');
-            }
-            
-
-            //Let the removed animation show
-            setTimeout(() => {
-                
-                _list.forEach((node: any) => {
-                    node.classList.remove('hide-start');
-                });
-
-                // remove current
-                if ( autoCloseReverse ) {
-                    _list[items.length-index].classList.add('hide-end');
-
-                    //
-                    onClose?.(rootRef.current, Number(items.length-index), _list.filter((node: HTMLDivElement) => !node.classList.contains('hide-end') ));
-
-                } else {
-                    _list[index-1]?.classList.add('hide-end');
-                    //
-                    onClose?.(rootRef.current, Number(index-1), _list.filter((node: HTMLDivElement) => !node.classList.contains('hide-end') ));
-                }
-                
-                // rearrange
-                if (cascadingEnabled) {
-                    _list.filter((node: any) => !node.classList.contains('hide-end')).forEach((node: any, i: number) => {
-                        node.style.transform = `perspective(100px) translateZ(-${2 * i}px) translateY(${35 * i}px)`;
-                    });    
-                }
-
-
-                //
-                autoClose(index, items, delay);
-
-            }, 300); 
-        }, delay);
-     
-        index++;
     }
 
+    function stopAutoCloseTimer() {
+        clearTimeout(window.setCloseToast);
+    }
+    
 
 
     useEffect(() => {
-
-
-        // Initialize 
+        
+    
+        // Initialize Toast Item
         //------------------------------------------
         init();
+
+
+        // Initialize Progress
+        //------------------------------------------
+        autoClose();
 
 
         // Remove the global list of events, especially as scroll and interval.
@@ -239,7 +290,10 @@ const Toast = (props: ToastProps) => {
         return () => {
 
             // Cancels a timeout previously established by calling setTimeout().
-            clearTimeout(window.setCloseToast);
+            stopAutoCloseTimer();
+
+            // Cancels progress animation
+            stopProgressTimer();
 
             // Remove all toasts
             const _el = document.querySelector(`#toasts__wrapper-${idRes}`);
@@ -250,6 +304,12 @@ const Toast = (props: ToastProps) => {
                 [].slice.call(rootRef.current.querySelectorAll('[data-close]')).forEach( (node: HTMLElement) => {
                     node.replaceWith(node.cloneNode(true));
                 });   
+
+                [].slice.call(rootRef.current.querySelectorAll('.toast-container')).forEach( (node: HTMLElement) => {
+                    node.removeEventListener('mouseenter', handleProgressPaused);
+                    node.removeEventListener('mouseleave', handleProgressStart);
+                });   
+    
             }
  
 
@@ -264,20 +324,23 @@ const Toast = (props: ToastProps) => {
                 <div className="toasts">
                     {(autoHideMultiple ? data.slice(-2) : data).map((item: any, i: number) => {
                         return <Item
-                            onlyOne={data.length === 1 ? true : false}
-                            depth={depth - i}
-                            key={i}
-                            index={i}
-                            title={item.title}
-                            note={item.note}
-                            lock={lock}
-                            cascading={cascadingEnabled}
-                            schemeBody={schemeBody}
-                            schemeHeader={schemeHeader}
-                            closeBtnColor={closeBtnColor}
-                            closeDisabled={closeDisabled}
-                            message={item.message}
-                        /> 
+                                    ref={el => progressObjRef.current[i] = el } 
+                                    onlyOne={data.length === 1 ? true : false}
+                                    depth={depth - i}
+                                    key={i}
+                                    index={i}
+                                    title={item.title}
+                                    note={item.note}
+                                    theme={item.theme}
+                                    lock={lock}
+                                    cascading={cascadingEnabled}
+                                    schemeBody={schemeBody}
+                                    schemeHeader={schemeHeader}
+                                    closeBtnColor={closeBtnColor}
+                                    closeDisabled={closeDisabled}
+                                    message={item.message}
+                                    autoCloseTime={AUTO_CLOSE_TIME}
+                                /> 
 
                     })}
                 </div>

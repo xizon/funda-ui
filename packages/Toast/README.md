@@ -20,7 +20,6 @@ import Toast from 'funda-ui/Toast';
 | `closeDisabled` | boolean  | false | Disable the close button. |
 | `direction` | `bottom-left` \| `bottom-center` \| `bottom-right` \| `top-left` \| `top-center` \| `top-right` \| `vertical-center`  | bottom-center | The direction of the toast |
 | `autoCloseTime` | boolean \| number  | false | Set an automatic closing time, multiple items will be accumulated in order. Amount of time measured in milliseconds. If false or without this attribute, Auto-Close will be disabled. |
-| `autoCloseReverse` | boolean  | false | Starts from the top position of the Array when we use the automatic close. |
 | `onClose` | function  | - | Call a function when the modal is opened. It returns three callback values.  <br /> <ol><li>The first is the current element (HTMLDivElement)</li><li>The second is the current index of removed item (number)</li><li> The third is the all displayed elements (HTMLDivElement[])</li></ol>|
 
 
@@ -31,7 +30,7 @@ Array configuration properties of the `data`:
 | `title` | string \| ReactNode \| boolean | - | Specifies an alternate and title for the toast |
 | `note` | string \| ReactNode \| boolean | - | A light-colored comment next to the title, which can be information such as time. |
 | `message` | string \| ReactNode  | - | Specifies the content, or HTML elements to the toast |
-
+| `theme` | `primary` \| `secondary` \| `success` \| `info` \| `warning` \| `danger` \| `light` \| `dark` \| undefined  | undefined \|  | Specifies a theme to `.toast`. All these colors are available as a Sass map of Bootstrap. |
 
 
 ## Examples
@@ -66,14 +65,14 @@ export default () => {
         <Toast
             cascading={false}
             direction="top-center"
-            schemeBody="align-items-center text-white bg-dark border-0 p-2"
+            schemeBody="align-items-center text-white border-0 p-2"
             closeBtnColor="#fff"
             autoCloseTime={5000}
             data={[
-                { title: false, note: false, message: "First..." },
-                { title: false, note: false, message: "Source of radiant heat." },
-                { title: false, note: false, message: "ok!" },
-                { title: false, note: false, message: "Last item here..." }
+                { theme: 'dark', title: false, note: false, message: "First..." },
+                { theme: 'success', title: false, note: false, message: "Source of radiant heat." },
+                { theme: 'danger', title: false, note: false, message: "ok!" },
+                { theme: 'warning', title: false, note: false, message: "Last item here..." }
             ]}
         />
     

@@ -3,11 +3,14 @@
 /* ====================================================== */
 .toasts__wrapper {
   --bs-toast-zindex: 1090;
+  --bs-border-radius: 0.375rem;
   --toasts-offset-top: 35px;
   --toasts-offset-bottom: 15px;
   --toasts-offset-bothsides: 15px;
   --toasts-container-gap: 0.5rem;
   --toasts-container-width: 350px;
+  --toasts-progress-height: 5px;
+  --toasts-progress-bg: rgba(255,255,255,.6);
   width: var(--toasts-container-width);
   position: fixed;
   left: 50%;
@@ -16,6 +19,7 @@
   pointer-events: none;
   transition: 0.1s ease-in-out;
   /* cascading divs */
+  /* progress */
 }
 .toasts__wrapper--bottom-left {
   left: var(--toasts-offset-bothsides);
@@ -102,6 +106,21 @@
 }
 .toasts__wrapper.toasts__wrapper--cascading .toasts:hover .toast-container {
   transform: perspective(100px) translateZ(0) !important;
+}
+.toasts__wrapper .toast-progress {
+  position: absolute;
+  width: 100%;
+  bottom: 0px;
+  left: 0px;
+  height: var(--toasts-progress-height);
+  background: transparent;
+  border-radius: 0 0 var(--bs-border-radius) var(--bs-border-radius);
+  overflow: hidden;
+}
+.toasts__wrapper .toast-progress .progress-bar {
+  background: var(--toasts-progress-bg);
+  width: 100%;
+  transition: all 0.1s;
 }
 
 /* Bootstrap toast here */

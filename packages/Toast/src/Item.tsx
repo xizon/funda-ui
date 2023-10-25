@@ -1,27 +1,31 @@
-import React from 'react';
+import React, { forwardRef } from 'react';
 
 interface ItemProps extends React.ComponentPropsWithoutRef<any> {
     onlyOne?: boolean;
     index: number;
     title?: string | React.ReactNode | boolean;
     note?: string | React.ReactNode | boolean;
+    theme?: string | undefined;
     message?: string | React.ReactNode;
     depth: number;
     schemeBody?: string;
     schemeHeader?: string;
     closeBtnColor?: string;
     closeDisabled?: boolean;
+    autoCloseTime?: boolean | number;
     lock?: boolean;
     cascading?: boolean;
+    
 };
 
-const Item = (props: ItemProps) => {
+const Item = forwardRef((props: ItemProps, ref: any) => {
 
     const {
         onlyOne,
         index,
         title,
         note,
+        theme,
         message,
         depth,
         lock,
@@ -29,10 +33,11 @@ const Item = (props: ItemProps) => {
         schemeBody,
         schemeHeader,
         closeBtnColor,
-        closeDisabled
+        closeDisabled,
+        autoCloseTime
     } = props;
 
-    
+
 
     return (
         <>
@@ -48,7 +53,7 @@ const Item = (props: ItemProps) => {
                 }}>
 
                 {/* Bootstrap toast */}
-                <div className={`toast fade show ${schemeBody ? schemeBody : ''}`} role="alert">
+                <div className={`toast fade show ${schemeBody ? schemeBody : ''} ${theme ? `bg-${theme}` : ''}`} role="alert">
                     {(title === '' || title === false) && (note === '' || note === false) ? null : <>
                         <div className={`toast-header ${schemeHeader ? schemeHeader : ''}`}>
                             <strong className="me-auto">{title === '' || title === false ? '' : <>{title}</>}</strong>
@@ -66,6 +71,12 @@ const Item = (props: ItemProps) => {
                         </> : null}
 
 
+                        {/* PROGRESS */}
+                        <div ref={ref} data-progress-index={index} className={`progress active toast-progress ${autoCloseTime === false ? 'd-none' : ''}`} role="progressbar">
+                            <div className="progress-bar"></div>
+                        </div>
+                        {/* /PROGRESS */}
+
 
                     </div>
                 </div>
@@ -74,7 +85,7 @@ const Item = (props: ItemProps) => {
 
         </>
     )
-}
+});
 
 
 export default Item;

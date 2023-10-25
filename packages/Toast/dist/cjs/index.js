@@ -104,11 +104,12 @@ var external_root_React_commonjs2_react_commonjs_react_amd_react_default = /*#__
 ;// CONCATENATED MODULE: ./src/Item.tsx
 
 ;
-var Item = function Item(props) {
+var Item = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_amd_react_.forwardRef)(function (props, ref) {
   var onlyOne = props.onlyOne,
     index = props.index,
     title = props.title,
     note = props.note,
+    theme = props.theme,
     message = props.message,
     depth = props.depth,
     lock = props.lock,
@@ -116,7 +117,8 @@ var Item = function Item(props) {
     schemeBody = props.schemeBody,
     schemeHeader = props.schemeHeader,
     closeBtnColor = props.closeBtnColor,
-    closeDisabled = props.closeDisabled;
+    closeDisabled = props.closeDisabled,
+    autoCloseTime = props.autoCloseTime;
   return /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
     className: "toast-container ".concat(onlyOne ? 'only-one' : ''),
     "data-index": index,
@@ -127,7 +129,7 @@ var Item = function Item(props) {
       zIndex: depth
     }
   }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
-    className: "toast fade show ".concat(schemeBody ? schemeBody : ''),
+    className: "toast fade show ".concat(schemeBody ? schemeBody : '', " ").concat(theme ? "bg-".concat(theme) : ''),
     role: "alert"
   }, (title === '' || title === false) && (note === '' || note === false) ? null : /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
     className: "toast-header ".concat(schemeHeader ? schemeHeader : '')
@@ -165,8 +167,15 @@ var Item = function Item(props) {
     fill: "".concat(closeBtnColor ? closeBtnColor : '#000000'),
     d: "M9.41 8l3.29-3.29c.19-.18.3-.43.3-.71a1.003 1.003 0 00-1.71-.71L8 6.59l-3.29-3.3a1.003 1.003 0 00-1.42 1.42L6.59 8 3.3 11.29c-.19.18-.3.43-.3.71a1.003 1.003 0 001.71.71L8 9.41l3.29 3.29c.18.19.43.3.71.3a1.003 1.003 0 00.71-1.71L9.41 8z",
     fillRule: "evenodd"
-  }))) : null) : null))));
-};
+  }))) : null) : null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
+    ref: ref,
+    "data-progress-index": index,
+    className: "progress active toast-progress ".concat(autoCloseTime === false ? 'd-none' : ''),
+    role: "progressbar"
+  }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
+    className: "progress-bar"
+  }))))));
+});
 /* harmony default export */ const src_Item = (Item);
 ;// CONCATENATED MODULE: ./src/index.tsx
 
@@ -176,7 +185,6 @@ var Toast = function Toast(props) {
     autoHideMultiple = props.autoHideMultiple,
     direction = props.direction,
     autoCloseTime = props.autoCloseTime,
-    autoCloseReverse = props.autoCloseReverse,
     lock = props.lock,
     cascading = props.cascading,
     data = props.data,
@@ -186,11 +194,80 @@ var Toast = function Toast(props) {
     closeDisabled = props.closeDisabled,
     id = props.id,
     onClose = props.onClose;
+  var DEFAULT_AUTO_CLOSE_TIME = 3000;
   var uniqueID = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useId)().replace(/\:/g, "-");
   var idRes = id || uniqueID;
   var rootRef = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useRef)(null);
   var depth = autoHideMultiple ? data.slice(-2).length + 1 : data.length + 1;
   var cascadingEnabled = typeof cascading === 'undefined' ? true : cascading;
+
+  // auto close
+  var AUTO_CLOSE_TIME = typeof autoCloseTime === 'undefined' || autoCloseTime === false ? false : autoCloseTime;
+
+  // progress animation
+  var PROGRESS_TRANSITION_TIME = typeof autoCloseTime === 'undefined' || autoCloseTime === false ? DEFAULT_AUTO_CLOSE_TIME : autoCloseTime;
+  var progressPausedRef = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useRef)([]);
+  var progressObjRef = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useRef)([]);
+  var progressIntervalRef = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useRef)([]);
+  var startProgressTimer = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useCallback)(function (el, i) {
+    // init progress
+    var progressCurrentChunk = 100 / (PROGRESS_TRANSITION_TIME / 100);
+    el.firstChild.style.width = 100 + '%';
+    el.firstChild.ariaValueNow = 100;
+
+    // animation
+    progressIntervalRef.current[i] = setInterval(function () {
+      if (!progressPausedRef.current[i]) {
+        var progPercent = 100 - progressCurrentChunk;
+
+        // console.log('interval');
+
+        el.firstChild.style.width = progPercent + '%';
+        el.firstChild.ariaValueNow = progPercent;
+        progressCurrentChunk++;
+
+        //
+        if (progPercent <= 0) {
+          el.classList.add('complete');
+
+          //
+          stopProgressTimer(i);
+
+          // hide toast item
+          var currentItem = el.closest('.toast-container');
+          handleClose(i, currentItem);
+        }
+      }
+    }, PROGRESS_TRANSITION_TIME / 100);
+  }, []);
+  var stopProgressTimer = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useCallback)(function () {
+    var index = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : undefined;
+    if (typeof index === 'undefined') {
+      data.forEach(function (item, i) {
+        clearInterval(progressIntervalRef.current[i]);
+        progressIntervalRef.current[i] = null;
+      });
+    } else {
+      clearInterval(progressIntervalRef.current[index]);
+      progressIntervalRef.current[index] = null;
+    }
+  }, [data]);
+  function progressAnimBegin() {
+    data.forEach(function (item, i) {
+      var el = progressObjRef.current[i];
+      if (el !== null && typeof el !== 'undefined') startProgressTimer(el, i);
+    });
+  }
+  function handleProgressPaused(e) {
+    var _currentIndex = e.currentTarget.dataset.index;
+    progressPausedRef.current[_currentIndex] = true;
+  }
+  function handleProgressStart(e) {
+    var _currentIndex = e.currentTarget.dataset.index;
+    progressPausedRef.current[_currentIndex] = false;
+  }
+
+  //
   function init() {
     // Move HTML templates to tag end body </body>
     // render() don't use "Fragment", in order to avoid error "Failed to execute 'insertBefore' on 'Node'"
@@ -204,6 +281,10 @@ var Toast = function Toast(props) {
           var currentItem = node.closest('.toast-container');
           handleClose(index, currentItem);
         });
+      });
+      [].slice.call(rootRef.current.querySelectorAll('.toast-container')).forEach(function (node) {
+        node.addEventListener('mouseenter', handleProgressPaused);
+        node.addEventListener('mouseleave', handleProgressStart);
       });
 
       // Automatically hide multiple items
@@ -234,16 +315,25 @@ var Toast = function Toast(props) {
         });
       }
     }
-
+  }
+  function autoClose() {
     // Auto hide
     //--------------
-    var _autoCloseTime = typeof autoCloseTime === 'undefined' || autoCloseTime === false ? false : autoCloseTime;
-    if (_autoCloseTime !== false) {
-      var items = JSON.parse(JSON.stringify(data));
-      autoClose(0, items, _autoCloseTime);
+    if (AUTO_CLOSE_TIME !== false) {
+      //
+      progressIntervalRef.current = data.map(function (v) {
+        return null;
+      });
+      progressPausedRef.current = data.map(function (v) {
+        return false;
+      });
+
+      //
+      progressAnimBegin();
     }
   }
   function handleClose(index, currentItem) {
+    if (rootRef.current === null) return;
     var _list = [].slice.call(rootRef.current.querySelectorAll('.toast-container'));
     currentItem.classList.add('hide-start');
 
@@ -271,70 +361,26 @@ var Toast = function Toast(props) {
       }));
     }, 300);
   }
-  function autoClose(index, items) {
-    var delay = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 3000;
-    if (items.length === index) {
-      clearTimeout(window.setCloseToast);
-      return;
-    }
-    window.setCloseToast = setTimeout(function () {
-      var _list = [].slice.call(rootRef.current.querySelectorAll('.toast-container'));
-      if (autoCloseReverse) {
-        var _list3;
-        (_list3 = _list[items.length - index]) === null || _list3 === void 0 ? void 0 : _list3.classList.add('hide-start');
-      } else {
-        var _list4;
-        (_list4 = _list[index - 1]) === null || _list4 === void 0 ? void 0 : _list4.classList.add('hide-start');
-      }
-
-      //Let the removed animation show
-      setTimeout(function () {
-        _list.forEach(function (node) {
-          node.classList.remove('hide-start');
-        });
-
-        // remove current
-        if (autoCloseReverse) {
-          _list[items.length - index].classList.add('hide-end');
-
-          //
-          onClose === null || onClose === void 0 ? void 0 : onClose(rootRef.current, Number(items.length - index), _list.filter(function (node) {
-            return !node.classList.contains('hide-end');
-          }));
-        } else {
-          var _list5;
-          (_list5 = _list[index - 1]) === null || _list5 === void 0 ? void 0 : _list5.classList.add('hide-end');
-          //
-          onClose === null || onClose === void 0 ? void 0 : onClose(rootRef.current, Number(index - 1), _list.filter(function (node) {
-            return !node.classList.contains('hide-end');
-          }));
-        }
-
-        // rearrange
-        if (cascadingEnabled) {
-          _list.filter(function (node) {
-            return !node.classList.contains('hide-end');
-          }).forEach(function (node, i) {
-            node.style.transform = "perspective(100px) translateZ(-".concat(2 * i, "px) translateY(").concat(35 * i, "px)");
-          });
-        }
-
-        //
-        autoClose(index, items, delay);
-      }, 300);
-    }, delay);
-    index++;
+  function stopAutoCloseTimer() {
+    clearTimeout(window.setCloseToast);
   }
   (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useEffect)(function () {
-    // Initialize 
+    // Initialize Toast Item
     //------------------------------------------
     init();
+
+    // Initialize Progress
+    //------------------------------------------
+    autoClose();
 
     // Remove the global list of events, especially as scroll and interval.
     //--------------
     return function () {
       // Cancels a timeout previously established by calling setTimeout().
-      clearTimeout(window.setCloseToast);
+      stopAutoCloseTimer();
+
+      // Cancels progress animation
+      stopProgressTimer();
 
       // Remove all toasts
       var _el = document.querySelector("#toasts__wrapper-".concat(idRes));
@@ -344,6 +390,10 @@ var Toast = function Toast(props) {
       if (rootRef.current !== null) {
         [].slice.call(rootRef.current.querySelectorAll('[data-close]')).forEach(function (node) {
           node.replaceWith(node.cloneNode(true));
+        });
+        [].slice.call(rootRef.current.querySelectorAll('.toast-container')).forEach(function (node) {
+          node.removeEventListener('mouseenter', handleProgressPaused);
+          node.removeEventListener('mouseleave', handleProgressStart);
         });
       }
     };
@@ -357,19 +407,24 @@ var Toast = function Toast(props) {
     className: "toasts"
   }, (autoHideMultiple ? data.slice(-2) : data).map(function (item, i) {
     return /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement(src_Item, {
+      ref: function ref(el) {
+        return progressObjRef.current[i] = el;
+      },
       onlyOne: data.length === 1 ? true : false,
       depth: depth - i,
       key: i,
       index: i,
       title: item.title,
       note: item.note,
+      theme: item.theme,
       lock: lock,
       cascading: cascadingEnabled,
       schemeBody: schemeBody,
       schemeHeader: schemeHeader,
       closeBtnColor: closeBtnColor,
       closeDisabled: closeDisabled,
-      message: item.message
+      message: item.message,
+      autoCloseTime: AUTO_CLOSE_TIME
     });
   }))));
 };
