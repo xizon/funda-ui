@@ -11,6 +11,7 @@ import CascadingSelectE2E from 'funda-ui/CascadingSelectE2E';
 | --- | --- | --- | --- |
 | `wrapperClassName` | string | `mb-3 position-relative` | The class name of the control wrapper. |
 | `controlClassName` | string | `form-control` | The class name of the control. |
+| `destroyParentIdMatch` | boolean  | false | Instead of using `parent_id` of response to match child and parent data (very useful for multiple fetch requests with no directly related fields), this operation will directly use the click event to modify the result. |
 | `columnTitle` | Array  | - | Set headers for each column group. Such as <br /> `['Heading 1', 'Heading 2', 'Heading 3', 'Heading 4']` <blockquote>Support html tags</blockquote> |
 | `triggerClassName` | string  | - | Specify a class for your trigger |
 | `triggerContent` | ReactNode  | - | Set a piece of text or HTML code for the trigger |
@@ -43,16 +44,22 @@ Array configuration properties of the `fetchArray`:
 | `fetchFuncMethod` | string  | - | When the property is *true*, every time the select changes, a data request will be triggered. <br /><blockquote>The methord must be a Promise Object.</blockquote> |
 | `fetchFuncMethodParams` | array  | - | The parameter passed by the method, it is an array. <br />Note: the first element is a query string, the second element is the number of queried data (usually a number), and then you can increase the third, or fourth, and more parameters. <br />Such as `['',0]`, `['',99,'string 1','string 2']`, `['',0,'$QUERY_ID']` <br /><blockquote>There should be at least one parameter which is the query string. <br />`$QUERY_ID` identifies the ID of the automatic query, and its value depends on the `id` attribute of the item.</blockquote> |
 | `fetchCallback` | function  | - | Return value from `fetchCallback` property to format the data of the API callback, which will match the data structure of the component. <br >At the same time it returns the original data, you will use this function and use the `return` keyword to return a new value. |
-
+| `hierarchical` | boolean  | false | Set hierarchical categories ( with sub-categories ) to attribute `options`. |
+| `indentation` | string  | - | Set hierarchical indentation placeholders, valid when the `hierarchical` is true. |
+| `doubleIndent` | boolean  | false | Set double indent effect, valid when the `hierarchical` is true. |
 
 
 ### Create Callback 
 
 A successful response returns the details of the callback such as Sample Request Body:
 
-Among them, `id`, `queryId` and `name` are attributes used by the system, and other attributes can be added freely
+Among them, `id`, `queryId`, `name` and `label` are attributes used by the system, and other attributes can be added freely. 
+
+> `label` usually uses hierarchical style. (It takes effect when the `hierarchical` attribute is configured in `fetchArray`)
 
 > The "name" attribute supports HTML tags
+
+
 
 ```json
 [
@@ -175,7 +182,7 @@ export default () => {
         <>
 
             <CascadingSelectE2E
-                value="Title 2[2],Title 4[5]"
+                value="Title 2[2],Title 5[5]"
                 name="name"
                 label="String"
                 depth={103}
@@ -297,4 +304,236 @@ export default () => {
 ```
 
 
+
+
+
+
+
+## Convert raw data into a tree structure
+
+Set hierarchical categories ( with sub-categories ) to attribute `fetchArray`.
+
+> [!NOTE]
+> Since the data of response structures of the two requests are not directly related, the attribute `destroyParentIdMatch` needs to be set to *true*.
+
+
+```js
+import React from "react";
+import CascadingSelectE2E from 'funda-ui/CascadingSelectE2E';
+
+// component styles
+import 'funda-ui/CascadingSelectE2E/index.css';
+
+
+
+class DataService {
+    
+    // `getListFirst()` must be a Promise Object
+    async getListFirst(searchStr = '', limit = 0, otherParam = '') {
+
+        // console.log('searchStr: ', searchStr);
+        // console.log("limit: ", limit);
+        // console.log("otherParam: ", otherParam);
+
+        const demoData = [
+            {
+
+                "parent_id": 0,
+                "id": 1,
+                "item_name": "Title 1",
+                "item_code": 'title-1'
+            },
+            {
+                "parent_id": 0,
+                "id": 2,
+                "item_name": "Title 2",
+                "item_code": 'title-2'
+            }
+        ];   
+
+        return {
+            code: 0,
+            message: 'OK',
+            data: demoData
+        };
+    }
+
+
+    // `getListSecond()` must be a Promise Object
+    async getListSecond(searchStr = '', limit = 0, searchId = 0) {
+
+        console.log("searchId: ", searchId);
+
+        let demoData1: any = [
+            {
+                "parent_id": 0,
+                "id": 3,
+                "item_name": "Title 3",
+                "item_code": 'title-3'
+            },
+            {
+                "parent_id": 0,
+                "id": 4,
+                "item_name": "Title 4",
+                "item_code": 'title-4'
+            },
+            {
+                "parent_id": 4,
+                "id": 5,
+                "item_name": "Title 5",
+                "item_code": 'title-5'
+            },
+            {
+                "parent_id": 5,
+                "id": 6,
+                "item_name": "Title 6",
+                "item_code": 'title-6'
+            },
+            {
+                "parent_id": 0,
+                "id": 7,
+                "item_name": "Title 7",
+                "item_code": 'title-7'
+            },
+            {
+                "parent_id": 5,
+                "id": 8,
+                "item_name": "Title 8",
+                "item_code": 'title-8'
+            } 
+        ];   
+
+
+        let demoData2: any = [
+            {
+                "parent_id": 0,
+                "id": 11,
+                "item_name": "Title 11",
+                "item_code": 'title-11'
+            },
+            {
+                "parent_id": 0,
+                "id": 12,
+                "item_name": "Title 12",
+                "item_code": 'title-12'
+            }
+        ];   
+
+        let res = [];
+
+        if (searchId == 1) res = demoData1;
+        if (searchId == 2) res = demoData2;
+
+
+        return {
+            code: 0,
+            message: 'OK',
+            data: res
+        };
+    }
+
+}
+
+export default (props: any) => {
+
+
+    /**
+     * Convert Tree
+     * @param {Array} arr                    - Input array to convert
+     * @param  {?String | ?Number} parentId  - Parent id
+     * @param  {?String} keyId               - Key value of id.
+     * @param  {?String} keyParentId         - Key value of parent id.
+     * @returns Array
+     */
+    function convertTree(arr, parentId = '', keyId = 'id', keyParentId = 'parent_id') {
+        
+        if( !parentId ) {
+            
+            // If there is no parent id (when recursing for the first time), all parents will be queried
+            return arr.filter(item => !item[keyParentId]).map(item => {
+                // Query all child nodes by parent node ID
+                item.children = convertTree(arr, item[keyId], keyId, keyParentId);
+                return item;
+            })
+        } else {
+            return arr.filter(item => item[keyParentId] === parentId).map(item => {
+                // Query all child nodes by parent node ID
+                item.children = convertTree(arr, item[keyId], keyId, keyParentId);
+                return item;
+            })
+        }
+    }
+
+    return (
+        <>
+
+            <CascadingSelectE2E
+                destroyParentIdMatch={true}
+                value="Title 2[2],Title 11[11]"
+                name="name"
+                depth={103}
+                displayResult={true}
+                valueType="label"
+                columnTitle={['Heading 1','Heading 2']}
+                loader={<><span>Loading...</span></>}
+                fetchArray={[
+                    {
+                        "fetchFuncAsync": new DataService,
+                        "fetchFuncMethod": "getListFirst",
+                        "fetchFuncMethodParams": ['', 0, 1],
+                        "fetchCallback": (res) => {
+
+                            const formattedData = res.map((item: any, i: number) => {
+                                return {
+                                    id: item.id,
+                                    queryId: item.id,
+                                    name: item.item_name   // The "name" attribute supports HTML tags
+                                }
+                            });
+                        
+                            return formattedData;
+
+                        }
+                    },
+                    {
+                        "hierarchical": true,
+                        "indentation": " ",
+                        "fetchFuncAsync": new DataService,
+                        "fetchFuncMethod": "getListSecond",
+                        "fetchFuncMethodParams": ['', 0, '$QUERY_ID'],
+                        "fetchCallback": (res) => {
+
+                            const formattedData = res.map((item: any, i: number) => {
+                                return {
+                                    id: item.id,
+                                    parent_id: item.parent_id,
+                                    label: item.item_name, // "label" usually uses hierarchical style
+                                    value: item.item_code,
+                                    queryString: '',
+
+                                    //
+                                    queryId: item.id,
+                                    name: item.item_name   // The "name" attribute supports HTML tags
+                                }
+                            });
+        
+                            const treeData = convertTree(formattedData);
+                        
+                            return treeData;
+
+                        }
+                    }
+                ]}
+                onChange={(input, currentData, index, depth, value) => {
+                    console.log('currentData: ', currentData);
+
+                }}
+            />
+
+
+       
+        </>
+    );
+}
+```
 

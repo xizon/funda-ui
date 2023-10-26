@@ -5,6 +5,11 @@ import { debounce } from './utils/performance';
 import Group from './Group';
 
 
+import {
+    addTreeDepth,
+    addTreeIndent
+} from './utils/tree';
+
 
 
 declare module 'react' {
@@ -22,6 +27,9 @@ interface fetchArrayConfig {
     fetchFuncMethod?: string | undefined;
     fetchFuncMethodParams?: any[] | undefined;
     fetchCallback?: (data: any) => void;
+    hierarchical?: boolean;
+    indentation?: string;
+    doubleIndent?: boolean;
 }
 
 type CascadingSelectE2EProps = {
@@ -33,6 +41,10 @@ type CascadingSelectE2EProps = {
     placeholder?: string;
     disabled?: any;
     required?: any;
+    /** Instead of using `parent_id` of response to match child and parent data 
+     * (very useful for multiple fetch requests with no directly related fields), 
+     * this operation will directly use the click event to modify the result. */
+    destroyParentIdMatch?: boolean;
     /** Set headers for each column group */
     columnTitle?: any[];
     /** Set whether to use "label" or "value" for the value of this form, they will be separated by commas, such as `Text 1,Text 1_1,Text 1_1_1` or `1,1_1,1_1_1`.
@@ -82,6 +94,7 @@ const CascadingSelectE2E = (props: CascadingSelectE2EProps) => {
         placeholder,
         name,
         id,
+        destroyParentIdMatch,
         columnTitle,
         depth,
         loader,
@@ -139,6 +152,29 @@ const CascadingSelectE2E = (props: CascadingSelectE2EProps) => {
         queryIds: []
     });
     const [isShow, setIsShow] = useState<boolean>(false);
+
+
+    // destroy `parent_id` match
+    const [selectedDataByClick, setSelectedDataByClick] = useState<any>({
+        labels: [],
+        values: [],
+        queryIds: []
+    });
+
+    /**
+     * Format indent value
+     * @param {String|Array} str 
+     * @returns {String|Array}
+     */
+    function formatIndentVal(str: any, indentLastPlaceholder: string) {
+        const reVar = new RegExp(indentLastPlaceholder, 'g');
+        if (Array.isArray(str)) {
+            return str.map((s: string) => s.replace(reVar,'').replace(/\&nbsp;/ig,''));
+        } else {
+            return str.replace(reVar,'').replace(/\&nbsp;/ig,'');
+        }
+        
+    }
 
 
 
@@ -199,9 +235,18 @@ const CascadingSelectE2E = (props: CascadingSelectE2EProps) => {
 
     async function fetchData(_fetchArray: any, params: string, dataDepth: number, parentId: number = 0) {
 
+        
         const fetchFuncAsync = _fetchArray.fetchFuncAsync;
         const fetchFuncMethod = _fetchArray.fetchFuncMethod;
         const fetchCallback = _fetchArray.fetchCallback;
+
+        //
+        const hierarchical = _fetchArray.hierarchical;
+        const indentation = _fetchArray.indentation;
+        const doubleIndent = _fetchArray.doubleIndent;
+        const INDENT_PLACEHOLDER = doubleIndent ? `&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;` : `&nbsp;&nbsp;&nbsp;&nbsp;`;
+        const INDENT_LAST_PLACEHOLDER = `${typeof indentation !== 'undefined' && indentation !== '' ? `${indentation}&nbsp;&nbsp;` : ''}`;
+
 
 
         if (typeof fetchFuncAsync === 'object') {
@@ -231,12 +276,21 @@ const CascadingSelectE2E = (props: CascadingSelectE2EProps) => {
                 _ORGIN_DATA = [];
             }
 
+            // STEP 0-1: ===========
+            // Set hierarchical categories ( with sub-categories )
+            if ( hierarchical ) {
+                _ORGIN_DATA = addTreeDepth(_ORGIN_DATA);
+                addTreeIndent(_ORGIN_DATA, INDENT_PLACEHOLDER, INDENT_LAST_PLACEHOLDER, 'label');
+            }
+
+ 
+            // STEP 0-2: ===========
             // add data depth
             _ORGIN_DATA.forEach((item: any) => {
-                item.depth = dataDepth;
+                item.itemDepth = dataDepth;
             });
 
-
+            
             if (dataDepth === 0) {
 
                 // STEP 1: ===========
@@ -290,6 +344,7 @@ const CascadingSelectE2E = (props: CascadingSelectE2EProps) => {
 
                 const childList = _ORGIN_DATA;
                 _temp_optData[dataDepth] = childList;
+
 
                 setOptData(_temp_optData);
                 setData(optData);
@@ -400,16 +455,46 @@ const CascadingSelectE2E = (props: CascadingSelectE2EProps) => {
 
     function handleClickItem(e: any, resValue: any, index: number, level: number) {
 
-        const dataDepthMax: boolean = resValue.depth === fetchArray!.length - 1;
+        const dataDepthMax: boolean = resValue.itemDepth === fetchArray!.length - 1;
         const parentId: number = e.currentTarget.dataset.query;
         const emptyAction: boolean = resValue.id.toString().indexOf('$EMPTY_ID_') < 0 ? false : true;
 
 
+        //update selected data by clicked item
+         //////////////////////////////////////////
+        setSelectedDataByClick((prevState: any) => {
+
+            const _valueData = prevState.values.slice(0,level+1);
+            const _labelData = prevState.labels.slice(0,level+1);
+            const _queryIdsData = prevState.queryIds.slice(0,level+1);
+
+            _valueData.splice(level, 1, resValue.id);
+            _labelData.splice(level, 1, resValue.name);
+            _queryIdsData.splice(level, 1, resValue.queryId);
+
+            console.log('****', {
+                labels: _labelData.filter((v: any) => v != ''),
+                values: _valueData.filter((v: any) => v.toString().indexOf('$EMPTY_ID_') < 0),
+                queryIds: _queryIdsData.filter((v: any) => v != undefined),
+            })
+
+            
+            return {
+                labels: _labelData.filter((v: any) => v != ''),
+                values: _valueData.filter((v: any) => v.toString().indexOf('$EMPTY_ID_') < 0),
+                queryIds: _queryIdsData.filter((v: any) => v != undefined),
+            };
+        });
+
+        // update dis
+        //////////////////////////////////////////
+
+
         // update data depth
         //////////////////////////////////////////
-        setCurrentDataDepth(resValue.depth + 1);
+        setCurrentDataDepth(resValue.itemDepth + 1);
         setCurrentDataDepth((prevState) => {
-            const _currentDataDepth = resValue.depth + 1;
+            const _currentDataDepth = resValue.itemDepth + 1;
 
             // Execute the fetch task
             //////////////////////////////////////////
@@ -503,7 +588,10 @@ const CascadingSelectE2E = (props: CascadingSelectE2EProps) => {
         const inputEl: any = valRef.current;
         let _valueData: any, _labelData: any, _queryIdsData: any;
 
+    
         if (targetVal.toString().indexOf('$EMPTY_ID_') >= 0) {
+
+            
 
             // If clearing the current column
             //////////////////////////////////////////
@@ -526,6 +614,7 @@ const CascadingSelectE2E = (props: CascadingSelectE2EProps) => {
 
         } else {
 
+        
             // click an item
             //////////////////////////////////////////
             //search JSON key that contains specific string
@@ -533,11 +622,14 @@ const CascadingSelectE2E = (props: CascadingSelectE2EProps) => {
             const _values = queryResultOfJSON(arr, targetVal, 'key');
             const _queryIds = queryResultOfJSON(arr, targetVal, 'query');
 
+     
+
             // update result to input
             _valueData = _values ? _values.map((item: any) => item) : [];
             _labelData = _labels ? _labels.map((item: any) => item) : [];
             _queryIdsData = _queryIds ? _queryIds.map((item: any) => item) : [];
 
+      
             //
             setSelectedData({
                 labels: _labelData,
@@ -552,6 +644,12 @@ const CascadingSelectE2E = (props: CascadingSelectE2EProps) => {
 
         // update selected data 
         //////////////////////////////////////////
+        if (destroyParentIdMatch) {
+            _valueData = selectedDataByClick.values;
+            _labelData = selectedDataByClick.labels;
+            _queryIdsData = selectedDataByClick.queryIds;
+        }
+
         const inputVal_0 = _valueData.map((item: any, i: number) => `${item}[${_queryIdsData[i]}]`)!.join(',');
         const inputVal_1 = _labelData.map((item: any, i: number) => `${item}[${_queryIdsData[i]}]`)!.join(',');
 
@@ -578,6 +676,13 @@ const CascadingSelectE2E = (props: CascadingSelectE2EProps) => {
                 values: [],
                 queryIds: []
             });
+
+            setSelectedDataByClick({
+                labels: [],
+                values: [],
+                queryIds: []
+            });
+
 
             setAllData([]);
             setDictionaryData([]);
@@ -686,9 +791,14 @@ const CascadingSelectE2E = (props: CascadingSelectE2EProps) => {
                     // all data from fetched data 
                     if ( typeof values[curDepth] !== 'undefined') {
                         const childList = values[curDepth][0];
-                        newData[activedIndex].children = childList;
+
+                        // if the value of some column is not fetched
+                        if (typeof newData[activedIndex] !== 'undefined') newData[activedIndex].children = childList;
+                        
                     }
     
+                
+                    
                     _TEMP_ALL_DATA.forEach((item: any) => {
                         if (item.id === queryIds[i]) item.children = newData;
                     });             
@@ -737,6 +847,15 @@ const CascadingSelectE2E = (props: CascadingSelectE2EProps) => {
                     queryIds: queryIds,
                 });
     
+                setSelectedDataByClick({
+                    labels: _allLables,
+                    values: _allValues,
+                    queryIds: queryIds,
+                });
+    
+
+
+                
             });
     
     
@@ -768,7 +887,12 @@ const CascadingSelectE2E = (props: CascadingSelectE2EProps) => {
 
     function addChildrenOpt(obj: any[], parentId: number, childrenData: any[]) {
 
+
+        // Traverse the results obtained by all fetch
         obj.forEach((item: any) => {
+
+            // !!!IMPORTANT:
+            // You need to put the contents of other columns after fetch into the "children" attribute
             if (item.id === parentId) item.children = childrenData;
 
             if (item.children) {
@@ -785,7 +909,7 @@ const CascadingSelectE2E = (props: CascadingSelectE2EProps) => {
         obj.unshift({
             id: "$EMPTY_ID_" + index,
             name: "",
-            depth: obj.length === 0 ? 0 : obj[0].depth
+            itemDepth: obj.length === 0 ? 0 : obj[0].itemDepth
         });
 
         obj.forEach((item: any, depth: number) => {
@@ -794,8 +918,7 @@ const CascadingSelectE2E = (props: CascadingSelectE2EProps) => {
             }
         });
     }
-
-
+    
     function queryResultOfJSON(data: any[], targetVal: any, returnType: string) {
 
         let callbackValueNested: any[] = [];
@@ -899,10 +1022,11 @@ const CascadingSelectE2E = (props: CascadingSelectE2EProps) => {
 
     }
 
-    function displayInfo() {
+    function displayInfo(destroyParentId: boolean) {
 
+        const _data = destroyParentId ? selectedDataByClick : selectedData;
 
-        return selectedData!.labels ? selectedData!.labels.map((item: any, i: number, arr: any[]) => {
+        return _data!.labels ? _data!.labels.map((item: any, i: number, arr: any[]) => {
             if (arr.length - 1 === i) {
                 return (
                     <div key={i}>
@@ -992,16 +1116,22 @@ const CascadingSelectE2E = (props: CascadingSelectE2EProps) => {
 
                                 
                                 {data.map((item: any, level: number) => {
-                                    return (
-                                        <li key={level}>
-                                            <Group
-                                                level={level}
-                                                columnTitle={columnTitleData}
-                                                data={item}
-                                                selectEv={(e, value, index) => handleClickItem(e, value, index, level)}
-                                            />
-                                        </li>
-                                    )
+                                
+                                    if ( item.length > 0 ) {
+                                        return (
+                                            <li key={level}>
+                                                <Group
+                                                    level={level}
+                                                    columnTitle={columnTitleData}
+                                                    data={item}
+                                                    selectEv={(e, value, index) => handleClickItem(e, value, index, level)}
+                                                />
+                                            </li>
+                                        )
+                                    } else {
+                                        return null;
+                                    }
+            
                                 })}
                             </ul>
 
@@ -1014,7 +1144,14 @@ const CascadingSelectE2E = (props: CascadingSelectE2EProps) => {
                 <div className="cascading-select-e2e__val" onClick={handleDisplayOptions}>
 
 
-                    {displayResult ? (selectedData!.labels && selectedData!.labels.length > 0 ? <div className="cascading-select-e2e__result">{displayInfo()}</div> : null) : null}
+                
+                
+                    {destroyParentIdMatch ? <>
+                        {displayResult ? (selectedDataByClick!.labels && selectedDataByClick!.labels.length > 0 ? <div className="cascading-select-e2e__result">{displayInfo(true)}</div> : null) : null}
+                    </> : <>
+                        {displayResult ? (selectedData!.labels && selectedData!.labels.length > 0 ? <div className="cascading-select-e2e__result">{displayInfo(false)}</div> : null) : null}
+                    </>}
+                    
 
                     <input
                         ref={valRef}
@@ -1022,7 +1159,12 @@ const CascadingSelectE2E = (props: CascadingSelectE2EProps) => {
                         name={name}
                         className={controlClassName || controlClassName === '' ? controlClassName : "form-control"}
                         placeholder={placeholder}
-                        value={changedVal} // placeholder will not change if defaultValue is used
+                        value={destroyParentIdMatch 
+                            ? 
+                                (valueType === 'value' ? selectedDataByClick.values.map((item: any, i: number) => `${item}[${selectedDataByClick.queryIds[i]}]`)!.join(',') : selectedDataByClick.labels.map((item: any, i: number) => `${item}[${selectedDataByClick.queryIds[i]}]`)!.join(',')) 
+                            : 
+                            changedVal
+                        } // placeholder will not change if defaultValue is used
                         onFocus={handleFocus}
                         onBlur={handleBlur}
                         disabled={disabled || null}
@@ -1032,6 +1174,7 @@ const CascadingSelectE2E = (props: CascadingSelectE2EProps) => {
                         readOnly
                         {...attributes}
                     />
+                    
 
                     {isShow ? <div 
                     className="cascading-select-e2e__closemask" 

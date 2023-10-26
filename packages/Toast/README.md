@@ -30,7 +30,7 @@ Array configuration properties of the `data`:
 | `title` | string \| ReactNode \| boolean | - | Specifies an alternate and title for the toast |
 | `note` | string \| ReactNode \| boolean | - | A light-colored comment next to the title, which can be information such as time. |
 | `message` | string \| ReactNode  | - | Specifies the content, or HTML elements to the toast |
-| `theme` | `primary` \| `secondary` \| `success` \| `info` \| `warning` \| `danger` \| `light` \| `dark` \| undefined  | undefined \|  | Specifies a theme to `.toast`. All these colors are available as a Sass map of Bootstrap. |
+| `theme` | `primary` \| `secondary` \| `success` \| `info` \| `warning` \| `danger` \| `light` \| `dark` \| undefined  | undefined  | Specifies a theme to `.toast`. All these colors are available as a Sass map of Bootstrap. |
 
 
 ## Examples

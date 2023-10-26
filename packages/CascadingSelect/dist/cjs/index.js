@@ -871,16 +871,20 @@ var CascadingSelect = function CascadingSelect(props) {
     fill: "#000",
     d: "M195.2 195.2a64 64 0 0 1 90.496 0L512 421.504 738.304 195.2a64 64 0 0 1 90.496 90.496L602.496 512 828.8 738.304a64 64 0 0 1-90.496 90.496L512 602.496 285.696 828.8a64 64 0 0 1-90.496-90.496L421.504 512 195.2 285.696a64 64 0 0 1 0-90.496z"
   }))) : null, data.map(function (item, level) {
-    return /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("li", {
-      key: level
-    }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement(Group, {
-      level: level,
-      columnTitle: columnTitleData,
-      data: item,
-      selectEv: function selectEv(e, value, index) {
-        return handleClickItem(e, value, index, level);
-      }
-    }));
+    if (item.length > 0) {
+      return /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("li", {
+        key: level
+      }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement(Group, {
+        level: level,
+        columnTitle: columnTitleData,
+        data: item,
+        selectEv: function selectEv(e, value, index) {
+          return handleClickItem(e, value, index, level);
+        }
+      }));
+    } else {
+      return null;
+    }
   }))) : null), /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
     className: "cascading-select__val",
     onClick: handleDisplayOptions

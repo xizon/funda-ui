@@ -821,16 +821,21 @@ const CascadingSelect = (props: CascadingSelectProps) => {
 
                                 {data.map((item: any, level: number) => {
                                     
-                                    return (
-                                        <li key={level}>
-                                            <Group 
-                                                level={level}
-                                                columnTitle={columnTitleData}
-                                                data={item} 
-                                                selectEv={(e, value, index) => handleClickItem(e, value, index, level)} 
-                                            />
-                                        </li>
-                                    )
+                                    if (item.length > 0) {
+                                        return (
+                                            <li key={level}>
+                                                <Group
+                                                    level={level}
+                                                    columnTitle={columnTitleData}
+                                                    data={item}
+                                                    selectEv={(e, value, index) => handleClickItem(e, value, index, level)}
+                                                />
+                                            </li>
+                                        )
+                                    } else {
+                                        return null;
+                                    }
+                                    
                                 })}
                             </ul>
 

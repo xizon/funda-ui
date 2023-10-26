@@ -10,6 +10,9 @@ interface fetchArrayConfig {
     fetchFuncMethod?: string | undefined;
     fetchFuncMethodParams?: any[] | undefined;
     fetchCallback?: (data: any) => void;
+    hierarchical?: boolean;
+    indentation?: string;
+    doubleIndent?: boolean;
 }
 declare type CascadingSelectE2EProps = {
     wrapperClassName?: string;
@@ -20,6 +23,10 @@ declare type CascadingSelectE2EProps = {
     placeholder?: string;
     disabled?: any;
     required?: any;
+    /** Instead of using `parent_id` of response to match child and parent data
+     * (very useful for multiple fetch requests with no directly related fields),
+     * this operation will directly use the click event to modify the result. */
+    destroyParentIdMatch?: boolean;
     /** Set headers for each column group */
     columnTitle?: any[];
     /** Set whether to use "label" or "value" for the value of this form, they will be separated by commas, such as `Text 1,Text 1_1,Text 1_1_1` or `1,1_1,1_1_1`.
