@@ -150,3 +150,160 @@ export default () => {
     );
 }
 ```
+
+
+
+
+
+### Access streams of data with this component
+
+
+```js
+import React, { useState } from "react";
+import File from 'funda-ui/File';
+
+
+export default () => {
+
+    const [filesData, setFilesData] = useState<any[]>([]);
+
+    const getExt = (filename: string) => {
+        const ext = /^.+\.([^.]+)$/.exec(filename);
+        return ext == null ? "" : ext[1];
+    };
+
+
+
+    /**
+     * base64 to ArrayBuffer
+     * @param {String} data 
+     * @returns {ArrayBuffer}
+     */
+    /*
+    @returns:
+
+    ArrayBuffer(522240)
+
+        byteLength: 522240
+        detached: false
+        maxByteLength: 522240
+        resizable: false
+        [[Prototype]]: ArrayBuffer
+        [[Int8Array]]: Int8Array(522240)
+        [[Uint8Array]]: Uint8Array(522240)
+        [[Int16Array]]: Int16Array(261120)
+        [[Int32Array]]: Int32Array(130560)
+        [[ArrayBufferByteLength]]: 522240
+        [[ArrayBufferData]]: 673
+    */
+    function base64ToArrayBuffer(data) {
+
+        let res = data;
+        if (data.indexOf('base64,') >= 0) {
+            res = data.split('base64,')[1];
+        }
+
+        //
+        const binaryString = atob(res);
+        const bytes = new Uint8Array(binaryString.length);
+        for (let i = 0; i < binaryString.length; i++) {
+            bytes[i] = binaryString.charCodeAt(i);
+        }
+        return bytes.buffer;
+    }
+
+    /**
+     * ArrayBuffer to Uint8Array
+     * @param {ArrayBuffer} data 
+     * @returns {Uint8Array}
+     */
+    /*
+    @returns:
+
+    Uint8Array(522240) [208, 207, 17, 224, 161, 177, 26, 225, 0, 0, ......]
+    */
+    function arrayBufferToUint8Array(data) {
+        const bytes = new Uint8Array(data);
+        return bytes;
+    }
+
+
+
+
+    function handleChange(e, submitEl, value) {
+        setFilesData([]);
+        console.log(e, submitEl, value);
+    }
+
+    function handleComplete(e, submitEl, value) {
+        console.log(e, value);
+    }
+
+    function handleProgress(files, submitEl) {
+        if (files.length === 0) {
+            alert('Please select a file')
+            return;
+        } else {
+
+            // setFilesData
+            [].slice.call(files).forEach((file: any) => {
+             
+                const size = file.size;
+                const mimeType = file.type;
+                const name = file.name;
+                const ext = getExt(name);
+
+
+                // get file content
+                const reader = new FileReader();
+                reader.addEventListener('load', (event) => {
+                    const b64string = (event.currentTarget as any).result;
+                    const arrayBufferData = base64ToArrayBuffer(b64string);
+                    const uint8ArrayData = arrayBufferToUint8Array(arrayBufferData);
+
+                    console.log(b64string);
+                    console.log(arrayBufferData);
+                    console.log(uint8ArrayData);
+
+                    // save to database
+                    // ...
+
+
+            
+                });
+                reader.readAsDataURL(file);
+
+                
+                setFilesData((prevState: any) => [...prevState, {
+                    size, 
+                    mimeType,
+                    name,
+                    ext
+                }]);
+
+            });
+
+            
+        }
+    }
+
+
+    return (
+        <>
+            <p>{JSON.stringify(filesData)}</p>
+            <File 
+                label="Select file" 
+                labelClassName="btn btn-outline-secondary"       
+                labelHoverClassName="btn btn-primary"
+                submitLabel="Upload" 
+                submitClassName="btn btn-primary mt-2"
+                onChange={handleChange}
+                onComplete={handleComplete}
+                onProgress={handleProgress}
+                multiple
+            />
+
+        </>
+    );
+}
+```
