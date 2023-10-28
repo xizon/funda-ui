@@ -202,10 +202,14 @@ const LiveSearch = (props: LiveSearchProps) => {
         let res: any[] = [];
         let filterRes = (data: any[]) => {
             return data.filter((item: any) => {
+
+                // Avoid fatal errors causing page crashes
+                const _queryString = typeof item.queryString !== 'undefined' ? item.queryString : '';
+
                 if (
                     (
-                        item.queryString.split(',').some((l: any) => l.charAt(0) === val.toLowerCase()) ||
-                        item.queryString.split(',').some((l: any) => l.replace(/ /g, '').indexOf(val.toLowerCase()) >= 0) ||
+                        _queryString.split(',').some((l: any) => l.charAt(0) === val.toLowerCase()) ||
+                        _queryString.split(',').some((l: any) => l.replace(/ /g, '').indexOf(val.toLowerCase()) >= 0) ||
                         item.label.toLowerCase().indexOf(val.toLowerCase()) >= 0
                     ) &&
                     val != ''

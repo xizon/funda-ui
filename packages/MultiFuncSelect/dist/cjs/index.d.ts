@@ -35,8 +35,8 @@ declare type MultiFuncSelectProps = {
     options?: OptionConfig[] | string;
     hierarchical?: boolean;
     indentation?: string;
-    winWidth?: string | Function;
     doubleIndent?: boolean;
+    winWidth?: string | Function;
     controlArrow?: React.ReactNode;
     fetchTrigger?: boolean;
     fetchTriggerForDefaultData?: MultiSelectDataConfig | null;

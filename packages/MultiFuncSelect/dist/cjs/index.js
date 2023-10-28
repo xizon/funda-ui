@@ -486,9 +486,11 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
     var update = function update(inputData) {
       var filterRes = function filterRes(data) {
         return inputData.filter(function (item) {
-          if ((item.queryString.split(',').some(function (l) {
+          // Avoid fatal errors causing page crashes
+          var _queryString = typeof item.queryString !== 'undefined' ? item.queryString : '';
+          if ((_queryString.split(',').some(function (l) {
             return l.charAt(0) === val.toLowerCase();
-          }) || item.queryString.split(',').some(function (l) {
+          }) || _queryString.split(',').some(function (l) {
             return l.replace(/ /g, '').indexOf(val.toLowerCase()) >= 0;
           }) || item.label.toLowerCase().indexOf(val.toLowerCase()) >= 0) && val != '') {
             return true;

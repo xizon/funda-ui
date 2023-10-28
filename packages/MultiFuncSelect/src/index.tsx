@@ -171,10 +171,15 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
         const update = (inputData: any) => {
             const filterRes = (data: any[]) => {
                 return inputData.filter((item: any) => {
+          
+                    // Avoid fatal errors causing page crashes
+                    const _queryString = typeof item.queryString !== 'undefined' ? item.queryString : '';
+
+                    
                     if (
                         (
-                            item.queryString.split(',').some((l: any) => l.charAt(0) === val.toLowerCase()) ||
-                            item.queryString.split(',').some((l: any) => l.replace(/ /g, '').indexOf(val.toLowerCase()) >= 0) ||
+                            _queryString.split(',').some((l: any) => l.charAt(0) === val.toLowerCase()) ||
+                            _queryString.split(',').some((l: any) => l.replace(/ /g, '').indexOf(val.toLowerCase()) >= 0) ||
                             item.label.toLowerCase().indexOf(val.toLowerCase()) >= 0
                         ) &&
                         val != ''
@@ -557,7 +562,6 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
                         values: _currentData.values,
                     });
 
-               
                     //
                     const _values: string[] = defaultValue.split(',');
                     _values.forEach((_value: string, _index: number) => {
@@ -683,7 +687,6 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
                         labels: _currentData.labels,
                         values: _currentData.values,
                     });
-
 
                     //
                     const _values: string[] = typeof defaultValue !== 'undefined' ? defaultValue.split(',') : [];

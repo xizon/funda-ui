@@ -771,9 +771,11 @@ var LiveSearch = function LiveSearch(props) {
             res = [];
             filterRes = function filterRes(data) {
               return data.filter(function (item) {
-                if ((item.queryString.split(',').some(function (l) {
+                // Avoid fatal errors causing page crashes
+                var _queryString = typeof item.queryString !== 'undefined' ? item.queryString : '';
+                if ((_queryString.split(',').some(function (l) {
                   return l.charAt(0) === val.toLowerCase();
-                }) || item.queryString.split(',').some(function (l) {
+                }) || _queryString.split(',').some(function (l) {
                   return l.replace(/ /g, '').indexOf(val.toLowerCase()) >= 0;
                 }) || item.label.toLowerCase().indexOf(val.toLowerCase()) >= 0) && val != '') {
                   return true;
