@@ -167,9 +167,11 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
     //performance
     const handleChangeFetchSafe = useThrottle((val: any) => {
         
+        
         let _orginalData: OptionConfig[] = [];
         const update = (inputData: any) => {
             const filterRes = (data: any[]) => {
+                
                 return inputData.filter((item: any) => {
           
                     // Avoid fatal errors causing page crashes
@@ -189,6 +191,7 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
                         return false;
                     }
                 });
+
             }
 
             setOptionsData(filterRes);
@@ -301,7 +304,6 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
     function getPlacement(el: HTMLElement, restorePos: boolean = false) {
 
         if ( el === null ) return;
-        
 
         const PLACEMENT_TOP = 'top-0';
         const PLACEMENT_BOTTOMEND = 'bottom-0';
@@ -345,7 +347,10 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
             const newH = maxHeight - (elTop > window.innerHeight/2 ? 0 : elTop) + elMinWindowSpacing;
 
             // default position
-            listContentRef.current.style.height = newH + 'px';
+            if (newH < maxHeight) { // Prevent the height of `elTop` to negatively not match the problem
+                listContentRef.current.style.height = newH + 'px';
+            }
+            
             
 
             // if it's on top
@@ -1098,7 +1103,8 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
 
     
 
-    function handleComposition(event: any) {
+    function handleComposition(event: any) { 
+
         if (event.type === 'compositionstart' || event.type === 'compositionend') {
             //fire change method to update for Chrome v53
             handleChange(event);
@@ -1106,11 +1112,13 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
     }
 
     function handleChange(event: any) {
+
         const val = event.target.value;
 
         // update temporary value
         setControlTempValue(val);
 
+  
         //
         if ( val.replace(/\s/g, "") === '' ) {
             // No elements found. Consider changing the search query.
@@ -1507,7 +1515,6 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
                                         }}></a>
                                     </button>
                                 </> : null}
-
 
                                 {optionsData ? optionsData.map((item, index) => {
                                     const startItemBorder = index === 0 ? 'border-top-0' : '';

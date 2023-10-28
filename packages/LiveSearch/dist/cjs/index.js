@@ -718,7 +718,10 @@ var LiveSearch = function LiveSearch(props) {
       var newH = maxHeight - (elTop > window.innerHeight / 2 ? 0 : elTop) + elMinWindowSpacing;
 
       // default position
-      listContentRef.current.style.height = newH + 'px';
+      if (newH < maxHeight) {
+        // Prevent the height of `elTop` to negatively not match the problem
+        listContentRef.current.style.height = newH + 'px';
+      }
 
       // if it's on top
       if (newH > maxHeight) {
