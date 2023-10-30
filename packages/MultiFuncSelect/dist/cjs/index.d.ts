@@ -33,6 +33,7 @@ declare type MultiFuncSelectProps = {
     readOnly?: any;
     placeholder?: string;
     options?: OptionConfig[] | string;
+    lockBodyScroll?: boolean;
     hierarchical?: boolean;
     indentation?: string;
     doubleIndent?: boolean;

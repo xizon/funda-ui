@@ -3,6 +3,9 @@ import React, { useId, useEffect, useState, useRef, forwardRef } from 'react';
 import { debounce } from './utils/performance';
 import useThrottle from './utils/useThrottle';
 
+//Destroys body scroll locking
+import { clearAllBodyScrollLocks, disableBodyScroll, enableBodyScroll } from './plugins/BSL';
+
 
 import {
     addTreeDepth,
@@ -51,6 +54,7 @@ type MultiFuncSelectProps = {
     readOnly?: any;
     placeholder?: string;
     options?: OptionConfig[] | string;
+    lockBodyScroll?: boolean;
     hierarchical?: boolean;
     indentation?: string;
     doubleIndent?: boolean;
@@ -96,6 +100,7 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
         placeholder,
         id,
         options,
+        lockBodyScroll,
         hierarchical,
         indentation,
         doubleIndent,
@@ -123,6 +128,7 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
     } = props;
 
     
+    const LOCK_BODY_SCROLL = typeof lockBodyScroll === 'undefined' ? true : lockBodyScroll;
     const WIN_WIDTH = typeof winWidth === 'function' ? winWidth() : winWidth ? winWidth : 'auto';
     const INDENT_PLACEHOLDER = doubleIndent ? `&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;` : `&nbsp;&nbsp;&nbsp;&nbsp;`;
     const INDENT_LAST_PLACEHOLDER = `${typeof indentation !== 'undefined' && indentation !== '' ? `${indentation}&nbsp;&nbsp;` : ''}`;
@@ -310,7 +316,7 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
         const PLACEMENT_RIGHT = 'end-0';
         const PLACEMENT_LEFT = 'start-0';
 
-        const elTop = el.getBoundingClientRect().top;
+        const elTop = selectInputRef.current.getBoundingClientRect().top;
         const elSpacing = 50 + selectInputRef.current.clientHeight*3;
         const elMinWindowSpacing = selectInputRef.current.clientHeight*2;
 
@@ -347,18 +353,15 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
             const newH = maxHeight - (elTop > window.innerHeight/2 ? 0 : elTop) + elMinWindowSpacing;
 
             // default position
-            if (newH < maxHeight) { // Prevent the height of `elTop` to negatively not match the problem
-                listContentRef.current.style.height = newH + 'px';
-            }
-            
-            
+            listContentRef.current.style.height = newH + 'px';
+
 
             // if it's on top
             if ( newH > maxHeight ) {
                 listContentRef.current.style.height = elTop - elMinWindowSpacing + 'px';
             }
 
-            
+        
             // Adjust the overall height to fit the wrapper
             const _displayedItems = listContentRef.current.querySelectorAll('.list-group-item');
             const _displayedHeight = _displayedItems[0].clientHeight * _displayedItems.length;
@@ -366,6 +369,7 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
                 listContentRef.current.style.height = _displayedHeight + 'px';
             }
 
+         
             //
             listContentRef.current.style.overflowY = 'auto';
 
@@ -753,6 +757,9 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
 
         // update temporary value
         setControlTempValue(null);
+
+        // Unlocks the page
+        if (LOCK_BODY_SCROLL) enableBodyScroll(document.querySelector('body'));
     }
 
     function activate() {
@@ -765,6 +772,15 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
 
         // update temporary value
         setControlTempValue('');
+
+
+        // Locks the page
+        //
+        // Get a target element that you want to persist scrolling for (such as a modal/lightbox/flyout/nav).
+        // Specifically, the target element is the one we would like to allow scroll on (NOT a parent of that element).
+        // This is also the element to apply the CSS '-webkit-overflow-scrolling: touch;' if desired.
+        if (LOCK_BODY_SCROLL) disableBodyScroll(document.querySelector('body'));
+ 
  
     }
 
@@ -1341,6 +1357,9 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
 
 
         return () => {
+            
+            if (LOCK_BODY_SCROLL) clearAllBodyScrollLocks();
+
             document.removeEventListener("keydown", listener);
             document.removeEventListener('pointerdown', handleClose);
             window.removeEventListener('scroll', windowScrollUpdate);

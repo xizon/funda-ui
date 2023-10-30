@@ -6,6 +6,7 @@ import useThrottle from './utils/useThrottle';
 import SearchBar from 'funda-searchbar';
 
 
+
 type LiveSearchProps = {
     wrapperClassName?: string;
     controlClassName?: string;
@@ -134,7 +135,7 @@ const LiveSearch = (props: LiveSearchProps) => {
         const PLACEMENT_RIGHT = 'end-0';
         const PLACEMENT_LEFT = 'start-0';
 
-        const elTop = el.getBoundingClientRect().top;
+        const elTop = inputRef.current.getBoundingClientRect().top;
         const elSpacing = 50 + inputRef.current.clientHeight*3;
         const elMinWindowSpacing = inputRef.current.clientHeight*2;
 
@@ -158,9 +159,7 @@ const LiveSearch = (props: LiveSearchProps) => {
             const newH = maxHeight - (elTop > window.innerHeight/2 ? 0 : elTop) + elMinWindowSpacing;
 
             // default position
-            if (newH < maxHeight) { // Prevent the height of `elTop` to negatively not match the problem
-                listContentRef.current.style.height = newH + 'px';
-            }
+            listContentRef.current.style.height = newH + 'px';
             
 
             // if it's on top
