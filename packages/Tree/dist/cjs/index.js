@@ -1000,7 +1000,7 @@ function TreeList(props) {
       var _async = item.childrenAsync ? 'async-ready' : '';
       var _cusIcons = arrowIcons ? 'custom-icons' : '';
       if (item.heading) return /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("li", {
-        className: "nav-item ${first ? 'first' : ''}",
+        className: "nav-item ".concat(first ? 'first' : ''),
         key: item.key
       }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("a", {
         tabIndex: -1,

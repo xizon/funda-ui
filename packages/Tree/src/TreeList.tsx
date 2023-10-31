@@ -4,6 +4,7 @@ import Checkbox from 'funda-checkbox';
 
 
 
+
 import { getNextSiblings, getParents, getChildren } from './utils/dom'; 
 
 import { initUlHeight } from './init-height';
@@ -367,7 +368,7 @@ export default function TreeList(props: TreeListProps) {
                 
                     
                     if ( item.heading ) return (
-                        <li className="nav-item ${first ? 'first' : ''}" key={item.key}>
+                        <li className={`nav-item ${first ? 'first' : ''}`} key={item.key}>
                             <a tabIndex={-1} className="nav-link disabled" href="#" aria-disabled="true" data-link={item.link} data-slug={item.slug} data-key={item.key}>
                                 <span>{item.icon ? item.icon.indexOf('</svg>') < 0 ? <><i className={item.icon}></i> </> : <var dangerouslySetInnerHTML={{ __html: `${item.icon}` }} /> : null}<i dangerouslySetInnerHTML={{ __html: `${item.title}` }}></i></span>
                             </a>
