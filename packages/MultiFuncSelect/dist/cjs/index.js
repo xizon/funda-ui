@@ -305,15 +305,15 @@ var external_root_React_commonjs2_react_commonjs_react_amd_react_ = __webpack_re
 var external_root_React_commonjs2_react_commonjs_react_amd_react_default = /*#__PURE__*/__webpack_require__.n(external_root_React_commonjs2_react_commonjs_react_amd_react_);
 // EXTERNAL MODULE: ./src/utils/performance.js
 var performance = __webpack_require__(342);
-;// CONCATENATED MODULE: ./src/utils/useThrottle.js
+;// CONCATENATED MODULE: ./src/utils/useDebounce.js
 /**
- * Limiting the rate of execution
+ * Delay the execution of function or state update
  * 
  * @usage:
 
 const App = () => {
     const [count, setCount] = useState(0);
-    const handleClick = useThrottle(() => setCount(count + 1), 500, [count]);
+    const handleClick = useDebounce(() => setCount(count + 1), 500, [count]);
 
     return (
         <div className="app">
@@ -325,19 +325,25 @@ const App = () => {
 
  */
 
-var useThrottle = function useThrottle(fn, delay, dependence) {
-  var ref = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useRef)({
-    lastTime: 0
-  });
+
+var useDebounce = function useDebounce(fn, delay, dependence) {
+  var ref = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useRef)(null);
   return (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useCallback)(function () {
-    var now = Date.now();
-    if (now - ref.current.lastTime >= delay) {
-      fn.apply(void 0, arguments);
-      ref.current.lastTime = now;
+    for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
+      args[_key] = arguments[_key];
     }
+    //Every time this returned function is called, the timer is cleared to ensure that fn is not executed
+    clearTimeout(ref.current);
+    ref.current = null;
+
+    // When the returned function is called for the last time (that is the user stops a continuous operation)
+    // Execute fn after another delay milliseconds
+    ref.current = setTimeout(function () {
+      fn.apply(void 0, args);
+    }, delay);
   }, dependence);
 };
-/* harmony default export */ const utils_useThrottle = (useThrottle);
+/* harmony default export */ const utils_useDebounce = (useDebounce);
 ;// CONCATENATED MODULE: ./src/plugins/BSL/bodyScrollLock.es6.js
 function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
 function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
@@ -740,7 +746,7 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
   };
 
   //performance
-  var handleChangeFetchSafe = utils_useThrottle(function (val) {
+  var handleChangeFetchSafe = utils_useDebounce(function (val) {
     var _orginalData = [];
     var update = function update(inputData) {
       var filterRes = function filterRes(data) {
@@ -769,7 +775,7 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
       _orginalData = orginalData;
       update(_orginalData);
     }
-  }, 150, [optionsData]);
+  }, 350, [optionsData]);
 
   /**
    * Format indent value
@@ -1664,7 +1670,6 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
     return new Promise(function (resolve) {
       // Determine the "active" class name to avoid listening to other unused components of the same type
       if (listRef.current === null || !rootRef.current.classList.contains('active')) return;
-      if (fetchTrigger) return;
       var options = [].slice.call(listRef.current.querySelectorAll('.list-group-item'));
       var currentIndex = options.findIndex(function (e) {
         return e === listRef.current.querySelector('.list-group-item.active');
@@ -1705,7 +1710,7 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
     //--------------
     var _oparams = fetchFuncMethodParams || [];
     var _params = _oparams.map(function (item) {
-      return item !== '$QUERY_STRING' ? item : fetchTrigger ? '-' : '';
+      return item !== '$QUERY_STRING' ? item : fetchTrigger ? '------' : '';
     });
     fetchData(_params.join(','), value);
 
@@ -1719,7 +1724,7 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
             case 0:
               res = null;
               if (!(event.code === "Enter" || event.code === "NumpadEnter")) {
-                _context.next = 13;
+                _context.next = 10;
                 break;
               }
               if (!(listRef.current === null || !rootRef.current.classList.contains('active'))) {
@@ -1728,20 +1733,13 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
               }
               return _context.abrupt("return");
             case 4:
-              if (!fetchTrigger) {
-                _context.next = 7;
-                break;
-              }
-              handleFetch();
-              return _context.abrupt("return");
-            case 7:
               if (!(listRef.current !== null)) {
-                _context.next = 12;
+                _context.next = 9;
                 break;
               }
-              _context.next = 10;
+              _context.next = 7;
               return listRef.current.dataset.data;
-            case 10:
+            case 7:
               currentData = _context.sent;
               if (typeof currentData !== 'undefined') {
                 currentControlValueArr = [];
@@ -1755,37 +1753,48 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
                   }
                 });
                 handleSelect(null, currentData, currentControlValueArr, currentControlLabelArr);
+
+                //
+                if (typeof onChange === 'function') {
+                  onChange === null || onChange === void 0 ? void 0 : onChange(selectInputRef.current, valueInputRef.current, !MULTI_SEL_VALID ? JSON.parse(currentData) : {
+                    labels: currentControlLabelArr.map(function (v) {
+                      return v.toString();
+                    }),
+                    values: currentControlValueArr.map(function (v) {
+                      return v.toString();
+                    })
+                  });
+
+                  //
+                  selectInputRef.current.blur();
+                }
               }
-            case 12:
+            case 9:
               return _context.abrupt("return");
-            case 13:
+            case 10:
               _context.t0 = event.code;
-              _context.next = _context.t0 === "ArrowLeft" ? 16 : _context.t0 === "ArrowRight" ? 17 : _context.t0 === "ArrowUp" ? 18 : _context.t0 === "ArrowDown" ? 22 : 26;
+              _context.next = _context.t0 === "ArrowLeft" ? 13 : _context.t0 === "ArrowRight" ? 14 : _context.t0 === "ArrowUp" ? 15 : _context.t0 === "ArrowDown" ? 19 : 23;
               break;
-            case 16:
-              return _context.abrupt("break", 26);
-            case 17:
-              return _context.abrupt("break", 26);
-            case 18:
-              _context.next = 20;
+            case 13:
+              return _context.abrupt("break", 23);
+            case 14:
+              return _context.abrupt("break", 23);
+            case 15:
+              _context.next = 17;
               return optionFocus('decrease');
-            case 20:
+            case 17:
               res = _context.sent;
-              return _context.abrupt("break", 26);
-            case 22:
-              _context.next = 24;
+              return _context.abrupt("break", 23);
+            case 19:
+              _context.next = 21;
               return optionFocus('increase');
-            case 24:
+            case 21:
               res = _context.sent;
-              return _context.abrupt("break", 26);
-            case 26:
+              return _context.abrupt("break", 23);
+            case 23:
               // temporary data
-              if (res !== null) listRef.current.dataset.data = JSON.stringify({
-                value: res.dataset.value,
-                label: res.dataset.label,
-                queryString: res.dataset.querystring
-              });
-            case 27:
+              if (res !== null) listRef.current.dataset.data = res.dataset.itemdata;
+            case 24:
             case "end":
               return _context.stop();
           }
@@ -1905,9 +1914,12 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
   })))))), fetchTrigger ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("span", {
     className: "multifunc-select-multi__control-searchbtn position-absolute top-0 end-0"
   }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("button", {
+    tabIndex: -1,
     type: "button",
-    className: 'btn border-end-0 rounded-pill',
-    onClick: handleFetch
+    className: "btn border-end-0 rounded-pill",
+    style: {
+      pointerEvents: 'none'
+    }
   }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("svg", {
     width: "1em",
     height: "1em",
@@ -1970,8 +1982,9 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
   })))))), fetchTrigger ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("span", {
     className: "multifunc-select-multi__control-searchbtn position-absolute top-0 end-0"
   }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("button", {
+    tabIndex: -1,
     type: "button",
-    className: 'btn border-end-0 rounded-pill',
+    className: "btn border-end-0 rounded-pill",
     onClick: handleFetch
   }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("svg", {
     width: "1em",
@@ -2033,7 +2046,8 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
         className: "list-group-item list-group-item-action border-start-0 border-end-0 ".concat(startItemBorder, " ").concat(endItemBorder, " border-bottom-0"),
         "data-value": "".concat(item.value),
         "data-label": "".concat(item.label),
-        "data-querystring": "".concat(item.queryString),
+        "data-querystring": "".concat(typeof item.queryString === 'undefined' ? '' : item.queryString),
+        "data-itemdata": JSON.stringify(item),
         role: "tab",
         dangerouslySetInnerHTML: {
           __html: item.label
@@ -2053,7 +2067,8 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
         className: "list-group-item list-group-item-action border-start-0 border-end-0 ".concat(startItemBorder, " ").concat(endItemBorder, " border-bottom-0 ").concat(itemSelected ? 'list-group-item-secondary item-selected' : ''),
         "data-value": "".concat(item.value),
         "data-label": "".concat(item.label),
-        "data-querystring": "".concat(item.queryString),
+        "data-querystring": "".concat(typeof item.queryString === 'undefined' ? '' : item.queryString),
+        "data-itemdata": JSON.stringify(item),
         role: "tab"
       }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("var", {
         className: "d-inline-block me-1 "

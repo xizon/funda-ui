@@ -1,10 +1,9 @@
 import React, { useId, useEffect, useState, useRef } from 'react';
 
 import { debounce } from './utils/performance';
-import useThrottle from './utils/useThrottle';
+import useDebounce from './utils/useDebounce';
 
 import SearchBar from 'funda-searchbar';
-
 
 
 type LiveSearchProps = {
@@ -97,9 +96,9 @@ const LiveSearch = (props: LiveSearchProps) => {
  
 
    //performance
-    const handleChangeFetchSafe = useThrottle((e: any) => {
+    const handleChangeFetchSafe = useDebounce((e: any) => {
         handleChange(e);
-    }, 150, [dataInit]);
+    }, 350, [dataInit]);
 
 
 
@@ -259,6 +258,9 @@ const LiveSearch = (props: LiveSearchProps) => {
                 //
                 setIsOpen(true);
             });
+        } else {
+            //
+            onChange?.(inputRef.current, data); 
         }
 
         // window position
@@ -279,6 +281,8 @@ const LiveSearch = (props: LiveSearchProps) => {
             setIsOpen(res.length === 0 ? true : false);
         }   
     }
+
+    
 
     async function fetchData(params: any) {
 
@@ -371,6 +375,17 @@ const LiveSearch = (props: LiveSearchProps) => {
         setIsOpen(false);
     }
 
+
+    function handleClose(event: any) {
+
+        if (event.target.closest(`.${wrapperClassName || wrapperClassName === '' ? wrapperClassName : 'livesearch__wrapper'}`) === null ) {
+            // cancel
+            setIsOpen(false);
+            setData([]);
+        }
+    }
+
+
     function optionFocus(type: string) {
 
         return new Promise(function (resolve) {
@@ -421,11 +436,11 @@ const LiveSearch = (props: LiveSearchProps) => {
         //--------------
         setChangedVal(value || '');
        
-
+        
         // data init
         //--------------
         const _oparams: any[] = fetchFuncMethodParams || [];
-        const _params: any[] = _oparams.map((item: any) => item !== '$QUERY_STRING' ? item : (fetchTrigger ? '-' : ''));
+        const _params: any[] = _oparams.map((item: any) => item !== '$QUERY_STRING' ? item : (fetchTrigger && !fetchUpdate) ? '' : (fetchUpdate ? '------' : (fetchTrigger ? '------' : '')) );
         if ( !firstFetch ) {
             fetchData((_params).join(','));
             setFirstFetch(true);  // avoid triggering two data requests if the input value has not changed
@@ -445,15 +460,17 @@ const LiveSearch = (props: LiveSearchProps) => {
                 // Determine the "active" class name to avoid listening to other unused components of the same type
                 if ( listRef.current === null || !rootRef.current.classList.contains('active') ) return;
 
-                if ( fetchTrigger ) {
-                    handleFetch();
-                    return;
-                }
 
                 if ( listRef.current !== null ) {
                     const currentData = listRef.current.dataset.data;
+         
                     if ( typeof currentData !== 'undefined' ) {
                         handleSelect(null, currentData);
+
+                        //
+                        onChange?.(inputRef.current, JSON.parse(currentData)); 
+
+                        //
                         const options = [].slice.call(listRef.current.querySelectorAll('.list-group-item:not(.no-match)'));
                         options.forEach((node: any) => {
                             node.classList.remove('active');
@@ -494,6 +511,10 @@ const LiveSearch = (props: LiveSearchProps) => {
         document.removeEventListener("keydown", listener);
         document.addEventListener("keydown", listener);
 
+        //--------------
+        document.removeEventListener('pointerdown', handleClose);
+        document.addEventListener('pointerdown', handleClose);
+
 
         // Add function to the element that should be used as the scrollable area.
         //--------------
@@ -511,6 +532,7 @@ const LiveSearch = (props: LiveSearchProps) => {
         return () => {
 
             document.removeEventListener("keydown", listener);
+            document.removeEventListener('pointerdown', handleClose);
             window.removeEventListener('scroll', windowScrollUpdate);
             window.removeEventListener('touchmove', windowScrollUpdate);
 
@@ -522,13 +544,15 @@ const LiveSearch = (props: LiveSearchProps) => {
     return (
         <>
 
+            {label ? <><div className="livesearch__wrapper__label"><label htmlFor={`label-${idRes}`} className="form-label" dangerouslySetInnerHTML={{ __html: `${label}` }}></label></div></> : null}
+
             <div className={`livesearch__wrapper ${wrapperClassName || wrapperClassName === '' ? wrapperClassName : 'mb-3 position-relative'} ${isOpen ? 'active' : ''}`} ref={rootRef} onMouseLeave={handleMouseLeaveTrigger}>
                 <SearchBar
                     wrapperClassName=""
                     controlClassName={controlClassName}
                     ref={inputRef}
                     value={changedVal}
-                    label={label}
+                    label=""
                     tabIndex={tabIndex}
                     id={idRes}
                     name={name}
@@ -556,7 +580,7 @@ const LiveSearch = (props: LiveSearchProps) => {
                                 const startItemBorder = index === 0 ? 'border-top-0' : '';
                                 const endItemBorder = index === data.length-1 ? 'border-bottom-0' : '';
 
-                                return <button tabIndex={-1} onClick={handleSelect} type="button" data-index={index} key={index} className={`list-group-item list-group-item-action border-start-0 border-end-0 ${startItemBorder} ${endItemBorder}`} data-value={`${item.value}`} data-label={`${item.label}`} data-querystring={`${item.queryString}`} role="tab">{item.label}</button>
+                                return <button tabIndex={-1} onClick={handleSelect} type="button" data-index={index} key={index} className={`list-group-item list-group-item-action border-start-0 border-end-0 ${startItemBorder} ${endItemBorder}`} data-value={`${item.value}`} data-label={`${item.label}`} data-querystring={`${typeof item.queryString === 'undefined' ? '' : item.queryString}`} role="tab">{item.label}</button>
                             }) : null}
                         </div>
 
@@ -575,6 +599,21 @@ const LiveSearch = (props: LiveSearchProps) => {
 
                     </div>
                 </> : null}
+
+
+                {!fetchTrigger ? <>
+                    <span className="livesearch__wrapper-searchbtn position-absolute top-0 end-0">
+                        <button tabIndex={-1} type="button" className="btn border-end-0 rounded-pill" style={{ pointerEvents: 'none' }}>
+                            <svg width="1em" height="1em" fill="#a5a5a5" viewBox="0 0 16 16">
+                                <path d="M12.027 9.92L16 13.95 14 16l-4.075-3.976A6.465 6.465 0 0 1 6.5 13C2.91 13 0 10.083 0 6.5 0 2.91 2.917 0 6.5 0 10.09 0 13 2.917 13 6.5a6.463 6.463 0 0 1-.973 3.42zM1.997 6.452c0 2.48 2.014 4.5 4.5 4.5 2.48 0 4.5-2.015 4.5-4.5 0-2.48-2.015-4.5-4.5-4.5-2.48 0-4.5 2.014-4.5 4.5z" fillRule="evenodd" />
+                            </svg>
+                        </button>
+
+                    </span>
+                </> : null}
+
+
+
 
 
             </div>

@@ -1,7 +1,7 @@
 import React, { useId, useEffect, useState, useRef, forwardRef } from 'react';
 
 import { debounce } from './utils/performance';
-import useThrottle from './utils/useThrottle';
+import useDebounce from './utils/useDebounce';
 
 //Destroys body scroll locking
 import { clearAllBodyScrollLocks, disableBodyScroll, enableBodyScroll } from './plugins/BSL';
@@ -11,6 +11,7 @@ import {
     addTreeDepth,
     addTreeIndent
 } from './utils/tree';
+import { type } from 'os';
 
 
 declare module 'react' {
@@ -171,7 +172,7 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
 
 
     //performance
-    const handleChangeFetchSafe = useThrottle((val: any) => {
+    const handleChangeFetchSafe = useDebounce((val: any) => {
         
         
         let _orginalData: OptionConfig[] = [];
@@ -204,7 +205,7 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
         };
    
         if ( fetchUpdate ) {
-      
+
             handleFetch(val).then((response: any) => {
                 _orginalData = response;
                 update(_orginalData);
@@ -215,7 +216,7 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
         }
   
 
-    }, 150, [optionsData]);
+    }, 350, [optionsData]);
 
 
 
@@ -1165,13 +1166,15 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
 
     function handleBlur(event: any) {
 
+
+
         //remove focus style
         if ( !(MULTI_SEL_VALID && isOpen) ) {
             rootRef.current.classList.remove('focus');
         }
         
         setTimeout(() => {
-
+         
             // cancel
             if ( !(MULTI_SEL_VALID && isOpen) ) {
                 cancel();
@@ -1185,7 +1188,9 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
 
 
     function handleClose(event: any) {
-        if (event.target.closest(`.${wrapperClassName || wrapperClassName === '' ? wrapperClassName : 'multifunc-select__wrapper'}`) === null) {
+        
+ 
+        if (event.target.closest(`.${wrapperClassName || wrapperClassName === '' ? wrapperClassName : 'multifunc-select__wrapper'}`) === null ) {
             // cancel
             cancel();
         }
@@ -1204,9 +1209,7 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
             // Determine the "active" class name to avoid listening to other unused components of the same type
             if ( listRef.current === null || !rootRef.current.classList.contains('active') ) return;
 
-            if ( fetchTrigger ) return;
-
-        
+       
             const options = [].slice.call(listRef.current.querySelectorAll('.list-group-item'));
             const currentIndex = options.findIndex((e) => e === listRef.current.querySelector('.list-group-item.active'));
 
@@ -1259,7 +1262,7 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
         // data init
         //--------------
         const _oparams: any[] = fetchFuncMethodParams || [];
-        const _params: any[] = _oparams.map((item: any) => item !== '$QUERY_STRING' ? item : (fetchTrigger ? '-' : ''));
+        const _params: any[] = _oparams.map((item: any) => item !== '$QUERY_STRING' ? item : (fetchTrigger ? '------' : ''));
         fetchData((_params).join(','), value);
 
 
@@ -1274,10 +1277,6 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
                 // Determine the "active" class name to avoid listening to other unused components of the same type
                 if ( listRef.current === null || !rootRef.current.classList.contains('active') ) return;
 
-                if ( fetchTrigger ) {
-                    handleFetch();
-                    return;
-                }
     
                 if ( listRef.current !== null ) {
                     const currentData = await listRef.current.dataset.data;
@@ -1292,12 +1291,21 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
 
                             if ( node.classList.contains('item-selected') ) {
                                 currentControlValueArr.push(node.dataset.value);
-                                currentControlLabelArr.push(node.dataset.label)
+                                currentControlLabelArr.push(node.dataset.label);
                             }
                         
                         });
 
                         handleSelect(null, currentData, currentControlValueArr, currentControlLabelArr);
+
+                        //
+                        if ( typeof(onChange) === 'function' ) {
+                            onChange?.(selectInputRef.current, valueInputRef.current, !MULTI_SEL_VALID ? JSON.parse(currentData) : {labels: currentControlLabelArr.map((v: any) => v.toString()), values: currentControlValueArr.map((v: any) => v.toString())});
+
+                            //
+                            selectInputRef.current.blur();
+                        }        
+                
 
                         
                     }
@@ -1325,11 +1333,7 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
             }
             
             // temporary data
-            if ( res !== null ) listRef.current.dataset.data = JSON.stringify({
-                value: res.dataset.value, 
-                label: res.dataset.label,
-                queryString: res.dataset.querystring
-            });
+            if ( res !== null ) listRef.current.dataset.data = res.dataset.itemdata;
             
        
 
@@ -1444,7 +1448,7 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
 
                         {fetchTrigger ? <>
                             <span className="multifunc-select-multi__control-searchbtn position-absolute top-0 end-0">
-                                <button type="button" className={'btn border-end-0 rounded-pill'} onClick={handleFetch}>
+                                <button tabIndex={-1} type="button" className="btn border-end-0 rounded-pill" style={{pointerEvents: 'none'}}>
                                     <svg width="1em" height="1em" fill="#a5a5a5" viewBox="0 0 16 16">
                                         <path d="M12.027 9.92L16 13.95 14 16l-4.075-3.976A6.465 6.465 0 0 1 6.5 13C2.91 13 0 10.083 0 6.5 0 2.91 2.917 0 6.5 0 10.09 0 13 2.917 13 6.5a6.463 6.463 0 0 1-.973 3.42zM1.997 6.452c0 2.48 2.014 4.5 4.5 4.5 2.48 0 4.5-2.015 4.5-4.5 0-2.48-2.015-4.5-4.5-4.5-2.48 0-4.5 2.014-4.5 4.5z" fillRule="evenodd" />
                                     </svg>
@@ -1504,7 +1508,7 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
 
                         {fetchTrigger ? <>
                             <span className="multifunc-select-multi__control-searchbtn position-absolute top-0 end-0">
-                                <button type="button" className={'btn border-end-0 rounded-pill'} onClick={handleFetch}>
+                                <button tabIndex={-1} type="button" className="btn border-end-0 rounded-pill" onClick={handleFetch}>
                                     <svg width="1em" height="1em" fill="#a5a5a5" viewBox="0 0 16 16">
                                         <path d="M12.027 9.92L16 13.95 14 16l-4.075-3.976A6.465 6.465 0 0 1 6.5 13C2.91 13 0 10.083 0 6.5 0 2.91 2.917 0 6.5 0 10.09 0 13 2.917 13 6.5a6.463 6.463 0 0 1-.973 3.42zM1.997 6.452c0 2.48 2.014 4.5 4.5 4.5 2.48 0 4.5-2.015 4.5-4.5 0-2.48-2.015-4.5-4.5-4.5-2.48 0-4.5 2.014-4.5 4.5z" fillRule="evenodd" />
                                     </svg>
@@ -1546,7 +1550,7 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
                                         // ++++++++++++++++++++
                                         // Single selection
                                         // ++++++++++++++++++++
-                                        return <button tabIndex={-1} onClick={handleSelect} type="button" data-index={index} key={index} className={`list-group-item list-group-item-action border-start-0 border-end-0 ${startItemBorder} ${endItemBorder} border-bottom-0`} data-value={`${item.value}`} data-label={`${item.label}`} data-querystring={`${item.queryString}`} role="tab" dangerouslySetInnerHTML={{
+                                        return <button tabIndex={-1} onClick={handleSelect} type="button" data-index={index} key={index} className={`list-group-item list-group-item-action border-start-0 border-end-0 ${startItemBorder} ${endItemBorder} border-bottom-0`} data-value={`${item.value}`} data-label={`${item.label}`} data-querystring={`${typeof item.queryString === 'undefined' ? '' : item.queryString}`} data-itemdata={JSON.stringify(item)} role="tab" dangerouslySetInnerHTML={{
                                             __html: item.label
                                         }}></button>
 
@@ -1557,7 +1561,7 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
                                         // ++++++++++++++++++++
                                         const itemSelected = multiSelControlOptionExist(controlArr.values, item.value) ? true : false;
 
-                                        return <button tabIndex={-1} onClick={handleSelect} type="button" data-index={index} key={index} className={`list-group-item list-group-item-action border-start-0 border-end-0 ${startItemBorder} ${endItemBorder} border-bottom-0 ${itemSelected ? 'list-group-item-secondary item-selected' : ''}`} data-value={`${item.value}`} data-label={`${item.label}`} data-querystring={`${item.queryString}`} role="tab">
+                                        return <button tabIndex={-1} onClick={handleSelect} type="button" data-index={index} key={index} className={`list-group-item list-group-item-action border-start-0 border-end-0 ${startItemBorder} ${endItemBorder} border-bottom-0 ${itemSelected ? 'list-group-item-secondary item-selected' : ''}`} data-value={`${item.value}`} data-label={`${item.label}`} data-querystring={`${typeof item.queryString === 'undefined' ? '' : item.queryString}`} data-itemdata={JSON.stringify(item)} role="tab">
                                             <var className="d-inline-block me-1 ">
                                                 {!itemSelected ? <svg width="1.2em" height="1.2em" viewBox="0 0 24 24" fill="none">
                                                     <path id="Vector" d="M4 7.2002V16.8002C4 17.9203 4 18.4801 4.21799 18.9079C4.40973 19.2842 4.71547 19.5905 5.0918 19.7822C5.5192 20 6.07899 20 7.19691 20H16.8031C17.921 20 18.48 20 18.9074 19.7822C19.2837 19.5905 19.5905 19.2842 19.7822 18.9079C20 18.4805 20 17.9215 20 16.8036V7.19691C20 6.07899 20 5.5192 19.7822 5.0918C19.5905 4.71547 19.2837 4.40973 18.9074 4.21799C18.4796 4 17.9203 4 16.8002 4H7.2002C6.08009 4 5.51962 4 5.0918 4.21799C4.71547 4.40973 4.40973 4.71547 4.21799 5.0918C4 5.51962 4 6.08009 4 7.2002Z" stroke="#000000" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />

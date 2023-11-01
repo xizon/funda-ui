@@ -472,13 +472,7 @@ const CascadingSelectE2E = (props: CascadingSelectE2EProps) => {
             _labelData.splice(level, 1, resValue.name);
             _queryIdsData.splice(level, 1, resValue.queryId);
 
-            console.log('****', {
-                labels: _labelData.filter((v: any) => v != ''),
-                values: _valueData.filter((v: any) => v.toString().indexOf('$EMPTY_ID_') < 0),
-                queryIds: _queryIdsData.filter((v: any) => v != undefined),
-            })
 
-            
             return {
                 labels: _labelData.filter((v: any) => v != ''),
                 values: _valueData.filter((v: any) => v.toString().indexOf('$EMPTY_ID_') < 0),

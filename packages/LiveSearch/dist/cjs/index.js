@@ -552,15 +552,15 @@ var external_root_React_commonjs2_react_commonjs_react_amd_react_ = __webpack_re
 var external_root_React_commonjs2_react_commonjs_react_amd_react_default = /*#__PURE__*/__webpack_require__.n(external_root_React_commonjs2_react_commonjs_react_amd_react_);
 // EXTERNAL MODULE: ./src/utils/performance.js
 var performance = __webpack_require__(342);
-;// CONCATENATED MODULE: ./src/utils/useThrottle.js
+;// CONCATENATED MODULE: ./src/utils/useDebounce.js
 /**
- * Limiting the rate of execution
+ * Delay the execution of function or state update
  * 
  * @usage:
 
 const App = () => {
     const [count, setCount] = useState(0);
-    const handleClick = useThrottle(() => setCount(count + 1), 500, [count]);
+    const handleClick = useDebounce(() => setCount(count + 1), 500, [count]);
 
     return (
         <div className="app">
@@ -572,19 +572,25 @@ const App = () => {
 
  */
 
-var useThrottle = function useThrottle(fn, delay, dependence) {
-  var ref = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useRef)({
-    lastTime: 0
-  });
+
+var useDebounce = function useDebounce(fn, delay, dependence) {
+  var ref = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useRef)(null);
   return (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useCallback)(function () {
-    var now = Date.now();
-    if (now - ref.current.lastTime >= delay) {
-      fn.apply(void 0, arguments);
-      ref.current.lastTime = now;
+    for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
+      args[_key] = arguments[_key];
     }
+    //Every time this returned function is called, the timer is cleared to ensure that fn is not executed
+    clearTimeout(ref.current);
+    ref.current = null;
+
+    // When the returned function is called for the last time (that is the user stops a continuous operation)
+    // Execute fn after another delay milliseconds
+    ref.current = setTimeout(function () {
+      fn.apply(void 0, args);
+    }, delay);
   }, dependence);
 };
-/* harmony default export */ const utils_useThrottle = (useThrottle);
+/* harmony default export */ const utils_useDebounce = (useDebounce);
 // EXTERNAL MODULE: ../SearchBar/dist/cjs/index.js
 var cjs = __webpack_require__(962);
 var cjs_default = /*#__PURE__*/__webpack_require__.n(cjs);
@@ -672,9 +678,9 @@ var LiveSearch = function LiveSearch(props) {
     setHasErr = _useState12[1];
 
   //performance
-  var handleChangeFetchSafe = utils_useThrottle(function (e) {
+  var handleChangeFetchSafe = utils_useDebounce(function (e) {
     handleChange(e);
-  }, 150, [dataInit]);
+  }, 350, [dataInit]);
 
   /**
    * Check if an element is in the viewport
@@ -827,6 +833,9 @@ var LiveSearch = function LiveSearch(props) {
         //
         setIsOpen(true);
       });
+    } else {
+      //
+      onChange === null || onChange === void 0 ? void 0 : onChange(inputRef.current, data);
     }
 
     // window position
@@ -976,6 +985,13 @@ var LiveSearch = function LiveSearch(props) {
   function handleMouseLeaveTrigger() {
     setIsOpen(false);
   }
+  function handleClose(event) {
+    if (event.target.closest(".".concat(wrapperClassName || wrapperClassName === '' ? wrapperClassName : 'livesearch__wrapper')) === null) {
+      // cancel
+      setIsOpen(false);
+      setData([]);
+    }
+  }
   function optionFocus(type) {
     return new Promise(function (resolve) {
       // Determine the "active" class name to avoid listening to other unused components of the same type
@@ -1016,7 +1032,7 @@ var LiveSearch = function LiveSearch(props) {
     //--------------
     var _oparams = fetchFuncMethodParams || [];
     var _params = _oparams.map(function (item) {
-      return item !== '$QUERY_STRING' ? item : fetchTrigger ? '-' : '';
+      return item !== '$QUERY_STRING' ? item : fetchTrigger && !fetchUpdate ? '' : fetchUpdate ? '------' : fetchTrigger ? '------' : '';
     });
     if (!firstFetch) {
       fetchData(_params.join(','));
@@ -1033,7 +1049,7 @@ var LiveSearch = function LiveSearch(props) {
             case 0:
               res = null;
               if (!(event.code === "Enter" || event.code === "NumpadEnter")) {
-                _context.next = 9;
+                _context.next = 6;
                 break;
               }
               if (!(listRef.current === null || !rootRef.current.classList.contains('active'))) {
@@ -1042,17 +1058,15 @@ var LiveSearch = function LiveSearch(props) {
               }
               return _context.abrupt("return");
             case 4:
-              if (!fetchTrigger) {
-                _context.next = 7;
-                break;
-              }
-              handleFetch();
-              return _context.abrupt("return");
-            case 7:
               if (listRef.current !== null) {
                 currentData = listRef.current.dataset.data;
                 if (typeof currentData !== 'undefined') {
                   handleSelect(null, currentData);
+
+                  //
+                  onChange === null || onChange === void 0 ? void 0 : onChange(inputRef.current, JSON.parse(currentData));
+
+                  //
                   options = [].slice.call(listRef.current.querySelectorAll('.list-group-item:not(.no-match)'));
                   options.forEach(function (node) {
                     node.classList.remove('active');
@@ -1060,34 +1074,34 @@ var LiveSearch = function LiveSearch(props) {
                 }
               }
               return _context.abrupt("return");
-            case 9:
+            case 6:
               _context.t0 = event.code;
-              _context.next = _context.t0 === "ArrowLeft" ? 12 : _context.t0 === "ArrowRight" ? 13 : _context.t0 === "ArrowUp" ? 14 : _context.t0 === "ArrowDown" ? 18 : 22;
+              _context.next = _context.t0 === "ArrowLeft" ? 9 : _context.t0 === "ArrowRight" ? 10 : _context.t0 === "ArrowUp" ? 11 : _context.t0 === "ArrowDown" ? 15 : 19;
               break;
-            case 12:
-              return _context.abrupt("break", 22);
-            case 13:
-              return _context.abrupt("break", 22);
-            case 14:
-              _context.next = 16;
+            case 9:
+              return _context.abrupt("break", 19);
+            case 10:
+              return _context.abrupt("break", 19);
+            case 11:
+              _context.next = 13;
               return optionFocus('decrease');
-            case 16:
+            case 13:
               res = _context.sent;
-              return _context.abrupt("break", 22);
-            case 18:
-              _context.next = 20;
+              return _context.abrupt("break", 19);
+            case 15:
+              _context.next = 17;
               return optionFocus('increase');
-            case 20:
+            case 17:
               res = _context.sent;
-              return _context.abrupt("break", 22);
-            case 22:
+              return _context.abrupt("break", 19);
+            case 19:
               // temporary data
               if (res !== null) listRef.current.dataset.data = JSON.stringify({
                 value: res.dataset.value,
                 label: res.dataset.label,
                 queryString: res.dataset.querystring
               });
-            case 23:
+            case 20:
             case "end":
               return _context.stop();
           }
@@ -1099,6 +1113,10 @@ var LiveSearch = function LiveSearch(props) {
     }();
     document.removeEventListener("keydown", listener);
     document.addEventListener("keydown", listener);
+
+    //--------------
+    document.removeEventListener('pointerdown', handleClose);
+    document.addEventListener('pointerdown', handleClose);
 
     // Add function to the element that should be used as the scrollable area.
     //--------------
@@ -1112,11 +1130,20 @@ var LiveSearch = function LiveSearch(props) {
     //--------------
     return function () {
       document.removeEventListener("keydown", listener);
+      document.removeEventListener('pointerdown', handleClose);
       window.removeEventListener('scroll', windowScrollUpdate);
       window.removeEventListener('touchmove', windowScrollUpdate);
     };
   }, [value]);
-  return /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
+  return /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, label ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
+    className: "livesearch__wrapper__label"
+  }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("label", {
+    htmlFor: "label-".concat(idRes),
+    className: "form-label",
+    dangerouslySetInnerHTML: {
+      __html: "".concat(label)
+    }
+  }))) : null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
     className: "livesearch__wrapper ".concat(wrapperClassName || wrapperClassName === '' ? wrapperClassName : 'mb-3 position-relative', " ").concat(isOpen ? 'active' : ''),
     ref: rootRef,
     onMouseLeave: handleMouseLeaveTrigger
@@ -1125,7 +1152,7 @@ var LiveSearch = function LiveSearch(props) {
     controlClassName: controlClassName,
     ref: inputRef,
     value: changedVal,
-    label: label,
+    label: "",
     tabIndex: tabIndex,
     id: idRes,
     name: name,
@@ -1168,7 +1195,7 @@ var LiveSearch = function LiveSearch(props) {
       className: "list-group-item list-group-item-action border-start-0 border-end-0 ".concat(startItemBorder, " ").concat(endItemBorder),
       "data-value": "".concat(item.value),
       "data-label": "".concat(item.label),
-      "data-querystring": "".concat(item.queryString),
+      "data-querystring": "".concat(typeof item.queryString === 'undefined' ? '' : item.queryString),
       role: "tab"
     }, item.label);
   }) : null))) : null, data && data.length === 0 && !hasErr && isOpen ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
@@ -1189,7 +1216,24 @@ var LiveSearch = function LiveSearch(props) {
     type: "button",
     className: "list-group-item list-group-item-action no-match",
     disabled: true
-  }, fetchNoneInfo || 'No match yet')))) : null));
+  }, fetchNoneInfo || 'No match yet')))) : null, !fetchTrigger ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("span", {
+    className: "livesearch__wrapper-searchbtn position-absolute top-0 end-0"
+  }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("button", {
+    tabIndex: -1,
+    type: "button",
+    className: "btn border-end-0 rounded-pill",
+    style: {
+      pointerEvents: 'none'
+    }
+  }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("svg", {
+    width: "1em",
+    height: "1em",
+    fill: "#a5a5a5",
+    viewBox: "0 0 16 16"
+  }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("path", {
+    d: "M12.027 9.92L16 13.95 14 16l-4.075-3.976A6.465 6.465 0 0 1 6.5 13C2.91 13 0 10.083 0 6.5 0 2.91 2.917 0 6.5 0 10.09 0 13 2.917 13 6.5a6.463 6.463 0 0 1-.973 3.42zM1.997 6.452c0 2.48 2.014 4.5 4.5 4.5 2.48 0 4.5-2.015 4.5-4.5 0-2.48-2.015-4.5-4.5-4.5-2.48 0-4.5 2.014-4.5 4.5z",
+    fillRule: "evenodd"
+  }))))) : null));
 };
 /* harmony default export */ const src = (LiveSearch);
 })();

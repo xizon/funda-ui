@@ -743,17 +743,6 @@ var CascadingSelectE2E = function CascadingSelectE2E(props) {
       _valueData.splice(level, 1, resValue.id);
       _labelData.splice(level, 1, resValue.name);
       _queryIdsData.splice(level, 1, resValue.queryId);
-      console.log('****', {
-        labels: _labelData.filter(function (v) {
-          return v != '';
-        }),
-        values: _valueData.filter(function (v) {
-          return v.toString().indexOf('$EMPTY_ID_') < 0;
-        }),
-        queryIds: _queryIdsData.filter(function (v) {
-          return v != undefined;
-        })
-      });
       return {
         labels: _labelData.filter(function (v) {
           return v != '';

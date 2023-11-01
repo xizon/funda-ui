@@ -211,7 +211,7 @@ export default () => {
                 }}
                 fetchFuncAsync={new DataService}
                 fetchFuncMethod="getList"
-                fetchFuncMethodParams={['',0]}
+                fetchFuncMethodParams={['$QUERY_STRING',0]}
                 fetchCallback={(res) => {
 
                     const formattedData = res.map((item) => {
@@ -294,7 +294,7 @@ export default () => {
                 }}
                 fetchFuncAsync={new DataService}
                 fetchFuncMethod="getList"
-                fetchFuncMethodParams={['',0]}
+                fetchFuncMethodParams={['$QUERY_STRING',0]}
                 fetchCallback={(res) => {
 
                     const formattedData = res.map((item) => {
