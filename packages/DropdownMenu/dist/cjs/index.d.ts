@@ -1,8 +1,8 @@
-/// <reference types="react" />
+import React from 'react';
 declare type OptionChangeFnType = (arg1: any) => void;
 interface OptionConfig {
     value?: string | undefined;
-    label?: string | undefined;
+    label?: string | React.ReactNode | undefined;
 }
 declare type DropdownMenuProps = {
     wrapperClassName?: string;

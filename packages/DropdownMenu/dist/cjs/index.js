@@ -104,22 +104,30 @@ var external_root_React_commonjs2_react_commonjs_react_amd_react_default = /*#__
 ;// CONCATENATED MODULE: ./src/Option.tsx
 
 function Option(props) {
-  var _props$option, _props$option2;
+  var option = props.option;
+  var _label = option ? option.label : '';
+  var _value = option ? option.value : '';
   function handleSelect(e) {
     e.preventDefault();
     var fn = props.onSelect;
     fn(props.option);
   }
-  return /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("li", null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("a", {
+  return /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, typeof _label === 'string' ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("li", null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("a", {
     className: props.hyperlinkClassName,
-    "data-value": (_props$option = props.option) === null || _props$option === void 0 ? void 0 : _props$option.value,
+    "data-value": _value,
     href: "#",
     tabIndex: -1,
     onClick: handleSelect,
     dangerouslySetInnerHTML: {
-      __html: "".concat((_props$option2 = props.option) === null || _props$option2 === void 0 ? void 0 : _props$option2.label)
+      __html: "".concat(_label)
     }
-  }));
+  }))) : /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("li", null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("a", {
+    className: props.hyperlinkClassName,
+    "data-value": _value,
+    href: "#",
+    tabIndex: -1,
+    onClick: handleSelect
+  }, _label))));
 }
 ;// CONCATENATED MODULE: ./src/index.tsx
 function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }

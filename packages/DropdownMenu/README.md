@@ -32,7 +32,7 @@ Array configuration properties of the `options`:
 
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |
-| `label` | string | - | Specify the label text for each option |
+| `label` | string \| ReactNode | - | Specify the label text for each option <blockquote>Support html tags</blockquote> |
 | `value` | string | - | Specify the value for each option |
 
 
@@ -87,9 +87,8 @@ export default () => {
             triggerContent={`<img src="avatar.jpg" alt="" />`}
             name="app-ddmenu-2"
             options={[
-                { label: "Option 1", value: "option-1" },
-                { label: "Option 2", value: "option-2" },
-                { label: "Option 3", value: "option-3" }
+                { label: "<s>Option 1</s>", value: "option-1" },
+                { label: <><a href="#" onClick={(e: any) => {e.preventDefault(); alert('Option 2')}}>Option 2</a></>, value: "option-2" }
             ]}
             onChange={(res) => {
                 console.log(res); // {"label": "-","value": "-"}

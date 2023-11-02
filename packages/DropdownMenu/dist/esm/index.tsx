@@ -6,7 +6,7 @@ type OptionChangeFnType = (arg1: any) => void;
 
 interface OptionConfig {
     value?: string | undefined;
-    label?: string | undefined;
+    label?: string | React.ReactNode | undefined;
 }
 
 type DropdownMenuProps = {
@@ -67,18 +67,18 @@ const DropdownMenu = (props: DropdownMenuProps) => {
    
     const defaultLabel = triggerContent === undefined ? '' : triggerContent;
     const selectedLabel = triggerSwitchActive ? (selected ? selected.label : defaultLabel) : defaultLabel;
-    const selectOptionsListPresentation = options?.map((selectOption, index) => {
+    const selectOptionsListPresentation = options?.map((selectOption: any, index: number) => {
         return <Option key={index} option={selectOption} onSelect={handleSelect} hyperlinkClassName={hyperlinkClassName ? hyperlinkClassName : 'dropdown-item-default'} />;
     });
 
 
-    function handleClick(event: any) {
+    function handleClick(event: React.MouseEvent) {
         if (hoverOn) return;
         setIsOpen(!isOpen);
     }
 
 
-    function handleHoverOn(event: any) {
+    function handleHoverOn(event: React.MouseEvent) {
         if (!hoverOn || typeof hoverOn === 'undefined') return;
         setTimeout(() => {
             setIsOpen(true);
@@ -86,7 +86,7 @@ const DropdownMenu = (props: DropdownMenuProps) => {
         
     }
 
-    function handleHoverOff(event: any) {
+    function handleHoverOff(event: React.MouseEvent) {
         if (!hoverOff || typeof hoverOff === 'undefined') return;
         setTimeout(() => {
             setIsOpen(false);
@@ -103,7 +103,7 @@ const DropdownMenu = (props: DropdownMenuProps) => {
     }
 
 
-    function handleSelect(option) {
+    function handleSelect(option: any) {
         setIsOpen(false);
         setSelected(option);
 
