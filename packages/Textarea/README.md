@@ -14,7 +14,6 @@ import Textarea from 'funda-ui/Textarea';
 | `type` | string | text | The type of input. Such as \<input type="text" name="name"\> gives a text box. |
 | `value` | string | - | Set a default value for this control |
 | `autoSize` | boolean | false | Creating a Textarea with dynamic height. |
-| `autoSizeBeginOneline` | boolean | false | Starting from a single row, change the height in real time (if not set, the default rows height will be restored only when value is empty), valid when the `autoSize` is true. |
 | `label` | string \| ReactNode | - | It is used to specify a label for an element of a form.<blockquote>Support html tags</blockquote> |
 | `name` | string | - | Name is not deprecated when used with form fields. |
 | `placeholder` | string | - |  Specifies a short hint that describes. |
@@ -60,13 +59,6 @@ export default () => {
                 autoSize
             />
 
-
-            <Textarea
-                placeholder="String"
-                name="String"
-                autoSize
-                autoSizeBeginOneline
-            />
 
         </>
     );

@@ -4,6 +4,9 @@ declare module 'react' {
         children?: any;
     }
 }
+interface OptionConfig {
+    [propName: string]: string | number;
+}
 declare type RadioOptionChangeFnType = (arg1: any, arg2: any) => void;
 declare type RadioProps = {
     wrapperClassName?: string;
@@ -12,7 +15,7 @@ declare type RadioProps = {
     name?: string;
     disabled?: any;
     required?: any;
-    options: string;
+    options?: OptionConfig[] | string;
     inline?: boolean;
     /** -- */
     id?: string;
@@ -22,6 +25,11 @@ declare type RadioProps = {
     /** This function is called whenever the data is updated.
      *  Exposes the JSON format data about the option as an argument.
      */
+    fetchFuncAsync?: any;
+    fetchFuncMethod?: string;
+    fetchFuncMethodParams?: any[];
+    fetchCallback?: (data: any) => void;
+    onFetch?: (data: any) => void;
     onClick?: RadioOptionChangeFnType | null;
     onChange?: RadioOptionChangeFnType | null;
     onBlur?: (e: any) => void;

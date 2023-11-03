@@ -22,7 +22,6 @@ interface TextareaProps extends React.ComponentPropsWithoutRef<"textarea"> {
     readOnly?: any;
 	placeholder?: string;
     autoSize?: boolean;
-    autoSizeBeginOneline?: boolean;
 	/** -- */
 	id?: string;
     style?: React.CSSProperties;
@@ -45,7 +44,6 @@ const Textarea = forwardRef((props: TextareaProps, ref: any) => {
         required,
         placeholder,
         autoSize,
-        autoSizeBeginOneline,
         readOnly,
         value,
         label,
@@ -70,7 +68,7 @@ const Textarea = forwardRef((props: TextareaProps, ref: any) => {
 
 
     // auto size
-    useAutosizeTextArea(autoSize ? valRef.current : null, autoSize ? changedVal : '', autoSizeBeginOneline);
+    useAutosizeTextArea(autoSize ? valRef.current : null, autoSize ? changedVal : '');
 
     function handleFocus(event: any) {
         const el = event.target;
@@ -158,7 +156,7 @@ const Textarea = forwardRef((props: TextareaProps, ref: any) => {
 					  required={required || null}
                       readOnly={readOnly || null}
 					  cols={cols || 20}
-					  rows={autoSizeBeginOneline ? 1 : (rows || 1)}
+					  rows={rows || 2}
                       style={style}
                       {...attributes}
 					/>

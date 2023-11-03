@@ -320,10 +320,6 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 
             //
             onChange === null || onChange === void 0 ? void 0 : onChange(event, onComposition);
-            if (typeof onChangeCallback === 'function') {
-              var newData = onChangeCallback(event);
-              setChangedVal(newData);
-            }
           }
           function handleBlur(event) {
             var el = event.target;
@@ -337,6 +333,12 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 
             //
             onBlur === null || onBlur === void 0 ? void 0 : onBlur(event, onComposition);
+
+            //
+            if (typeof onChangeCallback === 'function') {
+              var newData = onChangeCallback(event);
+              setChangedVal(newData);
+            }
           }
           (0, react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(function () {
             // update default value

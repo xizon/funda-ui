@@ -118,7 +118,7 @@ const App = () => {
     const [value, setValue] = useState("");
     const el = useRef<HTMLTextAreaElement>(null);
 
-    useAutosizeTextArea(el.current, value, false);
+    useAutosizeTextArea(el.current, value);
 
     const handleChange = (evt: React.ChangeEvent<HTMLTextAreaElement>) => {
         const val = evt.target?.value;
@@ -131,32 +131,6 @@ const App = () => {
                 onChange={handleChange}
                 ref={el}
                 rows={3}
-                value={value}
-            />
-        </div>
-    );
-};
-
-
-//--------
-
-const App = () => {
-    const [value, setValue] = useState("");
-    const el = useRef<HTMLTextAreaElement>(null);
-
-    useAutosizeTextArea(el.current, value, true);
-
-    const handleChange = (evt: React.ChangeEvent<HTMLTextAreaElement>) => {
-        const val = evt.target?.value;
-        setValue(val);
-    };
-
-    return (
-        <div className="App">
-            <textarea
-                onChange={handleChange}
-                ref={el}
-                rows={1}
                 value={value}
             />
         </div>
@@ -185,46 +159,35 @@ var useAutosizeTextArea = function useAutosizeTextArea(el, value, autoSizeBeginO
     setDefaultRowHeightInit = _useState6[1];
   (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useEffect)(function () {
     if (el) {
-      if (autoSizeBeginOneline) {
-        el.style.height = "0px";
-        var beginOnelineScrollHeight = el.scrollHeight;
-        el.style.height = beginOnelineScrollHeight + "px";
-      } else {
-        // initialize default row height
-        if (el.scrollHeight > 0 && !defaultRowHeightInit) {
-          setDefaultRowHeight(el.scrollHeight);
-          setDynamicDefaultRowHeight(el.scrollHeight);
-          setDefaultRowHeightInit(true);
-        }
+      // initialize default row height
+      if (el.scrollHeight > 0 && !defaultRowHeightInit) {
+        var style = el.currentStyle || window.getComputedStyle(el);
+        setDefaultRowHeight(el.scrollHeight + parseInt(style.borderTopWidth) + parseInt(style.borderBottomWidth));
+        setDynamicDefaultRowHeight(el.scrollHeight);
+        setDefaultRowHeightInit(true);
+      }
 
-        // reset the height momentarily to get the correct scrollHeight for the textarea
-        var scrollHeight = el.scrollHeight;
+      // restore default row height
+      if (defaultRowHeight > 0) {
+        el.style.height = defaultRowHeight + "px";
+      }
 
-        // reset row height
-        if (typeof value !== 'undefined' && value.length === 0) {
-          el.style.height = dynamicDefaultRowHeight + "px";
+      // reset the height momentarily to get the correct scrollHeight for the textarea
+      var scrollHeight = el.scrollHeight;
 
-          // update default row height
-          setDefaultRowHeight(dynamicDefaultRowHeight);
-        }
+      // then set the height directly, outside of the render loop
+      // Trying to set this with state or a ref will product an incorrect value.
 
-        // then set the height directly, outside of the render loop
-        // Trying to set this with state or a ref will product an incorrect value.
-
-        // !!! Compare initial height and changed height
-        if (scrollHeight > defaultRowHeight && defaultRowHeight > 0) {
-          el.style.height = scrollHeight + "px";
-
-          // update default row height
-          setDefaultRowHeight(scrollHeight);
-        }
+      // !!! Compare initial height and changed height
+      if (scrollHeight > defaultRowHeight && defaultRowHeight > 0) {
+        el.style.height = scrollHeight + "px";
       }
     }
   }, [el, value]);
 };
 /* harmony default export */ const utils_useAutosizeTextArea = (useAutosizeTextArea);
 ;// CONCATENATED MODULE: ./src/index.tsx
-var _excluded = ["wrapperClassName", "controlClassName", "cols", "rows", "disabled", "required", "placeholder", "autoSize", "autoSizeBeginOneline", "readOnly", "value", "label", "name", "id", "maxLength", "style", "tabIndex", "onChangeCallback", "onChange", "onBlur", "onFocus"];
+var _excluded = ["wrapperClassName", "controlClassName", "cols", "rows", "disabled", "required", "placeholder", "autoSize", "readOnly", "value", "label", "name", "id", "maxLength", "style", "tabIndex", "onChangeCallback", "onChange", "onBlur", "onFocus"];
 function _extends() { _extends = Object.assign ? Object.assign.bind() : function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
 function src_slicedToArray(arr, i) { return src_arrayWithHoles(arr) || src_iterableToArrayLimit(arr, i) || src_unsupportedIterableToArray(arr, i) || src_nonIterableRest(); }
 function src_nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
@@ -246,7 +209,6 @@ var Textarea = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_reac
     required = props.required,
     placeholder = props.placeholder,
     autoSize = props.autoSize,
-    autoSizeBeginOneline = props.autoSizeBeginOneline,
     readOnly = props.readOnly,
     value = props.value,
     label = props.label,
@@ -270,7 +232,7 @@ var Textarea = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_reac
     setChangedVal = _useState2[1];
 
   // auto size
-  utils_useAutosizeTextArea(autoSize ? valRef.current : null, autoSize ? changedVal : '', autoSizeBeginOneline);
+  utils_useAutosizeTextArea(autoSize ? valRef.current : null, autoSize ? changedVal : '');
   function handleFocus(event) {
     var el = event.target;
     rootRef.current.classList.add('focus');
@@ -349,7 +311,7 @@ var Textarea = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_reac
     required: required || null,
     readOnly: readOnly || null,
     cols: cols || 20,
-    rows: autoSizeBeginOneline ? 1 : rows || 1,
+    rows: rows || 2,
     style: style
   }, attributes))), required ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("span", {
     className: "position-absolute end-0 top-0 my-2 mx-2"
