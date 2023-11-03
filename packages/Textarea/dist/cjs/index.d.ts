@@ -17,11 +17,14 @@ interface TextareaProps extends React.ComponentPropsWithoutRef<"textarea"> {
     required?: any;
     readOnly?: any;
     placeholder?: string;
+    autoSize?: boolean;
+    autoSizeBeginOneline?: boolean;
     /** -- */
     id?: string;
     style?: React.CSSProperties;
     tabIndex?: number;
     [key: `data-${string}`]: string | undefined;
+    onChangeCallback?: (e: any) => void;
     onChange?: (e: any) => void;
     onBlur?: (e: any) => void;
     onFocus?: (e: any) => void;

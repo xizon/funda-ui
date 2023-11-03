@@ -178,10 +178,6 @@ var Input = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(funct
 
     //
     onChange === null || onChange === void 0 ? void 0 : onChange(event, onComposition);
-    if (typeof onChangeCallback === 'function') {
-      var newData = onChangeCallback(event);
-      setChangedVal(newData);
-    }
   }
   function handleBlur(event) {
     var el = event.target;
@@ -195,6 +191,12 @@ var Input = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(funct
 
     //
     onBlur === null || onBlur === void 0 ? void 0 : onBlur(event, onComposition);
+
+    //
+    if (typeof onChangeCallback === 'function') {
+      var newData = onChangeCallback(event);
+      setChangedVal(newData);
+    }
   }
   (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(function () {
     // update default value

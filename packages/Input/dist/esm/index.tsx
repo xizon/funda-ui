@@ -118,10 +118,7 @@ const Input = forwardRef((props: InputProps, ref: any) => {
 
         //
         onChange?.(event, onComposition);
-        if (typeof (onChangeCallback) === 'function') {
-            const newData: any = onChangeCallback(event);
-            setChangedVal(newData);
-        }
+
 
     }
 
@@ -138,6 +135,12 @@ const Input = forwardRef((props: InputProps, ref: any) => {
 
         //
         onBlur?.(event, onComposition);
+
+        //
+        if (typeof (onChangeCallback) === 'function') {
+            const newData: any = onChangeCallback(event);
+            setChangedVal(newData);
+        }
     }
 
 
