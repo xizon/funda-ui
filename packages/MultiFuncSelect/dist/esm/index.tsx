@@ -11,7 +11,6 @@ import {
     addTreeDepth,
     addTreeIndent
 } from './utils/tree';
-import { type } from 'os';
 
 
 declare module 'react' {
@@ -171,6 +170,7 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
     const multiSelControlOptionExist = (arr: any[], val: any) => arr.map((v: any) => v.toString()).includes(val.toString());
 
 
+
     //performance
     const handleChangeFetchSafe = useDebounce((val: any) => {
         
@@ -199,20 +199,29 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
                     }
                 });
 
+
             }
 
             setOptionsData(filterRes);
         };
    
-        if ( fetchUpdate ) {
+        if (fetchUpdate) {
 
             handleFetch(val).then((response: any) => {
                 _orginalData = response;
                 update(_orginalData);
+
+
+                // Adjust the overall height to fit the wrapper
+                fixContentHeight();
             });
         } else {
             _orginalData = orginalData;
             update(_orginalData);
+
+
+            // Adjust the overall height to fit the wrapper
+            fixContentHeight();
         }
   
 
@@ -308,6 +317,20 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
 
 
     //
+    function fixContentHeight() {
+        if (listContentRef.current === null) return;
+
+        setTimeout(() => {
+
+            const _displayedItems = listContentRef.current.querySelectorAll('.list-group-item');
+            const _displayedHeight = _displayedItems[0].clientHeight * _displayedItems.length;
+
+            listContentRef.current.style.height = _displayedHeight + 'px';
+            
+        }, 0);
+
+    }
+
     function getPlacement(el: HTMLElement, restorePos: boolean = false) {
 
         if ( el === null ) return;
@@ -370,7 +393,6 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
                 listContentRef.current.style.height = _displayedHeight + 'px';
             }
 
-         
             //
             listContentRef.current.style.overflowY = 'auto';
 

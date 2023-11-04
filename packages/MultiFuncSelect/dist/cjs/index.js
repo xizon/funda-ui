@@ -770,10 +770,16 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
       handleFetch(val).then(function (response) {
         _orginalData = response;
         update(_orginalData);
+
+        // Adjust the overall height to fit the wrapper
+        fixContentHeight();
       });
     } else {
       _orginalData = orginalData;
       update(_orginalData);
+
+      // Adjust the overall height to fit the wrapper
+      fixContentHeight();
     }
   }, 350, [optionsData]);
 
@@ -860,6 +866,14 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
   }
 
   //
+  function fixContentHeight() {
+    if (listContentRef.current === null) return;
+    setTimeout(function () {
+      var _displayedItems = listContentRef.current.querySelectorAll('.list-group-item');
+      var _displayedHeight = _displayedItems[0].clientHeight * _displayedItems.length;
+      listContentRef.current.style.height = _displayedHeight + 'px';
+    }, 0);
+  }
   function getPlacement(el) {
     var restorePos = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
     if (el === null) return;
