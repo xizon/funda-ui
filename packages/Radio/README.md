@@ -22,8 +22,8 @@ import Radio from 'funda-ui/Radio';
 | `fetchFuncMethodParams` | array  | - | The parameter passed by the method, it is an array. <br />Note: the first element is a query string, the second element is the number of queried data (usually a number), and then you can increase the third, or fourth, and more parameters. <br />Such as `['',0]`, `['',99,'string 1','string 2']` <br /><blockquote>There should be at least one parameter which is the query string.</blockquote> |
 | `fetchCallback` | function  | - | Return value from `fetchCallback` property to format the data of the API callback, which will match the data structure of the component. <br >At the same time it returns the original data, you will use this function and use the `return` keyword to return a new value. |
 | `onFetch` | function  | - | Call a function when  data is successfully fetched. It returns one callback value which is the fetched data (an array) |
-| `onClick` | function  | - | Call a function when the value of an HTML element is clicked. It returns two callback values, one is the current control and the other is the value. |
-| `onChange` | function  | - | Call a function when the value of an HTML element is changed. It returns two callback values, one is the current control and the other is the value. |
+| `onClick` | function  | - | Call a function when the value of an HTML element is clicked. It returns three callback values. <br /> <ol><li>The first is the current control</li><li>The second is the current value</li><li>The last is the data (Exposes the JSON format data) about the option.</li></ol> |
+| `onChange` | function  | - | Call a function when the value of an HTML element is changed. It returns three callback values. <br /> <ol><li>The first is the current control</li><li>The second is the current value</li><li>The last is the data (Exposes the JSON format data) about the option.</li></ol> |
 | `onBlur` | function  | - | Call a function when a user leaves a form field. |
 | `onFocus` | function  | - | Call a function when an form field gets focus. |
 
@@ -41,8 +41,8 @@ import Radio from 'funda-ui/Radio';
 
 export default () => {
 
-    function handleChange(e, val) {
-        console.log(e.target, val);
+    function handleChange(e, val, data) {
+        console.log(e.target, val, data);
     }
 
     return (
@@ -172,8 +172,8 @@ class DataService {
 
 export default () => {
 
-    function handleChange(e, val) {
-        console.log(e.target, val);
+    function handleChange(e, val, data) {
+        console.log(e.target, val, data);
     }
 
     return (
@@ -188,19 +188,20 @@ export default () => {
                 fetchFuncMethodParams={['',0]}
                 fetchCallback={(res) => {
 
-                    const formattedData = res.map((item) => {
+                    const formattedData = res.map((item, index) => {
                         return {
                             label: item.item_name,
-                            value: item.item_code
+                            value: item.item_code,
+                            customArg1: index
                         }
                     }); 
 
                     console.log(formattedData);
                     /*
                     [
-                        {"label": "foo","value": "bar"},
-                        {"label": "foo2","value": "bar2"},
-                        {"label": "foo3","value": "bar3"}
+                        {"label": "foo","value": "bar","customArg1": 0},
+                        {"label": "foo2","value": "bar2","customArg1": 1},
+                        {"label": "foo3","value": "bar3","customArg1": 2}
                     ]  
                     */
 

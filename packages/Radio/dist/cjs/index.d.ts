@@ -7,7 +7,7 @@ declare module 'react' {
 interface OptionConfig {
     [propName: string]: string | number;
 }
-declare type RadioOptionChangeFnType = (arg1: any, arg2: any) => void;
+declare type RadioOptionChangeFnType = (arg1: any, arg2: any, arg3?: any) => void;
 declare type RadioProps = {
     wrapperClassName?: string;
     value?: string;

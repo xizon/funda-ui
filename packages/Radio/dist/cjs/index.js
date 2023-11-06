@@ -257,6 +257,7 @@ var Radio = function Radio(props) {
   }
   function handleChange(event) {
     var val = event.target.value;
+    var currentIndex = event.target.dataset.index;
 
     //----
     // update value
@@ -268,8 +269,10 @@ var Radio = function Radio(props) {
 
     //
     if (typeof onChange === 'function') {
-      onChange(event, dataInit[event.target.selectedIndex]);
-      event.target.blur();
+      onChange(event, val, dataInit[currentIndex]);
+    }
+    if (typeof onClick === 'function') {
+      onClick(event, val, dataInit[currentIndex]);
     }
   }
   function handleBlur(event) {
@@ -293,6 +296,7 @@ var Radio = function Radio(props) {
       className: "form-check-input",
       id: "field-".concat(uniqueID, "-").concat(index),
       name: name,
+      "data-index": index,
       value: "".concat(item.value),
       required: requiredVal,
       disabled: disabled || null,

@@ -11,7 +11,7 @@ interface OptionConfig {
 }
 
 
-type RadioOptionChangeFnType = (arg1: any, arg2: any) => void;
+type RadioOptionChangeFnType = (arg1: any, arg2: any, arg3?: any) => void;
 
 
 type RadioProps = {
@@ -192,6 +192,7 @@ const Radio = (props: RadioProps) => {
 
     function handleChange(event: any) {
         const val = event.target.value;
+        const currentIndex = event.target.dataset.index;
 
 
         //----
@@ -205,11 +206,11 @@ const Radio = (props: RadioProps) => {
 
         //
         if (typeof (onChange) === 'function') {
-            onChange(event, dataInit[event.target.selectedIndex]);
-
-            event.target.blur();
+            onChange(event, val, dataInit[currentIndex]);
         }
-
+        if (typeof (onClick) === 'function') {
+            onClick(event, val, dataInit[currentIndex]);
+        }
     }
 
     function handleBlur(event: any) {
@@ -234,6 +235,7 @@ const Radio = (props: RadioProps) => {
                 className="form-check-input"
                 id={`field-${uniqueID}-${index}`}
                 name={name}
+                data-index={index}
                 value={`${item.value}`}
                 required={requiredVal}
                 disabled={disabled || null}
