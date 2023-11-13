@@ -1,0 +1,96 @@
+/* ======================================================
+   <!-- Calendar -->
+/* ====================================================== */
+.custom-calendar {
+  --custom-calendar-wrapper-min-width: 400px;
+  --custom-calendar-border-color: #ddd;
+  --custom-calendar-header-fs: 1.125rem;
+  --custom-calendar-header-bg: #f5f6fa;
+  --custom-calendar-default-border-color: #eee;
+  --custom-calendar-today-border-color: #ddd;
+  --custom-calendar-todayselected-bg: #eee;
+  --custom-calendar-year-month-btn-border-color: #ddd;
+  --custom-calendar-year-month-btn-hover-bg: rgba(0, 58, 166, .2);
+  --custom-calendar-year-month-btn-selected-bg: rgba(0, 58, 166, 1);
+  --custom-calendar-year-month-btn-selected-color: #fff;
+}
+.custom-calendar__wrapper {
+  min-width: var(--custom-calendar-wrapper-min-width);
+  border: 1px solid var(--custom-calendar-border-color);
+}
+.custom-calendar__header {
+  font-size: var(--custom-calendar-header-fs);
+  font-weight: bold;
+  padding: 10px 10px 5px 10px;
+  display: flex;
+  justify-content: space-between;
+  background-color: var(--custom-calendar-header-bg);
+}
+.custom-calendar__body {
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+}
+.custom-calendar__btn {
+  border: none;
+  outline: none;
+  background: none;
+  padding: 0;
+  margin: 0;
+  box-shadow: none;
+  cursor: pointer;
+}
+.custom-calendar__btn__btn--prev {
+  transform: rotate(90deg);
+}
+.custom-calendar__btn__btn--next {
+  transform: rotate(-90deg);
+}
+.custom-calendar__btn__btn--today {
+  margin: 1rem;
+}
+.custom-calendar__day {
+  width: 14.2%;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  border: 1px solid var(--custom-calendar-default-border-color);
+}
+.custom-calendar__day.today {
+  border: 1px solid var(--custom-calendar-today-border-color);
+}
+.custom-calendar__day.selected {
+  background-color: var(--custom-calendar-todayselected-bg);
+}
+.custom-calendar__month-container {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(4, 2.5em);
+  margin-top: 45px;
+  grid-gap: 10px;
+}
+.custom-calendar__year-container {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: repeat(5, 2.5em);
+  grid-gap: 5px;
+}
+.custom-calendar__year, .custom-calendar__month {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 5px;
+  font-size: 0.875em;
+  border: 1px solid var(--custom-calendar-year-month-btn-border-color);
+  border-radius: 5px;
+  cursor: pointer;
+}
+.custom-calendar__year:hover, .custom-calendar__year:hover, .custom-calendar__month:hover, .custom-calendar__month:hover {
+  background-color: var(--custom-calendar-year-month-btn-hover-bg);
+}
+.custom-calendar__year.selected, .custom-calendar__year.selected, .custom-calendar__month.selected, .custom-calendar__month.selected {
+  background-color: var(--custom-calendar-year-month-btn-selected-bg);
+  color: var(--custom-calendar-year-month-btn-selected-color);
+}

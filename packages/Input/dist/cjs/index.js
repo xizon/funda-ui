@@ -96,7 +96,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(787);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-var _excluded = ["wrapperClassName", "controlClassName", "type", "disabled", "required", "placeholder", "pattern", "readOnly", "value", "label", "units", "name", "step", "min", "max", "src", "size", "minLength", "maxLength", "alt", "id", "iconLeft", "iconRight", "autoComplete", "style", "tabIndex", "onChangeCallback", "onChange", "onBlur", "onFocus"];
+var _excluded = ["wrapperClassName", "controlClassName", "type", "disabled", "required", "placeholder", "pattern", "readOnly", "value", "label", "units", "name", "step", "min", "max", "src", "size", "minLength", "maxLength", "alt", "id", "iconLeft", "iconRight", "autoComplete", "style", "tabIndex", "onChangeCallback", "onInputCallback", "onKeyPressedCallback", "onChange", "onBlur", "onFocus"];
 function _extends() { _extends = Object.assign ? Object.assign.bind() : function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
 function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
 function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
@@ -135,6 +135,8 @@ var Input = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(funct
     style = props.style,
     tabIndex = props.tabIndex,
     onChangeCallback = props.onChangeCallback,
+    onInputCallback = props.onInputCallback,
+    onKeyPressedCallback = props.onKeyPressedCallback,
     onChange = props.onChange,
     onBlur = props.onBlur,
     onFocus = props.onFocus,
@@ -178,6 +180,12 @@ var Input = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(funct
 
     //
     onChange === null || onChange === void 0 ? void 0 : onChange(event, onComposition);
+
+    // It fires in real time as the user enters
+    if (typeof onInputCallback === 'function') {
+      var newData = onInputCallback(event);
+      setChangedVal(newData);
+    }
   }
   function handleBlur(event) {
     var el = event.target;
@@ -192,9 +200,15 @@ var Input = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(funct
     //
     onBlur === null || onBlur === void 0 ? void 0 : onBlur(event, onComposition);
 
-    //
+    // It fires when focus is lost
     if (typeof onChangeCallback === 'function') {
       var newData = onChangeCallback(event);
+      setChangedVal(newData);
+    }
+  }
+  function handleKeyPressed(event) {
+    if (typeof onKeyPressedCallback === 'function') {
+      var newData = onKeyPressedCallback(event);
       setChangedVal(newData);
     }
   }
@@ -245,6 +259,7 @@ var Input = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(funct
     onFocus: handleFocus,
     onBlur: handleBlur,
     onChange: handleChange,
+    onKeyDown: handleKeyPressed,
     onCompositionStart: handleComposition,
     onCompositionUpdate: handleComposition,
     onCompositionEnd: handleComposition,

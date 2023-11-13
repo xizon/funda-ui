@@ -24,6 +24,8 @@ interface TextareaProps extends React.ComponentPropsWithoutRef<"textarea"> {
     tabIndex?: number;
     [key: `data-${string}`]: string | undefined;
     onChangeCallback?: (e: any) => void;
+    onInputCallback?: (e: any) => void;
+    onKeyPressedCallback?: (e: any) => void;
     onChange?: (e: any) => void;
     onBlur?: (e: any) => void;
     onFocus?: (e: any) => void;

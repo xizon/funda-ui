@@ -158,7 +158,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
         var react__WEBPACK_IMPORTED_MODULE_0__ = __nested_webpack_require_1465__(787);
         /* harmony import */
         var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__nested_webpack_require_1465__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-        var _excluded = ["wrapperClassName", "controlClassName", "type", "disabled", "required", "placeholder", "pattern", "readOnly", "value", "label", "units", "name", "step", "min", "max", "src", "size", "minLength", "maxLength", "alt", "id", "iconLeft", "iconRight", "autoComplete", "style", "tabIndex", "onChangeCallback", "onChange", "onBlur", "onFocus"];
+        var _excluded = ["wrapperClassName", "controlClassName", "type", "disabled", "required", "placeholder", "pattern", "readOnly", "value", "label", "units", "name", "step", "min", "max", "src", "size", "minLength", "maxLength", "alt", "id", "iconLeft", "iconRight", "autoComplete", "style", "tabIndex", "onChangeCallback", "onInputCallback", "onKeyPressedCallback", "onChange", "onBlur", "onFocus"];
         function _extends() {
           _extends = Object.assign ? Object.assign.bind() : function (target) {
             for (var i = 1; i < arguments.length; i++) {
@@ -277,6 +277,8 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
             style = props.style,
             tabIndex = props.tabIndex,
             onChangeCallback = props.onChangeCallback,
+            onInputCallback = props.onInputCallback,
+            onKeyPressedCallback = props.onKeyPressedCallback,
             onChange = props.onChange,
             onBlur = props.onBlur,
             onFocus = props.onFocus,
@@ -320,6 +322,12 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 
             //
             onChange === null || onChange === void 0 ? void 0 : onChange(event, onComposition);
+
+            // It fires in real time as the user enters
+            if (typeof onInputCallback === 'function') {
+              var newData = onInputCallback(event);
+              setChangedVal(newData);
+            }
           }
           function handleBlur(event) {
             var el = event.target;
@@ -334,9 +342,15 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
             //
             onBlur === null || onBlur === void 0 ? void 0 : onBlur(event, onComposition);
 
-            //
+            // It fires when focus is lost
             if (typeof onChangeCallback === 'function') {
               var newData = onChangeCallback(event);
+              setChangedVal(newData);
+            }
+          }
+          function handleKeyPressed(event) {
+            if (typeof onKeyPressedCallback === 'function') {
+              var newData = onKeyPressedCallback(event);
               setChangedVal(newData);
             }
           }
@@ -387,6 +401,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
             onFocus: handleFocus,
             onBlur: handleBlur,
             onChange: handleChange,
+            onKeyDown: handleKeyPressed,
             onCompositionStart: handleComposition,
             onCompositionUpdate: handleComposition,
             onCompositionEnd: handleComposition,

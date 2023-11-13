@@ -47,6 +47,7 @@ Here is a table of the components and their status.
 | [Tooltip ✅](packages/Tooltip/README.md) |  |  |  |
 | [Digital Clock ✅](packages/DigitalClock/README.md) |  |  |  |
 | [Tree ✅🔥](packages/Tree/README.md) |  |  |  |
+| [Calendar ✅](packages/Calendar/README.md) |  |  |  |
 
 
 

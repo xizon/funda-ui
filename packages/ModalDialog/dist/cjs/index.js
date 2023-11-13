@@ -613,8 +613,6 @@ var ModalDialog = function ModalDialog(props) {
         };
       };
       onOpen === null || onOpen === void 0 ? void 0 : onOpen(null, _callback(null));
-    } else {
-      handleCloseWin(null);
     }
 
     // Pass the function to be called

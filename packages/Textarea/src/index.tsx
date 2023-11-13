@@ -28,6 +28,8 @@ interface TextareaProps extends React.ComponentPropsWithoutRef<"textarea"> {
     tabIndex?: number;
     [key: `data-${string}`]: string | undefined;
     onChangeCallback?: (e: any) => void;
+    onInputCallback?: (e: any) => void;
+    onKeyPressedCallback?: (e: any) => void;
     onChange?: (e: any) => void;
     onBlur?: (e: any) => void;
     onFocus?: (e: any) => void;
@@ -53,6 +55,8 @@ const Textarea = forwardRef((props: TextareaProps, ref: any) => {
         style,
         tabIndex,
         onChangeCallback,
+        onInputCallback,
+        onKeyPressedCallback,
         onChange,
         onBlur,
         onFocus,
@@ -91,6 +95,13 @@ const Textarea = forwardRef((props: TextareaProps, ref: any) => {
 
         //
         onChange?.(event);
+
+        // It fires in real time as the user enters
+        if (typeof (onInputCallback) === 'function') {
+            const newData: any = onInputCallback(event);
+            setChangedVal(newData);
+        }
+
     }
 
     function handleBlur(event: any) {
@@ -108,13 +119,21 @@ const Textarea = forwardRef((props: TextareaProps, ref: any) => {
         onBlur?.(event);
 
 
-        //
+        // It fires when focus is lost
         if (typeof (onChangeCallback) === 'function') {
             const newData: any = onChangeCallback(event);
             setChangedVal(newData);
         }
 
     }
+
+    function handleKeyPressed(event: React.KeyboardEvent<HTMLTextAreaElement>) {
+        if (typeof (onKeyPressedCallback) === 'function') {
+            const newData: any = onKeyPressedCallback(event);
+            setChangedVal(newData);
+        }
+    }
+
 
     useEffect(() => {
 
@@ -152,6 +171,7 @@ const Textarea = forwardRef((props: TextareaProps, ref: any) => {
 			          onFocus={handleFocus}
 					  onBlur={handleBlur}
 			          onChange={handleChange}
+                      onKeyDown={handleKeyPressed}
 			          disabled={disabled || null}
 					  required={required || null}
                       readOnly={readOnly || null}

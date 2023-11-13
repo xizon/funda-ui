@@ -36,6 +36,8 @@ type InputProps = {
     tabIndex?: number;
     [key: `data-${string}`]: string | undefined;
     onChangeCallback?: (e: any) => void;
+    onInputCallback?: (e: any) => void;
+    onKeyPressedCallback?: (e: any) => void;
     onChange?: (e: any, param: any) => void;
     onBlur?: (e: any, param: any) => void;
     onFocus?: (e: any, param: any) => void;
@@ -72,6 +74,8 @@ const Input = forwardRef((props: InputProps, ref: any) => {
         style,
         tabIndex,
         onChangeCallback,
+        onInputCallback,
+        onKeyPressedCallback,
         onChange,
         onBlur,
         onFocus,
@@ -119,6 +123,12 @@ const Input = forwardRef((props: InputProps, ref: any) => {
         //
         onChange?.(event, onComposition);
 
+        // It fires in real time as the user enters
+        if (typeof (onInputCallback) === 'function') {
+            const newData: any = onInputCallback(event);
+            setChangedVal(newData);
+        }
+
 
     }
 
@@ -136,9 +146,16 @@ const Input = forwardRef((props: InputProps, ref: any) => {
         //
         onBlur?.(event, onComposition);
 
-        //
+        // It fires when focus is lost
         if (typeof (onChangeCallback) === 'function') {
             const newData: any = onChangeCallback(event);
+            setChangedVal(newData);
+        }
+    }
+   
+    function handleKeyPressed(event: React.KeyboardEvent<HTMLInputElement>) {
+        if (typeof (onKeyPressedCallback) === 'function') {
+            const newData: any = onKeyPressedCallback(event);
             setChangedVal(newData);
         }
     }
@@ -190,6 +207,7 @@ const Input = forwardRef((props: InputProps, ref: any) => {
                         onFocus={handleFocus}
                         onBlur={handleBlur}
                         onChange={handleChange}
+                        onKeyDown={handleKeyPressed}
                         onCompositionStart={handleComposition}
                         onCompositionUpdate={handleComposition}
                         onCompositionEnd={handleComposition}

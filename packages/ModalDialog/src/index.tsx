@@ -129,6 +129,7 @@ const ModalDialog = (props: ModalDialogProps) => {
     }
 
     function closeAction() {
+        
         // pause video without controls
         //------------------------------------------
         if (window.curVideo !== null && typeof window.curVideo !== 'undefined') window.curVideo.pause();
@@ -374,8 +375,6 @@ const ModalDialog = (props: ModalDialogProps) => {
             };
             onOpen?.(null, callback(null));
 
-        } else {
-            handleCloseWin(null);
         }
 
 

@@ -1164,6 +1164,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
           }
           function handleChange(event) {
             var val = event.target.value;
+            var currentIndex = event.target.dataset.index;
 
             //----
             // update value
@@ -1175,8 +1176,10 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 
             //
             if (typeof onChange === 'function') {
-              onChange(event, dataInit[event.target.selectedIndex]);
-              event.target.blur();
+              onChange(event, val, dataInit[currentIndex]);
+            }
+            if (typeof onClick === 'function') {
+              onClick(event, val, dataInit[currentIndex]);
             }
           }
           function handleBlur(event) {
@@ -1200,6 +1203,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
               className: "form-check-input",
               id: "field-".concat(uniqueID, "-").concat(index),
               name: name,
+              "data-index": index,
               value: "".concat(item.value),
               required: requiredVal,
               disabled: disabled || null,

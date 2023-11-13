@@ -187,7 +187,7 @@ var useAutosizeTextArea = function useAutosizeTextArea(el, value, autoSizeBeginO
 };
 /* harmony default export */ const utils_useAutosizeTextArea = (useAutosizeTextArea);
 ;// CONCATENATED MODULE: ./src/index.tsx
-var _excluded = ["wrapperClassName", "controlClassName", "cols", "rows", "disabled", "required", "placeholder", "autoSize", "readOnly", "value", "label", "name", "id", "maxLength", "style", "tabIndex", "onChangeCallback", "onChange", "onBlur", "onFocus"];
+var _excluded = ["wrapperClassName", "controlClassName", "cols", "rows", "disabled", "required", "placeholder", "autoSize", "readOnly", "value", "label", "name", "id", "maxLength", "style", "tabIndex", "onChangeCallback", "onInputCallback", "onKeyPressedCallback", "onChange", "onBlur", "onFocus"];
 function _extends() { _extends = Object.assign ? Object.assign.bind() : function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
 function src_slicedToArray(arr, i) { return src_arrayWithHoles(arr) || src_iterableToArrayLimit(arr, i) || src_unsupportedIterableToArray(arr, i) || src_nonIterableRest(); }
 function src_nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
@@ -218,6 +218,8 @@ var Textarea = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_reac
     style = props.style,
     tabIndex = props.tabIndex,
     onChangeCallback = props.onChangeCallback,
+    onInputCallback = props.onInputCallback,
+    onKeyPressedCallback = props.onKeyPressedCallback,
     onChange = props.onChange,
     onBlur = props.onBlur,
     onFocus = props.onFocus,
@@ -252,6 +254,12 @@ var Textarea = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_reac
 
     //
     onChange === null || onChange === void 0 ? void 0 : onChange(event);
+
+    // It fires in real time as the user enters
+    if (typeof onInputCallback === 'function') {
+      var newData = onInputCallback(event);
+      setChangedVal(newData);
+    }
   }
   function handleBlur(event) {
     var el = event.target;
@@ -266,9 +274,15 @@ var Textarea = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_reac
     //
     onBlur === null || onBlur === void 0 ? void 0 : onBlur(event);
 
-    //
+    // It fires when focus is lost
     if (typeof onChangeCallback === 'function') {
       var newData = onChangeCallback(event);
+      setChangedVal(newData);
+    }
+  }
+  function handleKeyPressed(event) {
+    if (typeof onKeyPressedCallback === 'function') {
+      var newData = onKeyPressedCallback(event);
       setChangedVal(newData);
     }
   }
@@ -307,6 +321,7 @@ var Textarea = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_reac
     onFocus: handleFocus,
     onBlur: handleBlur,
     onChange: handleChange,
+    onKeyDown: handleKeyPressed,
     disabled: disabled || null,
     required: required || null,
     readOnly: readOnly || null,

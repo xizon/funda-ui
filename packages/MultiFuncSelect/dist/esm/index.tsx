@@ -318,15 +318,19 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
 
     //
     function fixContentHeight() {
-        if (listContentRef.current === null) return;
-
+   
         setTimeout(() => {
 
-            const _displayedItems = listContentRef.current.querySelectorAll('.list-group-item');
-            const _displayedHeight = _displayedItems[0].clientHeight * _displayedItems.length;
+            if (listContentRef.current !== null) {
+                const _displayedItems = listContentRef.current.querySelectorAll('.list-group-item');
 
-            listContentRef.current.style.height = _displayedHeight + 'px';
-            
+                if (typeof _displayedItems[0] !== 'undefined') {
+                    const _displayedHeight = _displayedItems[0].clientHeight * _displayedItems.length;
+                    listContentRef.current.style.height = _displayedHeight + 'px';
+                }
+
+            }
+
         }, 0);
 
     }

@@ -87,6 +87,8 @@ export default () => {
             data = {index: Math.random()};
         }
 
+        const currentRowNum = val !== null ? val.index : undefined;
+
         return <React.Fragment key={'tmpl-' + data.index}>
                 {/* ///////////// */}
                 <div className="row">
@@ -308,7 +310,7 @@ export default () => {
             data = {index: Math.random()};
         }
 
-        
+        const currentRowNum = val !== null ? val.index : undefined;
         
         return <React.Fragment key={'tmpl-' + data.index}>
                 {/* ///////////// */}
@@ -672,7 +674,7 @@ export default () => {
             data = {index: Math.random()};
         }
 
-        
+        const currentRowNum = val !== null ? val.index : undefined;
         
         return <React.Fragment key={'tmpl-' + data.index}>
                 {/* ///////////// */}
@@ -872,6 +874,8 @@ export default () => {
         } else {
             data = {index: Math.random()};
         }
+        
+        const currentRowNum = val !== null ? val.index : undefined;
 
         return <React.Fragment key={'tmpl-' + data.index}>
                 {/* ///////////// */}

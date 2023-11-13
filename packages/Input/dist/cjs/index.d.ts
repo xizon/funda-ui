@@ -34,6 +34,8 @@ declare type InputProps = {
     tabIndex?: number;
     [key: `data-${string}`]: string | undefined;
     onChangeCallback?: (e: any) => void;
+    onInputCallback?: (e: any) => void;
+    onKeyPressedCallback?: (e: any) => void;
     onChange?: (e: any, param: any) => void;
     onBlur?: (e: any, param: any) => void;
     onFocus?: (e: any, param: any) => void;
