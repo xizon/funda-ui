@@ -33,6 +33,12 @@ It accepts all props which this control support.
 
 
 
+### Create Callback 
+
+A successful response returns the details of the callback such as Sample Request Body:
+
+Among them, `label`, `value`, `disabled`, `id` and `parent_id` are attributes used by the system, and other attributes can be added freely
+
 
 
 ## Examples
@@ -106,19 +112,20 @@ export default () => {
                 fetchFuncMethodParams={['',0]}
                 fetchCallback={(res) => {
 
-                    const formattedData = res.map((item) => {
+                    const formattedData = res.map((item, index) => {
                         return {
                             label: item.item_name,
-                            value: item.item_code
+                            value: item.item_code,
+                            disabled: index === res.length - 1 ? true : false
                         }
                     }); 
 
                     console.log(formattedData);
                     /*
                     [
-                        {"label": "foo","value": "bar"},
-                        {"label": "foo2","value": "bar2"},
-                        {"label": "foo3","value": "bar3"}
+                        {"label": "foo","value": "bar","disabled": false},
+                        {"label": "foo2","value": "bar2","disabled": false},
+                        {"label": "foo3","value": "bar3","disabled": true}
                     ]  
                     */
 

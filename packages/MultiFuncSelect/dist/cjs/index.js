@@ -1880,7 +1880,9 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
     className: controlClassName || controlClassName === '' ? controlClassName : "form-control",
     onFocus: handleFocus,
     onBlur: handleBlur,
-    onClick: handleShowList,
+    onClick: typeof readOnly === 'undefined' || !readOnly ? handleShowList : function () {
+      return void 0;
+    },
     onChange: handleChange,
     onCompositionStart: handleComposition,
     onCompositionUpdate: handleComposition,

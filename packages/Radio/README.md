@@ -31,6 +31,13 @@ import Radio from 'funda-ui/Radio';
 It accepts all props which this control support.
 
 
+### Create Callback 
+
+A successful response returns the details of the callback such as Sample Request Body:
+
+Among them, `label` and `value`  are attributes used by the system, and other attributes can be added freely
+
+
 
 
 ## Examples

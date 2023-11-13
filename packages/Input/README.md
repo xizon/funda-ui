@@ -21,6 +21,7 @@ import Input from 'funda-ui/Input';
 | `max` | number | - | The maximum value to accept |
 | `placeholder` | string | - |  Specifies a short hint that describes. |
 | `maxLength` | number | - | Defines the maximum number of characters |
+| `readOnly` | boolean | false | When present, it specifies that this component field is read-only. |
 | `disabled` | boolean | false | Whether it is disabled |
 | `required` | boolean | false | When present, it specifies that a field must be filled out before submitting the form. |
 | `iconLeft` | ReactNode  | - | Set the left icon of this control |

@@ -1433,7 +1433,7 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
                             className={controlClassName || controlClassName === '' ? controlClassName : "form-control"}
                             onFocus={handleFocus}
                             onBlur={handleBlur}
-                            onClick={handleShowList}
+                            onClick={typeof readOnly === 'undefined' || !readOnly ? handleShowList : ()=>void(0)}
                             onChange={handleChange}
                             onCompositionStart={handleComposition}
                             onCompositionUpdate={handleComposition}

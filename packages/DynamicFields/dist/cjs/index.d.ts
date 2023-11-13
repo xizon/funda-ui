@@ -19,6 +19,7 @@ declare type DynamicFieldsProps = {
     iconAddBefore?: React.ReactNode | string;
     iconAddAfter?: React.ReactNode | string;
     iconAdd?: React.ReactNode | string;
+    iconAddPosition?: `start` | `end`;
     iconRemove?: React.ReactNode | string;
     innerAppendClassName?: string;
     innerAppendCellClassName?: string;

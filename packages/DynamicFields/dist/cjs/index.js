@@ -115,6 +115,7 @@ var DynamicFields = function DynamicFields(props) {
     iconAddBefore = props.iconAddBefore,
     iconAddAfter = props.iconAddAfter,
     iconAdd = props.iconAdd,
+    iconAddPosition = props.iconAddPosition,
     iconRemove = props.iconRemove,
     doNotRemoveDom = props.doNotRemoveDom,
     id = props.id,
@@ -302,6 +303,25 @@ var DynamicFields = function DynamicFields(props) {
       }, item, removeBtyn))));
     });
   }
+  function addButton() {
+    return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+      className: "dynamic-fields__btns dynamic-fields__btns--end"
+    }, iconAddBefore ? iconAddBefore : null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
+      ref: addBtnRef,
+      href: "#",
+      tabIndex: -1,
+      className: "dynamic-fields__addbtn align-middle",
+      onClick: handleClickAdd
+    }, iconAdd ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, iconAdd) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("svg", {
+      width: "20px",
+      height: "20px",
+      viewBox: "0 0 24 24",
+      fill: "none"
+    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("path", {
+      d: "M12 2C6.49 2 2 6.49 2 12C2 17.51 6.49 22 12 22C17.51 22 22 17.51 22 12C22 6.49 17.51 2 12 2ZM16 12.75H12.75V16C12.75 16.41 12.41 16.75 12 16.75C11.59 16.75 11.25 16.41 11.25 16V12.75H8C7.59 12.75 7.25 12.41 7.25 12C7.25 11.59 7.59 11.25 8 11.25H11.25V8C11.25 7.59 11.59 7.25 12 7.25C12.41 7.25 12.75 7.59 12.75 8V11.25H16C16.41 11.25 16.75 11.59 16.75 12C16.75 12.41 16.41 12.75 16 12.75Z",
+      fill: "#000"
+    })))), iconAddAfter ? iconAddAfter : null);
+  }
   (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(function () {
     setVal(data ? data.init : []);
     setTmpl(data ? data.tmpl : null);
@@ -319,7 +339,7 @@ var DynamicFields = function DynamicFields(props) {
     className: "dynamic-fields-container",
     "data-max-fields": maxFields || 10,
     id: idRes
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+  }, iconAddPosition === 'start' ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, addButton()) : null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
     className: "dynamic-fields__append ".concat(innerAppendClassName || '')
   }, innerAppendHeadData && Array.isArray(innerAppendHeadData) && val.length > 0 ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
     className: "dynamic-fields__inner__head ".concat(innerAppendHeadRowClassName || '')
@@ -331,23 +351,7 @@ var DynamicFields = function DynamicFields(props) {
   }))) : null, generateGroup(val)), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
     ref: emptyRef,
     className: "".concat(ITEM_HIDE_CLASSNAME)
-  }, innerAppendEmptyContent || null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-    className: "dynamic-fields__btns"
-  }, iconAddBefore ? iconAddBefore : null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
-    ref: addBtnRef,
-    href: "#",
-    tabIndex: -1,
-    className: "dynamic-fields__addbtn align-middle",
-    onClick: handleClickAdd
-  }, iconAdd ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, iconAdd) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("svg", {
-    width: "20px",
-    height: "20px",
-    viewBox: "0 0 24 24",
-    fill: "none"
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("path", {
-    d: "M12 2C6.49 2 2 6.49 2 12C2 17.51 6.49 22 12 22C17.51 22 22 17.51 22 12C22 6.49 17.51 2 12 2ZM16 12.75H12.75V16C12.75 16.41 12.41 16.75 12 16.75C11.59 16.75 11.25 16.41 11.25 16V12.75H8C7.59 12.75 7.25 12.41 7.25 12C7.25 11.59 7.59 11.25 8 11.25H11.25V8C11.25 7.59 11.59 7.25 12 7.25C12.41 7.25 12.75 7.59 12.75 8V11.25H16C16.41 11.25 16.75 11.59 16.75 12C16.75 12.41 16.41 12.75 16 12.75Z",
-    fill: "#000"
-  })))), iconAddAfter ? iconAddAfter : null))));
+  }, innerAppendEmptyContent || null), typeof iconAddPosition === 'undefined' || iconAddPosition === 'end' ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, addButton()) : null)));
 };
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (DynamicFields);
 })();

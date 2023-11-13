@@ -258,9 +258,10 @@ const Select = forwardRef((props: SelectProps, ref: any) => {
     
     // Generate list of options
     const selectOptionsList = dataInit.map((item: any, index: number) => {
+        const _disabled = typeof item.disabled === 'undefined' ? false : item.disabled;
         return <option key={index} value={item.value as string} dangerouslySetInnerHTML={{
             __html: `${item.label}`,
-        }}></option>;
+        }} disabled={_disabled}></option>;
         
     });
     
