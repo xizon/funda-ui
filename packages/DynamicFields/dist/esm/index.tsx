@@ -178,7 +178,7 @@ const DynamicFields = (props: DynamicFieldsProps) => {
         const curKey = (e.currentTarget.closest('.dynamic-fields__data__wrapper') as HTMLDivElement).dataset.key;
         
 
-        if (confirm(confirmText || '')) {
+        if (window.confirm(confirmText || '')) {
 
             //button status
             if (rootRef.current.querySelectorAll(PER_ROW_DOM_STRING).length <= parseFloat(maxFields)) {

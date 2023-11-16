@@ -114,7 +114,6 @@ export default () => {
                         <MultiFuncSelect
                             value={data.role_id}
                             name="role_id[]"
-                            data={location.pathname}
                             placeholder="Select"
                             options={`
                             [
@@ -718,7 +717,6 @@ export default () => {
                         <MultiFuncSelect
                             value={data.role_id}
                             name="role_id[]"
-                            data={location.pathname}
                             placeholder="Select"
                             options={`
                             [
@@ -895,7 +893,6 @@ export default () => {
                     <MultiFuncSelect
                         value={data.role_id}
                         name="role_id[]"
-                        data={location.pathname}
                         placeholder="Select"
                         options={`
                         [
@@ -952,7 +949,7 @@ export default () => {
                     <>Role(ID)</>,
                     <>&nbsp;</>
                 ]}
-                innerAppendHeadRowClassName="d-table-row fw-bold bg-light"
+                innerAppendHeadRowClassName="d-table-row fw-bold bg-body-tertiary"
                 innerAppendHeadCellClassName="d-table-cell border py-2 px-2"  
                 innerAppendEmptyContent={<><div className={`app-div-table__body--empty px-2 py-2 border`}>No data.</div></>}
             />

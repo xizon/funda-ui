@@ -126,7 +126,7 @@ const Input = forwardRef((props: InputProps, ref: any) => {
         // It fires in real time as the user enters
         if (typeof (onInputCallback) === 'function') {
             const newData: any = onInputCallback(event);
-            setChangedVal(newData);
+            if (newData) setChangedVal(newData);  // Avoid the error "react checkbox changing an uncontrolled input to be controlled"
         }
 
 
@@ -149,14 +149,14 @@ const Input = forwardRef((props: InputProps, ref: any) => {
         // It fires when focus is lost
         if (typeof (onChangeCallback) === 'function') {
             const newData: any = onChangeCallback(event);
-            setChangedVal(newData);
+            if (newData) setChangedVal(newData);  // Avoid the error "react checkbox changing an uncontrolled input to be controlled"
         }
     }
    
     function handleKeyPressed(event: React.KeyboardEvent<HTMLInputElement>) {
         if (typeof (onKeyPressedCallback) === 'function') {
             const newData: any = onKeyPressedCallback(event);
-            setChangedVal(newData);
+            if (newData) setChangedVal(newData);  // Avoid the error "react checkbox changing an uncontrolled input to be controlled"
         }
     }
 

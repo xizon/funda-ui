@@ -327,10 +327,11 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
           var idRes = id || uniqueID;
           var rootRef = (0, react__WEBPACK_IMPORTED_MODULE_0__.useRef)(null);
           var valRef = (0, react__WEBPACK_IMPORTED_MODULE_0__.useRef)(null);
-          var _useState = (0, react__WEBPACK_IMPORTED_MODULE_0__.useState)(null),
+          var _useState = (0, react__WEBPACK_IMPORTED_MODULE_0__.useState)( false || false),
             _useState2 = _slicedToArray(_useState, 2),
             val = _useState2[0],
-            setVal = _useState2[1];
+            setVal = _useState2[1]; // Avoid the error "react checkbox changing an uncontrolled input to be controlled"
+
           function handleFocus(event) {
             rootRef.current.classList.add('focus');
 

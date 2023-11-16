@@ -367,9 +367,6 @@ export default () => {
                 triggerContent={<>
                     <a href="#" tabIndex={-1}>Launch demo modal</a>
                 </>}
-                onOpen={(e, closewin) => {
-
-                }}
                 onClose={(e) => {
 
                     // Modifying React State can ensure that the window content is updated in real time
@@ -394,6 +391,57 @@ export default () => {
                     </div>
                 </div>
 
+            </ModalDialog>
+
+        </>
+    );
+}
+```
+
+
+
+
+
+## Custom close handler
+
+
+```js
+import React, { useState } from "react";
+import ModalDialog from 'funda-ui/ModalDialog';
+import Switch from 'funda-ui/Switch';
+
+
+export default () => {
+
+    const [closeModalFunc, setCloseModalFunc] = useState<Function | null>(null);
+
+    function handleCloseModal() {
+        closeModalFunc?.();
+    }
+
+    return (
+        <>
+            <ModalDialog
+                show={false}
+                heading="Title Here"
+                triggerClassName="d-inline w-auto"
+                triggerContent={<>
+                    <a href="#" tabIndex={-1}>Launch demo modal</a>
+                </>}
+                onOpen={(e, closewin) => {
+                    setCloseModalFunc(() => closewin);
+                }}
+                onClose={(e) => {
+
+                    // Modifying React State can ensure that the window content is updated in real time
+                    setTimeout(() => {
+                        setShow(false);
+                    }, 350);
+
+                }}
+            >
+
+                xxx
             </ModalDialog>
 
         </>

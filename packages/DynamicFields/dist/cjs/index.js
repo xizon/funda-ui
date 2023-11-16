@@ -230,7 +230,7 @@ var DynamicFields = function DynamicFields(props) {
   function handleClickRemove(e) {
     e.preventDefault();
     var curKey = e.currentTarget.closest('.dynamic-fields__data__wrapper').dataset.key;
-    if (confirm(confirmText || '')) {
+    if (window.confirm(confirmText || '')) {
       //button status
       if (rootRef.current.querySelectorAll(PER_ROW_DOM_STRING).length <= parseFloat(maxFields)) {
         addBtnRef.current.style.setProperty('display', 'inline', 'important');

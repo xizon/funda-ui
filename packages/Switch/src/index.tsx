@@ -51,7 +51,7 @@ const Switch = forwardRef((props: SwitchProps, ref: any) => {
     const uniqueID = useId();
     const idRes = id || uniqueID;
     const rootRef = useRef<any>(null);
-    const [val, setVal] = useState<any>(null);
+    const [val, setVal] = useState<any>(null || false);  // Avoid the error "react checkbox changing an uncontrolled input to be controlled"
 
     function handleFocus(event: any) {
         rootRef.current.classList.add('focus');

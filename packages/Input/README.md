@@ -65,28 +65,16 @@ export default () => {
                 disabled
             />
 
-
             <Input
                 name="name"
-                label="Date"
-                type="datetime-local"
-                onFocus={(e) => {
-                    e.target.setAttribute("max", new Date().toISOString().split("T")[0] + 'T00:00');
-                }}
-                step={1}
-            /> 
-
-            <Input
-                name="name"
-                label="Time"
-                type="time"
-                step={60}
+                label="String"
                 onInputCallback={(e) => {                                                             
                     // only numeric
                     const newVal = e.target.value.replace(/[^0-9]/g, '');
                     return newVal;
                 }}
             />
+
 
 
             <Input
@@ -98,6 +86,73 @@ export default () => {
                 }}
             />
 
+
+
+
+        </>
+    );
+}
+```
+
+
+
+## Date or DateTime
+
+```js
+import React from "react";
+import Input from 'funda-ui/Input';
+
+export default () => {
+
+    return (
+        <>
+
+
+            <Input
+                name="name"
+                label="Date"
+                type="date"
+                step={1}
+            /> 
+
+            <Input
+                name="name"
+                label="DateTime"
+                type="datetime-local"
+                onFocus={(e) => {
+                    e.target.setAttribute("max", new Date().toISOString().split("T")[0] + 'T00:00');
+                }}
+                step={1}
+            /> 
+
+            <Input
+                name="name"
+                label="DateTime"
+                type="datetime-local"
+                step={60}
+                onInputCallback={(e) => {
+                    // YYYY-MM-DD HH:MM
+                    const date = new Date(e.target.value);
+                    const padZero = (num: number): string => {
+                        return num < 10 ? '0' + num : num.toString();
+                    };
+                    const year = date.getFullYear();
+                    const month = padZero(date.getMonth() + 1);
+                    const day = padZero(date.getDate());
+                    const hours = padZero(date.getHours());
+                    const minutes = padZero(date.getMinutes());
+                    const res = `${year}-${month}-${day} ${hours}:${minutes}`;
+                    return res;
+                }}
+            /> 
+
+
+            <Input
+                name="name"
+                label="Time"
+                type="time"
+                step={60}
+            />
 
 
 

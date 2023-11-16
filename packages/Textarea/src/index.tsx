@@ -99,7 +99,7 @@ const Textarea = forwardRef((props: TextareaProps, ref: any) => {
         // It fires in real time as the user enters
         if (typeof (onInputCallback) === 'function') {
             const newData: any = onInputCallback(event);
-            setChangedVal(newData);
+            if (newData) setChangedVal(newData);  // Avoid the error "react checkbox changing an uncontrolled input to be controlled"
         }
 
     }
@@ -122,7 +122,7 @@ const Textarea = forwardRef((props: TextareaProps, ref: any) => {
         // It fires when focus is lost
         if (typeof (onChangeCallback) === 'function') {
             const newData: any = onChangeCallback(event);
-            setChangedVal(newData);
+            if (newData) setChangedVal(newData);  // Avoid the error "react checkbox changing an uncontrolled input to be controlled"
         }
 
     }
@@ -130,7 +130,7 @@ const Textarea = forwardRef((props: TextareaProps, ref: any) => {
     function handleKeyPressed(event: React.KeyboardEvent<HTMLTextAreaElement>) {
         if (typeof (onKeyPressedCallback) === 'function') {
             const newData: any = onKeyPressedCallback(event);
-            setChangedVal(newData);
+            if (newData) setChangedVal(newData);  // Avoid the error "react checkbox changing an uncontrolled input to be controlled"
         }
     }
 

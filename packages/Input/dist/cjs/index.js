@@ -184,9 +184,10 @@ var Input = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(funct
     // It fires in real time as the user enters
     if (typeof onInputCallback === 'function') {
       var newData = onInputCallback(event);
-      setChangedVal(newData);
+      if (newData) setChangedVal(newData); // Avoid the error "react checkbox changing an uncontrolled input to be controlled"
     }
   }
+
   function handleBlur(event) {
     var el = event.target;
     var val = event.target.value;
@@ -203,15 +204,17 @@ var Input = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(funct
     // It fires when focus is lost
     if (typeof onChangeCallback === 'function') {
       var newData = onChangeCallback(event);
-      setChangedVal(newData);
+      if (newData) setChangedVal(newData); // Avoid the error "react checkbox changing an uncontrolled input to be controlled"
     }
   }
+
   function handleKeyPressed(event) {
     if (typeof onKeyPressedCallback === 'function') {
       var newData = onKeyPressedCallback(event);
-      setChangedVal(newData);
+      if (newData) setChangedVal(newData); // Avoid the error "react checkbox changing an uncontrolled input to be controlled"
     }
   }
+
   (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(function () {
     // update default value
     //--------------
