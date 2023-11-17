@@ -146,6 +146,7 @@ const Checkbox = forwardRef((props: CheckboxProps, ref: any) => {
                         id={idRes}
                         name={name}
                         value={val ? value as string || '' : ''}  // do not use `defaultValue`
+                        {...attributes}
                     />
 
                     {label ? <><label htmlFor={`label-${idRes}`} className="form-check-label" dangerouslySetInnerHTML={{__html: `${label}`}}></label></> : null}

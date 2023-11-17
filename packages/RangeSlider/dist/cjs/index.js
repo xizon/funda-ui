@@ -625,7 +625,14 @@ var RangeSlider = function RangeSlider(props) {
   (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(function () {
     // update default value
     //--------------
-    initDefaultValue(value);
+    if (typeof value.min === 'undefined' || typeof value.max === 'undefined') {
+      initDefaultValue({
+        min: min,
+        max: max
+      });
+    } else {
+      initDefaultValue(value);
+    }
   }, [value]);
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, label ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
     className: "range-slider__label"

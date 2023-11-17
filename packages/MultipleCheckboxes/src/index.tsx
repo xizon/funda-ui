@@ -39,6 +39,7 @@ const MultipleCheckboxes = forwardRef((props: MultipleCheckboxesProps, ref: any)
         id,
         style,
         onChange,
+        ...attributes
     } = props;
 
 
@@ -162,6 +163,7 @@ const MultipleCheckboxes = forwardRef((props: MultipleCheckboxesProps, ref: any)
                         name={name}
                         value={regTagSelected.join(',')}
                         required={required || null}
+                        {...attributes}
                     />
 
 
