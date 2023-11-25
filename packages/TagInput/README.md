@@ -18,7 +18,7 @@ import TagInput from 'funda-ui/TagInput';
 | `maxLength` | number | - | Defines the maximum number of characters |
 | `disabled` | boolean | false | Whether it is disabled |
 | `required` | boolean | false | When present, it specifies that a field must be filled out before submitting the form. |
-| `onChange` | function  | - | Call a function when the value of an HTML element is changed. It returns two callback values, one is the control and the other is the current value (an array) |
+| `onChange` | function  | - | Call a function when the value of an HTML element is changed. It returns two callback values. <br /> <ol><li>The first is the control</li><li>The second is the current value (an array)</li></ol> |
 | `onBlur` | function  | - | Call a function when a user leaves a form field. |
 | `onFocus` | function  | - | Call a function when an form field gets focus. |
 

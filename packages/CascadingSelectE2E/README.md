@@ -12,7 +12,7 @@ import CascadingSelectE2E from 'funda-ui/CascadingSelectE2E';
 | `wrapperClassName` | string | `mb-3 position-relative` | The class name of the control wrapper. |
 | `controlClassName` | string | `form-control` | The class name of the control. |
 | `destroyParentIdMatch` | boolean  | false | Instead of using `parent_id` of response to match child and parent data (very useful for multiple fetch requests with no directly related fields), this operation will directly use the click event to modify the result. |
-| `columnTitle` | Array  | - | Set headers for each column group. Such as <br /> `['Heading 1', 'Heading 2', 'Heading 3', 'Heading 4']` <blockquote>Support html tags</blockquote> |
+| `columnTitle` | array  | - | Set headers for each column group. Such as <br /> `['Heading 1', 'Heading 2', 'Heading 3', 'Heading 4']` <blockquote>Support html tags</blockquote> |
 | `triggerClassName` | string  | - | Specify a class for your trigger |
 | `triggerContent` | ReactNode  | - | Set a piece of text or HTML code for the trigger |
 | `depth` | number  | 100 | Set the depth value of the control to control the display of the pop-up layer appear above. Please set it when multiple controls are used at the same time. |
@@ -29,7 +29,7 @@ import CascadingSelectE2E from 'funda-ui/CascadingSelectE2E';
 | `disabled` | boolean | false | Whether it is disabled |
 | `required` | boolean | false | When present, it specifies that a field must be filled out before submitting the form. |
 | `onFetch` | function  | - | Call a function when  data is successfully fetched. It returns one callback value which is the fetched data (an array) |
-| `fetchArray` | Array  | - | Set multiple requests, it should be an array |
+| `fetchArray` | array  | - | Set multiple requests, it should be an array |
 | `onChange` | function  | - | Call a function when the value of an HTML element is changed. It returns five callback values. <br /> <ol><li>The one is the input control</li><li>The second parameter is the current option data (a JSON object)</li><li>The third parameter is the index of the current column group</li><li>The fourth parameter indicates the current column depth</li><li>The last is value of the current control.</li></ol> |
 | `onBlur` | function  | - | Call a function when a user leaves a form field. |
 | `onFocus` | function  | - | Call a function when an form field gets focus. |
@@ -165,9 +165,40 @@ class DataService {
     }
 
 
+
     async getListUseAxios(searchStr = '', limit = 0) {
-        const response = await axios.get(`https://api?s=${searchStr}&limit=${limit}`);
-        return response;
+        let _data = null;
+        const res = await axios.get(`https://api`, {
+            params: {
+                s: searchStr,
+                limit: limit
+            },
+            headers: {
+                'Authorization': 'Bearer xxxx-xxxxxxxx-xxxxxxxx'
+                'Content-Type': 'application/json'
+            }
+        }).catch(function (error) {
+            console.log(error);
+        });
+
+        if (res && res.status == 200) _data = res.data;
+
+
+        // result
+        if (_data === null) {
+            return {
+                code: 0,
+                message: 'OK',
+                data: []
+            };
+        } else {
+            return {
+                code: 0,
+                message: 'OK',
+                data: _data
+            };
+        }
+
     }
 
 }

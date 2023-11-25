@@ -398,9 +398,40 @@ class DataService {
         };
     }
 
+
     async getListUseAxios(searchStr = '', limit = 0) {
-        const response = await axios.get(`https://api?s=${searchStr}&limit=${limit}`);
-        return response;
+        let _data = null;
+        const res = await axios.get(`https://api`, {
+            params: {
+                s: searchStr,
+                limit: limit
+            },
+            headers: {
+                'Authorization': 'Bearer xxxx-xxxxxxxx-xxxxxxxx'
+                'Content-Type': 'application/json'
+            }
+        }).catch(function (error) {
+            console.log(error);
+        });
+
+        if (res && res.status == 200) _data = res.data;
+
+
+        // result
+        if (_data === null) {
+            return {
+                code: 0,
+                message: 'OK',
+                data: []
+            };
+        } else {
+            return {
+                code: 0,
+                message: 'OK',
+                data: _data
+            };
+        }
+
     }
 
 }

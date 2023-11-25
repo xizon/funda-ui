@@ -2,6 +2,8 @@
 
 React components using pure Bootstrap 5+ which does not contain any external style and script libraries. You can load Bootstrap css libraries separately in your project.
 
+All components have undergone complex business verification and provide multiple examples.
+
 
 ---
 
@@ -49,7 +51,7 @@ Here is a table of the components and their status.
 | [Tooltip ✅](packages/Tooltip/README.md) |  |  |  |
 | [Digital Clock ✅](packages/DigitalClock/README.md) |  |  |  |
 | [Tree ✅🔥](packages/Tree/README.md) |  |  |  |
-| [Calendar ✅](packages/Calendar/README.md) |  |  |  |
+| [EventCalendar ✅🔥](packages/EventCalendar/README.md) |  |  |  |
 
 
 

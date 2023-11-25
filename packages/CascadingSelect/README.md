@@ -11,7 +11,7 @@ import CascadingSelect from 'funda-ui/CascadingSelect';
 | --- | --- | --- | --- |
 | `wrapperClassName` | string | `mb-3 position-relative` | The class name of the control wrapper. |
 | `controlClassName` | string | `form-control` | The class name of the control. |
-| `columnTitle` | Array  | - | Set headers for each column group. Such as <br /> `['Heading 1', 'Heading 2', 'Heading 3', 'Heading 4']` <blockquote>Support html tags</blockquote> |
+| `columnTitle` | array  | - | Set headers for each column group. Such as <br /> `['Heading 1', 'Heading 2', 'Heading 3', 'Heading 4']` <blockquote>Support html tags</blockquote> |
 | `triggerClassName` | string  | - | Specify a class for your trigger |
 | `triggerContent` | ReactNode  | - | Set a piece of text or HTML code for the trigger |
 | `depth` | number  | 100 | Set the depth value of the control to control the display of the pop-up layer appear above. Please set it when multiple controls are used at the same time. |
@@ -292,8 +292,38 @@ class DataService {
 
 
     async getListUseAxios(searchStr = '', limit = 0) {
-        const response = await axios.get(`https://api?s=${searchStr}&limit=${limit}`);
-        return response;
+        let _data = null;
+        const res = await axios.get(`https://api`, {
+            params: {
+                s: searchStr,
+                limit: limit
+            },
+            headers: {
+                'Authorization': 'Bearer xxxx-xxxxxxxx-xxxxxxxx'
+                'Content-Type': 'application/json'
+            }
+        }).catch(function (error) {
+            console.log(error);
+        });
+
+        if (res && res.status == 200) _data = res.data;
+
+
+        // result
+        if (_data === null) {
+            return {
+                code: 0,
+                message: 'OK',
+                data: []
+            };
+        } else {
+            return {
+                code: 0,
+                message: 'OK',
+                data: _data
+            };
+        }
+
     }
 
 }

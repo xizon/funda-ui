@@ -16,7 +16,7 @@ import Switch from 'funda-ui/Switch';
 | `name` | string | - | Name is not deprecated when used with form fields. |
 | `disabled` | boolean | false | Whether it is disabled |
 | `required` | boolean | false | When present, it specifies that a field must be filled out before submitting the form. |
-| `onChange` | function  | - | Call a function when the value of an HTML element is changed. It returns two callback values, one is the current control and the other is the value. |
+| `onChange` | function  | - | Call a function when the value of an HTML element is changed. It returns two callback values. <br /> <ol><li>The first is the current control</li><li>The second is the value</li></ol> |
 | `onBlur` | function  | - | Call a function when a user leaves a form field. |
 | `onFocus` | function  | - | Call a function when an form field gets focus. |
 

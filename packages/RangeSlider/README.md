@@ -20,7 +20,7 @@ import RangeSlider from 'funda-ui/RangeSlider';
 | `min` | number \| string | - | The minimum value to accept |
 | `max` | number \| string | - | The maximum value to accept |
 | `disabled` | boolean | false | Whether it is disabled |
-| `onChange` | function  | - | Call a function when the value of an HTML element is changed. It returns two callback values, one is the control and the other is the composition event (a boolean) |
+| `onChange` | function  | - | Call a function when the value of an HTML element is changed. It returns two callback values. <br /> <ol><li>The first is the control</li><li>The second is the composition event (a boolean)</li></ol> |
 
 
 ## Examples

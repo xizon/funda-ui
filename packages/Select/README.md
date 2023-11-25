@@ -24,7 +24,7 @@ import Select from 'funda-ui/Select';
 | `fetchFuncMethodParams` | array  | - | The parameter passed by the method, it is an array. <br />Note: the first element is a query string, the second element is the number of queried data (usually a number), and then you can increase the third, or fourth, and more parameters. <br />Such as `['',0]`, `['',99,'string 1','string 2']` <br /><blockquote>There should be at least one parameter which is the query string.</blockquote> |
 | `fetchCallback` | function  | - | Return value from `fetchCallback` property to format the data of the API callback, which will match the data structure of the component. <br >At the same time it returns the original data, you will use this function and use the `return` keyword to return a new value. |
 | `onFetch` | function  | - | Call a function when  data is successfully fetched. It returns one callback value which is the fetched data (an array) |
-| `onChange` | function  | - | Call a function when the value of an HTML element is changed. It returns two callback values, one is the current control and the other is the value. |
+| `onChange` | function  | - | Call a function when the value of an HTML element is changed. It returns two callback values. <br /> <ol><li>The first is the current control</li><li>The second is the value</li></ol> |
 | `onBlur` | function  | - | Call a function when a user leaves a form field. |
 | `onFocus` | function  | - | Call a function when an form field gets focus. |
 
@@ -73,10 +73,39 @@ class DataService {
 
 
     async getListUseAxios(searchStr = '', limit = 0) {
-        const response = await axios.get(`https://api?s=${searchStr}&limit=${limit}`);
-        return response;
-    }
+        let _data = null;
+        const res = await axios.get(`https://api`, {
+            params: {
+                s: searchStr,
+                limit: limit
+            },
+            headers: {
+                'Authorization': 'Bearer xxxx-xxxxxxxx-xxxxxxxx'
+                'Content-Type': 'application/json'
+            }
+        }).catch(function (error) {
+            console.log(error);
+        });
 
+        if (res && res.status == 200) _data = res.data;
+
+
+        // result
+        if (_data === null) {
+            return {
+                code: 0,
+                message: 'OK',
+                data: []
+            };
+        } else {
+            return {
+                code: 0,
+                message: 'OK',
+                data: _data
+            };
+        }
+
+    }
     	
 }
 
