@@ -269,21 +269,6 @@ export default function TreeList(props: TreeListProps) {
         }
 
      
-        // Note: that component re-rendering (such as routing changes) will cause collapsing problems 
-        // with `onSelect()`, please use `useMemo()` to wrap `<Tree />`, like this:
-        /*
-        function TreeMemo(props: any) {
-            const {t, callback, data} = props;
-            const dependencies = props.data !== null && props.data.length === 0 ? props.data : '';
-            return useMemo(() => {
-                return    <Tree
-                            data={data}
-                            showLine={true}
-                            onSelect={callback}
-                        />
-            }, [dependencies]);
-        }
-        */
         onSelect?.(e, {
             key: hyperlink.dataset.key,
             slug: hyperlink.dataset.slug,
