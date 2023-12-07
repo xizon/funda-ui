@@ -70,7 +70,8 @@ export default () => {
                 label="String"
                 onInputCallback={(e) => {                                                             
                     // only numeric
-                    const newVal = e.target.value.replace(/[^0-9]/g, '');
+                    if (isNaN(e.target.value)) return '0';
+                    const newVal = e.target.value.replace(/[^0-9.]/g, '');
                     return newVal;
                 }}
             />
@@ -81,7 +82,8 @@ export default () => {
                 name="name"
                 onChangeCallback={(e) => {
                     // only numeric
-                    const newVal = e.target.value.replace(/[^0-9]/g, '');
+                    if (isNaN(e.target.value)) return '0';
+                    const newVal = e.target.value.replace(/[^0-9.]/g, '');
                     return newVal;
                 }}
             />

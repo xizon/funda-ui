@@ -9,6 +9,8 @@ declare module 'react' {
 interface ColorPickerProps extends React.ComponentPropsWithoutRef<"input"> {
     wrapperClassName?: string;
     controlClassName?: string;
+    clearBtnClassName?: string;
+    clearBtnLabel?: string;
     value?: string;
     label?: React.ReactNode | string;
     name?: string;
@@ -32,6 +34,8 @@ const ColorPicker = forwardRef((props: ColorPickerProps, ref: any) => {
     const {
         wrapperClassName,
         controlClassName,
+        clearBtnClassName,
+        clearBtnLabel,
         disabled,
         required,
         readOnly,
@@ -59,11 +63,11 @@ const ColorPicker = forwardRef((props: ColorPickerProps, ref: any) => {
     if (shape && typeof shape === 'string') {
         switch (shape) {
             case 'rounded':
-                shapeClassName = 'custom-form-control-color--rounded';
-                break;   
+                shapeClassName = 'custom-colorpicker--rounded';
+                break;
             case 'circle':
-                shapeClassName = 'custom-form-control-color--circle';
-                break;    
+                shapeClassName = 'custom-colorpicker--circle';
+                break;
         }
     }
 
@@ -73,7 +77,7 @@ const ColorPicker = forwardRef((props: ColorPickerProps, ref: any) => {
         rootRef.current.classList.add('focus');
 
         //
-        onFocus?.(event);    
+        onFocus?.(event);
     }
 
     function handleChange(event: ChangeEvent<HTMLInputElement>) {
@@ -111,10 +115,10 @@ const ColorPicker = forwardRef((props: ColorPickerProps, ref: any) => {
 
     useEffect(() => {
 
+      
         // update default value
         //--------------
         setChangedVal(value || '');
-
 
     }, [value]);
 
@@ -122,8 +126,8 @@ const ColorPicker = forwardRef((props: ColorPickerProps, ref: any) => {
     return (
         <>
 
-            <div className={wrapperClassName || wrapperClassName === '' ? wrapperClassName : "mb-3 position-relative"} ref={rootRef}>
-                {label ? <><label htmlFor={idRes} className="form-label" dangerouslySetInnerHTML={{__html: `${label}`}}></label></> : null}
+            <div className={wrapperClassName || wrapperClassName === '' ? `custom-colorpicker__wrapper  ${shapeClassName} ${wrapperClassName}` : `custom-colorpicker__wrapper mb-3 position-relative  ${shapeClassName}`} ref={rootRef}>
+                {label ? <><label htmlFor={idRes} className="form-label" dangerouslySetInnerHTML={{ __html: `${label}` }}></label></> : null}
 
                 <div className="input-group">
                     <input
@@ -135,11 +139,11 @@ const ColorPicker = forwardRef((props: ColorPickerProps, ref: any) => {
                                 ref.current = node;
                             }
                         }}
-                        
-                        
+
+
                         tabIndex={tabIndex || 0}
                         type='color'
-                        className={`${controlClassName || controlClassName === '' ? controlClassName : "form-control custom-form-control-color flex-grow-0"} ${shapeClassName}`}
+                        className={`${controlClassName || controlClassName === '' ? controlClassName : "form-control custom-colorpicker-control flex-grow-0"}`}
                         id={idRes}
                         name={name}
                         value={changedVal}
@@ -153,8 +157,16 @@ const ColorPicker = forwardRef((props: ColorPickerProps, ref: any) => {
                         {...attributes}
                     />
 
+                    {changedVal !== '' ? <><button tabIndex={-1} type="button" className={clearBtnClassName || 'btn btn-link btn-sm'} onClick={() => {
+                        setChangedVal('');
+                    }}>{clearBtnLabel || 'clear'}
+                    </button></> : null}
+
+
                 </div>
                 {required ? <><span className="position-absolute end-0 top-0 my-2 mx-2"><span className="text-danger">*</span></span></> : ''}
+
+                {changedVal === '' ? <><div className="custom-colorpicker__transparent-placeholder"></div></> : null}
 
             </div>
 

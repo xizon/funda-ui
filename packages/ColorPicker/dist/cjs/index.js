@@ -96,7 +96,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(787);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-var _excluded = ["wrapperClassName", "controlClassName", "disabled", "required", "readOnly", "value", "label", "name", "shape", "id", "style", "tabIndex", "onChange", "onBlur", "onFocus"];
+var _excluded = ["wrapperClassName", "controlClassName", "clearBtnClassName", "clearBtnLabel", "disabled", "required", "readOnly", "value", "label", "name", "shape", "id", "style", "tabIndex", "onChange", "onBlur", "onFocus"];
 function _extends() { _extends = Object.assign ? Object.assign.bind() : function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
 function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
 function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
@@ -111,6 +111,8 @@ function _objectWithoutPropertiesLoose(source, excluded) { if (source == null) r
 var ColorPicker = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(function (props, _ref) {
   var wrapperClassName = props.wrapperClassName,
     controlClassName = props.controlClassName,
+    clearBtnClassName = props.clearBtnClassName,
+    clearBtnLabel = props.clearBtnLabel,
     disabled = props.disabled,
     required = props.required,
     readOnly = props.readOnly,
@@ -137,10 +139,10 @@ var ColorPicker = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)
   if (shape && typeof shape === 'string') {
     switch (shape) {
       case 'rounded':
-        shapeClassName = 'custom-form-control-color--rounded';
+        shapeClassName = 'custom-colorpicker--rounded';
         break;
       case 'circle':
-        shapeClassName = 'custom-form-control-color--circle';
+        shapeClassName = 'custom-colorpicker--circle';
         break;
     }
   }
@@ -182,7 +184,7 @@ var ColorPicker = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)
     setChangedVal(value || '');
   }, [value]);
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-    className: wrapperClassName || wrapperClassName === '' ? wrapperClassName : "mb-3 position-relative",
+    className: wrapperClassName || wrapperClassName === '' ? "custom-colorpicker__wrapper  ".concat(shapeClassName, " ").concat(wrapperClassName) : "custom-colorpicker__wrapper mb-3 position-relative  ".concat(shapeClassName),
     ref: rootRef
   }, label ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("label", {
     htmlFor: idRes,
@@ -203,7 +205,7 @@ var ColorPicker = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)
     },
     tabIndex: tabIndex || 0,
     type: "color",
-    className: "".concat(controlClassName || controlClassName === '' ? controlClassName : "form-control custom-form-control-color flex-grow-0", " ").concat(shapeClassName),
+    className: "".concat(controlClassName || controlClassName === '' ? controlClassName : "form-control custom-colorpicker-control flex-grow-0"),
     id: idRes,
     name: name,
     value: changedVal,
@@ -214,11 +216,20 @@ var ColorPicker = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)
     required: required || null,
     readOnly: readOnly || null,
     style: style
-  }, attributes))), required ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
+  }, attributes)), changedVal !== '' ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", {
+    tabIndex: -1,
+    type: "button",
+    className: clearBtnClassName || 'btn btn-link btn-sm',
+    onClick: function onClick() {
+      setChangedVal('');
+    }
+  }, clearBtnLabel || 'clear')) : null), required ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
     className: "position-absolute end-0 top-0 my-2 mx-2"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
     className: "text-danger"
-  }, "*"))) : ''));
+  }, "*"))) : '', changedVal === '' ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+    className: "custom-colorpicker__transparent-placeholder"
+  })) : null));
 });
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (ColorPicker);
 })();

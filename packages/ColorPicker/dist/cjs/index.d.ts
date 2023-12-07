@@ -7,6 +7,8 @@ declare module 'react' {
 interface ColorPickerProps extends React.ComponentPropsWithoutRef<"input"> {
     wrapperClassName?: string;
     controlClassName?: string;
+    clearBtnClassName?: string;
+    clearBtnLabel?: string;
     value?: string;
     label?: React.ReactNode | string;
     name?: string;
