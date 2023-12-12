@@ -187,6 +187,9 @@ const LiveSearch = (props: LiveSearchProps) => {
         // It is on top when no scrollbars have been added
         if ( !isInViewport(el) ) {
             if ( el.getBoundingClientRect().top < 0 ) {
+                el.classList.remove(PLACEMENT_BOTTOMEND);
+                el.style.removeProperty('bottom');
+                //
                 listContentRef.current.style.height = el.offsetHeight + el.getBoundingClientRect().top - elMinWindowSpacing + 'px';
                 listContentRef.current.style.overflowY = 'auto';
             }

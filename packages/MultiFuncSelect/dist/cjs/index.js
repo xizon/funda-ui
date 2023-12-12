@@ -947,6 +947,9 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
     // It is on top when no scrollbars have been added
     if (!isInViewport(el)) {
       if (el.getBoundingClientRect().top < 0) {
+        el.classList.remove(PLACEMENT_BOTTOMEND);
+        el.style.removeProperty('bottom');
+        //
         listContentRef.current.style.height = _contentHeight + el.getBoundingClientRect().top - elMinWindowSpacing + 'px';
         listContentRef.current.style.overflowY = 'auto';
       }

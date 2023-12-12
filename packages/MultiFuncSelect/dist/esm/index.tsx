@@ -302,6 +302,7 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
      */
     function isInViewport(elem: HTMLElement) {
         const bounding = elem.getBoundingClientRect();
+
         return (
             bounding.top >= 0 &&
             bounding.left >= 0 &&
@@ -421,6 +422,9 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
         // It is on top when no scrollbars have been added
         if ( !isInViewport(el) ) {
             if ( el.getBoundingClientRect().top < 0 ) {
+                el.classList.remove(PLACEMENT_BOTTOMEND);
+                el.style.removeProperty('bottom');
+                //
                 listContentRef.current.style.height = _contentHeight + el.getBoundingClientRect().top - elMinWindowSpacing + 'px';
                 listContentRef.current.style.overflowY = 'auto';
             }
