@@ -139,7 +139,9 @@ const Textarea = forwardRef((props: TextareaProps, ref: any) => {
 
         // update default value
         //--------------
-        setChangedVal(`${value}` || '');   // Avoid displaying the number 0
+        if (typeof value !== 'undefined') {
+            setChangedVal(`${value}`);   // Avoid displaying the number 0
+        }
 
     }, [value]);    
     
