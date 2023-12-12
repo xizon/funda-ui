@@ -162,10 +162,10 @@ const Input = forwardRef((props: InputProps, ref: any) => {
 
 
     useEffect(() => {
-
+        
         // update default value
         //--------------
-        setChangedVal(value || '');
+        setChangedVal(`${value}` || '');   // Avoid displaying the number 0
 
     }, [value]);
 
