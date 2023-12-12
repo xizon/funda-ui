@@ -451,3 +451,36 @@ export default () => {
 
 
 
+
+## Using child component
+
+
+```js
+import React, { useRef } from "react";
+import ModalDialog from 'funda-ui/ModalDialog';
+
+
+// child component
+import Child from "./Child";
+
+export default () => {
+
+    const formRef = useRef<any>(null);
+
+    return (
+        <>
+
+            <ModalDialog
+                show={false}
+                ...
+            >
+                <div ref={formRef}>
+                    <Child id={xxx} key={Math.random()} /> {/* The child component in the Modal need to use [key] to ensure that they are updated at any time.*/}
+                </div>
+            </ModalDialog>
+
+
+        </>
+    );
+}
+```
