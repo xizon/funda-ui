@@ -11,6 +11,7 @@ interface MultiSelectDataConfig {
     queryStrings: string[] | number[];
 }
 interface OptionConfig {
+    disabled?: boolean;
     label: any;
     value: any;
     queryString: string | number;

@@ -11,7 +11,7 @@ import Radio from 'funda-ui/Radio';
 | --- | --- | --- | --- |
 | `wrapperClassName` | string | `mb-3 position-relative` | The class name of the control wrapper. |
 | `inline` | boolean | false | If true the group checkboxes or radios are on the same horizontal row. |
-| `options` | JSON Object Literals | - | <strong>(Required)</strong> Set the default value using JSON string format for menu of options, like this: `{"Option 1":"value-1","<del style=color:red>deprecate</del>Option 2":"value-2","Option 3":"value-3"}` <blockquote>Note: Use API data if database query exists. That is, the attribute `fetchXXXX`</blockquote> <br /><blockquote>The label string supports html tags</blockquote>|
+| `options` | JSON Object Literals \| JSON Object | - | Set the default value using JSON string format for menu of options, like this: `[{"label": "Option 1","value": "value-1"},{"label": "<del style=color:red>deprecate</del>Option 2","value": "value-2"},{"label": "Option 3","value": "value-3","customAttr1": "attr1","customAttr2": "attr2"}]`<blockquote>Note: Use API data if database query exists. That is, the attribute `fetchXXXX`</blockquote> <br /><blockquote>The label string supports html tags</blockquote>|
 | `value` | string | - | Set a default value for this control |
 | `label` | string \| ReactNode | - | It is used to specify a label for an element of a form.<blockquote>Support html tags</blockquote> |
 | `name` | string | - | Name is not deprecated when used with form fields. |
@@ -22,8 +22,8 @@ import Radio from 'funda-ui/Radio';
 | `fetchFuncMethodParams` | array  | - | The parameter passed by the method, it is an array. <br />Note: the first element is a query string, the second element is the number of queried data (usually a number), and then you can increase the third, or fourth, and more parameters. <br />Such as `['',0]`, `['',99,'string 1','string 2']` <br /><blockquote>There should be at least one parameter which is the query string.</blockquote> |
 | `fetchCallback` | function  | - | Return value from `fetchCallback` property to format the data of the API callback, which will match the data structure of the component. <br >At the same time it returns the original data, you will use this function and use the `return` keyword to return a new value. |
 | `onFetch` | function  | - | Call a function when  data is successfully fetched. It returns one callback value which is the fetched data (an array) |
-| `onClick` | function  | - | Call a function when the value of an HTML element is clicked. It returns three callback values. <br /> <ol><li>The first is the current control</li><li>The second is the current value</li><li>The last is the data (Exposes the JSON format data) about the option.</li></ol> |
-| `onChange` | function  | - | Call a function when the value of an HTML element is changed. It returns three callback values. <br /> <ol><li>The first is the current control</li><li>The second is the current value</li><li>The last is the data (Exposes the JSON format data) about the option.</li></ol> |
+| `onClick` | function  | - | Call a function when the value of an HTML element is clicked. It returns four callback values. <br /> <ol><li>The first is the current control</li><li>The second is the current value</li><li>The third is the data (Exposes the JSON format data) about the option.</li><li>The last is the current index number</li></ol> |
+| `onChange` | function  | - | Call a function when the value of an HTML element is changed. It returns four callback values. <br /> <ol><li>The first is the current control</li><li>The second is the current value</li><li>The third is the data (Exposes the JSON format data) about the option.</li><li>The last is the current index number</li></ol> |
 | `onBlur` | function  | - | Call a function when a user leaves a form field. |
 | `onFocus` | function  | - | Call a function when an form field gets focus. |
 
@@ -31,11 +31,24 @@ import Radio from 'funda-ui/Radio';
 It accepts all props which this control support.
 
 
+
+---
+
+JSON Object Literals configuration properties of the `options`:
+
+| Property | Type | Default | Description |
+| --- | --- | --- | --- |
+| `label` | string | - | Specify the label text for each option. <blockquote>Support html tags</blockquote> |
+| `value` | string | - | Specify the value for each option |
+| `extends` | ReactNode | - | Append additional content to the end of the current control. |
+
+
+
 ### Create Callback 
 
 A successful response returns the details of the callback such as Sample Request Body:
 
-Among them, `label` and `value`  are attributes used by the system, and other attributes can be added freely
+Among them, `label`, `value`, and `extends`  are attributes used by the system, and other attributes can be added freely
 
 
 
@@ -48,8 +61,8 @@ import Radio from 'funda-ui/Radio';
 
 export default () => {
 
-    function handleChange(e, val, data) {
-        console.log(e.target, val, data);
+    function handleChange(e: any, val: string, currentData: any, currentIndex: number) {
+        console.log(e.target, val, data, currentIndex);
     }
 
     return (
@@ -60,21 +73,56 @@ export default () => {
                 value="value-2"
                 name="String"
                 label="String"
-                options={`{
-                    "Option 1":"value-1",
-                    "<del style=color:red>deprecate</del>Option 2":"value-2",
-                    "Option 3":"value-3",
-                    "Option 4":"value-4"
-                }`}
+                options={[
+                    {"label": "Option 1","value": "value-1"},
+                    {"label": "<del style=color:red>deprecate</del>Option 2","value": "value-2"},
+                    {"label": "Option 3","value": "value-3","customAttr1": "attr1","customAttr2": "attr2"}
+                ]}
                 onChange={handleChange}
             />
-                                           
-
+                          
         </>
     );
 }
 ```
 
+
+
+## Append additional controls
+
+Specify the content in the `extends` attribute of `options`.
+
+
+```js
+import React from "react";
+import Radio from 'funda-ui/Radio';
+
+export default () => {
+
+    function handleChange(e: any, val: string, currentData: any, currentIndex: number) {
+        console.log(e.target, val, data, currentIndex);
+    }
+
+    return (
+        <>           
+
+            <Radio
+                inline={true}
+                value="value-2"
+                name="String"
+                label="String"
+                options={[
+                    {"label": "Option 1","value": "value-1","extends":<><div className="ms-3" id={`radio-1`}></div></>},
+                    {"label": "Option 2","value": "value-2","extends":<><div className="ms-3" id={`radio-2`}><input type="color" /></div></>},
+                ]}
+                onChange={handleChange}
+            />
+
+
+        </>
+    );
+}
+```
 
 
 
@@ -88,12 +136,11 @@ import Radio from 'funda-ui/Radio';
 export default () => {
 
     const [val, setVal] = useState<string>('value-2');
-    const [opt, setOpt] = useState<any>({
-        "Option 1":"value-1",
-        "Option 2":"value-2",
-        "Option 3":"value-3",
-        "Option 4":"value-4"
-    });
+    const [opt, setOpt] = useState<any>([
+        {"label": "Option 1","value": "value-1"},
+        {"label": "Option 2","value": "value-2"},
+        {"label": "Option 3","value": "value-3"}
+    ]);
 
     
    
@@ -104,13 +151,10 @@ export default () => {
 
     function handleClick2(e: any) {
         e.preventDefault();
-        setOpt({
-            "Custom Option 1":"value-1",
-            "Custom Option 2":"value-2",
-            "Custom Option 3":"value-3",
-            "Custom Option 4":"value-4",
-            "Custom Option 5":"value-5"
-        });
+        setOpt([
+            {"label": "Custom Option 1","value": "value-1_1"},
+            {"label": "Custom Option 2","value": "value-2_1"}
+        ]);
     }
 
     return (

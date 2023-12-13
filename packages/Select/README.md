@@ -10,7 +10,7 @@ import Select from 'funda-ui/Select';
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |
 | `wrapperClassName` | string | `mb-3 position-relative` | The class name of the control wrapper. |
-| `options` | JSON Object Literals | - | Set the default value using JSON string format for menu of options, like this: `{"Option 1":"value-1","Option 2":"value-2","Option 3":"value-3"}` <br /> <blockquote>Note: Use API data if database query exists. That is, the attribute `fetchXXXX`</blockquote> <br /><blockquote>The label string supports html tags</blockquote>|
+| `options` | JSON Object Literals \| JSON Object | - | Set the default value using JSON string format for menu of options, like this: `[{"label": "Option 1","value": "value-1"},{"label": "Option 2","value": "value-2"},{"label": "Option 3","value": "value-3","customAttr1": "attr1","customAttr2": "attr2"},{"label": "Option 4","value": "value-4","disabled":true}]` <br /> <blockquote>Note: Use API data if database query exists. That is, the attribute `fetchXXXX`</blockquote>|
 | `hierarchical` | boolean  | false | Set hierarchical categories ( with sub-categories ) to attribute `options`. |
 | `indentation` | string  | - | Set hierarchical indentation placeholders, valid when the `hierarchical` is true. |
 | `doubleIndent` | boolean  | false | Set double indent effect, valid when the `hierarchical` is true. |
@@ -24,7 +24,7 @@ import Select from 'funda-ui/Select';
 | `fetchFuncMethodParams` | array  | - | The parameter passed by the method, it is an array. <br />Note: the first element is a query string, the second element is the number of queried data (usually a number), and then you can increase the third, or fourth, and more parameters. <br />Such as `['',0]`, `['',99,'string 1','string 2']` <br /><blockquote>There should be at least one parameter which is the query string.</blockquote> |
 | `fetchCallback` | function  | - | Return value from `fetchCallback` property to format the data of the API callback, which will match the data structure of the component. <br >At the same time it returns the original data, you will use this function and use the `return` keyword to return a new value. |
 | `onFetch` | function  | - | Call a function when  data is successfully fetched. It returns one callback value which is the fetched data (an array) |
-| `onChange` | function  | - | Call a function when the value of an HTML element is changed. It returns two callback values. <br /> <ol><li>The first is the current control</li><li>The second is the value</li></ol> |
+| `onChange` | function  | - | Call a function when the value of an HTML element is changed. It returns four callback values. <br /> <ol><li>The first is the current control</li><li>The second is the current value</li><li>The third is the data (Exposes the JSON format data) about the option.</li><li>The last is the current index number</li></ol> |
 | `onBlur` | function  | - | Call a function when a user leaves a form field. |
 | `onFocus` | function  | - | Call a function when an form field gets focus. |
 
@@ -33,11 +33,23 @@ It accepts all props which this control support.
 
 
 
+---
+
+JSON Object Literals configuration properties of the `options`:
+
+| Property | Type | Default | Description |
+| --- | --- | --- | --- |
+| `label` | string | - | Specify the label text for each option. |
+| `value` | string | - | Specify the value for each option |
+| `optgroup` | array | - | Creates a grouping of options. It will be displayed using the value of `label`. |
+| `disabled` | boolean | - | When present, it specifies that an option should be disabled. |
+
+
 ### Create Callback 
 
 A successful response returns the details of the callback such as Sample Request Body:
 
-Among them, `label`, `value`, `disabled`, `id` and `parent_id` are attributes used by the system, and other attributes can be added freely
+Among them, `label`, `value`, `optgroup` and `disabled` are attributes used by the system, and other attributes can be added freely
 
 
 
@@ -112,8 +124,9 @@ class DataService {
 
 export default () => {
 
-    function handleChange(e, val) {
-        console.log(e.target, val);
+
+    function handleChange(e: any, val: string, currentData: any, currentIndex: number) {
+        console.log(e.target, val, data, currentIndex);
     }
 
     return (
@@ -122,12 +135,12 @@ export default () => {
                 value="value-2"
                 name="name"
                 label="String"
-                options={`{
-                    "Option 1":"value-1",
-                    "Option 2":"value-2",
-                    "Option 3":"value-3",
-                    "Option 4":"value-4"
-                }`}
+                options={[
+                    {"label": "Option 1","value": "value-1"},
+                    {"label": "Option 2","value": "value-2"},
+                    {"label": "Option 3","value": "value-3","customAttr1": "attr1","customAttr2": "attr2"},
+                    {"label": "Option 4","value": "value-4","disabled":true}
+                ]}
                 onChange={handleChange}
             />
 
@@ -172,6 +185,58 @@ export default () => {
     );
 }
 ```
+
+
+
+## The Option Group element
+
+Specify the content in the `optgroup` attribute of `options`.
+
+
+```js
+import React from "react";
+import Select from 'funda-ui/Select';
+
+export default () => {
+
+    function handleChange(e: any, val: string, currentData: any, currentIndex: number) {
+        console.log(e.target, val, data, currentIndex);
+    }
+
+    return (
+        <>         
+
+            <Select
+                value="value-2"
+                name="name"
+                label="String"
+                options={[
+                    { "label": "Option 0", "value": "value-0" },
+                    {
+                        "label": "Group 1", "value": "", "optgroup": [
+                            { "label": "Option 1", "value": "value-1" },
+                            { "label": "Option 2", "value": "value-2" }
+                        ]
+                    },
+                    ,
+                    {
+                        "label": "Group 2", "value": "", "optgroup": [
+                            { "label": "Option 3", "value": "value-3" },
+                            { "label": "Option 4", "value": "value-4" },
+                            { "label": "Option 5", "value": "value-5" }
+                        ]
+                    },
+
+                ]}
+                onChange={handleChange}
+            />
+
+
+        </>
+    );
+}
+```
+
 
 
 ## Convert raw data into a tree structure

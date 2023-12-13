@@ -143,17 +143,7 @@ var Radio = function Radio(props) {
   var optionsRes = options ? isJSON(options) ? JSON.parse(options) : options : '';
 
   // return a array of options
-  var optionsDataInit = [];
-  var optionKeys = Object.keys(optionsRes);
-  var optionValues = Object.values(optionsRes).map(function (item) {
-    return item.toString();
-  });
-  optionsDataInit = optionKeys.map(function (item, index) {
-    return {
-      label: optionKeys[index],
-      value: optionValues[index]
-    };
-  });
+  var optionsDataInit = optionsRes;
 
   //
   var _useState = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(optionsDataInit),
@@ -269,10 +259,10 @@ var Radio = function Radio(props) {
 
     //
     if (typeof onChange === 'function') {
-      onChange(event, val, dataInit[currentIndex]);
+      onChange(event, val, dataInit[currentIndex], currentIndex);
     }
     if (typeof onClick === 'function') {
-      onClick(event, val, dataInit[currentIndex]);
+      onClick(event, val, dataInit[currentIndex], currentIndex);
     }
   }
   function handleBlur(event) {
@@ -290,6 +280,8 @@ var Radio = function Radio(props) {
     return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       key: index,
       className: inline ? "form-check form-check-inline" : "form-check"
+    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+      className: "d-inline-block"
     }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("input", _extends({
       tabIndex: tabIndex || 0,
       type: "radio",
@@ -315,7 +307,11 @@ var Radio = function Radio(props) {
       dangerouslySetInnerHTML: {
         __html: "".concat(item.label)
       }
-    }));
+    })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+      className: "d-inline-block"
+    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+      className: "form-control-extends__wrapper"
+    }, typeof item["extends"] !== 'undefined' ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, item["extends"]) : null)));
   });
   (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(function () {
     // data init

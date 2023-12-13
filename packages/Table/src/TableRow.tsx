@@ -108,8 +108,9 @@ const TableRow = (props: TableRowProps) => {
                     <td style={{display: 'none'}}>
                         <Radio
                             wrapperClassName=""
-                            options={`{
-                                "":"${nonExistentRowKey}"}`}
+                            options={`[
+                                {"label": "","value": "${nonExistentRowKey}"}
+                            ]`}
                             name={`checkbox-${checkboxNamePrefix}-0`}
                             tabIndex={-1}
                             data-index={`${nonExistentRowKey?.replace('row-', '')}`}

@@ -11,7 +11,7 @@ import MultiFuncSelect from 'funda-ui/MultiFuncSelect';
 | --- | --- | --- | --- |
 | `wrapperClassName` | string | `mb-3 position-relative` | The class name of the control wrapper. |
 | `controlClassName` | string | `form-control` | The class name of the control. |
-| `options` | JSON Object Literals | - | Set the default value using JSON string format for menu of options, like this: `[{"label": "Option 1","value": "value-1","queryString": "option1"},{"label": "<del style=color:red>deprecate</del>Option 2","value": "value-2","queryString": "option2"},{"label": "Option 3","value": "value-3","queryString": "option3"}]` <br /> <blockquote>Note: Use API data if database query exists. That is, the attribute `fetchXXXX`</blockquote> <hr /> <blockquote>When the attribute `hierarchical` is true, you need to use a hierarchical structure to pass data, such as: `[{label:"Top level 1",value:'level-1',queryString:""},{label:"Top level 2",value:'level-2',queryString:""},{label:"Top level 3",value:'level-3',queryString:"",children:[{label:"Sub level 3_1",value:'level-3_1',queryString:""},{label:"Sub level 3_2",value:'level-3_2',queryString:"",children:[{label:"Sub level 3_2_1",value:'level-3_2_1',queryString:""}]},{label:"Sub level 3_3",value:'level-3_3',queryString:""}]}]`</blockquote>|
+| `options` | JSON Object Literals \| JSON Object | - | Set the default value using JSON string format for menu of options, like this: `[{"label": "Option 1","value": "value-1","queryString": "option1"},{"label": "<del style=color:red>deprecate</del>Option 2","value": "value-2","queryString": "option2"},{"label": "Option 3","value": "value-3","queryString": "option3"},{"label": "Option 4","value": "value-4","disabled":true}]` <br /> <blockquote>Note: Use API data if database query exists. That is, the attribute `fetchXXXX`</blockquote> <hr /> <blockquote>When the attribute `hierarchical` is true, you need to use a hierarchical structure to pass data, such as: `[{label:"Top level 1",value:'level-1',queryString:""},{label:"Top level 2",value:'level-2',queryString:""},{label:"Top level 3",value:'level-3',queryString:"",children:[{label:"Sub level 3_1",value:'level-3_1',queryString:""},{label:"Sub level 3_2",value:'level-3_2',queryString:"",children:[{label:"Sub level 3_2_1",value:'level-3_2_1',queryString:""}]},{label:"Sub level 3_3",value:'level-3_3',queryString:""}]}]`</blockquote>|
 | `lockBodyScroll` | boolean  | true | Enables body scroll locking (for iOS Mobile and Tablet, Android, desktop Safari/Chrome/Firefox) without breaking scrolling of a target element. |
 | `hierarchical` | boolean  | false | Set hierarchical categories ( with sub-categories ) to attribute `options`. |
 | `indentation` | string  | - | Set hierarchical indentation placeholders, valid when the `hierarchical` is true. |
@@ -57,6 +57,15 @@ JSON Object Literals configuration properties of the `options`:
 | `label` | string | - | Specify the label text for each option. <blockquote>Support html tags</blockquote> |
 | `value` | string | - | Specify the value for each option |
 | `queryString` | string | - | Quick query string, such as Chinese pinyin or English initials |
+| `disabled` | boolean | - | When present, it specifies that an option should be disabled. |
+
+
+### Create Callback 
+
+A successful response returns the details of the callback such as Sample Request Body:
+
+Among them, `id`, `parent_id`, `label`, `value`, `queryString` and `disabled` are attributes used by the system, and other attributes can be added freely.
+
 
 
 
@@ -150,7 +159,8 @@ export default () => {
                 [
                     {"label": "Option 1","value": "value-1","queryString": "option1"},
                     {"label": "<del style=color:red>deprecate</del>Option 2","value": "value-2","queryString": "option2"},
-                    {"label": "Option 3","value": "value-3","queryString": "option3"}
+                    {"label": "Option 3","value": "value-3","queryString": "option3"},
+                    {"label": "Option 4","value": "value-4","disabled":true}
                 ]  
                 `}
                 onChange={(e, e2, val) => {
@@ -178,7 +188,8 @@ export default () => {
                 [
                     {"label": "Option 1","value": "value-1","queryString": "option1"},
                     {"label": "<del style=color:red>deprecate</del>Option 2","value": "value-2","queryString": "option2"},
-                    {"label": "Option 3","value": "value-3","queryString": "option3"}
+                    {"label": "Option 3","value": "value-3","queryString": "option3"},
+                    {"label": "Option 4","value": "value-4","disabled":true}
                 ]  
                 `}
                 onChange={(e, e2, val) => {
@@ -268,7 +279,7 @@ export default () => {
                 multiSelect={{
                     valid: true,
                     selectAll: true,
-                    selectAllLabel: "Select all options"
+                    selectAllLabel: "Select all options",
                     data: {
                         values: ['bar2'],
                         labels: ['foo2'],
@@ -306,7 +317,7 @@ export default () => {
                 multiSelect={{
                     valid: true,
                     selectAll: true,
-                    selectAllLabel: "Select all options"
+                    selectAllLabel: "Select all options",
                     data: {
                         values: ['bar2'],
                         labels: ['foo2'],

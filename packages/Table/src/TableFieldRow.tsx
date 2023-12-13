@@ -84,8 +84,9 @@ const TableFieldRow = (props: TableFieldRowProps) => {
                     {useRadio ? <>
                         <Radio
                             wrapperClassName=""
-                            options={`{
-                                "":"${rowKey}"}`}
+                            options={`[
+                                {"label": "","value": "${rowKey}"}
+                            ]`}
                             name={`checkbox-${checkboxNamePrefix}-0`}
                             tabIndex={-1}
                             data-index={`${rowIndex}`}

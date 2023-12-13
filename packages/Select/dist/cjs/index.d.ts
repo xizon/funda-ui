@@ -4,10 +4,13 @@ declare module 'react' {
         children?: any;
     }
 }
-interface OptionConfig {
-    [propName: string]: string | number;
+interface ItemConfig {
+    [propName: string]: string | number | boolean;
 }
-declare type SelectOptionChangeFnType = (arg1: any, arg2: any) => void;
+interface OptionConfig {
+    [propName: string]: string | number | boolean | ItemConfig[];
+}
+declare type SelectOptionChangeFnType = (arg1: any, arg2: any, arg3?: any, arg4?: any) => void;
 declare type SelectProps = {
     wrapperClassName?: string;
     value?: string;
@@ -15,7 +18,7 @@ declare type SelectProps = {
     name?: string;
     disabled?: any;
     required?: any;
-    options?: OptionConfig[] | string;
+    options?: OptionConfig[] | string | unknown;
     hierarchical?: boolean;
     indentation?: string;
     doubleIndent?: boolean;

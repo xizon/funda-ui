@@ -28,6 +28,7 @@ interface MultiSelectDataConfig {
 }
 
 interface OptionConfig {
+    disabled?: boolean;
     label: any;
     value: any;
     queryString: string | number;
@@ -1580,7 +1581,7 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
                                         // ++++++++++++++++++++
                                         // Single selection
                                         // ++++++++++++++++++++
-                                        return <button tabIndex={-1} onClick={handleSelect} type="button" data-index={index} key={index} className={`list-group-item list-group-item-action border-start-0 border-end-0 ${startItemBorder} ${endItemBorder} border-bottom-0`} data-value={`${item.value}`} data-label={`${item.label}`} data-querystring={`${typeof item.queryString === 'undefined' ? '' : item.queryString}`} data-itemdata={JSON.stringify(item)} role="tab" dangerouslySetInnerHTML={{
+                                        return <button tabIndex={-1} onClick={handleSelect} type="button" data-index={index} key={index} className={`list-group-item list-group-item-action border-start-0 border-end-0 ${startItemBorder} ${endItemBorder} border-bottom-0 ${typeof item.disabled === 'undefined' ? '' : (item.disabled == true ? 'disabled' : '')}`} data-value={`${item.value}`} data-label={`${item.label}`} data-querystring={`${typeof item.queryString === 'undefined' ? '' : item.queryString}`} data-itemdata={JSON.stringify(item)} role="tab" dangerouslySetInnerHTML={{
                                             __html: item.label
                                         }}></button>
 
@@ -1591,7 +1592,7 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
                                         // ++++++++++++++++++++
                                         const itemSelected = multiSelControlOptionExist(controlArr.values, item.value) ? true : false;
 
-                                        return <button tabIndex={-1} onClick={handleSelect} type="button" data-index={index} key={index} className={`list-group-item list-group-item-action border-start-0 border-end-0 ${startItemBorder} ${endItemBorder} border-bottom-0 ${itemSelected ? 'list-group-item-secondary item-selected' : ''}`} data-value={`${item.value}`} data-label={`${item.label}`} data-querystring={`${typeof item.queryString === 'undefined' ? '' : item.queryString}`} data-itemdata={JSON.stringify(item)} role="tab">
+                                        return <button tabIndex={-1} onClick={handleSelect} type="button" data-index={index} key={index} className={`list-group-item list-group-item-action border-start-0 border-end-0 ${startItemBorder} ${endItemBorder} border-bottom-0 ${itemSelected ? 'list-group-item-secondary item-selected' : ''} ${typeof item.disabled === 'undefined' ? '' : (item.disabled == true ? 'disabled' : '')}`} data-value={`${item.value}`} data-label={`${item.label}`} data-querystring={`${typeof item.queryString === 'undefined' ? '' : item.queryString}`} data-itemdata={JSON.stringify(item)} role="tab">
                                             <var className="d-inline-block me-1 ">
                                                 {!itemSelected ? <svg width="1.2em" height="1.2em" viewBox="0 0 24 24" fill="none">
                                                     <path d="M4 7.2002V16.8002C4 17.9203 4 18.4801 4.21799 18.9079C4.40973 19.2842 4.71547 19.5905 5.0918 19.7822C5.5192 20 6.07899 20 7.19691 20H16.8031C17.921 20 18.48 20 18.9074 19.7822C19.2837 19.5905 19.5905 19.2842 19.7822 18.9079C20 18.4805 20 17.9215 20 16.8036V7.19691C20 6.07899 20 5.5192 19.7822 5.0918C19.5905 4.71547 19.2837 4.40973 18.9074 4.21799C18.4796 4 17.9203 4 16.8002 4H7.2002C6.08009 4 5.51962 4 5.0918 4.21799C4.71547 4.40973 4.40973 4.71547 4.21799 5.0918C4 5.51962 4 6.08009 4 7.2002Z" stroke="#000000" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />

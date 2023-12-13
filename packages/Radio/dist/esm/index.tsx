@@ -7,11 +7,11 @@ declare module 'react' {
 }
 
 interface OptionConfig {
-    [propName: string]: string | number;
+    [propName: string]: string | number | React.ReactNode;
 }
 
 
-type RadioOptionChangeFnType = (arg1: any, arg2: any, arg3?: any) => void;
+type RadioOptionChangeFnType = (arg1: any, arg2: any, arg3?: any, arg4?: any) => void;
 
 
 type RadioProps = {
@@ -74,17 +74,8 @@ const Radio = (props: RadioProps) => {
     const optionsRes = options ? isJSON(options) ? JSON.parse(options as string) : options : '';
 
     // return a array of options
-    let optionsDataInit: OptionConfig[] = [];
-    const optionKeys = Object.keys(optionsRes);
-    const optionValues = Object.values(optionsRes).map((item: any) => item.toString());
-
-    optionsDataInit = optionKeys.map((item: any, index: number) => {
-        return {
-            label: optionKeys[index],
-            value: optionValues[index]
-        }
-    });
-
+    let optionsDataInit: OptionConfig[] = optionsRes;
+    
 
     //
     const [dataInit, setDataInit] = useState<OptionConfig[]>(optionsDataInit);
@@ -204,12 +195,13 @@ const Radio = (props: RadioProps) => {
         //remove focus style
         rootRef.current.classList.remove('focus');
 
+   
         //
         if (typeof (onChange) === 'function') {
-            onChange(event, val, dataInit[currentIndex]);
+            onChange(event, val, dataInit[currentIndex], currentIndex);
         }
         if (typeof (onClick) === 'function') {
-            onClick(event, val, dataInit[currentIndex]);
+            onClick(event, val, dataInit[currentIndex], currentIndex);
         }
     }
 
@@ -229,27 +221,36 @@ const Radio = (props: RadioProps) => {
         const requiredVal = index === 0 ? required || null : null;
 
         return <div key={index} className={inline ? `form-check form-check-inline` : `form-check`}>
-            <input
-                tabIndex={tabIndex || 0}
-                type="radio"
-                className="form-check-input"
-                id={`field-${uniqueID}-${index}`}
-                name={name}
-                data-index={index}
-                value={`${item.value}`}
-                required={requiredVal}
-                disabled={disabled || null}
-                onChange={handleChange}
-                onClick={typeof (onClick) === 'function' ? handleChange : () => void (0)}
-                onFocus={handleFocus}
-                onBlur={handleBlur}
-                checked={controlValue == item.value}   // component status will not change if defaultChecked is used
-                style={style}
-                {...attributes}
-            />
-            <label className="form-check-label" htmlFor={`field-${uniqueID}-${index}`} dangerouslySetInnerHTML={{
-                __html: `${item.label}`
-            }}></label>
+
+            <div className="d-inline-block">
+                <input
+                    tabIndex={tabIndex || 0}
+                    type="radio"
+                    className="form-check-input"
+                    id={`field-${uniqueID}-${index}`}
+                    name={name}
+                    data-index={index}
+                    value={`${item.value}`}
+                    required={requiredVal}
+                    disabled={disabled || null}
+                    onChange={handleChange}
+                    onClick={typeof (onClick) === 'function' ? handleChange : () => void (0)}
+                    onFocus={handleFocus}
+                    onBlur={handleBlur}
+                    checked={controlValue == item.value}   // component status will not change if defaultChecked is used
+                    style={style}
+                    {...attributes}
+                />
+                <label className="form-check-label" htmlFor={`field-${uniqueID}-${index}`} dangerouslySetInnerHTML={{
+                    __html: `${item.label}`
+                }}></label>
+            </div>
+            <div className="d-inline-block">
+                <div className="form-control-extends__wrapper">{typeof item.extends !== 'undefined' ? <>{item.extends}</> : null}</div>
+            </div>
+
+
+            
         </div>;
 
     });

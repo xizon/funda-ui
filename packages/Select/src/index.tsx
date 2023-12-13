@@ -13,13 +13,18 @@ declare module 'react' {
     }
 }
 
+interface ItemConfig {
+    [propName: string]: string | number | boolean;
+}
+
+
 interface OptionConfig {
-    [propName: string]: string | number;
+    [propName: string]: string | number | boolean | ItemConfig[];
 }
 
 
 
-type SelectOptionChangeFnType = (arg1: any, arg2: any) => void;
+type SelectOptionChangeFnType = (arg1: any, arg2: any, arg3?: any, arg4?: any) => void;
 
 
 type SelectProps = {
@@ -29,7 +34,7 @@ type SelectProps = {
     name?: string;
     disabled?: any;
     required?: any;
-    options?: OptionConfig[] | string;
+    options?: OptionConfig[] | string | unknown;
     hierarchical?: boolean;
     indentation?: string;
     doubleIndent?: boolean;
@@ -84,17 +89,7 @@ const Select = forwardRef((props: SelectProps, ref: any) => {
     const optionsRes = options ? isJSON( options ) ? JSON.parse( options as string ) : options : '';
 
     // return a array of options
-    let optionsDataInit: OptionConfig[] = []; 
-    const optionKeys = Object.keys(optionsRes);
-    const optionValues = Object.values(optionsRes).map((item: any) => item.toString() );
-    
-    optionsDataInit = optionKeys.map((item: any, index: number) => {
-        return {
-            label: optionKeys[index],
-            value: optionValues[index]
-        }
-    });
-
+    let optionsDataInit: OptionConfig[] = optionsRes; 
 
     //
     const [dataInit, setDataInit] = useState<OptionConfig[]>(optionsDataInit);
@@ -238,7 +233,7 @@ const Select = forwardRef((props: SelectProps, ref: any) => {
 
         //
 		if ( typeof(onChange) === 'function' ) {
-			onChange(event, dataInit[event.target.selectedIndex]);
+			onChange(event, dataInit[event.target.selectedIndex].value, dataInit[event.target.selectedIndex], event.target.selectedIndex);
 
             event.target.blur();
 		}
@@ -258,11 +253,26 @@ const Select = forwardRef((props: SelectProps, ref: any) => {
     
     // Generate list of options
     const selectOptionsList = dataInit.map((item: any, index: number) => {
-        const _disabled = typeof item.disabled === 'undefined' ? false : item.disabled;
-        return <option key={index} value={item.value as string} dangerouslySetInnerHTML={{
-            __html: `${item.label}`,
-        }} disabled={_disabled}></option>;
-        
+
+        if (typeof item.optgroup !== 'undefined') {
+            return <optgroup key={'optgroup-' + index} label={item.label}>
+
+                {item.optgroup.map((opt: any, optIndex: number) => {
+                    const _disabled = typeof opt.disabled === 'undefined' ? false : opt.disabled;
+                    return <option key={'option-' + optIndex} value={opt.value as string} dangerouslySetInnerHTML={{
+                        __html: `${opt.label}`,
+                    }} disabled={_disabled}></option>;
+                })}
+
+            </optgroup>;
+        } else {
+            const _disabled = typeof item.disabled === 'undefined' ? false : item.disabled;
+            return <option key={'option-' + index} value={item.value as string} dangerouslySetInnerHTML={{
+                __html: `${item.label}`,
+            }} disabled={_disabled}></option>;
+
+        }
+
     });
     
 

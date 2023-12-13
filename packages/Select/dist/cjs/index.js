@@ -300,17 +300,7 @@ var Select = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(func
   var optionsRes = options ? isJSON(options) ? JSON.parse(options) : options : '';
 
   // return a array of options
-  var optionsDataInit = [];
-  var optionKeys = Object.keys(optionsRes);
-  var optionValues = Object.values(optionsRes).map(function (item) {
-    return item.toString();
-  });
-  optionsDataInit = optionKeys.map(function (item, index) {
-    return {
-      label: optionKeys[index],
-      value: optionValues[index]
-    };
-  });
+  var optionsDataInit = optionsRes;
 
   //
   var _useState = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(optionsDataInit),
@@ -447,7 +437,7 @@ var Select = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(func
 
     //
     if (typeof onChange === 'function') {
-      onChange(event, dataInit[event.target.selectedIndex]);
+      onChange(event, dataInit[event.target.selectedIndex].value, dataInit[event.target.selectedIndex], event.target.selectedIndex);
       event.target.blur();
     }
   }
@@ -462,15 +452,32 @@ var Select = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(func
 
   // Generate list of options
   var selectOptionsList = dataInit.map(function (item, index) {
-    var _disabled = typeof item.disabled === 'undefined' ? false : item.disabled;
-    return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("option", {
-      key: index,
-      value: item.value,
-      dangerouslySetInnerHTML: {
-        __html: "".concat(item.label)
-      },
-      disabled: _disabled
-    });
+    if (typeof item.optgroup !== 'undefined') {
+      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("optgroup", {
+        key: 'optgroup-' + index,
+        label: item.label
+      }, item.optgroup.map(function (opt, optIndex) {
+        var _disabled = typeof opt.disabled === 'undefined' ? false : opt.disabled;
+        return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("option", {
+          key: 'option-' + optIndex,
+          value: opt.value,
+          dangerouslySetInnerHTML: {
+            __html: "".concat(opt.label)
+          },
+          disabled: _disabled
+        });
+      }));
+    } else {
+      var _disabled = typeof item.disabled === 'undefined' ? false : item.disabled;
+      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("option", {
+        key: 'option-' + index,
+        value: item.value,
+        dangerouslySetInnerHTML: {
+          __html: "".concat(item.label)
+        },
+        disabled: _disabled
+      });
+    }
   });
   (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(function () {
     // data init
