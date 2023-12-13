@@ -129,7 +129,14 @@ const MultipleCheckboxes = forwardRef((props: MultipleCheckboxesProps, ref: any)
                 <div className="multiple-checkboxes__control-wrapper" style={style}>
 
                     {regTagData ? regTagData.map((item: any, i: number) => {
-                        return <div key={'checkbox' + i} className={`multiple-checkboxes__control ${_inline ? 'd-inline-block' : ''} pe-3`}>
+                        return <div 
+                            key={'checkbox' + i} 
+                            className={`multiple-checkboxes__control ${_inline ? 'd-inline-block' : ''} pe-3`}
+                            data-index={i}
+                            data-label={item.label}
+                            data-value={item.value}
+                            data-disabled={disabled || 'false'}
+                        >
                             <Checkbox
                                 wrapperClassName=""
                                 label={item.label}

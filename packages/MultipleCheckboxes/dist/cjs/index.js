@@ -629,7 +629,11 @@ var MultipleCheckboxes = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forw
   }, regTagData ? regTagData.map(function (item, i) {
     return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       key: 'checkbox' + i,
-      className: "multiple-checkboxes__control ".concat(_inline ? 'd-inline-block' : '', " pe-3")
+      className: "multiple-checkboxes__control ".concat(_inline ? 'd-inline-block' : '', " pe-3"),
+      "data-index": i,
+      "data-label": item.label,
+      "data-value": item.value,
+      "data-disabled": disabled || 'false'
     }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((funda_checkbox__WEBPACK_IMPORTED_MODULE_1___default()), {
       wrapperClassName: "",
       label: item.label,
