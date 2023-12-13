@@ -17,8 +17,7 @@ import MultipleCheckboxes from 'funda-ui/MultipleCheckboxes';
 | `name` | string | - | Name is not deprecated when used with form fields. |
 | `disabled` | boolean | false | Whether it is disabled |
 | `required` | boolean | false | When present, it specifies that a field must be filled out before submitting the form. |
-| `onChange` | function  | - | Call a function when the value of an HTML element is changed. It returns only one callback values which is the current value (an array) |
-
+| `onChange` | function  | - | Call a function when the value of an HTML element is changed. It returns two callback values. <br /> <ol><li>The first is the control of current checkbox</li><li>The second is the current value (an array)</li></ol>  |
 
 
 ## Examples
@@ -39,8 +38,8 @@ export default () => {
                 name="name"
                 value={val}
                 options={[{"label": "Option 1","value": "value-1","queryString": "option1"},{"label": "<del style=color:red>deprecate</del>Option 2","value": "value-2","queryString": "option2"},{"label": "Option 3","value": "value-3","queryString": "option3"}]}
-                onChange={(data) => {
-                    console.log(data);
+                onChange={(e, data) => {
+                    console.log(e, data);
                     setVal(data.join(','));
                 }}
             />

@@ -647,7 +647,7 @@ var MultipleCheckboxes = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forw
           });
           if (index !== -1) newData.splice(index, 1);
           var _res = val ? Array.from(new Set([e.target.value].concat(_toConsumableArray(newData)))) : newData;
-          _onChange === null || _onChange === void 0 ? void 0 : _onChange(_res);
+          _onChange === null || _onChange === void 0 ? void 0 : _onChange(e, _res);
           return _res;
         });
       },

@@ -21,7 +21,7 @@ type MultipleCheckboxesProps = {
     id?: string;
     style?: React.CSSProperties;
     [key: `data-${string}`]: string | undefined;
-    onChange?: (data: any) => void;
+    onChange?: (e: any, data: any) => void;
 
 };
 
@@ -151,7 +151,7 @@ const MultipleCheckboxes = forwardRef((props: MultipleCheckboxesProps, ref: any)
 
                                         const _res = (val) ? Array.from(new Set([e.target.value, ...newData])) : newData;
 
-                                        onChange?.(_res);
+                                        onChange?.(e, _res);
 
                                         return _res;
                                     });
