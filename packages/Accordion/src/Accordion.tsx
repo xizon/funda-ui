@@ -29,6 +29,8 @@ type AccordionProps = {
 	triggerType?: string;
 	/** Display the only first item of a list */
 	displayTheFirstItem?: boolean;
+	/** Display all items */
+	displayAllItems?: boolean;
 	/** The number of milliseconds(ms) each iteration of the animation takes to complete */
 	duration?: number;
     /** Types of easing animation */
@@ -48,6 +50,7 @@ const Accordion = (props: AccordionProps) => {
         wrapperClassName,
         triggerType,
         displayTheFirstItem,
+        displayAllItems,
         duration,
         easing,
         alternateCollapse,
@@ -60,16 +63,17 @@ const Accordion = (props: AccordionProps) => {
     const ALTER = typeof alternateCollapse === 'undefined' ? true : alternateCollapse;
     const rootRef = useRef<any>(null);
     const [animOK, setAnimOK] = useState<boolean>(false);
+    const [heightObserver, setHeightObserver] = useState<number>(-1);
 
-   
-
+    
     function handleClickItem(e: React.MouseEvent) {
 		e.preventDefault();
 		//Prevents further propagation of the current event in the capturing and bubbling phases(if use `e.target`).
 		e.stopPropagation();
 
+     
+        if ((e.target as any).closest('.custom-accordion-header') === null) return;
 		if ( animOK ) return;
-
 
 		//
         const reactDomEl: any = e.currentTarget;
@@ -121,7 +125,10 @@ const Accordion = (props: AccordionProps) => {
 				startHeight  : 0,
 				endHeight    : $curContent.scrollHeight,
 				speed        : animSpeed
-			} as  never, easeType);
+			} as  never, easeType, () => {
+                // content height observer
+                setHeightObserver(curIndex);
+            });
 			
 		} else {
 			
@@ -158,7 +165,8 @@ const Accordion = (props: AccordionProps) => {
                     return <Item
                         key={"item" + i}
                         index={i}
-                        defaultActive={_defaultActive}
+                        heightObserver={heightObserver}
+                        defaultActive={typeof displayAllItems === 'undefined' ? _defaultActive : displayAllItems}
                         triggerType={triggerType || 'click'}
                         onToggleEv={handleClickItem}
                         {...childProps}

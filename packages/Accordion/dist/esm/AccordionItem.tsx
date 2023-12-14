@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
 
 type AccordionItemProps = {
+    heightObserver?: number;
     index?: number;
     /** Class of items */
     itemClassName?: string;
@@ -29,6 +30,7 @@ type AccordionItemProps = {
 const AccordionItem = (props: AccordionItemProps) => {
 	
     const { 
+        heightObserver,
         index,
         itemClassName,
         itemContentWrapperClassName,
@@ -45,8 +47,37 @@ const AccordionItem = (props: AccordionItemProps) => {
         children
     } = props;
     
-    const activedClassName = typeof(defaultActive) !== 'undefined' && defaultActive !== false ? ' active' : '';
 
+    
+    const activedClassName = typeof(defaultActive) !== 'undefined' && defaultActive !== false ? ' active' : '';
+    const observer = useRef<ResizeObserver | null>(null);
+    const contentWrapperRef = useRef<HTMLDivElement | null>(null);
+    const contentRef = useRef<HTMLDivElement | null>(null);
+    
+
+    useEffect(() => {
+
+        if (parseFloat(heightObserver as never) !== index) return;
+
+        // When the content height changes dynamically, change the height of the wrapper
+        if (contentRef.current && contentWrapperRef.current) {
+            const _contentPadding = window.getComputedStyle(contentRef.current as HTMLDivElement).getPropertyValue('padding-bottom');
+       
+            observer.current = new ResizeObserver(entries => {
+                entries.forEach(entry => {
+                    (contentWrapperRef.current as HTMLDivElement).style.height = entry.contentRect.bottom + parseFloat(_contentPadding) + 'px';
+                });
+            });
+            observer.current.observe(contentRef.current);
+
+        }
+
+        return () => {
+            if (contentRef.current) observer.current?.unobserve(contentRef.current);
+        };
+
+
+    }, [heightObserver]);
 
     return (
         <>
@@ -68,12 +99,12 @@ const AccordionItem = (props: AccordionItemProps) => {
 
                     {itemTriggerIcon}
                 </div>
-                <div className={`custom-accordion-content__wrapper ${itemContentWrapperClassName || itemContentWrapperClassName === '' ? itemContentWrapperClassName : "accordion-collapse"}`}
+                <div ref={contentWrapperRef} className={`custom-accordion-content__wrapper ${itemContentWrapperClassName || itemContentWrapperClassName === '' ? itemContentWrapperClassName : "accordion-collapse"}`}
                     role="tabpanel" style={{
                         height: defaultActive ? 'auto' : '0px',
                         overflow: 'hidden'
                     }}>
-                    <div className={`custom-accordion-content ${itemContentClassName || itemContentClassName === '' ? itemContentClassName : "accordion-body"}`}>
+                    <div className={`custom-accordion-content ${itemContentClassName || itemContentClassName === '' ? itemContentClassName : "accordion-body"}`} ref={contentRef} >
                         {children}
                     </div>
                 </div>

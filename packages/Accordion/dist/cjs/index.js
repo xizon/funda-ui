@@ -27,10 +27,12 @@ var _require = __webpack_require__(711),
  * 
  * @param  {HTMLElement} curElement      - Element of animation.
  * @param  {?JSON} config                - Configuration of animation
- * @param  {?string} easeType              - Types of easing animation.
+ * @param  {?string} easeType            - Types of easing animation.
+* @param  {?Function} callback           - Callback after animation ends
  */
 function animateStyles(curElement, config) {
   var easeType = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 'linear';
+  var callback = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : function () {};
   if (_typeof(curElement) === ( true ? "undefined" : 0)) return;
 
   // Set a default configuration
@@ -88,6 +90,7 @@ function animateStyles(curElement, config) {
     } else {
       // change height
       curElement.style.height = _endHeight + 'px';
+      if (typeof callback === 'function') callback();
 
       //
       window.cancelAnimationFrame(requestId);
@@ -440,7 +443,8 @@ var external_root_React_commonjs2_react_commonjs_react_amd_react_default = /*#__
 ;// CONCATENATED MODULE: ./src/AccordionItem.tsx
 
 var AccordionItem = function AccordionItem(props) {
-  var index = props.index,
+  var heightObserver = props.heightObserver,
+    index = props.index,
     itemClassName = props.itemClassName,
     itemContentWrapperClassName = props.itemContentWrapperClassName,
     itemContentClassName = props.itemContentClassName,
@@ -455,6 +459,27 @@ var AccordionItem = function AccordionItem(props) {
     triggerType = props.triggerType,
     children = props.children;
   var activedClassName = typeof defaultActive !== 'undefined' && defaultActive !== false ? ' active' : '';
+  var observer = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useRef)(null);
+  var contentWrapperRef = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useRef)(null);
+  var contentRef = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useRef)(null);
+  (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useEffect)(function () {
+    if (parseFloat(heightObserver) !== index) return;
+
+    // When the content height changes dynamically, change the height of the wrapper
+    if (contentRef.current && contentWrapperRef.current) {
+      var _contentPadding = window.getComputedStyle(contentRef.current).getPropertyValue('padding-bottom');
+      observer.current = new ResizeObserver(function (entries) {
+        entries.forEach(function (entry) {
+          contentWrapperRef.current.style.height = entry.contentRect.bottom + parseFloat(_contentPadding) + 'px';
+        });
+      });
+      observer.current.observe(contentRef.current);
+    }
+    return function () {
+      var _observer$current;
+      if (contentRef.current) (_observer$current = observer.current) === null || _observer$current === void 0 ? void 0 : _observer$current.unobserve(contentRef.current);
+    };
+  }, [heightObserver]);
   return /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
     "data-index": index,
     className: "custom-accordion-item ".concat(itemClassName || itemClassName === '' ? itemClassName : "accordion-item", " ").concat(activedClassName),
@@ -471,6 +496,7 @@ var AccordionItem = function AccordionItem(props) {
     className: "custom-accordion-trigger ".concat(itemTriggerClassName || itemTriggerClassName === '' ? itemTriggerClassName : "accordion-button", " ").concat(activedClassName === '' ? 'collapsed' : 'active'),
     type: "button"
   }, title), itemTriggerIcon), /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
+    ref: contentWrapperRef,
     className: "custom-accordion-content__wrapper ".concat(itemContentWrapperClassName || itemContentWrapperClassName === '' ? itemContentWrapperClassName : "accordion-collapse"),
     role: "tabpanel",
     style: {
@@ -478,7 +504,8 @@ var AccordionItem = function AccordionItem(props) {
       overflow: 'hidden'
     }
   }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
-    className: "custom-accordion-content ".concat(itemContentClassName || itemContentClassName === '' ? itemContentClassName : "accordion-body")
+    className: "custom-accordion-content ".concat(itemContentClassName || itemContentClassName === '' ? itemContentClassName : "accordion-body"),
+    ref: contentRef
   }, children))));
 };
 /* harmony default export */ const src_AccordionItem = (AccordionItem);
@@ -515,6 +542,7 @@ var Accordion = function Accordion(props) {
   var wrapperClassName = props.wrapperClassName,
     triggerType = props.triggerType,
     displayTheFirstItem = props.displayTheFirstItem,
+    displayAllItems = props.displayAllItems,
     duration = props.duration,
     easing = props.easing,
     alternateCollapse = props.alternateCollapse,
@@ -527,10 +555,15 @@ var Accordion = function Accordion(props) {
     _useState2 = _slicedToArray(_useState, 2),
     animOK = _useState2[0],
     setAnimOK = _useState2[1];
+  var _useState3 = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)(-1),
+    _useState4 = _slicedToArray(_useState3, 2),
+    heightObserver = _useState4[0],
+    setHeightObserver = _useState4[1];
   function handleClickItem(e) {
     e.preventDefault();
     //Prevents further propagation of the current event in the capturing and bubbling phases(if use `e.target`).
     e.stopPropagation();
+    if (e.target.closest('.custom-accordion-header') === null) return;
     if (animOK) return;
 
     //
@@ -577,7 +610,10 @@ var Accordion = function Accordion(props) {
         startHeight: 0,
         endHeight: $curContent.scrollHeight,
         speed: animSpeed
-      }, easeType);
+      }, easeType, function () {
+        // content height observer
+        setHeightObserver(curIndex);
+      });
     } else {
       if (e.type == 'click') {
         var _reactDomEl$querySele3, _reactDomEl$querySele4;
@@ -607,7 +643,8 @@ var Accordion = function Accordion(props) {
     return /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement(src_AccordionItem, _extends({
       key: "item" + i,
       index: i,
-      defaultActive: _defaultActive,
+      heightObserver: heightObserver,
+      defaultActive: typeof displayAllItems === 'undefined' ? _defaultActive : displayAllItems,
       triggerType: triggerType || 'click',
       onToggleEv: handleClickItem
     }, childProps));

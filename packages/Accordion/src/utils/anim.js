@@ -13,9 +13,10 @@ const {
  * 
  * @param  {HTMLElement} curElement      - Element of animation.
  * @param  {?JSON} config                - Configuration of animation
- * @param  {?string} easeType              - Types of easing animation.
+ * @param  {?string} easeType            - Types of easing animation.
+* @param  {?Function} callback           - Callback after animation ends
  */
-function animateStyles(curElement, config, easeType = 'linear') {
+function animateStyles(curElement, config, easeType = 'linear', callback = () => {}) {
     if (typeof curElement === typeof undefined) return;
 
     // Set a default configuration
@@ -79,6 +80,8 @@ function animateStyles(curElement, config, easeType = 'linear') {
         } else {
             // change height
             curElement.style.height = _endHeight + 'px';
+            
+            if (typeof callback === 'function') callback();
             
             //
             window.cancelAnimationFrame(requestId);

@@ -11,6 +11,7 @@ import { Accordion } from 'funda-ui/Accordion';
 | --- | --- | --- | --- |
 | `wrapperClassName` | string | `accordion` | The class name of the accordion wrapper. |
 | `displayTheFirstItem` | boolean | false | Display the only first item of a list |
+| `displayAllItems` | boolean | false | Display all items. <blockquote>When it is **true**, the `displayTheFirstItem` property is forced to invalid.</blockquote> |
 | `triggerType` | `click` \| `mouseover`  | click | One event type |
 | `duration` | number | 200 | The number of milliseconds(ms) each iteration of the animation takes to complete |
 | `easing` | `linear` \| `easeIn` \| `easeOut` \| `easeInOut` | `linear` | Types of easing animation |
