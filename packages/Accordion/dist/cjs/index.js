@@ -560,11 +560,14 @@ var Accordion = function Accordion(props) {
     heightObserver = _useState4[0],
     setHeightObserver = _useState4[1];
   function handleClickItem(e) {
-    e.preventDefault();
-    //Prevents further propagation of the current event in the capturing and bubbling phases(if use `e.target`).
-    e.stopPropagation();
     if (e.target.closest('.custom-accordion-header') === null) return;
     if (animOK) return;
+
+    // DO NOT place it before the above code, otherwise it will cause the checkbox and radio controls to fail.
+    e.preventDefault();
+
+    //Prevents further propagation of the current event in the capturing and bubbling phases(if use `e.target`).
+    e.stopPropagation();
 
     //
     var reactDomEl = e.currentTarget;

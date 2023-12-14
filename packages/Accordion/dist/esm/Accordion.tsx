@@ -67,13 +67,15 @@ const Accordion = (props: AccordionProps) => {
 
     
     function handleClickItem(e: React.MouseEvent) {
-		e.preventDefault();
+        if ((e.target as any).closest('.custom-accordion-header') === null) return;
+		if ( animOK ) return;
+
+        // DO NOT place it before the above code, otherwise it will cause the checkbox and radio controls to fail.
+        e.preventDefault();
+
 		//Prevents further propagation of the current event in the capturing and bubbling phases(if use `e.target`).
 		e.stopPropagation();
 
-     
-        if ((e.target as any).closest('.custom-accordion-header') === null) return;
-		if ( animOK ) return;
 
 		//
         const reactDomEl: any = e.currentTarget;
