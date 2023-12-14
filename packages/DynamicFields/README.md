@@ -78,6 +78,17 @@ export default () => {
 
     const LABEL_WIDTH = '200px';
 
+    // For some operations to initialize controls, you can use querySelectorAll to query nodes.
+    /*
+    setTimeout(() => {
+        [].slice.call(document.querySelectorAll(`[data-xxx-control]`)).forEach((field) => {
+            field.style.background = 'red';
+            //...
+        });
+    }, 500);
+    */
+
+
     //initialize default value
     const tmpl = (val: any, init: boolean = true) => {
         let data: any = null;
@@ -299,6 +310,17 @@ export default () => {
     const LABEL_WIDTH = '200px';
     const [dynamicFieldsValue, setDynamicFieldsValue] = useState<DynamicFieldsValueProps | null>(null);
     const [dynamicFieldsJsonValue, setDynamicFieldsJsonValue] = useState<any[]>([]);
+
+
+    // For some operations to initialize controls, you can use querySelectorAll to query nodes.
+    /*
+    setTimeout(() => {
+        [].slice.call(document.querySelectorAll(`[data-xxx-control]`)).forEach((field) => {
+            field.style.background = 'red';
+            //...
+        });
+    }, 500);
+    */
 
     //initialize default value
     const tmpl = (val: any, init: boolean = true) => {
@@ -663,6 +685,16 @@ export default () => {
     };
 
 
+    // For some operations to initialize controls, you can use querySelectorAll to query nodes.
+    /*
+    setTimeout(() => {
+        [].slice.call(document.querySelectorAll(`[data-xxx-control]`)).forEach((field) => {
+            field.style.background = 'red';
+            //...
+        });
+    }, 500);
+    */
+
 
     //initialize default value
     const tmpl = (val: any, init: boolean = true) => {
@@ -863,6 +895,15 @@ type DynamicFieldsValueProps = {
 
 export default () => {
 
+    // For some operations to initialize controls, you can use querySelectorAll to query nodes.
+    /*
+    setTimeout(() => {
+        [].slice.call(document.querySelectorAll(`[data-xxx-control]`)).forEach((field) => {
+            field.style.background = 'red';
+            //...
+        });
+    }, 500);
+    */
 
     //initialize default value
     const tmpl = (val: any, init: boolean = true) => {
