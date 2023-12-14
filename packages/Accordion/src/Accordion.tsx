@@ -4,6 +4,16 @@ import Item from './AccordionItem';
 
 import animateStyles from './utils/anim';
 
+
+// Adapt the easing parameters of TweenMax
+enum EasingList {
+    linear = 'linear',
+    easeIn = 'ease-in',
+    easeOut = 'ease-out',
+    easeInOut = 'ease-in-out'
+}
+
+
 declare module 'react' {
     interface ReactI18NextChildren<T> {
         children?: any;
@@ -21,6 +31,8 @@ type AccordionProps = {
 	displayTheFirstItem?: boolean;
 	/** The number of milliseconds(ms) each iteration of the animation takes to complete */
 	duration?: number;
+    /** Types of easing animation */
+    easing?: string;
     /**  Mutually exclusive alternate expansion between the levels */
     alternateCollapse?: boolean;
     /** This function is called whenever the data is updated.
@@ -37,12 +49,14 @@ const Accordion = (props: AccordionProps) => {
         triggerType,
         displayTheFirstItem,
         duration,
+        easing,
         alternateCollapse,
         onChange,
         children
     } = props;
 
 
+    const easeType: string = typeof alternateCollapse === 'undefined' ? EasingList['linear'] : EasingList[easing as never];
     const ALTER = typeof alternateCollapse === 'undefined' ? true : alternateCollapse;
     const rootRef = useRef<any>(null);
     const [animOK, setAnimOK] = useState<boolean>(false);
@@ -55,6 +69,7 @@ const Accordion = (props: AccordionProps) => {
 		e.stopPropagation();
 
 		if ( animOK ) return;
+
 
 		//
         const reactDomEl: any = e.currentTarget;
@@ -81,7 +96,7 @@ const Accordion = (props: AccordionProps) => {
                             startHeight  : node.scrollHeight,
                             endHeight    : 0,
                             speed        : animSpeed
-                        } as  never);				
+                        } as  never, easeType);				
                     }
 
                 });
@@ -106,7 +121,7 @@ const Accordion = (props: AccordionProps) => {
 				startHeight  : 0,
 				endHeight    : $curContent.scrollHeight,
 				speed        : animSpeed
-			} as  never);
+			} as  never, easeType);
 			
 		} else {
 			
@@ -121,7 +136,7 @@ const Accordion = (props: AccordionProps) => {
 					startHeight  : $curContent.scrollHeight,
 					endHeight    : 0,
 					speed        : animSpeed
-				} as  never);
+				} as  never, easeType);
 			}
 			
 		}
