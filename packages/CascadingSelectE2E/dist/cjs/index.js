@@ -20,8 +20,9 @@ return /******/ (() => { // webpackBootstrap
  * @returns {String} such as: [1][2][3]
  */
 function convertStringByCommaToValByBrackets(str) {
-  if (typeof str === 'undefined') return '';
-  if (str.length === 0) return '';
+  if (typeof str === 'undefined' || str === null || str === '') {
+    return '';
+  }
   return str.split(',').map(function (v) {
     return v.toString().includes('[') && v.toString().includes(']') ? "".concat(v) : "[".concat(v, "]");
   }).join('');
@@ -45,8 +46,9 @@ function convertArrToValByBrackets(arr) {
  * @returns {String} such as: {1}{2}{3}
  */
 function convertStringByCommaToValByBraces(str) {
-  if (typeof str === 'undefined') return '';
-  if (str.length === 0) return '';
+  if (typeof str === 'undefined' || str === null || str === '') {
+    return '';
+  }
   return str.split(',').map(function (v) {
     return v.toString().includes('{') && v.toString().includes('}') ? "".concat(v) : "{".concat(v, "}");
   }).join('');
@@ -82,7 +84,9 @@ module.exports = {
  */
 function extractContentsOfBrackets(str) {
   var commaSeparated = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
-  if (typeof str === 'undefined') return '';
+  if (typeof str === 'undefined' || str === null || str === '') {
+    return !commaSeparated ? [] : '';
+  }
   var res = str.match(/[^\[]+(?=(\[ \])|\])/g);
   if (commaSeparated) {
     return res === null ? '' : res.join(',').replace(/\,+$/, '');
@@ -98,7 +102,9 @@ function extractContentsOfBrackets(str) {
  */
 function extractContentsOfBraces(str) {
   var commaSeparated = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
-  if (typeof str === 'undefined') return '';
+  if (typeof str === 'undefined' || str === null || str === '') {
+    return !commaSeparated ? [] : '';
+  }
   var res = str.match(/[^\{]+(?=(\{ \})|\})/g);
   if (commaSeparated) {
     return res === null ? '' : res.join(',').replace(/\,+$/, '');
@@ -114,7 +120,9 @@ function extractContentsOfBraces(str) {
  */
 function extractContentsOfParentheses(str) {
   var commaSeparated = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
-  if (typeof str === 'undefined') return '';
+  if (typeof str === 'undefined' || str === null || str === '') {
+    return !commaSeparated ? [] : '';
+  }
   var res = str.match(/[^\(]+(?=(\( \))|\))/g);
   if (commaSeparated) {
     return res === null ? '' : res.join(',').replace(/\,+$/, '');
