@@ -217,7 +217,7 @@ const Radio = (props: RadioProps) => {
 
 
     // Generate list of options
-    const itemsList = dataInit.map((item: any, index: number) => {
+    const itemsList = Array.isArray(dataInit) ? dataInit.map((item: any, index: number) => {
         const requiredVal = index === 0 ? required || null : null;
 
         return <div key={index} className={inline ? `form-check form-check-inline` : `form-check`}>
@@ -253,7 +253,7 @@ const Radio = (props: RadioProps) => {
             
         </div>;
 
-    });
+    }): null;
 
 
 

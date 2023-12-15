@@ -275,7 +275,7 @@ var Radio = function Radio(props) {
   }
 
   // Generate list of options
-  var itemsList = dataInit.map(function (item, index) {
+  var itemsList = Array.isArray(dataInit) ? dataInit.map(function (item, index) {
     var requiredVal = index === 0 ? required || null : null;
     return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       key: index,
@@ -312,7 +312,7 @@ var Radio = function Radio(props) {
     }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "form-control-extends__wrapper"
     }, typeof item["extends"] !== 'undefined' ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, item["extends"]) : null)));
-  });
+  }) : null;
   (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(function () {
     // data init
     //--------------

@@ -252,7 +252,7 @@ const Select = forwardRef((props: SelectProps, ref: any) => {
 
     
     // Generate list of options
-    const selectOptionsList = dataInit.map((item: any, index: number) => {
+    const selectOptionsList = Array.isArray(dataInit) ? dataInit.map((item: any, index: number) => {
 
         if (typeof item.optgroup !== 'undefined') {
             return <optgroup key={'optgroup-' + index} label={item.label}>
@@ -273,7 +273,7 @@ const Select = forwardRef((props: SelectProps, ref: any) => {
 
         }
 
-    });
+    }) : null;
     
 
 

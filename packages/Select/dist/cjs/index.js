@@ -451,7 +451,7 @@ var Select = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(func
   }
 
   // Generate list of options
-  var selectOptionsList = dataInit.map(function (item, index) {
+  var selectOptionsList = Array.isArray(dataInit) ? dataInit.map(function (item, index) {
     if (typeof item.optgroup !== 'undefined') {
       return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("optgroup", {
         key: 'optgroup-' + index,
@@ -478,7 +478,7 @@ var Select = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(func
         disabled: _disabled
       });
     }
-  });
+  }) : null;
   (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(function () {
     // data init
     //--------------
