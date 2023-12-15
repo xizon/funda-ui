@@ -3,6 +3,9 @@ import React, { useId, useEffect, useState, useRef, forwardRef } from 'react';
 import { debounce } from './utils/performance';
 import useDebounce from './utils/useDebounce';
 
+import { extractContentsOfBrackets } from './utils/extract';
+import { convertArrToValByBrackets } from './utils/convert';
+
 //Destroys body scroll locking
 import { clearAllBodyScrollLocks, disableBodyScroll, enableBodyScroll } from './plugins/BSL';
 
@@ -68,6 +71,8 @@ type MultiFuncSelectProps = {
     depth?: number;
     /** Incoming data, you can set the third parameter of `onFetch` */
     data?: any;
+    /** Whether to use square brackets to save result and initialize default value */
+    extractValueByBrackets?: boolean;
     /** -- */
     id?: string;
     style?: React.CSSProperties;
@@ -118,6 +123,7 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
         fetchFuncMethod,
         fetchFuncMethodParams,
         data,
+        extractValueByBrackets,
         fetchCallback,
         onFetch,
         onLoad,
@@ -129,6 +135,7 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
     } = props;
 
     
+    const VALUE_BY_BRACKETS = typeof extractValueByBrackets === 'undefined' ? true : extractValueByBrackets;
     const LOCK_BODY_SCROLL = typeof lockBodyScroll === 'undefined' ? true : lockBodyScroll;
     const WIN_WIDTH = typeof winWidth === 'function' ? winWidth() : winWidth ? winWidth : 'auto';
     const INDENT_PLACEHOLDER = doubleIndent ? `&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;` : `&nbsp;&nbsp;&nbsp;&nbsp;`;
@@ -232,15 +239,15 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
 
     /**
      * Format indent value
-     * @param {String|Array} str 
+     * @param {String|Array} inputData 
      * @returns {String|Array}
      */
-    function formatIndentVal(str: any) {
+    function formatIndentVal(inputData: any) {
         const reVar = new RegExp(INDENT_LAST_PLACEHOLDER, 'g');
-        if (Array.isArray(str)) {
-            return str.map((s: string) => s.replace(reVar,'').replace(/\&nbsp;/ig,''));
+        if (Array.isArray(inputData)) {
+            return inputData.map((s: string) => s.replace(reVar,'').replace(/\&nbsp;/ig,''));
         } else {
-            return str.replace(reVar,'').replace(/\&nbsp;/ig,'');
+            return inputData.replace(reVar,'').replace(/\&nbsp;/ig,'');
         }
         
     }
@@ -340,6 +347,7 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
     function getPlacement(el: HTMLElement, restorePos: boolean = false) {
 
         if ( el === null ) return;
+        if ( selectInputRef.current === null ) return;
 
         const PLACEMENT_TOP = 'top-0';
         const PLACEMENT_BOTTOMEND = 'bottom-0';
@@ -360,7 +368,7 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
             return;
         }
 
-        if ( listContentRef.current === null ) return;
+        if ( listContentRef.current === null || listRef.current === null ) return;
 
 
         // STEP 0:
@@ -592,9 +600,10 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
                     setItemSelectedAll(false);
                 }
 
-                if ( typeof defaultValue !== 'undefined' && defaultValue !== '' && multiSelect?.data !== null ) {
+                
 
-                    
+                if ( typeof defaultValue !== 'undefined' && defaultValue !== '' && multiSelect?.data !== null ) {
+        
                     // initialize default values of Multiple selection
                     const _currentData: any = multiSelect?.data;
 
@@ -604,7 +613,7 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
                     });
 
                     //
-                    const _values: string[] = defaultValue.split(',');
+                    const _values: string[] = VALUE_BY_BRACKETS ? extractContentsOfBrackets(defaultValue) : defaultValue.split(',');
                     _values.forEach((_value: string, _index: number) => {
 
                         if ( !multiSelControlOptionExist(_currentData.values, _value) && typeof _currentData.values[_index] !== 'undefined' )  {
@@ -730,7 +739,7 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
                     });
 
                     //
-                    const _values: string[] = typeof defaultValue !== 'undefined' ? defaultValue.split(',') : [];
+                    const _values: string[] = typeof defaultValue !== 'undefined' ? (VALUE_BY_BRACKETS ? extractContentsOfBrackets(defaultValue) : defaultValue.split(',')) : [];
                     _values.forEach((_value: string, _index: number) => {
 
                         if ( !multiSelControlOptionExist(_currentData.values, _value) && typeof _currentData.values[_index] !== 'undefined' )  {
@@ -879,9 +888,9 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
                 if ( multiSelControlOptionExist(valueArr, _value) ) {
 
                     setControlArr((prevState: any) => {
-
+                        
                         // update temporary value
-                        setControlTempValue(prevState.labels.length >= 0 ? null : prevState.labels.join(','));
+                        setControlTempValue(prevState.labels.length >= 0 ? null : (VALUE_BY_BRACKETS ? convertArrToValByBrackets(prevState.labels) : prevState.labels.join(',')));
 
                         return {
                             labels: removeItemOnce(prevState.labels, formatIndentVal(_label)),
@@ -901,7 +910,7 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
                     setControlArr((prevState: any) => {
 
                         // update temporary value
-                        setControlTempValue(prevState.labels.length >= 0 ? null : prevState.labels.join(','));
+                        setControlTempValue(prevState.labels.length >= 0 ? null : (VALUE_BY_BRACKETS ? convertArrToValByBrackets(prevState.labels) : prevState.labels.join(',')));
 
                         return {
                             labels: [...prevState.labels, formatIndentVal(_label)],
@@ -921,8 +930,18 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
 
             //
             if ( typeof(onChange) === 'function' ) {
-                onChange?.(selectInputRef.current, valueInputRef.current, !MULTI_SEL_VALID ? optionsData[index as never] : {labels: currentControlLabelArr.map((v: any) => v.toString()), values: currentControlValueArr.map((v: any) => v.toString())});
-                
+                onChange?.(
+                    selectInputRef.current, 
+                    valueInputRef.current, 
+                    !MULTI_SEL_VALID ? optionsData[index as never] : {
+                        labels: currentControlLabelArr.map((v: any) => v.toString()), 
+                        values: currentControlValueArr.map((v: any) => v.toString()), 
+                        labelsOfString: VALUE_BY_BRACKETS ? convertArrToValByBrackets(currentControlLabelArr.map((v: any) => v.toString())) : currentControlLabelArr.map((v: any) => v.toString()).join(','), 
+                        valuesOfString: VALUE_BY_BRACKETS ? convertArrToValByBrackets(currentControlValueArr.map((v: any) => v.toString())) : currentControlValueArr.map((v: any) => v.toString()).join(',')
+                    }
+                );
+
+
                 //
                 selectInputRef.current.blur();
             }
@@ -959,7 +978,7 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
                     setControlArr((prevState: any) => {
 
                         // update temporary value
-                        setControlTempValue(prevState.labels.length >= 0 ? null : prevState.labels.join(','));
+                        setControlTempValue(prevState.labels.length >= 0 ? null : (VALUE_BY_BRACKETS ? convertArrToValByBrackets(prevState.labels) : prevState.labels.join(',')));
 
                         return {
                             labels: removeItemOnce(prevState.labels, formatIndentVal(_label)),
@@ -976,7 +995,7 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
                     setControlArr((prevState: any) => {
 
                         // update temporary value
-                        setControlTempValue(prevState.labels.length >= 0 ? null : prevState.labels.join(','));
+                        setControlTempValue(prevState.labels.length >= 0 ? null : (VALUE_BY_BRACKETS ? convertArrToValByBrackets(prevState.labels) : prevState.labels.join(',')));
 
                         return {
                             labels: [...prevState.labels, formatIndentVal(_label)],
@@ -998,7 +1017,18 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
 
             //
             if ( typeof(onChange) === 'function' ) {
-                onChange?.(selectInputRef.current, valueInputRef.current, !MULTI_SEL_VALID ? optionsData[index as never] : {labels: currentControlLabelArr.map((v: any) => v.toString()), values: currentControlValueArr.map((v: any) => v.toString())});
+ 
+                onChange?.(
+                    selectInputRef.current, 
+                    valueInputRef.current, 
+                    !MULTI_SEL_VALID ? optionsData[index as never] : {
+                        labels: currentControlLabelArr.map((v: any) => v.toString()), 
+                        values: currentControlValueArr.map((v: any) => v.toString()), 
+                        labelsOfString: VALUE_BY_BRACKETS ? convertArrToValByBrackets(currentControlLabelArr.map((v: any) => v.toString())) : currentControlLabelArr.map((v: any) => v.toString()).join(','), 
+                        valuesOfString: VALUE_BY_BRACKETS ? convertArrToValByBrackets(currentControlValueArr.map((v: any) => v.toString())) : currentControlValueArr.map((v: any) => v.toString()).join(',')
+                    }
+                );
+
 
                 //
                 selectInputRef.current.blur();
@@ -1015,8 +1045,17 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
 
         const onChangeSelectAll = (labelsArr: string[], valuesArr: string[]) => {
             if ( typeof(onChange) === 'function' ) {
-                onChange?.(selectInputRef.current, valueInputRef.current, {labels: labelsArr.map((v: any) => v.toString()), values: valuesArr.map((v: any) => v.toString())});
 
+                onChange?.(
+                    selectInputRef.current, 
+                    valueInputRef.current, 
+                    {
+                        labels: labelsArr.map((v: any) => v.toString()), 
+                        values: valuesArr.map((v: any) => v.toString()), 
+                        labelsOfString: VALUE_BY_BRACKETS ? convertArrToValByBrackets(labelsArr.map((v: any) => v.toString())) : labelsArr.map((v: any) => v.toString()).join(','), 
+                        valuesOfString: VALUE_BY_BRACKETS ? convertArrToValByBrackets(valuesArr.map((v: any) => v.toString())) : valuesArr.map((v: any) => v.toString()).join(',')
+                    }
+                );
 
                 //
                 selectInputRef.current.blur();
@@ -1086,7 +1125,7 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
         setControlArr((prevState: any) => {
 
             // update temporary value
-            setControlTempValue(prevState.labels.length >= 0 ? null : prevState.labels.join(','));
+            setControlTempValue(prevState.labels.length >= 0 ? null : (VALUE_BY_BRACKETS ? convertArrToValByBrackets(prevState.labels) : prevState.labels.join(',')));
 
             return {
                 labels: removeItemOnce(prevState.labels, formatIndentVal(_label)),
@@ -1104,7 +1143,18 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
 
         //
         if ( typeof(onChange) === 'function' ) {
-            onChange?.(selectInputRef.current, valueInputRef.current, {labels: currentControlLabelArr.map((v: any) => v.toString()), values: currentControlValueArr.map((v: any) => v.toString())});
+
+            onChange?.(
+                selectInputRef.current, 
+                valueInputRef.current, 
+                {
+                    labels: currentControlLabelArr.map((v: any) => v.toString()), 
+                    values: currentControlValueArr.map((v: any) => v.toString()), 
+                    labelsOfString: VALUE_BY_BRACKETS ? convertArrToValByBrackets(currentControlLabelArr.map((v: any) => v.toString())) : currentControlLabelArr.map((v: any) => v.toString()).join(','), 
+                    valuesOfString: VALUE_BY_BRACKETS ? convertArrToValByBrackets(currentControlValueArr.map((v: any) => v.toString())) : currentControlValueArr.map((v: any) => v.toString()).join(',')
+                }
+            );
+
 
             //
             selectInputRef.current.blur();
@@ -1331,7 +1381,19 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
 
                         //
                         if ( typeof(onChange) === 'function' ) {
-                            onChange?.(selectInputRef.current, valueInputRef.current, !MULTI_SEL_VALID ? JSON.parse(currentData) : {labels: currentControlLabelArr.map((v: any) => v.toString()), values: currentControlValueArr.map((v: any) => v.toString())});
+      
+                            onChange?.(
+                                selectInputRef.current, 
+                                valueInputRef.current, 
+                                !MULTI_SEL_VALID ? JSON.parse(currentData) : {
+                                    labels: currentControlLabelArr.map((v: any) => v.toString()), 
+                                    values: currentControlValueArr.map((v: any) => v.toString()), 
+                                    labelsOfString: VALUE_BY_BRACKETS ? convertArrToValByBrackets(currentControlLabelArr.map((v: any) => v.toString())) : currentControlLabelArr.map((v: any) => v.toString()).join(','), 
+                                    valuesOfString: VALUE_BY_BRACKETS ? convertArrToValByBrackets(currentControlValueArr.map((v: any) => v.toString())) : currentControlValueArr.map((v: any) => v.toString()).join(',')
+                                }
+                            );
+
+
 
                             //
                             selectInputRef.current.blur();
@@ -1446,19 +1508,20 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
                             disabled={disabled || null}
                             required={required || null}
                             readOnly={readOnly || null}
-                            value={controlTempValue || controlTempValue === '' ? controlTempValue : (MULTI_SEL_VALID ? formatIndentVal(controlArr.labels).map((v: any) => stripHTML(v)).join(',') :  stripHTML(controlLabel as never))}  // do not use `defaultValue`
+                            value={controlTempValue || controlTempValue === '' ? controlTempValue : (MULTI_SEL_VALID ? (VALUE_BY_BRACKETS ? convertArrToValByBrackets(formatIndentVal(controlArr.labels).map((v: any) => stripHTML(v))) : formatIndentVal(controlArr.labels).map((v: any) => stripHTML(v)).join(',')) :  stripHTML(controlLabel as never))}  // do not use `defaultValue`
                           
                             style={{cursor: 'pointer', borderBottomWidth: MULTI_SEL_VALID? '0' : '1px', ...style}}
                             autoComplete='off'
                             {...attributes}
                         />
+                        
 
                         <input 
                             ref={valueInputRef}
                             type="hidden"
                             id={idRes}
                             name={name}
-                            value={MULTI_SEL_VALID ? controlArr.values.join(',') : controlValue}  // do not use `defaultValue`
+                            value={MULTI_SEL_VALID ? (VALUE_BY_BRACKETS ? convertArrToValByBrackets(controlArr.values) : controlArr.values.join(',')) : controlValue}  // do not use `defaultValue`
                             {...attributes}
                         />
 

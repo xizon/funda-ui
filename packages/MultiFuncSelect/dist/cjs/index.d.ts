@@ -47,6 +47,8 @@ declare type MultiFuncSelectProps = {
     depth?: number;
     /** Incoming data, you can set the third parameter of `onFetch` */
     data?: any;
+    /** Whether to use square brackets to save result and initialize default value */
+    extractValueByBrackets?: boolean;
     /** -- */
     id?: string;
     style?: React.CSSProperties;

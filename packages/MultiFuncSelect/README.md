@@ -19,7 +19,8 @@ import MultiFuncSelect from 'funda-ui/MultiFuncSelect';
 | `multiSelect` | JSON Object | `{"valid": true, "selectAll": true, "selectAllLabel": "Select all options"}` | Enable multi-select. <blockquote>**Parameters Description:** <br />`valid` -->  *(Boolean)* *(required)* Set component in which multiple options can be selected at once to be valid.  <br />`selectAll` --> *(Boolean)* *(required)* Enables select all button. <br />`selectAllLabel` -->  *(String)* Sets the select all button label. (Support html tags) <br />`data` -->  *(JSON Object \| null)* *(required)* Sets a default data for control's values. (such as `{values: ['value-1','value-3'], labels: ['Option 1','Option 3'], queryStrings: ['','']}`)</blockquote> |
 | `depth` | number  | 100 | Set the depth value of the control to control the display of the pop-up layer appear above. Please set it when multiple controls are used at the same time. |
 | `winWidth` | number \| function  | `auto` | Set the container width of options. Such as: `500px` or `() => window.innerWidth/2 + 'px'`  |
-| `value` | string | - | Set a default value for this control |
+| `extractValueByBrackets` | boolean  | true | Whether to use square brackets to save result and initialize default value. |
+| `value` | string | - | Set a default value for this control. If it is a multi-select (the `multiSelect` property exists), the default value will be used like `[value-1][value-2]`. <blockquote>If `extractValueByBrackets` is false and the `multiSelect` property exists, the default value will be separated by comma, such as <br />`value-1,value-2`</blockquote> |
 | `label` | string \| ReactNode | - | It is used to specify a label for an element of a form.<blockquote>Support html tags</blockquote> |
 | `name` | string | - | Name is not deprecated when used with form fields. |
 | `placeholder` | string | - |  Specifies a short hint that describes. |
@@ -27,7 +28,7 @@ import MultiFuncSelect from 'funda-ui/MultiFuncSelect';
 | `disabled` | boolean | false | Whether it is disabled |
 | `required` | boolean | false | When present, it specifies that a field must be filled out before submitting the form. |
 | `controlArrow` | ReactNode  | `<svg width="10px" height="10px" viewBox="0 -4.5 20 20"><g stroke="none" strokeWidth="1" fill="none"><g transform="translate(-180.000000, -6684.000000)" className="arrow-fill-g" fill="#a5a5a5"><g transform="translate(56.000000, 160.000000)"><path d="M144,6525.39 L142.594,6524 L133.987,6532.261 L133.069,6531.38 L133.074,6531.385 L125.427,6524.045 L124,6525.414 C126.113,6527.443 132.014,6533.107 133.987,6535 C135.453,6533.594 134.024,6534.965 144,6525.39"></path></g></g></g></svg>` | Set an arrow of control |
-| `data` | any  | - | Incoming data, you can set the third parameter of `onFetch`. <blockquote>Changes in the `data` value will cause the component to re-render. It will be used when the value or content does not change when switching routes and needs to re-render the component or get the request.</blockquote> |
+| `data` | any  | - | Incoming data, you can set the third parameter of `onFetch`. <blockquote>Changes in the `data` value will cause the component to re-render. It will be used when the value or content does not change when switching routes and needs to re-render the component or get the request.</blockquote> <hr /> <blockquote>!!!Note: Using `data` and `value` at the same time may cause two different parameter transfers, which will affect the final rendering. Please choose the appropriate usage based on your business. Generally speaking, if the `multiSelect` exists, it is not recommended to use the `data`.</blockquote>|
 | `fetchTrigger` | boolean  | false | Use buttons to trigger data queries. |
 | `fetchTriggerForDefaultData` | JSON Object \| null  | null | Sets a default data for control's values. (such as `{values: ['value-1','value-3'], labels: ['Option 1','Option 3'], queryStrings: ['','']}`) <br />Only takes effect when `fetchTrigger` is *true* and `value` is not empty. |
 | `fetchNoneInfo` | string  | - | The text of the data not fetched. |
@@ -171,7 +172,7 @@ export default () => {
 
 
             <MultiFuncSelect
-                value="value-3,value-2"
+                value="[value-3][value-2]"
                 multiSelect={{
                     valid: true, 
                     selectAll: true, 
@@ -205,7 +206,6 @@ export default () => {
                 value="bar2"
                 placeholder="Select"
                 name="name"
-                data="mydata"
                 fetchFuncAsync={new DataService}
                 fetchFuncMethod="getList"
                 fetchFuncMethodParams={['',0]}
@@ -275,7 +275,7 @@ export default () => {
             <h3>Multiple selection (automatically trigger request)</h3>
             {/* ================================================================== */}
             <MultiFuncSelect
-                value="bar2"
+                value="[bar2]"
                 multiSelect={{
                     valid: true,
                     selectAll: true,
@@ -287,8 +287,7 @@ export default () => {
                     }
                 }}
                 name="target_user_id"
-                placeholder="Select"
-                data="mydata"
+                placeholder="Select"=
                 fetchFuncAsync={new DataService}
                 fetchFuncMethod="getList"
                 fetchFuncMethodParams={['',0]}
@@ -313,7 +312,7 @@ export default () => {
             <p>Using "fetchTrigger" and "fetchTriggerForDefaultData" parameters</p>
             {/* ================================================================== */}  
             <MultiFuncSelect
-                value="bar2"
+                value="[bar2]"
                 multiSelect={{
                     valid: true,
                     selectAll: true,
@@ -326,7 +325,6 @@ export default () => {
                 }}
                 name="target_user_id"
                 placeholder="Select"
-                data="mydata"
                 fetchUpdate={true}
                 fetchTrigger={true}
                 fetchTriggerForDefaultData={{
@@ -959,7 +957,7 @@ export default () => {
 
             <MultiFuncSelect
                 hierarchical={true}
-                value="level-1,level-3_1"
+                value="[level-1][level-3_1]"
                 multiSelect={{
                     valid: true, 
                     selectAll: true, 
@@ -1100,7 +1098,7 @@ export default () => {
                 hierarchical={true}
                 doubleIndent={true}
                 indentation="-"
-                value="level-1,level-3_1"
+                value="[level-1][level-3_1]"
                 multiSelect={{
                     valid: true, 
                     selectAll: true, 

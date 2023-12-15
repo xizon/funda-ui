@@ -127,6 +127,7 @@ const LiveSearch = (props: LiveSearchProps) => {
     function getPlacement(el: HTMLElement, restorePos: boolean = false) {
 
         if ( el === null ) return;
+        if ( inputRef.current === null ) return;
         
 
         const PLACEMENT_TOP = 'top-0';
@@ -147,6 +148,9 @@ const LiveSearch = (props: LiveSearchProps) => {
             }
             return;
         }
+
+
+        if ( listContentRef.current === null ) return;
     
         // STEP 1:
         // If the content exceeds the height of the window, first limit height and add scrollbar

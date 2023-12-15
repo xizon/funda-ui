@@ -11,6 +11,125 @@
 return /******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ({
 
+/***/ 498:
+/***/ ((module) => {
+
+/**
+ * Convert value to string separated by square brackets 
+ * @param {String} str  such as: 1,2,3
+ * @returns {String} such as: [1][2][3]
+ */
+function convertStringByCommaToValByBrackets(str) {
+  if (typeof str === 'undefined') return '';
+  if (str.length === 0) return '';
+  return str.split(',').map(function (v) {
+    return v.toString().includes('[') && v.toString().includes(']') ? "".concat(v) : "[".concat(v, "]");
+  }).join('');
+}
+
+/**
+ * Convert array value to string  separated by square brackets 
+ * @param {Array} arr  such as: ['1','2','3']
+ * @returns {String} such as: [1][2][3]
+ */
+function convertArrToValByBrackets(arr) {
+  if (!Array.isArray(arr)) return '';
+  return arr.map(function (v) {
+    return v.toString().includes('[') && v.toString().includes(']') ? "".concat(v) : "[".concat(v, "]");
+  }).join('');
+}
+
+/**
+ * Convert value to string separated by curly braces
+ * @param {String} str  such as: 1,2,3
+ * @returns {String} such as: {1}{2}{3}
+ */
+function convertStringByCommaToValByBraces(str) {
+  if (typeof str === 'undefined') return '';
+  if (str.length === 0) return '';
+  return str.split(',').map(function (v) {
+    return v.toString().includes('{') && v.toString().includes('}') ? "".concat(v) : "{".concat(v, "}");
+  }).join('');
+}
+
+/**
+ * Convert array value to string  separated by curly braces
+ * @param {Array} arr  such as: ['1','2','3']
+ * @returns {String} such as: {1}{2}{3}
+ */
+function convertArrToValByBraces(arr) {
+  if (!Array.isArray(arr)) return '';
+  return arr.map(function (v) {
+    return v.toString().includes('{') && v.toString().includes('}') ? "".concat(v) : "{".concat(v, "}");
+  }).join('');
+}
+module.exports = {
+  convertStringByCommaToValByBrackets: convertStringByCommaToValByBrackets,
+  convertArrToValByBrackets: convertArrToValByBrackets,
+  convertStringByCommaToValByBraces: convertStringByCommaToValByBraces,
+  convertArrToValByBraces: convertArrToValByBraces
+};
+
+/***/ }),
+
+/***/ 368:
+/***/ ((module) => {
+
+/**
+ * Extract the contents of square brackets
+ * @param {String} str    =>  input string. such as '[1,2] [f][c]'
+ * @returns {Array|String} such as: ['1,2','f','c']
+ */
+function extractContentsOfBrackets(str) {
+  var commaSeparated = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
+  if (typeof str === 'undefined') return '';
+  var res = str.match(/[^\[]+(?=(\[ \])|\])/g);
+  if (commaSeparated) {
+    return res === null ? '' : res.join(',').replace(/\,+$/, '');
+  } else {
+    return res === null ? '' : res;
+  }
+}
+
+/**
+ * Extract the contents of curly braces
+ * @param {String} str    =>  input string. such as '{1,2} {f}{c}'
+ * @returns {Array|String} such as: ['1,2','f','c']
+ */
+function extractContentsOfBraces(str) {
+  var commaSeparated = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
+  if (typeof str === 'undefined') return '';
+  var res = str.match(/[^\{]+(?=(\{ \})|\})/g);
+  if (commaSeparated) {
+    return res === null ? '' : res.join(',').replace(/\,+$/, '');
+  } else {
+    return res === null ? '' : res;
+  }
+}
+
+/**
+ * Extract the contents of parentheses
+ * @param {String} str    =>  input string. such as '(1,2) (f)(c)'
+ * @returns {Array|String} such as: ['1,2','f','c']
+ */
+function extractContentsOfParentheses(str) {
+  var commaSeparated = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
+  if (typeof str === 'undefined') return '';
+  var res = str.match(/[^\(]+(?=(\( \))|\))/g);
+  if (commaSeparated) {
+    return res === null ? '' : res.join(',').replace(/\,+$/, '');
+  } else {
+    return res === null ? '' : res;
+  }
+}
+module.exports = {
+  extractContentsOfBrackets: extractContentsOfBrackets,
+  extractContentsOfBraces: extractContentsOfBraces,
+  extractContentsOfParentheses: extractContentsOfParentheses
+};
+
+/***/ }),
+
 /***/ 342:
 /***/ ((module) => {
 
@@ -344,6 +463,10 @@ var useDebounce = function useDebounce(fn, delay, dependence) {
   }, dependence);
 };
 /* harmony default export */ const utils_useDebounce = (useDebounce);
+// EXTERNAL MODULE: ./src/utils/extract.js
+var extract = __webpack_require__(368);
+// EXTERNAL MODULE: ./src/utils/convert.js
+var convert = __webpack_require__(498);
 ;// CONCATENATED MODULE: ./src/plugins/BSL/bodyScrollLock.es6.js
 function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
 function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
@@ -601,7 +724,7 @@ var enableBodyScroll = function enableBodyScroll(targetElement) {
 // EXTERNAL MODULE: ./src/utils/tree.js
 var tree = __webpack_require__(602);
 ;// CONCATENATED MODULE: ./src/index.tsx
-var _excluded = ["wrapperClassName", "controlClassName", "multiSelect", "disabled", "required", "value", "label", "name", "readOnly", "placeholder", "id", "options", "lockBodyScroll", "hierarchical", "indentation", "doubleIndent", "style", "depth", "controlArrow", "winWidth", "tabIndex", "fetchTrigger", "fetchTriggerForDefaultData", "fetchNoneInfo", "fetchUpdate", "fetchFuncAsync", "fetchFuncMethod", "fetchFuncMethodParams", "data", "fetchCallback", "onFetch", "onLoad", "onSelect", "onChange", "onBlur", "onFocus"];
+var _excluded = ["wrapperClassName", "controlClassName", "multiSelect", "disabled", "required", "value", "label", "name", "readOnly", "placeholder", "id", "options", "lockBodyScroll", "hierarchical", "indentation", "doubleIndent", "style", "depth", "controlArrow", "winWidth", "tabIndex", "fetchTrigger", "fetchTriggerForDefaultData", "fetchNoneInfo", "fetchUpdate", "fetchFuncAsync", "fetchFuncMethod", "fetchFuncMethodParams", "data", "extractValueByBrackets", "fetchCallback", "onFetch", "onLoad", "onSelect", "onChange", "onBlur", "onFocus"];
 function _extends() { _extends = Object.assign ? Object.assign.bind() : function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
 function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys(Object(source), !0).forEach(function (key) { _defineProperty(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
@@ -624,6 +747,8 @@ function _iterableToArrayLimit(arr, i) { var _i = null == arr ? null : "undefine
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 function _objectWithoutProperties(source, excluded) { if (source == null) return {}; var target = _objectWithoutPropertiesLoose(source, excluded); var key, i; if (Object.getOwnPropertySymbols) { var sourceSymbolKeys = Object.getOwnPropertySymbols(source); for (i = 0; i < sourceSymbolKeys.length; i++) { key = sourceSymbolKeys[i]; if (excluded.indexOf(key) >= 0) continue; if (!Object.prototype.propertyIsEnumerable.call(source, key)) continue; target[key] = source[key]; } } return target; }
 function _objectWithoutPropertiesLoose(source, excluded) { if (source == null) return {}; var target = {}; var sourceKeys = Object.keys(source); var key, i; for (i = 0; i < sourceKeys.length; i++) { key = sourceKeys[i]; if (excluded.indexOf(key) >= 0) continue; target[key] = source[key]; } return target; }
+
+
 
 
 
@@ -661,6 +786,7 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
     fetchFuncMethod = props.fetchFuncMethod,
     fetchFuncMethodParams = props.fetchFuncMethodParams,
     data = props.data,
+    extractValueByBrackets = props.extractValueByBrackets,
     fetchCallback = props.fetchCallback,
     onFetch = props.onFetch,
     onLoad = props.onLoad,
@@ -669,6 +795,7 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
     onBlur = props.onBlur,
     onFocus = props.onFocus,
     attributes = _objectWithoutProperties(props, _excluded);
+  var VALUE_BY_BRACKETS = typeof extractValueByBrackets === 'undefined' ? true : extractValueByBrackets;
   var LOCK_BODY_SCROLL = typeof lockBodyScroll === 'undefined' ? true : lockBodyScroll;
   var WIN_WIDTH = typeof winWidth === 'function' ? winWidth() : winWidth ? winWidth : 'auto';
   var INDENT_PLACEHOLDER = doubleIndent ? "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" : "&nbsp;&nbsp;&nbsp;&nbsp;";
@@ -785,17 +912,17 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
 
   /**
    * Format indent value
-   * @param {String|Array} str 
+   * @param {String|Array} inputData 
    * @returns {String|Array}
    */
-  function formatIndentVal(str) {
+  function formatIndentVal(inputData) {
     var reVar = new RegExp(INDENT_LAST_PLACEHOLDER, 'g');
-    if (Array.isArray(str)) {
-      return str.map(function (s) {
+    if (Array.isArray(inputData)) {
+      return inputData.map(function (s) {
         return s.replace(reVar, '').replace(/\&nbsp;/ig, '');
       });
     } else {
-      return str.replace(reVar, '').replace(/\&nbsp;/ig, '');
+      return inputData.replace(reVar, '').replace(/\&nbsp;/ig, '');
     }
   }
 
@@ -880,6 +1007,7 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
   function getPlacement(el) {
     var restorePos = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
     if (el === null) return;
+    if (selectInputRef.current === null) return;
     var PLACEMENT_TOP = 'top-0';
     var PLACEMENT_BOTTOMEND = 'bottom-0';
     var PLACEMENT_RIGHT = 'end-0';
@@ -896,7 +1024,7 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
       }
       return;
     }
-    if (listContentRef.current === null) return;
+    if (listContentRef.current === null || listRef.current === null) return;
 
     // STEP 0:
     // save content height (Suitable for initial data with unchanged open options)
@@ -1108,7 +1236,7 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
                 });
 
                 //
-                _values = defaultValue.split(',');
+                _values = VALUE_BY_BRACKETS ? (0,extract.extractContentsOfBrackets)(defaultValue) : defaultValue.split(',');
                 _values.forEach(function (_value, _index) {
                   if (!multiSelControlOptionExist(_currentData.values, _value) && typeof _currentData.values[_index] !== 'undefined') {
                     var _filterRes = [];
@@ -1212,7 +1340,7 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
                 });
 
                 //
-                _values2 = typeof defaultValue !== 'undefined' ? defaultValue.split(',') : [];
+                _values2 = typeof defaultValue !== 'undefined' ? VALUE_BY_BRACKETS ? (0,extract.extractContentsOfBrackets)(defaultValue) : defaultValue.split(',') : [];
                 _values2.forEach(function (_value, _index) {
                   if (!multiSelControlOptionExist(_currentData2.values, _value) && typeof _currentData2.values[_index] !== 'undefined') {
                     var _filterRes3 = [];
@@ -1366,7 +1494,7 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
                 if (multiSelControlOptionExist(valueArr, _value)) {
                   setControlArr(function (prevState) {
                     // update temporary value
-                    setControlTempValue(prevState.labels.length >= 0 ? null : prevState.labels.join(','));
+                    setControlTempValue(prevState.labels.length >= 0 ? null : VALUE_BY_BRACKETS ? (0,convert.convertArrToValByBrackets)(prevState.labels) : prevState.labels.join(','));
                     return {
                       labels: removeItemOnce(prevState.labels, formatIndentVal(_label)),
                       values: removeItemOnce(prevState.values, _value)
@@ -1377,7 +1505,7 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
                 } else {
                   setControlArr(function (prevState) {
                     // update temporary value
-                    setControlTempValue(prevState.labels.length >= 0 ? null : prevState.labels.join(','));
+                    setControlTempValue(prevState.labels.length >= 0 ? null : VALUE_BY_BRACKETS ? (0,convert.convertArrToValByBrackets)(prevState.labels) : prevState.labels.join(','));
                     return {
                       labels: [].concat(src_toConsumableArray(prevState.labels), [formatIndentVal(_label)]),
                       values: [].concat(src_toConsumableArray(prevState.values), [_value])
@@ -1399,7 +1527,17 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
                   }),
                   values: currentControlValueArr.map(function (v) {
                     return v.toString();
-                  })
+                  }),
+                  labelsOfString: VALUE_BY_BRACKETS ? (0,convert.convertArrToValByBrackets)(currentControlLabelArr.map(function (v) {
+                    return v.toString();
+                  })) : currentControlLabelArr.map(function (v) {
+                    return v.toString();
+                  }).join(','),
+                  valuesOfString: VALUE_BY_BRACKETS ? (0,convert.convertArrToValByBrackets)(currentControlValueArr.map(function (v) {
+                    return v.toString();
+                  })) : currentControlValueArr.map(function (v) {
+                    return v.toString();
+                  }).join(',')
                 });
 
                 //
@@ -1428,7 +1566,7 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
                 if (multiSelControlOptionExist(controlArr.values, _value2)) {
                   setControlArr(function (prevState) {
                     // update temporary value
-                    setControlTempValue(prevState.labels.length >= 0 ? null : prevState.labels.join(','));
+                    setControlTempValue(prevState.labels.length >= 0 ? null : VALUE_BY_BRACKETS ? (0,convert.convertArrToValByBrackets)(prevState.labels) : prevState.labels.join(','));
                     return {
                       labels: removeItemOnce(prevState.labels, formatIndentVal(_label2)),
                       values: removeItemOnce(prevState.values, _value2)
@@ -1439,7 +1577,7 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
                 } else {
                   setControlArr(function (prevState) {
                     // update temporary value
-                    setControlTempValue(prevState.labels.length >= 0 ? null : prevState.labels.join(','));
+                    setControlTempValue(prevState.labels.length >= 0 ? null : VALUE_BY_BRACKETS ? (0,convert.convertArrToValByBrackets)(prevState.labels) : prevState.labels.join(','));
                     return {
                       labels: [].concat(src_toConsumableArray(prevState.labels), [formatIndentVal(_label2)]),
                       values: [].concat(src_toConsumableArray(prevState.values), [_value2])
@@ -1461,7 +1599,17 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
                   }),
                   values: _currentControlValueArr.map(function (v) {
                     return v.toString();
-                  })
+                  }),
+                  labelsOfString: VALUE_BY_BRACKETS ? (0,convert.convertArrToValByBrackets)(_currentControlLabelArr.map(function (v) {
+                    return v.toString();
+                  })) : _currentControlLabelArr.map(function (v) {
+                    return v.toString();
+                  }).join(','),
+                  valuesOfString: VALUE_BY_BRACKETS ? (0,convert.convertArrToValByBrackets)(_currentControlValueArr.map(function (v) {
+                    return v.toString();
+                  })) : _currentControlValueArr.map(function (v) {
+                    return v.toString();
+                  }).join(',')
                 });
 
                 //
@@ -1486,7 +1634,17 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
           }),
           values: valuesArr.map(function (v) {
             return v.toString();
-          })
+          }),
+          labelsOfString: VALUE_BY_BRACKETS ? (0,convert.convertArrToValByBrackets)(labelsArr.map(function (v) {
+            return v.toString();
+          })) : labelsArr.map(function (v) {
+            return v.toString();
+          }).join(','),
+          valuesOfString: VALUE_BY_BRACKETS ? (0,convert.convertArrToValByBrackets)(valuesArr.map(function (v) {
+            return v.toString();
+          })) : valuesArr.map(function (v) {
+            return v.toString();
+          }).join(',')
         });
 
         //
@@ -1546,7 +1704,7 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
     var _label = controlArr.labels[getCurrentIndex];
     setControlArr(function (prevState) {
       // update temporary value
-      setControlTempValue(prevState.labels.length >= 0 ? null : prevState.labels.join(','));
+      setControlTempValue(prevState.labels.length >= 0 ? null : VALUE_BY_BRACKETS ? (0,convert.convertArrToValByBrackets)(prevState.labels) : prevState.labels.join(','));
       return {
         labels: removeItemOnce(prevState.labels, formatIndentVal(_label)),
         values: removeItemOnce(prevState.values, _value)
@@ -1566,7 +1724,17 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
         }),
         values: currentControlValueArr.map(function (v) {
           return v.toString();
-        })
+        }),
+        labelsOfString: VALUE_BY_BRACKETS ? (0,convert.convertArrToValByBrackets)(currentControlLabelArr.map(function (v) {
+          return v.toString();
+        })) : currentControlLabelArr.map(function (v) {
+          return v.toString();
+        }).join(','),
+        valuesOfString: VALUE_BY_BRACKETS ? (0,convert.convertArrToValByBrackets)(currentControlValueArr.map(function (v) {
+          return v.toString();
+        })) : currentControlValueArr.map(function (v) {
+          return v.toString();
+        }).join(',')
       });
 
       //
@@ -1782,7 +1950,17 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
                     }),
                     values: currentControlValueArr.map(function (v) {
                       return v.toString();
-                    })
+                    }),
+                    labelsOfString: VALUE_BY_BRACKETS ? (0,convert.convertArrToValByBrackets)(currentControlLabelArr.map(function (v) {
+                      return v.toString();
+                    })) : currentControlLabelArr.map(function (v) {
+                      return v.toString();
+                    }).join(','),
+                    valuesOfString: VALUE_BY_BRACKETS ? (0,convert.convertArrToValByBrackets)(currentControlValueArr.map(function (v) {
+                      return v.toString();
+                    })) : currentControlValueArr.map(function (v) {
+                      return v.toString();
+                    }).join(',')
                   });
 
                   //
@@ -1893,7 +2071,9 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
     disabled: disabled || null,
     required: required || null,
     readOnly: readOnly || null,
-    value: controlTempValue || controlTempValue === '' ? controlTempValue : MULTI_SEL_VALID ? formatIndentVal(controlArr.labels).map(function (v) {
+    value: controlTempValue || controlTempValue === '' ? controlTempValue : MULTI_SEL_VALID ? VALUE_BY_BRACKETS ? (0,convert.convertArrToValByBrackets)(formatIndentVal(controlArr.labels).map(function (v) {
+      return stripHTML(v);
+    })) : formatIndentVal(controlArr.labels).map(function (v) {
       return stripHTML(v);
     }).join(',') : stripHTML(controlLabel) // do not use `defaultValue`
     ,
@@ -1908,7 +2088,7 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
     type: "hidden",
     id: idRes,
     name: name,
-    value: MULTI_SEL_VALID ? controlArr.values.join(',') : controlValue // do not use `defaultValue`
+    value: MULTI_SEL_VALID ? VALUE_BY_BRACKETS ? (0,convert.convertArrToValByBrackets)(controlArr.values) : controlArr.values.join(',') : controlValue // do not use `defaultValue`
   }, attributes)), /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("span", {
     className: "arrow position-absolute top-0 end-0 me-2 mt-1",
     style: {
