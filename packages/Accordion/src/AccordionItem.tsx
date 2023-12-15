@@ -65,7 +65,7 @@ const AccordionItem = (props: AccordionItemProps) => {
        
             observer.current = new ResizeObserver(entries => {
                 entries.forEach(entry => {
-                    (contentWrapperRef.current as HTMLDivElement).style.height = entry.contentRect.bottom + parseFloat(_contentPadding) + 'px';
+                    if (contentWrapperRef.current !== null) (contentWrapperRef.current as HTMLDivElement).style.height = entry.contentRect.bottom + parseFloat(_contentPadding) + 'px';
                 });
             });
             observer.current.observe(contentRef.current);

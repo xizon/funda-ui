@@ -15,12 +15,14 @@ declare type TagInputProps = {
     required?: any;
     readOnly?: any;
     placeholder?: string;
+    /** Whether to use square brackets to save result and initialize default value */
+    extractValueByBrackets?: boolean;
     /** -- */
     id?: string;
     style?: React.CSSProperties;
     tabIndex?: number;
     [key: `data-${string}`]: string | undefined;
-    onChange?: (e: any, param: any) => void;
+    onChange?: (e: any, data: any, dataStr: any) => void;
     onBlur?: (e: any) => void;
     onFocus?: (e: any) => void;
 };

@@ -10,15 +10,16 @@ import TagInput from 'funda-ui/TagInput';
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |
 | `wrapperClassName` | string | `mb-3 position-relative` | The class name of the control wrapper. |
+| `extractValueByBrackets` | boolean  | true | Whether to use square brackets to save result and initialize default value. |
 | `maxTags` | number | 10 | Maximum number of tags that can be added. |
-| `value` | string | - | Set a default value for this control. Please separate multiple values with commas. Such as `tag1,tag2,tag3` |
+| `value` | string | - | Set a default value for this control. Please separate multiple values with square brackets. Such as `[tag1][tag2][tag3]` <blockquote>If `extractValueByBrackets` is false, the default value will be separated by comma, such as <br />`tag1,tag2,tag3`</blockquote> |
 | `label` | string \| ReactNode | - | It is used to specify a label for an element of a form.<blockquote>Support html tags</blockquote> |
 | `name` | string | - | Name is not deprecated when used with form fields. |
 | `placeholder` | string | - |  Specifies a short hint that describes. |
 | `maxLength` | number | - | Defines the maximum number of characters |
 | `disabled` | boolean | false | Whether it is disabled |
 | `required` | boolean | false | When present, it specifies that a field must be filled out before submitting the form. |
-| `onChange` | function  | - | Call a function when the value of an HTML element is changed. It returns two callback values. <br /> <ol><li>The first is the control</li><li>The second is the current value (an array)</li></ol> |
+| `onChange` | function  | - | Call a function when the value of an HTML element is changed. It returns three callback values. <br /> <ol><li>The first is the control</li><li>The second is the current value (an array)</li><li>The third is the current string value (a string)</li></ol> |
 | `onBlur` | function  | - | Call a function when a user leaves a form field. |
 | `onFocus` | function  | - | Call a function when an form field gets focus. |
 
@@ -43,8 +44,8 @@ export default () => {
             <TagInput 
                 placeholder="Add tag..." 
                 name="tagInput-name-1" 
-                onChange={(e, res) => {
-                    console.log(res);
+                onChange={(e, data, dataStr) => {
+                    console.log(e, data, dataStr);
                 }}
             />
 
@@ -53,11 +54,10 @@ export default () => {
                 placeholder="Add tag..." 
                 name="tagInput-name-2" 
                 maxTags={5} 
-                value="tag1,tag2,tag3"
+                value="[tag1][tag2]"
             />
 
-
-          
+            
         </>
     );
 }

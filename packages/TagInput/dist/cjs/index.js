@@ -9,12 +9,131 @@
 		root["RPB"] = factory(root["React"]);
 })(this, (__WEBPACK_EXTERNAL_MODULE__787__) => {
 return /******/ (() => { // webpackBootstrap
-/******/ 	"use strict";
 /******/ 	var __webpack_modules__ = ({
+
+/***/ 498:
+/***/ ((module) => {
+
+/**
+ * Convert value to string separated by square brackets 
+ * @param {String} str  such as: 1,2,3
+ * @returns {String} such as: [1][2][3]
+ */
+function convertStringByCommaToValByBrackets(str) {
+  if (typeof str === 'undefined') return '';
+  if (str.length === 0) return '';
+  return str.split(',').map(function (v) {
+    return v.includes('[') && v.includes(']') ? "".concat(v) : "[".concat(v, "]");
+  }).join('');
+}
+
+/**
+ * Convert array value to string  separated by square brackets 
+ * @param {Array} arr  such as: ['1','2','3']
+ * @returns {String} such as: [1][2][3]
+ */
+function convertArrToValByBrackets(arr) {
+  if (!Array.isArray(arr)) return '';
+  return arr.map(function (v) {
+    return v.includes('[') && v.includes(']') ? "".concat(v) : "[".concat(v, "]");
+  }).join('');
+}
+
+/**
+ * Convert value to string separated by curly braces
+ * @param {String} str  such as: 1,2,3
+ * @returns {String} such as: {1}{2}{3}
+ */
+function convertStringByCommaToValByBraces(str) {
+  if (typeof str === 'undefined') return '';
+  if (str.length === 0) return '';
+  return str.split(',').map(function (v) {
+    return v.includes('{') && v.includes('}') ? "".concat(v) : "{".concat(v, "}");
+  }).join('');
+}
+
+/**
+ * Convert array value to string  separated by curly braces
+ * @param {Array} arr  such as: ['1','2','3']
+ * @returns {String} such as: {1}{2}{3}
+ */
+function convertArrToValByBraces(arr) {
+  if (!Array.isArray(arr)) return '';
+  return arr.map(function (v) {
+    return v.includes('{') && v.includes('}') ? "".concat(v) : "{".concat(v, "}");
+  }).join('');
+}
+module.exports = {
+  convertStringByCommaToValByBrackets: convertStringByCommaToValByBrackets,
+  convertArrToValByBrackets: convertArrToValByBrackets,
+  convertStringByCommaToValByBraces: convertStringByCommaToValByBraces,
+  convertArrToValByBraces: convertArrToValByBraces
+};
+
+/***/ }),
+
+/***/ 368:
+/***/ ((module) => {
+
+/**
+ * Extract the contents of square brackets
+ * @param {String} str    =>  input string. such as '[1,2] [f][c]'
+ * @returns {Array|String} such as: ['1,2','f','c']
+ */
+function extractContentsOfBrackets(str) {
+  var commaSeparated = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
+  if (typeof str === 'undefined') return '';
+  var res = str.match(/[^\[]+(?=(\[ \])|\])/g);
+  if (commaSeparated) {
+    return res === null ? '' : res.join(',').replace(/\,+$/, '');
+  } else {
+    return res === null ? '' : res;
+  }
+}
+
+/**
+ * Extract the contents of curly braces
+ * @param {String} str    =>  input string. such as '{1,2} {f}{c}'
+ * @returns {Array|String} such as: ['1,2','f','c']
+ */
+function extractContentsOfBraces(str) {
+  var commaSeparated = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
+  if (typeof str === 'undefined') return '';
+  var res = str.match(/[^\{]+(?=(\{ \})|\})/g);
+  if (commaSeparated) {
+    return res === null ? '' : res.join(',').replace(/\,+$/, '');
+  } else {
+    return res === null ? '' : res;
+  }
+}
+
+/**
+ * Extract the contents of parentheses
+ * @param {String} str    =>  input string. such as '(1,2) (f)(c)'
+ * @returns {Array|String} such as: ['1,2','f','c']
+ */
+function extractContentsOfParentheses(str) {
+  var commaSeparated = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
+  if (typeof str === 'undefined') return '';
+  var res = str.match(/[^\(]+(?=(\( \))|\))/g);
+  if (commaSeparated) {
+    return res === null ? '' : res.join(',').replace(/\,+$/, '');
+  } else {
+    return res === null ? '' : res;
+  }
+}
+module.exports = {
+  extractContentsOfBrackets: extractContentsOfBrackets,
+  extractContentsOfBraces: extractContentsOfBraces,
+  extractContentsOfParentheses: extractContentsOfParentheses
+};
+
+/***/ }),
 
 /***/ 787:
 /***/ ((module) => {
 
+"use strict";
 module.exports = __WEBPACK_EXTERNAL_MODULE__787__;
 
 /***/ })
@@ -88,15 +207,20 @@ module.exports = __WEBPACK_EXTERNAL_MODULE__787__;
 /******/ 	
 /************************************************************************/
 var __webpack_exports__ = {};
-// This entry need to be wrapped in an IIFE because it need to be isolated against other modules in the chunk.
+// This entry need to be wrapped in an IIFE because it need to be in strict mode.
 (() => {
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(787);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-var _excluded = ["wrapperClassName", "maxTags", "disabled", "required", "placeholder", "readOnly", "value", "label", "name", "id", "maxLength", "style", "tabIndex", "onChange", "onBlur", "onFocus"];
+/* harmony import */ var _utils_extract__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(368);
+/* harmony import */ var _utils_extract__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_utils_extract__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _utils_convert__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(498);
+/* harmony import */ var _utils_convert__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_utils_convert__WEBPACK_IMPORTED_MODULE_2__);
+var _excluded = ["wrapperClassName", "maxTags", "disabled", "required", "placeholder", "readOnly", "value", "label", "name", "id", "extractValueByBrackets", "maxLength", "style", "tabIndex", "onChange", "onBlur", "onFocus"];
 function _extends() { _extends = Object.assign ? Object.assign.bind() : function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
 function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
 function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
@@ -106,6 +230,8 @@ function _iterableToArrayLimit(arr, i) { var _i = null == arr ? null : "undefine
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 function _objectWithoutProperties(source, excluded) { if (source == null) return {}; var target = _objectWithoutPropertiesLoose(source, excluded); var key, i; if (Object.getOwnPropertySymbols) { var sourceSymbolKeys = Object.getOwnPropertySymbols(source); for (i = 0; i < sourceSymbolKeys.length; i++) { key = sourceSymbolKeys[i]; if (excluded.indexOf(key) >= 0) continue; if (!Object.prototype.propertyIsEnumerable.call(source, key)) continue; target[key] = source[key]; } } return target; }
 function _objectWithoutPropertiesLoose(source, excluded) { if (source == null) return {}; var target = {}; var sourceKeys = Object.keys(source); var key, i; for (i = 0; i < sourceKeys.length; i++) { key = sourceKeys[i]; if (excluded.indexOf(key) >= 0) continue; target[key] = source[key]; } return target; }
+
+
 
 var TagInput = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(function (props, _ref) {
   var wrapperClassName = props.wrapperClassName,
@@ -118,6 +244,7 @@ var TagInput = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(fu
     label = props.label,
     name = props.name,
     id = props.id,
+    extractValueByBrackets = props.extractValueByBrackets,
     maxLength = props.maxLength,
     style = props.style,
     tabIndex = props.tabIndex,
@@ -125,6 +252,7 @@ var TagInput = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(fu
     onBlur = props.onBlur,
     onFocus = props.onFocus,
     attributes = _objectWithoutProperties(props, _excluded);
+  var VALUE_BY_BRACKETS = typeof extractValueByBrackets === 'undefined' ? true : extractValueByBrackets;
   var uniqueID = (0,react__WEBPACK_IMPORTED_MODULE_0__.useId)();
   var idRes = id || uniqueID;
   var rootRef = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(null);
@@ -156,7 +284,7 @@ var TagInput = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(fu
     if (typeof defaultValue === 'undefined' || defaultValue === '') {
       setItems([]);
     } else {
-      setItems(defaultValue.trim().replace(/^\,|\,$/g, '').split(',').map(function (item, index) {
+      setItems((VALUE_BY_BRACKETS ? (0,_utils_extract__WEBPACK_IMPORTED_MODULE_1__.extractContentsOfBrackets)(defaultValue) : defaultValue.trim().replace(/^\,|\,$/g, '').split(',')).map(function (item, index) {
         return {
           content: item,
           id: index
@@ -173,7 +301,11 @@ var TagInput = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(fu
     setItems(newArray);
 
     //
-    onChange === null || onChange === void 0 ? void 0 : onChange(inputRef.current, newArray);
+    onChange === null || onChange === void 0 ? void 0 : onChange(inputRef.current, newArray, VALUE_BY_BRACKETS ? (0,_utils_convert__WEBPACK_IMPORTED_MODULE_2__.convertArrToValByBrackets)(newArray.map(function (v) {
+      return v.content;
+    })) : newArray.map(function (v) {
+      return v.content;
+    }).join(','));
   }
   function handleKeypress(event) {
     // Avoid adding results before when the user enters text is not complete
@@ -204,7 +336,11 @@ var TagInput = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(fu
       setUserInput('');
 
       //
-      onChange === null || onChange === void 0 ? void 0 : onChange(inputRef.current, items);
+      onChange === null || onChange === void 0 ? void 0 : onChange(inputRef.current, items, VALUE_BY_BRACKETS ? (0,_utils_convert__WEBPACK_IMPORTED_MODULE_2__.convertArrToValByBrackets)(items.map(function (v) {
+        return v.content;
+      })) : items.map(function (v) {
+        return v.content;
+      }).join(','));
     }
   }
   function handleComposition(event) {
@@ -338,7 +474,9 @@ var TagInput = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(fu
     type: "hidden",
     id: idRes,
     name: name,
-    value: items.map(function (item) {
+    value: VALUE_BY_BRACKETS ? (0,_utils_convert__WEBPACK_IMPORTED_MODULE_2__.convertArrToValByBrackets)(items.map(function (item) {
+      return item.content;
+    })) : items.map(function (item) {
       return item.content;
     }).join(','),
     required: required || null

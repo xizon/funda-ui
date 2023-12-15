@@ -11,11 +11,13 @@ declare type MultipleCheckboxesProps = {
     options?: OptionConfig[] | string;
     disabled?: any;
     required?: any;
+    /** Whether to use square brackets to save result and initialize default value */
+    extractValueByBrackets?: boolean;
     /** -- */
     id?: string;
     style?: React.CSSProperties;
     [key: `data-${string}`]: string | undefined;
-    onChange?: (e: any, data: any) => void;
+    onChange?: (e: any, data: any, dataStr: any) => void;
 };
 declare const MultipleCheckboxes: React.ForwardRefExoticComponent<MultipleCheckboxesProps & React.RefAttributes<unknown>>;
 export default MultipleCheckboxes;

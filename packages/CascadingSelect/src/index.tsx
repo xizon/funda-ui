@@ -4,6 +4,12 @@ import { debounce } from './utils/performance';
 
 import Group from './Group';
 
+import { extractContentsOfBrackets } from './utils/extract';
+import { convertArrToValByBrackets } from './utils/convert';
+
+
+
+
 declare module 'react' {
     interface ReactI18NextChildren<T> {
         children?: any;
@@ -23,6 +29,8 @@ type CascadingSelectProps = {
     placeholder?: string;
     disabled?: any;
     required?: any;
+    /** Whether to use square brackets to save result and initialize default value */
+    extractValueByBrackets?: boolean;
     /** Set headers for each column group */
     columnTitle?: any[];
     /** Set whether to use "label" or "value" for the value of this form, they will be separated by commas, such as `Text 1,Text 1_1,Text 1_1_1` or `1,1_1,1_1_1`.
@@ -74,6 +82,7 @@ const CascadingSelect = (props: CascadingSelectProps) => {
         placeholder,
         name,
         id,
+        extractValueByBrackets,
         columnTitle,
         depth,
         loader,
@@ -98,6 +107,7 @@ const CascadingSelect = (props: CascadingSelectProps) => {
     } = props;
 
 
+    const VALUE_BY_BRACKETS = typeof extractValueByBrackets === 'undefined' ? true : extractValueByBrackets;
     const uniqueID = useId();
     const idRes = id || uniqueID;
     const rootRef = useRef<any>(null);
@@ -423,8 +433,8 @@ const CascadingSelect = (props: CascadingSelectProps) => {
 
          // update selected data 
          //////////////////////////////////////////
-         const inputVal_0 = _valueData!.join(',');
-         const inputVal_1 = _labelData!.join(',');
+         const inputVal_0 = VALUE_BY_BRACKETS ? convertArrToValByBrackets(_valueData) : _valueData!.join(',');
+         const inputVal_1 = VALUE_BY_BRACKETS ? convertArrToValByBrackets(_labelData) : _labelData!.join(',');
 
          if (valueType === 'value') {
             if (inputEl !== null) setChangedVal(inputVal_0);
@@ -464,7 +474,9 @@ const CascadingSelect = (props: CascadingSelectProps) => {
             if ( defaultValue ) {
 
                 const rowQueryAttr = valueType === 'value' ? 'id' : 'name';
-                const targetVal = defaultValue.split(',');
+                const targetVal = VALUE_BY_BRACKETS ? extractContentsOfBrackets(defaultValue) : defaultValue.split(',');
+
+                
                 //
                 const _allColumnsData: any[] = [];
                 const _allLables: any[] = [];

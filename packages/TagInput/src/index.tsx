@@ -1,5 +1,8 @@
 import React, { useId, useState, useEffect, useRef, forwardRef } from 'react';
 
+import { extractContentsOfBrackets } from './utils/extract';
+import { convertArrToValByBrackets } from './utils/convert';
+
 declare module 'react' {
     interface ReactI18NextChildren<T> {
         children?: any;
@@ -17,12 +20,14 @@ type TagInputProps = {
     required?: any;
     readOnly?: any;
     placeholder?: string;
+    /** Whether to use square brackets to save result and initialize default value */
+    extractValueByBrackets?: boolean;
     /** -- */
     id?: string;
     style?: React.CSSProperties;
     tabIndex?: number;
     [key: `data-${string}`]: string | undefined;
-    onChange?: (e: any, param: any) => void;
+    onChange?: (e: any, data: any, dataStr: any) => void;
     onBlur?: (e: any) => void;
     onFocus?: (e: any) => void;
 
@@ -41,6 +46,7 @@ const TagInput = forwardRef((props: TagInputProps, ref: any) => {
         label,
         name,
         id,
+        extractValueByBrackets,
         maxLength,
         style,
         tabIndex,
@@ -51,6 +57,7 @@ const TagInput = forwardRef((props: TagInputProps, ref: any) => {
     } = props;
 
 
+    const VALUE_BY_BRACKETS = typeof extractValueByBrackets === 'undefined' ? true : extractValueByBrackets;
     const uniqueID = useId();
     const idRes = id || uniqueID;
     const rootRef = useRef<any>(null);
@@ -70,7 +77,7 @@ const TagInput = forwardRef((props: TagInputProps, ref: any) => {
         if ( typeof defaultValue === 'undefined' || defaultValue === '' ) {
             setItems([]);
         } else {
-            setItems(defaultValue.trim().replace(/^\,|\,$/g, '').split(',').map((item: any, index: number) => {
+            setItems((VALUE_BY_BRACKETS ? extractContentsOfBrackets(defaultValue) : defaultValue.trim().replace(/^\,|\,$/g, '').split(',')).map((item: any, index: number) => {
                 return {
                     content: item,
                     id: index
@@ -88,7 +95,7 @@ const TagInput = forwardRef((props: TagInputProps, ref: any) => {
         setItems(newArray);
 
         //
-        onChange?.(inputRef.current, newArray);
+        onChange?.(inputRef.current, newArray, VALUE_BY_BRACKETS ? convertArrToValByBrackets(newArray.map(v => v.content)) : newArray.map(v => v.content).join(','));
     }
 
     function handleKeypress(event: any) {
@@ -124,7 +131,7 @@ const TagInput = forwardRef((props: TagInputProps, ref: any) => {
             setUserInput('');
 
             //
-            onChange?.(inputRef.current, items);
+            onChange?.(inputRef.current, items, VALUE_BY_BRACKETS ? convertArrToValByBrackets(items.map(v => v.content)) : items.map(v => v.content).join(','));
             
 
         }
@@ -273,7 +280,7 @@ const TagInput = forwardRef((props: TagInputProps, ref: any) => {
                         type="hidden"
                         id={idRes}
                         name={name}
-                        value={items.map((item: any) => item.content).join(',')}
+                        value={VALUE_BY_BRACKETS ? convertArrToValByBrackets(items.map((item: any) => item.content)) : items.map((item: any) => item.content).join(',')}
                         required={required || null}
                     />
 

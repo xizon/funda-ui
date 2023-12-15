@@ -4,6 +4,8 @@ import { debounce } from './utils/performance';
 
 import Group from './Group';
 
+import { extractContentsOfBraces, extractContentsOfBrackets } from './utils/extract';
+import { convertArrToValByBraces } from './utils/convert';
 
 import {
     addTreeDepth,
@@ -41,6 +43,8 @@ type CascadingSelectE2EProps = {
     placeholder?: string;
     disabled?: any;
     required?: any;
+    /** Whether to use curly braces to save result and initialize default value */
+    extractValueByBraces?: boolean;
     /** Instead of using `parent_id` of response to match child and parent data 
      * (very useful for multiple fetch requests with no directly related fields), 
      * this operation will directly use the click event to modify the result. */
@@ -94,6 +98,7 @@ const CascadingSelectE2E = (props: CascadingSelectE2EProps) => {
         placeholder,
         name,
         id,
+        extractValueByBraces,
         destroyParentIdMatch,
         columnTitle,
         depth,
@@ -116,6 +121,7 @@ const CascadingSelectE2E = (props: CascadingSelectE2EProps) => {
     } = props;
 
 
+    const VALUE_BY_BRACES = typeof extractValueByBraces === 'undefined' ? true : extractValueByBraces;
     const uniqueID = useId();
     const idRes = id || uniqueID;
     const rootRef = useRef<any>(null);
@@ -169,11 +175,11 @@ const CascadingSelectE2E = (props: CascadingSelectE2EProps) => {
     function formatIndentVal(str: any, indentLastPlaceholder: string) {
         const reVar = new RegExp(indentLastPlaceholder, 'g');
         if (Array.isArray(str)) {
-            return str.map((s: string) => s.replace(reVar,'').replace(/\&nbsp;/ig,''));
+            return str.map((s: string) => s.replace(reVar, '').replace(/\&nbsp;/ig, ''));
         } else {
-            return str.replace(reVar,'').replace(/\&nbsp;/ig,'');
+            return str.replace(reVar, '').replace(/\&nbsp;/ig, '');
         }
-        
+
     }
 
 
@@ -202,8 +208,8 @@ const CascadingSelectE2E = (props: CascadingSelectE2EProps) => {
     //
     function getPlacement(el: HTMLElement, restorePos: boolean = false) {
 
-        if ( el === null ) return;
-        
+        if (el === null) return;
+
 
         const PLACEMENT_TOP = 'top-0';
         const PLACEMENT_BOTTOMEND = 'bottom-0';
@@ -212,8 +218,8 @@ const CascadingSelectE2E = (props: CascadingSelectE2EProps) => {
 
 
         //restore position
-        if ( restorePos ) {
-            if ( isInViewport(el) ) {
+        if (restorePos) {
+            if (isInViewport(el)) {
                 el.classList.remove(PLACEMENT_BOTTOMEND);
                 el.style.removeProperty('bottom');
             }
@@ -222,7 +228,7 @@ const CascadingSelectE2E = (props: CascadingSelectE2EProps) => {
 
 
         // Adjust position
-        if ( !isInViewport(el) ) {
+        if (!isInViewport(el)) {
             el.classList.add(PLACEMENT_BOTTOMEND);
             el.style.setProperty('bottom', -1 + 'px', "important");
         }
@@ -235,7 +241,7 @@ const CascadingSelectE2E = (props: CascadingSelectE2EProps) => {
 
     async function fetchData(_fetchArray: any, params: string, dataDepth: number, parentId: number = 0) {
 
-        
+
         const fetchFuncAsync = _fetchArray.fetchFuncAsync;
         const fetchFuncMethod = _fetchArray.fetchFuncMethod;
         const fetchCallback = _fetchArray.fetchCallback;
@@ -270,7 +276,7 @@ const CascadingSelectE2E = (props: CascadingSelectE2EProps) => {
 
 
             // Determine whether the data structure matches
-            if ( _ORGIN_DATA.length > 0 && typeof _ORGIN_DATA[0].id === 'undefined') {
+            if (_ORGIN_DATA.length > 0 && typeof _ORGIN_DATA[0].id === 'undefined') {
                 console.warn('The data structure does not match, please refer to the example in the component documentation.');
                 setHasErr(true);
                 _ORGIN_DATA = [];
@@ -278,19 +284,19 @@ const CascadingSelectE2E = (props: CascadingSelectE2EProps) => {
 
             // STEP 0-1: ===========
             // Set hierarchical categories ( with sub-categories )
-            if ( hierarchical ) {
+            if (hierarchical) {
                 _ORGIN_DATA = addTreeDepth(_ORGIN_DATA);
                 addTreeIndent(_ORGIN_DATA, INDENT_PLACEHOLDER, INDENT_LAST_PLACEHOLDER, 'label');
             }
 
- 
+
             // STEP 0-2: ===========
             // add data depth
             _ORGIN_DATA.forEach((item: any) => {
                 item.itemDepth = dataDepth;
             });
 
-            
+
             if (dataDepth === 0) {
 
                 // STEP 1: ===========
@@ -376,7 +382,7 @@ const CascadingSelectE2E = (props: CascadingSelectE2EProps) => {
         if (dataDepthMax) return;
 
         // other
-        if ( typeof fetchArray![dataDepth] === 'undefined' ) return new Promise((resolve, reject) => resolve([[],[]]) );
+        if (typeof fetchArray![dataDepth] === 'undefined') return new Promise((resolve, reject) => resolve([[], []]));
 
         // data fetch action
         const _oparams: any[] = fetchArray![dataDepth].fetchFuncMethodParams || [];
@@ -416,8 +422,8 @@ const CascadingSelectE2E = (props: CascadingSelectE2EProps) => {
     function handleClickOutside(event: any) {
 
         // svg element
-        if ( typeof event.target.className === 'object' ) return;
-   
+        if (typeof event.target.className === 'object') return;
+
         if (
             event.target.className != '' && (
                 event.target.className.indexOf('cascading-select-e2e__wrapper') < 0 &&
@@ -434,10 +440,10 @@ const CascadingSelectE2E = (props: CascadingSelectE2EProps) => {
     }
 
     function handleDisplayOptions(event: any) {
-        if ( event ) event.preventDefault();
+        if (event) event.preventDefault();
 
         setIsShow(true);
-        
+
         // Execute the fetch task
         if (!firstDataFeched) {
             setLoading(true);
@@ -446,9 +452,9 @@ const CascadingSelectE2E = (props: CascadingSelectE2EProps) => {
         }
 
         // window position
-        setTimeout( ()=> {
+        setTimeout(() => {
             getPlacement(listRef.current);
-        }, 0 );  
+        }, 0);
 
     }
 
@@ -461,12 +467,12 @@ const CascadingSelectE2E = (props: CascadingSelectE2EProps) => {
 
 
         //update selected data by clicked item
-         //////////////////////////////////////////
+        //////////////////////////////////////////
         setSelectedDataByClick((prevState: any) => {
 
-            const _valueData = prevState.values.slice(0,level+1);
-            const _labelData = prevState.labels.slice(0,level+1);
-            const _queryIdsData = prevState.queryIds.slice(0,level+1);
+            const _valueData = prevState.values.slice(0, level + 1);
+            const _labelData = prevState.labels.slice(0, level + 1);
+            const _queryIdsData = prevState.queryIds.slice(0, level + 1);
 
             _valueData.splice(level, 1, resValue.id);
             _labelData.splice(level, 1, resValue.name);
@@ -582,10 +588,10 @@ const CascadingSelectE2E = (props: CascadingSelectE2EProps) => {
         const inputEl: any = valRef.current;
         let _valueData: any, _labelData: any, _queryIdsData: any;
 
-    
+
         if (targetVal.toString().indexOf('$EMPTY_ID_') >= 0) {
 
-            
+
 
             // If clearing the current column
             //////////////////////////////////////////
@@ -608,7 +614,7 @@ const CascadingSelectE2E = (props: CascadingSelectE2EProps) => {
 
         } else {
 
-        
+
             // click an item
             //////////////////////////////////////////
             //search JSON key that contains specific string
@@ -616,14 +622,14 @@ const CascadingSelectE2E = (props: CascadingSelectE2EProps) => {
             const _values = queryResultOfJSON(arr, targetVal, 'key');
             const _queryIds = queryResultOfJSON(arr, targetVal, 'query');
 
-     
+
 
             // update result to input
             _valueData = _values ? _values.map((item: any) => item) : [];
             _labelData = _labels ? _labels.map((item: any) => item) : [];
             _queryIdsData = _queryIds ? _queryIds.map((item: any) => item) : [];
 
-      
+
             //
             setSelectedData({
                 labels: _labelData,
@@ -644,8 +650,8 @@ const CascadingSelectE2E = (props: CascadingSelectE2EProps) => {
             _queryIdsData = selectedDataByClick.queryIds;
         }
 
-        const inputVal_0 = _valueData.map((item: any, i: number) => `${item}[${_queryIdsData[i]}]`)!.join(',');
-        const inputVal_1 = _labelData.map((item: any, i: number) => `${item}[${_queryIdsData[i]}]`)!.join(',');
+        const inputVal_0 = VALUE_BY_BRACES ? convertArrToValByBraces(_valueData.map((item: any, i: number) => `${item}[${_queryIdsData[i]}]`)) : _valueData.map((item: any, i: number) => `${item}[${_queryIdsData[i]}]`)!.join(',');
+        const inputVal_1 = VALUE_BY_BRACES ? convertArrToValByBraces(_labelData.map((item: any, i: number) => `${item}[${_queryIdsData[i]}]`)) : _labelData.map((item: any, i: number) => `${item}[${_queryIdsData[i]}]`)!.join(',');
 
         if (valueType === 'value') {
             if (inputEl !== null) setChangedVal(inputVal_0);
@@ -664,7 +670,7 @@ const CascadingSelectE2E = (props: CascadingSelectE2EProps) => {
 
 
         // change the value to trigger component rendering
-        if ( typeof defaultValue === 'undefined' || defaultValue === '' ) {
+        if (typeof defaultValue === 'undefined' || defaultValue === '') {
             setSelectedData({
                 labels: [],
                 values: [],
@@ -688,151 +694,151 @@ const CascadingSelectE2E = (props: CascadingSelectE2EProps) => {
         } else {
             setChangedVal(defaultValue);
         }
-    
+
 
         //
         setFirstDataFeched(true);
         doFetch(false, 0, 0, false)?.then((firstColResponse: any) => {
-    
+
 
             const _ORGIN_DATA: any[] = firstColResponse[0];
             const _CHILDREN_DATA: any[] = firstColResponse[1];
             let activedIndex: any;
             const allFetch: any[] = [];
-    
+
             const rowQueryAttr: string = valueType === 'value' ? 'id' : 'name';
-            const targetVal: any = defaultValue.match(/(\[.*?\])/gi)!.map((item: any, i: number) => defaultValue.split(',')[i].replace(item, ''));
-            const queryIds: any = defaultValue.match(/[^\[]+(?=(\[ \])|\])/gi);
-    
+            const targetVal: any = defaultValue.match(/(\[.*?\])/gi)!.map((item: any, i: number) => VALUE_BY_BRACES ? extractContentsOfBraces(defaultValue)[i].replace(item, '') : defaultValue.split(',')[i].replace(item, ''));
+            const queryIds: any = extractContentsOfBrackets(defaultValue);
+
             //
             let _TEMP_ALL_DATA: any[] = [];
-    
+
             //
             const _allColumnsData: any[] = [];
             const _allLables: any[] = [];
             const _allValues: any[] = [];
-         
-    
+
+
             // loop over each column
             //////////////////////////////////////////
             for (let col = 0; col <= targetVal.length; col++) {
-    
+
                 if (col === 0) {
-    
+
                     // STEP 1: ===========
                     //active item from current column
                     const newData: any[] = JSON.parse(JSON.stringify(_CHILDREN_DATA));
                     activedIndex = _CHILDREN_DATA.findIndex((item: any) => {
                         return item[rowQueryAttr].toString() === targetVal[col].toString();
                     });
-                    
+
                     markAllItems(newData);
                     markCurrent(newData, activedIndex);
-    
-    
+
+
                     // STEP 2: ===========
                     // all data from fetched data 
                     _TEMP_ALL_DATA = _ORGIN_DATA;
-    
+
                     // STEP 3: ===========
                     // dictionary data (orginal)
                     // Same as the `STEP 2`
-    
-    
+
+
                     // STEP 4: ===========
                     // update result data
-                    if ( activedIndex !== -1 ) {
+                    if (activedIndex !== -1) {
                         _allLables.push(newData[activedIndex].name);
                         _allValues.push(newData[activedIndex].id);
                     }
 
                     _allColumnsData.push(newData);
-    
 
-    
+
+
                 }
-    
+
                 if (col > 0) {
                     allFetch.push(doFetch(false, col, queryIds[col - 1], false));
                 }
-    
-    
-    
+
+
+
             }
-    
+
             // fetch all columns except the first
             //////////////////////////////////////////
             Promise.all(allFetch).then((values) => {
-                
+
                 values.filter((v: any) => typeof v !== 'undefined').forEach((colResponse: any, i: number) => {
-    
+
                     const _CURRENT_COL_DATA: any[] = colResponse[0];
-                    const curDepth: number = i+1;
-                    
+                    const curDepth: number = i + 1;
+
                     // STEP 1: ===========
                     //active item from current column
                     const newData: any[] = JSON.parse(JSON.stringify(_CURRENT_COL_DATA));
                     activedIndex = newData.findIndex((item: any) => {
-                        if ( typeof targetVal[curDepth] !== 'undefined' ) {
+                        if (typeof targetVal[curDepth] !== 'undefined') {
                             return item[rowQueryAttr].toString() === targetVal[curDepth].toString();
                         }
                     });
-    
+
                     markAllItems(newData);
                     markCurrent(newData, activedIndex);
-    
+
                     // STEP 2: ===========
                     // all data from fetched data 
-                    if ( typeof values[curDepth] !== 'undefined') {
+                    if (typeof values[curDepth] !== 'undefined') {
                         const childList = values[curDepth][0];
 
                         // if the value of some column is not fetched
                         if (typeof newData[activedIndex] !== 'undefined') newData[activedIndex].children = childList;
-                        
+
                     }
-    
-                
-                    
+
+
+
                     _TEMP_ALL_DATA.forEach((item: any) => {
                         if (item.id === queryIds[i]) item.children = newData;
-                    });             
-    
-                    
+                    });
+
+
                     // STEP 3: ===========
                     // dictionary data (orginal)
                     setDictionaryData(newData);
-    
-    
+
+
                     // STEP 4: ===========
                     // update result data
-                    if ( activedIndex !== -1 ) {
+                    if (activedIndex !== -1) {
                         _allLables.push(newData[activedIndex].name);
                         _allValues.push(newData[activedIndex].id);
                     }
 
                     _allColumnsData.push(newData);
 
-    
+
                     return true;
 
                 });
-    
-             
+
+
                 // STEP 5: ===========
                 // all data from fetched data 
                 setAllData(_TEMP_ALL_DATA);
-    
+
                 // STEP 6: ===========
                 // dictionary data (orginal)
                 setDictionaryData(_TEMP_ALL_DATA);
-    
-                
+
+
                 // STEP 7: ===========
                 //update data
                 setOptData(_allColumnsData);
                 setData(_allColumnsData);
-    
-                
+
+
                 // STEP 8: ===========
                 //Set a default value
                 setSelectedData({
@@ -840,25 +846,25 @@ const CascadingSelectE2E = (props: CascadingSelectE2EProps) => {
                     values: _allValues,
                     queryIds: queryIds,
                 });
-    
+
                 setSelectedDataByClick({
                     labels: _allLables,
                     values: _allValues,
                     queryIds: queryIds,
                 });
-    
 
 
-                
+
+
             });
-    
-    
-    
+
+
+
         });
-    
-    
+
+
     }
-    
+
 
 
     function fillColumnTitle() {
@@ -912,7 +918,7 @@ const CascadingSelectE2E = (props: CascadingSelectE2EProps) => {
             }
         });
     }
-    
+
     function queryResultOfJSON(data: any[], targetVal: any, returnType: string) {
 
         let callbackValueNested: any[] = [];
@@ -1050,7 +1056,7 @@ const CascadingSelectE2E = (props: CascadingSelectE2EProps) => {
 
     useEffect(() => {
 
-    
+
         // column titles
         //--------------
         fillColumnTitle();
@@ -1089,7 +1095,7 @@ const CascadingSelectE2E = (props: CascadingSelectE2EProps) => {
         <>
 
             <div className={wrapperClassName || wrapperClassName === '' ? `cascading-select-e2e__wrapper ${wrapperClassName}` : `cascading-select-e2e__wrapper mb-3 position-relative`} ref={rootRef}>
-                {label ? <><label htmlFor={idRes} className="form-label" dangerouslySetInnerHTML={{__html: `${label}`}}></label></> : null}
+                {label ? <><label htmlFor={idRes} className="form-label" dangerouslySetInnerHTML={{ __html: `${label}` }}></label></> : null}
 
                 {triggerContent ? <>
                     <div className={triggerClassName ? `cascading-select-e2e__trigger ${triggerClassName}` : `cascading-select-e2e__trigger d-inline w-auto`} onClick={handleDisplayOptions}>{triggerContent}</div>
@@ -1102,16 +1108,16 @@ const CascadingSelectE2E = (props: CascadingSelectE2EProps) => {
                         <div ref={listRef} className="cascading-select-e2e__items shadow">
                             <ul>
                                 {loading ? <><div className="position-absolute top-0 start-0 mt-1 mx-1">{loader}</div></> : null}
-                                {showCloseBtn ? <a href="#" tabIndex={-1} onClick={(e)=> {
-                                    e.preventDefault(); 
+                                {showCloseBtn ? <a href="#" tabIndex={-1} onClick={(e) => {
+                                    e.preventDefault();
                                     setIsShow(false);
-                                }} className="cascading-select-e2e__close position-absolute top-0 end-0 mt-0 mx-1"><svg width="10px" height="10px" viewBox="0 0 1024 1024"><path fill="#000"  d="M195.2 195.2a64 64 0 0 1 90.496 0L512 421.504 738.304 195.2a64 64 0 0 1 90.496 90.496L602.496 512 828.8 738.304a64 64 0 0 1-90.496 90.496L512 602.496 285.696 828.8a64 64 0 0 1-90.496-90.496L421.504 512 195.2 285.696a64 64 0 0 1 0-90.496z"/></svg></a> : null}
-                                
+                                }} className="cascading-select-e2e__close position-absolute top-0 end-0 mt-0 mx-1"><svg width="10px" height="10px" viewBox="0 0 1024 1024"><path fill="#000" d="M195.2 195.2a64 64 0 0 1 90.496 0L512 421.504 738.304 195.2a64 64 0 0 1 90.496 90.496L602.496 512 828.8 738.304a64 64 0 0 1-90.496 90.496L512 602.496 285.696 828.8a64 64 0 0 1-90.496-90.496L421.504 512 195.2 285.696a64 64 0 0 1 0-90.496z" /></svg></a> : null}
 
-                                
+
+
                                 {data.map((item: any, level: number) => {
-                                
-                                    if ( item.length > 0 ) {
+
+                                    if (item.length > 0) {
                                         return (
                                             <li key={level}>
                                                 <Group
@@ -1125,7 +1131,7 @@ const CascadingSelectE2E = (props: CascadingSelectE2EProps) => {
                                     } else {
                                         return null;
                                     }
-            
+
                                 })}
                             </ul>
 
@@ -1138,14 +1144,14 @@ const CascadingSelectE2E = (props: CascadingSelectE2EProps) => {
                 <div className="cascading-select-e2e__val" onClick={handleDisplayOptions}>
 
 
-                
-                
+
+
                     {destroyParentIdMatch ? <>
                         {displayResult ? (selectedDataByClick!.labels && selectedDataByClick!.labels.length > 0 ? <div className="cascading-select-e2e__result">{displayInfo(true)}</div> : null) : null}
                     </> : <>
                         {displayResult ? (selectedData!.labels && selectedData!.labels.length > 0 ? <div className="cascading-select-e2e__result">{displayInfo(false)}</div> : null) : null}
                     </>}
-                    
+
 
                     <input
                         ref={valRef}
@@ -1153,10 +1159,10 @@ const CascadingSelectE2E = (props: CascadingSelectE2EProps) => {
                         name={name}
                         className={controlClassName || controlClassName === '' ? controlClassName : "form-control"}
                         placeholder={placeholder}
-                        value={destroyParentIdMatch 
-                            ? 
-                                (valueType === 'value' ? selectedDataByClick.values.map((item: any, i: number) => `${item}[${selectedDataByClick.queryIds[i]}]`)!.join(',') : selectedDataByClick.labels.map((item: any, i: number) => `${item}[${selectedDataByClick.queryIds[i]}]`)!.join(',')) 
-                            : 
+                        value={destroyParentIdMatch
+                            ?
+                            (valueType === 'value' ? (VALUE_BY_BRACES ? convertArrToValByBraces(selectedDataByClick.values.map((item: any, i: number) => `${item}[${selectedDataByClick.queryIds[i]}]`)) : selectedDataByClick.values.map((item: any, i: number) => `${item}[${selectedDataByClick.queryIds[i]}]`)!.join(',')) : (VALUE_BY_BRACES ? convertArrToValByBraces(selectedDataByClick.labels.map((item: any, i: number) => `${item}[${selectedDataByClick.queryIds[i]}]`)) : selectedDataByClick.labels.map((item: any, i: number) => `${item}[${selectedDataByClick.queryIds[i]}]`)!.join(',')))
+                            :
                             changedVal
                         } // placeholder will not change if defaultValue is used
                         onFocus={handleFocus}
@@ -1168,17 +1174,17 @@ const CascadingSelectE2E = (props: CascadingSelectE2EProps) => {
                         readOnly
                         {...attributes}
                     />
-                    
 
-                    {isShow ? <div 
-                    className="cascading-select-e2e__closemask" 
-                    onClick={(e)=> {
-                        e.preventDefault(); 
-                        setIsShow(false);
-                    }}></div> : null}
-                    
 
-                    <span className="arrow" style={{pointerEvents: 'none'}}>
+                    {isShow ? <div
+                        className="cascading-select-e2e__closemask"
+                        onClick={(e) => {
+                            e.preventDefault();
+                            setIsShow(false);
+                        }}></div> : null}
+
+
+                    <span className="arrow" style={{ pointerEvents: 'none' }}>
                         {controlArrow ? controlArrow : <svg width="10px" height="10px" viewBox="0 -4.5 20 20">
                             <g stroke="none" strokeWidth="1" fill="none">
                                 <g transform="translate(-180.000000, -6684.000000)" className="arrow-fill-g" fill="#a5a5a5">

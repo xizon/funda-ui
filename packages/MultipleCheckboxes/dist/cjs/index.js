@@ -430,6 +430,125 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 
 /***/ }),
 
+/***/ 498:
+/***/ ((module) => {
+
+/**
+ * Convert value to string separated by square brackets 
+ * @param {String} str  such as: 1,2,3
+ * @returns {String} such as: [1][2][3]
+ */
+function convertStringByCommaToValByBrackets(str) {
+  if (typeof str === 'undefined') return '';
+  if (str.length === 0) return '';
+  return str.split(',').map(function (v) {
+    return v.includes('[') && v.includes(']') ? "".concat(v) : "[".concat(v, "]");
+  }).join('');
+}
+
+/**
+ * Convert array value to string  separated by square brackets 
+ * @param {Array} arr  such as: ['1','2','3']
+ * @returns {String} such as: [1][2][3]
+ */
+function convertArrToValByBrackets(arr) {
+  if (!Array.isArray(arr)) return '';
+  return arr.map(function (v) {
+    return v.includes('[') && v.includes(']') ? "".concat(v) : "[".concat(v, "]");
+  }).join('');
+}
+
+/**
+ * Convert value to string separated by curly braces
+ * @param {String} str  such as: 1,2,3
+ * @returns {String} such as: {1}{2}{3}
+ */
+function convertStringByCommaToValByBraces(str) {
+  if (typeof str === 'undefined') return '';
+  if (str.length === 0) return '';
+  return str.split(',').map(function (v) {
+    return v.includes('{') && v.includes('}') ? "".concat(v) : "{".concat(v, "}");
+  }).join('');
+}
+
+/**
+ * Convert array value to string  separated by curly braces
+ * @param {Array} arr  such as: ['1','2','3']
+ * @returns {String} such as: {1}{2}{3}
+ */
+function convertArrToValByBraces(arr) {
+  if (!Array.isArray(arr)) return '';
+  return arr.map(function (v) {
+    return v.includes('{') && v.includes('}') ? "".concat(v) : "{".concat(v, "}");
+  }).join('');
+}
+module.exports = {
+  convertStringByCommaToValByBrackets: convertStringByCommaToValByBrackets,
+  convertArrToValByBrackets: convertArrToValByBrackets,
+  convertStringByCommaToValByBraces: convertStringByCommaToValByBraces,
+  convertArrToValByBraces: convertArrToValByBraces
+};
+
+/***/ }),
+
+/***/ 368:
+/***/ ((module) => {
+
+/**
+ * Extract the contents of square brackets
+ * @param {String} str    =>  input string. such as '[1,2] [f][c]'
+ * @returns {Array|String} such as: ['1,2','f','c']
+ */
+function extractContentsOfBrackets(str) {
+  var commaSeparated = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
+  if (typeof str === 'undefined') return '';
+  var res = str.match(/[^\[]+(?=(\[ \])|\])/g);
+  if (commaSeparated) {
+    return res === null ? '' : res.join(',').replace(/\,+$/, '');
+  } else {
+    return res === null ? '' : res;
+  }
+}
+
+/**
+ * Extract the contents of curly braces
+ * @param {String} str    =>  input string. such as '{1,2} {f}{c}'
+ * @returns {Array|String} such as: ['1,2','f','c']
+ */
+function extractContentsOfBraces(str) {
+  var commaSeparated = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
+  if (typeof str === 'undefined') return '';
+  var res = str.match(/[^\{]+(?=(\{ \})|\})/g);
+  if (commaSeparated) {
+    return res === null ? '' : res.join(',').replace(/\,+$/, '');
+  } else {
+    return res === null ? '' : res;
+  }
+}
+
+/**
+ * Extract the contents of parentheses
+ * @param {String} str    =>  input string. such as '(1,2) (f)(c)'
+ * @returns {Array|String} such as: ['1,2','f','c']
+ */
+function extractContentsOfParentheses(str) {
+  var commaSeparated = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
+  if (typeof str === 'undefined') return '';
+  var res = str.match(/[^\(]+(?=(\( \))|\))/g);
+  if (commaSeparated) {
+    return res === null ? '' : res.join(',').replace(/\,+$/, '');
+  } else {
+    return res === null ? '' : res;
+  }
+}
+module.exports = {
+  extractContentsOfBrackets: extractContentsOfBrackets,
+  extractContentsOfBraces: extractContentsOfBraces,
+  extractContentsOfParentheses: extractContentsOfParentheses
+};
+
+/***/ }),
+
 /***/ 787:
 /***/ ((module) => {
 
@@ -530,7 +649,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var funda_checkbox__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(109);
 /* harmony import */ var funda_checkbox__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(funda_checkbox__WEBPACK_IMPORTED_MODULE_1__);
-var _excluded = ["wrapperClassName", "inline", "options", "disabled", "required", "value", "label", "name", "id", "style", "onChange"];
+/* harmony import */ var _utils_extract__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(368);
+/* harmony import */ var _utils_extract__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_utils_extract__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _utils_convert__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(498);
+/* harmony import */ var _utils_convert__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_utils_convert__WEBPACK_IMPORTED_MODULE_3__);
+var _excluded = ["wrapperClassName", "inline", "options", "disabled", "required", "value", "label", "name", "id", "extractValueByBrackets", "style", "onChange"];
 function _extends() { _extends = Object.assign ? Object.assign.bind() : function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
 function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
 function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
@@ -547,6 +670,8 @@ function _objectWithoutProperties(source, excluded) { if (source == null) return
 function _objectWithoutPropertiesLoose(source, excluded) { if (source == null) return {}; var target = {}; var sourceKeys = Object.keys(source); var key, i; for (i = 0; i < sourceKeys.length; i++) { key = sourceKeys[i]; if (excluded.indexOf(key) >= 0) continue; target[key] = source[key]; } return target; }
 
 
+
+
 var MultipleCheckboxes = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(function (props, ref) {
   var wrapperClassName = props.wrapperClassName,
     inline = props.inline,
@@ -557,9 +682,11 @@ var MultipleCheckboxes = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forw
     label = props.label,
     name = props.name,
     id = props.id,
+    extractValueByBrackets = props.extractValueByBrackets,
     style = props.style,
     _onChange = props.onChange,
     attributes = _objectWithoutProperties(props, _excluded);
+  var VALUE_BY_BRACKETS = typeof extractValueByBrackets === 'undefined' ? true : extractValueByBrackets;
   var uniqueID = (0,react__WEBPACK_IMPORTED_MODULE_0__.useId)();
   var idRes = id || uniqueID;
   var rootRef = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(null);
@@ -600,7 +727,7 @@ var MultipleCheckboxes = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forw
     if (typeof defaultValue === 'undefined' || defaultValue === '') {
       setRegTagSelected([]);
     } else {
-      setRegTagSelected(defaultValue.trim().replace(/^\,|\,$/g, '').split(',').filter(function (v) {
+      setRegTagSelected(VALUE_BY_BRACKETS ? (0,_utils_extract__WEBPACK_IMPORTED_MODULE_2__.extractContentsOfBrackets)(defaultValue) : defaultValue.trim().replace(/^\,|\,$/g, '').split(',').filter(function (v) {
         return v !== '';
       }));
     }
@@ -647,7 +774,7 @@ var MultipleCheckboxes = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forw
           });
           if (index !== -1) newData.splice(index, 1);
           var _res = val ? Array.from(new Set([e.target.value].concat(_toConsumableArray(newData)))) : newData;
-          _onChange === null || _onChange === void 0 ? void 0 : _onChange(e, _res);
+          _onChange === null || _onChange === void 0 ? void 0 : _onChange(e, _res, VALUE_BY_BRACKETS ? (0,_utils_convert__WEBPACK_IMPORTED_MODULE_3__.convertArrToValByBrackets)(_res) : _res.join(','));
           return _res;
         });
       },
@@ -659,7 +786,7 @@ var MultipleCheckboxes = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forw
     type: "hidden",
     id: idRes,
     name: name,
-    value: regTagSelected.join(','),
+    value: VALUE_BY_BRACKETS ? (0,_utils_convert__WEBPACK_IMPORTED_MODULE_3__.convertArrToValByBrackets)(regTagSelected) : regTagSelected.join(','),
     required: required || null
   }, attributes))), required ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
     className: "position-absolute end-0 top-0 my-2 mx-2"

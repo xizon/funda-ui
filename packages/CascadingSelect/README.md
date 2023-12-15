@@ -11,6 +11,7 @@ import CascadingSelect from 'funda-ui/CascadingSelect';
 | --- | --- | --- | --- |
 | `wrapperClassName` | string | `mb-3 position-relative` | The class name of the control wrapper. |
 | `controlClassName` | string | `form-control` | The class name of the control. |
+| `extractValueByBrackets` | boolean  | true | Whether to use square brackets to save result and initialize default value. |
 | `columnTitle` | array  | - | Set headers for each column group. Such as <br /> `['Heading 1', 'Heading 2', 'Heading 3', 'Heading 4']` <blockquote>Support html tags</blockquote> |
 | `triggerClassName` | string  | - | Specify a class for your trigger |
 | `triggerContent` | ReactNode  | - | Set a piece of text or HTML code for the trigger |
@@ -19,7 +20,7 @@ import CascadingSelect from 'funda-ui/CascadingSelect';
 | `displayResultArrow` | ReactNode  | `<svg viewBox="0 0 22 22" width="8px"><path d="m345.44 248.29l-194.29 194.28c-12.359 12.365-32.397 12.365-44.75 0-12.354-12.354-12.354-32.391 0-44.744l171.91-171.91-171.91-171.9c-12.354-12.359-12.354-32.394 0-44.748 12.354-12.359 32.391-12.359 44.75 0l194.29 194.28c6.177 6.18 9.262 14.271 9.262 22.366 0 8.099-3.091 16.196-9.267 22.373" transform="matrix(.03541-.00013.00013.03541 2.98 3.02)" fill="#a5a5a5" /></svg>` | Set an arrow of breadcrumb result |
 | `controlArrow` | ReactNode  | `<svg width="10px" height="10px" viewBox="0 -4.5 20 20"><g stroke="none" strokeWidth="1" fill="none"><g transform="translate(-180.000000, -6684.000000)" className="arrow-fill-g" fill="#a5a5a5"><g transform="translate(56.000000, 160.000000)"><path d="M144,6525.39 L142.594,6524 L133.987,6532.261 L133.069,6531.38 L133.074,6531.385 L125.427,6524.045 L124,6525.414 C126.113,6527.443 132.014,6533.107 133.987,6535 C135.453,6533.594 134.024,6534.965 144,6525.39"></path></g></g></g></svg>` | Set an arrow of control |
 | `loader` | ReactNode  | - | Set a loader component to show while the component waits for the next load of data. e.g. `<span>Loading...</span>` |
-| `valueType` | `label` \| `value` | `label` | Set whether to use "label" or "value" for the value of this form, they will be separated by commas, such as <br />`Text 1,Text 1_1,Text 1_1_1` or `1,1_1,1_1_1` |
+| `valueType` | `label` \| `value` | `label` | Set whether to use "label" or "value" for the value of this form, they will be separated by square brackets, such as <br />`[Text 1][Text 1_1][Text 1_1_1]` or `[1][1_1][1_1_1]` <blockquote>If `extractValueByBrackets` is false, the default value will be separated by comma, such as <br />`Text 1,Text 1_1,Text 1_1_1`</blockquote> |
 | `showCloseBtn` | boolean | false | Whether to display the close button. |
 | `value` | string | - | Set a default value for this control |
 | `label` | string \| ReactNode | - | It is used to specify a label for an element of a form.<blockquote>Support html tags</blockquote> |
@@ -469,7 +470,7 @@ export default () => {
         <>
 
             <CascadingSelect
-                value="Title 1,Title 3"
+                value="[Title 1][Title 3]"
                 name="name"
                 label="String"
                 depth={100}

@@ -2,6 +2,8 @@ import React, { useId, useState, useEffect, useRef, forwardRef } from 'react';
 
 import Checkbox from 'funda-checkbox';
 
+import { extractContentsOfBrackets } from './utils/extract';
+import { convertArrToValByBrackets } from './utils/convert';
 
 interface OptionConfig {
     [propName: string]: string | number;
@@ -17,11 +19,13 @@ type MultipleCheckboxesProps = {
     options?: OptionConfig[] | string;
     disabled?: any;
     required?: any;
+    /** Whether to use square brackets to save result and initialize default value */
+    extractValueByBrackets?: boolean;
     /** -- */
     id?: string;
     style?: React.CSSProperties;
     [key: `data-${string}`]: string | undefined;
-    onChange?: (e: any, data: any) => void;
+    onChange?: (e: any, data: any, dataStr: any) => void;
 
 };
 
@@ -37,12 +41,14 @@ const MultipleCheckboxes = forwardRef((props: MultipleCheckboxesProps, ref: any)
         label,
         name,
         id,
+        extractValueByBrackets,
         style,
         onChange,
         ...attributes
     } = props;
 
 
+    const VALUE_BY_BRACKETS = typeof extractValueByBrackets === 'undefined' ? true : extractValueByBrackets;
     const uniqueID = useId();
     const idRes = id || uniqueID;
     const rootRef = useRef<any>(null);
@@ -97,7 +103,7 @@ const MultipleCheckboxes = forwardRef((props: MultipleCheckboxesProps, ref: any)
         if ( typeof defaultValue === 'undefined' || defaultValue === '' ) {
             setRegTagSelected([]);
         } else {
-            setRegTagSelected(defaultValue.trim().replace(/^\,|\,$/g, '').split(',').filter((v: any) => v !== ''));
+            setRegTagSelected(VALUE_BY_BRACKETS ? extractContentsOfBrackets(defaultValue) : defaultValue.trim().replace(/^\,|\,$/g, '').split(',').filter((v: any) => v !== ''));
         }
     }
 
@@ -151,7 +157,7 @@ const MultipleCheckboxes = forwardRef((props: MultipleCheckboxesProps, ref: any)
 
                                         const _res = (val) ? Array.from(new Set([e.target.value, ...newData])) : newData;
 
-                                        onChange?.(e, _res);
+                                        onChange?.(e, _res, VALUE_BY_BRACKETS ? convertArrToValByBrackets(_res) : _res.join(','));
 
                                         return _res;
                                     });
@@ -168,7 +174,7 @@ const MultipleCheckboxes = forwardRef((props: MultipleCheckboxesProps, ref: any)
                         type="hidden"
                         id={idRes}
                         name={name}
-                        value={regTagSelected.join(',')}
+                        value={VALUE_BY_BRACKETS ? convertArrToValByBrackets(regTagSelected) : regTagSelected.join(',')}
                         required={required || null}
                         {...attributes}
                     />

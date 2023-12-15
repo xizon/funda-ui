@@ -23,6 +23,8 @@ declare type CascadingSelectE2EProps = {
     placeholder?: string;
     disabled?: any;
     required?: any;
+    /** Whether to use curly braces to save result and initialize default value */
+    extractValueByBraces?: boolean;
     /** Instead of using `parent_id` of response to match child and parent data
      * (very useful for multiple fetch requests with no directly related fields),
      * this operation will directly use the click event to modify the result. */

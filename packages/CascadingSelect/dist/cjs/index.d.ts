@@ -14,6 +14,8 @@ declare type CascadingSelectProps = {
     placeholder?: string;
     disabled?: any;
     required?: any;
+    /** Whether to use square brackets to save result and initialize default value */
+    extractValueByBrackets?: boolean;
     /** Set headers for each column group */
     columnTitle?: any[];
     /** Set whether to use "label" or "value" for the value of this form, they will be separated by commas, such as `Text 1,Text 1_1,Text 1_1_1` or `1,1_1,1_1_1`.
