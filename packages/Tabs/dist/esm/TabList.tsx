@@ -30,7 +30,7 @@ const TabList = (props: TabListProps) => {
     return (
         <>
 
-            <li className={`nav-item ${activedClassName}`} role="presentation" onClick={switchEv} data-tab={targetId}>
+            <li data-index={index} data-tablist-index={index} className={`position-relative nav-item ${activedClassName}`} role="presentation" onClick={switchEv} data-tab={targetId}>
                 {children}
             </li>
 

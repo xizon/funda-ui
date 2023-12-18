@@ -29,7 +29,7 @@ import CascadingSelectE2E from 'funda-ui/CascadingSelectE2E';
 | `placeholder` | string | - |  Specifies a short hint that describes. |
 | `disabled` | boolean | false | Whether it is disabled |
 | `required` | boolean | false | When present, it specifies that a field must be filled out before submitting the form. |
-| `onFetch` | function  | - | Call a function when  data is successfully fetched. It returns one callback value which is the fetched data (an array) |
+| `onFetch` | function  | - | Call a function when  data is successfully fetched. It returns one callback value which is the fetched data (**Array**) |
 | `fetchArray` | array  | - | Set multiple requests, it should be an array |
 | `onChange` | function  | - | Call a function when the value of an HTML element is changed. It returns five callback values. <br /> <ol><li>The one is the input control</li><li>The second parameter is the current option data (a JSON object)</li><li>The third parameter is the index of the current column group</li><li>The fourth parameter indicates the current column depth</li><li>The last is value of the current control.</li></ol> |
 | `onBlur` | function  | - | Call a function when a user leaves a form field. |

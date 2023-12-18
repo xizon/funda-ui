@@ -30,8 +30,8 @@ import DynamicFields from 'funda-ui/DynamicFields';
 | `innerAppendHeadCellClassName` | string | - | Class names of a cell as the header of a group of table cells. <blockquote>Customize the class names of the append area, usually used in table styles</blockquote>|
 | `innerAppendEmptyContent` | React.ReactNode | - | Content displayed when there are no content. If this property is not set, all content will be automatically hidden. <blockquote>Customize the class names of the append area, usually used in table styles</blockquote>|
 | `maxFields` | number | 10 | Maximum number of control group allowed to be added |
-| `onAdd` | function  | - | Call a function when add a control. It returns one callback value which is each group of fields (HTMLDivElement[]) |
-| `onRemove` | function  | - | Call a function when remove a control. It returns three callback values. <br /> <ol><li>The first is each group of fields (HTMLDivElement[])</li><li>The second is the current key of removed item (number \| string)</li><li> The third is the current index of removed item (number \| string)</li></ol> |
+| `onAdd` | function  | - | Call a function when add a control. It returns one callback value which is each group of fields (**HTMLDivElement[]**) |
+| `onRemove` | function  | - | Call a function when remove a control. It returns three callback values. <br /> <ol><li>The first is each group of fields (**HTMLDivElement[]**)</li><li>The second is the current key of removed item (**number** \| **string**)</li><li> The third is the current index of removed item ((**number** \| **string**)</li></ol> |
 
 
 

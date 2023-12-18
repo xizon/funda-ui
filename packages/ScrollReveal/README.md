@@ -17,7 +17,7 @@ import ScrollReveal from 'funda-ui/ScrollReveal';
 | `delay` | number | - | A number indicating the minimum delay in milliseconds between notifications from this observer for a given target. |
 | `threshold` | number \| number[] | `[0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]` | Number between 0 and 1 indicating the percentage that should be visible before triggering. Can also be an array of numbers, to create multiple trigger points. <blockquote>It is usually used with `viewOffset`</blockquote> |
 | `onChange` | function  | - | Call this function whenever the in view state changes. It returns two callback values. <br /> <ol><li>The first is the element in the viewport</li><li>The second is a string of visible percentage</li></ol> |
-| `onIntersect` | function  | - | Call this function when elements intersect. It returns two callback values. <br /> <ol><li>The first is the element in the viewport</li><li>The second is intersecting state (boolean)</li></ol> |
+| `onIntersect` | function  | - | Call this function when elements intersect. It returns two callback values. <br /> <ol><li>The first is the element in the viewport</li><li>The second is intersecting state (**Boolean**)</li></ol> |
 
 
 

@@ -27,10 +27,10 @@ import ModalDialog from 'funda-ui/ModalDialog';
 | `submitBtnLabel` | string \| ReactNode  | - | Set a piece of text or HTML code for the submit button |
 | `enableVideo` | boolean  | false | Adapt the video to the window. For example, the content of the component can be written as: `<iframe width="560" height="315" src="https://www.youtube.com/embed/xxxxxx" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowFullScreen></iframe>` <br /> or <br />`<video playsInline controls poster="/assets/videos/480x270/demo.jpg" src="/assets/videos/480x270/demo.mp4"></video>` |
 | `data` | any  | - | Incoming data, you can set the third parameter of `onSubmit`. <blockquote>Changes in the `data` value will cause the component to re-render. It will be used when the value or content does not change when switching routes and needs to re-render the component or get the request.</blockquote> |
-| `onLoad` | function  | - | Call a function when the modal is rendered. It returns two callback values, one is the function of open, and the other is the function of close, they can be called separately. |
-| `onOpen` | function  | - | Call a function when the modal is opened. It returns two callback values, one is the trigger object and the other is the closing event (a function). |
+| `onLoad` | function  | - | Call a function when the modal is rendered. It returns two callback values. <br /> <ol><li>The first is the function of open(**Function**)</li><li>The second is the function of close (**Function**)</li></ol>. |
+| `onOpen` | function  | - | Call a function when the modal is opened. It returns two callback values, one is the trigger object and the other is the closing event (**Function**). |
 | `onClose` | function  | - | Call a function when the modal is closed. It returns a callback value which is the trigger object. |
-| `onSubmit` | function  | - | Call a function when the modal is submitted. It returns three callback values. <br /> <ol><li>The first is the trigger object</li><li>The second is the closing event (a function)</li><li> The third is a string passed by the `data` attribute</li></ol> |
+| `onSubmit` | function  | - | Call a function when the modal is submitted. It returns three callback values. <br /> <ol><li>The first is the trigger object</li><li>The second is the closing event (**Function**)</li><li> The third is a string passed by the `data` attribute</li></ol> |
 
 
 

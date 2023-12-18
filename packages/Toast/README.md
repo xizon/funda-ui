@@ -20,7 +20,7 @@ import Toast from 'funda-ui/Toast';
 | `closeDisabled` | boolean  | false | Disable the close button. |
 | `direction` | `bottom-left` \| `bottom-center` \| `bottom-right` \| `top-left` \| `top-center` \| `top-right` \| `vertical-center`  | bottom-center | The direction of the toast |
 | `autoCloseTime` | boolean \| number  | false | Set an automatic closing time, multiple items will be accumulated in order. Amount of time measured in milliseconds. If false or without this attribute, Auto-Close will be disabled. |
-| `onClose` | function  | - | Call a function when the modal is opened. It returns three callback values.  <br /> <ol><li>The first is the current element (HTMLDivElement)</li><li>The second is the current index of removed item (number)</li><li> The third is the all displayed elements (HTMLDivElement[])</li></ol>|
+| `onClose` | function  | - | Call a function when the modal is opened. It returns three callback values.  <br /> <ol><li>The first is the current element (**HTMLDivElement**)</li><li>The second is the current index of removed item (**Number**)</li><li> The third is the all displayed elements (**HTMLDivElement[]**)</li></ol>|
 
 
 Array configuration properties of the `data`:

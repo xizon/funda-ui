@@ -24,8 +24,8 @@ import Table from 'funda-ui/Table';
 | `responsive` | boolean  | false | Create normal responsive tables up to a particular breakpoint. |
 | `enhancedResponsive` | boolean  | false | Create enhanced responsive tables up to a particular breakpoint. |
 | `enhancedResponsiveWithScrollBar` | boolean  | false | Create enhanced responsive tables up to a particular breakpoint. This property allows scroll bars to be created automatically in the table. <br />**Only one of the `responsive` and `responsiveWithScrollBar` properties is allowed, and both are invalid if set to true.** |
-| `onClick` | function  | - | Call a function when the value of an HTML element is changed. It returns two callback values. <br /> <ol><li>The first is the current row</li><li>The second is the row data (Array)</li></ol> |
-| `onCheck` | function  | - | Call a function when changing the checkbox. It returns only one callback value (Array). <blockquote>Take effect when `checkable` is "true"</blockquote> |
+| `onClick` | function  | - | Call a function when the value of an HTML element is changed. It returns two callback values. <br /> <ol><li>The first is the current row</li><li>The second is the row data (**Array**)</li></ol> |
+| `onCheck` | function  | - | Call a function when changing the checkbox. It returns only one callback value (**Array**). <blockquote>Take effect when `checkable` is "true"</blockquote> |
 | `onDrag` | function  | - | As each row is dragged, it returns two functions. dragStart, dragEnd, they represent the callback events of drag start and drag end respectively. For example: `onDrag={(dragStart,dragEnd)=>{if(dragStart!==null)dragStart((el,data,printData)=>{console.log('dragStart: ',data,printData);});if(dragEnd!==null)dragEnd((el,data,printData)=>{console.log('dragEnd: ',data,printData);});}}`. <blockquote>Take effect when `draggable` is "true"</blockquote> |
 
 

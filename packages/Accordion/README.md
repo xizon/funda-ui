@@ -15,7 +15,7 @@ import { Accordion } from 'funda-ui/Accordion';
 | `triggerType` | `click` \| `mouseover`  | click | One event type |
 | `duration` | number | 200 | The number of milliseconds(ms) each iteration of the animation takes to complete |
 | `easing` | `linear` \| `easeIn` \| `easeOut` \| `easeInOut` | `linear` | Types of easing animation |
-| `onChange` | function  | - | Handling events for collapsing item. It returns two callback values. <br /> <ol><li>The first is current item (HTMLDivElement)</li><li>The second is the current index number (number)</li></ol> |
+| `onChange` | function  | - | Handling events for collapsing item. It returns two callback values. <br /> <ol><li>The first is current item (**HTMLDivElement**)</li><li>The second is the current index number (**Number**)</li></ol> |
 | `alternateCollapse` | boolean | true | Mutually exclusive alternate expansion between the levels. |
 
 

@@ -16,7 +16,9 @@ type TabsProps = {
     /** -- */
     style?: React.CSSProperties;
     onChange?: (nav: any, targetId: any, index: number) => void;
+    onLoad?: (func: Function) => void;
 	children: React.ReactNode | React.ReactNode[];
+    
 };
 
 const Tabs = (props: TabsProps) => {
@@ -30,6 +32,7 @@ const Tabs = (props: TabsProps) => {
         animTransitionDuration,
         style,
         onChange,
+        onLoad,
         children // the contents of the TabList and TabPanel in a loop
     } = props;
 
@@ -133,6 +136,8 @@ const Tabs = (props: TabsProps) => {
             }
         });
 
+        onLoad?.(() => itemInit);
+
     }, []);
 
 
@@ -205,6 +210,7 @@ const Tabs = (props: TabsProps) => {
                                     tabPanelIndex++;
                                     return <TabPanel
                                         key={item.key}
+                                        index={tabPanelIndex}
                                         expandedActiveClassNameForPanel={expandedActiveClassNameForPanel}
                                         targetId={`tabs-show-${uniqueID}-${tabPanelIndex}`}
                                         {...childProps} />;

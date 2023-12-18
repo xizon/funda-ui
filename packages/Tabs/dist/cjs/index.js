@@ -116,7 +116,9 @@ var TabList = function TabList(props) {
   var _expandClassName = typeof expandedActiveClassNameForNav !== 'undefined' ? expandedActiveClassNameForNav : '';
   var activedClassName = typeof defaultActive !== 'undefined' && defaultActive !== false ? " active ".concat(_expandClassName) : " ".concat(_expandClassName);
   return /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("li", {
-    className: "nav-item ".concat(activedClassName),
+    "data-index": index,
+    "data-tablist-index": index,
+    className: "position-relative nav-item ".concat(activedClassName),
     role: "presentation",
     onClick: switchEv,
     "data-tab": targetId
@@ -124,24 +126,28 @@ var TabList = function TabList(props) {
 };
 /* harmony default export */ const src_TabList = (TabList);
 ;// CONCATENATED MODULE: ./src/TabPanel.tsx
-var _excluded = ["defaultActive", "expandedActiveClassNameForPanel", "tabpanelClass", "targetId"];
+var _excluded = ["fadeDisabled", "defaultActive", "expandedActiveClassNameForPanel", "tabpanelClass", "targetId", "index"];
 function _extends() { _extends = Object.assign ? Object.assign.bind() : function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
 function _objectWithoutProperties(source, excluded) { if (source == null) return {}; var target = _objectWithoutPropertiesLoose(source, excluded); var key, i; if (Object.getOwnPropertySymbols) { var sourceSymbolKeys = Object.getOwnPropertySymbols(source); for (i = 0; i < sourceSymbolKeys.length; i++) { key = sourceSymbolKeys[i]; if (excluded.indexOf(key) >= 0) continue; if (!Object.prototype.propertyIsEnumerable.call(source, key)) continue; target[key] = source[key]; } } return target; }
 function _objectWithoutPropertiesLoose(source, excluded) { if (source == null) return {}; var target = {}; var sourceKeys = Object.keys(source); var key, i; for (i = 0; i < sourceKeys.length; i++) { key = sourceKeys[i]; if (excluded.indexOf(key) >= 0) continue; target[key] = source[key]; } return target; }
 
 ;
 var TabPanel = function TabPanel(props) {
-  var defaultActive = props.defaultActive,
+  var fadeDisabled = props.fadeDisabled,
+    defaultActive = props.defaultActive,
     expandedActiveClassNameForPanel = props.expandedActiveClassNameForPanel,
     tabpanelClass = props.tabpanelClass,
     targetId = props.targetId,
+    index = props.index,
     attributes = _objectWithoutProperties(props, _excluded);
   var _expandClassName = typeof expandedActiveClassNameForPanel !== 'undefined' ? expandedActiveClassNameForPanel : '';
   var activedClassName = typeof defaultActive !== 'undefined' && defaultActive !== false ? " show active ".concat(_expandClassName) : " ".concat(_expandClassName);
   return /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", _extends({
+    "data-index": index,
+    "data-tabpanel-index": index,
     role: "tabpanel",
     id: targetId,
-    className: tabpanelClass ? "tab-pane fade ".concat(tabpanelClass, " ").concat(activedClassName) : "tab-pane fade ".concat(activedClassName)
+    className: tabpanelClass ? "tab-pane ".concat(fadeDisabled ? '' : 'fade', " ").concat(tabpanelClass, " ").concat(activedClassName) : "tab-pane ".concat(fadeDisabled ? '' : 'fade', " ").concat(activedClassName)
   }, attributes)));
 };
 /* harmony default export */ const src_TabPanel = (TabPanel);
@@ -167,6 +173,7 @@ var Tabs = function Tabs(props) {
     animTransitionDuration = props.animTransitionDuration,
     style = props.style,
     onChange = props.onChange,
+    onLoad = props.onLoad,
     children = props.children;
   var uniqueID = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useId)().replace(/\:/g, "-");
   var rootRef = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useRef)(null);
@@ -245,6 +252,9 @@ var Tabs = function Tabs(props) {
         itemInit($li[i], true);
       }
     });
+    onLoad === null || onLoad === void 0 ? void 0 : onLoad(function () {
+      return itemInit;
+    });
   }, []);
   return /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
     className: wrapperClassName || wrapperClassName === '' ? wrapperClassName : "mb-3 position-relative",
@@ -302,6 +312,7 @@ var Tabs = function Tabs(props) {
           tabPanelIndex++;
           return /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement(src_TabPanel, Tabs_extends({
             key: item.key,
+            index: tabPanelIndex,
             expandedActiveClassNameForPanel: expandedActiveClassNameForPanel,
             targetId: "tabs-show-".concat(uniqueID, "-").concat(tabPanelIndex)
           }, childProps));
