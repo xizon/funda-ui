@@ -36,6 +36,7 @@ type RadioProps = {
     fetchFuncMethodParams?: any[];
     fetchCallback?: (data: any) => void;
     onFetch?: (data: any) => void;
+    onLoad?: (arg1: any, arg2: any, arg3: any) => void;
     onClick?: RadioOptionChangeFnType | null;
     onChange?: RadioOptionChangeFnType | null;
     onBlur?: (e: any) => void;
@@ -60,6 +61,7 @@ const Radio = (props: RadioProps) => {
         fetchFuncMethodParams,
         fetchCallback,
         onFetch,
+        onLoad,
         onClick,
         onChange,
         onBlur,
@@ -263,6 +265,11 @@ const Radio = (props: RadioProps) => {
         //--------------
         const _params: any[] = fetchFuncMethodParams || [];
         fetchData((_params).join(','));
+
+
+        //
+        //--------------
+        onLoad?.(dataInit, value, rootRef.current);
 
     }, [value, options]);
 

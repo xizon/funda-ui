@@ -30,6 +30,7 @@ declare type RadioProps = {
     fetchFuncMethodParams?: any[];
     fetchCallback?: (data: any) => void;
     onFetch?: (data: any) => void;
+    onLoad?: (arg1: any, arg2: any, arg3: any) => void;
     onClick?: RadioOptionChangeFnType | null;
     onChange?: RadioOptionChangeFnType | null;
     onBlur?: (e: any) => void;

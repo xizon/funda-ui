@@ -22,6 +22,7 @@ import Radio from 'funda-ui/Radio';
 | `fetchFuncMethodParams` | array  | - | The parameter passed by the method, it is an array. <br />Note: the first element is a query string, the second element is the number of queried data (usually a number), and then you can increase the third, or fourth, and more parameters. <br />Such as `['',0]`, `['',99,'string 1','string 2']` <br /><blockquote>There should be at least one parameter which is the query string.</blockquote> |
 | `fetchCallback` | function  | - | Return value from `fetchCallback` property to format the data of the API callback, which will match the data structure of the component. <br >At the same time it returns the original data, you will use this function and use the `return` keyword to return a new value. |
 | `onFetch` | function  | - | Call a function when  data is successfully fetched. It returns one callback value which is the fetched data (**Array**) |
+| `onLoad` | function  | - | Call a function when the component has been rendered completely. It returns three callback values. <br /> <ol><li>The first is the passed data （**Array**）</li><li>The second is the default value (**String** \| **undefined**)</li><li> The third is the radio wrapper (**HTMLDivElement**)</li></ol> |
 | `onClick` | function  | - | Call a function when the value of an HTML element is clicked. It returns four callback values. <br /> <ol><li>The first is the current control</li><li>The second is the current value</li><li>The third is the data (Exposes the JSON format data) about the option.</li><li>The last is the current index number</li></ol> |
 | `onChange` | function  | - | Call a function when the value of an HTML element is changed. It returns four callback values. <br /> <ol><li>The first is the current control</li><li>The second is the current value</li><li>The third is the data (Exposes the JSON format data) about the option.</li><li>The last is the current index number</li></ol> |
 | `onBlur` | function  | - | Call a function when a user leaves a form field. |
@@ -181,7 +182,7 @@ export default () => {
 
 
 
-## Examples
+## Asynchronous Usage via HTTP Request
 
 You need to use a `fetchCallback` property to format the data of the API callback, which will match the data structure of the component.
 
@@ -301,3 +302,47 @@ export default () => {
     );
 }
 ```
+
+
+## Do some actions when Radio rendering is complete
+
+
+```js
+import React from "react";
+import Radio from 'funda-ui/Radio';
+
+export default () => {
+
+
+    return (
+        <>           
+            <Radio
+                inline={true}
+                value="value-2"
+                name="String"
+                label="String"
+                options={[
+                    {"label": "Option 1","value": "value-1","attr1": false,"extends":<><div className="ms-3" id={`radio-1`}></div></>},
+                    {"label": "Option 2","value": "value-2","attr1": true,"extends":<><div className="ms-3" id={`radio-2`}><input type="color" /></div></>},
+                ]}
+                onLoad={(data: any, defaultVal: any, root: any) => {
+                              
+                    if (root) {
+                        [].slice.call(root.querySelectorAll(`[type="radio"]`)).forEach((el: HTMLInputElement, i:number) => {
+                            if (data[i].value === defaultVal && data[i].attr1) {
+                                (el.closest('.form-check') as HTMLDivElement).style.backgroundColor = 'red';
+                            } else {
+                                (el.closest('.form-check') as HTMLDivElement).style.backgroundColor = 'yellow';
+                            }
+        
+                        });
+                    }
+                    
+                }}
+            />
+
+        </>
+    );
+}
+```
+
