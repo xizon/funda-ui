@@ -887,7 +887,7 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
       var filterRes = function filterRes(data) {
         return inputData.filter(function (item) {
           // Avoid fatal errors causing page crashes
-          var _queryString = typeof item.queryString !== 'undefined' ? item.queryString : '';
+          var _queryString = typeof item.queryString !== 'undefined' && item.queryString !== null ? item.queryString : '';
           if ((_queryString.split(',').some(function (l) {
             return l.charAt(0) === val.toLowerCase();
           }) || _queryString.split(',').some(function (l) {

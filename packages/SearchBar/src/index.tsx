@@ -26,6 +26,7 @@ type SearchBarProps = {
     tabIndex?: number;
     [key: `data-${string}`]: string | undefined;
     onClick?: (e: any) => void;
+    onSubmit?: (e: any) => void;
     onChange?: (e: any, param: any) => void;
     onBlur?: (e: any, param: any) => void;
     onFocus?: (e: any, param: any) => void;
@@ -50,6 +51,7 @@ const SearchBar = forwardRef((props: SearchBarProps, ref: any) => {
         style,
         tabIndex,
         onClick,
+        onSubmit,
         onChange,
         onBlur,
         onFocus,
@@ -75,10 +77,13 @@ const SearchBar = forwardRef((props: SearchBarProps, ref: any) => {
     }
 
 
-    function handleSubmit(event: any) {
-
-        //
+    function handleClick(event: any) {
         onClick?.(event);
+    }
+
+
+    function handleSubmit(event: any) {
+        onSubmit?.(event);
     }
 
     function handleFocus(event: any) {
@@ -150,6 +155,7 @@ const SearchBar = forwardRef((props: SearchBarProps, ref: any) => {
                         onFocus={handleFocus}
                         onBlur={handleBlur}
                         onChange={handleChange}
+                        onClick={handleClick}
                         onCompositionStart={handleComposition}
                         onCompositionUpdate={handleComposition}
                         onCompositionEnd={handleComposition}

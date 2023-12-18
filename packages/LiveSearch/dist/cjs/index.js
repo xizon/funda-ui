@@ -210,7 +210,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
         var react__WEBPACK_IMPORTED_MODULE_0__ = __nested_webpack_require_1465__(787);
         /* harmony import */
         var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__nested_webpack_require_1465__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-        var _excluded = ["wrapperClassName", "controlClassName", "appearance", "disabled", "required", "placeholder", "value", "label", "name", "btnId", "id", "maxLength", "icon", "autoComplete", "style", "tabIndex", "onClick", "onChange", "onBlur", "onFocus"];
+        var _excluded = ["wrapperClassName", "controlClassName", "appearance", "disabled", "required", "placeholder", "value", "label", "name", "btnId", "id", "maxLength", "icon", "autoComplete", "style", "tabIndex", "onClick", "onSubmit", "onChange", "onBlur", "onFocus"];
         function _extends() {
           _extends = Object.assign ? Object.assign.bind() : function (target) {
             for (var i = 1; i < arguments.length; i++) {
@@ -319,6 +319,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
             style = props.style,
             tabIndex = props.tabIndex,
             onClick = props.onClick,
+            onSubmit = props.onSubmit,
             onChange = props.onChange,
             onBlur = props.onBlur,
             onFocus = props.onFocus,
@@ -342,9 +343,11 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
               setOnComposition(false);
             }
           }
-          function handleSubmit(event) {
-            //
+          function handleClick(event) {
             onClick === null || onClick === void 0 ? void 0 : onClick(event);
+          }
+          function handleSubmit(event) {
+            onSubmit === null || onSubmit === void 0 ? void 0 : onSubmit(event);
           }
           function handleFocus(event) {
             rootRef.current.classList.add('focus');
@@ -408,6 +411,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
             onFocus: handleFocus,
             onBlur: handleBlur,
             onChange: handleChange,
+            onClick: handleClick,
             onCompositionStart: handleComposition,
             onCompositionUpdate: handleComposition,
             onCompositionEnd: handleComposition,
@@ -627,11 +631,13 @@ var LiveSearch = function LiveSearch(props) {
     icon = props.icon,
     btnId = props.btnId,
     fetchTrigger = props.fetchTrigger,
+    hideIcon = props.hideIcon,
     depth = props.depth,
     maxLength = props.maxLength,
     style = props.style,
     winWidth = props.winWidth,
     tabIndex = props.tabIndex,
+    fetchAutoShow = props.fetchAutoShow,
     fetchNoneInfo = props.fetchNoneInfo,
     fetchUpdate = props.fetchUpdate,
     fetchFuncAsync = props.fetchFuncAsync,
@@ -642,6 +648,7 @@ var LiveSearch = function LiveSearch(props) {
     onSelect = props.onSelect,
     onChange = props.onChange,
     onBlur = props.onBlur;
+  var INPUT_MATCH_ENABLED = typeof fetchAutoShow === 'undefined' || fetchAutoShow === false ? true : false;
   var WIN_WIDTH = typeof winWidth === 'function' ? winWidth() : winWidth ? winWidth : 'auto';
   var uniqueID = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useId)();
   var idRes = id || uniqueID;
@@ -783,7 +790,7 @@ var LiveSearch = function LiveSearch(props) {
             filterRes = function filterRes(data) {
               return data.filter(function (item) {
                 // Avoid fatal errors causing page crashes
-                var _queryString = typeof item.queryString !== 'undefined' ? item.queryString : '';
+                var _queryString = typeof item.queryString !== 'undefined' && item.queryString !== null ? item.queryString : '';
                 if ((_queryString.split(',').some(function (l) {
                   return l.charAt(0) === val.toLowerCase();
                 }) || _queryString.split(',').some(function (l) {
@@ -826,21 +833,25 @@ var LiveSearch = function LiveSearch(props) {
 
     // detect string which contains only spaces
     if (!val.replace(/\s/g, '').length === true) return;
+    if (INPUT_MATCH_ENABLED) {
+      //
+      if (!fetchTrigger) {
+        matchData(val, fetchUpdate).then(function (response) {
+          setData(response);
 
-    //
-    if (!fetchTrigger) {
-      matchData(val, fetchUpdate).then(function (response) {
-        setData(response);
+          //
+          onChange === null || onChange === void 0 ? void 0 : onChange(inputRef.current, response);
 
+          //
+          setIsOpen(true);
+        });
+      } else {
         //
-        onChange === null || onChange === void 0 ? void 0 : onChange(inputRef.current, response);
-
-        //
-        setIsOpen(true);
-      });
+        onChange === null || onChange === void 0 ? void 0 : onChange(inputRef.current, data);
+      }
     } else {
       //
-      onChange === null || onChange === void 0 ? void 0 : onChange(inputRef.current, data);
+      onChange === null || onChange === void 0 ? void 0 : onChange(inputRef.current, dataInit);
     }
 
     // window position
@@ -949,19 +960,31 @@ var LiveSearch = function LiveSearch(props) {
             _data = JSON.parse(dataInput);
             onSelect === null || onSelect === void 0 ? void 0 : onSelect(inputRef.current, _data);
             setChangedVal(_data.label);
-            _context5.next = 15;
+            _context5.next = 20;
             break;
           case 9:
             index = typeof el.target !== 'undefined' ? el.target.dataset.index : el.dataset.index;
-            _context5.next = 12;
+            res = [];
+            if (!INPUT_MATCH_ENABLED) {
+              _context5.next = 17;
+              break;
+            }
+            _context5.next = 14;
             return matchData(inputRef.current.value, false);
-          case 12:
+          case 14:
             res = _context5.sent;
+            _context5.next = 18;
+            break;
+          case 17:
+            res = dataInit;
+          case 18:
             onSelect === null || onSelect === void 0 ? void 0 : onSelect(inputRef.current, res[index]);
             setChangedVal(res[index].label);
-          case 15:
+          case 20:
+            // cancel
+            setIsOpen(false);
             setData([]);
-          case 16:
+          case 22:
           case "end":
             return _context5.stop();
         }
@@ -971,6 +994,17 @@ var LiveSearch = function LiveSearch(props) {
   }
   function handleFetch() {
     activate();
+
+    // window position
+    setTimeout(function () {
+      getPlacement(listRef.current);
+    }, 0);
+  }
+  function handleClick() {
+    if (!INPUT_MATCH_ENABLED) {
+      setData(dataInit);
+      setIsOpen(true);
+    }
 
     // window position
     setTimeout(function () {
@@ -1171,8 +1205,9 @@ var LiveSearch = function LiveSearch(props) {
       handleChangeFetchSafe(e);
     },
     onBlur: handleBlur,
-    onClick: handleFetch,
-    icon: !fetchTrigger ? '' : icon,
+    onSubmit: handleFetch,
+    onClick: handleClick,
+    icon: hideIcon ? '' : !fetchTrigger ? '' : icon,
     btnId: btnId,
     autoComplete: "off"
   }), data && data.length > 0 && !hasErr ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
@@ -1221,7 +1256,7 @@ var LiveSearch = function LiveSearch(props) {
     type: "button",
     className: "list-group-item list-group-item-action no-match",
     disabled: true
-  }, fetchNoneInfo || 'No match yet')))) : null, !fetchTrigger ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("span", {
+  }, fetchNoneInfo || 'No match yet')))) : null, hideIcon ? null : /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, !fetchTrigger ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("span", {
     className: "livesearch__wrapper-searchbtn position-absolute top-0 end-0"
   }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("button", {
     tabIndex: -1,
@@ -1238,7 +1273,7 @@ var LiveSearch = function LiveSearch(props) {
   }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("path", {
     d: "M12.027 9.92L16 13.95 14 16l-4.075-3.976A6.465 6.465 0 0 1 6.5 13C2.91 13 0 10.083 0 6.5 0 2.91 2.917 0 6.5 0 10.09 0 13 2.917 13 6.5a6.463 6.463 0 0 1-.973 3.42zM1.997 6.452c0 2.48 2.014 4.5 4.5 4.5 2.48 0 4.5-2.015 4.5-4.5 0-2.48-2.015-4.5-4.5-4.5-2.48 0-4.5 2.014-4.5 4.5z",
     fillRule: "evenodd"
-  }))))) : null));
+  }))))) : null)));
 };
 /* harmony default export */ const src = (LiveSearch);
 })();

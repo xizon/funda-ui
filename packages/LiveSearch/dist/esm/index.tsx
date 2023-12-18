@@ -21,6 +21,7 @@ type LiveSearchProps = {
     icon?: React.ReactNode | string;
     btnId?: string;
     fetchTrigger?: boolean;
+    hideIcon?: boolean;
     /** Set the depth value of the control to control the display of the pop-up layer appear above.
      * Please set it when multiple controls are used at the same time. */
     depth?: number;
@@ -29,6 +30,7 @@ type LiveSearchProps = {
     style?: React.CSSProperties;
     tabIndex?: number;
     [key: `data-${string}`]: string | undefined;
+    fetchAutoShow?: boolean;
     fetchNoneInfo?: string;
     fetchUpdate?: boolean;
     fetchFuncAsync?: any;
@@ -57,11 +59,13 @@ const LiveSearch = (props: LiveSearchProps) => {
         icon,
         btnId,
         fetchTrigger,
+        hideIcon,
         depth,
         maxLength,
         style,
         winWidth,
         tabIndex,
+        fetchAutoShow,
         fetchNoneInfo,
         fetchUpdate,
         fetchFuncAsync,
@@ -75,6 +79,7 @@ const LiveSearch = (props: LiveSearchProps) => {
     } = props;
 
 
+    const INPUT_MATCH_ENABLED = typeof fetchAutoShow === 'undefined' || fetchAutoShow === false ? true : false;
     const WIN_WIDTH = typeof winWidth === 'function' ? winWidth() : winWidth ? winWidth : 'auto';
     const uniqueID = useId();
     const idRes = id || uniqueID;
@@ -84,7 +89,7 @@ const LiveSearch = (props: LiveSearchProps) => {
     const listContentRef = useRef<any>(null);
     const windowScrollUpdate = debounce(handleScrollEvent, 500);
     
-
+ 
 
     //
     const [firstFetch, setFirstFetch] = useState<boolean>(false);
@@ -211,7 +216,7 @@ const LiveSearch = (props: LiveSearchProps) => {
             return data.filter((item: any) => {
 
                 // Avoid fatal errors causing page crashes
-                const _queryString = typeof item.queryString !== 'undefined' ? item.queryString : '';
+                const _queryString = typeof item.queryString !== 'undefined' && item.queryString !== null ? item.queryString : '';
 
                 if (
                     (
@@ -245,6 +250,7 @@ const LiveSearch = (props: LiveSearchProps) => {
     }
 
 
+
     function handleChange(e: any) {
         const val = e.target.value;
 
@@ -253,22 +259,34 @@ const LiveSearch = (props: LiveSearchProps) => {
         // detect string which contains only spaces
         if ( !val.replace(/\s/g, '').length === true ) return;
 
-        //
-        if ( !fetchTrigger ) {
-            matchData(val, fetchUpdate).then((response: any) => {
 
-                setData(response);
-
+        if (INPUT_MATCH_ENABLED) {
+    
                 //
-                onChange?.(inputRef.current, response); 
+                if ( !fetchTrigger ) {
+                matchData(val, fetchUpdate).then((response: any) => {
 
+                    setData(response);
+
+                    //
+                    onChange?.(inputRef.current, response); 
+
+                    //
+                    setIsOpen(true);
+                });
+            } else {
                 //
-                setIsOpen(true);
-            });
+                onChange?.(inputRef.current, data); 
+            }
+
         } else {
             //
-            onChange?.(inputRef.current, data); 
+            onChange?.(inputRef.current, dataInit); 
+
         }
+
+
+
 
         // window position
         setTimeout( ()=> {
@@ -310,8 +328,7 @@ const LiveSearch = (props: LiveSearchProps) => {
                 _ORGIN_DATA = [];
             }
             
-
-            
+   
             //
             onFetch?.(_ORGIN_DATA);
             
@@ -343,19 +360,38 @@ const LiveSearch = (props: LiveSearchProps) => {
         } else {
             index = typeof el.target !== 'undefined' ? el.target.dataset.index : el.dataset.index;
 
-            const res: any = await matchData(inputRef.current.value, false);
+            let res: any = [];
+
+            if (INPUT_MATCH_ENABLED) {
+                res = await matchData(inputRef.current.value, false);
+            } else {
+                res = dataInit;
+            }
+            
             onSelect?.(inputRef.current, res[index as never]);
             setChangedVal(res[index as never].label);
         }
 
+        
+        // cancel
+        setIsOpen(false);
         setData([]);
-
     }
 
-
     function handleFetch() {
-        activate();
+        activate();   
 
+        // window position
+        setTimeout( ()=> {
+            getPlacement(listRef.current);
+        }, 0 );     
+    }
+
+    function handleClick() {
+        if (!INPUT_MATCH_ENABLED) {
+            setData(dataInit);
+            setIsOpen(true);
+        }
 
         // window position
         setTimeout( ()=> {
@@ -573,8 +609,9 @@ const LiveSearch = (props: LiveSearchProps) => {
                         handleChangeFetchSafe(e);
                     }}    
                     onBlur={handleBlur}
-                    onClick={handleFetch}
-                    icon={!fetchTrigger ? '' : icon}
+                    onSubmit={handleFetch}
+                    onClick={handleClick}
+                    icon={hideIcon ? '' : (!fetchTrigger ? '' : icon)}
                     btnId={btnId}
                     autoComplete='off'
                 />
@@ -608,16 +645,19 @@ const LiveSearch = (props: LiveSearchProps) => {
                 </> : null}
 
 
-                {!fetchTrigger ? <>
-                    <span className="livesearch__wrapper-searchbtn position-absolute top-0 end-0">
-                        <button tabIndex={-1} type="button" className="btn border-end-0 rounded-pill" style={{ pointerEvents: 'none' }}>
-                            <svg width="1em" height="1em" fill="#a5a5a5" viewBox="0 0 16 16">
-                                <path d="M12.027 9.92L16 13.95 14 16l-4.075-3.976A6.465 6.465 0 0 1 6.5 13C2.91 13 0 10.083 0 6.5 0 2.91 2.917 0 6.5 0 10.09 0 13 2.917 13 6.5a6.463 6.463 0 0 1-.973 3.42zM1.997 6.452c0 2.48 2.014 4.5 4.5 4.5 2.48 0 4.5-2.015 4.5-4.5 0-2.48-2.015-4.5-4.5-4.5-2.48 0-4.5 2.014-4.5 4.5z" fillRule="evenodd" />
-                            </svg>
-                        </button>
+                {hideIcon ? null : <>
+                    {!fetchTrigger ? <>
+                        <span className="livesearch__wrapper-searchbtn position-absolute top-0 end-0">
+                            <button tabIndex={-1} type="button" className="btn border-end-0 rounded-pill" style={{ pointerEvents: 'none' }}>
+                                <svg width="1em" height="1em" fill="#a5a5a5" viewBox="0 0 16 16">
+                                    <path d="M12.027 9.92L16 13.95 14 16l-4.075-3.976A6.465 6.465 0 0 1 6.5 13C2.91 13 0 10.083 0 6.5 0 2.91 2.917 0 6.5 0 10.09 0 13 2.917 13 6.5a6.463 6.463 0 0 1-.973 3.42zM1.997 6.452c0 2.48 2.014 4.5 4.5 4.5 2.48 0 4.5-2.015 4.5-4.5 0-2.48-2.015-4.5-4.5-4.5-2.48 0-4.5 2.014-4.5 4.5z" fillRule="evenodd" />
+                                </svg>
+                            </button>
 
-                    </span>
-                </> : null}
+                        </span>
+                    </> : null}
+                </>}
+
 
 
 

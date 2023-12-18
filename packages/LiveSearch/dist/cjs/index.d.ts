@@ -14,6 +14,7 @@ declare type LiveSearchProps = {
     icon?: React.ReactNode | string;
     btnId?: string;
     fetchTrigger?: boolean;
+    hideIcon?: boolean;
     /** Set the depth value of the control to control the display of the pop-up layer appear above.
      * Please set it when multiple controls are used at the same time. */
     depth?: number;
@@ -22,6 +23,7 @@ declare type LiveSearchProps = {
     style?: React.CSSProperties;
     tabIndex?: number;
     [key: `data-${string}`]: string | undefined;
+    fetchAutoShow?: boolean;
     fetchNoneInfo?: string;
     fetchUpdate?: boolean;
     fetchFuncAsync?: any;

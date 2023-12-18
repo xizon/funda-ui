@@ -577,7 +577,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
         var react__WEBPACK_IMPORTED_MODULE_0__ = __nested_webpack_require_1471__(787);
         /* harmony import */
         var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__nested_webpack_require_1471__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-        var _excluded = ["wrapperClassName", "disabled", "required", "value", "label", "name", "id", "options", "inline", "style", "tabIndex", "fetchFuncAsync", "fetchFuncMethod", "fetchFuncMethodParams", "fetchCallback", "onFetch", "onClick", "onChange", "onBlur", "onFocus"];
+        var _excluded = ["wrapperClassName", "disabled", "required", "value", "label", "name", "id", "options", "inline", "style", "tabIndex", "fetchFuncAsync", "fetchFuncMethod", "fetchFuncMethodParams", "fetchCallback", "onFetch", "onLoad", "onClick", "onChange", "onBlur", "onFocus"];
         function _regeneratorRuntime() {
           "use strict";
 
@@ -1040,6 +1040,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
             fetchFuncMethodParams = props.fetchFuncMethodParams,
             fetchCallback = props.fetchCallback,
             onFetch = props.onFetch,
+            onLoad = props.onLoad,
             onClick = props.onClick,
             onChange = props.onChange,
             onBlur = props.onBlur,
@@ -1227,6 +1228,10 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
             //--------------
             var _params = fetchFuncMethodParams || [];
             fetchData(_params.join(','));
+
+            //
+            //--------------
+            onLoad === null || onLoad === void 0 ? void 0 : onLoad(dataInit, value, rootRef.current);
           }, [value, options]);
           return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react__WEBPACK_IMPORTED_MODULE_0___default().Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
             id: "radio__wrapper-".concat(idRes),

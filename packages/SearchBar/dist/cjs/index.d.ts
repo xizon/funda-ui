@@ -24,6 +24,7 @@ declare type SearchBarProps = {
     tabIndex?: number;
     [key: `data-${string}`]: string | undefined;
     onClick?: (e: any) => void;
+    onSubmit?: (e: any) => void;
     onChange?: (e: any, param: any) => void;
     onBlur?: (e: any, param: any) => void;
     onFocus?: (e: any, param: any) => void;

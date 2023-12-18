@@ -21,8 +21,10 @@ import LiveSearch from 'funda-ui/LiveSearch';
 | `maxLength` | number | - | Defines the maximum number of characters |
 | `disabled` | boolean | false | Whether it is disabled |
 | `required` | boolean | false | When present, it specifies that a field must be filled out before submitting the form. |
-| `icon` | ReactNode  | - | Set the icon of search |
+| `hideIcon` | boolean  | false | Force hiding icons (including icon buttons) |
+| `icon` | ReactNode  | - | Set the icon of search. <blockquote>Valid when `fetchTrigger` is true.</blockquote> |
 | `winWidth` | number \| function  | `auto` | Set the container width of options. Such as: `500px` or `() => window.innerWidth/2 + 'px'`  |
+| `fetchAutoShow` | boolean  | false | Force display of the list. <blockquote>Note: When it is **true**, user input matching will be invalid.</blockquote> |
 | `fetchTrigger` | boolean  | false | Use buttons to trigger data queries. |
 | `fetchNoneInfo` | string  | - | The text of the data not fetched. <br />Only takes effect when `fetchTrigger` is *true*. |
 | `fetchUpdate` | boolean  | false | When the property is *true*, every time the input changes or the search button is clicked, a data request will be triggered. |
@@ -179,6 +181,79 @@ export default () => {
             <input
                 type="text"
                 name="app-livesearch-name-v"
+            />
+        </>
+    );
+}
+```
+
+
+
+
+## Create a non-retrieval `<input>` that can be input and selected
+
+Proper use of `hideIcon` and `fetchAutoShow` attributes.
+                
+
+```js
+import React from "react";
+import LiveSearch from 'funda-ui/LiveSearch';
+
+class DataService {
+    
+    // `getList()` must be a Promise Object
+    async getList() {
+
+  
+        return {
+            code: 0,
+            message: 'OK',
+            data: [
+                {item_name: 'foo', item_code: 'bar', kb_code: 'fb,foobar'},
+                {item_name: 'foo2', item_code: 'bar2', kb_code: 'fb2,foobar2'},
+                {item_name: 'foo3', item_code: 'bar3', kb_code: 'fb3,foobar3'}
+            ]
+        };
+    }
+
+}
+
+export default () => {
+
+    return (
+        <>
+            <LiveSearch
+                depth={100}
+                btnId="app-livesearch-btn"
+                name="app-livesearch-name"
+                label="String"
+                hideIcon
+                fetchAutoShow
+                fetchFuncAsync={new DataService}
+                fetchFuncMethod="getList"
+                fetchFuncMethodParams={[]}
+                fetchCallback={(res) => {
+
+                    const formattedData = res.map((item: any) => {
+                        return {
+                            label: item.item_name,
+                            value: item.item_code,
+                            queryString: item.kb_code
+                        }
+                    }); 
+
+                    return formattedData;
+                }}
+                onFetch={(res) => {
+                    console.log('onFetch: ', res);
+                }}
+                onSelect={(input, res) => {
+                    console.log('onSelect: ', res);
+
+                }}
+                onChange={(input, res) => {
+                    console.log('onChange: ',input.value, res);
+                }}
             />
         </>
     );

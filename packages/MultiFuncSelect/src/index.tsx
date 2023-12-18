@@ -190,7 +190,7 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
                 return inputData.filter((item: any) => {
           
                     // Avoid fatal errors causing page crashes
-                    const _queryString = typeof item.queryString !== 'undefined' ? item.queryString : '';
+                    const _queryString = typeof item.queryString !== 'undefined' && item.queryString !== null ? item.queryString : '';
 
                     
                     if (
@@ -1017,7 +1017,7 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
 
             //
             if ( typeof(onChange) === 'function' ) {
- 
+
                 onChange?.(
                     selectInputRef.current, 
                     valueInputRef.current, 
@@ -1379,9 +1379,10 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
 
                         handleSelect(null, currentData, currentControlValueArr, currentControlLabelArr);
 
+
                         //
                         if ( typeof(onChange) === 'function' ) {
-      
+
                             onChange?.(
                                 selectInputRef.current, 
                                 valueInputRef.current, 
