@@ -15,7 +15,7 @@ type TabsProps = {
     animTransitionDuration?: number;
     /** -- */
     style?: React.CSSProperties;
-    onChange?: (nav: any, targetId: any, index: number) => void;
+    onChange?: (nav: any, targetId: any, index: number, persistentIndex: number) => void;
     onLoad?: (func: Function) => void;
 	children: React.ReactNode | React.ReactNode[];
     
@@ -51,7 +51,7 @@ const Tabs = (props: TabsProps) => {
 
         //
         if (typeof (onChange) === 'function') {
-            onChange(el, el.dataset.tab, currentIndex);
+            onChange(el, el.dataset.tab, currentIndex, Number(el.dataset.index));
 
         }
     }

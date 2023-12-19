@@ -186,7 +186,7 @@ var Tabs = function Tabs(props) {
 
     //
     if (typeof onChange === 'function') {
-      onChange(el, el.dataset.tab, currentIndex);
+      onChange(el, el.dataset.tab, currentIndex, Number(el.dataset.index));
     }
   }
   function itemInit(targetEl, itemsInit) {
