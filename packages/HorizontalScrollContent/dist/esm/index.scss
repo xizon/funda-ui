@@ -1,0 +1,87 @@
+/* ======================================================
+    <!-- Horizontal Scroll Content -->
+/* ====================================================== */
+
+.horizontal-scroll-content__wrapper {
+
+    --hs-content-scrollbar-color: rgba(0, 0, 0, 0.2);
+    --hs-content-scrollbar-h: 3px;
+    --hs-content-btn-radius: 50%;
+    --hs-content-btn-size: 20px;
+    --hs-content-btn-bg: rgba(255, 255, 255, 0.4);
+    --hs-content-btn-svg-bg: #333;
+
+
+
+    position: relative;
+    text-align: center;
+    width: auto;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+
+    ul {
+        display: flex;
+        align-items: center;
+        list-style: none;
+        max-width: 100%;
+        overflow-x: scroll;
+        scroll-behavior: smooth;
+        margin: 0;
+        padding: 0;
+
+        &::-webkit-scrollbar {
+            height: var(--hs-content-scrollbar-h);
+        }
+
+        &::-webkit-scrollbar-thumb {
+            background: var(--hs-content-scrollbar-color);
+        }
+
+        >li {
+            margin: 0;
+            padding: 0;
+            white-space: nowrap;
+
+            /* custom style */
+        }
+    }
+
+    .horizontal-scroll-content__btn {
+        width: var(--hs-content-btn-size);
+        height: var(--hs-content-btn-size);
+        position: absolute;
+        border: 0;
+        outline: none;
+        margin: 0;
+        padding: 0;
+        background: none;
+        margin: 0 .25rem;
+        z-index: 1;
+
+        /* custom style */
+        background: var(--hs-content-btn-bg);
+        border-radius: var(--hs-content-btn-radius);
+        backdrop-filter: blur(2px);
+
+        svg {
+            fill: var(--hs-content-btn-svg-bg);
+            margin-top: 5px;
+
+            width: calc(var(--hs-content-btn-size) * 0.75);
+            height: calc(var(--hs-content-btn-size) * 0.75);
+        }
+
+        &.invalid {
+            display: none;
+        }
+
+        &.horizontal-scroll-content__prev {
+            left: 0;
+        }
+
+        &.horizontal-scroll-content__next {
+            right: 0;
+        }
+    }
+}

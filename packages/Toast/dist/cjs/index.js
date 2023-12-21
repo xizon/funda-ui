@@ -206,9 +206,13 @@ var Toast = function Toast(props) {
 
   // progress animation
   var PROGRESS_TRANSITION_TIME = typeof autoCloseTime === 'undefined' || autoCloseTime === false ? DEFAULT_AUTO_CLOSE_TIME : autoCloseTime;
-  var progressPausedRef = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useRef)([]);
+  var progressPausedRef = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useRef)(data.map(function (v) {
+    return false;
+  }));
   var progressObjRef = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useRef)([]);
-  var progressIntervalRef = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useRef)([]);
+  var progressIntervalRef = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useRef)(data.map(function (v) {
+    return null;
+  }));
   var startProgressTimer = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useCallback)(function (el, i) {
     // init progress
     var progressCurrentChunk = 100 / (PROGRESS_TRANSITION_TIME / 100);
@@ -217,20 +221,20 @@ var Toast = function Toast(props) {
 
     // animation
     progressIntervalRef.current[i] = setInterval(function () {
+      // console.log('toast setInterval');
+
       if (!progressPausedRef.current[i]) {
         var progPercent = 100 - progressCurrentChunk;
-
-        // console.log('interval');
-
         el.firstChild.style.width = progPercent + '%';
         el.firstChild.ariaValueNow = progPercent;
         progressCurrentChunk++;
 
         //
-        if (progPercent <= 0) {
+        if (progPercent === 0 || progPercent < 1) {
+          // may be 0.xxx
           el.classList.add('complete');
 
-          //
+          // stop current animation
           stopProgressTimer(i);
 
           // hide toast item
@@ -240,17 +244,25 @@ var Toast = function Toast(props) {
       }
     }, PROGRESS_TRANSITION_TIME / 100);
   }, []);
-  var stopProgressTimer = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useCallback)(function () {
-    var index = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : undefined;
-    if (typeof index === 'undefined') {
+  var clearAllProgressTimer = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useCallback)(function () {
+    var curIndex = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : undefined;
+    if (typeof curIndex === 'undefined') {
       data.forEach(function (item, i) {
         clearInterval(progressIntervalRef.current[i]);
         progressIntervalRef.current[i] = null;
       });
     } else {
-      clearInterval(progressIntervalRef.current[index]);
-      progressIntervalRef.current[index] = null;
+      data.forEach(function (item, i) {
+        if (i === curIndex) {
+          clearInterval(progressIntervalRef.current[i]);
+          progressIntervalRef.current[i] = null;
+        }
+      });
     }
+  }, [data]);
+  var stopProgressTimer = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useCallback)(function (index) {
+    clearInterval(progressIntervalRef.current[index]);
+    progressIntervalRef.current[index] = null;
   }, [data]);
   function progressAnimBegin() {
     data.forEach(function (item, i) {
@@ -320,19 +332,12 @@ var Toast = function Toast(props) {
     // Auto hide
     //--------------
     if (AUTO_CLOSE_TIME !== false) {
-      //
-      progressIntervalRef.current = data.map(function (v) {
-        return null;
-      });
-      progressPausedRef.current = data.map(function (v) {
-        return false;
-      });
-
-      //
+      // start animation
       progressAnimBegin();
     }
   }
   function handleClose(index, currentItem) {
+    var curIndex = Number(index);
     if (rootRef.current === null) return;
     var _list = [].slice.call(rootRef.current.querySelectorAll('.toast-container'));
     currentItem.classList.add('hide-start');
@@ -350,19 +355,23 @@ var Toast = function Toast(props) {
       if (cascadingEnabled) {
         _list.filter(function (node) {
           return !node.classList.contains('hide-end');
-        }).forEach(function (node, index) {
-          node.style.transform = "perspective(100px) translateZ(-".concat(2 * index, "px) translateY(").concat(35 * index, "px)");
+        }).forEach(function (node, k) {
+          node.style.transform = "perspective(100px) translateZ(-".concat(2 * k, "px) translateY(").concat(35 * k, "px)");
         });
       }
 
+      // stop all animations or current animation
+      if (_list.length === 1 || autoHideMultiple) {
+        clearAllProgressTimer();
+      } else {
+        clearAllProgressTimer(curIndex);
+      }
+
       //
-      onClose === null || onClose === void 0 ? void 0 : onClose(rootRef.current, Number(index), _list.filter(function (node) {
+      onClose === null || onClose === void 0 ? void 0 : onClose(rootRef.current, curIndex, _list.filter(function (node) {
         return !node.classList.contains('hide-end');
       }));
     }, 300);
-  }
-  function stopAutoCloseTimer() {
-    clearTimeout(window.setCloseToast);
   }
   (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useEffect)(function () {
     // Initialize Toast Item
@@ -376,11 +385,8 @@ var Toast = function Toast(props) {
     // Remove the global list of events, especially as scroll and interval.
     //--------------
     return function () {
-      // Cancels a timeout previously established by calling setTimeout().
-      stopAutoCloseTimer();
-
-      // Cancels progress animation
-      stopProgressTimer();
+      // Stop all animations
+      clearAllProgressTimer();
 
       // Remove all toasts
       var _el = document.querySelector("#toasts__wrapper-".concat(idRes));

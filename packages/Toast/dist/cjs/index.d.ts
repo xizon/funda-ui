@@ -1,9 +1,4 @@
 /// <reference types="react" />
-declare global {
-    interface Window {
-        setCloseToast?: any;
-    }
-}
 declare type ToastProps = {
     /** Specify data of toasts as a JSON string format. */
     data: any[any];

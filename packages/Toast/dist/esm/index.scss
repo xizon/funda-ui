@@ -91,7 +91,7 @@
         margin-bottom: var(--toasts-container-gap);
         
         &.auto-anim-switch--initfirst {
-            transform: translateY(-20);
+            transform: translateY(-20px);
             opacity: 0;
         }
         &.auto-anim-switch--first {

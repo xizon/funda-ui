@@ -74,7 +74,7 @@
   margin-bottom: var(--toasts-container-gap);
 }
 .toasts__wrapper .toast-container.auto-anim-switch--initfirst {
-  transform: translateY(-20);
+  transform: translateY(-20px);
   opacity: 0;
 }
 .toasts__wrapper .toast-container.auto-anim-switch--first {

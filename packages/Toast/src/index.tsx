@@ -3,12 +3,6 @@ import React, { useId, useEffect, useRef, useCallback } from 'react';
 import Item from './Item';
 
 
-declare global {
-    interface Window {
-        setCloseToast?: any;
-    }
-}
-
 
 type ToastProps = {
     /** Specify data of toasts as a JSON string format. */
@@ -72,9 +66,10 @@ const Toast = (props: ToastProps) => {
     // progress animation
     const PROGRESS_TRANSITION_TIME: any = typeof (autoCloseTime) === 'undefined' || autoCloseTime === false ? DEFAULT_AUTO_CLOSE_TIME : autoCloseTime;
 
-    const progressPausedRef = useRef<any[]>([]);
+
+    const progressPausedRef = useRef<any[]>(data.map((v: any) => false));
     const progressObjRef = useRef<any[]>([]);
-    const progressIntervalRef = useRef<any[]>([]);
+    const progressIntervalRef = useRef<any[]>(data.map((v: any) => null));
     const startProgressTimer = useCallback((el: any, i: number) => {
 
         // init progress
@@ -85,12 +80,12 @@ const Toast = (props: ToastProps) => {
 
         // animation
         progressIntervalRef.current[i] = setInterval(() => {
-
+            // console.log('toast setInterval');
+            
             if (!progressPausedRef.current[i]) {
                 
                 const progPercent = 100 - progressCurrentChunk;
         
-                // console.log('interval');
 
                 el.firstChild.style.width = progPercent + '%';
                 el.firstChild.ariaValueNow = progPercent;
@@ -98,10 +93,10 @@ const Toast = (props: ToastProps) => {
                 
         
                 //
-                if (progPercent <= 0) {
+                if (progPercent === 0 || progPercent < 1) {  // may be 0.xxx
                     el.classList.add('complete');
 
-                    //
+                    // stop current animation
                     stopProgressTimer(i);
 
                     // hide toast item
@@ -116,16 +111,29 @@ const Toast = (props: ToastProps) => {
     }, []);
 
 
-    const stopProgressTimer = useCallback((index: number | undefined = undefined) => {
-        if (typeof index === 'undefined') {
+    
+    const clearAllProgressTimer = useCallback((curIndex: number | undefined = undefined) => {
+        if (typeof curIndex === 'undefined') {
             data.forEach((item: any, i: number) => {
                 clearInterval(progressIntervalRef.current[i]);
                 progressIntervalRef.current[i] = null;
             });
         } else {
-            clearInterval(progressIntervalRef.current[index]);
-            progressIntervalRef.current[index] = null;
+            data.forEach((item: any, i: number) => {
+                if (i === curIndex) {
+                    clearInterval(progressIntervalRef.current[i]);
+                    progressIntervalRef.current[i] = null;
+                }
+            });
         }
+
+    }, [data]);
+    
+
+
+    const stopProgressTimer = useCallback((index: number) => {
+        clearInterval(progressIntervalRef.current[index]);
+        progressIntervalRef.current[index] = null;
 
     }, [data]);
     
@@ -221,19 +229,15 @@ const Toast = (props: ToastProps) => {
         // Auto hide
         //--------------
         if (AUTO_CLOSE_TIME !== false) {
-            
-            //
-            progressIntervalRef.current = data.map((v: any) => null);
-            progressPausedRef.current = data.map((v: any) => false);
 
-            //
+            // start animation
             progressAnimBegin();
         }
 
     }
 
     function handleClose(index: number, currentItem: HTMLDivElement) {
-
+        const curIndex = Number(index);
         if (rootRef.current === null) return;
 
   
@@ -252,24 +256,26 @@ const Toast = (props: ToastProps) => {
 
             // rearrange
             if (cascadingEnabled) {
-                _list.filter((node: any) => !node.classList.contains('hide-end')).forEach((node: any, index: number) => {
-                    node.style.transform = `perspective(100px) translateZ(-${2 * index}px) translateY(${35 * index}px)`;
+                _list.filter((node: any) => !node.classList.contains('hide-end')).forEach((node: any, k: number) => {
+                    node.style.transform = `perspective(100px) translateZ(-${2 * k}px) translateY(${35 * k}px)`;
                 });
             }
 
+            // stop all animations or current animation
+            if (_list.length === 1 || autoHideMultiple) {
+                clearAllProgressTimer();
+            } else {
+                clearAllProgressTimer(curIndex);
+            }
+            
 
             //
-            onClose?.(rootRef.current, Number(index), _list.filter((node: HTMLDivElement) => !node.classList.contains('hide-end') ));          
+            onClose?.(rootRef.current, curIndex, _list.filter((node: HTMLDivElement) => !node.classList.contains('hide-end') ));          
 
         }, 300);
 
         
     }
-
-    function stopAutoCloseTimer() {
-        clearTimeout(window.setCloseToast);
-    }
-    
 
 
     useEffect(() => {
@@ -289,11 +295,9 @@ const Toast = (props: ToastProps) => {
         //--------------
         return () => {
 
-            // Cancels a timeout previously established by calling setTimeout().
-            stopAutoCloseTimer();
 
-            // Cancels progress animation
-            stopProgressTimer();
+            // Stop all animations
+            clearAllProgressTimer();
 
             // Remove all toasts
             const _el = document.querySelector(`#toasts__wrapper-${idRes}`);
