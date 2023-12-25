@@ -34,21 +34,26 @@
     --tooltip-arrow-height: 6px;
     
 
-    position: relative;
+    position: absolute;
+    z-index: 1055;  /* --bs-modal-zindex */
     display: inline-block;
+    pointer-events: none;
+    display: none;
+    margin-top: -.2rem;
 
 
     &::before {
         background-size: 100% auto !important;
         content: "";
+        position: absolute;
     }
 
     &.active {
+        display: block;
 
         &::before,
         > .tooltip__content {
             opacity: 1;
-            pointer-events: auto;
         }
     }
 
@@ -57,7 +62,6 @@
         &::before,
         > .tooltip__content {
             opacity: 1;
-            pointer-events: auto;
         }
     }
 
@@ -67,9 +71,6 @@
         backface-visibility: hidden;
         will-change: transform;
         opacity: 0;
-        pointer-events: none;
-
-        position: absolute;
         box-sizing: border-box;
         z-index: 10;
         transform-origin: top;
@@ -125,8 +126,8 @@
         }
 
         &::before {
-            bottom: calc(100% + var(--tooltip-arrow-height));
-            left: calc(50% - var(--tooltip-arrow-width)/2);
+            top: calc(100% - var(--tooltip-arrow-height));
+            left: calc(var(--tooltip-arrow-width)/2 * -1);
         }
 
         > .tooltip__content {
@@ -189,9 +190,8 @@
         }
 
         &::before {
-            bottom: auto;
-            top: calc(100% + 1px);
-            left: calc(50% - var(--tooltip-arrow-width)/2);
+            bottom: calc(100% - var(--tooltip-arrow-height));
+            left: calc(var(--tooltip-arrow-width)/2 * -1);
         }
 
         > .tooltip__content {
@@ -236,64 +236,6 @@
     }
 
 
-    /*
-    ---------------------------
-    8. Position Modifiers - Left
-    ---------------------------
-    */
-    &[data-microtip-position="left"] {
-
-        &::before,
-        > .tooltip__content {
-            bottom: auto;
-            left: auto;
-            right: 100%;
-            top: 50%;
-            transform: translateY(-50%);
-        }
-
-        &::before {
-            background: var(--tooltip-arrow-bg-left);
-            height: var(--tooltip-arrow-width);
-            width: var(--tooltip-arrow-height);
-            margin-right: 5px;
-            margin-bottom: 0;
-        }
-
-        > .tooltip__content {
-            margin-right: 10px;
-        }
-    }
-
-
-    /*
-        ---------------------------
-        9. Position Modifiers - Right
-        ---------------------------
-        */
-
-    &[data-microtip-position="right"] {
-
-        &::before,
-        > .tooltip__content {
-            bottom: auto;
-            left: 100%;
-            top: 50%;
-            transform: translateY(-50%);
-        }
-
-        &::before {
-            background: var(--tooltip-arrow-bg-right);
-            height: var(--tooltip-arrow-width);
-            width: var(--tooltip-arrow-height);
-            margin-bottom: 0;
-            margin-left: 5px;
-        }
-
-        > .tooltip__content {
-            margin-left: 10px;
-        }
-    }
 
 
     /*
@@ -325,3 +267,4 @@
     }
 
 }
+  

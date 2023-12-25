@@ -1,10 +1,14 @@
 import React, { useId, useState, useRef, useEffect } from 'react';
 
+import { getAbsolutePositionOfStage } from './utils/get-element-property';
+
 
 type TooltipProps = {
     wrapperClassName?: string;
 	/** The direction of the tip. Defaults to `top`. Possible values are: `top`, `top-right`, `top-left`, `bottom`, `bottom-right`, `bottom-left` */
 	direction?: string;
+    /** Position offset */
+    offset?: number;
     /** The size of the content area. Defaults to `auto`. Possible values are: `auto`, `large`, `medium`, `small` */
     size?: string;
     /** The number of milliseconds to determine hover intent, defaults to 200 */
@@ -23,6 +27,7 @@ const Tooltip = (props: TooltipProps) => {
     const {
         wrapperClassName,
         direction,
+        offset,
         size,
         hoverDelay,
         mouseOutDelay,
@@ -32,9 +37,11 @@ const Tooltip = (props: TooltipProps) => {
     } = props;
 
 
-    const uniqueID = useId();
+    const POS_OFFSET = typeof offset === 'undefined' ? 10 : offset;
+    const uniqueID = useId().replace(/\:/g, "-");
     const idRes = id || uniqueID;
     const rootRef = useRef<any>(null);
+    const modalRef = useRef<any>(null);
     const HOVER_DELAY = hoverDelay ? hoverDelay : 200;
     const MOUSE_OUT_DELAY = mouseOutDelay ? mouseOutDelay : HOVER_DELAY;
 
@@ -77,10 +84,73 @@ const Tooltip = (props: TooltipProps) => {
     };
 
 
-    function handleMouseEnter() {
+    function handleMouseEnter(e: any) {
         stopTimerHover();
         stopTimerMouseout();
         startTimerHover();
+
+
+
+        // update modal position
+        const _modalRef: any = document.querySelector(`#tooltip__wrapper-${idRes}`);
+        const _triggerRef: any = document.querySelector(`#tooltip__trigger-${idRes}`);
+
+        // console.log(getAbsolutePositionOfStage(_triggerRef))
+
+        if (_modalRef !== null && _triggerRef !== null) {
+
+            const {x, y, width, height} = getAbsolutePositionOfStage(_triggerRef);
+
+            let pos = _modalRef.dataset.microtipPosition;
+            if (typeof pos === 'undefined') pos = 'top';
+       
+            // TOP
+            //
+            if (pos.indexOf('top') >= 0) {
+                _modalRef.style.left = x + (width/2) + 'px';
+                _modalRef.style.top = y - height - POS_OFFSET + 'px';
+            }
+
+       
+            // BOTTOM
+            //
+            if (pos.indexOf('bottom') >= 0) {
+                _modalRef.style.left = x + (width/2) + 'px';
+                _modalRef.style.top = y + height + POS_OFFSET + 'px';
+            }
+
+
+
+            // Determine whether it exceeds the far right or left side of the screen
+            const _modalContent = _modalRef.querySelector('.tooltip__content');
+            const _modalBox = _modalContent.getBoundingClientRect();
+            if (typeof _modalContent.dataset.offset === 'undefined') {
+
+                if (_modalBox.right > window.innerWidth) {
+                    const _modalOffsetPosition = _modalBox.right - window.innerWidth + POS_OFFSET;
+                    _modalContent.dataset.offset = _modalOffsetPosition;
+                    _modalContent.style.marginLeft = `-${_modalOffsetPosition}px`;
+                    console.log('_modalPosition: ', _modalOffsetPosition)
+                }
+
+
+                if (_modalBox.left < 0) {
+                    const _modalOffsetPosition = Math.abs(_modalBox.left) + POS_OFFSET;
+                    _modalContent.dataset.offset = _modalOffsetPosition;
+                    _modalContent.style.marginLeft = `${_modalOffsetPosition}px`;
+                    console.log('_modalPosition: ', _modalOffsetPosition)
+                }
+
+
+            }
+
+
+
+
+        }
+
+
+
     }
 
     function handleMouseLeave() {
@@ -101,6 +171,16 @@ const Tooltip = (props: TooltipProps) => {
 
     useEffect(() => {
 
+
+        // Move HTML templates to tag end body </body>
+        // render() don't use "Fragment", in order to avoid error "Failed to execute 'insertBefore' on 'Node'"
+        // prevent "transform", "filter", "perspective" attribute destruction fixed viewport orientation
+        //--------------
+        if (document.body !== null) {
+            document.body.appendChild(modalRef.current);
+        }
+
+
         window.removeEventListener('touchstart', handleTouchStart);
 		window.addEventListener( 'touchstart', handleTouchStart);
 
@@ -118,20 +198,25 @@ const Tooltip = (props: TooltipProps) => {
         <>
 
             <div
-                ref={rootRef}
-                id={idRes}
+                ref={modalRef}
+                id={`tooltip__wrapper-${idRes}`}
                 className={`${wrapperClassName || wrapperClassName === '' ? `tooltip__wrapper ${wrapperClassName}` : `tooltip__wrapper d-inline-block`} ${isShow ? 'active' : ''}`}
-                onMouseEnter={handleMouseEnter}
-                onMouseLeave={handleMouseLeave}
                 role="tooltip"
                 data-microtip-position={direction || 'top'} 
                 data-microtip-size={size || 'auto'}
             >
                 <div className="tooltip__content">{content}</div>
-
-                {children}
             </div>
 
+            <div
+                ref={rootRef}
+                id={`tooltip__trigger-${idRes}`}
+                className="tooltip__trigger d-inline-block"
+                onMouseEnter={handleMouseEnter}
+                onMouseLeave={handleMouseLeave}
+            >
+                {children}
+            </div>
 
 
         </>

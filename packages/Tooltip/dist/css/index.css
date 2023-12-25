@@ -27,8 +27,12 @@
   --tooltip-arrow-bg-right: url("data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%2212px%22%20height%3D%2236px%22%3E%3Cpath%20fill%3D%22rgba%2817,%2017,%2017,%200.9%29%22%20transform%3D%22rotate%2890%206%206%29%22%20d%3D%22M2.658,0.000%20C-13.615,0.000%2050.938,0.000%2034.662,0.000%20C28.662,0.000%2023.035,12.002%2018.660,12.002%20C14.285,12.002%208.594,0.000%202.658,0.000%20Z%22/%3E%3C/svg%3E") no-repeat;
   --tooltip-arrow-width: 18px;
   --tooltip-arrow-height: 6px;
-  position: relative;
+  position: absolute;
+  z-index: 1055; /* --bs-modal-zindex */
   display: inline-block;
+  pointer-events: none;
+  display: none;
+  margin-top: -0.2rem;
   /*
   ---------------------------
   1. Base Styles
@@ -65,16 +69,6 @@
   ---------------------------
   */
   /*
-  ---------------------------
-  8. Position Modifiers - Left
-  ---------------------------
-  */
-  /*
-      ---------------------------
-      9. Position Modifiers - Right
-      ---------------------------
-      */
-  /*
       ---------------------------
       10. Size
       ---------------------------
@@ -83,24 +77,24 @@
 .tooltip__wrapper::before {
   background-size: 100% auto !important;
   content: "";
+  position: absolute;
+}
+.tooltip__wrapper.active {
+  display: block;
 }
 .tooltip__wrapper.active::before,
 .tooltip__wrapper.active > .tooltip__content {
   opacity: 1;
-  pointer-events: auto;
 }
 .tooltip__wrapper:focus::before,
 .tooltip__wrapper:focus > .tooltip__content {
   opacity: 1;
-  pointer-events: auto;
 }
 .tooltip__wrapper::before,
 .tooltip__wrapper > .tooltip__content {
   backface-visibility: hidden;
   will-change: transform;
   opacity: 0;
-  pointer-events: none;
-  position: absolute;
   box-sizing: border-box;
   z-index: 10;
   transform-origin: top;
@@ -133,8 +127,8 @@
   margin-bottom: var(--tooltip-arrow-height);
 }
 .tooltip__wrapper[data-microtip-position|=top]::before {
-  bottom: calc(100% + var(--tooltip-arrow-height));
-  left: calc(50% - var(--tooltip-arrow-width) / 2);
+  top: calc(100% - var(--tooltip-arrow-height));
+  left: calc(var(--tooltip-arrow-width) / 2 * -1);
 }
 .tooltip__wrapper[data-microtip-position|=top] > .tooltip__content {
   bottom: calc(100% + var(--tooltip-arrow-height));
@@ -162,9 +156,8 @@
   margin-top: var(--tooltip-arrow-height);
 }
 .tooltip__wrapper[data-microtip-position|=bottom]::before {
-  bottom: auto;
-  top: calc(100% + 1px);
-  left: calc(50% - var(--tooltip-arrow-width) / 2);
+  bottom: calc(100% - var(--tooltip-arrow-height));
+  left: calc(var(--tooltip-arrow-width) / 2 * -1);
 }
 .tooltip__wrapper[data-microtip-position|=bottom] > .tooltip__content {
   bottom: auto;
@@ -183,41 +176,6 @@
   top: calc(100% + var(--tooltip-arrow-height));
   left: 50%;
   transform: translateX(calc(0% - var(--tooltip-arrow-width)));
-}
-.tooltip__wrapper[data-microtip-position=left]::before,
-.tooltip__wrapper[data-microtip-position=left] > .tooltip__content {
-  bottom: auto;
-  left: auto;
-  right: 100%;
-  top: 50%;
-  transform: translateY(-50%);
-}
-.tooltip__wrapper[data-microtip-position=left]::before {
-  background: var(--tooltip-arrow-bg-left);
-  height: var(--tooltip-arrow-width);
-  width: var(--tooltip-arrow-height);
-  margin-right: 5px;
-  margin-bottom: 0;
-}
-.tooltip__wrapper[data-microtip-position=left] > .tooltip__content {
-  margin-right: 10px;
-}
-.tooltip__wrapper[data-microtip-position=right]::before,
-.tooltip__wrapper[data-microtip-position=right] > .tooltip__content {
-  bottom: auto;
-  left: 100%;
-  top: 50%;
-  transform: translateY(-50%);
-}
-.tooltip__wrapper[data-microtip-position=right]::before {
-  background: var(--tooltip-arrow-bg-right);
-  height: var(--tooltip-arrow-width);
-  width: var(--tooltip-arrow-height);
-  margin-bottom: 0;
-  margin-left: 5px;
-}
-.tooltip__wrapper[data-microtip-position=right] > .tooltip__content {
-  margin-left: 10px;
 }
 .tooltip__wrapper[data-microtip-size=auto].tooltip__content {
   white-space: nowrap;
