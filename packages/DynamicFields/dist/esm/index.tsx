@@ -31,13 +31,16 @@ type DynamicFieldsProps = {
     innerAppendHideClassName?: string;
     innerAppendBodyClassName?: string;
     innerAppendHeadData?: React.ReactNode[] | string[];
+    innerAppendHeadRowShowFirst?: boolean;
     innerAppendHeadRowClassName?: string;
-    innerAppendHeadCellClassName?: string;
+    innerAppendHeadCellClassName?: string | string[];
+    innerAppendHeadCellStyles?: React.CSSProperties[];
     innerAppendEmptyContent?: React.ReactNode;
     /** -- */
     id?: string;
     onAdd?: (items: HTMLDivElement[]) => void;
     onRemove?: (items: HTMLDivElement[], key: number | string, index: number | string) => void;
+    onLoad?: (addbtn: any) => void;
 
 };
 
@@ -61,11 +64,14 @@ const DynamicFields = (props: DynamicFieldsProps) => {
         innerAppendHideClassName,
         innerAppendBodyClassName,
         innerAppendHeadData,
+        innerAppendHeadRowShowFirst,
         innerAppendHeadRowClassName,
         innerAppendHeadCellClassName,
+        innerAppendHeadCellStyles,
         innerAppendEmptyContent,
         onAdd,
-        onRemove
+        onRemove,
+        onLoad
     } = props;
 
     const ITEM_LAST_CLASSNAME = innerAppendLastCellClassName || 'last';
@@ -81,6 +87,8 @@ const DynamicFields = (props: DynamicFieldsProps) => {
     const emptyRef = useRef<any>(null);
     const [val, setVal] = useState<React.ReactNode[]>([]);
     const [tmpl, setTmpl] = useState<React.ReactNode>([]);
+    const addBtnIdRef = useRef<string>('');
+    addBtnIdRef.current = `dynamic-fields-add-${idRes}`;
 
     function updateLastItemCls(el: HTMLDivElement, type: string) {
         if (typeof el === 'undefined') return;
@@ -135,7 +143,7 @@ const DynamicFields = (props: DynamicFieldsProps) => {
 
 
     function handleClickAdd(event: any) {
-        event.preventDefault();
+        if (event !== null && typeof event !== 'undefined') event.preventDefault();
 
         //button status
         checkMaxStatus();
@@ -173,7 +181,7 @@ const DynamicFields = (props: DynamicFieldsProps) => {
 
 
     function handleClickRemove(e: React.MouseEvent) {
-        e.preventDefault();
+        if (e !== null && typeof e !== 'undefined')  e.preventDefault();
 
         const curKey = (e.currentTarget.closest('.dynamic-fields__data__wrapper') as HTMLDivElement).dataset.key;
         
@@ -259,7 +267,7 @@ const DynamicFields = (props: DynamicFieldsProps) => {
     function addButton() {
         return <div className="dynamic-fields__btns dynamic-fields__btns--end">
             {iconAddBefore ? iconAddBefore : null}
-            <a ref={addBtnRef} href="#" tabIndex={-1} className="dynamic-fields__addbtn align-middle" onClick={handleClickAdd}>
+            <a ref={addBtnRef} id={addBtnIdRef.current} href="#" tabIndex={-1} className="dynamic-fields__addbtn align-middle" onClick={handleClickAdd}>
                 {iconAdd ? <>{iconAdd}</> : <><svg width="20px" height="20px" viewBox="0 0 24 24" fill="none"><path d="M12 2C6.49 2 2 6.49 2 12C2 17.51 6.49 22 12 22C17.51 22 22 17.51 22 12C22 6.49 17.51 2 12 2ZM16 12.75H12.75V16C12.75 16.41 12.41 16.75 12 16.75C11.59 16.75 11.25 16.41 11.25 16V12.75H8C7.59 12.75 7.25 12.41 7.25 12C7.25 11.59 7.59 11.25 8 11.25H11.25V8C11.25 7.59 11.59 7.25 12 7.25C12.41 7.25 12.75 7.59 12.75 8V11.25H16C16.41 11.25 16.75 11.59 16.75 12C16.75 12.41 16.41 12.75 16 12.75Z" fill="#000" /></svg></>}
             </a>
             {iconAddAfter ? iconAddAfter : null}
@@ -271,6 +279,7 @@ const DynamicFields = (props: DynamicFieldsProps) => {
 
         setVal(data ? data.init : []);
         setTmpl(data ? data.tmpl : null);
+        onLoad?.(addBtnIdRef.current);
 
     }, [data]);
 
@@ -290,16 +299,17 @@ const DynamicFields = (props: DynamicFieldsProps) => {
 
 
                     <div className={`dynamic-fields__append ${innerAppendClassName || ''}`}>
-
+                    
                         {/* //////////// head /////////// */}
-                        {innerAppendHeadData && Array.isArray(innerAppendHeadData) && val.length > 0 ? <>
+                        {innerAppendHeadData && Array.isArray(innerAppendHeadData) && (val.length > 0 || innerAppendHeadRowShowFirst) ? <>
                             <div className={`dynamic-fields__inner__head ${innerAppendHeadRowClassName || ''}`}>
                                 {innerAppendHeadData.map((item: any, i:number) => {
-                                    return <div key={'inner-header-row' + i} className={`${innerAppendHeadCellClassName || ''} ${i === innerAppendHeadData.length-1 ? ITEM_LAST_CLASSNAME : ''}`}>{item}</div>;
+                                    return <div key={'inner-header-row' + i} className={`${innerAppendHeadCellClassName || ''} ${i === innerAppendHeadData.length-1 ? ITEM_LAST_CLASSNAME : ''} ${Array.isArray(innerAppendHeadCellClassName) ? (typeof innerAppendHeadCellClassName[i] !== 'undefined' ? innerAppendHeadCellClassName[i] : '') : ''}`} style={innerAppendHeadCellStyles && typeof innerAppendHeadCellStyles[i] !== 'undefined' ? innerAppendHeadCellStyles[i] : {}}>{item}</div>;
                                 })}
                             </div>
                         </> : null}
                         {/* //////////// /head /////////// */}
+
 
                         {/* //////////// item /////////// */}
                         {generateGroup(val)}
@@ -312,6 +322,13 @@ const DynamicFields = (props: DynamicFieldsProps) => {
                     <div ref={emptyRef} className={`${ITEM_HIDE_CLASSNAME}`}>
                         {innerAppendEmptyContent || null}
                     </div>
+
+                    {innerAppendHeadData && Array.isArray(innerAppendHeadData) && val.length === 0 && innerAppendHeadRowShowFirst ? <>
+                        <div>
+                            {innerAppendEmptyContent || null}
+                        </div>
+                    </> : null}
+
                     {/* //////////// /empty item /////////// */}
 
 

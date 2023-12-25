@@ -25,13 +25,16 @@ import DynamicFields from 'funda-ui/DynamicFields';
 | `innerAppendLastCellClassName` | string | - | Class names of table cell.<blockquote>Customize the class names of the append area, usually used in table styles</blockquote> |
 | `innerAppendHideClassName` | string | - | Specify a hidden class name.<blockquote>Customize the class names of the append area, usually used in table styles</blockquote> |
 | `innerAppendBodyClassName` | string | - | Class names of last table cell.<blockquote>Customize the class names of the append area, usually used in table styles</blockquote> |
-| `innerAppendHeadData` | React.ReactNode[] \| string[] | - | The data of group header content in an HTML table.<blockquote>Customize the class names of the append area, usually used in table styles</blockquote> |
+| `innerAppendHeadData` | React.ReactNode[] \| string[] | - | The data of group header content in an HTML table. such as `[<>User Name</>,<>Role(ID)</>,<>&nbsp;</>]` <blockquote>Customize the class names of the append area, usually used in table styles</blockquote> |
+| `innerAppendHeadRowShowFirst` | boolean | false | The first row of the table head is displayed by default. |
 | `innerAppendHeadRowClassName` | string | - | Class names of group header in an HTML table. <blockquote>Customize the class names of the append area, usually used in table styles</blockquote>|
-| `innerAppendHeadCellClassName` | string | - | Class names of a cell as the header of a group of table cells. <blockquote>Customize the class names of the append area, usually used in table styles</blockquote>|
+| `innerAppendHeadCellClassName` | string \| string[] | - | Class names of a cell as the header of a group of table cells. If Array it should be equal to the number of `innerAppendHeadData`. <blockquote>Customize the class names of the append area, usually used in table styles</blockquote>|
+| `innerAppendHeadCellStyles` | React.CSSProperties[] | false | Use inline styles per cell of table head. It should be equal to the number of `innerAppendHeadData`. such as `[{ background: "#f60" },{ background: "#f60" },{ width: "40px" }]` |
 | `innerAppendEmptyContent` | React.ReactNode | - | Content displayed when there are no content. If this property is not set, all content will be automatically hidden. <blockquote>Customize the class names of the append area, usually used in table styles</blockquote>|
 | `maxFields` | number | 10 | Maximum number of control group allowed to be added |
 | `onAdd` | function  | - | Call a function when add a control. It returns one callback value which is each group of fields (**HTMLDivElement[]**) |
 | `onRemove` | function  | - | Call a function when remove a control. It returns three callback values. <br /> <ol><li>The first is each group of fields (**HTMLDivElement[]**)</li><li>The second is the current key of removed item (**number** \| **string**)</li><li> The third is the current index of removed item ((**number** \| **string**)</li></ol> |
+| `onLoad` | function  | - | Call a function when the component has been rendered completely. It returns one callback value which is the button ID of add (**String**). |
 
 
 
@@ -919,9 +922,10 @@ export default () => {
 
         return <React.Fragment key={'tmpl-' + data.index}>
                 {/* ///////////// */}
-                <div className="d-table-cell border py-2 px-2" style={{width: '150px'}}>
+                <div className="d-table-cell border py-2 px-2">
                     {/* CONTROL */}
                     <Input
+                        wrapperClassName="position-relative"
                         value={data.user_name}
                         tabIndex={-1}
                         name="user_name[]"
@@ -929,9 +933,10 @@ export default () => {
                     {/* /CONTROL */}
                 </div>
             
-                <div className="d-table-cell border py-2 px-2">
+                <div className="d-table-cell border py-2 px-2"  style={{width: '150px'}}>
                     {/* CONTROL */}
                     <MultiFuncSelect
+                        wrapperClassName="position-relative"
                         value={data.role_id}
                         name="role_id[]"
                         placeholder="Select"
@@ -993,6 +998,184 @@ export default () => {
                 innerAppendHeadRowClassName="d-table-row fw-bold bg-body-tertiary"
                 innerAppendHeadCellClassName="d-table-cell border py-2 px-2"  
                 innerAppendEmptyContent={<><div className={`app-div-table__body--empty px-2 py-2 border`}>No data.</div></>}
+            />
+
+
+        </>
+    );
+}
+```
+
+
+
+
+## Use custom ADD behavior
+
+Use the `onLoad()` method to get the ID of the add button and then trigger it. 
+
+The current example achieves the following goals:
+
+  - Place the add button in the first row of the table
+  - The head of the table is displayed by default
+  - Set the style of each column of the table head.
+
+
+`styles.scss`:
+```scss
+/* ---------- Table Div  ----------- */
+.app-div-table {
+    .app-div-table__body {
+        display: table-row-group;
+
+        &.last .border {
+            border-bottom-width: 1px !important;
+        }
+    }
+
+    .border {
+        border-bottom-width: 0 !important;
+        border-right-width: 0 !important;
+    
+        &.last {
+            border-right-width: 1px !important;
+        }
+    }
+
+}
+```
+
+`index.tsx`:
+```js
+import React from "react";
+import DynamicFields from 'funda-ui/DynamicFields';
+import Input from 'funda-ui/Input';
+
+// component styles
+import 'funda-ui/MultiFuncSelect/index.css';
+
+
+type DynamicFieldsValueProps = {
+    init: React.ReactNode[];
+    tmpl: React.ReactNode;
+};
+
+
+export default () => {
+
+
+    const [dynamicFieldsInnerAppendHeadInit, setDynamicFieldsInnerAppendHeadInit] = useState<boolean>(false);
+    const [dynamicFieldsInnerAppendHeadData, setDynamicFieldsInnerAppendHeadData] = useState<any[]>([]);
+
+    const initInnerAppendHeadData = (addBtnId: string) => {
+        if (dynamicFieldsInnerAppendHeadInit) return;
+
+        setDynamicFieldsInnerAppendHeadData([
+            <>User Name</>,
+            <>User Pass</>,
+            <>
+                <span className="d-inline-block text-success btn-sm" style={{ transform: 'translateX(4px)', cursor: 'pointer' }} onClick={(e: React.MouseEvent) => {
+                    e.preventDefault();
+                    document.getElementById(addBtnId)?.click();
+                }}><svg width="25px" height="25px" viewBox="0 0 24 28" fill="none"><path d="M12 2C6.49 2 2 6.49 2 12C2 17.51 6.49 22 12 22C17.51 22 22 17.51 22 12C22 6.49 17.51 2 12 2ZM16 12.75H12.75V16C12.75 16.41 12.41 16.75 12 16.75C11.59 16.75 11.25 16.41 11.25 16V12.75H8C7.59 12.75 7.25 12.41 7.25 12C7.25 11.59 7.59 11.25 8 11.25H11.25V8C11.25 7.59 11.59 7.25 12 7.25C12.41 7.25 12.75 7.59 12.75 8V11.25H16C16.41 11.25 16.75 11.59 16.75 12C16.75 12.41 16.41 12.75 16 12.75Z" fill="#146c43" /></svg></span>
+            </>
+        ]);
+    };
+
+
+    //initialize default value
+    const tmpl = (val: any, init: boolean = true) => {
+        let data: any = null;
+        if (init) {
+            const {...rest} = val;
+            data = rest;
+        } else {
+            data = {index: Math.random()};
+        }
+        
+        const currentRowNum = val !== null ? val.index : undefined;
+
+        return <React.Fragment key={'tmpl-' + data.index}>
+                {/* ///////////// */}
+                <div className="d-table-cell border py-2 px-2">
+                    {/* CONTROL */}
+                    <Input
+                        wrapperClassName="position-relative"
+                        value={data.user_name}
+                        tabIndex={-1}
+                        name="user_name[]"
+                    />
+                    {/* /CONTROL */}
+                </div>
+
+                {/* ///////////// */}
+                <div className="d-table-cell border py-2 px-2">
+                    {/* CONTROL */}
+                    <Input
+                        wrapperClassName="position-relative"
+                        value={data.user_pass}
+                        tabIndex={-1}
+                        name="user_pass[]"
+                    />
+                    {/* /CONTROL */}
+                </div>
+
+
+                <div className="d-table-cell border py-2 px-2 last" style={{ width: '40px' }}></div>
+            {/* ///////////// */}
+
+        </React.Fragment>
+    };
+
+
+    console.log(11);
+
+
+    return (
+        <>
+            <DynamicFields
+                data={{
+                    init: [],
+                    tmpl: tmpl(null, false)
+                } as DynamicFieldsValueProps}
+                maxFields="10"
+                confirmText="Are you sure?"
+                iconAdd={<><div className="d-none"><svg width="20px" height="20px" viewBox="0 0 24 24" fill="none"><path d="M12 2C6.49 2 2 6.49 2 12C2 17.51 6.49 22 12 22C17.51 22 22 17.51 22 12C22 6.49 17.51 2 12 2ZM16 12.75H12.75V16C12.75 16.41 12.41 16.75 12 16.75C11.59 16.75 11.25 16.41 11.25 16V12.75H8C7.59 12.75 7.25 12.41 7.25 12C7.25 11.59 7.59 11.25 8 11.25H11.25V8C11.25 7.59 11.59 7.25 12 7.25C12.41 7.25 12.75 7.59 12.75 8V11.25H16C16.41 11.25 16.75 11.59 16.75 12C16.75 12.41 16.41 12.75 16 12.75Z" fill="#000" /></svg></div></>}
+                iconRemove={<><div className="position-absolute top-0 end-0 mt-2 mx-2"><svg width="20px" height="20px" viewBox="0 0 24 24" fill="none"><path fillRule="evenodd" clipRule="evenodd" d="M22 12c0 5.523-4.477 10-10 10S2 17.523 2 12 6.477 2 12 2s10 4.477 10 10ZM8 11a1 1 0 1 0 0 2h8a1 1 0 1 0 0-2H8Z" fill="#f00" /></svg></div></>}
+                onAdd={(items: HTMLDivElement[]) => {
+                    console.log('add', items);
+                    // do something
+
+                }}
+                onRemove={(items: HTMLDivElement[], key: number | string, index: number | string) => {
+                    console.log('remove', items, key, index);
+                }}
+                onLoad={(addBtn: string) => {
+             
+                    // initialize list head
+                    initInnerAppendHeadData(addBtn);
+                    setDynamicFieldsInnerAppendHeadInit(true);
+
+                
+                }}
+
+
+                innerAppendClassName="app-div-table d-table w-100"
+                innerAppendCellClassName="d-table-row"
+                innerAppendLastCellClassName="last"
+                innerAppendHideClassName="d-none"
+                innerAppendBodyClassName="app-div-table__body"
+                innerAppendHeadData={dynamicFieldsInnerAppendHeadData}
+                innerAppendHeadRowClassName="d-table-row fw-bold bg-body-tertiary"
+                innerAppendHeadCellClassName="d-table-cell border py-2 px-2"  
+                innerAppendHeadCellStyles={dynamicFieldsInnerAppendHeadData.map((v: any, i: number) => {
+                    if (i === dynamicFieldsInnerAppendHeadData.length - 1) {
+                        return { width: "40px" };
+                    } else {
+                        return { background: "#f60" };
+                    }
+                })}
+                innerAppendEmptyContent={<><div className={`app-div-table__body--empty px-2 py-2 border`}>No data.</div></>}
+                innerAppendHeadRowShowFirst
             />
 
 

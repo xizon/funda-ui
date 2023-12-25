@@ -27,13 +27,16 @@ declare type DynamicFieldsProps = {
     innerAppendHideClassName?: string;
     innerAppendBodyClassName?: string;
     innerAppendHeadData?: React.ReactNode[] | string[];
+    innerAppendHeadRowShowFirst?: boolean;
     innerAppendHeadRowClassName?: string;
-    innerAppendHeadCellClassName?: string;
+    innerAppendHeadCellClassName?: string | string[];
+    innerAppendHeadCellStyles?: React.CSSProperties[];
     innerAppendEmptyContent?: React.ReactNode;
     /** -- */
     id?: string;
     onAdd?: (items: HTMLDivElement[]) => void;
     onRemove?: (items: HTMLDivElement[], key: number | string, index: number | string) => void;
+    onLoad?: (addbtn: any) => void;
 };
 declare const DynamicFields: (props: DynamicFieldsProps) => JSX.Element;
 export default DynamicFields;

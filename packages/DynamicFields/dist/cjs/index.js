@@ -126,11 +126,14 @@ var DynamicFields = function DynamicFields(props) {
     innerAppendHideClassName = props.innerAppendHideClassName,
     innerAppendBodyClassName = props.innerAppendBodyClassName,
     innerAppendHeadData = props.innerAppendHeadData,
+    innerAppendHeadRowShowFirst = props.innerAppendHeadRowShowFirst,
     innerAppendHeadRowClassName = props.innerAppendHeadRowClassName,
     innerAppendHeadCellClassName = props.innerAppendHeadCellClassName,
+    innerAppendHeadCellStyles = props.innerAppendHeadCellStyles,
     innerAppendEmptyContent = props.innerAppendEmptyContent,
     onAdd = props.onAdd,
-    onRemove = props.onRemove;
+    onRemove = props.onRemove,
+    onLoad = props.onLoad;
   var ITEM_LAST_CLASSNAME = innerAppendLastCellClassName || 'last';
   var ITEM_HIDE_CLASSNAME = innerAppendHideClassName || 'd-none';
   var PER_ROW_DOM_STRING = '.dynamic-fields__append .dynamic-fields__data__wrapper';
@@ -150,6 +153,8 @@ var DynamicFields = function DynamicFields(props) {
     _useState4 = _slicedToArray(_useState3, 2),
     tmpl = _useState4[0],
     setTmpl = _useState4[1];
+  var addBtnIdRef = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)('');
+  addBtnIdRef.current = "dynamic-fields-add-".concat(idRes);
   function updateLastItemCls(el, type) {
     if (typeof el === 'undefined') return;
     if (type === 'add') {
@@ -193,7 +198,7 @@ var DynamicFields = function DynamicFields(props) {
     }
   }
   function handleClickAdd(event) {
-    event.preventDefault();
+    if (event !== null && typeof event !== 'undefined') event.preventDefault();
 
     //button status
     checkMaxStatus();
@@ -228,7 +233,7 @@ var DynamicFields = function DynamicFields(props) {
     }, 0);
   }
   function handleClickRemove(e) {
-    e.preventDefault();
+    if (e !== null && typeof e !== 'undefined') e.preventDefault();
     var curKey = e.currentTarget.closest('.dynamic-fields__data__wrapper').dataset.key;
     if (window.confirm(confirmText || '')) {
       //button status
@@ -308,6 +313,7 @@ var DynamicFields = function DynamicFields(props) {
       className: "dynamic-fields__btns dynamic-fields__btns--end"
     }, iconAddBefore ? iconAddBefore : null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
       ref: addBtnRef,
+      id: addBtnIdRef.current,
       href: "#",
       tabIndex: -1,
       className: "dynamic-fields__addbtn align-middle",
@@ -325,6 +331,7 @@ var DynamicFields = function DynamicFields(props) {
   (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(function () {
     setVal(data ? data.init : []);
     setTmpl(data ? data.tmpl : null);
+    onLoad === null || onLoad === void 0 ? void 0 : onLoad(addBtnIdRef.current);
   }, [data]);
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
     className: wrapperClassName || wrapperClassName === '' ? wrapperClassName : "mb-3 position-relative",
@@ -341,17 +348,18 @@ var DynamicFields = function DynamicFields(props) {
     id: idRes
   }, iconAddPosition === 'start' ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, addButton()) : null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
     className: "dynamic-fields__append ".concat(innerAppendClassName || '')
-  }, innerAppendHeadData && Array.isArray(innerAppendHeadData) && val.length > 0 ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+  }, innerAppendHeadData && Array.isArray(innerAppendHeadData) && (val.length > 0 || innerAppendHeadRowShowFirst) ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
     className: "dynamic-fields__inner__head ".concat(innerAppendHeadRowClassName || '')
   }, innerAppendHeadData.map(function (item, i) {
     return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       key: 'inner-header-row' + i,
-      className: "".concat(innerAppendHeadCellClassName || '', " ").concat(i === innerAppendHeadData.length - 1 ? ITEM_LAST_CLASSNAME : '')
+      className: "".concat(innerAppendHeadCellClassName || '', " ").concat(i === innerAppendHeadData.length - 1 ? ITEM_LAST_CLASSNAME : '', " ").concat(Array.isArray(innerAppendHeadCellClassName) ? typeof innerAppendHeadCellClassName[i] !== 'undefined' ? innerAppendHeadCellClassName[i] : '' : ''),
+      style: innerAppendHeadCellStyles && typeof innerAppendHeadCellStyles[i] !== 'undefined' ? innerAppendHeadCellStyles[i] : {}
     }, item);
   }))) : null, generateGroup(val)), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
     ref: emptyRef,
     className: "".concat(ITEM_HIDE_CLASSNAME)
-  }, innerAppendEmptyContent || null), typeof iconAddPosition === 'undefined' || iconAddPosition === 'end' ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, addButton()) : null)));
+  }, innerAppendEmptyContent || null), innerAppendHeadData && Array.isArray(innerAppendHeadData) && val.length === 0 && innerAppendHeadRowShowFirst ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, innerAppendEmptyContent || null)) : null, typeof iconAddPosition === 'undefined' || iconAddPosition === 'end' ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, addButton()) : null)));
 };
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (DynamicFields);
 })();
