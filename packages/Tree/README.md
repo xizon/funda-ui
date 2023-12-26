@@ -776,6 +776,32 @@ export default () => {
 Use those attributes of `customContentToHyperlink`, `customContentToLiTag`, `itemLinkMouseEnterCallback`, `itemLinkMouseLeaveCallback`, `itemMouseEnterCallback`, `itemMouseLeaveCallback` in the data item to create interactions and UI.
 
 
+
+`styles.scss`:
+```scss
+/* ---------- Tree Control  ----------- */
+.app-tree-item-control {
+    position: absolute;
+    top: .45rem;
+    right: 0;
+    z-index: 1;
+    background: #fff;
+    border-radius: 4px;
+    padding: 0 .2rem;
+    transform: scale(0);
+    transition: .1s ease-in-out;
+    transition-delay: 0.25s;
+
+
+    &.active {
+        transform: scale(1);
+    }
+
+}
+```
+
+
+`index.tsx`:
 ```js
 import React, { useEffect, useState, useRef } from "react";
 import Tree from 'funda-ui/Tree';
