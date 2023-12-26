@@ -1020,7 +1020,8 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
     var PLACEMENT_BOTTOMEND = 'bottom-0';
     var PLACEMENT_RIGHT = 'end-0';
     var PLACEMENT_LEFT = 'start-0';
-    var elTop = selectInputRef.current.getBoundingClientRect().top;
+    var inputBox = selectInputRef.current.getBoundingClientRect();
+    var elTop = inputBox.top;
     var elSpacing = 50 + selectInputRef.current.clientHeight * 3;
     var elMinWindowSpacing = selectInputRef.current.clientHeight * 2;
 
@@ -1089,6 +1090,14 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
         listContentRef.current.style.height = _contentHeight + el.getBoundingClientRect().top - elMinWindowSpacing + 'px';
         listContentRef.current.style.overflowY = 'auto';
       }
+    }
+
+    // STEP 4:
+    // Detect content height
+    var heightOffset = 80;
+    var contentBox = listContentRef.current.getBoundingClientRect();
+    if (contentBox.height - heightOffset > window.innerHeight / 2) {
+      listContentRef.current.style.height = window.innerHeight - inputBox.height - inputBox.top - heightOffset + 'px';
     }
   }
 

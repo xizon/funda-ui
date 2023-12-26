@@ -711,7 +711,8 @@ var LiveSearch = function LiveSearch(props) {
     var PLACEMENT_BOTTOMEND = 'bottom-0';
     var PLACEMENT_RIGHT = 'end-0';
     var PLACEMENT_LEFT = 'start-0';
-    var elTop = inputRef.current.getBoundingClientRect().top;
+    var inputBox = inputRef.current.getBoundingClientRect();
+    var elTop = inputBox.top;
     var elSpacing = 50 + inputRef.current.clientHeight * 3;
     var elMinWindowSpacing = inputRef.current.clientHeight * 2;
 
@@ -764,6 +765,14 @@ var LiveSearch = function LiveSearch(props) {
         listContentRef.current.style.height = el.offsetHeight + el.getBoundingClientRect().top - elMinWindowSpacing + 'px';
         listContentRef.current.style.overflowY = 'auto';
       }
+    }
+
+    // STEP 4:
+    // Detect content height
+    var heightOffset = 80;
+    var contentBox = listContentRef.current.getBoundingClientRect();
+    if (contentBox.height - heightOffset > window.innerHeight / 2) {
+      listContentRef.current.style.height = window.innerHeight - inputBox.height - inputBox.top - heightOffset + 'px';
     }
   }
 

@@ -140,7 +140,9 @@ const LiveSearch = (props: LiveSearchProps) => {
         const PLACEMENT_RIGHT = 'end-0';
         const PLACEMENT_LEFT = 'start-0';
 
-        const elTop = inputRef.current.getBoundingClientRect().top;
+
+        const inputBox = inputRef.current.getBoundingClientRect();
+        const elTop = inputBox.top;
         const elSpacing = 50 + inputRef.current.clientHeight*3;
         const elMinWindowSpacing = inputRef.current.clientHeight*2;
 
@@ -204,6 +206,15 @@ const LiveSearch = (props: LiveSearchProps) => {
             }
         }
   
+
+        // STEP 4:
+        // Detect content height
+        const heightOffset = 80;
+        const contentBox = listContentRef.current.getBoundingClientRect();
+        if (contentBox.height - heightOffset > window.innerHeight/2) {
+            listContentRef.current.style.height = (window.innerHeight - inputBox.height - inputBox.top - heightOffset) + 'px';
+        }
+
         
     }
 

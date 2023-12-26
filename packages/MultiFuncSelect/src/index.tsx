@@ -354,7 +354,8 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
         const PLACEMENT_RIGHT = 'end-0';
         const PLACEMENT_LEFT = 'start-0';
 
-        const elTop = selectInputRef.current.getBoundingClientRect().top;
+        const inputBox = selectInputRef.current.getBoundingClientRect();
+        const elTop = inputBox.top;
         const elSpacing = 50 + selectInputRef.current.clientHeight*3;
         const elMinWindowSpacing = selectInputRef.current.clientHeight*2;
 
@@ -439,6 +440,17 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
             }
         }
   
+
+
+        // STEP 4:
+        // Detect content height
+        const heightOffset = 80;
+        const contentBox = listContentRef.current.getBoundingClientRect();
+        if (contentBox.height - heightOffset > window.innerHeight/2) {
+            listContentRef.current.style.height = (window.innerHeight - inputBox.height - inputBox.top - heightOffset) + 'px';
+        }
+
+
     }
 
 
@@ -798,6 +810,7 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
 
         // update temporary value
         setControlTempValue(null);
+
 
         // Unlocks the page
         if (LOCK_BODY_SCROLL) enableBodyScroll(document.querySelector('body'));
