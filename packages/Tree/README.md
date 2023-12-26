@@ -701,18 +701,18 @@ export default () => {
      * @param  {?String} keyParentId         - Key value of parent id.
      * @returns Array
      */
-    function convertTree(arr, parentId = '', keyId = 'id', keyParentId = 'parent_id') {
+    function convertTree(arr: any[], parentId: string = '', keyId: string = 'id', keyParentId: string = 'parent_id') {
         
         if( !parentId ) {
             
             // If there is no parent id (when recursing for the first time), all parents will be queried
-            return arr.filter(item => !item[keyParentId]).map(item => {
+            return arr.filter((item: any) => !item[keyParentId]).map((item: any) => {
                 // Query all child nodes by parent node ID
                 item.children = convertTree(arr, item[keyId], keyId, keyParentId);
                 return item;
             })
         } else {
-            return arr.filter(item => item[keyParentId] === parentId).map(item => {
+            return arr.filter((item: any) => item[keyParentId] === parentId).map((item: any) => {
                 // Query all child nodes by parent node ID
                 item.children = convertTree(arr, item[keyId], keyId, keyParentId);
                 return item;
@@ -760,6 +760,204 @@ export default () => {
                 }}  
             />
 
+
+
+        </>
+    )
+}
+```
+
+
+
+
+
+## Push some expansion buttons to each item of the tree
+
+Use those attributes of `customContentToHyperlink`, `customContentToLiTag`, `itemLinkMouseEnterCallback`, `itemLinkMouseLeaveCallback`, `itemMouseEnterCallback`, `itemMouseLeaveCallback` in the data item to create interactions and UI.
+
+
+```js
+import React, { useEffect, useState, useRef } from "react";
+import Tree from 'funda-ui/Tree';
+
+// component styles
+import 'funda-ui/Tree/index.css';
+
+class DataService {
+
+    // `getList()` must be a Promise Object
+    async getList(searchStr: string = '', limit: number = 0, otherParam: string = '') {
+
+        const demoData = [
+            // level 1
+            {
+                "parent_id": 0,
+                "id": 1,
+                "item_name": "Title 1",
+                "item_type": "web"
+            },
+            {
+                "parent_id": 0,
+                "id": 2,
+                "item_name": "Title 2",
+                "item_type": "dev"
+            },
+            // level 2
+            {
+                "parent_id": 1,
+                "id": 3,
+                "item_name": "Title 3",
+                "item_type": "web/ui"
+            },
+            {
+                "parent_id": 1,
+                "id": 4,
+                "item_name": "Title 4",
+                "item_type": "web/ui"
+            },
+            {
+                "parent_id": 2,
+                "id": 5,
+                "item_name": "Title 5",
+                "item_type": "dev"
+            },
+            // level 3
+            {
+                "parent_id": 4,
+                "id": 6,
+                "item_name": "Title 6",
+                "item_type": "web/ui/photoshop"
+            },  
+        ];   
+
+        return {
+            code: 0,
+            message: 'OK',
+            data: demoData
+        };
+    }
+
+}
+
+
+export default () => {
+
+    const listRef = useRef<HTMLDivElement>(null);
+    const [data, setData] = useState<any[]>([]);
+
+    /**
+     * Convert Tree
+     * @param {Array} arr                    - Input array to convert
+     * @param  {?String | ?Number} parentId  - Parent id
+     * @param  {?String} keyId               - Key value of id.
+     * @param  {?String} keyParentId         - Key value of parent id.
+     * @returns Array
+     */
+    function convertTree(arr: any[], parentId: string = '', keyId: string = 'id', keyParentId: string = 'parent_id') {
+        
+        if( !parentId ) {
+            
+            // If there is no parent id (when recursing for the first time), all parents will be queried
+            return arr.filter((item: any) => !item[keyParentId]).map((item: any) => {
+                // Query all child nodes by parent node ID
+                item.children = convertTree(arr, item[keyId], keyId, keyParentId);
+                return item;
+            })
+        } else {
+            return arr.filter((item: any) => item[keyParentId] === parentId).map((item: any) => {
+                // Query all child nodes by parent node ID
+                item.children = convertTree(arr, item[keyId], keyId, keyParentId);
+                return item;
+            })
+        }
+    }
+
+
+    function handleTreeItemLinkEnter(e: any) {
+        e.preventDefault();
+        if (listRef.current === null) return;
+
+        //
+        const slug = e.currentTarget.dataset.slug;
+        const controlArea = listRef.current.querySelector(`[data-control-slug="${slug}"]`);
+        if (controlArea !== null) {
+            controlArea.classList.add('active');
+        }
+        // root area
+        const controlRootArea = listRef.current.querySelector(`[data-control-slug="0"]`);
+        if (controlRootArea !== null) {
+            controlRootArea.classList.add('active');
+        }
+
+    }
+
+    function handleTreeItemLinkLeave(e: any) {
+        if (listRef.current === null) return;
+
+        const slug = e.currentTarget.dataset.slug;
+        const controlArea = listRef.current.querySelector(`[data-control-slug="${slug}"]`);
+        if (controlArea !== null) {
+            controlArea.classList.remove('active');
+        }
+
+    }
+
+    useEffect(() => {
+        new DataService().getList('', 0, '').then((response: any) => {
+      
+            const _data: any[] = response.data.map((item: any, i: number) => {
+                return {
+                    id: item.id,
+                    parent_id: item.parent_id,
+                    active: false,
+                    title: `${item.item_name}`,
+                    link: "#",
+                    slug: item.id,
+                    itemLinkMouseEnterCallback: handleTreeItemLinkEnter,
+                    itemLinkMouseLeaveCallback: handleTreeItemLinkLeave,
+                    customContentToHyperlink: <>
+                        <div className="app-tree-item-control" data-control-slug={item.id}>
+                            <a
+                                tabIndex={-1}
+                                href="#"
+                                onClick={(e: React.MouseEvent) => {
+                                    e.preventDefault();
+                                    console.log('item.id: ', item.id);
+                                }}
+                                className="btn btn-info btn-sm text-light ms-2"
+                            >
+                                Button
+                            </a>
+    
+                        </div>
+                    </>,
+                }
+            });
+         
+
+            const treeData = convertTree(_data);
+            setData(treeData);
+            
+            // do something, such as update `<Scrollbar />`
+            // ...
+
+        });
+    }, []);
+
+
+    return (
+        <>
+
+            <div ref={listRef}>
+
+                <Tree
+                    data={data}
+                    showLine={true}
+                    onSelect={(e, val) => {
+                        console.log(val);
+                    }}
+                />
+            </div>
 
 
         </>
