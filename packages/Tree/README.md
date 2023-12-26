@@ -946,9 +946,10 @@ export default () => {
                             <a
                                 tabIndex={-1}
                                 href="#"
+                                data-control-slug={item.id}
                                 onClick={(e: React.MouseEvent) => {
                                     e.preventDefault();
-                                    console.log('item.id: ', item.id);
+                                    console.log('item.id: ', (e.currentTarget as any).dataset.controlSlug);
                                 }}
                                 className="btn btn-info btn-sm text-light ms-2"
                             >
