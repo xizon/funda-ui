@@ -283,7 +283,7 @@ var Tooltip = function Tooltip(props) {
         // this will render once, then fire componentDidUpdate, which will show the tip
         setHasBeenShown(true);
       }
-      if (!isShow) setIsShow(true);
+      setIsShow(true);
     }, HOVER_DELAY);
   };
   var stopTimerHover = function stopTimerHover() {
@@ -309,9 +309,9 @@ var Tooltip = function Tooltip(props) {
 
     // update modal position
     var _modalRef = document.querySelector("#tooltip__wrapper-".concat(idRes));
-    var _triggerRef = document.querySelector("#tooltip__trigger-".concat(idRes));
+    var _triggerRef = e.target;
 
-    // console.log(getAbsolutePositionOfStage(_triggerRef))
+    // console.log(getAbsolutePositionOfStage(_triggerRef));
 
     if (_modalRef !== null && _triggerRef !== null) {
       var _getAbsolutePositionO = (0,_utils_get_element_property__WEBPACK_IMPORTED_MODULE_1__.getAbsolutePositionOfStage)(_triggerRef),
@@ -344,24 +344,26 @@ var Tooltip = function Tooltip(props) {
           var _modalOffsetPosition = _modalBox.right - window.innerWidth + POS_OFFSET;
           _modalContent.dataset.offset = _modalOffsetPosition;
           _modalContent.style.marginLeft = "-".concat(_modalOffsetPosition, "px");
-          console.log('_modalPosition: ', _modalOffsetPosition);
+          // console.log('_modalPosition: ', _modalOffsetPosition)
         }
+
         if (_modalBox.left < 0) {
           var _modalOffsetPosition2 = Math.abs(_modalBox.left) + POS_OFFSET;
           _modalContent.dataset.offset = _modalOffsetPosition2;
           _modalContent.style.marginLeft = "".concat(_modalOffsetPosition2, "px");
-          console.log('_modalPosition: ', _modalOffsetPosition2);
+          // console.log('_modalPosition: ', _modalOffsetPosition)
         }
       }
     }
   }
+
   function handleMouseLeave() {
     stopTimerHover();
     stopTimerMouseout();
     startTimerMouseout();
   }
   function hideTip() {
-    if (isShow) setIsShow(false);
+    setIsShow(false);
   }
   function handleTouchStart(e) {
     hideTip();
@@ -377,12 +379,14 @@ var Tooltip = function Tooltip(props) {
     window.removeEventListener('touchstart', handleTouchStart);
     window.addEventListener('touchstart', handleTouchStart);
     return function () {
+      var _document$querySelect;
       stopTimerHover();
       stopTimerMouseout();
       window.removeEventListener('touchstart', handleTouchStart);
+      (_document$querySelect = document.querySelector("#tooltip__wrapper-".concat(idRes))) === null || _document$querySelect === void 0 ? void 0 : _document$querySelect.remove();
     };
   }, []);
-  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
     ref: modalRef,
     id: "tooltip__wrapper-".concat(idRes),
     className: "".concat(wrapperClassName || wrapperClassName === '' ? "tooltip__wrapper ".concat(wrapperClassName) : "tooltip__wrapper d-inline-block", " ").concat(isShow ? 'active' : ''),
@@ -391,9 +395,8 @@ var Tooltip = function Tooltip(props) {
     "data-microtip-size": size || 'auto'
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
     className: "tooltip__content"
-  }, content)), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+  }, content))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
     ref: rootRef,
-    id: "tooltip__trigger-".concat(idRes),
     className: "tooltip__trigger d-inline-block",
     onMouseEnter: handleMouseEnter,
     onMouseLeave: handleMouseLeave

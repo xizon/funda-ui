@@ -52,7 +52,7 @@ Here is a table of the components and their status.
 | [Digital Clock ✅](packages/DigitalClock/README.md) |  |  |  |
 | [Tree ✅🔥](packages/Tree/README.md) |  |  |  |
 | [EventCalendar ✅🔥](packages/EventCalendar/README.md) |  |  |  |
-
+| [EventCalendarTimeline ✅🔥](packages/EventCalendarTimeline/README.md) |  |  |  |
 
 
 

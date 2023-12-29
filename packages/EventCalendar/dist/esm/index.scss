@@ -2,56 +2,57 @@
    <!-- Event Calendar -->
 /* ====================================================== */
 
-.custom-event-cal__wrapper {
-    --custom-event-cal-wrapper-min-width: 400px;
-    --custom-event-cal-border-color: #ddd;
-    --custom-event-cal-border-color-hover: #333;
-    --custom-event-cal-header-fs: 1.125rem;
-    --custom-event-cal-default-border-color: #eee;
-    --custom-event-cal-day-border-color: #ddd;
-    --custom-event-cal-day-hover-bg: #f6f6f6;
-    --custom-event-cal-dayselected-bg: #0b5ed7;
-    --custom-event-cal-dayselected-text-color: #fff;
-    --custom-event-cal-year-month-btn-border-color: #ddd;
-    --custom-event-cal-year-month-btn-hover-bg: rgba(0, 58, 166, .1);
-    --custom-event-cal-year-month-btn-selected-bg: rgba(0, 58, 166, 1);
-    --custom-event-cal-year-month-btn-selected-color: #fff;
-    --custom-event-cal-month-wrapper-w: 18.75rem;
-    --custom-event-cal-year-wrapper-w: 18.75rem;
-    --custom-event-cal-header-arrow-bg: #000;
-    --custom-event-cal-header-text-color: #000;
-    --custom-event-cal-header-prevnext-btn-bg: transparent;
-    --custom-event-cal-header-prevnext-btn-color: #000;
-    --custom-event-cal-header-prevnext-btn-radius: 0.25rem;
-    --custom-event-cal-delete-btn-color: #ee4949;
-    --custom-event-cal-footer-today-btn-bg: rgba(0, 58, 166, 1);
-    --custom-event-cal-footer-today-btn-color: #fff;
-    --custom-event-cal-event-bg: rgb(255, 240, 227);
+.e-cal__wrapper {
+    --e-cal-wrapper-min-width: 400px;
+    --e-cal-body-bg: #fff;
+    --e-cal-border-color: #ddd;
+    --e-cal-border-color-hover: #333;
+    --e-cal-header-fs: 1.125rem;
+    --e-cal-default-border-color: #eee;
+    --e-cal-day-border-color: #ddd;
+    --e-cal-day-hover-bg: #f6f6f6;
+    --e-cal-dayselected-bg: #0b5ed7;
+    --e-cal-dayselected-text-color: #fff;
+    --e-cal-year-month-btn-border-color: #ddd;
+    --e-cal-year-month-btn-hover-bg: rgba(0, 58, 166, .1);
+    --e-cal-year-month-btn-selected-bg: rgba(0, 58, 166, 1);
+    --e-cal-year-month-btn-selected-color: #fff;
+    --e-cal-month-wrapper-w: 18.75rem;
+    --e-cal-year-wrapper-w: 18.75rem;
+    --e-cal-header-arrow-bg: #000;
+    --e-cal-header-text-color: #000;
+    --e-cal-header-prevnext-btn-bg: transparent;
+    --e-cal-header-prevnext-btn-color: #000;
+    --e-cal-header-prevnext-btn-radius: 0.25rem;
+    --e-cal-delete-btn-color: #ee4949;
+    --e-cal-footer-today-btn-bg: rgba(0, 58, 166, 1);
+    --e-cal-footer-today-btn-color: #fff;
+    --e-cal-event-bg: rgb(255, 240, 227);
 
 
     position: relative;
-    min-width: var(--custom-event-cal-wrapper-min-width);
-    border: 1px solid var(--custom-event-cal-border-color);
+    min-width: var(--e-cal-wrapper-min-width);
+    border: 1px solid var(--e-cal-border-color);
 
 
     /* --HEADER --*/
-    .custom-event-cal__header {
-        font-size: var(--custom-event-cal-header-fs);
+    .e-cal__header {
+        font-size: var(--e-cal-header-fs);
         font-weight: bold;
         padding: 10px 10px 5px 10px;
         display: flex;
         justify-content: space-between;
 
-        .custom-event-cal__header__btns {
-            .custom-event-cal__btn {
+        .e-cal__header__btns {
+            .e-cal__btn {
                 margin-right: 1rem;
-                color: var(--custom-event-cal-header-text-color);
+                color: var(--e-cal-header-text-color);
     
                 svg {
                     margin-left: .3rem;
                     
                     path {
-                        fill: var(--custom-event-cal-header-arrow-bg);
+                        fill: var(--e-cal-header-arrow-bg);
                     }  
                 }
                 
@@ -68,18 +69,19 @@
 
 
     /*-- BODY --*/
-    .custom-event-cal__body {
+    .e-cal__body {
+        background: var(--e-cal-body-bg);
         width: 100%;
         display: flex;
         flex-wrap: wrap;
     }
 
     /*-- CELL --*/
-    .custom-event-cal__row {
+    .e-cal__row {
         display: flex;
         width: 100%;
 
-        .custom-event-cal__cell {
+        .e-cal__cell {
             flex: 1; 
             position: relative;
             height: auto;
@@ -90,7 +92,7 @@
             flex-direction: column;
             text-align: center;
             border-width: 0;
-            border-color: var(--custom-event-cal-default-border-color);
+            border-color: var(--e-cal-default-border-color);
             border-style: solid;
             border-top-width: 1px;
             border-right-width: 1px;
@@ -103,14 +105,14 @@
                 border-bottom-width: 1px;
             }
            
-            &.custom-event-cal__day--week {
+            &.e-cal__day--week {
                 min-height: 2.75em;
                 align-items: end;
                 padding-inline-end: .75rem;
             }
 
-            .custom-event-cal__day__event {
-                background-color: var(--custom-event-cal-event-bg);
+            .e-cal__day__event {
+                background-color: var(--e-cal-event-bg);
                 width: 100%;
                 padding: .1rem .5rem;
                 margin: 0.5rem;
@@ -120,17 +122,17 @@
                 font-size: 0.75rem;
             }
         
-            .custom-event-cal__day__eventdel {
+            .e-cal__day__eventdel {
                 position: absolute;
                 z-index: 1;
                 left: 0;
                 top: 0;
                 display: none;
-                color: var(--custom-event-cal-delete-btn-color);
+                color: var(--e-cal-delete-btn-color);
         
                 svg {
                     path {
-                        fill: var(--custom-event-cal-delete-btn-color);
+                        fill: var(--e-cal-delete-btn-color);
                     }
                 }
             }
@@ -163,15 +165,15 @@
 
             &.selected {
                 > span {
-                    color: var(--custom-event-cal-dayselected-text-color);
-                    background-color: var(--custom-event-cal-dayselected-bg);
+                    color: var(--e-cal-dayselected-text-color);
+                    background-color: var(--e-cal-dayselected-bg);
                 }
             }
 
             &:not(.empty):hover {
-                background-color: var(--custom-event-cal-day-hover-bg);
+                background-color: var(--e-cal-day-hover-bg);
 
-                .custom-event-cal__day__eventdel {
+                .e-cal__day__eventdel {
                     display: block;
                 }
             } 
@@ -183,9 +185,9 @@
 
 
     /*-- SELECTION --*/
-    .custom-event-cal__month-wrapper {
+    .e-cal__month-wrapper {
         position: absolute;
-        width: var(--custom-event-cal-month-wrapper-w);
+        width: var(--e-cal-month-wrapper-w);
         height: auto;
         z-index: 1;
         top: calc(1rem + 22px);
@@ -198,7 +200,7 @@
         }
 
 
-        .custom-event-cal__month-container {
+        .e-cal__month-container {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
             grid-template-rows: repeat(4, 2.5em);
@@ -209,9 +211,9 @@
     }
 
 
-    .custom-event-cal__year-wrapper {
+    .e-cal__year-wrapper {
         position: absolute;
-        width: var(--custom-event-cal-year-wrapper-w);
+        width: var(--e-cal-year-wrapper-w);
         height: auto;
         z-index: 1;
         top: calc(1rem + 22px);
@@ -223,7 +225,7 @@
             display: block;
         }     
         
-        .custom-event-cal__year-container {
+        .e-cal__year-container {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
             grid-template-rows: repeat(5, 2.5em);
@@ -232,24 +234,24 @@
     }
 
 
-    .custom-event-cal__year,
-    .custom-event-cal__month {
+    .e-cal__year,
+    .e-cal__month {
         display: flex;
         align-items: center;
         justify-content: center;
         padding: 5px;
         font-size: 0.875em;
-        border: 1px solid var(--custom-event-cal-year-month-btn-border-color);
+        border: 1px solid var(--e-cal-year-month-btn-border-color);
         border-radius: 0.25rem;
         cursor: pointer;
 
         &:hover {
-            background-color: var(--custom-event-cal-year-month-btn-hover-bg);
+            background-color: var(--e-cal-year-month-btn-hover-bg);
         }
 
         &.selected {
-            background-color: var(--custom-event-cal-year-month-btn-selected-bg);
-            color: var(--custom-event-cal-year-month-btn-selected-color);
+            background-color: var(--e-cal-year-month-btn-selected-bg);
+            color: var(--e-cal-year-month-btn-selected-color);
         }
 
     }
@@ -258,7 +260,7 @@
 
 
     /* --BUTTON --*/
-    .custom-event-cal__btn {
+    .e-cal__btn {
         border: none;
         outline: none;
         background: none;
@@ -269,31 +271,31 @@
 
         svg {
             path {
-                fill: var(--custom-event-cal-header-arrow-bg);
+                fill: var(--e-cal-header-arrow-bg);
             }
         }
 
         &--prev,
         &--next {
-            border-radius: var(--custom-event-cal-header-prevnext-btn-radius);
-            color: var(--custom-event-cal-header-prevnext-btn-color);
-            background-color: var(--custom-event-cal-header-prevnext-btn-bg);
+            border-radius: var(--e-cal-header-prevnext-btn-radius);
+            color: var(--e-cal-header-prevnext-btn-color);
+            background-color: var(--e-cal-header-prevnext-btn-bg);
 
             svg {
                 path {
-                    fill: var(--custom-event-cal-header-prevnext-btn-color);
+                    fill: var(--e-cal-header-prevnext-btn-color);
                 }
             }
 
         }
 
         &--today {
-            border: 1px solid var(--custom-event-cal-border-color);
+            border: 1px solid var(--e-cal-border-color);
             border-radius: 0.25rem;
             font-size: 0.875em;
             padding: .2rem 1rem;
-            color: var(--custom-event-cal-footer-today-btn-color);
-            background-color: var(--custom-event-cal-footer-today-btn-bg);
+            color: var(--e-cal-footer-today-btn-color);
+            background-color: var(--e-cal-footer-today-btn-bg);
         }
     }
 

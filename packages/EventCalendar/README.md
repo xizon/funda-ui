@@ -11,13 +11,15 @@ import EventCalendar from 'funda-ui/EventCalendar';
 | --- | --- | --- | --- |
 | `customTodayDate` | string  | - | Specify a default today. such as `2023-11-16` |
 | `eventsValue` | array  | - | Specify the default value for all events. Its properties are described below in the documentation. such as `[{id:1,date:'2023-11-20',time:'',data:'event 1'},{id:2,date:'2023-9-22',time:'',data:'event 2'},{id:3,date:'2023-09-12',time:'',data:'<del>very long event string</del> here, event 3',eventStyles:{background:'rgb(255, 240, 227)'}}]` |
-| `langWeek` | array  | `['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN']` | Localization in the component of week sequence. |
-| `langWeekFull` | array  | `['MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY', 'SATURDAY', 'SUNDAY']` | Localization in the component of full week sequence. |
+| `langWeek` | array  | `['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN']` | Localization in the component of week sequence. <blockquote>Support html tags. <br />such as `['<small>MON</small>', '<small>TUE</small>', '<small>WED</small>', '<small>THU</small>', '<small>FRI</small>', '<small>SAT</small>', '<small>SUN</small>']`</blockquote> |
+| `langWeekFull` | array  | `['MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY', 'SATURDAY', 'SUNDAY']` | Localization in the component of full week sequence. <blockquote>This attribute is not valid yet</blockquote> |
 | `langMonths` | array  | `['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC']` | Localization in the component of months sequence. |
 | `langMonthsFull` | array  | `['January', 'Febuary', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']` | Localization in the component of full months sequence. |
 | `langToday` | array  | `Today`| Localization in the component of today button. |
 | `iconRemove` | ReactNode  | `<svg width="20px" height="20px" viewBox="0 0 24 24" fill="none"><path fillRule="evenodd" clipRule="evenodd" d="M22 12c0 5.523-4.477 10-10 10S2 17.523 2 12 6.477 2 12 2s10 4.477 10 10ZM8 11a1 1 0 1 0 0 2h8a1 1 0 1 0 0-2H8Z" fill="#000" /></svg>` | The label of the button to delete current item, if it is not set, only the SVG icon will be included |
-| `onChangeDate` | function  | - | Call a function when a date area is clicked. It returns only one value which is the current value (**JSON Object**)  |
+| `cellCloseBtnClassName` | string  | - | Specify a class for close button of cell |
+| `cellCloseBtnLabel` | string \| ReactNode  | - | Set a piece of text or HTML code for the close button of cell |
+| `onChangeDate` | function  | - | Call a function when a date area is clicked. It returns only two values. <br /> <ol><li>The one is an HTMLElement of this area (**HTMLElement**) </li><li>The second parameter is the current value (**JSON Object**) </li></ol> |
 | `modalContent` | ReactNode  | - | **For `<ModalDialog />`** Customize the content in the pop-up window, usually form controls. See the case at the bottom of the document. |
 | `modalDeleteContent` | ReactNode  | - | **For `<ModalDialog />`** Customize the content in the pop-up window (the part used for deletion), usually a form control, see the case at the bottom of the document. |
 | `modalHeading` | ReactNode  | - | **For `<ModalDialog />`** Set a window title |
@@ -91,7 +93,6 @@ export default () => {
         <>
             <EventCalendar 
                 langWeek={['星期一', '星期二', '星期三', '星期四', '星期五', '星期六', '星期日']}
-                langWeekFull={['周一', '周二', '周三', '周四', '周五', '周六', '周日']}
                 langMonths={['一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月', '十月', '十一月', '十二月']}
                 langMonthsFull={['一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月', '十月', '十一月', '十二月']}
                 langToday="今天"
@@ -273,6 +274,7 @@ export default () => {
 
     const [data, setData] = useState<any>(null);
     const [updateCalendarData, setUpdateCalendarData] = useState<boolean>(false);
+    const [modalFormData, setModalFormData] = useState<any>(null);
 
 
     useEffect(() => {
@@ -290,7 +292,7 @@ export default () => {
         <>
    
             <EventCalendar
-                customTodayDate={data ? data.date : defaultCustomTodayDate}
+                customTodayDate={defaultCustomTodayDate}
                 eventsValue={data}
                 modalMaxWidth="850px"
                 modalHeading="Settings"
@@ -306,10 +308,10 @@ export default () => {
                         <input
                             tabIndex={-1}
                             type="hidden"
-                            defaultValue={data ? data.id : ''}
+                            defaultValue={modalFormData ? modalFormData.id : ''}
                             name="post_id"
                         />
-                        Are you sure?（ID: {data ? data.id : ''}）
+                        Are you sure?（ID: {modalFormData ? modalFormData.id : ''}）
                     </div>
 
 
@@ -320,6 +322,7 @@ export default () => {
                     <div ref={formRef}>
 
 
+
                         <div className="row mb-3">
                             <div className="text-end" style={{ width: LABEL_WIDTH }}>
                                 Content
@@ -328,7 +331,7 @@ export default () => {
                                 <input
                                     className="form-control"
                                     type="text"
-                                    defaultValue={data ? data.content : ''}
+                                    defaultValue={modalFormData ? modalFormData.content : ''}
                                     name="post_title"
                                 />
                             </div>
@@ -345,7 +348,7 @@ export default () => {
                                 <input
                                     className="form-control"
                                     type="date"
-                                    defaultValue={data ? data.date : ''}
+                                    defaultValue={modalFormData ? modalFormData.date : ''}
                                     name="post_date"
                                 />
                             </div>
@@ -358,14 +361,14 @@ export default () => {
 
                 </>}
                 onModalEditOpen={(currentData: any) => {
-                    setData({
+                    setModalFormData({
                         id: currentData.id,
                         content: currentData.data,
                         date: currentData.date
                     })
                 }}
                 onModalDeleteOpen={(currentData: any) => {
-                    setData({
+                    setModalFormData({
                         id: currentData.id,
                         content: currentData.data,
                         date: currentData.date
@@ -398,7 +401,8 @@ export default () => {
                     });
 
                 }}
-                onChangeDate={(currentData: any) => {
+                onChangeDate={(e: any, currentData: any) => {
+                    console.log(e.currentTarget.dataset.date, e.currentTarget.dataset.week); // 2023-11-22, 2
                     console.log(currentData); // {id: 0, date: '2023-11-22'}  or {id: 1, date: '2023-11-20', time: '', data: 'event 1'}
                 }}
                 

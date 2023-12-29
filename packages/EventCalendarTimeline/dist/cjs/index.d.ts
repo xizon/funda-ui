@@ -1,7 +1,19 @@
 import React from 'react';
-declare type EventCalendarProps = {
+interface EventsValueConfig {
+    id: string | number;
+    date: string;
+    time: string;
+    data: string;
+    dataTooltip?: string;
+    eventStyles?: React.CSSProperties;
+}
+interface TimelineValueConfig {
+    listSection: string;
+    eventSources: EventsValueConfig[];
+}
+declare type EventCalendarTimelineProps = {
     customTodayDate?: string;
-    eventsValue?: any[];
+    eventsValue?: TimelineValueConfig[];
     langWeek?: string[];
     langWeekFull?: string[];
     langMonths?: string[];
@@ -10,6 +22,10 @@ declare type EventCalendarProps = {
     iconRemove?: React.ReactNode | string;
     cellCloseBtnClassName?: string;
     cellCloseBtnLabel?: string | React.ReactNode;
+    forwardAndBackFillDisabled?: boolean;
+    draggable?: boolean;
+    showWeek?: boolean;
+    autoScroll?: boolean;
     onChangeDate?: (e: any, currentData: any) => void;
     modalMaskOpacity?: string;
     modalMaxWidth?: number | string;
@@ -29,6 +45,14 @@ declare type EventCalendarProps = {
     onModalDeleteClose?: (currentData: any) => void;
     onModalEditEvent?: (currentData: any, closewin: any) => void;
     onModalDeleteEvent?: (currentData: any, closewin: any) => void;
+    tableListSectionTitle?: string | React.ReactNode;
+    tableCellMinWidth?: number;
+    tableTooltipDirection?: string;
+    tableTooltipOffset?: number;
+    tableTooltipSize?: string;
+    tableTooltipDisabled?: boolean;
+    /** -- */
+    id?: string;
 };
-declare const EventCalendar: (props: EventCalendarProps) => JSX.Element;
-export default EventCalendar;
+declare const EventCalendarTimeline: (props: EventCalendarTimelineProps) => JSX.Element;
+export default EventCalendarTimeline;

@@ -59,7 +59,7 @@ const Tooltip = (props: TooltipProps) => {
                 setHasBeenShown(true);
             }
 
-            if (!isShow) setIsShow(true);
+            setIsShow(true);
 
         }, HOVER_DELAY);
     };
@@ -93,9 +93,9 @@ const Tooltip = (props: TooltipProps) => {
 
         // update modal position
         const _modalRef: any = document.querySelector(`#tooltip__wrapper-${idRes}`);
-        const _triggerRef: any = document.querySelector(`#tooltip__trigger-${idRes}`);
+        const _triggerRef: any = e.target;
 
-        // console.log(getAbsolutePositionOfStage(_triggerRef))
+        // console.log(getAbsolutePositionOfStage(_triggerRef));
 
         if (_modalRef !== null && _triggerRef !== null) {
 
@@ -130,7 +130,7 @@ const Tooltip = (props: TooltipProps) => {
                     const _modalOffsetPosition = _modalBox.right - window.innerWidth + POS_OFFSET;
                     _modalContent.dataset.offset = _modalOffsetPosition;
                     _modalContent.style.marginLeft = `-${_modalOffsetPosition}px`;
-                    console.log('_modalPosition: ', _modalOffsetPosition)
+                    // console.log('_modalPosition: ', _modalOffsetPosition)
                 }
 
 
@@ -138,7 +138,7 @@ const Tooltip = (props: TooltipProps) => {
                     const _modalOffsetPosition = Math.abs(_modalBox.left) + POS_OFFSET;
                     _modalContent.dataset.offset = _modalOffsetPosition;
                     _modalContent.style.marginLeft = `${_modalOffsetPosition}px`;
-                    console.log('_modalPosition: ', _modalOffsetPosition)
+                    // console.log('_modalPosition: ', _modalOffsetPosition)
                 }
 
 
@@ -161,7 +161,7 @@ const Tooltip = (props: TooltipProps) => {
 
 
     function hideTip() {
-        if (isShow) setIsShow(false);
+       setIsShow(false);
     }
 
     function handleTouchStart(e: any) {
@@ -188,6 +188,8 @@ const Tooltip = (props: TooltipProps) => {
             stopTimerHover();
             stopTimerMouseout();
             window.removeEventListener('touchstart', handleTouchStart);
+            document.querySelector(`#tooltip__wrapper-${idRes}`)?.remove();
+
         };
 
   
@@ -197,20 +199,23 @@ const Tooltip = (props: TooltipProps) => {
     return (
         <>
 
-            <div
-                ref={modalRef}
-                id={`tooltip__wrapper-${idRes}`}
-                className={`${wrapperClassName || wrapperClassName === '' ? `tooltip__wrapper ${wrapperClassName}` : `tooltip__wrapper d-inline-block`} ${isShow ? 'active' : ''}`}
-                role="tooltip"
-                data-microtip-position={direction || 'top'} 
-                data-microtip-size={size || 'auto'}
-            >
-                <div className="tooltip__content">{content}</div>
+            {/* FIX: "Failed to execute 'removeChild' on 'Node': The node to be removed is not a child of this node" when using remove() */}
+            <div>
+                <div
+                    ref={modalRef}
+                    id={`tooltip__wrapper-${idRes}`}
+                    className={`${wrapperClassName || wrapperClassName === '' ? `tooltip__wrapper ${wrapperClassName}` : `tooltip__wrapper d-inline-block`} ${isShow ? 'active' : ''}`}
+                    role="tooltip"
+                    data-microtip-position={direction || 'top'}
+                    data-microtip-size={size || 'auto'}
+                >
+                    <div className="tooltip__content">{content}</div>
+                </div>
             </div>
+
 
             <div
                 ref={rootRef}
-                id={`tooltip__trigger-${idRes}`}
                 className="tooltip__trigger d-inline-block"
                 onMouseEnter={handleMouseEnter}
                 onMouseLeave={handleMouseLeave}
