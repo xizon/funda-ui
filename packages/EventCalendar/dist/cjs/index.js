@@ -1146,7 +1146,7 @@ var EventCalendar = function EventCalendar(props) {
     if (typeof v === 'undefined') return '';
 
     // YYYY-MM-DD
-    var date = typeof v === 'string' ? new Date(v) : v;
+    var date = typeof v === 'string' ? new Date(v.replace(/-/g, "/")) : v; // fix "Invalid date in safari"
     var padZero = function padZero(num) {
       if (padZeroEnabled) {
         return num < 10 ? '0' + num : num.toString();

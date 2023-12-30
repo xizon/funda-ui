@@ -172,11 +172,14 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
     const scrollHeaderRef = useRef(null);
     const scrollBodyRef = useRef(null);
     const scrollListRef = useRef(null);
+    const [tableRowNum, setTableRowNum] = useState<number>(-1);
 
+    // table grid tooltip
     const CELL_TOOLTIP_POS_OFFSET = typeof tableTooltipOffset === 'undefined' ? 10 : tableTooltipOffset;
     const tableTooltipModalRef = useRef<any>(null);
     const [isShowTableTooltip, setIsShowTableTooltip] = useState<boolean>(false);
     const [tableTooltipContent, setTableTooltipContent] = useState<any>(null);
+    
 
 
     // cell
@@ -391,7 +394,7 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
 
 
         // YYYY-MM-DD
-        const date = typeof v === 'string' ? new Date(v) : v;
+        const date = typeof v === 'string' ? new Date(v.replace(/-/g, "/")) : v;  // fix "Invalid date in safari"
         const padZero = (num: number): string => {
             if (padZeroEnabled) {
                 return num < 10 ? '0' + num : num.toString();
@@ -451,8 +454,8 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
             setSelectedYear(_date.getFullYear());
 
 
-            // reset scroll position
-            resetTableScrollPosition();
+            // restore table grid init status
+            restoreTableGridInitStatus();
 
             return _date;
         });
@@ -469,8 +472,8 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
             setSelectedYear(_date.getFullYear());
 
 
-            // reset scroll position
-            resetTableScrollPosition();
+            // restore table grid init status
+            restoreTableGridInitStatus();
 
 
             return _date;
@@ -489,8 +492,8 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
         // close win
         setWinYear(false);
 
-        // reset scroll position
-        resetTableScrollPosition();
+        // restore table grid init status
+        restoreTableGridInitStatus();
 
     }
 
@@ -503,8 +506,8 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
         // close win
         setWinMonth(false);
 
-        // reset scroll position
-        resetTableScrollPosition();
+        // restore table grid init status
+        restoreTableGridInitStatus();
         
     }
 
@@ -514,8 +517,8 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
         setSelectedYear(now.getFullYear());
         setTodayDate(now);
 
-        // reset scroll position
-        resetTableScrollPosition();
+        // restore table grid init status
+        restoreTableGridInitStatus();
 
     }
 
@@ -537,7 +540,7 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
         return val.map((item: any, i: number) => {
 
             return (
-                <tr key={i} role="row">
+                <tr key={i} role="row" data-index={i}>
                     <td role="gridcell" data-resource-index={i} className="e-cal-tl-table__datagrid-cell">
                         <div className="e-cal-tl-table__cell-cushion e-cal-tl-table__cell-cushion-title" dangerouslySetInnerHTML={{
                             __html: item.listSection
@@ -550,7 +553,7 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
     }
 
 
-    function generateDaysUi(eventSourcesData: any[] = [], listSectionData: any = '', showEvents: boolean = false) {
+    function generateDaysUi(eventSourcesData: any[] = [], listSectionData: any = '', rowIndex: number = 0, showEvents: boolean = false) {
 
         if (forwardAndBackFillDisabled) {
             //#######################
@@ -587,12 +590,14 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
                                 style={{minWidth: CELL_MIN_W + 'px'}}
                                 onClick={(e: React.MouseEvent) => {
 
-
+                                    // update row data
+                                    setTableRowNum(-1);
                                     if (_currentData.length > 0) {
                                         _currentData[0].rowData = listSectionData;
                                     }
     
         
+                                    //
                                     if (d > 0) {
                                         handleDayChange(e, d);
 
@@ -684,20 +689,23 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
 
                         return d > 0 && d <= days[month] ? (
                             <td
-                                className={`e-cal-tl-table__cell-cushion-content__container ${eventSourcesData && _currentData.length > 0 ? 'has-event' : ''} ${d > 0 ? '' : 'empty'} ${d === now.getDate() ? 'today' : ''} ${d === day ? 'selected' : ''} ${isLastCol ? 'last-cell' : ''}`}
+                                className={`e-cal-tl-table__cell-cushion-content__container ${eventSourcesData && _currentData.length > 0 ? 'has-event' : ''} ${d > 0 ? '' : 'empty'} ${d === now.getDate() ? 'today' : ''} ${d === day && tableRowNum === rowIndex ? 'selected' : ''} ${isLastCol ? 'last-cell' : ''}`}
                                 key={"col" + i}
                                 data-index={colIndex-1}
                                 colSpan={1}
                                 data-date={getCalendarDate(_dateShow)}
                                 data-week={i}
-                                style={{minWidth: CELL_MIN_W + 'px'}}
+                                data-row={rowIndex}
                                 onClick={(e: React.MouseEvent) => {
 
+                                    // update row data
+                                    setTableRowNum(rowIndex);
                                     if (_currentData.length > 0) {
                                         _currentData[0].rowData = listSectionData;
                                     }
     
         
+                                    //
                                     if (d > 0) {
                                         handleDayChange(e, d);
                                         
@@ -806,11 +814,14 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
                                 style={{minWidth: CELL_MIN_W + 'px'}}
                                 onClick={(e: React.MouseEvent) => {
 
+                                    // update row data
+                                    setTableRowNum(-1);
                                     if (_currentData.length > 0) {
                                         _currentData[0].rowData = listSectionData;
                                     }
     
         
+                                    //
                                     if (d > 0) {
                                         handleDayChange(e, d);
         
@@ -911,20 +922,23 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
 
                         return (
                             <td
-                                className={`e-cal-tl-table__cell-cushion-content__container ${_currentData.length > 0 ? 'has-event' : ''} ${d > 0 ? '' : 'empty'} ${d === now.getDate() ? 'today' : ''} ${d === day ? 'selected' : ''} ${isLastCol ? 'last-cell' : ''}`}
+                                className={`e-cal-tl-table__cell-cushion-content__container ${_currentData.length > 0 ? 'has-event' : ''} ${d > 0 ? '' : 'empty'} ${d === now.getDate() ? 'today' : ''} ${d === day && tableRowNum === rowIndex ? 'selected' : ''} ${isLastCol ? 'last-cell' : ''}`}
                                 key={"col" + i}
                                 data-index={colIndex-1}
                                 colSpan={1}
                                 data-date={getCalendarDate(_dateShow)}
                                 data-week={i}
-                                style={{minWidth: CELL_MIN_W + 'px'}}
+                                data-row={rowIndex}
                                 onClick={(e: React.MouseEvent) => {
 
+                                    // update row data
+                                    setTableRowNum(rowIndex);
                                     if (_currentData.length > 0) {
                                         _currentData[0].rowData = listSectionData;
                                     }
     
         
+                                    // 
                                     if (d > 0) {
                                         handleDayChange(e, d);
         
@@ -1077,8 +1091,9 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
 
 
  
-    function resetTableScrollPosition() {
+    function restoreTableGridInitStatus() {
 
+        // restore table grid init status
         if (scrollListRef.current) (scrollListRef.current as any).scrollTop = 0;
         if (scrollBodyRef.current) (scrollBodyRef.current as any).scrollLeft = 0;
 
@@ -1086,23 +1101,30 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
 
 
     function tableGridInit() {
+
+        //
         if (tableGridRef.current === null) return;
 
         const tableGridEl: any = tableGridRef.current;
 
-       // calculate min width
+
+        //****************
+        // STEP 1: 
+        //****************
+        // calculate min width 
         //--------------
         const cellMinWidth = CELL_MIN_W;
         const colCount = forwardAndBackFillDisabled ? days[month] : 7 * getCells().length;
         const scrollableMinWidth = cellMinWidth * colCount;
 
-
-        // initialize scrollable wrapper
+        //****************
+        // STEP 2: 
+        //****************    
+        // initialize scrollable wrapper (width)
         //--------------
         const _scrollableWrapper = tableGridEl.querySelectorAll('.e-cal-tl-table__scroller-harness');
         [].slice.call(_scrollableWrapper).forEach((el: any) => {
             const scrollType = el.dataset.scroll;
-            const oldHeight = el.clientHeight;
 
             if (scrollType !== 'list') {
                 const _content = el.querySelector('.e-cal-tl-table__scroller');
@@ -1119,37 +1141,119 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
 
             }
 
-            // initialize cell width
-            const colElements: any = tableGridEl.querySelector('.e-cal-tl-table__datagrid-body__content colgroup').getElementsByTagName('col')
-            const tdElements: any = tableGridEl.querySelector('.e-cal-tl-table__datagrid-body__content tbody').getElementsByTagName('td');
+        
+        });
+
+        //****************
+        // STEP 3: 
+        //****************
+        // initialize cell width
+        //--------------
+        const headerThElements: any  = tableGridEl.querySelector('.e-cal-tl-table__datagrid-header__content tbody').getElementsByTagName('th');
+        const colElements: any = tableGridEl.querySelector('.e-cal-tl-table__datagrid-body__content colgroup').getElementsByTagName('col')
+        const tdElements: any = tableGridEl.querySelector('.e-cal-tl-table__datagrid-body__content tbody').getElementsByTagName('td');
+        const tdElementMaxWidth: number = typeof tdElements[0] === 'undefined' ? 0 : parseFloat(window.getComputedStyle(tdElements[0].querySelector('.e-cal-tl-table__cell-cushion-content')).maxWidth);
 
 
-            if (tdElements.length > 0) {
-                for (let i = 0; i < colElements.length; i++) {
-                    const widerElement = colElements[i].offsetWidth > tdElements[i].offsetWidth ? colElements[i] : tdElements[i];
-                    const tdOwidth = window.getComputedStyle(widerElement as HTMLElement).width;
+        for (let i = 0; i < headerThElements.length; i++) {
+        
+            const curHeaderThElementMaxWidth = parseFloat(window.getComputedStyle(headerThElements[i].querySelector('.e-cal-tl-table__cell-cushion-headercontent')).width);
+            const targetElement = headerThElements[i].offsetWidth > tdElements[i].offsetWidth ? headerThElements[i] : tdElements[i];
+            let tdOwidth = parseFloat(window.getComputedStyle(targetElement).width);
 
-                    [].slice.call(tableGridEl.querySelectorAll(`[data-datagrid-col="${i}"]`)).forEach((el: any) => {
-                        el.style.minWidth = tdOwidth;
-                    });
-
-                }
+        
+            // check td max width
+            if (tdElementMaxWidth > 0 && tdOwidth > tdElementMaxWidth) {
+                tdOwidth = tdElementMaxWidth;
             }
 
+            // check header th max width
+            if (tdElementMaxWidth > 0 && tdElementMaxWidth < curHeaderThElementMaxWidth) {
+                tdOwidth = curHeaderThElementMaxWidth;
+            }
 
-            // initialize table height
+            // Prevent the width from being +1 each time it is initialized
+            tdOwidth = tdOwidth - 1;
+
+            headerThElements[i].querySelector('.e-cal-tl-table__cell-cushion-headercontent').style.width = tdOwidth + 'px';
+            tdElements[i].querySelector('.e-cal-tl-table__cell-cushion-content').style.minWidth = tdOwidth + 'px';
+            colElements[i].style.minWidth = tdOwidth + 'px';
+
+
+        }
+
+        //****************
+        // STEP 4: 
+        //****************    
+        // initialize max width of table content
+        //--------------
+        if (scrollBodyRef.current !== null && scrollHeaderRef.current !== null) {
+            const tableContentWidth = window.getComputedStyle(tableGridEl.querySelector('.e-cal-tl-table__datagrid-body__content')).width;
+            const scrollBodyEl: any = scrollBodyRef.current;
+            const scrollHeaderEl: any = scrollHeaderRef.current;
+            
+            scrollBodyEl.style.width = tableContentWidth;
+            scrollHeaderEl.style.width = tableContentWidth;
+            scrollBodyEl.dataset.width = parseFloat(tableContentWidth);
+            scrollHeaderEl.dataset.width = parseFloat(tableContentWidth);
+
+            //
+            const tableWrapperMaxWidthLatest = tableGridEl.clientWidth;
+            if (tableWrapperMaxWidthLatest > parseFloat(tableContentWidth)) {
+                tableGridEl.querySelector('.e-cal-tl-table__timeline-table').style.width = tableContentWidth;
+            }
+            
+
+        }
+
+
+
+        //****************
+        // STEP 5: 
+        //****************
+        // initialize cell height
+        //--------------
+        const headerTitleTrElements = tableGridEl.querySelector('.e-cal-tl-table__datagrid-body__title tbody').getElementsByTagName('tr');
+        const trElements = tableGridEl.querySelector('.e-cal-tl-table__datagrid-body__content tbody').getElementsByTagName('tr');
+
+        for (let i = 0; i < headerTitleTrElements.length; i++) {
+
+        
+            const targetElement = headerTitleTrElements[i].offsetHeight > trElements[i].offsetHeight ? headerTitleTrElements[i] : trElements[i];
+            let tdOHeight = window.getComputedStyle(targetElement).height;
+
+            headerTitleTrElements[i].style.height = tdOHeight;
+            trElements[i].style.height = tdOHeight;
+
+        }
+
+        //****************
+        // STEP 6: 
+        //****************
+        //initialize scrollable wrapper (height)
+        //--------------
+        [].slice.call(_scrollableWrapper).forEach((el: any) => {
+            const scrollType = el.dataset.scroll;
+            const oldHeight = el.clientHeight;
+
             if (scrollType !== 'header') {
-                const tableMaxHeight = window.getComputedStyle(tableGridEl as HTMLElement).height;
-                if (oldHeight > parseFloat(tableMaxHeight)) {
-                    el.style.height = tableMaxHeight;
+                const tableWrapperMaxHeight = window.getComputedStyle(tableGridEl as HTMLElement).height;
+                if (oldHeight > parseFloat(tableWrapperMaxHeight)) {
+                    el.style.height = tableWrapperMaxHeight;
                 }
             }
-
+        
         });
 
 
+        //****************
+        // STEP 7: 
+        //****************
         // display wrapper
+        //--------------
         tableGridEl.classList.remove('invisible');
+
+
 
     }
 
@@ -1158,6 +1262,9 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
         if (tableGridRef.current === null) return;
 
         const tableGridEl: any = tableGridRef.current;
+
+        // initialize scrollable wrapper (width & height)
+        //--------------
         const _scrollableWrapper = tableGridEl.querySelectorAll('.e-cal-tl-table__scroller-harness');
         [].slice.call(_scrollableWrapper).forEach((el: any) => {
             const _content = el.querySelector('.e-cal-tl-table__scroller');
@@ -1165,7 +1272,6 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
             el.removeAttribute('style');
             _content.removeAttribute('style');
         });
-
     }
 
 
@@ -1327,7 +1433,7 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
                         <tr role="presentation">
                             <th role="presentation">
                                 {/*<!--///// HEADER LEFT //////-->*/}
-                                <div className="e-cal-tl-table__timeline-header">
+                                <div className="e-cal-tl-table__timeline-header e-cal-tl-table__timeline-headertitle">
 
                                     <table role="presentation" className="e-cal-tl-table__datagrid-header__title">
                                         <colgroup>
@@ -1419,7 +1525,7 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
 
                                                         return (
                                                             <tr key={i}>
-                                                                {generateDaysUi(item.eventSources, item.listSection, true)}
+                                                                {generateDaysUi(item.eventSources, item.listSection, i, true)}
                                                             </tr>
                                                         )
 

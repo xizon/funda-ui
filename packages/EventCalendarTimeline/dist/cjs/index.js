@@ -1231,16 +1231,22 @@ var EventCalendarTimeline = function EventCalendarTimeline(props) {
   var scrollHeaderRef = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(null);
   var scrollBodyRef = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(null);
   var scrollListRef = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(null);
+  var _useState27 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(-1),
+    _useState28 = _slicedToArray(_useState27, 2),
+    tableRowNum = _useState28[0],
+    setTableRowNum = _useState28[1];
+
+  // table grid tooltip
   var CELL_TOOLTIP_POS_OFFSET = typeof tableTooltipOffset === 'undefined' ? 10 : tableTooltipOffset;
   var tableTooltipModalRef = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(null);
-  var _useState27 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(false),
-    _useState28 = _slicedToArray(_useState27, 2),
-    isShowTableTooltip = _useState28[0],
-    setIsShowTableTooltip = _useState28[1];
-  var _useState29 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(null),
+  var _useState29 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(false),
     _useState30 = _slicedToArray(_useState29, 2),
-    tableTooltipContent = _useState30[0],
-    setTableTooltipContent = _useState30[1];
+    isShowTableTooltip = _useState30[0],
+    setIsShowTableTooltip = _useState30[1];
+  var _useState31 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(null),
+    _useState32 = _slicedToArray(_useState31, 2),
+    tableTooltipContent = _useState32[0],
+    setTableTooltipContent = _useState32[1];
 
   // cell
   var getCells = function getCells() {
@@ -1427,7 +1433,7 @@ var EventCalendarTimeline = function EventCalendarTimeline(props) {
     if (typeof v === 'undefined') return '';
 
     // YYYY-MM-DD
-    var date = typeof v === 'string' ? new Date(v) : v;
+    var date = typeof v === 'string' ? new Date(v.replace(/-/g, "/")) : v; // fix "Invalid date in safari"
     var padZero = function padZero(num) {
       if (padZeroEnabled) {
         return num < 10 ? '0' + num : num.toString();
@@ -1474,8 +1480,8 @@ var EventCalendarTimeline = function EventCalendarTimeline(props) {
       setSelectedMonth(_date.getMonth());
       setSelectedYear(_date.getFullYear());
 
-      // reset scroll position
-      resetTableScrollPosition();
+      // restore table grid init status
+      restoreTableGridInitStatus();
       return _date;
     });
   }
@@ -1487,8 +1493,8 @@ var EventCalendarTimeline = function EventCalendarTimeline(props) {
       setSelectedMonth(_date.getMonth());
       setSelectedYear(_date.getFullYear());
 
-      // reset scroll position
-      resetTableScrollPosition();
+      // restore table grid init status
+      restoreTableGridInitStatus();
       return _date;
     });
   }
@@ -1503,8 +1509,8 @@ var EventCalendarTimeline = function EventCalendarTimeline(props) {
     // close win
     setWinYear(false);
 
-    // reset scroll position
-    resetTableScrollPosition();
+    // restore table grid init status
+    restoreTableGridInitStatus();
   }
   function handleMonthChange(currentIndex) {
     setSelectedMonth(currentIndex);
@@ -1514,16 +1520,16 @@ var EventCalendarTimeline = function EventCalendarTimeline(props) {
     // close win
     setWinMonth(false);
 
-    // reset scroll position
-    resetTableScrollPosition();
+    // restore table grid init status
+    restoreTableGridInitStatus();
   }
   function handleTodayChange() {
     setSelectedMonth(now.getMonth());
     setSelectedYear(now.getFullYear());
     setTodayDate(now);
 
-    // reset scroll position
-    resetTableScrollPosition();
+    // restore table grid init status
+    restoreTableGridInitStatus();
   }
   function handleShowWinYear() {
     setWinYear(function (prevState) {
@@ -1544,7 +1550,8 @@ var EventCalendarTimeline = function EventCalendarTimeline(props) {
     return val.map(function (item, i) {
       return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("tr", {
         key: i,
-        role: "row"
+        role: "row",
+        "data-index": i
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("td", {
         role: "gridcell",
         "data-resource-index": i,
@@ -1560,7 +1567,8 @@ var EventCalendarTimeline = function EventCalendarTimeline(props) {
   function generateDaysUi() {
     var eventSourcesData = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
     var listSectionData = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '';
-    var showEvents = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
+    var rowIndex = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 0;
+    var showEvents = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : false;
     if (forwardAndBackFillDisabled) {
       //#######################
 
@@ -1593,9 +1601,13 @@ var EventCalendarTimeline = function EventCalendarTimeline(props) {
                 minWidth: CELL_MIN_W + 'px'
               },
               onClick: function onClick(e) {
+                // update row data
+                setTableRowNum(-1);
                 if (_currentData.length > 0) {
                   _currentData[0].rowData = listSectionData;
                 }
+
+                //
                 if (d > 0) {
                   handleDayChange(e, d);
                   onChangeDate === null || onChangeDate === void 0 ? void 0 : onChangeDate(e, _currentData.length === 0 ? {
@@ -1668,19 +1680,21 @@ var EventCalendarTimeline = function EventCalendarTimeline(props) {
               fill: "#000"
             }))), cellCloseBtnLabel || ''))) : '';
             return d > 0 && d <= days[month] ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("td", {
-              className: "e-cal-tl-table__cell-cushion-content__container ".concat(eventSourcesData && _currentData.length > 0 ? 'has-event' : '', " ").concat(d > 0 ? '' : 'empty', " ").concat(d === now.getDate() ? 'today' : '', " ").concat(d === day ? 'selected' : '', " ").concat(isLastCol ? 'last-cell' : ''),
+              className: "e-cal-tl-table__cell-cushion-content__container ".concat(eventSourcesData && _currentData.length > 0 ? 'has-event' : '', " ").concat(d > 0 ? '' : 'empty', " ").concat(d === now.getDate() ? 'today' : '', " ").concat(d === day && tableRowNum === rowIndex ? 'selected' : '', " ").concat(isLastCol ? 'last-cell' : ''),
               key: "col" + i,
               "data-index": colIndex - 1,
               colSpan: 1,
               "data-date": getCalendarDate(_dateShow),
               "data-week": i,
-              style: {
-                minWidth: CELL_MIN_W + 'px'
-              },
+              "data-row": rowIndex,
               onClick: function onClick(e) {
+                // update row data
+                setTableRowNum(rowIndex);
                 if (_currentData.length > 0) {
                   _currentData[0].rowData = listSectionData;
                 }
+
+                //
                 if (d > 0) {
                   handleDayChange(e, d);
                   onChangeDate === null || onChangeDate === void 0 ? void 0 : onChangeDate(e, _currentData.length === 0 ? {
@@ -1764,9 +1778,13 @@ var EventCalendarTimeline = function EventCalendarTimeline(props) {
                 minWidth: CELL_MIN_W + 'px'
               },
               onClick: function onClick(e) {
+                // update row data
+                setTableRowNum(-1);
                 if (_currentData.length > 0) {
                   _currentData[0].rowData = listSectionData;
                 }
+
+                //
                 if (d > 0) {
                   handleDayChange(e, d);
                   onChangeDate === null || onChangeDate === void 0 ? void 0 : onChangeDate(e, _currentData.length === 0 ? {
@@ -1845,19 +1863,21 @@ var EventCalendarTimeline = function EventCalendarTimeline(props) {
               fill: "#000"
             }))), cellCloseBtnLabel || ''))) : '';
             return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("td", {
-              className: "e-cal-tl-table__cell-cushion-content__container ".concat(_currentData.length > 0 ? 'has-event' : '', " ").concat(d > 0 ? '' : 'empty', " ").concat(d === now.getDate() ? 'today' : '', " ").concat(d === day ? 'selected' : '', " ").concat(isLastCol ? 'last-cell' : ''),
+              className: "e-cal-tl-table__cell-cushion-content__container ".concat(_currentData.length > 0 ? 'has-event' : '', " ").concat(d > 0 ? '' : 'empty', " ").concat(d === now.getDate() ? 'today' : '', " ").concat(d === day && tableRowNum === rowIndex ? 'selected' : '', " ").concat(isLastCol ? 'last-cell' : ''),
               key: "col" + i,
               "data-index": _colIndex - 1,
               colSpan: 1,
               "data-date": getCalendarDate(_dateShow),
               "data-week": i,
-              style: {
-                minWidth: CELL_MIN_W + 'px'
-              },
+              "data-row": rowIndex,
               onClick: function onClick(e) {
+                // update row data
+                setTableRowNum(rowIndex);
                 if (_currentData.length > 0) {
                   _currentData[0].rowData = listSectionData;
                 }
+
+                // 
                 if (d > 0) {
                   handleDayChange(e, d);
                   onChangeDate === null || onChangeDate === void 0 ? void 0 : onChangeDate(e, _currentData.length === 0 ? {
@@ -1953,26 +1973,33 @@ var EventCalendarTimeline = function EventCalendarTimeline(props) {
     var _latestScrollTop = el.scrollTop;
     if (scrollBodyRef.current) scrollBodyRef.current.scrollTop = _latestScrollTop;
   }
-  function resetTableScrollPosition() {
+  function restoreTableGridInitStatus() {
+    // restore table grid init status
     if (scrollListRef.current) scrollListRef.current.scrollTop = 0;
     if (scrollBodyRef.current) scrollBodyRef.current.scrollLeft = 0;
   }
   function tableGridInit() {
+    //
     if (tableGridRef.current === null) return;
     var tableGridEl = tableGridRef.current;
 
-    // calculate min width
+    //****************
+    // STEP 1: 
+    //****************
+    // calculate min width 
     //--------------
     var cellMinWidth = CELL_MIN_W;
     var colCount = forwardAndBackFillDisabled ? days[month] : 7 * getCells().length;
     var scrollableMinWidth = cellMinWidth * colCount;
 
-    // initialize scrollable wrapper
+    //****************
+    // STEP 2: 
+    //****************    
+    // initialize scrollable wrapper (width)
     //--------------
     var _scrollableWrapper = tableGridEl.querySelectorAll('.e-cal-tl-table__scroller-harness');
     [].slice.call(_scrollableWrapper).forEach(function (el) {
       var scrollType = el.dataset.scroll;
-      var oldHeight = el.clientHeight;
       if (scrollType !== 'list') {
         var _content = el.querySelector('.e-cal-tl-table__scroller');
         var tableMaxWidth = tableGridEl.clientWidth;
@@ -1984,38 +2011,103 @@ var EventCalendarTimeline = function EventCalendarTimeline(props) {
         el.style.maxWidth = el.dataset.width + 'px';
         _content.style.minWidth = scrollableMinWidth + 'px';
       }
+    });
 
-      // initialize cell width
-      var colElements = tableGridEl.querySelector('.e-cal-tl-table__datagrid-body__content colgroup').getElementsByTagName('col');
-      var tdElements = tableGridEl.querySelector('.e-cal-tl-table__datagrid-body__content tbody').getElementsByTagName('td');
-      if (tdElements.length > 0) {
-        var _loop = function _loop() {
-          var widerElement = colElements[i].offsetWidth > tdElements[i].offsetWidth ? colElements[i] : tdElements[i];
-          var tdOwidth = window.getComputedStyle(widerElement).width;
-          [].slice.call(tableGridEl.querySelectorAll("[data-datagrid-col=\"".concat(i, "\"]"))).forEach(function (el) {
-            el.style.minWidth = tdOwidth;
-          });
-        };
-        for (var i = 0; i < colElements.length; i++) {
-          _loop();
-        }
+    //****************
+    // STEP 3: 
+    //****************
+    // initialize cell width
+    //--------------
+    var headerThElements = tableGridEl.querySelector('.e-cal-tl-table__datagrid-header__content tbody').getElementsByTagName('th');
+    var colElements = tableGridEl.querySelector('.e-cal-tl-table__datagrid-body__content colgroup').getElementsByTagName('col');
+    var tdElements = tableGridEl.querySelector('.e-cal-tl-table__datagrid-body__content tbody').getElementsByTagName('td');
+    var tdElementMaxWidth = typeof tdElements[0] === 'undefined' ? 0 : parseFloat(window.getComputedStyle(tdElements[0].querySelector('.e-cal-tl-table__cell-cushion-content')).maxWidth);
+    for (var i = 0; i < headerThElements.length; i++) {
+      var curHeaderThElementMaxWidth = parseFloat(window.getComputedStyle(headerThElements[i].querySelector('.e-cal-tl-table__cell-cushion-headercontent')).width);
+      var targetElement = headerThElements[i].offsetWidth > tdElements[i].offsetWidth ? headerThElements[i] : tdElements[i];
+      var tdOwidth = parseFloat(window.getComputedStyle(targetElement).width);
+
+      // check td max width
+      if (tdElementMaxWidth > 0 && tdOwidth > tdElementMaxWidth) {
+        tdOwidth = tdElementMaxWidth;
       }
 
-      // initialize table height
+      // check header th max width
+      if (tdElementMaxWidth > 0 && tdElementMaxWidth < curHeaderThElementMaxWidth) {
+        tdOwidth = curHeaderThElementMaxWidth;
+      }
+
+      // Prevent the width from being +1 each time it is initialized
+      tdOwidth = tdOwidth - 1;
+      headerThElements[i].querySelector('.e-cal-tl-table__cell-cushion-headercontent').style.width = tdOwidth + 'px';
+      tdElements[i].querySelector('.e-cal-tl-table__cell-cushion-content').style.minWidth = tdOwidth + 'px';
+      colElements[i].style.minWidth = tdOwidth + 'px';
+    }
+
+    //****************
+    // STEP 4: 
+    //****************    
+    // initialize max width of table content
+    //--------------
+    if (scrollBodyRef.current !== null && scrollHeaderRef.current !== null) {
+      var tableContentWidth = window.getComputedStyle(tableGridEl.querySelector('.e-cal-tl-table__datagrid-body__content')).width;
+      var scrollBodyEl = scrollBodyRef.current;
+      var scrollHeaderEl = scrollHeaderRef.current;
+      scrollBodyEl.style.width = tableContentWidth;
+      scrollHeaderEl.style.width = tableContentWidth;
+      scrollBodyEl.dataset.width = parseFloat(tableContentWidth);
+      scrollHeaderEl.dataset.width = parseFloat(tableContentWidth);
+
+      //
+      var tableWrapperMaxWidthLatest = tableGridEl.clientWidth;
+      if (tableWrapperMaxWidthLatest > parseFloat(tableContentWidth)) {
+        tableGridEl.querySelector('.e-cal-tl-table__timeline-table').style.width = tableContentWidth;
+      }
+    }
+
+    //****************
+    // STEP 5: 
+    //****************
+    // initialize cell height
+    //--------------
+    var headerTitleTrElements = tableGridEl.querySelector('.e-cal-tl-table__datagrid-body__title tbody').getElementsByTagName('tr');
+    var trElements = tableGridEl.querySelector('.e-cal-tl-table__datagrid-body__content tbody').getElementsByTagName('tr');
+    for (var _i2 = 0; _i2 < headerTitleTrElements.length; _i2++) {
+      var _targetElement = headerTitleTrElements[_i2].offsetHeight > trElements[_i2].offsetHeight ? headerTitleTrElements[_i2] : trElements[_i2];
+      var tdOHeight = window.getComputedStyle(_targetElement).height;
+      headerTitleTrElements[_i2].style.height = tdOHeight;
+      trElements[_i2].style.height = tdOHeight;
+    }
+
+    //****************
+    // STEP 6: 
+    //****************
+    //initialize scrollable wrapper (height)
+    //--------------
+    [].slice.call(_scrollableWrapper).forEach(function (el) {
+      var scrollType = el.dataset.scroll;
+      var oldHeight = el.clientHeight;
       if (scrollType !== 'header') {
-        var tableMaxHeight = window.getComputedStyle(tableGridEl).height;
-        if (oldHeight > parseFloat(tableMaxHeight)) {
-          el.style.height = tableMaxHeight;
+        var tableWrapperMaxHeight = window.getComputedStyle(tableGridEl).height;
+        if (oldHeight > parseFloat(tableWrapperMaxHeight)) {
+          el.style.height = tableWrapperMaxHeight;
         }
       }
     });
 
+    //****************
+    // STEP 7: 
+    //****************
     // display wrapper
+    //--------------
     tableGridEl.classList.remove('invisible');
   }
   function tableGridReset() {
     if (tableGridRef.current === null) return;
     var tableGridEl = tableGridRef.current;
+
+    // initialize scrollable wrapper (width & height)
+    //--------------
     var _scrollableWrapper = tableGridEl.querySelectorAll('.e-cal-tl-table__scroller-harness');
     [].slice.call(_scrollableWrapper).forEach(function (el) {
       var _content = el.querySelector('.e-cal-tl-table__scroller');
@@ -2171,7 +2263,7 @@ var EventCalendarTimeline = function EventCalendarTimeline(props) {
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("th", {
     role: "presentation"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-    className: "e-cal-tl-table__timeline-header"
+    className: "e-cal-tl-table__timeline-header e-cal-tl-table__timeline-headertitle"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("table", {
     role: "presentation",
     className: "e-cal-tl-table__datagrid-header__title"
@@ -2241,7 +2333,7 @@ var EventCalendarTimeline = function EventCalendarTimeline(props) {
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("colgroup", null, generateColUi()), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("tbody", null, val.map(function (item, i) {
     return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("tr", {
       key: i
-    }, generateDaysUi(item.eventSources, item.listSection, true));
+    }, generateDaysUi(item.eventSources, item.listSection, i, true));
   }))))))))))), EVENTS_ENABLED ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((funda_modaldialog__WEBPACK_IMPORTED_MODULE_1___default()), {
     show: showDelete,
     maskOpacity: modalMaskOpacity,

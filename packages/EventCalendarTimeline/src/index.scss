@@ -216,7 +216,7 @@
     --e-cal-tl-table-header-w: 150px;
     --e-cal-tl-table-cell-padding: 0.5rem 0.75rem;
     --e-cal-tl-table-cell-h: 2.5rem;
-    --e-cal-tl-table-cell-max-w: 100px;
+    --e-cal-tl-table-cell-max-w: 300px;
     --e-cal-tl-table-cell-line-height: 1.7;
     --e-cal-tl-table-primary-border: 1px solid #ddd;
     --e-cal-tl-table-bodycell-border: 1px solid #eee;
@@ -336,11 +336,16 @@
     }
 
     /* header */
-    .e-cal-tl-table__timeline-header {
+    .e-cal-tl-table__timeline-headertitle {
         background: var(--e-cal-tl-table-header-bg);
         border-bottom: var(--e-cal-tl-table-header-border);
+        overflow: hidden;
     }
     
+    .e-cal-tl-table__timeline-header {
+        background: var(--e-cal-tl-table-header-bg);
+    }
+
 
     /* header title */
     .e-cal-tl-table__datagrid-header__title {
@@ -350,8 +355,9 @@
     /* header content */
     .e-cal-tl-table__datagrid-header__content {
         border-spacing: 0;
+        border-bottom: var(--e-cal-tl-table-header-border);
 
-        >tbody>tr>th {
+        > tbody > tr > th {
             border-right: var(--e-cal-tl-table-primary-border);
         }
     }
@@ -369,8 +375,6 @@
     .e-cal-tl-table__cell-cushion-title,
     .e-cal-tl-table__cell-cushion-content {
         word-break: break-all;
-        overflow: hidden;
-        height: var(--e-cal-tl-table-cell-h);
         max-width: var(--e-cal-tl-table-cell-max-w);
 
         /* If the maximum width is not increased and the screen becomes smaller, 
@@ -379,7 +383,7 @@
     }
 
     .e-cal-tl-table__cell-cushion-headercontent {
-        overflow: hidden;
+        white-space: nowrap;
     }
 
     .e-cal-tl-table__cell-cushion-headercontent,
@@ -387,14 +391,13 @@
         font-size: var(--e-cal-tl-table-headercell-font-size);
     }
 
-    .e-cal-tl-table__cell-cushion-headercontent,
     .e-cal-tl-table__cell-cushion-headertitle,
     .e-cal-tl-table__cell-cushion-title {
-        white-space: nowrap;
+        word-break: break-all;
     }
 
-    .e-cal-tl-table__cell-cushion-headertitle,
-    .e-cal-tl-table__datagrid-header {
+    /* header */
+    .e-cal-tl-table__cell-cushion-headertitle {
         width: var(--e-cal-tl-table-header-w);
     }
 
@@ -403,10 +406,12 @@
     .e-cal-tl-table__cell-cushion-content__container {
         position: relative;
 
+        &.selected,
         &:hover {
             background-color: var(--e-cal-tl-table-event-hover-bg);
             box-shadow: var(--e-cal-tl-table-event-hover-shadow);
         }
+
 
         &.has-event {
             .e-cal-tl-table__cell-cushion {
