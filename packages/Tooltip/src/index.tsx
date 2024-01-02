@@ -200,7 +200,7 @@ const Tooltip = (props: TooltipProps) => {
         <>
 
             {/* FIX: "Failed to execute 'removeChild' on 'Node': The node to be removed is not a child of this node" when using remove() */}
-            <div>
+            <span>
                 <div
                     ref={modalRef}
                     id={`tooltip__wrapper-${idRes}`}
@@ -211,7 +211,7 @@ const Tooltip = (props: TooltipProps) => {
                 >
                     <div className="tooltip__content">{content}</div>
                 </div>
-            </div>
+            </span>
 
 
             <div

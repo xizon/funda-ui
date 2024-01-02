@@ -386,7 +386,7 @@ var Tooltip = function Tooltip(props) {
       (_document$querySelect = document.querySelector("#tooltip__wrapper-".concat(idRes))) === null || _document$querySelect === void 0 ? void 0 : _document$querySelect.remove();
     };
   }, []);
-  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
     ref: modalRef,
     id: "tooltip__wrapper-".concat(idRes),
     className: "".concat(wrapperClassName || wrapperClassName === '' ? "tooltip__wrapper ".concat(wrapperClassName) : "tooltip__wrapper d-inline-block", " ").concat(isShow ? 'active' : ''),

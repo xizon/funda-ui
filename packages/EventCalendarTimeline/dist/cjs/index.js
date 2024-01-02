@@ -2465,7 +2465,7 @@ var EventCalendarTimeline = function EventCalendarTimeline(props) {
         return _ref2.apply(this, arguments);
       };
     }()
-  }, modalContent)) : null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+  }, modalContent)) : null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
     ref: tableTooltipModalRef,
     id: "e-cal-tl-table__cell-tooltipwrapper-".concat(idRes),
     className: "e-cal-tl-table__cell-tooltipwrapper d-inline-block ".concat(isShowTableTooltip ? 'active' : ''),

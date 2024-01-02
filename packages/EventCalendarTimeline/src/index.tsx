@@ -1694,7 +1694,7 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
             {/*//////////////////// Table Grid Tooltip //////////////////// */}
             {/*////////////////////////////////////////////////// */}
             {/* FIX: "Failed to execute 'removeChild' on 'Node': The node to be removed is not a child of this node" when using remove() */}
-            <div>
+            <span>
                 <div
                     ref={tableTooltipModalRef}
                     id={`e-cal-tl-table__cell-tooltipwrapper-${idRes}`}
@@ -1708,7 +1708,7 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
                     </div>
                 </div>
 
-            </div>
+            </span>
 
 
 
