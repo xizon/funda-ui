@@ -683,6 +683,10 @@ var LiveSearch = function LiveSearch(props) {
     _useState12 = _slicedToArray(_useState11, 2),
     hasErr = _useState12[0],
     setHasErr = _useState12[1];
+  var _useState13 = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)(false),
+    _useState14 = _slicedToArray(_useState13, 2),
+    componentFirstLoad = _useState14[0],
+    setComponentFirstLoad = _useState14[1];
 
   //performance
   var handleChangeFetchSafe = utils_useDebounce(function (e) {
@@ -907,7 +911,7 @@ var LiveSearch = function LiveSearch(props) {
         while (1) switch (_context4.prev = _context4.next) {
           case 0:
             if (!(_typeof(fetchFuncAsync) === 'object')) {
-              _context4.next = 12;
+              _context4.next = 13;
               break;
             }
             _context4.next = 3;
@@ -931,10 +935,18 @@ var LiveSearch = function LiveSearch(props) {
 
             //
             setDataInit(_ORGIN_DATA);
+
+            //
+            // window position
+            if (componentFirstLoad) {
+              setTimeout(function () {
+                getPlacement(listRef.current);
+              }, 500);
+            }
             return _context4.abrupt("return", _ORGIN_DATA);
-          case 12:
-            return _context4.abrupt("return", []);
           case 13:
+            return _context4.abrupt("return", []);
+          case 14:
           case "end":
             return _context4.stop();
         }
@@ -1072,6 +1084,12 @@ var LiveSearch = function LiveSearch(props) {
     });
   }
   (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useEffect)(function () {
+    // Component first load
+    //--------------
+    if (!componentFirstLoad) {
+      setComponentFirstLoad(true);
+    }
+
     // update default value
     //--------------
     setChangedVal(value || '');

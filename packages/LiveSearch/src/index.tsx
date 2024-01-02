@@ -98,6 +98,7 @@ const LiveSearch = (props: LiveSearchProps) => {
     const [changedVal, setChangedVal] = useState<string>(value || '');
     const [isOpen, setIsOpen] = useState<boolean>(false);
     const [hasErr, setHasErr] = useState<boolean>(false);
+    const [componentFirstLoad, setComponentFirstLoad] = useState<boolean>(false);
  
 
    //performance
@@ -345,6 +346,16 @@ const LiveSearch = (props: LiveSearchProps) => {
             
             //
             setDataInit(_ORGIN_DATA);
+
+
+            //
+            // window position
+            if (componentFirstLoad) {
+                setTimeout( ()=> {
+                    getPlacement(listRef.current);
+                }, 500 );  
+            } 
+
     
             return _ORGIN_DATA;
         } else {
@@ -485,6 +496,13 @@ const LiveSearch = (props: LiveSearchProps) => {
 
 
     useEffect(() => {
+
+        // Component first load
+        //--------------
+        if (!componentFirstLoad) {
+            setComponentFirstLoad(true);
+        }
+        
 
         // update default value
         //--------------

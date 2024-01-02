@@ -863,20 +863,24 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
     _useState18 = _slicedToArray(_useState17, 2),
     incomingData = _useState18[0],
     setIncomingData = _useState18[1];
+  var _useState19 = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)(false),
+    _useState20 = _slicedToArray(_useState19, 2),
+    componentFirstLoad = _useState20[0],
+    setComponentFirstLoad = _useState20[1];
 
   // Multiple selection
   var MULTI_SEL_VALID = multiSelect ? multiSelect.valid : false;
-  var _useState19 = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)({
+  var _useState21 = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)({
       labels: [],
       values: []
     }),
-    _useState20 = _slicedToArray(_useState19, 2),
-    controlArr = _useState20[0],
-    setControlArr = _useState20[1];
-  var _useState21 = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)(false),
     _useState22 = _slicedToArray(_useState21, 2),
-    itemSelectedAll = _useState22[0],
-    setItemSelectedAll = _useState22[1];
+    controlArr = _useState22[0],
+    setControlArr = _useState22[1];
+  var _useState23 = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)(false),
+    _useState24 = _slicedToArray(_useState23, 2),
+    itemSelectedAll = _useState24[0],
+    setItemSelectedAll = _useState24[1];
   var multiSelControlOptionExist = function multiSelControlOptionExist(arr, val) {
     return arr.map(function (v) {
       return v.toString();
@@ -1163,7 +1167,7 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
             incomingOptionsData = valueInputRef.current.dataset.options; // Determine whether the default value is user query input or default input
             defaultValue = init ? inputDefaultValue : '';
             if (!(_typeof(fetchFuncAsync) === 'object')) {
-              _context2.next = 22;
+              _context2.next = 23;
               break;
             }
             _context2.next = 6;
@@ -1294,9 +1298,18 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
             //
             onFetch === null || onFetch === void 0 ? void 0 : onFetch(selectInputRef.current, valueInputRef.current, defaultValue, _ORGIN_DATA, incomingData);
 
+            // STEP 7: ===========
+            //
+            // window position
+            if (componentFirstLoad) {
+              setTimeout(function () {
+                getPlacement(listRef.current);
+              }, 500);
+            }
+
             //
             return _context2.abrupt("return", _ORGIN_DATA);
-          case 22:
+          case 23:
             // STEP 1: ===========
             // get incoming options from `data-options` of component
             if (typeof incomingOptionsData !== 'undefined') {
@@ -1398,9 +1411,18 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
             //
             onFetch === null || onFetch === void 0 ? void 0 : onFetch(selectInputRef.current, valueInputRef.current, defaultValue, optionsDataInit, incomingData);
 
+            // STEP 7: ===========
+            //
+            // window position
+            if (componentFirstLoad) {
+              setTimeout(function () {
+                getPlacement(listRef.current);
+              }, 500);
+            }
+
             //
             return _context2.abrupt("return", optionsDataInit);
-          case 35:
+          case 37:
           case "end":
             return _context2.stop();
         }
@@ -1906,6 +1928,12 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
     });
   }
   (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useEffect)(function () {
+    // Component first load
+    //--------------
+    if (!componentFirstLoad) {
+      setComponentFirstLoad(true);
+    }
+
     // Call a function when the component has been rendered completely
     //--------------
     onLoad === null || onLoad === void 0 ? void 0 : onLoad(selectInputRef.current, valueInputRef.current, value);

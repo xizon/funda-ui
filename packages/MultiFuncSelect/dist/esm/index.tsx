@@ -169,6 +169,7 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
     const [isOpen, setIsOpen] = useState<boolean>(false);
     const [listContentHeight, setListContentHeight] = useState<number>(0);
     const [incomingData, setIncomingData] = useState<string | null | undefined>(null);
+    const [componentFirstLoad, setComponentFirstLoad] = useState<boolean>(false);
 
 
     // Multiple selection
@@ -675,7 +676,18 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
             //
             onFetch?.(selectInputRef.current, valueInputRef.current, defaultValue, _ORGIN_DATA, incomingData);
 
-        
+
+            // STEP 7: ===========
+            //
+            // window position
+            if (componentFirstLoad) {
+                setTimeout( ()=> {
+                    getPlacement(listRef.current);
+                }, 500 );  
+            }
+
+
+
             //
             return _ORGIN_DATA;
 
@@ -796,6 +808,15 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
             // STEP 6: ===========
             //
             onFetch?.(selectInputRef.current, valueInputRef.current, defaultValue, optionsDataInit, incomingData);
+
+            // STEP 7: ===========
+            //
+            // window position
+            if (componentFirstLoad) {
+                setTimeout( ()=> {
+                    getPlacement(listRef.current);
+                }, 500 );  
+            }
 
             //
             return optionsDataInit;
@@ -1346,6 +1367,12 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
 
     useEffect(() => {
 
+        
+        // Component first load
+        //--------------
+        if (!componentFirstLoad) {
+            setComponentFirstLoad(true);
+        }
 
         // Call a function when the component has been rendered completely
         //--------------
