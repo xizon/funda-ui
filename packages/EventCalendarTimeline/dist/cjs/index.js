@@ -1125,6 +1125,9 @@ var EventCalendarTimeline = function EventCalendarTimeline(props) {
     showWeek = props.showWeek,
     autoScroll = props.autoScroll,
     onChangeDate = props.onChangeDate,
+    onChangeMonth = props.onChangeMonth,
+    onChangeYear = props.onChangeYear,
+    onChangeToday = props.onChangeToday,
     modalMaskOpacity = props.modalMaskOpacity,
     modalMaxWidth = props.modalMaxWidth,
     modalMinHeight = props.modalMinHeight,
@@ -1369,7 +1372,7 @@ var EventCalendarTimeline = function EventCalendarTimeline(props) {
 
     // update modal positiona
     var _tableTooltipModalRef = document.querySelector("#e-cal-tl-table__cell-tooltipwrapper-".concat(idRes));
-    var _triggerRef = e.target;
+    var _triggerRef = e.currentTarget;
     if (_tableTooltipModalRef !== null && _triggerRef !== null) {
       var _getAbsolutePositionO = (0,_utils_get_element_property__WEBPACK_IMPORTED_MODULE_2__.getAbsolutePositionOfStage)(_triggerRef),
         x = _getAbsolutePositionO.x,
@@ -1480,6 +1483,13 @@ var EventCalendarTimeline = function EventCalendarTimeline(props) {
       setSelectedMonth(_date.getMonth());
       setSelectedYear(_date.getFullYear());
 
+      //
+      onChangeMonth === null || onChangeMonth === void 0 ? void 0 : onChangeMonth({
+        day: day,
+        month: _date.getMonth(),
+        year: _date.getFullYear()
+      });
+
       // restore table grid init status
       restoreTableGridInitStatus();
       return _date;
@@ -1492,6 +1502,13 @@ var EventCalendarTimeline = function EventCalendarTimeline(props) {
       // update
       setSelectedMonth(_date.getMonth());
       setSelectedYear(_date.getFullYear());
+
+      //
+      onChangeMonth === null || onChangeMonth === void 0 ? void 0 : onChangeMonth({
+        day: day,
+        month: _date.getMonth(),
+        year: _date.getFullYear()
+      });
 
       // restore table grid init status
       restoreTableGridInitStatus();
@@ -1509,6 +1526,13 @@ var EventCalendarTimeline = function EventCalendarTimeline(props) {
     // close win
     setWinYear(false);
 
+    //
+    onChangeYear === null || onChangeYear === void 0 ? void 0 : onChangeYear({
+      day: day,
+      month: month,
+      year: currentValue
+    });
+
     // restore table grid init status
     restoreTableGridInitStatus();
   }
@@ -1520,6 +1544,13 @@ var EventCalendarTimeline = function EventCalendarTimeline(props) {
     // close win
     setWinMonth(false);
 
+    //
+    onChangeMonth === null || onChangeMonth === void 0 ? void 0 : onChangeMonth({
+      day: day,
+      month: currentIndex,
+      year: year
+    });
+
     // restore table grid init status
     restoreTableGridInitStatus();
   }
@@ -1527,6 +1558,13 @@ var EventCalendarTimeline = function EventCalendarTimeline(props) {
     setSelectedMonth(now.getMonth());
     setSelectedYear(now.getFullYear());
     setTodayDate(now);
+
+    //
+    onChangeToday === null || onChangeToday === void 0 ? void 0 : onChangeToday({
+      day: now.getDay(),
+      month: now.getMonth(),
+      year: now.getFullYear()
+    });
 
     // restore table grid init status
     restoreTableGridInitStatus();
@@ -1680,13 +1718,17 @@ var EventCalendarTimeline = function EventCalendarTimeline(props) {
               fill: "#000"
             }))), cellCloseBtnLabel || ''))) : '';
             return d > 0 && d <= days[month] ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("td", {
-              className: "e-cal-tl-table__cell-cushion-content__container ".concat(eventSourcesData && _currentData.length > 0 ? 'has-event' : '', " ").concat(d > 0 ? '' : 'empty', " ").concat(d === now.getDate() ? 'today' : '', " ").concat(d === day && tableRowNum === rowIndex ? 'selected' : '', " ").concat(isLastCol ? 'last-cell' : ''),
+              className: "e-cal-tl-table__cell-cushion-content__container e-cal-tl-table__cell-tooltiptrigger ".concat(eventSourcesData && _currentData.length > 0 ? 'has-event' : '', " ").concat(d > 0 ? '' : 'empty', " ").concat(d === now.getDate() ? 'today' : '', " ").concat(d === day && tableRowNum === rowIndex ? 'selected' : '', " ").concat(isLastCol ? 'last-cell' : ''),
               key: "col" + i,
               "data-index": colIndex - 1,
               colSpan: 1,
               "data-date": getCalendarDate(_dateShow),
               "data-week": i,
               "data-row": rowIndex,
+              onMouseEnter: _eventContentTooltip === '' ? function () {} : tableTooltipDisabled ? function () {} : _eventContent !== '' ? function (e) {
+                handleTableTooltipMouseEnter(e, _eventContentTooltip);
+              } : function () {},
+              onMouseLeave: _eventContentTooltip === '' ? function () {} : tableTooltipDisabled ? function () {} : _eventContent !== '' ? handleTableTooltipMouseLeave : function () {},
               onClick: function onClick(e) {
                 // update row data
                 setTableRowNum(rowIndex);
@@ -1713,11 +1755,7 @@ var EventCalendarTimeline = function EventCalendarTimeline(props) {
                 }
               }
             }, d > 0 ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-              className: "e-cal-tl-table__cell-cushion e-cal-tl-table__cell-cushion-content e-cal-tl-table__cell-tooltiptrigger",
-              onMouseEnter: _eventContentTooltip === '' ? function () {} : tableTooltipDisabled ? function () {} : _eventContent !== '' ? function (e) {
-                handleTableTooltipMouseEnter(e, _eventContentTooltip);
-              } : function () {},
-              onMouseLeave: _eventContentTooltip === '' ? function () {} : tableTooltipDisabled ? function () {} : _eventContent !== '' ? handleTableTooltipMouseLeave : function () {}
+              className: "e-cal-tl-table__cell-cushion e-cal-tl-table__cell-cushion-content"
             }, _eventContent)) : null) : null;
           }
         });
@@ -1863,13 +1901,17 @@ var EventCalendarTimeline = function EventCalendarTimeline(props) {
               fill: "#000"
             }))), cellCloseBtnLabel || ''))) : '';
             return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("td", {
-              className: "e-cal-tl-table__cell-cushion-content__container ".concat(_currentData.length > 0 ? 'has-event' : '', " ").concat(d > 0 ? '' : 'empty', " ").concat(d === now.getDate() ? 'today' : '', " ").concat(d === day && tableRowNum === rowIndex ? 'selected' : '', " ").concat(isLastCol ? 'last-cell' : ''),
+              className: "e-cal-tl-table__cell-cushion-content__container e-cal-tl-table__cell-tooltiptrigger ".concat(_currentData.length > 0 ? 'has-event' : '', " ").concat(d > 0 ? '' : 'empty', " ").concat(d === now.getDate() ? 'today' : '', " ").concat(d === day && tableRowNum === rowIndex ? 'selected' : '', " ").concat(isLastCol ? 'last-cell' : ''),
               key: "col" + i,
               "data-index": _colIndex - 1,
               colSpan: 1,
               "data-date": getCalendarDate(_dateShow),
               "data-week": i,
               "data-row": rowIndex,
+              onMouseEnter: _eventContentTooltip === '' ? function () {} : tableTooltipDisabled ? function () {} : _eventContent !== '' ? function (e) {
+                handleTableTooltipMouseEnter(e, _eventContentTooltip);
+              } : function () {},
+              onMouseLeave: _eventContentTooltip === '' ? function () {} : tableTooltipDisabled ? function () {} : _eventContent !== '' ? handleTableTooltipMouseLeave : function () {},
               onClick: function onClick(e) {
                 // update row data
                 setTableRowNum(rowIndex);
@@ -1898,11 +1940,7 @@ var EventCalendarTimeline = function EventCalendarTimeline(props) {
             }, isFirstRow && __forwardFillNum && typeof __forwardFillNum[i] !== 'undefined' ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
               className: "e-cal-tl-table__cell-cushion e-cal-tl-table__cell-cushion-content disabled"
             }, "\xA0")) : null, d > 0 ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-              className: "e-cal-tl-table__cell-cushion e-cal-tl-table__cell-cushion-content e-cal-tl-table__cell-tooltiptrigger",
-              onMouseEnter: _eventContentTooltip === '' ? function () {} : tableTooltipDisabled ? function () {} : _eventContent !== '' ? function (e) {
-                handleTableTooltipMouseEnter(e, _eventContentTooltip);
-              } : function () {},
-              onMouseLeave: _eventContentTooltip === '' ? function () {} : tableTooltipDisabled ? function () {} : _eventContent !== '' ? handleTableTooltipMouseLeave : function () {}
+              className: "e-cal-tl-table__cell-cushion e-cal-tl-table__cell-cushion-content"
             }, _eventContent)) : null, isLastRow && __backFillNum && typeof __backFillNum[i - item.col.filter(Boolean).length] !== 'undefined' ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
               className: "e-cal-tl-table__cell-cushion e-cal-tl-table__cell-cushion-content disabled"
             }, "\xA0")) : null);

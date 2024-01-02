@@ -11,6 +11,9 @@ declare type EventCalendarProps = {
     cellCloseBtnClassName?: string;
     cellCloseBtnLabel?: string | React.ReactNode;
     onChangeDate?: (e: any, currentData: any) => void;
+    onChangeMonth?: (currentData: any) => void;
+    onChangeYear?: (currentData: any) => void;
+    onChangeToday?: (currentData: any) => void;
     modalMaskOpacity?: string;
     modalMaxWidth?: number | string;
     modalMinHeight?: number | string;

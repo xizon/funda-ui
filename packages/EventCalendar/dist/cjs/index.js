@@ -974,6 +974,9 @@ var EventCalendar = function EventCalendar(props) {
     langToday = props.langToday,
     iconRemove = props.iconRemove,
     onChangeDate = props.onChangeDate,
+    onChangeMonth = props.onChangeMonth,
+    onChangeYear = props.onChangeYear,
+    onChangeToday = props.onChangeToday,
     cellCloseBtnClassName = props.cellCloseBtnClassName,
     cellCloseBtnLabel = props.cellCloseBtnLabel,
     modalMaskOpacity = props.modalMaskOpacity,
@@ -1187,6 +1190,13 @@ var EventCalendar = function EventCalendar(props) {
       // update
       setSelectedMonth(_date.getMonth());
       setSelectedYear(_date.getFullYear());
+
+      //
+      onChangeMonth === null || onChangeMonth === void 0 ? void 0 : onChangeMonth({
+        day: day,
+        month: _date.getMonth(),
+        year: _date.getFullYear()
+      });
       return _date;
     });
   }
@@ -1197,6 +1207,13 @@ var EventCalendar = function EventCalendar(props) {
       // update
       setSelectedMonth(_date.getMonth());
       setSelectedYear(_date.getFullYear());
+
+      //
+      onChangeMonth === null || onChangeMonth === void 0 ? void 0 : onChangeMonth({
+        day: day,
+        month: _date.getMonth(),
+        year: _date.getFullYear()
+      });
       return _date;
     });
   }
@@ -1210,6 +1227,13 @@ var EventCalendar = function EventCalendar(props) {
 
     // close win
     setWinYear(false);
+
+    //
+    onChangeYear === null || onChangeYear === void 0 ? void 0 : onChangeYear({
+      day: day,
+      month: month,
+      year: currentValue
+    });
   }
   function handleMonthChange(currentIndex) {
     setSelectedMonth(currentIndex);
@@ -1218,11 +1242,25 @@ var EventCalendar = function EventCalendar(props) {
 
     // close win
     setWinMonth(false);
+
+    //
+    onChangeMonth === null || onChangeMonth === void 0 ? void 0 : onChangeMonth({
+      day: day,
+      month: currentIndex,
+      year: year
+    });
   }
   function handleTodayChange() {
     setSelectedMonth(now.getMonth());
     setSelectedYear(now.getFullYear());
     setTodayDate(now);
+
+    //
+    onChangeToday === null || onChangeToday === void 0 ? void 0 : onChangeToday({
+      day: now.getDay(),
+      month: now.getMonth(),
+      year: now.getFullYear()
+    });
   }
   function handleShowWinYear() {
     setWinYear(function (prevState) {

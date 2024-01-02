@@ -1150,3 +1150,23 @@ export default () => {
     );
 }
 ```
+
+
+
+
+## Globally disable real-time search functionality (only valid for non-dynamic requests)
+
+> [!WARNING]
+> Globally disabling live search will be invalid when `fetchTrigger` exists and **true**
+
+
+Prevent the keyboard from popping up when input focus is entered on mobile devices. Just add the window global variable to any page, such as:
+
+
+```js
+window['funda-ui__MultiFuncSelect-disable-livesearch'] = 1;
+```
+
+
+
+

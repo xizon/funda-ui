@@ -25,7 +25,9 @@ type EventCalendarProps = {
     cellCloseBtnClassName?: string;
     cellCloseBtnLabel?: string | React.ReactNode;
     onChangeDate?: (e: any, currentData: any) => void;
-
+    onChangeMonth?: (currentData: any) => void;
+    onChangeYear?: (currentData: any) => void;
+    onChangeToday?: (currentData: any) => void;
 
     // modal dialog
     modalMaskOpacity?: string;
@@ -60,7 +62,9 @@ const EventCalendar = (props: EventCalendarProps) => {
         langToday,
         iconRemove,
         onChangeDate,
-        
+        onChangeMonth,
+        onChangeYear,
+        onChangeToday,
 
         //
         cellCloseBtnClassName,
@@ -254,6 +258,13 @@ const EventCalendar = (props: EventCalendarProps) => {
             setSelectedMonth(_date.getMonth());
             setSelectedYear(_date.getFullYear());
 
+            //
+            onChangeMonth?.({
+                day: day,
+                month: _date.getMonth(),
+                year: _date.getFullYear()
+            });
+
             return _date;
         });
 
@@ -267,6 +278,13 @@ const EventCalendar = (props: EventCalendarProps) => {
             // update
             setSelectedMonth(_date.getMonth());
             setSelectedYear(_date.getFullYear());
+
+            //
+            onChangeMonth?.({
+                day: day,
+                month: _date.getMonth(),
+                year: _date.getFullYear()
+            });
 
             return _date;
         });
@@ -283,6 +301,14 @@ const EventCalendar = (props: EventCalendarProps) => {
 
         // close win
         setWinYear(false);
+
+        //
+        onChangeYear?.({
+            day: day,
+            month: month,
+            year: currentValue
+        });
+
     }
 
 
@@ -293,6 +319,15 @@ const EventCalendar = (props: EventCalendarProps) => {
 
         // close win
         setWinMonth(false);
+
+
+        //
+        onChangeMonth?.({
+            day: day,
+            month: currentIndex,
+            year: year
+        });
+
     }
 
 
@@ -300,6 +335,14 @@ const EventCalendar = (props: EventCalendarProps) => {
         setSelectedMonth(now.getMonth());
         setSelectedYear(now.getFullYear());
         setTodayDate(now);
+
+        //
+        onChangeToday?.({
+            day: now.getDay(),
+            month: now.getMonth(),
+            year: now.getFullYear()
+        });
+
     }
 
 

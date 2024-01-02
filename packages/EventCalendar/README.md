@@ -20,6 +20,9 @@ import EventCalendar from 'funda-ui/EventCalendar';
 | `cellCloseBtnClassName` | string  | - | Specify a class for close button of cell |
 | `cellCloseBtnLabel` | string \| ReactNode  | - | Set a piece of text or HTML code for the close button of cell |
 | `onChangeDate` | function  | - | Call a function when a date area is clicked. It returns only two values. <br /> <ol><li>The one is an HTMLElement of this area (**HTMLElement**) </li><li>The second parameter is the current value (**JSON Object**) </li></ol> |
+| `onChangeMonth` | function  | - | Called when the date moves to a new month. The function receives the selected month (0-11). Triggered when the previous, next or month selection button is clicked. It returns only one value which is the current value (**JSON Object**) |
+| `onChangeYear` | function  | - | Called when the date moves to a new year. The function receives the selected year. Triggered when the year selection button is clicked. It returns only one value which is the current value (**JSON Object**) |
+| `onChangeToday` | function  | - | Called when the date moves to today. Triggered when the today selection button is clicked. It returns only one value which is the current value (**JSON Object**) |
 | `modalContent` | ReactNode  | - | **For `<ModalDialog />`** Customize the content in the pop-up window, usually form controls. See the case at the bottom of the document. |
 | `modalDeleteContent` | ReactNode  | - | **For `<ModalDialog />`** Customize the content in the pop-up window (the part used for deletion), usually a form control, see the case at the bottom of the document. |
 | `modalHeading` | ReactNode  | - | **For `<ModalDialog />`** Set a window title |
@@ -405,7 +408,16 @@ export default () => {
                     console.log(e.currentTarget.dataset.date, e.currentTarget.dataset.week); // 2023-11-22, 2
                     console.log(currentData); // {id: 0, date: '2023-11-22'}  or {id: 1, date: '2023-11-20', time: '', data: 'event 1'}
                 }}
-                
+                onChangeMonth={(currentData: any) => {
+                    console.log(currentData); // {day: 22, month: 10, year: 2024}
+                }}
+                onChangeYear={(currentData: any) => {
+                    console.log(currentData); // {day: 22, month: 10, year: 2030}
+                }}
+                onChangeToday={(currentData: any) => {
+                    console.log(currentData); // {day: 22, month: 10, year: 2024}
+                }}
+
             />       
 
                   

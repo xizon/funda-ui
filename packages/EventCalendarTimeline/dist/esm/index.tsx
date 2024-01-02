@@ -2,6 +2,7 @@ import React, { useId, useState, useEffect, useMemo, useRef, useCallback } from 
 
 import ModalDialog from 'funda-modaldialog';
 
+
 import { getAbsolutePositionOfStage } from './utils/get-element-property';
 
 
@@ -36,6 +37,9 @@ type EventCalendarTimelineProps = {
     showWeek?: boolean;
     autoScroll?: boolean;
     onChangeDate?: (e: any, currentData: any) => void;
+    onChangeMonth?: (currentData: any) => void;
+    onChangeYear?: (currentData: any) => void;
+    onChangeToday?: (currentData: any) => void;
 
 
 
@@ -92,6 +96,9 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
         showWeek,
         autoScroll,
         onChangeDate,
+        onChangeMonth,
+        onChangeYear,
+        onChangeToday,
 
         //
         modalMaskOpacity,
@@ -311,7 +318,7 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
       
         // update modal positiona
         const _tableTooltipModalRef: any = document.querySelector(`#e-cal-tl-table__cell-tooltipwrapper-${idRes}`);
-        const _triggerRef: any = e.target;
+        const _triggerRef: any = e.currentTarget;
 
         if (_tableTooltipModalRef !== null && _triggerRef !== null) {
 
@@ -453,10 +460,19 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
             setSelectedMonth(_date.getMonth());
             setSelectedYear(_date.getFullYear());
 
+            //
+            onChangeMonth?.({
+                day: day,
+                month: _date.getMonth(),
+                year: _date.getFullYear()
+            });
+
 
             // restore table grid init status
             restoreTableGridInitStatus();
 
+
+            
             return _date;
         });
 
@@ -470,6 +486,13 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
             // update
             setSelectedMonth(_date.getMonth());
             setSelectedYear(_date.getFullYear());
+
+            //
+            onChangeMonth?.({
+                day: day,
+                month: _date.getMonth(),
+                year: _date.getFullYear()
+            });
 
 
             // restore table grid init status
@@ -492,6 +515,14 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
         // close win
         setWinYear(false);
 
+
+        //
+        onChangeYear?.({
+            day: day,
+            month: month,
+            year: currentValue
+        });
+
         // restore table grid init status
         restoreTableGridInitStatus();
 
@@ -506,6 +537,14 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
         // close win
         setWinMonth(false);
 
+
+        //
+        onChangeMonth?.({
+            day: day,
+            month: currentIndex,
+            year: year
+        });
+
         // restore table grid init status
         restoreTableGridInitStatus();
         
@@ -516,6 +555,13 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
         setSelectedMonth(now.getMonth());
         setSelectedYear(now.getFullYear());
         setTodayDate(now);
+
+        //
+        onChangeToday?.({
+            day: now.getDay(),
+            month: now.getMonth(),
+            year: now.getFullYear()
+        });
 
         // restore table grid init status
         restoreTableGridInitStatus();
@@ -689,13 +735,15 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
 
                         return d > 0 && d <= days[month] ? (
                             <td
-                                className={`e-cal-tl-table__cell-cushion-content__container ${eventSourcesData && _currentData.length > 0 ? 'has-event' : ''} ${d > 0 ? '' : 'empty'} ${d === now.getDate() ? 'today' : ''} ${d === day && tableRowNum === rowIndex ? 'selected' : ''} ${isLastCol ? 'last-cell' : ''}`}
+                                className={`e-cal-tl-table__cell-cushion-content__container e-cal-tl-table__cell-tooltiptrigger ${eventSourcesData && _currentData.length > 0 ? 'has-event' : ''} ${d > 0 ? '' : 'empty'} ${d === now.getDate() ? 'today' : ''} ${d === day && tableRowNum === rowIndex ? 'selected' : ''} ${isLastCol ? 'last-cell' : ''}`}
                                 key={"col" + i}
                                 data-index={colIndex-1}
                                 colSpan={1}
                                 data-date={getCalendarDate(_dateShow)}
                                 data-week={i}
                                 data-row={rowIndex}
+                                onMouseEnter={_eventContentTooltip === '' ? () => {} : ( tableTooltipDisabled ? () => {} :  (_eventContent !== '' ? (e: React.MouseEvent) => {handleTableTooltipMouseEnter(e, _eventContentTooltip)} : () => {}) )}
+                                onMouseLeave={_eventContentTooltip === '' ? () => {} : ( tableTooltipDisabled ? () => {} :  (_eventContent !== '' ? handleTableTooltipMouseLeave : () => {}) )}
                                 onClick={(e: React.MouseEvent) => {
 
                                     // update row data
@@ -731,9 +779,7 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
                                 {/* day */}
                                 {d > 0 ? <>
                                     <div 
-                                        className="e-cal-tl-table__cell-cushion e-cal-tl-table__cell-cushion-content e-cal-tl-table__cell-tooltiptrigger"                 
-                                        onMouseEnter={_eventContentTooltip === '' ? () => {} : ( tableTooltipDisabled ? () => {} :  (_eventContent !== '' ? (e: React.MouseEvent) => {handleTableTooltipMouseEnter(e, _eventContentTooltip)} : () => {}) )}
-                                        onMouseLeave={_eventContentTooltip === '' ? () => {} : ( tableTooltipDisabled ? () => {} :  (_eventContent !== '' ? handleTableTooltipMouseLeave : () => {}) )}
+                                        className="e-cal-tl-table__cell-cushion e-cal-tl-table__cell-cushion-content"                 
                                     >
                                         {_eventContent}
                                     </div>
@@ -922,13 +968,15 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
 
                         return (
                             <td
-                                className={`e-cal-tl-table__cell-cushion-content__container ${_currentData.length > 0 ? 'has-event' : ''} ${d > 0 ? '' : 'empty'} ${d === now.getDate() ? 'today' : ''} ${d === day && tableRowNum === rowIndex ? 'selected' : ''} ${isLastCol ? 'last-cell' : ''}`}
+                                className={`e-cal-tl-table__cell-cushion-content__container e-cal-tl-table__cell-tooltiptrigger ${_currentData.length > 0 ? 'has-event' : ''} ${d > 0 ? '' : 'empty'} ${d === now.getDate() ? 'today' : ''} ${d === day && tableRowNum === rowIndex ? 'selected' : ''} ${isLastCol ? 'last-cell' : ''}`}
                                 key={"col" + i}
                                 data-index={colIndex-1}
                                 colSpan={1}
                                 data-date={getCalendarDate(_dateShow)}
                                 data-week={i}
                                 data-row={rowIndex}
+                                onMouseEnter={_eventContentTooltip === '' ? () => {} : ( tableTooltipDisabled ? () => {} :  (_eventContent !== '' ? (e: React.MouseEvent) => {handleTableTooltipMouseEnter(e, _eventContentTooltip)} : () => {}) )}
+                                onMouseLeave={_eventContentTooltip === '' ? () => {} : ( tableTooltipDisabled ? () => {} :  (_eventContent !== '' ? handleTableTooltipMouseLeave : () => {}) )}
                                 onClick={(e: React.MouseEvent) => {
 
                                     // update row data
@@ -971,9 +1019,7 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
                                 {/* day */}
                                 {d > 0 ? <>
                                     <div 
-                                        className="e-cal-tl-table__cell-cushion e-cal-tl-table__cell-cushion-content e-cal-tl-table__cell-tooltiptrigger"                 
-                                        onMouseEnter={_eventContentTooltip === '' ? () => {} : ( tableTooltipDisabled ? () => {} :  (_eventContent !== '' ? (e: React.MouseEvent) => {handleTableTooltipMouseEnter(e, _eventContentTooltip)} : () => {}) )}
-                                        onMouseLeave={_eventContentTooltip === '' ? () => {} : ( tableTooltipDisabled ? () => {} :  (_eventContent !== '' ? handleTableTooltipMouseLeave : () => {}) )}
+                                        className="e-cal-tl-table__cell-cushion e-cal-tl-table__cell-cushion-content"                 
                                     >
                                         {_eventContent}
                                     </div>
