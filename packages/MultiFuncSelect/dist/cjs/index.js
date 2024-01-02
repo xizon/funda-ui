@@ -803,6 +803,7 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
     onBlur = props.onBlur,
     onFocus = props.onFocus,
     attributes = _objectWithoutProperties(props, _excluded);
+  var LIVE_SEARCH_OK = typeof fetchTrigger !== 'undefined' && fetchTrigger === true ? true : false;
   var LIVE_SEARCH_DISABLED = (typeof fetchTrigger === 'undefined' || fetchTrigger === false) && typeof window !== 'undefined' && typeof window['funda-ui__MultiFuncSelect-disable-livesearch'] !== 'undefined' ? true : false; // Globally disable real-time search functionality (only valid for non-dynamic requests)
 
   var INPUT_READONLY = LIVE_SEARCH_DISABLED ? true : typeof readOnly === 'undefined' ? null : readOnly;
@@ -1433,9 +1434,13 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
   function cancel() {
     // hide list
     setIsOpen(false);
-
-    // restore data
-    setOptionsData(orginalData);
+    if (LIVE_SEARCH_OK) {
+      // clean data
+      setOptionsData([]);
+    } else {
+      // restore data
+      setOptionsData(orginalData);
+    }
 
     // update temporary value
     setControlTempValue(null);
@@ -1446,9 +1451,13 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
   function activate() {
     // show list
     setIsOpen(true);
-
-    // restore data
-    setOptionsData(orginalData);
+    if (LIVE_SEARCH_OK) {
+      // clean data
+      setOptionsData([]);
+    } else {
+      // restore data
+      setOptionsData(orginalData);
+    }
 
     // update temporary value
     setControlTempValue('');
@@ -1852,8 +1861,14 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
     //
     if (val.replace(/\s/g, "") === '') {
       // No elements found. Consider changing the search query.
-      // restore data
-      setOptionsData(orginalData);
+
+      if (LIVE_SEARCH_OK) {
+        // clean data
+        setOptionsData([]);
+      } else {
+        // restore data
+        setOptionsData(orginalData);
+      }
     } else {
       handleChangeFetchSafe(val);
     }
@@ -2162,7 +2177,7 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
   }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("path", {
     d: "M144,6525.39 L142.594,6524 L133.987,6532.261 L133.069,6531.38 L133.074,6531.385 L125.427,6524.045 L124,6525.414 C126.113,6527.443 132.014,6533.107 133.987,6535 C135.453,6533.594 134.024,6534.965 144,6525.39"
   })))))), fetchTrigger ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("span", {
-    className: "multifunc-select-multi__control-searchbtn position-absolute top-0 end-0"
+    className: "multifunc-select-single__control-searchbtn position-absolute top-0 end-0"
   }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("button", {
     tabIndex: -1,
     type: "button",
