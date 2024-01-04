@@ -153,7 +153,6 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
     const idRes = id || uniqueID;
     const rootRef = useRef<any>(null);
     const rootSingleRef = useRef<any>(null);
-    const rootMultiRef = useRef<any>(null);
     const selectInputRef = useRef<any>(null);
     const valueInputRef = useRef<any>(null);
     const listRef = useRef<any>(null);
@@ -177,13 +176,14 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
     const [incomingData, setIncomingData] = useState<string | null | undefined>(null);
 
 
+
     // Multiple selection
+    let selectedSign: boolean = false;
     const MULTI_SEL_VALID = multiSelect ? multiSelect.valid : false;
     const [controlArr, setControlArr] = useState<any>({
         labels: [],
         values: []
     });
-    const [itemSelectedAll, setItemSelectedAll] = useState<boolean>(false);
     const multiSelControlOptionExist = (arr: any[], val: any) => arr.map((v: any) => v.toString()).includes(val.toString());
 
 
@@ -232,9 +232,6 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
                     popwinBtnEventsInit(_filterRes);
                     popwinFilterItems(val);
                 }, 0 );  
-
-
-
             });
         } else {
             _orginalData = orginalData;
@@ -482,7 +479,6 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
                         labels: [],
                         values: []
                     });
-                    setItemSelectedAll(false);
                 }
 
                 
@@ -546,7 +542,7 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
             //
             onFetch?.(selectInputRef.current, valueInputRef.current, defaultValue, _ORGIN_DATA, incomingData);
 
-
+            
             //
             return _ORGIN_DATA;
 
@@ -611,7 +607,6 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
                         labels: [],
                         values: []
                     });
-                    setItemSelectedAll(false);
                 }
 
                 if ( typeof defaultValue !== 'undefined' && defaultValue !== '' && multiSelect?.data !== null ) {
@@ -683,7 +678,7 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
         let contentMaxHeight = 0;
 
         // update modal position
-        const _modalRef: any = document.querySelector(`#multifunc-select__options-wrapper-${idRes}`);
+        const _modalRef: any = document.querySelector(`#mf-select__options-wrapper-${idRes}`);
         const _triggerRef: any = selectInputRef.current;
 
         // console.log(getAbsolutePositionOfStage(_triggerRef));
@@ -753,12 +748,16 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
         // Adjust position
         if (targetPos === 'top') {
             _modalRef.style.left = x + 'px';
-            _modalRef.style.top = y - POS_OFFSET - (listContentRef.current.clientHeight) - 2 + 'px';
+            //_modalRef.style.top = y - POS_OFFSET - (listContentRef.current.clientHeight) - 2 + 'px';
+            _modalRef.style.top = 'auto';
+            _modalRef.style.bottom = (window.innerHeight - _triggerBox.top) + POS_OFFSET + 2 + 'px';
+            _modalRef.style.setProperty('position', 'fixed', 'important');
         }
 
         if (targetPos === 'bottom') {
             _modalRef.style.left = x + 'px';
             _modalRef.style.top = y + height + POS_OFFSET + 'px';
+            _modalRef.style.setProperty('position', 'absolute', 'important');
         }
 
 
@@ -805,12 +804,12 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
 
     function popwinPosHide() {
 
-        const _modalRef: any = document.querySelector(`#multifunc-select__options-wrapper-${idRes}`);
+        const _modalRef: any = document.querySelector(`#mf-select__options-wrapper-${idRes}`);
 
         if (_modalRef !== null && listContentRef.current !== null) {
 
-            const _nodataDiv = listContentRef.current.querySelector('.multifunc-select-multi__control-option-item--nomatch');
-            const _btnSelectAll = listContentRef.current.querySelector('.multifunc-select-multi__control-option-item--select-all');
+            const _nodataDiv = listContentRef.current.querySelector('.mf-select-multi__control-option-item--nomatch');
+            const _btnSelectAll = listContentRef.current.querySelector('.mf-select-multi__control-option-item--select-all');
 
             // remove classnames, data-* and styles
             _modalRef.classList.remove('active');
@@ -821,7 +820,7 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
             
 
             // display all filtered items
-            [].slice.call(listContentRef.current.querySelectorAll('.multifunc-select-multi__control-option-item')).forEach((node: any) => {
+            [].slice.call(listContentRef.current.querySelectorAll('.mf-select-multi__control-option-item')).forEach((node: any) => {
                 node.classList.remove('hide');
             });
             _nodataDiv.classList.add('hide');
@@ -837,28 +836,43 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
      function popwinBtnEventsInit(getOptionsData: any[]) {
         if (listContentRef.current === null) return;
 
-
+   
         // options event listener
         // !!! to prevent button mismatch when changing
-        [].slice.call(listContentRef.current.querySelectorAll('.multifunc-select-multi__control-option-item')).forEach((node: HTMLElement) => {
-            const optVal = node.dataset.value;
-            getOptionsData.forEach((item: any) => {
-                if (optVal == item.value) {
+        [].slice.call(listContentRef.current.querySelectorAll('.mf-select-multi__control-option-item')).forEach((node: HTMLElement) => {
 
-                    if ( typeof node.dataset.ev === 'undefined' ) {
-                        node.dataset.ev = 'true';
-                        node.addEventListener('pointerdown', (e: any) => {
-                            handleSelect(e);
-                        });
-                    }
+            // Solve the problem of missing click events caused by `<MultiFuncSelect />` not updating "data" []
+            if (getOptionsData.length === 0) {
+
+                if ( typeof node.dataset.ev === 'undefined' ) {
+                    node.dataset.ev = 'true';
+                    node.addEventListener('pointerdown', (e: any) => {
+                        handleSelect(e);
+                    });
                 }
-            });
+
+            } else {
+                const optVal = node.dataset.value;
+                getOptionsData.forEach((item: any) => {
+                    if (optVal == item.value) {
+
+                        if ( typeof node.dataset.ev === 'undefined' ) {
+                            node.dataset.ev = 'true';
+                            node.addEventListener('pointerdown', (e: any) => {
+                                handleSelect(e);
+                            });
+                        }
+                    }
+                });
+            }
+
+        
 
 
         });
 
 
-        const _btnSelectAll = listContentRef.current.querySelector('.multifunc-select-multi__control-option-item--select-all > span');
+        const _btnSelectAll = listContentRef.current.querySelector('.mf-select-multi__control-option-item--select-all > span');
         if ( _btnSelectAll !== null && typeof _btnSelectAll.dataset.ev === 'undefined') {
             _btnSelectAll.dataset.ev = 'true';
             _btnSelectAll.addEventListener('pointerdown', (e: any) => {
@@ -869,13 +883,13 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
     
     }
 
- 
+
 
     function popwinFilterItems(val: any) {
         if (listContentRef.current === null) return;
 
 
-        [].slice.call(listContentRef.current.querySelectorAll('.multifunc-select-multi__control-option-item')).forEach((node: any) => {
+        [].slice.call(listContentRef.current.querySelectorAll('.mf-select-multi__control-option-item')).forEach((node: any) => {
             
             // Avoid fatal errors causing page crashes
             const _queryString = typeof node.dataset.querystring !== 'undefined' && node.dataset.querystring !== null ? node.dataset.querystring : '';
@@ -901,10 +915,10 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
         
 
         // display all filtered items
-        const _btnSelectAll = listContentRef.current.querySelector('.multifunc-select-multi__control-option-item--select-all');
-        const _nodataDiv = listContentRef.current.querySelector('.multifunc-select-multi__control-option-item--nomatch');
-        if (val.replace(/\s/g, "") === '') {
-             [].slice.call(listContentRef.current.querySelectorAll('.multifunc-select-multi__control-option-item')).forEach((node: any) => {
+        const _btnSelectAll = listContentRef.current.querySelector('.mf-select-multi__control-option-item--select-all');
+        const _nodataDiv = listContentRef.current.querySelector('.mf-select-multi__control-option-item--nomatch');
+        if ((val === null ? '' : val).replace(/\s/g, "") === '') {
+             [].slice.call(listContentRef.current.querySelectorAll('.mf-select-multi__control-option-item')).forEach((node: any) => {
                 node.classList.remove('hide');
             });
             _nodataDiv.classList.add('hide');
@@ -925,13 +939,10 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
         const pos = listContentRef.current.dataset.pos;
         const filteredHeight = listContentRef.current.firstChild.clientHeight;
 
-        if (pos === 'bottom') {
-            if (parseFloat(oldHeight) > filteredHeight) {
-                listContentRef.current.style.height = filteredHeight + 'px';
-            } else {
-                listContentRef.current.style.height = oldHeight + 'px';
-            }
-            
+        if (parseFloat(oldHeight) > filteredHeight) {
+            listContentRef.current.style.height = filteredHeight + 'px';
+        } else {
+            listContentRef.current.style.height = oldHeight + 'px';
         }
 
     }
@@ -942,9 +953,9 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
     function popwinNoMatchInit() {
         if (listContentRef.current === null) return;
 
-        const _btnSelectAll = listContentRef.current.querySelector('.multifunc-select-multi__control-option-item--select-all');
-        const _nodataDiv = listContentRef.current.querySelector('.multifunc-select-multi__control-option-item--nomatch');
-        const emptyFieldsCheck = [].slice.call(listContentRef.current.querySelectorAll('.multifunc-select-multi__control-option-item')).every((node: any) => {
+        const _btnSelectAll = listContentRef.current.querySelector('.mf-select-multi__control-option-item--select-all');
+        const _nodataDiv = listContentRef.current.querySelector('.mf-select-multi__control-option-item--nomatch');
+        const emptyFieldsCheck = [].slice.call(listContentRef.current.querySelectorAll('.mf-select-multi__control-option-item')).every((node: any) => {
             if (!node.classList.contains('hide')) {
                 return false;
             }
@@ -1030,7 +1041,7 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
 
     function rootWrapperSwitch() {
         // remove active styles from the root container and activate current wrapper
-        [].slice.call(document.querySelectorAll('.multifunc-select__wrapper')).forEach((node: any) => {
+        [].slice.call(document.querySelectorAll('.mf-select__wrapper')).forEach((node: any) => {
             node.classList.remove('active', 'focus');
         });
         rootRef.current.classList.add('active', 'focus');
@@ -1051,15 +1062,17 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
         const incominggetOptionsData = valueInputRef.current.dataset.options;
 
 
+
         // cancel
-        if ( !(MULTI_SEL_VALID && isOpen) ) {
+        if ( !(MULTI_SEL_VALID) ) {
             cancel();
         }
 
         //remove focus style
-        if ( !(MULTI_SEL_VALID && isOpen) ) {
+        if ( !(MULTI_SEL_VALID) ) {
             rootRef.current.classList.remove('focus');
         }
+
 
 
         // update value * label
@@ -1100,8 +1113,8 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
                     // remove item
                     //#########
                     el.currentTarget.dataset.selected = 'false';
-                    el.currentTarget.querySelector('.multifunc-select-multi__control-option-checkbox--selected').style.display = 'inline-block';
-                    el.currentTarget.querySelector('.multifunc-select-multi__control-option-checkbox').style.display = 'none';
+                    el.currentTarget.querySelector('.mf-select-multi__control-option-checkbox-selected').classList.add('d-none');
+                    el.currentTarget.querySelector('.mf-select-multi__control-option-checkbox-placeholder').classList.remove('d-none');
 
                     //
                     setControlArr((prevState: any) => {
@@ -1125,8 +1138,8 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
                     // add item
                     //#########
                     el.currentTarget.dataset.selected = 'true';
-                    el.currentTarget.querySelector('.multifunc-select-multi__control-option-checkbox--selected').style.display = 'none';
-                    el.currentTarget.querySelector('.multifunc-select-multi__control-option-checkbox').style.display = 'inline-block';
+                    el.currentTarget.querySelector('.mf-select-multi__control-option-checkbox-selected').classList.remove('d-none');
+                    el.currentTarget.querySelector('.mf-select-multi__control-option-checkbox-placeholder').classList.add('d-none');
 
                     //
                     setControlArr((prevState: any) => {
@@ -1208,8 +1221,9 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
                     // remove item
                     //#########
                     el.currentTarget.dataset.selected = 'false';
-                    el.currentTarget.querySelector('.multifunc-select-multi__control-option-checkbox--selected').style.display = 'inline-block';
-                    el.currentTarget.querySelector('.multifunc-select-multi__control-option-checkbox').style.display = 'none';
+                    el.currentTarget.querySelector('.mf-select-multi__control-option-checkbox-selected').classList.add('d-none');
+                    el.currentTarget.querySelector('.mf-select-multi__control-option-checkbox-placeholder').classList.remove('d-none');
+
 
                     //
                     setControlArr((prevState: any) => {
@@ -1230,9 +1244,11 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
                     //#########
                     // add item
                     //#########
+          
                     el.currentTarget.dataset.selected = 'true';
-                    el.currentTarget.querySelector('.multifunc-select-multi__control-option-checkbox--selected').style.display = 'none';
-                    el.currentTarget.querySelector('.multifunc-select-multi__control-option-checkbox').style.display = 'inline-block';
+                    el.currentTarget.querySelector('.mf-select-multi__control-option-checkbox-selected').classList.remove('d-none');
+                    el.currentTarget.querySelector('.mf-select-multi__control-option-checkbox-placeholder').classList.add('d-none');
+
 
                     //
                     setControlArr((prevState: any) => {
@@ -1304,81 +1320,64 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
 
 
         const updateOptionCheckboxes = (type: string) => {
-            [].slice.call(listContentRef.current.querySelectorAll('.multifunc-select-multi__control-option-item')).forEach((node: any) => {
+
+            const _labels: any[] = [];
+            const _values: any[] = [];
+
+            [].slice.call(listContentRef.current.querySelectorAll('.mf-select-multi__control-option-item:not(.hide)')).forEach((node: any) => {
+
+                const _label = node.dataset.label;
+                const _value = node.dataset.value;
+
 
                 if (type === 'remove') {
                     //#########
                     // remove item
                     //#########
                     node.dataset.selected = 'false';
-                    node.querySelector('.multifunc-select-multi__control-option-checkbox--selected').style.display = 'inline-block';
-                    node.querySelector('.multifunc-select-multi__control-option-checkbox').style.display = 'none';
+                    node.querySelector('.mf-select-multi__control-option-checkbox-selected').classList.add('d-none');
+                    node.querySelector('.mf-select-multi__control-option-checkbox-placeholder').classList.remove('d-none');
+      
+                    //
+                    const _indexLable = _labels.findIndex((item: any) => item == _label);
+                    const _indexValue = _values.findIndex((item: any) => item == _value);
+                    if (_indexLable !== -1) _labels.splice(_indexLable, 1);
+                    if (_indexValue !== -1) _values.splice(_indexValue, 1);
+                    
 
                 } else {
                     //#########
                     // add item
                     //#########
                     node.dataset.selected = 'true';
-                    node.querySelector('.multifunc-select-multi__control-option-checkbox--selected').style.display = 'none';
-                    node.querySelector('.multifunc-select-multi__control-option-checkbox').style.display = 'inline-block';
+                    node.querySelector('.mf-select-multi__control-option-checkbox-selected').classList.remove('d-none');
+                    node.querySelector('.mf-select-multi__control-option-checkbox-placeholder').classList.add('d-none');
+
+                    //
+                    _labels.push(_label);
+                    _values.push(_value);
 
                 }
 
-
             });
+
+            setControlArr({
+                labels: _labels,
+                values: _values
+            });
+            
         };
 
 
-        setItemSelectedAll((prevState) => {
+        if (selectedSign) {
+            updateOptionCheckboxes('remove');
+        } else {
+            updateOptionCheckboxes('add');
+        }
 
-            if ( !prevState ) {
-
+        selectedSign = !selectedSign;
+   
         
-                setControlArr((prevData: any) => {
-
-                    const currentControlValueArr = [...prevData.values, ...optionsData.map((v: any) => v.value)].filter((item: any, index: number, arr: any[]) => arr.indexOf(item, 0) === index );
-                    const currentControlLabelArr = [...formatIndentVal(prevData.labels), ...formatIndentVal(optionsData.map((v: any) => v.label))].filter((item: any, index: number, arr: any[]) => arr.indexOf(item, 0) === index );
-
-                    //
-                    onChangeSelectAll(currentControlLabelArr, currentControlValueArr);    
-                    
-                    // update option checkboxes
-                    updateOptionCheckboxes('add');
-
-          
-                    return {
-                        labels: currentControlLabelArr,
-                        values: currentControlValueArr
-                    }
-                });
-
-
-            } else {
-
-        
-                setControlArr((prevData: any) => {
-
-                    const currentControlValueArr = removeItems(prevData.values, optionsData.map((v: any) => v.value));
-                    const currentControlLabelArr = removeItems(formatIndentVal(prevData.labels), formatIndentVal(optionsData.map((v: any) => v.label)));
-
-
-                    //
-                    onChangeSelectAll(currentControlLabelArr, currentControlValueArr);  
-        
-                    // update option checkboxes
-                    updateOptionCheckboxes('remove');
-
-        
-                    return {
-                        labels: currentControlLabelArr,
-                        values: currentControlValueArr
-                    }
-                });
-
-            }
-
-            return !prevState;
-        } );
 
     }
 
@@ -1457,6 +1456,7 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
 
 
         const res = await fetchData((_params).join(','), value, false);
+        
 
         return res;
     }
@@ -1499,19 +1499,7 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
     function handleBlur(event: any) {
 
 
-        //remove focus style
-        if ( !(MULTI_SEL_VALID && isOpen) ) {
-            rootRef.current.classList.remove('focus');
-        }
-        
         setTimeout(() => {
-
-        
-            // cancel
-            if ( !(MULTI_SEL_VALID && isOpen) ) {
-                cancel();
-            }
-
             onBlur?.(event);
         }, 300);
 
@@ -1521,7 +1509,7 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
 
     function handleClose(event: any) {
         
-        if (event.target.closest(`.multifunc-select__wrapper`) === null && event.target.closest(`.multifunc-select__options-wrapper`) === null ) {
+        if (event.target.closest(`.mf-select__wrapper`) === null && event.target.closest(`.mf-select__options-wrapper`) === null ) {
             // cancel
             cancel();
 
@@ -1727,7 +1715,8 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
             window.removeEventListener('touchmove', windowScrollUpdate);
 
             //
-            document.querySelector(`#multifunc-select__options-wrapper-${idRes}`)?.remove();
+            document.querySelector(`#mf-select__options-wrapper-${idRes}`)?.remove();
+            
             
         }
 
@@ -1737,15 +1726,12 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
     return (
         <>
 
-            {label ? <><div className="multifunc-select__label"><label htmlFor={`label-${idRes}`} className="form-label" dangerouslySetInnerHTML={{__html: `${label}`}}></label></div></> : null}
+            {label ? <><div className="mf-select__label"><label htmlFor={`label-${idRes}`} className="form-label" dangerouslySetInnerHTML={{__html: `${label}`}}></label></div></> : null}
 
-            <div id={`multifunc-select__wrapper-${idRes}`} className={`multifunc-select__wrapper ${wrapperClassName || wrapperClassName === '' ? wrapperClassName : 'mb-3 position-relative'} ${MULTI_SEL_VALID ? 'multiple-selection' : ''} ${isOpen ? 'active focus' : ''}`} ref={rootRef}>
+            <div id={`mf-select__wrapper-${idRes}`} className={`mf-select__wrapper ${wrapperClassName || wrapperClassName === '' ? wrapperClassName : 'mb-3 position-relative'} ${MULTI_SEL_VALID ? 'multiple-selection' : ''} ${isOpen ? 'active focus' : ''}`} ref={rootRef}>
                 
-                    {/*
-                    // ++++++++++++++++++++
-                    // Single selection Control (includes result container)
-                    // ++++++++++++++++++++
-                    */}
+
+                    {/* RESULT CONTAINER */}
                     <div ref={rootSingleRef} className="position-relative">
                         <input 
                             ref={(node) => {
@@ -1792,8 +1778,34 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
                             {...attributes}
                         />
 
-                        
-                        <span className="arrow position-absolute top-0 end-0 me-2 mt-1" style={{translate: 'all .2s', transform: isOpen ? 'rotate(180deg) translateY(-4px)' : 'rotate(0) translateY(0)', pointerEvents: 'none', display: fetchTrigger ? 'none' : 'inline-block'}}>
+
+                    </div>
+                    {/* /RESULT CONTAINER */}
+
+
+
+                    {/*
+                    // ++++++++++++++++++++
+                    // Single selection Control
+                    // ++++++++++++++++++++
+                    */}
+                    {!MULTI_SEL_VALID ? <div className="mf-select-single__inputplaceholder-wrapper">
+
+
+                        <div className="mf-select-single__inputplaceholder-inner">
+                            <input 
+                                tabIndex={tabIndex || 0}
+                                type="text"
+                                className={controlClassName || controlClassName === '' ? controlClassName : "form-control"}
+                            />
+
+                            <span className={`mf-select-multi__control-blinking-cursor ${generateInputFocusStr() === '|' ? 'animated' : ''}`}>
+                                {controlTempValue || controlTempValue === '' ? (controlTempValue.length === 0 ? <span className={`${generateInputFocusStr() === placeholder && placeholder !== '' && typeof placeholder !== 'undefined' ? 'control-placeholder' : ''}`}>{generateInputFocusStr()}</span> : <span>{controlTempValue}</span>) : (stripHTML(controlLabel as never).length === 0 ? <span className={`${generateInputFocusStr() === placeholder && placeholder !== '' && typeof placeholder !== 'undefined' ? 'control-placeholder' : ''}`}>{generateInputFocusStr()}</span> : <span>{stripHTML(controlLabel as never)}</span>) }
+                            </span>
+                        </div>
+
+
+                        <span className="arrow position-absolute top-0 end-0 me-2 mt-1" style={{ translate: 'all .2s', transform: isOpen ? 'rotate(180deg) translateY(-4px)' : 'rotate(0) translateY(0)', pointerEvents: 'none', display: fetchTrigger ? 'none' : 'inline-block' }}>
                             {controlArrow ? controlArrow : <svg width="10px" height="10px" viewBox="0 -4.5 20 20">
                                 <g stroke="none" strokeWidth="1" fill="none">
                                     <g transform="translate(-180.000000, -6684.000000)" className="arrow-fill-g" fill="#a5a5a5">
@@ -1808,8 +1820,18 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
 
 
                         {fetchTrigger ? <>
-                            <span className="multifunc-select-single__control-searchbtn position-absolute top-0 end-0">
-                                <button tabIndex={-1} type="button" className="btn border-end-0 rounded-pill" style={{pointerEvents: 'none'}}>
+                            <span className="mf-select-multi__control-searchbtn position-absolute top-0 end-0">
+                                <button tabIndex={-1} type="button" className="btn border-end-0 rounded-pill" onClick={(e: React.MouseEvent) => {
+                                    handleFetch().then((response: any) => {
+                                       
+                                        // pop win initalization
+                                        setTimeout( ()=> {
+                                            popwinPosInit();
+                                            popwinBtnEventsInit(response);
+                                            popwinFilterItems(controlTempValue);
+                                        }, 0 );  
+                                    });
+                                }}>
                                     <svg width="1em" height="1em" fill="#a5a5a5" viewBox="0 0 16 16">
                                         <path d="M12.027 9.92L16 13.95 14 16l-4.075-3.976A6.465 6.465 0 0 1 6.5 13C2.91 13 0 10.083 0 6.5 0 2.91 2.917 0 6.5 0 10.09 0 13 2.917 13 6.5a6.463 6.463 0 0 1-.973 3.42zM1.997 6.452c0 2.48 2.014 4.5 4.5 4.5 2.48 0 4.5-2.015 4.5-4.5 0-2.48-2.015-4.5-4.5-4.5-2.48 0-4.5 2.014-4.5 4.5z" fillRule="evenodd" />
                                     </svg>
@@ -1819,8 +1841,8 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
                         </> : null}
 
 
+                    </div> : null}
 
-                    </div>
 
                     
                     {/*
@@ -1828,11 +1850,11 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
                     // Multiple selection Control
                     // ++++++++++++++++++++
                     */}
-                    {MULTI_SEL_VALID ? <div ref={rootMultiRef} className="multifunc-select-multi__wrapper">
+                    {MULTI_SEL_VALID ? <div className="mf-select-multi__inputplaceholder-wrapper">
 
-                        <div className="multifunc-select-multi__control-wrapper">
+                        <div className="mf-select-multi__inputplaceholder-inner">
                             <div>
-                                <ul className="multifunc-select-multi__list">
+                                <ul className="mf-select-multi__list">
 
                                     {controlArr.labels.map((item: any, index: number) => (
                                         <li key={index}>
@@ -1842,8 +1864,8 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
                                         </li>
                                     ))}
                                     
-                                    <li className={`multifunc-select-multi__list-item-placeholder ${typeof placeholder === 'undefined' || placeholder === '' ? 'hide' : ''}`}>
-                                        <span className={`multifunc-select-multi__control-blinking-cursor ${generateInputFocusStr() === placeholder && placeholder !== '' && typeof placeholder !== 'undefined' ? 'control-placeholder' : ''} ${generateInputFocusStr() === '|' ? 'animated' : ''}`}>
+                                    <li className={`mf-select-multi__list-item-placeholder ${typeof placeholder === 'undefined' || placeholder === '' ? 'hide' : ''}`}>
+                                        <span className={`mf-select-multi__control-blinking-cursor ${generateInputFocusStr() === placeholder && placeholder !== '' && typeof placeholder !== 'undefined' ? 'control-placeholder' : ''} ${generateInputFocusStr() === '|' ? 'animated' : ''}`}>
                                             {generateInputFocusStr()}
                                         </span>
                                     </li>
@@ -1868,8 +1890,18 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
 
 
                         {fetchTrigger ? <>
-                            <span className="multifunc-select-multi__control-searchbtn position-absolute top-0 end-0">
-                                <button tabIndex={-1} type="button" className="btn border-end-0 rounded-pill" onClick={handleFetch}>
+                            <span className="mf-select-multi__control-searchbtn position-absolute top-0 end-0">
+                                <button tabIndex={-1} type="button" className="btn border-end-0 rounded-pill" onClick={(e: React.MouseEvent) => {
+                                    handleFetch().then((response: any) => {
+                                       
+                                        // pop win initalization
+                                        setTimeout( ()=> {
+                                            popwinPosInit();
+                                            popwinBtnEventsInit(response);
+                                            popwinFilterItems(controlTempValue);
+                                        }, 0 );  
+                                    });
+                                }}>
                                     <svg width="1em" height="1em" fill="#a5a5a5" viewBox="0 0 16 16">
                                         <path d="M12.027 9.92L16 13.95 14 16l-4.075-3.976A6.465 6.465 0 0 1 6.5 13C2.91 13 0 10.083 0 6.5 0 2.91 2.917 0 6.5 0 10.09 0 13 2.917 13 6.5a6.463 6.463 0 0 1-.973 3.42zM1.997 6.452c0 2.48 2.014 4.5 4.5 4.5 2.48 0 4.5-2.015 4.5-4.5 0-2.48-2.015-4.5-4.5-4.5-2.48 0-4.5 2.014-4.5 4.5z" fillRule="evenodd" />
                                     </svg>
@@ -1887,25 +1919,18 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
                     {optionsData && !hasErr ? <>
                     <div 
                         ref={listRef} 
-                        id={`multifunc-select__options-wrapper-${idRes}`} 
-                        className={`multifunc-select__options-wrapper list-group position-absolute border shadow small ${winWidth ? '' : ''}`} 
+                        id={`mf-select__options-wrapper-${idRes}`} 
+                        className={`mf-select__options-wrapper list-group position-absolute border shadow small ${winWidth ? '' : ''}`} 
                         style={{ zIndex: (depth ? depth : 1055), width: WIN_WIDTH}} 
                         role="tablist"
                     >
 
-                        {controlTempValue !== null && optionsData.length === 0 ? <>
-                       
-                        </> : <>
-                        
-
-                        </>}
-
-                        <div className="multifunc-select__options-contentlist rounded" style={{backgroundColor: 'var(--bs-list-group-bg)'}} ref={listContentRef}>
-                            <div className="multifunc-select__options-contentlist-inner">
+                        <div className="mf-select__options-contentlist rounded" style={{backgroundColor: 'var(--bs-list-group-bg)'}} ref={listContentRef}>
+                            <div className="mf-select__options-contentlist-inner">
 
                                 {/* SELECT ALL BUTTON */}
                                 {MULTI_SEL_VALID ? <>
-                                    <span tabIndex={-1} className="list-group-item list-group-item-action border-start-0 border-end-0 text-secondary bg-light multifunc-select-multi__control-option-item--select-all" role="tab" style={{ display: multiSelect?.selectAll ? 'block' : 'none' }}>
+                                    <span tabIndex={-1} className="list-group-item list-group-item-action border-start-0 border-end-0 text-secondary bg-light mf-select-multi__control-option-item--select-all" role="tab" style={{ display: multiSelect?.selectAll ? 'block' : 'none' }}>
                                         <span tabIndex={-1} className="btn btn-secondary" dangerouslySetInnerHTML={{
                                             __html: `${multiSelect?.selectAllLabel || 'Select all options'}`
                                         }}></span>
@@ -1914,7 +1939,7 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
                                 {/* /SELECT ALL BUTTON */}
 
                                 {/* NO MATCH */}
-                                <button tabIndex={-1} type="button" className="list-group-item list-group-item-action no-match border-0 multifunc-select-multi__control-option-item--nomatch hide" disabled>{fetchNoneInfo || 'No match yet'}</button>
+                                <button tabIndex={-1} type="button" className="list-group-item list-group-item-action no-match border-0 mf-select-multi__control-option-item--nomatch hide" disabled>{fetchNoneInfo || 'No match yet'}</button>
                                 {/* /NO MATCH */}
 
 
@@ -1930,7 +1955,7 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
                                         // ++++++++++++++++++++
                                         // Single selection
                                         // ++++++++++++++++++++
-                                        return <button tabIndex={-1} type="button" data-index={index} key={index} className={`list-group-item list-group-item-action border-start-0 border-end-0 multifunc-select-multi__control-option-item ${startItemBorder} ${endItemBorder} border-bottom-0 ${typeof item.disabled === 'undefined' ? '' : (item.disabled == true ? 'disabled' : '')}`} data-value={`${item.value}`} data-label={`${item.label}`} data-querystring={`${typeof item.queryString === 'undefined' ? '' : item.queryString}`} data-itemdata={JSON.stringify(item)} role="tab" dangerouslySetInnerHTML={{
+                                        return <button tabIndex={-1} type="button" data-index={index} key={index} className={`list-group-item list-group-item-action border-start-0 border-end-0 mf-select-multi__control-option-item ${startItemBorder} ${endItemBorder} border-bottom-0 ${typeof item.disabled === 'undefined' ? '' : (item.disabled == true ? 'disabled' : '')}`} data-value={`${item.value}`} data-label={`${item.label}`} data-querystring={`${typeof item.queryString === 'undefined' ? '' : item.queryString}`} data-itemdata={JSON.stringify(item)} role="tab" dangerouslySetInnerHTML={{
                                             __html: item.label
                                         }}></button>
 
@@ -1941,17 +1966,13 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
                                         // ++++++++++++++++++++
                                         const itemSelected = multiSelControlOptionExist(controlArr.values, item.value) ? true : false;
 
-                                        return <button tabIndex={-1} type="button" data-selected={`${itemSelected ? 'true' : 'false'}`} data-index={index} key={index} className={`list-group-item list-group-item-action border-start-0 border-end-0 multifunc-select-multi__control-option-item ${startItemBorder} ${endItemBorder} border-bottom-0 ${itemSelected ? 'list-group-item-secondary item-selected' : ''} ${typeof item.disabled === 'undefined' ? '' : (item.disabled == true ? 'disabled' : '')}`} data-value={`${item.value}`} data-label={`${item.label}`} data-querystring={`${typeof item.queryString === 'undefined' ? '' : item.queryString}`} data-itemdata={JSON.stringify(item)} role="tab">
-                                            <var className="me-1 multifunc-select-multi__control-option-checkbox multifunc-select-multi__control-option-checkbox--selected">
+                                        return <button tabIndex={-1} type="button" data-selected={`${itemSelected ? 'true' : 'false'}`} data-index={index} key={index} className={`list-group-item list-group-item-action border-start-0 border-end-0 mf-select-multi__control-option-item ${startItemBorder} ${endItemBorder} border-bottom-0 ${itemSelected ? 'list-group-item-secondary item-selected' : ''} ${typeof item.disabled === 'undefined' ? '' : (item.disabled == true ? 'disabled' : '')}`} data-value={`${item.value}`} data-label={`${item.label}`} data-querystring={`${typeof item.queryString === 'undefined' ? '' : item.queryString}`} data-itemdata={JSON.stringify(item)} role="tab">
+                                            <var className={`me-1 mf-select-multi__control-option-checkbox-selected ${itemSelected ? '' : 'd-none'}`}>
                                                 <svg width="1.2em" height="1.2em" fill="#000000" viewBox="0 0 24 24"><path d="M19 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.11 0 2-.9 2-2V5c0-1.1-.89-2-2-2zm-9 14l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" /></svg>
 
                                             </var>
-                                            <var className="me-1 multifunc-select-multi__control-option-checkbox">
-                                                <svg width="1.2em" height="1.2em" viewBox="0 0 24 24" fill="none">
-                                                    <path d="M4 7.2002V16.8002C4 17.9203 4 18.4801 4.21799 18.9079C4.40973 19.2842 4.71547 19.5905 5.0918 19.7822C5.5192 20 6.07899 20 7.19691 20H16.8031C17.921 20 18.48 20 18.9074 19.7822C19.2837 19.5905 19.5905 19.2842 19.7822 18.9079C20 18.4805 20 17.9215 20 16.8036V7.19691C20 6.07899 20 5.5192 19.7822 5.0918C19.5905 4.71547 19.2837 4.40973 18.9074 4.21799C18.4796 4 17.9203 4 16.8002 4H7.2002C6.08009 4 5.51962 4 5.0918 4.21799C4.71547 4.40973 4.40973 4.71547 4.21799 5.0918C4 5.51962 4 6.08009 4 7.2002Z" stroke="#000000" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                                                </svg>
-                                            </var>
-                                            <var className={`me-1 multifunc-select-multi__control-option-checkbox-placeholder ${itemSelected ? 'd-none' : ''}`}>
+                                            
+                                            <var className={`me-1 mf-select-multi__control-option-checkbox-placeholder ${itemSelected ? 'd-none' : ''}`}>
                                                 <svg width="1.2em" height="1.2em" fill="#000000" viewBox="0 0 24 24"><path d="M4 7.2002V16.8002C4 17.9203 4 18.4801 4.21799 18.9079C4.40973 19.2842 4.71547 19.5905 5.0918 19.7822C5.5192 20 6.07899 20 7.19691 20H16.8031C17.921 20 18.48 20 18.9074 19.7822C19.2837 19.5905 19.5905 19.2842 19.7822 18.9079C20 18.4805 20 17.9215 20 16.8036V7.19691C20 6.07899 20 5.5192 19.7822 5.0918C19.5905 4.71547 19.2837 4.40973 18.9074 4.21799C18.4796 4 17.9203 4 16.8002 4H7.2002C6.08009 4 5.51962 4 5.0918 4.21799C4.71547 4.40973 4.40973 4.71547 4.21799 5.0918C4 5.51962 4 6.08009 4 7.2002Z" /></svg>
                                             </var>
                                             <span dangerouslySetInnerHTML={{

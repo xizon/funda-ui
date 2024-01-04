@@ -877,6 +877,10 @@ var enableBodyScroll = function enableBodyScroll(targetElement) {
 var tree = __webpack_require__(602);
 ;// CONCATENATED MODULE: ./src/index.tsx
 var _excluded = ["wrapperClassName", "controlClassName", "multiSelect", "disabled", "required", "value", "label", "name", "readOnly", "placeholder", "id", "options", "lockBodyScroll", "hierarchical", "indentation", "doubleIndent", "style", "depth", "controlArrow", "winWidth", "tabIndex", "fetchTrigger", "fetchTriggerForDefaultData", "fetchNoneInfo", "fetchUpdate", "fetchFuncAsync", "fetchFuncMethod", "fetchFuncMethodParams", "data", "extractValueByBrackets", "fetchCallback", "onFetch", "onLoad", "onSelect", "onChange", "onBlur", "onFocus"];
+function src_toConsumableArray(arr) { return src_arrayWithoutHoles(arr) || src_iterableToArray(arr) || src_unsupportedIterableToArray(arr) || src_nonIterableSpread(); }
+function src_nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+function src_iterableToArray(iter) { if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter); }
+function src_arrayWithoutHoles(arr) { if (Array.isArray(arr)) return src_arrayLikeToArray(arr); }
 function _extends() { _extends = Object.assign ? Object.assign.bind() : function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
 function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys(Object(source), !0).forEach(function (key) { _defineProperty(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
@@ -884,10 +888,6 @@ function _defineProperty(obj, key, value) { key = _toPropertyKey(key); if (key i
 function _toPropertyKey(arg) { var key = _toPrimitive(arg, "string"); return _typeof(key) === "symbol" ? key : String(key); }
 function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input === null) return input; var prim = input[Symbol.toPrimitive]; if (prim !== undefined) { var res = prim.call(input, hint || "default"); if (_typeof(res) !== "object") return res; throw new TypeError("@@toPrimitive must return a primitive value."); } return (hint === "string" ? String : Number)(input); }
 function _regeneratorRuntime() { "use strict"; /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/facebook/regenerator/blob/main/LICENSE */ _regeneratorRuntime = function _regeneratorRuntime() { return exports; }; var exports = {}, Op = Object.prototype, hasOwn = Op.hasOwnProperty, defineProperty = Object.defineProperty || function (obj, key, desc) { obj[key] = desc.value; }, $Symbol = "function" == typeof Symbol ? Symbol : {}, iteratorSymbol = $Symbol.iterator || "@@iterator", asyncIteratorSymbol = $Symbol.asyncIterator || "@@asyncIterator", toStringTagSymbol = $Symbol.toStringTag || "@@toStringTag"; function define(obj, key, value) { return Object.defineProperty(obj, key, { value: value, enumerable: !0, configurable: !0, writable: !0 }), obj[key]; } try { define({}, ""); } catch (err) { define = function define(obj, key, value) { return obj[key] = value; }; } function wrap(innerFn, outerFn, self, tryLocsList) { var protoGenerator = outerFn && outerFn.prototype instanceof Generator ? outerFn : Generator, generator = Object.create(protoGenerator.prototype), context = new Context(tryLocsList || []); return defineProperty(generator, "_invoke", { value: makeInvokeMethod(innerFn, self, context) }), generator; } function tryCatch(fn, obj, arg) { try { return { type: "normal", arg: fn.call(obj, arg) }; } catch (err) { return { type: "throw", arg: err }; } } exports.wrap = wrap; var ContinueSentinel = {}; function Generator() {} function GeneratorFunction() {} function GeneratorFunctionPrototype() {} var IteratorPrototype = {}; define(IteratorPrototype, iteratorSymbol, function () { return this; }); var getProto = Object.getPrototypeOf, NativeIteratorPrototype = getProto && getProto(getProto(values([]))); NativeIteratorPrototype && NativeIteratorPrototype !== Op && hasOwn.call(NativeIteratorPrototype, iteratorSymbol) && (IteratorPrototype = NativeIteratorPrototype); var Gp = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(IteratorPrototype); function defineIteratorMethods(prototype) { ["next", "throw", "return"].forEach(function (method) { define(prototype, method, function (arg) { return this._invoke(method, arg); }); }); } function AsyncIterator(generator, PromiseImpl) { function invoke(method, arg, resolve, reject) { var record = tryCatch(generator[method], generator, arg); if ("throw" !== record.type) { var result = record.arg, value = result.value; return value && "object" == _typeof(value) && hasOwn.call(value, "__await") ? PromiseImpl.resolve(value.__await).then(function (value) { invoke("next", value, resolve, reject); }, function (err) { invoke("throw", err, resolve, reject); }) : PromiseImpl.resolve(value).then(function (unwrapped) { result.value = unwrapped, resolve(result); }, function (error) { return invoke("throw", error, resolve, reject); }); } reject(record.arg); } var previousPromise; defineProperty(this, "_invoke", { value: function value(method, arg) { function callInvokeWithMethodAndArg() { return new PromiseImpl(function (resolve, reject) { invoke(method, arg, resolve, reject); }); } return previousPromise = previousPromise ? previousPromise.then(callInvokeWithMethodAndArg, callInvokeWithMethodAndArg) : callInvokeWithMethodAndArg(); } }); } function makeInvokeMethod(innerFn, self, context) { var state = "suspendedStart"; return function (method, arg) { if ("executing" === state) throw new Error("Generator is already running"); if ("completed" === state) { if ("throw" === method) throw arg; return doneResult(); } for (context.method = method, context.arg = arg;;) { var delegate = context.delegate; if (delegate) { var delegateResult = maybeInvokeDelegate(delegate, context); if (delegateResult) { if (delegateResult === ContinueSentinel) continue; return delegateResult; } } if ("next" === context.method) context.sent = context._sent = context.arg;else if ("throw" === context.method) { if ("suspendedStart" === state) throw state = "completed", context.arg; context.dispatchException(context.arg); } else "return" === context.method && context.abrupt("return", context.arg); state = "executing"; var record = tryCatch(innerFn, self, context); if ("normal" === record.type) { if (state = context.done ? "completed" : "suspendedYield", record.arg === ContinueSentinel) continue; return { value: record.arg, done: context.done }; } "throw" === record.type && (state = "completed", context.method = "throw", context.arg = record.arg); } }; } function maybeInvokeDelegate(delegate, context) { var methodName = context.method, method = delegate.iterator[methodName]; if (undefined === method) return context.delegate = null, "throw" === methodName && delegate.iterator["return"] && (context.method = "return", context.arg = undefined, maybeInvokeDelegate(delegate, context), "throw" === context.method) || "return" !== methodName && (context.method = "throw", context.arg = new TypeError("The iterator does not provide a '" + methodName + "' method")), ContinueSentinel; var record = tryCatch(method, delegate.iterator, context.arg); if ("throw" === record.type) return context.method = "throw", context.arg = record.arg, context.delegate = null, ContinueSentinel; var info = record.arg; return info ? info.done ? (context[delegate.resultName] = info.value, context.next = delegate.nextLoc, "return" !== context.method && (context.method = "next", context.arg = undefined), context.delegate = null, ContinueSentinel) : info : (context.method = "throw", context.arg = new TypeError("iterator result is not an object"), context.delegate = null, ContinueSentinel); } function pushTryEntry(locs) { var entry = { tryLoc: locs[0] }; 1 in locs && (entry.catchLoc = locs[1]), 2 in locs && (entry.finallyLoc = locs[2], entry.afterLoc = locs[3]), this.tryEntries.push(entry); } function resetTryEntry(entry) { var record = entry.completion || {}; record.type = "normal", delete record.arg, entry.completion = record; } function Context(tryLocsList) { this.tryEntries = [{ tryLoc: "root" }], tryLocsList.forEach(pushTryEntry, this), this.reset(!0); } function values(iterable) { if (iterable) { var iteratorMethod = iterable[iteratorSymbol]; if (iteratorMethod) return iteratorMethod.call(iterable); if ("function" == typeof iterable.next) return iterable; if (!isNaN(iterable.length)) { var i = -1, next = function next() { for (; ++i < iterable.length;) if (hasOwn.call(iterable, i)) return next.value = iterable[i], next.done = !1, next; return next.value = undefined, next.done = !0, next; }; return next.next = next; } } return { next: doneResult }; } function doneResult() { return { value: undefined, done: !0 }; } return GeneratorFunction.prototype = GeneratorFunctionPrototype, defineProperty(Gp, "constructor", { value: GeneratorFunctionPrototype, configurable: !0 }), defineProperty(GeneratorFunctionPrototype, "constructor", { value: GeneratorFunction, configurable: !0 }), GeneratorFunction.displayName = define(GeneratorFunctionPrototype, toStringTagSymbol, "GeneratorFunction"), exports.isGeneratorFunction = function (genFun) { var ctor = "function" == typeof genFun && genFun.constructor; return !!ctor && (ctor === GeneratorFunction || "GeneratorFunction" === (ctor.displayName || ctor.name)); }, exports.mark = function (genFun) { return Object.setPrototypeOf ? Object.setPrototypeOf(genFun, GeneratorFunctionPrototype) : (genFun.__proto__ = GeneratorFunctionPrototype, define(genFun, toStringTagSymbol, "GeneratorFunction")), genFun.prototype = Object.create(Gp), genFun; }, exports.awrap = function (arg) { return { __await: arg }; }, defineIteratorMethods(AsyncIterator.prototype), define(AsyncIterator.prototype, asyncIteratorSymbol, function () { return this; }), exports.AsyncIterator = AsyncIterator, exports.async = function (innerFn, outerFn, self, tryLocsList, PromiseImpl) { void 0 === PromiseImpl && (PromiseImpl = Promise); var iter = new AsyncIterator(wrap(innerFn, outerFn, self, tryLocsList), PromiseImpl); return exports.isGeneratorFunction(outerFn) ? iter : iter.next().then(function (result) { return result.done ? result.value : iter.next(); }); }, defineIteratorMethods(Gp), define(Gp, toStringTagSymbol, "Generator"), define(Gp, iteratorSymbol, function () { return this; }), define(Gp, "toString", function () { return "[object Generator]"; }), exports.keys = function (val) { var object = Object(val), keys = []; for (var key in object) keys.push(key); return keys.reverse(), function next() { for (; keys.length;) { var key = keys.pop(); if (key in object) return next.value = key, next.done = !1, next; } return next.done = !0, next; }; }, exports.values = values, Context.prototype = { constructor: Context, reset: function reset(skipTempReset) { if (this.prev = 0, this.next = 0, this.sent = this._sent = undefined, this.done = !1, this.delegate = null, this.method = "next", this.arg = undefined, this.tryEntries.forEach(resetTryEntry), !skipTempReset) for (var name in this) "t" === name.charAt(0) && hasOwn.call(this, name) && !isNaN(+name.slice(1)) && (this[name] = undefined); }, stop: function stop() { this.done = !0; var rootRecord = this.tryEntries[0].completion; if ("throw" === rootRecord.type) throw rootRecord.arg; return this.rval; }, dispatchException: function dispatchException(exception) { if (this.done) throw exception; var context = this; function handle(loc, caught) { return record.type = "throw", record.arg = exception, context.next = loc, caught && (context.method = "next", context.arg = undefined), !!caught; } for (var i = this.tryEntries.length - 1; i >= 0; --i) { var entry = this.tryEntries[i], record = entry.completion; if ("root" === entry.tryLoc) return handle("end"); if (entry.tryLoc <= this.prev) { var hasCatch = hasOwn.call(entry, "catchLoc"), hasFinally = hasOwn.call(entry, "finallyLoc"); if (hasCatch && hasFinally) { if (this.prev < entry.catchLoc) return handle(entry.catchLoc, !0); if (this.prev < entry.finallyLoc) return handle(entry.finallyLoc); } else if (hasCatch) { if (this.prev < entry.catchLoc) return handle(entry.catchLoc, !0); } else { if (!hasFinally) throw new Error("try statement without catch or finally"); if (this.prev < entry.finallyLoc) return handle(entry.finallyLoc); } } } }, abrupt: function abrupt(type, arg) { for (var i = this.tryEntries.length - 1; i >= 0; --i) { var entry = this.tryEntries[i]; if (entry.tryLoc <= this.prev && hasOwn.call(entry, "finallyLoc") && this.prev < entry.finallyLoc) { var finallyEntry = entry; break; } } finallyEntry && ("break" === type || "continue" === type) && finallyEntry.tryLoc <= arg && arg <= finallyEntry.finallyLoc && (finallyEntry = null); var record = finallyEntry ? finallyEntry.completion : {}; return record.type = type, record.arg = arg, finallyEntry ? (this.method = "next", this.next = finallyEntry.finallyLoc, ContinueSentinel) : this.complete(record); }, complete: function complete(record, afterLoc) { if ("throw" === record.type) throw record.arg; return "break" === record.type || "continue" === record.type ? this.next = record.arg : "return" === record.type ? (this.rval = this.arg = record.arg, this.method = "return", this.next = "end") : "normal" === record.type && afterLoc && (this.next = afterLoc), ContinueSentinel; }, finish: function finish(finallyLoc) { for (var i = this.tryEntries.length - 1; i >= 0; --i) { var entry = this.tryEntries[i]; if (entry.finallyLoc === finallyLoc) return this.complete(entry.completion, entry.afterLoc), resetTryEntry(entry), ContinueSentinel; } }, "catch": function _catch(tryLoc) { for (var i = this.tryEntries.length - 1; i >= 0; --i) { var entry = this.tryEntries[i]; if (entry.tryLoc === tryLoc) { var record = entry.completion; if ("throw" === record.type) { var thrown = record.arg; resetTryEntry(entry); } return thrown; } } throw new Error("illegal catch attempt"); }, delegateYield: function delegateYield(iterable, resultName, nextLoc) { return this.delegate = { iterator: values(iterable), resultName: resultName, nextLoc: nextLoc }, "next" === this.method && (this.arg = undefined), ContinueSentinel; } }, exports; }
-function src_toConsumableArray(arr) { return src_arrayWithoutHoles(arr) || src_iterableToArray(arr) || src_unsupportedIterableToArray(arr) || src_nonIterableSpread(); }
-function src_nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
-function src_iterableToArray(iter) { if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter); }
-function src_arrayWithoutHoles(arr) { if (Array.isArray(arr)) return src_arrayLikeToArray(arr); }
 function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
 function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
 function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
@@ -962,7 +962,6 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
   var idRes = id || uniqueID;
   var rootRef = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useRef)(null);
   var rootSingleRef = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useRef)(null);
-  var rootMultiRef = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useRef)(null);
   var selectInputRef = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useRef)(null);
   var valueInputRef = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useRef)(null);
   var listRef = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useRef)(null);
@@ -1008,6 +1007,7 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
     setIncomingData = _useState16[1];
 
   // Multiple selection
+  var selectedSign = false;
   var MULTI_SEL_VALID = multiSelect ? multiSelect.valid : false;
   var _useState17 = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)({
       labels: [],
@@ -1016,10 +1016,6 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
     _useState18 = _slicedToArray(_useState17, 2),
     controlArr = _useState18[0],
     setControlArr = _useState18[1];
-  var _useState19 = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)(false),
-    _useState20 = _slicedToArray(_useState19, 2),
-    itemSelectedAll = _useState20[0],
-    setItemSelectedAll = _useState20[1];
   var multiSelControlOptionExist = function multiSelControlOptionExist(arr, val) {
     return arr.map(function (v) {
       return v.toString();
@@ -1287,7 +1283,6 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
                   labels: [],
                   values: []
                 });
-                setItemSelectedAll(false);
               }
               if (typeof defaultValue !== 'undefined' && defaultValue !== '' && (multiSelect === null || multiSelect === void 0 ? void 0 : multiSelect.data) !== null) {
                 // initialize default values of Multiple selection
@@ -1393,7 +1388,6 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
                   labels: [],
                   values: []
                 });
-                setItemSelectedAll(false);
               }
               if (typeof defaultValue !== 'undefined' && defaultValue !== '' && (multiSelect === null || multiSelect === void 0 ? void 0 : multiSelect.data) !== null) {
                 // initialize default values of Multiple selection
@@ -1460,7 +1454,7 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
     var contentMaxHeight = 0;
 
     // update modal position
-    var _modalRef = document.querySelector("#multifunc-select__options-wrapper-".concat(idRes));
+    var _modalRef = document.querySelector("#mf-select__options-wrapper-".concat(idRes));
     var _triggerRef = selectInputRef.current;
 
     // console.log(getAbsolutePositionOfStage(_triggerRef));
@@ -1524,11 +1518,15 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
     // Adjust position
     if (targetPos === 'top') {
       _modalRef.style.left = x + 'px';
-      _modalRef.style.top = y - POS_OFFSET - listContentRef.current.clientHeight - 2 + 'px';
+      //_modalRef.style.top = y - POS_OFFSET - (listContentRef.current.clientHeight) - 2 + 'px';
+      _modalRef.style.top = 'auto';
+      _modalRef.style.bottom = window.innerHeight - _triggerBox.top + POS_OFFSET + 2 + 'px';
+      _modalRef.style.setProperty('position', 'fixed', 'important');
     }
     if (targetPos === 'bottom') {
       _modalRef.style.left = x + 'px';
       _modalRef.style.top = y + height + POS_OFFSET + 'px';
+      _modalRef.style.setProperty('position', 'absolute', 'important');
     }
 
     // STEP 5:
@@ -1558,10 +1556,10 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
     popwinNoMatchInit();
   }
   function popwinPosHide() {
-    var _modalRef = document.querySelector("#multifunc-select__options-wrapper-".concat(idRes));
+    var _modalRef = document.querySelector("#mf-select__options-wrapper-".concat(idRes));
     if (_modalRef !== null && listContentRef.current !== null) {
-      var _nodataDiv = listContentRef.current.querySelector('.multifunc-select-multi__control-option-item--nomatch');
-      var _btnSelectAll = listContentRef.current.querySelector('.multifunc-select-multi__control-option-item--select-all');
+      var _nodataDiv = listContentRef.current.querySelector('.mf-select-multi__control-option-item--nomatch');
+      var _btnSelectAll = listContentRef.current.querySelector('.mf-select-multi__control-option-item--select-all');
 
       // remove classnames, data-* and styles
       _modalRef.classList.remove('active');
@@ -1569,7 +1567,7 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
       popwinContainerHeightReset();
 
       // display all filtered items
-      [].slice.call(listContentRef.current.querySelectorAll('.multifunc-select-multi__control-option-item')).forEach(function (node) {
+      [].slice.call(listContentRef.current.querySelectorAll('.mf-select-multi__control-option-item')).forEach(function (node) {
         node.classList.remove('hide');
       });
       _nodataDiv.classList.add('hide');
@@ -1581,20 +1579,30 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
 
     // options event listener
     // !!! to prevent button mismatch when changing
-    [].slice.call(listContentRef.current.querySelectorAll('.multifunc-select-multi__control-option-item')).forEach(function (node) {
-      var optVal = node.dataset.value;
-      getOptionsData.forEach(function (item) {
-        if (optVal == item.value) {
-          if (typeof node.dataset.ev === 'undefined') {
-            node.dataset.ev = 'true';
-            node.addEventListener('pointerdown', function (e) {
-              handleSelect(e);
-            });
-          }
+    [].slice.call(listContentRef.current.querySelectorAll('.mf-select-multi__control-option-item')).forEach(function (node) {
+      // Solve the problem of missing click events caused by `<MultiFuncSelect />` not updating "data" []
+      if (getOptionsData.length === 0) {
+        if (typeof node.dataset.ev === 'undefined') {
+          node.dataset.ev = 'true';
+          node.addEventListener('pointerdown', function (e) {
+            handleSelect(e);
+          });
         }
-      });
+      } else {
+        var optVal = node.dataset.value;
+        getOptionsData.forEach(function (item) {
+          if (optVal == item.value) {
+            if (typeof node.dataset.ev === 'undefined') {
+              node.dataset.ev = 'true';
+              node.addEventListener('pointerdown', function (e) {
+                handleSelect(e);
+              });
+            }
+          }
+        });
+      }
     });
-    var _btnSelectAll = listContentRef.current.querySelector('.multifunc-select-multi__control-option-item--select-all > span');
+    var _btnSelectAll = listContentRef.current.querySelector('.mf-select-multi__control-option-item--select-all > span');
     if (_btnSelectAll !== null && typeof _btnSelectAll.dataset.ev === 'undefined') {
       _btnSelectAll.dataset.ev = 'true';
       _btnSelectAll.addEventListener('pointerdown', function (e) {
@@ -1604,7 +1612,7 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
   }
   function popwinFilterItems(val) {
     if (listContentRef.current === null) return;
-    [].slice.call(listContentRef.current.querySelectorAll('.multifunc-select-multi__control-option-item')).forEach(function (node) {
+    [].slice.call(listContentRef.current.querySelectorAll('.mf-select-multi__control-option-item')).forEach(function (node) {
       // Avoid fatal errors causing page crashes
       var _queryString = typeof node.dataset.querystring !== 'undefined' && node.dataset.querystring !== null ? node.dataset.querystring : '';
       if ((_queryString.split(',').some(function (l) {
@@ -1622,10 +1630,10 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
     popwinNoMatchInit();
 
     // display all filtered items
-    var _btnSelectAll = listContentRef.current.querySelector('.multifunc-select-multi__control-option-item--select-all');
-    var _nodataDiv = listContentRef.current.querySelector('.multifunc-select-multi__control-option-item--nomatch');
-    if (val.replace(/\s/g, "") === '') {
-      [].slice.call(listContentRef.current.querySelectorAll('.multifunc-select-multi__control-option-item')).forEach(function (node) {
+    var _btnSelectAll = listContentRef.current.querySelector('.mf-select-multi__control-option-item--select-all');
+    var _nodataDiv = listContentRef.current.querySelector('.mf-select-multi__control-option-item--nomatch');
+    if ((val === null ? '' : val).replace(/\s/g, "") === '') {
+      [].slice.call(listContentRef.current.querySelectorAll('.mf-select-multi__control-option-item')).forEach(function (node) {
         node.classList.remove('hide');
       });
       _nodataDiv.classList.add('hide');
@@ -1640,19 +1648,17 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
     var oldHeight = listContentRef.current.dataset.height;
     var pos = listContentRef.current.dataset.pos;
     var filteredHeight = listContentRef.current.firstChild.clientHeight;
-    if (pos === 'bottom') {
-      if (parseFloat(oldHeight) > filteredHeight) {
-        listContentRef.current.style.height = filteredHeight + 'px';
-      } else {
-        listContentRef.current.style.height = oldHeight + 'px';
-      }
+    if (parseFloat(oldHeight) > filteredHeight) {
+      listContentRef.current.style.height = filteredHeight + 'px';
+    } else {
+      listContentRef.current.style.height = oldHeight + 'px';
     }
   }
   function popwinNoMatchInit() {
     if (listContentRef.current === null) return;
-    var _btnSelectAll = listContentRef.current.querySelector('.multifunc-select-multi__control-option-item--select-all');
-    var _nodataDiv = listContentRef.current.querySelector('.multifunc-select-multi__control-option-item--nomatch');
-    var emptyFieldsCheck = [].slice.call(listContentRef.current.querySelectorAll('.multifunc-select-multi__control-option-item')).every(function (node) {
+    var _btnSelectAll = listContentRef.current.querySelector('.mf-select-multi__control-option-item--select-all');
+    var _nodataDiv = listContentRef.current.querySelector('.mf-select-multi__control-option-item--nomatch');
+    var emptyFieldsCheck = [].slice.call(listContentRef.current.querySelectorAll('.mf-select-multi__control-option-item')).every(function (node) {
       if (!node.classList.contains('hide')) {
         return false;
       }
@@ -1718,7 +1724,7 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
   }
   function rootWrapperSwitch() {
     // remove active styles from the root container and activate current wrapper
-    [].slice.call(document.querySelectorAll('.multifunc-select__wrapper')).forEach(function (node) {
+    [].slice.call(document.querySelectorAll('.mf-select__wrapper')).forEach(function (node) {
       node.classList.remove('active', 'focus');
     });
     rootRef.current.classList.add('active', 'focus');
@@ -1762,12 +1768,12 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
             curItem = el === null ? JSON.parse(dataInput) : JSON.parse(el.currentTarget.dataset.itemdata); // get incoming options from `data-options` of component
             // It is usually used for complex cascading `<MultiFuncSelect />` components
             incominggetOptionsData = valueInputRef.current.dataset.options; // cancel
-            if (!(MULTI_SEL_VALID && isOpen)) {
+            if (!MULTI_SEL_VALID) {
               cancel();
             }
 
             //remove focus style
-            if (!(MULTI_SEL_VALID && isOpen)) {
+            if (!MULTI_SEL_VALID) {
               rootRef.current.classList.remove('focus');
             }
 
@@ -1801,8 +1807,8 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
                   // remove item
                   //#########
                   el.currentTarget.dataset.selected = 'false';
-                  el.currentTarget.querySelector('.multifunc-select-multi__control-option-checkbox--selected').style.display = 'inline-block';
-                  el.currentTarget.querySelector('.multifunc-select-multi__control-option-checkbox').style.display = 'none';
+                  el.currentTarget.querySelector('.mf-select-multi__control-option-checkbox-selected').classList.add('d-none');
+                  el.currentTarget.querySelector('.mf-select-multi__control-option-checkbox-placeholder').classList.remove('d-none');
 
                   //
                   setControlArr(function (prevState) {
@@ -1820,8 +1826,8 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
                   // add item
                   //#########
                   el.currentTarget.dataset.selected = 'true';
-                  el.currentTarget.querySelector('.multifunc-select-multi__control-option-checkbox--selected').style.display = 'none';
-                  el.currentTarget.querySelector('.multifunc-select-multi__control-option-checkbox').style.display = 'inline-block';
+                  el.currentTarget.querySelector('.mf-select-multi__control-option-checkbox-selected').classList.remove('d-none');
+                  el.currentTarget.querySelector('.mf-select-multi__control-option-checkbox-placeholder').classList.add('d-none');
 
                   //
                   setControlArr(function (prevState) {
@@ -1888,8 +1894,8 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
                   // remove item
                   //#########
                   el.currentTarget.dataset.selected = 'false';
-                  el.currentTarget.querySelector('.multifunc-select-multi__control-option-checkbox--selected').style.display = 'inline-block';
-                  el.currentTarget.querySelector('.multifunc-select-multi__control-option-checkbox').style.display = 'none';
+                  el.currentTarget.querySelector('.mf-select-multi__control-option-checkbox-selected').classList.add('d-none');
+                  el.currentTarget.querySelector('.mf-select-multi__control-option-checkbox-placeholder').classList.remove('d-none');
 
                   //
                   setControlArr(function (prevState) {
@@ -1906,9 +1912,10 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
                   //#########
                   // add item
                   //#########
+
                   el.currentTarget.dataset.selected = 'true';
-                  el.currentTarget.querySelector('.multifunc-select-multi__control-option-checkbox--selected').style.display = 'none';
-                  el.currentTarget.querySelector('.multifunc-select-multi__control-option-checkbox').style.display = 'inline-block';
+                  el.currentTarget.querySelector('.mf-select-multi__control-option-checkbox-selected').classList.remove('d-none');
+                  el.currentTarget.querySelector('.mf-select-multi__control-option-checkbox-placeholder').classList.add('d-none');
 
                   //
                   setControlArr(function (prevState) {
@@ -1985,70 +1992,52 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
       }
     };
     var updateOptionCheckboxes = function updateOptionCheckboxes(type) {
-      [].slice.call(listContentRef.current.querySelectorAll('.multifunc-select-multi__control-option-item')).forEach(function (node) {
+      var _labels = [];
+      var _values = [];
+      [].slice.call(listContentRef.current.querySelectorAll('.mf-select-multi__control-option-item:not(.hide)')).forEach(function (node) {
+        var _label = node.dataset.label;
+        var _value = node.dataset.value;
         if (type === 'remove') {
           //#########
           // remove item
           //#########
           node.dataset.selected = 'false';
-          node.querySelector('.multifunc-select-multi__control-option-checkbox--selected').style.display = 'inline-block';
-          node.querySelector('.multifunc-select-multi__control-option-checkbox').style.display = 'none';
+          node.querySelector('.mf-select-multi__control-option-checkbox-selected').classList.add('d-none');
+          node.querySelector('.mf-select-multi__control-option-checkbox-placeholder').classList.remove('d-none');
+
+          //
+          var _indexLable = _labels.findIndex(function (item) {
+            return item == _label;
+          });
+          var _indexValue = _values.findIndex(function (item) {
+            return item == _value;
+          });
+          if (_indexLable !== -1) _labels.splice(_indexLable, 1);
+          if (_indexValue !== -1) _values.splice(_indexValue, 1);
         } else {
           //#########
           // add item
           //#########
           node.dataset.selected = 'true';
-          node.querySelector('.multifunc-select-multi__control-option-checkbox--selected').style.display = 'none';
-          node.querySelector('.multifunc-select-multi__control-option-checkbox').style.display = 'inline-block';
+          node.querySelector('.mf-select-multi__control-option-checkbox-selected').classList.remove('d-none');
+          node.querySelector('.mf-select-multi__control-option-checkbox-placeholder').classList.add('d-none');
+
+          //
+          _labels.push(_label);
+          _values.push(_value);
         }
       });
+      setControlArr({
+        labels: _labels,
+        values: _values
+      });
     };
-    setItemSelectedAll(function (prevState) {
-      if (!prevState) {
-        setControlArr(function (prevData) {
-          var currentControlValueArr = [].concat(src_toConsumableArray(prevData.values), src_toConsumableArray(optionsData.map(function (v) {
-            return v.value;
-          }))).filter(function (item, index, arr) {
-            return arr.indexOf(item, 0) === index;
-          });
-          var currentControlLabelArr = [].concat(src_toConsumableArray(formatIndentVal(prevData.labels)), src_toConsumableArray(formatIndentVal(optionsData.map(function (v) {
-            return v.label;
-          })))).filter(function (item, index, arr) {
-            return arr.indexOf(item, 0) === index;
-          });
-
-          //
-          onChangeSelectAll(currentControlLabelArr, currentControlValueArr);
-
-          // update option checkboxes
-          updateOptionCheckboxes('add');
-          return {
-            labels: currentControlLabelArr,
-            values: currentControlValueArr
-          };
-        });
-      } else {
-        setControlArr(function (prevData) {
-          var currentControlValueArr = removeItems(prevData.values, optionsData.map(function (v) {
-            return v.value;
-          }));
-          var currentControlLabelArr = removeItems(formatIndentVal(prevData.labels), formatIndentVal(optionsData.map(function (v) {
-            return v.label;
-          })));
-
-          //
-          onChangeSelectAll(currentControlLabelArr, currentControlValueArr);
-
-          // update option checkboxes
-          updateOptionCheckboxes('remove');
-          return {
-            labels: currentControlLabelArr,
-            values: currentControlValueArr
-          };
-        });
-      }
-      return !prevState;
-    });
+    if (selectedSign) {
+      updateOptionCheckboxes('remove');
+    } else {
+      updateOptionCheckboxes('add');
+    }
+    selectedSign = !selectedSign;
   }
   function handleMultiControlItemRemove(event) {
     event.preventDefault();
@@ -2166,20 +2155,12 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
     onFocus === null || onFocus === void 0 ? void 0 : onFocus(event);
   }
   function handleBlur(event) {
-    //remove focus style
-    if (!(MULTI_SEL_VALID && isOpen)) {
-      rootRef.current.classList.remove('focus');
-    }
     setTimeout(function () {
-      // cancel
-      if (!(MULTI_SEL_VALID && isOpen)) {
-        cancel();
-      }
       onBlur === null || onBlur === void 0 ? void 0 : onBlur(event);
     }, 300);
   }
   function handleClose(event) {
-    if (event.target.closest(".multifunc-select__wrapper") === null && event.target.closest(".multifunc-select__options-wrapper") === null) {
+    if (event.target.closest(".mf-select__wrapper") === null && event.target.closest(".mf-select__options-wrapper") === null) {
       // cancel
       cancel();
       if (MULTI_SEL_VALID) popwinPosHide();
@@ -2368,11 +2349,11 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
       window.removeEventListener('touchmove', windowScrollUpdate);
 
       //
-      (_document$querySelect = document.querySelector("#multifunc-select__options-wrapper-".concat(idRes))) === null || _document$querySelect === void 0 ? void 0 : _document$querySelect.remove();
+      (_document$querySelect = document.querySelector("#mf-select__options-wrapper-".concat(idRes))) === null || _document$querySelect === void 0 ? void 0 : _document$querySelect.remove();
     };
   }, [value, options, data]);
   return /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, label ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
-    className: "multifunc-select__label"
+    className: "mf-select__label"
   }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("label", {
     htmlFor: "label-".concat(idRes),
     className: "form-label",
@@ -2380,8 +2361,8 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
       __html: "".concat(label)
     }
   }))) : null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
-    id: "multifunc-select__wrapper-".concat(idRes),
-    className: "multifunc-select__wrapper ".concat(wrapperClassName || wrapperClassName === '' ? wrapperClassName : 'mb-3 position-relative', " ").concat(MULTI_SEL_VALID ? 'multiple-selection' : '', " ").concat(isOpen ? 'active focus' : ''),
+    id: "mf-select__wrapper-".concat(idRes),
+    className: "mf-select__wrapper ".concat(wrapperClassName || wrapperClassName === '' ? wrapperClassName : 'mb-3 position-relative', " ").concat(MULTI_SEL_VALID ? 'multiple-selection' : '', " ").concat(isOpen ? 'active focus' : ''),
     ref: rootRef
   }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
     ref: rootSingleRef,
@@ -2435,7 +2416,21 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
     id: idRes,
     name: name,
     value: MULTI_SEL_VALID ? VALUE_BY_BRACKETS ? (0,convert.convertArrToValByBrackets)(controlArr.values) : controlArr.values.join(',') : controlValue // do not use `defaultValue`
-  }, attributes)), /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("span", {
+  }, attributes))), !MULTI_SEL_VALID ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
+    className: "mf-select-single__inputplaceholder-wrapper"
+  }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
+    className: "mf-select-single__inputplaceholder-inner"
+  }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("input", {
+    tabIndex: tabIndex || 0,
+    type: "text",
+    className: controlClassName || controlClassName === '' ? controlClassName : "form-control"
+  }), /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("span", {
+    className: "mf-select-multi__control-blinking-cursor ".concat(generateInputFocusStr() === '|' ? 'animated' : '')
+  }, controlTempValue || controlTempValue === '' ? controlTempValue.length === 0 ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("span", {
+    className: "".concat(generateInputFocusStr() === placeholder && placeholder !== '' && typeof placeholder !== 'undefined' ? 'control-placeholder' : '')
+  }, generateInputFocusStr()) : /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("span", null, controlTempValue) : stripHTML(controlLabel).length === 0 ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("span", {
+    className: "".concat(generateInputFocusStr() === placeholder && placeholder !== '' && typeof placeholder !== 'undefined' ? 'control-placeholder' : '')
+  }, generateInputFocusStr()) : /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("span", null, stripHTML(controlLabel)))), /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("span", {
     className: "arrow position-absolute top-0 end-0 me-2 mt-1",
     style: {
       translate: 'all .2s',
@@ -2460,13 +2455,20 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
   }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("path", {
     d: "M144,6525.39 L142.594,6524 L133.987,6532.261 L133.069,6531.38 L133.074,6531.385 L125.427,6524.045 L124,6525.414 C126.113,6527.443 132.014,6533.107 133.987,6535 C135.453,6533.594 134.024,6534.965 144,6525.39"
   })))))), fetchTrigger ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("span", {
-    className: "multifunc-select-single__control-searchbtn position-absolute top-0 end-0"
+    className: "mf-select-multi__control-searchbtn position-absolute top-0 end-0"
   }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("button", {
     tabIndex: -1,
     type: "button",
     className: "btn border-end-0 rounded-pill",
-    style: {
-      pointerEvents: 'none'
+    onClick: function onClick(e) {
+      handleFetch().then(function (response) {
+        // pop win initalization
+        setTimeout(function () {
+          popwinPosInit();
+          popwinBtnEventsInit(response);
+          popwinFilterItems(controlTempValue);
+        }, 0);
+      });
     }
   }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("svg", {
     width: "1em",
@@ -2476,13 +2478,12 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
   }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("path", {
     d: "M12.027 9.92L16 13.95 14 16l-4.075-3.976A6.465 6.465 0 0 1 6.5 13C2.91 13 0 10.083 0 6.5 0 2.91 2.917 0 6.5 0 10.09 0 13 2.917 13 6.5a6.463 6.463 0 0 1-.973 3.42zM1.997 6.452c0 2.48 2.014 4.5 4.5 4.5 2.48 0 4.5-2.015 4.5-4.5 0-2.48-2.015-4.5-4.5-4.5-2.48 0-4.5 2.014-4.5 4.5z",
     fillRule: "evenodd"
-  }))))) : null), MULTI_SEL_VALID ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
-    ref: rootMultiRef,
-    className: "multifunc-select-multi__wrapper"
+  }))))) : null) : null, MULTI_SEL_VALID ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
+    className: "mf-select-multi__inputplaceholder-wrapper"
   }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
-    className: "multifunc-select-multi__control-wrapper"
+    className: "mf-select-multi__inputplaceholder-inner"
   }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("ul", {
-    className: "multifunc-select-multi__list"
+    className: "mf-select-multi__list"
   }, controlArr.labels.map(function (item, index) {
     return /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("li", {
       key: index
@@ -2500,9 +2501,9 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
       d: "M195.2 195.2a64 64 0 0 1 90.496 0L512 421.504 738.304 195.2a64 64 0 0 1 90.496 90.496L602.496 512 828.8 738.304a64 64 0 0 1-90.496 90.496L512 602.496 285.696 828.8a64 64 0 0 1-90.496-90.496L421.504 512 195.2 285.696a64 64 0 0 1 0-90.496z"
     }))));
   }), /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("li", {
-    className: "multifunc-select-multi__list-item-placeholder ".concat(typeof placeholder === 'undefined' || placeholder === '' ? 'hide' : '')
+    className: "mf-select-multi__list-item-placeholder ".concat(typeof placeholder === 'undefined' || placeholder === '' ? 'hide' : '')
   }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("span", {
-    className: "multifunc-select-multi__control-blinking-cursor ".concat(generateInputFocusStr() === placeholder && placeholder !== '' && typeof placeholder !== 'undefined' ? 'control-placeholder' : '', " ").concat(generateInputFocusStr() === '|' ? 'animated' : '')
+    className: "mf-select-multi__control-blinking-cursor ".concat(generateInputFocusStr() === placeholder && placeholder !== '' && typeof placeholder !== 'undefined' ? 'control-placeholder' : '', " ").concat(generateInputFocusStr() === '|' ? 'animated' : '')
   }, generateInputFocusStr()))))), /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("span", {
     className: "arrow position-absolute top-0 end-0 me-2 mt-1",
     style: {
@@ -2528,12 +2529,21 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
   }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("path", {
     d: "M144,6525.39 L142.594,6524 L133.987,6532.261 L133.069,6531.38 L133.074,6531.385 L125.427,6524.045 L124,6525.414 C126.113,6527.443 132.014,6533.107 133.987,6535 C135.453,6533.594 134.024,6534.965 144,6525.39"
   })))))), fetchTrigger ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("span", {
-    className: "multifunc-select-multi__control-searchbtn position-absolute top-0 end-0"
+    className: "mf-select-multi__control-searchbtn position-absolute top-0 end-0"
   }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("button", {
     tabIndex: -1,
     type: "button",
     className: "btn border-end-0 rounded-pill",
-    onClick: handleFetch
+    onClick: function onClick(e) {
+      handleFetch().then(function (response) {
+        // pop win initalization
+        setTimeout(function () {
+          popwinPosInit();
+          popwinBtnEventsInit(response);
+          popwinFilterItems(controlTempValue);
+        }, 0);
+      });
+    }
   }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("svg", {
     width: "1em",
     height: "1em",
@@ -2544,24 +2554,24 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
     fillRule: "evenodd"
   }))))) : null) : null, optionsData && !hasErr ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
     ref: listRef,
-    id: "multifunc-select__options-wrapper-".concat(idRes),
-    className: "multifunc-select__options-wrapper list-group position-absolute border shadow small ".concat(winWidth ? '' : ''),
+    id: "mf-select__options-wrapper-".concat(idRes),
+    className: "mf-select__options-wrapper list-group position-absolute border shadow small ".concat(winWidth ? '' : ''),
     style: {
       zIndex: depth ? depth : 1055,
       width: WIN_WIDTH
     },
     role: "tablist"
-  }, controlTempValue !== null && optionsData.length === 0 ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null) : /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null), /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
-    className: "multifunc-select__options-contentlist rounded",
+  }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
+    className: "mf-select__options-contentlist rounded",
     style: {
       backgroundColor: 'var(--bs-list-group-bg)'
     },
     ref: listContentRef
   }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
-    className: "multifunc-select__options-contentlist-inner"
+    className: "mf-select__options-contentlist-inner"
   }, MULTI_SEL_VALID ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("span", {
     tabIndex: -1,
-    className: "list-group-item list-group-item-action border-start-0 border-end-0 text-secondary bg-light multifunc-select-multi__control-option-item--select-all",
+    className: "list-group-item list-group-item-action border-start-0 border-end-0 text-secondary bg-light mf-select-multi__control-option-item--select-all",
     role: "tab",
     style: {
       display: multiSelect !== null && multiSelect !== void 0 && multiSelect.selectAll ? 'block' : 'none'
@@ -2575,7 +2585,7 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
   }))) : null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("button", {
     tabIndex: -1,
     type: "button",
-    className: "list-group-item list-group-item-action no-match border-0 multifunc-select-multi__control-option-item--nomatch hide",
+    className: "list-group-item list-group-item-action no-match border-0 mf-select-multi__control-option-item--nomatch hide",
     disabled: true
   }, fetchNoneInfo || 'No match yet'), optionsData ? optionsData.map(function (item, index) {
     var startItemBorder = index === 0 ? 'border-top-0' : '';
@@ -2589,7 +2599,7 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
         type: "button",
         "data-index": index,
         key: index,
-        className: "list-group-item list-group-item-action border-start-0 border-end-0 multifunc-select-multi__control-option-item ".concat(startItemBorder, " ").concat(endItemBorder, " border-bottom-0 ").concat(typeof item.disabled === 'undefined' ? '' : item.disabled == true ? 'disabled' : ''),
+        className: "list-group-item list-group-item-action border-start-0 border-end-0 mf-select-multi__control-option-item ".concat(startItemBorder, " ").concat(endItemBorder, " border-bottom-0 ").concat(typeof item.disabled === 'undefined' ? '' : item.disabled == true ? 'disabled' : ''),
         "data-value": "".concat(item.value),
         "data-label": "".concat(item.label),
         "data-querystring": "".concat(typeof item.queryString === 'undefined' ? '' : item.queryString),
@@ -2610,14 +2620,14 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
         "data-selected": "".concat(itemSelected ? 'true' : 'false'),
         "data-index": index,
         key: index,
-        className: "list-group-item list-group-item-action border-start-0 border-end-0 multifunc-select-multi__control-option-item ".concat(startItemBorder, " ").concat(endItemBorder, " border-bottom-0 ").concat(itemSelected ? 'list-group-item-secondary item-selected' : '', " ").concat(typeof item.disabled === 'undefined' ? '' : item.disabled == true ? 'disabled' : ''),
+        className: "list-group-item list-group-item-action border-start-0 border-end-0 mf-select-multi__control-option-item ".concat(startItemBorder, " ").concat(endItemBorder, " border-bottom-0 ").concat(itemSelected ? 'list-group-item-secondary item-selected' : '', " ").concat(typeof item.disabled === 'undefined' ? '' : item.disabled == true ? 'disabled' : ''),
         "data-value": "".concat(item.value),
         "data-label": "".concat(item.label),
         "data-querystring": "".concat(typeof item.queryString === 'undefined' ? '' : item.queryString),
         "data-itemdata": JSON.stringify(item),
         role: "tab"
       }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("var", {
-        className: "me-1 multifunc-select-multi__control-option-checkbox multifunc-select-multi__control-option-checkbox--selected"
+        className: "me-1 mf-select-multi__control-option-checkbox-selected ".concat(itemSelected ? '' : 'd-none')
       }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("svg", {
         width: "1.2em",
         height: "1.2em",
@@ -2626,20 +2636,7 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
       }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("path", {
         d: "M19 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.11 0 2-.9 2-2V5c0-1.1-.89-2-2-2zm-9 14l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"
       }))), /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("var", {
-        className: "me-1 multifunc-select-multi__control-option-checkbox"
-      }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("svg", {
-        width: "1.2em",
-        height: "1.2em",
-        viewBox: "0 0 24 24",
-        fill: "none"
-      }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("path", {
-        d: "M4 7.2002V16.8002C4 17.9203 4 18.4801 4.21799 18.9079C4.40973 19.2842 4.71547 19.5905 5.0918 19.7822C5.5192 20 6.07899 20 7.19691 20H16.8031C17.921 20 18.48 20 18.9074 19.7822C19.2837 19.5905 19.5905 19.2842 19.7822 18.9079C20 18.4805 20 17.9215 20 16.8036V7.19691C20 6.07899 20 5.5192 19.7822 5.0918C19.5905 4.71547 19.2837 4.40973 18.9074 4.21799C18.4796 4 17.9203 4 16.8002 4H7.2002C6.08009 4 5.51962 4 5.0918 4.21799C4.71547 4.40973 4.40973 4.71547 4.21799 5.0918C4 5.51962 4 6.08009 4 7.2002Z",
-        stroke: "#000000",
-        strokeWidth: "2",
-        strokeLinecap: "round",
-        strokeLinejoin: "round"
-      }))), /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("var", {
-        className: "me-1 multifunc-select-multi__control-option-checkbox-placeholder ".concat(itemSelected ? 'd-none' : '')
+        className: "me-1 mf-select-multi__control-option-checkbox-placeholder ".concat(itemSelected ? 'd-none' : '')
       }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("svg", {
         width: "1.2em",
         height: "1.2em",

@@ -77,12 +77,18 @@ const TagInput = forwardRef((props: TagInputProps, ref: any) => {
         if ( typeof defaultValue === 'undefined' || defaultValue === '' ) {
             setItems([]);
         } else {
-            setItems((VALUE_BY_BRACKETS ? extractContentsOfBrackets(defaultValue) : defaultValue.trim().replace(/^\,|\,$/g, '').split(',')).map((item: any, index: number) => {
-                return {
-                    content: item,
-                    id: index
-                }
-            }));
+            const _val = VALUE_BY_BRACKETS ? extractContentsOfBrackets(defaultValue) : defaultValue.trim().replace(/^\,|\,$/g, '').split(',');
+            if (Array.isArray(_val)) {
+                setItems(_val.map((item: any, index: number) => {
+                    return {
+                        content: item,
+                        id: index
+                    }
+                }));
+            } else {
+                setItems([]);
+            }
+            
         }
     }
 

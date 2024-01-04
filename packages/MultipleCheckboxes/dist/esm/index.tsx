@@ -103,7 +103,15 @@ const MultipleCheckboxes = forwardRef((props: MultipleCheckboxesProps, ref: any)
         if ( typeof defaultValue === 'undefined' || defaultValue === '' ) {
             setRegTagSelected([]);
         } else {
-            setRegTagSelected(VALUE_BY_BRACKETS ? extractContentsOfBrackets(defaultValue) : defaultValue.trim().replace(/^\,|\,$/g, '').split(',').filter((v: any) => v !== ''));
+
+            const _val = VALUE_BY_BRACKETS ? extractContentsOfBrackets(defaultValue) : defaultValue.trim().replace(/^\,|\,$/g, '').split(',');
+            if (Array.isArray(_val)) {
+                setRegTagSelected(_val.filter((v: any) => v !== ''));
+            } else {
+                setRegTagSelected([]);
+            }
+
+            
         }
     }
 

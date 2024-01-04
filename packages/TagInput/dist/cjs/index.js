@@ -292,12 +292,17 @@ var TagInput = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(fu
     if (typeof defaultValue === 'undefined' || defaultValue === '') {
       setItems([]);
     } else {
-      setItems((VALUE_BY_BRACKETS ? (0,_utils_extract__WEBPACK_IMPORTED_MODULE_1__.extractContentsOfBrackets)(defaultValue) : defaultValue.trim().replace(/^\,|\,$/g, '').split(',')).map(function (item, index) {
-        return {
-          content: item,
-          id: index
-        };
-      }));
+      var _val = VALUE_BY_BRACKETS ? (0,_utils_extract__WEBPACK_IMPORTED_MODULE_1__.extractContentsOfBrackets)(defaultValue) : defaultValue.trim().replace(/^\,|\,$/g, '').split(',');
+      if (Array.isArray(_val)) {
+        setItems(_val.map(function (item, index) {
+          return {
+            content: item,
+            id: index
+          };
+        }));
+      } else {
+        setItems([]);
+      }
     }
   }
   function handleRemove(e) {

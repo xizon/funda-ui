@@ -735,9 +735,14 @@ var MultipleCheckboxes = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forw
     if (typeof defaultValue === 'undefined' || defaultValue === '') {
       setRegTagSelected([]);
     } else {
-      setRegTagSelected(VALUE_BY_BRACKETS ? (0,_utils_extract__WEBPACK_IMPORTED_MODULE_2__.extractContentsOfBrackets)(defaultValue) : defaultValue.trim().replace(/^\,|\,$/g, '').split(',').filter(function (v) {
-        return v !== '';
-      }));
+      var _val = VALUE_BY_BRACKETS ? (0,_utils_extract__WEBPACK_IMPORTED_MODULE_2__.extractContentsOfBrackets)(defaultValue) : defaultValue.trim().replace(/^\,|\,$/g, '').split(',');
+      if (Array.isArray(_val)) {
+        setRegTagSelected(_val.filter(function (v) {
+          return v !== '';
+        }));
+      } else {
+        setRegTagSelected([]);
+      }
     }
   }
   (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(function () {
