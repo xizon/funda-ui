@@ -176,7 +176,7 @@ const Tooltip = (props: TooltipProps) => {
         // render() don't use "Fragment", in order to avoid error "Failed to execute 'insertBefore' on 'Node'"
         // prevent "transform", "filter", "perspective" attribute destruction fixed viewport orientation
         //--------------
-        if (document.body !== null) {
+        if (document.body !== null && modalRef.current !== null) {
             document.body.appendChild(modalRef.current);
         }
 

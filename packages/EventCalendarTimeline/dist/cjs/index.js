@@ -822,7 +822,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
             // prevent "transform", "filter", "perspective" attribute destruction fixed viewport orientation
             //--------------
             if (PROTECT_FIXED_VIEWPORT) {
-              if (document.body !== null) {
+              if (document.body !== null && modalRef.current !== null) {
                 document.body.appendChild(modalRef.current);
                 [].slice.call(modalRef.current.querySelectorAll('[data-close]')).forEach(function (node) {
                   if (typeof node.dataset.ev === 'undefined') {

@@ -308,7 +308,7 @@ const ModalDialog = (props: ModalDialogProps) => {
         // prevent "transform", "filter", "perspective" attribute destruction fixed viewport orientation
         //--------------
         if ( PROTECT_FIXED_VIEWPORT ) {
-            if ( document.body !== null ) {
+            if ( document.body !== null && modalRef.current !== null) {
                 
                 document.body.appendChild(modalRef.current);
 

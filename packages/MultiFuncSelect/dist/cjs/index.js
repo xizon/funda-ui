@@ -138,6 +138,148 @@ module.exports = {
 
 /***/ }),
 
+/***/ 378:
+/***/ ((module) => {
+
+function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
+/**
+ * Get the -webkit-transition-duration property
+ *
+ * @param {Element} el - A DOM node containing one selector to match against.
+ * @return {Number}    - Returns a pure number.
+ */
+function getTransitionDuration(el) {
+  if (_typeof(el) === ( true ? "undefined" : 0)) {
+    return 0;
+  }
+  var style = window.getComputedStyle(el),
+    duration = style.webkitTransitionDuration,
+    delay = style.webkitTransitionDelay;
+  if (_typeof(duration) != ( true ? "undefined" : 0)) {
+    // fix miliseconds vs seconds
+    duration = duration.indexOf("ms") > -1 ? parseFloat(duration) : parseFloat(duration) * 1000;
+    delay = delay.indexOf("ms") > -1 ? parseFloat(delay) : parseFloat(delay) * 1000;
+    return duration;
+  } else {
+    return 0;
+  }
+}
+
+/**
+ * Get an object's absolute position on the page
+ *
+ * @param {Element} el - A DOM node containing one selector to match against.
+ * @return {Json}    - An object containing the properties top and left. 
+ */
+function getAbsoluteCoordinates(el) {
+  var windowWidth = window.innerWidth,
+    leftPos = null,
+    topPos = null;
+  if (!document.getElementsByTagName('body')[0].className.match(/rtl/)) {
+    leftPos = el.offsetLeft == 0 ? el.parentElement.offsetLeft : el.offsetLeft;
+    topPos = el.offsetTop == 0 ? el.parentElement.offsetTop : el.offsetTop;
+  } else {
+    // width and height in pixels, including padding and border
+    // Corresponds to outerWidth(), outerHeight()
+    leftPos = el.offsetLeft == 0 ? windowWidth - (el.parentElement.offsetLeft + el.parentElement.offsetWidth) : windowWidth - (el.offsetLeft + el.offsetWidth);
+    topPos = el.offsetTop == 0 ? windowWidth - (el.parentElement.offsetTop + el.parentElement.offsetHeight) : windowWidth - (el.offsetTop + el.offsetHeight);
+  }
+  return {
+    'left': leftPos,
+    'top': topPos
+  };
+}
+
+/**
+ * Get the current coordinates of the first element in the set of matched elements, relative to the document.
+ *
+ * @param {Element} el - A DOM node containing one selector to match against.
+ * @return {Json}      - An object containing the properties top and left. 
+ */
+function getOffset(el) {
+  var res = {
+    top: 0,
+    left: 0
+  };
+  var box = el.getBoundingClientRect();
+  var top = 0,
+    left = 0;
+
+  //Include scrollbar and border
+  top = box.top + window.pageYOffset - document.documentElement.clientTop;
+  left = box.left + window.pageXOffset - document.documentElement.clientLeft;
+  res = {
+    top: top,
+    left: left
+  };
+  return res;
+}
+
+/**
+ * Get the current coordinates of the first element in the set of matched elements, relative to the offset parent.
+ *
+ * @param {Element} el - A DOM node containing one selector to match against.
+ * @return {Json}      - An object containing the properties top and left.
+ */
+function getPosition(el) {
+  var res = {
+    top: 0,
+    left: 0
+  };
+  var top = el.offsetTop ? el.offsetTop : 0,
+    left = el.offsetLeft ? el.offsetLeft : 0;
+  res = {
+    top: top,
+    left: left
+  };
+  return res;
+}
+
+/**
+ * Get the absolute position of the stage element
+ * 
+ * @param {Element} domElement  - A DOM node
+ * @param {Number | String} left     - left offset
+ * @param {Number | String} top      - top offset
+ * @returns 
+ */
+function getAbsolutePositionOfStage(domElement) {
+  var left = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
+  var top = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 0;
+  if (!parseInt(left)) {
+    left = 0;
+  } else {
+    left = parseInt(left);
+  }
+  if (!parseInt(top)) {
+    top = 0;
+  } else {
+    top = parseInt(top);
+  }
+  var box = domElement.getBoundingClientRect();
+  var body = document.body;
+  var docElem = document.documentElement;
+  var scrollTop = window.pageYOffset || docElem.scrollTop || body.scrollTop;
+  var scrollLeft = window.pageXOffset || docElem.scrollLeft || body.scrollLeft;
+  var clientTop = docElem.clientTop || body.clientTop || 0;
+  var clientLeft = docElem.clientLeft || body.clientLeft || 0;
+  var attr = {};
+  attr.y = box.top + scrollTop - clientTop + top;
+  attr.x = box.left + scrollLeft - clientLeft + left;
+  attr.width = box.width;
+  attr.height = box.height;
+  return attr;
+}
+module.exports = {
+  getTransitionDuration: getTransitionDuration,
+  getAbsoluteCoordinates: getAbsoluteCoordinates,
+  getOffset: getOffset,
+  getPosition: getPosition,
+  getAbsolutePositionOfStage: getAbsolutePositionOfStage
+};
+
+/***/ }),
+
 /***/ 342:
 /***/ ((module) => {
 
@@ -475,6 +617,8 @@ var useDebounce = function useDebounce(fn, delay, dependence) {
 var extract = __webpack_require__(368);
 // EXTERNAL MODULE: ./src/utils/convert.js
 var convert = __webpack_require__(498);
+// EXTERNAL MODULE: ./src/utils/get-element-property.js
+var get_element_property = __webpack_require__(378);
 ;// CONCATENATED MODULE: ./src/plugins/BSL/bodyScrollLock.es6.js
 function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
 function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
@@ -761,6 +905,7 @@ function _objectWithoutPropertiesLoose(source, excluded) { if (source == null) r
 
 
 
+
 //Destroys body scroll locking
 
 
@@ -812,6 +957,7 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
   var WIN_WIDTH = typeof winWidth === 'function' ? winWidth() : winWidth ? winWidth : 'auto';
   var INDENT_PLACEHOLDER = doubleIndent ? "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" : "&nbsp;&nbsp;&nbsp;&nbsp;";
   var INDENT_LAST_PLACEHOLDER = "".concat(typeof indentation !== 'undefined' && indentation !== '' ? "".concat(indentation, "&nbsp;&nbsp;") : '');
+  var POS_OFFSET = 0;
   var uniqueID = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useId)().replace(/\:/g, "-");
   var idRes = id || uniqueID;
   var rootRef = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useRef)(null);
@@ -856,32 +1002,24 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
     _useState14 = _slicedToArray(_useState13, 2),
     isOpen = _useState14[0],
     setIsOpen = _useState14[1];
-  var _useState15 = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)(0),
+  var _useState15 = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)(null),
     _useState16 = _slicedToArray(_useState15, 2),
-    listContentHeight = _useState16[0],
-    setListContentHeight = _useState16[1];
-  var _useState17 = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)(null),
-    _useState18 = _slicedToArray(_useState17, 2),
-    incomingData = _useState18[0],
-    setIncomingData = _useState18[1];
-  var _useState19 = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)(false),
-    _useState20 = _slicedToArray(_useState19, 2),
-    componentFirstLoad = _useState20[0],
-    setComponentFirstLoad = _useState20[1];
+    incomingData = _useState16[0],
+    setIncomingData = _useState16[1];
 
   // Multiple selection
   var MULTI_SEL_VALID = multiSelect ? multiSelect.valid : false;
-  var _useState21 = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)({
+  var _useState17 = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)({
       labels: [],
       values: []
     }),
-    _useState22 = _slicedToArray(_useState21, 2),
-    controlArr = _useState22[0],
-    setControlArr = _useState22[1];
-  var _useState23 = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)(false),
-    _useState24 = _slicedToArray(_useState23, 2),
-    itemSelectedAll = _useState24[0],
-    setItemSelectedAll = _useState24[1];
+    _useState18 = _slicedToArray(_useState17, 2),
+    controlArr = _useState18[0],
+    setControlArr = _useState18[1];
+  var _useState19 = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)(false),
+    _useState20 = _slicedToArray(_useState19, 2),
+    itemSelectedAll = _useState20[0],
+    setItemSelectedAll = _useState20[1];
   var multiSelControlOptionExist = function multiSelControlOptionExist(arr, val) {
     return arr.map(function (v) {
       return v.toString();
@@ -892,7 +1030,7 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
   var handleChangeFetchSafe = utils_useDebounce(function (val) {
     var _orginalData = [];
     var update = function update(inputData) {
-      var filterRes = function filterRes(data) {
+      var filterRes = function filterRes() {
         return inputData.filter(function (item) {
           // Avoid fatal errors causing page crashes
           var _queryString = typeof item.queryString !== 'undefined' && item.queryString !== null ? item.queryString : '';
@@ -907,22 +1045,30 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
           }
         });
       };
-      setOptionsData(filterRes);
+      return filterRes();
     };
     if (fetchUpdate) {
       handleFetch(val).then(function (response) {
         _orginalData = response;
-        update(_orginalData);
+        var _filterRes = update(_orginalData);
 
-        // Adjust the overall height to fit the wrapper
-        fixContentHeight();
+        // pop win initalization
+        setTimeout(function () {
+          popwinPosInit();
+          popwinBtnEventsInit(_filterRes);
+          popwinFilterItems(val);
+        }, 0);
       });
     } else {
       _orginalData = orginalData;
-      update(_orginalData);
+      var _filterRes = update(_orginalData);
 
-      // Adjust the overall height to fit the wrapper
-      fixContentHeight();
+      // pop win initalization
+      setTimeout(function () {
+        popwinPosInit();
+        popwinBtnEventsInit(_filterRes);
+        popwinFilterItems(val);
+      }, 0);
     }
   }, 350, [optionsData]);
 
@@ -1005,108 +1151,8 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
     return bounding.top >= 0 && bounding.left >= 0 && bounding.bottom <= (window.innerHeight || document.documentElement.clientHeight) && bounding.right <= (window.innerWidth || document.documentElement.clientWidth);
   }
   function handleScrollEvent() {
-    getPlacement(listRef.current, true);
-  }
-
-  //
-  function fixContentHeight() {
-    setTimeout(function () {
-      if (listContentRef.current !== null) {
-        var _displayedItems = listContentRef.current.querySelectorAll('.list-group-item');
-        if (typeof _displayedItems[0] !== 'undefined') {
-          var _displayedHeight = _displayedItems[0].clientHeight * _displayedItems.length;
-          listContentRef.current.style.height = _displayedHeight + 'px';
-        }
-      }
-    }, 0);
-  }
-  function getPlacement(el) {
-    var restorePos = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
-    if (el === null) return;
-    if (selectInputRef.current === null) return;
-    var PLACEMENT_TOP = 'top-0';
-    var PLACEMENT_BOTTOMEND = 'bottom-0';
-    var PLACEMENT_RIGHT = 'end-0';
-    var PLACEMENT_LEFT = 'start-0';
-    var inputBox = selectInputRef.current.getBoundingClientRect();
-    var elTop = inputBox.top;
-    var elSpacing = 50 + selectInputRef.current.clientHeight * 3;
-    var elMinWindowSpacing = selectInputRef.current.clientHeight * 2;
-
-    //restore position
-    if (restorePos) {
-      if (isInViewport(el)) {
-        el.classList.remove(PLACEMENT_BOTTOMEND);
-        el.style.removeProperty('bottom');
-      }
-      return;
-    }
-    if (listContentRef.current === null || listRef.current === null) return;
-
-    // STEP 0:
-    // save content height (Suitable for initial data with unchanged open options)
-    var _contentHeight = el.offsetHeight;
-    if (listContentHeight === 0) {
-      setListContentHeight(el.offsetHeight);
-    } else {
-      _contentHeight = listContentHeight;
-    }
-
-    // STEP 1:
-    // If the content exceeds the height of the window, first limit height and add scrollbar
-    var maxHeight = window.innerHeight - elSpacing;
-    if (maxHeight < selectInputRef.current.clientHeight) maxHeight = elMinWindowSpacing;
-    if (_contentHeight > 0 && _contentHeight > maxHeight) {
-      var newH = maxHeight - (elTop > window.innerHeight / 2 ? 0 : elTop) + elMinWindowSpacing;
-
-      // default position
-      listContentRef.current.style.height = newH + 'px';
-
-      // if it's on top
-      if (newH > maxHeight) {
-        listContentRef.current.style.height = elTop - elMinWindowSpacing + 'px';
-      }
-
-      // Adjust the overall height to fit the wrapper
-      var _displayedItems = listContentRef.current.querySelectorAll('.list-group-item');
-      var _displayedHeight = _displayedItems[0].clientHeight * _displayedItems.length;
-      if (_displayedHeight < listRef.current.clientHeight) {
-        listContentRef.current.style.height = _displayedHeight + 'px';
-      }
-
-      //
-      listContentRef.current.style.overflowY = 'auto';
-    } else {
-      listContentRef.current.style.height = 'auto';
-      listContentRef.current.style.overflowY = 'inherit';
-    }
-
-    // STEP 2:
-    // Adjust position
-    if (!isInViewport(el)) {
-      el.classList.add(PLACEMENT_BOTTOMEND);
-      el.style.setProperty('bottom', selectInputRef.current.clientHeight + 5 + 'px', "important");
-    }
-
-    // STEP 3:
-    // It is on top when no scrollbars have been added
-    if (!isInViewport(el)) {
-      if (el.getBoundingClientRect().top < 0) {
-        el.classList.remove(PLACEMENT_BOTTOMEND);
-        el.style.removeProperty('bottom');
-        //
-        listContentRef.current.style.height = _contentHeight + el.getBoundingClientRect().top - elMinWindowSpacing + 'px';
-        listContentRef.current.style.overflowY = 'auto';
-      }
-    }
-
-    // STEP 4:
-    // Detect content height
-    var heightOffset = 80;
-    var contentBox = listContentRef.current.getBoundingClientRect();
-    if (contentBox.height - heightOffset > window.innerHeight / 2) {
-      listContentRef.current.style.height = window.innerHeight - inputBox.height - inputBox.top - heightOffset + 'px';
-    }
+    // remove classnames, data-* and styles
+    popwinContainerHeightReset();
   }
 
   // Determine whether it is in JSON format
@@ -1129,15 +1175,6 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
       }
     }
   }
-  function adjustMultiControlContainerHeight() {
-    setTimeout(function () {
-      // Sometimes you may get 0, you need to judge
-      if (rootMultiRef.current.clientHeight > 0) {
-        rootSingleRef.current.style.height = rootMultiRef.current.clientHeight + 'px';
-        selectInputRef.current.style.height = rootMultiRef.current.clientHeight + 'px';
-      }
-    }, 0);
-  }
   function fetchData(_x2, _x3) {
     return _fetchData.apply(this, arguments);
   }
@@ -1153,7 +1190,7 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
         filterResQueryLabel,
         _currentData,
         _values,
-        _filterRes2,
+        _filterRes3,
         _filterResQueryValue,
         _filterResQueryLabel,
         _currentData2,
@@ -1168,7 +1205,7 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
             incomingOptionsData = valueInputRef.current.dataset.options; // Determine whether the default value is user query input or default input
             defaultValue = init ? inputDefaultValue : '';
             if (!(_typeof(fetchFuncAsync) === 'object')) {
-              _context2.next = 23;
+              _context2.next = 22;
               break;
             }
             _context2.next = 6;
@@ -1264,28 +1301,30 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
                 _values = VALUE_BY_BRACKETS ? (0,extract.extractContentsOfBrackets)(defaultValue) : defaultValue.split(',');
                 _values.forEach(function (_value, _index) {
                   if (!multiSelControlOptionExist(_currentData.values, _value) && typeof _currentData.values[_index] !== 'undefined') {
-                    var _filterRes = [];
-                    _filterRes = [{
+                    var _filterRes2 = [];
+                    _filterRes2 = [{
                       value: _currentData.values[_index],
                       label: _currentData.labels[_index],
                       queryString: _currentData.queryStrings[_index]
                     }];
                     setControlArr(function (prevState) {
                       return {
-                        labels: unique([].concat(src_toConsumableArray(prevState.labels), [typeof _filterRes[0] !== 'undefined' ? _filterRes[0].label : '']).filter(function (v) {
+                        labels: unique([].concat(src_toConsumableArray(prevState.labels), [typeof _filterRes2[0] !== 'undefined' ? _filterRes2[0].label : '']).filter(function (v) {
                           return v !== '';
                         })),
-                        values: unique([].concat(src_toConsumableArray(prevState.values), [typeof _filterRes[0] !== 'undefined' ? _filterRes[0].value : '']).filter(function (v) {
+                        values: unique([].concat(src_toConsumableArray(prevState.values), [typeof _filterRes2[0] !== 'undefined' ? _filterRes2[0].value : '']).filter(function (v) {
                           return v !== '';
                         }))
                       };
                     });
                   }
                 });
-
-                // Appropriate multi-item container height
-                adjustMultiControlContainerHeight();
               }
+
+              // hide disabled item
+              _ORGIN_DATA = _ORGIN_DATA.filter(function (v) {
+                return typeof v.disabled !== 'undefined' && v.disabled == true ? false : true;
+              });
             }
 
             // STEP 5: ===========
@@ -1299,18 +1338,9 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
             //
             onFetch === null || onFetch === void 0 ? void 0 : onFetch(selectInputRef.current, valueInputRef.current, defaultValue, _ORGIN_DATA, incomingData);
 
-            // STEP 7: ===========
-            //
-            // window position
-            if (componentFirstLoad) {
-              setTimeout(function () {
-                getPlacement(listRef.current);
-              }, 500);
-            }
-
             //
             return _context2.abrupt("return", _ORGIN_DATA);
-          case 23:
+          case 22:
             // STEP 1: ===========
             // get incoming options from `data-options` of component
             if (typeof incomingOptionsData !== 'undefined') {
@@ -1329,15 +1359,15 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
 
             // STEP 3: ===========
             // value & label must be initialized
-            _filterRes2 = [];
+            _filterRes3 = [];
             _filterResQueryValue = optionsDataInit.filter(function (item) {
               return item.value == defaultValue;
             });
             _filterResQueryLabel = optionsDataInit.filter(function (item) {
               return item.label == defaultValue;
             });
-            _filterRes2 = _filterResQueryValue;
-            if (_filterResQueryValue.length === 0) _filterRes2 = _filterResQueryLabel;
+            _filterRes3 = _filterResQueryValue;
+            if (_filterResQueryValue.length === 0) _filterRes3 = _filterResQueryLabel;
 
             // STEP 4: ===========
             // ++++++++++++++++++++
@@ -1348,9 +1378,9 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
               setControlValue('');
               setControlLabel('');
             } else {
-              if (_filterRes2.length > 0) {
-                setControlValue(_filterRes2[0].value);
-                setControlLabel(formatIndentVal(_filterRes2[0].label));
+              if (_filterRes3.length > 0) {
+                setControlValue(_filterRes3[0].value);
+                setControlLabel(formatIndentVal(_filterRes3[0].label));
               }
             }
 
@@ -1377,28 +1407,30 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
                 _values2 = typeof defaultValue !== 'undefined' ? VALUE_BY_BRACKETS ? (0,extract.extractContentsOfBrackets)(defaultValue) : defaultValue.split(',') : [];
                 _values2.forEach(function (_value, _index) {
                   if (!multiSelControlOptionExist(_currentData2.values, _value) && typeof _currentData2.values[_index] !== 'undefined') {
-                    var _filterRes3 = [];
-                    _filterRes3 = [{
+                    var _filterRes4 = [];
+                    _filterRes4 = [{
                       value: _currentData2.values[_index],
                       label: _currentData2.labels[_index],
                       queryString: _currentData2.queryStrings[_index]
                     }];
                     setControlArr(function (prevState) {
                       return {
-                        labels: unique([].concat(src_toConsumableArray(prevState.labels), [typeof _filterRes3[0] !== 'undefined' ? _filterRes3[0].label : '']).filter(function (v) {
+                        labels: unique([].concat(src_toConsumableArray(prevState.labels), [typeof _filterRes4[0] !== 'undefined' ? _filterRes4[0].label : '']).filter(function (v) {
                           return v !== '';
                         })),
-                        values: unique([].concat(src_toConsumableArray(prevState.values), [typeof _filterRes3[0] !== 'undefined' ? _filterRes3[0].value : '']).filter(function (v) {
+                        values: unique([].concat(src_toConsumableArray(prevState.values), [typeof _filterRes4[0] !== 'undefined' ? _filterRes4[0].value : '']).filter(function (v) {
                           return v !== '';
                         }))
                       };
                     });
                   }
                 });
-
-                // Appropriate multi-item container height
-                adjustMultiControlContainerHeight();
               }
+
+              // hide disabled item
+              optionsDataInit = optionsDataInit.filter(function (v) {
+                return typeof v.disabled !== 'undefined' && v.disabled == true ? false : true;
+              });
             }
 
             // STEP 5: ===========
@@ -1412,18 +1444,9 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
             //
             onFetch === null || onFetch === void 0 ? void 0 : onFetch(selectInputRef.current, valueInputRef.current, defaultValue, optionsDataInit, incomingData);
 
-            // STEP 7: ===========
-            //
-            // window position
-            if (componentFirstLoad) {
-              setTimeout(function () {
-                getPlacement(listRef.current);
-              }, 500);
-            }
-
             //
             return _context2.abrupt("return", optionsDataInit);
-          case 37:
+          case 35:
           case "end":
             return _context2.stop();
         }
@@ -1431,9 +1454,217 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
     }));
     return _fetchData.apply(this, arguments);
   }
+  function popwinPosInit() {
+    if (listContentRef.current === null || selectInputRef.current === null) return;
+    var contentHeightOffset = 80;
+    var contentMaxHeight = 0;
+
+    // update modal position
+    var _modalRef = document.querySelector("#multifunc-select__options-wrapper-".concat(idRes));
+    var _triggerRef = selectInputRef.current;
+
+    // console.log(getAbsolutePositionOfStage(_triggerRef));
+
+    if (_modalRef === null) return;
+    var _getAbsolutePositionO = (0,get_element_property.getAbsolutePositionOfStage)(_triggerRef),
+      x = _getAbsolutePositionO.x,
+      y = _getAbsolutePositionO.y,
+      width = _getAbsolutePositionO.width,
+      height = _getAbsolutePositionO.height;
+    var _triggerBox = _triggerRef.getBoundingClientRect();
+    var targetPos = '';
+
+    // STEP 1:
+    //-----------
+    // display wrapper
+    _modalRef.classList.add('active');
+
+    // STEP 2:
+    //-----------
+    // Detect position
+    if (window.innerHeight - _triggerBox.top > 100) {
+      targetPos = 'bottom';
+    } else {
+      targetPos = 'top';
+    }
+    if (typeof listContentRef.current.dataset.pos === 'undefined') listContentRef.current.dataset.pos = targetPos;
+
+    // STEP 3:
+    //-----------
+    // Detect content height
+    var _contentBox = listContentRef.current.getBoundingClientRect();
+    var _contentOldHeight = listContentRef.current.clientHeight;
+    if (targetPos === 'top') {
+      contentMaxHeight = _triggerBox.top;
+      if (_contentBox.height > contentMaxHeight) {
+        listContentRef.current.style.height = contentMaxHeight - contentHeightOffset + 'px';
+        if (typeof listContentRef.current.dataset.height === 'undefined') listContentRef.current.dataset.height = contentMaxHeight - contentHeightOffset;
+      } else {
+        if (_contentOldHeight > 50) {
+          listContentRef.current.style.height = _contentOldHeight + 'px';
+          if (typeof listContentRef.current.dataset.height === 'undefined') listContentRef.current.dataset.height = _contentOldHeight;
+        }
+      }
+    }
+    if (targetPos === 'bottom') {
+      contentMaxHeight = window.innerHeight - _triggerBox.bottom;
+      if (_contentBox.height > contentMaxHeight) {
+        listContentRef.current.style.height = contentMaxHeight - 10 + 'px';
+        if (typeof listContentRef.current.dataset.height === 'undefined') listContentRef.current.dataset.height = contentMaxHeight - 10;
+      } else {
+        if (_contentOldHeight > 50) {
+          listContentRef.current.style.height = _contentOldHeight + 'px';
+          if (typeof listContentRef.current.dataset.height === 'undefined') listContentRef.current.dataset.height = _contentOldHeight;
+        }
+      }
+    }
+
+    // STEP 4:
+    //-----------
+    // Adjust position
+    if (targetPos === 'top') {
+      _modalRef.style.left = x + 'px';
+      _modalRef.style.top = y - POS_OFFSET - listContentRef.current.clientHeight - 2 + 'px';
+    }
+    if (targetPos === 'bottom') {
+      _modalRef.style.left = x + 'px';
+      _modalRef.style.top = y + height + POS_OFFSET + 'px';
+    }
+
+    // STEP 5:
+    //-----------
+    // Determine whether it exceeds the far right or left side of the screen
+    var _modalContent = _modalRef;
+    var _modalBox = _modalContent.getBoundingClientRect();
+    if (typeof _modalContent.dataset.offset === 'undefined') {
+      if (_modalBox.right > window.innerWidth) {
+        var _modalOffsetPosition = _modalBox.right - window.innerWidth + POS_OFFSET;
+        _modalContent.dataset.offset = _modalOffsetPosition;
+        _modalContent.style.marginLeft = "-".concat(_modalOffsetPosition, "px");
+        // console.log('_modalPosition: ', _modalOffsetPosition)
+      }
+
+      if (_modalBox.left < 0) {
+        var _modalOffsetPosition2 = Math.abs(_modalBox.left) + POS_OFFSET;
+        _modalContent.dataset.offset = _modalOffsetPosition2;
+        _modalContent.style.marginLeft = "".concat(_modalOffsetPosition2, "px");
+        // console.log('_modalPosition: ', _modalOffsetPosition)
+      }
+    }
+  }
+
+  function popwinPosHide() {
+    var _modalRef = document.querySelector("#multifunc-select__options-wrapper-".concat(idRes));
+    if (_modalRef !== null && listContentRef.current !== null) {
+      var _nodataDiv = listContentRef.current.querySelector('.multifunc-select-multi__control-option-item--nomatch');
+      var _btnSelectAll = listContentRef.current.querySelector('.multifunc-select-multi__control-option-item--select-all');
+
+      // remove classnames, data-* and styles
+      _modalRef.classList.remove('active');
+      listContentRef.current.style.removeProperty('height');
+      popwinContainerHeightReset();
+
+      // display all filtered items
+      [].slice.call(listContentRef.current.querySelectorAll('.multifunc-select-multi__control-option-item')).forEach(function (node) {
+        node.classList.remove('hide');
+      });
+      _nodataDiv.classList.add('hide');
+      if (_btnSelectAll !== null) _btnSelectAll.classList.remove('hide');
+    }
+  }
+  function popwinBtnEventsInit(getOptionsData) {
+    if (listContentRef.current === null) return;
+
+    // options event listener
+    // !!! to prevent button mismatch when changing
+    [].slice.call(listContentRef.current.querySelectorAll('.multifunc-select-multi__control-option-item')).forEach(function (node) {
+      var optVal = node.dataset.value;
+      getOptionsData.forEach(function (item) {
+        if (optVal == item.value) {
+          if (typeof node.dataset.ev === 'undefined') {
+            node.dataset.ev = 'true';
+            node.addEventListener('pointerdown', function (e) {
+              handleSelect(e);
+            });
+          }
+        }
+      });
+    });
+    var _btnSelectAll = listContentRef.current.querySelector('.multifunc-select-multi__control-option-item--select-all > span');
+    if (_btnSelectAll !== null && typeof _btnSelectAll.dataset.ev === 'undefined') {
+      _btnSelectAll.dataset.ev = 'true';
+      _btnSelectAll.addEventListener('pointerdown', function (e) {
+        handleSelectAll(e);
+      });
+    }
+  }
+  function popwinFilterItems(val) {
+    if (listContentRef.current === null) return;
+    [].slice.call(listContentRef.current.querySelectorAll('.multifunc-select-multi__control-option-item')).forEach(function (node) {
+      // Avoid fatal errors causing page crashes
+      var _queryString = typeof node.dataset.querystring !== 'undefined' && node.dataset.querystring !== null ? node.dataset.querystring : '';
+      if ((_queryString.split(',').some(function (l) {
+        return l.charAt(0) === val.toLowerCase();
+      }) || _queryString.split(',').some(function (l) {
+        return l.replace(/ /g, '').indexOf(val.toLowerCase()) >= 0;
+      }) || node.dataset.label.toLowerCase().indexOf(val.toLowerCase()) >= 0) && val != '') {
+        node.classList.remove('hide');
+      } else {
+        node.classList.add('hide');
+      }
+    });
+
+    // no data label
+    var _btnSelectAll = listContentRef.current.querySelector('.multifunc-select-multi__control-option-item--select-all');
+    var _nodataDiv = listContentRef.current.querySelector('.multifunc-select-multi__control-option-item--nomatch');
+    var emptyFieldsCheck = [].slice.call(listContentRef.current.querySelectorAll('.multifunc-select-multi__control-option-item')).every(function (node) {
+      if (!node.classList.contains('hide')) {
+        return false;
+      }
+      return true;
+    });
+    if (emptyFieldsCheck) {
+      _nodataDiv.classList.remove('hide');
+      if (_btnSelectAll !== null) _btnSelectAll.classList.add('hide');
+    } else {
+      _nodataDiv.classList.add('hide');
+      if (_btnSelectAll !== null) _btnSelectAll.classList.remove('hide');
+    }
+
+    // display all filtered items
+    if (val.replace(/\s/g, "") === '') {
+      [].slice.call(listContentRef.current.querySelectorAll('.multifunc-select-multi__control-option-item')).forEach(function (node) {
+        node.classList.remove('hide');
+      });
+      _nodataDiv.classList.add('hide');
+      if (_btnSelectAll !== null) _btnSelectAll.classList.remove('hide');
+    }
+
+    // Appropriate list container height
+    popwinContainerHeightAdjust();
+  }
+  function popwinContainerHeightAdjust() {
+    if (listContentRef.current === null) return;
+    var oldHeight = listContentRef.current.dataset.height;
+    var pos = listContentRef.current.dataset.pos;
+    var filteredHeight = listContentRef.current.firstChild.clientHeight;
+    if (pos === 'bottom') {
+      if (parseFloat(oldHeight) > filteredHeight) {
+        listContentRef.current.style.height = filteredHeight + 'px';
+      } else {
+        listContentRef.current.style.height = oldHeight + 'px';
+      }
+    }
+  }
+  function popwinContainerHeightReset() {
+    if (listContentRef.current === null) return;
+    listContentRef.current.removeAttribute('data-height');
+    listContentRef.current.removeAttribute('data-pos');
+  }
   function cancel() {
     // hide list
     setIsOpen(false);
+    if (!MULTI_SEL_VALID) popwinPosHide();
     if (LIVE_SEARCH_OK) {
       // clean data
       setOptionsData([]);
@@ -1451,6 +1682,8 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
   function activate() {
     // show list
     setIsOpen(true);
+    popwinPosInit();
+    popwinBtnEventsInit(optionsData);
     if (LIVE_SEARCH_OK) {
       // clean data
       setOptionsData([]);
@@ -1484,17 +1717,21 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
       var dataInput,
         valueArr,
         labelArr,
-        index,
-        incomingOptionsData,
+        curItem,
+        incominggetOptionsData,
         _data,
         _value,
         _label,
         currentControlValueArr,
         currentControlLabelArr,
+        _selected,
+        _selectedVal,
         _value2,
         _label2,
         _currentControlValueArr,
         _currentControlLabelArr,
+        _selected2,
+        _selectedVal2,
         _args3 = arguments;
       return _regeneratorRuntime().wrap(function _callee3$(_context3) {
         while (1) switch (_context3.prev = _context3.next) {
@@ -1508,9 +1745,9 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
             }
             return _context3.abrupt("return");
           case 5:
-            // get incoming options from `data-options` of component
+            curItem = el === null ? JSON.parse(dataInput) : JSON.parse(el.currentTarget.dataset.itemdata); // get incoming options from `data-options` of component
             // It is usually used for complex cascading `<MultiFuncSelect />` components
-            incomingOptionsData = valueInputRef.current.dataset.options; // cancel
+            incominggetOptionsData = valueInputRef.current.dataset.options; // cancel
             if (!(MULTI_SEL_VALID && isOpen)) {
               cancel();
             }
@@ -1532,7 +1769,7 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
               setControlLabel(formatIndentVal(_label));
 
               // set value if the attribute `data-options` of component exists, only valid for single selection (it may be an empty array)
-              if (typeof incomingOptionsData !== 'undefined') {
+              if (typeof incominggetOptionsData !== 'undefined') {
                 valueInputRef.current.dataset.value = _value;
               }
 
@@ -1542,7 +1779,18 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
               currentControlValueArr = JSON.parse(JSON.stringify(valueArr));
               currentControlLabelArr = JSON.parse(JSON.stringify(labelArr));
               if (MULTI_SEL_VALID) {
-                if (multiSelControlOptionExist(valueArr, _value)) {
+                // update option checkboxes
+                _selected = el.currentTarget.dataset.selected;
+                _selectedVal = _selected == 'true' ? true : false;
+                if (_selectedVal) {
+                  //#########
+                  // remove item
+                  //#########
+                  el.currentTarget.dataset.selected = 'false';
+                  el.currentTarget.querySelector('.multifunc-select-multi__control-option-checkbox--selected').style.display = 'inline-block';
+                  el.currentTarget.querySelector('.multifunc-select-multi__control-option-checkbox').style.display = 'none';
+
+                  //
                   setControlArr(function (prevState) {
                     // update temporary value
                     setControlTempValue(prevState.labels.length >= 0 ? null : VALUE_BY_BRACKETS ? (0,convert.convertArrToValByBrackets)(prevState.labels) : prevState.labels.join(','));
@@ -1554,6 +1802,14 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
                   currentControlValueArr = removeItemOnce(currentControlValueArr, _value);
                   currentControlLabelArr = removeItemOnce(currentControlLabelArr, formatIndentVal(_label));
                 } else {
+                  //#########
+                  // add item
+                  //#########
+                  el.currentTarget.dataset.selected = 'true';
+                  el.currentTarget.querySelector('.multifunc-select-multi__control-option-checkbox--selected').style.display = 'none';
+                  el.currentTarget.querySelector('.multifunc-select-multi__control-option-checkbox').style.display = 'inline-block';
+
+                  //
                   setControlArr(function (prevState) {
                     // update temporary value
                     setControlTempValue(prevState.labels.length >= 0 ? null : VALUE_BY_BRACKETS ? (0,convert.convertArrToValByBrackets)(prevState.labels) : prevState.labels.join(','));
@@ -1565,14 +1821,11 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
                   currentControlValueArr.push(_value);
                   currentControlLabelArr.push(_label);
                 }
-
-                // Appropriate multi-item container height
-                adjustMultiControlContainerHeight();
               }
 
               //
               if (typeof onChange === 'function') {
-                onChange === null || onChange === void 0 ? void 0 : onChange(selectInputRef.current, valueInputRef.current, !MULTI_SEL_VALID ? optionsData[index] : {
+                onChange === null || onChange === void 0 ? void 0 : onChange(selectInputRef.current, valueInputRef.current, !MULTI_SEL_VALID ? curItem : {
                   labels: currentControlLabelArr.map(function (v) {
                     return v.toString();
                   }),
@@ -1595,16 +1848,15 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
                 selectInputRef.current.blur();
               }
             } else {
-              index = typeof el.currentTarget !== 'undefined' ? el.currentTarget.dataset.index : el.dataset.index;
-              _value2 = optionsData[index].value;
-              _label2 = optionsData[index].label; // ++++++++++++++++++++
+              _value2 = typeof curItem !== 'undefined' ? curItem.value : '';
+              _label2 = typeof curItem !== 'undefined' ? curItem.label : ''; // ++++++++++++++++++++
               // Single selection
               // ++++++++++++++++++++
               setControlValue(_value2);
               setControlLabel(formatIndentVal(_label2));
 
               // set value if the attribute `data-options` of component exists, only valid for single selection (it may be an empty array)
-              if (typeof incomingOptionsData !== 'undefined') {
+              if (typeof incominggetOptionsData !== 'undefined') {
                 valueInputRef.current.dataset.value = _value2;
               }
 
@@ -1614,7 +1866,18 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
               _currentControlValueArr = JSON.parse(JSON.stringify(controlArr.values));
               _currentControlLabelArr = JSON.parse(JSON.stringify(controlArr.labels));
               if (MULTI_SEL_VALID) {
-                if (multiSelControlOptionExist(controlArr.values, _value2)) {
+                // update option checkboxes
+                _selected2 = el.currentTarget.dataset.selected;
+                _selectedVal2 = _selected2 == 'true' ? true : false;
+                if (_selectedVal2) {
+                  //#########
+                  // remove item
+                  //#########
+                  el.currentTarget.dataset.selected = 'false';
+                  el.currentTarget.querySelector('.multifunc-select-multi__control-option-checkbox--selected').style.display = 'inline-block';
+                  el.currentTarget.querySelector('.multifunc-select-multi__control-option-checkbox').style.display = 'none';
+
+                  //
                   setControlArr(function (prevState) {
                     // update temporary value
                     setControlTempValue(prevState.labels.length >= 0 ? null : VALUE_BY_BRACKETS ? (0,convert.convertArrToValByBrackets)(prevState.labels) : prevState.labels.join(','));
@@ -1626,6 +1889,14 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
                   _currentControlValueArr = removeItemOnce(_currentControlValueArr, _value2);
                   _currentControlLabelArr = removeItemOnce(_currentControlLabelArr, formatIndentVal(_label2));
                 } else {
+                  //#########
+                  // add item
+                  //#########
+                  el.currentTarget.dataset.selected = 'true';
+                  el.currentTarget.querySelector('.multifunc-select-multi__control-option-checkbox--selected').style.display = 'none';
+                  el.currentTarget.querySelector('.multifunc-select-multi__control-option-checkbox').style.display = 'inline-block';
+
+                  //
                   setControlArr(function (prevState) {
                     // update temporary value
                     setControlTempValue(prevState.labels.length >= 0 ? null : VALUE_BY_BRACKETS ? (0,convert.convertArrToValByBrackets)(prevState.labels) : prevState.labels.join(','));
@@ -1637,14 +1908,11 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
                   _currentControlValueArr.push(_value2);
                   _currentControlLabelArr.push(_label2);
                 }
-
-                // Appropriate multi-item container height
-                adjustMultiControlContainerHeight();
               }
 
               //
               if (typeof onChange === 'function') {
-                onChange === null || onChange === void 0 ? void 0 : onChange(selectInputRef.current, valueInputRef.current, !MULTI_SEL_VALID ? optionsData[index] : {
+                onChange === null || onChange === void 0 ? void 0 : onChange(selectInputRef.current, valueInputRef.current, !MULTI_SEL_VALID ? curItem : {
                   labels: _currentControlLabelArr.map(function (v) {
                     return v.toString();
                   }),
@@ -1667,7 +1935,7 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
                 selectInputRef.current.blur();
               }
             }
-          case 9:
+          case 10:
           case "end":
             return _context3.stop();
         }
@@ -1702,6 +1970,25 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
         selectInputRef.current.blur();
       }
     };
+    var updateOptionCheckboxes = function updateOptionCheckboxes(type) {
+      [].slice.call(listContentRef.current.querySelectorAll('.multifunc-select-multi__control-option-item')).forEach(function (node) {
+        if (type === 'remove') {
+          //#########
+          // remove item
+          //#########
+          node.dataset.selected = 'false';
+          node.querySelector('.multifunc-select-multi__control-option-checkbox--selected').style.display = 'inline-block';
+          node.querySelector('.multifunc-select-multi__control-option-checkbox').style.display = 'none';
+        } else {
+          //#########
+          // add item
+          //#########
+          node.dataset.selected = 'true';
+          node.querySelector('.multifunc-select-multi__control-option-checkbox--selected').style.display = 'none';
+          node.querySelector('.multifunc-select-multi__control-option-checkbox').style.display = 'inline-block';
+        }
+      });
+    };
     setItemSelectedAll(function (prevState) {
       if (!prevState) {
         setControlArr(function (prevData) {
@@ -1718,6 +2005,9 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
 
           //
           onChangeSelectAll(currentControlLabelArr, currentControlValueArr);
+
+          // update option checkboxes
+          updateOptionCheckboxes('add');
           return {
             labels: currentControlLabelArr,
             values: currentControlValueArr
@@ -1734,6 +2024,9 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
 
           //
           onChangeSelectAll(currentControlLabelArr, currentControlValueArr);
+
+          // update option checkboxes
+          updateOptionCheckboxes('remove');
           return {
             labels: currentControlLabelArr,
             values: currentControlValueArr
@@ -1763,9 +2056,6 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
     });
     currentControlValueArr = removeItemOnce(currentControlValueArr, _value);
     currentControlLabelArr = removeItemOnce(currentControlLabelArr, formatIndentVal(_label));
-
-    // Appropriate multi-item container height
-    adjustMultiControlContainerHeight();
 
     //
     if (typeof onChange === 'function') {
@@ -1799,11 +2089,6 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
     //
     if (!isOpen) {
       activate();
-
-      // window position
-      setTimeout(function () {
-        getPlacement(listRef.current);
-      }, 0);
     }
   }
   function handleFetch() {
@@ -1826,19 +2111,13 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
             _oparams = fetchFuncMethodParams || [];
             _params = _oparams.map(function (item) {
               return item !== '$QUERY_STRING' ? item : searchStr;
-            }); // if empty
-            if (!(searchStr.replace(/\s/g, "") === '')) {
-              _context4.next = 6;
-              break;
-            }
-            return _context4.abrupt("return", []);
-          case 6:
-            _context4.next = 8;
+            });
+            _context4.next = 6;
             return fetchData(_params.join(','), value, false);
-          case 8:
+          case 6:
             res = _context4.sent;
             return _context4.abrupt("return", res);
-          case 10:
+          case 8:
           case "end":
             return _context4.stop();
         }
@@ -1859,24 +2138,7 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
     setControlTempValue(val);
 
     //
-    if (val.replace(/\s/g, "") === '') {
-      // No elements found. Consider changing the search query.
-
-      if (LIVE_SEARCH_OK) {
-        // clean data
-        setOptionsData([]);
-      } else {
-        // restore data
-        setOptionsData(orginalData);
-      }
-    } else {
-      handleChangeFetchSafe(val);
-    }
-
-    // window position
-    setTimeout(function () {
-      getPlacement(listRef.current);
-    }, 0);
+    handleChangeFetchSafe(val);
   }
 
   //
@@ -1903,9 +2165,10 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
     }, 300);
   }
   function handleClose(event) {
-    if (event.target.closest(".".concat(wrapperClassName || wrapperClassName === '' ? wrapperClassName : 'multifunc-select__wrapper')) === null) {
+    if (event.target.closest(".multifunc-select__wrapper") === null && event.target.closest(".multifunc-select__options-wrapper") === null) {
       // cancel
       cancel();
+      if (MULTI_SEL_VALID) popwinPosHide();
     }
   }
   function generateInputFocusStr() {
@@ -1915,7 +2178,7 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
     return new Promise(function (resolve) {
       // Determine the "active" class name to avoid listening to other unused components of the same type
       if (listRef.current === null || !rootRef.current.classList.contains('active')) return;
-      var options = [].slice.call(listRef.current.querySelectorAll('.list-group-item'));
+      var options = [].slice.call(listRef.current.querySelectorAll('.list-group-item:not(.hide)'));
       var currentIndex = options.findIndex(function (e) {
         return e === listRef.current.querySelector('.list-group-item.active');
       });
@@ -1943,10 +2206,12 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
     });
   }
   (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useEffect)(function () {
-    // Component first load
+    // Move HTML templates to tag end body </body>
+    // render() don't use "Fragment", in order to avoid error "Failed to execute 'insertBefore' on 'Node'"
+    // prevent "transform", "filter", "perspective" attribute destruction fixed viewport orientation
     //--------------
-    if (!componentFirstLoad) {
-      setComponentFirstLoad(true);
+    if (document.body !== null && listRef.current !== null) {
+      document.body.appendChild(listRef.current);
     }
 
     // Call a function when the component has been rendered completely
@@ -1995,7 +2260,7 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
               if (typeof currentData !== 'undefined') {
                 currentControlValueArr = [];
                 currentControlLabelArr = [];
-                _options = [].slice.call(listRef.current.querySelectorAll('.list-group-item:not(.no-match)'));
+                _options = [].slice.call(listRef.current.querySelectorAll('.list-group-item:not(.hide):not(.no-match)'));
                 _options.forEach(function (node) {
                   node.classList.remove('active');
                   if (node.classList.contains('item-selected')) {
@@ -2081,11 +2346,15 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
     // windowScrollUpdate();
 
     return function () {
+      var _document$querySelect;
       if (LOCK_BODY_SCROLL) clearAllBodyScrollLocks();
       document.removeEventListener("keydown", listener);
       document.removeEventListener('pointerdown', handleClose);
       window.removeEventListener('scroll', windowScrollUpdate);
       window.removeEventListener('touchmove', windowScrollUpdate);
+
+      //
+      (_document$querySelect = document.querySelector("#multifunc-select__options-wrapper-".concat(idRes))) === null || _document$querySelect === void 0 ? void 0 : _document$querySelect.remove();
     };
   }, [value, options, data]);
   return /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, label ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
@@ -2261,41 +2530,40 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
     fillRule: "evenodd"
   }))))) : null) : null, optionsData && !hasErr ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
     ref: listRef,
-    className: "list-group position-absolute border shadow small ".concat(winWidth ? '' : 'w-100'),
+    id: "multifunc-select__options-wrapper-".concat(idRes),
+    className: "multifunc-select__options-wrapper list-group position-absolute border shadow small ".concat(winWidth ? '' : ''),
     style: {
-      marginTop: '0.2rem',
-      zIndex: depth ? depth : 100,
+      zIndex: depth ? depth : 1055,
       width: WIN_WIDTH
     },
     role: "tablist"
-  }, controlTempValue !== null && optionsData.length === 0 ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("button", {
-    tabIndex: -1,
-    type: "button",
-    className: "list-group-item list-group-item-action no-match",
-    disabled: true
-  }, fetchNoneInfo || 'No match yet')) : /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
-    className: "rounded",
+  }, controlTempValue !== null && optionsData.length === 0 ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null) : /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
+    className: "multifunc-select__options-contentlist rounded",
     style: {
       backgroundColor: 'var(--bs-list-group-bg)'
     },
     ref: listContentRef
-  }, MULTI_SEL_VALID ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("button", {
+  }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
+    className: "multifunc-select__options-contentlist-inner"
+  }, MULTI_SEL_VALID ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("span", {
     tabIndex: -1,
-    type: "button",
-    className: "list-group-item list-group-item-action border-start-0 border-end-0 text-secondary bg-light multifunc-select-multi__control-select-all",
+    className: "list-group-item list-group-item-action border-start-0 border-end-0 text-secondary bg-light multifunc-select-multi__control-option-item--select-all",
     role: "tab",
     style: {
       display: multiSelect !== null && multiSelect !== void 0 && multiSelect.selectAll ? 'block' : 'none'
     }
-  }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("a", {
+  }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("span", {
     tabIndex: -1,
-    href: "#",
-    onClick: handleSelectAll,
     className: "btn btn-secondary",
     dangerouslySetInnerHTML: {
       __html: "".concat((multiSelect === null || multiSelect === void 0 ? void 0 : multiSelect.selectAllLabel) || 'Select all options')
     }
-  }))) : null, optionsData ? optionsData.map(function (item, index) {
+  }))) : null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("button", {
+    tabIndex: -1,
+    type: "button",
+    className: "list-group-item list-group-item-action no-match border-0 multifunc-select-multi__control-option-item--nomatch hide",
+    disabled: true
+  }, fetchNoneInfo || 'No match yet'), optionsData ? optionsData.map(function (item, index) {
     var startItemBorder = index === 0 ? 'border-top-0' : '';
     var endItemBorder = index === optionsData.length - 1 ? 'border-bottom-0' : '';
     if (!MULTI_SEL_VALID) {
@@ -2304,11 +2572,10 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
       // ++++++++++++++++++++
       return /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("button", {
         tabIndex: -1,
-        onClick: handleSelect,
         type: "button",
         "data-index": index,
         key: index,
-        className: "list-group-item list-group-item-action border-start-0 border-end-0 ".concat(startItemBorder, " ").concat(endItemBorder, " border-bottom-0 ").concat(typeof item.disabled === 'undefined' ? '' : item.disabled == true ? 'disabled' : ''),
+        className: "list-group-item list-group-item-action border-start-0 border-end-0 multifunc-select-multi__control-option-item ".concat(startItemBorder, " ").concat(endItemBorder, " border-bottom-0 ").concat(typeof item.disabled === 'undefined' ? '' : item.disabled == true ? 'disabled' : ''),
         "data-value": "".concat(item.value),
         "data-label": "".concat(item.label),
         "data-querystring": "".concat(typeof item.queryString === 'undefined' ? '' : item.queryString),
@@ -2325,19 +2592,28 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
       var itemSelected = multiSelControlOptionExist(controlArr.values, item.value) ? true : false;
       return /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("button", {
         tabIndex: -1,
-        onClick: handleSelect,
         type: "button",
+        "data-selected": "".concat(itemSelected ? 'true' : 'false'),
         "data-index": index,
         key: index,
-        className: "list-group-item list-group-item-action border-start-0 border-end-0 ".concat(startItemBorder, " ").concat(endItemBorder, " border-bottom-0 ").concat(itemSelected ? 'list-group-item-secondary item-selected' : '', " ").concat(typeof item.disabled === 'undefined' ? '' : item.disabled == true ? 'disabled' : ''),
+        className: "list-group-item list-group-item-action border-start-0 border-end-0 multifunc-select-multi__control-option-item ".concat(startItemBorder, " ").concat(endItemBorder, " border-bottom-0 ").concat(itemSelected ? 'list-group-item-secondary item-selected' : '', " ").concat(typeof item.disabled === 'undefined' ? '' : item.disabled == true ? 'disabled' : ''),
         "data-value": "".concat(item.value),
         "data-label": "".concat(item.label),
         "data-querystring": "".concat(typeof item.queryString === 'undefined' ? '' : item.queryString),
         "data-itemdata": JSON.stringify(item),
         role: "tab"
       }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("var", {
-        className: "d-inline-block me-1 "
-      }, !itemSelected ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("svg", {
+        className: "me-1 multifunc-select-multi__control-option-checkbox multifunc-select-multi__control-option-checkbox--selected"
+      }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("svg", {
+        width: "1.2em",
+        height: "1.2em",
+        fill: "#000000",
+        viewBox: "0 0 24 24"
+      }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("path", {
+        d: "M19 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.11 0 2-.9 2-2V5c0-1.1-.89-2-2-2zm-9 14l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"
+      }))), /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("var", {
+        className: "me-1 multifunc-select-multi__control-option-checkbox"
+      }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("svg", {
         width: "1.2em",
         height: "1.2em",
         viewBox: "0 0 24 24",
@@ -2348,20 +2624,22 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
         strokeWidth: "2",
         strokeLinecap: "round",
         strokeLinejoin: "round"
-      })) : /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("svg", {
+      }))), /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("var", {
+        className: "me-1 multifunc-select-multi__control-option-checkbox-placeholder ".concat(itemSelected ? 'd-none' : '')
+      }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("svg", {
         width: "1.2em",
         height: "1.2em",
         fill: "#000000",
         viewBox: "0 0 24 24"
       }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("path", {
-        d: "M19 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.11 0 2-.9 2-2V5c0-1.1-.89-2-2-2zm-9 14l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"
+        d: "M4 7.2002V16.8002C4 17.9203 4 18.4801 4.21799 18.9079C4.40973 19.2842 4.71547 19.5905 5.0918 19.7822C5.5192 20 6.07899 20 7.19691 20H16.8031C17.921 20 18.48 20 18.9074 19.7822C19.2837 19.5905 19.5905 19.2842 19.7822 18.9079C20 18.4805 20 17.9215 20 16.8036V7.19691C20 6.07899 20 5.5192 19.7822 5.0918C19.5905 4.71547 19.2837 4.40973 18.9074 4.21799C18.4796 4 17.9203 4 16.8002 4H7.2002C6.08009 4 5.51962 4 5.0918 4.21799C4.71547 4.40973 4.40973 4.71547 4.21799 5.0918C4 5.51962 4 6.08009 4 7.2002Z"
       }))), /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("span", {
         dangerouslySetInnerHTML: {
           __html: item.label
         }
       }));
     }
-  }) : null)))) : null));
+  }) : null))))) : null));
 });
 /* harmony default export */ const src = (MultiFuncSelect);
 })();

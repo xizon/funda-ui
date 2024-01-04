@@ -2,7 +2,6 @@
     <!-- Multifunction Select -->
 /* ====================================================== */
 .multifunc-select__wrapper {
-  --multi-sel-popwin-min-width: 200px;
   --multi-sel-focus-border-color:#86b7fe;
   --multi-sel-focus-box-shadow: 0 0 0 0.25rem rgba(13,110,253,.25);
   --multi-sel-placeholder-color: rgba(33, 37, 41, 0.75);
@@ -15,13 +14,9 @@
   --multi-sel-searchbtn-hover-fill: #333;
   --multi-sel-removebtn-fill: #000;
   --multi-sel-removebtn-hover-fill: #f00;
-  --multi-sel-listgroup-tool-bg: rgb(248,249,250);
-  --multi-sel-listgroup-checkbox: #a5a5a5;
-  --multi-sel-listgroup-item-hover-focus-bg: rgba(0,0,0,.1);
   /*------ Placeholder for input ------*/
   /*------ Arrow ------*/
   /*------ Input ------*/
-  /*------ List ------*/
   /*------ Multiple selection ------*/
   /*------------*/
 }
@@ -35,35 +30,6 @@
   box-shadow: none;
   border-color: transparent;
   outline: 0;
-}
-.multifunc-select__wrapper .list-group {
-  display: none;
-  min-width: var(--multi-sel-popwin-min-width);
-}
-.multifunc-select__wrapper .list-group .bg-light {
-  background-color: var(--multi-sel-listgroup-tool-bg) !important;
-}
-.multifunc-select__wrapper .list-group .list-group-item svg {
-  fill: transparent;
-}
-.multifunc-select__wrapper .list-group .list-group-item svg path {
-  stroke: var(--multi-sel-listgroup-checkbox);
-}
-.multifunc-select__wrapper .list-group .list-group-item.item-selected svg {
-  fill: var(--multi-sel-listgroup-checkbox);
-}
-.multifunc-select__wrapper .list-group .list-group-item.item-selected svg path {
-  stroke: var(--multi-sel-listgroup-checkbox);
-}
-.multifunc-select__wrapper .list-group .list-group-item:hover, .multifunc-select__wrapper .list-group .list-group-item:focus {
-  background-color: var(--multi-sel-listgroup-item-hover-focus-bg);
-}
-.multifunc-select__wrapper.active .list-group {
-  display: block;
-}
-.multifunc-select__wrapper .multifunc-select-multi__control-select-all .btn {
-  font-size: 0.75rem;
-  padding: 0.1rem 0.5rem;
 }
 .multifunc-select__wrapper .multifunc-select-multi__wrapper {
   position: absolute;
@@ -175,4 +141,76 @@
   box-shadow: var(--multi-sel-focus-box-shadow);
   border-color: var(--multi-sel-focus-border-color);
   outline: 0;
+}
+
+/*------ List ------*/
+.multifunc-select__options-wrapper {
+  --multi-sel-listgroup-popwin-min-width: 200px;
+  --multi-sel-listgroup-tool-bg: rgb(248,249,250);
+  --multi-sel-listgroup-checkbox: #a5a5a5;
+  --multi-sel-listgroup-item-hover-focus-bg: rgba(0,0,0,.1);
+  --multi-sel-listgroup-content-scrollbar-color: rgba(0, 0, 0, 0.2);
+  --multi-sel-listgroup-content-scrollbar-track: rgba(0, 0, 0, 0);
+  --multi-sel-listgroup-content-scrollbar-w: 3px;
+  display: none;
+  min-width: var(--multi-sel-listgroup-popwin-min-width);
+  z-index: 1055; /* --bs-modal-zindex */
+  /*------ Multiple selection ------*/
+}
+.multifunc-select__options-wrapper.active {
+  display: block;
+}
+.multifunc-select__options-wrapper .multifunc-select__options-contentlist {
+  overflow: hidden;
+  overflow-y: auto;
+}
+.multifunc-select__options-wrapper .multifunc-select__options-contentlist.noscroll {
+  overflow-y: hidden;
+}
+.multifunc-select__options-wrapper .multifunc-select__options-contentlist::-webkit-scrollbar {
+  height: var(--multi-sel-listgroup-content-scrollbar-h);
+  width: var(--multi-sel-listgroup-content-scrollbar-w);
+}
+.multifunc-select__options-wrapper .multifunc-select__options-contentlist::-webkit-scrollbar-thumb {
+  background: var(--multi-sel-listgroup-content-scrollbar-color);
+}
+.multifunc-select__options-wrapper .multifunc-select__options-contentlist::-webkit-scrollbar-track {
+  background: var(--multi-sel-listgroup-content-scrollbar-track);
+}
+.multifunc-select__options-wrapper .bg-light {
+  background-color: var(--multi-sel-listgroup-tool-bg) !important;
+}
+.multifunc-select__options-wrapper .list-group-item.hide {
+  display: none;
+}
+.multifunc-select__options-wrapper .list-group-item .multifunc-select-multi__control-option-item--nomatch.hide {
+  display: none;
+}
+.multifunc-select__options-wrapper .list-group-item .multifunc-select-multi__control-option-checkbox-placeholder svg {
+  fill: transparent;
+}
+.multifunc-select__options-wrapper .list-group-item .multifunc-select-multi__control-option-checkbox-placeholder svg path {
+  stroke: var(--multi-sel-listgroup-checkbox);
+}
+.multifunc-select__options-wrapper .list-group-item .multifunc-select-multi__control-option-checkbox {
+  display: none;
+}
+.multifunc-select__options-wrapper .list-group-item .multifunc-select-multi__control-option-checkbox svg {
+  fill: var(--multi-sel-listgroup-checkbox);
+}
+.multifunc-select__options-wrapper .list-group-item .multifunc-select-multi__control-option-checkbox svg path {
+  stroke: var(--multi-sel-listgroup-checkbox);
+}
+.multifunc-select__options-wrapper .list-group-item.item-selected .multifunc-select-multi__control-option-checkbox--selected {
+  display: inline-block;
+}
+.multifunc-select__options-wrapper .list-group-item:hover, .multifunc-select__options-wrapper .list-group-item:focus {
+  background-color: var(--multi-sel-listgroup-item-hover-focus-bg);
+}
+.multifunc-select__options-wrapper .multifunc-select-multi__control-option-item--select-all.hide {
+  display: none !important;
+}
+.multifunc-select__options-wrapper .multifunc-select-multi__control-option-item--select-all .btn {
+  font-size: 0.75rem;
+  padding: 0.1rem 0.5rem;
 }
