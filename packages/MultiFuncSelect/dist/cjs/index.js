@@ -1551,8 +1551,12 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
         // console.log('_modalPosition: ', _modalOffsetPosition)
       }
     }
-  }
 
+    // STEP 6:
+    //-----------
+    // no data label
+    popwinNoMatchInit();
+  }
   function popwinPosHide() {
     var _modalRef = document.querySelector("#multifunc-select__options-wrapper-".concat(idRes));
     if (_modalRef !== null && listContentRef.current !== null) {
@@ -1615,23 +1619,11 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
     });
 
     // no data label
-    var _btnSelectAll = listContentRef.current.querySelector('.multifunc-select-multi__control-option-item--select-all');
-    var _nodataDiv = listContentRef.current.querySelector('.multifunc-select-multi__control-option-item--nomatch');
-    var emptyFieldsCheck = [].slice.call(listContentRef.current.querySelectorAll('.multifunc-select-multi__control-option-item')).every(function (node) {
-      if (!node.classList.contains('hide')) {
-        return false;
-      }
-      return true;
-    });
-    if (emptyFieldsCheck) {
-      _nodataDiv.classList.remove('hide');
-      if (_btnSelectAll !== null) _btnSelectAll.classList.add('hide');
-    } else {
-      _nodataDiv.classList.add('hide');
-      if (_btnSelectAll !== null) _btnSelectAll.classList.remove('hide');
-    }
+    popwinNoMatchInit();
 
     // display all filtered items
+    var _btnSelectAll = listContentRef.current.querySelector('.multifunc-select-multi__control-option-item--select-all');
+    var _nodataDiv = listContentRef.current.querySelector('.multifunc-select-multi__control-option-item--nomatch');
     if (val.replace(/\s/g, "") === '') {
       [].slice.call(listContentRef.current.querySelectorAll('.multifunc-select-multi__control-option-item')).forEach(function (node) {
         node.classList.remove('hide');
@@ -1654,6 +1646,24 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
       } else {
         listContentRef.current.style.height = oldHeight + 'px';
       }
+    }
+  }
+  function popwinNoMatchInit() {
+    if (listContentRef.current === null) return;
+    var _btnSelectAll = listContentRef.current.querySelector('.multifunc-select-multi__control-option-item--select-all');
+    var _nodataDiv = listContentRef.current.querySelector('.multifunc-select-multi__control-option-item--nomatch');
+    var emptyFieldsCheck = [].slice.call(listContentRef.current.querySelectorAll('.multifunc-select-multi__control-option-item')).every(function (node) {
+      if (!node.classList.contains('hide')) {
+        return false;
+      }
+      return true;
+    });
+    if (emptyFieldsCheck) {
+      _nodataDiv.classList.remove('hide');
+      if (_btnSelectAll !== null) _btnSelectAll.classList.add('hide');
+    } else {
+      _nodataDiv.classList.add('hide');
+      if (_btnSelectAll !== null) _btnSelectAll.classList.remove('hide');
     }
   }
   function popwinContainerHeightReset() {
@@ -1682,8 +1692,12 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
   function activate() {
     // show list
     setIsOpen(true);
-    popwinPosInit();
-    popwinBtnEventsInit(optionsData);
+
+    // pop win initalization
+    setTimeout(function () {
+      popwinPosInit();
+      popwinBtnEventsInit(optionsData);
+    }, 0);
     if (LIVE_SEARCH_OK) {
       // clean data
       setOptionsData([]);
@@ -2537,7 +2551,7 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
       width: WIN_WIDTH
     },
     role: "tablist"
-  }, controlTempValue !== null && optionsData.length === 0 ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null) : /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
+  }, controlTempValue !== null && optionsData.length === 0 ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null) : /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null), /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
     className: "multifunc-select__options-contentlist rounded",
     style: {
       backgroundColor: 'var(--bs-list-group-bg)'
@@ -2639,7 +2653,7 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
         }
       }));
     }
-  }) : null))))) : null));
+  }) : null)))) : null));
 });
 /* harmony default export */ const src = (MultiFuncSelect);
 })();

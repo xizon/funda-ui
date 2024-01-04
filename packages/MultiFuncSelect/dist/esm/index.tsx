@@ -790,6 +790,16 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
 
         }
 
+
+
+
+         // STEP 6:
+        //-----------
+        // no data label
+        popwinNoMatchInit();
+        
+
+
     }
     
 
@@ -864,6 +874,7 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
     function popwinFilterItems(val: any) {
         if (listContentRef.current === null) return;
 
+
         [].slice.call(listContentRef.current.querySelectorAll('.multifunc-select-multi__control-option-item')).forEach((node: any) => {
             
             // Avoid fatal errors causing page crashes
@@ -886,27 +897,12 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
 
 
         // no data label
-        const _btnSelectAll = listContentRef.current.querySelector('.multifunc-select-multi__control-option-item--select-all');
-        const _nodataDiv = listContentRef.current.querySelector('.multifunc-select-multi__control-option-item--nomatch');
-        const emptyFieldsCheck = [].slice.call(listContentRef.current.querySelectorAll('.multifunc-select-multi__control-option-item')).every((node: any) => {
-            if (!node.classList.contains('hide')) {
-                return false;
-            }
-            return true;
-        });
-
-      
-        if (emptyFieldsCheck) {
-            _nodataDiv.classList.remove('hide');
-            if ( _btnSelectAll !== null ) _btnSelectAll.classList.add('hide');
-        } else {
-            _nodataDiv.classList.add('hide');
-            if ( _btnSelectAll !== null ) _btnSelectAll.classList.remove('hide');
-        }
-    
+        popwinNoMatchInit();
         
 
         // display all filtered items
+        const _btnSelectAll = listContentRef.current.querySelector('.multifunc-select-multi__control-option-item--select-all');
+        const _nodataDiv = listContentRef.current.querySelector('.multifunc-select-multi__control-option-item--nomatch');
         if (val.replace(/\s/g, "") === '') {
              [].slice.call(listContentRef.current.querySelectorAll('.multifunc-select-multi__control-option-item')).forEach((node: any) => {
                 node.classList.remove('hide');
@@ -939,6 +935,32 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
         }
 
     }
+
+
+
+
+    function popwinNoMatchInit() {
+        if (listContentRef.current === null) return;
+
+        const _btnSelectAll = listContentRef.current.querySelector('.multifunc-select-multi__control-option-item--select-all');
+        const _nodataDiv = listContentRef.current.querySelector('.multifunc-select-multi__control-option-item--nomatch');
+        const emptyFieldsCheck = [].slice.call(listContentRef.current.querySelectorAll('.multifunc-select-multi__control-option-item')).every((node: any) => {
+            if (!node.classList.contains('hide')) {
+                return false;
+            }
+            return true;
+        });
+
+        if (emptyFieldsCheck) {
+            _nodataDiv.classList.remove('hide');
+            if ( _btnSelectAll !== null ) _btnSelectAll.classList.add('hide');
+        } else {
+            _nodataDiv.classList.add('hide');
+            if ( _btnSelectAll !== null ) _btnSelectAll.classList.remove('hide');
+        }
+
+    }
+
 
     function popwinContainerHeightReset() {
         if (listContentRef.current === null) return;
@@ -974,8 +996,14 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
 
         // show list
         setIsOpen(true);
-        popwinPosInit();
-        popwinBtnEventsInit(optionsData);
+
+        // pop win initalization
+        setTimeout( ()=> {
+            popwinPosInit();
+            popwinBtnEventsInit(optionsData);
+        }, 0 );  
+
+
 
         if (LIVE_SEARCH_OK) {
             // clean data
@@ -1868,75 +1896,77 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
                         {controlTempValue !== null && optionsData.length === 0 ? <>
                        
                         </> : <>
-                            <div className="multifunc-select__options-contentlist rounded" style={{backgroundColor: 'var(--bs-list-group-bg)'}} ref={listContentRef}>
-                                <div className="multifunc-select__options-contentlist-inner">
-
-                                    {/* SELECT ALL BUTTON */}
-                                    {MULTI_SEL_VALID ? <>
-                                        <span tabIndex={-1} className="list-group-item list-group-item-action border-start-0 border-end-0 text-secondary bg-light multifunc-select-multi__control-option-item--select-all" role="tab" style={{ display: multiSelect?.selectAll ? 'block' : 'none' }}>
-                                            <span tabIndex={-1} className="btn btn-secondary" dangerouslySetInnerHTML={{
-                                                __html: `${multiSelect?.selectAllLabel || 'Select all options'}`
-                                            }}></span>
-                                        </span>
-                                    </> : null}
-                                    {/* /SELECT ALL BUTTON */}
-
-                                    {/* NO MATCH */}
-                                    <button tabIndex={-1} type="button" className="list-group-item list-group-item-action no-match border-0 multifunc-select-multi__control-option-item--nomatch hide" disabled>{fetchNoneInfo || 'No match yet'}</button>
-                                    {/* /NO MATCH */}
-
-
-                                    {/* OPTIONS LIST */}
-                                    {optionsData ? optionsData.map((item, index) => {
-                                        const startItemBorder = index === 0 ? 'border-top-0' : '';
-                                        const endItemBorder = index === optionsData.length - 1 ? 'border-bottom-0' : '';
-
-
-
-                                        if (!MULTI_SEL_VALID) {
-
-                                            // ++++++++++++++++++++
-                                            // Single selection
-                                            // ++++++++++++++++++++
-                                            return <button tabIndex={-1} type="button" data-index={index} key={index} className={`list-group-item list-group-item-action border-start-0 border-end-0 multifunc-select-multi__control-option-item ${startItemBorder} ${endItemBorder} border-bottom-0 ${typeof item.disabled === 'undefined' ? '' : (item.disabled == true ? 'disabled' : '')}`} data-value={`${item.value}`} data-label={`${item.label}`} data-querystring={`${typeof item.queryString === 'undefined' ? '' : item.queryString}`} data-itemdata={JSON.stringify(item)} role="tab" dangerouslySetInnerHTML={{
-                                                __html: item.label
-                                            }}></button>
-
-                                        } else {
-
-                                            // ++++++++++++++++++++
-                                            // Multiple selection
-                                            // ++++++++++++++++++++
-                                            const itemSelected = multiSelControlOptionExist(controlArr.values, item.value) ? true : false;
-
-                                            return <button tabIndex={-1} type="button" data-selected={`${itemSelected ? 'true' : 'false'}`} data-index={index} key={index} className={`list-group-item list-group-item-action border-start-0 border-end-0 multifunc-select-multi__control-option-item ${startItemBorder} ${endItemBorder} border-bottom-0 ${itemSelected ? 'list-group-item-secondary item-selected' : ''} ${typeof item.disabled === 'undefined' ? '' : (item.disabled == true ? 'disabled' : '')}`} data-value={`${item.value}`} data-label={`${item.label}`} data-querystring={`${typeof item.queryString === 'undefined' ? '' : item.queryString}`} data-itemdata={JSON.stringify(item)} role="tab">
-                                                <var className="me-1 multifunc-select-multi__control-option-checkbox multifunc-select-multi__control-option-checkbox--selected">
-                                                    <svg width="1.2em" height="1.2em" fill="#000000" viewBox="0 0 24 24"><path d="M19 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.11 0 2-.9 2-2V5c0-1.1-.89-2-2-2zm-9 14l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" /></svg>
-
-                                                </var>
-                                                <var className="me-1 multifunc-select-multi__control-option-checkbox">
-                                                    <svg width="1.2em" height="1.2em" viewBox="0 0 24 24" fill="none">
-                                                        <path d="M4 7.2002V16.8002C4 17.9203 4 18.4801 4.21799 18.9079C4.40973 19.2842 4.71547 19.5905 5.0918 19.7822C5.5192 20 6.07899 20 7.19691 20H16.8031C17.921 20 18.48 20 18.9074 19.7822C19.2837 19.5905 19.5905 19.2842 19.7822 18.9079C20 18.4805 20 17.9215 20 16.8036V7.19691C20 6.07899 20 5.5192 19.7822 5.0918C19.5905 4.71547 19.2837 4.40973 18.9074 4.21799C18.4796 4 17.9203 4 16.8002 4H7.2002C6.08009 4 5.51962 4 5.0918 4.21799C4.71547 4.40973 4.40973 4.71547 4.21799 5.0918C4 5.51962 4 6.08009 4 7.2002Z" stroke="#000000" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                                                    </svg>
-                                                </var>
-                                                <var className={`me-1 multifunc-select-multi__control-option-checkbox-placeholder ${itemSelected ? 'd-none' : ''}`}>
-                                                    <svg width="1.2em" height="1.2em" fill="#000000" viewBox="0 0 24 24"><path d="M4 7.2002V16.8002C4 17.9203 4 18.4801 4.21799 18.9079C4.40973 19.2842 4.71547 19.5905 5.0918 19.7822C5.5192 20 6.07899 20 7.19691 20H16.8031C17.921 20 18.48 20 18.9074 19.7822C19.2837 19.5905 19.5905 19.2842 19.7822 18.9079C20 18.4805 20 17.9215 20 16.8036V7.19691C20 6.07899 20 5.5192 19.7822 5.0918C19.5905 4.71547 19.2837 4.40973 18.9074 4.21799C18.4796 4 17.9203 4 16.8002 4H7.2002C6.08009 4 5.51962 4 5.0918 4.21799C4.71547 4.40973 4.40973 4.71547 4.21799 5.0918C4 5.51962 4 6.08009 4 7.2002Z" /></svg>
-                                                </var>
-                                                <span dangerouslySetInnerHTML={{
-                                                    __html: item.label
-                                                }}></span>
-                                            </button>
-
-                                        }
-
-
-                                    }) : null}
-                                    {/* /OPTIONS LIST */}
-
-                                </div>
-                            </div>
+                        
 
                         </>}
+
+                        <div className="multifunc-select__options-contentlist rounded" style={{backgroundColor: 'var(--bs-list-group-bg)'}} ref={listContentRef}>
+                            <div className="multifunc-select__options-contentlist-inner">
+
+                                {/* SELECT ALL BUTTON */}
+                                {MULTI_SEL_VALID ? <>
+                                    <span tabIndex={-1} className="list-group-item list-group-item-action border-start-0 border-end-0 text-secondary bg-light multifunc-select-multi__control-option-item--select-all" role="tab" style={{ display: multiSelect?.selectAll ? 'block' : 'none' }}>
+                                        <span tabIndex={-1} className="btn btn-secondary" dangerouslySetInnerHTML={{
+                                            __html: `${multiSelect?.selectAllLabel || 'Select all options'}`
+                                        }}></span>
+                                    </span>
+                                </> : null}
+                                {/* /SELECT ALL BUTTON */}
+
+                                {/* NO MATCH */}
+                                <button tabIndex={-1} type="button" className="list-group-item list-group-item-action no-match border-0 multifunc-select-multi__control-option-item--nomatch hide" disabled>{fetchNoneInfo || 'No match yet'}</button>
+                                {/* /NO MATCH */}
+
+
+                                {/* OPTIONS LIST */}
+                                {optionsData ? optionsData.map((item, index) => {
+                                    const startItemBorder = index === 0 ? 'border-top-0' : '';
+                                    const endItemBorder = index === optionsData.length - 1 ? 'border-bottom-0' : '';
+
+
+
+                                    if (!MULTI_SEL_VALID) {
+
+                                        // ++++++++++++++++++++
+                                        // Single selection
+                                        // ++++++++++++++++++++
+                                        return <button tabIndex={-1} type="button" data-index={index} key={index} className={`list-group-item list-group-item-action border-start-0 border-end-0 multifunc-select-multi__control-option-item ${startItemBorder} ${endItemBorder} border-bottom-0 ${typeof item.disabled === 'undefined' ? '' : (item.disabled == true ? 'disabled' : '')}`} data-value={`${item.value}`} data-label={`${item.label}`} data-querystring={`${typeof item.queryString === 'undefined' ? '' : item.queryString}`} data-itemdata={JSON.stringify(item)} role="tab" dangerouslySetInnerHTML={{
+                                            __html: item.label
+                                        }}></button>
+
+                                    } else {
+
+                                        // ++++++++++++++++++++
+                                        // Multiple selection
+                                        // ++++++++++++++++++++
+                                        const itemSelected = multiSelControlOptionExist(controlArr.values, item.value) ? true : false;
+
+                                        return <button tabIndex={-1} type="button" data-selected={`${itemSelected ? 'true' : 'false'}`} data-index={index} key={index} className={`list-group-item list-group-item-action border-start-0 border-end-0 multifunc-select-multi__control-option-item ${startItemBorder} ${endItemBorder} border-bottom-0 ${itemSelected ? 'list-group-item-secondary item-selected' : ''} ${typeof item.disabled === 'undefined' ? '' : (item.disabled == true ? 'disabled' : '')}`} data-value={`${item.value}`} data-label={`${item.label}`} data-querystring={`${typeof item.queryString === 'undefined' ? '' : item.queryString}`} data-itemdata={JSON.stringify(item)} role="tab">
+                                            <var className="me-1 multifunc-select-multi__control-option-checkbox multifunc-select-multi__control-option-checkbox--selected">
+                                                <svg width="1.2em" height="1.2em" fill="#000000" viewBox="0 0 24 24"><path d="M19 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.11 0 2-.9 2-2V5c0-1.1-.89-2-2-2zm-9 14l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" /></svg>
+
+                                            </var>
+                                            <var className="me-1 multifunc-select-multi__control-option-checkbox">
+                                                <svg width="1.2em" height="1.2em" viewBox="0 0 24 24" fill="none">
+                                                    <path d="M4 7.2002V16.8002C4 17.9203 4 18.4801 4.21799 18.9079C4.40973 19.2842 4.71547 19.5905 5.0918 19.7822C5.5192 20 6.07899 20 7.19691 20H16.8031C17.921 20 18.48 20 18.9074 19.7822C19.2837 19.5905 19.5905 19.2842 19.7822 18.9079C20 18.4805 20 17.9215 20 16.8036V7.19691C20 6.07899 20 5.5192 19.7822 5.0918C19.5905 4.71547 19.2837 4.40973 18.9074 4.21799C18.4796 4 17.9203 4 16.8002 4H7.2002C6.08009 4 5.51962 4 5.0918 4.21799C4.71547 4.40973 4.40973 4.71547 4.21799 5.0918C4 5.51962 4 6.08009 4 7.2002Z" stroke="#000000" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                                                </svg>
+                                            </var>
+                                            <var className={`me-1 multifunc-select-multi__control-option-checkbox-placeholder ${itemSelected ? 'd-none' : ''}`}>
+                                                <svg width="1.2em" height="1.2em" fill="#000000" viewBox="0 0 24 24"><path d="M4 7.2002V16.8002C4 17.9203 4 18.4801 4.21799 18.9079C4.40973 19.2842 4.71547 19.5905 5.0918 19.7822C5.5192 20 6.07899 20 7.19691 20H16.8031C17.921 20 18.48 20 18.9074 19.7822C19.2837 19.5905 19.5905 19.2842 19.7822 18.9079C20 18.4805 20 17.9215 20 16.8036V7.19691C20 6.07899 20 5.5192 19.7822 5.0918C19.5905 4.71547 19.2837 4.40973 18.9074 4.21799C18.4796 4 17.9203 4 16.8002 4H7.2002C6.08009 4 5.51962 4 5.0918 4.21799C4.71547 4.40973 4.40973 4.71547 4.21799 5.0918C4 5.51962 4 6.08009 4 7.2002Z" /></svg>
+                                            </var>
+                                            <span dangerouslySetInnerHTML={{
+                                                __html: item.label
+                                            }}></span>
+                                        </button>
+
+                                    }
+
+
+                                }) : null}
+                                {/* /OPTIONS LIST */}
+
+                            </div>
+                        </div>
 
 
                     </div>
