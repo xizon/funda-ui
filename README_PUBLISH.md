@@ -1,6 +1,6 @@
 # Funda UI
 
-React components using pure Bootstrap 5+ which does not contain any external style and script libraries. You can load Bootstrap css libraries separately in your project.
+React components using pure Bootstrap 5+ which has undergone complex business testing and is easy to integrate with any API. You can load Bootstrap css libraries separately in your project.
 
 All components have undergone complex business verification and provide multiple examples.
 
