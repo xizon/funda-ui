@@ -16,6 +16,7 @@
   --mf-sel-removebtn-hover-fill: #f00;
   /*------ Placeholder for input ------*/
   /*------ Arrow ------*/
+  /*------ Clean ------*/
   /*------ Input ------*/
   /*------ Blinking cursor ------*/
   /*------ Single selection ------*/
@@ -27,6 +28,9 @@
   color: var(--mf-sel-input-placeholder-color);
 }
 .mf-select__wrapper .arrow svg .arrow-fill-g {
+  fill: var(--mf-sel-arrow-fill);
+}
+.mf-select__wrapper .clean svg .clean-fill-g {
   fill: var(--mf-sel-arrow-fill);
 }
 .mf-select__wrapper [data-select]:focus {
@@ -211,7 +215,8 @@
   display: none;
   min-width: var(--mf-sel-listgroup-popwin-min-width);
   z-index: 1055; /* --bs-modal-zindex */
-  /*------ Multiple selection ------*/
+  /*------ Extended buttons of Multiple selection ------*/
+  /*------ Extended buttons of Single selection ------*/
 }
 .mf-select__options-wrapper.active {
   display: block;
@@ -267,6 +272,13 @@
   display: none !important;
 }
 .mf-select__options-wrapper .mf-select-multi__control-option-item--select-all .btn {
+  font-size: 0.75rem;
+  padding: 0.1rem 0.5rem;
+}
+.mf-select__options-wrapper .mf-select-multi__control-option-item--clean.hide {
+  display: none !important;
+}
+.mf-select__options-wrapper .mf-select-multi__control-option-item--clean .btn {
   font-size: 0.75rem;
   padding: 0.1rem 0.5rem;
 }

@@ -876,7 +876,7 @@ var enableBodyScroll = function enableBodyScroll(targetElement) {
 // EXTERNAL MODULE: ./src/utils/tree.js
 var tree = __webpack_require__(602);
 ;// CONCATENATED MODULE: ./src/index.tsx
-var _excluded = ["wrapperClassName", "controlClassName", "multiSelect", "disabled", "required", "value", "label", "name", "readOnly", "placeholder", "id", "options", "lockBodyScroll", "hierarchical", "indentation", "doubleIndent", "style", "depth", "controlArrow", "winWidth", "tabIndex", "fetchTrigger", "fetchTriggerForDefaultData", "fetchNoneInfo", "fetchUpdate", "fetchFuncAsync", "fetchFuncMethod", "fetchFuncMethodParams", "data", "extractValueByBrackets", "fetchCallback", "onFetch", "onLoad", "onSelect", "onChange", "onBlur", "onFocus"];
+var _excluded = ["wrapperClassName", "controlClassName", "multiSelect", "disabled", "required", "value", "label", "name", "readOnly", "placeholder", "id", "options", "cleanTrigger", "lockBodyScroll", "hierarchical", "indentation", "doubleIndent", "style", "depth", "controlArrow", "winWidth", "tabIndex", "fetchTrigger", "fetchTriggerForDefaultData", "fetchNoneInfo", "fetchUpdate", "fetchFuncAsync", "fetchFuncMethod", "fetchFuncMethodParams", "data", "extractValueByBrackets", "fetchCallback", "onFetch", "onLoad", "onSelect", "onChange", "onBlur", "onFocus"];
 function src_toConsumableArray(arr) { return src_arrayWithoutHoles(arr) || src_iterableToArray(arr) || src_unsupportedIterableToArray(arr) || src_nonIterableSpread(); }
 function src_nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
 function src_iterableToArray(iter) { if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter); }
@@ -922,6 +922,7 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
     placeholder = props.placeholder,
     id = props.id,
     options = props.options,
+    cleanTrigger = props.cleanTrigger,
     lockBodyScroll = props.lockBodyScroll,
     hierarchical = props.hierarchical,
     indentation = props.indentation,
@@ -1005,10 +1006,9 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
     _useState16 = _slicedToArray(_useState15, 2),
     incomingData = _useState16[0],
     setIncomingData = _useState16[1];
-
-  // Multiple selection
   var selectedSign = false;
   var MULTI_SEL_VALID = multiSelect ? multiSelect.valid : false;
+  var MULTI_SEL_LABEL = multiSelect ? multiSelect.selectAllLabel : 'Select all options';
   var _useState17 = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)({
       labels: [],
       values: []
@@ -1021,6 +1021,10 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
       return v.toString();
     }).includes(val.toString());
   };
+
+  // clean trigger
+  var CLEAN_TRIGGER_VALID = typeof cleanTrigger === 'undefined' ? false : cleanTrigger ? cleanTrigger.valid : false;
+  var CLEAN_TRIGGER_LABEL = cleanTrigger ? cleanTrigger.cleanValueLabel : 'Clean';
 
   //performance
   var handleChangeFetchSafe = utils_useDebounce(function (val) {
@@ -1603,11 +1607,22 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
         });
       }
     });
+
+    // select all button
     var _btnSelectAll = listContentRef.current.querySelector('.mf-select-multi__control-option-item--select-all > span');
     if (_btnSelectAll !== null && typeof _btnSelectAll.dataset.ev === 'undefined') {
       _btnSelectAll.dataset.ev = 'true';
       _btnSelectAll.addEventListener('pointerdown', function (e) {
         handleSelectAll(e);
+      });
+    }
+
+    // clean button
+    var _btnClean = listContentRef.current.querySelector('.mf-select-multi__control-option-item--clean > span');
+    if (_btnClean !== null && typeof _btnClean.dataset.ev === 'undefined') {
+      _btnClean.dataset.ev = 'true';
+      _btnClean.addEventListener('pointerdown', function (e) {
+        handleCleanValue(e);
       });
     }
   }
@@ -1968,31 +1983,6 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
   }
   function handleSelectAll(event) {
     event.preventDefault();
-    var onChangeSelectAll = function onChangeSelectAll(labelsArr, valuesArr) {
-      if (typeof onChange === 'function') {
-        onChange === null || onChange === void 0 ? void 0 : onChange(selectInputRef.current, valueInputRef.current, {
-          labels: labelsArr.map(function (v) {
-            return v.toString();
-          }),
-          values: valuesArr.map(function (v) {
-            return v.toString();
-          }),
-          labelsOfString: VALUE_BY_BRACKETS ? (0,convert.convertArrToValByBrackets)(labelsArr.map(function (v) {
-            return v.toString();
-          })) : labelsArr.map(function (v) {
-            return v.toString();
-          }).join(','),
-          valuesOfString: VALUE_BY_BRACKETS ? (0,convert.convertArrToValByBrackets)(valuesArr.map(function (v) {
-            return v.toString();
-          })) : valuesArr.map(function (v) {
-            return v.toString();
-          }).join(',')
-        });
-
-        //
-        selectInputRef.current.blur();
-      }
-    };
     var updateOptionCheckboxes = function updateOptionCheckboxes(type) {
       var _labels = [];
       var _values = [];
@@ -2040,6 +2030,23 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
       updateOptionCheckboxes('add');
     }
     selectedSign = !selectedSign;
+  }
+  function handleCleanValue(event) {
+    event.preventDefault();
+
+    // It is valid when a single selection
+    var emptyValue = {
+      label: '',
+      value: '',
+      queryString: ''
+    };
+    handleSelect(null, JSON.stringify(emptyValue), [], []);
+    if (typeof onChange === 'function') {
+      onChange === null || onChange === void 0 ? void 0 : onChange(selectInputRef.current, valueInputRef.current, emptyValue);
+    }
+
+    // update temporary value
+    setControlTempValue('');
   }
   function handleMultiControlItemRemove(event) {
     event.preventDefault();
@@ -2582,9 +2589,19 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
     tabIndex: -1,
     className: "btn btn-secondary",
     dangerouslySetInnerHTML: {
-      __html: "".concat((multiSelect === null || multiSelect === void 0 ? void 0 : multiSelect.selectAllLabel) || 'Select all options')
+      __html: "".concat(MULTI_SEL_LABEL)
     }
-  }))) : null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("button", {
+  }))) : null, !MULTI_SEL_VALID ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, CLEAN_TRIGGER_VALID ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("span", {
+    tabIndex: -1,
+    className: "list-group-item list-group-item-action border-start-0 border-end-0 text-secondary bg-light mf-select-multi__control-option-item--clean",
+    role: "tab"
+  }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("span", {
+    tabIndex: -1,
+    className: "btn btn-secondary",
+    dangerouslySetInnerHTML: {
+      __html: "".concat(CLEAN_TRIGGER_LABEL)
+    }
+  }))) : null) : null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("button", {
     tabIndex: -1,
     type: "button",
     className: "list-group-item list-group-item-action no-match border-0 mf-select-multi__control-option-item--nomatch hide",

@@ -23,10 +23,15 @@ interface MultiSelectConfig {
     selectAllLabel?: string;
     data: MultiSelectDataConfig | null;
 }
+interface CleanTriggerConfig {
+    valid: boolean;
+    cleanValueLabel?: string;
+}
 declare type MultiFuncSelectProps = {
     wrapperClassName?: string;
     controlClassName?: string;
     multiSelect?: MultiSelectConfig;
+    cleanTrigger?: CleanTriggerConfig;
     value?: string;
     label?: React.ReactNode | string;
     name?: string;

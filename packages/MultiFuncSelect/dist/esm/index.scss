@@ -33,6 +33,14 @@
         }
     }
         
+    /*------ Clean ------*/
+    .clean {
+        svg .clean-fill-g {
+            fill: var(--mf-sel-arrow-fill);
+        }
+    }
+        
+
 
     /*------ Input ------*/
     [data-select]:focus {
@@ -398,7 +406,7 @@
 
 
 
-    /*------ Multiple selection ------*/
+    /*------ Extended buttons of Multiple selection ------*/
     .mf-select-multi__control-option-item--select-all {
 
         &.hide {
@@ -411,6 +419,20 @@
         }
     }
 
+    /*------ Extended buttons of Single selection ------*/
+    .mf-select-multi__control-option-item--clean {
+
+        &.hide {
+            display: none !important;
+        }
+
+        .btn {
+            font-size: 0.75rem;
+            padding: 0.1rem 0.5rem;
+        }
+    }
+
+    
 
 }
 
