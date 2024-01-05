@@ -229,14 +229,15 @@ const LiveSearch = (props: LiveSearchProps) => {
 
                 // Avoid fatal errors causing page crashes
                 const _queryString = typeof item.queryString !== 'undefined' && item.queryString !== null ? item.queryString : '';
+                const _val = typeof val !== 'undefined' && val !== null ? val : '';
 
                 if (
                     (
-                        _queryString.split(',').some((l: any) => l.charAt(0) === val.toLowerCase()) ||
-                        _queryString.split(',').some((l: any) => l.replace(/ /g, '').indexOf(val.toLowerCase()) >= 0) ||
-                        item.label.toLowerCase().indexOf(val.toLowerCase()) >= 0
+                        _queryString.split(',').some((l: any) => l.charAt(0) === _val.toLowerCase()) ||
+                        _queryString.split(',').some((l: any) => l.replace(/ /g, '').indexOf(_val.toLowerCase()) >= 0) ||
+                        item.label.toLowerCase().indexOf(_val.toLowerCase()) >= 0
                     ) &&
-                    val != ''
+                    _val != ''
                 ) {
                     return true;
                 } else {

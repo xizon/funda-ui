@@ -56,6 +56,7 @@ JSON Object Literals configuration properties of the `options`:
 | `id` | string \| number | - | **(Optional)** Item ID. <blockquote>Valid when the `hierarchical` is true</blockquote> |
 | `parent_id` | string \| number | - | **(Optional)** Parent ID of item. <blockquote>Valid when the `hierarchical` is true</blockquote> |
 | `label` | string | - | Specify the label text for each option. <blockquote>Support html tags</blockquote> |
+| `listItemLabel` | string | - | **(Optional)** Specify the label text for pop-up list items. <blockquote>Support html tags</blockquote> |
 | `value` | string | - | Specify the value for each option |
 | `queryString` | string | - | Quick query string, such as Chinese pinyin or English initials |
 | `disabled` | boolean | - | When present, it specifies that an option should be disabled. |
@@ -65,7 +66,7 @@ JSON Object Literals configuration properties of the `options`:
 
 A successful response returns the details of the callback such as Sample Request Body:
 
-Among them, `id`, `parent_id`, `label`, `value`, `queryString` and `disabled` are attributes used by the system, and other attributes can be added freely.
+Among them, `id`, `parent_id`, `label`, `listItemLabel`, `value`, `queryString` and `disabled` are attributes used by the system, and other attributes can be added freely.
 
 
 
@@ -168,6 +169,26 @@ export default () => {
                     console.log(e, e2, val);
                 }}
             />
+
+
+            <MultiFuncSelect
+                value="value-2"
+                placeholder="Select"
+                name="name"
+                winWidth={() => window.innerWidth/2 + 'px'}
+                options={`
+                [
+                    {"label": "Option 1","listItemLabel":"Option 1 (No: 001)","value": "value-1","queryString": "option1"},
+                    {"label": "<del style=color:red>deprecate</del>Option 2","listItemLabel":"<del style=color:red>deprecate</del>Option 2 (No: 002)","value": "value-2","queryString": "option2"},
+                    {"label": "Option 3","listItemLabel":"Option 3 (No: 003)","value": "value-3","queryString": "option3"},
+                    {"label": "Option 4","listItemLabel":"Option 4 (No: 004)","value": "value-4","disabled":true}
+                ]  
+                `}
+                onChange={(e, e2, val) => {
+                    console.log(e, e2, val);
+                }}
+            />
+
 
 
 

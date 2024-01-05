@@ -804,11 +804,12 @@ var LiveSearch = function LiveSearch(props) {
               return data.filter(function (item) {
                 // Avoid fatal errors causing page crashes
                 var _queryString = typeof item.queryString !== 'undefined' && item.queryString !== null ? item.queryString : '';
+                var _val = typeof val !== 'undefined' && val !== null ? val : '';
                 if ((_queryString.split(',').some(function (l) {
-                  return l.charAt(0) === val.toLowerCase();
+                  return l.charAt(0) === _val.toLowerCase();
                 }) || _queryString.split(',').some(function (l) {
-                  return l.replace(/ /g, '').indexOf(val.toLowerCase()) >= 0;
-                }) || item.label.toLowerCase().indexOf(val.toLowerCase()) >= 0) && val != '') {
+                  return l.replace(/ /g, '').indexOf(_val.toLowerCase()) >= 0;
+                }) || item.label.toLowerCase().indexOf(_val.toLowerCase()) >= 0) && _val != '') {
                   return true;
                 } else {
                   return false;

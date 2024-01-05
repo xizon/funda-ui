@@ -13,6 +13,7 @@ interface MultiSelectDataConfig {
 interface OptionConfig {
     disabled?: boolean;
     label: any;
+    listItemLabel?: any;
     value: any;
     queryString: string | number;
 }
