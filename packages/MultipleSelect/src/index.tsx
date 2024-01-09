@@ -234,6 +234,121 @@ const MultipleSelect = forwardRef((props: MultipleSelectProps, ref: any) => {
         }
     }
 
+
+    function selectItem(el: HTMLElement) {
+        if (el === null) return;
+
+
+        const _li = el;
+        const _val = _li.dataset.value;
+        const _label = _li.dataset.label;
+
+
+        // set selected items
+        setValSelected((prevState) => {
+            const newData = JSON.parse(JSON.stringify(prevState));
+            const index = newData.findIndex((item: string | number) => item == _val);
+            if (index !== -1) newData.splice(index, 1);
+
+            const _res = (_val) ? Array.from(new Set([_val, ...newData])) : newData;
+            onChange?.(_li, _res, VALUE_BY_BRACKETS ? convertArrToValByBrackets(_res) : _res.join(','));
+
+            // hide current item
+            _li.classList.add('hide');
+
+            return _res;
+        });
+
+
+        // update selected data
+        setValSelectedData((prevState) => {
+            const newData = JSON.parse(JSON.stringify(prevState));
+            const index = newData.findIndex((item: any) => item.value == _val);
+            if (index !== -1) newData.splice(index, 1);
+
+            const _res = (_val) ? Array.from(new Set([{
+                label: _label,
+                value: _val
+            }, ...newData])) : newData;
+
+
+            return _res;
+        });
+    }
+    
+    function removeItem(el: HTMLElement) {
+        if (el === null) return;
+    
+        const _li = el;
+        const _val = _li.dataset.value;
+    
+        // set selected items
+        setValSelected((prevState) => {
+            const newData = JSON.parse(JSON.stringify(prevState));
+            const index = newData.findIndex((item: string | number) => item == _val);
+            if (index !== -1) newData.splice(index, 1);
+    
+            const _res = newData;
+    
+            onChange?.(_li, _res, VALUE_BY_BRACKETS ? convertArrToValByBrackets(_res) : _res.join(','));
+    
+            // show current item
+            if (availableListRef.current) {
+                const removedItem = availableListRef.current.querySelector(`li[data-value="${_val}"]`);
+                if (removedItem !== null) removedItem.classList.remove('hide');
+            }
+       
+            
+            return _res;
+        });
+    
+    
+        // update selected data
+        setValSelectedData((prevState) => {
+            const newData = JSON.parse(JSON.stringify(prevState));
+            const index = newData.findIndex((item: any) => item.value == _val);
+            if (index !== -1) newData.splice(index, 1);
+    
+            const _res = newData;
+    
+            return _res;
+        });
+    
+        
+    }
+
+
+
+
+    function handleSelectAll(event: any) {
+        event.preventDefault();
+        if (availableListRef.current === null) return;
+
+        const items = [].slice.call(availableListRef.current.querySelectorAll('li[data-value]'));
+        items.forEach((item: any) => {
+            
+            if (!item.classList.contains('disabled')) {
+                selectItem(item);
+            }
+            
+        });
+
+
+    }
+
+
+    function handleRemoveAll(event: any) {
+        event.preventDefault();
+        if (selectedListRef.current === null) return;
+
+        const items = [].slice.call(selectedListRef.current.querySelectorAll('li[data-value]'));
+        items.forEach((item: any) => {
+            removeItem(item);
+        });
+
+    }
+
+
     useEffect(() => {
 
 
@@ -266,7 +381,7 @@ const MultipleSelect = forwardRef((props: MultipleSelectProps, ref: any) => {
                         }
                     }}
                     tabIndex={-1}
-                    type="hidde"
+                    type="hidden"
                     id={idRes}
                     name={name}
                     value={VALUE_BY_BRACKETS ? convertArrToValByBrackets(valSelected) : valSelected.join(',')}
@@ -292,7 +407,7 @@ const MultipleSelect = forwardRef((props: MultipleSelectProps, ref: any) => {
 
                             <span className="m-select__title" dangerouslySetInnerHTML={{__html: `${availableHeaderTitle || ''}`}}></span>
 
-                            <a href="#" className="m-select__btn--add-all">{addAllBtnLabel || 'Add all'}</a>
+                            <a href="#" className="m-select__btn--add-all" onClick={handleSelectAll}>{addAllBtnLabel || 'Add all'}</a>
                         </div>
                         <ul className="m-select__available m-select__options-contentlist" ref={availableListRef}>
 
@@ -302,15 +417,18 @@ const MultipleSelect = forwardRef((props: MultipleSelectProps, ref: any) => {
                                 
                                 return <li
                                     key={'item' + i}
-                                    data-index={i}
-                                    data-label={item.label}
-                                    data-value={item.value}
-                                    data-disabled={item.disabled || 'false'}
                                     className={`${item.disabled ? 'disabled' : ''} ${valSelected.includes(item.value) ? 'hide' : ''}`}
+                                    data-index={i}
+                                    data-value={`${item.value}`} 
+                                    data-label={`${item.label}`}
+                                    data-disabled={item.disabled || 'false'}
+                                    data-querystring={`${typeof item.queryString === 'undefined' ? '' : item.queryString}`} data-itemdata={JSON.stringify(item)} 
                                 >
                                    
                                     <span>
-                                        {item.label}
+                                        <strong dangerouslySetInnerHTML={{
+                                            __html: typeof item.listItemLabel === 'undefined' ? item.label : item.listItemLabel
+                                        }}></strong>
                                         <a
                                             href="#"
                                             className="m-select__item-action"
@@ -318,43 +436,7 @@ const MultipleSelect = forwardRef((props: MultipleSelectProps, ref: any) => {
                                     </span>
                                     <i
                                         onClick={(e: React.MouseEvent) => {
-
-                                            const _li = (e.target as  any).closest('li');
-                                            const _val = _li.dataset.value;
-                                            const _label = _li.dataset.label;
-                                  
-
-                                            setValSelected((prevState) => {
-                                                const newData = JSON.parse(JSON.stringify(prevState));
-                                                const index = newData.findIndex((item: string | number) => item == _val);
-                                                if (index !== -1) newData.splice(index, 1);
-
-                                                const _res = (_val) ? Array.from(new Set([_val, ...newData])) : newData;
-                                                onChange?.(_li, _res, VALUE_BY_BRACKETS ? convertArrToValByBrackets(_res) : _res.join(','));
-
-                                                // hide current item
-                                                _li.classList.add('hide');
-
-                                                return _res;
-                                            });
-
-
-                                            // update selected data
-                                            setValSelectedData((prevState) => {
-                                                const newData = JSON.parse(JSON.stringify(prevState));
-                                                const index = newData.findIndex((item: any) => item.value == _val);
-                                                if (index !== -1) newData.splice(index, 1);
-
-                                                const _res = (_val) ? Array.from(new Set([{
-                                                    label: _label,
-                                                    value: _val
-                                                }, ...newData])) : newData;
-
-
-                                                return _res;
-                                            });
-
-
+                                            selectItem((e.target as  any).closest('li'));
                                         }}>
                                         {iconAdd ? <>{iconAdd}</> : <><svg width="15px" height="15px" viewBox="0 0 24 24" fill="none"><path d="M12 2C6.49 2 2 6.49 2 12C2 17.51 6.49 22 12 22C17.51 22 22 17.51 22 12C22 6.49 17.51 2 12 2ZM16 12.75H12.75V16C12.75 16.41 12.41 16.75 12 16.75C11.59 16.75 11.25 16.41 11.25 16V12.75H8C7.59 12.75 7.25 12.41 7.25 12C7.25 11.59 7.59 11.25 8 11.25H11.25V8C11.25 7.59 11.59 7.25 12 7.25C12.41 7.25 12.75 7.59 12.75 8V11.25H16C16.41 11.25 16.75 11.59 16.75 12C16.75 12.41 16.41 12.75 16 12.75Z" fill="#000" /></svg></>}
 
@@ -380,7 +462,7 @@ const MultipleSelect = forwardRef((props: MultipleSelectProps, ref: any) => {
                         <div className="m-select__m-select__item-actions m-select__header">
                             <span className="m-select__count" dangerouslySetInnerHTML={{__html: `${typeof selectedHeaderNote !== 'undefined' ? selectedHeaderNote.replace('{items_num}', valSelectedData.length as never) : ''}`}}></span>
                             <span className="m-select__title" dangerouslySetInnerHTML={{__html: `${selectedHeaderTitle || ''}`}}></span>
-                            <a href="#" className="m-select__btn--remove-all">{removeAllBtnLabel || 'Remove all'}</a>
+                            <a href="#" className="m-select__btn--remove-all" onClick={handleRemoveAll}>{removeAllBtnLabel || 'Remove all'}</a>
                         </div>
                         <ul className="m-select__selected m-select__options-contentlist--sortable m-select__options-contentlist" ref={selectedListRef}>
 
@@ -388,14 +470,18 @@ const MultipleSelect = forwardRef((props: MultipleSelectProps, ref: any) => {
                             {valSelectedData ? valSelectedData.map((item: any, i: number) => {
                                 return <li
                                     key={'item-selected' + i}
-                                    data-index={i}
-                                    data-label={item.label}
-                                    data-value={item.value}
                                     className="selected"
+                                    data-index={i}
+                                    data-value={`${item.value}`} 
+                                    data-label={`${item.label}`}
+                                    data-disabled={item.disabled || 'false'}
+                                    data-querystring={`${typeof item.queryString === 'undefined' ? '' : item.queryString}`} data-itemdata={JSON.stringify(item)} 
                                 >
                                    
                                     <span>
-                                        {item.label}
+                                        <strong dangerouslySetInnerHTML={{
+                                            __html: typeof item.listItemLabel === 'undefined' ? item.label : item.listItemLabel
+                                        }}></strong>
                                         <a
                                             href="#"
                                             className="m-select__item-action"
@@ -403,42 +489,7 @@ const MultipleSelect = forwardRef((props: MultipleSelectProps, ref: any) => {
                                     </span>
                                     <i
                                         onClick={(e: React.MouseEvent) => {
-
-                                            const _li = (e.target as  any).closest('li');
-                                            const _val = _li.dataset.value;
-
-                                            setValSelected((prevState) => {
-                                                const newData = JSON.parse(JSON.stringify(prevState));
-                                                const index = newData.findIndex((item: string | number) => item == _val);
-                                                if (index !== -1) newData.splice(index, 1);
-
-                                                const _res = newData;
-
-                                                onChange?.(_li, _res, VALUE_BY_BRACKETS ? convertArrToValByBrackets(_res) : _res.join(','));
-
-                                                // show current item
-                                                if (availableListRef.current) {
-                                                    const removedItem = availableListRef.current.querySelector(`li[data-value="${_val}"]`);
-                                                    if (removedItem !== null) removedItem.classList.remove('hide');
-                                                }
-                                           
-                                                
-                                                return _res;
-                                            });
-
-
-                                            // update selected data
-                                            setValSelectedData((prevState) => {
-                                                const newData = JSON.parse(JSON.stringify(prevState));
-                                                const index = newData.findIndex((item: any) => item.value == _val);
-                                                if (index !== -1) newData.splice(index, 1);
-
-                                                const _res = newData;
-
-                                                return _res;
-                                            });
-
-
+                                            removeItem((e.target as  any).closest('li'));
                                         }}>
                                         {iconRemove ? <>{iconRemove}</> : <><svg width="15px" height="15px" viewBox="0 0 24 24" fill="none"><path fillRule="evenodd" clipRule="evenodd" d="M22 12c0 5.523-4.477 10-10 10S2 17.523 2 12 6.477 2 12 2s10 4.477 10 10ZM8 11a1 1 0 1 0 0 2h8a1 1 0 1 0 0-2H8Z" fill="#000" /></svg></>}
                                         

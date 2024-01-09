@@ -101,7 +101,7 @@
             &:last-child {
                 border-bottom: none;
             }
-            & > span {
+            > span {
                 padding: .35rem .75rem;
                 display: inline-block;
                 max-width: 100%;
@@ -109,11 +109,19 @@
                 text-overflow: ellipsis;
                 word-break: break-all;
             }
-            & > i {
+
+            > strong {
+                font-weight: normal;
+            }
+            
+            > i {
                 display: inline-block;
                 padding: .35rem .75rem;
                 cursor: pointer;
             }
+
+
+
             a {
                 color: #999;
                 text-decoration: none;
