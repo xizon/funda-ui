@@ -1719,8 +1719,17 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
     // pop win initalization
     setTimeout(function () {
       popwinPosInit();
-      popwinBtnEventsInit(optionsData);
+      popwinBtnEventsInit(orginalData);
     }, 0);
+
+    // make sure the event handler is registered
+    if (orginalData.length === 0) {
+      setTimeout(function () {
+        // no data label
+        popwinNoMatchInit();
+        popwinBtnEventsInit(orginalData);
+      }, 500);
+    }
     if (LIVE_SEARCH_OK) {
       // clean data
       setOptionsData([]);

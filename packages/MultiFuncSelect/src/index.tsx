@@ -1037,8 +1037,18 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
         // pop win initalization
         setTimeout(() => {
             popwinPosInit();
-            popwinBtnEventsInit(optionsData);
+            popwinBtnEventsInit(orginalData);
         }, 0);
+
+        // make sure the event handler is registered
+        if (orginalData.length === 0) {
+            setTimeout(() => {
+                // no data label
+                popwinNoMatchInit();
+                popwinBtnEventsInit(orginalData);
+            }, 500);
+    
+        }
 
 
 

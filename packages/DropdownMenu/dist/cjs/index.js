@@ -155,6 +155,8 @@ var DropdownMenu = function DropdownMenu(props) {
     options = props.options,
     tabIndex = props.tabIndex,
     onChange = props.onChange;
+  var POS_OFFSET = 10;
+  var modalRef = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useRef)(null);
   var _useState = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)(false),
     _useState2 = _slicedToArray(_useState, 2),
     isOpen = _useState2[0],
@@ -182,6 +184,7 @@ var DropdownMenu = function DropdownMenu(props) {
     if (!hoverOn || typeof hoverOn === 'undefined') return;
     setTimeout(function () {
       setIsOpen(true);
+      popwinListInit();
     }, _hoverDelay);
   }
   function handleHoverOff(event) {
@@ -201,6 +204,25 @@ var DropdownMenu = function DropdownMenu(props) {
     if (typeof onChange === 'function') {
       onChange(option);
     }
+  }
+  function popwinListInit() {
+    if (modalRef.current === null) return;
+    setTimeout(function () {
+      // Determine whether it exceeds the far right or left side of the screen
+      var _modalContent = modalRef.current;
+      var _modalBox = _modalContent.getBoundingClientRect();
+      if (_modalBox.right > window.innerWidth) {
+        var _modalOffsetPosition = _modalBox.right - window.innerWidth + POS_OFFSET;
+        _modalContent.style.marginLeft = "-".concat(_modalOffsetPosition, "px");
+        // console.log('_modalPosition: ', _modalOffsetPosition)
+      }
+
+      if (_modalBox.left < 0) {
+        var _modalOffsetPosition2 = Math.abs(_modalBox.left) + POS_OFFSET;
+        _modalContent.style.marginLeft = "".concat(_modalOffsetPosition2, "px");
+        // console.log('_modalPosition: ', _modalOffsetPosition)
+      }
+    }, 0);
   }
   (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useEffect)(function () {
     document.removeEventListener('pointerdown', handleClose);
@@ -233,6 +255,7 @@ var DropdownMenu = function DropdownMenu(props) {
     type: "hidden",
     value: selected === null || selected === void 0 ? void 0 : selected.value
   }), /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("ul", {
+    ref: modalRef,
     className: isOpen ? "".concat(listClassName ? listClassName : 'dropdown-menu-default', " ").concat(showClassName ? showClassName : 'show') : "".concat(listClassName ? listClassName : 'dropdown-menu-default')
   }, selectOptionsListPresentation)));
 };

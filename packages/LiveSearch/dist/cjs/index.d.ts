@@ -18,6 +18,8 @@ declare type LiveSearchProps = {
     /** Set the depth value of the control to control the display of the pop-up layer appear above.
      * Please set it when multiple controls are used at the same time. */
     depth?: number;
+    /** Incoming data, you can set the third parameter of `onFetch` */
+    data?: any;
     /** -- */
     id?: string;
     style?: React.CSSProperties;

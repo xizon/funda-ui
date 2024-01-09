@@ -46,6 +46,24 @@ export default () => {
                 name="tagInput-name-1" 
                 onChange={(e, data, dataStr) => {
                     console.log(e, data, dataStr);
+                    /*
+                    <input ... placeholder="Add tag..." value="">,
+                    [
+                        {
+                            "content": "1",
+                            "id": 0
+                        },
+                        {
+                            "content": "3",
+                            "id": 1
+                        },
+                        {
+                            "content": "34",
+                            "id": 2
+                        }
+                    ],
+                    '[1][3][34]'
+                    */
                 }}
             />
 

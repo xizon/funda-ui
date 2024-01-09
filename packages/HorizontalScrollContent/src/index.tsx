@@ -1,5 +1,6 @@
 import React, { useId, useState, useRef, useEffect } from 'react';
 
+import { debounce } from './utils/performance';
 
 
 type HorizontalScrollContentProps = {
@@ -12,6 +13,17 @@ type HorizontalScrollContentProps = {
     onMove?: (dir: number, wrapperWidth: number, realContentWidth: number, moveOffset: number) => void;
     /** -- */
     id?: string;
+};
+
+
+
+// Fix ERROR: ResizeObserver loop completed with undelivered notifications.
+const _ResizeObserver = window.ResizeObserver;
+window.ResizeObserver = class ResizeObserver extends _ResizeObserver {
+    constructor(callback) {
+        callback = debounce(callback, 16);
+        super(callback);
+    }
 };
 
 
@@ -109,6 +121,11 @@ const HorizontalScrollContent = (props: HorizontalScrollContentProps) => {
         if (el) {
        
             observer.current = new ResizeObserver(entries => {
+
+                if (!Array.isArray(entries) || !entries.length) {
+                    return;
+                }
+
                 entries.forEach(entry => {
                     resetNextBtn();
                 });

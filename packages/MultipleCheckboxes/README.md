@@ -21,6 +21,19 @@ import MultipleCheckboxes from 'funda-ui/MultipleCheckboxes';
 | `onChange` | function  | - | Call a function when the value of an HTML element is changed. It returns three callback values. <br /> <ol><li>The first is the control of current checkbox</li><li>The second is the current value (**Array**)</li><li>The third is the current string value (**String**)</li></ol>  |
 
 
+It accepts all props which this control support.
+
+
+---
+
+JSON Object Literals configuration properties of the `options`:
+
+| Property | Type | Default | Description |
+| --- | --- | --- | --- |
+| `label` | string | - | Specify the label text for each option. |
+| `value` | string | - | Specify the value for each option |
+
+
 ## Examples
 
 ```js
@@ -38,9 +51,19 @@ export default () => {
             <MultipleCheckboxes 
                 name="name"
                 value={val}
-                options={[{"label": "Option 1","value": "value-1","queryString": "option1"},{"label": "<del style=color:red>deprecate</del>Option 2","value": "value-2","queryString": "option2"},{"label": "Option 3","value": "value-3","queryString": "option3"}]}
+                options={[
+                    {"label": "Option 1","value": "value-1"},
+                    {"label": "<del style=color:red>deprecate</del>Option 2","value": "value-2"},
+                    {"label": "Option 3","value": "value-3"}
+                ]}
                 onChange={(e, data, dataStr) => {
                     console.log(e, data, dataStr);
+                    /*
+                    <input type="checkbox" ... value="value-1">,
+                    ['value-3', 'value-2'],
+                    '[value-3][value-2]'
+                    */
+                   
                     setVal(dataStr);
                 }}
             />

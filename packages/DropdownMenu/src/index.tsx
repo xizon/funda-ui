@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 
 import Option from './Option';
 
@@ -60,6 +60,8 @@ const DropdownMenu = (props: DropdownMenuProps) => {
         onChange
     } = props;
 
+    const POS_OFFSET = 10;
+    const modalRef = useRef<any>(null);
     const [isOpen, setIsOpen] = useState<boolean>(false);
     const [selected, setSelected] = useState<any>(null);
     const _hoverDelay = !isNaN(hoverDelay as never) && typeof hoverDelay !== 'undefined' ? hoverDelay : 150;
@@ -82,6 +84,7 @@ const DropdownMenu = (props: DropdownMenuProps) => {
         if (!hoverOn || typeof hoverOn === 'undefined') return;
         setTimeout(() => {
             setIsOpen(true);
+            popwinListInit();
         }, _hoverDelay);
         
     }
@@ -113,6 +116,38 @@ const DropdownMenu = (props: DropdownMenuProps) => {
 
     }
 
+
+
+
+    function popwinListInit() {
+        if (modalRef.current === null) return;
+
+        setTimeout(() => {
+            // Determine whether it exceeds the far right or left side of the screen
+            const _modalContent = modalRef.current;
+            const _modalBox = _modalContent.getBoundingClientRect();
+
+            if (_modalBox.right > window.innerWidth) {
+                const _modalOffsetPosition = _modalBox.right - window.innerWidth + POS_OFFSET;
+                _modalContent.style.marginLeft = `-${_modalOffsetPosition}px`;
+                // console.log('_modalPosition: ', _modalOffsetPosition)
+            }
+
+
+            if (_modalBox.left < 0) {
+                const _modalOffsetPosition = Math.abs(_modalBox.left) + POS_OFFSET;
+                _modalContent.style.marginLeft = `${_modalOffsetPosition}px`;
+                // console.log('_modalPosition: ', _modalOffsetPosition)
+            }
+
+
+        }, 0);
+        
+
+    }
+
+
+
     useEffect(() => {
 
         document.removeEventListener('pointerdown', handleClose);
@@ -133,7 +168,7 @@ const DropdownMenu = (props: DropdownMenuProps) => {
                 {triggerButton ? <button tabIndex={tabIndex || -1} className={triggerClassName ? `${triggerClassName}` : `d-inline w-auto`} type="button" onMouseEnter={handleHoverOn} onClick={handleClick} dangerouslySetInnerHTML={{ __html: selectedLabel }}></button> : <div className={triggerClassName ? `${triggerClassName}` : `d-inline w-auto`} onMouseEnter={handleHoverOn} onClick={handleClick} dangerouslySetInnerHTML={{ __html: selectedLabel }}></div>}
 
                 <input name={name || ''} type="hidden" value={selected?.value} />
-                <ul className={isOpen ? `${listClassName ? listClassName : 'dropdown-menu-default'} ${showClassName ? showClassName : 'show'}` : `${listClassName ? listClassName : 'dropdown-menu-default'}`}>
+                <ul ref={modalRef} className={isOpen ? `${listClassName ? listClassName : 'dropdown-menu-default'} ${showClassName ? showClassName : 'show'}` : `${listClassName ? listClassName : 'dropdown-menu-default'}`}>
                     {selectOptionsListPresentation}
                 </ul>
             </div>

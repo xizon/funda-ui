@@ -154,7 +154,7 @@ export default () => {
             <h3>Normal (Single selection and Multiple selection)</h3>
             {/* ================================================================== */}
             <MultiFuncSelect
-                cleanTrigger={{valid: true, cleanValueLabel: 'Clean}}
+                cleanTrigger={{valid: true, cleanValueLabel: 'Clean'}}
                 value="value-2"
                 placeholder="Select"
                 name="name"
@@ -169,6 +169,16 @@ export default () => {
                 `}
                 onChange={(e, e2, val) => {
                     console.log(e, e2, val);
+                    /*
+                    <input ... value=​"[Option 3]​[Option 2]​[Option 1]​">​ 
+                    <input ... value=​"[value-3]​[value-2]​[value-1]​">​ 
+                    {
+                        labels: ['Option 3', '<del style=color:red>deprecate</del>Option 2', 'Option 1']labelsOfString: "[Option 3][<del style=color:red>deprecate</del>Option 2][Option 1]", 
+                        values: ['value-3', 'value-2', 'value-1'], 
+                        labelsOfString: '[Option 3][<del style=color:red>deprecate</del>Option 2][Option 1]', 
+                        valuesOfString: '[value-3][value-2][value-1]'
+                    }
+                    */
                 }}
             />
 

@@ -25,6 +25,8 @@ type LiveSearchProps = {
     /** Set the depth value of the control to control the display of the pop-up layer appear above.
      * Please set it when multiple controls are used at the same time. */
     depth?: number;
+    /** Incoming data, you can set the third parameter of `onFetch` */
+    data?: any;
     /** -- */
     id?: string;
     style?: React.CSSProperties;
@@ -65,6 +67,7 @@ const LiveSearch = (props: LiveSearchProps) => {
         style,
         winWidth,
         tabIndex,
+        data,
         fetchAutoShow,
         fetchNoneInfo,
         fetchUpdate,
@@ -76,6 +79,7 @@ const LiveSearch = (props: LiveSearchProps) => {
         onSelect,
         onChange,
         onBlur,
+        ...attributes
     } = props;
 
 
@@ -93,8 +97,8 @@ const LiveSearch = (props: LiveSearchProps) => {
 
     //
     const [firstFetch, setFirstFetch] = useState<boolean>(false);
-    const [dataInit, setDataInit] = useState<any[]>([]);
-    const [data, setData] = useState<any[]>([]);
+    const [dataInit, setOrginalDataInit] = useState<any[]>([]);
+    const [orginalData, setOrginalData] = useState<any[]>([]);
     const [changedVal, setChangedVal] = useState<string>(value || '');
     const [isOpen, setIsOpen] = useState<boolean>(false);
     const [hasErr, setHasErr] = useState<boolean>(false);
@@ -279,7 +283,7 @@ const LiveSearch = (props: LiveSearchProps) => {
                 if ( !fetchTrigger ) {
                 matchData(val, fetchUpdate).then((response: any) => {
 
-                    setData(response);
+                    setOrginalData(response);
 
                     //
                     onChange?.(inputRef.current, response); 
@@ -289,7 +293,7 @@ const LiveSearch = (props: LiveSearchProps) => {
                 });
             } else {
                 //
-                onChange?.(inputRef.current, data); 
+                onChange?.(inputRef.current, orginalData); 
             }
 
         } else {
@@ -312,7 +316,7 @@ const LiveSearch = (props: LiveSearchProps) => {
     async function activate() {
         if ( fetchTrigger ) {
             const res: any = await matchData(changedVal, fetchUpdate);
-            setData(res);
+            setOrginalData(res);
             
 
             //
@@ -346,7 +350,7 @@ const LiveSearch = (props: LiveSearchProps) => {
             onFetch?.(_ORGIN_DATA);
             
             //
-            setDataInit(_ORGIN_DATA);
+            setOrginalDataInit(_ORGIN_DATA);
 
 
             //
@@ -398,7 +402,7 @@ const LiveSearch = (props: LiveSearchProps) => {
         
         // cancel
         setIsOpen(false);
-        setData([]);
+        setOrginalData([]);
     }
 
     function handleFetch() {
@@ -412,7 +416,7 @@ const LiveSearch = (props: LiveSearchProps) => {
 
     function handleClick() {
         if (!INPUT_MATCH_ENABLED) {
-            setData(dataInit);
+            setOrginalData(dataInit);
             setIsOpen(true);
         }
 
@@ -429,8 +433,8 @@ const LiveSearch = (props: LiveSearchProps) => {
         if ( !fetchTrigger ) {
             setTimeout(() => {
                 //
-                onBlur?.(inputRef.current, data);
-                setData([]);
+                onBlur?.(inputRef.current, orginalData);
+                setOrginalData([]);
 
             }, 300);
         }
@@ -447,7 +451,7 @@ const LiveSearch = (props: LiveSearchProps) => {
         if (event.target.closest(`.${wrapperClassName || wrapperClassName === '' ? wrapperClassName : 'livesearch__wrapper'}`) === null ) {
             // cancel
             setIsOpen(false);
-            setData([]);
+            setOrginalData([]);
         }
     }
 
@@ -611,7 +615,7 @@ const LiveSearch = (props: LiveSearchProps) => {
 
         };
 
-    }, [value]);
+    }, [value, data]);
 
 
     return (
@@ -644,17 +648,18 @@ const LiveSearch = (props: LiveSearchProps) => {
                     icon={hideIcon ? '' : (!fetchTrigger ? '' : icon)}
                     btnId={btnId}
                     autoComplete='off'
+                    {...attributes}
                 />
 
 
-                {data && data.length > 0 && !hasErr ? <>
+                {orginalData && orginalData.length > 0 && !hasErr ? <>
                     <div ref={listRef} className={`list-group position-absolute border shadow small ${winWidth ? '' : 'w-100'}`} style={{ marginTop: '0.2rem', zIndex: (depth ? depth : 100), minWidth: '200px', width: WIN_WIDTH}} role="tablist">
                         <div className="rounded" ref={listContentRef}>
-                            {data ? data.map((item, index) => {
+                            {orginalData ? orginalData.map((item, index) => {
                                 const startItemBorder = index === 0 ? 'border-top-0' : '';
-                                const endItemBorder = index === data.length-1 ? 'border-bottom-0' : '';
+                                const endItemBorder = index === orginalData.length-1 ? 'border-bottom-0' : '';
 
-                                return <button tabIndex={-1} onClick={handleSelect} type="button" data-index={index} key={index} className={`list-group-item list-group-item-action border-start-0 border-end-0 ${startItemBorder} ${endItemBorder}`} data-value={`${item.value}`} data-label={`${item.label}`} data-querystring={`${typeof item.queryString === 'undefined' ? '' : item.queryString}`} role="tab">{item.label}</button>
+                                return <button tabIndex={-1} onClick={handleSelect} type="button" data-index={index} key={index} className={`list-group-item list-group-item-action border-start-0 border-end-0 border-top-0 border-bottom-0 ${startItemBorder} ${endItemBorder}`} data-value={`${item.value}`} data-label={`${item.label}`} data-querystring={`${typeof item.queryString === 'undefined' ? '' : item.queryString}`} role="tab">{item.label}</button>
                             }) : null}
                         </div>
 
@@ -663,11 +668,11 @@ const LiveSearch = (props: LiveSearchProps) => {
 
                 </> : null}
 
-                {data && data.length === 0 && !hasErr && isOpen ? <>
+                {orginalData && orginalData.length === 0 && !hasErr && isOpen ? <>
                     <div ref={listRef} className={`list-group position-absolute border shadow small ${winWidth ? '' : 'w-100'}`} style={{ marginTop: '0.2rem', zIndex: (depth ? depth : 100), minWidth: '200px', width: WIN_WIDTH}} role="tablist">
 
                         <div className="rounded" ref={listContentRef}>
-                            <button tabIndex={-1} type="button" className="list-group-item list-group-item-action no-match" disabled>{fetchNoneInfo || 'No match yet'}</button>
+                            <button tabIndex={-1} type="button" className="list-group-item list-group-item-action border-top-0 border-bottom-0 no-match" disabled>{fetchNoneInfo || 'No match yet'}</button>
                         </div>
 
 

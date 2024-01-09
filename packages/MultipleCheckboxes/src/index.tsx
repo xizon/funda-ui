@@ -54,8 +54,8 @@ const MultipleCheckboxes = forwardRef((props: MultipleCheckboxesProps, ref: any)
     const rootRef = useRef<any>(null);
     const inputRef = useRef<any>(null);
     const optionsRes = options ? isJSON( options ) ? JSON.parse( options as string ) : options : [];
-    const [regTagData, setRegTagData] = useState<any[]>([]);
-    const [regTagSelected, setRegTagSelected] = useState<any[]>([]);
+    const [valData, setValData] = useState<any[]>([]);
+    const [valSelected, setValSelected] = useState<any[]>([]);
     const _inline = typeof inline === 'undefined' ? true : inline;
 
 
@@ -101,14 +101,14 @@ const MultipleCheckboxes = forwardRef((props: MultipleCheckboxesProps, ref: any)
 
         // change the value to trigger component rendering
         if ( typeof defaultValue === 'undefined' || defaultValue === '' ) {
-            setRegTagSelected([]);
+            setValSelected([]);
         } else {
 
             const _val = VALUE_BY_BRACKETS ? extractContentsOfBrackets(defaultValue) : defaultValue.trim().replace(/^\,|\,$/g, '').split(',');
             if (Array.isArray(_val)) {
-                setRegTagSelected(_val.filter((v: any) => v !== ''));
+                setValSelected(_val.filter((v: any) => v !== ''));
             } else {
-                setRegTagSelected([]);
+                setValSelected([]);
             }
 
             
@@ -125,7 +125,7 @@ const MultipleCheckboxes = forwardRef((props: MultipleCheckboxesProps, ref: any)
 
         // Initialize options
         //--------------
-        setRegTagData(optionsRes);
+        setValData(optionsRes);
 
 
 
@@ -142,7 +142,7 @@ const MultipleCheckboxes = forwardRef((props: MultipleCheckboxesProps, ref: any)
 
                 <div className="multiple-checkboxes__control-wrapper" style={style}>
 
-                    {regTagData ? regTagData.map((item: any, i: number) => {
+                    {valData ? valData.map((item: any, i: number) => {
                         return <div 
                             key={'checkbox' + i} 
                             className={`multiple-checkboxes__control ${_inline ? 'd-inline-block' : ''} pe-3`}
@@ -158,21 +158,21 @@ const MultipleCheckboxes = forwardRef((props: MultipleCheckboxesProps, ref: any)
                                 disabled={disabled || null}
                                 onChange={(e: any, val: boolean) => {
 
-                                    setRegTagSelected((prevState) => {
+                                    setValSelected((prevState) => {
                                         const newData = JSON.parse(JSON.stringify(prevState));
                                         const index = newData.findIndex((item: string | number) => item == e.target.value);
                                         if (index !== -1) newData.splice(index, 1);
 
                                         const _res = (val) ? Array.from(new Set([e.target.value, ...newData])) : newData;
 
-                                        onChange?.(e, _res, VALUE_BY_BRACKETS ? convertArrToValByBrackets(_res) : _res.join(','));
+                                        onChange?.(e.target, _res, VALUE_BY_BRACKETS ? convertArrToValByBrackets(_res) : _res.join(','));
 
                                         return _res;
                                     });
 
 
                                 }}
-                                checked={regTagSelected.includes(item.value)}
+                                checked={valSelected.includes(item.value)}
                             /></div>;
                     }) : null}
                     
@@ -182,7 +182,7 @@ const MultipleCheckboxes = forwardRef((props: MultipleCheckboxesProps, ref: any)
                         type="hidden"
                         id={idRes}
                         name={name}
-                        value={VALUE_BY_BRACKETS ? convertArrToValByBrackets(regTagSelected) : regTagSelected.join(',')}
+                        value={VALUE_BY_BRACKETS ? convertArrToValByBrackets(valSelected) : valSelected.join(',')}
                         required={required || null}
                         {...attributes}
                     />

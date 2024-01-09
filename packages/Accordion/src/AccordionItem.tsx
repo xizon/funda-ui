@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 
+import { debounce } from './utils/performance';
 
 type AccordionItemProps = {
     heightObserver?: number;
@@ -25,6 +26,18 @@ type AccordionItemProps = {
 	/** -- */
 	children: React.ReactNode;
 };
+
+
+
+// Fix ERROR: ResizeObserver loop completed with undelivered notifications.
+const _ResizeObserver = window.ResizeObserver;
+window.ResizeObserver = class ResizeObserver extends _ResizeObserver {
+    constructor(callback) {
+        callback = debounce(callback, 16);
+        super(callback);
+    }
+};
+
 
 
 const AccordionItem = (props: AccordionItemProps) => {
@@ -64,6 +77,11 @@ const AccordionItem = (props: AccordionItemProps) => {
             const _contentPadding = window.getComputedStyle(contentRef.current as HTMLDivElement).getPropertyValue('padding-bottom');
        
             observer.current = new ResizeObserver(entries => {
+
+                if (!Array.isArray(entries) || !entries.length) {
+                    return;
+                }
+
                 entries.forEach(entry => {
                     if (contentWrapperRef.current !== null) (contentWrapperRef.current as HTMLDivElement).style.height = entry.contentRect.bottom + parseFloat(_contentPadding) + 'px';
                 });

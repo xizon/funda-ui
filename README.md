@@ -44,13 +44,14 @@ Here is a table of the components and their status.
 | [Show More Less ✅](packages/ShowMoreLess/README.md) | [Range Slider ✅](packages/RangeSlider/README.md) | |  |
 | [Slideshow ❏](packages/Slideshow/README.md) | [Color Picker ✅](packages/ColorPicker/README.md) |  |  |
 | [Tabs ✅](packages/Tabs/README.md) | [MultipleCheckboxes ✅](packages/MultipleCheckboxes/README.md) |  |  |
-| [Timeline ❏](packages/Timeline/README.md) |  |  |  |
+| [Timeline ❏](packages/Timeline/README.md) | [MultipleSelect ✅🔥](packages/MultipleSelect/README.md) |  |  |
 | [Toast ✅](packages/Toast/README.md) |  |  |  |
 | [Tooltip ✅](packages/Tooltip/README.md) |  |  |  |
 | [Digital Clock ✅](packages/DigitalClock/README.md) |  |  |  |
 | [Tree ✅🔥](packages/Tree/README.md) |  |  |  |
 | [EventCalendar ✅🔥](packages/EventCalendar/README.md) |  |  |  |
 | [EventCalendarTimeline ✅🔥](packages/EventCalendarTimeline/README.md) |  |  |  |
+
 
 
 

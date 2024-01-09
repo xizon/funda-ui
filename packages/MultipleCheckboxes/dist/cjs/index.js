@@ -702,12 +702,12 @@ var MultipleCheckboxes = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forw
   var optionsRes = options ? isJSON(options) ? JSON.parse(options) : options : [];
   var _useState = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)([]),
     _useState2 = _slicedToArray(_useState, 2),
-    regTagData = _useState2[0],
-    setRegTagData = _useState2[1];
+    valData = _useState2[0],
+    setValData = _useState2[1];
   var _useState3 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)([]),
     _useState4 = _slicedToArray(_useState3, 2),
-    regTagSelected = _useState4[0],
-    setRegTagSelected = _useState4[1];
+    valSelected = _useState4[0],
+    setValSelected = _useState4[1];
   var _inline = typeof inline === 'undefined' ? true : inline;
 
   // Determine whether it is in JSON format
@@ -733,15 +733,15 @@ var MultipleCheckboxes = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forw
   function initDefaultValue(defaultValue) {
     // change the value to trigger component rendering
     if (typeof defaultValue === 'undefined' || defaultValue === '') {
-      setRegTagSelected([]);
+      setValSelected([]);
     } else {
       var _val = VALUE_BY_BRACKETS ? (0,_utils_extract__WEBPACK_IMPORTED_MODULE_2__.extractContentsOfBrackets)(defaultValue) : defaultValue.trim().replace(/^\,|\,$/g, '').split(',');
       if (Array.isArray(_val)) {
-        setRegTagSelected(_val.filter(function (v) {
+        setValSelected(_val.filter(function (v) {
           return v !== '';
         }));
       } else {
-        setRegTagSelected([]);
+        setValSelected([]);
       }
     }
   }
@@ -752,7 +752,7 @@ var MultipleCheckboxes = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forw
 
     // Initialize options
     //--------------
-    setRegTagData(optionsRes);
+    setValData(optionsRes);
   }, [value, options]);
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
     className: wrapperClassName || wrapperClassName === '' ? "multiple-checkboxes__wrapper ".concat(wrapperClassName) : "multiple-checkboxes__wrapper mb-3 position-relative",
@@ -766,7 +766,7 @@ var MultipleCheckboxes = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forw
   })) : null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
     className: "multiple-checkboxes__control-wrapper",
     style: style
-  }, regTagData ? regTagData.map(function (item, i) {
+  }, valData ? valData.map(function (item, i) {
     return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       key: 'checkbox' + i,
       className: "multiple-checkboxes__control ".concat(_inline ? 'd-inline-block' : '', " pe-3"),
@@ -780,18 +780,18 @@ var MultipleCheckboxes = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forw
       value: item.value,
       disabled: disabled || null,
       onChange: function onChange(e, val) {
-        setRegTagSelected(function (prevState) {
+        setValSelected(function (prevState) {
           var newData = JSON.parse(JSON.stringify(prevState));
           var index = newData.findIndex(function (item) {
             return item == e.target.value;
           });
           if (index !== -1) newData.splice(index, 1);
           var _res = val ? Array.from(new Set([e.target.value].concat(_toConsumableArray(newData)))) : newData;
-          _onChange === null || _onChange === void 0 ? void 0 : _onChange(e, _res, VALUE_BY_BRACKETS ? (0,_utils_convert__WEBPACK_IMPORTED_MODULE_3__.convertArrToValByBrackets)(_res) : _res.join(','));
+          _onChange === null || _onChange === void 0 ? void 0 : _onChange(e.target, _res, VALUE_BY_BRACKETS ? (0,_utils_convert__WEBPACK_IMPORTED_MODULE_3__.convertArrToValByBrackets)(_res) : _res.join(','));
           return _res;
         });
       },
-      checked: regTagSelected.includes(item.value)
+      checked: valSelected.includes(item.value)
     }));
   }) : null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("input", _extends({
     ref: inputRef,
@@ -799,7 +799,7 @@ var MultipleCheckboxes = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forw
     type: "hidden",
     id: idRes,
     name: name,
-    value: VALUE_BY_BRACKETS ? (0,_utils_convert__WEBPACK_IMPORTED_MODULE_3__.convertArrToValByBrackets)(regTagSelected) : regTagSelected.join(','),
+    value: VALUE_BY_BRACKETS ? (0,_utils_convert__WEBPACK_IMPORTED_MODULE_3__.convertArrToValByBrackets)(valSelected) : valSelected.join(','),
     required: required || null
   }, attributes))), required ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
     className: "position-absolute end-0 top-0 my-2 mx-2"
