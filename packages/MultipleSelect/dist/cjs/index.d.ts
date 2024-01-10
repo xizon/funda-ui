@@ -4,6 +4,8 @@ interface OptionConfig {
 }
 declare type MultipleSelectProps = {
     wrapperClassName?: string;
+    wrapperMinHeight?: string;
+    wrapperMinWidth?: string;
     availableHeaderTitle?: string;
     selectedHeaderTitle?: string;
     selectedHeaderNote?: string;
@@ -33,7 +35,7 @@ declare type MultipleSelectProps = {
     fetchFuncMethodParams?: any[];
     fetchCallback?: (data: any) => void;
     onFetch?: (data: any) => void;
-    onChange?: (e: any, data: any, dataStr: any) => void;
+    onChange?: (e: any, data: any, dataStr: any, currentData: any, type: string) => void;
 };
 declare const MultipleSelect: React.ForwardRefExoticComponent<MultipleSelectProps & React.RefAttributes<unknown>>;
 export default MultipleSelect;

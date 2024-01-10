@@ -2632,6 +2632,7 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
         "data-label": "".concat(item.label),
         "data-querystring": "".concat(typeof item.queryString === 'undefined' ? '' : item.queryString),
         "data-itemdata": JSON.stringify(item),
+        "data-list-item-label": "".concat(typeof item.listItemLabel === 'undefined' ? '' : item.listItemLabel),
         role: "tab",
         dangerouslySetInnerHTML: {
           __html: typeof item.listItemLabel === 'undefined' ? item.label : item.listItemLabel
@@ -2652,6 +2653,7 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
         "data-value": "".concat(item.value),
         "data-label": "".concat(item.label),
         "data-querystring": "".concat(typeof item.queryString === 'undefined' ? '' : item.queryString),
+        "data-list-item-label": "".concat(typeof item.listItemLabel === 'undefined' ? '' : item.listItemLabel),
         "data-itemdata": JSON.stringify(item),
         role: "tab"
       }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("var", {

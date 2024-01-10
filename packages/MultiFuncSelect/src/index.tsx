@@ -2029,9 +2029,22 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
                                         // ++++++++++++++++++++
                                         // Single selection
                                         // ++++++++++++++++++++
-                                        return <button tabIndex={-1} type="button" data-index={index} key={index} className={`list-group-item list-group-item-action border-start-0 border-end-0 mf-select-multi__control-option-item ${startItemBorder} ${endItemBorder} border-bottom-0 ${typeof item.disabled === 'undefined' ? '' : (item.disabled == true ? 'disabled' : '')}`} data-value={`${item.value}`} data-label={`${item.label}`} data-querystring={`${typeof item.queryString === 'undefined' ? '' : item.queryString}`} data-itemdata={JSON.stringify(item)} role="tab" dangerouslySetInnerHTML={{
-                                            __html: typeof item.listItemLabel === 'undefined' ? item.label : item.listItemLabel
-                                        }}></button>
+                                        return <button 
+                                            tabIndex={-1} 
+                                            type="button" 
+                                            data-index={index} 
+                                            key={index} 
+                                            className={`list-group-item list-group-item-action border-start-0 border-end-0 mf-select-multi__control-option-item ${startItemBorder} ${endItemBorder} border-bottom-0 ${typeof item.disabled === 'undefined' ? '' : (item.disabled == true ? 'disabled' : '')}`} 
+                                            data-value={`${item.value}`} 
+                                            data-label={`${item.label}`} 
+                                            data-querystring={`${typeof item.queryString === 'undefined' ? '' : item.queryString}`} 
+                                            data-itemdata={JSON.stringify(item)} 
+                                            data-list-item-label={`${typeof item.listItemLabel === 'undefined' ? '' : item.listItemLabel}`} 
+                                            role="tab" 
+                                            dangerouslySetInnerHTML={{
+                                                __html: typeof item.listItemLabel === 'undefined' ? item.label : item.listItemLabel
+                                            }}
+                                        ></button>
 
                                     } else {
 
@@ -2040,7 +2053,20 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
                                         // ++++++++++++++++++++
                                         const itemSelected = multiSelControlOptionExist(controlArr.values, item.value) ? true : false;
 
-                                        return <button tabIndex={-1} type="button" data-selected={`${itemSelected ? 'true' : 'false'}`} data-index={index} key={index} className={`list-group-item list-group-item-action border-start-0 border-end-0 mf-select-multi__control-option-item ${startItemBorder} ${endItemBorder} border-bottom-0 ${itemSelected ? 'list-group-item-secondary item-selected' : ''} ${typeof item.disabled === 'undefined' ? '' : (item.disabled == true ? 'disabled' : '')}`} data-value={`${item.value}`} data-label={`${item.label}`} data-querystring={`${typeof item.queryString === 'undefined' ? '' : item.queryString}`} data-itemdata={JSON.stringify(item)} role="tab">
+                                        return <button 
+                                            tabIndex={-1} 
+                                            type="button" 
+                                            data-selected={`${itemSelected ? 'true' : 'false'}`} 
+                                            data-index={index} 
+                                            key={index} 
+                                            className={`list-group-item list-group-item-action border-start-0 border-end-0 mf-select-multi__control-option-item ${startItemBorder} ${endItemBorder} border-bottom-0 ${itemSelected ? 'list-group-item-secondary item-selected' : ''} ${typeof item.disabled === 'undefined' ? '' : (item.disabled == true ? 'disabled' : '')}`} 
+                                            data-value={`${item.value}`} 
+                                            data-label={`${item.label}`} 
+                                            data-querystring={`${typeof item.queryString === 'undefined' ? '' : item.queryString}`} 
+                                            data-list-item-label={`${typeof item.listItemLabel === 'undefined' ? '' : item.listItemLabel}`} 
+                                            data-itemdata={JSON.stringify(item)} 
+                                            role="tab"
+                                        >
                                             <var className={`me-1 mf-select-multi__control-option-checkbox-selected ${itemSelected ? '' : 'd-none'}`}>
                                                 <svg width="1.2em" height="1.2em" fill="#000000" viewBox="0 0 24 24"><path d="M19 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.11 0 2-.9 2-2V5c0-1.1-.89-2-2-2zm-9 14l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" /></svg>
 

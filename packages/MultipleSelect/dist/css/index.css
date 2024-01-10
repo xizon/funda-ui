@@ -2,22 +2,39 @@
     <!-- Multiple Select -->
 /* ====================================================== */
 .m-select__wrapper {
+  --m-select-wrapper-min-w: 350px;
+  --m-select-wrapper-min-h: 315px;
+  --m-select-header-font-size: 0.75rem;
+  --m-select-body-font-size: 0.75rem;
   --m-select-scrollbar-color: rgba(0, 0, 0, 0.2);
   --m-select-scrollbar-track: rgba(0, 0, 0, 0);
   --m-select-scrollbar-w: 3px;
-  min-width: 350px;
-  min-height: 315px;
+  --m-select-search-icon-color: #333;
+  --m-select-body-bg: #fff;
+  --m-select-header-bg: #dee2e6;
+  --m-select-border-color: #dee2e6;
+  --m-select-options-item-bg: #f6f6f6;
+  --m-select-options-item-icon-color: #000;
+  --m-select-options-item-selected-bg: #0b5ed7;
+  --m-select-options-item-selected-icon-color: #fff;
+  --m-select-options-item-selected-text-color: #fff;
+  --m-select-options-item-dividingline-color: rgba(255, 255, 255, 1);
+  --m-select-search-input-w: 100px;
+  --m-select-search-input-bg: #fff;
+  --m-select-search-input-text-color: #333;
+  min-width: var(--m-select-wrapper-min-w);
+  min-height: var(--m-select-wrapper-min-h);
   width: 100%;
   height: 100%;
-  border: solid 1px #dee2e6;
+  border: solid 1px var(--m-select-border-color);
   border-radius: 0.35rem;
   position: relative;
-  background: #fff;
+  background: var(--m-select-body-bg);
   /*-------- List --------*/
 }
 .m-select__wrapper .m-select-diving-line {
   width: 1px;
-  background-color: #dee2e6;
+  background-color: var(--m-select-border-color);
   left: 50%;
   top: 0;
   position: absolute;
@@ -28,6 +45,7 @@
   display: flex;
   font-size: 0.8em;
   height: 100%;
+  /* Search */
 }
 .m-select__wrapper .m-select-inner ul,
 .m-select__wrapper .m-select-inner li {
@@ -45,7 +63,6 @@
   position: relative;
   overflow: auto;
   overflow-x: hidden;
-  background: #fff;
   border: none;
   position: relative;
   width: 100%;
@@ -56,11 +73,11 @@
 .m-select__wrapper .m-select-inner li {
   cursor: default;
   position: relative;
-  font-size: 0.75rem;
+  font-size: var(--m-select-body-font-size);
   display: flex;
   justify-content: space-between;
-  background: #f6f6f6;
-  border-bottom: 1px solid rgb(255, 255, 255);
+  background: var(--m-select-options-item-bg);
+  border-bottom: 1px solid var(--m-select-options-item-dividingline-color);
 }
 .m-select__wrapper .m-select-inner li.disabled {
   pointer-events: none;
@@ -73,11 +90,11 @@
   opacity: 0.8;
 }
 .m-select__wrapper .m-select-inner li.selected {
-  background: #0b5ed7;
-  color: #fff;
+  background: var(--m-select-options-item-selected-bg);
+  color: var(--m-select-options-item-selected-text-color);
 }
 .m-select__wrapper .m-select-inner li.selected > i svg path {
-  fill: #fff;
+  fill: var(--m-select-options-item-selected-icon-color);
 }
 .m-select__wrapper .m-select-inner li:last-child {
   border-bottom: none;
@@ -97,6 +114,9 @@
   display: inline-block;
   padding: 0.35rem 0.75rem;
   cursor: pointer;
+}
+.m-select__wrapper .m-select-inner li > i svg path {
+  fill: var(--m-select-options-item-icon-color);
 }
 .m-select__wrapper .m-select-inner li a {
   color: #999;
@@ -118,9 +138,9 @@
 }
 .m-select__wrapper .m-select-inner .m-select__header {
   border: none;
-  font-size: 0.75rem;
+  font-size: var(--m-select-header-font-size);
   margin-bottom: 1px;
-  background: #dee2e6;
+  background: var(--m-select-header-bg);
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -139,16 +159,29 @@
   padding: 0.2rem;
   font-weight: bold;
 }
-.m-select__wrapper .m-select-inner input.m-select__search {
+.m-select__wrapper .m-select-inner .m-select__search__container {
+  position: relative;
+}
+.m-select__wrapper .m-select-inner .m-select__search__container input.m-select__search {
   height: 14px;
   padding: 0.1rem 0.5rem;
   opacity: 0.5;
   margin: 4px;
-  width: 100px;
+  width: var(--m-select-search-input-w);
+  background-color: var(--m-select-search-input-bg);
+  color: var(--m-select-search-input-text-color);
   border-radius: 25px;
   border: none;
   outline: none;
   box-shadow: none;
+}
+.m-select__wrapper .m-select-inner .m-select__search__container i {
+  position: absolute;
+  right: 0.6em;
+  top: 0.1em;
+}
+.m-select__wrapper .m-select-inner .m-select__search__container i svg {
+  fill: var(--m-select-search-icon-color);
 }
 .m-select__wrapper .m-select__options-contentlist {
   position: relative;

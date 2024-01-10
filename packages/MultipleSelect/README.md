@@ -10,6 +10,8 @@ import MultipleSelect from 'funda-ui/MultipleSelect';
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |
 | `wrapperClassName` | string | `mb-3` | The class name of the control wrapper. |
+| `wrapperMinHeight` | string | - | Minimum height of wrapper. If not specified, the default value in css will be used, which is **315px** |
+| `wrapperMinWidth` | string | - | Minimum width of wrapper. If not specified, the default value in css will be used, which is **350px** |
 | `extractValueByBrackets` | boolean  | true | Whether to use square brackets to save result and initialize default value. |
 | `availableHeaderTitle` | string  | - | Header title for available areas. <blockquote>Support html tags</blockquote> |
 | `selectedHeaderTitle` | string  | - | Header title for selected areas. <blockquote>Support html tags</blockquote> |
@@ -33,7 +35,7 @@ import MultipleSelect from 'funda-ui/MultipleSelect';
 | `fetchFuncMethodParams` | array  | - | The parameter passed by the method, it is an array. <br />Note: the first element is a query string, the second element is the number of queried data (usually a number), and then you can increase the third, or fourth, and more parameters. <br />Such as `['',0]`, `['',99,'string 1','string 2']` <br /><blockquote>There should be at least one parameter which is the query string.</blockquote> |
 | `fetchCallback` | function  | - | Return value from `fetchCallback` property to format the data of the API callback, which will match the data structure of the component. <br >At the same time it returns the original data, you will use this function and use the `return` keyword to return a new value. |
 | `onFetch` | function  | - | Call a function when  data is successfully fetched. It returns one callback value which is the fetched data (**Array**) |
-| `onChange` | function  | - | Call a function when the value of an HTML element is changed. It returns three callback values. <br /> <ol><li>The first is the control of current checkbox</li><li>The second is the current value (**Array**)</li><li>The third is the current string value (**String**)</li></ol>  |
+| `onChange` | function  | - | Call a function when the value of an HTML element is changed. It returns five callback values. <br /> <ol><li>The first is the control of current checkbox</li><li>The second is the current value (**Array**)</li><li>The third is the current string value (**String**)</li><li>The fourth is the data (Exposes the JSON format data) about the option. (**JSON Object**)</li><li>The last is Add or delete operation identifier, value is `add` or `remove`. (**String**)</li></ol>  |
 
 
 It accepts all props which this control support.
@@ -78,18 +80,20 @@ export default () => {
                 value={val}
                 options={
                     [
-                        {"label": "Option 1","value": "value-1","queryString": "option1"},
-                        {"label": "<del style=color:red>deprecate</del>Option 2","value": "value-2","queryString": "option2"},
-                        {"label": "Option 3","value": "value-3","queryString": "option3"},
-                        {"label": "Option 4","value": "value-4","disabled":true}
+                        {"label": "Option 1","listItemLabel":"Option 1 (No: 001)","value": "value-1","queryString": "option1"},
+                        {"label": "<del style=color:red>deprecate</del>Option 2","listItemLabel":"<del style=color:red>deprecate</del>Option 2 (No: 002)","value": "value-2","queryString": "option2"},
+                        {"label": "Option 3","listItemLabel":"Option 3 (No: 003)","value": "value-3","queryString": "option3"},
+                        {"label": "Option 4","listItemLabel":"Option 4 (No: 004)","value": "value-4","disabled":true}
                     ]  
                 }
-                onChange={(e, data, dataStr) => {
-                    console.log(e, data, dataStr);
+                onChange={(e, data, dataStr, currentData, type) => {
+                    console.log(e, data, dataStr, currentData, type);
                     /*
                         <li data-index="0" data-label="Option 1" data-value="value-1">...</li>,
                         ['value-3', 'value-2'],
-                        '[value-3][value-2]'
+                        '[value-3][value-2]',
+                        {"label": "Option 3","listItemLabel":"Option 3 (No: 003)","value": "value-3","queryString": "option3"},
+                        add
                     */
 
                     setVal(dataStr);
@@ -187,6 +191,7 @@ export default () => {
     return (
         <>
 
+
             <MultipleSelect 
                 name="name"
                 availableHeaderTitle="Select One Item"
@@ -198,7 +203,7 @@ export default () => {
                 fetchFuncMethodParams={['',0]}
                 fetchCallback={(res) => {
 
-                    const formattedData = res.map((item, index) => {
+                    const formattedData = res.map((item: any, index: number) => {
                         return {
                             label: item.item_name,
                             value: item.item_code,
@@ -221,11 +226,10 @@ export default () => {
                     console.log('onFetch: ', res);
 
                 }}
-                onChange={(e, data, dataStr) => {
-                    console.log(e, data, dataStr);
+                onChange={(e: any, data: any[], dataStr: string, currentData: any, type: string) => {
+                    console.log(e, data, dataStr, currentData, type);
                 }}
             />
-
 
 
         </>

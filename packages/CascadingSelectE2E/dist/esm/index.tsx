@@ -476,13 +476,13 @@ const CascadingSelectE2E = (props: CascadingSelectE2EProps) => {
 
             _valueData.splice(level, 1, resValue.id);
             _labelData.splice(level, 1, resValue.name);
-            _queryIdsData.splice(level, 1, resValue.queryId);
+            if (Array.isArray(_queryIdsData)) _queryIdsData.splice(level, 1, resValue.queryId);
 
 
             return {
                 labels: _labelData.filter((v: any) => v != ''),
                 values: _valueData.filter((v: any) => v.toString().indexOf('$EMPTY_ID_') < 0),
-                queryIds: _queryIdsData.filter((v: any) => v != undefined),
+                queryIds: Array.isArray(_queryIdsData) ? _queryIdsData.filter((v: any) => v != undefined) : _labelData.filter((v: any) => v != ''),
             };
         });
 
@@ -666,31 +666,54 @@ const CascadingSelectE2E = (props: CascadingSelectE2EProps) => {
 
     }
 
+
+    function cleanValue() {
+        setSelectedData({
+            labels: [],
+            values: [],
+            queryIds: []
+        });
+
+        setSelectedDataByClick({
+            labels: [],
+            values: [],
+            queryIds: []
+        });
+
+
+        setAllData([]);
+        setDictionaryData([]);
+        setOptData([]);
+        setData([]);
+        setChangedVal('');
+        setFirstDataFeched(false);
+    }
+
     function initDefaultValue(defaultValue: any) {
+
+        // Determine whether the splicing value of the default value is empty
+        if (typeof defaultValue !== 'undefined' && defaultValue !== '') {
+            const formattedDefaultValue = VALUE_BY_BRACES ? extractContentsOfBraces(defaultValue) : defaultValue.split(',');
+            
+            const emptyDefaultValueCheck = formattedDefaultValue.every((item: any, index: number) => {
+                if (item !== '[]') {
+                    return false;
+                }
+        
+                return true;
+            });
+
+            if (emptyDefaultValueCheck) {
+                cleanValue();
+                return; // required RETURN
+            }
+        }
 
 
         // change the value to trigger component rendering
         if (typeof defaultValue === 'undefined' || defaultValue === '') {
-            setSelectedData({
-                labels: [],
-                values: [],
-                queryIds: []
-            });
-
-            setSelectedDataByClick({
-                labels: [],
-                values: [],
-                queryIds: []
-            });
-
-
-            setAllData([]);
-            setDictionaryData([]);
-            setOptData([]);
-            setData([]);
-            setChangedVal('');
-            setFirstDataFeched(false);
-            return;
+            cleanValue();
+            return; // required RETURN
         } else {
             setChangedVal(defaultValue);
         }
