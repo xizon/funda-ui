@@ -1,6 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
 
-import { debounce } from './utils/performance';
 
 type AccordionItemProps = {
     heightObserver?: number;
@@ -27,16 +26,6 @@ type AccordionItemProps = {
 	children: React.ReactNode;
 };
 
-
-
-// Fix ERROR: ResizeObserver loop completed with undelivered notifications.
-const _ResizeObserver = window.ResizeObserver;
-window.ResizeObserver = class ResizeObserver extends _ResizeObserver {
-    constructor(callback) {
-        callback = debounce(callback, 16);
-        super(callback);
-    }
-};
 
 
 
