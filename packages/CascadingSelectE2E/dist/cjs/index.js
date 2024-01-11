@@ -1075,12 +1075,12 @@ var CascadingSelectE2E = function CascadingSelectE2E(props) {
     // Determine whether the splicing value of the default value is empty
     if (typeof defaultValue !== 'undefined' && defaultValue !== '') {
       var formattedDefaultValue = VALUE_BY_BRACES ? (0,extract.extractContentsOfBraces)(defaultValue) : defaultValue.split(',');
-      var emptyDefaultValueCheck = formattedDefaultValue.every(function (item, index) {
+      var emptyDefaultValueCheck = Array.isArray(formattedDefaultValue) ? formattedDefaultValue.every(function (item, index) {
         if (item !== '[]') {
           return false;
         }
         return true;
-      });
+      }) : true;
       if (emptyDefaultValueCheck) {
         cleanValue();
         return; // required RETURN

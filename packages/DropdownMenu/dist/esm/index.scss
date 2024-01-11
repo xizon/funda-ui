@@ -17,13 +17,21 @@
     
     --dropdown-link-border-color: rgba(0, 0, 0, 0.05);
     --dropdown-link-color: #333;
+    --dropdown-link-size: 0.75rem;
 
+    
     
 
 	display: inline-block;
 	cursor: pointer;
 	position: relative;
-    
+
+
+    .dropdown__icon,
+    .dropdown__trigger {
+        display: inline-block;
+    }
+
     ul, li {
         margin: 0;
         padding: 0;
@@ -94,7 +102,7 @@
 				border-bottom: 1px solid var(--dropdown-link-border-color);
 				padding: .75rem 0;
 				color: var(--dropdown-link-color);
-				font-size: 0.75rem;
+				font-size: var(--dropdown-link-size);
 				text-decoration: none;
 
                 svg,

@@ -1,8 +1,7 @@
 import React from 'react';
 declare type OptionChangeFnType = (arg1: any) => void;
 interface OptionConfig {
-    value?: string | undefined;
-    label?: string | React.ReactNode | undefined;
+    [propName: string]: string | number | React.ReactNode;
 }
 declare type DropdownMenuProps = {
     wrapperClassName?: string;
@@ -12,6 +11,8 @@ declare type DropdownMenuProps = {
     hoverOn?: boolean;
     hoverOff?: boolean;
     hoverDelay?: number;
+    iconLeft?: React.ReactNode | string;
+    iconRight?: React.ReactNode | string;
     /** Set a name for the form field for this component  */
     name?: string;
     /** Whether to use button style, otherwise use "div" */

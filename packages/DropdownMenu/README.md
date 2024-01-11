@@ -17,6 +17,8 @@ import DropdownMenu from 'funda-ui/DropdownMenu';
 | `hoverOn` | boolean | false | Use hover to trigger opening. |
 | `hoverOff` | boolean | false | Use hover to trigger closing. |
 | `hoverDelay` | number | 150 | This will delay applying the hover effects. |
+| `iconLeft` | ReactNode  | - | Set the left icon of this control |
+| `iconRight` | ReactNode  | - | Set the right icon of this control |
 | `name` | string  | - | Set a name for the form field for this component. Name is not deprecated when used with form fields. |
 | `triggerButton` | boolean  | false | Whether to use button style, otherwise use "div" |
 | `triggerClassName` | string  | `d-inline w-auto` | Specify a class for your trigger |
@@ -34,6 +36,10 @@ Array configuration properties of the `options`:
 | --- | --- | --- | --- |
 | `label` | string \| ReactNode | - | Specify the label text for each option <blockquote>Support html tags</blockquote> |
 | `value` | string | - | Specify the value for each option |
+
+
+Among them, `label` and `value` are attributes used by the system, and other attributes can be added freely
+
 
 
 
@@ -77,6 +83,16 @@ export default () => {
         <h3>Using Bootstrap's styles</h3>
         {/* ================================================================== */}
         <DropdownMenu
+            iconLeft={<><span className="pe-1 opacity-50"><svg width="15px" height="15px" viewBox="-5 0 20 20">
+                <g stroke="none" strokeWidth="1" fill="none" fillRule="evenodd">
+                    <g transform="translate(-265.000000, -2679.000000)" fill="var(--bs-link-color)">
+                        <g transform="translate(56.000000, 160.000000)">
+                            <path d="M219,2521 L219,2537.998 C219,2538.889 217.923,2539.335 217.293,2538.705 L214.707,2536.119 C214.317,2535.729 213.683,2535.729 213.293,2536.119 L210.707,2538.705 C210.077,2539.335 209,2538.889 209,2537.998 L209,2521 C209,2519.895 209.895,2519 211,2519 L217,2519 C218.105,2519 219,2519.895 219,2521">
+                            </path>
+                        </g>
+                    </g>
+                </g>
+            </svg></span></>}
             hoverOn={true}
             hoverOff={true}
             wrapperClassName="dropdown"
@@ -87,11 +103,11 @@ export default () => {
             triggerContent={`<img src="avatar.jpg" alt="" />`}
             name="app-ddmenu-2"
             options={[
-                { label: "<s>Option 1</s>", value: "option-1" },
-                { label: <><a href="#" onClick={(e: any) => {e.preventDefault(); alert('Option 2')}}>Option 2</a></>, value: "option-2" }
+                { label: "<s>Option 1</s>", value: "option-1", mydata: "a" },
+                { label: <><a href="#" onClick={(e: any) => {e.preventDefault(); alert('Option 2')}}>Option 2</a></>, value: "option-2", mydata: "b"}
             ]}
             onChange={(res) => {
-                console.log(res); // {"label": "-","value": "-"}
+                console.log(res); // {"label": "-","value": "-", "mydata": "-"}
             }}
         />
 

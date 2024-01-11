@@ -11,9 +11,14 @@
   --dropdown-li-hover-bg: #FAFAFA;
   --dropdown-link-border-color: rgba(0, 0, 0, 0.05);
   --dropdown-link-color: #333;
+  --dropdown-link-size: 0.75rem;
   display: inline-block;
   cursor: pointer;
   position: relative;
+}
+.dropdown-default .dropdown__icon,
+.dropdown-default .dropdown__trigger {
+  display: inline-block;
 }
 .dropdown-default ul, .dropdown-default li {
   margin: 0;
@@ -78,7 +83,7 @@
   border-bottom: 1px solid var(--dropdown-link-border-color);
   padding: 0.75rem 0;
   color: var(--dropdown-link-color);
-  font-size: 0.75rem;
+  font-size: var(--dropdown-link-size);
   text-decoration: none;
 }
 .dropdown-default > ul li a svg,

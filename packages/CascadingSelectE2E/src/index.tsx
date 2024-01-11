@@ -693,15 +693,16 @@ const CascadingSelectE2E = (props: CascadingSelectE2EProps) => {
 
         // Determine whether the splicing value of the default value is empty
         if (typeof defaultValue !== 'undefined' && defaultValue !== '') {
+
             const formattedDefaultValue = VALUE_BY_BRACES ? extractContentsOfBraces(defaultValue) : defaultValue.split(',');
-            
-            const emptyDefaultValueCheck = formattedDefaultValue.every((item: any, index: number) => {
+
+            const emptyDefaultValueCheck = Array.isArray(formattedDefaultValue) ? formattedDefaultValue.every((item: any, index: number) => {
                 if (item !== '[]') {
                     return false;
                 }
         
                 return true;
-            });
+            }) : true;
 
             if (emptyDefaultValueCheck) {
                 cleanValue();

@@ -5,8 +5,7 @@ import Option from './Option';
 type OptionChangeFnType = (arg1: any) => void;
 
 interface OptionConfig {
-    value?: string | undefined;
-    label?: string | React.ReactNode | undefined;
+    [propName: string]: string | number | React.ReactNode;
 }
 
 type DropdownMenuProps = {
@@ -17,6 +16,8 @@ type DropdownMenuProps = {
     hoverOn?: boolean;
     hoverOff?: boolean;
     hoverDelay?: number;
+    iconLeft?: React.ReactNode | string;
+    iconRight?: React.ReactNode | string;
     /** Set a name for the form field for this component  */
     name?: string;
     /** Whether to use button style, otherwise use "div" */
@@ -49,6 +50,8 @@ const DropdownMenu = (props: DropdownMenuProps) => {
         hoverOn,
         hoverOff,
         hoverDelay,
+        iconLeft,
+        iconRight,
         name,
         triggerButton,
         triggerClassName,
@@ -165,9 +168,35 @@ const DropdownMenu = (props: DropdownMenuProps) => {
 
             <div className={`dropdown__wrapper ${wrapperClassName || wrapperClassName === '' ? wrapperClassName : `dropdown-default dropdown-default--${alignOptionsLayer ? alignOptionsLayer : 'center'}`} ${isOpen ? 'active' : ''}`} onMouseLeave={handleHoverOff} >
 
-                {triggerButton ? <button tabIndex={tabIndex || -1} className={triggerClassName ? `${triggerClassName}` : `d-inline w-auto`} type="button" onMouseEnter={handleHoverOn} onClick={handleClick} dangerouslySetInnerHTML={{ __html: selectedLabel }}></button> : <div className={triggerClassName ? `${triggerClassName}` : `d-inline w-auto`} onMouseEnter={handleHoverOn} onClick={handleClick} dangerouslySetInnerHTML={{ __html: selectedLabel }}></div>}
+                
+                {triggerButton ? <button 
+                    tabIndex={tabIndex || -1} 
+                    className={triggerClassName ? `${triggerClassName}` : `d-inline w-auto`} 
+                    type="button" 
+                    onMouseEnter={handleHoverOn} 
+                    onClick={handleClick} 
+                >
+                    {iconLeft ? <><span className="dropdown__icon">{iconLeft}</span></>: null}
+                    <span className="dropdown__trigger" dangerouslySetInnerHTML={{ __html: selectedLabel }}></span>
+                    {iconRight ? <><span className="dropdown__icon">{iconRight}</span></>: null}
 
+                </button> : <div 
+                    className={triggerClassName ? `${triggerClassName}` : `d-inline w-auto`} 
+                    onMouseEnter={handleHoverOn} 
+                    onClick={handleClick} 
+                >
+                    {iconLeft ? <><span className="dropdown__icon">{iconLeft}</span></>: null}
+                    <span className="dropdown__trigger" dangerouslySetInnerHTML={{ __html: selectedLabel }}></span>
+                    {iconRight ? <><span className="dropdown__icon">{iconRight}</span></>: null}
+                </div>
+                }
+
+                
+
+                {/* INPUT */}
                 <input name={name || ''} type="hidden" value={selected?.value} />
+                {/* /INPUT */}
+
                 <ul ref={modalRef} className={isOpen ? `${listClassName ? listClassName : 'dropdown-menu-default'} ${showClassName ? showClassName : 'show'}` : `${listClassName ? listClassName : 'dropdown-menu-default'}`}>
                     {selectOptionsListPresentation}
                 </ul>

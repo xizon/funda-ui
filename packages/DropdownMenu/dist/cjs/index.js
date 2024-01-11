@@ -146,6 +146,8 @@ var DropdownMenu = function DropdownMenu(props) {
     hoverOn = props.hoverOn,
     hoverOff = props.hoverOff,
     hoverDelay = props.hoverDelay,
+    iconLeft = props.iconLeft,
+    iconRight = props.iconRight,
     name = props.name,
     triggerButton = props.triggerButton,
     triggerClassName = props.triggerClassName,
@@ -239,18 +241,30 @@ var DropdownMenu = function DropdownMenu(props) {
     className: triggerClassName ? "".concat(triggerClassName) : "d-inline w-auto",
     type: "button",
     onMouseEnter: handleHoverOn,
-    onClick: handleClick,
+    onClick: handleClick
+  }, iconLeft ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("span", {
+    className: "dropdown__icon"
+  }, iconLeft)) : null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("span", {
+    className: "dropdown__trigger",
     dangerouslySetInnerHTML: {
       __html: selectedLabel
     }
-  }) : /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
+  }), iconRight ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("span", {
+    className: "dropdown__icon"
+  }, iconRight)) : null) : /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
     className: triggerClassName ? "".concat(triggerClassName) : "d-inline w-auto",
     onMouseEnter: handleHoverOn,
-    onClick: handleClick,
+    onClick: handleClick
+  }, iconLeft ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("span", {
+    className: "dropdown__icon"
+  }, iconLeft)) : null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("span", {
+    className: "dropdown__trigger",
     dangerouslySetInnerHTML: {
       __html: selectedLabel
     }
-  }), /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("input", {
+  }), iconRight ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("span", {
+    className: "dropdown__icon"
+  }, iconRight)) : null), /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("input", {
     name: name || '',
     type: "hidden",
     value: selected === null || selected === void 0 ? void 0 : selected.value
