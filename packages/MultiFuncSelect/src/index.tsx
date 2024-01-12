@@ -103,6 +103,7 @@ type MultiFuncSelectProps = {
     onFocus?: (e: any) => void;
 };
 
+
 const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
     const {
         wrapperClassName,
@@ -198,6 +199,13 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
     // clean trigger
     const CLEAN_TRIGGER_VALID = typeof cleanTrigger === 'undefined' ? false : (cleanTrigger ? cleanTrigger.valid : false);
     const CLEAN_TRIGGER_LABEL = cleanTrigger ? cleanTrigger.cleanValueLabel : 'Clean';
+
+
+    // touch prevent
+    const selectTouchStartOk = useRef<any>(null);  // DO NOT USE "useState()"
+    selectTouchStartOk.current = false;
+    const [touchExist, setTouchExist] = useState<boolean>(false);
+  
 
     //performance
     const handleChangeFetchSafe = useDebounce((val: any) => {
@@ -731,11 +739,19 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
             if (_contentBox.height > contentMaxHeight) {
                 listContentRef.current.style.height = contentMaxHeight - contentHeightOffset + 'px';
                 if (typeof listContentRef.current.dataset.height === 'undefined') listContentRef.current.dataset.height = contentMaxHeight - contentHeightOffset;
+
+                // has scrollbar
+                listContentRef.current.dataset.hasScrollbar = 'true';
+
             } else {
                 if (_contentOldHeight > 50) {
                     listContentRef.current.style.height = _contentOldHeight + 'px';
                     if (typeof listContentRef.current.dataset.height === 'undefined') listContentRef.current.dataset.height = _contentOldHeight;
                 }
+
+                // has scrollbar
+                listContentRef.current.dataset.hasScrollbar = 'false';
+
             }
         }
 
@@ -745,14 +761,26 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
             if (_contentBox.height > contentMaxHeight) {
                 listContentRef.current.style.height = contentMaxHeight - 10 + 'px';
                 if (typeof listContentRef.current.dataset.height === 'undefined') listContentRef.current.dataset.height = contentMaxHeight - 10;
+
+                // has scrollbar
+                listContentRef.current.dataset.hasScrollbar = 'true';
+
             } else {
                 if (_contentOldHeight > 50) {
                     listContentRef.current.style.height = _contentOldHeight + 'px';
                     if (typeof listContentRef.current.dataset.height === 'undefined') listContentRef.current.dataset.height = _contentOldHeight;
                 }
+
+                // has scrollbar
+                listContentRef.current.dataset.hasScrollbar = 'false';
+
             }
 
         }
+
+
+  
+        
 
         // STEP 4:
         //-----------
@@ -809,6 +837,15 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
         popwinNoMatchInit();
 
 
+        // STEP 7:
+        //-----------
+        // Prevent touch screen from starting to click option
+        if (touchExist) {
+            selectTouchStartOk.current = true;
+        }
+        
+
+
 
     }
 
@@ -848,6 +885,7 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
         if (listContentRef.current === null) return;
 
 
+
         // options event listener
         // !!! to prevent button mismatch when changing
         [].slice.call(listContentRef.current.querySelectorAll('.mf-select-multi__control-option-item')).forEach((node: HTMLElement) => {
@@ -872,6 +910,7 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
                             node.addEventListener('pointerdown', (e: any) => {
                                 handleSelect(e);
                             });
+                            
                         }
                     }
                 });
@@ -1034,6 +1073,7 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
         // show list
         setIsOpen(true);
 
+
         // pop win initalization
         setTimeout(() => {
             popwinPosInit();
@@ -1084,11 +1124,26 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
     }
 
 
+    function handleSelectTouchStart(e: any) {
+        const touches = e.touches;
+        if ( touches && touches.length ) {	
+            // Prevent touch screen from starting to click option
+            setTouchExist(true);
+        }
+    }
+
+
+    function handleSelectTouchEnd(e: any) {
+
+        selectTouchStartOk.current = false;
+    }
+
+    
 
     async function handleSelect(el: any, dataInput: any = false, valueArr: any[] = [], labelArr: any[] = []) {
 
+        if (typeof el === 'undefined' || selectTouchStartOk.current) return;
 
-        if (typeof el === 'undefined') return;
 
         const curItem: any = el === null ? JSON.parse(dataInput) : JSON.parse(el.currentTarget.dataset.itemdata);
 
@@ -1731,6 +1786,8 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
         document.removeEventListener('pointerdown', handleClose);
         document.addEventListener('pointerdown', handleClose);
 
+        document.addEventListener('touchstart', handleClose);
+
         // Add function to the element that should be used as the scrollable area.
         //--------------
         window.removeEventListener('scroll', windowScrollUpdate);
@@ -1740,6 +1797,11 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
         // windowScrollUpdate();
 
 
+        // // Prevent touch screen from starting to click option
+         //--------------
+         document.addEventListener('touchstart', handleSelectTouchStart);
+         if (listContentRef.current) listContentRef.current.addEventListener('touchend', handleSelectTouchEnd);
+         
 
         return () => {
 
@@ -1749,6 +1811,11 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
             document.removeEventListener('pointerdown', handleClose);
             window.removeEventListener('scroll', windowScrollUpdate);
             window.removeEventListener('touchmove', windowScrollUpdate);
+
+            //
+            document.removeEventListener('touchstart', handleSelectTouchStart);
+            if (listContentRef.current) listContentRef.current.removeEventListener('touchend', handleSelectTouchEnd);
+
 
             //
             document.querySelector(`#mf-select__options-wrapper-${idRes}`)?.remove();
