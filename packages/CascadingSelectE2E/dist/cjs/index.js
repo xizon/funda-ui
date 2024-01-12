@@ -446,7 +446,7 @@ function Group(props) {
         "data-index": index,
         "data-value": item.id,
         "data-query": item.queryId,
-        className: "cascading-select-e2e__opt ".concat(item.current ? 'active' : ''),
+        className: "c-select-e2e__opt ".concat(item.current ? 'active' : ''),
         onClick: function onClick(e) {
           return selectEv(e, item, index);
         },
@@ -463,7 +463,7 @@ function Group(props) {
         onClick: function onClick(e) {
           return selectEv(e, item, index);
         },
-        className: "cascading-select-e2e__opt-header ".concat(item.current ? 'active' : ''),
+        className: "c-select-e2e__opt-header ".concat(item.current ? 'active' : ''),
         dangerouslySetInnerHTML: {
           __html: columnTitle[level]
         }
@@ -647,20 +647,29 @@ var CascadingSelectE2E = function CascadingSelectE2E(props) {
     var PLACEMENT_BOTTOMEND = 'bottom-0';
     var PLACEMENT_RIGHT = 'end-0';
     var PLACEMENT_LEFT = 'start-0';
+    if (valRef.current === null) return;
 
-    //restore position
-    if (restorePos) {
-      if (isInViewport(el)) {
-        el.classList.remove(PLACEMENT_BOTTOMEND);
-        el.style.removeProperty('bottom');
-      }
-      return;
+    // STEP 1:
+    //-----------
+    // Detect position
+    var targetPos = '';
+    var _triggerBox = valRef.current.getBoundingClientRect();
+    if (window.innerHeight - _triggerBox.top > 100) {
+      targetPos = 'bottom';
+    } else {
+      targetPos = 'top';
     }
 
+    // STEP 2:
+    //-----------
     // Adjust position
-    if (!isInViewport(el)) {
+    if (targetPos === 'top') {
       el.classList.add(PLACEMENT_BOTTOMEND);
       el.style.setProperty('bottom', -1 + 'px', "important");
+    }
+    if (targetPos === 'bottom') {
+      el.classList.remove(PLACEMENT_BOTTOMEND);
+      el.style.removeProperty('bottom');
     }
   }
   function fetchData(_x2, _x3, _x4) {
@@ -844,7 +853,7 @@ var CascadingSelectE2E = function CascadingSelectE2E(props) {
   function handleClickOutside(event) {
     // svg element
     if (_typeof(event.target.className) === 'object') return;
-    if (event.target.className != '' && event.target.className.indexOf('cascading-select-e2e__wrapper') < 0 && event.target.className.indexOf('form-control') < 0 && event.target.className.indexOf('cascading-select-e2e__trigger') < 0 && event.target.className.indexOf('cascading-select-e2e__items') < 0 && event.target.className.indexOf('cascading-select-e2e__opt') < 0) {
+    if (event.target.className != '' && event.target.className.indexOf('c-select-e2e__wrapper') < 0 && event.target.className.indexOf('form-control') < 0 && event.target.className.indexOf('c-select-e2e__trigger') < 0 && event.target.className.indexOf('c-select-e2e__items') < 0 && event.target.className.indexOf('c-select-e2e__opt') < 0) {
       setIsShow(false);
     }
   }
@@ -1406,7 +1415,7 @@ var CascadingSelectE2E = function CascadingSelectE2E(props) {
     };
   }, [value]);
   return /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
-    className: wrapperClassName || wrapperClassName === '' ? "cascading-select-e2e__wrapper ".concat(wrapperClassName) : "cascading-select-e2e__wrapper mb-3 position-relative",
+    className: wrapperClassName || wrapperClassName === '' ? "c-select-e2e__wrapper ".concat(wrapperClassName) : "c-select-e2e__wrapper mb-3 position-relative",
     ref: rootRef
   }, label ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("label", {
     htmlFor: idRes,
@@ -1415,16 +1424,16 @@ var CascadingSelectE2E = function CascadingSelectE2E(props) {
       __html: "".concat(label)
     }
   })) : null, triggerContent ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
-    className: triggerClassName ? "cascading-select-e2e__trigger ".concat(triggerClassName) : "cascading-select-e2e__trigger d-inline w-auto",
+    className: triggerClassName ? "c-select-e2e__trigger ".concat(triggerClassName) : "c-select-e2e__trigger d-inline w-auto",
     onClick: handleDisplayOptions
   }, triggerContent)) : null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
-    className: "cascading-select-e2e",
+    className: "c-select-e2e",
     style: {
       zIndex: depth ? depth : 100
     }
   }, isShow && !hasErr ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
     ref: listRef,
-    className: "cascading-select-e2e__items shadow"
+    className: "c-select-e2e__items shadow"
   }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("ul", null, loading ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
     className: "position-absolute top-0 start-0 mt-1 mx-1"
   }, loader)) : null, showCloseBtn ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("a", {
@@ -1434,7 +1443,7 @@ var CascadingSelectE2E = function CascadingSelectE2E(props) {
       e.preventDefault();
       setIsShow(false);
     },
-    className: "cascading-select-e2e__close position-absolute top-0 end-0 mt-0 mx-1"
+    className: "c-select-e2e__close position-absolute top-0 end-0 mt-0 mx-1"
   }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("svg", {
     width: "10px",
     height: "10px",
@@ -1458,12 +1467,12 @@ var CascadingSelectE2E = function CascadingSelectE2E(props) {
       return null;
     }
   }))) : null), /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
-    className: "cascading-select-e2e__val",
+    className: "c-select-e2e__val",
     onClick: handleDisplayOptions
   }, destroyParentIdMatch ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, displayResult ? selectedDataByClick.labels && selectedDataByClick.labels.length > 0 ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
-    className: "cascading-select-e2e__result"
+    className: "c-select-e2e__result"
   }, displayInfo(true)) : null : null) : /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, displayResult ? selectedData.labels && selectedData.labels.length > 0 ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
-    className: "cascading-select-e2e__result"
+    className: "c-select-e2e__result"
   }, displayInfo(false)) : null : null), /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("input", _extends({
     ref: valRef,
     id: idRes,
@@ -1488,7 +1497,7 @@ var CascadingSelectE2E = function CascadingSelectE2E(props) {
     tabIndex: tabIndex || 0,
     readOnly: true
   }, attributes)), isShow ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
-    className: "cascading-select-e2e__closemask",
+    className: "c-select-e2e__closemask",
     onClick: function onClick(e) {
       e.preventDefault();
       setIsShow(false);

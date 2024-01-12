@@ -217,22 +217,35 @@ const CascadingSelectE2E = (props: CascadingSelectE2EProps) => {
         const PLACEMENT_LEFT = 'start-0';
 
 
-        //restore position
-        if (restorePos) {
-            if (isInViewport(el)) {
-                el.classList.remove(PLACEMENT_BOTTOMEND);
-                el.style.removeProperty('bottom');
-            }
-            return;
+        if (valRef.current === null) return;
+        
+
+
+        // STEP 1:
+        //-----------
+        // Detect position
+        let targetPos = '';
+        const _triggerBox = valRef.current.getBoundingClientRect();
+        if (window.innerHeight - _triggerBox.top > 100) {
+            targetPos = 'bottom';
+        } else {
+            targetPos = 'top';
         }
 
 
+        // STEP 2:
+        //-----------
         // Adjust position
-        if (!isInViewport(el)) {
+        if (targetPos === 'top') {
             el.classList.add(PLACEMENT_BOTTOMEND);
             el.style.setProperty('bottom', -1 + 'px', "important");
         }
 
+        if (targetPos === 'bottom') {
+            el.classList.remove(PLACEMENT_BOTTOMEND);
+            el.style.removeProperty('bottom');
+        }
+     
 
     }
 
@@ -426,11 +439,11 @@ const CascadingSelectE2E = (props: CascadingSelectE2EProps) => {
 
         if (
             event.target.className != '' && (
-                event.target.className.indexOf('cascading-select-e2e__wrapper') < 0 &&
+                event.target.className.indexOf('c-select-e2e__wrapper') < 0 &&
                 event.target.className.indexOf('form-control') < 0 &&
-                event.target.className.indexOf('cascading-select-e2e__trigger') < 0 &&
-                event.target.className.indexOf('cascading-select-e2e__items') < 0 &&
-                event.target.className.indexOf('cascading-select-e2e__opt') < 0
+                event.target.className.indexOf('c-select-e2e__trigger') < 0 &&
+                event.target.className.indexOf('c-select-e2e__items') < 0 &&
+                event.target.className.indexOf('c-select-e2e__opt') < 0
             )
         ) {
 
@@ -1118,24 +1131,24 @@ const CascadingSelectE2E = (props: CascadingSelectE2EProps) => {
     return (
         <>
 
-            <div className={wrapperClassName || wrapperClassName === '' ? `cascading-select-e2e__wrapper ${wrapperClassName}` : `cascading-select-e2e__wrapper mb-3 position-relative`} ref={rootRef}>
+            <div className={wrapperClassName || wrapperClassName === '' ? `c-select-e2e__wrapper ${wrapperClassName}` : `c-select-e2e__wrapper mb-3 position-relative`} ref={rootRef}>
                 {label ? <><label htmlFor={idRes} className="form-label" dangerouslySetInnerHTML={{ __html: `${label}` }}></label></> : null}
 
                 {triggerContent ? <>
-                    <div className={triggerClassName ? `cascading-select-e2e__trigger ${triggerClassName}` : `cascading-select-e2e__trigger d-inline w-auto`} onClick={handleDisplayOptions}>{triggerContent}</div>
+                    <div className={triggerClassName ? `c-select-e2e__trigger ${triggerClassName}` : `c-select-e2e__trigger d-inline w-auto`} onClick={handleDisplayOptions}>{triggerContent}</div>
                 </> : null}
 
 
-                <div className="cascading-select-e2e" style={{ zIndex: (depth ? depth : 100) }}>
+                <div className="c-select-e2e" style={{ zIndex: (depth ? depth : 100) }}>
 
                     {isShow && !hasErr ? (
-                        <div ref={listRef} className="cascading-select-e2e__items shadow">
+                        <div ref={listRef} className="c-select-e2e__items shadow">
                             <ul>
                                 {loading ? <><div className="position-absolute top-0 start-0 mt-1 mx-1">{loader}</div></> : null}
                                 {showCloseBtn ? <a href="#" tabIndex={-1} onClick={(e) => {
                                     e.preventDefault();
                                     setIsShow(false);
-                                }} className="cascading-select-e2e__close position-absolute top-0 end-0 mt-0 mx-1"><svg width="10px" height="10px" viewBox="0 0 1024 1024"><path fill="#000" d="M195.2 195.2a64 64 0 0 1 90.496 0L512 421.504 738.304 195.2a64 64 0 0 1 90.496 90.496L602.496 512 828.8 738.304a64 64 0 0 1-90.496 90.496L512 602.496 285.696 828.8a64 64 0 0 1-90.496-90.496L421.504 512 195.2 285.696a64 64 0 0 1 0-90.496z" /></svg></a> : null}
+                                }} className="c-select-e2e__close position-absolute top-0 end-0 mt-0 mx-1"><svg width="10px" height="10px" viewBox="0 0 1024 1024"><path fill="#000" d="M195.2 195.2a64 64 0 0 1 90.496 0L512 421.504 738.304 195.2a64 64 0 0 1 90.496 90.496L602.496 512 828.8 738.304a64 64 0 0 1-90.496 90.496L512 602.496 285.696 828.8a64 64 0 0 1-90.496-90.496L421.504 512 195.2 285.696a64 64 0 0 1 0-90.496z" /></svg></a> : null}
 
 
 
@@ -1165,15 +1178,15 @@ const CascadingSelectE2E = (props: CascadingSelectE2EProps) => {
 
                 </div>
 
-                <div className="cascading-select-e2e__val" onClick={handleDisplayOptions}>
+                <div className="c-select-e2e__val" onClick={handleDisplayOptions}>
 
 
 
 
                     {destroyParentIdMatch ? <>
-                        {displayResult ? (selectedDataByClick!.labels && selectedDataByClick!.labels.length > 0 ? <div className="cascading-select-e2e__result">{displayInfo(true)}</div> : null) : null}
+                        {displayResult ? (selectedDataByClick!.labels && selectedDataByClick!.labels.length > 0 ? <div className="c-select-e2e__result">{displayInfo(true)}</div> : null) : null}
                     </> : <>
-                        {displayResult ? (selectedData!.labels && selectedData!.labels.length > 0 ? <div className="cascading-select-e2e__result">{displayInfo(false)}</div> : null) : null}
+                        {displayResult ? (selectedData!.labels && selectedData!.labels.length > 0 ? <div className="c-select-e2e__result">{displayInfo(false)}</div> : null) : null}
                     </>}
 
 
@@ -1201,7 +1214,7 @@ const CascadingSelectE2E = (props: CascadingSelectE2EProps) => {
 
 
                     {isShow ? <div
-                        className="cascading-select-e2e__closemask"
+                        className="c-select-e2e__closemask"
                         onClick={(e) => {
                             e.preventDefault();
                             setIsShow(false);
