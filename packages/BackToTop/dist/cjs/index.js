@@ -423,11 +423,11 @@ var BackToTop = function BackToTop(props) {
     windowScrollUpdate();
 
     //
-    (_btnRef$current2 = btnRef.current) === null || _btnRef$current2 === void 0 ? void 0 : _btnRef$current2.removeEventListener('click', handleClick);
-    (_btnRef$current3 = btnRef.current) === null || _btnRef$current3 === void 0 ? void 0 : _btnRef$current3.addEventListener('click', handleClick);
+    (_btnRef$current2 = btnRef.current) === null || _btnRef$current2 === void 0 ? void 0 : _btnRef$current2.removeEventListener('pointerdown', handleClick);
+    (_btnRef$current3 = btnRef.current) === null || _btnRef$current3 === void 0 ? void 0 : _btnRef$current3.addEventListener('pointerdown', handleClick);
     return function () {
       var _btnRef$current4, _btnRef$current5;
-      (_btnRef$current4 = btnRef.current) === null || _btnRef$current4 === void 0 ? void 0 : _btnRef$current4.removeEventListener('click', handleClick);
+      (_btnRef$current4 = btnRef.current) === null || _btnRef$current4 === void 0 ? void 0 : _btnRef$current4.removeEventListener('pointerdown', handleClick);
       window.removeEventListener('scroll', windowScrollUpdate);
       window.removeEventListener('touchmove', windowScrollUpdate);
 

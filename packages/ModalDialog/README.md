@@ -68,6 +68,7 @@ export default () => {
                     console.log('open: ', e.target);
 
                     const myAppBtn = document.querySelector('#app-mybtn');
+                    
                     myAppBtn?.addEventListener('pointerdown', (e) => {
                         e.preventDefault();
                         console.log('click event');
@@ -254,6 +255,8 @@ export default () => {
                         const btns = document.querySelectorAll('#app-mydata-list > a');
 
                         [].slice.call(btns).forEach((node: any) => {
+
+                            // Prevent touch screen from starting to click option, DO NOT USE "pointerdown"
                             node?.addEventListener('click', (e: any) => {
                                 e.preventDefault();
 

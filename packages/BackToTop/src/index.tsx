@@ -137,12 +137,12 @@ const BackToTop = (props: BackToTopProps) => {
 
 
         //
-        btnRef.current?.removeEventListener('click', handleClick);
-        btnRef.current?.addEventListener('click', handleClick);
+        btnRef.current?.removeEventListener('pointerdown', handleClick);
+        btnRef.current?.addEventListener('pointerdown', handleClick);
 
 
         return () => {
-            btnRef.current?.removeEventListener('click', handleClick);
+            btnRef.current?.removeEventListener('pointerdown', handleClick);
             window.removeEventListener('scroll', windowScrollUpdate);
             window.removeEventListener('touchmove', windowScrollUpdate);
 

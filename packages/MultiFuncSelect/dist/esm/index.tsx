@@ -201,12 +201,6 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
     const CLEAN_TRIGGER_LABEL = cleanTrigger ? cleanTrigger.cleanValueLabel : 'Clean';
 
 
-    // touch prevent
-    const selectTouchStartOk = useRef<any>(null);  // DO NOT USE "useState()"
-    selectTouchStartOk.current = false;
-    const [touchExist, setTouchExist] = useState<boolean>(false);
-  
-
     //performance
     const handleChangeFetchSafe = useDebounce((val: any) => {
 
@@ -354,7 +348,7 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
 
 
     function handleScrollEvent() {
-        // remove classnames, data-* and styles
+        // remove data-* attibutes
         popwinContainerHeightReset();
     }
 
@@ -836,18 +830,6 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
         // no data label
         popwinNoMatchInit();
 
-
-        // STEP 7:
-        //-----------
-        // Prevent touch screen from starting to click option
-        if (touchExist) {
-            //window['selectTouchStartOk'] = true;
-            selectTouchStartOk.current = true;
-        }
-        
-
-
-
     }
 
 
@@ -857,21 +839,25 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
 
         if (_modalRef !== null && listContentRef.current !== null) {
 
-            const _nodataDiv = listContentRef.current.querySelector('.mf-select-multi__control-option-item--nomatch');
-            const _btnSelectAll = listContentRef.current.querySelector('.mf-select-multi__control-option-item--select-all');
 
-            // remove classnames, data-* and styles
+            // remove classnames and styles
             _modalRef.classList.remove('active');
             listContentRef.current.style.removeProperty('height');
 
+            // remove data-* attibutes
             popwinContainerHeightReset();
 
 
-
             // display all filtered items
-            [].slice.call(listContentRef.current.querySelectorAll('.mf-select-multi__control-option-item')).forEach((node: any) => {
+            const _items = [].slice.call(listContentRef.current.querySelectorAll('.mf-select-multi__control-option-item'));
+            _items.forEach((node: any) => {
                 node.classList.remove('hide');
             });
+
+
+            // nomatch & button of select all 
+            const _nodataDiv = listContentRef.current.querySelector('.mf-select-multi__control-option-item--nomatch');
+            const _btnSelectAll = listContentRef.current.querySelector('.mf-select-multi__control-option-item--select-all');
             _nodataDiv.classList.add('hide');
             if (_btnSelectAll !== null) _btnSelectAll.classList.remove('hide');
 
@@ -886,7 +872,6 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
         if (listContentRef.current === null) return;
 
 
-
         // options event listener
         // !!! to prevent button mismatch when changing
         [].slice.call(listContentRef.current.querySelectorAll('.mf-select-multi__control-option-item')).forEach((node: HTMLElement) => {
@@ -896,7 +881,9 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
 
                 if (typeof node.dataset.ev === 'undefined') {
                     node.dataset.ev = 'true';
-                    node.addEventListener('pointerdown', (e: any) => {
+
+                    // Prevent touch screen from starting to click option, DO NOT USE "pointerdown"
+                    node.addEventListener('click', (e: any) => {
                         handleSelect(e);
                     });
                 }
@@ -908,7 +895,9 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
 
                         if (typeof node.dataset.ev === 'undefined') {
                             node.dataset.ev = 'true';
-                            node.addEventListener('pointerdown', (e: any) => {
+
+                            // Prevent touch screen from starting to click option, DO NOT USE "pointerdown"
+                            node.addEventListener('click', (e: any) => {
                                 handleSelect(e);
                             });
                             
@@ -1042,6 +1031,7 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
     function popwinContainerHeightReset() {
         if (listContentRef.current === null) return;
 
+        // remove data-* attibutes
         listContentRef.current.removeAttribute('data-height');
         listContentRef.current.removeAttribute('data-pos');
 
@@ -1124,28 +1114,12 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
         rootRef.current.classList.add('active', 'focus');
     }
 
-
-    function handleSelectTouchStart(e: any) {
-        const touches = e.touches;
-        if ( touches && touches.length ) {	
-            // Prevent touch screen from starting to click option
-            setTouchExist(true);
-        }
-    }
-
-
-    function handleSelectTouchEnd(e: any) {
-
-        // window['selectTouchStartOk'] = false;
-        selectTouchStartOk.current = false;
-    }
-
-    
+   
 
     async function handleSelect(el: any, dataInput: any = false, valueArr: any[] = [], labelArr: any[] = []) {
 
-        if (typeof el === 'undefined' || selectTouchStartOk.current) return;
-
+        if (typeof el === 'undefined') return;
+     
 
         const curItem: any = el === null ? JSON.parse(dataInput) : JSON.parse(el.currentTarget.dataset.itemdata);
 
@@ -1165,8 +1139,6 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
         if (!(MULTI_SEL_VALID)) {
             rootRef.current.classList.remove('focus');
         }
-
-
 
         // update value * label
         if (dataInput) {
@@ -1799,12 +1771,8 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
         // windowScrollUpdate();
 
 
-        // // Prevent touch screen from starting to click option
-         //--------------
-         document.addEventListener('touchstart', handleSelectTouchStart);
-         if (listContentRef.current) listContentRef.current.addEventListener('touchend', handleSelectTouchEnd);
-         
 
+         
         return () => {
 
             if (LOCK_BODY_SCROLL) clearAllBodyScrollLocks();
@@ -1814,11 +1782,7 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
             window.removeEventListener('scroll', windowScrollUpdate);
             window.removeEventListener('touchmove', windowScrollUpdate);
 
-            //
-            document.removeEventListener('touchstart', handleSelectTouchStart);
-            if (listContentRef.current) listContentRef.current.removeEventListener('touchend', handleSelectTouchEnd);
-
-
+         
             //
             document.querySelector(`#mf-select__options-wrapper-${idRes}`)?.remove();
 

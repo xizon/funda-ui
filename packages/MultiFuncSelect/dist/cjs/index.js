@@ -1026,14 +1026,6 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
   var CLEAN_TRIGGER_VALID = typeof cleanTrigger === 'undefined' ? false : cleanTrigger ? cleanTrigger.valid : false;
   var CLEAN_TRIGGER_LABEL = cleanTrigger ? cleanTrigger.cleanValueLabel : 'Clean';
 
-  // touch prevent
-  var selectTouchStartOk = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useRef)(null); // DO NOT USE "useState()"
-  selectTouchStartOk.current = false;
-  var _useState19 = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)(false),
-    _useState20 = _slicedToArray(_useState19, 2),
-    touchExist = _useState20[0],
-    setTouchExist = _useState20[1];
-
   //performance
   var handleChangeFetchSafe = utils_useDebounce(function (val) {
     var _orginalData = [];
@@ -1160,7 +1152,7 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
     return bounding.top >= 0 && bounding.left >= 0 && bounding.bottom <= (window.innerHeight || document.documentElement.clientHeight) && bounding.right <= (window.innerWidth || document.documentElement.clientWidth);
   }
   function handleScrollEvent() {
-    // remove classnames, data-* and styles
+    // remove data-* attibutes
     popwinContainerHeightReset();
   }
 
@@ -1579,30 +1571,26 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
     //-----------
     // no data label
     popwinNoMatchInit();
-
-    // STEP 7:
-    //-----------
-    // Prevent touch screen from starting to click option
-    if (touchExist) {
-      //window['selectTouchStartOk'] = true;
-      selectTouchStartOk.current = true;
-    }
   }
   function popwinPosHide() {
     var _modalRef = document.querySelector("#mf-select__options-wrapper-".concat(idRes));
     if (_modalRef !== null && listContentRef.current !== null) {
-      var _nodataDiv = listContentRef.current.querySelector('.mf-select-multi__control-option-item--nomatch');
-      var _btnSelectAll = listContentRef.current.querySelector('.mf-select-multi__control-option-item--select-all');
-
-      // remove classnames, data-* and styles
+      // remove classnames and styles
       _modalRef.classList.remove('active');
       listContentRef.current.style.removeProperty('height');
+
+      // remove data-* attibutes
       popwinContainerHeightReset();
 
       // display all filtered items
-      [].slice.call(listContentRef.current.querySelectorAll('.mf-select-multi__control-option-item')).forEach(function (node) {
+      var _items = [].slice.call(listContentRef.current.querySelectorAll('.mf-select-multi__control-option-item'));
+      _items.forEach(function (node) {
         node.classList.remove('hide');
       });
+
+      // nomatch & button of select all 
+      var _nodataDiv = listContentRef.current.querySelector('.mf-select-multi__control-option-item--nomatch');
+      var _btnSelectAll = listContentRef.current.querySelector('.mf-select-multi__control-option-item--select-all');
       _nodataDiv.classList.add('hide');
       if (_btnSelectAll !== null) _btnSelectAll.classList.remove('hide');
     }
@@ -1617,7 +1605,9 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
       if (getOptionsData.length === 0) {
         if (typeof node.dataset.ev === 'undefined') {
           node.dataset.ev = 'true';
-          node.addEventListener('pointerdown', function (e) {
+
+          // Prevent touch screen from starting to click option, DO NOT USE "pointerdown"
+          node.addEventListener('click', function (e) {
             handleSelect(e);
           });
         }
@@ -1627,7 +1617,9 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
           if (optVal == item.value) {
             if (typeof node.dataset.ev === 'undefined') {
               node.dataset.ev = 'true';
-              node.addEventListener('pointerdown', function (e) {
+
+              // Prevent touch screen from starting to click option, DO NOT USE "pointerdown"
+              node.addEventListener('click', function (e) {
                 handleSelect(e);
               });
             }
@@ -1719,6 +1711,8 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
   }
   function popwinContainerHeightReset() {
     if (listContentRef.current === null) return;
+
+    // remove data-* attibutes
     listContentRef.current.removeAttribute('data-height');
     listContentRef.current.removeAttribute('data-pos');
   }
@@ -1783,17 +1777,6 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
     });
     rootRef.current.classList.add('active', 'focus');
   }
-  function handleSelectTouchStart(e) {
-    var touches = e.touches;
-    if (touches && touches.length) {
-      // Prevent touch screen from starting to click option
-      setTouchExist(true);
-    }
-  }
-  function handleSelectTouchEnd(e) {
-    // window['selectTouchStartOk'] = false;
-    selectTouchStartOk.current = false;
-  }
   function handleSelect(_x4) {
     return _handleSelect.apply(this, arguments);
   }
@@ -1824,7 +1807,7 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
             dataInput = _args3.length > 1 && _args3[1] !== undefined ? _args3[1] : false;
             valueArr = _args3.length > 2 && _args3[2] !== undefined ? _args3[2] : [];
             labelArr = _args3.length > 3 && _args3[3] !== undefined ? _args3[3] : [];
-            if (!(typeof el === 'undefined' || selectTouchStartOk.current)) {
+            if (!(typeof el === 'undefined')) {
               _context3.next = 5;
               break;
             }
@@ -2398,10 +2381,6 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
     window.addEventListener('touchmove', windowScrollUpdate);
     // windowScrollUpdate();
 
-    // // Prevent touch screen from starting to click option
-    //--------------
-    document.addEventListener('touchstart', handleSelectTouchStart);
-    if (listContentRef.current) listContentRef.current.addEventListener('touchend', handleSelectTouchEnd);
     return function () {
       var _document$querySelect;
       if (LOCK_BODY_SCROLL) clearAllBodyScrollLocks();
@@ -2409,10 +2388,6 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
       document.removeEventListener('pointerdown', handleClose);
       window.removeEventListener('scroll', windowScrollUpdate);
       window.removeEventListener('touchmove', windowScrollUpdate);
-
-      //
-      document.removeEventListener('touchstart', handleSelectTouchStart);
-      if (listContentRef.current) listContentRef.current.removeEventListener('touchend', handleSelectTouchEnd);
 
       //
       (_document$querySelect = document.querySelector("#mf-select__options-wrapper-".concat(idRes))) === null || _document$querySelect === void 0 ? void 0 : _document$querySelect.remove();
