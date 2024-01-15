@@ -41,8 +41,8 @@ JSON Object Literals configuration properties of the `options`:
 | --- | --- | --- | --- |
 | `label` | string | - | Specify the label text for each option. |
 | `value` | string | - | Specify the value for each option |
-| `optgroup` | array | - | Creates a grouping of options. It will be displayed using the value of `label`. |
-| `disabled` | boolean | - | When present, it specifies that an option should be disabled. |
+| `optgroup` | array | - | **(Optional)** Creates a grouping of options. It will be displayed using the value of `label`. |
+| `disabled` | boolean | - | **(Optional)** When present, it specifies that an option should be disabled. |
 
 
 ### Create Callback 

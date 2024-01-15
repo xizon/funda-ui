@@ -18,7 +18,9 @@ import MultipleCheckboxes from 'funda-ui/MultipleCheckboxes';
 | `name` | string | - | Name is not deprecated when used with form fields. |
 | `disabled` | boolean | false | Whether it is disabled |
 | `required` | boolean | false | When present, it specifies that a field must be filled out before submitting the form. |
-| `onChange` | function  | - | Call a function when the value of an HTML element is changed. It returns three callback values. <br /> <ol><li>The first is the control of current checkbox</li><li>The second is the current value (**Array**)</li><li>The third is the current string value (**String**)</li></ol>  |
+| `onChange` | function  | - | Call a function when the value of an HTML element is changed. It returns six callback values. <br /> <ol><li>The first is the control of current checkbox</li><li>The second is the current value (**Array**)</li><li>The third is the current string value (**String**)</li><li>The fourth is the current label text (**Array**)</li><li>The fifth is the current string label text (**String**)</li><li>The sixth is the current value (**JSON Object**)</li></ol>  |
+
+
 
 
 It accepts all props which this control support.
@@ -31,7 +33,10 @@ JSON Object Literals configuration properties of the `options`:
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |
 | `label` | string | - | Specify the label text for each option. |
+| `listItemLabel` | string | - | **(Optional)** Specify the label text for pop-up list items. <blockquote>Support html tags</blockquote> |
 | `value` | string | - | Specify the value for each option |
+| `disabled` | boolean | - | **(Optional)** When present, it specifies that an option should be disabled. |
+
 
 
 ## Examples
@@ -52,16 +57,20 @@ export default () => {
                 name="name"
                 value={val}
                 options={[
-                    {"label": "Option 1","value": "value-1"},
-                    {"label": "<del style=color:red>deprecate</del>Option 2","value": "value-2"},
-                    {"label": "Option 3","value": "value-3"}
+                    {"label": "Option 1","listItemLabel":"Option 1 (No: 001)","value": "value-1"},
+                    {"label": "<del style=color:red>deprecate</del>Option 2","listItemLabel":"<del style=color:red>deprecate</del>Option 2 (No: 002)","value": "value-2"},
+                    {"label": "Option 3","listItemLabel":"Option 3 (No: 003)","value": "value-3"},
+                    {"label": "Option 4","listItemLabel":"Option 4 (No: 004)","value": "value-4","disabled":true}
                 ]}
-                onChange={(e, data, dataStr) => {
-                    console.log(e, data, dataStr);
+                onChange={(e: any, value: any, valueStr: any, label: any, labelStr: any, currentData: any) => {
+                    console.log(e, value, valueStr, label, labelStr, currentData);
                     /*
                     <input type="checkbox" ... value="value-1">,
                     ['value-3', 'value-2'],
-                    '[value-3][value-2]'
+                    '[value-3][value-2]',
+                     ['Option 3', '<del style=color:red>deprecate</del>Option 2'],
+                    '[Option 3][<del style=color:red>deprecate</del>Option 2]',
+                    {"label": "Option 1","value": "value-1"}
                     */
                    
                     setVal(dataStr);

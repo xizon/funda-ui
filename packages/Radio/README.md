@@ -40,16 +40,17 @@ JSON Object Literals configuration properties of the `options`:
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |
 | `label` | string | - | Specify the label text for each option. <blockquote>Support html tags</blockquote> |
+| `listItemLabel` | string | - | **(Optional)** Specify the label text for pop-up list items. <blockquote>Support html tags</blockquote> |
 | `value` | string | - | Specify the value for each option |
-| `extends` | ReactNode | - | Append additional content to the end of the current control. |
-
+| `extends` | ReactNode | - | **(Optional)** Append additional content to the end of the current control. |
+| `disabled` | boolean | - | **(Optional)** When present, it specifies that an option should be disabled. |
 
 
 ### Create Callback 
 
 A successful response returns the details of the callback such as Sample Request Body:
 
-Among them, `label`, `value`, and `extends`  are attributes used by the system, and other attributes can be added freely
+Among them, `label`, `value`, `listItemLabel`, `extends` and `disabled`  are attributes used by the system, and other attributes can be added freely
 
 
 
@@ -63,7 +64,7 @@ import Radio from 'funda-ui/Radio';
 export default () => {
 
     function handleChange(e: any, val: string, currentData: any, currentIndex: number) {
-        console.log(e.target, val, data, currentIndex);
+        console.log(e.target, val, currentData, currentIndex);
     }
 
     return (
@@ -81,6 +82,22 @@ export default () => {
                 ]}
                 onChange={handleChange}
             />
+
+
+            <Radio
+                inline={true}
+                value="value-2"
+                name="String"
+                label="String"
+                options={[
+                    { "label": "Option 1", "listItemLabel": "Option 1 (No: 001)", "value": "value-1" },
+                    { "label": "<del style=color:red>deprecate</del>Option 2", "listItemLabel": "<del style=color:red>deprecate</del>Option 2 (No: 002)", "value": "value-2" },
+                    { "label": "Option 3", "listItemLabel": "Option 3 (No: 003)", "value": "value-3" },
+                    { "label": "Option 4", "listItemLabel": "Option 4 (No: 004)", "value": "value-4", "disabled": true, "customAttr1": "attr1","customAttr2": "attr2" }
+                ]}
+                onChange={handleChange}
+            />
+
                           
         </>
     );

@@ -53,7 +53,7 @@ JSON Object Literals configuration properties of the `options`:
 | `listItemLabel` | string | - | **(Optional)** Specify the label text for pop-up list items. <blockquote>Support html tags</blockquote> |
 | `value` | string | - | Specify the value for each option |
 | `queryString` | string | - | Quick query string, such as Chinese pinyin or English initials |
-| `disabled` | boolean | - | When present, it specifies that an option should be disabled. |
+| `disabled` | boolean | - | **(Optional)** When present, it specifies that an option should be disabled. |
 
 
 ## Examples

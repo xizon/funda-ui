@@ -290,9 +290,13 @@ var Radio = function Radio(props) {
       id: "field-".concat(uniqueID, "-").concat(index),
       name: name,
       "data-index": index,
+      "data-label": item.label,
+      "data-list-item-label": "".concat(typeof item.listItemLabel === 'undefined' ? '' : item.listItemLabel),
+      "data-value": item.value,
+      "data-disabled": disabled || 'false',
       value: "".concat(item.value),
       required: requiredVal,
-      disabled: disabled || null,
+      disabled: disabled || (typeof item.disabled !== 'undefined' ? item.disabled : null),
       onChange: handleChange,
       onClick: typeof onClick === 'function' ? handleChange : function () {
         return void 0;
@@ -306,7 +310,7 @@ var Radio = function Radio(props) {
       className: "form-check-label",
       htmlFor: "field-".concat(uniqueID, "-").concat(index),
       dangerouslySetInnerHTML: {
-        __html: "".concat(item.label)
+        __html: "".concat(typeof item.listItemLabel === 'undefined' ? item.label : item.listItemLabel)
       }
     })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "d-inline-block"

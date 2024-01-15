@@ -772,13 +772,19 @@ var MultipleCheckboxes = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forw
       className: "multiple-checkboxes__control ".concat(_inline ? 'd-inline-block' : '', " pe-3"),
       "data-index": i,
       "data-label": item.label,
+      "data-list-item-label": "".concat(typeof item.listItemLabel === 'undefined' ? '' : item.listItemLabel),
       "data-value": item.value,
       "data-disabled": disabled || 'false'
-    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((funda_checkbox__WEBPACK_IMPORTED_MODULE_1___default()), {
+    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((funda_checkbox__WEBPACK_IMPORTED_MODULE_1___default()), _extends({
       wrapperClassName: "",
-      label: item.label,
+      "data-index": i,
+      "data-label": item.label,
+      "data-list-item-label": "".concat(typeof item.listItemLabel === 'undefined' ? '' : item.listItemLabel),
+      "data-value": item.value,
+      "data-disabled": disabled || 'false',
+      label: typeof item.listItemLabel === 'undefined' ? item.label : item.listItemLabel,
       value: item.value,
-      disabled: disabled || null,
+      disabled: disabled || (typeof item.disabled !== 'undefined' ? item.disabled : null),
       onChange: function onChange(e, val) {
         setValSelected(function (prevState) {
           var newData = JSON.parse(JSON.stringify(prevState));
@@ -787,12 +793,17 @@ var MultipleCheckboxes = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forw
           });
           if (index !== -1) newData.splice(index, 1);
           var _res = val ? Array.from(new Set([e.target.value].concat(_toConsumableArray(newData)))) : newData;
-          _onChange === null || _onChange === void 0 ? void 0 : _onChange(e.target, _res, VALUE_BY_BRACKETS ? (0,_utils_convert__WEBPACK_IMPORTED_MODULE_3__.convertArrToValByBrackets)(_res) : _res.join(','));
+          var _resLabel = optionsRes.filter(function (v) {
+            return _res.includes(v.value);
+          }).map(function (k) {
+            return k.label;
+          });
+          _onChange === null || _onChange === void 0 ? void 0 : _onChange(e.target, _res, VALUE_BY_BRACKETS ? (0,_utils_convert__WEBPACK_IMPORTED_MODULE_3__.convertArrToValByBrackets)(_res) : _res.join(','), _resLabel, VALUE_BY_BRACKETS ? (0,_utils_convert__WEBPACK_IMPORTED_MODULE_3__.convertArrToValByBrackets)(_resLabel) : _resLabel.join(','), item);
           return _res;
         });
       },
       checked: valSelected.includes(item.value)
-    }));
+    }, attributes)));
   }) : null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("input", _extends({
     ref: inputRef,
     tabIndex: -1,

@@ -2,11 +2,12 @@ import React, { useId, useState, useEffect, useRef, forwardRef } from 'react';
 
 import Checkbox from 'funda-checkbox';
 
+
 import { extractContentsOfBrackets } from './utils/extract';
 import { convertArrToValByBrackets } from './utils/convert';
 
 interface OptionConfig {
-    [propName: string]: string | number;
+    [propName: string]: string | number | boolean;
 }
 
 
@@ -25,7 +26,7 @@ type MultipleCheckboxesProps = {
     id?: string;
     style?: React.CSSProperties;
     [key: `data-${string}`]: string | undefined;
-    onChange?: (e: any, data: any, dataStr: any) => void;
+    onChange?: (e: any, value: any, valueStr: any, label: any, labelStr: any, currentData: any) => void;
 
 };
 
@@ -148,14 +149,20 @@ const MultipleCheckboxes = forwardRef((props: MultipleCheckboxesProps, ref: any)
                             className={`multiple-checkboxes__control ${_inline ? 'd-inline-block' : ''} pe-3`}
                             data-index={i}
                             data-label={item.label}
+                            data-list-item-label={`${typeof item.listItemLabel === 'undefined' ? '' : item.listItemLabel}`} 
                             data-value={item.value}
                             data-disabled={disabled || 'false'}
                         >
                             <Checkbox
                                 wrapperClassName=""
-                                label={item.label}
+                                data-index={i}
+                                data-label={item.label}
+                                data-list-item-label={`${typeof item.listItemLabel === 'undefined' ? '' : item.listItemLabel}`} 
+                                data-value={item.value}
+                                data-disabled={disabled || 'false'}
+                                label={typeof item.listItemLabel === 'undefined' ? item.label : item.listItemLabel}
                                 value={item.value}
-                                disabled={disabled || null}
+                                disabled={disabled || (typeof item.disabled !== 'undefined' ? item.disabled : null)}
                                 onChange={(e: any, val: boolean) => {
 
                                     setValSelected((prevState) => {
@@ -164,15 +171,16 @@ const MultipleCheckboxes = forwardRef((props: MultipleCheckboxesProps, ref: any)
                                         if (index !== -1) newData.splice(index, 1);
 
                                         const _res = (val) ? Array.from(new Set([e.target.value, ...newData])) : newData;
+                                        const _resLabel = optionsRes.filter((v: any) => _res.includes(v.value)).map((k: any) => k.label);
 
-                                        onChange?.(e.target, _res, VALUE_BY_BRACKETS ? convertArrToValByBrackets(_res) : _res.join(','));
+                                        onChange?.(e.target, _res, VALUE_BY_BRACKETS ? convertArrToValByBrackets(_res) : _res.join(','), _resLabel, VALUE_BY_BRACKETS ? convertArrToValByBrackets(_resLabel) : _resLabel.join(','), item);
 
                                         return _res;
                                     });
 
-
                                 }}
                                 checked={valSelected.includes(item.value)}
+                                {...attributes}
                             /></div>;
                     }) : null}
                     

@@ -7,7 +7,7 @@ declare module 'react' {
 }
 
 interface OptionConfig {
-    [propName: string]: string | number | React.ReactNode;
+    [propName: string]: string | number | React.ReactNode | boolean;
 }
 
 
@@ -232,9 +232,13 @@ const Radio = (props: RadioProps) => {
                     id={`field-${uniqueID}-${index}`}
                     name={name}
                     data-index={index}
+                    data-label={item.label}
+                    data-list-item-label={`${typeof item.listItemLabel === 'undefined' ? '' : item.listItemLabel}`} 
+                    data-value={item.value}
+                    data-disabled={disabled || 'false'}
                     value={`${item.value}`}
                     required={requiredVal}
-                    disabled={disabled || null}
+                    disabled={disabled || (typeof item.disabled !== 'undefined' ? item.disabled : null)}
                     onChange={handleChange}
                     onClick={typeof (onClick) === 'function' ? handleChange : () => void (0)}
                     onFocus={handleFocus}
@@ -244,7 +248,7 @@ const Radio = (props: RadioProps) => {
                     {...attributes}
                 />
                 <label className="form-check-label" htmlFor={`field-${uniqueID}-${index}`} dangerouslySetInnerHTML={{
-                    __html: `${item.label}`
+                    __html: `${typeof item.listItemLabel === 'undefined' ? item.label : item.listItemLabel}`
                 }}></label>
             </div>
             <div className="d-inline-block">
