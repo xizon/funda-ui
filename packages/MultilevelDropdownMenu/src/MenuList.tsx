@@ -60,12 +60,17 @@ export default function MenuList(props: MenuListProps) {
         activeClass(hyperlink.parentNode, 'add');
 
         // init <ul> height
-        [].slice.call(ul).forEach(function(el: any){
-            if ( typeof el.querySelectorAll('li')[0] !== 'undefined' ) {
-                const calcH = el.querySelectorAll('li').length * el.querySelectorAll('li')[0].scrollHeight;
-                el.style.maxHeight = `${calcH}px`;
-            }
+        [].slice.call(ul).forEach(function (_curUl: any) {
 
+            const allHeight = [].slice.call(_curUl.querySelectorAll('li')).map((_curLi: any) => _curLi.scrollHeight);
+            const totalHeight = allHeight.reduce(
+                (accumulator: number, currentValue: number) => accumulator + currentValue,
+                0,
+            );
+
+            // Prevent the use of iframe or other situations where the height is 0
+            _curUl.style.maxHeight = `${totalHeight == 0 ? 999 : totalHeight}px`;
+            
         });
 
     };
@@ -167,15 +172,20 @@ export default function MenuList(props: MenuListProps) {
 
                 // init <ul> height
                 const ul = getNextSiblings(hyperlink.el, 'ul');
-                [].slice.call(ul).forEach(function(el: any){
-                    if ( typeof el.querySelectorAll('li')[0] !== 'undefined' ) {
-                        const calcH = el.querySelectorAll('li').length * el.querySelectorAll('li')[0].scrollHeight;
-                        
-                        // Prevent the use of iframe or other situations where the height is 0
-                        el.style.maxHeight = `${calcH == 0 ? 999 : calcH}px`;
-                    }
+                
+                [].slice.call(ul).forEach(function (_curUl: any) {
 
+                    const allHeight = [].slice.call(_curUl.querySelectorAll('li')).map((_curLi: any) => _curLi.scrollHeight);
+                    const totalHeight = allHeight.reduce(
+                        (accumulator: number, currentValue: number) => accumulator + currentValue,
+                        0,
+                    );
+        
+                    // Prevent the use of iframe or other situations where the height is 0
+                    _curUl.style.maxHeight = `${totalHeight == 0 ? 999 : totalHeight}px`;
+                    
                 });
+                
             }
 
         });
