@@ -10,6 +10,8 @@ import MultipleCheckboxes from 'funda-ui/MultipleCheckboxes';
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |
 | `wrapperClassName` | string | `mb-3 position-relative` | The class name of the control wrapper. |
+| `groupWrapperClassName` | string | - | The class name of the radio group wrapper. |
+| `groupLabelClassName` | string | - | The class name of the radio group label. |
 | `extractValueByBrackets` | boolean  | true | Whether to use square brackets to save result and initialize default value. |
 | `inline` | boolean | true | If true the group checkboxes or radios are on the same horizontal row. |
 | `options` | JSON Object Literals | - | Set the default value using JSON string format for menu of options, like this: `[{"label": "Option 1","value": "value-1"},{"label": "<del style=color:red>deprecate</del>Option 2","value": "value-2"},{"label": "Option 3","value": "value-3"}]`|
@@ -33,6 +35,7 @@ JSON Object Literals configuration properties of the `options`:
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |
 | `label` | string | - | Specify the label text for each option. |
+| `optgroup` | array | - | **(Optional)** Creates a grouping of options. It will be displayed using the value of `label`. such as `[{"label":"Option 0","value":"value-0"},{"label":"Group 1","value":"","optgroup":[{"label":"Option 1","value":"value-1"},{"label":"Option 2","value":"value-2"}]}]` |
 | `listItemLabel` | string | - | **(Optional)** Specify the label text for pop-up list items. <blockquote>Support html tags</blockquote> |
 | `value` | string | - | Specify the value for each option |
 | `disabled` | boolean | - | **(Optional)** When present, it specifies that an option should be disabled. |
@@ -73,11 +76,64 @@ export default () => {
                     {"label": "Option 1","value": "value-1"}
                     */
                    
-                    setVal(dataStr);
+                    setVal(valueStr);
                 }}
             />
 
 
+
+    
+        </>
+    );
+}
+```
+
+
+
+
+## The Option Group element
+
+Specify the content in the `optgroup` attribute of `options`.
+
+
+```js
+import React, { useState } from "react";
+import MultipleCheckboxes from 'funda-ui/MultipleCheckboxes';
+
+
+export default () => {
+
+    const [val, setVal] = useState('[value-1][value-3]');
+
+    return (
+        <>
+          
+            <MultipleCheckboxes 
+                groupWrapperClassName="border rounded p-2 mb-2"
+                groupLabelClassName="fw-bold mb-2"
+                name="name"
+                value={val}
+                options={[
+                    { "label": "Option 0", "value": "value-0" },
+                    {
+                        "label": "Group 1", "value": "", "optgroup": [
+                            { "label": "Option 1", "value": "value-1" },
+                            { "label": "Option 2", "value": "value-2" }
+                        ]
+                    },
+                    {
+                        "label": "Group 2", "value": "", "optgroup": [
+                            { "label": "Option 3", "value": "value-3" },
+                            { "label": "Option 4", "value": "value-4" },
+                            { "label": "Option 5", "value": "value-5" }
+                        ]
+                    }
+                ]}
+                onChange={(e: any, value: any, valueStr: any, label: any, labelStr: any, currentData: any) => {
+                    console.log(e, value, valueStr, label, labelStr, currentData);
+                    setVal(valueStr);
+                }}
+            />
 
     
         </>

@@ -4,11 +4,13 @@ interface OptionConfig {
 }
 declare type MultipleCheckboxesProps = {
     wrapperClassName?: string;
+    groupWrapperClassName?: string;
+    groupLabelClassName?: string;
     inline?: boolean;
     value?: string;
     label?: React.ReactNode | string;
     name?: string;
-    options?: OptionConfig[] | string;
+    options?: OptionConfig[] | string | unknown;
     disabled?: any;
     required?: any;
     /** Whether to use square brackets to save result and initialize default value */

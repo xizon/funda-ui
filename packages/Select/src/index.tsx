@@ -260,7 +260,7 @@ const Select = forwardRef((props: SelectProps, ref: any) => {
                 {item.optgroup.map((opt: any, optIndex: number) => {
                     const _disabled = typeof opt.disabled === 'undefined' ? false : opt.disabled;
                     return <option key={'option-' + optIndex} value={opt.value as string} dangerouslySetInnerHTML={{
-                        __html: `${opt.label}`,
+                        __html: `${typeof opt.listItemLabel === 'undefined' ? opt.label : opt.listItemLabel}`,
                     }} disabled={_disabled}></option>;
                 })}
 
@@ -268,7 +268,7 @@ const Select = forwardRef((props: SelectProps, ref: any) => {
         } else {
             const _disabled = typeof item.disabled === 'undefined' ? false : item.disabled;
             return <option key={'option-' + index} value={item.value as string} dangerouslySetInnerHTML={{
-                __html: `${item.label}`,
+                __html: `${typeof item.listItemLabel === 'undefined' ? item.label : item.listItemLabel}`,
             }} disabled={_disabled}></option>;
 
         }

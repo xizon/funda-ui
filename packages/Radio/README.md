@@ -10,6 +10,8 @@ import Radio from 'funda-ui/Radio';
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |
 | `wrapperClassName` | string | `mb-3 position-relative` | The class name of the control wrapper. |
+| `groupWrapperClassName` | string | - | The class name of the radio group wrapper. |
+| `groupLabelClassName` | string | - | The class name of the radio group label. |
 | `inline` | boolean | false | If true the group checkboxes or radios are on the same horizontal row. |
 | `options` | JSON Object Literals \| JSON Object | - | Set the default value using JSON string format for menu of options, like this: `[{"label": "Option 1","value": "value-1"},{"label": "<del style=color:red>deprecate</del>Option 2","value": "value-2"},{"label": "Option 3","value": "value-3","customAttr1": "attr1","customAttr2": "attr2"}]`<blockquote>Note: Use API data if database query exists. That is, the attribute `fetchXXXX`</blockquote> <br /><blockquote>The label string supports html tags</blockquote>|
 | `value` | string | - | Set a default value for this control |
@@ -42,6 +44,7 @@ JSON Object Literals configuration properties of the `options`:
 | `label` | string | - | Specify the label text for each option. <blockquote>Support html tags</blockquote> |
 | `listItemLabel` | string | - | **(Optional)** Specify the label text for pop-up list items. <blockquote>Support html tags</blockquote> |
 | `value` | string | - | Specify the value for each option |
+| `optgroup` | array | - | **(Optional)** Creates a grouping of options. It will be displayed using the value of `label`. such as `[{"label":"Option 0","value":"value-0"},{"label":"Group 1","value":"","optgroup":[{"label":"Option 1","value":"value-1"},{"label":"Option 2","value":"value-2"}]}]` |
 | `extends` | ReactNode | - | **(Optional)** Append additional content to the end of the current control. |
 | `disabled` | boolean | - | **(Optional)** When present, it specifies that an option should be disabled. |
 
@@ -99,6 +102,56 @@ export default () => {
             />
 
                           
+        </>
+    );
+}
+```
+
+
+
+## The Option Group element
+
+Specify the content in the `optgroup` attribute of `options`.
+
+
+```js
+import React from "react";
+import Radio from 'funda-ui/Radio';
+
+export default () => {
+
+    function handleChange(e: any, val: string, currentData: any, currentIndex: number) {
+        console.log(e.target, val, currentData, currentIndex);
+    }
+
+    return (
+        <>         
+
+            <Radio
+                inline={true}
+                value="value-2"
+                name="name"
+                groupWrapperClassName="border rounded p-2 mb-2"
+                groupLabelClassName="fw-bold mb-2"
+                options={[
+                    { "label": "Option 0", "value": "value-0" },
+                    {
+                        "label": "Group 1", "value": "", "optgroup": [
+                            { "label": "Option 1", "value": "value-1" },
+                            { "label": "Option 2", "value": "value-2" }
+                        ]
+                    },
+                    {
+                        "label": "Group 2", "value": "", "optgroup": [
+                            { "label": "Option 3", "value": "value-3" },
+                            { "label": "Option 4", "value": "value-4" },
+                            { "label": "Option 5", "value": "value-5" }
+                        ]
+                    }
+                ]}
+                onChange={handleChange}
+            />
+
         </>
     );
 }

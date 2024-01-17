@@ -16,12 +16,14 @@ type RadioOptionChangeFnType = (arg1: any, arg2: any, arg3?: any, arg4?: any) =>
 
 type RadioProps = {
     wrapperClassName?: string;
+    groupWrapperClassName?: string;
+    groupLabelClassName?: string;
     value?: string;
     label?: React.ReactNode | string;
     name?: string;
     disabled?: any;
     required?: any;
-    options?: OptionConfig[] | string;
+    options?: OptionConfig[] | string | unknown;
     inline?: boolean;
     /** -- */
     id?: string;
@@ -46,6 +48,8 @@ type RadioProps = {
 const Radio = (props: RadioProps) => {
     const {
         wrapperClassName,
+        groupWrapperClassName,
+        groupLabelClassName,
         disabled,
         required,
         value,
@@ -185,7 +189,20 @@ const Radio = (props: RadioProps) => {
 
     function handleChange(event: any) {
         const val = event.target.value;
-        const currentIndex = event.target.dataset.index;
+        let curData: any;
+        let currentIndex = event.target.dataset.index;
+
+        // if group
+        if (currentIndex.indexOf('-') >= 0) {
+            const groupIdArr = currentIndex.split('-');
+            const groupIndex = groupIdArr[0];
+            const groupItemIndex = groupIdArr[1];
+            const groupOpts: any = dataInit[groupIndex].optgroup;
+
+            curData = groupOpts[groupItemIndex];
+        } else {
+            curData = dataInit[currentIndex];
+        }
 
 
         //----
@@ -200,10 +217,10 @@ const Radio = (props: RadioProps) => {
    
         //
         if (typeof (onChange) === 'function') {
-            onChange(event, val, dataInit[currentIndex], currentIndex);
+            onChange(event, val, curData, currentIndex);
         }
         if (typeof (onClick) === 'function') {
-            onClick(event, val, dataInit[currentIndex], currentIndex);
+            onClick(event, val, curData, currentIndex);
         }
     }
 
@@ -217,47 +234,92 @@ const Radio = (props: RadioProps) => {
         onBlur?.(event);
     }
 
-
     // Generate list of options
     const itemsList = Array.isArray(dataInit) ? dataInit.map((item: any, index: number) => {
         const requiredVal = index === 0 ? required || null : null;
 
-        return <div key={index} className={inline ? `form-check form-check-inline` : `form-check`}>
+        if (typeof item.optgroup !== 'undefined') {
+            return <div className={`radio-group__wrapper ${groupWrapperClassName || ''}`} key={'optgroup-' + index}>
+                    {/* GROUP LABEL */}
+                    <div className={`radio-group__label ${groupLabelClassName || ''}`}>{item.label}</div>
+                    {/* /GROUP LABEL */}
 
-            <div className="d-inline-block">
-                <input
-                    tabIndex={tabIndex || 0}
-                    type="radio"
-                    className="form-check-input"
-                    id={`field-${uniqueID}-${index}`}
-                    name={name}
-                    data-index={index}
-                    data-label={item.label}
-                    data-list-item-label={`${typeof item.listItemLabel === 'undefined' ? '' : item.listItemLabel}`} 
-                    data-value={item.value}
-                    data-disabled={disabled || 'false'}
-                    value={`${item.value}`}
-                    required={requiredVal}
-                    disabled={disabled || (typeof item.disabled !== 'undefined' ? item.disabled : null)}
-                    onChange={handleChange}
-                    onClick={typeof (onClick) === 'function' ? handleChange : () => void (0)}
-                    onFocus={handleFocus}
-                    onBlur={handleBlur}
-                    checked={controlValue == item.value}   // component status will not change if defaultChecked is used
-                    style={style}
-                    {...attributes}
-                />
-                <label className="form-check-label" htmlFor={`field-${uniqueID}-${index}`} dangerouslySetInnerHTML={{
-                    __html: `${typeof item.listItemLabel === 'undefined' ? item.label : item.listItemLabel}`
-                }}></label>
-            </div>
-            <div className="d-inline-block">
-                <div className="form-control-extends__wrapper">{typeof item.extends !== 'undefined' ? <>{item.extends}</> : null}</div>
-            </div>
+                    {item.optgroup.map((opt: any, optIndex: number) => {
 
+                        return <div key={'option-' + optIndex} className={inline ? `form-check form-check-inline` : `form-check`}>
+                                <div className="d-inline-block">
+                                    <input
+                                        tabIndex={tabIndex || 0}
+                                        type="radio"
+                                        className="form-check-input"
+                                        id={`field-${uniqueID}-${index}-${optIndex}`}
+                                        name={name}
+                                        data-index={`${index}-${optIndex}`}
+                                        data-label={opt.label}
+                                        data-list-item-label={`${typeof opt.listItemLabel === 'undefined' ? '' : opt.listItemLabel}`}
+                                        data-value={opt.value}
+                                        data-disabled={disabled || (typeof opt.disabled !== 'undefined' ? `${opt.disabled}` : 'false')}
+                                        value={`${opt.value}`}
+                                        required={requiredVal}
+                                        disabled={disabled || (typeof opt.disabled !== 'undefined' ? opt.disabled : null)}
+                                        onChange={handleChange}
+                                        onClick={typeof (onClick) === 'function' ? handleChange : () => void (0)}
+                                        onFocus={handleFocus}
+                                        onBlur={handleBlur}
+                                        checked={controlValue == opt.value}   // component status will not change if defaultChecked is used
+                                        style={style}
+                                        {...attributes}
+                                    />
+                                    <label className="form-check-label" htmlFor={`field-${uniqueID}-${index}-${optIndex}`} dangerouslySetInnerHTML={{
+                                        __html: `${typeof opt.listItemLabel === 'undefined' ? opt.label : opt.listItemLabel}`
+                                    }}></label>
+                                </div>
+                                <div className="d-inline-block">
+                                    <div className="form-control-extends__wrapper">{typeof opt.extends !== 'undefined' ? <>{opt.extends}</> : null}</div>
+                                </div>
+                            </div>;
 
-            
-        </div>;
+                    })}
+
+                </div>;
+        } else {
+
+            return <div key={'option-' + index} className={inline ? `form-check form-check-inline` : `form-check`}>
+                    <div className="d-inline-block">
+                        <input
+                            tabIndex={tabIndex || 0}
+                            type="radio"
+                            className="form-check-input"
+                            id={`field-${uniqueID}-${index}`}
+                            name={name}
+                            data-index={index}
+                            data-label={item.label}
+                            data-list-item-label={`${typeof item.listItemLabel === 'undefined' ? '' : item.listItemLabel}`} 
+                            data-value={item.value}
+                            data-disabled={disabled || (typeof item.disabled !== 'undefined' ? `${item.disabled}` : 'false')}
+                            value={`${item.value}`}
+                            required={requiredVal}
+                            disabled={disabled || (typeof item.disabled !== 'undefined' ? item.disabled : null)}
+                            onChange={handleChange}
+                            onClick={typeof (onClick) === 'function' ? handleChange : () => void (0)}
+                            onFocus={handleFocus}
+                            onBlur={handleBlur}
+                            checked={controlValue == item.value}   // component status will not change if defaultChecked is used
+                            style={style}
+                            {...attributes}
+                        />
+                        <label className="form-check-label" htmlFor={`field-${uniqueID}-${index}`} dangerouslySetInnerHTML={{
+                            __html: `${typeof item.listItemLabel === 'undefined' ? item.label : item.listItemLabel}`
+                        }}></label>
+                    </div>
+                    <div className="d-inline-block">
+                        <div className="form-control-extends__wrapper">{typeof item.extends !== 'undefined' ? <>{item.extends}</> : null}</div>
+                    </div>
+            </div>;
+
+        }
+
+      
 
     }): null;
 

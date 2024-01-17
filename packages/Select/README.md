@@ -40,8 +40,9 @@ JSON Object Literals configuration properties of the `options`:
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |
 | `label` | string | - | Specify the label text for each option. |
+| `listItemLabel` | string | - | **(Optional)** Specify the label text for pop-up list items. <blockquote>Support html tags</blockquote> |
 | `value` | string | - | Specify the value for each option |
-| `optgroup` | array | - | **(Optional)** Creates a grouping of options. It will be displayed using the value of `label`. |
+| `optgroup` | array | - | **(Optional)** Creates a grouping of options. It will be displayed using the value of `label`. such as `[{"label":"Option 0","value":"value-0"},{"label":"Group 1","value":"","optgroup":[{"label":"Option 1","value":"value-1"},{"label":"Option 2","value":"value-2"}]}]` |
 | `disabled` | boolean | - | **(Optional)** When present, it specifies that an option should be disabled. |
 
 
@@ -49,7 +50,7 @@ JSON Object Literals configuration properties of the `options`:
 
 A successful response returns the details of the callback such as Sample Request Body:
 
-Among them, `label`, `value`, `optgroup` and `disabled` are attributes used by the system, and other attributes can be added freely
+Among them, `label`, `listItemLabel`, `value`, `optgroup` and `disabled` are attributes used by the system, and other attributes can be added freely
 
 
 
@@ -126,7 +127,13 @@ export default () => {
 
 
     function handleChange(e: any, val: string, currentData: any, currentIndex: number) {
-        console.log(e.target, val, data, currentIndex);
+        console.log(e.target, val, currentData, currentIndex);
+        /*
+        <select ...>...</select>,
+        'value-1',
+        {label: 'Option 1', listItemLabel: 'Option 1 (No: 001)', value: 'value-1'},
+        0
+        */
     }
 
     return (
@@ -143,6 +150,21 @@ export default () => {
                 ]}
                 onChange={handleChange}
             />
+
+            <Select
+                value="value-2"
+                name="name"
+                label="String"
+                options={[
+                    { "label": "Option 1", "listItemLabel": "Option 1 (No: 001)", "value": "value-1" },
+                    { "label": "<del style=color:red>deprecate</del>Option 2", "listItemLabel": "<del style=color:red>deprecate</del>Option 2 (No: 002)", "value": "value-2" },
+                    { "label": "Option 3", "listItemLabel": "Option 3 (No: 003)", "value": "value-3" },
+                    { "label": "Option 4", "listItemLabel": "Option 4 (No: 004)", "value": "value-4", "disabled": true, "customAttr1": "attr1","customAttr2": "attr2" }
+                ]}
+                onChange={handleChange}
+            />
+
+
 
 
             <Select
@@ -200,7 +222,7 @@ import Select from 'funda-ui/Select';
 export default () => {
 
     function handleChange(e: any, val: string, currentData: any, currentIndex: number) {
-        console.log(e.target, val, data, currentIndex);
+        console.log(e.target, val, currentData, currentIndex);
     }
 
     return (
@@ -218,14 +240,13 @@ export default () => {
                             { "label": "Option 2", "value": "value-2" }
                         ]
                     },
-                    ,
                     {
                         "label": "Group 2", "value": "", "optgroup": [
                             { "label": "Option 3", "value": "value-3" },
                             { "label": "Option 4", "value": "value-4" },
                             { "label": "Option 5", "value": "value-5" }
                         ]
-                    },
+                    }
 
                 ]}
                 onChange={handleChange}

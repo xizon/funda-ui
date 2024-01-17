@@ -661,7 +661,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _utils_extract__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_utils_extract__WEBPACK_IMPORTED_MODULE_2__);
 /* harmony import */ var _utils_convert__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(498);
 /* harmony import */ var _utils_convert__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_utils_convert__WEBPACK_IMPORTED_MODULE_3__);
-var _excluded = ["wrapperClassName", "inline", "options", "disabled", "required", "value", "label", "name", "id", "extractValueByBrackets", "style", "onChange"];
+var _excluded = ["wrapperClassName", "groupWrapperClassName", "groupLabelClassName", "inline", "options", "disabled", "required", "value", "label", "name", "id", "extractValueByBrackets", "style", "onChange"];
 function _extends() { _extends = Object.assign ? Object.assign.bind() : function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
 function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
 function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
@@ -682,6 +682,8 @@ function _objectWithoutPropertiesLoose(source, excluded) { if (source == null) r
 
 var MultipleCheckboxes = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(function (props, ref) {
   var wrapperClassName = props.wrapperClassName,
+    groupWrapperClassName = props.groupWrapperClassName,
+    groupLabelClassName = props.groupLabelClassName,
     inline = props.inline,
     options = props.options,
     disabled = props.disabled,
@@ -766,44 +768,103 @@ var MultipleCheckboxes = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forw
   })) : null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
     className: "multiple-checkboxes__control-wrapper",
     style: style
-  }, valData ? valData.map(function (item, i) {
-    return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      key: 'checkbox' + i,
-      className: "multiple-checkboxes__control ".concat(_inline ? 'd-inline-block' : '', " pe-3"),
-      "data-index": i,
-      "data-label": item.label,
-      "data-list-item-label": "".concat(typeof item.listItemLabel === 'undefined' ? '' : item.listItemLabel),
-      "data-value": item.value,
-      "data-disabled": disabled || 'false'
-    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((funda_checkbox__WEBPACK_IMPORTED_MODULE_1___default()), _extends({
-      wrapperClassName: "",
-      "data-index": i,
-      "data-label": item.label,
-      "data-list-item-label": "".concat(typeof item.listItemLabel === 'undefined' ? '' : item.listItemLabel),
-      "data-value": item.value,
-      "data-disabled": disabled || 'false',
-      label: typeof item.listItemLabel === 'undefined' ? item.label : item.listItemLabel,
-      value: item.value,
-      disabled: disabled || (typeof item.disabled !== 'undefined' ? item.disabled : null),
-      onChange: function onChange(e, val) {
-        setValSelected(function (prevState) {
-          var newData = JSON.parse(JSON.stringify(prevState));
-          var index = newData.findIndex(function (item) {
-            return item == e.target.value;
+  }, valData ? valData.map(function (item, index) {
+    if (typeof item.optgroup !== 'undefined') {
+      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+        className: "multiple-checkboxes-group__wrapper ".concat(groupWrapperClassName || ''),
+        key: 'optgroup-' + index
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+        className: "rmultiple-checkboxes-group__label ".concat(groupLabelClassName || '')
+      }, item.label), item.optgroup.map(function (opt, optIndex) {
+        return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+          key: 'checkbox' + optIndex,
+          className: "multiple-checkboxes__control ".concat(_inline ? 'd-inline-block' : '', " pe-3"),
+          "data-index": "".concat(index, "-").concat(optIndex),
+          "data-label": opt.label,
+          "data-list-item-label": "".concat(typeof opt.listItemLabel === 'undefined' ? '' : opt.listItemLabel),
+          "data-value": opt.value,
+          "data-disabled": disabled || (typeof opt.disabled !== 'undefined' ? "".concat(opt.disabled) : 'false')
+        }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((funda_checkbox__WEBPACK_IMPORTED_MODULE_1___default()), _extends({
+          wrapperClassName: "",
+          "data-index": "".concat(index, "-").concat(optIndex),
+          "data-label": opt.label,
+          "data-list-item-label": "".concat(typeof opt.listItemLabel === 'undefined' ? '' : opt.listItemLabel),
+          "data-value": opt.value,
+          "data-disabled": disabled || (typeof opt.disabled !== 'undefined' ? "".concat(opt.disabled) : 'false'),
+          label: typeof opt.listItemLabel === 'undefined' ? opt.label : opt.listItemLabel,
+          value: opt.value,
+          disabled: disabled || (typeof opt.disabled !== 'undefined' ? opt.disabled : null),
+          onChange: function onChange(e, val) {
+            setValSelected(function (prevState) {
+              var newData = JSON.parse(JSON.stringify(prevState));
+              var elIndex = newData.findIndex(function (item) {
+                return item == e.target.value;
+              });
+              if (elIndex !== -1) newData.splice(elIndex, 1);
+              var _res = val ? Array.from(new Set([e.target.value].concat(_toConsumableArray(newData)))) : newData;
+              var _resLabel = optionsRes.filter(function (v) {
+                return _res.includes(v.value);
+              }).map(function (k) {
+                return k.label;
+              });
+
+              //
+              var curData;
+
+              // if group
+              if (typeof item.optgroup !== 'undefined') {
+                var groupItemIndex = optIndex;
+                var groupOpts = item.optgroup;
+                curData = groupOpts[groupItemIndex];
+              } else {
+                curData = item;
+              }
+              _onChange === null || _onChange === void 0 ? void 0 : _onChange(e.target, _res, VALUE_BY_BRACKETS ? (0,_utils_convert__WEBPACK_IMPORTED_MODULE_3__.convertArrToValByBrackets)(_res) : _res.join(','), _resLabel, VALUE_BY_BRACKETS ? (0,_utils_convert__WEBPACK_IMPORTED_MODULE_3__.convertArrToValByBrackets)(_resLabel) : _resLabel.join(','), curData);
+              return _res;
+            });
+          },
+          checked: valSelected.includes(opt.value)
+        }, attributes)));
+      }));
+    } else {
+      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+        key: 'checkbox' + index,
+        className: "multiple-checkboxes__control ".concat(_inline ? 'd-inline-block' : '', " pe-3"),
+        "data-index": index,
+        "data-label": item.label,
+        "data-list-item-label": "".concat(typeof item.listItemLabel === 'undefined' ? '' : item.listItemLabel),
+        "data-value": item.value,
+        "data-disabled": disabled || (typeof item.disabled !== 'undefined' ? "".concat(item.disabled) : 'false')
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((funda_checkbox__WEBPACK_IMPORTED_MODULE_1___default()), _extends({
+        wrapperClassName: "",
+        "data-index": index,
+        "data-label": item.label,
+        "data-list-item-label": "".concat(typeof item.listItemLabel === 'undefined' ? '' : item.listItemLabel),
+        "data-value": item.value,
+        "data-disabled": disabled || (typeof item.disabled !== 'undefined' ? "".concat(item.disabled) : 'false'),
+        label: typeof item.listItemLabel === 'undefined' ? item.label : item.listItemLabel,
+        value: item.value,
+        disabled: disabled || (typeof item.disabled !== 'undefined' ? item.disabled : null),
+        onChange: function onChange(e, val) {
+          setValSelected(function (prevState) {
+            var newData = JSON.parse(JSON.stringify(prevState));
+            var elIndex = newData.findIndex(function (item) {
+              return item == e.target.value;
+            });
+            if (elIndex !== -1) newData.splice(elIndex, 1);
+            var _res = val ? Array.from(new Set([e.target.value].concat(_toConsumableArray(newData)))) : newData;
+            var _resLabel = optionsRes.filter(function (v) {
+              return _res.includes(v.value);
+            }).map(function (k) {
+              return k.label;
+            });
+            _onChange === null || _onChange === void 0 ? void 0 : _onChange(e.target, _res, VALUE_BY_BRACKETS ? (0,_utils_convert__WEBPACK_IMPORTED_MODULE_3__.convertArrToValByBrackets)(_res) : _res.join(','), _resLabel, VALUE_BY_BRACKETS ? (0,_utils_convert__WEBPACK_IMPORTED_MODULE_3__.convertArrToValByBrackets)(_resLabel) : _resLabel.join(','), item);
+            return _res;
           });
-          if (index !== -1) newData.splice(index, 1);
-          var _res = val ? Array.from(new Set([e.target.value].concat(_toConsumableArray(newData)))) : newData;
-          var _resLabel = optionsRes.filter(function (v) {
-            return _res.includes(v.value);
-          }).map(function (k) {
-            return k.label;
-          });
-          _onChange === null || _onChange === void 0 ? void 0 : _onChange(e.target, _res, VALUE_BY_BRACKETS ? (0,_utils_convert__WEBPACK_IMPORTED_MODULE_3__.convertArrToValByBrackets)(_res) : _res.join(','), _resLabel, VALUE_BY_BRACKETS ? (0,_utils_convert__WEBPACK_IMPORTED_MODULE_3__.convertArrToValByBrackets)(_resLabel) : _resLabel.join(','), item);
-          return _res;
-        });
-      },
-      checked: valSelected.includes(item.value)
-    }, attributes)));
+        },
+        checked: valSelected.includes(item.value)
+      }, attributes)));
+    }
   }) : null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("input", _extends({
     ref: inputRef,
     tabIndex: -1,

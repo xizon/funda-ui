@@ -577,7 +577,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
         var react__WEBPACK_IMPORTED_MODULE_0__ = __nested_webpack_require_1471__(787);
         /* harmony import */
         var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__nested_webpack_require_1471__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-        var _excluded = ["wrapperClassName", "disabled", "required", "value", "label", "name", "id", "options", "inline", "style", "tabIndex", "fetchFuncAsync", "fetchFuncMethod", "fetchFuncMethodParams", "fetchCallback", "onFetch", "onLoad", "onClick", "onChange", "onBlur", "onFocus"];
+        var _excluded = ["wrapperClassName", "groupWrapperClassName", "groupLabelClassName", "disabled", "required", "value", "label", "name", "id", "options", "inline", "style", "tabIndex", "fetchFuncAsync", "fetchFuncMethod", "fetchFuncMethodParams", "fetchCallback", "onFetch", "onLoad", "onClick", "onChange", "onBlur", "onFocus"];
         function _regeneratorRuntime() {
           "use strict";
 
@@ -1025,6 +1025,8 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
         }
         var Radio = function Radio(props) {
           var wrapperClassName = props.wrapperClassName,
+            groupWrapperClassName = props.groupWrapperClassName,
+            groupLabelClassName = props.groupLabelClassName,
             disabled = props.disabled,
             required = props.required,
             value = props.value,
@@ -1156,7 +1158,19 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
           }
           function handleChange(event) {
             var val = event.target.value;
+            var curData;
             var currentIndex = event.target.dataset.index;
+
+            // if group
+            if (currentIndex.indexOf('-') >= 0) {
+              var groupIdArr = currentIndex.split('-');
+              var groupIndex = groupIdArr[0];
+              var groupItemIndex = groupIdArr[1];
+              var groupOpts = dataInit[groupIndex].optgroup;
+              curData = groupOpts[groupItemIndex];
+            } else {
+              curData = dataInit[currentIndex];
+            }
 
             //----
             // update value
@@ -1168,10 +1182,10 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 
             //
             if (typeof onChange === 'function') {
-              onChange(event, val, dataInit[currentIndex], currentIndex);
+              onChange(event, val, curData, currentIndex);
             }
             if (typeof onClick === 'function') {
-              onClick(event, val, dataInit[currentIndex], currentIndex);
+              onClick(event, val, curData, currentIndex);
             }
           }
           function handleBlur(event) {
@@ -1186,46 +1200,96 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
           // Generate list of options
           var itemsList = Array.isArray(dataInit) ? dataInit.map(function (item, index) {
             var requiredVal = index === 0 ? required || null : null;
-            return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-              key: index,
-              className: inline ? "form-check form-check-inline" : "form-check"
-            }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-              className: "d-inline-block"
-            }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("input", _extends({
-              tabIndex: tabIndex || 0,
-              type: "radio",
-              className: "form-check-input",
-              id: "field-".concat(uniqueID, "-").concat(index),
-              name: name,
-              "data-index": index,
-              "data-label": item.label,
-              "data-list-item-label": "".concat(typeof item.listItemLabel === 'undefined' ? '' : item.listItemLabel),
-              "data-value": item.value,
-              "data-disabled": disabled || 'false',
-              value: "".concat(item.value),
-              required: requiredVal,
-              disabled: disabled || (typeof item.disabled !== 'undefined' ? item.disabled : null),
-              onChange: handleChange,
-              onClick: typeof onClick === 'function' ? handleChange : function () {
-                return void 0;
-              },
-              onFocus: handleFocus,
-              onBlur: handleBlur,
-              checked: controlValue == item.value // component status will not change if defaultChecked is used
-              ,
+            if (typeof item.optgroup !== 'undefined') {
+              return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+                className: "radio-group__wrapper ".concat(groupWrapperClassName || ''),
+                key: 'optgroup-' + index
+              }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+                className: "radio-group__label ".concat(groupLabelClassName || '')
+              }, item.label), item.optgroup.map(function (opt, optIndex) {
+                return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+                  key: 'option-' + optIndex,
+                  className: inline ? "form-check form-check-inline" : "form-check"
+                }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+                  className: "d-inline-block"
+                }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("input", _extends({
+                  tabIndex: tabIndex || 0,
+                  type: "radio",
+                  className: "form-check-input",
+                  id: "field-".concat(uniqueID, "-").concat(index, "-").concat(optIndex),
+                  name: name,
+                  "data-index": "".concat(index, "-").concat(optIndex),
+                  "data-label": opt.label,
+                  "data-list-item-label": "".concat(typeof opt.listItemLabel === 'undefined' ? '' : opt.listItemLabel),
+                  "data-value": opt.value,
+                  "data-disabled": disabled || (typeof opt.disabled !== 'undefined' ? "".concat(opt.disabled) : 'false'),
+                  value: "".concat(opt.value),
+                  required: requiredVal,
+                  disabled: disabled || (typeof opt.disabled !== 'undefined' ? opt.disabled : null),
+                  onChange: handleChange,
+                  onClick: typeof onClick === 'function' ? handleChange : function () {
+                    return void 0;
+                  },
+                  onFocus: handleFocus,
+                  onBlur: handleBlur,
+                  checked: controlValue == opt.value // component status will not change if defaultChecked is used
+                  ,
 
-              style: style
-            }, attributes)), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("label", {
-              className: "form-check-label",
-              htmlFor: "field-".concat(uniqueID, "-").concat(index),
-              dangerouslySetInnerHTML: {
-                __html: "".concat(typeof item.listItemLabel === 'undefined' ? item.label : item.listItemLabel)
-              }
-            })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-              className: "d-inline-block"
-            }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-              className: "form-control-extends__wrapper"
-            }, typeof item["extends"] !== 'undefined' ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react__WEBPACK_IMPORTED_MODULE_0___default().Fragment, null, item["extends"]) : null)));
+                  style: style
+                }, attributes)), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("label", {
+                  className: "form-check-label",
+                  htmlFor: "field-".concat(uniqueID, "-").concat(index, "-").concat(optIndex),
+                  dangerouslySetInnerHTML: {
+                    __html: "".concat(typeof opt.listItemLabel === 'undefined' ? opt.label : opt.listItemLabel)
+                  }
+                })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+                  className: "d-inline-block"
+                }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+                  className: "form-control-extends__wrapper"
+                }, typeof opt["extends"] !== 'undefined' ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react__WEBPACK_IMPORTED_MODULE_0___default().Fragment, null, opt["extends"]) : null)));
+              }));
+            } else {
+              return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+                key: 'option-' + index,
+                className: inline ? "form-check form-check-inline" : "form-check"
+              }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+                className: "d-inline-block"
+              }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("input", _extends({
+                tabIndex: tabIndex || 0,
+                type: "radio",
+                className: "form-check-input",
+                id: "field-".concat(uniqueID, "-").concat(index),
+                name: name,
+                "data-index": index,
+                "data-label": item.label,
+                "data-list-item-label": "".concat(typeof item.listItemLabel === 'undefined' ? '' : item.listItemLabel),
+                "data-value": item.value,
+                "data-disabled": disabled || (typeof item.disabled !== 'undefined' ? "".concat(item.disabled) : 'false'),
+                value: "".concat(item.value),
+                required: requiredVal,
+                disabled: disabled || (typeof item.disabled !== 'undefined' ? item.disabled : null),
+                onChange: handleChange,
+                onClick: typeof onClick === 'function' ? handleChange : function () {
+                  return void 0;
+                },
+                onFocus: handleFocus,
+                onBlur: handleBlur,
+                checked: controlValue == item.value // component status will not change if defaultChecked is used
+                ,
+
+                style: style
+              }, attributes)), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("label", {
+                className: "form-check-label",
+                htmlFor: "field-".concat(uniqueID, "-").concat(index),
+                dangerouslySetInnerHTML: {
+                  __html: "".concat(typeof item.listItemLabel === 'undefined' ? item.label : item.listItemLabel)
+                }
+              })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+                className: "d-inline-block"
+              }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+                className: "form-control-extends__wrapper"
+              }, typeof item["extends"] !== 'undefined' ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react__WEBPACK_IMPORTED_MODULE_0___default().Fragment, null, item["extends"]) : null)));
+            }
           }) : null;
           (0, react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(function () {
             // data init

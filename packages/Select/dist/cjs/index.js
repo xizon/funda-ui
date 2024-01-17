@@ -462,7 +462,7 @@ var Select = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(func
           key: 'option-' + optIndex,
           value: opt.value,
           dangerouslySetInnerHTML: {
-            __html: "".concat(opt.label)
+            __html: "".concat(typeof opt.listItemLabel === 'undefined' ? opt.label : opt.listItemLabel)
           },
           disabled: _disabled
         });
@@ -473,7 +473,7 @@ var Select = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(func
         key: 'option-' + index,
         value: item.value,
         dangerouslySetInnerHTML: {
-          __html: "".concat(item.label)
+          __html: "".concat(typeof item.listItemLabel === 'undefined' ? item.label : item.listItemLabel)
         },
         disabled: _disabled
       });

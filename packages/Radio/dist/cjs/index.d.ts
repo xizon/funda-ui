@@ -10,12 +10,14 @@ interface OptionConfig {
 declare type RadioOptionChangeFnType = (arg1: any, arg2: any, arg3?: any, arg4?: any) => void;
 declare type RadioProps = {
     wrapperClassName?: string;
+    groupWrapperClassName?: string;
+    groupLabelClassName?: string;
     value?: string;
     label?: React.ReactNode | string;
     name?: string;
     disabled?: any;
     required?: any;
-    options?: OptionConfig[] | string;
+    options?: OptionConfig[] | string | unknown;
     inline?: boolean;
     /** -- */
     id?: string;
