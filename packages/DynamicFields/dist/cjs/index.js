@@ -109,6 +109,8 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 var DynamicFields = function DynamicFields(props) {
   var wrapperClassName = props.wrapperClassName,
+    btnAddWrapperClassName = props.btnAddWrapperClassName,
+    btnRemoveWrapperClassName = props.btnRemoveWrapperClassName,
     label = props.label,
     data = props.data,
     maxFields = props.maxFields,
@@ -282,7 +284,7 @@ var DynamicFields = function DynamicFields(props) {
       var removeBtyn = /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
         href: "#",
         tabIndex: -1,
-        className: "dynamic-fields__removebtn align-middle",
+        className: "dynamic-fields__removebtn ".concat(btnRemoveWrapperClassName || 'align-middle'),
         onClick: handleClickRemove
       }, iconRemove ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, iconRemove) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("svg", {
         width: "20px",
@@ -316,7 +318,7 @@ var DynamicFields = function DynamicFields(props) {
       id: addBtnIdRef.current,
       href: "#",
       tabIndex: -1,
-      className: "dynamic-fields__addbtn align-middle",
+      className: "dynamic-fields__addbtn ".concat(btnAddWrapperClassName || 'align-middle'),
       onClick: handleClickAdd
     }, iconAdd ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, iconAdd) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("svg", {
       width: "20px",

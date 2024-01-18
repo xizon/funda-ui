@@ -11,6 +11,8 @@ import DynamicFields from 'funda-ui/DynamicFields';
 | --- | --- | --- | --- |
 | `key` | React.key | - | Trigger child component update when prop of parent changes. <blockquote>Ensure that complex dynamic form components update in real time on the page.</blockquote> |
 | `wrapperClassName` | string | `mb-3 position-relative` | The class name of the control wrapper. |
+| `btnAddWrapperClassName` | string | `align-middle` | The class name of the add button wrapper. |
+| `btnRemoveWrapperClassName` | string | `align-middle` | The class name of the remove button wrapper. |
 | `label` | string \| ReactNode | - | It is used to specify a label for an element of a form.<blockquote>Support html tags</blockquote> |
 | `data` | JSON Object | - | <strong>(Required)</strong> Control group are dynamically added after the button is triggered |
 | `confirmText` | string | - | The text to display in the confirm box. |
@@ -968,6 +970,7 @@ export default () => {
     return (
         <>
             <DynamicFields
+                btnRemoveWrapperClassName="position-relative d-inline-block align-middle"
                 data={{
                     init: [],
                     tmpl: tmpl(null, false)
@@ -975,7 +978,7 @@ export default () => {
                 maxFields="10"
                 confirmText="Are you sure?"
                 iconAdd={<><div className="mt-1"><svg width="20px" height="20px" viewBox="0 0 24 24" fill="none"><path d="M12 2C6.49 2 2 6.49 2 12C2 17.51 6.49 22 12 22C17.51 22 22 17.51 22 12C22 6.49 17.51 2 12 2ZM16 12.75H12.75V16C12.75 16.41 12.41 16.75 12 16.75C11.59 16.75 11.25 16.41 11.25 16V12.75H8C7.59 12.75 7.25 12.41 7.25 12C7.25 11.59 7.59 11.25 8 11.25H11.25V8C11.25 7.59 11.59 7.25 12 7.25C12.41 7.25 12.75 7.59 12.75 8V11.25H16C16.41 11.25 16.75 11.59 16.75 12C16.75 12.41 16.41 12.75 16 12.75Z" fill="#000" /></svg></div></>}
-                iconRemove={<><div className="position-absolute top-0 end-0 mt-2 mx-2"><svg width="20px" height="20px" viewBox="0 0 24 24" fill="none"><path fillRule="evenodd" clipRule="evenodd" d="M22 12c0 5.523-4.477 10-10 10S2 17.523 2 12 6.477 2 12 2s10 4.477 10 10ZM8 11a1 1 0 1 0 0 2h8a1 1 0 1 0 0-2H8Z" fill="#f00" /></svg></div></>}
+                iconRemove={<><div className="position-absolute top-0 end-0 mx-2" style={{marginTop: '-10px'}}><svg width="20px" height="20px" viewBox="0 0 24 24" fill="none"><path fillRule="evenodd" clipRule="evenodd" d="M22 12c0 5.523-4.477 10-10 10S2 17.523 2 12 6.477 2 12 2s10 4.477 10 10ZM8 11a1 1 0 1 0 0 2h8a1 1 0 1 0 0-2H8Z" fill="#f00" /></svg></div></>}
                 onAdd={(items: HTMLDivElement[]) => {
                     console.log('add', items);
                     // do something
@@ -1133,6 +1136,7 @@ export default () => {
     return (
         <>
             <DynamicFields
+                btnRemoveWrapperClassName="position-relative d-inline-block align-middle"
                 data={{
                     init: [],
                     tmpl: tmpl(null, false)
@@ -1140,7 +1144,7 @@ export default () => {
                 maxFields="10"
                 confirmText="Are you sure?"
                 iconAdd={<><div className="d-none"><svg width="20px" height="20px" viewBox="0 0 24 24" fill="none"><path d="M12 2C6.49 2 2 6.49 2 12C2 17.51 6.49 22 12 22C17.51 22 22 17.51 22 12C22 6.49 17.51 2 12 2ZM16 12.75H12.75V16C12.75 16.41 12.41 16.75 12 16.75C11.59 16.75 11.25 16.41 11.25 16V12.75H8C7.59 12.75 7.25 12.41 7.25 12C7.25 11.59 7.59 11.25 8 11.25H11.25V8C11.25 7.59 11.59 7.25 12 7.25C12.41 7.25 12.75 7.59 12.75 8V11.25H16C16.41 11.25 16.75 11.59 16.75 12C16.75 12.41 16.41 12.75 16 12.75Z" fill="#000" /></svg></div></>}
-                iconRemove={<><div className="position-absolute top-0 end-0 mt-2 mx-2"><svg width="20px" height="20px" viewBox="0 0 24 24" fill="none"><path fillRule="evenodd" clipRule="evenodd" d="M22 12c0 5.523-4.477 10-10 10S2 17.523 2 12 6.477 2 12 2s10 4.477 10 10ZM8 11a1 1 0 1 0 0 2h8a1 1 0 1 0 0-2H8Z" fill="#f00" /></svg></div></>}
+                iconRemove={<><div className="position-absolute top-0 end-0 mx-2" style={{marginTop: '-10px'}}><svg width="20px" height="20px" viewBox="0 0 24 24" fill="none"><path fillRule="evenodd" clipRule="evenodd" d="M22 12c0 5.523-4.477 10-10 10S2 17.523 2 12 6.477 2 12 2s10 4.477 10 10ZM8 11a1 1 0 1 0 0 2h8a1 1 0 1 0 0-2H8Z" fill="#f00" /></svg></div></>}
                 onAdd={(items: HTMLDivElement[]) => {
                     console.log('add', items);
                     // do something

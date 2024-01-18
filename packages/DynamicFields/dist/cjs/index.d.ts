@@ -10,6 +10,8 @@ declare type DynamicFieldsValueProps = {
 };
 declare type DynamicFieldsProps = {
     wrapperClassName?: string;
+    btnAddWrapperClassName?: string;
+    btnRemoveWrapperClassName?: string;
     value?: string;
     label?: React.ReactNode | string;
     data: DynamicFieldsValueProps | null;
