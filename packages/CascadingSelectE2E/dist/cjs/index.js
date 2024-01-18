@@ -611,22 +611,6 @@ var CascadingSelectE2E = function CascadingSelectE2E(props) {
     setSelectedDataByClick = _useState26[1];
 
   /**
-   * Format indent value
-   * @param {String|Array} str 
-   * @returns {String|Array}
-   */
-  function formatIndentVal(str, indentLastPlaceholder) {
-    var reVar = new RegExp(indentLastPlaceholder, 'g');
-    if (Array.isArray(str)) {
-      return str.map(function (s) {
-        return s.replace(reVar, '').replace(/\&nbsp;/ig, '');
-      });
-    } else {
-      return str.replace(reVar, '').replace(/\&nbsp;/ig, '');
-    }
-  }
-
-  /**
    * Check if an element is in the viewport
    * @param {HTMLElement} elem 
    * @returns {boolean}

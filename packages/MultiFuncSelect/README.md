@@ -203,29 +203,23 @@ export default () => {
 
 
 
-
             <MultiFuncSelect
-                value="[value-3][value-2]"
+                value="[1][2][3][4][5][6][7][8][9][10][11][12][13][14][15][16][17][18][19][20]"
                 multiSelect={{
-                    valid: true, 
-                    selectAll: true, 
+                    valid: true,
+                    selectAll: true,
                     selectAllLabel: "Select all options",
                     data: {
-                        values: ['value-3','value-2'],
-                        labels: ['Option 3','<del style=color:red>deprecate</del>Option 2'],
-                        queryStrings: ['option3','option2']
+                        values: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20].map(v => v.toString()),
+                        labels: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20].map(v => v.toString()),
+                        queryStrings: ['option3', 'option2']
                     }
                 }}
                 placeholder="Select"
                 name="name"
-                options={`
-                [
-                    {"label": "Option 1","value": "value-1","queryString": "option1"},
-                    {"label": "<del style=color:red>deprecate</del>Option 2","value": "value-2","queryString": "option2"},
-                    {"label": "Option 3","value": "value-3","queryString": "option3"},
-                    {"label": "Option 4","value": "value-4","disabled":true}
-                ]  
-                `}
+                options={Array.from({ length: 100 }).fill(0).map((v, i) => {
+                    return { "label": `${i}`, "value": `${i}`, "queryString": "" }
+                })}
                 onChange={(e, e2, val) => {
                     console.log(e, e2, val);
                 }}

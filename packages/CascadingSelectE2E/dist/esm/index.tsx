@@ -167,22 +167,6 @@ const CascadingSelectE2E = (props: CascadingSelectE2EProps) => {
         queryIds: []
     });
 
-    /**
-     * Format indent value
-     * @param {String|Array} str 
-     * @returns {String|Array}
-     */
-    function formatIndentVal(str: any, indentLastPlaceholder: string) {
-        const reVar = new RegExp(indentLastPlaceholder, 'g');
-        if (Array.isArray(str)) {
-            return str.map((s: string) => s.replace(reVar, '').replace(/\&nbsp;/ig, ''));
-        } else {
-            return str.replace(reVar, '').replace(/\&nbsp;/ig, '');
-        }
-
-    }
-
-
 
     /**
      * Check if an element is in the viewport

@@ -963,6 +963,7 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
   var idRes = id || uniqueID;
   var rootRef = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useRef)(null);
   var rootSingleRef = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useRef)(null);
+  var rootMultiRef = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useRef)(null);
   var selectInputRef = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useRef)(null);
   var valueInputRef = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useRef)(null);
   var listRef = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useRef)(null);
@@ -1082,10 +1083,11 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
     var reVar = new RegExp(INDENT_LAST_PLACEHOLDER, 'g');
     if (Array.isArray(inputData)) {
       return inputData.map(function (s) {
-        return s.replace(reVar, '').replace(/\&nbsp;/ig, '');
+        return String(s).replace(reVar, '').replace(/\&nbsp;/ig, '');
       });
     } else {
-      return inputData.replace(reVar, '').replace(/\&nbsp;/ig, '');
+      var _txt = typeof inputData === 'string' ? inputData : inputData.toString();
+      return _txt.replace(reVar, '').replace(/\&nbsp;/ig, '');
     }
   }
 
@@ -1100,11 +1102,11 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
 
   /**
    * Remove html tag content
-   * @param {string} str 
+   * @param {string | number} str 
    * @returns {string}
    */
   function stripHTML(str) {
-    return str.replace(/<\/?[^>]+(>|$)(.*?)<\/?[^>]+(>|$)/ig, '');
+    return String(str).replace(/<\/?[^>]+(>|$)(.*?)<\/?[^>]+(>|$)/ig, '');
   }
 
   /**
@@ -1321,6 +1323,9 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
                 });
               }
 
+              // Appropriate multi-item container height
+              adjustMultiControlContainerHeight();
+
               // hide disabled item
               _ORGIN_DATA = _ORGIN_DATA.filter(function (v) {
                 return typeof v.disabled !== 'undefined' && v.disabled == true ? false : true;
@@ -1426,6 +1431,9 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
                 });
               }
 
+              // Appropriate multi-item container height
+              adjustMultiControlContainerHeight();
+
               // hide disabled item
               optionsDataInit = optionsDataInit.filter(function (v) {
                 return typeof v.disabled !== 'undefined' && v.disabled == true ? false : true;
@@ -1452,6 +1460,21 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
       }, _callee2);
     }));
     return _fetchData.apply(this, arguments);
+  }
+  function adjustMultiControlContainerHeight() {
+    setTimeout(function () {
+      // Sometimes you may get 0, you need to judge
+      if (rootMultiRef.current.clientHeight > 0) {
+        rootSingleRef.current.style.height = rootMultiRef.current.clientHeight + 'px';
+        selectInputRef.current.style.height = rootMultiRef.current.clientHeight + 'px';
+      }
+
+      // popwin position update
+      var _modalRef = document.querySelector("#mf-select__options-wrapper-".concat(idRes));
+      if (MULTI_SEL_VALID && _modalRef.classList.contains('active')) {
+        popwinPosInit();
+      }
+    }, 0);
   }
   function popwinPosInit() {
     if (listContentRef.current === null || selectInputRef.current === null) return;
@@ -1889,6 +1912,9 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
                   currentControlValueArr.push(_value);
                   currentControlLabelArr.push(_label);
                 }
+
+                // Appropriate multi-item container height
+                adjustMultiControlContainerHeight();
               }
 
               //
@@ -1977,6 +2003,9 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
                   _currentControlValueArr.push(_value2);
                   _currentControlLabelArr.push(_label2);
                 }
+
+                // Appropriate multi-item container height
+                adjustMultiControlContainerHeight();
               }
 
               //
@@ -2054,6 +2083,9 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
         labels: _labels,
         values: _values
       });
+
+      // Appropriate multi-item container height
+      adjustMultiControlContainerHeight();
     };
     if (selectedSign) {
       updateOptionCheckboxes('remove');
@@ -2099,6 +2131,9 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
     });
     currentControlValueArr = removeItemOnce(currentControlValueArr, _value);
     currentControlLabelArr = removeItemOnce(currentControlLabelArr, formatIndentVal(_label));
+
+    // Appropriate multi-item container height
+    adjustMultiControlContainerHeight();
 
     //
     if (typeof onChange === 'function') {
@@ -2520,6 +2555,7 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
     d: "M12.027 9.92L16 13.95 14 16l-4.075-3.976A6.465 6.465 0 0 1 6.5 13C2.91 13 0 10.083 0 6.5 0 2.91 2.917 0 6.5 0 10.09 0 13 2.917 13 6.5a6.463 6.463 0 0 1-.973 3.42zM1.997 6.452c0 2.48 2.014 4.5 4.5 4.5 2.48 0 4.5-2.015 4.5-4.5 0-2.48-2.015-4.5-4.5-4.5-2.48 0-4.5 2.014-4.5 4.5z",
     fillRule: "evenodd"
   }))))) : null) : null, MULTI_SEL_VALID ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
+    ref: rootMultiRef,
     className: "mf-select-multi__inputplaceholder-wrapper"
   }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
     className: "mf-select-multi__inputplaceholder-inner"

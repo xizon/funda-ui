@@ -162,6 +162,7 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
     const idRes = id || uniqueID;
     const rootRef = useRef<any>(null);
     const rootSingleRef = useRef<any>(null);
+    const rootMultiRef = useRef<any>(null);
     const selectInputRef = useRef<any>(null);
     const valueInputRef = useRef<any>(null);
     const listRef = useRef<any>(null);
@@ -272,9 +273,10 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
     function formatIndentVal(inputData: any) {
         const reVar = new RegExp(INDENT_LAST_PLACEHOLDER, 'g');
         if (Array.isArray(inputData)) {
-            return inputData.map((s: string) => s.replace(reVar, '').replace(/\&nbsp;/ig, ''));
+            return inputData.map((s: any) => String(s).replace(reVar, '').replace(/\&nbsp;/ig, ''));
         } else {
-            return inputData.replace(reVar, '').replace(/\&nbsp;/ig, '');
+            const _txt: any = typeof inputData === 'string' ? inputData : inputData.toString();
+            return _txt.replace(reVar, '').replace(/\&nbsp;/ig, '');
         }
 
     }
@@ -292,11 +294,11 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
 
     /**
      * Remove html tag content
-     * @param {string} str 
+     * @param {string | number} str 
      * @returns {string}
      */
-    function stripHTML(str: string) {
-        return str.replace(/<\/?[^>]+(>|$)(.*?)<\/?[^>]+(>|$)/ig, '');
+    function stripHTML(str: string | number) {
+        return String(str).replace(/<\/?[^>]+(>|$)(.*?)<\/?[^>]+(>|$)/ig, '');
     }
 
 
@@ -533,11 +535,13 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
 
                 }
 
-
+                // Appropriate multi-item container height
+                adjustMultiControlContainerHeight();
 
                 // hide disabled item
                 _ORGIN_DATA = _ORGIN_DATA.filter((v: any) => typeof v.disabled !== 'undefined' && v.disabled == true ? false : true);
 
+                
 
 
             }
@@ -658,6 +662,9 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
                     });
                 }
 
+                // Appropriate multi-item container height
+                adjustMultiControlContainerHeight();
+
 
                 // hide disabled item
                 optionsDataInit = optionsDataInit.filter((v: any) => typeof v.disabled !== 'undefined' && v.disabled == true ? false : true);
@@ -683,6 +690,28 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
 
 
     }
+
+
+
+    function adjustMultiControlContainerHeight() {
+        setTimeout(() => {
+            // Sometimes you may get 0, you need to judge
+            if (rootMultiRef.current.clientHeight > 0) {
+                rootSingleRef.current.style.height = rootMultiRef.current.clientHeight + 'px';
+                selectInputRef.current.style.height = rootMultiRef.current.clientHeight + 'px';
+            }
+
+            // popwin position update
+            const _modalRef: any = document.querySelector(`#mf-select__options-wrapper-${idRes}`);
+            if (MULTI_SEL_VALID && _modalRef.classList.contains('active')) {
+                popwinPosInit();
+            }
+            
+            
+        },0);              
+    }
+
+
 
     function popwinPosInit() {
         if (listContentRef.current === null || selectInputRef.current === null) return;
@@ -1224,6 +1253,8 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
                 }
 
 
+                // Appropriate multi-item container height
+                adjustMultiControlContainerHeight();
 
 
             }
@@ -1334,6 +1365,9 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
                 }
 
 
+                // Appropriate multi-item container height
+                adjustMultiControlContainerHeight();
+
 
             }
 
@@ -1411,6 +1445,12 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
                 values: _values
             });
 
+
+
+            // Appropriate multi-item container height
+            adjustMultiControlContainerHeight();
+
+
         };
 
 
@@ -1475,6 +1515,9 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
         currentControlLabelArr = removeItemOnce(currentControlLabelArr, formatIndentVal(_label));
 
 
+        // Appropriate multi-item container height
+        adjustMultiControlContainerHeight();
+
 
         //
         if (typeof (onChange) === 'function') {
@@ -1485,7 +1528,7 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
                 {
                     labels: currentControlLabelArr.map((v: any) => v.toString()),
                     values: currentControlValueArr.map((v: any) => v.toString()),
-                    labelsOfString: VALUE_BY_BRACKETS ? convertArrToValByBrackets(currentControlLabelArr.map((v: any) => v.toString())) : currentControlLabelArr.map((v: any) => v.toString()).join(','),
+                    labelsOfString: VALUE_BY_BRACKETS ? convertArrToValByBrackets(currentControlLabelArr.map((v: any) => v.toString())) : currentControlLabelArr.map((v: any) =>     v.toString()).join(','),
                     valuesOfString: VALUE_BY_BRACKETS ? convertArrToValByBrackets(currentControlValueArr.map((v: any) => v.toString())) : currentControlValueArr.map((v: any) => v.toString()).join(',')
                 }
             );
@@ -1931,7 +1974,7 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
                 // Multiple selection Control
                 // ++++++++++++++++++++
                 */}
-                {MULTI_SEL_VALID ? <div className="mf-select-multi__inputplaceholder-wrapper">
+                {MULTI_SEL_VALID ? <div ref={rootMultiRef} className="mf-select-multi__inputplaceholder-wrapper">
 
 
                     {/* PLACEHOLDER */}

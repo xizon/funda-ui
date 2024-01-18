@@ -970,7 +970,7 @@ export default () => {
     return (
         <>
             <DynamicFields
-                btnRemoveWrapperClassName="position-relative d-inline-block align-middle"
+                btnRemoveWrapperClassName="position-relative d-inline-block align-middle"   // Compatible with safari
                 data={{
                     init: [],
                     tmpl: tmpl(null, false)
@@ -1136,7 +1136,7 @@ export default () => {
     return (
         <>
             <DynamicFields
-                btnRemoveWrapperClassName="position-relative d-inline-block align-middle"
+                btnRemoveWrapperClassName="position-relative d-inline-block align-middle"  // Compatible with safari
                 data={{
                     init: [],
                     tmpl: tmpl(null, false)
