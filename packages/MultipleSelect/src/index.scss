@@ -125,7 +125,8 @@
                 max-width: 100%;
                 overflow: hidden;
                 text-overflow: ellipsis;
-                word-break: break-all;
+                word-wrap: break-word;
+                word-break: break-word;
             }
 
             > strong {

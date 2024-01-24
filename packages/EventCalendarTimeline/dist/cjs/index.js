@@ -1720,6 +1720,7 @@ var EventCalendarTimeline = function EventCalendarTimeline(props) {
             return d > 0 && d <= days[month] ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("td", {
               className: "e-cal-tl-table__cell-cushion-content__container e-cal-tl-table__cell-tooltiptrigger ".concat(eventSourcesData && _currentData.length > 0 ? 'has-event' : '', " ").concat(d > 0 ? '' : 'empty', " ").concat(d === now.getDate() ? 'today' : '', " ").concat(d === day && tableRowNum === rowIndex ? 'selected' : '', " ").concat(isLastCol ? 'last-cell' : ''),
               key: "col" + i,
+              "data-overlay-id": "e-cal-tl-table__cell-tooltipwrapper-".concat(idRes),
               "data-index": colIndex - 1,
               colSpan: 1,
               "data-date": getCalendarDate(_dateShow),
@@ -1903,6 +1904,7 @@ var EventCalendarTimeline = function EventCalendarTimeline(props) {
             return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("td", {
               className: "e-cal-tl-table__cell-cushion-content__container e-cal-tl-table__cell-tooltiptrigger ".concat(_currentData.length > 0 ? 'has-event' : '', " ").concat(d > 0 ? '' : 'empty', " ").concat(d === now.getDate() ? 'today' : '', " ").concat(d === day && tableRowNum === rowIndex ? 'selected' : '', " ").concat(isLastCol ? 'last-cell' : ''),
               key: "col" + i,
+              "data-overlay-id": "e-cal-tl-table__cell-tooltipwrapper-".concat(idRes),
               "data-index": _colIndex - 1,
               colSpan: 1,
               "data-date": getCalendarDate(_dateShow),

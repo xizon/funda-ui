@@ -90,6 +90,36 @@ export default () => {
 
 
 
+```js
+import React, { useState } from "react";
+import MultipleCheckboxes from 'funda-ui/MultipleCheckboxes';
+
+
+export default () => {
+
+    const [val, setVal] = useState('[<del style=color:red>deprecate</del>Option 2][Option 4]');  // default value is label value
+
+    return (
+        <>
+          
+            <MultipleCheckboxes 
+                name="name"
+                value={val}
+                options={[
+                    {"label": "Option 1","listItemLabel":"Option 1 (No: 001)","value": "value-1"},
+                    {"label": "<del style=color:red>deprecate</del>Option 2","listItemLabel":"<del style=color:red>deprecate</del>Option 2 (No: 002)","value": "value-2"},
+                    {"label": "Option 3","listItemLabel":"Option 3 (No: 003)","value": "value-3"},
+                    {"label": "Option 4","listItemLabel":"Option 4 (No: 004)","value": "value-4","disabled":true}
+                ]}
+            />
+
+    
+        </>
+    );
+}
+```
+
+
 
 ## The Option Group element
 

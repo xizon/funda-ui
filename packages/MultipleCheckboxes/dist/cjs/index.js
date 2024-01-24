@@ -739,9 +739,27 @@ var MultipleCheckboxes = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forw
     } else {
       var _val = VALUE_BY_BRACKETS ? (0,_utils_extract__WEBPACK_IMPORTED_MODULE_2__.extractContentsOfBrackets)(defaultValue) : defaultValue.trim().replace(/^\,|\,$/g, '').split(',');
       if (Array.isArray(_val)) {
-        setValSelected(_val.filter(function (v) {
+        // If the default value is label, match value
+        var _realValue = _val.filter(function (v) {
           return v !== '';
-        }));
+        });
+        var filterRes = [];
+        var filterResQueryValue = optionsRes.filter(function (item) {
+          return _val.includes(item.value);
+        });
+        var filterResQueryLabel = optionsRes.filter(function (item) {
+          return _val.includes(item.label);
+        });
+        filterRes = filterResQueryValue;
+        if (filterResQueryValue.length === 0) filterRes = filterResQueryLabel;
+        if (filterRes.length > 0) _realValue = filterRes.filter(function (v) {
+          return v.value !== '';
+        }).map(function (k) {
+          return k.value;
+        });
+
+        //
+        setValSelected(_realValue);
       } else {
         setValSelected([]);
       }
@@ -786,6 +804,7 @@ var MultipleCheckboxes = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forw
           "data-disabled": disabled || (typeof opt.disabled !== 'undefined' ? "".concat(opt.disabled) : 'false')
         }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((funda_checkbox__WEBPACK_IMPORTED_MODULE_1___default()), _extends({
           wrapperClassName: "",
+          name: "".concat(name, "-checkbox-item"),
           "data-index": "".concat(index, "-").concat(optIndex),
           "data-label": opt.label,
           "data-list-item-label": "".concat(typeof opt.listItemLabel === 'undefined' ? '' : opt.listItemLabel),
@@ -837,6 +856,7 @@ var MultipleCheckboxes = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forw
         "data-disabled": disabled || (typeof item.disabled !== 'undefined' ? "".concat(item.disabled) : 'false')
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((funda_checkbox__WEBPACK_IMPORTED_MODULE_1___default()), _extends({
         wrapperClassName: "",
+        name: "".concat(name, "-checkbox-item"),
         "data-index": index,
         "data-label": item.label,
         "data-list-item-label": "".concat(typeof item.listItemLabel === 'undefined' ? '' : item.listItemLabel),

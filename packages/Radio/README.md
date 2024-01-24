@@ -87,6 +87,21 @@ export default () => {
             />
 
 
+
+            <Radio
+                inline={true}
+                value="Option 3"  // default value is label value
+                name="String"
+                label="String"
+                options={[
+                    {"label": "Option 1","value": "value-1"},
+                    {"label": "<del style=color:red>deprecate</del>Option 2","value": "value-2"},
+                    {"label": "Option 3","value": "value-3","customAttr1": "attr1","customAttr2": "attr2"}
+                ]}
+                onChange={handleChange}
+            />
+
+
             <Radio
                 inline={true}
                 value="value-2"

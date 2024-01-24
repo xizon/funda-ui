@@ -1018,7 +1018,8 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
     controlArr = _useState18[0],
     setControlArr = _useState18[1];
   var multiSelControlOptionExist = function multiSelControlOptionExist(arr, val) {
-    return arr.map(function (v) {
+    var _data = arr.filter(Boolean);
+    return _data.map(function (v) {
       return v.toString();
     }).includes(val.toString());
   };
@@ -1256,6 +1257,7 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
                 }];
               }
             } else {
+              // If the default value is label, match value
               filterResQueryValue = _ORGIN_DATA.filter(function (item) {
                 return item.value == defaultValue;
               });
@@ -1364,6 +1366,8 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
 
             // STEP 3: ===========
             // value & label must be initialized
+
+            // If the default value is label, match value
             _filterRes3 = [];
             _filterResQueryValue = optionsDataInit.filter(function (item) {
               return item.value == defaultValue;
@@ -2437,6 +2441,7 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
       __html: "".concat(label)
     }
   }))) : null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
+    "data-overlay-id": "mf-select__options-wrapper-".concat(idRes),
     id: "mf-select__wrapper-".concat(idRes),
     className: "mf-select__wrapper ".concat(wrapperClassName || wrapperClassName === '' ? wrapperClassName : 'mb-3 position-relative', " ").concat(MULTI_SEL_VALID ? 'multiple-selection' : '', " ").concat(isOpen ? 'active focus' : ''),
     ref: rootRef
@@ -2454,6 +2459,7 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
     },
     tabIndex: tabIndex || 0,
     type: "text",
+    "data-overlay-id": "mf-select__options-wrapper-".concat(idRes),
     id: "label-".concat(idRes)
 
     // Don't use "name", it's just a container to display the label

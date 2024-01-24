@@ -157,6 +157,8 @@ const Tooltip = (props: TooltipProps) => {
         stopTimerHover();
         stopTimerMouseout();
         startTimerMouseout();
+
+        
     }
 
 
@@ -216,6 +218,7 @@ const Tooltip = (props: TooltipProps) => {
 
             <div
                 ref={rootRef}
+                data-overlay-id={`tooltip__wrapper-${idRes}`}
                 className="tooltip__trigger d-inline-block"
                 onMouseEnter={handleMouseEnter}
                 onMouseLeave={handleMouseLeave}

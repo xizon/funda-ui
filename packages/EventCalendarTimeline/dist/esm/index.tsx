@@ -737,6 +737,7 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
                             <td
                                 className={`e-cal-tl-table__cell-cushion-content__container e-cal-tl-table__cell-tooltiptrigger ${eventSourcesData && _currentData.length > 0 ? 'has-event' : ''} ${d > 0 ? '' : 'empty'} ${d === now.getDate() ? 'today' : ''} ${d === day && tableRowNum === rowIndex ? 'selected' : ''} ${isLastCol ? 'last-cell' : ''}`}
                                 key={"col" + i}
+                                data-overlay-id={`e-cal-tl-table__cell-tooltipwrapper-${idRes}`}
                                 data-index={colIndex-1}
                                 colSpan={1}
                                 data-date={getCalendarDate(_dateShow)}
@@ -970,6 +971,7 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
                             <td
                                 className={`e-cal-tl-table__cell-cushion-content__container e-cal-tl-table__cell-tooltiptrigger ${_currentData.length > 0 ? 'has-event' : ''} ${d > 0 ? '' : 'empty'} ${d === now.getDate() ? 'today' : ''} ${d === day && tableRowNum === rowIndex ? 'selected' : ''} ${isLastCol ? 'last-cell' : ''}`}
                                 key={"col" + i}
+                                data-overlay-id={`e-cal-tl-table__cell-tooltipwrapper-${idRes}`}
                                 data-index={colIndex-1}
                                 colSpan={1}
                                 data-date={getCalendarDate(_dateShow)}

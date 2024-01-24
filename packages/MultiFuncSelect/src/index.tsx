@@ -194,8 +194,11 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
         labels: [],
         values: []
     });
-    const multiSelControlOptionExist = (arr: any[], val: any) => arr.map((v: any) => v.toString()).includes(val.toString());
-
+    const multiSelControlOptionExist = (arr: any[], val: any) => {
+        const _data = arr.filter(Boolean);
+        return _data.map((v: any) => v.toString()).includes(val.toString());
+    };
+    
 
     // clean trigger
     const CLEAN_TRIGGER_VALID = typeof cleanTrigger === 'undefined' ? false : (cleanTrigger ? cleanTrigger.valid : false);
@@ -458,6 +461,8 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
                 }
 
             } else {
+
+                // If the default value is label, match value
                 const filterResQueryValue = _ORGIN_DATA.filter((item: any) => item.value == defaultValue);
                 const filterResQueryLabel = _ORGIN_DATA.filter((item: any) => item.label == defaultValue);
 
@@ -589,6 +594,8 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
 
             // STEP 3: ===========
             // value & label must be initialized
+
+            // If the default value is label, match value
             let filterRes: any = [];
             const filterResQueryValue = optionsDataInit.filter((item: any) => item.value == defaultValue);
             const filterResQueryLabel = optionsDataInit.filter((item: any) => item.label == defaultValue);
@@ -1840,7 +1847,13 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
 
             {label ? <><div className="mf-select__label"><label htmlFor={`label-${idRes}`} className="form-label" dangerouslySetInnerHTML={{ __html: `${label}` }}></label></div></> : null}
 
-            <div id={`mf-select__wrapper-${idRes}`} className={`mf-select__wrapper ${wrapperClassName || wrapperClassName === '' ? wrapperClassName : 'mb-3 position-relative'} ${MULTI_SEL_VALID ? 'multiple-selection' : ''} ${isOpen ? 'active focus' : ''}`} ref={rootRef}>
+            <div 
+                data-overlay-id={`mf-select__options-wrapper-${idRes}`}
+                id={`mf-select__wrapper-${idRes}`} 
+                className={`mf-select__wrapper ${wrapperClassName || wrapperClassName === '' ? wrapperClassName : 'mb-3 position-relative'} ${MULTI_SEL_VALID ? 'multiple-selection' : ''} ${isOpen ? 'active focus' : ''}`} 
+                ref={rootRef}
+
+            >
 
 
                 {/* RESULT CONTAINER */}
@@ -1856,6 +1869,7 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
                         }}
                         tabIndex={tabIndex || 0}
                         type="text"
+                        data-overlay-id={`mf-select__options-wrapper-${idRes}`}
                         id={`label-${idRes}`}
 
                         // Don't use "name", it's just a container to display the label

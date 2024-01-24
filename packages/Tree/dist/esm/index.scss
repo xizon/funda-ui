@@ -25,7 +25,8 @@
     justify-content: space-between;
     padding: 0.5rem 0;
     outline: none; /* When using "tabindex" please set */
-    word-break: break-all;
+    word-wrap: break-word;
+    word-break: break-word;
 
     ul, li {
         list-style: none;

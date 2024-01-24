@@ -112,7 +112,19 @@ const MultipleCheckboxes = forwardRef((props: MultipleCheckboxesProps, ref: any)
 
             const _val = VALUE_BY_BRACKETS ? extractContentsOfBrackets(defaultValue) : defaultValue.trim().replace(/^\,|\,$/g, '').split(',');
             if (Array.isArray(_val)) {
-                setValSelected(_val.filter((v: any) => v !== ''));
+             
+                // If the default value is label, match value
+                let _realValue: any[] = _val.filter((v: any) => v !== '');
+                let filterRes: any = [];
+                const filterResQueryValue = optionsRes.filter((item: any) => _val.includes(item.value));
+                const filterResQueryLabel = optionsRes.filter((item: any) => _val.includes(item.label));
+
+                filterRes = filterResQueryValue;
+                if (filterResQueryValue.length === 0) filterRes = filterResQueryLabel;
+                if (filterRes.length > 0) _realValue = filterRes.filter((v: any) => v.value !== '').map((k: any) => k.value);
+
+                //
+                setValSelected(_realValue);
             } else {
                 setValSelected([]);
             }
@@ -169,6 +181,7 @@ const MultipleCheckboxes = forwardRef((props: MultipleCheckboxesProps, ref: any)
                                                 >
                                                     <Checkbox
                                                         wrapperClassName=""
+                                                        name={`${name}-checkbox-item`}
                                                         data-index={`${index}-${optIndex}`}
                                                         data-label={opt.label}
                                                         data-list-item-label={`${typeof opt.listItemLabel === 'undefined' ? '' : opt.listItemLabel}`} 
@@ -228,6 +241,7 @@ const MultipleCheckboxes = forwardRef((props: MultipleCheckboxesProps, ref: any)
                                     >
                                         <Checkbox
                                             wrapperClassName=""
+                                            name={`${name}-checkbox-item`}
                                             data-index={index}
                                             data-label={item.label}
                                             data-list-item-label={`${typeof item.listItemLabel === 'undefined' ? '' : item.listItemLabel}`} 

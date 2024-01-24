@@ -140,7 +140,18 @@ const Textarea = forwardRef((props: TextareaProps, ref: any) => {
         // update default value
         //--------------
         if (typeof value !== 'undefined') {
-            setChangedVal(`${value}`);   // Avoid displaying the number 0
+            
+
+            if (value.length > 0 && autoSize) {
+                // Recalculate height if default value exceeds initial height
+                setChangedVal('');
+                setTimeout(() => {
+                    setChangedVal(`${value}`);
+                }, 0);
+            } else {
+                setChangedVal(`${value}`);   // Avoid displaying the number 0
+            }
+
         }
 
     }, [value]);    

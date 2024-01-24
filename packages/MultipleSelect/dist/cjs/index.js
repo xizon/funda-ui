@@ -472,7 +472,8 @@ var MultipleSelect = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardR
     hasErr = _useState10[0],
     setHasErr = _useState10[1];
   var multiSelControlOptionExist = function multiSelControlOptionExist(arr, val) {
-    return arr.map(function (v) {
+    var _data = arr.filter(Boolean);
+    return _data.map(function (v) {
       return v.toString();
     }).includes(val.toString());
   };

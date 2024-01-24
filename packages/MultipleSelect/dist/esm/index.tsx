@@ -113,7 +113,11 @@ const MultipleSelect = forwardRef((props: MultipleSelectProps, ref: any) => {
     const [hasErr, setHasErr] = useState<boolean>(false);
 
 
-    const multiSelControlOptionExist = (arr: any[], val: any) => arr.map((v: any) => v.toString()).includes(val.toString());
+    const multiSelControlOptionExist = (arr: any[], val: any) => {
+        const _data = arr.filter(Boolean);
+        return _data.map((v: any) => v.toString()).includes(val.toString());
+    };
+    
 
     async function fetchData(params: any) {
         

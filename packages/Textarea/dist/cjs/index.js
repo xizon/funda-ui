@@ -293,7 +293,15 @@ var Textarea = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_reac
     // update default value
     //--------------
     if (typeof value !== 'undefined') {
-      setChangedVal("".concat(value)); // Avoid displaying the number 0
+      if (value.length > 0 && autoSize) {
+        // Recalculate height if default value exceeds initial height
+        setChangedVal('');
+        setTimeout(function () {
+          setChangedVal("".concat(value));
+        }, 0);
+      } else {
+        setChangedVal("".concat(value)); // Avoid displaying the number 0
+      }
     }
   }, [value]);
   return /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {

@@ -113,8 +113,21 @@ const Radio = (props: RadioProps) => {
                 _ORGIN_DATA = [];
             }
 
+
+                  
+            // If the default value is label, match value
+            let _realValue = value;
+            let filterRes: any = [];
+            const filterResQueryValue = _ORGIN_DATA.filter((item: any) => item.value == value);
+            const filterResQueryLabel = _ORGIN_DATA.filter((item: any) => item.label == value);
+
+            filterRes = filterResQueryValue;
+            if (filterResQueryValue.length === 0) filterRes = filterResQueryLabel;
+            if (filterRes.length > 0) _realValue = filterRes[0].value;
+            
+
             //
-            setControlValue(value); // value must be initialized
+            setControlValue(_realValue); // value must be initialized
 
 
             //
@@ -126,8 +139,22 @@ const Radio = (props: RadioProps) => {
             return _ORGIN_DATA;
         } else {
 
+
+                  
+            // If the default value is label, match value
+            let _realValue = value;
+            let filterRes: any = [];
+            const filterResQueryValue = optionsDataInit.filter((item: any) => item.value == value);
+            const filterResQueryLabel = optionsDataInit.filter((item: any) => item.label == value);
+
+            filterRes = filterResQueryValue;
+            if (filterResQueryValue.length === 0) filterRes = filterResQueryLabel;
+            if (filterRes.length > 0) _realValue = filterRes[0].value;
+
+
+
             //
-            setControlValue(value); // value must be initialized
+            setControlValue(_realValue); // value must be initialized
 
             //
             setDataInit(optionsDataInit); // data must be initialized

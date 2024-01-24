@@ -303,7 +303,8 @@
 }
 .e-cal-tl-table__timeline-table__wrapper .e-cal-tl-table__cell-cushion-title,
 .e-cal-tl-table__timeline-table__wrapper .e-cal-tl-table__cell-cushion-content {
-  word-break: break-all;
+  word-wrap: break-word;
+  word-break: break-word;
   max-width: var(--e-cal-tl-table-cell-max-w);
   /* If the maximum width is not increased and the screen becomes smaller, 
   the cell width of ".e-cal-tl-table__datagrid-header__content" may be 
@@ -318,7 +319,8 @@
 }
 .e-cal-tl-table__timeline-table__wrapper .e-cal-tl-table__cell-cushion-headertitle,
 .e-cal-tl-table__timeline-table__wrapper .e-cal-tl-table__cell-cushion-title {
-  word-break: break-all;
+  word-wrap: break-word;
+  word-break: break-word;
 }
 .e-cal-tl-table__timeline-table__wrapper .e-cal-tl-table__cell-cushion-headertitle {
   width: var(--e-cal-tl-table-header-w);
