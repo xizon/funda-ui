@@ -9,6 +9,11 @@ import ModalDialog from 'funda-ui/ModalDialog';
 ```
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |
+| `modalContentClassName` | string  | - | The extended class name of content wrapper |
+| `modalHeaderClassName` | string  | - | The extended class name of header |
+| `modalTitleClassName` | string  | - | The extended class name of title |
+| `modalBodyClassName` | string  | - | The extended class name of content area |
+| `modalFooterClassName` | string  | - | The extended class name of footer area |
 | `show` | boolean  | false | **(required)** Whether the modal dialog is visible or not, you can use it with the `autoClose` property at the same time |
 | `protectFixedViewport` | boolean  | true | Prevent "transform", "filter", "perspective" attribute destruction fixed viewport orientation. Enabled by default, after enabling the default JS event will be invalid, you need to use the `onOpen` attribute to add some new events to elements. Please refer to the example. <blockquote>When you use a component with its own events, you can turn it off to lose js events</blockquote> |
 | `autoClose` | number \| boolean  | false | Specify auto-close time. This function is not enabled when this value is false. If the value is `2000`, it will automatically close after 2 seconds. |
@@ -170,6 +175,95 @@ export default () => {
     );
 }
 ```
+
+
+
+## Custom content area without spacing and sticky
+
+```js
+import React from "react";
+import ModalDialog from 'funda-ui/ModalDialog';
+
+export default () => {
+
+    const [closeModalFunc, setCloseModalFunc] = useState<Function | null>(null);
+
+    return (
+        <>
+
+            <ModalDialog
+                modalBodyClassName="p-0"
+                show={false}
+                protectFixedViewport={false}
+                maxWidth="850px"
+                minHeight="175px"
+                heading="Title Here"
+                triggerClassName="d-inline w-auto"
+                triggerContent={<>
+                    <a href="#" tabIndex={-1}>Launch demo modal</a>
+                </>}
+                onOpen={(e, closewin) => {
+                    setCloseModalFunc(() => closewin);
+                }}
+            >
+
+                <div className="custom-content">
+
+                    {/* NAV */}
+                    <div className="position-sticky top-0 p-2 px-3 z-2 bg-body border-bottom">
+                        <strong>Navigation</strong>
+                    </div>
+                    {/* /NAV */}
+
+
+
+                    {/* CONTENT */}
+                    <div className="p-3">
+                        content here...<br />content here...<br />content here...<br />content here...<br />content here...<br />content here...<br />content here...<br />content here...<br />content here...<br />content here...<br />content here...<br />content here...<br />content here...<br />content here...<br />content here...<br />content here...<br />content here...<br />content here...<br />content here...<br />content here...<br />content here...<br />content here...<br />content here...<br />content here...<br />content here...<br />content here...<br />content here...<br />content here...<br />content here...<br />content here...<br />content here...<br />content here...<br />
+                    </div>
+                    {/* /CONTENT */}
+
+                
+                    {/* TOOLBOX */}
+                    <div className="border-top position-sticky bottom-0 px-3 z-2 bg-body pb-2">
+
+                        <div className="text-start pt-2">
+
+                            <div className="row g-3 align-items-center">
+                                <div className="col-auto text-start">
+                                    <button tabIndex={-1} type="button" className="btn btn-secondary my-1 btn-sm">Button 1</button>
+                                    <button tabIndex={-1} type="button" className="btn mx-1 my-1 btn-sm ms-2 btn-outline-secondary"><small>Button 2</small></button>
+                                    <button tabIndex={-1} type="button" className="btn mx-1 my-1 btn-sm ms-2 btn-outline-secondary"><small>Button 3</small></button>
+                                </div>
+                                <div className="col-auto gx-0">
+                                    <input type="text" placeholder="Input" className="form-control form-control-sm" style={{ width: '100px' }} />
+                                </div>
+                                <div className="col text-end">
+                                    <button tabIndex={-1} type="button" className="btn btn-outline-secondary btn-sm text-decoration-none" onClick={(e: React.MouseEvent) => {
+                                        closeModalFunc?.();
+                                    }}>Discard</button>
+                                    <button tabIndex={-1} type="button" className="btn btn-primary btn-sm text-decoration-none ms-2" onClick={(e: React.MouseEvent) => {
+                                        // do something...
+
+                                        // close
+                                        closeModalFunc?.();
+                                    }}>Confirm</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {/* /TOOLBOX */}
+
+                </div>
+            </ModalDialog>
+
+        </>
+    );
+}
+```
+
+
+
 
 
 ## Asynchronous Usage
@@ -370,14 +464,6 @@ export default () => {
                 triggerContent={<>
                     <a href="#" tabIndex={-1}>Launch demo modal</a>
                 </>}
-                onClose={(e) => {
-
-                    // Modifying React State can ensure that the window content is updated in real time
-                    setTimeout(() => {
-                        setShow(false);
-                    }, 350);
-
-                }}
             >
 
                 <div className="row mb-3">
@@ -433,14 +519,6 @@ export default () => {
                 </>}
                 onOpen={(e, closewin) => {
                     setCloseModalFunc(() => closewin);
-                }}
-                onClose={(e) => {
-
-                    // Modifying React State can ensure that the window content is updated in real time
-                    setTimeout(() => {
-                        setShow(false);
-                    }, 350);
-
                 }}
             >
 

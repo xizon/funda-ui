@@ -366,7 +366,12 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 //Destroys body scroll locking
 
 var ModalDialog = function ModalDialog(props) {
-  var show = props.show,
+  var modalContentClassName = props.modalContentClassName,
+    modalHeaderClassName = props.modalHeaderClassName,
+    modalTitleClassName = props.modalTitleClassName,
+    modalBodyClassName = props.modalBodyClassName,
+    modalFooterClassName = props.modalFooterClassName,
+    show = props.show,
     protectFixedViewport = props.protectFixedViewport,
     maxWidth = props.maxWidth,
     minHeight = props.minHeight,
@@ -672,28 +677,28 @@ var ModalDialog = function ModalDialog(props) {
       maxWidth: "".concat(maxWidth)
     } : {}
   }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
-    className: enableVideo ? 'modal-content bg-transparent shadow-none border-0' : 'modal-content',
+    className: "".concat(enableVideo ? 'modal-content bg-transparent shadow-none border-0' : 'modal-content', " ").concat(modalContentClassName || ''),
     style: {
       overflow: 'inherit',
       minHeight: minHeight ? minHeight : 'auto'
     }
   }, (!heading || heading === '') && closeDisabled ? null : /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
-    className: enableVideo ? 'modal-header border-0 px-0' : 'modal-header'
+    className: "".concat(enableVideo ? 'modal-header border-0 px-0' : 'modal-header', " ").concat(modalHeaderClassName || '')
   }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("h5", {
-    className: "modal-title"
+    className: "modal-title ".concat(modalTitleClassName || '')
   }, heading || ''), !closeDisabled ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("button", {
     type: "button",
     className: enableVideo ? 'btn-close btn-close-white' : 'btn-close',
     "data-close": "1",
     onClick: handleCloseWin
   }) : null)), /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
-    className: enableVideo ? 'modal-body m-0 p-0' : 'modal-body'
+    className: "".concat(enableVideo ? 'modal-body m-0 p-0' : 'modal-body', " ").concat(modalBodyClassName || '')
   }, enableVideo ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
     className: "modal-dialog__video"
   }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
     className: "ratio ratio-16x9"
   }, children))) : children), closeBtnLabel || submitBtnLabel ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
-    className: "modal-footer"
+    className: "modal-footer ".concat(modalFooterClassName || '')
   }, !closeDisabled ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, closeBtnLabel ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("button", {
     "data-close": "1",
     onClick: handleCloseWin,

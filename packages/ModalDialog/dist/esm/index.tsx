@@ -19,6 +19,12 @@ declare global {
 
 
 type ModalDialogProps = {
+    /** Extended class name */
+    modalContentClassName?: string;
+    modalHeaderClassName?: string;
+    modalTitleClassName?: string;
+    modalBodyClassName?: string;
+    modalFooterClassName?: string;
     /** Whether the modal dialog is visible or not, you can use it with the `autoClose` property at the same time */
     show: boolean;
     /** Prevent "transform", "filter", "perspective" attribute destruction fixed viewport orientation. Enabled by default, after enabling the default JS event will be invalid, you need to use the `onOpen` attribute to add some new events to elements. Please refer to the example. */
@@ -67,6 +73,11 @@ type ModalDialogProps = {
 
 const ModalDialog = (props: ModalDialogProps) => {
     const {
+        modalContentClassName,
+        modalHeaderClassName,
+        modalTitleClassName,
+        modalBodyClassName,
+        modalFooterClassName,
         show,
         protectFixedViewport,
         maxWidth,
@@ -428,17 +439,17 @@ const ModalDialog = (props: ModalDialogProps) => {
             {/* Modal */}
             <div ref={modalRef} className={enableVideo ? `modal ${PROTECT_FIXED_VIEWPORT ? 'protect-fixed-viewport' : ''} fade is-video ${winShow ? 'show' : ''}` : `modal ${PROTECT_FIXED_VIEWPORT ? 'protect-fixed-viewport' : ''} fade ${winShow ? 'show' : ''}`} tabIndex={-1} aria-hidden="true" style={{ pointerEvents: 'none' }} data-mask={`mask-${idRes}`}>
                 <div className="modal-dialog modal-dialog-centered modal-dialog-scrollable" style={maxWidth ? { maxWidth: `${maxWidth}` } : {}}>
-                    <div className={enableVideo ? 'modal-content bg-transparent shadow-none border-0' : 'modal-content'} style={{overflow: 'inherit',minHeight: minHeight ? minHeight : 'auto'}}>
+                    <div className={`${enableVideo ? 'modal-content bg-transparent shadow-none border-0' : 'modal-content'} ${modalContentClassName || ''}`} style={{overflow: 'inherit',minHeight: minHeight ? minHeight : 'auto'}}>
                         {(!heading || heading === '') && closeDisabled ? null : <>
 
-                            <div className={enableVideo ? 'modal-header border-0 px-0' : 'modal-header'}>
-                                <h5 className="modal-title">{heading || ''}</h5>
+                            <div className={`${enableVideo ? 'modal-header border-0 px-0' : 'modal-header'} ${modalHeaderClassName || ''}`}>
+                                <h5 className={`modal-title ${modalTitleClassName || ''}`}>{heading || ''}</h5>
                                 {!closeDisabled ? <button type="button" className={enableVideo ? 'btn-close btn-close-white' : 'btn-close'} data-close="1" onClick={handleCloseWin}></button> : null}
 
                             </div>
                         </>}
 
-                        <div className={enableVideo ? 'modal-body m-0 p-0' : 'modal-body'}>
+                        <div className={`${enableVideo ? 'modal-body m-0 p-0' : 'modal-body'} ${modalBodyClassName || ''}`}>
                             {/*<!-- ////////  content  begin //////// -->*/}
                             {enableVideo ? <>
                                 <div className="modal-dialog__video">
@@ -451,7 +462,7 @@ const ModalDialog = (props: ModalDialogProps) => {
                         </div>
 
                         {closeBtnLabel || submitBtnLabel ? <>
-                            <div className="modal-footer">
+                            <div className={`modal-footer ${modalFooterClassName || ''}`}>
 
                                 {!closeDisabled ? <>{closeBtnLabel ? <button data-close="1" onClick={handleCloseWin} type="button" className={closeBtnClassName ? closeBtnClassName : 'btn btn-secondary'}>{closeBtnLabel}</button> : null}</> : null}
 

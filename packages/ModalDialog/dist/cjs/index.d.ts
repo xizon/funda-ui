@@ -11,6 +11,12 @@ declare global {
     }
 }
 declare type ModalDialogProps = {
+    /** Extended class name */
+    modalContentClassName?: string;
+    modalHeaderClassName?: string;
+    modalTitleClassName?: string;
+    modalBodyClassName?: string;
+    modalFooterClassName?: string;
     /** Whether the modal dialog is visible or not, you can use it with the `autoClose` property at the same time */
     show: boolean;
     /** Prevent "transform", "filter", "perspective" attribute destruction fixed viewport orientation. Enabled by default, after enabling the default JS event will be invalid, you need to use the `onOpen` attribute to add some new events to elements. Please refer to the example. */
