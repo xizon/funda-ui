@@ -11,6 +11,8 @@ import Input from 'funda-ui/Input';
 | --- | --- | --- | --- |
 | `wrapperClassName` | string | `mb-3 position-relative` | The class name of the control wrapper. |
 | `controlClassName` | string | `form-control` | The class name of the control. |
+| `controlGroupWrapperClassName` | string | `input-group` | The class name of the control group wrapper. |
+| `controlGroupTextClassName` | string | `input-group-text` | The class name of the control group text. |
 | `type` | string | text | The type of input. Such as \<input type="text" name="name"\> gives a text box. |
 | `value` | string | - | Set a default value for this control |
 | `label` | string \| ReactNode | - | It is used to specify a label for an element of a form.<blockquote>Support html tags</blockquote> |

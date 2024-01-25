@@ -7,6 +7,8 @@ declare module 'react' {
 interface TextareaProps extends React.ComponentPropsWithoutRef<"textarea"> {
     wrapperClassName?: string;
     controlClassName?: string;
+    controlGroupWrapperClassName?: string;
+    controlGroupTextClassName?: string;
     value?: string;
     label?: React.ReactNode | string;
     name?: string;
@@ -18,6 +20,8 @@ interface TextareaProps extends React.ComponentPropsWithoutRef<"textarea"> {
     readOnly?: any;
     placeholder?: string;
     autoSize?: boolean;
+    iconLeft?: React.ReactNode | string;
+    iconRight?: React.ReactNode | string;
     /** -- */
     id?: string;
     style?: React.CSSProperties;

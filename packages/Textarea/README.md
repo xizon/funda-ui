@@ -11,6 +11,8 @@ import Textarea from 'funda-ui/Textarea';
 | --- | --- | --- | --- |
 | `wrapperClassName` | string | `mb-3 position-relative` | The class name of the control wrapper. |
 | `controlClassName` | string | `form-control` | The class name of the control. |
+| `controlGroupWrapperClassName` | string | `input-group` | The class name of the control group wrapper. |
+| `controlGroupTextClassName` | string | `input-group-text` | The class name of the control group text. |
 | `type` | string | text | The type of input. Such as \<input type="text" name="name"\> gives a text box. |
 | `value` | string | - | Set a default value for this control |
 | `autoSize` | boolean | false | Creating a Textarea with dynamic height. |
@@ -21,6 +23,8 @@ import Textarea from 'funda-ui/Textarea';
 | `readOnly` | boolean | false | When present, it specifies that this component field is read-only. |
 | `disabled` | boolean | false | Whether it is disabled |
 | `required` | boolean | false | When present, it specifies that a field must be filled out before submitting the form. |
+| `iconLeft` | ReactNode  | - | Set the left icon of this control |
+| `iconRight` | ReactNode  | - | Set the right icon of this control |
 | `cols` | number  | - | The cols attribute specifies the visible width of a text area. |
 | `rows` | number  | - | The rows attribute specifies the visible height of a text area, in lines. |
 | `onChangeCallback` | function  | - | Return value from `onChangeCallback` property to format the data of the control element, which will match the data structure of the component. <br >At the same time it returns the current control, you will use this function and use the `return` keyword to return a new value. <blockquote>It fires when focus is lost. If return is not set, it will not return.</blockquote> |

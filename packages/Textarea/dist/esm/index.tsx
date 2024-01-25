@@ -11,6 +11,8 @@ declare module 'react' {
 interface TextareaProps extends React.ComponentPropsWithoutRef<"textarea"> {
     wrapperClassName?: string;
     controlClassName?: string;
+    controlGroupWrapperClassName?: string;
+    controlGroupTextClassName?: string;
 	value?: string;
 	label?: React.ReactNode | string;
 	name?: string;
@@ -22,6 +24,8 @@ interface TextareaProps extends React.ComponentPropsWithoutRef<"textarea"> {
     readOnly?: any;
 	placeholder?: string;
     autoSize?: boolean;
+    iconLeft?: React.ReactNode | string;
+    iconRight?: React.ReactNode | string;
 	/** -- */
 	id?: string;
     style?: React.CSSProperties;
@@ -40,12 +44,16 @@ const Textarea = forwardRef((props: TextareaProps, ref: any) => {
     const {
         wrapperClassName,
         controlClassName,
+        controlGroupWrapperClassName,
+        controlGroupTextClassName,
         cols,
         rows,
         disabled,
         required,
         placeholder,
         autoSize,
+        iconLeft,
+        iconRight,
         readOnly,
         value,
         label,
@@ -161,9 +169,10 @@ const Textarea = forwardRef((props: TextareaProps, ref: any) => {
         <>
 
             <div className={wrapperClassName || wrapperClassName === '' ? wrapperClassName : "mb-3 position-relative"} ref={rootRef}>
-                {label ? <><label htmlFor={idRes} className="form-label" dangerouslySetInnerHTML={{__html: `${label}`}}></label></> : null}
+                {label ? <><label htmlFor={idRes} className={controlGroupWrapperClassName || "form-label"} dangerouslySetInnerHTML={{__html: `${label}`}}></label></> : null}
 
                 <div className="input-group">
+                    {typeof iconLeft !== 'undefined' && iconLeft !== null && iconLeft !== '' ? <><span className={controlGroupTextClassName || "input-group-text"}>{iconLeft}</span></>: null}
                     
                     <textarea  
                         ref={(node) => {
@@ -193,6 +202,7 @@ const Textarea = forwardRef((props: TextareaProps, ref: any) => {
                       style={style}
                       {...attributes}
 					/>
+                     {typeof iconRight !== 'undefined' && iconRight !== null && iconRight !== '' ? <><span className={controlGroupTextClassName || "input-group-text"}>{iconRight}</span></>: null}
                 </div>
                 {required ? <><span className="position-absolute end-0 top-0 my-2 mx-2"><span className="text-danger">*</span></span></> : ''}
 

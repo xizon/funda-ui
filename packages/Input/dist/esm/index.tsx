@@ -9,6 +9,8 @@ declare module 'react' {
 type InputProps = {
     wrapperClassName?: string;
     controlClassName?: string;
+    controlGroupWrapperClassName?: string;
+    controlGroupTextClassName?: string;
     type?: string;
     value?: string;
     label?: React.ReactNode | string;
@@ -49,6 +51,8 @@ const Input = forwardRef((props: InputProps, ref: any) => {
     const {
         wrapperClassName,
         controlClassName,
+        controlGroupWrapperClassName,
+        controlGroupTextClassName,
         type,
         disabled,
         required,
@@ -177,10 +181,11 @@ const Input = forwardRef((props: InputProps, ref: any) => {
         <>
 
             <div className={wrapperClassName || wrapperClassName === '' ? wrapperClassName : "mb-3 position-relative"} ref={rootRef}>
-                {label ? <><label htmlFor={idRes} className="form-label" dangerouslySetInnerHTML={{__html: `${label}`}}></label></> : null}
+                {label ? <><label htmlFor={idRes} className={controlGroupWrapperClassName || "form-label"} dangerouslySetInnerHTML={{__html: `${label}`}}></label></> : null}
 
                 <div className="input-group">
-                    {iconLeft ? <><span className="input-group-text">{iconLeft}</span></>: null}
+                    {typeof iconLeft !== 'undefined' && iconLeft !== null && iconLeft !== '' ? <><span className={controlGroupTextClassName || "input-group-text"}>{iconLeft}</span></>: null}
+
                     <input
                         ref={(node) => {
                             valRef.current = node;
@@ -220,8 +225,8 @@ const Input = forwardRef((props: InputProps, ref: any) => {
                         style={style}
                         {...attributes}
                     />
-                    {units ? <><span className="input-group-text">{units}</span></>: null}
-                    {iconRight ? <><span className="input-group-text">{iconRight}</span></>: null}
+                    {units ? <><span className={controlGroupTextClassName || "input-group-text"}>{units}</span></>: null}
+                    {typeof iconRight !== 'undefined' && iconRight !== null && iconRight !== '' ? <><span className={controlGroupTextClassName || "input-group-text"}>{iconRight}</span></>: null}
                 </div>
                 {required ? <><span className="position-absolute end-0 top-0 my-2 mx-2"><span className="text-danger">*</span></span></> : ''}
 

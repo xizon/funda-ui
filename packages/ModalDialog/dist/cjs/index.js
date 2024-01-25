@@ -395,6 +395,8 @@ var ModalDialog = function ModalDialog(props) {
     onSubmit = props.onSubmit,
     id = props.id,
     children = props.children;
+  var M_WIDTH = typeof maxWidth === 'function' ? maxWidth() : maxWidth ? maxWidth : undefined;
+  var M_HEIGHT = typeof minHeight === 'function' ? minHeight() : minHeight ? minHeight : undefined;
   var uniqueID = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useId)().replace(/\:/g, "-");
   var modalRef = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useRef)(null);
   var triggerRef = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useRef)(null);
@@ -673,14 +675,14 @@ var ModalDialog = function ModalDialog(props) {
     "data-mask": "mask-".concat(idRes)
   }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
     className: "modal-dialog modal-dialog-centered modal-dialog-scrollable",
-    style: maxWidth ? {
-      maxWidth: "".concat(maxWidth)
+    style: M_WIDTH ? {
+      maxWidth: "".concat(M_WIDTH)
     } : {}
   }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
     className: "".concat(enableVideo ? 'modal-content bg-transparent shadow-none border-0' : 'modal-content', " ").concat(modalContentClassName || ''),
     style: {
       overflow: 'inherit',
-      minHeight: minHeight ? minHeight : 'auto'
+      minHeight: M_HEIGHT ? M_HEIGHT : 'auto'
     }
   }, (!heading || heading === '') && closeDisabled ? null : /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
     className: "".concat(enableVideo ? 'modal-header border-0 px-0' : 'modal-header', " ").concat(modalHeaderClassName || '')

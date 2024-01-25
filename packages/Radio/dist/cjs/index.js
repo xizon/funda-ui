@@ -175,7 +175,7 @@ var Radio = function Radio(props) {
 
             //
             if (!(_typeof(fetchFuncAsync) === 'object')) {
-              _context.next = 21;
+              _context.next = 19;
               break;
             }
             _context.next = 4;
@@ -203,9 +203,11 @@ var Radio = function Radio(props) {
             filterResQueryLabel = _ORGIN_DATA.filter(function (item) {
               return item.label == value;
             });
-            filterRes = filterResQueryValue;
-            if (filterResQueryValue.length === 0) filterRes = filterResQueryLabel;
-            if (filterRes.length > 0) _realValue = filterRes[0].value;
+            if (filterResQueryValue.length === 0 && filterResQueryLabel.length > 0) {
+              filterRes = filterResQueryValue;
+              if (filterResQueryValue.length === 0) filterRes = filterResQueryLabel;
+              if (filterRes.length > 0) _realValue = filterRes[0].value;
+            }
 
             //
             setControlValue(_realValue); // value must be initialized
@@ -216,7 +218,7 @@ var Radio = function Radio(props) {
             //
             onFetch === null || onFetch === void 0 ? void 0 : onFetch(_ORGIN_DATA);
             return _context.abrupt("return", _ORGIN_DATA);
-          case 21:
+          case 19:
             // If the default value is label, match value
             _realValue2 = value;
             _filterRes = [];
@@ -226,9 +228,11 @@ var Radio = function Radio(props) {
             _filterResQueryLabel = optionsDataInit.filter(function (item) {
               return item.label == value;
             });
-            _filterRes = _filterResQueryValue;
-            if (_filterResQueryValue.length === 0) _filterRes = _filterResQueryLabel;
-            if (_filterRes.length > 0) _realValue2 = _filterRes[0].value;
+            if (_filterResQueryValue.length === 0 && _filterResQueryLabel.length > 0) {
+              _filterRes = _filterResQueryValue;
+              if (_filterResQueryValue.length === 0) _filterRes = _filterResQueryLabel;
+              if (_filterRes.length > 0) _realValue2 = _filterRes[0].value;
+            }
 
             //
             setControlValue(_realValue2); // value must be initialized
@@ -239,7 +243,7 @@ var Radio = function Radio(props) {
             //
             onFetch === null || onFetch === void 0 ? void 0 : onFetch(optionsDataInit);
             return _context.abrupt("return", optionsDataInit);
-          case 32:
+          case 28:
           case "end":
             return _context.stop();
         }

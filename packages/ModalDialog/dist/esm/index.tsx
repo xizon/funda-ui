@@ -30,9 +30,9 @@ type ModalDialogProps = {
     /** Prevent "transform", "filter", "perspective" attribute destruction fixed viewport orientation. Enabled by default, after enabling the default JS event will be invalid, you need to use the `onOpen` attribute to add some new events to elements. Please refer to the example. */
     protectFixedViewport?: boolean;
     /** Custom modal max-width whick need a unit string. */
-    maxWidth?: number | string;
+    maxWidth?: number | string | Function;
     /** Custom modal max-height whick need a unit string. */
-    minHeight?: number | string;
+    minHeight?: number | string | Function;
     /** Adapt the video to the window */
     enableVideo?: boolean;
     /** Set a window title */
@@ -104,6 +104,9 @@ const ModalDialog = (props: ModalDialogProps) => {
         children
     } = props;
 
+
+    const M_WIDTH = typeof maxWidth === 'function' ? maxWidth() : maxWidth ? maxWidth : undefined;
+    const M_HEIGHT = typeof minHeight === 'function' ? minHeight() : minHeight ? minHeight : undefined;
 
     const uniqueID = useId().replace(/\:/g, "-");
     const modalRef = useRef<any>(null);
@@ -438,8 +441,8 @@ const ModalDialog = (props: ModalDialogProps) => {
 
             {/* Modal */}
             <div ref={modalRef} className={enableVideo ? `modal ${PROTECT_FIXED_VIEWPORT ? 'protect-fixed-viewport' : ''} fade is-video ${winShow ? 'show' : ''}` : `modal ${PROTECT_FIXED_VIEWPORT ? 'protect-fixed-viewport' : ''} fade ${winShow ? 'show' : ''}`} tabIndex={-1} aria-hidden="true" style={{ pointerEvents: 'none' }} data-mask={`mask-${idRes}`}>
-                <div className="modal-dialog modal-dialog-centered modal-dialog-scrollable" style={maxWidth ? { maxWidth: `${maxWidth}` } : {}}>
-                    <div className={`${enableVideo ? 'modal-content bg-transparent shadow-none border-0' : 'modal-content'} ${modalContentClassName || ''}`} style={{overflow: 'inherit',minHeight: minHeight ? minHeight : 'auto'}}>
+                <div className="modal-dialog modal-dialog-centered modal-dialog-scrollable" style={M_WIDTH ? { maxWidth: `${M_WIDTH}` } : {}}>
+                    <div className={`${enableVideo ? 'modal-content bg-transparent shadow-none border-0' : 'modal-content'} ${modalContentClassName || ''}`} style={{overflow: 'inherit',minHeight: M_HEIGHT ? M_HEIGHT : 'auto'}}>
                         {(!heading || heading === '') && closeDisabled ? null : <>
 
                             <div className={`${enableVideo ? 'modal-header border-0 px-0' : 'modal-header'} ${modalHeaderClassName || ''}`}>

@@ -20,8 +20,8 @@ import ModalDialog from 'funda-ui/ModalDialog';
 | `heading` | ReactNode  | - | Set a window title |
 | `maskDisabled` | boolean  | false | Disable mask |
 | `maskOpacity` | string  | - | The mask opacity. The value is in the range *0.0* to *1.0* |
-| `maxWidth` | number \| string  | false | Custom modal max-width whick need a unit string. Such as: `200px` |
-| `minHeight` | number \| string  | false | Custom modal max-height whick need a unit string. Such as: `auto` |
+| `maxWidth` | number \| string \| function  | false | Custom modal max-width whick need a unit string. Such as: `500px` or `() => window.innerWidth >= 768 ? window.innerWidth - 100 + 'px' : undefined`|
+| `minHeight` | number \| string \| function  | false | Custom modal max-height whick need a unit string. Such as: `auto` or `() => window.innerHeight - 150 + 'px'` |
 | `closeOnlyBtn` | boolean  | false | Disable mask to close the window |
 | `closeDisabled` | boolean  | false | Disable the close button. |
 | `triggerClassName` | string  | - | Specify a class for your trigger |

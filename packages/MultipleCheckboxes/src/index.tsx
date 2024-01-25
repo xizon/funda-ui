@@ -119,9 +119,12 @@ const MultipleCheckboxes = forwardRef((props: MultipleCheckboxesProps, ref: any)
                 const filterResQueryValue = optionsRes.filter((item: any) => _val.includes(item.value));
                 const filterResQueryLabel = optionsRes.filter((item: any) => _val.includes(item.label));
 
-                filterRes = filterResQueryValue;
-                if (filterResQueryValue.length === 0) filterRes = filterResQueryLabel;
-                if (filterRes.length > 0) _realValue = filterRes.filter((v: any) => v.value !== '').map((k: any) => k.value);
+                if (filterResQueryValue.length === 0 && filterResQueryLabel.length > 0) {
+                    filterRes = filterResQueryValue;
+                    if (filterResQueryValue.length === 0) filterRes = filterResQueryLabel;
+                    if (filterRes.length > 0 && filterResQueryLabel.length) _realValue = filterRes.filter((v: any) => v.value !== '').map((k: any) => k.value);
+                }
+
 
                 //
                 setValSelected(_realValue);

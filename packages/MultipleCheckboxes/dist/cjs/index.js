@@ -750,13 +750,15 @@ var MultipleCheckboxes = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forw
         var filterResQueryLabel = optionsRes.filter(function (item) {
           return _val.includes(item.label);
         });
-        filterRes = filterResQueryValue;
-        if (filterResQueryValue.length === 0) filterRes = filterResQueryLabel;
-        if (filterRes.length > 0) _realValue = filterRes.filter(function (v) {
-          return v.value !== '';
-        }).map(function (k) {
-          return k.value;
-        });
+        if (filterResQueryValue.length === 0 && filterResQueryLabel.length > 0) {
+          filterRes = filterResQueryValue;
+          if (filterResQueryValue.length === 0) filterRes = filterResQueryLabel;
+          if (filterRes.length > 0 && filterResQueryLabel.length) _realValue = filterRes.filter(function (v) {
+            return v.value !== '';
+          }).map(function (k) {
+            return k.value;
+          });
+        }
 
         //
         setValSelected(_realValue);

@@ -22,9 +22,9 @@ declare type ModalDialogProps = {
     /** Prevent "transform", "filter", "perspective" attribute destruction fixed viewport orientation. Enabled by default, after enabling the default JS event will be invalid, you need to use the `onOpen` attribute to add some new events to elements. Please refer to the example. */
     protectFixedViewport?: boolean;
     /** Custom modal max-width whick need a unit string. */
-    maxWidth?: number | string;
+    maxWidth?: number | string | Function;
     /** Custom modal max-height whick need a unit string. */
-    minHeight?: number | string;
+    minHeight?: number | string | Function;
     /** Adapt the video to the window */
     enableVideo?: boolean;
     /** Set a window title */
