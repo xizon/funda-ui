@@ -64,6 +64,22 @@ const MultipleCheckboxes = forwardRef((props: MultipleCheckboxesProps, ref: any)
     const [valSelected, setValSelected] = useState<any[]>([]);
     const _inline = typeof inline === 'undefined' ? true : inline;
 
+    const optionsFlat = (allData: any[]) => {
+
+        const flatItems: any[] = [];
+
+        allData.forEach((item: any) => {
+            if (typeof item.optgroup !== 'undefined') {
+                item.optgroup.forEach((opt: any) => {
+                    flatItems.push(opt);
+                });
+            } else {
+                flatItems.push(item);
+            }
+        });
+
+        return flatItems;
+    };
 
 	// Determine whether it is in JSON format
 	function isJSON( str: any ){
@@ -201,7 +217,7 @@ const MultipleCheckboxes = forwardRef((props: MultipleCheckboxesProps, ref: any)
                                                                 if (elIndex !== -1) newData.splice(elIndex, 1);
 
                                                                 const _res = (val) ? Array.from(new Set([e.target.value, ...newData])) : newData;
-                                                                const _resLabel = optionsRes.filter((v: any) => _res.includes(v.value)).map((k: any) => k.label);
+                                                                const _resLabel = optionsFlat(optionsRes).filter((v: any) => _res.includes(v.value)).map((k: any) => k.label);
 
                                                                 //
                                                                 let curData: any;
@@ -215,8 +231,7 @@ const MultipleCheckboxes = forwardRef((props: MultipleCheckboxesProps, ref: any)
                                                                 } else {
                                                                     curData = item;
                                                                 }
-                                                        
-
+                                                                
                                                                 onChange?.(e.target, _res, VALUE_BY_BRACKETS ? convertArrToValByBrackets(_res) : _res.join(','), _resLabel, VALUE_BY_BRACKETS ? convertArrToValByBrackets(_resLabel) : _resLabel.join(','), curData);
 
                                                                 return _res;

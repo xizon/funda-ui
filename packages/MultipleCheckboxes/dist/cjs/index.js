@@ -711,6 +711,19 @@ var MultipleCheckboxes = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forw
     valSelected = _useState4[0],
     setValSelected = _useState4[1];
   var _inline = typeof inline === 'undefined' ? true : inline;
+  var optionsFlat = function optionsFlat(allData) {
+    var flatItems = [];
+    allData.forEach(function (item) {
+      if (typeof item.optgroup !== 'undefined') {
+        item.optgroup.forEach(function (opt) {
+          flatItems.push(opt);
+        });
+      } else {
+        flatItems.push(item);
+      }
+    });
+    return flatItems;
+  };
 
   // Determine whether it is in JSON format
   function isJSON(str) {
@@ -823,7 +836,7 @@ var MultipleCheckboxes = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forw
               });
               if (elIndex !== -1) newData.splice(elIndex, 1);
               var _res = val ? Array.from(new Set([e.target.value].concat(_toConsumableArray(newData)))) : newData;
-              var _resLabel = optionsRes.filter(function (v) {
+              var _resLabel = optionsFlat(optionsRes).filter(function (v) {
                 return _res.includes(v.value);
               }).map(function (k) {
                 return k.label;
