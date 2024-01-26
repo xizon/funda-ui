@@ -19,6 +19,15 @@ declare type MultipleCheckboxesProps = {
     id?: string;
     style?: React.CSSProperties;
     [key: `data-${string}`]: string | undefined;
+    /** This function is called whenever the data is updated.
+ *  Exposes the JSON format data about the option as an argument.
+ */
+    fetchFuncAsync?: any;
+    fetchFuncMethod?: string;
+    fetchFuncMethodParams?: any[];
+    fetchCallback?: (data: any) => void;
+    onFetch?: (data: any) => void;
+    onLoad?: (arg1: any, arg2: any, arg3: any) => void;
     onChange?: (e: any, value: any, valueStr: any, label: any, labelStr: any, currentData: any) => void;
 };
 declare const MultipleCheckboxes: React.ForwardRefExoticComponent<MultipleCheckboxesProps & React.RefAttributes<unknown>>;

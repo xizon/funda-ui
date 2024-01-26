@@ -138,6 +138,10 @@ const Radio = (props: RadioProps) => {
             //
             onFetch?.(_ORGIN_DATA);
 
+            //
+            onLoad?.(_ORGIN_DATA, _realValue, rootRef.current);
+
+
             return _ORGIN_DATA;
         } else {
 
@@ -166,6 +170,10 @@ const Radio = (props: RadioProps) => {
 
             //
             onFetch?.(optionsDataInit);
+
+            //
+            onLoad?.(optionsDataInit, _realValue, rootRef.current);
+
 
             return optionsDataInit;
         }
@@ -363,11 +371,6 @@ const Radio = (props: RadioProps) => {
         //--------------
         const _params: any[] = fetchFuncMethodParams || [];
         fetchData((_params).join(','));
-
-
-        //
-        //--------------
-        onLoad?.(dataInit, value, rootRef.current);
 
     }, [value, options]);
 

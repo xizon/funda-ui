@@ -20,6 +20,12 @@ import MultipleCheckboxes from 'funda-ui/MultipleCheckboxes';
 | `name` | string | - | Name is not deprecated when used with form fields. |
 | `disabled` | boolean | false | Whether it is disabled |
 | `required` | boolean | false | When present, it specifies that a field must be filled out before submitting the form. |
+| `fetchFuncAsync` | Constructor | - | A method as a string from the constructor.  |
+| `fetchFuncMethod` | string  | - | When the property is *true*, every time the select changes, a data request will be triggered. <br /><blockquote>The methord must be a Promise Object.</blockquote> |
+| `fetchFuncMethodParams` | array  | - | The parameter passed by the method, it is an array. <br />Note: the first element is a query string, the second element is the number of queried data (usually a number), and then you can increase the third, or fourth, and more parameters. <br />Such as `['',0]`, `['',99,'string 1','string 2']` <br /><blockquote>There should be at least one parameter which is the query string.</blockquote> |
+| `fetchCallback` | function  | - | Return value from `fetchCallback` property to format the data of the API callback, which will match the data structure of the component. <br >At the same time it returns the original data, you will use this function and use the `return` keyword to return a new value. |
+| `onFetch` | function  | - | Call a function when  data is successfully fetched. It returns one callback value which is the fetched data (**Array**) |
+| `onLoad` | function  | - | Call a function when the component has been rendered completely. It returns three callback values. <br /> <ol><li>The first is the passed data （**Array**）</li><li>The second is the default value (**String** \| **undefined**)</li><li> The third is the component wrapper (**HTMLDivElement**)</li></ol> |
 | `onChange` | function  | - | Call a function when the value of an HTML element is changed. It returns six callback values. <br /> <ol><li>The first is the control of current checkbox</li><li>The second is the current value (**Array**)</li><li>The third is the current string value (**String**)</li><li>The fourth is the current label text (**Array**)</li><li>The fifth is the current string label text (**String**)</li><li>The sixth is the current value (**JSON Object**)</li></ol>  |
 
 
@@ -170,3 +176,190 @@ export default () => {
     );
 }
 ```
+
+
+
+
+
+## Asynchronous Usage via HTTP Request
+
+You need to use a `fetchCallback` property to format the data of the API callback, which will match the data structure of the component.
+
+
+```js
+import React, { useState } from "react";
+import MultipleCheckboxes from 'funda-ui/MultipleCheckboxes';
+import axios from 'axios';
+
+class DataService {
+    
+    // `getList()` must be a Promise Object
+    async getList(searchStr = '', limit = 0, otherParam = '') {
+
+        console.log('searchStr: ', searchStr);
+        console.log("limit: ", limit);
+        console.log("otherParam: ", otherParam);
+
+        return {
+            code: 0,
+            message: 'OK',
+            data: [
+                {item_name: 'foo', item_code: 'bar'},
+                {item_name: 'foo2', item_code: 'bar2'},
+                {item_name: 'foo3', item_code: 'bar3'}
+            ]
+        };
+    }
+
+
+
+    async getListUseAxios(searchStr = '', limit = 0) {
+        let _data = null;
+        const res = await axios.get(`https://api`, {
+            params: {
+                s: searchStr,
+                limit: limit
+            },
+            headers: {
+                'Authorization': 'Bearer xxxx-xxxxxxxx-xxxxxxxx'
+                'Content-Type': 'application/json'
+            }
+        }).catch(function (error) {
+            console.log(error);
+        });
+
+        if (res && res.status == 200) _data = res.data;
+
+
+        // result
+        if (_data === null) {
+            return {
+                code: 0,
+                message: 'OK',
+                data: []
+            };
+        } else {
+            return {
+                code: 0,
+                message: 'OK',
+                data: _data
+            };
+        }
+
+    }
+
+    	
+}
+
+
+export default () => {
+
+    const [val, setVal] = useState('[bar2]');
+
+    return (
+        <>
+
+            <MultipleCheckboxes 
+                name="name"
+                value={val}
+                fetchFuncAsync={new DataService}
+                fetchFuncMethod="getList"
+                fetchFuncMethodParams={['',0]}
+                fetchCallback={(res) => {
+
+                    const formattedData = res.map((item, index) => {
+                        return {
+                            label: item.item_name,
+                            value: item.item_code,
+                            customArg1: index
+                        }
+                    }); 
+
+                    console.log(formattedData);
+                    /*
+                    [
+                        {"label": "foo","value": "bar","customArg1": 0},
+                        {"label": "foo2","value": "bar2","customArg1": 1},
+                        {"label": "foo3","value": "bar3","customArg1": 2}
+                    ]  
+                    */
+
+                    return formattedData;
+                }}
+                onFetch={(res) => {
+                    console.log('onFetch: ', res);
+                }}
+                onChange={(e: any, value: any, valueStr: any, label: any, labelStr: any, currentData: any) => {
+                    console.log(e, value, valueStr, label, labelStr, currentData);
+                    setVal(valueStr);
+                }}
+            />
+
+
+        </>
+    );
+}
+```
+
+
+
+
+## Do some actions when Radio rendering is complete
+
+
+```js
+import React from "react";
+import MultipleCheckboxes from 'funda-ui/MultipleCheckboxes';
+
+export default () => {
+
+    const optionsFlat = (allData: any[]) => {
+
+        const flatItems: any[] = [];
+
+        allData.forEach((item: any) => {
+            if (typeof item.optgroup !== 'undefined') {
+                item.optgroup.forEach((opt: any) => {
+                    flatItems.push(opt);
+                });
+            } else {
+                flatItems.push(item);
+            }
+        });
+
+        return flatItems;
+    };
+
+
+    return (
+        <>           
+            <MultipleCheckboxes
+                name="name"
+                value="value-2"
+                options={[
+                    {"label": "Option 1","value": "value-1","attr1": false},
+                    {"label": "Option 2","value": "value-2","attr1": true},
+                ]}
+                onLoad={(data: any, defaultVal: any, root: any) => {
+                              
+                    const _flatData = optionsFlat(data);
+                
+                    if (root) {
+                        [].slice.call(root.querySelectorAll(`[type="checkbox"]`)).forEach((el: HTMLInputElement, i:number) => {
+                            if (defaultVal.includes(_flatData[i].value) && _flatData[i].attr1) {
+                                (el.closest('.form-check') as HTMLDivElement).style.backgroundColor = 'red';
+                            } else {
+                                (el.closest('.form-check') as HTMLDivElement).style.backgroundColor = 'yellow';
+                            }
+        
+                        });
+                    }
+                    
+                }}
+            />
+
+        </>
+    );
+}
+```
+

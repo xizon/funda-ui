@@ -1083,7 +1083,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 
                     //
                     if (!(_typeof(fetchFuncAsync) === 'object')) {
-                      _context.next = 19;
+                      _context.next = 20;
                       break;
                     }
                     _context.next = 4;
@@ -1125,8 +1125,11 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 
                     //
                     onFetch === null || onFetch === void 0 ? void 0 : onFetch(_ORGIN_DATA);
+
+                    //
+                    onLoad === null || onLoad === void 0 ? void 0 : onLoad(_ORGIN_DATA, _realValue, rootRef.current);
                     return _context.abrupt("return", _ORGIN_DATA);
-                  case 19:
+                  case 20:
                     // If the default value is label, match value
                     _realValue2 = value;
                     _filterRes = [];
@@ -1150,8 +1153,11 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 
                     //
                     onFetch === null || onFetch === void 0 ? void 0 : onFetch(optionsDataInit);
+
+                    //
+                    onLoad === null || onLoad === void 0 ? void 0 : onLoad(optionsDataInit, _realValue2, rootRef.current);
                     return _context.abrupt("return", optionsDataInit);
-                  case 28:
+                  case 30:
                   case "end":
                     return _context.stop();
                 }
@@ -1326,10 +1332,6 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
             //--------------
             var _params = fetchFuncMethodParams || [];
             fetchData(_params.join(','));
-
-            //
-            //--------------
-            onLoad === null || onLoad === void 0 ? void 0 : onLoad(dataInit, value, rootRef.current);
           }, [value, options]);
           return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react__WEBPACK_IMPORTED_MODULE_0___default().Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
             id: "radio__wrapper-".concat(idRes),

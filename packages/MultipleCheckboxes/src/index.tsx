@@ -29,6 +29,15 @@ type MultipleCheckboxesProps = {
     id?: string;
     style?: React.CSSProperties;
     [key: `data-${string}`]: string | undefined;
+    /** This function is called whenever the data is updated.
+ *  Exposes the JSON format data about the option as an argument.
+ */
+    fetchFuncAsync?: any;
+    fetchFuncMethod?: string;
+    fetchFuncMethodParams?: any[];
+    fetchCallback?: (data: any) => void;
+    onFetch?: (data: any) => void;
+    onLoad?: (arg1: any, arg2: any, arg3: any) => void;
     onChange?: (e: any, value: any, valueStr: any, label: any, labelStr: any, currentData: any) => void;
 
 };
@@ -49,6 +58,12 @@ const MultipleCheckboxes = forwardRef((props: MultipleCheckboxesProps, ref: any)
         id,
         extractValueByBrackets,
         style,
+        fetchFuncAsync,
+        fetchFuncMethod,
+        fetchFuncMethodParams,
+        fetchCallback,
+        onFetch,
+        onLoad,
         onChange,
         ...attributes
     } = props;
@@ -60,9 +75,17 @@ const MultipleCheckboxes = forwardRef((props: MultipleCheckboxesProps, ref: any)
     const rootRef = useRef<any>(null);
     const inputRef = useRef<any>(null);
     const optionsRes = options ? isJSON( options ) ? JSON.parse( options as string ) : options : [];
-    const [valData, setValData] = useState<any[]>([]);
     const [valSelected, setValSelected] = useState<any[]>([]);
     const _inline = typeof inline === 'undefined' ? true : inline;
+
+    // return a array of options
+    let optionsDataInit: OptionConfig[] = optionsRes;
+    
+    //
+    const [dataInit, setDataInit] = useState<OptionConfig[]>(optionsDataInit);
+    const [hasErr, setHasErr] = useState<boolean>(false);
+
+
 
     const optionsFlat = (allData: any[]) => {
 
@@ -81,49 +104,111 @@ const MultipleCheckboxes = forwardRef((props: MultipleCheckboxesProps, ref: any)
         return flatItems;
     };
 
-	// Determine whether it is in JSON format
-	function isJSON( str: any ){
-		
-		if ( typeof(str) === 'string' && str.length > 0 ) {
-
-			if ( str.replace( /\"\"/g, '' ).replace( /\,/g, '' ) == '[{}]' ) {
-				return false;
-			} else {
-
-				if (/^[\],:{}\s]*$/.test( str.replace(/\\["\\\/bfnrtu]/g, '@' ).
-				replace(/"[^"\\\n\r]*"|true|false|null|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?/g, ']').
-				replace(/(?:^|:|,)(?:\s*\[)+/g, ''))) {
-
-					return true;
-
-				}else{
-					return false;
-				}	
-
-			}
-
-		} else {
-			
-			if ( 
-				typeof(str) === 'object' && 
-				Object.prototype.toString.call(str) === '[object Object]' &&
-			    ! str.length
-			   ) {
-				return true;
-			} else {
-				return false;
-			}
-			
-		}
-
-	} 
 
 
-    function initDefaultValue(defaultValue: any) {
+    async function fetchData(params: any) {
+
+        // set default value
+        if (typeof value !== 'undefined' && value !== '') rootRef.current.dataset.value = value;
+
+        //
+        if (typeof fetchFuncAsync === 'object') {
+
+            const response: any = await fetchFuncAsync[`${fetchFuncMethod}`](...params.split(','));
+            let _ORGIN_DATA = response.data;
+
+            // reset data structure
+            if (typeof (fetchCallback) === 'function') {
+                _ORGIN_DATA = fetchCallback(_ORGIN_DATA);
+            }
+
+            // Determine whether the data structure matches
+            if (_ORGIN_DATA.length > 0 && typeof _ORGIN_DATA[0].value === 'undefined') {
+                console.warn('The data structure does not match, please refer to the example in the component documentation.');
+                _ORGIN_DATA = [];
+            }
+
+
+            //
+            initDefaultValue(value, _ORGIN_DATA); // value must be initialized
+
+
+            //
+            setDataInit(_ORGIN_DATA); // data must be initialized
+
+            //
+            onFetch?.(_ORGIN_DATA);
+
+
+            return _ORGIN_DATA;
+        } else {
+
+            //
+            initDefaultValue(value, optionsDataInit); // value must be initialized
+
+            //
+            setDataInit(optionsDataInit); // data must be initialized
+
+            //
+            onFetch?.(optionsDataInit);
+
+
+            return optionsDataInit;
+        }
+
+
+    }
+
+
+    // Determine whether it is in JSON format
+    function isJSON(str: any) {
+
+        if (typeof (str) === 'string' && str.length > 0) {
+
+            if (str.replace(/\"\"/g, '').replace(/\,/g, '') == '[{}]') {
+                return false;
+            } else {
+
+                if (/^[\],:{}\s]*$/.test(str.replace(/\\["\\\/bfnrtu]/g, '@').
+                    replace(/"[^"\\\n\r]*"|true|false|null|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?/g, ']').
+                    replace(/(?:^|:|,)(?:\s*\[)+/g, ''))) {
+
+                    return true;
+
+                } else {
+                    return false;
+                }
+
+            }
+
+        } else {
+
+            if (
+                typeof (str) === 'object' &&
+                Object.prototype.toString.call(str) === '[object Object]' &&
+                !str.length
+            ) {
+                return true;
+            } else {
+                return false;
+            }
+
+        }
+
+    }
+
+
+
+    function initDefaultValue(defaultValue: any, latestData: any[]) {
 
         // change the value to trigger component rendering
         if ( typeof defaultValue === 'undefined' || defaultValue === '' ) {
             setValSelected([]);
+
+            //
+            onLoad?.(latestData, defaultValue, rootRef.current);
+
+
         } else {
 
             const _val = VALUE_BY_BRACKETS ? extractContentsOfBrackets(defaultValue) : defaultValue.trim().replace(/^\,|\,$/g, '').split(',');
@@ -132,8 +217,8 @@ const MultipleCheckboxes = forwardRef((props: MultipleCheckboxesProps, ref: any)
                 // If the default value is label, match value
                 let _realValue: any[] = _val.filter((v: any) => v !== '');
                 let filterRes: any = [];
-                const filterResQueryValue = optionsRes.filter((item: any) => _val.includes(item.value));
-                const filterResQueryLabel = optionsRes.filter((item: any) => _val.includes(item.label));
+                const filterResQueryValue = latestData.filter((item: any) => _val.includes(item.value));
+                const filterResQueryLabel = latestData.filter((item: any) => _val.includes(item.label));
 
                 if (filterResQueryValue.length === 0 && filterResQueryLabel.length > 0) {
                     filterRes = filterResQueryValue;
@@ -144,8 +229,16 @@ const MultipleCheckboxes = forwardRef((props: MultipleCheckboxesProps, ref: any)
 
                 //
                 setValSelected(_realValue);
+
+                //
+                onLoad?.(latestData, _realValue, rootRef.current);
+
             } else {
                 setValSelected([]);
+
+                //
+                onLoad?.(latestData, defaultValue, rootRef.current);
+
             }
 
             
@@ -155,15 +248,10 @@ const MultipleCheckboxes = forwardRef((props: MultipleCheckboxesProps, ref: any)
     useEffect(() => {
 
 
-        // update default value
+        // data init
         //--------------
-        initDefaultValue(value);
-
-
-        // Initialize options
-        //--------------
-        setValData(optionsRes);
-
+        const _params: any[] = fetchFuncMethodParams || [];
+        fetchData((_params).join(','));
 
 
     }, [value, options]);
@@ -179,7 +267,7 @@ const MultipleCheckboxes = forwardRef((props: MultipleCheckboxesProps, ref: any)
 
                 <div className="multiple-checkboxes__control-wrapper" style={style}>
 
-                    {valData ? valData.map((item: any, index: number) => {
+                    {dataInit ? dataInit.map((item: any, index: number) => {
 
                         if (typeof item.optgroup !== 'undefined') {
                             return <div className={`multiple-checkboxes-group__wrapper ${groupWrapperClassName || ''}`} key={'optgroup-' + index}>
@@ -217,7 +305,7 @@ const MultipleCheckboxes = forwardRef((props: MultipleCheckboxesProps, ref: any)
                                                                 if (elIndex !== -1) newData.splice(elIndex, 1);
 
                                                                 const _res = (val) ? Array.from(new Set([e.target.value, ...newData])) : newData;
-                                                                const _resLabel = optionsFlat(optionsRes).filter((v: any) => _res.includes(v.value)).map((k: any) => k.label);
+                                                                const _resLabel = optionsFlat(dataInit).filter((v: any) => _res.includes(v.value)).map((k: any) => k.label);
 
                                                                 //
                                                                 let curData: any;
@@ -276,7 +364,7 @@ const MultipleCheckboxes = forwardRef((props: MultipleCheckboxesProps, ref: any)
                                                     if (elIndex !== -1) newData.splice(elIndex, 1);
 
                                                     const _res = (val) ? Array.from(new Set([e.target.value, ...newData])) : newData;
-                                                    const _resLabel = optionsRes.filter((v: any) => _res.includes(v.value)).map((k: any) => k.label);
+                                                    const _resLabel = dataInit.filter((v: any) => _res.includes(v.value)).map((k: any) => k.label);
 
                                                     onChange?.(e.target, _res, VALUE_BY_BRACKETS ? convertArrToValByBrackets(_res) : _res.join(','), _resLabel, VALUE_BY_BRACKETS ? convertArrToValByBrackets(_resLabel) : _resLabel.join(','), item);
 
