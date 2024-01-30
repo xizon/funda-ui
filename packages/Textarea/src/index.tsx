@@ -147,7 +147,7 @@ const Textarea = forwardRef((props: TextareaProps, ref: any) => {
 
         // update default value
         //--------------
-        if (typeof value !== 'undefined') {
+        if (typeof value !== 'undefined' && value !== null) {
             
 
             if (value.length > 0 && autoSize) {

@@ -296,7 +296,7 @@ var Textarea = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_reac
   (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useEffect)(function () {
     // update default value
     //--------------
-    if (typeof value !== 'undefined') {
+    if (typeof value !== 'undefined' && value !== null) {
       if (value.length > 0 && autoSize) {
         // Recalculate height if default value exceeds initial height
         setChangedVal('');
