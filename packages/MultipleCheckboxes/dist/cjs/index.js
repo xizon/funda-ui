@@ -922,6 +922,11 @@ var MultipleCheckboxes = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forw
               }).map(function (k) {
                 return k.label;
               });
+              var _resDataCollection = optionsFlat(dataInit).filter(function (v) {
+                return _res.includes(v.value);
+              }).map(function (k) {
+                return k;
+              });
 
               //
               var curData;
@@ -934,7 +939,7 @@ var MultipleCheckboxes = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forw
               } else {
                 curData = item;
               }
-              _onChange === null || _onChange === void 0 ? void 0 : _onChange(e.target, _res, VALUE_BY_BRACKETS ? (0,_utils_convert__WEBPACK_IMPORTED_MODULE_3__.convertArrToValByBrackets)(_res) : _res.join(','), _resLabel, VALUE_BY_BRACKETS ? (0,_utils_convert__WEBPACK_IMPORTED_MODULE_3__.convertArrToValByBrackets)(_resLabel) : _resLabel.join(','), curData);
+              _onChange === null || _onChange === void 0 ? void 0 : _onChange(e.target, _res, VALUE_BY_BRACKETS ? (0,_utils_convert__WEBPACK_IMPORTED_MODULE_3__.convertArrToValByBrackets)(_res) : _res.join(','), _resLabel, VALUE_BY_BRACKETS ? (0,_utils_convert__WEBPACK_IMPORTED_MODULE_3__.convertArrToValByBrackets)(_resLabel) : _resLabel.join(','), curData, _resDataCollection);
               return _res;
             });
           },
@@ -974,7 +979,12 @@ var MultipleCheckboxes = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forw
             }).map(function (k) {
               return k.label;
             });
-            _onChange === null || _onChange === void 0 ? void 0 : _onChange(e.target, _res, VALUE_BY_BRACKETS ? (0,_utils_convert__WEBPACK_IMPORTED_MODULE_3__.convertArrToValByBrackets)(_res) : _res.join(','), _resLabel, VALUE_BY_BRACKETS ? (0,_utils_convert__WEBPACK_IMPORTED_MODULE_3__.convertArrToValByBrackets)(_resLabel) : _resLabel.join(','), item);
+            var _resDataCollection = optionsFlat(dataInit).filter(function (v) {
+              return _res.includes(v.value);
+            }).map(function (k) {
+              return k;
+            });
+            _onChange === null || _onChange === void 0 ? void 0 : _onChange(e.target, _res, VALUE_BY_BRACKETS ? (0,_utils_convert__WEBPACK_IMPORTED_MODULE_3__.convertArrToValByBrackets)(_res) : _res.join(','), _resLabel, VALUE_BY_BRACKETS ? (0,_utils_convert__WEBPACK_IMPORTED_MODULE_3__.convertArrToValByBrackets)(_resLabel) : _resLabel.join(','), item, _resDataCollection);
             return _res;
           });
         },

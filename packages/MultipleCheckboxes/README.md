@@ -26,7 +26,7 @@ import MultipleCheckboxes from 'funda-ui/MultipleCheckboxes';
 | `fetchCallback` | function  | - | Return value from `fetchCallback` property to format the data of the API callback, which will match the data structure of the component. <br >At the same time it returns the original data, you will use this function and use the `return` keyword to return a new value. |
 | `onFetch` | function  | - | Call a function when  data is successfully fetched. It returns one callback value which is the fetched data (**Array**) |
 | `onLoad` | function  | - | Call a function when the component has been rendered completely. It returns three callback values. <br /> <ol><li>The first is the passed data （**Array**）</li><li>The second is the default value (**String** \| **undefined**)</li><li> The third is the component wrapper (**HTMLDivElement**)</li></ol> |
-| `onChange` | function  | - | Call a function when the value of an HTML element is changed. It returns six callback values. <br /> <ol><li>The first is the control of current checkbox</li><li>The second is the current value (**Array**)</li><li>The third is the current string value (**String**)</li><li>The fourth is the current label text (**Array**)</li><li>The fifth is the current string label text (**String**)</li><li>The sixth is the current value (**JSON Object**)</li></ol>  |
+| `onChange` | function  | - | Call a function when the value of an HTML element is changed. It returns seven callback values. <br /> <ol><li>The first is the control of current checkbox</li><li>The second is the current value (**Array**)</li><li>The third is the current string value (**String**)</li><li>The fourth is the current label text (**Array**)</li><li>The fifth is the current string label text (**String**)</li><li>The sixth is the current value (**JSON Object**)</li><li>The last is the value collection (**JSON Object Array**)</li></ol>  |
 
 
 
@@ -71,8 +71,8 @@ export default () => {
                     {"label": "Option 3","listItemLabel":"Option 3 (No: 003)","value": "value-3"},
                     {"label": "Option 4","listItemLabel":"Option 4 (No: 004)","value": "value-4","disabled":true}
                 ]}
-                onChange={(e: any, value: any, valueStr: any, label: any, labelStr: any, currentData: any) => {
-                    console.log(e, value, valueStr, label, labelStr, currentData);
+                onChange={(e: any, value: any, valueStr: any, label: any, labelStr: any, currentData: any, dataCollection: any) => {
+                    console.log(e, value, valueStr, label, labelStr, currentData, dataCollection);
                     /*
                     <input type="checkbox" ... value="value-1">,
                     ['value-3', 'value-2'],
@@ -165,8 +165,8 @@ export default () => {
                         ]
                     }
                 ]}
-                onChange={(e: any, value: any, valueStr: any, label: any, labelStr: any, currentData: any) => {
-                    console.log(e, value, valueStr, label, labelStr, currentData);
+                onChange={(e: any, value: any, valueStr: any, label: any, labelStr: any, currentData: any, dataCollection: any) => {
+                    console.log(e, value, valueStr, label, labelStr, currentData, dataCollection);
                     setVal(valueStr);
                 }}
             />
@@ -289,8 +289,8 @@ export default () => {
                 onFetch={(res) => {
                     console.log('onFetch: ', res);
                 }}
-                onChange={(e: any, value: any, valueStr: any, label: any, labelStr: any, currentData: any) => {
-                    console.log(e, value, valueStr, label, labelStr, currentData);
+                onChange={(e: any, value: any, valueStr: any, label: any, labelStr: any, currentData: any, dataCollection: any) => {
+                    console.log(e, value, valueStr, label, labelStr, currentData, dataCollection);
                     setVal(valueStr);
                 }}
             />

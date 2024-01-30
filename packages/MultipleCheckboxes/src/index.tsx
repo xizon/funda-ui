@@ -38,7 +38,7 @@ type MultipleCheckboxesProps = {
     fetchCallback?: (data: any) => void;
     onFetch?: (data: any) => void;
     onLoad?: (arg1: any, arg2: any, arg3: any) => void;
-    onChange?: (e: any, value: any, valueStr: any, label: any, labelStr: any, currentData: any) => void;
+    onChange?: (e: any, value: any, valueStr: any, label: any, labelStr: any, currentData: any, dataCollection: any) => void;
 
 };
 
@@ -306,6 +306,8 @@ const MultipleCheckboxes = forwardRef((props: MultipleCheckboxesProps, ref: any)
 
                                                                 const _res = (val) ? Array.from(new Set([e.target.value, ...newData])) : newData;
                                                                 const _resLabel = optionsFlat(dataInit).filter((v: any) => _res.includes(v.value)).map((k: any) => k.label);
+                                                                const _resDataCollection = optionsFlat(dataInit).filter((v: any) => _res.includes(v.value)).map((k: any) => k);
+
 
                                                                 //
                                                                 let curData: any;
@@ -320,7 +322,7 @@ const MultipleCheckboxes = forwardRef((props: MultipleCheckboxesProps, ref: any)
                                                                     curData = item;
                                                                 }
                                                                 
-                                                                onChange?.(e.target, _res, VALUE_BY_BRACKETS ? convertArrToValByBrackets(_res) : _res.join(','), _resLabel, VALUE_BY_BRACKETS ? convertArrToValByBrackets(_resLabel) : _resLabel.join(','), curData);
+                                                                onChange?.(e.target, _res, VALUE_BY_BRACKETS ? convertArrToValByBrackets(_res) : _res.join(','), _resLabel, VALUE_BY_BRACKETS ? convertArrToValByBrackets(_resLabel) : _resLabel.join(','), curData, _resDataCollection);
 
                                                                 return _res;
                                                             });
@@ -365,8 +367,10 @@ const MultipleCheckboxes = forwardRef((props: MultipleCheckboxesProps, ref: any)
 
                                                     const _res = (val) ? Array.from(new Set([e.target.value, ...newData])) : newData;
                                                     const _resLabel = dataInit.filter((v: any) => _res.includes(v.value)).map((k: any) => k.label);
+                                                    const _resDataCollection = optionsFlat(dataInit).filter((v: any) => _res.includes(v.value)).map((k: any) => k);
 
-                                                    onChange?.(e.target, _res, VALUE_BY_BRACKETS ? convertArrToValByBrackets(_res) : _res.join(','), _resLabel, VALUE_BY_BRACKETS ? convertArrToValByBrackets(_resLabel) : _resLabel.join(','), item);
+
+                                                    onChange?.(e.target, _res, VALUE_BY_BRACKETS ? convertArrToValByBrackets(_res) : _res.join(','), _resLabel, VALUE_BY_BRACKETS ? convertArrToValByBrackets(_resLabel) : _resLabel.join(','), item, _resDataCollection);
 
                                                     return _res;
                                                 });
