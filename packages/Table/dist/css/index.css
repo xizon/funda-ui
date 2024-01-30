@@ -9,9 +9,25 @@
   --table-dis-top: 1rem;
   --table-checkbox-indeterminate-color: #bbbbbb;
   --table-row-active-bg: #f0f8ff;
+  --table-scrollbar-color: rgba(0, 0, 0, 0.2);
+  --table-scrollbar-track: rgba(0, 0, 0, 0);
+  --table-scrollbar-h: 3px;
+  --table-scrollbar-w: 3px;
   /*------ enable sort  ------*/
   /*------ has checkbox  ------*/
   /*------ allow drag and drop  ------*/
+}
+.table__wrapper.table-responsive {
+  overflow-x: auto;
+}
+.table__wrapper.table-responsive::-webkit-scrollbar {
+  height: var(--table-scrollbar-h);
+}
+.table__wrapper.table-responsive::-webkit-scrollbar-thumb {
+  background: var(--table-scrollbar-color);
+}
+.table__wrapper.table-responsive::-webkit-scrollbar-track {
+  background: var(--table-scrollbar-track);
 }
 .table__wrapper table td,
 .table__wrapper table th {
@@ -480,6 +496,16 @@
     border-right: 0 !important;
     overflow: auto;
   }
+  .table__wrapper.table-enhanced-responsive-scrolled table::-webkit-scrollbar {
+    height: var(--table-scrollbar-h);
+    width: var(--table-scrollbar-w);
+  }
+  .table__wrapper.table-enhanced-responsive-scrolled table::-webkit-scrollbar-thumb {
+    background: var(--table-scrollbar-color);
+  }
+  .table__wrapper.table-enhanced-responsive-scrolled table::-webkit-scrollbar-track {
+    background: var(--table-scrollbar-track);
+  }
   .table__wrapper.table-enhanced-responsive-scrolled table thead {
     display: block;
     float: left;
@@ -500,6 +526,15 @@
     border-bottom: 1px solid var(--table-border-color);
     border-right: 1px solid var(--table-border-color);
   }
+  .table__wrapper.table-enhanced-responsive-scrolled table tbody::-webkit-scrollbar {
+    height: var(--table-scrollbar-h);
+  }
+  .table__wrapper.table-enhanced-responsive-scrolled table tbody::-webkit-scrollbar-thumb {
+    background: var(--table-scrollbar-color);
+  }
+  .table__wrapper.table-enhanced-responsive-scrolled table tbody::-webkit-scrollbar-track {
+    background: var(--table-scrollbar-track);
+  }
   .table__wrapper.table-enhanced-responsive-scrolled table thead tr,
   .table__wrapper.table-enhanced-responsive-scrolled table tbody tr {
     display: block;
@@ -511,6 +546,21 @@
     box-sizing: border-box;
     overflow-x: hidden;
     overflow-y: auto;
+  }
+  .table__wrapper.table-enhanced-responsive-scrolled table th::-webkit-scrollbar,
+  .table__wrapper.table-enhanced-responsive-scrolled table tbody td::-webkit-scrollbar,
+  .table__wrapper.table-enhanced-responsive-scrolled table tbody th::-webkit-scrollbar {
+    width: var(--table-scrollbar-w);
+  }
+  .table__wrapper.table-enhanced-responsive-scrolled table th::-webkit-scrollbar-thumb,
+  .table__wrapper.table-enhanced-responsive-scrolled table tbody td::-webkit-scrollbar-thumb,
+  .table__wrapper.table-enhanced-responsive-scrolled table tbody th::-webkit-scrollbar-thumb {
+    background: var(--table-scrollbar-color);
+  }
+  .table__wrapper.table-enhanced-responsive-scrolled table th::-webkit-scrollbar-track,
+  .table__wrapper.table-enhanced-responsive-scrolled table tbody td::-webkit-scrollbar-track,
+  .table__wrapper.table-enhanced-responsive-scrolled table tbody th::-webkit-scrollbar-track {
+    background: var(--table-scrollbar-track);
   }
   .table__wrapper.table-enhanced-responsive-scrolled table th:first-child,
   .table__wrapper.table-enhanced-responsive-scrolled table tbody td:first-child,

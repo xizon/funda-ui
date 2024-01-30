@@ -88,7 +88,7 @@ const Table = (props: TableProps) => {
 
     //
     let responsiveClasses = '';
-    if (responsive) tableClasses += ' table-responsive';
+    if (typeof responsive === 'undefined' || responsive === true) responsiveClasses += ' table-responsive';
 
     //
     let enhancedResponsiveClasses = '';
@@ -179,7 +179,7 @@ const Table = (props: TableProps) => {
 
     function tableDataScrolledInit(w: number) {
 
-        if (w <= 768) {
+        if (w <= 768 && tbodyRef.current.querySelector('tr') !== null) {
             //get maxHeight of per row
             for (let i = 0; i < tbodyRef.current.querySelector('tr').children.length; i++ ) {
                 const tbodyRows = rootRef.current.querySelectorAll(`tbody tr [data-table-col="${i}"]`);

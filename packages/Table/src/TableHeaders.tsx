@@ -2,7 +2,6 @@ import React from 'react';
 
 import Checkbox from 'funda-checkbox';
 
-
 import { getChildren } from './utils/dom';
 import { formatCheckboxControlVal, setCheckboxCheckedData } from './table-utils';
 

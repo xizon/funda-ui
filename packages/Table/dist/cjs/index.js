@@ -2252,7 +2252,7 @@ var Table = function Table(props) {
 
   //
   var responsiveClasses = '';
-  if (responsive) tableClasses += ' table-responsive';
+  if (typeof responsive === 'undefined' || responsive === true) responsiveClasses += ' table-responsive';
 
   //
   var enhancedResponsiveClasses = '';
@@ -2326,7 +2326,7 @@ var Table = function Table(props) {
   }
   ;
   function tableDataScrolledInit(w) {
-    if (w <= 768) {
+    if (w <= 768 && tbodyRef.current.querySelector('tr') !== null) {
       var _loop = function _loop() {
         var tbodyRows = rootRef.current.querySelectorAll("tbody tr [data-table-col=\"".concat(i, "\"]"));
         var maxHeight = maxDimension(tbodyRows).height;

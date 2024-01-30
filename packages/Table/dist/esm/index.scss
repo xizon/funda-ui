@@ -10,6 +10,28 @@
     --table-dis-top: 1rem;
     --table-checkbox-indeterminate-color: #bbbbbb;
     --table-row-active-bg: #f0f8ff;
+    --table-scrollbar-color: rgba(0, 0, 0, 0.2);
+    --table-scrollbar-track: rgba(0, 0, 0, 0);
+    --table-scrollbar-h: 3px;
+    --table-scrollbar-w: 3px;
+
+    
+    &.table-responsive {
+        overflow-x: auto;
+
+        &::-webkit-scrollbar {
+            height: var(--table-scrollbar-h);
+        }
+
+        &::-webkit-scrollbar-thumb {
+            background: var(--table-scrollbar-color);
+        }
+
+        &::-webkit-scrollbar-track {
+            background: var(--table-scrollbar-track);
+        }
+    }
+
 
     table {
         
@@ -292,7 +314,20 @@
                 border-left: 0 !important;
                 border-right: 0 !important;
                 overflow: auto;
+                
 
+                &::-webkit-scrollbar {
+                    height: var(--table-scrollbar-h);
+                    width: var(--table-scrollbar-w);
+                }
+        
+                &::-webkit-scrollbar-thumb {
+                    background: var(--table-scrollbar-color);
+                }
+        
+                &::-webkit-scrollbar-track {
+                    background: var(--table-scrollbar-track);
+                }
 
                 thead {
                     display: block;
@@ -317,6 +352,20 @@
                     overflow-x: scroll;
                     border-bottom: 1px solid var(--table-border-color);
                     border-right: 1px solid var(--table-border-color);
+
+
+                    &::-webkit-scrollbar {
+                        height: var(--table-scrollbar-h);
+                    }
+            
+                    &::-webkit-scrollbar-thumb {
+                        background: var(--table-scrollbar-color);
+                    }
+            
+                    &::-webkit-scrollbar-track {
+                        background: var(--table-scrollbar-track);
+                    }
+
                 }
 
                 thead tr,
@@ -331,6 +380,19 @@
                     box-sizing: border-box;
                     overflow-x: hidden;
                     overflow-y: auto;
+
+
+                    &::-webkit-scrollbar {
+                        width: var(--table-scrollbar-w);
+                    }
+
+                    &::-webkit-scrollbar-thumb {
+                        background: var(--table-scrollbar-color);
+                    }
+
+                    &::-webkit-scrollbar-track {
+                        background: var(--table-scrollbar-track);
+                    }
 
                     &:first-child {
                         border-top: 0;

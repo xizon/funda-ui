@@ -1,8 +1,8 @@
 import React, { useRef } from 'react';
 
 import Checkbox from 'funda-checkbox';
-import Radio from 'funda-radio';
 
+import Radio from 'funda-radio';
 
 import { getChildren } from './utils/dom'; 
 import { removeItemOnce, formatCheckboxControlVal, setCheckboxCheckedData } from './table-utils'; 
