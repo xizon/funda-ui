@@ -13,6 +13,7 @@ interface TextareaProps extends React.ComponentPropsWithoutRef<"textarea"> {
     controlClassName?: string;
     controlGroupWrapperClassName?: string;
     controlGroupTextClassName?: string;
+    initializingText?: string;
 	value?: string;
 	label?: React.ReactNode | string;
 	name?: string;
@@ -46,6 +47,7 @@ const Textarea = forwardRef((props: TextareaProps, ref: any) => {
         controlClassName,
         controlGroupWrapperClassName,
         controlGroupTextClassName,
+        initializingText,
         cols,
         rows,
         disabled,
@@ -77,6 +79,8 @@ const Textarea = forwardRef((props: TextareaProps, ref: any) => {
     const rootRef = useRef<any>(null);
     const valRef = useRef<any>(null);
     const [changedVal, setChangedVal] = useState<string>(value || '');
+    const [initTextStatus, setInitTextStatus] = useState<boolean>(false);
+    const INIT_TEXT = initializingText || 'Initializing...'
 
 
     // auto size
@@ -145,17 +149,29 @@ const Textarea = forwardRef((props: TextareaProps, ref: any) => {
 
     useEffect(() => {
 
+     
         // update default value
         //--------------
         if (typeof value !== 'undefined' && value !== null) {
-            
-
+      
             if (value.length > 0 && autoSize) {
+
+                setInitTextStatus(true);
+
                 // Recalculate height if default value exceeds initial height
-                setChangedVal('');
+                setChangedVal(``);
+                setTimeout(() => {
+                    setChangedVal(` `); // spacing here
+                }, 0);
+
+                setTimeout(() => {
+                    setChangedVal(``);
+                }, 750);
+                
                 setTimeout(() => {
                     setChangedVal(`${value}`);
-                }, 0);
+                    setInitTextStatus(false);
+                }, 1500);
             } else {
                 setChangedVal(`${value}`);   // Avoid displaying the number 0
             }
@@ -187,7 +203,7 @@ const Textarea = forwardRef((props: TextareaProps, ref: any) => {
 					  className={controlClassName || controlClassName === '' ? controlClassName : "form-control"}
 			          id={idRes}
 					  name={name}
-					  placeholder={placeholder || ''}
+					  placeholder={initTextStatus ? INIT_TEXT : (placeholder || '')}
 					  value={changedVal}
 					  maxLength={maxLength || null}
 			          onFocus={handleFocus}

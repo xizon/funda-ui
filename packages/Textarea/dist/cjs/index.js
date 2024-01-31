@@ -187,7 +187,7 @@ var useAutosizeTextArea = function useAutosizeTextArea(el, value, autoSizeBeginO
 };
 /* harmony default export */ const utils_useAutosizeTextArea = (useAutosizeTextArea);
 ;// CONCATENATED MODULE: ./src/index.tsx
-var _excluded = ["wrapperClassName", "controlClassName", "controlGroupWrapperClassName", "controlGroupTextClassName", "cols", "rows", "disabled", "required", "placeholder", "autoSize", "iconLeft", "iconRight", "readOnly", "value", "label", "name", "id", "maxLength", "style", "tabIndex", "onChangeCallback", "onInputCallback", "onKeyPressedCallback", "onChange", "onBlur", "onFocus"];
+var _excluded = ["wrapperClassName", "controlClassName", "controlGroupWrapperClassName", "controlGroupTextClassName", "initializingText", "cols", "rows", "disabled", "required", "placeholder", "autoSize", "iconLeft", "iconRight", "readOnly", "value", "label", "name", "id", "maxLength", "style", "tabIndex", "onChangeCallback", "onInputCallback", "onKeyPressedCallback", "onChange", "onBlur", "onFocus"];
 function _extends() { _extends = Object.assign ? Object.assign.bind() : function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
 function src_slicedToArray(arr, i) { return src_arrayWithHoles(arr) || src_iterableToArrayLimit(arr, i) || src_unsupportedIterableToArray(arr, i) || src_nonIterableRest(); }
 function src_nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
@@ -205,6 +205,7 @@ var Textarea = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_reac
     controlClassName = props.controlClassName,
     controlGroupWrapperClassName = props.controlGroupWrapperClassName,
     controlGroupTextClassName = props.controlGroupTextClassName,
+    initializingText = props.initializingText,
     cols = props.cols,
     rows = props.rows,
     disabled = props.disabled,
@@ -236,6 +237,11 @@ var Textarea = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_reac
     _useState2 = src_slicedToArray(_useState, 2),
     changedVal = _useState2[0],
     setChangedVal = _useState2[1];
+  var _useState3 = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)(false),
+    _useState4 = src_slicedToArray(_useState3, 2),
+    initTextStatus = _useState4[0],
+    setInitTextStatus = _useState4[1];
+  var INIT_TEXT = initializingText || 'Initializing...';
 
   // auto size
   utils_useAutosizeTextArea(autoSize ? valRef.current : null, autoSize ? changedVal : '');
@@ -298,11 +304,20 @@ var Textarea = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_reac
     //--------------
     if (typeof value !== 'undefined' && value !== null) {
       if (value.length > 0 && autoSize) {
+        setInitTextStatus(true);
+
         // Recalculate height if default value exceeds initial height
-        setChangedVal('');
+        setChangedVal("");
+        setTimeout(function () {
+          setChangedVal(" "); // spacing here
+        }, 0);
+        setTimeout(function () {
+          setChangedVal("");
+        }, 750);
         setTimeout(function () {
           setChangedVal("".concat(value));
-        }, 0);
+          setInitTextStatus(false);
+        }, 1500);
       } else {
         setChangedVal("".concat(value)); // Avoid displaying the number 0
       }
@@ -334,7 +349,7 @@ var Textarea = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_reac
     className: controlClassName || controlClassName === '' ? controlClassName : "form-control",
     id: idRes,
     name: name,
-    placeholder: placeholder || '',
+    placeholder: initTextStatus ? INIT_TEXT : placeholder || '',
     value: changedVal,
     maxLength: maxLength || null,
     onFocus: handleFocus,
