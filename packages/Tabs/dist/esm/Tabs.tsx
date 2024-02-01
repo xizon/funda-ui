@@ -49,8 +49,8 @@ const Tabs = (props: TabsProps) => {
         // If you want to hide the tab in advance, please use `{ height: 0; overflow: hidden; }`, do not use `{ display: none }`
         // Otherwise it will cause the scrollHeight of the element inside the child node to be 0
         if (type === 'hide') {
-            node.style.setProperty('height', '0');
-            node.style.setProperty('overflow', 'hidden');
+            node.style.setProperty('height', '0', 'important');
+            node.style.setProperty('overflow', 'hidden', 'important');
         } else {
             node.style.removeProperty('height');
             node.style.removeProperty('overflow');
