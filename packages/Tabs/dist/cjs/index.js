@@ -141,26 +141,17 @@ var TabPanel = function TabPanel(props) {
     attributes = _objectWithoutProperties(props, _excluded);
   var _expandClassName = typeof expandedActiveClassNameForPanel !== 'undefined' ? expandedActiveClassNameForPanel : '';
   var activedClassName = typeof defaultActive !== 'undefined' && defaultActive !== false ? " active ".concat(_expandClassName) : " ".concat(_expandClassName);
+  var activedStyles = typeof defaultActive !== 'undefined' && defaultActive !== false ? {} : {
+    height: '0',
+    overflow: 'hidden'
+  };
   return /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", _extends({
     "data-index": index,
     "data-tabpanel-index": index,
     role: "tabpanel",
     id: targetId,
     className: tabpanelClass ? "tab-pane d-block ".concat(tabpanelClass, " ").concat(activedClassName) : "tab-pane d-block ".concat(activedClassName),
-    ref: function ref(node) {
-      if (node) {
-        // !!!Special note:
-        // If you want to hide the tab in advance, please use `{ height: 0; overflow: hidden; }`, do not use `{ display: none }`
-        // Otherwise it will cause the scrollHeight of the element inside the child node to be 0
-        if (typeof defaultActive !== 'undefined' && defaultActive !== false) {
-          node.style.removeProperty('height');
-          node.style.removeProperty('overflow');
-        } else {
-          node.style.setProperty('height', '0', 'important');
-          node.style.setProperty('overflow', 'hidden', 'important');
-        }
-      }
-    }
+    style: activedStyles
   }, attributes)));
 };
 /* harmony default export */ const src_TabPanel = (TabPanel);
