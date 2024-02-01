@@ -40,7 +40,6 @@ import { TabPanel } from 'funda-ui/Tabs';
 | `key` | string \| `tab-panel-*` | - |  A “key” is a special string attribute you need to include when creating lists of elements. Let’s assign a key to our list of items. Must contain the string `tab-panel` |
 | `defaultActive` | boolean | false | Set an item to activate by default |
 | `tabpanelClass` | string | - | Additional style name, such as `shadow` |
-| `fadeDisabled` | boolean | false | If true, no fade effect is applied |
 
 
 
@@ -138,9 +137,9 @@ export default () => {
 ```
 
 
-## No fade effect
+## No delay
 
-Set the `animTransitionDuration` of <Tabs> to **0**, and add the `fadeDisabled` attribute to the <TabPanel>.
+Set the `animTransitionDuration` of <Tabs> to **0**.
 
 
 ```js
@@ -206,7 +205,7 @@ export default () => {
                 })}
 
                 {[1,2,3,4,5,6].map((item: any, i: number) =>{
-                    return return <TabPanel key={`tab-panel-${i}`} fadeDisabled tabpanelClass="fs-6" defaultActive={i === 0 ? true : false}>{item}</TabPanel>
+                    return return <TabPanel key={`tab-panel-${i}`} tabpanelClass="fs-6" defaultActive={i === 0 ? true : false}>{item}</TabPanel>
                 })}   
 
             </Tabs>	
@@ -293,7 +292,7 @@ export default () => {
                     })}
 
                     {[1, 2, 3, 4, 5, 6].map((item: any, i: number) => {
-                        return <TabPanel key={`tab-panel-${i}`} fadeDisabled tabpanelClass="fs-6" defaultActive={i === 0 ? true : false}>{item}</TabPanel>
+                        return <TabPanel key={`tab-panel-${i}`} tabpanelClass="fs-6" defaultActive={i === 0 ? true : false}>{item}</TabPanel>
                     })}
 
                 </Tabs>

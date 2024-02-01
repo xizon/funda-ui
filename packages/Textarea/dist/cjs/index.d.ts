@@ -9,7 +9,6 @@ interface TextareaProps extends React.ComponentPropsWithoutRef<"textarea"> {
     controlClassName?: string;
     controlGroupWrapperClassName?: string;
     controlGroupTextClassName?: string;
-    initializingText?: string;
     value?: string;
     label?: React.ReactNode | string;
     name?: string;

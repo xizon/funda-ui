@@ -15,8 +15,8 @@ import Textarea from 'funda-ui/Textarea';
 | `controlGroupTextClassName` | string | `input-group-text` | The class name of the control group text. |
 | `type` | string | text | The type of input. Such as \<input type="text" name="name"\> gives a text box. |
 | `value` | string | - | Set a default value for this control |
-| `autoSize` | boolean | false | Creating a Textarea with dynamic height. |
-| `initializingText` | string | `Initializing...` | Placeholder text when initializing the height, valid if the text has line breaks and `autoSize` is true |
+| `autoSize` | boolean | false | Creating a Textarea with dynamic height. <blockquote>**Special note:** If you want to hide the textarea element in advance, please use `{ height: 0; overflow: hidden; }`, do not use `{ display: none }`, this can ensure that the `autoSize` initialization is valid. The parent container cannot also use `{ display: none }`, Otherwise it will cause the scrollHeight of the element inside the child node to be 0
+​</blockquote> |
 | `label` | string \| ReactNode | - | It is used to specify a label for an element of a form.<blockquote>Support html tags</blockquote> |
 | `name` | string | - | Name is not deprecated when used with form fields. |
 | `placeholder` | string | - |  Specifies a short hint that describes. |

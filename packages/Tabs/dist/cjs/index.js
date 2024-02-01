@@ -126,28 +126,36 @@ var TabList = function TabList(props) {
 };
 /* harmony default export */ const src_TabList = (TabList);
 ;// CONCATENATED MODULE: ./src/TabPanel.tsx
-var _excluded = ["fadeDisabled", "defaultActive", "expandedActiveClassNameForPanel", "tabpanelClass", "targetId", "index"];
+var _excluded = ["defaultActive", "expandedActiveClassNameForPanel", "tabpanelClass", "targetId", "index"];
 function _extends() { _extends = Object.assign ? Object.assign.bind() : function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
 function _objectWithoutProperties(source, excluded) { if (source == null) return {}; var target = _objectWithoutPropertiesLoose(source, excluded); var key, i; if (Object.getOwnPropertySymbols) { var sourceSymbolKeys = Object.getOwnPropertySymbols(source); for (i = 0; i < sourceSymbolKeys.length; i++) { key = sourceSymbolKeys[i]; if (excluded.indexOf(key) >= 0) continue; if (!Object.prototype.propertyIsEnumerable.call(source, key)) continue; target[key] = source[key]; } } return target; }
 function _objectWithoutPropertiesLoose(source, excluded) { if (source == null) return {}; var target = {}; var sourceKeys = Object.keys(source); var key, i; for (i = 0; i < sourceKeys.length; i++) { key = sourceKeys[i]; if (excluded.indexOf(key) >= 0) continue; target[key] = source[key]; } return target; }
 
 ;
 var TabPanel = function TabPanel(props) {
-  var fadeDisabled = props.fadeDisabled,
-    defaultActive = props.defaultActive,
+  var defaultActive = props.defaultActive,
     expandedActiveClassNameForPanel = props.expandedActiveClassNameForPanel,
     tabpanelClass = props.tabpanelClass,
     targetId = props.targetId,
     index = props.index,
     attributes = _objectWithoutProperties(props, _excluded);
   var _expandClassName = typeof expandedActiveClassNameForPanel !== 'undefined' ? expandedActiveClassNameForPanel : '';
-  var activedClassName = typeof defaultActive !== 'undefined' && defaultActive !== false ? " show active ".concat(_expandClassName) : " ".concat(_expandClassName);
+  var activedClassName = typeof defaultActive !== 'undefined' && defaultActive !== false ? " active ".concat(_expandClassName) : " ".concat(_expandClassName);
+
+  // !!!Special note:
+  // If you want to hide the tab in advance, please use `{ height: 0; overflow: hidden; }`, do not use `{ display: none }`
+  // Otherwise it will cause the scrollHeight of the element inside the child node to be 0
+  var activedStyles = typeof defaultActive !== 'undefined' && defaultActive !== false ? {} : {
+    height: '0',
+    overflow: 'hidden'
+  };
   return /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", _extends({
     "data-index": index,
     "data-tabpanel-index": index,
     role: "tabpanel",
     id: targetId,
-    className: tabpanelClass ? "tab-pane ".concat(fadeDisabled ? '' : 'fade', " ").concat(tabpanelClass, " ").concat(activedClassName) : "tab-pane ".concat(fadeDisabled ? '' : 'fade', " ").concat(activedClassName)
+    className: tabpanelClass ? "tab-pane d-block ".concat(tabpanelClass, " ").concat(activedClassName) : "tab-pane d-block ".concat(activedClassName),
+    style: activedStyles
   }, attributes)));
 };
 /* harmony default export */ const src_TabPanel = (TabPanel);
@@ -178,6 +186,20 @@ var Tabs = function Tabs(props) {
   var uniqueID = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useId)().replace(/\:/g, "-");
   var rootRef = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useRef)(null);
   var speed = animTransitionDuration ? animTransitionDuration : 150;
+  var elDisplay = function elDisplay(type, node) {
+    if (node === null) return;
+
+    // !!!Special note:
+    // If you want to hide the tab in advance, please use `{ height: 0; overflow: hidden; }`, do not use `{ display: none }`
+    // Otherwise it will cause the scrollHeight of the element inside the child node to be 0
+    if (type === 'hide') {
+      node.style.setProperty('height', '0');
+      node.style.setProperty('overflow', 'hidden');
+    } else {
+      node.style.removeProperty('height');
+      node.style.removeProperty('overflow');
+    }
+  };
   function handleClickItem(e) {
     e.preventDefault();
     var el = e.currentTarget;
@@ -220,7 +242,8 @@ var Tabs = function Tabs(props) {
       runExClassName(node.firstChild, _classNameNav, 'remove');
     });
     $allContent.forEach(function (node) {
-      node.classList.remove('show');
+      // 
+      elDisplay('hide', node);
       setTimeout(function () {
         node.classList.remove('active');
         runExClassName(node, _classNamePanel, 'remove');
@@ -236,7 +259,8 @@ var Tabs = function Tabs(props) {
       setTimeout(function () {
         var _panel = document.getElementById(tabID);
         if (_panel !== null) {
-          _panel.classList.add('active', 'show');
+          elDisplay('show', _panel);
+          _panel.classList.add('active');
           runExClassName(_panel, _classNamePanel, 'add');
         }
       }, speed);

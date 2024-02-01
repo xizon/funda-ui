@@ -41,6 +41,24 @@ const Tabs = (props: TabsProps) => {
     const speed = animTransitionDuration ? animTransitionDuration : 150;
 
 
+    
+    const elDisplay = (type: string, node: HTMLElement) => {
+        if (node === null) return;
+
+        // !!!Special note:
+        // If you want to hide the tab in advance, please use `{ height: 0; overflow: hidden; }`, do not use `{ display: none }`
+        // Otherwise it will cause the scrollHeight of the element inside the child node to be 0
+        if (type === 'hide') {
+            node.style.setProperty('height', '0');
+            node.style.setProperty('overflow', 'hidden');
+        } else {
+            node.style.removeProperty('height');
+            node.style.removeProperty('overflow');
+        }
+
+    };
+
+
     function handleClickItem(e: any) {
         e.preventDefault();
         
@@ -97,7 +115,10 @@ const Tabs = (props: TabsProps) => {
         
 
         $allContent.forEach( (node) => {
-            node.classList.remove('show');
+            // 
+            elDisplay('hide', node);
+
+
             setTimeout(() => {
                 node.classList.remove('active');
                 runExClassName(node, _classNamePanel, 'remove');
@@ -115,7 +136,10 @@ const Tabs = (props: TabsProps) => {
             setTimeout(() => {
                 const _panel = document.getElementById(tabID) as HTMLElement;
                 if ( _panel !== null ) {
-                    _panel.classList.add('active', 'show');
+
+                    elDisplay('show', _panel);
+
+                    _panel.classList.add('active');
                     runExClassName(_panel, _classNamePanel, 'add');
                 }
             }, speed);  

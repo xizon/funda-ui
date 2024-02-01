@@ -37,12 +37,10 @@ import { useEffect, useState } from "react";
 // Updates the height of a <textarea> when the value changes.
 const useAutosizeTextArea = (
     el,
-    value,
-    autoSizeBeginOneline
+    value
 ) => {
 
     const [defaultRowHeight, setDefaultRowHeight] = useState(0);
-    const [dynamicDefaultRowHeight, setDynamicDefaultRowHeight] = useState(0);
     const [defaultRowHeightInit, setDefaultRowHeightInit] = useState(false);
 
     useEffect(() => {
@@ -53,10 +51,8 @@ const useAutosizeTextArea = (
             if (el.scrollHeight > 0 && !defaultRowHeightInit) {
                 const style = el.currentStyle || window.getComputedStyle(el);
                 setDefaultRowHeight(el.scrollHeight + parseInt(style.borderTopWidth) + parseInt(style.borderBottomWidth));
-                setDynamicDefaultRowHeight(el.scrollHeight);
                 setDefaultRowHeightInit(true);
             }
-
 
             // restore default row height
             if (defaultRowHeight > 0) {
