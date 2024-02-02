@@ -50,6 +50,15 @@ interface MultiSelectConfig {
     data: MultiSelectDataConfig | null;
 }
 
+interface multiSelectSelectedItemOnlyStatusConfig {
+    itemsLabel?: string;
+    allItemsLabel?: string;
+    noneLabel?: string;
+}
+
+
+
+
 interface CleanTriggerConfig {
     valid: boolean;
     cleanValueLabel?: string;
@@ -60,6 +69,7 @@ type MultiFuncSelectProps = {
     wrapperClassName?: string;
     controlClassName?: string;
     multiSelect?: MultiSelectConfig;
+    multiSelectSelectedItemOnlyStatus?: multiSelectSelectedItemOnlyStatusConfig;
     cleanTrigger?: CleanTriggerConfig;
     value?: string;
     label?: React.ReactNode | string;
@@ -109,6 +119,7 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
         wrapperClassName,
         controlClassName,
         multiSelect,
+        multiSelectSelectedItemOnlyStatus,
         disabled,
         required,
         value,
@@ -190,10 +201,18 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
     let selectedSign: boolean = false;
     const MULTI_SEL_VALID = multiSelect ? multiSelect.valid : false;
     const MULTI_SEL_LABEL = multiSelect ? multiSelect.selectAllLabel : 'Select all options';
+    const MULTI_SEL_SELECTED_STATUS = {
+        itemsLabel: '{num} Selected',
+        allItemsLabel: 'All Content',
+        noneLabel: 'No items selected',
+    };
+
     const [controlArr, setControlArr] = useState<any>({
         labels: [],
         values: []
     });
+
+
     const multiSelControlOptionExist = (arr: any[], val: any) => {
         const _data = arr.filter(Boolean);
         return _data.map((v: any) => v.toString()).includes(val.toString());
@@ -1996,19 +2015,35 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
                         <div>
                             <ul className="mf-select-multi__list">
 
-                                {controlArr.labels.map((item: any, index: number) => (
-                                    <li key={index}>
-                                        {stripHTML(item)}
+                                {typeof multiSelectSelectedItemOnlyStatus !== 'undefined' ? <>
+                                
+                                    <li className="mf-select-multi__list-item-statusstring">
+                                        {typeof multiSelectSelectedItemOnlyStatus.itemsLabel === 'string' && controlArr.labels.length > 0 && controlArr.labels.length < optionsData.length ? multiSelectSelectedItemOnlyStatus.itemsLabel.replace('{num}', controlArr.labels.length) : null }
+                                        {typeof multiSelectSelectedItemOnlyStatus.noneLabel === 'string' && controlArr.labels.length === 0 ? multiSelectSelectedItemOnlyStatus.noneLabel : null }
+                                        {typeof multiSelectSelectedItemOnlyStatus.allItemsLabel === 'string' && controlArr.labels.length === optionsData.length ? multiSelectSelectedItemOnlyStatus.allItemsLabel : null }
 
-                                        <a href="#" tabIndex={-1} onClick={handleMultiControlItemRemove} data-item={controlArr.values[index]}><svg width="10px" height="10px" viewBox="0 0 1024 1024"><path fill="#000" d="M195.2 195.2a64 64 0 0 1 90.496 0L512 421.504 738.304 195.2a64 64 0 0 1 90.496 90.496L602.496 512 828.8 738.304a64 64 0 0 1-90.496 90.496L512 602.496 285.696 828.8a64 64 0 0 1-90.496-90.496L421.504 512 195.2 285.696a64 64 0 0 1 0-90.496z" /></svg></a>
+                                        {/*-----*/}
+                                        {typeof multiSelectSelectedItemOnlyStatus.itemsLabel !== 'string' && controlArr.labels.length > 0 ? MULTI_SEL_SELECTED_STATUS.itemsLabel.replace('{num}', controlArr.labels.length) : null }
+                                        {typeof multiSelectSelectedItemOnlyStatus.noneLabel !== 'string' && controlArr.labels.length === 0 ? MULTI_SEL_SELECTED_STATUS.noneLabel : null }
+                                        {typeof multiSelectSelectedItemOnlyStatus.allItemsLabel !== 'string' && controlArr.labels.length === optionsData.length ? MULTI_SEL_SELECTED_STATUS.allItemsLabel : null }
+
                                     </li>
-                                ))}
+                                </> : <>
+                                    {controlArr.labels.map((item: any, index: number) => (
+                                        <li key={index}>
+                                            {stripHTML(item)}
 
-                                <li className={`mf-select-multi__list-item-placeholder ${typeof placeholder === 'undefined' || placeholder === '' ? 'hide' : ''}`}>
-                                    <span className={`mf-select-multi__control-blinking-cursor ${generateInputFocusStr() === placeholder && placeholder !== '' && typeof placeholder !== 'undefined' ? 'control-placeholder' : ''} ${generateInputFocusStr() === '|' ? 'animated' : ''}`}>
-                                        {generateInputFocusStr()}
-                                    </span>
-                                </li>
+                                            <a href="#" tabIndex={-1} onClick={handleMultiControlItemRemove} data-item={controlArr.values[index]}><svg width="10px" height="10px" viewBox="0 0 1024 1024"><path fill="#000" d="M195.2 195.2a64 64 0 0 1 90.496 0L512 421.504 738.304 195.2a64 64 0 0 1 90.496 90.496L602.496 512 828.8 738.304a64 64 0 0 1-90.496 90.496L512 602.496 285.696 828.8a64 64 0 0 1-90.496-90.496L421.504 512 195.2 285.696a64 64 0 0 1 0-90.496z" /></svg></a>
+                                        </li>
+                                    ))}
+
+                                    <li className={`mf-select-multi__list-item-placeholder ${typeof placeholder === 'undefined' || placeholder === '' ? 'hide' : ''}`}>
+                                        <span className={`mf-select-multi__control-blinking-cursor ${generateInputFocusStr() === placeholder && placeholder !== '' && typeof placeholder !== 'undefined' ? 'control-placeholder' : ''} ${generateInputFocusStr() === '|' ? 'animated' : ''}`}>
+                                            {generateInputFocusStr()}
+                                        </span>
+                                    </li>
+                                </>}
+                                
                             </ul>
 
                         </div>
@@ -2113,6 +2148,35 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
                                     const endItemBorder = index === optionsData.length - 1 ? 'border-bottom-0' : '';
 
 
+                                    // disable selected options (only single selection)
+                                    let disabledCurrentOption: boolean = false;
+                                    if (
+                                        (typeof value !== 'undefined' && value !== null && value !== '') &&
+                                        (typeof item.value !== 'undefined' && item.value !== null && item.value !== '')
+                                    ) {
+
+                                        if (!MULTI_SEL_VALID) {
+                                            const _defaultValue = value.toString();
+                                            let filterRes: any = [];
+                                            const filterResQueryValue = optionsData.filter((item: any) => item.value == _defaultValue);
+                                            const filterResQueryLabel = optionsData.filter((item: any) => item.label == _defaultValue);
+    
+                                            if (filterResQueryValue.length === 0 && filterResQueryLabel.length > 0) {
+                                                filterRes = filterResQueryValue;
+                                                if (filterResQueryValue.length === 0) filterRes = filterResQueryLabel;
+                                            }
+
+                                            const _targetValue = filterRes.length > 0 ? filterRes[0].value : _defaultValue;
+                                            const _realValue = item.value.toString();
+
+                                            if (_realValue === _targetValue && _targetValue !== '') {
+                                                disabledCurrentOption = true;
+                                            }
+                                        }
+
+                                    }
+                                    
+
 
                                     if (!MULTI_SEL_VALID) {
 
@@ -2124,7 +2188,7 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
                                             type="button" 
                                             data-index={index} 
                                             key={index} 
-                                            className={`list-group-item list-group-item-action border-start-0 border-end-0 mf-select-multi__control-option-item ${startItemBorder} ${endItemBorder} border-bottom-0 ${typeof item.disabled === 'undefined' ? '' : (item.disabled == true ? 'disabled' : '')}`} 
+                                            className={`list-group-item list-group-item-action border-start-0 border-end-0 mf-select-multi__control-option-item ${startItemBorder} ${endItemBorder} border-bottom-0 ${typeof item.disabled === 'undefined' ? '' : (item.disabled == true ? 'disabled' : '')} ${disabledCurrentOption ? 'active disabled' : ''}`} 
                                             data-value={`${item.value}`} 
                                             data-label={`${item.label}`} 
                                             data-querystring={`${typeof item.queryString === 'undefined' ? '' : item.queryString}`} 

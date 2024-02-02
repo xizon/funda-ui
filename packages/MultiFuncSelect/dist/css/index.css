@@ -143,6 +143,9 @@
   text-overflow: ellipsis;
   position: relative;
 }
+.mf-select__wrapper .mf-select-multi__inputplaceholder-wrapper ul.mf-select-multi__list li.mf-select-multi__list-item-statusstring {
+  background: transparent;
+}
 .mf-select__wrapper .mf-select-multi__inputplaceholder-wrapper ul.mf-select-multi__list li.mf-select-multi__list-item-placeholder {
   background: transparent;
   color: var(--mf-sel-placeholder-color);

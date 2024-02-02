@@ -200,6 +200,10 @@
                 text-overflow: ellipsis;
                 position: relative;
 
+                &.mf-select-multi__list-item-statusstring {
+                    background: transparent;
+                }
+
                 &.mf-select-multi__list-item-placeholder {
                     background: transparent;
                     color: var(--mf-sel-placeholder-color);

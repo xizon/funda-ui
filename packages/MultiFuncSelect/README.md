@@ -18,6 +18,7 @@ import MultiFuncSelect from 'funda-ui/MultiFuncSelect';
 | `indentation` | string  | - | Set hierarchical indentation placeholders, valid when the `hierarchical` is true. |
 | `doubleIndent` | boolean  | false | Set double indent effect, valid when the `hierarchical` is true. |
 | `multiSelect` | JSON Object | `{"valid": false, "selectAll": true, "selectAllLabel": "Select all options"}` | Enable multi-select. <blockquote>**Parameters Description:** <br />`valid` -->  *(Boolean)* *(required)* Set component in which multiple options can be selected at once to be valid.  <br />`selectAll` --> *(Boolean)* *(required)* Enables select all button. <br />`selectAllLabel` -->  *(String)* Sets the select all button label. (Support html tags) <br />`data` -->  *(JSON Object \| null)* *(required)* Sets a default data for control's values. (such as `{values: ['value-1','value-3'], labels: ['Option 1','Option 3'], queryStrings: ['','']}`)</blockquote> |
+| `multiSelectSelectedItemOnlyStatus` | JSON Object | `{"itemsLabel":"{num} Selected","allItemsLabel":"All Content","noneLabel":"No items selected"}` | Let the selected options only display the status without detailed options. It is not recommended for search to trigger request. <hr> The `{num}` is a placeholder which will be automatically replaced by a number. <blockquote>Valid when `multiSelect` parameter exists</blockquote> |
 | `depth` | number  | 1055 | Set the depth value of the control to control the display of the pop-up layer appear above. Please set it when multiple controls are used at the same time. |
 | `winWidth` | number \| function  | `auto` | Set the container width of options. Such as: `500px` or `() => window.innerWidth/2 + 'px'`  |
 | `extractValueByBrackets` | boolean  | true | Whether to use square brackets to save result and initialize default value. |
@@ -212,7 +213,7 @@ export default () => {
                     data: {
                         values: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20].map(v => v.toString()),
                         labels: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20].map(v => v.toString()),
-                        queryStrings: ['option3', 'option2']
+                        queryStrings: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20].map(v => ''),
                     }
                 }}
                 placeholder="Select"
@@ -1178,6 +1179,55 @@ export default () => {
 }
 ```
 
+
+
+## Only show the status of selected items for multiple selection
+
+Set `multiSelectSelectedItemOnlyStatus` parameter.
+
+```js
+import React from "react";
+import MultiFuncSelect from 'funda-ui/MultiFuncSelect';
+
+// component styles
+import 'funda-ui/MultiFuncSelect/index.css';
+
+export default () => {
+ 
+    return (
+        <>
+
+            <MultiFuncSelect
+                value="[1][2][3][4][5][6][7][8][9][10][11][12][13][14][15][16][17][18][19][20]"
+                multiSelect={{
+                    valid: true,
+                    selectAll: true,
+                    selectAllLabel: "Select all options",
+                    data: {
+                        values: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20].map(v => v.toString()),
+                        labels: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20].map(v => v.toString()),
+                        queryStrings: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20].map(v => ''),
+                    }
+                }}
+                multiSelectSelectedItemOnlyStatus={{
+                    itemsLabel: '{num} Selected',
+                    allItemsLabel: 'All Content',
+                    noneLabel: 'No items selected',
+                }}
+                placeholder="Select"
+                name="name"
+                options={Array.from({ length: 100 }).fill(0).map((v, i) => {
+                    return { "label": `${i}`, "value": `${i}`, "queryString": "" }
+                })}
+                onChange={(e, e2, val) => {
+                    console.log(e, e2, val);
+                }}
+            />
+
+        </>
+    );
+}
+```
 
 
 
