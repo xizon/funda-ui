@@ -11,6 +11,148 @@
 return /******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ({
 
+/***/ 378:
+/***/ ((module) => {
+
+function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
+/**
+ * Get the -webkit-transition-duration property
+ *
+ * @param {Element} el - A DOM node containing one selector to match against.
+ * @return {Number}    - Returns a pure number.
+ */
+function getTransitionDuration(el) {
+  if (_typeof(el) === ( true ? "undefined" : 0)) {
+    return 0;
+  }
+  var style = window.getComputedStyle(el),
+    duration = style.webkitTransitionDuration,
+    delay = style.webkitTransitionDelay;
+  if (_typeof(duration) != ( true ? "undefined" : 0)) {
+    // fix miliseconds vs seconds
+    duration = duration.indexOf("ms") > -1 ? parseFloat(duration) : parseFloat(duration) * 1000;
+    delay = delay.indexOf("ms") > -1 ? parseFloat(delay) : parseFloat(delay) * 1000;
+    return duration;
+  } else {
+    return 0;
+  }
+}
+
+/**
+ * Get an object's absolute position on the page
+ *
+ * @param {Element} el - A DOM node containing one selector to match against.
+ * @return {Json}    - An object containing the properties top and left. 
+ */
+function getAbsoluteCoordinates(el) {
+  var windowWidth = window.innerWidth,
+    leftPos = null,
+    topPos = null;
+  if (!document.getElementsByTagName('body')[0].className.match(/rtl/)) {
+    leftPos = el.offsetLeft == 0 ? el.parentElement.offsetLeft : el.offsetLeft;
+    topPos = el.offsetTop == 0 ? el.parentElement.offsetTop : el.offsetTop;
+  } else {
+    // width and height in pixels, including padding and border
+    // Corresponds to outerWidth(), outerHeight()
+    leftPos = el.offsetLeft == 0 ? windowWidth - (el.parentElement.offsetLeft + el.parentElement.offsetWidth) : windowWidth - (el.offsetLeft + el.offsetWidth);
+    topPos = el.offsetTop == 0 ? windowWidth - (el.parentElement.offsetTop + el.parentElement.offsetHeight) : windowWidth - (el.offsetTop + el.offsetHeight);
+  }
+  return {
+    'left': leftPos,
+    'top': topPos
+  };
+}
+
+/**
+ * Get the current coordinates of the first element in the set of matched elements, relative to the document.
+ *
+ * @param {Element} el - A DOM node containing one selector to match against.
+ * @return {Json}      - An object containing the properties top and left. 
+ */
+function getOffset(el) {
+  var res = {
+    top: 0,
+    left: 0
+  };
+  var box = el.getBoundingClientRect();
+  var top = 0,
+    left = 0;
+
+  //Include scrollbar and border
+  top = box.top + window.pageYOffset - document.documentElement.clientTop;
+  left = box.left + window.pageXOffset - document.documentElement.clientLeft;
+  res = {
+    top: top,
+    left: left
+  };
+  return res;
+}
+
+/**
+ * Get the current coordinates of the first element in the set of matched elements, relative to the offset parent.
+ *
+ * @param {Element} el - A DOM node containing one selector to match against.
+ * @return {Json}      - An object containing the properties top and left.
+ */
+function getPosition(el) {
+  var res = {
+    top: 0,
+    left: 0
+  };
+  var top = el.offsetTop ? el.offsetTop : 0,
+    left = el.offsetLeft ? el.offsetLeft : 0;
+  res = {
+    top: top,
+    left: left
+  };
+  return res;
+}
+
+/**
+ * Get the absolute position of the stage element
+ * 
+ * @param {Element} domElement  - A DOM node
+ * @param {Number | String} left     - left offset
+ * @param {Number | String} top      - top offset
+ * @returns 
+ */
+function getAbsolutePositionOfStage(domElement) {
+  var left = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
+  var top = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 0;
+  if (!parseInt(left)) {
+    left = 0;
+  } else {
+    left = parseInt(left);
+  }
+  if (!parseInt(top)) {
+    top = 0;
+  } else {
+    top = parseInt(top);
+  }
+  var box = domElement.getBoundingClientRect();
+  var body = document.body;
+  var docElem = document.documentElement;
+  var scrollTop = window.pageYOffset || docElem.scrollTop || body.scrollTop;
+  var scrollLeft = window.pageXOffset || docElem.scrollLeft || body.scrollLeft;
+  var clientTop = docElem.clientTop || body.clientTop || 0;
+  var clientLeft = docElem.clientLeft || body.clientLeft || 0;
+  var attr = {};
+  attr.y = box.top + scrollTop - clientTop + top;
+  attr.x = box.left + scrollLeft - clientLeft + left;
+  attr.width = box.width;
+  attr.height = box.height;
+  return attr;
+}
+module.exports = {
+  getTransitionDuration: getTransitionDuration,
+  getAbsoluteCoordinates: getAbsoluteCoordinates,
+  getOffset: getOffset,
+  getPosition: getPosition,
+  getAbsolutePositionOfStage: getAbsolutePositionOfStage
+};
+
+/***/ }),
+
 /***/ 342:
 /***/ ((module) => {
 
@@ -595,11 +737,13 @@ var useDebounce = function useDebounce(fn, delay, dependence) {
   }, dependence);
 };
 /* harmony default export */ const utils_useDebounce = (useDebounce);
+// EXTERNAL MODULE: ./src/utils/get-element-property.js
+var get_element_property = __webpack_require__(378);
 // EXTERNAL MODULE: ../SearchBar/dist/cjs/index.js
 var cjs = __webpack_require__(962);
 var cjs_default = /*#__PURE__*/__webpack_require__.n(cjs);
 ;// CONCATENATED MODULE: ./src/index.tsx
-var _excluded = ["wrapperClassName", "controlClassName", "appearance", "disabled", "required", "placeholder", "value", "label", "name", "id", "icon", "btnId", "fetchTrigger", "hideIcon", "depth", "maxLength", "style", "winWidth", "tabIndex", "data", "fetchAutoShow", "fetchNoneInfo", "fetchUpdate", "fetchFuncAsync", "fetchFuncMethod", "fetchFuncMethodParams", "fetchCallback", "onFetch", "onSelect", "onChange", "onBlur"];
+var _excluded = ["wrapperClassName", "controlClassName", "appearance", "disabled", "required", "placeholder", "value", "label", "name", "id", "icon", "btnId", "fetchTrigger", "hideIcon", "depth", "maxLength", "style", "winWidth", "tabIndex", "data", "fetchAutoShow", "fetchNoneInfo", "fetchUpdate", "fetchFuncAsync", "fetchFuncMethod", "fetchFuncMethodParams", "fetchCallback", "onFetch", "onChange", "onBlur"];
 function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
 function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
 function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter); }
@@ -617,6 +761,7 @@ function _iterableToArrayLimit(arr, i) { var _i = null == arr ? null : "undefine
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 function _objectWithoutProperties(source, excluded) { if (source == null) return {}; var target = _objectWithoutPropertiesLoose(source, excluded); var key, i; if (Object.getOwnPropertySymbols) { var sourceSymbolKeys = Object.getOwnPropertySymbols(source); for (i = 0; i < sourceSymbolKeys.length; i++) { key = sourceSymbolKeys[i]; if (excluded.indexOf(key) >= 0) continue; if (!Object.prototype.propertyIsEnumerable.call(source, key)) continue; target[key] = source[key]; } } return target; }
 function _objectWithoutPropertiesLoose(source, excluded) { if (source == null) return {}; var target = {}; var sourceKeys = Object.keys(source); var key, i; for (i = 0; i < sourceKeys.length; i++) { key = sourceKeys[i]; if (excluded.indexOf(key) >= 0) continue; target[key] = source[key]; } return target; }
+
 
 
 
@@ -650,13 +795,13 @@ var LiveSearch = function LiveSearch(props) {
     fetchFuncMethodParams = props.fetchFuncMethodParams,
     fetchCallback = props.fetchCallback,
     onFetch = props.onFetch,
-    onSelect = props.onSelect,
     onChange = props.onChange,
     onBlur = props.onBlur,
     attributes = _objectWithoutProperties(props, _excluded);
+  var POS_OFFSET = 0;
   var INPUT_MATCH_ENABLED = typeof fetchAutoShow === 'undefined' || fetchAutoShow === false ? true : false;
   var WIN_WIDTH = typeof winWidth === 'function' ? winWidth() : winWidth ? winWidth : 'auto';
-  var uniqueID = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useId)();
+  var uniqueID = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useId)().replace(/\:/g, "-");
   var idRes = id || uniqueID;
   var rootRef = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useRef)(null);
   var inputRef = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useRef)(null);
@@ -709,81 +854,165 @@ var LiveSearch = function LiveSearch(props) {
     return bounding.top >= 0 && bounding.left >= 0 && bounding.bottom <= (window.innerHeight || document.documentElement.clientHeight) && bounding.right <= (window.innerWidth || document.documentElement.clientWidth);
   }
   function handleScrollEvent() {
-    getPlacement(listRef.current, true);
+    popwinPosInit(false);
   }
+  function popwinPosInit() {
+    var showAct = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : true;
+    if (listContentRef.current === null || inputRef.current === null) return;
+    var contentHeightOffset = 80;
+    var contentMaxHeight = 0;
 
-  //
-  function getPlacement(el) {
-    var restorePos = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
-    if (el === null) return;
-    if (inputRef.current === null) return;
-    var PLACEMENT_TOP = 'top-0';
-    var PLACEMENT_BOTTOMEND = 'bottom-0';
-    var PLACEMENT_RIGHT = 'end-0';
-    var PLACEMENT_LEFT = 'start-0';
-    var inputBox = inputRef.current.getBoundingClientRect();
-    var elTop = inputBox.top;
-    var elSpacing = 50 + inputRef.current.clientHeight * 3;
-    var elMinWindowSpacing = inputRef.current.clientHeight * 2;
+    // update modal position
+    var _modalRef = document.querySelector("#livesearch__options-wrapper-".concat(idRes));
+    var _triggerRef = inputRef.current;
 
-    //restore position
-    if (restorePos) {
-      if (isInViewport(el)) {
-        el.classList.remove(PLACEMENT_BOTTOMEND);
-        el.style.removeProperty('bottom');
-      }
-      return;
-    }
-    if (listContentRef.current === null) return;
+    // console.log(getAbsolutePositionOfStage(_triggerRef));
+
+    if (_modalRef === null) return;
+    var _getAbsolutePositionO = (0,get_element_property.getAbsolutePositionOfStage)(_triggerRef),
+      x = _getAbsolutePositionO.x,
+      y = _getAbsolutePositionO.y,
+      width = _getAbsolutePositionO.width,
+      height = _getAbsolutePositionO.height;
+    var _triggerBox = _triggerRef.getBoundingClientRect();
+    var targetPos = '';
 
     // STEP 1:
-    // If the content exceeds the height of the window, first limit height and add scrollbar
-    var maxHeight = window.innerHeight - elSpacing;
-    if (maxHeight < inputRef.current.clientHeight) maxHeight = elMinWindowSpacing;
-    if (el.offsetHeight > 0 && el.offsetHeight > maxHeight) {
-      var newH = maxHeight - (elTop > window.innerHeight / 2 ? 0 : elTop) + elMinWindowSpacing;
-
-      // default position
-      listContentRef.current.style.height = newH + 'px';
-
-      // if it's on top
-      if (newH > maxHeight) {
-        listContentRef.current.style.height = elTop - elMinWindowSpacing + 'px';
-      }
-
-      //
-      listContentRef.current.style.overflowY = 'auto';
-    } else {
-      listContentRef.current.style.height = 'auto';
-      listContentRef.current.style.overflowY = 'inherit';
-    }
+    //-----------
+    // display wrapper
+    if (showAct) _modalRef.classList.add('active');
 
     // STEP 2:
-    // Adjust position
-    if (!isInViewport(el)) {
-      el.classList.add(PLACEMENT_BOTTOMEND);
-      el.style.setProperty('bottom', inputRef.current.clientHeight + 5 + 'px', "important");
+    //-----------
+    // Detect position
+    if (window.innerHeight - _triggerBox.top > 100) {
+      targetPos = 'bottom';
+    } else {
+      targetPos = 'top';
     }
+    if (typeof listContentRef.current.dataset.pos === 'undefined') listContentRef.current.dataset.pos = targetPos;
 
     // STEP 3:
-    // It is on top when no scrollbars have been added
-    if (!isInViewport(el)) {
-      if (el.getBoundingClientRect().top < 0) {
-        el.classList.remove(PLACEMENT_BOTTOMEND);
-        el.style.removeProperty('bottom');
-        //
-        listContentRef.current.style.height = el.offsetHeight + el.getBoundingClientRect().top - elMinWindowSpacing + 'px';
-        listContentRef.current.style.overflowY = 'auto';
+    //-----------
+    // Detect content MAX HEIGHT and ACTUAL HEIGHT
+    var _contentBox = listContentRef.current.getBoundingClientRect();
+    var _contentActualHeight = listContentRef.current.querySelector('.livesearch__options-contentlist-inner').clientHeight;
+    if (targetPos === 'top') {
+      contentMaxHeight = _triggerBox.top;
+      if (_contentBox.height > _contentActualHeight) {
+        if (_contentActualHeight > 0) listContentRef.current.style.height = _contentActualHeight + 'px';
+      } else {
+        if (_contentActualHeight > 0) listContentRef.current.style.height = _contentActualHeight + 'px';
+
+        // recalculate the height
+        _contentBox = listContentRef.current.getBoundingClientRect();
+        if (_contentBox.height > contentMaxHeight) listContentRef.current.style.height = contentMaxHeight - contentHeightOffset + 'px';
+      }
+    }
+    if (targetPos === 'bottom') {
+      contentMaxHeight = window.innerHeight - _triggerBox.bottom;
+      if (_contentBox.height > _contentActualHeight) {
+        if (_contentActualHeight > 0) listContentRef.current.style.height = _contentActualHeight + 'px';
+      } else {
+        if (_contentActualHeight > 0) listContentRef.current.style.height = _contentActualHeight + 'px';
+
+        // recalculate the height
+        _contentBox = listContentRef.current.getBoundingClientRect();
+        if (_contentBox.height > contentMaxHeight) listContentRef.current.style.height = contentMaxHeight - 10 + 'px';
       }
     }
 
     // STEP 4:
-    // Detect content height
-    var heightOffset = 80;
-    var contentBox = listContentRef.current.getBoundingClientRect();
-    if (contentBox.height - heightOffset > window.innerHeight / 2) {
-      listContentRef.current.style.height = window.innerHeight - inputBox.height - inputBox.top - heightOffset + 'px';
+    //-----------
+    // Adjust position
+    if (targetPos === 'top') {
+      _modalRef.style.left = x + 'px';
+      //_modalRef.style.top = y - POS_OFFSET - (listContentRef.current.clientHeight) - 2 + 'px';
+      _modalRef.style.top = 'auto';
+      _modalRef.style.bottom = window.innerHeight - _triggerBox.top + POS_OFFSET + 2 + 'px';
+      _modalRef.style.setProperty('position', 'fixed', 'important');
+      _modalRef.classList.add('pos-top');
     }
+    if (targetPos === 'bottom') {
+      _modalRef.style.left = x + 'px';
+      _modalRef.style.bottom = 'auto';
+      _modalRef.style.top = y + height + POS_OFFSET + 'px';
+      _modalRef.style.setProperty('position', 'absolute', 'important');
+      _modalRef.classList.remove('pos-top');
+    }
+
+    // STEP 5:
+    //-----------
+    // Determine whether it exceeds the far right or left side of the screen
+    var _modalContent = _modalRef;
+    var _modalBox = _modalContent.getBoundingClientRect();
+    if (typeof _modalContent.dataset.offset === 'undefined') {
+      if (_modalBox.right > window.innerWidth) {
+        var _modalOffsetPosition = _modalBox.right - window.innerWidth + POS_OFFSET;
+        _modalContent.dataset.offset = _modalOffsetPosition;
+        _modalContent.style.marginLeft = "-".concat(_modalOffsetPosition, "px");
+        // console.log('_modalPosition: ', _modalOffsetPosition)
+      }
+
+      if (_modalBox.left < 0) {
+        var _modalOffsetPosition2 = Math.abs(_modalBox.left) + POS_OFFSET;
+        _modalContent.dataset.offset = _modalOffsetPosition2;
+        _modalContent.style.marginLeft = "".concat(_modalOffsetPosition2, "px");
+        // console.log('_modalPosition: ', _modalOffsetPosition)
+      }
+    }
+  }
+
+  function popwinPosHide() {
+    var _modalRef = document.querySelector("#livesearch__options-wrapper-".concat(idRes));
+    if (_modalRef !== null && listContentRef.current !== null) {
+      // remove classnames and styles
+      _modalRef.classList.remove('active');
+      listContentRef.current.style.removeProperty('height');
+
+      // remove data-* attibutes
+      popwinContainerHeightReset();
+    }
+  }
+  function popwinBtnEventsInit(getOptionsData) {
+    if (listContentRef.current === null) return;
+
+    // options event listener
+    // !!! to prevent button mismatch when changing
+    [].slice.call(listContentRef.current.querySelectorAll('.livesearch__control-option-item')).forEach(function (node) {
+      // Solve the problem of missing click events caused by `<MultiFuncSelect />` not updating "data" []
+      if (getOptionsData.length === 0) {
+        if (typeof node.dataset.ev === 'undefined') {
+          node.dataset.ev = 'true';
+
+          // Prevent touch screen from starting to click option, DO NOT USE "pointerdown"
+          node.addEventListener('click', function (e) {
+            handleSelect(e);
+          });
+        }
+      } else {
+        var optVal = node.dataset.value;
+        getOptionsData.forEach(function (item) {
+          if (optVal == item.value) {
+            if (typeof node.dataset.ev === 'undefined') {
+              node.dataset.ev = 'true';
+
+              // Prevent touch screen from starting to click option, DO NOT USE "pointerdown"
+              node.addEventListener('click', function (e) {
+                handleSelect(e);
+              });
+            }
+          }
+        });
+      }
+    });
+  }
+  function popwinContainerHeightReset() {
+    if (listContentRef.current === null) return;
+
+    // remove data-* attibutes
+    listContentRef.current.removeAttribute('data-height');
+    listContentRef.current.removeAttribute('data-pos');
   }
 
   //
@@ -860,71 +1089,59 @@ var LiveSearch = function LiveSearch(props) {
           setOrginalData(response);
 
           //
-          onChange === null || onChange === void 0 ? void 0 : onChange(inputRef.current, response);
+          onChange === null || onChange === void 0 ? void 0 : onChange(inputRef.current, response, '');
 
           //
           setIsOpen(true);
+
+          // window position
+          setTimeout(function () {
+            popwinPosInit();
+            popwinBtnEventsInit(response);
+          }, 0);
         });
       } else {
         //
-        onChange === null || onChange === void 0 ? void 0 : onChange(inputRef.current, orginalData);
+        onChange === null || onChange === void 0 ? void 0 : onChange(inputRef.current, orginalData, '');
+
+        // window position
+        setTimeout(function () {
+          popwinPosInit();
+          popwinBtnEventsInit(orginalData);
+        }, 0);
       }
     } else {
       //
-      onChange === null || onChange === void 0 ? void 0 : onChange(inputRef.current, dataInit);
+      onChange === null || onChange === void 0 ? void 0 : onChange(inputRef.current, orginalData, '');
+
+      // window position
+      setTimeout(function () {
+        popwinPosInit();
+        popwinBtnEventsInit(orginalData);
+      }, 0);
     }
-
-    // window position
-    setTimeout(function () {
-      getPlacement(listRef.current);
-    }, 0);
   }
-  function activate() {
-    return _activate.apply(this, arguments);
-  }
-  function _activate() {
-    _activate = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee3() {
-      var res;
-      return _regeneratorRuntime().wrap(function _callee3$(_context3) {
-        while (1) switch (_context3.prev = _context3.next) {
-          case 0:
-            if (!fetchTrigger) {
-              _context3.next = 6;
-              break;
-            }
-            _context3.next = 3;
-            return matchData(changedVal, fetchUpdate);
-          case 3:
-            res = _context3.sent;
-            setOrginalData(res);
-
-            //
-            setIsOpen(res.length === 0 ? true : false);
-          case 6:
-          case "end":
-            return _context3.stop();
-        }
-      }, _callee3);
-    }));
-    return _activate.apply(this, arguments);
+  function cancel() {
+    setOrginalData([]);
+    popwinPosHide();
   }
   function fetchData(_x2) {
     return _fetchData.apply(this, arguments);
   }
   function _fetchData() {
-    _fetchData = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee4(params) {
+    _fetchData = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee3(params) {
       var response, _ORGIN_DATA;
-      return _regeneratorRuntime().wrap(function _callee4$(_context4) {
-        while (1) switch (_context4.prev = _context4.next) {
+      return _regeneratorRuntime().wrap(function _callee3$(_context3) {
+        while (1) switch (_context3.prev = _context3.next) {
           case 0:
             if (!(_typeof(fetchFuncAsync) === 'object')) {
-              _context4.next = 13;
+              _context3.next = 13;
               break;
             }
-            _context4.next = 3;
+            _context3.next = 3;
             return fetchFuncAsync["".concat(fetchFuncMethod)].apply(fetchFuncAsync, _toConsumableArray(params.split(',')));
           case 3:
-            response = _context4.sent;
+            response = _context3.sent;
             _ORGIN_DATA = response.data; // reset data structure
             if (typeof fetchCallback === 'function') {
               _ORGIN_DATA = fetchCallback(_ORGIN_DATA);
@@ -947,17 +1164,18 @@ var LiveSearch = function LiveSearch(props) {
             // window position
             if (componentFirstLoad) {
               setTimeout(function () {
-                getPlacement(listRef.current);
+                popwinPosInit();
+                popwinBtnEventsInit(_ORGIN_DATA);
               }, 500);
             }
-            return _context4.abrupt("return", _ORGIN_DATA);
+            return _context3.abrupt("return", _ORGIN_DATA);
           case 13:
-            return _context4.abrupt("return", []);
+            return _context3.abrupt("return", []);
           case 14:
           case "end":
-            return _context4.stop();
+            return _context3.stop();
         }
-      }, _callee4);
+      }, _callee3);
     }));
     return _fetchData.apply(this, arguments);
   }
@@ -965,68 +1183,97 @@ var LiveSearch = function LiveSearch(props) {
     return _handleSelect.apply(this, arguments);
   }
   function _handleSelect() {
-    _handleSelect = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee5(el) {
+    _handleSelect = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee4(el) {
       var dataInput,
-        index,
         _data,
+        _curData,
+        _data2,
         res,
-        _args5 = arguments;
-      return _regeneratorRuntime().wrap(function _callee5$(_context5) {
-        while (1) switch (_context5.prev = _context5.next) {
+        _args4 = arguments;
+      return _regeneratorRuntime().wrap(function _callee4$(_context4) {
+        while (1) switch (_context4.prev = _context4.next) {
           case 0:
-            dataInput = _args5.length > 1 && _args5[1] !== undefined ? _args5[1] : false;
+            dataInput = _args4.length > 1 && _args4[1] !== undefined ? _args4[1] : false;
             if (!(typeof el === 'undefined')) {
-              _context5.next = 3;
+              _context4.next = 3;
               break;
             }
-            return _context5.abrupt("return");
+            return _context4.abrupt("return");
           case 3:
             if (!dataInput) {
-              _context5.next = 9;
+              _context4.next = 9;
               break;
             }
             _data = JSON.parse(dataInput);
-            onSelect === null || onSelect === void 0 ? void 0 : onSelect(inputRef.current, _data);
+            onChange === null || onChange === void 0 ? void 0 : onChange(inputRef.current, orginalData, _data);
             setChangedVal(_data.label);
-            _context5.next = 20;
+            _context4.next = 21;
             break;
           case 9:
-            index = typeof el.target !== 'undefined' ? el.target.dataset.index : el.dataset.index;
+            _curData = typeof el.target !== 'undefined' ? el.target.dataset.itemdata : el.dataset.itemdata;
+            _data2 = JSON.parse(_curData);
             res = [];
             if (!INPUT_MATCH_ENABLED) {
-              _context5.next = 17;
+              _context4.next = 18;
               break;
             }
-            _context5.next = 14;
+            _context4.next = 15;
             return matchData(inputRef.current.value, false);
-          case 14:
-            res = _context5.sent;
-            _context5.next = 18;
+          case 15:
+            res = _context4.sent;
+            _context4.next = 19;
             break;
-          case 17:
-            res = dataInit;
           case 18:
-            onSelect === null || onSelect === void 0 ? void 0 : onSelect(inputRef.current, res[index]);
-            setChangedVal(res[index].label);
-          case 20:
+            res = dataInit;
+          case 19:
+            onChange === null || onChange === void 0 ? void 0 : onChange(inputRef.current, res, _data2);
+            setChangedVal(_data2.label);
+          case 21:
             // cancel
             setIsOpen(false);
-            setOrginalData([]);
-          case 22:
+            cancel();
+          case 23:
+          case "end":
+            return _context4.stop();
+        }
+      }, _callee4);
+    }));
+    return _handleSelect.apply(this, arguments);
+  }
+  function handleFetch() {
+    return _handleFetch.apply(this, arguments);
+  }
+  function _handleFetch() {
+    _handleFetch = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee5() {
+      var res;
+      return _regeneratorRuntime().wrap(function _callee5$(_context5) {
+        while (1) switch (_context5.prev = _context5.next) {
+          case 0:
+            if (!fetchTrigger) {
+              _context5.next = 7;
+              break;
+            }
+            _context5.next = 3;
+            return matchData(changedVal, fetchUpdate);
+          case 3:
+            res = _context5.sent;
+            setOrginalData(res);
+
+            //
+            setIsOpen(res.length === 0 ? true : false);
+
+            // window position
+            setTimeout(function () {
+              popwinPosInit();
+              popwinBtnEventsInit(dataInit);
+            }, 0);
+          case 7:
           case "end":
             return _context5.stop();
         }
       }, _callee5);
     }));
-    return _handleSelect.apply(this, arguments);
-  }
-  function handleFetch() {
-    activate();
-
-    // window position
-    setTimeout(function () {
-      getPlacement(listRef.current);
-    }, 0);
+    return _handleFetch.apply(this, arguments);
   }
   function handleClick() {
     if (!INPUT_MATCH_ENABLED) {
@@ -1036,7 +1283,8 @@ var LiveSearch = function LiveSearch(props) {
 
     // window position
     setTimeout(function () {
-      getPlacement(listRef.current);
+      popwinPosInit();
+      popwinBtnEventsInit(dataInit);
     }, 0);
   }
   function handleBlur(e) {
@@ -1044,8 +1292,10 @@ var LiveSearch = function LiveSearch(props) {
     if (!fetchTrigger) {
       setTimeout(function () {
         //
-        onBlur === null || onBlur === void 0 ? void 0 : onBlur(inputRef.current, orginalData);
-        setOrginalData([]);
+        onBlur === null || onBlur === void 0 ? void 0 : onBlur(inputRef.current);
+
+        //
+        cancel();
       }, 300);
     }
   }
@@ -1053,17 +1303,21 @@ var LiveSearch = function LiveSearch(props) {
     setIsOpen(false);
   }
   function handleClose(event) {
-    if (event.target.closest(".".concat(wrapperClassName || wrapperClassName === '' ? wrapperClassName : 'livesearch__wrapper')) === null) {
+    if (event.target.closest(".livesearch__wrapper") === null && event.target.closest(".livesearch__options-wrapper") === null) {
       // cancel
       setIsOpen(false);
-      setOrginalData([]);
+      cancel();
     }
   }
   function optionFocus(type) {
     return new Promise(function (resolve) {
       // Determine the "active" class name to avoid listening to other unused components of the same type
       if (listRef.current === null || !rootRef.current.classList.contains('active')) return;
-      var options = [].slice.call(listRef.current.querySelectorAll('.list-group-item'));
+      var options = [].slice.call(listRef.current.querySelectorAll('.list-group-item:not(.hide)'));
+      // Avoid selecting options that are disabled
+      options = options.filter(function (options) {
+        return !options.classList.contains('disabled');
+      });
       var currentIndex = options.findIndex(function (e) {
         return e === listRef.current.querySelector('.list-group-item.active');
       });
@@ -1091,6 +1345,14 @@ var LiveSearch = function LiveSearch(props) {
     });
   }
   (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useEffect)(function () {
+    // Move HTML templates to tag end body </body>
+    // render() don't use "Fragment", in order to avoid error "Failed to execute 'insertBefore' on 'Node'"
+    // prevent "transform", "filter", "perspective" attribute destruction fixed viewport orientation
+    //--------------
+    if (document.body !== null && listRef.current !== null) {
+      document.body.appendChild(listRef.current);
+    }
+
     // Component first load
     //--------------
     if (!componentFirstLoad) {
@@ -1137,13 +1399,15 @@ var LiveSearch = function LiveSearch(props) {
                   handleSelect(null, currentData);
 
                   //
-                  onChange === null || onChange === void 0 ? void 0 : onChange(inputRef.current, JSON.parse(currentData));
-
-                  //
                   options = [].slice.call(listRef.current.querySelectorAll('.list-group-item:not(.no-match)'));
                   options.forEach(function (node) {
                     node.classList.remove('active');
                   });
+
+                  //
+                  onChange === null || onChange === void 0 ? void 0 : onChange(inputRef.current, options.map(function (node) {
+                    return JSON.parse(node.dataset.itemdata);
+                  }), JSON.parse(currentData));
                 }
               }
               return _context.abrupt("return");
@@ -1202,10 +1466,14 @@ var LiveSearch = function LiveSearch(props) {
     // Remove the global list of events, especially as scroll and interval.
     //--------------
     return function () {
+      var _document$querySelect;
       document.removeEventListener("keydown", listener);
       document.removeEventListener('pointerdown', handleClose);
       window.removeEventListener('scroll', windowScrollUpdate);
       window.removeEventListener('touchmove', windowScrollUpdate);
+
+      //
+      (_document$querySelect = document.querySelector("#livesearch__options-wrapper-".concat(idRes))) === null || _document$querySelect === void 0 ? void 0 : _document$querySelect.remove();
     };
   }, [value, data]);
   return /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, label ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
@@ -1244,53 +1512,48 @@ var LiveSearch = function LiveSearch(props) {
     icon: hideIcon ? '' : !fetchTrigger ? '' : icon,
     btnId: btnId,
     autoComplete: "off"
-  }, attributes)), orginalData && orginalData.length > 0 && !hasErr ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
+  }, attributes)), orginalData && !hasErr ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
     ref: listRef,
-    className: "list-group position-absolute border shadow small ".concat(winWidth ? '' : 'w-100'),
+    id: "livesearch__options-wrapper-".concat(idRes),
+    className: "livesearch__options-wrapper list-group position-absolute border shadow small ".concat(winWidth ? '' : ''),
     style: {
-      marginTop: '0.2rem',
-      zIndex: depth ? depth : 100,
-      minWidth: '200px',
+      zIndex: depth ? depth : 1055,
       width: WIN_WIDTH
     },
     role: "tablist"
   }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
-    className: "rounded",
+    className: "livesearch__options-contentlist rounded",
+    style: {
+      backgroundColor: 'var(--bs-list-group-bg)'
+    },
     ref: listContentRef
-  }, orginalData ? orginalData.map(function (item, index) {
+  }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
+    className: "livesearch__options-contentlist-inner"
+  }, orginalData && orginalData.length === 0 && !hasErr && isOpen ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("button", {
+    tabIndex: -1,
+    type: "button",
+    className: "list-group-item list-group-item-action border-top-0 border-bottom-0 no-match livesearch__control-option-item--nomatch",
+    disabled: true
+  }, fetchNoneInfo || 'No match yet')) : null, orginalData ? orginalData.map(function (item, index) {
     var startItemBorder = index === 0 ? 'border-top-0' : '';
     var endItemBorder = index === orginalData.length - 1 ? 'border-bottom-0' : '';
     return /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("button", {
       tabIndex: -1,
-      onClick: handleSelect,
       type: "button",
       "data-index": index,
       key: index,
-      className: "list-group-item list-group-item-action border-start-0 border-end-0 border-top-0 border-bottom-0 ".concat(startItemBorder, " ").concat(endItemBorder),
+      className: "list-group-item list-group-item-action border-start-0 border-end-0 border-top-0 border-bottom-0 livesearch__control-option-item ".concat(startItemBorder, " ").concat(endItemBorder, " ").concat(typeof item.disabled === 'undefined' ? '' : item.disabled == true ? 'disabled' : ''),
       "data-value": "".concat(item.value),
       "data-label": "".concat(item.label),
       "data-querystring": "".concat(typeof item.queryString === 'undefined' ? '' : item.queryString),
-      role: "tab"
-    }, item.label);
-  }) : null))) : null, orginalData && orginalData.length === 0 && !hasErr && isOpen ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
-    ref: listRef,
-    className: "list-group position-absolute border shadow small ".concat(winWidth ? '' : 'w-100'),
-    style: {
-      marginTop: '0.2rem',
-      zIndex: depth ? depth : 100,
-      minWidth: '200px',
-      width: WIN_WIDTH
-    },
-    role: "tablist"
-  }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
-    className: "rounded",
-    ref: listContentRef
-  }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("button", {
-    tabIndex: -1,
-    type: "button",
-    className: "list-group-item list-group-item-action border-top-0 border-bottom-0 no-match",
-    disabled: true
-  }, fetchNoneInfo || 'No match yet')))) : null, hideIcon ? null : /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, !fetchTrigger ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("span", {
+      "data-itemdata": JSON.stringify(item),
+      "data-list-item-label": "".concat(typeof item.listItemLabel === 'undefined' ? '' : item.listItemLabel),
+      role: "tab",
+      dangerouslySetInnerHTML: {
+        __html: typeof item.listItemLabel === 'undefined' ? item.label : item.listItemLabel
+      }
+    });
+  }) : null)))) : null, hideIcon ? null : /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, !fetchTrigger ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("span", {
     className: "livesearch__wrapper-searchbtn position-absolute top-0 end-0"
   }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("button", {
     tabIndex: -1,

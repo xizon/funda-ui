@@ -1,0 +1,69 @@
+/* ======================================================
+    <!-- Live Search -->
+/* ====================================================== */
+
+
+/*------ List ------*/
+.livesearch__options-wrapper  {
+    --livesearch-listgroup-popwin-min-width: 200px;
+    --livesearch-listgroup-item-hover-focus-bg: rgba(0,0,0,.1);
+    --livesearch-listgroup-content-scrollbar-color: rgba(0, 0, 0, 0.2);
+    --livesearch-listgroup-content-scrollbar-track: rgba(0, 0, 0, 0);
+    --livesearch-listgroup-content-scrollbar-w: 3px;
+
+
+    display: none;
+    min-width: var(--livesearch-listgroup-popwin-min-width);
+    z-index: 1055;  /* --bs-modal-zindex */
+    
+
+    &.active {
+        display: block;
+    }
+
+
+    .livesearch__options-contentlist {
+        overflow: hidden;
+        overflow-y: auto;
+
+        &.noscroll {
+            overflow-y: hidden;
+        }
+
+        &::-webkit-scrollbar {
+            height: var(--livesearch-listgroup-content-scrollbar-h);
+            width: var(--livesearch-listgroup-content-scrollbar-w);
+        }
+
+        &::-webkit-scrollbar-thumb {
+            background: var(--livesearch-listgroup-content-scrollbar-color);
+        }
+
+        &::-webkit-scrollbar-track {
+            background: var(--livesearch-listgroup-content-scrollbar-track);
+        }
+
+    }
+
+    .list-group-item {
+
+        &.hide {
+            display: none;
+        }
+
+        .livesearch__control-option-item--nomatch {
+            &.hide {
+                display: none;
+            }
+        }
+
+
+        &:hover,
+        &:focus {
+            background-color: var(--livesearch-listgroup-item-hover-focus-bg);
+        }
+
+    }
+
+}
+

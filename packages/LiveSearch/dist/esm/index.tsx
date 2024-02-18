@@ -3,6 +3,9 @@ import React, { useId, useEffect, useState, useRef } from 'react';
 import { debounce } from './utils/performance';
 import useDebounce from './utils/useDebounce';
 
+import { getAbsolutePositionOfStage } from './utils/get-element-property';
+
+
 import SearchBar from 'funda-searchbar';
 
 
@@ -40,9 +43,8 @@ type LiveSearchProps = {
     fetchFuncMethodParams?: any[];
     fetchCallback?: (data: any) => void;
     onFetch?: (data: any) => void;
-    onSelect?: (e: any, data: any) => void;
-    onChange?: (e: any, data: any) => void;
-    onBlur?: (e: any, data: any) => void;
+    onChange?: (e: any, data: any, selectedData: any) => void;
+    onBlur?: (e: any) => void;
 };
 
 
@@ -76,16 +78,16 @@ const LiveSearch = (props: LiveSearchProps) => {
         fetchFuncMethodParams,
         fetchCallback,
         onFetch,
-        onSelect,
         onChange,
         onBlur,
         ...attributes
     } = props;
 
 
+    const POS_OFFSET = 0;
     const INPUT_MATCH_ENABLED = typeof fetchAutoShow === 'undefined' || fetchAutoShow === false ? true : false;
     const WIN_WIDTH = typeof winWidth === 'function' ? winWidth() : winWidth ? winWidth : 'auto';
-    const uniqueID = useId();
+    const uniqueID = useId().replace(/\:/g, "-");
     const idRes = id || uniqueID;
     const rootRef = useRef<any>(null);
     const inputRef = useRef<any>(null);
@@ -130,99 +132,219 @@ const LiveSearch = (props: LiveSearchProps) => {
 
 
     function handleScrollEvent() {
-        getPlacement(listRef.current, true);
+        popwinPosInit(false);
     }
 
-    //
-    function getPlacement(el: HTMLElement, restorePos: boolean = false) {
-
-        if ( el === null ) return;
-        if ( inputRef.current === null ) return;
-        
-
-        const PLACEMENT_TOP = 'top-0';
-        const PLACEMENT_BOTTOMEND = 'bottom-0';
-        const PLACEMENT_RIGHT = 'end-0';
-        const PLACEMENT_LEFT = 'start-0';
 
 
-        const inputBox = inputRef.current.getBoundingClientRect();
-        const elTop = inputBox.top;
-        const elSpacing = 50 + inputRef.current.clientHeight*3;
-        const elMinWindowSpacing = inputRef.current.clientHeight*2;
+    function popwinPosInit(showAct: boolean = true) {
+        if (listContentRef.current === null || inputRef.current === null) return;
 
+        const contentHeightOffset = 80;
+        let contentMaxHeight = 0;
 
-        //restore position
-        if ( restorePos ) {
-            if ( isInViewport(el) ) {
-                el.classList.remove(PLACEMENT_BOTTOMEND);
-                el.style.removeProperty('bottom');
-            }
-            return;
-        }
+        // update modal position
+        const _modalRef: any = document.querySelector(`#livesearch__options-wrapper-${idRes}`);
+        const _triggerRef: any = inputRef.current;
 
+        // console.log(getAbsolutePositionOfStage(_triggerRef));
 
-        if ( listContentRef.current === null ) return;
-    
+        if (_modalRef === null) return;
+
+        const { x, y, width, height } = getAbsolutePositionOfStage(_triggerRef);
+        const _triggerBox = _triggerRef.getBoundingClientRect();
+        let targetPos = '';
+
         // STEP 1:
-        // If the content exceeds the height of the window, first limit height and add scrollbar
-        let maxHeight = window.innerHeight - elSpacing;
-        if ( maxHeight < inputRef.current.clientHeight ) maxHeight = elMinWindowSpacing;
-        
-        if ( el.offsetHeight > 0 && (el.offsetHeight > maxHeight) ) {
+        //-----------
+        // display wrapper
+        if (showAct) _modalRef.classList.add('active');
 
-            const newH = maxHeight - (elTop > window.innerHeight/2 ? 0 : elTop) + elMinWindowSpacing;
-
-            // default position
-            listContentRef.current.style.height = newH + 'px';
-            
-
-            // if it's on top
-            if ( newH > maxHeight ) {
-                listContentRef.current.style.height = elTop - elMinWindowSpacing + 'px';
-            }
-
-            //
-            listContentRef.current.style.overflowY = 'auto';
-
-        } else {
-            listContentRef.current.style.height = 'auto';
-            listContentRef.current.style.overflowY = 'inherit';
-        }
 
         // STEP 2:
-        // Adjust position
-        if ( !isInViewport(el) ) {
-            el.classList.add(PLACEMENT_BOTTOMEND);
-            el.style.setProperty('bottom', inputRef.current.clientHeight + 5 + 'px', "important");
+        //-----------
+        // Detect position
+        if (window.innerHeight - _triggerBox.top > 100) {
+            targetPos = 'bottom';
+        } else {
+            targetPos = 'top';
         }
+
+        if (typeof listContentRef.current.dataset.pos === 'undefined') listContentRef.current.dataset.pos = targetPos;
 
 
 
         // STEP 3:
-        // It is on top when no scrollbars have been added
-        if ( !isInViewport(el) ) {
-            if ( el.getBoundingClientRect().top < 0 ) {
-                el.classList.remove(PLACEMENT_BOTTOMEND);
-                el.style.removeProperty('bottom');
-                //
-                listContentRef.current.style.height = el.offsetHeight + el.getBoundingClientRect().top - elMinWindowSpacing + 'px';
-                listContentRef.current.style.overflowY = 'auto';
+        //-----------
+        // Detect content MAX HEIGHT and ACTUAL HEIGHT
+        let _contentBox = listContentRef.current.getBoundingClientRect();
+        const _contentActualHeight = listContentRef.current.querySelector('.livesearch__options-contentlist-inner').clientHeight;
+
+
+        if (targetPos === 'top') {
+            contentMaxHeight = _triggerBox.top;
+
+            if (_contentBox.height > _contentActualHeight) {
+                if (_contentActualHeight > 0) listContentRef.current.style.height = _contentActualHeight + 'px';
+            } else {
+                if (_contentActualHeight > 0) listContentRef.current.style.height = _contentActualHeight + 'px';
+
+                // recalculate the height
+                _contentBox = listContentRef.current.getBoundingClientRect();
+                if (_contentBox.height > contentMaxHeight) listContentRef.current.style.height = contentMaxHeight - contentHeightOffset + 'px';
+
             }
         }
-  
 
-        // STEP 4:
-        // Detect content height
-        const heightOffset = 80;
-        const contentBox = listContentRef.current.getBoundingClientRect();
-        if (contentBox.height - heightOffset > window.innerHeight/2) {
-            listContentRef.current.style.height = (window.innerHeight - inputBox.height - inputBox.top - heightOffset) + 'px';
+        if (targetPos === 'bottom') {
+            contentMaxHeight = window.innerHeight - _triggerBox.bottom;
+
+            if (_contentBox.height > _contentActualHeight) {
+                if (_contentActualHeight > 0) listContentRef.current.style.height = _contentActualHeight + 'px';
+            } else {
+                if (_contentActualHeight > 0) listContentRef.current.style.height = _contentActualHeight + 'px';
+
+                // recalculate the height
+                _contentBox = listContentRef.current.getBoundingClientRect();
+                if (_contentBox.height > contentMaxHeight) listContentRef.current.style.height = contentMaxHeight - 10 + 'px';
+            }
+
         }
 
         
+
+        // STEP 4:
+        //-----------
+        // Adjust position
+        if (targetPos === 'top') {
+            _modalRef.style.left = x + 'px';
+            //_modalRef.style.top = y - POS_OFFSET - (listContentRef.current.clientHeight) - 2 + 'px';
+            _modalRef.style.top = 'auto';
+            _modalRef.style.bottom = (window.innerHeight - _triggerBox.top) + POS_OFFSET + 2 + 'px';
+            _modalRef.style.setProperty('position', 'fixed', 'important');
+            _modalRef.classList.add('pos-top');
+        }
+
+        if (targetPos === 'bottom') {
+            _modalRef.style.left = x + 'px';
+            _modalRef.style.bottom = 'auto';
+            _modalRef.style.top = y + height + POS_OFFSET + 'px';
+            _modalRef.style.setProperty('position', 'absolute', 'important');
+            _modalRef.classList.remove('pos-top');
+        }
+
+
+
+
+
+        // STEP 5:
+        //-----------
+        // Determine whether it exceeds the far right or left side of the screen
+        const _modalContent = _modalRef;
+        const _modalBox = _modalContent.getBoundingClientRect();
+        if (typeof _modalContent.dataset.offset === 'undefined') {
+
+            if (_modalBox.right > window.innerWidth) {
+                const _modalOffsetPosition = _modalBox.right - window.innerWidth + POS_OFFSET;
+                _modalContent.dataset.offset = _modalOffsetPosition;
+                _modalContent.style.marginLeft = `-${_modalOffsetPosition}px`;
+                // console.log('_modalPosition: ', _modalOffsetPosition)
+            }
+
+
+            if (_modalBox.left < 0) {
+                const _modalOffsetPosition = Math.abs(_modalBox.left) + POS_OFFSET;
+                _modalContent.dataset.offset = _modalOffsetPosition;
+                _modalContent.style.marginLeft = `${_modalOffsetPosition}px`;
+                // console.log('_modalPosition: ', _modalOffsetPosition)
+            }
+
+
+        }
+
+
+
     }
 
+
+
+
+    function popwinPosHide() {
+
+        const _modalRef: any = document.querySelector(`#livesearch__options-wrapper-${idRes}`);
+
+        if (_modalRef !== null && listContentRef.current !== null) {
+
+
+            // remove classnames and styles
+            _modalRef.classList.remove('active');
+            listContentRef.current.style.removeProperty('height');
+
+            // remove data-* attibutes
+            popwinContainerHeightReset();
+
+        }
+
+
+    }
+
+    
+    
+    function popwinBtnEventsInit(getOptionsData: any[]) {
+        if (listContentRef.current === null) return;
+
+
+        // options event listener
+        // !!! to prevent button mismatch when changing
+        [].slice.call(listContentRef.current.querySelectorAll('.livesearch__control-option-item')).forEach((node: HTMLElement) => {
+
+            // Solve the problem of missing click events caused by `<MultiFuncSelect />` not updating "data" []
+            if (getOptionsData.length === 0) {
+
+                if (typeof node.dataset.ev === 'undefined') {
+                    node.dataset.ev = 'true';
+
+                    // Prevent touch screen from starting to click option, DO NOT USE "pointerdown"
+                    node.addEventListener('click', (e: any) => {
+                        handleSelect(e);
+                    });
+                }
+
+            } else {
+                const optVal = node.dataset.value;
+                getOptionsData.forEach((item: any) => {
+                    if (optVal == item.value) {
+
+                        if (typeof node.dataset.ev === 'undefined') {
+                            node.dataset.ev = 'true';
+
+                            // Prevent touch screen from starting to click option, DO NOT USE "pointerdown"
+                            node.addEventListener('click', (e: any) => {
+                                handleSelect(e);
+                            });
+                            
+                        }
+                    }
+                });
+            }
+
+
+
+
+        });
+
+
+    }
+
+    
+    function popwinContainerHeightReset() {
+        if (listContentRef.current === null) return;
+
+        // remove data-* attibutes
+        listContentRef.current.removeAttribute('data-height');
+        listContentRef.current.removeAttribute('data-pos');
+
+    }
 
     //
     async function matchData(val: string = '', query: boolean = false) {
@@ -284,46 +406,57 @@ const LiveSearch = (props: LiveSearchProps) => {
                 matchData(val, fetchUpdate).then((response: any) => {
 
                     setOrginalData(response);
-
+                    
+             
                     //
-                    onChange?.(inputRef.current, response); 
+                    onChange?.(inputRef.current, response, ''); 
 
                     //
                     setIsOpen(true);
+
+                    // window position
+                    setTimeout(() => {
+                        popwinPosInit();
+                        popwinBtnEventsInit(response);
+                    }, 0);
+
+
+
                 });
             } else {
+
                 //
-                onChange?.(inputRef.current, orginalData); 
+                onChange?.(inputRef.current, orginalData, ''); 
+
+                // window position
+                setTimeout(() => {
+                    popwinPosInit();
+                    popwinBtnEventsInit(orginalData);
+                }, 0);
+
             }
 
         } else {
-            //
-            onChange?.(inputRef.current, dataInit); 
 
+            //
+            onChange?.(inputRef.current, orginalData, ''); 
+
+
+            // window position
+            setTimeout( ()=> {
+                popwinPosInit();
+                popwinBtnEventsInit(orginalData);
+            }, 0 );
         }
 
 
 
-
-        // window position
-        setTimeout( ()=> {
-            getPlacement(listRef.current);
-        }, 0 );
-
     }
     
-
-    async function activate() {
-        if ( fetchTrigger ) {
-            const res: any = await matchData(changedVal, fetchUpdate);
-            setOrginalData(res);
-            
-
-            //
-            setIsOpen(res.length === 0 ? true : false);
-        }   
+    function cancel() {
+        setOrginalData([]);
+        popwinPosHide();
     }
-
     
 
     async function fetchData(params: any) {
@@ -356,8 +489,10 @@ const LiveSearch = (props: LiveSearchProps) => {
             //
             // window position
             if (componentFirstLoad) {
+
                 setTimeout( ()=> {
-                    getPlacement(listRef.current);
+                    popwinPosInit();
+                    popwinBtnEventsInit(_ORGIN_DATA);
                 }, 500 );  
             } 
 
@@ -374,18 +509,17 @@ const LiveSearch = (props: LiveSearchProps) => {
         
         if ( typeof el === 'undefined' ) return;
 
-        let index: number | undefined | string;
 
-        
         // update value
         if ( dataInput ) {
             const _data = JSON.parse(dataInput);
 
-            onSelect?.(inputRef.current, _data);
+            onChange?.(inputRef.current, orginalData, _data);
             setChangedVal(_data.label);
         
         } else {
-            index = typeof el.target !== 'undefined' ? el.target.dataset.index : el.dataset.index;
+            const _curData = typeof el.target !== 'undefined' ? el.target.dataset.itemdata : el.dataset.itemdata;
+            const _data = JSON.parse(_curData);
 
             let res: any = [];
 
@@ -394,24 +528,33 @@ const LiveSearch = (props: LiveSearchProps) => {
             } else {
                 res = dataInit;
             }
-            
-            onSelect?.(inputRef.current, res[index as never]);
-            setChangedVal(res[index as never].label);
+           
+            onChange?.(inputRef.current, res, _data);
+            setChangedVal(_data.label);
         }
 
         
         // cancel
         setIsOpen(false);
-        setOrginalData([]);
+        cancel();
     }
 
-    function handleFetch() {
-        activate();   
+    async function handleFetch() {
+        if ( fetchTrigger ) {
+            const res: any = await matchData(changedVal, fetchUpdate);
+            setOrginalData(res);
+            
 
-        // window position
-        setTimeout( ()=> {
-            getPlacement(listRef.current);
-        }, 0 );     
+            //
+            setIsOpen(res.length === 0 ? true : false);
+
+            // window position
+            setTimeout( ()=> {
+                popwinPosInit();
+                popwinBtnEventsInit(dataInit);
+            }, 0 );     
+
+        }     
     }
 
     function handleClick() {
@@ -422,7 +565,8 @@ const LiveSearch = (props: LiveSearchProps) => {
 
         // window position
         setTimeout( ()=> {
-            getPlacement(listRef.current);
+            popwinPosInit();
+            popwinBtnEventsInit(dataInit);
         }, 0 );     
     }
 
@@ -432,9 +576,12 @@ const LiveSearch = (props: LiveSearchProps) => {
         setIsOpen(false);
         if ( !fetchTrigger ) {
             setTimeout(() => {
+
                 //
-                onBlur?.(inputRef.current, orginalData);
-                setOrginalData([]);
+                onBlur?.(inputRef.current);
+                
+                //
+                cancel();
 
             }, 300);
         }
@@ -445,15 +592,15 @@ const LiveSearch = (props: LiveSearchProps) => {
         setIsOpen(false);
     }
 
-
     function handleClose(event: any) {
 
-        if (event.target.closest(`.${wrapperClassName || wrapperClassName === '' ? wrapperClassName : 'livesearch__wrapper'}`) === null ) {
+        if (event.target.closest(`.livesearch__wrapper`) === null && event.target.closest(`.livesearch__options-wrapper`) === null) {
             // cancel
             setIsOpen(false);
-            setOrginalData([]);
+            cancel();
         }
     }
+
 
 
     function optionFocus(type: string) {
@@ -461,33 +608,37 @@ const LiveSearch = (props: LiveSearchProps) => {
         return new Promise(function (resolve) {
 
             // Determine the "active" class name to avoid listening to other unused components of the same type
-            if ( listRef.current === null || !rootRef.current.classList.contains('active') ) return;
+            if (listRef.current === null || !rootRef.current.classList.contains('active')) return;
 
-        
-            const options = [].slice.call(listRef.current.querySelectorAll('.list-group-item'));
+
+            let options = [].slice.call(listRef.current.querySelectorAll('.list-group-item:not(.hide)'));
+            // Avoid selecting options that are disabled
+            options = options.filter((options: HTMLElement) => !options.classList.contains('disabled'));
+
             const currentIndex = options.findIndex((e) => e === listRef.current.querySelector('.list-group-item.active'));
-
-
+            
+     
             // get the next element in the list, "%" will loop around to 0
             let nextIndex;
-            if ( type === 'increase' ) {
+            if (type === 'increase') {
                 nextIndex = currentIndex + 1 % options.length;
             } else {
                 nextIndex = (currentIndex < 0 ? options.length : currentIndex) - 1 % options.length;
             }
 
-            
+
+
             //only one
-            if ( options.length === 1 ) nextIndex = 0;
-            
-        
-            if ( !isNaN(nextIndex) ) {
-                options.forEach( (node: any, index: number) => {
+            if (options.length === 1) nextIndex = 0;
+
+
+            if (!isNaN(nextIndex)) {
+                options.forEach((node: any, index: number) => {
                     node?.classList.remove('active');
                 });
 
                 const targetOption = options[nextIndex] as HTMLElement;
-                if ( typeof targetOption !== 'undefined' && !targetOption.classList.contains('no-match') ) {
+                if (typeof targetOption !== 'undefined' && !targetOption.classList.contains('no-match')) {
                     targetOption.classList.add('active');
                     resolve(targetOption);
                 }
@@ -499,8 +650,18 @@ const LiveSearch = (props: LiveSearchProps) => {
     }
 
 
-
     useEffect(() => {
+
+
+        // Move HTML templates to tag end body </body>
+        // render() don't use "Fragment", in order to avoid error "Failed to execute 'insertBefore' on 'Node'"
+        // prevent "transform", "filter", "perspective" attribute destruction fixed viewport orientation
+        //--------------
+        if (document.body !== null && listRef.current !== null) {
+            document.body.appendChild(listRef.current);
+        }
+
+
 
         // Component first load
         //--------------
@@ -545,13 +706,15 @@ const LiveSearch = (props: LiveSearchProps) => {
                         handleSelect(null, currentData);
 
                         //
-                        onChange?.(inputRef.current, JSON.parse(currentData)); 
-
-                        //
                         const options = [].slice.call(listRef.current.querySelectorAll('.list-group-item:not(.no-match)'));
                         options.forEach((node: any) => {
                             node.classList.remove('active');
                         });
+
+
+                        //
+                        onChange?.(inputRef.current, options.map((node: HTMLElement) => JSON.parse(node.dataset.itemdata as any)), JSON.parse(currentData)); 
+
                     }  
                 }
 
@@ -613,6 +776,10 @@ const LiveSearch = (props: LiveSearchProps) => {
             window.removeEventListener('scroll', windowScrollUpdate);
             window.removeEventListener('touchmove', windowScrollUpdate);
 
+         
+            //
+            document.querySelector(`#livesearch__options-wrapper-${idRes}`)?.remove();
+
         };
 
     }, [value, data]);
@@ -652,31 +819,63 @@ const LiveSearch = (props: LiveSearchProps) => {
                 />
 
 
-                {orginalData && orginalData.length > 0 && !hasErr ? <>
-                    <div ref={listRef} className={`list-group position-absolute border shadow small ${winWidth ? '' : 'w-100'}`} style={{ marginTop: '0.2rem', zIndex: (depth ? depth : 100), minWidth: '200px', width: WIN_WIDTH}} role="tablist">
-                        <div className="rounded" ref={listContentRef}>
-                            {orginalData ? orginalData.map((item, index) => {
-                                const startItemBorder = index === 0 ? 'border-top-0' : '';
-                                const endItemBorder = index === orginalData.length-1 ? 'border-bottom-0' : '';
+                {orginalData && !hasErr ? <>
+                    <div 
+                        ref={listRef} 
+                        id={`livesearch__options-wrapper-${idRes}`}
+                        className={`livesearch__options-wrapper list-group position-absolute border shadow small ${winWidth ? '' : ''}`}
+                        style={{ zIndex: (depth ? depth : 1055), width: WIN_WIDTH }}
+                        role="tablist"
+                    >
+                        <div 
+                            className="livesearch__options-contentlist rounded" 
+                            style={{ backgroundColor: 'var(--bs-list-group-bg)' }} 
+                            ref={listContentRef}
+                        >
+                            <div className="livesearch__options-contentlist-inner">
 
-                                return <button tabIndex={-1} onClick={handleSelect} type="button" data-index={index} key={index} className={`list-group-item list-group-item-action border-start-0 border-end-0 border-top-0 border-bottom-0 ${startItemBorder} ${endItemBorder}`} data-value={`${item.value}`} data-label={`${item.label}`} data-querystring={`${typeof item.queryString === 'undefined' ? '' : item.queryString}`} role="tab">{item.label}</button>
-                            }) : null}
+
+                                {/* NO MATCH */}
+                                {orginalData && orginalData.length === 0 && !hasErr && isOpen ? <>
+                                    <button
+                                        tabIndex={-1}
+                                        type="button"
+                                        className="list-group-item list-group-item-action border-top-0 border-bottom-0 no-match livesearch__control-option-item--nomatch"
+                                        disabled
+                                    >{fetchNoneInfo || 'No match yet'}</button>
+                                </> : null}
+                                {/* /NO MATCH */}
+
+
+                                {orginalData ? orginalData.map((item, index) => {
+                                    const startItemBorder = index === 0 ? 'border-top-0' : '';
+                                    const endItemBorder = index === orginalData.length-1 ? 'border-bottom-0' : '';
+
+                                    return <button 
+                                        tabIndex={-1} 
+                                        type="button" 
+                                        data-index={index} 
+                                        key={index} 
+                                        className={`list-group-item list-group-item-action border-start-0 border-end-0 border-top-0 border-bottom-0 livesearch__control-option-item ${startItemBorder} ${endItemBorder} ${typeof item.disabled === 'undefined' ? '' : (item.disabled == true ? 'disabled' : '')}`} 
+                                        data-value={`${item.value}`} 
+                                        data-label={`${item.label}`} 
+                                        data-querystring={`${typeof item.queryString === 'undefined' ? '' : item.queryString}`} 
+                                        data-itemdata={JSON.stringify(item)} 
+                                        data-list-item-label={`${typeof item.listItemLabel === 'undefined' ? '' : item.listItemLabel}`} 
+                                        role="tab"
+                                        dangerouslySetInnerHTML={{
+                                            __html: typeof item.listItemLabel === 'undefined' ? item.label : item.listItemLabel
+                                        }}
+                                    ></button>
+                                }) : null}
+
+                            </div>
+
                         </div>
 
 
                     </div>
 
-                </> : null}
-
-                {orginalData && orginalData.length === 0 && !hasErr && isOpen ? <>
-                    <div ref={listRef} className={`list-group position-absolute border shadow small ${winWidth ? '' : 'w-100'}`} style={{ marginTop: '0.2rem', zIndex: (depth ? depth : 100), minWidth: '200px', width: WIN_WIDTH}} role="tablist">
-
-                        <div className="rounded" ref={listContentRef}>
-                            <button tabIndex={-1} type="button" className="list-group-item list-group-item-action border-top-0 border-bottom-0 no-match" disabled>{fetchNoneInfo || 'No match yet'}</button>
-                        </div>
-
-
-                    </div>
                 </> : null}
 
 

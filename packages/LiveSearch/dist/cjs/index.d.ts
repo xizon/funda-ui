@@ -33,9 +33,8 @@ declare type LiveSearchProps = {
     fetchFuncMethodParams?: any[];
     fetchCallback?: (data: any) => void;
     onFetch?: (data: any) => void;
-    onSelect?: (e: any, data: any) => void;
-    onChange?: (e: any, data: any) => void;
-    onBlur?: (e: any, data: any) => void;
+    onChange?: (e: any, data: any, selectedData: any) => void;
+    onBlur?: (e: any) => void;
 };
 declare const LiveSearch: (props: LiveSearchProps) => JSX.Element;
 export default LiveSearch;

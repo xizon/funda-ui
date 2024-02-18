@@ -34,19 +34,32 @@ import LiveSearch from 'funda-ui/LiveSearch';
 | `fetchFuncMethodParams` | array  | - | The parameter passed by the method, it is an array. <br />Note: the first element is a query string, the second element is the number of queried data (usually a number), and then you can increase the third, or fourth, and more parameters. <br />Such as `['',0]`, `['',99,'string 1','string 2']`, `['',99,'string 1','$QUERY_STRING']` <br /><blockquote>There should be at least one parameter which is the query string.  <br />`$QUERY_STRING` identifies the ID of the automatic query, and its value depends on the user input string.</blockquote> |
 | `fetchCallback` | function  | - | Return value from `fetchCallback` property to format the data of the API callback, which will match the data structure of the component. <br >At the same time it returns the original data, you will use this function and use the `return` keyword to return a new value. |
 | `onFetch` | function  | - | Call a function when  data is successfully fetched. It returns one callback value which is the fetched data (**Array**) |
-| `onSelect` | function  | - | Call a function when option selected from list. It returns two callback values. <br /> <ol><li>The first is the control</li><li>The second is the fetched data (**Array**)</li></ol>  |
-| `onChange` | function  | - | Call a function when the value of an HTML element is changed. It returns two callback values. <br /> <ol><li>The first is the control</li><li>The second is the fetched data (**Array**)</li></ol> |
-| `onBlur` | function  | - | Call a function when a user leaves an form field. It returns two callback values. <br /> <ol><li>The first is the control</li><li>The second is the fetched data (**Array**)</li></ol> |
+| `onChange` | function  | - | Call a function when the value of an HTML element is changed. It returns three callback values. <br /> <ol><li>The first is the control (**HTML Element**)</li><li>The second is the fetched data(**Array**)</li><li>The last is the selected data (**JSON Object**)</li></ol> |
+| `onBlur` | function  | - | Call a function when a user leaves an form field. |
 
 
 It accepts all props which this control support.
+
+
+---
+
+JSON Object Literals configuration properties of the callback from `fetchCallback`:
+
+| Property | Type | Default | Description |
+| --- | --- | --- | --- |
+| `label` | string | - | Specify the label text for each option. <blockquote>Support html tags</blockquote> |
+| `listItemLabel` | string | - | **(Optional)** Specify the label text for pop-up list items. <blockquote>Support html tags</blockquote> |
+| `value` | string | - | Specify the value for each option |
+| `queryString` | string | - | Quick query string, such as Chinese pinyin or English initials |
+| `disabled` | boolean | - | **(Optional)** When present, it specifies that an option should be disabled. |
+
 
 
 ### Create Callback 
 
 A successful response returns the details of the callback such as Sample Request Body:
 
-Among them, `label`, `value` and `queryString` are attributes used by the system, and other attributes can be added freely
+Among them, `label`, `listItemLabel`, `value`, `queryString` and `disabled` are attributes used by the system, and other attributes can be added freely.
 
 
 
@@ -60,6 +73,9 @@ import React from "react";
 import LiveSearch from 'funda-ui/LiveSearch';
 import axios from 'axios';
 
+// component styles
+import 'funda-ui/LiveSearch/index.css';
+
 class DataService {
     
     // `getList()` must be a Promise Object
@@ -69,13 +85,23 @@ class DataService {
         console.log("limit: ", limit);
         console.log("otherParam: ", otherParam);
 
+
+        if ( searchStr === '------') return {
+            code: 0,
+            message: 'OK',
+            data: []
+        };
+
+
         return {
             code: 0,
             message: 'OK',
             data: [
-                {item_name: 'foo', item_code: 'bar', kb_code: 'fb,foobar'},
-                {item_name: 'foo2', item_code: 'bar2', kb_code: 'fb2,foobar2'},
-                {item_name: 'foo3', item_code: 'bar3', kb_code: 'fb3,foobar3'}
+                {item_name: 'banana', item_code: 'b', kb_code: 'banana,xiangjiao,xj'},
+                {item_name: 'apple', item_code: 'a', kb_code: 'apple,pingguo,pg'},
+                {item_name: 'lemon', item_code: 'l', kb_code: 'lemon,ningmeng,nm'},
+                {item_name: 'juice', item_code: 'j', kb_code: 'juice,guozhi,gz'},
+                {item_name: 'coffee', item_code: 'c', kb_code: 'coffee,kafei,kf'}
             ]
         };
     }
@@ -128,7 +154,7 @@ export default () => {
                 depth={100}
                 btnId="app-livesearch-btn"
                 name="app-livesearch-name"
-                label="String"
+                label="Food List"
                 fetchTrigger={false}
                 fetchUpdate={false}
                 fetchNoneInfo="No match yet"
@@ -137,48 +163,73 @@ export default () => {
                 fetchFuncMethodParams={['$QUERY_STRING',0]}
                 fetchCallback={(res) => {
 
-                    const formattedData = res.map((item) => {
+                    const formattedData = res.map((item: any, i: number) => {
                         return {
                             label: item.item_name,
+                            listItemLabel: `${item.item_name} (No. ${i})`,
                             value: item.item_code,
-                            queryString: item.kb_code
+                            queryString: item.kb_code,
+                            disabled: item.item_code === 'j' ? true : false
                         }
                     }); 
 
                     console.log(formattedData);
                     /*
                     [
-                        {"label": "foo","value": "bar","queryString": "fb,foobar"},
-                        {"label": "foo2","value": "bar2","queryString": "fb2,foobar2"},
-                        {"label": "foo3","value": "bar3","queryString": "fb3,foobar3"}
-                    ]  
+                        {
+                            "label": "banana",
+                            "listItemLabel": "banana (No. 0)",
+                            "value": "b",
+                            "queryString": "banana,xiangjiao,xj",
+                            "disabled": false
+                        },
+                        {
+                            "label": "apple",
+                            "listItemLabel": "apple (No. 1)",
+                            "value": "a",
+                            "queryString": "apple,pingguo,pg",
+                            "disabled": false
+                        },
+                        {
+                            "label": "lemon",
+                            "listItemLabel": "lemon (No. 2)",
+                            "value": "l",
+                            "queryString": "lemon,ningmeng,nm",
+                            "disabled": false
+                        },
+                        {
+                            "label": "juice",
+                            "listItemLabel": "juice (No. 3)",
+                            "value": "j",
+                            "queryString": "juice,guozhi,gz",
+                            "disabled": true
+                        },
+                        {
+                            "label": "coffee",
+                            "listItemLabel": "coffee (No. 4)",
+                            "value": "c",
+                            "queryString": "coffee,kafei,kf",
+                            "disabled": false
+                        }
+                    ]
                     */
 
                     return formattedData;
                 }}
-                onFetch={(res) => {
+                onFetch={(res: any[]) => {
                     console.log('onFetch: ', res);
 
                 }}
-                onSelect={(input, res) => {
-                    console.log('onSelect: ', res);
+                onChange={(input: HTMLElement, data: any[], selectedData: any) => {
+                    console.log('onChange: ', data, selectedData);
 
-                    input.value = res.label;
-                    document.querySelector('[name="app-livesearch-name-v"]').value = res.value;
-                }}
-                onChange={(input, res) => {
-                    console.log('onChange: ', res);
-                }}
-                onBlur={async(input, res) => {
-                    console.log('onBlur: ', res);
-
-                    if (Array.isArray(res) && res.length > 0) {
-                        const nameInc = res.some( (item) => item.label === input.value);
-                        if ( !nameInc ) {
-                            input.value = res[0].label;
-                            document.querySelector('[name="app-livesearch-name-v"]').value = res[0].value;
-                        }
+                    if (selectedData !== '') {
+                        document.querySelector('[name="app-livesearch-name-v"]').value = selectedData.label;
                     }
+                    
+                }}
+                onBlur={(input: HTMLElement) => {
+                    console.log('onBlur: ', input);
                 }}
             />
             <input
@@ -202,6 +253,9 @@ Proper use of `hideIcon` and `fetchAutoShow` attributes.
 import React from "react";
 import LiveSearch from 'funda-ui/LiveSearch';
 
+// component styles
+import 'funda-ui/LiveSearch/index.css';
+
 class DataService {
     
     // `getList()` must be a Promise Object
@@ -212,9 +266,11 @@ class DataService {
             code: 0,
             message: 'OK',
             data: [
-                {item_name: 'foo', item_code: 'bar', kb_code: 'fb,foobar'},
-                {item_name: 'foo2', item_code: 'bar2', kb_code: 'fb2,foobar2'},
-                {item_name: 'foo3', item_code: 'bar3', kb_code: 'fb3,foobar3'}
+                {item_name: 'banana', item_code: 'b', kb_code: 'banana,xiangjiao,xj'},
+                {item_name: 'apple', item_code: 'a', kb_code: 'apple,pingguo,pg'},
+                {item_name: 'lemon', item_code: 'l', kb_code: 'lemon,ningmeng,nm'},
+                {item_name: 'juice', item_code: 'j', kb_code: 'juice,guozhi,gz'},
+                {item_name: 'coffee', item_code: 'c', kb_code: 'coffee,kafei,kf'}
             ]
         };
     }
@@ -229,7 +285,7 @@ export default () => {
                 depth={100}
                 btnId="app-livesearch-btn"
                 name="app-livesearch-name"
-                label="String"
+                label="Food List"
                 hideIcon
                 fetchAutoShow
                 fetchFuncAsync={new DataService}
@@ -247,15 +303,11 @@ export default () => {
 
                     return formattedData;
                 }}
-                onFetch={(res) => {
+                onFetch={(res: any[]) => {
                     console.log('onFetch: ', res);
                 }}
-                onSelect={(input, res) => {
-                    console.log('onSelect: ', res);
-
-                }}
-                onChange={(input, res) => {
-                    console.log('onChange: ',input.value, res);
+                onChange={(input: HTMLElement, data: any[], selectedData: any) => {
+                    console.log('onChange: ',input.value, data, selectedData);
                 }}
             />
         </>

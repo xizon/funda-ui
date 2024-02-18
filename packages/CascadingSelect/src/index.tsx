@@ -4,9 +4,16 @@ import { debounce } from './utils/performance';
 
 import Group from './Group';
 
-import { extractContentsOfBrackets } from './utils/extract';
-import { convertArrToValByBrackets } from './utils/convert';
+import { extractContentsOfBraces } from './utils/extract';
+import { convertArrToValByBraces } from './utils/convert';
 
+import { getAbsolutePositionOfStage } from './utils/get-element-property';
+
+
+import {
+    addTreeDepth,
+    addTreeIndent
+} from './utils/tree';
 
 
 
@@ -17,7 +24,7 @@ declare module 'react' {
 }
 
 
-type CascadingSelectOptionChangeFnType = (input: any, currentData: any, index: any, depth: any, value: any) => void;
+type CascadingSelectOptionChangeFnType = (input: any, currentData: any, index: any, depth: any, value: any, closeFunc: any) => void;
 
 
 type CascadingSelectProps = {
@@ -29,11 +36,11 @@ type CascadingSelectProps = {
     placeholder?: string;
     disabled?: any;
     required?: any;
-    /** Whether to use square brackets to save result and initialize default value */
-    extractValueByBrackets?: boolean;
+    /** Whether to use curly braces to save result and initialize default value */
+    extractValueByBraces?: boolean;
     /** Set headers for each column group */
     columnTitle?: any[];
-    /** Set whether to use "label" or "value" for the value of this form, they will be separated by commas, such as `Text 1,Text 1_1,Text 1_1_1` or `1,1_1,1_1_1`.
+    /** Set whether to use "label" or "value" for the value of this form
      * Optional values: `label`, `value`
      */
     valueType?: string;
@@ -51,10 +58,14 @@ type CascadingSelectProps = {
     displayResultArrow?: React.ReactNode;
     /** Set an arrow of control */
     controlArrow?: React.ReactNode;
-    /** Specify a class for this Node. */
+    /** Specify a class for trigger. */
     triggerClassName?: string;
     /** Set a piece of text or HTML code for the trigger */
     triggerContent?: React.ReactNode;
+    /** Specify a class for clean node button. */
+    cleanNodeBtnClassName?: string;
+    /** Set a piece of text or HTML code for the clean node button */
+    cleanNodeBtnContent?: React.ReactNode;
     /** -- */
     id?: string;
     style?: React.CSSProperties;
@@ -64,7 +75,7 @@ type CascadingSelectProps = {
     fetchFuncMethod?: string;
     fetchFuncMethodParams?: any[];
     fetchCallback?: (data: any) => void;
-    onFetch?: (data: any) => void;
+    onFetch?: (data: any, childrenData: any) => void;
     onChange?: CascadingSelectOptionChangeFnType | null;
     onBlur?: (e: any) => void;
     onFocus?: (e: any) => void;
@@ -82,7 +93,7 @@ const CascadingSelect = (props: CascadingSelectProps) => {
         placeholder,
         name,
         id,
-        extractValueByBrackets,
+        extractValueByBraces,
         columnTitle,
         depth,
         loader,
@@ -95,6 +106,8 @@ const CascadingSelect = (props: CascadingSelectProps) => {
         tabIndex,
         triggerClassName,
         triggerContent,
+        cleanNodeBtnClassName,
+        cleanNodeBtnContent,
         fetchFuncAsync,
         fetchFuncMethod,
         fetchFuncMethodParams,
@@ -107,28 +120,42 @@ const CascadingSelect = (props: CascadingSelectProps) => {
     } = props;
 
 
-    const VALUE_BY_BRACKETS = typeof extractValueByBrackets === 'undefined' ? true : extractValueByBrackets;
-    const uniqueID = useId();
+    const POS_OFFSET = 0;
+    const VALUE_BY_BRACES = typeof extractValueByBraces === 'undefined' ? true : extractValueByBraces;
+    const uniqueID = useId().replace(/\:/g, "-");
     const idRes = id || uniqueID;
     const rootRef = useRef<any>(null);
     const valRef = useRef<any>(null);
     const listRef = useRef<any>(null);
 
+
     const [dictionaryData, setDictionaryData] = useState<any[]>([]);
-    const [loading, setLoading] = useState<boolean>(true);
+    const [loading, setLoading] = useState<boolean>(false);
     const [columnTitleData, setColumnTitleData] = useState<any[]>([]);
     const [hasErr, setHasErr] = useState<boolean>(false);
     const [changedVal, setChangedVal] = useState<string>(value || '');
     const windowScrollUpdate = debounce(handleScrollEvent, 500);
-   
+
+
 
     //for variable 
     const [data, setData] = useState<any[]>([]);
-    const [selectedData, setSelectedData] = useState<any>({
+
+    // DO NOT USE `useState()` for `selectedData`, because the list uses 
+    // vanilla JS DOM events which will cause the results of useState not to be displayed in real time.
+    const selectedData = useRef<any>({   
         labels: [],
         values: []
     });
+
     const [isShow, setIsShow] = useState<boolean>(false);
+
+
+    // destroy `parent_id` match
+    const [selectedDataByClick, setSelectedDataByClick] = useState<any>({
+        labels: [],
+        values: []
+    });
 
 
     /**
@@ -148,31 +175,34 @@ const CascadingSelect = (props: CascadingSelectProps) => {
 
 
     function handleScrollEvent() {
-        getPlacement(listRef.current, true);
+        popwinPosInit(false);
     }
 
 
-    //
-    function getPlacement(el: HTMLElement, restorePos: boolean = false) {
+    function popwinPosInit(showAct: boolean = true) {
+        if (valRef.current === null) return
 
-        if ( el === null ) return;
-        
+        // update modal position
+        const _modalRef: any = document.querySelector(`#cas-select__items-wrapper-${idRes}`);
+        const _triggerRef: any = valRef.current;
 
-        const PLACEMENT_TOP = 'top-0';
-        const PLACEMENT_BOTTOMEND = 'bottom-0';
-        const PLACEMENT_RIGHT = 'end-0';
-        const PLACEMENT_LEFT = 'start-0';
+        // console.log(getAbsolutePositionOfStage(_triggerRef));
 
+        if (_modalRef === null) return;
 
-        if (valRef.current === null) return;
-        
-
+        const { x, y, width, height } = getAbsolutePositionOfStage(_triggerRef);
+        const _triggerBox = _triggerRef.getBoundingClientRect();
+        let targetPos = '';
 
         // STEP 1:
         //-----------
+        // display wrapper
+        if (showAct) _modalRef.classList.add('active');
+        
+
+        // STEP 2:
+        //-----------
         // Detect position
-        let targetPos = '';
-        const _triggerBox = valRef.current.getBoundingClientRect();
         if (window.innerHeight - _triggerBox.top > 100) {
             targetPos = 'bottom';
         } else {
@@ -180,53 +210,196 @@ const CascadingSelect = (props: CascadingSelectProps) => {
         }
 
 
-        // STEP 2:
+        // STEP 3:
         //-----------
         // Adjust position
         if (targetPos === 'top') {
-            el.classList.add(PLACEMENT_BOTTOMEND);
-            el.style.setProperty('bottom', -1 + 'px', "important");
+            _modalRef.style.left = x + 'px';
+            //_modalRef.style.top = y - POS_OFFSET - (listRef.current.clientHeight) - 2 + 'px';
+            _modalRef.style.top = 'auto';
+            _modalRef.style.bottom = (window.innerHeight - _triggerBox.top) + POS_OFFSET + 2 + 'px';
+            _modalRef.style.setProperty('position', 'fixed', 'important');
+            _modalRef.classList.add('pos-top');
         }
 
         if (targetPos === 'bottom') {
-            el.classList.remove(PLACEMENT_BOTTOMEND);
-            el.style.removeProperty('bottom');
+            _modalRef.style.left = x + 'px';
+            _modalRef.style.bottom = 'auto';
+            _modalRef.style.top = y + height + POS_OFFSET + 'px';
+            _modalRef.style.setProperty('position', 'absolute', 'important');
+            _modalRef.classList.remove('pos-top');
         }
-     
+
+
+
+
+
+        // STEP 4:
+        //-----------
+        // Determine whether it exceeds the far right or left side of the screen
+        const _modalContent = _modalRef;
+        const _modalBox = _modalContent.getBoundingClientRect();
+        if (typeof _modalContent.dataset.offset === 'undefined') {
+
+            if (_modalBox.right > window.innerWidth) {
+                const _modalOffsetPosition = _modalBox.right - window.innerWidth + POS_OFFSET;
+                _modalContent.dataset.offset = _modalOffsetPosition;
+                _modalContent.style.marginLeft = `-${_modalOffsetPosition}px`;
+                // console.log('_modalPosition: ', _modalOffsetPosition)
+            }
+
+
+            if (_modalBox.left < 0) {
+                const _modalOffsetPosition = Math.abs(_modalBox.left) + POS_OFFSET;
+                _modalContent.dataset.offset = _modalOffsetPosition;
+                _modalContent.style.marginLeft = `${_modalOffsetPosition}px`;
+                // console.log('_modalPosition: ', _modalOffsetPosition)
+            }
+
+
+        }
+
+
 
     }
 
 
 
+    function popwinPosHide() {
+
+        const _modalRef: any = document.querySelector(`#cas-select__items-wrapper-${idRes}`);
+
+        if (_modalRef !== null) {
+            // remove classnames and styles
+            _modalRef.classList.remove('active');
+
+        }
+
+    }
+
+    
+    
+
+    function popwinBtnEventsInit() {
+        if (listRef.current === null) return;
+
+        // options event listener
+        // !!! to prevent button mismatch when changing
+        if (data.length > 0) {
+            [].slice.call(listRef.current.querySelectorAll('[data-opt]')).forEach((node: HTMLElement) => {
+
+                if (typeof node.dataset.ev === 'undefined') {
+                    node.dataset.ev = 'true';
+
+                    // Prevent touch screen from starting to click option, DO NOT USE "pointerdown"
+                    node.addEventListener('click', (e: any) => {
+                        const _value = JSON.parse(e.currentTarget.dataset.value);
+                        const _index = Number(e.currentTarget.dataset.index);
+                        const _level = Number(e.currentTarget.dataset.level);
+                        
+
+                        handleClickItem(e, _value, _index, _level, data);
+                    });
+                }
+            });
+        }
+
+
+    }
+
+
+    function updateColDisplay(useFetch: boolean, emptyAction: boolean = false, level: number | undefined) {
+        if (listRef.current === null) return;
+
+        let latestDisplayColIndex: number = 0;
+        const currentItemsInner: any = listRef.current.querySelector('.cas-select__items-inner');
+        if (currentItemsInner !== null) {
+            const colItemsWrapper = [].slice.call(currentItemsInner.querySelectorAll('.cas-select__items-col'));
+            colItemsWrapper.forEach((perCol: any) => {
+                perCol.classList.remove('hide-col');
+            });
+
+            colItemsWrapper.some((perCol: any, i: number) => {
+                const hasActive = [].slice.call(perCol.querySelectorAll('[data-opt]')).some((el: HTMLElement) => el.classList.contains('active'));
+                if (!hasActive) {
+                    latestDisplayColIndex = i;
+                    return true;
+                }
+                return false;
+            });
+
+            // remove columns behind the current empty trigger
+            colItemsWrapper.forEach((perCol: any, i: number) => {
+                if (!emptyAction) {
+                    if (useFetch) {
+                        if (i > latestDisplayColIndex && latestDisplayColIndex > 0) perCol.classList.add('hide-col');
+                    } else {
+                        if (i === latestDisplayColIndex && latestDisplayColIndex > 0) perCol.classList.add('hide-col');
+                    }
+                } else {
+                    if (typeof level !== 'undefined' && Number.isInteger(level)) {
+                        if (i > level) perCol.classList.add('hide-col');
+                    }
+                    
+                }
+
+
+                
+            });
+        }
+    
+    }
+
+
+    function cancel() {
+        // hide list
+        setIsShow(false);
+        popwinPosHide();
+    }
+
+    function activate() {
+        // show list
+        setIsShow(true);
+
+        // window position
+        setTimeout(() => {
+            popwinPosInit();
+            popwinBtnEventsInit();
+        }, 0);
+
+    }
+    
     
     async function fetchData(params: any) {
 
         if (typeof fetchFuncAsync === 'object') {
 
+
             //
             setLoading(true);
+
 
             const response: any = await fetchFuncAsync[`${fetchFuncMethod}`](...params.split(','));
             let _ORGIN_DATA = response.data;
 
-            
             // loading 
             setLoading(false);
+
+            if (typeof _ORGIN_DATA[0] === 'undefined') return;
 
             // reset data structure
             if (typeof (fetchCallback) === 'function') {
                 _ORGIN_DATA = fetchCallback(_ORGIN_DATA);
             }
 
+
             // Determine whether the data structure matches
-            if ( _ORGIN_DATA.length > 0 && typeof _ORGIN_DATA[0].id === 'undefined' ) {
-                console.warn( 'The data structure does not match, please refer to the example in the component documentation.' );
+            if (_ORGIN_DATA.length > 0 && typeof _ORGIN_DATA[0].id === 'undefined') {
+                console.warn('The data structure does not match, please refer to the example in the component documentation.');
                 setHasErr(true);
                 _ORGIN_DATA = [];
             }
-            
 
-            
             // STEP 1: ===========
             // column titles
             fillColumnTitle(_ORGIN_DATA);
@@ -247,6 +420,19 @@ const CascadingSelect = (props: CascadingSelectProps) => {
             setData([_EMPTY_SUPPORTED_DATA]);
 
 
+
+            // STEP 5: ===========
+            //
+            onFetch?.(_EMPTY_SUPPORTED_DATA, _ORGIN_DATA);
+
+
+
+            // STEP 6: ===========
+            // update column display with DOM
+            updateColDisplay(true, false, undefined);
+
+
+
             return [_ORGIN_DATA, _EMPTY_SUPPORTED_DATA];
         } else {
             return [];
@@ -257,11 +443,20 @@ const CascadingSelect = (props: CascadingSelectProps) => {
 
 
     //
+    function doFetch() {
+        // data fetch action
+        const _params: any[] = fetchFuncMethodParams || [];
+        return fetchData((_params).join(','));
+    }
+
+
+
+
     function handleFocus(event: any) {
         rootRef.current.classList.add('focus');
 
         //
-        setIsShow(true);
+        handleDisplayOptions(null);
 
         //
         onFocus?.(event);
@@ -274,6 +469,7 @@ const CascadingSelect = (props: CascadingSelectProps) => {
         //remove focus style
         rootRef.current.classList.remove('focus');
 
+
         //
         onBlur?.(event);
     }
@@ -285,49 +481,45 @@ const CascadingSelect = (props: CascadingSelectProps) => {
      */
     function handleClickOutside(event: any) {
 
-
         // svg element
-        if ( typeof event.target.className === 'object' ) return;
+        if (typeof event.target.className === 'object') return;
 
         if (
             event.target.className != '' && (
-                event.target.className.indexOf('c-select__wrapper') < 0 &&
+                event.target.className.indexOf('cas-select__wrapper') < 0 &&
                 event.target.className.indexOf('form-control') < 0 &&
-                event.target.className.indexOf('c-select__trigger') < 0 &&
-                event.target.className.indexOf('c-select__items') < 0 &&
-                event.target.className.indexOf('c-select__opt') < 0
+                event.target.className.indexOf('cas-select__trigger') < 0 &&
+                event.target.className.indexOf('cas-select__items-wrapper') < 0 &&
+                event.target.className.indexOf('cas-select__opt') < 0
             )
         ) {
 
-            setIsShow(false);
+            cancel();
+
         }
     }
 
-
     function handleDisplayOptions(event: any) {
-        event.preventDefault();
-        setIsShow(true);
+        if (event) event.preventDefault();
 
-
-        // window position
-        setTimeout( ()=> {
-            getPlacement(listRef.current);
-        }, 0 ); 
+        //
+        activate();
 
     }
 
 
-
-    function handleClickItem(e: any, resValue: any, index: number, level: number) {
+    function handleClickItem(e: any, resValue: any, index: number, level: number, data: any[]) {
+        e.preventDefault();
 
         // update value
         //////////////////////////////////////////
         const inputVal = updateValue(dictionaryData, resValue.id, level);
 
+
         // callback
         //////////////////////////////////////////
         if (typeof (onChange) === 'function') {
-            onChange(valRef.current, resValue, index, level, inputVal);
+            onChange(valRef.current, resValue, index, level, inputVal, cancel);
         }
 
 
@@ -344,33 +536,72 @@ const CascadingSelect = (props: CascadingSelectProps) => {
             markAllItems(childList);
             newData[level + 1] = childList;
         }
+        
 
         markCurrent(newData[level], index);
+        
 
-
-        //
+        // update actived items
+        //////////////////////////////////////////
         setData(newData);
 
 
         // close modal
         //////////////////////////////////////////
         if (typeof resValue.children === 'undefined' && resValue.id.toString().indexOf('$EMPTY_ID_') < 0 ) {
-            setIsShow(false);
+            //
+            cancel();
+        }
+
+
+        // active current option with DOM
+        //////////////////////////////////////////
+        const currentItemsInner: any = e.currentTarget.closest('.cas-select__items-inner');
+        if (currentItemsInner !== null) {
+            data.forEach((v: any, col: number) => {
+                const colItemsWrapper = currentItemsInner.querySelectorAll('.cas-select__items-col');
+                colItemsWrapper.forEach((perCol: HTMLUListElement) => {
+                    const _col = Number(perCol.dataset.col);
+                    
+                    if (_col >= level) {
+                        [].slice.call(perCol.querySelectorAll('[data-opt]')).forEach((node: HTMLElement) => {
+                            node.classList.remove('active');
+                        });
+                    } 
+                });
+            });
+            
+            
+            // not header option
+            if (typeof e.currentTarget.dataset.optHeader === 'undefined')  e.currentTarget.classList.add('active');
+           
+        
         }
         
+   
+
+        // initialize events for options
+        //////////////////////////////////////////
+        setTimeout(() => {
+            popwinBtnEventsInit();
+        }, 0);
+
+
+
     }
+
 
 
     /**
      * Active the selected item
-     * @param arr 
-     * @param index 
-     * @returns 
-     */
+    * @param arr 
+    * @param index 
+    * @returns 
+    */
     function markCurrent(arr: any[], index: number) {
 
-         // click an item
-         //////////////////////////////////////////
+        // click an item
+        //////////////////////////////////////////
         for (let i = 0; i < arr.length; i++) {
             if (i === index) {
                 arr[i].current = true;
@@ -378,6 +609,10 @@ const CascadingSelect = (props: CascadingSelectProps) => {
                 arr[i].current = false;
             }
         }
+
+        // return result
+        //////////////////////////////////////////
+        return arr;
     }
 
     /**
@@ -397,30 +632,30 @@ const CascadingSelect = (props: CascadingSelectProps) => {
     function updateValue(arr: any[], targetVal: any, level: number | boolean = false) {
 
         const inputEl: any = valRef.current;
-        let _valueData, _labelData;
-    
-    
-        if ( targetVal.toString().indexOf('$EMPTY_ID_') >= 0 ) {
-    
+        let _valueData: any, _labelData: any;
+
+
+        if (targetVal.toString().indexOf('$EMPTY_ID_') >= 0) {
+
             // If clearing the current column
             //////////////////////////////////////////
-            _valueData = selectedData.values;
-            _labelData = selectedData.labels;
-    
+            _valueData = selectedData.current.values;
+            _labelData = selectedData.current.labels;
+
             // update result to input
             _valueData.splice(level);
             _labelData.splice(level);
-    
+
             //
-            setSelectedData({
+            selectedData.current = {
                 labels: _labelData,
                 values: _valueData
-            });
-    
-    
+            };
+
+
         } else {
-    
-            
+
+
             // click an item
             //////////////////////////////////////////
             //search JSON key that contains specific string
@@ -428,28 +663,28 @@ const CascadingSelect = (props: CascadingSelectProps) => {
             const _values = queryResultOfJSON(arr, targetVal, 'key');
 
 
+
             // update result to input
             _valueData = _values ? _values.map((item: any) => item) : [];
-            _labelData = _labels ? _labels.map((item: any) => item) : [];    
-    
+            _labelData = _labels ? _labels.map((item: any) => item) : [];
+
             //
-            setSelectedData({
+            selectedData.current = {
                 labels: _labelData,
                 values: _valueData
-            });
-    
-    
-    
+            };
+
+
+
         }
 
 
+        // update selected data 
+        //////////////////////////////////////////
+        const inputVal_0 = VALUE_BY_BRACES ? convertArrToValByBraces(_valueData.map((item: any, i: number) => `${item}[${_valueData[i]}]`)) : _valueData.map((item: any, i: number) => `${item}[${_valueData[i]}]`)!.join(',');
+        const inputVal_1 = VALUE_BY_BRACES ? convertArrToValByBraces(_labelData.map((item: any, i: number) => `${item}[${_valueData[i]}]`)) : _labelData.map((item: any, i: number) => `${item}[${_valueData[i]}]`)!.join(',');
 
-         // update selected data 
-         //////////////////////////////////////////
-         const inputVal_0 = VALUE_BY_BRACKETS ? convertArrToValByBrackets(_valueData) : _valueData!.join(',');
-         const inputVal_1 = VALUE_BY_BRACKETS ? convertArrToValByBrackets(_labelData) : _labelData!.join(',');
-
-         if (valueType === 'value') {
+        if (valueType === 'value') {
             if (inputEl !== null) setChangedVal(inputVal_0);
         } else {
             if (inputEl !== null) setChangedVal(inputVal_1);
@@ -459,128 +694,172 @@ const CascadingSelect = (props: CascadingSelectProps) => {
             0: inputVal_0,
             1: inputVal_1
         }
-    
+
     }
-    
+
+
+    function cleanValue() {
+        selectedData.current = {
+            labels: [],
+            values: []
+        };
+
+        setSelectedDataByClick({
+            labels: [],
+            values: []
+        });
+
+
+        setDictionaryData([]);
+        setData([]);
+        setChangedVal('');
+    }
 
     function initDefaultValue(defaultValue: any) {
-        // change the value to trigger component rendering
-        if ( typeof defaultValue === 'undefined' || defaultValue === '' ) {
-            setSelectedData({
-                labels: [],
-                values: []
-            });
 
-            setDictionaryData([]);
-            setData([]);
-            setChangedVal('');
+        // change the value to trigger component rendering
+        if (typeof defaultValue === 'undefined' || defaultValue === '') {
+            cleanValue();
         } else {
             setChangedVal(defaultValue);
         }
+
         
         //
-        const _params: any[] = fetchFuncMethodParams || [];
-        fetchData((_params).join(',')).then( (response: any) => {
-
+        
+        doFetch()?.then((response: any) => {
+     
+            
             const _data = response[1];
+       
 
-            if ( defaultValue ) {
-
-                const rowQueryAttr = valueType === 'value' ? 'id' : 'name';
-                const targetVal = VALUE_BY_BRACKETS ? extractContentsOfBrackets(defaultValue) : defaultValue.split(',');
-
+            // Determine whether the splicing value of the default value is empty
+            if (typeof defaultValue !== 'undefined' && defaultValue !== '') {
                 
+                const rowQueryAttr: string = valueType === 'value' ? 'id' : 'name';
+                const targetVal: any = defaultValue.match(/(\[.*?\])/gi)!.map((item: any, i: number) => VALUE_BY_BRACES ? extractContentsOfBraces(defaultValue)[i].replace(item, '') : defaultValue.split(',')[i].replace(item, ''));
+
                 //
                 const _allColumnsData: any[] = [];
                 const _allLables: any[] = [];
+                const _allValues: any[] = [];
+
 
                 // loop over each column
-                for( let col = 0; col < targetVal.length; col++ ) {
+                //////////////////////////////////////////
+                for (let col = 0; col <= targetVal.length; col++) {
 
-                    if ( col === 0 ) {
+                    if (col === 0) {
 
                         // STEP 1: ===========
                         //active item from current column
                         //////////////////////////////////////////
                         const newData: any[] = JSON.parse(JSON.stringify(_data));
-                        const activedIndex = _data.findIndex( (item: any) => {
+                        const activedIndex = _data.findIndex((item: any) => {
                             return item[rowQueryAttr].toString() === targetVal[col].toString();
                         });
 
                         markAllItems(newData);
                         markCurrent(newData, activedIndex);
-                        
+
                         //
-                        if ( activedIndex !== -1 ) {
+                        if (activedIndex !== -1) {
                             _allLables.push(newData[activedIndex].name);
                         }
-                        
+
                         _allColumnsData.push(newData);
-                        
-                    } 
 
-                    if ( col > 0 ) {
-                        const _findNode: any = searchObject(_data, function (v: any) { return v != null && v != undefined && v[rowQueryAttr] == targetVal[col-1]; });
+                    }
 
-                        const childList = _findNode[0].children; 
+                    if (col > 0) {
+                 
+                        const _findNode: any = searchObject(_data, function (v: any) { return v != null && v != undefined && v[rowQueryAttr] == targetVal[col - 1]; });
+
+                        const childList = _findNode[0].children;
 
                         // STEP 1: ===========
                         //active item from current column
                         //////////////////////////////////////////
-                        const newData: any[] = JSON.parse(JSON.stringify(childList));
-                        const activedIndex = newData.findIndex( (item: any) => {
-                            return item[rowQueryAttr].toString() === targetVal[col].toString();
-                        });
+                        if (typeof childList !== 'undefined') {
 
-                        markAllItems(newData);
-                        markCurrent(newData, activedIndex);
-                        
-                        //
-                        if ( activedIndex !== -1 ) {
-                            _allLables.push(newData[activedIndex].name);
-                        } 
-                        
-                        _allColumnsData.push(newData);
-                      
-                    } 
+                            const newData: any[] = JSON.parse(JSON.stringify(childList));
+                            const activedIndex = newData.findIndex((item: any) => {
+                                return item[rowQueryAttr].toString() === targetVal[col].toString();
+                            });
 
-                    
-                    
+                            markAllItems(newData);
+                            markCurrent(newData, activedIndex);
+
+                            //
+                            if (activedIndex !== -1) {
+                                _allLables.push(newData[activedIndex].name);
+                            }
+
+                            _allColumnsData.push(newData);
+
+                        }
+
+
+                    }
+
+
                 }
 
+
+
+
+                                
                 // STEP 2: ===========
-                //update data
+                // update actived items
                 //////////////////////////////////////////
                 setData(_allColumnsData);
+                
 
 
                 // STEP 3: ===========
-                //Set a default value
+                // Set a default value
                 //////////////////////////////////////////
-                setSelectedData({
-                    labels: _allLables
-                });  
+                selectedData.current = {
+                    labels: _allLables,
+                    values: _allValues
+                };
 
-                // STEP 4: ===========
-                // callback
-                //////////////////////////////////////////
-                onFetch?.(_allColumnsData);
+                setSelectedDataByClick({
+                    labels: _allLables,
+                    values: _allValues
+                });
 
-            } else {
-
-                // STEP 4: ===========
-                // callback
-                //////////////////////////////////////////
-                onFetch?.(_data);
-
-                
             }
 
+
         });
+   
+
+        // Determine whether the splicing value of the default value is empty
+        if (typeof defaultValue !== 'undefined' && defaultValue !== '') {
+
+            const formattedDefaultValue = VALUE_BY_BRACES ? extractContentsOfBraces(defaultValue) : defaultValue.split(',');
+
+            const emptyDefaultValueCheck = Array.isArray(formattedDefaultValue) ? formattedDefaultValue.every((item: any, index: number) => {
+                if (item !== '[]') {
+                    return false;
+                }
+        
+                return true;
+            }) : true;
+
+            if (emptyDefaultValueCheck) {
+                cleanValue();
+            }
+
+        }
+
+
 
     }
 
-    
+
+
     function fillColumnTitle(obj: any[]) {
 
         const dataDepth = getDepth(obj);
@@ -599,7 +878,6 @@ const CascadingSelect = (props: CascadingSelectProps) => {
         setColumnTitleData(newColumnTitleData);
     }
 
-
     function getDepth(obj: any[]) {
         let depth = 0;
 
@@ -617,20 +895,19 @@ const CascadingSelect = (props: CascadingSelectProps) => {
         return 1 + depth;
     }
 
-
-
     function addEmptyOpt(obj: any[], index: number) {
 
         index++;
 
         obj.unshift({
             id: "$EMPTY_ID_" + index,
-            name: ""
+            name: "",
+            itemDepth: obj.length === 0 ? 0 : obj[0].itemDepth
         });
 
         obj.forEach((item: any, depth: number) => {
             if (item.children) {
-                addEmptyOpt(item.children, index * (depth+1));
+                addEmptyOpt(item.children, index * (depth + 1));
             }
         });
     }
@@ -659,6 +936,7 @@ const CascadingSelect = (props: CascadingSelectProps) => {
     }
     
 
+
     function queryResultOfJSON(data: any[], targetVal: any, returnType: string) {
 
         let callbackValueNested: any[] = [];
@@ -666,44 +944,48 @@ const CascadingSelect = (props: CascadingSelectProps) => {
         let loop = true;
         let resDepth = 0;
         const rowQueryAttr = 'id';
-    
+
         const getIndexOf = function (arr: any[], val: any) {
             for (let i = 0; i < arr.length; i++) {
                 if (arr[i][rowQueryAttr].toString() === val.toString()) return i;
             }
             return -1;
         };
-    
-    
+
+
         const searchJsonStr = function (list: any[], depth?: any) {
-    
+
             // `depth` is very important, it is used to accurately judge the final result
             if (typeof (depth) === 'undefined') {
                 depth = 0;
             } else {
                 depth++;
             }
-    
+
             for (let i = 0; i < list.length; i++) {
-    
+
                 const row = list[i];
-                const callbackValue: any = returnType === 'key' ? row.id.toString() : row.name.toString();
-    
-    
+                let callbackValue: any;
+
+                if (returnType === 'key') callbackValue = row[rowQueryAttr].toString();
+                if (returnType === 'value') callbackValue = row.name.toString();
+      
+
                 if (loop) {
                     // get first-level item
                     if (getIndexOf(data, row[rowQueryAttr]) !== -1) {
                         callbackValueNested.push(callbackValue as never);
                         lastFirstLevelName = callbackValue;
                     }
-    
+
                     // get child-level item
                     if (row.children) {
                         callbackValueNested.push(callbackValue as never);
                     }
-    
+
                 }
-    
+
+
                 //check the value
                 if (row[rowQueryAttr].toString() === targetVal.toString()) {
                     callbackValueNested.push(callbackValue as never);
@@ -711,56 +993,57 @@ const CascadingSelect = (props: CascadingSelectProps) => {
                     resDepth = depth;
                     break;
                 }
-    
+
                 // Note: Recursion must be placed here
                 if (loop) {
                     if (row.children) {
                         searchJsonStr(row.children, depth);
                     }
                 }
-    
-    
+
+
             }
-    
-    
+
+
         }
         searchJsonStr(data);
-    
-    
+
+
         // (1) Remove duplicate values
         //------------------------------------------
         callbackValueNested = callbackValueNested.filter(function (item, index, arr) {
             return arr.indexOf(item, 0) === index;
         });
-    
-    
+
+
         // (2) Delete needless first-level
         //------------------------------------------
         let resAll = callbackValueNested.slice(callbackValueNested.indexOf(lastFirstLevelName as never), callbackValueNested.length)
-    
-    
+
+
         // (3) Returns result
         //------------------------------------------
         if (resAll.length > 1) {
             // Get first-level item
             resAll.splice(1);
-    
+
             // Get child-level item
             let resChild = callbackValueNested.slice(-resDepth); // Get the last elements in reverse
-    
+
             // Combine
             resAll = resAll.concat(resChild);
-    
+
         }
-    
+
         return resAll;
-    
+
     }
 
+    function displayInfo(destroyParentId: boolean) {
 
-    function displayInfo() {
+        const _data = destroyParentId ? selectedDataByClick : selectedData.current;
 
-        return selectedData!.labels ? selectedData!.labels.map((item: any, i: number, arr: any[]) => {
+        return _data!.labels ? _data!.labels.map((item: any, i: number, arr: any[]) => {
             if (arr.length - 1 === i) {
                 return (
                     <div key={i}>
@@ -790,9 +1073,21 @@ const CascadingSelect = (props: CascadingSelectProps) => {
 
     useEffect(() => {
 
+
+
+        // Move HTML templates to tag end body </body>
+        // render() don't use "Fragment", in order to avoid error "Failed to execute 'insertBefore' on 'Node'"
+        // prevent "transform", "filter", "perspective" attribute destruction fixed viewport orientation
+        //--------------
+        if (document.body !== null && listRef.current !== null) {
+            document.body.appendChild(listRef.current);
+        }
+
+
         // Initialize default value (request parameters for each level)
         //--------------
         initDefaultValue(value);
+
 
         //
         //--------------
@@ -800,7 +1095,6 @@ const CascadingSelect = (props: CascadingSelectProps) => {
         document.addEventListener('pointerdown', handleClickOutside);
 
 
-        
         // Add function to the element that should be used as the scrollable area.
         //--------------
         window.removeEventListener('scroll', windowScrollUpdate);
@@ -809,15 +1103,14 @@ const CascadingSelect = (props: CascadingSelectProps) => {
         window.addEventListener('touchmove', windowScrollUpdate);
         windowScrollUpdate();
 
-
         return () => {
             document.removeEventListener('pointerdown', handleClickOutside);
             window.removeEventListener('scroll', windowScrollUpdate);
             window.removeEventListener('touchmove', windowScrollUpdate);
-            
+
+            //
+            document.querySelector(`#cas-select__items-wrapper-${idRes}`)?.remove();
         }
-
-
 
 
     }, [value]);
@@ -825,61 +1118,70 @@ const CascadingSelect = (props: CascadingSelectProps) => {
     return (
         <>
 
-            <div className={wrapperClassName || wrapperClassName === '' ? `c-select__wrapper ${wrapperClassName}` : `c-select__wrapper mb-3 position-relative`} ref={rootRef}>
-                {label ? <><label htmlFor={idRes} className="form-label" dangerouslySetInnerHTML={{__html: `${label}`}}></label></> : null}
+            <div 
+                className={wrapperClassName || wrapperClassName === '' ? `cas-select__wrapper ${wrapperClassName}` : `cas-select__wrapper mb-3 position-relative`} 
+                ref={rootRef}
+                data-overlay-id={`cas-select__items-wrapper-${idRes}`}
+            >
+                {label ? <><label htmlFor={idRes} className="form-label" dangerouslySetInnerHTML={{ __html: `${label}` }}></label></> : null}
 
                 {triggerContent ? <>
-                    <div className={triggerClassName ? `c-select__trigger ${triggerClassName}` : `c-select__trigger d-inline w-auto`} onClick={handleDisplayOptions}>{triggerContent}</div>
+                    <div className={triggerClassName ? `cas-select__trigger ${triggerClassName}` : `cas-select__trigger d-inline w-auto`} onClick={handleDisplayOptions}>{triggerContent}</div>
                 </> : null}
 
 
-                <div className="c-select" style={{ zIndex: (depth ? depth : 100) }}>
-
-                    {isShow && !hasErr ? (
-                        <div ref={listRef} className="c-select__items shadow">
-                            <ul>
-
-                                {showCloseBtn ? <a href="#" tabIndex={-1} onClick={(e) => {
-                                    e.preventDefault();
-                                    setIsShow(false);
-                                }} className="c-select__close position-absolute top-0 end-0 mt-0 mx-1"><svg width="10px" height="10px" viewBox="0 0 1024 1024"><path fill="#000" d="M195.2 195.2a64 64 0 0 1 90.496 0L512 421.504 738.304 195.2a64 64 0 0 1 90.496 90.496L602.496 512 828.8 738.304a64 64 0 0 1-90.496 90.496L512 602.496 285.696 828.8a64 64 0 0 1-90.496-90.496L421.504 512 195.2 285.696a64 64 0 0 1 0-90.496z" /></svg></a> : null}
-
-                                {data.map((item: any, level: number) => {
-                                    
-                                    if (item.length > 0) {
-                                        return (
-                                            <li key={level}>
-                                                <Group
-                                                    level={level}
-                                                    columnTitle={columnTitleData}
-                                                    data={item}
-                                                    selectEv={(e, value, index) => handleClickItem(e, value, index, level)}
-                                                />
-                                            </li>
-                                        )
-                                    } else {
-                                        return null;
-                                    }
-                                    
-                                })}
-                            </ul>
-
-                        </div>
-                    ) : null}
+                {!hasErr ? (
+                    <div 
+                        ref={listRef} 
+                        id={`cas-select__items-wrapper-${idRes}`}
+                        className={`cas-select__items-wrapper position-absolute border shadow small`}
+                        style={{ zIndex: (depth ? depth : 1055) }}
+                    >
+                        <ul className="cas-select__items-inner">
+                            {loading ? <><div className="cas-select__items-loader">{loader || <svg height="12px" width="12px" viewBox="0 0 512 512"><g><path fill="inherit" d="M256,0c-23.357,0-42.297,18.932-42.297,42.288c0,23.358,18.94,42.288,42.297,42.288c23.357,0,42.279-18.93,42.279-42.288C298.279,18.932,279.357,0,256,0z"/><path fill="inherit" d="M256,427.424c-23.357,0-42.297,18.931-42.297,42.288C213.703,493.07,232.643,512,256,512c23.357,0,42.279-18.93,42.279-42.288C298.279,446.355,279.357,427.424,256,427.424z"/><path fill="inherit" d="M74.974,74.983c-16.52,16.511-16.52,43.286,0,59.806c16.52,16.52,43.287,16.52,59.806,0c16.52-16.511,16.52-43.286,0-59.806C118.261,58.463,91.494,58.463,74.974,74.983z"/><path fill="inherit" d="M377.203,377.211c-16.503,16.52-16.503,43.296,0,59.815c16.519,16.52,43.304,16.52,59.806,0c16.52-16.51,16.52-43.295,0-59.815C420.489,360.692,393.722,360.7,377.203,377.211z"/><path fill="inherit" d="M84.567,256c0.018-23.348-18.922-42.279-42.279-42.279c-23.357-0.009-42.297,18.932-42.279,42.288c-0.018,23.348,18.904,42.279,42.279,42.279C65.645,298.288,84.567,279.358,84.567,256z"/><path fill="inherit" d="M469.712,213.712c-23.357,0-42.279,18.941-42.297,42.288c0,23.358,18.94,42.288,42.297,42.297c23.357,0,42.297-18.94,42.279-42.297C512.009,232.652,493.069,213.712,469.712,213.712z"/><path fill="inherit" d="M74.991,377.22c-16.519,16.511-16.519,43.296,0,59.806c16.503,16.52,43.27,16.52,59.789,0c16.52-16.519,16.52-43.295,0-59.815C118.278,360.692,91.511,360.692,74.991,377.22z"/><path fill="inherit" d="M437.026,134.798c16.52-16.52,16.52-43.304,0-59.824c-16.519-16.511-43.304-16.52-59.823,0c-16.52,16.52-16.503,43.295,0,59.815C393.722,151.309,420.507,151.309,437.026,134.798z"/></g></svg>}</div></> : null}
+                            {showCloseBtn ? <a href="#" tabIndex={-1} onClick={(e) => {
+                                e.preventDefault();
+                                cancel();
+                            }} className="cas-select__close position-absolute top-0 end-0 mt-0 mx-1"><svg width="10px" height="10px" viewBox="0 0 1024 1024"><path fill="#000" d="M195.2 195.2a64 64 0 0 1 90.496 0L512 421.504 738.304 195.2a64 64 0 0 1 90.496 90.496L602.496 512 828.8 738.304a64 64 0 0 1-90.496 90.496L512 602.496 285.696 828.8a64 64 0 0 1-90.496-90.496L421.504 512 195.2 285.696a64 64 0 0 1 0-90.496z" /></svg></a> : null}
 
 
-                </div>
 
-                <div className="c-select__val" onClick={handleDisplayOptions}>
+                            {data.map((item: any, level: number) => {
 
-                    {loading ? <><div className="position-absolute top-0 start-0 mt-2 mx-2">{loader}</div></> : null}
+                                if (item.length > 0) {
+                                    return (
+                                        <li key={level} data-col={level} className="cas-select__items-col">
+                                            <Group
+                                                level={level}
+                                                columnTitle={columnTitleData}
+                                                data={item}
+                                                cleanNodeBtnClassName={cleanNodeBtnClassName}
+                                                cleanNodeBtnContent={cleanNodeBtnContent}
+                                                selectEv={(e, value, index) => handleClickItem(e, value, index, level, data)}
+                                            />
+                                        </li>
+                                    )
+                                } else {
+                                    return null;
+                                }
 
-                    
-                    {displayResult ? (selectedData!.labels && selectedData!.labels.length > 0 ? <div className="c-select__result">{displayInfo()}</div> : null) : null}
+                            })}
+                        </ul>
+
+                    </div>
+                ) : null}
+
+
+
+                <div className="cas-select__val" onClick={handleDisplayOptions}>
+
+                    {displayResult ? (selectedData.current!.labels && selectedData.current!.labels.length > 0 ? <div className="cas-select__result">{displayInfo(false)}</div> : null) : null}
+
 
                     <input
                         ref={valRef}
                         id={idRes}
+                        data-overlay-id={`cas-select__items-wrapper-${idRes}`}
                         name={name}
                         className={controlClassName || controlClassName === '' ? controlClassName : "form-control"}
                         placeholder={placeholder}
@@ -893,16 +1195,17 @@ const CascadingSelect = (props: CascadingSelectProps) => {
                         readOnly
                         {...attributes}
                     />
-                    
-                    {isShow ? <div 
-                    className="c-select__closemask" 
-                    onClick={(e)=> {
-                        e.preventDefault(); 
-                        setIsShow(false);
-                    }}></div> : null}
-                                        
 
-                    <span className="arrow" style={{pointerEvents: 'none'}}>
+
+                    {isShow ? <div
+                        className="cas-select__closemask"
+                        onClick={(e) => {
+                            e.preventDefault();
+                            cancel();
+                        }}></div> : null}
+
+
+                    <span className="arrow" style={{ pointerEvents: 'none' }}>
                         {controlArrow ? controlArrow : <svg width="10px" height="10px" viewBox="0 -4.5 20 20">
                             <g stroke="none" strokeWidth="1" fill="none">
                                 <g transform="translate(-180.000000, -6684.000000)" className="arrow-fill-g" fill="#a5a5a5">

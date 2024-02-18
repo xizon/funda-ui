@@ -4,7 +4,7 @@ declare module 'react' {
         children?: any;
     }
 }
-declare type CascadingSelectOptionChangeFnType = (input: any, currentData: any, index: any, depth: any, value: any) => void;
+declare type CascadingSelectOptionChangeFnType = (input: any, currentData: any, index: any, depth: any, value: any, closeFunc: any) => void;
 declare type CascadingSelectProps = {
     wrapperClassName?: string;
     controlClassName?: string;
@@ -14,11 +14,11 @@ declare type CascadingSelectProps = {
     placeholder?: string;
     disabled?: any;
     required?: any;
-    /** Whether to use square brackets to save result and initialize default value */
-    extractValueByBrackets?: boolean;
+    /** Whether to use curly braces to save result and initialize default value */
+    extractValueByBraces?: boolean;
     /** Set headers for each column group */
     columnTitle?: any[];
-    /** Set whether to use "label" or "value" for the value of this form, they will be separated by commas, such as `Text 1,Text 1_1,Text 1_1_1` or `1,1_1,1_1_1`.
+    /** Set whether to use "label" or "value" for the value of this form
      * Optional values: `label`, `value`
      */
     valueType?: string;
@@ -36,10 +36,14 @@ declare type CascadingSelectProps = {
     displayResultArrow?: React.ReactNode;
     /** Set an arrow of control */
     controlArrow?: React.ReactNode;
-    /** Specify a class for this Node. */
+    /** Specify a class for trigger. */
     triggerClassName?: string;
     /** Set a piece of text or HTML code for the trigger */
     triggerContent?: React.ReactNode;
+    /** Specify a class for clean node button. */
+    cleanNodeBtnClassName?: string;
+    /** Set a piece of text or HTML code for the clean node button */
+    cleanNodeBtnContent?: React.ReactNode;
     /** -- */
     id?: string;
     style?: React.CSSProperties;
@@ -49,7 +53,7 @@ declare type CascadingSelectProps = {
     fetchFuncMethod?: string;
     fetchFuncMethodParams?: any[];
     fetchCallback?: (data: any) => void;
-    onFetch?: (data: any) => void;
+    onFetch?: (data: any, childrenData: any) => void;
     onChange?: CascadingSelectOptionChangeFnType | null;
     onBlur?: (e: any) => void;
     onFocus?: (e: any) => void;

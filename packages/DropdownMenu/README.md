@@ -9,10 +9,9 @@ import DropdownMenu from 'funda-ui/DropdownMenu';
 ```
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |
-| `wrapperClassName` | string | `dropdown-default` | The class name of the menu wrapper. |
-| `alignOptionsLayer` | string | `start` \| `center` \| `end` | Align the options layer in a drop-down field. By default it is "center". <blockquote>It only takes effect when when the `wrapperClassName` attribute is removed</blockquote> |
-| `listClassName` | string | `dropdown-menu-default` | The class name of the list. |
-| `hyperlinkClassName` | string | `dropdown-item-default` | The class name of the hyperlink of each item. |
+| `wrapperClassName` | string | `dd-menu-default` | The class name of the menu wrapper. |
+| `listClassName` | string | `dd-menu-default__inner` | The class name of the list. |
+| `hyperlinkClassName` | string | `dd-menu-default__item` | The class name of the hyperlink of each item. |
 | `showClassName` | string | `show` | Activates the class name for the display list |
 | `hoverOn` | boolean | false | Use hover to trigger opening. |
 | `hoverOff` | boolean | false | Use hover to trigger closing. |
@@ -21,11 +20,11 @@ import DropdownMenu from 'funda-ui/DropdownMenu';
 | `iconRight` | ReactNode  | - | Set the right icon of this control |
 | `name` | string  | - | Set a name for the form field for this component. Name is not deprecated when used with form fields. |
 | `triggerButton` | boolean  | false | Whether to use button style, otherwise use "div" |
-| `triggerClassName` | string  | `d-inline w-auto` | Specify a class for your trigger |
+| `triggerClassName` | string  | `d-block-inline w-auto` | Specify a class for your trigger |
 | `triggerContent` | string  | - | Set a piece of text for the trigger <blockquote>Support html tags</blockquote> |
 | `triggerSwitchActive` | boolean  | false | When enabled, the corresponding option content will be displayed after selecting an option |
 | `options` | array  | - | Specify data of Dropdown Menu as a JSON string format. Such as: <br /> `[{"label":"Option 1","value":"option-1"},{"label":"Option 2","value":"option-2"}]` <blockquote>Support html tags</blockquote> |
-| `onChange` | function  | - | This function is called whenever the data is updated. Exposes the JSON format data about the option as an argument. You can use it like this: `(res) => console.log(res)` |
+| `onChange` | function  | - | Call a function when the value of an HTML element is changed. It returns two callback values. <br /> <ol><li>The first is the value selected (**String**)</li><li>The last is data about the option as an argument (**JSON Object**).</li></ol> |
 | `tabIndex` | number  | -1 | This attribute allows developers to make HTML elements focusable. |
 
 
@@ -34,7 +33,8 @@ Array configuration properties of the `options`:
 
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |
-| `label` | string \| ReactNode | - | Specify the label text for each option <blockquote>Support html tags</blockquote> |
+| `label` | string | - | Specify the label text for each option <blockquote>Support html tags</blockquote> |
+| `listItemLabel` | string | - | **(Optional)** Specify the label text for pop-up list items. <blockquote>Support html tags</blockquote> |
 | `value` | string | - | Specify the value for each option |
 
 
@@ -61,11 +61,11 @@ export default () => {
         <h3>Using default styles</h3>
         {/* ================================================================== */} 
         <DropdownMenu
-            wrapperClassName="dropdown-default"
-            listClassName="dropdown-menu-default"
-            hyperlinkClassName="dropdown-item-default"
+            wrapperClassName="dd-menu-default"
+            listClassName="dd-menu-default__inner"
+            hyperlinkClassName="dd-menu-default__item"
             triggerButton={false}
-            triggerClassName="d-inline w-auto"
+            triggerClassName="d-block-inline w-auto"
             triggerContent={`Option 1`}
             triggerSwitchActive={true}
             name="app-ddmenu-1"
@@ -74,8 +74,8 @@ export default () => {
                 { label: "Option 2", value: "option-2" },
                 { label: "Option 3", value: "option-3" }
             ]}
-            onChange={(res) => {
-                console.log(res); // {"label": "-","value": "-"}
+            onChange={(res, currentData) => {
+                console.log(res, currentData); // option-2 {label: 'Option 2', value: 'option-2'}
             }}
         />
 
@@ -96,18 +96,18 @@ export default () => {
             hoverOn={true}
             hoverOff={true}
             wrapperClassName="dropdown"
-            listClassName="dropdown-menu"
-            hyperlinkClassName="dropdown-item"
+            listClassName="dd-menu-menu"
+            hyperlinkClassName="dd-menu-item"
             triggerButton={true}
-            triggerClassName="btn btn-secondary btn-sm"
-            triggerContent={`<img src="avatar.jpg" alt="" />`}
+            triggerClassName="btn btn-warning btn-sm"
+            triggerContent={`<img src="https://placehold.co/30x30" alt="" />`}
             name="app-ddmenu-2"
             options={[
-                { label: "<s>Option 1</s>", value: "option-1", mydata: "a" },
-                { label: <><a href="#" onClick={(e: any) => {e.preventDefault(); alert('Option 2')}}>Option 2</a></>, value: "option-2", mydata: "b"}
+                { label: "<s>Option 1</s>", listItemLabel: "Option 1 (No: 001)", value: "option-1", mydata: "a" },
+                { label: "<span style='color: red'>Option 2</span>", listItemLabel: "Option 2 (No: 002)", value: "option-2", mydata: "b"}
             ]}
-            onChange={(res) => {
-                console.log(res); // {"label": "-","value": "-", "mydata": "-"}
+            onChange={(res, currentData) => {
+                console.log(res, currentData); // option-1 {label: '<s>Option 1</s>', listItemLabel: 'Option 1 (No: 001)', value: 'option-1', mydata: 'a'}
             }}
         />
 

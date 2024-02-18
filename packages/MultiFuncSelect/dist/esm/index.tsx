@@ -1,4 +1,4 @@
-import React, { useId, useEffect, useState, useRef, forwardRef } from 'react';
+import React, { useId, useEffect, useState, useRef, forwardRef, ButtonHTMLAttributes } from 'react';
 
 import { debounce } from './utils/performance';
 import useDebounce from './utils/useDebounce';
@@ -840,12 +840,15 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
             _modalRef.style.top = 'auto';
             _modalRef.style.bottom = (window.innerHeight - _triggerBox.top) + POS_OFFSET + 2 + 'px';
             _modalRef.style.setProperty('position', 'fixed', 'important');
+            _modalRef.classList.add('pos-top');
         }
 
         if (targetPos === 'bottom') {
             _modalRef.style.left = x + 'px';
+            _modalRef.style.bottom = 'auto';
             _modalRef.style.top = y + height + POS_OFFSET + 'px';
             _modalRef.style.setProperty('position', 'absolute', 'important');
+            _modalRef.classList.remove('pos-top');
         }
 
 
@@ -1184,7 +1187,6 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
         const incominggetOptionsData = valueInputRef.current.dataset.options;
 
 
-
         // cancel
         if (!(MULTI_SEL_VALID)) {
             cancel();
@@ -1194,6 +1196,14 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
         if (!(MULTI_SEL_VALID)) {
             rootRef.current.classList.remove('focus');
         }
+
+        // get options
+        const options = [].slice.call(listRef.current.querySelectorAll('.list-group-item:not(.hide):not(.no-match)'));
+
+
+        // current control of some option
+        const curBtn = options.filter((node: HTMLElement) => node.dataset.itemdata == JSON.stringify(curItem))[0];
+      
 
         // update value * label
         if (dataInput) {
@@ -1206,6 +1216,15 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
             // ++++++++++++++++++++
             // Single selection
             // ++++++++++++++++++++
+            // clear all active classes of options 
+            // (Avoid using the keyboard to select and two actives will appear after clicking on a non-selected option.)
+            options.forEach((node: any) => {
+                node.classList.remove('active');
+            });
+            
+
+
+            //
             setControlValue(_value);
             setControlLabel(formatIndentVal(_label));
 
@@ -1224,17 +1243,19 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
 
             if (MULTI_SEL_VALID) {
 
+                const $el = el === null ? curBtn : el.currentTarget;
 
+                
                 // update option checkboxes
-                const _selected = el.currentTarget.dataset.selected;
+                const _selected = $el.dataset.selected;
                 const _selectedVal = _selected == 'true' ? true : false;
                 if (_selectedVal) {
                     //#########
                     // remove item
                     //#########
-                    el.currentTarget.dataset.selected = 'false';
-                    el.currentTarget.querySelector('.mf-select-multi__control-option-checkbox-selected').classList.add('d-none');
-                    el.currentTarget.querySelector('.mf-select-multi__control-option-checkbox-placeholder').classList.remove('d-none');
+                    $el.dataset.selected = 'false';
+                    $el.querySelector('.mf-select-multi__control-option-checkbox-selected').classList.add('d-none');
+                    $el.querySelector('.mf-select-multi__control-option-checkbox-placeholder').classList.remove('d-none');
 
                     //
                     setControlArr((prevState: any) => {
@@ -1257,9 +1278,9 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
                     //#########
                     // add item
                     //#########
-                    el.currentTarget.dataset.selected = 'true';
-                    el.currentTarget.querySelector('.mf-select-multi__control-option-checkbox-selected').classList.remove('d-none');
-                    el.currentTarget.querySelector('.mf-select-multi__control-option-checkbox-placeholder').classList.add('d-none');
+                    $el.dataset.selected = 'true';
+                    $el.querySelector('.mf-select-multi__control-option-checkbox-selected').classList.remove('d-none');
+                    $el.querySelector('.mf-select-multi__control-option-checkbox-placeholder').classList.add('d-none');
 
                     //
                     setControlArr((prevState: any) => {
@@ -1278,9 +1299,15 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
 
                 }
 
-
                 // Appropriate multi-item container height
                 adjustMultiControlContainerHeight();
+
+
+                // active current option
+                setTimeout(() => {
+                    $el.classList.add('active');
+                }, 0);
+
 
 
             }
@@ -1316,6 +1343,14 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
             // ++++++++++++++++++++
             // Single selection
             // ++++++++++++++++++++
+
+            // clear all active classes of options
+            // (Avoid using the keyboard to select and two actives will appear after clicking on a non-selected option.)
+            options.forEach((node: any) => {
+                node.classList.remove('active');
+            });
+
+            //
             setControlValue(_value);
             setControlLabel(formatIndentVal(_label));
 
@@ -1323,6 +1358,7 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
             if (typeof incominggetOptionsData !== 'undefined') {
                 valueInputRef.current.dataset.value = _value;
             }
+            
 
 
             // ++++++++++++++++++++
@@ -1332,19 +1368,21 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
             let currentControlLabelArr: any[] = JSON.parse(JSON.stringify(controlArr.labels));
 
             if (MULTI_SEL_VALID) {
+                
 
+                const $el = el === null ? curBtn : el.currentTarget;
 
 
                 // update option checkboxes
-                const _selected = el.currentTarget.dataset.selected;
+                const _selected = $el.dataset.selected;
                 const _selectedVal = _selected == 'true' ? true : false;
                 if (_selectedVal) {
                     //#########
                     // remove item
                     //#########
-                    el.currentTarget.dataset.selected = 'false';
-                    el.currentTarget.querySelector('.mf-select-multi__control-option-checkbox-selected').classList.add('d-none');
-                    el.currentTarget.querySelector('.mf-select-multi__control-option-checkbox-placeholder').classList.remove('d-none');
+                    $el.dataset.selected = 'false';
+                    $el.querySelector('.mf-select-multi__control-option-checkbox-selected').classList.add('d-none');
+                    $el.querySelector('.mf-select-multi__control-option-checkbox-placeholder').classList.remove('d-none');
 
 
                     //
@@ -1367,9 +1405,9 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
                     // add item
                     //#########
 
-                    el.currentTarget.dataset.selected = 'true';
-                    el.currentTarget.querySelector('.mf-select-multi__control-option-checkbox-selected').classList.remove('d-none');
-                    el.currentTarget.querySelector('.mf-select-multi__control-option-checkbox-placeholder').classList.add('d-none');
+                    $el.dataset.selected = 'true';
+                    $el.querySelector('.mf-select-multi__control-option-checkbox-selected').classList.remove('d-none');
+                    $el.querySelector('.mf-select-multi__control-option-checkbox-placeholder').classList.add('d-none');
 
 
                     //
@@ -1393,6 +1431,11 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
 
                 // Appropriate multi-item container height
                 adjustMultiControlContainerHeight();
+
+                // active current option
+                setTimeout(() => {
+                    $el.classList.add('active');
+                }, 0);
 
 
             }
@@ -1669,9 +1712,13 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
             if (listRef.current === null || !rootRef.current.classList.contains('active')) return;
 
 
-            const options = [].slice.call(listRef.current.querySelectorAll('.list-group-item:not(.hide)'));
-            const currentIndex = options.findIndex((e) => e === listRef.current.querySelector('.list-group-item.active'));
+            let options = [].slice.call(listRef.current.querySelectorAll('.list-group-item:not(.hide)'));
+            // Avoid selecting options that are disabled
+            options = options.filter((options: HTMLElement) => !options.classList.contains('disabled'));
 
+            const currentIndex = options.findIndex((e) => e === listRef.current.querySelector('.list-group-item.active'));
+            
+     
             // get the next element in the list, "%" will loop around to 0
             let nextIndex;
             if (type === 'increase') {
@@ -1679,6 +1726,7 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
             } else {
                 nextIndex = (currentIndex < 0 ? options.length : currentIndex) - 1 % options.length;
             }
+
 
 
             //only one
@@ -1756,7 +1804,7 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
 
                         options.forEach((node: any) => {
                             node.classList.remove('active');
-
+                        
                             if (node.classList.contains('item-selected')) {
                                 currentControlValueArr.push(node.dataset.value);
                                 currentControlLabelArr.push(node.dataset.label);
@@ -2109,7 +2157,11 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
                         role="tablist"
                     >
 
-                        <div className="mf-select__options-contentlist rounded" style={{ backgroundColor: 'var(--bs-list-group-bg)' }} ref={listContentRef}>
+                        <div 
+                            className="mf-select__options-contentlist rounded" 
+                            style={{ backgroundColor: 'var(--bs-list-group-bg)' }} 
+                            ref={listContentRef}
+                        >
                             <div className="mf-select__options-contentlist-inner">
 
                                 {/* SELECT ALL BUTTON */}
@@ -2151,12 +2203,12 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
                                     // disable selected options (only single selection)
                                     let disabledCurrentOption: boolean = false;
                                     if (
-                                        (typeof value !== 'undefined' && value !== null && value !== '') &&
+                                        (typeof controlValue !== 'undefined' && controlValue !== null && controlValue !== '') &&
                                         (typeof item.value !== 'undefined' && item.value !== null && item.value !== '')
                                     ) {
 
                                         if (!MULTI_SEL_VALID) {
-                                            const _defaultValue = value.toString();
+                                            const _defaultValue = controlValue.toString();
                                             let filterRes: any = [];
                                             const filterResQueryValue = optionsData.filter((item: any) => item.value == _defaultValue);
                                             const filterResQueryLabel = optionsData.filter((item: any) => item.label == _defaultValue);

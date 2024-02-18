@@ -1,7 +1,7 @@
 import React from 'react';
-declare type OptionChangeFnType = (arg1: any) => void;
+declare type OptionChangeFnType = (arg1: any, arg2: any) => void;
 interface OptionConfig {
-    [propName: string]: string | number | React.ReactNode;
+    [propName: string]: string | number;
 }
 declare type DropdownMenuProps = {
     wrapperClassName?: string;
@@ -23,14 +23,13 @@ declare type DropdownMenuProps = {
     triggerContent?: string;
     /** When enabled, the corresponding option content will be displayed after selecting an option */
     triggerSwitchActive?: boolean;
-    /** Center align the options layer in a drop-down field. By default it is left aligned "start". */
-    alignOptionsLayer?: string;
     /** Specify data of Dropdown Menu as a JSON string format. */
     options?: OptionConfig[];
     /** This function is called whenever the data is updated.
      *  Exposes the JSON format data about the option as an argument.
      */
     /** -- */
+    id?: string;
     tabIndex?: number;
     onChange?: OptionChangeFnType | null;
 };

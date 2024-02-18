@@ -2,13 +2,13 @@ import React from 'react';
 
 interface OptionConfig {
     value?: string | undefined;
-    label?: string | React.ReactNode | undefined;
+    label?: string | undefined;
+    listItemLabel?: string | undefined;
 }
 
 type OptionProps = {
     option?: OptionConfig;
     hyperlinkClassName?: string;
-    onSelect?: (option: any) => void | undefined;
 };
 
 export default function Option(props: OptionProps) {
@@ -18,22 +18,23 @@ export default function Option(props: OptionProps) {
 
     const _label = option ? option.label : '';
     const _value = option ? option.value : '';
-
-    function handleSelect(e: any) {
-        e.preventDefault();
-
-        const fn: any = props.onSelect;
-        fn(props.option);
-    }
-
+    const _listItemLabel = option ? (typeof option.listItemLabel === 'undefined' ? undefined : option.listItemLabel) : undefined;
 
     return (
         <>
-            {typeof _label === 'string' ? <>
-                <li><a className={props.hyperlinkClassName} data-value={_value} href="#" tabIndex={-1} onClick={handleSelect} dangerouslySetInnerHTML={{ __html: `${_label}` }}></a></li>
-            </> : <>
-            <li><a className={props.hyperlinkClassName} data-value={_value} href="#" tabIndex={-1} onClick={handleSelect}>{_label}</a></li>
-            </>}
+            <li>
+                <a
+                    className={props.hyperlinkClassName}
+                    data-opt="true"
+                    data-value={_value}
+                    data-label={_label}
+                    data-list-item-label={_listItemLabel}
+                    data-itemdata={option ? JSON.stringify(option) : ''}
+                    href="#"
+                    tabIndex={-1}
+                    dangerouslySetInnerHTML={{ __html: typeof _listItemLabel === 'undefined' ? `${_label}` : `${_listItemLabel}` }}
+                ></a>
+            </li>
         </>
 
     );

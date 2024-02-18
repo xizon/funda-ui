@@ -1572,11 +1572,14 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
       _modalRef.style.top = 'auto';
       _modalRef.style.bottom = window.innerHeight - _triggerBox.top + POS_OFFSET + 2 + 'px';
       _modalRef.style.setProperty('position', 'fixed', 'important');
+      _modalRef.classList.add('pos-top');
     }
     if (targetPos === 'bottom') {
       _modalRef.style.left = x + 'px';
+      _modalRef.style.bottom = 'auto';
       _modalRef.style.top = y + height + POS_OFFSET + 'px';
       _modalRef.style.setProperty('position', 'absolute', 'important');
+      _modalRef.classList.remove('pos-top');
     }
 
     // STEP 5:
@@ -1820,17 +1823,21 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
         labelArr,
         curItem,
         incominggetOptionsData,
+        options,
+        curBtn,
         _data,
         _value,
         _label,
         currentControlValueArr,
         currentControlLabelArr,
+        $el,
         _selected,
         _selectedVal,
         _value2,
         _label2,
         _currentControlValueArr,
         _currentControlLabelArr,
+        _$el,
         _selected2,
         _selectedVal2,
         _args3 = arguments;
@@ -1858,7 +1865,11 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
               rootRef.current.classList.remove('focus');
             }
 
-            // update value * label
+            // get options
+            options = [].slice.call(listRef.current.querySelectorAll('.list-group-item:not(.hide):not(.no-match)')); // current control of some option
+            curBtn = options.filter(function (node) {
+              return node.dataset.itemdata == JSON.stringify(curItem);
+            })[0]; // update value * label
             if (dataInput) {
               // using keyboard
               _data = JSON.parse(dataInput);
@@ -1866,6 +1877,13 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
               _label = _data.label; // ++++++++++++++++++++
               // Single selection
               // ++++++++++++++++++++
+              // clear all active classes of options 
+              // (Avoid using the keyboard to select and two actives will appear after clicking on a non-selected option.)
+              options.forEach(function (node) {
+                node.classList.remove('active');
+              });
+
+              //
               setControlValue(_value);
               setControlLabel(formatIndentVal(_label));
 
@@ -1880,16 +1898,16 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
               currentControlValueArr = JSON.parse(JSON.stringify(valueArr));
               currentControlLabelArr = JSON.parse(JSON.stringify(labelArr));
               if (MULTI_SEL_VALID) {
-                // update option checkboxes
-                _selected = el.currentTarget.dataset.selected;
+                $el = el === null ? curBtn : el.currentTarget; // update option checkboxes
+                _selected = $el.dataset.selected;
                 _selectedVal = _selected == 'true' ? true : false;
                 if (_selectedVal) {
                   //#########
                   // remove item
                   //#########
-                  el.currentTarget.dataset.selected = 'false';
-                  el.currentTarget.querySelector('.mf-select-multi__control-option-checkbox-selected').classList.add('d-none');
-                  el.currentTarget.querySelector('.mf-select-multi__control-option-checkbox-placeholder').classList.remove('d-none');
+                  $el.dataset.selected = 'false';
+                  $el.querySelector('.mf-select-multi__control-option-checkbox-selected').classList.add('d-none');
+                  $el.querySelector('.mf-select-multi__control-option-checkbox-placeholder').classList.remove('d-none');
 
                   //
                   setControlArr(function (prevState) {
@@ -1906,9 +1924,9 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
                   //#########
                   // add item
                   //#########
-                  el.currentTarget.dataset.selected = 'true';
-                  el.currentTarget.querySelector('.mf-select-multi__control-option-checkbox-selected').classList.remove('d-none');
-                  el.currentTarget.querySelector('.mf-select-multi__control-option-checkbox-placeholder').classList.add('d-none');
+                  $el.dataset.selected = 'true';
+                  $el.querySelector('.mf-select-multi__control-option-checkbox-selected').classList.remove('d-none');
+                  $el.querySelector('.mf-select-multi__control-option-checkbox-placeholder').classList.add('d-none');
 
                   //
                   setControlArr(function (prevState) {
@@ -1925,6 +1943,11 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
 
                 // Appropriate multi-item container height
                 adjustMultiControlContainerHeight();
+
+                // active current option
+                setTimeout(function () {
+                  $el.classList.add('active');
+                }, 0);
               }
 
               //
@@ -1956,6 +1979,13 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
               _label2 = typeof curItem !== 'undefined' ? curItem.label : ''; // ++++++++++++++++++++
               // Single selection
               // ++++++++++++++++++++
+              // clear all active classes of options
+              // (Avoid using the keyboard to select and two actives will appear after clicking on a non-selected option.)
+              options.forEach(function (node) {
+                node.classList.remove('active');
+              });
+
+              //
               setControlValue(_value2);
               setControlLabel(formatIndentVal(_label2));
 
@@ -1970,16 +2000,16 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
               _currentControlValueArr = JSON.parse(JSON.stringify(controlArr.values));
               _currentControlLabelArr = JSON.parse(JSON.stringify(controlArr.labels));
               if (MULTI_SEL_VALID) {
-                // update option checkboxes
-                _selected2 = el.currentTarget.dataset.selected;
+                _$el = el === null ? curBtn : el.currentTarget; // update option checkboxes
+                _selected2 = _$el.dataset.selected;
                 _selectedVal2 = _selected2 == 'true' ? true : false;
                 if (_selectedVal2) {
                   //#########
                   // remove item
                   //#########
-                  el.currentTarget.dataset.selected = 'false';
-                  el.currentTarget.querySelector('.mf-select-multi__control-option-checkbox-selected').classList.add('d-none');
-                  el.currentTarget.querySelector('.mf-select-multi__control-option-checkbox-placeholder').classList.remove('d-none');
+                  _$el.dataset.selected = 'false';
+                  _$el.querySelector('.mf-select-multi__control-option-checkbox-selected').classList.add('d-none');
+                  _$el.querySelector('.mf-select-multi__control-option-checkbox-placeholder').classList.remove('d-none');
 
                   //
                   setControlArr(function (prevState) {
@@ -1997,9 +2027,9 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
                   // add item
                   //#########
 
-                  el.currentTarget.dataset.selected = 'true';
-                  el.currentTarget.querySelector('.mf-select-multi__control-option-checkbox-selected').classList.remove('d-none');
-                  el.currentTarget.querySelector('.mf-select-multi__control-option-checkbox-placeholder').classList.add('d-none');
+                  _$el.dataset.selected = 'true';
+                  _$el.querySelector('.mf-select-multi__control-option-checkbox-selected').classList.remove('d-none');
+                  _$el.querySelector('.mf-select-multi__control-option-checkbox-placeholder').classList.add('d-none');
 
                   //
                   setControlArr(function (prevState) {
@@ -2016,6 +2046,11 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
 
                 // Appropriate multi-item container height
                 adjustMultiControlContainerHeight();
+
+                // active current option
+                setTimeout(function () {
+                  _$el.classList.add('active');
+                }, 0);
               }
 
               //
@@ -2043,7 +2078,7 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
                 selectInputRef.current.blur();
               }
             }
-          case 10:
+          case 12:
           case "end":
             return _context3.stop();
         }
@@ -2259,6 +2294,10 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
       // Determine the "active" class name to avoid listening to other unused components of the same type
       if (listRef.current === null || !rootRef.current.classList.contains('active')) return;
       var options = [].slice.call(listRef.current.querySelectorAll('.list-group-item:not(.hide)'));
+      // Avoid selecting options that are disabled
+      options = options.filter(function (options) {
+        return !options.classList.contains('disabled');
+      });
       var currentIndex = options.findIndex(function (e) {
         return e === listRef.current.querySelector('.list-group-item.active');
       });
@@ -2694,9 +2733,9 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
 
     // disable selected options (only single selection)
     var disabledCurrentOption = false;
-    if (typeof value !== 'undefined' && value !== null && value !== '' && typeof item.value !== 'undefined' && item.value !== null && item.value !== '') {
+    if (typeof controlValue !== 'undefined' && controlValue !== null && controlValue !== '' && typeof item.value !== 'undefined' && item.value !== null && item.value !== '') {
       if (!MULTI_SEL_VALID) {
-        var _defaultValue = value.toString();
+        var _defaultValue = controlValue.toString();
         var filterRes = [];
         var filterResQueryValue = optionsData.filter(function (item) {
           return item.value == _defaultValue;

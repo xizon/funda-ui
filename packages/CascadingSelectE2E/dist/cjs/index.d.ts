@@ -4,7 +4,7 @@ declare module 'react' {
         children?: any;
     }
 }
-declare type CascadingSelectE2EOptionChangeFnType = (input: any, currentData: any, index: any, depth: any, value: any) => void;
+declare type CascadingSelectE2EOptionChangeFnType = (input: any, currentData: any, index: any, depth: any, value: any, closeFunc: any) => void;
 interface fetchArrayConfig {
     fetchFuncAsync?: any | undefined;
     fetchFuncMethod?: string | undefined;
@@ -31,7 +31,7 @@ declare type CascadingSelectE2EProps = {
     destroyParentIdMatch?: boolean;
     /** Set headers for each column group */
     columnTitle?: any[];
-    /** Set whether to use "label" or "value" for the value of this form, they will be separated by commas, such as `Text 1,Text 1_1,Text 1_1_1` or `1,1_1,1_1_1`.
+    /** Set whether to use "label" or "value" for the value of this form
      * Optional values: `label`, `value`
      */
     valueType?: string;
@@ -49,10 +49,14 @@ declare type CascadingSelectE2EProps = {
     displayResultArrow?: React.ReactNode;
     /** Set an arrow of control */
     controlArrow?: React.ReactNode;
-    /** Specify a class for this Node. */
+    /** Specify a class for trigger. */
     triggerClassName?: string;
     /** Set a piece of text or HTML code for the trigger */
     triggerContent?: React.ReactNode;
+    /** Specify a class for clean node button. */
+    cleanNodeBtnClassName?: string;
+    /** Set a piece of text or HTML code for the clean node button */
+    cleanNodeBtnContent?: React.ReactNode;
     /** Configuration for multiple requests */
     fetchArray?: fetchArrayConfig[];
     /** -- */
