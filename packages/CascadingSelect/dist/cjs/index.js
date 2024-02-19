@@ -552,53 +552,41 @@ var CascadingSelect = function CascadingSelect(props) {
   var rootRef = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useRef)(null);
   var valRef = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useRef)(null);
   var listRef = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useRef)(null);
-  var _useState = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)([]),
+
+  // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+  // DO NOT USE `useState()` for `dictionaryData`, `listData`,  
+  // because the list uses vanilla JS DOM events which will cause the results of useState not to be displayed in real time.
+  // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+  var dictionaryData = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useRef)([]);
+  var _useState = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)(false),
     _useState2 = _slicedToArray(_useState, 2),
-    dictionaryData = _useState2[0],
-    setDictionaryData = _useState2[1];
-  var _useState3 = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)(false),
+    loading = _useState2[0],
+    setLoading = _useState2[1];
+  var _useState3 = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)([]),
     _useState4 = _slicedToArray(_useState3, 2),
-    loading = _useState4[0],
-    setLoading = _useState4[1];
-  var _useState5 = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)([]),
+    columnTitleData = _useState4[0],
+    setColumnTitleData = _useState4[1];
+  var _useState5 = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)(false),
     _useState6 = _slicedToArray(_useState5, 2),
-    columnTitleData = _useState6[0],
-    setColumnTitleData = _useState6[1];
-  var _useState7 = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)(false),
+    hasErr = _useState6[0],
+    setHasErr = _useState6[1];
+  var _useState7 = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)(value || ''),
     _useState8 = _slicedToArray(_useState7, 2),
-    hasErr = _useState8[0],
-    setHasErr = _useState8[1];
-  var _useState9 = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)(value || ''),
-    _useState10 = _slicedToArray(_useState9, 2),
-    changedVal = _useState10[0],
-    setChangedVal = _useState10[1];
+    changedVal = _useState8[0],
+    setChangedVal = _useState8[1];
   var windowScrollUpdate = (0,performance.debounce)(handleScrollEvent, 500);
 
   //for variable 
-  var _useState11 = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)([]),
-    _useState12 = _slicedToArray(_useState11, 2),
-    data = _useState12[0],
-    setData = _useState12[1];
-
-  // DO NOT USE `useState()` for `selectedData`, because the list uses 
-  // vanilla JS DOM events which will cause the results of useState not to be displayed in real time.
+  var listData = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useRef)([]);
   var selectedData = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useRef)({
     labels: [],
     values: []
   });
-  var _useState13 = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)(false),
-    _useState14 = _slicedToArray(_useState13, 2),
-    isShow = _useState14[0],
-    setIsShow = _useState14[1];
-
-  // destroy `parent_id` match
-  var _useState15 = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)({
-      labels: [],
-      values: []
-    }),
-    _useState16 = _slicedToArray(_useState15, 2),
-    selectedDataByClick = _useState16[0],
-    setSelectedDataByClick = _useState16[1];
+  var _useState9 = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)(false),
+    _useState10 = _slicedToArray(_useState9, 2),
+    isShow = _useState10[0],
+    setIsShow = _useState10[1];
 
   /**
    * Check if an element is in the viewport
@@ -698,7 +686,7 @@ var CascadingSelect = function CascadingSelect(props) {
 
     // options event listener
     // !!! to prevent button mismatch when changing
-    if (data.length > 0) {
+    if (listData.current.length > 0) {
       [].slice.call(listRef.current.querySelectorAll('[data-opt]')).forEach(function (node) {
         if (typeof node.dataset.ev === 'undefined') {
           node.dataset.ev = 'true';
@@ -708,7 +696,7 @@ var CascadingSelect = function CascadingSelect(props) {
             var _value = JSON.parse(e.currentTarget.dataset.value);
             var _index = Number(e.currentTarget.dataset.index);
             var _level = Number(e.currentTarget.dataset.level);
-            handleClickItem(e, _value, _index, _level, data);
+            handleClickItem(e, _value, _index, _level, listData.current);
           });
         }
       });
@@ -751,6 +739,11 @@ var CascadingSelect = function CascadingSelect(props) {
         }
       });
     }
+
+    // initialize events for options
+    setTimeout(function () {
+      popwinBtnEventsInit();
+    }, 0);
   }
   function cancel() {
     // hide list
@@ -812,7 +805,7 @@ var CascadingSelect = function CascadingSelect(props) {
 
             // STEP 2: ===========
             // dictionary data (orginal)
-            setDictionaryData(_ORGIN_DATA);
+            dictionaryData.current = _ORGIN_DATA;
 
             // STEP 3: ===========
             // Add an empty item to each list to support empty item selection
@@ -821,7 +814,7 @@ var CascadingSelect = function CascadingSelect(props) {
 
             // STEP 4: ===========
             // Turn the data of each group into an array
-            setData([_EMPTY_SUPPORTED_DATA]);
+            listData.current = [_EMPTY_SUPPORTED_DATA];
 
             // STEP 5: ===========
             //
@@ -880,12 +873,16 @@ var CascadingSelect = function CascadingSelect(props) {
     //
     activate();
   }
-  function handleClickItem(e, resValue, index, level, data) {
+  function handleClickItem(e, resValue, index, level, curData) {
     e.preventDefault();
+
+    // update column display with DOM
+    //////////////////////////////////////////
+    updateColDisplay(true, false, level);
 
     // update value
     //////////////////////////////////////////
-    var inputVal = updateValue(dictionaryData, resValue.id, level);
+    var inputVal = updateValue(dictionaryData.current, resValue.id, level);
 
     // callback
     //////////////////////////////////////////
@@ -895,7 +892,7 @@ var CascadingSelect = function CascadingSelect(props) {
 
     // update data
     //////////////////////////////////////////
-    var newData = data; // such as: [Array(6), Array(3)]
+    var newData = curData; // such as: [Array(6), Array(3)]
 
     // All the elements from start(array.length - start) to the end of the array will be deleted.
     newData.splice(level + 1);
@@ -910,7 +907,7 @@ var CascadingSelect = function CascadingSelect(props) {
 
     // update actived items
     //////////////////////////////////////////
-    setData(newData);
+    listData.current = newData;
 
     // close modal
     //////////////////////////////////////////
@@ -923,7 +920,7 @@ var CascadingSelect = function CascadingSelect(props) {
     //////////////////////////////////////////
     var currentItemsInner = e.currentTarget.closest('.cas-select__items-inner');
     if (currentItemsInner !== null) {
-      data.forEach(function (v, col) {
+      curData.forEach(function (v, col) {
         var colItemsWrapper = currentItemsInner.querySelectorAll('.cas-select__items-col');
         colItemsWrapper.forEach(function (perCol) {
           var _col = Number(perCol.dataset.col);
@@ -938,12 +935,6 @@ var CascadingSelect = function CascadingSelect(props) {
       // not header option
       if (typeof e.currentTarget.dataset.optHeader === 'undefined') e.currentTarget.classList.add('active');
     }
-
-    // initialize events for options
-    //////////////////////////////////////////
-    setTimeout(function () {
-      popwinBtnEventsInit();
-    }, 0);
   }
 
   /**
@@ -953,6 +944,8 @@ var CascadingSelect = function CascadingSelect(props) {
   * @returns 
   */
   function markCurrent(arr, index) {
+    if (!Array.isArray(arr)) return;
+
     // click an item
     //////////////////////////////////////////
     for (var i = 0; i < arr.length; i++) {
@@ -1047,12 +1040,8 @@ var CascadingSelect = function CascadingSelect(props) {
       labels: [],
       values: []
     };
-    setSelectedDataByClick({
-      labels: [],
-      values: []
-    });
-    setDictionaryData([]);
-    setData([]);
+    dictionaryData.current = [];
+    listData.current = [];
     setChangedVal('');
   }
   function initDefaultValue(defaultValue) {
@@ -1133,7 +1122,7 @@ var CascadingSelect = function CascadingSelect(props) {
         // STEP 2: ===========
         // update actived items
         //////////////////////////////////////////
-        setData(_allColumnsData);
+        listData.current = _allColumnsData;
 
         // STEP 3: ===========
         // Set a default value
@@ -1142,10 +1131,6 @@ var CascadingSelect = function CascadingSelect(props) {
           labels: _allLables,
           values: _allValues
         };
-        setSelectedDataByClick({
-          labels: _allLables,
-          values: _allValues
-        });
       }
     });
 
@@ -1307,9 +1292,18 @@ var CascadingSelect = function CascadingSelect(props) {
     }
     return resAll;
   }
-  function displayInfo(destroyParentId) {
-    var _data = destroyParentId ? selectedDataByClick : selectedData.current;
-    return _data.labels ? _data.labels.map(function (item, i, arr) {
+  function displayInfo() {
+    var _data = selectedData.current;
+    var formattedDefaultValue = changedVal !== '' ? VALUE_BY_BRACES ? (0,extract.extractContentsOfBraces)(changedVal) : changedVal.split(',') : [];
+    var _labels = Array.isArray(_data.labels) && _data.labels.length > 0 ? _data.labels : [];
+
+    // Sometimes the array may be empty due to rendering speed
+    if (_labels.length === 0) {
+      _labels = formattedDefaultValue.map(function (s) {
+        return s.toString().replace(/[\w\s]/gi, '').replace(/\[\]/g, '');
+      });
+    }
+    return _labels.length > 0 ? _labels.map(function (item, i, arr) {
       if (arr.length - 1 === i) {
         return /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
           key: i
@@ -1441,7 +1435,7 @@ var CascadingSelect = function CascadingSelect(props) {
   }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("path", {
     fill: "#000",
     d: "M195.2 195.2a64 64 0 0 1 90.496 0L512 421.504 738.304 195.2a64 64 0 0 1 90.496 90.496L602.496 512 828.8 738.304a64 64 0 0 1-90.496 90.496L512 602.496 285.696 828.8a64 64 0 0 1-90.496-90.496L421.504 512 195.2 285.696a64 64 0 0 1 0-90.496z"
-  }))) : null, data.map(function (item, level) {
+  }))) : null, listData.current.map(function (item, level) {
     if (item.length > 0) {
       return /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("li", {
         key: level,
@@ -1454,7 +1448,7 @@ var CascadingSelect = function CascadingSelect(props) {
         cleanNodeBtnClassName: cleanNodeBtnClassName,
         cleanNodeBtnContent: cleanNodeBtnContent,
         selectEv: function selectEv(e, value, index) {
-          return handleClickItem(e, value, index, level, data);
+          return handleClickItem(e, value, index, level, listData.current);
         }
       }));
     } else {
@@ -1463,9 +1457,9 @@ var CascadingSelect = function CascadingSelect(props) {
   }))) : null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
     className: "cas-select__val",
     onClick: handleDisplayOptions
-  }, displayResult ? selectedData.current.labels && selectedData.current.labels.length > 0 ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
+  }, displayResult ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
     className: "cas-select__result"
-  }, displayInfo(false)) : null : null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("input", _extends({
+  }, displayInfo()) : null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("input", _extends({
     ref: valRef,
     id: idRes,
     "data-overlay-id": "cas-select__items-wrapper-".concat(idRes),

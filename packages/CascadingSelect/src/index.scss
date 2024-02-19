@@ -11,10 +11,6 @@
     --cas-select-result-padding-x: 0.75rem;
     --cas-select-result-padding-y: 0.375rem;
 
-    --cas-select-opt-font-size: 0.875rem;
-    --cas-select-opt-padding-x: .4rem;
-    --cas-select-opt-padding-y: .3rem;
-
 
     .cas-select__result {
         position: absolute;
@@ -98,6 +94,11 @@
 
 /*------ List ------*/
 .cas-select__items-wrapper {
+
+
+    --cas-select-opt-font-size: 0.875rem;
+    --cas-select-opt-padding-x: .4rem;
+    --cas-select-opt-padding-y: .3rem;
 
     --cas-select-opt-header-border-color: rgba(1, 1, 1, .2);
     --cas-select-opt-header-text-color: #999;

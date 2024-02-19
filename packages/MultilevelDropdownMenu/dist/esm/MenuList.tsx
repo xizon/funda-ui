@@ -63,6 +63,12 @@ export default function MenuList(props: MenuListProps) {
         [].slice.call(ul).forEach(function (_curUl: any) {
 
             const allHeight = [].slice.call(_curUl.querySelectorAll('li')).map((_curLi: any) => _curLi.scrollHeight);
+
+            // Prevent missing height, causing the last element to be clipped
+            const maxHeight = Math.max(...allHeight);
+            allHeight.push(maxHeight*3);
+
+            //
             const totalHeight = allHeight.reduce(
                 (accumulator: number, currentValue: number) => accumulator + currentValue,
                 0,
@@ -176,6 +182,13 @@ export default function MenuList(props: MenuListProps) {
                 [].slice.call(ul).forEach(function (_curUl: any) {
 
                     const allHeight = [].slice.call(_curUl.querySelectorAll('li')).map((_curLi: any) => _curLi.scrollHeight);
+
+                    // Prevent missing height, causing the last element to be clipped
+                    const maxHeight = Math.max(...allHeight);
+                    allHeight.push(maxHeight * 3);
+
+
+                    // 
                     const totalHeight = allHeight.reduce(
                         (accumulator: number, currentValue: number) => accumulator + currentValue,
                         0,

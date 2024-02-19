@@ -10,13 +10,6 @@ import { convertArrToValByBraces } from './utils/convert';
 import { getAbsolutePositionOfStage } from './utils/get-element-property';
 
 
-import {
-    addTreeDepth,
-    addTreeIndent
-} from './utils/tree';
-
-
-
 declare module 'react' {
     interface ReactI18NextChildren<T> {
         children?: any;
@@ -129,7 +122,15 @@ const CascadingSelect = (props: CascadingSelectProps) => {
     const listRef = useRef<any>(null);
 
 
-    const [dictionaryData, setDictionaryData] = useState<any[]>([]);
+    // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+    // DO NOT USE `useState()` for `dictionaryData`, `listData`,  
+    // because the list uses vanilla JS DOM events which will cause the results of useState not to be displayed in real time.
+    // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+
+
+    const dictionaryData = useRef<any[]>([]);
+
     const [loading, setLoading] = useState<boolean>(false);
     const [columnTitleData, setColumnTitleData] = useState<any[]>([]);
     const [hasErr, setHasErr] = useState<boolean>(false);
@@ -139,23 +140,13 @@ const CascadingSelect = (props: CascadingSelectProps) => {
 
 
     //for variable 
-    const [data, setData] = useState<any[]>([]);
-
-    // DO NOT USE `useState()` for `selectedData`, because the list uses 
-    // vanilla JS DOM events which will cause the results of useState not to be displayed in real time.
+    const listData = useRef<any[]>([]);
     const selectedData = useRef<any>({   
         labels: [],
         values: []
     });
 
     const [isShow, setIsShow] = useState<boolean>(false);
-
-
-    // destroy `parent_id` match
-    const [selectedDataByClick, setSelectedDataByClick] = useState<any>({
-        labels: [],
-        values: []
-    });
 
 
     /**
@@ -285,7 +276,7 @@ const CascadingSelect = (props: CascadingSelectProps) => {
 
         // options event listener
         // !!! to prevent button mismatch when changing
-        if (data.length > 0) {
+        if (listData.current.length > 0) {
             [].slice.call(listRef.current.querySelectorAll('[data-opt]')).forEach((node: HTMLElement) => {
 
                 if (typeof node.dataset.ev === 'undefined') {
@@ -298,7 +289,7 @@ const CascadingSelect = (props: CascadingSelectProps) => {
                         const _level = Number(e.currentTarget.dataset.level);
                         
 
-                        handleClickItem(e, _value, _index, _level, data);
+                        handleClickItem(e, _value, _index, _level, listData.current);
                     });
                 }
             });
@@ -347,6 +338,16 @@ const CascadingSelect = (props: CascadingSelectProps) => {
                 
             });
         }
+
+
+   
+        // initialize events for options
+        setTimeout(() => {
+            popwinBtnEventsInit();
+        }, 0);
+
+
+
     
     }
 
@@ -407,7 +408,7 @@ const CascadingSelect = (props: CascadingSelectProps) => {
 
             // STEP 2: ===========
             // dictionary data (orginal)
-            setDictionaryData(_ORGIN_DATA);
+            dictionaryData.current = _ORGIN_DATA;
 
             // STEP 3: ===========
             // Add an empty item to each list to support empty item selection
@@ -417,7 +418,7 @@ const CascadingSelect = (props: CascadingSelectProps) => {
     
             // STEP 4: ===========
             // Turn the data of each group into an array
-            setData([_EMPTY_SUPPORTED_DATA]);
+            listData.current = [_EMPTY_SUPPORTED_DATA];
 
 
 
@@ -508,12 +509,17 @@ const CascadingSelect = (props: CascadingSelectProps) => {
     }
 
 
-    function handleClickItem(e: any, resValue: any, index: number, level: number, data: any[]) {
+    function handleClickItem(e: any, resValue: any, index: number, level: number, curData: any[]) {
         e.preventDefault();
+
+        // update column display with DOM
+        //////////////////////////////////////////
+        updateColDisplay(true, false, level);
+
 
         // update value
         //////////////////////////////////////////
-        const inputVal = updateValue(dictionaryData, resValue.id, level);
+        const inputVal = updateValue(dictionaryData.current, resValue.id, level);
 
 
         // callback
@@ -525,7 +531,7 @@ const CascadingSelect = (props: CascadingSelectProps) => {
 
         // update data
         //////////////////////////////////////////
-        const newData: any = data;  // such as: [Array(6), Array(3)]
+        const newData: any = curData;  // such as: [Array(6), Array(3)]
 
         // All the elements from start(array.length - start) to the end of the array will be deleted.
         newData.splice(level + 1);
@@ -543,7 +549,7 @@ const CascadingSelect = (props: CascadingSelectProps) => {
 
         // update actived items
         //////////////////////////////////////////
-        setData(newData);
+        listData.current = newData;
 
 
         // close modal
@@ -558,7 +564,7 @@ const CascadingSelect = (props: CascadingSelectProps) => {
         //////////////////////////////////////////
         const currentItemsInner: any = e.currentTarget.closest('.cas-select__items-inner');
         if (currentItemsInner !== null) {
-            data.forEach((v: any, col: number) => {
+            curData.forEach((v: any, col: number) => {
                 const colItemsWrapper = currentItemsInner.querySelectorAll('.cas-select__items-col');
                 colItemsWrapper.forEach((perCol: HTMLUListElement) => {
                     const _col = Number(perCol.dataset.col);
@@ -578,15 +584,6 @@ const CascadingSelect = (props: CascadingSelectProps) => {
         
         }
         
-   
-
-        // initialize events for options
-        //////////////////////////////////////////
-        setTimeout(() => {
-            popwinBtnEventsInit();
-        }, 0);
-
-
 
     }
 
@@ -599,6 +596,7 @@ const CascadingSelect = (props: CascadingSelectProps) => {
     * @returns 
     */
     function markCurrent(arr: any[], index: number) {
+        if (!Array.isArray(arr)) return;
 
         // click an item
         //////////////////////////////////////////
@@ -704,14 +702,10 @@ const CascadingSelect = (props: CascadingSelectProps) => {
             values: []
         };
 
-        setSelectedDataByClick({
-            labels: [],
-            values: []
-        });
 
-
-        setDictionaryData([]);
-        setData([]);
+        dictionaryData.current = [];
+        listData.current = [];
+        
         setChangedVal('');
     }
 
@@ -812,7 +806,7 @@ const CascadingSelect = (props: CascadingSelectProps) => {
                 // STEP 2: ===========
                 // update actived items
                 //////////////////////////////////////////
-                setData(_allColumnsData);
+                listData.current = _allColumnsData;
                 
 
 
@@ -824,10 +818,6 @@ const CascadingSelect = (props: CascadingSelectProps) => {
                     values: _allValues
                 };
 
-                setSelectedDataByClick({
-                    labels: _allLables,
-                    values: _allValues
-                });
 
             }
 
@@ -1039,11 +1029,20 @@ const CascadingSelect = (props: CascadingSelectProps) => {
 
     }
 
-    function displayInfo(destroyParentId: boolean) {
 
-        const _data = destroyParentId ? selectedDataByClick : selectedData.current;
+    function displayInfo() {
 
-        return _data!.labels ? _data!.labels.map((item: any, i: number, arr: any[]) => {
+        const _data = selectedData.current;
+        const formattedDefaultValue: any = changedVal !== '' ? VALUE_BY_BRACES ? extractContentsOfBraces(changedVal) : changedVal.split(',') : [];
+        let _labels = Array.isArray(_data.labels) && _data.labels.length > 0 ? _data.labels : [];
+
+        // Sometimes the array may be empty due to rendering speed
+        if (_labels.length === 0) {
+            _labels = formattedDefaultValue.map((s: string | number) => s.toString().replace(/[\w\s]/gi, '').replace(/\[\]/g, ''));
+        }
+
+        
+        return _labels.length > 0 ? _labels.map((item: any, i: number, arr: any[]) => {
             if (arr.length - 1 === i) {
                 return (
                     <div key={i}>
@@ -1065,7 +1064,6 @@ const CascadingSelect = (props: CascadingSelectProps) => {
         }) : '';
 
     }
-
     function arrowGenerator() {
         return displayResultArrow ? displayResultArrow : <svg viewBox="0 0 22 22" width="8px"><path d="m345.44 248.29l-194.29 194.28c-12.359 12.365-32.397 12.365-44.75 0-12.354-12.354-12.354-32.391 0-44.744l171.91-171.91-171.91-171.9c-12.354-12.359-12.354-32.394 0-44.748 12.354-12.359 32.391-12.359 44.75 0l194.29 194.28c6.177 6.18 9.262 14.271 9.262 22.366 0 8.099-3.091 16.196-9.267 22.373" transform="matrix(.03541-.00013.00013.03541 2.98 3.02)" fill="#a5a5a5" /></svg>;
     }
@@ -1146,7 +1144,7 @@ const CascadingSelect = (props: CascadingSelectProps) => {
 
 
 
-                            {data.map((item: any, level: number) => {
+                            {listData.current.map((item: any, level: number) => {
 
                                 if (item.length > 0) {
                                     return (
@@ -1157,7 +1155,7 @@ const CascadingSelect = (props: CascadingSelectProps) => {
                                                 data={item}
                                                 cleanNodeBtnClassName={cleanNodeBtnClassName}
                                                 cleanNodeBtnContent={cleanNodeBtnContent}
-                                                selectEv={(e, value, index) => handleClickItem(e, value, index, level, data)}
+                                                selectEv={(e, value, index) => handleClickItem(e, value, index, level, listData.current)}
                                             />
                                         </li>
                                     )
@@ -1175,7 +1173,7 @@ const CascadingSelect = (props: CascadingSelectProps) => {
 
                 <div className="cas-select__val" onClick={handleDisplayOptions}>
 
-                    {displayResult ? (selectedData.current!.labels && selectedData.current!.labels.length > 0 ? <div className="cas-select__result">{displayInfo(false)}</div> : null) : null}
+                    {displayResult ? <div className="cas-select__result">{displayInfo()}</div> : null}
 
 
                     <input

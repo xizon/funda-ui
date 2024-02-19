@@ -386,28 +386,6 @@ export default () => {
 
 
 
-
-
-
-             <CascadingSelectE2E
-                value="{2[2]}"
-                name="name"
-                label="String"
-                displayResult={true}
-                valueType="value"
-                .....
-            />
-
-             <CascadingSelectE2E
-                value=""
-                name="name"
-                label="String"
-                displayResult={true}
-                valueType="label"
-                .....
-            />
-
-
         </>
     );
 }
@@ -461,9 +439,9 @@ class DataService {
             },
             {
                 "parent_id": 0,
-                "item_code": 999,
+                "id": 999,
                 "item_name": "No item fetch",
-                "item_type": "none"
+                "item_code": 'no-match'
             }
         ];   
 
