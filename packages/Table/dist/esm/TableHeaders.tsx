@@ -42,13 +42,24 @@ const TableHeaders = (props: TableHeadersProps) => {
     } = props;
     
 
-
+    sortable
     return data ? (
         <>
             <thead className={headClassName ? headClassName : ''}>
                 <tr>
                     {data.map((item: any, i: number) => {
-                        return <th key={i} scope="col" data-sort-type={item.type} data-table-text={item.content.replace(/(<([^>]+)>)/ig, '')} data-table-col={i} style={item.style ? item.style : (item.width ? ((typeof window !== 'undefined' && window.innerWidth > 768) ? {width: item.width} : {}) : {})} className={item.className || ''}>
+
+                        const itemSortable = item.type === false || item.type?.toString() === 'false' || item.type?.toString() === '0' || typeof item.type === 'undefined' ? false : true;
+
+                        return <th 
+                            key={i} 
+                            scope="col" 
+                            data-sort-type={item.type} 
+                            data-table-text={item.content.replace(/(<([^>]+)>)/ig, '')} 
+                            data-table-col={i} 
+                            style={item.style ? item.style : (item.width ? ((typeof window !== 'undefined' && window.innerWidth > 768) ? {width: item.width} : {}) : {})} 
+                            className={item.className || ''}
+                        >
                             {i === 0 ? <span className="checkbox-trigger" style={{visibility: useRadio ? 'hidden' : 'visible'}}>
                                 <Checkbox
                                     wrapperClassName=""
@@ -121,7 +132,7 @@ const TableHeaders = (props: TableHeadersProps) => {
                                 />
                             </span> : null}
                             <span dangerouslySetInnerHTML={{ __html: `${item.content}` }}></span>
-                            {sortable ? <span className="sort-trigger" onClick={evSort}><svg width="1em" height="1em" viewBox="0 0 18 18">
+                            {sortable && itemSortable ? <span className="sort-trigger" onClick={evSort}><svg width="1em" height="1em" viewBox="0 0 18 18">
                                 <g stroke="none" strokeWidth="1" fill="none" fillRule="evenodd">
                                     <path d="M9.5,3 L13,8 L6,8 L9.5,3 L9.5,3 Z M6,11 L13,11 L9.5,16 L6,11 L6,11 Z" id="path" fill="#000000">
                                     </path>

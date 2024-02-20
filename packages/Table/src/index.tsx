@@ -237,7 +237,7 @@ const Table = (props: TableProps) => {
 		const curIndex = el.dataset.tableCol;
 		const targetComparator = [].slice.call(tbodyRef.current.querySelectorAll(`[data-table-col="${curIndex}"]`));
 	
-		if ( filterType === false ) return false;
+		if ( filterType === 'false' || filterType === '0' ) return false;
 
 
 		//sort of HTML elements

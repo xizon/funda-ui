@@ -2035,10 +2035,12 @@ var TableHeaders = function TableHeaders(props) {
     updategetCheckedRootData = props.updategetCheckedRootData,
     onCheck = props.onCheck,
     evSort = props.evSort;
+  sortable;
   return data ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("thead", {
     className: headClassName ? headClassName : ''
   }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("tr", null, data.map(function (item, i) {
-    var _filter$;
+    var _item$type, _item$type2, _filter$;
+    var itemSortable = item.type === false || ((_item$type = item.type) === null || _item$type === void 0 ? void 0 : _item$type.toString()) === 'false' || ((_item$type2 = item.type) === null || _item$type2 === void 0 ? void 0 : _item$type2.toString()) === '0' || typeof item.type === 'undefined' ? false : true;
     return /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("th", {
       key: i,
       scope: "col",
@@ -2123,7 +2125,7 @@ var TableHeaders = function TableHeaders(props) {
       dangerouslySetInnerHTML: {
         __html: "".concat(item.content)
       }
-    }), sortable ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("span", {
+    }), sortable && itemSortable ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("span", {
       className: "sort-trigger",
       onClick: evSort
     }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("svg", {
@@ -2379,7 +2381,7 @@ var Table = function Table(props) {
     var filterType = el.dataset.sortType;
     var curIndex = el.dataset.tableCol;
     var targetComparator = [].slice.call(tbodyRef.current.querySelectorAll("[data-table-col=\"".concat(curIndex, "\"]")));
-    if (filterType === false) return false;
+    if (filterType === 'false' || filterType === '0') return false;
 
     //sort of HTML elements
     var sortBy = function sortBy(a, b) {
