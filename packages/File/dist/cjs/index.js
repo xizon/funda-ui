@@ -96,7 +96,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(787);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-var _excluded = ["wrapperClassName", "controlClassName", "labelClassName", "labelHoverClassName", "fetchUrl", "fetchMethod", "fetchParams", "multiple", "submitLabel", "submitClassName", "disabled", "required", "value", "label", "name", "id", "data", "tabIndex", "fetchFuncAsync", "fetchFuncMethod", "fetchFuncMethodParams", "onChange", "onComplete", "onProgress"];
+var _excluded = ["wrapperClassName", "controlClassName", "labelClassName", "labelHoverClassName", "inline", "fetchUrl", "fetchMethod", "fetchParams", "multiple", "submitLabel", "submitClassName", "disabled", "required", "value", "label", "name", "id", "data", "tabIndex", "fetchFuncAsync", "fetchFuncMethod", "fetchFuncMethodParams", "onChange", "onComplete", "onProgress"];
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
 function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys(Object(source), !0).forEach(function (key) { _defineProperty(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
 function _defineProperty(obj, key, value) { key = _toPropertyKey(key); if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
@@ -126,6 +126,7 @@ var File = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(functi
     controlClassName = props.controlClassName,
     labelClassName = props.labelClassName,
     labelHoverClassName = props.labelHoverClassName,
+    inline = props.inline,
     fetchUrl = props.fetchUrl,
     fetchMethod = props.fetchMethod,
     fetchParams = props.fetchParams,
@@ -268,7 +269,7 @@ var File = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(functi
   function handleSubmit(event) {
     event.preventDefault();
     var curFiles = fileInputRef.current.files;
-    onProgress === null || onProgress === void 0 ? void 0 : onProgress(curFiles, submitRef.current);
+    onProgress === null || onProgress === void 0 ? void 0 : onProgress(curFiles, fileInputRef.current, submitRef.current);
     if (fetchUrl) {
       var formData = new FormData();
       formData.append('action', 'upload_plug_action');
@@ -281,7 +282,7 @@ var File = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(functi
         }
       }).then(function (response) {
         var jsonData = response.data;
-        onComplete === null || onComplete === void 0 ? void 0 : onComplete(event, submitRef.current, jsonData, incomingData);
+        onComplete === null || onComplete === void 0 ? void 0 : onComplete(fileInputRef.current, submitRef.current, jsonData, incomingData);
 
         // update default value
         setDefaultValue(undefined);
@@ -369,7 +370,7 @@ var File = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(functi
     }
 
     //
-    onChange === null || onChange === void 0 ? void 0 : onChange(event, submitRef.current, fileInputRef.current.files);
+    onChange === null || onChange === void 0 ? void 0 : onChange(fileInputRef.current, submitRef.current, fileInputRef.current.files);
   }
   function fileNames() {
     var current = fileInputRef.current;
@@ -403,6 +404,10 @@ var File = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(functi
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
     className: wrapperClassName || wrapperClassName === '' ? wrapperClassName : "mb-3 position-relative upload-control",
     ref: rootRef
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+    className: "upload-control-group d-flex ".concat(typeof inline === 'undefined' || inline === false ? 'flex-column' : 'flex-row')
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+    className: "upload-control-group__control"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("label", {
     ref: labelRef,
     onMouseEnter: handleLabelEnter,
@@ -413,6 +418,8 @@ var File = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(functi
       opacity: disabled ? 0.5 : 1
     },
     htmlFor: idRes,
+    "data-label": "1",
+    "data-input-id": idRes,
     className: "form-label d-inline"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", {
     className: labelClassName ? labelClassName : 'btn btn-outline-secondary',
@@ -432,6 +439,11 @@ var File = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(functi
     className: "text-danger"
   }, "*")) : '')), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
     className: "input-group"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+    className: "upload-control-group__control-inner",
+    style: {
+      display: 'none'
+    }
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("input", _extends({
     ref: function ref(node) {
       fileInputRef.current = node;
@@ -454,16 +466,17 @@ var File = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(functi
     onKeyUp: handleFileInput,
     onChange: handleChange,
     disabled: disabled || null,
-    required: required || null,
-    style: {
-      display: 'none'
-    }
-  }, attributes)), typeof defaultValue !== 'undefined' ? fileNames() : null, defaultValue), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", {
+    required: required || null
+  }, attributes))))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+    className: "upload-control-group__btn"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", {
     ref: submitRef,
     className: submitClassName ? submitClassName + " ".concat(disabled ? 'disabled' : '') : 'btn btn-primary mt-2' + " ".concat(disabled ? 'disabled' : ''),
     type: "button",
     onClick: handleSubmit
-  }, submitLabel ? submitLabel : null)));
+  }, submitLabel ? submitLabel : null))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+    className: "pload-control-result"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("small", null, typeof defaultValue !== 'undefined' ? fileNames() : null, defaultValue))));
 });
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (File);
 })();

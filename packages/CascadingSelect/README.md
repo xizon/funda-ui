@@ -508,7 +508,7 @@ export default () => {
 
                     /*
                     // prevent orginal data
-                    let placesMap: any = {};
+                    let placesMap: Record<string, unknown[]> = {};
                     for (const val of res) {
                         placesMap[val.item_code] = [val.item_name, val.item_type];
                     }

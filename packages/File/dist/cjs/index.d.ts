@@ -9,6 +9,7 @@ declare type FileProps = {
     controlClassName?: string;
     labelClassName?: string;
     labelHoverClassName?: string;
+    inline?: boolean;
     fetchUrl?: string;
     fetchMethod?: string;
     fetchParams?: any;
@@ -31,7 +32,7 @@ declare type FileProps = {
     fetchFuncMethodParams?: any[];
     onChange?: (e: any, e2: any, value: any) => void;
     onComplete?: (e: any, e2: any, callback: any, incomingData: string | null | undefined) => void;
-    onProgress?: (files: any, e2: any) => void;
+    onProgress?: (files: any, e: any, e2: any) => void;
 };
 declare const File: React.ForwardRefExoticComponent<FileProps & React.RefAttributes<unknown>>;
 export default File;

@@ -423,7 +423,7 @@ export default () => {
                                     "fetchCallback": (res) => {
 
                                         // prevent orginal data
-                                        let placesMap: any = {};
+                                        let placesMap: Record<string, unknown[]> = {};
                                         for (const val of res) {
                                             placesMap[val.item_code] = [val.item_name, val.item_type, val.item_code];
                                         }
@@ -450,7 +450,7 @@ export default () => {
                                     "fetchCallback": (res) => {
 
                                         // prevent orginal data
-                                        let placesMap: any = {};
+                                        let placesMap: Record<string, unknown[]> = {};
                                         for (const val of res) {
                                             placesMap[val.item_code] = [val.item_name, val.item_type, val.item_code];
                                         }
@@ -545,6 +545,14 @@ export default () => {
                             if (typeof field.id !== 'undefined' ) field.id = field.id.replace('%i%', keyIndex);
                             if (typeof field.dataset.id !== 'undefined' ) field.dataset.id = field.dataset.id.replace('%i%', keyIndex);
                         });
+
+
+                        // if using `<File />` component 
+                        // ==> <label for="xxxx-%i%-yyyyy">
+                        [].slice.call(node.querySelectorAll(`[data-label]`)).forEach((field: any) => {
+                            if (field.getAttribute('for') !== null) field.setAttribute('for', field.getAttribute('for').replace('%i%', keyIndex));
+                        });
+
                     });
 
 

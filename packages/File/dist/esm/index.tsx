@@ -11,6 +11,7 @@ type FileProps = {
     controlClassName?: string;
     labelClassName?: string;
     labelHoverClassName?: string;
+    inline?: boolean;
     fetchUrl?: string;
     fetchMethod?: string;
     fetchParams?: any;
@@ -33,7 +34,7 @@ type FileProps = {
     fetchFuncMethodParams?: any[];
     onChange?: (e: any, e2: any, value: any) => void;
     onComplete?: (e: any, e2: any, callback: any, incomingData: string | null | undefined) => void;
-    onProgress?: (files: any, e2: any) => void;
+    onProgress?: (files: any, e: any, e2: any) => void;
 
 };
 
@@ -44,6 +45,7 @@ const File = forwardRef((props: FileProps, ref: any) => {
         controlClassName,
         labelClassName,
         labelHoverClassName,
+        inline,
         fetchUrl,
         fetchMethod,
         fetchParams,
@@ -140,7 +142,7 @@ const File = forwardRef((props: FileProps, ref: any) => {
         
         const curFiles = fileInputRef.current.files;
 
-        onProgress?.(curFiles, submitRef.current);
+        onProgress?.(curFiles, fileInputRef.current, submitRef.current);
 
         if (fetchUrl) {
 
@@ -155,7 +157,7 @@ const File = forwardRef((props: FileProps, ref: any) => {
                 headers: { 'Content-Type': 'multipart/form-data' }
             }).then(function (response: any) {
                 const jsonData = response.data;
-                onComplete?.(event, submitRef.current, jsonData, incomingData);
+                onComplete?.(fileInputRef.current, submitRef.current, jsonData, incomingData);
 
                 // update default value
                 setDefaultValue(undefined);
@@ -214,7 +216,7 @@ const File = forwardRef((props: FileProps, ref: any) => {
         }
 
         //
-        onChange?.(event, submitRef.current, fileInputRef.current.files);
+        onChange?.(fileInputRef.current, submitRef.current, fileInputRef.current.files);
     }
 
     function fileNames() {
@@ -251,48 +253,72 @@ const File = forwardRef((props: FileProps, ref: any) => {
 
 
             <div className={wrapperClassName || wrapperClassName === '' ? wrapperClassName : "mb-3 position-relative upload-control"} ref={rootRef}>
-                <label
-                    ref={labelRef}
-                    onMouseEnter={handleLabelEnter}
-                    onMouseLeave={handleLabelLeave}
-                    style={{ cursor: 'pointer', pointerEvents: disabled ? 'none' : 'auto', opacity: disabled ? 0.5 : 1 }}
-                    htmlFor={idRes}
-                    className="form-label d-inline"
-                ><button className={labelClassName ? labelClassName : 'btn btn-outline-secondary'} type="button" style={{ pointerEvents: 'none' }}>{label ? label : <svg width="25px" height="25px" viewBox="0 0 1024 1024"><path d="M512 256l144.8 144.8-36.2 36.2-83-83v311.6h-51.2V354l-83 83-36.2-36.2L512 256zM307.2 716.8V768h409.6v-51.2H307.2z" fill="#000000" fillRule="evenodd" /></svg>} {required ? <><span className="text-danger">*</span></> : ''}</button></label>
+                
 
+                <div className={`upload-control-group d-flex ${typeof inline === 'undefined' || inline === false ? 'flex-column' : 'flex-row' }`}>
+                    <div className="upload-control-group__control">
+                        {/* INPUT */}
+                        <label
+                            ref={labelRef}
+                            onMouseEnter={handleLabelEnter}
+                            onMouseLeave={handleLabelLeave}
+                            style={{ cursor: 'pointer', pointerEvents: disabled ? 'none' : 'auto', opacity: disabled ? 0.5 : 1 }}
+                            htmlFor={idRes}
+                            data-label="1"
+                            data-input-id={idRes}
+                            className="form-label d-inline"
+                        >
+                            <button className={labelClassName ? labelClassName : 'btn btn-outline-secondary'} type="button" style={{ pointerEvents: 'none' }}>{label ? label : <svg width="25px" height="25px" viewBox="0 0 1024 1024"><path d="M512 256l144.8 144.8-36.2 36.2-83-83v311.6h-51.2V354l-83 83-36.2-36.2L512 256zM307.2 716.8V768h409.6v-51.2H307.2z" fill="#000000" fillRule="evenodd" /></svg>} {required ? <><span className="text-danger">*</span></> : ''}</button>
+                        </label>
 
-                <div className="input-group">
-                    <input
-                        ref={(node) => {
-                            fileInputRef.current = node;
-                            if (typeof ref === 'function') {
-                                ref(node);
-                            } else if (ref) {
-                                ref.current = node;
-                            }
-                        }}
-                        tabIndex={tabIndex || 0}
-                        className={controlClassName || controlClassName === '' ? controlClassName : "form-control"}
-                        id={idRes}
-                        type="file"
-                        // The onChange should trigger updates whenever
-                        // the value changes?
-                        // Try to select a file, then try selecting another one.
-                        multiple={multiple || false}
-                        name={name}
-                        onKeyUp={handleFileInput}
-                        onChange={handleChange}
-                        disabled={disabled || null}
-                        required={required || null}
-                        style={{ display: 'none' }}
-                        {...attributes}
-                    />
-                    {typeof defaultValue !== 'undefined' ? fileNames() : null}
-                    {defaultValue}
-
+                        <div className="input-group">
+                            <div className="upload-control-group__control-inner" style={{ display: 'none' }}>
+                                <input
+                                    ref={(node) => {
+                                        fileInputRef.current = node;
+                                        if (typeof ref === 'function') {
+                                            ref(node);
+                                        } else if (ref) {
+                                            ref.current = node;
+                                        }
+                                    }}
+                                    tabIndex={tabIndex || 0}
+                                    className={controlClassName || controlClassName === '' ? controlClassName : "form-control"}
+                                    id={idRes}
+                                    type="file"
+                                    // The onChange should trigger updates whenever
+                                    // the value changes?
+                                    // Try to select a file, then try selecting another one.
+                                    multiple={multiple || false}
+                                    name={name}
+                                    onKeyUp={handleFileInput}
+                                    onChange={handleChange}
+                                    disabled={disabled || null}
+                                    required={required || null}
+                                    {...attributes}
+                                />
+                            </div>
+                        </div>
+                        {/* /INPUT */}
+                    </div>
+                    <div className="upload-control-group__btn">
+                        {/* BUTTON */}
+                        <button ref={submitRef} className={submitClassName ? submitClassName + ` ${disabled ? 'disabled' : ''}` : 'btn btn-primary mt-2' + ` ${disabled ? 'disabled' : ''}`} type="button" onClick={handleSubmit}>{submitLabel ? submitLabel : null}</button>
+                        {/* BUTTON */}
+                    </div>
                 </div>
 
-                <button ref={submitRef} className={submitClassName ? submitClassName + ` ${disabled ? 'disabled' : ''}` : 'btn btn-primary mt-2' + ` ${disabled ? 'disabled' : ''}`} type="button" onClick={handleSubmit}>{submitLabel ? submitLabel : null}</button>
+                {/* RESULT */}
+                <div className="pload-control-result">
+                    <small>
+                        {typeof defaultValue !== 'undefined' ? fileNames() : null}
+                        {defaultValue}
+                    </small>
+                </div>
+                {/* /RESULT */}
+
+
+                
 
 
             </div>

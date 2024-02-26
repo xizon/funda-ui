@@ -496,7 +496,7 @@ export default () => {
                         "fetchCallback": (res) => {
 
                             // prevent orginal data
-                            let placesMap: any = {};
+                            let placesMap: Record<string, unknown[]> = {};
                             for (const val of res) {
                                 placesMap[val.id] = [val.item_name, val.item_type, val.id];
                             }

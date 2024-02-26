@@ -201,7 +201,7 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
     let selectedSign: boolean = false;
     const MULTI_SEL_VALID = multiSelect ? multiSelect.valid : false;
     const MULTI_SEL_LABEL = multiSelect ? multiSelect.selectAllLabel : 'Select all options';
-    const MULTI_SEL_SELECTED_STATUS = {
+    const MULTI_SEL_SELECTED_STATUS: Record<string, string> = {
         itemsLabel: '{num} Selected',
         allItemsLabel: 'All Content',
         noneLabel: 'No items selected',
@@ -1539,7 +1539,7 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
         event.preventDefault();
 
         // It is valid when a single selection
-        const emptyValue = {label: '', value: '', queryString: ''};
+        const emptyValue: Record<string, string> = {label: '', value: '', queryString: ''};
         handleSelect(null, JSON.stringify(emptyValue), [], []);
 
         if (typeof (onChange) === 'function') {

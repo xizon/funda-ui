@@ -15,6 +15,7 @@ import File from 'funda-ui/File';
 | `labelHoverClassName` | string | `btn btn-primary` | The class name of the select button on hover. |
 | `submitLabel` | string \| ReactNode | - | Specifies a label for submit button |
 | `submitClassName` | string | `btn btn-primary mt-2` | The class name of the submit button. |
+| `inline` | boolean | false | If true the group are on the same horizontal row. |
 | `fetchUrl` | string | - | If the URL exists, it is passed using the default fetch method ([Fetch API](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch)). |
 | `fetchMethod` | string | `POST` | The request's method (GET, POST, etc.) <blockquote>Valid when the `fetchUrl` attribute is not empty</blockquote>|
 | `fetchParams` | JSON Object | - | Set of query parameters in the request <blockquote>Valid when the `fetchUrl` attribute is not empty</blockquote> |
@@ -28,9 +29,9 @@ import File from 'funda-ui/File';
 | `fetchFuncAsync` | Constructor | - | A method as a string from the constructor.  |
 | `fetchFuncMethod` | string  | - | When the property is *true*, every time the select changes, a data request will be triggered. <br /><blockquote>The methord must be a Promise Object.</blockquote> |
 | `fetchFuncMethodParams` | array  | - | The parameter passed by the method, it is an array. <br />Note: the first element is a query string, the second element is the number of queried data (usually a number), and then you can increase the third, or fourth, and more parameters. <br />Such as `['',0]`, `['',99,'string 1','string 2']` <br /><blockquote>There should be at least one parameter which is the query string.</blockquote> |
-| `onChange` | function  | - | Call a function when the value of an HTML element is changed. It returns three callback values. <br /> <ol><li>The first is the control (**HTML Element**)</li><li>The second is an HTMLElement of submit button</li><li> The third is current value (**[An object of FileList](https://developer.mozilla.org/en-US/docs/Web/API/FileList)**)</li></ol> |
-| `onProgress` | function  | - | Call a function when upload is in progress. It returns two callback values. <br /> <ol><li>The first is (**[An object of FileList](https://developer.mozilla.org/en-US/docs/Web/API/FileList)**)</li><li>The second is an HTMLElement of submit button</li></ol> |
-| `onComplete` | function  | - | Call a function when the modal is submitted. It returns four callback values. <br /> <ol><li>The one is the trigger object</li><li>The second parameter is an HTMLElement of submit button</li><li>The third parameter is the callback from backend (**JSON Object Literals**)</li><li>The last is incoming data from attribute `data`.</li></ol> |
+| `onChange` | function  | - | Call a function when the value of an HTML element is changed. It returns three callback values. <br /> <ol><li>The first is the file input (**HTML Element**)</li><li>The second parameter is submit button (**HTML Element**)</li><li> The third is current value (**[An object of FileList](https://developer.mozilla.org/en-US/docs/Web/API/FileList)**)</li></ol> |
+| `onProgress` | function  | - | Call a function when upload is in progress. It returns three callback values. <br /> <ol><li>The first is (**[An object of FileList](https://developer.mozilla.org/en-US/docs/Web/API/FileList)**)</li><li>The second is the file input (**HTML Element**)</li><li>The last parameter is submit button (**HTML Element**)</li></ol> |
+| `onComplete` | function  | - | Call a function when the modal is submitted. It returns four callback values. <br /> <ol><li>The one is the file input (**HTML Element**)</li><li>The second parameter is submit button (**HTML Element**)</li><li>The third parameter is the callback from backend (**JSON Object Literals**)</li><li>The last is incoming data from attribute `data`. (**Any**)</li></ol> |
 
 
 
@@ -48,15 +49,15 @@ import File from 'funda-ui/File';
 
 export default () => {
 
-    function handleChange(e, submitEl, value) {
-        console.log(e, submitEl, value);
+    function handleChange(input: HTMLInputElement, submitEl: HTMLElement, value: any) {
+        console.log(input, submitEl, value);
     }
 
-    function handleComplete(e, submitEl, value) {
-        console.log(e, value);
+    function handleComplete(input: HTMLInputElement, submitEl: HTMLElement, value: any) {
+       console.log(input, value);
     }
 
-    function handleProgress(files, submitEl) {
+    function handleProgress(files: any[], submitEl: HTMLElement) {
         console.log(files);
     }
 
@@ -82,6 +83,39 @@ export default () => {
     );
 }
 ```
+
+
+### Upload controls and buttons are on the same line
+
+Use the `inline` attribute.
+
+
+```js
+import React from "react";
+import File from 'funda-ui/File';
+
+export default () => {
+    return (
+        <>
+            <File 
+                fetchUrl="http://api"
+                fetchMethod="POST"
+                fetchParams={{
+                    Authorization: `Bearer xxxx-xxxx-xxxx-xxxx`,
+                }}
+                label="Select file" 
+                labelClassName="btn btn-sm btn-outline-secondary px-0 border-0 text-primary"
+                labelHoverClassName="btn btn-sm btn-outline-secondary px-0 border-0 text-primary"
+                submitLabel="Upload" 
+                submitClassName="btn btn-sm btn-primary"
+                inline
+            />
+
+        </>
+    );
+}
+```
+
 
 
 ### Use a custom API interface:
@@ -117,15 +151,15 @@ class UploadService {
 
 export default () => {
 
-    function handleChange(e, submitEl, value) {
-        console.log(e, submitEl, value);
+    function handleChange(input: HTMLInputElement, submitEl: HTMLElement, value: any) {
+        console.log(input, submitEl, value);
     }
 
-    function handleComplete(e, submitEl, value) {
-        console.log(e, value);
+    function handleComplete(input: HTMLInputElement, submitEl: HTMLElement, value: any) {
+       console.log(input, value);
     }
 
-    function handleProgress(files, submitEl) {
+    function handleProgress(files: any[], submitEl: HTMLElement) {
         console.log(files);
     }
 
@@ -230,16 +264,16 @@ export default () => {
 
 
 
-    function handleChange(e, submitEl, value) {
+    function handleChange(input: HTMLInputElement, submitEl: HTMLElement, value: any) {
         setFilesData([]);
-        console.log(e, submitEl, value);
+        console.log(input, submitEl, value);
     }
 
-    function handleComplete(e, submitEl, value) {
-        console.log(e, value);
+    function handleComplete(input: HTMLInputElement, submitEl: HTMLElement, value: any) {
+       console.log(input, value);
     }
 
-    function handleProgress(files, submitEl) {
+    function handleProgress(files: any[], submitEl: HTMLElement) {
         if (files.length === 0) {
             alert('Please select a file')
             return;
