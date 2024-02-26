@@ -167,7 +167,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
             return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;
           }, _typeof(obj);
         }
-        var _excluded = ["wrapperClassName", "disabled", "required", "value", "label", "name", "id", "checked", "indeterminate", "style", "tabIndex", "onChange", "onBlur", "onFocus"];
+        var _excluded = ["wrapperClassName", "itemSelectedClassName", "disabled", "required", "value", "label", "name", "id", "checked", "indeterminate", "style", "tabIndex", "onChange", "onBlur", "onFocus"];
         function _extends() {
           _extends = Object.assign ? Object.assign.bind() : function (target) {
             for (var i = 1; i < arguments.length; i++) {
@@ -309,6 +309,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
         }
         var Checkbox = /*#__PURE__*/(0, react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(function (props, _ref) {
           var wrapperClassName = props.wrapperClassName,
+            itemSelectedClassName = props.itemSelectedClassName,
             disabled = props.disabled,
             required = props.required,
             value = props.value,
@@ -369,7 +370,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
             }
           }, [checked, indeterminate]);
           return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react__WEBPACK_IMPORTED_MODULE_0___default().Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-            className: wrapperClassName || wrapperClassName === '' ? wrapperClassName : "mb-3 position-relative",
+            className: "".concat(wrapperClassName || wrapperClassName === '' ? wrapperClassName : "mb-3 position-relative", " ").concat(val ? itemSelectedClassName || 'item-selected' : ''),
             ref: rootRef
           }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
             className: "form-check"

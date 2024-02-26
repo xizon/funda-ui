@@ -7,6 +7,7 @@ declare module 'react' {
 declare type CheckboxOptionChangeFnType = (arg1: any, arg2: any) => void;
 declare type CheckboxProps = {
     wrapperClassName?: string;
+    itemSelectedClassName?: string;
     value: string | boolean;
     label?: React.ReactNode | string;
     name?: string;

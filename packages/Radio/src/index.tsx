@@ -18,6 +18,7 @@ type RadioProps = {
     wrapperClassName?: string;
     groupWrapperClassName?: string;
     groupLabelClassName?: string;
+    itemSelectedClassName?: string;
     value?: string;
     label?: React.ReactNode | string;
     name?: string;
@@ -50,6 +51,7 @@ const Radio = (props: RadioProps) => {
         wrapperClassName,
         groupWrapperClassName,
         groupLabelClassName,
+        itemSelectedClassName,
         disabled,
         required,
         value,
@@ -286,7 +288,7 @@ const Radio = (props: RadioProps) => {
 
                     {item.optgroup.map((opt: any, optIndex: number) => {
 
-                        return <div key={'option-' + optIndex} className={inline ? `form-check form-check-inline` : `form-check`}>
+                        return <div key={'option-' + optIndex} className={`${inline ? `form-check form-check-inline` : `form-check`} ${controlValue == opt.value ? (itemSelectedClassName || 'item-selected') : ''}`}>
                                 <div className="d-inline-block">
                                     <input
                                         tabIndex={tabIndex || 0}
@@ -324,7 +326,7 @@ const Radio = (props: RadioProps) => {
                 </div>;
         } else {
 
-            return <div key={'option-' + index} className={inline ? `form-check form-check-inline` : `form-check`}>
+            return <div key={'option-' + index} className={`${inline ? `form-check form-check-inline` : `form-check`} ${controlValue == item.value ? (itemSelectedClassName || 'item-selected') : ''}`}>
                     <div className="d-inline-block">
                         <input
                             tabIndex={tabIndex || 0}

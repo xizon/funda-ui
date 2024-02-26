@@ -167,7 +167,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
             return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;
           }, _typeof(obj);
         }
-        var _excluded = ["wrapperClassName", "disabled", "required", "value", "label", "name", "id", "checked", "indeterminate", "style", "tabIndex", "onChange", "onBlur", "onFocus"];
+        var _excluded = ["wrapperClassName", "itemSelectedClassName", "disabled", "required", "value", "label", "name", "id", "checked", "indeterminate", "style", "tabIndex", "onChange", "onBlur", "onFocus"];
         function _extends() {
           _extends = Object.assign ? Object.assign.bind() : function (target) {
             for (var i = 1; i < arguments.length; i++) {
@@ -309,6 +309,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
         }
         var Checkbox = /*#__PURE__*/(0, react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(function (props, _ref) {
           var wrapperClassName = props.wrapperClassName,
+            itemSelectedClassName = props.itemSelectedClassName,
             disabled = props.disabled,
             required = props.required,
             value = props.value,
@@ -369,7 +370,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
             }
           }, [checked, indeterminate]);
           return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react__WEBPACK_IMPORTED_MODULE_0___default().Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-            className: wrapperClassName || wrapperClassName === '' ? wrapperClassName : "mb-3 position-relative",
+            className: "".concat(wrapperClassName || wrapperClassName === '' ? wrapperClassName : "mb-3 position-relative", " ").concat(val ? itemSelectedClassName || 'item-selected' : ''),
             ref: rootRef
           }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
             className: "form-check"
@@ -577,7 +578,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
         var react__WEBPACK_IMPORTED_MODULE_0__ = __nested_webpack_require_1471__(787);
         /* harmony import */
         var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__nested_webpack_require_1471__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-        var _excluded = ["wrapperClassName", "groupWrapperClassName", "groupLabelClassName", "disabled", "required", "value", "label", "name", "id", "options", "inline", "style", "tabIndex", "fetchFuncAsync", "fetchFuncMethod", "fetchFuncMethodParams", "fetchCallback", "onFetch", "onLoad", "onClick", "onChange", "onBlur", "onFocus"];
+        var _excluded = ["wrapperClassName", "groupWrapperClassName", "groupLabelClassName", "itemSelectedClassName", "disabled", "required", "value", "label", "name", "id", "options", "inline", "style", "tabIndex", "fetchFuncAsync", "fetchFuncMethod", "fetchFuncMethodParams", "fetchCallback", "onFetch", "onLoad", "onClick", "onChange", "onBlur", "onFocus"];
         function _regeneratorRuntime() {
           "use strict";
 
@@ -1027,6 +1028,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
           var wrapperClassName = props.wrapperClassName,
             groupWrapperClassName = props.groupWrapperClassName,
             groupLabelClassName = props.groupLabelClassName,
+            itemSelectedClassName = props.itemSelectedClassName,
             disabled = props.disabled,
             required = props.required,
             value = props.value,
@@ -1245,7 +1247,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
               }, item.label), item.optgroup.map(function (opt, optIndex) {
                 return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
                   key: 'option-' + optIndex,
-                  className: inline ? "form-check form-check-inline" : "form-check"
+                  className: "".concat(inline ? "form-check form-check-inline" : "form-check", " ").concat(controlValue == opt.value ? itemSelectedClassName || 'item-selected' : '')
                 }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
                   className: "d-inline-block"
                 }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("input", _extends({
@@ -1287,7 +1289,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
             } else {
               return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
                 key: 'option-' + index,
-                className: inline ? "form-check form-check-inline" : "form-check"
+                className: "".concat(inline ? "form-check form-check-inline" : "form-check", " ").concat(controlValue == item.value ? itemSelectedClassName || 'item-selected' : '')
               }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
                 className: "d-inline-block"
               }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("input", _extends({

@@ -12,6 +12,7 @@ import Radio from 'funda-ui/Radio';
 | `wrapperClassName` | string | `mb-3 position-relative` | The class name of the control wrapper. |
 | `groupWrapperClassName` | string | - | The class name of the radio group wrapper. |
 | `groupLabelClassName` | string | - | The class name of the radio group label. |
+| `itemSelectedClassName` | string | `item-selected` | The class name of the item selected. |
 | `inline` | boolean | false | If true the group checkboxes or radios are on the same horizontal row. |
 | `options` | JSON Object Literals \| JSON Object | - | Set the default value using JSON string format for menu of options, like this: `[{"label": "Option 1","value": "value-1"},{"label": "<del style=color:red>deprecate</del>Option 2","value": "value-2"},{"label": "Option 3","value": "value-3","customAttr1": "attr1","customAttr2": "attr2"}]`<blockquote>Note: Use API data if database query exists. That is, the attribute `fetchXXXX`</blockquote> <br /><blockquote>The label string supports html tags</blockquote>|
 | `value` | string | - | Set a default value for this control |

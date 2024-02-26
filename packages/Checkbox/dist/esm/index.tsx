@@ -11,6 +11,7 @@ type CheckboxOptionChangeFnType = (arg1: any, arg2: any) => void;
 
 type CheckboxProps = {
     wrapperClassName?: string;
+    itemSelectedClassName?: string;
     value: string | boolean;
     label?: React.ReactNode | string;
     name?: string;
@@ -34,6 +35,7 @@ type CheckboxProps = {
 const Checkbox = forwardRef((props: CheckboxProps, ref: any) => {
     const {
         wrapperClassName,
+        itemSelectedClassName,
         disabled,
         required,
         value,
@@ -110,7 +112,7 @@ const Checkbox = forwardRef((props: CheckboxProps, ref: any) => {
     return (
         <>
 
-            <div className={wrapperClassName || wrapperClassName === '' ? wrapperClassName : "mb-3 position-relative"} ref={rootRef}>
+            <div className={`${wrapperClassName || wrapperClassName === '' ? wrapperClassName : "mb-3 position-relative"} ${val ? (itemSelectedClassName || 'item-selected') : ''}`} ref={rootRef}>
                 <div className="form-check">
                     <input
                         ref={(node) => {

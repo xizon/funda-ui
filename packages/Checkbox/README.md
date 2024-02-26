@@ -10,6 +10,7 @@ import Checkbox from 'funda-ui/Checkbox';
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |
 | `wrapperClassName` | string | `mb-3 position-relative` | The class name of the control wrapper. |
+| `itemSelectedClassName` | string | `item-selected` | The class name of the item selected. |
 | `checked` | boolean | false | Is it selected. |
 | `indeterminate` | boolean | false | Set a checkbox to indeterminate state. |
 | `value` | string | - | **(required)** Set a default value for this control. If unchecked, it will pass an empty value |

@@ -12,6 +12,7 @@ declare type RadioProps = {
     wrapperClassName?: string;
     groupWrapperClassName?: string;
     groupLabelClassName?: string;
+    itemSelectedClassName?: string;
     value?: string;
     label?: React.ReactNode | string;
     name?: string;
