@@ -216,21 +216,19 @@ const DropdownMenu = (props: DropdownMenuProps) => {
             // Determine whether it exceeds the far right or left side of the screen
             const _modalContent = modalRef.current;
             const _modalListContent = modalRef.current.querySelector('.dd-menu-list__inner');
-            const _modalBox = _modalContent.getBoundingClientRect();
-            const _modalListBox = _modalListContent.getBoundingClientRect();
+            const _modalBox = _modalListContent.getBoundingClientRect();
             const _iconRef: any = iconRef.current;
             
             
-            if (_modalListBox.right > window.innerWidth) {
+            if (_modalBox.right > window.innerWidth) {
                 const _modalOffsetPosition = _modalBox.right - window.innerWidth + EXCEEDED_SIDE_POS_OFFSET;
                 _modalContent.style.marginLeft = `-${_modalOffsetPosition}px`;
                 _iconRef.style.marginLeft = `${_modalOffsetPosition}px`;
-                
                 // console.log('_modalPosition: ', _modalOffsetPosition)
             }
 
 
-            if (_modalListBox.left < 0) {
+            if (_modalBox.left < 0) {
                 const _modalOffsetPosition = Math.abs(_modalBox.left) + EXCEEDED_SIDE_POS_OFFSET;
                 _modalContent.style.marginLeft = `${_modalOffsetPosition}px`;
                 _iconRef.style.marginLeft = `-${_modalOffsetPosition}px`;
