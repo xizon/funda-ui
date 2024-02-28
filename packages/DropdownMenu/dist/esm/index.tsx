@@ -215,10 +215,13 @@ const DropdownMenu = (props: DropdownMenuProps) => {
             //-----------            
             // Determine whether it exceeds the far right or left side of the screen
             const _modalContent = modalRef.current;
+            const _modalListContent = modalRef.current.querySelector('.dd-menu-list__inner');
             const _modalBox = _modalContent.getBoundingClientRect();
+            const _modalListBox = _modalListContent.getBoundingClientRect();
             const _iconRef: any = iconRef.current;
-
-            if (_modalBox.right > window.innerWidth) {
+            
+            
+            if (_modalListBox.right > window.innerWidth) {
                 const _modalOffsetPosition = _modalBox.right - window.innerWidth + EXCEEDED_SIDE_POS_OFFSET;
                 _modalContent.style.marginLeft = `-${_modalOffsetPosition}px`;
                 _iconRef.style.marginLeft = `${_modalOffsetPosition}px`;
@@ -227,7 +230,7 @@ const DropdownMenu = (props: DropdownMenuProps) => {
             }
 
 
-            if (_modalBox.left < 0) {
+            if (_modalListBox.left < 0) {
                 const _modalOffsetPosition = Math.abs(_modalBox.left) + EXCEEDED_SIDE_POS_OFFSET;
                 _modalContent.style.marginLeft = `${_modalOffsetPosition}px`;
                 _iconRef.style.marginLeft = `-${_modalOffsetPosition}px`;
@@ -359,7 +362,7 @@ const DropdownMenu = (props: DropdownMenuProps) => {
                     
                     <ul 
                         ref={listRef}
-                        className={`${listClassName ? listClassName : 'dd-menu-default__inner'} ${isOpen ? (showClassName ? showClassName : 'show') : ''}`}
+                        className={`dd-menu-list__inner ${listClassName ? listClassName : 'dd-menu-default__inner'} ${isOpen ? (showClassName ? showClassName : 'show') : ''}`}
                     >
                         {selectOptionsListPresentation}
                     </ul>

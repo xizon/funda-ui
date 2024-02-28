@@ -420,9 +420,11 @@ var DropdownMenu = function DropdownMenu(props) {
       //-----------            
       // Determine whether it exceeds the far right or left side of the screen
       var _modalContent = modalRef.current;
+      var _modalListContent = modalRef.current.querySelector('.dd-menu-list__inner');
       var _modalBox = _modalContent.getBoundingClientRect();
+      var _modalListBox = _modalListContent.getBoundingClientRect();
       var _iconRef = iconRef.current;
-      if (_modalBox.right > window.innerWidth) {
+      if (_modalListBox.right > window.innerWidth) {
         var _modalOffsetPosition = _modalBox.right - window.innerWidth + EXCEEDED_SIDE_POS_OFFSET;
         _modalContent.style.marginLeft = "-".concat(_modalOffsetPosition, "px");
         _iconRef.style.marginLeft = "".concat(_modalOffsetPosition, "px");
@@ -430,7 +432,7 @@ var DropdownMenu = function DropdownMenu(props) {
         // console.log('_modalPosition: ', _modalOffsetPosition)
       }
 
-      if (_modalBox.left < 0) {
+      if (_modalListBox.left < 0) {
         var _modalOffsetPosition2 = Math.abs(_modalBox.left) + EXCEEDED_SIDE_POS_OFFSET;
         _modalContent.style.marginLeft = "".concat(_modalOffsetPosition2, "px");
         _iconRef.style.marginLeft = "-".concat(_modalOffsetPosition2, "px");
@@ -529,7 +531,7 @@ var DropdownMenu = function DropdownMenu(props) {
     className: "dd-menu-list__icon ".concat(isOpen ? 'active' : '')
   }), /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("ul", {
     ref: listRef,
-    className: "".concat(listClassName ? listClassName : 'dd-menu-default__inner', " ").concat(isOpen ? showClassName ? showClassName : 'show' : '')
+    className: "dd-menu-list__inner ".concat(listClassName ? listClassName : 'dd-menu-default__inner', " ").concat(isOpen ? showClassName ? showClassName : 'show' : '')
   }, selectOptionsListPresentation))));
 };
 /* harmony default export */ const src = (DropdownMenu);
