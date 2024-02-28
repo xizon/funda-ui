@@ -25,6 +25,7 @@ import EventCalendarTimeline from 'funda-ui/EventCalendarTimeline';
 | `tableTooltipDisabled` | boolean  | false | Disable table tooltip |
 | `tableTooltipDirection` | `top` \| `top-right` \| `top-left` \| `bottom` \| `bottom-right` \| `bottom-left` | bottom | Table tooltip direction of the tip. Defaults to `top`. |
 | `tableTooltipOffset` | number  | 10 | Table tooltip position offset |
+| `tableTooltipExceededSidePosOffset` | number | 15 | Table tooltip offset px that exceeds the far right or left side of the screen |
 | `tableTooltipSize` | `auto` \| `large` \| `medium` \| `small`  | auto | Table tooltip size of the content area. Defaults to `auto`. |
 | `tableCellMinWidth` | number  | 50 \| 100 | Define a minimum width in pixels for each cell in the content area. <blockquote>When `showWeek` is true, it defaults to **100**</blockquote> |
 | `draggable` | boolean | false | Indicates whether the content area can be dragged. |

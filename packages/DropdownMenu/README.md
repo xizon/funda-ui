@@ -13,6 +13,7 @@ import DropdownMenu from 'funda-ui/DropdownMenu';
 | `listClassName` | string | `dd-menu-default__inner` | The class name of the list. |
 | `hyperlinkClassName` | string | `dd-menu-default__item` | The class name of the hyperlink of each item. |
 | `showClassName` | string | `show` | Activates the class name for the display list |
+| `exceededSidePosOffset` | number | 15 | Offset px that exceeds the far right or left side of the screen |
 | `hoverOn` | boolean | false | Use hover to trigger opening. |
 | `hoverOff` | boolean | false | Use hover to trigger closing. |
 | `hoverDelay` | number | 150 | This will delay applying the hover effects. |

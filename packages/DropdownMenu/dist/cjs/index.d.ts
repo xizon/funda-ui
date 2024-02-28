@@ -8,6 +8,7 @@ declare type DropdownMenuProps = {
     listClassName?: string;
     hyperlinkClassName?: string;
     showClassName?: string;
+    exceededSidePosOffset?: number;
     hoverOn?: boolean;
     hoverOff?: boolean;
     hoverDelay?: number;

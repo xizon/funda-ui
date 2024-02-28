@@ -52,6 +52,7 @@ declare type EventCalendarTimelineProps = {
     tableCellMinWidth?: number;
     tableTooltipDirection?: string;
     tableTooltipOffset?: number;
+    tableTooltipExceededSidePosOffset?: number;
     tableTooltipSize?: string;
     tableTooltipDisabled?: boolean;
     /** -- */

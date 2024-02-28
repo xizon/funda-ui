@@ -1157,6 +1157,7 @@ var EventCalendarTimeline = function EventCalendarTimeline(props) {
     tableCellMinWidth = props.tableCellMinWidth,
     tableTooltipDirection = props.tableTooltipDirection,
     tableTooltipOffset = props.tableTooltipOffset,
+    tableTooltipExceededSidePosOffset = props.tableTooltipExceededSidePosOffset,
     tableTooltipSize = props.tableTooltipSize,
     tableTooltipDisabled = props.tableTooltipDisabled,
     id = props.id;
@@ -1247,6 +1248,7 @@ var EventCalendarTimeline = function EventCalendarTimeline(props) {
     setTableRowNum = _useState28[1];
 
   // table grid tooltip
+  var CELL_TOOLTIP_EXCEEDED_SIDE_POS_OFFSET = Number(tableTooltipExceededSidePosOffset) || 15;
   var CELL_TOOLTIP_POS_OFFSET = typeof tableTooltipOffset === 'undefined' ? 10 : tableTooltipOffset;
   var tableTooltipModalRef = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(null);
   var _useState29 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(false),
@@ -1408,14 +1410,14 @@ var EventCalendarTimeline = function EventCalendarTimeline(props) {
       var _modalBox = _modalContent.getBoundingClientRect();
       if (typeof _modalContent.dataset.offset === 'undefined') {
         if (_modalBox.right > window.innerWidth) {
-          var _modalOffsetPosition = _modalBox.right - window.innerWidth + CELL_TOOLTIP_POS_OFFSET;
+          var _modalOffsetPosition = _modalBox.right - window.innerWidth + CELL_TOOLTIP_EXCEEDED_SIDE_POS_OFFSET;
           _modalContent.dataset.offset = _modalOffsetPosition;
           _modalContent.style.marginLeft = "-".concat(_modalOffsetPosition, "px");
           // console.log('_modalPosition: ', _modalOffsetPosition)
         }
 
         if (_modalBox.left < 0) {
-          var _modalOffsetPosition2 = Math.abs(_modalBox.left) + CELL_TOOLTIP_POS_OFFSET;
+          var _modalOffsetPosition2 = Math.abs(_modalBox.left) + CELL_TOOLTIP_EXCEEDED_SIDE_POS_OFFSET;
           _modalContent.dataset.offset = _modalOffsetPosition2;
           _modalContent.style.marginLeft = "".concat(_modalOffsetPosition2, "px");
           // console.log('_modalPosition: ', _modalOffsetPosition)

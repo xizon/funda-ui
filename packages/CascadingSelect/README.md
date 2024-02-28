@@ -11,6 +11,7 @@ import CascadingSelect from 'funda-ui/CascadingSelect';
 | --- | --- | --- | --- |
 | `wrapperClassName` | string | `mb-3 position-relative` | The class name of the control wrapper. |
 | `controlClassName` | string | `form-control` | The class name of the control. |
+| `exceededSidePosOffset` | number | 15 | Offset px that exceeds the far right or left side of the screen |
 | `extractValueByBraces` | boolean  | true | Whether to use curly braces to save result and initialize default value. |
 | `columnTitle` | array  | - | Set headers for each column group. Such as <br /> `['Heading 1', 'Heading 2', 'Heading 3', 'Heading 4']` <blockquote>Support html tags</blockquote> |
 | `triggerClassName` | string  | - | Specify a class for your trigger |

@@ -9,6 +9,8 @@ type TooltipProps = {
 	direction?: string;
     /** Position offset */
     offset?: number;
+    /** Offset px that exceeds the far right or left side of the screen */
+    exceededSidePosOffset?: number;
     /** The size of the content area. Defaults to `auto`. Possible values are: `auto`, `large`, `medium`, `small` */
     size?: string;
     /** The number of milliseconds to determine hover intent, defaults to 200 */
@@ -28,6 +30,7 @@ const Tooltip = (props: TooltipProps) => {
         wrapperClassName,
         direction,
         offset,
+        exceededSidePosOffset,
         size,
         hoverDelay,
         mouseOutDelay,
@@ -37,7 +40,8 @@ const Tooltip = (props: TooltipProps) => {
     } = props;
 
 
-    const POS_OFFSET = typeof offset === 'undefined' ? 10 : offset;
+    const POS_OFFSET = Number(offset) || 10;
+    const EXCEEDED_SIDE_POS_OFFSET = Number(exceededSidePosOffset) || 15;
     const uniqueID = useId().replace(/\:/g, "-");
     const idRes = id || uniqueID;
     const rootRef = useRef<any>(null);
@@ -127,7 +131,7 @@ const Tooltip = (props: TooltipProps) => {
             if (typeof _modalContent.dataset.offset === 'undefined') {
 
                 if (_modalBox.right > window.innerWidth) {
-                    const _modalOffsetPosition = _modalBox.right - window.innerWidth + POS_OFFSET;
+                    const _modalOffsetPosition = _modalBox.right - window.innerWidth + EXCEEDED_SIDE_POS_OFFSET;
                     _modalContent.dataset.offset = _modalOffsetPosition;
                     _modalContent.style.marginLeft = `-${_modalOffsetPosition}px`;
                     // console.log('_modalPosition: ', _modalOffsetPosition)
@@ -135,7 +139,7 @@ const Tooltip = (props: TooltipProps) => {
 
 
                 if (_modalBox.left < 0) {
-                    const _modalOffsetPosition = Math.abs(_modalBox.left) + POS_OFFSET;
+                    const _modalOffsetPosition = Math.abs(_modalBox.left) + EXCEEDED_SIDE_POS_OFFSET;
                     _modalContent.dataset.offset = _modalOffsetPosition;
                     _modalContent.style.marginLeft = `${_modalOffsetPosition}px`;
                     // console.log('_modalPosition: ', _modalOffsetPosition)

@@ -8,6 +8,7 @@ declare type CascadingSelectOptionChangeFnType = (input: any, currentData: any, 
 declare type CascadingSelectProps = {
     wrapperClassName?: string;
     controlClassName?: string;
+    exceededSidePosOffset?: number;
     value?: string;
     label?: React.ReactNode | string;
     name?: string;

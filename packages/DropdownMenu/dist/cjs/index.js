@@ -282,6 +282,7 @@ var DropdownMenu = function DropdownMenu(props) {
     listClassName = props.listClassName,
     hyperlinkClassName = props.hyperlinkClassName,
     showClassName = props.showClassName,
+    exceededSidePosOffset = props.exceededSidePosOffset,
     hoverOn = props.hoverOn,
     hoverOff = props.hoverOff,
     hoverDelay = props.hoverDelay,
@@ -297,6 +298,7 @@ var DropdownMenu = function DropdownMenu(props) {
     id = props.id,
     onChange = props.onChange;
   var POS_OFFSET = 0;
+  var EXCEEDED_SIDE_POS_OFFSET = Number(exceededSidePosOffset) || 15;
   var uniqueID = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useId)().replace(/\:/g, "-");
   var idRes = id || uniqueID;
   var modalRef = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useRef)(null);
@@ -421,7 +423,7 @@ var DropdownMenu = function DropdownMenu(props) {
       var _modalBox = _modalContent.getBoundingClientRect();
       var _iconRef = iconRef.current;
       if (_modalBox.right > window.innerWidth) {
-        var _modalOffsetPosition = _modalBox.right - window.innerWidth + POS_OFFSET;
+        var _modalOffsetPosition = _modalBox.right - window.innerWidth + EXCEEDED_SIDE_POS_OFFSET;
         _modalContent.style.marginLeft = "-".concat(_modalOffsetPosition, "px");
         _iconRef.style.marginLeft = "".concat(_modalOffsetPosition, "px");
 
@@ -429,7 +431,7 @@ var DropdownMenu = function DropdownMenu(props) {
       }
 
       if (_modalBox.left < 0) {
-        var _modalOffsetPosition2 = Math.abs(_modalBox.left) + POS_OFFSET;
+        var _modalOffsetPosition2 = Math.abs(_modalBox.left) + EXCEEDED_SIDE_POS_OFFSET;
         _modalContent.style.marginLeft = "".concat(_modalOffsetPosition2, "px");
         _iconRef.style.marginLeft = "-".concat(_modalOffsetPosition2, "px");
         // console.log('_modalPosition: ', _modalOffsetPosition)

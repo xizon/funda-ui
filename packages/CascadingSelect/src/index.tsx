@@ -23,6 +23,7 @@ type CascadingSelectOptionChangeFnType = (input: any, currentData: any, index: a
 type CascadingSelectProps = {
     wrapperClassName?: string;
     controlClassName?: string;
+    exceededSidePosOffset?: number;
     value?: string;
     label?: React.ReactNode | string;
     name?: string;
@@ -79,6 +80,7 @@ const CascadingSelect = (props: CascadingSelectProps) => {
     const {
         wrapperClassName,
         controlClassName,
+        exceededSidePosOffset,
         disabled,
         required,
         value,
@@ -114,6 +116,7 @@ const CascadingSelect = (props: CascadingSelectProps) => {
 
 
     const POS_OFFSET = 0;
+    const EXCEEDED_SIDE_POS_OFFSET = Number(exceededSidePosOffset) || 15;
     const VALUE_BY_BRACES = typeof extractValueByBraces === 'undefined' ? true : extractValueByBraces;
     const uniqueID = useId().replace(/\:/g, "-");
     const idRes = id || uniqueID;
@@ -233,7 +236,7 @@ const CascadingSelect = (props: CascadingSelectProps) => {
         if (typeof _modalContent.dataset.offset === 'undefined') {
 
             if (_modalBox.right > window.innerWidth) {
-                const _modalOffsetPosition = _modalBox.right - window.innerWidth + POS_OFFSET;
+                const _modalOffsetPosition = _modalBox.right - window.innerWidth + EXCEEDED_SIDE_POS_OFFSET;
                 _modalContent.dataset.offset = _modalOffsetPosition;
                 _modalContent.style.marginLeft = `-${_modalOffsetPosition}px`;
                 // console.log('_modalPosition: ', _modalOffsetPosition)
@@ -241,7 +244,7 @@ const CascadingSelect = (props: CascadingSelectProps) => {
 
 
             if (_modalBox.left < 0) {
-                const _modalOffsetPosition = Math.abs(_modalBox.left) + POS_OFFSET;
+                const _modalOffsetPosition = Math.abs(_modalBox.left) + EXCEEDED_SIDE_POS_OFFSET;
                 _modalContent.dataset.offset = _modalOffsetPosition;
                 _modalContent.style.marginLeft = `${_modalOffsetPosition}px`;
                 // console.log('_modalPosition: ', _modalOffsetPosition)

@@ -253,13 +253,15 @@ var Tooltip = function Tooltip(props) {
   var wrapperClassName = props.wrapperClassName,
     direction = props.direction,
     offset = props.offset,
+    exceededSidePosOffset = props.exceededSidePosOffset,
     size = props.size,
     hoverDelay = props.hoverDelay,
     mouseOutDelay = props.mouseOutDelay,
     content = props.content,
     id = props.id,
     children = props.children;
-  var POS_OFFSET = typeof offset === 'undefined' ? 10 : offset;
+  var POS_OFFSET = Number(offset) || 10;
+  var EXCEEDED_SIDE_POS_OFFSET = Number(exceededSidePosOffset) || 15;
   var uniqueID = (0,react__WEBPACK_IMPORTED_MODULE_0__.useId)().replace(/\:/g, "-");
   var idRes = id || uniqueID;
   var rootRef = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(null);
@@ -341,14 +343,14 @@ var Tooltip = function Tooltip(props) {
       var _modalBox = _modalContent.getBoundingClientRect();
       if (typeof _modalContent.dataset.offset === 'undefined') {
         if (_modalBox.right > window.innerWidth) {
-          var _modalOffsetPosition = _modalBox.right - window.innerWidth + POS_OFFSET;
+          var _modalOffsetPosition = _modalBox.right - window.innerWidth + EXCEEDED_SIDE_POS_OFFSET;
           _modalContent.dataset.offset = _modalOffsetPosition;
           _modalContent.style.marginLeft = "-".concat(_modalOffsetPosition, "px");
           // console.log('_modalPosition: ', _modalOffsetPosition)
         }
 
         if (_modalBox.left < 0) {
-          var _modalOffsetPosition2 = Math.abs(_modalBox.left) + POS_OFFSET;
+          var _modalOffsetPosition2 = Math.abs(_modalBox.left) + EXCEEDED_SIDE_POS_OFFSET;
           _modalContent.dataset.offset = _modalOffsetPosition2;
           _modalContent.style.marginLeft = "".concat(_modalOffsetPosition2, "px");
           // console.log('_modalPosition: ', _modalOffsetPosition)

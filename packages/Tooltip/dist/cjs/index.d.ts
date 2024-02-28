@@ -5,6 +5,8 @@ declare type TooltipProps = {
     direction?: string;
     /** Position offset */
     offset?: number;
+    /** Offset px that exceeds the far right or left side of the screen */
+    exceededSidePosOffset?: number;
     /** The size of the content area. Defaults to `auto`. Possible values are: `auto`, `large`, `medium`, `small` */
     size?: string;
     /** The number of milliseconds to determine hover intent, defaults to 200 */

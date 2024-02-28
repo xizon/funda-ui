@@ -12,6 +12,7 @@ import SearchBar from 'funda-searchbar';
 type LiveSearchProps = {
     wrapperClassName?: string;
     controlClassName?: string;
+    exceededSidePosOffset?: number;
     appearance?: string;
     value?: string;
     label?: React.ReactNode | string;
@@ -52,6 +53,7 @@ const LiveSearch = (props: LiveSearchProps) => {
     const {
         wrapperClassName,
         controlClassName,
+        exceededSidePosOffset,
         appearance,
         disabled,
         required,
@@ -85,6 +87,7 @@ const LiveSearch = (props: LiveSearchProps) => {
 
 
     const POS_OFFSET = 0;
+    const EXCEEDED_SIDE_POS_OFFSET = Number(exceededSidePosOffset) || 15;
     const INPUT_MATCH_ENABLED = typeof fetchAutoShow === 'undefined' || fetchAutoShow === false ? true : false;
     const WIN_WIDTH = typeof winWidth === 'function' ? winWidth() : winWidth ? winWidth : 'auto';
     const uniqueID = useId().replace(/\:/g, "-");
@@ -245,7 +248,7 @@ const LiveSearch = (props: LiveSearchProps) => {
         if (typeof _modalContent.dataset.offset === 'undefined') {
 
             if (_modalBox.right > window.innerWidth) {
-                const _modalOffsetPosition = _modalBox.right - window.innerWidth + POS_OFFSET;
+                const _modalOffsetPosition = _modalBox.right - window.innerWidth + EXCEEDED_SIDE_POS_OFFSET;
                 _modalContent.dataset.offset = _modalOffsetPosition;
                 _modalContent.style.marginLeft = `-${_modalOffsetPosition}px`;
                 // console.log('_modalPosition: ', _modalOffsetPosition)
@@ -253,7 +256,7 @@ const LiveSearch = (props: LiveSearchProps) => {
 
 
             if (_modalBox.left < 0) {
-                const _modalOffsetPosition = Math.abs(_modalBox.left) + POS_OFFSET;
+                const _modalOffsetPosition = Math.abs(_modalBox.left) + EXCEEDED_SIDE_POS_OFFSET;
                 _modalContent.dataset.offset = _modalOffsetPosition;
                 _modalContent.style.marginLeft = `${_modalOffsetPosition}px`;
                 // console.log('_modalPosition: ', _modalOffsetPosition)

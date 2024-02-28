@@ -11,6 +11,7 @@ import LiveSearch from 'funda-ui/LiveSearch';
 | --- | --- | --- | --- |
 | `wrapperClassName` | string | `mb-3 position-relative` | The class name of the control wrapper. |
 | `controlClassName` | string | `form-control` | The class name of the control. |
+| `exceededSidePosOffset` | number | 15 | Offset px that exceeds the far right or left side of the screen |
 | `btnId` | string  | - | ID of the specified button. |
 | `appearance` | string | - | The overlay style of the control. The optional values are:<br />**corners:**<br />`pill` |
 | `depth` | number  | 100 | Set the depth value of the control to control the display of the pop-up layer appear above. Please set it when multiple controls are used at the same time. |

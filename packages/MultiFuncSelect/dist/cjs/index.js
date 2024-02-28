@@ -876,7 +876,7 @@ var enableBodyScroll = function enableBodyScroll(targetElement) {
 // EXTERNAL MODULE: ./src/utils/tree.js
 var tree = __webpack_require__(602);
 ;// CONCATENATED MODULE: ./src/index.tsx
-var _excluded = ["wrapperClassName", "controlClassName", "multiSelect", "multiSelectSelectedItemOnlyStatus", "disabled", "required", "value", "label", "name", "readOnly", "placeholder", "id", "options", "cleanTrigger", "lockBodyScroll", "hierarchical", "indentation", "doubleIndent", "style", "depth", "controlArrow", "winWidth", "tabIndex", "fetchTrigger", "fetchTriggerForDefaultData", "fetchNoneInfo", "fetchUpdate", "fetchFuncAsync", "fetchFuncMethod", "fetchFuncMethodParams", "data", "extractValueByBrackets", "fetchCallback", "onFetch", "onLoad", "onSelect", "onChange", "onBlur", "onFocus"];
+var _excluded = ["wrapperClassName", "controlClassName", "exceededSidePosOffset", "multiSelect", "multiSelectSelectedItemOnlyStatus", "disabled", "required", "value", "label", "name", "readOnly", "placeholder", "id", "options", "cleanTrigger", "lockBodyScroll", "hierarchical", "indentation", "doubleIndent", "style", "depth", "controlArrow", "winWidth", "tabIndex", "fetchTrigger", "fetchTriggerForDefaultData", "fetchNoneInfo", "fetchUpdate", "fetchFuncAsync", "fetchFuncMethod", "fetchFuncMethodParams", "data", "extractValueByBrackets", "fetchCallback", "onFetch", "onLoad", "onSelect", "onChange", "onBlur", "onFocus"];
 function src_toConsumableArray(arr) { return src_arrayWithoutHoles(arr) || src_iterableToArray(arr) || src_unsupportedIterableToArray(arr) || src_nonIterableSpread(); }
 function src_nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
 function src_iterableToArray(iter) { if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter); }
@@ -912,6 +912,7 @@ function _objectWithoutPropertiesLoose(source, excluded) { if (source == null) r
 var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_amd_react_.forwardRef)(function (props, _ref2) {
   var wrapperClassName = props.wrapperClassName,
     controlClassName = props.controlClassName,
+    exceededSidePosOffset = props.exceededSidePosOffset,
     multiSelect = props.multiSelect,
     multiSelectSelectedItemOnlyStatus = props.multiSelectSelectedItemOnlyStatus,
     disabled = props.disabled,
@@ -960,6 +961,7 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
   var INDENT_PLACEHOLDER = doubleIndent ? "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" : "&nbsp;&nbsp;&nbsp;&nbsp;";
   var INDENT_LAST_PLACEHOLDER = "".concat(typeof indentation !== 'undefined' && indentation !== '' ? "".concat(indentation, "&nbsp;&nbsp;") : '');
   var POS_OFFSET = 0;
+  var EXCEEDED_SIDE_POS_OFFSET = Number(exceededSidePosOffset) || 15;
   var uniqueID = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useId)().replace(/\:/g, "-");
   var idRes = id || uniqueID;
   var rootRef = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useRef)(null);
@@ -1589,14 +1591,14 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
     var _modalBox = _modalContent.getBoundingClientRect();
     if (typeof _modalContent.dataset.offset === 'undefined') {
       if (_modalBox.right > window.innerWidth) {
-        var _modalOffsetPosition = _modalBox.right - window.innerWidth + POS_OFFSET;
+        var _modalOffsetPosition = _modalBox.right - window.innerWidth + EXCEEDED_SIDE_POS_OFFSET;
         _modalContent.dataset.offset = _modalOffsetPosition;
         _modalContent.style.marginLeft = "-".concat(_modalOffsetPosition, "px");
         // console.log('_modalPosition: ', _modalOffsetPosition)
       }
 
       if (_modalBox.left < 0) {
-        var _modalOffsetPosition2 = Math.abs(_modalBox.left) + POS_OFFSET;
+        var _modalOffsetPosition2 = Math.abs(_modalBox.left) + EXCEEDED_SIDE_POS_OFFSET;
         _modalContent.dataset.offset = _modalOffsetPosition2;
         _modalContent.style.marginLeft = "".concat(_modalOffsetPosition2, "px");
         // console.log('_modalPosition: ', _modalOffsetPosition)

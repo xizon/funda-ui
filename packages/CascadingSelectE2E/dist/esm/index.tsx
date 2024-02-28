@@ -40,6 +40,7 @@ interface fetchArrayConfig {
 type CascadingSelectE2EProps = {
     wrapperClassName?: string;
     controlClassName?: string;
+    exceededSidePosOffset?: number;
     value?: string;
     label?: React.ReactNode | string;
     name?: string;
@@ -98,6 +99,7 @@ const CascadingSelectE2E = (props: CascadingSelectE2EProps) => {
     const {
         wrapperClassName,
         controlClassName,
+        exceededSidePosOffset,
         disabled,
         required,
         value,
@@ -131,6 +133,7 @@ const CascadingSelectE2E = (props: CascadingSelectE2EProps) => {
 
 
     const POS_OFFSET = 0;
+    const EXCEEDED_SIDE_POS_OFFSET = Number(exceededSidePosOffset) || 15;
     const VALUE_BY_BRACES = typeof extractValueByBraces === 'undefined' ? true : extractValueByBraces;
     const uniqueID = useId().replace(/\:/g, "-");
     const idRes = id || uniqueID;
@@ -269,7 +272,7 @@ const CascadingSelectE2E = (props: CascadingSelectE2EProps) => {
         if (typeof _modalContent.dataset.offset === 'undefined') {
 
             if (_modalBox.right > window.innerWidth) {
-                const _modalOffsetPosition = _modalBox.right - window.innerWidth + POS_OFFSET;
+                const _modalOffsetPosition = _modalBox.right - window.innerWidth + EXCEEDED_SIDE_POS_OFFSET;
                 _modalContent.dataset.offset = _modalOffsetPosition;
                 _modalContent.style.marginLeft = `-${_modalOffsetPosition}px`;
                 // console.log('_modalPosition: ', _modalOffsetPosition)
@@ -277,7 +280,7 @@ const CascadingSelectE2E = (props: CascadingSelectE2EProps) => {
 
 
             if (_modalBox.left < 0) {
-                const _modalOffsetPosition = Math.abs(_modalBox.left) + POS_OFFSET;
+                const _modalOffsetPosition = Math.abs(_modalBox.left) + EXCEEDED_SIDE_POS_OFFSET;
                 _modalContent.dataset.offset = _modalOffsetPosition;
                 _modalContent.style.marginLeft = `${_modalOffsetPosition}px`;
                 // console.log('_modalPosition: ', _modalOffsetPosition)

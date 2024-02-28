@@ -2,6 +2,7 @@ import React from 'react';
 declare type LiveSearchProps = {
     wrapperClassName?: string;
     controlClassName?: string;
+    exceededSidePosOffset?: number;
     appearance?: string;
     value?: string;
     label?: React.ReactNode | string;

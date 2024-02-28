@@ -35,6 +35,7 @@ interface CleanTriggerConfig {
 declare type MultiFuncSelectProps = {
     wrapperClassName?: string;
     controlClassName?: string;
+    exceededSidePosOffset?: number;
     multiSelect?: MultiSelectConfig;
     multiSelectSelectedItemOnlyStatus?: multiSelectSelectedItemOnlyStatusConfig;
     cleanTrigger?: CleanTriggerConfig;

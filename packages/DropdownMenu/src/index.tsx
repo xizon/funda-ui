@@ -16,6 +16,7 @@ type DropdownMenuProps = {
     listClassName?: string;
     hyperlinkClassName?: string;
     showClassName?: string;
+    exceededSidePosOffset?: number;
     hoverOn?: boolean;
     hoverOff?: boolean;
     hoverDelay?: number;
@@ -49,6 +50,7 @@ const DropdownMenu = (props: DropdownMenuProps) => {
         listClassName,
         hyperlinkClassName,
         showClassName,
+        exceededSidePosOffset,
         hoverOn,
         hoverOff,
         hoverDelay,
@@ -66,6 +68,7 @@ const DropdownMenu = (props: DropdownMenuProps) => {
     } = props;
 
     const POS_OFFSET = 0;
+    const EXCEEDED_SIDE_POS_OFFSET = Number(exceededSidePosOffset) || 15;
     const uniqueID = useId().replace(/\:/g, "-");
     const idRes = id || uniqueID;
     const modalRef = useRef<any>(null);
@@ -207,7 +210,7 @@ const DropdownMenu = (props: DropdownMenuProps) => {
                 _modalRef.classList.remove('pos-top');
             }
     
-    
+            
             // STEP 4:
             //-----------            
             // Determine whether it exceeds the far right or left side of the screen
@@ -216,7 +219,7 @@ const DropdownMenu = (props: DropdownMenuProps) => {
             const _iconRef: any = iconRef.current;
 
             if (_modalBox.right > window.innerWidth) {
-                const _modalOffsetPosition = _modalBox.right - window.innerWidth + POS_OFFSET;
+                const _modalOffsetPosition = _modalBox.right - window.innerWidth + EXCEEDED_SIDE_POS_OFFSET;
                 _modalContent.style.marginLeft = `-${_modalOffsetPosition}px`;
                 _iconRef.style.marginLeft = `${_modalOffsetPosition}px`;
                 
@@ -225,7 +228,7 @@ const DropdownMenu = (props: DropdownMenuProps) => {
 
 
             if (_modalBox.left < 0) {
-                const _modalOffsetPosition = Math.abs(_modalBox.left) + POS_OFFSET;
+                const _modalOffsetPosition = Math.abs(_modalBox.left) + EXCEEDED_SIDE_POS_OFFSET;
                 _modalContent.style.marginLeft = `${_modalOffsetPosition}px`;
                 _iconRef.style.marginLeft = `-${_modalOffsetPosition}px`;
                 // console.log('_modalPosition: ', _modalOffsetPosition)

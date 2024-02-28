@@ -71,6 +71,7 @@ type EventCalendarTimelineProps = {
     // tooltip
     tableTooltipDirection?: string;
     tableTooltipOffset?: number;
+    tableTooltipExceededSidePosOffset?: number;
     tableTooltipSize?: string;
     tableTooltipDisabled?: boolean;
 
@@ -127,6 +128,7 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
         //
         tableTooltipDirection,
         tableTooltipOffset,
+        tableTooltipExceededSidePosOffset,
         tableTooltipSize,
         tableTooltipDisabled,
 
@@ -182,6 +184,7 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
     const [tableRowNum, setTableRowNum] = useState<number>(-1);
 
     // table grid tooltip
+    const CELL_TOOLTIP_EXCEEDED_SIDE_POS_OFFSET = Number(tableTooltipExceededSidePosOffset) || 15;
     const CELL_TOOLTIP_POS_OFFSET = typeof tableTooltipOffset === 'undefined' ? 10 : tableTooltipOffset;
     const tableTooltipModalRef = useRef<any>(null);
     const [isShowTableTooltip, setIsShowTableTooltip] = useState<boolean>(false);
@@ -350,7 +353,7 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
             if (typeof _modalContent.dataset.offset === 'undefined') {
 
                 if (_modalBox.right > window.innerWidth) {
-                    const _modalOffsetPosition = _modalBox.right - window.innerWidth + CELL_TOOLTIP_POS_OFFSET;
+                    const _modalOffsetPosition = _modalBox.right - window.innerWidth + CELL_TOOLTIP_EXCEEDED_SIDE_POS_OFFSET;
                     _modalContent.dataset.offset = _modalOffsetPosition;
                     _modalContent.style.marginLeft = `-${_modalOffsetPosition}px`;
                     // console.log('_modalPosition: ', _modalOffsetPosition)
@@ -358,7 +361,7 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
 
 
                 if (_modalBox.left < 0) {
-                    const _modalOffsetPosition = Math.abs(_modalBox.left) + CELL_TOOLTIP_POS_OFFSET;
+                    const _modalOffsetPosition = Math.abs(_modalBox.left) + CELL_TOOLTIP_EXCEEDED_SIDE_POS_OFFSET;
                     _modalContent.dataset.offset = _modalOffsetPosition;
                     _modalContent.style.marginLeft = `${_modalOffsetPosition}px`;
                     // console.log('_modalPosition: ', _modalOffsetPosition)

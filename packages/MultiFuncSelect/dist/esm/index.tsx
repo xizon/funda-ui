@@ -68,6 +68,7 @@ interface CleanTriggerConfig {
 type MultiFuncSelectProps = {
     wrapperClassName?: string;
     controlClassName?: string;
+    exceededSidePosOffset?: number;
     multiSelect?: MultiSelectConfig;
     multiSelectSelectedItemOnlyStatus?: multiSelectSelectedItemOnlyStatusConfig;
     cleanTrigger?: CleanTriggerConfig;
@@ -118,6 +119,7 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
     const {
         wrapperClassName,
         controlClassName,
+        exceededSidePosOffset,
         multiSelect,
         multiSelectSelectedItemOnlyStatus,
         disabled,
@@ -169,6 +171,7 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
     const INDENT_PLACEHOLDER = doubleIndent ? `&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;` : `&nbsp;&nbsp;&nbsp;&nbsp;`;
     const INDENT_LAST_PLACEHOLDER = `${typeof indentation !== 'undefined' && indentation !== '' ? `${indentation}&nbsp;&nbsp;` : ''}`;
     const POS_OFFSET = 0;
+    const EXCEEDED_SIDE_POS_OFFSET = Number(exceededSidePosOffset) || 15;
     const uniqueID = useId().replace(/\:/g, "-");
     const idRes = id || uniqueID;
     const rootRef = useRef<any>(null);
@@ -863,7 +866,7 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
         if (typeof _modalContent.dataset.offset === 'undefined') {
 
             if (_modalBox.right > window.innerWidth) {
-                const _modalOffsetPosition = _modalBox.right - window.innerWidth + POS_OFFSET;
+                const _modalOffsetPosition = _modalBox.right - window.innerWidth + EXCEEDED_SIDE_POS_OFFSET;
                 _modalContent.dataset.offset = _modalOffsetPosition;
                 _modalContent.style.marginLeft = `-${_modalOffsetPosition}px`;
                 // console.log('_modalPosition: ', _modalOffsetPosition)
@@ -871,7 +874,7 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
 
 
             if (_modalBox.left < 0) {
-                const _modalOffsetPosition = Math.abs(_modalBox.left) + POS_OFFSET;
+                const _modalOffsetPosition = Math.abs(_modalBox.left) + EXCEEDED_SIDE_POS_OFFSET;
                 _modalContent.dataset.offset = _modalOffsetPosition;
                 _modalContent.style.marginLeft = `${_modalOffsetPosition}px`;
                 // console.log('_modalPosition: ', _modalOffsetPosition)
