@@ -492,12 +492,14 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
             modalTitleClassName = props.modalTitleClassName,
             modalBodyClassName = props.modalBodyClassName,
             modalFooterClassName = props.modalFooterClassName,
+            modalFooterExpandedContentClassName = props.modalFooterExpandedContentClassName,
             show = props.show,
             protectFixedViewport = props.protectFixedViewport,
             maxWidth = props.maxWidth,
             minHeight = props.minHeight,
             enableVideo = props.enableVideo,
             heading = props.heading,
+            footerExpandedContent = props.footerExpandedContent,
             triggerClassName = props.triggerClassName,
             triggerContent = props.triggerContent,
             closeBtnClassName = props.closeBtnClassName,
@@ -820,7 +822,9 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
             className: "modal-dialog__video"
           }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
             className: "ratio ratio-16x9"
-          }, children))) : children), closeBtnLabel || submitBtnLabel ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement(external_root_React_commonjs2_react_commonjs_react_amd_react_default().Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
+          }, children))) : children), footerExpandedContent ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement(external_root_React_commonjs2_react_commonjs_react_amd_react_default().Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
+            className: "modal-footer modal-expanded-footer ".concat(modalFooterExpandedContentClassName || '')
+          }, footerExpandedContent)) : null, closeBtnLabel || submitBtnLabel ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement(external_root_React_commonjs2_react_commonjs_react_amd_react_default().Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
             className: "modal-footer ".concat(modalFooterClassName || '')
           }, !closeDisabled ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement(external_root_React_commonjs2_react_commonjs_react_amd_react_default().Fragment, null, closeBtnLabel ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("button", {
             "data-close": "1",

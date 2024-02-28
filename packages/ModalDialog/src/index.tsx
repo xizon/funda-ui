@@ -25,6 +25,7 @@ type ModalDialogProps = {
     modalTitleClassName?: string;
     modalBodyClassName?: string;
     modalFooterClassName?: string;
+    modalFooterExpandedContentClassName?: string;
     /** Whether the modal dialog is visible or not, you can use it with the `autoClose` property at the same time */
     show: boolean;
     /** Prevent "transform", "filter", "perspective" attribute destruction fixed viewport orientation. Enabled by default, after enabling the default JS event will be invalid, you need to use the `onOpen` attribute to add some new events to elements. Please refer to the example. */
@@ -37,6 +38,8 @@ type ModalDialogProps = {
     enableVideo?: boolean;
     /** Set a window title */
     heading?: React.ReactNode;
+    /** Set footer content */
+    footerExpandedContent?: React.ReactNode;
     /** Specify a class for this Node. */
     triggerClassName?: string;
     /** Set a piece of text or HTML code for the trigger */
@@ -78,12 +81,14 @@ const ModalDialog = (props: ModalDialogProps) => {
         modalTitleClassName,
         modalBodyClassName,
         modalFooterClassName,
+        modalFooterExpandedContentClassName,
         show,
         protectFixedViewport,
         maxWidth,
         minHeight,
         enableVideo,
         heading,
+        footerExpandedContent,
         triggerClassName,
         triggerContent,
         closeBtnClassName,
@@ -464,6 +469,18 @@ const ModalDialog = (props: ModalDialogProps) => {
                             {/*<!-- ////////  content  end //////// -->*/}
                         </div>
 
+                        
+
+                        {/* FOOTER CONTENT */}
+                        {footerExpandedContent ? <>
+                            <div className={`modal-footer modal-expanded-footer ${modalFooterExpandedContentClassName || ''}`}>
+                                {footerExpandedContent}
+                            </div>
+                        </> : null}
+                        {/* /FOOTER CONTENT */}
+
+                                                            
+                        {/* SUBMIT & CANCEL */}
                         {closeBtnLabel || submitBtnLabel ? <>
                             <div className={`modal-footer ${modalFooterClassName || ''}`}>
 
@@ -479,6 +496,7 @@ const ModalDialog = (props: ModalDialogProps) => {
                                 }} type="button" className={submitBtnClassName ? submitBtnClassName : 'btn btn-primary'}>{submitBtnLabel}</button> : null}
                             </div>
                         </> : null}
+                        {/* /SUBMIT & CANCEL */}
 
                     </div>
                 </div>

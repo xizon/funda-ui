@@ -14,10 +14,12 @@ import ModalDialog from 'funda-ui/ModalDialog';
 | `modalTitleClassName` | string  | - | The extended class name of title |
 | `modalBodyClassName` | string  | - | The extended class name of content area |
 | `modalFooterClassName` | string  | - | The extended class name of footer area |
+| `modalFooterExpandedContentClassName` | string  | - | The extended class name of footer content area |
 | `show` | boolean  | false | **(required)** Whether the modal dialog is visible or not, you can use it with the `autoClose` property at the same time |
 | `protectFixedViewport` | boolean  | true | Prevent "transform", "filter", "perspective" attribute destruction fixed viewport orientation. Enabled by default, after enabling the default JS event will be invalid, you need to use the `onOpen` attribute to add some new events to elements. Please refer to the example. <blockquote>When you use a component with its own events, you can turn it off to lose js events</blockquote> |
 | `autoClose` | number \| boolean  | false | Specify auto-close time. This function is not enabled when this value is false. If the value is `2000`, it will automatically close after 2 seconds. |
 | `heading` | ReactNode  | - | Set a window title |
+| `footerExpandedContent` | ReactNode  | - | Set footer content expanded |
 | `maskDisabled` | boolean  | false | Disable mask |
 | `maskOpacity` | string  | - | The mask opacity. The value is in the range *0.0* to *1.0* |
 | `maxWidth` | number \| string \| function  | false | Custom modal max-width whick need a unit string. Such as: `500px` or `() => window.innerWidth >= 768 ? window.innerWidth - 100 + 'px' : undefined`|
