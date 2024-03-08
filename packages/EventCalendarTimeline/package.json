@@ -13,7 +13,8 @@
     "dependencies": {
         "react": "^18.2.0",
         "react-dom": "^18.2.0",
-        "funda-modaldialog": "*"
+        "funda-modaldialog": "*",
+        "funda-root-portal": "*"
     },
     "devDependencies": {
         "@babel/core": "^7.2.0",

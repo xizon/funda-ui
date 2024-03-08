@@ -13,8 +13,7 @@
     "dependencies": {
         "react": "^18.2.0",
         "react-dom": "^18.2.0",
-        "funda-checkbox": "*",
-        "funda-radio": "*"
+        "funda-checkbox": "*"
     },
     "devDependencies": {
         "@babel/core": "^7.2.0",

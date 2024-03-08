@@ -1,13 +1,13 @@
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
-		module.exports = factory(require("react"));
+		module.exports = factory(require("react"), require("react-dom"));
 	else if(typeof define === 'function' && define.amd)
-		define(["react"], factory);
+		define(["react", "react-dom"], factory);
 	else if(typeof exports === 'object')
-		exports["RPB"] = factory(require("react"));
+		exports["RPB"] = factory(require("react"), require("react-dom"));
 	else
-		root["RPB"] = factory(root["React"]);
-})(this, (__WEBPACK_EXTERNAL_MODULE__787__) => {
+		root["RPB"] = factory(root["React"], root["ReactDOM"]);
+})(this, (__WEBPACK_EXTERNAL_MODULE__787__, __WEBPACK_EXTERNAL_MODULE__156__) => {
 return /******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ({
 
@@ -205,6 +205,201 @@ module.exports = {
 
 /***/ }),
 
+/***/ 909:
+/***/ (function(module, exports, __webpack_require__) {
+
+/* module decorator */ module = __webpack_require__.nmd(module);
+var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
+(function webpackUniversalModuleDefinition(root, factory) {
+  if (( false ? 0 : _typeof(exports)) === 'object' && ( false ? 0 : _typeof(module)) === 'object') module.exports = factory(__webpack_require__(787), __webpack_require__(156));else if (true) !(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(787), __webpack_require__(156)], __WEBPACK_AMD_DEFINE_FACTORY__ = (factory),
+		__WEBPACK_AMD_DEFINE_RESULT__ = (typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ?
+		(__WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__)) : __WEBPACK_AMD_DEFINE_FACTORY__),
+		__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));else {}
+})(this, function (__WEBPACK_EXTERNAL_MODULE__787__, __WEBPACK_EXTERNAL_MODULE__156__) {
+  return (/******/function () {
+      // webpackBootstrap
+      /******/
+      "use strict";
+
+      /******/
+      var __webpack_modules__ = {
+        /***/787: /***/function _(module) {
+          module.exports = __WEBPACK_EXTERNAL_MODULE__787__;
+
+          /***/
+        },
+
+        /***/156: /***/function _(module) {
+          module.exports = __WEBPACK_EXTERNAL_MODULE__156__;
+
+          /***/
+        }
+
+        /******/
+      };
+      /************************************************************************/
+      /******/ // The module cache
+      /******/
+      var __webpack_module_cache__ = {};
+      /******/
+      /******/ // The require function
+      /******/
+      function __nested_webpack_require_1708__(moduleId) {
+        /******/ // Check if module is in cache
+        /******/var cachedModule = __webpack_module_cache__[moduleId];
+        /******/
+        if (cachedModule !== undefined) {
+          /******/return cachedModule.exports;
+          /******/
+        }
+        /******/ // Create a new module (and put it into the cache)
+        /******/
+        var module = __webpack_module_cache__[moduleId] = {
+          /******/ // no module.id needed
+          /******/ // no module.loaded needed
+          /******/exports: {}
+          /******/
+        };
+        /******/
+        /******/ // Execute the module function
+        /******/
+        __webpack_modules__[moduleId](module, module.exports, __nested_webpack_require_1708__);
+        /******/
+        /******/ // Return the exports of the module
+        /******/
+        return module.exports;
+        /******/
+      }
+      /******/
+      /************************************************************************/
+      /******/ /* webpack/runtime/compat get default export */
+      /******/
+      (function () {
+        /******/ // getDefaultExport function for compatibility with non-harmony modules
+        /******/__nested_webpack_require_1708__.n = function (module) {
+          /******/var getter = module && module.__esModule ? /******/function () {
+            return module['default'];
+          } : /******/function () {
+            return module;
+          };
+          /******/
+          __nested_webpack_require_1708__.d(getter, {
+            a: getter
+          });
+          /******/
+          return getter;
+          /******/
+        };
+        /******/
+      })();
+      /******/
+      /******/ /* webpack/runtime/define property getters */
+      /******/
+      (function () {
+        /******/ // define getter functions for harmony exports
+        /******/__nested_webpack_require_1708__.d = function (exports, definition) {
+          /******/for (var key in definition) {
+            /******/if (__nested_webpack_require_1708__.o(definition, key) && !__nested_webpack_require_1708__.o(exports, key)) {
+              /******/Object.defineProperty(exports, key, {
+                enumerable: true,
+                get: definition[key]
+              });
+              /******/
+            }
+            /******/
+          }
+          /******/
+        };
+        /******/
+      })();
+      /******/
+      /******/ /* webpack/runtime/hasOwnProperty shorthand */
+      /******/
+      (function () {
+        /******/__nested_webpack_require_1708__.o = function (obj, prop) {
+          return Object.prototype.hasOwnProperty.call(obj, prop);
+        };
+        /******/
+      })();
+      /******/
+      /******/ /* webpack/runtime/make namespace object */
+      /******/
+      (function () {
+        /******/ // define __esModule on exports
+        /******/__nested_webpack_require_1708__.r = function (exports) {
+          /******/if (typeof Symbol !== 'undefined' && Symbol.toStringTag) {
+            /******/Object.defineProperty(exports, Symbol.toStringTag, {
+              value: 'Module'
+            });
+            /******/
+          }
+          /******/
+          Object.defineProperty(exports, '__esModule', {
+            value: true
+          });
+          /******/
+        };
+        /******/
+      })();
+      /******/
+      /************************************************************************/
+      var __webpack_exports__ = {};
+      // This entry need to be wrapped in an IIFE because it need to be isolated against other modules in the chunk.
+      (function () {
+        __nested_webpack_require_1708__.r(__webpack_exports__);
+        /* harmony export */
+        __nested_webpack_require_1708__.d(__webpack_exports__, {
+          /* harmony export */"default": function _default() {
+            return __WEBPACK_DEFAULT_EXPORT__;
+          }
+          /* harmony export */
+        });
+        /* harmony import */
+        var react__WEBPACK_IMPORTED_MODULE_0__ = __nested_webpack_require_1708__(787);
+        /* harmony import */
+        var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__nested_webpack_require_1708__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+        /* harmony import */
+        var react_dom__WEBPACK_IMPORTED_MODULE_1__ = __nested_webpack_require_1708__(156);
+        /* harmony import */
+        var react_dom__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__nested_webpack_require_1708__.n(react_dom__WEBPACK_IMPORTED_MODULE_1__);
+        var RootPortal = function RootPortal(props) {
+          var containerClassName = props.containerClassName,
+            show = props.show,
+            children = props.children;
+          var containerRef = (0, react__WEBPACK_IMPORTED_MODULE_0__.useRef)();
+
+          // Move HTML templates to tag end body </body>
+          // render() don't use "Fragment", in order to avoid error "Failed to execute 'insertBefore' on 'Node'"
+          // prevent "transform", "filter", "perspective" attribute destruction fixed viewport orientation
+          // ###
+          // ###
+          // Use `containerRef.current` to ensure the correctness of the nextjs framework. It may report an error document as undefined
+
+          (0, react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(function () {
+            containerRef.current = document.createElement('div');
+            containerRef.current.className = "root-portal-container ".concat(containerClassName || '');
+            document.body.appendChild(containerRef.current);
+            return function () {
+              if (containerRef.current) {
+                containerRef.current.remove();
+              }
+            };
+          }, []);
+          return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react__WEBPACK_IMPORTED_MODULE_0___default().Fragment, null, containerRef.current && show && /*#__PURE__*/(0, react_dom__WEBPACK_IMPORTED_MODULE_1__.createPortal)(children, containerRef.current));
+        };
+        /* harmony default export */
+        var __WEBPACK_DEFAULT_EXPORT__ = RootPortal;
+      })();
+
+      /******/
+      return __webpack_exports__;
+      /******/
+    }()
+  );
+});
+
+/***/ }),
+
 /***/ 962:
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -352,7 +547,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
         var react__WEBPACK_IMPORTED_MODULE_0__ = __nested_webpack_require_1465__(787);
         /* harmony import */
         var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__nested_webpack_require_1465__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-        var _excluded = ["wrapperClassName", "controlClassName", "appearance", "disabled", "required", "placeholder", "value", "label", "name", "btnId", "id", "maxLength", "icon", "autoComplete", "style", "tabIndex", "onClick", "onSubmit", "onChange", "onBlur", "onFocus"];
+        var _excluded = ["wrapperClassName", "controlClassName", "appearance", "isSearchInput", "disabled", "required", "placeholder", "value", "label", "name", "btnId", "id", "maxLength", "icon", "autoComplete", "style", "tabIndex", "onClick", "onSubmit", "onChange", "onBlur", "onFocus"];
         function _extends() {
           _extends = Object.assign ? Object.assign.bind() : function (target) {
             for (var i = 1; i < arguments.length; i++) {
@@ -447,6 +642,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
           var wrapperClassName = props.wrapperClassName,
             controlClassName = props.controlClassName,
             appearance = props.appearance,
+            isSearchInput = props.isSearchInput,
             disabled = props.disabled,
             required = props.required,
             placeholder = props.placeholder,
@@ -531,18 +727,21 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
           return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react__WEBPACK_IMPORTED_MODULE_0___default().Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
             className: wrapperClassName || wrapperClassName === '' ? wrapperClassName : "mb-3 position-relative",
             ref: rootRef
-          }, label ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react__WEBPACK_IMPORTED_MODULE_0___default().Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("label", {
+          }, label ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react__WEBPACK_IMPORTED_MODULE_0___default().Fragment, null, typeof label === 'string' ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("label", {
             htmlFor: idRes,
             className: "form-label",
             dangerouslySetInnerHTML: {
               __html: "".concat(label)
             }
-          })) : null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+          }) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("label", {
+            htmlFor: idRes,
+            className: "form-label"
+          }, label)) : null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
             className: "input-group"
           }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("input", _extends({
             ref: ref,
             tabIndex: tabIndex || 0,
-            type: appearance === 'pill' ? 'input' : 'search',
+            type: isSearchInput ? 'search' : 'text',
             className: appearance === 'pill' ? "".concat(controlClassName || controlClassName === '' ? controlClassName : "form-control", " border rounded-pill") : controlClassName || controlClassName === '' ? controlClassName : "form-control",
             id: idRes,
             name: name,
@@ -598,6 +797,14 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 
 "use strict";
 module.exports = __WEBPACK_EXTERNAL_MODULE__787__;
+
+/***/ }),
+
+/***/ 156:
+/***/ ((module) => {
+
+"use strict";
+module.exports = __WEBPACK_EXTERNAL_MODULE__156__;
 
 /***/ })
 
@@ -739,11 +946,14 @@ var useDebounce = function useDebounce(fn, delay, dependence) {
 /* harmony default export */ const utils_useDebounce = (useDebounce);
 // EXTERNAL MODULE: ./src/utils/get-element-property.js
 var get_element_property = __webpack_require__(378);
-// EXTERNAL MODULE: ../SearchBar/dist/cjs/index.js
-var cjs = __webpack_require__(962);
+// EXTERNAL MODULE: ../RootPortal/dist/cjs/index.js
+var cjs = __webpack_require__(909);
 var cjs_default = /*#__PURE__*/__webpack_require__.n(cjs);
+// EXTERNAL MODULE: ../SearchBar/dist/cjs/index.js
+var dist_cjs = __webpack_require__(962);
+var dist_cjs_default = /*#__PURE__*/__webpack_require__.n(dist_cjs);
 ;// CONCATENATED MODULE: ./src/index.tsx
-var _excluded = ["wrapperClassName", "controlClassName", "exceededSidePosOffset", "appearance", "disabled", "required", "placeholder", "value", "label", "name", "id", "icon", "btnId", "fetchTrigger", "hideIcon", "depth", "maxLength", "style", "winWidth", "tabIndex", "data", "fetchAutoShow", "fetchNoneInfo", "fetchUpdate", "fetchFuncAsync", "fetchFuncMethod", "fetchFuncMethodParams", "fetchCallback", "onFetch", "onChange", "onBlur"];
+var _excluded = ["wrapperClassName", "controlClassName", "exceededSidePosOffset", "appearance", "isSearchInput", "disabled", "required", "placeholder", "value", "label", "name", "id", "icon", "btnId", "fetchTrigger", "hideIcon", "depth", "maxLength", "style", "winWidth", "tabIndex", "data", "fetchAutoShow", "fetchNoneInfo", "fetchUpdate", "fetchFuncAsync", "fetchFuncMethod", "fetchFuncMethodParams", "fetchCallback", "onFetch", "onChange", "onBlur"];
 function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
 function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
 function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter); }
@@ -766,11 +976,13 @@ function _objectWithoutPropertiesLoose(source, excluded) { if (source == null) r
 
 
 
+
 var LiveSearch = function LiveSearch(props) {
   var wrapperClassName = props.wrapperClassName,
     controlClassName = props.controlClassName,
     exceededSidePosOffset = props.exceededSidePosOffset,
     appearance = props.appearance,
+    isSearchInput = props.isSearchInput,
     disabled = props.disabled,
     required = props.required,
     placeholder = props.placeholder,
@@ -976,39 +1188,6 @@ var LiveSearch = function LiveSearch(props) {
       popwinContainerHeightReset();
     }
   }
-  function popwinBtnEventsInit(getOptionsData) {
-    if (listContentRef.current === null) return;
-
-    // options event listener
-    // !!! to prevent button mismatch when changing
-    [].slice.call(listContentRef.current.querySelectorAll('.livesearch__control-option-item')).forEach(function (node) {
-      // Solve the problem of missing click events caused by `<MultiFuncSelect />` not updating "data" []
-      if (getOptionsData.length === 0) {
-        if (typeof node.dataset.ev === 'undefined') {
-          node.dataset.ev = 'true';
-
-          // Prevent touch screen from starting to click option, DO NOT USE "pointerdown"
-          node.addEventListener('click', function (e) {
-            handleSelect(e);
-          });
-        }
-      } else {
-        var optVal = node.dataset.value;
-        getOptionsData.forEach(function (item) {
-          if (optVal == item.value) {
-            if (typeof node.dataset.ev === 'undefined') {
-              node.dataset.ev = 'true';
-
-              // Prevent touch screen from starting to click option, DO NOT USE "pointerdown"
-              node.addEventListener('click', function (e) {
-                handleSelect(e);
-              });
-            }
-          }
-        });
-      }
-    });
-  }
   function popwinContainerHeightReset() {
     if (listContentRef.current === null) return;
 
@@ -1099,7 +1278,6 @@ var LiveSearch = function LiveSearch(props) {
           // window position
           setTimeout(function () {
             popwinPosInit();
-            popwinBtnEventsInit(response);
           }, 0);
         });
       } else {
@@ -1109,7 +1287,6 @@ var LiveSearch = function LiveSearch(props) {
         // window position
         setTimeout(function () {
           popwinPosInit();
-          popwinBtnEventsInit(orginalData);
         }, 0);
       }
     } else {
@@ -1119,7 +1296,6 @@ var LiveSearch = function LiveSearch(props) {
       // window position
       setTimeout(function () {
         popwinPosInit();
-        popwinBtnEventsInit(orginalData);
       }, 0);
     }
   }
@@ -1167,7 +1343,6 @@ var LiveSearch = function LiveSearch(props) {
             if (componentFirstLoad) {
               setTimeout(function () {
                 popwinPosInit();
-                popwinBtnEventsInit(_ORGIN_DATA);
               }, 500);
             }
             return _context3.abrupt("return", _ORGIN_DATA);
@@ -1267,7 +1442,6 @@ var LiveSearch = function LiveSearch(props) {
             // window position
             setTimeout(function () {
               popwinPosInit();
-              popwinBtnEventsInit(dataInit);
             }, 0);
           case 7:
           case "end":
@@ -1286,7 +1460,6 @@ var LiveSearch = function LiveSearch(props) {
     // window position
     setTimeout(function () {
       popwinPosInit();
-      popwinBtnEventsInit(dataInit);
     }, 0);
   }
   function handleBlur(e) {
@@ -1347,14 +1520,6 @@ var LiveSearch = function LiveSearch(props) {
     });
   }
   (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useEffect)(function () {
-    // Move HTML templates to tag end body </body>
-    // render() don't use "Fragment", in order to avoid error "Failed to execute 'insertBefore' on 'Node'"
-    // prevent "transform", "filter", "perspective" attribute destruction fixed viewport orientation
-    //--------------
-    if (document.body !== null && listRef.current !== null) {
-      document.body.appendChild(listRef.current);
-    }
-
     // Component first load
     //--------------
     if (!componentFirstLoad) {
@@ -1468,29 +1633,28 @@ var LiveSearch = function LiveSearch(props) {
     // Remove the global list of events, especially as scroll and interval.
     //--------------
     return function () {
-      var _document$querySelect;
       document.removeEventListener("keydown", listener);
       document.removeEventListener('pointerdown', handleClose);
       window.removeEventListener('scroll', windowScrollUpdate);
       window.removeEventListener('touchmove', windowScrollUpdate);
-
-      //
-      (_document$querySelect = document.querySelector("#livesearch__options-wrapper-".concat(idRes))) === null || _document$querySelect === void 0 ? void 0 : _document$querySelect.remove();
     };
   }, [value, data]);
   return /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, label ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
     className: "livesearch__wrapper__label"
-  }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("label", {
+  }, typeof label === 'string' ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("label", {
     htmlFor: "label-".concat(idRes),
     className: "form-label",
     dangerouslySetInnerHTML: {
       __html: "".concat(label)
     }
-  }))) : null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
+  }) : /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("label", {
+    htmlFor: "label-".concat(idRes),
+    className: "form-label"
+  }, label))) : null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
     className: "livesearch__wrapper ".concat(wrapperClassName || wrapperClassName === '' ? wrapperClassName : 'mb-3 position-relative', " ").concat(isOpen ? 'active' : ''),
     ref: rootRef,
     onMouseLeave: handleMouseLeaveTrigger
-  }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((cjs_default()), _extends({
+  }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((dist_cjs_default()), _extends({
     wrapperClassName: "",
     controlClassName: controlClassName,
     ref: inputRef,
@@ -1513,8 +1677,12 @@ var LiveSearch = function LiveSearch(props) {
     onClick: handleClick,
     icon: hideIcon ? '' : !fetchTrigger ? '' : icon,
     btnId: btnId,
-    autoComplete: "off"
-  }, attributes)), orginalData && !hasErr ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
+    autoComplete: "off",
+    isSearchInput: isSearchInput
+  }, attributes)), orginalData && !hasErr ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((cjs_default()), {
+    show: true,
+    containerClassName: "LiveSearch"
+  }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
     ref: listRef,
     id: "livesearch__options-wrapper-".concat(idRes),
     className: "livesearch__options-wrapper list-group position-absolute border shadow small ".concat(winWidth ? '' : ''),
@@ -1553,9 +1721,10 @@ var LiveSearch = function LiveSearch(props) {
       role: "tab",
       dangerouslySetInnerHTML: {
         __html: typeof item.listItemLabel === 'undefined' ? item.label : item.listItemLabel
-      }
+      },
+      onClick: handleSelect
     });
-  }) : null)))) : null, hideIcon ? null : /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, !fetchTrigger ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("span", {
+  }) : null))))) : null, hideIcon ? null : /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, !fetchTrigger ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("span", {
     className: "livesearch__wrapper-searchbtn position-absolute top-0 end-0"
   }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("button", {
     tabIndex: -1,

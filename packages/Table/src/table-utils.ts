@@ -6,7 +6,7 @@ export const removeItemOnce = (arr: any[], key: string) => {
 };
   
 
-export const formatCheckboxControlVal = (el: HTMLFormElement) => {
+export const formatCheckboxControlVal = (el: HTMLElement) => {
     const _curContent: any = ([].slice.call(el.closest('th')?.children).at(-1) as any).innerHTML;      
     const $row: any = el.closest('tr[data-key]');
     const _restContent: any[] = [].slice.call($row.children).map((node: any, i: number) => {

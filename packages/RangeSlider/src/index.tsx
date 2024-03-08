@@ -122,7 +122,7 @@ const RangeSlider = (props: RangeSliderProps) => {
     return (
         <>
 
-            {label ? <><div className="range-slider__label"><label htmlFor={`label-${idRes}`} className="form-label" dangerouslySetInnerHTML={{__html: `${label}`}}></label></div></> : null}
+            {label ? <><div className="range-slider__label">{typeof label === 'string' ? <label htmlFor={`label-${idRes}`} className="form-label" dangerouslySetInnerHTML={{__html: `${label}`}}></label> : <label htmlFor={`label-${idRes}`} className="form-label">{label}</label>}</div></> : null}
 
 
             <div className={wrapperClassName || wrapperClassName === '' ? `range-slider__wrapper ${onlyOne ? 'only-one' : ''} ${wrapperClassName}` : `range-slider__wrapper ${onlyOne ? 'only-one' : ''} mb-3 position-relative`} ref={rootRef}>

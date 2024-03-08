@@ -1,15 +1,210 @@
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
-		module.exports = factory(require("react"));
+		module.exports = factory(require("react"), require("react-dom"));
 	else if(typeof define === 'function' && define.amd)
-		define(["react"], factory);
+		define(["react", "react-dom"], factory);
 	else if(typeof exports === 'object')
-		exports["RPB"] = factory(require("react"));
+		exports["RPB"] = factory(require("react"), require("react-dom"));
 	else
-		root["RPB"] = factory(root["React"]);
-})(this, (__WEBPACK_EXTERNAL_MODULE__787__) => {
+		root["RPB"] = factory(root["React"], root["ReactDOM"]);
+})(this, (__WEBPACK_EXTERNAL_MODULE__787__, __WEBPACK_EXTERNAL_MODULE__156__) => {
 return /******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ({
+
+/***/ 909:
+/***/ (function(module, exports, __webpack_require__) {
+
+/* module decorator */ module = __webpack_require__.nmd(module);
+var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
+(function webpackUniversalModuleDefinition(root, factory) {
+  if (( false ? 0 : _typeof(exports)) === 'object' && ( false ? 0 : _typeof(module)) === 'object') module.exports = factory(__webpack_require__(787), __webpack_require__(156));else if (true) !(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(787), __webpack_require__(156)], __WEBPACK_AMD_DEFINE_FACTORY__ = (factory),
+		__WEBPACK_AMD_DEFINE_RESULT__ = (typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ?
+		(__WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__)) : __WEBPACK_AMD_DEFINE_FACTORY__),
+		__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));else {}
+})(this, function (__WEBPACK_EXTERNAL_MODULE__787__, __WEBPACK_EXTERNAL_MODULE__156__) {
+  return (/******/function () {
+      // webpackBootstrap
+      /******/
+      "use strict";
+
+      /******/
+      var __webpack_modules__ = {
+        /***/787: /***/function _(module) {
+          module.exports = __WEBPACK_EXTERNAL_MODULE__787__;
+
+          /***/
+        },
+
+        /***/156: /***/function _(module) {
+          module.exports = __WEBPACK_EXTERNAL_MODULE__156__;
+
+          /***/
+        }
+
+        /******/
+      };
+      /************************************************************************/
+      /******/ // The module cache
+      /******/
+      var __webpack_module_cache__ = {};
+      /******/
+      /******/ // The require function
+      /******/
+      function __nested_webpack_require_1708__(moduleId) {
+        /******/ // Check if module is in cache
+        /******/var cachedModule = __webpack_module_cache__[moduleId];
+        /******/
+        if (cachedModule !== undefined) {
+          /******/return cachedModule.exports;
+          /******/
+        }
+        /******/ // Create a new module (and put it into the cache)
+        /******/
+        var module = __webpack_module_cache__[moduleId] = {
+          /******/ // no module.id needed
+          /******/ // no module.loaded needed
+          /******/exports: {}
+          /******/
+        };
+        /******/
+        /******/ // Execute the module function
+        /******/
+        __webpack_modules__[moduleId](module, module.exports, __nested_webpack_require_1708__);
+        /******/
+        /******/ // Return the exports of the module
+        /******/
+        return module.exports;
+        /******/
+      }
+      /******/
+      /************************************************************************/
+      /******/ /* webpack/runtime/compat get default export */
+      /******/
+      (function () {
+        /******/ // getDefaultExport function for compatibility with non-harmony modules
+        /******/__nested_webpack_require_1708__.n = function (module) {
+          /******/var getter = module && module.__esModule ? /******/function () {
+            return module['default'];
+          } : /******/function () {
+            return module;
+          };
+          /******/
+          __nested_webpack_require_1708__.d(getter, {
+            a: getter
+          });
+          /******/
+          return getter;
+          /******/
+        };
+        /******/
+      })();
+      /******/
+      /******/ /* webpack/runtime/define property getters */
+      /******/
+      (function () {
+        /******/ // define getter functions for harmony exports
+        /******/__nested_webpack_require_1708__.d = function (exports, definition) {
+          /******/for (var key in definition) {
+            /******/if (__nested_webpack_require_1708__.o(definition, key) && !__nested_webpack_require_1708__.o(exports, key)) {
+              /******/Object.defineProperty(exports, key, {
+                enumerable: true,
+                get: definition[key]
+              });
+              /******/
+            }
+            /******/
+          }
+          /******/
+        };
+        /******/
+      })();
+      /******/
+      /******/ /* webpack/runtime/hasOwnProperty shorthand */
+      /******/
+      (function () {
+        /******/__nested_webpack_require_1708__.o = function (obj, prop) {
+          return Object.prototype.hasOwnProperty.call(obj, prop);
+        };
+        /******/
+      })();
+      /******/
+      /******/ /* webpack/runtime/make namespace object */
+      /******/
+      (function () {
+        /******/ // define __esModule on exports
+        /******/__nested_webpack_require_1708__.r = function (exports) {
+          /******/if (typeof Symbol !== 'undefined' && Symbol.toStringTag) {
+            /******/Object.defineProperty(exports, Symbol.toStringTag, {
+              value: 'Module'
+            });
+            /******/
+          }
+          /******/
+          Object.defineProperty(exports, '__esModule', {
+            value: true
+          });
+          /******/
+        };
+        /******/
+      })();
+      /******/
+      /************************************************************************/
+      var __webpack_exports__ = {};
+      // This entry need to be wrapped in an IIFE because it need to be isolated against other modules in the chunk.
+      (function () {
+        __nested_webpack_require_1708__.r(__webpack_exports__);
+        /* harmony export */
+        __nested_webpack_require_1708__.d(__webpack_exports__, {
+          /* harmony export */"default": function _default() {
+            return __WEBPACK_DEFAULT_EXPORT__;
+          }
+          /* harmony export */
+        });
+        /* harmony import */
+        var react__WEBPACK_IMPORTED_MODULE_0__ = __nested_webpack_require_1708__(787);
+        /* harmony import */
+        var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__nested_webpack_require_1708__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+        /* harmony import */
+        var react_dom__WEBPACK_IMPORTED_MODULE_1__ = __nested_webpack_require_1708__(156);
+        /* harmony import */
+        var react_dom__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__nested_webpack_require_1708__.n(react_dom__WEBPACK_IMPORTED_MODULE_1__);
+        var RootPortal = function RootPortal(props) {
+          var containerClassName = props.containerClassName,
+            show = props.show,
+            children = props.children;
+          var containerRef = (0, react__WEBPACK_IMPORTED_MODULE_0__.useRef)();
+
+          // Move HTML templates to tag end body </body>
+          // render() don't use "Fragment", in order to avoid error "Failed to execute 'insertBefore' on 'Node'"
+          // prevent "transform", "filter", "perspective" attribute destruction fixed viewport orientation
+          // ###
+          // ###
+          // Use `containerRef.current` to ensure the correctness of the nextjs framework. It may report an error document as undefined
+
+          (0, react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(function () {
+            containerRef.current = document.createElement('div');
+            containerRef.current.className = "root-portal-container ".concat(containerClassName || '');
+            document.body.appendChild(containerRef.current);
+            return function () {
+              if (containerRef.current) {
+                containerRef.current.remove();
+              }
+            };
+          }, []);
+          return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react__WEBPACK_IMPORTED_MODULE_0___default().Fragment, null, containerRef.current && show && /*#__PURE__*/(0, react_dom__WEBPACK_IMPORTED_MODULE_1__.createPortal)(children, containerRef.current));
+        };
+        /* harmony default export */
+        var __WEBPACK_DEFAULT_EXPORT__ = RootPortal;
+      })();
+
+      /******/
+      return __webpack_exports__;
+      /******/
+    }()
+  );
+});
+
+/***/ }),
 
 /***/ 378:
 /***/ ((module) => {
@@ -159,6 +354,14 @@ module.exports = {
 "use strict";
 module.exports = __WEBPACK_EXTERNAL_MODULE__787__;
 
+/***/ }),
+
+/***/ 156:
+/***/ ((module) => {
+
+"use strict";
+module.exports = __WEBPACK_EXTERNAL_MODULE__156__;
+
 /***/ })
 
 /******/ 	});
@@ -175,13 +378,16 @@ module.exports = __WEBPACK_EXTERNAL_MODULE__787__;
 /******/ 		}
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = __webpack_module_cache__[moduleId] = {
-/******/ 			// no module.id needed
-/******/ 			// no module.loaded needed
+/******/ 			id: moduleId,
+/******/ 			loaded: false,
 /******/ 			exports: {}
 /******/ 		};
 /******/ 	
 /******/ 		// Execute the module function
-/******/ 		__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
+/******/ 		__webpack_modules__[moduleId].call(module.exports, module, module.exports, __webpack_require__);
+/******/ 	
+/******/ 		// Flag the module as loaded
+/******/ 		module.loaded = true;
 /******/ 	
 /******/ 		// Return the exports of the module
 /******/ 		return module.exports;
@@ -228,6 +434,15 @@ module.exports = __WEBPACK_EXTERNAL_MODULE__787__;
 /******/ 		};
 /******/ 	})();
 /******/ 	
+/******/ 	/* webpack/runtime/node module decorator */
+/******/ 	(() => {
+/******/ 		__webpack_require__.nmd = (module) => {
+/******/ 			module.paths = [];
+/******/ 			if (!module.children) module.children = [];
+/******/ 			return module;
+/******/ 		};
+/******/ 	})();
+/******/ 	
 /************************************************************************/
 var __webpack_exports__ = {};
 // This entry need to be wrapped in an IIFE because it need to be in strict mode.
@@ -239,8 +454,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(787);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _utils_get_element_property__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(378);
-/* harmony import */ var _utils_get_element_property__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_utils_get_element_property__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var funda_root_portal__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(909);
+/* harmony import */ var funda_root_portal__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(funda_root_portal__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _utils_get_element_property__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(378);
+/* harmony import */ var _utils_get_element_property__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_utils_get_element_property__WEBPACK_IMPORTED_MODULE_2__);
 function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
 function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
 function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
@@ -249,6 +466,35 @@ function _iterableToArrayLimit(arr, i) { var _i = null == arr ? null : "undefine
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 
+
+var useContainerDimensions = function useContainerDimensions(myRef) {
+  var _useState = useState({
+      width: 0,
+      height: 0
+    }),
+    _useState2 = _slicedToArray(_useState, 2),
+    dimensions = _useState2[0],
+    setDimensions = _useState2[1];
+  useEffect(function () {
+    var getDimensions = function getDimensions() {
+      return {
+        width: myRef.current.offsetWidth,
+        height: myRef.current.offsetHeight
+      };
+    };
+    var handleResize = function handleResize() {
+      setDimensions(getDimensions());
+    };
+    if (myRef.current) {
+      setDimensions(getDimensions());
+    }
+    window.addEventListener("resize", handleResize);
+    return function () {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, [myRef]);
+  return dimensions;
+};
 var Tooltip = function Tooltip(props) {
   var wrapperClassName = props.wrapperClassName,
     direction = props.direction,
@@ -268,14 +514,21 @@ var Tooltip = function Tooltip(props) {
   var modalRef = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(null);
   var HOVER_DELAY = hoverDelay ? hoverDelay : 200;
   var MOUSE_OUT_DELAY = mouseOutDelay ? mouseOutDelay : HOVER_DELAY;
-  var _useState = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(false),
-    _useState2 = _slicedToArray(_useState, 2),
-    hasBeenShown = _useState2[0],
-    setHasBeenShown = _useState2[1];
   var _useState3 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(false),
     _useState4 = _slicedToArray(_useState3, 2),
-    isShow = _useState4[0],
-    setIsShow = _useState4[1];
+    hasBeenShown = _useState4[0],
+    setHasBeenShown = _useState4[1];
+  var _useState5 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(false),
+    _useState6 = _slicedToArray(_useState5, 2),
+    isShow = _useState6[0],
+    setIsShow = _useState6[1];
+  var _useState7 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)({
+      x: 0,
+      y: 0
+    }),
+    _useState8 = _slicedToArray(_useState7, 2),
+    position = _useState8[0],
+    setPosition = _useState8[1];
 
   //timer hover
   var timeoutHoverIdRef = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(null);
@@ -304,61 +557,69 @@ var Tooltip = function Tooltip(props) {
     clearTimeout(timeoutMouseoutIdRef.current);
     timeoutMouseoutIdRef.current = null;
   };
+  var exceededOffsetInit = function exceededOffsetInit() {
+    // Determine whether it exceeds the far right or left side of the screen
+    //------------------
+    var _modalRef = modalRef.current;
+    if (_modalRef === null) return;
+    var _modalContent = _modalRef.querySelector('.tooltip__content');
+    var _modalBox = _modalContent.getBoundingClientRect();
+    if (typeof _modalContent.dataset.offset === 'undefined') {
+      if (_modalBox.right > window.innerWidth) {
+        var _modalOffsetPosition = _modalBox.right - window.innerWidth + EXCEEDED_SIDE_POS_OFFSET;
+        _modalContent.dataset.offset = _modalOffsetPosition;
+        _modalContent.style.marginLeft = "-".concat(_modalOffsetPosition, "px");
+        // console.log('_modalPosition: ', _modalOffsetPosition)
+      }
+
+      if (_modalBox.left < 0) {
+        var _modalOffsetPosition2 = Math.abs(_modalBox.left) + EXCEEDED_SIDE_POS_OFFSET;
+        _modalContent.dataset.offset = _modalOffsetPosition2;
+        _modalContent.style.marginLeft = "".concat(_modalOffsetPosition2, "px");
+
+        // console.log('_modalPosition: ', _modalOffsetPosition)
+      }
+    }
+  };
+
   function handleMouseEnter(e) {
     stopTimerHover();
     stopTimerMouseout();
     startTimerHover();
 
     // update modal position
-    var _modalRef = document.querySelector("#tooltip__wrapper-".concat(idRes));
-    var _triggerRef = e.target;
+    //------------------
+    var _triggerRef = e.currentTarget;
 
     // console.log(getAbsolutePositionOfStage(_triggerRef));
-
-    if (_modalRef !== null && _triggerRef !== null) {
-      var _getAbsolutePositionO = (0,_utils_get_element_property__WEBPACK_IMPORTED_MODULE_1__.getAbsolutePositionOfStage)(_triggerRef),
+    if (_triggerRef !== null) {
+      var _getAbsolutePositionO = (0,_utils_get_element_property__WEBPACK_IMPORTED_MODULE_2__.getAbsolutePositionOfStage)(_triggerRef),
         x = _getAbsolutePositionO.x,
         y = _getAbsolutePositionO.y,
         width = _getAbsolutePositionO.width,
         height = _getAbsolutePositionO.height;
-      var pos = _modalRef.dataset.microtipPosition;
+      var pos = _triggerRef.dataset.microtipPosition;
       if (typeof pos === 'undefined') pos = 'top';
 
       // TOP
       //
       if (pos.indexOf('top') >= 0) {
-        _modalRef.style.left = x + width / 2 + 'px';
-        _modalRef.style.top = y - height - POS_OFFSET + 'px';
+        setPosition({
+          x: x + width / 2 + 'px',
+          y: y - height - POS_OFFSET + 'px'
+        });
       }
 
       // BOTTOM
       //
       if (pos.indexOf('bottom') >= 0) {
-        _modalRef.style.left = x + width / 2 + 'px';
-        _modalRef.style.top = y + height + POS_OFFSET + 'px';
-      }
-
-      // Determine whether it exceeds the far right or left side of the screen
-      var _modalContent = _modalRef.querySelector('.tooltip__content');
-      var _modalBox = _modalContent.getBoundingClientRect();
-      if (typeof _modalContent.dataset.offset === 'undefined') {
-        if (_modalBox.right > window.innerWidth) {
-          var _modalOffsetPosition = _modalBox.right - window.innerWidth + EXCEEDED_SIDE_POS_OFFSET;
-          _modalContent.dataset.offset = _modalOffsetPosition;
-          _modalContent.style.marginLeft = "-".concat(_modalOffsetPosition, "px");
-          // console.log('_modalPosition: ', _modalOffsetPosition)
-        }
-
-        if (_modalBox.left < 0) {
-          var _modalOffsetPosition2 = Math.abs(_modalBox.left) + EXCEEDED_SIDE_POS_OFFSET;
-          _modalContent.dataset.offset = _modalOffsetPosition2;
-          _modalContent.style.marginLeft = "".concat(_modalOffsetPosition2, "px");
-          // console.log('_modalPosition: ', _modalOffsetPosition)
-        }
+        setPosition({
+          x: x + width / 2 + 'px',
+          y: y + height + POS_OFFSET + 'px'
+        });
       }
     }
   }
-
   function handleMouseLeave() {
     stopTimerHover();
     stopTimerMouseout();
@@ -371,39 +632,44 @@ var Tooltip = function Tooltip(props) {
     hideTip();
   }
   (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(function () {
-    // Move HTML templates to tag end body </body>
-    // render() don't use "Fragment", in order to avoid error "Failed to execute 'insertBefore' on 'Node'"
-    // prevent "transform", "filter", "perspective" attribute destruction fixed viewport orientation
-    //--------------
-    if (document.body !== null && modalRef.current !== null) {
-      document.body.appendChild(modalRef.current);
-    }
     window.removeEventListener('touchstart', handleTouchStart);
     window.addEventListener('touchstart', handleTouchStart);
     return function () {
-      var _document$querySelect;
       stopTimerHover();
       stopTimerMouseout();
       window.removeEventListener('touchstart', handleTouchStart);
-      (_document$querySelect = document.querySelector("#tooltip__wrapper-".concat(idRes))) === null || _document$querySelect === void 0 ? void 0 : _document$querySelect.remove();
     };
   }, []);
-  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-    ref: modalRef,
-    id: "tooltip__wrapper-".concat(idRes),
-    className: "".concat(wrapperClassName || wrapperClassName === '' ? "tooltip__wrapper ".concat(wrapperClassName) : "tooltip__wrapper d-inline-block", " ").concat(isShow ? 'active' : ''),
-    role: "tooltip",
-    "data-microtip-position": direction || 'top',
-    "data-microtip-size": size || 'auto'
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-    className: "tooltip__content"
-  }, content))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+
+  // Prevent element data from being unable to be obtained when ref is null
+  (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(function () {
+    exceededOffsetInit();
+  });
+  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
     ref: rootRef,
     "data-overlay-id": "tooltip__wrapper-".concat(idRes),
     className: "tooltip__trigger d-inline-block",
+    "data-microtip-position": direction || 'top',
+    "data-microtip-size": size || 'auto',
     onMouseEnter: handleMouseEnter,
     onMouseLeave: handleMouseLeave
-  }, children));
+  }, children), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((funda_root_portal__WEBPACK_IMPORTED_MODULE_1___default()), {
+    show: isShow,
+    containerClassName: "Tooltip"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+    ref: modalRef,
+    id: "tooltip__wrapper-".concat(idRes),
+    className: "tooltip__wrapper ".concat(wrapperClassName || '', " active"),
+    role: "tooltip",
+    "data-microtip-position": direction || 'top',
+    "data-microtip-size": size || 'auto',
+    style: {
+      left: position.x,
+      top: position.y
+    }
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+    className: "tooltip__content"
+  }, content))));
 };
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Tooltip);
 })();

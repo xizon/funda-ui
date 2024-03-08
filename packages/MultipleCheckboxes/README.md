@@ -9,6 +9,7 @@ import MultipleCheckboxes from 'funda-ui/MultipleCheckboxes';
 ```
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |
+| `ref` | React.ForwardedRef | - | It is the return element of this component.  |
 | `wrapperClassName` | string | `mb-3 position-relative` | The class name of the control wrapper. |
 | `groupWrapperClassName` | string | - | The class name of the radio group wrapper. |
 | `groupLabelClassName` | string | - | The class name of the radio group label. |

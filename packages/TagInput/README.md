@@ -9,6 +9,7 @@ import TagInput from 'funda-ui/TagInput';
 ```
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |
+| `ref` | React.ForwardedRef | - | It is the return element of this component.  |
 | `wrapperClassName` | string | `mb-3 position-relative` | The class name of the control wrapper. |
 | `extractValueByBrackets` | boolean  | true | Whether to use square brackets to save result and initialize default value. |
 | `maxTags` | number | 10 | Maximum number of tags that can be added. |

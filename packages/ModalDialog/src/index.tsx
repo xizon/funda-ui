@@ -1,4 +1,7 @@
-import React, { useId, useState, useRef, useEffect } from 'react';
+import React, { useId, useState, useRef, useEffect, forwardRef, useImperativeHandle } from 'react';
+
+import RootPortal from 'funda-root-portal';
+
 //Destroys body scroll locking
 import { clearAllBodyScrollLocks, disableBodyScroll, enableBodyScroll } from './plugins/BSL';
 
@@ -17,6 +20,10 @@ declare global {
 }
 
 
+interface ModalDialogRef {
+    open: () => void;
+    close: () => void;
+}
 
 type ModalDialogProps = {
     /** Extended class name */
@@ -28,8 +35,6 @@ type ModalDialogProps = {
     modalFooterExpandedContentClassName?: string;
     /** Whether the modal dialog is visible or not, you can use it with the `autoClose` property at the same time */
     show: boolean;
-    /** Prevent "transform", "filter", "perspective" attribute destruction fixed viewport orientation. Enabled by default, after enabling the default JS event will be invalid, you need to use the `onOpen` attribute to add some new events to elements. Please refer to the example. */
-    protectFixedViewport?: boolean;
     /** Custom modal max-width whick need a unit string. */
     maxWidth?: number | string | Function;
     /** Custom modal max-height whick need a unit string. */
@@ -74,7 +79,7 @@ type ModalDialogProps = {
     onSubmit?: (e: any, callback: any, incomingData: string | null | undefined) => void;
 };
 
-const ModalDialog = (props: ModalDialogProps) => {
+const ModalDialog = forwardRef((props: ModalDialogProps, ref: React.ForwardedRef<ModalDialogRef>) => {
     const {
         modalContentClassName,
         modalHeaderClassName,
@@ -83,7 +88,6 @@ const ModalDialog = (props: ModalDialogProps) => {
         modalFooterClassName,
         modalFooterExpandedContentClassName,
         show,
-        protectFixedViewport,
         maxWidth,
         minHeight,
         enableVideo,
@@ -117,12 +121,27 @@ const ModalDialog = (props: ModalDialogProps) => {
     const modalRef = useRef<any>(null);
     const triggerRef = useRef<any>(null);
     const idRes = id || uniqueID;
-    const PROTECT_FIXED_VIEWPORT =  typeof protectFixedViewport === 'undefined' ? true : protectFixedViewport;
 
-    const [winShow, setWinShow] = useState<boolean>(false);
+    const [modalShow, setModalShow] = useState<boolean>(false);
     const [incomingData, setIncomingData] = useState<string | null | undefined>(null);
 
 
+    // exposes the following methods
+    useImperativeHandle(
+        ref,
+        () => ({
+            open: () => {
+                handleOpenWin(null);
+            },
+            close: () => {
+                handleCloseWin(null);
+            }
+        }),
+        [ref],
+    );
+
+
+    //
     function handleCloseWin(e: any) {
         if (typeof e !== 'undefined' && e !== null) e.preventDefault();
 
@@ -157,7 +176,7 @@ const ModalDialog = (props: ModalDialogProps) => {
         // close Modal Dialog
         //------------------------------------------
         const $mask: HTMLElement | null = document.querySelector(`#mask-${idRes} > .modal-backdrop`);
-        setWinShow(false);
+        setModalShow(false);
         if ($mask !== null) $mask.classList.remove('show');
 
         setTimeout(() => {
@@ -181,6 +200,8 @@ const ModalDialog = (props: ModalDialogProps) => {
 
 
     function openAction() {
+
+        if (modalRef.current === null) return;
 
 
         // Video PopUp Interaction
@@ -257,7 +278,7 @@ const ModalDialog = (props: ModalDialogProps) => {
         modalRef.current.style.display = 'block';
         if ($mask !== null) $mask.style.display = 'block';
         setTimeout(() => {
-            setWinShow(true);
+            setModalShow(true);
             if ($mask !== null) $mask.classList.add('show');
         }, 0);
 
@@ -321,64 +342,6 @@ const ModalDialog = (props: ModalDialogProps) => {
         //--------------
         setIncomingData(data);
 
- 
-        // Move HTML templates to tag end body </body>
-        // render() don't use "Fragment", in order to avoid error "Failed to execute 'insertBefore' on 'Node'"
-        // prevent "transform", "filter", "perspective" attribute destruction fixed viewport orientation
-        //--------------
-        if ( PROTECT_FIXED_VIEWPORT ) {
-            if ( document.body !== null && modalRef.current !== null) {
-                
-                document.body.appendChild(modalRef.current);
-
-                [].slice.call(modalRef.current.querySelectorAll('[data-close]')).forEach((node: HTMLElement) => {
-                    if ( typeof node.dataset.ev === 'undefined' ) {
-                        node.dataset.ev = 'true';
-                        node.addEventListener('pointerdown', (e: any) => {
-                            handleCloseWin(e);
-                        });
-                    }
-
-                });
-                [].slice.call(modalRef.current.querySelectorAll('[data-confirm]')).forEach((node: HTMLElement) => {
-                    if ( typeof node.dataset.ev === 'undefined' ) {
-                        node.dataset.ev = 'true';
-                        node.addEventListener('pointerdown', (e: any) => {
-                            const callback = (e: any) => {
-                                return () => {
-                                    handleCloseWin(e);
-                                }
-                            };
-
-                            const _incomingData = node.dataset.incomingData;
-                            onSubmit?.(e, callback(e), _incomingData);
-                        });
-                    }
-
-                });  
-            }
-            
-
-        }
-
-
-        // add mask
-        //--------------
-        if (document.getElementById(`mask-${idRes}`) === null && !maskDisabled && document.body !== null) {
-            const maskDiv = document.createElement('div');
-            maskDiv.id = `mask-${idRes}`;
-            maskDiv.innerHTML = `<div class="${winShow ? 'modal-backdrop fade show' : 'modal-backdrop fade'}" style="display:none;${maskOpacity ? `opacity:${maskOpacity};` : ''}"></div>`;
-            document.body.appendChild(maskDiv);
-
-            if (!closeOnlyBtn) {
-                const $mask: HTMLElement | null = document.querySelector(`#mask-${idRes} > .modal-backdrop`);
-                if ($mask !== null) $mask.addEventListener('pointerdown', (e: any) => {
-                    handleCloseWin(e);
-                });
-            }
-
-        }
-
 
         // show
         //--------------
@@ -411,28 +374,6 @@ const ModalDialog = (props: ModalDialogProps) => {
             // Cancels a timeout previously established by calling setTimeout().
             clearTimeout(window.setCloseModalDialog);
             
-            // Remove all masks and modals
-            Array.prototype.forEach.call(document.querySelectorAll('.modal'), (node: any) => {
-
-                if ( PROTECT_FIXED_VIEWPORT ) {
-                    // for current actived modal
-                    if (node.classList.contains('protect-fixed-viewport') && node.classList.contains('show')) {
-                        node.remove();
-                    }
-                }
-
-            });
-            
-
-            // If there is no active modal, hide all masks
-            const existingModal = [].slice.call(document.querySelectorAll('.modal')).filter((node: any) => node.classList.contains('show')).length > 0;
-            if ( !existingModal ) {
-                Array.prototype.forEach.call(document.querySelectorAll('.modal-backdrop'), (mask: any) => {
-                    mask.classList.remove('show');
-                    mask.style.display = 'none';
-                });
-            }
-
         }
 
 
@@ -444,67 +385,90 @@ const ModalDialog = (props: ModalDialogProps) => {
                 <div className={triggerClassName ? triggerClassName : 'd-inline w-auto'} ref={triggerRef} onClick={handleOpenWin}>{triggerContent}</div>
             </> : null}
 
+     
             {/* Modal */}
-            <div ref={modalRef} className={enableVideo ? `modal ${PROTECT_FIXED_VIEWPORT ? 'protect-fixed-viewport' : ''} fade is-video ${winShow ? 'show' : ''}` : `modal ${PROTECT_FIXED_VIEWPORT ? 'protect-fixed-viewport' : ''} fade ${winShow ? 'show' : ''}`} tabIndex={-1} aria-hidden="true" style={{ pointerEvents: 'none' }} data-mask={`mask-${idRes}`}>
-                <div className="modal-dialog modal-dialog-centered modal-dialog-scrollable" style={M_WIDTH ? { maxWidth: `${M_WIDTH}` } : {}}>
-                    <div className={`${enableVideo ? 'modal-content bg-transparent shadow-none border-0' : 'modal-content'} ${modalContentClassName || ''}`} style={{overflow: 'inherit',minHeight: M_HEIGHT ? M_HEIGHT : 'auto'}}>
-                        {(!heading || heading === '') && closeDisabled ? null : <>
+            <RootPortal show={true} containerClassName="ModalDialog">
 
-                            <div className={`${enableVideo ? 'modal-header border-0 px-0' : 'modal-header'} ${modalHeaderClassName || ''}`}>
-                                <h5 className={`modal-title ${modalTitleClassName || ''}`}>{heading || ''}</h5>
-                                {!closeDisabled ? <button type="button" className={enableVideo ? 'btn-close btn-close-white' : 'btn-close'} data-close="1" onClick={handleCloseWin}></button> : null}
+                <div ref={modalRef} className={enableVideo ? `modal fade is-video ${modalShow ? 'show' : ''}` : `modal fade ${modalShow ? 'show' : ''}`} tabIndex={-1} aria-hidden="true" style={{ pointerEvents: 'none' }} data-mask={`mask-${idRes}`}>
+                    <div className="modal-dialog modal-dialog-centered modal-dialog-scrollable" style={M_WIDTH ? { maxWidth: `${M_WIDTH}` } : {}}>
+                        <div className={`${enableVideo ? 'modal-content bg-transparent shadow-none border-0' : 'modal-content'} ${modalContentClassName || ''}`} style={{ overflow: 'inherit', minHeight: M_HEIGHT ? M_HEIGHT : 'auto' }}>
+                            {(!heading || heading === '') && closeDisabled ? null : <>
 
-                            </div>
-                        </>}
+                                <div className={`${enableVideo ? 'modal-header border-0 px-0' : 'modal-header'} ${modalHeaderClassName || ''}`}>
+                                    <h5 className={`modal-title ${modalTitleClassName || ''}`}>{heading || ''}</h5>
+                                    {!closeDisabled ? <button type="button" className={enableVideo ? 'btn-close btn-close-white' : 'btn-close'} data-close="1" onClick={handleCloseWin}></button> : null}
 
-                        <div className={`${enableVideo ? 'modal-body m-0 p-0' : 'modal-body'} ${modalBodyClassName || ''}`}>
-                            {/*<!-- ////////  content  begin //////// -->*/}
-                            {enableVideo ? <>
-                                <div className="modal-dialog__video">
-                                    <div className="ratio ratio-16x9">
-                                        {children}
-                                    </div>
                                 </div>
-                            </> : children}
-                            {/*<!-- ////////  content  end //////// -->*/}
+                            </>}
+
+                            <div className={`${enableVideo ? 'modal-body m-0 p-0' : 'modal-body'} ${modalBodyClassName || ''}`}>
+                                {/*<!-- ////////  content  begin //////// -->*/}
+                                {enableVideo ? <>
+                                    <div className="modal-dialog__video">
+                                        <div className="ratio ratio-16x9">
+                                            {children}
+                                        </div>
+                                    </div>
+                                </> : children}
+                                {/*<!-- ////////  content  end //////// -->*/}
+                            </div>
+
+
+
+                            {/* FOOTER CONTENT */}
+                            {footerExpandedContent ? <>
+                                <div className={`modal-footer modal-expanded-footer ${modalFooterExpandedContentClassName || ''}`}>
+                                    {footerExpandedContent}
+                                </div>
+                            </> : null}
+                            {/* /FOOTER CONTENT */}
+
+
+                            {/* SUBMIT & CANCEL */}
+                            {closeBtnLabel || submitBtnLabel ? <>
+                                <div className={`modal-footer ${modalFooterClassName || ''}`}>
+
+                                    {!closeDisabled ? <>{closeBtnLabel ? <button data-close="1" onClick={handleCloseWin} type="button" className={closeBtnClassName ? closeBtnClassName : 'btn btn-secondary'}>{closeBtnLabel}</button> : null}</> : null}
+
+                                    {submitBtnLabel ? <button data-confirm="1" data-incoming-data={`${incomingData}`} onClick={(e: any) => {
+                                        const callback = (e: any) => {
+                                            return () => {
+                                                handleCloseWin(e);
+                                            }
+                                        };
+                                        onSubmit?.(e, callback(e), incomingData);
+                                    }} type="button" className={submitBtnClassName ? submitBtnClassName : 'btn btn-primary'}>{submitBtnLabel}</button> : null}
+                                </div>
+                            </> : null}
+                            {/* /SUBMIT & CANCEL */}
+
                         </div>
-
-                        
-
-                        {/* FOOTER CONTENT */}
-                        {footerExpandedContent ? <>
-                            <div className={`modal-footer modal-expanded-footer ${modalFooterExpandedContentClassName || ''}`}>
-                                {footerExpandedContent}
-                            </div>
-                        </> : null}
-                        {/* /FOOTER CONTENT */}
-
-                                                            
-                        {/* SUBMIT & CANCEL */}
-                        {closeBtnLabel || submitBtnLabel ? <>
-                            <div className={`modal-footer ${modalFooterClassName || ''}`}>
-
-                                {!closeDisabled ? <>{closeBtnLabel ? <button data-close="1" onClick={handleCloseWin} type="button" className={closeBtnClassName ? closeBtnClassName : 'btn btn-secondary'}>{closeBtnLabel}</button> : null}</> : null}
-
-                                {submitBtnLabel ? <button data-confirm="1" data-incoming-data={`${incomingData}`} onClick={(e: any) => {
-                                    const callback = (e: any) => {
-                                        return () => {
-                                            handleCloseWin(e);
-                                        }
-                                    };
-                                    onSubmit?.(e, callback(e), incomingData);
-                                }} type="button" className={submitBtnClassName ? submitBtnClassName : 'btn btn-primary'}>{submitBtnLabel}</button> : null}
-                            </div>
-                        </> : null}
-                        {/* /SUBMIT & CANCEL */}
-
                     </div>
                 </div>
-            </div>
+
+                {/* MASK */}
+                {!maskDisabled ? <div id={`mask-${idRes}`}>
+                    <div
+                        id={`mask-${idRes}`}
+                        className={modalShow ? 'modal-backdrop fade show' : 'modal-backdrop fade'}
+                        style={maskOpacity ? {
+                            display: modalShow ? 'block' : 'none',
+                            opacity: maskOpacity
+                        } : {
+                            display: modalShow ? 'block' : 'none'
+                        }}
+                        onClick={handleCloseWin}
+                    ></div>
+                </div> : null}
+                {/* /MASK */}
+
+                
+            </RootPortal>
+
 
 
         </div>
     )
-};
+});
 
 export default ModalDialog;

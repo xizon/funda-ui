@@ -293,7 +293,7 @@ const DynamicFields = (props: DynamicFieldsProps) => {
 
 
             <div className={wrapperClassName || wrapperClassName === '' ? wrapperClassName : "mb-3 position-relative"} ref={rootRef}>
-                {label ? <><label className="form-label" dangerouslySetInnerHTML={{__html: `${label}`}}></label></> : null}
+                {label ? <>{typeof label === 'string' ? <label className="form-label" dangerouslySetInnerHTML={{__html: `${label}`}}></label> : <label className="form-label">{label}</label>}</> : null}
 
                 <div ref={fieldsRef} className="dynamic-fields-container" data-max-fields={maxFields || 10} id={idRes}>
 

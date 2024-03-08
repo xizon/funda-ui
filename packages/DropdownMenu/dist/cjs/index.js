@@ -1,13 +1,13 @@
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
-		module.exports = factory(require("react"));
+		module.exports = factory(require("react"), require("react-dom"));
 	else if(typeof define === 'function' && define.amd)
-		define(["react"], factory);
+		define(["react", "react-dom"], factory);
 	else if(typeof exports === 'object')
-		exports["RPB"] = factory(require("react"));
+		exports["RPB"] = factory(require("react"), require("react-dom"));
 	else
-		root["RPB"] = factory(root["React"]);
-})(this, (__WEBPACK_EXTERNAL_MODULE__787__) => {
+		root["RPB"] = factory(root["React"], root["ReactDOM"]);
+})(this, (__WEBPACK_EXTERNAL_MODULE__787__, __WEBPACK_EXTERNAL_MODULE__156__) => {
 return /******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ({
 
@@ -153,11 +153,214 @@ module.exports = {
 
 /***/ }),
 
+/***/ 909:
+/***/ (function(module, exports, __webpack_require__) {
+
+/* module decorator */ module = __webpack_require__.nmd(module);
+var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
+(function webpackUniversalModuleDefinition(root, factory) {
+  if (( false ? 0 : _typeof(exports)) === 'object' && ( false ? 0 : _typeof(module)) === 'object') module.exports = factory(__webpack_require__(787), __webpack_require__(156));else if (true) !(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(787), __webpack_require__(156)], __WEBPACK_AMD_DEFINE_FACTORY__ = (factory),
+		__WEBPACK_AMD_DEFINE_RESULT__ = (typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ?
+		(__WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__)) : __WEBPACK_AMD_DEFINE_FACTORY__),
+		__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));else {}
+})(this, function (__WEBPACK_EXTERNAL_MODULE__787__, __WEBPACK_EXTERNAL_MODULE__156__) {
+  return (/******/function () {
+      // webpackBootstrap
+      /******/
+      "use strict";
+
+      /******/
+      var __webpack_modules__ = {
+        /***/787: /***/function _(module) {
+          module.exports = __WEBPACK_EXTERNAL_MODULE__787__;
+
+          /***/
+        },
+
+        /***/156: /***/function _(module) {
+          module.exports = __WEBPACK_EXTERNAL_MODULE__156__;
+
+          /***/
+        }
+
+        /******/
+      };
+      /************************************************************************/
+      /******/ // The module cache
+      /******/
+      var __webpack_module_cache__ = {};
+      /******/
+      /******/ // The require function
+      /******/
+      function __nested_webpack_require_1708__(moduleId) {
+        /******/ // Check if module is in cache
+        /******/var cachedModule = __webpack_module_cache__[moduleId];
+        /******/
+        if (cachedModule !== undefined) {
+          /******/return cachedModule.exports;
+          /******/
+        }
+        /******/ // Create a new module (and put it into the cache)
+        /******/
+        var module = __webpack_module_cache__[moduleId] = {
+          /******/ // no module.id needed
+          /******/ // no module.loaded needed
+          /******/exports: {}
+          /******/
+        };
+        /******/
+        /******/ // Execute the module function
+        /******/
+        __webpack_modules__[moduleId](module, module.exports, __nested_webpack_require_1708__);
+        /******/
+        /******/ // Return the exports of the module
+        /******/
+        return module.exports;
+        /******/
+      }
+      /******/
+      /************************************************************************/
+      /******/ /* webpack/runtime/compat get default export */
+      /******/
+      (function () {
+        /******/ // getDefaultExport function for compatibility with non-harmony modules
+        /******/__nested_webpack_require_1708__.n = function (module) {
+          /******/var getter = module && module.__esModule ? /******/function () {
+            return module['default'];
+          } : /******/function () {
+            return module;
+          };
+          /******/
+          __nested_webpack_require_1708__.d(getter, {
+            a: getter
+          });
+          /******/
+          return getter;
+          /******/
+        };
+        /******/
+      })();
+      /******/
+      /******/ /* webpack/runtime/define property getters */
+      /******/
+      (function () {
+        /******/ // define getter functions for harmony exports
+        /******/__nested_webpack_require_1708__.d = function (exports, definition) {
+          /******/for (var key in definition) {
+            /******/if (__nested_webpack_require_1708__.o(definition, key) && !__nested_webpack_require_1708__.o(exports, key)) {
+              /******/Object.defineProperty(exports, key, {
+                enumerable: true,
+                get: definition[key]
+              });
+              /******/
+            }
+            /******/
+          }
+          /******/
+        };
+        /******/
+      })();
+      /******/
+      /******/ /* webpack/runtime/hasOwnProperty shorthand */
+      /******/
+      (function () {
+        /******/__nested_webpack_require_1708__.o = function (obj, prop) {
+          return Object.prototype.hasOwnProperty.call(obj, prop);
+        };
+        /******/
+      })();
+      /******/
+      /******/ /* webpack/runtime/make namespace object */
+      /******/
+      (function () {
+        /******/ // define __esModule on exports
+        /******/__nested_webpack_require_1708__.r = function (exports) {
+          /******/if (typeof Symbol !== 'undefined' && Symbol.toStringTag) {
+            /******/Object.defineProperty(exports, Symbol.toStringTag, {
+              value: 'Module'
+            });
+            /******/
+          }
+          /******/
+          Object.defineProperty(exports, '__esModule', {
+            value: true
+          });
+          /******/
+        };
+        /******/
+      })();
+      /******/
+      /************************************************************************/
+      var __webpack_exports__ = {};
+      // This entry need to be wrapped in an IIFE because it need to be isolated against other modules in the chunk.
+      (function () {
+        __nested_webpack_require_1708__.r(__webpack_exports__);
+        /* harmony export */
+        __nested_webpack_require_1708__.d(__webpack_exports__, {
+          /* harmony export */"default": function _default() {
+            return __WEBPACK_DEFAULT_EXPORT__;
+          }
+          /* harmony export */
+        });
+        /* harmony import */
+        var react__WEBPACK_IMPORTED_MODULE_0__ = __nested_webpack_require_1708__(787);
+        /* harmony import */
+        var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__nested_webpack_require_1708__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+        /* harmony import */
+        var react_dom__WEBPACK_IMPORTED_MODULE_1__ = __nested_webpack_require_1708__(156);
+        /* harmony import */
+        var react_dom__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__nested_webpack_require_1708__.n(react_dom__WEBPACK_IMPORTED_MODULE_1__);
+        var RootPortal = function RootPortal(props) {
+          var containerClassName = props.containerClassName,
+            show = props.show,
+            children = props.children;
+          var containerRef = (0, react__WEBPACK_IMPORTED_MODULE_0__.useRef)();
+
+          // Move HTML templates to tag end body </body>
+          // render() don't use "Fragment", in order to avoid error "Failed to execute 'insertBefore' on 'Node'"
+          // prevent "transform", "filter", "perspective" attribute destruction fixed viewport orientation
+          // ###
+          // ###
+          // Use `containerRef.current` to ensure the correctness of the nextjs framework. It may report an error document as undefined
+
+          (0, react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(function () {
+            containerRef.current = document.createElement('div');
+            containerRef.current.className = "root-portal-container ".concat(containerClassName || '');
+            document.body.appendChild(containerRef.current);
+            return function () {
+              if (containerRef.current) {
+                containerRef.current.remove();
+              }
+            };
+          }, []);
+          return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react__WEBPACK_IMPORTED_MODULE_0___default().Fragment, null, containerRef.current && show && /*#__PURE__*/(0, react_dom__WEBPACK_IMPORTED_MODULE_1__.createPortal)(children, containerRef.current));
+        };
+        /* harmony default export */
+        var __WEBPACK_DEFAULT_EXPORT__ = RootPortal;
+      })();
+
+      /******/
+      return __webpack_exports__;
+      /******/
+    }()
+  );
+});
+
+/***/ }),
+
 /***/ 787:
 /***/ ((module) => {
 
 "use strict";
 module.exports = __WEBPACK_EXTERNAL_MODULE__787__;
+
+/***/ }),
+
+/***/ 156:
+/***/ ((module) => {
+
+"use strict";
+module.exports = __WEBPACK_EXTERNAL_MODULE__156__;
 
 /***/ })
 
@@ -175,13 +378,16 @@ module.exports = __WEBPACK_EXTERNAL_MODULE__787__;
 /******/ 		}
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = __webpack_module_cache__[moduleId] = {
-/******/ 			// no module.id needed
-/******/ 			// no module.loaded needed
+/******/ 			id: moduleId,
+/******/ 			loaded: false,
 /******/ 			exports: {}
 /******/ 		};
 /******/ 	
 /******/ 		// Execute the module function
-/******/ 		__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
+/******/ 		__webpack_modules__[moduleId].call(module.exports, module, module.exports, __webpack_require__);
+/******/ 	
+/******/ 		// Flag the module as loaded
+/******/ 		module.loaded = true;
 /******/ 	
 /******/ 		// Return the exports of the module
 /******/ 		return module.exports;
@@ -228,6 +434,15 @@ module.exports = __WEBPACK_EXTERNAL_MODULE__787__;
 /******/ 		};
 /******/ 	})();
 /******/ 	
+/******/ 	/* webpack/runtime/node module decorator */
+/******/ 	(() => {
+/******/ 		__webpack_require__.nmd = (module) => {
+/******/ 			module.paths = [];
+/******/ 			if (!module.children) module.children = [];
+/******/ 			return module;
+/******/ 		};
+/******/ 	})();
+/******/ 	
 /************************************************************************/
 var __webpack_exports__ = {};
 // This entry need to be wrapped in an IIFE because it need to be in strict mode.
@@ -244,15 +459,25 @@ __webpack_require__.d(__webpack_exports__, {
 // EXTERNAL MODULE: external {"root":"React","commonjs2":"react","commonjs":"react","amd":"react"}
 var external_root_React_commonjs2_react_commonjs_react_amd_react_ = __webpack_require__(787);
 var external_root_React_commonjs2_react_commonjs_react_amd_react_default = /*#__PURE__*/__webpack_require__.n(external_root_React_commonjs2_react_commonjs_react_amd_react_);
+// EXTERNAL MODULE: ../RootPortal/dist/cjs/index.js
+var cjs = __webpack_require__(909);
+var cjs_default = /*#__PURE__*/__webpack_require__.n(cjs);
 ;// CONCATENATED MODULE: ./src/Option.tsx
 
 function Option(props) {
-  var option = props.option;
+  var option = props.option,
+    hyperlinkClassName = props.hyperlinkClassName,
+    selectEv = props.selectEv;
   var _label = option ? option.label : '';
   var _value = option ? option.value : '';
   var _listItemLabel = option ? typeof option.listItemLabel === 'undefined' ? undefined : option.listItemLabel : undefined;
+  function handleSelect(e) {
+    e.preventDefault();
+    var _value = e.currentTarget.dataset.value;
+    selectEv === null || selectEv === void 0 ? void 0 : selectEv(_value, option);
+  }
   return /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("li", null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("a", {
-    className: props.hyperlinkClassName,
+    className: hyperlinkClassName,
     "data-opt": "true",
     "data-value": _value,
     "data-label": _label,
@@ -262,7 +487,8 @@ function Option(props) {
     tabIndex: -1,
     dangerouslySetInnerHTML: {
       __html: typeof _listItemLabel === 'undefined' ? "".concat(_label) : "".concat(_listItemLabel)
-    }
+    },
+    onClick: handleSelect
   })));
 }
 // EXTERNAL MODULE: ./src/utils/get-element-property.js
@@ -274,6 +500,7 @@ function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o =
 function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i]; return arr2; }
 function _iterableToArrayLimit(arr, i) { var _i = null == arr ? null : "undefined" != typeof Symbol && arr[Symbol.iterator] || arr["@@iterator"]; if (null != _i) { var _s, _e, _x, _r, _arr = [], _n = !0, _d = !1; try { if (_x = (_i = _i.call(arr)).next, 0 === i) { if (Object(_i) !== _i) return; _n = !1; } else for (; !(_n = (_s = _x.call(_i)).done) && (_arr.push(_s.value), _arr.length !== i); _n = !0); } catch (err) { _d = !0, _e = err; } finally { try { if (!_n && null != _i["return"] && (_r = _i["return"](), Object(_r) !== _r)) return; } finally { if (_d) throw _e; } } return _arr; } }
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+
 
 
 
@@ -320,21 +547,22 @@ var DropdownMenu = function DropdownMenu(props) {
     return /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement(Option, {
       key: index,
       option: selectOption,
-      hyperlinkClassName: hyperlinkClassName ? hyperlinkClassName : 'dd-menu-default__item'
+      hyperlinkClassName: hyperlinkClassName ? hyperlinkClassName : 'dd-menu-default__item',
+      selectEv: function selectEv(value, option) {
+        return handleSelect(value, option);
+      }
     });
   });
   function handleClick(event) {
     if (hoverOn) return;
     setIsOpen(!isOpen);
     popwinPosInit();
-    popwinBtnEventsInit();
   }
   function handleHoverOn(event) {
     if (!hoverOn || typeof hoverOn === 'undefined') return;
     setTimeout(function () {
       setIsOpen(true);
       popwinPosInit();
-      popwinBtnEventsInit();
     }, _hoverDelay);
   }
   function handleHoverOff(event) {
@@ -350,8 +578,7 @@ var DropdownMenu = function DropdownMenu(props) {
       popwinPosHide();
     }
   }
-  function handleSelect(e, option, currentData) {
-    e.preventDefault();
+  function handleSelect(value, option) {
     setIsOpen(false);
     popwinPosHide();
     setSelected(option);
@@ -359,11 +586,11 @@ var DropdownMenu = function DropdownMenu(props) {
     // change display text of trigger
     setTimeout(function () {
       if (triggerRef.current !== null) {
-        triggerRef.current.querySelector('.dd-menu__trigger').innerHTML = currentData.label;
+        triggerRef.current.querySelector('.dd-menu__trigger').innerHTML = option.label;
       }
     }, 0);
     if (typeof onChange === 'function') {
-      onChange(option, currentData);
+      onChange(value, option);
     }
   }
   function popwinPosInit() {
@@ -445,40 +672,11 @@ var DropdownMenu = function DropdownMenu(props) {
       _modalRef.classList.remove('active');
     }
   }
-  function popwinBtnEventsInit() {
-    if (listRef.current === null) return;
-
-    // options event listener
-    // !!! to prevent button mismatch when changing
-    if (Array.isArray(options) && options.length > 0) {
-      [].slice.call(listRef.current.querySelectorAll('[data-opt]')).forEach(function (node) {
-        if (typeof node.dataset.ev === 'undefined') {
-          node.dataset.ev = 'true';
-
-          // Prevent touch screen from starting to click option, DO NOT USE "pointerdown"
-          node.addEventListener('click', function (e) {
-            var _value = e.currentTarget.dataset.value;
-            var _itemdata = JSON.parse(e.currentTarget.dataset.itemdata);
-            handleSelect(e, _value, _itemdata);
-          });
-        }
-      });
-    }
-  }
   (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useEffect)(function () {
-    // Move HTML templates to tag end body </body>
-    // render() don't use "Fragment", in order to avoid error "Failed to execute 'insertBefore' on 'Node'"
-    // prevent "transform", "filter", "perspective" attribute destruction fixed viewport orientation
-    //--------------
-    if (document.body !== null && modalRef.current !== null) {
-      document.body.appendChild(modalRef.current);
-    }
     document.removeEventListener('pointerdown', handleClose);
     document.addEventListener('pointerdown', handleClose);
     return function () {
-      var _document$querySelect;
       document.removeEventListener('pointerdown', handleClose);
-      (_document$querySelect = document.querySelector("#dd-menu-list__wrapper-".concat(idRes))) === null || _document$querySelect === void 0 ? void 0 : _document$querySelect.remove();
     };
   }, [options]);
   return /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
@@ -520,7 +718,10 @@ var DropdownMenu = function DropdownMenu(props) {
     name: name || '',
     type: "hidden",
     value: selected === null || selected === void 0 ? void 0 : selected.value
-  }), /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
+  }), /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((cjs_default()), {
+    show: true,
+    containerClassName: "DropdownMenu"
+  }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
     ref: modalRef,
     className: "dd-menu-list__wrapper",
     id: "dd-menu-list__wrapper-".concat(idRes)
@@ -530,7 +731,7 @@ var DropdownMenu = function DropdownMenu(props) {
   }), /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("ul", {
     ref: listRef,
     className: "dd-menu-list__inner ".concat(listClassName ? listClassName : 'dd-menu-default__inner', " ").concat(isOpen ? showClassName ? showClassName : 'show' : '')
-  }, selectOptionsListPresentation))));
+  }, selectOptionsListPresentation)))));
 };
 /* harmony default export */ const src = (DropdownMenu);
 })();

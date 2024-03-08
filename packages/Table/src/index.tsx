@@ -19,6 +19,7 @@ type TableProps = {
     bodyClassName?: string;
     headClassName?: string;
     footClassName?: string;
+    rowActiveClassName?: string;
     checkable?: boolean;
     useRadio?: boolean;
     draggable?: boolean;
@@ -31,9 +32,14 @@ type TableProps = {
     enhancedResponsiveWithScrollBar?: boolean;
     /** -- */
     id?: string;
+    onCellMouseEnter?: (el: any) => void;
+    onCellMouseLeave?: (el: any) => void;
+    onRowMouseEnter?: (el: any) => void;
+    onRowMouseLeave?: (el: any) => void;
     onClick?: (el: any, val: any) => void;
     onCheck?: (val: any) => void;
     onDrag?: (dragStart: any, dragEnd: any ) => void;
+    onRenderFinished?: (res: boolean) => void;
 };
 
 
@@ -44,6 +50,7 @@ const Table = (props: TableProps) => {
         bodyClassName,
         headClassName,
         footClassName,
+        rowActiveClassName,
         checkable,
         useRadio,
         draggable,
@@ -55,9 +62,14 @@ const Table = (props: TableProps) => {
         enhancedResponsive,
         enhancedResponsiveWithScrollBar,
         id,
+        onCellMouseEnter,
+        onCellMouseLeave,
+        onRowMouseEnter,
+        onRowMouseLeave,
         onClick,
         onCheck,
-        onDrag
+        onDrag,
+        onRenderFinished
     } = props;
 
 
@@ -76,6 +88,7 @@ const Table = (props: TableProps) => {
 
     const _headers = data.hasOwnProperty('headers') ? data.headers : false;
     const _summaries = data.hasOwnProperty('summaries') ? data.summaries : false;
+    const _fieldsChecked = data.hasOwnProperty('fieldsChecked') ? data.fieldsChecked : false;
     let windowWidth = typeof window !== 'undefined' ? window.innerWidth : 0;
 
 
@@ -351,6 +364,7 @@ const Table = (props: TableProps) => {
     // events fired on the drop targets
     const handledragOver = useCallback((e: any) => {
         e.preventDefault();
+        if (draggedObj === null) return;
 
         draggedObj.style.display = 'none';
         
@@ -396,7 +410,6 @@ const Table = (props: TableProps) => {
         removePlaceholder();
 
         draggedObj.classList.remove( 'dragging' );
-        (allRows().at(-1) as any).style.setProperty('display', 'none', "important");
         tbodyRef.current.classList.remove('drag-trigger-mousedown');
         
 
@@ -503,6 +516,11 @@ const Table = (props: TableProps) => {
 
     }, [data]);
 
+    useEffect(() => {
+        // display after render finished
+        onRenderFinished?.(true);
+    }, []);
+
 
     return (
         <>
@@ -543,6 +561,8 @@ const Table = (props: TableProps) => {
                             return <TableRow 
                                         key={i + String(mainUpdate)} // Trigger child component update when prop of parent changes
                                         index={i}
+                                        rowActiveClassName={rowActiveClassName}
+                                        fieldsChecked={_fieldsChecked}
                                         rowKey={`row-${i}`} 
                                         headerLabel={_headers} 
                                         data={item} 
@@ -559,6 +579,10 @@ const Table = (props: TableProps) => {
                                         useRadio={useRadio || false}
                                         evDragEnd={handleDragEnd}
                                         evDragStart={handleDragStart}
+                                        evCellMouseEnter={onCellMouseEnter}
+                                        evCellMouseLeave={onCellMouseLeave}
+                                        evRowMouseEnter={onRowMouseEnter}
+                                        evRowMouseLeave={onRowMouseLeave}
                                     />;
                         }) : ""
                         }
@@ -571,6 +595,5 @@ const Table = (props: TableProps) => {
         </>
     )
 };
-
 
 export default Table;

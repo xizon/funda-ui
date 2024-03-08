@@ -1,5 +1,7 @@
 /// <reference types="react" />
 declare type ToastProps = {
+    /** The class name of the toast wrapper. */
+    wrapperClassName?: string;
     /** Specify data of toasts as a JSON string format. */
     data: any[any];
     /** Automatically hide multiple items */

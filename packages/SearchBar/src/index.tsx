@@ -10,6 +10,7 @@ type SearchBarProps = {
     wrapperClassName?: string;
     controlClassName?: string;
     appearance?: string;
+    isSearchInput?: boolean;
     value?: string;
     label?: React.ReactNode | string;
     name?: string;
@@ -37,6 +38,7 @@ const SearchBar = forwardRef((props: SearchBarProps, ref: any) => {
         wrapperClassName,
         controlClassName,
         appearance,
+        isSearchInput,
         disabled,
         required,
         placeholder,
@@ -138,13 +140,13 @@ const SearchBar = forwardRef((props: SearchBarProps, ref: any) => {
 
 
             <div className={wrapperClassName || wrapperClassName === '' ? wrapperClassName : "mb-3 position-relative"} ref={rootRef}>
-                {label ? <><label htmlFor={idRes} className="form-label" dangerouslySetInnerHTML={{__html: `${label}`}}></label></> : null}
+                {label ? <>{typeof label === 'string' ? <label htmlFor={idRes} className="form-label" dangerouslySetInnerHTML={{ __html: `${label}` }}></label> : <label htmlFor={idRes} className="form-label" >{label}</label>}</> : null}
 
                 <div className="input-group">
                     <input
                         ref={ref}
                         tabIndex={tabIndex || 0}
-                        type={appearance === 'pill' ? 'input' : 'search'}
+                        type={isSearchInput ? 'search' : 'text'}
                         className={appearance === 'pill' ? `${(controlClassName || controlClassName === '' ? controlClassName : "form-control")} border rounded-pill` : (controlClassName || controlClassName === '' ? controlClassName : "form-control")}
                         id={idRes}
                         name={name}

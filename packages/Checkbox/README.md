@@ -9,6 +9,7 @@ import Checkbox from 'funda-ui/Checkbox';
 ```
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |
+| `ref` | React.ForwardedRef | - | It is the return element of this component.  |
 | `wrapperClassName` | string | `mb-3 position-relative` | The class name of the control wrapper. |
 | `itemSelectedClassName` | string | `item-selected` | The class name of the item selected. |
 | `checked` | boolean | false | Is it selected. |

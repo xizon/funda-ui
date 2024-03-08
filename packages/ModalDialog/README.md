@@ -9,6 +9,7 @@ import ModalDialog from 'funda-ui/ModalDialog';
 ```
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |
+| `ref` | React.ForwardedRef | - | It exposes the following methods of the component:  <br /> <ol><li>`ref.current.open()`</li><li>`ref.current.close()`</li></ol> |
 | `modalContentClassName` | string  | - | The extended class name of content wrapper |
 | `modalHeaderClassName` | string  | - | The extended class name of header |
 | `modalTitleClassName` | string  | - | The extended class name of title |
@@ -16,7 +17,6 @@ import ModalDialog from 'funda-ui/ModalDialog';
 | `modalFooterClassName` | string  | - | The extended class name of footer area |
 | `modalFooterExpandedContentClassName` | string  | - | The extended class name of footer content area |
 | `show` | boolean  | false | **(required)** Whether the modal dialog is visible or not, you can use it with the `autoClose` property at the same time |
-| `protectFixedViewport` | boolean  | true | Prevent "transform", "filter", "perspective" attribute destruction fixed viewport orientation. Enabled by default, after enabling the default JS event will be invalid, you need to use the `onOpen` attribute to add some new events to elements. Please refer to the example. <blockquote>When you use a component with its own events, you can turn it off to lose js events</blockquote> |
 | `autoClose` | number \| boolean  | false | Specify auto-close time. This function is not enabled when this value is false. If the value is `2000`, it will automatically close after 2 seconds. |
 | `heading` | ReactNode  | - | Set a window title |
 | `footerExpandedContent` | ReactNode  | - | Set footer content expanded |
@@ -196,7 +196,6 @@ export default () => {
             <ModalDialog
                 modalBodyClassName="p-0"
                 show={false}
-                protectFixedViewport={false}
                 maxWidth="850px"
                 minHeight="175px"
                 heading="Title Here"
@@ -442,54 +441,50 @@ export default () => {
 ```
 
 
-## Import components with their own events
 
-Disable property `protectFixedViewport`.
+
+## Using exposed OPEN and CLOSE methods (Using `ref`)
+
+Lets you callback the handle exposed as a ref.
+
 
 ```js
-import React from "react";
+import React, { useRef } from "react";
 import ModalDialog from 'funda-ui/ModalDialog';
-import Switch from 'funda-ui/Switch';
-
 
 export default () => {
 
-    const LABEL_WIDTH = '100px';
+    const modalHandleRef = useRef<any>();
+
+    function handleOpen(e: any) {
+        if (typeof e !== 'undefined' && e !== null) e.preventDefault();
+        if (modalHandleRef.current) modalHandleRef.current.open();
+      
+    }
+
+    function handleClose(e: any) {
+        if (typeof e !== 'undefined' && e !== null) e.preventDefault();
+        if (modalHandleRef.current) modalHandleRef.current.close();
+      
+    }
 
     return (
         <>
+
+            <a href="#" onClick={handleOpen}>open modal</a>
+            <a href="#" onClick={handleClose}>close modal</a>
             <ModalDialog
+                ref={modalHandleRef}
                 show={false}
-                protectFixedViewport={false}
-                heading="Title Here"
-                triggerClassName="d-inline w-auto"
-                triggerContent={<>
-                    <a href="#" tabIndex={-1}>Launch demo modal</a>
-                </>}
             >
-
-                <div className="row mb-3">
-                    <div className="text-end" style={{ width: LABEL_WIDTH }}>
-                        Title
-                    </div>
-                    <div className="col">
-                        <Switch
-                            value="ok"
-                            onChange={(e, val) => {
-                                console.log(val);
-                            }} 
-                        />
-                    </div>
-                </div>
-
+                <h4>This is a modal</h4>
             </ModalDialog>
+
 
         </>
     );
 }
 ```
-
-
 
 
 

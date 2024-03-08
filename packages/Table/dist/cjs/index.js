@@ -410,947 +410,19 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
             id: idRes,
             name: name,
             value: val ? value || '' : '' // do not use `defaultValue`
-          }, attributes)), label ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react__WEBPACK_IMPORTED_MODULE_0___default().Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("label", {
+          }, attributes)), label ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react__WEBPACK_IMPORTED_MODULE_0___default().Fragment, null, typeof label === 'string' ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("label", {
             htmlFor: "label-".concat(idRes),
             className: "form-check-label",
             dangerouslySetInnerHTML: {
               __html: "".concat(label)
             }
-          })) : null)));
+          }) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("label", {
+            htmlFor: "label-".concat(idRes),
+            className: "form-check-label"
+          }, label)) : null)));
         });
         /* harmony default export */
         var __WEBPACK_DEFAULT_EXPORT__ = Checkbox;
-      })();
-
-      /******/
-      return __webpack_exports__;
-      /******/
-    }()
-  );
-});
-
-/***/ }),
-
-/***/ 135:
-/***/ (function(module, exports, __webpack_require__) {
-
-/* module decorator */ module = __webpack_require__.nmd(module);
-var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof2(obj) { "@babel/helpers - typeof"; return _typeof2 = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof2(obj); }
-(function webpackUniversalModuleDefinition(root, factory) {
-  if (( false ? 0 : _typeof2(exports)) === 'object' && ( false ? 0 : _typeof2(module)) === 'object') module.exports = factory(__webpack_require__(787));else if (true) !(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(787)], __WEBPACK_AMD_DEFINE_FACTORY__ = (factory),
-		__WEBPACK_AMD_DEFINE_RESULT__ = (typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ?
-		(__WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__)) : __WEBPACK_AMD_DEFINE_FACTORY__),
-		__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));else {}
-})(this, function (__WEBPACK_EXTERNAL_MODULE__787__) {
-  return (/******/function () {
-      // webpackBootstrap
-      /******/
-      "use strict";
-
-      /******/
-      var __webpack_modules__ = {
-        /***/787: /***/function _(module) {
-          module.exports = __WEBPACK_EXTERNAL_MODULE__787__;
-
-          /***/
-        }
-
-        /******/
-      };
-      /************************************************************************/
-      /******/ // The module cache
-      /******/
-      var __webpack_module_cache__ = {};
-      /******/
-      /******/ // The require function
-      /******/
-      function __nested_webpack_require_1471__(moduleId) {
-        /******/ // Check if module is in cache
-        /******/var cachedModule = __webpack_module_cache__[moduleId];
-        /******/
-        if (cachedModule !== undefined) {
-          /******/return cachedModule.exports;
-          /******/
-        }
-        /******/ // Create a new module (and put it into the cache)
-        /******/
-        var module = __webpack_module_cache__[moduleId] = {
-          /******/ // no module.id needed
-          /******/ // no module.loaded needed
-          /******/exports: {}
-          /******/
-        };
-        /******/
-        /******/ // Execute the module function
-        /******/
-        __webpack_modules__[moduleId](module, module.exports, __nested_webpack_require_1471__);
-        /******/
-        /******/ // Return the exports of the module
-        /******/
-        return module.exports;
-        /******/
-      }
-      /******/
-      /************************************************************************/
-      /******/ /* webpack/runtime/compat get default export */
-      /******/
-      (function () {
-        /******/ // getDefaultExport function for compatibility with non-harmony modules
-        /******/__nested_webpack_require_1471__.n = function (module) {
-          /******/var getter = module && module.__esModule ? /******/function () {
-            return module['default'];
-          } : /******/function () {
-            return module;
-          };
-          /******/
-          __nested_webpack_require_1471__.d(getter, {
-            a: getter
-          });
-          /******/
-          return getter;
-          /******/
-        };
-        /******/
-      })();
-      /******/
-      /******/ /* webpack/runtime/define property getters */
-      /******/
-      (function () {
-        /******/ // define getter functions for harmony exports
-        /******/__nested_webpack_require_1471__.d = function (exports, definition) {
-          /******/for (var key in definition) {
-            /******/if (__nested_webpack_require_1471__.o(definition, key) && !__nested_webpack_require_1471__.o(exports, key)) {
-              /******/Object.defineProperty(exports, key, {
-                enumerable: true,
-                get: definition[key]
-              });
-              /******/
-            }
-            /******/
-          }
-          /******/
-        };
-        /******/
-      })();
-      /******/
-      /******/ /* webpack/runtime/hasOwnProperty shorthand */
-      /******/
-      (function () {
-        /******/__nested_webpack_require_1471__.o = function (obj, prop) {
-          return Object.prototype.hasOwnProperty.call(obj, prop);
-        };
-        /******/
-      })();
-      /******/
-      /******/ /* webpack/runtime/make namespace object */
-      /******/
-      (function () {
-        /******/ // define __esModule on exports
-        /******/__nested_webpack_require_1471__.r = function (exports) {
-          /******/if (typeof Symbol !== 'undefined' && Symbol.toStringTag) {
-            /******/Object.defineProperty(exports, Symbol.toStringTag, {
-              value: 'Module'
-            });
-            /******/
-          }
-          /******/
-          Object.defineProperty(exports, '__esModule', {
-            value: true
-          });
-          /******/
-        };
-        /******/
-      })();
-      /******/
-      /************************************************************************/
-      var __webpack_exports__ = {};
-      // This entry need to be wrapped in an IIFE because it need to be isolated against other modules in the chunk.
-      (function () {
-        __nested_webpack_require_1471__.r(__webpack_exports__);
-        /* harmony export */
-        __nested_webpack_require_1471__.d(__webpack_exports__, {
-          /* harmony export */"default": function _default() {
-            return __WEBPACK_DEFAULT_EXPORT__;
-          }
-          /* harmony export */
-        });
-        /* harmony import */
-        var react__WEBPACK_IMPORTED_MODULE_0__ = __nested_webpack_require_1471__(787);
-        /* harmony import */
-        var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__nested_webpack_require_1471__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-        var _excluded = ["wrapperClassName", "groupWrapperClassName", "groupLabelClassName", "itemSelectedClassName", "disabled", "required", "value", "label", "name", "id", "options", "inline", "style", "tabIndex", "fetchFuncAsync", "fetchFuncMethod", "fetchFuncMethodParams", "fetchCallback", "onFetch", "onLoad", "onClick", "onChange", "onBlur", "onFocus"];
-        function _regeneratorRuntime() {
-          "use strict";
-
-          /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/facebook/regenerator/blob/main/LICENSE */
-          _regeneratorRuntime = function _regeneratorRuntime() {
-            return exports;
-          };
-          var exports = {},
-            Op = Object.prototype,
-            hasOwn = Op.hasOwnProperty,
-            defineProperty = Object.defineProperty || function (obj, key, desc) {
-              obj[key] = desc.value;
-            },
-            $Symbol = "function" == typeof Symbol ? Symbol : {},
-            iteratorSymbol = $Symbol.iterator || "@@iterator",
-            asyncIteratorSymbol = $Symbol.asyncIterator || "@@asyncIterator",
-            toStringTagSymbol = $Symbol.toStringTag || "@@toStringTag";
-          function define(obj, key, value) {
-            return Object.defineProperty(obj, key, {
-              value: value,
-              enumerable: !0,
-              configurable: !0,
-              writable: !0
-            }), obj[key];
-          }
-          try {
-            define({}, "");
-          } catch (err) {
-            define = function define(obj, key, value) {
-              return obj[key] = value;
-            };
-          }
-          function wrap(innerFn, outerFn, self, tryLocsList) {
-            var protoGenerator = outerFn && outerFn.prototype instanceof Generator ? outerFn : Generator,
-              generator = Object.create(protoGenerator.prototype),
-              context = new Context(tryLocsList || []);
-            return defineProperty(generator, "_invoke", {
-              value: makeInvokeMethod(innerFn, self, context)
-            }), generator;
-          }
-          function tryCatch(fn, obj, arg) {
-            try {
-              return {
-                type: "normal",
-                arg: fn.call(obj, arg)
-              };
-            } catch (err) {
-              return {
-                type: "throw",
-                arg: err
-              };
-            }
-          }
-          exports.wrap = wrap;
-          var ContinueSentinel = {};
-          function Generator() {}
-          function GeneratorFunction() {}
-          function GeneratorFunctionPrototype() {}
-          var IteratorPrototype = {};
-          define(IteratorPrototype, iteratorSymbol, function () {
-            return this;
-          });
-          var getProto = Object.getPrototypeOf,
-            NativeIteratorPrototype = getProto && getProto(getProto(values([])));
-          NativeIteratorPrototype && NativeIteratorPrototype !== Op && hasOwn.call(NativeIteratorPrototype, iteratorSymbol) && (IteratorPrototype = NativeIteratorPrototype);
-          var Gp = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(IteratorPrototype);
-          function defineIteratorMethods(prototype) {
-            ["next", "throw", "return"].forEach(function (method) {
-              define(prototype, method, function (arg) {
-                return this._invoke(method, arg);
-              });
-            });
-          }
-          function AsyncIterator(generator, PromiseImpl) {
-            function invoke(method, arg, resolve, reject) {
-              var record = tryCatch(generator[method], generator, arg);
-              if ("throw" !== record.type) {
-                var result = record.arg,
-                  value = result.value;
-                return value && "object" == _typeof(value) && hasOwn.call(value, "__await") ? PromiseImpl.resolve(value.__await).then(function (value) {
-                  invoke("next", value, resolve, reject);
-                }, function (err) {
-                  invoke("throw", err, resolve, reject);
-                }) : PromiseImpl.resolve(value).then(function (unwrapped) {
-                  result.value = unwrapped, resolve(result);
-                }, function (error) {
-                  return invoke("throw", error, resolve, reject);
-                });
-              }
-              reject(record.arg);
-            }
-            var previousPromise;
-            defineProperty(this, "_invoke", {
-              value: function value(method, arg) {
-                function callInvokeWithMethodAndArg() {
-                  return new PromiseImpl(function (resolve, reject) {
-                    invoke(method, arg, resolve, reject);
-                  });
-                }
-                return previousPromise = previousPromise ? previousPromise.then(callInvokeWithMethodAndArg, callInvokeWithMethodAndArg) : callInvokeWithMethodAndArg();
-              }
-            });
-          }
-          function makeInvokeMethod(innerFn, self, context) {
-            var state = "suspendedStart";
-            return function (method, arg) {
-              if ("executing" === state) throw new Error("Generator is already running");
-              if ("completed" === state) {
-                if ("throw" === method) throw arg;
-                return doneResult();
-              }
-              for (context.method = method, context.arg = arg;;) {
-                var delegate = context.delegate;
-                if (delegate) {
-                  var delegateResult = maybeInvokeDelegate(delegate, context);
-                  if (delegateResult) {
-                    if (delegateResult === ContinueSentinel) continue;
-                    return delegateResult;
-                  }
-                }
-                if ("next" === context.method) context.sent = context._sent = context.arg;else if ("throw" === context.method) {
-                  if ("suspendedStart" === state) throw state = "completed", context.arg;
-                  context.dispatchException(context.arg);
-                } else "return" === context.method && context.abrupt("return", context.arg);
-                state = "executing";
-                var record = tryCatch(innerFn, self, context);
-                if ("normal" === record.type) {
-                  if (state = context.done ? "completed" : "suspendedYield", record.arg === ContinueSentinel) continue;
-                  return {
-                    value: record.arg,
-                    done: context.done
-                  };
-                }
-                "throw" === record.type && (state = "completed", context.method = "throw", context.arg = record.arg);
-              }
-            };
-          }
-          function maybeInvokeDelegate(delegate, context) {
-            var methodName = context.method,
-              method = delegate.iterator[methodName];
-            if (undefined === method) return context.delegate = null, "throw" === methodName && delegate.iterator["return"] && (context.method = "return", context.arg = undefined, maybeInvokeDelegate(delegate, context), "throw" === context.method) || "return" !== methodName && (context.method = "throw", context.arg = new TypeError("The iterator does not provide a '" + methodName + "' method")), ContinueSentinel;
-            var record = tryCatch(method, delegate.iterator, context.arg);
-            if ("throw" === record.type) return context.method = "throw", context.arg = record.arg, context.delegate = null, ContinueSentinel;
-            var info = record.arg;
-            return info ? info.done ? (context[delegate.resultName] = info.value, context.next = delegate.nextLoc, "return" !== context.method && (context.method = "next", context.arg = undefined), context.delegate = null, ContinueSentinel) : info : (context.method = "throw", context.arg = new TypeError("iterator result is not an object"), context.delegate = null, ContinueSentinel);
-          }
-          function pushTryEntry(locs) {
-            var entry = {
-              tryLoc: locs[0]
-            };
-            1 in locs && (entry.catchLoc = locs[1]), 2 in locs && (entry.finallyLoc = locs[2], entry.afterLoc = locs[3]), this.tryEntries.push(entry);
-          }
-          function resetTryEntry(entry) {
-            var record = entry.completion || {};
-            record.type = "normal", delete record.arg, entry.completion = record;
-          }
-          function Context(tryLocsList) {
-            this.tryEntries = [{
-              tryLoc: "root"
-            }], tryLocsList.forEach(pushTryEntry, this), this.reset(!0);
-          }
-          function values(iterable) {
-            if (iterable) {
-              var iteratorMethod = iterable[iteratorSymbol];
-              if (iteratorMethod) return iteratorMethod.call(iterable);
-              if ("function" == typeof iterable.next) return iterable;
-              if (!isNaN(iterable.length)) {
-                var i = -1,
-                  next = function next() {
-                    for (; ++i < iterable.length;) if (hasOwn.call(iterable, i)) return next.value = iterable[i], next.done = !1, next;
-                    return next.value = undefined, next.done = !0, next;
-                  };
-                return next.next = next;
-              }
-            }
-            return {
-              next: doneResult
-            };
-          }
-          function doneResult() {
-            return {
-              value: undefined,
-              done: !0
-            };
-          }
-          return GeneratorFunction.prototype = GeneratorFunctionPrototype, defineProperty(Gp, "constructor", {
-            value: GeneratorFunctionPrototype,
-            configurable: !0
-          }), defineProperty(GeneratorFunctionPrototype, "constructor", {
-            value: GeneratorFunction,
-            configurable: !0
-          }), GeneratorFunction.displayName = define(GeneratorFunctionPrototype, toStringTagSymbol, "GeneratorFunction"), exports.isGeneratorFunction = function (genFun) {
-            var ctor = "function" == typeof genFun && genFun.constructor;
-            return !!ctor && (ctor === GeneratorFunction || "GeneratorFunction" === (ctor.displayName || ctor.name));
-          }, exports.mark = function (genFun) {
-            return Object.setPrototypeOf ? Object.setPrototypeOf(genFun, GeneratorFunctionPrototype) : (genFun.__proto__ = GeneratorFunctionPrototype, define(genFun, toStringTagSymbol, "GeneratorFunction")), genFun.prototype = Object.create(Gp), genFun;
-          }, exports.awrap = function (arg) {
-            return {
-              __await: arg
-            };
-          }, defineIteratorMethods(AsyncIterator.prototype), define(AsyncIterator.prototype, asyncIteratorSymbol, function () {
-            return this;
-          }), exports.AsyncIterator = AsyncIterator, exports.async = function (innerFn, outerFn, self, tryLocsList, PromiseImpl) {
-            void 0 === PromiseImpl && (PromiseImpl = Promise);
-            var iter = new AsyncIterator(wrap(innerFn, outerFn, self, tryLocsList), PromiseImpl);
-            return exports.isGeneratorFunction(outerFn) ? iter : iter.next().then(function (result) {
-              return result.done ? result.value : iter.next();
-            });
-          }, defineIteratorMethods(Gp), define(Gp, toStringTagSymbol, "Generator"), define(Gp, iteratorSymbol, function () {
-            return this;
-          }), define(Gp, "toString", function () {
-            return "[object Generator]";
-          }), exports.keys = function (val) {
-            var object = Object(val),
-              keys = [];
-            for (var key in object) keys.push(key);
-            return keys.reverse(), function next() {
-              for (; keys.length;) {
-                var key = keys.pop();
-                if (key in object) return next.value = key, next.done = !1, next;
-              }
-              return next.done = !0, next;
-            };
-          }, exports.values = values, Context.prototype = {
-            constructor: Context,
-            reset: function reset(skipTempReset) {
-              if (this.prev = 0, this.next = 0, this.sent = this._sent = undefined, this.done = !1, this.delegate = null, this.method = "next", this.arg = undefined, this.tryEntries.forEach(resetTryEntry), !skipTempReset) for (var name in this) "t" === name.charAt(0) && hasOwn.call(this, name) && !isNaN(+name.slice(1)) && (this[name] = undefined);
-            },
-            stop: function stop() {
-              this.done = !0;
-              var rootRecord = this.tryEntries[0].completion;
-              if ("throw" === rootRecord.type) throw rootRecord.arg;
-              return this.rval;
-            },
-            dispatchException: function dispatchException(exception) {
-              if (this.done) throw exception;
-              var context = this;
-              function handle(loc, caught) {
-                return record.type = "throw", record.arg = exception, context.next = loc, caught && (context.method = "next", context.arg = undefined), !!caught;
-              }
-              for (var i = this.tryEntries.length - 1; i >= 0; --i) {
-                var entry = this.tryEntries[i],
-                  record = entry.completion;
-                if ("root" === entry.tryLoc) return handle("end");
-                if (entry.tryLoc <= this.prev) {
-                  var hasCatch = hasOwn.call(entry, "catchLoc"),
-                    hasFinally = hasOwn.call(entry, "finallyLoc");
-                  if (hasCatch && hasFinally) {
-                    if (this.prev < entry.catchLoc) return handle(entry.catchLoc, !0);
-                    if (this.prev < entry.finallyLoc) return handle(entry.finallyLoc);
-                  } else if (hasCatch) {
-                    if (this.prev < entry.catchLoc) return handle(entry.catchLoc, !0);
-                  } else {
-                    if (!hasFinally) throw new Error("try statement without catch or finally");
-                    if (this.prev < entry.finallyLoc) return handle(entry.finallyLoc);
-                  }
-                }
-              }
-            },
-            abrupt: function abrupt(type, arg) {
-              for (var i = this.tryEntries.length - 1; i >= 0; --i) {
-                var entry = this.tryEntries[i];
-                if (entry.tryLoc <= this.prev && hasOwn.call(entry, "finallyLoc") && this.prev < entry.finallyLoc) {
-                  var finallyEntry = entry;
-                  break;
-                }
-              }
-              finallyEntry && ("break" === type || "continue" === type) && finallyEntry.tryLoc <= arg && arg <= finallyEntry.finallyLoc && (finallyEntry = null);
-              var record = finallyEntry ? finallyEntry.completion : {};
-              return record.type = type, record.arg = arg, finallyEntry ? (this.method = "next", this.next = finallyEntry.finallyLoc, ContinueSentinel) : this.complete(record);
-            },
-            complete: function complete(record, afterLoc) {
-              if ("throw" === record.type) throw record.arg;
-              return "break" === record.type || "continue" === record.type ? this.next = record.arg : "return" === record.type ? (this.rval = this.arg = record.arg, this.method = "return", this.next = "end") : "normal" === record.type && afterLoc && (this.next = afterLoc), ContinueSentinel;
-            },
-            finish: function finish(finallyLoc) {
-              for (var i = this.tryEntries.length - 1; i >= 0; --i) {
-                var entry = this.tryEntries[i];
-                if (entry.finallyLoc === finallyLoc) return this.complete(entry.completion, entry.afterLoc), resetTryEntry(entry), ContinueSentinel;
-              }
-            },
-            "catch": function _catch(tryLoc) {
-              for (var i = this.tryEntries.length - 1; i >= 0; --i) {
-                var entry = this.tryEntries[i];
-                if (entry.tryLoc === tryLoc) {
-                  var record = entry.completion;
-                  if ("throw" === record.type) {
-                    var thrown = record.arg;
-                    resetTryEntry(entry);
-                  }
-                  return thrown;
-                }
-              }
-              throw new Error("illegal catch attempt");
-            },
-            delegateYield: function delegateYield(iterable, resultName, nextLoc) {
-              return this.delegate = {
-                iterator: values(iterable),
-                resultName: resultName,
-                nextLoc: nextLoc
-              }, "next" === this.method && (this.arg = undefined), ContinueSentinel;
-            }
-          }, exports;
-        }
-        function _toConsumableArray(arr) {
-          return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread();
-        }
-        function _nonIterableSpread() {
-          throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
-        }
-        function _iterableToArray(iter) {
-          if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter);
-        }
-        function _arrayWithoutHoles(arr) {
-          if (Array.isArray(arr)) return _arrayLikeToArray(arr);
-        }
-        function _extends() {
-          _extends = Object.assign ? Object.assign.bind() : function (target) {
-            for (var i = 1; i < arguments.length; i++) {
-              var source = arguments[i];
-              for (var key in source) {
-                if (Object.prototype.hasOwnProperty.call(source, key)) {
-                  target[key] = source[key];
-                }
-              }
-            }
-            return target;
-          };
-          return _extends.apply(this, arguments);
-        }
-        function _typeof(obj) {
-          "@babel/helpers - typeof";
-
-          return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) {
-            return typeof obj;
-          } : function (obj) {
-            return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;
-          }, _typeof(obj);
-        }
-        function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) {
-          try {
-            var info = gen[key](arg);
-            var value = info.value;
-          } catch (error) {
-            reject(error);
-            return;
-          }
-          if (info.done) {
-            resolve(value);
-          } else {
-            Promise.resolve(value).then(_next, _throw);
-          }
-        }
-        function _asyncToGenerator(fn) {
-          return function () {
-            var self = this,
-              args = arguments;
-            return new Promise(function (resolve, reject) {
-              var gen = fn.apply(self, args);
-              function _next(value) {
-                asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value);
-              }
-              function _throw(err) {
-                asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err);
-              }
-              _next(undefined);
-            });
-          };
-        }
-        function _slicedToArray(arr, i) {
-          return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest();
-        }
-        function _nonIterableRest() {
-          throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
-        }
-        function _unsupportedIterableToArray(o, minLen) {
-          if (!o) return;
-          if (typeof o === "string") return _arrayLikeToArray(o, minLen);
-          var n = Object.prototype.toString.call(o).slice(8, -1);
-          if (n === "Object" && o.constructor) n = o.constructor.name;
-          if (n === "Map" || n === "Set") return Array.from(o);
-          if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen);
-        }
-        function _arrayLikeToArray(arr, len) {
-          if (len == null || len > arr.length) len = arr.length;
-          for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i];
-          return arr2;
-        }
-        function _iterableToArrayLimit(arr, i) {
-          var _i = null == arr ? null : "undefined" != typeof Symbol && arr[Symbol.iterator] || arr["@@iterator"];
-          if (null != _i) {
-            var _s,
-              _e,
-              _x,
-              _r,
-              _arr = [],
-              _n = !0,
-              _d = !1;
-            try {
-              if (_x = (_i = _i.call(arr)).next, 0 === i) {
-                if (Object(_i) !== _i) return;
-                _n = !1;
-              } else for (; !(_n = (_s = _x.call(_i)).done) && (_arr.push(_s.value), _arr.length !== i); _n = !0);
-            } catch (err) {
-              _d = !0, _e = err;
-            } finally {
-              try {
-                if (!_n && null != _i["return"] && (_r = _i["return"](), Object(_r) !== _r)) return;
-              } finally {
-                if (_d) throw _e;
-              }
-            }
-            return _arr;
-          }
-        }
-        function _arrayWithHoles(arr) {
-          if (Array.isArray(arr)) return arr;
-        }
-        function _objectWithoutProperties(source, excluded) {
-          if (source == null) return {};
-          var target = _objectWithoutPropertiesLoose(source, excluded);
-          var key, i;
-          if (Object.getOwnPropertySymbols) {
-            var sourceSymbolKeys = Object.getOwnPropertySymbols(source);
-            for (i = 0; i < sourceSymbolKeys.length; i++) {
-              key = sourceSymbolKeys[i];
-              if (excluded.indexOf(key) >= 0) continue;
-              if (!Object.prototype.propertyIsEnumerable.call(source, key)) continue;
-              target[key] = source[key];
-            }
-          }
-          return target;
-        }
-        function _objectWithoutPropertiesLoose(source, excluded) {
-          if (source == null) return {};
-          var target = {};
-          var sourceKeys = Object.keys(source);
-          var key, i;
-          for (i = 0; i < sourceKeys.length; i++) {
-            key = sourceKeys[i];
-            if (excluded.indexOf(key) >= 0) continue;
-            target[key] = source[key];
-          }
-          return target;
-        }
-        var Radio = function Radio(props) {
-          var wrapperClassName = props.wrapperClassName,
-            groupWrapperClassName = props.groupWrapperClassName,
-            groupLabelClassName = props.groupLabelClassName,
-            itemSelectedClassName = props.itemSelectedClassName,
-            disabled = props.disabled,
-            required = props.required,
-            value = props.value,
-            label = props.label,
-            name = props.name,
-            id = props.id,
-            options = props.options,
-            inline = props.inline,
-            style = props.style,
-            tabIndex = props.tabIndex,
-            fetchFuncAsync = props.fetchFuncAsync,
-            fetchFuncMethod = props.fetchFuncMethod,
-            fetchFuncMethodParams = props.fetchFuncMethodParams,
-            fetchCallback = props.fetchCallback,
-            onFetch = props.onFetch,
-            onLoad = props.onLoad,
-            onClick = props.onClick,
-            onChange = props.onChange,
-            onBlur = props.onBlur,
-            onFocus = props.onFocus,
-            attributes = _objectWithoutProperties(props, _excluded);
-          var uniqueID = (0, react__WEBPACK_IMPORTED_MODULE_0__.useId)();
-          var idRes = id || uniqueID;
-          var rootRef = (0, react__WEBPACK_IMPORTED_MODULE_0__.useRef)(null);
-          var optionsRes = options ? isJSON(options) ? JSON.parse(options) : options : '';
-
-          // return a array of options
-          var optionsDataInit = optionsRes;
-
-          //
-          var _useState = (0, react__WEBPACK_IMPORTED_MODULE_0__.useState)(optionsDataInit),
-            _useState2 = _slicedToArray(_useState, 2),
-            dataInit = _useState2[0],
-            setDataInit = _useState2[1];
-          var _useState3 = (0, react__WEBPACK_IMPORTED_MODULE_0__.useState)(false),
-            _useState4 = _slicedToArray(_useState3, 2),
-            hasErr = _useState4[0],
-            setHasErr = _useState4[1];
-          var _useState5 = (0, react__WEBPACK_IMPORTED_MODULE_0__.useState)(''),
-            _useState6 = _slicedToArray(_useState5, 2),
-            controlValue = _useState6[0],
-            setControlValue = _useState6[1];
-          function fetchData(_x2) {
-            return _fetchData.apply(this, arguments);
-          } // Determine whether it is in JSON format
-          function _fetchData() {
-            _fetchData = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee(params) {
-              var response, _ORGIN_DATA, _realValue, filterRes, filterResQueryValue, filterResQueryLabel, _realValue2, _filterRes, _filterResQueryValue, _filterResQueryLabel;
-              return _regeneratorRuntime().wrap(function _callee$(_context) {
-                while (1) switch (_context.prev = _context.next) {
-                  case 0:
-                    // set default value
-                    if (typeof value !== 'undefined' && value !== '') rootRef.current.dataset.value = value;
-
-                    //
-                    if (!(_typeof(fetchFuncAsync) === 'object')) {
-                      _context.next = 20;
-                      break;
-                    }
-                    _context.next = 4;
-                    return fetchFuncAsync["".concat(fetchFuncMethod)].apply(fetchFuncAsync, _toConsumableArray(params.split(',')));
-                  case 4:
-                    response = _context.sent;
-                    _ORGIN_DATA = response.data; // reset data structure
-                    if (typeof fetchCallback === 'function') {
-                      _ORGIN_DATA = fetchCallback(_ORGIN_DATA);
-                    }
-
-                    // Determine whether the data structure matches
-                    if (_ORGIN_DATA.length > 0 && typeof _ORGIN_DATA[0].value === 'undefined') {
-                      console.warn('The data structure does not match, please refer to the example in the component documentation.');
-                      setHasErr(true);
-                      _ORGIN_DATA = [];
-                    }
-
-                    // If the default value is label, match value
-                    _realValue = value;
-                    filterRes = [];
-                    filterResQueryValue = _ORGIN_DATA.filter(function (item) {
-                      return item.value == value;
-                    });
-                    filterResQueryLabel = _ORGIN_DATA.filter(function (item) {
-                      return item.label == value;
-                    });
-                    if (filterResQueryValue.length === 0 && filterResQueryLabel.length > 0) {
-                      filterRes = filterResQueryValue;
-                      if (filterResQueryValue.length === 0) filterRes = filterResQueryLabel;
-                      if (filterRes.length > 0) _realValue = filterRes[0].value;
-                    }
-
-                    //
-                    setControlValue(_realValue); // value must be initialized
-
-                    //
-                    setDataInit(_ORGIN_DATA); // data must be initialized
-
-                    //
-                    onFetch === null || onFetch === void 0 ? void 0 : onFetch(_ORGIN_DATA);
-
-                    //
-                    onLoad === null || onLoad === void 0 ? void 0 : onLoad(_ORGIN_DATA, _realValue, rootRef.current);
-                    return _context.abrupt("return", _ORGIN_DATA);
-                  case 20:
-                    // If the default value is label, match value
-                    _realValue2 = value;
-                    _filterRes = [];
-                    _filterResQueryValue = optionsDataInit.filter(function (item) {
-                      return item.value == value;
-                    });
-                    _filterResQueryLabel = optionsDataInit.filter(function (item) {
-                      return item.label == value;
-                    });
-                    if (_filterResQueryValue.length === 0 && _filterResQueryLabel.length > 0) {
-                      _filterRes = _filterResQueryValue;
-                      if (_filterResQueryValue.length === 0) _filterRes = _filterResQueryLabel;
-                      if (_filterRes.length > 0) _realValue2 = _filterRes[0].value;
-                    }
-
-                    //
-                    setControlValue(_realValue2); // value must be initialized
-
-                    //
-                    setDataInit(optionsDataInit); // data must be initialized
-
-                    //
-                    onFetch === null || onFetch === void 0 ? void 0 : onFetch(optionsDataInit);
-
-                    //
-                    onLoad === null || onLoad === void 0 ? void 0 : onLoad(optionsDataInit, _realValue2, rootRef.current);
-                    return _context.abrupt("return", optionsDataInit);
-                  case 30:
-                  case "end":
-                    return _context.stop();
-                }
-              }, _callee);
-            }));
-            return _fetchData.apply(this, arguments);
-          }
-          function isJSON(str) {
-            if (typeof str === 'string' && str.length > 0) {
-              if (str.replace(/\"\"/g, '').replace(/\,/g, '') == '[{}]') {
-                return false;
-              } else {
-                if (/^[\],:{}\s]*$/.test(str.replace(/\\["\\\/bfnrtu]/g, '@').replace(/"[^"\\\n\r]*"|true|false|null|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?/g, ']').replace(/(?:^|:|,)(?:\s*\[)+/g, ''))) {
-                  return true;
-                } else {
-                  return false;
-                }
-              }
-            } else {
-              if (_typeof(str) === 'object' && Object.prototype.toString.call(str) === '[object Object]' && !str.length) {
-                return true;
-              } else {
-                return false;
-              }
-            }
-          }
-
-          //
-          function handleFocus(event) {
-            rootRef.current.classList.add('focus');
-
-            //
-            onFocus === null || onFocus === void 0 ? void 0 : onFocus(event);
-          }
-          function handleChange(event) {
-            var val = event.target.value;
-            var curData;
-            var currentIndex = event.target.dataset.index;
-
-            // if group
-            if (currentIndex.indexOf('-') >= 0) {
-              var groupIdArr = currentIndex.split('-');
-              var groupIndex = groupIdArr[0];
-              var groupItemIndex = groupIdArr[1];
-              var groupOpts = dataInit[groupIndex].optgroup;
-              curData = groupOpts[groupItemIndex];
-            } else {
-              curData = dataInit[currentIndex];
-            }
-
-            //----
-            // update value
-            setControlValue(val);
-
-            //----
-            //remove focus style
-            rootRef.current.classList.remove('focus');
-
-            //
-            if (typeof onChange === 'function') {
-              onChange(event, val, curData, currentIndex);
-            }
-            if (typeof onClick === 'function') {
-              onClick(event, val, curData, currentIndex);
-            }
-          }
-          function handleBlur(event) {
-            //----
-            //remove focus style
-            rootRef.current.classList.remove('focus');
-
-            //
-            onBlur === null || onBlur === void 0 ? void 0 : onBlur(event);
-          }
-
-          // Generate list of options
-          var itemsList = Array.isArray(dataInit) ? dataInit.map(function (item, index) {
-            var requiredVal = index === 0 ? required || null : null;
-            if (typeof item.optgroup !== 'undefined') {
-              return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-                className: "radio-group__wrapper ".concat(groupWrapperClassName || ''),
-                key: 'optgroup-' + index
-              }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-                className: "radio-group__label ".concat(groupLabelClassName || '')
-              }, item.label), item.optgroup.map(function (opt, optIndex) {
-                return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-                  key: 'option-' + optIndex,
-                  className: "".concat(inline ? "form-check form-check-inline" : "form-check", " ").concat(controlValue == opt.value ? itemSelectedClassName || 'item-selected' : '')
-                }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-                  className: "d-inline-block"
-                }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("input", _extends({
-                  tabIndex: tabIndex || 0,
-                  type: "radio",
-                  className: "form-check-input",
-                  id: "field-".concat(uniqueID, "-").concat(index, "-").concat(optIndex),
-                  name: name,
-                  "data-index": "".concat(index, "-").concat(optIndex),
-                  "data-label": opt.label,
-                  "data-list-item-label": "".concat(typeof opt.listItemLabel === 'undefined' ? '' : opt.listItemLabel),
-                  "data-value": opt.value,
-                  "data-disabled": disabled || (typeof opt.disabled !== 'undefined' ? "".concat(opt.disabled) : 'false'),
-                  value: "".concat(opt.value),
-                  required: requiredVal,
-                  disabled: disabled || (typeof opt.disabled !== 'undefined' ? opt.disabled : null),
-                  onChange: handleChange,
-                  onClick: typeof onClick === 'function' ? handleChange : function () {
-                    return void 0;
-                  },
-                  onFocus: handleFocus,
-                  onBlur: handleBlur,
-                  checked: controlValue == opt.value // component status will not change if defaultChecked is used
-                  ,
-
-                  style: style
-                }, attributes)), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("label", {
-                  className: "form-check-label",
-                  htmlFor: "field-".concat(uniqueID, "-").concat(index, "-").concat(optIndex),
-                  dangerouslySetInnerHTML: {
-                    __html: "".concat(typeof opt.listItemLabel === 'undefined' ? opt.label : opt.listItemLabel)
-                  }
-                })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-                  className: "d-inline-block"
-                }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-                  className: "form-control-extends__wrapper"
-                }, typeof opt["extends"] !== 'undefined' ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react__WEBPACK_IMPORTED_MODULE_0___default().Fragment, null, opt["extends"]) : null)));
-              }));
-            } else {
-              return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-                key: 'option-' + index,
-                className: "".concat(inline ? "form-check form-check-inline" : "form-check", " ").concat(controlValue == item.value ? itemSelectedClassName || 'item-selected' : '')
-              }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-                className: "d-inline-block"
-              }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("input", _extends({
-                tabIndex: tabIndex || 0,
-                type: "radio",
-                className: "form-check-input",
-                id: "field-".concat(uniqueID, "-").concat(index),
-                name: name,
-                "data-index": index,
-                "data-label": item.label,
-                "data-list-item-label": "".concat(typeof item.listItemLabel === 'undefined' ? '' : item.listItemLabel),
-                "data-value": item.value,
-                "data-disabled": disabled || (typeof item.disabled !== 'undefined' ? "".concat(item.disabled) : 'false'),
-                value: "".concat(item.value),
-                required: requiredVal,
-                disabled: disabled || (typeof item.disabled !== 'undefined' ? item.disabled : null),
-                onChange: handleChange,
-                onClick: typeof onClick === 'function' ? handleChange : function () {
-                  return void 0;
-                },
-                onFocus: handleFocus,
-                onBlur: handleBlur,
-                checked: controlValue == item.value // component status will not change if defaultChecked is used
-                ,
-
-                style: style
-              }, attributes)), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("label", {
-                className: "form-check-label",
-                htmlFor: "field-".concat(uniqueID, "-").concat(index),
-                dangerouslySetInnerHTML: {
-                  __html: "".concat(typeof item.listItemLabel === 'undefined' ? item.label : item.listItemLabel)
-                }
-              })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-                className: "d-inline-block"
-              }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-                className: "form-control-extends__wrapper"
-              }, typeof item["extends"] !== 'undefined' ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react__WEBPACK_IMPORTED_MODULE_0___default().Fragment, null, item["extends"]) : null)));
-            }
-          }) : null;
-          (0, react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(function () {
-            // data init
-            //--------------
-            var _params = fetchFuncMethodParams || [];
-            fetchData(_params.join(','));
-          }, [value, options]);
-          return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react__WEBPACK_IMPORTED_MODULE_0___default().Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-            id: "radio__wrapper-".concat(idRes),
-            className: "radio__wrapper ".concat(wrapperClassName || wrapperClassName === '' ? wrapperClassName : 'mb-3 position-relative'),
-            ref: rootRef
-          }, label ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react__WEBPACK_IMPORTED_MODULE_0___default().Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("label", {
-            htmlFor: idRes,
-            className: "form-label",
-            dangerouslySetInnerHTML: {
-              __html: "".concat(label)
-            }
-          })) : null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-            id: idRes
-          }, !hasErr ? itemsList : null)));
-        };
-        /* harmony default export */
-        var __WEBPACK_DEFAULT_EXPORT__ = Radio;
       })();
 
       /******/
@@ -1626,9 +698,6 @@ var external_root_React_commonjs2_react_commonjs_react_amd_react_ = __webpack_re
 var external_root_React_commonjs2_react_commonjs_react_amd_react_default = /*#__PURE__*/__webpack_require__.n(external_root_React_commonjs2_react_commonjs_react_amd_react_);
 // EXTERNAL MODULE: ./src/utils/performance.js
 var performance = __webpack_require__(342);
-// EXTERNAL MODULE: ../Radio/dist/cjs/index.js
-var cjs = __webpack_require__(135);
-var cjs_default = /*#__PURE__*/__webpack_require__.n(cjs);
 ;// CONCATENATED MODULE: ./src/TableField.tsx
 
 
@@ -1642,15 +711,22 @@ var TableField = function TableField(props) {
     style = props.style,
     columnHeader = props.columnHeader,
     index = props.index,
-    content = props.content;
+    content = props.content,
+    evCellMouseEnter = props.evCellMouseEnter,
+    evCellMouseLeave = props.evCellMouseLeave;
   function handleTbodyLeave(e) {
-    e.target.closest('table').querySelector('tbody').classList.remove('drag-trigger-mousedown');
+    var _e$target$closest;
+    (_e$target$closest = e.target.closest('table')) === null || _e$target$closest === void 0 ? void 0 : _e$target$closest.querySelector('tbody').classList.remove('drag-trigger-mousedown');
+    evCellMouseEnter === null || evCellMouseEnter === void 0 ? void 0 : evCellMouseEnter(e);
   }
   return /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("td", {
     colSpan: cols,
     "data-table-text": columnHeader,
     "data-table-col": index,
     onMouseEnter: handleTbodyLeave,
+    onMouseLeave: function onMouseLeave(e) {
+      evCellMouseLeave === null || evCellMouseLeave === void 0 ? void 0 : evCellMouseLeave(e);
+    },
     style: style ? style : width ? typeof window !== 'undefined' && window.innerWidth > 768 ? {
       width: width
     } : {} : {},
@@ -1659,8 +735,8 @@ var TableField = function TableField(props) {
 };
 /* harmony default export */ const src_TableField = (TableField);
 // EXTERNAL MODULE: ../Checkbox/dist/cjs/index.js
-var dist_cjs = __webpack_require__(109);
-var dist_cjs_default = /*#__PURE__*/__webpack_require__.n(dist_cjs);
+var cjs = __webpack_require__(109);
+var cjs_default = /*#__PURE__*/__webpack_require__.n(cjs);
 // EXTERNAL MODULE: ./src/utils/dom.js
 var dom = __webpack_require__(426);
 ;// CONCATENATED MODULE: ./src/table-utils.ts
@@ -1722,7 +798,16 @@ var setCheckboxCheckedData = function setCheckboxCheckedData(arr, key, val) {
   });
 };
 ;// CONCATENATED MODULE: ./src/TableFieldRow.tsx
-
+function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter); }
+function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
+function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i]; return arr2; }
+function _iterableToArrayLimit(arr, i) { var _i = null == arr ? null : "undefined" != typeof Symbol && arr[Symbol.iterator] || arr["@@iterator"]; if (null != _i) { var _s, _e, _x, _r, _arr = [], _n = !0, _d = !1; try { if (_x = (_i = _i.call(arr)).next, 0 === i) { if (Object(_i) !== _i) return; _n = !1; } else for (; !(_n = (_s = _x.call(_i)).done) && (_arr.push(_s.value), _arr.length !== i); _n = !0); } catch (err) { _d = !0, _e = err; } finally { try { if (!_n && null != _i["return"] && (_r = _i["return"](), Object(_r) !== _r)) return; } finally { if (_d) throw _e; } } return _arr; } }
+function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 
 
@@ -1732,8 +817,12 @@ var setCheckboxCheckedData = function setCheckboxCheckedData(arr, key, val) {
 -------------------------------------------------*/
 
 var TableFieldRow = function TableFieldRow(props) {
-  var _filter$;
-  var draggable = props.draggable,
+  var _latestCheckedData$fi;
+  var _props$rowActiveClass = props.rowActiveClassName,
+    rowActiveClassName = _props$rowActiveClass === void 0 ? 'active' : _props$rowActiveClass,
+    fieldsChecked = props.fieldsChecked,
+    updateFirstInitCheckboxesClassName = props.updateFirstInitCheckboxesClassName,
+    draggable = props.draggable,
     useRadio = props.useRadio,
     cols = props.cols,
     width = props.width,
@@ -1750,12 +839,35 @@ var TableFieldRow = function TableFieldRow(props) {
     updategetCheckedData = props.updategetCheckedData,
     getCheckedRootData = props.getCheckedRootData,
     updategetCheckedRootData = props.updategetCheckedRootData,
-    onCheck = props.onCheck;
+    onCheck = props.onCheck,
+    evCellMouseEnter = props.evCellMouseEnter,
+    evCellMouseLeave = props.evCellMouseLeave;
   var contentRef = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useRef)(null);
   var checkboxRef = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useRef)(null);
+  var _useState = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)(false),
+    _useState2 = _slicedToArray(_useState, 2),
+    firstInitCheckboxes = _useState2[0],
+    setFirstInitCheckboxes = _useState2[1];
   var rowIndex = rowKey === null || rowKey === void 0 ? void 0 : rowKey.replace('row-', '');
+
+  // initialize actived checkboxes
+  var latestCheckedData = function latestCheckedData() {
+    if (firstInitCheckboxes) return getCheckedData;
+    if (Array.isArray(fieldsChecked)) {
+      var _checkedData = getCheckedData;
+      if (typeof rowKey !== 'undefined' && typeof getCheckedData !== 'undefined') setCheckboxCheckedData(getCheckedData, rowKey, fieldsChecked[Number(rowIndex)]);
+      // Update checked data
+      updategetCheckedData(_checkedData);
+      setFirstInitCheckboxes(true);
+      updateFirstInitCheckboxesClassName(true);
+      return _checkedData;
+    } else {
+      return getCheckedData;
+    }
+  };
   function handleTbodyEnter(e) {
-    e.target.closest('table').querySelector('tbody').classList.add('drag-trigger-mousedown');
+    var _e$target$closest;
+    (_e$target$closest = e.target.closest('table')) === null || _e$target$closest === void 0 ? void 0 : _e$target$closest.querySelector('tbody').classList.add('drag-trigger-mousedown');
   }
   return /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("th", {
     scope: "row",
@@ -1765,7 +877,13 @@ var TableFieldRow = function TableFieldRow(props) {
     style: style ? style : width ? typeof window !== 'undefined' && window.innerWidth > 768 ? {
       width: width
     } : {} : {},
-    className: className || ''
+    className: className || '',
+    onMouseEnter: function onMouseEnter(e) {
+      evCellMouseEnter === null || evCellMouseEnter === void 0 ? void 0 : evCellMouseEnter(e);
+    },
+    onMouseLeave: function onMouseLeave(e) {
+      evCellMouseLeave === null || evCellMouseLeave === void 0 ? void 0 : evCellMouseLeave(e);
+    }
   }, draggable ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("span", {
     className: "drag-trigger",
     "data-id": rowIndex,
@@ -1813,20 +931,69 @@ var TableFieldRow = function TableFieldRow(props) {
     strokeLinejoin: "round"
   })))) : null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("span", {
     className: "checkbox-trigger"
-  }, useRadio ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((cjs_default()), {
-    wrapperClassName: "",
-    options: "[\n                                {\"label\": \"\",\"value\": \"".concat(rowKey, "\"}\n                            ]"),
-    name: "checkbox-".concat(checkboxNamePrefix, "-0"),
+  }, useRadio ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("a", {
+    ref: checkboxRef,
+    href: "#",
+    draggable: false /* required */,
     tabIndex: -1,
+    className: "radio-svg-btn",
     "data-index": "".concat(rowIndex),
     "data-key": "".concat(rowKey),
-    value: "".concat(rowKey),
-    onClick: function onClick(e, val) {
+    onClick: function onClick(e) {
+      e.preventDefault();
+
+      // STEP 1:
+      // Active current row
+      //-----------
+      var _rows = [].slice.call(e.currentTarget.closest('tbody').querySelectorAll('.row-obj'));
+      var _rowEl = e.currentTarget.closest('.row-obj');
+      var activeClass = rowActiveClassName.split(' ');
+      _rows.forEach(function (row) {
+        var _row$classList;
+        (_row$classList = row.classList).remove.apply(_row$classList, _toConsumableArray(activeClass));
+      });
+      if (_rowEl !== null) {
+        var _rowEl$classList;
+        (_rowEl$classList = _rowEl.classList).add.apply(_rowEl$classList, _toConsumableArray(activeClass));
+      }
+
+      // STEP 2:
       // callback
       //-----------
-      onCheck === null || onCheck === void 0 ? void 0 : onCheck(formatCheckboxControlVal(e.target));
+      onCheck === null || onCheck === void 0 ? void 0 : onCheck([formatCheckboxControlVal(e.currentTarget)]);
     }
-  })) : /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((dist_cjs_default()), {
+  }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("span", {
+    className: "radio-svg--default"
+  }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("svg", {
+    className: "radio-svg",
+    width: "16px",
+    height: "16px",
+    viewBox: "0 0 24 24",
+    fill: "none"
+  }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("path", {
+    fillRule: "evenodd",
+    clipRule: "evenodd",
+    d: "M12 19.5C16.1421 19.5 19.5 16.1421 19.5 12C19.5 7.85786 16.1421 4.5 12 4.5C7.85786 4.5 4.5 7.85786 4.5 12C4.5 16.1421 7.85786 19.5 12 19.5ZM12 21C16.9706 21 21 16.9706 21 12C21 7.02944 16.9706 3 12 3C7.02944 3 3 7.02944 3 12C3 16.9706 7.02944 21 12 21Z",
+    fill: "currentColor"
+  }))), /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("span", {
+    className: "radio-svg--active"
+  }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("svg", {
+    className: "radio-svg",
+    width: "16px",
+    height: "16px",
+    viewBox: "0 0 24 24",
+    fill: "none"
+  }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("path", {
+    fillRule: "evenodd",
+    clipRule: "evenodd",
+    d: "M12 19.5C16.1421 19.5 19.5 16.1421 19.5 12C19.5 7.85786 16.1421 4.5 12 4.5C7.85786 4.5 4.5 7.85786 4.5 12C4.5 16.1421 7.85786 19.5 12 19.5ZM12 21C16.9706 21 21 16.9706 21 12C21 7.02944 16.9706 3 12 3C7.02944 3 3 7.02944 3 12C3 16.9706 7.02944 21 12 21Z",
+    fill: "currentColor"
+  }), /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("circle", {
+    cx: "12",
+    cy: "12",
+    r: "5.25",
+    fill: "currentColor"
+  }))))) : /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((cjs_default()), {
     ref: checkboxRef,
     wrapperClassName: "",
     name: "checkbox-".concat(checkboxNamePrefix, "-").concat(rowIndex),
@@ -1834,9 +1001,9 @@ var TableFieldRow = function TableFieldRow(props) {
     "data-index": "".concat(rowIndex),
     "data-key": "".concat(rowKey),
     value: "".concat(rowKey),
-    checked: (_filter$ = getCheckedData.filter(function (cur) {
+    checked: (_latestCheckedData$fi = latestCheckedData().filter(function (cur) {
       return cur.key === rowKey;
-    })[0]) === null || _filter$ === void 0 ? void 0 : _filter$.checked,
+    })[0]) === null || _latestCheckedData$fi === void 0 ? void 0 : _latestCheckedData$fi.checked,
     onChange: function onChange(e, val) {
       var _curKey = e.target.value;
       var _checkedData = getCheckedData;
@@ -1905,6 +1072,7 @@ var TableFieldRow = function TableFieldRow(props) {
       // Update checked print
       //-----------
       updateCheckedPrint(_res);
+      console.log('***1', e.target, val, _res);
 
       // STEP 6:
       // callback
@@ -1917,7 +1085,12 @@ var TableFieldRow = function TableFieldRow(props) {
 };
 /* harmony default export */ const src_TableFieldRow = (TableFieldRow);
 ;// CONCATENATED MODULE: ./src/TableRow.tsx
-
+function TableRow_slicedToArray(arr, i) { return TableRow_arrayWithHoles(arr) || TableRow_iterableToArrayLimit(arr, i) || TableRow_unsupportedIterableToArray(arr, i) || TableRow_nonIterableRest(); }
+function TableRow_nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+function TableRow_unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return TableRow_arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return TableRow_arrayLikeToArray(o, minLen); }
+function TableRow_arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i]; return arr2; }
+function TableRow_iterableToArrayLimit(arr, i) { var _i = null == arr ? null : "undefined" != typeof Symbol && arr[Symbol.iterator] || arr["@@iterator"]; if (null != _i) { var _s, _e, _x, _r, _arr = [], _n = !0, _d = !1; try { if (_x = (_i = _i.call(arr)).next, 0 === i) { if (Object(_i) !== _i) return; _n = !1; } else for (; !(_n = (_s = _x.call(_i)).done) && (_arr.push(_s.value), _arr.length !== i); _n = !0); } catch (err) { _d = !0, _e = err; } finally { try { if (!_n && null != _i["return"] && (_r = _i["return"](), Object(_r) !== _r)) return; } finally { if (_d) throw _e; } } return _arr; } }
+function TableRow_arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 
 
@@ -1927,8 +1100,11 @@ var TableFieldRow = function TableFieldRow(props) {
 -------------------------------------------------*/
 
 var TableRow = function TableRow(props) {
-  var _filter$;
-  var index = props.index,
+  var _filter$, _filter$2;
+  var _props$rowActiveClass = props.rowActiveClassName,
+    rowActiveClassName = _props$rowActiveClass === void 0 ? 'active' : _props$rowActiveClass,
+    fieldsChecked = props.fieldsChecked,
+    index = props.index,
     data = props.data,
     headerLabel = props.headerLabel,
     checkboxNamePrefix = props.checkboxNamePrefix,
@@ -1944,11 +1120,34 @@ var TableRow = function TableRow(props) {
     onClick = props.onClick,
     onCheck = props.onCheck,
     evDragEnd = props.evDragEnd,
-    evDragStart = props.evDragStart;
+    evDragStart = props.evDragStart,
+    evCellMouseEnter = props.evCellMouseEnter,
+    evCellMouseLeave = props.evCellMouseLeave,
+    evRowMouseEnter = props.evRowMouseEnter,
+    evRowMouseLeave = props.evRowMouseLeave;
   var nonExistentRowKey = "row-null";
-  var rowChecked = (_filter$ = getCheckedData.filter(function (cur) {
+  var rowIndex = rowKey === null || rowKey === void 0 ? void 0 : rowKey.replace('row-', '');
+  var _rowChecked = (_filter$ = getCheckedData.filter(function (cur) {
     return cur.key === rowKey;
   })[0]) === null || _filter$ === void 0 ? void 0 : _filter$.checked;
+  var _useState = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)(false),
+    _useState2 = TableRow_slicedToArray(_useState, 2),
+    firstInitCheckboxesClassName = _useState2[0],
+    setFirstInitCheckboxesClassName = _useState2[1];
+
+  // initialize actived checkboxes
+  var latestRowChecked = function latestRowChecked() {
+    if (firstInitCheckboxesClassName) return _rowChecked;
+    if (Array.isArray(fieldsChecked)) {
+      if (typeof rowKey !== 'undefined' && typeof getCheckedData !== 'undefined') {
+        return fieldsChecked[Number(rowIndex)];
+      }
+    }
+    return _rowChecked;
+  };
+  var rowChecked = firstInitCheckboxesClassName ? (_filter$2 = getCheckedData.filter(function (cur) {
+    return cur.key === rowKey;
+  })[0]) === null || _filter$2 === void 0 ? void 0 : _filter$2.checked : latestRowChecked();
   function handleClick(event) {
     var curVal = formatPerlineControlVal(event.currentTarget);
     onClick === null || onClick === void 0 ? void 0 : onClick(event, curVal);
@@ -1959,8 +1158,14 @@ var TableRow = function TableRow(props) {
     onDragStart: evDragStart,
     "data-id": index,
     "data-key": rowKey,
-    className: "row-obj ".concat(rowChecked ? 'active' : '', " ").concat(typeof onClick === 'undefined' ? '' : 'clickable'),
-    onClick: handleClick
+    className: "row-obj ".concat(rowChecked ? rowActiveClassName : '', " ").concat(typeof onClick === 'undefined' ? '' : 'clickable'),
+    onClick: handleClick,
+    onMouseEnter: function onMouseEnter(e) {
+      evRowMouseEnter === null || evRowMouseEnter === void 0 ? void 0 : evRowMouseEnter(e);
+    },
+    onMouseLeave: function onMouseLeave(e) {
+      evRowMouseLeave === null || evRowMouseLeave === void 0 ? void 0 : evRowMouseLeave(e);
+    }
   }, data ? data.map(function (el, i) {
     var headerItem = headerLabel[i];
     if (headerItem === undefined) headerItem = {
@@ -1970,8 +1175,12 @@ var TableRow = function TableRow(props) {
     if (i === 0) {
       return /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement(src_TableFieldRow, {
         key: 'th-row' + i,
+        rowActiveClassName: rowActiveClassName,
+        fieldsChecked: fieldsChecked,
+        updateFirstInitCheckboxesClassName: setFirstInitCheckboxesClassName,
         useRadio: useRadio,
-        columnHeader: headerItem.content.replace(/(<([^>]+)>)/ig, ''),
+        columnHeader: typeof headerItem.content === 'string' ? headerItem.content.replace(/(<([^>]+)>)/ig, '') : headerItem.content,
+        className: el.className,
         cols: el.cols,
         content: el.content,
         width: el.width,
@@ -1986,32 +1195,25 @@ var TableRow = function TableRow(props) {
         updategetCheckedRootData: updategetCheckedRootData,
         getCheckedRootData: getCheckedRootData,
         onCheck: onCheck,
-        draggable: draggable
+        draggable: draggable,
+        evCellMouseEnter: evCellMouseEnter,
+        evCellMouseLeave: evCellMouseLeave
       });
     } else {
       return /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement(src_TableField, {
         key: 'td-row' + i,
-        columnHeader: headerItem.content.replace(/(<([^>]+)>)/ig, ''),
+        columnHeader: typeof headerItem.content === 'string' ? headerItem.content.replace(/(<([^>]+)>)/ig, '') : headerItem.content,
+        className: el.className,
         cols: el.cols,
         content: el.content,
         width: el.width,
         style: el.style,
-        index: i
+        index: i,
+        evCellMouseEnter: evCellMouseEnter,
+        evCellMouseLeave: evCellMouseLeave
       });
     }
-  }) : null, useRadio ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("td", {
-    style: {
-      display: 'none'
-    }
-  }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((cjs_default()), {
-    wrapperClassName: "",
-    options: "[\n                                {\"label\": \"\",\"value\": \"".concat(nonExistentRowKey, "\"}\n                            ]"),
-    name: "checkbox-".concat(checkboxNamePrefix, "-0"),
-    tabIndex: -1,
-    "data-index": "".concat(nonExistentRowKey === null || nonExistentRowKey === void 0 ? void 0 : nonExistentRowKey.replace('row-', '')),
-    "data-key": "".concat(nonExistentRowKey),
-    value: "".concat(nonExistentRowKey)
-  }))) : null));
+  }) : null));
 };
 /* harmony default export */ const src_TableRow = (TableRow);
 ;// CONCATENATED MODULE: ./src/TableHeaders.tsx
@@ -2037,7 +1239,6 @@ var TableHeaders = function TableHeaders(props) {
     updategetCheckedRootData = props.updategetCheckedRootData,
     onCheck = props.onCheck,
     evSort = props.evSort;
-  sortable;
   return data ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("thead", {
     className: headClassName ? headClassName : ''
   }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("tr", null, data.map(function (item, i) {
@@ -2047,7 +1248,7 @@ var TableHeaders = function TableHeaders(props) {
       key: i,
       scope: "col",
       "data-sort-type": item.type,
-      "data-table-text": item.content.replace(/(<([^>]+)>)/ig, ''),
+      "data-table-text": typeof item.content === 'string' ? item.content.replace(/(<([^>]+)>)/ig, '') : item.content,
       "data-table-col": i,
       style: item.style ? item.style : item.width ? typeof window !== 'undefined' && window.innerWidth > 768 ? {
         width: item.width
@@ -2058,7 +1259,7 @@ var TableHeaders = function TableHeaders(props) {
       style: {
         visibility: useRadio ? 'hidden' : 'visible'
       }
-    }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((dist_cjs_default()), {
+    }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((cjs_default()), {
       wrapperClassName: "",
       name: "checkbox-".concat(checkboxNamePrefix, "-all"),
       tabIndex: -1,
@@ -2185,12 +1386,12 @@ var TableColgroup = function TableColgroup(props) {
 };
 /* harmony default export */ const src_TableColgroup = (TableColgroup);
 ;// CONCATENATED MODULE: ./src/index.tsx
-function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
-function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
-function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
-function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i]; return arr2; }
-function _iterableToArrayLimit(arr, i) { var _i = null == arr ? null : "undefined" != typeof Symbol && arr[Symbol.iterator] || arr["@@iterator"]; if (null != _i) { var _s, _e, _x, _r, _arr = [], _n = !0, _d = !1; try { if (_x = (_i = _i.call(arr)).next, 0 === i) { if (Object(_i) !== _i) return; _n = !1; } else for (; !(_n = (_s = _x.call(_i)).done) && (_arr.push(_s.value), _arr.length !== i); _n = !0); } catch (err) { _d = !0, _e = err; } finally { try { if (!_n && null != _i["return"] && (_r = _i["return"](), Object(_r) !== _r)) return; } finally { if (_d) throw _e; } } return _arr; } }
-function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+function src_slicedToArray(arr, i) { return src_arrayWithHoles(arr) || src_iterableToArrayLimit(arr, i) || src_unsupportedIterableToArray(arr, i) || src_nonIterableRest(); }
+function src_nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+function src_unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return src_arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return src_arrayLikeToArray(o, minLen); }
+function src_arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i]; return arr2; }
+function src_iterableToArrayLimit(arr, i) { var _i = null == arr ? null : "undefined" != typeof Symbol && arr[Symbol.iterator] || arr["@@iterator"]; if (null != _i) { var _s, _e, _x, _r, _arr = [], _n = !0, _d = !1; try { if (_x = (_i = _i.call(arr)).next, 0 === i) { if (Object(_i) !== _i) return; _n = !1; } else for (; !(_n = (_s = _x.call(_i)).done) && (_arr.push(_s.value), _arr.length !== i); _n = !0); } catch (err) { _d = !0, _e = err; } finally { try { if (!_n && null != _i["return"] && (_r = _i["return"](), Object(_r) !== _r)) return; } finally { if (_d) throw _e; } } return _arr; } }
+function src_arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 
 
@@ -2205,6 +1406,7 @@ var Table = function Table(props) {
     bodyClassName = props.bodyClassName,
     headClassName = props.headClassName,
     footClassName = props.footClassName,
+    rowActiveClassName = props.rowActiveClassName,
     checkable = props.checkable,
     useRadio = props.useRadio,
     draggable = props.draggable,
@@ -2216,36 +1418,42 @@ var Table = function Table(props) {
     enhancedResponsive = props.enhancedResponsive,
     enhancedResponsiveWithScrollBar = props.enhancedResponsiveWithScrollBar,
     id = props.id,
+    onCellMouseEnter = props.onCellMouseEnter,
+    onCellMouseLeave = props.onCellMouseLeave,
+    onRowMouseEnter = props.onRowMouseEnter,
+    onRowMouseLeave = props.onRowMouseLeave,
     onClick = props.onClick,
     onCheck = props.onCheck,
-    onDrag = props.onDrag;
+    onDrag = props.onDrag,
+    onRenderFinished = props.onRenderFinished;
   var uniqueID = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useId)().replace(/\:/g, "-");
   var idRes = id || uniqueID;
   var rootRef = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useRef)(null);
   var tbodyRef = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useRef)(null);
   var _useState = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)([]),
-    _useState2 = _slicedToArray(_useState, 2),
+    _useState2 = src_slicedToArray(_useState, 2),
     checkedPrint = _useState2[0],
     setCheckedPrint = _useState2[1];
   var _useState3 = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)([]),
-    _useState4 = _slicedToArray(_useState3, 2),
+    _useState4 = src_slicedToArray(_useState3, 2),
     checkedData = _useState4[0],
     setCheckedData = _useState4[1];
   var _useState5 = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)([]),
-    _useState6 = _slicedToArray(_useState5, 2),
+    _useState6 = src_slicedToArray(_useState5, 2),
     checkedRootData = _useState6[0],
     setCheckedRootData = _useState6[1];
   var _useState7 = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)([]),
-    _useState8 = _slicedToArray(_useState7, 2),
+    _useState8 = src_slicedToArray(_useState7, 2),
     sortData = _useState8[0],
     setSortData = _useState8[1];
   var _useState9 = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)(false),
-    _useState10 = _slicedToArray(_useState9, 2),
+    _useState10 = src_slicedToArray(_useState9, 2),
     mainUpdate = _useState10[0],
     setMainUpdate = _useState10[1];
   var windowResizeUpdate = (0,performance.debounce)(handleWindowUpdate, 50);
   var _headers = data.hasOwnProperty('headers') ? data.headers : false;
   var _summaries = data.hasOwnProperty('summaries') ? data.summaries : false;
+  var _fieldsChecked = data.hasOwnProperty('fieldsChecked') ? data.fieldsChecked : false;
   var windowWidth = typeof window !== 'undefined' ? window.innerWidth : 0;
 
   //Set the class names of different styles
@@ -2476,6 +1684,7 @@ var Table = function Table(props) {
   // events fired on the drop targets
   var handledragOver = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useCallback)(function (e) {
     e.preventDefault();
+    if (draggedObj === null) return;
     draggedObj.style.display = 'none';
     if (e.target.classList.contains('row-placeholder')) return;
     var itemsWrapper = e.target.parentNode;
@@ -2506,7 +1715,6 @@ var Table = function Table(props) {
     draggedObj.style.display = 'table-row';
     removePlaceholder();
     draggedObj.classList.remove('dragging');
-    allRows().at(-1).style.setProperty('display', 'none', "important");
     tbodyRef.current.classList.remove('drag-trigger-mousedown');
     if (overObj === null) return;
 
@@ -2598,6 +1806,10 @@ var Table = function Table(props) {
       window.removeEventListener('resize', windowResizeUpdate);
     };
   }, [data]);
+  (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useEffect)(function () {
+    // display after render finished
+    onRenderFinished === null || onRenderFinished === void 0 ? void 0 : onRenderFinished(true);
+  }, []);
   return /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
     ref: rootRef,
     id: idRes,
@@ -2633,6 +1845,8 @@ var Table = function Table(props) {
       key: i + String(mainUpdate) // Trigger child component update when prop of parent changes
       ,
       index: i,
+      rowActiveClassName: rowActiveClassName,
+      fieldsChecked: _fieldsChecked,
       rowKey: "row-".concat(i),
       headerLabel: _headers,
       data: item,
@@ -2648,7 +1862,11 @@ var Table = function Table(props) {
       draggable: draggable || false,
       useRadio: useRadio || false,
       evDragEnd: handleDragEnd,
-      evDragStart: handleDragStart
+      evDragStart: handleDragStart,
+      evCellMouseEnter: onCellMouseEnter,
+      evCellMouseLeave: onCellMouseLeave,
+      evRowMouseEnter: onRowMouseEnter,
+      evRowMouseLeave: onRowMouseLeave
     });
   }) : ""))));
 };

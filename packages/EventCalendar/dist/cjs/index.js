@@ -1,13 +1,13 @@
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
-		module.exports = factory(require("react"));
+		module.exports = factory(require("react"), require("react-dom"));
 	else if(typeof define === 'function' && define.amd)
-		define(["react"], factory);
+		define(["react", "react-dom"], factory);
 	else if(typeof exports === 'object')
-		exports["RPB"] = factory(require("react"));
+		exports["RPB"] = factory(require("react"), require("react-dom"));
 	else
-		root["RPB"] = factory(root["React"]);
-})(this, (__WEBPACK_EXTERNAL_MODULE__787__) => {
+		root["RPB"] = factory(root["React"], root["ReactDOM"]);
+})(this, (__WEBPACK_EXTERNAL_MODULE__787__, __WEBPACK_EXTERNAL_MODULE__156__) => {
 return /******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ({
 
@@ -15,22 +15,229 @@ return /******/ (() => { // webpackBootstrap
 /***/ (function(module, exports, __webpack_require__) {
 
 /* module decorator */ module = __webpack_require__.nmd(module);
-var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
+var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof2(obj) { "@babel/helpers - typeof"; return _typeof2 = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof2(obj); }
 (function webpackUniversalModuleDefinition(root, factory) {
-  if (( false ? 0 : _typeof(exports)) === 'object' && ( false ? 0 : _typeof(module)) === 'object') module.exports = factory(__webpack_require__(787));else if (true) !(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(787)], __WEBPACK_AMD_DEFINE_FACTORY__ = (factory),
+  if (( false ? 0 : _typeof2(exports)) === 'object' && ( false ? 0 : _typeof2(module)) === 'object') module.exports = factory(__webpack_require__(787), __webpack_require__(156));else if (true) !(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(787), __webpack_require__(156)], __WEBPACK_AMD_DEFINE_FACTORY__ = (factory),
 		__WEBPACK_AMD_DEFINE_RESULT__ = (typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ?
 		(__WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__)) : __WEBPACK_AMD_DEFINE_FACTORY__),
 		__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));else {}
-})(this, function (__WEBPACK_EXTERNAL_MODULE__787__) {
+})(this, function (__WEBPACK_EXTERNAL_MODULE__787__, __WEBPACK_EXTERNAL_MODULE__156__) {
   return (/******/function () {
       // webpackBootstrap
       /******/
-      "use strict";
-
-      /******/
       var __webpack_modules__ = {
+        /***/909: /***/function _(module, exports, __nested_webpack_require_1189__) {
+          /* module decorator */module = __nested_webpack_require_1189__.nmd(module);
+          var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;
+          function _typeof(obj) {
+            "@babel/helpers - typeof";
+
+            return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) {
+              return typeof obj;
+            } : function (obj) {
+              return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;
+            }, _typeof(obj);
+          }
+          (function webpackUniversalModuleDefinition(root, factory) {
+            if (( false ? 0 : _typeof(exports)) === 'object' && ( false ? 0 : _typeof(module)) === 'object') module.exports = factory(__nested_webpack_require_1189__(787), __nested_webpack_require_1189__(156));else if (true) !(__WEBPACK_AMD_DEFINE_ARRAY__ = [__nested_webpack_require_1189__(787), __nested_webpack_require_1189__(156)], __WEBPACK_AMD_DEFINE_FACTORY__ = factory, __WEBPACK_AMD_DEFINE_RESULT__ = typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ? __WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__) : __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));else {}
+          })(this, function (__WEBPACK_EXTERNAL_MODULE__787__, __WEBPACK_EXTERNAL_MODULE__156__) {
+            return (/******/function () {
+                // webpackBootstrap
+                /******/
+                "use strict";
+
+                /******/
+                var __webpack_modules__ = {
+                  /***/787: /***/function _(module) {
+                    module.exports = __WEBPACK_EXTERNAL_MODULE__787__;
+
+                    /***/
+                  },
+
+                  /***/156: /***/function _(module) {
+                    module.exports = __WEBPACK_EXTERNAL_MODULE__156__;
+
+                    /***/
+                  }
+
+                  /******/
+                };
+                /************************************************************************/
+                /******/ // The module cache
+                /******/
+                var __webpack_module_cache__ = {};
+                /******/
+                /******/ // The require function
+                /******/
+                function __nested_webpack_require_1708__(moduleId) {
+                  /******/ // Check if module is in cache
+                  /******/var cachedModule = __webpack_module_cache__[moduleId];
+                  /******/
+                  if (cachedModule !== undefined) {
+                    /******/return cachedModule.exports;
+                    /******/
+                  }
+                  /******/ // Create a new module (and put it into the cache)
+                  /******/
+                  var module = __webpack_module_cache__[moduleId] = {
+                    /******/ // no module.id needed
+                    /******/ // no module.loaded needed
+                    /******/exports: {}
+                    /******/
+                  };
+                  /******/
+                  /******/ // Execute the module function
+                  /******/
+                  __webpack_modules__[moduleId](module, module.exports, __nested_webpack_require_1708__);
+                  /******/
+                  /******/ // Return the exports of the module
+                  /******/
+                  return module.exports;
+                  /******/
+                }
+                /******/
+                /************************************************************************/
+                /******/ /* webpack/runtime/compat get default export */
+                /******/
+                (function () {
+                  /******/ // getDefaultExport function for compatibility with non-harmony modules
+                  /******/__nested_webpack_require_1708__.n = function (module) {
+                    /******/var getter = module && module.__esModule ? /******/function () {
+                      return module['default'];
+                    } : /******/function () {
+                      return module;
+                    };
+                    /******/
+                    __nested_webpack_require_1708__.d(getter, {
+                      a: getter
+                    });
+                    /******/
+                    return getter;
+                    /******/
+                  };
+                  /******/
+                })();
+                /******/
+                /******/ /* webpack/runtime/define property getters */
+                /******/
+                (function () {
+                  /******/ // define getter functions for harmony exports
+                  /******/__nested_webpack_require_1708__.d = function (exports, definition) {
+                    /******/for (var key in definition) {
+                      /******/if (__nested_webpack_require_1708__.o(definition, key) && !__nested_webpack_require_1708__.o(exports, key)) {
+                        /******/Object.defineProperty(exports, key, {
+                          enumerable: true,
+                          get: definition[key]
+                        });
+                        /******/
+                      }
+                      /******/
+                    }
+                    /******/
+                  };
+                  /******/
+                })();
+                /******/
+                /******/ /* webpack/runtime/hasOwnProperty shorthand */
+                /******/
+                (function () {
+                  /******/__nested_webpack_require_1708__.o = function (obj, prop) {
+                    return Object.prototype.hasOwnProperty.call(obj, prop);
+                  };
+                  /******/
+                })();
+                /******/
+                /******/ /* webpack/runtime/make namespace object */
+                /******/
+                (function () {
+                  /******/ // define __esModule on exports
+                  /******/__nested_webpack_require_1708__.r = function (exports) {
+                    /******/if (typeof Symbol !== 'undefined' && Symbol.toStringTag) {
+                      /******/Object.defineProperty(exports, Symbol.toStringTag, {
+                        value: 'Module'
+                      });
+                      /******/
+                    }
+                    /******/
+                    Object.defineProperty(exports, '__esModule', {
+                      value: true
+                    });
+                    /******/
+                  };
+                  /******/
+                })();
+                /******/
+                /************************************************************************/
+                var __webpack_exports__ = {};
+                // This entry need to be wrapped in an IIFE because it need to be isolated against other modules in the chunk.
+                (function () {
+                  __nested_webpack_require_1708__.r(__webpack_exports__);
+                  /* harmony export */
+                  __nested_webpack_require_1708__.d(__webpack_exports__, {
+                    /* harmony export */"default": function _default() {
+                      return __WEBPACK_DEFAULT_EXPORT__;
+                    }
+                    /* harmony export */
+                  });
+                  /* harmony import */
+                  var react__WEBPACK_IMPORTED_MODULE_0__ = __nested_webpack_require_1708__(787);
+                  /* harmony import */
+                  var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__nested_webpack_require_1708__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+                  /* harmony import */
+                  var react_dom__WEBPACK_IMPORTED_MODULE_1__ = __nested_webpack_require_1708__(156);
+                  /* harmony import */
+                  var react_dom__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__nested_webpack_require_1708__.n(react_dom__WEBPACK_IMPORTED_MODULE_1__);
+                  var RootPortal = function RootPortal(props) {
+                    var containerClassName = props.containerClassName,
+                      show = props.show,
+                      children = props.children;
+                    var containerRef = (0, react__WEBPACK_IMPORTED_MODULE_0__.useRef)();
+
+                    // Move HTML templates to tag end body </body>
+                    // render() don't use "Fragment", in order to avoid error "Failed to execute 'insertBefore' on 'Node'"
+                    // prevent "transform", "filter", "perspective" attribute destruction fixed viewport orientation
+                    // ###
+                    // ###
+                    // Use `containerRef.current` to ensure the correctness of the nextjs framework. It may report an error document as undefined
+
+                    (0, react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(function () {
+                      containerRef.current = document.createElement('div');
+                      containerRef.current.className = "root-portal-container ".concat(containerClassName || '');
+                      document.body.appendChild(containerRef.current);
+                      return function () {
+                        if (containerRef.current) {
+                          containerRef.current.remove();
+                        }
+                      };
+                    }, []);
+                    return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react__WEBPACK_IMPORTED_MODULE_0___default().Fragment, null, containerRef.current && show && /*#__PURE__*/(0, react_dom__WEBPACK_IMPORTED_MODULE_1__.createPortal)(children, containerRef.current));
+                  };
+                  /* harmony default export */
+                  var __WEBPACK_DEFAULT_EXPORT__ = RootPortal;
+                })();
+
+                /******/
+                return __webpack_exports__;
+                /******/
+              }()
+            );
+          });
+
+          /***/
+        },
+
         /***/787: /***/function _(module) {
+          "use strict";
+
           module.exports = __WEBPACK_EXTERNAL_MODULE__787__;
+
+          /***/
+        },
+
+        /***/156: /***/function _(module) {
+          "use strict";
+
+          module.exports = __WEBPACK_EXTERNAL_MODULE__156__;
 
           /***/
         }
@@ -44,7 +251,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
       /******/
       /******/ // The require function
       /******/
-      function __nested_webpack_require_1465__(moduleId) {
+      function __nested_webpack_require_11836__(moduleId) {
         /******/ // Check if module is in cache
         /******/var cachedModule = __webpack_module_cache__[moduleId];
         /******/
@@ -55,15 +262,19 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
         /******/ // Create a new module (and put it into the cache)
         /******/
         var module = __webpack_module_cache__[moduleId] = {
-          /******/ // no module.id needed
-          /******/ // no module.loaded needed
+          /******/id: moduleId,
+          /******/loaded: false,
           /******/exports: {}
           /******/
         };
         /******/
         /******/ // Execute the module function
         /******/
-        __webpack_modules__[moduleId](module, module.exports, __nested_webpack_require_1465__);
+        __webpack_modules__[moduleId].call(module.exports, module, module.exports, __nested_webpack_require_11836__);
+        /******/
+        /******/ // Flag the module as loaded
+        /******/
+        module.loaded = true;
         /******/
         /******/ // Return the exports of the module
         /******/
@@ -76,14 +287,14 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
       /******/
       (function () {
         /******/ // getDefaultExport function for compatibility with non-harmony modules
-        /******/__nested_webpack_require_1465__.n = function (module) {
+        /******/__nested_webpack_require_11836__.n = function (module) {
           /******/var getter = module && module.__esModule ? /******/function () {
             return module['default'];
           } : /******/function () {
             return module;
           };
           /******/
-          __nested_webpack_require_1465__.d(getter, {
+          __nested_webpack_require_11836__.d(getter, {
             a: getter
           });
           /******/
@@ -97,9 +308,9 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
       /******/
       (function () {
         /******/ // define getter functions for harmony exports
-        /******/__nested_webpack_require_1465__.d = function (exports, definition) {
+        /******/__nested_webpack_require_11836__.d = function (exports, definition) {
           /******/for (var key in definition) {
-            /******/if (__nested_webpack_require_1465__.o(definition, key) && !__nested_webpack_require_1465__.o(exports, key)) {
+            /******/if (__nested_webpack_require_11836__.o(definition, key) && !__nested_webpack_require_11836__.o(exports, key)) {
               /******/Object.defineProperty(exports, key, {
                 enumerable: true,
                 get: definition[key]
@@ -116,7 +327,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
       /******/ /* webpack/runtime/hasOwnProperty shorthand */
       /******/
       (function () {
-        /******/__nested_webpack_require_1465__.o = function (obj, prop) {
+        /******/__nested_webpack_require_11836__.o = function (obj, prop) {
           return Object.prototype.hasOwnProperty.call(obj, prop);
         };
         /******/
@@ -126,7 +337,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
       /******/
       (function () {
         /******/ // define __esModule on exports
-        /******/__nested_webpack_require_1465__.r = function (exports) {
+        /******/__nested_webpack_require_11836__.r = function (exports) {
           /******/if (typeof Symbol !== 'undefined' && Symbol.toStringTag) {
             /******/Object.defineProperty(exports, Symbol.toStringTag, {
               value: 'Module'
@@ -142,15 +353,31 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
         /******/
       })();
       /******/
+      /******/ /* webpack/runtime/node module decorator */
+      /******/
+      (function () {
+        /******/__nested_webpack_require_11836__.nmd = function (module) {
+          /******/module.paths = [];
+          /******/
+          if (!module.children) module.children = [];
+          /******/
+          return module;
+          /******/
+        };
+        /******/
+      })();
+      /******/
       /************************************************************************/
       var __webpack_exports__ = {};
-      // This entry need to be wrapped in an IIFE because it need to be isolated against other modules in the chunk.
+      // This entry need to be wrapped in an IIFE because it need to be in strict mode.
       (function () {
+        "use strict";
+
         // ESM COMPAT FLAG
-        __nested_webpack_require_1465__.r(__webpack_exports__);
+        __nested_webpack_require_11836__.r(__webpack_exports__);
 
         // EXPORTS
-        __nested_webpack_require_1465__.d(__webpack_exports__, {
+        __nested_webpack_require_11836__.d(__webpack_exports__, {
           "default": function _default() {
             return (/* binding */src
             );
@@ -158,8 +385,11 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
         });
 
         // EXTERNAL MODULE: external {"root":"React","commonjs2":"react","commonjs":"react","amd":"react"}
-        var external_root_React_commonjs2_react_commonjs_react_amd_react_ = __nested_webpack_require_1465__(787);
-        var external_root_React_commonjs2_react_commonjs_react_amd_react_default = /*#__PURE__*/__nested_webpack_require_1465__.n(external_root_React_commonjs2_react_commonjs_react_amd_react_);
+        var external_root_React_commonjs2_react_commonjs_react_amd_react_ = __nested_webpack_require_11836__(787);
+        var external_root_React_commonjs2_react_commonjs_react_amd_react_default = /*#__PURE__*/__nested_webpack_require_11836__.n(external_root_React_commonjs2_react_commonjs_react_amd_react_);
+        // EXTERNAL MODULE: ../RootPortal/dist/cjs/index.js
+        var cjs = __nested_webpack_require_11836__(909);
+        var cjs_default = /*#__PURE__*/__nested_webpack_require_11836__.n(cjs);
         ; // CONCATENATED MODULE: ./src/plugins/BSL/bodyScrollLock.es6.js
         function _toConsumableArray(arr) {
           return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread();
@@ -486,7 +716,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 
         //Destroys body scroll locking
 
-        var ModalDialog = function ModalDialog(props) {
+        var ModalDialog = /*#__PURE__*/(0, external_root_React_commonjs2_react_commonjs_react_amd_react_.forwardRef)(function (props, ref) {
           var modalContentClassName = props.modalContentClassName,
             modalHeaderClassName = props.modalHeaderClassName,
             modalTitleClassName = props.modalTitleClassName,
@@ -494,7 +724,6 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
             modalFooterClassName = props.modalFooterClassName,
             modalFooterExpandedContentClassName = props.modalFooterExpandedContentClassName,
             show = props.show,
-            protectFixedViewport = props.protectFixedViewport,
             maxWidth = props.maxWidth,
             minHeight = props.minHeight,
             enableVideo = props.enableVideo,
@@ -524,15 +753,28 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
           var modalRef = (0, external_root_React_commonjs2_react_commonjs_react_amd_react_.useRef)(null);
           var triggerRef = (0, external_root_React_commonjs2_react_commonjs_react_amd_react_.useRef)(null);
           var idRes = id || uniqueID;
-          var PROTECT_FIXED_VIEWPORT = typeof protectFixedViewport === 'undefined' ? true : protectFixedViewport;
           var _useState = (0, external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)(false),
             _useState2 = _slicedToArray(_useState, 2),
-            winShow = _useState2[0],
-            setWinShow = _useState2[1];
+            modalShow = _useState2[0],
+            setModalShow = _useState2[1];
           var _useState3 = (0, external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)(null),
             _useState4 = _slicedToArray(_useState3, 2),
             incomingData = _useState4[0],
             setIncomingData = _useState4[1];
+
+          // exposes the following methods
+          (0, external_root_React_commonjs2_react_commonjs_react_amd_react_.useImperativeHandle)(ref, function () {
+            return {
+              open: function open() {
+                handleOpenWin(null);
+              },
+              close: function close() {
+                handleCloseWin(null);
+              }
+            };
+          }, [ref]);
+
+          //
           function handleCloseWin(e) {
             if (typeof e !== 'undefined' && e !== null) e.preventDefault();
             closeAction();
@@ -560,7 +802,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
             // close Modal Dialog
             //------------------------------------------
             var $mask = document.querySelector("#mask-".concat(idRes, " > .modal-backdrop"));
-            setWinShow(false);
+            setModalShow(false);
             if ($mask !== null) $mask.classList.remove('show');
             setTimeout(function () {
               if (modalRef.current !== null) modalRef.current.style.display = 'none';
@@ -576,6 +818,8 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
             clearTimeout(window.setCloseModalDialog);
           }
           function openAction() {
+            if (modalRef.current === null) return;
+
             // Video PopUp Interaction
             //------------------------------------------
             var hasVideo = modalRef.current.classList.contains('is-video') ? true : false;
@@ -633,7 +877,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
             modalRef.current.style.display = 'block';
             if ($mask !== null) $mask.style.display = 'block';
             setTimeout(function () {
-              setWinShow(true);
+              setModalShow(true);
               if ($mask !== null) $mask.classList.add('show');
             }, 0);
 
@@ -684,53 +928,6 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
             //--------------
             setIncomingData(data);
 
-            // Move HTML templates to tag end body </body>
-            // render() don't use "Fragment", in order to avoid error "Failed to execute 'insertBefore' on 'Node'"
-            // prevent "transform", "filter", "perspective" attribute destruction fixed viewport orientation
-            //--------------
-            if (PROTECT_FIXED_VIEWPORT) {
-              if (document.body !== null && modalRef.current !== null) {
-                document.body.appendChild(modalRef.current);
-                [].slice.call(modalRef.current.querySelectorAll('[data-close]')).forEach(function (node) {
-                  if (typeof node.dataset.ev === 'undefined') {
-                    node.dataset.ev = 'true';
-                    node.addEventListener('pointerdown', function (e) {
-                      handleCloseWin(e);
-                    });
-                  }
-                });
-                [].slice.call(modalRef.current.querySelectorAll('[data-confirm]')).forEach(function (node) {
-                  if (typeof node.dataset.ev === 'undefined') {
-                    node.dataset.ev = 'true';
-                    node.addEventListener('pointerdown', function (e) {
-                      var callback = function callback(e) {
-                        return function () {
-                          handleCloseWin(e);
-                        };
-                      };
-                      var _incomingData = node.dataset.incomingData;
-                      onSubmit === null || onSubmit === void 0 ? void 0 : onSubmit(e, callback(e), _incomingData);
-                    });
-                  }
-                });
-              }
-            }
-
-            // add mask
-            //--------------
-            if (document.getElementById("mask-".concat(idRes)) === null && !maskDisabled && document.body !== null) {
-              var maskDiv = document.createElement('div');
-              maskDiv.id = "mask-".concat(idRes);
-              maskDiv.innerHTML = "<div class=\"".concat(winShow ? 'modal-backdrop fade show' : 'modal-backdrop fade', "\" style=\"display:none;").concat(maskOpacity ? "opacity:".concat(maskOpacity, ";") : '', "\"></div>");
-              document.body.appendChild(maskDiv);
-              if (!closeOnlyBtn) {
-                var $mask = document.querySelector("#mask-".concat(idRes, " > .modal-backdrop"));
-                if ($mask !== null) $mask.addEventListener('pointerdown', function (e) {
-                  handleCloseWin(e);
-                });
-              }
-            }
-
             // show
             //--------------
             if (show) {
@@ -760,36 +957,18 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 
               // Cancels a timeout previously established by calling setTimeout().
               clearTimeout(window.setCloseModalDialog);
-
-              // Remove all masks and modals
-              Array.prototype.forEach.call(document.querySelectorAll('.modal'), function (node) {
-                if (PROTECT_FIXED_VIEWPORT) {
-                  // for current actived modal
-                  if (node.classList.contains('protect-fixed-viewport') && node.classList.contains('show')) {
-                    node.remove();
-                  }
-                }
-              });
-
-              // If there is no active modal, hide all masks
-              var existingModal = [].slice.call(document.querySelectorAll('.modal')).filter(function (node) {
-                return node.classList.contains('show');
-              }).length > 0;
-              if (!existingModal) {
-                Array.prototype.forEach.call(document.querySelectorAll('.modal-backdrop'), function (mask) {
-                  mask.classList.remove('show');
-                  mask.style.display = 'none';
-                });
-              }
             };
           }, [show, data]);
           return /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", null, triggerContent ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement(external_root_React_commonjs2_react_commonjs_react_amd_react_default().Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
             className: triggerClassName ? triggerClassName : 'd-inline w-auto',
             ref: triggerRef,
             onClick: handleOpenWin
-          }, triggerContent)) : null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
+          }, triggerContent)) : null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement(cjs_default(), {
+            show: true,
+            containerClassName: "ModalDialog"
+          }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
             ref: modalRef,
-            className: enableVideo ? "modal ".concat(PROTECT_FIXED_VIEWPORT ? 'protect-fixed-viewport' : '', " fade is-video ").concat(winShow ? 'show' : '') : "modal ".concat(PROTECT_FIXED_VIEWPORT ? 'protect-fixed-viewport' : '', " fade ").concat(winShow ? 'show' : ''),
+            className: enableVideo ? "modal fade is-video ".concat(modalShow ? 'show' : '') : "modal fade ".concat(modalShow ? 'show' : ''),
             tabIndex: -1,
             "aria-hidden": "true",
             style: {
@@ -844,8 +1023,20 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
             },
             type: "button",
             className: submitBtnClassName ? submitBtnClassName : 'btn btn-primary'
-          }, submitBtnLabel) : null)) : null))));
-        };
+          }, submitBtnLabel) : null)) : null))), !maskDisabled ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
+            id: "mask-".concat(idRes)
+          }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
+            id: "mask-".concat(idRes),
+            className: modalShow ? 'modal-backdrop fade show' : 'modal-backdrop fade',
+            style: maskOpacity ? {
+              display: modalShow ? 'block' : 'none',
+              opacity: maskOpacity
+            } : {
+              display: modalShow ? 'block' : 'none'
+            },
+            onClick: handleCloseWin
+          })) : null));
+        });
         /* harmony default export */
         var src = ModalDialog;
       })();
@@ -864,6 +1055,14 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 
 "use strict";
 module.exports = __WEBPACK_EXTERNAL_MODULE__787__;
+
+/***/ }),
+
+/***/ 156:
+/***/ ((module) => {
+
+"use strict";
+module.exports = __WEBPACK_EXTERNAL_MODULE__156__;
 
 /***/ })
 
@@ -1501,7 +1700,6 @@ var EventCalendar = function EventCalendar(props) {
   }, langToday || 'Today'))), EVENTS_ENABLED ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((funda_modaldialog__WEBPACK_IMPORTED_MODULE_1___default()), {
     show: showDelete,
     maskOpacity: modalMaskOpacity,
-    protectFixedViewport: false,
     triggerClassName: "",
     triggerContent: "",
     closeBtnClassName: modalCloseBtnClassName || 'btn btn-secondary',
@@ -1549,7 +1747,6 @@ var EventCalendar = function EventCalendar(props) {
     heading: modalHeading,
     maxWidth: modalMaxWidth,
     minHeight: modalMinHeight,
-    protectFixedViewport: false,
     triggerClassName: "",
     triggerContent: "",
     closeBtnClassName: modalCloseBtnClassName || 'btn btn-secondary',

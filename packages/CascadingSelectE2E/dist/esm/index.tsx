@@ -1,5 +1,8 @@
 import React, { useId, useEffect, useState, useRef } from 'react';
 
+import RootPortal from 'funda-root-portal';
+
+
 import { debounce } from './utils/performance';
 
 import Group from './Group';
@@ -171,14 +174,14 @@ const CascadingSelectE2E = (props: CascadingSelectE2EProps) => {
 
     //for variable 
     const listData = useRef<any[]>([]);
-    const selectedData = useRef<any>({   
+    const selectedData = useRef<any>({
         labels: [],
         values: [],
         queryIds: []
     });
 
     // destroy `parent_id` match
-    const selectedDataByClick = useRef<any>({   
+    const selectedDataByClick = useRef<any>({
         labels: [],
         values: [],
         queryIds: []
@@ -228,7 +231,7 @@ const CascadingSelectE2E = (props: CascadingSelectE2EProps) => {
         //-----------
         // display wrapper
         if (showAct) _modalRef.classList.add('active');
-        
+
 
         // STEP 2:
         //-----------
@@ -307,36 +310,6 @@ const CascadingSelectE2E = (props: CascadingSelectE2EProps) => {
 
     }
 
-    
-    
-
-    function popwinBtnEventsInit() {
-        if (listRef.current === null) return;
-
-   
-        // options event listener
-        // !!! to prevent button mismatch when changing
-        if (listData.current.length > 0) {
-            [].slice.call(listRef.current.querySelectorAll('[data-opt]')).forEach((node: HTMLElement) => {
-
-                if (typeof node.dataset.ev === 'undefined') {
-                    node.dataset.ev = 'true';
-
-                    // Prevent touch screen from starting to click option, DO NOT USE "pointerdown"
-                    node.addEventListener('click', (e: any) => {
-                        const _value = JSON.parse(e.currentTarget.dataset.value);
-                        const _index = Number(e.currentTarget.dataset.index);
-                        const _level = Number(e.currentTarget.dataset.level);
-                        
-                        handleClickItem(e, _value, _index, _level, listData.current);
-                    });
-                }
-            });
-
-        }
-
-
-    }
 
 
     function updateColDisplay(useFetch: boolean, emptyAction: boolean = false, level: number | undefined) {
@@ -371,23 +344,15 @@ const CascadingSelectE2E = (props: CascadingSelectE2EProps) => {
                     if (typeof level !== 'undefined' && Number.isInteger(level)) {
                         if (i > level) perCol.classList.add('hide-col');
                     }
-                    
+
                 }
 
 
-                
+
             });
         }
 
 
-        // initialize events for options
-        setTimeout(() => {
-            popwinBtnEventsInit();
-        }, 0);
-
-
-
-    
     }
 
 
@@ -411,12 +376,11 @@ const CascadingSelectE2E = (props: CascadingSelectE2EProps) => {
         // window position
         setTimeout(() => {
             popwinPosInit();
-            popwinBtnEventsInit();
         }, 0);
 
 
     }
-    
+
     async function fetchData(_fetchArray: any, params: string, dataDepth: number, parentId: number = 0) {
 
 
@@ -459,7 +423,7 @@ const CascadingSelectE2E = (props: CascadingSelectE2EProps) => {
                 setHasErr(true);
                 _ORGIN_DATA = [];
             }
-            
+
 
             // STEP 0-1: ===========
             // Set hierarchical categories ( with sub-categories )
@@ -653,7 +617,7 @@ const CascadingSelectE2E = (props: CascadingSelectE2EProps) => {
             // update column display with DOM
             //////////////////////////////////////////
             updateColDisplay(false, emptyAction, level);
-            
+
             // Execute the fetch task
             //////////////////////////////////////////
             doFetch(dataDepthMax, _currentDataDepth, parentId, emptyAction)?.then((res: any) => {
@@ -665,12 +629,12 @@ const CascadingSelectE2E = (props: CascadingSelectE2EProps) => {
                 }
 
             });
-            
+
             return _currentDataDepth;
 
         });
 
-    
+
         //update selected data by clicked item
         //////////////////////////////////////////
         updateValueByClickedItem(resValue, level);
@@ -704,15 +668,15 @@ const CascadingSelectE2E = (props: CascadingSelectE2EProps) => {
             markAllItems(childList);
             newData[level + 1] = childList;
         }
-        
+
         markCurrent(newData[level], index);
-        
+
 
 
         // close modal
         //////////////////////////////////////////
         if (dataDepthMax && resValue.id.toString().indexOf('$EMPTY_ID_') < 0) {
-            
+
             //
             cancel();
 
@@ -728,20 +692,20 @@ const CascadingSelectE2E = (props: CascadingSelectE2EProps) => {
                 const colItemsWrapper = currentItemsInner.querySelectorAll('.cas-select-e2e__items-col');
                 colItemsWrapper.forEach((perCol: HTMLUListElement) => {
                     const _col = Number(perCol.dataset.col);
-                    
+
                     if (_col >= level) {
                         [].slice.call(perCol.querySelectorAll('[data-opt]')).forEach((node: HTMLElement) => {
                             node.classList.remove('active');
                         });
-                    } 
+                    }
                 });
             });
-            
-            
+
+
             // not header option
-            if (typeof e.currentTarget.dataset.optHeader === 'undefined')  e.currentTarget.classList.add('active');
-           
-        
+            if (typeof e.currentTarget.dataset.optHeader === 'undefined') e.currentTarget.classList.add('active');
+
+
         }
 
 
@@ -814,7 +778,7 @@ const CascadingSelectE2E = (props: CascadingSelectE2EProps) => {
                 values: _valueData,
                 queryIds: _queryIdsData,
             };
-            
+
 
 
         } else {
@@ -912,7 +876,7 @@ const CascadingSelectE2E = (props: CascadingSelectE2EProps) => {
 
         setChangedVal('');
         setFirstDataFeched(false);
-        
+
     }
 
     function initDefaultValue(defaultValue: any) {
@@ -926,7 +890,7 @@ const CascadingSelectE2E = (props: CascadingSelectE2EProps) => {
                 if (item !== '[]') {
                     return false;
                 }
-        
+
                 return true;
             }) : true;
 
@@ -1285,7 +1249,7 @@ const CascadingSelectE2E = (props: CascadingSelectE2EProps) => {
             _labels = formattedDefaultValue.map((s: string | number) => s.toString().replace(/[\w\s]/gi, '').replace(/\[\]/g, ''));
         }
 
-        
+
         return _labels.length > 0 ? _labels.map((item: any, i: number, arr: any[]) => {
             if (arr.length - 1 === i) {
                 return (
@@ -1317,17 +1281,6 @@ const CascadingSelectE2E = (props: CascadingSelectE2EProps) => {
     useEffect(() => {
 
 
-
-        // Move HTML templates to tag end body </body>
-        // render() don't use "Fragment", in order to avoid error "Failed to execute 'insertBefore' on 'Node'"
-        // prevent "transform", "filter", "perspective" attribute destruction fixed viewport orientation
-        //--------------
-        if (document.body !== null && listRef.current !== null) {
-            document.body.appendChild(listRef.current);
-        }
-
-
-
         // column titles
         //--------------
         fillColumnTitle();
@@ -1355,9 +1308,6 @@ const CascadingSelectE2E = (props: CascadingSelectE2EProps) => {
             document.removeEventListener('pointerdown', handleClickOutside);
             window.removeEventListener('scroll', windowScrollUpdate);
             window.removeEventListener('touchmove', windowScrollUpdate);
-
-            //
-            document.querySelector(`#cas-select-e2e__items-wrapper-${idRes}`)?.remove();
         }
 
 
@@ -1366,12 +1316,12 @@ const CascadingSelectE2E = (props: CascadingSelectE2EProps) => {
     return (
         <>
 
-            <div 
-                className={wrapperClassName || wrapperClassName === '' ? `cas-select-e2e__wrapper ${wrapperClassName}` : `cas-select-e2e__wrapper mb-3 position-relative`} 
+            <div
+                className={wrapperClassName || wrapperClassName === '' ? `cas-select-e2e__wrapper ${wrapperClassName}` : `cas-select-e2e__wrapper mb-3 position-relative`}
                 ref={rootRef}
                 data-overlay-id={`cas-select-e2e__items-wrapper-${idRes}`}
             >
-                {label ? <><label htmlFor={idRes} className="form-label" dangerouslySetInnerHTML={{ __html: `${label}` }}></label></> : null}
+                {label ? <>{typeof label === 'string' ? <label htmlFor={idRes} className="form-label" dangerouslySetInnerHTML={{ __html: `${label}` }}></label> : <label htmlFor={idRes} className="form-label" >{label}</label>}</> : null}
 
                 {triggerContent ? <>
                     <div className={triggerClassName ? `cas-select-e2e__trigger ${triggerClassName}` : `cas-select-e2e__trigger d-inline w-auto`} onClick={handleDisplayOptions}>{triggerContent}</div>
@@ -1379,44 +1329,48 @@ const CascadingSelectE2E = (props: CascadingSelectE2EProps) => {
 
 
                 {!hasErr ? (
-                    <div 
-                        ref={listRef} 
-                        id={`cas-select-e2e__items-wrapper-${idRes}`}
-                        className={`cas-select-e2e__items-wrapper position-absolute border shadow small`}
-                        style={{ zIndex: (depth ? depth : 1055) }}
-                    >
-                        <ul className="cas-select-e2e__items-inner">
-                            {loading ? <><div className="cas-select-e2e__items-loader">{loader || <svg height="12px" width="12px" viewBox="0 0 512 512"><g><path fill="inherit" d="M256,0c-23.357,0-42.297,18.932-42.297,42.288c0,23.358,18.94,42.288,42.297,42.288c23.357,0,42.279-18.93,42.279-42.288C298.279,18.932,279.357,0,256,0z"/><path fill="inherit" d="M256,427.424c-23.357,0-42.297,18.931-42.297,42.288C213.703,493.07,232.643,512,256,512c23.357,0,42.279-18.93,42.279-42.288C298.279,446.355,279.357,427.424,256,427.424z"/><path fill="inherit" d="M74.974,74.983c-16.52,16.511-16.52,43.286,0,59.806c16.52,16.52,43.287,16.52,59.806,0c16.52-16.511,16.52-43.286,0-59.806C118.261,58.463,91.494,58.463,74.974,74.983z"/><path fill="inherit" d="M377.203,377.211c-16.503,16.52-16.503,43.296,0,59.815c16.519,16.52,43.304,16.52,59.806,0c16.52-16.51,16.52-43.295,0-59.815C420.489,360.692,393.722,360.7,377.203,377.211z"/><path fill="inherit" d="M84.567,256c0.018-23.348-18.922-42.279-42.279-42.279c-23.357-0.009-42.297,18.932-42.279,42.288c-0.018,23.348,18.904,42.279,42.279,42.279C65.645,298.288,84.567,279.358,84.567,256z"/><path fill="inherit" d="M469.712,213.712c-23.357,0-42.279,18.941-42.297,42.288c0,23.358,18.94,42.288,42.297,42.297c23.357,0,42.297-18.94,42.279-42.297C512.009,232.652,493.069,213.712,469.712,213.712z"/><path fill="inherit" d="M74.991,377.22c-16.519,16.511-16.519,43.296,0,59.806c16.503,16.52,43.27,16.52,59.789,0c16.52-16.519,16.52-43.295,0-59.815C118.278,360.692,91.511,360.692,74.991,377.22z"/><path fill="inherit" d="M437.026,134.798c16.52-16.52,16.52-43.304,0-59.824c-16.519-16.511-43.304-16.52-59.823,0c-16.52,16.52-16.503,43.295,0,59.815C393.722,151.309,420.507,151.309,437.026,134.798z"/></g></svg>}</div></> : null}
-                            {showCloseBtn ? <a href="#" tabIndex={-1} onClick={(e) => {
-                                e.preventDefault();
-                                cancel();
-                            }} className="cas-select-e2e__close position-absolute top-0 end-0 mt-0 mx-1"><svg width="10px" height="10px" viewBox="0 0 1024 1024"><path fill="#000" d="M195.2 195.2a64 64 0 0 1 90.496 0L512 421.504 738.304 195.2a64 64 0 0 1 90.496 90.496L602.496 512 828.8 738.304a64 64 0 0 1-90.496 90.496L512 602.496 285.696 828.8a64 64 0 0 1-90.496-90.496L421.504 512 195.2 285.696a64 64 0 0 1 0-90.496z" /></svg></a> : null}
+                    <RootPortal show={true} containerClassName="CascadingSelectE2E">
+                        <div
+                            ref={listRef}
+                            id={`cas-select-e2e__items-wrapper-${idRes}`}
+                            className={`cas-select-e2e__items-wrapper position-absolute border shadow small`}
+                            style={{ zIndex: (depth ? depth : 1055) }}
+                        >
+                            <ul className="cas-select-e2e__items-inner">
+                                {loading ? <><div className="cas-select-e2e__items-loader">{loader || <svg height="12px" width="12px" viewBox="0 0 512 512"><g><path fill="inherit" d="M256,0c-23.357,0-42.297,18.932-42.297,42.288c0,23.358,18.94,42.288,42.297,42.288c23.357,0,42.279-18.93,42.279-42.288C298.279,18.932,279.357,0,256,0z" /><path fill="inherit" d="M256,427.424c-23.357,0-42.297,18.931-42.297,42.288C213.703,493.07,232.643,512,256,512c23.357,0,42.279-18.93,42.279-42.288C298.279,446.355,279.357,427.424,256,427.424z" /><path fill="inherit" d="M74.974,74.983c-16.52,16.511-16.52,43.286,0,59.806c16.52,16.52,43.287,16.52,59.806,0c16.52-16.511,16.52-43.286,0-59.806C118.261,58.463,91.494,58.463,74.974,74.983z" /><path fill="inherit" d="M377.203,377.211c-16.503,16.52-16.503,43.296,0,59.815c16.519,16.52,43.304,16.52,59.806,0c16.52-16.51,16.52-43.295,0-59.815C420.489,360.692,393.722,360.7,377.203,377.211z" /><path fill="inherit" d="M84.567,256c0.018-23.348-18.922-42.279-42.279-42.279c-23.357-0.009-42.297,18.932-42.279,42.288c-0.018,23.348,18.904,42.279,42.279,42.279C65.645,298.288,84.567,279.358,84.567,256z" /><path fill="inherit" d="M469.712,213.712c-23.357,0-42.279,18.941-42.297,42.288c0,23.358,18.94,42.288,42.297,42.297c23.357,0,42.297-18.94,42.279-42.297C512.009,232.652,493.069,213.712,469.712,213.712z" /><path fill="inherit" d="M74.991,377.22c-16.519,16.511-16.519,43.296,0,59.806c16.503,16.52,43.27,16.52,59.789,0c16.52-16.519,16.52-43.295,0-59.815C118.278,360.692,91.511,360.692,74.991,377.22z" /><path fill="inherit" d="M437.026,134.798c16.52-16.52,16.52-43.304,0-59.824c-16.519-16.511-43.304-16.52-59.823,0c-16.52,16.52-16.503,43.295,0,59.815C393.722,151.309,420.507,151.309,437.026,134.798z" /></g></svg>}</div></> : null}
+                                {showCloseBtn ? <a href="#" tabIndex={-1} onClick={(e) => {
+                                    e.preventDefault();
+                                    cancel();
+                                }} className="cas-select-e2e__close position-absolute top-0 end-0 mt-0 mx-1"><svg width="10px" height="10px" viewBox="0 0 1024 1024"><path fill="#000" d="M195.2 195.2a64 64 0 0 1 90.496 0L512 421.504 738.304 195.2a64 64 0 0 1 90.496 90.496L602.496 512 828.8 738.304a64 64 0 0 1-90.496 90.496L512 602.496 285.696 828.8a64 64 0 0 1-90.496-90.496L421.504 512 195.2 285.696a64 64 0 0 1 0-90.496z" /></svg></a> : null}
 
 
 
-                            {listData.current.map((item: any, level: number) => {
+                                {listData.current.map((item: any, level: number) => {
 
-                                if (item.length > 0) {
-                                    return (
-                                        <li key={level} data-col={level} className="cas-select-e2e__items-col">
-                                            <Group
-                                                level={level}
-                                                columnTitle={columnTitleData}
-                                                data={item}
-                                                cleanNodeBtnClassName={cleanNodeBtnClassName}
-                                                cleanNodeBtnContent={cleanNodeBtnContent}
-                                                selectEv={(e, value, index) => handleClickItem(e, value, index, level, listData.current)}
-                                            />
-                                        </li>
-                                    )
-                                } else {
-                                    return null;
-                                }
+                                    if (item.length > 0) {
+                                        return (
+                                            <li key={level} data-col={level} className="cas-select-e2e__items-col">
+                                                <Group
+                                                    level={level}
+                                                    columnTitle={columnTitleData}
+                                                    data={item}
+                                                    cleanNodeBtnClassName={cleanNodeBtnClassName}
+                                                    cleanNodeBtnContent={cleanNodeBtnContent}
+                                                    selectEv={(e, value, index) => handleClickItem(e, value, index, level, listData.current)}
+                                                />
+                                            </li>
+                                        )
+                                    } else {
+                                        return null;
+                                    }
 
-                            })}
-                        </ul>
+                                })}
+                            </ul>
 
-                    </div>
+                        </div>
+
+                    </RootPortal>
+
                 ) : null}
 
 

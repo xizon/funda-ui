@@ -1,10 +1,15 @@
 import React, { useId, useEffect, useRef, useCallback } from 'react';
 
+import RootPortal from 'funda-root-portal';
+
+
 import Item from './Item';
 
 
 
 type ToastProps = {
+    /** The class name of the toast wrapper. */
+    wrapperClassName?: string;
     /** Specify data of toasts as a JSON string format. */
     data: any[any];
     /** Automatically hide multiple items */
@@ -37,6 +42,7 @@ type ToastProps = {
 
 const Toast = (props: ToastProps) => {
     const {
+        wrapperClassName,
         async,
         autoHideMultiple,
         direction,
@@ -53,11 +59,12 @@ const Toast = (props: ToastProps) => {
     } = props;
 
 
+    const ANIM_SPEED = 300;
     const DEFAULT_AUTO_CLOSE_TIME = 3000;
     const uniqueID = useId().replace(/\:/g, "-");
     const idRes = id || uniqueID;
     const rootRef = useRef<any>(null);
-    let depth: number = autoHideMultiple ? data.slice(-2).length + 1 : data.length + 1;
+    const depth: number = autoHideMultiple ? data.slice(-2).length + 1 : data.length + 1;
     const cascadingEnabled = typeof cascading === 'undefined' ? true : cascading;
 
     // auto close
@@ -101,7 +108,7 @@ const Toast = (props: ToastProps) => {
 
                     // hide toast item
                     const currentItem = el.closest('.toast-container');
-                    handleClose(i as never, currentItem as never);
+                    handleClose(null, i as never, currentItem as never);
                 }
             }
 
@@ -158,66 +165,65 @@ const Toast = (props: ToastProps) => {
 
     //
     function init() {
-        
+        if (rootRef.current === null) return;
 
-        // Move HTML templates to tag end body </body>
-        // render() don't use "Fragment", in order to avoid error "Failed to execute 'insertBefore' on 'Node'"
-        // prevent "transform", "filter", "perspective" attribute destruction fixed viewport orientation
+        const $toast = rootRef.current;
+
+        // Automatically hide multiple items
+        // It creates a transition animation effect with multiple records and only one displayed.
         //------------------------------------------
-        if ( document.body !== null ) {
-            document.body.appendChild(rootRef.current);
-            [].slice.call(rootRef.current.querySelectorAll('[data-close]')).forEach( (node: HTMLElement) => {
-                node.addEventListener('pointerdown', (e: any) => {
-                    const index = node.dataset.index;
-                    const currentItem = node.closest('.toast-container');
-                    handleClose(index as never, currentItem as never);
+        if (autoHideMultiple) {
+
+            const _list: HTMLDivElement[] = [].slice.call($toast.querySelectorAll('.toast-container'));
+
+            
+            if (_list.length === 2) {
+                _list.forEach((node: any, i: number) => {
+                    node.classList.remove('auto-anim-switch', 'auto-anim-switch--initfirst', 'auto-anim-switch--first');
+
+                    if (i !== _list.length - 1) {
+                        node.classList.add('auto-anim-switch--initfirst'); // top element of source code
+                    } else {
+                        node.classList.add('auto-anim-switch--initfirst');   // bottom element of source code
+                    }
+                    
                 });
-            });      
-            
-            [].slice.call(rootRef.current.querySelectorAll('.toast-container')).forEach( (node: HTMLElement) => {
-                node.addEventListener('mouseenter', handleProgressPaused);
-                node.addEventListener('mouseleave', handleProgressStart);
-            });   
 
 
-            
-            // Automatically hide multiple items
-            // It creates a transition animation effect with multiple records and only one displayed.
-            if (autoHideMultiple) {
-                const _list: HTMLDivElement[] = [].slice.call(rootRef.current.querySelectorAll('.toast-container'));
+                setTimeout(() => {
+                    _list.forEach((node: any, i: number) => {
+                        if (i !== _list.length - 1) {
+                            node.classList.add('auto-anim-switch');
+                        } else {
+                            node.classList.add('auto-anim-switch--initfirst', 'auto-anim-switch--first');
+                        }
+                    });
+                }, ANIM_SPEED/2);
+            } else {
+
                 _list.forEach((node: any, i: number) => {
                     if (i !== _list.length - 1) {
                         node.classList.add('auto-anim-switch');
                     } else {
-                        node.classList.add('auto-anim-switch--initfirst');
-                        node.classList.add('auto-anim-switch--first');
+                        node.classList.add('auto-anim-switch--initfirst', 'auto-anim-switch--first');
                     }
                 });
             }
 
 
-
         }
 
-
-
         
-
         // Initialize data
         //--------------
-        const $toast = document.querySelector(`#${rootRef.current.id}`) as HTMLElement;
-        if ( $toast !== null ) {
-            if ( $toast.dataset.async == 'true' ) {
+        if ( $toast.dataset.async == 'true' ) {
+            const _list: HTMLDivElement[] = [].slice.call($toast.querySelectorAll('.toast-container'));
+            _list.forEach((node: any, i: number) => {
+                node.classList.remove('hide-end');
+                // rearrange
+                if (cascadingEnabled) node.style.transform = `perspective(100px) translateZ(-${2 * i}px) translateY(${35 * i}px)`;
 
-                const _list: HTMLDivElement[] = [].slice.call(rootRef.current.querySelectorAll('.toast-container'));
-                _list.forEach((node: any, i: number) => {
-                    node.classList.remove('hide-end');
-                    // rearrange
-                    if (cascadingEnabled) node.style.transform = `perspective(100px) translateZ(-${2 * i}px) translateY(${35 * i}px)`;
-
-                });
-
-            }
+            });
 
         }
 
@@ -236,11 +242,12 @@ const Toast = (props: ToastProps) => {
 
     }
 
-    function handleClose(index: number, currentItem: HTMLDivElement) {
-        const curIndex = Number(index);
+    function handleClose(e: any, index: number, currentItem: HTMLDivElement) {
+        if (typeof e !== 'undefined' && e !== null) e.preventDefault();
         if (rootRef.current === null) return;
 
-  
+        const curIndex = Number(index);
+        
         const _list: HTMLDivElement[] = [].slice.call(rootRef.current.querySelectorAll('.toast-container'));
         currentItem.classList.add('hide-start');
 
@@ -272,15 +279,14 @@ const Toast = (props: ToastProps) => {
             //
             onClose?.(rootRef.current, curIndex, _list.filter((node: HTMLDivElement) => !node.classList.contains('hide-end') ));          
 
-        }, 300);
+        }, ANIM_SPEED);
 
         
     }
 
 
     useEffect(() => {
-        
-    
+
         // Initialize Toast Item
         //------------------------------------------
         init();
@@ -295,63 +301,56 @@ const Toast = (props: ToastProps) => {
         //--------------
         return () => {
 
-
             // Stop all animations
             clearAllProgressTimer();
-
-            // Remove all toasts
-            const _el = document.querySelector(`#toasts__wrapper-${idRes}`);
-            if ( _el !== null ) _el.remove();
-
-            // remove all events
-            if (rootRef.current !== null) {
-                [].slice.call(rootRef.current.querySelectorAll('[data-close]')).forEach( (node: HTMLElement) => {
-                    node.replaceWith(node.cloneNode(true));
-                });   
-
-                [].slice.call(rootRef.current.querySelectorAll('.toast-container')).forEach( (node: HTMLElement) => {
-                    node.removeEventListener('mouseenter', handleProgressPaused);
-                    node.removeEventListener('mouseleave', handleProgressStart);
-                });   
-    
-            }
- 
 
         }
 
     }, [data]);
 
     return (
-        <div>
+        <>
 
-            <div id={`toasts__wrapper-${idRes}`} data-async={async ? async : false} className={`toasts__wrapper toasts__wrapper--${direction ? direction : 'bottom-center'} ${cascadingEnabled ? 'toasts__wrapper--cascading' : ''}`} ref={rootRef}>
-                <div className="toasts">
-                    {(autoHideMultiple ? data.slice(-2) : data).map((item: any, i: number) => {
-                        return <Item
-                                    ref={el => progressObjRef.current[i] = el } 
-                                    onlyOne={data.length === 1 ? true : false}
-                                    depth={depth - i}
-                                    key={i}
-                                    index={i}
-                                    title={item.title}
-                                    note={item.note}
-                                    theme={item.theme}
-                                    lock={lock}
-                                    cascading={cascadingEnabled}
-                                    schemeBody={schemeBody}
-                                    schemeHeader={schemeHeader}
-                                    closeBtnColor={closeBtnColor}
-                                    closeDisabled={closeDisabled}
-                                    message={item.message}
-                                    autoCloseTime={AUTO_CLOSE_TIME}
-                                /> 
+            <RootPortal show={true} containerClassName="Toast">
 
-                    })}
+                <div 
+                    id={`toasts__wrapper-${idRes}`} 
+                    data-async={async ? async : false} 
+                    className={`toasts__wrapper toasts__wrapper--${direction ? direction : 'bottom-center'} ${cascadingEnabled ? 'toasts__wrapper--cascading' : ''} ${wrapperClassName || ''}`} 
+                    ref={rootRef}
+                >
+                    <div className="toasts">
+                        {(autoHideMultiple ? data.slice(-2) : data).map((item: any, i: number) => {
+                            return <Item
+                                ref={el => progressObjRef.current[i] = el}
+                                onlyOne={data.length === 1 ? true : false}
+                                depth={depth - i}
+                                key={i}
+                                index={i}
+                                title={item.title}
+                                note={item.note}
+                                theme={item.theme}
+                                lock={lock}
+                                cascading={cascadingEnabled}
+                                schemeBody={schemeBody}
+                                schemeHeader={schemeHeader}
+                                closeBtnColor={closeBtnColor}
+                                closeDisabled={closeDisabled}
+                                message={item.message}
+                                autoCloseTime={AUTO_CLOSE_TIME}
+                                evStart={handleProgressStart}
+                                evPause={handleProgressPaused}
+                                evClose={handleClose}
+                            />
+
+                        })}
+                    </div>
+
                 </div>
+            </RootPortal>
 
-            </div>
 
-        </div>
+        </>
     )
 };
 

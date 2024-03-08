@@ -36,7 +36,6 @@
 
     position: absolute;
     z-index: 1055;  /* --bs-modal-zindex */
-    display: inline-block;
     pointer-events: none;
     display: none;
     margin-top: -.2rem;
@@ -75,7 +74,7 @@
         z-index: 10;
         transform-origin: top;
         box-shadow: var(--tooltip-box-shadow);
-        transition: .1s ease-in-out;
+        transition: none !important;  /* Don't use transition if position is outside window */
     }
 
 
@@ -98,6 +97,7 @@
         white-space: nowrap;
         box-sizing: content-box;
         line-height: var(--tooltip-content-line-height);
+        
 
         img {
             height: auto !important;
@@ -239,10 +239,10 @@
 
 
     /*
-        ---------------------------
-        10. Size
-        ---------------------------
-        */
+    ---------------------------
+    10. Size
+    ---------------------------
+    */
     &[data-microtip-size="auto"].tooltip__content {
         white-space: nowrap;
         width: auto;

@@ -8,6 +8,7 @@ declare type SearchBarProps = {
     wrapperClassName?: string;
     controlClassName?: string;
     appearance?: string;
+    isSearchInput?: boolean;
     value?: string;
     label?: React.ReactNode | string;
     name?: string;

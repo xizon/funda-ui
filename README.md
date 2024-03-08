@@ -19,12 +19,12 @@ All components have undergone complex business verification and provide multiple
 ## Components List
 
 Here is a table of the components and their status.
-MasonryLayout
+
 
 | WEB ELEMENTS | FORMS | INTERACTION | NAVIGATION | LAYOUTS |
 | --- | --- | --- | --- | --- |
-| [Accordion ✅](packages/Accordion/README.md) | [Input ✅](packages/Input/README.md) | [Infinite Scroll ❏](packages/InfiniteScroll/README.md) |[Multilevel Dropdown Menu ✅](packages/MultilevelDropdownMenu/README.md)  | [MasonryLayout ✅](packages/MasonryLayout/README.md)
-| [Accordion Slider ❏](packages/AccordionSlider/README.md) | [Password Input ❏](packages/PasswordInput/README.md) | [Image Perspective Hover ❏](packages/ImagePerspectiveHover/README.md) | [Dropdown Menu ✅](packages/DropdownMenu/README.md)  |   |
+| [Accordion ✅](packages/Accordion/README.md) | [Input ✅](packages/Input/README.md) | [Infinite Scroll ❏](packages/InfiniteScroll/README.md) |[Multilevel Dropdown Menu ✅](packages/MultilevelDropdownMenu/README.md)  | [MasonryLayout ✅](packages/MasonryLayout/README.md) |
+| [Accordion Slider ❏](packages/AccordionSlider/README.md) | [Password Input ❏](packages/PasswordInput/README.md) | [Image Perspective Hover ❏](packages/ImagePerspectiveHover/README.md) | [Dropdown Menu ✅](packages/DropdownMenu/README.md)  | [RootPortal ✅](packages/RootPortal/README.md)  |
 | [Back To Top ✅](packages/BackToTop/README.md) | [Merge Input ❏](packages/MergeInput/README.md) | [Mousewheel Interaction ❏](packages/MousewheelInteraction/README.md) | |   |
 | [Button ❏](packages/Button/README.md) | [Tag Input ✅](packages/TagInput/README.md) | [Parallax ❏](packages/Parallax/README.md) |  |   |
 | [Card ❏](packages/Card/README.md) | [Textarea  ✅](packages/Textarea/README.md) | [Scroll Reveal ✅](packages/ScrollReveal/README.md) |  |   |
@@ -34,7 +34,7 @@ MasonryLayout
 | [Image Shapes ❏](packages/ImageShapes/README.md) | [Radio ✅](packages/Radio/README.md) | [Horizontal Scroll Content ✅](packages/HorizontalScrollContent/README.md) |  |  |
 | [Lightbox ❏](packages/Lightbox/README.md) | [Checkbox ✅](packages/Checkbox/README.md) |  |  |  |
 | [List Bulleted ❏](packages/ListBulleted/README.md) | [Multifunction Select ✅🔥](packages/MultiFuncSelect/README.md) |  |  |  |
-| [Modal Dialog ✅🔥](packages/ModalDialog/README.md) | [LiveSearch ✅](packages/LiveSearch/README.md) |  |  |  |
+| [Modal Dialog ✅🔥](packages/ModalDialog/README.md) | [Live Search ✅](packages/LiveSearch/README.md) |  |  |  |
 | [Pagination ✅](packages/Pagination/README.md) | [Number ❏](packages/Number/README.md) |  |  |  |
 | [Table ✅](packages/Table/README.md) | [SearchBar ✅](packages/SearchBar/README.md) |  |  |  |
 | [Periodical Scroll ❏](packages/PeriodicalScroll/README.md) | [Switch ✅](packages/Switch/README.md) |  |  |  |
@@ -49,8 +49,8 @@ MasonryLayout
 | [Tooltip ✅](packages/Tooltip/README.md) |  |  |  |  |
 | [Digital Clock ✅](packages/DigitalClock/README.md) |  |  |  |  |
 | [Tree ✅🔥](packages/Tree/README.md) |  |  |  |  |
-| [EventCalendar ✅🔥](packages/EventCalendar/README.md) |  |  |  |  |
-| [EventCalendarTimeline ✅🔥](packages/EventCalendarTimeline/README.md) |  |  |  |  |
+| [Event Calendar ✅🔥](packages/EventCalendar/README.md) |  |  |  |  |
+| [Event Calendar Timeline ✅🔥](packages/EventCalendarTimeline/README.md) |  |  |  |  |
 
 
 

@@ -166,7 +166,7 @@ function paginationNavigators(visibleNavigators, totalPages, activePage) {
 ;// CONCATENATED MODULE: ./src/index.tsx
 
 
-var Pagination = function Pagination(props) {
+var Pagination = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_amd_react_.forwardRef)(function (props, ref) {
   var wrapperClassName = props.wrapperClassName,
     navClassName = props.navClassName,
     apiUrl = props.apiUrl,
@@ -180,34 +180,41 @@ var Pagination = function Pagination(props) {
     breakLabel = props.breakLabel,
     align = props.align,
     onlyPrevNext = props.onlyPrevNext,
-    activeClass = props.activeClass,
-    previousClass = props.previousClass,
-    nextClass = props.nextClass,
-    firstClass = props.firstClass,
-    lastClass = props.lastClass,
-    disabledClass = props.disabledClass,
+    activeClassName = props.activeClassName,
+    previousClassName = props.previousClassName,
+    nextClassName = props.nextClassName,
+    firstClassName = props.firstClassName,
+    lastClassName = props.lastClassName,
+    disabledClassName = props.disabledClassName,
     symmetry = props.symmetry,
     style = props.style,
     onChange = props.onChange;
-  function handleClick(parameter) {
-    switch (parameter) {
-      case "prev":
-        onChange === null || onChange === void 0 ? void 0 : onChange(activePage - 1);
-        break;
-      case "next":
-        onChange === null || onChange === void 0 ? void 0 : onChange(activePage + 1);
-        break;
-      case "first":
-        onChange === null || onChange === void 0 ? void 0 : onChange(1);
-        break;
-      case "last":
-        onChange === null || onChange === void 0 ? void 0 : onChange(totalPages);
-        break;
-      default:
-        onChange === null || onChange === void 0 ? void 0 : onChange(1);
-        break;
-    }
-  }
+
+  // exposes the following methods
+  (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useImperativeHandle)(ref, function () {
+    return {
+      next: function next(cb) {
+        handleClick('next', function (p) {
+          cb === null || cb === void 0 ? void 0 : cb(p);
+        });
+      },
+      prev: function prev(cb) {
+        handleClick('prev', function (p) {
+          cb === null || cb === void 0 ? void 0 : cb(p);
+        });
+      },
+      first: function first(cb) {
+        handleClick('first', function (p) {
+          cb === null || cb === void 0 ? void 0 : cb(p);
+        });
+      },
+      last: function last(cb) {
+        handleClick('last', function (p) {
+          cb === null || cb === void 0 ? void 0 : cb(p);
+        });
+      }
+    };
+  }, [ref, activePage]);
   var visibleNavigators = pageRangeDisplayed ? pageRangeDisplayed : 3;
   var alignClassName = '';
   switch (align) {
@@ -221,12 +228,12 @@ var Pagination = function Pagination(props) {
       alignClassName = ' justify-content-center';
       break;
   }
-  var _activeClassName = activeClass ? activeClass : 'active',
-    _previousClassName = previousClass ? previousClass : 'prev',
-    _nextClassName = nextClass ? nextClass : 'next',
-    _firstClassName = firstClass ? firstClass : 'first',
-    _lastClassName = lastClass ? lastClass : 'last',
-    _disabledClassName = disabledClass ? disabledClass : 'disabled',
+  var _activeClassNameName = activeClassName ? activeClassName : 'active',
+    _previousClassNameName = previousClassName ? previousClassName : 'prev',
+    _nextClassNameName = nextClassName ? nextClassName : 'next',
+    _firstClassNameName = firstClassName ? firstClassName : 'first',
+    _lastClassNameName = lastClassName ? lastClassName : 'last',
+    _disabledClassNameName = disabledClassName ? disabledClassName : 'disabled',
     _onlyPrevNextButtons = typeof onlyPrevNext === 'undefined' ? false : onlyPrevNext,
     _symmetry = typeof symmetry === 'undefined' ? false : symmetry;
 
@@ -251,40 +258,67 @@ var Pagination = function Pagination(props) {
         _ellipsisEnabled = true;
         return /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("li", {
           key: i,
-          className: activePage === item ? "page-item ".concat(_activeClassName) : "page-item"
+          className: activePage === item ? "page-item ".concat(_activeClassNameName) : "page-item"
         }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("a", {
           className: "page-link",
+          "data-page": item,
           href: apiUrl.replace('{page}', item),
           onClick: function onClick(e) {
             e.preventDefault();
-            onChange === null || onChange === void 0 ? void 0 : onChange(item);
+            onChange === null || onChange === void 0 ? void 0 : onChange(Number(item), Number(totalPages));
           }
         }, item));
       }
     }
   });
+  function handleClick(parameter, cb) {
+    switch (parameter) {
+      case "prev":
+        onChange === null || onChange === void 0 ? void 0 : onChange(activePage - 1, Number(totalPages));
+        cb === null || cb === void 0 ? void 0 : cb(activePage - 1);
+        break;
+      case "next":
+        onChange === null || onChange === void 0 ? void 0 : onChange(activePage + 1, Number(totalPages));
+        cb === null || cb === void 0 ? void 0 : cb(activePage + 1);
+        break;
+      case "first":
+        onChange === null || onChange === void 0 ? void 0 : onChange(1, Number(totalPages));
+        cb === null || cb === void 0 ? void 0 : cb(1);
+        break;
+      case "last":
+        onChange === null || onChange === void 0 ? void 0 : onChange(totalPages, Number(totalPages));
+        cb === null || cb === void 0 ? void 0 : cb(totalPages);
+        break;
+      default:
+        onChange === null || onChange === void 0 ? void 0 : onChange(1, Number(totalPages));
+        cb === null || cb === void 0 ? void 0 : cb(1);
+        break;
+    }
+  }
   return /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("nav", {
     className: wrapperClassName || wrapperClassName === '' ? wrapperClassName : "mb-3 position-relative",
     style: style
   }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("ul", {
-    className: navClassName ? "".concat(navClassName, " ").concat(alignClassName) : "pagination ".concat(alignClassName)
+    className: navClassName || navClassName === '' ? "".concat(navClassName, " ").concat(alignClassName) : "pagination ".concat(alignClassName)
   }, firstLabel ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("li", {
-    className: activePage > 1 ? "page-item ".concat(_firstClassName) : "page-item ".concat(_firstClassName, " ").concat(_disabledClassName)
+    className: activePage > 1 ? "page-item ".concat(_firstClassNameName) : "page-item ".concat(_firstClassNameName, " ").concat(_disabledClassNameName)
   }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("a", {
     tabIndex: activePage > 1 ? 0 : -1,
     "aria-disabled": activePage > 1 ? 'false' : 'true',
     className: "page-link",
+    "data-page": 1,
     href: apiUrl.replace('{page}', '1'),
     onClick: function onClick(e) {
       e.preventDefault();
       handleClick('first');
     }
   }, firstLabel || null)) : '', previousLabel ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("li", {
-    className: activePage > 1 ? "page-item ".concat(_previousClassName) : "page-item ".concat(_previousClassName, " ").concat(_disabledClassName)
+    className: activePage > 1 ? "page-item ".concat(_previousClassNameName) : "page-item ".concat(_previousClassNameName, " ").concat(_disabledClassNameName)
   }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("a", {
     tabIndex: activePage > 1 ? 0 : -1,
     "aria-disabled": activePage > 1 ? 'false' : 'true',
     className: "page-link",
+    "data-page": activePage - 1,
     href: apiUrl.replace('{page}', activePage - 1),
     onClick: function onClick(e) {
       e.preventDefault();
@@ -294,13 +328,14 @@ var Pagination = function Pagination(props) {
     if (item > 0 && item <= totalPages && !_onlyPrevNextButtons) {
       return /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("li", {
         key: i,
-        className: activePage === item ? "page-item ".concat(_activeClassName) : "page-item"
+        className: activePage === item ? "page-item ".concat(_activeClassNameName) : "page-item"
       }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("a", {
         className: "page-link",
+        "data-page": item,
         href: apiUrl.replace('{page}', item),
         onClick: function onClick(e) {
           e.preventDefault();
-          onChange === null || onChange === void 0 ? void 0 : onChange(item);
+          onChange === null || onChange === void 0 ? void 0 : onChange(Number(item), Number(totalPages));
         }
       }, item));
     }
@@ -309,29 +344,31 @@ var Pagination = function Pagination(props) {
   }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("span", {
     className: "page-link"
   }, _ellipsis))) : '', _ellipsisElements, nextLabel ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("li", {
-    className: activePage < totalPages ? "page-item ".concat(_nextClassName) : "page-item ".concat(_nextClassName, " ").concat(_disabledClassName)
+    className: activePage < totalPages ? "page-item ".concat(_nextClassNameName) : "page-item ".concat(_nextClassNameName, " ").concat(_disabledClassNameName)
   }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("a", {
     tabIndex: activePage < totalPages ? 0 : -1,
     "aria-disabled": activePage < totalPages ? 'false' : 'true',
     className: "page-link",
+    "data-page": activePage + 1,
     href: apiUrl.replace('{page}', activePage + 1),
     onClick: function onClick(e) {
       e.preventDefault();
       handleClick('next');
     }
   }, nextLabel || null)) : '', lastLabel ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("li", {
-    className: activePage < totalPages ? "page-item ".concat(_lastClassName) : "page-item ".concat(_lastClassName, " ").concat(_disabledClassName)
+    className: activePage < totalPages ? "page-item ".concat(_lastClassNameName) : "page-item ".concat(_lastClassNameName, " ").concat(_disabledClassNameName)
   }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("a", {
     tabIndex: activePage < totalPages ? 0 : -1,
     "aria-disabled": activePage < totalPages ? 'false' : 'true',
     className: "page-link",
+    "data-page": totalPages,
     href: apiUrl.replace('{page}', totalPages),
     onClick: function onClick(e) {
       e.preventDefault();
       handleClick('last');
     }
   }, lastLabel || null)) : '')));
-};
+});
 /* harmony default export */ const src = (Pagination);
 })();
 

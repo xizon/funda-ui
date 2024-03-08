@@ -9,6 +9,7 @@ import File from 'funda-ui/File';
 ```
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |
+| `ref` | React.ForwardedRef | - | It is the return element of this component.  |
 | `wrapperClassName` | string | `mb-3 position-relative` | The class name of the control wrapper. |
 | `controlClassName` | string | `form-control` | The class name of the control. |
 | `labelClassName` | string | `btn btn-outline-secondary` | The class name of the label. |
@@ -57,7 +58,7 @@ export default () => {
        console.log(input, value);
     }
 
-    function handleProgress(files: any[], submitEl: HTMLElement) {
+    function handleProgress(files: any[], input: HTMLInputElement, submitEl: HTMLElement) {
         console.log(files);
     }
 
@@ -159,7 +160,7 @@ export default () => {
        console.log(input, value);
     }
 
-    function handleProgress(files: any[], submitEl: HTMLElement) {
+    function handleProgress(files: any[], input: HTMLInputElement, submitEl: HTMLElement) {
         console.log(files);
     }
 
@@ -273,7 +274,7 @@ export default () => {
        console.log(input, value);
     }
 
-    function handleProgress(files: any[], submitEl: HTMLElement) {
+    function handleProgress(files: any[], input: HTMLInputElement, submitEl: HTMLElement) {
         if (files.length === 0) {
             alert('Please select a file')
             return;

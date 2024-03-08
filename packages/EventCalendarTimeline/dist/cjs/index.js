@@ -1,13 +1,13 @@
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
-		module.exports = factory(require("react"));
+		module.exports = factory(require("react"), require("react-dom"));
 	else if(typeof define === 'function' && define.amd)
-		define(["react"], factory);
+		define(["react", "react-dom"], factory);
 	else if(typeof exports === 'object')
-		exports["RPB"] = factory(require("react"));
+		exports["RPB"] = factory(require("react"), require("react-dom"));
 	else
-		root["RPB"] = factory(root["React"]);
-})(this, (__WEBPACK_EXTERNAL_MODULE__787__) => {
+		root["RPB"] = factory(root["React"], root["ReactDOM"]);
+})(this, (__WEBPACK_EXTERNAL_MODULE__787__, __WEBPACK_EXTERNAL_MODULE__156__) => {
 return /******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ({
 
@@ -157,22 +157,229 @@ module.exports = {
 /***/ (function(module, exports, __webpack_require__) {
 
 /* module decorator */ module = __webpack_require__.nmd(module);
-var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
+var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof2(obj) { "@babel/helpers - typeof"; return _typeof2 = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof2(obj); }
 (function webpackUniversalModuleDefinition(root, factory) {
-  if (( false ? 0 : _typeof(exports)) === 'object' && ( false ? 0 : _typeof(module)) === 'object') module.exports = factory(__webpack_require__(787));else if (true) !(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(787)], __WEBPACK_AMD_DEFINE_FACTORY__ = (factory),
+  if (( false ? 0 : _typeof2(exports)) === 'object' && ( false ? 0 : _typeof2(module)) === 'object') module.exports = factory(__webpack_require__(787), __webpack_require__(156));else if (true) !(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(787), __webpack_require__(156)], __WEBPACK_AMD_DEFINE_FACTORY__ = (factory),
 		__WEBPACK_AMD_DEFINE_RESULT__ = (typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ?
 		(__WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__)) : __WEBPACK_AMD_DEFINE_FACTORY__),
 		__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));else {}
-})(this, function (__WEBPACK_EXTERNAL_MODULE__787__) {
+})(this, function (__WEBPACK_EXTERNAL_MODULE__787__, __WEBPACK_EXTERNAL_MODULE__156__) {
   return (/******/function () {
       // webpackBootstrap
       /******/
-      "use strict";
-
-      /******/
       var __webpack_modules__ = {
+        /***/909: /***/function _(module, exports, __nested_webpack_require_1189__) {
+          /* module decorator */module = __nested_webpack_require_1189__.nmd(module);
+          var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;
+          function _typeof(obj) {
+            "@babel/helpers - typeof";
+
+            return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) {
+              return typeof obj;
+            } : function (obj) {
+              return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;
+            }, _typeof(obj);
+          }
+          (function webpackUniversalModuleDefinition(root, factory) {
+            if (( false ? 0 : _typeof(exports)) === 'object' && ( false ? 0 : _typeof(module)) === 'object') module.exports = factory(__nested_webpack_require_1189__(787), __nested_webpack_require_1189__(156));else if (true) !(__WEBPACK_AMD_DEFINE_ARRAY__ = [__nested_webpack_require_1189__(787), __nested_webpack_require_1189__(156)], __WEBPACK_AMD_DEFINE_FACTORY__ = factory, __WEBPACK_AMD_DEFINE_RESULT__ = typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ? __WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__) : __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));else {}
+          })(this, function (__WEBPACK_EXTERNAL_MODULE__787__, __WEBPACK_EXTERNAL_MODULE__156__) {
+            return (/******/function () {
+                // webpackBootstrap
+                /******/
+                "use strict";
+
+                /******/
+                var __webpack_modules__ = {
+                  /***/787: /***/function _(module) {
+                    module.exports = __WEBPACK_EXTERNAL_MODULE__787__;
+
+                    /***/
+                  },
+
+                  /***/156: /***/function _(module) {
+                    module.exports = __WEBPACK_EXTERNAL_MODULE__156__;
+
+                    /***/
+                  }
+
+                  /******/
+                };
+                /************************************************************************/
+                /******/ // The module cache
+                /******/
+                var __webpack_module_cache__ = {};
+                /******/
+                /******/ // The require function
+                /******/
+                function __nested_webpack_require_1708__(moduleId) {
+                  /******/ // Check if module is in cache
+                  /******/var cachedModule = __webpack_module_cache__[moduleId];
+                  /******/
+                  if (cachedModule !== undefined) {
+                    /******/return cachedModule.exports;
+                    /******/
+                  }
+                  /******/ // Create a new module (and put it into the cache)
+                  /******/
+                  var module = __webpack_module_cache__[moduleId] = {
+                    /******/ // no module.id needed
+                    /******/ // no module.loaded needed
+                    /******/exports: {}
+                    /******/
+                  };
+                  /******/
+                  /******/ // Execute the module function
+                  /******/
+                  __webpack_modules__[moduleId](module, module.exports, __nested_webpack_require_1708__);
+                  /******/
+                  /******/ // Return the exports of the module
+                  /******/
+                  return module.exports;
+                  /******/
+                }
+                /******/
+                /************************************************************************/
+                /******/ /* webpack/runtime/compat get default export */
+                /******/
+                (function () {
+                  /******/ // getDefaultExport function for compatibility with non-harmony modules
+                  /******/__nested_webpack_require_1708__.n = function (module) {
+                    /******/var getter = module && module.__esModule ? /******/function () {
+                      return module['default'];
+                    } : /******/function () {
+                      return module;
+                    };
+                    /******/
+                    __nested_webpack_require_1708__.d(getter, {
+                      a: getter
+                    });
+                    /******/
+                    return getter;
+                    /******/
+                  };
+                  /******/
+                })();
+                /******/
+                /******/ /* webpack/runtime/define property getters */
+                /******/
+                (function () {
+                  /******/ // define getter functions for harmony exports
+                  /******/__nested_webpack_require_1708__.d = function (exports, definition) {
+                    /******/for (var key in definition) {
+                      /******/if (__nested_webpack_require_1708__.o(definition, key) && !__nested_webpack_require_1708__.o(exports, key)) {
+                        /******/Object.defineProperty(exports, key, {
+                          enumerable: true,
+                          get: definition[key]
+                        });
+                        /******/
+                      }
+                      /******/
+                    }
+                    /******/
+                  };
+                  /******/
+                })();
+                /******/
+                /******/ /* webpack/runtime/hasOwnProperty shorthand */
+                /******/
+                (function () {
+                  /******/__nested_webpack_require_1708__.o = function (obj, prop) {
+                    return Object.prototype.hasOwnProperty.call(obj, prop);
+                  };
+                  /******/
+                })();
+                /******/
+                /******/ /* webpack/runtime/make namespace object */
+                /******/
+                (function () {
+                  /******/ // define __esModule on exports
+                  /******/__nested_webpack_require_1708__.r = function (exports) {
+                    /******/if (typeof Symbol !== 'undefined' && Symbol.toStringTag) {
+                      /******/Object.defineProperty(exports, Symbol.toStringTag, {
+                        value: 'Module'
+                      });
+                      /******/
+                    }
+                    /******/
+                    Object.defineProperty(exports, '__esModule', {
+                      value: true
+                    });
+                    /******/
+                  };
+                  /******/
+                })();
+                /******/
+                /************************************************************************/
+                var __webpack_exports__ = {};
+                // This entry need to be wrapped in an IIFE because it need to be isolated against other modules in the chunk.
+                (function () {
+                  __nested_webpack_require_1708__.r(__webpack_exports__);
+                  /* harmony export */
+                  __nested_webpack_require_1708__.d(__webpack_exports__, {
+                    /* harmony export */"default": function _default() {
+                      return __WEBPACK_DEFAULT_EXPORT__;
+                    }
+                    /* harmony export */
+                  });
+                  /* harmony import */
+                  var react__WEBPACK_IMPORTED_MODULE_0__ = __nested_webpack_require_1708__(787);
+                  /* harmony import */
+                  var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__nested_webpack_require_1708__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+                  /* harmony import */
+                  var react_dom__WEBPACK_IMPORTED_MODULE_1__ = __nested_webpack_require_1708__(156);
+                  /* harmony import */
+                  var react_dom__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__nested_webpack_require_1708__.n(react_dom__WEBPACK_IMPORTED_MODULE_1__);
+                  var RootPortal = function RootPortal(props) {
+                    var containerClassName = props.containerClassName,
+                      show = props.show,
+                      children = props.children;
+                    var containerRef = (0, react__WEBPACK_IMPORTED_MODULE_0__.useRef)();
+
+                    // Move HTML templates to tag end body </body>
+                    // render() don't use "Fragment", in order to avoid error "Failed to execute 'insertBefore' on 'Node'"
+                    // prevent "transform", "filter", "perspective" attribute destruction fixed viewport orientation
+                    // ###
+                    // ###
+                    // Use `containerRef.current` to ensure the correctness of the nextjs framework. It may report an error document as undefined
+
+                    (0, react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(function () {
+                      containerRef.current = document.createElement('div');
+                      containerRef.current.className = "root-portal-container ".concat(containerClassName || '');
+                      document.body.appendChild(containerRef.current);
+                      return function () {
+                        if (containerRef.current) {
+                          containerRef.current.remove();
+                        }
+                      };
+                    }, []);
+                    return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react__WEBPACK_IMPORTED_MODULE_0___default().Fragment, null, containerRef.current && show && /*#__PURE__*/(0, react_dom__WEBPACK_IMPORTED_MODULE_1__.createPortal)(children, containerRef.current));
+                  };
+                  /* harmony default export */
+                  var __WEBPACK_DEFAULT_EXPORT__ = RootPortal;
+                })();
+
+                /******/
+                return __webpack_exports__;
+                /******/
+              }()
+            );
+          });
+
+          /***/
+        },
+
         /***/787: /***/function _(module) {
+          "use strict";
+
           module.exports = __WEBPACK_EXTERNAL_MODULE__787__;
+
+          /***/
+        },
+
+        /***/156: /***/function _(module) {
+          "use strict";
+
+          module.exports = __WEBPACK_EXTERNAL_MODULE__156__;
 
           /***/
         }
@@ -186,7 +393,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
       /******/
       /******/ // The require function
       /******/
-      function __nested_webpack_require_1465__(moduleId) {
+      function __nested_webpack_require_11836__(moduleId) {
         /******/ // Check if module is in cache
         /******/var cachedModule = __webpack_module_cache__[moduleId];
         /******/
@@ -197,15 +404,19 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
         /******/ // Create a new module (and put it into the cache)
         /******/
         var module = __webpack_module_cache__[moduleId] = {
-          /******/ // no module.id needed
-          /******/ // no module.loaded needed
+          /******/id: moduleId,
+          /******/loaded: false,
           /******/exports: {}
           /******/
         };
         /******/
         /******/ // Execute the module function
         /******/
-        __webpack_modules__[moduleId](module, module.exports, __nested_webpack_require_1465__);
+        __webpack_modules__[moduleId].call(module.exports, module, module.exports, __nested_webpack_require_11836__);
+        /******/
+        /******/ // Flag the module as loaded
+        /******/
+        module.loaded = true;
         /******/
         /******/ // Return the exports of the module
         /******/
@@ -218,14 +429,14 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
       /******/
       (function () {
         /******/ // getDefaultExport function for compatibility with non-harmony modules
-        /******/__nested_webpack_require_1465__.n = function (module) {
+        /******/__nested_webpack_require_11836__.n = function (module) {
           /******/var getter = module && module.__esModule ? /******/function () {
             return module['default'];
           } : /******/function () {
             return module;
           };
           /******/
-          __nested_webpack_require_1465__.d(getter, {
+          __nested_webpack_require_11836__.d(getter, {
             a: getter
           });
           /******/
@@ -239,9 +450,9 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
       /******/
       (function () {
         /******/ // define getter functions for harmony exports
-        /******/__nested_webpack_require_1465__.d = function (exports, definition) {
+        /******/__nested_webpack_require_11836__.d = function (exports, definition) {
           /******/for (var key in definition) {
-            /******/if (__nested_webpack_require_1465__.o(definition, key) && !__nested_webpack_require_1465__.o(exports, key)) {
+            /******/if (__nested_webpack_require_11836__.o(definition, key) && !__nested_webpack_require_11836__.o(exports, key)) {
               /******/Object.defineProperty(exports, key, {
                 enumerable: true,
                 get: definition[key]
@@ -258,7 +469,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
       /******/ /* webpack/runtime/hasOwnProperty shorthand */
       /******/
       (function () {
-        /******/__nested_webpack_require_1465__.o = function (obj, prop) {
+        /******/__nested_webpack_require_11836__.o = function (obj, prop) {
           return Object.prototype.hasOwnProperty.call(obj, prop);
         };
         /******/
@@ -268,7 +479,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
       /******/
       (function () {
         /******/ // define __esModule on exports
-        /******/__nested_webpack_require_1465__.r = function (exports) {
+        /******/__nested_webpack_require_11836__.r = function (exports) {
           /******/if (typeof Symbol !== 'undefined' && Symbol.toStringTag) {
             /******/Object.defineProperty(exports, Symbol.toStringTag, {
               value: 'Module'
@@ -284,15 +495,31 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
         /******/
       })();
       /******/
+      /******/ /* webpack/runtime/node module decorator */
+      /******/
+      (function () {
+        /******/__nested_webpack_require_11836__.nmd = function (module) {
+          /******/module.paths = [];
+          /******/
+          if (!module.children) module.children = [];
+          /******/
+          return module;
+          /******/
+        };
+        /******/
+      })();
+      /******/
       /************************************************************************/
       var __webpack_exports__ = {};
-      // This entry need to be wrapped in an IIFE because it need to be isolated against other modules in the chunk.
+      // This entry need to be wrapped in an IIFE because it need to be in strict mode.
       (function () {
+        "use strict";
+
         // ESM COMPAT FLAG
-        __nested_webpack_require_1465__.r(__webpack_exports__);
+        __nested_webpack_require_11836__.r(__webpack_exports__);
 
         // EXPORTS
-        __nested_webpack_require_1465__.d(__webpack_exports__, {
+        __nested_webpack_require_11836__.d(__webpack_exports__, {
           "default": function _default() {
             return (/* binding */src
             );
@@ -300,8 +527,11 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
         });
 
         // EXTERNAL MODULE: external {"root":"React","commonjs2":"react","commonjs":"react","amd":"react"}
-        var external_root_React_commonjs2_react_commonjs_react_amd_react_ = __nested_webpack_require_1465__(787);
-        var external_root_React_commonjs2_react_commonjs_react_amd_react_default = /*#__PURE__*/__nested_webpack_require_1465__.n(external_root_React_commonjs2_react_commonjs_react_amd_react_);
+        var external_root_React_commonjs2_react_commonjs_react_amd_react_ = __nested_webpack_require_11836__(787);
+        var external_root_React_commonjs2_react_commonjs_react_amd_react_default = /*#__PURE__*/__nested_webpack_require_11836__.n(external_root_React_commonjs2_react_commonjs_react_amd_react_);
+        // EXTERNAL MODULE: ../RootPortal/dist/cjs/index.js
+        var cjs = __nested_webpack_require_11836__(909);
+        var cjs_default = /*#__PURE__*/__nested_webpack_require_11836__.n(cjs);
         ; // CONCATENATED MODULE: ./src/plugins/BSL/bodyScrollLock.es6.js
         function _toConsumableArray(arr) {
           return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread();
@@ -628,7 +858,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 
         //Destroys body scroll locking
 
-        var ModalDialog = function ModalDialog(props) {
+        var ModalDialog = /*#__PURE__*/(0, external_root_React_commonjs2_react_commonjs_react_amd_react_.forwardRef)(function (props, ref) {
           var modalContentClassName = props.modalContentClassName,
             modalHeaderClassName = props.modalHeaderClassName,
             modalTitleClassName = props.modalTitleClassName,
@@ -636,7 +866,6 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
             modalFooterClassName = props.modalFooterClassName,
             modalFooterExpandedContentClassName = props.modalFooterExpandedContentClassName,
             show = props.show,
-            protectFixedViewport = props.protectFixedViewport,
             maxWidth = props.maxWidth,
             minHeight = props.minHeight,
             enableVideo = props.enableVideo,
@@ -666,15 +895,28 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
           var modalRef = (0, external_root_React_commonjs2_react_commonjs_react_amd_react_.useRef)(null);
           var triggerRef = (0, external_root_React_commonjs2_react_commonjs_react_amd_react_.useRef)(null);
           var idRes = id || uniqueID;
-          var PROTECT_FIXED_VIEWPORT = typeof protectFixedViewport === 'undefined' ? true : protectFixedViewport;
           var _useState = (0, external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)(false),
             _useState2 = _slicedToArray(_useState, 2),
-            winShow = _useState2[0],
-            setWinShow = _useState2[1];
+            modalShow = _useState2[0],
+            setModalShow = _useState2[1];
           var _useState3 = (0, external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)(null),
             _useState4 = _slicedToArray(_useState3, 2),
             incomingData = _useState4[0],
             setIncomingData = _useState4[1];
+
+          // exposes the following methods
+          (0, external_root_React_commonjs2_react_commonjs_react_amd_react_.useImperativeHandle)(ref, function () {
+            return {
+              open: function open() {
+                handleOpenWin(null);
+              },
+              close: function close() {
+                handleCloseWin(null);
+              }
+            };
+          }, [ref]);
+
+          //
           function handleCloseWin(e) {
             if (typeof e !== 'undefined' && e !== null) e.preventDefault();
             closeAction();
@@ -702,7 +944,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
             // close Modal Dialog
             //------------------------------------------
             var $mask = document.querySelector("#mask-".concat(idRes, " > .modal-backdrop"));
-            setWinShow(false);
+            setModalShow(false);
             if ($mask !== null) $mask.classList.remove('show');
             setTimeout(function () {
               if (modalRef.current !== null) modalRef.current.style.display = 'none';
@@ -718,6 +960,8 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
             clearTimeout(window.setCloseModalDialog);
           }
           function openAction() {
+            if (modalRef.current === null) return;
+
             // Video PopUp Interaction
             //------------------------------------------
             var hasVideo = modalRef.current.classList.contains('is-video') ? true : false;
@@ -775,7 +1019,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
             modalRef.current.style.display = 'block';
             if ($mask !== null) $mask.style.display = 'block';
             setTimeout(function () {
-              setWinShow(true);
+              setModalShow(true);
               if ($mask !== null) $mask.classList.add('show');
             }, 0);
 
@@ -826,53 +1070,6 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
             //--------------
             setIncomingData(data);
 
-            // Move HTML templates to tag end body </body>
-            // render() don't use "Fragment", in order to avoid error "Failed to execute 'insertBefore' on 'Node'"
-            // prevent "transform", "filter", "perspective" attribute destruction fixed viewport orientation
-            //--------------
-            if (PROTECT_FIXED_VIEWPORT) {
-              if (document.body !== null && modalRef.current !== null) {
-                document.body.appendChild(modalRef.current);
-                [].slice.call(modalRef.current.querySelectorAll('[data-close]')).forEach(function (node) {
-                  if (typeof node.dataset.ev === 'undefined') {
-                    node.dataset.ev = 'true';
-                    node.addEventListener('pointerdown', function (e) {
-                      handleCloseWin(e);
-                    });
-                  }
-                });
-                [].slice.call(modalRef.current.querySelectorAll('[data-confirm]')).forEach(function (node) {
-                  if (typeof node.dataset.ev === 'undefined') {
-                    node.dataset.ev = 'true';
-                    node.addEventListener('pointerdown', function (e) {
-                      var callback = function callback(e) {
-                        return function () {
-                          handleCloseWin(e);
-                        };
-                      };
-                      var _incomingData = node.dataset.incomingData;
-                      onSubmit === null || onSubmit === void 0 ? void 0 : onSubmit(e, callback(e), _incomingData);
-                    });
-                  }
-                });
-              }
-            }
-
-            // add mask
-            //--------------
-            if (document.getElementById("mask-".concat(idRes)) === null && !maskDisabled && document.body !== null) {
-              var maskDiv = document.createElement('div');
-              maskDiv.id = "mask-".concat(idRes);
-              maskDiv.innerHTML = "<div class=\"".concat(winShow ? 'modal-backdrop fade show' : 'modal-backdrop fade', "\" style=\"display:none;").concat(maskOpacity ? "opacity:".concat(maskOpacity, ";") : '', "\"></div>");
-              document.body.appendChild(maskDiv);
-              if (!closeOnlyBtn) {
-                var $mask = document.querySelector("#mask-".concat(idRes, " > .modal-backdrop"));
-                if ($mask !== null) $mask.addEventListener('pointerdown', function (e) {
-                  handleCloseWin(e);
-                });
-              }
-            }
-
             // show
             //--------------
             if (show) {
@@ -902,36 +1099,18 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 
               // Cancels a timeout previously established by calling setTimeout().
               clearTimeout(window.setCloseModalDialog);
-
-              // Remove all masks and modals
-              Array.prototype.forEach.call(document.querySelectorAll('.modal'), function (node) {
-                if (PROTECT_FIXED_VIEWPORT) {
-                  // for current actived modal
-                  if (node.classList.contains('protect-fixed-viewport') && node.classList.contains('show')) {
-                    node.remove();
-                  }
-                }
-              });
-
-              // If there is no active modal, hide all masks
-              var existingModal = [].slice.call(document.querySelectorAll('.modal')).filter(function (node) {
-                return node.classList.contains('show');
-              }).length > 0;
-              if (!existingModal) {
-                Array.prototype.forEach.call(document.querySelectorAll('.modal-backdrop'), function (mask) {
-                  mask.classList.remove('show');
-                  mask.style.display = 'none';
-                });
-              }
             };
           }, [show, data]);
           return /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", null, triggerContent ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement(external_root_React_commonjs2_react_commonjs_react_amd_react_default().Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
             className: triggerClassName ? triggerClassName : 'd-inline w-auto',
             ref: triggerRef,
             onClick: handleOpenWin
-          }, triggerContent)) : null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
+          }, triggerContent)) : null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement(cjs_default(), {
+            show: true,
+            containerClassName: "ModalDialog"
+          }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
             ref: modalRef,
-            className: enableVideo ? "modal ".concat(PROTECT_FIXED_VIEWPORT ? 'protect-fixed-viewport' : '', " fade is-video ").concat(winShow ? 'show' : '') : "modal ".concat(PROTECT_FIXED_VIEWPORT ? 'protect-fixed-viewport' : '', " fade ").concat(winShow ? 'show' : ''),
+            className: enableVideo ? "modal fade is-video ".concat(modalShow ? 'show' : '') : "modal fade ".concat(modalShow ? 'show' : ''),
             tabIndex: -1,
             "aria-hidden": "true",
             style: {
@@ -986,10 +1165,217 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
             },
             type: "button",
             className: submitBtnClassName ? submitBtnClassName : 'btn btn-primary'
-          }, submitBtnLabel) : null)) : null))));
-        };
+          }, submitBtnLabel) : null)) : null))), !maskDisabled ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
+            id: "mask-".concat(idRes)
+          }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
+            id: "mask-".concat(idRes),
+            className: modalShow ? 'modal-backdrop fade show' : 'modal-backdrop fade',
+            style: maskOpacity ? {
+              display: modalShow ? 'block' : 'none',
+              opacity: maskOpacity
+            } : {
+              display: modalShow ? 'block' : 'none'
+            },
+            onClick: handleCloseWin
+          })) : null));
+        });
         /* harmony default export */
         var src = ModalDialog;
+      })();
+
+      /******/
+      return __webpack_exports__;
+      /******/
+    }()
+  );
+});
+
+/***/ }),
+
+/***/ 909:
+/***/ (function(module, exports, __webpack_require__) {
+
+/* module decorator */ module = __webpack_require__.nmd(module);
+var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
+(function webpackUniversalModuleDefinition(root, factory) {
+  if (( false ? 0 : _typeof(exports)) === 'object' && ( false ? 0 : _typeof(module)) === 'object') module.exports = factory(__webpack_require__(787), __webpack_require__(156));else if (true) !(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(787), __webpack_require__(156)], __WEBPACK_AMD_DEFINE_FACTORY__ = (factory),
+		__WEBPACK_AMD_DEFINE_RESULT__ = (typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ?
+		(__WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__)) : __WEBPACK_AMD_DEFINE_FACTORY__),
+		__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));else {}
+})(this, function (__WEBPACK_EXTERNAL_MODULE__787__, __WEBPACK_EXTERNAL_MODULE__156__) {
+  return (/******/function () {
+      // webpackBootstrap
+      /******/
+      "use strict";
+
+      /******/
+      var __webpack_modules__ = {
+        /***/787: /***/function _(module) {
+          module.exports = __WEBPACK_EXTERNAL_MODULE__787__;
+
+          /***/
+        },
+
+        /***/156: /***/function _(module) {
+          module.exports = __WEBPACK_EXTERNAL_MODULE__156__;
+
+          /***/
+        }
+
+        /******/
+      };
+      /************************************************************************/
+      /******/ // The module cache
+      /******/
+      var __webpack_module_cache__ = {};
+      /******/
+      /******/ // The require function
+      /******/
+      function __nested_webpack_require_1708__(moduleId) {
+        /******/ // Check if module is in cache
+        /******/var cachedModule = __webpack_module_cache__[moduleId];
+        /******/
+        if (cachedModule !== undefined) {
+          /******/return cachedModule.exports;
+          /******/
+        }
+        /******/ // Create a new module (and put it into the cache)
+        /******/
+        var module = __webpack_module_cache__[moduleId] = {
+          /******/ // no module.id needed
+          /******/ // no module.loaded needed
+          /******/exports: {}
+          /******/
+        };
+        /******/
+        /******/ // Execute the module function
+        /******/
+        __webpack_modules__[moduleId](module, module.exports, __nested_webpack_require_1708__);
+        /******/
+        /******/ // Return the exports of the module
+        /******/
+        return module.exports;
+        /******/
+      }
+      /******/
+      /************************************************************************/
+      /******/ /* webpack/runtime/compat get default export */
+      /******/
+      (function () {
+        /******/ // getDefaultExport function for compatibility with non-harmony modules
+        /******/__nested_webpack_require_1708__.n = function (module) {
+          /******/var getter = module && module.__esModule ? /******/function () {
+            return module['default'];
+          } : /******/function () {
+            return module;
+          };
+          /******/
+          __nested_webpack_require_1708__.d(getter, {
+            a: getter
+          });
+          /******/
+          return getter;
+          /******/
+        };
+        /******/
+      })();
+      /******/
+      /******/ /* webpack/runtime/define property getters */
+      /******/
+      (function () {
+        /******/ // define getter functions for harmony exports
+        /******/__nested_webpack_require_1708__.d = function (exports, definition) {
+          /******/for (var key in definition) {
+            /******/if (__nested_webpack_require_1708__.o(definition, key) && !__nested_webpack_require_1708__.o(exports, key)) {
+              /******/Object.defineProperty(exports, key, {
+                enumerable: true,
+                get: definition[key]
+              });
+              /******/
+            }
+            /******/
+          }
+          /******/
+        };
+        /******/
+      })();
+      /******/
+      /******/ /* webpack/runtime/hasOwnProperty shorthand */
+      /******/
+      (function () {
+        /******/__nested_webpack_require_1708__.o = function (obj, prop) {
+          return Object.prototype.hasOwnProperty.call(obj, prop);
+        };
+        /******/
+      })();
+      /******/
+      /******/ /* webpack/runtime/make namespace object */
+      /******/
+      (function () {
+        /******/ // define __esModule on exports
+        /******/__nested_webpack_require_1708__.r = function (exports) {
+          /******/if (typeof Symbol !== 'undefined' && Symbol.toStringTag) {
+            /******/Object.defineProperty(exports, Symbol.toStringTag, {
+              value: 'Module'
+            });
+            /******/
+          }
+          /******/
+          Object.defineProperty(exports, '__esModule', {
+            value: true
+          });
+          /******/
+        };
+        /******/
+      })();
+      /******/
+      /************************************************************************/
+      var __webpack_exports__ = {};
+      // This entry need to be wrapped in an IIFE because it need to be isolated against other modules in the chunk.
+      (function () {
+        __nested_webpack_require_1708__.r(__webpack_exports__);
+        /* harmony export */
+        __nested_webpack_require_1708__.d(__webpack_exports__, {
+          /* harmony export */"default": function _default() {
+            return __WEBPACK_DEFAULT_EXPORT__;
+          }
+          /* harmony export */
+        });
+        /* harmony import */
+        var react__WEBPACK_IMPORTED_MODULE_0__ = __nested_webpack_require_1708__(787);
+        /* harmony import */
+        var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__nested_webpack_require_1708__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+        /* harmony import */
+        var react_dom__WEBPACK_IMPORTED_MODULE_1__ = __nested_webpack_require_1708__(156);
+        /* harmony import */
+        var react_dom__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__nested_webpack_require_1708__.n(react_dom__WEBPACK_IMPORTED_MODULE_1__);
+        var RootPortal = function RootPortal(props) {
+          var containerClassName = props.containerClassName,
+            show = props.show,
+            children = props.children;
+          var containerRef = (0, react__WEBPACK_IMPORTED_MODULE_0__.useRef)();
+
+          // Move HTML templates to tag end body </body>
+          // render() don't use "Fragment", in order to avoid error "Failed to execute 'insertBefore' on 'Node'"
+          // prevent "transform", "filter", "perspective" attribute destruction fixed viewport orientation
+          // ###
+          // ###
+          // Use `containerRef.current` to ensure the correctness of the nextjs framework. It may report an error document as undefined
+
+          (0, react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(function () {
+            containerRef.current = document.createElement('div');
+            containerRef.current.className = "root-portal-container ".concat(containerClassName || '');
+            document.body.appendChild(containerRef.current);
+            return function () {
+              if (containerRef.current) {
+                containerRef.current.remove();
+              }
+            };
+          }, []);
+          return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react__WEBPACK_IMPORTED_MODULE_0___default().Fragment, null, containerRef.current && show && /*#__PURE__*/(0, react_dom__WEBPACK_IMPORTED_MODULE_1__.createPortal)(children, containerRef.current));
+        };
+        /* harmony default export */
+        var __WEBPACK_DEFAULT_EXPORT__ = RootPortal;
       })();
 
       /******/
@@ -1006,6 +1392,14 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 
 "use strict";
 module.exports = __WEBPACK_EXTERNAL_MODULE__787__;
+
+/***/ }),
+
+/***/ 156:
+/***/ ((module) => {
+
+"use strict";
+module.exports = __WEBPACK_EXTERNAL_MODULE__156__;
 
 /***/ })
 
@@ -1099,10 +1493,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(787);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var funda_modaldialog__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(483);
-/* harmony import */ var funda_modaldialog__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(funda_modaldialog__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var _utils_get_element_property__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(378);
-/* harmony import */ var _utils_get_element_property__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_utils_get_element_property__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var funda_root_portal__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(909);
+/* harmony import */ var funda_root_portal__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(funda_root_portal__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var funda_modaldialog__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(483);
+/* harmony import */ var funda_modaldialog__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(funda_modaldialog__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _utils_get_element_property__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(378);
+/* harmony import */ var _utils_get_element_property__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_utils_get_element_property__WEBPACK_IMPORTED_MODULE_3__);
 function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
 function _regeneratorRuntime() { "use strict"; /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/facebook/regenerator/blob/main/LICENSE */ _regeneratorRuntime = function _regeneratorRuntime() { return exports; }; var exports = {}, Op = Object.prototype, hasOwn = Op.hasOwnProperty, defineProperty = Object.defineProperty || function (obj, key, desc) { obj[key] = desc.value; }, $Symbol = "function" == typeof Symbol ? Symbol : {}, iteratorSymbol = $Symbol.iterator || "@@iterator", asyncIteratorSymbol = $Symbol.asyncIterator || "@@asyncIterator", toStringTagSymbol = $Symbol.toStringTag || "@@toStringTag"; function define(obj, key, value) { return Object.defineProperty(obj, key, { value: value, enumerable: !0, configurable: !0, writable: !0 }), obj[key]; } try { define({}, ""); } catch (err) { define = function define(obj, key, value) { return obj[key] = value; }; } function wrap(innerFn, outerFn, self, tryLocsList) { var protoGenerator = outerFn && outerFn.prototype instanceof Generator ? outerFn : Generator, generator = Object.create(protoGenerator.prototype), context = new Context(tryLocsList || []); return defineProperty(generator, "_invoke", { value: makeInvokeMethod(innerFn, self, context) }), generator; } function tryCatch(fn, obj, arg) { try { return { type: "normal", arg: fn.call(obj, arg) }; } catch (err) { return { type: "throw", arg: err }; } } exports.wrap = wrap; var ContinueSentinel = {}; function Generator() {} function GeneratorFunction() {} function GeneratorFunctionPrototype() {} var IteratorPrototype = {}; define(IteratorPrototype, iteratorSymbol, function () { return this; }); var getProto = Object.getPrototypeOf, NativeIteratorPrototype = getProto && getProto(getProto(values([]))); NativeIteratorPrototype && NativeIteratorPrototype !== Op && hasOwn.call(NativeIteratorPrototype, iteratorSymbol) && (IteratorPrototype = NativeIteratorPrototype); var Gp = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(IteratorPrototype); function defineIteratorMethods(prototype) { ["next", "throw", "return"].forEach(function (method) { define(prototype, method, function (arg) { return this._invoke(method, arg); }); }); } function AsyncIterator(generator, PromiseImpl) { function invoke(method, arg, resolve, reject) { var record = tryCatch(generator[method], generator, arg); if ("throw" !== record.type) { var result = record.arg, value = result.value; return value && "object" == _typeof(value) && hasOwn.call(value, "__await") ? PromiseImpl.resolve(value.__await).then(function (value) { invoke("next", value, resolve, reject); }, function (err) { invoke("throw", err, resolve, reject); }) : PromiseImpl.resolve(value).then(function (unwrapped) { result.value = unwrapped, resolve(result); }, function (error) { return invoke("throw", error, resolve, reject); }); } reject(record.arg); } var previousPromise; defineProperty(this, "_invoke", { value: function value(method, arg) { function callInvokeWithMethodAndArg() { return new PromiseImpl(function (resolve, reject) { invoke(method, arg, resolve, reject); }); } return previousPromise = previousPromise ? previousPromise.then(callInvokeWithMethodAndArg, callInvokeWithMethodAndArg) : callInvokeWithMethodAndArg(); } }); } function makeInvokeMethod(innerFn, self, context) { var state = "suspendedStart"; return function (method, arg) { if ("executing" === state) throw new Error("Generator is already running"); if ("completed" === state) { if ("throw" === method) throw arg; return doneResult(); } for (context.method = method, context.arg = arg;;) { var delegate = context.delegate; if (delegate) { var delegateResult = maybeInvokeDelegate(delegate, context); if (delegateResult) { if (delegateResult === ContinueSentinel) continue; return delegateResult; } } if ("next" === context.method) context.sent = context._sent = context.arg;else if ("throw" === context.method) { if ("suspendedStart" === state) throw state = "completed", context.arg; context.dispatchException(context.arg); } else "return" === context.method && context.abrupt("return", context.arg); state = "executing"; var record = tryCatch(innerFn, self, context); if ("normal" === record.type) { if (state = context.done ? "completed" : "suspendedYield", record.arg === ContinueSentinel) continue; return { value: record.arg, done: context.done }; } "throw" === record.type && (state = "completed", context.method = "throw", context.arg = record.arg); } }; } function maybeInvokeDelegate(delegate, context) { var methodName = context.method, method = delegate.iterator[methodName]; if (undefined === method) return context.delegate = null, "throw" === methodName && delegate.iterator["return"] && (context.method = "return", context.arg = undefined, maybeInvokeDelegate(delegate, context), "throw" === context.method) || "return" !== methodName && (context.method = "throw", context.arg = new TypeError("The iterator does not provide a '" + methodName + "' method")), ContinueSentinel; var record = tryCatch(method, delegate.iterator, context.arg); if ("throw" === record.type) return context.method = "throw", context.arg = record.arg, context.delegate = null, ContinueSentinel; var info = record.arg; return info ? info.done ? (context[delegate.resultName] = info.value, context.next = delegate.nextLoc, "return" !== context.method && (context.method = "next", context.arg = undefined), context.delegate = null, ContinueSentinel) : info : (context.method = "throw", context.arg = new TypeError("iterator result is not an object"), context.delegate = null, ContinueSentinel); } function pushTryEntry(locs) { var entry = { tryLoc: locs[0] }; 1 in locs && (entry.catchLoc = locs[1]), 2 in locs && (entry.finallyLoc = locs[2], entry.afterLoc = locs[3]), this.tryEntries.push(entry); } function resetTryEntry(entry) { var record = entry.completion || {}; record.type = "normal", delete record.arg, entry.completion = record; } function Context(tryLocsList) { this.tryEntries = [{ tryLoc: "root" }], tryLocsList.forEach(pushTryEntry, this), this.reset(!0); } function values(iterable) { if (iterable) { var iteratorMethod = iterable[iteratorSymbol]; if (iteratorMethod) return iteratorMethod.call(iterable); if ("function" == typeof iterable.next) return iterable; if (!isNaN(iterable.length)) { var i = -1, next = function next() { for (; ++i < iterable.length;) if (hasOwn.call(iterable, i)) return next.value = iterable[i], next.done = !1, next; return next.value = undefined, next.done = !0, next; }; return next.next = next; } } return { next: doneResult }; } function doneResult() { return { value: undefined, done: !0 }; } return GeneratorFunction.prototype = GeneratorFunctionPrototype, defineProperty(Gp, "constructor", { value: GeneratorFunctionPrototype, configurable: !0 }), defineProperty(GeneratorFunctionPrototype, "constructor", { value: GeneratorFunction, configurable: !0 }), GeneratorFunction.displayName = define(GeneratorFunctionPrototype, toStringTagSymbol, "GeneratorFunction"), exports.isGeneratorFunction = function (genFun) { var ctor = "function" == typeof genFun && genFun.constructor; return !!ctor && (ctor === GeneratorFunction || "GeneratorFunction" === (ctor.displayName || ctor.name)); }, exports.mark = function (genFun) { return Object.setPrototypeOf ? Object.setPrototypeOf(genFun, GeneratorFunctionPrototype) : (genFun.__proto__ = GeneratorFunctionPrototype, define(genFun, toStringTagSymbol, "GeneratorFunction")), genFun.prototype = Object.create(Gp), genFun; }, exports.awrap = function (arg) { return { __await: arg }; }, defineIteratorMethods(AsyncIterator.prototype), define(AsyncIterator.prototype, asyncIteratorSymbol, function () { return this; }), exports.AsyncIterator = AsyncIterator, exports.async = function (innerFn, outerFn, self, tryLocsList, PromiseImpl) { void 0 === PromiseImpl && (PromiseImpl = Promise); var iter = new AsyncIterator(wrap(innerFn, outerFn, self, tryLocsList), PromiseImpl); return exports.isGeneratorFunction(outerFn) ? iter : iter.next().then(function (result) { return result.done ? result.value : iter.next(); }); }, defineIteratorMethods(Gp), define(Gp, toStringTagSymbol, "Generator"), define(Gp, iteratorSymbol, function () { return this; }), define(Gp, "toString", function () { return "[object Generator]"; }), exports.keys = function (val) { var object = Object(val), keys = []; for (var key in object) keys.push(key); return keys.reverse(), function next() { for (; keys.length;) { var key = keys.pop(); if (key in object) return next.value = key, next.done = !1, next; } return next.done = !0, next; }; }, exports.values = values, Context.prototype = { constructor: Context, reset: function reset(skipTempReset) { if (this.prev = 0, this.next = 0, this.sent = this._sent = undefined, this.done = !1, this.delegate = null, this.method = "next", this.arg = undefined, this.tryEntries.forEach(resetTryEntry), !skipTempReset) for (var name in this) "t" === name.charAt(0) && hasOwn.call(this, name) && !isNaN(+name.slice(1)) && (this[name] = undefined); }, stop: function stop() { this.done = !0; var rootRecord = this.tryEntries[0].completion; if ("throw" === rootRecord.type) throw rootRecord.arg; return this.rval; }, dispatchException: function dispatchException(exception) { if (this.done) throw exception; var context = this; function handle(loc, caught) { return record.type = "throw", record.arg = exception, context.next = loc, caught && (context.method = "next", context.arg = undefined), !!caught; } for (var i = this.tryEntries.length - 1; i >= 0; --i) { var entry = this.tryEntries[i], record = entry.completion; if ("root" === entry.tryLoc) return handle("end"); if (entry.tryLoc <= this.prev) { var hasCatch = hasOwn.call(entry, "catchLoc"), hasFinally = hasOwn.call(entry, "finallyLoc"); if (hasCatch && hasFinally) { if (this.prev < entry.catchLoc) return handle(entry.catchLoc, !0); if (this.prev < entry.finallyLoc) return handle(entry.finallyLoc); } else if (hasCatch) { if (this.prev < entry.catchLoc) return handle(entry.catchLoc, !0); } else { if (!hasFinally) throw new Error("try statement without catch or finally"); if (this.prev < entry.finallyLoc) return handle(entry.finallyLoc); } } } }, abrupt: function abrupt(type, arg) { for (var i = this.tryEntries.length - 1; i >= 0; --i) { var entry = this.tryEntries[i]; if (entry.tryLoc <= this.prev && hasOwn.call(entry, "finallyLoc") && this.prev < entry.finallyLoc) { var finallyEntry = entry; break; } } finallyEntry && ("break" === type || "continue" === type) && finallyEntry.tryLoc <= arg && arg <= finallyEntry.finallyLoc && (finallyEntry = null); var record = finallyEntry ? finallyEntry.completion : {}; return record.type = type, record.arg = arg, finallyEntry ? (this.method = "next", this.next = finallyEntry.finallyLoc, ContinueSentinel) : this.complete(record); }, complete: function complete(record, afterLoc) { if ("throw" === record.type) throw record.arg; return "break" === record.type || "continue" === record.type ? this.next = record.arg : "return" === record.type ? (this.rval = this.arg = record.arg, this.method = "return", this.next = "end") : "normal" === record.type && afterLoc && (this.next = afterLoc), ContinueSentinel; }, finish: function finish(finallyLoc) { for (var i = this.tryEntries.length - 1; i >= 0; --i) { var entry = this.tryEntries[i]; if (entry.finallyLoc === finallyLoc) return this.complete(entry.completion, entry.afterLoc), resetTryEntry(entry), ContinueSentinel; } }, "catch": function _catch(tryLoc) { for (var i = this.tryEntries.length - 1; i >= 0; --i) { var entry = this.tryEntries[i]; if (entry.tryLoc === tryLoc) { var record = entry.completion; if ("throw" === record.type) { var thrown = record.arg; resetTryEntry(entry); } return thrown; } } throw new Error("illegal catch attempt"); }, delegateYield: function delegateYield(iterable, resultName, nextLoc) { return this.delegate = { iterator: values(iterable), resultName: resultName, nextLoc: nextLoc }, "next" === this.method && (this.arg = undefined), ContinueSentinel; } }, exports; }
 function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
@@ -1117,6 +1513,7 @@ function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o =
 function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i]; return arr2; }
 function _iterableToArrayLimit(arr, i) { var _i = null == arr ? null : "undefined" != typeof Symbol && arr[Symbol.iterator] || arr["@@iterator"]; if (null != _i) { var _s, _e, _x, _r, _arr = [], _n = !0, _d = !1; try { if (_x = (_i = _i.call(arr)).next, 0 === i) { if (Object(_i) !== _i) return; _n = !1; } else for (; !(_n = (_s = _x.call(_i)).done) && (_arr.push(_s.value), _arr.length !== i); _n = !0); } catch (err) { _d = !0, _e = err; } finally { try { if (!_n && null != _i["return"] && (_r = _i["return"](), Object(_r) !== _r)) return; } finally { if (_d) throw _e; } } return _arr; } }
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+
 
 
 
@@ -1384,10 +1781,10 @@ var EventCalendarTimeline = function EventCalendarTimeline(props) {
     setTableTooltipContent(content);
 
     // update modal positiona
-    var _tableTooltipModalRef = document.querySelector("#e-cal-tl-table__cell-tooltipwrapper-".concat(idRes));
+    var _tableTooltipModalRef = tableTooltipModalRef.current;
     var _triggerRef = e.currentTarget;
     if (_tableTooltipModalRef !== null && _triggerRef !== null) {
-      var _getAbsolutePositionO = (0,_utils_get_element_property__WEBPACK_IMPORTED_MODULE_2__.getAbsolutePositionOfStage)(_triggerRef),
+      var _getAbsolutePositionO = (0,_utils_get_element_property__WEBPACK_IMPORTED_MODULE_3__.getAbsolutePositionOfStage)(_triggerRef),
         x = _getAbsolutePositionO.x,
         y = _getAbsolutePositionO.y,
         width = _getAbsolutePositionO.width,
@@ -2193,20 +2590,13 @@ var EventCalendarTimeline = function EventCalendarTimeline(props) {
       var _customNow = new Date(customTodayDate);
       setTodayDate(_customNow);
     }
-
-    // tooltip
-    if (document.body !== null) {
-      document.body.appendChild(tableTooltipModalRef.current);
-    }
     window.removeEventListener('touchstart', handleTableTooltipTouchStart);
     window.addEventListener('touchstart', handleTableTooltipTouchStart);
     return function () {
-      var _document$querySelect;
       // table grid
       tableGridReset();
 
       // tooltip
-      (_document$querySelect = document.querySelector("#e-cal-tl-table__cell-tooltipwrapper-".concat(idRes))) === null || _document$querySelect === void 0 ? void 0 : _document$querySelect.remove();
       window.removeEventListener('touchstart', handleTableTooltipTouchStart);
     };
   }, [eventsValue, customTodayDate]);
@@ -2387,10 +2777,9 @@ var EventCalendarTimeline = function EventCalendarTimeline(props) {
     return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("tr", {
       key: i
     }, generateDaysUi(item.eventSources, item.listSection, i, true));
-  }))))))))))), EVENTS_ENABLED ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((funda_modaldialog__WEBPACK_IMPORTED_MODULE_1___default()), {
+  }))))))))))), EVENTS_ENABLED ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((funda_modaldialog__WEBPACK_IMPORTED_MODULE_2___default()), {
     show: showDelete,
     maskOpacity: modalMaskOpacity,
-    protectFixedViewport: false,
     triggerClassName: "",
     triggerContent: "",
     closeBtnClassName: modalCloseBtnClassName || 'btn btn-secondary',
@@ -2432,13 +2821,12 @@ var EventCalendarTimeline = function EventCalendarTimeline(props) {
         return _ref.apply(this, arguments);
       };
     }()
-  }, modalDeleteContent || 'Are you sure?'), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((funda_modaldialog__WEBPACK_IMPORTED_MODULE_1___default()), {
+  }, modalDeleteContent || 'Are you sure?'), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((funda_modaldialog__WEBPACK_IMPORTED_MODULE_2___default()), {
     show: showEdit,
     maskOpacity: modalMaskOpacity,
     heading: modalHeading,
     maxWidth: modalMaxWidth,
     minHeight: modalMinHeight,
-    protectFixedViewport: false,
     triggerClassName: "",
     triggerContent: "",
     closeBtnClassName: modalCloseBtnClassName || 'btn btn-secondary',
@@ -2480,7 +2868,10 @@ var EventCalendarTimeline = function EventCalendarTimeline(props) {
         return _ref2.apply(this, arguments);
       };
     }()
-  }, modalContent)) : null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+  }, modalContent)) : null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((funda_root_portal__WEBPACK_IMPORTED_MODULE_1___default()), {
+    show: true,
+    containerClassName: "EventCalendarTimeline-TooltipModal"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
     ref: tableTooltipModalRef,
     id: "e-cal-tl-table__cell-tooltipwrapper-".concat(idRes),
     className: "e-cal-tl-table__cell-tooltipwrapper d-inline-block ".concat(isShowTableTooltip ? 'active' : ''),

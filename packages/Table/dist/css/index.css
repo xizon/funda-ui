@@ -9,10 +9,12 @@
   --table-dis-top: 1rem;
   --table-checkbox-indeterminate-color: #bbbbbb;
   --table-row-active-bg: #f0f8ff;
+  --table-radio-svg-btn-color: #919191;
   --table-scrollbar-color: rgba(0, 0, 0, 0.2);
   --table-scrollbar-track: rgba(0, 0, 0, 0);
   --table-scrollbar-h: 3px;
   --table-scrollbar-w: 3px;
+  /*------ active row  ------*/
   /*------ enable sort  ------*/
   /*------ has checkbox  ------*/
   /*------ allow drag and drop  ------*/
@@ -68,6 +70,7 @@
   position: absolute;
   left: calc(var(--table-padding-x) / 2);
   z-index: 2;
+  /* radio svg */
 }
 .table__wrapper .checkbox-trigger > div {
   display: inline-block;
@@ -80,6 +83,11 @@
   background-color: var(--table-checkbox-indeterminate-color);
   border-color: var(--table-checkbox-indeterminate-color);
 }
+.table__wrapper .checkbox-trigger .radio-svg-btn svg,
+.table__wrapper .checkbox-trigger .radio-svg-btn path,
+.table__wrapper .checkbox-trigger .radio-svg-btn circle {
+  fill: var(--table-radio-svg-btn-color);
+}
 .table__wrapper .drag-trigger {
   display: none;
   position: absolute;
@@ -87,6 +95,18 @@
   z-index: 3;
   cursor: move;
   opacity: 0.5;
+}
+.table__wrapper table tbody .row-obj .checkbox-trigger {
+  /* radio svg */
+}
+.table__wrapper table tbody .row-obj .checkbox-trigger .radio-svg--active {
+  display: none;
+}
+.table__wrapper table tbody .row-obj.active .radio-svg--default {
+  display: none;
+}
+.table__wrapper table tbody .row-obj.active .radio-svg--active {
+  display: inline-block;
 }
 .table__wrapper .newsort {
   animation: table-newsort 0.5s linear 1 forwards;

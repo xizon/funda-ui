@@ -127,7 +127,7 @@ const ColorPicker = forwardRef((props: ColorPickerProps, ref: any) => {
         <>
 
             <div className={wrapperClassName || wrapperClassName === '' ? `custom-colorpicker__wrapper  ${shapeClassName} ${wrapperClassName}` : `custom-colorpicker__wrapper mb-3 position-relative  ${shapeClassName}`} ref={rootRef}>
-                {label ? <><label htmlFor={idRes} className="form-label" dangerouslySetInnerHTML={{ __html: `${label}` }}></label></> : null}
+                {label ? <>{typeof label === 'string' ? <label htmlFor={idRes} className="form-label" dangerouslySetInnerHTML={{ __html: `${label}` }}></label> : <label htmlFor={idRes} className="form-label">{label}</label>}</> : null}
 
                 <div className="input-group">
                     <input

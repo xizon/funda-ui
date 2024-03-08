@@ -1,5 +1,8 @@
 import React, { useEffect, useState, useRef, useId } from 'react';
 
+import RootPortal from 'funda-root-portal';
+
+
 import Option from './Option';
 
 import { getAbsolutePositionOfStage } from './utils/get-element-property';
@@ -87,6 +90,7 @@ const DropdownMenu = (props: DropdownMenuProps) => {
             key={index} 
             option={selectOption} 
             hyperlinkClassName={hyperlinkClassName ? hyperlinkClassName : 'dd-menu-default__item'} 
+            selectEv={(value: any, option: any) => handleSelect(value, option)}
         />;
     });
 
@@ -96,7 +100,6 @@ const DropdownMenu = (props: DropdownMenuProps) => {
         
         setIsOpen(!isOpen);
         popwinPosInit();
-        popwinBtnEventsInit();
 
     }
 
@@ -107,7 +110,6 @@ const DropdownMenu = (props: DropdownMenuProps) => {
         setTimeout(() => {
             setIsOpen(true);
             popwinPosInit();
-            popwinBtnEventsInit();
         }, _hoverDelay);
         
     }
@@ -131,9 +133,8 @@ const DropdownMenu = (props: DropdownMenuProps) => {
     }
     
 
-    function handleSelect(e: any, option: any, currentData: any) {
-        e.preventDefault();
-        
+    function handleSelect(value: any, option: any) {
+
         setIsOpen(false);
         popwinPosHide();
         setSelected(option);
@@ -141,12 +142,12 @@ const DropdownMenu = (props: DropdownMenuProps) => {
         // change display text of trigger
         setTimeout(() => {
             if (triggerRef.current !== null) {
-                triggerRef.current.querySelector('.dd-menu__trigger').innerHTML = currentData.label;
+                triggerRef.current.querySelector('.dd-menu__trigger').innerHTML = option.label;
             }
         }, 0);
 
         if (typeof (onChange) === 'function') {
-            onChange(option, currentData);
+            onChange(value, option);
         }
 
     }
@@ -255,46 +256,8 @@ const DropdownMenu = (props: DropdownMenuProps) => {
     }
 
     
-    
-
-    function popwinBtnEventsInit() {
-        if (listRef.current === null) return;
-
-        // options event listener
-        // !!! to prevent button mismatch when changing
-        if (Array.isArray(options) && options.length > 0) {
-            [].slice.call(listRef.current.querySelectorAll('[data-opt]')).forEach((node: HTMLElement) => {
-
-                if (typeof node.dataset.ev === 'undefined') {
-                    node.dataset.ev = 'true';
-
-                    // Prevent touch screen from starting to click option, DO NOT USE "pointerdown"
-                    node.addEventListener('click', (e: any) => {
-                        const _value = e.currentTarget.dataset.value;
-                        const _itemdata = JSON.parse(e.currentTarget.dataset.itemdata);
-                        
-
-                        handleSelect(e, _value, _itemdata);
-                    });
-                }
-            });
-        }
-
-
-    }
-
 
     useEffect(() => {
-
-
-
-        // Move HTML templates to tag end body </body>
-        // render() don't use "Fragment", in order to avoid error "Failed to execute 'insertBefore' on 'Node'"
-        // prevent "transform", "filter", "perspective" attribute destruction fixed viewport orientation
-        //--------------
-        if (document.body !== null && modalRef.current !== null) {
-            document.body.appendChild(modalRef.current);
-        }
 
 
         document.removeEventListener('pointerdown', handleClose);
@@ -302,8 +265,6 @@ const DropdownMenu = (props: DropdownMenuProps) => {
 
         return () => {
             document.removeEventListener('pointerdown', handleClose);
-
-            document.querySelector(`#dd-menu-list__wrapper-${idRes}`)?.remove();
         }
 
     }, [options]);
@@ -351,20 +312,23 @@ const DropdownMenu = (props: DropdownMenuProps) => {
                 {/* /INPUT */}
                 
                 {/* MENU LIST */}
-                <div 
-                    ref={modalRef} 
-                    className="dd-menu-list__wrapper"
-                    id={`dd-menu-list__wrapper-${idRes}`}
-                >
-                    <span ref={iconRef} className={`dd-menu-list__icon ${isOpen ? 'active' : ''}`}></span>
-                    
-                    <ul 
-                        ref={listRef}
-                        className={`dd-menu-list__inner ${listClassName ? listClassName : 'dd-menu-default__inner'} ${isOpen ? (showClassName ? showClassName : 'show') : ''}`}
+                <RootPortal show={true} containerClassName="DropdownMenu">
+                    <div
+                        ref={modalRef}
+                        className="dd-menu-list__wrapper"
+                        id={`dd-menu-list__wrapper-${idRes}`}
                     >
-                        {selectOptionsListPresentation}
-                    </ul>
-                </div>
+                        <span ref={iconRef} className={`dd-menu-list__icon ${isOpen ? 'active' : ''}`}></span>
+
+                        <ul
+                            ref={listRef}
+                            className={`dd-menu-list__inner ${listClassName ? listClassName : 'dd-menu-default__inner'} ${isOpen ? (showClassName ? showClassName : 'show') : ''}`}
+                        >
+                            {selectOptionsListPresentation}
+                        </ul>
+                    </div>
+                </RootPortal>
+                
                 {/* /MENU LIST */}
 
 

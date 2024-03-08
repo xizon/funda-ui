@@ -29,7 +29,6 @@
   --tooltip-arrow-height: 6px;
   position: absolute;
   z-index: 1055; /* --bs-modal-zindex */
-  display: inline-block;
   pointer-events: none;
   display: none;
   margin-top: -0.2rem;
@@ -69,10 +68,10 @@
   ---------------------------
   */
   /*
-      ---------------------------
-      10. Size
-      ---------------------------
-      */
+  ---------------------------
+  10. Size
+  ---------------------------
+  */
 }
 .tooltip__wrapper::before {
   background-size: 100% auto !important;
@@ -99,7 +98,7 @@
   z-index: 10;
   transform-origin: top;
   box-shadow: var(--tooltip-box-shadow);
-  transition: 0.1s ease-in-out;
+  transition: none !important; /* Don't use transition if position is outside window */
 }
 .tooltip__wrapper > .tooltip__content {
   background: var(--tooltip-content-bg);

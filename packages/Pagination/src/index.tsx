@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { forwardRef, useImperativeHandle } from 'react';
 import { paginationNavigators } from './pagination-navigators';
 
 
@@ -30,28 +30,29 @@ type PaginationProps = {
     /** Only display the previous and next buttons. */
     onlyPrevNext?: boolean;
     /** The classname for the active page */
-    activeClass?: string;
+    activeClassName?: string;
     /** The classname on tag li of the previous button */
-    previousClass?: string;
+    previousClassName?: string;
     /** The classname on tag li of the next button */
-    nextClass?: string;
+    nextClassName?: string;
     /** The classname on tag li of the first button */
-    firstClass?: string;
+    firstClassName?: string;
     /** The classname on tag li of the last button */
-    lastClass?: string;
+    lastClassName?: string;
     /** The classname for disabled buttons */
-    disabledClass?: string;
+    disabledClassName?: string;
     /** The activation button is symmetrical on the left and right sides. */
     symmetry?: boolean;
     /** -- */
     style?: React.CSSProperties;
     /** The method to call when a page is clicked. Exposes the current page number as an argument. */
-    onChange?: (param: any) => void;
-    
+    onChange?: (page: number, total: number) => void;
+
 
 };
 
-const Pagination = (props: PaginationProps) => {
+
+const Pagination = forwardRef((props: PaginationProps, ref: any) => {
     const {
         wrapperClassName,
         navClassName,
@@ -66,38 +67,47 @@ const Pagination = (props: PaginationProps) => {
         breakLabel,
         align,
         onlyPrevNext,
-        activeClass,
-        previousClass,
-        nextClass,
-        firstClass,
-        lastClass,
-        disabledClass,
+        activeClassName,
+        previousClassName,
+        nextClassName,
+        firstClassName,
+        lastClassName,
+        disabledClassName,
         symmetry,
         style,
         onChange
     } = props;
 
 
-    function handleClick(parameter: any) {
 
-        switch (parameter) {
-            case "prev":
-                onChange?.(activePage - 1);
-                break;
-            case "next":
-                onChange?.(activePage + 1);
-                break;
-            case "first":
-                onChange?.(1);
-                break;
-            case "last":
-                onChange?.(totalPages);
-                break;
-            default:
-                onChange?.(1);
-                break;
-        }
-    }
+    // exposes the following methods
+    useImperativeHandle(
+        ref,
+        () => ({
+            next: (cb: any) => {
+                handleClick('next', (p: number) => {
+                    cb?.(p);
+                });
+            },
+            prev: (cb: any) => {
+                handleClick('prev', (p: number) => {
+                    cb?.(p);
+                });
+            },
+            first: (cb: any) => {
+                handleClick('first', (p: number) => {
+                    cb?.(p);
+                });
+            },
+            last: (cb: any) => {
+                handleClick('last', (p: number) => {
+                    cb?.(p);
+                });
+            }
+        }),
+        [ref, activePage],
+    );
+
 
     const visibleNavigators = pageRangeDisplayed ? pageRangeDisplayed : 3;
 
@@ -114,12 +124,12 @@ const Pagination = (props: PaginationProps) => {
             break;
     }
 
-    const _activeClassName = activeClass ? activeClass : 'active',
-        _previousClassName = previousClass ? previousClass : 'prev',
-        _nextClassName = nextClass ? nextClass : 'next',
-        _firstClassName = firstClass ? firstClass : 'first',
-        _lastClassName = lastClass ? lastClass : 'last',
-        _disabledClassName = disabledClass ? disabledClass :'disabled',
+    const _activeClassNameName = activeClassName ? activeClassName : 'active',
+        _previousClassNameName = previousClassName ? previousClassName : 'prev',
+        _nextClassNameName = nextClassName ? nextClassName : 'next',
+        _firstClassNameName = firstClassName ? firstClassName : 'first',
+        _lastClassNameName = lastClassName ? lastClassName : 'last',
+        _disabledClassNameName = disabledClassName ? disabledClassName : 'disabled',
         _onlyPrevNextButtons = typeof (onlyPrevNext) === 'undefined' ? false : onlyPrevNext,
         _symmetry = typeof (symmetry) === 'undefined' ? false : symmetry;
 
@@ -148,10 +158,10 @@ const Pagination = (props: PaginationProps) => {
                 _ellipsisEnabled = true;
 
                 return (
-                    <li key={i} className={activePage === item ? `page-item ${_activeClassName}` : `page-item`}>
-                        <a className="page-link" href={apiUrl.replace('{page}', item)} onClick={(e) => {
+                    <li key={i} className={activePage === item ? `page-item ${_activeClassNameName}` : `page-item`}>
+                        <a className="page-link" data-page={item} href={apiUrl.replace('{page}', item)} onClick={(e) => {
                             e.preventDefault();
-                            onChange?.(item);
+                            onChange?.(Number(item), Number(totalPages));
                         }}>{item}</a>
                     </li>
                 );
@@ -159,22 +169,55 @@ const Pagination = (props: PaginationProps) => {
         }
     });
 
+
+
+
+    function handleClick(parameter: any, cb?: any) {
+
+        switch (parameter) {
+            case "prev":
+                onChange?.(activePage - 1, Number(totalPages));
+                cb?.(activePage - 1);
+                break;
+            case "next":
+                onChange?.(activePage + 1, Number(totalPages));
+                cb?.(activePage + 1);
+                break;
+            case "first":
+                onChange?.(1, Number(totalPages));
+                cb?.(1);
+                break;
+            case "last":
+                onChange?.(totalPages, Number(totalPages));
+                cb?.(totalPages);
+                break;
+            default:
+                onChange?.(1, Number(totalPages));
+                cb?.(1);
+                break;
+        }
+    }
+
+
     return (
         <>
 
-            <nav className={wrapperClassName || wrapperClassName === '' ? wrapperClassName : "mb-3 position-relative"}  style={style}>
-                <ul className={navClassName ? `${navClassName} ${alignClassName}` : `pagination ${alignClassName}`}>
+            <nav
+                className={wrapperClassName || wrapperClassName === '' ? wrapperClassName : "mb-3 position-relative"}
+                style={style}
+            >
+                <ul className={navClassName || navClassName === '' ? `${navClassName} ${alignClassName}` : `pagination ${alignClassName}`}>
                     {firstLabel ? (
-                        <li className={activePage > 1 ? `page-item ${_firstClassName}` : `page-item ${_firstClassName} ${_disabledClassName}`}>
-                            <a tabIndex={activePage > 1 ? 0 : -1} aria-disabled={activePage > 1 ? 'false' : 'true'}className="page-link" href={apiUrl.replace('{page}', '1')} onClick={(e) => { e.preventDefault(); handleClick('first'); }}>
+                        <li className={activePage > 1 ? `page-item ${_firstClassNameName}` : `page-item ${_firstClassNameName} ${_disabledClassNameName}`}>
+                            <a tabIndex={activePage > 1 ? 0 : -1} aria-disabled={activePage > 1 ? 'false' : 'true'} className="page-link" data-page={1} href={apiUrl.replace('{page}', '1')} onClick={(e) => { e.preventDefault(); handleClick('first'); }}>
                                 {firstLabel || null}
                             </a>
                         </li>
                     ) : ''}
 
                     {previousLabel ? (
-                        <li className={activePage > 1 ? `page-item ${_previousClassName}` : `page-item ${_previousClassName} ${_disabledClassName}`}>
-                            <a tabIndex={activePage > 1 ? 0 : -1} aria-disabled={activePage > 1 ? 'false' : 'true'}className="page-link" href={apiUrl.replace('{page}', (activePage - 1) as any)} onClick={(e) => { e.preventDefault(); handleClick('prev'); }}>
+                        <li className={activePage > 1 ? `page-item ${_previousClassNameName}` : `page-item ${_previousClassNameName} ${_disabledClassNameName}`}>
+                            <a tabIndex={activePage > 1 ? 0 : -1} aria-disabled={activePage > 1 ? 'false' : 'true'} className="page-link" data-page={activePage - 1} href={apiUrl.replace('{page}', (activePage - 1) as any)} onClick={(e) => { e.preventDefault(); handleClick('prev'); }}>
                                 {previousLabel || null}
                             </a>
                         </li>
@@ -185,10 +228,10 @@ const Pagination = (props: PaginationProps) => {
                         navArr.map((item: any, i: number) => {
                             if (item > 0 && item <= totalPages && !_onlyPrevNextButtons) {
                                 return (
-                                    <li key={i} className={activePage === item ? `page-item ${_activeClassName}` : `page-item`}>
-                                        <a className="page-link" href={apiUrl.replace('{page}', item)} onClick={(e) => {
+                                    <li key={i} className={activePage === item ? `page-item ${_activeClassNameName}` : `page-item`}>
+                                        <a className="page-link" data-page={item} href={apiUrl.replace('{page}', item)} onClick={(e) => {
                                             e.preventDefault();
-                                            onChange?.(item);
+                                            onChange?.(Number(item), Number(totalPages));
                                         }}>{item}</a>
                                     </li>
                                 );
@@ -202,8 +245,8 @@ const Pagination = (props: PaginationProps) => {
                     {_ellipsisElements}
 
                     {nextLabel ? (
-                        <li className={activePage < totalPages ? `page-item ${_nextClassName}` : `page-item ${_nextClassName} ${_disabledClassName}`}>
-                            <a tabIndex={activePage < totalPages ? 0 : -1} aria-disabled={activePage < totalPages ? 'false' : 'true'} className="page-link" href={apiUrl.replace('{page}', (activePage + 1) as any)} onClick={(e) => { e.preventDefault(); handleClick('next'); }}>
+                        <li className={activePage < totalPages ? `page-item ${_nextClassNameName}` : `page-item ${_nextClassNameName} ${_disabledClassNameName}`}>
+                            <a tabIndex={activePage < totalPages ? 0 : -1} aria-disabled={activePage < totalPages ? 'false' : 'true'} className="page-link" data-page={activePage + 1} href={apiUrl.replace('{page}', (activePage + 1) as any)} onClick={(e) => { e.preventDefault(); handleClick('next'); }}>
                                 {nextLabel || null}
                             </a>
                         </li>
@@ -211,8 +254,8 @@ const Pagination = (props: PaginationProps) => {
 
 
                     {lastLabel ? (
-                        <li className={activePage < totalPages ? `page-item ${_lastClassName}`  : `page-item ${_lastClassName} ${_disabledClassName}`}>
-                            <a tabIndex={activePage < totalPages ? 0 : -1} aria-disabled={activePage < totalPages ? 'false' : 'true'} className="page-link" href={apiUrl.replace('{page}', totalPages as any)} onClick={(e) => { e.preventDefault(); handleClick('last'); }}>
+                        <li className={activePage < totalPages ? `page-item ${_lastClassNameName}` : `page-item ${_lastClassNameName} ${_disabledClassNameName}`}>
+                            <a tabIndex={activePage < totalPages ? 0 : -1} aria-disabled={activePage < totalPages ? 'false' : 'true'} className="page-link" data-page={totalPages} href={apiUrl.replace('{page}', totalPages as any)} onClick={(e) => { e.preventDefault(); handleClick('last'); }}>
                                 {lastLabel || null}
                             </a>
                         </li>
@@ -225,6 +268,6 @@ const Pagination = (props: PaginationProps) => {
 
         </>
     )
-};
+});
 
 export default Pagination;

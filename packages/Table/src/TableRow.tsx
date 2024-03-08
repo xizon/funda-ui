@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 import Radio from 'funda-radio';
 
@@ -12,6 +12,8 @@ import { formatPerlineControlVal } from './table-utils';
 /* Table Row
 -------------------------------------------------*/
 type TableRowProps = {
+    rowActiveClassName?: string;
+    fieldsChecked?: boolean[] | boolean;
     index: React.Key;
     data?: any[];
     headerLabel?: any[];
@@ -29,11 +31,17 @@ type TableRowProps = {
     onCheck?: (val: any) => void;
     evDragEnd?: (option: any) => void | undefined;
     evDragStart?: (option: any) => void | undefined;
+    evCellMouseEnter?: (el: any) => void | undefined;
+    evCellMouseLeave?: (el: any) => void | undefined;
+    evRowMouseEnter?: (el: any) => void | undefined;
+    evRowMouseLeave?: (el: any) => void | undefined;
 };
 
 const TableRow = (props: TableRowProps) => {
 
     const {
+        rowActiveClassName = 'active',
+        fieldsChecked,
         index,
         data,
         headerLabel,
@@ -50,12 +58,35 @@ const TableRow = (props: TableRowProps) => {
         onClick,
         onCheck,
         evDragEnd,
-        evDragStart
+        evDragStart,
+        evCellMouseEnter,
+        evCellMouseLeave,
+        evRowMouseEnter,
+        evRowMouseLeave
     } = props;
 
     
+    
     const nonExistentRowKey = `row-null`;
-    const rowChecked = getCheckedData!.filter((cur: any) => cur.key === rowKey)[0]?.checked;
+    const rowIndex = rowKey?.replace('row-', '');
+    const _rowChecked = getCheckedData!.filter((cur: any) => cur.key === rowKey)[0]?.checked;
+
+    const [firstInitCheckboxesClassName, setFirstInitCheckboxesClassName] = useState<boolean>(false);
+ 
+    
+    // initialize actived checkboxes
+    const latestRowChecked = () => {
+        if (firstInitCheckboxesClassName) return _rowChecked;
+
+        if (Array.isArray(fieldsChecked)) {
+            if (typeof rowKey !== 'undefined' && typeof getCheckedData !== 'undefined') {
+                return fieldsChecked[Number(rowIndex)];
+            }
+        }
+        return _rowChecked;
+    };
+
+    const rowChecked = firstInitCheckboxesClassName ? getCheckedData!.filter((cur: any) => cur.key === rowKey)[0]?.checked : latestRowChecked();
 
     function handleClick(event: any) {
         const curVal: any = formatPerlineControlVal(event.currentTarget)
@@ -64,7 +95,21 @@ const TableRow = (props: TableRowProps) => {
 
     return (
         <>
-            <tr draggable={draggable} onDragEnd={evDragEnd} onDragStart={evDragStart} data-id={index} data-key={rowKey} className={`row-obj ${rowChecked ? 'active' : ''} ${typeof onClick === 'undefined' ? '' : 'clickable'}`} onClick={handleClick}>
+            <tr 
+                draggable={draggable} 
+                onDragEnd={evDragEnd} 
+                onDragStart={evDragStart} 
+                data-id={index} 
+                data-key={rowKey} 
+                className={`row-obj ${rowChecked ? rowActiveClassName : ''} ${typeof onClick === 'undefined' ? '' : 'clickable'}`} 
+                onClick={handleClick}
+                onMouseEnter={(e: React.MouseEvent) => {
+                    evRowMouseEnter?.(e);
+                }}
+                onMouseLeave={(e: React.MouseEvent) => {
+                    evRowMouseLeave?.(e);
+                }}
+            >
                 {data ? data.map((el: any, i: number) => {
                     let headerItem = headerLabel![i];
                     if (headerItem === undefined) headerItem = {type: false, content: ''};
@@ -72,8 +117,12 @@ const TableRow = (props: TableRowProps) => {
                     if ( i === 0 ) {
                         return <TableFieldRow 
                                     key={'th-row' + i} 
+                                    rowActiveClassName={rowActiveClassName}
+                                    fieldsChecked={fieldsChecked}
+                                    updateFirstInitCheckboxesClassName={setFirstInitCheckboxesClassName}
                                     useRadio={useRadio}
-                                    columnHeader={headerItem.content.replace(/(<([^>]+)>)/ig, '')} 
+                                    columnHeader={typeof headerItem.content === 'string' ? headerItem.content.replace(/(<([^>]+)>)/ig, '') : headerItem.content} 
+                                    className={el.className}
                                     cols={el.cols} 
                                     content={el.content} 
                                     width={el.width} 
@@ -89,37 +138,26 @@ const TableRow = (props: TableRowProps) => {
                                     getCheckedRootData={getCheckedRootData}
                                     onCheck={onCheck}
                                     draggable={draggable}
+                                    evCellMouseEnter={evCellMouseEnter}
+                                    evCellMouseLeave={evCellMouseLeave}
                                 />;
                     } else {
                         return <TableField 
                                     key={'td-row' + i} 
-                                    columnHeader={headerItem.content.replace(/(<([^>]+)>)/ig, '')} 
+                                    columnHeader={typeof headerItem.content === 'string' ? headerItem.content.replace(/(<([^>]+)>)/ig, '') : headerItem.content} 
+                                    className={el.className}
                                     cols={el.cols} 
                                     content={el.content} 
                                     width={el.width} 
                                     style={el.style} 
                                     index={i} 
+                                    evCellMouseEnter={evCellMouseEnter}
+                                    evCellMouseLeave={evCellMouseLeave}
                                 />;
                     }
                     
                 }) : null}
 
-
-                {useRadio ? <>
-                    <td style={{display: 'none'}}>
-                        <Radio
-                            wrapperClassName=""
-                            options={`[
-                                {"label": "","value": "${nonExistentRowKey}"}
-                            ]`}
-                            name={`checkbox-${checkboxNamePrefix}-0`}
-                            tabIndex={-1}
-                            data-index={`${nonExistentRowKey?.replace('row-', '')}`}
-                            data-key={`${nonExistentRowKey}`}
-                            value={`${nonExistentRowKey}`}
-                        />
-                    </td>
-                </> : null}
             </tr>
 
         </>

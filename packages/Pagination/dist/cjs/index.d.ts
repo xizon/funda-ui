@@ -27,23 +27,23 @@ declare type PaginationProps = {
     /** Only display the previous and next buttons. */
     onlyPrevNext?: boolean;
     /** The classname for the active page */
-    activeClass?: string;
+    activeClassName?: string;
     /** The classname on tag li of the previous button */
-    previousClass?: string;
+    previousClassName?: string;
     /** The classname on tag li of the next button */
-    nextClass?: string;
+    nextClassName?: string;
     /** The classname on tag li of the first button */
-    firstClass?: string;
+    firstClassName?: string;
     /** The classname on tag li of the last button */
-    lastClass?: string;
+    lastClassName?: string;
     /** The classname for disabled buttons */
-    disabledClass?: string;
+    disabledClassName?: string;
     /** The activation button is symmetrical on the left and right sides. */
     symmetry?: boolean;
     /** -- */
     style?: React.CSSProperties;
     /** The method to call when a page is clicked. Exposes the current page number as an argument. */
-    onChange?: (param: any) => void;
+    onChange?: (page: number, total: number) => void;
 };
-declare const Pagination: (props: PaginationProps) => JSX.Element;
+declare const Pagination: React.ForwardRefExoticComponent<PaginationProps & React.RefAttributes<unknown>>;
 export default Pagination;

@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 
+
 import ModalDialog from 'funda-modaldialog';
 
 
@@ -586,7 +587,6 @@ const EventCalendar = (props: EventCalendarProps) => {
                 <ModalDialog
                     show={showDelete}
                     maskOpacity={modalMaskOpacity}
-                    protectFixedViewport={false}
                     triggerClassName=""
                     triggerContent=""
                     closeBtnClassName={modalCloseBtnClassName || 'btn btn-secondary'}
@@ -620,7 +620,7 @@ const EventCalendar = (props: EventCalendarProps) => {
                 </ModalDialog>
                 {/*<!-- /DELETE -->*/}
 
-
+                
                 {/*<!-- EDIT -->*/}
                 <ModalDialog
                     show={showEdit}
@@ -628,7 +628,6 @@ const EventCalendar = (props: EventCalendarProps) => {
                     heading={modalHeading}
                     maxWidth={modalMaxWidth}
                     minHeight={modalMinHeight}
-                    protectFixedViewport={false}
                     triggerClassName=""
                     triggerContent=""
                     closeBtnClassName={modalCloseBtnClassName || 'btn btn-secondary'}

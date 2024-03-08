@@ -5,7 +5,7 @@ import useDebounce from './utils/useDebounce';
 
 import { getAbsolutePositionOfStage } from './utils/get-element-property';
 
-
+import RootPortal from 'funda-root-portal';
 import SearchBar from 'funda-searchbar';
 
 
@@ -14,6 +14,7 @@ type LiveSearchProps = {
     controlClassName?: string;
     exceededSidePosOffset?: number;
     appearance?: string;
+    isSearchInput?: boolean;
     value?: string;
     label?: React.ReactNode | string;
     name?: string;
@@ -55,6 +56,7 @@ const LiveSearch = (props: LiveSearchProps) => {
         controlClassName,
         exceededSidePosOffset,
         appearance,
+        isSearchInput,
         disabled,
         required,
         placeholder,
@@ -97,8 +99,8 @@ const LiveSearch = (props: LiveSearchProps) => {
     const listRef = useRef<any>(null);
     const listContentRef = useRef<any>(null);
     const windowScrollUpdate = debounce(handleScrollEvent, 500);
-    
- 
+
+
 
     //
     const [firstFetch, setFirstFetch] = useState<boolean>(false);
@@ -108,9 +110,9 @@ const LiveSearch = (props: LiveSearchProps) => {
     const [isOpen, setIsOpen] = useState<boolean>(false);
     const [hasErr, setHasErr] = useState<boolean>(false);
     const [componentFirstLoad, setComponentFirstLoad] = useState<boolean>(false);
- 
 
-   //performance
+
+    //performance
     const handleChangeFetchSafe = useDebounce((e: any) => {
         handleChange(e);
     }, 350, [dataInit]);
@@ -214,7 +216,7 @@ const LiveSearch = (props: LiveSearchProps) => {
 
         }
 
-        
+
 
         // STEP 4:
         //-----------
@@ -291,55 +293,7 @@ const LiveSearch = (props: LiveSearchProps) => {
 
     }
 
-    
-    
-    function popwinBtnEventsInit(getOptionsData: any[]) {
-        if (listContentRef.current === null) return;
 
-
-        // options event listener
-        // !!! to prevent button mismatch when changing
-        [].slice.call(listContentRef.current.querySelectorAll('.livesearch__control-option-item')).forEach((node: HTMLElement) => {
-
-            // Solve the problem of missing click events caused by `<MultiFuncSelect />` not updating "data" []
-            if (getOptionsData.length === 0) {
-
-                if (typeof node.dataset.ev === 'undefined') {
-                    node.dataset.ev = 'true';
-
-                    // Prevent touch screen from starting to click option, DO NOT USE "pointerdown"
-                    node.addEventListener('click', (e: any) => {
-                        handleSelect(e);
-                    });
-                }
-
-            } else {
-                const optVal = node.dataset.value;
-                getOptionsData.forEach((item: any) => {
-                    if (optVal == item.value) {
-
-                        if (typeof node.dataset.ev === 'undefined') {
-                            node.dataset.ev = 'true';
-
-                            // Prevent touch screen from starting to click option, DO NOT USE "pointerdown"
-                            node.addEventListener('click', (e: any) => {
-                                handleSelect(e);
-                            });
-                            
-                        }
-                    }
-                });
-            }
-
-
-
-
-        });
-
-
-    }
-
-    
     function popwinContainerHeightReset() {
         if (listContentRef.current === null) return;
 
@@ -399,20 +353,20 @@ const LiveSearch = (props: LiveSearchProps) => {
         setChangedVal(val);
 
         // detect string which contains only spaces
-        if ( !val.replace(/\s/g, '').length === true ) return;
+        if (!val.replace(/\s/g, '').length === true) return;
 
 
         if (INPUT_MATCH_ENABLED) {
-    
-                //
-                if ( !fetchTrigger ) {
+
+            //
+            if (!fetchTrigger) {
                 matchData(val, fetchUpdate).then((response: any) => {
 
                     setOrginalData(response);
-                    
-             
+
+
                     //
-                    onChange?.(inputRef.current, response, ''); 
+                    onChange?.(inputRef.current, response, '');
 
                     //
                     setIsOpen(true);
@@ -420,7 +374,6 @@ const LiveSearch = (props: LiveSearchProps) => {
                     // window position
                     setTimeout(() => {
                         popwinPosInit();
-                        popwinBtnEventsInit(response);
                     }, 0);
 
 
@@ -429,12 +382,11 @@ const LiveSearch = (props: LiveSearchProps) => {
             } else {
 
                 //
-                onChange?.(inputRef.current, orginalData, ''); 
+                onChange?.(inputRef.current, orginalData, '');
 
                 // window position
                 setTimeout(() => {
                     popwinPosInit();
-                    popwinBtnEventsInit(orginalData);
                 }, 0);
 
             }
@@ -442,49 +394,48 @@ const LiveSearch = (props: LiveSearchProps) => {
         } else {
 
             //
-            onChange?.(inputRef.current, orginalData, ''); 
+            onChange?.(inputRef.current, orginalData, '');
 
 
             // window position
-            setTimeout( ()=> {
+            setTimeout(() => {
                 popwinPosInit();
-                popwinBtnEventsInit(orginalData);
-            }, 0 );
+            }, 0);
         }
 
 
 
     }
-    
+
     function cancel() {
         setOrginalData([]);
         popwinPosHide();
     }
-    
+
 
     async function fetchData(params: any) {
 
-        if ( typeof fetchFuncAsync === 'object' ) {
-            
+        if (typeof fetchFuncAsync === 'object') {
+
             const response: any = await fetchFuncAsync[`${fetchFuncMethod}`](...params.split(','));
             let _ORGIN_DATA = response.data;
-  
+
             // reset data structure
             if (typeof (fetchCallback) === 'function') {
                 _ORGIN_DATA = fetchCallback(_ORGIN_DATA);
             }
 
             // Determine whether the data structure matches
-            if ( _ORGIN_DATA.length > 0 &&  typeof _ORGIN_DATA[0].value === 'undefined' ) {
-                console.warn( 'The data structure does not match, please refer to the example in the component documentation.' );
+            if (_ORGIN_DATA.length > 0 && typeof _ORGIN_DATA[0].value === 'undefined') {
+                console.warn('The data structure does not match, please refer to the example in the component documentation.');
                 setHasErr(true);
                 _ORGIN_DATA = [];
             }
-            
-   
+
+
             //
             onFetch?.(_ORGIN_DATA);
-            
+
             //
             setOrginalDataInit(_ORGIN_DATA);
 
@@ -493,13 +444,12 @@ const LiveSearch = (props: LiveSearchProps) => {
             // window position
             if (componentFirstLoad) {
 
-                setTimeout( ()=> {
+                setTimeout(() => {
                     popwinPosInit();
-                    popwinBtnEventsInit(_ORGIN_DATA);
-                }, 500 );  
-            } 
+                }, 500);
+            }
 
-    
+
             return _ORGIN_DATA;
         } else {
             return [];
@@ -509,17 +459,17 @@ const LiveSearch = (props: LiveSearchProps) => {
     }
 
     async function handleSelect(el: any, dataInput: any = false) {
-        
-        if ( typeof el === 'undefined' ) return;
+
+        if (typeof el === 'undefined') return;
 
 
         // update value
-        if ( dataInput ) {
+        if (dataInput) {
             const _data = JSON.parse(dataInput);
 
             onChange?.(inputRef.current, orginalData, _data);
             setChangedVal(_data.label);
-        
+
         } else {
             const _curData = typeof el.target !== 'undefined' ? el.target.dataset.itemdata : el.dataset.itemdata;
             const _data = JSON.parse(_curData);
@@ -531,33 +481,32 @@ const LiveSearch = (props: LiveSearchProps) => {
             } else {
                 res = dataInit;
             }
-           
+
             onChange?.(inputRef.current, res, _data);
             setChangedVal(_data.label);
         }
 
-        
+
         // cancel
         setIsOpen(false);
         cancel();
     }
 
     async function handleFetch() {
-        if ( fetchTrigger ) {
+        if (fetchTrigger) {
             const res: any = await matchData(changedVal, fetchUpdate);
             setOrginalData(res);
-            
+
 
             //
             setIsOpen(res.length === 0 ? true : false);
 
             // window position
-            setTimeout( ()=> {
+            setTimeout(() => {
                 popwinPosInit();
-                popwinBtnEventsInit(dataInit);
-            }, 0 );     
+            }, 0);
 
-        }     
+        }
     }
 
     function handleClick() {
@@ -567,22 +516,21 @@ const LiveSearch = (props: LiveSearchProps) => {
         }
 
         // window position
-        setTimeout( ()=> {
+        setTimeout(() => {
             popwinPosInit();
-            popwinBtnEventsInit(dataInit);
-        }, 0 );     
+        }, 0);
     }
 
 
     function handleBlur(e: any) {
-        
+
         setIsOpen(false);
-        if ( !fetchTrigger ) {
+        if (!fetchTrigger) {
             setTimeout(() => {
 
                 //
                 onBlur?.(inputRef.current);
-                
+
                 //
                 cancel();
 
@@ -619,8 +567,8 @@ const LiveSearch = (props: LiveSearchProps) => {
             options = options.filter((options: HTMLElement) => !options.classList.contains('disabled'));
 
             const currentIndex = options.findIndex((e) => e === listRef.current.querySelector('.list-group-item.active'));
-            
-     
+
+
             // get the next element in the list, "%" will loop around to 0
             let nextIndex;
             if (type === 'increase') {
@@ -656,56 +604,46 @@ const LiveSearch = (props: LiveSearchProps) => {
     useEffect(() => {
 
 
-        // Move HTML templates to tag end body </body>
-        // render() don't use "Fragment", in order to avoid error "Failed to execute 'insertBefore' on 'Node'"
-        // prevent "transform", "filter", "perspective" attribute destruction fixed viewport orientation
-        //--------------
-        if (document.body !== null && listRef.current !== null) {
-            document.body.appendChild(listRef.current);
-        }
-
-
-
         // Component first load
         //--------------
         if (!componentFirstLoad) {
             setComponentFirstLoad(true);
         }
-        
+
 
         // update default value
         //--------------
         setChangedVal(value || '');
-       
-        
+
+
         // data init
         //--------------
         const _oparams: any[] = fetchFuncMethodParams || [];
-        const _params: any[] = _oparams.map((item: any) => item !== '$QUERY_STRING' ? item : (fetchTrigger && !fetchUpdate) ? '' : (fetchUpdate ? '------' : (fetchTrigger ? '------' : '')) );
-        if ( !firstFetch ) {
+        const _params: any[] = _oparams.map((item: any) => item !== '$QUERY_STRING' ? item : (fetchTrigger && !fetchUpdate) ? '' : (fetchUpdate ? '------' : (fetchTrigger ? '------' : '')));
+        if (!firstFetch) {
             fetchData((_params).join(','));
             setFirstFetch(true);  // avoid triggering two data requests if the input value has not changed
         }
 
-        
+
 
         // keyboard listener
         //--------------
         const listener = async (event: any) => {
 
-       
+
             let res: any = null;
- 
+
             if (event.code === "Enter" || event.code === "NumpadEnter") {
 
                 // Determine the "active" class name to avoid listening to other unused components of the same type
-                if ( listRef.current === null || !rootRef.current.classList.contains('active') ) return;
+                if (listRef.current === null || !rootRef.current.classList.contains('active')) return;
 
 
-                if ( listRef.current !== null ) {
+                if (listRef.current !== null) {
                     const currentData = listRef.current.dataset.data;
-         
-                    if ( typeof currentData !== 'undefined' ) {
+
+                    if (typeof currentData !== 'undefined') {
                         handleSelect(null, currentData);
 
                         //
@@ -716,9 +654,9 @@ const LiveSearch = (props: LiveSearchProps) => {
 
 
                         //
-                        onChange?.(inputRef.current, options.map((node: HTMLElement) => JSON.parse(node.dataset.itemdata as any)), JSON.parse(currentData)); 
+                        onChange?.(inputRef.current, options.map((node: HTMLElement) => JSON.parse(node.dataset.itemdata as any)), JSON.parse(currentData));
 
-                    }  
+                    }
                 }
 
                 return;
@@ -740,14 +678,14 @@ const LiveSearch = (props: LiveSearchProps) => {
                     res = await optionFocus('increase');
                     break;
             }
-            
+
             // temporary data
-            if ( res !== null ) listRef.current.dataset.data = JSON.stringify({
-                value: res.dataset.value, 
+            if (res !== null) listRef.current.dataset.data = JSON.stringify({
+                value: res.dataset.value,
                 label: res.dataset.label,
                 queryString: res.dataset.querystring
             });
-            
+
 
         };
 
@@ -779,10 +717,6 @@ const LiveSearch = (props: LiveSearchProps) => {
             window.removeEventListener('scroll', windowScrollUpdate);
             window.removeEventListener('touchmove', windowScrollUpdate);
 
-         
-            //
-            document.querySelector(`#livesearch__options-wrapper-${idRes}`)?.remove();
-
         };
 
     }, [value, data]);
@@ -791,7 +725,7 @@ const LiveSearch = (props: LiveSearchProps) => {
     return (
         <>
 
-            {label ? <><div className="livesearch__wrapper__label"><label htmlFor={`label-${idRes}`} className="form-label" dangerouslySetInnerHTML={{ __html: `${label}` }}></label></div></> : null}
+            {label ? <><div className="livesearch__wrapper__label">{typeof label === 'string' ? <label htmlFor={`label-${idRes}`} className="form-label" dangerouslySetInnerHTML={{ __html: `${label}` }}></label> : <label htmlFor={`label-${idRes}`} className="form-label">{label}</label>}</div></> : null}
 
             <div className={`livesearch__wrapper ${wrapperClassName || wrapperClassName === '' ? wrapperClassName : 'mb-3 position-relative'} ${isOpen ? 'active' : ''}`} ref={rootRef} onMouseLeave={handleMouseLeaveTrigger}>
                 <SearchBar
@@ -811,73 +745,79 @@ const LiveSearch = (props: LiveSearchProps) => {
                     appearance={appearance}
                     onChange={(e: any) => {
                         handleChangeFetchSafe(e);
-                    }}    
+                    }}
                     onBlur={handleBlur}
                     onSubmit={handleFetch}
                     onClick={handleClick}
                     icon={hideIcon ? '' : (!fetchTrigger ? '' : icon)}
                     btnId={btnId}
                     autoComplete='off'
+                    isSearchInput={isSearchInput}
                     {...attributes}
                 />
 
 
                 {orginalData && !hasErr ? <>
-                    <div 
-                        ref={listRef} 
-                        id={`livesearch__options-wrapper-${idRes}`}
-                        className={`livesearch__options-wrapper list-group position-absolute border shadow small ${winWidth ? '' : ''}`}
-                        style={{ zIndex: (depth ? depth : 1055), width: WIN_WIDTH }}
-                        role="tablist"
-                    >
-                        <div 
-                            className="livesearch__options-contentlist rounded" 
-                            style={{ backgroundColor: 'var(--bs-list-group-bg)' }} 
-                            ref={listContentRef}
+                    <RootPortal show={true} containerClassName="LiveSearch">
+                        <div
+                            ref={listRef}
+                            id={`livesearch__options-wrapper-${idRes}`}
+                            className={`livesearch__options-wrapper list-group position-absolute border shadow small ${winWidth ? '' : ''}`}
+                            style={{ zIndex: (depth ? depth : 1055), width: WIN_WIDTH }}
+                            role="tablist"
                         >
-                            <div className="livesearch__options-contentlist-inner">
+                            <div
+                                className="livesearch__options-contentlist rounded"
+                                style={{ backgroundColor: 'var(--bs-list-group-bg)' }}
+                                ref={listContentRef}
+                            >
+                                <div className="livesearch__options-contentlist-inner">
 
 
-                                {/* NO MATCH */}
-                                {orginalData && orginalData.length === 0 && !hasErr && isOpen ? <>
-                                    <button
-                                        tabIndex={-1}
-                                        type="button"
-                                        className="list-group-item list-group-item-action border-top-0 border-bottom-0 no-match livesearch__control-option-item--nomatch"
-                                        disabled
-                                    >{fetchNoneInfo || 'No match yet'}</button>
-                                </> : null}
-                                {/* /NO MATCH */}
+                                    {/* NO MATCH */}
+                                    {orginalData && orginalData.length === 0 && !hasErr && isOpen ? <>
+                                        <button
+                                            tabIndex={-1}
+                                            type="button"
+                                            className="list-group-item list-group-item-action border-top-0 border-bottom-0 no-match livesearch__control-option-item--nomatch"
+                                            disabled
+                                        >{fetchNoneInfo || 'No match yet'}</button>
+                                    </> : null}
+                                    {/* /NO MATCH */}
 
 
-                                {orginalData ? orginalData.map((item, index) => {
-                                    const startItemBorder = index === 0 ? 'border-top-0' : '';
-                                    const endItemBorder = index === orginalData.length-1 ? 'border-bottom-0' : '';
+                                    {orginalData ? orginalData.map((item, index) => {
+                                        const startItemBorder = index === 0 ? 'border-top-0' : '';
+                                        const endItemBorder = index === orginalData.length - 1 ? 'border-bottom-0' : '';
 
-                                    return <button 
-                                        tabIndex={-1} 
-                                        type="button" 
-                                        data-index={index} 
-                                        key={index} 
-                                        className={`list-group-item list-group-item-action border-start-0 border-end-0 border-top-0 border-bottom-0 livesearch__control-option-item ${startItemBorder} ${endItemBorder} ${typeof item.disabled === 'undefined' ? '' : (item.disabled == true ? 'disabled' : '')}`} 
-                                        data-value={`${item.value}`} 
-                                        data-label={`${item.label}`} 
-                                        data-querystring={`${typeof item.queryString === 'undefined' ? '' : item.queryString}`} 
-                                        data-itemdata={JSON.stringify(item)} 
-                                        data-list-item-label={`${typeof item.listItemLabel === 'undefined' ? '' : item.listItemLabel}`} 
-                                        role="tab"
-                                        dangerouslySetInnerHTML={{
-                                            __html: typeof item.listItemLabel === 'undefined' ? item.label : item.listItemLabel
-                                        }}
-                                    ></button>
-                                }) : null}
+                                        return <button
+                                            tabIndex={-1}
+                                            type="button"
+                                            data-index={index}
+                                            key={index}
+                                            className={`list-group-item list-group-item-action border-start-0 border-end-0 border-top-0 border-bottom-0 livesearch__control-option-item ${startItemBorder} ${endItemBorder} ${typeof item.disabled === 'undefined' ? '' : (item.disabled == true ? 'disabled' : '')}`}
+                                            data-value={`${item.value}`}
+                                            data-label={`${item.label}`}
+                                            data-querystring={`${typeof item.queryString === 'undefined' ? '' : item.queryString}`}
+                                            data-itemdata={JSON.stringify(item)}
+                                            data-list-item-label={`${typeof item.listItemLabel === 'undefined' ? '' : item.listItemLabel}`}
+                                            role="tab"
+                                            dangerouslySetInnerHTML={{
+                                                __html: typeof item.listItemLabel === 'undefined' ? item.label : item.listItemLabel
+                                            }}
+                                            onClick={handleSelect}
+                                        ></button>
+                                    }) : null}
+
+                                </div>
 
                             </div>
+
 
                         </div>
 
 
-                    </div>
+                    </RootPortal>
 
                 </> : null}
 

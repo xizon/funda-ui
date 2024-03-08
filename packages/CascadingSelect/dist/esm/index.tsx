@@ -1,5 +1,8 @@
 import React, { useId, useEffect, useState, useRef } from 'react';
 
+import RootPortal from 'funda-root-portal';
+
+
 import { debounce } from './utils/performance';
 
 import Group from './Group';
@@ -144,7 +147,7 @@ const CascadingSelect = (props: CascadingSelectProps) => {
 
     //for variable 
     const listData = useRef<any[]>([]);
-    const selectedData = useRef<any>({   
+    const selectedData = useRef<any>({
         labels: [],
         values: []
     });
@@ -192,7 +195,7 @@ const CascadingSelect = (props: CascadingSelectProps) => {
         //-----------
         // display wrapper
         if (showAct) _modalRef.classList.add('active');
-        
+
 
         // STEP 2:
         //-----------
@@ -271,37 +274,6 @@ const CascadingSelect = (props: CascadingSelectProps) => {
 
     }
 
-    
-    
-
-    function popwinBtnEventsInit() {
-        if (listRef.current === null) return;
-
-        // options event listener
-        // !!! to prevent button mismatch when changing
-        if (listData.current.length > 0) {
-            [].slice.call(listRef.current.querySelectorAll('[data-opt]')).forEach((node: HTMLElement) => {
-
-                if (typeof node.dataset.ev === 'undefined') {
-                    node.dataset.ev = 'true';
-
-                    // Prevent touch screen from starting to click option, DO NOT USE "pointerdown"
-                    node.addEventListener('click', (e: any) => {
-                        const _value = JSON.parse(e.currentTarget.dataset.value);
-                        const _index = Number(e.currentTarget.dataset.index);
-                        const _level = Number(e.currentTarget.dataset.level);
-                        
-
-                        handleClickItem(e, _value, _index, _level, listData.current);
-                    });
-                }
-            });
-        }
-
-
-    }
-
-
     function updateColDisplay(useFetch: boolean, emptyAction: boolean = false, level: number | undefined) {
         if (listRef.current === null) return;
 
@@ -334,24 +306,14 @@ const CascadingSelect = (props: CascadingSelectProps) => {
                     if (typeof level !== 'undefined' && Number.isInteger(level)) {
                         if (i > level) perCol.classList.add('hide-col');
                     }
-                    
+
                 }
 
 
-                
+
             });
         }
 
-
-   
-        // initialize events for options
-        setTimeout(() => {
-            popwinBtnEventsInit();
-        }, 0);
-
-
-
-    
     }
 
 
@@ -368,12 +330,11 @@ const CascadingSelect = (props: CascadingSelectProps) => {
         // window position
         setTimeout(() => {
             popwinPosInit();
-            popwinBtnEventsInit();
         }, 0);
 
     }
-    
-    
+
+
     async function fetchData(params: any) {
 
         if (typeof fetchFuncAsync === 'object') {
@@ -407,7 +368,7 @@ const CascadingSelect = (props: CascadingSelectProps) => {
             // STEP 1: ===========
             // column titles
             fillColumnTitle(_ORGIN_DATA);
-            
+
 
             // STEP 2: ===========
             // dictionary data (orginal)
@@ -418,7 +379,7 @@ const CascadingSelect = (props: CascadingSelectProps) => {
             const _EMPTY_SUPPORTED_DATA = JSON.parse(JSON.stringify(_ORGIN_DATA));
             addEmptyOpt(_EMPTY_SUPPORTED_DATA, 0);
 
-    
+
             // STEP 4: ===========
             // Turn the data of each group into an array
             listData.current = [_EMPTY_SUPPORTED_DATA];
@@ -545,10 +506,10 @@ const CascadingSelect = (props: CascadingSelectProps) => {
             markAllItems(childList);
             newData[level + 1] = childList;
         }
-        
+
 
         markCurrent(newData[level], index);
-        
+
 
         // update actived items
         //////////////////////////////////////////
@@ -557,7 +518,7 @@ const CascadingSelect = (props: CascadingSelectProps) => {
 
         // close modal
         //////////////////////////////////////////
-        if (typeof resValue.children === 'undefined' && resValue.id.toString().indexOf('$EMPTY_ID_') < 0 ) {
+        if (typeof resValue.children === 'undefined' && resValue.id.toString().indexOf('$EMPTY_ID_') < 0) {
             //
             cancel();
         }
@@ -571,22 +532,22 @@ const CascadingSelect = (props: CascadingSelectProps) => {
                 const colItemsWrapper = currentItemsInner.querySelectorAll('.cas-select__items-col');
                 colItemsWrapper.forEach((perCol: HTMLUListElement) => {
                     const _col = Number(perCol.dataset.col);
-                    
+
                     if (_col >= level) {
                         [].slice.call(perCol.querySelectorAll('[data-opt]')).forEach((node: HTMLElement) => {
                             node.classList.remove('active');
                         });
-                    } 
+                    }
                 });
             });
-            
-            
+
+
             // not header option
-            if (typeof e.currentTarget.dataset.optHeader === 'undefined')  e.currentTarget.classList.add('active');
-           
-        
+            if (typeof e.currentTarget.dataset.optHeader === 'undefined') e.currentTarget.classList.add('active');
+
+
         }
-        
+
 
     }
 
@@ -708,7 +669,7 @@ const CascadingSelect = (props: CascadingSelectProps) => {
 
         dictionaryData.current = [];
         listData.current = [];
-        
+
         setChangedVal('');
     }
 
@@ -721,18 +682,18 @@ const CascadingSelect = (props: CascadingSelectProps) => {
             setChangedVal(defaultValue);
         }
 
-        
+
         //
-        
+
         doFetch()?.then((response: any) => {
-     
-            
+
+
             const _data = response[1];
-       
+
 
             // Determine whether the splicing value of the default value is empty
             if (typeof defaultValue !== 'undefined' && defaultValue !== '') {
-                
+
                 const rowQueryAttr: string = valueType === 'value' ? 'id' : 'name';
                 const targetVal: any = defaultValue.match(/(\[.*?\])/gi)!.map((item: any, i: number) => VALUE_BY_BRACES ? extractContentsOfBraces(defaultValue)[i].replace(item, '') : defaultValue.split(',')[i].replace(item, ''));
 
@@ -769,7 +730,7 @@ const CascadingSelect = (props: CascadingSelectProps) => {
                     }
 
                     if (col > 0) {
-                 
+
                         const _findNode: any = searchObject(_data, function (v: any) { return v != null && v != undefined && v[rowQueryAttr] == targetVal[col - 1]; });
 
                         const childList = _findNode[0].children;
@@ -805,12 +766,12 @@ const CascadingSelect = (props: CascadingSelectProps) => {
 
 
 
-                                
+
                 // STEP 2: ===========
                 // update actived items
                 //////////////////////////////////////////
                 listData.current = _allColumnsData;
-                
+
 
 
                 // STEP 3: ===========
@@ -826,7 +787,7 @@ const CascadingSelect = (props: CascadingSelectProps) => {
 
 
         });
-   
+
 
         // Determine whether the splicing value of the default value is empty
         if (typeof defaultValue !== 'undefined' && defaultValue !== '') {
@@ -837,7 +798,7 @@ const CascadingSelect = (props: CascadingSelectProps) => {
                 if (item !== '[]') {
                     return false;
                 }
-        
+
                 return true;
             }) : true;
 
@@ -858,13 +819,13 @@ const CascadingSelect = (props: CascadingSelectProps) => {
         const dataDepth = getDepth(obj);
         const oldColumnTitleData = columnTitle ? columnTitle : [];
         const newColumnTitleData = new Array(dataDepth)?.fill('');
-        oldColumnTitleData!.forEach( (item: any, index: number) => {
+        oldColumnTitleData!.forEach((item: any, index: number) => {
             newColumnTitleData[index] = item;
         });
 
         //
-        if ( oldColumnTitleData.length > dataDepth ) {
-            newColumnTitleData.splice(dataDepth, oldColumnTitleData.length-dataDepth);
+        if (oldColumnTitleData.length > dataDepth) {
+            newColumnTitleData.splice(dataDepth, oldColumnTitleData.length - dataDepth);
         }
 
 
@@ -927,7 +888,7 @@ const CascadingSelect = (props: CascadingSelectProps) => {
         }
         return result;
     }
-    
+
 
 
     function queryResultOfJSON(data: any[], targetVal: any, returnType: string) {
@@ -962,7 +923,7 @@ const CascadingSelect = (props: CascadingSelectProps) => {
 
                 if (returnType === 'key') callbackValue = row[rowQueryAttr].toString();
                 if (returnType === 'value') callbackValue = row.name.toString();
-      
+
 
                 if (loop) {
                     // get first-level item
@@ -1044,7 +1005,7 @@ const CascadingSelect = (props: CascadingSelectProps) => {
             _labels = formattedDefaultValue.map((s: string | number) => s.toString().replace(/[\w\s]/gi, '').replace(/\[\]/g, ''));
         }
 
-        
+
         return _labels.length > 0 ? _labels.map((item: any, i: number, arr: any[]) => {
             if (arr.length - 1 === i) {
                 return (
@@ -1075,16 +1036,6 @@ const CascadingSelect = (props: CascadingSelectProps) => {
     useEffect(() => {
 
 
-
-        // Move HTML templates to tag end body </body>
-        // render() don't use "Fragment", in order to avoid error "Failed to execute 'insertBefore' on 'Node'"
-        // prevent "transform", "filter", "perspective" attribute destruction fixed viewport orientation
-        //--------------
-        if (document.body !== null && listRef.current !== null) {
-            document.body.appendChild(listRef.current);
-        }
-
-
         // Initialize default value (request parameters for each level)
         //--------------
         initDefaultValue(value);
@@ -1108,9 +1059,6 @@ const CascadingSelect = (props: CascadingSelectProps) => {
             document.removeEventListener('pointerdown', handleClickOutside);
             window.removeEventListener('scroll', windowScrollUpdate);
             window.removeEventListener('touchmove', windowScrollUpdate);
-
-            //
-            document.querySelector(`#cas-select__items-wrapper-${idRes}`)?.remove();
         }
 
 
@@ -1119,12 +1067,12 @@ const CascadingSelect = (props: CascadingSelectProps) => {
     return (
         <>
 
-            <div 
-                className={wrapperClassName || wrapperClassName === '' ? `cas-select__wrapper ${wrapperClassName}` : `cas-select__wrapper mb-3 position-relative`} 
+            <div
+                className={wrapperClassName || wrapperClassName === '' ? `cas-select__wrapper ${wrapperClassName}` : `cas-select__wrapper mb-3 position-relative`}
                 ref={rootRef}
                 data-overlay-id={`cas-select__items-wrapper-${idRes}`}
             >
-                {label ? <><label htmlFor={idRes} className="form-label" dangerouslySetInnerHTML={{ __html: `${label}` }}></label></> : null}
+                {label ? <>{typeof label === 'string' ? <label htmlFor={idRes} className="form-label" dangerouslySetInnerHTML={{ __html: `${label}` }}></label> : <label htmlFor={idRes} className="form-label" >{label}</label>}</> : null}
 
                 {triggerContent ? <>
                     <div className={triggerClassName ? `cas-select__trigger ${triggerClassName}` : `cas-select__trigger d-inline w-auto`} onClick={handleDisplayOptions}>{triggerContent}</div>
@@ -1132,44 +1080,48 @@ const CascadingSelect = (props: CascadingSelectProps) => {
 
 
                 {!hasErr ? (
-                    <div 
-                        ref={listRef} 
-                        id={`cas-select__items-wrapper-${idRes}`}
-                        className={`cas-select__items-wrapper position-absolute border shadow small`}
-                        style={{ zIndex: (depth ? depth : 1055) }}
-                    >
-                        <ul className="cas-select__items-inner">
-                            {loading ? <><div className="cas-select__items-loader">{loader || <svg height="12px" width="12px" viewBox="0 0 512 512"><g><path fill="inherit" d="M256,0c-23.357,0-42.297,18.932-42.297,42.288c0,23.358,18.94,42.288,42.297,42.288c23.357,0,42.279-18.93,42.279-42.288C298.279,18.932,279.357,0,256,0z"/><path fill="inherit" d="M256,427.424c-23.357,0-42.297,18.931-42.297,42.288C213.703,493.07,232.643,512,256,512c23.357,0,42.279-18.93,42.279-42.288C298.279,446.355,279.357,427.424,256,427.424z"/><path fill="inherit" d="M74.974,74.983c-16.52,16.511-16.52,43.286,0,59.806c16.52,16.52,43.287,16.52,59.806,0c16.52-16.511,16.52-43.286,0-59.806C118.261,58.463,91.494,58.463,74.974,74.983z"/><path fill="inherit" d="M377.203,377.211c-16.503,16.52-16.503,43.296,0,59.815c16.519,16.52,43.304,16.52,59.806,0c16.52-16.51,16.52-43.295,0-59.815C420.489,360.692,393.722,360.7,377.203,377.211z"/><path fill="inherit" d="M84.567,256c0.018-23.348-18.922-42.279-42.279-42.279c-23.357-0.009-42.297,18.932-42.279,42.288c-0.018,23.348,18.904,42.279,42.279,42.279C65.645,298.288,84.567,279.358,84.567,256z"/><path fill="inherit" d="M469.712,213.712c-23.357,0-42.279,18.941-42.297,42.288c0,23.358,18.94,42.288,42.297,42.297c23.357,0,42.297-18.94,42.279-42.297C512.009,232.652,493.069,213.712,469.712,213.712z"/><path fill="inherit" d="M74.991,377.22c-16.519,16.511-16.519,43.296,0,59.806c16.503,16.52,43.27,16.52,59.789,0c16.52-16.519,16.52-43.295,0-59.815C118.278,360.692,91.511,360.692,74.991,377.22z"/><path fill="inherit" d="M437.026,134.798c16.52-16.52,16.52-43.304,0-59.824c-16.519-16.511-43.304-16.52-59.823,0c-16.52,16.52-16.503,43.295,0,59.815C393.722,151.309,420.507,151.309,437.026,134.798z"/></g></svg>}</div></> : null}
-                            {showCloseBtn ? <a href="#" tabIndex={-1} onClick={(e) => {
-                                e.preventDefault();
-                                cancel();
-                            }} className="cas-select__close position-absolute top-0 end-0 mt-0 mx-1"><svg width="10px" height="10px" viewBox="0 0 1024 1024"><path fill="#000" d="M195.2 195.2a64 64 0 0 1 90.496 0L512 421.504 738.304 195.2a64 64 0 0 1 90.496 90.496L602.496 512 828.8 738.304a64 64 0 0 1-90.496 90.496L512 602.496 285.696 828.8a64 64 0 0 1-90.496-90.496L421.504 512 195.2 285.696a64 64 0 0 1 0-90.496z" /></svg></a> : null}
+                    <RootPortal show={true} containerClassName="CascadingSelect">
+
+                        <div
+                            ref={listRef}
+                            id={`cas-select__items-wrapper-${idRes}`}
+                            className={`cas-select__items-wrapper position-absolute border shadow small`}
+                            style={{ zIndex: (depth ? depth : 1055) }}
+                        >
+                            <ul className="cas-select__items-inner">
+                                {loading ? <><div className="cas-select__items-loader">{loader || <svg height="12px" width="12px" viewBox="0 0 512 512"><g><path fill="inherit" d="M256,0c-23.357,0-42.297,18.932-42.297,42.288c0,23.358,18.94,42.288,42.297,42.288c23.357,0,42.279-18.93,42.279-42.288C298.279,18.932,279.357,0,256,0z" /><path fill="inherit" d="M256,427.424c-23.357,0-42.297,18.931-42.297,42.288C213.703,493.07,232.643,512,256,512c23.357,0,42.279-18.93,42.279-42.288C298.279,446.355,279.357,427.424,256,427.424z" /><path fill="inherit" d="M74.974,74.983c-16.52,16.511-16.52,43.286,0,59.806c16.52,16.52,43.287,16.52,59.806,0c16.52-16.511,16.52-43.286,0-59.806C118.261,58.463,91.494,58.463,74.974,74.983z" /><path fill="inherit" d="M377.203,377.211c-16.503,16.52-16.503,43.296,0,59.815c16.519,16.52,43.304,16.52,59.806,0c16.52-16.51,16.52-43.295,0-59.815C420.489,360.692,393.722,360.7,377.203,377.211z" /><path fill="inherit" d="M84.567,256c0.018-23.348-18.922-42.279-42.279-42.279c-23.357-0.009-42.297,18.932-42.279,42.288c-0.018,23.348,18.904,42.279,42.279,42.279C65.645,298.288,84.567,279.358,84.567,256z" /><path fill="inherit" d="M469.712,213.712c-23.357,0-42.279,18.941-42.297,42.288c0,23.358,18.94,42.288,42.297,42.297c23.357,0,42.297-18.94,42.279-42.297C512.009,232.652,493.069,213.712,469.712,213.712z" /><path fill="inherit" d="M74.991,377.22c-16.519,16.511-16.519,43.296,0,59.806c16.503,16.52,43.27,16.52,59.789,0c16.52-16.519,16.52-43.295,0-59.815C118.278,360.692,91.511,360.692,74.991,377.22z" /><path fill="inherit" d="M437.026,134.798c16.52-16.52,16.52-43.304,0-59.824c-16.519-16.511-43.304-16.52-59.823,0c-16.52,16.52-16.503,43.295,0,59.815C393.722,151.309,420.507,151.309,437.026,134.798z" /></g></svg>}</div></> : null}
+                                {showCloseBtn ? <a href="#" tabIndex={-1} onClick={(e) => {
+                                    e.preventDefault();
+                                    cancel();
+                                }} className="cas-select__close position-absolute top-0 end-0 mt-0 mx-1"><svg width="10px" height="10px" viewBox="0 0 1024 1024"><path fill="#000" d="M195.2 195.2a64 64 0 0 1 90.496 0L512 421.504 738.304 195.2a64 64 0 0 1 90.496 90.496L602.496 512 828.8 738.304a64 64 0 0 1-90.496 90.496L512 602.496 285.696 828.8a64 64 0 0 1-90.496-90.496L421.504 512 195.2 285.696a64 64 0 0 1 0-90.496z" /></svg></a> : null}
 
 
 
-                            {listData.current.map((item: any, level: number) => {
+                                {listData.current.map((item: any, level: number) => {
 
-                                if (item.length > 0) {
-                                    return (
-                                        <li key={level} data-col={level} className="cas-select__items-col">
-                                            <Group
-                                                level={level}
-                                                columnTitle={columnTitleData}
-                                                data={item}
-                                                cleanNodeBtnClassName={cleanNodeBtnClassName}
-                                                cleanNodeBtnContent={cleanNodeBtnContent}
-                                                selectEv={(e, value, index) => handleClickItem(e, value, index, level, listData.current)}
-                                            />
-                                        </li>
-                                    )
-                                } else {
-                                    return null;
-                                }
+                                    if (item.length > 0) {
+                                        return (
+                                            <li key={level} data-col={level} className="cas-select__items-col">
+                                                <Group
+                                                    level={level}
+                                                    columnTitle={columnTitleData}
+                                                    data={item}
+                                                    cleanNodeBtnClassName={cleanNodeBtnClassName}
+                                                    cleanNodeBtnContent={cleanNodeBtnContent}
+                                                    selectEv={(e, value, index, ) => handleClickItem(e, value, index, level, listData.current)}
+                                                />
+                                            </li>
+                                        )
+                                    } else {
+                                        return null;
+                                    }
 
-                            })}
-                        </ul>
+                                })}
+                            </ul>
 
-                    </div>
+                        </div>
+                    </RootPortal>
+
                 ) : null}
 
 

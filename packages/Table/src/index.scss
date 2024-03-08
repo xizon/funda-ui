@@ -10,11 +10,13 @@
     --table-dis-top: 1rem;
     --table-checkbox-indeterminate-color: #bbbbbb;
     --table-row-active-bg: #f0f8ff;
+    --table-radio-svg-btn-color: #919191;
     --table-scrollbar-color: rgba(0, 0, 0, 0.2);
     --table-scrollbar-track: rgba(0, 0, 0, 0);
     --table-scrollbar-h: 3px;
     --table-scrollbar-w: 3px;
 
+    
     
     &.table-responsive {
         overflow-x: auto;
@@ -107,6 +109,17 @@
             }
         } 
 
+        /* radio svg */
+        .radio-svg-btn {
+            
+            svg,
+            path,
+            circle {
+                fill: var(--table-radio-svg-btn-color);
+            }
+            
+        }
+
     }
 
     .drag-trigger {
@@ -116,6 +129,28 @@
         z-index: 3;
         cursor: move;
         opacity: .5;
+    }
+
+
+    /*------ active row  ------*/
+    table tbody {
+        .row-obj {
+            .checkbox-trigger {
+                /* radio svg */
+                .radio-svg--active {
+                    display: none;
+                }
+            }
+
+            &.active {
+                .radio-svg--default {
+                    display: none;
+                }
+                .radio-svg--active {
+                    display: inline-block;
+                }
+            }
+        }
     }
 
 

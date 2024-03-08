@@ -1,5 +1,6 @@
 import React from 'react';
 
+
 import Checkbox from 'funda-checkbox';
 
 import { getChildren } from './utils/dom';
@@ -41,8 +42,6 @@ const TableHeaders = (props: TableHeadersProps) => {
         evSort
     } = props;
     
-
-    sortable
     return data ? (
         <>
             <thead className={headClassName ? headClassName : ''}>
@@ -55,7 +54,7 @@ const TableHeaders = (props: TableHeadersProps) => {
                             key={i} 
                             scope="col" 
                             data-sort-type={item.type} 
-                            data-table-text={item.content.replace(/(<([^>]+)>)/ig, '')} 
+                            data-table-text={typeof item.content === 'string' ? item.content.replace(/(<([^>]+)>)/ig, '') : item.content} 
                             data-table-col={i} 
                             style={item.style ? item.style : (item.width ? ((typeof window !== 'undefined' && window.innerWidth > 768) ? {width: item.width} : {}) : {})} 
                             className={item.className || ''}

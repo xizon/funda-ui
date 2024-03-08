@@ -1,6 +1,6 @@
 import React from 'react';
 
-type GroupFnType = (arg1: any, arg2: any, arg3: number, arg4: any[]) => void;
+type GroupFnType = (arg1: any, arg2: any, arg3: number) => void;
 
 type GroupProps = {
     level: number;
@@ -27,16 +27,18 @@ export default function Group(props: GroupProps) {
             {data.map((item: any, index: number) => {
                 if ( item.id.toString().indexOf('$EMPTY_ID_') < 0 ) {
                     return <div 
-                    key={index} 
-                    data-opt="true"
-                    data-index={index} 
-                    data-id={item.id} 
-                    data-value={JSON.stringify(item)} 
-                    data-level={level}
-                    className={`cas-select__opt ${item.current ? 'active' : ''}`} 
-                    dangerouslySetInnerHTML={{
-                        __html: typeof item.label !== 'undefined' ? item.label : item.name // "item.label" usually uses hierarchical style
-                    }}></div>
+                        key={index} 
+                        data-opt="true"
+                        data-index={index} 
+                        data-id={item.id} 
+                        data-value={JSON.stringify(item)} 
+                        data-level={level}
+                        className={`cas-select__opt ${item.current ? 'active' : ''}`} 
+                        dangerouslySetInnerHTML={{
+                            __html: typeof item.label !== 'undefined' ? item.label : item.name // "item.label" usually uses hierarchical style
+                        }}
+                        onClick={(e) => selectEv?.(e, item, index)} 
+                    ></div>
                 } else {
                     return columnTitle[level] === '' ? null : <h3 
                     key={index} 
@@ -56,6 +58,7 @@ export default function Group(props: GroupProps) {
                                 data-id={item.id} 
                                 data-value={JSON.stringify(item)} 
                                 data-level={level}
+                                onClick={(e) => selectEv?.(e, item, index)} 
                             >
                                 {cleanNodeBtnContent || <svg width="12px" height="12px" viewBox="0 0 16 16"><path fill="inherit" d="M9.41 8l3.29-3.29c.19-.18.3-.43.3-.71a1.003 1.003 0 00-1.71-.71L8 6.59l-3.29-3.3a1.003 1.003 0 00-1.42 1.42L6.59 8 3.3 11.29c-.19.18-.3.43-.3.71a1.003 1.003 0 001.71.71L8 9.41l3.29 3.29c.18.19.43.3.71.3a1.003 1.003 0 00.71-1.71L9.41 8z" fillRule="evenodd"></path></svg>}
                             </a>

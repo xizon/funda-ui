@@ -9,22 +9,34 @@ interface OptionConfig {
 type OptionProps = {
     option?: OptionConfig;
     hyperlinkClassName?: string;
+    selectEv?: (value: any, option: any) => void | undefined;
 };
 
 export default function Option(props: OptionProps) {
     const {
-        option
+        option,
+        hyperlinkClassName,
+        selectEv
     } = props;
 
     const _label = option ? option.label : '';
     const _value = option ? option.value : '';
     const _listItemLabel = option ? (typeof option.listItemLabel === 'undefined' ? undefined : option.listItemLabel) : undefined;
 
+    function handleSelect(e: any) {
+        e.preventDefault();
+
+        const _value = e.currentTarget.dataset.value;
+
+        selectEv?.(_value, option);
+    }
+
+
     return (
         <>
             <li>
                 <a
-                    className={props.hyperlinkClassName}
+                    className={hyperlinkClassName}
                     data-opt="true"
                     data-value={_value}
                     data-label={_label}
@@ -33,6 +45,7 @@ export default function Option(props: OptionProps) {
                     href="#"
                     tabIndex={-1}
                     dangerouslySetInnerHTML={{ __html: typeof _listItemLabel === 'undefined' ? `${_label}` : `${_listItemLabel}` }}
+                    onClick={handleSelect}
                 ></a>
             </li>
         </>

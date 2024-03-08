@@ -9,6 +9,7 @@ import Switch from 'funda-ui/Switch';
 ```
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |
+| `ref` | React.ForwardedRef | - | It is the return element of this component.  |
 | `wrapperClassName` | string | `mb-3 position-relative` | The class name of the control wrapper. |
 | `checked` | boolean | false | Is it selected. |
 | `value` | string | - | **(required)** Set a default value for this control. If unchecked, it will pass an empty value |

@@ -1,13 +1,13 @@
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
-		module.exports = factory(require("react"));
+		module.exports = factory(require("react"), require("react-dom"));
 	else if(typeof define === 'function' && define.amd)
-		define(["react"], factory);
+		define(["react", "react-dom"], factory);
 	else if(typeof exports === 'object')
-		exports["RPB"] = factory(require("react"));
+		exports["RPB"] = factory(require("react"), require("react-dom"));
 	else
-		root["RPB"] = factory(root["React"]);
-})(this, (__WEBPACK_EXTERNAL_MODULE__787__) => {
+		root["RPB"] = factory(root["React"], root["ReactDOM"]);
+})(this, (__WEBPACK_EXTERNAL_MODULE__787__, __WEBPACK_EXTERNAL_MODULE__156__) => {
 return /******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ({
 
@@ -481,11 +481,214 @@ module.exports = {
 
 /***/ }),
 
+/***/ 909:
+/***/ (function(module, exports, __webpack_require__) {
+
+/* module decorator */ module = __webpack_require__.nmd(module);
+var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
+(function webpackUniversalModuleDefinition(root, factory) {
+  if (( false ? 0 : _typeof(exports)) === 'object' && ( false ? 0 : _typeof(module)) === 'object') module.exports = factory(__webpack_require__(787), __webpack_require__(156));else if (true) !(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(787), __webpack_require__(156)], __WEBPACK_AMD_DEFINE_FACTORY__ = (factory),
+		__WEBPACK_AMD_DEFINE_RESULT__ = (typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ?
+		(__WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__)) : __WEBPACK_AMD_DEFINE_FACTORY__),
+		__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));else {}
+})(this, function (__WEBPACK_EXTERNAL_MODULE__787__, __WEBPACK_EXTERNAL_MODULE__156__) {
+  return (/******/function () {
+      // webpackBootstrap
+      /******/
+      "use strict";
+
+      /******/
+      var __webpack_modules__ = {
+        /***/787: /***/function _(module) {
+          module.exports = __WEBPACK_EXTERNAL_MODULE__787__;
+
+          /***/
+        },
+
+        /***/156: /***/function _(module) {
+          module.exports = __WEBPACK_EXTERNAL_MODULE__156__;
+
+          /***/
+        }
+
+        /******/
+      };
+      /************************************************************************/
+      /******/ // The module cache
+      /******/
+      var __webpack_module_cache__ = {};
+      /******/
+      /******/ // The require function
+      /******/
+      function __nested_webpack_require_1708__(moduleId) {
+        /******/ // Check if module is in cache
+        /******/var cachedModule = __webpack_module_cache__[moduleId];
+        /******/
+        if (cachedModule !== undefined) {
+          /******/return cachedModule.exports;
+          /******/
+        }
+        /******/ // Create a new module (and put it into the cache)
+        /******/
+        var module = __webpack_module_cache__[moduleId] = {
+          /******/ // no module.id needed
+          /******/ // no module.loaded needed
+          /******/exports: {}
+          /******/
+        };
+        /******/
+        /******/ // Execute the module function
+        /******/
+        __webpack_modules__[moduleId](module, module.exports, __nested_webpack_require_1708__);
+        /******/
+        /******/ // Return the exports of the module
+        /******/
+        return module.exports;
+        /******/
+      }
+      /******/
+      /************************************************************************/
+      /******/ /* webpack/runtime/compat get default export */
+      /******/
+      (function () {
+        /******/ // getDefaultExport function for compatibility with non-harmony modules
+        /******/__nested_webpack_require_1708__.n = function (module) {
+          /******/var getter = module && module.__esModule ? /******/function () {
+            return module['default'];
+          } : /******/function () {
+            return module;
+          };
+          /******/
+          __nested_webpack_require_1708__.d(getter, {
+            a: getter
+          });
+          /******/
+          return getter;
+          /******/
+        };
+        /******/
+      })();
+      /******/
+      /******/ /* webpack/runtime/define property getters */
+      /******/
+      (function () {
+        /******/ // define getter functions for harmony exports
+        /******/__nested_webpack_require_1708__.d = function (exports, definition) {
+          /******/for (var key in definition) {
+            /******/if (__nested_webpack_require_1708__.o(definition, key) && !__nested_webpack_require_1708__.o(exports, key)) {
+              /******/Object.defineProperty(exports, key, {
+                enumerable: true,
+                get: definition[key]
+              });
+              /******/
+            }
+            /******/
+          }
+          /******/
+        };
+        /******/
+      })();
+      /******/
+      /******/ /* webpack/runtime/hasOwnProperty shorthand */
+      /******/
+      (function () {
+        /******/__nested_webpack_require_1708__.o = function (obj, prop) {
+          return Object.prototype.hasOwnProperty.call(obj, prop);
+        };
+        /******/
+      })();
+      /******/
+      /******/ /* webpack/runtime/make namespace object */
+      /******/
+      (function () {
+        /******/ // define __esModule on exports
+        /******/__nested_webpack_require_1708__.r = function (exports) {
+          /******/if (typeof Symbol !== 'undefined' && Symbol.toStringTag) {
+            /******/Object.defineProperty(exports, Symbol.toStringTag, {
+              value: 'Module'
+            });
+            /******/
+          }
+          /******/
+          Object.defineProperty(exports, '__esModule', {
+            value: true
+          });
+          /******/
+        };
+        /******/
+      })();
+      /******/
+      /************************************************************************/
+      var __webpack_exports__ = {};
+      // This entry need to be wrapped in an IIFE because it need to be isolated against other modules in the chunk.
+      (function () {
+        __nested_webpack_require_1708__.r(__webpack_exports__);
+        /* harmony export */
+        __nested_webpack_require_1708__.d(__webpack_exports__, {
+          /* harmony export */"default": function _default() {
+            return __WEBPACK_DEFAULT_EXPORT__;
+          }
+          /* harmony export */
+        });
+        /* harmony import */
+        var react__WEBPACK_IMPORTED_MODULE_0__ = __nested_webpack_require_1708__(787);
+        /* harmony import */
+        var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__nested_webpack_require_1708__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+        /* harmony import */
+        var react_dom__WEBPACK_IMPORTED_MODULE_1__ = __nested_webpack_require_1708__(156);
+        /* harmony import */
+        var react_dom__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__nested_webpack_require_1708__.n(react_dom__WEBPACK_IMPORTED_MODULE_1__);
+        var RootPortal = function RootPortal(props) {
+          var containerClassName = props.containerClassName,
+            show = props.show,
+            children = props.children;
+          var containerRef = (0, react__WEBPACK_IMPORTED_MODULE_0__.useRef)();
+
+          // Move HTML templates to tag end body </body>
+          // render() don't use "Fragment", in order to avoid error "Failed to execute 'insertBefore' on 'Node'"
+          // prevent "transform", "filter", "perspective" attribute destruction fixed viewport orientation
+          // ###
+          // ###
+          // Use `containerRef.current` to ensure the correctness of the nextjs framework. It may report an error document as undefined
+
+          (0, react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(function () {
+            containerRef.current = document.createElement('div');
+            containerRef.current.className = "root-portal-container ".concat(containerClassName || '');
+            document.body.appendChild(containerRef.current);
+            return function () {
+              if (containerRef.current) {
+                containerRef.current.remove();
+              }
+            };
+          }, []);
+          return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react__WEBPACK_IMPORTED_MODULE_0___default().Fragment, null, containerRef.current && show && /*#__PURE__*/(0, react_dom__WEBPACK_IMPORTED_MODULE_1__.createPortal)(children, containerRef.current));
+        };
+        /* harmony default export */
+        var __WEBPACK_DEFAULT_EXPORT__ = RootPortal;
+      })();
+
+      /******/
+      return __webpack_exports__;
+      /******/
+    }()
+  );
+});
+
+/***/ }),
+
 /***/ 787:
 /***/ ((module) => {
 
 "use strict";
 module.exports = __WEBPACK_EXTERNAL_MODULE__787__;
+
+/***/ }),
+
+/***/ 156:
+/***/ ((module) => {
+
+"use strict";
+module.exports = __WEBPACK_EXTERNAL_MODULE__156__;
 
 /***/ })
 
@@ -503,13 +706,16 @@ module.exports = __WEBPACK_EXTERNAL_MODULE__787__;
 /******/ 		}
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = __webpack_module_cache__[moduleId] = {
-/******/ 			// no module.id needed
-/******/ 			// no module.loaded needed
+/******/ 			id: moduleId,
+/******/ 			loaded: false,
 /******/ 			exports: {}
 /******/ 		};
 /******/ 	
 /******/ 		// Execute the module function
-/******/ 		__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
+/******/ 		__webpack_modules__[moduleId].call(module.exports, module, module.exports, __webpack_require__);
+/******/ 	
+/******/ 		// Flag the module as loaded
+/******/ 		module.loaded = true;
 /******/ 	
 /******/ 		// Return the exports of the module
 /******/ 		return module.exports;
@@ -556,6 +762,15 @@ module.exports = __WEBPACK_EXTERNAL_MODULE__787__;
 /******/ 		};
 /******/ 	})();
 /******/ 	
+/******/ 	/* webpack/runtime/node module decorator */
+/******/ 	(() => {
+/******/ 		__webpack_require__.nmd = (module) => {
+/******/ 			module.paths = [];
+/******/ 			if (!module.children) module.children = [];
+/******/ 			return module;
+/******/ 		};
+/******/ 	})();
+/******/ 	
 /************************************************************************/
 var __webpack_exports__ = {};
 // This entry need to be wrapped in an IIFE because it need to be in strict mode.
@@ -572,6 +787,9 @@ __webpack_require__.d(__webpack_exports__, {
 // EXTERNAL MODULE: external {"root":"React","commonjs2":"react","commonjs":"react","amd":"react"}
 var external_root_React_commonjs2_react_commonjs_react_amd_react_ = __webpack_require__(787);
 var external_root_React_commonjs2_react_commonjs_react_amd_react_default = /*#__PURE__*/__webpack_require__.n(external_root_React_commonjs2_react_commonjs_react_amd_react_);
+// EXTERNAL MODULE: ../RootPortal/dist/cjs/index.js
+var cjs = __webpack_require__(909);
+var cjs_default = /*#__PURE__*/__webpack_require__.n(cjs);
 // EXTERNAL MODULE: ./src/utils/performance.js
 var performance = __webpack_require__(342);
 ;// CONCATENATED MODULE: ./src/utils/useDebounce.js
@@ -906,6 +1124,7 @@ function _objectWithoutPropertiesLoose(source, excluded) { if (source == null) r
 
 
 
+
 //Destroys body scroll locking
 
 
@@ -974,15 +1193,18 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
   var optionsRes = options ? isJSON(options) ? JSON.parse(options) : options : [];
   var windowScrollUpdate = (0,performance.debounce)(handleScrollEvent, 500);
 
+  // keyboard
+  var keyboardSelectedItem = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useRef)(null);
+
   // return a array of options
-  var optionsDataInit = optionsRes;
+  var staticOptionsData = optionsRes;
 
   //
-  var _useState = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)(optionsDataInit),
+  var _useState = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)(staticOptionsData),
     _useState2 = _slicedToArray(_useState, 2),
     orginalData = _useState2[0],
     setOrginalData = _useState2[1];
-  var _useState3 = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)(optionsDataInit),
+  var _useState3 = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)(staticOptionsData),
     _useState4 = _slicedToArray(_useState3, 2),
     optionsData = _useState4[0],
     setOptionsData = _useState4[1];
@@ -1010,7 +1232,11 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
     _useState16 = _slicedToArray(_useState15, 2),
     incomingData = _useState16[0],
     setIncomingData = _useState16[1];
-  var selectedSign = false;
+  var _useState17 = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)(false),
+    _useState18 = _slicedToArray(_useState17, 2),
+    firstDataFeched = _useState18[0],
+    setFirstDataFeched = _useState18[1];
+  var selectedSign = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useRef)(false);
   var MULTI_SEL_VALID = multiSelect ? multiSelect.valid : false;
   var MULTI_SEL_LABEL = multiSelect ? multiSelect.selectAllLabel : 'Select all options';
   var MULTI_SEL_SELECTED_STATUS = {
@@ -1018,13 +1244,13 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
     allItemsLabel: 'All Content',
     noneLabel: 'No items selected'
   };
-  var _useState17 = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)({
+  var _useState19 = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)({
       labels: [],
       values: []
     }),
-    _useState18 = _slicedToArray(_useState17, 2),
-    controlArr = _useState18[0],
-    setControlArr = _useState18[1];
+    _useState20 = _slicedToArray(_useState19, 2),
+    controlArr = _useState20[0],
+    setControlArr = _useState20[1];
   var multiSelControlOptionExist = function multiSelControlOptionExist(arr, val) {
     var _data = arr.filter(Boolean);
     return _data.map(function (v) {
@@ -1066,7 +1292,6 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
         // pop win initalization
         setTimeout(function () {
           popwinPosInit();
-          popwinBtnEventsInit(_filterRes);
           popwinFilterItems(val);
         }, 0);
       });
@@ -1077,7 +1302,6 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
       // pop win initalization
       setTimeout(function () {
         popwinPosInit();
-        popwinBtnEventsInit(_filterRes);
         popwinFilterItems(val);
       }, 0);
     }
@@ -1359,7 +1583,7 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
             // STEP 1: ===========
             // get incoming options from `data-options` of component
             if (typeof incomingOptionsData !== 'undefined') {
-              optionsDataInit = JSON.parse(incomingOptionsData);
+              staticOptionsData = JSON.parse(incomingOptionsData);
 
               // set value if the attribute `data-options` of component exists, only valid for single selection (it may be an empty array)
               if (typeof defaultValue !== 'undefined' && defaultValue !== '') valueInputRef.current.dataset.value = defaultValue;
@@ -1368,8 +1592,8 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
             // STEP 2: ===========
             // Set hierarchical categories ( with sub-categories )
             if (hierarchical) {
-              optionsDataInit = (0,tree.addTreeDepth)(optionsDataInit);
-              (0,tree.addTreeIndent)(optionsDataInit, INDENT_PLACEHOLDER, INDENT_LAST_PLACEHOLDER, 'label');
+              staticOptionsData = (0,tree.addTreeDepth)(staticOptionsData);
+              (0,tree.addTreeIndent)(staticOptionsData, INDENT_PLACEHOLDER, INDENT_LAST_PLACEHOLDER, 'label');
             }
 
             // STEP 3: ===========
@@ -1377,10 +1601,10 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
 
             // If the default value is label, match value
             _filterRes3 = [];
-            _filterResQueryValue = optionsDataInit.filter(function (item) {
+            _filterResQueryValue = staticOptionsData.filter(function (item) {
               return item.value == defaultValue;
             });
-            _filterResQueryLabel = optionsDataInit.filter(function (item) {
+            _filterResQueryLabel = staticOptionsData.filter(function (item) {
               return item.label == defaultValue;
             });
             _filterRes3 = _filterResQueryValue;
@@ -1447,24 +1671,24 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
               adjustMultiControlContainerHeight();
 
               // hide disabled item
-              optionsDataInit = optionsDataInit.filter(function (v) {
+              staticOptionsData = staticOptionsData.filter(function (v) {
                 return typeof v.disabled !== 'undefined' && v.disabled == true ? false : true;
               });
             }
 
             // STEP 5: ===========
             //
-            setOptionsData(optionsDataInit); // data must be initialized
+            setOptionsData(staticOptionsData); // data must be initialized
 
             //
-            setOrginalData(optionsDataInit);
+            setOrginalData(staticOptionsData);
 
             // STEP 6: ===========
             //
-            onFetch === null || onFetch === void 0 ? void 0 : onFetch(selectInputRef.current, valueInputRef.current, defaultValue, optionsDataInit, incomingData);
+            onFetch === null || onFetch === void 0 ? void 0 : onFetch(selectInputRef.current, valueInputRef.current, defaultValue, staticOptionsData, incomingData);
 
             //
-            return _context2.abrupt("return", optionsDataInit);
+            return _context2.abrupt("return", staticOptionsData);
           case 35:
           case "end":
             return _context2.stop();
@@ -1483,7 +1707,7 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
 
       // popwin position update
       var _modalRef = document.querySelector("#mf-select__options-wrapper-".concat(idRes));
-      if (MULTI_SEL_VALID && _modalRef.classList.contains('active')) {
+      if (MULTI_SEL_VALID && _modalRef !== null && _modalRef.classList.contains('active')) {
         popwinPosInit();
       }
     }, 0);
@@ -1633,57 +1857,6 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
       if (_btnSelectAll !== null) _btnSelectAll.classList.remove('hide');
     }
   }
-  function popwinBtnEventsInit(getOptionsData) {
-    if (listContentRef.current === null) return;
-
-    // options event listener
-    // !!! to prevent button mismatch when changing
-    [].slice.call(listContentRef.current.querySelectorAll('.mf-select-multi__control-option-item')).forEach(function (node) {
-      // Solve the problem of missing click events caused by `<MultiFuncSelect />` not updating "data" []
-      if (getOptionsData.length === 0) {
-        if (typeof node.dataset.ev === 'undefined') {
-          node.dataset.ev = 'true';
-
-          // Prevent touch screen from starting to click option, DO NOT USE "pointerdown"
-          node.addEventListener('click', function (e) {
-            handleSelect(e);
-          });
-        }
-      } else {
-        var optVal = node.dataset.value;
-        getOptionsData.forEach(function (item) {
-          if (optVal == item.value) {
-            if (typeof node.dataset.ev === 'undefined') {
-              node.dataset.ev = 'true';
-
-              // Prevent touch screen from starting to click option, DO NOT USE "pointerdown"
-              node.addEventListener('click', function (e) {
-                handleSelect(e);
-              });
-            }
-          }
-        });
-      }
-    });
-
-    // select all button
-    var _btnSelectAll = listContentRef.current.querySelector('.mf-select-multi__control-option-item--select-all > span');
-    if (_btnSelectAll !== null && typeof _btnSelectAll.dataset.ev === 'undefined') {
-      _btnSelectAll.dataset.ev = 'true';
-      _btnSelectAll.addEventListener('pointerdown', function (e) {
-        handleSelectAll(e);
-      });
-    }
-
-    // clean button
-    var _btnClean = listContentRef.current.querySelector('.mf-select-multi__control-option-item--clean > span');
-    if (_btnClean !== null && typeof _btnClean.dataset.ev === 'undefined') {
-      _btnClean.dataset.ev = 'true';
-      _btnClean.addEventListener('pointerdown', function (e) {
-        handleCleanValue(e);
-      });
-    }
-  }
   function popwinFilterItems(val) {
     if (listContentRef.current === null) return;
     [].slice.call(listContentRef.current.querySelectorAll('.mf-select-multi__control-option-item')).forEach(function (node) {
@@ -1779,7 +1952,6 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
     // pop win initalization
     setTimeout(function () {
       popwinPosInit();
-      popwinBtnEventsInit(orginalData);
     }, 0);
 
     // make sure the event handler is registered
@@ -1787,7 +1959,6 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
       setTimeout(function () {
         // no data label
         popwinNoMatchInit();
-        popwinBtnEventsInit(orginalData);
       }, 500);
     }
     if (LIVE_SEARCH_OK) {
@@ -2134,12 +2305,12 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
       // Appropriate multi-item container height
       adjustMultiControlContainerHeight();
     };
-    if (selectedSign) {
+    if (selectedSign.current) {
       updateOptionCheckboxes('remove');
     } else {
       updateOptionCheckboxes('add');
     }
-    selectedSign = !selectedSign;
+    selectedSign.current = !selectedSign.current;
   }
   function handleCleanValue(event) {
     event.preventDefault();
@@ -2295,11 +2466,9 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
     return new Promise(function (resolve) {
       // Determine the "active" class name to avoid listening to other unused components of the same type
       if (listRef.current === null || !rootRef.current.classList.contains('active')) return;
-      var options = [].slice.call(listRef.current.querySelectorAll('.list-group-item:not(.hide)'));
+
       // Avoid selecting options that are disabled
-      options = options.filter(function (options) {
-        return !options.classList.contains('disabled');
-      });
+      var options = [].slice.call(listRef.current.querySelectorAll('.list-group-item:not(.hide):not(.mf-select-multi__control-option-item--select-all):not(.mf-select-multi__control-option-item--clean)'));
       var currentIndex = options.findIndex(function (e) {
         return e === listRef.current.querySelector('.list-group-item.active');
       });
@@ -2321,20 +2490,13 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
         var targetOption = options[nextIndex];
         if (typeof targetOption !== 'undefined' && !targetOption.classList.contains('no-match')) {
           targetOption.classList.add('active');
+          keyboardSelectedItem.current = targetOption;
           resolve(targetOption);
         }
       }
     });
   }
   (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useEffect)(function () {
-    // Move HTML templates to tag end body </body>
-    // render() don't use "Fragment", in order to avoid error "Failed to execute 'insertBefore' on 'Node'"
-    // prevent "transform", "filter", "perspective" attribute destruction fixed viewport orientation
-    //--------------
-    if (document.body !== null && listRef.current !== null) {
-      document.body.appendChild(listRef.current);
-    }
-
     // Call a function when the component has been rendered completely
     //--------------
     onLoad === null || onLoad === void 0 ? void 0 : onLoad(selectInputRef.current, valueInputRef.current, value);
@@ -2355,13 +2517,13 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
     //--------------
     var listener = /*#__PURE__*/function () {
       var _ref = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee(event) {
-        var res, currentData, currentControlValueArr, currentControlLabelArr, _options;
+        var res, currentData, currentControlValueArr, currentControlLabelArr, htmlOptions;
         return _regeneratorRuntime().wrap(function _callee$(_context) {
           while (1) switch (_context.prev = _context.next) {
             case 0:
               res = null;
               if (!(event.code === "Enter" || event.code === "NumpadEnter")) {
-                _context.next = 10;
+                _context.next = 12;
                 break;
               }
               if (!(listRef.current === null || !rootRef.current.classList.contains('active'))) {
@@ -2370,20 +2532,28 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
               }
               return _context.abrupt("return");
             case 4:
-              if (!(listRef.current !== null)) {
-                _context.next = 9;
+              if (!(keyboardSelectedItem.current !== null && keyboardSelectedItem.current.classList.contains('disabled'))) {
+                _context.next = 6;
                 break;
               }
-              _context.next = 7;
+              return _context.abrupt("return");
+            case 6:
+              if (!(listRef.current !== null)) {
+                _context.next = 11;
+                break;
+              }
+              _context.next = 9;
               return listRef.current.dataset.data;
-            case 7:
+            case 9:
               currentData = _context.sent;
               if (typeof currentData !== 'undefined') {
                 currentControlValueArr = [];
                 currentControlLabelArr = [];
-                _options = [].slice.call(listRef.current.querySelectorAll('.list-group-item:not(.hide):not(.no-match)'));
-                _options.forEach(function (node) {
+                htmlOptions = [].slice.call(listRef.current.querySelectorAll('.list-group-item:not(.hide):not(.no-match)'));
+                htmlOptions.forEach(function (node) {
                   node.classList.remove('active');
+
+                  // multiple options
                   if (node.classList.contains('item-selected')) {
                     currentControlValueArr.push(node.dataset.value);
                     currentControlLabelArr.push(node.dataset.label);
@@ -2416,32 +2586,32 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
                   selectInputRef.current.blur();
                 }
               }
-            case 9:
+            case 11:
               return _context.abrupt("return");
-            case 10:
+            case 12:
               _context.t0 = event.code;
-              _context.next = _context.t0 === "ArrowLeft" ? 13 : _context.t0 === "ArrowRight" ? 14 : _context.t0 === "ArrowUp" ? 15 : _context.t0 === "ArrowDown" ? 19 : 23;
+              _context.next = _context.t0 === "ArrowLeft" ? 15 : _context.t0 === "ArrowRight" ? 16 : _context.t0 === "ArrowUp" ? 17 : _context.t0 === "ArrowDown" ? 21 : 25;
               break;
-            case 13:
-              return _context.abrupt("break", 23);
-            case 14:
-              return _context.abrupt("break", 23);
             case 15:
-              _context.next = 17;
-              return optionFocus('decrease');
+              return _context.abrupt("break", 25);
+            case 16:
+              return _context.abrupt("break", 25);
             case 17:
-              res = _context.sent;
-              return _context.abrupt("break", 23);
+              _context.next = 19;
+              return optionFocus('decrease');
             case 19:
-              _context.next = 21;
-              return optionFocus('increase');
-            case 21:
               res = _context.sent;
-              return _context.abrupt("break", 23);
+              return _context.abrupt("break", 25);
+            case 21:
+              _context.next = 23;
+              return optionFocus('increase');
             case 23:
+              res = _context.sent;
+              return _context.abrupt("break", 25);
+            case 25:
               // temporary data
               if (res !== null) listRef.current.dataset.data = res.dataset.itemdata;
-            case 24:
+            case 26:
             case "end":
               return _context.stop();
           }
@@ -2468,26 +2638,25 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
     // windowScrollUpdate();
 
     return function () {
-      var _document$querySelect;
       if (LOCK_BODY_SCROLL) clearAllBodyScrollLocks();
       document.removeEventListener("keydown", listener);
       document.removeEventListener('pointerdown', handleClose);
       window.removeEventListener('scroll', windowScrollUpdate);
       window.removeEventListener('touchmove', windowScrollUpdate);
-
-      //
-      (_document$querySelect = document.querySelector("#mf-select__options-wrapper-".concat(idRes))) === null || _document$querySelect === void 0 ? void 0 : _document$querySelect.remove();
     };
   }, [value, options, data]);
   return /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, label ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
     className: "mf-select__label"
-  }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("label", {
+  }, typeof label === 'string' ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("label", {
     htmlFor: "label-".concat(idRes),
     className: "form-label",
     dangerouslySetInnerHTML: {
       __html: "".concat(label)
     }
-  }))) : null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
+  }) : /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("label", {
+    htmlFor: "label-".concat(idRes),
+    className: "form-label"
+  }, label))) : null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
     "data-overlay-id": "mf-select__options-wrapper-".concat(idRes),
     id: "mf-select__wrapper-".concat(idRes),
     className: "mf-select__wrapper ".concat(wrapperClassName || wrapperClassName === '' ? wrapperClassName : 'mb-3 position-relative', " ").concat(MULTI_SEL_VALID ? 'multiple-selection' : '', " ").concat(isOpen ? 'active focus' : ''),
@@ -2594,7 +2763,6 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
         // pop win initalization
         setTimeout(function () {
           popwinPosInit();
-          popwinBtnEventsInit(response);
           popwinFilterItems(controlTempValue);
         }, 0);
       });
@@ -2671,7 +2839,6 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
         // pop win initalization
         setTimeout(function () {
           popwinPosInit();
-          popwinBtnEventsInit(response);
           popwinFilterItems(controlTempValue);
         }, 0);
       });
@@ -2684,7 +2851,10 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
   }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("path", {
     d: "M12.027 9.92L16 13.95 14 16l-4.075-3.976A6.465 6.465 0 0 1 6.5 13C2.91 13 0 10.083 0 6.5 0 2.91 2.917 0 6.5 0 10.09 0 13 2.917 13 6.5a6.463 6.463 0 0 1-.973 3.42zM1.997 6.452c0 2.48 2.014 4.5 4.5 4.5 2.48 0 4.5-2.015 4.5-4.5 0-2.48-2.015-4.5-4.5-4.5-2.48 0-4.5 2.014-4.5 4.5z",
     fillRule: "evenodd"
-  }))))) : null) : null, optionsData && !hasErr ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
+  }))))) : null) : null, optionsData && !hasErr ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((cjs_default()), {
+    show: true,
+    containerClassName: "MultiFuncSelect"
+  }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
     ref: listRef,
     id: "mf-select__options-wrapper-".concat(idRes),
     className: "mf-select__options-wrapper list-group position-absolute border shadow small ".concat(winWidth ? '' : ''),
@@ -2703,7 +2873,7 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
     className: "mf-select__options-contentlist-inner"
   }, MULTI_SEL_VALID ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("span", {
     tabIndex: -1,
-    className: "list-group-item list-group-item-action border-start-0 border-end-0 text-secondary bg-light mf-select-multi__control-option-item--select-all",
+    className: "list-group-item list-group-item-action border-start-0 border-end-0 text-secondary bg-light mf-select-multi__control-option-item--select-all position-sticky top-0 z-3",
     role: "tab",
     style: {
       display: multiSelect !== null && multiSelect !== void 0 && multiSelect.selectAll ? 'block' : 'none'
@@ -2713,17 +2883,19 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
     className: "btn btn-secondary",
     dangerouslySetInnerHTML: {
       __html: "".concat(MULTI_SEL_LABEL)
-    }
+    },
+    onClick: handleSelectAll
   }))) : null, !MULTI_SEL_VALID ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, CLEAN_TRIGGER_VALID ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("span", {
     tabIndex: -1,
-    className: "list-group-item list-group-item-action border-start-0 border-end-0 text-secondary bg-light mf-select-multi__control-option-item--clean",
+    className: "list-group-item list-group-item-action border-start-0 border-end-0 text-secondary bg-light mf-select-multi__control-option-item--clean position-sticky top-0 z-3",
     role: "tab"
   }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("span", {
     tabIndex: -1,
     className: "btn btn-secondary",
     dangerouslySetInnerHTML: {
       __html: "".concat(CLEAN_TRIGGER_LABEL)
-    }
+    },
+    onClick: handleCleanValue
   }))) : null) : null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("button", {
     tabIndex: -1,
     type: "button",
@@ -2774,7 +2946,8 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
         role: "tab",
         dangerouslySetInnerHTML: {
           __html: typeof item.listItemLabel === 'undefined' ? item.label : item.listItemLabel
-        }
+        },
+        onClick: handleSelect
       });
     } else {
       // ++++++++++++++++++++
@@ -2793,7 +2966,8 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
         "data-querystring": "".concat(typeof item.queryString === 'undefined' ? '' : item.queryString),
         "data-list-item-label": "".concat(typeof item.listItemLabel === 'undefined' ? '' : item.listItemLabel),
         "data-itemdata": JSON.stringify(item),
-        role: "tab"
+        role: "tab",
+        onClick: handleSelect
       }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("var", {
         className: "me-1 mf-select-multi__control-option-checkbox-selected ".concat(itemSelected ? '' : 'd-none')
       }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("svg", {
@@ -2818,7 +2992,7 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
         }
       }));
     }
-  }) : null)))) : null));
+  }) : null))))) : null));
 });
 /* harmony default export */ const src = (MultiFuncSelect);
 })();

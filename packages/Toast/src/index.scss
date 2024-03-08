@@ -89,11 +89,13 @@
 
     .toast-container {
         margin-bottom: var(--toasts-container-gap);
-        
+
+
         &.auto-anim-switch--initfirst {
             transform: translateY(-20px);
             opacity: 0;
         }
+        
         &.auto-anim-switch--first {
             animation-name: toast-anim-show-first;
             animation-duration: .3s;
@@ -102,6 +104,7 @@
             animation-iteration-count: 1;
             animation-fill-mode: forwards;
         }
+        
 
         &.auto-anim-switch:not(.only-one) {
             animation-name: toast-anim-hide;

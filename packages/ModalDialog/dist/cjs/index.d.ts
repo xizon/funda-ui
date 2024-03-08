@@ -10,6 +10,10 @@ declare global {
         setCloseModalDialog?: any;
     }
 }
+interface ModalDialogRef {
+    open: () => void;
+    close: () => void;
+}
 declare type ModalDialogProps = {
     /** Extended class name */
     modalContentClassName?: string;
@@ -20,8 +24,6 @@ declare type ModalDialogProps = {
     modalFooterExpandedContentClassName?: string;
     /** Whether the modal dialog is visible or not, you can use it with the `autoClose` property at the same time */
     show: boolean;
-    /** Prevent "transform", "filter", "perspective" attribute destruction fixed viewport orientation. Enabled by default, after enabling the default JS event will be invalid, you need to use the `onOpen` attribute to add some new events to elements. Please refer to the example. */
-    protectFixedViewport?: boolean;
     /** Custom modal max-width whick need a unit string. */
     maxWidth?: number | string | Function;
     /** Custom modal max-height whick need a unit string. */
@@ -65,5 +67,5 @@ declare type ModalDialogProps = {
     onClose?: (e: any) => void;
     onSubmit?: (e: any, callback: any, incomingData: string | null | undefined) => void;
 };
-declare const ModalDialog: (props: ModalDialogProps) => JSX.Element;
+declare const ModalDialog: React.ForwardRefExoticComponent<ModalDialogProps & React.RefAttributes<ModalDialogRef>>;
 export default ModalDialog;

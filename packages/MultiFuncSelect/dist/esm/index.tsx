@@ -1,5 +1,8 @@
 import React, { useId, useEffect, useState, useRef, forwardRef, ButtonHTMLAttributes } from 'react';
 
+import RootPortal from 'funda-root-portal';
+
+
 import { debounce } from './utils/performance';
 import useDebounce from './utils/useDebounce';
 
@@ -181,27 +184,31 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
     const valueInputRef = useRef<any>(null);
     const listRef = useRef<any>(null);
     const listContentRef = useRef<any>(null);
-    const optionsRes = options ? isJSON(options) ? JSON.parse(options as string) : options : [];
+    const optionsRes = options ? (isJSON(options) ? JSON.parse(options as string) : options) : [];
     const windowScrollUpdate = debounce(handleScrollEvent, 500);
 
 
+    // keyboard
+    const keyboardSelectedItem = useRef<any>(null);
+
 
     // return a array of options
-    let optionsDataInit: OptionConfig[] = optionsRes;
+    let staticOptionsData: OptionConfig[] = optionsRes;
 
     //
-    const [orginalData, setOrginalData] = useState<OptionConfig[]>(optionsDataInit);
-    const [optionsData, setOptionsData] = useState<OptionConfig[]>(optionsDataInit);
+    const [orginalData, setOrginalData] = useState<OptionConfig[]>(staticOptionsData);
+    const [optionsData, setOptionsData] = useState<OptionConfig[]>(staticOptionsData);
     const [hasErr, setHasErr] = useState<boolean>(false);
     const [controlLabel, setControlLabel] = useState<string | undefined>('');
     const [controlValue, setControlValue] = useState<string | undefined>('');
     const [controlTempValue, setControlTempValue] = useState<string | null>(null);
     const [isOpen, setIsOpen] = useState<boolean>(false);
     const [incomingData, setIncomingData] = useState<string | null | undefined>(null);
+    const [firstDataFeched, setFirstDataFeched] = useState<boolean>(false);
 
 
 
-    let selectedSign: boolean = false;
+    const selectedSign = useRef<boolean>(false);
     const MULTI_SEL_VALID = multiSelect ? multiSelect.valid : false;
     const MULTI_SEL_LABEL = multiSelect ? multiSelect.selectAllLabel : 'Select all options';
     const MULTI_SEL_SELECTED_STATUS: Record<string, string> = {
@@ -220,7 +227,6 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
         const _data = arr.filter(Boolean);
         return _data.map((v: any) => v.toString()).includes(val.toString());
     };
-    
 
     // clean trigger
     const CLEAN_TRIGGER_VALID = typeof cleanTrigger === 'undefined' ? false : (cleanTrigger ? cleanTrigger.valid : false);
@@ -268,7 +274,6 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
                 // pop win initalization
                 setTimeout(() => {
                     popwinPosInit();
-                    popwinBtnEventsInit(_filterRes);
                     popwinFilterItems(val);
                 }, 0);
             });
@@ -279,7 +284,6 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
             // pop win initalization
             setTimeout(() => {
                 popwinPosInit();
-                popwinBtnEventsInit(_filterRes);
                 popwinFilterItems(val);
             }, 0);
 
@@ -427,11 +431,13 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
         // Determine whether the default value is user query input or default input
         const defaultValue = init ? inputDefaultValue : '';
 
+
         if (typeof fetchFuncAsync === 'object') {
 
-
+         
             const response: any = await fetchFuncAsync[`${fetchFuncMethod}`](...params.split(','));
             let _ORGIN_DATA = response.data;
+
 
             // reset data structure
             if (typeof (fetchCallback) === 'function') {
@@ -537,6 +543,8 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
 
                     //
                     const _values: string[] = VALUE_BY_BRACKETS ? extractContentsOfBrackets(defaultValue) : defaultValue.split(',');
+
+
                     _values.forEach((_value: string, _index: number) => {
 
                         if (!multiSelControlOptionExist(_currentData.values, _value) && typeof _currentData.values[_index] !== 'undefined') {
@@ -568,9 +576,6 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
                 // hide disabled item
                 _ORGIN_DATA = _ORGIN_DATA.filter((v: any) => typeof v.disabled !== 'undefined' && v.disabled == true ? false : true);
 
-                
-
-
             }
 
 
@@ -597,7 +602,7 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
             // STEP 1: ===========
             // get incoming options from `data-options` of component
             if (typeof incomingOptionsData !== 'undefined') {
-                optionsDataInit = JSON.parse(incomingOptionsData);
+                staticOptionsData = JSON.parse(incomingOptionsData);
 
                 // set value if the attribute `data-options` of component exists, only valid for single selection (it may be an empty array)
                 if (typeof defaultValue !== 'undefined' && defaultValue !== '') valueInputRef.current.dataset.value = defaultValue;
@@ -608,10 +613,11 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
             // STEP 2: ===========
             // Set hierarchical categories ( with sub-categories )
             if (hierarchical) {
-                optionsDataInit = addTreeDepth(optionsDataInit);
-                addTreeIndent(optionsDataInit, INDENT_PLACEHOLDER, INDENT_LAST_PLACEHOLDER, 'label');
+                staticOptionsData = addTreeDepth(staticOptionsData);
+                addTreeIndent(staticOptionsData, INDENT_PLACEHOLDER, INDENT_LAST_PLACEHOLDER, 'label');
             }
 
+            
 
 
             // STEP 3: ===========
@@ -619,8 +625,8 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
 
             // If the default value is label, match value
             let filterRes: any = [];
-            const filterResQueryValue = optionsDataInit.filter((item: any) => item.value == defaultValue);
-            const filterResQueryLabel = optionsDataInit.filter((item: any) => item.label == defaultValue);
+            const filterResQueryValue = staticOptionsData.filter((item: any) => item.value == defaultValue);
+            const filterResQueryLabel = staticOptionsData.filter((item: any) => item.label == defaultValue);
 
             filterRes = filterResQueryValue;
             if (filterResQueryValue.length === 0) filterRes = filterResQueryLabel;
@@ -696,25 +702,25 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
 
 
                 // hide disabled item
-                optionsDataInit = optionsDataInit.filter((v: any) => typeof v.disabled !== 'undefined' && v.disabled == true ? false : true);
+                staticOptionsData = staticOptionsData.filter((v: any) => typeof v.disabled !== 'undefined' && v.disabled == true ? false : true);
 
             }
 
-
+    
             // STEP 5: ===========
             //
-            setOptionsData(optionsDataInit); // data must be initialized
+            setOptionsData(staticOptionsData); // data must be initialized
 
             //
-            setOrginalData(optionsDataInit);
+            setOrginalData(staticOptionsData);
 
             // STEP 6: ===========
             //
-            onFetch?.(selectInputRef.current, valueInputRef.current, defaultValue, optionsDataInit, incomingData);
+            onFetch?.(selectInputRef.current, valueInputRef.current, defaultValue, staticOptionsData, incomingData);
 
 
             //
-            return optionsDataInit;
+            return staticOptionsData;
         }
 
 
@@ -724,6 +730,7 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
 
     function adjustMultiControlContainerHeight() {
         setTimeout(() => {
+           
             // Sometimes you may get 0, you need to judge
             if (rootMultiRef.current.clientHeight > 0) {
                 rootSingleRef.current.style.height = rootMultiRef.current.clientHeight + 'px';
@@ -732,7 +739,7 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
 
             // popwin position update
             const _modalRef: any = document.querySelector(`#mf-select__options-wrapper-${idRes}`);
-            if (MULTI_SEL_VALID && _modalRef.classList.contains('active')) {
+            if (MULTI_SEL_VALID && _modalRef !== null && _modalRef.classList.contains('active')) {
                 popwinPosInit();
             }
             
@@ -929,77 +936,6 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
     }
 
 
-    function popwinBtnEventsInit(getOptionsData: any[]) {
-        if (listContentRef.current === null) return;
-
-
-        // options event listener
-        // !!! to prevent button mismatch when changing
-        [].slice.call(listContentRef.current.querySelectorAll('.mf-select-multi__control-option-item')).forEach((node: HTMLElement) => {
-
-            // Solve the problem of missing click events caused by `<MultiFuncSelect />` not updating "data" []
-            if (getOptionsData.length === 0) {
-
-                if (typeof node.dataset.ev === 'undefined') {
-                    node.dataset.ev = 'true';
-
-                    // Prevent touch screen from starting to click option, DO NOT USE "pointerdown"
-                    node.addEventListener('click', (e: any) => {
-                        handleSelect(e);
-                    });
-                }
-
-            } else {
-                const optVal = node.dataset.value;
-                getOptionsData.forEach((item: any) => {
-                    if (optVal == item.value) {
-
-                        if (typeof node.dataset.ev === 'undefined') {
-                            node.dataset.ev = 'true';
-
-                            // Prevent touch screen from starting to click option, DO NOT USE "pointerdown"
-                            node.addEventListener('click', (e: any) => {
-                                handleSelect(e);
-                            });
-                            
-                        }
-                    }
-                });
-            }
-
-
-
-
-        });
-
-
-        // select all button
-        const _btnSelectAll = listContentRef.current.querySelector('.mf-select-multi__control-option-item--select-all > span');
-        if (_btnSelectAll !== null && typeof _btnSelectAll.dataset.ev === 'undefined') {
-            _btnSelectAll.dataset.ev = 'true';
-            _btnSelectAll.addEventListener('pointerdown', (e: any) => {
-                handleSelectAll(e);
-            });
-
-        }
-
-
-        // clean button
-        const _btnClean = listContentRef.current.querySelector('.mf-select-multi__control-option-item--clean > span');
-        if (_btnClean !== null && typeof _btnClean.dataset.ev === 'undefined') {
-            _btnClean.dataset.ev = 'true';
-            _btnClean.addEventListener('pointerdown', (e: any) => {
-                handleCleanValue(e);
-            });
-
-        }
-
-        
-
-    }
-
-
-
     function popwinFilterItems(val: any) {
         if (listContentRef.current === null) return;
 
@@ -1129,7 +1065,6 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
         // pop win initalization
         setTimeout(() => {
             popwinPosInit();
-            popwinBtnEventsInit(orginalData);
         }, 0);
 
         // make sure the event handler is registered
@@ -1137,7 +1072,6 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
             setTimeout(() => {
                 // no data label
                 popwinNoMatchInit();
-                popwinBtnEventsInit(orginalData);
             }, 500);
     
         }
@@ -1526,13 +1460,13 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
         };
 
 
-        if (selectedSign) {
+        if (selectedSign.current) {
             updateOptionCheckboxes('remove');
         } else {
             updateOptionCheckboxes('add');
         }
 
-        selectedSign = !selectedSign;
+        selectedSign.current = !selectedSign.current;
 
 
 
@@ -1715,10 +1649,8 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
             if (listRef.current === null || !rootRef.current.classList.contains('active')) return;
 
 
-            let options = [].slice.call(listRef.current.querySelectorAll('.list-group-item:not(.hide)'));
             // Avoid selecting options that are disabled
-            options = options.filter((options: HTMLElement) => !options.classList.contains('disabled'));
-
+            const options = [].slice.call(listRef.current.querySelectorAll('.list-group-item:not(.hide):not(.mf-select-multi__control-option-item--select-all):not(.mf-select-multi__control-option-item--clean)'));
             const currentIndex = options.findIndex((e) => e === listRef.current.querySelector('.list-group-item.active'));
             
      
@@ -1744,6 +1676,8 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
                 const targetOption = options[nextIndex] as HTMLElement;
                 if (typeof targetOption !== 'undefined' && !targetOption.classList.contains('no-match')) {
                     targetOption.classList.add('active');
+
+                    keyboardSelectedItem.current = targetOption;
                     resolve(targetOption);
                 }
 
@@ -1757,16 +1691,7 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
 
 
     useEffect(() => {
-
-
-        // Move HTML templates to tag end body </body>
-        // render() don't use "Fragment", in order to avoid error "Failed to execute 'insertBefore' on 'Node'"
-        // prevent "transform", "filter", "perspective" attribute destruction fixed viewport orientation
-        //--------------
-        if (document.body !== null && listRef.current !== null) {
-            document.body.appendChild(listRef.current);
-        }
-
+        
 
         // Call a function when the component has been rendered completely
         //--------------
@@ -1777,11 +1702,13 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
         //--------------
         setIncomingData(data);
 
+
         // data init
         //--------------
         const _oparams: any[] = fetchFuncMethodParams || [];
         const _params: any[] = _oparams.map((item: any) => item !== '$QUERY_STRING' ? item : (fetchTrigger ? '------' : ''));
         fetchData((_params).join(','), value);
+
 
 
         // keyboard listener
@@ -1795,19 +1722,24 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
                 // Determine the "active" class name to avoid listening to other unused components of the same type
                 if (listRef.current === null || !rootRef.current.classList.contains('active')) return;
 
+                // Avoid selecting options that are disabled
+                if (keyboardSelectedItem.current !== null && keyboardSelectedItem.current.classList.contains('disabled')) return;
+               
 
                 if (listRef.current !== null) {
                     const currentData = await listRef.current.dataset.data;
                     if (typeof currentData !== 'undefined') {
 
+                     
                         const currentControlValueArr: any[] = [];
                         const currentControlLabelArr: any[] = [];
 
-                        const options = [].slice.call(listRef.current.querySelectorAll('.list-group-item:not(.hide):not(.no-match)'));
+                        const htmlOptions = [].slice.call(listRef.current.querySelectorAll('.list-group-item:not(.hide):not(.no-match)'));
 
-                        options.forEach((node: any) => {
+                        htmlOptions.forEach((node: any) => {
                             node.classList.remove('active');
-                        
+          
+                            // multiple options
                             if (node.classList.contains('item-selected')) {
                                 currentControlValueArr.push(node.dataset.value);
                                 currentControlLabelArr.push(node.dataset.label);
@@ -1902,11 +1834,6 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
             window.removeEventListener('scroll', windowScrollUpdate);
             window.removeEventListener('touchmove', windowScrollUpdate);
 
-         
-            //
-            document.querySelector(`#mf-select__options-wrapper-${idRes}`)?.remove();
-
-
         }
 
     }, [value, options, data]);
@@ -1915,7 +1842,7 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
     return (
         <>
 
-            {label ? <><div className="mf-select__label"><label htmlFor={`label-${idRes}`} className="form-label" dangerouslySetInnerHTML={{ __html: `${label}` }}></label></div></> : null}
+            {label ? <><div className="mf-select__label">{typeof label === 'string' ? <label htmlFor={`label-${idRes}`} className="form-label" dangerouslySetInnerHTML={{ __html: `${label}` }}></label> : <label htmlFor={`label-${idRes}`} className="form-label">{label}</label>}</div></> : null}
 
             <div 
                 data-overlay-id={`mf-select__options-wrapper-${idRes}`}
@@ -2033,7 +1960,6 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
                                     // pop win initalization
                                     setTimeout(() => {
                                         popwinPosInit();
-                                        popwinBtnEventsInit(response);
                                         popwinFilterItems(controlTempValue);
                                     }, 0);
                                 });
@@ -2131,7 +2057,6 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
                                     // pop win initalization
                                     setTimeout(() => {
                                         popwinPosInit();
-                                        popwinBtnEventsInit(response);
                                         popwinFilterItems(controlTempValue);
                                     }, 0);
                                 });
@@ -2152,154 +2077,179 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
 
 
                 {optionsData && !hasErr ? <>
-                    <div
-                        ref={listRef}
-                        id={`mf-select__options-wrapper-${idRes}`}
-                        className={`mf-select__options-wrapper list-group position-absolute border shadow small ${winWidth ? '' : ''}`}
-                        style={{ zIndex: (depth ? depth : 1055), width: WIN_WIDTH }}
-                        role="tablist"
-                    >
+                    <RootPortal show={true} containerClassName="MultiFuncSelect">
 
-                        <div 
-                            className="mf-select__options-contentlist rounded" 
-                            style={{ backgroundColor: 'var(--bs-list-group-bg)' }} 
-                            ref={listContentRef}
+                        <div
+                            ref={listRef}
+                            id={`mf-select__options-wrapper-${idRes}`}
+                            className={`mf-select__options-wrapper list-group position-absolute border shadow small ${winWidth ? '' : ''}`}
+                            style={{ zIndex: (depth ? depth : 1055), width: WIN_WIDTH }}
+                            role="tablist"
                         >
-                            <div className="mf-select__options-contentlist-inner">
 
-                                {/* SELECT ALL BUTTON */}
-                                {MULTI_SEL_VALID ? <>
-                                    <span tabIndex={-1} className="list-group-item list-group-item-action border-start-0 border-end-0 text-secondary bg-light mf-select-multi__control-option-item--select-all" role="tab" style={{ display: multiSelect?.selectAll ? 'block' : 'none' }}>
-                                        <span tabIndex={-1} className="btn btn-secondary" dangerouslySetInnerHTML={{
-                                            __html: `${MULTI_SEL_LABEL}`
-                                        }}></span>
-                                    </span>
-                                </> : null}
-                                {/* /SELECT ALL BUTTON */}
+                            <div
+                                className="mf-select__options-contentlist rounded"
+                                style={{ backgroundColor: 'var(--bs-list-group-bg)' }}
+                                ref={listContentRef}
+                            >
+                                <div className="mf-select__options-contentlist-inner">
 
-
-
-                                {/* CLEAN BUTTON (Only Single selection) */}
-                                {!MULTI_SEL_VALID ? <>
-                                    {CLEAN_TRIGGER_VALID ? <>
-                                        <span tabIndex={-1} className="list-group-item list-group-item-action border-start-0 border-end-0 text-secondary bg-light mf-select-multi__control-option-item--clean" role="tab" >
-                                            <span tabIndex={-1} className="btn btn-secondary" dangerouslySetInnerHTML={{
-                                                __html: `${CLEAN_TRIGGER_LABEL}`
-                                            }}></span>
+                                    {/* SELECT ALL BUTTON */}
+                                    {MULTI_SEL_VALID ? <>
+                                        <span
+                                            tabIndex={-1}
+                                            className="list-group-item list-group-item-action border-start-0 border-end-0 text-secondary bg-light mf-select-multi__control-option-item--select-all position-sticky top-0 z-3"
+                                            role="tab"
+                                            style={{ display: multiSelect?.selectAll ? 'block' : 'none' }}
+                                        >
+                                            <span
+                                                tabIndex={-1}
+                                                className="btn btn-secondary"
+                                                dangerouslySetInnerHTML={{
+                                                    __html: `${MULTI_SEL_LABEL}`
+                                                }}
+                                                onClick={handleSelectAll}
+                                            ></span>
                                         </span>
                                     </> : null}
-                                </> : null}
-                                {/* /CLEAN BUTTON (Only Single selection) */}
+                                    {/* /SELECT ALL BUTTON */}
 
 
-                                {/* NO MATCH */}
-                                <button tabIndex={-1} type="button" className="list-group-item list-group-item-action no-match border-0 mf-select-multi__control-option-item--nomatch hide" disabled>{fetchNoneInfo || 'No match yet'}</button>
-                                {/* /NO MATCH */}
+
+                                    {/* CLEAN BUTTON (Only Single selection) */}
+                                    {!MULTI_SEL_VALID ? <>
+                                        {CLEAN_TRIGGER_VALID ? <>
+                                            <span
+                                                tabIndex={-1}
+                                                className="list-group-item list-group-item-action border-start-0 border-end-0 text-secondary bg-light mf-select-multi__control-option-item--clean position-sticky top-0 z-3"
+                                                role="tab"
+                                            >
+                                                <span
+                                                    tabIndex={-1}
+                                                    className="btn btn-secondary"
+                                                    dangerouslySetInnerHTML={{
+                                                        __html: `${CLEAN_TRIGGER_LABEL}`
+                                                    }}
+                                                    onClick={handleCleanValue}
+                                                ></span>
+                                            </span>
+                                        </> : null}
+                                    </> : null}
+                                    {/* /CLEAN BUTTON (Only Single selection) */}
 
 
-                                {/* OPTIONS LIST */}
-                                {optionsData ? optionsData.map((item, index) => {
-                                    const startItemBorder = index === 0 ? 'border-top-0' : '';
-                                    const endItemBorder = index === optionsData.length - 1 ? 'border-bottom-0' : '';
+                                    {/* NO MATCH */}
+                                    <button tabIndex={-1} type="button" className="list-group-item list-group-item-action no-match border-0 mf-select-multi__control-option-item--nomatch hide" disabled>{fetchNoneInfo || 'No match yet'}</button>
+                                    {/* /NO MATCH */}
 
 
-                                    // disable selected options (only single selection)
-                                    let disabledCurrentOption: boolean = false;
-                                    if (
-                                        (typeof controlValue !== 'undefined' && controlValue !== null && controlValue !== '') &&
-                                        (typeof item.value !== 'undefined' && item.value !== null && item.value !== '')
-                                    ) {
+                                    {/* OPTIONS LIST */}
+                                    {optionsData ? optionsData.map((item, index) => {
+                                        const startItemBorder = index === 0 ? 'border-top-0' : '';
+                                        const endItemBorder = index === optionsData.length - 1 ? 'border-bottom-0' : '';
 
-                                        if (!MULTI_SEL_VALID) {
-                                            const _defaultValue = controlValue.toString();
-                                            let filterRes: any = [];
-                                            const filterResQueryValue = optionsData.filter((item: any) => item.value == _defaultValue);
-                                            const filterResQueryLabel = optionsData.filter((item: any) => item.label == _defaultValue);
-    
-                                            if (filterResQueryValue.length === 0 && filterResQueryLabel.length > 0) {
-                                                filterRes = filterResQueryValue;
-                                                if (filterResQueryValue.length === 0) filterRes = filterResQueryLabel;
+
+                                        // disable selected options (only single selection)
+                                        let disabledCurrentOption: boolean = false;
+                                        if (
+                                            (typeof controlValue !== 'undefined' && controlValue !== null && controlValue !== '') &&
+                                            (typeof item.value !== 'undefined' && item.value !== null && item.value !== '')
+                                        ) {
+
+                                            if (!MULTI_SEL_VALID) {
+                                                const _defaultValue = controlValue.toString();
+                                                let filterRes: any = [];
+                                                const filterResQueryValue = optionsData.filter((item: any) => item.value == _defaultValue);
+                                                const filterResQueryLabel = optionsData.filter((item: any) => item.label == _defaultValue);
+
+                                                if (filterResQueryValue.length === 0 && filterResQueryLabel.length > 0) {
+                                                    filterRes = filterResQueryValue;
+                                                    if (filterResQueryValue.length === 0) filterRes = filterResQueryLabel;
+                                                }
+
+                                                const _targetValue = filterRes.length > 0 ? filterRes[0].value : _defaultValue;
+                                                const _realValue = item.value.toString();
+
+                                                if (_realValue === _targetValue && _targetValue !== '') {
+                                                    disabledCurrentOption = true;
+                                                }
                                             }
 
-                                            const _targetValue = filterRes.length > 0 ? filterRes[0].value : _defaultValue;
-                                            const _realValue = item.value.toString();
-
-                                            if (_realValue === _targetValue && _targetValue !== '') {
-                                                disabledCurrentOption = true;
-                                            }
                                         }
 
-                                    }
-                                    
 
 
-                                    if (!MULTI_SEL_VALID) {
+                                        if (!MULTI_SEL_VALID) {
 
-                                        // ++++++++++++++++++++
-                                        // Single selection
-                                        // ++++++++++++++++++++
-                                        return <button 
-                                            tabIndex={-1} 
-                                            type="button" 
-                                            data-index={index} 
-                                            key={index} 
-                                            className={`list-group-item list-group-item-action border-start-0 border-end-0 mf-select-multi__control-option-item ${startItemBorder} ${endItemBorder} border-bottom-0 ${typeof item.disabled === 'undefined' ? '' : (item.disabled == true ? 'disabled' : '')} ${disabledCurrentOption ? 'active disabled' : ''}`} 
-                                            data-value={`${item.value}`} 
-                                            data-label={`${item.label}`} 
-                                            data-querystring={`${typeof item.queryString === 'undefined' ? '' : item.queryString}`} 
-                                            data-itemdata={JSON.stringify(item)} 
-                                            data-list-item-label={`${typeof item.listItemLabel === 'undefined' ? '' : item.listItemLabel}`} 
-                                            role="tab" 
-                                            dangerouslySetInnerHTML={{
-                                                __html: typeof item.listItemLabel === 'undefined' ? item.label : item.listItemLabel
-                                            }}
-                                        ></button>
+                                            // ++++++++++++++++++++
+                                            // Single selection
+                                            // ++++++++++++++++++++
+                                            return <button
+                                                tabIndex={-1}
+                                                type="button"
+                                                data-index={index}
+                                                key={index}
+                                                className={`list-group-item list-group-item-action border-start-0 border-end-0 mf-select-multi__control-option-item ${startItemBorder} ${endItemBorder} border-bottom-0 ${typeof item.disabled === 'undefined' ? '' : (item.disabled == true ? 'disabled' : '')} ${disabledCurrentOption ? 'active disabled' : ''}`}
+                                                data-value={`${item.value}`}
+                                                data-label={`${item.label}`}
+                                                data-querystring={`${typeof item.queryString === 'undefined' ? '' : item.queryString}`}
+                                                data-itemdata={JSON.stringify(item)}
+                                                data-list-item-label={`${typeof item.listItemLabel === 'undefined' ? '' : item.listItemLabel}`}
+                                                role="tab"
+                                                dangerouslySetInnerHTML={{
+                                                    __html: typeof item.listItemLabel === 'undefined' ? item.label : item.listItemLabel
+                                                }}
+                                                onClick={handleSelect}
+                                            ></button>
 
-                                    } else {
+                                        } else {
 
-                                        // ++++++++++++++++++++
-                                        // Multiple selection
-                                        // ++++++++++++++++++++
-                                        const itemSelected = multiSelControlOptionExist(controlArr.values, item.value) ? true : false;
+                                            // ++++++++++++++++++++
+                                            // Multiple selection
+                                            // ++++++++++++++++++++
+                                            const itemSelected = multiSelControlOptionExist(controlArr.values, item.value) ? true : false;
 
-                                        return <button 
-                                            tabIndex={-1} 
-                                            type="button" 
-                                            data-selected={`${itemSelected ? 'true' : 'false'}`} 
-                                            data-index={index} 
-                                            key={index} 
-                                            className={`list-group-item list-group-item-action border-start-0 border-end-0 mf-select-multi__control-option-item ${startItemBorder} ${endItemBorder} border-bottom-0 ${itemSelected ? 'list-group-item-secondary item-selected' : ''} ${typeof item.disabled === 'undefined' ? '' : (item.disabled == true ? 'disabled' : '')}`} 
-                                            data-value={`${item.value}`} 
-                                            data-label={`${item.label}`} 
-                                            data-querystring={`${typeof item.queryString === 'undefined' ? '' : item.queryString}`} 
-                                            data-list-item-label={`${typeof item.listItemLabel === 'undefined' ? '' : item.listItemLabel}`} 
-                                            data-itemdata={JSON.stringify(item)} 
-                                            role="tab"
-                                        >
-                                            <var className={`me-1 mf-select-multi__control-option-checkbox-selected ${itemSelected ? '' : 'd-none'}`}>
-                                                <svg width="1.2em" height="1.2em" fill="#000000" viewBox="0 0 24 24"><path d="M19 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.11 0 2-.9 2-2V5c0-1.1-.89-2-2-2zm-9 14l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" /></svg>
+                                            return <button
+                                                tabIndex={-1}
+                                                type="button"
+                                                data-selected={`${itemSelected ? 'true' : 'false'}`}
+                                                data-index={index}
+                                                key={index}
+                                                className={`list-group-item list-group-item-action border-start-0 border-end-0 mf-select-multi__control-option-item ${startItemBorder} ${endItemBorder} border-bottom-0 ${itemSelected ? 'list-group-item-secondary item-selected' : ''} ${typeof item.disabled === 'undefined' ? '' : (item.disabled == true ? 'disabled' : '')}`}
+                                                data-value={`${item.value}`}
+                                                data-label={`${item.label}`}
+                                                data-querystring={`${typeof item.queryString === 'undefined' ? '' : item.queryString}`}
+                                                data-list-item-label={`${typeof item.listItemLabel === 'undefined' ? '' : item.listItemLabel}`}
+                                                data-itemdata={JSON.stringify(item)}
+                                                role="tab"
+                                                onClick={handleSelect}
+                                            >
+                                                <var className={`me-1 mf-select-multi__control-option-checkbox-selected ${itemSelected ? '' : 'd-none'}`}>
+                                                    <svg width="1.2em" height="1.2em" fill="#000000" viewBox="0 0 24 24"><path d="M19 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.11 0 2-.9 2-2V5c0-1.1-.89-2-2-2zm-9 14l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" /></svg>
 
-                                            </var>
+                                                </var>
 
-                                            <var className={`me-1 mf-select-multi__control-option-checkbox-placeholder ${itemSelected ? 'd-none' : ''}`}>
-                                                <svg width="1.2em" height="1.2em" fill="#000000" viewBox="0 0 24 24"><path d="M4 7.2002V16.8002C4 17.9203 4 18.4801 4.21799 18.9079C4.40973 19.2842 4.71547 19.5905 5.0918 19.7822C5.5192 20 6.07899 20 7.19691 20H16.8031C17.921 20 18.48 20 18.9074 19.7822C19.2837 19.5905 19.5905 19.2842 19.7822 18.9079C20 18.4805 20 17.9215 20 16.8036V7.19691C20 6.07899 20 5.5192 19.7822 5.0918C19.5905 4.71547 19.2837 4.40973 18.9074 4.21799C18.4796 4 17.9203 4 16.8002 4H7.2002C6.08009 4 5.51962 4 5.0918 4.21799C4.71547 4.40973 4.40973 4.71547 4.21799 5.0918C4 5.51962 4 6.08009 4 7.2002Z" /></svg>
-                                            </var>
-                                            <span dangerouslySetInnerHTML={{
-                                                __html: typeof item.listItemLabel === 'undefined' ? item.label : item.listItemLabel
-                                            }}></span>
-                                        </button>
+                                                <var className={`me-1 mf-select-multi__control-option-checkbox-placeholder ${itemSelected ? 'd-none' : ''}`}>
+                                                    <svg width="1.2em" height="1.2em" fill="#000000" viewBox="0 0 24 24"><path d="M4 7.2002V16.8002C4 17.9203 4 18.4801 4.21799 18.9079C4.40973 19.2842 4.71547 19.5905 5.0918 19.7822C5.5192 20 6.07899 20 7.19691 20H16.8031C17.921 20 18.48 20 18.9074 19.7822C19.2837 19.5905 19.5905 19.2842 19.7822 18.9079C20 18.4805 20 17.9215 20 16.8036V7.19691C20 6.07899 20 5.5192 19.7822 5.0918C19.5905 4.71547 19.2837 4.40973 18.9074 4.21799C18.4796 4 17.9203 4 16.8002 4H7.2002C6.08009 4 5.51962 4 5.0918 4.21799C4.71547 4.40973 4.40973 4.71547 4.21799 5.0918C4 5.51962 4 6.08009 4 7.2002Z" /></svg>
+                                                </var>
+                                                <span dangerouslySetInnerHTML={{
+                                                    __html: typeof item.listItemLabel === 'undefined' ? item.label : item.listItemLabel
+                                                }}></span>
+                                            </button>
 
-                                    }
+                                        }
 
 
-                                }) : null}
-                                {/* /OPTIONS LIST */}
+                                    }) : null}
+                                    {/* /OPTIONS LIST */}
 
+                                </div>
                             </div>
+
+
                         </div>
 
-
-                    </div>
+                    </RootPortal>
 
                 </> : null}
 

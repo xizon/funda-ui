@@ -132,7 +132,7 @@ const Switch = forwardRef((props: SwitchProps, ref: any) => {
                     />
 
 
-                    {label ? <><label htmlFor={`label-${idRes}`} className="form-check-label" dangerouslySetInnerHTML={{__html: `${label}`}}></label></> : null}
+                    {label ? <>{typeof label === 'string' ? <label htmlFor={`label-${idRes}`} className="form-check-label" dangerouslySetInnerHTML={{__html: `${label}`}}></label> : <label htmlFor={`label-${idRes}`} className="form-check-label">{label}</label>}</> : null}
                 </div>
             </div>
 

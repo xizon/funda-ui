@@ -1,5 +1,6 @@
 import React, { useId, useState, useEffect, useMemo, useRef, useCallback } from 'react';
 
+import RootPortal from 'funda-root-portal';
 import ModalDialog from 'funda-modaldialog';
 
 
@@ -320,7 +321,7 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
 
       
         // update modal positiona
-        const _tableTooltipModalRef: any = document.querySelector(`#e-cal-tl-table__cell-tooltipwrapper-${idRes}`);
+        const _tableTooltipModalRef: any = tableTooltipModalRef.current;
         const _triggerRef: any = e.currentTarget;
 
         if (_tableTooltipModalRef !== null && _triggerRef !== null) {
@@ -1360,14 +1361,6 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
 
 
 
-
-        // tooltip
-        if (document.body !== null) {
-            document.body.appendChild(tableTooltipModalRef.current);
-        }
-
-
-
         window.removeEventListener('touchstart', handleTableTooltipTouchStart);
 		window.addEventListener( 'touchstart', handleTableTooltipTouchStart);
 
@@ -1377,7 +1370,6 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
             tableGridReset();
             
             // tooltip
-            document.querySelector(`#e-cal-tl-table__cell-tooltipwrapper-${idRes}`)?.remove();
             window.removeEventListener('touchstart', handleTableTooltipTouchStart);
         }
 
@@ -1613,7 +1605,6 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
                 <ModalDialog
                     show={showDelete}
                     maskOpacity={modalMaskOpacity}
-                    protectFixedViewport={false}
                     triggerClassName=""
                     triggerContent=""
                     closeBtnClassName={modalCloseBtnClassName || 'btn btn-secondary'}
@@ -1655,7 +1646,6 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
                     heading={modalHeading}
                     maxWidth={modalMaxWidth}
                     minHeight={modalMinHeight}
-                    protectFixedViewport={false}
                     triggerClassName=""
                     triggerContent=""
                     closeBtnClassName={modalCloseBtnClassName || 'btn btn-secondary'}
@@ -1698,8 +1688,7 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
             {/*/////////////////////////////////////////////////// */}
             {/*//////////////////// Table Grid Tooltip //////////////////// */}
             {/*////////////////////////////////////////////////// */}
-            {/* FIX: "Failed to execute 'removeChild' on 'Node': The node to be removed is not a child of this node" when using remove() */}
-            <span>
+            <RootPortal show={true} containerClassName="EventCalendarTimeline-TooltipModal">
                 <div
                     ref={tableTooltipModalRef}
                     id={`e-cal-tl-table__cell-tooltipwrapper-${idRes}`}
@@ -1712,9 +1701,7 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
                         {tableTooltipContent}
                     </div>
                 </div>
-
-            </span>
-
+            </RootPortal>
 
 
         </>
