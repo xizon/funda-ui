@@ -49,7 +49,7 @@ declare type ModalDialogProps = {
     /** Disable mask */
     maskDisabled?: boolean;
     /** Mask opacity */
-    maskOpacity?: string;
+    maskOpacity?: string | number;
     /** Disable mask to close the window */
     closeOnlyBtn?: boolean;
     /** Disable the close button. */

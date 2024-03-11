@@ -21,11 +21,11 @@ import ModalDialog from 'funda-ui/ModalDialog';
 | `heading` | ReactNode  | - | Set a window title |
 | `footerExpandedContent` | ReactNode  | - | Set footer content expanded |
 | `maskDisabled` | boolean  | false | Disable mask |
-| `maskOpacity` | string  | - | The mask opacity. The value is in the range *0.0* to *1.0* |
+| `maskOpacity` | string \| number  | - | The mask opacity. The value is in the range *0.0* to *1.0* |
 | `maxWidth` | number \| string \| function  | false | Custom modal max-width whick need a unit string. Such as: `500px` or `() => window.innerWidth >= 768 ? window.innerWidth - 100 + 'px' : undefined`|
 | `minHeight` | number \| string \| function  | false | Custom modal max-height whick need a unit string. Such as: `auto` or `() => window.innerHeight - 150 + 'px'` |
 | `closeOnlyBtn` | boolean  | false | Disable mask to close the window |
-| `closeDisabled` | boolean  | false | Disable the close button. |
+| `closeDisabled` | boolean  | false | Disable the close button & mask. |
 | `triggerClassName` | string  | - | Specify a class for your trigger |
 | `triggerContent` | ReactNode  | - | Set a piece of text or HTML code for the trigger |
 | `closeBtnClassName` | string  | - | Specify a class for close button |
@@ -177,6 +177,82 @@ export default () => {
     );
 }
 ```
+
+
+## Display Number of CountDown
+
+```js
+import React, { useEffect, useState, useRef, useCallback  } from "react";
+import ModalDialog from 'funda-ui/ModalDialog';
+
+export default () => {
+
+    const [autoCloseCount, setAutoCloseCount] = useState<number>(6);
+    const intervalIdRef = useRef<any>(null);
+    const startTimer = useCallback(() => {
+        intervalIdRef.current = setInterval(() => {
+
+        
+            setAutoCloseCount((prevState: number) => {
+                let _val = prevState;
+                if ( _val > 0 ) {
+                    _val = _val - 1;
+                } else {
+                    stopTimer();
+                }
+                console.log('***', _val)
+
+                return _val;
+            });
+
+
+
+        }, 1000);
+    }, []);
+    
+
+    const stopTimer = useCallback(() => {
+        clearInterval(intervalIdRef.current);
+        intervalIdRef.current = null;
+    }, []);
+
+
+    useEffect(() => {
+
+        startTimer();
+
+        return () => {
+            stopTimer();
+        }
+
+    }, []);
+    
+
+
+    return (
+        <>
+
+
+            <ModalDialog
+                show={true}
+                autoClose={6000}
+                triggerClassName="d-inline w-auto"
+                triggerContent={<>
+                    <a href="#" tabIndex={-1}>Launch demo modal</a>
+                </>}
+                maskDisabled
+            >
+                <h4>This window will automatically close after {autoCloseCount} seconds :)</h4>
+                <p>You can click the button on the page to trigger the pop-up window.</p>
+            </ModalDialog>
+
+
+
+        </>
+    );
+}
+```
+
 
 
 

@@ -2,6 +2,7 @@ import React, { useId, useState, useRef, useEffect, forwardRef, useImperativeHan
 
 import RootPortal from 'funda-root-portal';
 
+
 //Destroys body scroll locking
 import { clearAllBodyScrollLocks, disableBodyScroll, enableBodyScroll } from './plugins/BSL';
 
@@ -60,7 +61,7 @@ type ModalDialogProps = {
     /** Disable mask */
     maskDisabled?: boolean;
     /** Mask opacity */
-    maskOpacity?: string;
+    maskOpacity?: string | number;
     /** Disable mask to close the window */
     closeOnlyBtn?: boolean;
     /** Disable the close button. */
@@ -124,8 +125,7 @@ const ModalDialog = forwardRef((props: ModalDialogProps, ref: React.ForwardedRef
 
     const [modalShow, setModalShow] = useState<boolean>(false);
     const [incomingData, setIncomingData] = useState<string | null | undefined>(null);
-
-
+    
     // exposes the following methods
     useImperativeHandle(
         ref,
@@ -135,7 +135,7 @@ const ModalDialog = forwardRef((props: ModalDialogProps, ref: React.ForwardedRef
             },
             close: () => {
                 handleCloseWin(null);
-            }
+            },
         }),
         [ref],
     );
@@ -297,9 +297,10 @@ const ModalDialog = forwardRef((props: ModalDialogProps, ref: React.ForwardedRef
         //auto close
         //------------------------------------------
         if (autoClose && !isNaN(autoClose as number)) {
+
+            //
             window.setCloseModalDialog = setTimeout(function () {
                 closeAction();
-
                 //
                 onClose?.(null);
             }, autoClose as number);
@@ -336,7 +337,6 @@ const ModalDialog = forwardRef((props: ModalDialogProps, ref: React.ForwardedRef
 
     useEffect(() => {
 
-        
   
         // update incoming data
         //--------------
@@ -377,7 +377,7 @@ const ModalDialog = forwardRef((props: ModalDialogProps, ref: React.ForwardedRef
         }
 
 
-    }, [show, data]);
+    }, [show, data, modalRef.current]);   // When show`` defaults to true, `modalRef.current` will be null
 
     return (
         <div>
@@ -457,7 +457,11 @@ const ModalDialog = forwardRef((props: ModalDialogProps, ref: React.ForwardedRef
                         } : {
                             display: modalShow ? 'block' : 'none'
                         }}
-                        onClick={handleCloseWin}
+                        onClick={(e: any) => {
+                            if (typeof closeDisabled === 'undefined' || closeDisabled === false) {
+                                handleCloseWin(null);
+                            }
+                        }}
                     ></div>
                 </div> : null}
                 {/* /MASK */}

@@ -1034,9 +1034,9 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
             //auto close
             //------------------------------------------
             if (autoClose && !isNaN(autoClose)) {
+              //
               window.setCloseModalDialog = setTimeout(function () {
                 closeAction();
-
                 //
                 onClose === null || onClose === void 0 ? void 0 : onClose(null);
               }, autoClose);
@@ -1100,7 +1100,8 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
               // Cancels a timeout previously established by calling setTimeout().
               clearTimeout(window.setCloseModalDialog);
             };
-          }, [show, data]);
+          }, [show, data, modalRef.current]); // When show`` defaults to true, `modalRef.current` will be null
+
           return /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", null, triggerContent ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement(external_root_React_commonjs2_react_commonjs_react_amd_react_default().Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
             className: triggerClassName ? triggerClassName : 'd-inline w-auto',
             ref: triggerRef,
@@ -1176,7 +1177,11 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
             } : {
               display: modalShow ? 'block' : 'none'
             },
-            onClick: handleCloseWin
+            onClick: function onClick(e) {
+              if (typeof closeDisabled === 'undefined' || closeDisabled === false) {
+                handleCloseWin(null);
+              }
+            }
           })) : null));
         });
         /* harmony default export */

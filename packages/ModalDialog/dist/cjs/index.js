@@ -762,9 +762,9 @@ var ModalDialog = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_r
     //auto close
     //------------------------------------------
     if (autoClose && !isNaN(autoClose)) {
+      //
       window.setCloseModalDialog = setTimeout(function () {
         closeAction();
-
         //
         onClose === null || onClose === void 0 ? void 0 : onClose(null);
       }, autoClose);
@@ -828,7 +828,8 @@ var ModalDialog = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_r
       // Cancels a timeout previously established by calling setTimeout().
       clearTimeout(window.setCloseModalDialog);
     };
-  }, [show, data]);
+  }, [show, data, modalRef.current]); // When show`` defaults to true, `modalRef.current` will be null
+
   return /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", null, triggerContent ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
     className: triggerClassName ? triggerClassName : 'd-inline w-auto',
     ref: triggerRef,
@@ -904,7 +905,11 @@ var ModalDialog = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_r
     } : {
       display: modalShow ? 'block' : 'none'
     },
-    onClick: handleCloseWin
+    onClick: function onClick(e) {
+      if (typeof closeDisabled === 'undefined' || closeDisabled === false) {
+        handleCloseWin(null);
+      }
+    }
   })) : null));
 });
 /* harmony default export */ const src = (ModalDialog);

@@ -1,6 +1,6 @@
 {
     "private": true,
-    "name": "funda-event-cal-tlendar",
+    "name": "funda-event-calendar-timeline",
     "version": "0.0.1",
     "description": "",
     "main": "./dist/cjs/index.js",
