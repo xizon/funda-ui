@@ -1699,7 +1699,7 @@ var LiveSearch = function LiveSearch(props) {
     ref: listContentRef
   }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
     className: "livesearch__options-contentlist-inner"
-  }, orginalData && orginalData.length === 0 && !hasErr && isOpen ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("button", {
+  }, orginalData && orginalData.length === 0 ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("button", {
     tabIndex: -1,
     type: "button",
     className: "list-group-item list-group-item-action border-top-0 border-bottom-0 no-match livesearch__control-option-item--nomatch",

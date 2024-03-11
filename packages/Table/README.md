@@ -333,7 +333,7 @@ export default () => {
             
             <Table 
                 bodyClassName="table-group-divider" 
-                rowActiveClassName="active bg-primary"
+                rowActiveClassName="active bg-primary-subtle"
                 data={tableData2_check}
                 checkable={true}
                 onCheck={(val) => {
@@ -413,6 +413,10 @@ When a `useState()` in a child component changes state, it will cause the entire
 
 At this time, we need to use `useMemo()` to wrap this subcomponent to avoid problems caused when the child component triggers a method of `useState()` of the parent component.
 
+> [!WARNING]
+> As a general rule, when using `checkable`, `onClick()`, `onCheck()` attributes, you need to use useMemo to wrap the table component.
+
+
 
 ```js
 
@@ -432,6 +436,25 @@ function MemoTable(props: any) {
     return useMemo(() => {
         return <Table
                     checkable={true}
+                    onClick={(e: any, val: any) => {
+                        const { id, name } = JSON.parse(val.content.at(-1));
+
+                        console.log('click: ', e.currentTarget, val, id, name);
+
+                        // Active current row
+                        const rowActiveClassName = 'active bg-primary-subtle';
+                        const _rows = [].slice.call(e.currentTarget.closest('tbody').querySelectorAll('.row-obj'));
+                        const _rowEl = e.currentTarget;
+                        const activeClass = rowActiveClassName.split(' ');
+
+                        _rows.forEach((row: HTMLElement) => {
+                            row.classList.remove(...activeClass);
+                        });
+                        if (_rowEl !== null) {
+                            _rowEl.classList.add(...activeClass);
+                        }
+
+                    }}
                     onCheck={(val) => {
                         console.log(val);
                         callback(val); //If `useMemo()` is not used, this method will cause the parent component to re-render, causing the checkbox to fail
@@ -445,13 +468,15 @@ function MemoTable(props: any) {
                         "headers": [
                             {"style": { padding: '.5rem .1rem', width: '18px' }, "content": '' },
                             {"content": 'Id' },
-                            {"content": 'Name' }
+                            {"content": 'Name' },
+                            {"style": { display: 'none' }, "content": "" }
                         ],
                         "fields": data.map((item: any) => {
                             return [
                                 { "cols": 1, "style": { padding: '.5rem .1rem' }, "content": '' },
                                 { "cols": 1, "style": { fontWeight: 'normal' }, "content": item.id },
                                 { "cols": 1, "content": item.name },
+                                { "cols": 1, style: { display: 'none' }, "content": `{"id":"${item.id}","name":"${item.name}"}` }
                             ];
                         })
                     }}

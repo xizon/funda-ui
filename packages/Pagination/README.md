@@ -515,6 +515,20 @@ export default () => {
 
 Lets you callback the handle exposed as a ref.
 
+
+`styles.scss`:
+```scss
+/* ---------- Content  ----------- */
+.items-container {
+    &.rerender {
+        .data-generation:first-child {
+            display: none;
+        }
+    }
+}
+```
+
+`index.tsx`:
 ```js
 import React, { memo, useState, useEffect, useRef } from "react";
 import axios from 'axios';
@@ -667,6 +681,7 @@ const DataList = memo(function DataList(props: any) {
     const {
         data,
         headHide,
+        curComHide,
         onTableRenderFinished,
     } = props;
 
@@ -680,7 +695,7 @@ const DataList = memo(function DataList(props: any) {
 
     return (
         <>
-        <div ref={rootRef} className="data-generation">
+        <div ref={rootRef} className={`data-generation ${curComHide ? 'd-none' : ''}`}>
             <h3 className={`${headHide ? 'd-none' : ''}`}>Posts List</h3>
             <div className="item">
                 {data &&
@@ -699,19 +714,19 @@ const DataList = memo(function DataList(props: any) {
 export default (props: any) => {
 
     const {
-        callback
+        callback,
+        reRender  // number | null  (using Math.random() to re-render)
     } = props;
 
     const recordsPerPage = 3;
     const observerTarget = useRef<HTMLDivElement>(null);
     const pageHandleRef = useRef<any>();
-    const oldDataContainerRef = useRef<HTMLDivElement>(null);
     
 
     // data list
-    const [prevListData, setpPrevListData] = useState<any[]>([]);
+    const [prevListData, setPrevListData] = useState<any[]>([]);
     const [listItemsTotal, setListItemsTotal] = useState<number>(0);
-     const [currentRecords, setCurrentRecords] = useState<any[]>([]);
+    const [currentRecords, setCurrentRecords] = useState<any[]>([]);
     const [allRecords, setAllRecords] = useState<any[]>([]);
 
     // pagination
@@ -732,34 +747,71 @@ export default (props: any) => {
     }
  
 
-    function pushNewData(curPage?: number | undefined) {
+    function pushNewData(curPage?: number | undefined, data: any[] | null = null) {
 
         const _cpage = typeof curPage !== 'undefined' ? curPage : currentPage;
         const _loadedItems = Math.round((listItemsTotal/allPages)*1) + Math.round((listItemsTotal/allPages)*currentPage);
         
-        console.log('****', _cpage)
-        setpPrevListData((prevState: any[]) => {
-            return [...prevState, currentRecords];  // for your business
-        });
 
-        setCurrentRecords(splitContent(allRecords, _cpage));
+        // for your business
+        if (data === null) {
+            
+            setPrevListData((prevState: any[]) => {
+                return [...prevState, currentRecords];
+            });
+
+            setCurrentRecords(splitContent(allRecords, _cpage));
+        } else {
+            setPrevListData((prevState: any[]) => {
+                return [...prevState, [...data]]; 
+            });
+            setCurrentRecords(data);
+        }
+
+
+
         callback?.(listItemsTotal, recordsPerPage, _cpage, allPages, _loadedItems > listItemsTotal ? listItemsTotal : _loadedItems);
+    }
+
+
+    function renderMain(alldata: any, init: boolean) {
+        const _itemsTotal: number = alldata.length;
+
+        console.log('init: ', alldata);
+        setListItemsTotal(_itemsTotal);
+        setAllRecords(alldata);
+        setCurrentRecords(splitContent(alldata, 1));
+
+        // current list
+        if (init) {
+            pushNewData(1, splitContent(alldata, 1));
+        }
+        
+        const _allPages = Math.ceil(_itemsTotal / recordsPerPage);
+        const _loadedItems = Math.round((_itemsTotal/_allPages)*1) + Math.round((_itemsTotal/_allPages)*currentPage);
+        callback?.(_itemsTotal, recordsPerPage, currentPage, _allPages, _loadedItems > _itemsTotal ? _itemsTotal : _loadedItems);
+
     }
 
 
 
     useEffect(() => {
         
-        const _itemsTotal: number = demoData.length;
 
-        console.log(demoData);
-        setListItemsTotal(_itemsTotal);
-        setAllRecords(demoData);
-        setCurrentRecords(splitContent(demoData, 1));
+        // force render
+        if (reRender !== null) {
+            const _allData = localStorage.getItem('ITEMS_DATA');
+            if (_allData !== null) {
+                setPrevListData([]);
+                setCurrentPage(0);
+                const _oldData = JSON.parse(_allData);
+                renderMain(_oldData, false);
+            }
 
-        const _allPages = Math.ceil(_itemsTotal / recordsPerPage);
-        const _loadedItems = Math.round((_itemsTotal/_allPages)*1) + Math.round((_itemsTotal/_allPages)*currentPage);
-        callback?.(_itemsTotal, recordsPerPage, currentPage, _allPages, _loadedItems > _itemsTotal ? _itemsTotal : _loadedItems);
+        }
+
+        renderMain(demoData, true);
+
 
         /*
         axios
@@ -769,19 +821,17 @@ export default (props: any) => {
             })
             .then((data: any[]) => {
                 // do something
-                // ...
+                // renderMain(data, true);
             });
         */
           
-    }, []);
+    }, [reRender]);
 
 
     useEffect(() => {
         const observer = new IntersectionObserver(
             entries => {
-                if (entries[0].isIntersecting) {
-                    if (pageHandleRef.current) pageHandleRef.current.next();
-                }
+                if (pageHandleRef.current) pageHandleRef.current.next();
             },
             { 
                 threshold: 0.9  // A threshold of 1.0 means that when 100% of the target is visible within the element specified by the root option, the callback is invoked.
@@ -803,55 +853,41 @@ export default (props: any) => {
 
     return (
         <>
-            <div className="items-container">
+            <div className={`items-container ${reRender !== null && currentPage > 0 ? 'rerender' : ''}`}>
                 <div className="content" style={{overflow: 'auto'}}>
                     <div style={{height: '250px'}}>
 
                         <div className="list" style={{ minHeight: '150px' }}>
-                            <div ref={oldDataContainerRef}>
-                                {prevListData.map((data: any, i: number) => {
+                            {prevListData.map((data: any, i: number) => {
 
-                                    return <React.Fragment key={i}>
-                                        <DataList
-                                            data={data}
-                                            headHide={i > 0 ? true : false}
-                                        />
-                                    </React.Fragment>
-                                })}
+                                return <React.Fragment key={i}>
+                                    <DataList
+                                        data={data}
+                                        headHide={i > 0 ? true : false}
+                                        curComHide={i === 1 ? true : false}
+                                        onTableRenderFinished={(rootRef: any) => {
+                                            if (i === 0) {
+                                                // do something
+                                            }
 
+                                        }}
+                                    />
+                                </React.Fragment>
+                            })}
 
-                                
-                            </div>
-                            
-                            <DataList
-                                headHide={prevListData.length === 0 ? false : true}
-                                data={currentRecords}
-                                onTableRenderFinished={(rootRef: any) => {
-                                    console.log(rootRef.current);
-                                }}
-                            />
                         </div>
 
                         {/* ONLY TRIGGER OF NEXT BUTTON */}
                         <div ref={observerTarget}>
                             <Pagination
-                                wrapperClassName="invisible"
                                 ref={pageHandleRef}
                                 key={allPages}
                                 apiUrl={`/{page}`}
                                 onChange={( number, total ) => {
                                     console.log( total, `page number: ${number}` ); 
-                                    if (total >= number) {
+                                    if (total+1 >= number) {
                                         setCurrentPage(number);
                                         pushNewData(number);
-
-                                        const tableWrapper: any = document.querySelector('.items-container .content');
-                                        if (oldDataContainerRef.current && tableWrapper) {
-                                            tableWrapper.scrollTo({
-                                                top: oldDataContainerRef.current.clientHeight
-                                            });
-                                        }
-                       
                                     }
                                 }}
                                 pageRangeDisplayed={3}
@@ -862,6 +898,7 @@ export default (props: any) => {
                                 firstLabel="first"
                                 lastLabel="last"
                                 symmetry={false}
+                                nextClassName="btn btn-link btn-sm text-decoration-none border-0"
                                 previousClassName="d-none"
                                 firstClassName="d-none"
                                 lastClassName="d-none"

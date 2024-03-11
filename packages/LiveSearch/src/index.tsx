@@ -775,7 +775,7 @@ const LiveSearch = (props: LiveSearchProps) => {
 
 
                                     {/* NO MATCH */}
-                                    {orginalData && orginalData.length === 0 && !hasErr && isOpen ? <>
+                                    {orginalData && orginalData.length === 0 ? <>
                                         <button
                                             tabIndex={-1}
                                             type="button"
