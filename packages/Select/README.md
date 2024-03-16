@@ -36,7 +36,7 @@ It accepts all props which this control support.
 
 ---
 
-JSON Object Literals configuration properties of the `options`:
+JSON Object Literals configuration properties of the `options` and callback from `fetchCallback`:
 
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |

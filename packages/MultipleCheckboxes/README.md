@@ -37,7 +37,7 @@ It accepts all props which this control support.
 
 ---
 
-JSON Object Literals configuration properties of the `options`:
+JSON Object Literals configuration properties of the `options` and callback from `fetchCallback`:
 
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |
@@ -68,7 +68,7 @@ export default () => {
                 value={val}
                 options={[
                     {"label": "Option 1","listItemLabel":"Option 1 (No: 001)","value": "value-1"},
-                    {"label": "<del style=color:red>deprecate</del>Option 2","listItemLabel":"<del style=color:red>deprecate</del>Option 2 (No: 002)","value": "value-2"},
+                    {"label": "Option 2","listItemLabel":"<del style=color:red>deprecate</del>Option 2 (No: 002)","value": "value-2"},
                     {"label": "Option 3","listItemLabel":"Option 3 (No: 003)","value": "value-3"},
                     {"label": "Option 4","listItemLabel":"Option 4 (No: 004)","value": "value-4","disabled":true}
                 ]}
@@ -114,7 +114,7 @@ export default () => {
                 value={val}
                 options={[
                     {"label": "Option 1","listItemLabel":"Option 1 (No: 001)","value": "value-1"},
-                    {"label": "<del style=color:red>deprecate</del>Option 2","listItemLabel":"<del style=color:red>deprecate</del>Option 2 (No: 002)","value": "value-2"},
+                    {"label": "Option 2","listItemLabel":"<del style=color:red>deprecate</del>Option 2 (No: 002)","value": "value-2"},
                     {"label": "Option 3","listItemLabel":"Option 3 (No: 003)","value": "value-3"},
                     {"label": "Option 4","listItemLabel":"Option 4 (No: 004)","value": "value-4","disabled":true}
                 ]}

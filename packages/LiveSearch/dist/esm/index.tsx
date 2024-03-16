@@ -8,6 +8,14 @@ import { getAbsolutePositionOfStage } from './utils/get-element-property';
 import RootPortal from 'funda-root-portal';
 import SearchBar from 'funda-searchbar';
 
+interface OptionConfig {
+    disabled?: boolean;
+    label: any;
+    listItemLabel?: any;
+    value: any;
+    queryString: string | number;
+}
+
 
 type LiveSearchProps = {
     wrapperClassName?: string;
@@ -19,9 +27,11 @@ type LiveSearchProps = {
     label?: React.ReactNode | string;
     name?: string;
     maxLength?: any;
+    readOnly?: any;
     disabled?: any;
     required?: any;
     placeholder?: string;
+    options?: OptionConfig[] | string;
     winWidth?: string | Function;
     icon?: React.ReactNode | string;
     btnId?: string;
@@ -57,9 +67,11 @@ const LiveSearch = (props: LiveSearchProps) => {
         exceededSidePosOffset,
         appearance,
         isSearchInput,
+        readOnly,
         disabled,
         required,
         placeholder,
+        options,
         value,
         label,
         name,
@@ -98,13 +110,15 @@ const LiveSearch = (props: LiveSearchProps) => {
     const inputRef = useRef<any>(null);
     const listRef = useRef<any>(null);
     const listContentRef = useRef<any>(null);
+    const optionsRes = options ? (isJSON(options) ? JSON.parse(options as string) : options) : [];
     const windowScrollUpdate = debounce(handleScrollEvent, 500);
 
-
+    // return a array of options
+    let staticOptionsData: OptionConfig[] = optionsRes;
 
     //
     const [firstFetch, setFirstFetch] = useState<boolean>(false);
-    const [dataInit, setOrginalDataInit] = useState<any[]>([]);
+    const [dataInit, setOrginalDataInit] = useState<any[]>(staticOptionsData);
     const [orginalData, setOrginalData] = useState<any[]>([]);
     const [changedVal, setChangedVal] = useState<string>(value || '');
     const [isOpen, setIsOpen] = useState<boolean>(false);
@@ -118,7 +132,42 @@ const LiveSearch = (props: LiveSearchProps) => {
     }, 350, [dataInit]);
 
 
+    // Determine whether it is in JSON format
+    function isJSON(str: any) {
 
+        if (typeof (str) === 'string' && str.length > 0) {
+
+            if (str.replace(/\"\"/g, '').replace(/\,/g, '') == '[{}]') {
+                return false;
+            } else {
+
+                if (/^[\],:{}\s]*$/.test(str.replace(/\\["\\\/bfnrtu]/g, '@').
+                    replace(/"[^"\\\n\r]*"|true|false|null|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?/g, ']').
+                    replace(/(?:^|:|,)(?:\s*\[)+/g, ''))) {
+
+                    return true;
+
+                } else {
+                    return false;
+                }
+
+            }
+
+        } else {
+
+            if (
+                typeof (str) === 'object' &&
+                Object.prototype.toString.call(str) === '[object Object]' &&
+                !str.length
+            ) {
+                return true;
+            } else {
+                return false;
+            }
+
+        }
+
+    }
 
     /**
      * Check if an element is in the viewport
@@ -472,6 +521,8 @@ const LiveSearch = (props: LiveSearchProps) => {
 
         } else {
             const _curData = typeof el.target !== 'undefined' ? el.target.dataset.itemdata : el.dataset.itemdata;
+            console.log('****', _curData);
+
             const _data = JSON.parse(_curData);
 
             let res: any = [];
@@ -741,6 +792,7 @@ const LiveSearch = (props: LiveSearchProps) => {
                     maxLength={maxLength}
                     disabled={disabled}
                     required={required}
+                    readOnly={readOnly}
                     style={style}
                     appearance={appearance}
                     onChange={(e: any) => {

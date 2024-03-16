@@ -15,6 +15,7 @@ type SearchBarProps = {
     label?: React.ReactNode | string;
     name?: string;
     maxLength?: any;
+    readOnly?: any;
     disabled?: any;
     required?: any;
     placeholder?: string;
@@ -39,6 +40,7 @@ const SearchBar = forwardRef((props: SearchBarProps, ref: any) => {
         controlClassName,
         appearance,
         isSearchInput,
+        readOnly,
         disabled,
         required,
         placeholder,
@@ -162,6 +164,7 @@ const SearchBar = forwardRef((props: SearchBarProps, ref: any) => {
                         onCompositionUpdate={handleComposition}
                         onCompositionEnd={handleComposition}
                         disabled={disabled || null}
+                        readOnly={readOnly || null}
                         required={required || null}
                         style={style}
                         {...attributes}

@@ -13,6 +13,7 @@ declare type SearchBarProps = {
     label?: React.ReactNode | string;
     name?: string;
     maxLength?: any;
+    readOnly?: any;
     disabled?: any;
     required?: any;
     placeholder?: string;

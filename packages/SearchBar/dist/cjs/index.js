@@ -96,7 +96,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(787);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-var _excluded = ["wrapperClassName", "controlClassName", "appearance", "isSearchInput", "disabled", "required", "placeholder", "value", "label", "name", "btnId", "id", "maxLength", "icon", "autoComplete", "style", "tabIndex", "onClick", "onSubmit", "onChange", "onBlur", "onFocus"];
+var _excluded = ["wrapperClassName", "controlClassName", "appearance", "isSearchInput", "readOnly", "disabled", "required", "placeholder", "value", "label", "name", "btnId", "id", "maxLength", "icon", "autoComplete", "style", "tabIndex", "onClick", "onSubmit", "onChange", "onBlur", "onFocus"];
 function _extends() { _extends = Object.assign ? Object.assign.bind() : function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
 function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
 function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
@@ -112,6 +112,7 @@ var SearchBar = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(f
     controlClassName = props.controlClassName,
     appearance = props.appearance,
     isSearchInput = props.isSearchInput,
+    readOnly = props.readOnly,
     disabled = props.disabled,
     required = props.required,
     placeholder = props.placeholder,
@@ -226,6 +227,7 @@ var SearchBar = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(f
     onCompositionUpdate: handleComposition,
     onCompositionEnd: handleComposition,
     disabled: disabled || null,
+    readOnly: readOnly || null,
     required: required || null,
     style: style
   }, attributes)), icon || icon !== '' ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {

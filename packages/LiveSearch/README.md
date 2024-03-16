@@ -12,6 +12,7 @@ import LiveSearch from 'funda-ui/LiveSearch';
 | `wrapperClassName` | string | `mb-3 position-relative` | The class name of the control wrapper. |
 | `controlClassName` | string | `form-control` | The class name of the control. |
 | `exceededSidePosOffset` | number | 15 | Offset px that exceeds the far right or left side of the screen |
+| `options` | JSON Object Literals \| JSON Object | - | Set the default value using JSON string format for menu of options, like this: `[{"label": "Option 1","value": "value-1","queryString": "option1"},{"label": "<del style=color:red>deprecate</del>Option 2","value": "value-2","queryString": "option2"},{"label": "Option 3","value": "value-3","queryString": "option3"},{"label": "Option 4","value": "value-4","queryString": "option4","disabled":true}]` <br /> <blockquote>Note: Use API data if database query exists. That is, the attribute `fetchXXXX`</blockquote> <hr /> <blockquote>When the attribute `hierarchical` is true, you need to use a hierarchical structure to pass data, such as: `[{label:"Top level 1",value:'level-1',queryString:""},{label:"Top level 2",value:'level-2',queryString:""},{label:"Top level 3",value:'level-3',queryString:"",children:[{label:"Sub level 3_1",value:'level-3_1',queryString:""},{label:"Sub level 3_2",value:'level-3_2',queryString:"",children:[{label:"Sub level 3_2_1",value:'level-3_2_1',queryString:""}]},{label:"Sub level 3_3",value:'level-3_3',queryString:""}]}]`</blockquote>|
 | `btnId` | string  | - | ID of the specified button. |
 | `appearance` | string | - | The overlay style of the control. The optional values are:<br />**corners:**<br />`pill` |
 | `isSearchInput` | boolean | false | Whether to enable the search input, it will have an clear button |
@@ -21,6 +22,7 @@ import LiveSearch from 'funda-ui/LiveSearch';
 | `name` | string | - | Name is not deprecated when used with form fields. |
 | `placeholder` | string | - |  Specifies a short hint that describes. |
 | `maxLength` | number | - | Defines the maximum number of characters |
+| `readOnly` | boolean | false | When present, it specifies that this component field is read-only. |
 | `disabled` | boolean | false | Whether it is disabled |
 | `required` | boolean | false | When present, it specifies that a field must be filled out before submitting the form. |
 | `hideIcon` | boolean  | false | Force hiding icons (including icon buttons) |
@@ -43,9 +45,10 @@ import LiveSearch from 'funda-ui/LiveSearch';
 It accepts all props which this control support.
 
 
+
 ---
 
-JSON Object Literals configuration properties of the callback from `fetchCallback`:
+JSON Object Literals configuration properties of the `options` and callback from `fetchCallback`:
 
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |
@@ -66,6 +69,58 @@ Among them, `label`, `listItemLabel`, `value`, `queryString` and `disabled` are 
 
 
 ## Examples
+
+You need to use a `fetchCallback` property to format the data of the API callback, which will match the data structure of the component.
+
+
+```js
+import React from "react";
+import LiveSearch from 'funda-ui/LiveSearch';
+
+// component styles
+import 'funda-ui/LiveSearch/index.css';
+
+export default () => {
+
+    return (
+        <>
+            <LiveSearch
+                btnId="app-livesearch-btn"
+                name="app-livesearch-name"
+                label="Food List"
+                options={`
+                [
+                    {"label": "Option 1","value": "value-1","queryString": "option1"},
+                    {"label": "<del style=color:red>deprecate</del>Option 2","value": "value-2","queryString": "option2"},
+                    {"label": "Option 3","value": "value-3","queryString": "option3"},
+                    {"label": "Option 4","value": "value-4","queryString": "option4", "disabled":true}
+                ]  
+                `}
+            />
+
+
+
+            <LiveSearch
+                btnId="app-livesearch-btn"
+                name="app-livesearch-name"
+                hideIcon
+                fetchAutoShow
+                options={`
+                [
+                    {"label": "Option 1","listItemLabel":"Option 1 (No: 001)","value": "value-1","queryString": "option1"},
+                    {"label": "Option 2","listItemLabel":"<del style=color:red>deprecate</del>Option 2 (No: 002)","value": "value-2","queryString": "option2"},
+                    {"label": "Option 3","listItemLabel":"Option 3 (No: 003)","value": "value-3","queryString": "option3"},
+                    {"label": "Option 4","listItemLabel":"Option 4 (No: 004)","value": "value-4","queryString": "option4", "disabled":true}
+                ]  
+                `}
+            />
+
+        </>
+    );
+}
+```
+
+## Asynchronous loading option
 
 You need to use a `fetchCallback` property to format the data of the API callback, which will match the data structure of the component.
 

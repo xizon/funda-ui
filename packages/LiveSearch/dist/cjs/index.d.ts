@@ -1,4 +1,11 @@
 import React from 'react';
+interface OptionConfig {
+    disabled?: boolean;
+    label: any;
+    listItemLabel?: any;
+    value: any;
+    queryString: string | number;
+}
 declare type LiveSearchProps = {
     wrapperClassName?: string;
     controlClassName?: string;
@@ -9,9 +16,11 @@ declare type LiveSearchProps = {
     label?: React.ReactNode | string;
     name?: string;
     maxLength?: any;
+    readOnly?: any;
     disabled?: any;
     required?: any;
     placeholder?: string;
+    options?: OptionConfig[] | string;
     winWidth?: string | Function;
     icon?: React.ReactNode | string;
     btnId?: string;
