@@ -204,8 +204,6 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
     const [controlTempValue, setControlTempValue] = useState<string | null>(null);
     const [isOpen, setIsOpen] = useState<boolean>(false);
     const [incomingData, setIncomingData] = useState<string | null | undefined>(null);
-    const [firstDataFeched, setFirstDataFeched] = useState<boolean>(false);
-
 
 
     const selectedSign = useRef<boolean>(false);

@@ -1289,9 +1289,6 @@ var LiveSearch = function LiveSearch(props) {
   function handleChange(e) {
     var val = e.target.value;
     setChangedVal(val);
-
-    // detect string which contains only spaces
-    if (!val.replace(/\s/g, '').length === true) return;
     if (INPUT_MATCH_ENABLED) {
       //
       if (!fetchTrigger) {
@@ -1413,33 +1410,32 @@ var LiveSearch = function LiveSearch(props) {
             _data = JSON.parse(dataInput);
             onChange === null || onChange === void 0 ? void 0 : onChange(inputRef.current, orginalData, _data);
             setChangedVal(_data.label);
-            _context4.next = 22;
+            _context4.next = 21;
             break;
           case 9:
             _curData = typeof el.target !== 'undefined' ? el.target.dataset.itemdata : el.dataset.itemdata;
-            console.log('****', _curData);
             _data2 = JSON.parse(_curData);
             res = [];
             if (!INPUT_MATCH_ENABLED) {
-              _context4.next = 19;
+              _context4.next = 18;
               break;
             }
-            _context4.next = 16;
+            _context4.next = 15;
             return matchData(inputRef.current.value, false);
-          case 16:
+          case 15:
             res = _context4.sent;
-            _context4.next = 20;
+            _context4.next = 19;
             break;
-          case 19:
+          case 18:
             res = dataInit;
-          case 20:
+          case 19:
             onChange === null || onChange === void 0 ? void 0 : onChange(inputRef.current, res, _data2);
             setChangedVal(_data2.label);
-          case 22:
+          case 21:
             // cancel
             setIsOpen(false);
             cancel();
-          case 24:
+          case 23:
           case "end":
             return _context4.stop();
         }

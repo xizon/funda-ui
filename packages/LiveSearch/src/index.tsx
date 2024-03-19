@@ -8,6 +8,8 @@ import { getAbsolutePositionOfStage } from './utils/get-element-property';
 import RootPortal from 'funda-root-portal';
 import SearchBar from 'funda-searchbar';
 
+
+
 interface OptionConfig {
     disabled?: boolean;
     label: any;
@@ -401,10 +403,6 @@ const LiveSearch = (props: LiveSearchProps) => {
 
         setChangedVal(val);
 
-        // detect string which contains only spaces
-        if (!val.replace(/\s/g, '').length === true) return;
-
-
         if (INPUT_MATCH_ENABLED) {
 
             //
@@ -521,8 +519,7 @@ const LiveSearch = (props: LiveSearchProps) => {
 
         } else {
             const _curData = typeof el.target !== 'undefined' ? el.target.dataset.itemdata : el.dataset.itemdata;
-            console.log('****', _curData);
-
+    
             const _data = JSON.parse(_curData);
 
             let res: any = [];

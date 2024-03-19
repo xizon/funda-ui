@@ -1232,10 +1232,6 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
     _useState16 = _slicedToArray(_useState15, 2),
     incomingData = _useState16[0],
     setIncomingData = _useState16[1];
-  var _useState17 = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)(false),
-    _useState18 = _slicedToArray(_useState17, 2),
-    firstDataFeched = _useState18[0],
-    setFirstDataFeched = _useState18[1];
   var selectedSign = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useRef)(false);
   var MULTI_SEL_VALID = multiSelect ? multiSelect.valid : false;
   var MULTI_SEL_LABEL = multiSelect ? multiSelect.selectAllLabel : 'Select all options';
@@ -1244,13 +1240,13 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
     allItemsLabel: 'All Content',
     noneLabel: 'No items selected'
   };
-  var _useState19 = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)({
+  var _useState17 = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)({
       labels: [],
       values: []
     }),
-    _useState20 = _slicedToArray(_useState19, 2),
-    controlArr = _useState20[0],
-    setControlArr = _useState20[1];
+    _useState18 = _slicedToArray(_useState17, 2),
+    controlArr = _useState18[0],
+    setControlArr = _useState18[1];
   var multiSelControlOptionExist = function multiSelControlOptionExist(arr, val) {
     var _data = arr.filter(Boolean);
     return _data.map(function (v) {
