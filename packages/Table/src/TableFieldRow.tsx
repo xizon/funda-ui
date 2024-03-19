@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useImperativeHandle } from 'react';
 
 import Checkbox from 'funda-checkbox';
 
@@ -11,6 +11,7 @@ import { removeItemOnce, formatCheckboxControlVal, setCheckboxCheckedData } from
 /* Table Field Row
 -------------------------------------------------*/
 type TableFieldRowProps = {
+    ref?: React.RefObject<any>;
     rowActiveClassName?: string;
     fieldsChecked?: boolean[] | boolean;
     updateFirstInitCheckboxesClassName?: any;
@@ -20,6 +21,7 @@ type TableFieldRowProps = {
     content?: any;
     width?: string;
     className?: string;
+    dataUse?: string;
     style?: React.CSSProperties;
     columnHeader?: string;
     index?: number;
@@ -34,12 +36,14 @@ type TableFieldRowProps = {
     onCheck?: (val: any) => void;
     evCellMouseEnter?: (el: any) => void | undefined;
     evCellMouseLeave?: (el: any) => void | undefined;
+    evCellClick?: (el: any) => void | undefined;
 };
 
 const TableFieldRow = (props: TableFieldRowProps) => {
 
 
     const {
+        ref,
         rowActiveClassName = 'active',
         fieldsChecked,
         updateFirstInitCheckboxesClassName,
@@ -48,6 +52,7 @@ const TableFieldRow = (props: TableFieldRowProps) => {
         cols,
         width,
         className,
+        dataUse = '',
         style,
         columnHeader,
         index,
@@ -62,14 +67,29 @@ const TableFieldRow = (props: TableFieldRowProps) => {
         updategetCheckedRootData,
         onCheck,
         evCellMouseEnter,
-        evCellMouseLeave
+        evCellMouseLeave,
+        evCellClick,
     } = props;
+    
 
     const contentRef = useRef<any>(null);
     const checkboxRef = useRef<any>(null);
     const [firstInitCheckboxes, setFirstInitCheckboxes] = useState<boolean>(false);
 
     const rowIndex = rowKey?.replace('row-', '');
+
+
+    // exposes the following methods
+    useImperativeHandle(
+        ref,
+        () => ({
+            check: (e: any, val: any) => {
+                checkedAct(e, val);
+            },
+        }),
+        [ref],
+    );
+
 
 
     // initialize actived checkboxes
@@ -90,6 +110,92 @@ const TableFieldRow = (props: TableFieldRowProps) => {
         }
     };
 
+    function checkedAct(e: any, val: any) {
+        
+        const _curKey: string = e.target.value;
+        const _checkedData: any = getCheckedData;
+
+        let _res: any = getCheckedPrint;
+
+
+        // STEP 1:
+        // Current checkbox
+        //-----------
+        if (val === true) {
+            _res.push(formatCheckboxControlVal(e.target));
+            setCheckboxCheckedData(_checkedData, _curKey, true);
+        } else {
+            setCheckboxCheckedData(_checkedData, _curKey, false);
+            _res = removeItemOnce(_res, _curKey);
+
+        }
+
+        // STEP 2:
+        // Array deduplication
+        //-----------
+        _res = _res.filter((item: any, index: number, self: any[]) => index === self.findIndex((t) => (t.key === item.key)))
+
+
+
+
+        // STEP 3:
+        // ALl parent checkboxes
+        //-----------
+        const _headRow = e.target.closest('table').querySelectorAll('thead th')[0];
+        if (typeof _headRow !== 'undefined') {
+            const _rootCheckbox = _headRow.querySelector('[type="checkbox"]');
+            const _checkboxes = getChildren(e.target.closest('table').querySelector('tbody'), '[type="checkbox"]');
+            const _checkedLength = _checkboxes.filter((el: any) => {
+                return el.checked === true;
+            }).length;
+
+            if (_checkedLength === 0) {
+                _rootCheckbox.indeterminate = false;
+                updategetCheckedRootData([{
+                    key: `row-all`,
+                    checked: false
+                }]);
+            } else {
+                if (_checkedLength === _checkboxes.length) {
+                    _rootCheckbox.indeterminate = false;
+                    updategetCheckedRootData([{
+                        key: `row-all`,
+                        checked: true
+                    }]);
+                }
+
+                if (_checkedLength < _checkboxes.length) {
+                    updategetCheckedRootData([{
+                        key: `row-all`,
+                        checked: false
+                    }]);
+                    _rootCheckbox.indeterminate = true;
+
+                }
+            }
+
+        }
+
+
+        // STEP 4:
+        // Update checked data
+        //-----------
+        updategetCheckedData(_checkedData);
+
+
+        // STEP 5:
+        // Update checked print
+        //-----------
+        updateCheckedPrint(_res);
+
+        console.log('***1', e.target, val, _res)
+
+        // STEP 6:
+        // callback
+        //-----------
+        onCheck?.(_res);
+    }
+
 
     function handleTbodyEnter(e: any) {
         (e.target.closest('table') as any)?.querySelector('tbody').classList.add('drag-trigger-mousedown');
@@ -102,6 +208,7 @@ const TableFieldRow = (props: TableFieldRowProps) => {
                 colSpan={cols}
                 data-table-text={columnHeader}
                 data-table-col={index}
+                data-use={dataUse}
                 style={style ? style : (width ? ((typeof window !== 'undefined' && window.innerWidth > 768) ? { width: width } : {}) : {})}
                 className={className || ''}
                 onMouseEnter={(e: React.MouseEvent) => {
@@ -109,6 +216,9 @@ const TableFieldRow = (props: TableFieldRowProps) => {
                 }}
                 onMouseLeave={(e: React.MouseEvent) => {
                     evCellMouseLeave?.(e);
+                }}
+                onClick={(e: React.MouseEvent) => {
+                    evCellClick?.(e);
                 }}
             >
                 {draggable ? <span className="drag-trigger" data-id={rowIndex} onMouseEnter={handleTbodyEnter}>
@@ -206,91 +316,7 @@ const TableFieldRow = (props: TableFieldRowProps) => {
                             value={`${rowKey}`}
                             checked={latestCheckedData().filter((cur: any) => cur.key === rowKey)[0]?.checked}
                             onChange={(e: any, val: any) => {
-
-                                const _curKey: string = e.target.value;
-                                const _checkedData: any = getCheckedData;
-
-                                let _res: any = getCheckedPrint;
-
-
-                                // STEP 1:
-                                // Current checkbox
-                                //-----------
-                                if (val === true) {
-                                    _res.push(formatCheckboxControlVal(e.target));
-                                    setCheckboxCheckedData(_checkedData, _curKey, true);
-                                } else {
-                                    setCheckboxCheckedData(_checkedData, _curKey, false);
-                                    _res = removeItemOnce(_res, _curKey);
-
-                                }
-
-                                // STEP 2:
-                                // Array deduplication
-                                //-----------
-                                _res = _res.filter((item: any, index: number, self: any[]) => index === self.findIndex((t) => (t.key === item.key)))
-
-
-
-
-                                // STEP 3:
-                                // ALl parent checkboxes
-                                //-----------
-                                const _headRow = e.target.closest('table').querySelectorAll('thead th')[0];
-                                if (typeof _headRow !== 'undefined') {
-                                    const _rootCheckbox = _headRow.querySelector('[type="checkbox"]');
-                                    const _checkboxes = getChildren(e.target.closest('table').querySelector('tbody'), '[type="checkbox"]');
-                                    const _checkedLength = _checkboxes.filter((el: any) => {
-                                        return el.checked === true;
-                                    }).length;
-
-                                    if (_checkedLength === 0) {
-                                        _rootCheckbox.indeterminate = false;
-                                        updategetCheckedRootData([{
-                                            key: `row-all`,
-                                            checked: false
-                                        }]);
-                                    } else {
-                                        if (_checkedLength === _checkboxes.length) {
-                                            _rootCheckbox.indeterminate = false;
-                                            updategetCheckedRootData([{
-                                                key: `row-all`,
-                                                checked: true
-                                            }]);
-                                        }
-
-                                        if (_checkedLength < _checkboxes.length) {
-                                            updategetCheckedRootData([{
-                                                key: `row-all`,
-                                                checked: false
-                                            }]);
-                                            _rootCheckbox.indeterminate = true;
-
-                                        }
-                                    }
-
-                                }
-
-
-                                // STEP 4:
-                                // Update checked data
-                                //-----------
-                                updategetCheckedData(_checkedData);
-
-
-                                // STEP 5:
-                                // Update checked print
-                                //-----------
-                                updateCheckedPrint(_res);
-
-                                console.log('***1', e.target, val, _res)
-
-                                // STEP 6:
-                                // callback
-                                //-----------
-                                onCheck?.(_res);
-
-
+                                checkedAct(e, val);
                             }}
                         />
                     </>}

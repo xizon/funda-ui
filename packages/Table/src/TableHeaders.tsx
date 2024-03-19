@@ -1,7 +1,7 @@
 import React from 'react';
 
-
 import Checkbox from 'funda-checkbox';
+
 
 import { getChildren } from './utils/dom';
 import { formatCheckboxControlVal, setCheckboxCheckedData } from './table-utils';
@@ -22,6 +22,9 @@ type TableHeadersProps = {
     updategetCheckedRootData?: any;
     onCheck?: (val: any) => void;
     evSort?: (option: any) => void;
+    evHeadCellMouseEnter?: (el: any) => void | undefined;
+    evHeadCellMouseLeave?: (el: any) => void | undefined;
+    evHeadCellClick?: (el: any) => void | undefined;
 };
 
 const TableHeaders = (props: TableHeadersProps) => {
@@ -39,8 +42,74 @@ const TableHeaders = (props: TableHeadersProps) => {
         getCheckedRootData,
         updategetCheckedRootData,
         onCheck,
-        evSort
+        evSort,
+        evHeadCellMouseEnter,
+        evHeadCellMouseLeave,
+        evHeadCellClick
     } = props;
+
+
+    function checkedAct(e: any, val: any) {
+
+        const _checkedData: any = getCheckedData;
+        let _res: any = getCheckedPrint;
+
+
+        // STEP 1:
+        // Current checkbox
+        //-----------
+        if (val === true) {
+            updategetCheckedRootData([{
+                key: `row-all`,
+                checked: true
+            }]);
+        } else {
+            updategetCheckedRootData([{
+                key: `row-all`,
+                checked: false
+            }]);
+        }
+
+
+        // STEP 2:
+        // All child checkboxes
+        //-----------
+        const _checkboxes = getChildren(e.target.closest('table').querySelector('tbody'), '[type="checkbox"]');
+        [].slice.call(_checkboxes).forEach((node: any) => {
+            if (val === true) {
+                setCheckboxCheckedData(_checkedData, node.dataset.key, true);
+                _res.push(formatCheckboxControlVal(node));
+            } else {
+                setCheckboxCheckedData(_checkedData, node.dataset.key, false);
+                _res = [];
+
+            }
+        });
+
+
+        // STEP 3:
+        // Array deduplication
+        //-----------
+        _res = _res.filter((item: any, index: number, self: any[]) => index === self.findIndex((t) => (t.key === item.key)))
+
+
+        // STEP 4:
+        // Update checked data
+        //-----------
+        updategetCheckedData(_checkedData);
+
+        // STEP 5:
+        // Update checked print
+        //-----------
+        updateCheckedPrint(_res);
+
+
+        // STEP 6:
+        // callback
+        //-----------
+        onCheck?.(_res);
+
+    }
     
     return data ? (
         <>
@@ -56,8 +125,18 @@ const TableHeaders = (props: TableHeadersProps) => {
                             data-sort-type={item.type} 
                             data-table-text={typeof item.content === 'string' ? item.content.replace(/(<([^>]+)>)/ig, '') : item.content} 
                             data-table-col={i} 
+                            data-use={item.data || ''}
                             style={item.style ? item.style : (item.width ? ((typeof window !== 'undefined' && window.innerWidth > 768) ? {width: item.width} : {}) : {})} 
                             className={item.className || ''}
+                            onMouseEnter={(e: React.MouseEvent) => {
+                                evHeadCellMouseEnter?.(e);
+                            }}
+                            onMouseLeave={(e: React.MouseEvent) => {
+                                evHeadCellMouseLeave?.(e);
+                            }}
+                            onClick={(e: React.MouseEvent) => {
+                                evHeadCellClick?.(e);
+                            }}
                         >
                             {i === 0 ? <span className="checkbox-trigger" style={{visibility: useRadio ? 'hidden' : 'visible'}}>
                                 <Checkbox
@@ -67,66 +146,7 @@ const TableHeaders = (props: TableHeadersProps) => {
                                     value={`row-all`}
                                     checked={getCheckedRootData!.filter((cur: any) => cur.key === 'row-all')[0]?.checked}
                                     onChange={(e: any, val: any) => {
-
-                                        const _checkedData: any = getCheckedData;
-                                        let _res: any = getCheckedPrint;
-
-
-                                        // STEP 1:
-                                        // Current checkbox
-                                        //-----------
-                                        if (val === true) {
-                                            updategetCheckedRootData([{
-                                                key: `row-all`,
-                                                checked: true
-                                            }]);
-                                        } else {
-                                            updategetCheckedRootData([{
-                                                key: `row-all`,
-                                                checked: false
-                                            }]);
-                                        }
-
-
-                                        // STEP 2:
-                                        // All child checkboxes
-                                        //-----------
-                                        const _checkboxes = getChildren(e.target.closest('table').querySelector('tbody'), '[type="checkbox"]');
-                                        [].slice.call(_checkboxes).forEach((node: any) => {
-                                            if (val === true) {
-                                                setCheckboxCheckedData(_checkedData, node.dataset.key, true);
-                                                _res.push(formatCheckboxControlVal(node));
-                                            } else {
-                                                setCheckboxCheckedData(_checkedData, node.dataset.key, false);
-                                                _res = [];
-
-                                            }
-                                        });
-
-
-                                        // STEP 3:
-                                        // Array deduplication
-                                        //-----------
-                                        _res = _res.filter((item: any, index: number, self: any[]) => index === self.findIndex((t) => (t.key === item.key)))
-
-
-                                        // STEP 4:
-                                        // Update checked data
-                                        //-----------
-                                        updategetCheckedData(_checkedData);
-
-                                        // STEP 5:
-                                        // Update checked print
-                                        //-----------
-                                        updateCheckedPrint(_res);
-
-
-                                        // STEP 6:
-                                        // callback
-                                        //-----------
-                                        onCheck?.(_res);
-
-
+                                        checkedAct(e, val);
                                     }}
                                 />
                             </span> : null}

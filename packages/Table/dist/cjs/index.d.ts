@@ -1,5 +1,6 @@
-/// <reference types="react" />
+import React from 'react';
 declare type TableProps = {
+    ref?: React.RefObject<any>;
     wrapperClassName?: string;
     tableClassName?: string;
     bodyClassName?: string;
@@ -20,8 +21,13 @@ declare type TableProps = {
     id?: string;
     onCellMouseEnter?: (el: any) => void;
     onCellMouseLeave?: (el: any) => void;
+    onCellClick?: (el: any) => void;
     onRowMouseEnter?: (el: any) => void;
     onRowMouseLeave?: (el: any) => void;
+    onRowClick?: (el: any) => void;
+    onHeadCellMouseEnter?: (el: any) => void;
+    onHeadCellMouseLeave?: (el: any) => void;
+    onHeadCellClick?: (el: any) => void;
     onClick?: (el: any, val: any) => void;
     onCheck?: (val: any) => void;
     onDrag?: (dragStart: any, dragEnd: any) => void;

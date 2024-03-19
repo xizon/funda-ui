@@ -1,7 +1,5 @@
 import React, { useState } from 'react';
 
-import Radio from 'funda-radio';
-
 
 import TableField from './TableField';
 import TableFieldRow from './TableFieldRow';
@@ -12,6 +10,7 @@ import { formatPerlineControlVal } from './table-utils';
 /* Table Row
 -------------------------------------------------*/
 type TableRowProps = {
+    ref?: React.RefObject<any>;
     rowActiveClassName?: string;
     fieldsChecked?: boolean[] | boolean;
     index: React.Key;
@@ -33,13 +32,16 @@ type TableRowProps = {
     evDragStart?: (option: any) => void | undefined;
     evCellMouseEnter?: (el: any) => void | undefined;
     evCellMouseLeave?: (el: any) => void | undefined;
+    evCellClick?: (el: any) => void | undefined;
     evRowMouseEnter?: (el: any) => void | undefined;
     evRowMouseLeave?: (el: any) => void | undefined;
+    evRowClick?: (el: any) => void | undefined;
 };
 
 const TableRow = (props: TableRowProps) => {
 
     const {
+        ref,
         rowActiveClassName = 'active',
         fieldsChecked,
         index,
@@ -61,8 +63,10 @@ const TableRow = (props: TableRowProps) => {
         evDragStart,
         evCellMouseEnter,
         evCellMouseLeave,
+        evCellClick,
         evRowMouseEnter,
-        evRowMouseLeave
+        evRowMouseLeave,
+        evRowClick,
     } = props;
 
     
@@ -91,6 +95,7 @@ const TableRow = (props: TableRowProps) => {
     function handleClick(event: any) {
         const curVal: any = formatPerlineControlVal(event.currentTarget)
         onClick?.(event, curVal);
+        evRowClick?.(event);
     }
 
     return (
@@ -117,12 +122,14 @@ const TableRow = (props: TableRowProps) => {
                     if ( i === 0 ) {
                         return <TableFieldRow 
                                     key={'th-row' + i} 
+                                    ref={ref}
                                     rowActiveClassName={rowActiveClassName}
                                     fieldsChecked={fieldsChecked}
                                     updateFirstInitCheckboxesClassName={setFirstInitCheckboxesClassName}
                                     useRadio={useRadio}
                                     columnHeader={typeof headerItem.content === 'string' ? headerItem.content.replace(/(<([^>]+)>)/ig, '') : headerItem.content} 
                                     className={el.className}
+                                    dataUse={el.data}
                                     cols={el.cols} 
                                     content={el.content} 
                                     width={el.width} 
@@ -140,12 +147,14 @@ const TableRow = (props: TableRowProps) => {
                                     draggable={draggable}
                                     evCellMouseEnter={evCellMouseEnter}
                                     evCellMouseLeave={evCellMouseLeave}
+                                    evCellClick={evCellClick}
                                 />;
                     } else {
                         return <TableField 
                                     key={'td-row' + i} 
                                     columnHeader={typeof headerItem.content === 'string' ? headerItem.content.replace(/(<([^>]+)>)/ig, '') : headerItem.content} 
                                     className={el.className}
+                                    dataUse={el.data}
                                     cols={el.cols} 
                                     content={el.content} 
                                     width={el.width} 
@@ -153,6 +162,7 @@ const TableRow = (props: TableRowProps) => {
                                     index={i} 
                                     evCellMouseEnter={evCellMouseEnter}
                                     evCellMouseLeave={evCellMouseLeave}
+                                    evCellClick={evCellClick}
                                 />;
                     }
                     

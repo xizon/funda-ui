@@ -35,10 +35,6 @@ import Textarea from 'funda-ui/Textarea';
 | `onChange` | function  | - | Call a function when the value of an HTML element is changed. It returns only one callback value which is the current control. |
 | `onBlur` | function  | - | Call a function when a user leaves an form field. |
 | `onFocus` | function  | - | Call a function when an form field gets focus. |
-| `onCellMouseEnter` | function  | - | It fires when the mouse pointer enters a cell. It returns only one callback value which is the current cell. |
-| `onCellMouseLeave` | function  | - | It fires when the mouse pointer leaves a cell. It returns only one callback value which is the current cell. |
-| `onRowMouseEnter` | function  | - | It fires when the mouse pointer enters a row. It returns only one callback value which is the current row. |
-| `onRowMouseLeave` | function  | - | It fires when the mouse pointer leaves a row. It returns only one callback value which is the current row. |
 
 
 

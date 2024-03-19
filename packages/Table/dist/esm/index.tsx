@@ -14,6 +14,7 @@ import { formatRowControlVal } from './table-utils';
 
 
 type TableProps = {
+    ref?: React.RefObject<any>;
     wrapperClassName?: string;
     tableClassName?: string;
     bodyClassName?: string;
@@ -34,8 +35,13 @@ type TableProps = {
     id?: string;
     onCellMouseEnter?: (el: any) => void;
     onCellMouseLeave?: (el: any) => void;
+    onCellClick?: (el: any) => void;
     onRowMouseEnter?: (el: any) => void;
     onRowMouseLeave?: (el: any) => void;
+    onRowClick?: (el: any) => void;
+    onHeadCellMouseEnter?: (el: any) => void;
+    onHeadCellMouseLeave?: (el: any) => void;
+    onHeadCellClick?: (el: any) => void;
     onClick?: (el: any, val: any) => void;
     onCheck?: (val: any) => void;
     onDrag?: (dragStart: any, dragEnd: any ) => void;
@@ -45,6 +51,7 @@ type TableProps = {
 
 const Table = (props: TableProps) => {
     const {
+        ref,
         wrapperClassName,
         tableClassName,
         bodyClassName,
@@ -64,8 +71,13 @@ const Table = (props: TableProps) => {
         id,
         onCellMouseEnter,
         onCellMouseLeave,
+        onCellClick,
         onRowMouseEnter,
         onRowMouseLeave,
+        onRowClick,
+        onHeadCellMouseEnter,
+        onHeadCellMouseLeave,
+        onHeadCellClick,
         onClick,
         onCheck,
         onDrag,
@@ -543,6 +555,9 @@ const Table = (props: TableProps) => {
                         getCheckedRootData={checkedRootData}
                         onCheck={onCheck}
                         evSort={handleSortList}
+                        evHeadCellMouseEnter={onHeadCellMouseEnter}
+                        evHeadCellMouseLeave={onHeadCellMouseLeave}
+                        evHeadCellClick={onHeadCellClick}
                     />
 
                     <TableSummaries 
@@ -561,6 +576,7 @@ const Table = (props: TableProps) => {
                             return <TableRow 
                                         key={i + String(mainUpdate)} // Trigger child component update when prop of parent changes
                                         index={i}
+                                        ref={ref}
                                         rowActiveClassName={rowActiveClassName}
                                         fieldsChecked={_fieldsChecked}
                                         rowKey={`row-${i}`} 
@@ -581,8 +597,10 @@ const Table = (props: TableProps) => {
                                         evDragStart={handleDragStart}
                                         evCellMouseEnter={onCellMouseEnter}
                                         evCellMouseLeave={onCellMouseLeave}
+                                        evCellClick={onCellClick}
                                         evRowMouseEnter={onRowMouseEnter}
                                         evRowMouseLeave={onRowMouseLeave}
+                                        evRowClick={onRowClick}
                                     />;
                         }) : ""
                         }

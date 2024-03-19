@@ -708,12 +708,15 @@ var TableField = function TableField(props) {
   var cols = props.cols,
     width = props.width,
     className = props.className,
+    _props$dataUse = props.dataUse,
+    dataUse = _props$dataUse === void 0 ? '' : _props$dataUse,
     style = props.style,
     columnHeader = props.columnHeader,
     index = props.index,
     content = props.content,
     evCellMouseEnter = props.evCellMouseEnter,
-    evCellMouseLeave = props.evCellMouseLeave;
+    evCellMouseLeave = props.evCellMouseLeave,
+    evCellClick = props.evCellClick;
   function handleTbodyLeave(e) {
     var _e$target$closest;
     (_e$target$closest = e.target.closest('table')) === null || _e$target$closest === void 0 ? void 0 : _e$target$closest.querySelector('tbody').classList.remove('drag-trigger-mousedown');
@@ -723,9 +726,13 @@ var TableField = function TableField(props) {
     colSpan: cols,
     "data-table-text": columnHeader,
     "data-table-col": index,
+    "data-use": dataUse,
     onMouseEnter: handleTbodyLeave,
     onMouseLeave: function onMouseLeave(e) {
       evCellMouseLeave === null || evCellMouseLeave === void 0 ? void 0 : evCellMouseLeave(e);
+    },
+    onClick: function onClick(e) {
+      evCellClick === null || evCellClick === void 0 ? void 0 : evCellClick(e);
     },
     style: style ? style : width ? typeof window !== 'undefined' && window.innerWidth > 768 ? {
       width: width
@@ -818,7 +825,8 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 var TableFieldRow = function TableFieldRow(props) {
   var _latestCheckedData$fi;
-  var _props$rowActiveClass = props.rowActiveClassName,
+  var ref = props.ref,
+    _props$rowActiveClass = props.rowActiveClassName,
     rowActiveClassName = _props$rowActiveClass === void 0 ? 'active' : _props$rowActiveClass,
     fieldsChecked = props.fieldsChecked,
     updateFirstInitCheckboxesClassName = props.updateFirstInitCheckboxesClassName,
@@ -827,6 +835,8 @@ var TableFieldRow = function TableFieldRow(props) {
     cols = props.cols,
     width = props.width,
     className = props.className,
+    _props$dataUse = props.dataUse,
+    dataUse = _props$dataUse === void 0 ? '' : _props$dataUse,
     style = props.style,
     columnHeader = props.columnHeader,
     index = props.index,
@@ -841,7 +851,8 @@ var TableFieldRow = function TableFieldRow(props) {
     updategetCheckedRootData = props.updategetCheckedRootData,
     onCheck = props.onCheck,
     evCellMouseEnter = props.evCellMouseEnter,
-    evCellMouseLeave = props.evCellMouseLeave;
+    evCellMouseLeave = props.evCellMouseLeave,
+    evCellClick = props.evCellClick;
   var contentRef = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useRef)(null);
   var checkboxRef = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useRef)(null);
   var _useState = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)(false),
@@ -849,6 +860,15 @@ var TableFieldRow = function TableFieldRow(props) {
     firstInitCheckboxes = _useState2[0],
     setFirstInitCheckboxes = _useState2[1];
   var rowIndex = rowKey === null || rowKey === void 0 ? void 0 : rowKey.replace('row-', '');
+
+  // exposes the following methods
+  (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useImperativeHandle)(ref, function () {
+    return {
+      check: function check(e, val) {
+        checkedAct(e, val);
+      }
+    };
+  }, [ref]);
 
   // initialize actived checkboxes
   var latestCheckedData = function latestCheckedData() {
@@ -865,6 +885,81 @@ var TableFieldRow = function TableFieldRow(props) {
       return getCheckedData;
     }
   };
+  function checkedAct(e, val) {
+    var _curKey = e.target.value;
+    var _checkedData = getCheckedData;
+    var _res = getCheckedPrint;
+
+    // STEP 1:
+    // Current checkbox
+    //-----------
+    if (val === true) {
+      _res.push(formatCheckboxControlVal(e.target));
+      setCheckboxCheckedData(_checkedData, _curKey, true);
+    } else {
+      setCheckboxCheckedData(_checkedData, _curKey, false);
+      _res = removeItemOnce(_res, _curKey);
+    }
+
+    // STEP 2:
+    // Array deduplication
+    //-----------
+    _res = _res.filter(function (item, index, self) {
+      return index === self.findIndex(function (t) {
+        return t.key === item.key;
+      });
+    });
+
+    // STEP 3:
+    // ALl parent checkboxes
+    //-----------
+    var _headRow = e.target.closest('table').querySelectorAll('thead th')[0];
+    if (typeof _headRow !== 'undefined') {
+      var _rootCheckbox = _headRow.querySelector('[type="checkbox"]');
+      var _checkboxes = (0,dom.getChildren)(e.target.closest('table').querySelector('tbody'), '[type="checkbox"]');
+      var _checkedLength = _checkboxes.filter(function (el) {
+        return el.checked === true;
+      }).length;
+      if (_checkedLength === 0) {
+        _rootCheckbox.indeterminate = false;
+        updategetCheckedRootData([{
+          key: "row-all",
+          checked: false
+        }]);
+      } else {
+        if (_checkedLength === _checkboxes.length) {
+          _rootCheckbox.indeterminate = false;
+          updategetCheckedRootData([{
+            key: "row-all",
+            checked: true
+          }]);
+        }
+        if (_checkedLength < _checkboxes.length) {
+          updategetCheckedRootData([{
+            key: "row-all",
+            checked: false
+          }]);
+          _rootCheckbox.indeterminate = true;
+        }
+      }
+    }
+
+    // STEP 4:
+    // Update checked data
+    //-----------
+    updategetCheckedData(_checkedData);
+
+    // STEP 5:
+    // Update checked print
+    //-----------
+    updateCheckedPrint(_res);
+    console.log('***1', e.target, val, _res);
+
+    // STEP 6:
+    // callback
+    //-----------
+    onCheck === null || onCheck === void 0 ? void 0 : onCheck(_res);
+  }
   function handleTbodyEnter(e) {
     var _e$target$closest;
     (_e$target$closest = e.target.closest('table')) === null || _e$target$closest === void 0 ? void 0 : _e$target$closest.querySelector('tbody').classList.add('drag-trigger-mousedown');
@@ -874,6 +969,7 @@ var TableFieldRow = function TableFieldRow(props) {
     colSpan: cols,
     "data-table-text": columnHeader,
     "data-table-col": index,
+    "data-use": dataUse,
     style: style ? style : width ? typeof window !== 'undefined' && window.innerWidth > 768 ? {
       width: width
     } : {} : {},
@@ -883,6 +979,9 @@ var TableFieldRow = function TableFieldRow(props) {
     },
     onMouseLeave: function onMouseLeave(e) {
       evCellMouseLeave === null || evCellMouseLeave === void 0 ? void 0 : evCellMouseLeave(e);
+    },
+    onClick: function onClick(e) {
+      evCellClick === null || evCellClick === void 0 ? void 0 : evCellClick(e);
     }
   }, draggable ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("span", {
     className: "drag-trigger",
@@ -1005,79 +1104,7 @@ var TableFieldRow = function TableFieldRow(props) {
       return cur.key === rowKey;
     })[0]) === null || _latestCheckedData$fi === void 0 ? void 0 : _latestCheckedData$fi.checked,
     onChange: function onChange(e, val) {
-      var _curKey = e.target.value;
-      var _checkedData = getCheckedData;
-      var _res = getCheckedPrint;
-
-      // STEP 1:
-      // Current checkbox
-      //-----------
-      if (val === true) {
-        _res.push(formatCheckboxControlVal(e.target));
-        setCheckboxCheckedData(_checkedData, _curKey, true);
-      } else {
-        setCheckboxCheckedData(_checkedData, _curKey, false);
-        _res = removeItemOnce(_res, _curKey);
-      }
-
-      // STEP 2:
-      // Array deduplication
-      //-----------
-      _res = _res.filter(function (item, index, self) {
-        return index === self.findIndex(function (t) {
-          return t.key === item.key;
-        });
-      });
-
-      // STEP 3:
-      // ALl parent checkboxes
-      //-----------
-      var _headRow = e.target.closest('table').querySelectorAll('thead th')[0];
-      if (typeof _headRow !== 'undefined') {
-        var _rootCheckbox = _headRow.querySelector('[type="checkbox"]');
-        var _checkboxes = (0,dom.getChildren)(e.target.closest('table').querySelector('tbody'), '[type="checkbox"]');
-        var _checkedLength = _checkboxes.filter(function (el) {
-          return el.checked === true;
-        }).length;
-        if (_checkedLength === 0) {
-          _rootCheckbox.indeterminate = false;
-          updategetCheckedRootData([{
-            key: "row-all",
-            checked: false
-          }]);
-        } else {
-          if (_checkedLength === _checkboxes.length) {
-            _rootCheckbox.indeterminate = false;
-            updategetCheckedRootData([{
-              key: "row-all",
-              checked: true
-            }]);
-          }
-          if (_checkedLength < _checkboxes.length) {
-            updategetCheckedRootData([{
-              key: "row-all",
-              checked: false
-            }]);
-            _rootCheckbox.indeterminate = true;
-          }
-        }
-      }
-
-      // STEP 4:
-      // Update checked data
-      //-----------
-      updategetCheckedData(_checkedData);
-
-      // STEP 5:
-      // Update checked print
-      //-----------
-      updateCheckedPrint(_res);
-      console.log('***1', e.target, val, _res);
-
-      // STEP 6:
-      // callback
-      //-----------
-      onCheck === null || onCheck === void 0 ? void 0 : onCheck(_res);
+      checkedAct(e, val);
     }
   }))), /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("span", {
     ref: contentRef
@@ -1101,7 +1128,8 @@ function TableRow_arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 var TableRow = function TableRow(props) {
   var _filter$, _filter$2;
-  var _props$rowActiveClass = props.rowActiveClassName,
+  var ref = props.ref,
+    _props$rowActiveClass = props.rowActiveClassName,
     rowActiveClassName = _props$rowActiveClass === void 0 ? 'active' : _props$rowActiveClass,
     fieldsChecked = props.fieldsChecked,
     index = props.index,
@@ -1123,8 +1151,10 @@ var TableRow = function TableRow(props) {
     evDragStart = props.evDragStart,
     evCellMouseEnter = props.evCellMouseEnter,
     evCellMouseLeave = props.evCellMouseLeave,
+    evCellClick = props.evCellClick,
     evRowMouseEnter = props.evRowMouseEnter,
-    evRowMouseLeave = props.evRowMouseLeave;
+    evRowMouseLeave = props.evRowMouseLeave,
+    evRowClick = props.evRowClick;
   var nonExistentRowKey = "row-null";
   var rowIndex = rowKey === null || rowKey === void 0 ? void 0 : rowKey.replace('row-', '');
   var _rowChecked = (_filter$ = getCheckedData.filter(function (cur) {
@@ -1151,6 +1181,7 @@ var TableRow = function TableRow(props) {
   function handleClick(event) {
     var curVal = formatPerlineControlVal(event.currentTarget);
     onClick === null || onClick === void 0 ? void 0 : onClick(event, curVal);
+    evRowClick === null || evRowClick === void 0 ? void 0 : evRowClick(event);
   }
   return /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("tr", {
     draggable: draggable,
@@ -1175,12 +1206,14 @@ var TableRow = function TableRow(props) {
     if (i === 0) {
       return /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement(src_TableFieldRow, {
         key: 'th-row' + i,
+        ref: ref,
         rowActiveClassName: rowActiveClassName,
         fieldsChecked: fieldsChecked,
         updateFirstInitCheckboxesClassName: setFirstInitCheckboxesClassName,
         useRadio: useRadio,
         columnHeader: typeof headerItem.content === 'string' ? headerItem.content.replace(/(<([^>]+)>)/ig, '') : headerItem.content,
         className: el.className,
+        dataUse: el.data,
         cols: el.cols,
         content: el.content,
         width: el.width,
@@ -1197,20 +1230,23 @@ var TableRow = function TableRow(props) {
         onCheck: onCheck,
         draggable: draggable,
         evCellMouseEnter: evCellMouseEnter,
-        evCellMouseLeave: evCellMouseLeave
+        evCellMouseLeave: evCellMouseLeave,
+        evCellClick: evCellClick
       });
     } else {
       return /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement(src_TableField, {
         key: 'td-row' + i,
         columnHeader: typeof headerItem.content === 'string' ? headerItem.content.replace(/(<([^>]+)>)/ig, '') : headerItem.content,
         className: el.className,
+        dataUse: el.data,
         cols: el.cols,
         content: el.content,
         width: el.width,
         style: el.style,
         index: i,
         evCellMouseEnter: evCellMouseEnter,
-        evCellMouseLeave: evCellMouseLeave
+        evCellMouseLeave: evCellMouseLeave,
+        evCellClick: evCellClick
       });
     }
   }) : null));
@@ -1238,7 +1274,67 @@ var TableHeaders = function TableHeaders(props) {
     getCheckedRootData = props.getCheckedRootData,
     updategetCheckedRootData = props.updategetCheckedRootData,
     onCheck = props.onCheck,
-    evSort = props.evSort;
+    evSort = props.evSort,
+    evHeadCellMouseEnter = props.evHeadCellMouseEnter,
+    evHeadCellMouseLeave = props.evHeadCellMouseLeave,
+    evHeadCellClick = props.evHeadCellClick;
+  function checkedAct(e, val) {
+    var _checkedData = getCheckedData;
+    var _res = getCheckedPrint;
+
+    // STEP 1:
+    // Current checkbox
+    //-----------
+    if (val === true) {
+      updategetCheckedRootData([{
+        key: "row-all",
+        checked: true
+      }]);
+    } else {
+      updategetCheckedRootData([{
+        key: "row-all",
+        checked: false
+      }]);
+    }
+
+    // STEP 2:
+    // All child checkboxes
+    //-----------
+    var _checkboxes = (0,dom.getChildren)(e.target.closest('table').querySelector('tbody'), '[type="checkbox"]');
+    [].slice.call(_checkboxes).forEach(function (node) {
+      if (val === true) {
+        setCheckboxCheckedData(_checkedData, node.dataset.key, true);
+        _res.push(formatCheckboxControlVal(node));
+      } else {
+        setCheckboxCheckedData(_checkedData, node.dataset.key, false);
+        _res = [];
+      }
+    });
+
+    // STEP 3:
+    // Array deduplication
+    //-----------
+    _res = _res.filter(function (item, index, self) {
+      return index === self.findIndex(function (t) {
+        return t.key === item.key;
+      });
+    });
+
+    // STEP 4:
+    // Update checked data
+    //-----------
+    updategetCheckedData(_checkedData);
+
+    // STEP 5:
+    // Update checked print
+    //-----------
+    updateCheckedPrint(_res);
+
+    // STEP 6:
+    // callback
+    //-----------
+    onCheck === null || onCheck === void 0 ? void 0 : onCheck(_res);
+  }
   return data ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("thead", {
     className: headClassName ? headClassName : ''
   }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("tr", null, data.map(function (item, i) {
@@ -1250,10 +1346,20 @@ var TableHeaders = function TableHeaders(props) {
       "data-sort-type": item.type,
       "data-table-text": typeof item.content === 'string' ? item.content.replace(/(<([^>]+)>)/ig, '') : item.content,
       "data-table-col": i,
+      "data-use": item.data || '',
       style: item.style ? item.style : item.width ? typeof window !== 'undefined' && window.innerWidth > 768 ? {
         width: item.width
       } : {} : {},
-      className: item.className || ''
+      className: item.className || '',
+      onMouseEnter: function onMouseEnter(e) {
+        evHeadCellMouseEnter === null || evHeadCellMouseEnter === void 0 ? void 0 : evHeadCellMouseEnter(e);
+      },
+      onMouseLeave: function onMouseLeave(e) {
+        evHeadCellMouseLeave === null || evHeadCellMouseLeave === void 0 ? void 0 : evHeadCellMouseLeave(e);
+      },
+      onClick: function onClick(e) {
+        evHeadCellClick === null || evHeadCellClick === void 0 ? void 0 : evHeadCellClick(e);
+      }
     }, i === 0 ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("span", {
       className: "checkbox-trigger",
       style: {
@@ -1268,61 +1374,7 @@ var TableHeaders = function TableHeaders(props) {
         return cur.key === 'row-all';
       })[0]) === null || _filter$ === void 0 ? void 0 : _filter$.checked,
       onChange: function onChange(e, val) {
-        var _checkedData = getCheckedData;
-        var _res = getCheckedPrint;
-
-        // STEP 1:
-        // Current checkbox
-        //-----------
-        if (val === true) {
-          updategetCheckedRootData([{
-            key: "row-all",
-            checked: true
-          }]);
-        } else {
-          updategetCheckedRootData([{
-            key: "row-all",
-            checked: false
-          }]);
-        }
-
-        // STEP 2:
-        // All child checkboxes
-        //-----------
-        var _checkboxes = (0,dom.getChildren)(e.target.closest('table').querySelector('tbody'), '[type="checkbox"]');
-        [].slice.call(_checkboxes).forEach(function (node) {
-          if (val === true) {
-            setCheckboxCheckedData(_checkedData, node.dataset.key, true);
-            _res.push(formatCheckboxControlVal(node));
-          } else {
-            setCheckboxCheckedData(_checkedData, node.dataset.key, false);
-            _res = [];
-          }
-        });
-
-        // STEP 3:
-        // Array deduplication
-        //-----------
-        _res = _res.filter(function (item, index, self) {
-          return index === self.findIndex(function (t) {
-            return t.key === item.key;
-          });
-        });
-
-        // STEP 4:
-        // Update checked data
-        //-----------
-        updategetCheckedData(_checkedData);
-
-        // STEP 5:
-        // Update checked print
-        //-----------
-        updateCheckedPrint(_res);
-
-        // STEP 6:
-        // callback
-        //-----------
-        onCheck === null || onCheck === void 0 ? void 0 : onCheck(_res);
+        checkedAct(e, val);
       }
     })) : null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("span", {
       dangerouslySetInnerHTML: {
@@ -1401,7 +1453,8 @@ function src_arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 
 var Table = function Table(props) {
-  var wrapperClassName = props.wrapperClassName,
+  var ref = props.ref,
+    wrapperClassName = props.wrapperClassName,
     tableClassName = props.tableClassName,
     bodyClassName = props.bodyClassName,
     headClassName = props.headClassName,
@@ -1420,8 +1473,13 @@ var Table = function Table(props) {
     id = props.id,
     onCellMouseEnter = props.onCellMouseEnter,
     onCellMouseLeave = props.onCellMouseLeave,
+    onCellClick = props.onCellClick,
     onRowMouseEnter = props.onRowMouseEnter,
     onRowMouseLeave = props.onRowMouseLeave,
+    onRowClick = props.onRowClick,
+    onHeadCellMouseEnter = props.onHeadCellMouseEnter,
+    onHeadCellMouseLeave = props.onHeadCellMouseLeave,
+    onHeadCellClick = props.onHeadCellClick,
     onClick = props.onClick,
     onCheck = props.onCheck,
     onDrag = props.onDrag,
@@ -1829,7 +1887,10 @@ var Table = function Table(props) {
     updategetCheckedRootData: setCheckedRootData,
     getCheckedRootData: checkedRootData,
     onCheck: onCheck,
-    evSort: handleSortList
+    evSort: handleSortList,
+    evHeadCellMouseEnter: onHeadCellMouseEnter,
+    evHeadCellMouseLeave: onHeadCellMouseLeave,
+    evHeadCellClick: onHeadCellClick
   }), /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement(src_TableSummaries, {
     data: _summaries,
     footClassName: footClassName
@@ -1845,6 +1906,7 @@ var Table = function Table(props) {
       key: i + String(mainUpdate) // Trigger child component update when prop of parent changes
       ,
       index: i,
+      ref: ref,
       rowActiveClassName: rowActiveClassName,
       fieldsChecked: _fieldsChecked,
       rowKey: "row-".concat(i),
@@ -1865,8 +1927,10 @@ var Table = function Table(props) {
       evDragStart: handleDragStart,
       evCellMouseEnter: onCellMouseEnter,
       evCellMouseLeave: onCellMouseLeave,
+      evCellClick: onCellClick,
       evRowMouseEnter: onRowMouseEnter,
-      evRowMouseLeave: onRowMouseLeave
+      evRowMouseLeave: onRowMouseLeave,
+      evRowClick: onRowClick
     });
   }) : ""))));
 };

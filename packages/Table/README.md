@@ -9,6 +9,7 @@ import Table from 'funda-ui/Table';
 ```
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |
+| `ref` | React.ForwardedRef | - | It exposes the following methods of the component:  <br /> <ol><li>`ref.current.check(e, val)`</li></ol> |
 | `wrapperClassName` | string | `mb-3 position-relative` | The class name of the table wrapper. |
 | `tableClassName` | string | `table` | The class name of the table wrapper. |
 | `bodyClassName` | string | - | The class name of `<tbody>`. |
@@ -29,7 +30,15 @@ import Table from 'funda-ui/Table';
 | `onCheck` | function  | - | Call a function when changing the checkbox. It returns only one callback value (**Array**). <blockquote>It is valid when `checkable` is "true"</blockquote> |
 | `onDrag` | function  | - | As each row is dragged, it returns two functions. dragStart, dragEnd, they represent the callback events of drag start and drag end respectively. For example: `onDrag={(dragStart,dragEnd)=>{if(dragStart!==null)dragStart((el,data,printData)=>{console.log('dragStart: ',data,printData);});if(dragEnd!==null)dragEnd((el,data,printData)=>{console.log('dragEnd: ',data,printData);});}}`. <blockquote>It is valid when `draggable` is "true"</blockquote> |
 | `onRenderFinished` | function  | - | Determine whether the table has been rendered. It returns only one callback value (**Boolean**). <blockquote>It is very practical for large batches of data to be displayed in business.</blockquote>|
-
+| `onCellMouseEnter` | function  | - | It fires when the mouse pointer enters a cell. It returns only one callback value which is the current cell. |
+| `onCellMouseLeave` | function  | - | It fires when the mouse pointer leaves a cell. It returns only one callback value which is the current cell. |
+| `onCellClick` | function  | - | It fires when the mouse pointer clicks a cell. It returns only one callback value which is the current cell. |
+| `onRowMouseEnter` | function  | - | It fires when the mouse pointer enters a row. It returns only one callback value which is the current row. |
+| `onRowMouseLeave` | function  | - | It fires when the mouse pointer leaves a row. It returns only one callback value which is the current row. |
+| `onRowClick` | function  | - | It fires when the mouse pointer clicks a row. It returns only one callback value which is the current row. |
+| `onHeadCellMouseEnter` | function  | - | It fires when the mouse pointer enters a cell of header. It returns only one callback value which is the current cell. |
+| `onHeadCellMouseLeave` | function  | - | It fires when the mouse pointer leaves a cell of header. It returns only one callback value which is the current cell. |
+| `onHeadCellClick` | function  | - | It fires when the mouse pointer clicks a cell of header. It returns only one callback value which is the current cell. |
 
 
 
@@ -37,8 +46,8 @@ JSON configuration properties of the `data`:
 
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |
-| `fields` | array | - | Table rows and columns. Eg. `[[{"cols": 1, "width": "50px", "content": "01" },{"cols": 1, "content": "David Lin" }],[{"cols": 1, "width": "50px","content": "02" },{"cols": 1, "content": "Tom McFarlin" }]]` <blockquote><ol><li>The key `cols` identifies the column (change the value if the column is merged). </li><li>The key `content` to place the content of each cell. </li><li>The key `width` to set the width of each cell. It will fail when the breakpoint is less than or equal to 768px.</li><li>The key `className` to set the classes of each cell.</li><li>The key `style` to set the style which type is *React.CSSProperties*, and it will cover `width`.</li></ol><blockquote>|
-| `headers` | array | - | Defines a header cell in an HTML table. Eg. `[{"type": false, "style": {width: '50px', background: 'black', color: 'white'}, "content": "Index" },{"type": "number", "content": "Money" },{"type": "text", "content": "Name" },{"type": "number", "content": "No." },{"type": "date", "content": "Date1" },{"type": "date", "content": "Date2" }]` <blockquote><ol><li>The key `type` is used to specify the type of sorting for each column (Type of sorted values: `false`, `'number'`, `'text'` or `'date'`). If set to `false` or `0`, sorting is disabled. <hr> *It is valid when `sortable` is true* </li><li>The key `content` is the value of each field.</li><li>The key `width` to set the width of each field. It will fail when the breakpoint is less than or equal to 768px.</li><li>The key `className` to set the classes of each field.</li><li>The key `style` to set the style which type is *React.CSSProperties*, and it will cover `width`.</li></ol><blockquote>|
+| `fields` | array | - | Table rows and columns. Eg. `[[{"cols": 1, "width": "50px", "content": "01" },{"cols": 1, "content": "David Lin" }],[{"cols": 1, "width": "50px","content": "02" },{"cols": 1, "content": "Tom McFarlin" }]]` <blockquote><ol><li>The key `cols` identifies the column (change the value if the column is merged). </li><li>The key `content` to place the content of each cell. </li><li>The key `width` to set the width of each cell. It will fail when the breakpoint is less than or equal to 768px.</li><li>The key `className` to set the classes of each cell.</li><li>The key `style` to set the style which type is *React.CSSProperties*, and it will cover `width`.</li><li>The key `data` to set a `data-use` attribute allows us to store extra information on standard.</li></ol><blockquote>|
+| `headers` | array | - | Defines a header cell in an HTML table. Eg. `[{"type": false, "style": {width: '50px', background: 'black', color: 'white'}, "content": "Index" },{"type": "number", "content": "Money" },{"type": "text", "content": "Name" },{"type": "number", "content": "No." },{"type": "date", "content": "Date1" },{"type": "date", "content": "Date2" }]` <blockquote><ol><li>The key `type` is used to specify the type of sorting for each column (Type of sorted values: `false`, `'number'`, `'text'` or `'date'`). If set to `false` or `0`, sorting is disabled. <hr> *It is valid when `sortable` is true* </li><li>The key `content` is the value of each field.</li><li>The key `width` to set the width of each field. It will fail when the breakpoint is less than or equal to 768px.</li><li>The key `className` to set the classes of each field.</li><li>The key `style` to set the style which type is *React.CSSProperties*, and it will cover `width`.</li><li>The key `data` to set a `data-use` attribute allows us to store extra information on standard.</li></ol><blockquote>|
 | `summaries` | array | - | Insert a summarized table in report footer. Eg. `["Text 1","Text 2"]`|
 | `fieldsChecked` | array | - | Insert a summarized table in report footer. Eg. `[false,true]` <blockquote>It is valid when `checkable` or `useRadio` is "true", It is just passed in as a default value. </blockquote>|
 
@@ -320,6 +329,9 @@ export default () => {
                 tableClassName="table table-striped table-hover" 
                 bordered={true} 
                 data={tableData1} 
+                onHeadCellClick={(e: React.MouseEvent) => {
+                    console.log(e.currentTarget);
+                }}
                 onClick={(el, val) => {
                     console.log(val);
                 }}
