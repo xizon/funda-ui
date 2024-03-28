@@ -124,6 +124,24 @@ const EventCalendar = (props: EventCalendarProps) => {
     const [showEdit, setShowEdit] = useState<boolean>(false);
     const [showDelete, setShowDelete] = useState<boolean>(false);
     
+    const padZero = (num: number) => {
+        return num < 10 ? '0' + num : num.toString();
+    };
+
+
+    const isValidDate = (v: string) => {
+        return !(String(new window.Date(v) as any).toLowerCase() === 'invalid date');
+    };
+    
+    const dateFormat = (v: Date | String) => {
+        const date = typeof v === 'string' ? new window.Date(v.replace(/-/g, "/")) : v;  // fix "Invalid date in safari"
+        return date;
+    };
+
+    const getTodayDate = () => {
+        return getCalendarDate(new Date() as any);
+    }
+    
 
     // cell
     const getCells = (type: 'none' | 'forward' | 'back' = 'none') => {
@@ -261,9 +279,9 @@ const EventCalendar = (props: EventCalendarProps) => {
 
             //
             onChangeMonth?.({
-                day: day,
-                month: _date.getMonth(),
-                year: _date.getFullYear()
+                day: padZero(day),
+                month: padZero(_date.getMonth()+1),
+                year: _date.getFullYear().toString()
             });
 
             return _date;
@@ -282,9 +300,9 @@ const EventCalendar = (props: EventCalendarProps) => {
 
             //
             onChangeMonth?.({
-                day: day,
-                month: _date.getMonth(),
-                year: _date.getFullYear()
+                day: padZero(day),
+                month: padZero(_date.getMonth()+1),
+                year: _date.getFullYear().toString()
             });
 
             return _date;
@@ -305,9 +323,9 @@ const EventCalendar = (props: EventCalendarProps) => {
 
         //
         onChangeYear?.({
-            day: day,
-            month: month,
-            year: currentValue
+            day: padZero(day),
+            month: padZero(month+1),
+            year: currentValue.toString()
         });
 
     }
@@ -324,9 +342,9 @@ const EventCalendar = (props: EventCalendarProps) => {
 
         //
         onChangeMonth?.({
-            day: day,
-            month: currentIndex,
-            year: year
+            day: padZero(day),
+            month: padZero(currentIndex+1),
+            year: year.toString()
         });
 
     }
@@ -338,10 +356,11 @@ const EventCalendar = (props: EventCalendarProps) => {
         setTodayDate(now);
 
         //
+        const _now = getTodayDate().split('-');
         onChangeToday?.({
-            day: now.getDay(),
-            month: now.getMonth(),
-            year: now.getFullYear()
+            day: _now[2],
+            month: _now[1],
+            year: _now[0]
         });
 
     }
@@ -379,7 +398,7 @@ const EventCalendar = (props: EventCalendarProps) => {
         if (Array.isArray(eventsValue)) setVal(eventsValue);
         
         // update current today
-        if (typeof customTodayDate !== 'undefined') {
+        if (typeof customTodayDate === 'string' && customTodayDate !== '' && isValidDate(customTodayDate)) {
             const _customNow = new Date(customTodayDate);
             setTodayDate(_customNow);
         }

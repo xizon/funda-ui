@@ -48,7 +48,7 @@
     }
 
     &.active {
-        display: block;
+        display: block !important;
 
         &::before,
         > .tooltip__content {

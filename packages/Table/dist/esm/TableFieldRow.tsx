@@ -188,7 +188,6 @@ const TableFieldRow = (props: TableFieldRowProps) => {
         //-----------
         updateCheckedPrint(_res);
 
-        console.log('***1', e.target, val, _res)
 
         // STEP 6:
         // callback

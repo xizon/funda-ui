@@ -191,7 +191,25 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
     const [isShowTableTooltip, setIsShowTableTooltip] = useState<boolean>(false);
     const [tableTooltipContent, setTableTooltipContent] = useState<any>(null);
     
+    const padZero = (num: number) => {
+        return num < 10 ? '0' + num : num.toString();
+    };
 
+
+    const isValidDate = (v: string) => {
+        return !(String(new window.Date(v) as any).toLowerCase() === 'invalid date');
+    };
+    
+    const dateFormat = (v: Date | String) => {
+        const date = typeof v === 'string' ? new window.Date(v.replace(/-/g, "/")) : v;  // fix "Invalid date in safari"
+        return date;
+    };
+
+
+    const getTodayDate = () => {
+        return getCalendarDate(new Date() as any);
+    }
+    
 
     // cell
     const getCells = (type: 'none' | 'forward' | 'back' = 'none') => {
@@ -466,9 +484,9 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
 
             //
             onChangeMonth?.({
-                day: day,
-                month: _date.getMonth(),
-                year: _date.getFullYear()
+                day: padZero(day),
+                month: padZero(_date.getMonth()+1),
+                year: _date.getFullYear().toString()
             });
 
 
@@ -493,9 +511,9 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
 
             //
             onChangeMonth?.({
-                day: day,
-                month: _date.getMonth(),
-                year: _date.getFullYear()
+                day: padZero(day),
+                month: padZero(_date.getMonth()+1),
+                year: _date.getFullYear().toString()
             });
 
 
@@ -522,9 +540,9 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
 
         //
         onChangeYear?.({
-            day: day,
-            month: month,
-            year: currentValue
+            day: padZero(day),
+            month: padZero(month+1),
+            year: currentValue.toString()
         });
 
         // restore table grid init status
@@ -544,9 +562,9 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
 
         //
         onChangeMonth?.({
-            day: day,
-            month: currentIndex,
-            year: year
+            day: padZero(day),
+            month: padZero(currentIndex+1),
+            year: year.toString()
         });
 
         // restore table grid init status
@@ -561,10 +579,11 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
         setTodayDate(now);
 
         //
+        const _now = getTodayDate().split('-');
         onChangeToday?.({
-            day: now.getDay(),
-            month: now.getMonth(),
-            year: now.getFullYear()
+            day: _now[2],
+            month: _now[1],
+            year: _now[0]
         });
 
         // restore table grid init status
@@ -1354,7 +1373,7 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
         if (Array.isArray(eventsValue)) setVal(eventsValue);
         
         // update current today
-        if (typeof customTodayDate !== 'undefined') {
+        if (typeof customTodayDate !== 'undefined'  && isValidDate(customTodayDate)) {
             const _customNow = new Date(customTodayDate);
             setTodayDate(_customNow);
         }
@@ -1696,6 +1715,7 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
                     role="tooltip"
                     data-microtip-position={tableTooltipDirection || 'bottom'}
                     data-microtip-size={tableTooltipSize || 'auto'}
+                    style={{ display: 'none'}}
                 >
                     <div className="e-cal-tl-table__cell-tooltipcontent">
                         {tableTooltipContent}

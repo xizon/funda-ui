@@ -13,7 +13,7 @@
   z-index: 1055; /* --bs-modal-zindex */
 }
 .livesearch__options-wrapper.active {
-  display: block;
+  display: block !important;
 }
 .livesearch__options-wrapper .livesearch__options-contentlist {
   overflow: hidden;

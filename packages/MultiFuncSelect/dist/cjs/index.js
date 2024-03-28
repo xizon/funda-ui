@@ -2856,7 +2856,8 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
     className: "mf-select__options-wrapper list-group position-absolute border shadow small ".concat(winWidth ? '' : ''),
     style: {
       zIndex: depth ? depth : 1055,
-      width: WIN_WIDTH
+      width: WIN_WIDTH,
+      display: 'none'
     },
     role: "tablist"
   }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {

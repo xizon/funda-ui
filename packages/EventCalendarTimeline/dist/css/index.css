@@ -466,7 +466,7 @@
   position: absolute;
 }
 .e-cal-tl-table__cell-tooltipwrapper.active {
-  display: block;
+  display: block !important;
 }
 .e-cal-tl-table__cell-tooltipwrapper.active::before,
 .e-cal-tl-table__cell-tooltipwrapper.active > .e-cal-tl-table__cell-tooltipcontent {

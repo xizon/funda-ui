@@ -265,7 +265,7 @@ var Input = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(funct
     value: changedVal,
     minLength: minLength || null,
     maxLength: maxLength || null,
-    autoComplete: autoComplete ? 'on' : 'off',
+    autoComplete: typeof autoComplete === 'undefined' ? 'off' : autoComplete,
     onFocus: handleFocus,
     onBlur: handleBlur,
     onChange: handleChange,

@@ -1957,7 +1957,8 @@ var CascadingSelectE2E = function CascadingSelectE2E(props) {
     id: "cas-select-e2e__items-wrapper-".concat(idRes),
     className: "cas-select-e2e__items-wrapper position-absolute border shadow small",
     style: {
-      zIndex: depth ? depth : 1055
+      zIndex: depth ? depth : 1055,
+      display: 'none'
     }
   }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("ul", {
     className: "cas-select-e2e__items-inner"

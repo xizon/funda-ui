@@ -254,7 +254,8 @@ const Tooltip = (props: TooltipProps) => {
                     data-microtip-size={size || 'auto'}
                     style={{
                         left: position.x,
-                        top: position.y
+                        top: position.y,
+                        display: 'none'
                     }}
                 >
                     <div className="tooltip__content">{content}</div>

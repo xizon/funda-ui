@@ -1,0 +1,447 @@
+/* ======================================================
+    <!-- Date -->
+/* ====================================================== */
+
+.date2d__trigger {
+
+    --date2d-focus-border-color:#86b7fe;
+    --date2d-focus-box-shadow: 0 0 0 0.25rem rgba(13,110,253,.25);
+
+    &.focus {
+        .date2d__control input {
+            box-shadow: var(--date2d-focus-box-shadow);
+            border-color: var(--date2d-focus-border-color);
+            outline: 0;
+        }
+    }
+
+    .date2d__control {
+        position: relative;
+
+        .date2d__control__icon {
+            position: absolute;
+            top: .3rem;
+            right: .5rem;
+            z-index: 6;
+            pointer-events: none;
+        }
+    }
+
+}
+
+
+.date2d__wrapper {
+
+    --date2d-box-shadow: 0 5px 15px 0 rgba(0,0,0,.07), 0 15px 35px 0 rgba(50,50,93,.1);
+    --date2d-bg: #fff;
+    --date2d-font-size: 0.75rem;
+    --date2d-title-font-size: 0.875rem;
+    --date2d-title-bg: #f8f9fa;
+    --date2d-border-color: #ddd;
+    --date2d-title-border-color: #eee;
+    --date2d-timeselected-bg: #0b5ed7;
+    --date2d-timeselected-text-color: #fff;
+    --date2d-time-btn-hover-bg: rgba(0, 58, 166, .1);
+
+    
+    position: absolute;
+    z-index: 1055;  /* --bs-modal-zindex */
+    display: none;
+
+    white-space: nowrap;
+    border-radius: 4px;
+    text-align: left;
+    box-shadow: var(--date2d-box-shadow);
+    background: var(--date2d-bg);
+    font-size: var(--date2d-font-size);
+    opacity: 0;
+
+    &.active {
+        display: block !important;
+        animation-name: date2d-show;
+        animation-duration: 0.05s;
+        animation-timing-function: linear;
+        animation-delay: 0.1s;
+        animation-iteration-count: 1;
+        animation-fill-mode: forwards;
+    }
+
+
+    ul, li {
+        white-space: normal;
+        margin: 0;
+        padding: 0;
+        list-style: none;
+    }
+
+
+    /* Time Control */
+    .date2d__tools-container {
+        .date2d__hourslist,
+        .date2d__minuteslist,
+        .date2d__secondslist {
+
+            border-top: 1px solid var(--date2d-border-color);
+            border-bottom: 1px solid var(--date2d-border-color);
+
+            h3 {
+                font-size: var(--date2d-title-font-size);
+                padding: 0.2rem 0.5rem 0.3rem;
+                border-bottom: 1px solid var(--date2d-title-border-color);
+                background: var(--date2d-title-bg);
+            }
+            
+            ul {
+                padding: .15rem;
+                width: 5.625rem;
+                li {
+                    display: inline-block;
+
+                    a {
+                        display: inline-block;
+                        width: 1.75rem;
+                        height: 1.75rem;
+                        border-radius: 50%;
+                        line-height: 2.2;
+                        font-size: var(--date2d-font-size);
+                        text-align: center;
+                        text-decoration: none;
+
+                        &.selected {
+                            color: var(--date2d-timeselected-text-color);
+                            background-color: var(--date2d-timeselected-bg);
+                        }
+                    }
+             
+                    &:hover {
+                        background-color: var(--date2d-time-btn-hover-bg);
+                    }
+                }
+            }
+            
+        }
+
+        .date2d__minuteslist,
+        .date2d__secondslist {
+            ul {
+                width: 10.9375rem;
+            }
+        }
+
+    }
+ 
+
+}
+  
+@keyframes date2d-show {
+    0%   {
+        opacity: 0;
+    }
+
+    100% {
+        opacity: 1;
+    }
+}
+
+
+
+/*----------- Calendar ------------*/
+.date2d-cal__wrapper {
+    --date2d-cal-wrapper-min-width: 300px;
+    --date2d-cal-body-bg: #fff;
+    --date2d-cal-border-color: #ddd;
+    --date2d-cal-border-color-hover: #333;
+    --date2d-cal-header-fs: 1.125rem;
+    --date2d-cal-default-border-color: #eee;
+    --date2d-cal-day-border-color: #ddd;
+    --date2d-cal-day-hover-bg: #f6f6f6;
+    --date2d-cal-dayselected-bg: #0b5ed7;
+    --date2d-cal-dayselected-text-color: #fff;
+    --date2d-cal-year-month-btn-border-color: #ddd;
+    --date2d-cal-year-month-btn-hover-bg: rgba(0, 58, 166, .1);
+    --date2d-cal-year-month-btn-selected-bg: rgba(0, 58, 166, 1);
+    --date2d-cal-year-month-btn-selected-color: #fff;
+    --date2d-cal-month-wrapper-w: 18.75rem;
+    --date2d-cal-year-wrapper-w: 18.75rem;
+    --date2d-cal-header-arrow-bg: #000;
+    --date2d-cal-header-text-color: #000;
+    --date2d-cal-header-prevnext-btn-bg: transparent;
+    --date2d-cal-header-prevnext-btn-color: #000;
+    --date2d-cal-header-prevnext-btn-radius: 0.25rem;
+    --date2d-cal-delete-btn-color: #ee4949;
+    --date2d-cal-footer-today-btn-bg: rgba(0, 58, 166, 1);
+    --date2d-cal-footer-today-btn-color: #fff;
+    --date2d-cal-event-bg: rgb(255, 240, 227);
+
+
+    position: relative;
+    min-width: var(--date2d-cal-wrapper-min-width);
+    border: 1px solid var(--date2d-cal-border-color);
+
+
+    /* --HEADER --*/
+    .date2d-cal__header {
+        font-size: var(--date2d-cal-header-fs);
+        font-weight: bold;
+        padding: 10px 10px 5px 10px;
+        display: flex;
+        justify-content: space-between;
+
+        .date2d-cal__header__btns {
+            .date2d-cal__btn {
+                margin-right: 1rem;
+                color: var(--date2d-cal-header-text-color);
+    
+                svg {
+                    margin-left: .3rem;
+                    
+                    path {
+                        fill: var(--date2d-cal-header-arrow-bg);
+                    }  
+                }
+                
+                &.active {
+                    svg {
+                        transform: rotate(180deg);
+                    }
+                }
+      
+            }
+        }
+
+    }
+
+
+    /*-- BODY --*/
+    .date2d-cal__body {
+        background: var(--date2d-cal-body-bg);
+        width: 100%;
+        display: flex;
+        flex-wrap: wrap;
+    }
+
+    /*-- CELL --*/
+    .date2d-cal__row {
+        display: flex;
+        width: 100%;
+
+        .date2d-cal__cell {
+            flex: 1; 
+            position: relative;
+            height: auto;
+            min-height: 3.5em;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            text-align: center;
+            border-width: 0;
+            border-color: var(--date2d-cal-default-border-color);
+            border-style: solid;
+            border-top-width: 1px;
+            border-right-width: 1px;
+
+            &.last-cell {
+                border-right-width: 0;
+            }
+
+            &.last-row {
+                border-bottom-width: 1px;
+            }
+           
+            &.date2d-cal__day--week {
+                min-height: 2.75em;
+                align-items: end;
+                padding-inline-end: .75rem;
+            }
+
+            .date2d-cal__day__event {
+                background-color: var(--date2d-cal-event-bg);
+                width: 100%;
+                padding: .1rem .5rem;
+                margin: 0.5rem;
+                border-radius: 0;
+                margin-top: 2.5rem;
+                text-align: left;
+                font-size: 0.75rem;
+            }
+        
+            .date2d-cal__day__eventdel {
+                position: absolute;
+                z-index: 1;
+                left: 0;
+                top: 0;
+                display: none;
+                color: var(--date2d-cal-delete-btn-color);
+        
+                svg {
+                    path {
+                        fill: var(--date2d-cal-delete-btn-color);
+                    }
+                }
+            }
+            
+            > span {
+                position: absolute;
+                right: .25rem;
+                top: 0;
+                display: inline-block;
+                padding: .1rem;
+                border-radius: 50%;
+                width: 1.7rem;
+                height: 1.7rem;
+                line-height: 2;
+                margin: .5rem 0;
+
+                &.disabled {
+                    opacity: .2;
+                }
+            }
+
+
+            &:not(.empty) {
+                cursor: pointer;
+            }
+
+            &.today {
+                
+            }
+
+            &.selected {
+                > span {
+                    color: var(--date2d-cal-dayselected-text-color);
+                    background-color: var(--date2d-cal-dayselected-bg);
+                }
+            }
+
+            &:not(.empty):hover {
+                background-color: var(--date2d-cal-day-hover-bg);
+
+                .date2d-cal__day__eventdel {
+                    display: block;
+                }
+            } 
+            
+        }
+
+
+    }
+
+
+    /*-- SELECTION --*/
+    .date2d-cal__month-wrapper {
+        position: absolute;
+        width: var(--date2d-cal-month-wrapper-w);
+        height: auto;
+        z-index: 1;
+        top: calc(1rem + 22px);
+        left: 50%;
+        transform: translateX(-50%);
+        display: none;
+
+        &.active {
+            display: block;
+        }
+
+
+        .date2d-cal__month-container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            grid-template-rows: repeat(4, 2.5em);
+            grid-gap: 10px;
+        }
+
+
+    }
+
+
+    .date2d-cal__year-wrapper {
+        position: absolute;
+        width: var(--date2d-cal-year-wrapper-w);
+        height: auto;
+        z-index: 1;
+        top: calc(1rem + 22px);
+        left: 50%;
+        transform: translateX(-50%);
+        display: none;
+
+        &.active {
+            display: block;
+        }     
+        
+        .date2d-cal__year-container {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            grid-template-rows: repeat(5, 2.5em);
+            grid-gap: 5px;
+        }   
+    }
+
+
+    .date2d-cal__year,
+    .date2d-cal__month {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 5px;
+        font-size: 0.875em;
+        border: 1px solid var(--date2d-cal-year-month-btn-border-color);
+        border-radius: 0.25rem;
+        cursor: pointer;
+
+        &:hover {
+            background-color: var(--date2d-cal-year-month-btn-hover-bg);
+        }
+
+        &.selected {
+            background-color: var(--date2d-cal-year-month-btn-selected-bg);
+            color: var(--date2d-cal-year-month-btn-selected-color);
+        }
+
+    }
+
+
+
+
+    /* --BUTTON --*/
+    .date2d-cal__btn {
+        border: none;
+        outline: none;
+        background: none;
+        padding: 0;
+        margin: 0;
+        box-shadow: none;
+        cursor: pointer;
+
+        svg {
+            path {
+                fill: var(--date2d-cal-header-arrow-bg);
+            }
+        }
+
+        &--prev,
+        &--next {
+            border-radius: var(--date2d-cal-header-prevnext-btn-radius);
+            color: var(--date2d-cal-header-prevnext-btn-color);
+            background-color: var(--date2d-cal-header-prevnext-btn-bg);
+
+            svg {
+                path {
+                    fill: var(--date2d-cal-header-prevnext-btn-color);
+                }
+            }
+
+        }
+
+        &--today {
+            border: 1px solid var(--date2d-cal-border-color);
+            border-radius: 0.25rem;
+            font-size: 0.875em;
+            padding: .2rem 1rem;
+            color: var(--date2d-cal-footer-today-btn-color);
+            background-color: var(--date2d-cal-footer-today-btn-bg);
+        }
+    }
+
+
+}

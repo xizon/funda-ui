@@ -47,12 +47,13 @@ Here is a table of the components and their status.
 | [Slideshow ❏](packages/Slideshow/README.md) | [Color Picker ✅](packages/ColorPicker/README.md) |  |  |  |
 | [Tabs ✅](packages/Tabs/README.md) | [MultipleCheckboxes ✅](packages/MultipleCheckboxes/README.md) |  |  |  |
 | [Timeline ❏](packages/Timeline/README.md) | [MultipleSelect ✅🔥](packages/MultipleSelect/README.md) |  |  |  |
-| [Toast ✅](packages/Toast/README.md) |  |  |  |  |
+| [Toast ✅](packages/Toast/README.md) | [Date ✅](packages/Date/README.md) |  |  |  |
 | [Tooltip ✅](packages/Tooltip/README.md) |  |  |  |  |
 | [Digital Clock ✅](packages/DigitalClock/README.md) |  |  |  |  |
 | [Tree ✅🔥](packages/Tree/README.md) |  |  |  |  |
 | [Event Calendar ✅🔥](packages/EventCalendar/README.md) |  |  |  |  |
 | [Event Calendar Timeline ✅🔥](packages/EventCalendarTimeline/README.md) |  |  |  |  |
+
 
 
 

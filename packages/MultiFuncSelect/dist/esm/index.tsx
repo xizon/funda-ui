@@ -2081,7 +2081,7 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
                             ref={listRef}
                             id={`mf-select__options-wrapper-${idRes}`}
                             className={`mf-select__options-wrapper list-group position-absolute border shadow small ${winWidth ? '' : ''}`}
-                            style={{ zIndex: (depth ? depth : 1055), width: WIN_WIDTH }}
+                            style={{ zIndex: (depth ? depth : 1055), width: WIN_WIDTH, display: 'none' }}
                             role="tablist"
                         >
 

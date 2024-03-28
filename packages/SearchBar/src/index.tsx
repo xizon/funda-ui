@@ -155,7 +155,7 @@ const SearchBar = forwardRef((props: SearchBarProps, ref: any) => {
                         placeholder={placeholder || ''}
                         value={changedVal}
                         maxLength={maxLength || null}
-                        autoComplete={autoComplete ? 'on' : 'off'}
+                        autoComplete={typeof autoComplete === 'undefined' ? 'off' : autoComplete}
                         onFocus={handleFocus}
                         onBlur={handleBlur}
                         onChange={handleChange}

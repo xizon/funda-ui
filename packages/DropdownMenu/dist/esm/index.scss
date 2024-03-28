@@ -193,7 +193,7 @@
 
 
     &.active {
-        display: block;
+        display: block !important;
 
         > ul {
             animation: dd-menu-display 0.4s cubic-bezier(0.73, 0.005, 0.22, 1);

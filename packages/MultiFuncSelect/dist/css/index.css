@@ -222,7 +222,7 @@
   /*------ Extended buttons of Single selection ------*/
 }
 .mf-select__options-wrapper.active {
-  display: block;
+  display: block !important;
 }
 .mf-select__options-wrapper .mf-select__options-contentlist {
   overflow: hidden;

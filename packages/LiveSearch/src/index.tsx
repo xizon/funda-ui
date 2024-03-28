@@ -812,7 +812,7 @@ const LiveSearch = (props: LiveSearchProps) => {
                             ref={listRef}
                             id={`livesearch__options-wrapper-${idRes}`}
                             className={`livesearch__options-wrapper list-group position-absolute border shadow small ${winWidth ? '' : ''}`}
-                            style={{ zIndex: (depth ? depth : 1055), width: WIN_WIDTH }}
+                            style={{ zIndex: (depth ? depth : 1055), width: WIN_WIDTH, display: 'none' }}
                             role="tablist"
                         >
                             <div

@@ -953,7 +953,6 @@ var TableFieldRow = function TableFieldRow(props) {
     // Update checked print
     //-----------
     updateCheckedPrint(_res);
-    console.log('***1', e.target, val, _res);
 
     // STEP 6:
     // callback

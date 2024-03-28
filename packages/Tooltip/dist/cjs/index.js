@@ -665,7 +665,8 @@ var Tooltip = function Tooltip(props) {
     "data-microtip-size": size || 'auto',
     style: {
       left: position.x,
-      top: position.y
+      top: position.y,
+      display: 'none'
     }
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
     className: "tooltip__content"

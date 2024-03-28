@@ -136,7 +136,7 @@
     z-index: 1055;  /* --bs-modal-zindex */
 
     &.active {
-        display: block;
+        display: block !important;
     }
 
 

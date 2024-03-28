@@ -1281,6 +1281,19 @@ var EventCalendar = function EventCalendar(props) {
     _useState26 = _slicedToArray(_useState25, 2),
     showDelete = _useState26[0],
     setShowDelete = _useState26[1];
+  var padZero = function padZero(num) {
+    return num < 10 ? '0' + num : num.toString();
+  };
+  var isValidDate = function isValidDate(v) {
+    return !(String(new window.Date(v)).toLowerCase() === 'invalid date');
+  };
+  var dateFormat = function dateFormat(v) {
+    var date = typeof v === 'string' ? new window.Date(v.replace(/-/g, "/")) : v; // fix "Invalid date in safari"
+    return date;
+  };
+  var getTodayDate = function getTodayDate() {
+    return getCalendarDate(new Date());
+  };
 
   // cell
   var getCells = function getCells() {
@@ -1408,9 +1421,9 @@ var EventCalendar = function EventCalendar(props) {
 
       //
       onChangeMonth === null || onChangeMonth === void 0 ? void 0 : onChangeMonth({
-        day: day,
-        month: _date.getMonth(),
-        year: _date.getFullYear()
+        day: padZero(day),
+        month: padZero(_date.getMonth() + 1),
+        year: _date.getFullYear().toString()
       });
       return _date;
     });
@@ -1425,9 +1438,9 @@ var EventCalendar = function EventCalendar(props) {
 
       //
       onChangeMonth === null || onChangeMonth === void 0 ? void 0 : onChangeMonth({
-        day: day,
-        month: _date.getMonth(),
-        year: _date.getFullYear()
+        day: padZero(day),
+        month: padZero(_date.getMonth() + 1),
+        year: _date.getFullYear().toString()
       });
       return _date;
     });
@@ -1445,9 +1458,9 @@ var EventCalendar = function EventCalendar(props) {
 
     //
     onChangeYear === null || onChangeYear === void 0 ? void 0 : onChangeYear({
-      day: day,
-      month: month,
-      year: currentValue
+      day: padZero(day),
+      month: padZero(month + 1),
+      year: currentValue.toString()
     });
   }
   function handleMonthChange(currentIndex) {
@@ -1460,9 +1473,9 @@ var EventCalendar = function EventCalendar(props) {
 
     //
     onChangeMonth === null || onChangeMonth === void 0 ? void 0 : onChangeMonth({
-      day: day,
-      month: currentIndex,
-      year: year
+      day: padZero(day),
+      month: padZero(currentIndex + 1),
+      year: year.toString()
     });
   }
   function handleTodayChange() {
@@ -1471,10 +1484,11 @@ var EventCalendar = function EventCalendar(props) {
     setTodayDate(now);
 
     //
+    var _now = getTodayDate().split('-');
     onChangeToday === null || onChangeToday === void 0 ? void 0 : onChangeToday({
-      day: now.getDay(),
-      month: now.getMonth(),
-      year: now.getFullYear()
+      day: _now[2],
+      month: _now[1],
+      year: _now[0]
     });
   }
   function handleShowWinYear() {
@@ -1504,7 +1518,7 @@ var EventCalendar = function EventCalendar(props) {
     if (Array.isArray(eventsValue)) setVal(eventsValue);
 
     // update current today
-    if (typeof customTodayDate !== 'undefined') {
+    if (typeof customTodayDate === 'string' && customTodayDate !== '' && isValidDate(customTodayDate)) {
       var _customNow = new Date(customTodayDate);
       setTodayDate(_customNow);
     }

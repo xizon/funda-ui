@@ -1581,7 +1581,8 @@ var CascadingSelect = function CascadingSelect(props) {
     id: "cas-select__items-wrapper-".concat(idRes),
     className: "cas-select__items-wrapper position-absolute border shadow small",
     style: {
-      zIndex: depth ? depth : 1055
+      zIndex: depth ? depth : 1055,
+      display: 'none'
     }
   }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("ul", {
     className: "cas-select__items-inner"

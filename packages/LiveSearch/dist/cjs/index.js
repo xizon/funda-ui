@@ -749,7 +749,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
             placeholder: placeholder || '',
             value: changedVal,
             maxLength: maxLength || null,
-            autoComplete: autoComplete ? 'on' : 'off',
+            autoComplete: typeof autoComplete === 'undefined' ? 'off' : autoComplete,
             onFocus: handleFocus,
             onBlur: handleBlur,
             onChange: handleChange,
@@ -1715,7 +1715,8 @@ var LiveSearch = function LiveSearch(props) {
     className: "livesearch__options-wrapper list-group position-absolute border shadow small ".concat(winWidth ? '' : ''),
     style: {
       zIndex: depth ? depth : 1055,
-      width: WIN_WIDTH
+      width: WIN_WIDTH,
+      display: 'none'
     },
     role: "tablist"
   }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {

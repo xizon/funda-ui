@@ -101,7 +101,7 @@
   /* Options */
 }
 .cas-select__items-wrapper.active {
-  display: block;
+  display: block !important;
 }
 .cas-select__items-wrapper ul,
 .cas-select__items-wrapper li {

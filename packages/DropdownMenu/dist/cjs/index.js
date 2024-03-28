@@ -724,7 +724,10 @@ var DropdownMenu = function DropdownMenu(props) {
   }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
     ref: modalRef,
     className: "dd-menu-list__wrapper",
-    id: "dd-menu-list__wrapper-".concat(idRes)
+    id: "dd-menu-list__wrapper-".concat(idRes),
+    style: {
+      display: 'none'
+    }
   }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("span", {
     ref: iconRef,
     className: "dd-menu-list__icon ".concat(isOpen ? 'active' : '')

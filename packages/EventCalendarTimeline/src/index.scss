@@ -542,7 +542,7 @@
     }
 
     &.active {
-        display: block;
+        display: block !important;
 
         &::before,
         > .e-cal-tl-table__cell-tooltipcontent {

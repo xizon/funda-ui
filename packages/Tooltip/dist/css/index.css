@@ -79,7 +79,7 @@
   position: absolute;
 }
 .tooltip__wrapper.active {
-  display: block;
+  display: block !important;
 }
 .tooltip__wrapper.active::before,
 .tooltip__wrapper.active > .tooltip__content {

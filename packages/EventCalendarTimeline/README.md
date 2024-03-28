@@ -15,7 +15,7 @@ import EventCalendarTimeline from 'funda-ui/EventCalendarTimeline';
 | `langWeekFull` | array  | `['MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY', 'SATURDAY', 'SUNDAY']` | Localization in the component of full week sequence. <blockquote>This attribute is not valid yet</blockquote> |
 | `langMonths` | array  | `['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC']` | Localization in the component of months sequence. |
 | `langMonthsFull` | array  | `['January', 'Febuary', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']` | Localization in the component of full months sequence. |
-| `langToday` | array  | `Today`| Localization in the component of today button. |
+| `langToday` | string  | `Today`| Localization in the component of today button. |
 | `iconRemove` | ReactNode  | `<svg width="20px" height="20px" viewBox="0 0 24 24" fill="none"><path fillRule="evenodd" clipRule="evenodd" d="M22 12c0 5.523-4.477 10-10 10S2 17.523 2 12 6.477 2 12 2s10 4.477 10 10ZM8 11a1 1 0 1 0 0 2h8a1 1 0 1 0 0-2H8Z" fill="#000" /></svg>` | The label of the button to delete current item, if it is not set, only the SVG icon will be included |
 | `cellCloseBtnClassName` | string  | - | Specify a class for close button of cell |
 | `cellCloseBtnLabel` | string \| ReactNode  | - | Set a piece of text or HTML code for the close button of cell |
@@ -453,13 +453,13 @@ export default () => {
                         console.log(currentData); // {id: 0, date: '2023-11-22'}  or {id: 1, date: '2023-11-20', time: '', data: 'event 1'}
                     }}
                     onChangeMonth={(currentData: any) => {
-                        console.log(currentData); // {day: 22, month: 10, year: 2024}
+                        console.log(currentData); // {day: '14', month: '03', year: '2024'}
                     }}
                     onChangeYear={(currentData: any) => {
-                        console.log(currentData); // {day: 22, month: 10, year: 2030}
+                        console.log(currentData); // {day: '14', month: '03', year: '2030'}
                     }}
                     onChangeToday={(currentData: any) => {
-                        console.log(currentData); // {day: 22, month: 10, year: 2024}
+                        console.log(currentData); // {day: '26', month: '03', year: '2024'}
                     }}
                     forwardAndBackFillDisabled
                     draggable

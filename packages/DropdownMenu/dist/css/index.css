@@ -143,7 +143,7 @@
   border-right: 4px solid transparent;
 }
 .dd-menu-list__wrapper.active {
-  display: block;
+  display: block !important;
 }
 .dd-menu-list__wrapper.active > ul {
   animation: dd-menu-display 0.4s cubic-bezier(0.73, 0.005, 0.22, 1);

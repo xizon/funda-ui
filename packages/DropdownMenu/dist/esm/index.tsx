@@ -317,6 +317,7 @@ const DropdownMenu = (props: DropdownMenuProps) => {
                         ref={modalRef}
                         className="dd-menu-list__wrapper"
                         id={`dd-menu-list__wrapper-${idRes}`}
+                        style={{ display: 'none'}}
                     >
                         <span ref={iconRef} className={`dd-menu-list__icon ${isOpen ? 'active' : ''}`}></span>
 
