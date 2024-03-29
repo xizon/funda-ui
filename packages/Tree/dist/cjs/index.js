@@ -393,6 +393,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 
             "data-name": name !== null && name !== void 0 && name.match(/(\[.*?\])/gi) ? "".concat(name.split('[')[0], "-label[]") : "".concat(name, "-label"),
             "data-checkbox": true,
+            "data-checked": val,
             disabled: disabled || null,
             required: required || null,
             onChange: handleChange,

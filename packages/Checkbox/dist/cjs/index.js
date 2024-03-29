@@ -198,6 +198,7 @@ var Checkbox = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(fu
     ,
     "data-name": name !== null && name !== void 0 && name.match(/(\[.*?\])/gi) ? "".concat(name.split('[')[0], "-label[]") : "".concat(name, "-label"),
     "data-checkbox": true,
+    "data-checked": val,
     disabled: disabled || null,
     required: required || null,
     onChange: handleChange,

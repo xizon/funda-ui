@@ -393,6 +393,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 
             "data-name": name !== null && name !== void 0 && name.match(/(\[.*?\])/gi) ? "".concat(name.split('[')[0], "-label[]") : "".concat(name, "-label"),
             "data-checkbox": true,
+            "data-checked": val,
             disabled: disabled || null,
             required: required || null,
             onChange: handleChange,
@@ -825,7 +826,8 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 var TableFieldRow = function TableFieldRow(props) {
   var _latestCheckedData$fi;
-  var ref = props.ref,
+  var tableRootRef = props.tableRootRef,
+    tableCheckRef = props.tableCheckRef,
     _props$rowActiveClass = props.rowActiveClassName,
     rowActiveClassName = _props$rowActiveClass === void 0 ? 'active' : _props$rowActiveClass,
     fieldsChecked = props.fieldsChecked,
@@ -862,13 +864,82 @@ var TableFieldRow = function TableFieldRow(props) {
   var rowIndex = rowKey === null || rowKey === void 0 ? void 0 : rowKey.replace('row-', '');
 
   // exposes the following methods
-  (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useImperativeHandle)(ref, function () {
+  (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useImperativeHandle)(tableCheckRef, function () {
     return {
-      check: function check(e, val) {
-        checkedAct(e, val);
+      check: function check(data, cb) {
+        var _checkedData = getCheckedData;
+        var _res = [];
+
+        // STEP 1:
+        // Update checked data
+        //-----------
+        data.forEach(function (v, i) {
+          var _curKey = "row-".concat(v.index);
+          if (v.value === true) {
+            setCheckboxCheckedData(_checkedData, _curKey, true);
+          } else {
+            setCheckboxCheckedData(_checkedData, _curKey, false);
+          }
+        });
+        updategetCheckedData(_checkedData);
+
+        // STEP 2:
+        // get per checkbox value
+        //----------- 
+        if (tableRootRef.current !== null) {
+          _checkedData.forEach(function (item) {
+            if (item.checked === true) {
+              var _index = item.key.replace('row-', '');
+              var curCheckbox = tableRootRef.current.querySelector('table').querySelector("tbody [data-key=\"row-".concat(_index, "\"]"));
+              _res.push(formatRowControlVal(curCheckbox, checkboxNamePrefix));
+            } else {
+              _res = removeItemOnce(_res, item.key);
+            }
+          });
+        }
+
+        // STEP 3:
+        // Update checked print
+        //-----------
+        updateCheckedPrint(_res);
+
+        // STEP 4:
+        // Update root checkbox
+        //-----------
+        var _headRow = tableRootRef.current.querySelector('table').querySelectorAll('thead th')[0];
+        var allChecked = _checkedData.every(function (item) {
+          return item.checked === true;
+        });
+        if (allChecked) {
+          updategetCheckedRootData([{
+            key: "row-all",
+            checked: true
+          }]);
+        } else {
+          updategetCheckedRootData([{
+            key: "row-all",
+            checked: false
+          }]);
+        }
+        if (typeof _headRow !== 'undefined') {
+          var _rootCheckbox = _headRow.querySelector('[type="checkbox"]');
+          var hasAnyChecked = _checkedData.some(function (item) {
+            return item.checked === true;
+          });
+          if (hasAnyChecked && !allChecked) {
+            _rootCheckbox.indeterminate = true;
+          } else {
+            _rootCheckbox.indeterminate = false;
+          }
+        }
+
+        // STEP 5:
+        // callback
+        //-----------
+        cb === null || cb === void 0 ? void 0 : cb(_res);
       }
     };
-  }, [ref]);
+  }, [tableCheckRef]);
 
   // initialize actived checkboxes
   var latestCheckedData = function latestCheckedData() {
@@ -885,40 +956,14 @@ var TableFieldRow = function TableFieldRow(props) {
       return getCheckedData;
     }
   };
-  function checkedAct(e, val) {
-    var _curKey = e.target.value;
-    var _checkedData = getCheckedData;
-    var _res = getCheckedPrint;
-
-    // STEP 1:
-    // Current checkbox
-    //-----------
-    if (val === true) {
-      _res.push(formatCheckboxControlVal(e.target));
-      setCheckboxCheckedData(_checkedData, _curKey, true);
-    } else {
-      setCheckboxCheckedData(_checkedData, _curKey, false);
-      _res = removeItemOnce(_res, _curKey);
-    }
-
-    // STEP 2:
-    // Array deduplication
-    //-----------
-    _res = _res.filter(function (item, index, self) {
-      return index === self.findIndex(function (t) {
-        return t.key === item.key;
-      });
-    });
-
-    // STEP 3:
-    // ALl parent checkboxes
-    //-----------
-    var _headRow = e.target.closest('table').querySelectorAll('thead th')[0];
+  function updateRootcheckbox(el) {
+    if (el === null) return;
+    var _headRow = el.closest('table').querySelectorAll('thead th')[0];
     if (typeof _headRow !== 'undefined') {
       var _rootCheckbox = _headRow.querySelector('[type="checkbox"]');
-      var _checkboxes = (0,dom.getChildren)(e.target.closest('table').querySelector('tbody'), '[type="checkbox"]');
-      var _checkedLength = _checkboxes.filter(function (el) {
-        return el.checked === true;
+      var _checkboxes = (0,dom.getChildren)(el.closest('table').querySelector('tbody'), '[type="checkbox"]');
+      var _checkedLength = _checkboxes.filter(function (checkbox) {
+        return checkbox.checked === true;
       }).length;
       if (_checkedLength === 0) {
         _rootCheckbox.indeterminate = false;
@@ -943,6 +988,37 @@ var TableFieldRow = function TableFieldRow(props) {
         }
       }
     }
+  }
+  function checkedAct(el, val) {
+    if (el === null) return;
+    var _curKey = el.value;
+    var _checkedData = getCheckedData;
+    var _res = getCheckedPrint;
+
+    // STEP 1:
+    // Current checkbox
+    //-----------
+    if (val === true) {
+      _res.push(formatCheckboxControlVal(el));
+      setCheckboxCheckedData(_checkedData, _curKey, true);
+    } else {
+      setCheckboxCheckedData(_checkedData, _curKey, false);
+      _res = removeItemOnce(_res, _curKey);
+    }
+
+    // STEP 2:
+    // Array deduplication
+    //-----------
+    _res = _res.filter(function (item, index, self) {
+      return index === self.findIndex(function (t) {
+        return t.key === item.key;
+      });
+    });
+
+    // STEP 3:
+    // ALl parent checkboxes
+    //-----------
+    updateRootcheckbox(el);
 
     // STEP 4:
     // Update checked data
@@ -1103,7 +1179,7 @@ var TableFieldRow = function TableFieldRow(props) {
       return cur.key === rowKey;
     })[0]) === null || _latestCheckedData$fi === void 0 ? void 0 : _latestCheckedData$fi.checked,
     onChange: function onChange(e, val) {
-      checkedAct(e, val);
+      checkedAct(e.target, val);
     }
   }))), /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("span", {
     ref: contentRef
@@ -1127,7 +1203,8 @@ function TableRow_arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 var TableRow = function TableRow(props) {
   var _filter$, _filter$2;
-  var ref = props.ref,
+  var tableRootRef = props.tableRootRef,
+    tableCheckRef = props.tableCheckRef,
     _props$rowActiveClass = props.rowActiveClassName,
     rowActiveClassName = _props$rowActiveClass === void 0 ? 'active' : _props$rowActiveClass,
     fieldsChecked = props.fieldsChecked,
@@ -1205,7 +1282,8 @@ var TableRow = function TableRow(props) {
     if (i === 0) {
       return /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement(src_TableFieldRow, {
         key: 'th-row' + i,
-        ref: ref,
+        tableRootRef: tableRootRef,
+        tableCheckRef: tableCheckRef,
         rowActiveClassName: rowActiveClassName,
         fieldsChecked: fieldsChecked,
         updateFirstInitCheckboxesClassName: setFirstInitCheckboxesClassName,
@@ -1277,7 +1355,8 @@ var TableHeaders = function TableHeaders(props) {
     evHeadCellMouseEnter = props.evHeadCellMouseEnter,
     evHeadCellMouseLeave = props.evHeadCellMouseLeave,
     evHeadCellClick = props.evHeadCellClick;
-  function checkedAct(e, val) {
+  function checkedAct(el, val) {
+    if (el === null) return;
     var _checkedData = getCheckedData;
     var _res = getCheckedPrint;
 
@@ -1299,7 +1378,7 @@ var TableHeaders = function TableHeaders(props) {
     // STEP 2:
     // All child checkboxes
     //-----------
-    var _checkboxes = (0,dom.getChildren)(e.target.closest('table').querySelector('tbody'), '[type="checkbox"]');
+    var _checkboxes = (0,dom.getChildren)(el.closest('table').querySelector('tbody'), '[type="checkbox"]');
     [].slice.call(_checkboxes).forEach(function (node) {
       if (val === true) {
         setCheckboxCheckedData(_checkedData, node.dataset.key, true);
@@ -1373,7 +1452,7 @@ var TableHeaders = function TableHeaders(props) {
         return cur.key === 'row-all';
       })[0]) === null || _filter$ === void 0 ? void 0 : _filter$.checked,
       onChange: function onChange(e, val) {
-        checkedAct(e, val);
+        checkedAct(e.target, val);
       }
     })) : null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("span", {
       dangerouslySetInnerHTML: {
@@ -1452,7 +1531,7 @@ function src_arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 
 var Table = function Table(props) {
-  var ref = props.ref,
+  var tableCheckRef = props.tableCheckRef,
     wrapperClassName = props.wrapperClassName,
     tableClassName = props.tableClassName,
     bodyClassName = props.bodyClassName,
@@ -1905,7 +1984,8 @@ var Table = function Table(props) {
       key: i + String(mainUpdate) // Trigger child component update when prop of parent changes
       ,
       index: i,
-      ref: ref,
+      tableRootRef: rootRef,
+      tableCheckRef: tableCheckRef,
       rowActiveClassName: rowActiveClassName,
       fieldsChecked: _fieldsChecked,
       rowKey: "row-".concat(i),

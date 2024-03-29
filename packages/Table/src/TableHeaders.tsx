@@ -49,7 +49,9 @@ const TableHeaders = (props: TableHeadersProps) => {
     } = props;
 
 
-    function checkedAct(e: any, val: any) {
+    function checkedAct(el: any, val: any) {
+
+        if (el === null) return;
 
         const _checkedData: any = getCheckedData;
         let _res: any = getCheckedPrint;
@@ -74,7 +76,7 @@ const TableHeaders = (props: TableHeadersProps) => {
         // STEP 2:
         // All child checkboxes
         //-----------
-        const _checkboxes = getChildren(e.target.closest('table').querySelector('tbody'), '[type="checkbox"]');
+        const _checkboxes = getChildren(el.closest('table').querySelector('tbody'), '[type="checkbox"]');
         [].slice.call(_checkboxes).forEach((node: any) => {
             if (val === true) {
                 setCheckboxCheckedData(_checkedData, node.dataset.key, true);
@@ -146,7 +148,7 @@ const TableHeaders = (props: TableHeadersProps) => {
                                     value={`row-all`}
                                     checked={getCheckedRootData!.filter((cur: any) => cur.key === 'row-all')[0]?.checked}
                                     onChange={(e: any, val: any) => {
-                                        checkedAct(e, val);
+                                        checkedAct(e.target, val);
                                     }}
                                 />
                             </span> : null}

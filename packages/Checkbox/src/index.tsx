@@ -131,6 +131,7 @@ const Checkbox = forwardRef((props: CheckboxProps, ref: any) => {
                         // Don't use "name", it's just a container to display the label
                         data-name={name?.match(/(\[.*?\])/gi) ? `${name.split('[')[0]}-label[]` : `${name}-label`}
                         data-checkbox
+                        data-checked={val}
                         disabled={disabled || null}
                         required={required || null}
                         onChange={handleChange}

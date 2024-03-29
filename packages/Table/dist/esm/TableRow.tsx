@@ -10,7 +10,8 @@ import { formatPerlineControlVal } from './table-utils';
 /* Table Row
 -------------------------------------------------*/
 type TableRowProps = {
-    ref?: React.RefObject<any>;
+    tableRootRef: React.RefObject<any>;
+    tableCheckRef?: React.RefObject<any>;
     rowActiveClassName?: string;
     fieldsChecked?: boolean[] | boolean;
     index: React.Key;
@@ -41,7 +42,8 @@ type TableRowProps = {
 const TableRow = (props: TableRowProps) => {
 
     const {
-        ref,
+        tableRootRef,
+        tableCheckRef,
         rowActiveClassName = 'active',
         fieldsChecked,
         index,
@@ -122,7 +124,8 @@ const TableRow = (props: TableRowProps) => {
                     if ( i === 0 ) {
                         return <TableFieldRow 
                                     key={'th-row' + i} 
-                                    ref={ref}
+                                    tableRootRef={tableRootRef}
+                                    tableCheckRef={tableCheckRef}
                                     rowActiveClassName={rowActiveClassName}
                                     fieldsChecked={fieldsChecked}
                                     updateFirstInitCheckboxesClassName={setFirstInitCheckboxesClassName}

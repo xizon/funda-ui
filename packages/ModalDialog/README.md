@@ -9,7 +9,7 @@ import ModalDialog from 'funda-ui/ModalDialog';
 ```
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |
-| `ref` | React.ForwardedRef | - | It exposes the following methods of the component:  <br /> <ol><li>`ref.current.open()`</li><li>`ref.current.close()`</li></ol> |
+| `ref` | React.RefObject | - | It exposes the following methods of the component:  <br /> <ol><li>`ref.current.open()`</li><li>`ref.current.close()`</li></ol> |
 | `modalContentClassName` | string  | - | The extended class name of content wrapper |
 | `modalHeaderClassName` | string  | - | The extended class name of header |
 | `modalTitleClassName` | string  | - | The extended class name of title |

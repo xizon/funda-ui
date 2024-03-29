@@ -9,7 +9,7 @@ import Table from 'funda-ui/Table';
 ```
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |
-| `ref` | React.ForwardedRef | - | It exposes the following methods of the component:  <br /> <ol><li>`ref.current.check(e, val)`</li></ol> |
+| `tableCheckRef` | React.RefObject | - | It exposes the following methods of the component:  <br /> <ol><li>`ref.current.check([{index:1,value:true},{index:3,value:true}], (res) => { console.log(res) })`</li></ol> |
 | `wrapperClassName` | string | `mb-3 position-relative` | The class name of the table wrapper. |
 | `tableClassName` | string | `table` | The class name of the table wrapper. |
 | `bodyClassName` | string | - | The class name of `<tbody>`. |
@@ -534,3 +534,198 @@ const Main = (props: any) => {
 
 export default Main;
 ```
+
+
+
+
+## Trigger checkbox using exposed methods (Using `tableCheckRef`)
+
+Lets you callback the handle exposed as a ref.
+
+
+```js
+import React, { useState, useRef, useMemo } from "react";
+
+// bootstrap components
+import Table from 'funda-ui/Table';
+
+// component styles
+import 'funda-ui/Table/index.css';
+
+
+const data = {
+	"headers": [
+        {"style": { padding: '.5rem .1rem', width: '18px' }, "content": '' },
+		{"style": {width: '50px', background: 'black', color: 'white'}, "content": "No." },
+	    {"content": "Name" },
+		{"content": "" }
+	],
+	"fields": [
+		[
+           { "cols": 1, "style": { padding: '.5rem .1rem' }, "content": '' },
+		   {"cols": 1, "width": "50px", "content": "01" },
+		   {"cols": 1, "content": "David Lin" },
+		   {"cols": 1, "content": "Because that’s all Steve Job’ needed for a salary."}
+		],
+		[
+           { "cols": 1, "style": { padding: '.5rem .1rem' }, "content": '' },
+		   {"cols": 1, "width": "50px", "content": "02" },
+		   {"cols": 1, "content": "Tom McFarlin" },
+		   {"cols": 1, "content": "Pictures are worth a thousand words, right? So Tom x 1,000."}
+		],	
+		[
+           { "cols": 1, "style": { padding: '.5rem .1rem' }, "content": '' },
+		   {"cols": 1, "width": "50px", "content": "03" },
+		   {"cols": 1, "content": "Chris Ames" },
+		   {"cols": 1, "content": "With hair like that?! Enough said…"}
+		],
+        [
+            { "cols": 1, "style": { padding: '.5rem .1rem' }, "content": '' },
+            {"cols": 1, "width": "50px", "content": "04" },
+            {"cols": 1, "content": "David Lin" },
+            {"cols": 1, "content": "Because that’s all Steve Job’ needed for a salary."}
+         ],
+         [
+            { "cols": 1, "style": { padding: '.5rem .1rem' }, "content": '' },
+            {"cols": 1, "width": "50px", "content": "05" },
+            {"cols": 1, "content": "Tom McFarlin" },
+            {"cols": 1, "content": "Pictures are worth a thousand words, right? So Tom x 1,000."}
+         ],	
+         [
+            { "cols": 1, "style": { padding: '.5rem .1rem' }, "content": '' },
+            {"cols": 1, "width": "50px", "content": "06" },
+            {"cols": 1, "content": "Chris Ames" },
+            {"cols": 1, "content": "With hair like that?! Enough said…"}
+         ],
+         [
+            { "cols": 1, "style": { padding: '.5rem .1rem' }, "content": '' },
+            {"cols": 1, "width": "50px", "content": "07" },
+            {"cols": 1, "content": "Chris Ames" },
+            {"cols": 1, "content": "With hair like that?! Enough said…"}
+         ]
+	],
+    "fieldsChecked": [false, false, false, false, false, false, false]
+};
+
+
+// DO NOT move `useMemo` to component
+function MemoTable(props: any) {
+    const {tableCheckRef, data, updateTable} = props;
+    return useMemo(() => {
+        return <Table
+            tableCheckRef={tableCheckRef}
+            bodyClassName="table-group-divider"
+            rowActiveClassName="active bg-primary-subtle"
+            data={data}
+            checkable={true}
+            onCheck={(val) => {
+                console.log(val);
+            }}
+        />
+    }, [data, updateTable]);
+}
+
+
+export default () => {
+
+    const tableCheckRef = useRef<any>(null);
+    const [updateTable, setUpdateTable] = useState<boolean>(true);
+    const [checkVal, setCheckVal] = useState<boolean>(true);
+
+    function handleSelectTarget(e: any) {
+        e.preventDefault();
+
+        // If you want to get the target index value using html tag, you can use
+        /*
+        const targetTr = document.querySelectorAll('.my-table tbody > tr');
+        const specIds: any[] = [];
+        [].slice.call(targetTr).forEach((node: any, i: number) => {
+            const checkboxDiv = node.querySelector('th');
+            if (checkboxDiv !== null && checkboxDiv.classList.contains('is-target')) {
+                specIds.push({
+                    index: i,
+                    value: val
+                });
+            }
+        });
+        */
+
+
+            
+        // trigger target checkbox
+        if (tableCheckRef.current !== null) {
+            tableCheckRef.current.check([
+                {
+                    index: 1,
+                    value: checkVal
+                },
+                {
+                    index: 3,
+                    value: checkVal
+                },
+                {
+                    index: 5,
+                    value: checkVal
+                }
+            ], (res: any[]) => {
+                console.log(res);
+                /*
+                [
+                    {
+                        "index": 1,
+                        "key": "row-1",
+                        "name": "checkbox--r0--row-1",
+                        "content": [
+                            "",
+                            "02",
+                            "Tom McFarlin",
+                            "Pictures are worth a thousand words, right? So Tom x 1,000."
+                        ]
+                    },
+                    {
+                        "index": 3,
+                        "key": "row-3",
+                        "name": "checkbox--r0--row-3",
+                        "content": [
+                            "",
+                            "04",
+                            "David Lin",
+                            "Because that’s all Steve Job’ needed for a salary."
+                        ]
+                    },
+                    {
+                        "index": 5,
+                        "key": "row-5",
+                        "name": "checkbox--r0--row-5",
+                        "content": [
+                            "",
+                            "06",
+                            "Chris Ames",
+                            "With hair like that?! Enough said…"
+                        ]
+                    }
+                ]
+                */
+            });
+            
+            setCheckVal(!checkVal);
+            setUpdateTable(!updateTable);
+        }
+      
+    }
+
+    return (
+        <>
+
+            <a href="#" onClick={handleSelectTarget}>Select items 1, 3, and 5</a>
+
+            <div className="my-table">
+                <MemoTable tableCheckRef={tableCheckRef} data={data} updateTable={updateTable} />
+            </div>
+
+
+        </>
+    );
+}
+```
+

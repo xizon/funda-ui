@@ -14,7 +14,7 @@ import { formatRowControlVal } from './table-utils';
 
 
 type TableProps = {
-    ref?: React.RefObject<any>;
+    tableCheckRef?: React.RefObject<any>;
     wrapperClassName?: string;
     tableClassName?: string;
     bodyClassName?: string;
@@ -51,7 +51,7 @@ type TableProps = {
 
 const Table = (props: TableProps) => {
     const {
-        ref,
+        tableCheckRef,
         wrapperClassName,
         tableClassName,
         bodyClassName,
@@ -576,7 +576,8 @@ const Table = (props: TableProps) => {
                             return <TableRow 
                                         key={i + String(mainUpdate)} // Trigger child component update when prop of parent changes
                                         index={i}
-                                        ref={ref}
+                                        tableRootRef={rootRef}
+                                        tableCheckRef={tableCheckRef}
                                         rowActiveClassName={rowActiveClassName}
                                         fieldsChecked={_fieldsChecked}
                                         rowKey={`row-${i}`} 

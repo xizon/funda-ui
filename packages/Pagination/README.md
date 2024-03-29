@@ -9,7 +9,7 @@ import Pagination from 'funda-ui/Pagination';
 ```
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |
-| `ref` | React.ForwardedRef | - | It exposes the following methods of the component (The function supports callback to return a value which is the currently activated page number, like this: `ref.current.next((page) => {console.log(page)})`):  <br /> <ol><li>`ref.current.next()`</li><li>`ref.current.prev()`</li><li>`ref.current.first()`</li><li>`ref.current.last()`</li></ol> |
+| `ref` | React.RefObject | - | It exposes the following methods of the component (The function supports callback to return a value which is the currently activated page number, like this: `ref.current.next((page) => {console.log(page)})`):  <br /> <ol><li>`ref.current.next()`</li><li>`ref.current.prev()`</li><li>`ref.current.first()`</li><li>`ref.current.last()`</li></ol> |
 | `wrapperClassName` | string | `mb-3 position-relative` | The class name of the navigation wrapper. |
 | `navClassName` | string | `pagination` | The class name of the navigation. |
 | `apiUrl` | string  | - | <strong>(Required)</strong> An API URL Path. Use `{page}` characters to place a placeholder. such as `/mypage/{page}` |

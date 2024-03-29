@@ -22,7 +22,7 @@ import Input from 'funda-ui/Input';
 | `step` | number | 1 | Specified legal number intervals. |
 | `min` | number | - | The minimum value to accept |
 | `max` | number | - | The maximum value to accept |
-| `pattern` | string | - | The pattern attribute specifies a regular expression that the <input> element's value is checked against on form submission. such as `(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}` |
+| `pattern` | string | - | The pattern attribute specifies a regular expression that the \<input \> element's value is checked against on form submission. such as `(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}` |
 | `placeholder` | string | - |  Specifies a short hint that describes. |
 | `maxLength` | number | - | Defines the maximum number of characters |
 | `readOnly` | boolean | false | When present, it specifies that this component field is read-only. |
