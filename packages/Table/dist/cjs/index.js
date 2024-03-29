@@ -1261,8 +1261,12 @@ var TableRow = function TableRow(props) {
   }
   return /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("tr", {
     draggable: draggable,
-    onDragEnd: evDragEnd,
-    onDragStart: evDragStart,
+    onDragEnd: draggable ? evDragEnd : function () {
+      return void 0;
+    },
+    onDragStart: draggable ? evDragStart : function () {
+      return void 0;
+    },
     "data-id": index,
     "data-key": rowKey,
     className: "row-obj ".concat(rowChecked ? rowActiveClassName : '', " ").concat(typeof onClick === 'undefined' ? '' : 'clickable'),
@@ -1880,7 +1884,8 @@ var Table = function Table(props) {
 
     // reset data-id in order to sort data
     newData.forEach(function (curId, order) {
-      rootRef.current.querySelector('table').querySelector("tbody [data-key=\"row-".concat(curId, "\"]")).dataset.id = order;
+      var _el = rootRef.current.querySelector('table').querySelector("tbody [data-key=\"row-".concat(curId, "\"]"));
+      if (_el !== null) _el.dataset.id = order;
     });
 
     // sort elements

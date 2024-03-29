@@ -1,6 +1,8 @@
 import React from 'react';
 
+
 import Checkbox from 'funda-checkbox';
+
 
 
 import { getChildren } from './utils/dom';

@@ -99,13 +99,13 @@ const TableRow = (props: TableRowProps) => {
         onClick?.(event, curVal);
         evRowClick?.(event);
     }
-
+  
     return (
         <>
             <tr 
                 draggable={draggable} 
-                onDragEnd={evDragEnd} 
-                onDragStart={evDragStart} 
+                onDragEnd={draggable ? evDragEnd : () => void(0)} 
+                onDragStart={draggable ? evDragStart: () => void(0)} 
                 data-id={index} 
                 data-key={rowKey} 
                 className={`row-obj ${rowChecked ? rowActiveClassName : ''} ${typeof onClick === 'undefined' ? '' : 'clickable'}`} 

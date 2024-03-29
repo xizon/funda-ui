@@ -5,6 +5,7 @@ import Checkbox from 'funda-checkbox';
 
 
 
+
 import { getChildren } from './utils/dom';
 import { removeItemOnce, formatCheckboxControlVal, setCheckboxCheckedData, formatRowControlVal } from './table-utils';
 

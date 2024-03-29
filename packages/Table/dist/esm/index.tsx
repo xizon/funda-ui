@@ -456,7 +456,9 @@ const Table = (props: TableProps) => {
 
         // reset data-id in order to sort data
         newData.forEach((curId: any, order: number) => {
-            rootRef.current.querySelector('table').querySelector(`tbody [data-key="row-${curId}"]`).dataset.id = order;
+            const _el = rootRef.current.querySelector('table').querySelector(`tbody [data-key="row-${curId}"]`);
+            if (_el !== null) _el.dataset.id = order;
+            
         });
 
 
