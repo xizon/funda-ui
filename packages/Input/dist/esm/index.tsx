@@ -31,6 +31,7 @@ type InputProps = {
     pattern?: any;
     iconLeft?: React.ReactNode | string;
     iconRight?: React.ReactNode | string;
+    appendControl?: React.ReactNode;
     /** -- */
     id?: string;
     style?: React.CSSProperties;
@@ -72,6 +73,7 @@ const Input = forwardRef((props: InputProps, ref: any) => {
         maxLength,
         alt,
         id,
+        appendControl,
         iconLeft,
         iconRight,
         autoComplete,
@@ -183,50 +185,108 @@ const Input = forwardRef((props: InputProps, ref: any) => {
             <div className={wrapperClassName || wrapperClassName === '' ? wrapperClassName : "mb-3 position-relative"} ref={rootRef}>
                 {label ? <>{typeof label === 'string' ? <label htmlFor={idRes} className={controlGroupWrapperClassName || "form-label"} dangerouslySetInnerHTML={{__html: `${label}`}}></label> : <label htmlFor={idRes} className={controlGroupWrapperClassName || "form-label"}>{label}</label>}</> : null}
 
-                <div className="input-group">
+                <div className={`input-group position-relative ${typeof iconLeft !== 'undefined' && iconLeft !== null && iconLeft !== '' ? 'has-left-content' : ''} ${typeof iconRight !== 'undefined' && iconRight !== null && iconRight !== '' ? 'has-right-content' : ''}`}>
                     {typeof iconLeft !== 'undefined' && iconLeft !== null && iconLeft !== '' ? <><span className={controlGroupTextClassName || "input-group-text"}>{iconLeft}</span></>: null}
 
-                    <input
-                        ref={(node) => {
-                            valRef.current = node;
-                            if (typeof ref === 'function') {
-                                ref(node);
-                            } else if (ref) {
-                                ref.current = node;
-                            }
-                        }}
-                        tabIndex={tabIndex || 0}
-                        type={typeRes}
-                        className={controlClassName || controlClassName === '' ? controlClassName : "form-control"}
-                        id={idRes}
-                        name={name}
-                        step={step || null}
-                        min={min || null}
-                        max={max || null}
-                        src={src || null}
-                        size={size || null}
-                        alt={alt || null}
-                        pattern={pattern || null}
-                        placeholder={placeholder || ''}
-                        value={changedVal}
-                        minLength={minLength || null}
-                        maxLength={maxLength || null}
-                        autoComplete={typeof autoComplete === 'undefined' ? 'off' : autoComplete}
-                        onFocus={handleFocus}
-                        onBlur={handleBlur}
-                        onChange={handleChange}
-                        onKeyDown={handleKeyPressed}
-                        onCompositionStart={handleComposition}
-                        onCompositionUpdate={handleComposition}
-                        onCompositionEnd={handleComposition}
-                        disabled={disabled || null}
-                        required={required || null}
-                        readOnly={readOnly || null}
-                        style={style}
-                        {...attributes}
-                    />
-                    {units ? <><span className={controlGroupTextClassName || "input-group-text"}>{units}</span></>: null}
-                    {typeof iconRight !== 'undefined' && iconRight !== null && iconRight !== '' ? <><span className={controlGroupTextClassName || "input-group-text"}>{iconRight}</span></>: null}
+                    {appendControl && (typeof iconLeft !== 'undefined' && iconLeft !== null && iconLeft !== '') ? <>
+                        <div className="input-group-control-container position-relative">
+
+                            <input
+                                ref={(node) => {
+                                    valRef.current = node;
+                                    if (typeof ref === 'function') {
+                                        ref(node);
+                                    } else if (ref) {
+                                        ref.current = node;
+                                    }
+                                }}
+                                
+                                tabIndex={tabIndex || 0}
+                                type={typeRes}
+                                className={controlClassName || controlClassName === '' ? `${controlClassName} ${typeof iconLeft !== 'undefined' && iconLeft !== null && iconLeft !== '' ? 'rounded-start-0' : ''}` : `form-control ${typeof iconLeft !== 'undefined' && iconLeft !== null && iconLeft !== '' ? 'rounded-start-0' : ''}`}
+                                id={idRes}
+                                name={name}
+                                step={step || null}
+                                min={min || null}
+                                max={max || null}
+                                src={src || null}
+                                size={size || null}
+                                alt={alt || null}
+                                pattern={pattern || null}
+                                placeholder={placeholder || ''}
+                                value={changedVal}
+                                minLength={minLength || null}
+                                maxLength={maxLength || null}
+                                autoComplete={typeof autoComplete === 'undefined' ? 'off' : autoComplete}
+                                onFocus={handleFocus}
+                                onBlur={handleBlur}
+                                onChange={handleChange}
+                                onKeyDown={handleKeyPressed}
+                                onCompositionStart={handleComposition}
+                                onCompositionUpdate={handleComposition}
+                                onCompositionEnd={handleComposition}
+                                disabled={disabled || null}
+                                required={required || null}
+                                readOnly={readOnly || null}
+                                style={style}
+                                {...attributes}
+                            />
+                            {appendControl || ''}
+                            {units ? <><span className={controlGroupTextClassName || "input-group-text"}>{units}</span></> : null}
+                            {typeof iconRight !== 'undefined' && iconRight !== null && iconRight !== '' ? <><span className={controlGroupTextClassName || "input-group-text"}>{iconRight}</span></> : null}
+                        </div>
+                    
+                    </> : <>
+
+
+                        <input
+                            ref={(node) => {
+                                valRef.current = node;
+                                if (typeof ref === 'function') {
+                                    ref(node);
+                                } else if (ref) {
+                                    ref.current = node;
+                                }
+                            }}
+
+                            tabIndex={tabIndex || 0}
+                            type={typeRes}
+                            className={controlClassName || controlClassName === '' ? `${controlClassName}` : `form-control`}
+                            id={idRes}
+                            name={name}
+                            step={step || null}
+                            min={min || null}
+                            max={max || null}
+                            src={src || null}
+                            size={size || null}
+                            alt={alt || null}
+                            pattern={pattern || null}
+                            placeholder={placeholder || ''}
+                            value={changedVal}
+                            minLength={minLength || null}
+                            maxLength={maxLength || null}
+                            autoComplete={typeof autoComplete === 'undefined' ? 'off' : autoComplete}
+                            onFocus={handleFocus}
+                            onBlur={handleBlur}
+                            onChange={handleChange}
+                            onKeyDown={handleKeyPressed}
+                            onCompositionStart={handleComposition}
+                            onCompositionUpdate={handleComposition}
+                            onCompositionEnd={handleComposition}
+                            disabled={disabled || null}
+                            required={required || null}
+                            readOnly={readOnly || null}
+                            style={style}
+                            {...attributes}
+                        />
+                        {appendControl || ''}
+                        {units ? <><span className={controlGroupTextClassName || "input-group-text"}>{units}</span></> : null}
+                        {typeof iconRight !== 'undefined' && iconRight !== null && iconRight !== '' ? <><span className={controlGroupTextClassName || "input-group-text"}>{iconRight}</span></> : null}
+
+                    
+                    </>}
+
+                   
                 </div>
                 {required ? <><span className="position-absolute end-0 top-0 my-2 mx-2"><span className="text-danger">*</span></span></> : ''}
 

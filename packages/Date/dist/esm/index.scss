@@ -4,13 +4,14 @@
 
 .date2d__trigger {
 
-    --date2d-focus-border-color:#86b7fe;
-    --date2d-focus-box-shadow: 0 0 0 0.25rem rgba(13,110,253,.25);
+    --date2d-trigger-focus-border-color:#86b7fe;
+    --date2d-trigger-focus-box-shadow: 0 0 0 0.25rem rgba(13,110,253,.25);
+    --date2d-trigger-clear-bg: rgb(156, 156, 156);
 
     &.focus {
         .date2d__control input {
-            box-shadow: var(--date2d-focus-box-shadow);
-            border-color: var(--date2d-focus-border-color);
+            box-shadow: var(--date2d-trigger-focus-box-shadow);
+            border-color: var(--date2d-trigger-focus-border-color);
             outline: 0;
         }
     }
@@ -18,14 +19,76 @@
     .date2d__control {
         position: relative;
 
+        
+        .form-control {
+            color: transparent;
+            pointer-events: none;
+        }
+
         .date2d__control__icon {
             position: absolute;
             top: .3rem;
             right: .5rem;
             z-index: 6;
             pointer-events: none;
+
+            .date2d__control__icon__close {
+                display: inline-block;
+                margin-right: .2rem;
+                pointer-events: all;
+
+                svg path {
+                    fill: var(--date2d-trigger-clear-bg);
+                }
+            }
+        }
+
+        
+    }
+
+
+    .date2d__control__inputplaceholder {
+        display: inline-block;
+        position: relative;
+        width: 100%;
+        position: absolute;
+        top: 50%;
+        left: 0;
+        z-index: 1;
+        transform: translateY(-50%);
+        margin-left: .5rem;
+        font-size: 0.875rem;
+
+        > input {
+            padding: 0 !important;
+            margin: 0 !important;
+            border: none;
+            background: transparent;
+            box-shadow: none;
+            border: none;
+            width: 1.071428571428571rem;
+
+            outline: 0 !important;
+            border-color: transparent !important;
+            box-shadow: none !important;
+        }
+
+        .date2d__control__inputplaceholder--year {
+            width: 2.142857142857143rem;
+        }
+        
+    }
+
+
+    .date2d__control {
+        .input-group:not(.has-left-content) {
+            .date2d__control__inputplaceholder {
+                left: 0.5rem;
+            }
         }
     }
+    
+
 
 }
 

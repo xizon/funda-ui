@@ -11,8 +11,6 @@ declare type DateProps = {
     onlyTime?: boolean;
     truncateSeconds?: boolean;
     valueUseSlash?: boolean;
-    min?: any;
-    max?: any;
     value?: string;
     label?: React.ReactNode | string;
     units?: string;
@@ -21,8 +19,6 @@ declare type DateProps = {
     disabled?: any;
     required?: any;
     readOnly?: any;
-    placeholder?: string;
-    pattern?: any;
     iconLeft?: React.ReactNode | string;
     iconRight?: React.ReactNode | string;
     /** -- */
@@ -31,9 +27,6 @@ declare type DateProps = {
     autoComplete?: string;
     tabIndex?: number;
     [key: `data-${string}`]: string | undefined;
-    onChangeCallback?: (e: any) => void;
-    onInputCallback?: (e: any) => void;
-    onKeyPressedCallback?: (e: any) => void;
     onLoad?: (e: any, data: any) => void;
     onChange?: (e: any, data: any) => void;
     onBlur?: (e: any) => void;

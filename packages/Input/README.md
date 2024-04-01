@@ -14,6 +14,7 @@ import Input from 'funda-ui/Input';
 | `controlClassName` | string | `form-control` | The class name of the control. |
 | `controlGroupWrapperClassName` | string | `input-group` | The class name of the control group wrapper. |
 | `controlGroupTextClassName` | string | `input-group-text` | The class name of the control group text. |
+| `appendControl` | ReactNode  | - | An extension of the same level as \<input \>, usually used to placeholder of some elements |
 | `type` | string | text | The type of input. Such as \<input type="text" name="name"\> gives a text box. |
 | `value` | string | - | Set a default value for this control |
 | `label` | string \| ReactNode | - | It is used to specify a label for an element of a form.<blockquote>Support html tags</blockquote> |
@@ -202,3 +203,125 @@ export default () => {
     );
 }
 ```
+
+
+
+## Implement independent time elements
+
+```css
+.demo {
+    display: inline-block;
+    position: relative;
+    width: 100%;
+    position: absolute;
+    top: 50%;
+    left: 0;
+    z-index: 1;
+    transform: translateY(-50%);
+    margin-left: .5rem;
+
+    > input {
+        padding: 0 !important;
+        margin: 0 !important;
+        border: none;
+        background: transparent;
+        box-shadow: none;
+        border: none;
+        width: 1.25rem;
+
+        &:focus {
+            outline: none;
+            border: none;
+            box-shadow: none;
+            background: none;
+        }
+    }
+
+    .demo--year {
+        width: 2.5rem;
+    }
+    
+}
+```
+
+
+```js
+import React from "react";
+import Input from 'funda-ui/Input';
+
+export default () => {
+
+    return (
+        <>
+
+            <Input
+                name="name"
+                label="DateTime Custom"
+                type="text"
+                appendControl={<>
+                    <div className="demo">
+
+                        <input
+                            tabIndex={-1}
+                            className="demo--year"
+                            value="2024"
+                            onChange={(e: any) => {
+
+                            }}
+                        />
+                        -
+                        <input
+                            tabIndex={-1}
+                            className="demo--month"
+                            value="03"
+                            onChange={(e: any) => {
+
+                            }}
+                        />
+                        -
+                        <input
+                            tabIndex={-1}
+                            className="demo--day"
+                            value="15"
+                            onChange={(e: any) => {
+
+                            }}
+                        />
+                        &nbsp;
+                        <input
+                            tabIndex={-1}
+                            className="demo--hours"
+                            value="18"
+                            onChange={(e: any) => {
+
+                            }}
+                        />
+                        :
+                        <input
+                            tabIndex={-1}
+                            className="demo--minutes"
+                            value="15"
+                            onChange={(e: any) => {
+
+                            }}
+                        />
+                        :
+                        <input
+                            tabIndex={-1}
+                            className="demo--seconds"
+                            value="00"
+                            onChange={(e: any) => {
+
+                            }}
+                        />
+
+                    </div>
+                </>}
+            /> 
+
+
+        </>
+    );
+}
+```
+

@@ -3,7 +3,6 @@ import React, { useId, useState, useRef, useEffect, forwardRef, ChangeEvent } fr
 import Input from 'funda-input';
 import RootPortal from 'funda-root-portal';
 
-
 import Calendar from './Calendar';
 
 
@@ -27,8 +26,6 @@ type DateProps = {
     onlyTime?: boolean;
     truncateSeconds?: boolean;
     valueUseSlash?: boolean;
-    min?: any;
-    max?: any;
     value?: string;
     label?: React.ReactNode | string;
     units?: string;
@@ -37,8 +34,6 @@ type DateProps = {
     disabled?: any;
     required?: any;
     readOnly?: any;
-    placeholder?: string;
-    pattern?: any;
     iconLeft?: React.ReactNode | string;
     iconRight?: React.ReactNode | string;
 
@@ -48,9 +43,6 @@ type DateProps = {
     autoComplete?: string;
     tabIndex?: number;
     [key: `data-${string}`]: string | undefined;
-    onChangeCallback?: (e: any) => void;
-    onInputCallback?: (e: any) => void;
-    onKeyPressedCallback?: (e: any) => void;
     onLoad?: (e: any, data: any) => void;
     onChange?: (e: any, data: any) => void;
     onBlur?: (e: any) => void;
@@ -82,12 +74,8 @@ const Date = forwardRef((props: DateProps, ref: any) => {
         onlyTime,
         truncateSeconds,
         valueUseSlash,
-        min,
-        max,
         disabled,
         required,
-        placeholder,
-        pattern,
         readOnly,
         value,
         label,
@@ -100,9 +88,6 @@ const Date = forwardRef((props: DateProps, ref: any) => {
         autoComplete,
         style,
         tabIndex,
-        onChangeCallback,
-        onInputCallback,
-        onKeyPressedCallback,
         onLoad,
         onChange,
         onBlur,
@@ -178,6 +163,7 @@ const Date = forwardRef((props: DateProps, ref: any) => {
     const listContentRef = useRef<any>(null);
 
     const [dateDefaultValueExist, setDateDefaultValueExist] = useState<boolean>(false);
+    const [splitVals, setSplitVals] = useState<any[]>(['0000','00','00','00','00','00']);
     const [changedVal, setChangedVal] = useState<string>(value || '');
     const [isShow, setIsShow] = useState<boolean>(false);
     const [dateVal, setDateVal] = useState<string>('');
@@ -361,7 +347,7 @@ const Date = forwardRef((props: DateProps, ref: any) => {
     }
 
 
-    function handleFocus(event: ChangeEvent<HTMLInputElement>) {
+    function handleFocus(event: ChangeEvent<HTMLElement>) {
         rootRef.current.classList.add('focus');
 
 
@@ -375,37 +361,41 @@ const Date = forwardRef((props: DateProps, ref: any) => {
         //
         onChange?.(inputRef.current, val);
 
-        // It fires in real time as the user enters
-        if (typeof (onInputCallback) === 'function') {
-            const newData: any = onInputCallback(inputRef.current);
-            if (newData) setChangedVal(newData);  // Avoid the error "react checkbox changing an uncontrolled input to be controlled"
-        }
-
-
     }
 
 
-    function handleBlur(event: ChangeEvent<HTMLInputElement>) {
-        const el = event.target;
-        const val = event.target.value;
+    function handleBlur(event: ChangeEvent<HTMLElement>) {
 
+        //remove focus style
+        rootRef.current.classList.remove('focus');
 
         //
         onBlur?.(inputRef.current);
+    }
 
-        // It fires when focus is lost
-        if (typeof (onChangeCallback) === 'function') {
-            const newData: any = onChangeCallback(inputRef.current);
-            if (newData) setChangedVal(newData);  // Avoid the error "react checkbox changing an uncontrolled input to be controlled"
+
+    function handleInitSplitClickEv(e: any) {
+        e.target.select();
+        resetDefauleValueExist();
+
+        if (!dateDefaultValueExist) {
+            const _full = `${splitVals[0]}-${splitVals[1]}-${splitVals[2]} ${splitVals[3]}:${splitVals[4]}:${splitVals[5]}`;
+            onChange?.(inputRef.current, valueResConverter(_full));
+            setChangedVal(_full);
         }
     }
 
-    function handleKeyPressed(event: React.KeyboardEvent<HTMLInputElement>) {
-        if (typeof (onKeyPressedCallback) === 'function') {
-            const newData: any = onKeyPressedCallback(inputRef.current);
-            if (newData) setChangedVal(newData);  // Avoid the error "react checkbox changing an uncontrolled input to be controlled"
-        }
+
+    function clearAll() {
+        setDateDefaultValueExist(false);
+        setSplitVals(['0000','00','00','00','00','00']);
+        setChangedVal('');
+        setDateVal('');
+        setTimeVal(['00', '00', '00']);
+        onChange?.(inputRef.current, '');
     }
+
+
 
     function resetDefauleValueExist() {
         if (!dateDefaultValueExist) setDateDefaultValueExist(true);
@@ -422,6 +412,7 @@ const Date = forwardRef((props: DateProps, ref: any) => {
     }
 
 
+
     useEffect(() => {
 
         // update default value
@@ -430,17 +421,19 @@ const Date = forwardRef((props: DateProps, ref: any) => {
             setDateDefaultValueExist(false);
 
             //
-            if (onlyTime) {
-                const {
-                    date,
-                    hours,
-                    minutes,
-                    seconds
-                } = getFullTimeData(getNow());
+            const {
+                date,
+                year,
+                month,
+                day,
+                hours,
+                minutes,
+                seconds
+            } = getFullTimeData(getNow());
 
-                setDateVal(date);
-                setTimeVal([hours, minutes, seconds]);
-            }
+            setDateVal(date);
+            setTimeVal([hours, minutes, seconds]);
+            setSplitVals([year, month, day, hours, minutes, seconds]);
 
         } else {
             setDateDefaultValueExist(true);
@@ -450,10 +443,13 @@ const Date = forwardRef((props: DateProps, ref: any) => {
             const _res = valueResConverter(_dVal);
 
             setChangedVal(_res);
-
+            
             if (isValidDate(_dVal)) {
                 const {
                     date,
+                    year,
+                    month,
+                    day,
                     hours,
                     minutes,
                     seconds
@@ -462,6 +458,7 @@ const Date = forwardRef((props: DateProps, ref: any) => {
 
                 setDateVal(date);
                 setTimeVal([hours, minutes, seconds]);
+                setSplitVals([year, month, day, hours, minutes, seconds]);
             }
 
             onLoad?.(_res, getFullTimeData(_dVal));
@@ -488,6 +485,9 @@ const Date = forwardRef((props: DateProps, ref: any) => {
                 className={`date2d__trigger d-inline-block is-${type}`}
                 onClick={handleShow}
 
+                onFocus={handleFocus}
+                onBlur={handleBlur}
+
             >
 
 
@@ -501,7 +501,7 @@ const Date = forwardRef((props: DateProps, ref: any) => {
                                 ref.current = node;
                             }
                         }}
-                        tabIndex={tabIndex || 0}
+                        tabIndex={-1}
                         type="text"
                         data-date-info={JSON.stringify(getFullTimeData(changedVal))}
                         wrapperClassName={wrapperClassName}
@@ -511,34 +511,208 @@ const Date = forwardRef((props: DateProps, ref: any) => {
                         id={idRes}
                         name={name}
                         alt={alt}
-                        pattern={pattern}
-                        placeholder={placeholder}
                         value={!dateDefaultValueExist ? `` : valueResConverter(changedVal)}
-                        autoComplete={autoComplete}
-                        onFocus={handleFocus}
-                        onBlur={handleBlur}
+                        autoComplete="off"
                         onChange={handleChange}
-                        onKeyPressedCallback={handleKeyPressed}
-                        disabled={disabled}
-                        required={required}
-                        readOnly={readOnly}
                         label={label}
                         units={units}
                         iconLeft={iconLeft}
                         iconRight={iconRight}
+                        appendControl={<>
+                         <div className="date2d__control__inputplaceholder">
+
+                                {typeof onlyTime === 'undefined' || onlyTime === false ? <>
+                                    <input
+                                        tabIndex={tabIndex || 0}
+                                        className="date2d__control__inputplaceholder--year"
+                                        value={!dateDefaultValueExist ? `` : (splitVals[0] === '0000' ? '' : splitVals[0])}
+                                        maxLength={4}
+                                        autoComplete="off"
+                                        disabled={disabled}
+                                        required={required}
+                                        readOnly={readOnly}
+                                        onClick={handleInitSplitClickEv}
+                                        onChange={(e: any) => {
+                                            const _val = e.target.value;
+                                            const _date = `${_val}-${splitVals[1]}-${splitVals[2]}`;
+                                            const _full = `${_date} ${splitVals[3]}:${splitVals[4]}:${splitVals[5]}`;
+                                            onChange?.(inputRef.current, valueResConverter(_full));
+                                            setSplitVals((prevState: string[]) => {
+                                                return [_val, prevState[1], prevState[2], prevState[3], prevState[4], prevState[5]];
+                                            });
+
+                                            // update other data
+                                            setDateVal(_date);
+                                            setChangedVal(_full);
+                                            setTimeVal([splitVals[3], splitVals[4], splitVals[5]]);
+
+                                            
+                                        }}
+                                    />
+                                    -
+                                    <input
+                                        tabIndex={tabIndex || 0}
+                                        className="date2d__control__inputplaceholder--month"
+                                        value={!dateDefaultValueExist ? `` : (splitVals[1] === '00' ? '' : splitVals[1])}
+                                        maxLength={2}
+                                        autoComplete="off"
+                                        disabled={disabled}
+                                        required={required}
+                                        readOnly={readOnly}
+                                        onClick={handleInitSplitClickEv}
+                                        onChange={(e: any) => {
+                                            const _val = e.target.value;
+                                            const _date = `${splitVals[0]}-${_val}-${splitVals[2]}`;
+                                            const _full = `${_date} ${splitVals[3]}:${splitVals[4]}:${splitVals[5]}`;
+                                            onChange?.(inputRef.current, valueResConverter(_full));
+                                            setSplitVals((prevState: string[]) => {
+                                                return [prevState[0], _val, prevState[2], prevState[3], prevState[4], prevState[5]];
+                                            });
+
+                                            // update other data
+                                            setDateVal(_date);
+                                            setChangedVal(_full);
+                                            setTimeVal([splitVals[3], splitVals[4], splitVals[5]]);
+                                            
+                                        }}
+                                    />
+                                    -
+                                    <input
+                                        tabIndex={tabIndex || 0}
+                                        className="date2d__control__inputplaceholder--day"
+                                        value={!dateDefaultValueExist ? `` : (splitVals[2] === '00' ? '' : splitVals[2])}
+                                        maxLength={2}
+                                        onClick={handleInitSplitClickEv}
+                                        onChange={(e: any) => {
+                                            const _val = e.target.value;
+                                            const _date = `${splitVals[0]}-${splitVals[1]}-${_val}`;
+                                            const _full = `${_date} ${splitVals[3]}:${splitVals[4]}:${splitVals[5]}`;
+                                            onChange?.(inputRef.current, valueResConverter(_full));
+                                            setSplitVals((prevState: string[]) => {
+                                                return [prevState[0], prevState[1], _val, prevState[3], prevState[4], prevState[5]];
+                                            });
+
+                                            // update other data
+                                            setDateVal(_date);
+                                            setChangedVal(_full);
+                                            setTimeVal([splitVals[3], splitVals[4], splitVals[5]]);
+
+                                            
+                                        }}
+                                    />
+                                    &nbsp;
+
+                                </> : null}
+
+                                {type === 'datetime-local' || type === 'time' ? <>
+                                    {/* TIME CONTROL */}
+                                    <input
+                                        tabIndex={tabIndex || 0}
+                                        className="date2d__control__inputplaceholder--hours"
+                                        value={!dateDefaultValueExist ? `` : (splitVals[3] === '00' ? '' : splitVals[3])}
+                                        maxLength={2}
+                                        onClick={handleInitSplitClickEv}
+                                        onChange={(e: any) => {
+                                            const _val = e.target.value;
+                                            const _date = `${splitVals[0]}-${splitVals[1]}-${splitVals[2]}`;
+                                            const _full = `${_date} ${_val}:${splitVals[4]}:${splitVals[5]}`;
+                                            onChange?.(inputRef.current, valueResConverter(_full));
+                                            setSplitVals((prevState: string[]) => {
+                                                return [prevState[0], prevState[1], prevState[2], _val, prevState[4], prevState[5]];
+                                            });
+
+                                            // update other data
+                                            setDateVal(_date);
+                                            setChangedVal(_full);
+                                            setTimeVal([_val, splitVals[4], splitVals[5]]);
+
+                                            
+                                        }}
+                                    />
+                                    {/* TIME CONTROL */}
+
+                                    {/* TIME CONTROL */}
+                                    :
+                                    <input
+                                        tabIndex={tabIndex || 0}
+                                        className="date2d__control__inputplaceholder--minutes"
+                                        value={!dateDefaultValueExist ? `` : (splitVals[4] === '00' ? '' : splitVals[4])}
+                                        maxLength={2}
+                                        onClick={handleInitSplitClickEv}
+                                        onChange={(e: any) => {
+                                            const _val = e.target.value;
+                                            const _date = `${splitVals[0]}-${splitVals[1]}-${splitVals[2]}`;
+                                            const _full = `${_date} ${splitVals[3]}:${_val}:${splitVals[5]}`;
+                                            onChange?.(inputRef.current, valueResConverter(_full));
+                                            setSplitVals((prevState: string[]) => {
+                                                return [prevState[0], prevState[1], prevState[2], prevState[3], _val, prevState[5]];
+                                            });
+
+                                            // update other data
+                                            setDateVal(_date);
+                                            setChangedVal(_full);
+                                            setTimeVal([splitVals[3], _val, splitVals[5]]);
+
+                                            
+                                        }}
+                                    />
+                                    {/* TIME CONTROL */}
+
+
+                                    {/* TIME CONTROL */}
+                                    {(typeof truncateSeconds === 'undefined' || truncateSeconds === false) ? <>
+                                        :
+                                        <input
+                                            tabIndex={tabIndex || 0}
+                                            className="date2d__control__inputplaceholder--seconds"
+                                            value={!dateDefaultValueExist ? `` : (splitVals[5] === '00' ? '' : splitVals[5])}
+                                            maxLength={2}
+                                            onClick={handleInitSplitClickEv}
+                                            onChange={(e: any) => {
+                                                const _val = e.target.value;
+                                                const _date = `${splitVals[0]}-${splitVals[1]}-${splitVals[2]}`;
+                                                const _full = `${_date} ${splitVals[3]}:${splitVals[4]}:${_val}`;
+                                                onChange?.(inputRef.current, valueResConverter(_full));
+                                                setSplitVals((prevState: string[]) => {
+                                                    return [prevState[0], prevState[1], prevState[2], prevState[3], prevState[4], _val];
+                                                });
+
+
+                                                // update other data
+                                                setDateVal(_date);
+                                                setChangedVal(_full);
+                                                setTimeVal([splitVals[3], splitVals[4], _val]);
+                                                    
+                                            }}
+                                        />
+                                    </> : null}
+                                    {/* TIME CONTROL */}
+                                </> : null}
+
+
+
+                            </div>
+                        </>}
                         style={style}
                         {...attributes}
                     />
 
                     <span className="date2d__control__icon">
+
+                        <a tabIndex={-1} href="#" className={`date2d__control__icon__close ${dateDefaultValueExist ? '' : 'd-none'}`} onClick={(e: React.MouseEvent) => {
+                            e.preventDefault();
+                            clearAll();
+                        }}><svg width="12px" height="12px" viewBox="0 0 1024 1024"><path fill="#000" d="M195.2 195.2a64 64 0 0 1 90.496 0L512 421.504 738.304 195.2a64 64 0 0 1 90.496 90.496L602.496 512 828.8 738.304a64 64 0 0 1-90.496 90.496L512 602.496 285.696 828.8a64 64 0 0 1-90.496-90.496L421.504 512 195.2 285.696a64 64 0 0 1 0-90.496z" /></svg></a>
+                        
                         <svg width="14px" height="14px" viewBox="0 0 24 24" fill="none">
                             <path d="M3 9H21M9 15L11 17L15 13M7 3V5M17 3V5M6.2 21H17.8C18.9201 21 19.4802 21 19.908 20.782C20.2843 20.5903 20.5903 20.2843 20.782 19.908C21 19.4802 21 18.9201 21 17.8V8.2C21 7.07989 21 6.51984 20.782 6.09202C20.5903 5.71569 20.2843 5.40973 19.908 5.21799C19.4802 5 18.9201 5 17.8 5H6.2C5.0799 5 4.51984 5 4.09202 5.21799C3.71569 5.40973 3.40973 5.71569 3.21799 6.09202C3 6.51984 3 7.07989 3 8.2V17.8C3 18.9201 3 19.4802 3.21799 19.908C3.40973 20.2843 3.71569 20.5903 4.09202 20.782C4.51984 21 5.07989 21 6.2 21Z" stroke="#000000" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                         </svg>
                     </span>
+
+                   
                 </div>
 
-
-
+                
 
             </div>
 
@@ -572,9 +746,14 @@ const Date = forwardRef((props: DateProps, ref: any) => {
                                         resetDefauleValueExist();
 
                                         //
+                                        const _v = getFullTimeData(`${currentData.date} ${timeVal[0]}:${timeVal[1]}:${timeVal[2]}`);
                                         setDateVal(currentData.date);
                                         setChangedVal(`${currentData.date} ${timeVal[0]}:${timeVal[1]}:${timeVal[2]}`);
-                                        onChange?.(inputRef.current, getFullTimeData(`${currentData.date} ${timeVal[0]}:${timeVal[1]}:${timeVal[2]}`));
+                                        setSplitVals((prevState: string[]) => {
+                                            return [_v.year, _v.month, _v.day, prevState[3], prevState[4], prevState[5]];
+                                        });
+                                        onChange?.(inputRef.current, _v);
+                                        
 
                                     }}
                                     onChangeToday={(currentData: any) => {
@@ -582,18 +761,26 @@ const Date = forwardRef((props: DateProps, ref: any) => {
 
                                         //
                                         const _date = `${currentData.year}-${currentData.month}-${currentData.day}`;
+                                        const _v = getFullTimeData(`${_date} ${timeVal[0]}:${timeVal[1]}:${timeVal[2]}`);
                                         setDateVal(`${_date}`);
                                         setChangedVal(`${_date} ${timeVal[0]}:${timeVal[1]}:${timeVal[2]}`);
-                                        onChange?.(inputRef.current, getFullTimeData(`${_date} ${timeVal[0]}:${timeVal[1]}:${timeVal[2]}`));
+                                        setSplitVals((prevState: string[]) => {
+                                            return [_v.year, _v.month, _v.day, prevState[3], prevState[4], prevState[5]];
+                                        });
+                                        onChange?.(inputRef.current, _v);
                                     }}
                                     onChangeMonth={(currentData: any) => {
                                         resetDefauleValueExist();
 
                                         //
                                         const _date = `${currentData.year}-${currentData.month}-${currentData.day}`;
+                                        const _v = getFullTimeData(`${_date} ${timeVal[0]}:${timeVal[1]}:${timeVal[2]}`);
                                         setDateVal(_date);
                                         setChangedVal(`${_date} ${timeVal[0]}:${timeVal[1]}:${timeVal[2]}`);
-                                        onChange?.(inputRef.current, getFullTimeData(`${_date} ${timeVal[0]}:${timeVal[1]}:${timeVal[2]}`));
+                                        setSplitVals((prevState: string[]) => {
+                                            return [_v.year, _v.month, _v.day, prevState[3], prevState[4], prevState[5]];
+                                        });
+                                        onChange?.(inputRef.current, _v);
 
                                     }}
                                     onChangeYear={(currentData: any) => {
@@ -601,9 +788,13 @@ const Date = forwardRef((props: DateProps, ref: any) => {
 
                                         //
                                         const _date = `${currentData.year}-${currentData.month}-${currentData.day}`;
+                                        const _v = getFullTimeData(`${_date} ${timeVal[0]}:${timeVal[1]}:${timeVal[2]}`);
                                         setDateVal(_date);
                                         setChangedVal(`${_date} ${timeVal[0]}:${timeVal[1]}:${timeVal[2]}`);
-                                        onChange?.(inputRef.current, getFullTimeData(`${_date} ${timeVal[0]}:${timeVal[1]}:${timeVal[2]}`));
+                                        setSplitVals((prevState: string[]) => {
+                                            return [_v.year, _v.month, _v.day, prevState[3], prevState[4], prevState[5]];
+                                        });
+                                        onChange?.(inputRef.current, _v);
 
                                     }}
                                 />
@@ -632,11 +823,15 @@ const Date = forwardRef((props: DateProps, ref: any) => {
 
                                                     //
                                                     const _val = (e.currentTarget as any).dataset.value;
+                                                    const _v = getFullTimeData(`${dateVal} ${_val}:${timeVal[1]}:${timeVal[2]}`);
                                                     setChangedVal(`${dateVal} ${_val}:${timeVal[1]}:${timeVal[2]}`);
                                                     setTimeVal((prevState: string[]) => {
                                                         return [_val, prevState[1], prevState[2]];
                                                     });
-                                                    onChange?.(inputRef.current, getFullTimeData(`${dateVal} ${_val}:${timeVal[1]}:${timeVal[2]}`));
+                                                    setSplitVals((prevState: string[]) => {
+                                                        return [prevState[0], prevState[1], prevState[2], _v.hours, prevState[4], prevState[5]];
+                                                    });
+                                                    onChange?.(inputRef.current, _v);
 
                                                 }}
                                                 className={`${timeVal[0] == hour ? 'selected' : ''}`}
@@ -667,11 +862,15 @@ const Date = forwardRef((props: DateProps, ref: any) => {
 
                                                     //
                                                     const _val = (e.currentTarget as any).dataset.value;
+                                                    const _v = getFullTimeData(`${dateVal} ${timeVal[0]}:${_val}:${timeVal[2]}`);
                                                     setChangedVal(`${dateVal} ${timeVal[0]}:${_val}:${timeVal[2]}`);
                                                     setTimeVal((prevState: string[]) => {
                                                         return [prevState[0], _val, prevState[2]];
                                                     });
-                                                    onChange?.(inputRef.current, getFullTimeData(`${dateVal} ${timeVal[0]}:${_val}:${timeVal[2]}`));
+                                                    setSplitVals((prevState: string[]) => {
+                                                        return [prevState[0], prevState[1], prevState[2], prevState[3], _v.minutes, prevState[5]];
+                                                    });
+                                                    onChange?.(inputRef.current, _v);
 
                                                 }}
                                                 className={`${timeVal[1] == v ? 'selected' : ''}`}
@@ -705,11 +904,15 @@ const Date = forwardRef((props: DateProps, ref: any) => {
 
                                                         //
                                                         const _val = (e.currentTarget as any).dataset.value;
+                                                        const _v = getFullTimeData(`${dateVal} ${timeVal[0]}:${timeVal[1]}:${_val}`);
                                                         setChangedVal(`${dateVal} ${timeVal[0]}:${timeVal[1]}:${_val}`);
                                                         setTimeVal((prevState: string[]) => {
                                                             return [prevState[0], prevState[1], _val];
                                                         });
-                                                        onChange?.(inputRef.current, getFullTimeData(`${dateVal} ${timeVal[0]}:${timeVal[1]}:${_val}`));
+                                                        setSplitVals((prevState: string[]) => {
+                                                            return [prevState[0], prevState[1], prevState[2], prevState[3], prevState[5], _v.seconds ];
+                                                        });
+                                                        onChange?.(inputRef.current, _v);
 
                                                     }}
                                                     className={`${timeVal[2] == v ? 'selected' : ''}`}

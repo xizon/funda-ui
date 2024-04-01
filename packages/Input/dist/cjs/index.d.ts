@@ -29,6 +29,7 @@ declare type InputProps = {
     pattern?: any;
     iconLeft?: React.ReactNode | string;
     iconRight?: React.ReactNode | string;
+    appendControl?: React.ReactNode;
     /** -- */
     id?: string;
     style?: React.CSSProperties;
