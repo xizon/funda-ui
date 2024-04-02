@@ -3,6 +3,7 @@ import React, { useId, useState, useRef, useEffect, forwardRef, ChangeEvent } fr
 import Input from 'funda-input';
 import RootPortal from 'funda-root-portal';
 
+
 import Calendar from './Calendar';
 
 
@@ -15,6 +16,7 @@ import i18n__zh_CN from './localization/zh_CN';
 
 
 type DateProps = {
+    popupClassName?: string;
     wrapperClassName?: string;
     controlClassName?: string;
     controlGroupWrapperClassName?: string;
@@ -63,6 +65,7 @@ type DateProps = {
 
 const Date = forwardRef((props: DateProps, ref: any) => {
     const {
+        popupClassName,
         wrapperClassName,
         controlClassName,
         controlGroupWrapperClassName,
@@ -388,10 +391,7 @@ const Date = forwardRef((props: DateProps, ref: any) => {
 
     function clearAll() {
         setDateDefaultValueExist(false);
-        setSplitVals(['0000','00','00','00','00','00']);
         setChangedVal('');
-        setDateVal('');
-        setTimeVal(['00', '00', '00']);
         onChange?.(inputRef.current, '');
     }
 
@@ -732,7 +732,7 @@ const Date = forwardRef((props: DateProps, ref: any) => {
                 <div
                     ref={modalRef}
                     id={`date2d__wrapper-${idRes}`}
-                    className={`date2d__wrapper is-${type} active`}
+                    className={`date2d__wrapper is-${type} ${popupClassName || ''} active`}
                     style={{
                         display: 'none'
                     }}

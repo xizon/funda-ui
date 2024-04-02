@@ -1,5 +1,6 @@
 import React from 'react';
 declare type DateProps = {
+    popupClassName?: string;
     wrapperClassName?: string;
     controlClassName?: string;
     controlGroupWrapperClassName?: string;

@@ -171,9 +171,9 @@ const Textarea = forwardRef((props: TextareaProps, ref: any) => {
         <>
 
             <div className={wrapperClassName || wrapperClassName === '' ? wrapperClassName : "mb-3 position-relative"} ref={rootRef}>
-                {label ? <>{typeof label === 'string' ? <label htmlFor={idRes} className={controlGroupWrapperClassName || "form-label"} dangerouslySetInnerHTML={{__html: `${label}`}}></label> : <label htmlFor={idRes} className={controlGroupWrapperClassName || "form-label"}>{label}</label>}</> : null}
+                {label ? <>{typeof label === 'string' ? <label htmlFor={idRes} className="form-label" dangerouslySetInnerHTML={{__html: `${label}`}}></label> : <label htmlFor={idRes} className="form-label">{label}</label>}</> : null}
 
-                <div className="input-group">
+                <div className={controlGroupWrapperClassName || "input-group"}>
                     {typeof iconLeft !== 'undefined' && iconLeft !== null && iconLeft !== '' ? <><span className={controlGroupTextClassName || "input-group-text"}>{iconLeft}</span></>: null}
                     
                     <textarea  

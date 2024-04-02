@@ -308,15 +308,15 @@ var Textarea = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_reac
     ref: rootRef
   }, label ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, typeof label === 'string' ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("label", {
     htmlFor: idRes,
-    className: controlGroupWrapperClassName || "form-label",
+    className: "form-label",
     dangerouslySetInnerHTML: {
       __html: "".concat(label)
     }
   }) : /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("label", {
     htmlFor: idRes,
-    className: controlGroupWrapperClassName || "form-label"
+    className: "form-label"
   }, label)) : null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
-    className: "input-group"
+    className: controlGroupWrapperClassName || "input-group"
   }, typeof iconLeft !== 'undefined' && iconLeft !== null && iconLeft !== '' ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("span", {
     className: controlGroupTextClassName || "input-group-text"
   }, iconLeft)) : null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("textarea", _extends({

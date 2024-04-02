@@ -12,6 +12,7 @@ import Date from 'funda-ui/Date';
 | `ref` | React.ForwardedRef | - | It is the return element of this component.  |
 | `offset` | number  | 10 | Position offset of top and bottom. |
 | `exceededSidePosOffset` | number | 15 | Offset px that exceeds the far right or left side of the screen |
+| `popupClassName` | string | - | The class name of the popup. |
 | `wrapperClassName` | string | `mb-3 position-relative` | The class name of the control wrapper. |
 | `controlClassName` | string | `form-control` | The class name of the control. |
 | `controlGroupWrapperClassName` | string | `input-group` | The class name of the control group wrapper. |

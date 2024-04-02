@@ -548,15 +548,15 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
             ref: rootRef
           }, label ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react__WEBPACK_IMPORTED_MODULE_0___default().Fragment, null, typeof label === 'string' ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("label", {
             htmlFor: idRes,
-            className: controlGroupWrapperClassName || "form-label",
+            className: "form-label",
             dangerouslySetInnerHTML: {
               __html: "".concat(label)
             }
           }) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("label", {
             htmlFor: idRes,
-            className: controlGroupWrapperClassName || "form-label"
+            className: "form-label"
           }, label)) : null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-            className: "input-group position-relative ".concat(typeof iconLeft !== 'undefined' && iconLeft !== null && iconLeft !== '' ? 'has-left-content' : '', " ").concat(typeof iconRight !== 'undefined' && iconRight !== null && iconRight !== '' ? 'has-right-content' : '')
+            className: "".concat(controlGroupWrapperClassName || "input-group", " position-relative ").concat(typeof iconLeft !== 'undefined' && iconLeft !== null && iconLeft !== '' ? 'has-left-content' : '', " ").concat(typeof iconRight !== 'undefined' && iconRight !== null && iconRight !== '' ? 'has-right-content' : '')
           }, typeof iconLeft !== 'undefined' && iconLeft !== null && iconLeft !== '' ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react__WEBPACK_IMPORTED_MODULE_0___default().Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
             className: controlGroupTextClassName || "input-group-text"
           }, iconLeft)) : null, appendControl && typeof iconLeft !== 'undefined' && iconLeft !== null && iconLeft !== '' ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react__WEBPACK_IMPORTED_MODULE_0___default().Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
@@ -572,7 +572,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
             },
             tabIndex: tabIndex || 0,
             type: typeRes,
-            className: controlClassName || controlClassName === '' ? "".concat(controlClassName, " ").concat(typeof iconLeft !== 'undefined' && iconLeft !== null && iconLeft !== '' ? 'rounded-start-0' : '') : "form-control ".concat(typeof iconLeft !== 'undefined' && iconLeft !== null && iconLeft !== '' ? 'rounded-start-0' : ''),
+            className: controlClassName || controlClassName === '' ? "".concat(controlClassName, " ").concat(typeof iconLeft !== 'undefined' && iconLeft !== null && iconLeft !== '' ? 'rounded-start-0' : 'rounded') : "form-control ".concat(typeof iconLeft !== 'undefined' && iconLeft !== null && iconLeft !== '' ? 'rounded-start-0' : 'rounded'),
             id: idRes,
             name: name,
             step: step || null,
@@ -613,7 +613,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
             },
             tabIndex: tabIndex || 0,
             type: typeRes,
-            className: controlClassName || controlClassName === '' ? "".concat(controlClassName) : "form-control",
+            className: controlClassName || controlClassName === '' ? "".concat(controlClassName) : "form-control rounded",
             id: idRes,
             name: name,
             step: step || null,
@@ -1462,7 +1462,7 @@ var en_US_default = /*#__PURE__*/__webpack_require__.n(en_US);
 var zh_CN = __webpack_require__(357);
 var zh_CN_default = /*#__PURE__*/__webpack_require__.n(zh_CN);
 ;// CONCATENATED MODULE: ./src/index.tsx
-var _excluded = ["wrapperClassName", "controlClassName", "controlGroupWrapperClassName", "controlGroupTextClassName", "offset", "exceededSidePosOffset", "localization", "type", "onlyTime", "truncateSeconds", "valueUseSlash", "disabled", "required", "readOnly", "value", "label", "units", "name", "alt", "id", "iconLeft", "iconRight", "autoComplete", "style", "tabIndex", "onLoad", "onChange", "onBlur", "onFocus", "langHoursTitle", "langMinutesTitle", "langSecondsTitle", "langWeek", "langWeekFull", "langMonths", "langMonthsFull", "langToday"];
+var _excluded = ["popupClassName", "wrapperClassName", "controlClassName", "controlGroupWrapperClassName", "controlGroupTextClassName", "offset", "exceededSidePosOffset", "localization", "type", "onlyTime", "truncateSeconds", "valueUseSlash", "disabled", "required", "readOnly", "value", "label", "units", "name", "alt", "id", "iconLeft", "iconRight", "autoComplete", "style", "tabIndex", "onLoad", "onChange", "onBlur", "onFocus", "langHoursTitle", "langMinutesTitle", "langSecondsTitle", "langWeek", "langWeekFull", "langMonths", "langMonthsFull", "langToday"];
 function _extends() { _extends = Object.assign ? Object.assign.bind() : function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
 function src_slicedToArray(arr, i) { return src_arrayWithHoles(arr) || src_iterableToArrayLimit(arr, i) || src_unsupportedIterableToArray(arr, i) || src_nonIterableRest(); }
 function src_nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
@@ -1482,7 +1482,8 @@ function _objectWithoutPropertiesLoose(source, excluded) { if (source == null) r
 
 
 var src_Date = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_amd_react_.forwardRef)(function (props, _ref) {
-  var wrapperClassName = props.wrapperClassName,
+  var popupClassName = props.popupClassName,
+    wrapperClassName = props.wrapperClassName,
     controlClassName = props.controlClassName,
     controlGroupWrapperClassName = props.controlGroupWrapperClassName,
     controlGroupTextClassName = props.controlGroupTextClassName,
@@ -1768,10 +1769,7 @@ var src_Date = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_reac
   }
   function clearAll() {
     setDateDefaultValueExist(false);
-    setSplitVals(['0000', '00', '00', '00', '00', '00']);
     setChangedVal('');
-    setDateVal('');
-    setTimeVal(['00', '00', '00']);
     _onChange === null || _onChange === void 0 ? void 0 : _onChange(inputRef.current, '');
   }
   function resetDefauleValueExist() {
@@ -2044,7 +2042,7 @@ var src_Date = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_reac
   }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
     ref: modalRef,
     id: "date2d__wrapper-".concat(idRes),
-    className: "date2d__wrapper is-".concat(type, " active"),
+    className: "date2d__wrapper is-".concat(type, " ").concat(popupClassName || '', " active"),
     style: {
       display: 'none'
     }

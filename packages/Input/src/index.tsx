@@ -183,9 +183,9 @@ const Input = forwardRef((props: InputProps, ref: any) => {
         <>
 
             <div className={wrapperClassName || wrapperClassName === '' ? wrapperClassName : "mb-3 position-relative"} ref={rootRef}>
-                {label ? <>{typeof label === 'string' ? <label htmlFor={idRes} className={controlGroupWrapperClassName || "form-label"} dangerouslySetInnerHTML={{__html: `${label}`}}></label> : <label htmlFor={idRes} className={controlGroupWrapperClassName || "form-label"}>{label}</label>}</> : null}
+                {label ? <>{typeof label === 'string' ? <label htmlFor={idRes} className="form-label" dangerouslySetInnerHTML={{__html: `${label}`}}></label> : <label htmlFor={idRes} className="form-label">{label}</label>}</> : null}
 
-                <div className={`input-group position-relative ${typeof iconLeft !== 'undefined' && iconLeft !== null && iconLeft !== '' ? 'has-left-content' : ''} ${typeof iconRight !== 'undefined' && iconRight !== null && iconRight !== '' ? 'has-right-content' : ''}`}>
+                <div className={`${controlGroupWrapperClassName || "input-group"} position-relative ${typeof iconLeft !== 'undefined' && iconLeft !== null && iconLeft !== '' ? 'has-left-content' : ''} ${typeof iconRight !== 'undefined' && iconRight !== null && iconRight !== '' ? 'has-right-content' : ''}`}>
                     {typeof iconLeft !== 'undefined' && iconLeft !== null && iconLeft !== '' ? <><span className={controlGroupTextClassName || "input-group-text"}>{iconLeft}</span></>: null}
 
                     {appendControl && (typeof iconLeft !== 'undefined' && iconLeft !== null && iconLeft !== '') ? <>
@@ -203,7 +203,7 @@ const Input = forwardRef((props: InputProps, ref: any) => {
                                 
                                 tabIndex={tabIndex || 0}
                                 type={typeRes}
-                                className={controlClassName || controlClassName === '' ? `${controlClassName} ${typeof iconLeft !== 'undefined' && iconLeft !== null && iconLeft !== '' ? 'rounded-start-0' : ''}` : `form-control ${typeof iconLeft !== 'undefined' && iconLeft !== null && iconLeft !== '' ? 'rounded-start-0' : ''}`}
+                                className={controlClassName || controlClassName === '' ? `${controlClassName} ${typeof iconLeft !== 'undefined' && iconLeft !== null && iconLeft !== '' ? 'rounded-start-0' : 'rounded'}` : `form-control ${typeof iconLeft !== 'undefined' && iconLeft !== null && iconLeft !== '' ? 'rounded-start-0' : 'rounded'}`}
                                 id={idRes}
                                 name={name}
                                 step={step || null}
@@ -251,7 +251,7 @@ const Input = forwardRef((props: InputProps, ref: any) => {
 
                             tabIndex={tabIndex || 0}
                             type={typeRes}
-                            className={controlClassName || controlClassName === '' ? `${controlClassName}` : `form-control`}
+                            className={controlClassName || controlClassName === '' ? `${controlClassName}` : `form-control rounded`}
                             id={idRes}
                             name={name}
                             step={step || null}

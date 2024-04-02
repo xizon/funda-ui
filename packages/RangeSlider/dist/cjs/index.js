@@ -372,15 +372,15 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
             ref: rootRef
           }, label ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react__WEBPACK_IMPORTED_MODULE_0___default().Fragment, null, typeof label === 'string' ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("label", {
             htmlFor: idRes,
-            className: controlGroupWrapperClassName || "form-label",
+            className: "form-label",
             dangerouslySetInnerHTML: {
               __html: "".concat(label)
             }
           }) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("label", {
             htmlFor: idRes,
-            className: controlGroupWrapperClassName || "form-label"
+            className: "form-label"
           }, label)) : null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-            className: "input-group position-relative ".concat(typeof iconLeft !== 'undefined' && iconLeft !== null && iconLeft !== '' ? 'has-left-content' : '', " ").concat(typeof iconRight !== 'undefined' && iconRight !== null && iconRight !== '' ? 'has-right-content' : '')
+            className: "".concat(controlGroupWrapperClassName || "input-group", " position-relative ").concat(typeof iconLeft !== 'undefined' && iconLeft !== null && iconLeft !== '' ? 'has-left-content' : '', " ").concat(typeof iconRight !== 'undefined' && iconRight !== null && iconRight !== '' ? 'has-right-content' : '')
           }, typeof iconLeft !== 'undefined' && iconLeft !== null && iconLeft !== '' ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react__WEBPACK_IMPORTED_MODULE_0___default().Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
             className: controlGroupTextClassName || "input-group-text"
           }, iconLeft)) : null, appendControl && typeof iconLeft !== 'undefined' && iconLeft !== null && iconLeft !== '' ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react__WEBPACK_IMPORTED_MODULE_0___default().Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
@@ -396,7 +396,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
             },
             tabIndex: tabIndex || 0,
             type: typeRes,
-            className: controlClassName || controlClassName === '' ? "".concat(controlClassName, " ").concat(typeof iconLeft !== 'undefined' && iconLeft !== null && iconLeft !== '' ? 'rounded-start-0' : '') : "form-control ".concat(typeof iconLeft !== 'undefined' && iconLeft !== null && iconLeft !== '' ? 'rounded-start-0' : ''),
+            className: controlClassName || controlClassName === '' ? "".concat(controlClassName, " ").concat(typeof iconLeft !== 'undefined' && iconLeft !== null && iconLeft !== '' ? 'rounded-start-0' : 'rounded') : "form-control ".concat(typeof iconLeft !== 'undefined' && iconLeft !== null && iconLeft !== '' ? 'rounded-start-0' : 'rounded'),
             id: idRes,
             name: name,
             step: step || null,
@@ -437,7 +437,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
             },
             tabIndex: tabIndex || 0,
             type: typeRes,
-            className: controlClassName || controlClassName === '' ? "".concat(controlClassName) : "form-control",
+            className: controlClassName || controlClassName === '' ? "".concat(controlClassName) : "form-control rounded",
             id: idRes,
             name: name,
             step: step || null,
