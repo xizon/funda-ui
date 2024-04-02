@@ -209,6 +209,12 @@ export default () => {
 ## Implement independent time elements
 
 ```css
+.input-group:not(.has-left-content) {
+    .demo {
+        left: 0.5rem;
+    }
+}
+
 .demo {
     display: inline-block;
     position: relative;
@@ -242,6 +248,9 @@ export default () => {
     }
     
 }
+
+
+
 ```
 
 

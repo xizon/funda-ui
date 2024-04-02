@@ -1867,6 +1867,7 @@ var src_Date = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_reac
     units: units,
     iconLeft: iconLeft,
     iconRight: iconRight,
+    required: required,
     appendControl: /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
       className: "date2d__control__inputplaceholder"
     }, typeof onlyTime === 'undefined' || onlyTime === false ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("input", {
@@ -1875,9 +1876,8 @@ var src_Date = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_reac
       value: !dateDefaultValueExist ? "" : splitVals[0] === '0000' ? '' : splitVals[0],
       maxLength: 4,
       autoComplete: "off",
-      disabled: disabled,
-      required: required,
-      readOnly: readOnly,
+      disabled: disabled || null,
+      readOnly: readOnly || null,
       onClick: handleInitSplitClickEv,
       onChange: function onChange(e) {
         var _val = e.target.value;
@@ -1899,9 +1899,8 @@ var src_Date = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_reac
       value: !dateDefaultValueExist ? "" : splitVals[1] === '00' ? '' : splitVals[1],
       maxLength: 2,
       autoComplete: "off",
-      disabled: disabled,
-      required: required,
-      readOnly: readOnly,
+      disabled: disabled || null,
+      readOnly: readOnly || null,
       onClick: handleInitSplitClickEv,
       onChange: function onChange(e) {
         var _val = e.target.value;
@@ -1922,6 +1921,9 @@ var src_Date = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_reac
       className: "date2d__control__inputplaceholder--day",
       value: !dateDefaultValueExist ? "" : splitVals[2] === '00' ? '' : splitVals[2],
       maxLength: 2,
+      autoComplete: "off",
+      disabled: disabled || null,
+      readOnly: readOnly || null,
       onClick: handleInitSplitClickEv,
       onChange: function onChange(e) {
         var _val = e.target.value;
@@ -1942,6 +1944,9 @@ var src_Date = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_reac
       className: "date2d__control__inputplaceholder--hours",
       value: !dateDefaultValueExist ? "" : splitVals[3] === '00' ? '' : splitVals[3],
       maxLength: 2,
+      autoComplete: "off",
+      disabled: disabled || null,
+      readOnly: readOnly || null,
       onClick: handleInitSplitClickEv,
       onChange: function onChange(e) {
         var _val = e.target.value;
@@ -1962,6 +1967,9 @@ var src_Date = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_reac
       className: "date2d__control__inputplaceholder--minutes",
       value: !dateDefaultValueExist ? "" : splitVals[4] === '00' ? '' : splitVals[4],
       maxLength: 2,
+      autoComplete: "off",
+      disabled: disabled || null,
+      readOnly: readOnly || null,
       onClick: handleInitSplitClickEv,
       onChange: function onChange(e) {
         var _val = e.target.value;
@@ -1982,6 +1990,9 @@ var src_Date = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_reac
       className: "date2d__control__inputplaceholder--seconds",
       value: !dateDefaultValueExist ? "" : splitVals[5] === '00' ? '' : splitVals[5],
       maxLength: 2,
+      autoComplete: "off",
+      disabled: disabled || null,
+      readOnly: readOnly || null,
       onClick: handleInitSplitClickEv,
       onChange: function onChange(e) {
         var _val = e.target.value;
