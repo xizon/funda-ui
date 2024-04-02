@@ -448,6 +448,14 @@ function MemoTable(props: any) {
     return useMemo(() => {
         return <Table
                     checkable={true}
+                    onHeadCellClick={(e: React.MouseEvent) => {
+                        const _data = (e.currentTarget as any).dataset.use; // Match attribute "data" of `data.headers`
+                        console.log(_data);
+                    }}
+                    onCellClick={(e: React.MouseEvent) => {
+                        const _data = (e.currentTarget as any).dataset.use; // Match attribute "data" of `data.fields`
+                        console.log(_data);
+                    }}
                     onClick={(e: any, val: any) => {
                         const { id, name } = JSON.parse(val.content.at(-1));
 
@@ -479,15 +487,15 @@ function MemoTable(props: any) {
                     data={{
                         "headers": [
                             {"style": { padding: '.5rem .1rem', width: '18px' }, "content": '' },
-                            {"content": 'Id' },
-                            {"content": 'Name' },
+                            {"content": 'Id', "data": JSON.stringify({param1: 1, param2: 1}) },
+                            {"content": 'Name', "data": JSON.stringify({param1: 2, param2: 2}) },
                             {"style": { display: 'none' }, "content": "" }
                         ],
                         "fields": data.map((item: any) => {
                             return [
                                 { "cols": 1, "style": { padding: '.5rem .1rem' }, "content": '' },
-                                { "cols": 1, "style": { fontWeight: 'normal' }, "content": item.id },
-                                { "cols": 1, "content": item.name },
+                                { "cols": 1, "style": { fontWeight: 'normal' }, "content": item.id, "data": JSON.stringify(item) },
+                                { "cols": 1, "content": item.name, "data": JSON.stringify(item) },
                                 { "cols": 1, style: { display: 'none' }, "content": `{"id":"${item.id}","name":"${item.name}"}` }
                             ];
                         })
