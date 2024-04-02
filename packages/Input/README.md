@@ -11,7 +11,7 @@ import Input from 'funda-ui/Input';
 | --- | --- | --- | --- |
 | `ref` | React.ForwardedRef | - | It is the return element of this component.  |
 | `wrapperClassName` | string | `mb-3 position-relative` | The class name of the control wrapper. |
-| `controlClassName` | string | `form-control rounded` | The class name of the control. |
+| `controlClassName` | string | `form-control` | The class name of the control. |
 | `controlGroupWrapperClassName` | string | `input-group` | The class name of the control group wrapper. |
 | `controlGroupTextClassName` | string | `input-group-text` | The class name of the control group text. |
 | `appendControl` | ReactNode  | - | An extension of the same level as \<input \>, usually used to placeholder of some elements |

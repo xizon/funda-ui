@@ -41,7 +41,7 @@ import Date from 'funda-ui/Date';
 | `iconLeft` | ReactNode  | - | Set the left icon of this control |
 | `iconRight` | ReactNode  | - | Set the right icon of this control |
 | `onLoad` | function  | - | Call a function when the value of an HTML element is changed. It returns two callback values. <br /> <ol><li>The first is the value at which the requirement was initialized (**String**)</li><li>The second is the current date info (**JSON Object**)</li></ol> |
-| `onChange` | function  | - | Call a function when the value of an HTML element is changed. It returns two callback values. <br /> <ol><li>The first is the control (**HTML Element**)</li><li>The second is the current date info (**JSON Object** \| **String**)</li></ol> |
+| `onChange` | function  | - | Call a function when the value of an HTML element is changed. It returns three callback values. <br /> <ol><li>The first is the control (**HTML Element**)</li><li>The second is the current date info (**JSON Object** \| **String**)</li><li>The last is the boolean value that determine whether the date is valid (**Boolean**)</li></ol> |
 | `onBlur` | function  | - | Call a function when a user leaves an form field. It returns only one callback value which is the control (**HTML Element**) |
 | `onFocus` | function  | - | Call a function when an form field gets focus. It returns only one callback value which is the control (**HTML Element**) |
 
@@ -65,8 +65,8 @@ export default () => {
                 label="Date"
                 value="2024-03-13"
                 type="date"
-                onChange={(input: HTMLInputElement, dateRes: any) => {
-                    console.log(input, dateRes, dateRes !== null && typeof dateRes !== 'string' ? dateRes.res : dateRes)
+                onChange={(input: HTMLInputElement, dateRes: any, isValidDate: boolean) => {
+                    console.log(isValidDate, input, dateRes, dateRes !== null && typeof dateRes !== 'string' ? dateRes.res : dateRes)
                 }}
                 onLoad={(initValue: string, dateRes: any) => {
                     console.log(initValue, dateRes)
@@ -79,8 +79,8 @@ export default () => {
                 label="Date & Time (no seconds)"
                 value="2024-03-14 10:22"
                 type="datetime-local"
-                onChange={(input: HTMLInputElement, dateRes: any) => {
-                    console.log(input, dateRes, dateRes !== null && typeof dateRes !== 'string' ? dateRes.res : dateRes)
+                onChange={(input: HTMLInputElement, dateRes: any, isValidDate: boolean) => {
+                    console.log(isValidDate, input, dateRes, dateRes !== null && typeof dateRes !== 'string' ? dateRes.res : dateRes)
                 }}
                 onLoad={(initValue: string, dateRes: any) => {
                     console.log(initValue, dateRes)
@@ -93,8 +93,8 @@ export default () => {
                 label="Time"
                 value="07:30:38"
                 type="time"
-                onChange={(input: HTMLInputElement, dateRes: any) => {
-                    console.log(input, dateRes, dateRes !== null && typeof dateRes !== 'string' ? dateRes.res : dateRes)
+                onChange={(input: HTMLInputElement, dateRes: any, isValidDate: boolean) => {
+                    console.log(isValidDate, input, dateRes, dateRes !== null && typeof dateRes !== 'string' ? dateRes.res : dateRes)
                 }}
                 onLoad={(initValue: string, dateRes: any) => {
                     console.log(initValue, dateRes)

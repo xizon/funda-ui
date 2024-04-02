@@ -14,7 +14,7 @@ type InputProps = {
     type?: string;
     value?: string;
     label?: React.ReactNode | string;
-    units?: string;
+    units?: React.ReactNode | string;
     name?: string;
     step?: any;
 	min?: any;
@@ -97,6 +97,10 @@ const Input = forwardRef((props: InputProps, ref: any) => {
     const [onComposition, setOnComposition] = useState(false);
     const [changedVal, setChangedVal] = useState<string>(value || '');
 
+    const propExist = (p: any) => {
+        return typeof p !== 'undefined' && p !== null && p !== '';
+    };
+
     function handleComposition(event: CompositionEvent<HTMLInputElement>) {
         if (event.type === 'compositionstart') {
             setOnComposition(true);
@@ -166,7 +170,6 @@ const Input = forwardRef((props: InputProps, ref: any) => {
         }
     }
 
-
     useEffect(() => {
         
         // update default value
@@ -179,16 +182,18 @@ const Input = forwardRef((props: InputProps, ref: any) => {
     }, [value]);
 
 
+    
+
     return (
         <>
 
             <div className={wrapperClassName || wrapperClassName === '' ? wrapperClassName : "mb-3 position-relative"} ref={rootRef}>
                 {label ? <>{typeof label === 'string' ? <label htmlFor={idRes} className="form-label" dangerouslySetInnerHTML={{__html: `${label}`}}></label> : <label htmlFor={idRes} className="form-label">{label}</label>}</> : null}
 
-                <div className={`${controlGroupWrapperClassName || "input-group"} position-relative ${typeof iconLeft !== 'undefined' && iconLeft !== null && iconLeft !== '' ? 'has-left-content' : ''} ${typeof iconRight !== 'undefined' && iconRight !== null && iconRight !== '' ? 'has-right-content' : ''}`}>
-                    {typeof iconLeft !== 'undefined' && iconLeft !== null && iconLeft !== '' ? <><span className={controlGroupTextClassName || "input-group-text"}>{iconLeft}</span></>: null}
+                <div className={`${controlGroupWrapperClassName || "input-group"} position-relative ${propExist(iconLeft) ? 'has-left-content' : ''} ${propExist(iconRight) || propExist(units) ? 'has-right-content' : ''}`}>
+                    {propExist(iconLeft) ? <><span className={controlGroupTextClassName || "input-group-text"}>{iconLeft}</span></>: null}
 
-                    {appendControl && (typeof iconLeft !== 'undefined' && iconLeft !== null && iconLeft !== '') ? <>
+                    {appendControl && (propExist(iconLeft)) ? <>
                         <div className="input-group-control-container position-relative">
 
                             <input
@@ -203,7 +208,7 @@ const Input = forwardRef((props: InputProps, ref: any) => {
                                 
                                 tabIndex={tabIndex || 0}
                                 type={typeRes}
-                                className={controlClassName || controlClassName === '' ? `${controlClassName} ${typeof iconLeft !== 'undefined' && iconLeft !== null && iconLeft !== '' ? 'rounded-start-0' : 'rounded'}` : `form-control ${typeof iconLeft !== 'undefined' && iconLeft !== null && iconLeft !== '' ? 'rounded-start-0' : 'rounded'}`}
+                                className={controlClassName || controlClassName === '' ? `${controlClassName} ${propExist(iconLeft) ? 'rounded-start-0' : 'rounded'}` : `form-control ${propExist(iconLeft) ? 'rounded-start-0' : 'rounded'}`}
                                 id={idRes}
                                 name={name}
                                 step={step || null}
@@ -232,8 +237,8 @@ const Input = forwardRef((props: InputProps, ref: any) => {
                                 {...attributes}
                             />
                             {appendControl || ''}
-                            {units ? <><span className={controlGroupTextClassName || "input-group-text"}>{units}</span></> : null}
-                            {typeof iconRight !== 'undefined' && iconRight !== null && iconRight !== '' ? <><span className={controlGroupTextClassName || "input-group-text"}>{iconRight}</span></> : null}
+                            {propExist(units) ? <><span className={controlGroupTextClassName || "input-group-text"}>{units}</span></> : null}
+                            {propExist(iconRight) ? <><span className={controlGroupTextClassName || "input-group-text"}>{iconRight}</span></> : null}
                         </div>
                     
                     </> : <>
@@ -248,10 +253,10 @@ const Input = forwardRef((props: InputProps, ref: any) => {
                                     ref.current = node;
                                 }
                             }}
-
+                            
                             tabIndex={tabIndex || 0}
                             type={typeRes}
-                            className={controlClassName || controlClassName === '' ? `${controlClassName}` : `form-control rounded`}
+                            className={controlClassName || controlClassName === '' ? `${controlClassName} ${propExist(iconLeft) || propExist(iconRight) || propExist(units) ? '' : 'rounded'}` : `form-control ${propExist(iconLeft) || propExist(iconRight) || propExist(units) ? '' : 'rounded'}`}
                             id={idRes}
                             name={name}
                             step={step || null}
@@ -280,8 +285,8 @@ const Input = forwardRef((props: InputProps, ref: any) => {
                             {...attributes}
                         />
                         {appendControl || ''}
-                        {units ? <><span className={controlGroupTextClassName || "input-group-text"}>{units}</span></> : null}
-                        {typeof iconRight !== 'undefined' && iconRight !== null && iconRight !== '' ? <><span className={controlGroupTextClassName || "input-group-text"}>{iconRight}</span></> : null}
+                        {propExist(units) ? <><span className={controlGroupTextClassName || "input-group-text"}>{units}</span></> : null}
+                        {propExist(iconRight) ? <><span className={controlGroupTextClassName || "input-group-text"}>{iconRight}</span></> : null}
 
                     
                     </>}

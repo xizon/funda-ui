@@ -15,6 +15,8 @@ import i18n__en_US from './localization/en_US';
 import i18n__zh_CN from './localization/zh_CN';
 
 
+import { debounce } from './utils/performance';
+
 type DateProps = {
     popupClassName?: string;
     wrapperClassName?: string;
@@ -46,7 +48,7 @@ type DateProps = {
     tabIndex?: number;
     [key: `data-${string}`]: string | undefined;
     onLoad?: (e: any, data: any) => void;
-    onChange?: (e: any, data: any) => void;
+    onChange?: (e: any, data: any, isValidDate: boolean) => void;
     onBlur?: (e: any) => void;
     onFocus?: (e: any) => void;
 
@@ -175,6 +177,10 @@ const Date = forwardRef((props: DateProps, ref: any) => {
     const hoursArr = ['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23', '00'];
     const msArr = ['00', '01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23', '24', '25', '26', '27', '28', '29', '30', '31', '32', '33', '34', '35', '36', '37', '38', '39', '40', '41', '42', '43', '44', '45', '46', '47', '48', '49', '50', '51', '52', '53', '54', '55', '56', '57', '58', '59'];
 
+
+    const windowScrollUpdate = debounce(handleScrollEvent, 50);
+
+
     const isValidDate = (v: string) => {
         return !(String(new window.Date(v) as any).toLowerCase() === 'invalid date');
     };
@@ -246,6 +252,11 @@ const Date = forwardRef((props: DateProps, ref: any) => {
         }
     };
 
+
+
+    function handleScrollEvent() {
+        popwinPosHide();
+    }
 
 
     function popwinPosInit() {
@@ -329,7 +340,7 @@ const Date = forwardRef((props: DateProps, ref: any) => {
         setIsShow(false);
     }
 
-    function handleClose(event: any) {
+    function handleClickOutside(event: any) {
         if (event.target.closest(`.date2d__wrapper`) === null && event.target.closest(`.date2d-cal__wrapper`) === null) {
             popwinPosHide();
 
@@ -362,7 +373,7 @@ const Date = forwardRef((props: DateProps, ref: any) => {
         const val = event.target.value;
 
         //
-        onChange?.(inputRef.current, val);
+        onChange?.(inputRef.current, val, isValidDate(val));
 
     }
 
@@ -383,7 +394,7 @@ const Date = forwardRef((props: DateProps, ref: any) => {
 
         if (!dateDefaultValueExist) {
             const _full = `${splitVals[0]}-${splitVals[1]}-${splitVals[2]} ${splitVals[3]}:${splitVals[4]}:${splitVals[5]}`;
-            onChange?.(inputRef.current, valueResConverter(_full));
+            onChange?.(inputRef.current, valueResConverter(_full), isValidDate(_full));
             setChangedVal(_full);
         }
     }
@@ -392,7 +403,7 @@ const Date = forwardRef((props: DateProps, ref: any) => {
     function clearAll() {
         setDateDefaultValueExist(false);
         setChangedVal('');
-        onChange?.(inputRef.current, '');
+        onChange?.(inputRef.current, '', false);
     }
 
 
@@ -467,13 +478,27 @@ const Date = forwardRef((props: DateProps, ref: any) => {
 
 
         //--------------
-        document.removeEventListener('pointerdown', handleClose);
-        document.addEventListener('pointerdown', handleClose);
+        document.removeEventListener('pointerdown', handleClickOutside);
+        document.addEventListener('pointerdown', handleClickOutside);
+
+
+        // Add function to the element that should be used as the scrollable area.
+        //--------------
+        window.removeEventListener('scroll', windowScrollUpdate);
+        window.removeEventListener('touchmove', windowScrollUpdate);
+        window.addEventListener('scroll', windowScrollUpdate);
+        window.addEventListener('touchmove', windowScrollUpdate);
+        windowScrollUpdate();
+
 
         return () => {
-            document.removeEventListener('pointerdown', handleClose);
+            document.removeEventListener('pointerdown', handleClickOutside);
 
-        };
+            window.removeEventListener('scroll', windowScrollUpdate);
+            window.removeEventListener('touchmove', windowScrollUpdate);
+
+        }
+
     }, [value]);
 
     return (
@@ -536,7 +561,7 @@ const Date = forwardRef((props: DateProps, ref: any) => {
                                             const _val = e.target.value;
                                             const _date = `${_val}-${splitVals[1]}-${splitVals[2]}`;
                                             const _full = `${_date} ${splitVals[3]}:${splitVals[4]}:${splitVals[5]}`;
-                                            onChange?.(inputRef.current, valueResConverter(_full));
+                                            onChange?.(inputRef.current, valueResConverter(_full), isValidDate(_full));
                                             setSplitVals((prevState: string[]) => {
                                                 return [_val, prevState[1], prevState[2], prevState[3], prevState[4], prevState[5]];
                                             });
@@ -553,7 +578,7 @@ const Date = forwardRef((props: DateProps, ref: any) => {
                                     <input
                                         tabIndex={tabIndex || 0}
                                         className="date2d__control__inputplaceholder--month"
-                                        value={!dateDefaultValueExist ? `` : (splitVals[1] === '00' ? '' : splitVals[1])}
+                                        value={!dateDefaultValueExist ? `` : splitVals[1]}
                                         maxLength={2}
                                         autoComplete="off"
                                         disabled={disabled || null}
@@ -563,7 +588,7 @@ const Date = forwardRef((props: DateProps, ref: any) => {
                                             const _val = e.target.value;
                                             const _date = `${splitVals[0]}-${_val}-${splitVals[2]}`;
                                             const _full = `${_date} ${splitVals[3]}:${splitVals[4]}:${splitVals[5]}`;
-                                            onChange?.(inputRef.current, valueResConverter(_full));
+                                            onChange?.(inputRef.current, valueResConverter(_full), isValidDate(_full));
                                             setSplitVals((prevState: string[]) => {
                                                 return [prevState[0], _val, prevState[2], prevState[3], prevState[4], prevState[5]];
                                             });
@@ -579,7 +604,7 @@ const Date = forwardRef((props: DateProps, ref: any) => {
                                     <input
                                         tabIndex={tabIndex || 0}
                                         className="date2d__control__inputplaceholder--day"
-                                        value={!dateDefaultValueExist ? `` : (splitVals[2] === '00' ? '' : splitVals[2])}
+                                        value={!dateDefaultValueExist ? `` : splitVals[2]}
                                         maxLength={2}
                                         autoComplete="off"
                                         disabled={disabled || null}
@@ -589,7 +614,7 @@ const Date = forwardRef((props: DateProps, ref: any) => {
                                             const _val = e.target.value;
                                             const _date = `${splitVals[0]}-${splitVals[1]}-${_val}`;
                                             const _full = `${_date} ${splitVals[3]}:${splitVals[4]}:${splitVals[5]}`;
-                                            onChange?.(inputRef.current, valueResConverter(_full));
+                                            onChange?.(inputRef.current, valueResConverter(_full), isValidDate(_full));
                                             setSplitVals((prevState: string[]) => {
                                                 return [prevState[0], prevState[1], _val, prevState[3], prevState[4], prevState[5]];
                                             });
@@ -611,7 +636,7 @@ const Date = forwardRef((props: DateProps, ref: any) => {
                                     <input
                                         tabIndex={tabIndex || 0}
                                         className="date2d__control__inputplaceholder--hours"
-                                        value={!dateDefaultValueExist ? `` : (splitVals[3] === '00' ? '' : splitVals[3])}
+                                        value={!dateDefaultValueExist ? `` : splitVals[3]}
                                         maxLength={2}
                                         autoComplete="off"
                                         disabled={disabled || null}
@@ -621,7 +646,7 @@ const Date = forwardRef((props: DateProps, ref: any) => {
                                             const _val = e.target.value;
                                             const _date = `${splitVals[0]}-${splitVals[1]}-${splitVals[2]}`;
                                             const _full = `${_date} ${_val}:${splitVals[4]}:${splitVals[5]}`;
-                                            onChange?.(inputRef.current, valueResConverter(_full));
+                                            onChange?.(inputRef.current, valueResConverter(_full), isValidDate(_full));
                                             setSplitVals((prevState: string[]) => {
                                                 return [prevState[0], prevState[1], prevState[2], _val, prevState[4], prevState[5]];
                                             });
@@ -641,7 +666,7 @@ const Date = forwardRef((props: DateProps, ref: any) => {
                                     <input
                                         tabIndex={tabIndex || 0}
                                         className="date2d__control__inputplaceholder--minutes"
-                                        value={!dateDefaultValueExist ? `` : (splitVals[4] === '00' ? '' : splitVals[4])}
+                                        value={!dateDefaultValueExist ? `` : splitVals[4]}
                                         maxLength={2}
                                         autoComplete="off"
                                         disabled={disabled || null}
@@ -651,7 +676,7 @@ const Date = forwardRef((props: DateProps, ref: any) => {
                                             const _val = e.target.value;
                                             const _date = `${splitVals[0]}-${splitVals[1]}-${splitVals[2]}`;
                                             const _full = `${_date} ${splitVals[3]}:${_val}:${splitVals[5]}`;
-                                            onChange?.(inputRef.current, valueResConverter(_full));
+                                            onChange?.(inputRef.current, valueResConverter(_full), isValidDate(_full));
                                             setSplitVals((prevState: string[]) => {
                                                 return [prevState[0], prevState[1], prevState[2], prevState[3], _val, prevState[5]];
                                             });
@@ -673,7 +698,7 @@ const Date = forwardRef((props: DateProps, ref: any) => {
                                         <input
                                             tabIndex={tabIndex || 0}
                                             className="date2d__control__inputplaceholder--seconds"
-                                            value={!dateDefaultValueExist ? `` : (splitVals[5] === '00' ? '' : splitVals[5])}
+                                            value={!dateDefaultValueExist ? `` : splitVals[5]}
                                             maxLength={2}
                                             autoComplete="off"
                                             disabled={disabled || null}
@@ -683,7 +708,7 @@ const Date = forwardRef((props: DateProps, ref: any) => {
                                                 const _val = e.target.value;
                                                 const _date = `${splitVals[0]}-${splitVals[1]}-${splitVals[2]}`;
                                                 const _full = `${_date} ${splitVals[3]}:${splitVals[4]}:${_val}`;
-                                                onChange?.(inputRef.current, valueResConverter(_full));
+                                                onChange?.(inputRef.current, valueResConverter(_full), isValidDate(_full));
                                                 setSplitVals((prevState: string[]) => {
                                                     return [prevState[0], prevState[1], prevState[2], prevState[3], prevState[4], _val];
                                                 });
@@ -763,7 +788,7 @@ const Date = forwardRef((props: DateProps, ref: any) => {
                                         setSplitVals((prevState: string[]) => {
                                             return [_v.year, _v.month, _v.day, prevState[3], prevState[4], prevState[5]];
                                         });
-                                        onChange?.(inputRef.current, _v);
+                                        onChange?.(inputRef.current, _v, true);
                                         
 
                                     }}
@@ -778,7 +803,7 @@ const Date = forwardRef((props: DateProps, ref: any) => {
                                         setSplitVals((prevState: string[]) => {
                                             return [_v.year, _v.month, _v.day, prevState[3], prevState[4], prevState[5]];
                                         });
-                                        onChange?.(inputRef.current, _v);
+                                        onChange?.(inputRef.current, _v, true);
                                     }}
                                     onChangeMonth={(currentData: any) => {
                                         resetDefauleValueExist();
@@ -791,7 +816,7 @@ const Date = forwardRef((props: DateProps, ref: any) => {
                                         setSplitVals((prevState: string[]) => {
                                             return [_v.year, _v.month, _v.day, prevState[3], prevState[4], prevState[5]];
                                         });
-                                        onChange?.(inputRef.current, _v);
+                                        onChange?.(inputRef.current, _v, true);
 
                                     }}
                                     onChangeYear={(currentData: any) => {
@@ -805,7 +830,7 @@ const Date = forwardRef((props: DateProps, ref: any) => {
                                         setSplitVals((prevState: string[]) => {
                                             return [_v.year, _v.month, _v.day, prevState[3], prevState[4], prevState[5]];
                                         });
-                                        onChange?.(inputRef.current, _v);
+                                        onChange?.(inputRef.current, _v, true);
 
                                     }}
                                 />
@@ -842,7 +867,7 @@ const Date = forwardRef((props: DateProps, ref: any) => {
                                                     setSplitVals((prevState: string[]) => {
                                                         return [prevState[0], prevState[1], prevState[2], _v.hours, prevState[4], prevState[5]];
                                                     });
-                                                    onChange?.(inputRef.current, _v);
+                                                    onChange?.(inputRef.current, _v, true);
 
                                                 }}
                                                 className={`${timeVal[0] == hour ? 'selected' : ''}`}
@@ -881,7 +906,7 @@ const Date = forwardRef((props: DateProps, ref: any) => {
                                                     setSplitVals((prevState: string[]) => {
                                                         return [prevState[0], prevState[1], prevState[2], prevState[3], _v.minutes, prevState[5]];
                                                     });
-                                                    onChange?.(inputRef.current, _v);
+                                                    onChange?.(inputRef.current, _v, true);
 
                                                 }}
                                                 className={`${timeVal[1] == v ? 'selected' : ''}`}
@@ -923,7 +948,7 @@ const Date = forwardRef((props: DateProps, ref: any) => {
                                                         setSplitVals((prevState: string[]) => {
                                                             return [prevState[0], prevState[1], prevState[2], prevState[3], prevState[5], _v.seconds ];
                                                         });
-                                                        onChange?.(inputRef.current, _v);
+                                                        onChange?.(inputRef.current, _v, true);
 
                                                     }}
                                                     className={`${timeVal[2] == v ? 'selected' : ''}`}

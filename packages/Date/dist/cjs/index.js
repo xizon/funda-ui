@@ -35,7 +35,7 @@ var config = {
   hoursTitle: "时",
   minutesTitle: "分",
   secondsTitle: "秒",
-  week: ["星期一", "星期二", "星期三", "星期四", "星期五", "星期六", "星期日"],
+  week: ["一", "二", "三", "四", "五", "六", "日"],
   weekFull: ["星期一", "星期二", "星期三", "星期四", "星期五", "星期六", "星期日"],
   months: ["一月", "二月", "三月", "四月", "五月", "六月", "七月", "八月", "九月", "十月", "十一月", "十二月"],
   monthsFull: ["一月", "二月", "三月", "四月", "五月", "六月", "七月", "八月", "九月", "十月", "十一月", "十二月"],
@@ -183,6 +183,58 @@ module.exports = {
   getOffset: getOffset,
   getPosition: getPosition,
   getAbsolutePositionOfStage: getAbsolutePositionOfStage
+};
+
+/***/ }),
+
+/***/ 342:
+/***/ ((module) => {
+
+/*
+* Debounce
+*
+* @param  {Function} fn    - A function to be executed within the time limit.
+* @param  {Number} limit   - Waiting time.
+* @return {Function}       - Returns a new function.
+*/
+function debounce(fn) {
+  var limit = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 300;
+  var timer;
+  return function () {
+    //Every time this returned function is called, the timer is cleared to ensure that fn is not executed
+    clearTimeout(timer);
+
+    // When the returned function is called for the last time (that is the user stops a continuous operation)
+    // Execute fn after another delay milliseconds
+    timer = setTimeout(function () {
+      fn.apply(this, arguments);
+    }, limit);
+  };
+}
+
+/*
+* Throttle
+*
+* @param  {Function} fn    - A function to be executed within the time limit.
+* @param  {Number} limit   - Waiting time.
+* @return {Function}       - Returns a new function.
+*/
+function throttle(fn) {
+  var limit = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 300;
+  var waiting = false;
+  return function () {
+    if (!waiting) {
+      fn.apply(this, arguments);
+      waiting = true;
+      setTimeout(function () {
+        waiting = false;
+      }, limit);
+    }
+  };
+}
+module.exports = {
+  debounce: debounce,
+  throttle: throttle
 };
 
 /***/ }),
@@ -475,6 +527,9 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
             _useState4 = _slicedToArray(_useState3, 2),
             changedVal = _useState4[0],
             setChangedVal = _useState4[1];
+          var propExist = function propExist(p) {
+            return typeof p !== 'undefined' && p !== null && p !== '';
+          };
           function handleComposition(event) {
             if (event.type === 'compositionstart') {
               setOnComposition(true);
@@ -556,10 +611,10 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
             htmlFor: idRes,
             className: "form-label"
           }, label)) : null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-            className: "".concat(controlGroupWrapperClassName || "input-group", " position-relative ").concat(typeof iconLeft !== 'undefined' && iconLeft !== null && iconLeft !== '' ? 'has-left-content' : '', " ").concat(typeof iconRight !== 'undefined' && iconRight !== null && iconRight !== '' ? 'has-right-content' : '')
-          }, typeof iconLeft !== 'undefined' && iconLeft !== null && iconLeft !== '' ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react__WEBPACK_IMPORTED_MODULE_0___default().Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
+            className: "".concat(controlGroupWrapperClassName || "input-group", " position-relative ").concat(propExist(iconLeft) ? 'has-left-content' : '', " ").concat(propExist(iconRight) || propExist(units) ? 'has-right-content' : '')
+          }, propExist(iconLeft) ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react__WEBPACK_IMPORTED_MODULE_0___default().Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
             className: controlGroupTextClassName || "input-group-text"
-          }, iconLeft)) : null, appendControl && typeof iconLeft !== 'undefined' && iconLeft !== null && iconLeft !== '' ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react__WEBPACK_IMPORTED_MODULE_0___default().Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+          }, iconLeft)) : null, appendControl && propExist(iconLeft) ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react__WEBPACK_IMPORTED_MODULE_0___default().Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
             className: "input-group-control-container position-relative"
           }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("input", _extends({
             ref: function ref(node) {
@@ -572,7 +627,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
             },
             tabIndex: tabIndex || 0,
             type: typeRes,
-            className: controlClassName || controlClassName === '' ? "".concat(controlClassName, " ").concat(typeof iconLeft !== 'undefined' && iconLeft !== null && iconLeft !== '' ? 'rounded-start-0' : 'rounded') : "form-control ".concat(typeof iconLeft !== 'undefined' && iconLeft !== null && iconLeft !== '' ? 'rounded-start-0' : 'rounded'),
+            className: controlClassName || controlClassName === '' ? "".concat(controlClassName, " ").concat(propExist(iconLeft) ? 'rounded-start-0' : 'rounded') : "form-control ".concat(propExist(iconLeft) ? 'rounded-start-0' : 'rounded'),
             id: idRes,
             name: name,
             step: step || null,
@@ -598,9 +653,9 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
             required: required || null,
             readOnly: readOnly || null,
             style: style
-          }, attributes)), appendControl || '', units ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react__WEBPACK_IMPORTED_MODULE_0___default().Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
+          }, attributes)), appendControl || '', propExist(units) ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react__WEBPACK_IMPORTED_MODULE_0___default().Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
             className: controlGroupTextClassName || "input-group-text"
-          }, units)) : null, typeof iconRight !== 'undefined' && iconRight !== null && iconRight !== '' ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react__WEBPACK_IMPORTED_MODULE_0___default().Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
+          }, units)) : null, propExist(iconRight) ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react__WEBPACK_IMPORTED_MODULE_0___default().Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
             className: controlGroupTextClassName || "input-group-text"
           }, iconRight)) : null)) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react__WEBPACK_IMPORTED_MODULE_0___default().Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("input", _extends({
             ref: function ref(node) {
@@ -613,7 +668,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
             },
             tabIndex: tabIndex || 0,
             type: typeRes,
-            className: controlClassName || controlClassName === '' ? "".concat(controlClassName) : "form-control rounded",
+            className: controlClassName || controlClassName === '' ? "".concat(controlClassName, " ").concat(propExist(iconLeft) || propExist(iconRight) || propExist(units) ? '' : 'rounded') : "form-control ".concat(propExist(iconLeft) || propExist(iconRight) || propExist(units) ? '' : 'rounded'),
             id: idRes,
             name: name,
             step: step || null,
@@ -639,9 +694,9 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
             required: required || null,
             readOnly: readOnly || null,
             style: style
-          }, attributes)), appendControl || '', units ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react__WEBPACK_IMPORTED_MODULE_0___default().Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
+          }, attributes)), appendControl || '', propExist(units) ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react__WEBPACK_IMPORTED_MODULE_0___default().Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
             className: controlGroupTextClassName || "input-group-text"
-          }, units)) : null, typeof iconRight !== 'undefined' && iconRight !== null && iconRight !== '' ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react__WEBPACK_IMPORTED_MODULE_0___default().Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
+          }, units)) : null, propExist(iconRight) ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react__WEBPACK_IMPORTED_MODULE_0___default().Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
             className: controlGroupTextClassName || "input-group-text"
           }, iconRight)) : null)), required ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react__WEBPACK_IMPORTED_MODULE_0___default().Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
             className: "position-absolute end-0 top-0 my-2 mx-2"
@@ -1461,6 +1516,8 @@ var en_US_default = /*#__PURE__*/__webpack_require__.n(en_US);
 // EXTERNAL MODULE: ./src/localization/zh_CN.js
 var zh_CN = __webpack_require__(357);
 var zh_CN_default = /*#__PURE__*/__webpack_require__.n(zh_CN);
+// EXTERNAL MODULE: ./src/utils/performance.js
+var performance = __webpack_require__(342);
 ;// CONCATENATED MODULE: ./src/index.tsx
 var _excluded = ["popupClassName", "wrapperClassName", "controlClassName", "controlGroupWrapperClassName", "controlGroupTextClassName", "offset", "exceededSidePosOffset", "localization", "type", "onlyTime", "truncateSeconds", "valueUseSlash", "disabled", "required", "readOnly", "value", "label", "units", "name", "alt", "id", "iconLeft", "iconRight", "autoComplete", "style", "tabIndex", "onLoad", "onChange", "onBlur", "onFocus", "langHoursTitle", "langMinutesTitle", "langSecondsTitle", "langWeek", "langWeekFull", "langMonths", "langMonthsFull", "langToday"];
 function _extends() { _extends = Object.assign ? Object.assign.bind() : function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
@@ -1479,6 +1536,7 @@ function _objectWithoutPropertiesLoose(source, excluded) { if (source == null) r
 
 
 // Localization
+
 
 
 var src_Date = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_amd_react_.forwardRef)(function (props, _ref) {
@@ -1591,6 +1649,7 @@ var src_Date = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_reac
     setTimeVal = _useState12[1];
   var hoursArr = ['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23', '00'];
   var msArr = ['00', '01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23', '24', '25', '26', '27', '28', '29', '30', '31', '32', '33', '34', '35', '36', '37', '38', '39', '40', '41', '42', '43', '44', '45', '46', '47', '48', '49', '50', '51', '52', '53', '54', '55', '56', '57', '58', '59'];
+  var windowScrollUpdate = (0,performance.debounce)(handleScrollEvent, 50);
   var isValidDate = function isValidDate(v) {
     return !(String(new window.Date(v)).toLowerCase() === 'invalid date');
   };
@@ -1653,6 +1712,9 @@ var src_Date = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_reac
       seconds: "".concat(seconds)
     };
   };
+  function handleScrollEvent() {
+    popwinPosHide();
+  }
   function popwinPosInit() {
     if (modalRef.current === null || listContentRef.current === null || inputRef.current === null) return;
 
@@ -1725,7 +1787,7 @@ var src_Date = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_reac
   function popwinPosHide() {
     setIsShow(false);
   }
-  function handleClose(event) {
+  function handleClickOutside(event) {
     if (event.target.closest(".date2d__wrapper") === null && event.target.closest(".date2d-cal__wrapper") === null) {
       popwinPosHide();
 
@@ -1749,7 +1811,7 @@ var src_Date = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_reac
     var val = event.target.value;
 
     //
-    _onChange === null || _onChange === void 0 ? void 0 : _onChange(inputRef.current, val);
+    _onChange === null || _onChange === void 0 ? void 0 : _onChange(inputRef.current, val, isValidDate(val));
   }
   function handleBlur(event) {
     //remove focus style
@@ -1763,14 +1825,14 @@ var src_Date = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_reac
     resetDefauleValueExist();
     if (!dateDefaultValueExist) {
       var _full = "".concat(splitVals[0], "-").concat(splitVals[1], "-").concat(splitVals[2], " ").concat(splitVals[3], ":").concat(splitVals[4], ":").concat(splitVals[5]);
-      _onChange === null || _onChange === void 0 ? void 0 : _onChange(inputRef.current, valueResConverter(_full));
+      _onChange === null || _onChange === void 0 ? void 0 : _onChange(inputRef.current, valueResConverter(_full), isValidDate(_full));
       setChangedVal(_full);
     }
   }
   function clearAll() {
     setDateDefaultValueExist(false);
     setChangedVal('');
-    _onChange === null || _onChange === void 0 ? void 0 : _onChange(inputRef.current, '');
+    _onChange === null || _onChange === void 0 ? void 0 : _onChange(inputRef.current, '', false);
   }
   function resetDefauleValueExist() {
     if (!dateDefaultValueExist) setDateDefaultValueExist(true);
@@ -1824,10 +1886,20 @@ var src_Date = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_reac
     }
 
     //--------------
-    document.removeEventListener('pointerdown', handleClose);
-    document.addEventListener('pointerdown', handleClose);
+    document.removeEventListener('pointerdown', handleClickOutside);
+    document.addEventListener('pointerdown', handleClickOutside);
+
+    // Add function to the element that should be used as the scrollable area.
+    //--------------
+    window.removeEventListener('scroll', windowScrollUpdate);
+    window.removeEventListener('touchmove', windowScrollUpdate);
+    window.addEventListener('scroll', windowScrollUpdate);
+    window.addEventListener('touchmove', windowScrollUpdate);
+    windowScrollUpdate();
     return function () {
-      document.removeEventListener('pointerdown', handleClose);
+      document.removeEventListener('pointerdown', handleClickOutside);
+      window.removeEventListener('scroll', windowScrollUpdate);
+      window.removeEventListener('touchmove', windowScrollUpdate);
     };
   }, [value]);
   return /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
@@ -1881,7 +1953,7 @@ var src_Date = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_reac
         var _val = e.target.value;
         var _date = "".concat(_val, "-").concat(splitVals[1], "-").concat(splitVals[2]);
         var _full = "".concat(_date, " ").concat(splitVals[3], ":").concat(splitVals[4], ":").concat(splitVals[5]);
-        _onChange === null || _onChange === void 0 ? void 0 : _onChange(inputRef.current, valueResConverter(_full));
+        _onChange === null || _onChange === void 0 ? void 0 : _onChange(inputRef.current, valueResConverter(_full), isValidDate(_full));
         setSplitVals(function (prevState) {
           return [_val, prevState[1], prevState[2], prevState[3], prevState[4], prevState[5]];
         });
@@ -1894,7 +1966,7 @@ var src_Date = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_reac
     }), "-", /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("input", {
       tabIndex: tabIndex || 0,
       className: "date2d__control__inputplaceholder--month",
-      value: !dateDefaultValueExist ? "" : splitVals[1] === '00' ? '' : splitVals[1],
+      value: !dateDefaultValueExist ? "" : splitVals[1],
       maxLength: 2,
       autoComplete: "off",
       disabled: disabled || null,
@@ -1904,7 +1976,7 @@ var src_Date = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_reac
         var _val = e.target.value;
         var _date = "".concat(splitVals[0], "-").concat(_val, "-").concat(splitVals[2]);
         var _full = "".concat(_date, " ").concat(splitVals[3], ":").concat(splitVals[4], ":").concat(splitVals[5]);
-        _onChange === null || _onChange === void 0 ? void 0 : _onChange(inputRef.current, valueResConverter(_full));
+        _onChange === null || _onChange === void 0 ? void 0 : _onChange(inputRef.current, valueResConverter(_full), isValidDate(_full));
         setSplitVals(function (prevState) {
           return [prevState[0], _val, prevState[2], prevState[3], prevState[4], prevState[5]];
         });
@@ -1917,7 +1989,7 @@ var src_Date = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_reac
     }), "-", /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("input", {
       tabIndex: tabIndex || 0,
       className: "date2d__control__inputplaceholder--day",
-      value: !dateDefaultValueExist ? "" : splitVals[2] === '00' ? '' : splitVals[2],
+      value: !dateDefaultValueExist ? "" : splitVals[2],
       maxLength: 2,
       autoComplete: "off",
       disabled: disabled || null,
@@ -1927,7 +1999,7 @@ var src_Date = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_reac
         var _val = e.target.value;
         var _date = "".concat(splitVals[0], "-").concat(splitVals[1], "-").concat(_val);
         var _full = "".concat(_date, " ").concat(splitVals[3], ":").concat(splitVals[4], ":").concat(splitVals[5]);
-        _onChange === null || _onChange === void 0 ? void 0 : _onChange(inputRef.current, valueResConverter(_full));
+        _onChange === null || _onChange === void 0 ? void 0 : _onChange(inputRef.current, valueResConverter(_full), isValidDate(_full));
         setSplitVals(function (prevState) {
           return [prevState[0], prevState[1], _val, prevState[3], prevState[4], prevState[5]];
         });
@@ -1940,7 +2012,7 @@ var src_Date = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_reac
     }), "\xA0") : null, type === 'datetime-local' || type === 'time' ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("input", {
       tabIndex: tabIndex || 0,
       className: "date2d__control__inputplaceholder--hours",
-      value: !dateDefaultValueExist ? "" : splitVals[3] === '00' ? '' : splitVals[3],
+      value: !dateDefaultValueExist ? "" : splitVals[3],
       maxLength: 2,
       autoComplete: "off",
       disabled: disabled || null,
@@ -1950,7 +2022,7 @@ var src_Date = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_reac
         var _val = e.target.value;
         var _date = "".concat(splitVals[0], "-").concat(splitVals[1], "-").concat(splitVals[2]);
         var _full = "".concat(_date, " ").concat(_val, ":").concat(splitVals[4], ":").concat(splitVals[5]);
-        _onChange === null || _onChange === void 0 ? void 0 : _onChange(inputRef.current, valueResConverter(_full));
+        _onChange === null || _onChange === void 0 ? void 0 : _onChange(inputRef.current, valueResConverter(_full), isValidDate(_full));
         setSplitVals(function (prevState) {
           return [prevState[0], prevState[1], prevState[2], _val, prevState[4], prevState[5]];
         });
@@ -1963,7 +2035,7 @@ var src_Date = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_reac
     }), ":", /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("input", {
       tabIndex: tabIndex || 0,
       className: "date2d__control__inputplaceholder--minutes",
-      value: !dateDefaultValueExist ? "" : splitVals[4] === '00' ? '' : splitVals[4],
+      value: !dateDefaultValueExist ? "" : splitVals[4],
       maxLength: 2,
       autoComplete: "off",
       disabled: disabled || null,
@@ -1973,7 +2045,7 @@ var src_Date = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_reac
         var _val = e.target.value;
         var _date = "".concat(splitVals[0], "-").concat(splitVals[1], "-").concat(splitVals[2]);
         var _full = "".concat(_date, " ").concat(splitVals[3], ":").concat(_val, ":").concat(splitVals[5]);
-        _onChange === null || _onChange === void 0 ? void 0 : _onChange(inputRef.current, valueResConverter(_full));
+        _onChange === null || _onChange === void 0 ? void 0 : _onChange(inputRef.current, valueResConverter(_full), isValidDate(_full));
         setSplitVals(function (prevState) {
           return [prevState[0], prevState[1], prevState[2], prevState[3], _val, prevState[5]];
         });
@@ -1986,7 +2058,7 @@ var src_Date = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_reac
     }), typeof truncateSeconds === 'undefined' || truncateSeconds === false ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, ":", /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("input", {
       tabIndex: tabIndex || 0,
       className: "date2d__control__inputplaceholder--seconds",
-      value: !dateDefaultValueExist ? "" : splitVals[5] === '00' ? '' : splitVals[5],
+      value: !dateDefaultValueExist ? "" : splitVals[5],
       maxLength: 2,
       autoComplete: "off",
       disabled: disabled || null,
@@ -1996,7 +2068,7 @@ var src_Date = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_reac
         var _val = e.target.value;
         var _date = "".concat(splitVals[0], "-").concat(splitVals[1], "-").concat(splitVals[2]);
         var _full = "".concat(_date, " ").concat(splitVals[3], ":").concat(splitVals[4], ":").concat(_val);
-        _onChange === null || _onChange === void 0 ? void 0 : _onChange(inputRef.current, valueResConverter(_full));
+        _onChange === null || _onChange === void 0 ? void 0 : _onChange(inputRef.current, valueResConverter(_full), isValidDate(_full));
         setSplitVals(function (prevState) {
           return [prevState[0], prevState[1], prevState[2], prevState[3], prevState[4], _val];
         });
@@ -2068,7 +2140,7 @@ var src_Date = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_reac
       setSplitVals(function (prevState) {
         return [_v.year, _v.month, _v.day, prevState[3], prevState[4], prevState[5]];
       });
-      _onChange === null || _onChange === void 0 ? void 0 : _onChange(inputRef.current, _v);
+      _onChange === null || _onChange === void 0 ? void 0 : _onChange(inputRef.current, _v, true);
     },
     onChangeToday: function onChangeToday(currentData) {
       resetDefauleValueExist();
@@ -2081,7 +2153,7 @@ var src_Date = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_reac
       setSplitVals(function (prevState) {
         return [_v.year, _v.month, _v.day, prevState[3], prevState[4], prevState[5]];
       });
-      _onChange === null || _onChange === void 0 ? void 0 : _onChange(inputRef.current, _v);
+      _onChange === null || _onChange === void 0 ? void 0 : _onChange(inputRef.current, _v, true);
     },
     onChangeMonth: function onChangeMonth(currentData) {
       resetDefauleValueExist();
@@ -2094,7 +2166,7 @@ var src_Date = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_reac
       setSplitVals(function (prevState) {
         return [_v.year, _v.month, _v.day, prevState[3], prevState[4], prevState[5]];
       });
-      _onChange === null || _onChange === void 0 ? void 0 : _onChange(inputRef.current, _v);
+      _onChange === null || _onChange === void 0 ? void 0 : _onChange(inputRef.current, _v, true);
     },
     onChangeYear: function onChangeYear(currentData) {
       resetDefauleValueExist();
@@ -2107,7 +2179,7 @@ var src_Date = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_reac
       setSplitVals(function (prevState) {
         return [_v.year, _v.month, _v.day, prevState[3], prevState[4], prevState[5]];
       });
-      _onChange === null || _onChange === void 0 ? void 0 : _onChange(inputRef.current, _v);
+      _onChange === null || _onChange === void 0 ? void 0 : _onChange(inputRef.current, _v, true);
     }
   }))) : null, type === 'datetime-local' || type === 'time' ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
     className: "date2d__hourslist border-end"
@@ -2132,7 +2204,7 @@ var src_Date = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_reac
         setSplitVals(function (prevState) {
           return [prevState[0], prevState[1], prevState[2], _v.hours, prevState[4], prevState[5]];
         });
-        _onChange === null || _onChange === void 0 ? void 0 : _onChange(inputRef.current, _v);
+        _onChange === null || _onChange === void 0 ? void 0 : _onChange(inputRef.current, _v, true);
       },
       className: "".concat(timeVal[0] == hour ? 'selected' : '')
     }, hour));
@@ -2159,7 +2231,7 @@ var src_Date = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_reac
         setSplitVals(function (prevState) {
           return [prevState[0], prevState[1], prevState[2], prevState[3], _v.minutes, prevState[5]];
         });
-        _onChange === null || _onChange === void 0 ? void 0 : _onChange(inputRef.current, _v);
+        _onChange === null || _onChange === void 0 ? void 0 : _onChange(inputRef.current, _v, true);
       },
       className: "".concat(timeVal[1] == v ? 'selected' : '')
     }, v));
@@ -2186,7 +2258,7 @@ var src_Date = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_reac
         setSplitVals(function (prevState) {
           return [prevState[0], prevState[1], prevState[2], prevState[3], prevState[5], _v.seconds];
         });
-        _onChange === null || _onChange === void 0 ? void 0 : _onChange(inputRef.current, _v);
+        _onChange === null || _onChange === void 0 ? void 0 : _onChange(inputRef.current, _v, true);
       },
       className: "".concat(timeVal[2] == v ? 'selected' : '')
     }, v));

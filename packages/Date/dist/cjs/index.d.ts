@@ -29,7 +29,7 @@ declare type DateProps = {
     tabIndex?: number;
     [key: `data-${string}`]: string | undefined;
     onLoad?: (e: any, data: any) => void;
-    onChange?: (e: any, data: any) => void;
+    onChange?: (e: any, data: any, isValidDate: boolean) => void;
     onBlur?: (e: any) => void;
     onFocus?: (e: any) => void;
     langHoursTitle?: string;

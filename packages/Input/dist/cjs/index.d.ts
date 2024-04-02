@@ -12,7 +12,7 @@ declare type InputProps = {
     type?: string;
     value?: string;
     label?: React.ReactNode | string;
-    units?: string;
+    units?: React.ReactNode | string;
     name?: string;
     step?: any;
     min?: any;
