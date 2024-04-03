@@ -32,6 +32,7 @@ declare type DateProps = {
     onChange?: (e: any, data: any, isValidDate: boolean) => void;
     onBlur?: (e: any) => void;
     onFocus?: (e: any) => void;
+    onClosePopup?: () => void;
     langHoursTitle?: string;
     langMinutesTitle?: string;
     langSecondsTitle?: string;

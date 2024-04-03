@@ -58,6 +58,9 @@
         transform: translateY(-50%);
         margin-left: .5rem;
         font-size: 0.875rem;
+        white-space: nowrap;
+        width: calc(100% - 2rem);
+        overflow: hidden;
 
         > input {
             padding: 0 !important;

@@ -51,6 +51,7 @@ type DateProps = {
     onChange?: (e: any, data: any, isValidDate: boolean) => void;
     onBlur?: (e: any) => void;
     onFocus?: (e: any) => void;
+    onClosePopup?: () => void;
 
 
     // calendar
@@ -97,6 +98,7 @@ const Date = forwardRef((props: DateProps, ref: any) => {
         onChange,
         onBlur,
         onFocus,
+        onClosePopup,
 
 
         //calendar
@@ -338,6 +340,7 @@ const Date = forwardRef((props: DateProps, ref: any) => {
 
     function popwinPosHide() {
         setIsShow(false);
+        onClosePopup?.();
     }
 
     function handleClickOutside(event: any) {
@@ -574,6 +577,7 @@ const Date = forwardRef((props: DateProps, ref: any) => {
 
                                             
                                         }}
+                                        {...attributes}
                                     />
                                     -
                                     <input
@@ -600,6 +604,7 @@ const Date = forwardRef((props: DateProps, ref: any) => {
                                             setTimeVal([splitVals[3], splitVals[4], splitVals[5]]);
                                             
                                         }}
+                                        {...attributes}
                                     />
                                     -
                                     <input
@@ -627,6 +632,7 @@ const Date = forwardRef((props: DateProps, ref: any) => {
 
                                             
                                         }}
+                                        {...attributes}
                                     />
                                     &nbsp;
 
@@ -659,6 +665,7 @@ const Date = forwardRef((props: DateProps, ref: any) => {
 
                                             
                                         }}
+                                        {...attributes}
                                     />
                                     {/* TIME CONTROL */}
 
@@ -689,6 +696,7 @@ const Date = forwardRef((props: DateProps, ref: any) => {
 
                                             
                                         }}
+                                        {...attributes}
                                     />
                                     {/* TIME CONTROL */}
 
@@ -721,6 +729,7 @@ const Date = forwardRef((props: DateProps, ref: any) => {
                                                 setTimeVal([splitVals[3], splitVals[4], _val]);
                                                     
                                             }}
+                                            {...attributes}
                                         />
                                     </> : null}
                                     {/* TIME CONTROL */}
@@ -762,6 +771,7 @@ const Date = forwardRef((props: DateProps, ref: any) => {
                     style={{
                         display: 'none'
                     }}
+                    {...attributes}
                 >
 
 

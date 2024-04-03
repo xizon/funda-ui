@@ -44,6 +44,9 @@
   transform: translateY(-50%);
   margin-left: 0.5rem;
   font-size: 0.875rem;
+  white-space: nowrap;
+  width: calc(100% - 2rem);
+  overflow: hidden;
 }
 .date2d__trigger .date2d__control__inputplaceholder > input {
   padding: 0 !important;
