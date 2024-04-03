@@ -1888,18 +1888,21 @@ var src_Date = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_reac
     //--------------
     document.removeEventListener('pointerdown', handleClickOutside);
     document.addEventListener('pointerdown', handleClickOutside);
+    document.addEventListener('touchstart', handleClickOutside);
 
-    // Add function to the element that should be used as the scrollable area.
-    //--------------
-    window.removeEventListener('scroll', windowScrollUpdate);
-    window.removeEventListener('touchmove', windowScrollUpdate);
-    window.addEventListener('scroll', windowScrollUpdate);
-    window.addEventListener('touchmove', windowScrollUpdate);
-    windowScrollUpdate();
+    // // Add function to the element that should be used as the scrollable area.
+    // //--------------
+    // window.removeEventListener('scroll', windowScrollUpdate);
+    // window.removeEventListener('touchmove', windowScrollUpdate);
+    // window.addEventListener('scroll', windowScrollUpdate);
+    // window.addEventListener('touchmove', windowScrollUpdate);
+    // windowScrollUpdate();
+
     return function () {
       document.removeEventListener('pointerdown', handleClickOutside);
-      window.removeEventListener('scroll', windowScrollUpdate);
-      window.removeEventListener('touchmove', windowScrollUpdate);
+
+      // window.removeEventListener('scroll', windowScrollUpdate);
+      // window.removeEventListener('touchmove', windowScrollUpdate);
     };
   }, [value]);
   return /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {

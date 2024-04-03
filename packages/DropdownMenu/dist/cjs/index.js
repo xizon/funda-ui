@@ -675,6 +675,7 @@ var DropdownMenu = function DropdownMenu(props) {
   (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useEffect)(function () {
     document.removeEventListener('pointerdown', handleClose);
     document.addEventListener('pointerdown', handleClose);
+    document.addEventListener('touchstart', handleClose);
     return function () {
       document.removeEventListener('pointerdown', handleClose);
     };

@@ -480,22 +480,23 @@ const Date = forwardRef((props: DateProps, ref: any) => {
         //--------------
         document.removeEventListener('pointerdown', handleClickOutside);
         document.addEventListener('pointerdown', handleClickOutside);
+        document.addEventListener('touchstart', handleClickOutside);
 
 
-        // Add function to the element that should be used as the scrollable area.
-        //--------------
-        window.removeEventListener('scroll', windowScrollUpdate);
-        window.removeEventListener('touchmove', windowScrollUpdate);
-        window.addEventListener('scroll', windowScrollUpdate);
-        window.addEventListener('touchmove', windowScrollUpdate);
-        windowScrollUpdate();
+        // // Add function to the element that should be used as the scrollable area.
+        // //--------------
+        // window.removeEventListener('scroll', windowScrollUpdate);
+        // window.removeEventListener('touchmove', windowScrollUpdate);
+        // window.addEventListener('scroll', windowScrollUpdate);
+        // window.addEventListener('touchmove', windowScrollUpdate);
+        // windowScrollUpdate();
 
 
         return () => {
             document.removeEventListener('pointerdown', handleClickOutside);
 
-            window.removeEventListener('scroll', windowScrollUpdate);
-            window.removeEventListener('touchmove', windowScrollUpdate);
+            // window.removeEventListener('scroll', windowScrollUpdate);
+            // window.removeEventListener('touchmove', windowScrollUpdate);
 
         }
 

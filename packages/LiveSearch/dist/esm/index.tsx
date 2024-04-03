@@ -743,6 +743,7 @@ const LiveSearch = (props: LiveSearchProps) => {
         //--------------
         document.removeEventListener('pointerdown', handleClose);
         document.addEventListener('pointerdown', handleClose);
+        document.addEventListener('touchstart', handleClose);
 
 
         // Add function to the element that should be used as the scrollable area.

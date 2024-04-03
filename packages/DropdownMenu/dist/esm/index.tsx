@@ -262,6 +262,8 @@ const DropdownMenu = (props: DropdownMenuProps) => {
 
         document.removeEventListener('pointerdown', handleClose);
         document.addEventListener('pointerdown', handleClose);
+        document.addEventListener('touchstart', handleClose);
+        
 
         return () => {
             document.removeEventListener('pointerdown', handleClose);

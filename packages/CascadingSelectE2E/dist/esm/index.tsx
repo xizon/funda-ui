@@ -1295,6 +1295,7 @@ const CascadingSelectE2E = (props: CascadingSelectE2EProps) => {
         //--------------
         document.removeEventListener('pointerdown', handleClickOutside);
         document.addEventListener('pointerdown', handleClickOutside);
+        document.addEventListener('touchstart', handleClickOutside);
 
 
         // Add function to the element that should be used as the scrollable area.
