@@ -10,6 +10,7 @@ import MultiFuncSelect from 'funda-ui/MultiFuncSelect';
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |
 | `ref` | React.ForwardedRef | - | It is the return element of this component.  |
+| `popupRef` | React.RefObject | - | It exposes the following methods when the component's popup opens or closes:  <br /> <ol><li>`popupRef.current.close()`</li></ol> |
 | `wrapperClassName` | string | `mb-3 position-relative` | The class name of the control wrapper. |
 | `controlClassName` | string | `form-control` | The class name of the control. |
 | `exceededSidePosOffset` | number | 15 | Offset px that exceeds the far right or left side of the screen |

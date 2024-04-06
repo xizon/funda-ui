@@ -1,4 +1,4 @@
-import React, { useId, useEffect, useState, useRef } from 'react';
+import React, { useId, useEffect, useState, useRef, useImperativeHandle } from 'react';
 
 import RootPortal from 'funda-root-portal';
 
@@ -42,6 +42,7 @@ interface fetchArrayConfig {
 }
 
 type CascadingSelectE2EProps = {
+    popupRef?: React.RefObject<any>;
     wrapperClassName?: string;
     controlClassName?: string;
     exceededSidePosOffset?: number;
@@ -101,6 +102,7 @@ type CascadingSelectE2EProps = {
 
 const CascadingSelectE2E = (props: CascadingSelectE2EProps) => {
     const {
+        popupRef,
         wrapperClassName,
         controlClassName,
         exceededSidePosOffset,
@@ -144,6 +146,19 @@ const CascadingSelectE2E = (props: CascadingSelectE2EProps) => {
     const rootRef = useRef<any>(null);
     const valRef = useRef<any>(null);
     const listRef = useRef<any>(null);
+
+
+    // exposes the following methods
+    useImperativeHandle(
+        popupRef,
+        () => ({
+            close: () => {
+                cancel();
+            },
+        }),
+        [popupRef],
+    );
+
 
 
     // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@

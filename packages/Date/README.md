@@ -10,6 +10,7 @@ import Date from 'funda-ui/Date';
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |
 | `ref` | React.ForwardedRef | - | It is the return element of this component.  |
+| `popupRef` | React.RefObject | - | It exposes the following methods when the component's popup opens or closes:  <br /> <ol><li>`popupRef.current.close()`</li></ol> |
 | `offset` | number  | 10 | Position offset of top and bottom. |
 | `exceededSidePosOffset` | number | 15 | Offset px that exceeds the far right or left side of the screen |
 | `popupClassName` | string | - | The class name of the popup. |
@@ -45,6 +46,14 @@ import Date from 'funda-ui/Date';
 | `onBlur` | function  | - | Call a function when a user leaves an form field. It returns only one callback value which is the control (**HTML Element**) |
 | `onFocus` | function  | - | Call a function when an form field gets focus. It returns only one callback value which is the control (**HTML Element**) |
 | `onClosePopup` | function  | - | Call a function when close popup. It has no return value. |
+| `onChangeDate` | function  | - | Call a function when a date area is clicked. The function receives the selected date (yyyy-MM-dd).  Triggered when the date cell selection button is clicked. It returns only one value which is the current value (**JSON Object**) |
+| `onChangeMonth` | function  | - | Called when the date moves to a new month. The function receives the selected month (0-11). Triggered when the previous, next or month selection button is clicked. It returns only one value which is the current value (**JSON Object**) |
+| `onChangeYear` | function  | - | Called when the date moves to a new year. The function receives the selected year. Triggered when the year selection button is clicked. It returns only one value which is the current value (**JSON Object**) |
+| `onChangeToday` | function  | - | Called when the date moves to today. Triggered when the today selection button is clicked. It returns only one value which is the current value (**JSON Object**) |
+| `onChangeHours` | function  | - | Called when the date moves to hours. Triggered when the hours selection button is clicked. It returns only one value which is the current value (**JSON Object**) |
+| `onChangeMinutes` | function  | - | Called when the date moves to minutes. Triggered when the minutes selection button is clicked. It returns only one value which is the current value (**JSON Object**) |
+| `onChangeSeconds` | function  | - | Called when the date moves to seconds. Triggered when the seconds selection button is clicked. It returns only one value which is the current value (**JSON Object**) |
+
 
 
 
@@ -147,3 +156,52 @@ export default () => {
     );
 }
 ```
+
+## Popup closes automatically after a minute of tapping
+
+Lets you callback the handle exposed as a ref.
+
+
+```js
+import React, {useRef} from "react";
+import Date from 'funda-ui/Date';
+
+// component styles
+import 'funda-ui/Date/index.css';
+
+export default () => {
+
+    const popupRef = useRef<any>();
+
+
+    return (
+        <>
+
+
+
+           <Date
+                popupRef={popupRef}
+                label="Date & Time (no seconds)"
+                value="2024-03-14 10:22"
+                type="datetime-local"
+                onChange={(input: HTMLInputElement, dateRes: any, isValidDate: boolean) => {
+                    console.log(isValidDate, input, dateRes, dateRes !== null && typeof dateRes !== 'string' ? dateRes.res : dateRes)
+                }}
+                onLoad={(initValue: string, dateRes: any) => {
+                    console.log(initValue, dateRes)
+                }}
+                truncateSeconds
+                onChangeMinutes={(dateRes: any) => {
+                    console.log(dateRes);
+
+                    // close popup
+                    if (popupRef.current) popupRef.current.close();
+                }}
+            />
+
+ 
+        </>
+    );
+}
+```
+

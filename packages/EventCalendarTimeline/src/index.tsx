@@ -422,7 +422,7 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
         if (typeof v === 'undefined') return '';
 
 
-        // YYYY-MM-DD
+        // yyyy-MM-dd
         const date = typeof v === 'string' ? new Date(v.replace(/-/g, "/")) : v;  // fix "Invalid date in safari"
         const padZero = (num: number): string => {
             if (padZeroEnabled) {

@@ -955,7 +955,7 @@ var cjs_default = /*#__PURE__*/__webpack_require__.n(cjs);
 var dist_cjs = __webpack_require__(962);
 var dist_cjs_default = /*#__PURE__*/__webpack_require__.n(dist_cjs);
 ;// CONCATENATED MODULE: ./src/index.tsx
-var _excluded = ["wrapperClassName", "controlClassName", "exceededSidePosOffset", "appearance", "isSearchInput", "readOnly", "disabled", "required", "placeholder", "options", "value", "label", "name", "id", "icon", "btnId", "fetchTrigger", "hideIcon", "depth", "maxLength", "style", "winWidth", "tabIndex", "data", "fetchAutoShow", "fetchNoneInfo", "fetchUpdate", "fetchFuncAsync", "fetchFuncMethod", "fetchFuncMethodParams", "fetchCallback", "onFetch", "onChange", "onBlur"];
+var _excluded = ["popupRef", "wrapperClassName", "controlClassName", "exceededSidePosOffset", "appearance", "isSearchInput", "readOnly", "disabled", "required", "placeholder", "options", "value", "label", "name", "id", "icon", "btnId", "fetchTrigger", "hideIcon", "depth", "maxLength", "style", "winWidth", "tabIndex", "data", "fetchAutoShow", "fetchNoneInfo", "fetchUpdate", "fetchFuncAsync", "fetchFuncMethod", "fetchFuncMethodParams", "fetchCallback", "onFetch", "onChange", "onBlur"];
 function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
 function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
 function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter); }
@@ -980,7 +980,8 @@ function _objectWithoutPropertiesLoose(source, excluded) { if (source == null) r
 
 
 var LiveSearch = function LiveSearch(props) {
-  var wrapperClassName = props.wrapperClassName,
+  var popupRef = props.popupRef,
+    wrapperClassName = props.wrapperClassName,
     controlClassName = props.controlClassName,
     exceededSidePosOffset = props.exceededSidePosOffset,
     appearance = props.appearance,
@@ -1065,6 +1066,16 @@ var LiveSearch = function LiveSearch(props) {
   var handleChangeFetchSafe = utils_useDebounce(function (e) {
     handleChange(e);
   }, 350, [dataInit]);
+
+  // exposes the following methods
+  (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useImperativeHandle)(popupRef, function () {
+    return {
+      close: function close() {
+        setIsOpen(false);
+        cancel();
+      }
+    };
+  }, [popupRef]);
 
   // Determine whether it is in JSON format
   function isJSON(str) {

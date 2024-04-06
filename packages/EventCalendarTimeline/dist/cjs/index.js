@@ -1863,7 +1863,7 @@ var EventCalendarTimeline = function EventCalendarTimeline(props) {
     var padZeroEnabled = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : true;
     if (typeof v === 'undefined') return '';
 
-    // YYYY-MM-DD
+    // yyyy-MM-dd
     var date = typeof v === 'string' ? new Date(v.replace(/-/g, "/")) : v; // fix "Invalid date in safari"
     var padZero = function padZero(num) {
       if (padZeroEnabled) {

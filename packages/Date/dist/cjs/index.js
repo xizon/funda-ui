@@ -1206,7 +1206,7 @@ var Calendar = function Calendar(props) {
     var padZeroEnabled = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : true;
     if (typeof v === 'undefined') return '';
 
-    // YYYY-MM-DD
+    // yyyy-MM-dd
     var date = typeof v === 'string' ? new Date(v.replace(/-/g, "/")) : v; // fix "Invalid date in safari"
     var padZero = function padZero(num) {
       if (padZeroEnabled) {
@@ -1519,7 +1519,7 @@ var zh_CN_default = /*#__PURE__*/__webpack_require__.n(zh_CN);
 // EXTERNAL MODULE: ./src/utils/performance.js
 var performance = __webpack_require__(342);
 ;// CONCATENATED MODULE: ./src/index.tsx
-var _excluded = ["popupClassName", "wrapperClassName", "controlClassName", "controlGroupWrapperClassName", "controlGroupTextClassName", "offset", "exceededSidePosOffset", "localization", "type", "onlyTime", "truncateSeconds", "valueUseSlash", "disabled", "required", "readOnly", "value", "label", "units", "name", "alt", "id", "iconLeft", "iconRight", "autoComplete", "style", "tabIndex", "onLoad", "onChange", "onBlur", "onFocus", "onClosePopup", "langHoursTitle", "langMinutesTitle", "langSecondsTitle", "langWeek", "langWeekFull", "langMonths", "langMonthsFull", "langToday"];
+var _excluded = ["popupRef", "popupClassName", "wrapperClassName", "controlClassName", "controlGroupWrapperClassName", "controlGroupTextClassName", "offset", "exceededSidePosOffset", "localization", "type", "onlyTime", "truncateSeconds", "valueUseSlash", "disabled", "required", "readOnly", "value", "label", "units", "name", "alt", "id", "iconLeft", "iconRight", "autoComplete", "style", "tabIndex", "onLoad", "onChange", "onBlur", "onFocus", "onClosePopup", "onChangeDate", "onChangeMonth", "onChangeYear", "onChangeToday", "onChangeHours", "onChangeMinutes", "onChangeSeconds", "langHoursTitle", "langMinutesTitle", "langSecondsTitle", "langWeek", "langWeekFull", "langMonths", "langMonthsFull", "langToday"];
 function _extends() { _extends = Object.assign ? Object.assign.bind() : function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
 function src_slicedToArray(arr, i) { return src_arrayWithHoles(arr) || src_iterableToArrayLimit(arr, i) || src_unsupportedIterableToArray(arr, i) || src_nonIterableRest(); }
 function src_nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
@@ -1540,7 +1540,8 @@ function _objectWithoutPropertiesLoose(source, excluded) { if (source == null) r
 
 
 var src_Date = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_amd_react_.forwardRef)(function (props, _ref) {
-  var popupClassName = props.popupClassName,
+  var popupRef = props.popupRef,
+    popupClassName = props.popupClassName,
     wrapperClassName = props.wrapperClassName,
     controlClassName = props.controlClassName,
     controlGroupWrapperClassName = props.controlGroupWrapperClassName,
@@ -1571,6 +1572,13 @@ var src_Date = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_reac
     onBlur = props.onBlur,
     onFocus = props.onFocus,
     onClosePopup = props.onClosePopup,
+    _onChangeDate = props.onChangeDate,
+    _onChangeMonth = props.onChangeMonth,
+    _onChangeYear = props.onChangeYear,
+    _onChangeToday = props.onChangeToday,
+    onChangeHours = props.onChangeHours,
+    onChangeMinutes = props.onChangeMinutes,
+    onChangeSeconds = props.onChangeSeconds,
     langHoursTitle = props.langHoursTitle,
     langMinutesTitle = props.langMinutesTitle,
     langSecondsTitle = props.langSecondsTitle,
@@ -1650,6 +1658,15 @@ var src_Date = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_reac
     setTimeVal = _useState12[1];
   var hoursArr = ['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23', '00'];
   var msArr = ['00', '01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23', '24', '25', '26', '27', '28', '29', '30', '31', '32', '33', '34', '35', '36', '37', '38', '39', '40', '41', '42', '43', '44', '45', '46', '47', '48', '49', '50', '51', '52', '53', '54', '55', '56', '57', '58', '59'];
+
+  // exposes the following methods
+  (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useImperativeHandle)(popupRef, function () {
+    return {
+      close: function close() {
+        popwinPosHide();
+      }
+    };
+  }, [popupRef]);
   var windowScrollUpdate = (0,performance.debounce)(handleScrollEvent, 50);
   var isValidDate = function isValidDate(v) {
     return !(String(new window.Date(v)).toLowerCase() === 'invalid date');
@@ -2146,6 +2163,9 @@ var src_Date = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_reac
         return [_v.year, _v.month, _v.day, prevState[3], prevState[4], prevState[5]];
       });
       _onChange === null || _onChange === void 0 ? void 0 : _onChange(inputRef.current, _v, true);
+
+      // 
+      _onChangeDate === null || _onChangeDate === void 0 ? void 0 : _onChangeDate(_v);
     },
     onChangeToday: function onChangeToday(currentData) {
       resetDefauleValueExist();
@@ -2159,6 +2179,9 @@ var src_Date = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_reac
         return [_v.year, _v.month, _v.day, prevState[3], prevState[4], prevState[5]];
       });
       _onChange === null || _onChange === void 0 ? void 0 : _onChange(inputRef.current, _v, true);
+
+      // 
+      _onChangeToday === null || _onChangeToday === void 0 ? void 0 : _onChangeToday(_v);
     },
     onChangeMonth: function onChangeMonth(currentData) {
       resetDefauleValueExist();
@@ -2172,6 +2195,9 @@ var src_Date = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_reac
         return [_v.year, _v.month, _v.day, prevState[3], prevState[4], prevState[5]];
       });
       _onChange === null || _onChange === void 0 ? void 0 : _onChange(inputRef.current, _v, true);
+
+      // 
+      _onChangeMonth === null || _onChangeMonth === void 0 ? void 0 : _onChangeMonth(_v);
     },
     onChangeYear: function onChangeYear(currentData) {
       resetDefauleValueExist();
@@ -2185,6 +2211,9 @@ var src_Date = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_reac
         return [_v.year, _v.month, _v.day, prevState[3], prevState[4], prevState[5]];
       });
       _onChange === null || _onChange === void 0 ? void 0 : _onChange(inputRef.current, _v, true);
+
+      // 
+      _onChangeYear === null || _onChangeYear === void 0 ? void 0 : _onChangeYear(_v);
     }
   }))) : null, type === 'datetime-local' || type === 'time' ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
     className: "date2d__hourslist border-end"
@@ -2210,6 +2239,9 @@ var src_Date = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_reac
           return [prevState[0], prevState[1], prevState[2], _v.hours, prevState[4], prevState[5]];
         });
         _onChange === null || _onChange === void 0 ? void 0 : _onChange(inputRef.current, _v, true);
+
+        // 
+        onChangeHours === null || onChangeHours === void 0 ? void 0 : onChangeHours(_v);
       },
       className: "".concat(timeVal[0] == hour ? 'selected' : '')
     }, hour));
@@ -2237,6 +2269,9 @@ var src_Date = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_reac
           return [prevState[0], prevState[1], prevState[2], prevState[3], _v.minutes, prevState[5]];
         });
         _onChange === null || _onChange === void 0 ? void 0 : _onChange(inputRef.current, _v, true);
+
+        // 
+        onChangeMinutes === null || onChangeMinutes === void 0 ? void 0 : onChangeMinutes(_v);
       },
       className: "".concat(timeVal[1] == v ? 'selected' : '')
     }, v));
@@ -2264,6 +2299,9 @@ var src_Date = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_reac
           return [prevState[0], prevState[1], prevState[2], prevState[3], prevState[5], _v.seconds];
         });
         _onChange === null || _onChange === void 0 ? void 0 : _onChange(inputRef.current, _v, true);
+
+        // 
+        onChangeSeconds === null || onChangeSeconds === void 0 ? void 0 : onChangeSeconds(_v);
       },
       className: "".concat(timeVal[2] == v ? 'selected' : '')
     }, v));

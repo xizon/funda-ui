@@ -6,6 +6,7 @@ declare module 'react' {
 }
 declare type CascadingSelectOptionChangeFnType = (input: any, currentData: any, index: any, depth: any, value: any, closeFunc: any) => void;
 declare type CascadingSelectProps = {
+    popupRef?: React.RefObject<any>;
     wrapperClassName?: string;
     controlClassName?: string;
     exceededSidePosOffset?: number;

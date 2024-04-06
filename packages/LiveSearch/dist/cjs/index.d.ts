@@ -7,6 +7,7 @@ interface OptionConfig {
     queryString: string | number;
 }
 declare type LiveSearchProps = {
+    popupRef?: React.RefObject<any>;
     wrapperClassName?: string;
     controlClassName?: string;
     exceededSidePosOffset?: number;

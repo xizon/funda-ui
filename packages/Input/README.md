@@ -138,7 +138,7 @@ export default () => {
                 type="datetime-local"
                 step={60}
                 onInputCallback={(e) => {
-                    // YYYY-MM-DD HH:MM
+                    // yyyy-MM-dd HH:mm
                     const date = new Date(e.target.value);
                     const padZero = (num: number): string => {
                         return num < 10 ? '0' + num : num.toString();

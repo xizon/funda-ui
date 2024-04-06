@@ -1094,7 +1094,7 @@ var enableBodyScroll = function enableBodyScroll(targetElement) {
 // EXTERNAL MODULE: ./src/utils/tree.js
 var tree = __webpack_require__(602);
 ;// CONCATENATED MODULE: ./src/index.tsx
-var _excluded = ["wrapperClassName", "controlClassName", "exceededSidePosOffset", "multiSelect", "multiSelectSelectedItemOnlyStatus", "disabled", "required", "value", "label", "name", "readOnly", "placeholder", "id", "options", "cleanTrigger", "lockBodyScroll", "hierarchical", "indentation", "doubleIndent", "style", "depth", "controlArrow", "winWidth", "tabIndex", "fetchTrigger", "fetchTriggerForDefaultData", "fetchNoneInfo", "fetchUpdate", "fetchFuncAsync", "fetchFuncMethod", "fetchFuncMethodParams", "data", "extractValueByBrackets", "fetchCallback", "onFetch", "onLoad", "onSelect", "onChange", "onBlur", "onFocus"];
+var _excluded = ["popupRef", "wrapperClassName", "controlClassName", "exceededSidePosOffset", "multiSelect", "multiSelectSelectedItemOnlyStatus", "disabled", "required", "value", "label", "name", "readOnly", "placeholder", "id", "options", "cleanTrigger", "lockBodyScroll", "hierarchical", "indentation", "doubleIndent", "style", "depth", "controlArrow", "winWidth", "tabIndex", "fetchTrigger", "fetchTriggerForDefaultData", "fetchNoneInfo", "fetchUpdate", "fetchFuncAsync", "fetchFuncMethod", "fetchFuncMethodParams", "data", "extractValueByBrackets", "fetchCallback", "onFetch", "onLoad", "onSelect", "onChange", "onBlur", "onFocus"];
 function src_toConsumableArray(arr) { return src_arrayWithoutHoles(arr) || src_iterableToArray(arr) || src_unsupportedIterableToArray(arr) || src_nonIterableSpread(); }
 function src_nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
 function src_iterableToArray(iter) { if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter); }
@@ -1129,7 +1129,8 @@ function _objectWithoutPropertiesLoose(source, excluded) { if (source == null) r
 
 
 var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_amd_react_.forwardRef)(function (props, _ref2) {
-  var wrapperClassName = props.wrapperClassName,
+  var popupRef = props.popupRef,
+    wrapperClassName = props.wrapperClassName,
     controlClassName = props.controlClassName,
     exceededSidePosOffset = props.exceededSidePosOffset,
     multiSelect = props.multiSelect,
@@ -1257,6 +1258,16 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
   // clean trigger
   var CLEAN_TRIGGER_VALID = typeof cleanTrigger === 'undefined' ? false : cleanTrigger ? cleanTrigger.valid : false;
   var CLEAN_TRIGGER_LABEL = cleanTrigger ? cleanTrigger.cleanValueLabel : 'Clean';
+
+  // exposes the following methods
+  (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useImperativeHandle)(popupRef, function () {
+    return {
+      close: function close() {
+        cancel();
+        if (MULTI_SEL_VALID) popwinPosHide();
+      }
+    };
+  }, [popupRef]);
 
   //performance
   var handleChangeFetchSafe = utils_useDebounce(function (val) {

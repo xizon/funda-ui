@@ -1,4 +1,4 @@
-import React, { useId, useEffect, useState, useRef } from 'react';
+import React, { useId, useEffect, useState, useRef, useImperativeHandle } from 'react';
 
 import RootPortal from 'funda-root-portal';
 
@@ -25,6 +25,7 @@ type CascadingSelectOptionChangeFnType = (input: any, currentData: any, index: a
 
 
 type CascadingSelectProps = {
+    popupRef?: React.RefObject<any>;
     wrapperClassName?: string;
     controlClassName?: string;
     exceededSidePosOffset?: number;
@@ -82,6 +83,7 @@ type CascadingSelectProps = {
 
 const CascadingSelect = (props: CascadingSelectProps) => {
     const {
+        popupRef,
         wrapperClassName,
         controlClassName,
         exceededSidePosOffset,
@@ -127,6 +129,18 @@ const CascadingSelect = (props: CascadingSelectProps) => {
     const rootRef = useRef<any>(null);
     const valRef = useRef<any>(null);
     const listRef = useRef<any>(null);
+
+
+    // exposes the following methods
+    useImperativeHandle(
+        popupRef,
+        () => ({
+            close: () => {
+                cancel();
+            },
+        }),
+        [popupRef],
+    );
 
 
     // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@

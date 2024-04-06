@@ -9,7 +9,7 @@ import Table from 'funda-ui/Table';
 ```
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |
-| `tableCheckRef` | React.RefObject | - | It exposes the following methods of the component:  <br /> <ol><li>`ref.current.check([{index:1,value:true},{index:3,value:true}], (res) => { console.log(res) })`</li></ol> |
+| `tableCheckRef` | React.RefObject | - | It exposes the following methods of the component:  <br /> <ol><li>`tableCheckRef.current.check([{index:1,value:true},{index:3,value:true}], (res) => { console.log(res) })`</li></ol> |
 | `wrapperClassName` | string | `mb-3 position-relative` | The class name of the table wrapper. |
 | `tableClassName` | string | `table` | The class name of the table wrapper. |
 | `bodyClassName` | string | - | The class name of `<tbody>`. |

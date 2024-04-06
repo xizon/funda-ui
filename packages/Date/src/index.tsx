@@ -1,4 +1,4 @@
-import React, { useId, useState, useRef, useEffect, forwardRef, ChangeEvent } from 'react';
+import React, { useId, useState, useRef, useEffect, forwardRef, ChangeEvent, useImperativeHandle } from 'react';
 
 import Input from 'funda-input';
 import RootPortal from 'funda-root-portal';
@@ -18,6 +18,7 @@ import i18n__zh_CN from './localization/zh_CN';
 import { debounce } from './utils/performance';
 
 type DateProps = {
+    popupRef?: React.RefObject<any>;
     popupClassName?: string;
     wrapperClassName?: string;
     controlClassName?: string;
@@ -52,6 +53,15 @@ type DateProps = {
     onBlur?: (e: any) => void;
     onFocus?: (e: any) => void;
     onClosePopup?: () => void;
+    //
+    onChangeDate?: (currentData: any) => void;
+    onChangeMonth?: (currentData: any) => void;
+    onChangeYear?: (currentData: any) => void;
+    onChangeToday?: (currentData: any) => void;
+    onChangeHours?: (currentData: any) => void;
+    onChangeMinutes?: (currentData: any) => void;
+    onChangeSeconds?: (currentData: any) => void;
+
 
 
     // calendar
@@ -68,6 +78,7 @@ type DateProps = {
 
 const Date = forwardRef((props: DateProps, ref: any) => {
     const {
+        popupRef,
         popupClassName,
         wrapperClassName,
         controlClassName,
@@ -99,6 +110,15 @@ const Date = forwardRef((props: DateProps, ref: any) => {
         onBlur,
         onFocus,
         onClosePopup,
+
+        //
+        onChangeDate,
+        onChangeMonth,
+        onChangeYear,
+        onChangeToday,
+        onChangeHours,
+        onChangeMinutes,
+        onChangeSeconds,
 
 
         //calendar
@@ -178,6 +198,19 @@ const Date = forwardRef((props: DateProps, ref: any) => {
 
     const hoursArr = ['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23', '00'];
     const msArr = ['00', '01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23', '24', '25', '26', '27', '28', '29', '30', '31', '32', '33', '34', '35', '36', '37', '38', '39', '40', '41', '42', '43', '44', '45', '46', '47', '48', '49', '50', '51', '52', '53', '54', '55', '56', '57', '58', '59'];
+
+
+
+    // exposes the following methods
+    useImperativeHandle(
+        popupRef,
+        () => ({
+            close: () => {
+                popwinPosHide();
+            },
+        }),
+        [popupRef],
+    );
 
 
     const windowScrollUpdate = debounce(handleScrollEvent, 50);
@@ -800,6 +833,9 @@ const Date = forwardRef((props: DateProps, ref: any) => {
                                             return [_v.year, _v.month, _v.day, prevState[3], prevState[4], prevState[5]];
                                         });
                                         onChange?.(inputRef.current, _v, true);
+
+                                        // 
+                                        onChangeDate?.(_v);
                                         
 
                                     }}
@@ -815,6 +851,10 @@ const Date = forwardRef((props: DateProps, ref: any) => {
                                             return [_v.year, _v.month, _v.day, prevState[3], prevState[4], prevState[5]];
                                         });
                                         onChange?.(inputRef.current, _v, true);
+
+                                        // 
+                                        onChangeToday?.(_v);
+
                                     }}
                                     onChangeMonth={(currentData: any) => {
                                         resetDefauleValueExist();
@@ -829,6 +869,9 @@ const Date = forwardRef((props: DateProps, ref: any) => {
                                         });
                                         onChange?.(inputRef.current, _v, true);
 
+                                        // 
+                                        onChangeMonth?.(_v);
+
                                     }}
                                     onChangeYear={(currentData: any) => {
                                         resetDefauleValueExist();
@@ -842,6 +885,9 @@ const Date = forwardRef((props: DateProps, ref: any) => {
                                             return [_v.year, _v.month, _v.day, prevState[3], prevState[4], prevState[5]];
                                         });
                                         onChange?.(inputRef.current, _v, true);
+
+                                        // 
+                                        onChangeYear?.(_v);
 
                                     }}
                                 />
@@ -879,6 +925,9 @@ const Date = forwardRef((props: DateProps, ref: any) => {
                                                         return [prevState[0], prevState[1], prevState[2], _v.hours, prevState[4], prevState[5]];
                                                     });
                                                     onChange?.(inputRef.current, _v, true);
+
+                                                    // 
+                                                    onChangeHours?.(_v);
 
                                                 }}
                                                 className={`${timeVal[0] == hour ? 'selected' : ''}`}
@@ -918,6 +967,9 @@ const Date = forwardRef((props: DateProps, ref: any) => {
                                                         return [prevState[0], prevState[1], prevState[2], prevState[3], _v.minutes, prevState[5]];
                                                     });
                                                     onChange?.(inputRef.current, _v, true);
+
+                                                    // 
+                                                    onChangeMinutes?.(_v);
 
                                                 }}
                                                 className={`${timeVal[1] == v ? 'selected' : ''}`}
@@ -960,6 +1012,9 @@ const Date = forwardRef((props: DateProps, ref: any) => {
                                                             return [prevState[0], prevState[1], prevState[2], prevState[3], prevState[5], _v.seconds ];
                                                         });
                                                         onChange?.(inputRef.current, _v, true);
+
+                                                        // 
+                                                        onChangeSeconds?.(_v);
 
                                                     }}
                                                     className={`${timeVal[2] == v ? 'selected' : ''}`}

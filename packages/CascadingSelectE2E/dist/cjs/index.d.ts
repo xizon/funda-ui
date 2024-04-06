@@ -15,6 +15,7 @@ interface fetchArrayConfig {
     doubleIndent?: boolean;
 }
 declare type CascadingSelectE2EProps = {
+    popupRef?: React.RefObject<any>;
     wrapperClassName?: string;
     controlClassName?: string;
     exceededSidePosOffset?: number;

@@ -1,4 +1,4 @@
-import React, { useId, useEffect, useState, useRef } from 'react';
+import React, { useId, useEffect, useState, useRef, useImperativeHandle } from 'react';
 
 import { debounce } from './utils/performance';
 import useDebounce from './utils/useDebounce';
@@ -20,6 +20,7 @@ interface OptionConfig {
 
 
 type LiveSearchProps = {
+    popupRef?: React.RefObject<any>;
     wrapperClassName?: string;
     controlClassName?: string;
     exceededSidePosOffset?: number;
@@ -64,6 +65,7 @@ type LiveSearchProps = {
 
 const LiveSearch = (props: LiveSearchProps) => {
     const {
+        popupRef,
         wrapperClassName,
         controlClassName,
         exceededSidePosOffset,
@@ -132,6 +134,21 @@ const LiveSearch = (props: LiveSearchProps) => {
     const handleChangeFetchSafe = useDebounce((e: any) => {
         handleChange(e);
     }, 350, [dataInit]);
+
+
+
+    // exposes the following methods
+    useImperativeHandle(
+        popupRef,
+        () => ({
+            close: () => {
+                setIsOpen(false);
+                cancel();
+            },
+        }),
+        [popupRef],
+    );
+
 
 
     // Determine whether it is in JSON format
@@ -599,7 +616,6 @@ const LiveSearch = (props: LiveSearchProps) => {
             cancel();
         }
     }
-
 
 
     function optionFocus(type: string) {

@@ -1,5 +1,6 @@
 import React from 'react';
 declare type DateProps = {
+    popupRef?: React.RefObject<any>;
     popupClassName?: string;
     wrapperClassName?: string;
     controlClassName?: string;
@@ -33,6 +34,13 @@ declare type DateProps = {
     onBlur?: (e: any) => void;
     onFocus?: (e: any) => void;
     onClosePopup?: () => void;
+    onChangeDate?: (currentData: any) => void;
+    onChangeMonth?: (currentData: any) => void;
+    onChangeYear?: (currentData: any) => void;
+    onChangeToday?: (currentData: any) => void;
+    onChangeHours?: (currentData: any) => void;
+    onChangeMinutes?: (currentData: any) => void;
+    onChangeSeconds?: (currentData: any) => void;
     langHoursTitle?: string;
     langMinutesTitle?: string;
     langSecondsTitle?: string;

@@ -1,4 +1,4 @@
-import React, { useId, useEffect, useState, useRef, forwardRef, ButtonHTMLAttributes } from 'react';
+import React, { useId, useEffect, useState, useRef, forwardRef, useImperativeHandle } from 'react';
 
 import RootPortal from 'funda-root-portal';
 
@@ -69,6 +69,7 @@ interface CleanTriggerConfig {
 
 
 type MultiFuncSelectProps = {
+    popupRef?: React.RefObject<any>;
     wrapperClassName?: string;
     controlClassName?: string;
     exceededSidePosOffset?: number;
@@ -120,6 +121,7 @@ type MultiFuncSelectProps = {
 
 const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
     const {
+        popupRef,
         wrapperClassName,
         controlClassName,
         exceededSidePosOffset,
@@ -229,6 +231,23 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
     // clean trigger
     const CLEAN_TRIGGER_VALID = typeof cleanTrigger === 'undefined' ? false : (cleanTrigger ? cleanTrigger.valid : false);
     const CLEAN_TRIGGER_LABEL = cleanTrigger ? cleanTrigger.cleanValueLabel : 'Clean';
+
+
+
+    // exposes the following methods
+    useImperativeHandle(
+        popupRef,
+        () => ({
+            close: () => {
+                cancel();
+
+                if (MULTI_SEL_VALID) popwinPosHide();
+            },
+        }),
+        [popupRef],
+    );
+
+
 
 
     //performance
@@ -1618,7 +1637,6 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
     }
 
 
-
     function handleClose(event: any) {
 
         if (event.target.closest(`.mf-select__wrapper`) === null && event.target.closest(`.mf-select__options-wrapper`) === null) {
@@ -1628,8 +1646,6 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
             if (MULTI_SEL_VALID) popwinPosHide();
 
         }
-
-
 
     }
 
