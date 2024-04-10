@@ -198,7 +198,7 @@ const Input = forwardRef((props: InputProps, ref: any) => {
                     {propExist(iconLeft) ? <><span className={controlGroupTextClassName || "input-group-text"}>{iconLeft}</span></>: null}
 
                     {appendControl && (propExist(iconLeft)) ? <>
-                        <div className="input-group-control-container position-relative">
+                        <div className="input-group-control-container w-100 position-relative">
 
                             <input
                                 ref={(node) => {
