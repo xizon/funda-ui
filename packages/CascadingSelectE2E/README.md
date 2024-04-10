@@ -12,6 +12,7 @@ import CascadingSelectE2E from 'funda-ui/CascadingSelectE2E';
 | `popupRef` | React.RefObject | - | It exposes the following methods when the component's popup opens or closes:  <br /> <ol><li>`popupRef.current.close()`</li></ol> |
 | `wrapperClassName` | string | `mb-3 position-relative` | The class name of the control wrapper. |
 | `controlClassName` | string | `form-control` | The class name of the control. |
+| `controlExClassName` | string | - | The extended class name of `controlClassName`. |
 | `exceededSidePosOffset` | number | 15 | Offset px that exceeds the far right or left side of the screen |
 | `extractValueByBraces` | boolean  | true | Whether to use curly braces to save result and initialize default value. |
 | `destroyParentIdMatch` | boolean  | false | Instead of using `parent_id` of response to match child and parent data (very useful for multiple fetch requests with no directly related fields), this operation will directly use the click event to modify the result. |

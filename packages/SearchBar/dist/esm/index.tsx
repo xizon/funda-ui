@@ -9,6 +9,7 @@ declare module 'react' {
 type SearchBarProps = {
     wrapperClassName?: string;
     controlClassName?: string;
+    controlExClassName?: string;
     appearance?: string;
     isSearchInput?: boolean;
     value?: string;
@@ -38,6 +39,7 @@ const SearchBar = forwardRef((props: SearchBarProps, ref: any) => {
     const {
         wrapperClassName,
         controlClassName,
+        controlExClassName,
         appearance,
         isSearchInput,
         readOnly,
@@ -149,7 +151,7 @@ const SearchBar = forwardRef((props: SearchBarProps, ref: any) => {
                         ref={ref}
                         tabIndex={tabIndex || 0}
                         type={isSearchInput ? 'search' : 'text'}
-                        className={appearance === 'pill' ? `${(controlClassName || controlClassName === '' ? controlClassName : "form-control")} border rounded-pill` : (controlClassName || controlClassName === '' ? controlClassName : "form-control")}
+                        className={`${appearance === 'pill' ? `${(controlClassName || controlClassName === '' ? controlClassName : "form-control")} border rounded-pill` : (controlClassName || controlClassName === '' ? controlClassName : "form-control")} ${controlExClassName || ''}`}
                         id={idRes}
                         name={name}
                         placeholder={placeholder || ''}

@@ -9,6 +9,7 @@ declare module 'react' {
 type InputProps = {
     wrapperClassName?: string;
     controlClassName?: string;
+    controlExClassName?: string;
     controlGroupWrapperClassName?: string;
     controlGroupTextClassName?: string;
     type?: string;
@@ -24,6 +25,7 @@ type InputProps = {
     minLength?: any;
     maxLength?: any;
     alt?: any;
+    inputMode?: "search" | "text" | "email" | "tel" | "url" | "none" | "numeric" | "decimal" | undefined;
     disabled?: any;
     required?: any;
     readOnly?: any;
@@ -52,6 +54,7 @@ const Input = forwardRef((props: InputProps, ref: any) => {
     const {
         wrapperClassName,
         controlClassName,
+        controlExClassName,
         controlGroupWrapperClassName,
         controlGroupTextClassName,
         type,
@@ -72,6 +75,7 @@ const Input = forwardRef((props: InputProps, ref: any) => {
         minLength,
         maxLength,
         alt,
+        inputMode,
         id,
         appendControl,
         iconLeft,
@@ -217,6 +221,7 @@ const Input = forwardRef((props: InputProps, ref: any) => {
                                 src={src || null}
                                 size={size || null}
                                 alt={alt || null}
+                                inputMode={inputMode || 'text'}
                                 pattern={pattern || null}
                                 placeholder={placeholder || ''}
                                 value={changedVal}
@@ -256,7 +261,7 @@ const Input = forwardRef((props: InputProps, ref: any) => {
                             
                             tabIndex={tabIndex || 0}
                             type={typeRes}
-                            className={controlClassName || controlClassName === '' ? `${controlClassName} ${propExist(iconLeft) || propExist(iconRight) || propExist(units) ? '' : 'rounded'}` : `form-control ${propExist(iconLeft) || propExist(iconRight) || propExist(units) ? '' : 'rounded'}`}
+                            className={`${controlClassName || controlClassName === '' ? `${controlClassName} ${propExist(iconLeft) || propExist(iconRight) || propExist(units) ? '' : 'rounded'}` : `form-control ${propExist(iconLeft) || propExist(iconRight) || propExist(units) ? '' : 'rounded'}`} ${controlExClassName || ''}`}
                             id={idRes}
                             name={name}
                             step={step || null}
@@ -265,6 +270,7 @@ const Input = forwardRef((props: InputProps, ref: any) => {
                             src={src || null}
                             size={size || null}
                             alt={alt || null}
+                            inputMode={inputMode || 'text'}
                             pattern={pattern || null}
                             placeholder={placeholder || ''}
                             value={changedVal}

@@ -12,6 +12,7 @@ import CascadingSelect from 'funda-ui/CascadingSelect';
 | `popupRef` | React.RefObject | - | It exposes the following methods when the component's popup opens or closes:  <br /> <ol><li>`popupRef.current.close()`</li></ol> |
 | `wrapperClassName` | string | `mb-3 position-relative` | The class name of the control wrapper. |
 | `controlClassName` | string | `form-control` | The class name of the control. |
+| `controlExClassName` | string | - | The extended class name of `controlClassName`. |
 | `exceededSidePosOffset` | number | 15 | Offset px that exceeds the far right or left side of the screen |
 | `extractValueByBraces` | boolean  | true | Whether to use curly braces to save result and initialize default value. |
 | `columnTitle` | array  | - | Set headers for each column group. Such as <br /> `['Heading 1', 'Heading 2', 'Heading 3', 'Heading 4']` <blockquote>Support html tags</blockquote> |

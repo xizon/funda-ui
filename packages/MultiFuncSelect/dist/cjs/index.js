@@ -1094,7 +1094,7 @@ var enableBodyScroll = function enableBodyScroll(targetElement) {
 // EXTERNAL MODULE: ./src/utils/tree.js
 var tree = __webpack_require__(602);
 ;// CONCATENATED MODULE: ./src/index.tsx
-var _excluded = ["popupRef", "wrapperClassName", "controlClassName", "exceededSidePosOffset", "multiSelect", "multiSelectSelectedItemOnlyStatus", "disabled", "required", "value", "label", "name", "readOnly", "placeholder", "id", "options", "cleanTrigger", "lockBodyScroll", "hierarchical", "indentation", "doubleIndent", "style", "depth", "controlArrow", "winWidth", "tabIndex", "fetchTrigger", "fetchTriggerForDefaultData", "fetchNoneInfo", "fetchUpdate", "fetchFuncAsync", "fetchFuncMethod", "fetchFuncMethodParams", "data", "extractValueByBrackets", "fetchCallback", "onFetch", "onLoad", "onSelect", "onChange", "onBlur", "onFocus"];
+var _excluded = ["popupRef", "wrapperClassName", "controlClassName", "controlExClassName", "exceededSidePosOffset", "multiSelect", "multiSelectSelectedItemOnlyStatus", "disabled", "required", "value", "label", "name", "readOnly", "placeholder", "id", "options", "cleanTrigger", "lockBodyScroll", "hierarchical", "indentation", "doubleIndent", "style", "depth", "controlArrow", "winWidth", "tabIndex", "fetchTrigger", "fetchTriggerForDefaultData", "fetchNoneInfo", "fetchUpdate", "fetchFuncAsync", "fetchFuncMethod", "fetchFuncMethodParams", "data", "extractValueByBrackets", "fetchCallback", "onFetch", "onLoad", "onSelect", "onChange", "onBlur", "onFocus"];
 function src_toConsumableArray(arr) { return src_arrayWithoutHoles(arr) || src_iterableToArray(arr) || src_unsupportedIterableToArray(arr) || src_nonIterableSpread(); }
 function src_nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
 function src_iterableToArray(iter) { if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter); }
@@ -1132,6 +1132,7 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
   var popupRef = props.popupRef,
     wrapperClassName = props.wrapperClassName,
     controlClassName = props.controlClassName,
+    controlExClassName = props.controlExClassName,
     exceededSidePosOffset = props.exceededSidePosOffset,
     multiSelect = props.multiSelect,
     multiSelectSelectedItemOnlyStatus = props.multiSelectSelectedItemOnlyStatus,
@@ -2690,7 +2691,7 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
     "data-name": name !== null && name !== void 0 && name.match(/(\[.*?\])/gi) ? "".concat(name.split('[')[0], "-label[]") : "".concat(name, "-label"),
     "data-select": true,
     placeholder: placeholder || '',
-    className: controlClassName || controlClassName === '' ? controlClassName : "form-control",
+    className: "".concat(controlClassName || controlClassName === '' ? controlClassName : "form-control", " ").concat(controlExClassName || ''),
     onFocus: handleFocus,
     onBlur: handleBlur,
     onClick: typeof readOnly === 'undefined' || !readOnly ? handleShowList : function () {
@@ -2728,7 +2729,7 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
   }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("input", {
     tabIndex: tabIndex || 0,
     type: "text",
-    className: controlClassName || controlClassName === '' ? controlClassName : "form-control"
+    className: "".concat(controlClassName || controlClassName === '' ? controlClassName : "form-control", " ").concat(controlExClassName || '')
   }), /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("span", {
     className: "mf-select-multi__control-blinking-cursor ".concat(generateInputFocusStr() === '|' ? 'animated' : '')
   }, controlTempValue || controlTempValue === '' ? controlTempValue.length === 0 ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("span", {

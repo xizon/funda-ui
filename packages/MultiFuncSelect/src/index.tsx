@@ -72,6 +72,7 @@ type MultiFuncSelectProps = {
     popupRef?: React.RefObject<any>;
     wrapperClassName?: string;
     controlClassName?: string;
+    controlExClassName?: string;
     exceededSidePosOffset?: number;
     multiSelect?: MultiSelectConfig;
     multiSelectSelectedItemOnlyStatus?: multiSelectSelectedItemOnlyStatusConfig;
@@ -124,6 +125,7 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
         popupRef,
         wrapperClassName,
         controlClassName,
+        controlExClassName,
         exceededSidePosOffset,
         multiSelect,
         multiSelectSelectedItemOnlyStatus,
@@ -1881,12 +1883,12 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
                         type="text"
                         data-overlay-id={`mf-select__options-wrapper-${idRes}`}
                         id={`label-${idRes}`}
-
+                        
                         // Don't use "name", it's just a container to display the label
                         data-name={name?.match(/(\[.*?\])/gi) ? `${name.split('[')[0]}-label[]` : `${name}-label`}
                         data-select
                         placeholder={placeholder || ''}
-                        className={controlClassName || controlClassName === '' ? controlClassName : "form-control"}
+                        className={`${controlClassName || controlClassName === '' ? controlClassName : "form-control"} ${controlExClassName || ''}`}
                         onFocus={handleFocus}
                         onBlur={handleBlur}
                         onClick={typeof readOnly === 'undefined' || !readOnly ? handleShowList : () => void (0)}
@@ -1933,7 +1935,7 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
                         <input
                             tabIndex={tabIndex || 0}
                             type="text"
-                            className={controlClassName || controlClassName === '' ? controlClassName : "form-control"}
+                            className={`${controlClassName || controlClassName === '' ? controlClassName : "form-control"} ${controlExClassName || ''}`}
                         />
 
                         <span className={`mf-select-multi__control-blinking-cursor ${generateInputFocusStr() === '|' ? 'animated' : ''}`}>

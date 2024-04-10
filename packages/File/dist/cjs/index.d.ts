@@ -7,6 +7,7 @@ declare module 'react' {
 declare type FileProps = {
     wrapperClassName?: string;
     controlClassName?: string;
+    controlExClassName?: string;
     labelClassName?: string;
     labelHoverClassName?: string;
     inline?: boolean;

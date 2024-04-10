@@ -45,6 +45,7 @@ type CascadingSelectE2EProps = {
     popupRef?: React.RefObject<any>;
     wrapperClassName?: string;
     controlClassName?: string;
+    controlExClassName?: string;
     exceededSidePosOffset?: number;
     value?: string;
     label?: React.ReactNode | string;
@@ -105,6 +106,7 @@ const CascadingSelectE2E = (props: CascadingSelectE2EProps) => {
         popupRef,
         wrapperClassName,
         controlClassName,
+        controlExClassName,
         exceededSidePosOffset,
         disabled,
         required,
@@ -1400,13 +1402,13 @@ const CascadingSelectE2E = (props: CascadingSelectE2EProps) => {
                         {displayResult ? <div className="cas-select-e2e__result">{displayInfo(false)}</div> : null}
                     </>}
 
-
+                    
                     <input
                         ref={valRef}
                         id={idRes}
                         data-overlay-id={`cas-select-e2e__items-wrapper-${idRes}`}
                         name={name}
-                        className={controlClassName || controlClassName === '' ? controlClassName : "form-control"}
+                        className={`${controlClassName || controlClassName === '' ? controlClassName : "form-control"} ${controlExClassName || ''}`}
                         placeholder={placeholder}
                         value={destroyParentIdMatch
                             ?

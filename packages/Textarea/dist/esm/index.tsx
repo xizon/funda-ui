@@ -11,6 +11,7 @@ declare module 'react' {
 interface TextareaProps extends React.ComponentPropsWithoutRef<"textarea"> {
     wrapperClassName?: string;
     controlClassName?: string;
+    controlExClassName?: string;
     controlGroupWrapperClassName?: string;
     controlGroupTextClassName?: string;
 	value?: string;
@@ -44,6 +45,7 @@ const Textarea = forwardRef((props: TextareaProps, ref: any) => {
     const {
         wrapperClassName,
         controlClassName,
+        controlExClassName,
         controlGroupWrapperClassName,
         controlGroupTextClassName,
         cols,
@@ -186,7 +188,7 @@ const Textarea = forwardRef((props: TextareaProps, ref: any) => {
                             }
                         }}
                       tabIndex={tabIndex || 0}
-					  className={controlClassName || controlClassName === '' ? controlClassName : "form-control"}
+					  className={`${controlClassName || controlClassName === '' ? controlClassName : "form-control"} ${controlExClassName || ''}`}
 			          id={idRes}
 					  name={name}
 					  placeholder={placeholder || ''}

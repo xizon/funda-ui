@@ -12,6 +12,7 @@ import SearchBar from 'funda-ui/SearchBar';
 | `ref` | React.ForwardedRef | - | It is the return element of this component.  |
 | `wrapperClassName` | string | `mb-3 position-relative` | The class name of the control wrapper. |
 | `controlClassName` | string | `form-control` | The class name of the control. |
+| `controlExClassName` | string | - | The extended class name of `controlClassName`. |
 | `btnId` | string  | - | ID of the specified button. |
 | `appearance` | string | - | The overlay style of the control. The optional values are:<br />**corners:**<br />`pill` |
 | `isSearchInput` | boolean | false | Whether to enable the search input, it will have an clear button |

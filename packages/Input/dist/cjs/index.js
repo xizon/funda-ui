@@ -96,7 +96,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(787);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-var _excluded = ["wrapperClassName", "controlClassName", "controlGroupWrapperClassName", "controlGroupTextClassName", "type", "disabled", "required", "placeholder", "pattern", "readOnly", "value", "label", "units", "name", "step", "min", "max", "src", "size", "minLength", "maxLength", "alt", "id", "appendControl", "iconLeft", "iconRight", "autoComplete", "style", "tabIndex", "onChangeCallback", "onInputCallback", "onKeyPressedCallback", "onChange", "onBlur", "onFocus"];
+var _excluded = ["wrapperClassName", "controlClassName", "controlExClassName", "controlGroupWrapperClassName", "controlGroupTextClassName", "type", "disabled", "required", "placeholder", "pattern", "readOnly", "value", "label", "units", "name", "step", "min", "max", "src", "size", "minLength", "maxLength", "alt", "inputMode", "id", "appendControl", "iconLeft", "iconRight", "autoComplete", "style", "tabIndex", "onChangeCallback", "onInputCallback", "onKeyPressedCallback", "onChange", "onBlur", "onFocus"];
 function _extends() { _extends = Object.assign ? Object.assign.bind() : function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
 function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
 function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
@@ -110,6 +110,7 @@ function _objectWithoutPropertiesLoose(source, excluded) { if (source == null) r
 var Input = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(function (props, _ref) {
   var wrapperClassName = props.wrapperClassName,
     controlClassName = props.controlClassName,
+    controlExClassName = props.controlExClassName,
     controlGroupWrapperClassName = props.controlGroupWrapperClassName,
     controlGroupTextClassName = props.controlGroupTextClassName,
     type = props.type,
@@ -130,6 +131,7 @@ var Input = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(funct
     minLength = props.minLength,
     maxLength = props.maxLength,
     alt = props.alt,
+    inputMode = props.inputMode,
     id = props.id,
     appendControl = props.appendControl,
     iconLeft = props.iconLeft,
@@ -266,6 +268,7 @@ var Input = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(funct
     src: src || null,
     size: size || null,
     alt: alt || null,
+    inputMode: inputMode || 'text',
     pattern: pattern || null,
     placeholder: placeholder || '',
     value: changedVal,
@@ -298,7 +301,7 @@ var Input = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(funct
     },
     tabIndex: tabIndex || 0,
     type: typeRes,
-    className: controlClassName || controlClassName === '' ? "".concat(controlClassName, " ").concat(propExist(iconLeft) || propExist(iconRight) || propExist(units) ? '' : 'rounded') : "form-control ".concat(propExist(iconLeft) || propExist(iconRight) || propExist(units) ? '' : 'rounded'),
+    className: "".concat(controlClassName || controlClassName === '' ? "".concat(controlClassName, " ").concat(propExist(iconLeft) || propExist(iconRight) || propExist(units) ? '' : 'rounded') : "form-control ".concat(propExist(iconLeft) || propExist(iconRight) || propExist(units) ? '' : 'rounded'), " ").concat(controlExClassName || ''),
     id: idRes,
     name: name,
     step: step || null,
@@ -307,6 +310,7 @@ var Input = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(funct
     src: src || null,
     size: size || null,
     alt: alt || null,
+    inputMode: inputMode || 'text',
     pattern: pattern || null,
     placeholder: placeholder || '',
     value: changedVal,

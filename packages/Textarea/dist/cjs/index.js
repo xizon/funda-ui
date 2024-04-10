@@ -182,7 +182,7 @@ var useAutosizeTextArea = function useAutosizeTextArea(el, value) {
 };
 /* harmony default export */ const utils_useAutosizeTextArea = (useAutosizeTextArea);
 ;// CONCATENATED MODULE: ./src/index.tsx
-var _excluded = ["wrapperClassName", "controlClassName", "controlGroupWrapperClassName", "controlGroupTextClassName", "cols", "rows", "disabled", "required", "placeholder", "autoSize", "iconLeft", "iconRight", "readOnly", "value", "label", "name", "id", "maxLength", "style", "tabIndex", "onChangeCallback", "onInputCallback", "onKeyPressedCallback", "onChange", "onBlur", "onFocus"];
+var _excluded = ["wrapperClassName", "controlClassName", "controlExClassName", "controlGroupWrapperClassName", "controlGroupTextClassName", "cols", "rows", "disabled", "required", "placeholder", "autoSize", "iconLeft", "iconRight", "readOnly", "value", "label", "name", "id", "maxLength", "style", "tabIndex", "onChangeCallback", "onInputCallback", "onKeyPressedCallback", "onChange", "onBlur", "onFocus"];
 function _extends() { _extends = Object.assign ? Object.assign.bind() : function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
 function src_slicedToArray(arr, i) { return src_arrayWithHoles(arr) || src_iterableToArrayLimit(arr, i) || src_unsupportedIterableToArray(arr, i) || src_nonIterableRest(); }
 function src_nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
@@ -198,6 +198,7 @@ function _objectWithoutPropertiesLoose(source, excluded) { if (source == null) r
 var Textarea = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_amd_react_.forwardRef)(function (props, _ref) {
   var wrapperClassName = props.wrapperClassName,
     controlClassName = props.controlClassName,
+    controlExClassName = props.controlExClassName,
     controlGroupWrapperClassName = props.controlGroupWrapperClassName,
     controlGroupTextClassName = props.controlGroupTextClassName,
     cols = props.cols,
@@ -329,7 +330,7 @@ var Textarea = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_reac
       }
     },
     tabIndex: tabIndex || 0,
-    className: controlClassName || controlClassName === '' ? controlClassName : "form-control",
+    className: "".concat(controlClassName || controlClassName === '' ? controlClassName : "form-control", " ").concat(controlExClassName || ''),
     id: idRes,
     name: name,
     placeholder: placeholder || '',

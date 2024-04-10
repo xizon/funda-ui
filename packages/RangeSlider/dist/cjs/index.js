@@ -158,7 +158,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
         var react__WEBPACK_IMPORTED_MODULE_0__ = __nested_webpack_require_1465__(787);
         /* harmony import */
         var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__nested_webpack_require_1465__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-        var _excluded = ["wrapperClassName", "controlClassName", "controlGroupWrapperClassName", "controlGroupTextClassName", "type", "disabled", "required", "placeholder", "pattern", "readOnly", "value", "label", "units", "name", "step", "min", "max", "src", "size", "minLength", "maxLength", "alt", "id", "appendControl", "iconLeft", "iconRight", "autoComplete", "style", "tabIndex", "onChangeCallback", "onInputCallback", "onKeyPressedCallback", "onChange", "onBlur", "onFocus"];
+        var _excluded = ["wrapperClassName", "controlClassName", "controlExClassName", "controlGroupWrapperClassName", "controlGroupTextClassName", "type", "disabled", "required", "placeholder", "pattern", "readOnly", "value", "label", "units", "name", "step", "min", "max", "src", "size", "minLength", "maxLength", "alt", "inputMode", "id", "appendControl", "iconLeft", "iconRight", "autoComplete", "style", "tabIndex", "onChangeCallback", "onInputCallback", "onKeyPressedCallback", "onChange", "onBlur", "onFocus"];
         function _extends() {
           _extends = Object.assign ? Object.assign.bind() : function (target) {
             for (var i = 1; i < arguments.length; i++) {
@@ -252,6 +252,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
         var Input = /*#__PURE__*/(0, react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(function (props, _ref) {
           var wrapperClassName = props.wrapperClassName,
             controlClassName = props.controlClassName,
+            controlExClassName = props.controlExClassName,
             controlGroupWrapperClassName = props.controlGroupWrapperClassName,
             controlGroupTextClassName = props.controlGroupTextClassName,
             type = props.type,
@@ -272,6 +273,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
             minLength = props.minLength,
             maxLength = props.maxLength,
             alt = props.alt,
+            inputMode = props.inputMode,
             id = props.id,
             appendControl = props.appendControl,
             iconLeft = props.iconLeft,
@@ -408,6 +410,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
             src: src || null,
             size: size || null,
             alt: alt || null,
+            inputMode: inputMode || 'text',
             pattern: pattern || null,
             placeholder: placeholder || '',
             value: changedVal,
@@ -440,7 +443,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
             },
             tabIndex: tabIndex || 0,
             type: typeRes,
-            className: controlClassName || controlClassName === '' ? "".concat(controlClassName, " ").concat(propExist(iconLeft) || propExist(iconRight) || propExist(units) ? '' : 'rounded') : "form-control ".concat(propExist(iconLeft) || propExist(iconRight) || propExist(units) ? '' : 'rounded'),
+            className: "".concat(controlClassName || controlClassName === '' ? "".concat(controlClassName, " ").concat(propExist(iconLeft) || propExist(iconRight) || propExist(units) ? '' : 'rounded') : "form-control ".concat(propExist(iconLeft) || propExist(iconRight) || propExist(units) ? '' : 'rounded'), " ").concat(controlExClassName || ''),
             id: idRes,
             name: name,
             step: step || null,
@@ -449,6 +452,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
             src: src || null,
             size: size || null,
             alt: alt || null,
+            inputMode: inputMode || 'text',
             pattern: pattern || null,
             placeholder: placeholder || '',
             value: changedVal,
@@ -600,6 +604,7 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 var RangeSlider = function RangeSlider(props) {
   var wrapperClassName = props.wrapperClassName,
     controlClassName = props.controlClassName,
+    controlExClassName = props.controlExClassName,
     disabled = props.disabled,
     required = props.required,
     value = props.value,
@@ -705,7 +710,7 @@ var RangeSlider = function RangeSlider(props) {
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((funda_input__WEBPACK_IMPORTED_MODULE_1___default()), {
     ref: valMinRef,
     wrapperClassName: wrapperClassName || wrapperClassName === '' ? wrapperClassName : "mb-3 position-relative",
-    controlClassName: controlClassName || controlClassName === '' ? controlClassName : "form-control",
+    controlClassName: "".concat(controlClassName || controlClassName === '' ? controlClassName : "form-control", " ").concat(controlExClassName || ''),
     required: required || null,
     type: "text",
     id: idRes + '-min',
@@ -714,7 +719,7 @@ var RangeSlider = function RangeSlider(props) {
   }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((funda_input__WEBPACK_IMPORTED_MODULE_1___default()), {
     ref: valMaxRef,
     wrapperClassName: wrapperClassName || wrapperClassName === '' ? wrapperClassName : "mb-3 position-relative",
-    controlClassName: controlClassName || controlClassName === '' ? controlClassName : "form-control",
+    controlClassName: "".concat(controlClassName || controlClassName === '' ? controlClassName : "form-control", " ").concat(controlExClassName || ''),
     required: required || null,
     type: "text",
     id: idRes + '-max',

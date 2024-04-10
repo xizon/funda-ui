@@ -20,10 +20,12 @@ import { debounce } from './utils/performance';
 type DateProps = {
     popupRef?: React.RefObject<any>;
     popupClassName?: string;
+    triggerClassName?: string;
     wrapperClassName?: string;
     controlClassName?: string;
     controlGroupWrapperClassName?: string;
     controlGroupTextClassName?: string;
+    delimiter?: string;
     offset?: number;
     exceededSidePosOffset?: number;
     localization?: 'en_US' | 'zh_CN';
@@ -32,6 +34,7 @@ type DateProps = {
     truncateSeconds?: boolean;
     valueUseSlash?: boolean;
     value?: string;
+    placeholder?: string;
     label?: React.ReactNode | string;
     units?: string;
     name?: string;
@@ -52,7 +55,8 @@ type DateProps = {
     onChange?: (e: any, data: any, isValidDate: boolean) => void;
     onBlur?: (e: any) => void;
     onFocus?: (e: any) => void;
-    onClosePopup?: () => void;
+    onOpenPopup?: (allSplittingInputs: any[]) => void;
+    onClosePopup?: (allSplittingInputs: any[]) => void;
     //
     onChangeDate?: (currentData: any) => void;
     onChangeMonth?: (currentData: any) => void;
@@ -79,11 +83,13 @@ type DateProps = {
 const Date = forwardRef((props: DateProps, ref: any) => {
     const {
         popupRef,
+        triggerClassName,
         popupClassName,
         wrapperClassName,
         controlClassName,
         controlGroupWrapperClassName,
         controlGroupTextClassName,
+        delimiter,
         offset,
         exceededSidePosOffset,
         localization,
@@ -95,6 +101,7 @@ const Date = forwardRef((props: DateProps, ref: any) => {
         required,
         readOnly,
         value,
+        placeholder,
         label,
         units,
         name,
@@ -109,6 +116,7 @@ const Date = forwardRef((props: DateProps, ref: any) => {
         onChange,
         onBlur,
         onFocus,
+        onOpenPopup,
         onClosePopup,
 
         //
@@ -147,6 +155,17 @@ const Date = forwardRef((props: DateProps, ref: any) => {
     let _langMonthsFull = langMonthsFull;
     let _langToday = langToday;
 
+     // 
+     const DELIMITER_DATE = delimiter || '/';
+     const DELIMITER_TIME = ':';
+
+
+    // placeholder
+    let datePlaceholder = placeholder || placeholder === '' ? placeholder : 'yyyy/MM/dd HH:mm:ss';
+
+    if (typeof placeholder === 'undefined') {
+        datePlaceholder = `${typeof onlyTime === 'undefined' || onlyTime === false ? 'yyyy/MM/dd ' : ''}${type === 'datetime-local' || type === 'time' ? `HH:mm${typeof truncateSeconds === 'undefined' || truncateSeconds === false ? ':ss' : ''}` : ''}`;
+    }
 
     if (typeof localization === 'string') {
 
@@ -188,6 +207,13 @@ const Date = forwardRef((props: DateProps, ref: any) => {
     const modalRef = useRef<any>(null);
     const inputRef = useRef<any>(null);
     const listContentRef = useRef<any>(null);
+
+    const partedInputYear = useRef<HTMLInputElement>(null);
+    const partedInputMonth = useRef<HTMLInputElement>(null);
+    const partedInputDay = useRef<HTMLInputElement>(null);
+    const partedInputHours = useRef<HTMLInputElement>(null);
+    const partedInputMinutes = useRef<HTMLInputElement>(null);
+    const partedInputSeconds = useRef<HTMLInputElement>(null);
 
     const [dateDefaultValueExist, setDateDefaultValueExist] = useState<boolean>(false);
     const [splitVals, setSplitVals] = useState<any[]>(['0000','00','00','00','00','00']);
@@ -240,6 +266,15 @@ const Date = forwardRef((props: DateProps, ref: any) => {
         return new window.Date(window.Date.now());
     };
 
+    const padZero = (num: number, padZeroEnabled: boolean = true) => {
+        if (padZeroEnabled) {
+            return num < 10 ? '0' + num : num.toString();
+        } else {
+            return num.toString();
+        }
+
+    };
+
     const getFullTimeData = (v: Date | String, padZeroEnabled: boolean = true) => {
 
         if (typeof v === 'string' && !isValidDate(v)) {
@@ -257,20 +292,13 @@ const Date = forwardRef((props: DateProps, ref: any) => {
         }
 
         const date: any = dateFormat(v);
-        const padZero = (num: number) => {
-            if (padZeroEnabled) {
-                return num < 10 ? '0' + num : num.toString();
-            } else {
-                return num.toString();
-            }
 
-        };
         const year = date.getFullYear();
-        const month = padZero(date.getMonth() + 1);
-        const day = padZero(date.getDate());
-        const hours = padZero(date.getHours());
-        const minutes = padZero(date.getMinutes());
-        const seconds = padZero(date.getSeconds());
+        const month = padZero(date.getMonth() + 1, padZeroEnabled);
+        const day = padZero(date.getDate(), padZeroEnabled);
+        const hours = padZero(date.getHours(), padZeroEnabled);
+        const minutes = padZero(date.getMinutes(), padZeroEnabled);
+        const seconds = padZero(date.getSeconds(), padZeroEnabled);
         const res = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
         const res2 = `${year}-${month}-${day} ${hours}:${minutes}`;
 
@@ -373,7 +401,7 @@ const Date = forwardRef((props: DateProps, ref: any) => {
 
     function popwinPosHide() {
         setIsShow(false);
-        onClosePopup?.();
+        onClosePopup?.([partedInputYear.current, partedInputMonth.current, partedInputDay.current, partedInputHours.current, partedInputMinutes.current, partedInputSeconds.current]);
     }
 
     function handleClickOutside(event: any) {
@@ -392,6 +420,9 @@ const Date = forwardRef((props: DateProps, ref: any) => {
 
         setTimeout(() => {
             popwinPosInit();
+
+            onOpenPopup?.([partedInputYear.current, partedInputMonth.current, partedInputDay.current, partedInputHours.current, partedInputMinutes.current, partedInputSeconds.current]);
+
         }, 0);
 
     }
@@ -425,6 +456,9 @@ const Date = forwardRef((props: DateProps, ref: any) => {
 
 
     function handleInitSplitClickEv(e: any) {
+        e.preventDefault();
+        e.stopPropagation();  // Avoid triggering other inputs
+
         e.target.select();
         resetDefauleValueExist();
 
@@ -544,7 +578,7 @@ const Date = forwardRef((props: DateProps, ref: any) => {
             <div
                 ref={rootRef}
                 data-overlay-id={`date2d__wrapper-${idRes}`}
-                className={`date2d__trigger d-inline-block is-${type}`}
+                className={`date2d__trigger d-inline-block is-${type} ${triggerClassName || ''}`}
                 onClick={handleShow}
 
                 onFocus={handleFocus}
@@ -565,14 +599,17 @@ const Date = forwardRef((props: DateProps, ref: any) => {
                         }}
                         tabIndex={-1}
                         type="text"
+                        inputMode="none"
                         data-date-info={JSON.stringify(getFullTimeData(changedVal))}
                         wrapperClassName={wrapperClassName}
                         controlClassName={controlClassName}
+                        controlExClassName=""
                         controlGroupWrapperClassName={controlGroupWrapperClassName}
                         controlGroupTextClassName={controlGroupTextClassName}
                         id={idRes}
                         name={name}
                         alt={alt}
+                        placeholder={datePlaceholder}
                         value={!dateDefaultValueExist ? `` : valueResConverter(changedVal)}
                         autoComplete="off"
                         onChange={handleChange}
@@ -584,8 +621,12 @@ const Date = forwardRef((props: DateProps, ref: any) => {
                         appendControl={<>
                          <div className="date2d__control__inputplaceholder">
 
+
+
                                 {typeof onlyTime === 'undefined' || onlyTime === false ? <>
                                     <input
+                                        ref={partedInputYear}
+                                        inputMode="numeric"
                                         tabIndex={tabIndex || 0}
                                         className="date2d__control__inputplaceholder--year"
                                         value={!dateDefaultValueExist ? `` : (splitVals[0] === '0000' ? '' : splitVals[0])}
@@ -598,6 +639,12 @@ const Date = forwardRef((props: DateProps, ref: any) => {
                                             const _val = e.target.value;
                                             const _date = `${_val}-${splitVals[1]}-${splitVals[2]}`;
                                             const _full = `${_date} ${splitVals[3]}:${splitVals[4]}:${splitVals[5]}`;
+
+                                            
+                                            if (_val !== '') {
+                                                // console.log(/^([1-9][0-9])\d{2}$/.test(_val));//  1000 ～ 9999
+                                            }
+
                                             onChange?.(inputRef.current, valueResConverter(_full), isValidDate(_full));
                                             setSplitVals((prevState: string[]) => {
                                                 return [_val, prevState[1], prevState[2], prevState[3], prevState[4], prevState[5]];
@@ -612,8 +659,10 @@ const Date = forwardRef((props: DateProps, ref: any) => {
                                         }}
                                         {...attributes}
                                     />
-                                    -
+                                    {dateDefaultValueExist ? DELIMITER_DATE : null}
                                     <input
+                                        ref={partedInputMonth}
+                                        inputMode="numeric"
                                         tabIndex={tabIndex || 0}
                                         className="date2d__control__inputplaceholder--month"
                                         value={!dateDefaultValueExist ? `` : splitVals[1]}
@@ -626,6 +675,13 @@ const Date = forwardRef((props: DateProps, ref: any) => {
                                             const _val = e.target.value;
                                             const _date = `${splitVals[0]}-${_val}-${splitVals[2]}`;
                                             const _full = `${_date} ${splitVals[3]}:${splitVals[4]}:${splitVals[5]}`;
+
+                                            if (_val !== '') {
+                                                // console.log(/^(0?[1-9]|1[0-2])$/.test(_val));//  01～12, 1~12
+                                            }
+                                            
+
+
                                             onChange?.(inputRef.current, valueResConverter(_full), isValidDate(_full));
                                             setSplitVals((prevState: string[]) => {
                                                 return [prevState[0], _val, prevState[2], prevState[3], prevState[4], prevState[5]];
@@ -639,8 +695,10 @@ const Date = forwardRef((props: DateProps, ref: any) => {
                                         }}
                                         {...attributes}
                                     />
-                                    -
+                                    {dateDefaultValueExist ? DELIMITER_DATE : null}
                                     <input
+                                        ref={partedInputDay}
+                                        inputMode="numeric"
                                         tabIndex={tabIndex || 0}
                                         className="date2d__control__inputplaceholder--day"
                                         value={!dateDefaultValueExist ? `` : splitVals[2]}
@@ -653,6 +711,13 @@ const Date = forwardRef((props: DateProps, ref: any) => {
                                             const _val = e.target.value;
                                             const _date = `${splitVals[0]}-${splitVals[1]}-${_val}`;
                                             const _full = `${_date} ${splitVals[3]}:${splitVals[4]}:${splitVals[5]}`;
+
+
+                                            if (_val !== '') {
+                                                // console.log(/^(0?[1-9]|[1-2][0-9]|3[0-1])$/.test(_val));//  01～31, 1~31
+                                            }
+
+
                                             onChange?.(inputRef.current, valueResConverter(_full), isValidDate(_full));
                                             setSplitVals((prevState: string[]) => {
                                                 return [prevState[0], prevState[1], _val, prevState[3], prevState[4], prevState[5]];
@@ -674,6 +739,8 @@ const Date = forwardRef((props: DateProps, ref: any) => {
                                 {type === 'datetime-local' || type === 'time' ? <>
                                     {/* TIME CONTROL */}
                                     <input
+                                        ref={partedInputHours}
+                                        inputMode="numeric"
                                         tabIndex={tabIndex || 0}
                                         className="date2d__control__inputplaceholder--hours"
                                         value={!dateDefaultValueExist ? `` : splitVals[3]}
@@ -686,6 +753,12 @@ const Date = forwardRef((props: DateProps, ref: any) => {
                                             const _val = e.target.value;
                                             const _date = `${splitVals[0]}-${splitVals[1]}-${splitVals[2]}`;
                                             const _full = `${_date} ${_val}:${splitVals[4]}:${splitVals[5]}`;
+
+                                            if (_val !== '') {
+                                                // console.log(/^([01]?[0-9]|2[0-3])$/.test(_val));//  0～23, 00～23
+                                            }
+                                            
+
                                             onChange?.(inputRef.current, valueResConverter(_full), isValidDate(_full));
                                             setSplitVals((prevState: string[]) => {
                                                 return [prevState[0], prevState[1], prevState[2], _val, prevState[4], prevState[5]];
@@ -703,8 +776,10 @@ const Date = forwardRef((props: DateProps, ref: any) => {
                                     {/* TIME CONTROL */}
 
                                     {/* TIME CONTROL */}
-                                    :
+                                    {dateDefaultValueExist ? DELIMITER_TIME : null}
                                     <input
+                                        ref={partedInputMinutes}
+                                        inputMode="numeric"
                                         tabIndex={tabIndex || 0}
                                         className="date2d__control__inputplaceholder--minutes"
                                         value={!dateDefaultValueExist ? `` : splitVals[4]}
@@ -717,6 +792,12 @@ const Date = forwardRef((props: DateProps, ref: any) => {
                                             const _val = e.target.value;
                                             const _date = `${splitVals[0]}-${splitVals[1]}-${splitVals[2]}`;
                                             const _full = `${_date} ${splitVals[3]}:${_val}:${splitVals[5]}`;
+
+                                            if (_val !== '') {
+                                                // console.log(/^([01]?[0-9]|[0-5][0-9])$/.test(_val));//  0~59, 00~59
+                                            }
+
+
                                             onChange?.(inputRef.current, valueResConverter(_full), isValidDate(_full));
                                             setSplitVals((prevState: string[]) => {
                                                 return [prevState[0], prevState[1], prevState[2], prevState[3], _val, prevState[5]];
@@ -736,8 +817,10 @@ const Date = forwardRef((props: DateProps, ref: any) => {
 
                                     {/* TIME CONTROL */}
                                     {(typeof truncateSeconds === 'undefined' || truncateSeconds === false) ? <>
-                                        :
+                                        {dateDefaultValueExist ? DELIMITER_TIME : null}
                                         <input
+                                            ref={partedInputSeconds}
+                                            inputMode="numeric"
                                             tabIndex={tabIndex || 0}
                                             className="date2d__control__inputplaceholder--seconds"
                                             value={!dateDefaultValueExist ? `` : splitVals[5]}
@@ -750,6 +833,12 @@ const Date = forwardRef((props: DateProps, ref: any) => {
                                                 const _val = e.target.value;
                                                 const _date = `${splitVals[0]}-${splitVals[1]}-${splitVals[2]}`;
                                                 const _full = `${_date} ${splitVals[3]}:${splitVals[4]}:${_val}`;
+
+                                                if (_val !== '') {
+                                                    // console.log(/^([01]?[0-9]|[0-5][0-9])$/.test(_val));//  0~59, 00~59
+                                                }
+
+
                                                 onChange?.(inputRef.current, valueResConverter(_full), isValidDate(_full));
                                                 setSplitVals((prevState: string[]) => {
                                                     return [prevState[0], prevState[1], prevState[2], prevState[3], prevState[4], _val];
@@ -780,6 +869,7 @@ const Date = forwardRef((props: DateProps, ref: any) => {
 
                         <a tabIndex={-1} href="#" className={`date2d__control__icon__close ${dateDefaultValueExist ? '' : 'd-none'}`} onClick={(e: React.MouseEvent) => {
                             e.preventDefault();
+                            e.stopPropagation();  // Avoid triggering pop-ups
                             clearAll();
                         }}><svg width="12px" height="12px" viewBox="0 0 1024 1024"><path fill="#000" d="M195.2 195.2a64 64 0 0 1 90.496 0L512 421.504 738.304 195.2a64 64 0 0 1 90.496 90.496L602.496 512 828.8 738.304a64 64 0 0 1-90.496 90.496L512 602.496 285.696 828.8a64 64 0 0 1-90.496-90.496L421.504 512 195.2 285.696a64 64 0 0 1 0-90.496z" /></svg></a>
                         

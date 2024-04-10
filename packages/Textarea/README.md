@@ -12,6 +12,7 @@ import Textarea from 'funda-ui/Textarea';
 | `ref` | React.ForwardedRef | - | It is the return element of this component.  |
 | `wrapperClassName` | string | `mb-3 position-relative` | The class name of the control wrapper. |
 | `controlClassName` | string | `form-control` | The class name of the control. |
+| `controlExClassName` | string | - | The extended class name of `controlClassName`. |
 | `controlGroupWrapperClassName` | string | `input-group` | The class name of the control group wrapper. |
 | `controlGroupTextClassName` | string | `input-group-text` | The class name of the control group text. |
 | `type` | string | text | The type of input. Such as \<input type="text" name="name"\> gives a text box. |

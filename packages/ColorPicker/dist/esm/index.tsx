@@ -9,6 +9,7 @@ declare module 'react' {
 interface ColorPickerProps extends React.ComponentPropsWithoutRef<"input"> {
     wrapperClassName?: string;
     controlClassName?: string;
+    controlExClassName?: string;
     clearBtnClassName?: string;
     clearBtnLabel?: string;
     value?: string;
@@ -34,6 +35,7 @@ const ColorPicker = forwardRef((props: ColorPickerProps, ref: any) => {
     const {
         wrapperClassName,
         controlClassName,
+        controlExClassName,
         clearBtnClassName,
         clearBtnLabel,
         disabled,
@@ -140,10 +142,10 @@ const ColorPicker = forwardRef((props: ColorPickerProps, ref: any) => {
                             }
                         }}
 
-
+                        
                         tabIndex={tabIndex || 0}
                         type='color'
-                        className={`${controlClassName || controlClassName === '' ? controlClassName : "form-control custom-colorpicker-control flex-grow-0"}`}
+                        className={`${controlClassName || controlClassName === '' ? controlClassName : "form-control custom-colorpicker-control flex-grow-0"} ${controlExClassName || ''}`}
                         id={idRes}
                         name={name}
                         value={changedVal}

@@ -9,6 +9,7 @@ declare module 'react' {
 type FileProps = {
     wrapperClassName?: string;
     controlClassName?: string;
+    controlExClassName?: string;
     labelClassName?: string;
     labelHoverClassName?: string;
     inline?: boolean;
@@ -43,6 +44,7 @@ const File = forwardRef((props: FileProps, ref: any) => {
     const {
         wrapperClassName,
         controlClassName,
+        controlExClassName,
         labelClassName,
         labelHoverClassName,
         inline,
@@ -282,8 +284,9 @@ const File = forwardRef((props: FileProps, ref: any) => {
                                             ref.current = node;
                                         }
                                     }}
+                                    
                                     tabIndex={tabIndex || 0}
-                                    className={controlClassName || controlClassName === '' ? controlClassName : "form-control"}
+                                    className={`${controlClassName || controlClassName === '' ? controlClassName : "form-control"} ${controlExClassName || ''}`}
                                     id={idRes}
                                     type="file"
                                     // The onChange should trigger updates whenever

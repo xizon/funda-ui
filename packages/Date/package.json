@@ -11,10 +11,11 @@
         "test": "echo \"Error: no test specified\" && exit 1"
     },
     "dependencies": {
-        "react": "^18.2.0",
-        "react-dom": "^18.2.0",
+        "funda-input": "*",
         "funda-root-portal": "*",
-        "funda-input": "*"
+        "moment": "^2.30.1",
+        "react": "^18.2.0",
+        "react-dom": "^18.2.0"
     },
     "devDependencies": {
         "@babel/core": "^7.2.0",

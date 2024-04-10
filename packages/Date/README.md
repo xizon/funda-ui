@@ -11,9 +11,11 @@ import Date from 'funda-ui/Date';
 | --- | --- | --- | --- |
 | `ref` | React.ForwardedRef | - | It is the return element of this component.  |
 | `popupRef` | React.RefObject | - | It exposes the following methods when the component's popup opens or closes:  <br /> <ol><li>`popupRef.current.close()`</li></ol> |
+| `delimiter` | string  | `/` | Specify a delimiter from a date string. such as `/`, `-`, ` `, `.` |
 | `offset` | number  | 10 | Position offset of top and bottom. |
 | `exceededSidePosOffset` | number | 15 | Offset px that exceeds the far right or left side of the screen |
 | `popupClassName` | string | - | The class name of the popup. |
+| `triggerClassName` | string | - | The class name of the date trigger. |
 | `wrapperClassName` | string | `mb-3 position-relative` | The class name of the control wrapper. |
 | `controlClassName` | string | `form-control` | The class name of the control. |
 | `controlGroupWrapperClassName` | string | `input-group` | The class name of the control group wrapper. |
@@ -33,6 +35,7 @@ import Date from 'funda-ui/Date';
 | `langMonthsFull` | array  | `['January', 'Febuary', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']` | Localization in the component of full months sequence. |
 | `langToday` | string  | `Today`| Localization in the component of today button. |
 | `value` | string | - | Set a default value for this control |
+| `placeholder` | string | `yyyy/MM/dd HH:mm:ss` |  Specifies a short hint that describes. |
 | `label` | string \| ReactNode | - | It is used to specify a label for an element of a form.<blockquote>Support html tags</blockquote> |
 | `units` | string | - | Specify a unit identification string. Such as `em`, `px`, and so on. |
 | `name` | string | - | Name is not deprecated when used with form fields. |
@@ -45,7 +48,8 @@ import Date from 'funda-ui/Date';
 | `onChange` | function  | - | Call a function when the value of an HTML element is changed. It returns three callback values. <br /> <ol><li>The first is the control (**HTML Element**)</li><li>The second is the current date info (**JSON Object** \| **String**)</li><li>The last is the boolean value that determine whether the date is valid (**Boolean**)</li></ol> |
 | `onBlur` | function  | - | Call a function when a user leaves an form field. It returns only one callback value which is the control (**HTML Element**) |
 | `onFocus` | function  | - | Call a function when an form field gets focus. It returns only one callback value which is the control (**HTML Element**) |
-| `onClosePopup` | function  | - | Call a function when close popup. It has no return value. |
+| `onOpenPopup` | function  | - | Call a function when open popup. It returns only one value which is the existing time-splitting inputs (**Array**) |
+| `onClosePopup` | function  | - | Call a function when close popup. It returns only one value which is the existing time-splitting inputs (**Array**) |
 | `onChangeDate` | function  | - | Call a function when a date area is clicked. The function receives the selected date (yyyy-MM-dd).  Triggered when the date cell selection button is clicked. It returns only one value which is the current value (**JSON Object**) |
 | `onChangeMonth` | function  | - | Called when the date moves to a new month. The function receives the selected month (0-11). Triggered when the previous, next or month selection button is clicked. It returns only one value which is the current value (**JSON Object**) |
 | `onChangeYear` | function  | - | Called when the date moves to a new year. The function receives the selected year. Triggered when the year selection button is clicked. It returns only one value which is the current value (**JSON Object**) |
@@ -72,9 +76,11 @@ export default () => {
         <>
           
            <Date
+                name="name"
                 label="Date"
                 value="2024-03-13"
                 type="date"
+                placeholder="yyyy/MM/dd"
                 onChange={(input: HTMLInputElement, dateRes: any, isValidDate: boolean) => {
                     console.log(isValidDate, input, dateRes, dateRes !== null && typeof dateRes !== 'string' ? dateRes.res : dateRes)
                 }}
@@ -86,9 +92,11 @@ export default () => {
 
 
            <Date
+                name="name"
                 label="Date & Time (no seconds)"
                 value="2024-03-14 10:22"
                 type="datetime-local"
+                placeholder="yyyy/MM/dd HH:mm"
                 onChange={(input: HTMLInputElement, dateRes: any, isValidDate: boolean) => {
                     console.log(isValidDate, input, dateRes, dateRes !== null && typeof dateRes !== 'string' ? dateRes.res : dateRes)
                 }}
@@ -100,8 +108,10 @@ export default () => {
 
 
            <Date
+                name="name"
                 label="Time"
                 value="07:30:38"
+                placeholder="HH:mm:ss"
                 type="time"
                 onChange={(input: HTMLInputElement, dateRes: any, isValidDate: boolean) => {
                     console.log(isValidDate, input, dateRes, dateRes !== null && typeof dateRes !== 'string' ? dateRes.res : dateRes)
@@ -144,12 +154,14 @@ export default () => {
                 langMonths={['一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月', '十月', '十一月', '十二月']}
                 langMonthsFull={['一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月', '十月', '十一月', '十二月']}
                 langToday="今天"
+                ...
             />
 
 
 
             <Date 
                 localization="zh_CN"
+                ...
             />
  
         </>
@@ -181,8 +193,10 @@ export default () => {
 
            <Date
                 popupRef={popupRef}
+                name="name"
                 label="Date & Time (no seconds)"
                 value="2024-03-14 10:22"
+                placeholder="yyyy/MM/dd HH:mm"
                 type="datetime-local"
                 onChange={(input: HTMLInputElement, dateRes: any, isValidDate: boolean) => {
                     console.log(isValidDate, input, dateRes, dateRes !== null && typeof dateRes !== 'string' ? dateRes.res : dateRes)
@@ -205,3 +219,70 @@ export default () => {
 }
 ```
 
+
+
+
+## Auto Width
+
+```js
+import React from "react";
+import Date from 'funda-ui/Date';
+
+// component styles
+import 'funda-ui/Date/index.css';
+
+export default () => {
+
+    return (
+        <>
+
+            <Date 
+                triggerClassName="w-auto"
+                ...
+            />
+
+
+ 
+        </>
+    );
+}
+```
+
+
+
+## Focus hours's input control when popup opens
+
+```js
+import React from "react";
+import Date from 'funda-ui/Date';
+
+// component styles
+import 'funda-ui/Date/index.css';
+
+export default () => {
+
+    return (
+        <>
+
+            <Date
+                name="name"
+                value=""
+                type="time" 
+                truncateSeconds
+                onOpenPopup={(allSplittingInputs: any[]) => {
+
+                    console.log(allSplittingInputs);
+            
+                    // focus hours input
+                    if (allSplittingInputs[3] !== null) {
+                        allSplittingInputs[3].select();
+                    }
+                }}
+                onlyTime
+            />
+
+ 
+        </>
+    );
+}
+```

@@ -507,11 +507,11 @@ var AccordionItem = function AccordionItem(props) {
     type: "button"
   }, title), itemTriggerIcon), /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
     ref: contentWrapperRef,
-    className: "custom-accordion-content__wrapper ".concat(itemContentWrapperClassName || itemContentWrapperClassName === '' ? itemContentWrapperClassName : "accordion-collapse"),
+    className: "custom-accordion-content__wrapper w-100 ".concat(itemContentWrapperClassName || itemContentWrapperClassName === '' ? itemContentWrapperClassName : "accordion-collapse"),
     role: "tabpanel",
     style: {
       height: defaultActive ? 'auto' : '0px',
-      overflow: 'hidden'
+      overflow: 'hidden' // “overflow” affects the width, so add `w-100` to `custom-accordion-content__wrapper`
     }
   }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
     className: "custom-accordion-content ".concat(itemContentClassName || itemContentClassName === '' ? itemContentClassName : "accordion-body"),

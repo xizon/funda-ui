@@ -2,10 +2,12 @@ import React from 'react';
 declare type DateProps = {
     popupRef?: React.RefObject<any>;
     popupClassName?: string;
+    triggerClassName?: string;
     wrapperClassName?: string;
     controlClassName?: string;
     controlGroupWrapperClassName?: string;
     controlGroupTextClassName?: string;
+    delimiter?: string;
     offset?: number;
     exceededSidePosOffset?: number;
     localization?: 'en_US' | 'zh_CN';
@@ -14,6 +16,7 @@ declare type DateProps = {
     truncateSeconds?: boolean;
     valueUseSlash?: boolean;
     value?: string;
+    placeholder?: string;
     label?: React.ReactNode | string;
     units?: string;
     name?: string;
@@ -33,7 +36,8 @@ declare type DateProps = {
     onChange?: (e: any, data: any, isValidDate: boolean) => void;
     onBlur?: (e: any) => void;
     onFocus?: (e: any) => void;
-    onClosePopup?: () => void;
+    onOpenPopup?: (allSplittingInputs: any[]) => void;
+    onClosePopup?: (allSplittingInputs: any[]) => void;
     onChangeDate?: (currentData: any) => void;
     onChangeMonth?: (currentData: any) => void;
     onChangeYear?: (currentData: any) => void;

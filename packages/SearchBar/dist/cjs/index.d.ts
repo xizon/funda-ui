@@ -7,6 +7,7 @@ declare module 'react' {
 declare type SearchBarProps = {
     wrapperClassName?: string;
     controlClassName?: string;
+    controlExClassName?: string;
     appearance?: string;
     isSearchInput?: boolean;
     value?: string;

@@ -12,6 +12,7 @@ import File from 'funda-ui/File';
 | `ref` | React.ForwardedRef | - | It is the return element of this component.  |
 | `wrapperClassName` | string | `mb-3 position-relative` | The class name of the control wrapper. |
 | `controlClassName` | string | `form-control` | The class name of the control. |
+| `controlExClassName` | string | - | The extended class name of `controlClassName`. |
 | `labelClassName` | string | `btn btn-outline-secondary` | The class name of the label. |
 | `labelHoverClassName` | string | `btn btn-primary` | The class name of the select button on hover. |
 | `submitLabel` | string \| ReactNode | - | Specifies a label for submit button |

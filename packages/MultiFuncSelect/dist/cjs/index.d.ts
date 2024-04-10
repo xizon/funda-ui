@@ -36,6 +36,7 @@ declare type MultiFuncSelectProps = {
     popupRef?: React.RefObject<any>;
     wrapperClassName?: string;
     controlClassName?: string;
+    controlExClassName?: string;
     exceededSidePosOffset?: number;
     multiSelect?: MultiSelectConfig;
     multiSelectSelectedItemOnlyStatus?: multiSelectSelectedItemOnlyStatusConfig;

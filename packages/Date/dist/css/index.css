@@ -5,6 +5,7 @@
   --date2d-trigger-focus-border-color:#86b7fe;
   --date2d-trigger-focus-box-shadow: 0 0 0 0.25rem rgba(13,110,253,.25);
   --date2d-trigger-clear-bg: rgb(156, 156, 156);
+  width: 100%;
 }
 .date2d__trigger.focus .date2d__control input {
   box-shadow: var(--date2d-trigger-focus-box-shadow);
@@ -23,7 +24,7 @@
   top: 0.3rem;
   right: 0.5rem;
   z-index: 6;
-  pointer-events: none;
+  cursor: pointer;
 }
 .date2d__trigger .date2d__control .date2d__control__icon .date2d__control__icon__close {
   display: inline-block;
@@ -56,6 +57,7 @@
   box-shadow: none;
   border: none;
   width: 1.0714285714rem;
+  text-align: center;
   outline: 0 !important;
   border-color: transparent !important;
   box-shadow: none !important;

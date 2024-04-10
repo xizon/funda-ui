@@ -11,6 +11,7 @@ import RangeSlider from 'funda-ui/RangeSlider';
 | --- | --- | --- | --- |
 | `wrapperClassName` | string | `mb-3 position-relative` | The class name of the control wrapper. |
 | `controlClassName` | string | `form-control` | The class name of the control. |
+| `controlExClassName` | string | - | The extended class name of `controlClassName`. |
 | `onlyOne` | boolean | false | Only one numeric control is allowed. |
 | `value` | JSON Object | - | Set a default value for this control. Such as `{ min: 0, max: 100 }` |
 | `label` | string \| ReactNode | - | It is used to specify a label for an element of a form.<blockquote>Support html tags</blockquote> |

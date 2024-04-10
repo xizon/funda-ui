@@ -7,6 +7,7 @@ declare module 'react' {
 declare type InputProps = {
     wrapperClassName?: string;
     controlClassName?: string;
+    controlExClassName?: string;
     controlGroupWrapperClassName?: string;
     controlGroupTextClassName?: string;
     type?: string;
@@ -22,6 +23,7 @@ declare type InputProps = {
     minLength?: any;
     maxLength?: any;
     alt?: any;
+    inputMode?: "search" | "text" | "email" | "tel" | "url" | "none" | "numeric" | "decimal" | undefined;
     disabled?: any;
     required?: any;
     readOnly?: any;

@@ -106,10 +106,10 @@ const AccordionItem = (props: AccordionItemProps) => {
 
                     {itemTriggerIcon}
                 </div>
-                <div ref={contentWrapperRef} className={`custom-accordion-content__wrapper ${itemContentWrapperClassName || itemContentWrapperClassName === '' ? itemContentWrapperClassName : "accordion-collapse"}`}
+                <div ref={contentWrapperRef} className={`custom-accordion-content__wrapper w-100 ${itemContentWrapperClassName || itemContentWrapperClassName === '' ? itemContentWrapperClassName : "accordion-collapse"}`}
                     role="tabpanel" style={{
                         height: defaultActive ? 'auto' : '0px',
-                        overflow: 'hidden'
+                        overflow: 'hidden'   // “overflow” affects the width, so add `w-100` to `custom-accordion-content__wrapper`
                     }}>
                     <div className={`custom-accordion-content ${itemContentClassName || itemContentClassName === '' ? itemContentClassName : "accordion-body"}`} ref={contentRef} >
                         {children}

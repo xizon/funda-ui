@@ -547,7 +547,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
         var react__WEBPACK_IMPORTED_MODULE_0__ = __nested_webpack_require_1465__(787);
         /* harmony import */
         var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__nested_webpack_require_1465__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-        var _excluded = ["wrapperClassName", "controlClassName", "appearance", "isSearchInput", "readOnly", "disabled", "required", "placeholder", "value", "label", "name", "btnId", "id", "maxLength", "icon", "autoComplete", "style", "tabIndex", "onClick", "onSubmit", "onChange", "onBlur", "onFocus"];
+        var _excluded = ["wrapperClassName", "controlClassName", "controlExClassName", "appearance", "isSearchInput", "readOnly", "disabled", "required", "placeholder", "value", "label", "name", "btnId", "id", "maxLength", "icon", "autoComplete", "style", "tabIndex", "onClick", "onSubmit", "onChange", "onBlur", "onFocus"];
         function _extends() {
           _extends = Object.assign ? Object.assign.bind() : function (target) {
             for (var i = 1; i < arguments.length; i++) {
@@ -641,6 +641,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
         var SearchBar = /*#__PURE__*/(0, react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(function (props, ref) {
           var wrapperClassName = props.wrapperClassName,
             controlClassName = props.controlClassName,
+            controlExClassName = props.controlExClassName,
             appearance = props.appearance,
             isSearchInput = props.isSearchInput,
             readOnly = props.readOnly,
@@ -743,7 +744,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
             ref: ref,
             tabIndex: tabIndex || 0,
             type: isSearchInput ? 'search' : 'text',
-            className: appearance === 'pill' ? "".concat(controlClassName || controlClassName === '' ? controlClassName : "form-control", " border rounded-pill") : controlClassName || controlClassName === '' ? controlClassName : "form-control",
+            className: "".concat(appearance === 'pill' ? "".concat(controlClassName || controlClassName === '' ? controlClassName : "form-control", " border rounded-pill") : controlClassName || controlClassName === '' ? controlClassName : "form-control", " ").concat(controlExClassName || ''),
             id: idRes,
             name: name,
             placeholder: placeholder || '',

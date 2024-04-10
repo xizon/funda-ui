@@ -9,6 +9,7 @@ declare type CascadingSelectProps = {
     popupRef?: React.RefObject<any>;
     wrapperClassName?: string;
     controlClassName?: string;
+    controlExClassName?: string;
     exceededSidePosOffset?: number;
     value?: string;
     label?: React.ReactNode | string;

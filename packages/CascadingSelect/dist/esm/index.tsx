@@ -28,6 +28,7 @@ type CascadingSelectProps = {
     popupRef?: React.RefObject<any>;
     wrapperClassName?: string;
     controlClassName?: string;
+    controlExClassName?: string;
     exceededSidePosOffset?: number;
     value?: string;
     label?: React.ReactNode | string;
@@ -86,6 +87,7 @@ const CascadingSelect = (props: CascadingSelectProps) => {
         popupRef,
         wrapperClassName,
         controlClassName,
+        controlExClassName,
         exceededSidePosOffset,
         disabled,
         required,
@@ -1146,13 +1148,13 @@ const CascadingSelect = (props: CascadingSelectProps) => {
 
                     {displayResult ? <div className="cas-select__result">{displayInfo()}</div> : null}
 
-
+                    
                     <input
                         ref={valRef}
                         id={idRes}
                         data-overlay-id={`cas-select__items-wrapper-${idRes}`}
                         name={name}
-                        className={controlClassName || controlClassName === '' ? controlClassName : "form-control"}
+                        className={`${controlClassName || controlClassName === '' ? controlClassName : "form-control"} ${controlExClassName || ''}`}
                         placeholder={placeholder}
                         value={changedVal} // placeholder will not change if defaultValue is used
                         onFocus={handleFocus}

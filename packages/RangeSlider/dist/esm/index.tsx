@@ -5,6 +5,7 @@ import Input from 'funda-input';
 type RangeSliderProps = {
     wrapperClassName?: string;
     controlClassName?: string;
+    controlExClassName?: string;
     value?: any;
     label?: React.ReactNode | string;
     minName?: string;
@@ -26,6 +27,7 @@ const RangeSlider = (props: RangeSliderProps) => {
     const {
         wrapperClassName,
         controlClassName,
+        controlExClassName,
         disabled,
         required,
         value,
@@ -131,7 +133,7 @@ const RangeSlider = (props: RangeSliderProps) => {
                 <Input
                     ref={valMinRef}
                     wrapperClassName={wrapperClassName || wrapperClassName === '' ? wrapperClassName : "mb-3 position-relative"}
-                    controlClassName={controlClassName || controlClassName === '' ? controlClassName : "form-control"}   
+                    controlClassName={`${controlClassName || controlClassName === '' ? controlClassName : "form-control"} ${controlExClassName || ''}`} 
                     required={required || null}
                     type="text"
                     id={idRes + '-min'}
@@ -142,7 +144,7 @@ const RangeSlider = (props: RangeSliderProps) => {
                 <Input
                     ref={valMaxRef}
                     wrapperClassName={wrapperClassName || wrapperClassName === '' ? wrapperClassName : "mb-3 position-relative"}
-                    controlClassName={controlClassName || controlClassName === '' ? controlClassName : "form-control"}   
+                    controlClassName={`${controlClassName || controlClassName === '' ? controlClassName : "form-control"} ${controlExClassName || ''}`} 
                     required={required || null}
                     type="text"
                     id={idRes + '-max'}

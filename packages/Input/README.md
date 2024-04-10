@@ -12,6 +12,7 @@ import Input from 'funda-ui/Input';
 | `ref` | React.ForwardedRef | - | It is the return element of this component.  |
 | `wrapperClassName` | string | `mb-3 position-relative` | The class name of the control wrapper. |
 | `controlClassName` | string | `form-control` | The class name of the control. |
+| `controlExClassName` | string | - | The extended class name of `controlClassName`. |
 | `controlGroupWrapperClassName` | string | `input-group` | The class name of the control group wrapper. |
 | `controlGroupTextClassName` | string | `input-group-text` | The class name of the control group text. |
 | `appendControl` | ReactNode  | - | An extension of the same level as \<input \>, usually used to placeholder of some elements |
@@ -20,6 +21,8 @@ import Input from 'funda-ui/Input';
 | `label` | string \| ReactNode | - | It is used to specify a label for an element of a form.<blockquote>Support html tags</blockquote> |
 | `units` | string | - | Specify a unit identification string. Such as `em`, `px`, and so on. |
 | `name` | string | - | Name is not deprecated when used with form fields. |
+| `alt` | string | - | An HTML form with an image that represents the submit button. |
+| `inputMode` | `search` \| `text` \| `email` \| `tel` \| `url` \| `none` \| `numeric` \| `decimal` \| undefined | `text` | The inputmode global attribute is an enumerated attribute that hints at the type of data that might be entered by the user while editing the element or its contents. This allows a browser to display an appropriate virtual keyboard. |
 | `step` | number | 1 | Specified legal number intervals. |
 | `min` | number | - | The minimum value to accept |
 | `max` | number | - | The maximum value to accept |
