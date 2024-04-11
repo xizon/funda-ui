@@ -1654,7 +1654,7 @@ var zh_CN_default = /*#__PURE__*/__webpack_require__.n(zh_CN);
 // EXTERNAL MODULE: ./src/utils/performance.js
 var performance = __webpack_require__(342);
 ;// CONCATENATED MODULE: ./src/index.tsx
-var _excluded = ["popupRef", "triggerClassName", "popupClassName", "wrapperClassName", "controlClassName", "controlGroupWrapperClassName", "controlGroupTextClassName", "delimiter", "offset", "exceededSidePosOffset", "localization", "type", "onlyTime", "truncateSeconds", "valueUseSlash", "disabled", "required", "readOnly", "value", "min", "max", "placeholder", "label", "units", "name", "alt", "id", "iconLeft", "iconRight", "autoComplete", "style", "tabIndex", "onLoad", "onChange", "onBlur", "onFocus", "onOpenPopup", "onClosePopup", "onChangeDate", "onChangeMonth", "onChangeYear", "onChangeToday", "onChangeHours", "onChangeMinutes", "onChangeSeconds", "langHoursTitle", "langMinutesTitle", "langSecondsTitle", "langWeek", "langWeekFull", "langMonths", "langMonthsFull", "langToday"];
+var _excluded = ["popupRef", "triggerClassName", "popupClassName", "wrapperClassName", "controlClassName", "controlGroupWrapperClassName", "controlGroupTextClassName", "delimiter", "offset", "exceededSidePosOffset", "localization", "type", "onlyTime", "truncateSeconds", "valueUseSlash", "disabled", "required", "readOnly", "value", "clickInitValue", "min", "max", "placeholder", "label", "units", "name", "alt", "id", "iconLeft", "iconRight", "autoComplete", "style", "tabIndex", "onLoad", "onChange", "onBlur", "onFocus", "onOpenPopup", "onClosePopup", "onChangeDate", "onChangeMonth", "onChangeYear", "onChangeToday", "onChangeHours", "onChangeMinutes", "onChangeSeconds", "langHoursTitle", "langMinutesTitle", "langSecondsTitle", "langWeek", "langWeekFull", "langMonths", "langMonthsFull", "langToday"];
 function _extends() { _extends = Object.assign ? Object.assign.bind() : function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
 function src_slicedToArray(arr, i) { return src_arrayWithHoles(arr) || src_iterableToArrayLimit(arr, i) || src_unsupportedIterableToArray(arr, i) || src_nonIterableRest(); }
 function src_nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
@@ -1694,6 +1694,7 @@ var src_Date = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_reac
     required = props.required,
     readOnly = props.readOnly,
     value = props.value,
+    clickInitValue = props.clickInitValue,
     min = props.min,
     max = props.max,
     placeholder = props.placeholder,
@@ -1793,26 +1794,30 @@ var src_Date = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_reac
     _useState2 = src_slicedToArray(_useState, 2),
     dateDefaultValueExist = _useState2[0],
     setDateDefaultValueExist = _useState2[1];
-  var _useState3 = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)(['0000', '00', '00', '00', '00', '00']),
+  var _useState3 = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)(false),
     _useState4 = src_slicedToArray(_useState3, 2),
-    splitVals = _useState4[0],
-    setSplitVals = _useState4[1];
-  var _useState5 = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)(value || ''),
+    initSplitClickEvOk = _useState4[0],
+    setInitSplitClickEvOk = _useState4[1];
+  var _useState5 = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)(['0000', '00', '00', '00', '00', '00']),
     _useState6 = src_slicedToArray(_useState5, 2),
-    changedVal = _useState6[0],
-    setChangedVal = _useState6[1];
-  var _useState7 = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)(false),
+    splitVals = _useState6[0],
+    setSplitVals = _useState6[1];
+  var _useState7 = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)(value || ''),
     _useState8 = src_slicedToArray(_useState7, 2),
-    isShow = _useState8[0],
-    setIsShow = _useState8[1];
-  var _useState9 = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)(''),
+    changedVal = _useState8[0],
+    setChangedVal = _useState8[1];
+  var _useState9 = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)(false),
     _useState10 = src_slicedToArray(_useState9, 2),
-    dateVal = _useState10[0],
-    setDateVal = _useState10[1];
-  var _useState11 = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)(['00', '00', '00']),
+    isShow = _useState10[0],
+    setIsShow = _useState10[1];
+  var _useState11 = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)(''),
     _useState12 = src_slicedToArray(_useState11, 2),
-    timeVal = _useState12[0],
-    setTimeVal = _useState12[1];
+    dateVal = _useState12[0],
+    setDateVal = _useState12[1];
+  var _useState13 = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)(['00', '00', '00']),
+    _useState14 = src_slicedToArray(_useState13, 2),
+    timeVal = _useState14[0],
+    setTimeVal = _useState14[1];
   var hoursArr = ['00', '01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23'];
   var msArr = ['00', '01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23', '24', '25', '26', '27', '28', '29', '30', '31', '32', '33', '34', '35', '36', '37', '38', '39', '40', '41', '42', '43', '44', '45', '46', '47', '48', '49', '50', '51', '52', '53', '54', '55', '56', '57', '58', '59'];
 
@@ -2016,10 +2021,32 @@ var src_Date = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_reac
 
     e.target.select();
     resetDefauleValueExist();
-    if (!dateDefaultValueExist) {
-      var _full = "".concat(splitVals[0], "-").concat(splitVals[1], "-").concat(splitVals[2], " ").concat(splitVals[3], ":").concat(splitVals[4], ":").concat(splitVals[5]);
-      _onChange === null || _onChange === void 0 ? void 0 : _onChange(inputRef.current, valueResConverter(_full), isValidDate(_full));
-      setChangedVal(_full);
+
+    // update default value when splitting control clicked
+    var noTargetVal = typeof clickInitValue === 'undefined' || clickInitValue === null || clickInitValue === 'null' || clickInitValue === '';
+    var _targetVal = noTargetVal ? getNow() : clickInitValue;
+    if (noTargetVal) {
+      if (!dateDefaultValueExist) {
+        var _initValue = initValue(_targetVal),
+          _initValue2 = src_slicedToArray(_initValue, 2),
+          a = _initValue2[0],
+          b = _initValue2[1];
+        var _full = getFullTimeData(b).res;
+        _onChange === null || _onChange === void 0 ? void 0 : _onChange(inputRef.current, valueResConverter(_full), isValidDate(_full));
+        setChangedVal(_full);
+      }
+    } else {
+      if (!initSplitClickEvOk) {
+        var _initValue3 = initValue(_targetVal),
+          _initValue4 = src_slicedToArray(_initValue3, 2),
+          _a = _initValue4[0],
+          _b = _initValue4[1];
+        var _full2 = getFullTimeData(_b).res;
+        _onChange === null || _onChange === void 0 ? void 0 : _onChange(inputRef.current, valueResConverter(_full2), isValidDate(_full2));
+
+        //
+        setInitSplitClickEvOk(true);
+      }
     }
   }
   function clearAll() {
@@ -2163,14 +2190,12 @@ var src_Date = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_reac
     }
     return res;
   }
-  (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useEffect)(function () {
-    // update default value
-    //--------------
-    if (typeof value === 'undefined' || value === null || value === 'null' || value === '') {
-      setDateDefaultValueExist(false);
-
-      //
-      var _getFullTimeData = getFullTimeData(getNow()),
+  function initValue(v) {
+    var _dVal = onlyTime ? "".concat(getFullTimeData(getNow()).date, " ").concat(v) : v;
+    var _res = valueResConverter(_dVal);
+    setChangedVal(_res);
+    if (isValidDate(_dVal)) {
+      var _getFullTimeData = getFullTimeData(_dVal),
         date = _getFullTimeData.date,
         year = _getFullTimeData.year,
         month = _getFullTimeData.month,
@@ -2178,43 +2203,24 @@ var src_Date = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_reac
         hours = _getFullTimeData.hours,
         minutes = _getFullTimeData.minutes,
         seconds = _getFullTimeData.seconds;
-      if (!currentMaxDateDisabled && !currentMinDateDisabled) {
-        setDateVal(date);
-        setTimeVal([hours, minutes, seconds]);
-        setSplitVals([year, month, day, hours, minutes, seconds]);
-      } else {
-        if (currentMaxDateDisabled) {
-          setDateVal(MAX.date);
-          setTimeVal([MAX.hours, MAX.minutes, MAX.seconds]);
-          setSplitVals([MAX.year, MAX.month, MAX.day, MAX.hours, MAX.minutes, MAX.seconds]);
-        }
-        if (currentMinDateDisabled) {
-          setDateVal(MIN.date);
-          setTimeVal([MIN.hours, MIN.minutes, MIN.seconds]);
-          setSplitVals([MIN.year, MIN.month, MIN.day, MIN.hours, MIN.minutes, MIN.seconds]);
-        }
-      }
+      setDateVal(date);
+      setTimeVal([hours, minutes, seconds]);
+      setSplitVals([year, month, day, hours, minutes, seconds]);
+    }
+    return [_res, _dVal];
+  }
+  (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useEffect)(function () {
+    // update default value
+    //--------------
+    if (typeof value === 'undefined' || value === null || value === 'null' || value === '') {
+      setDateDefaultValueExist(false);
     } else {
       setDateDefaultValueExist(true);
-
-      //
-      var _dVal = onlyTime ? "".concat(getFullTimeData(getNow()).date, " ").concat(value) : value;
-      var _res = valueResConverter(_dVal);
-      setChangedVal(_res);
-      if (isValidDate(_dVal)) {
-        var _getFullTimeData2 = getFullTimeData(_dVal),
-          _date2 = _getFullTimeData2.date,
-          _year = _getFullTimeData2.year,
-          _month = _getFullTimeData2.month,
-          _day = _getFullTimeData2.day,
-          _hours = _getFullTimeData2.hours,
-          _minutes = _getFullTimeData2.minutes,
-          _seconds = _getFullTimeData2.seconds;
-        setDateVal(_date2);
-        setTimeVal([_hours, _minutes, _seconds]);
-        setSplitVals([_year, _month, _day, _hours, _minutes, _seconds]);
-      }
-      onLoad === null || onLoad === void 0 ? void 0 : onLoad(_res, getFullTimeData(_dVal));
+      var _initValue5 = initValue(value),
+        _initValue6 = src_slicedToArray(_initValue5, 2),
+        a = _initValue6[0],
+        b = _initValue6[1];
+      onLoad === null || onLoad === void 0 ? void 0 : onLoad(a, getFullTimeData(b));
     }
 
     //--------------

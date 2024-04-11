@@ -3,6 +3,7 @@ import React, { useId, useState, useRef, useEffect, forwardRef, ChangeEvent, use
 import Input from 'funda-input';
 import RootPortal from 'funda-root-portal';
 
+
 import Calendar from './Calendar';
 
 
@@ -33,6 +34,7 @@ type DateProps = {
     truncateSeconds?: boolean;
     valueUseSlash?: boolean;
     value?: string;
+    clickInitValue?: string;
     min?: string;
     max?: string;
     placeholder?: string;
@@ -102,6 +104,7 @@ const Date = forwardRef((props: DateProps, ref: any) => {
         required,
         readOnly,
         value,
+        clickInitValue,
         min,
         max,
         placeholder,
@@ -220,6 +223,7 @@ const Date = forwardRef((props: DateProps, ref: any) => {
     const partedInputSeconds = useRef<HTMLInputElement>(null);
 
     const [dateDefaultValueExist, setDateDefaultValueExist] = useState<boolean>(false);
+    const [initSplitClickEvOk, setInitSplitClickEvOk] = useState<boolean>(false);
     const [splitVals, setSplitVals] = useState<any[]>(['0000','00','00','00','00','00']);
     const [changedVal, setChangedVal] = useState<string>(value || '');
     const [isShow, setIsShow] = useState<boolean>(false);
@@ -476,14 +480,36 @@ const Date = forwardRef((props: DateProps, ref: any) => {
         e.stopPropagation();  // Avoid triggering other inputs
 
         e.target.select();
-        
+
         resetDefauleValueExist();
 
-        if (!dateDefaultValueExist) {
-            const _full = `${splitVals[0]}-${splitVals[1]}-${splitVals[2]} ${splitVals[3]}:${splitVals[4]}:${splitVals[5]}`;
-            onChange?.(inputRef.current, valueResConverter(_full), isValidDate(_full));
-            setChangedVal(_full);
+        // update default value when splitting control clicked
+        const noTargetVal = typeof clickInitValue === 'undefined' || clickInitValue === null || clickInitValue === 'null' || clickInitValue === '';
+        const _targetVal: any = noTargetVal ? getNow() : clickInitValue;
+        
+        if (noTargetVal) {
+            if (!dateDefaultValueExist) {
+                const [a, b] = initValue(_targetVal);
+                const _full = getFullTimeData(b).res;
+                onChange?.(inputRef.current, valueResConverter(_full), isValidDate(_full));
+                setChangedVal(_full);
+            }
+
+        } else {
+
+            if (!initSplitClickEvOk) {
+                const [a, b] = initValue(_targetVal);
+                const _full = getFullTimeData(b).res;
+                onChange?.(inputRef.current, valueResConverter(_full), isValidDate(_full));
+
+                //
+                setInitSplitClickEvOk(true);
+            }
+
+
         }
+
+
     }
 
 
@@ -677,15 +703,13 @@ const Date = forwardRef((props: DateProps, ref: any) => {
         return res;
     }
 
+    function initValue(v: any) {
+        const _dVal: any = onlyTime ? `${getFullTimeData(getNow()).date} ${v}` : v;
+        const _res = valueResConverter(_dVal);
 
-    useEffect(() => {
-
-        // update default value
-        //--------------
-        if (typeof value === 'undefined' || value === null || value === 'null' || value === '') {
-            setDateDefaultValueExist(false);
-
-            //
+        setChangedVal(_res);
+        
+        if (isValidDate(_dVal)) {
             const {
                 date,
                 year,
@@ -694,63 +718,30 @@ const Date = forwardRef((props: DateProps, ref: any) => {
                 hours,
                 minutes,
                 seconds
-            } = getFullTimeData(getNow());
-
-            if (!currentMaxDateDisabled && !currentMinDateDisabled) {
-                setDateVal(date);
-                setTimeVal([hours, minutes, seconds]);
-                setSplitVals([year, month, day, hours, minutes, seconds]);
-            } else {
-
-                if (currentMaxDateDisabled) {
-                    setDateVal(MAX.date);
-                    setTimeVal([MAX.hours, MAX.minutes, MAX.seconds]);
-                    setSplitVals([MAX.year, MAX.month, MAX.day, MAX.hours, MAX.minutes, MAX.seconds]);
-                }
-                if (currentMinDateDisabled) {
-                    setDateVal(MIN.date);
-                    setTimeVal([MIN.hours, MIN.minutes, MIN.seconds]);
-                    setSplitVals([MIN.year, MIN.month, MIN.day, MIN.hours, MIN.minutes, MIN.seconds]);
-                }
+            } = getFullTimeData(_dVal);
 
 
+            setDateVal(date);
+            setTimeVal([hours, minutes, seconds]);
+            setSplitVals([year, month, day, hours, minutes, seconds]);
+        }
 
-            }
+        return [_res, _dVal]
+
+    }
+    
+
+    useEffect(() => {
 
 
-
-            
-
-
-
+        // update default value
+        //--------------
+        if (typeof value === 'undefined' || value === null || value === 'null' || value === '') {
+            setDateDefaultValueExist(false);
         } else {
             setDateDefaultValueExist(true);
-
-            //
-            const _dVal: any = onlyTime ? `${getFullTimeData(getNow()).date} ${value}` : value;
-            const _res = valueResConverter(_dVal);
-
-            setChangedVal(_res);
-            
-            if (isValidDate(_dVal)) {
-                const {
-                    date,
-                    year,
-                    month,
-                    day,
-                    hours,
-                    minutes,
-                    seconds
-                } = getFullTimeData(_dVal);
-
-
-                setDateVal(date);
-                setTimeVal([hours, minutes, seconds]);
-                setSplitVals([year, month, day, hours, minutes, seconds]);
-            }
-
-            onLoad?.(_res, getFullTimeData(_dVal));
-
+            const [a, b] = initValue(value);
+            onLoad?.(a, getFullTimeData(b));
         }
 
 

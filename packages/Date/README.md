@@ -35,6 +35,7 @@ import Date from 'funda-ui/Date';
 | `langMonthsFull` | array  | `['January', 'Febuary', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']` | Localization in the component of full months sequence. |
 | `langToday` | string  | `Today`| Localization in the component of today button. |
 | `value` | string | - | Set a default value for this control |
+| `clickInitValue` | string | - | If the default value does not exist, the time is automatically initialized when the input is focused, and if not set, the current time is defaulted. |
 | `min` | string | - | The minimum date & time to accept. such as `2024-02-26 08:05:00` |
 | `max` | string | - | The maximum date & time to accept. such as `2024-02-26 09:25:45` |
 | `placeholder` | string | `yyyy/MM/dd HH:mm:ss` |  Specifies a short hint that describes. |
@@ -342,3 +343,33 @@ export default () => {
     );
 }
 ```
+
+
+
+## The default value sets a click initialization time for the null value
+
+```js
+import React from "react";
+import Date from 'funda-ui/Date';
+
+// component styles
+import 'funda-ui/Date/index.css';
+
+export default () => {
+
+    return (
+        <>
+
+            <Date
+                name="name"
+                value=""
+                clickInitValue="2024-03-14 10:22:00"
+                type="datetime-local"
+            />
+
+ 
+        </>
+    );
+}
+```
+

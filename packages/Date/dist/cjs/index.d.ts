@@ -16,6 +16,7 @@ declare type DateProps = {
     truncateSeconds?: boolean;
     valueUseSlash?: boolean;
     value?: string;
+    clickInitValue?: string;
     min?: string;
     max?: string;
     placeholder?: string;
