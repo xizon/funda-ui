@@ -417,6 +417,44 @@ export default () => {
 ```
 
 
+## Auto width for table
+
+Add a width to `tableClassName` attribute.
+
+```css
+.custom-table-inner {
+    width: 1%;
+}
+    
+```
+
+```js
+import React from "react";
+
+// bootstrap components
+import Table from 'funda-ui/Table';
+
+// component styles
+import 'funda-ui/Table/index.css';
+
+
+export default () => {
+
+    
+    return (
+        <>
+
+            <Table 
+                tableClassName="table custom-table-inner" 
+                ...
+            />
+
+
+        </>
+    );
+}
+```
+
 
 
 ## Safe Asynchronous Example
