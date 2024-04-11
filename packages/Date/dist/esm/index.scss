@@ -2,6 +2,15 @@
     <!-- Date -->
 /* ====================================================== */
 
+// Disabled item
+// ---------------------------
+//
+@mixin disabled-item() {
+	// @include disabled-item(); 
+    opacity: .4;
+    pointer-events: none;
+}
+
 .date2d__trigger {
 
     --date2d-trigger-focus-border-color:#86b7fe;
@@ -179,15 +188,23 @@
                             color: var(--date2d-timeselected-text-color);
                             background-color: var(--date2d-timeselected-bg);
                         }
+
+                        &.disabled {
+                            @include disabled-item();
+                        }
+
                     }
              
                     &:hover {
                         background-color: var(--date2d-time-btn-hover-bg);
                     }
+
+
                 }
             }
             
         }
+
 
         .date2d__minuteslist,
         .date2d__secondslist {
@@ -308,6 +325,10 @@
             border-style: solid;
             border-top-width: 1px;
             border-right-width: 1px;
+
+            &.disabled {
+                @include disabled-item();
+            }
 
             &.last-cell {
                 border-right-width: 0;
@@ -466,6 +487,10 @@
             color: var(--date2d-cal-year-month-btn-selected-color);
         }
 
+        &.disabled {
+            @include disabled-item();
+        }
+
     }
 
 
@@ -485,6 +510,11 @@
             path {
                 fill: var(--date2d-cal-header-arrow-bg);
             }
+        }
+
+
+        &.disabled {
+            @include disabled-item();
         }
 
         &--prev,

@@ -190,7 +190,7 @@ export default () => {
     }
 
     useEffect(() => {
-       setInputValue('default);
+       setInputValue('default');
     }, []);
 
 

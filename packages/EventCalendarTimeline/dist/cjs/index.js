@@ -865,6 +865,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
             modalBodyClassName = props.modalBodyClassName,
             modalFooterClassName = props.modalFooterClassName,
             modalFooterExpandedContentClassName = props.modalFooterExpandedContentClassName,
+            depth = props.depth,
             show = props.show,
             maxWidth = props.maxWidth,
             minHeight = props.minHeight,
@@ -889,6 +890,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
             onSubmit = props.onSubmit,
             id = props.id,
             children = props.children;
+          var DEPTH = depth || 1055; // the default value same as bootstrap
           var M_WIDTH = typeof maxWidth === 'function' ? maxWidth() : maxWidth ? maxWidth : undefined;
           var M_HEIGHT = typeof minHeight === 'function' ? minHeight() : minHeight ? minHeight : undefined;
           var uniqueID = (0, external_root_React_commonjs2_react_commonjs_react_amd_react_.useId)().replace(/\:/g, "-");
@@ -1115,7 +1117,8 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
             tabIndex: -1,
             "aria-hidden": "true",
             style: {
-              pointerEvents: 'none'
+              pointerEvents: 'none',
+              zIndex: DEPTH
             },
             "data-mask": "mask-".concat(idRes)
           }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
@@ -1173,9 +1176,11 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
             className: modalShow ? 'modal-backdrop fade show' : 'modal-backdrop fade',
             style: maskOpacity ? {
               display: modalShow ? 'block' : 'none',
-              opacity: maskOpacity
+              opacity: maskOpacity,
+              zIndex: DEPTH - 5
             } : {
-              display: modalShow ? 'block' : 'none'
+              display: modalShow ? 'block' : 'none',
+              zIndex: DEPTH - 5
             },
             onClick: function onClick(e) {
               if (typeof closeDisabled === 'undefined' || closeDisabled === false) {
@@ -1666,7 +1671,12 @@ var EventCalendarTimeline = function EventCalendarTimeline(props) {
     tableTooltipContent = _useState32[0],
     setTableTooltipContent = _useState32[1];
   var padZero = function padZero(num) {
-    return num < 10 ? '0' + num : num.toString();
+    var padZeroEnabled = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : true;
+    if (padZeroEnabled) {
+      return num < 10 ? '0' + num : num.toString();
+    } else {
+      return num.toString();
+    }
   };
   var isValidDate = function isValidDate(v) {
     return !(String(new window.Date(v)).toLowerCase() === 'invalid date');
@@ -2063,6 +2073,7 @@ var EventCalendarTimeline = function EventCalendarTimeline(props) {
               "data-datagrid-col": colIndex - 1,
               colSpan: 1,
               "data-date": getCalendarDate(_dateShow),
+              "data-day": padZero(d),
               "data-week": i,
               style: {
                 minWidth: CELL_MIN_W + 'px'
@@ -2153,6 +2164,7 @@ var EventCalendarTimeline = function EventCalendarTimeline(props) {
               "data-index": colIndex - 1,
               colSpan: 1,
               "data-date": getCalendarDate(_dateShow),
+              "data-day": padZero(d),
               "data-week": i,
               "data-row": rowIndex,
               onMouseEnter: _eventContentTooltip === '' ? function () {} : tableTooltipDisabled ? function () {} : _eventContent !== '' ? function (e) {
@@ -2241,6 +2253,7 @@ var EventCalendarTimeline = function EventCalendarTimeline(props) {
               "data-datagrid-col": _colIndex - 1,
               colSpan: 1,
               "data-date": getCalendarDate(_dateShow),
+              "data-day": padZero(d),
               "data-week": i,
               style: {
                 minWidth: CELL_MIN_W + 'px'
@@ -2337,6 +2350,7 @@ var EventCalendarTimeline = function EventCalendarTimeline(props) {
               "data-index": _colIndex - 1,
               colSpan: 1,
               "data-date": getCalendarDate(_dateShow),
+              "data-day": padZero(d),
               "data-week": i,
               "data-row": rowIndex,
               onMouseEnter: _eventContentTooltip === '' ? function () {} : tableTooltipDisabled ? function () {} : _eventContent !== '' ? function (e) {
@@ -2685,6 +2699,7 @@ var EventCalendarTimeline = function EventCalendarTimeline(props) {
     className: "e-cal-tl__month-container"
   }, MONTHS_FULL.map(function (month, index) {
     return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+      "data-month": padZero(index + 1),
       className: "e-cal-tl__month ".concat(selectedMonth === index ? ' selected' : ''),
       key: month + index,
       onClick: function onClick() {
@@ -2697,6 +2712,7 @@ var EventCalendarTimeline = function EventCalendarTimeline(props) {
     className: "e-cal-tl__year-container bg-body-tertiary"
   }, yearsArray.map(function (year, index) {
     return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+      "data-year": year,
       className: "e-cal-tl__year ".concat(selectedYear === year ? ' selected' : ''),
       key: year + index,
       onClick: function onClick() {

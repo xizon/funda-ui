@@ -104,6 +104,7 @@ const LiveSearch = (props: LiveSearchProps) => {
     } = props;
 
 
+    const DEPTH = depth || 1055;  // the default value same as bootstrap
     const POS_OFFSET = 0;
     const EXCEEDED_SIDE_POS_OFFSET = Number(exceededSidePosOffset) || 15;
     const INPUT_MATCH_ENABLED = typeof fetchAutoShow === 'undefined' || fetchAutoShow === false ? true : false;
@@ -829,7 +830,7 @@ const LiveSearch = (props: LiveSearchProps) => {
                             ref={listRef}
                             id={`livesearch__options-wrapper-${idRes}`}
                             className={`livesearch__options-wrapper list-group position-absolute border shadow small ${winWidth ? '' : ''}`}
-                            style={{ zIndex: (depth ? depth : 1055), width: WIN_WIDTH, display: 'none' }}
+                            style={{ zIndex: DEPTH, width: WIN_WIDTH, display: 'none' }}
                             role="tablist"
                         >
                             <div

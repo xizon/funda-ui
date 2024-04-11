@@ -168,6 +168,7 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
     } = props;
 
 
+    const DEPTH = depth || 1055;  // the default value same as bootstrap
     const LIVE_SEARCH_OK = typeof fetchTrigger !== 'undefined' && fetchTrigger === true ? true : false;
     const LIVE_SEARCH_DISABLED = (typeof fetchTrigger === 'undefined' || fetchTrigger === false) && typeof window !== 'undefined' && typeof (window as any)['funda-ui__MultiFuncSelect-disable-livesearch'] !== 'undefined' ? true : false; // Globally disable real-time search functionality (only valid for non-dynamic requests)
 
@@ -2098,7 +2099,7 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
                             ref={listRef}
                             id={`mf-select__options-wrapper-${idRes}`}
                             className={`mf-select__options-wrapper list-group position-absolute border shadow small ${winWidth ? '' : ''}`}
-                            style={{ zIndex: (depth ? depth : 1055), width: WIN_WIDTH, display: 'none' }}
+                            style={{ zIndex: DEPTH, width: WIN_WIDTH, display: 'none' }}
                             role="tablist"
                         >
 

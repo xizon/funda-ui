@@ -2,7 +2,6 @@ import React, { useId, useState, useRef, useEffect, forwardRef, useImperativeHan
 
 import RootPortal from 'funda-root-portal';
 
-
 //Destroys body scroll locking
 import { clearAllBodyScrollLocks, disableBodyScroll, enableBodyScroll } from './plugins/BSL';
 
@@ -34,6 +33,8 @@ type ModalDialogProps = {
     modalBodyClassName?: string;
     modalFooterClassName?: string;
     modalFooterExpandedContentClassName?: string;
+    /** Set the depth value of the control to control the display of the pop-up layer appear above. Please set it when multiple controls are used at the same time. */
+    depth?: number;
     /** Whether the modal dialog is visible or not, you can use it with the `autoClose` property at the same time */
     show: boolean;
     /** Custom modal max-width whick need a unit string. */
@@ -88,6 +89,7 @@ const ModalDialog = forwardRef((props: ModalDialogProps, ref: React.ForwardedRef
         modalBodyClassName,
         modalFooterClassName,
         modalFooterExpandedContentClassName,
+        depth,
         show,
         maxWidth,
         minHeight,
@@ -115,6 +117,7 @@ const ModalDialog = forwardRef((props: ModalDialogProps, ref: React.ForwardedRef
     } = props;
 
 
+    const DEPTH = depth || 1055;  // the default value same as bootstrap
     const M_WIDTH = typeof maxWidth === 'function' ? maxWidth() : maxWidth ? maxWidth : undefined;
     const M_HEIGHT = typeof minHeight === 'function' ? minHeight() : minHeight ? minHeight : undefined;
 
@@ -389,7 +392,16 @@ const ModalDialog = forwardRef((props: ModalDialogProps, ref: React.ForwardedRef
             {/* Modal */}
             <RootPortal show={true} containerClassName="ModalDialog">
 
-                <div ref={modalRef} className={enableVideo ? `modal fade is-video ${modalShow ? 'show' : ''}` : `modal fade ${modalShow ? 'show' : ''}`} tabIndex={-1} aria-hidden="true" style={{ pointerEvents: 'none' }} data-mask={`mask-${idRes}`}>
+                <div 
+                    ref={modalRef} 
+                    className={enableVideo ? `modal fade is-video ${modalShow ? 'show' : ''}` : `modal fade ${modalShow ? 'show' : ''}`} 
+                    tabIndex={-1} aria-hidden="true" 
+                    style={{ 
+                        pointerEvents: 'none',
+                        zIndex: DEPTH
+                    }} 
+                    data-mask={`mask-${idRes}`}
+                >
                     <div className="modal-dialog modal-dialog-centered modal-dialog-scrollable" style={M_WIDTH ? { maxWidth: `${M_WIDTH}` } : {}}>
                         <div className={`${enableVideo ? 'modal-content bg-transparent shadow-none border-0' : 'modal-content'} ${modalContentClassName || ''}`} style={{ overflow: 'inherit', minHeight: M_HEIGHT ? M_HEIGHT : 'auto' }}>
                             {(!heading || heading === '') && closeDisabled ? null : <>
@@ -453,9 +465,11 @@ const ModalDialog = forwardRef((props: ModalDialogProps, ref: React.ForwardedRef
                         className={modalShow ? 'modal-backdrop fade show' : 'modal-backdrop fade'}
                         style={maskOpacity ? {
                             display: modalShow ? 'block' : 'none',
-                            opacity: maskOpacity
+                            opacity: maskOpacity,
+                            zIndex: DEPTH - 5
                         } : {
-                            display: modalShow ? 'block' : 'none'
+                            display: modalShow ? 'block' : 'none',
+                            zIndex: DEPTH - 5
                         }}
                         onClick={(e: any) => {
                             if (typeof closeDisabled === 'undefined' || closeDisabled === false) {

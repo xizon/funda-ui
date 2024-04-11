@@ -16,6 +16,8 @@ declare type DateProps = {
     truncateSeconds?: boolean;
     valueUseSlash?: boolean;
     value?: string;
+    min?: string;
+    max?: string;
     placeholder?: string;
     label?: React.ReactNode | string;
     units?: string;

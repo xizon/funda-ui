@@ -82,6 +82,10 @@
   border-top-width: 1px;
   border-right-width: 1px;
 }
+.e-cal__wrapper .e-cal__row .e-cal__cell.disabled {
+  opacity: 0.4;
+  pointer-events: none;
+}
 .e-cal__wrapper .e-cal__row .e-cal__cell.last-cell {
   border-right-width: 0;
 }
@@ -200,6 +204,11 @@
   background-color: var(--e-cal-year-month-btn-selected-bg);
   color: var(--e-cal-year-month-btn-selected-color);
 }
+.e-cal__wrapper .e-cal__year.disabled,
+.e-cal__wrapper .e-cal__month.disabled {
+  opacity: 0.4;
+  pointer-events: none;
+}
 .e-cal__wrapper .e-cal__btn {
   border: none;
   outline: none;
@@ -211,6 +220,10 @@
 }
 .e-cal__wrapper .e-cal__btn svg path {
   fill: var(--e-cal-header-arrow-bg);
+}
+.e-cal__wrapper .e-cal__btn.disabled {
+  opacity: 0.4;
+  pointer-events: none;
 }
 .e-cal__wrapper .e-cal__btn--prev, .e-cal__wrapper .e-cal__btn--next {
   border-radius: var(--e-cal-header-prevnext-btn-radius);

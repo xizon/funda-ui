@@ -926,6 +926,7 @@ var CascadingSelectE2E = function CascadingSelectE2E(props) {
     onBlur = props.onBlur,
     onFocus = props.onFocus,
     attributes = _objectWithoutProperties(props, _excluded);
+  var DEPTH = depth || 1055; // the default value same as bootstrap
   var POS_OFFSET = 0;
   var EXCEEDED_SIDE_POS_OFFSET = Number(exceededSidePosOffset) || 15;
   var VALUE_BY_BRACES = typeof extractValueByBraces === 'undefined' ? true : extractValueByBraces;
@@ -1969,7 +1970,7 @@ var CascadingSelectE2E = function CascadingSelectE2E(props) {
     id: "cas-select-e2e__items-wrapper-".concat(idRes),
     className: "cas-select-e2e__items-wrapper position-absolute border shadow small",
     style: {
-      zIndex: depth ? depth : 1055,
+      zIndex: DEPTH,
       display: 'none'
     }
   }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("ul", {

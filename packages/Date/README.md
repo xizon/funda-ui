@@ -35,6 +35,8 @@ import Date from 'funda-ui/Date';
 | `langMonthsFull` | array  | `['January', 'Febuary', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']` | Localization in the component of full months sequence. |
 | `langToday` | string  | `Today`| Localization in the component of today button. |
 | `value` | string | - | Set a default value for this control |
+| `min` | string | - | The minimum date & time to accept. such as `2024-02-26 08:05:00` |
+| `max` | string | - | The maximum date & time to accept. such as `2024-02-26 09:25:45` |
 | `placeholder` | string | `yyyy/MM/dd HH:mm:ss` |  Specifies a short hint that describes. |
 | `label` | string \| ReactNode | - | It is used to specify a label for an element of a form.<blockquote>Support html tags</blockquote> |
 | `units` | string | - | Specify a unit identification string. Such as `em`, `px`, and so on. |
@@ -129,6 +131,60 @@ export default () => {
 }
 ```
 
+
+
+
+
+## Asynchronous Usage
+
+
+```js
+import React, { useEffect, useState } from "react";
+import Date from 'funda-ui/Date';
+
+// component styles
+import 'funda-ui/Date/index.css';
+
+export default () => {
+
+    const defaultVal = '2024-03-14 10:22:05';
+
+    const [customDate, setCustomDate] = useState<string>('');
+    const [defaultCustomDate, setDefaultCustomDate] = useState<string>('');
+
+    function handleChange(e) {
+        setInputValue(e.target.value);
+    }
+
+    useEffect(() => {
+       setCustomDate(defaultVal);
+       setDefaultCustomDate(defaultVal);
+    }, []);
+
+
+    return (
+        <>
+
+
+           <Date
+                name="name"
+                value={defaultCustomDate} // Don't use customDate assignments directly
+                type="datetime-local"
+                placeholder="yyyy/MM/dd HH:mm:ss"
+                onChange={(input: HTMLInputElement, dateRes: any, isValidDate: boolean) => {
+                    let _valRes = dateRes !== null && typeof dateRes !== 'string' ? dateRes.res : dateRes;
+                    _valRes = _valRes.split(':').length === 3 ? _valRes : `${_valRes}:00`;
+                    if (_valRes === ':00') _valRes = '';
+
+                    setCustomDate(_valRes);
+                }}
+            />
+
+
+        </>
+    );
+}
+```
 
 
 

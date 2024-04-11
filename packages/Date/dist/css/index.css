@@ -150,6 +150,12 @@
   color: var(--date2d-timeselected-text-color);
   background-color: var(--date2d-timeselected-bg);
 }
+.date2d__wrapper .date2d__tools-container .date2d__hourslist ul li a.disabled,
+.date2d__wrapper .date2d__tools-container .date2d__minuteslist ul li a.disabled,
+.date2d__wrapper .date2d__tools-container .date2d__secondslist ul li a.disabled {
+  opacity: 0.4;
+  pointer-events: none;
+}
 .date2d__wrapper .date2d__tools-container .date2d__hourslist ul li:hover,
 .date2d__wrapper .date2d__tools-container .date2d__minuteslist ul li:hover,
 .date2d__wrapper .date2d__tools-container .date2d__secondslist ul li:hover {
@@ -249,6 +255,10 @@
   border-style: solid;
   border-top-width: 1px;
   border-right-width: 1px;
+}
+.date2d-cal__wrapper .date2d-cal__row .date2d-cal__cell.disabled {
+  opacity: 0.4;
+  pointer-events: none;
 }
 .date2d-cal__wrapper .date2d-cal__row .date2d-cal__cell.last-cell {
   border-right-width: 0;
@@ -368,6 +378,11 @@
   background-color: var(--date2d-cal-year-month-btn-selected-bg);
   color: var(--date2d-cal-year-month-btn-selected-color);
 }
+.date2d-cal__wrapper .date2d-cal__year.disabled,
+.date2d-cal__wrapper .date2d-cal__month.disabled {
+  opacity: 0.4;
+  pointer-events: none;
+}
 .date2d-cal__wrapper .date2d-cal__btn {
   border: none;
   outline: none;
@@ -379,6 +394,10 @@
 }
 .date2d-cal__wrapper .date2d-cal__btn svg path {
   fill: var(--date2d-cal-header-arrow-bg);
+}
+.date2d-cal__wrapper .date2d-cal__btn.disabled {
+  opacity: 0.4;
+  pointer-events: none;
 }
 .date2d-cal__wrapper .date2d-cal__btn--prev, .date2d-cal__wrapper .date2d-cal__btn--next {
   border-radius: var(--date2d-cal-header-prevnext-btn-radius);

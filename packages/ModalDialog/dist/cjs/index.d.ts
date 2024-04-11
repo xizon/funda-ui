@@ -22,6 +22,8 @@ declare type ModalDialogProps = {
     modalBodyClassName?: string;
     modalFooterClassName?: string;
     modalFooterExpandedContentClassName?: string;
+    /** Set the depth value of the control to control the display of the pop-up layer appear above. Please set it when multiple controls are used at the same time. */
+    depth?: number;
     /** Whether the modal dialog is visible or not, you can use it with the `autoClose` property at the same time */
     show: boolean;
     /** Custom modal max-width whick need a unit string. */

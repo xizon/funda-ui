@@ -1017,6 +1017,7 @@ var LiveSearch = function LiveSearch(props) {
     onChange = props.onChange,
     onBlur = props.onBlur,
     attributes = _objectWithoutProperties(props, _excluded);
+  var DEPTH = depth || 1055; // the default value same as bootstrap
   var POS_OFFSET = 0;
   var EXCEEDED_SIDE_POS_OFFSET = Number(exceededSidePosOffset) || 15;
   var INPUT_MATCH_ENABLED = typeof fetchAutoShow === 'undefined' || fetchAutoShow === false ? true : false;
@@ -1727,7 +1728,7 @@ var LiveSearch = function LiveSearch(props) {
     id: "livesearch__options-wrapper-".concat(idRes),
     className: "livesearch__options-wrapper list-group position-absolute border shadow small ".concat(winWidth ? '' : ''),
     style: {
-      zIndex: depth ? depth : 1055,
+      zIndex: DEPTH,
       width: WIN_WIDTH,
       display: 'none'
     },

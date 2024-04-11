@@ -119,6 +119,11 @@
   background-color: var(--e-cal-tl-year-month-btn-selected-bg);
   color: var(--e-cal-tl-year-month-btn-selected-color);
 }
+.e-cal-tl__wrapper .e-cal-tl__year.disabled,
+.e-cal-tl__wrapper .e-cal-tl__month.disabled {
+  opacity: 0.4;
+  pointer-events: none;
+}
 .e-cal-tl__wrapper .e-cal-tl__btn {
   border: none;
   outline: none;
@@ -130,6 +135,10 @@
 }
 .e-cal-tl__wrapper .e-cal-tl__btn svg path {
   fill: var(--e-cal-tl-header-arrow-bg);
+}
+.e-cal-tl__wrapper .e-cal-tl__btn.disabled {
+  opacity: 0.4;
+  pointer-events: none;
 }
 .e-cal-tl__wrapper .e-cal-tl__btn--prev, .e-cal-tl__wrapper .e-cal-tl__btn--next {
   border-radius: var(--e-cal-tl-header-prevnext-btn-radius);
@@ -346,6 +355,10 @@
 .e-cal-tl-table__timeline-table__wrapper .e-cal-tl-table__cell-cushion-headercontent__container.selected {
   background-color: var(--e-cal-tl-table-dayselected-bg);
   color: var(--e-cal-tl-table-dayselected-text-color);
+}
+.e-cal-tl-table__timeline-table__wrapper .e-cal-tl-table__cell-cushion-headercontent__container.disabled {
+  opacity: 0.4;
+  pointer-events: none;
 }
 .e-cal-tl-table__timeline-table__wrapper .e-cal-tl-table__datagrid-body__content colgroup > col.empty,
 .e-cal-tl-table__timeline-table__wrapper .e-cal-tl-table__cell-cushion-headercontent__container.empty,

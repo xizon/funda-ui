@@ -191,10 +191,14 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
     const [isShowTableTooltip, setIsShowTableTooltip] = useState<boolean>(false);
     const [tableTooltipContent, setTableTooltipContent] = useState<any>(null);
     
-    const padZero = (num: number) => {
-        return num < 10 ? '0' + num : num.toString();
-    };
+    const padZero = (num: number, padZeroEnabled: boolean = true) => {
+        if (padZeroEnabled) {
+            return num < 10 ? '0' + num : num.toString();
+        } else {
+            return num.toString();
+        }
 
+    };
 
     const isValidDate = (v: string) => {
         return !(String(new window.Date(v) as any).toLowerCase() === 'invalid date');
@@ -208,7 +212,7 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
 
     const getTodayDate = () => {
         return getCalendarDate(new Date() as any);
-    }
+    };
     
 
     // cell
@@ -655,6 +659,7 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
                                 data-datagrid-col={colIndex-1}
                                 colSpan={1}
                                 data-date={getCalendarDate(_dateShow)}
+                                data-day={padZero(d)}
                                 data-week={i}
                                 style={{minWidth: CELL_MIN_W + 'px'}}
                                 onClick={(e: React.MouseEvent) => {
@@ -764,6 +769,7 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
                                 data-index={colIndex-1}
                                 colSpan={1}
                                 data-date={getCalendarDate(_dateShow)}
+                                data-day={padZero(d)}
                                 data-week={i}
                                 data-row={rowIndex}
                                 onMouseEnter={_eventContentTooltip === '' ? () => {} : ( tableTooltipDisabled ? () => {} :  (_eventContent !== '' ? (e: React.MouseEvent) => {handleTableTooltipMouseEnter(e, _eventContentTooltip)} : () => {}) )}
@@ -880,6 +886,7 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
                                 data-datagrid-col={colIndex-1}
                                 colSpan={1}
                                 data-date={getCalendarDate(_dateShow)}
+                                data-day={padZero(d)}
                                 data-week={i}
                                 style={{minWidth: CELL_MIN_W + 'px'}}
                                 onClick={(e: React.MouseEvent) => {
@@ -998,6 +1005,7 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
                                 data-index={colIndex-1}
                                 colSpan={1}
                                 data-date={getCalendarDate(_dateShow)}
+                                data-day={padZero(d)}
                                 data-week={i}
                                 data-row={rowIndex}
                                 onMouseEnter={_eventContentTooltip === '' ? () => {} : ( tableTooltipDisabled ? () => {} :  (_eventContent !== '' ? (e: React.MouseEvent) => {handleTableTooltipMouseEnter(e, _eventContentTooltip)} : () => {}) )}
@@ -1449,7 +1457,12 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
                 <div className={`e-cal-tl__month-wrapper shadow p-3 mb-5 bg-body-tertiary rounded ${winMonth ? 'active' : ''}`}>
                     <div className="e-cal-tl__month-container">
                         {MONTHS_FULL.map((month, index) => {
-                            return <div className={`e-cal-tl__month ${selectedMonth === index ? ' selected' : ''}`} key={month + index} onClick={() => { handleMonthChange(index) }}>{month}</div>
+                            return <div 
+                                data-month={padZero(index+1)}
+                                className={`e-cal-tl__month ${selectedMonth === index ? ' selected' : ''}`} 
+                                key={month + index} 
+                                onClick={() => { handleMonthChange(index) }}
+                            >{month}</div>
                         })}
                     </div>
                 </div>
@@ -1459,7 +1472,12 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
                 <div className={`e-cal-tl__year-wrapper shadow p-3 mb-5 bg-body-tertiary rounded ${winYear ? 'active' : ''}`}>
                     <div className="e-cal-tl__year-container bg-body-tertiary">
                         {yearsArray.map((year, index) => {
-                            return <div className={`e-cal-tl__year ${selectedYear === year ? ' selected' : ''}`} key={year + index} onClick={() => { handleYearChange(year) }}>{year}</div>
+                            return <div 
+                            data-year={year}
+                                className={`e-cal-tl__year ${selectedYear === year ? ' selected' : ''}`} 
+                                key={year + index} 
+                                onClick={() => { handleYearChange(year) }}
+                            >{year}</div>
                         })}
                     </div>
 

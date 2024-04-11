@@ -3,7 +3,6 @@ import React, { useId, useState, useRef, useEffect, forwardRef, ChangeEvent, use
 import Input from 'funda-input';
 import RootPortal from 'funda-root-portal';
 
-
 import Calendar from './Calendar';
 
 
@@ -34,6 +33,8 @@ type DateProps = {
     truncateSeconds?: boolean;
     valueUseSlash?: boolean;
     value?: string;
+    min?: string;
+    max?: string;
     placeholder?: string;
     label?: React.ReactNode | string;
     units?: string;
@@ -101,6 +102,8 @@ const Date = forwardRef((props: DateProps, ref: any) => {
         required,
         readOnly,
         value,
+        min,
+        max,
         placeholder,
         label,
         units,
@@ -158,6 +161,7 @@ const Date = forwardRef((props: DateProps, ref: any) => {
      // 
      const DELIMITER_DATE = delimiter || '/';
      const DELIMITER_TIME = ':';
+
 
 
     // placeholder
@@ -222,7 +226,7 @@ const Date = forwardRef((props: DateProps, ref: any) => {
     const [dateVal, setDateVal] = useState<string>('');
     const [timeVal, setTimeVal] = useState<string[]>(['00', '00', '00']);
 
-    const hoursArr = ['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23', '00'];
+    const hoursArr = ['00', '01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23'];
     const msArr = ['00', '01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23', '24', '25', '26', '27', '28', '29', '30', '31', '32', '33', '34', '35', '36', '37', '38', '39', '40', '41', '42', '43', '44', '45', '46', '47', '48', '49', '50', '51', '52', '53', '54', '55', '56', '57', '58', '59'];
 
 
@@ -316,6 +320,12 @@ const Date = forwardRef((props: DateProps, ref: any) => {
     };
 
 
+    // 
+    const MIN: any = typeof min !== 'undefined' && min !== '' && min !== null && isValidDate(min) ? getFullTimeData(min) : '';
+    const MAX: any = typeof max !== 'undefined' && max !== '' && max !== null && isValidDate(max) ? getFullTimeData(max) : '';
+    const currentMinDateDisabled = MIN !== '' ? (Number(new window.Date().getTime()) < Number(new window.Date(MIN.res).getTime()) ? true : false) : false;
+    const currentMaxDateDisabled = MAX !== '' ? (Number(new window.Date().getTime()) > Number(new window.Date(MAX.res).getTime()) ? true : false) : false;
+
 
     function handleScrollEvent() {
         popwinPosHide();
@@ -355,6 +365,7 @@ const Date = forwardRef((props: DateProps, ref: any) => {
         if (targetPos === 'top') {
             _modalRef.style.left = x + 'px';
             //_modalRef.style.top = y - POS_OFFSET - (listContentRef.current.clientHeight) - 2 + 'px';
+            _modalRef.style.marginTop = 0;
             _modalRef.style.top = 'auto';
             _modalRef.style.bottom = (window.innerHeight - _triggerBox.top) + POS_OFFSET + 2 + 'px';
             _modalRef.style.setProperty('position', 'fixed', 'important');
@@ -363,6 +374,7 @@ const Date = forwardRef((props: DateProps, ref: any) => {
         }
 
         if (targetPos === 'bottom') {
+            _modalRef.style.marginTop = 0;
             _modalRef.style.left = x + 'px';
             _modalRef.style.bottom = 'auto';
             _modalRef.style.top = y + height + POS_OFFSET + 'px';
@@ -375,6 +387,7 @@ const Date = forwardRef((props: DateProps, ref: any) => {
         // STEP 3:
         //-----------
         // Determine whether it exceeds the far right or left side of the screen
+        // Determine whether it exceeds the max height of the popup
         const _modalContent = _modalRef;
         const _modalBox = _modalContent.getBoundingClientRect();
         if (typeof _modalContent.dataset.offset === 'undefined') {
@@ -394,6 +407,9 @@ const Date = forwardRef((props: DateProps, ref: any) => {
                 // console.log('_modalPosition: ', _modalOffsetPosition)
             }
 
+            if (window.innerHeight - _modalBox.bottom < 0) {
+                _modalRef.style.marginTop = `${window.innerHeight - _modalBox.bottom}px`;
+            }
 
         }
 
@@ -460,6 +476,7 @@ const Date = forwardRef((props: DateProps, ref: any) => {
         e.stopPropagation();  // Avoid triggering other inputs
 
         e.target.select();
+        
         resetDefauleValueExist();
 
         if (!dateDefaultValueExist) {
@@ -493,6 +510,173 @@ const Date = forwardRef((props: DateProps, ref: any) => {
     }
 
 
+    
+    function checkDisabledSeconds(curYear: number | string, curMonth: number, curDay: number | string, curHours: number | string, curMinutes: number | string, curSeconds: number | string) {
+        let res: boolean = false;
+
+        // maximum
+        if (MAX !== '') {
+            if (Number(curYear) > Number(MAX.year)) {
+                res = true;
+            }
+
+            if (Number(curYear) === Number(MAX.year) && Number(curMonth+1) > Number(MAX.month)) {
+                res = true;
+            }
+    
+            if (Number(curYear) === Number(MAX.year) && Number(curMonth+1) === Number(MAX.month) && Number(curDay) > Number(MAX.day)) {
+                res = true;
+            }
+
+
+            if (Number(curYear) === Number(MAX.year) && Number(curMonth+1) === Number(MAX.month) && Number(curDay) === Number(MAX.day) && Number(curHours) > Number(MAX.hours) ) {
+                res = true;
+            }
+
+            if (Number(curYear) === Number(MAX.year) && Number(curMonth+1) === Number(MAX.month) && Number(curDay) === Number(MAX.day) && Number(curHours) === Number(MAX.hours) && Number(curMinutes) > Number(MAX.minutes) ) {
+                res = true;
+            }
+
+            if (Number(curYear) === Number(MAX.year) && Number(curMonth+1) === Number(MAX.month) && Number(curDay) === Number(MAX.day) && Number(curHours) === Number(MAX.hours) && Number(curMinutes) === Number(MAX.minutes) && Number(curSeconds) > Number(MAX.seconds) ) {
+                res = true;
+            }
+        }
+
+        // minimum
+        if (MIN !== '') {
+            if (Number(curYear) < Number(MIN.year)) {
+                res = true;
+            }
+
+            if (Number(curYear) === Number(MIN.year) && Number(curMonth+1) < Number(MIN.month)) {
+                res = true;
+            }
+    
+            if (Number(curYear) === Number(MIN.year) && Number(curMonth+1) === Number(MIN.month) && Number(curDay) < Number(MIN.day)) {
+                res = true;
+            }
+
+
+            if (Number(curYear) === Number(MIN.year) && Number(curMonth+1) === Number(MIN.month) && Number(curDay) === Number(MIN.day) && Number(curHours) < Number(MIN.hours) ) {
+                res = true;
+            }
+
+            if (Number(curYear) === Number(MIN.year) && Number(curMonth+1) === Number(MIN.month) && Number(curDay) === Number(MIN.day) && Number(curHours) === Number(MIN.hours) && Number(curMinutes) < Number(MIN.minutes) ) {
+                res = true;
+            }
+
+            if (Number(curYear) === Number(MIN.year) && Number(curMonth+1) === Number(MIN.month) && Number(curDay) === Number(MIN.day) && Number(curHours) === Number(MIN.hours) && Number(curMinutes) === Number(MIN.minutes) && Number(curSeconds) < Number(MIN.seconds) ) {
+                res = true;
+            }
+        }
+
+ 
+        return res;
+    }
+
+
+    function checkDisabledMinutes(curYear: number | string, curMonth: number, curDay: number | string, curHours: number | string, curMinutes: number | string) {
+        let res: boolean = false;
+
+        // maximum
+        if (MAX !== '') {
+            if (Number(curYear) > Number(MAX.year)) {
+                res = true;
+            }
+
+            if (Number(curYear) === Number(MAX.year) && Number(curMonth+1) > Number(MAX.month)) {
+                res = true;
+            }
+    
+            if (Number(curYear) === Number(MAX.year) && Number(curMonth+1) === Number(MAX.month) && Number(curDay) > Number(MAX.day)) {
+                res = true;
+            }
+
+
+            if (Number(curYear) === Number(MAX.year) && Number(curMonth+1) === Number(MAX.month) && Number(curDay) === Number(MAX.day) && Number(curHours) > Number(MAX.hours) ) {
+                res = true;
+            }
+
+            if (Number(curYear) === Number(MAX.year) && Number(curMonth+1) === Number(MAX.month) && Number(curDay) === Number(MAX.day) && Number(curHours) === Number(MAX.hours) && Number(curMinutes) > Number(MAX.minutes) ) {
+                res = true;
+            }
+        }
+
+        // minimum
+        if (MIN !== '') {
+            if (Number(curYear) < Number(MIN.year)) {
+                res = true;
+            }
+            
+            if (Number(curYear) === Number(MIN.year) && Number(curMonth+1) < Number(MIN.month)) {
+                res = true;
+            }
+            
+            if (Number(curYear) === Number(MIN.year) && Number(curMonth+1) === Number(MIN.month) && Number(curDay) < Number(MIN.day)) {
+                res = true;
+            }
+            
+            
+            if (Number(curYear) === Number(MIN.year) && Number(curMonth+1) === Number(MIN.month) && Number(curDay) === Number(MIN.day) && Number(curHours) < Number(MIN.hours) ) {
+                res = true;
+            }
+            
+            if (Number(curYear) === Number(MIN.year) && Number(curMonth+1) === Number(MIN.month) && Number(curDay) === Number(MIN.day) && Number(curHours) === Number(MIN.hours) && Number(curMinutes) < Number(MIN.minutes) ) {
+                res = true;
+            }
+        }
+
+       
+        return res;
+    }
+
+
+    function checkDisabledHours(curYear: number | string, curMonth: number, curDay: number | string, curHours: number | string) {
+        let res: boolean = false;
+
+        // maximum
+        if (MAX !== '') {
+            if (Number(curYear) > Number(MAX.year)) {
+                res = true;
+            }
+
+            if (Number(curYear) === Number(MAX.year) && Number(curMonth+1) > Number(MAX.month)) {
+                res = true;
+            }
+    
+            if (Number(curYear) === Number(MAX.year) && Number(curMonth+1) === Number(MAX.month) && Number(curDay) > Number(MAX.day)) {
+                res = true;
+            }
+
+
+            if (Number(curYear) === Number(MAX.year) && Number(curMonth+1) === Number(MAX.month) && Number(curDay) === Number(MAX.day) && Number(curHours) > Number(MAX.hours) ) {
+                res = true;
+            }
+        }
+
+        // minimum
+        if (MIN !== '') {
+            if (Number(curYear) < Number(MIN.year)) {
+                res = true;
+            }
+            
+            if (Number(curYear) === Number(MIN.year) && Number(curMonth+1) < Number(MIN.month)) {
+                res = true;
+            }
+            
+            if (Number(curYear) === Number(MIN.year) && Number(curMonth+1) === Number(MIN.month) && Number(curDay) < Number(MIN.day)) {
+                res = true;
+            }
+            
+            
+            if (Number(curYear) === Number(MIN.year) && Number(curMonth+1) === Number(MIN.month) && Number(curDay) === Number(MIN.day) && Number(curHours) < Number(MIN.hours) ) {
+                res = true;
+            }
+        }
+
+        return res;
+    }
+
 
     useEffect(() => {
 
@@ -512,9 +696,32 @@ const Date = forwardRef((props: DateProps, ref: any) => {
                 seconds
             } = getFullTimeData(getNow());
 
-            setDateVal(date);
-            setTimeVal([hours, minutes, seconds]);
-            setSplitVals([year, month, day, hours, minutes, seconds]);
+            if (!currentMaxDateDisabled && !currentMinDateDisabled) {
+                setDateVal(date);
+                setTimeVal([hours, minutes, seconds]);
+                setSplitVals([year, month, day, hours, minutes, seconds]);
+            } else {
+
+                if (currentMaxDateDisabled) {
+                    setDateVal(MAX.date);
+                    setTimeVal([MAX.hours, MAX.minutes, MAX.seconds]);
+                    setSplitVals([MAX.year, MAX.month, MAX.day, MAX.hours, MAX.minutes, MAX.seconds]);
+                }
+                if (currentMinDateDisabled) {
+                    setDateVal(MIN.date);
+                    setTimeVal([MIN.hours, MIN.minutes, MIN.seconds]);
+                    setSplitVals([MIN.year, MIN.month, MIN.day, MIN.hours, MIN.minutes, MIN.seconds]);
+                }
+
+
+
+            }
+
+
+
+            
+
+
 
         } else {
             setDateDefaultValueExist(true);
@@ -906,6 +1113,8 @@ const Date = forwardRef((props: DateProps, ref: any) => {
                         {typeof onlyTime === 'undefined' || onlyTime === false ? <>
                             <div className="date2d__calendar">
                                 <Calendar
+                                    min={min}
+                                    max={max}
                                     customTodayDate={changedVal}
                                     langWeek={_langWeek}
                                     langWeekFull={_langWeekFull}
@@ -995,6 +1204,9 @@ const Date = forwardRef((props: DateProps, ref: any) => {
 
                                 <ul>
                                     {hoursArr.map((hour: string, i: number) => {
+
+                                        const _curVal = getFullTimeData(`${dateVal} ${timeVal[0]}:${timeVal[1]}:${timeVal[2]}`);
+
                                         return <li key={i}>
                                             <a
                                                 data-value={hour}
@@ -1020,7 +1232,7 @@ const Date = forwardRef((props: DateProps, ref: any) => {
                                                     onChangeHours?.(_v);
 
                                                 }}
-                                                className={`${timeVal[0] == hour ? 'selected' : ''}`}
+                                                className={`${timeVal[0] == hour ? 'selected' : ''} ${checkDisabledHours(_curVal.year, Number(_curVal.month)-1, _curVal.day, hour) ? 'disabled' : ''}`}
                                             >
                                                 {hour}
                                             </a>
@@ -1037,6 +1249,8 @@ const Date = forwardRef((props: DateProps, ref: any) => {
 
                                 <ul>
                                     {msArr.map((v: string, i: number) => {
+                                        const _curVal = getFullTimeData(`${dateVal} ${timeVal[0]}:${timeVal[1]}:${timeVal[2]}`);
+
                                         return <li key={i}>
                                             <a
                                                 data-value={v}
@@ -1062,7 +1276,7 @@ const Date = forwardRef((props: DateProps, ref: any) => {
                                                     onChangeMinutes?.(_v);
 
                                                 }}
-                                                className={`${timeVal[1] == v ? 'selected' : ''}`}
+                                                className={`${timeVal[1] == v ? 'selected' : ''} ${checkDisabledMinutes(_curVal.year, Number(_curVal.month)-1, _curVal.day, _curVal.hours, v) ? 'disabled' : ''}`}
                                             >
 
                                                 {v}
@@ -1082,6 +1296,8 @@ const Date = forwardRef((props: DateProps, ref: any) => {
 
                                     <ul>
                                         {msArr.map((v: string, i: number) => {
+                                            const _curVal = getFullTimeData(`${dateVal} ${timeVal[0]}:${timeVal[1]}:${timeVal[2]}`);
+                                            
                                             return <li key={i}>
                                                 <a
                                                     data-value={v}
@@ -1107,7 +1323,7 @@ const Date = forwardRef((props: DateProps, ref: any) => {
                                                         onChangeSeconds?.(_v);
 
                                                     }}
-                                                    className={`${timeVal[2] == v ? 'selected' : ''}`}
+                                                    className={`${timeVal[2] == v ? 'selected' : ''} ${checkDisabledSeconds(_curVal.year, Number(_curVal.month)-1, _curVal.day, _curVal.hours, _curVal.minutes, v) ? 'disabled' : ''}`}
                                                 >
 
                                                     {v}

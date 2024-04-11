@@ -2,6 +2,15 @@
    <!-- Event Calendar Timeline -->
 /* ====================================================== */
 
+// Disabled item
+// ---------------------------
+//
+@mixin disabled-item() {
+	// @include disabled-item(); 
+    opacity: .4;
+    pointer-events: none;
+}
+
 /*
 ///////////////////////////////////////////////////
 //////////////////// Calendar ////////////////////
@@ -148,6 +157,10 @@
             color: var(--e-cal-tl-year-month-btn-selected-color);
         }
 
+        &.disabled {
+            @include disabled-item();
+        }
+
     }
 
 
@@ -167,6 +180,10 @@
             path {
                 fill: var(--e-cal-tl-header-arrow-bg);
             }
+        }
+
+        &.disabled {
+            @include disabled-item();
         }
 
         &--prev,
@@ -436,6 +453,10 @@
         &.selected {
             background-color: var(--e-cal-tl-table-dayselected-bg);
             color: var(--e-cal-tl-table-dayselected-text-color);
+        }
+
+        &.disabled {
+            @include disabled-item();
         }
     }
 

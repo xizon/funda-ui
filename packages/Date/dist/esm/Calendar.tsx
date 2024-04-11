@@ -11,6 +11,8 @@ interface EventsValueConfig {
 
 
 type CalendarProps = {
+    min?: string;
+    max?: string;
     customTodayDate?: string;
     langWeek?: string[];
     langWeekFull?: string[];
@@ -29,6 +31,8 @@ type CalendarProps = {
 
 const Calendar = (props: CalendarProps) => {
     const {
+        min,
+        max,
         customTodayDate,
         langWeek,
         langWeekFull,
@@ -71,9 +75,15 @@ const Calendar = (props: CalendarProps) => {
     const [winMonth, setWinMonth] = useState<boolean>(false);
 
 
-    const padZero = (num: number) => {
-        return num < 10 ? '0' + num : num.toString();
+    const padZero = (num: number, padZeroEnabled: boolean = true) => {
+        if (padZeroEnabled) {
+            return num < 10 ? '0' + num : num.toString();
+        } else {
+            return num.toString();
+        }
+
     };
+
 
     const isValidDate = (v: string) => {
         return !(String(new window.Date(v) as any).toLowerCase() === 'invalid date');
@@ -88,6 +98,54 @@ const Calendar = (props: CalendarProps) => {
     const getTodayDate = () => {
         return getCalendarDate(new Date() as any);
     }
+    
+
+    const getFullTimeData = (v: Date | String, padZeroEnabled: boolean = true) => {
+
+        if (typeof v === 'string' && !isValidDate(v)) {
+            return {
+                res: '0000-00-00 00:00:00',
+                resNoSeconds: '0000-00-00 00:00',
+                date: `0000-00-00`,
+                year: `0000`,
+                month: `00`,
+                day: `00`,
+                hours: `00`,
+                minutes: `00`,
+                seconds: `00`
+            }
+        }
+
+        const date: any = dateFormat(v);
+
+        const year = date.getFullYear();
+        const month = padZero(date.getMonth() + 1, padZeroEnabled);
+        const day = padZero(date.getDate(), padZeroEnabled);
+        const hours = padZero(date.getHours(), padZeroEnabled);
+        const minutes = padZero(date.getMinutes(), padZeroEnabled);
+        const seconds = padZero(date.getSeconds(), padZeroEnabled);
+        const res = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+        const res2 = `${year}-${month}-${day} ${hours}:${minutes}`;
+
+        return {
+            res: res,
+            resNoSeconds: res2,
+            date: `${year}-${month}-${day}`,
+            year: `${year}`,
+            month: `${month}`,
+            day: `${day}`,
+            hours: `${hours}`,
+            minutes: `${minutes}`,
+            seconds: `${seconds}`
+        }
+    };
+
+
+    // 
+    const MIN: any = typeof min !== 'undefined' && min !== '' && min !== null && isValidDate(min) ? getFullTimeData(min) : '';
+    const MAX: any = typeof max !== 'undefined' && max !== '' && max !== null && isValidDate(max) ? getFullTimeData(max) : '';
+    const currentMinDateDisabled = MIN !== '' ? (Number(new window.Date().getTime()) < Number(new window.Date(MIN.res).getTime()) ? true : false) : false;
+    const currentMaxDateDisabled = MAX !== '' ? (Number(new window.Date().getTime()) > Number(new window.Date(MAX.res).getTime()) ? true : false) : false;
     
 
 
@@ -323,6 +381,91 @@ const Calendar = (props: CalendarProps) => {
     }
 
 
+    function checkDisabledDay(curYear: number | string, curMonth: number, curDay: number | string) {
+        let res: boolean = false;
+
+        // maximum
+        if (MAX !== '') {
+            if (Number(curYear) > Number(MAX.year)) {
+                res = true;
+            }
+
+            if (Number(curYear) === Number(MAX.year) && Number(curMonth+1) > Number(MAX.month)) {
+                res = true;
+            }
+    
+            if (Number(curYear) === Number(MAX.year) && Number(curMonth+1) === Number(MAX.month) && Number(curDay) > Number(MAX.day)) {
+                res = true;
+            }
+        }
+
+        // minimum
+        if (MIN !== '') {
+            if (Number(curYear) < Number(MIN.year)) {
+                res = true;
+            }
+
+            if (Number(curYear) === Number(MIN.year) && Number(curMonth+1) < Number(MIN.month)) {
+                res = true;
+            }
+    
+            if (Number(curYear) === Number(MIN.year) && Number(curMonth+1) === Number(MIN.month) && Number(curDay) < Number(MIN.day)) {
+                res = true;
+            }
+        }
+
+
+        return res;
+    }
+
+    function checkDisabledMonth(curYear: number | string, curMonth: number) {
+        let res: boolean = false;
+
+        // maximum
+        if (MAX !== '') {
+            if (Number(curYear) > Number(MAX.year)) {
+                res = true;
+            }
+
+            if (Number(curYear) === Number(MAX.year) && Number(curMonth+1) > Number(MAX.month)) {
+                res = true;
+            }
+        }
+
+        // minimum
+        if (MIN !== '') {
+            if (Number(curYear) < Number(MIN.year)) {
+                res = true;
+            }
+
+            if (Number(curYear) === Number(MIN.year) && Number(curMonth+1) < Number(MIN.month)) {
+                res = true;
+            }
+        }
+
+        return res;
+    }
+    function checkDisabledYear(curYear: number | string) {
+        let res: boolean = false;
+
+        // maximum
+        if (MAX !== '') {
+            if (Number(curYear) > Number(MAX.year)) {
+                res = true;
+            }
+        }
+
+        // minimum
+        if (MIN !== '') {
+            if (Number(curYear) < Number(MIN.year)) {
+                res = true;
+            }
+        }
+
+
+        return res;
+    }
+
 
     //if user change the selectedYear, then udate the years array that is displayed on year tab view
     useEffect(() => {
@@ -342,11 +485,20 @@ const Calendar = (props: CalendarProps) => {
 
     useEffect(() => {
 
-
+  
         // update current today
         if (typeof customTodayDate === 'string' && customTodayDate !== '' && isValidDate(customTodayDate)) {
             const _customNow = new Date(customTodayDate);
             setTodayDate(_customNow);
+        } else {
+
+            if (currentMaxDateDisabled) {
+                setTodayDate(new Date(MAX.res))
+            }
+            if (currentMinDateDisabled) {
+                setTodayDate(new Date(MIN.res))
+            }
+
         }
     }, [customTodayDate]);
 
@@ -429,11 +581,13 @@ const Calendar = (props: CalendarProps) => {
                                     }
                                 }        
 
+                           
                                 return (
                                     <div
-                                        className={`date2d-cal__cell date2d-cal__day ${d > 0 ? '' : 'empty'} ${d === now.getDate() ? 'today' : ''} ${d === day ? 'selected' : ''} ${isLastCol ? 'last-cell' : ''} ${isLastRow ? 'last-row' : ''}`}
+                                        className={`date2d-cal__cell date2d-cal__day ${d > 0 ? '' : 'empty'} ${d === now.getDate() ? 'today' : ''} ${d === day ? 'selected' : ''} ${isLastCol ? 'last-cell' : ''} ${isLastRow ? 'last-row' : ''} ${checkDisabledDay(year, month, d) ? 'disabled' : ''}`}
                                         key={"col" + i}
                                         data-date={getCalendarDate(_dateShow)}
+                                        data-day={padZero(d)}
                                         data-week={i}
                                         onClick={(e: React.MouseEvent) => {
 
@@ -448,7 +602,7 @@ const Calendar = (props: CalendarProps) => {
                                             }
                                         }}
                                     >
-                                        
+                                    
                                         {/* forward fill */}
                                         {isFirstRow && __forwardFillNum && typeof __forwardFillNum[i] !== 'undefined' ? <><span className="disabled">{__forwardFillNum[i]}</span></> : null}
 
@@ -475,7 +629,12 @@ const Calendar = (props: CalendarProps) => {
                 <div className={`date2d-cal__month-wrapper shadow p-3 mb-5 bg-body-tertiary rounded ${winMonth ? 'active' : ''}`}>
                     <div className="date2d-cal__month-container">
                         {MONTHS_FULL.map((month, index) => {
-                            return <div className={`date2d-cal__month ${selectedMonth === index ? ' selected' : ''}`} key={month + index} onClick={() => { handleMonthChange(index) }}>{month}</div>
+                            return <div 
+                                data-month={padZero(index+1)}
+                                className={`date2d-cal__month ${selectedMonth === index ? ' selected' : ''} ${checkDisabledMonth(year, index) ? 'disabled' : ''}`} 
+                                key={month + index} 
+                                onClick={() => { handleMonthChange(index) }}
+                            >{month}</div>
                         })}
                     </div>
                 </div>
@@ -485,7 +644,11 @@ const Calendar = (props: CalendarProps) => {
                 <div className={`date2d-cal__year-wrapper shadow p-3 mb-5 bg-body-tertiary rounded ${winYear ? 'active' : ''}`}>
                     <div className="date2d-cal__year-container bg-body-tertiary">
                         {yearsArray.map((year, index) => {
-                            return <div className={`date2d-cal__year ${selectedYear === year ? ' selected' : ''}`} key={year + index} onClick={() => { handleYearChange(year) }}>{year}</div>
+                            return <div 
+                                data-year={year}
+                                className={`date2d-cal__year ${selectedYear === year ? ' selected' : ''} ${checkDisabledYear(year) ? 'disabled' : ''}`} 
+                                key={year + index} onClick={() => { handleYearChange(year) }}
+                            >{year}</div>
                         })}
                     </div>
 
@@ -493,10 +656,14 @@ const Calendar = (props: CalendarProps) => {
                 {/*++++++++++++++++ /YEAR SELECTION TAB ++++++++++++++++*/}
 
 
-
                 {/*++++++++++++++++ TODAY SELECTION TAB ++++++++++++++++*/}
                 <div className="date2d-cal__today-wrapper p-2 bg-body-tertiary">
-                    <button tabIndex={-1} type="button" className="date2d-cal__btn date2d-cal__btn--today" onClick={handleTodayChange}>
+                    <button 
+                        tabIndex={-1} 
+                        type="button" 
+                        className={`date2d-cal__btn date2d-cal__btn--today ${currentMaxDateDisabled || currentMinDateDisabled ? 'disabled' : ''}`} 
+                        onClick={handleTodayChange}
+                    >
                         {langToday || 'Today'}
                     </button>
                 </div>

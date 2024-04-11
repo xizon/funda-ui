@@ -16,12 +16,13 @@ import ModalDialog from 'funda-ui/ModalDialog';
 | `modalBodyClassName` | string  | - | The extended class name of content area |
 | `modalFooterClassName` | string  | - | The extended class name of footer area |
 | `modalFooterExpandedContentClassName` | string  | - | The extended class name of footer content area |
+| `depth` | number  | 1055 | Set the depth value of the control to control the display of the pop-up layer appear above. Please set it when multiple controls are used at the same time. |
 | `show` | boolean  | false | **(required)** Whether the modal dialog is visible or not, you can use it with the `autoClose` property at the same time |
 | `autoClose` | number \| boolean  | false | Specify auto-close time. This function is not enabled when this value is false. If the value is `2000`, it will automatically close after 2 seconds. |
 | `heading` | ReactNode  | - | Set a window title |
 | `footerExpandedContent` | ReactNode  | - | Set footer content expanded |
 | `maskDisabled` | boolean  | false | Disable mask |
-| `maskOpacity` | string \| number  | - | The mask opacity. The value is in the range *0.0* to *1.0* |
+| `maskOpacity` | string \| number  | - | The mask opacity. The value is in the range *0.0* to *1.0*. Do not want the user to see but also do not want to disable, use `0.001` |
 | `maxWidth` | number \| string \| function  | false | Custom modal max-width whick need a unit string. Such as: `500px` or `() => window.innerWidth >= 768 ? window.innerWidth - 100 + 'px' : undefined`|
 | `minHeight` | number \| string \| function  | false | Custom modal max-height whick need a unit string. Such as: `auto` or `() => window.innerHeight - 150 + 'px'` |
 | `closeOnlyBtn` | boolean  | false | Disable mask to close the window |

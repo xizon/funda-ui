@@ -593,6 +593,7 @@ var ModalDialog = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_r
     modalBodyClassName = props.modalBodyClassName,
     modalFooterClassName = props.modalFooterClassName,
     modalFooterExpandedContentClassName = props.modalFooterExpandedContentClassName,
+    depth = props.depth,
     show = props.show,
     maxWidth = props.maxWidth,
     minHeight = props.minHeight,
@@ -617,6 +618,7 @@ var ModalDialog = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_r
     onSubmit = props.onSubmit,
     id = props.id,
     children = props.children;
+  var DEPTH = depth || 1055; // the default value same as bootstrap
   var M_WIDTH = typeof maxWidth === 'function' ? maxWidth() : maxWidth ? maxWidth : undefined;
   var M_HEIGHT = typeof minHeight === 'function' ? minHeight() : minHeight ? minHeight : undefined;
   var uniqueID = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useId)().replace(/\:/g, "-");
@@ -843,7 +845,8 @@ var ModalDialog = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_r
     tabIndex: -1,
     "aria-hidden": "true",
     style: {
-      pointerEvents: 'none'
+      pointerEvents: 'none',
+      zIndex: DEPTH
     },
     "data-mask": "mask-".concat(idRes)
   }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
@@ -901,9 +904,11 @@ var ModalDialog = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_r
     className: modalShow ? 'modal-backdrop fade show' : 'modal-backdrop fade',
     style: maskOpacity ? {
       display: modalShow ? 'block' : 'none',
-      opacity: maskOpacity
+      opacity: maskOpacity,
+      zIndex: DEPTH - 5
     } : {
-      display: modalShow ? 'block' : 'none'
+      display: modalShow ? 'block' : 'none',
+      zIndex: DEPTH - 5
     },
     onClick: function onClick(e) {
       if (typeof closeDisabled === 'undefined' || closeDisabled === false) {

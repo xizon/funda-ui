@@ -1046,7 +1046,9 @@ function _iterableToArrayLimit(arr, i) { var _i = null == arr ? null : "undefine
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 var Calendar = function Calendar(props) {
-  var customTodayDate = props.customTodayDate,
+  var min = props.min,
+    max = props.max,
+    customTodayDate = props.customTodayDate,
     langWeek = props.langWeek,
     langWeekFull = props.langWeekFull,
     langMonths = props.langMonths,
@@ -1116,7 +1118,12 @@ var Calendar = function Calendar(props) {
     winMonth = _useState22[0],
     setWinMonth = _useState22[1];
   var padZero = function padZero(num) {
-    return num < 10 ? '0' + num : num.toString();
+    var padZeroEnabled = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : true;
+    if (padZeroEnabled) {
+      return num < 10 ? '0' + num : num.toString();
+    } else {
+      return num.toString();
+    }
   };
   var isValidDate = function isValidDate(v) {
     return !(String(new window.Date(v)).toLowerCase() === 'invalid date');
@@ -1128,6 +1135,48 @@ var Calendar = function Calendar(props) {
   var getTodayDate = function getTodayDate() {
     return getCalendarDate(new Date());
   };
+  var getFullTimeData = function getFullTimeData(v) {
+    var padZeroEnabled = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : true;
+    if (typeof v === 'string' && !isValidDate(v)) {
+      return {
+        res: '0000-00-00 00:00:00',
+        resNoSeconds: '0000-00-00 00:00',
+        date: "0000-00-00",
+        year: "0000",
+        month: "00",
+        day: "00",
+        hours: "00",
+        minutes: "00",
+        seconds: "00"
+      };
+    }
+    var date = dateFormat(v);
+    var year = date.getFullYear();
+    var month = padZero(date.getMonth() + 1, padZeroEnabled);
+    var day = padZero(date.getDate(), padZeroEnabled);
+    var hours = padZero(date.getHours(), padZeroEnabled);
+    var minutes = padZero(date.getMinutes(), padZeroEnabled);
+    var seconds = padZero(date.getSeconds(), padZeroEnabled);
+    var res = "".concat(year, "-").concat(month, "-").concat(day, " ").concat(hours, ":").concat(minutes, ":").concat(seconds);
+    var res2 = "".concat(year, "-").concat(month, "-").concat(day, " ").concat(hours, ":").concat(minutes);
+    return {
+      res: res,
+      resNoSeconds: res2,
+      date: "".concat(year, "-").concat(month, "-").concat(day),
+      year: "".concat(year),
+      month: "".concat(month),
+      day: "".concat(day),
+      hours: "".concat(hours),
+      minutes: "".concat(minutes),
+      seconds: "".concat(seconds)
+    };
+  };
+
+  // 
+  var MIN = typeof min !== 'undefined' && min !== '' && min !== null && isValidDate(min) ? getFullTimeData(min) : '';
+  var MAX = typeof max !== 'undefined' && max !== '' && max !== null && isValidDate(max) ? getFullTimeData(max) : '';
+  var currentMinDateDisabled = MIN !== '' ? Number(new window.Date().getTime()) < Number(new window.Date(MIN.res).getTime()) ? true : false : false;
+  var currentMaxDateDisabled = MAX !== '' ? Number(new window.Date().getTime()) > Number(new window.Date(MAX.res).getTime()) ? true : false : false;
 
   // cell
   var getCells = function getCells() {
@@ -1335,6 +1384,78 @@ var Calendar = function Calendar(props) {
       return !prevState;
     });
   }
+  function checkDisabledDay(curYear, curMonth, curDay) {
+    var res = false;
+
+    // maximum
+    if (MAX !== '') {
+      if (Number(curYear) > Number(MAX.year)) {
+        res = true;
+      }
+      if (Number(curYear) === Number(MAX.year) && Number(curMonth + 1) > Number(MAX.month)) {
+        res = true;
+      }
+      if (Number(curYear) === Number(MAX.year) && Number(curMonth + 1) === Number(MAX.month) && Number(curDay) > Number(MAX.day)) {
+        res = true;
+      }
+    }
+
+    // minimum
+    if (MIN !== '') {
+      if (Number(curYear) < Number(MIN.year)) {
+        res = true;
+      }
+      if (Number(curYear) === Number(MIN.year) && Number(curMonth + 1) < Number(MIN.month)) {
+        res = true;
+      }
+      if (Number(curYear) === Number(MIN.year) && Number(curMonth + 1) === Number(MIN.month) && Number(curDay) < Number(MIN.day)) {
+        res = true;
+      }
+    }
+    return res;
+  }
+  function checkDisabledMonth(curYear, curMonth) {
+    var res = false;
+
+    // maximum
+    if (MAX !== '') {
+      if (Number(curYear) > Number(MAX.year)) {
+        res = true;
+      }
+      if (Number(curYear) === Number(MAX.year) && Number(curMonth + 1) > Number(MAX.month)) {
+        res = true;
+      }
+    }
+
+    // minimum
+    if (MIN !== '') {
+      if (Number(curYear) < Number(MIN.year)) {
+        res = true;
+      }
+      if (Number(curYear) === Number(MIN.year) && Number(curMonth + 1) < Number(MIN.month)) {
+        res = true;
+      }
+    }
+    return res;
+  }
+  function checkDisabledYear(curYear) {
+    var res = false;
+
+    // maximum
+    if (MAX !== '') {
+      if (Number(curYear) > Number(MAX.year)) {
+        res = true;
+      }
+    }
+
+    // minimum
+    if (MIN !== '') {
+      if (Number(curYear) < Number(MIN.year)) {
+        res = true;
+      }
+    }
+    return res;
+  }
 
   //if user change the selectedYear, then udate the years array that is displayed on year tab view
   (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useEffect)(function () {
@@ -1352,6 +1473,13 @@ var Calendar = function Calendar(props) {
     if (typeof customTodayDate === 'string' && customTodayDate !== '' && isValidDate(customTodayDate)) {
       var _customNow = new Date(customTodayDate);
       setTodayDate(_customNow);
+    } else {
+      if (currentMaxDateDisabled) {
+        setTodayDate(new Date(MAX.res));
+      }
+      if (currentMinDateDisabled) {
+        setTodayDate(new Date(MIN.res));
+      }
     }
   }, [customTodayDate]);
   return /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
@@ -1459,9 +1587,10 @@ var Calendar = function Calendar(props) {
         }
       }
       return /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
-        className: "date2d-cal__cell date2d-cal__day ".concat(d > 0 ? '' : 'empty', " ").concat(d === now.getDate() ? 'today' : '', " ").concat(d === day ? 'selected' : '', " ").concat(isLastCol ? 'last-cell' : '', " ").concat(isLastRow ? 'last-row' : ''),
+        className: "date2d-cal__cell date2d-cal__day ".concat(d > 0 ? '' : 'empty', " ").concat(d === now.getDate() ? 'today' : '', " ").concat(d === day ? 'selected' : '', " ").concat(isLastCol ? 'last-cell' : '', " ").concat(isLastRow ? 'last-row' : '', " ").concat(checkDisabledDay(year, month, d) ? 'disabled' : ''),
         key: "col" + i,
         "data-date": getCalendarDate(_dateShow),
+        "data-day": padZero(d),
         "data-week": i,
         onClick: function onClick(e) {
           if (d > 0) {
@@ -1484,7 +1613,8 @@ var Calendar = function Calendar(props) {
     className: "date2d-cal__month-container"
   }, MONTHS_FULL.map(function (month, index) {
     return /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
-      className: "date2d-cal__month ".concat(selectedMonth === index ? ' selected' : ''),
+      "data-month": padZero(index + 1),
+      className: "date2d-cal__month ".concat(selectedMonth === index ? ' selected' : '', " ").concat(checkDisabledMonth(year, index) ? 'disabled' : ''),
       key: month + index,
       onClick: function onClick() {
         handleMonthChange(index);
@@ -1496,7 +1626,8 @@ var Calendar = function Calendar(props) {
     className: "date2d-cal__year-container bg-body-tertiary"
   }, yearsArray.map(function (year, index) {
     return /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
-      className: "date2d-cal__year ".concat(selectedYear === year ? ' selected' : ''),
+      "data-year": year,
+      className: "date2d-cal__year ".concat(selectedYear === year ? ' selected' : '', " ").concat(checkDisabledYear(year) ? 'disabled' : ''),
       key: year + index,
       onClick: function onClick() {
         handleYearChange(year);
@@ -1507,7 +1638,7 @@ var Calendar = function Calendar(props) {
   }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("button", {
     tabIndex: -1,
     type: "button",
-    className: "date2d-cal__btn date2d-cal__btn--today",
+    className: "date2d-cal__btn date2d-cal__btn--today ".concat(currentMaxDateDisabled || currentMinDateDisabled ? 'disabled' : ''),
     onClick: handleTodayChange
   }, langToday || 'Today'))));
 };
@@ -1523,7 +1654,7 @@ var zh_CN_default = /*#__PURE__*/__webpack_require__.n(zh_CN);
 // EXTERNAL MODULE: ./src/utils/performance.js
 var performance = __webpack_require__(342);
 ;// CONCATENATED MODULE: ./src/index.tsx
-var _excluded = ["popupRef", "triggerClassName", "popupClassName", "wrapperClassName", "controlClassName", "controlGroupWrapperClassName", "controlGroupTextClassName", "delimiter", "offset", "exceededSidePosOffset", "localization", "type", "onlyTime", "truncateSeconds", "valueUseSlash", "disabled", "required", "readOnly", "value", "placeholder", "label", "units", "name", "alt", "id", "iconLeft", "iconRight", "autoComplete", "style", "tabIndex", "onLoad", "onChange", "onBlur", "onFocus", "onOpenPopup", "onClosePopup", "onChangeDate", "onChangeMonth", "onChangeYear", "onChangeToday", "onChangeHours", "onChangeMinutes", "onChangeSeconds", "langHoursTitle", "langMinutesTitle", "langSecondsTitle", "langWeek", "langWeekFull", "langMonths", "langMonthsFull", "langToday"];
+var _excluded = ["popupRef", "triggerClassName", "popupClassName", "wrapperClassName", "controlClassName", "controlGroupWrapperClassName", "controlGroupTextClassName", "delimiter", "offset", "exceededSidePosOffset", "localization", "type", "onlyTime", "truncateSeconds", "valueUseSlash", "disabled", "required", "readOnly", "value", "min", "max", "placeholder", "label", "units", "name", "alt", "id", "iconLeft", "iconRight", "autoComplete", "style", "tabIndex", "onLoad", "onChange", "onBlur", "onFocus", "onOpenPopup", "onClosePopup", "onChangeDate", "onChangeMonth", "onChangeYear", "onChangeToday", "onChangeHours", "onChangeMinutes", "onChangeSeconds", "langHoursTitle", "langMinutesTitle", "langSecondsTitle", "langWeek", "langWeekFull", "langMonths", "langMonthsFull", "langToday"];
 function _extends() { _extends = Object.assign ? Object.assign.bind() : function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
 function src_slicedToArray(arr, i) { return src_arrayWithHoles(arr) || src_iterableToArrayLimit(arr, i) || src_unsupportedIterableToArray(arr, i) || src_nonIterableRest(); }
 function src_nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
@@ -1563,6 +1694,8 @@ var src_Date = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_reac
     required = props.required,
     readOnly = props.readOnly,
     value = props.value,
+    min = props.min,
+    max = props.max,
     placeholder = props.placeholder,
     label = props.label,
     units = props.units,
@@ -1680,7 +1813,7 @@ var src_Date = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_reac
     _useState12 = src_slicedToArray(_useState11, 2),
     timeVal = _useState12[0],
     setTimeVal = _useState12[1];
-  var hoursArr = ['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23', '00'];
+  var hoursArr = ['00', '01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23'];
   var msArr = ['00', '01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23', '24', '25', '26', '27', '28', '29', '30', '31', '32', '33', '34', '35', '36', '37', '38', '39', '40', '41', '42', '43', '44', '45', '46', '47', '48', '49', '50', '51', '52', '53', '54', '55', '56', '57', '58', '59'];
 
   // exposes the following methods
@@ -1755,6 +1888,12 @@ var src_Date = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_reac
       seconds: "".concat(seconds)
     };
   };
+
+  // 
+  var MIN = typeof min !== 'undefined' && min !== '' && min !== null && isValidDate(min) ? getFullTimeData(min) : '';
+  var MAX = typeof max !== 'undefined' && max !== '' && max !== null && isValidDate(max) ? getFullTimeData(max) : '';
+  var currentMinDateDisabled = MIN !== '' ? Number(new window.Date().getTime()) < Number(new window.Date(MIN.res).getTime()) ? true : false : false;
+  var currentMaxDateDisabled = MAX !== '' ? Number(new window.Date().getTime()) > Number(new window.Date(MAX.res).getTime()) ? true : false : false;
   function handleScrollEvent() {
     popwinPosHide();
   }
@@ -1791,6 +1930,7 @@ var src_Date = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_reac
     if (targetPos === 'top') {
       _modalRef.style.left = x + 'px';
       //_modalRef.style.top = y - POS_OFFSET - (listContentRef.current.clientHeight) - 2 + 'px';
+      _modalRef.style.marginTop = 0;
       _modalRef.style.top = 'auto';
       _modalRef.style.bottom = window.innerHeight - _triggerBox.top + POS_OFFSET + 2 + 'px';
       _modalRef.style.setProperty('position', 'fixed', 'important');
@@ -1798,6 +1938,7 @@ var src_Date = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_reac
       _modalRef.classList.add('pos-top');
     }
     if (targetPos === 'bottom') {
+      _modalRef.style.marginTop = 0;
       _modalRef.style.left = x + 'px';
       _modalRef.style.bottom = 'auto';
       _modalRef.style.top = y + height + POS_OFFSET + 'px';
@@ -1808,6 +1949,7 @@ var src_Date = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_reac
     // STEP 3:
     //-----------
     // Determine whether it exceeds the far right or left side of the screen
+    // Determine whether it exceeds the max height of the popup
     var _modalContent = _modalRef;
     var _modalBox = _modalContent.getBoundingClientRect();
     if (typeof _modalContent.dataset.offset === 'undefined') {
@@ -1824,9 +1966,12 @@ var src_Date = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_reac
         _modalContent.style.marginLeft = "".concat(_modalOffsetPosition2, "px");
         // console.log('_modalPosition: ', _modalOffsetPosition)
       }
+
+      if (window.innerHeight - _modalBox.bottom < 0) {
+        _modalRef.style.marginTop = "".concat(window.innerHeight - _modalBox.bottom, "px");
+      }
     }
   }
-
   function popwinPosHide() {
     setIsShow(false);
     onClosePopup === null || onClosePopup === void 0 ? void 0 : onClosePopup([partedInputYear.current, partedInputMonth.current, partedInputDay.current, partedInputHours.current, partedInputMinutes.current, partedInputSeconds.current]);
@@ -1892,6 +2037,132 @@ var src_Date = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_reac
     var _time = type === 'datetime-local' || type === 'time' ? " ".concat(getFullTimeData(v).hours, ":").concat(getFullTimeData(v).minutes).concat(truncateSeconds ? "" : ":".concat(getFullTimeData(v).seconds)) : '';
     return onlyTime ? _onlyTime : "".concat(_date).concat(_time);
   }
+  function checkDisabledSeconds(curYear, curMonth, curDay, curHours, curMinutes, curSeconds) {
+    var res = false;
+
+    // maximum
+    if (MAX !== '') {
+      if (Number(curYear) > Number(MAX.year)) {
+        res = true;
+      }
+      if (Number(curYear) === Number(MAX.year) && Number(curMonth + 1) > Number(MAX.month)) {
+        res = true;
+      }
+      if (Number(curYear) === Number(MAX.year) && Number(curMonth + 1) === Number(MAX.month) && Number(curDay) > Number(MAX.day)) {
+        res = true;
+      }
+      if (Number(curYear) === Number(MAX.year) && Number(curMonth + 1) === Number(MAX.month) && Number(curDay) === Number(MAX.day) && Number(curHours) > Number(MAX.hours)) {
+        res = true;
+      }
+      if (Number(curYear) === Number(MAX.year) && Number(curMonth + 1) === Number(MAX.month) && Number(curDay) === Number(MAX.day) && Number(curHours) === Number(MAX.hours) && Number(curMinutes) > Number(MAX.minutes)) {
+        res = true;
+      }
+      if (Number(curYear) === Number(MAX.year) && Number(curMonth + 1) === Number(MAX.month) && Number(curDay) === Number(MAX.day) && Number(curHours) === Number(MAX.hours) && Number(curMinutes) === Number(MAX.minutes) && Number(curSeconds) > Number(MAX.seconds)) {
+        res = true;
+      }
+    }
+
+    // minimum
+    if (MIN !== '') {
+      if (Number(curYear) < Number(MIN.year)) {
+        res = true;
+      }
+      if (Number(curYear) === Number(MIN.year) && Number(curMonth + 1) < Number(MIN.month)) {
+        res = true;
+      }
+      if (Number(curYear) === Number(MIN.year) && Number(curMonth + 1) === Number(MIN.month) && Number(curDay) < Number(MIN.day)) {
+        res = true;
+      }
+      if (Number(curYear) === Number(MIN.year) && Number(curMonth + 1) === Number(MIN.month) && Number(curDay) === Number(MIN.day) && Number(curHours) < Number(MIN.hours)) {
+        res = true;
+      }
+      if (Number(curYear) === Number(MIN.year) && Number(curMonth + 1) === Number(MIN.month) && Number(curDay) === Number(MIN.day) && Number(curHours) === Number(MIN.hours) && Number(curMinutes) < Number(MIN.minutes)) {
+        res = true;
+      }
+      if (Number(curYear) === Number(MIN.year) && Number(curMonth + 1) === Number(MIN.month) && Number(curDay) === Number(MIN.day) && Number(curHours) === Number(MIN.hours) && Number(curMinutes) === Number(MIN.minutes) && Number(curSeconds) < Number(MIN.seconds)) {
+        res = true;
+      }
+    }
+    return res;
+  }
+  function checkDisabledMinutes(curYear, curMonth, curDay, curHours, curMinutes) {
+    var res = false;
+
+    // maximum
+    if (MAX !== '') {
+      if (Number(curYear) > Number(MAX.year)) {
+        res = true;
+      }
+      if (Number(curYear) === Number(MAX.year) && Number(curMonth + 1) > Number(MAX.month)) {
+        res = true;
+      }
+      if (Number(curYear) === Number(MAX.year) && Number(curMonth + 1) === Number(MAX.month) && Number(curDay) > Number(MAX.day)) {
+        res = true;
+      }
+      if (Number(curYear) === Number(MAX.year) && Number(curMonth + 1) === Number(MAX.month) && Number(curDay) === Number(MAX.day) && Number(curHours) > Number(MAX.hours)) {
+        res = true;
+      }
+      if (Number(curYear) === Number(MAX.year) && Number(curMonth + 1) === Number(MAX.month) && Number(curDay) === Number(MAX.day) && Number(curHours) === Number(MAX.hours) && Number(curMinutes) > Number(MAX.minutes)) {
+        res = true;
+      }
+    }
+
+    // minimum
+    if (MIN !== '') {
+      if (Number(curYear) < Number(MIN.year)) {
+        res = true;
+      }
+      if (Number(curYear) === Number(MIN.year) && Number(curMonth + 1) < Number(MIN.month)) {
+        res = true;
+      }
+      if (Number(curYear) === Number(MIN.year) && Number(curMonth + 1) === Number(MIN.month) && Number(curDay) < Number(MIN.day)) {
+        res = true;
+      }
+      if (Number(curYear) === Number(MIN.year) && Number(curMonth + 1) === Number(MIN.month) && Number(curDay) === Number(MIN.day) && Number(curHours) < Number(MIN.hours)) {
+        res = true;
+      }
+      if (Number(curYear) === Number(MIN.year) && Number(curMonth + 1) === Number(MIN.month) && Number(curDay) === Number(MIN.day) && Number(curHours) === Number(MIN.hours) && Number(curMinutes) < Number(MIN.minutes)) {
+        res = true;
+      }
+    }
+    return res;
+  }
+  function checkDisabledHours(curYear, curMonth, curDay, curHours) {
+    var res = false;
+
+    // maximum
+    if (MAX !== '') {
+      if (Number(curYear) > Number(MAX.year)) {
+        res = true;
+      }
+      if (Number(curYear) === Number(MAX.year) && Number(curMonth + 1) > Number(MAX.month)) {
+        res = true;
+      }
+      if (Number(curYear) === Number(MAX.year) && Number(curMonth + 1) === Number(MAX.month) && Number(curDay) > Number(MAX.day)) {
+        res = true;
+      }
+      if (Number(curYear) === Number(MAX.year) && Number(curMonth + 1) === Number(MAX.month) && Number(curDay) === Number(MAX.day) && Number(curHours) > Number(MAX.hours)) {
+        res = true;
+      }
+    }
+
+    // minimum
+    if (MIN !== '') {
+      if (Number(curYear) < Number(MIN.year)) {
+        res = true;
+      }
+      if (Number(curYear) === Number(MIN.year) && Number(curMonth + 1) < Number(MIN.month)) {
+        res = true;
+      }
+      if (Number(curYear) === Number(MIN.year) && Number(curMonth + 1) === Number(MIN.month) && Number(curDay) < Number(MIN.day)) {
+        res = true;
+      }
+      if (Number(curYear) === Number(MIN.year) && Number(curMonth + 1) === Number(MIN.month) && Number(curDay) === Number(MIN.day) && Number(curHours) < Number(MIN.hours)) {
+        res = true;
+      }
+    }
+    return res;
+  }
   (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useEffect)(function () {
     // update default value
     //--------------
@@ -1907,9 +2178,22 @@ var src_Date = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_reac
         hours = _getFullTimeData.hours,
         minutes = _getFullTimeData.minutes,
         seconds = _getFullTimeData.seconds;
-      setDateVal(date);
-      setTimeVal([hours, minutes, seconds]);
-      setSplitVals([year, month, day, hours, minutes, seconds]);
+      if (!currentMaxDateDisabled && !currentMinDateDisabled) {
+        setDateVal(date);
+        setTimeVal([hours, minutes, seconds]);
+        setSplitVals([year, month, day, hours, minutes, seconds]);
+      } else {
+        if (currentMaxDateDisabled) {
+          setDateVal(MAX.date);
+          setTimeVal([MAX.hours, MAX.minutes, MAX.seconds]);
+          setSplitVals([MAX.year, MAX.month, MAX.day, MAX.hours, MAX.minutes, MAX.seconds]);
+        }
+        if (currentMinDateDisabled) {
+          setDateVal(MIN.date);
+          setTimeVal([MIN.hours, MIN.minutes, MIN.seconds]);
+          setSplitVals([MIN.year, MIN.month, MIN.day, MIN.hours, MIN.minutes, MIN.seconds]);
+        }
+      }
     } else {
       setDateDefaultValueExist(true);
 
@@ -2209,6 +2493,8 @@ var src_Date = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_reac
   }, typeof onlyTime === 'undefined' || onlyTime === false ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
     className: "date2d__calendar"
   }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement(src_Calendar, {
+    min: min,
+    max: max,
     customTodayDate: changedVal,
     langWeek: _langWeek,
     langWeekFull: _langWeekFull,
@@ -2281,6 +2567,7 @@ var src_Date = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_reac
   }))) : null, type === 'datetime-local' || type === 'time' ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
     className: "date2d__hourslist border-end"
   }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("h3", null, _langHoursTitle), /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("ul", null, hoursArr.map(function (hour, i) {
+    var _curVal = getFullTimeData("".concat(dateVal, " ").concat(timeVal[0], ":").concat(timeVal[1], ":").concat(timeVal[2]));
     return /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("li", {
       key: i
     }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("a", {
@@ -2306,11 +2593,12 @@ var src_Date = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_reac
         // 
         onChangeHours === null || onChangeHours === void 0 ? void 0 : onChangeHours(_v);
       },
-      className: "".concat(timeVal[0] == hour ? 'selected' : '')
+      className: "".concat(timeVal[0] == hour ? 'selected' : '', " ").concat(checkDisabledHours(_curVal.year, Number(_curVal.month) - 1, _curVal.day, hour) ? 'disabled' : '')
     }, hour));
   }))), /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
     className: "date2d__minuteslist border-end"
   }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("h3", null, _langMinutesTitle), /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("ul", null, msArr.map(function (v, i) {
+    var _curVal = getFullTimeData("".concat(dateVal, " ").concat(timeVal[0], ":").concat(timeVal[1], ":").concat(timeVal[2]));
     return /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("li", {
       key: i
     }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("a", {
@@ -2336,11 +2624,12 @@ var src_Date = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_reac
         // 
         onChangeMinutes === null || onChangeMinutes === void 0 ? void 0 : onChangeMinutes(_v);
       },
-      className: "".concat(timeVal[1] == v ? 'selected' : '')
+      className: "".concat(timeVal[1] == v ? 'selected' : '', " ").concat(checkDisabledMinutes(_curVal.year, Number(_curVal.month) - 1, _curVal.day, _curVal.hours, v) ? 'disabled' : '')
     }, v));
   }))), typeof truncateSeconds === 'undefined' || truncateSeconds === false ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
     className: "date2d__secondslist border-end"
   }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("h3", null, _langSecondsTitle), /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("ul", null, msArr.map(function (v, i) {
+    var _curVal = getFullTimeData("".concat(dateVal, " ").concat(timeVal[0], ":").concat(timeVal[1], ":").concat(timeVal[2]));
     return /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("li", {
       key: i
     }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("a", {
@@ -2366,7 +2655,7 @@ var src_Date = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_reac
         // 
         onChangeSeconds === null || onChangeSeconds === void 0 ? void 0 : onChangeSeconds(_v);
       },
-      className: "".concat(timeVal[2] == v ? 'selected' : '')
+      className: "".concat(timeVal[2] == v ? 'selected' : '', " ").concat(checkDisabledSeconds(_curVal.year, Number(_curVal.month) - 1, _curVal.day, _curVal.hours, _curVal.minutes, v) ? 'disabled' : '')
     }, v));
   })))) : null) : null))));
 });

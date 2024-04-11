@@ -124,10 +124,14 @@ const EventCalendar = (props: EventCalendarProps) => {
     const [showEdit, setShowEdit] = useState<boolean>(false);
     const [showDelete, setShowDelete] = useState<boolean>(false);
     
-    const padZero = (num: number) => {
-        return num < 10 ? '0' + num : num.toString();
-    };
+    const padZero = (num: number, padZeroEnabled: boolean = true) => {
+        if (padZeroEnabled) {
+            return num < 10 ? '0' + num : num.toString();
+        } else {
+            return num.toString();
+        }
 
+    };
 
     const isValidDate = (v: string) => {
         return !(String(new window.Date(v) as any).toLowerCase() === 'invalid date');
@@ -140,7 +144,7 @@ const EventCalendar = (props: EventCalendarProps) => {
 
     const getTodayDate = () => {
         return getCalendarDate(new Date() as any);
-    }
+    };
     
 
     // cell
@@ -488,6 +492,7 @@ const EventCalendar = (props: EventCalendarProps) => {
                                         className={`e-cal__cell e-cal__day ${d > 0 ? '' : 'empty'} ${d === now.getDate() ? 'today' : ''} ${d === day ? 'selected' : ''} ${isLastCol ? 'last-cell' : ''} ${isLastRow ? 'last-row' : ''}`}
                                         key={"col" + i}
                                         data-date={getCalendarDate(_dateShow)}
+                                        data-day={padZero(d)}
                                         data-week={i}
                                         onClick={(e: React.MouseEvent) => {
 
@@ -568,7 +573,12 @@ const EventCalendar = (props: EventCalendarProps) => {
                 <div className={`e-cal__month-wrapper shadow p-3 mb-5 bg-body-tertiary rounded ${winMonth ? 'active' : ''}`}>
                     <div className="e-cal__month-container">
                         {MONTHS_FULL.map((month, index) => {
-                            return <div className={`e-cal__month ${selectedMonth === index ? ' selected' : ''}`} key={month + index} onClick={() => { handleMonthChange(index) }}>{month}</div>
+                            return <div 
+                                data-month={padZero(index+1)}
+                                className={`e-cal__month ${selectedMonth === index ? ' selected' : ''}`} 
+                                key={month + index} 
+                                onClick={() => { handleMonthChange(index) }}
+                            >{month}</div>
                         })}
                     </div>
                 </div>
@@ -578,7 +588,12 @@ const EventCalendar = (props: EventCalendarProps) => {
                 <div className={`e-cal__year-wrapper shadow p-3 mb-5 bg-body-tertiary rounded ${winYear ? 'active' : ''}`}>
                     <div className="e-cal__year-container bg-body-tertiary">
                         {yearsArray.map((year, index) => {
-                            return <div className={`e-cal__year ${selectedYear === year ? ' selected' : ''}`} key={year + index} onClick={() => { handleYearChange(year) }}>{year}</div>
+                            return <div 
+                                data-year={year}
+                                className={`e-cal__year ${selectedYear === year ? ' selected' : ''}`} 
+                                key={year + index} 
+                                onClick={() => { handleYearChange(year) }}
+                            >{year}</div>
                         })}
                     </div>
 

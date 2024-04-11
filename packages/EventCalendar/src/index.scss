@@ -2,6 +2,15 @@
    <!-- Event Calendar -->
 /* ====================================================== */
 
+// Disabled item
+// ---------------------------
+//
+@mixin disabled-item() {
+	// @include disabled-item(); 
+    opacity: .4;
+    pointer-events: none;
+}
+
 .e-cal__wrapper {
     --e-cal-wrapper-min-width: 400px;
     --e-cal-body-bg: #fff;
@@ -96,6 +105,10 @@
             border-style: solid;
             border-top-width: 1px;
             border-right-width: 1px;
+
+            &.disabled {
+                @include disabled-item();
+            }
 
             &.last-cell {
                 border-right-width: 0;
@@ -254,6 +267,10 @@
             color: var(--e-cal-year-month-btn-selected-color);
         }
 
+        &.disabled {
+            @include disabled-item();
+        }
+
     }
 
 
@@ -273,6 +290,10 @@
             path {
                 fill: var(--e-cal-header-arrow-bg);
             }
+        }
+
+        &.disabled {
+            @include disabled-item();
         }
 
         &--prev,
