@@ -1,4 +1,4 @@
-import React, { useId, useEffect, useState, useRef, useImperativeHandle } from 'react';
+import React, { forwardRef, useId, useEffect, useState, useRef, useImperativeHandle } from 'react';
 
 import { debounce } from './utils/performance';
 import useDebounce from './utils/useDebounce';
@@ -23,12 +23,20 @@ type LiveSearchProps = {
     popupRef?: React.RefObject<any>;
     wrapperClassName?: string;
     controlClassName?: string;
+    controlExClassName?: string;
+    controlGroupWrapperClassName?: string;
+    controlGroupTextClassName?: string;
     exceededSidePosOffset?: number;
     appearance?: string;
     isSearchInput?: boolean;
+    allowSpacingRetrive?: boolean;
     value?: string;
     label?: React.ReactNode | string;
     name?: string;
+    units?: React.ReactNode | string;
+    iconLeft?: React.ReactNode | string;
+    iconRight?: React.ReactNode | string;
+    minLength?: any;
     maxLength?: any;
     readOnly?: any;
     disabled?: any;
@@ -50,7 +58,7 @@ type LiveSearchProps = {
     style?: React.CSSProperties;
     tabIndex?: number;
     [key: `data-${string}`]: string | undefined;
-    fetchAutoShow?: boolean;
+    autoShowOptions?: boolean;
     fetchNoneInfo?: string;
     fetchUpdate?: boolean;
     fetchFuncAsync?: any;
@@ -58,19 +66,24 @@ type LiveSearchProps = {
     fetchFuncMethodParams?: any[];
     fetchCallback?: (data: any) => void;
     onFetch?: (data: any) => void;
-    onChange?: (e: any, data: any, selectedData: any) => void;
-    onBlur?: (e: any) => void;
+    onClick?: (inputEl: any, popupEl: any) => void;
+    onChange?: (inputEl: any, data: any, selectedData: any, popupEl: any) => void;
+    onKeyboardInput?: (e: any, inputEl: any, popupEl: any) => void;
+    onBlur?: (inputEl: any, popupEl: any) => void;
 };
 
-
-const LiveSearch = (props: LiveSearchProps) => {
+const LiveSearch = forwardRef((props: LiveSearchProps, ref: any) => {
     const {
         popupRef,
         wrapperClassName,
         controlClassName,
+        controlExClassName,
+        controlGroupWrapperClassName,
+        controlGroupTextClassName,
         exceededSidePosOffset,
         appearance,
         isSearchInput,
+        allowSpacingRetrive,
         readOnly,
         disabled,
         required,
@@ -79,26 +92,32 @@ const LiveSearch = (props: LiveSearchProps) => {
         value,
         label,
         name,
+        units,
+        iconLeft,
+        iconRight,
+        minLength,
+        maxLength,
         id,
         icon,
         btnId,
         fetchTrigger,
         hideIcon,
         depth,
-        maxLength,
         style,
         winWidth,
         tabIndex,
         data,
-        fetchAutoShow,
+        autoShowOptions,
         fetchNoneInfo,
         fetchUpdate,
         fetchFuncAsync,
         fetchFuncMethod,
         fetchFuncMethodParams,
         fetchCallback,
+        onClick,
         onFetch,
         onChange,
+        onKeyboardInput,
         onBlur,
         ...attributes
     } = props;
@@ -107,7 +126,7 @@ const LiveSearch = (props: LiveSearchProps) => {
     const DEPTH = depth || 1055;  // the default value same as bootstrap
     const POS_OFFSET = 0;
     const EXCEEDED_SIDE_POS_OFFSET = Number(exceededSidePosOffset) || 15;
-    const INPUT_MATCH_ENABLED = typeof fetchAutoShow === 'undefined' || fetchAutoShow === false ? true : false;
+    const EMPTY_FOR_FETCH = typeof autoShowOptions === 'undefined' || autoShowOptions === false ? false : true;
     const WIN_WIDTH = typeof winWidth === 'function' ? winWidth() : winWidth ? winWidth : 'auto';
     const uniqueID = useId().replace(/\:/g, "-");
     const idRes = id || uniqueID;
@@ -137,7 +156,6 @@ const LiveSearch = (props: LiveSearchProps) => {
     }, 350, [dataInit]);
 
 
-
     // exposes the following methods
     useImperativeHandle(
         popupRef,
@@ -145,11 +163,10 @@ const LiveSearch = (props: LiveSearchProps) => {
             close: () => {
                 setIsOpen(false);
                 cancel();
-            },
+            }
         }),
         [popupRef],
     );
-
 
 
     // Determine whether it is in JSON format
@@ -373,7 +390,7 @@ const LiveSearch = (props: LiveSearchProps) => {
     }
 
     //
-    async function matchData(val: string = '', query: boolean = false) {
+    async function matchData(val: string = '', query: boolean = false, emptyValShowAll: boolean = false) {
 
         let res: any[] = [];
         let filterRes = (data: any[]) => {
@@ -383,6 +400,15 @@ const LiveSearch = (props: LiveSearchProps) => {
                 const _queryString = typeof item.queryString !== 'undefined' && item.queryString !== null ? item.queryString : '';
                 const _val = typeof val !== 'undefined' && val !== null ? val : '';
 
+         
+                if (emptyValShowAll && val === '') {
+                    return true;
+                }
+
+                if (allowSpacingRetrive && val == ' ') {
+                    return true;
+                }
+          
                 if (
                     (
                         _queryString.split(',').some((l: any) => l.charAt(0) === _val.toLowerCase()) ||
@@ -421,51 +447,37 @@ const LiveSearch = (props: LiveSearchProps) => {
 
         setChangedVal(val);
 
-        if (INPUT_MATCH_ENABLED) {
+        //
+        if (!fetchTrigger) {
+            matchData(val, fetchUpdate, EMPTY_FOR_FETCH).then((response: any) => {
 
-            //
-            if (!fetchTrigger) {
-                matchData(val, fetchUpdate).then((response: any) => {
+                setOrginalData(response);
 
-                    setOrginalData(response);
-
-
-                    //
-                    onChange?.(inputRef.current, response, '');
-
-                    //
-                    setIsOpen(true);
-
-                    // window position
-                    setTimeout(() => {
-                        popwinPosInit();
-                    }, 0);
-
-
-
-                });
-            } else {
 
                 //
-                onChange?.(inputRef.current, orginalData, '');
+                onChange?.(inputRef.current, response, '', listRef.current);
+
+                //
+                setIsOpen(true);
 
                 // window position
                 setTimeout(() => {
                     popwinPosInit();
                 }, 0);
 
-            }
 
+
+            });
         } else {
 
             //
-            onChange?.(inputRef.current, orginalData, '');
-
+            onChange?.(inputRef.current, orginalData, '', listRef.current);
 
             // window position
             setTimeout(() => {
                 popwinPosInit();
             }, 0);
+
         }
 
 
@@ -532,7 +544,7 @@ const LiveSearch = (props: LiveSearchProps) => {
         if (dataInput) {
             const _data = JSON.parse(dataInput);
 
-            onChange?.(inputRef.current, orginalData, _data);
+            onChange?.(inputRef.current, orginalData, _data, listRef.current);
             setChangedVal(_data.label);
 
         } else {
@@ -542,13 +554,13 @@ const LiveSearch = (props: LiveSearchProps) => {
 
             let res: any = [];
 
-            if (INPUT_MATCH_ENABLED) {
-                res = await matchData(inputRef.current.value, false);
+            if (!EMPTY_FOR_FETCH) {
+                res = await matchData(inputRef.current.value, false, EMPTY_FOR_FETCH);
             } else {
                 res = dataInit;
             }
 
-            onChange?.(inputRef.current, res, _data);
+            onChange?.(inputRef.current, res, _data, listRef.current);
             setChangedVal(_data.label);
         }
 
@@ -560,7 +572,7 @@ const LiveSearch = (props: LiveSearchProps) => {
 
     async function handleFetch() {
         if (fetchTrigger) {
-            const res: any = await matchData(changedVal, fetchUpdate);
+            const res: any = await matchData(changedVal, fetchUpdate, EMPTY_FOR_FETCH);
             setOrginalData(res);
 
 
@@ -576,7 +588,7 @@ const LiveSearch = (props: LiveSearchProps) => {
     }
 
     function handleClick() {
-        if (!INPUT_MATCH_ENABLED) {
+        if (EMPTY_FOR_FETCH) {
             setOrginalData(dataInit);
             setIsOpen(true);
         }
@@ -585,6 +597,8 @@ const LiveSearch = (props: LiveSearchProps) => {
         setTimeout(() => {
             popwinPosInit();
         }, 0);
+
+        onClick?.(inputRef.current, listRef.current)
     }
 
 
@@ -595,7 +609,7 @@ const LiveSearch = (props: LiveSearchProps) => {
             setTimeout(() => {
 
                 //
-                onBlur?.(inputRef.current);
+                onBlur?.(inputRef.current, listRef.current);
 
                 //
                 cancel();
@@ -719,7 +733,7 @@ const LiveSearch = (props: LiveSearchProps) => {
 
 
                         //
-                        onChange?.(inputRef.current, options.map((node: HTMLElement) => JSON.parse(node.dataset.itemdata as any)), JSON.parse(currentData));
+                        onChange?.(inputRef.current, options.map((node: HTMLElement) => JSON.parse(node.dataset.itemdata as any)), JSON.parse(currentData), listRef.current);
 
                     }
                 }
@@ -797,13 +811,27 @@ const LiveSearch = (props: LiveSearchProps) => {
                 <SearchBar
                     wrapperClassName=""
                     controlClassName={controlClassName}
-                    ref={inputRef}
+                    controlExClassName={controlExClassName}
+                    controlGroupWrapperClassName={controlGroupWrapperClassName}
+                    controlGroupTextClassName={controlGroupTextClassName}  
+                    ref={(node) => {
+                        inputRef.current = node;
+                        if (typeof ref === 'function') {
+                            ref(node);
+                        } else if (ref) {
+                            ref.current = node;
+                        }
+                    }}
                     value={changedVal}
                     label=""
                     tabIndex={tabIndex}
                     id={idRes}
                     name={name}
                     placeholder={placeholder}
+                    units={units}
+                    iconLeft={iconLeft}
+                    iconRight={iconRight}
+                    minLength={minLength}
                     maxLength={maxLength}
                     disabled={disabled}
                     required={required}
@@ -820,6 +848,9 @@ const LiveSearch = (props: LiveSearchProps) => {
                     btnId={btnId}
                     autoComplete='off'
                     isSearchInput={isSearchInput}
+                    onKeyPressedCallback={(e: React.KeyboardEvent<any>) => {
+                        onKeyboardInput?.(e, inputRef.current, listRef.current);
+                    }}
                     {...attributes}
                 />
 
@@ -911,7 +942,7 @@ const LiveSearch = (props: LiveSearchProps) => {
 
         </>
     )
-};
+});
 
 
 export default LiveSearch;

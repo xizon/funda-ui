@@ -8,11 +8,17 @@ declare type SearchBarProps = {
     wrapperClassName?: string;
     controlClassName?: string;
     controlExClassName?: string;
+    controlGroupWrapperClassName?: string;
+    controlGroupTextClassName?: string;
     appearance?: string;
     isSearchInput?: boolean;
     value?: string;
     label?: React.ReactNode | string;
     name?: string;
+    units?: React.ReactNode | string;
+    iconLeft?: React.ReactNode | string;
+    iconRight?: React.ReactNode | string;
+    minLength?: any;
     maxLength?: any;
     readOnly?: any;
     disabled?: any;
@@ -27,6 +33,7 @@ declare type SearchBarProps = {
     tabIndex?: number;
     [key: `data-${string}`]: string | undefined;
     onClick?: (e: any) => void;
+    onKeyPressedCallback?: (e: any) => void;
     onSubmit?: (e: any) => void;
     onChange?: (e: any, param: any) => void;
     onBlur?: (e: any, param: any) => void;

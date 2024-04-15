@@ -96,7 +96,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(787);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-var _excluded = ["wrapperClassName", "controlClassName", "controlExClassName", "appearance", "isSearchInput", "readOnly", "disabled", "required", "placeholder", "value", "label", "name", "btnId", "id", "maxLength", "icon", "autoComplete", "style", "tabIndex", "onClick", "onSubmit", "onChange", "onBlur", "onFocus"];
+var _excluded = ["wrapperClassName", "controlClassName", "controlExClassName", "controlGroupWrapperClassName", "controlGroupTextClassName", "appearance", "isSearchInput", "readOnly", "disabled", "required", "placeholder", "value", "label", "name", "units", "iconLeft", "iconRight", "minLength", "maxLength", "btnId", "id", "icon", "autoComplete", "style", "tabIndex", "onClick", "onKeyPressedCallback", "onSubmit", "onChange", "onBlur", "onFocus"];
 function _extends() { _extends = Object.assign ? Object.assign.bind() : function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
 function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
 function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
@@ -111,6 +111,8 @@ var SearchBar = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(f
   var wrapperClassName = props.wrapperClassName,
     controlClassName = props.controlClassName,
     controlExClassName = props.controlExClassName,
+    controlGroupWrapperClassName = props.controlGroupWrapperClassName,
+    controlGroupTextClassName = props.controlGroupTextClassName,
     appearance = props.appearance,
     isSearchInput = props.isSearchInput,
     readOnly = props.readOnly,
@@ -120,14 +122,19 @@ var SearchBar = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(f
     value = props.value,
     label = props.label,
     name = props.name,
+    units = props.units,
+    iconLeft = props.iconLeft,
+    iconRight = props.iconRight,
+    minLength = props.minLength,
+    maxLength = props.maxLength,
     btnId = props.btnId,
     id = props.id,
-    maxLength = props.maxLength,
     icon = props.icon,
     autoComplete = props.autoComplete,
     style = props.style,
     tabIndex = props.tabIndex,
     onClick = props.onClick,
+    onKeyPressedCallback = props.onKeyPressedCallback,
     onSubmit = props.onSubmit,
     onChange = props.onChange,
     onBlur = props.onBlur,
@@ -144,6 +151,9 @@ var SearchBar = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(f
     _useState4 = _slicedToArray(_useState3, 2),
     onComposition = _useState4[0],
     setOnComposition = _useState4[1];
+  var propExist = function propExist(p) {
+    return typeof p !== 'undefined' && p !== null && p !== '';
+  };
   function handleComposition(event) {
     if (event.type === 'compositionstart') {
       setOnComposition(true);
@@ -190,6 +200,13 @@ var SearchBar = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(f
     //
     onBlur === null || onBlur === void 0 ? void 0 : onBlur(event, onComposition);
   }
+  function handleKeyPressed(event) {
+    if (typeof onKeyPressedCallback === 'function') {
+      var newData = onKeyPressedCallback(event);
+      if (newData) setChangedVal(newData); // Avoid the error "react checkbox changing an uncontrolled input to be controlled"
+    }
+  }
+
   (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(function () {
     // update default value
     //--------------
@@ -208,8 +225,10 @@ var SearchBar = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(f
     htmlFor: idRes,
     className: "form-label"
   }, label)) : null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-    className: "input-group"
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("input", _extends({
+    className: "".concat(controlGroupWrapperClassName || "input-group", " position-relative ").concat(propExist(iconLeft) ? 'has-left-content' : '', " ").concat(propExist(iconRight) || propExist(units) ? 'has-right-content' : '')
+  }, propExist(iconLeft) ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
+    className: controlGroupTextClassName || "input-group-text"
+  }, iconLeft)) : null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("input", _extends({
     ref: ref,
     tabIndex: tabIndex || 0,
     type: isSearchInput ? 'search' : 'text',
@@ -218,12 +237,14 @@ var SearchBar = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(f
     name: name,
     placeholder: placeholder || '',
     value: changedVal,
+    minLength: minLength || null,
     maxLength: maxLength || null,
     autoComplete: typeof autoComplete === 'undefined' ? 'off' : autoComplete,
     onFocus: handleFocus,
     onBlur: handleBlur,
     onChange: handleChange,
     onClick: handleClick,
+    onKeyDown: handleKeyPressed,
     onCompositionStart: handleComposition,
     onCompositionUpdate: handleComposition,
     onCompositionEnd: handleComposition,
@@ -231,7 +252,11 @@ var SearchBar = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(f
     readOnly: readOnly || null,
     required: required || null,
     style: style
-  }, attributes)), icon || icon !== '' ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
+  }, attributes)), propExist(units) ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
+    className: controlGroupTextClassName || "input-group-text"
+  }, units)) : null, propExist(iconRight) ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
+    className: controlGroupTextClassName || "input-group-text"
+  }, iconRight)) : null, icon || icon !== '' ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
     className: appearance === 'pill' ? 'position-absolute end-0' : 'input-group-text m-0 p-0 border-start-0',
     style: appearance === 'pill' ? {
       zIndex: 5

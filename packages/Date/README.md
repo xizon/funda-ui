@@ -153,9 +153,6 @@ export default () => {
     const [customDate, setCustomDate] = useState<string>('');
     const [defaultCustomDate, setDefaultCustomDate] = useState<string>('');
 
-    function handleChange(e) {
-        setInputValue(e.target.value);
-    }
 
     useEffect(() => {
        setCustomDate(defaultVal);

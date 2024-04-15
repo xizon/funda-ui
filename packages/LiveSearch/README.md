@@ -9,10 +9,14 @@ import LiveSearch from 'funda-ui/LiveSearch';
 ```
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |
+| `ref` | React.ForwardedRef | - | It is the return element of this component.  |
 | `popupRef` | React.RefObject | - | It exposes the following methods when the component's popup opens or closes:  <br /> <ol><li>`popupRef.current.close()`</li></ol> |
+| `allowSpacingRetrive` | boolean | false | Allow Spaces to return all results. <blockquote>The condition is that the database interface can retrieve whitespace data</blockquote> |
 | `wrapperClassName` | string | `mb-3 position-relative` | The class name of the control wrapper. |
 | `controlClassName` | string | `form-control` | The class name of the control. |
 | `controlExClassName` | string | - | The extended class name of `controlClassName`. |
+| `controlGroupWrapperClassName` | string | `input-group` | The class name of the control group wrapper. |
+| `controlGroupTextClassName` | string | `input-group-text` | The class name of the control group text. |
 | `exceededSidePosOffset` | number | 15 | Offset px that exceeds the far right or left side of the screen |
 | `options` | JSON Object Literals \| JSON Object | - | Set the default value using JSON string format for menu of options, like this: `[{"label": "Option 1","value": "value-1","queryString": "option1"},{"label": "<del style=color:red>deprecate</del>Option 2","value": "value-2","queryString": "option2"},{"label": "Option 3","value": "value-3","queryString": "option3"},{"label": "Option 4","value": "value-4","queryString": "option4","disabled":true}]` <br /> <blockquote>Note: Use API data if database query exists. That is, the attribute `fetchXXXX`</blockquote> <hr /> <blockquote>When the attribute `hierarchical` is true, you need to use a hierarchical structure to pass data, such as: `[{label:"Top level 1",value:'level-1',queryString:""},{label:"Top level 2",value:'level-2',queryString:""},{label:"Top level 3",value:'level-3',queryString:"",children:[{label:"Sub level 3_1",value:'level-3_1',queryString:""},{label:"Sub level 3_2",value:'level-3_2',queryString:"",children:[{label:"Sub level 3_2_1",value:'level-3_2_1',queryString:""}]},{label:"Sub level 3_3",value:'level-3_3',queryString:""}]}]`</blockquote>|
 | `btnId` | string  | - | ID of the specified button. |
@@ -23,6 +27,10 @@ import LiveSearch from 'funda-ui/LiveSearch';
 | `label` | string \| ReactNode | - | It is used to specify a label for an element of a form.<blockquote>Support html tags</blockquote> |
 | `name` | string | - | Name is not deprecated when used with form fields. |
 | `placeholder` | string | - |  Specifies a short hint that describes. |
+| `units` | string | - | Specify a unit identification string. Such as `em`, `px`, and so on. |
+| `iconLeft` | ReactNode  | - | Set the left icon of this control |
+| `iconRight` | ReactNode  | - | Set the right icon of this control |
+| `maxLength` | number | - | Defines the maximum number of characters |
 | `maxLength` | number | - | Defines the maximum number of characters |
 | `readOnly` | boolean | false | When present, it specifies that this component field is read-only. |
 | `disabled` | boolean | false | Whether it is disabled |
@@ -31,7 +39,7 @@ import LiveSearch from 'funda-ui/LiveSearch';
 | `icon` | ReactNode  | - | Set the icon of search. <blockquote>Valid when `fetchTrigger` is true.</blockquote> |
 | `winWidth` | number \| function  | `auto` | Set the container width of options. Such as: `500px` or `() => window.innerWidth/2 + 'px'`  |
 | `data`  <blockquote>You could use [key](https://react.dev/learn/rendering-lists#why-does-react-need-keys) instead of it</blockquote>  | any  | - | Incoming data, you can set the third parameter of `onFetch`. <blockquote>Changes in the `data` value will cause the component to re-render. It will be used when the value or content does not change when switching routes and needs to re-render the component or get the request.</blockquote> <hr /> <blockquote>!!!Note: Using `data` and `value` at the same time may cause two different parameter transfers, which will affect the final rendering. Please choose the appropriate usage based on your business. Generally speaking, if the `multiSelect` exists, it is not recommended to use the `data`.</blockquote>|
-| `fetchAutoShow` | boolean  | false | Force display of the list. <blockquote>Note: When it is **true**, user input matching will be invalid.</blockquote> |
+| `autoShowOptions` | boolean  | false | Force display of the option list. |
 | `fetchTrigger` | boolean  | false | Use buttons to trigger data queries. |
 | `fetchNoneInfo` | string  | - | The text of the data not fetched. <br />Only takes effect when `fetchTrigger` is *true*. |
 | `fetchUpdate` | boolean  | false | When the property is *true*, every time the input changes or the search button is clicked, a data request will be triggered. |
@@ -40,8 +48,11 @@ import LiveSearch from 'funda-ui/LiveSearch';
 | `fetchFuncMethodParams` | array  | - | The parameter passed by the method, it is an array. <br />Note: the first element is a query string, the second element is the number of queried data (usually a number), and then you can increase the third, or fourth, and more parameters. <br />Such as `['',0]`, `['',99,'string 1','string 2']`, `['',99,'string 1','$QUERY_STRING']` <br /><blockquote>There should be at least one parameter which is the query string.  <br />`$QUERY_STRING` identifies the ID of the automatic query, and its value depends on the user input string.</blockquote> |
 | `fetchCallback` | function  | - | Return value from `fetchCallback` property to format the data of the API callback, which will match the data structure of the component. <br >At the same time it returns the original data, you will use this function and use the `return` keyword to return a new value. |
 | `onFetch` | function  | - | Call a function when  data is successfully fetched. It returns one callback value which is the fetched data (**Array**) |
-| `onChange` | function  | - | Call a function when the value of an HTML element is changed. It returns three callback values. <br /> <ol><li>The first is the control (**HTML Element**)</li><li>The second is the fetched data(**Array**)</li><li>The last is the selected data (**JSON Object**)</li></ol> |
-| `onBlur` | function  | - | Call a function when a user leaves an form field. |
+| `onClick` | function  | - | Call a function when the value of an HTML element is changed. It returns two callback values. <br /> <ol><li>The first is the control (**HTML Element**)</li><li>The last is the pop-up element(**HTML Element**)</li></ol> |
+| `onChange` | function  | - | Call a function when the value of an HTML element is changed. It returns four callback values. <br /> <ol><li>The first is the control (**HTML Element**)</li><li>The second is the fetched data(**Array**)</li><li>The third is the selected data (**JSON Object**)</li><li>The last is the pop-up element(**HTML Element**)</li></ol> |
+| `onBlur` | function  | - | Call a function when a user leaves an form field. It returns two callback values. <br /> <ol><li>The first is the control (**HTML Element**)</li><li>The last is the pop-up element(**HTML Element**)</li></ol> |
+| `onKeyboardInput` | function  | - | Call a function when the keyboard is pressed. It returns three callback values. <br /> <ol><li>The first is the Control Event (**KeyboardEvent**)</li><li>The second is the control (**HTML Element**)</li><li>The last is the pop-up element(**HTML Element**)</li></ol> |
+
 
 
 It accepts all props which this control support.
@@ -106,7 +117,7 @@ export default () => {
                 btnId="app-livesearch-btn"
                 name="app-livesearch-name"
                 hideIcon
-                fetchAutoShow
+                autoShowOptions
                 options={`
                 [
                     {"label": "Option 1","listItemLabel":"Option 1 (No: 001)","value": "value-1","queryString": "option1"},
@@ -303,7 +314,7 @@ export default () => {
 
 ## Create a non-retrieval `<input>` that can be input and selected
 
-Proper use of `hideIcon` and `fetchAutoShow` attributes.
+Proper use of `autoShowOptions` attribute.  `hideIcon` is optional.
                 
 
 ```js
@@ -343,7 +354,7 @@ export default () => {
                 name="app-livesearch-name"
                 label="Food List"
                 hideIcon
-                fetchAutoShow
+                autoShowOptions
                 fetchFuncAsync={new DataService}
                 fetchFuncMethod="getList"
                 fetchFuncMethodParams={[]}
@@ -372,3 +383,5 @@ export default () => {
     );
 }
 ```
+
+

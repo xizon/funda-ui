@@ -1,5 +1,6 @@
 import React, { useId, useState, useEffect, useRef, forwardRef } from 'react';
 
+
 declare module 'react' {
     interface ReactI18NextChildren<T> {
         children?: any;
@@ -10,11 +11,17 @@ type SearchBarProps = {
     wrapperClassName?: string;
     controlClassName?: string;
     controlExClassName?: string;
+    controlGroupWrapperClassName?: string;
+    controlGroupTextClassName?: string;
     appearance?: string;
     isSearchInput?: boolean;
     value?: string;
     label?: React.ReactNode | string;
     name?: string;
+    units?: React.ReactNode | string;
+    iconLeft?: React.ReactNode | string;
+    iconRight?: React.ReactNode | string;
+    minLength?: any;
     maxLength?: any;
     readOnly?: any;
     disabled?: any;
@@ -29,6 +36,7 @@ type SearchBarProps = {
     tabIndex?: number;
     [key: `data-${string}`]: string | undefined;
     onClick?: (e: any) => void;
+    onKeyPressedCallback?: (e: any) => void;
     onSubmit?: (e: any) => void;
     onChange?: (e: any, param: any) => void;
     onBlur?: (e: any, param: any) => void;
@@ -40,6 +48,8 @@ const SearchBar = forwardRef((props: SearchBarProps, ref: any) => {
         wrapperClassName,
         controlClassName,
         controlExClassName,
+        controlGroupWrapperClassName,
+        controlGroupTextClassName,
         appearance,
         isSearchInput,
         readOnly,
@@ -49,14 +59,19 @@ const SearchBar = forwardRef((props: SearchBarProps, ref: any) => {
         value,
         label,
         name,
+        units,
+        iconLeft,
+        iconRight,
+        minLength,
+        maxLength,
         btnId,
         id,
-        maxLength,
         icon,
         autoComplete,
         style,
         tabIndex,
         onClick,
+        onKeyPressedCallback,
         onSubmit,
         onChange,
         onBlur,
@@ -72,6 +87,10 @@ const SearchBar = forwardRef((props: SearchBarProps, ref: any) => {
 
 
     const [onComposition, setOnComposition] = useState(false);
+
+    const propExist = (p: any) => {
+        return typeof p !== 'undefined' && p !== null && p !== '';
+    };
 
     function handleComposition(event: any) {
         if (event.type === 'compositionstart') {
@@ -129,6 +148,13 @@ const SearchBar = forwardRef((props: SearchBarProps, ref: any) => {
         onBlur?.(event, onComposition);
     }
 
+    function handleKeyPressed(event: React.KeyboardEvent<HTMLInputElement>) {
+
+        if (typeof (onKeyPressedCallback) === 'function') {
+            const newData: any = onKeyPressedCallback(event);
+            if (newData) setChangedVal(newData);  // Avoid the error "react checkbox changing an uncontrolled input to be controlled"
+        }
+    }
 
     useEffect(() => {
 
@@ -146,7 +172,10 @@ const SearchBar = forwardRef((props: SearchBarProps, ref: any) => {
             <div className={wrapperClassName || wrapperClassName === '' ? wrapperClassName : "mb-3 position-relative"} ref={rootRef}>
                 {label ? <>{typeof label === 'string' ? <label htmlFor={idRes} className="form-label" dangerouslySetInnerHTML={{ __html: `${label}` }}></label> : <label htmlFor={idRes} className="form-label" >{label}</label>}</> : null}
 
-                <div className="input-group">
+                <div className={`${controlGroupWrapperClassName || "input-group"} position-relative ${propExist(iconLeft) ? 'has-left-content' : ''} ${propExist(iconRight) || propExist(units) ? 'has-right-content' : ''}`}>
+                    
+                    {propExist(iconLeft) ? <><span className={controlGroupTextClassName || "input-group-text"}>{iconLeft}</span></>: null}
+
                     <input
                         ref={ref}
                         tabIndex={tabIndex || 0}
@@ -156,12 +185,14 @@ const SearchBar = forwardRef((props: SearchBarProps, ref: any) => {
                         name={name}
                         placeholder={placeholder || ''}
                         value={changedVal}
+                        minLength={minLength || null}
                         maxLength={maxLength || null}
                         autoComplete={typeof autoComplete === 'undefined' ? 'off' : autoComplete}
                         onFocus={handleFocus}
                         onBlur={handleBlur}
                         onChange={handleChange}
                         onClick={handleClick}
+                        onKeyDown={handleKeyPressed}
                         onCompositionStart={handleComposition}
                         onCompositionUpdate={handleComposition}
                         onCompositionEnd={handleComposition}
@@ -171,6 +202,10 @@ const SearchBar = forwardRef((props: SearchBarProps, ref: any) => {
                         style={style}
                         {...attributes}
                     />
+
+                    {propExist(units) ? <><span className={controlGroupTextClassName || "input-group-text"}>{units}</span></> : null}
+                    {propExist(iconRight) ? <><span className={controlGroupTextClassName || "input-group-text"}>{iconRight}</span></> : null}
+
 
                     {icon || icon !== '' ? <>
                         <span className={appearance === 'pill' ? 'position-absolute end-0' : 'input-group-text m-0 p-0 border-start-0'} style={appearance === 'pill' ? { zIndex: 5 } : {}}>
@@ -182,6 +217,7 @@ const SearchBar = forwardRef((props: SearchBarProps, ref: any) => {
 
                         </span>
                     </> : null}
+
 
                 </div>
             </div>

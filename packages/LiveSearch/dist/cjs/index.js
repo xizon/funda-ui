@@ -547,7 +547,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
         var react__WEBPACK_IMPORTED_MODULE_0__ = __nested_webpack_require_1465__(787);
         /* harmony import */
         var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__nested_webpack_require_1465__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-        var _excluded = ["wrapperClassName", "controlClassName", "controlExClassName", "appearance", "isSearchInput", "readOnly", "disabled", "required", "placeholder", "value", "label", "name", "btnId", "id", "maxLength", "icon", "autoComplete", "style", "tabIndex", "onClick", "onSubmit", "onChange", "onBlur", "onFocus"];
+        var _excluded = ["wrapperClassName", "controlClassName", "controlExClassName", "controlGroupWrapperClassName", "controlGroupTextClassName", "appearance", "isSearchInput", "readOnly", "disabled", "required", "placeholder", "value", "label", "name", "units", "iconLeft", "iconRight", "minLength", "maxLength", "btnId", "id", "icon", "autoComplete", "style", "tabIndex", "onClick", "onKeyPressedCallback", "onSubmit", "onChange", "onBlur", "onFocus"];
         function _extends() {
           _extends = Object.assign ? Object.assign.bind() : function (target) {
             for (var i = 1; i < arguments.length; i++) {
@@ -642,6 +642,8 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
           var wrapperClassName = props.wrapperClassName,
             controlClassName = props.controlClassName,
             controlExClassName = props.controlExClassName,
+            controlGroupWrapperClassName = props.controlGroupWrapperClassName,
+            controlGroupTextClassName = props.controlGroupTextClassName,
             appearance = props.appearance,
             isSearchInput = props.isSearchInput,
             readOnly = props.readOnly,
@@ -651,14 +653,19 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
             value = props.value,
             label = props.label,
             name = props.name,
+            units = props.units,
+            iconLeft = props.iconLeft,
+            iconRight = props.iconRight,
+            minLength = props.minLength,
+            maxLength = props.maxLength,
             btnId = props.btnId,
             id = props.id,
-            maxLength = props.maxLength,
             icon = props.icon,
             autoComplete = props.autoComplete,
             style = props.style,
             tabIndex = props.tabIndex,
             onClick = props.onClick,
+            onKeyPressedCallback = props.onKeyPressedCallback,
             onSubmit = props.onSubmit,
             onChange = props.onChange,
             onBlur = props.onBlur,
@@ -675,6 +682,9 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
             _useState4 = _slicedToArray(_useState3, 2),
             onComposition = _useState4[0],
             setOnComposition = _useState4[1];
+          var propExist = function propExist(p) {
+            return typeof p !== 'undefined' && p !== null && p !== '';
+          };
           function handleComposition(event) {
             if (event.type === 'compositionstart') {
               setOnComposition(true);
@@ -721,6 +731,13 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
             //
             onBlur === null || onBlur === void 0 ? void 0 : onBlur(event, onComposition);
           }
+          function handleKeyPressed(event) {
+            if (typeof onKeyPressedCallback === 'function') {
+              var newData = onKeyPressedCallback(event);
+              if (newData) setChangedVal(newData); // Avoid the error "react checkbox changing an uncontrolled input to be controlled"
+            }
+          }
+
           (0, react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(function () {
             // update default value
             //--------------
@@ -739,8 +756,10 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
             htmlFor: idRes,
             className: "form-label"
           }, label)) : null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-            className: "input-group"
-          }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("input", _extends({
+            className: "".concat(controlGroupWrapperClassName || "input-group", " position-relative ").concat(propExist(iconLeft) ? 'has-left-content' : '', " ").concat(propExist(iconRight) || propExist(units) ? 'has-right-content' : '')
+          }, propExist(iconLeft) ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react__WEBPACK_IMPORTED_MODULE_0___default().Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
+            className: controlGroupTextClassName || "input-group-text"
+          }, iconLeft)) : null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("input", _extends({
             ref: ref,
             tabIndex: tabIndex || 0,
             type: isSearchInput ? 'search' : 'text',
@@ -749,12 +768,14 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
             name: name,
             placeholder: placeholder || '',
             value: changedVal,
+            minLength: minLength || null,
             maxLength: maxLength || null,
             autoComplete: typeof autoComplete === 'undefined' ? 'off' : autoComplete,
             onFocus: handleFocus,
             onBlur: handleBlur,
             onChange: handleChange,
             onClick: handleClick,
+            onKeyDown: handleKeyPressed,
             onCompositionStart: handleComposition,
             onCompositionUpdate: handleComposition,
             onCompositionEnd: handleComposition,
@@ -762,7 +783,11 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
             readOnly: readOnly || null,
             required: required || null,
             style: style
-          }, attributes)), icon || icon !== '' ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react__WEBPACK_IMPORTED_MODULE_0___default().Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
+          }, attributes)), propExist(units) ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react__WEBPACK_IMPORTED_MODULE_0___default().Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
+            className: controlGroupTextClassName || "input-group-text"
+          }, units)) : null, propExist(iconRight) ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react__WEBPACK_IMPORTED_MODULE_0___default().Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
+            className: controlGroupTextClassName || "input-group-text"
+          }, iconRight)) : null, icon || icon !== '' ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react__WEBPACK_IMPORTED_MODULE_0___default().Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
             className: appearance === 'pill' ? 'position-absolute end-0' : 'input-group-text m-0 p-0 border-start-0',
             style: appearance === 'pill' ? {
               zIndex: 5
@@ -956,7 +981,7 @@ var cjs_default = /*#__PURE__*/__webpack_require__.n(cjs);
 var dist_cjs = __webpack_require__(962);
 var dist_cjs_default = /*#__PURE__*/__webpack_require__.n(dist_cjs);
 ;// CONCATENATED MODULE: ./src/index.tsx
-var _excluded = ["popupRef", "wrapperClassName", "controlClassName", "exceededSidePosOffset", "appearance", "isSearchInput", "readOnly", "disabled", "required", "placeholder", "options", "value", "label", "name", "id", "icon", "btnId", "fetchTrigger", "hideIcon", "depth", "maxLength", "style", "winWidth", "tabIndex", "data", "fetchAutoShow", "fetchNoneInfo", "fetchUpdate", "fetchFuncAsync", "fetchFuncMethod", "fetchFuncMethodParams", "fetchCallback", "onFetch", "onChange", "onBlur"];
+var _excluded = ["popupRef", "wrapperClassName", "controlClassName", "controlExClassName", "controlGroupWrapperClassName", "controlGroupTextClassName", "exceededSidePosOffset", "appearance", "isSearchInput", "allowSpacingRetrive", "readOnly", "disabled", "required", "placeholder", "options", "value", "label", "name", "units", "iconLeft", "iconRight", "minLength", "maxLength", "id", "icon", "btnId", "fetchTrigger", "hideIcon", "depth", "style", "winWidth", "tabIndex", "data", "autoShowOptions", "fetchNoneInfo", "fetchUpdate", "fetchFuncAsync", "fetchFuncMethod", "fetchFuncMethodParams", "fetchCallback", "onClick", "onFetch", "onChange", "onKeyboardInput", "onBlur"];
 function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
 function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
 function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter); }
@@ -980,13 +1005,17 @@ function _objectWithoutPropertiesLoose(source, excluded) { if (source == null) r
 
 
 
-var LiveSearch = function LiveSearch(props) {
+var LiveSearch = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_amd_react_.forwardRef)(function (props, _ref2) {
   var popupRef = props.popupRef,
     wrapperClassName = props.wrapperClassName,
     controlClassName = props.controlClassName,
+    controlExClassName = props.controlExClassName,
+    controlGroupWrapperClassName = props.controlGroupWrapperClassName,
+    controlGroupTextClassName = props.controlGroupTextClassName,
     exceededSidePosOffset = props.exceededSidePosOffset,
     appearance = props.appearance,
     isSearchInput = props.isSearchInput,
+    allowSpacingRetrive = props.allowSpacingRetrive,
     readOnly = props.readOnly,
     disabled = props.disabled,
     required = props.required,
@@ -995,32 +1024,38 @@ var LiveSearch = function LiveSearch(props) {
     value = props.value,
     label = props.label,
     name = props.name,
+    units = props.units,
+    iconLeft = props.iconLeft,
+    iconRight = props.iconRight,
+    minLength = props.minLength,
+    maxLength = props.maxLength,
     id = props.id,
     icon = props.icon,
     btnId = props.btnId,
     fetchTrigger = props.fetchTrigger,
     hideIcon = props.hideIcon,
     depth = props.depth,
-    maxLength = props.maxLength,
     style = props.style,
     winWidth = props.winWidth,
     tabIndex = props.tabIndex,
     data = props.data,
-    fetchAutoShow = props.fetchAutoShow,
+    autoShowOptions = props.autoShowOptions,
     fetchNoneInfo = props.fetchNoneInfo,
     fetchUpdate = props.fetchUpdate,
     fetchFuncAsync = props.fetchFuncAsync,
     fetchFuncMethod = props.fetchFuncMethod,
     fetchFuncMethodParams = props.fetchFuncMethodParams,
     fetchCallback = props.fetchCallback,
+    onClick = props.onClick,
     onFetch = props.onFetch,
     onChange = props.onChange,
+    onKeyboardInput = props.onKeyboardInput,
     onBlur = props.onBlur,
     attributes = _objectWithoutProperties(props, _excluded);
   var DEPTH = depth || 1055; // the default value same as bootstrap
   var POS_OFFSET = 0;
   var EXCEEDED_SIDE_POS_OFFSET = Number(exceededSidePosOffset) || 15;
-  var INPUT_MATCH_ENABLED = typeof fetchAutoShow === 'undefined' || fetchAutoShow === false ? true : false;
+  var EMPTY_FOR_FETCH = typeof autoShowOptions === 'undefined' || autoShowOptions === false ? false : true;
   var WIN_WIDTH = typeof winWidth === 'function' ? winWidth() : winWidth ? winWidth : 'auto';
   var uniqueID = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useId)().replace(/\:/g, "-");
   var idRes = id || uniqueID;
@@ -1246,6 +1281,7 @@ var LiveSearch = function LiveSearch(props) {
     _matchData = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee2() {
       var val,
         query,
+        emptyValShowAll,
         res,
         filterRes,
         _oparams,
@@ -1257,12 +1293,19 @@ var LiveSearch = function LiveSearch(props) {
           case 0:
             val = _args2.length > 0 && _args2[0] !== undefined ? _args2[0] : '';
             query = _args2.length > 1 && _args2[1] !== undefined ? _args2[1] : false;
+            emptyValShowAll = _args2.length > 2 && _args2[2] !== undefined ? _args2[2] : false;
             res = [];
             filterRes = function filterRes(data) {
               return data.filter(function (item) {
                 // Avoid fatal errors causing page crashes
                 var _queryString = typeof item.queryString !== 'undefined' && item.queryString !== null ? item.queryString : '';
                 var _val = typeof val !== 'undefined' && val !== null ? val : '';
+                if (emptyValShowAll && val === '') {
+                  return true;
+                }
+                if (allowSpacingRetrive && val == ' ') {
+                  return true;
+                }
                 if ((_queryString.split(',').some(function (l) {
                   return l.charAt(0) === _val.toLowerCase();
                 }) || _queryString.split(',').some(function (l) {
@@ -1275,23 +1318,23 @@ var LiveSearch = function LiveSearch(props) {
               });
             };
             if (!query) {
-              _context2.next = 14;
+              _context2.next = 15;
               break;
             }
             _oparams = fetchFuncMethodParams || [];
             _params = _oparams.map(function (item) {
               return item !== '$QUERY_STRING' ? item : val;
             });
-            _context2.next = 9;
+            _context2.next = 10;
             return fetchData(_params.join(','));
-          case 9:
+          case 10:
             response = _context2.sent;
             res = filterRes(response);
             return _context2.abrupt("return", res);
-          case 14:
+          case 15:
             res = filterRes(dataInit);
             return _context2.abrupt("return", res);
-          case 16:
+          case 17:
           case "end":
             return _context2.stop();
         }
@@ -1302,35 +1345,26 @@ var LiveSearch = function LiveSearch(props) {
   function handleChange(e) {
     var val = e.target.value;
     setChangedVal(val);
-    if (INPUT_MATCH_ENABLED) {
-      //
-      if (!fetchTrigger) {
-        matchData(val, fetchUpdate).then(function (response) {
-          setOrginalData(response);
 
-          //
-          onChange === null || onChange === void 0 ? void 0 : onChange(inputRef.current, response, '');
+    //
+    if (!fetchTrigger) {
+      matchData(val, fetchUpdate, EMPTY_FOR_FETCH).then(function (response) {
+        setOrginalData(response);
 
-          //
-          setIsOpen(true);
-
-          // window position
-          setTimeout(function () {
-            popwinPosInit();
-          }, 0);
-        });
-      } else {
         //
-        onChange === null || onChange === void 0 ? void 0 : onChange(inputRef.current, orginalData, '');
+        onChange === null || onChange === void 0 ? void 0 : onChange(inputRef.current, response, '', listRef.current);
+
+        //
+        setIsOpen(true);
 
         // window position
         setTimeout(function () {
           popwinPosInit();
         }, 0);
-      }
+      });
     } else {
       //
-      onChange === null || onChange === void 0 ? void 0 : onChange(inputRef.current, orginalData, '');
+      onChange === null || onChange === void 0 ? void 0 : onChange(inputRef.current, orginalData, '', listRef.current);
 
       // window position
       setTimeout(function () {
@@ -1421,7 +1455,7 @@ var LiveSearch = function LiveSearch(props) {
               break;
             }
             _data = JSON.parse(dataInput);
-            onChange === null || onChange === void 0 ? void 0 : onChange(inputRef.current, orginalData, _data);
+            onChange === null || onChange === void 0 ? void 0 : onChange(inputRef.current, orginalData, _data, listRef.current);
             setChangedVal(_data.label);
             _context4.next = 21;
             break;
@@ -1429,12 +1463,12 @@ var LiveSearch = function LiveSearch(props) {
             _curData = typeof el.target !== 'undefined' ? el.target.dataset.itemdata : el.dataset.itemdata;
             _data2 = JSON.parse(_curData);
             res = [];
-            if (!INPUT_MATCH_ENABLED) {
+            if (EMPTY_FOR_FETCH) {
               _context4.next = 18;
               break;
             }
             _context4.next = 15;
-            return matchData(inputRef.current.value, false);
+            return matchData(inputRef.current.value, false, EMPTY_FOR_FETCH);
           case 15:
             res = _context4.sent;
             _context4.next = 19;
@@ -1442,7 +1476,7 @@ var LiveSearch = function LiveSearch(props) {
           case 18:
             res = dataInit;
           case 19:
-            onChange === null || onChange === void 0 ? void 0 : onChange(inputRef.current, res, _data2);
+            onChange === null || onChange === void 0 ? void 0 : onChange(inputRef.current, res, _data2, listRef.current);
             setChangedVal(_data2.label);
           case 21:
             // cancel
@@ -1470,7 +1504,7 @@ var LiveSearch = function LiveSearch(props) {
               break;
             }
             _context5.next = 3;
-            return matchData(changedVal, fetchUpdate);
+            return matchData(changedVal, fetchUpdate, EMPTY_FOR_FETCH);
           case 3:
             res = _context5.sent;
             setOrginalData(res);
@@ -1491,7 +1525,7 @@ var LiveSearch = function LiveSearch(props) {
     return _handleFetch.apply(this, arguments);
   }
   function handleClick() {
-    if (!INPUT_MATCH_ENABLED) {
+    if (EMPTY_FOR_FETCH) {
       setOrginalData(dataInit);
       setIsOpen(true);
     }
@@ -1500,13 +1534,14 @@ var LiveSearch = function LiveSearch(props) {
     setTimeout(function () {
       popwinPosInit();
     }, 0);
+    onClick === null || onClick === void 0 ? void 0 : onClick(inputRef.current, listRef.current);
   }
   function handleBlur(e) {
     setIsOpen(false);
     if (!fetchTrigger) {
       setTimeout(function () {
         //
-        onBlur === null || onBlur === void 0 ? void 0 : onBlur(inputRef.current);
+        onBlur === null || onBlur === void 0 ? void 0 : onBlur(inputRef.current, listRef.current);
 
         //
         cancel();
@@ -1613,7 +1648,7 @@ var LiveSearch = function LiveSearch(props) {
                   //
                   onChange === null || onChange === void 0 ? void 0 : onChange(inputRef.current, _options.map(function (node) {
                     return JSON.parse(node.dataset.itemdata);
-                  }), JSON.parse(currentData));
+                  }), JSON.parse(currentData), listRef.current);
                 }
               }
               return _context.abrupt("return");
@@ -1697,13 +1732,27 @@ var LiveSearch = function LiveSearch(props) {
   }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((dist_cjs_default()), _extends({
     wrapperClassName: "",
     controlClassName: controlClassName,
-    ref: inputRef,
+    controlExClassName: controlExClassName,
+    controlGroupWrapperClassName: controlGroupWrapperClassName,
+    controlGroupTextClassName: controlGroupTextClassName,
+    ref: function ref(node) {
+      inputRef.current = node;
+      if (typeof _ref2 === 'function') {
+        _ref2(node);
+      } else if (_ref2) {
+        _ref2.current = node;
+      }
+    },
     value: changedVal,
     label: "",
     tabIndex: tabIndex,
     id: idRes,
     name: name,
     placeholder: placeholder,
+    units: units,
+    iconLeft: iconLeft,
+    iconRight: iconRight,
+    minLength: minLength,
     maxLength: maxLength,
     disabled: disabled,
     required: required,
@@ -1719,7 +1768,10 @@ var LiveSearch = function LiveSearch(props) {
     icon: hideIcon ? '' : !fetchTrigger ? '' : icon,
     btnId: btnId,
     autoComplete: "off",
-    isSearchInput: isSearchInput
+    isSearchInput: isSearchInput,
+    onKeyPressedCallback: function onKeyPressedCallback(e) {
+      onKeyboardInput === null || onKeyboardInput === void 0 ? void 0 : onKeyboardInput(e, inputRef.current, listRef.current);
+    }
   }, attributes)), orginalData && !hasErr ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((cjs_default()), {
     show: true,
     containerClassName: "LiveSearch"
@@ -1784,7 +1836,7 @@ var LiveSearch = function LiveSearch(props) {
     d: "M12.027 9.92L16 13.95 14 16l-4.075-3.976A6.465 6.465 0 0 1 6.5 13C2.91 13 0 10.083 0 6.5 0 2.91 2.917 0 6.5 0 10.09 0 13 2.917 13 6.5a6.463 6.463 0 0 1-.973 3.42zM1.997 6.452c0 2.48 2.014 4.5 4.5 4.5 2.48 0 4.5-2.015 4.5-4.5 0-2.48-2.015-4.5-4.5-4.5-2.48 0-4.5 2.014-4.5 4.5z",
     fillRule: "evenodd"
   }))))) : null)));
-};
+});
 /* harmony default export */ const src = (LiveSearch);
 })();
 
