@@ -1210,6 +1210,11 @@ const Date = forwardRef((props: DateProps, ref: any) => {
                                                     //
                                                     const _val = (e.currentTarget as any).dataset.value;
                                                     const _v = getFullTimeData(`${dateVal} ${_val}:${timeVal[1]}:${timeVal[2]}`);
+
+                                                    console.log('^^^^^^^funda-ui test: ', (e.currentTarget as any).dataset.value, `${dateVal} ${_val}:${timeVal[1]}:${timeVal[2]}`, getFullTimeData(`${dateVal} ${_val}:${timeVal[1]}:${timeVal[2]}`))
+
+
+                                                    
                                                     setChangedVal(`${dateVal} ${_val}:${timeVal[1]}:${timeVal[2]}`);
                                                     setTimeVal((prevState: string[]) => {
                                                         return [_val, prevState[1], prevState[2]];
@@ -1254,6 +1259,11 @@ const Date = forwardRef((props: DateProps, ref: any) => {
                                                     //
                                                     const _val = (e.currentTarget as any).dataset.value;
                                                     const _v = getFullTimeData(`${dateVal} ${timeVal[0]}:${_val}:${timeVal[2]}`);
+
+
+                                                    console.log('^^^^^^^funda-ui test: ', (e.currentTarget as any).dataset.value, `${dateVal} ${timeVal[0]}:${_val}:${timeVal[2]}`, getFullTimeData(`${dateVal} ${timeVal[0]}:${_val}:${timeVal[2]}`))
+
+
                                                     setChangedVal(`${dateVal} ${timeVal[0]}:${_val}:${timeVal[2]}`);
                                                     setTimeVal((prevState: string[]) => {
                                                         return [prevState[0], _val, prevState[2]];

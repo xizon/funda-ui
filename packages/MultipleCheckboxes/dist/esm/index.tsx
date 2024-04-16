@@ -1,8 +1,5 @@
 import React, { useId, useState, useEffect, useRef, forwardRef } from 'react';
 
-import Checkbox from 'funda-checkbox';
-
-
 
 import { extractContentsOfBrackets } from './utils/extract';
 import { convertArrToValByBrackets } from './utils/convert';
@@ -75,15 +72,15 @@ const MultipleCheckboxes = forwardRef((props: MultipleCheckboxesProps, ref: any)
     const rootRef = useRef<any>(null);
     const inputRef = useRef<any>(null);
     const optionsRes = options ? isJSON( options ) ? JSON.parse( options as string ) : options : [];
-    const [valSelected, setValSelected] = useState<any[]>([]);
     const _inline = typeof inline === 'undefined' ? true : inline;
+    
 
     // return a array of options
     let optionsDataInit: OptionConfig[] = optionsRes;
     
     //
+    const [selectedItems, setSelectedItems] = useState<any>(new Set());
     const [dataInit, setDataInit] = useState<OptionConfig[]>(optionsDataInit);
-    const [hasErr, setHasErr] = useState<boolean>(false);
 
 
 
@@ -104,7 +101,23 @@ const MultipleCheckboxes = forwardRef((props: MultipleCheckboxesProps, ref: any)
         return flatItems;
     };
 
+    const labelRes = (label: any, id: any) => {
+        return label ? <>{typeof label === 'string' ? <label htmlFor={id} className="form-check-label" dangerouslySetInnerHTML={{ __html: `${label}` }}></label> : <label htmlFor={id} className="form-check-label">{label}</label>}</> : null;
+    };
 
+
+    function handleCheckboxChange(itemKey: string) {
+        // first, make a copy of the original set rather than mutating the original
+        const newSelectedItems = new Set(selectedItems);
+        if (!newSelectedItems.has(itemKey)) {
+            newSelectedItems.add(itemKey);
+        } else {
+            newSelectedItems.delete(itemKey);
+        }
+        setSelectedItems(newSelectedItems);
+    }
+
+    
 
     async function fetchData(params: any) {
 
@@ -201,9 +214,11 @@ const MultipleCheckboxes = forwardRef((props: MultipleCheckboxesProps, ref: any)
 
     function initDefaultValue(defaultValue: any, latestData: any[]) {
 
+        const newSelectedItems = new Set();
+
         // change the value to trigger component rendering
         if ( typeof defaultValue === 'undefined' || defaultValue === '' ) {
-            setValSelected([]);
+            setSelectedItems(newSelectedItems);
 
             //
             onLoad?.(latestData, defaultValue, rootRef.current);
@@ -228,13 +243,17 @@ const MultipleCheckboxes = forwardRef((props: MultipleCheckboxesProps, ref: any)
 
 
                 //
-                setValSelected(_realValue);
+                _realValue.forEach((v: any) => {
+                    newSelectedItems.add(v);
+                });
+                setSelectedItems(newSelectedItems);
+    
 
                 //
                 onLoad?.(latestData, _realValue, rootRef.current);
 
             } else {
-                setValSelected([]);
+                setSelectedItems(newSelectedItems);
 
                 //
                 onLoad?.(latestData, defaultValue, rootRef.current);
@@ -245,8 +264,17 @@ const MultipleCheckboxes = forwardRef((props: MultipleCheckboxesProps, ref: any)
         }
     }
 
-    useEffect(() => {
+    function valRes(setData: any) {
+        const res: any[] = [];
+        const s = setData;
+        for (let it = s.values(), val = null; val = it.next().value;) {
+            res.push(val);
+        }
+        return res;
+    }
+    
 
+    useEffect(() => {
 
         // data init
         //--------------
@@ -264,8 +292,9 @@ const MultipleCheckboxes = forwardRef((props: MultipleCheckboxesProps, ref: any)
 
                 {label ? <>{typeof label === 'string' ? <label htmlFor={`label-${idRes}`} className="form-label" dangerouslySetInnerHTML={{__html: `${label}`}}></label> : <label htmlFor={`label-${idRes}`} className="form-label">{label}</label>}</> : null}
 
-
                 <div className="multiple-checkboxes__control-wrapper" style={style}>
+
+
 
                     {dataInit ? dataInit.map((item: any, index: number) => {
 
@@ -279,58 +308,67 @@ const MultipleCheckboxes = forwardRef((props: MultipleCheckboxesProps, ref: any)
 
                                         return <div 
                                                     key={'checkbox' + optIndex} 
-                                                    className={`multiple-checkboxes__control ${_inline ? 'd-inline-block' : ''} pe-3`}
+                                                    className={`multiple-checkboxes__control form-check ${_inline ? 'd-inline-block' : ''} pe-3`}
                                                     data-index={`${index}-${optIndex}`}
                                                     data-label={opt.label}
                                                     data-list-item-label={`${typeof opt.listItemLabel === 'undefined' ? '' : opt.listItemLabel}`} 
                                                     data-value={opt.value}
                                                     data-disabled={disabled || (typeof opt.disabled !== 'undefined' ? `${opt.disabled}` : 'false')}
                                                 >
-                                                    <Checkbox
-                                                        wrapperClassName=""
+                                                    <input
+                                                        type="checkbox"
+                                                        className="form-check-input"
                                                         name={`${name}-checkbox-item`}
+                                                        id={`multiple-checkboxes__control-label-${index}-${optIndex}-${idRes}`}
                                                         data-index={`${index}-${optIndex}`}
                                                         data-label={opt.label}
                                                         data-list-item-label={`${typeof opt.listItemLabel === 'undefined' ? '' : opt.listItemLabel}`} 
                                                         data-value={opt.value}
                                                         data-disabled={disabled || (typeof opt.disabled !== 'undefined' ? `${opt.disabled}` : 'false')}
-                                                        label={typeof opt.listItemLabel === 'undefined' ? opt.label : opt.listItemLabel}
                                                         value={opt.value}
                                                         disabled={disabled || (typeof opt.disabled !== 'undefined' ? opt.disabled : null)}
-                                                        onChange={(e: any, val: boolean) => {
+                                                        checked={selectedItems.has(opt.value)}
+                                                        onChange={(e: any) => {
+                                        
+                                                            handleCheckboxChange(opt.value)
 
-                                                            setValSelected((prevState) => {
-                                                                const newData = JSON.parse(JSON.stringify(prevState));
-                                                                const elIndex = newData.findIndex((item: string | number) => item == e.target.value);
-                                                                if (elIndex !== -1) newData.splice(elIndex, 1);
+                                                            const newSelectedItems = new Set(selectedItems);
+                                                            if (!selectedItems.has(opt.value)) {
+                                                                newSelectedItems.add(opt.value);
+                                                            } else {
+                                                                newSelectedItems.delete(opt.value);
+                                                            }
+                                                     
+            
+                                                            //
+                                                            const _res = valRes(newSelectedItems);
+                                                            const _resLabel = optionsFlat(dataInit).filter((v: any) => _res.includes(v.value)).map((k: any) => k.label);
+                                                            const _resDataCollection = optionsFlat(dataInit).filter((v: any) => _res.includes(v.value)).map((k: any) => k);
 
-                                                                const _res = (val) ? Array.from(new Set([e.target.value, ...newData])) : newData;
-                                                                const _resLabel = optionsFlat(dataInit).filter((v: any) => _res.includes(v.value)).map((k: any) => k.label);
-                                                                const _resDataCollection = optionsFlat(dataInit).filter((v: any) => _res.includes(v.value)).map((k: any) => k);
 
+                                                            //
+                                                            let curData: any;
 
-                                                                //
-                                                                let curData: any;
-                                                              
-                                                                // if group
-                                                                if (typeof item.optgroup !== 'undefined') {
-                                                                    const groupItemIndex = optIndex;
-                                                                    const groupOpts: any = item.optgroup;
-                                                        
-                                                                    curData = groupOpts[groupItemIndex];
-                                                                } else {
-                                                                    curData = item;
-                                                                }
-                                                                
-                                                                onChange?.(e.target, _res, VALUE_BY_BRACKETS ? convertArrToValByBrackets(_res) : _res.join(','), _resLabel, VALUE_BY_BRACKETS ? convertArrToValByBrackets(_resLabel) : _resLabel.join(','), curData, _resDataCollection);
+                                                            // if group
+                                                            if (typeof item.optgroup !== 'undefined') {
+                                                                const groupItemIndex = optIndex;
+                                                                const groupOpts: any = item.optgroup;
 
-                                                                return _res;
-                                                            });
+                                                                curData = groupOpts[groupItemIndex];
+                                                            } else {
+                                                                curData = item;
+                                                            }
+                                                            
+                                                            onChange?.(e.target, _res, VALUE_BY_BRACKETS ? convertArrToValByBrackets(_res) : _res.join(','), _resLabel, VALUE_BY_BRACKETS ? convertArrToValByBrackets(_resLabel) : _resLabel.join(','), curData, _resDataCollection);
+
 
                                                         }}
-                                                        checked={valSelected.includes(opt.value)}
                                                         {...attributes}
+
                                                     />
+
+                                                    {labelRes(opt.label, `multiple-checkboxes__control-label-${index}-${optIndex}-${idRes}`)}
+
                                                 </div>;
 
                                     })}
@@ -340,45 +378,56 @@ const MultipleCheckboxes = forwardRef((props: MultipleCheckboxesProps, ref: any)
 
                             return <div 
                                         key={'checkbox' + index} 
-                                        className={`multiple-checkboxes__control ${_inline ? 'd-inline-block' : ''} pe-3`}
+                                        className={`multiple-checkboxes__control form-check ${_inline ? 'd-inline-block' : ''} pe-3`}
                                         data-index={index}
                                         data-label={item.label}
                                         data-list-item-label={`${typeof item.listItemLabel === 'undefined' ? '' : item.listItemLabel}`} 
                                         data-value={item.value}
                                         data-disabled={disabled || (typeof item.disabled !== 'undefined' ? `${item.disabled}` : 'false')}
                                     >
-                                        <Checkbox
-                                            wrapperClassName=""
+
+                                        <input
+                                            type="checkbox"
+                                            className="form-check-input"
                                             name={`${name}-checkbox-item`}
+                                            id={`multiple-checkboxes__control-label-${index}-${idRes}`}
                                             data-index={index}
                                             data-label={item.label}
                                             data-list-item-label={`${typeof item.listItemLabel === 'undefined' ? '' : item.listItemLabel}`} 
                                             data-value={item.value}
                                             data-disabled={disabled || (typeof item.disabled !== 'undefined' ? `${item.disabled}` : 'false')}
-                                            label={typeof item.listItemLabel === 'undefined' ? item.label : item.listItemLabel}
                                             value={item.value}
                                             disabled={disabled || (typeof item.disabled !== 'undefined' ? item.disabled : null)}
-                                            onChange={(e: any, val: boolean) => {
-
-                                                setValSelected((prevState) => {
-                                                    const newData = JSON.parse(JSON.stringify(prevState));
-                                                    const elIndex = newData.findIndex((item: string | number) => item == e.target.value);
-                                                    if (elIndex !== -1) newData.splice(elIndex, 1);
-
-                                                    const _res = (val) ? Array.from(new Set([e.target.value, ...newData])) : newData;
-                                                    const _resLabel = dataInit.filter((v: any) => _res.includes(v.value)).map((k: any) => k.label);
-                                                    const _resDataCollection = optionsFlat(dataInit).filter((v: any) => _res.includes(v.value)).map((k: any) => k);
+                                            checked={selectedItems.has(item.value)}
+                                            onChange={(e: any) => {
 
 
-                                                    onChange?.(e.target, _res, VALUE_BY_BRACKETS ? convertArrToValByBrackets(_res) : _res.join(','), _resLabel, VALUE_BY_BRACKETS ? convertArrToValByBrackets(_resLabel) : _resLabel.join(','), item, _resDataCollection);
+                                                handleCheckboxChange(item.value)
 
-                                                    return _res;
-                                                });
+                                                const newSelectedItems = new Set(selectedItems);
+                                                if (!selectedItems.has(item.value)) {
+                                                    newSelectedItems.add(item.value);
+                                                } else {
+                                                    newSelectedItems.delete(item.value);
+                                                }
+                                         
+
+                                                //
+                                                const _res = valRes(newSelectedItems);
+                                                const _resLabel = dataInit.filter((v: any) => _res.includes(v.value)).map((k: any) => k.label);
+                                                const _resDataCollection = optionsFlat(dataInit).filter((v: any) => _res.includes(v.value)).map((k: any) => k);
+
+
+                                                onChange?.(e.target, _res, VALUE_BY_BRACKETS ? convertArrToValByBrackets(_res) : _res.join(','), _resLabel, VALUE_BY_BRACKETS ? convertArrToValByBrackets(_resLabel) : _resLabel.join(','), item, _resDataCollection);
+
 
                                             }}
-                                            checked={valSelected.includes(item.value)}
                                             {...attributes}
+
                                         />
+
+                                        {labelRes(item.label, `multiple-checkboxes__control-label-${index}-${idRes}`)}
+
                                     </div>;
 
                         }
@@ -392,7 +441,7 @@ const MultipleCheckboxes = forwardRef((props: MultipleCheckboxesProps, ref: any)
                         type="hidden"
                         id={idRes}
                         name={name}
-                        value={VALUE_BY_BRACKETS ? convertArrToValByBrackets(valSelected) : valSelected.join(',')}
+                        value={VALUE_BY_BRACKETS ? convertArrToValByBrackets(valRes(selectedItems)) : valRes(selectedItems).join(',')}
                         required={required || null}
                         {...attributes}
                     />

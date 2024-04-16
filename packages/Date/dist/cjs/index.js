@@ -2587,6 +2587,7 @@ var src_Date = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_reac
         //
         var _val = e.currentTarget.dataset.value;
         var _v = getFullTimeData("".concat(dateVal, " ").concat(_val, ":").concat(timeVal[1], ":").concat(timeVal[2]));
+        console.log('^^^^^^^funda-ui test: ', e.currentTarget.dataset.value, "".concat(dateVal, " ").concat(_val, ":").concat(timeVal[1], ":").concat(timeVal[2]), getFullTimeData("".concat(dateVal, " ").concat(_val, ":").concat(timeVal[1], ":").concat(timeVal[2])));
         setChangedVal("".concat(dateVal, " ").concat(_val, ":").concat(timeVal[1], ":").concat(timeVal[2]));
         setTimeVal(function (prevState) {
           return [_val, prevState[1], prevState[2]];
@@ -2618,6 +2619,7 @@ var src_Date = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_reac
         //
         var _val = e.currentTarget.dataset.value;
         var _v = getFullTimeData("".concat(dateVal, " ").concat(timeVal[0], ":").concat(_val, ":").concat(timeVal[2]));
+        console.log('^^^^^^^funda-ui test: ', e.currentTarget.dataset.value, "".concat(dateVal, " ").concat(timeVal[0], ":").concat(_val, ":").concat(timeVal[2]), getFullTimeData("".concat(dateVal, " ").concat(timeVal[0], ":").concat(_val, ":").concat(timeVal[2])));
         setChangedVal("".concat(dateVal, " ").concat(timeVal[0], ":").concat(_val, ":").concat(timeVal[2]));
         setTimeVal(function (prevState) {
           return [prevState[0], _val, prevState[2]];

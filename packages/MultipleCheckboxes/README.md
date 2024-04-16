@@ -82,8 +82,6 @@ export default () => {
                     '[Option 3][<del style=color:red>deprecate</del>Option 2]',
                     {"label": "Option 1","value": "value-1"}
                     */
-                   
-                    setVal(valueStr);
                 }}
             />
 
@@ -168,7 +166,6 @@ export default () => {
                 ]}
                 onChange={(e: any, value: any, valueStr: any, label: any, labelStr: any, currentData: any, dataCollection: any) => {
                     console.log(e, value, valueStr, label, labelStr, currentData, dataCollection);
-                    setVal(valueStr);
                 }}
             />
 
@@ -292,7 +289,6 @@ export default () => {
                 }}
                 onChange={(e: any, value: any, valueStr: any, label: any, labelStr: any, currentData: any, dataCollection: any) => {
                     console.log(e, value, valueStr, label, labelStr, currentData, dataCollection);
-                    setVal(valueStr);
                 }}
             />
 
@@ -359,6 +355,59 @@ export default () => {
                 }}
             />
 
+        </>
+    );
+}
+```
+
+
+## Filter results individually
+
+Sometimes `onChange` requires a new result to satisfy the business. Please do not use `onChange` to modify the `value` in real time, because it may cause incorrect rendering.
+
+```js
+import React, { useId, useState } from "react";
+import MultipleCheckboxes from 'funda-ui/MultipleCheckboxes';
+
+
+export default () => {
+
+    const uniqueID = useId();
+    const [val, setVal] = useState('[<del style=color:red>deprecate</del>Option 2][Option 4]');  // default value is label value
+
+    return (
+        <>
+          
+            <MultipleCheckboxes 
+                name="name"
+                value={val}
+                options={[
+                    {"label": "Option 1","listItemLabel":"Option 1 (No: 001)","value": "value-1"},
+                    {"label": "Option 2","listItemLabel":"<del style=color:red>deprecate</del>Option 2 (No: 002)","value": "value-2"},
+                    {"label": "Option 3","listItemLabel":"Option 3 (No: 003)","value": "value-3"},
+                    {"label": "Option 4","listItemLabel":"Option 4 (No: 004)","value": "value-4","disabled":true}
+                ]}
+                onChange={(e: any, value: any, valueStr: any, label: any, labelStr: any, currentData: any, dataCollection: any) => {
+
+
+                    // Exclude the value of "Option 3"
+                    const _input: any = document.getElementById(`checkboxes-res-${uniqueID}`);
+                    if (_input !== null) {
+                        _input.value = value.filter((v: any) => v != 'value-3').map((v: any) => `[${v}]`).join('');
+                    }
+                    
+                }}
+            />
+
+            <input
+                tabIndex={-1}
+                type="text"
+                id={`checkboxes-res-${uniqueID}`}
+                name="name-here"
+            />
+
+
+    
         </>
     );
 }
