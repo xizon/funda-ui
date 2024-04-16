@@ -911,7 +911,7 @@ var ModalDialog = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_r
       zIndex: DEPTH - 5
     },
     onClick: function onClick(e) {
-      if (typeof closeDisabled === 'undefined' || closeDisabled === false) {
+      if ((typeof closeDisabled === 'undefined' || closeDisabled === false) && (typeof closeOnlyBtn === 'undefined' || closeOnlyBtn === false)) {
         handleCloseWin(null);
       }
     }

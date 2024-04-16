@@ -1041,7 +1041,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
               zIndex: DEPTH - 5
             },
             onClick: function onClick(e) {
-              if (typeof closeDisabled === 'undefined' || closeDisabled === false) {
+              if ((typeof closeDisabled === 'undefined' || closeDisabled === false) && (typeof closeOnlyBtn === 'undefined' || closeOnlyBtn === false)) {
                 handleCloseWin(null);
               }
             }
