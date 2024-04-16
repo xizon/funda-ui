@@ -386,7 +386,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
         var react__WEBPACK_IMPORTED_MODULE_0__ = __nested_webpack_require_1465__(787);
         /* harmony import */
         var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__nested_webpack_require_1465__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-        var _excluded = ["wrapperClassName", "controlClassName", "controlExClassName", "controlGroupWrapperClassName", "controlGroupTextClassName", "type", "disabled", "required", "placeholder", "pattern", "readOnly", "value", "label", "units", "name", "step", "min", "max", "src", "size", "minLength", "maxLength", "alt", "inputMode", "id", "appendControl", "iconLeft", "iconRight", "autoComplete", "style", "tabIndex", "onChangeCallback", "onInputCallback", "onKeyPressedCallback", "onChange", "onBlur", "onFocus"];
+        var _excluded = ["contentRef", "wrapperClassName", "controlClassName", "controlExClassName", "controlGroupWrapperClassName", "controlGroupTextClassName", "type", "disabled", "required", "placeholder", "pattern", "readOnly", "value", "label", "units", "name", "step", "min", "max", "src", "size", "minLength", "maxLength", "alt", "inputMode", "id", "appendControl", "iconLeft", "iconRight", "autoComplete", "style", "tabIndex", "onChangeCallback", "onInputCallback", "onKeyPressedCallback", "onChange", "onBlur", "onFocus"];
         function _extends() {
           _extends = Object.assign ? Object.assign.bind() : function (target) {
             for (var i = 1; i < arguments.length; i++) {
@@ -478,7 +478,8 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
           return target;
         }
         var Input = /*#__PURE__*/(0, react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(function (props, _ref) {
-          var wrapperClassName = props.wrapperClassName,
+          var contentRef = props.contentRef,
+            wrapperClassName = props.wrapperClassName,
             controlClassName = props.controlClassName,
             controlExClassName = props.controlExClassName,
             controlGroupWrapperClassName = props.controlGroupWrapperClassName,
@@ -529,6 +530,20 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
             _useState4 = _slicedToArray(_useState3, 2),
             changedVal = _useState4[0],
             setChangedVal = _useState4[1];
+
+          // exposes the following methods
+          (0, react__WEBPACK_IMPORTED_MODULE_0__.useImperativeHandle)(contentRef, function () {
+            return {
+              clear: function clear(cb) {
+                setChangedVal('');
+                cb === null || cb === void 0 ? void 0 : cb();
+              },
+              set: function set(value, cb) {
+                setChangedVal("".concat(value));
+                cb === null || cb === void 0 ? void 0 : cb();
+              }
+            };
+          }, [contentRef]);
           var propExist = function propExist(p) {
             return typeof p !== 'undefined' && p !== null && p !== '';
           };
@@ -544,7 +559,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
             rootRef.current.classList.add('focus');
 
             //
-            onFocus === null || onFocus === void 0 ? void 0 : onFocus(event, onComposition);
+            onFocus === null || onFocus === void 0 ? void 0 : onFocus(event, onComposition, valRef.current);
           }
           function handleChange(event) {
             var val = event.target.value;
@@ -557,11 +572,11 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
             }
 
             //
-            onChange === null || onChange === void 0 ? void 0 : onChange(event, onComposition);
+            onChange === null || onChange === void 0 ? void 0 : onChange(event, onComposition, valRef.current);
 
             // It fires in real time as the user enters
             if (typeof onInputCallback === 'function') {
-              var newData = onInputCallback(event);
+              var newData = onInputCallback(event, valRef.current);
               if (newData) setChangedVal(newData); // Avoid the error "react checkbox changing an uncontrolled input to be controlled"
             }
           }
@@ -577,18 +592,18 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
             }
 
             //
-            onBlur === null || onBlur === void 0 ? void 0 : onBlur(event, onComposition);
+            onBlur === null || onBlur === void 0 ? void 0 : onBlur(event, onComposition, valRef.current);
 
             // It fires when focus is lost
             if (typeof onChangeCallback === 'function') {
-              var newData = onChangeCallback(event);
+              var newData = onChangeCallback(event, valRef.current);
               if (newData) setChangedVal(newData); // Avoid the error "react checkbox changing an uncontrolled input to be controlled"
             }
           }
 
           function handleKeyPressed(event) {
             if (typeof onKeyPressedCallback === 'function') {
-              var newData = onKeyPressedCallback(event);
+              var newData = onKeyPressedCallback(event, valRef.current);
               if (newData) setChangedVal(newData); // Avoid the error "react checkbox changing an uncontrolled input to be controlled"
             }
           }

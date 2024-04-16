@@ -1,4 +1,4 @@
-import React, { useId, useState, useEffect, useRef, forwardRef } from 'react';
+import React, { useId, useState, useEffect, useRef, forwardRef, useImperativeHandle } from 'react';
 
 
 import useAutosizeTextArea from './utils/useAutosizeTextArea';
@@ -8,7 +8,8 @@ declare module 'react' {
         children?: any;
     }
 }
-interface TextareaProps extends React.ComponentPropsWithoutRef<"textarea"> {
+type TextareaProps = {
+    contentRef?: React.RefObject<any>;
     wrapperClassName?: string;
     controlClassName?: string;
     controlExClassName?: string;
@@ -32,17 +33,18 @@ interface TextareaProps extends React.ComponentPropsWithoutRef<"textarea"> {
     style?: React.CSSProperties;
     tabIndex?: number;
     [key: `data-${string}`]: string | undefined;
-    onChangeCallback?: (e: any) => void;
-    onInputCallback?: (e: any) => void;
-    onKeyPressedCallback?: (e: any) => void;
-    onChange?: (e: any) => void;
-    onBlur?: (e: any) => void;
-    onFocus?: (e: any) => void;
+    onChangeCallback?: (e: any, el: any) => void;
+    onInputCallback?: (e: any, el: any) => void;
+    onKeyPressedCallback?: (e: any, el: any) => void;
+    onChange?: (e: any, el: any) => void;
+    onBlur?: (e: any, el: any) => void;
+    onFocus?: (e: any, el: any) => void;
 };
 
 
 const Textarea = forwardRef((props: TextareaProps, ref: any) => {
     const {
+        contentRef,
         wrapperClassName,
         controlClassName,
         controlExClassName,
@@ -80,6 +82,22 @@ const Textarea = forwardRef((props: TextareaProps, ref: any) => {
     const valRef = useRef<any>(null);
     const [changedVal, setChangedVal] = useState<string>(value || '');
 
+    // exposes the following methods
+    useImperativeHandle(
+        contentRef,
+        () => ({
+            clear: (cb?: any) => {
+                setChangedVal('');
+                cb?.();
+            },
+            set: (value: string, cb?: any) => {
+                setChangedVal(`${value}`);
+                cb?.();
+            }
+        }),
+        [contentRef],
+    );
+
 
     // auto size
     useAutosizeTextArea(autoSize ? valRef.current : null, autoSize ? changedVal : '');
@@ -89,7 +107,7 @@ const Textarea = forwardRef((props: TextareaProps, ref: any) => {
         rootRef.current.classList.add('focus');
 
         //
-        onFocus?.(event);     
+        onFocus?.(event, valRef.current);     
     }
 
     function handleChange(event: any) {
@@ -104,11 +122,11 @@ const Textarea = forwardRef((props: TextareaProps, ref: any) => {
         }
 
         //
-        onChange?.(event);
+        onChange?.(event, valRef.current);
 
         // It fires in real time as the user enters
         if (typeof (onInputCallback) === 'function') {
-            const newData: any = onInputCallback(event);
+            const newData: any = onInputCallback(event, valRef.current);
             if (newData) setChangedVal(newData);  // Avoid the error "react checkbox changing an uncontrolled input to be controlled"
         }
 
@@ -126,12 +144,12 @@ const Textarea = forwardRef((props: TextareaProps, ref: any) => {
         }
 
         //
-        onBlur?.(event);
+        onBlur?.(event, valRef.current);
 
 
         // It fires when focus is lost
         if (typeof (onChangeCallback) === 'function') {
-            const newData: any = onChangeCallback(event);
+            const newData: any = onChangeCallback(event, valRef.current);
             if (newData) setChangedVal(newData);  // Avoid the error "react checkbox changing an uncontrolled input to be controlled"
         }
 
@@ -139,7 +157,7 @@ const Textarea = forwardRef((props: TextareaProps, ref: any) => {
 
     function handleKeyPressed(event: React.KeyboardEvent<HTMLTextAreaElement>) {
         if (typeof (onKeyPressedCallback) === 'function') {
-            const newData: any = onKeyPressedCallback(event);
+            const newData: any = onKeyPressedCallback(event, valRef.current);
             if (newData) setChangedVal(newData);  // Avoid the error "react checkbox changing an uncontrolled input to be controlled"
         }
     }

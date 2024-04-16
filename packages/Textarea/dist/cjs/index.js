@@ -182,7 +182,7 @@ var useAutosizeTextArea = function useAutosizeTextArea(el, value) {
 };
 /* harmony default export */ const utils_useAutosizeTextArea = (useAutosizeTextArea);
 ;// CONCATENATED MODULE: ./src/index.tsx
-var _excluded = ["wrapperClassName", "controlClassName", "controlExClassName", "controlGroupWrapperClassName", "controlGroupTextClassName", "cols", "rows", "disabled", "required", "placeholder", "autoSize", "iconLeft", "iconRight", "readOnly", "value", "label", "name", "id", "maxLength", "style", "tabIndex", "onChangeCallback", "onInputCallback", "onKeyPressedCallback", "onChange", "onBlur", "onFocus"];
+var _excluded = ["contentRef", "wrapperClassName", "controlClassName", "controlExClassName", "controlGroupWrapperClassName", "controlGroupTextClassName", "cols", "rows", "disabled", "required", "placeholder", "autoSize", "iconLeft", "iconRight", "readOnly", "value", "label", "name", "id", "maxLength", "style", "tabIndex", "onChangeCallback", "onInputCallback", "onKeyPressedCallback", "onChange", "onBlur", "onFocus"];
 function _extends() { _extends = Object.assign ? Object.assign.bind() : function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
 function src_slicedToArray(arr, i) { return src_arrayWithHoles(arr) || src_iterableToArrayLimit(arr, i) || src_unsupportedIterableToArray(arr, i) || src_nonIterableRest(); }
 function src_nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
@@ -194,9 +194,9 @@ function _objectWithoutProperties(source, excluded) { if (source == null) return
 function _objectWithoutPropertiesLoose(source, excluded) { if (source == null) return {}; var target = {}; var sourceKeys = Object.keys(source); var key, i; for (i = 0; i < sourceKeys.length; i++) { key = sourceKeys[i]; if (excluded.indexOf(key) >= 0) continue; target[key] = source[key]; } return target; }
 
 
-;
 var Textarea = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_amd_react_.forwardRef)(function (props, _ref) {
-  var wrapperClassName = props.wrapperClassName,
+  var contentRef = props.contentRef,
+    wrapperClassName = props.wrapperClassName,
     controlClassName = props.controlClassName,
     controlExClassName = props.controlExClassName,
     controlGroupWrapperClassName = props.controlGroupWrapperClassName,
@@ -233,6 +233,20 @@ var Textarea = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_reac
     changedVal = _useState2[0],
     setChangedVal = _useState2[1];
 
+  // exposes the following methods
+  (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useImperativeHandle)(contentRef, function () {
+    return {
+      clear: function clear(cb) {
+        setChangedVal('');
+        cb === null || cb === void 0 ? void 0 : cb();
+      },
+      set: function set(value, cb) {
+        setChangedVal("".concat(value));
+        cb === null || cb === void 0 ? void 0 : cb();
+      }
+    };
+  }, [contentRef]);
+
   // auto size
   utils_useAutosizeTextArea(autoSize ? valRef.current : null, autoSize ? changedVal : '');
   function handleFocus(event) {
@@ -240,7 +254,7 @@ var Textarea = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_reac
     rootRef.current.classList.add('focus');
 
     //
-    onFocus === null || onFocus === void 0 ? void 0 : onFocus(event);
+    onFocus === null || onFocus === void 0 ? void 0 : onFocus(event, valRef.current);
   }
   function handleChange(event) {
     var val = event.target.value;
@@ -253,11 +267,11 @@ var Textarea = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_reac
     }
 
     //
-    onChange === null || onChange === void 0 ? void 0 : onChange(event);
+    onChange === null || onChange === void 0 ? void 0 : onChange(event, valRef.current);
 
     // It fires in real time as the user enters
     if (typeof onInputCallback === 'function') {
-      var newData = onInputCallback(event);
+      var newData = onInputCallback(event, valRef.current);
       if (newData) setChangedVal(newData); // Avoid the error "react checkbox changing an uncontrolled input to be controlled"
     }
   }
@@ -273,18 +287,18 @@ var Textarea = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_reac
     }
 
     //
-    onBlur === null || onBlur === void 0 ? void 0 : onBlur(event);
+    onBlur === null || onBlur === void 0 ? void 0 : onBlur(event, valRef.current);
 
     // It fires when focus is lost
     if (typeof onChangeCallback === 'function') {
-      var newData = onChangeCallback(event);
+      var newData = onChangeCallback(event, valRef.current);
       if (newData) setChangedVal(newData); // Avoid the error "react checkbox changing an uncontrolled input to be controlled"
     }
   }
 
   function handleKeyPressed(event) {
     if (typeof onKeyPressedCallback === 'function') {
-      var newData = onKeyPressedCallback(event);
+      var newData = onKeyPressedCallback(event, valRef.current);
       if (newData) setChangedVal(newData); // Avoid the error "react checkbox changing an uncontrolled input to be controlled"
     }
   }

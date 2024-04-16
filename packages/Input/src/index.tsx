@@ -1,4 +1,4 @@
-import React, { useId, useState, useEffect, useRef, forwardRef, ChangeEvent, CompositionEvent } from 'react';
+import React, { useId, useState, useEffect, useRef, forwardRef, ChangeEvent, CompositionEvent, useImperativeHandle } from 'react';
 
 declare module 'react' {
     interface ReactI18NextChildren<T> {
@@ -7,6 +7,7 @@ declare module 'react' {
 }
 
 type InputProps = {
+    contentRef?: React.RefObject<any>;
     wrapperClassName?: string;
     controlClassName?: string;
     controlExClassName?: string;
@@ -40,18 +41,19 @@ type InputProps = {
     autoComplete?: string;
     tabIndex?: number;
     [key: `data-${string}`]: string | undefined;
-    onChangeCallback?: (e: any) => void;
-    onInputCallback?: (e: any) => void;
-    onKeyPressedCallback?: (e: any) => void;
-    onChange?: (e: any, param: any) => void;
-    onBlur?: (e: any, param: any) => void;
-    onFocus?: (e: any, param: any) => void;
+    onChangeCallback?: (e: any, el: any) => void;
+    onInputCallback?: (e: any, el: any) => void;
+    onKeyPressedCallback?: (e: any, el: any) => void;
+    onChange?: (e: any, param: any, el: any) => void;
+    onBlur?: (e: any, param: any, el: any) => void;
+    onFocus?: (e: any, param: any, el: any) => void;
 
 };
 
 
 const Input = forwardRef((props: InputProps, ref: any) => {
     const {
+        contentRef,
         wrapperClassName,
         controlClassName,
         controlExClassName,
@@ -101,6 +103,23 @@ const Input = forwardRef((props: InputProps, ref: any) => {
     const [onComposition, setOnComposition] = useState(false);
     const [changedVal, setChangedVal] = useState<string>(value || '');
 
+
+    // exposes the following methods
+    useImperativeHandle(
+        contentRef,
+        () => ({
+            clear: (cb?: any) => {
+                setChangedVal('');
+                cb?.();
+            },
+            set: (value: string, cb?: any) => {
+                setChangedVal(`${value}`);
+                cb?.();
+            }
+        }),
+        [contentRef],
+    );
+
     const propExist = (p: any) => {
         return typeof p !== 'undefined' && p !== null && p !== '';
     };
@@ -119,7 +138,7 @@ const Input = forwardRef((props: InputProps, ref: any) => {
         rootRef.current.classList.add('focus');
 
         //
-        onFocus?.(event, onComposition);    
+        onFocus?.(event, onComposition, valRef.current);    
     }
 
     function handleChange(event: ChangeEvent<HTMLInputElement>) {
@@ -135,11 +154,11 @@ const Input = forwardRef((props: InputProps, ref: any) => {
         }
 
         //
-        onChange?.(event, onComposition);
+        onChange?.(event, onComposition, valRef.current);
 
         // It fires in real time as the user enters
         if (typeof (onInputCallback) === 'function') {
-            const newData: any = onInputCallback(event);
+            const newData: any = onInputCallback(event, valRef.current);
             if (newData) setChangedVal(newData);  // Avoid the error "react checkbox changing an uncontrolled input to be controlled"
         }
 
@@ -158,18 +177,18 @@ const Input = forwardRef((props: InputProps, ref: any) => {
         }
 
         //
-        onBlur?.(event, onComposition);
+        onBlur?.(event, onComposition, valRef.current);
 
         // It fires when focus is lost
         if (typeof (onChangeCallback) === 'function') {
-            const newData: any = onChangeCallback(event);
+            const newData: any = onChangeCallback(event, valRef.current);
             if (newData) setChangedVal(newData);  // Avoid the error "react checkbox changing an uncontrolled input to be controlled"
         }
     }
    
     function handleKeyPressed(event: React.KeyboardEvent<HTMLInputElement>) {
         if (typeof (onKeyPressedCallback) === 'function') {
-            const newData: any = onKeyPressedCallback(event);
+            const newData: any = onKeyPressedCallback(event, valRef.current);
             if (newData) setChangedVal(newData);  // Avoid the error "react checkbox changing an uncontrolled input to be controlled"
         }
     }

@@ -10,6 +10,7 @@ import Textarea from 'funda-ui/Textarea';
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |
 | `ref` | React.ForwardedRef | - | It is the return element of this component.  |
+| `contentRef` | React.RefObject | - | It exposes the following methods when the component's popup opens or closes:  <br /> <ol><li>`contentRef.current.clear(() => { console.log('callback') })`</li><li>`contentRef.current.set('test value', () => { console.log('callback') })`</li></ol> |
 | `wrapperClassName` | string | `mb-3 position-relative` | The class name of the control wrapper. |
 | `controlClassName` | string | `form-control` | The class name of the control. |
 | `controlExClassName` | string | - | The extended class name of `controlClassName`. |
@@ -30,12 +31,12 @@ import Textarea from 'funda-ui/Textarea';
 | `iconRight` | ReactNode  | - | Set the right icon of this control |
 | `cols` | number  | - | The cols attribute specifies the visible width of a text area. |
 | `rows` | number  | - | The rows attribute specifies the visible height of a text area, in lines. |
-| `onChangeCallback` | function  | - | Return value from `onChangeCallback` property to format the data of the control element, which will match the data structure of the component. <br >At the same time it returns the Control Event, you will use this function and use the `return` keyword to return a new value. <blockquote>It fires when focus is lost. If return is not set, it will not return.</blockquote> |
-| `onInputCallback` | function  | - | Return value from `onInputCallback` property to format the data of the control element, which will match the data structure of the component. <br >At the same time it returns the Control Event, you will use this function and use the `return` keyword to return a new value. <blockquote>It fires in real time as the user enters. If return is not set, it will not return.</blockquote> |
-| `onKeyPressedCallback` | function  | - | Return value from `onKeyPressedCallback` property to format the data of the control element, which will match the data structure of the component. <br >At the same time it returns the Control Event, you will use this function and use the `return` keyword to return a new value. <blockquote>It fires when the keyboard is pressed. If return is not set, it will not return.</blockquote> |
-| `onChange` | function  | - | Call a function when the value of an HTML element is changed. It returns only one callback value which is the Control Event (**Event**). |
-| `onBlur` | function  | - | Call a function when a user leaves an form field. It returns only one callback value which is the Control Event (**Event**) |
-| `onFocus` | function  | - | Call a function when an form field gets focus. It returns only one callback value which is the Control Event (**Event**) |
+| `onChangeCallback` | function  | - | Return value from `onChangeCallback` property to format the data of the control element, which will match the data structure of the component. It returns two callback values. <br /> <ol><li>The first is the Control Event (**Event**)</li><li>The last is the control (**HTML Element**)</li></ol> <br >At the same time it returns the Control Event, you will use this function and use the `return` keyword to return a new value. <blockquote>It fires when focus is lost. If return is not set, it will not return.</blockquote> |
+| `onInputCallback` | function  | - | Return value from `onInputCallback` property to format the data of the control element, which will match the data structure of the component.  It returns two callback values. <br /> <ol><li>The first is the Control Event (**Event**)</li><li>The last is the control (**HTML Element**)</li></ol><br >At the same time it returns the Control Event, you will use this function and use the `return` keyword to return a new value. <blockquote>It fires in real time as the user enters. If return is not set, it will not return.</blockquote> |
+| `onKeyPressedCallback` | function  | - | Return value from `onKeyPressedCallback` property to format the data of the control element, which will match the data structure of the component.  It returns two callback values. <br /> <ol><li>The first is the Control Event (**Event**)</li><li>The last is the control (**HTML Element**)</li></ol><br >At the same time it returns the Control Event, you will use this function and use the `return` keyword to return a new value. <blockquote>It fires when the keyboard is pressed. If return is not set, it will not return.</blockquote> |
+| `onChange` | function  | - | Call a function when the value of an HTML element is changed. It returns two callback values. <br /> <ol><li>The first is the Control Event (**Event**)</li><li>The last is the control (**HTML Element**)</li></ol>  |
+| `onBlur` | function  | - | Call a function when a user leaves an form field. It returns two callback values. <br /> <ol><li>The first is the Control Event (**Event**)</li><li>The second is the composition event (**Boolean****)</li><li>The last is the control (**HTML Element**)</li></ol> |
+| `onFocus` | function  | - | Call a function when an form field gets focus. It returns two callback values. <br /> <ol><li>The first is the Control Event (**Event**)</li><li>The last is the control (**HTML Element**)</li></ol> |
 
 
 
@@ -229,5 +230,100 @@ export default () => {
 
         </>
     );
+}
+```
+
+
+## Complex use of popup and default value
+
+Lets you callback the handle exposed as a ref.
+
+
+```js
+ import React, { useState, useRef } from 'react';
+
+ // bootstrap components
+ import ModalDialog from 'funda-ui/ModalDialog';
+ import Textarea from '../Textarea/src';
+
+export default () => {
+
+    const conRef = useRef<any>(null);
+    const [show, setShow] = useState<boolean>(false);
+    const [userContent, setUserContent] = useState<string>('');
+
+    return (
+
+
+        <>
+      
+            <button
+                type="button" 
+                onClick={(e: React.MouseEvent) => {
+                    setShow(true);
+                }}
+            >Open Textarea Popup</button>
+
+
+         
+            {/*<!-- EDIT INFO -->*/}
+            <ModalDialog
+                show={show}
+                heading="TEST"
+                triggerClassName=""
+                triggerContent=""
+                closeBtnClassName="btn btn-secondary"
+                closeBtnLabel="Cancel"
+                submitBtnClassName="btn btn-primary"
+                submitBtnLabel="Confirm"
+                onOpen={() => {
+                    // if (conRef.current) conRef.current.set('my default value here', () => { console.log('callback') });
+                }}
+                onClose={(e) => {
+
+                    // Modifying React State can ensure that the window content is updated in real time
+                    setTimeout(() => {
+                        setShow(false);
+                    }, 350);
+
+                }}
+                onSubmit={(e, closewin, data) => {
+                    if (e === null) return;
+
+                    closewin();
+
+                    setTimeout(() => {
+                        setUserContent('');
+                        if (conRef.current) conRef.current.clear();
+                        setShow(false);
+                    }, 350);
+
+
+                    // do something 
+                    alert(userContent);
+
+
+                }}
+            >
+
+                <Textarea
+                    contentRef={conRef}
+                    name="name"
+                    rows={3}
+                    autoSize
+                    onChange={(e) => {
+                        setUserContent(e.target.value);
+                    }}
+                />
+                
+
+            </ModalDialog>
+            {/*<!-- /EDIT INFOD -->*/}
+
+
+
+
+        </>
+    )
 }
 ```

@@ -4,7 +4,8 @@ declare module 'react' {
         children?: any;
     }
 }
-interface TextareaProps extends React.ComponentPropsWithoutRef<"textarea"> {
+declare type TextareaProps = {
+    contentRef?: React.RefObject<any>;
     wrapperClassName?: string;
     controlClassName?: string;
     controlExClassName?: string;
@@ -28,12 +29,12 @@ interface TextareaProps extends React.ComponentPropsWithoutRef<"textarea"> {
     style?: React.CSSProperties;
     tabIndex?: number;
     [key: `data-${string}`]: string | undefined;
-    onChangeCallback?: (e: any) => void;
-    onInputCallback?: (e: any) => void;
-    onKeyPressedCallback?: (e: any) => void;
-    onChange?: (e: any) => void;
-    onBlur?: (e: any) => void;
-    onFocus?: (e: any) => void;
-}
+    onChangeCallback?: (e: any, el: any) => void;
+    onInputCallback?: (e: any, el: any) => void;
+    onKeyPressedCallback?: (e: any, el: any) => void;
+    onChange?: (e: any, el: any) => void;
+    onBlur?: (e: any, el: any) => void;
+    onFocus?: (e: any, el: any) => void;
+};
 declare const Textarea: React.ForwardRefExoticComponent<TextareaProps & React.RefAttributes<unknown>>;
 export default Textarea;

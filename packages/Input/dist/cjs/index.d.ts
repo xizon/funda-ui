@@ -5,6 +5,7 @@ declare module 'react' {
     }
 }
 declare type InputProps = {
+    contentRef?: React.RefObject<any>;
     wrapperClassName?: string;
     controlClassName?: string;
     controlExClassName?: string;
@@ -38,12 +39,12 @@ declare type InputProps = {
     autoComplete?: string;
     tabIndex?: number;
     [key: `data-${string}`]: string | undefined;
-    onChangeCallback?: (e: any) => void;
-    onInputCallback?: (e: any) => void;
-    onKeyPressedCallback?: (e: any) => void;
-    onChange?: (e: any, param: any) => void;
-    onBlur?: (e: any, param: any) => void;
-    onFocus?: (e: any, param: any) => void;
+    onChangeCallback?: (e: any, el: any) => void;
+    onInputCallback?: (e: any, el: any) => void;
+    onKeyPressedCallback?: (e: any, el: any) => void;
+    onChange?: (e: any, param: any, el: any) => void;
+    onBlur?: (e: any, param: any, el: any) => void;
+    onFocus?: (e: any, param: any, el: any) => void;
 };
 declare const Input: React.ForwardRefExoticComponent<InputProps & React.RefAttributes<unknown>>;
 export default Input;

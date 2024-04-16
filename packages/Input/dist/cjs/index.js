@@ -96,7 +96,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(787);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-var _excluded = ["wrapperClassName", "controlClassName", "controlExClassName", "controlGroupWrapperClassName", "controlGroupTextClassName", "type", "disabled", "required", "placeholder", "pattern", "readOnly", "value", "label", "units", "name", "step", "min", "max", "src", "size", "minLength", "maxLength", "alt", "inputMode", "id", "appendControl", "iconLeft", "iconRight", "autoComplete", "style", "tabIndex", "onChangeCallback", "onInputCallback", "onKeyPressedCallback", "onChange", "onBlur", "onFocus"];
+var _excluded = ["contentRef", "wrapperClassName", "controlClassName", "controlExClassName", "controlGroupWrapperClassName", "controlGroupTextClassName", "type", "disabled", "required", "placeholder", "pattern", "readOnly", "value", "label", "units", "name", "step", "min", "max", "src", "size", "minLength", "maxLength", "alt", "inputMode", "id", "appendControl", "iconLeft", "iconRight", "autoComplete", "style", "tabIndex", "onChangeCallback", "onInputCallback", "onKeyPressedCallback", "onChange", "onBlur", "onFocus"];
 function _extends() { _extends = Object.assign ? Object.assign.bind() : function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
 function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
 function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
@@ -108,7 +108,8 @@ function _objectWithoutProperties(source, excluded) { if (source == null) return
 function _objectWithoutPropertiesLoose(source, excluded) { if (source == null) return {}; var target = {}; var sourceKeys = Object.keys(source); var key, i; for (i = 0; i < sourceKeys.length; i++) { key = sourceKeys[i]; if (excluded.indexOf(key) >= 0) continue; target[key] = source[key]; } return target; }
 
 var Input = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(function (props, _ref) {
-  var wrapperClassName = props.wrapperClassName,
+  var contentRef = props.contentRef,
+    wrapperClassName = props.wrapperClassName,
     controlClassName = props.controlClassName,
     controlExClassName = props.controlExClassName,
     controlGroupWrapperClassName = props.controlGroupWrapperClassName,
@@ -159,6 +160,20 @@ var Input = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(funct
     _useState4 = _slicedToArray(_useState3, 2),
     changedVal = _useState4[0],
     setChangedVal = _useState4[1];
+
+  // exposes the following methods
+  (0,react__WEBPACK_IMPORTED_MODULE_0__.useImperativeHandle)(contentRef, function () {
+    return {
+      clear: function clear(cb) {
+        setChangedVal('');
+        cb === null || cb === void 0 ? void 0 : cb();
+      },
+      set: function set(value, cb) {
+        setChangedVal("".concat(value));
+        cb === null || cb === void 0 ? void 0 : cb();
+      }
+    };
+  }, [contentRef]);
   var propExist = function propExist(p) {
     return typeof p !== 'undefined' && p !== null && p !== '';
   };
@@ -174,7 +189,7 @@ var Input = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(funct
     rootRef.current.classList.add('focus');
 
     //
-    onFocus === null || onFocus === void 0 ? void 0 : onFocus(event, onComposition);
+    onFocus === null || onFocus === void 0 ? void 0 : onFocus(event, onComposition, valRef.current);
   }
   function handleChange(event) {
     var val = event.target.value;
@@ -187,11 +202,11 @@ var Input = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(funct
     }
 
     //
-    onChange === null || onChange === void 0 ? void 0 : onChange(event, onComposition);
+    onChange === null || onChange === void 0 ? void 0 : onChange(event, onComposition, valRef.current);
 
     // It fires in real time as the user enters
     if (typeof onInputCallback === 'function') {
-      var newData = onInputCallback(event);
+      var newData = onInputCallback(event, valRef.current);
       if (newData) setChangedVal(newData); // Avoid the error "react checkbox changing an uncontrolled input to be controlled"
     }
   }
@@ -207,18 +222,18 @@ var Input = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(funct
     }
 
     //
-    onBlur === null || onBlur === void 0 ? void 0 : onBlur(event, onComposition);
+    onBlur === null || onBlur === void 0 ? void 0 : onBlur(event, onComposition, valRef.current);
 
     // It fires when focus is lost
     if (typeof onChangeCallback === 'function') {
-      var newData = onChangeCallback(event);
+      var newData = onChangeCallback(event, valRef.current);
       if (newData) setChangedVal(newData); // Avoid the error "react checkbox changing an uncontrolled input to be controlled"
     }
   }
 
   function handleKeyPressed(event) {
     if (typeof onKeyPressedCallback === 'function') {
-      var newData = onKeyPressedCallback(event);
+      var newData = onKeyPressedCallback(event, valRef.current);
       if (newData) setChangedVal(newData); // Avoid the error "react checkbox changing an uncontrolled input to be controlled"
     }
   }
