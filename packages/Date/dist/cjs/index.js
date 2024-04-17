@@ -45,6 +45,441 @@ module.exports = config;
 
 /***/ }),
 
+/***/ 593:
+/***/ ((module) => {
+
+/**
+ * Get now
+ * @returns {Date}  // Wed Apr 17 2024 14:31:36 GMT+0800 (China Standard Time)
+ */
+var getNow = function getNow() {
+  return new Date(Date.now());
+};
+
+/**
+ * Zero Padding
+ * @param {Number} num
+ * @param {Boolean} padZeroEnabled 
+ * @returns {String}  '01', '05', '12'
+ */
+var padZero = function padZero(num) {
+  var padZeroEnabled = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : true;
+  if (padZeroEnabled) {
+    return num < 10 ? '0' + num : num.toString();
+  } else {
+    return num.toString();
+  }
+};
+
+/**
+ * Number validation
+ * @param {*} v 
+ * @returns {Boolean}  
+ */
+var isNumeric = function isNumeric(v) {
+  return !isNaN(parseFloat(v)) && isFinite(v);
+};
+
+/**
+ * Hours validation
+ * @param {*} v 
+ * @returns {Boolean}  
+ */
+var isValidHours = function isValidHours(v) {
+  return /^([01]?[0-9]|2[0-3])$/.test(v); //  0～23, 00～23
+};
+
+/**
+ * Minutes and Seconds validation
+ * @param {*} v 
+ * @returns {Boolean}  
+ */
+var isValidMinutesAndSeconds = function isValidMinutesAndSeconds(v) {
+  return /^([01]?[0-9]|[0-5][0-9])$/.test(v); //  0~59, 00~59
+};
+
+/**
+ * Year validation
+ * @param {*} v 
+ * @returns {Boolean}  
+ */
+var isValidYear = function isValidYear(v) {
+  return /^([1-9][0-9])\d{2}$/.test(v); //  1000 ～ 9999
+};
+
+/**
+ * Month validation
+ * @param {*} v 
+ * @returns {Boolean}  
+ */
+var isValidMonth = function isValidMonth(v) {
+  return /^(0?[1-9]|1[0-2])$/.test(v); //  01～12, 1~12
+};
+
+/**
+ * Day validation
+ * @param {*} v 
+ * @returns {Boolean}  
+ */
+var isValidDay = function isValidDay(v) {
+  return /^(0?[1-9]|[1-2][0-9]|3[0-1])$/.test(v); //  01～31, 1~31
+};
+
+/**
+ * Check if the string is legitimate
+ * @param {String} v 
+ * @returns {Boolean}  
+ */
+var isValidDate = function isValidDate(v) {
+  return !(String(new Date(v)).toLowerCase() === 'invalid date');
+};
+
+/**
+ * Get calendar date
+ * @param {Date | String} v 
+ * @returns {String}  yyyy-MM-dd
+ */
+function dateFormat(v) {
+  var date = typeof v === 'string' ? new Date(v.replace(/-/g, "/")) : v; // fix "Invalid date in safari"
+  return date;
+}
+
+/**
+ * Get calendar date
+ * @param {Date | String} v 
+ * @param {Boolean} padZeroEnabled 
+ * @returns {String}  yyyy-MM-dd
+ */
+function getCalendarDate(v) {
+  var padZeroEnabled = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : true;
+  var date = dateFormat(v);
+  var year = date.getFullYear();
+  var month = padZero(date.getMonth() + 1, padZeroEnabled);
+  var day = padZero(date.getDate(), padZeroEnabled);
+  var hours = padZero(date.getHours(), padZeroEnabled);
+  var minutes = padZero(date.getMinutes(), padZeroEnabled);
+  var seconds = padZero(date.getSeconds(), padZeroEnabled);
+  var res = "".concat(year, "-").concat(month, "-").concat(day);
+  return res;
+}
+
+/**
+ * Get today date
+ * @returns {String}  yyyy-MM-dd
+ */
+function getTodayDate() {
+  return getCalendarDate(new Date());
+}
+
+/**
+ * Get tomorrow date
+ * @param {Date | String} v 
+ * @returns {String}  yyyy-MM-dd
+ */
+function getTomorrowDate(v) {
+  var today = dateFormat(v);
+  var _tomorrow = today;
+  _tomorrow.setDate(_tomorrow.getDate() + 1);
+  var tomorrow = getCalendarDate(_tomorrow);
+  return tomorrow;
+}
+
+/**
+ * Get yesterday date
+ * @param {Date | String} v 
+ * @returns {String}  yyyy-MM-dd
+ */
+function getYesterdayDate(v) {
+  var today = dateFormat(v);
+  var _yesterday = today;
+  _yesterday.setDate(_yesterday.getDate() - 1);
+  var yesterday = getCalendarDate(_yesterday);
+  return yesterday;
+}
+
+/**
+ * Get specified date
+ * @param {Date | String} v 
+ * @param {Number} days  The number of days forward or backward, which can be a negative number
+ * @returns {String}  yyyy-MM-dd
+ */
+/* console.log(getSpecifiedDate(getTodayDate(), -180)); // 2023-08-27 (180 days before February 23, 202) */
+function getSpecifiedDate(v, days) {
+  var today = dateFormat(v);
+  var _specifiedDay = today;
+  _specifiedDay.setDate(_specifiedDay.getDate() + days);
+  var specifiedDay = getCalendarDate(_specifiedDay);
+  return specifiedDay;
+}
+
+/**
+ * Get next month date
+ * @param {Date | String} v 
+ * @returns {String}  yyyy-MM-dd
+ */
+function getNextMonthDate(v) {
+  var today = dateFormat(v);
+  today.setMonth(today.getMonth() + 1);
+  return getCalendarDate(today);
+}
+
+/**
+ * Get previous month date
+ * @param {Date | String} v 
+ * @returns {String}  yyyy-MM-dd
+ */
+function getPrevMonthDate(v) {
+  var today = dateFormat(v);
+  today.setMonth(today.getMonth() - 1);
+  return getCalendarDate(today);
+}
+
+/**
+ * Get next year date
+ * @param {Date | String} v 
+ * @returns {String}  yyyy-MM-dd
+ */
+function getNextYearDate(v) {
+  var today = dateFormat(v);
+  var current = new Date(today);
+  current.setFullYear(current.getFullYear() + 1);
+  return getCalendarDate(current);
+}
+
+/**
+ * Get previous year date
+ * @param {Date | String} v 
+ * @returns {String}  yyyy-MM-dd
+ */
+function getPrevYearDate(v) {
+  var today = dateFormat(v);
+  var current = new Date(today);
+  current.setFullYear(current.getFullYear() - 1);
+  return getCalendarDate(current);
+}
+
+/**
+ * Get last day in month
+ * @param {Date | String} v 
+ * @param {?Number}  targetMonth 
+ * @returns {String}  yyyy-MM-dd
+ */
+/*
+Example: Get last day in  next month 
+
+const _day = '2024-01-01';
+const y = new Date(getNextMonthDate(_day)).getFullYear();
+const m = String(new Date(getNextMonthDate(_day)).getMonth() + 1).padStart(2, '0');
+const d = getLastDayInMonth(getNextMonthDate(_day), new Date(getNextMonthDate(_day)).getMonth() + 1);
+
+const lastDayOfNextMonth = `${y}-${m}-${d}`; // 2024-02-29
+
+*/
+function getLastDayInMonth(v) {
+  var targetMonth = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : undefined;
+  var date = dateFormat(v);
+  return new Date(date.getFullYear(), typeof targetMonth !== 'undefined' ? targetMonth : date.getMonth() - 1, 0).getDate();
+}
+
+/**
+ * Get current year
+ * @returns {Number}
+ */
+function getCurrentYear() {
+  return new Date().getFullYear();
+}
+
+/**
+ * Get current month
+ * @param {Boolean} padZeroEnabled 
+ * @returns {Number}
+ */
+function getCurrentMonth() {
+  var padZeroEnabled = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : true;
+  var m = new Date().getMonth() + 1;
+  return padZeroEnabled ? String(m).padStart(2, '0') : m;
+}
+
+/**
+ * Get current day
+ * @param {Boolean} padZeroEnabled 
+ * @returns {Number}
+ */
+function getCurrentDay() {
+  var padZeroEnabled = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : true;
+  var d = new Date().getDate();
+  return padZeroEnabled ? String(d).padStart(2, '0') : d;
+}
+
+/**
+ * Get first and last month day
+ * @param {Number} v 
+ * @param {Boolean} padZeroEnabled 
+ * @returns  {Array}
+ */
+function getFirstAndLastMonthDay(year) {
+  var padZeroEnabled = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : true;
+  var theFirst = new Date(year, 0, 1).getDate();
+  var theLast = new Date(year, 11, 31).getDate();
+  var padZero = function padZero(num) {
+    if (padZeroEnabled) {
+      return num < 10 ? '0' + num : num.toString();
+    } else {
+      return num.toString();
+    }
+  };
+  return [padZero(theFirst), padZero(theLast)];
+}
+
+/**
+ * Get current date
+ * @param {Boolean} padZeroEnabled 
+ * @typedef {String} JSON
+ */
+function getCurrentDate() {
+  var padZeroEnabled = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : true;
+  var date = new Date();
+  var padZero = function padZero(num) {
+    if (padZeroEnabled) {
+      return num < 10 ? '0' + num : num.toString();
+    } else {
+      return num.toString();
+    }
+  };
+  var year = date.getFullYear();
+  var month = padZero(date.getMonth() + 1);
+  var day = padZero(date.getDate());
+  var hours = padZero(date.getHours());
+  var minutes = padZero(date.getMinutes());
+  return {
+    today: "".concat(year, "-").concat(month, "-").concat(day),
+    yearStart: "".concat(year, "-01-01"),
+    yearEnd: "".concat(year, "-12-").concat(getLastDayInMonth(date, 12))
+  };
+}
+
+/**
+ * Get full time
+ * @param {Date | String} v 
+ * @param {Boolean} padZeroEnabled 
+ * @param {Boolean} hasSeconds 
+ * @returns {String}  yyyy-MM-dd HH:mm:ss
+ */
+function getFullTime(v) {
+  var padZeroEnabled = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : true;
+  var hasSeconds = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : true;
+  var date = dateFormat(v);
+  var padZero = function padZero(num) {
+    if (padZeroEnabled) {
+      return num < 10 ? '0' + num : num.toString();
+    } else {
+      return num.toString();
+    }
+  };
+  var year = date.getFullYear();
+  var month = padZero(date.getMonth() + 1);
+  var day = padZero(date.getDate());
+  var hours = padZero(date.getHours());
+  var minutes = padZero(date.getMinutes());
+  var seconds = padZero(date.getSeconds());
+  var res = "".concat(year, "-").concat(month, "-").concat(day, " ").concat(hours, ":").concat(minutes, ":").concat(seconds);
+  var res2 = "".concat(year, "-").concat(month, "-").concat(day, " ").concat(hours, ":").concat(minutes);
+  return hasSeconds ? res : res2;
+}
+
+/**
+ * Add hours
+ * @param {Date | String} v 
+ * @param {Number} offset
+ * @param {Boolean} padZeroEnabled 
+ * @returns {String}  yyyy-MM-dd HH:mm:ss
+ */
+function setDateHours(v, offset) {
+  var padZeroEnabled = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : true;
+  var date = dateFormat(v);
+  var _cur = new Date(date).setTime(new Date(date).getTime() + offset * 60 * 60 * 1000);
+  return getFullTime(new Date(_cur), padZeroEnabled);
+}
+
+/**
+ * Add minutes
+ * @param {Date | String} v 
+ * @param {Number} offset
+ * @param {Boolean} padZeroEnabled 
+ * @returns {String}  yyyy-MM-dd HH:mm:ss
+ */
+function setDateMinutes(v, offset) {
+  var padZeroEnabled = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : true;
+  var date = dateFormat(v);
+  var _cur = new Date(date).setTime(new Date(date).getTime() + offset * 60 * 1000);
+  return getFullTime(new Date(_cur), padZeroEnabled);
+}
+/**
+ * Add days
+ * @param {Date | String} v 
+ * @param {Number} offset
+ * @param {Boolean} padZeroEnabled 
+ * @returns {String}  yyyy-MM-dd HH:mm:ss
+ */
+function setDateDays(v, offset) {
+  var padZeroEnabled = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : true;
+  var date = dateFormat(v);
+  var _cur = new Date(date).setTime(new Date(date).getTime() + offset * 24 * 60 * 60 * 1000);
+  return getFullTime(new Date(_cur), padZeroEnabled);
+}
+
+/**
+ * Convert timestamp to date
+ * @param {Number} v 
+ * @param {Boolean} padZeroEnabled 
+ * @returns {String}  yyyy-MM-dd HH:mm:ss
+ */
+function timestampToDate(v) {
+  var padZeroEnabled = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : true;
+  return getFullTime(new Date(v), padZeroEnabled);
+}
+
+// node & browser
+module.exports = {
+  getNow: getNow,
+  padZero: padZero,
+  dateFormat: dateFormat,
+  //
+  isValidDate: isValidDate,
+  isNumeric: isNumeric,
+  isValidHours: isValidHours,
+  isValidMinutesAndSeconds: isValidMinutesAndSeconds,
+  isValidYear: isValidYear,
+  isValidMonth: isValidMonth,
+  isValidDay: isValidDay,
+  //
+  getLastDayInMonth: getLastDayInMonth,
+  getFirstAndLastMonthDay: getFirstAndLastMonthDay,
+  getCalendarDate: getCalendarDate,
+  getFullTime: getFullTime,
+  // current
+  getTodayDate: getTodayDate,
+  getCurrentMonth: getCurrentMonth,
+  getCurrentYear: getCurrentYear,
+  getCurrentDay: getCurrentDay,
+  getCurrentDate: getCurrentDate,
+  // next & previous
+  getTomorrowDate: getTomorrowDate,
+  getYesterdayDate: getYesterdayDate,
+  getNextMonthDate: getNextMonthDate,
+  getPrevMonthDate: getPrevMonthDate,
+  getNextYearDate: getNextYearDate,
+  getPrevYearDate: getPrevYearDate,
+  getSpecifiedDate: getSpecifiedDate,
+  // convert
+  setDateHours: setDateHours,
+  setDateMinutes: setDateMinutes,
+  setDateDays: setDateDays,
+  timestampToDate: timestampToDate
+};
+
+/***/ }),
+
 /***/ 378:
 /***/ ((module) => {
 
@@ -1048,6 +1483,8 @@ var cjs_default = /*#__PURE__*/__webpack_require__.n(cjs);
 // EXTERNAL MODULE: ../RootPortal/dist/cjs/index.js
 var dist_cjs = __webpack_require__(909);
 var dist_cjs_default = /*#__PURE__*/__webpack_require__.n(dist_cjs);
+// EXTERNAL MODULE: ./src/utils/date.js
+var utils_date = __webpack_require__(593);
 ;// CONCATENATED MODULE: ./src/Calendar.tsx
 function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
 function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
@@ -1059,6 +1496,7 @@ function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o =
 function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i]; return arr2; }
 function _iterableToArrayLimit(arr, i) { var _i = null == arr ? null : "undefined" != typeof Symbol && arr[Symbol.iterator] || arr["@@iterator"]; if (null != _i) { var _s, _e, _x, _r, _arr = [], _n = !0, _d = !1; try { if (_x = (_i = _i.call(arr)).next, 0 === i) { if (Object(_i) !== _i) return; _n = !1; } else for (; !(_n = (_s = _x.call(_i)).done) && (_arr.push(_s.value), _arr.length !== i); _n = !0); } catch (err) { _d = !0, _e = err; } finally { try { if (!_n && null != _i["return"] && (_r = _i["return"](), Object(_r) !== _r)) return; } finally { if (_d) throw _e; } } return _arr; } }
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+
 
 var Calendar = function Calendar(props) {
   var min = props.min,
@@ -1132,27 +1570,9 @@ var Calendar = function Calendar(props) {
     _useState22 = _slicedToArray(_useState21, 2),
     winMonth = _useState22[0],
     setWinMonth = _useState22[1];
-  var padZero = function padZero(num) {
-    var padZeroEnabled = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : true;
-    if (padZeroEnabled) {
-      return num < 10 ? '0' + num : num.toString();
-    } else {
-      return num.toString();
-    }
-  };
-  var isValidDate = function isValidDate(v) {
-    return !(String(new window.Date(v)).toLowerCase() === 'invalid date');
-  };
-  var dateFormat = function dateFormat(v) {
-    var date = typeof v === 'string' ? new window.Date(v.replace(/-/g, "/")) : v; // fix "Invalid date in safari"
-    return date;
-  };
-  var getTodayDate = function getTodayDate() {
-    return getCalendarDate(new Date());
-  };
   var getFullTimeData = function getFullTimeData(v) {
     var padZeroEnabled = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : true;
-    if (typeof v === 'string' && !isValidDate(v)) {
+    if (typeof v === 'string' && !(0,utils_date.isValidDate)(v)) {
       return {
         res: '0000-00-00 00:00:00',
         resNoSeconds: '0000-00-00 00:00',
@@ -1165,13 +1585,13 @@ var Calendar = function Calendar(props) {
         seconds: "00"
       };
     }
-    var date = dateFormat(v);
+    var date = (0,utils_date.dateFormat)(v);
     var year = date.getFullYear();
-    var month = padZero(date.getMonth() + 1, padZeroEnabled);
-    var day = padZero(date.getDate(), padZeroEnabled);
-    var hours = padZero(date.getHours(), padZeroEnabled);
-    var minutes = padZero(date.getMinutes(), padZeroEnabled);
-    var seconds = padZero(date.getSeconds(), padZeroEnabled);
+    var month = (0,utils_date.padZero)(date.getMonth() + 1, padZeroEnabled);
+    var day = (0,utils_date.padZero)(date.getDate(), padZeroEnabled);
+    var hours = (0,utils_date.padZero)(date.getHours(), padZeroEnabled);
+    var minutes = (0,utils_date.padZero)(date.getMinutes(), padZeroEnabled);
+    var seconds = (0,utils_date.padZero)(date.getSeconds(), padZeroEnabled);
     var res = "".concat(year, "-").concat(month, "-").concat(day, " ").concat(hours, ":").concat(minutes, ":").concat(seconds);
     var res2 = "".concat(year, "-").concat(month, "-").concat(day, " ").concat(hours, ":").concat(minutes);
     return {
@@ -1188,8 +1608,8 @@ var Calendar = function Calendar(props) {
   };
 
   // 
-  var MIN = typeof min !== 'undefined' && min !== '' && min !== null && isValidDate(min) ? getFullTimeData(min) : '';
-  var MAX = typeof max !== 'undefined' && max !== '' && max !== null && isValidDate(max) ? getFullTimeData(max) : '';
+  var MIN = typeof min !== 'undefined' && min !== '' && min !== null && (0,utils_date.isValidDate)(min) ? getFullTimeData(min) : '';
+  var MAX = typeof max !== 'undefined' && max !== '' && max !== null && (0,utils_date.isValidDate)(max) ? getFullTimeData(max) : '';
   var currentMinDateDisabled = MIN !== '' ? Number(new window.Date().getTime()) < Number(new window.Date(MIN.res).getTime()) ? true : false : false;
   var currentMaxDateDisabled = MAX !== '' ? Number(new window.Date().getTime()) > Number(new window.Date(MAX.res).getTime()) ? true : false : false;
 
@@ -1319,8 +1739,8 @@ var Calendar = function Calendar(props) {
 
       //
       onChangeMonth === null || onChangeMonth === void 0 ? void 0 : onChangeMonth({
-        day: padZero(day),
-        month: padZero(_date.getMonth() + 1),
+        day: (0,utils_date.padZero)(day),
+        month: (0,utils_date.padZero)(_date.getMonth() + 1),
         year: _date.getFullYear().toString()
       });
       return _date;
@@ -1336,8 +1756,8 @@ var Calendar = function Calendar(props) {
 
       //
       onChangeMonth === null || onChangeMonth === void 0 ? void 0 : onChangeMonth({
-        day: padZero(day),
-        month: padZero(_date.getMonth() + 1),
+        day: (0,utils_date.padZero)(day),
+        month: (0,utils_date.padZero)(_date.getMonth() + 1),
         year: _date.getFullYear().toString()
       });
       return _date;
@@ -1356,8 +1776,8 @@ var Calendar = function Calendar(props) {
 
     //
     onChangeYear === null || onChangeYear === void 0 ? void 0 : onChangeYear({
-      day: padZero(day),
-      month: padZero(month + 1),
+      day: (0,utils_date.padZero)(day),
+      month: (0,utils_date.padZero)(month + 1),
       year: currentValue.toString()
     });
   }
@@ -1371,8 +1791,8 @@ var Calendar = function Calendar(props) {
 
     //
     onChangeMonth === null || onChangeMonth === void 0 ? void 0 : onChangeMonth({
-      day: padZero(day),
-      month: padZero(currentIndex + 1),
+      day: (0,utils_date.padZero)(day),
+      month: (0,utils_date.padZero)(currentIndex + 1),
       year: year.toString()
     });
   }
@@ -1382,7 +1802,7 @@ var Calendar = function Calendar(props) {
     setTodayDate(now);
 
     //
-    var _now = getTodayDate().split('-');
+    var _now = (0,utils_date.getTodayDate)().split('-');
     onChangeToday === null || onChangeToday === void 0 ? void 0 : onChangeToday({
       day: _now[2],
       month: _now[1],
@@ -1485,7 +1905,7 @@ var Calendar = function Calendar(props) {
   }, [date]);
   (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useEffect)(function () {
     // update current today
-    if (typeof customTodayDate === 'string' && customTodayDate !== '' && isValidDate(customTodayDate)) {
+    if (typeof customTodayDate === 'string' && customTodayDate !== '' && (0,utils_date.isValidDate)(customTodayDate)) {
       var _customNow = new Date(customTodayDate);
       setTodayDate(_customNow);
     } else {
@@ -1605,7 +2025,7 @@ var Calendar = function Calendar(props) {
         className: "date2d-cal__cell date2d-cal__day ".concat(d > 0 ? '' : 'empty', " ").concat(d === now.getDate() ? 'today' : '', " ").concat(d === day ? 'selected' : '', " ").concat(isLastCol ? 'last-cell' : '', " ").concat(isLastRow ? 'last-row' : '', " ").concat(checkDisabledDay(year, month, d) ? 'disabled' : ''),
         key: "col" + i,
         "data-date": getCalendarDate(_dateShow),
-        "data-day": padZero(d),
+        "data-day": (0,utils_date.padZero)(d),
         "data-week": i,
         onClick: function onClick(e) {
           if (d > 0) {
@@ -1628,7 +2048,7 @@ var Calendar = function Calendar(props) {
     className: "date2d-cal__month-container"
   }, MONTHS_FULL.map(function (month, index) {
     return /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
-      "data-month": padZero(index + 1),
+      "data-month": (0,utils_date.padZero)(index + 1),
       className: "date2d-cal__month ".concat(selectedMonth === index ? ' selected' : '', " ").concat(checkDisabledMonth(year, index) ? 'disabled' : ''),
       key: month + index,
       onClick: function onClick() {
@@ -1689,6 +2109,7 @@ function _objectWithoutPropertiesLoose(source, excluded) { if (source == null) r
 
 
 
+
 var src_Date = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_amd_react_.forwardRef)(function (props, _ref) {
   var popupRef = props.popupRef,
     triggerClassName = props.triggerClassName,
@@ -1745,6 +2166,7 @@ var src_Date = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_reac
     langMonthsFull = props.langMonthsFull,
     langToday = props.langToday,
     attributes = _objectWithoutProperties(props, _excluded);
+  var defaultValueIsEmpty = typeof value === 'undefined' || value === null || value === 'null' || value === '';
 
   // Localization
   var _langHoursTitle = langHoursTitle || 'Hours';
@@ -1845,9 +2267,6 @@ var src_Date = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_reac
     };
   }, [popupRef]);
   var windowScrollUpdate = (0,performance.debounce)(handleScrollEvent, 50);
-  var isValidDate = function isValidDate(v) {
-    return !(String(new window.Date(v)).toLowerCase() === 'invalid date');
-  };
   var eventFire = function eventFire(el, etype) {
     if (el.fireEvent) {
       el.fireEvent('on' + etype);
@@ -1857,24 +2276,9 @@ var src_Date = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_reac
       el.dispatchEvent(evObj);
     }
   };
-  var dateFormat = function dateFormat(v) {
-    var date = typeof v === 'string' ? new window.Date(v.replace(/-/g, "/")) : v; // fix "Invalid date in safari"
-    return date;
-  };
-  var getNow = function getNow() {
-    return new window.Date(window.Date.now());
-  };
-  var padZero = function padZero(num) {
-    var padZeroEnabled = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : true;
-    if (padZeroEnabled) {
-      return num < 10 ? '0' + num : num.toString();
-    } else {
-      return num.toString();
-    }
-  };
   var getFullTimeData = function getFullTimeData(v) {
     var padZeroEnabled = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : true;
-    if (typeof v === 'string' && !isValidDate(v)) {
+    if (typeof v === 'string' && !(0,utils_date.isValidDate)(v)) {
       return {
         res: '0000-00-00 00:00:00',
         resNoSeconds: '0000-00-00 00:00',
@@ -1887,13 +2291,13 @@ var src_Date = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_reac
         seconds: "00"
       };
     }
-    var date = dateFormat(v);
+    var date = (0,utils_date.dateFormat)(v);
     var year = date.getFullYear();
-    var month = padZero(date.getMonth() + 1, padZeroEnabled);
-    var day = padZero(date.getDate(), padZeroEnabled);
-    var hours = padZero(date.getHours(), padZeroEnabled);
-    var minutes = padZero(date.getMinutes(), padZeroEnabled);
-    var seconds = padZero(date.getSeconds(), padZeroEnabled);
+    var month = (0,utils_date.padZero)(date.getMonth() + 1, padZeroEnabled);
+    var day = (0,utils_date.padZero)(date.getDate(), padZeroEnabled);
+    var hours = (0,utils_date.padZero)(date.getHours(), padZeroEnabled);
+    var minutes = (0,utils_date.padZero)(date.getMinutes(), padZeroEnabled);
+    var seconds = (0,utils_date.padZero)(date.getSeconds(), padZeroEnabled);
     var res = "".concat(year, "-").concat(month, "-").concat(day, " ").concat(hours, ":").concat(minutes, ":").concat(seconds);
     var res2 = "".concat(year, "-").concat(month, "-").concat(day, " ").concat(hours, ":").concat(minutes);
     return {
@@ -1910,10 +2314,37 @@ var src_Date = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_reac
   };
 
   // 
-  var MIN = typeof min !== 'undefined' && min !== '' && min !== null && isValidDate(min) ? getFullTimeData(min) : '';
-  var MAX = typeof max !== 'undefined' && max !== '' && max !== null && isValidDate(max) ? getFullTimeData(max) : '';
+  var MIN = typeof min !== 'undefined' && min !== '' && min !== null && (0,utils_date.isValidDate)(min) ? getFullTimeData(min) : '';
+  var MAX = typeof max !== 'undefined' && max !== '' && max !== null && (0,utils_date.isValidDate)(max) ? getFullTimeData(max) : '';
   var currentMinDateDisabled = MIN !== '' ? Number(new window.Date().getTime()) < Number(new window.Date(MIN.res).getTime()) ? true : false : false;
   var currentMaxDateDisabled = MAX !== '' ? Number(new window.Date().getTime()) > Number(new window.Date(MAX.res).getTime()) ? true : false : false;
+  var getActualDefaultValue = function getActualDefaultValue(v) {
+    var init = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
+    var _v = getFullTimeData((0,utils_date.getNow)());
+    var _nowVal = "".concat(_v.date, " ").concat(_v.hours, ":").concat(_v.minutes, ":").concat(_v.seconds);
+    if (!init) setInitSplitClickEvOk(true);
+    if (!initSplitClickEvOk) {
+      var noTargetVal = typeof clickInitValue === 'undefined' || clickInitValue === null || clickInitValue === 'null' || clickInitValue === '';
+      if (!defaultValueIsEmpty) {
+        noTargetVal = true;
+      }
+
+      //
+      var targetVal = noTargetVal ? defaultValueIsEmpty ? _nowVal : v : clickInitValue;
+      if (typeof v === 'undefined') {
+        targetVal = noTargetVal ? _nowVal : clickInitValue;
+      }
+
+      //
+      return [false, noTargetVal, targetVal];
+    } else {
+      var _targetVal = defaultValueIsEmpty ? _nowVal : v;
+      if (typeof v === 'undefined') {
+        _targetVal = _nowVal;
+      }
+      return [true, true, _targetVal];
+    }
+  };
   function handleScrollEvent() {
     popwinPosHide();
   }
@@ -2021,7 +2452,7 @@ var src_Date = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_reac
     var val = event.target.value;
 
     //
-    _onChange === null || _onChange === void 0 ? void 0 : _onChange(inputRef.current, val, isValidDate(val));
+    _onChange === null || _onChange === void 0 ? void 0 : _onChange(inputRef.current, val, (0,utils_date.isValidDate)(val));
   }
   function handleBlur(event) {
     //remove focus style
@@ -2036,44 +2467,19 @@ var src_Date = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_reac
 
     e.target.select();
     resetDefauleValueExist();
-
-    // update default value when splitting control clicked
-    var noTargetVal = typeof clickInitValue === 'undefined' || clickInitValue === null || clickInitValue === 'null' || clickInitValue === '';
-    var _targetVal = noTargetVal ? getNow() : clickInitValue;
-    if (noTargetVal) {
-      if (!dateDefaultValueExist) {
-        var _initValue = initValue(_targetVal),
-          _initValue2 = src_slicedToArray(_initValue, 2),
-          a = _initValue2[0],
-          b = _initValue2[1];
-        var _full = getFullTimeData(b).res;
-        _onChange === null || _onChange === void 0 ? void 0 : _onChange(inputRef.current, valueResConverter(_full), isValidDate(_full));
-        setChangedVal(_full);
-      }
-    } else {
-      if (!initSplitClickEvOk) {
-        var _initValue3 = initValue(_targetVal),
-          _initValue4 = src_slicedToArray(_initValue3, 2),
-          _a = _initValue4[0],
-          _b = _initValue4[1];
-        var _full2 = getFullTimeData(_b).res;
-        _onChange === null || _onChange === void 0 ? void 0 : _onChange(inputRef.current, valueResConverter(_full2), isValidDate(_full2));
-
-        //
-        setInitSplitClickEvOk(true);
-      }
-    }
+    var _date = "".concat(splitVals[0], "-").concat(splitVals[1], "-").concat(splitVals[2]);
+    var _full = "".concat(_date, " ").concat(splitVals[3], ":").concat(splitVals[4], ":").concat(splitVals[5]);
+    _onChange === null || _onChange === void 0 ? void 0 : _onChange(inputRef.current, valueResConverter(_full), (0,utils_date.isValidDate)(_full));
   }
   function clearAll() {
     setDateDefaultValueExist(false);
-    setChangedVal('');
     _onChange === null || _onChange === void 0 ? void 0 : _onChange(inputRef.current, '', false);
   }
   function resetDefauleValueExist() {
     if (!dateDefaultValueExist) setDateDefaultValueExist(true);
   }
   function valueResConverter(inputData) {
-    var v = isValidDate(inputData) ? inputData : "".concat(getFullTimeData(getNow()).date, " ").concat(inputData);
+    var v = (0,utils_date.isValidDate)(inputData) ? inputData : "".concat(getFullTimeData((0,utils_date.getNow)()).date, " ").concat(inputData);
     var _onlyTime = "".concat(getFullTimeData(v).hours, ":").concat(getFullTimeData(v).minutes).concat(truncateSeconds ? "" : ":".concat(getFullTimeData(v).seconds));
     var _date = "".concat(getFullTimeData(v).year).concat(valueUseSlash ? "/" : '-').concat(getFullTimeData(v).month).concat(valueUseSlash ? "/" : '-').concat(getFullTimeData(v).day);
     var _time = type === 'datetime-local' || type === 'time' ? " ".concat(getFullTimeData(v).hours, ":").concat(getFullTimeData(v).minutes).concat(truncateSeconds ? "" : ":".concat(getFullTimeData(v).seconds)) : '';
@@ -2206,11 +2612,10 @@ var src_Date = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_reac
     return res;
   }
   function initValue(v) {
-    var _dVal = onlyTime ? "".concat(getFullTimeData(getNow()).date, " ").concat(v) : v;
-    var _res = valueResConverter(_dVal);
+    var _res = valueResConverter(v);
     setChangedVal(_res);
-    if (isValidDate(_dVal)) {
-      var _getFullTimeData = getFullTimeData(_dVal),
+    if ((0,utils_date.isValidDate)(v)) {
+      var _getFullTimeData = getFullTimeData(v),
         date = _getFullTimeData.date,
         year = _getFullTimeData.year,
         month = _getFullTimeData.month,
@@ -2222,21 +2627,22 @@ var src_Date = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_reac
       setTimeVal([hours, minutes, seconds]);
       setSplitVals([year, month, day, hours, minutes, seconds]);
     }
-    return [_res, _dVal];
+    return [_res, v];
   }
   (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useEffect)(function () {
     // update default value
     //--------------
-    if (typeof value === 'undefined' || value === null || value === 'null' || value === '') {
-      setDateDefaultValueExist(false);
-    } else {
-      setDateDefaultValueExist(true);
-      var _initValue5 = initValue(value),
-        _initValue6 = src_slicedToArray(_initValue5, 2),
-        a = _initValue6[0],
-        b = _initValue6[1];
-      onLoad === null || onLoad === void 0 ? void 0 : onLoad(a, getFullTimeData(b));
-    }
+    var _getActualDefaultValu = getActualDefaultValue(value, true),
+      _getActualDefaultValu2 = src_slicedToArray(_getActualDefaultValu, 3),
+      curInitSplitClickEvOk = _getActualDefaultValu2[0],
+      curNoTargetVal = _getActualDefaultValu2[1],
+      curTargetVal = _getActualDefaultValu2[2];
+    setDateDefaultValueExist(defaultValueIsEmpty ? false : true);
+    var _initValue = initValue(curTargetVal),
+      _initValue2 = src_slicedToArray(_initValue, 2),
+      a = _initValue2[0],
+      b = _initValue2[1];
+    onLoad === null || onLoad === void 0 ? void 0 : onLoad(a, getFullTimeData(b));
 
     //--------------
     document.removeEventListener('pointerdown', handleClickOutside);
@@ -2304,7 +2710,7 @@ var src_Date = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_reac
       inputMode: "numeric",
       tabIndex: tabIndex || 0,
       className: "date2d__control__inputplaceholder--year",
-      value: !dateDefaultValueExist ? "" : splitVals[0] === '0000' ? '' : splitVals[0],
+      value: !dateDefaultValueExist ? "" : splitVals[0],
       maxLength: 4,
       autoComplete: "off",
       disabled: disabled || null,
@@ -2312,12 +2718,11 @@ var src_Date = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_reac
       onClick: handleInitSplitClickEv,
       onChange: function onChange(e) {
         var _val = e.target.value;
+        if (_val !== '' && !(0,utils_date.isValidYear)(_val) && (0,utils_date.isNumeric)(_val) && Number(_val) > 9999) _val = '9999';
+        if (_val !== '' && !(0,utils_date.isValidYear)(_val) && !(0,utils_date.isNumeric)(_val)) _val = "".concat((0,utils_date.getCurrentYear)());
         var _date = "".concat(_val, "-").concat(splitVals[1], "-").concat(splitVals[2]);
         var _full = "".concat(_date, " ").concat(splitVals[3], ":").concat(splitVals[4], ":").concat(splitVals[5]);
-        if (_val !== '') {
-          // console.log(/^([1-9][0-9])\d{2}$/.test(_val));//  1000 ～ 9999
-        }
-        _onChange === null || _onChange === void 0 ? void 0 : _onChange(inputRef.current, valueResConverter(_full), isValidDate(_full));
+        _onChange === null || _onChange === void 0 ? void 0 : _onChange(inputRef.current, valueResConverter(_full), (0,utils_date.isValidDate)(_full));
         setSplitVals(function (prevState) {
           return [_val, prevState[1], prevState[2], prevState[3], prevState[4], prevState[5]];
         });
@@ -2340,12 +2745,14 @@ var src_Date = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_reac
       onClick: handleInitSplitClickEv,
       onChange: function onChange(e) {
         var _val = e.target.value;
+        if (_val !== '' && !(0,utils_date.isValidMonth)(_val) && (0,utils_date.isNumeric)(_val)) {
+          if (Number(_val) > 12) _val = '12';
+          if (Number(_val) < 1 && Number(_val) > 0) _val = '01';
+        }
+        if (_val !== '' && !(0,utils_date.isValidMonth)(_val) && !(0,utils_date.isNumeric)(_val)) _val = "".concat((0,utils_date.getCurrentMonth)());
         var _date = "".concat(splitVals[0], "-").concat(_val, "-").concat(splitVals[2]);
         var _full = "".concat(_date, " ").concat(splitVals[3], ":").concat(splitVals[4], ":").concat(splitVals[5]);
-        if (_val !== '') {
-          // console.log(/^(0?[1-9]|1[0-2])$/.test(_val));//  01～12, 1~12
-        }
-        _onChange === null || _onChange === void 0 ? void 0 : _onChange(inputRef.current, valueResConverter(_full), isValidDate(_full));
+        _onChange === null || _onChange === void 0 ? void 0 : _onChange(inputRef.current, valueResConverter(_full), (0,utils_date.isValidDate)(_full));
         setSplitVals(function (prevState) {
           return [prevState[0], _val, prevState[2], prevState[3], prevState[4], prevState[5]];
         });
@@ -2368,12 +2775,19 @@ var src_Date = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_reac
       onClick: handleInitSplitClickEv,
       onChange: function onChange(e) {
         var _val = e.target.value;
+        var _day = "".concat(splitVals[0], "-").concat(splitVals[1], "-01");
+        var d = (0,utils_date.getLastDayInMonth)(_day, new window.Date(_day).getMonth() + 1);
+        if (_val !== '' && (0,utils_date.isValidDay)(_val) && (0,utils_date.isNumeric)(_val)) {
+          if (Number(_val) > Number(d)) _val = "".concat(d);
+        }
+        if (_val !== '' && !(0,utils_date.isValidDay)(_val) && (0,utils_date.isNumeric)(_val)) {
+          if (Number(_val) > Number(d)) _val = "".concat(d);
+          if (Number(_val) < 1 && Number(_val) > 0) _val = '01';
+        }
+        if (_val !== '' && !(0,utils_date.isValidDay)(_val) && !(0,utils_date.isNumeric)(_val)) _val = "".concat((0,utils_date.getCurrentDay)());
         var _date = "".concat(splitVals[0], "-").concat(splitVals[1], "-").concat(_val);
         var _full = "".concat(_date, " ").concat(splitVals[3], ":").concat(splitVals[4], ":").concat(splitVals[5]);
-        if (_val !== '') {
-          // console.log(/^(0?[1-9]|[1-2][0-9]|3[0-1])$/.test(_val));//  01～31, 1~31
-        }
-        _onChange === null || _onChange === void 0 ? void 0 : _onChange(inputRef.current, valueResConverter(_full), isValidDate(_full));
+        _onChange === null || _onChange === void 0 ? void 0 : _onChange(inputRef.current, valueResConverter(_full), (0,utils_date.isValidDate)(_full));
         setSplitVals(function (prevState) {
           return [prevState[0], prevState[1], _val, prevState[3], prevState[4], prevState[5]];
         });
@@ -2396,12 +2810,11 @@ var src_Date = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_reac
       onClick: handleInitSplitClickEv,
       onChange: function onChange(e) {
         var _val = e.target.value;
+        if (_val !== '' && !(0,utils_date.isValidHours)(_val) && (0,utils_date.isNumeric)(_val) && Number(_val) > 23) _val = '23';
+        if (_val !== '' && !(0,utils_date.isValidHours)(_val) && !(0,utils_date.isNumeric)(_val)) _val = '00';
         var _date = "".concat(splitVals[0], "-").concat(splitVals[1], "-").concat(splitVals[2]);
         var _full = "".concat(_date, " ").concat(_val, ":").concat(splitVals[4], ":").concat(splitVals[5]);
-        if (_val !== '') {
-          // console.log(/^([01]?[0-9]|2[0-3])$/.test(_val));//  0～23, 00～23
-        }
-        _onChange === null || _onChange === void 0 ? void 0 : _onChange(inputRef.current, valueResConverter(_full), isValidDate(_full));
+        _onChange === null || _onChange === void 0 ? void 0 : _onChange(inputRef.current, valueResConverter(_full), (0,utils_date.isValidDate)(_full));
         setSplitVals(function (prevState) {
           return [prevState[0], prevState[1], prevState[2], _val, prevState[4], prevState[5]];
         });
@@ -2424,12 +2837,11 @@ var src_Date = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_reac
       onClick: handleInitSplitClickEv,
       onChange: function onChange(e) {
         var _val = e.target.value;
+        if (_val !== '' && !(0,utils_date.isValidMinutesAndSeconds)(_val) && (0,utils_date.isNumeric)(_val) && Number(_val) > 59) _val = '59';
+        if (_val !== '' && !(0,utils_date.isValidMinutesAndSeconds)(_val) && !(0,utils_date.isNumeric)(_val)) _val = '00';
         var _date = "".concat(splitVals[0], "-").concat(splitVals[1], "-").concat(splitVals[2]);
         var _full = "".concat(_date, " ").concat(splitVals[3], ":").concat(_val, ":").concat(splitVals[5]);
-        if (_val !== '') {
-          // console.log(/^([01]?[0-9]|[0-5][0-9])$/.test(_val));//  0~59, 00~59
-        }
-        _onChange === null || _onChange === void 0 ? void 0 : _onChange(inputRef.current, valueResConverter(_full), isValidDate(_full));
+        _onChange === null || _onChange === void 0 ? void 0 : _onChange(inputRef.current, valueResConverter(_full), (0,utils_date.isValidDate)(_full));
         setSplitVals(function (prevState) {
           return [prevState[0], prevState[1], prevState[2], prevState[3], _val, prevState[5]];
         });
@@ -2452,12 +2864,11 @@ var src_Date = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_reac
       onClick: handleInitSplitClickEv,
       onChange: function onChange(e) {
         var _val = e.target.value;
+        if (_val !== '' && !(0,utils_date.isValidMinutesAndSeconds)(_val) && (0,utils_date.isNumeric)(_val) && Number(_val) > 59) _val = '59';
+        if (_val !== '' && !(0,utils_date.isValidMinutesAndSeconds)(_val) && !(0,utils_date.isNumeric)(_val)) _val = '00';
         var _date = "".concat(splitVals[0], "-").concat(splitVals[1], "-").concat(splitVals[2]);
         var _full = "".concat(_date, " ").concat(splitVals[3], ":").concat(splitVals[4], ":").concat(_val);
-        if (_val !== '') {
-          // console.log(/^([01]?[0-9]|[0-5][0-9])$/.test(_val));//  0~59, 00~59
-        }
-        _onChange === null || _onChange === void 0 ? void 0 : _onChange(inputRef.current, valueResConverter(_full), isValidDate(_full));
+        _onChange === null || _onChange === void 0 ? void 0 : _onChange(inputRef.current, valueResConverter(_full), (0,utils_date.isValidDate)(_full));
         setSplitVals(function (prevState) {
           return [prevState[0], prevState[1], prevState[2], prevState[3], prevState[4], _val];
         });
@@ -2602,7 +3013,6 @@ var src_Date = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_reac
         //
         var _val = e.currentTarget.dataset.value;
         var _v = getFullTimeData("".concat(dateVal, " ").concat(_val, ":").concat(timeVal[1], ":").concat(timeVal[2]));
-        console.log('^^^^^^^funda-ui test: ', e.currentTarget.dataset.value, "".concat(dateVal, " ").concat(_val, ":").concat(timeVal[1], ":").concat(timeVal[2]), getFullTimeData("".concat(dateVal, " ").concat(_val, ":").concat(timeVal[1], ":").concat(timeVal[2])));
         setChangedVal("".concat(dateVal, " ").concat(_val, ":").concat(timeVal[1], ":").concat(timeVal[2]));
         setTimeVal(function (prevState) {
           return [_val, prevState[1], prevState[2]];
@@ -2634,7 +3044,6 @@ var src_Date = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_reac
         //
         var _val = e.currentTarget.dataset.value;
         var _v = getFullTimeData("".concat(dateVal, " ").concat(timeVal[0], ":").concat(_val, ":").concat(timeVal[2]));
-        console.log('^^^^^^^funda-ui test: ', e.currentTarget.dataset.value, "".concat(dateVal, " ").concat(timeVal[0], ":").concat(_val, ":").concat(timeVal[2]), getFullTimeData("".concat(dateVal, " ").concat(timeVal[0], ":").concat(_val, ":").concat(timeVal[2])));
         setChangedVal("".concat(dateVal, " ").concat(timeVal[0], ":").concat(_val, ":").concat(timeVal[2]));
         setTimeVal(function (prevState) {
           return [prevState[0], _val, prevState[2]];

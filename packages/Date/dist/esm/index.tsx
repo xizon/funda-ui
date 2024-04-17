@@ -17,6 +17,25 @@ import i18n__zh_CN from './localization/zh_CN';
 
 import { debounce } from './utils/performance';
 
+import { 
+    padZero,
+    dateFormat,
+    getNow,
+    isValidDate,
+    isNumeric,
+    isValidHours,
+    isValidMinutesAndSeconds,
+    isValidYear,
+    isValidMonth,
+    isValidDay,
+    getCurrentYear,
+    getCurrentMonth,
+    getCurrentDay,
+    getLastDayInMonth
+ } from './utils/date';
+
+
+
 type DateProps = {
     popupRef?: React.RefObject<any>;
     popupClassName?: string;
@@ -149,6 +168,8 @@ const Date = forwardRef((props: DateProps, ref: any) => {
         ...attributes
     } = props;
 
+    const defaultValueIsEmpty= typeof value === 'undefined' || value === null || value === 'null' || value === '';
+
 
 
     // Localization
@@ -249,11 +270,6 @@ const Date = forwardRef((props: DateProps, ref: any) => {
 
     const windowScrollUpdate = debounce(handleScrollEvent, 50);
 
-
-    const isValidDate = (v: string) => {
-        return !(String(new window.Date(v) as any).toLowerCase() === 'invalid date');
-    };
-
     const eventFire = (el: any, etype: string) => {
         if (el.fireEvent) {
             el.fireEvent('on' + etype);
@@ -264,24 +280,6 @@ const Date = forwardRef((props: DateProps, ref: any) => {
         }
     };
 
-
-    const dateFormat = (v: Date | String) => {
-        const date = typeof v === 'string' ? new window.Date(v.replace(/-/g, "/")) : v;  // fix "Invalid date in safari"
-        return date;
-    };
-
-    const getNow = () => {
-        return new window.Date(window.Date.now());
-    };
-
-    const padZero = (num: number, padZeroEnabled: boolean = true) => {
-        if (padZeroEnabled) {
-            return num < 10 ? '0' + num : num.toString();
-        } else {
-            return num.toString();
-        }
-
-    };
 
     const getFullTimeData = (v: Date | String, padZeroEnabled: boolean = true) => {
 
@@ -299,7 +297,7 @@ const Date = forwardRef((props: DateProps, ref: any) => {
             }
         }
 
-        const date: any = dateFormat(v);
+        const date: any = dateFormat(v as any);
 
         const year = date.getFullYear();
         const month = padZero(date.getMonth() + 1, padZeroEnabled);
@@ -330,6 +328,45 @@ const Date = forwardRef((props: DateProps, ref: any) => {
     const currentMinDateDisabled = MIN !== '' ? (Number(new window.Date().getTime()) < Number(new window.Date(MIN.res).getTime()) ? true : false) : false;
     const currentMaxDateDisabled = MAX !== '' ? (Number(new window.Date().getTime()) > Number(new window.Date(MAX.res).getTime()) ? true : false) : false;
 
+    const getActualDefaultValue = (v?: any, init: boolean = false) => {
+        const _v = getFullTimeData(getNow());
+        const _nowVal: any = `${_v.date} ${_v.hours}:${_v.minutes}:${_v.seconds}`;
+
+        if (!init) setInitSplitClickEvOk(true);
+
+
+        if (!initSplitClickEvOk) {
+
+
+            let noTargetVal = typeof clickInitValue === 'undefined' || clickInitValue === null || clickInitValue === 'null' || clickInitValue === '';
+            if (!defaultValueIsEmpty) {
+                noTargetVal = true;
+            }
+
+            //
+            let targetVal: any = noTargetVal ? (defaultValueIsEmpty ? _nowVal : v) : clickInitValue;
+
+            if (typeof v === 'undefined') {
+                targetVal = noTargetVal ? _nowVal : clickInitValue;
+            }
+
+            //
+            return [false, noTargetVal, targetVal];
+        } else {
+
+        
+            let targetVal: any = defaultValueIsEmpty ? _nowVal : v;
+
+            if (typeof v === 'undefined') {
+                targetVal = _nowVal;
+            }
+
+            return [true, true, targetVal]; 
+        }
+
+
+        
+    };
 
     function handleScrollEvent() {
         popwinPosHide();
@@ -483,39 +520,16 @@ const Date = forwardRef((props: DateProps, ref: any) => {
 
         resetDefauleValueExist();
 
-        // update default value when splitting control clicked
-        const noTargetVal = typeof clickInitValue === 'undefined' || clickInitValue === null || clickInitValue === 'null' || clickInitValue === '';
-        const _targetVal: any = noTargetVal ? getNow() : clickInitValue;
-        
-        if (noTargetVal) {
-            if (!dateDefaultValueExist) {
-                const [a, b] = initValue(_targetVal);
-                const _full = getFullTimeData(b).res;
-                onChange?.(inputRef.current, valueResConverter(_full), isValidDate(_full));
-                setChangedVal(_full);
-            }
 
-        } else {
-
-            if (!initSplitClickEvOk) {
-                const [a, b] = initValue(_targetVal);
-                const _full = getFullTimeData(b).res;
-                onChange?.(inputRef.current, valueResConverter(_full), isValidDate(_full));
-
-                //
-                setInitSplitClickEvOk(true);
-            }
-
-
-        }
-
+        const _date = `${splitVals[0]}-${splitVals[1]}-${splitVals[2]}`;
+        const _full = `${_date} ${splitVals[3]}:${splitVals[4]}:${splitVals[5]}`;
+        onChange?.(inputRef.current, valueResConverter(_full), isValidDate(_full));
 
     }
 
 
     function clearAll() {
         setDateDefaultValueExist(false);
-        setChangedVal('');
         onChange?.(inputRef.current, '', false);
     }
 
@@ -704,12 +718,13 @@ const Date = forwardRef((props: DateProps, ref: any) => {
     }
 
     function initValue(v: any) {
-        const _dVal: any = onlyTime ? `${getFullTimeData(getNow()).date} ${v}` : v;
-        const _res = valueResConverter(_dVal);
+        const _res = valueResConverter(v);
+
 
         setChangedVal(_res);
         
-        if (isValidDate(_dVal)) {
+        if (isValidDate(v)) {
+
             const {
                 date,
                 year,
@@ -718,7 +733,7 @@ const Date = forwardRef((props: DateProps, ref: any) => {
                 hours,
                 minutes,
                 seconds
-            } = getFullTimeData(_dVal);
+            } = getFullTimeData(v);
 
 
             setDateVal(date);
@@ -726,23 +741,20 @@ const Date = forwardRef((props: DateProps, ref: any) => {
             setSplitVals([year, month, day, hours, minutes, seconds]);
         }
 
-        return [_res, _dVal]
+        return [_res, v]
 
     }
     
 
     useEffect(() => {
 
-
+   
         // update default value
         //--------------
-        if (typeof value === 'undefined' || value === null || value === 'null' || value === '') {
-            setDateDefaultValueExist(false);
-        } else {
-            setDateDefaultValueExist(true);
-            const [a, b] = initValue(value);
-            onLoad?.(a, getFullTimeData(b));
-        }
+        const [curInitSplitClickEvOk, curNoTargetVal, curTargetVal] = getActualDefaultValue(value, true);
+        setDateDefaultValueExist(defaultValueIsEmpty ? false : true);
+        const [a, b] = initValue(curTargetVal);
+        onLoad?.(a, getFullTimeData(b));
 
 
         //--------------
@@ -827,21 +839,22 @@ const Date = forwardRef((props: DateProps, ref: any) => {
                                         inputMode="numeric"
                                         tabIndex={tabIndex || 0}
                                         className="date2d__control__inputplaceholder--year"
-                                        value={!dateDefaultValueExist ? `` : (splitVals[0] === '0000' ? '' : splitVals[0])}
+                                        value={!dateDefaultValueExist ? `` : splitVals[0]}
                                         maxLength={4}
                                         autoComplete="off"
                                         disabled={disabled || null}
                                         readOnly={readOnly || null}
                                         onClick={handleInitSplitClickEv}
                                         onChange={(e: any) => {
-                                            const _val = e.target.value;
+                                            let _val = e.target.value;
+                                            if (_val !== '' && !isValidYear(_val) && isNumeric(_val) && Number(_val) > 9999) _val = '9999';
+                                            if (_val !== '' && !isValidYear(_val) && !isNumeric(_val)) _val = `${getCurrentYear()}`;
+
+
                                             const _date = `${_val}-${splitVals[1]}-${splitVals[2]}`;
                                             const _full = `${_date} ${splitVals[3]}:${splitVals[4]}:${splitVals[5]}`;
 
-                                            
-                                            if (_val !== '') {
-                                                // console.log(/^([1-9][0-9])\d{2}$/.test(_val));//  1000 ～ 9999
-                                            }
+                               
 
                                             onChange?.(inputRef.current, valueResConverter(_full), isValidDate(_full));
                                             setSplitVals((prevState: string[]) => {
@@ -870,15 +883,19 @@ const Date = forwardRef((props: DateProps, ref: any) => {
                                         readOnly={readOnly || null}
                                         onClick={handleInitSplitClickEv}
                                         onChange={(e: any) => {
-                                            const _val = e.target.value;
+                                            let _val = e.target.value;
+                                            if (_val !== '' && !isValidMonth(_val) && isNumeric(_val)) {
+                                                if (Number(_val) > 12) _val = '12';
+                                                if (Number(_val) < 1 && Number(_val) > 0) _val = '01';
+                                            }
+                                            if (_val !== '' && !isValidMonth(_val) && !isNumeric(_val)) _val = `${getCurrentMonth()}`;
+
+
+
                                             const _date = `${splitVals[0]}-${_val}-${splitVals[2]}`;
                                             const _full = `${_date} ${splitVals[3]}:${splitVals[4]}:${splitVals[5]}`;
 
-                                            if (_val !== '') {
-                                                // console.log(/^(0?[1-9]|1[0-2])$/.test(_val));//  01～12, 1~12
-                                            }
-                                            
-
+                   
 
                                             onChange?.(inputRef.current, valueResConverter(_full), isValidDate(_full));
                                             setSplitVals((prevState: string[]) => {
@@ -906,14 +923,26 @@ const Date = forwardRef((props: DateProps, ref: any) => {
                                         readOnly={readOnly || null}
                                         onClick={handleInitSplitClickEv}
                                         onChange={(e: any) => {
-                                            const _val = e.target.value;
+                                            let _val = e.target.value;
+
+                                            const _day = `${splitVals[0]}-${splitVals[1]}-01`;
+                                            const d = getLastDayInMonth(_day, new window.Date(_day).getMonth() + 1);
+
+                                            if (_val !== '' && isValidDay(_val) && isNumeric(_val)) {
+                                                if (Number(_val) > Number(d)) _val = `${d}`;
+                                            }     
+                                            
+                                            if (_val !== '' && !isValidDay(_val) && isNumeric(_val)) {
+                                                if (Number(_val) > Number(d)) _val = `${d}`;
+                                                if (Number(_val) < 1 && Number(_val) > 0) _val = '01';
+                                            }
+                                            if (_val !== '' && !isValidDay(_val) && !isNumeric(_val)) _val = `${getCurrentDay()}`;
+
+
                                             const _date = `${splitVals[0]}-${splitVals[1]}-${_val}`;
                                             const _full = `${_date} ${splitVals[3]}:${splitVals[4]}:${splitVals[5]}`;
 
 
-                                            if (_val !== '') {
-                                                // console.log(/^(0?[1-9]|[1-2][0-9]|3[0-1])$/.test(_val));//  01～31, 1~31
-                                            }
 
 
                                             onChange?.(inputRef.current, valueResConverter(_full), isValidDate(_full));
@@ -948,13 +977,13 @@ const Date = forwardRef((props: DateProps, ref: any) => {
                                         readOnly={readOnly || null}
                                         onClick={handleInitSplitClickEv}
                                         onChange={(e: any) => {
-                                            const _val = e.target.value;
+                                            let _val = e.target.value;
+                                            if (_val !== '' && !isValidHours(_val) && isNumeric(_val) && Number(_val) > 23) _val = '23';
+                                            if (_val !== '' && !isValidHours(_val) && !isNumeric(_val)) _val = '00';
+                                            
+
                                             const _date = `${splitVals[0]}-${splitVals[1]}-${splitVals[2]}`;
                                             const _full = `${_date} ${_val}:${splitVals[4]}:${splitVals[5]}`;
-
-                                            if (_val !== '') {
-                                                // console.log(/^([01]?[0-9]|2[0-3])$/.test(_val));//  0～23, 00～23
-                                            }
                                             
 
                                             onChange?.(inputRef.current, valueResConverter(_full), isValidDate(_full));
@@ -987,13 +1016,13 @@ const Date = forwardRef((props: DateProps, ref: any) => {
                                         readOnly={readOnly || null}
                                         onClick={handleInitSplitClickEv}
                                         onChange={(e: any) => {
-                                            const _val = e.target.value;
+                                            let _val = e.target.value;
+                                            if (_val !== '' && !isValidMinutesAndSeconds(_val) && isNumeric(_val) && Number(_val) > 59) _val = '59';
+                                            if (_val !== '' && !isValidMinutesAndSeconds(_val) && !isNumeric(_val)) _val = '00';
+                                            
+
                                             const _date = `${splitVals[0]}-${splitVals[1]}-${splitVals[2]}`;
                                             const _full = `${_date} ${splitVals[3]}:${_val}:${splitVals[5]}`;
-
-                                            if (_val !== '') {
-                                                // console.log(/^([01]?[0-9]|[0-5][0-9])$/.test(_val));//  0~59, 00~59
-                                            }
 
 
                                             onChange?.(inputRef.current, valueResConverter(_full), isValidDate(_full));
@@ -1028,13 +1057,13 @@ const Date = forwardRef((props: DateProps, ref: any) => {
                                             readOnly={readOnly || null}
                                             onClick={handleInitSplitClickEv}
                                             onChange={(e: any) => {
-                                                const _val = e.target.value;
+                                                let _val = e.target.value;
+                                                if (_val !== '' && !isValidMinutesAndSeconds(_val) && isNumeric(_val) && Number(_val) > 59) _val = '59';
+                                                if (_val !== '' && !isValidMinutesAndSeconds(_val) && !isNumeric(_val)) _val = '00';
+
+
                                                 const _date = `${splitVals[0]}-${splitVals[1]}-${splitVals[2]}`;
                                                 const _full = `${_date} ${splitVals[3]}:${splitVals[4]}:${_val}`;
-
-                                                if (_val !== '') {
-                                                    // console.log(/^([01]?[0-9]|[0-5][0-9])$/.test(_val));//  0~59, 00~59
-                                                }
 
 
                                                 onChange?.(inputRef.current, valueResConverter(_full), isValidDate(_full));
@@ -1211,9 +1240,6 @@ const Date = forwardRef((props: DateProps, ref: any) => {
                                                     const _val = (e.currentTarget as any).dataset.value;
                                                     const _v = getFullTimeData(`${dateVal} ${_val}:${timeVal[1]}:${timeVal[2]}`);
 
-                                                    console.log('^^^^^^^funda-ui test: ', (e.currentTarget as any).dataset.value, `${dateVal} ${_val}:${timeVal[1]}:${timeVal[2]}`, getFullTimeData(`${dateVal} ${_val}:${timeVal[1]}:${timeVal[2]}`))
-
-
                                                     
                                                     setChangedVal(`${dateVal} ${_val}:${timeVal[1]}:${timeVal[2]}`);
                                                     setTimeVal((prevState: string[]) => {
@@ -1259,10 +1285,6 @@ const Date = forwardRef((props: DateProps, ref: any) => {
                                                     //
                                                     const _val = (e.currentTarget as any).dataset.value;
                                                     const _v = getFullTimeData(`${dateVal} ${timeVal[0]}:${_val}:${timeVal[2]}`);
-
-
-                                                    console.log('^^^^^^^funda-ui test: ', (e.currentTarget as any).dataset.value, `${dateVal} ${timeVal[0]}:${_val}:${timeVal[2]}`, getFullTimeData(`${dateVal} ${timeVal[0]}:${_val}:${timeVal[2]}`))
-
 
                                                     setChangedVal(`${dateVal} ${timeVal[0]}:${_val}:${timeVal[2]}`);
                                                     setTimeVal((prevState: string[]) => {

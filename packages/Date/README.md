@@ -265,6 +265,10 @@ export default () => {
                     // close popup
                     if (popupRef.current) popupRef.current.close();
                 }}
+                onChangeToday={(dateRes: any) => {
+                    // close popup
+                    if (datePopupRef.current) datePopupRef.current.close();
+                }}
             />
 
  

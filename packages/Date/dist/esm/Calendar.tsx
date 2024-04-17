@@ -1,5 +1,12 @@
 import React, { useState, useEffect, useMemo } from 'react';
 
+import { 
+    padZero,
+    dateFormat,
+    isValidDate,
+    getTodayDate
+ } from './utils/date';
+
 
 interface EventsValueConfig {
     id: string | number;
@@ -75,30 +82,6 @@ const Calendar = (props: CalendarProps) => {
     const [winMonth, setWinMonth] = useState<boolean>(false);
 
 
-    const padZero = (num: number, padZeroEnabled: boolean = true) => {
-        if (padZeroEnabled) {
-            return num < 10 ? '0' + num : num.toString();
-        } else {
-            return num.toString();
-        }
-
-    };
-
-
-    const isValidDate = (v: string) => {
-        return !(String(new window.Date(v) as any).toLowerCase() === 'invalid date');
-    };
-    
-    const dateFormat = (v: Date | String) => {
-        const date = typeof v === 'string' ? new window.Date(v.replace(/-/g, "/")) : v;  // fix "Invalid date in safari"
-        return date;
-    };
-
-
-    const getTodayDate = () => {
-        return getCalendarDate(new Date() as any);
-    }
-    
 
     const getFullTimeData = (v: Date | String, padZeroEnabled: boolean = true) => {
 
@@ -116,7 +99,7 @@ const Calendar = (props: CalendarProps) => {
             }
         }
 
-        const date: any = dateFormat(v);
+        const date: any = dateFormat(v as any);
 
         const year = date.getFullYear();
         const month = padZero(date.getMonth() + 1, padZeroEnabled);
