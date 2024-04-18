@@ -10,6 +10,7 @@ import MultiFuncSelect from 'funda-ui/MultiFuncSelect';
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |
 | `ref` | React.ForwardedRef | - | It is the return element of this component.  |
+| `contentRef` | React.RefObject | - | It exposes the following methods when the component's popup opens or closes:  <br /> <ol><li>`contentRef.current.clear(() => { console.log('callback') })`</li><li>`contentRef.current.set([{"label": "Option 1","listItemLabel":"Option 1 (No: 001)","value": "value-1","queryString": "option1"}], () => { console.log('callback') })`</li></ol> |
 | `popupRef` | React.RefObject | - | It exposes the following methods when the component's popup opens or closes:  <br /> <ol><li>`popupRef.current.close()`</li></ol> |
 | `wrapperClassName` | string | `mb-3 position-relative` | The class name of the control wrapper. |
 | `controlClassName` | string | `form-control` | The class name of the control. |
@@ -1237,6 +1238,118 @@ export default () => {
 
 
 
+
+
+## Use the exposed method to assign and empty
+
+Lets you callback the handle exposed as a ref.
+
+
+```js
+ import React, { useState, useRef } from 'react';
+
+import MultiFuncSelect from 'funda-ui/MultiFuncSelect';
+
+// component styles
+import 'funda-ui/MultiFuncSelect/index.css';
+
+
+export default () => {
+
+    const conRef = useRef<any>(null);
+    const con2Ref = useRef<any>(null);
+
+    return (
+
+
+        <>
+
+            <button
+                type="button" 
+                onClick={(e: React.MouseEvent) => {
+                    if (conRef.current) conRef.current.clear();
+                }}
+            >Set Empty Value</button>
+
+            <button
+                type="button" 
+                onClick={(e: React.MouseEvent) => {
+                    if (conRef.current) conRef.current.set([{"label": "Option 1","listItemLabel":"Option 1 (No: 001)","value": "value-1","queryString": "option1"}], () => { console.log('callback') });
+                }}
+            >Set Custom Value</button>
+
+
+            <MultiFuncSelect
+                contentRef={conRef}
+                value="value-2"
+                placeholder="Select"
+                name="name"
+                winWidth={() => window.innerWidth/2 + 'px'}
+                options={`
+                [
+                    {"label": "Option 1","value": "value-1","queryString": "option1"},
+                    {"label": "<del style=color:red>deprecate</del>Option 2","value": "value-2","queryString": "option2"},
+                    {"label": "Option 3","value": "value-3","queryString": "option3"},
+                    {"label": "Option 4","value": "value-4","queryString": "option4", "disabled":true}
+                ]  
+                `}
+                onChange={(e, e2, val) => {
+                    console.log(e, e2, val);
+                }}
+            />
+
+
+            <hr />
+
+
+            <button
+                type="button" 
+                onClick={(e: React.MouseEvent) => {
+                    if (con2Ref.current) con2Ref.current.clear();
+                }}
+            >Set Empty Value (multiple)</button>
+
+            <button
+                type="button" 
+                onClick={(e: React.MouseEvent) => {
+                    if (con2Ref.current) con2Ref.current.set([{"label": "15","listItemLabel":"15","value": "15","queryString": ""},{"label": "25","listItemLabel":"25","value": "25","queryString": ""},{"label": "33","listItemLabel":"33","value": "33","queryString": ""}], () => { console.log('callback') });
+                }}
+            >Set Custom Value (multiple)</button>
+
+
+            <MultiFuncSelect
+                contentRef={con2Ref}
+                value="[1][2][3][4][5][6][7][8][9][10][11][12][13][14][15][16][17][18][19][20]"
+                multiSelect={{
+                    valid: true,
+                    selectAll: true,
+                    selectAllLabel: "Select all options",
+                    data: {
+                        values: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20].map(v => v.toString()),
+                        labels: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20].map(v => v.toString()),
+                        queryStrings: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20].map(v => ''),
+                    }
+                }}
+                placeholder="Select"
+                name="name"
+                options={Array.from({ length: 100 }).fill(0).map((v, i) => {
+                    return { "label": `${i}`, "value": `${i}`, "queryString": "" }
+                })}
+                onChange={(e, e2, val) => {
+                    console.log(e, e2, val);
+                }}
+            />
+
+
+
+        </>
+    )
+}
+```
+
+
+
+
 ## Globally disable real-time search functionality (only valid for non-dynamic requests)
 
 > [!WARNING]
@@ -1249,7 +1362,5 @@ Prevent the keyboard from popping up when input focus is entered on mobile devic
 ```js
 window['funda-ui__MultiFuncSelect-disable-livesearch'] = 1;
 ```
-
-
 
 

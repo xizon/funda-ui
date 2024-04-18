@@ -69,6 +69,7 @@ interface CleanTriggerConfig {
 
 
 type MultiFuncSelectProps = {
+    contentRef?: React.RefObject<any>;
     popupRef?: React.RefObject<any>;
     wrapperClassName?: string;
     controlClassName?: string;
@@ -122,6 +123,7 @@ type MultiFuncSelectProps = {
 
 const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
     const {
+        contentRef,
         popupRef,
         wrapperClassName,
         controlClassName,
@@ -250,6 +252,40 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
         [popupRef],
     );
 
+    useImperativeHandle(
+        contentRef,
+        () => ({
+            clear: (cb?: any) => {
+
+                if (MULTI_SEL_VALID) {
+                    updateOptionCheckboxes('remove');
+                } else {
+                    handleCleanValue();
+                }
+
+                cb?.();
+            },
+            /*
+            set([{"label": "Option 1","listItemLabel":"Option 1 (No: 001)","value": "value-1","queryString": "option1"}, () => { console.log('callback') }])
+            */
+            set: (value: any, cb?: any) => {
+
+                if (MULTI_SEL_VALID) {
+                    updateOptionCheckboxesViaAddSingleItem({
+                        labels: value.map((v: any) => v.label),
+                        values: value.map((v: any) => v.value)
+                    });
+                } else {
+                    const _val = value[0];
+                    handleSelect(null, (typeof _val === 'object' ? JSON.stringify(_val) : _val), [`${_val.value}`], [`${_val.label}`]);
+                }
+
+                
+                cb?.();
+            }
+        }),
+        [contentRef],
+    );
 
 
 
@@ -1421,64 +1457,80 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
     }
 
 
+    function updateOptionCheckboxes(type: string) {
+
+        const _labels: any[] = [];
+        const _values: any[] = [];
+
+        [].slice.call(listContentRef.current.querySelectorAll('.mf-select-multi__control-option-item:not(.hide)')).forEach((node: any) => {
+
+            const _label = node.dataset.label;
+            const _value = node.dataset.value;
+
+
+            if (type === 'remove') {
+                //#########
+                // remove item
+                //#########
+                node.dataset.selected = 'false';
+                node.querySelector('.mf-select-multi__control-option-checkbox-selected').classList.add('d-none');
+                node.querySelector('.mf-select-multi__control-option-checkbox-placeholder').classList.remove('d-none');
+
+                //
+                const _indexLable = _labels.findIndex((item: any) => item == _label);
+                const _indexValue = _values.findIndex((item: any) => item == _value);
+                if (_indexLable !== -1) _labels.splice(_indexLable, 1);
+                if (_indexValue !== -1) _values.splice(_indexValue, 1);
+
+
+            } else {
+                //#########
+                // add item
+                //#########
+                node.dataset.selected = 'true';
+                node.querySelector('.mf-select-multi__control-option-checkbox-selected').classList.remove('d-none');
+                node.querySelector('.mf-select-multi__control-option-checkbox-placeholder').classList.add('d-none');
+
+                //
+                _labels.push(_label);
+                _values.push(_value);
+
+            }
+
+        });
+
+        setControlArr({
+            labels: _labels,
+            values: _values
+        });
+
+
+
+        // Appropriate multi-item container height
+        adjustMultiControlContainerHeight();
+
+
+    };
+
+    function updateOptionCheckboxesViaAddSingleItem(data: any) {
+
+        const _labels: any[] = data.labels || [];
+        const _values: any[] = data.values || [];
+
+        setControlArr({
+            labels: _labels,
+            values: _values
+        });
+
+        // Appropriate multi-item container height
+        adjustMultiControlContainerHeight();
+
+    };
+
+
+
     function handleSelectAll(event: any) {
         event.preventDefault();
-
-        const updateOptionCheckboxes = (type: string) => {
-
-            const _labels: any[] = [];
-            const _values: any[] = [];
-
-            [].slice.call(listContentRef.current.querySelectorAll('.mf-select-multi__control-option-item:not(.hide)')).forEach((node: any) => {
-
-                const _label = node.dataset.label;
-                const _value = node.dataset.value;
-
-
-                if (type === 'remove') {
-                    //#########
-                    // remove item
-                    //#########
-                    node.dataset.selected = 'false';
-                    node.querySelector('.mf-select-multi__control-option-checkbox-selected').classList.add('d-none');
-                    node.querySelector('.mf-select-multi__control-option-checkbox-placeholder').classList.remove('d-none');
-
-                    //
-                    const _indexLable = _labels.findIndex((item: any) => item == _label);
-                    const _indexValue = _values.findIndex((item: any) => item == _value);
-                    if (_indexLable !== -1) _labels.splice(_indexLable, 1);
-                    if (_indexValue !== -1) _values.splice(_indexValue, 1);
-
-
-                } else {
-                    //#########
-                    // add item
-                    //#########
-                    node.dataset.selected = 'true';
-                    node.querySelector('.mf-select-multi__control-option-checkbox-selected').classList.remove('d-none');
-                    node.querySelector('.mf-select-multi__control-option-checkbox-placeholder').classList.add('d-none');
-
-                    //
-                    _labels.push(_label);
-                    _values.push(_value);
-
-                }
-
-            });
-
-            setControlArr({
-                labels: _labels,
-                values: _values
-            });
-
-
-
-            // Appropriate multi-item container height
-            adjustMultiControlContainerHeight();
-
-
-        };
-
 
         if (selectedSign.current) {
             updateOptionCheckboxes('remove');
@@ -1489,12 +1541,10 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
         selectedSign.current = !selectedSign.current;
 
 
-
     }
 
-    function handleCleanValue(event: any) {
-        event.preventDefault();
-
+    function handleCleanValue(event?: any) {
+        if (typeof event !== 'undefined') event.preventDefault();
         // It is valid when a single selection
         const emptyValue: Record<string, string> = {label: '', value: '', queryString: ''};
         handleSelect(null, JSON.stringify(emptyValue), [], []);

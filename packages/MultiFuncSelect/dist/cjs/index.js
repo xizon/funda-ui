@@ -1094,7 +1094,7 @@ var enableBodyScroll = function enableBodyScroll(targetElement) {
 // EXTERNAL MODULE: ./src/utils/tree.js
 var tree = __webpack_require__(602);
 ;// CONCATENATED MODULE: ./src/index.tsx
-var _excluded = ["popupRef", "wrapperClassName", "controlClassName", "controlExClassName", "exceededSidePosOffset", "multiSelect", "multiSelectSelectedItemOnlyStatus", "disabled", "required", "value", "label", "name", "readOnly", "placeholder", "id", "options", "cleanTrigger", "lockBodyScroll", "hierarchical", "indentation", "doubleIndent", "style", "depth", "controlArrow", "winWidth", "tabIndex", "fetchTrigger", "fetchTriggerForDefaultData", "fetchNoneInfo", "fetchUpdate", "fetchFuncAsync", "fetchFuncMethod", "fetchFuncMethodParams", "data", "extractValueByBrackets", "fetchCallback", "onFetch", "onLoad", "onSelect", "onChange", "onBlur", "onFocus"];
+var _excluded = ["contentRef", "popupRef", "wrapperClassName", "controlClassName", "controlExClassName", "exceededSidePosOffset", "multiSelect", "multiSelectSelectedItemOnlyStatus", "disabled", "required", "value", "label", "name", "readOnly", "placeholder", "id", "options", "cleanTrigger", "lockBodyScroll", "hierarchical", "indentation", "doubleIndent", "style", "depth", "controlArrow", "winWidth", "tabIndex", "fetchTrigger", "fetchTriggerForDefaultData", "fetchNoneInfo", "fetchUpdate", "fetchFuncAsync", "fetchFuncMethod", "fetchFuncMethodParams", "data", "extractValueByBrackets", "fetchCallback", "onFetch", "onLoad", "onSelect", "onChange", "onBlur", "onFocus"];
 function src_toConsumableArray(arr) { return src_arrayWithoutHoles(arr) || src_iterableToArray(arr) || src_unsupportedIterableToArray(arr) || src_nonIterableSpread(); }
 function src_nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
 function src_iterableToArray(iter) { if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter); }
@@ -1129,7 +1129,8 @@ function _objectWithoutPropertiesLoose(source, excluded) { if (source == null) r
 
 
 var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_amd_react_.forwardRef)(function (props, _ref2) {
-  var popupRef = props.popupRef,
+  var contentRef = props.contentRef,
+    popupRef = props.popupRef,
     wrapperClassName = props.wrapperClassName,
     controlClassName = props.controlClassName,
     controlExClassName = props.controlExClassName,
@@ -1270,6 +1271,37 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
       }
     };
   }, [popupRef]);
+  (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useImperativeHandle)(contentRef, function () {
+    return {
+      clear: function clear(cb) {
+        if (MULTI_SEL_VALID) {
+          updateOptionCheckboxes('remove');
+        } else {
+          handleCleanValue();
+        }
+        cb === null || cb === void 0 ? void 0 : cb();
+      },
+      /*
+      set([{"label": "Option 1","listItemLabel":"Option 1 (No: 001)","value": "value-1","queryString": "option1"}, () => { console.log('callback') }])
+      */
+      set: function set(value, cb) {
+        if (MULTI_SEL_VALID) {
+          updateOptionCheckboxesViaAddSingleItem({
+            labels: value.map(function (v) {
+              return v.label;
+            }),
+            values: value.map(function (v) {
+              return v.value;
+            })
+          });
+        } else {
+          var _val = value[0];
+          handleSelect(null, _typeof(_val) === 'object' ? JSON.stringify(_val) : _val, ["".concat(_val.value)], ["".concat(_val.label)]);
+        }
+        cb === null || cb === void 0 ? void 0 : cb();
+      }
+    };
+  }, [contentRef]);
 
   //performance
   var handleChangeFetchSafe = utils_useDebounce(function (val) {
@@ -2268,52 +2300,65 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
     }));
     return _handleSelect.apply(this, arguments);
   }
+  function updateOptionCheckboxes(type) {
+    var _labels = [];
+    var _values = [];
+    [].slice.call(listContentRef.current.querySelectorAll('.mf-select-multi__control-option-item:not(.hide)')).forEach(function (node) {
+      var _label = node.dataset.label;
+      var _value = node.dataset.value;
+      if (type === 'remove') {
+        //#########
+        // remove item
+        //#########
+        node.dataset.selected = 'false';
+        node.querySelector('.mf-select-multi__control-option-checkbox-selected').classList.add('d-none');
+        node.querySelector('.mf-select-multi__control-option-checkbox-placeholder').classList.remove('d-none');
+
+        //
+        var _indexLable = _labels.findIndex(function (item) {
+          return item == _label;
+        });
+        var _indexValue = _values.findIndex(function (item) {
+          return item == _value;
+        });
+        if (_indexLable !== -1) _labels.splice(_indexLable, 1);
+        if (_indexValue !== -1) _values.splice(_indexValue, 1);
+      } else {
+        //#########
+        // add item
+        //#########
+        node.dataset.selected = 'true';
+        node.querySelector('.mf-select-multi__control-option-checkbox-selected').classList.remove('d-none');
+        node.querySelector('.mf-select-multi__control-option-checkbox-placeholder').classList.add('d-none');
+
+        //
+        _labels.push(_label);
+        _values.push(_value);
+      }
+    });
+    setControlArr({
+      labels: _labels,
+      values: _values
+    });
+
+    // Appropriate multi-item container height
+    adjustMultiControlContainerHeight();
+  }
+  ;
+  function updateOptionCheckboxesViaAddSingleItem(data) {
+    var _labels = data.labels || [];
+    var _values = data.values || [];
+    setControlArr({
+      labels: _labels,
+      values: _values
+    });
+
+    // Appropriate multi-item container height
+    adjustMultiControlContainerHeight();
+  }
+  ;
   function handleSelectAll(event) {
     event.preventDefault();
-    var updateOptionCheckboxes = function updateOptionCheckboxes(type) {
-      var _labels = [];
-      var _values = [];
-      [].slice.call(listContentRef.current.querySelectorAll('.mf-select-multi__control-option-item:not(.hide)')).forEach(function (node) {
-        var _label = node.dataset.label;
-        var _value = node.dataset.value;
-        if (type === 'remove') {
-          //#########
-          // remove item
-          //#########
-          node.dataset.selected = 'false';
-          node.querySelector('.mf-select-multi__control-option-checkbox-selected').classList.add('d-none');
-          node.querySelector('.mf-select-multi__control-option-checkbox-placeholder').classList.remove('d-none');
-
-          //
-          var _indexLable = _labels.findIndex(function (item) {
-            return item == _label;
-          });
-          var _indexValue = _values.findIndex(function (item) {
-            return item == _value;
-          });
-          if (_indexLable !== -1) _labels.splice(_indexLable, 1);
-          if (_indexValue !== -1) _values.splice(_indexValue, 1);
-        } else {
-          //#########
-          // add item
-          //#########
-          node.dataset.selected = 'true';
-          node.querySelector('.mf-select-multi__control-option-checkbox-selected').classList.remove('d-none');
-          node.querySelector('.mf-select-multi__control-option-checkbox-placeholder').classList.add('d-none');
-
-          //
-          _labels.push(_label);
-          _values.push(_value);
-        }
-      });
-      setControlArr({
-        labels: _labels,
-        values: _values
-      });
-
-      // Appropriate multi-item container height
-      adjustMultiControlContainerHeight();
-    };
     if (selectedSign.current) {
       updateOptionCheckboxes('remove');
     } else {
@@ -2322,8 +2367,7 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
     selectedSign.current = !selectedSign.current;
   }
   function handleCleanValue(event) {
-    event.preventDefault();
-
+    if (typeof event !== 'undefined') event.preventDefault();
     // It is valid when a single selection
     var emptyValue = {
       label: '',
