@@ -106,6 +106,7 @@ function _extends() { _extends = Object.assign ? Object.assign.bind() : function
 function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
 function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
 function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+function _createForOfIteratorHelper(o, allowArrayLike) { var it = typeof Symbol !== "undefined" && o[Symbol.iterator] || o["@@iterator"]; if (!it) { if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function (_e2) { function e(_x3) { return _e2.apply(this, arguments); } e.toString = function () { return _e2.toString(); }; return e; }(function (e) { throw e; }), f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = it.call(o); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function (_e3) { function e(_x4) { return _e3.apply(this, arguments); } e.toString = function () { return _e3.toString(); }; return e; }(function (e) { didErr = true; err = e; }), f: function f() { try { if (!normalCompletion && it["return"] != null) it["return"](); } finally { if (didErr) throw err; } } }; }
 function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
 function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
 function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
@@ -162,26 +163,63 @@ var Radio = function Radio(props) {
     _useState6 = _slicedToArray(_useState5, 2),
     controlValue = _useState6[0],
     setControlValue = _useState6[1];
+  function stringlineToHump(str) {
+    if (typeof str === 'string' && str.length > 0) {
+      var re = /-(\w)/g;
+      str = str.replace(re, function ($0, $1) {
+        return $1.toUpperCase();
+      });
+      return str;
+    } else {
+      return str;
+    }
+  }
+  function getDataAttributes(node) {
+    if (node === null) return [];
+    var res = {};
+    var _iterator = _createForOfIteratorHelper(node.attributes),
+      _step;
+    try {
+      for (_iterator.s(); !(_step = _iterator.n()).done;) {
+        var attr = _step.value;
+        if (/^data-/.test(attr.name)) {
+          res[stringlineToHump(attr.name)] = attr.value;
+        }
+      }
+    } catch (err) {
+      _iterator.e(err);
+    } finally {
+      _iterator.f();
+    }
+    return res;
+  }
   function fetchData(_x2) {
     return _fetchData.apply(this, arguments);
   } // Determine whether it is in JSON format
   function _fetchData() {
     _fetchData = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee(params) {
-      var response, _ORGIN_DATA, _realValue, filterRes, filterResQueryValue, filterResQueryLabel, _realValue2, _filterRes, _filterResQueryValue, _filterResQueryLabel;
+      var allControlsData, response, _ORGIN_DATA, _realValue, filterRes, filterResQueryValue, filterResQueryLabel, _realValue2, _filterRes, _filterResQueryValue, _filterResQueryLabel;
       return _regeneratorRuntime().wrap(function _callee$(_context) {
         while (1) switch (_context.prev = _context.next) {
           case 0:
             // set default value
             if (typeof value !== 'undefined' && value !== '') rootRef.current.dataset.value = value;
+            if (rootRef.current) {
+              allControlsData = [];
+              [].slice.call(rootRef.current.querySelectorAll("[type=\"radio\"]")).forEach(function (el, i) {
+                allControlsData.push(getDataAttributes(el));
+              });
+              rootRef.current.setAttribute('data-controls-cus-attrs', JSON.stringify(allControlsData));
+            }
 
             //
             if (!(_typeof(fetchFuncAsync) === 'object')) {
-              _context.next = 20;
+              _context.next = 21;
               break;
             }
-            _context.next = 4;
+            _context.next = 5;
             return fetchFuncAsync["".concat(fetchFuncMethod)].apply(fetchFuncAsync, _toConsumableArray(params.split(',')));
-          case 4:
+          case 5:
             response = _context.sent;
             _ORGIN_DATA = response.data; // reset data structure
             if (typeof fetchCallback === 'function') {
@@ -222,7 +260,7 @@ var Radio = function Radio(props) {
             //
             onLoad === null || onLoad === void 0 ? void 0 : onLoad(_ORGIN_DATA, _realValue, rootRef.current);
             return _context.abrupt("return", _ORGIN_DATA);
-          case 20:
+          case 21:
             // If the default value is label, match value
             _realValue2 = value;
             _filterRes = [];
@@ -250,7 +288,7 @@ var Radio = function Radio(props) {
             //
             onLoad === null || onLoad === void 0 ? void 0 : onLoad(optionsDataInit, _realValue2, rootRef.current);
             return _context.abrupt("return", optionsDataInit);
-          case 30:
+          case 31:
           case "end":
             return _context.stop();
         }

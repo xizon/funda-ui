@@ -90,13 +90,50 @@ const Radio = (props: RadioProps) => {
     const [hasErr, setHasErr] = useState<boolean>(false);
     const [controlValue, setControlValue] = useState<string | undefined>('');
 
+    function stringlineToHump(str: any) {
+        if (typeof str === 'string' && str.length > 0) {
+            const re = /-(\w)/g;
+            str = str.replace(re, function ($0, $1) {
+                return $1.toUpperCase();
+            });
+            return str;
+        } else {
+            return str;
+        }
 
+    }
+
+
+    function getDataAttributes(node: any) {
+        if (node === null) return [];
+
+        const res: any  = {};
+        for (const attr of node.attributes) {
+            if (/^data-/.test(attr.name)) {
+                res[stringlineToHump(attr.name)] = attr.value;
+            }
+        }
+
+        return res;
+
+    }
+ 
 
     async function fetchData(params: any) {
 
         // set default value
         if (typeof value !== 'undefined' && value !== '') rootRef.current.dataset.value = value;
 
+
+        if (rootRef.current) {
+            const allControlsData: any[] = [];
+            [].slice.call(rootRef.current.querySelectorAll(`[type="radio"]`)).forEach((el: HTMLInputElement, i: number) => {
+                allControlsData.push(getDataAttributes(el));
+            });
+            rootRef.current.setAttribute('data-controls-cus-attrs', JSON.stringify(allControlsData));
+        }
+        
+        
         //
         if (typeof fetchFuncAsync === 'object') {
 
@@ -374,6 +411,8 @@ const Radio = (props: RadioProps) => {
         const _params: any[] = fetchFuncMethodParams || [];
         fetchData((_params).join(','));
 
+
+
     }, [value, options]);
 
 
@@ -381,7 +420,11 @@ const Radio = (props: RadioProps) => {
         <>
 
 
-            <div id={`radio__wrapper-${idRes}`} className={`radio__wrapper ${wrapperClassName || wrapperClassName === '' ? wrapperClassName : 'mb-3 position-relative'}`} ref={rootRef}>
+            <div 
+                id={`radio__wrapper-${idRes}`} 
+                className={`radio__wrapper ${wrapperClassName || wrapperClassName === '' ? wrapperClassName : 'mb-3 position-relative'}`} 
+                ref={rootRef}
+            >
                 {label ? <>{typeof label === 'string' ? <label htmlFor={idRes} className="form-label" dangerouslySetInnerHTML={{ __html: `${label}` }}></label> : <label htmlFor={idRes} className="form-label" >{label}</label>}</> : null}
                 <div id={idRes}>
                     {!hasErr ? itemsList : null}

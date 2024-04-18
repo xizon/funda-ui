@@ -424,14 +424,24 @@ export default () => {
                 value="value-2"
                 name="String"
                 label="String"
+                data-custom-param="123"
                 options={[
                     {"label": "Option 1","value": "value-1","attr1": false,"extends":<><div className="ms-3" id={`radio-1`}></div></>},
                     {"label": "Option 2","value": "value-2","attr1": true,"extends":<><div className="ms-3" id={`radio-2`}><input type="color" /></div></>},
                 ]}
-                onLoad={(data: any, defaultVal: any, root: any) => {
+                onLoad={(comData: any, defaultVal: any, root: any) => {
 
-                    const _flatData = optionsFlat(data);
-  
+                    const _flatData = optionsFlat(comData);
+                    const _curVal = _flatData.filter((v: any) => v.value == defaultVal)[0];
+                    const _curValIndex = _flatData.findIndex((v: any) => v.value == defaultVal);
+
+                    const _allData = JSON.parse(root.dataset.controlsCusAttrs);
+                    const _curItemData = _allData[_curValIndex];
+
+                    if (typeof _curItemData !== 'undefined') {
+                        console.log(_curItemData);
+                    }
+
                     if (root) {
                         [].slice.call(root.querySelectorAll(`[type="radio"]`)).forEach((el: HTMLInputElement, i:number) => {
                             if (_flatData[i].value === defaultVal && _flatData[i].attr1) {
