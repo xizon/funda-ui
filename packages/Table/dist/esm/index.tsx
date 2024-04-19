@@ -95,6 +95,7 @@ const Table = (props: TableProps) => {
     const [checkedRootData, setCheckedRootData] = useState<any[]>([]);
     const [sortData, setSortData] = useState<any[] | undefined>([]);
     const [mainUpdate, setMainUpdate] = useState<boolean>(false);
+    const [fieldsCheckedUpdateDataPrint, setFieldsCheckedUpdateDataPrint] = useState<boolean>(false);
 
     const windowResizeUpdate = debounce(handleWindowUpdate, 50);
 
@@ -103,6 +104,8 @@ const Table = (props: TableProps) => {
     const _fieldsChecked = data.hasOwnProperty('fieldsChecked') ? data.fieldsChecked : false;
     let windowWidth = typeof window !== 'undefined' ? window.innerWidth : 0;
 
+
+    //
 
     //Set the class names of different styles
     //
@@ -208,10 +211,23 @@ const Table = (props: TableProps) => {
             //get maxHeight of per row
             for (let i = 0; i < tbodyRef.current.querySelector('tr').children.length; i++ ) {
                 const tbodyRows = rootRef.current.querySelectorAll(`tbody tr [data-table-col="${i}"]`);
+                const curColDisplay = window.getComputedStyle(tbodyRows, null).display;
+
+                // default display attribute
+                let curColDisplayVal = curColDisplay;
+                if (typeof tbodyRows.dataset.show === 'undefined') {
+                    tbodyRows.dataset.show = curColDisplay;
+                } else {
+                    curColDisplayVal = tbodyRows.dataset.show;
+                }
+                tbodyRows.style.display = curColDisplayVal;
+                
+                //
                 const maxHeight = maxDimension(tbodyRows).height;
                 [].slice.call(tbodyRows).forEach((row: any) => {
                     row.style.height = maxHeight + 'px';
                 });
+
 
                 //
                 const theadRows = rootRef.current.querySelectorAll(`thead tr [data-table-col="${i}"]`);
@@ -222,7 +238,19 @@ const Table = (props: TableProps) => {
 
         } else {
             [].slice.call(rootRef.current.querySelectorAll('tbody td, tbody th, thead th')).forEach((node: any, i: number) => {
-                node.removeAttribute('style');
+                const curColDisplay = window.getComputedStyle(node, null).display;
+
+                // default display attribute
+                let curColDisplayVal = curColDisplay;
+                if (typeof node.dataset.show === 'undefined') {
+                    node.dataset.show = curColDisplay;
+                } else {
+                    curColDisplayVal = node.dataset.show;
+                }
+                node.style.display = curColDisplayVal;
+
+                //
+                node.style.removeProperty('height');
             });
         }
 
@@ -582,6 +610,7 @@ const Table = (props: TableProps) => {
                                         tableCheckRef={tableCheckRef}
                                         rowActiveClassName={rowActiveClassName}
                                         fieldsChecked={_fieldsChecked}
+                                        fieldsCheckedAct={[fieldsCheckedUpdateDataPrint, setFieldsCheckedUpdateDataPrint]}
                                         rowKey={`row-${i}`} 
                                         headerLabel={_headers} 
                                         data={item} 

@@ -1,12 +1,12 @@
 import React from 'react';
 
 
-import Checkbox from 'funda-checkbox';
+// HAS CHECKBOX
 
 
 
 import { getChildren } from './utils/dom';
-import { formatCheckboxControlVal, setCheckboxCheckedData } from './table-utils';
+import { formatCheckboxControlVal, setCheckboxCheckedData, getAllCheckboxInput } from './table-utils';
 
 /* Table Headers
 -------------------------------------------------*/
@@ -78,8 +78,8 @@ const TableHeaders = (props: TableHeadersProps) => {
         // STEP 2:
         // All child checkboxes
         //-----------
-        const _checkboxes = getChildren(el.closest('table').querySelector('tbody'), '[type="checkbox"]');
-        [].slice.call(_checkboxes).forEach((node: any) => {
+        const _checkboxes: any[] = getAllCheckboxInput(el);
+        _checkboxes.forEach((node: any) => {
             if (val === true) {
                 setCheckboxCheckedData(_checkedData, node.dataset.key, true);
                 _res.push(formatCheckboxControlVal(node));
@@ -143,16 +143,26 @@ const TableHeaders = (props: TableHeadersProps) => {
                             }}
                         >
                             {i === 0 ? <span className="checkbox-trigger" style={{visibility: useRadio ? 'hidden' : 'visible'}}>
-                                <Checkbox
-                                    wrapperClassName=""
-                                    name={`checkbox-${checkboxNamePrefix}-all`}
-                                    tabIndex={-1}
-                                    value={`row-all`}
-                                    checked={getCheckedRootData!.filter((cur: any) => cur.key === 'row-all')[0]?.checked}
-                                    onChange={(e: any, val: any) => {
-                                        checkedAct(e.target, val);
-                                    }}
-                                />
+
+                            <div className="form-check__wrapper">
+                                <div className="form-check d-inline-block">
+                                    <input
+                                        type="checkbox"
+                                        className="form-check-input"
+                                        name={`checkbox-${checkboxNamePrefix}-all`}
+                                        tabIndex={-1}
+                                        value={`row-all`}
+                                        checked={getCheckedRootData!.filter((cur: any) => cur.key === 'row-all')[0]?.checked}
+                                        onChange={(e: any) => {
+                                            checkedAct(e.target, !getCheckedRootData!.filter((cur: any) => cur.key === 'row-all')[0]?.checked);
+                                        }}
+                                    />
+
+                                </div>
+
+                            </div>
+                   
+
                             </span> : null}
                             <span dangerouslySetInnerHTML={{ __html: `${item.content}` }}></span>
                             {sortable && itemSortable ? <span className="sort-trigger" onClick={evSort}><svg width="1em" height="1em" viewBox="0 0 18 18">

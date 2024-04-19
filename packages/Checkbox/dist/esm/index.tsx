@@ -112,7 +112,7 @@ const Checkbox = forwardRef((props: CheckboxProps, ref: any) => {
     return (
         <>
 
-            <div className={`${wrapperClassName || wrapperClassName === '' ? wrapperClassName : "mb-3 position-relative"} ${val ? (itemSelectedClassName || 'item-selected') : ''}`} ref={rootRef}>
+            <div className={`form-check__wrapper ${wrapperClassName || wrapperClassName === '' ? wrapperClassName : "mb-3 position-relative"} ${val ? (itemSelectedClassName || 'item-selected') : ''}`} ref={rootRef}>
                 <div className="form-check">
                     <input
                         ref={(node) => {

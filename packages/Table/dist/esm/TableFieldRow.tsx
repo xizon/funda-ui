@@ -1,13 +1,9 @@
 import React, { useRef, useState, useImperativeHandle } from 'react';
 
-import Checkbox from 'funda-checkbox';
-
-
-
-
+// HAS CHECKBOX
 
 import { getChildren } from './utils/dom';
-import { removeItemOnce, formatCheckboxControlVal, setCheckboxCheckedData, formatRowControlVal } from './table-utils';
+import { removeItemOnce, formatCheckboxControlVal, setCheckboxCheckedData, formatRowControlVal, getAllCheckboxInput } from './table-utils';
 
 
 
@@ -18,6 +14,7 @@ type TableFieldRowProps = {
     tableCheckRef?: React.RefObject<any>;
     rowActiveClassName?: string;
     fieldsChecked?: boolean[] | boolean;
+    fieldsCheckedAct?: any[];
     updateFirstInitCheckboxesClassName?: any;
     draggable?: boolean;
     useRadio?: boolean;
@@ -51,6 +48,7 @@ const TableFieldRow = (props: TableFieldRowProps) => {
         tableCheckRef,
         rowActiveClassName = 'active',
         fieldsChecked,
+        fieldsCheckedAct,
         updateFirstInitCheckboxesClassName,
         draggable,
         useRadio,
@@ -80,6 +78,9 @@ const TableFieldRow = (props: TableFieldRowProps) => {
     const contentRef = useRef<any>(null);
     const checkboxRef = useRef<any>(null);
     const [firstInitCheckboxes, setFirstInitCheckboxes] = useState<boolean>(false);
+    
+    //
+    const [fieldsCheckedUpdateDataPrint, setFieldsCheckedUpdateDataPrint] = fieldsCheckedAct || [null, null];
 
     const rowIndex = rowKey?.replace('row-', '');
 
@@ -243,6 +244,27 @@ const TableFieldRow = (props: TableFieldRowProps) => {
 
         let _res: any = getCheckedPrint;
 
+        
+        // STEP 1:
+        // Update checked print from "fieldsChecked"
+        // !!! Only one time is allowed
+        //-----------
+        if (!fieldsCheckedUpdateDataPrint) {
+            if (Array.isArray(fieldsChecked)) {
+                const _checkboxes: any[] = getAllCheckboxInput(el);
+                _checkboxes.forEach((node: any, rowIndex: number) => {
+                    if (fieldsChecked[Number(rowIndex)] === true) {
+                        _res.push(formatCheckboxControlVal(node));
+                    }
+                });
+            }
+
+            //
+            setFieldsCheckedUpdateDataPrint(true);
+        }
+
+
+
         // STEP 1:
         // Current checkbox
         //-----------
@@ -292,6 +314,8 @@ const TableFieldRow = (props: TableFieldRowProps) => {
     function handleTbodyEnter(e: any) {
         (e.target.closest('table') as any)?.querySelector('tbody').classList.add('drag-trigger-mousedown');
     }
+
+
 
     return (
         <>
@@ -398,19 +422,28 @@ const TableFieldRow = (props: TableFieldRowProps) => {
 
 
                     </> : <>
-                        <Checkbox
-                            ref={checkboxRef}
-                            wrapperClassName=""
-                            name={`checkbox-${checkboxNamePrefix}-${rowIndex}`}
-                            tabIndex={-1}
-                            data-index={`${rowIndex}`}
-                            data-key={`${rowKey}`}
-                            value={`${rowKey}`}
-                            checked={latestCheckedData().filter((cur: any) => cur.key === rowKey)[0]?.checked}
-                            onChange={(e: any, val: any) => {
-                                checkedAct(e.target, val);
-                            }}
-                        />
+
+                        <div className="form-check__wrapper">
+                            <div className="form-check d-inline-block">
+                                <input
+                                    type="checkbox"
+                                    className="form-check-input"
+                                    name={`checkbox-${checkboxNamePrefix}-${rowIndex}`}
+                                    ref={checkboxRef}
+                                    tabIndex={-1}
+                                    data-index={`${rowIndex}`}
+                                    data-key={`${rowKey}`}
+                                    value={`${rowKey}`}
+                                    checked={latestCheckedData().filter((cur: any) => cur.key === rowKey)[0]?.checked}
+                                    onChange={(e: any) => {
+                                        checkedAct(e.target, !latestCheckedData().filter((cur: any) => cur.key === rowKey)[0]?.checked);
+                                    }}
+                                />
+                            </div>
+
+                        </div>
+
+                        
                     </>}
 
                 </span>

@@ -14,6 +14,7 @@ type TableRowProps = {
     tableCheckRef?: React.RefObject<any>;
     rowActiveClassName?: string;
     fieldsChecked?: boolean[] | boolean;
+    fieldsCheckedAct?: any[];
     index: React.Key;
     data?: any[];
     headerLabel?: any[];
@@ -46,6 +47,7 @@ const TableRow = (props: TableRowProps) => {
         tableCheckRef,
         rowActiveClassName = 'active',
         fieldsChecked,
+        fieldsCheckedAct,
         index,
         data,
         headerLabel,
@@ -128,6 +130,7 @@ const TableRow = (props: TableRowProps) => {
                                     tableCheckRef={tableCheckRef}
                                     rowActiveClassName={rowActiveClassName}
                                     fieldsChecked={fieldsChecked}
+                                    fieldsCheckedAct={fieldsCheckedAct}
                                     updateFirstInitCheckboxesClassName={setFirstInitCheckboxesClassName}
                                     useRadio={useRadio}
                                     columnHeader={typeof headerItem.content === 'string' ? headerItem.content.replace(/(<([^>]+)>)/ig, '') : headerItem.content} 

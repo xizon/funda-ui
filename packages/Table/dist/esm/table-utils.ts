@@ -1,3 +1,4 @@
+import { getChildren } from './utils/dom';
 
 export const removeItemOnce = (arr: any[], key: string) => {
     return arr.filter((item: any) => {
@@ -63,3 +64,10 @@ export const setCheckboxCheckedData = (arr: any[], key: string, val: boolean) =>
     });
 };
 
+
+export const getAllCheckboxInput = (el: any) => {
+    if (el === null) return [];
+    const _checkboxes = getChildren(el.closest('table').querySelector('tbody'), '[type="checkbox"]');
+    return [].slice.call(_checkboxes);
+
+};
