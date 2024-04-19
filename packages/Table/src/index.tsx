@@ -370,7 +370,7 @@ const Table = (props: TableProps) => {
     };
 
     function handleTbodyLeave(e: any) {
-        tbodyRef.current.classList.remove('drag-trigger-mousedown');
+        tbodyRef.current?.classList.remove('drag-trigger-mousedown');
     }
 
     // events fired on the drop targets
@@ -422,7 +422,7 @@ const Table = (props: TableProps) => {
         removePlaceholder();
 
         draggedObj.classList.remove( 'dragging' );
-        tbodyRef.current.classList.remove('drag-trigger-mousedown');
+        tbodyRef.current?.classList.remove('drag-trigger-mousedown');
         
 
         if ( overObj === null ) return;

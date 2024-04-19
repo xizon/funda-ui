@@ -318,12 +318,14 @@ var Radio = function Radio(props) {
 
   //
   function handleFocus(event) {
-    rootRef.current.classList.add('focus');
+    var _rootRef$current;
+    (_rootRef$current = rootRef.current) === null || _rootRef$current === void 0 ? void 0 : _rootRef$current.classList.add('focus');
 
     //
     onFocus === null || onFocus === void 0 ? void 0 : onFocus(event);
   }
   function handleChange(event) {
+    var _rootRef$current2;
     var val = event.target.value;
     var curData;
     var currentIndex = event.target.dataset.index;
@@ -345,7 +347,7 @@ var Radio = function Radio(props) {
 
     //----
     //remove focus style
-    rootRef.current.classList.remove('focus');
+    (_rootRef$current2 = rootRef.current) === null || _rootRef$current2 === void 0 ? void 0 : _rootRef$current2.classList.remove('focus');
 
     //
     if (typeof onChange === 'function') {
@@ -356,9 +358,10 @@ var Radio = function Radio(props) {
     }
   }
   function handleBlur(event) {
+    var _rootRef$current3;
     //----
     //remove focus style
-    rootRef.current.classList.remove('focus');
+    (_rootRef$current3 = rootRef.current) === null || _rootRef$current3 === void 0 ? void 0 : _rootRef$current3.classList.remove('focus');
 
     //
     onBlur === null || onBlur === void 0 ? void 0 : onBlur(event);

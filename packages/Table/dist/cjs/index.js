@@ -334,18 +334,20 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
             setVal = _useState2[1]; // Avoid the error "react checkbox changing an uncontrolled input to be controlled"
 
           function handleFocus(event) {
-            rootRef.current.classList.add('focus');
+            var _rootRef$current;
+            (_rootRef$current = rootRef.current) === null || _rootRef$current === void 0 ? void 0 : _rootRef$current.classList.add('focus');
 
             //
             onFocus === null || onFocus === void 0 ? void 0 : onFocus(event);
           }
           function handleChange(event) {
+            var _rootRef$current2;
             var _val = event.target.checked;
             setVal(_val);
 
             //----
             //remove focus style
-            rootRef.current.classList.remove('focus');
+            (_rootRef$current2 = rootRef.current) === null || _rootRef$current2 === void 0 ? void 0 : _rootRef$current2.classList.remove('focus');
 
             //
             if (typeof onChange === 'function') {
@@ -353,9 +355,10 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
             }
           }
           function handleBlur(event) {
+            var _rootRef$current3;
             //----
             //remove focus style
-            rootRef.current.classList.remove('focus');
+            (_rootRef$current3 = rootRef.current) === null || _rootRef$current3 === void 0 ? void 0 : _rootRef$current3.classList.remove('focus');
 
             //
             onBlur === null || onBlur === void 0 ? void 0 : onBlur(event);
@@ -1818,7 +1821,8 @@ var Table = function Table(props) {
     });
   };
   function handleTbodyLeave(e) {
-    tbodyRef.current.classList.remove('drag-trigger-mousedown');
+    var _tbodyRef$current;
+    (_tbodyRef$current = tbodyRef.current) === null || _tbodyRef$current === void 0 ? void 0 : _tbodyRef$current.classList.remove('drag-trigger-mousedown');
   }
 
   // events fired on the drop targets
@@ -1852,10 +1856,11 @@ var Table = function Table(props) {
     onDrag === null || onDrag === void 0 ? void 0 : onDrag(dragStart, null);
   }, [handledragOver]);
   var handleDragEnd = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useCallback)(function (e) {
+    var _tbodyRef$current2;
     draggedObj.style.display = 'table-row';
     removePlaceholder();
     draggedObj.classList.remove('dragging');
-    tbodyRef.current.classList.remove('drag-trigger-mousedown');
+    (_tbodyRef$current2 = tbodyRef.current) === null || _tbodyRef$current2 === void 0 ? void 0 : _tbodyRef$current2.classList.remove('drag-trigger-mousedown');
     if (overObj === null) return;
 
     // update state

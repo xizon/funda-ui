@@ -130,9 +130,9 @@ const DynamicFields = (props: DynamicFieldsProps) => {
         if (innerAppendEmptyContent === '' || typeof innerAppendEmptyContent === 'undefined') return false;
 
         if (type === 'add') {
-            emptyRef.current.classList.add(ITEM_HIDE_CLASSNAME);
+            emptyRef.current?.classList.add(ITEM_HIDE_CLASSNAME);
         } else {
-            emptyRef.current.classList.remove(ITEM_HIDE_CLASSNAME);
+            emptyRef.current?.classList.remove(ITEM_HIDE_CLASSNAME);
         }
         return true;
     }

@@ -367,7 +367,8 @@ var File = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(functi
     //----
     //remove focus style
     if (val === '') {
-      rootRef.current.classList.remove('focus');
+      var _rootRef$current;
+      (_rootRef$current = rootRef.current) === null || _rootRef$current === void 0 ? void 0 : _rootRef$current.classList.remove('focus');
     }
 
     //

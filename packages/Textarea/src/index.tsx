@@ -104,7 +104,7 @@ const Textarea = forwardRef((props: TextareaProps, ref: any) => {
 
     function handleFocus(event: any) {
         const el = event.target;
-        rootRef.current.classList.add('focus');
+        rootRef.current?.classList.add('focus');
 
         //
         onFocus?.(event, valRef.current);     
@@ -118,7 +118,7 @@ const Textarea = forwardRef((props: TextareaProps, ref: any) => {
         //----
         //remove focus style
         if (val === '') {
-            rootRef.current.classList.remove('focus');
+            rootRef.current?.classList.remove('focus');
         }
 
         //
@@ -140,7 +140,7 @@ const Textarea = forwardRef((props: TextareaProps, ref: any) => {
         //----
         //remove focus style
         if (val === '') {
-            rootRef.current.classList.remove('focus');
+            rootRef.current?.classList.remove('focus');
         }
 
         //

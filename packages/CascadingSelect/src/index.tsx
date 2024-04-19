@@ -436,7 +436,7 @@ const CascadingSelect = (props: CascadingSelectProps) => {
 
 
     function handleFocus(event: any) {
-        rootRef.current.classList.add('focus');
+        rootRef.current?.classList.add('focus');
 
         //
         handleDisplayOptions(null);
@@ -450,7 +450,7 @@ const CascadingSelect = (props: CascadingSelectProps) => {
 
         //----
         //remove focus style
-        rootRef.current.classList.remove('focus');
+        rootRef.current?.classList.remove('focus');
 
 
         //

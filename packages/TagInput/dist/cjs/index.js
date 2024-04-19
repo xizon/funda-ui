@@ -370,7 +370,8 @@ var TagInput = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(fu
     //----
     //remove focus style
     if (val === '') {
-      rootRef.current.classList.remove('focus');
+      var _rootRef$current;
+      (_rootRef$current = rootRef.current) === null || _rootRef$current === void 0 ? void 0 : _rootRef$current.classList.remove('focus');
     }
 
     //
@@ -389,7 +390,8 @@ var TagInput = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(fu
     setUserInput(val);
   }
   function handleFocus(event) {
-    rootRef.current.classList.add('focus');
+    var _rootRef$current2;
+    (_rootRef$current2 = rootRef.current) === null || _rootRef$current2 === void 0 ? void 0 : _rootRef$current2.classList.add('focus');
 
     //
     onFocus === null || onFocus === void 0 ? void 0 : onFocus(event);
@@ -401,7 +403,8 @@ var TagInput = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(fu
     //----
     //remove focus style
     if (val === '') {
-      rootRef.current.classList.remove('focus');
+      var _rootRef$current3;
+      (_rootRef$current3 = rootRef.current) === null || _rootRef$current3 === void 0 ? void 0 : _rootRef$current3.classList.remove('focus');
     }
 
     //

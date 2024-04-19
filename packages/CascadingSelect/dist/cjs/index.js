@@ -1053,7 +1053,8 @@ var CascadingSelect = function CascadingSelect(props) {
     return fetchData(_params.join(','));
   }
   function handleFocus(event) {
-    rootRef.current.classList.add('focus');
+    var _rootRef$current;
+    (_rootRef$current = rootRef.current) === null || _rootRef$current === void 0 ? void 0 : _rootRef$current.classList.add('focus');
 
     //
     handleDisplayOptions(null);
@@ -1062,9 +1063,10 @@ var CascadingSelect = function CascadingSelect(props) {
     onFocus === null || onFocus === void 0 ? void 0 : onFocus(event);
   }
   function handleBlur(event) {
+    var _rootRef$current2;
     //----
     //remove focus style
-    rootRef.current.classList.remove('focus');
+    (_rootRef$current2 = rootRef.current) === null || _rootRef$current2 === void 0 ? void 0 : _rootRef$current2.classList.remove('focus');
 
     //
     onBlur === null || onBlur === void 0 ? void 0 : onBlur(event);

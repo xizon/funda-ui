@@ -76,7 +76,7 @@ const ColorPicker = forwardRef((props: ColorPickerProps, ref: any) => {
 
 
     function handleFocus(event: ChangeEvent<HTMLInputElement>) {
-        rootRef.current.classList.add('focus');
+        rootRef.current?.classList.add('focus');
 
         //
         onFocus?.(event);
@@ -91,7 +91,7 @@ const ColorPicker = forwardRef((props: ColorPickerProps, ref: any) => {
         //----
         //remove focus style
         if (val === '') {
-            rootRef.current.classList.remove('focus');
+            rootRef.current?.classList.remove('focus');
         }
 
         //
@@ -107,7 +107,7 @@ const ColorPicker = forwardRef((props: ColorPickerProps, ref: any) => {
         //----
         //remove focus style
         if (val === '') {
-            rootRef.current.classList.remove('focus');
+            rootRef.current?.classList.remove('focus');
         }
 
         //

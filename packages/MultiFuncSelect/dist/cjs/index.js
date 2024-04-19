@@ -2021,11 +2021,12 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
     if (LOCK_BODY_SCROLL) disableBodyScroll(document.querySelector('body'));
   }
   function rootWrapperSwitch() {
+    var _rootRef$current;
     // remove active styles from the root container and activate current wrapper
     [].slice.call(document.querySelectorAll('.mf-select__wrapper')).forEach(function (node) {
       node.classList.remove('active', 'focus');
     });
-    rootRef.current.classList.add('active', 'focus');
+    (_rootRef$current = rootRef.current) === null || _rootRef$current === void 0 ? void 0 : _rootRef$current.classList.add('active', 'focus');
   }
   function handleSelect(_x4) {
     return _handleSelect.apply(this, arguments);
@@ -2037,6 +2038,7 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
         labelArr,
         curItem,
         incominggetOptionsData,
+        _rootRef$current3,
         options,
         curBtn,
         _data,
@@ -2076,7 +2078,7 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
 
             //remove focus style
             if (!MULTI_SEL_VALID) {
-              rootRef.current.classList.remove('focus');
+              (_rootRef$current3 = rootRef.current) === null || _rootRef$current3 === void 0 ? void 0 : _rootRef$current3.classList.remove('focus');
             }
 
             // get options
@@ -2492,7 +2494,8 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
 
   //
   function handleFocus(event) {
-    rootRef.current.classList.add('focus');
+    var _rootRef$current2;
+    (_rootRef$current2 = rootRef.current) === null || _rootRef$current2 === void 0 ? void 0 : _rootRef$current2.classList.add('focus');
 
     // update temporary value
     setControlTempValue('');

@@ -250,8 +250,9 @@ var Textarea = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_reac
   // auto size
   utils_useAutosizeTextArea(autoSize ? valRef.current : null, autoSize ? changedVal : '');
   function handleFocus(event) {
+    var _rootRef$current;
     var el = event.target;
-    rootRef.current.classList.add('focus');
+    (_rootRef$current = rootRef.current) === null || _rootRef$current === void 0 ? void 0 : _rootRef$current.classList.add('focus');
 
     //
     onFocus === null || onFocus === void 0 ? void 0 : onFocus(event, valRef.current);
@@ -263,7 +264,8 @@ var Textarea = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_reac
     //----
     //remove focus style
     if (val === '') {
-      rootRef.current.classList.remove('focus');
+      var _rootRef$current2;
+      (_rootRef$current2 = rootRef.current) === null || _rootRef$current2 === void 0 ? void 0 : _rootRef$current2.classList.remove('focus');
     }
 
     //
@@ -283,7 +285,8 @@ var Textarea = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_reac
     //----
     //remove focus style
     if (val === '') {
-      rootRef.current.classList.remove('focus');
+      var _rootRef$current3;
+      (_rootRef$current3 = rootRef.current) === null || _rootRef$current3 === void 0 ? void 0 : _rootRef$current3.classList.remove('focus');
     }
 
     //

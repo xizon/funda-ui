@@ -112,7 +112,7 @@ const SearchBar = forwardRef((props: SearchBarProps, ref: any) => {
     }
 
     function handleFocus(event: any) {
-        rootRef.current.classList.add('focus');
+        rootRef.current?.classList.add('focus');
 
         //
         onFocus?.(event, onComposition);
@@ -126,7 +126,7 @@ const SearchBar = forwardRef((props: SearchBarProps, ref: any) => {
         //----
         //remove focus style
         if (val === '') {
-            rootRef.current.classList.remove('focus');
+            rootRef.current?.classList.remove('focus');
         }
 
         //
@@ -141,7 +141,7 @@ const SearchBar = forwardRef((props: SearchBarProps, ref: any) => {
         //----
         //remove focus style
         if (val === '') {
-            rootRef.current.classList.remove('focus');
+            rootRef.current?.classList.remove('focus');
         }
 
         //

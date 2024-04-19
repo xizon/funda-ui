@@ -260,7 +260,7 @@ const Radio = (props: RadioProps) => {
 
     //
     function handleFocus(event: any) {
-        rootRef.current.classList.add('focus');
+        rootRef.current?.classList.add('focus');
 
         //
         onFocus?.(event);
@@ -291,7 +291,7 @@ const Radio = (props: RadioProps) => {
 
         //----
         //remove focus style
-        rootRef.current.classList.remove('focus');
+        rootRef.current?.classList.remove('focus');
 
    
         //
@@ -307,7 +307,7 @@ const Radio = (props: RadioProps) => {
 
         //----
         //remove focus style
-        rootRef.current.classList.remove('focus');
+        rootRef.current?.classList.remove('focus');
 
         //
         onBlur?.(event);

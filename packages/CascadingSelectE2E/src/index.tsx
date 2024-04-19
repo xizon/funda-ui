@@ -564,7 +564,7 @@ const CascadingSelectE2E = (props: CascadingSelectE2EProps) => {
 
 
     function handleFocus(event: any) {
-        rootRef.current.classList.add('focus');
+        rootRef.current?.classList.add('focus');
 
         //
         handleDisplayOptions(null);
@@ -578,7 +578,7 @@ const CascadingSelectE2E = (props: CascadingSelectE2EProps) => {
 
         //----
         //remove focus style
-        rootRef.current.classList.remove('focus');
+        rootRef.current?.classList.remove('focus');
 
 
         //

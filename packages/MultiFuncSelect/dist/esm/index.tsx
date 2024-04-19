@@ -1162,7 +1162,7 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
         [].slice.call(document.querySelectorAll('.mf-select__wrapper')).forEach((node: any) => {
             node.classList.remove('active', 'focus');
         });
-        rootRef.current.classList.add('active', 'focus');
+        rootRef.current?.classList.add('active', 'focus');
     }
 
    
@@ -1187,7 +1187,7 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
 
         //remove focus style
         if (!(MULTI_SEL_VALID)) {
-            rootRef.current.classList.remove('focus');
+            rootRef.current?.classList.remove('focus');
         }
 
         // get options
@@ -1671,7 +1671,7 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
     //
     function handleFocus(event: any) {
 
-        rootRef.current.classList.add('focus');
+        rootRef.current?.classList.add('focus');
 
         // update temporary value
         setControlTempValue('');

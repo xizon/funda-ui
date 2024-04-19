@@ -214,7 +214,7 @@ const File = forwardRef((props: FileProps, ref: any) => {
         //----
         //remove focus style
         if (val === '') {
-            rootRef.current.classList.remove('focus');
+            rootRef.current?.classList.remove('focus');
         }
 
         //

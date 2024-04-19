@@ -160,7 +160,7 @@ const TagInput = forwardRef((props: TagInputProps, ref: any) => {
         //----
         //remove focus style
         if (val === '') {
-            rootRef.current.classList.remove('focus');
+            rootRef.current?.classList.remove('focus');
         }
 
         //
@@ -186,7 +186,7 @@ const TagInput = forwardRef((props: TagInputProps, ref: any) => {
 
 
     function handleFocus(event: any) {
-        rootRef.current.classList.add('focus');
+        rootRef.current?.classList.add('focus');
 
         //
         onFocus?.(event);
@@ -201,7 +201,7 @@ const TagInput = forwardRef((props: TagInputProps, ref: any) => {
         //----
         //remove focus style
         if (val === '') {
-            rootRef.current.classList.remove('focus');
+            rootRef.current?.classList.remove('focus');
         }
 
         //

@@ -59,7 +59,7 @@ const Checkbox = forwardRef((props: CheckboxProps, ref: any) => {
     const [val, setVal] = useState<any>(null || false);  // Avoid the error "react checkbox changing an uncontrolled input to be controlled"
 
     function handleFocus(event: any) {
-        rootRef.current.classList.add('focus');
+        rootRef.current?.classList.add('focus');
 
         //
         onFocus?.(event);
@@ -73,7 +73,7 @@ const Checkbox = forwardRef((props: CheckboxProps, ref: any) => {
 
         //----
         //remove focus style
-        rootRef.current.classList.remove('focus');
+        rootRef.current?.classList.remove('focus');
 
         //
         if (typeof (onChange) === 'function') {
@@ -89,7 +89,7 @@ const Checkbox = forwardRef((props: CheckboxProps, ref: any) => {
 
         //----
         //remove focus style
-        rootRef.current.classList.remove('focus');
+        rootRef.current?.classList.remove('focus');
 
         //
         onBlur?.(event);

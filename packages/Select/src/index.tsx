@@ -212,7 +212,7 @@ const Select = forwardRef((props: SelectProps, ref: any) => {
 
     //
     function handleFocus(event: any) {
-        rootRef.current.classList.add('focus');
+        rootRef.current?.classList.add('focus');
 
         //
         onFocus?.(event);    
@@ -229,7 +229,7 @@ const Select = forwardRef((props: SelectProps, ref: any) => {
 
         //----
         //remove focus style
-        rootRef.current.classList.remove('focus');
+        rootRef.current?.classList.remove('focus');
 
         //
 		if ( typeof(onChange) === 'function' ) {
@@ -244,7 +244,7 @@ const Select = forwardRef((props: SelectProps, ref: any) => {
 
         //----
         //remove focus style
-        rootRef.current.classList.remove('focus');
+        rootRef.current?.classList.remove('focus');
 
         //
         onBlur?.(event);

@@ -135,7 +135,7 @@ const Input = forwardRef((props: InputProps, ref: any) => {
 
 
     function handleFocus(event: ChangeEvent<HTMLInputElement>) {
-        rootRef.current.classList.add('focus');
+        rootRef.current?.classList.add('focus');
 
         //
         onFocus?.(event, onComposition, valRef.current);    
@@ -150,7 +150,7 @@ const Input = forwardRef((props: InputProps, ref: any) => {
         //----
         //remove focus style
         if (val === '') {
-            rootRef.current.classList.remove('focus');
+            rootRef.current?.classList.remove('focus');
         }
 
         //
@@ -173,7 +173,7 @@ const Input = forwardRef((props: InputProps, ref: any) => {
         //----
         //remove focus style
         if (val === '') {
-            rootRef.current.classList.remove('focus');
+            rootRef.current?.classList.remove('focus');
         }
 
         //

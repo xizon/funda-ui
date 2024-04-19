@@ -991,7 +991,8 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
             }
           }
           function handleFocus(event) {
-            rootRef.current.classList.add('focus');
+            var _rootRef$current;
+            (_rootRef$current = rootRef.current) === null || _rootRef$current === void 0 ? void 0 : _rootRef$current.classList.add('focus');
 
             //
             onFocus === null || onFocus === void 0 ? void 0 : onFocus(event, onComposition, valRef.current);
@@ -1003,7 +1004,8 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
             //----
             //remove focus style
             if (val === '') {
-              rootRef.current.classList.remove('focus');
+              var _rootRef$current2;
+              (_rootRef$current2 = rootRef.current) === null || _rootRef$current2 === void 0 ? void 0 : _rootRef$current2.classList.remove('focus');
             }
 
             //
@@ -1023,7 +1025,8 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
             //----
             //remove focus style
             if (val === '') {
-              rootRef.current.classList.remove('focus');
+              var _rootRef$current3;
+              (_rootRef$current3 = rootRef.current) === null || _rootRef$current3 === void 0 ? void 0 : _rootRef$current3.classList.remove('focus');
             }
 
             //
@@ -2429,10 +2432,11 @@ var src_Date = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_reac
   }
   function handleClickOutside(event) {
     if (event.target.closest(".date2d__wrapper") === null && event.target.closest(".date2d-cal__wrapper") === null) {
+      var _rootRef$current;
       popwinPosHide();
 
       //remove focus style
-      rootRef.current.classList.remove('focus');
+      (_rootRef$current = rootRef.current) === null || _rootRef$current === void 0 ? void 0 : _rootRef$current.classList.remove('focus');
     }
   }
   function handleShow() {
@@ -2443,7 +2447,8 @@ var src_Date = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_reac
     }, 0);
   }
   function handleFocus(event) {
-    rootRef.current.classList.add('focus');
+    var _rootRef$current2;
+    (_rootRef$current2 = rootRef.current) === null || _rootRef$current2 === void 0 ? void 0 : _rootRef$current2.classList.add('focus');
 
     //
     onFocus === null || onFocus === void 0 ? void 0 : onFocus(event);
@@ -2455,8 +2460,9 @@ var src_Date = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_reac
     _onChange === null || _onChange === void 0 ? void 0 : _onChange(inputRef.current, val, (0,utils_date.isValidDate)(val));
   }
   function handleBlur(event) {
+    var _rootRef$current3;
     //remove focus style
-    rootRef.current.classList.remove('focus');
+    (_rootRef$current3 = rootRef.current) === null || _rootRef$current3 === void 0 ? void 0 : _rootRef$current3.classList.remove('focus');
 
     //
     onBlur === null || onBlur === void 0 ? void 0 : onBlur(inputRef.current);

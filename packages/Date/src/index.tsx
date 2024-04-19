@@ -466,7 +466,7 @@ const Date = forwardRef((props: DateProps, ref: any) => {
             popwinPosHide();
 
             //remove focus style
-            rootRef.current.classList.remove('focus');
+            rootRef.current?.classList.remove('focus');
         }
 
     }
@@ -486,7 +486,7 @@ const Date = forwardRef((props: DateProps, ref: any) => {
 
 
     function handleFocus(event: ChangeEvent<HTMLElement>) {
-        rootRef.current.classList.add('focus');
+        rootRef.current?.classList.add('focus');
 
 
         //
@@ -505,7 +505,7 @@ const Date = forwardRef((props: DateProps, ref: any) => {
     function handleBlur(event: ChangeEvent<HTMLElement>) {
 
         //remove focus style
-        rootRef.current.classList.remove('focus');
+        rootRef.current?.classList.remove('focus');
 
         //
         onBlur?.(inputRef.current);

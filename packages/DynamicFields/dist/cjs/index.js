@@ -187,9 +187,11 @@ var DynamicFields = function DynamicFields(props) {
   function emptyContentEnabled(type) {
     if (innerAppendEmptyContent === '' || typeof innerAppendEmptyContent === 'undefined') return false;
     if (type === 'add') {
-      emptyRef.current.classList.add(ITEM_HIDE_CLASSNAME);
+      var _emptyRef$current;
+      (_emptyRef$current = emptyRef.current) === null || _emptyRef$current === void 0 ? void 0 : _emptyRef$current.classList.add(ITEM_HIDE_CLASSNAME);
     } else {
-      emptyRef.current.classList.remove(ITEM_HIDE_CLASSNAME);
+      var _emptyRef$current2;
+      (_emptyRef$current2 = emptyRef.current) === null || _emptyRef$current2 === void 0 ? void 0 : _emptyRef$current2.classList.remove(ITEM_HIDE_CLASSNAME);
     }
     return true;
   }
