@@ -1077,6 +1077,7 @@ const ListLiveSearch = (props: ListLiveSearchProps) => {
 
 
     function handleSubmit(e: any) {
+        e.preventDefault();
         if (inputRef.current === null) return;
         const _val = inputRef.current.value;
 
@@ -1087,10 +1088,12 @@ const ListLiveSearch = (props: ListLiveSearchProps) => {
 
 
     function handleKeydown(e: any) {
+        
         if (inputRef.current === null) return;
         const _val = inputRef.current.value;
 
         if (e.keyCode === 13) {
+            e.preventDefault();
             onSubmit?.(e, filterRes(data, _val), inputRef.current);
         }
     }
