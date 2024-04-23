@@ -1,13 +1,12 @@
 import React, { useEffect, useRef, useCallback } from 'react';
 
-import Checkbox from 'funda-checkbox';
+// HAS CHECKBOX
 
 
-
-
-import { getNextSiblings, getParents, getChildren } from './utils/dom'; 
+import { getNextSiblings, getPreviousSiblings, getParents, getChildren } from './utils/dom'; 
 
 import { initUlHeight } from './init-height';
+import { removeItemOnce, activeClass } from './tree-utils';
 
 interface fetchConfig {
     fetchFuncAsync?: any | undefined;
@@ -71,13 +70,6 @@ export default function TreeList(props: TreeListProps) {
     const loadingIcon: React.ReactNode = <var className="loading-icon"><svg width="1em" height="1em" viewBox="0 0 512 512"><g><path fill="currentColor" d="M256,0c-23.357,0-42.297,18.932-42.297,42.288c0,23.358,18.94,42.288,42.297,42.288c23.357,0,42.279-18.93,42.279-42.288C298.279,18.932,279.357,0,256,0z"/><path fill="currentColor" d="M256,427.424c-23.357,0-42.297,18.931-42.297,42.288C213.703,493.07,232.643,512,256,512c23.357,0,42.279-18.93,42.279-42.288C298.279,446.355,279.357,427.424,256,427.424z"/><path fill="currentColor" d="M74.974,74.983c-16.52,16.511-16.52,43.286,0,59.806c16.52,16.52,43.287,16.52,59.806,0c16.52-16.511,16.52-43.286,0-59.806C118.261,58.463,91.494,58.463,74.974,74.983z"/><path fill="currentColor" d="M377.203,377.211c-16.503,16.52-16.503,43.296,0,59.815c16.519,16.52,43.304,16.52,59.806,0c16.52-16.51,16.52-43.295,0-59.815C420.489,360.692,393.722,360.7,377.203,377.211z"/><path fill="currentColor" d="M84.567,256c0.018-23.348-18.922-42.279-42.279-42.279c-23.357-0.009-42.297,18.932-42.279,42.288c-0.018,23.348,18.904,42.279,42.279,42.279C65.645,298.288,84.567,279.358,84.567,256z"/><path fill="currentColor" d="M469.712,213.712c-23.357,0-42.279,18.941-42.297,42.288c0,23.358,18.94,42.288,42.297,42.297c23.357,0,42.297-18.94,42.279-42.297C512.009,232.652,493.069,213.712,469.712,213.712z"/><path fill="currentColor" d="M74.991,377.22c-16.519,16.511-16.519,43.296,0,59.806c16.503,16.52,43.27,16.52,59.789,0c16.52-16.519,16.52-43.295,0-59.815C118.278,360.692,91.511,360.692,74.991,377.22z"/><path fill="currentColor" d="M437.026,134.798c16.52-16.52,16.52-43.304,0-59.824c-16.519-16.511-43.304-16.52-59.823,0c-16.52,16.52-16.503,43.295,0,59.815C393.722,151.309,420.507,151.309,437.026,134.798z"/></g></svg></var>;
 
 
-    const removeItemOnce = (arr: any[], key: string) => {
-        return arr.filter((item: any) => {
-            return item.key !== key;
-        });
-    };
-      
-
     const formatCheckboxControlVal = (el: HTMLFormElement) => {
         return {
             name: el.dataset.name?.replace(/-label$/, ''),
@@ -115,7 +107,7 @@ export default function TreeList(props: TreeListProps) {
         //---
         _parentsLi.forEach((node: any) => {
             const _checkboxes = getChildren(node, '[type="checkbox"]');
-            const parentKey = _checkboxes[0].dataset.key;
+            const parentKey = typeof _checkboxes[0] === 'undefined' ? '' : _checkboxes[0].dataset.key;
 
 
             //
@@ -158,13 +150,6 @@ export default function TreeList(props: TreeListProps) {
 
     };
 
-    const activeClass = (el: any, mode: string, classname: string = 'active') => {
-        if ( mode === 'add' ) {
-            el.classList.add(classname);
-        } else {
-            el.classList.remove(classname);
-        }
-    };
 
     const closeChild = (hyperlink: HTMLElement, ul: HTMLAllCollection) => {
         if ( ul.length === 0 ) return;
@@ -295,6 +280,84 @@ export default function TreeList(props: TreeListProps) {
 
     }
 
+    function checkedAct(el: any, val: any) {
+
+        if (el === null) return;
+
+        const _curKey: string = el.dataset.key;
+        const _checkedData: any = getCheckedData;
+
+        let _res: any = getCheckedPrint;
+
+        // STEP 1:
+        // Current checkbox
+        //-----------
+        if ( val === true ) {
+            _res.push(formatCheckboxControlVal(el));
+            setCheckboxIndeterminateData(_checkedData, _curKey, false);
+            setCheckboxCheckedData(_checkedData, _curKey, true);
+
+        } else {
+            setCheckboxCheckedData(_checkedData, _curKey, false);
+            _res = removeItemOnce(_res, _curKey);
+            
+        }
+
+
+        // STEP 2:
+        // All child checkboxes
+        //-----------
+        [].slice.call(getChildren(el.closest('li'), '[type="checkbox"]')).forEach((node: any) => {
+            if ( val === true ) {
+                if ( node.dataset.key !== _curKey ) {
+                    setCheckboxIndeterminateData(_checkedData, node.dataset.key, false);
+                    setCheckboxCheckedData(_checkedData, node.dataset.key, true);
+                    _res.push(formatCheckboxControlVal(node));
+                }
+            } else {
+                setCheckboxCheckedData(_checkedData, node.dataset.key, false);
+                _res = removeItemOnce(_res, node.dataset.key);
+
+            }
+
+        });
+
+  
+        // STEP 3:
+        // ALl parent checkboxes
+        //-----------
+        const [updatedCheckedData, updatedPrintData] = setCheckboxIndeterminateStatus(_checkedData, _res, el);
+        let _updatedCheckedData: any[] = updatedCheckedData;
+        let _updatedPrintData: any[] = updatedPrintData;
+
+
+        // STEP 4:
+        // Update checked data
+        //-----------
+        updategetCheckedData(_updatedCheckedData);
+        
+        
+        // STEP 5:
+        // Array deduplication
+        //-----------
+        _updatedPrintData = _updatedPrintData.filter((item: any, index: number, self: any[]) => index === self.findIndex((t) => (t.key === item.key)))
+
+        
+        // STEP 6:
+        // Update checked print
+        //-----------
+        updateCheckedPrint(_updatedPrintData);
+
+
+        // STEP 7:
+        // callback
+        //----------- 
+        onCheck?.(_updatedPrintData);
+
+     
+    }
+    
+
 
     useEffect(() => {
 
@@ -335,9 +398,10 @@ export default function TreeList(props: TreeListProps) {
         // Initialize indeterminate status of all checkboxes 
         //=====================
         setCheckboxIndeterminateStatus(getCheckedData as never, getCheckedPrint as never, null);
-                                
-
+     
     }, [data]);
+
+    
 
 
     if ( data ) {
@@ -353,8 +417,19 @@ export default function TreeList(props: TreeListProps) {
                 
                     
                     if ( item.heading ) return (
-                        <li className={`nav-item ${first ? 'first' : ''}`} key={item.key}>
-                            <a tabIndex={-1} className="nav-link disabled" href="#" aria-disabled="true" data-link={item.link} data-slug={item.slug} data-key={item.key}>
+                        <li 
+                            className={`nav-item ${first ? 'first' : ''}`} 
+                            key={item.key}
+                        >
+                            <a 
+                                tabIndex={-1} 
+                                className="nav-link disabled" 
+                                href="#" 
+                                aria-disabled="true" 
+                                data-link={item.link} 
+                                data-slug={item.slug} 
+                                data-key={item.key}
+                            >
                                 <span>{item.icon ? item.icon.indexOf('</svg>') < 0 ? <><i className={item.icon}></i> </> : <var dangerouslySetInnerHTML={{ __html: `${item.icon}` }} /> : null}<i dangerouslySetInnerHTML={{ __html: `${item.title}` }}></i></span>
                             </a>
                         </li>
@@ -370,94 +445,33 @@ export default function TreeList(props: TreeListProps) {
                             {(item.children && item.children.length) || item.childrenAsync ? <span aria-expanded={item.active ? 'true' : 'false'} className={item.active ? `arrow active ${_async} ${_cusIcons}` : `arrow ${_async} ${_cusIcons}`} onClick={handleCollapse} data-link={item.link} data-slug={item.slug} data-key={item.key}>{arrowGenerator()}</span> : ''}
 
                             <span className="checkbox-trigger">
-                                <Checkbox
-                                    wrapperClassName=""
-                                    name={`checkbox-${checkboxNamePrefix}-${item.key}`}
-                                    tabIndex={-1}
-                                    data-key={item.key}
-                                    data-link={item.link}
-                                    value={item.slug}
-                                    indeterminate={getCheckedData!.filter((cur: any) => cur.key === item.key)[0]?.indeterminate}
-                                    checked={getCheckedData!.filter((cur: any) => cur.key === item.key)[0]?.checked}
-                                    onChange={(e: any, val: any) => {
-                                      
-                                        const _curKey: string = e.target.dataset.key;
-                                        const _checkedData: any = getCheckedData;
 
-                                        let _res: any = getCheckedPrint;
+                                <div className="form-check__wrapper">
+                                    <div className="form-check d-inline-block">
+                                        <input
+                                            type="checkbox"
+                                            className={`form-check-input ${getCheckedData!.filter((cur: any) => cur.key === item.key)[0]?.indeterminate ? 'indeterminate' : ''}`}
+                                            name={`checkbox-${checkboxNamePrefix}-${item.key}`}
+                                            tabIndex={-1}
+                                            data-name={`checkbox-${checkboxNamePrefix}-${item.key}`}
+                                            data-key={item.key}
+                                            data-link={item.link}
+                                            value={item.slug}
+                                            checked={getCheckedData!.filter((cur: any) => cur.key === item.key)[0]?.checked}
+                                            onChange={(e: any) => {
+                                                checkedAct(e.target, !getCheckedData!.filter((cur: any) => cur.key === item.key)[0]?.checked);
+                                            }}
+                                        />
 
-                                        // STEP 1:
-                                        // Current checkbox
-                                        //-----------
-                                        if ( val === true ) {
-                                            _res.push(formatCheckboxControlVal(e.target));
-                                            setCheckboxIndeterminateData(_checkedData, _curKey, false);
-                                            setCheckboxCheckedData(_checkedData, _curKey, true);
+                                    </div>
 
-                                        } else {
-                                            setCheckboxCheckedData(_checkedData, _curKey, false);
-                                            _res = removeItemOnce(_res, _curKey);
-                                            
-                                        }
+                                </div>
 
-
-                                        // STEP 2:
-                                        // All child checkboxes
-                                        //-----------
-                                        [].slice.call(getChildren(e.target.closest('li'), '[type="checkbox"]')).forEach((node: any) => {
-                                            if ( val === true ) {
-                                                if ( node.dataset.key !== _curKey ) {
-                                                    setCheckboxIndeterminateData(_checkedData, node.dataset.key, false);
-                                                    setCheckboxCheckedData(_checkedData, node.dataset.key, true);
-                                                    _res.push(formatCheckboxControlVal(node));
-                                                }
-                                            } else {
-                                                setCheckboxCheckedData(_checkedData, node.dataset.key, false);
-                                                _res = removeItemOnce(_res, node.dataset.key);
-
-                                            }
-
-                                        });
-
-
-                                        // STEP 3:
-                                        // ALl parent checkboxes
-                                        //-----------
-                                        const [updatedCheckedData, updatedPrintData] = setCheckboxIndeterminateStatus(_checkedData, _res, e.target);
-                                        let _updatedCheckedData: any[] = updatedCheckedData;
-                                        let _updatedPrintData: any[] = updatedPrintData;
-
-
-                                        // STEP 4:
-                                        // Update checked data
-                                        //-----------
-                                        updategetCheckedData(_updatedCheckedData);
-                                        
-                                        
-                                        // STEP 5:
-                                        // Array deduplication
-                                        //-----------
-                                        _updatedPrintData = _updatedPrintData.filter((item: any, index: number, self: any[]) => index === self.findIndex((t) => (t.key === item.key)))
-
-                                        
-                                        // STEP 6:
-                                        // Update checked print
-                                        //-----------
-                                        updateCheckedPrint(_updatedPrintData);
-
-
-                                        // STEP 7:
-                                        // callback
-                                        //----------- 
-                                        onCheck?.(_updatedPrintData);
-                                    }}
-                                />
                             </span>
-
-                      
+              
                             <a 
                                 tabIndex={-1} 
-                                className={item.active ? `nav-link active ${_async} ${item.selected ? 'selected' : ''}` : `nav-link ${_async} ${item.selected ? 'selected' : ''}`} 
+                                className={`nav-link ${_async} ${item.selected ? 'selected' : ''} ${item.active ? 'active': ''}`}
                                 href={item.link === '#' ? `${item.link}-${i}` : item.link} 
                                 aria-expanded="false" 
                                 onClick={handleSelect} 

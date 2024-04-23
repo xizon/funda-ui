@@ -4,6 +4,9 @@ declare module 'react' {
         children?: any;
     }
 }
+interface ListSearchDataConfig {
+    title: string | number;
+}
 declare type TreeProps = {
     /** Set TreeNode display Checkbox or not */
     checkable?: boolean;
@@ -27,6 +30,8 @@ declare type TreeProps = {
     childClassName?: string;
     /** Specify data of Cascading DropDown List as a JSON string format. */
     data?: any[any];
+    /** Retrieve data */
+    retrieveData?: ListSearchDataConfig[];
     /** -- */
     id?: string;
     onSelect?: (e: any, val: any, func: Function) => void;

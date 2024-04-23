@@ -19,11 +19,11 @@ import Tree from 'funda-ui/Tree';
 | `arrowIcons` | React.ReactNode[] | - | Set collapse/expand icon. Use an array to set two icons, if only one is set, the icon animation is activated, and if two are set, the animation is canceled. <br /> such as: `[<><svg width="1em" height="1em" viewBox="0 0 24 24">...</svg></>,<><svg width="1em" height="1em" viewBox="0 0 24 24">...</svg></>]` <blockquote>`arrow` will have no effect when using this attribute.</blockquote> |
 | `disableArrow` | boolean | false | Disable arrow. |
 | `disableCollapse` | boolean | false | Disable the collapse effect. |
-| `data` | array | - | Specify data of Cascading DropDown List as a JSON string format. Such as: <br />`[{title:"Top level 1",link:"#",slug:'level-1'},{title:"Top level 2",link:"/s",slug:'level-2',},{title:"Top level 3",link:"https://example.com",slug:'level-3',active:true,children:[{title:"Sub level 3_1",link:"#3-1",slug:'level-3_1'},{title:"Sub level 3_2",link:"#3-2",slug:'level-3_2'},{title:"Sub level 3_3",link:"#3-3",slug:'level-3_3'}]},{title:"Top level 4 (heading)",link:"#",slug:'level-4',}]` |
+| `data` | array | - | Specify data of Cascading List as a JSON string format. Such as: <br />`[{title:"Top level 1",link:"#",slug:'level-1'},{title:"Top level 2",link:"/s",slug:'level-2',},{title:"Top level 3",link:"https://example.com",slug:'level-3',active:true,children:[{title:"Sub level 3_1",link:"#3-1",slug:'level-3_1'},{title:"Sub level 3_2",link:"#3-2",slug:'level-3_2'},{title:"Sub level 3_3",link:"#3-3",slug:'level-3_3'}]},{title:"Top level 4 (heading)",link:"#",slug:'level-4',}]` |
+| `retrieveData` | array | - | Specify data of showing items from `data`. Such as: <br />`[{title:"Top level 1",},{title:"Sub level 2_2"},{title:"Sub level 3_3"}]` <blockquote>It will filter out other options that don't exist, usually used for real-time searches</blockquote> |
 | `onSelect` | function  | - | Call a function when clicking an item. It returns three callback values. <br /> <ol><li>The first is the current hyperlink</li><li>The second is the data (**JSON Object**)</li><li> The third is a callback function, which can initiate an asynchronous request to load children (usage: Please refer to the documentation example)</li></ol> |
 | `onCollapse` | function  | - | Call a function when collapsing/expanding. The return value is same with `onSelect`. <blockquote>When `disableArrow` is "true", click on the content to trigger it</blockquote> |
 | `onCheck` | function  | - | Call a function when changing the checkbox. It returns only one callback value (**Array**). <blockquote>It is valid when `checkable` is "true"</blockquote> |
-
 
 
 
@@ -52,6 +52,14 @@ Array configuration properties of the `data`:
 | `itemMouseLeaveCallback` | function | - |  The mouseleave event of `<li class="nav-item"></li>`  |
 
 
+---
+
+Array configuration properties of the `retrieveData`:
+
+| Property | Type | Default | Description |
+| --- | --- | --- | --- |
+| `title` | string | - | Specify the label text for each option. |
+
 
 ---
 
@@ -63,6 +71,7 @@ The property list of the last parameter (Function) in the return value of `onCol
 | `key` | React.Key \| null | null | Match the key value of item.  |
 | `fetch` | JSON Object \| null | null | Set a request.  |
 | `firstRender` | boolean | false | Is it the first render.  |
+
 
 
 > 
@@ -991,3 +1000,289 @@ export default () => {
     )
 }
 ```
+
+
+
+
+## Live Search Tree
+
+Use the `retrieveData` attribute to display real-time search content.
+
+
+ListLiveSearch.tsx:
+```js
+
+import React, { useState, useEffect, useRef} from "react";
+
+interface ListLiveSearchDataConfig {
+    title: string | number;
+}
+
+
+type ListLiveSearchProps = {
+    listdata: any[];
+    placeholder?: string;
+    exClass?: string;
+    onChange?: (e: any, data: any[], el: any) => void;
+    onSubmit?: (e: any, data: any[], el: any) => void;
+};
+
+
+
+const ListLiveSearch = (props: ListLiveSearchProps) => {
+
+    const {
+        listdata,
+        placeholder,
+        exClass,
+        onChange,
+        onSubmit
+    } = props;
+
+    const inputRef = useRef<any>(null);
+    const [data, setData] = useState<ListLiveSearchDataConfig[]>([]);
+   
+    const filterRes = (inputData: any[], val: string) => {
+
+        return inputData.filter((item: any) => {
+
+            // Avoid fatal errors causing page crashes
+            const _val = typeof val !== 'undefined' && val !== null ? val : '';
+        
+            if (
+                (
+                    item.title.toLowerCase().indexOf(_val.toLowerCase()) >= 0
+                ) &&
+                _val != ''
+            ) {
+                return true;
+            } else {
+                return false;
+            }
+        });
+    }
+
+
+    function handleChange(e: any) {
+        if (inputRef.current === null) return;
+
+        const _val = e.target.value;
+        onChange?.(e, filterRes(data, _val), inputRef.current);
+
+        if (_val === '') {
+            onSubmit?.(e, filterRes(data, _val), inputRef.current);
+        }
+
+    }
+
+
+    function handleSubmit(e: any) {
+        if (inputRef.current === null) return;
+        const _val = inputRef.current.value;
+
+        onSubmit?.(e, filterRes(data, _val), inputRef.current);
+
+    }
+
+
+
+    function handleKeydown(e: any) {
+        if (inputRef.current === null) return;
+        const _val = inputRef.current.value;
+
+        if (e.keyCode === 13) {
+            onSubmit?.(e, filterRes(data, _val), inputRef.current);
+        }
+    }
+
+    useEffect(() => {
+        setData(listdata);
+    }, [listdata])
+
+    return (
+        <>
+
+            <div className={`input-group ${exClass || 'mb-1'}`}>
+                <input 
+                    ref={inputRef} 
+                    autoComplete="off" 
+                    type="text" 
+                    className="form-control" 
+                    placeholder={placeholder || ''} 
+                    onChange={handleChange} 
+                    onKeyDown={handleKeydown}
+                />
+                <div className="input-group-text">
+                    <button tabIndex={-1} type="button" className="btn border-end-0 rounded-pill p-0 m-0" onClick={handleSubmit}>
+                        <svg width="1em" height="1em" fill="#a5a5a5" viewBox="0 0 16 16">
+                            <path d="M12.027 9.92L16 13.95 14 16l-4.075-3.976A6.465 6.465 0 0 1 6.5 13C2.91 13 0 10.083 0 6.5 0 2.91 2.917 0 6.5 0 10.09 0 13 2.917 13 6.5a6.463 6.463 0 0 1-.973 3.42zM1.997 6.452c0 2.48 2.014 4.5 4.5 4.5 2.48 0 4.5-2.015 4.5-4.5 0-2.48-2.015-4.5-4.5-4.5-2.48 0-4.5 2.014-4.5 4.5z" fillRule="evenodd" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+        </>
+    );
+
+}
+
+
+
+export default ListLiveSearch;
+
+```
+
+index.tsx:
+```js
+import React, { useState, useEffect} from "react";
+import Tree from 'funda-ui/Tree';
+
+// component styles
+import 'funda-ui/Tree/index.css';
+
+import ListLiveSearch from './ListLiveSearch';
+
+
+const treeData = [
+    {
+        title: "Top level 1",
+        link: "#",
+        slug: 'level-1',
+        checked: true
+    },
+    {
+        title: "Top level 2",
+        link: "/s",
+        slug: 'level-2',
+        checked: false,
+        children: [
+            {
+                title: "Sub level 2_1",
+                link: "#2-1",
+                slug: 'level-2_1',
+                checked: false
+            },
+            {
+                title: "Sub level 2_2",
+                link: "#2-2",
+                slug: 'level-2_2',
+                checked: false
+            }]
+    },
+    {
+        title: "Top level 3",
+        link: "/k",
+        slug: 'level-3',
+        checked: false,
+        active: true,
+        children: [
+            {
+                title: "Sub level 3_1",
+                link: "#3-1",
+                slug: 'level-3_1',
+                checked: false
+            },
+            {
+                title: "Sub level 3_2",
+                link: "#3-2",
+                slug: 'level-3_2',
+                checked: false
+            },
+            {
+                title: "Sub level 3_3",
+                link: "#3-3",
+                slug: 'level-3_3',
+                checked: true
+            }]
+    }
+];
+
+export default () => {
+
+
+    // list live search
+    const [flatList, setFlatList] = useState<any[]>([]);
+    const [queryData, setQueryData] = useState<any[]>([]);
+    function deepClone(obj: any) {
+        if (Array.isArray(obj)) {
+            return (obj as any).map((item: any) => deepClone(item));
+        } else if (typeof obj === 'object' && obj !== null) {
+            const clone: any = {};
+            for (let key in obj) {
+                if (obj.hasOwnProperty(key)) {
+                    clone[key] = deepClone(obj[key]);
+                }
+            }
+            return clone;
+        } else {
+            return obj;
+        }
+    }
+    const flatOriginalData = (data: any[]) => {
+        const result: any[] = [];
+        const iterate = (obj: any) => {
+            if (!obj) {
+                return;
+            }
+            obj.forEach((item: any) => {
+                result.push(item);
+                if (item.children) {
+                    iterate(item.children);
+                }
+
+                // delete current item children
+                delete item.children;
+
+            })
+        }
+    
+        iterate(data);
+        return result;
+    };
+
+    useEffect(() => {
+        setFlatList(flatOriginalData(deepClone(treeData)));
+    }, []);
+
+
+
+    return (
+        <>
+
+            {/* LIST LIVE SEARCH */}
+            <ListLiveSearch 
+                listdata={flatList.map((item: any) => {
+                    return {
+                        title: item.title
+                    }
+                })}
+                placeholder="Search" 
+                onChange={(e: any, queryData: any[], input: HTMLInputElement) => {
+                    setQueryData(queryData);
+                }}
+                onSubmit={(e: any, queryData: any[], input: HTMLInputElement) => {
+                    setQueryData(queryData);
+                }}
+            />
+            {/* /LIST LIVE SEARCH */}
+
+            <Tree 
+                retrieveData={queryData}
+                data={treeData} 
+                showLine={true}
+                checkable={true}
+                onCheck={(val) => {
+                    console.log(val);
+                }} 
+                onSelect={(e, val) => {
+                    console.log(val);
+                }}  
+            />
+
+
+
+        </>
+    )
+}
+```
+

@@ -3,12 +3,18 @@ import React, { useState, useEffect, useRef, useId } from 'react';
 import TreeList from './TreeList';
 import { initUlHeight, initAsyncItems } from './init-height';
 
+import {deepClone, flatOriginalData} from './tree-utils';
 
 declare module 'react' {
     interface ReactI18NextChildren<T> {
         children?: any;
     }
 }
+
+interface ListSearchDataConfig {
+    title: string | number;
+}
+
 
 
 interface DataNode {
@@ -62,6 +68,8 @@ type TreeProps = {
     childClassName?: string;
     /** Specify data of Cascading DropDown List as a JSON string format. */
     data?: any[any];
+    /** Retrieve data */
+    retrieveData?: ListSearchDataConfig[];
     /** -- */
     id?: string;
     onSelect?: (e: any, val: any, func: Function) => void;
@@ -83,6 +91,7 @@ const Tree = (props: TreeProps) => {
         treeClassName,
         childClassName,
         data,
+        retrieveData,
         onSelect,
         onCollapse,
         onCheck
@@ -92,7 +101,8 @@ const Tree = (props: TreeProps) => {
     const uniqueID = useId().replace(/\:/g, "-");
     const idRes = id || uniqueID;
     const rootRef = useRef<any>(null);
-    const [val, setVal] = useState<DataNode[] | null>(null);
+    const [list, setList] = useState<DataNode[] | null>(null);
+    const [flatList, setFlatList] = useState<DataNode[]>([]);
     const [checkedPrint, setCheckedPrint] = useState<any[]>([]);
     const [checkedData, setCheckedData] = useState<any[]>([]);
     const expandClassName = `${showLine ? 'show-line' : ''} ${disableArrow ? 'hide-arrow' : ''} ${disableCollapse ? 'collapse-disabled' : ''} ${lineStyle ? `line--${lineStyle}` : ''} ${checkable ? 'has-checkbox' : ''}`;
@@ -153,6 +163,32 @@ const Tree = (props: TreeProps) => {
     }
 
 
+    function updateShowProp(obj: DataNode[], retrieveData: ListSearchDataConfig[], val: boolean | undefined = undefined) {
+        obj.forEach((item: any, index: number) => {
+
+            if (retrieveData.length === 0) {
+                item.show = true;
+            } else {
+                if (typeof val !== 'undefined') {
+                    item.show = val;
+                } else {
+                    if (retrieveData.map((v: any) => v.title?.toLowerCase()).includes(item.title?.toLowerCase())) {
+                        item.show = true;
+                    } else {
+                        item.show = false;
+                    }
+                }
+            }
+
+
+            //
+            if (item.children) {
+                updateShowProp(item.children, retrieveData, val);
+            }
+        });
+    }
+
+
 
     function addKey(obj: DataNode[], depth: string, init: number) {
         obj.forEach((item: any, index: number) => {
@@ -184,6 +220,7 @@ const Tree = (props: TreeProps) => {
             setCheckedData((prevState) => [{
                 key: item.key,
                 checked: item.checked === true,
+                show: true,
                 indeterminate: false
             }, ...prevState]);
             
@@ -194,17 +231,34 @@ const Tree = (props: TreeProps) => {
     }
 
 
-    function initDefaultValue(key: React.Key | null, fetch: fetchConfig | null = null, firstRender: boolean = false) {
+    function initDefaultValue(key: React.Key | null, fetch: fetchConfig | null = null, firstRender: boolean = false, retrieveData: ListSearchDataConfig[] = []) {
 
         if ( firstRender ) {
             addKey(data, '', 0);
-            setVal(data);
+            
+
+            // filter showing items
+            if (Array.isArray(retrieveData)) {
+                updateShowProp(data, retrieveData);
+            } else {
+                updateShowProp(data, retrieveData, true);
+            }
+
+      
 
             // Initialize default value of checkboxes 
             if ( checkable ) {
                 initCheckboxesVal(data);
                 initCheckboxesData(data);
             }
+
+
+            // update list
+            setList(data);
+
+            // update retrive list
+            const _clone: any = deepClone(data);
+            setFlatList(flatOriginalData(_clone));
 
             return;
         }
@@ -218,11 +272,19 @@ const Tree = (props: TreeProps) => {
 
                 if ( _childrenData.length > 0 ) {
                     // add children to node
-                    const _newData: DataNode[] = updateTreeData(val, key ? key : '', _childrenData);
+                    const _newData: DataNode[] = updateTreeData(list, key ? key : '', _childrenData);
 
                     // update data
                     addKey(_newData, '', 0);
-                    setVal(_newData);
+          
+                    // filter showing items
+                    if (Array.isArray(retrieveData)) {
+                        updateShowProp(_newData, retrieveData);
+                    } else {
+                        updateShowProp(_newData, retrieveData, true);
+                    }
+
+
 
                     // Initialize default value of checkboxes 
                     if ( checkable ) {
@@ -230,10 +292,19 @@ const Tree = (props: TreeProps) => {
                             setCheckedData((prevState) => [{
                                 key: newitem.key,
                                 checked: newitem.checked === true,
+                                show: true,
                                 indeterminate: false
                             }, ...prevState]);
                         });
                     }
+                            
+                    // update list
+                    setList(_newData);
+
+                    // update retrive list
+                    const _clone: any = deepClone(_newData);
+                    setFlatList(flatOriginalData(_clone));
+                    
 
                 }
 
@@ -247,7 +318,7 @@ const Tree = (props: TreeProps) => {
                         }
                     });
 
-
+                
                     // init <ul> height
                     // Initialize async items
                     const ul: any = [].slice.call(rootRef.current.querySelectorAll('ul'));
@@ -265,9 +336,19 @@ const Tree = (props: TreeProps) => {
     }
 
 
+
+
+
+    function filterRetriveData(flatData: DataNode[], retrieveData: ListSearchDataConfig[]) {
+        return flatData.filter((item: any) => {
+            return retrieveData.map((v: any) => v.title?.toLowerCase()).includes(item.title?.toLowerCase())
+        });
+    }
+
     useEffect(() => {
-        initDefaultValue(null, null, true);
-    }, [data]);
+        initDefaultValue(null, null, true, retrieveData);
+    }, [data, retrieveData]);
+
 
    
     return (
@@ -285,7 +366,7 @@ const Tree = (props: TreeProps) => {
                     disableCollapse={disableCollapse}
                     arrow={arrow}
                     arrowIcons={arrowIcons}
-                    data={val} 
+                    data={Array.isArray(retrieveData) && retrieveData.length > 0 ? filterRetriveData(flatList, retrieveData) : list} 
                     childClassName={childClassName || 'tree-diagram-default-nav'} 
                     onSelect={onSelect} 
                     onCollapse={onCollapse}
