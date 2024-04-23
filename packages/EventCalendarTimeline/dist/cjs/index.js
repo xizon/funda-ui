@@ -1838,14 +1838,15 @@ var EventCalendarTimeline = function EventCalendarTimeline(props) {
       var _modalContent = _tableTooltipModalRef.querySelector('.e-cal-tl-table__cell-tooltipcontent');
       var _modalBox = _modalContent.getBoundingClientRect();
       if (typeof _modalContent.dataset.offset === 'undefined') {
-        if (_modalBox.right > window.innerWidth) {
+        // 10 pixels is used to account for some bias in mobile devices
+        if (_modalBox.right + 10 > window.innerWidth) {
           var _modalOffsetPosition = _modalBox.right - window.innerWidth + CELL_TOOLTIP_EXCEEDED_SIDE_POS_OFFSET;
           _modalContent.dataset.offset = _modalOffsetPosition;
           _modalContent.style.marginLeft = "-".concat(_modalOffsetPosition, "px");
           // console.log('_modalPosition: ', _modalOffsetPosition)
         }
 
-        if (_modalBox.left < 0) {
+        if (_modalBox.left - 10 < 0) {
           var _modalOffsetPosition2 = Math.abs(_modalBox.left) + CELL_TOOLTIP_EXCEEDED_SIDE_POS_OFFSET;
           _modalContent.dataset.offset = _modalOffsetPosition2;
           _modalContent.style.marginLeft = "".concat(_modalOffsetPosition2, "px");

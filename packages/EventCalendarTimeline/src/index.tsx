@@ -375,7 +375,8 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
             const _modalBox = _modalContent.getBoundingClientRect();
             if (typeof _modalContent.dataset.offset === 'undefined') {
 
-                if (_modalBox.right > window.innerWidth) {
+            // 10 pixels is used to account for some bias in mobile devices
+            if ((_modalBox.right + 10) > window.innerWidth) {
                     const _modalOffsetPosition = _modalBox.right - window.innerWidth + CELL_TOOLTIP_EXCEEDED_SIDE_POS_OFFSET;
                     _modalContent.dataset.offset = _modalOffsetPosition;
                     _modalContent.style.marginLeft = `-${_modalOffsetPosition}px`;
@@ -383,7 +384,7 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
                 }
 
 
-                if (_modalBox.left < 0) {
+                if ((_modalBox.left - 10) < 0) {
                     const _modalOffsetPosition = Math.abs(_modalBox.left) + CELL_TOOLTIP_EXCEEDED_SIDE_POS_OFFSET;
                     _modalContent.dataset.offset = _modalOffsetPosition;
                     _modalContent.style.marginLeft = `${_modalOffsetPosition}px`;

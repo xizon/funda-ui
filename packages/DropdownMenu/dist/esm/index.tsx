@@ -2,7 +2,6 @@ import React, { useEffect, useState, useRef, useId } from 'react';
 
 import RootPortal from 'funda-root-portal';
 
-
 import Option from './Option';
 
 import { getAbsolutePositionOfStage } from './utils/get-element-property';
@@ -219,9 +218,10 @@ const DropdownMenu = (props: DropdownMenuProps) => {
             const _modalListContent = modalRef.current.querySelector('.dd-menu-list__inner');
             const _modalBox = _modalListContent.getBoundingClientRect();
             const _iconRef: any = iconRef.current;
-            
-            
-            if (_modalBox.right > window.innerWidth) {
+
+    
+            // 10 pixels is used to account for some bias in mobile devices
+            if ((_modalBox.right + 10) > window.innerWidth) {
                 const _modalOffsetPosition = _modalBox.right - window.innerWidth + EXCEEDED_SIDE_POS_OFFSET;
                 _modalContent.style.marginLeft = `-${_modalOffsetPosition}px`;
                 _iconRef.style.marginLeft = `${_modalOffsetPosition}px`;
@@ -229,7 +229,7 @@ const DropdownMenu = (props: DropdownMenuProps) => {
             }
 
 
-            if (_modalBox.left < 0) {
+            if ((_modalBox.left - 10) < 0) {
                 const _modalOffsetPosition = Math.abs(_modalBox.left) + EXCEEDED_SIDE_POS_OFFSET;
                 _modalContent.style.marginLeft = `${_modalOffsetPosition}px`;
                 _iconRef.style.marginLeft = `-${_modalOffsetPosition}px`;

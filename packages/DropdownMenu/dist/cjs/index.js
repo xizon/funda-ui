@@ -650,14 +650,16 @@ var DropdownMenu = function DropdownMenu(props) {
       var _modalListContent = modalRef.current.querySelector('.dd-menu-list__inner');
       var _modalBox = _modalListContent.getBoundingClientRect();
       var _iconRef = iconRef.current;
-      if (_modalBox.right > window.innerWidth) {
+
+      // 10 pixels is used to account for some bias in mobile devices
+      if (_modalBox.right + 10 > window.innerWidth) {
         var _modalOffsetPosition = _modalBox.right - window.innerWidth + EXCEEDED_SIDE_POS_OFFSET;
         _modalContent.style.marginLeft = "-".concat(_modalOffsetPosition, "px");
         _iconRef.style.marginLeft = "".concat(_modalOffsetPosition, "px");
         // console.log('_modalPosition: ', _modalOffsetPosition)
       }
 
-      if (_modalBox.left < 0) {
+      if (_modalBox.left - 10 < 0) {
         var _modalOffsetPosition2 = Math.abs(_modalBox.left) + EXCEEDED_SIDE_POS_OFFSET;
         _modalContent.style.marginLeft = "".concat(_modalOffsetPosition2, "px");
         _iconRef.style.marginLeft = "-".concat(_modalOffsetPosition2, "px");
