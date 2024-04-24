@@ -22,7 +22,7 @@ type TableHeadersProps = {
     updategetCheckedData?: any;
     getCheckedRootData?: any[];
     updategetCheckedRootData?: any;
-    onCheck?: (val: any) => void;
+    onCheck?: (val: any, el: any, checked: boolean) => void;
     evSort?: (option: any) => void;
     evHeadCellMouseEnter?: (el: any) => void | undefined;
     evHeadCellMouseLeave?: (el: any) => void | undefined;
@@ -111,7 +111,7 @@ const TableHeaders = (props: TableHeadersProps) => {
         // STEP 6:
         // callback
         //-----------
-        onCheck?.(_res);
+        onCheck?.(_res, el, val);
 
     }
     
@@ -151,6 +151,9 @@ const TableHeaders = (props: TableHeadersProps) => {
                                         className="form-check-input"
                                         name={`checkbox-${checkboxNamePrefix}-all`}
                                         tabIndex={-1}
+                                        data-index={-1}
+                                        data-key="row-all"
+                                        data-use=""
                                         value={`row-all`}
                                         checked={getCheckedRootData!.filter((cur: any) => cur.key === 'row-all')[0]?.checked}
                                         onChange={(e: any) => {

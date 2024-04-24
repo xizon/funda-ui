@@ -17,6 +17,7 @@ declare type TableProps = {
     responsive?: boolean;
     enhancedResponsive?: boolean;
     enhancedResponsiveWithScrollBar?: boolean;
+    cellAutoWidth?: boolean;
     /** -- */
     id?: string;
     onCellMouseEnter?: (el: any) => void;
@@ -29,7 +30,7 @@ declare type TableProps = {
     onHeadCellMouseLeave?: (el: any) => void;
     onHeadCellClick?: (el: any) => void;
     onClick?: (el: any, val: any) => void;
-    onCheck?: (val: any) => void;
+    onCheck?: (val: any, el: any, checked: boolean) => void;
     onDrag?: (dragStart: any, dragEnd: any) => void;
     onRenderFinished?: (res: boolean) => void;
 };

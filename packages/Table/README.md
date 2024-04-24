@@ -24,10 +24,11 @@ import Table from 'funda-ui/Table';
 | `bordered` | boolean  | false | Adds borders on all sides of the table and cells |
 | `colGroup` | boolean  | false | Set the background color of the multiple columns with the `<colgroup>` and `<col>` tags |
 | `responsive` | boolean  | true | For horizontally scrolling tables on the wrapper. |
+| `cellAutoWidth` | boolean  | false | Width does not expand automatically, each cell uses a custom minimum width. |
 | `enhancedResponsive` | boolean  | false | Create enhanced responsive tables up to a particular breakpoint. <blockquote>Valid when the device width is less than or equal to 768px</blockquote> |
 | `enhancedResponsiveWithScrollBar` | boolean  | false | Create enhanced responsive tables up to a particular breakpoint. This property allows scroll bars to be created automatically in the table with floating header. <blockquote>Valid when the device width is less than or equal to 768px</blockquote> |
 | `onClick` | function  | - | Call a function when the value of an HTML element is changed. It returns two callback values. <br /> <ol><li>The first is the current row</li><li>The second is the row data (**Array**)</li></ol> |
-| `onCheck` | function  | - | Call a function when changing the checkbox. It returns only one callback value (**Array**). <blockquote>It is valid when `checkable` is "true"</blockquote> |
+| `onCheck` | function  | - | Call a function when changing the checkbox. It returns three callback values. <br /> <ol><li>The first is the row data (**Array**)</li><li>The second is the checkbox or radio control (**HTML Element**)</li><li>The second is the current value (**Boolean**)</li></ol> <blockquote>It is valid when `checkable` is "true"</blockquote> |
 | `onDrag` | function  | - | As each row is dragged, it returns two functions. dragStart, dragEnd, they represent the callback events of drag start and drag end respectively. For example: `onDrag={(dragStart,dragEnd)=>{if(dragStart!==null)dragStart((el,data,printData)=>{console.log('dragStart: ',data,printData);});if(dragEnd!==null)dragEnd((el,data,printData)=>{console.log('dragEnd: ',data,printData);});}}`. <blockquote>It is valid when `draggable` is "true"</blockquote> |
 | `onRenderFinished` | function  | - | Determine whether the table has been rendered. It returns only one callback value (**Boolean**). <blockquote>It is very practical for large batches of data to be displayed in business.</blockquote>|
 | `onCellMouseEnter` | function  | - | It fires when the mouse pointer enters a cell. It returns only one callback value which is the current cell. |
@@ -348,8 +349,8 @@ export default () => {
                 rowActiveClassName="active bg-primary-subtle"
                 data={tableData2_check}
                 checkable={true}
-                onCheck={(val) => {
-                    console.log(val);
+                onCheck={(val: any[], el: any, checked: boolean) => {
+                    console.log(val, el, checked);
                 }} 
             />
 
@@ -480,9 +481,15 @@ import 'funda-ui/Table/index.css';
 
 
 
+//convert HTML text to plain text
+function htmlToPlain(input: string) {
+    return input.replace(/(<([^>]+)>)/ig, '');
+}
+
+
 // DO NOT move `useMemo` to component
 function MemoTable(props: any) {
-    const {callback, data} = props;
+    const {setMethord, setSelectedItems, data} = props;
     return useMemo(() => {
         return <Table
                     checkable={true}
@@ -513,9 +520,56 @@ function MemoTable(props: any) {
                         }
 
                     }}
-                    onCheck={(val) => {
-                        console.log(val);
-                        callback(val); //If `useMemo()` is not used, this method will cause the parent component to re-render, causing the checkbox to fail
+                    onCheck={(val: any, el: any, checked: boolean) => {
+
+        
+                        //
+                        const isCheckboxAllControl = el.dataset.index == -1;
+                        if (isCheckboxAllControl) {
+
+                            // check all
+                            if (checked) {
+                                const newMap = new Map();
+                                const result = data.reduce(function(map: any, obj: any) {
+                                    map[obj.id] = obj;
+                                    newMap.set(obj.id, obj);
+                                    return map;
+                                }, {});
+                                setSelectedItems(newMap);
+                            } else {
+                                setSelectedItems(new Map());
+                            }
+                            
+                        } else {
+
+                            if (typeof el.dataset.use !== 'undefined' && el.dataset.use !== '') {
+                                const _itemData = JSON.parse(el.dataset.use);
+
+                                setSelectedItems((prevState: any) => {
+                                    const _selectedItems = prevState;
+
+                                    if (!_selectedItems.has(_itemData.id)) {
+                                        _selectedItems.set(_itemData.id, _itemData);
+                                    } else {
+                                        _selectedItems.delete(_itemData.id);
+                                    }
+
+                                    return _selectedItems;
+                                });
+                            }
+                        }
+
+        
+
+
+                        //
+                        const text = val.map((v: any) => {
+                            return `${v.content[1]}: ${htmlToPlain(v.content[2])}，`
+                        });
+        
+                        setMethord(text.join('').replace(/，\s*$/, ''));
+
+
                     }}
                     headClassName="table-light"
                     tableClassName="table table-hover table-bordered table-striped"
@@ -529,9 +583,9 @@ function MemoTable(props: any) {
                             {"content": 'Name', "data": JSON.stringify({param1: 2, param2: 2}) },
                             {"style": { display: 'none' }, "content": "" }
                         ],
-                        "fields": data.map((item: any) => {
+                        "fields": data.map((item: any, i: number) => {
                             return [
-                                { "cols": 1, "style": { padding: '.5rem .1rem' }, "content": '' },
+                                { "cols": 1, "data": JSON.stringify({...item, customIndex: i}), "style": { padding: '.5rem .1rem' }, "content": '' },
                                 { "cols": 1, "style": { fontWeight: 'normal' }, "content": item.id, "data": JSON.stringify(item) },
                                 { "cols": 1, "content": item.name, "data": JSON.stringify(item) },
                                 { "cols": 1, style: { display: 'none' }, "content": `{"id":"${item.id}","name":"${item.name}"}` }
@@ -552,7 +606,23 @@ const Main = (props: any) => {
 
     const [tableData, setTableData] = useState<any[]>([]);
     const [methord, setMethord] = useState<any[]>([]);
+    const [selectedItems, setSelectedItems] = useState<any>(new Map());
+    const [res, setRes] = useState<string>('');
 
+
+    function handleView(e: React.MouseEvent) {
+        e.preventDefault();
+
+        const res: any[] = [];
+        const selectedList: any[] = selectedItems.values();
+
+        for (const obj of selectedList) {
+            res.push(obj);
+        }
+        setRes(`selectedList: ${JSON.stringify(res)} methord: ${methord}`);
+        // selectedList: [{"id":"01","name":"David Lin","customIndex":0},{"id":"02","name":"Tom McFarlin","customIndex":1}] methord: 01: David Lin，02: Tom McFarlin
+
+    }
 
 
     useEffect(() => {
@@ -570,7 +640,14 @@ const Main = (props: any) => {
     return (
         <>
 
-            <MemoTable data={tableData} callback={setMethord} />
+            <a href="#" tabIndex={-1} onClick={handleView}>View Checked Data</a>
+            <p><small>{res}</small></p>
+
+            <MemoTable 
+                data={tableData} 
+                setMethord={setMethord} 
+                setSelectedItems={setSelectedItems} 
+            />
 
         </>
     );
@@ -638,7 +715,7 @@ const data = {
             {"cols": 1, "content": "Pictures are worth a thousand words, right? So Tom x 1,000."}
          ],	
          [
-            { "cols": 1, "style": { padding: '.5rem .1rem' }, "content": '' },
+            {"cols": 1, "style": { padding: '.5rem .1rem' }, "content": '' },
             {"cols": 1, "width": "50px", "content": "06" },
             {"cols": 1, "content": "Chris Ames" },
             {"cols": 1, "content": "With hair like that?! Enough said…"}
@@ -664,8 +741,8 @@ function MemoTable(props: any) {
             rowActiveClassName="active bg-primary-subtle"
             data={data}
             checkable={true}
-            onCheck={(val) => {
-                console.log(val);
+            onCheck={(val: any[], el: any, checked: boolean) => {
+                console.log(val, el, checked);
             }}
         />
     }, [data, updateTable]);
@@ -775,3 +852,164 @@ export default () => {
 }
 ```
 
+
+
+
+
+## Table Cell Editable
+
+
+```js
+import { useEffect, useState, useMemo } from "react";
+
+// bootstrap components
+import Table from 'funda-ui/Table';
+
+// component styles
+import 'funda-ui/Table/index.css';
+
+
+
+const EditableCell = (props: any) => {
+
+    const {
+        uid,
+        colIndex,
+        defaultValue,
+        onChange
+    } = props;
+
+
+    const inputWrapperRef = useRef<HTMLDivElement>(null);
+    const [controlShow, setControlShow] = useState<boolean>(false);
+    const [changeContent, setChangeContent] = useState<boolean>(false);
+    const [curVal, setCurVal] = useState<string>(defaultValue);
+
+    function handleClick(e: React.MouseEvent) {
+        e.preventDefault();
+        setControlShow(true);
+        setChangeContent(true);
+
+        setTimeout(() => {
+            if (inputWrapperRef.current) (inputWrapperRef.current.querySelector('.form-control') as any).focus();
+        }, 0);
+    }
+
+    return (
+        <>
+            <div onClick={handleClick} style={{cursor: 'pointer', minWidth: '20px', minHeight: '20px'}}>{changeContent ? <><i className="fa-solid fa-circle-notch fa-spin"></i></> : curVal === '' ? '-' : curVal}</div>
+
+
+            {controlShow ? <>
+                <div ref={inputWrapperRef} className={`position-absolute z-1 top-0 start-0`} style={{ width: '150px' }}>
+                    <input
+                        value={curVal === '-' ? '' : curVal}
+                        placeholder="Enter"
+                        className="form-control"
+                        data-uid={`${uid}`}
+                        data-col={colIndex}
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                            const newValue = e.target.value;
+                            setCurVal(newValue);
+                            onChange?.(e.target.dataset.uid, e.target.dataset.col, newValue);
+                            
+                        }}
+                        onBlur={() => {
+                            setControlShow(false);
+                            setChangeContent(false);
+                        }}
+                    />
+
+
+                    <a className="position-absolute z-1 top-0 end-0 mt-1 me-1 d-none" href="#" tabIndex={-1} onClick={(e: React.MouseEvent) => {
+                        e.preventDefault();
+                        setControlShow(false);
+                        setChangeContent(false);
+                    }}>
+                        <svg width="20px" height="20px" viewBox="0 0 1024 1024" fill="#f00"><path d="M512 897.6c-108 0-209.6-42.4-285.6-118.4-76-76-118.4-177.6-118.4-285.6 0-108 42.4-209.6 118.4-285.6 76-76 177.6-118.4 285.6-118.4 108 0 209.6 42.4 285.6 118.4 157.6 157.6 157.6 413.6 0 571.2-76 76-177.6 118.4-285.6 118.4z m0-760c-95.2 0-184.8 36.8-252 104-67.2 67.2-104 156.8-104 252s36.8 184.8 104 252c67.2 67.2 156.8 104 252 104 95.2 0 184.8-36.8 252-104 139.2-139.2 139.2-364.8 0-504-67.2-67.2-156.8-104-252-104z" fill="" /><path d="M707.872 329.392L348.096 689.16l-31.68-31.68 359.776-359.768z" fill="" /><path d="M328 340.8l32-31.2 348 348-32 32z" fill="" /></svg>
+
+                    </a>
+
+
+                </div>
+
+            </>: null}
+        </>
+    );
+
+}
+
+
+// DO NOT move `useMemo` to component
+function MemoTable(props: any) {
+    const {data} = props;
+    return useMemo(() => {
+        return <Table
+                    headClassName="table-light"
+                    tableClassName="table table-hover table-bordered table-striped"
+                    enhancedResponsive={true}
+                    cellAutoWidth
+
+                    // Special note: the `data` parameter passed in must be written on the `fields` attribute.
+                    data={{
+                        "headers": [
+                            {"content": 'Id', "style": { minWidth: '150px', fontSize: '0.875em', position: 'sticky', top: '0', zIndex: 3, background: '#fff' }, "data": JSON.stringify({param1: 1, param2: 1}) },
+                            {"content": 'Name', "style": { minWidth: '250px', fontSize: '0.875em', position: 'sticky', top: '0', zIndex: 3, background: '#fff' }, "data": JSON.stringify({param1: 2, param2: 2}) }
+                        ],
+                        "fields": data.map((item: any, i: number) => {
+                            return [
+                                { "cols": 1, "style": { fontWeight: 'normal' }, "content": item.id, "data": JSON.stringify(item) },
+                                { "cols": 1, "content": <>
+                                    <EditableCell
+                                        uid={item.id}
+                                        colIndex={i}
+                                        defaultValue={item.name}
+                                        onChange={(uid: string, col: number, value: string) => {
+                                            console.log(uid, col, value);
+                                        }}
+                                    />
+                                </>, "data": JSON.stringify(item) }
+                            ];
+                        })
+                    }}
+                />
+    }, [data]);
+}
+
+
+
+const Main = (props: any) => {
+
+    const {
+        otherdeps
+    } = props;
+
+    const [tableData, setTableData] = useState<any[]>([]);
+
+    useEffect(() => {
+        
+        // set a default request
+        setTableData([
+            {id: "01", name: "David Lin"},
+            {id: "02", name: "Tom McFarlin"},
+            {id: "03", name: "Chris Ames"}
+        ]);
+
+    }, [otherdeps]); // The Main component will be re-rendered due to `otherdeps`
+
+
+    return (
+        <>
+
+            <MemoTable 
+                data={tableData} 
+            />
+
+        </>
+    );
+
+
+}
+
+export default Main;
+```

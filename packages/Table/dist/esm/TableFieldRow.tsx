@@ -34,7 +34,7 @@ type TableFieldRowProps = {
     updategetCheckedData?: any;
     getCheckedRootData?: any[];
     updategetCheckedRootData?: any;
-    onCheck?: (val: any) => void;
+    onCheck?: (val: any, el: any, checked: boolean) => void;
     evCellMouseEnter?: (el: any) => void | undefined;
     evCellMouseLeave?: (el: any) => void | undefined;
     evCellClick?: (el: any) => void | undefined;
@@ -306,7 +306,7 @@ const TableFieldRow = (props: TableFieldRowProps) => {
         // STEP 6:
         // callback
         //-----------
-        onCheck?.(_res);
+        onCheck?.(_res, el, val);
 
     }
 
@@ -361,6 +361,7 @@ const TableFieldRow = (props: TableFieldRowProps) => {
                             className="radio-svg-btn"
                             data-index={`${rowIndex}`}
                             data-key={`${rowKey}`}
+                            data-use={dataUse}
                             onClick={(e: any) => {
                                 e.preventDefault();
 
@@ -382,7 +383,7 @@ const TableFieldRow = (props: TableFieldRowProps) => {
                                 // STEP 2:
                                 // callback
                                 //-----------
-                                onCheck?.([formatCheckboxControlVal(e.currentTarget)]);
+                                onCheck?.([formatCheckboxControlVal(e.currentTarget)], e.currentTarget, true);
                             }}
                         >
                             <span className="radio-svg--default">
@@ -433,6 +434,7 @@ const TableFieldRow = (props: TableFieldRowProps) => {
                                     tabIndex={-1}
                                     data-index={`${rowIndex}`}
                                     data-key={`${rowKey}`}
+                                    data-use={dataUse}
                                     value={`${rowKey}`}
                                     checked={latestCheckedData().filter((cur: any) => cur.key === rowKey)[0]?.checked}
                                     onChange={(e: any) => {

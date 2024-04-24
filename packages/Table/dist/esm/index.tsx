@@ -31,6 +31,7 @@ type TableProps = {
     responsive?: boolean;
     enhancedResponsive?: boolean;
     enhancedResponsiveWithScrollBar?: boolean;
+    cellAutoWidth?: boolean;
     /** -- */
     id?: string;
     onCellMouseEnter?: (el: any) => void;
@@ -43,7 +44,7 @@ type TableProps = {
     onHeadCellMouseLeave?: (el: any) => void;
     onHeadCellClick?: (el: any) => void;
     onClick?: (el: any, val: any) => void;
-    onCheck?: (val: any) => void;
+    onCheck?: (val: any, el: any, checked: boolean) => void;
     onDrag?: (dragStart: any, dragEnd: any ) => void;
     onRenderFinished?: (res: boolean) => void;
 };
@@ -68,6 +69,7 @@ const Table = (props: TableProps) => {
         responsive,
         enhancedResponsive,
         enhancedResponsiveWithScrollBar,
+        cellAutoWidth,
         id,
         onCellMouseEnter,
         onCellMouseLeave,
@@ -569,7 +571,7 @@ const Table = (props: TableProps) => {
 
             <div ref={rootRef} id={idRes} className={`table__wrapper ${wrapperClassName || wrapperClassName === '' ? wrapperClassName : `mb-3 position-relative`} ${responsiveClasses} ${enhancedResponsiveClasses} ${checkableClasses} ${radioClasses} ${draggableClasses} ${sortableClasses}`}>
 
-                <table className={`${tableClassName || tableClassName === '' ? tableClassName : "table"} ${tableClasses}`}>
+                <table className={`${tableClassName || tableClassName === '' ? tableClassName : "table"} ${tableClasses}`} style={typeof cellAutoWidth === 'undefined' || cellAutoWidth === false ? {} : {width: '1%'}}>
 
                     <TableHeaders 
                         data={_headers} 

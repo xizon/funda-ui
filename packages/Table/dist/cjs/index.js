@@ -627,7 +627,7 @@ var TableFieldRow = function TableFieldRow(props) {
     // STEP 6:
     // callback
     //-----------
-    onCheck === null || onCheck === void 0 ? void 0 : onCheck(_res);
+    onCheck === null || onCheck === void 0 ? void 0 : onCheck(_res, el, val);
   }
   function handleTbodyEnter(e) {
     var _e$target$closest;
@@ -707,6 +707,7 @@ var TableFieldRow = function TableFieldRow(props) {
     className: "radio-svg-btn",
     "data-index": "".concat(rowIndex),
     "data-key": "".concat(rowKey),
+    "data-use": dataUse,
     onClick: function onClick(e) {
       e.preventDefault();
 
@@ -728,7 +729,7 @@ var TableFieldRow = function TableFieldRow(props) {
       // STEP 2:
       // callback
       //-----------
-      onCheck === null || onCheck === void 0 ? void 0 : onCheck([formatCheckboxControlVal(e.currentTarget)]);
+      onCheck === null || onCheck === void 0 ? void 0 : onCheck([formatCheckboxControlVal(e.currentTarget)], e.currentTarget, true);
     }
   }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("span", {
     className: "radio-svg--default"
@@ -773,6 +774,7 @@ var TableFieldRow = function TableFieldRow(props) {
     tabIndex: -1,
     "data-index": "".concat(rowIndex),
     "data-key": "".concat(rowKey),
+    "data-use": dataUse,
     value: "".concat(rowKey),
     checked: (_latestCheckedData$fi = latestCheckedData().filter(function (cur) {
       return cur.key === rowKey;
@@ -1020,7 +1022,7 @@ var TableHeaders = function TableHeaders(props) {
     // STEP 6:
     // callback
     //-----------
-    onCheck === null || onCheck === void 0 ? void 0 : onCheck(_res);
+    onCheck === null || onCheck === void 0 ? void 0 : onCheck(_res, el, val);
   }
   return data ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("thead", {
     className: headClassName ? headClassName : ''
@@ -1061,6 +1063,9 @@ var TableHeaders = function TableHeaders(props) {
       className: "form-check-input",
       name: "checkbox-".concat(checkboxNamePrefix, "-all"),
       tabIndex: -1,
+      "data-index": -1,
+      "data-key": "row-all",
+      "data-use": "",
       value: "row-all",
       checked: (_filter$ = getCheckedRootData.filter(function (cur) {
         return cur.key === 'row-all';
@@ -1165,6 +1170,7 @@ var Table = function Table(props) {
     responsive = props.responsive,
     enhancedResponsive = props.enhancedResponsive,
     enhancedResponsiveWithScrollBar = props.enhancedResponsiveWithScrollBar,
+    cellAutoWidth = props.cellAutoWidth,
     id = props.id,
     onCellMouseEnter = props.onCellMouseEnter,
     onCellMouseLeave = props.onCellMouseLeave,
@@ -1601,7 +1607,10 @@ var Table = function Table(props) {
     id: idRes,
     className: "table__wrapper ".concat(wrapperClassName || wrapperClassName === '' ? wrapperClassName : "mb-3 position-relative", " ").concat(responsiveClasses, " ").concat(enhancedResponsiveClasses, " ").concat(checkableClasses, " ").concat(radioClasses, " ").concat(draggableClasses, " ").concat(sortableClasses)
   }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("table", {
-    className: "".concat(tableClassName || tableClassName === '' ? tableClassName : "table", " ").concat(tableClasses)
+    className: "".concat(tableClassName || tableClassName === '' ? tableClassName : "table", " ").concat(tableClasses),
+    style: typeof cellAutoWidth === 'undefined' || cellAutoWidth === false ? {} : {
+      width: '1%'
+    }
   }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement(src_TableHeaders, {
     data: _headers,
     useRadio: useRadio || false,

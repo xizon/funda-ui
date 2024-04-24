@@ -29,7 +29,7 @@ type TableRowProps = {
     getCheckedRootData?: any[];
     updategetCheckedRootData?: any;
     onClick?: (el: any, val: any) => void;
-    onCheck?: (val: any) => void;
+    onCheck?: (val: any, el: any, checked: boolean) => void;
     evDragEnd?: (option: any) => void | undefined;
     evDragStart?: (option: any) => void | undefined;
     evCellMouseEnter?: (el: any) => void | undefined;
