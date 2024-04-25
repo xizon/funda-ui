@@ -2491,6 +2491,12 @@ var src_Date = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_reac
     var _full = "".concat(_date, " ").concat(splitVals[3], ":").concat(splitVals[4], ":").concat(splitVals[5]);
     _onChange === null || _onChange === void 0 ? void 0 : _onChange(inputRef.current, valueResConverter(_full), (0,utils_date.isValidDate)(_full));
   }
+  function handleKeypress(event) {
+    if (event.code == "Enter") {
+      event.preventDefault();
+      handleBlur(null);
+    }
+  }
   function clearAll() {
     setDateDefaultValueExist(false);
     _onChange === null || _onChange === void 0 ? void 0 : _onChange(inputRef.current, '', false);
@@ -2704,7 +2710,8 @@ var src_Date = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_reac
     className: "date2d__trigger d-inline-block is-".concat(type, " ").concat(triggerClassName || ''),
     onClick: handleShow,
     onFocus: handleFocus,
-    onBlur: handleBlur
+    onBlur: handleBlur,
+    onKeyDown: handleKeypress
   }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
     className: "date2d__control"
   }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((cjs_default()), _extends({

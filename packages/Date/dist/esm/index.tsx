@@ -545,6 +545,15 @@ const Date = forwardRef((props: DateProps, ref: any) => {
 
     }
 
+    function handleKeypress(event: any) {
+        
+        if (event.code == "Enter") {
+            event.preventDefault();
+            handleBlur(null);
+        }
+    }
+
+
 
     function clearAll() {
         setDateDefaultValueExist(false);
@@ -820,6 +829,7 @@ const Date = forwardRef((props: DateProps, ref: any) => {
                 onClick={handleShow}
                 onFocus={handleFocus}
                 onBlur={handleBlur}
+                onKeyDown={handleKeypress}
 
             >
 
