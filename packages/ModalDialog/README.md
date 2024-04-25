@@ -147,6 +147,27 @@ export default () => {
             </ModalDialog>
 
 
+            <h3>Adjust depth and matte visibility</h3>
+            {/* ================================================================== */}
+
+            <ModalDialog
+                show={false}
+                enableVideo={true}
+                maxWidth="1200px"
+                maskOpacity="0"
+                triggerClassName="d-inline w-auto"
+                triggerContent={<>
+                    <a href="#" tabIndex={-1}>Launch demo modal</a>
+                </>}
+                maskOpacity={0.001}
+                depth={1040}
+            >
+                <div>Text</div>
+            </ModalDialog>
+
+
+
+
             <h3>Automatically open&close the pop-up window</h3>
             {/* ================================================================== */}
             <ModalDialog
