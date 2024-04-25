@@ -27,7 +27,7 @@ import Table from 'funda-ui/Table';
 | `cellAutoWidth` | boolean  | false | Width does not expand automatically, each cell uses a custom minimum width. <blockquote>If the content is exceeded, there will be a horizontal scrollbar on the table</blockquote> |
 | `enhancedResponsive` | boolean  | false | Create enhanced responsive tables up to a particular breakpoint. <blockquote>Valid when the device width is less than or equal to 768px</blockquote> |
 | `enhancedResponsiveWithScrollBar` | boolean  | false | Create enhanced responsive tables up to a particular breakpoint. This property allows scroll bars to be created automatically in the table with floating header. <blockquote>Valid when the device width is less than or equal to 768px</blockquote> |
-| `onClick` | function  | - | Call a function when the value of an HTML element is changed. It returns two callback values. <br /> <ol><li>The first is the current row</li><li>The second is the row data (**Array**)</li></ol> |
+| `onClick` | function  | - | Call a function when the value of an HTML element is changed. It returns two callback values. <br /> <ol><li>The first is the HTML Element Event (**Event**)</li><li>The second is the row data (**Array**)</li></ol> |
 | `onCheck` | function  | - | Call a function when changing the checkbox. It returns three callback values. <br /> <ol><li>The first is the row data (**Array**)</li><li>The second is the checkbox or radio control (**HTML Element**)</li><li>The second is the current value (**Boolean**)</li></ol> <blockquote>It is valid when `checkable` is "true"</blockquote> |
 | `onDrag` | function  | - | As each row is dragged, it returns two functions. dragStart, dragEnd, they represent the callback events of drag start and drag end respectively. For example: `onDrag={(dragStart,dragEnd)=>{if(dragStart!==null)dragStart((el,data,printData)=>{console.log('dragStart: ',data,printData);});if(dragEnd!==null)dragEnd((el,data,printData)=>{console.log('dragEnd: ',data,printData);});}}`. <blockquote>It is valid when `draggable` is "true"</blockquote> |
 | `onRenderFinished` | function  | - | Determine whether the table has been rendered. It returns only one callback value (**Boolean**). <blockquote>It is very practical for large batches of data to be displayed in business.</blockquote>|
@@ -333,8 +333,11 @@ export default () => {
                 onHeadCellClick={(e: React.MouseEvent) => {
                     console.log(e.currentTarget);
                 }}
-                onClick={(el, val) => {
-                    console.log(val);
+                onClick={(e: any, val: any) => {
+                    const _rows = [].slice.call(e.currentTarget.closest('tbody').querySelectorAll('.row-obj'));
+                    const _rowEl = e.currentTarget;
+
+                    console.log(_rows, _rowEl, val);
                 }}
                 onCellMouseEnter={(e: any) => {
                     console.log(e.currentTarget);
