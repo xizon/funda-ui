@@ -38,7 +38,7 @@ Here is a table of the components and their status.
 | [List Bulleted ❏](packages/ListBulleted/README.md) | [Multifunction Select ✅🔥](packages/MultiFuncSelect/README.md) |  |  |  |
 | [Modal Dialog ✅🔥](packages/ModalDialog/README.md) | [Live Search ✅](packages/LiveSearch/README.md) |  |  |  |
 | [Pagination ✅](packages/Pagination/README.md) | [Number ❏](packages/Number/README.md) |  |  |  |
-| [Table ✅](packages/Table/README.md) | [SearchBar ✅](packages/SearchBar/README.md) |  |  |  |
+| [Table ✅🔥](packages/Table/README.md) | [SearchBar ✅](packages/SearchBar/README.md) |  |  |  |
 | [Periodical Scroll ❏](packages/PeriodicalScroll/README.md) | [Switch ✅](packages/Switch/README.md) |  |  |  |
 | [Progress Bar ❏](packages/ProgressBar/README.md) | [Dynamic Fields ✅🔥](packages/DynamicFields/README.md) |  |  |  |
 | [Rating ❏](packages/Rating/README.md) | [File ✅](packages/File/README.md) |  |  |  |

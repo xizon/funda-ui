@@ -254,6 +254,9 @@ const Date = forwardRef((props: DateProps, ref: any) => {
     const hoursArr = ['00', '01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23'];
     const msArr = ['00', '01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23', '24', '25', '26', '27', '28', '29', '30', '31', '32', '33', '34', '35', '36', '37', '38', '39', '40', '41', '42', '43', '44', '45', '46', '47', '48', '49', '50', '51', '52', '53', '54', '55', '56', '57', '58', '59'];
 
+    // blur for popup window
+    const popupBlurEnabled = useRef<boolean>(false);  // DO NOT USE 'useState()'
+
 
 
     // exposes the following methods
@@ -262,6 +265,7 @@ const Date = forwardRef((props: DateProps, ref: any) => {
         () => ({
             close: () => {
                 popwinPosHide();
+                handleBlur(null);
             },
         }),
         [popupRef],
@@ -460,14 +464,24 @@ const Date = forwardRef((props: DateProps, ref: any) => {
     function popwinPosHide() {
         setIsShow(false);
         onClosePopup?.([partedInputYear.current, partedInputMonth.current, partedInputDay.current, partedInputHours.current, partedInputMinutes.current, partedInputSeconds.current]);
+
     }
 
     function handleClickOutside(event: any) {
         if (event.target.closest(`.date2d__wrapper`) === null && event.target.closest(`.date2d-cal__wrapper`) === null) {
             popwinPosHide();
-
+            
             //remove focus style
             rootRef.current?.classList.remove('focus');
+
+            // move out the popup window
+            if (popupBlurEnabled.current) {
+                onBlur?.(inputRef.current);
+                popupBlurEnabled.current = false;
+            }
+            
+            
+
         }
 
     }
@@ -483,15 +497,18 @@ const Date = forwardRef((props: DateProps, ref: any) => {
 
         }, 0);
 
+        // focus
+        handleFocus(null);
+
     }
 
 
-    function handleFocus(event: ChangeEvent<HTMLElement>) {
+    function handleFocus(event: ChangeEvent<HTMLElement> | null) {
         rootRef.current?.classList.add('focus');
 
 
         //
-        onFocus?.(event);
+        onFocus?.(inputRef.current);
     }
 
     function handleChange(event: ChangeEvent<HTMLInputElement>) {
@@ -503,7 +520,7 @@ const Date = forwardRef((props: DateProps, ref: any) => {
     }
 
 
-    function handleBlur(event: ChangeEvent<HTMLElement>) {
+    function handleBlur(event: ChangeEvent<HTMLElement> | null) {
 
         //remove focus style
         rootRef.current?.classList.remove('focus');
@@ -539,6 +556,11 @@ const Date = forwardRef((props: DateProps, ref: any) => {
     function resetDefauleValueExist() {
         if (!dateDefaultValueExist) setDateDefaultValueExist(true);
     }
+
+    function resetPopupBlurStatus() {
+        if (!popupBlurEnabled.current) popupBlurEnabled.current = true;
+    }
+
 
     function valueResConverter(inputData: any) {
         const v = isValidDate(inputData) ? inputData : `${getFullTimeData(getNow()).date} ${inputData}`;
@@ -786,12 +808,16 @@ const Date = forwardRef((props: DateProps, ref: any) => {
     return (
         <>
 
+            <div className="date2d__label">
+                {label ? <>{typeof label === 'string' ? <label htmlFor={idRes} className="form-label" dangerouslySetInnerHTML={{ __html: `${label}` }}></label> : <label htmlFor={idRes} className="form-label">{label}</label>}</> : null}
+            </div>
+            
+            
             <div
                 ref={rootRef}
                 data-overlay-id={`date2d__wrapper-${idRes}`}
                 className={`date2d__trigger d-inline-block is-${type} ${triggerClassName || ''}`}
                 onClick={handleShow}
-
                 onFocus={handleFocus}
                 onBlur={handleBlur}
 
@@ -824,7 +850,7 @@ const Date = forwardRef((props: DateProps, ref: any) => {
                         value={!dateDefaultValueExist ? `` : valueResConverter(changedVal)}
                         autoComplete="off"
                         onChange={handleChange}
-                        label={label}
+                        label=""
                         units={units}
                         iconLeft={iconLeft}
                         iconRight={iconRight}
@@ -1156,6 +1182,9 @@ const Date = forwardRef((props: DateProps, ref: any) => {
 
                                         // 
                                         onChangeDate?.(_v);
+
+                                        //
+                                        resetPopupBlurStatus();
                                         
 
                                     }}
@@ -1175,6 +1204,9 @@ const Date = forwardRef((props: DateProps, ref: any) => {
                                         // 
                                         onChangeToday?.(_v);
 
+                                        //
+                                        resetPopupBlurStatus();
+
                                     }}
                                     onChangeMonth={(currentData: any) => {
                                         resetDefauleValueExist();
@@ -1192,6 +1224,9 @@ const Date = forwardRef((props: DateProps, ref: any) => {
                                         // 
                                         onChangeMonth?.(_v);
 
+                                        //
+                                        resetPopupBlurStatus();                                        
+
                                     }}
                                     onChangeYear={(currentData: any) => {
                                         resetDefauleValueExist();
@@ -1208,6 +1243,10 @@ const Date = forwardRef((props: DateProps, ref: any) => {
 
                                         // 
                                         onChangeYear?.(_v);
+
+                                        //
+                                        resetPopupBlurStatus();
+
 
                                     }}
                                 />
@@ -1254,6 +1293,10 @@ const Date = forwardRef((props: DateProps, ref: any) => {
                                                     // 
                                                     onChangeHours?.(_v);
 
+
+                                                    //
+                                                    resetPopupBlurStatus();
+
                                                 }}
                                                 className={`${timeVal[0] == hour ? 'selected' : ''} ${checkDisabledHours(_curVal.year, Number(_curVal.month)-1, _curVal.day, hour) ? 'disabled' : ''}`}
                                             >
@@ -1298,6 +1341,11 @@ const Date = forwardRef((props: DateProps, ref: any) => {
 
                                                     // 
                                                     onChangeMinutes?.(_v);
+
+
+                                                    //
+                                                    resetPopupBlurStatus();
+
 
                                                 }}
                                                 className={`${timeVal[1] == v ? 'selected' : ''} ${checkDisabledMinutes(_curVal.year, Number(_curVal.month)-1, _curVal.day, _curVal.hours, v) ? 'disabled' : ''}`}
@@ -1345,6 +1393,10 @@ const Date = forwardRef((props: DateProps, ref: any) => {
 
                                                         // 
                                                         onChangeSeconds?.(_v);
+
+
+                                                        //
+                                                        resetPopupBlurStatus();                                                  
 
                                                     }}
                                                     className={`${timeVal[2] == v ? 'selected' : ''} ${checkDisabledSeconds(_curVal.year, Number(_curVal.month)-1, _curVal.day, _curVal.hours, _curVal.minutes, v) ? 'disabled' : ''}`}

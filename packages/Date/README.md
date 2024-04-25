@@ -49,7 +49,7 @@ import Date from 'funda-ui/Date';
 | `iconRight` | ReactNode  | - | Set the right icon of this control |
 | `onLoad` | function  | - | Call a function when the value of an HTML element is changed. It returns two callback values. <br /> <ol><li>The first is the value at which the requirement was initialized (**String**)</li><li>The second is the current date info (**JSON Object**)</li></ol> |
 | `onChange` | function  | - | Call a function when the value of an HTML element is changed. It returns three callback values. <br /> <ol><li>The first is the control (**HTML Element**)</li><li>The second is the current date info (**JSON Object** \| **String**)</li><li>The last is the boolean value that determine whether the date is valid (**Boolean**)</li></ol> |
-| `onBlur` | function  | - | Call a function when a user leaves an form field. It returns only one callback value which is the control (**HTML Element**) |
+| `onBlur` | function  | - | Call a function when a user leaves an form field. It returns only one callback value which is the control (**HTML Element**) <blockquote>Changes of year/month/day/hours/minutes/seconds/popup will trigger</blockquote> |
 | `onFocus` | function  | - | Call a function when an form field gets focus. It returns only one callback value which is the control (**HTML Element**) |
 | `onOpenPopup` | function  | - | Call a function when open popup. It returns only one value which is the existing time-splitting inputs (**Array**) |
 | `onClosePopup` | function  | - | Call a function when close popup. It returns only one value which is the existing time-splitting inputs (**Array**) |

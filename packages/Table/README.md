@@ -873,7 +873,7 @@ export default () => {
 
 
 ```js
-import { useEffect, useState, useMemo } from "react";
+import { useEffect, useState, useRef, useMemo } from "react";
 
 // bootstrap components
 import Table from 'funda-ui/Table';

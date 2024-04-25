@@ -2261,11 +2261,15 @@ var src_Date = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_reac
   var hoursArr = ['00', '01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23'];
   var msArr = ['00', '01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23', '24', '25', '26', '27', '28', '29', '30', '31', '32', '33', '34', '35', '36', '37', '38', '39', '40', '41', '42', '43', '44', '45', '46', '47', '48', '49', '50', '51', '52', '53', '54', '55', '56', '57', '58', '59'];
 
+  // blur for popup window
+  var popupBlurEnabled = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useRef)(false); // DO NOT USE 'useState()'
+
   // exposes the following methods
   (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useImperativeHandle)(popupRef, function () {
     return {
       close: function close() {
         popwinPosHide();
+        handleBlur(null);
       }
     };
   }, [popupRef]);
@@ -2438,6 +2442,12 @@ var src_Date = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_reac
 
       //remove focus style
       (_rootRef$current = rootRef.current) === null || _rootRef$current === void 0 ? void 0 : _rootRef$current.classList.remove('focus');
+
+      // move out the popup window
+      if (popupBlurEnabled.current) {
+        onBlur === null || onBlur === void 0 ? void 0 : onBlur(inputRef.current);
+        popupBlurEnabled.current = false;
+      }
     }
   }
   function handleShow() {
@@ -2446,13 +2456,16 @@ var src_Date = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_reac
       popwinPosInit();
       onOpenPopup === null || onOpenPopup === void 0 ? void 0 : onOpenPopup([partedInputYear.current, partedInputMonth.current, partedInputDay.current, partedInputHours.current, partedInputMinutes.current, partedInputSeconds.current]);
     }, 0);
+
+    // focus
+    handleFocus(null);
   }
   function handleFocus(event) {
     var _rootRef$current2;
     (_rootRef$current2 = rootRef.current) === null || _rootRef$current2 === void 0 ? void 0 : _rootRef$current2.classList.add('focus');
 
     //
-    onFocus === null || onFocus === void 0 ? void 0 : onFocus(event);
+    onFocus === null || onFocus === void 0 ? void 0 : onFocus(inputRef.current);
   }
   function handleChange(event) {
     var val = event.target.value;
@@ -2484,6 +2497,9 @@ var src_Date = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_reac
   }
   function resetDefauleValueExist() {
     if (!dateDefaultValueExist) setDateDefaultValueExist(true);
+  }
+  function resetPopupBlurStatus() {
+    if (!popupBlurEnabled.current) popupBlurEnabled.current = true;
   }
   function valueResConverter(inputData) {
     var v = (0,utils_date.isValidDate)(inputData) ? inputData : "".concat(getFullTimeData((0,utils_date.getNow)()).date, " ").concat(inputData);
@@ -2672,6 +2688,17 @@ var src_Date = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_reac
     };
   }, [value]);
   return /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
+    className: "date2d__label"
+  }, label ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, typeof label === 'string' ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("label", {
+    htmlFor: idRes,
+    className: "form-label",
+    dangerouslySetInnerHTML: {
+      __html: "".concat(label)
+    }
+  }) : /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("label", {
+    htmlFor: idRes,
+    className: "form-label"
+  }, label)) : null), /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
     ref: rootRef,
     "data-overlay-id": "date2d__wrapper-".concat(idRes),
     className: "date2d__trigger d-inline-block is-".concat(type, " ").concat(triggerClassName || ''),
@@ -2705,7 +2732,7 @@ var src_Date = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_reac
     value: !dateDefaultValueExist ? "" : valueResConverter(changedVal),
     autoComplete: "off",
     onChange: handleChange,
-    label: label,
+    label: "",
     units: units,
     iconLeft: iconLeft,
     iconRight: iconRight,
@@ -2954,6 +2981,9 @@ var src_Date = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_reac
 
       // 
       _onChangeDate === null || _onChangeDate === void 0 ? void 0 : _onChangeDate(_v);
+
+      //
+      resetPopupBlurStatus();
     },
     onChangeToday: function onChangeToday(currentData) {
       resetDefauleValueExist();
@@ -2970,6 +3000,9 @@ var src_Date = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_reac
 
       // 
       _onChangeToday === null || _onChangeToday === void 0 ? void 0 : _onChangeToday(_v);
+
+      //
+      resetPopupBlurStatus();
     },
     onChangeMonth: function onChangeMonth(currentData) {
       resetDefauleValueExist();
@@ -2986,6 +3019,9 @@ var src_Date = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_reac
 
       // 
       _onChangeMonth === null || _onChangeMonth === void 0 ? void 0 : _onChangeMonth(_v);
+
+      //
+      resetPopupBlurStatus();
     },
     onChangeYear: function onChangeYear(currentData) {
       resetDefauleValueExist();
@@ -3002,6 +3038,9 @@ var src_Date = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_reac
 
       // 
       _onChangeYear === null || _onChangeYear === void 0 ? void 0 : _onChangeYear(_v);
+
+      //
+      resetPopupBlurStatus();
     }
   }))) : null, type === 'datetime-local' || type === 'time' ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
     className: "date2d__hourslist border-end"
@@ -3031,6 +3070,9 @@ var src_Date = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_reac
 
         // 
         onChangeHours === null || onChangeHours === void 0 ? void 0 : onChangeHours(_v);
+
+        //
+        resetPopupBlurStatus();
       },
       className: "".concat(timeVal[0] == hour ? 'selected' : '', " ").concat(checkDisabledHours(_curVal.year, Number(_curVal.month) - 1, _curVal.day, hour) ? 'disabled' : '')
     }, hour));
@@ -3062,6 +3104,9 @@ var src_Date = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_reac
 
         // 
         onChangeMinutes === null || onChangeMinutes === void 0 ? void 0 : onChangeMinutes(_v);
+
+        //
+        resetPopupBlurStatus();
       },
       className: "".concat(timeVal[1] == v ? 'selected' : '', " ").concat(checkDisabledMinutes(_curVal.year, Number(_curVal.month) - 1, _curVal.day, _curVal.hours, v) ? 'disabled' : '')
     }, v));
@@ -3093,6 +3138,9 @@ var src_Date = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_reac
 
         // 
         onChangeSeconds === null || onChangeSeconds === void 0 ? void 0 : onChangeSeconds(_v);
+
+        //
+        resetPopupBlurStatus();
       },
       className: "".concat(timeVal[2] == v ? 'selected' : '', " ").concat(checkDisabledSeconds(_curVal.year, Number(_curVal.month) - 1, _curVal.day, _curVal.hours, _curVal.minutes, v) ? 'disabled' : '')
     }, v));
