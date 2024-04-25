@@ -71,6 +71,26 @@
 
         }
 
+        &.cell-autowidth {
+            display: block;  /* Key 1 */
+            width: max-content;  
+            max-width: 100%;
+            overflow: auto;  /* Key 2 */
+
+            &::-webkit-scrollbar {
+                height: var(--table-scrollbar-h);
+            }
+    
+            &::-webkit-scrollbar-thumb {
+                background: var(--table-scrollbar-color);
+            }
+    
+            &::-webkit-scrollbar-track {
+                background: var(--table-scrollbar-track);
+            }
+        }
+        
+
     }
 
     .sort-trigger {
@@ -338,6 +358,14 @@
                 }
 
             } 
+
+
+            table.cell-autowidth {
+                display: table;  /* Key 1 */
+                width: 100%;
+            }
+            
+
         }
 
 
@@ -375,6 +403,10 @@
 
                     th {
                         display: block;
+
+                        /* required */
+                        min-width: auto !important;
+                        width: auto !important;
 
                         &:not(last-child) {
                             border-bottom: 0;

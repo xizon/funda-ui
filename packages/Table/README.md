@@ -24,7 +24,7 @@ import Table from 'funda-ui/Table';
 | `bordered` | boolean  | false | Adds borders on all sides of the table and cells |
 | `colGroup` | boolean  | false | Set the background color of the multiple columns with the `<colgroup>` and `<col>` tags |
 | `responsive` | boolean  | true | For horizontally scrolling tables on the wrapper. |
-| `cellAutoWidth` | boolean  | false | Width does not expand automatically, each cell uses a custom minimum width. |
+| `cellAutoWidth` | boolean  | false | Width does not expand automatically, each cell uses a custom minimum width. <blockquote>If the content is exceeded, there will be a horizontal scrollbar on the table</blockquote> |
 | `enhancedResponsive` | boolean  | false | Create enhanced responsive tables up to a particular breakpoint. <blockquote>Valid when the device width is less than or equal to 768px</blockquote> |
 | `enhancedResponsiveWithScrollBar` | boolean  | false | Create enhanced responsive tables up to a particular breakpoint. This property allows scroll bars to be created automatically in the table with floating header. <blockquote>Valid when the device width is less than or equal to 768px</blockquote> |
 | `onClick` | function  | - | Call a function when the value of an HTML element is changed. It returns two callback values. <br /> <ol><li>The first is the current row</li><li>The second is the row data (**Array**)</li></ol> |
@@ -393,6 +393,19 @@ export default () => {
                 colGroup={true} 
                 data={tableData5} 
             />
+
+            <h3>Cell Auto Width</h3>
+            {/* ================================================================== */}
+
+            <Table 
+                headClassName="table-light"
+                tableClassName="table table-hover table-bordered table-striped"
+                enhancedResponsive={true}
+                data={tableData1} 
+                cellAutoWidth
+            />
+
+
 
 
             <h3>Enhanced Responsive</h3>

@@ -1306,28 +1306,18 @@ var Table = function Table(props) {
     if (w <= 768 && tbodyRef.current.querySelector('tr') !== null) {
       var _loop = function _loop() {
         var tbodyRows = rootRef.current.querySelectorAll("tbody tr [data-table-col=\"".concat(i, "\"]"));
-        var curColDisplay = window.getComputedStyle(tbodyRows, null).display;
-
-        // default display attribute
-        var curColDisplayVal = curColDisplay;
-        if (typeof tbodyRows.dataset.show === 'undefined') {
-          tbodyRows.dataset.show = curColDisplay;
-        } else {
-          curColDisplayVal = tbodyRows.dataset.show;
-        }
-        tbodyRows.style.display = curColDisplayVal;
-
-        //
         var maxHeight = maxDimension(tbodyRows).height;
-        [].slice.call(tbodyRows).forEach(function (row) {
-          row.style.height = maxHeight + 'px';
-        });
+        if (maxHeight > 0) {
+          [].slice.call(tbodyRows).forEach(function (row) {
+            row.style.height = maxHeight + 'px';
+          });
 
-        //
-        var theadRows = rootRef.current.querySelectorAll("thead tr [data-table-col=\"".concat(i, "\"]"));
-        [].slice.call(theadRows).forEach(function (row) {
-          row.style.height = maxHeight + 'px';
-        });
+          //
+          var theadRows = rootRef.current.querySelectorAll("thead tr [data-table-col=\"".concat(i, "\"]"));
+          [].slice.call(theadRows).forEach(function (row) {
+            row.style.height = maxHeight + 'px';
+          });
+        }
       };
       //get maxHeight of per row
       for (var i = 0; i < tbodyRef.current.querySelector('tr').children.length; i++) {
@@ -1335,18 +1325,6 @@ var Table = function Table(props) {
       }
     } else {
       [].slice.call(rootRef.current.querySelectorAll('tbody td, tbody th, thead th')).forEach(function (node, i) {
-        var curColDisplay = window.getComputedStyle(node, null).display;
-
-        // default display attribute
-        var curColDisplayVal = curColDisplay;
-        if (typeof node.dataset.show === 'undefined') {
-          node.dataset.show = curColDisplay;
-        } else {
-          curColDisplayVal = node.dataset.show;
-        }
-        node.style.display = curColDisplayVal;
-
-        //
         node.style.removeProperty('height');
       });
     }
@@ -1607,10 +1585,7 @@ var Table = function Table(props) {
     id: idRes,
     className: "table__wrapper ".concat(wrapperClassName || wrapperClassName === '' ? wrapperClassName : "mb-3 position-relative", " ").concat(responsiveClasses, " ").concat(enhancedResponsiveClasses, " ").concat(checkableClasses, " ").concat(radioClasses, " ").concat(draggableClasses, " ").concat(sortableClasses)
   }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("table", {
-    className: "".concat(tableClassName || tableClassName === '' ? tableClassName : "table", " ").concat(tableClasses),
-    style: typeof cellAutoWidth === 'undefined' || cellAutoWidth === false ? {} : {
-      width: '1%'
-    }
+    className: "".concat(tableClassName || tableClassName === '' ? tableClassName : "table", " ").concat(tableClasses, " ").concat(typeof cellAutoWidth === 'undefined' || cellAutoWidth === false ? '' : 'cell-autowidth')
   }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement(src_TableHeaders, {
     data: _headers,
     useRadio: useRadio || false,

@@ -9,8 +9,8 @@ import TableSummaries from './TableSummaries';
 import TableColgroup from './TableColgroup';
 
 
-import { getChildren } from './utils/dom'; 
-import { formatRowControlVal } from './table-utils'; 
+import { getChildren } from './utils/dom';
+import { formatRowControlVal } from './table-utils';
 
 
 type TableProps = {
@@ -45,7 +45,7 @@ type TableProps = {
     onHeadCellClick?: (el: any) => void;
     onClick?: (el: any, val: any) => void;
     onCheck?: (val: any, el: any, checked: boolean) => void;
-    onDrag?: (dragStart: any, dragEnd: any ) => void;
+    onDrag?: (dragStart: any, dragEnd: any) => void;
     onRenderFinished?: (res: boolean) => void;
 };
 
@@ -91,7 +91,7 @@ const Table = (props: TableProps) => {
     const idRes = id || uniqueID;
     const rootRef = useRef<any>(null);
     const tbodyRef = useRef<any>(null);
-    
+
     const [checkedPrint, setCheckedPrint] = useState<any[]>([]);
     const [checkedData, setCheckedData] = useState<any[]>([]);
     const [checkedRootData, setCheckedRootData] = useState<any[]>([]);
@@ -134,7 +134,7 @@ const Table = (props: TableProps) => {
     if (useRadio) radioClasses += ' use-radio';
 
 
-    
+
     //
     let draggableClasses = '';
     if (draggable) draggableClasses += ' allow-dragdrop';
@@ -151,21 +151,21 @@ const Table = (props: TableProps) => {
     const insertAfter = (newNode: any, existingNode: any) => {
         existingNode.parentNode.insertBefore(newNode, existingNode.nextSibling);
     };
-    
+
     const allRows = () => {
         return [].slice.call(tbodyRef.current.children);
     };
 
     const printData = (data: number[]) => {
         const _res: any[] = [];
-        data.forEach( (v: number) => {
+        data.forEach((v: number) => {
             _res.push(formatRowControlVal(rootRef.current.querySelector('table').querySelector(`tbody [data-key="row-${v}"]`), idRes));
         });
         return _res;
     };
 
-    
-    
+
+
     // ================================================================
     // responsive table initialization
     // ================================================================
@@ -196,6 +196,8 @@ const Table = (props: TableProps) => {
             return el.clientWidth;
         });
 
+
+
         const maxHeight = Math.max.apply(null, elementHeights);
         const maxWidth = Math.max.apply(null, elementWidths);
 
@@ -211,48 +213,30 @@ const Table = (props: TableProps) => {
 
         if (w <= 768 && tbodyRef.current.querySelector('tr') !== null) {
             //get maxHeight of per row
-            for (let i = 0; i < tbodyRef.current.querySelector('tr').children.length; i++ ) {
+            for (let i = 0; i < tbodyRef.current.querySelector('tr').children.length; i++) {
                 const tbodyRows = rootRef.current.querySelectorAll(`tbody tr [data-table-col="${i}"]`);
-                const curColDisplay = window.getComputedStyle(tbodyRows, null).display;
 
-                // default display attribute
-                let curColDisplayVal = curColDisplay;
-                if (typeof tbodyRows.dataset.show === 'undefined') {
-                    tbodyRows.dataset.show = curColDisplay;
-                } else {
-                    curColDisplayVal = tbodyRows.dataset.show;
-                }
-                tbodyRows.style.display = curColDisplayVal;
-                
-                //
                 const maxHeight = maxDimension(tbodyRows).height;
-                [].slice.call(tbodyRows).forEach((row: any) => {
-                    row.style.height = maxHeight + 'px';
-                });
+                if (maxHeight > 0) {
+                    [].slice.call(tbodyRows).forEach((row: any) => {
+                        row.style.height = maxHeight + 'px';
+                    });
 
 
-                //
-                const theadRows = rootRef.current.querySelectorAll(`thead tr [data-table-col="${i}"]`);
-                [].slice.call(theadRows).forEach((row: any) => {
-                    row.style.height = maxHeight + 'px';
-                });
+                    //
+                    const theadRows = rootRef.current.querySelectorAll(`thead tr [data-table-col="${i}"]`);
+                    [].slice.call(theadRows).forEach((row: any) => {
+                        row.style.height = maxHeight + 'px';
+                    });
+                }
             }
+
+
 
         } else {
             [].slice.call(rootRef.current.querySelectorAll('tbody td, tbody th, thead th')).forEach((node: any, i: number) => {
-                const curColDisplay = window.getComputedStyle(node, null).display;
-
-                // default display attribute
-                let curColDisplayVal = curColDisplay;
-                if (typeof node.dataset.show === 'undefined') {
-                    node.dataset.show = curColDisplay;
-                } else {
-                    curColDisplayVal = node.dataset.show;
-                }
-                node.style.display = curColDisplayVal;
-
-                //
                 node.style.removeProperty('height');
+
             });
         }
 
@@ -286,61 +270,61 @@ const Table = (props: TableProps) => {
     // sort with headers
     // ================================================================
     let inverse = false;
-	function handleSortList(e: any) {
+    function handleSortList(e: any) {
         const el = e.currentTarget.parentNode;
-		const filterType  = el.dataset.sortType;
-		const curIndex = el.dataset.tableCol;
-		const targetComparator = [].slice.call(tbodyRef.current.querySelectorAll(`[data-table-col="${curIndex}"]`));
-	
-		if ( filterType === 'false' || filterType === '0' ) return false;
+        const filterType = el.dataset.sortType;
+        const curIndex = el.dataset.tableCol;
+        const targetComparator = [].slice.call(tbodyRef.current.querySelectorAll(`[data-table-col="${curIndex}"]`));
+
+        if (filterType === 'false' || filterType === '0') return false;
 
 
-		//sort of HTML elements
-		const sortBy = function(a: any, b: any) {
+        //sort of HTML elements
+        const sortBy = function (a: any, b: any) {
 
-			let txt1 = a.innerHTML.replace(/(<([^>]+)>)/ig, '').toLowerCase(),
-				txt2 = b.innerHTML.replace(/(<([^>]+)>)/ig, '').toLowerCase();	
+            let txt1 = a.innerHTML.replace(/(<([^>]+)>)/ig, '').toLowerCase(),
+                txt2 = b.innerHTML.replace(/(<([^>]+)>)/ig, '').toLowerCase();
 
-			//type of number
-			if ( filterType == 'number' ) {
-				txt1 = Number( txt1.replace(/[^0-9.-]+/g, '' ) );
-				txt2 = Number( txt2.replace(/[^0-9.-]+/g, '' ) );
-			}
+            //type of number
+            if (filterType == 'number') {
+                txt1 = Number(txt1.replace(/[^0-9.-]+/g, ''));
+                txt2 = Number(txt2.replace(/[^0-9.-]+/g, ''));
+            }
 
-			//type of date
-			if ( filterType == 'date' ) {
-				txt1 = new Date( txt1 );
-				txt2 = new Date( txt2 );	
-			}	
+            //type of date
+            if (filterType == 'date') {
+                txt1 = new Date(txt1);
+                txt2 = new Date(txt2);
+            }
 
-			//add filter class
+            //add filter class
             allRows().forEach((node: any) => {
                 node.classList.add('newsort');
             });
-	
-			inverse = !inverse;
 
-			return txt2<txt1 ? -1 : txt2>txt1 ? 1 : 0;
-		}
+            inverse = !inverse;
 
-		targetComparator.sort(sortBy);
+            return txt2 < txt1 ? -1 : txt2 > txt1 ? 1 : 0;
+        }
 
-		//console.log( 'targetComparator:', targetComparator );
-		//console.log( 'inverse:', self.inverse );
+        targetComparator.sort(sortBy);
 
-		if ( !inverse ) targetComparator.reverse();
+        //console.log( 'targetComparator:', targetComparator );
+        //console.log( 'inverse:', self.inverse );
+
+        if (!inverse) targetComparator.reverse();
 
         allRows().forEach((node: any) => {
             node.remove();
         });
 
-		for (let i = 0; i < targetComparator.length; i++) {
-			const curRow = (targetComparator[i] as any).parentNode;
-			tbodyRef.current.appendChild(curRow);
-		}
+        for (let i = 0; i < targetComparator.length; i++) {
+            const curRow = (targetComparator[i] as any).parentNode;
+            tbodyRef.current.appendChild(curRow);
+        }
 
-	}
-	
+    }
+
 
 
 
@@ -409,53 +393,53 @@ const Table = (props: TableProps) => {
         if (draggedObj === null) return;
 
         draggedObj.style.display = 'none';
-        
-        
+
+
         if (e.target.classList.contains('row-placeholder')) return;
 
         const itemsWrapper = e.target.parentNode;
         if (itemsWrapper.classList.contains('row-obj')) {
             overObj = itemsWrapper;
             removePlaceholder();
-      
-            if ( Number(overObj.dataset.id) === allRows().length - 1) {
+
+            if (Number(overObj.dataset.id) === allRows().length - 1) {
                 tbodyRef.current.insertBefore(placeholderGenerator((allRows().at(-2) as any).clientHeight), overObj);
             } else {
                 tbodyRef.current.insertBefore(placeholderGenerator(overObj.clientHeight), overObj);
             }
 
-            
+
         }
 
     }, [sortData]);
-    
+
 
     const handleDragStart = useCallback((e: any) => {
         draggedObj = e.currentTarget;
         e.dataTransfer.effectAllowed = 'move';
         e.dataTransfer.setData('text/html', draggedObj);
 
-        draggedObj.classList.add( 'dragging' );
+        draggedObj.classList.add('dragging');
         (allRows().at(-1) as any).style.setProperty('display', 'table-row', "important");
-        
-        
+
+
         // callback
         const dragStart: Function = (callback: Function) => {
             callback.call(null, draggedObj, sortData, printData(sortData as never));
         };
         onDrag?.(dragStart, null);
-        
+
     }, [handledragOver]);
 
     const handleDragEnd = useCallback((e: any) => {
         draggedObj.style.display = 'table-row';
         removePlaceholder();
 
-        draggedObj.classList.remove( 'dragging' );
+        draggedObj.classList.remove('dragging');
         tbodyRef.current?.classList.remove('drag-trigger-mousedown');
-        
 
-        if ( overObj === null ) return;
+
+        if (overObj === null) return;
 
         // update state
         let curData: number[] = [];
@@ -479,7 +463,7 @@ const Table = (props: TableProps) => {
                 }
             }
         }
-        
+
 
         //console.log("--> data2: ", newData);
         setSortData(newData);
@@ -488,7 +472,7 @@ const Table = (props: TableProps) => {
         newData.forEach((curId: any, order: number) => {
             const _el = rootRef.current.querySelector('table').querySelector(`tbody [data-key="row-${curId}"]`);
             if (_el !== null) _el.dataset.id = order;
-            
+
         });
 
 
@@ -499,7 +483,7 @@ const Table = (props: TableProps) => {
         }
         const sorted = categoryItemsArray.sort(sorter);
         sorted.forEach(e => rootRef.current.querySelector('table').querySelector('tbody').appendChild(e));
-       
+
 
         // callback
         const dragEnd: Function = (callback: Function) => {
@@ -515,7 +499,7 @@ const Table = (props: TableProps) => {
 
     useEffect(() => {
 
-        
+
         // Update status of children components
         //--------------
         setMainUpdate((prevState) => !prevState);
@@ -541,11 +525,11 @@ const Table = (props: TableProps) => {
 
         //drag & drop
         //--------------
-        if ( draggable ) {
+        if (draggable) {
             insertAfter(lastRowGenerator((allRows().at(-1) as any).clientHeight), allRows().at(-1));
         }
-        
-     
+
+
         // Add function to the element that should be used as the scrollable area.
         //--------------
         window.removeEventListener('resize', windowResizeUpdate);
@@ -571,13 +555,13 @@ const Table = (props: TableProps) => {
 
             <div ref={rootRef} id={idRes} className={`table__wrapper ${wrapperClassName || wrapperClassName === '' ? wrapperClassName : `mb-3 position-relative`} ${responsiveClasses} ${enhancedResponsiveClasses} ${checkableClasses} ${radioClasses} ${draggableClasses} ${sortableClasses}`}>
 
-                <table className={`${tableClassName || tableClassName === '' ? tableClassName : "table"} ${tableClasses}`} style={typeof cellAutoWidth === 'undefined' || cellAutoWidth === false ? {} : {width: '1%'}}>
+                <table className={`${tableClassName || tableClassName === '' ? tableClassName : "table"} ${tableClasses} ${typeof cellAutoWidth === 'undefined' || cellAutoWidth === false ? '' : 'cell-autowidth'}`}>
 
-                    <TableHeaders 
-                        data={_headers} 
+                    <TableHeaders
+                        data={_headers}
                         useRadio={useRadio || false}
-                        headClassName={headClassName} 
-                        checkboxNamePrefix={idRes} 
+                        headClassName={headClassName}
+                        checkboxNamePrefix={idRes}
                         sortable={sortable}
                         updateCheckedPrint={setCheckedPrint}
                         getCheckedPrint={checkedPrint}
@@ -592,50 +576,50 @@ const Table = (props: TableProps) => {
                         evHeadCellClick={onHeadCellClick}
                     />
 
-                    <TableSummaries 
-                        data={_summaries} 
-                        footClassName={footClassName} 
+                    <TableSummaries
+                        data={_summaries}
+                        footClassName={footClassName}
                     />
 
-                    {data.hasOwnProperty('fields') && colGroup ? <TableColgroup 
-                        data={data.fields} 
+                    {data.hasOwnProperty('fields') && colGroup ? <TableColgroup
+                        data={data.fields}
                     /> : null}
 
 
-                    <tbody ref={tbodyRef}  className={bodyClassName ? bodyClassName : ''} onDragOver={handledragOver} onMouseLeave={handleTbodyLeave}>
+                    <tbody ref={tbodyRef} className={bodyClassName ? bodyClassName : ''} onDragOver={handledragOver} onMouseLeave={handleTbodyLeave}>
 
                         {data.hasOwnProperty('fields') ? data.fields.map((item: any, i: number) => {
-                            return <TableRow 
-                                        key={i + String(mainUpdate)} // Trigger child component update when prop of parent changes
-                                        index={i}
-                                        tableRootRef={rootRef}
-                                        tableCheckRef={tableCheckRef}
-                                        rowActiveClassName={rowActiveClassName}
-                                        fieldsChecked={_fieldsChecked}
-                                        fieldsCheckedAct={[fieldsCheckedUpdateDataPrint, setFieldsCheckedUpdateDataPrint]}
-                                        rowKey={`row-${i}`} 
-                                        headerLabel={_headers} 
-                                        data={item} 
-                                        checkboxNamePrefix={idRes} 
-                                        updateCheckedPrint={setCheckedPrint}
-                                        getCheckedPrint={checkedPrint}
-                                        updategetCheckedData={setCheckedData}
-                                        getCheckedData={checkedData}
-                                        updategetCheckedRootData={setCheckedRootData}
-                                        getCheckedRootData={checkedRootData}
-                                        onClick={onClick}
-                                        onCheck={onCheck}
-                                        draggable={draggable || false} 
-                                        useRadio={useRadio || false}
-                                        evDragEnd={handleDragEnd}
-                                        evDragStart={handleDragStart}
-                                        evCellMouseEnter={onCellMouseEnter}
-                                        evCellMouseLeave={onCellMouseLeave}
-                                        evCellClick={onCellClick}
-                                        evRowMouseEnter={onRowMouseEnter}
-                                        evRowMouseLeave={onRowMouseLeave}
-                                        evRowClick={onRowClick}
-                                    />;
+                            return <TableRow
+                                key={i + String(mainUpdate)} // Trigger child component update when prop of parent changes
+                                index={i}
+                                tableRootRef={rootRef}
+                                tableCheckRef={tableCheckRef}
+                                rowActiveClassName={rowActiveClassName}
+                                fieldsChecked={_fieldsChecked}
+                                fieldsCheckedAct={[fieldsCheckedUpdateDataPrint, setFieldsCheckedUpdateDataPrint]}
+                                rowKey={`row-${i}`}
+                                headerLabel={_headers}
+                                data={item}
+                                checkboxNamePrefix={idRes}
+                                updateCheckedPrint={setCheckedPrint}
+                                getCheckedPrint={checkedPrint}
+                                updategetCheckedData={setCheckedData}
+                                getCheckedData={checkedData}
+                                updategetCheckedRootData={setCheckedRootData}
+                                getCheckedRootData={checkedRootData}
+                                onClick={onClick}
+                                onCheck={onCheck}
+                                draggable={draggable || false}
+                                useRadio={useRadio || false}
+                                evDragEnd={handleDragEnd}
+                                evDragStart={handleDragStart}
+                                evCellMouseEnter={onCellMouseEnter}
+                                evCellMouseLeave={onCellMouseLeave}
+                                evCellClick={onCellClick}
+                                evRowMouseEnter={onRowMouseEnter}
+                                evRowMouseLeave={onRowMouseLeave}
+                                evRowClick={onRowClick}
+                            />;
                         }) : ""
                         }
 

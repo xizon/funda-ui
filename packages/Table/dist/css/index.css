@@ -54,6 +54,21 @@
 .table__wrapper table.table-colgroup col:first-child {
   background-color: var(--table-dark-bg);
 }
+.table__wrapper table.cell-autowidth {
+  display: block; /* Key 1 */
+  width: max-content;
+  max-width: 100%;
+  overflow: auto; /* Key 2 */
+}
+.table__wrapper table.cell-autowidth::-webkit-scrollbar {
+  height: var(--table-scrollbar-h);
+}
+.table__wrapper table.cell-autowidth::-webkit-scrollbar-thumb {
+  background: var(--table-scrollbar-color);
+}
+.table__wrapper table.cell-autowidth::-webkit-scrollbar-track {
+  background: var(--table-scrollbar-track);
+}
 .table__wrapper .sort-trigger {
   cursor: pointer;
 }
@@ -510,6 +525,10 @@
   .table__wrapper.table-enhanced-responsive.has-checkbox .checkbox-trigger ~ span {
     padding-left: 0;
   }
+  .table__wrapper.table-enhanced-responsive table.cell-autowidth {
+    display: table; /* Key 1 */
+    width: 100%;
+  }
   .table__wrapper.table-enhanced-responsive-scrolled table {
     display: block;
     width: 100%;
@@ -536,6 +555,9 @@
   }
   .table__wrapper.table-enhanced-responsive-scrolled table thead th {
     display: block;
+    /* required */
+    min-width: auto !important;
+    width: auto !important;
   }
   .table__wrapper.table-enhanced-responsive-scrolled table thead th:not(last-child) {
     border-bottom: 0;
