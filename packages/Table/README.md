@@ -880,13 +880,14 @@ import { useEffect, useState, useRef, useMemo } from "react";
 
 // bootstrap components
 import Table from 'funda-ui/Table';
+import Date from 'funda-ui/Date';
 
 // component styles
 import 'funda-ui/Table/index.css';
+import 'funda-ui/Date/index.css';
 
 
-
-const EditableCell = (props: any) => {
+const EditableCellInput = (props: any) => {
 
     const {
         uid,
@@ -956,6 +957,77 @@ const EditableCell = (props: any) => {
 }
 
 
+const EditableCellDate = (props: any) => {
+
+    const {
+        itemData,
+        uid,
+        colIndex,
+        defaultValue,
+        onChange,
+        onConfirm
+    } = props;
+
+    const popupRef = useRef<any>();
+    const inputRef = useRef<any>();
+    
+
+    const inputWrapperRef = useRef<HTMLDivElement>(null);
+    const [defaultVurVal, setDefaultVurVal] = useState<string>(defaultValue);
+
+    const curVal = useRef<string>(defaultValue);
+
+    return (
+        <>
+
+     
+            <div 
+                ref={inputWrapperRef} 
+                className={`position-absolute z-1 top-0 start-0`} 
+                style={{ width: '250px' }}
+                
+            >
+                <Date
+                    delimiter="-"
+                    showToolsWhenHover
+                    wrapperClassName="position-relative app-data-editable"
+                    popupRef={popupRef}
+                    contentRef={inputRef}
+                    value={defaultVurVal === '-' ? '' : defaultVurVal}
+                    placeholder="Edit"
+                    data-uid={`${uid}`}
+                    data-col={colIndex}
+                    data-use={JSON.stringify(itemData)}
+                    type="datetime-local"
+                    localization="zh_CN"
+                    style={{border: 'none', background: 'transparent', textAlign: 'center', fontSize: '0.75rem'}}
+                    onChangeSeconds={(dateRes: any) => {
+                        // close popup
+                        if (popupRef.current) popupRef.current.close();
+                    }}
+                    onChange={(input: HTMLInputElement, dateRes: any, isValidDate: boolean) => {
+                        const _res = dateRes !== null && typeof dateRes !== 'string' ? dateRes.res : dateRes;
+                        curVal.current = _res;
+                        onChange?.(input.dataset.uid, input.dataset.col, _res);
+                    }}
+                    onBlur={(el: any) => {
+                        if (typeof el.dataset.use !== 'undefined' && el.dataset.use !== '') {
+                            const _itemData = JSON.parse(el.dataset.use);
+                            onConfirm?.(_itemData, curVal.current);
+                        }
+                    }}
+                />
+
+
+            </div>
+
+            
+        </>
+    );
+
+}
+
+
 // DO NOT move `useMemo` to component
 function MemoTable(props: any) {
     const {data} = props;
@@ -970,13 +1042,14 @@ function MemoTable(props: any) {
                     data={{
                         "headers": [
                             {"content": 'Id', "style": { minWidth: '150px', fontSize: '0.875em', position: 'sticky', top: '0', zIndex: 3, background: '#fff' }, "data": JSON.stringify({param1: 1, param2: 1}) },
-                            {"content": 'Name', "style": { minWidth: '250px', fontSize: '0.875em', position: 'sticky', top: '0', zIndex: 3, background: '#fff' }, "data": JSON.stringify({param1: 2, param2: 2}) }
+                            {"content": 'Name', "style": { minWidth: '250px', fontSize: '0.875em', position: 'sticky', top: '0', zIndex: 3, background: '#fff' }, "data": JSON.stringify({param1: 2, param2: 2}) },
+                            {"content": 'Date', "style": { minWidth: '250px', fontSize: '0.875em', position: 'sticky', top: '0', zIndex: 3, background: '#fff' }, "data": JSON.stringify({param1: 2, param2: 2}) }
                         ],
                         "fields": data.map((item: any, i: number) => {
                             return [
                                 { "cols": 1, "style": { fontWeight: 'normal' }, "content": item.id, "data": JSON.stringify(item) },
                                 { "cols": 1, "content": <>
-                                    <EditableCell
+                                    <EditableCellInput
                                         uid={item.id}
                                         colIndex={i}
                                         defaultValue={item.name}
@@ -984,7 +1057,19 @@ function MemoTable(props: any) {
                                             console.log(uid, col, value);
                                         }}
                                     />
-                                </>, "data": JSON.stringify(item) }
+                                </>, "data": JSON.stringify(item) },
+                                { "cols": 1,  "data": JSON.stringify(item), "style": { minWidth: '55px', textAlign: 'center', height: '1.9rem' }, "content": <>
+                                        <EditableCellDate
+                                            uid={item.id}
+                                            colIndex={i}
+                                            itemData={item}
+                                            defaultValue={item.date}
+                                            onConfirm={(data: any, newtime: string) => {
+                                                console.log(data, newtime);
+                                            }}
+                                        />
+                                    </>
+                                },
                             ];
                         })
                     }}
@@ -1006,9 +1091,9 @@ const Main = (props: any) => {
         
         // set a default request
         setTableData([
-            {id: "01", name: "David Lin"},
-            {id: "02", name: "Tom McFarlin"},
-            {id: "03", name: "Chris Ames"}
+            {id: "01", name: "David Lin", date: "2024-02-02 18:01:00"},
+            {id: "02", name: "Tom McFarlin", date: ""},
+            {id: "03", name: "Chris Ames", date: "2024-04-12 05:18:05"}
         ]);
 
     }, [otherdeps]); // The Main component will be re-rendered due to `otherdeps`
