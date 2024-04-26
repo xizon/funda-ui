@@ -60,6 +60,37 @@ export default () => {
 }
 ```
 
+## No spacing
+
+```js
+import React from "react";
+import ColorPicker from 'funda-ui/ColorPicker';
+
+// component styles
+import 'funda-ui/ColorPicker/index.css';
+
+export default () => {
+
+
+    return (
+        <>
+
+            <ColorPicker
+                ...
+                wrapperClassName="position-relative"
+                ...
+            />
+
+             <ColorPicker
+                ...
+                wrapperClassName=""
+                ...
+            />
+
+        </>
+    );
+}
+```
 
 
 

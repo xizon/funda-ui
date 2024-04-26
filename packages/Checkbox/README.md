@@ -78,7 +78,34 @@ export default () => {
 }
 ```
 
+## No spacing
 
+```js
+import React from "react";
+import Checkbox from 'funda-ui/Checkbox';
+
+export default () => {
+
+
+    return (
+        <>
+
+            <Checkbox
+                ...
+                wrapperClassName="position-relative"
+                ...
+            />
+
+             <Checkbox
+                ...
+                wrapperClassName=""
+                ...
+            />
+
+        </>
+    );
+}
+```
 
 
 ## Asynchronous Usage

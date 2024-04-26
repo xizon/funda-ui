@@ -136,6 +136,38 @@ export default () => {
 ```
 
 
+## No spacing
+
+```js
+import React from "react";
+import Date from 'funda-ui/Date';
+
+// component styles
+import 'funda-ui/Date/index.css';
+
+export default () => {
+
+
+    return (
+        <>
+
+            <Date
+                ...
+                wrapperClassName="position-relative"
+                ...
+            />
+
+             <Date
+                ...
+                wrapperClassName=""
+                ...
+            />
+
+        </>
+    );
+}
+```
+
 
 
 ## Remove Date Control border and background color

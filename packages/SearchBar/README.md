@@ -83,3 +83,34 @@ export default () => {
     );
 }
 ```
+
+
+
+## No spacing
+
+```js
+import React from "react";
+import SearchBar from 'funda-ui/SearchBar';
+
+export default () => {
+
+
+    return (
+        <>
+
+            <SearchBar
+                ...
+                wrapperClassName="position-relative"
+                ...
+            />
+
+             <SearchBar
+                ...
+                wrapperClassName=""
+                ...
+            />
+
+        </>
+    );
+}
+```

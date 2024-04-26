@@ -86,6 +86,37 @@ export default () => {
 
 
 
+## No spacing
+
+```js
+import React from "react";
+import RangeSlider from 'funda-ui/RangeSlider';
+
+// component styles
+import 'funda-ui/RangeSlider/index.css';
+
+export default () => {
+
+
+    return (
+        <>
+
+            <RangeSlider
+                ...
+                wrapperClassName="position-relative"
+                ...
+            />
+
+             <RangeSlider
+                ...
+                wrapperClassName=""
+                ...
+            />
+
+        </>
+    );
+}
+```
 
 
 ## Asynchronous & Complex State Problem Solving

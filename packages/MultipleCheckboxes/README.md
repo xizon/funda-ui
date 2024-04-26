@@ -125,6 +125,36 @@ export default () => {
 ```
 
 
+## No spacing
+
+```js
+import React from "react";
+import MultipleCheckboxes from 'funda-ui/MultipleCheckboxes';
+
+export default () => {
+
+
+    return (
+        <>
+
+            <MultipleCheckboxes
+                ...
+                wrapperClassName="position-relative"
+                ...
+            />
+
+             <MultipleCheckboxes
+                ...
+                wrapperClassName=""
+                ...
+            />
+
+        </>
+    );
+}
+```
+
+
 
 ## The Option Group element
 

@@ -396,8 +396,37 @@ export default () => {
 
 
 
+## No spacing
+
+```js
+import React from "react";
+import CascadingSelectE2E from 'funda-ui/CascadingSelectE2E';
+
+// component styles
+import 'funda-ui/CascadingSelectE2E/index.css';
+
+export default () => {
 
 
+    return (
+        <>
+
+            <CascadingSelectE2E
+                ...
+                wrapperClassName="position-relative"
+                ...
+            />
+
+             <CascadingSelectE2E
+                ...
+                wrapperClassName=""
+                ...
+            />
+
+        </>
+    );
+}
+```
 
 
 ## Convert raw data into a tree structure

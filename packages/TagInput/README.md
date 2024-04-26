@@ -81,3 +81,37 @@ export default () => {
     );
 }
 ```
+
+
+## No spacing
+
+```js
+import React from "react";
+import TagInput from 'funda-ui/TagInput';
+
+// component styles
+import 'funda-ui/TagInput/index.css';
+
+
+export default () => {
+
+
+    return (
+        <>
+
+            <TagInput
+                ...
+                wrapperClassName="position-relative"
+                ...
+            />
+
+             <TagInput
+                ...
+                wrapperClassName=""
+                ...
+            />
+
+        </>
+    );
+}
+```

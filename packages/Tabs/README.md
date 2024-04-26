@@ -136,6 +136,37 @@ export default () => {
 
 ```
 
+## No spacing
+
+```js
+import React from "react";
+import { Tabs, TabList, TabPanel } from 'funda-ui/Tabs';
+
+export default () => {
+
+
+    return (
+        <>
+
+            <Tabs
+                ...
+                wrapperClassName="position-relative"
+                ...
+            />
+
+             <Tabs
+                ...
+                wrapperClassName=""
+                ...
+            />
+
+        </>
+    );
+}
+```
+
+
+
 
 ## No delay
 

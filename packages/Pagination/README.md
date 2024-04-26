@@ -193,6 +193,37 @@ export default () => {
 
 ```
 
+## No spacing
+
+```js
+import React from "react";
+import Pagination from 'funda-ui/Pagination';
+
+export default () => {
+
+
+    return (
+        <>
+
+            <Pagination
+                ...
+                wrapperClassName="position-relative"
+                ...
+            />
+
+             <Pagination
+                ...
+                wrapperClassName=""
+                ...
+            />
+
+        </>
+    );
+}
+```
+
+
+
 
 ## Implement Data Pagination
 

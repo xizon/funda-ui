@@ -133,6 +133,41 @@ export default () => {
 }
 ```
 
+
+## No spacing
+
+```js
+import React from "react";
+import LiveSearch from 'funda-ui/LiveSearch';
+
+// component styles
+import 'funda-ui/LiveSearch/index.css';
+
+export default () => {
+
+
+    return (
+        <>
+
+            <LiveSearch
+                ...
+                wrapperClassName="position-relative"
+                ...
+            />
+
+             <LiveSearch
+                ...
+                wrapperClassName=""
+                ...
+            />
+
+        </>
+    );
+}
+```
+
+
+
 ## Asynchronous loading option
 
 You need to use a `fetchCallback` property to format the data of the API callback, which will match the data structure of the component.

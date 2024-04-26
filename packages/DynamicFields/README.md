@@ -189,6 +189,36 @@ export default () => {
 ```
 
 
+## No spacing
+
+```js
+import React from "react";
+import DynamicFields from 'funda-ui/DynamicFields';
+
+export default () => {
+
+
+    return (
+        <>
+
+            <DynamicFields
+                ...
+                wrapperClassName="position-relative"
+                ...
+            />
+
+             <DynamicFields
+                ...
+                wrapperClassName=""
+                ...
+            />
+
+        </>
+    );
+}
+```
+
+
 
 ## Asynchronous Usage (Use Vanilla JS to manipulate Dom elements)
 

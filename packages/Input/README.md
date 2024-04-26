@@ -105,6 +105,36 @@ export default () => {
 }
 ```
 
+## No spacing
+
+```js
+import React from "react";
+import Input from 'funda-ui/Input';
+
+export default () => {
+
+
+    return (
+        <>
+
+            <Input
+                ...
+                wrapperClassName="position-relative"
+                ...
+            />
+
+             <Input
+                ...
+                wrapperClassName=""
+                ...
+            />
+
+        </>
+    );
+}
+```
+
+
 
 
 ## Date or DateTime

@@ -86,6 +86,36 @@ export default () => {
 }
 ```
 
+## No spacing
+
+```js
+import React from "react";
+import File from 'funda-ui/File';
+
+export default () => {
+
+
+    return (
+        <>
+
+            <File
+                ...
+                wrapperClassName="position-relative"
+                ...
+            />
+
+             <File
+                ...
+                wrapperClassName=""
+                ...
+            />
+
+        </>
+    );
+}
+```
+
+
 
 ### Upload controls and buttons are on the same line
 

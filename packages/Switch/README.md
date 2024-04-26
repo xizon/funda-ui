@@ -74,6 +74,34 @@ export default () => {
 
 
 
+## No spacing
+
+```js
+import React from "react";
+import Switch from 'funda-ui/Switch';
+
+export default () => {
+
+
+    return (
+        <>
+
+            <Switch
+                ...
+                wrapperClassName="position-relative"
+                ...
+            />
+
+             <Switch
+                ...
+                wrapperClassName=""
+                ...
+            />
+
+        </>
+    );
+}
+```
 
 ## Asynchronous Usage
 

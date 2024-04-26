@@ -434,6 +434,40 @@ export default () => {
 ```
 
 
+
+## No spacing
+
+```js
+import React from "react";
+import Table from 'funda-ui/Table';
+
+// component styles
+import 'funda-ui/Table/index.css';
+
+export default () => {
+
+
+    return (
+        <>
+
+            <Table
+                ...
+                wrapperClassName="position-relative"
+                ...
+            />
+
+             <Table
+                ...
+                wrapperClassName=""
+                ...
+            />
+
+        </>
+    );
+}
+```
+
+
 ## Auto width for table
 
 Add a width to `tableClassName` attribute.
@@ -447,8 +481,6 @@ Add a width to `tableClassName` attribute.
 
 ```js
 import React from "react";
-
-// bootstrap components
 import Table from 'funda-ui/Table';
 
 // component styles
@@ -488,8 +520,6 @@ At this time, we need to use `useMemo()` to wrap this subcomponent to avoid prob
 ```js
 
 import { useEffect, useState, useMemo } from "react";
-
-// bootstrap components
 import Table from 'funda-ui/Table';
 
 // component styles
@@ -684,8 +714,6 @@ Lets you callback the handle exposed as attribute `tableCheckRef`.
 
 ```js
 import React, { useState, useRef, useMemo } from "react";
-
-// bootstrap components
 import Table from 'funda-ui/Table';
 
 // component styles

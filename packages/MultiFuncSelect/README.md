@@ -392,6 +392,39 @@ export default () => {
 ```
 
 
+## No spacing
+
+```js
+import React from "react";
+import MultiFuncSelect from 'funda-ui/MultiFuncSelect';
+
+// component styles
+import 'funda-ui/MultiFuncSelect/index.css';
+
+export default () => {
+
+
+    return (
+        <>
+
+            <MultiFuncSelect
+                ...
+                wrapperClassName="position-relative"
+                ...
+            />
+
+             <MultiFuncSelect
+                ...
+                wrapperClassName=""
+                ...
+            />
+
+        </>
+    );
+}
+```
+
+
 ## Multi-Level Cascading Select (Implemented using `useState()`)
 
 

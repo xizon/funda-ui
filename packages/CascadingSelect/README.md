@@ -430,6 +430,40 @@ export default () => {
 ```
 
 
+## No spacing
+
+```js
+import React from "react";
+import CascadingSelect from 'funda-ui/CascadingSelect';
+
+// component styles
+import 'funda-ui/CascadingSelect/index.css';
+
+export default () => {
+
+
+    return (
+        <>
+
+            <CascadingSelect
+                ...
+                wrapperClassName="position-relative"
+                ...
+            />
+
+             <CascadingSelect
+                ...
+                wrapperClassName=""
+                ...
+            />
+
+        </>
+    );
+}
+```
+
+
+
 ## Examples (Use formatted data to match components)
 
 You need to use a `fetchCallback` property to format the data of the API callback, which will match the data structure of the component.

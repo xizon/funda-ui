@@ -124,6 +124,37 @@ export default () => {
 
 
 
+## No spacing
+
+```js
+import React from "react";
+import Radio from 'funda-ui/Radio';
+
+export default () => {
+
+
+    return (
+        <>
+
+            <Radio
+                ...
+                wrapperClassName="position-relative"
+                ...
+            />
+
+             <Radio
+                ...
+                wrapperClassName=""
+                ...
+            />
+
+        </>
+    );
+}
+```
+
+
+
 ## The Option Group element
 
 Specify the content in the `optgroup` attribute of `options`.

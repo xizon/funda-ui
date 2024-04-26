@@ -210,6 +210,35 @@ export default () => {
 ```
 
 
+## No spacing
+
+```js
+import React from "react";
+import Select from 'funda-ui/Select';
+
+export default () => {
+
+
+    return (
+        <>
+
+            <Select
+                ...
+                wrapperClassName="position-relative"
+                ...
+            />
+
+             <Select
+                ...
+                wrapperClassName=""
+                ...
+            />
+
+        </>
+    );
+}
+```
+
 
 ## The Option Group element
 

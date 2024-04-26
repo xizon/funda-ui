@@ -42,6 +42,8 @@ import Textarea from 'funda-ui/Textarea';
 
 It accepts all props which this control support.
 
+
+
 ## Examples
 
 ```js
@@ -232,6 +234,40 @@ export default () => {
     );
 }
 ```
+
+
+
+
+## No spacing
+
+```js
+import React from "react";
+import Textarea from 'funda-ui/Textarea';
+
+
+export default () => {
+
+
+    return (
+        <>
+
+            <Textarea
+                ...
+                wrapperClassName="position-relative"
+                ...
+            />
+
+             <Textarea
+                ...
+                wrapperClassName=""
+                ...
+            />
+
+        </>
+    );
+}
+```
+
 
 
 ## Complex use of popup and default value
