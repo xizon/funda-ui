@@ -541,9 +541,9 @@ export default () => {
 
 
 
-## Using exposed OPEN and CLOSE methods (Using `ref`)
+## Using exposed OPEN and CLOSE methods
 
-Lets you callback the handle exposed as a ref.
+Lets you callback the handle exposed as attribute `ref`.
 
 
 ```js

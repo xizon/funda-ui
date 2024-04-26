@@ -37,8 +37,8 @@ import CascadingSelectE2E from 'funda-ui/CascadingSelectE2E';
 | `onFetch` | function  | - | Call a function when  data is successfully fetched. It returns one callback value which is the fetched data (**Array**) |
 | `fetchArray` | array  | - | Set multiple requests, it should be an array |
 | `onChange` | function  | - | Call a function when the value of an HTML element is changed. It returns six callback values. <br /> <ol><li>The one is the input control (**HTML Element**)</li><li>The second parameter is the current option data (**JSON Object**)</li><li>The third parameter is the index of the current column group (**Number**)</li><li>The fourth parameter indicates the current column depth (**Number**)</li><li>The fifth is value of the current control (**JSON Object**).</li><li>The last is the function of close (**Function**)</li></ol> |
-| `onBlur` | function  | - | Call a function when a user leaves a form field. |
-| `onFocus` | function  | - | Call a function when an form field gets focus. |
+| `onBlur` | function  | - | Call a function when a user leaves a form field. It returns only one callback value which is the Control Event (**Event**)|
+| `onFocus` | function  | - | Call a function when an form field gets focus. It returns only one callback value which is the Control Event (**Event**)|
 
 
 

@@ -677,9 +677,9 @@ export default Main;
 
 
 
-## Trigger checkbox using exposed methods (Using `tableCheckRef`)
+## Trigger checkbox using exposed methods
 
-Lets you callback the handle exposed as a ref.
+Lets you callback the handle exposed as attribute `tableCheckRef`.
 
 
 ```js

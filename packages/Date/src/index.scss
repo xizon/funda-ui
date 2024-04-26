@@ -35,14 +35,22 @@
             pointer-events: none;
         }
 
-        .date2d__control__icon {
+        .date2d__control-tools {
             position: absolute;
             top: .3rem;
             right: .5rem;
             z-index: 6;
             cursor: pointer;
+            height: 1.5rem;
+            line-height: 1.5rem;
 
-            .date2d__control__icon__close {
+            &.date2d__control-tools--hover-show-tools {
+                transform: scale(0);
+                transition: .1s ease-in-out;
+                transition-delay: 0.25s;
+            }
+
+            .date2d__control-tools__close {
                 display: inline-block;
                 margin-right: .2rem;
                 pointer-events: all;
@@ -102,6 +110,12 @@
         }
     }
     
+    /* tools */
+    &.date2d__trigger--hover-show-tools:hover {
+        .date2d__control-tools.date2d__control-tools--hover-show-tools {
+            transform: scale(1);
+        }
+    }
 
 
 }

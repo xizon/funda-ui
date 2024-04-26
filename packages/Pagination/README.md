@@ -513,7 +513,7 @@ export default () => {
 
 ## Implement Data Pagination With Infinite Scroll
 
-Lets you callback the handle exposed as a ref.
+Lets you callback the handle exposed as attribute `ref`.
 
 
 `styles.scss`:

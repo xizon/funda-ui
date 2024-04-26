@@ -1282,7 +1282,7 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
         cb === null || cb === void 0 ? void 0 : cb();
       },
       /*
-      set([{"label": "Option 1","listItemLabel":"Option 1 (No: 001)","value": "value-1","queryString": "option1"}, () => { console.log('callback') }])
+      set([{"label": "Option 1","listItemLabel":"Option 1 (No: 001)","value": "value-1","queryString": "option1"}], () => { console.log('callback') }])
       */
       set: function set(value, cb) {
         if (MULTI_SEL_VALID) {

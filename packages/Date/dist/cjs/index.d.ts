@@ -1,5 +1,6 @@
 import React from 'react';
 declare type DateProps = {
+    contentRef?: React.RefObject<any>;
     popupRef?: React.RefObject<any>;
     popupClassName?: string;
     triggerClassName?: string;
@@ -8,6 +9,8 @@ declare type DateProps = {
     controlGroupWrapperClassName?: string;
     controlGroupTextClassName?: string;
     delimiter?: string;
+    hideClearButton?: boolean;
+    showToolsWhenHover?: boolean;
     offset?: number;
     exceededSidePosOffset?: number;
     localization?: 'en_US' | 'zh_CN';
@@ -35,10 +38,10 @@ declare type DateProps = {
     autoComplete?: string;
     tabIndex?: number;
     [key: `data-${string}`]: string | undefined;
-    onLoad?: (e: any, data: any) => void;
-    onChange?: (e: any, data: any, isValidDate: boolean) => void;
-    onBlur?: (e: any) => void;
-    onFocus?: (e: any) => void;
+    onLoad?: (e: any, data: any, allSplittingInputs: any[]) => void;
+    onChange?: (e: any, data: any, isValidDate: boolean, allSplittingInputs: any[]) => void;
+    onBlur?: (e: any, allSplittingInputs: any[]) => void;
+    onFocus?: (e: any, allSplittingInputs: any[]) => void;
     onOpenPopup?: (allSplittingInputs: any[]) => void;
     onClosePopup?: (allSplittingInputs: any[]) => void;
     onChangeDate?: (currentData: any) => void;

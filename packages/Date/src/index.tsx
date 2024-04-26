@@ -37,6 +37,7 @@ import {
 
 
 type DateProps = {
+    contentRef?: React.RefObject<any>;
     popupRef?: React.RefObject<any>;
     popupClassName?: string;
     triggerClassName?: string;
@@ -45,6 +46,8 @@ type DateProps = {
     controlGroupWrapperClassName?: string;
     controlGroupTextClassName?: string;
     delimiter?: string;
+    hideClearButton?: boolean;
+    showToolsWhenHover?: boolean;
     offset?: number;
     exceededSidePosOffset?: number;
     localization?: 'en_US' | 'zh_CN';
@@ -73,10 +76,10 @@ type DateProps = {
     autoComplete?: string;
     tabIndex?: number;
     [key: `data-${string}`]: string | undefined;
-    onLoad?: (e: any, data: any) => void;
-    onChange?: (e: any, data: any, isValidDate: boolean) => void;
-    onBlur?: (e: any) => void;
-    onFocus?: (e: any) => void;
+    onLoad?: (e: any, data: any, allSplittingInputs: any[]) => void;
+    onChange?: (e: any, data: any, isValidDate: boolean, allSplittingInputs: any[]) => void;
+    onBlur?: (e: any, allSplittingInputs: any[]) => void;
+    onFocus?: (e: any, allSplittingInputs: any[]) => void;
     onOpenPopup?: (allSplittingInputs: any[]) => void;
     onClosePopup?: (allSplittingInputs: any[]) => void;
     //
@@ -104,6 +107,7 @@ type DateProps = {
 
 const Date = forwardRef((props: DateProps, ref: any) => {
     const {
+        contentRef,
         popupRef,
         triggerClassName,
         popupClassName,
@@ -112,6 +116,8 @@ const Date = forwardRef((props: DateProps, ref: any) => {
         controlGroupWrapperClassName,
         controlGroupTextClassName,
         delimiter,
+        hideClearButton,
+        showToolsWhenHover,
         offset,
         exceededSidePosOffset,
         localization,
@@ -185,8 +191,10 @@ const Date = forwardRef((props: DateProps, ref: any) => {
      // 
      const DELIMITER_DATE = delimiter || '/';
      const DELIMITER_TIME = ':';
+     const SHOW_TOOLS_ENABLED = !(typeof showToolsWhenHover === 'undefined' || showToolsWhenHover === false);
+     const HIDE_CLEAR_BTN_ENABLED = !(typeof hideClearButton === 'undefined' || hideClearButton === false);
 
-
+     
 
     // placeholder
     let datePlaceholder = placeholder || placeholder === '' ? placeholder : 'yyyy/MM/dd HH:mm:ss';
@@ -257,6 +265,17 @@ const Date = forwardRef((props: DateProps, ref: any) => {
     // blur for popup window
     const popupBlurEnabled = useRef<boolean>(false);  // DO NOT USE 'useState()'
 
+    //
+    const getAllSplittingInputs = () => {
+        return [
+            partedInputYear.current, 
+            partedInputMonth.current, 
+            partedInputDay.current, 
+            partedInputHours.current, 
+            partedInputMinutes.current, 
+            partedInputSeconds.current
+        ];
+    };
 
 
     // exposes the following methods
@@ -266,12 +285,42 @@ const Date = forwardRef((props: DateProps, ref: any) => {
             close: () => {
                 popwinPosHide();
                 handleBlur(null);
-            },
+            }
         }),
         [popupRef],
     );
 
+    useImperativeHandle(
+        contentRef,
+        () => ({
+            clear: (cb?: any) => {
+                clearAll();
+                cb?.();
+            },
+            blur: (cb?: any) => {
+                getAllSplittingInputs().forEach((el: any) => {
+                    if (el !== null) el.blur();
+                });
+         
+                handleBlur(null);
+                cb?.();
+            },
+            /*
+            set('2024-04-18 21:54:09', () => { console.log('callback') }])
+            */
+            set: (value: any, cb?: any) => {
 
+                const _defaultValueIsEmpty= typeof value === 'undefined' || value === null || value === 'null' || value === '';
+                setDateDefaultValueExist(_defaultValueIsEmpty ? false : true);
+                initValue(value);
+                
+                cb?.();
+            }
+        }),
+        [contentRef],
+    );
+
+    
     const windowScrollUpdate = debounce(handleScrollEvent, 50);
 
     const eventFire = (el: any, etype: string) => {
@@ -329,8 +378,6 @@ const Date = forwardRef((props: DateProps, ref: any) => {
     // 
     const MIN: any = typeof min !== 'undefined' && min !== '' && min !== null && isValidDate(min) ? getFullTimeData(min) : '';
     const MAX: any = typeof max !== 'undefined' && max !== '' && max !== null && isValidDate(max) ? getFullTimeData(max) : '';
-    const currentMinDateDisabled = MIN !== '' ? (Number(new window.Date().getTime()) < Number(new window.Date(MIN.res).getTime()) ? true : false) : false;
-    const currentMaxDateDisabled = MAX !== '' ? (Number(new window.Date().getTime()) > Number(new window.Date(MAX.res).getTime()) ? true : false) : false;
 
     const getActualDefaultValue = (v?: any, init: boolean = false) => {
         const _v = getFullTimeData(getNow());
@@ -463,7 +510,7 @@ const Date = forwardRef((props: DateProps, ref: any) => {
 
     function popwinPosHide() {
         setIsShow(false);
-        onClosePopup?.([partedInputYear.current, partedInputMonth.current, partedInputDay.current, partedInputHours.current, partedInputMinutes.current, partedInputSeconds.current]);
+        onClosePopup?.(getAllSplittingInputs());
 
     }
 
@@ -476,7 +523,7 @@ const Date = forwardRef((props: DateProps, ref: any) => {
 
             // move out the popup window
             if (popupBlurEnabled.current) {
-                onBlur?.(inputRef.current);
+                onBlur?.(inputRef.current, getAllSplittingInputs());
                 popupBlurEnabled.current = false;
             }
             
@@ -493,7 +540,7 @@ const Date = forwardRef((props: DateProps, ref: any) => {
         setTimeout(() => {
             popwinPosInit();
 
-            onOpenPopup?.([partedInputYear.current, partedInputMonth.current, partedInputDay.current, partedInputHours.current, partedInputMinutes.current, partedInputSeconds.current]);
+            onOpenPopup?.(getAllSplittingInputs());
 
         }, 0);
 
@@ -508,14 +555,14 @@ const Date = forwardRef((props: DateProps, ref: any) => {
 
 
         //
-        onFocus?.(inputRef.current);
+        onFocus?.(inputRef.current, getAllSplittingInputs());
     }
 
     function handleChange(event: ChangeEvent<HTMLInputElement>) {
         const val = event.target.value;
 
         //
-        onChange?.(inputRef.current, val, isValidDate(val));
+        onChange?.(inputRef.current, val, isValidDate(val), getAllSplittingInputs());
 
     }
 
@@ -526,7 +573,7 @@ const Date = forwardRef((props: DateProps, ref: any) => {
         rootRef.current?.classList.remove('focus');
 
         //
-        onBlur?.(inputRef.current);
+        onBlur?.(inputRef.current, getAllSplittingInputs());
     }
 
 
@@ -541,7 +588,7 @@ const Date = forwardRef((props: DateProps, ref: any) => {
 
         const _date = `${splitVals[0]}-${splitVals[1]}-${splitVals[2]}`;
         const _full = `${_date} ${splitVals[3]}:${splitVals[4]}:${splitVals[5]}`;
-        onChange?.(inputRef.current, valueResConverter(_full), isValidDate(_full));
+        onChange?.(inputRef.current, valueResConverter(_full), isValidDate(_full), getAllSplittingInputs());
 
     }
 
@@ -549,6 +596,11 @@ const Date = forwardRef((props: DateProps, ref: any) => {
         
         if (event.code == "Enter") {
             event.preventDefault();
+
+            getAllSplittingInputs().forEach((el: any) => {
+                if (el !== null) el.blur();
+            });
+     
             handleBlur(null);
         }
     }
@@ -557,7 +609,7 @@ const Date = forwardRef((props: DateProps, ref: any) => {
 
     function clearAll() {
         setDateDefaultValueExist(false);
-        onChange?.(inputRef.current, '', false);
+        onChange?.(inputRef.current, '', false, getAllSplittingInputs());
     }
 
 
@@ -786,7 +838,7 @@ const Date = forwardRef((props: DateProps, ref: any) => {
         const [curInitSplitClickEvOk, curNoTargetVal, curTargetVal] = getActualDefaultValue(value, true);
         setDateDefaultValueExist(defaultValueIsEmpty ? false : true);
         const [a, b] = initValue(curTargetVal);
-        onLoad?.(a, getFullTimeData(b));
+        onLoad?.(a, getFullTimeData(b), getAllSplittingInputs());
 
 
         //--------------
@@ -817,15 +869,13 @@ const Date = forwardRef((props: DateProps, ref: any) => {
     return (
         <>
 
-            <div className="date2d__label">
-                {label ? <>{typeof label === 'string' ? <label htmlFor={idRes} className="form-label" dangerouslySetInnerHTML={{ __html: `${label}` }}></label> : <label htmlFor={idRes} className="form-label">{label}</label>}</> : null}
-            </div>
-            
+                {label ? <>{typeof label === 'string' ? <div className="date2d__label"><label htmlFor={idRes} className="form-label" dangerouslySetInnerHTML={{ __html: `${label}` }}></label></div> : <div className="date2d__label"><label htmlFor={idRes} className="form-label">{label}</label></div>}</> : null}
+    
             
             <div
                 ref={rootRef}
                 data-overlay-id={`date2d__wrapper-${idRes}`}
-                className={`date2d__trigger d-inline-block is-${type} ${triggerClassName || ''}`}
+                className={`date2d__trigger d-inline-block is-${type} ${triggerClassName || ''} ${SHOW_TOOLS_ENABLED ? 'date2d__trigger--hover-show-tools' : ''}`}
                 onClick={handleShow}
                 onFocus={handleFocus}
                 onBlur={handleBlur}
@@ -893,7 +943,7 @@ const Date = forwardRef((props: DateProps, ref: any) => {
 
                                
 
-                                            onChange?.(inputRef.current, valueResConverter(_full), isValidDate(_full));
+                                            onChange?.(inputRef.current, valueResConverter(_full), isValidDate(_full), getAllSplittingInputs());
                                             setSplitVals((prevState: string[]) => {
                                                 return [_val, prevState[1], prevState[2], prevState[3], prevState[4], prevState[5]];
                                             });
@@ -934,7 +984,7 @@ const Date = forwardRef((props: DateProps, ref: any) => {
 
                    
 
-                                            onChange?.(inputRef.current, valueResConverter(_full), isValidDate(_full));
+                                            onChange?.(inputRef.current, valueResConverter(_full), isValidDate(_full), getAllSplittingInputs());
                                             setSplitVals((prevState: string[]) => {
                                                 return [prevState[0], _val, prevState[2], prevState[3], prevState[4], prevState[5]];
                                             });
@@ -982,7 +1032,7 @@ const Date = forwardRef((props: DateProps, ref: any) => {
 
 
 
-                                            onChange?.(inputRef.current, valueResConverter(_full), isValidDate(_full));
+                                            onChange?.(inputRef.current, valueResConverter(_full), isValidDate(_full), getAllSplittingInputs());
                                             setSplitVals((prevState: string[]) => {
                                                 return [prevState[0], prevState[1], _val, prevState[3], prevState[4], prevState[5]];
                                             });
@@ -1023,7 +1073,7 @@ const Date = forwardRef((props: DateProps, ref: any) => {
                                             const _full = `${_date} ${_val}:${splitVals[4]}:${splitVals[5]}`;
                                             
 
-                                            onChange?.(inputRef.current, valueResConverter(_full), isValidDate(_full));
+                                            onChange?.(inputRef.current, valueResConverter(_full), isValidDate(_full), getAllSplittingInputs());
                                             setSplitVals((prevState: string[]) => {
                                                 return [prevState[0], prevState[1], prevState[2], _val, prevState[4], prevState[5]];
                                             });
@@ -1062,7 +1112,7 @@ const Date = forwardRef((props: DateProps, ref: any) => {
                                             const _full = `${_date} ${splitVals[3]}:${_val}:${splitVals[5]}`;
 
 
-                                            onChange?.(inputRef.current, valueResConverter(_full), isValidDate(_full));
+                                            onChange?.(inputRef.current, valueResConverter(_full), isValidDate(_full), getAllSplittingInputs());
                                             setSplitVals((prevState: string[]) => {
                                                 return [prevState[0], prevState[1], prevState[2], prevState[3], _val, prevState[5]];
                                             });
@@ -1103,7 +1153,7 @@ const Date = forwardRef((props: DateProps, ref: any) => {
                                                 const _full = `${_date} ${splitVals[3]}:${splitVals[4]}:${_val}`;
 
 
-                                                onChange?.(inputRef.current, valueResConverter(_full), isValidDate(_full));
+                                                onChange?.(inputRef.current, valueResConverter(_full), isValidDate(_full), getAllSplittingInputs());
                                                 setSplitVals((prevState: string[]) => {
                                                     return [prevState[0], prevState[1], prevState[2], prevState[3], prevState[4], _val];
                                                 });
@@ -1129,9 +1179,10 @@ const Date = forwardRef((props: DateProps, ref: any) => {
                         {...attributes}
                     />
 
-                    <span className="date2d__control__icon">
+                    {/* TOOLS */}
+                    <span className={`date2d__control-tools ${SHOW_TOOLS_ENABLED ? 'date2d__control-tools--hover-show-tools' : ''}`}>
 
-                        <a tabIndex={-1} href="#" className={`date2d__control__icon__close ${dateDefaultValueExist ? '' : 'd-none'}`} onClick={(e: React.MouseEvent) => {
+                        <a tabIndex={-1} href="#" className={`date2d__control-tools__close ${HIDE_CLEAR_BTN_ENABLED ? 'd-none' : ''} ${dateDefaultValueExist ? '' : 'd-none'}`} onClick={(e: React.MouseEvent) => {
                             e.preventDefault();
                             e.stopPropagation();  // Avoid triggering pop-ups
                             clearAll();
@@ -1141,6 +1192,7 @@ const Date = forwardRef((props: DateProps, ref: any) => {
                             <path d="M3 9H21M9 15L11 17L15 13M7 3V5M17 3V5M6.2 21H17.8C18.9201 21 19.4802 21 19.908 20.782C20.2843 20.5903 20.5903 20.2843 20.782 19.908C21 19.4802 21 18.9201 21 17.8V8.2C21 7.07989 21 6.51984 20.782 6.09202C20.5903 5.71569 20.2843 5.40973 19.908 5.21799C19.4802 5 18.9201 5 17.8 5H6.2C5.0799 5 4.51984 5 4.09202 5.21799C3.71569 5.40973 3.40973 5.71569 3.21799 6.09202C3 6.51984 3 7.07989 3 8.2V17.8C3 18.9201 3 19.4802 3.21799 19.908C3.40973 20.2843 3.71569 20.5903 4.09202 20.782C4.51984 21 5.07989 21 6.2 21Z" stroke="#000000" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                         </svg>
                     </span>
+                    {/* /TOOLS */}
 
                    
                 </div>
@@ -1188,7 +1240,7 @@ const Date = forwardRef((props: DateProps, ref: any) => {
                                         setSplitVals((prevState: string[]) => {
                                             return [_v.year, _v.month, _v.day, prevState[3], prevState[4], prevState[5]];
                                         });
-                                        onChange?.(inputRef.current, _v, true);
+                                        onChange?.(inputRef.current, _v, true, getAllSplittingInputs());
 
                                         // 
                                         onChangeDate?.(_v);
@@ -1209,7 +1261,7 @@ const Date = forwardRef((props: DateProps, ref: any) => {
                                         setSplitVals((prevState: string[]) => {
                                             return [_v.year, _v.month, _v.day, prevState[3], prevState[4], prevState[5]];
                                         });
-                                        onChange?.(inputRef.current, _v, true);
+                                        onChange?.(inputRef.current, _v, true, getAllSplittingInputs());
 
                                         // 
                                         onChangeToday?.(_v);
@@ -1229,7 +1281,7 @@ const Date = forwardRef((props: DateProps, ref: any) => {
                                         setSplitVals((prevState: string[]) => {
                                             return [_v.year, _v.month, _v.day, prevState[3], prevState[4], prevState[5]];
                                         });
-                                        onChange?.(inputRef.current, _v, true);
+                                        onChange?.(inputRef.current, _v, true, getAllSplittingInputs());
 
                                         // 
                                         onChangeMonth?.(_v);
@@ -1249,7 +1301,7 @@ const Date = forwardRef((props: DateProps, ref: any) => {
                                         setSplitVals((prevState: string[]) => {
                                             return [_v.year, _v.month, _v.day, prevState[3], prevState[4], prevState[5]];
                                         });
-                                        onChange?.(inputRef.current, _v, true);
+                                        onChange?.(inputRef.current, _v, true, getAllSplittingInputs());
 
                                         // 
                                         onChangeYear?.(_v);
@@ -1298,7 +1350,7 @@ const Date = forwardRef((props: DateProps, ref: any) => {
                                                     setSplitVals((prevState: string[]) => {
                                                         return [prevState[0], prevState[1], prevState[2], _v.hours, prevState[4], prevState[5]];
                                                     });
-                                                    onChange?.(inputRef.current, _v, true);
+                                                    onChange?.(inputRef.current, _v, true, getAllSplittingInputs());
 
                                                     // 
                                                     onChangeHours?.(_v);
@@ -1347,7 +1399,7 @@ const Date = forwardRef((props: DateProps, ref: any) => {
                                                     setSplitVals((prevState: string[]) => {
                                                         return [prevState[0], prevState[1], prevState[2], prevState[3], _v.minutes, prevState[5]];
                                                     });
-                                                    onChange?.(inputRef.current, _v, true);
+                                                    onChange?.(inputRef.current, _v, true, getAllSplittingInputs());
 
                                                     // 
                                                     onChangeMinutes?.(_v);
@@ -1399,7 +1451,7 @@ const Date = forwardRef((props: DateProps, ref: any) => {
                                                         setSplitVals((prevState: string[]) => {
                                                             return [prevState[0], prevState[1], prevState[2], prevState[3], prevState[5], _v.seconds ];
                                                         });
-                                                        onChange?.(inputRef.current, _v, true);
+                                                        onChange?.(inputRef.current, _v, true, getAllSplittingInputs());
 
                                                         // 
                                                         onChangeSeconds?.(_v);

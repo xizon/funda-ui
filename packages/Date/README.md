@@ -10,8 +10,11 @@ import Date from 'funda-ui/Date';
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |
 | `ref` | React.ForwardedRef | - | It is the return element of this component.  |
+| `contentRef` | React.RefObject | - | It exposes the following methods:  <br /> <ol><li>`contentRef.current.clear(() => { console.log('callback') })`</li><li>`contentRef.current.blur(() => { console.log('callback') })`</li><li>`contentRef.current.set('2024-04-25 21:54:18', () => { console.log('callback') })`</li></ol> |
 | `popupRef` | React.RefObject | - | It exposes the following methods when the component's popup opens or closes:  <br /> <ol><li>`popupRef.current.close()`</li></ol> |
 | `delimiter` | string  | `/` | Specify a delimiter from a date string. such as `/`, `-`, ` `, `.` |
+| `hideClearButton` | boolean  | false | Hide the Clear button |
+| `showToolsWhenHover` | boolean  | false | The tool icon is displayed when hovering over the mouse |
 | `offset` | number  | 10 | Position offset of top and bottom. |
 | `exceededSidePosOffset` | number | 15 | Offset px that exceeds the far right or left side of the screen |
 | `popupClassName` | string | - | The class name of the popup. |
@@ -47,10 +50,10 @@ import Date from 'funda-ui/Date';
 | `required` | boolean | false | When present, it specifies that a field must be filled out before submitting the form. |
 | `iconLeft` | ReactNode  | - | Set the left icon of this control |
 | `iconRight` | ReactNode  | - | Set the right icon of this control |
-| `onLoad` | function  | - | Call a function when the value of an HTML element is changed. It returns two callback values. <br /> <ol><li>The first is the value at which the requirement was initialized (**String**)</li><li>The second is the current date info (**JSON Object**)</li></ol> |
-| `onChange` | function  | - | Call a function when the value of an HTML element is changed. It returns three callback values. <br /> <ol><li>The first is the control (**HTML Element**)</li><li>The second is the current date info (**JSON Object** \| **String**)</li><li>The last is the boolean value that determine whether the date is valid (**Boolean**)</li></ol> |
-| `onBlur` | function  | - | Call a function when a user leaves an form field. It returns only one callback value which is the control (**HTML Element**) <blockquote>Changes of year/month/day/hours/minutes/seconds/popup will trigger</blockquote> |
-| `onFocus` | function  | - | Call a function when an form field gets focus. It returns only one callback value which is the control (**HTML Element**) |
+| `onLoad` | function  | - | Call a function when the value of an HTML element is changed. It returns three callback values. <br /> <ol><li>The first is the value at which the requirement was initialized (**String**)</li><li>The second is the current date info (**JSON Object**)</li><li>The last is the existing time-splitting inputs (**Array**)</li></ol> |
+| `onChange` | function  | - | Call a function when the value of an HTML element is changed. It returns four callback values. <br /> <ol><li>The first is the control (**HTML Element**)</li><li>The second is the current date info (**JSON Object** \| **String**)</li><li>The third is the boolean value that determine whether the date is valid (**Boolean**)</li><li>The last is the existing time-splitting inputs (**Array**)</li></ol> |
+| `onBlur` | function  | - | Call a function when a user leaves an form field. It returns two callback values. <br /> <ol><li>The first is the control (**HTML Element**)</li><li>The last is the existing time-splitting inputs (**Array**)</li></ol> <blockquote>Changes of year/month/day/hours/minutes/seconds/popup will trigger</blockquote> |
+| `onFocus` | function  | - | Call a function when an form field gets focus. It returns two callback values. <br /> <ol><li>The first is the control (**HTML Element**)</li><li>The last is the existing time-splitting inputs (**Array**)</li></ol> |
 | `onOpenPopup` | function  | - | Call a function when open popup. It returns only one value which is the existing time-splitting inputs (**Array**) |
 | `onClosePopup` | function  | - | Call a function when close popup. It returns only one value which is the existing time-splitting inputs (**Array**) |
 | `onChangeDate` | function  | - | Call a function when a date area is clicked. The function receives the selected date (yyyy-MM-dd).  Triggered when the date cell selection button is clicked. It returns only one value which is the current value (**JSON Object**) |
@@ -84,11 +87,11 @@ export default () => {
                 value="2024-03-13"
                 type="date"
                 placeholder="yyyy/MM/dd"
-                onChange={(input: HTMLInputElement, dateRes: any, isValidDate: boolean) => {
-                    console.log(isValidDate, input, dateRes, dateRes !== null && typeof dateRes !== 'string' ? dateRes.res : dateRes)
+                onChange={(input: HTMLInputElement, dateRes: any, isValidDate: boolean, allSplittingInputs: any[]) => {
+                    console.log(isValidDate, input, dateRes, dateRes !== null && typeof dateRes !== 'string' ? dateRes.res : dateRes, allSplittingInputs)
                 }}
-                onLoad={(initValue: string, dateRes: any) => {
-                    console.log(initValue, dateRes)
+                onLoad={(initValue: string, dateRes: any, allSplittingInputs: any[]) => {
+                    console.log(initValue, dateRes, allSplittingInputs)
                 }}
             />
 
@@ -100,11 +103,11 @@ export default () => {
                 value="2024-03-14 10:22"
                 type="datetime-local"
                 placeholder="yyyy/MM/dd HH:mm"
-                onChange={(input: HTMLInputElement, dateRes: any, isValidDate: boolean) => {
-                    console.log(isValidDate, input, dateRes, dateRes !== null && typeof dateRes !== 'string' ? dateRes.res : dateRes)
+                onChange={(input: HTMLInputElement, dateRes: any, isValidDate: boolean, allSplittingInputs: any[]) => {
+                    console.log(isValidDate, input, dateRes, dateRes !== null && typeof dateRes !== 'string' ? dateRes.res : dateRes, allSplittingInputs)
                 }}
-                onLoad={(initValue: string, dateRes: any) => {
-                    console.log(initValue, dateRes)
+                onLoad={(initValue: string, dateRes: any, allSplittingInputs: any[]) => {
+                    console.log(initValue, dateRes, allSplittingInputs)
                 }}
                 truncateSeconds
             />
@@ -116,11 +119,11 @@ export default () => {
                 value="07:30:38"
                 placeholder="HH:mm:ss"
                 type="time"
-                onChange={(input: HTMLInputElement, dateRes: any, isValidDate: boolean) => {
-                    console.log(isValidDate, input, dateRes, dateRes !== null && typeof dateRes !== 'string' ? dateRes.res : dateRes)
+                onChange={(input: HTMLInputElement, dateRes: any, isValidDate: boolean, allSplittingInputs: any[]) => {
+                    console.log(isValidDate, input, dateRes, dateRes !== null && typeof dateRes !== 'string' ? dateRes.res : dateRes, allSplittingInputs)
                 }}
-                onLoad={(initValue: string, dateRes: any) => {
-                    console.log(initValue, dateRes)
+                onLoad={(initValue: string, dateRes: any, allSplittingInputs: any[]) => {
+                    console.log(initValue, dateRes, allSplittingInputs)
                 }}
                 onlyTime
             />
@@ -132,6 +135,36 @@ export default () => {
 }
 ```
 
+
+
+
+## Remove Date Control border and background color
+
+
+```js
+import React from "react";
+import Date from 'funda-ui/Date';
+
+// component styles
+import 'funda-ui/Date/index.css';
+
+export default () => {
+
+
+    return (
+        <>
+
+            <Date
+                ...
+                style={{border: 'none', background: 'transparent', textAlign: 'center', fontSize: '0.75rem'}}
+                ...
+            />
+
+ 
+        </>
+    );
+}
+```
 
 
 
@@ -169,7 +202,7 @@ export default () => {
                 value={defaultCustomDate} // Don't use customDate assignments directly
                 type="datetime-local"
                 placeholder="yyyy/MM/dd HH:mm:ss"
-                onChange={(input: HTMLInputElement, dateRes: any, isValidDate: boolean) => {
+                onChange={(input: HTMLInputElement, dateRes: any, isValidDate: boolean, allSplittingInputs: any[]) => {
                     let _valRes = dateRes !== null && typeof dateRes !== 'string' ? dateRes.res : dateRes;
                     _valRes = _valRes.split(':').length === 3 ? _valRes : `${_valRes}:00`;
                     if (_valRes === ':00') _valRes = '';
@@ -225,7 +258,7 @@ export default () => {
 
 ## Popup closes automatically after a minute of tapping
 
-Lets you callback the handle exposed as a ref.
+Lets you callback the handle exposed as attribute `popupRef`.
 
 
 ```js
@@ -252,11 +285,11 @@ export default () => {
                 value="2024-03-14 10:22"
                 placeholder="yyyy/MM/dd HH:mm"
                 type="datetime-local"
-                onChange={(input: HTMLInputElement, dateRes: any, isValidDate: boolean) => {
-                    console.log(isValidDate, input, dateRes, dateRes !== null && typeof dateRes !== 'string' ? dateRes.res : dateRes)
+                onChange={(input: HTMLInputElement, dateRes: any, isValidDate: boolean, allSplittingInputs: any[]) => {
+                    console.log(isValidDate, input, dateRes, dateRes !== null && typeof dateRes !== 'string' ? dateRes.res : dateRes, allSplittingInputs)
                 }}
-                onLoad={(initValue: string, dateRes: any) => {
-                    console.log(initValue, dateRes)
+                onLoad={(initValue: string, dateRes: any, allSplittingInputs: any[]) => {
+                    console.log(initValue, dateRes, allSplittingInputs)
                 }}
                 truncateSeconds
                 onChangeMinutes={(dateRes: any) => {
@@ -366,6 +399,64 @@ export default () => {
                 value=""
                 clickInitValue="2024-03-14 10:22:00"
                 type="datetime-local"
+            />
+
+ 
+        </>
+    );
+}
+```
+
+
+
+
+
+## Focus year's input control and set a default value when component rendered
+
+Lets you callback the handle exposed as attribute `contentRef`.
+
+```js
+import React, {useRef} from "react";
+import Date from 'funda-ui/Date';
+
+// component styles
+import 'funda-ui/Date/index.css';
+
+export default () => {
+
+    const inputRef = useRef<any>();
+
+    return (
+        <>
+
+            <Date
+                contentRef={inputRef}
+                name="name"
+                value=""
+                type="datetime-local"
+                onLoad={(initValue: string, dateRes: any, allSplittingInputs: any[]) => {
+                    console.log(allSplittingInputs)
+
+                    // focus hours input
+                    if (allSplittingInputs[0] !== null) {
+
+                        // Make sure it is not affected by other rendering
+                        setTimeout(() => {
+                            if (inputRef.current) inputRef.current.set('2024-04-18 21:54:09', () => { console.log('callback') });
+                        }, 0);
+
+                        setTimeout(() => {
+                            allSplittingInputs[0].select();
+                        }, 150);
+
+                        setTimeout(() => {
+                            if (inputRef.current) {
+                                inputRef.current.clear();
+                                inputRef.current.blur();
+                            }
+                        }, 5000);
+                    }
+                }}
             />
 
  

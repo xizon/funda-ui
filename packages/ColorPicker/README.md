@@ -20,9 +20,9 @@ import ColorPicker from 'funda-ui/ColorPicker';
 | `shape` | string | `circle` \| `rounded` | Set shape of this control. |
 | `disabled` | boolean | false | Whether it is disabled |
 | `required` | boolean | false | When present, it specifies that a field must be filled out before submitting the form. |
-| `onChange` | function  | - | Call a function when the value of an HTML element is changed. It returns only one callback value which is the control |
-| `onBlur` | function  | - | Call a function when a user leaves an form field. It returns only one callback value which is the control |
-| `onFocus` | function  | - | Call a function when an form field gets focus. It returns only one callback value which is the control |
+| `onChange` | function  | - | Call a function when the value of an HTML element is changed. It returns only one callback value which is the Control Event (**Event**) |
+| `onBlur` | function  | - | Call a function when a user leaves an form field. It returns only one callback value which is the Control Event (**Event**) |
+| `onFocus` | function  | - | Call a function when an form field gets focus. It returns only one callback value which is the Control Event (**Event**) |
 
 
 It accepts all props which this control support.

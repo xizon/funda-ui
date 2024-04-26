@@ -266,7 +266,7 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
                 cb?.();
             },
             /*
-            set([{"label": "Option 1","listItemLabel":"Option 1 (No: 001)","value": "value-1","queryString": "option1"}, () => { console.log('callback') }])
+            set([{"label": "Option 1","listItemLabel":"Option 1 (No: 001)","value": "value-1","queryString": "option1"}], () => { console.log('callback') }])
             */
             set: (value: any, cb?: any) => {
 
@@ -1682,12 +1682,9 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
     }
 
     function handleBlur(event: any) {
-
-
         setTimeout(() => {
             onBlur?.(event);
         }, 300);
-
     }
 
 
