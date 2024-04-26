@@ -188,8 +188,11 @@ export default () => {
 
 
     useEffect(() => {
+
+       // "setDefaultCustomDate" is generally used to assign values after http requests 
+       // (usually used for real business APIs needs)
        setCustomDate(defaultVal);
-       setDefaultCustomDate(defaultVal);
+       setDefaultCustomDate(defaultVal);  
     }, []);
 
 
