@@ -1,4 +1,4 @@
-import React, { useId, useState, useEffect, useRef, forwardRef, ChangeEvent, CompositionEvent, useImperativeHandle } from 'react';
+import React, { useId, useState, useEffect, useRef, forwardRef, ChangeEvent, CompositionEvent, KeyboardEvent, FocusEvent, useImperativeHandle } from 'react';
 
 declare module 'react' {
     interface ReactI18NextChildren<T> {
@@ -47,6 +47,7 @@ type InputProps = {
     onChange?: (e: any, param: any, el: any) => void;
     onBlur?: (e: any, param: any, el: any) => void;
     onFocus?: (e: any, param: any, el: any) => void;
+    onPressEnter?: (e: any, el: any) => void;
 
 };
 
@@ -91,6 +92,7 @@ const Input = forwardRef((props: InputProps, ref: any) => {
         onChange,
         onBlur,
         onFocus,
+        onPressEnter,
         ...attributes
     } = props;
 
@@ -100,7 +102,7 @@ const Input = forwardRef((props: InputProps, ref: any) => {
     const rootRef = useRef<any>(null);
     const valRef = useRef<any>(null);
     const typeRes = typeof (type) === 'undefined' ? 'text' : type;
-    const [onComposition, setOnComposition] = useState(false);
+    const [onComposition, setOnComposition] = useState<boolean>(false);
     const [changedVal, setChangedVal] = useState<string>(value || '');
 
 
@@ -134,7 +136,7 @@ const Input = forwardRef((props: InputProps, ref: any) => {
     }
 
 
-    function handleFocus(event: ChangeEvent<HTMLInputElement>) {
+    function handleFocus(event: FocusEvent<HTMLInputElement>) {
         rootRef.current?.classList.add('focus');
 
         //
@@ -165,7 +167,7 @@ const Input = forwardRef((props: InputProps, ref: any) => {
 
     }
 
-    function handleBlur(event: ChangeEvent<HTMLInputElement>) {
+    function handleBlur(event: FocusEvent<HTMLInputElement>) {
         const el = event.target;
         const val = event.target.value;
 
@@ -186,11 +188,17 @@ const Input = forwardRef((props: InputProps, ref: any) => {
         }
     }
    
-    function handleKeyPressed(event: React.KeyboardEvent<HTMLInputElement>) {
+    function handleKeyPressed(event: KeyboardEvent<HTMLInputElement>) {
         if (typeof (onKeyPressedCallback) === 'function') {
             const newData: any = onKeyPressedCallback(event, valRef.current);
             if (newData) setChangedVal(newData);  // Avoid the error "react checkbox changing an uncontrolled input to be controlled"
         }
+
+        if (event.code == "Enter") {
+            // DO NOT USE "preventDefault()"
+            onPressEnter?.(event, valRef.current);
+        }
+
     }
 
     useEffect(() => {

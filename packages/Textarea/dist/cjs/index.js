@@ -118,7 +118,13 @@ const App = () => {
     const [value, setValue] = useState("");
     const el = useRef<HTMLTextAreaElement>(null);
 
-    useAutosizeTextArea(el.current, value);
+    useAutosizeTextArea(
+        el.current, 
+        value,
+        (res) => {
+            onResize?.(event, valRef.current, res);
+        }
+    );
 
     const handleChange = (evt: React.ChangeEvent<HTMLTextAreaElement>) => {
         const val = evt.target?.value;
@@ -144,7 +150,7 @@ const App = () => {
 
 
 // Updates the height of a <textarea> when the value changes.
-var useAutosizeTextArea = function useAutosizeTextArea(el, value) {
+var useAutosizeTextArea = function useAutosizeTextArea(el, value, cb) {
   var _useState = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)(0),
     _useState2 = _slicedToArray(_useState, 2),
     defaultRowHeight = _useState2[0],
@@ -155,9 +161,11 @@ var useAutosizeTextArea = function useAutosizeTextArea(el, value) {
     setDefaultRowHeightInit = _useState4[1];
   (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useEffect)(function () {
     if (el) {
+      var style = el.currentStyle || window.getComputedStyle(el);
+      var _controlWidth = el.scrollWidth + parseInt(style.borderLeftWidth) + parseInt(style.borderRightWidth);
+
       // initialize default row height
       if (el.scrollHeight > 0 && !defaultRowHeightInit) {
-        var style = el.currentStyle || window.getComputedStyle(el);
         setDefaultRowHeight(el.scrollHeight + parseInt(style.borderTopWidth) + parseInt(style.borderBottomWidth));
         setDefaultRowHeightInit(true);
       }
@@ -177,12 +185,15 @@ var useAutosizeTextArea = function useAutosizeTextArea(el, value) {
       if (scrollHeight > defaultRowHeight && defaultRowHeight > 0) {
         el.style.height = scrollHeight + "px";
       }
+
+      //
+      cb === null || cb === void 0 ? void 0 : cb([_controlWidth, scrollHeight]);
     }
   }, [el, value]);
 };
 /* harmony default export */ const utils_useAutosizeTextArea = (useAutosizeTextArea);
 ;// CONCATENATED MODULE: ./src/index.tsx
-var _excluded = ["contentRef", "wrapperClassName", "controlClassName", "controlExClassName", "controlGroupWrapperClassName", "controlGroupTextClassName", "cols", "rows", "disabled", "required", "placeholder", "autoSize", "iconLeft", "iconRight", "readOnly", "value", "label", "name", "id", "maxLength", "style", "tabIndex", "onChangeCallback", "onInputCallback", "onKeyPressedCallback", "onChange", "onBlur", "onFocus"];
+var _excluded = ["contentRef", "wrapperClassName", "controlClassName", "controlExClassName", "controlGroupWrapperClassName", "controlGroupTextClassName", "cols", "rows", "disabled", "required", "placeholder", "autoSize", "iconLeft", "iconRight", "readOnly", "value", "label", "name", "id", "maxLength", "style", "tabIndex", "onChangeCallback", "onInputCallback", "onKeyPressedCallback", "onChange", "onBlur", "onFocus", "onPressEnter", "onResize"];
 function _extends() { _extends = Object.assign ? Object.assign.bind() : function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
 function src_slicedToArray(arr, i) { return src_arrayWithHoles(arr) || src_iterableToArrayLimit(arr, i) || src_unsupportedIterableToArray(arr, i) || src_nonIterableRest(); }
 function src_nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
@@ -223,6 +234,8 @@ var Textarea = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_reac
     onChange = props.onChange,
     onBlur = props.onBlur,
     onFocus = props.onFocus,
+    onPressEnter = props.onPressEnter,
+    onResize = props.onResize,
     attributes = _objectWithoutProperties(props, _excluded);
   var uniqueID = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useId)();
   var idRes = id || uniqueID;
@@ -248,7 +261,9 @@ var Textarea = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_reac
   }, [contentRef]);
 
   // auto size
-  utils_useAutosizeTextArea(autoSize ? valRef.current : null, autoSize ? changedVal : '');
+  utils_useAutosizeTextArea(autoSize ? valRef.current : null, autoSize ? changedVal : '', function (res) {
+    onResize === null || onResize === void 0 ? void 0 : onResize(event, valRef.current, res);
+  });
   function handleFocus(event) {
     var _rootRef$current;
     var el = event.target;
@@ -304,8 +319,12 @@ var Textarea = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_reac
       var newData = onKeyPressedCallback(event, valRef.current);
       if (newData) setChangedVal(newData); // Avoid the error "react checkbox changing an uncontrolled input to be controlled"
     }
-  }
 
+    if (event.code == "Enter") {
+      // DO NOT USE "preventDefault()"
+      onPressEnter === null || onPressEnter === void 0 ? void 0 : onPressEnter(event, valRef.current);
+    }
+  }
   (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useEffect)(function () {
     // update default value
     //--------------

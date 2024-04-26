@@ -1,4 +1,4 @@
-import React, { useId, useState, useEffect, useRef, forwardRef } from 'react';
+import React, { useId, useState, useEffect, useRef, ChangeEvent, MouseEvent, CompositionEvent, KeyboardEvent, FocusEvent, forwardRef } from 'react';
 
 
 declare module 'react' {
@@ -41,6 +41,7 @@ type SearchBarProps = {
     onChange?: (e: any, param: any) => void;
     onBlur?: (e: any, param: any) => void;
     onFocus?: (e: any, param: any) => void;
+    onPressEnter?: (e: any, param: any) => void;
 };
 
 const SearchBar = forwardRef((props: SearchBarProps, ref: any) => {
@@ -76,6 +77,7 @@ const SearchBar = forwardRef((props: SearchBarProps, ref: any) => {
         onChange,
         onBlur,
         onFocus,
+        onPressEnter,
         ...attributes
     } = props;
 
@@ -86,13 +88,13 @@ const SearchBar = forwardRef((props: SearchBarProps, ref: any) => {
     const [changedVal, setChangedVal] = useState<string>(value || '');
 
 
-    const [onComposition, setOnComposition] = useState(false);
+    const [onComposition, setOnComposition] = useState<boolean>(false);
 
     const propExist = (p: any) => {
         return typeof p !== 'undefined' && p !== null && p !== '';
     };
 
-    function handleComposition(event: any) {
+    function handleComposition(event: CompositionEvent<HTMLInputElement>) {
         if (event.type === 'compositionstart') {
             setOnComposition(true);
         }
@@ -102,23 +104,23 @@ const SearchBar = forwardRef((props: SearchBarProps, ref: any) => {
     }
 
 
-    function handleClick(event: any) {
+    function handleClick(event: MouseEvent<HTMLInputElement>) {
         onClick?.(event);
     }
 
 
-    function handleSubmit(event: any) {
+    function handleSubmit(event: MouseEvent<HTMLButtonElement>) {
         onSubmit?.(event);
     }
 
-    function handleFocus(event: any) {
+    function handleFocus(event: FocusEvent<HTMLInputElement>) {
         rootRef.current?.classList.add('focus');
 
         //
         onFocus?.(event, onComposition);
     }
 
-    function handleChange(event: any) {
+    function handleChange(event: ChangeEvent<HTMLInputElement>) {
         const val = event.target.value;
 
         setChangedVal(val);
@@ -133,7 +135,7 @@ const SearchBar = forwardRef((props: SearchBarProps, ref: any) => {
         onChange?.(event, onComposition);
     }
 
-    function handleBlur(event: any) {
+    function handleBlur(event: FocusEvent<HTMLInputElement>) {
         const el = event.target;
         const val = event.target.value;
 
@@ -148,12 +150,19 @@ const SearchBar = forwardRef((props: SearchBarProps, ref: any) => {
         onBlur?.(event, onComposition);
     }
 
-    function handleKeyPressed(event: React.KeyboardEvent<HTMLInputElement>) {
+    function handleKeyPressed(event: KeyboardEvent<HTMLInputElement>) {
 
         if (typeof (onKeyPressedCallback) === 'function') {
             const newData: any = onKeyPressedCallback(event);
             if (newData) setChangedVal(newData);  // Avoid the error "react checkbox changing an uncontrolled input to be controlled"
         }
+
+
+        if (event.code == "Enter") {
+            // DO NOT USE "preventDefault()"
+            onPressEnter?.(event, onComposition);
+        }
+
     }
 
     useEffect(() => {

@@ -35,6 +35,8 @@ declare type TextareaProps = {
     onChange?: (e: any, el: any) => void;
     onBlur?: (e: any, el: any) => void;
     onFocus?: (e: any, el: any) => void;
+    onPressEnter?: (e: any, el: any) => void;
+    onResize?: (e: any, el: any, params: any) => void;
 };
 declare const Textarea: React.ForwardRefExoticComponent<TextareaProps & React.RefAttributes<unknown>>;
 export default Textarea;

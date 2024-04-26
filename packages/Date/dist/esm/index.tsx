@@ -1,4 +1,4 @@
-import React, { useId, useState, useRef, useEffect, forwardRef, ChangeEvent, useImperativeHandle } from 'react';
+import React, { useId, useState, useRef, useEffect, forwardRef, ChangeEvent, FocusEvent, useImperativeHandle } from 'react';
 
 import Input from 'funda-input';
 import RootPortal from 'funda-root-portal';
@@ -80,6 +80,7 @@ type DateProps = {
     onChange?: (e: any, data: any, isValidDate: boolean, allSplittingInputs: any[]) => void;
     onBlur?: (e: any, allSplittingInputs: any[]) => void;
     onFocus?: (e: any, allSplittingInputs: any[]) => void;
+    onPressEnter?: (e: any, allSplittingInputs: any[]) => void;
     onOpenPopup?: (allSplittingInputs: any[]) => void;
     onClosePopup?: (allSplittingInputs: any[]) => void;
     //
@@ -147,6 +148,7 @@ const Date = forwardRef((props: DateProps, ref: any) => {
         onChange,
         onBlur,
         onFocus,
+        onPressEnter,
         onOpenPopup,
         onClosePopup,
 
@@ -550,12 +552,13 @@ const Date = forwardRef((props: DateProps, ref: any) => {
     }
 
 
-    function handleFocus(event: ChangeEvent<HTMLElement> | null) {
+    function handleFocus(event: FocusEvent<HTMLElement> | null) {
         rootRef.current?.classList.add('focus');
 
 
         //
         onFocus?.(inputRef.current, getAllSplittingInputs());
+
     }
 
     function handleChange(event: ChangeEvent<HTMLInputElement>) {
@@ -567,7 +570,7 @@ const Date = forwardRef((props: DateProps, ref: any) => {
     }
 
 
-    function handleBlur(event: ChangeEvent<HTMLElement> | null) {
+    function handleBlur(event: FocusEvent<HTMLElement> | null) {
 
         //remove focus style
         rootRef.current?.classList.remove('focus');
@@ -602,6 +605,9 @@ const Date = forwardRef((props: DateProps, ref: any) => {
             });
      
             handleBlur(null);
+
+            //
+            onPressEnter?.(inputRef.current, getAllSplittingInputs());
         }
     }
 

@@ -1,4 +1,4 @@
-import React, { useId, useState, useEffect, useRef, forwardRef, useImperativeHandle } from 'react';
+import React, { useId, useState, useEffect, useRef, forwardRef, KeyboardEvent, useImperativeHandle } from 'react';
 
 
 import useAutosizeTextArea from './utils/useAutosizeTextArea';
@@ -39,6 +39,9 @@ type TextareaProps = {
     onChange?: (e: any, el: any) => void;
     onBlur?: (e: any, el: any) => void;
     onFocus?: (e: any, el: any) => void;
+    onPressEnter?: (e: any, el: any) => void;
+    onResize?: (e: any, el: any, params: any) => void;
+    
 };
 
 
@@ -72,6 +75,8 @@ const Textarea = forwardRef((props: TextareaProps, ref: any) => {
         onChange,
         onBlur,
         onFocus,
+        onPressEnter,
+        onResize,
         ...attributes
     } = props;
 
@@ -95,12 +100,18 @@ const Textarea = forwardRef((props: TextareaProps, ref: any) => {
                 cb?.();
             }
         }),
-        [contentRef],
+        [contentRef]
     );
 
 
     // auto size
-    useAutosizeTextArea(autoSize ? valRef.current : null, autoSize ? changedVal : '');
+    useAutosizeTextArea(
+        autoSize ? valRef.current : null, 
+        autoSize ? changedVal : '',
+        (res: any[]) => {
+            onResize?.(event, valRef.current, res);
+        }
+    );
 
     function handleFocus(event: any) {
         const el = event.target;
@@ -155,11 +166,17 @@ const Textarea = forwardRef((props: TextareaProps, ref: any) => {
 
     }
 
-    function handleKeyPressed(event: React.KeyboardEvent<HTMLTextAreaElement>) {
+    function handleKeyPressed(event: KeyboardEvent<HTMLTextAreaElement>) {
         if (typeof (onKeyPressedCallback) === 'function') {
             const newData: any = onKeyPressedCallback(event, valRef.current);
             if (newData) setChangedVal(newData);  // Avoid the error "react checkbox changing an uncontrolled input to be controlled"
         }
+
+        if (event.code == "Enter") {
+            // DO NOT USE "preventDefault()"
+            onPressEnter?.(event, valRef.current);
+        }
+
     }
 
 

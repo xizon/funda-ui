@@ -1,4 +1,4 @@
-import React, { useId, useState, useEffect, useRef, forwardRef } from 'react';
+import React, { useId, useState, useEffect, useRef, forwardRef, ChangeEvent, MouseEvent, KeyboardEvent, FocusEvent, CompositionEvent } from 'react';
 
 import { extractContentsOfBrackets } from './utils/extract';
 import { convertArrToValByBrackets } from './utils/convert';
@@ -68,7 +68,7 @@ const TagInput = forwardRef((props: TagInputProps, ref: any) => {
     const [userInput, setUserInput] = useState<string>('');
     const [items, setItems] = useState<any[]>([]);
     const [alreadyInItems, setAlreadyInItems] = useState<boolean>(false);
-    const [onComposition, setOnComposition] = useState(false);
+    const [onComposition, setOnComposition] = useState<boolean>(false);
 
 
     function initDefaultValue(defaultValue: any) {
@@ -93,7 +93,7 @@ const TagInput = forwardRef((props: TagInputProps, ref: any) => {
     }
 
 
-    function handleRemove(e: any) {
+    function handleRemove(e: MouseEvent<HTMLAnchorElement>) {
         e.preventDefault();
 
         const idToRemove = Number(e.currentTarget.dataset.item);
@@ -104,7 +104,7 @@ const TagInput = forwardRef((props: TagInputProps, ref: any) => {
         onChange?.(inputRef.current, newArray, VALUE_BY_BRACKETS ? convertArrToValByBrackets(newArray.map(v => v.content)) : newArray.map(v => v.content).join(','));
     }
 
-    function handleKeypress(event: any) {
+    function handleKeypress(event: KeyboardEvent<HTMLInputElement>) {
         
         // Avoid adding results before when the user enters text is not complete
         if ( onComposition ) return;
@@ -143,7 +143,7 @@ const TagInput = forwardRef((props: TagInputProps, ref: any) => {
         }
     }
 
-    function handleComposition(event: any) {
+    function handleComposition(event: CompositionEvent<HTMLInputElement>) {
         if (event.type === 'compositionstart') {
             setOnComposition(true);
         }
@@ -153,7 +153,7 @@ const TagInput = forwardRef((props: TagInputProps, ref: any) => {
     }
 
 
-    function handleChange(event: any) {
+    function handleChange(event: ChangeEvent<HTMLInputElement>) {
 
         const val = event.target.value;
         
@@ -185,7 +185,7 @@ const TagInput = forwardRef((props: TagInputProps, ref: any) => {
 
 
 
-    function handleFocus(event: any) {
+    function handleFocus(event: FocusEvent<HTMLInputElement>) {
         rootRef.current?.classList.add('focus');
 
         //
@@ -193,7 +193,7 @@ const TagInput = forwardRef((props: TagInputProps, ref: any) => {
     }
 
 
-    function handleBlur(event: any) {
+    function handleBlur(event: FocusEvent<HTMLInputElement>) {
         const el = event.target;
         const val = event.target.value;
 

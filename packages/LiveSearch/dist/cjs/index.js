@@ -547,7 +547,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
         var react__WEBPACK_IMPORTED_MODULE_0__ = __nested_webpack_require_1465__(787);
         /* harmony import */
         var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__nested_webpack_require_1465__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-        var _excluded = ["wrapperClassName", "controlClassName", "controlExClassName", "controlGroupWrapperClassName", "controlGroupTextClassName", "appearance", "isSearchInput", "readOnly", "disabled", "required", "placeholder", "value", "label", "name", "units", "iconLeft", "iconRight", "minLength", "maxLength", "btnId", "id", "icon", "autoComplete", "style", "tabIndex", "onClick", "onKeyPressedCallback", "onSubmit", "onChange", "onBlur", "onFocus"];
+        var _excluded = ["wrapperClassName", "controlClassName", "controlExClassName", "controlGroupWrapperClassName", "controlGroupTextClassName", "appearance", "isSearchInput", "readOnly", "disabled", "required", "placeholder", "value", "label", "name", "units", "iconLeft", "iconRight", "minLength", "maxLength", "btnId", "id", "icon", "autoComplete", "style", "tabIndex", "onClick", "onKeyPressedCallback", "onSubmit", "onChange", "onBlur", "onFocus", "onPressEnter"];
         function _extends() {
           _extends = Object.assign ? Object.assign.bind() : function (target) {
             for (var i = 1; i < arguments.length; i++) {
@@ -670,6 +670,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
             onChange = props.onChange,
             onBlur = props.onBlur,
             onFocus = props.onFocus,
+            onPressEnter = props.onPressEnter,
             attributes = _objectWithoutProperties(props, _excluded);
           var uniqueID = (0, react__WEBPACK_IMPORTED_MODULE_0__.useId)();
           var idRes = id || uniqueID;
@@ -739,8 +740,12 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
               var newData = onKeyPressedCallback(event);
               if (newData) setChangedVal(newData); // Avoid the error "react checkbox changing an uncontrolled input to be controlled"
             }
-          }
 
+            if (event.code == "Enter") {
+              // DO NOT USE "preventDefault()"
+              onPressEnter === null || onPressEnter === void 0 ? void 0 : onPressEnter(event, onComposition);
+            }
+          }
           (0, react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(function () {
             // update default value
             //--------------
@@ -984,7 +989,7 @@ var cjs_default = /*#__PURE__*/__webpack_require__.n(cjs);
 var dist_cjs = __webpack_require__(962);
 var dist_cjs_default = /*#__PURE__*/__webpack_require__.n(dist_cjs);
 ;// CONCATENATED MODULE: ./src/index.tsx
-var _excluded = ["popupRef", "wrapperClassName", "controlClassName", "controlExClassName", "controlGroupWrapperClassName", "controlGroupTextClassName", "exceededSidePosOffset", "appearance", "isSearchInput", "allowSpacingRetrive", "readOnly", "disabled", "required", "placeholder", "options", "value", "label", "name", "units", "iconLeft", "iconRight", "minLength", "maxLength", "id", "icon", "btnId", "fetchTrigger", "hideIcon", "depth", "style", "winWidth", "tabIndex", "data", "autoShowOptions", "fetchNoneInfo", "fetchUpdate", "fetchFuncAsync", "fetchFuncMethod", "fetchFuncMethodParams", "fetchCallback", "onClick", "onFetch", "onChange", "onKeyboardInput", "onBlur"];
+var _excluded = ["popupRef", "wrapperClassName", "controlClassName", "controlExClassName", "controlGroupWrapperClassName", "controlGroupTextClassName", "exceededSidePosOffset", "appearance", "isSearchInput", "allowSpacingRetrive", "readOnly", "disabled", "required", "placeholder", "options", "value", "label", "name", "units", "iconLeft", "iconRight", "minLength", "maxLength", "id", "icon", "btnId", "fetchTrigger", "hideIcon", "depth", "style", "winWidth", "tabIndex", "data", "autoShowOptions", "fetchNoneInfo", "fetchUpdate", "fetchFuncAsync", "fetchFuncMethod", "fetchFuncMethodParams", "fetchCallback", "onClick", "onFetch", "onChange", "onKeyboardInput", "onBlur", "onPressEnter"];
 function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
 function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
 function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter); }
@@ -1054,6 +1059,7 @@ var LiveSearch = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_re
     onChange = props.onChange,
     onKeyboardInput = props.onKeyboardInput,
     onBlur = props.onBlur,
+    _onPressEnter = props.onPressEnter,
     attributes = _objectWithoutProperties(props, _excluded);
   var DEPTH = depth || 1055; // the default value same as bootstrap
   var POS_OFFSET = 0;
@@ -1775,6 +1781,9 @@ var LiveSearch = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_re
     isSearchInput: isSearchInput,
     onKeyPressedCallback: function onKeyPressedCallback(e) {
       onKeyboardInput === null || onKeyboardInput === void 0 ? void 0 : onKeyboardInput(e, inputRef.current, listRef.current);
+    },
+    onPressEnter: function onPressEnter(event, onComposition) {
+      _onPressEnter === null || _onPressEnter === void 0 ? void 0 : _onPressEnter(event, onComposition);
     }
   }, attributes)), orginalData && !hasErr ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((cjs_default()), {
     show: true,

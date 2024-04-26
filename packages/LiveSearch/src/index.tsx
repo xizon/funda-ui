@@ -1,4 +1,4 @@
-import React, { forwardRef, useId, useEffect, useState, useRef, useImperativeHandle } from 'react';
+import React, { forwardRef, useId, useEffect, useState, useRef, KeyboardEvent, useImperativeHandle } from 'react';
 
 import { debounce } from './utils/performance';
 import useDebounce from './utils/useDebounce';
@@ -70,6 +70,7 @@ type LiveSearchProps = {
     onChange?: (inputEl: any, data: any, selectedData: any, popupEl: any) => void;
     onKeyboardInput?: (e: any, inputEl: any, popupEl: any) => void;
     onBlur?: (inputEl: any, popupEl: any) => void;
+    onPressEnter?: (inputEl: any, popupEl: any) => void;
 };
 
 const LiveSearch = forwardRef((props: LiveSearchProps, ref: any) => {
@@ -119,6 +120,7 @@ const LiveSearch = forwardRef((props: LiveSearchProps, ref: any) => {
         onChange,
         onKeyboardInput,
         onBlur,
+        onPressEnter,
         ...attributes
     } = props;
 
@@ -849,8 +851,11 @@ const LiveSearch = forwardRef((props: LiveSearchProps, ref: any) => {
                     btnId={btnId}
                     autoComplete='off'
                     isSearchInput={isSearchInput}
-                    onKeyPressedCallback={(e: React.KeyboardEvent<any>) => {
+                    onKeyPressedCallback={(e: KeyboardEvent<any>) => {
                         onKeyboardInput?.(e, inputRef.current, listRef.current);
+                    }}
+                    onPressEnter={(event: any, onComposition: any) => {
+                        onPressEnter?.(event, onComposition);
                     }}
                     {...attributes}
                 />

@@ -38,6 +38,7 @@ declare type SearchBarProps = {
     onChange?: (e: any, param: any) => void;
     onBlur?: (e: any, param: any) => void;
     onFocus?: (e: any, param: any) => void;
+    onPressEnter?: (e: any, param: any) => void;
 };
 declare const SearchBar: React.ForwardRefExoticComponent<SearchBarProps & React.RefAttributes<unknown>>;
 export default SearchBar;

@@ -42,6 +42,7 @@ declare type DateProps = {
     onChange?: (e: any, data: any, isValidDate: boolean, allSplittingInputs: any[]) => void;
     onBlur?: (e: any, allSplittingInputs: any[]) => void;
     onFocus?: (e: any, allSplittingInputs: any[]) => void;
+    onPressEnter?: (e: any, allSplittingInputs: any[]) => void;
     onOpenPopup?: (allSplittingInputs: any[]) => void;
     onClosePopup?: (allSplittingInputs: any[]) => void;
     onChangeDate?: (currentData: any) => void;

@@ -1,4 +1,4 @@
-import React, { useId, useState, useEffect, useRef, forwardRef, ChangeEvent } from 'react';
+import React, { useId, useState, useEffect, useRef, forwardRef, ChangeEvent, FocusEvent } from 'react';
 
 declare module 'react' {
     interface ReactI18NextChildren<T> {
@@ -75,7 +75,7 @@ const ColorPicker = forwardRef((props: ColorPickerProps, ref: any) => {
 
 
 
-    function handleFocus(event: ChangeEvent<HTMLInputElement>) {
+    function handleFocus(event: FocusEvent<HTMLInputElement>) {
         rootRef.current?.classList.add('focus');
 
         //
@@ -99,7 +99,7 @@ const ColorPicker = forwardRef((props: ColorPickerProps, ref: any) => {
 
     }
 
-    function handleBlur(event: ChangeEvent<HTMLInputElement>) {
+    function handleBlur(event: FocusEvent<HTMLInputElement>) {
         const el = event.target;
         const val = event.target.value;
 

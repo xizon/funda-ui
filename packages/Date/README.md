@@ -63,6 +63,7 @@ import Date from 'funda-ui/Date';
 | `onChangeHours` | function  | - | Called when the date moves to hours. Triggered when the hours selection button is clicked. It returns only one value which is the current value (**JSON Object**) |
 | `onChangeMinutes` | function  | - | Called when the date moves to minutes. Triggered when the minutes selection button is clicked. It returns only one value which is the current value (**JSON Object**) |
 | `onChangeSeconds` | function  | - | Called when the date moves to seconds. Triggered when the seconds selection button is clicked. It returns only one value which is the current value (**JSON Object**) |
+| `onPressEnter` | function  | - | The callback function that is triggered when Enter key is pressed. It returns two callback values. <br /> <ol><li>The first is the control (**HTML Element**)</li><li>The last is the existing time-splitting inputs (**Array**)</li></ol> |
 
 
 

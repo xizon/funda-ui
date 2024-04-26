@@ -57,6 +57,7 @@ declare type LiveSearchProps = {
     onChange?: (inputEl: any, data: any, selectedData: any, popupEl: any) => void;
     onKeyboardInput?: (e: any, inputEl: any, popupEl: any) => void;
     onBlur?: (inputEl: any, popupEl: any) => void;
+    onPressEnter?: (inputEl: any, popupEl: any) => void;
 };
 declare const LiveSearch: React.ForwardRefExoticComponent<LiveSearchProps & React.RefAttributes<unknown>>;
 export default LiveSearch;

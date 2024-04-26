@@ -25,6 +25,9 @@ import TagInput from 'funda-ui/TagInput';
 | `onFocus` | function  | - | Call a function when an form field gets focus. It returns only one callback value which is the Control Event (**Event**) |
 
 
+> Note: Enter or space to add an element
+
+
 It accepts all props which this control support.
 
 

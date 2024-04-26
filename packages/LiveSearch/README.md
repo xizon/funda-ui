@@ -52,6 +52,7 @@ import LiveSearch from 'funda-ui/LiveSearch';
 | `onChange` | function  | - | Call a function when the value of an HTML element is changed. It returns four callback values. <br /> <ol><li>The first is the control (**HTML Element**)</li><li>The second is the fetched data(**Array**)</li><li>The third is the selected data (**JSON Object**)</li><li>The last is the pop-up element(**HTML Element**)</li></ol> |
 | `onBlur` | function  | - | Call a function when a user leaves an form field. It returns two callback values. <br /> <ol><li>The first is the control (**HTML Element**)</li><li>The last is the pop-up element(**HTML Element**)</li></ol> |
 | `onKeyboardInput` | function  | - | Call a function when the keyboard is pressed. It returns three callback values. <br /> <ol><li>The first is the Control Event (**KeyboardEvent**)</li><li>The second is the control (**HTML Element**)</li><li>The last is the pop-up element(**HTML Element**)</li></ol> |
+| `onPressEnter` | function  | - | The callback function that is triggered when Enter key is pressed. It returns two callback values. <br /> <ol><li>The first is the control (**HTML Element**)</li><li>The last is the pop-up element(**HTML Element**)</li></ol> |
 
 
 
