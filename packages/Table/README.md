@@ -957,7 +957,7 @@ const EditableCellInput = (props: any) => {
 }
 
 
-const EditableCellDate = (props: any) => {
+const EditableCellTime = (props: any) => {
 
     const {
         itemData,
@@ -1043,7 +1043,7 @@ function MemoTable(props: any) {
                         "headers": [
                             {"content": 'Id', "style": { minWidth: '150px', fontSize: '0.875em', position: 'sticky', top: '0', zIndex: 3, background: '#fff' }, "data": JSON.stringify({param1: 1, param2: 1}) },
                             {"content": 'Name', "style": { minWidth: '250px', fontSize: '0.875em', position: 'sticky', top: '0', zIndex: 3, background: '#fff' }, "data": JSON.stringify({param1: 2, param2: 2}) },
-                            {"content": 'Date', "style": { minWidth: '250px', fontSize: '0.875em', position: 'sticky', top: '0', zIndex: 3, background: '#fff' }, "data": JSON.stringify({param1: 2, param2: 2}) }
+                            {"content": 'Time', "style": { minWidth: '250px', fontSize: '0.875em', position: 'sticky', top: '0', zIndex: 3, background: '#fff' }, "data": JSON.stringify({param1: 2, param2: 2}) }
                         ],
                         "fields": data.map((item: any, i: number) => {
                             return [
@@ -1059,11 +1059,11 @@ function MemoTable(props: any) {
                                     />
                                 </>, "data": JSON.stringify(item) },
                                 { "cols": 1,  "data": JSON.stringify(item), "style": { minWidth: '55px', textAlign: 'center', height: '1.9rem' }, "content": <>
-                                        <EditableCellDate
+                                        <EditableCellTime
                                             uid={item.id}
                                             colIndex={i}
                                             itemData={item}
-                                            defaultValue={item.date}
+                                            defaultValue={item.time}
                                             onConfirm={(data: any, newtime: string) => {
                                                 console.log(data, newtime);
                                             }}
@@ -1091,9 +1091,9 @@ const Main = (props: any) => {
         
         // set a default request
         setTableData([
-            {id: "01", name: "David Lin", date: "2024-02-02 18:01:00"},
-            {id: "02", name: "Tom McFarlin", date: ""},
-            {id: "03", name: "Chris Ames", date: "2024-04-12 05:18:05"}
+            {id: "01", name: "David Lin", time: "2024-02-02 18:01:00"},
+            {id: "02", name: "Tom McFarlin", time: ""},
+            {id: "03", name: "Chris Ames", time: "2024-04-12 05:18:05"}
         ]);
 
     }, [otherdeps]); // The Main component will be re-rendered due to `otherdeps`
