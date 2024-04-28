@@ -2,8 +2,13 @@ import React, { useEffect, useRef, useCallback } from 'react';
 
 // HAS CHECKBOX
 
+import {
+    getNextSiblings, 
+    getPreviousSiblings, 
+    getParents, 
+    getChildren
+} from 'funda-utils';
 
-import { getNextSiblings, getPreviousSiblings, getParents, getChildren } from './utils/dom'; 
 
 import { initUlHeight } from './init-height';
 import { removeItemOnce, activeClass } from './tree-utils';

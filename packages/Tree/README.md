@@ -1221,7 +1221,7 @@ export default () => {
             return obj;
         }
     }
-    const flatOriginalData = (data: any[]) => {
+    const flatData = (data: any[]) => {
         const result: any[] = [];
         const iterate = (obj: any) => {
             if (!obj) {
@@ -1244,7 +1244,7 @@ export default () => {
     };
 
     useEffect(() => {
-        setFlatList(flatOriginalData(deepClone(treeData)));
+        setFlatList(flatData(deepClone(treeData)));
     }, []);
 
 

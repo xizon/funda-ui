@@ -1,10 +1,13 @@
 import React, { useEffect, useState, useRef, useId } from 'react';
 
 import RootPortal from 'funda-root-portal';
+import {
+    useClickOutside,
+    getAbsolutePositionOfStage
+} from 'funda-utils';
 
 import Option from './Option';
 
-import { getAbsolutePositionOfStage } from './utils/get-element-property';
 
 
 type OptionChangeFnType = (arg1: any, arg2: any) => void;
@@ -94,6 +97,20 @@ const DropdownMenu = (props: DropdownMenuProps) => {
     });
 
 
+
+    // click outside
+    useClickOutside({
+        enabled: true,
+        isOutside: (event: any) => {
+            return event.target.closest(`.dd-menu__wrapper`) === null && event.target.closest(`.dd-menu-list__wrapper`) === null;
+        },
+        handle: (event: any) => {
+            setIsOpen(false);
+            popwinPosHide();
+        }
+    });
+
+    
     function handleClick(event: React.MouseEvent) {
         if (hoverOn) return;
         
@@ -123,14 +140,6 @@ const DropdownMenu = (props: DropdownMenuProps) => {
     }
 
 
-
-    function handleClose(event: any) {
-        if (event.target.closest(`.dd-menu__wrapper`) === null && event.target.closest(`.dd-menu-list__wrapper`) === null) {
-            setIsOpen(false);
-            popwinPosHide();
-        }
-    }
-    
 
     function handleSelect(value: any, option: any) {
 
@@ -255,22 +264,7 @@ const DropdownMenu = (props: DropdownMenuProps) => {
 
     }
 
-    
 
-    useEffect(() => {
-
-
-        document.removeEventListener('pointerdown', handleClose);
-        document.addEventListener('pointerdown', handleClose);
-        document.addEventListener('touchstart', handleClose);
-        
-
-        return () => {
-            document.removeEventListener('pointerdown', handleClose);
-        }
-
-    }, [options]);
-    
 
     return (
         <>

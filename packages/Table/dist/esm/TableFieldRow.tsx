@@ -2,7 +2,11 @@ import React, { useRef, useState, useImperativeHandle } from 'react';
 
 // HAS CHECKBOX
 
-import { getChildren } from './utils/dom';
+import {
+    getChildren
+} from 'funda-utils';
+
+
 import { removeItemOnce, formatCheckboxControlVal, setCheckboxCheckedData, formatRowControlVal, getAllCheckboxInput } from './table-utils';
 
 

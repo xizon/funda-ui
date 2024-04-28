@@ -1,13 +1,15 @@
 import React, { useId, useState, useEffect, useRef, forwardRef } from 'react';
 
+
 import {
+    isJSON,
     addTreeDepth,
-    addTreeIndent
-} from './utils/tree';
+    addTreeIndent,
+    extractContentsOfBrackets,
+    convertArrToValByBrackets
+} from 'funda-utils';
 
 
-import { extractContentsOfBrackets } from './utils/extract';
-import { convertArrToValByBrackets } from './utils/convert';
 
 interface OptionConfig {
     [propName: string]: string | number | boolean;
@@ -183,42 +185,6 @@ const MultipleSelect = forwardRef((props: MultipleSelectProps, ref: any) => {
 
     }
 
-    // Determine whether it is in JSON format
-    function isJSON(str: any) {
-
-        if (typeof (str) === 'string' && str.length > 0) {
-
-            if (str.replace(/\"\"/g, '').replace(/\,/g, '') == '[{}]') {
-                return false;
-            } else {
-
-                if (/^[\],:{}\s]*$/.test(str.replace(/\\["\\\/bfnrtu]/g, '@').
-                    replace(/"[^"\\\n\r]*"|true|false|null|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?/g, ']').
-                    replace(/(?:^|:|,)(?:\s*\[)+/g, ''))) {
-
-                    return true;
-
-                } else {
-                    return false;
-                }
-
-            }
-
-        } else {
-
-            if (
-                typeof (str) === 'object' &&
-                Object.prototype.toString.call(str) === '[object Object]' &&
-                !str.length
-            ) {
-                return true;
-            } else {
-                return false;
-            }
-
-        }
-
-    }
 
 
     function initDefaultValue(defaultValue: any, options: any[]) {

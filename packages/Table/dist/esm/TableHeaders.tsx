@@ -3,9 +3,10 @@ import React from 'react';
 
 // HAS CHECKBOX
 
+import {
+    getChildren
+} from 'funda-utils';
 
-
-import { getChildren } from './utils/dom';
 import { formatCheckboxControlVal, setCheckboxCheckedData, getAllCheckboxInput } from './table-utils';
 
 /* Table Headers

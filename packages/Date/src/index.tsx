@@ -2,22 +2,10 @@ import React, { useId, useState, useRef, useEffect, forwardRef, ChangeEvent, Foc
 
 import Input from 'funda-input';
 import RootPortal from 'funda-root-portal';
-
-
-import Calendar from './Calendar';
-
-
-import { getAbsolutePositionOfStage } from './utils/get-element-property';
-
-
-// Localization
-import i18n__en_US from './localization/en_US';
-import i18n__zh_CN from './localization/zh_CN';
-
-
-import { debounce } from './utils/performance';
-
-import { 
+import {
+    useWindowScroll,
+    useClickOutside,
+    getAbsolutePositionOfStage,
     padZero,
     dateFormat,
     getNow,
@@ -32,7 +20,18 @@ import {
     getCurrentMonth,
     getCurrentDay,
     getLastDayInMonth
- } from './utils/date';
+} from 'funda-utils';
+
+
+import Calendar from './Calendar';
+
+
+
+// Localization
+import i18n__en_US from './localization/en_US';
+import i18n__zh_CN from './localization/zh_CN';
+
+
 
 
 
@@ -322,8 +321,37 @@ const Date = forwardRef((props: DateProps, ref: any) => {
         [contentRef],
     );
 
-    
-    const windowScrollUpdate = debounce(handleScrollEvent, 50);
+
+    // click outside
+    useClickOutside({
+        enabled: true,
+        isOutside: (event: any) => {
+            return event.target.closest(`.date2d__wrapper`) === null && event.target.closest(`.date2d-cal__wrapper`) === null;
+        },
+        handle: (event: any) => {
+            popwinPosHide();
+            
+            //remove focus style
+            rootRef.current?.classList.remove('focus');
+
+            // move out the popup window
+            if (popupBlurEnabled.current) {
+                onBlur?.(inputRef.current, getAllSplittingInputs());
+                popupBlurEnabled.current = false;
+            }
+        }
+    });
+
+
+
+    // Add function to the element that should be used as the scrollable area.
+    // const [scrollData, windowScrollUpdate] = useWindowScroll({
+    //     performance: ['debounce', 50],   // "['debounce', 500]" or "['throttle', 500]"
+    //     handle: (scrollData: any) => {
+    //         popwinPosHide();
+    //     }
+    // });
+
 
     const eventFire = (el: any, etype: string) => {
         if (el.fireEvent) {
@@ -421,9 +449,6 @@ const Date = forwardRef((props: DateProps, ref: any) => {
         
     };
 
-    function handleScrollEvent() {
-        popwinPosHide();
-    }
 
 
     function popwinPosInit() {
@@ -516,24 +541,6 @@ const Date = forwardRef((props: DateProps, ref: any) => {
 
     }
 
-    function handleClickOutside(event: any) {
-        if (event.target.closest(`.date2d__wrapper`) === null && event.target.closest(`.date2d-cal__wrapper`) === null) {
-            popwinPosHide();
-            
-            //remove focus style
-            rootRef.current?.classList.remove('focus');
-
-            // move out the popup window
-            if (popupBlurEnabled.current) {
-                onBlur?.(inputRef.current, getAllSplittingInputs());
-                popupBlurEnabled.current = false;
-            }
-            
-            
-
-        }
-
-    }
 
 
     function handleShow() {
@@ -846,29 +853,6 @@ const Date = forwardRef((props: DateProps, ref: any) => {
         const [a, b] = initValue(curTargetVal);
         onLoad?.(a, getFullTimeData(b), getAllSplittingInputs());
 
-
-        //--------------
-        document.removeEventListener('pointerdown', handleClickOutside);
-        document.addEventListener('pointerdown', handleClickOutside);
-        document.addEventListener('touchstart', handleClickOutside);
-
-
-        // // Add function to the element that should be used as the scrollable area.
-        // //--------------
-        // window.removeEventListener('scroll', windowScrollUpdate);
-        // window.removeEventListener('touchmove', windowScrollUpdate);
-        // window.addEventListener('scroll', windowScrollUpdate);
-        // window.addEventListener('touchmove', windowScrollUpdate);
-        // windowScrollUpdate();
-
-
-        return () => {
-            document.removeEventListener('pointerdown', handleClickOutside);
-
-            // window.removeEventListener('scroll', windowScrollUpdate);
-            // window.removeEventListener('touchmove', windowScrollUpdate);
-
-        }
 
     }, [value]);
 

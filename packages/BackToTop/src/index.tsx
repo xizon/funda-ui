@@ -1,12 +1,15 @@
 import React, { useEffect, useState, useRef } from 'react';
 
-import { throttle } from './utils/performance';
+
 import {
+    useWindowScroll,
     easeLinear,
     easeInQuad,
     easeOutQuad,
     easeInOutQuad
-} from './utils/easing';
+} from 'funda-utils';
+
+
 
 
 // Adapt the easing parameters of TweenMax
@@ -41,18 +44,22 @@ const BackToTop = (props: BackToTopProps) => {
 
     const btnRef = useRef<any>(null);
     const [isAtRange, setIsAtRange] = useState<boolean>(false);
-    const windowScrollUpdate = throttle(handleScrollEvent, 5);
 
 
-    function handleScrollEvent() {
-        const scrollTop = window.pageYOffset;
+    // Add function to the element that should be used as the scrollable area.
+    const [scrollData, windowScrollUpdate] = useWindowScroll({
+        performance: ['throttle', 5],   // "['debounce', 500]" or "['throttle', 500]"
+        handle: (scrollData: any) => {
+            const scrollTop = scrollData.y;
 
-        if (scrollTop < window.innerHeight / 2) {
-            setIsAtRange(false);
-        } else {
-            setIsAtRange(true);
+            if (scrollTop < window.innerHeight / 2) {
+                setIsAtRange(false);
+            } else {
+                setIsAtRange(true);
+            }
         }
-    }
+    });
+
 
 
     function moveToTop() {
@@ -127,14 +134,6 @@ const BackToTop = (props: BackToTopProps) => {
         //Hide other pages button of back-to-top
         btnRef.current?.classList.remove('active');
 
-        
-        // Add function to the element that should be used as the scrollable area.
-        window.removeEventListener('scroll', windowScrollUpdate);
-        window.removeEventListener('touchmove', windowScrollUpdate);
-        window.addEventListener('scroll', windowScrollUpdate);
-        window.addEventListener('touchmove', windowScrollUpdate);
-        windowScrollUpdate();
-
 
         //
         btnRef.current?.removeEventListener('pointerdown', handleClick);
@@ -143,8 +142,6 @@ const BackToTop = (props: BackToTopProps) => {
 
         return () => {
             btnRef.current?.removeEventListener('pointerdown', handleClick);
-            window.removeEventListener('scroll', windowScrollUpdate);
-            window.removeEventListener('touchmove', windowScrollUpdate);
 
             //Hide other pages button of back-to-top
             btnRef.current?.classList.remove('active');

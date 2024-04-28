@@ -1,23 +1,19 @@
 import React, { useId, useEffect, useState, useRef, useImperativeHandle } from 'react';
 
 import RootPortal from 'funda-root-portal';
-
-
-
-import { debounce } from './utils/performance';
-
-import Group from './Group';
-
-import { extractContentsOfBraces, extractContentsOfBrackets } from './utils/extract';
-import { convertArrToValByBraces } from './utils/convert';
-
-import { getAbsolutePositionOfStage } from './utils/get-element-property';
-
-
 import {
+    useWindowScroll,
+    useClickOutside,
+    extractContentsOfBraces,
+    extractContentsOfBrackets,
+    convertArrToValByBraces,
+    getAbsolutePositionOfStage,
     addTreeDepth,
     addTreeIndent
-} from './utils/tree';
+} from 'funda-utils';
+
+
+import Group from './Group';
 
 
 
@@ -162,6 +158,39 @@ const CascadingSelectE2E = (props: CascadingSelectE2EProps) => {
         [popupRef],
     );
 
+    
+
+
+    // click outside
+    useClickOutside({
+        enabled: true,
+        isOutside: (event: any) => {
+
+            // svg element
+            if (typeof event.target.className === 'object') return false;
+
+
+            return event.target.className != '' && (
+                event.target.className.indexOf('cas-select-e2e__wrapper') < 0 &&
+                event.target.className.indexOf('form-control') < 0 &&
+                event.target.className.indexOf('cas-select-e2e__trigger') < 0 &&
+                event.target.className.indexOf('cas-select-e2e__items-wrapper') < 0 &&
+                event.target.className.indexOf('cas-select-e2e__opt') < 0
+            );
+        },
+        handle: (event: any) => {
+            cancel();
+        }
+    });
+
+
+    // Add function to the element that should be used as the scrollable area.
+    const [scrollData, windowScrollUpdate] = useWindowScroll({
+        performance: ['debounce', 500],   // "['debounce', 500]" or "['throttle', 500]"
+        handle: (scrollData: any) => {
+            popwinPosInit(false);
+        }
+    });
 
 
     // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
@@ -188,8 +217,6 @@ const CascadingSelectE2E = (props: CascadingSelectE2EProps) => {
     const [hasErr, setHasErr] = useState<boolean>(false);
     const [firstDataFeched, setFirstDataFeched] = useState<boolean>(false);
     const [changedVal, setChangedVal] = useState<string>(value || '');
-    const windowScrollUpdate = debounce(handleScrollEvent, 500);
-
 
     //for variable 
     const listData = useRef<any[]>([]);
@@ -224,10 +251,6 @@ const CascadingSelectE2E = (props: CascadingSelectE2EProps) => {
         );
     }
 
-
-    function handleScrollEvent() {
-        popwinPosInit(false);
-    }
 
 
     function popwinPosInit(showAct: boolean = true) {
@@ -587,29 +610,6 @@ const CascadingSelectE2E = (props: CascadingSelectE2EProps) => {
     }
 
 
-
-    /**
-     * If clicked on outside of element
-     */
-    function handleClickOutside(event: any) {
-
-        // svg element
-        if (typeof event.target.className === 'object') return;
-
-        if (
-            event.target.className != '' && (
-                event.target.className.indexOf('cas-select-e2e__wrapper') < 0 &&
-                event.target.className.indexOf('form-control') < 0 &&
-                event.target.className.indexOf('cas-select-e2e__trigger') < 0 &&
-                event.target.className.indexOf('cas-select-e2e__items-wrapper') < 0 &&
-                event.target.className.indexOf('cas-select-e2e__opt') < 0
-            )
-        ) {
-
-            cancel();
-
-        }
-    }
 
     function handleDisplayOptions(event: any) {
         if (event) event.preventDefault();
@@ -1309,27 +1309,6 @@ const CascadingSelectE2E = (props: CascadingSelectE2EProps) => {
         //--------------
         initDefaultValue(value);
 
-
-        //
-        //--------------
-        document.removeEventListener('pointerdown', handleClickOutside);
-        document.addEventListener('pointerdown', handleClickOutside);
-        document.addEventListener('touchstart', handleClickOutside);
-
-
-        // Add function to the element that should be used as the scrollable area.
-        //--------------
-        window.removeEventListener('scroll', windowScrollUpdate);
-        window.removeEventListener('touchmove', windowScrollUpdate);
-        window.addEventListener('scroll', windowScrollUpdate);
-        window.addEventListener('touchmove', windowScrollUpdate);
-        windowScrollUpdate();
-
-        return () => {
-            document.removeEventListener('pointerdown', handleClickOutside);
-            window.removeEventListener('scroll', windowScrollUpdate);
-            window.removeEventListener('touchmove', windowScrollUpdate);
-        }
 
 
     }, [value]);

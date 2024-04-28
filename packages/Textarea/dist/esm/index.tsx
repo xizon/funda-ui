@@ -1,7 +1,11 @@
 import React, { useId, useState, useEffect, useRef, forwardRef, KeyboardEvent, useImperativeHandle } from 'react';
 
 
-import useAutosizeTextArea from './utils/useAutosizeTextArea';
+
+import {
+    useAutosizeTextArea
+} from 'funda-utils';
+
 
 declare module 'react' {
     interface ReactI18NextChildren<T> {

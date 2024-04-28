@@ -1,12 +1,16 @@
 import React, { forwardRef, useId, useEffect, useState, useRef, KeyboardEvent, useImperativeHandle } from 'react';
 
-import { debounce } from './utils/performance';
-import useDebounce from './utils/useDebounce';
-
-import { getAbsolutePositionOfStage } from './utils/get-element-property';
 
 import RootPortal from 'funda-root-portal';
 import SearchBar from 'funda-searchbar';
+import {
+    isJSON,
+    useWindowScroll,
+    useClickOutside,
+    useDebounce,
+    useKeyPress,
+    getAbsolutePositionOfStage
+} from 'funda-utils';
 
 
 
@@ -137,7 +141,6 @@ const LiveSearch = forwardRef((props: LiveSearchProps, ref: any) => {
     const listRef = useRef<any>(null);
     const listContentRef = useRef<any>(null);
     const optionsRes = options ? (isJSON(options) ? JSON.parse(options as string) : options) : [];
-    const windowScrollUpdate = debounce(handleScrollEvent, 500);
 
     // return a array of options
     let staticOptionsData: OptionConfig[] = optionsRes;
@@ -150,6 +153,61 @@ const LiveSearch = forwardRef((props: LiveSearchProps, ref: any) => {
     const [isOpen, setIsOpen] = useState<boolean>(false);
     const [hasErr, setHasErr] = useState<boolean>(false);
     const [componentFirstLoad, setComponentFirstLoad] = useState<boolean>(false);
+
+    // key
+    const multiplePressed = useKeyPress({
+        keyCode: ['ArrowUp', 'ArrowDown', 'Enter', 'NumpadEnter'],
+        handleUp: (key: any, event: any) => { },
+        handleDown: async (key: any, event: any) => {
+            let res: any = null;
+            
+            if (key === 'Enter' || key === 'NumpadEnter') {
+                event.preventDefault();
+             
+                // Determine the "active" class name to avoid listening to other unused components of the same type
+                if (listRef.current === null || !rootRef.current.classList.contains('active')) return;
+
+
+                if (listRef.current !== null) {
+                    const currentData = listRef.current.dataset.data;
+
+                    if (typeof currentData !== 'undefined') {
+                        handleSelect(null, currentData);
+
+                        //
+                        const options = [].slice.call(listRef.current.querySelectorAll('.list-group-item:not(.no-match)'));
+                        options.forEach((node: any) => {
+                            node.classList.remove('active');
+                        });
+
+
+                        //
+                        onChange?.(inputRef.current, options.map((node: HTMLElement) => JSON.parse(node.dataset.itemdata as any)), JSON.parse(currentData), listRef.current);
+
+                    }
+                }
+
+            }
+
+            if (key === 'ArrowUp') {
+                res = await optionFocus('decrease');
+
+            }
+
+            if (key === 'ArrowDown') {
+                res = await optionFocus('increase');
+            }
+
+            // temporary data
+            if (res !== null) listRef.current.dataset.data = JSON.stringify({
+                value: res.dataset.value,
+                label: res.dataset.label,
+                queryString: res.dataset.querystring
+            });
+
+        }
+    });
+
 
 
     //performance
@@ -171,42 +229,30 @@ const LiveSearch = forwardRef((props: LiveSearchProps, ref: any) => {
     );
 
 
-    // Determine whether it is in JSON format
-    function isJSON(str: any) {
 
-        if (typeof (str) === 'string' && str.length > 0) {
-
-            if (str.replace(/\"\"/g, '').replace(/\,/g, '') == '[{}]') {
-                return false;
-            } else {
-
-                if (/^[\],:{}\s]*$/.test(str.replace(/\\["\\\/bfnrtu]/g, '@').
-                    replace(/"[^"\\\n\r]*"|true|false|null|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?/g, ']').
-                    replace(/(?:^|:|,)(?:\s*\[)+/g, ''))) {
-
-                    return true;
-
-                } else {
-                    return false;
-                }
-
-            }
-
-        } else {
-
-            if (
-                typeof (str) === 'object' &&
-                Object.prototype.toString.call(str) === '[object Object]' &&
-                !str.length
-            ) {
-                return true;
-            } else {
-                return false;
-            }
-
+    // click outside
+    useClickOutside({
+        enabled: true,
+        isOutside: (event: any) => {
+            return event.target.closest(`.livesearch__wrapper`) === null && event.target.closest(`.livesearch__options-wrapper`) === null;
+        },
+        handle: (event: any) => {
+            // cancel
+            setIsOpen(false);
+            cancel();
         }
+    });
 
-    }
+
+    // Add function to the element that should be used as the scrollable area.
+    const [scrollData, windowScrollUpdate] = useWindowScroll({
+        performance: ['debounce', 500],   // "['debounce', 500]" or "['throttle', 500]"
+        handle: (scrollData: any) => {
+            popwinPosInit(false);
+        }
+    });
+
+
 
     /**
      * Check if an element is in the viewport
@@ -224,9 +270,6 @@ const LiveSearch = forwardRef((props: LiveSearchProps, ref: any) => {
     }
 
 
-    function handleScrollEvent() {
-        popwinPosInit(false);
-    }
 
 
 
@@ -626,14 +669,6 @@ const LiveSearch = forwardRef((props: LiveSearchProps, ref: any) => {
         setIsOpen(false);
     }
 
-    function handleClose(event: any) {
-
-        if (event.target.closest(`.livesearch__wrapper`) === null && event.target.closest(`.livesearch__options-wrapper`) === null) {
-            // cancel
-            setIsOpen(false);
-            cancel();
-        }
-    }
 
 
     function optionFocus(type: string) {
@@ -708,99 +743,6 @@ const LiveSearch = forwardRef((props: LiveSearchProps, ref: any) => {
         }
 
 
-
-        // keyboard listener
-        //--------------
-        const listener = async (event: any) => {
-
-
-            let res: any = null;
-
-            if (event.code === "Enter" || event.code === "NumpadEnter") {
-
-                // Determine the "active" class name to avoid listening to other unused components of the same type
-                if (listRef.current === null || !rootRef.current.classList.contains('active')) return;
-
-
-                if (listRef.current !== null) {
-                    const currentData = listRef.current.dataset.data;
-
-                    if (typeof currentData !== 'undefined') {
-                        handleSelect(null, currentData);
-
-                        //
-                        const options = [].slice.call(listRef.current.querySelectorAll('.list-group-item:not(.no-match)'));
-                        options.forEach((node: any) => {
-                            node.classList.remove('active');
-                        });
-
-
-                        //
-                        onChange?.(inputRef.current, options.map((node: HTMLElement) => JSON.parse(node.dataset.itemdata as any)), JSON.parse(currentData), listRef.current);
-
-                    }
-                }
-
-                return;
-            }
-
-            switch (event.code) {
-                case "ArrowLeft":
-                    // Left pressed
-                    break;
-                case "ArrowRight":
-                    // Right pressed
-                    break;
-                case "ArrowUp":
-                    // Up pressed
-                    res = await optionFocus('decrease');
-                    break;
-                case "ArrowDown":
-                    // Down pressed
-                    res = await optionFocus('increase');
-                    break;
-            }
-
-            // temporary data
-            if (res !== null) listRef.current.dataset.data = JSON.stringify({
-                value: res.dataset.value,
-                label: res.dataset.label,
-                queryString: res.dataset.querystring
-            });
-
-
-        };
-
-        document.removeEventListener("keydown", listener);
-        document.addEventListener("keydown", listener);
-
-        //--------------
-        document.removeEventListener('pointerdown', handleClose);
-        document.addEventListener('pointerdown', handleClose);
-        document.addEventListener('touchstart', handleClose);
-
-
-        // Add function to the element that should be used as the scrollable area.
-        //--------------
-        window.removeEventListener('scroll', windowScrollUpdate);
-        window.removeEventListener('touchmove', windowScrollUpdate);
-        window.addEventListener('scroll', windowScrollUpdate);
-        window.addEventListener('touchmove', windowScrollUpdate);
-        windowScrollUpdate();
-
-
-
-
-        // Remove the global list of events, especially as scroll and interval.
-        //--------------
-        return () => {
-
-            document.removeEventListener("keydown", listener);
-            document.removeEventListener('pointerdown', handleClose);
-            window.removeEventListener('scroll', windowScrollUpdate);
-            window.removeEventListener('touchmove', windowScrollUpdate);
-
-        };
 
     }, [value, data]);
 

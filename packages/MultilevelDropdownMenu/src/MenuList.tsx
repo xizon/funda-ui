@@ -1,6 +1,10 @@
 import React, { useEffect, useRef } from 'react';
 
-import { getNextSiblings } from './utils/dom'; 
+import {
+    getNextSiblings
+} from 'funda-utils';
+
+
 
 /* Recursively nested components to traverse nodes
 -------------------------------------------------*/		

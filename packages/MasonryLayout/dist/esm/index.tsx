@@ -1,6 +1,9 @@
 import React, { useId, useState, useEffect, useRef, useCallback } from 'react';
 
-import { debounce } from './utils/performance';
+import {
+    debounce
+} from 'funda-utils';
+
 
 type MasonryLayoutProps = {
     columns?: number,

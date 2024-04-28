@@ -1,7 +1,10 @@
 import React, { useId, useEffect, useState, useRef, useCallback } from 'react';
 
+import {
+    debounce,
+    getChildren
+} from 'funda-utils';
 
-import { debounce } from './utils/performance';
 
 import TableRow from './TableRow';
 import TableHeaders from './TableHeaders';
@@ -9,7 +12,6 @@ import TableSummaries from './TableSummaries';
 import TableColgroup from './TableColgroup';
 
 
-import { getChildren } from './utils/dom';
 import { formatRowControlVal } from './table-utils';
 
 

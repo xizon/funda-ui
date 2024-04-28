@@ -1,4 +1,8 @@
-import { getChildren } from './utils/dom';
+
+import {
+    getChildren
+} from 'funda-utils';
+
 
 export const removeItemOnce = (arr: any[], key: string) => {
     return arr.filter((item: any) => {

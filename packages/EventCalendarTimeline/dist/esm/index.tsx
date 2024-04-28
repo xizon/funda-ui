@@ -2,9 +2,12 @@ import React, { useId, useState, useEffect, useMemo, useRef, useCallback } from 
 
 import RootPortal from 'funda-root-portal';
 import ModalDialog from 'funda-modaldialog';
+import {
+    useClickOutside,
+    getAbsolutePositionOfStage
+} from 'funda-utils';
 
 
-import { getAbsolutePositionOfStage } from './utils/get-element-property';
 
 
 interface EventsValueConfig {
@@ -191,6 +194,22 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
     const [isShowTableTooltip, setIsShowTableTooltip] = useState<boolean>(false);
     const [tableTooltipContent, setTableTooltipContent] = useState<any>(null);
     
+
+
+    // click outside
+    useClickOutside({
+        enabled: true,
+        isOutside: (event: any) => {
+            return true;
+        },
+        handle: (event: any) => {
+            hideTableTooltip();
+        }
+    });
+    
+
+
+
     const padZero = (num: number, padZeroEnabled: boolean = true) => {
         if (padZeroEnabled) {
             return num < 10 ? '0' + num : num.toString();
@@ -411,11 +430,6 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
     function hideTableTooltip() {
         setIsShowTableTooltip(false);
     }
-
-    function handleTableTooltipTouchStart(e: any) {
-        hideTableTooltip();
-    }
-
 
 
 
@@ -1388,17 +1402,10 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
         }
 
 
-
-        window.removeEventListener('touchstart', handleTableTooltipTouchStart);
-		window.addEventListener( 'touchstart', handleTableTooltipTouchStart);
-
         return () => {
 
             // table grid
             tableGridReset();
-            
-            // tooltip
-            window.removeEventListener('touchstart', handleTableTooltipTouchStart);
         }
 
     }, [eventsValue, customTodayDate]);

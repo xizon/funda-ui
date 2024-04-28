@@ -1,26 +1,25 @@
 import React, { useId, useEffect, useState, useRef, forwardRef, useImperativeHandle } from 'react';
 
 import RootPortal from 'funda-root-portal';
+import { 
+    isJSON,
+    useDebounce,
+    useClickOutside,
+    useKeyPress,
+    useWindowScroll,
+    extractContentsOfBrackets,
+    convertArrToValByBrackets,
+    getAbsolutePositionOfStage,
+    addTreeDepth,
+    addTreeIndent,
+} from 'funda-utils';
 
 
-import { debounce } from './utils/performance';
-import useDebounce from './utils/useDebounce';
-
-import { extractContentsOfBrackets } from './utils/extract';
-import { convertArrToValByBrackets } from './utils/convert';
-
-
-import { getAbsolutePositionOfStage } from './utils/get-element-property';
 
 
 //Destroys body scroll locking
 import { clearAllBodyScrollLocks, disableBodyScroll, enableBodyScroll } from './plugins/BSL';
 
-
-import {
-    addTreeDepth,
-    addTreeIndent
-} from './utils/tree';
 
 
 declare module 'react' {
@@ -192,10 +191,90 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
     const listRef = useRef<any>(null);
     const listContentRef = useRef<any>(null);
     const optionsRes = options ? (isJSON(options) ? JSON.parse(options as string) : options) : [];
-    const windowScrollUpdate = debounce(handleScrollEvent, 500);
+
+    // keyboard 
+    const multiplePressed = useKeyPress({
+        keyCode: ['ArrowUp', 'ArrowDown', 'Enter', 'NumpadEnter'],
+        handleUp: (key: any, event: any) => { },
+        handleDown: async (key: any, event: any) => {
+            let res: any = null;
+            
+            if (key === 'Enter' || key === 'NumpadEnter') {
+                event.preventDefault();
+                
+                // Determine the "active" class name to avoid listening to other unused components of the same type
+                if (listRef.current === null || !rootRef.current.classList.contains('active')) return;
+
+                // Avoid selecting options that are disabled
+                if (keyboardSelectedItem.current !== null && keyboardSelectedItem.current.classList.contains('disabled')) return;
+                
+                if (listRef.current !== null) {
+                    const currentData = await listRef.current.dataset.data;
+
+                
+                    if (typeof currentData !== 'undefined') {
+
+                        
+                        const currentControlValueArr: any[] = [];
+                        const currentControlLabelArr: any[] = [];
+
+                        const htmlOptions = [].slice.call(listRef.current.querySelectorAll('.list-group-item:not(.hide):not(.no-match)'));
+
+                        htmlOptions.forEach((node: any) => {
+                            node.classList.remove('active');
+            
+                            // multiple options
+                            if (node.classList.contains('item-selected')) {
+                                currentControlValueArr.push(node.dataset.value);
+                                currentControlLabelArr.push(node.dataset.label);
+                            }
+
+                        });
 
 
-    // keyboard
+                        handleSelect(null, currentData, currentControlValueArr, currentControlLabelArr);
+
+
+                        //
+                        if (typeof (onChange) === 'function') {
+
+                            onChange?.(
+                                selectInputRef.current,
+                                valueInputRef.current,
+                                !MULTI_SEL_VALID ? JSON.parse(currentData) : {
+                                    labels: currentControlLabelArr.map((v: any) => v.toString()),
+                                    values: currentControlValueArr.map((v: any) => v.toString()),
+                                    labelsOfString: VALUE_BY_BRACKETS ? convertArrToValByBrackets(currentControlLabelArr.map((v: any) => v.toString())) : currentControlLabelArr.map((v: any) => v.toString()).join(','),
+                                    valuesOfString: VALUE_BY_BRACKETS ? convertArrToValByBrackets(currentControlValueArr.map((v: any) => v.toString())) : currentControlValueArr.map((v: any) => v.toString()).join(',')
+                                }
+                            );
+
+
+
+                            //
+                            selectInputRef.current.blur();
+                        }
+
+                    }
+                }
+            }
+
+            if (key === 'ArrowUp') {
+                res = await optionFocus('decrease');
+
+            }
+
+            if (key === 'ArrowDown') {
+                res = await optionFocus('increase');
+            }
+
+            
+            // temporary data
+            if (res !== null) listRef.current.dataset.data = res.dataset.itemdata;
+
+        }
+    });
+
     const keyboardSelectedItem = useRef<any>(null);
 
 
@@ -286,6 +365,32 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
         }),
         [contentRef],
     );
+
+
+
+    // click outside
+    useClickOutside({
+        enabled: true,
+        isOutside: (event: any) => {
+            return event.target.closest(`.mf-select__wrapper`) === null && event.target.closest(`.mf-select__options-wrapper`) === null;
+        },
+        handle: (event: any) => {
+            // cancel
+            cancel();
+            if (MULTI_SEL_VALID) popwinPosHide();
+        }
+    });
+
+
+
+    // Add function to the element that should be used as the scrollable area.
+    const [scrollData, windowScrollUpdate] = useWindowScroll({
+        performance: ['debounce', 500],   // "['debounce', 500]" or "['throttle', 500]"
+        handle: (scrollData: any) => {
+            // remove data-* attibutes
+            popwinContainerHeightReset();
+        }
+    });
 
 
 
@@ -433,48 +538,6 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
         );
     }
 
-
-    function handleScrollEvent() {
-        // remove data-* attibutes
-        popwinContainerHeightReset();
-    }
-
-    // Determine whether it is in JSON format
-    function isJSON(str: any) {
-
-        if (typeof (str) === 'string' && str.length > 0) {
-
-            if (str.replace(/\"\"/g, '').replace(/\,/g, '') == '[{}]') {
-                return false;
-            } else {
-
-                if (/^[\],:{}\s]*$/.test(str.replace(/\\["\\\/bfnrtu]/g, '@').
-                    replace(/"[^"\\\n\r]*"|true|false|null|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?/g, ']').
-                    replace(/(?:^|:|,)(?:\s*\[)+/g, ''))) {
-
-                    return true;
-
-                } else {
-                    return false;
-                }
-
-            }
-
-        } else {
-
-            if (
-                typeof (str) === 'object' &&
-                Object.prototype.toString.call(str) === '[object Object]' &&
-                !str.length
-            ) {
-                return true;
-            } else {
-                return false;
-            }
-
-        }
-
-    }
 
 
     async function fetchData(params: any, inputDefaultValue: any, init: boolean = true) {
@@ -1688,19 +1751,6 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
     }
 
 
-    function handleClose(event: any) {
-
-        if (event.target.closest(`.mf-select__wrapper`) === null && event.target.closest(`.mf-select__options-wrapper`) === null) {
-            // cancel
-            cancel();
-
-            if (MULTI_SEL_VALID) popwinPosHide();
-
-        }
-
-    }
-
-
     function generateInputFocusStr() {
         return controlTempValue || controlTempValue === '' ? (controlTempValue.length === 0 ? '|' : controlTempValue) : (placeholder || '');
     }
@@ -1756,7 +1806,8 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
 
 
     useEffect(() => {
-        
+
+
 
         // Call a function when the component has been rendered completely
         //--------------
@@ -1775,129 +1826,8 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
         fetchData((_params).join(','), value);
 
 
-
-        // keyboard listener
-        //--------------
-        const listener = async (event: any) => {
-
-            let res: any = null;
-
-            if (event.code === "Enter" || event.code === "NumpadEnter") {
-
-                // Determine the "active" class name to avoid listening to other unused components of the same type
-                if (listRef.current === null || !rootRef.current.classList.contains('active')) return;
-
-                // Avoid selecting options that are disabled
-                if (keyboardSelectedItem.current !== null && keyboardSelectedItem.current.classList.contains('disabled')) return;
-               
-
-                if (listRef.current !== null) {
-                    const currentData = await listRef.current.dataset.data;
-                    if (typeof currentData !== 'undefined') {
-
-                     
-                        const currentControlValueArr: any[] = [];
-                        const currentControlLabelArr: any[] = [];
-
-                        const htmlOptions = [].slice.call(listRef.current.querySelectorAll('.list-group-item:not(.hide):not(.no-match)'));
-
-                        htmlOptions.forEach((node: any) => {
-                            node.classList.remove('active');
-          
-                            // multiple options
-                            if (node.classList.contains('item-selected')) {
-                                currentControlValueArr.push(node.dataset.value);
-                                currentControlLabelArr.push(node.dataset.label);
-                            }
-
-                        });
-
-                        handleSelect(null, currentData, currentControlValueArr, currentControlLabelArr);
-
-
-                        //
-                        if (typeof (onChange) === 'function') {
-
-                            onChange?.(
-                                selectInputRef.current,
-                                valueInputRef.current,
-                                !MULTI_SEL_VALID ? JSON.parse(currentData) : {
-                                    labels: currentControlLabelArr.map((v: any) => v.toString()),
-                                    values: currentControlValueArr.map((v: any) => v.toString()),
-                                    labelsOfString: VALUE_BY_BRACKETS ? convertArrToValByBrackets(currentControlLabelArr.map((v: any) => v.toString())) : currentControlLabelArr.map((v: any) => v.toString()).join(','),
-                                    valuesOfString: VALUE_BY_BRACKETS ? convertArrToValByBrackets(currentControlValueArr.map((v: any) => v.toString())) : currentControlValueArr.map((v: any) => v.toString()).join(',')
-                                }
-                            );
-
-
-
-                            //
-                            selectInputRef.current.blur();
-                        }
-
-
-
-                    }
-                }
-
-                return;
-            }
-
-
-            switch (event.code) {
-                case "ArrowLeft":
-                    // Left pressed
-                    break;
-                case "ArrowRight":
-                    // Right pressed
-                    break;
-                case "ArrowUp":
-                    // Up pressed
-                    res = await optionFocus('decrease');
-                    break;
-                case "ArrowDown":
-                    // Down pressed
-                    res = await optionFocus('increase');
-                    break;
-            }
-
-            // temporary data
-            if (res !== null) listRef.current.dataset.data = res.dataset.itemdata;
-
-
-
-        };
-
-        document.removeEventListener("keydown", listener);
-        document.addEventListener("keydown", listener);
-
-
-
-        //--------------
-        document.removeEventListener('pointerdown', handleClose);
-        document.addEventListener('pointerdown', handleClose);
-        document.addEventListener('touchstart', handleClose);
-
-        // Add function to the element that should be used as the scrollable area.
-        //--------------
-        window.removeEventListener('scroll', windowScrollUpdate);
-        window.removeEventListener('touchmove', windowScrollUpdate);
-        window.addEventListener('scroll', windowScrollUpdate);
-        window.addEventListener('touchmove', windowScrollUpdate);
-        // windowScrollUpdate();
-
-
-
-         
         return () => {
-
             if (LOCK_BODY_SCROLL) clearAllBodyScrollLocks();
-
-            document.removeEventListener("keydown", listener);
-            document.removeEventListener('pointerdown', handleClose);
-            window.removeEventListener('scroll', windowScrollUpdate);
-            window.removeEventListener('touchmove', windowScrollUpdate);
-
         }
 
     }, [value, options, data]);

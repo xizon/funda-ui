@@ -1,6 +1,9 @@
 import React, { useId, useState, useEffect, useRef, useCallback } from 'react';
 
-import { throttle } from './utils/performance';
+import {
+    throttle
+} from 'funda-utils';
+
 
 type ScrollbarProps = {
     onlyVerticle?: boolean;

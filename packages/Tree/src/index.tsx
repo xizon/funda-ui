@@ -1,9 +1,15 @@
 import React, { useState, useEffect, useRef, useId } from 'react';
 
+import {
+    deepClone,
+    flatData
+} from 'funda-utils';
+
+
 import TreeList from './TreeList';
 import { initUlHeight, initAsyncItems } from './init-height';
 
-import {deepClone, flatOriginalData} from './tree-utils';
+
 
 declare module 'react' {
     interface ReactI18NextChildren<T> {
@@ -258,7 +264,7 @@ const Tree = (props: TreeProps) => {
 
             // update retrive list
             const _clone: any = deepClone(data);
-            setFlatList(flatOriginalData(_clone));
+            setFlatList(flatData(_clone));
 
             return;
         }
@@ -303,7 +309,7 @@ const Tree = (props: TreeProps) => {
 
                     // update retrive list
                     const _clone: any = deepClone(_newData);
-                    setFlatList(flatOriginalData(_clone));
+                    setFlatList(flatData(_clone));
                     
 
                 }

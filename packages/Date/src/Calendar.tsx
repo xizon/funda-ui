@@ -1,11 +1,13 @@
 import React, { useState, useEffect, useMemo } from 'react';
 
-import { 
+
+ import {
     padZero,
     dateFormat,
     isValidDate,
     getTodayDate
- } from './utils/date';
+} from 'funda-utils';
+
 
 
 interface EventsValueConfig {

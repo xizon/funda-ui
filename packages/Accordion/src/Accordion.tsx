@@ -2,7 +2,8 @@ import React, { useState, useRef } from 'react';
 
 import Item from './AccordionItem';
 
-import animateStyles from './utils/anim';
+import {animateStyles} from 'funda-utils';
+
 
 
 // Adapt the easing parameters of TweenMax

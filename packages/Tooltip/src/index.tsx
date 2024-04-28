@@ -1,10 +1,10 @@
 import React, { useId, useState, useRef, useEffect } from 'react';
 
 import RootPortal from 'funda-root-portal';
-
-
-import { getAbsolutePositionOfStage } from './utils/get-element-property';
-
+import {
+    useClickOutside,
+    getAbsolutePositionOfStage
+} from 'funda-utils';
 
 type TooltipProps = {
     wrapperClassName?: string;
@@ -85,6 +85,19 @@ const Tooltip = (props: TooltipProps) => {
         x: 0,
         y: 0
     }); 
+
+
+
+    // click outside
+    useClickOutside({
+        enabled: true,
+        isOutside: (event: any) => {
+            return true;
+        },
+        handle: (event: any) => {
+            hideTip();
+        }
+    });
 
 
     //timer hover
@@ -204,22 +217,11 @@ const Tooltip = (props: TooltipProps) => {
        setIsShow(false);
     }
 
-    function handleTouchStart(e: any) {
-        hideTip();
-    }
-
 
     useEffect(() => {
-
-    
-        window.removeEventListener('touchstart', handleTouchStart);
-		window.addEventListener( 'touchstart', handleTouchStart);
-
         return () => {
             stopTimerHover();
             stopTimerMouseout();
-            window.removeEventListener('touchstart', handleTouchStart);
-
         };
     }, []);
 

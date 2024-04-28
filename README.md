@@ -156,6 +156,18 @@ $ npm run build:lib
 $ npm run build:publish
 ```
   
+  
+> **(Optional) Update Utils**
+> 
+> ```sh
+> $ npx lerna run build --scope=funda-utils
+> $ npm i
+> $ npx lerna run build
+> ```
+> 
+
+
+
 > **(Optional) Manually generate `.d.ts` files, you can execute**
 > 
 > ```sh

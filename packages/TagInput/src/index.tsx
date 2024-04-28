@@ -1,7 +1,11 @@
 import React, { useId, useState, useEffect, useRef, forwardRef, ChangeEvent, MouseEvent, KeyboardEvent, FocusEvent, CompositionEvent } from 'react';
 
-import { extractContentsOfBrackets } from './utils/extract';
-import { convertArrToValByBrackets } from './utils/convert';
+
+import {
+    extractContentsOfBrackets,
+    convertArrToValByBrackets
+} from 'funda-utils';
+
 
 declare module 'react' {
     interface ReactI18NextChildren<T> {
