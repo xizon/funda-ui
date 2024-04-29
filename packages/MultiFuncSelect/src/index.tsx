@@ -15,8 +15,6 @@ import {
 } from 'funda-utils';
 
 
-
-
 //Destroys body scroll locking
 import { clearAllBodyScrollLocks, disableBodyScroll, enableBodyScroll } from './plugins/BSL';
 
@@ -192,89 +190,6 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
     const listContentRef = useRef<any>(null);
     const optionsRes = options ? (isJSON(options) ? JSON.parse(options as string) : options) : [];
 
-    // keyboard 
-    const multiplePressed = useKeyPress({
-        keyCode: ['ArrowUp', 'ArrowDown', 'Enter', 'NumpadEnter'],
-        handleUp: (key: any, event: any) => { },
-        handleDown: async (key: any, event: any) => {
-            let res: any = null;
-            
-            if (key === 'Enter' || key === 'NumpadEnter') {
-                event.preventDefault();
-                
-                // Determine the "active" class name to avoid listening to other unused components of the same type
-                if (listRef.current === null || !rootRef.current.classList.contains('active')) return;
-
-                // Avoid selecting options that are disabled
-                if (keyboardSelectedItem.current !== null && keyboardSelectedItem.current.classList.contains('disabled')) return;
-                
-                if (listRef.current !== null) {
-                    const currentData = await listRef.current.dataset.data;
-
-                
-                    if (typeof currentData !== 'undefined') {
-
-                        
-                        const currentControlValueArr: any[] = [];
-                        const currentControlLabelArr: any[] = [];
-
-                        const htmlOptions = [].slice.call(listRef.current.querySelectorAll('.list-group-item:not(.hide):not(.no-match)'));
-
-                        htmlOptions.forEach((node: any) => {
-                            node.classList.remove('active');
-            
-                            // multiple options
-                            if (node.classList.contains('item-selected')) {
-                                currentControlValueArr.push(node.dataset.value);
-                                currentControlLabelArr.push(node.dataset.label);
-                            }
-
-                        });
-
-
-                        handleSelect(null, currentData, currentControlValueArr, currentControlLabelArr);
-
-
-                        //
-                        if (typeof (onChange) === 'function') {
-
-                            onChange?.(
-                                selectInputRef.current,
-                                valueInputRef.current,
-                                !MULTI_SEL_VALID ? JSON.parse(currentData) : {
-                                    labels: currentControlLabelArr.map((v: any) => v.toString()),
-                                    values: currentControlValueArr.map((v: any) => v.toString()),
-                                    labelsOfString: VALUE_BY_BRACKETS ? convertArrToValByBrackets(currentControlLabelArr.map((v: any) => v.toString())) : currentControlLabelArr.map((v: any) => v.toString()).join(','),
-                                    valuesOfString: VALUE_BY_BRACKETS ? convertArrToValByBrackets(currentControlValueArr.map((v: any) => v.toString())) : currentControlValueArr.map((v: any) => v.toString()).join(',')
-                                }
-                            );
-
-
-
-                            //
-                            selectInputRef.current.blur();
-                        }
-
-                    }
-                }
-            }
-
-            if (key === 'ArrowUp') {
-                res = await optionFocus('decrease');
-
-            }
-
-            if (key === 'ArrowDown') {
-                res = await optionFocus('increase');
-            }
-
-            
-            // temporary data
-            if (res !== null) listRef.current.dataset.data = res.dataset.itemdata;
-
-        }
-    });
-
     const keyboardSelectedItem = useRef<any>(null);
 
 
@@ -372,6 +287,7 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
     useClickOutside({
         enabled: true,
         isOutside: (event: any) => {
+            if (!isOpen) return;
             return event.target.closest(`.mf-select__wrapper`) === null && event.target.closest(`.mf-select__options-wrapper`) === null;
         },
         handle: (event: any) => {
@@ -379,7 +295,7 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
             cancel();
             if (MULTI_SEL_VALID) popwinPosHide();
         }
-    });
+    }, [isOpen]);
 
 
 
@@ -391,6 +307,95 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
             popwinContainerHeightReset();
         }
     });
+
+
+
+    // keyboard 
+    const multiplePressed = useKeyPress({
+        keyCode: ['ArrowUp', 'ArrowDown', 'Enter', 'NumpadEnter'],
+        handleUp: (key: any, event: any) => { },
+        handleDown: async (key: any, event: any) => {
+  
+            if (!isOpen) return;
+
+            let res: any = null;
+            
+            if (key === 'Enter' || key === 'NumpadEnter') {
+                event.preventDefault();
+                
+                // Determine the "active" class name to avoid listening to other unused components of the same type
+                if (listRef.current === null || !rootRef.current.classList.contains('active')) return;
+
+                // Avoid selecting options that are disabled
+                if (keyboardSelectedItem.current !== null && keyboardSelectedItem.current.classList.contains('disabled')) return;
+                
+                if (listRef.current !== null) {
+                    const currentData = await listRef.current.dataset.data;
+
+                
+                    if (typeof currentData !== 'undefined') {
+
+                        
+                        const currentControlValueArr: any[] = [];
+                        const currentControlLabelArr: any[] = [];
+
+                        const htmlOptions = [].slice.call(listRef.current.querySelectorAll('.list-group-item:not(.hide):not(.no-match)'));
+
+                        htmlOptions.forEach((node: any) => {
+                            node.classList.remove('active');
+            
+                            // multiple options
+                            if (node.classList.contains('item-selected')) {
+                                currentControlValueArr.push(node.dataset.value);
+                                currentControlLabelArr.push(node.dataset.label);
+                            }
+
+                        });
+
+
+                        handleSelect(null, currentData, currentControlValueArr, currentControlLabelArr);
+
+
+                        //
+                        if (typeof (onChange) === 'function') {
+
+                            onChange?.(
+                                selectInputRef.current,
+                                valueInputRef.current,
+                                !MULTI_SEL_VALID ? JSON.parse(currentData) : {
+                                    labels: currentControlLabelArr.map((v: any) => v.toString()),
+                                    values: currentControlValueArr.map((v: any) => v.toString()),
+                                    labelsOfString: VALUE_BY_BRACKETS ? convertArrToValByBrackets(currentControlLabelArr.map((v: any) => v.toString())) : currentControlLabelArr.map((v: any) => v.toString()).join(','),
+                                    valuesOfString: VALUE_BY_BRACKETS ? convertArrToValByBrackets(currentControlValueArr.map((v: any) => v.toString())) : currentControlValueArr.map((v: any) => v.toString()).join(',')
+                                }
+                            );
+
+
+
+                            //
+                            selectInputRef.current.blur();
+                        }
+
+                    }
+                }
+            }
+
+            if (key === 'ArrowUp') {
+                res = await optionFocus('decrease');
+
+            }
+
+            if (key === 'ArrowDown') {
+                res = await optionFocus('increase');
+            }
+
+            
+            // temporary data
+            if (res !== null) listRef.current.dataset.data = res.dataset.itemdata;
+
+        }
+    }, [isOpen]);
+
 
 
 

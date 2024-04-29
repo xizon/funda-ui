@@ -3726,12 +3726,12 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
                     // do something
                     //...
                 }
-            });
+            }, []);
         };
         
          */
 
-        function useClickOutside(_ref) {
+        function useClickOutside(_ref, deps) {
           var enabled = _ref.enabled,
             isOutside = _ref.isOutside,
             handle = _ref.handle;
@@ -3757,7 +3757,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
                 document.removeEventListener('pointerdown', eventHandler);
               };
             }
-          }, [enabled]);
+          }, [enabled].concat(deps));
         }
         /* harmony default export */
         var hooks_useClickOutside = useClickOutside;
@@ -3826,7 +3826,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
                     // await xxxxx();
                     console.log(key);
                 }
-            });
+            }, []);
         
             const multiplePressed = useKeyPress({
                 keyCode: ['ArrowUp', 'ArrowDown', 'Enter', 'NumpadEnter'],
@@ -3836,7 +3836,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
                     event.preventDefault();
                     console.log(key);
                 }
-            });
+            }, [myDep1, myDep2]);
         
         
             return (
@@ -3846,7 +3846,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
         
          */
 
-        var useKeyPress = function useKeyPress(_ref) {
+        var useKeyPress = function useKeyPress(_ref, deps) {
           var keyCode = _ref.keyCode,
             handleDown = _ref.handleDown,
             handleUp = _ref.handleUp;
@@ -3892,7 +3892,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
               window.removeEventListener('keydown', eventHandlerDown);
               window.removeEventListener('keyup', eventHandlerUp);
             };
-          }, []);
+          }, deps);
           return keyPressed;
         };
         /* harmony default export */
@@ -4955,6 +4955,7 @@ var src_Date = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_reac
   (0,Utils_dist_cjs.useClickOutside)({
     enabled: true,
     isOutside: function isOutside(event) {
+      if (!isShow) return;
       return event.target.closest(".date2d__wrapper") === null && event.target.closest(".date2d-cal__wrapper") === null;
     },
     handle: function handle(event) {
@@ -4970,7 +4971,7 @@ var src_Date = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_reac
         popupBlurEnabled.current = false;
       }
     }
-  });
+  }, [isShow]);
 
   // Add function to the element that should be used as the scrollable area.
   // const [scrollData, windowScrollUpdate] = useWindowScroll({

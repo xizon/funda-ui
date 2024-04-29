@@ -147,39 +147,6 @@ const CascadingSelect = (props: CascadingSelectProps) => {
 
 
 
-    // click outside
-    useClickOutside({
-        enabled: true,
-        isOutside: (event: any) => {
-
-            // svg element
-            if (typeof event.target.className === 'object') return false;
-
-
-            return event.target.className != '' && (
-                event.target.className.indexOf('cas-select__wrapper') < 0 &&
-                event.target.className.indexOf('form-control') < 0 &&
-                event.target.className.indexOf('cas-select__trigger') < 0 &&
-                event.target.className.indexOf('cas-select__items-wrapper') < 0 &&
-                event.target.className.indexOf('cas-select__opt') < 0
-            );
-        },
-        handle: (event: any) => {
-            cancel();
-        }
-    });
-
-
-
-    // Add function to the element that should be used as the scrollable area.
-    const [scrollData, windowScrollUpdate] = useWindowScroll({
-        performance: ['debounce', 500],   // "['debounce', 500]" or "['throttle', 500]"
-        handle: (scrollData: any) => {
-            popwinPosInit(false);
-        }
-    });
-
-
     // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
     // DO NOT USE `useState()` for `dictionaryData`, `listData`,  
     // because the list uses vanilla JS DOM events which will cause the results of useState not to be displayed in real time.
@@ -204,6 +171,43 @@ const CascadingSelect = (props: CascadingSelectProps) => {
     });
 
     const [isShow, setIsShow] = useState<boolean>(false);
+
+
+
+
+    // click outside
+    useClickOutside({
+        enabled: true,
+        isOutside: (event: any) => {
+            if (!isShow) return;
+
+            // svg element
+            if (typeof event.target.className === 'object') return false;
+
+
+            return event.target.className != '' && (
+                event.target.className.indexOf('cas-select__wrapper') < 0 &&
+                event.target.className.indexOf('form-control') < 0 &&
+                event.target.className.indexOf('cas-select__trigger') < 0 &&
+                event.target.className.indexOf('cas-select__items-wrapper') < 0 &&
+                event.target.className.indexOf('cas-select__opt') < 0
+            );
+        },
+        handle: (event: any) => {
+            cancel();
+        }
+    }, [isShow]);
+
+
+
+    // Add function to the element that should be used as the scrollable area.
+    const [scrollData, windowScrollUpdate] = useWindowScroll({
+        performance: ['debounce', 500],   // "['debounce', 500]" or "['throttle', 500]"
+        handle: (scrollData: any) => {
+            popwinPosInit(false);
+        }
+    });
+
 
 
     /**

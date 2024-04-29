@@ -102,13 +102,15 @@ const DropdownMenu = (props: DropdownMenuProps) => {
     useClickOutside({
         enabled: true,
         isOutside: (event: any) => {
+            if (!isOpen) return;
+
             return event.target.closest(`.dd-menu__wrapper`) === null && event.target.closest(`.dd-menu-list__wrapper`) === null;
         },
         handle: (event: any) => {
             setIsOpen(false);
             popwinPosHide();
         }
-    });
+    }, [isOpen]);
 
     
     function handleClick(event: React.MouseEvent) {

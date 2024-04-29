@@ -159,6 +159,9 @@ const LiveSearch = forwardRef((props: LiveSearchProps, ref: any) => {
         keyCode: ['ArrowUp', 'ArrowDown', 'Enter', 'NumpadEnter'],
         handleUp: (key: any, event: any) => { },
         handleDown: async (key: any, event: any) => {
+            if (!isOpen) return;
+
+
             let res: any = null;
             
             if (key === 'Enter' || key === 'NumpadEnter') {
@@ -206,7 +209,7 @@ const LiveSearch = forwardRef((props: LiveSearchProps, ref: any) => {
             });
 
         }
-    });
+    }, [isOpen]);
 
 
 
@@ -234,6 +237,8 @@ const LiveSearch = forwardRef((props: LiveSearchProps, ref: any) => {
     useClickOutside({
         enabled: true,
         isOutside: (event: any) => {
+            if (!isOpen) return;
+
             return event.target.closest(`.livesearch__wrapper`) === null && event.target.closest(`.livesearch__options-wrapper`) === null;
         },
         handle: (event: any) => {
@@ -241,7 +246,7 @@ const LiveSearch = forwardRef((props: LiveSearchProps, ref: any) => {
             setIsOpen(false);
             cancel();
         }
-    });
+    }, [isOpen]);
 
 
     // Add function to the element that should be used as the scrollable area.

@@ -3615,12 +3615,12 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
                     // do something
                     //...
                 }
-            });
+            }, []);
         };
         
          */
 
-        function useClickOutside(_ref) {
+        function useClickOutside(_ref, deps) {
           var enabled = _ref.enabled,
             isOutside = _ref.isOutside,
             handle = _ref.handle;
@@ -3646,7 +3646,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
                 document.removeEventListener('pointerdown', eventHandler);
               };
             }
-          }, [enabled]);
+          }, [enabled].concat(deps));
         }
         /* harmony default export */
         var hooks_useClickOutside = useClickOutside;
@@ -3715,7 +3715,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
                     // await xxxxx();
                     console.log(key);
                 }
-            });
+            }, []);
         
             const multiplePressed = useKeyPress({
                 keyCode: ['ArrowUp', 'ArrowDown', 'Enter', 'NumpadEnter'],
@@ -3725,7 +3725,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
                     event.preventDefault();
                     console.log(key);
                 }
-            });
+            }, [myDep1, myDep2]);
         
         
             return (
@@ -3735,7 +3735,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
         
          */
 
-        var useKeyPress = function useKeyPress(_ref) {
+        var useKeyPress = function useKeyPress(_ref, deps) {
           var keyCode = _ref.keyCode,
             handleDown = _ref.handleDown,
             handleUp = _ref.handleUp;
@@ -3781,7 +3781,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
               window.removeEventListener('keydown', eventHandlerDown);
               window.removeEventListener('keyup', eventHandlerUp);
             };
-          }, []);
+          }, deps);
           return keyPressed;
         };
         /* harmony default export */
@@ -4144,20 +4144,26 @@ var LiveSearch = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(
         return _regeneratorRuntime().wrap(function _callee$(_context) {
           while (1) switch (_context.prev = _context.next) {
             case 0:
+              if (isOpen) {
+                _context.next = 2;
+                break;
+              }
+              return _context.abrupt("return");
+            case 2:
               res = null;
               if (!(key === 'Enter' || key === 'NumpadEnter')) {
-                _context.next = 6;
+                _context.next = 8;
                 break;
               }
               event.preventDefault();
 
               // Determine the "active" class name to avoid listening to other unused components of the same type
               if (!(listRef.current === null || !rootRef.current.classList.contains('active'))) {
-                _context.next = 5;
+                _context.next = 7;
                 break;
               }
               return _context.abrupt("return");
-            case 5:
+            case 7:
               if (listRef.current !== null) {
                 currentData = listRef.current.dataset.data;
                 if (typeof currentData !== 'undefined') {
@@ -4175,32 +4181,32 @@ var LiveSearch = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(
                   }), JSON.parse(currentData), listRef.current);
                 }
               }
-            case 6:
+            case 8:
               if (!(key === 'ArrowUp')) {
-                _context.next = 10;
+                _context.next = 12;
                 break;
               }
-              _context.next = 9;
+              _context.next = 11;
               return optionFocus('decrease');
-            case 9:
+            case 11:
               res = _context.sent;
-            case 10:
+            case 12:
               if (!(key === 'ArrowDown')) {
-                _context.next = 14;
+                _context.next = 16;
                 break;
               }
-              _context.next = 13;
+              _context.next = 15;
               return optionFocus('increase');
-            case 13:
+            case 15:
               res = _context.sent;
-            case 14:
+            case 16:
               // temporary data
               if (res !== null) listRef.current.dataset.data = JSON.stringify({
                 value: res.dataset.value,
                 label: res.dataset.label,
                 queryString: res.dataset.querystring
               });
-            case 15:
+            case 17:
             case "end":
               return _context.stop();
           }
@@ -4211,7 +4217,7 @@ var LiveSearch = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(
       }
       return handleDown;
     }()
-  });
+  }, [isOpen]);
 
   //performance
   var handleChangeFetchSafe = (0,funda_utils__WEBPACK_IMPORTED_MODULE_3__.useDebounce)(function (e) {
@@ -4232,6 +4238,7 @@ var LiveSearch = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(
   (0,funda_utils__WEBPACK_IMPORTED_MODULE_3__.useClickOutside)({
     enabled: true,
     isOutside: function isOutside(event) {
+      if (!isOpen) return;
       return event.target.closest(".livesearch__wrapper") === null && event.target.closest(".livesearch__options-wrapper") === null;
     },
     handle: function handle(event) {
@@ -4239,7 +4246,7 @@ var LiveSearch = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(
       setIsOpen(false);
       cancel();
     }
-  });
+  }, [isOpen]);
 
   // Add function to the element that should be used as the scrollable area.
   var _useWindowScroll = (0,funda_utils__WEBPACK_IMPORTED_MODULE_3__.useWindowScroll)({

@@ -97,7 +97,7 @@ const Tooltip = (props: TooltipProps) => {
         handle: (event: any) => {
             hideTip();
         }
-    });
+    }, []);
 
 
     //timer hover

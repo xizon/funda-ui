@@ -2023,13 +2023,13 @@ const App = () => {
             // do something
             //...
         }
-    });
+    }, []);
 };
 
  */
 
 
-function useClickOutside(_ref) {
+function useClickOutside(_ref, deps) {
   var enabled = _ref.enabled,
     isOutside = _ref.isOutside,
     handle = _ref.handle;
@@ -2055,7 +2055,7 @@ function useClickOutside(_ref) {
         document.removeEventListener('pointerdown', eventHandler);
       };
     }
-  }, [enabled]);
+  }, [enabled].concat(deps));
 }
 /* harmony default export */ const hooks_useClickOutside = (useClickOutside);
 ;// CONCATENATED MODULE: ./src/hooks/useKeyPress.js
@@ -2080,7 +2080,7 @@ const App = () => {
             // await xxxxx();
             console.log(key);
         }
-    });
+    }, []);
 
     const multiplePressed = useKeyPress({
         keyCode: ['ArrowUp', 'ArrowDown', 'Enter', 'NumpadEnter'],
@@ -2090,7 +2090,7 @@ const App = () => {
             event.preventDefault();
             console.log(key);
         }
-    });
+    }, [myDep1, myDep2]);
 
 
     return (
@@ -2100,7 +2100,7 @@ const App = () => {
 
  */
 
-var useKeyPress = function useKeyPress(_ref) {
+var useKeyPress = function useKeyPress(_ref, deps) {
   var keyCode = _ref.keyCode,
     handleDown = _ref.handleDown,
     handleUp = _ref.handleUp;
@@ -2146,7 +2146,7 @@ var useKeyPress = function useKeyPress(_ref) {
       window.removeEventListener('keydown', eventHandlerDown);
       window.removeEventListener('keyup', eventHandlerUp);
     };
-  }, []);
+  }, deps);
   return keyPressed;
 };
 /* harmony default export */ const hooks_useKeyPress = (useKeyPress);

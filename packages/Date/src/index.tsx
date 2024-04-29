@@ -326,6 +326,8 @@ const Date = forwardRef((props: DateProps, ref: any) => {
     useClickOutside({
         enabled: true,
         isOutside: (event: any) => {
+            if (!isShow) return;
+
             return event.target.closest(`.date2d__wrapper`) === null && event.target.closest(`.date2d-cal__wrapper`) === null;
         },
         handle: (event: any) => {
@@ -340,7 +342,7 @@ const Date = forwardRef((props: DateProps, ref: any) => {
                 popupBlurEnabled.current = false;
             }
         }
-    });
+    }, [isShow]);
 
 
 

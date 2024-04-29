@@ -205,7 +205,7 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
         handle: (event: any) => {
             hideTableTooltip();
         }
-    });
+    }, []);
     
 
 
