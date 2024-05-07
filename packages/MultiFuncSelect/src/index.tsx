@@ -15,6 +15,7 @@ import {
 } from 'funda-utils';
 
 
+
 //Destroys body scroll locking
 import { clearAllBodyScrollLocks, disableBodyScroll, enableBodyScroll } from './plugins/BSL';
 
@@ -393,7 +394,8 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
             // temporary data
             if (res !== null) listRef.current.dataset.data = res.dataset.itemdata;
 
-        }
+        },
+        spyElement: rootRef.current,
     }, [isOpen]);
 
 

@@ -35,6 +35,7 @@ import LiveSearch from 'funda-ui/LiveSearch';
 | `readOnly` | boolean | false | When present, it specifies that this component field is read-only. |
 | `disabled` | boolean | false | Whether it is disabled |
 | `required` | boolean | false | When present, it specifies that a field must be filled out before submitting the form. |
+| `noMatchPopup` | boolean  | true | Pop-up window is not displayed when there is no matching content. If **true**, it is displayed by default. |
 | `hideIcon` | boolean  | false | Force hiding icons (including icon buttons) |
 | `icon` | ReactNode  | - | Set the icon of search. <blockquote>Valid when `fetchTrigger` is true.</blockquote> |
 | `winWidth` | number \| function  | `auto` | Set the container width of options. Such as: `500px` or `() => window.innerWidth/2 + 'px'`  |

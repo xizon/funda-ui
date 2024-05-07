@@ -778,14 +778,20 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 
           //
           function handleCloseWin(e) {
-            if (typeof e !== 'undefined' && e !== null) e.preventDefault();
+            if (typeof e !== 'undefined' && e !== null) {
+              e.preventDefault();
+              e.stopPropagation();
+            }
             closeAction();
 
             //
             onClose === null || onClose === void 0 ? void 0 : onClose(e);
           }
           function handleOpenWin(e) {
-            if (typeof e !== 'undefined' && e !== null) e.preventDefault();
+            if (typeof e !== 'undefined' && e !== null) {
+              e.preventDefault();
+              e.stopPropagation();
+            }
             openAction();
 
             //
@@ -1827,15 +1833,15 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
             );
           }
         });
-        ; // CONCATENATED MODULE: ./src/libs/easing.js
+        ; // CONCATENATED MODULE: ./src/libs/easing.ts
         /*
          * All easing functions
          * @link: https://easings.net
-         * @param {Number} t   - time (Amount of time that has passed since the beginning of the animation. Usually starts at 0 and is slowly increased using a game loop or other update function.)
-         * @param {Number} b   - beginning value (The starting point of the animation. Usually it's a static value, you can start at 0 for example.)
-         * @param {Number} c   - change in value (The amount of change needed to go from starting point to end point. It's also usually a static value.)
-         * @param {Number} d   - duration (Amount of time the animation will take. Usually a static value aswell.)
-         * @return {Number}
+         * @param {number} t   - time (Amount of time that has passed since the beginning of the animation. Usually starts at 0 and is slowly increased using a game loop or other update function.)
+         * @param {number} b   - beginning value (The starting point of the animation. Usually it's a static value, you can start at 0 for example.)
+         * @param {number} c   - change in value (The amount of change needed to go from starting point to end point. It's also usually a static value.)
+         * @param {number} d   - duration (Amount of time the animation will take. Usually a static value aswell.)
+         * @return {number}
          */
         function _easeLinear(t, b, c, d) {
           return c * t / d + b;
@@ -1952,19 +1958,22 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
           return a * Math.pow(2, -10 * (t -= 1)) * Math.sin((t * d - s) * (2 * Math.PI) / p) * .5 + c + b;
         }
         function _easeInBack(t, b, c, d) {
+          var s = 1.70158;
           if (s == undefined) s = 1.70158;
           return c * (t /= d) * t * ((s + 1) * t - s) + b;
         }
         function _easeOutBack(t, b, c, d) {
+          var s = 1.70158;
           if (s == undefined) s = 1.70158;
           return c * ((t = t / d - 1) * t * ((s + 1) * t + s) + 1) + b;
         }
         function _easeInOutBack(t, b, c, d) {
+          var s = 1.70158;
           if (s == undefined) s = 1.70158;
           if ((t /= d / 2) < 1) return c / 2 * (t * t * (((s *= 1.525) + 1) * t - s)) + b;
           return c / 2 * ((t -= 2) * t * (((s *= 1.525) + 1) * t + s) + 2) + b;
         }
-        ; // CONCATENATED MODULE: ./src/libs/init-default-options.js
+        ; // CONCATENATED MODULE: ./src/libs/init-default-options.ts
         function _typeof(obj) {
           "@babel/helpers - typeof";
 
@@ -1976,11 +1985,10 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
         }
         /**
          *  Set a default JSON format configuration
-         * @public
          *
-         * @param  {JSON} props         - Set some default keys and values.
-         * @param  {JSON} options       - A JSON variable passed in from outside, including key and value.
-         * @return {JSON}               - Merge the new and old values.
+         * @param  {*} props         - Set some default keys and values.
+         * @param  {*} options       - A JSON variable passed in from outside, including key and value.
+         * @return {JSON}            - Merge the new and old values.
          */
         function _setDefaultOptions(props, options) {
           if (_typeof(options) === ( true ? "undefined" : 0) || options === null || options === false) options = {};
@@ -2009,11 +2017,12 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 
         /**
         * Check if a string is a valid number
-        * @private
+         * @param {*} str 
+         * @returns 
         */
         function _isValidNumeric(str) {
           if (typeof str != "string") return false; // we only process strings!  
-          if (!isNaN(str) &&
+          if (!isNaN(Number(str)) &&
           // use type coercion to parse the _entirety_ of the string (`parseFloat` alone does not do this)
           !isNaN(parseFloat(str)) // ensure strings of whitespace fail
           ) {
@@ -2025,7 +2034,8 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 
         /**
          * Determine whether it is in JSON format
-         * @private
+         * @param {*} str 
+         * @returns 
          */
         function _isJSON(str) {
           if (typeof str === 'string' && str.length > 0) {
@@ -2046,7 +2056,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
             }
           }
         }
-        ; // CONCATENATED MODULE: ./src/libs/anim.js
+        ; // CONCATENATED MODULE: ./src/libs/anim.ts
         function anim_typeof(obj) {
           "@babel/helpers - typeof";
 
@@ -2078,10 +2088,8 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
             "endHeight": 0,
             "speed": 200 //ms
           }, config);
-
-          //
-          var _endHeight = config.endHeight,
-            _speed = config.speed;
+          var _endHeight = config.endHeight;
+          var _speed = config.speed;
           var _startHeight = config.startHeight;
           var duration = _speed;
           var start = new Date().getTime();
@@ -2121,14 +2129,11 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 
             //If the elapsed time is less than the speed (ms)
             if (time < duration) {
-              //
               requestId = window.requestAnimationFrame(loop);
             } else {
               // change height
               curElement.style.height = _endHeight + 'px';
               if (typeof callback === 'function') callback();
-
-              //
               window.cancelAnimationFrame(requestId);
             }
           };
@@ -2136,7 +2141,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
         }
         /* harmony default export */
         var anim = animateStyles;
-        ; // CONCATENATED MODULE: ./src/libs/performance.js
+        ; // CONCATENATED MODULE: ./src/libs/performance.ts
         /*
         * Debounce
         *
@@ -2148,11 +2153,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
           var limit = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 300;
           var timer;
           return function () {
-            //Every time this returned function is called, the timer is cleared to ensure that fn is not executed
             clearTimeout(timer);
-
-            // When the returned function is called for the last time (that is the user stops a continuous operation)
-            // Execute fn after another delay milliseconds
             timer = setTimeout(function () {
               fn.apply(this, arguments);
             }, limit);
@@ -2179,7 +2180,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
             }
           };
         }
-        ; // CONCATENATED MODULE: ./src/libs/dom.js
+        ; // CONCATENATED MODULE: ./src/libs/dom.ts
         function _createForOfIteratorHelper(o, allowArrayLike) {
           var it = typeof Symbol !== "undefined" && o[Symbol.iterator] || o["@@iterator"];
           if (!it) {
@@ -2274,7 +2275,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 
         // the next siblings
         function _getNextSiblings(el) {
-          var filter = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] :  false || '';
+          var filter = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '';
           var sibs = [];
           while (el = el.nextSibling) {
             if (matches(el, filter)) {
@@ -2286,7 +2287,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 
         // previous siblings
         function _getPreviousSiblings(el) {
-          var filter = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] :  false || '';
+          var filter = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '';
           var sibs = [];
           while (el = el.previousSibling) {
             if (matches(el, filter)) {
@@ -2298,7 +2299,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 
         // parent and get all the siblings
         function _getAllSiblings(el) {
-          var filter = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] :  false || '';
+          var filter = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '';
           var sibs = [];
           el = el.parentNode.firstChild;
           while (el = el.nextSibling) {
@@ -2311,7 +2312,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 
         // all parent nodes
         function _getParents(el) {
-          var filter = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] :  false || '';
+          var filter = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '';
           var parents = [];
           while (el = el.parentNode) {
             if (matches(el, filter)) {
@@ -2323,7 +2324,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 
         // all child nodes
         function _getChildren(el) {
-          var filter = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] :  false || '';
+          var filter = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '';
           var all = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : [];
           all.push.apply(all, _toConsumableArray(el.childNodes));
           var _iterator = _createForOfIteratorHelper(el.childNodes),
@@ -2353,28 +2354,21 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
             return node.ownerDocument;
           }
         }
-        function getWindow(node) {
-          if (typeof node === 'undefined') {
-            return window;
-          } else {
-            return node.ownerDocument.defaultView;
-          }
-        }
         function _isNode(value) {
-          return value instanceof Node || value instanceof getWindow(value).Node;
+          return value instanceof Node;
         }
         function _isElement(value) {
-          return value instanceof Element || value instanceof getWindow(value).Element;
+          return value instanceof Element;
         }
         function _isHTMLElement(value) {
-          return value instanceof HTMLElement || value instanceof getWindow(value).HTMLElement;
+          return value instanceof HTMLElement;
         }
         function _isShadowRoot(value) {
           // Browsers without `ShadowRoot` support.
           if (typeof ShadowRoot === 'undefined') {
             return false;
           }
-          return value instanceof ShadowRoot || value instanceof getWindow(value).ShadowRoot;
+          return value instanceof ShadowRoot;
         }
 
         /* console.log(nodeContains(document.body, document.getElementById('obj'))) */
@@ -2405,7 +2399,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
           // Give up, the result is false
           return false;
         }
-        ; // CONCATENATED MODULE: ./src/libs/get-element-property.js
+        ; // CONCATENATED MODULE: ./src/libs/get-element-property.ts
         function get_element_property_typeof(obj) {
           "@babel/helpers - typeof";
 
@@ -2418,8 +2412,8 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
         /**
          * Get the -webkit-transition-duration property
          *
-         * @param {Element} el - A DOM node containing one selector to match against.
-         * @return {Number}    - Returns a pure number.
+         * @param {HTMLElement} el - A DOM node containing one selector to match against.
+         * @return {number}    - Returns a pure number.
          */
         function _getTransitionDuration(el) {
           if (get_element_property_typeof(el) === ( true ? "undefined" : 0)) {
@@ -2441,21 +2435,22 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
         /**
          * Get an object's absolute position on the page
          *
-         * @param {Element} el - A DOM node containing one selector to match against.
+         * @param {HTMLElement} el - A DOM node containing one selector to match against.
          * @return {Json}    - An object containing the properties top and left. 
          */
         function _getAbsoluteCoordinates(el) {
           var windowWidth = window.innerWidth,
             leftPos = null,
             topPos = null;
+          var pEl = el.parentElement;
           if (!document.getElementsByTagName('body')[0].className.match(/rtl/)) {
-            leftPos = el.offsetLeft == 0 ? el.parentElement.offsetLeft : el.offsetLeft;
-            topPos = el.offsetTop == 0 ? el.parentElement.offsetTop : el.offsetTop;
+            leftPos = el.offsetLeft == 0 ? pEl.offsetLeft : el.offsetLeft;
+            topPos = el.offsetTop == 0 ? pEl.offsetTop : el.offsetTop;
           } else {
             // width and height in pixels, including padding and border
             // Corresponds to outerWidth(), outerHeight()
-            leftPos = el.offsetLeft == 0 ? windowWidth - (el.parentElement.offsetLeft + el.parentElement.offsetWidth) : windowWidth - (el.offsetLeft + el.offsetWidth);
-            topPos = el.offsetTop == 0 ? windowWidth - (el.parentElement.offsetTop + el.parentElement.offsetHeight) : windowWidth - (el.offsetTop + el.offsetHeight);
+            leftPos = el.offsetLeft == 0 ? windowWidth - (pEl.offsetLeft + pEl.offsetWidth) : windowWidth - (el.offsetLeft + el.offsetWidth);
+            topPos = el.offsetTop == 0 ? windowWidth - (pEl.offsetTop + pEl.offsetHeight) : windowWidth - (el.offsetTop + el.offsetHeight);
           }
           return {
             'left': leftPos,
@@ -2491,7 +2486,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
         /**
          * Get the current coordinates of the first element in the set of matched elements, relative to the offset parent.
          *
-         * @param {Element} el - A DOM node containing one selector to match against.
+         * @param {HTMLElement} el - A DOM node containing one selector to match against.
          * @return {Json}      - An object containing the properties top and left.
          */
         function _getPosition(el) {
@@ -2511,9 +2506,9 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
         /**
          * Get the absolute position of the stage element
          * 
-         * @param {Element} domElement  - A DOM node
-         * @param {Number | String} left     - left offset
-         * @param {Number | String} top      - top offset
+         * @param {HTMLElement} domElement  - A DOM node
+         * @param {number | string} left     - left offset
+         * @param {number | string} top      - top offset
          * @returns 
          */
         function _getAbsolutePositionOfStage(domElement) {
@@ -2543,7 +2538,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
           attr.height = box.height;
           return attr;
         }
-        ; // CONCATENATED MODULE: ./src/libs/tree.js
+        ; // CONCATENATED MODULE: ./src/libs/tree.ts
         function tree_typeof(obj) {
           "@babel/helpers - typeof";
 
@@ -2675,9 +2670,9 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
         /**
          * Convert Tree
          * @param {Array} arr                    - Flat array
-         * @param  {?String | ?Number} parentId  - Parent id
-         * @param  {?String} keyId               - Key value of id.
-         * @param  {?String} keyParentId         - Key value of parent id.
+         * @param  {?string | ?number} parentId  - Parent id
+         * @param  {?string} keyId               - Key value of id.
+         * @param  {?string} keyParentId         - Key value of parent id.
          * @returns Array
          */
         function _convertTree(arr) {
@@ -2744,9 +2739,9 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
         /**
         * Add depth to each item in the tree
         * @param {Array} arr       - Hierarchical array
-        * @param  {?String} keyId               - Key value of id.
-        * @param  {?String} keyParentId         - Key value of parent id.
-        * @param  {?Number} depth               - Depth of the item.
+        * @param  {?string} keyId               - Key value of id.
+        * @param  {?string} keyParentId         - Key value of parent id.
+        * @param  {?number} depth               - Depth of the item.
         * @returns Number
         */
         function _addTreeDepth(arr) {
@@ -2770,9 +2765,9 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
         /**
          * Add indent placeholder
          * @param {Array} arr                    - Flat array
-         * @param  {?String} placeholder         - String of placeholder
-         * @param  {?String} lastPlaceholder     - Last String of placeholder
-         * @param  {?String} keyName             - Key value of name.
+         * @param  {?string} placeholder         - String of placeholder
+         * @param  {?string} lastPlaceholder     - Last String of placeholder
+         * @param  {?string} keyName             - Key value of name.
          * @returns Array
          */
         function _addTreeIndent(arr) {
@@ -2791,7 +2786,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
             }
           });
         }
-        ; // CONCATENATED MODULE: ./src/libs/buffer.js
+        ; // CONCATENATED MODULE: ./src/libs/buffer.ts
         function _regeneratorRuntime() {
           "use strict";
 
@@ -3162,8 +3157,6 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
           if (data.indexOf('base64,') >= 0) {
             res = data.split('base64,')[1];
           }
-
-          //
           var binaryString = atob(res);
           var bytes = new Uint8Array(binaryString.length);
           for (var i = 0; i < binaryString.length; i++) {
@@ -3183,8 +3176,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
         Uint8Array(522240) [208, 207, 17, 224, 161, 177, 26, 225, 0, 0, ......]
         */
         function _arrayBufferToUint8Array(data) {
-          var bytes = new Uint8Array(data);
-          return bytes;
+          return new Uint8Array(data);
         }
 
         /**
@@ -3230,8 +3222,6 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
           if ((typeof Buffer === "undefined" ? "undefined" : buffer_typeof(Buffer)) !== ( true ? "undefined" : 0)) {
             return Buffer.from(data, 'binary').toString('base64'); // node.js too
           } else {
-            // prevent ERROR:  RangeError: Maximum call stack size exceeded
-            //!!!!!!!!!
             var binary = '';
             var bytes = new Uint8Array(data);
             var len = bytes.byteLength;
@@ -3272,7 +3262,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
          * @returns {Blob}
          */
         function _arrayToBlob(uint8ArrayData) {
-          return new Blob(uint8ArrayData, {
+          return new Blob([uint8ArrayData], {
             type: "text/plain"
           });
         }
@@ -3286,9 +3276,8 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
           return new Promise(function (resolve, reject) {
             var reader = new FileReader();
             reader.addEventListener("loadend", function () {
-              resolve(reader.result); // ArrayBuffer(xxxx)
+              resolve(reader.result);
             });
-
             reader.readAsArrayBuffer(data);
           });
         }
@@ -3415,11 +3404,11 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
           }));
           return _readStream.apply(this, arguments);
         }
-        ; // CONCATENATED MODULE: ./src/libs/convert.js
+        ; // CONCATENATED MODULE: ./src/libs/convert.ts
         /**
          * Convert value to string separated by square brackets 
-         * @param {String} str  such as: 1,2,3
-         * @returns {String} such as: [1][2][3]
+         * @param {string} str  such as: 1,2,3
+         * @returns {string} such as: [1][2][3]
          */
         function _convertStringByCommaToValByBrackets(str) {
           if (typeof str === 'undefined' || str === null || str === '') {
@@ -3432,8 +3421,8 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 
         /**
          * Convert array value to string  separated by square brackets 
-         * @param {Array} arr  such as: ['1','2','3']
-         * @returns {String} such as: [1][2][3]
+         * @param {string[]} arr  such as: ['1','2','3']
+         * @returns {string} such as: [1][2][3]
          */
         function _convertArrToValByBrackets(arr) {
           if (!Array.isArray(arr)) return '';
@@ -3444,8 +3433,8 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 
         /**
          * Convert value to string separated by curly braces
-         * @param {String} str  such as: 1,2,3
-         * @returns {String} such as: {1}{2}{3}
+         * @param {string} str  such as: 1,2,3
+         * @returns {string} such as: {1}{2}{3}
          */
         function _convertStringByCommaToValByBraces(str) {
           if (typeof str === 'undefined' || str === null || str === '') {
@@ -3458,8 +3447,8 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 
         /**
          * Convert array value to string  separated by curly braces
-         * @param {Array} arr  such as: ['1','2','3']
-         * @returns {String} such as: {1}{2}{3}
+         * @param {string[]} arr  such as: ['1','2','3']
+         * @returns {string} such as: {1}{2}{3}
          */
         function _convertArrToValByBraces(arr) {
           if (!Array.isArray(arr)) return '';
@@ -3467,11 +3456,12 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
             return v.toString().includes('{') && v.toString().includes('}') ? "".concat(v) : "{".concat(v, "}");
           }).join('');
         }
-        ; // CONCATENATED MODULE: ./src/libs/extract.js
+        ; // CONCATENATED MODULE: ./src/libs/extract.ts
         /**
          * Extract the contents of square brackets
-         * @param {String} str    =>  input string. such as '[1,2] [f][c]'
-         * @returns {Array|String} such as: ['1,2','f','c']
+         * @param {string} str    =>  input string. such as '[1,2] [f][c]'
+         * @param {boolean} commaSeparated    =>  flag to determine if the result should be comma separated or not
+         * @returns {Array<string>|string} such as: ['1,2','f','c']
          */
         function _extractContentsOfBrackets(str) {
           var commaSeparated = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
@@ -3488,8 +3478,9 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 
         /**
          * Extract the contents of curly braces
-         * @param {String} str    =>  input string. such as '{1,2} {f}{c}'
-         * @returns {Array|String} such as: ['1,2','f','c']
+         * @param {string} str    =>  input string. such as '{1,2} {f}{c}'
+         * @param {boolean} commaSeparated    =>  flag to determine if the result should be comma separated or not
+         * @returns {Array<string>|string} such as: ['1,2','f','c']
          */
         function _extractContentsOfBraces(str) {
           var commaSeparated = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
@@ -3506,8 +3497,9 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 
         /**
          * Extract the contents of parentheses
-         * @param {String} str    =>  input string. such as '(1,2) (f)(c)'
-         * @returns {Array|String} such as: ['1,2','f','c']
+         * @param {string} str    =>  input string. such as '(1,2) (f)(c)'
+         * @param {boolean} commaSeparated    =>  flag to determine if the result should be comma separated or not
+         * @returns {Array<string>|string} such as: ['1,2','f','c']
          */
         function _extractContentsOfParentheses(str) {
           var commaSeparated = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
@@ -3521,7 +3513,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
             return res === null ? '' : res;
           }
         }
-        ; // CONCATENATED MODULE: ./src/libs/date.js
+        ; // CONCATENATED MODULE: ./src/libs/date.ts
         /**
          * Get now
          * @returns {Date}  // Wed Apr 17 2024 14:31:36 GMT+0800 (China Standard Time)
@@ -3611,7 +3603,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
         /**
          * Get calendar date
          * @param {Date | String} v 
-         * @returns {String}  yyyy-MM-dd
+         * @returns {Date | String}  yyyy-MM-dd
          */
         function _dateFormat(v) {
           var date = typeof v === 'string' ? new Date(v.replace(/-/g, "/")) : v; // fix "Invalid date in safari"
@@ -3736,7 +3728,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
          * Get last day in month
          * @param {Date | String} v 
          * @param {?Number}  targetMonth 
-         * @returns {String}  yyyy-MM-dd
+         * @returns {String | Number}  yyyy-MM-dd
          */
         /*
         Example: Get last day in  next month 
@@ -3912,7 +3904,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
           var padZeroEnabled = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : true;
           return _getFullTime(new Date(v), padZeroEnabled);
         }
-        ; // CONCATENATED MODULE: ./src/libs/object.js
+        ; // CONCATENATED MODULE: ./src/libs/object.ts
         function object_typeof(obj) {
           "@babel/helpers - typeof";
 
@@ -3973,7 +3965,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 
         // EXTERNAL MODULE: external {"root":"React","commonjs2":"react","commonjs":"react","amd":"react"}
         var external_root_React_commonjs2_react_commonjs_react_amd_react_ = __nested_webpack_require_1471__(787);
-        ; // CONCATENATED MODULE: ./src/hooks/useThrottle.js
+        ; // CONCATENATED MODULE: ./src/hooks/useThrottle.tsx
         /**
          * Limiting the rate of execution
          * 
@@ -4007,7 +3999,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
         };
         /* harmony default export */
         var hooks_useThrottle = useThrottle;
-        ; // CONCATENATED MODULE: ./src/hooks/useDebounce.js
+        ; // CONCATENATED MODULE: ./src/hooks/useDebounce.tsx
         /**
          * Delay the execution of function or state update
          * 
@@ -4033,12 +4025,8 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
             for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
               args[_key] = arguments[_key];
             }
-            //Every time this returned function is called, the timer is cleared to ensure that fn is not executed
             clearTimeout(ref.current);
             ref.current = null;
-
-            // When the returned function is called for the last time (that is the user stops a continuous operation)
-            // Execute fn after another delay milliseconds
             ref.current = setTimeout(function () {
               fn.apply(void 0, args);
             }, delay);
@@ -4046,7 +4034,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
         };
         /* harmony default export */
         var hooks_useDebounce = useDebounce;
-        ; // CONCATENATED MODULE: ./src/hooks/useAutosizeTextArea.js
+        ; // CONCATENATED MODULE: ./src/hooks/useAutosizeTextArea.tsx
         function _slicedToArray(arr, i) {
           return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || useAutosizeTextArea_unsupportedIterableToArray(arr, i) || _nonIterableRest();
         }
@@ -4135,8 +4123,10 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
         
          */
 
-        // Updates the height of a <textarea> when the value changes.
-        var useAutosizeTextArea = function useAutosizeTextArea(el, value, cb) {
+        var useAutosizeTextArea = function useAutosizeTextArea(props) {
+          var el = props.el,
+            value = props.value,
+            cb = props.cb;
           var _useState = (0, external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)(0),
             _useState2 = _slicedToArray(_useState, 2),
             defaultRowHeight = _useState2[0],
@@ -4146,40 +4136,38 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
             defaultRowHeightInit = _useState4[0],
             setDefaultRowHeightInit = _useState4[1];
           (0, external_root_React_commonjs2_react_commonjs_react_amd_react_.useEffect)(function () {
-            if (el) {
-              var style = el.currentStyle || window.getComputedStyle(el);
-              var _controlWidth = el.scrollWidth + parseInt(style.borderLeftWidth) + parseInt(style.borderRightWidth);
+            if (el.current) {
+              var style = el.current.currentStyle || window.getComputedStyle(el.current);
+              var _controlWidth = el.current.scrollWidth + parseInt(style.borderLeftWidth) + parseInt(style.borderRightWidth);
 
               // initialize default row height
-              if (el.scrollHeight > 0 && !defaultRowHeightInit) {
-                setDefaultRowHeight(el.scrollHeight + parseInt(style.borderTopWidth) + parseInt(style.borderBottomWidth));
+              if (el.current.scrollHeight > 0 && !defaultRowHeightInit) {
+                setDefaultRowHeight(el.current.scrollHeight + parseInt(style.borderTopWidth) + parseInt(style.borderBottomWidth));
                 setDefaultRowHeightInit(true);
               }
 
               // restore default row height
               if (defaultRowHeight > 0) {
-                el.style.height = defaultRowHeight + "px";
+                el.current.style.height = defaultRowHeight + "px";
               }
 
               // reset the height momentarily to get the correct scrollHeight for the textarea
-              var scrollHeight = el.scrollHeight;
+              var scrollHeight = el.current.scrollHeight;
 
               // then set the height directly, outside of the render loop
               // Trying to set this with state or a ref will product an incorrect value.
 
               // !!! Compare initial height and changed height
               if (scrollHeight > defaultRowHeight && defaultRowHeight > 0) {
-                el.style.height = scrollHeight + "px";
+                el.current.style.height = scrollHeight + "px";
               }
-
-              //
               cb === null || cb === void 0 ? void 0 : cb([_controlWidth, scrollHeight]);
             }
           }, [el, value]);
         };
         /* harmony default export */
         var hooks_useAutosizeTextArea = useAutosizeTextArea;
-        ; // CONCATENATED MODULE: ./src/hooks/useInterval.js
+        ; // CONCATENATED MODULE: ./src/hooks/useInterval.tsx
         /**
          * Provides a convenient way to create and manage intervals
          * 
@@ -4220,7 +4208,32 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
         };
         /* harmony default export */
         var hooks_useInterval = useInterval;
-        ; // CONCATENATED MODULE: ./src/hooks/useClickOutside.js
+        ; // CONCATENATED MODULE: ./src/hooks/useClickOutside.tsx
+        function useClickOutside_toConsumableArray(arr) {
+          return useClickOutside_arrayWithoutHoles(arr) || useClickOutside_iterableToArray(arr) || useClickOutside_unsupportedIterableToArray(arr) || useClickOutside_nonIterableSpread();
+        }
+        function useClickOutside_nonIterableSpread() {
+          throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
+        }
+        function useClickOutside_unsupportedIterableToArray(o, minLen) {
+          if (!o) return;
+          if (typeof o === "string") return useClickOutside_arrayLikeToArray(o, minLen);
+          var n = Object.prototype.toString.call(o).slice(8, -1);
+          if (n === "Object" && o.constructor) n = o.constructor.name;
+          if (n === "Map" || n === "Set") return Array.from(o);
+          if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return useClickOutside_arrayLikeToArray(o, minLen);
+        }
+        function useClickOutside_iterableToArray(iter) {
+          if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter);
+        }
+        function useClickOutside_arrayWithoutHoles(arr) {
+          if (Array.isArray(arr)) return useClickOutside_arrayLikeToArray(arr);
+        }
+        function useClickOutside_arrayLikeToArray(arr, len) {
+          if (len == null || len > arr.length) len = arr.length;
+          for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i];
+          return arr2;
+        }
         /**
          * Handles the event of clicking outside of the wrapped component
          * 
@@ -4235,7 +4248,8 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
                 handle: (event: any) => {
                     // do something
                     //...
-                }
+                },
+                spyElement: document
             }, []);
         };
         
@@ -4244,7 +4258,9 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
         function useClickOutside(_ref, deps) {
           var enabled = _ref.enabled,
             isOutside = _ref.isOutside,
-            handle = _ref.handle;
+            handle = _ref.handle,
+            _ref$spyElement = _ref.spyElement,
+            spyElement = _ref$spyElement === void 0 ? document : _ref$spyElement;
           var isOutsideRef = (0, external_root_React_commonjs2_react_commonjs_react_amd_react_.useRef)(isOutside);
           var handleRef = (0, external_root_React_commonjs2_react_commonjs_react_amd_react_.useRef)(handle);
           (0, external_root_React_commonjs2_react_commonjs_react_amd_react_.useEffect)(function () {
@@ -4256,22 +4272,22 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
           (0, external_root_React_commonjs2_react_commonjs_react_amd_react_.useEffect)(function () {
             if (enabled) {
               var eventHandler = function eventHandler(event) {
-                var _isOutsideRef;
-                if ((_isOutsideRef = isOutsideRef.current) !== null && _isOutsideRef !== void 0 && _isOutsideRef.call(isOutsideRef, event)) {
-                  var _handleRef;
-                  (_handleRef = handleRef.current) === null || _handleRef === void 0 || _handleRef.call(handleRef, event);
+                var _isOutsideRef$current;
+                if ((_isOutsideRef$current = isOutsideRef.current) !== null && _isOutsideRef$current !== void 0 && _isOutsideRef$current.call(isOutsideRef, event)) {
+                  var _handleRef$current;
+                  (_handleRef$current = handleRef.current) === null || _handleRef$current === void 0 ? void 0 : _handleRef$current.call(handleRef, event);
                 }
               };
-              document.addEventListener('pointerdown', eventHandler);
+              spyElement === null || spyElement === void 0 ? void 0 : spyElement.addEventListener('pointerdown', eventHandler);
               return function () {
-                document.removeEventListener('pointerdown', eventHandler);
+                spyElement === null || spyElement === void 0 ? void 0 : spyElement.removeEventListener('pointerdown', eventHandler);
               };
             }
-          }, [enabled].concat(deps));
+          }, [enabled].concat(useClickOutside_toConsumableArray(deps)));
         }
         /* harmony default export */
         var hooks_useClickOutside = useClickOutside;
-        ; // CONCATENATED MODULE: ./src/hooks/useKeyPress.js
+        ; // CONCATENATED MODULE: ./src/hooks/useKeyPress.tsx
         function useKeyPress_slicedToArray(arr, i) {
           return useKeyPress_arrayWithHoles(arr) || useKeyPress_iterableToArrayLimit(arr, i) || useKeyPress_unsupportedIterableToArray(arr, i) || useKeyPress_nonIterableRest();
         }
@@ -4335,7 +4351,8 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
                     event.preventDefault();
                     // await xxxxx();
                     console.log(key);
-                }
+                },
+                spyElement: window,
             }, []);
         
             const multiplePressed = useKeyPress({
@@ -4345,7 +4362,8 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
                     // do something
                     event.preventDefault();
                     console.log(key);
-                }
+                },
+                spyElement: window
             }, [myDep1, myDep2]);
         
         
@@ -4359,14 +4377,14 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
         var useKeyPress = function useKeyPress(_ref, deps) {
           var keyCode = _ref.keyCode,
             handleDown = _ref.handleDown,
-            handleUp = _ref.handleUp;
+            handleUp = _ref.handleUp,
+            _ref$spyElement = _ref.spyElement,
+            spyElement = _ref$spyElement === void 0 ? window : _ref$spyElement;
           var _useState = (0, external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)(false),
             _useState2 = useKeyPress_slicedToArray(_useState, 2),
             keyPressed = _useState2[0],
             setKeyPressed = _useState2[1];
           var multipleKeys = Array.isArray(keyCode);
-
-          // `Escape`, `Enter`, `Alt`, `Control`, `CapsLock`, `Shift`, `ArrowUp`, `ArrowDown`, `ArrowLeft`, `ArrowRight` `w`, `e`, ...
           var eventHandlerDown = function eventHandlerDown(event) {
             var key = event.code;
             if (multipleKeys) {
@@ -4396,18 +4414,18 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
             }
           };
           (0, external_root_React_commonjs2_react_commonjs_react_amd_react_.useEffect)(function () {
-            window.addEventListener('keydown', eventHandlerDown);
-            window.addEventListener('keyup', eventHandlerUp);
+            spyElement === null || spyElement === void 0 ? void 0 : spyElement.addEventListener('keydown', eventHandlerDown);
+            spyElement === null || spyElement === void 0 ? void 0 : spyElement.addEventListener('keyup', eventHandlerUp);
             return function () {
-              window.removeEventListener('keydown', eventHandlerDown);
-              window.removeEventListener('keyup', eventHandlerUp);
+              spyElement === null || spyElement === void 0 ? void 0 : spyElement.removeEventListener('keydown', eventHandlerDown);
+              spyElement === null || spyElement === void 0 ? void 0 : spyElement.removeEventListener('keyup', eventHandlerUp);
             };
           }, deps);
           return keyPressed;
         };
         /* harmony default export */
         var hooks_useKeyPress = useKeyPress;
-        ; // CONCATENATED MODULE: ./src/hooks/useWindowScroll.js
+        ; // CONCATENATED MODULE: ./src/hooks/useWindowScroll.tsx
         function useWindowScroll_slicedToArray(arr, i) {
           return useWindowScroll_arrayWithHoles(arr) || useWindowScroll_iterableToArrayLimit(arr, i) || useWindowScroll_unsupportedIterableToArray(arr, i) || useWindowScroll_nonIterableRest();
         }
@@ -4497,16 +4515,16 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
               y: top
             };
             setScrollData(res);
-            if (typeof handle === 'function') handle(res);
+            if (typeof handle === "function") handle(res);
           };
-          if (performanceName === 'debounce') windowScrollUpdate = _debounce(eventHandlerScroll, parseFloat(performanceLimit));
-          if (performanceName === 'throttle') windowScrollUpdate = _throttle(eventHandlerScroll, parseFloat(performanceLimit));
+          if (performanceName === "debounce") windowScrollUpdate = _debounce(eventHandlerScroll, parseFloat(performanceLimit));
+          if (performanceName === "throttle") windowScrollUpdate = _throttle(eventHandlerScroll, parseFloat(performanceLimit));
           (0, external_root_React_commonjs2_react_commonjs_react_amd_react_.useEffect)(function () {
-            window.addEventListener('scroll', windowScrollUpdate);
-            window.addEventListener('touchmove', windowScrollUpdate);
+            window.addEventListener("scroll", windowScrollUpdate);
+            window.addEventListener("touchmove", windowScrollUpdate);
             return function () {
-              window.removeEventListener('scroll', windowScrollUpdate);
-              window.removeEventListener('touchmove', windowScrollUpdate);
+              window.removeEventListener("scroll", windowScrollUpdate);
+              window.removeEventListener("touchmove", windowScrollUpdate);
             };
           }, []);
           return [scrollData, windowScrollUpdate];

@@ -29,6 +29,7 @@ declare type LiveSearchProps = {
     disabled?: any;
     required?: any;
     placeholder?: string;
+    noMatchPopup?: boolean;
     options?: OptionConfig[] | string;
     winWidth?: string | Function;
     icon?: React.ReactNode | string;

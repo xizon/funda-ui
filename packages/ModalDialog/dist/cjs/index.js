@@ -648,14 +648,20 @@ var ModalDialog = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_r
 
   //
   function handleCloseWin(e) {
-    if (typeof e !== 'undefined' && e !== null) e.preventDefault();
+    if (typeof e !== 'undefined' && e !== null) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
     closeAction();
 
     //
     onClose === null || onClose === void 0 ? void 0 : onClose(e);
   }
   function handleOpenWin(e) {
-    if (typeof e !== 'undefined' && e !== null) e.preventDefault();
+    if (typeof e !== 'undefined' && e !== null) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
     openAction();
 
     //

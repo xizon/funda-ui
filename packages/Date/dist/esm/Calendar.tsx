@@ -9,7 +9,6 @@ import React, { useState, useEffect, useMemo } from 'react';
 } from 'funda-utils';
 
 
-
 interface EventsValueConfig {
     id: string | number;
     date: string,

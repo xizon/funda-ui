@@ -7,7 +7,6 @@ import {
 } from 'funda-utils';
 
 
-
 interface OptionConfig {
     [propName: string]: string | number | boolean;
 }

@@ -172,8 +172,6 @@ import useWindowScroll from './hooks/useWindowScroll';
 
 
 
-
-
 export { 
    animateStyles,
    setDefaultOptions,

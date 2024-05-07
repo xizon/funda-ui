@@ -46,6 +46,7 @@ type LiveSearchProps = {
     disabled?: any;
     required?: any;
     placeholder?: string;
+    noMatchPopup?: boolean;
     options?: OptionConfig[] | string;
     winWidth?: string | Function;
     icon?: React.ReactNode | string;
@@ -93,6 +94,7 @@ const LiveSearch = forwardRef((props: LiveSearchProps, ref: any) => {
         disabled,
         required,
         placeholder,
+        noMatchPopup,
         options,
         value,
         label,
@@ -133,6 +135,7 @@ const LiveSearch = forwardRef((props: LiveSearchProps, ref: any) => {
     const POS_OFFSET = 0;
     const EXCEEDED_SIDE_POS_OFFSET = Number(exceededSidePosOffset) || 15;
     const EMPTY_FOR_FETCH = typeof autoShowOptions === 'undefined' || autoShowOptions === false ? false : true;
+    const NO_MATCH_POPUP = typeof noMatchPopup === 'undefined' ? true : noMatchPopup;
     const WIN_WIDTH = typeof winWidth === 'function' ? winWidth() : winWidth ? winWidth : 'auto';
     const uniqueID = useId().replace(/\:/g, "-");
     const idRes = id || uniqueID;
@@ -208,7 +211,8 @@ const LiveSearch = forwardRef((props: LiveSearchProps, ref: any) => {
                 queryString: res.dataset.querystring
             });
 
-        }
+        },
+        spyElement: rootRef.current
     }, [isOpen]);
 
 
@@ -639,6 +643,7 @@ const LiveSearch = forwardRef((props: LiveSearchProps, ref: any) => {
     }
 
     function handleClick() {
+
         if (EMPTY_FOR_FETCH) {
             setOrginalData(dataInit);
             setIsOpen(true);
@@ -758,6 +763,8 @@ const LiveSearch = forwardRef((props: LiveSearchProps, ref: any) => {
             {label ? <><div className="livesearch__wrapper__label">{typeof label === 'string' ? <label htmlFor={`label-${idRes}`} className="form-label" dangerouslySetInnerHTML={{ __html: `${label}` }}></label> : <label htmlFor={`label-${idRes}`} className="form-label">{label}</label>}</div></> : null}
 
             <div className={`livesearch__wrapper ${wrapperClassName || wrapperClassName === '' ? wrapperClassName : 'mb-3 position-relative'} ${isOpen ? 'active' : ''}`} ref={rootRef} onMouseLeave={handleMouseLeaveTrigger}>
+
+       
                 <SearchBar
                     wrapperClassName=""
                     controlClassName={controlClassName}
@@ -813,12 +820,12 @@ const LiveSearch = forwardRef((props: LiveSearchProps, ref: any) => {
                         <div
                             ref={listRef}
                             id={`livesearch__options-wrapper-${idRes}`}
-                            className={`livesearch__options-wrapper list-group position-absolute border shadow small ${winWidth ? '' : ''}`}
+                            className={`livesearch__options-wrapper list-group position-absolute border shadow small ${winWidth ? '' : ''} ${(orginalData && orginalData.length === 0) && !NO_MATCH_POPUP ? 'shadow-none border-0' : ''}`}
                             style={{ zIndex: DEPTH, width: WIN_WIDTH, display: 'none' }}
                             role="tablist"
                         >
                             <div
-                                className="livesearch__options-contentlist rounded"
+                                className={`livesearch__options-contentlist rounded ${(orginalData && orginalData.length === 0) && !NO_MATCH_POPUP ? 'd-none' : ''}`}
                                 style={{ backgroundColor: 'var(--bs-list-group-bg)' }}
                                 ref={listContentRef}
                             >

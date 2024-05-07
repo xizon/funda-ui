@@ -778,14 +778,20 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 
           //
           function handleCloseWin(e) {
-            if (typeof e !== 'undefined' && e !== null) e.preventDefault();
+            if (typeof e !== 'undefined' && e !== null) {
+              e.preventDefault();
+              e.stopPropagation();
+            }
             closeAction();
 
             //
             onClose === null || onClose === void 0 ? void 0 : onClose(e);
           }
           function handleOpenWin(e) {
-            if (typeof e !== 'undefined' && e !== null) e.preventDefault();
+            if (typeof e !== 'undefined' && e !== null) {
+              e.preventDefault();
+              e.stopPropagation();
+            }
             openAction();
 
             //

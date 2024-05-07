@@ -3,6 +3,7 @@ import React, { useId, useState, useRef, useEffect, forwardRef, useImperativeHan
 import RootPortal from 'funda-root-portal';
 
 
+
 //Destroys body scroll locking
 import { clearAllBodyScrollLocks, disableBodyScroll, enableBodyScroll } from './plugins/BSL';
 
@@ -147,7 +148,10 @@ const ModalDialog = forwardRef((props: ModalDialogProps, ref: React.ForwardedRef
 
     //
     function handleCloseWin(e: any) {
-        if (typeof e !== 'undefined' && e !== null) e.preventDefault();
+        if (typeof e !== 'undefined' && e !== null) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
 
         closeAction();
 
@@ -157,7 +161,10 @@ const ModalDialog = forwardRef((props: ModalDialogProps, ref: React.ForwardedRef
 
 
     function handleOpenWin(e: any) {
-        if (typeof e !== 'undefined' && e !== null) e.preventDefault();
+        if (typeof e !== 'undefined' && e !== null) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
 
         openAction();
 

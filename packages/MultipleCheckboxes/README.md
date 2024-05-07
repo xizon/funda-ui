@@ -156,6 +156,63 @@ export default () => {
 
 
 
+## Safe Asynchronous Example
+
+When a `useState()` in a child component changes state, it will cause the entire parent component to re-render, resulting in invalidation such as **checkbox**.
+
+At this time, we need to use `useMemo()` to wrap this subcomponent to avoid problems caused when the child component triggers a method of `useState()` of the parent component.
+
+
+
+```js
+import React, { useState, useMemo } from "react";
+import MultipleCheckboxes from 'funda-ui/MultipleCheckboxes';
+
+
+// DO NOT move `useMemo` to component
+function MemoMultipleCheckboxes(props: any) {
+    const {val, callback} = props;
+    return useMemo(() => {
+        return <MultipleCheckboxes
+                wrapperClassName=""
+                value={val}
+                options={[
+                    {"label": "Option 1","listItemLabel":"Option 1 (No: 001)","value": "value-1"},
+                    {"label": "Option 2","listItemLabel":"<del style=color:red>deprecate</del>Option 2 (No: 002)","value": "value-2"},
+                    {"label": "Option 3","listItemLabel":"Option 3 (No: 003)","value": "value-3"},
+                    {"label": "Option 4","listItemLabel":"Option 4 (No: 004)","value": "value-4","disabled":true}
+                ]}
+                onChange={(e: any, value: any, valueStr: any, label: any, labelStr: any, currentData: any, dataCollection: any) => {
+                    callback(value);
+                }}
+            />
+    }, [val]);
+}
+
+export default () => {
+
+    const [myCheckboxes, setMyCheckboxes] = useState('[<del style=color:red>deprecate</del>Option 2][Option 4]');  // default value is label value
+
+    return (
+        <>
+          
+            <MemoMultipleCheckboxes 
+                val={"value-3"} 
+                name="name"
+                callback={setMyCheckboxes} 
+            />
+            
+            
+
+    
+        </>
+    );
+}
+
+```
+
+
+
 ## The Option Group element
 
 Specify the content in the `optgroup` attribute of `options`.

@@ -198,15 +198,15 @@ __webpack_require__.d(__webpack_exports__, {
   "useWindowScroll": () => (/* reexport */ hooks_useWindowScroll)
 });
 
-;// CONCATENATED MODULE: ./src/libs/easing.js
+;// CONCATENATED MODULE: ./src/libs/easing.ts
 /*
  * All easing functions
  * @link: https://easings.net
- * @param {Number} t   - time (Amount of time that has passed since the beginning of the animation. Usually starts at 0 and is slowly increased using a game loop or other update function.)
- * @param {Number} b   - beginning value (The starting point of the animation. Usually it's a static value, you can start at 0 for example.)
- * @param {Number} c   - change in value (The amount of change needed to go from starting point to end point. It's also usually a static value.)
- * @param {Number} d   - duration (Amount of time the animation will take. Usually a static value aswell.)
- * @return {Number}
+ * @param {number} t   - time (Amount of time that has passed since the beginning of the animation. Usually starts at 0 and is slowly increased using a game loop or other update function.)
+ * @param {number} b   - beginning value (The starting point of the animation. Usually it's a static value, you can start at 0 for example.)
+ * @param {number} c   - change in value (The amount of change needed to go from starting point to end point. It's also usually a static value.)
+ * @param {number} d   - duration (Amount of time the animation will take. Usually a static value aswell.)
+ * @return {number}
  */
 function easeLinear(t, b, c, d) {
   return c * t / d + b;
@@ -323,28 +323,30 @@ function easeInOutElastic(t, b, c, d) {
   return a * Math.pow(2, -10 * (t -= 1)) * Math.sin((t * d - s) * (2 * Math.PI) / p) * .5 + c + b;
 }
 function easeInBack(t, b, c, d) {
+  var s = 1.70158;
   if (s == undefined) s = 1.70158;
   return c * (t /= d) * t * ((s + 1) * t - s) + b;
 }
 function easeOutBack(t, b, c, d) {
+  var s = 1.70158;
   if (s == undefined) s = 1.70158;
   return c * ((t = t / d - 1) * t * ((s + 1) * t + s) + 1) + b;
 }
 function easeInOutBack(t, b, c, d) {
+  var s = 1.70158;
   if (s == undefined) s = 1.70158;
   if ((t /= d / 2) < 1) return c / 2 * (t * t * (((s *= 1.525) + 1) * t - s)) + b;
   return c / 2 * ((t -= 2) * t * (((s *= 1.525) + 1) * t + s) + 2) + b;
 }
 
-;// CONCATENATED MODULE: ./src/libs/init-default-options.js
+;// CONCATENATED MODULE: ./src/libs/init-default-options.ts
 function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
 /**
  *  Set a default JSON format configuration
- * @public
  *
- * @param  {JSON} props         - Set some default keys and values.
- * @param  {JSON} options       - A JSON variable passed in from outside, including key and value.
- * @return {JSON}               - Merge the new and old values.
+ * @param  {*} props         - Set some default keys and values.
+ * @param  {*} options       - A JSON variable passed in from outside, including key and value.
+ * @return {JSON}            - Merge the new and old values.
  */
 function setDefaultOptions(props, options) {
   if (_typeof(options) === ( true ? "undefined" : 0) || options === null || options === false) options = {};
@@ -373,11 +375,12 @@ function setDefaultOptions(props, options) {
 
 /**
 * Check if a string is a valid number
-* @private
+ * @param {*} str 
+ * @returns 
 */
 function isValidNumeric(str) {
   if (typeof str != "string") return false; // we only process strings!  
-  if (!isNaN(str) &&
+  if (!isNaN(Number(str)) &&
   // use type coercion to parse the _entirety_ of the string (`parseFloat` alone does not do this)
   !isNaN(parseFloat(str)) // ensure strings of whitespace fail
   ) {
@@ -389,7 +392,8 @@ function isValidNumeric(str) {
 
 /**
  * Determine whether it is in JSON format
- * @private
+ * @param {*} str 
+ * @returns 
  */
 function isJSON(str) {
   if (typeof str === 'string' && str.length > 0) {
@@ -411,7 +415,7 @@ function isJSON(str) {
   }
 }
 
-;// CONCATENATED MODULE: ./src/libs/anim.js
+;// CONCATENATED MODULE: ./src/libs/anim.ts
 function anim_typeof(obj) { "@babel/helpers - typeof"; return anim_typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, anim_typeof(obj); }
 
 
@@ -437,10 +441,8 @@ function animateStyles(curElement, config) {
     "endHeight": 0,
     "speed": 200 //ms
   }, config);
-
-  //
-  var _endHeight = config.endHeight,
-    _speed = config.speed;
+  var _endHeight = config.endHeight;
+  var _speed = config.speed;
   var _startHeight = config.startHeight;
   var duration = _speed;
   var start = new Date().getTime();
@@ -480,21 +482,18 @@ function animateStyles(curElement, config) {
 
     //If the elapsed time is less than the speed (ms)
     if (time < duration) {
-      //
       requestId = window.requestAnimationFrame(loop);
     } else {
       // change height
       curElement.style.height = _endHeight + 'px';
       if (typeof callback === 'function') callback();
-
-      //
       window.cancelAnimationFrame(requestId);
     }
   };
   requestId = window.requestAnimationFrame(loop);
 }
 /* harmony default export */ const anim = (animateStyles);
-;// CONCATENATED MODULE: ./src/libs/performance.js
+;// CONCATENATED MODULE: ./src/libs/performance.ts
 /*
 * Debounce
 *
@@ -506,11 +505,7 @@ function debounce(fn) {
   var limit = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 300;
   var timer;
   return function () {
-    //Every time this returned function is called, the timer is cleared to ensure that fn is not executed
     clearTimeout(timer);
-
-    // When the returned function is called for the last time (that is the user stops a continuous operation)
-    // Execute fn after another delay milliseconds
     timer = setTimeout(function () {
       fn.apply(this, arguments);
     }, limit);
@@ -538,7 +533,7 @@ function throttle(fn) {
   };
 }
 
-;// CONCATENATED MODULE: ./src/libs/dom.js
+;// CONCATENATED MODULE: ./src/libs/dom.ts
 function _createForOfIteratorHelper(o, allowArrayLike) { var it = typeof Symbol !== "undefined" && o[Symbol.iterator] || o["@@iterator"]; if (!it) { if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = it.call(o); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it["return"] != null) it["return"](); } finally { if (didErr) throw err; } } }; }
 function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
 function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
@@ -564,7 +559,7 @@ function matches(el, filter) {
 
 // the next siblings
 function getNextSiblings(el) {
-  var filter = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] :  false || '';
+  var filter = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '';
   var sibs = [];
   while (el = el.nextSibling) {
     if (matches(el, filter)) {
@@ -576,7 +571,7 @@ function getNextSiblings(el) {
 
 // previous siblings
 function getPreviousSiblings(el) {
-  var filter = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] :  false || '';
+  var filter = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '';
   var sibs = [];
   while (el = el.previousSibling) {
     if (matches(el, filter)) {
@@ -588,7 +583,7 @@ function getPreviousSiblings(el) {
 
 // parent and get all the siblings
 function getAllSiblings(el) {
-  var filter = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] :  false || '';
+  var filter = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '';
   var sibs = [];
   el = el.parentNode.firstChild;
   while (el = el.nextSibling) {
@@ -601,7 +596,7 @@ function getAllSiblings(el) {
 
 // all parent nodes
 function getParents(el) {
-  var filter = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] :  false || '';
+  var filter = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '';
   var parents = [];
   while (el = el.parentNode) {
     if (matches(el, filter)) {
@@ -613,7 +608,7 @@ function getParents(el) {
 
 // all child nodes
 function getChildren(el) {
-  var filter = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] :  false || '';
+  var filter = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '';
   var all = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : [];
   all.push.apply(all, _toConsumableArray(el.childNodes));
   var _iterator = _createForOfIteratorHelper(el.childNodes),
@@ -643,28 +638,21 @@ function getDocument(node) {
     return node.ownerDocument;
   }
 }
-function getWindow(node) {
-  if (typeof node === 'undefined') {
-    return window;
-  } else {
-    return node.ownerDocument.defaultView;
-  }
-}
 function isNode(value) {
-  return value instanceof Node || value instanceof getWindow(value).Node;
+  return value instanceof Node;
 }
 function isElement(value) {
-  return value instanceof Element || value instanceof getWindow(value).Element;
+  return value instanceof Element;
 }
 function isHTMLElement(value) {
-  return value instanceof HTMLElement || value instanceof getWindow(value).HTMLElement;
+  return value instanceof HTMLElement;
 }
 function isShadowRoot(value) {
   // Browsers without `ShadowRoot` support.
   if (typeof ShadowRoot === 'undefined') {
     return false;
   }
-  return value instanceof ShadowRoot || value instanceof getWindow(value).ShadowRoot;
+  return value instanceof ShadowRoot;
 }
 
 /* console.log(nodeContains(document.body, document.getElementById('obj'))) */
@@ -696,13 +684,13 @@ function nodeContains(parent, child) {
   return false;
 }
 
-;// CONCATENATED MODULE: ./src/libs/get-element-property.js
+;// CONCATENATED MODULE: ./src/libs/get-element-property.ts
 function get_element_property_typeof(obj) { "@babel/helpers - typeof"; return get_element_property_typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, get_element_property_typeof(obj); }
 /**
  * Get the -webkit-transition-duration property
  *
- * @param {Element} el - A DOM node containing one selector to match against.
- * @return {Number}    - Returns a pure number.
+ * @param {HTMLElement} el - A DOM node containing one selector to match against.
+ * @return {number}    - Returns a pure number.
  */
 function getTransitionDuration(el) {
   if (get_element_property_typeof(el) === ( true ? "undefined" : 0)) {
@@ -724,21 +712,22 @@ function getTransitionDuration(el) {
 /**
  * Get an object's absolute position on the page
  *
- * @param {Element} el - A DOM node containing one selector to match against.
+ * @param {HTMLElement} el - A DOM node containing one selector to match against.
  * @return {Json}    - An object containing the properties top and left. 
  */
 function getAbsoluteCoordinates(el) {
   var windowWidth = window.innerWidth,
     leftPos = null,
     topPos = null;
+  var pEl = el.parentElement;
   if (!document.getElementsByTagName('body')[0].className.match(/rtl/)) {
-    leftPos = el.offsetLeft == 0 ? el.parentElement.offsetLeft : el.offsetLeft;
-    topPos = el.offsetTop == 0 ? el.parentElement.offsetTop : el.offsetTop;
+    leftPos = el.offsetLeft == 0 ? pEl.offsetLeft : el.offsetLeft;
+    topPos = el.offsetTop == 0 ? pEl.offsetTop : el.offsetTop;
   } else {
     // width and height in pixels, including padding and border
     // Corresponds to outerWidth(), outerHeight()
-    leftPos = el.offsetLeft == 0 ? windowWidth - (el.parentElement.offsetLeft + el.parentElement.offsetWidth) : windowWidth - (el.offsetLeft + el.offsetWidth);
-    topPos = el.offsetTop == 0 ? windowWidth - (el.parentElement.offsetTop + el.parentElement.offsetHeight) : windowWidth - (el.offsetTop + el.offsetHeight);
+    leftPos = el.offsetLeft == 0 ? windowWidth - (pEl.offsetLeft + pEl.offsetWidth) : windowWidth - (el.offsetLeft + el.offsetWidth);
+    topPos = el.offsetTop == 0 ? windowWidth - (pEl.offsetTop + pEl.offsetHeight) : windowWidth - (el.offsetTop + el.offsetHeight);
   }
   return {
     'left': leftPos,
@@ -774,7 +763,7 @@ function getOffset(el) {
 /**
  * Get the current coordinates of the first element in the set of matched elements, relative to the offset parent.
  *
- * @param {Element} el - A DOM node containing one selector to match against.
+ * @param {HTMLElement} el - A DOM node containing one selector to match against.
  * @return {Json}      - An object containing the properties top and left.
  */
 function getPosition(el) {
@@ -794,9 +783,9 @@ function getPosition(el) {
 /**
  * Get the absolute position of the stage element
  * 
- * @param {Element} domElement  - A DOM node
- * @param {Number | String} left     - left offset
- * @param {Number | String} top      - top offset
+ * @param {HTMLElement} domElement  - A DOM node
+ * @param {number | string} left     - left offset
+ * @param {number | string} top      - top offset
  * @returns 
  */
 function getAbsolutePositionOfStage(domElement) {
@@ -827,7 +816,7 @@ function getAbsolutePositionOfStage(domElement) {
   return attr;
 }
 
-;// CONCATENATED MODULE: ./src/libs/tree.js
+;// CONCATENATED MODULE: ./src/libs/tree.ts
 function tree_typeof(obj) { "@babel/helpers - typeof"; return tree_typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, tree_typeof(obj); }
 var _excluded = ["children"];
 function _objectWithoutProperties(source, excluded) { if (source == null) return {}; var target = _objectWithoutPropertiesLoose(source, excluded); var key, i; if (Object.getOwnPropertySymbols) { var sourceSymbolKeys = Object.getOwnPropertySymbols(source); for (i = 0; i < sourceSymbolKeys.length; i++) { key = sourceSymbolKeys[i]; if (excluded.indexOf(key) >= 0) continue; if (!Object.prototype.propertyIsEnumerable.call(source, key)) continue; target[key] = source[key]; } } return target; }
@@ -848,9 +837,9 @@ function _extends() { _extends = Object.assign ? Object.assign.bind() : function
 /**
  * Convert Tree
  * @param {Array} arr                    - Flat array
- * @param  {?String | ?Number} parentId  - Parent id
- * @param  {?String} keyId               - Key value of id.
- * @param  {?String} keyParentId         - Key value of parent id.
+ * @param  {?string | ?number} parentId  - Parent id
+ * @param  {?string} keyId               - Key value of id.
+ * @param  {?string} keyParentId         - Key value of parent id.
  * @returns Array
  */
 function convertTree(arr) {
@@ -917,9 +906,9 @@ function getAllDepth(arr) {
 /**
 * Add depth to each item in the tree
 * @param {Array} arr       - Hierarchical array
-* @param  {?String} keyId               - Key value of id.
-* @param  {?String} keyParentId         - Key value of parent id.
-* @param  {?Number} depth               - Depth of the item.
+* @param  {?string} keyId               - Key value of id.
+* @param  {?string} keyParentId         - Key value of parent id.
+* @param  {?number} depth               - Depth of the item.
 * @returns Number
 */
 function addTreeDepth(arr) {
@@ -943,9 +932,9 @@ function addTreeDepth(arr) {
 /**
  * Add indent placeholder
  * @param {Array} arr                    - Flat array
- * @param  {?String} placeholder         - String of placeholder
- * @param  {?String} lastPlaceholder     - Last String of placeholder
- * @param  {?String} keyName             - Key value of name.
+ * @param  {?string} placeholder         - String of placeholder
+ * @param  {?string} lastPlaceholder     - Last String of placeholder
+ * @param  {?string} keyName             - Key value of name.
  * @returns Array
  */
 function addTreeIndent(arr) {
@@ -965,7 +954,7 @@ function addTreeIndent(arr) {
   });
 }
 
-;// CONCATENATED MODULE: ./src/libs/buffer.js
+;// CONCATENATED MODULE: ./src/libs/buffer.ts
 function _regeneratorRuntime() { "use strict"; /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/facebook/regenerator/blob/main/LICENSE */ _regeneratorRuntime = function _regeneratorRuntime() { return exports; }; var exports = {}, Op = Object.prototype, hasOwn = Op.hasOwnProperty, defineProperty = Object.defineProperty || function (obj, key, desc) { obj[key] = desc.value; }, $Symbol = "function" == typeof Symbol ? Symbol : {}, iteratorSymbol = $Symbol.iterator || "@@iterator", asyncIteratorSymbol = $Symbol.asyncIterator || "@@asyncIterator", toStringTagSymbol = $Symbol.toStringTag || "@@toStringTag"; function define(obj, key, value) { return Object.defineProperty(obj, key, { value: value, enumerable: !0, configurable: !0, writable: !0 }), obj[key]; } try { define({}, ""); } catch (err) { define = function define(obj, key, value) { return obj[key] = value; }; } function wrap(innerFn, outerFn, self, tryLocsList) { var protoGenerator = outerFn && outerFn.prototype instanceof Generator ? outerFn : Generator, generator = Object.create(protoGenerator.prototype), context = new Context(tryLocsList || []); return defineProperty(generator, "_invoke", { value: makeInvokeMethod(innerFn, self, context) }), generator; } function tryCatch(fn, obj, arg) { try { return { type: "normal", arg: fn.call(obj, arg) }; } catch (err) { return { type: "throw", arg: err }; } } exports.wrap = wrap; var ContinueSentinel = {}; function Generator() {} function GeneratorFunction() {} function GeneratorFunctionPrototype() {} var IteratorPrototype = {}; define(IteratorPrototype, iteratorSymbol, function () { return this; }); var getProto = Object.getPrototypeOf, NativeIteratorPrototype = getProto && getProto(getProto(values([]))); NativeIteratorPrototype && NativeIteratorPrototype !== Op && hasOwn.call(NativeIteratorPrototype, iteratorSymbol) && (IteratorPrototype = NativeIteratorPrototype); var Gp = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(IteratorPrototype); function defineIteratorMethods(prototype) { ["next", "throw", "return"].forEach(function (method) { define(prototype, method, function (arg) { return this._invoke(method, arg); }); }); } function AsyncIterator(generator, PromiseImpl) { function invoke(method, arg, resolve, reject) { var record = tryCatch(generator[method], generator, arg); if ("throw" !== record.type) { var result = record.arg, value = result.value; return value && "object" == buffer_typeof(value) && hasOwn.call(value, "__await") ? PromiseImpl.resolve(value.__await).then(function (value) { invoke("next", value, resolve, reject); }, function (err) { invoke("throw", err, resolve, reject); }) : PromiseImpl.resolve(value).then(function (unwrapped) { result.value = unwrapped, resolve(result); }, function (error) { return invoke("throw", error, resolve, reject); }); } reject(record.arg); } var previousPromise; defineProperty(this, "_invoke", { value: function value(method, arg) { function callInvokeWithMethodAndArg() { return new PromiseImpl(function (resolve, reject) { invoke(method, arg, resolve, reject); }); } return previousPromise = previousPromise ? previousPromise.then(callInvokeWithMethodAndArg, callInvokeWithMethodAndArg) : callInvokeWithMethodAndArg(); } }); } function makeInvokeMethod(innerFn, self, context) { var state = "suspendedStart"; return function (method, arg) { if ("executing" === state) throw new Error("Generator is already running"); if ("completed" === state) { if ("throw" === method) throw arg; return doneResult(); } for (context.method = method, context.arg = arg;;) { var delegate = context.delegate; if (delegate) { var delegateResult = maybeInvokeDelegate(delegate, context); if (delegateResult) { if (delegateResult === ContinueSentinel) continue; return delegateResult; } } if ("next" === context.method) context.sent = context._sent = context.arg;else if ("throw" === context.method) { if ("suspendedStart" === state) throw state = "completed", context.arg; context.dispatchException(context.arg); } else "return" === context.method && context.abrupt("return", context.arg); state = "executing"; var record = tryCatch(innerFn, self, context); if ("normal" === record.type) { if (state = context.done ? "completed" : "suspendedYield", record.arg === ContinueSentinel) continue; return { value: record.arg, done: context.done }; } "throw" === record.type && (state = "completed", context.method = "throw", context.arg = record.arg); } }; } function maybeInvokeDelegate(delegate, context) { var methodName = context.method, method = delegate.iterator[methodName]; if (undefined === method) return context.delegate = null, "throw" === methodName && delegate.iterator["return"] && (context.method = "return", context.arg = undefined, maybeInvokeDelegate(delegate, context), "throw" === context.method) || "return" !== methodName && (context.method = "throw", context.arg = new TypeError("The iterator does not provide a '" + methodName + "' method")), ContinueSentinel; var record = tryCatch(method, delegate.iterator, context.arg); if ("throw" === record.type) return context.method = "throw", context.arg = record.arg, context.delegate = null, ContinueSentinel; var info = record.arg; return info ? info.done ? (context[delegate.resultName] = info.value, context.next = delegate.nextLoc, "return" !== context.method && (context.method = "next", context.arg = undefined), context.delegate = null, ContinueSentinel) : info : (context.method = "throw", context.arg = new TypeError("iterator result is not an object"), context.delegate = null, ContinueSentinel); } function pushTryEntry(locs) { var entry = { tryLoc: locs[0] }; 1 in locs && (entry.catchLoc = locs[1]), 2 in locs && (entry.finallyLoc = locs[2], entry.afterLoc = locs[3]), this.tryEntries.push(entry); } function resetTryEntry(entry) { var record = entry.completion || {}; record.type = "normal", delete record.arg, entry.completion = record; } function Context(tryLocsList) { this.tryEntries = [{ tryLoc: "root" }], tryLocsList.forEach(pushTryEntry, this), this.reset(!0); } function values(iterable) { if (iterable) { var iteratorMethod = iterable[iteratorSymbol]; if (iteratorMethod) return iteratorMethod.call(iterable); if ("function" == typeof iterable.next) return iterable; if (!isNaN(iterable.length)) { var i = -1, next = function next() { for (; ++i < iterable.length;) if (hasOwn.call(iterable, i)) return next.value = iterable[i], next.done = !1, next; return next.value = undefined, next.done = !0, next; }; return next.next = next; } } return { next: doneResult }; } function doneResult() { return { value: undefined, done: !0 }; } return GeneratorFunction.prototype = GeneratorFunctionPrototype, defineProperty(Gp, "constructor", { value: GeneratorFunctionPrototype, configurable: !0 }), defineProperty(GeneratorFunctionPrototype, "constructor", { value: GeneratorFunction, configurable: !0 }), GeneratorFunction.displayName = define(GeneratorFunctionPrototype, toStringTagSymbol, "GeneratorFunction"), exports.isGeneratorFunction = function (genFun) { var ctor = "function" == typeof genFun && genFun.constructor; return !!ctor && (ctor === GeneratorFunction || "GeneratorFunction" === (ctor.displayName || ctor.name)); }, exports.mark = function (genFun) { return Object.setPrototypeOf ? Object.setPrototypeOf(genFun, GeneratorFunctionPrototype) : (genFun.__proto__ = GeneratorFunctionPrototype, define(genFun, toStringTagSymbol, "GeneratorFunction")), genFun.prototype = Object.create(Gp), genFun; }, exports.awrap = function (arg) { return { __await: arg }; }, defineIteratorMethods(AsyncIterator.prototype), define(AsyncIterator.prototype, asyncIteratorSymbol, function () { return this; }), exports.AsyncIterator = AsyncIterator, exports.async = function (innerFn, outerFn, self, tryLocsList, PromiseImpl) { void 0 === PromiseImpl && (PromiseImpl = Promise); var iter = new AsyncIterator(wrap(innerFn, outerFn, self, tryLocsList), PromiseImpl); return exports.isGeneratorFunction(outerFn) ? iter : iter.next().then(function (result) { return result.done ? result.value : iter.next(); }); }, defineIteratorMethods(Gp), define(Gp, toStringTagSymbol, "Generator"), define(Gp, iteratorSymbol, function () { return this; }), define(Gp, "toString", function () { return "[object Generator]"; }), exports.keys = function (val) { var object = Object(val), keys = []; for (var key in object) keys.push(key); return keys.reverse(), function next() { for (; keys.length;) { var key = keys.pop(); if (key in object) return next.value = key, next.done = !1, next; } return next.done = !0, next; }; }, exports.values = values, Context.prototype = { constructor: Context, reset: function reset(skipTempReset) { if (this.prev = 0, this.next = 0, this.sent = this._sent = undefined, this.done = !1, this.delegate = null, this.method = "next", this.arg = undefined, this.tryEntries.forEach(resetTryEntry), !skipTempReset) for (var name in this) "t" === name.charAt(0) && hasOwn.call(this, name) && !isNaN(+name.slice(1)) && (this[name] = undefined); }, stop: function stop() { this.done = !0; var rootRecord = this.tryEntries[0].completion; if ("throw" === rootRecord.type) throw rootRecord.arg; return this.rval; }, dispatchException: function dispatchException(exception) { if (this.done) throw exception; var context = this; function handle(loc, caught) { return record.type = "throw", record.arg = exception, context.next = loc, caught && (context.method = "next", context.arg = undefined), !!caught; } for (var i = this.tryEntries.length - 1; i >= 0; --i) { var entry = this.tryEntries[i], record = entry.completion; if ("root" === entry.tryLoc) return handle("end"); if (entry.tryLoc <= this.prev) { var hasCatch = hasOwn.call(entry, "catchLoc"), hasFinally = hasOwn.call(entry, "finallyLoc"); if (hasCatch && hasFinally) { if (this.prev < entry.catchLoc) return handle(entry.catchLoc, !0); if (this.prev < entry.finallyLoc) return handle(entry.finallyLoc); } else if (hasCatch) { if (this.prev < entry.catchLoc) return handle(entry.catchLoc, !0); } else { if (!hasFinally) throw new Error("try statement without catch or finally"); if (this.prev < entry.finallyLoc) return handle(entry.finallyLoc); } } } }, abrupt: function abrupt(type, arg) { for (var i = this.tryEntries.length - 1; i >= 0; --i) { var entry = this.tryEntries[i]; if (entry.tryLoc <= this.prev && hasOwn.call(entry, "finallyLoc") && this.prev < entry.finallyLoc) { var finallyEntry = entry; break; } } finallyEntry && ("break" === type || "continue" === type) && finallyEntry.tryLoc <= arg && arg <= finallyEntry.finallyLoc && (finallyEntry = null); var record = finallyEntry ? finallyEntry.completion : {}; return record.type = type, record.arg = arg, finallyEntry ? (this.method = "next", this.next = finallyEntry.finallyLoc, ContinueSentinel) : this.complete(record); }, complete: function complete(record, afterLoc) { if ("throw" === record.type) throw record.arg; return "break" === record.type || "continue" === record.type ? this.next = record.arg : "return" === record.type ? (this.rval = this.arg = record.arg, this.method = "return", this.next = "end") : "normal" === record.type && afterLoc && (this.next = afterLoc), ContinueSentinel; }, finish: function finish(finallyLoc) { for (var i = this.tryEntries.length - 1; i >= 0; --i) { var entry = this.tryEntries[i]; if (entry.finallyLoc === finallyLoc) return this.complete(entry.completion, entry.afterLoc), resetTryEntry(entry), ContinueSentinel; } }, "catch": function _catch(tryLoc) { for (var i = this.tryEntries.length - 1; i >= 0; --i) { var entry = this.tryEntries[i]; if (entry.tryLoc === tryLoc) { var record = entry.completion; if ("throw" === record.type) { var thrown = record.arg; resetTryEntry(entry); } return thrown; } } throw new Error("illegal catch attempt"); }, delegateYield: function delegateYield(iterable, resultName, nextLoc) { return this.delegate = { iterator: values(iterable), resultName: resultName, nextLoc: nextLoc }, "next" === this.method && (this.arg = undefined), ContinueSentinel; } }, exports; }
 function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
 function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
@@ -997,8 +986,6 @@ function base64ToArrayBuffer(data) {
   if (data.indexOf('base64,') >= 0) {
     res = data.split('base64,')[1];
   }
-
-  //
   var binaryString = atob(res);
   var bytes = new Uint8Array(binaryString.length);
   for (var i = 0; i < binaryString.length; i++) {
@@ -1018,8 +1005,7 @@ function base64ToArrayBuffer(data) {
 Uint8Array(522240) [208, 207, 17, 224, 161, 177, 26, 225, 0, 0, ......]
 */
 function arrayBufferToUint8Array(data) {
-  var bytes = new Uint8Array(data);
-  return bytes;
+  return new Uint8Array(data);
 }
 
 /**
@@ -1065,8 +1051,6 @@ function uint8arrayToBase64Str(data) {
   if ((typeof Buffer === "undefined" ? "undefined" : buffer_typeof(Buffer)) !== ( true ? "undefined" : 0)) {
     return Buffer.from(data, 'binary').toString('base64'); // node.js too
   } else {
-    // prevent ERROR:  RangeError: Maximum call stack size exceeded
-    //!!!!!!!!!
     var binary = '';
     var bytes = new Uint8Array(data);
     var len = bytes.byteLength;
@@ -1107,7 +1091,7 @@ function toBinary(data) {
  * @returns {Blob}
  */
 function arrayToBlob(uint8ArrayData) {
-  return new Blob(uint8ArrayData, {
+  return new Blob([uint8ArrayData], {
     type: "text/plain"
   });
 }
@@ -1121,9 +1105,8 @@ function blobToUint8array(data) {
   return new Promise(function (resolve, reject) {
     var reader = new FileReader();
     reader.addEventListener("loadend", function () {
-      resolve(reader.result); // ArrayBuffer(xxxx)
+      resolve(reader.result);
     });
-
     reader.readAsArrayBuffer(data);
   });
 }
@@ -1251,11 +1234,11 @@ function _readStream() {
   return _readStream.apply(this, arguments);
 }
 
-;// CONCATENATED MODULE: ./src/libs/convert.js
+;// CONCATENATED MODULE: ./src/libs/convert.ts
 /**
  * Convert value to string separated by square brackets 
- * @param {String} str  such as: 1,2,3
- * @returns {String} such as: [1][2][3]
+ * @param {string} str  such as: 1,2,3
+ * @returns {string} such as: [1][2][3]
  */
 function convertStringByCommaToValByBrackets(str) {
   if (typeof str === 'undefined' || str === null || str === '') {
@@ -1268,8 +1251,8 @@ function convertStringByCommaToValByBrackets(str) {
 
 /**
  * Convert array value to string  separated by square brackets 
- * @param {Array} arr  such as: ['1','2','3']
- * @returns {String} such as: [1][2][3]
+ * @param {string[]} arr  such as: ['1','2','3']
+ * @returns {string} such as: [1][2][3]
  */
 function convertArrToValByBrackets(arr) {
   if (!Array.isArray(arr)) return '';
@@ -1280,8 +1263,8 @@ function convertArrToValByBrackets(arr) {
 
 /**
  * Convert value to string separated by curly braces
- * @param {String} str  such as: 1,2,3
- * @returns {String} such as: {1}{2}{3}
+ * @param {string} str  such as: 1,2,3
+ * @returns {string} such as: {1}{2}{3}
  */
 function convertStringByCommaToValByBraces(str) {
   if (typeof str === 'undefined' || str === null || str === '') {
@@ -1294,8 +1277,8 @@ function convertStringByCommaToValByBraces(str) {
 
 /**
  * Convert array value to string  separated by curly braces
- * @param {Array} arr  such as: ['1','2','3']
- * @returns {String} such as: {1}{2}{3}
+ * @param {string[]} arr  such as: ['1','2','3']
+ * @returns {string} such as: {1}{2}{3}
  */
 function convertArrToValByBraces(arr) {
   if (!Array.isArray(arr)) return '';
@@ -1304,11 +1287,12 @@ function convertArrToValByBraces(arr) {
   }).join('');
 }
 
-;// CONCATENATED MODULE: ./src/libs/extract.js
+;// CONCATENATED MODULE: ./src/libs/extract.ts
 /**
  * Extract the contents of square brackets
- * @param {String} str    =>  input string. such as '[1,2] [f][c]'
- * @returns {Array|String} such as: ['1,2','f','c']
+ * @param {string} str    =>  input string. such as '[1,2] [f][c]'
+ * @param {boolean} commaSeparated    =>  flag to determine if the result should be comma separated or not
+ * @returns {Array<string>|string} such as: ['1,2','f','c']
  */
 function extractContentsOfBrackets(str) {
   var commaSeparated = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
@@ -1325,8 +1309,9 @@ function extractContentsOfBrackets(str) {
 
 /**
  * Extract the contents of curly braces
- * @param {String} str    =>  input string. such as '{1,2} {f}{c}'
- * @returns {Array|String} such as: ['1,2','f','c']
+ * @param {string} str    =>  input string. such as '{1,2} {f}{c}'
+ * @param {boolean} commaSeparated    =>  flag to determine if the result should be comma separated or not
+ * @returns {Array<string>|string} such as: ['1,2','f','c']
  */
 function extractContentsOfBraces(str) {
   var commaSeparated = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
@@ -1343,8 +1328,9 @@ function extractContentsOfBraces(str) {
 
 /**
  * Extract the contents of parentheses
- * @param {String} str    =>  input string. such as '(1,2) (f)(c)'
- * @returns {Array|String} such as: ['1,2','f','c']
+ * @param {string} str    =>  input string. such as '(1,2) (f)(c)'
+ * @param {boolean} commaSeparated    =>  flag to determine if the result should be comma separated or not
+ * @returns {Array<string>|string} such as: ['1,2','f','c']
  */
 function extractContentsOfParentheses(str) {
   var commaSeparated = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
@@ -1359,7 +1345,7 @@ function extractContentsOfParentheses(str) {
   }
 }
 
-;// CONCATENATED MODULE: ./src/libs/date.js
+;// CONCATENATED MODULE: ./src/libs/date.ts
 /**
  * Get now
  * @returns {Date}  // Wed Apr 17 2024 14:31:36 GMT+0800 (China Standard Time)
@@ -1449,7 +1435,7 @@ var isValidDate = function isValidDate(v) {
 /**
  * Get calendar date
  * @param {Date | String} v 
- * @returns {String}  yyyy-MM-dd
+ * @returns {Date | String}  yyyy-MM-dd
  */
 function dateFormat(v) {
   var date = typeof v === 'string' ? new Date(v.replace(/-/g, "/")) : v; // fix "Invalid date in safari"
@@ -1574,7 +1560,7 @@ function getPrevYearDate(v) {
  * Get last day in month
  * @param {Date | String} v 
  * @param {?Number}  targetMonth 
- * @returns {String}  yyyy-MM-dd
+ * @returns {String | Number}  yyyy-MM-dd
  */
 /*
 Example: Get last day in  next month 
@@ -1751,7 +1737,7 @@ function timestampToDate(v) {
   return getFullTime(new Date(v), padZeroEnabled);
 }
 
-;// CONCATENATED MODULE: ./src/libs/object.js
+;// CONCATENATED MODULE: ./src/libs/object.ts
 function object_typeof(obj) { "@babel/helpers - typeof"; return object_typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, object_typeof(obj); }
 /**
  * Deep clone
@@ -1804,7 +1790,7 @@ function flatData(data) {
 
 // EXTERNAL MODULE: external {"root":"React","commonjs2":"react","commonjs":"react","amd":"react"}
 var external_root_React_commonjs2_react_commonjs_react_amd_react_ = __webpack_require__(787);
-;// CONCATENATED MODULE: ./src/hooks/useThrottle.js
+;// CONCATENATED MODULE: ./src/hooks/useThrottle.tsx
 /**
  * Limiting the rate of execution
  * 
@@ -1837,7 +1823,7 @@ var useThrottle = function useThrottle(fn, delay, dependence) {
   }, dependence);
 };
 /* harmony default export */ const hooks_useThrottle = (useThrottle);
-;// CONCATENATED MODULE: ./src/hooks/useDebounce.js
+;// CONCATENATED MODULE: ./src/hooks/useDebounce.tsx
 /**
  * Delay the execution of function or state update
  * 
@@ -1864,19 +1850,15 @@ var useDebounce = function useDebounce(fn, delay, dependence) {
     for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
       args[_key] = arguments[_key];
     }
-    //Every time this returned function is called, the timer is cleared to ensure that fn is not executed
     clearTimeout(ref.current);
     ref.current = null;
-
-    // When the returned function is called for the last time (that is the user stops a continuous operation)
-    // Execute fn after another delay milliseconds
     ref.current = setTimeout(function () {
       fn.apply(void 0, args);
     }, delay);
   }, dependence);
 };
 /* harmony default export */ const hooks_useDebounce = (useDebounce);
-;// CONCATENATED MODULE: ./src/hooks/useAutosizeTextArea.js
+;// CONCATENATED MODULE: ./src/hooks/useAutosizeTextArea.tsx
 function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || useAutosizeTextArea_unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
 function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
 function useAutosizeTextArea_unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return useAutosizeTextArea_arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return useAutosizeTextArea_arrayLikeToArray(o, minLen); }
@@ -1922,10 +1904,10 @@ const App = () => {
 
  */
 
-
-
-// Updates the height of a <textarea> when the value changes.
-var useAutosizeTextArea = function useAutosizeTextArea(el, value, cb) {
+var useAutosizeTextArea = function useAutosizeTextArea(props) {
+  var el = props.el,
+    value = props.value,
+    cb = props.cb;
   var _useState = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)(0),
     _useState2 = _slicedToArray(_useState, 2),
     defaultRowHeight = _useState2[0],
@@ -1935,39 +1917,37 @@ var useAutosizeTextArea = function useAutosizeTextArea(el, value, cb) {
     defaultRowHeightInit = _useState4[0],
     setDefaultRowHeightInit = _useState4[1];
   (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useEffect)(function () {
-    if (el) {
-      var style = el.currentStyle || window.getComputedStyle(el);
-      var _controlWidth = el.scrollWidth + parseInt(style.borderLeftWidth) + parseInt(style.borderRightWidth);
+    if (el.current) {
+      var style = el.current.currentStyle || window.getComputedStyle(el.current);
+      var _controlWidth = el.current.scrollWidth + parseInt(style.borderLeftWidth) + parseInt(style.borderRightWidth);
 
       // initialize default row height
-      if (el.scrollHeight > 0 && !defaultRowHeightInit) {
-        setDefaultRowHeight(el.scrollHeight + parseInt(style.borderTopWidth) + parseInt(style.borderBottomWidth));
+      if (el.current.scrollHeight > 0 && !defaultRowHeightInit) {
+        setDefaultRowHeight(el.current.scrollHeight + parseInt(style.borderTopWidth) + parseInt(style.borderBottomWidth));
         setDefaultRowHeightInit(true);
       }
 
       // restore default row height
       if (defaultRowHeight > 0) {
-        el.style.height = defaultRowHeight + "px";
+        el.current.style.height = defaultRowHeight + "px";
       }
 
       // reset the height momentarily to get the correct scrollHeight for the textarea
-      var scrollHeight = el.scrollHeight;
+      var scrollHeight = el.current.scrollHeight;
 
       // then set the height directly, outside of the render loop
       // Trying to set this with state or a ref will product an incorrect value.
 
       // !!! Compare initial height and changed height
       if (scrollHeight > defaultRowHeight && defaultRowHeight > 0) {
-        el.style.height = scrollHeight + "px";
+        el.current.style.height = scrollHeight + "px";
       }
-
-      //
       cb === null || cb === void 0 ? void 0 : cb([_controlWidth, scrollHeight]);
     }
   }, [el, value]);
 };
 /* harmony default export */ const hooks_useAutosizeTextArea = (useAutosizeTextArea);
-;// CONCATENATED MODULE: ./src/hooks/useInterval.js
+;// CONCATENATED MODULE: ./src/hooks/useInterval.tsx
 /**
  * Provides a convenient way to create and manage intervals
  * 
@@ -2007,7 +1987,13 @@ var useInterval = function useInterval(fn, delay) {
   }, [delay]);
 };
 /* harmony default export */ const hooks_useInterval = (useInterval);
-;// CONCATENATED MODULE: ./src/hooks/useClickOutside.js
+;// CONCATENATED MODULE: ./src/hooks/useClickOutside.tsx
+function useClickOutside_toConsumableArray(arr) { return useClickOutside_arrayWithoutHoles(arr) || useClickOutside_iterableToArray(arr) || useClickOutside_unsupportedIterableToArray(arr) || useClickOutside_nonIterableSpread(); }
+function useClickOutside_nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+function useClickOutside_unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return useClickOutside_arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return useClickOutside_arrayLikeToArray(o, minLen); }
+function useClickOutside_iterableToArray(iter) { if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter); }
+function useClickOutside_arrayWithoutHoles(arr) { if (Array.isArray(arr)) return useClickOutside_arrayLikeToArray(arr); }
+function useClickOutside_arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i]; return arr2; }
 /**
  * Handles the event of clicking outside of the wrapped component
  * 
@@ -2022,17 +2008,19 @@ const App = () => {
         handle: (event: any) => {
             // do something
             //...
-        }
+        },
+        spyElement: document
     }, []);
 };
 
  */
 
-
 function useClickOutside(_ref, deps) {
   var enabled = _ref.enabled,
     isOutside = _ref.isOutside,
-    handle = _ref.handle;
+    handle = _ref.handle,
+    _ref$spyElement = _ref.spyElement,
+    spyElement = _ref$spyElement === void 0 ? document : _ref$spyElement;
   var isOutsideRef = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useRef)(isOutside);
   var handleRef = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useRef)(handle);
   (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useEffect)(function () {
@@ -2044,21 +2032,21 @@ function useClickOutside(_ref, deps) {
   (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useEffect)(function () {
     if (enabled) {
       var eventHandler = function eventHandler(event) {
-        var _isOutsideRef;
-        if ((_isOutsideRef = isOutsideRef.current) !== null && _isOutsideRef !== void 0 && _isOutsideRef.call(isOutsideRef, event)) {
-          var _handleRef;
-          (_handleRef = handleRef.current) === null || _handleRef === void 0 || _handleRef.call(handleRef, event);
+        var _isOutsideRef$current;
+        if ((_isOutsideRef$current = isOutsideRef.current) !== null && _isOutsideRef$current !== void 0 && _isOutsideRef$current.call(isOutsideRef, event)) {
+          var _handleRef$current;
+          (_handleRef$current = handleRef.current) === null || _handleRef$current === void 0 ? void 0 : _handleRef$current.call(handleRef, event);
         }
       };
-      document.addEventListener('pointerdown', eventHandler);
+      spyElement === null || spyElement === void 0 ? void 0 : spyElement.addEventListener('pointerdown', eventHandler);
       return function () {
-        document.removeEventListener('pointerdown', eventHandler);
+        spyElement === null || spyElement === void 0 ? void 0 : spyElement.removeEventListener('pointerdown', eventHandler);
       };
     }
-  }, [enabled].concat(deps));
+  }, [enabled].concat(useClickOutside_toConsumableArray(deps)));
 }
 /* harmony default export */ const hooks_useClickOutside = (useClickOutside);
-;// CONCATENATED MODULE: ./src/hooks/useKeyPress.js
+;// CONCATENATED MODULE: ./src/hooks/useKeyPress.tsx
 function useKeyPress_slicedToArray(arr, i) { return useKeyPress_arrayWithHoles(arr) || useKeyPress_iterableToArrayLimit(arr, i) || useKeyPress_unsupportedIterableToArray(arr, i) || useKeyPress_nonIterableRest(); }
 function useKeyPress_nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
 function useKeyPress_unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return useKeyPress_arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return useKeyPress_arrayLikeToArray(o, minLen); }
@@ -2079,7 +2067,8 @@ const App = () => {
             event.preventDefault();
             // await xxxxx();
             console.log(key);
-        }
+        },
+        spyElement: window,
     }, []);
 
     const multiplePressed = useKeyPress({
@@ -2089,7 +2078,8 @@ const App = () => {
             // do something
             event.preventDefault();
             console.log(key);
-        }
+        },
+        spyElement: window
     }, [myDep1, myDep2]);
 
 
@@ -2100,17 +2090,18 @@ const App = () => {
 
  */
 
+
 var useKeyPress = function useKeyPress(_ref, deps) {
   var keyCode = _ref.keyCode,
     handleDown = _ref.handleDown,
-    handleUp = _ref.handleUp;
+    handleUp = _ref.handleUp,
+    _ref$spyElement = _ref.spyElement,
+    spyElement = _ref$spyElement === void 0 ? window : _ref$spyElement;
   var _useState = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)(false),
     _useState2 = useKeyPress_slicedToArray(_useState, 2),
     keyPressed = _useState2[0],
     setKeyPressed = _useState2[1];
   var multipleKeys = Array.isArray(keyCode);
-
-  // `Escape`, `Enter`, `Alt`, `Control`, `CapsLock`, `Shift`, `ArrowUp`, `ArrowDown`, `ArrowLeft`, `ArrowRight` `w`, `e`, ...
   var eventHandlerDown = function eventHandlerDown(event) {
     var key = event.code;
     if (multipleKeys) {
@@ -2140,17 +2131,17 @@ var useKeyPress = function useKeyPress(_ref, deps) {
     }
   };
   (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useEffect)(function () {
-    window.addEventListener('keydown', eventHandlerDown);
-    window.addEventListener('keyup', eventHandlerUp);
+    spyElement === null || spyElement === void 0 ? void 0 : spyElement.addEventListener('keydown', eventHandlerDown);
+    spyElement === null || spyElement === void 0 ? void 0 : spyElement.addEventListener('keyup', eventHandlerUp);
     return function () {
-      window.removeEventListener('keydown', eventHandlerDown);
-      window.removeEventListener('keyup', eventHandlerUp);
+      spyElement === null || spyElement === void 0 ? void 0 : spyElement.removeEventListener('keydown', eventHandlerDown);
+      spyElement === null || spyElement === void 0 ? void 0 : spyElement.removeEventListener('keyup', eventHandlerUp);
     };
   }, deps);
   return keyPressed;
 };
 /* harmony default export */ const hooks_useKeyPress = (useKeyPress);
-;// CONCATENATED MODULE: ./src/hooks/useWindowScroll.js
+;// CONCATENATED MODULE: ./src/hooks/useWindowScroll.tsx
 function useWindowScroll_slicedToArray(arr, i) { return useWindowScroll_arrayWithHoles(arr) || useWindowScroll_iterableToArrayLimit(arr, i) || useWindowScroll_unsupportedIterableToArray(arr, i) || useWindowScroll_nonIterableRest(); }
 function useWindowScroll_nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
 function useWindowScroll_unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return useWindowScroll_arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return useWindowScroll_arrayLikeToArray(o, minLen); }
@@ -2198,16 +2189,16 @@ var useWindowScroll = function useWindowScroll(_ref) {
       y: top
     };
     setScrollData(res);
-    if (typeof handle === 'function') handle(res);
+    if (typeof handle === "function") handle(res);
   };
-  if (performanceName === 'debounce') windowScrollUpdate = debounce(eventHandlerScroll, parseFloat(performanceLimit));
-  if (performanceName === 'throttle') windowScrollUpdate = throttle(eventHandlerScroll, parseFloat(performanceLimit));
+  if (performanceName === "debounce") windowScrollUpdate = debounce(eventHandlerScroll, parseFloat(performanceLimit));
+  if (performanceName === "throttle") windowScrollUpdate = throttle(eventHandlerScroll, parseFloat(performanceLimit));
   (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useEffect)(function () {
-    window.addEventListener('scroll', windowScrollUpdate);
-    window.addEventListener('touchmove', windowScrollUpdate);
+    window.addEventListener("scroll", windowScrollUpdate);
+    window.addEventListener("touchmove", windowScrollUpdate);
     return function () {
-      window.removeEventListener('scroll', windowScrollUpdate);
-      window.removeEventListener('touchmove', windowScrollUpdate);
+      window.removeEventListener("scroll", windowScrollUpdate);
+      window.removeEventListener("touchmove", windowScrollUpdate);
     };
   }, []);
   return [scrollData, windowScrollUpdate];
