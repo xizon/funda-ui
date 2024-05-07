@@ -780,6 +780,8 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
           function handleCloseWin(e) {
             if (typeof e !== 'undefined' && e !== null) {
               e.preventDefault();
+
+              // Prevent click events of parent nested Modal
               e.stopPropagation();
             }
             closeAction();
@@ -790,6 +792,8 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
           function handleOpenWin(e) {
             if (typeof e !== 'undefined' && e !== null) {
               e.preventDefault();
+
+              // Prevent click events of parent nested Modal
               e.stopPropagation();
             }
             openAction();
@@ -4094,13 +4098,13 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
             const [value, setValue] = useState("");
             const el = useRef<HTMLTextAreaElement>(null);
         
-            useAutosizeTextArea(
-                el.current, 
-                value,
-                (res) => {
-                    onResize?.(event, valRef.current, res);
+            useAutosizeTextArea({
+                el: el.current, 
+                value: value,
+                cb: (res) => {
+                    console.log('dimensions: ', res);
                 }
-            );
+            });
         
             const handleChange = (evt: React.ChangeEvent<HTMLTextAreaElement>) => {
                 const val = evt.target?.value;
@@ -4123,10 +4127,10 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
         
          */
 
-        var useAutosizeTextArea = function useAutosizeTextArea(props) {
-          var el = props.el,
-            value = props.value,
-            cb = props.cb;
+        var useAutosizeTextArea = function useAutosizeTextArea(_ref) {
+          var el = _ref.el,
+            value = _ref.value,
+            cb = _ref.cb;
           var _useState = (0, external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)(0),
             _useState2 = _slicedToArray(_useState, 2),
             defaultRowHeight = _useState2[0],
@@ -4136,30 +4140,30 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
             defaultRowHeightInit = _useState4[0],
             setDefaultRowHeightInit = _useState4[1];
           (0, external_root_React_commonjs2_react_commonjs_react_amd_react_.useEffect)(function () {
-            if (el.current) {
-              var style = el.current.currentStyle || window.getComputedStyle(el.current);
-              var _controlWidth = el.current.scrollWidth + parseInt(style.borderLeftWidth) + parseInt(style.borderRightWidth);
+            if (el) {
+              var style = el.currentStyle || window.getComputedStyle(el);
+              var _controlWidth = el.scrollWidth + parseInt(style.borderLeftWidth) + parseInt(style.borderRightWidth);
 
               // initialize default row height
-              if (el.current.scrollHeight > 0 && !defaultRowHeightInit) {
-                setDefaultRowHeight(el.current.scrollHeight + parseInt(style.borderTopWidth) + parseInt(style.borderBottomWidth));
+              if (el.scrollHeight > 0 && !defaultRowHeightInit) {
+                setDefaultRowHeight(el.scrollHeight + parseInt(style.borderTopWidth) + parseInt(style.borderBottomWidth));
                 setDefaultRowHeightInit(true);
               }
 
               // restore default row height
               if (defaultRowHeight > 0) {
-                el.current.style.height = defaultRowHeight + "px";
+                el.style.height = defaultRowHeight + "px";
               }
 
               // reset the height momentarily to get the correct scrollHeight for the textarea
-              var scrollHeight = el.current.scrollHeight;
+              var scrollHeight = el.scrollHeight;
 
               // then set the height directly, outside of the render loop
               // Trying to set this with state or a ref will product an incorrect value.
 
               // !!! Compare initial height and changed height
               if (scrollHeight > defaultRowHeight && defaultRowHeight > 0) {
-                el.current.style.height = scrollHeight + "px";
+                el.style.height = scrollHeight + "px";
               }
               cb === null || cb === void 0 ? void 0 : cb([_controlWidth, scrollHeight]);
             }
@@ -4260,7 +4264,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
             isOutside = _ref.isOutside,
             handle = _ref.handle,
             _ref$spyElement = _ref.spyElement,
-            spyElement = _ref$spyElement === void 0 ? document : _ref$spyElement;
+            spyElement = _ref$spyElement === void 0 ? typeof document === 'undefined' ? null : document : _ref$spyElement;
           var isOutsideRef = (0, external_root_React_commonjs2_react_commonjs_react_amd_react_.useRef)(isOutside);
           var handleRef = (0, external_root_React_commonjs2_react_commonjs_react_amd_react_.useRef)(handle);
           (0, external_root_React_commonjs2_react_commonjs_react_amd_react_.useEffect)(function () {
@@ -4379,7 +4383,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
             handleDown = _ref.handleDown,
             handleUp = _ref.handleUp,
             _ref$spyElement = _ref.spyElement,
-            spyElement = _ref$spyElement === void 0 ? window : _ref$spyElement;
+            spyElement = _ref$spyElement === void 0 ? typeof window === 'undefined' ? null : window : _ref$spyElement;
           var _useState = (0, external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)(false),
             _useState2 = useKeyPress_slicedToArray(_useState, 2),
             keyPressed = _useState2[0],

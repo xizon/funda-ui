@@ -31,7 +31,7 @@ function useClickOutside({
     enabled,
     isOutside,
     handle,
-    spyElement = document,
+    spyElement = typeof document === 'undefined' ? null : document,
 }: UseClickOutsideProps, deps: any[]) {
     const isOutsideRef = useRef<(event: PointerEvent) => boolean>(isOutside);
     const handleRef = useRef<(event: PointerEvent) => void>(handle);

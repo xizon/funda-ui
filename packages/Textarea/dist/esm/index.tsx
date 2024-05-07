@@ -1,10 +1,10 @@
 import React, { useId, useState, useEffect, useRef, forwardRef, KeyboardEvent, useImperativeHandle } from 'react';
 
 
-
 import {
     useAutosizeTextArea
 } from 'funda-utils';
+
 
 
 declare module 'react' {
@@ -44,7 +44,7 @@ type TextareaProps = {
     onBlur?: (e: any, el: any) => void;
     onFocus?: (e: any, el: any) => void;
     onPressEnter?: (e: any, el: any) => void;
-    onResize?: (e: any, el: any, params: any) => void;
+    onResize?: (el: any, params: number[]) => void;
     
 };
 
@@ -109,13 +109,13 @@ const Textarea = forwardRef((props: TextareaProps, ref: any) => {
 
 
     // auto size
-    useAutosizeTextArea(
-        autoSize ? valRef.current : null, 
-        autoSize ? changedVal : '',
-        (res: any[]) => {
-            onResize?.(event, valRef.current, res);
+    useAutosizeTextArea({
+        el: autoSize ? valRef.current : null,
+        value: autoSize ? changedVal : '',
+        cb: (res: any[]) => {
+            onResize?.(valRef.current, res);
         }
-    );
+    });
 
     function handleFocus(event: any) {
         const el = event.target;

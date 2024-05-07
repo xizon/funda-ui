@@ -650,6 +650,8 @@ var ModalDialog = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_r
   function handleCloseWin(e) {
     if (typeof e !== 'undefined' && e !== null) {
       e.preventDefault();
+
+      // Prevent click events of parent nested Modal
       e.stopPropagation();
     }
     closeAction();
@@ -660,6 +662,8 @@ var ModalDialog = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_r
   function handleOpenWin(e) {
     if (typeof e !== 'undefined' && e !== null) {
       e.preventDefault();
+
+      // Prevent click events of parent nested Modal
       e.stopPropagation();
     }
     openAction();

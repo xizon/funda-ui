@@ -48,7 +48,7 @@ const useKeyPress = ({
     keyCode, 
     handleDown, 
     handleUp,
-    spyElement = window,
+    spyElement = typeof window === 'undefined' ? null : window,
 }: UseKeyPressProps, deps: any[]): boolean => {
     const [keyPressed, setKeyPressed] = useState(false);
     const multipleKeys = Array.isArray(keyCode);

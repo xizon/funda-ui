@@ -150,6 +150,8 @@ const ModalDialog = forwardRef((props: ModalDialogProps, ref: React.ForwardedRef
     function handleCloseWin(e: any) {
         if (typeof e !== 'undefined' && e !== null) {
             e.preventDefault();
+
+            // Prevent click events of parent nested Modal
             e.stopPropagation();
         }
 
@@ -163,6 +165,8 @@ const ModalDialog = forwardRef((props: ModalDialogProps, ref: React.ForwardedRef
     function handleOpenWin(e: any) {
         if (typeof e !== 'undefined' && e !== null) {
             e.preventDefault();
+
+            // Prevent click events of parent nested Modal
             e.stopPropagation();
         }
 

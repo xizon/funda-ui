@@ -780,6 +780,8 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
           function handleCloseWin(e) {
             if (typeof e !== 'undefined' && e !== null) {
               e.preventDefault();
+
+              // Prevent click events of parent nested Modal
               e.stopPropagation();
             }
             closeAction();
@@ -790,6 +792,8 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
           function handleOpenWin(e) {
             if (typeof e !== 'undefined' && e !== null) {
               e.preventDefault();
+
+              // Prevent click events of parent nested Modal
               e.stopPropagation();
             }
             openAction();
