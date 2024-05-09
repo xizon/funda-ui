@@ -11,7 +11,6 @@ import LiveSearch from 'funda-ui/LiveSearch';
 | --- | --- | --- | --- |
 | `ref` | React.ForwardedRef | - | It is the return element of this component.  |
 | `popupRef` | React.RefObject | - | It exposes the following methods when the component's popup opens or closes:  <br /> <ol><li>`popupRef.current.close()`</li></ol> |
-| `allowSpacingRetrive` | boolean | false | Allow Spaces to return all results. <blockquote>The condition is that the database interface can retrieve whitespace data</blockquote> |
 | `wrapperClassName` | string | `mb-3 position-relative` | The class name of the control wrapper. |
 | `controlClassName` | string | `form-control` | The class name of the control. |
 | `controlExClassName` | string | - | The extended class name of `controlClassName`. |
@@ -40,6 +39,7 @@ import LiveSearch from 'funda-ui/LiveSearch';
 | `icon` | ReactNode  | - | Set the icon of search. <blockquote>Valid when `fetchTrigger` is true.</blockquote> |
 | `winWidth` | number \| function  | `auto` | Set the container width of options. Such as: `500px` or `() => window.innerWidth/2 + 'px'`  |
 | `data`  <blockquote>You could use [key](https://react.dev/learn/rendering-lists#why-does-react-need-keys) instead of it</blockquote>  | any  | - | Incoming data, you can set the third parameter of `onFetch`. <blockquote>Changes in the `data` value will cause the component to re-render. It will be used when the value or content does not change when switching routes and needs to re-render the component or get the request.</blockquote> <hr /> <blockquote>!!!Note: Using `data` and `value` at the same time may cause two different parameter transfers, which will affect the final rendering. Please choose the appropriate usage based on your business. Generally speaking, if the `multiSelect` exists, it is not recommended to use the `data`.</blockquote>|
+| `allowSpacingRetrive` | boolean | false | Allow Spaces to return all results. <blockquote>The condition is that the database interface can retrieve whitespace data. By default, using spaces will return no results.</blockquote> |
 | `autoShowOptions` | boolean  | false | Force display of the option list. |
 | `fetchTrigger` | boolean  | false | Use buttons to trigger data queries. |
 | `fetchNoneInfo` | string  | - | The text of the data not fetched. <br />Only takes effect when `fetchTrigger` is *true*. |
