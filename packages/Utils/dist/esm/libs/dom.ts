@@ -132,6 +132,7 @@ function nodeContains(parent: Node, child: Node): boolean {
     return false;
 }
 
+
 export {
     getNextSiblings,
     getPreviousSiblings,

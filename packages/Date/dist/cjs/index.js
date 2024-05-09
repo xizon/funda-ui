@@ -1192,6 +1192,10 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
             return (/* reexport */_isHTMLElement
             );
           },
+          "isInViewport": function isInViewport() {
+            return (/* reexport */_isInViewport
+            );
+          },
           "isJSON": function isJSON() {
             return (/* reexport */_isJSON
             );
@@ -3446,6 +3450,16 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
           return result;
         }
         ;
+        ; // CONCATENATED MODULE: ./src/libs/viewport.ts
+        /**
+         * Check if an element is in the viewport
+         * @param {HTMLElement} elem 
+         * @returns {boolean}
+         */
+        function _isInViewport(elem) {
+          var bounding = elem.getBoundingClientRect();
+          return bounding.top >= 0 && bounding.left >= 0 && bounding.bottom <= (window.innerHeight || document.documentElement.clientHeight) && bounding.right <= (window.innerWidth || document.documentElement.clientWidth);
+        }
 
         // EXTERNAL MODULE: external {"root":"React","commonjs2":"react","commonjs":"react","amd":"react"}
         var external_root_React_commonjs2_react_commonjs_react_amd_react_ = __nested_webpack_require_1471__(787);
@@ -3869,6 +3883,8 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
             keyPressed = _useState2[0],
             setKeyPressed = _useState2[1];
           var multipleKeys = Array.isArray(keyCode);
+
+          // `Escape`, `Enter`, `Alt`, `Control`, `CapsLock`, `Shift`, `ArrowUp`, `ArrowDown`, `ArrowLeft`, `ArrowRight` `w`, `e`, ...
           var eventHandlerDown = function eventHandlerDown(event) {
             var key = event.code;
             if (multipleKeys) {
@@ -4748,8 +4764,12 @@ var en_US_default = /*#__PURE__*/__webpack_require__.n(en_US);
 var zh_CN = __webpack_require__(357);
 var zh_CN_default = /*#__PURE__*/__webpack_require__.n(zh_CN);
 ;// CONCATENATED MODULE: ./src/index.tsx
+function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
 var _excluded = ["contentRef", "popupRef", "triggerClassName", "popupClassName", "wrapperClassName", "controlClassName", "controlGroupWrapperClassName", "controlGroupTextClassName", "delimiter", "hideClearButton", "showToolsWhenHover", "offset", "exceededSidePosOffset", "localization", "type", "onlyTime", "truncateSeconds", "valueUseSlash", "disabled", "required", "readOnly", "value", "clickInitValue", "min", "max", "placeholder", "label", "units", "name", "alt", "id", "iconLeft", "iconRight", "autoComplete", "style", "tabIndex", "onLoad", "onChange", "onBlur", "onFocus", "onPressEnter", "onOpenPopup", "onClosePopup", "onChangeDate", "onChangeMonth", "onChangeYear", "onChangeToday", "onChangeHours", "onChangeMinutes", "onChangeSeconds", "langHoursTitle", "langMinutesTitle", "langSecondsTitle", "langWeek", "langWeekFull", "langMonths", "langMonthsFull", "langToday"];
+function _regeneratorRuntime() { "use strict"; /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/facebook/regenerator/blob/main/LICENSE */ _regeneratorRuntime = function _regeneratorRuntime() { return exports; }; var exports = {}, Op = Object.prototype, hasOwn = Op.hasOwnProperty, defineProperty = Object.defineProperty || function (obj, key, desc) { obj[key] = desc.value; }, $Symbol = "function" == typeof Symbol ? Symbol : {}, iteratorSymbol = $Symbol.iterator || "@@iterator", asyncIteratorSymbol = $Symbol.asyncIterator || "@@asyncIterator", toStringTagSymbol = $Symbol.toStringTag || "@@toStringTag"; function define(obj, key, value) { return Object.defineProperty(obj, key, { value: value, enumerable: !0, configurable: !0, writable: !0 }), obj[key]; } try { define({}, ""); } catch (err) { define = function define(obj, key, value) { return obj[key] = value; }; } function wrap(innerFn, outerFn, self, tryLocsList) { var protoGenerator = outerFn && outerFn.prototype instanceof Generator ? outerFn : Generator, generator = Object.create(protoGenerator.prototype), context = new Context(tryLocsList || []); return defineProperty(generator, "_invoke", { value: makeInvokeMethod(innerFn, self, context) }), generator; } function tryCatch(fn, obj, arg) { try { return { type: "normal", arg: fn.call(obj, arg) }; } catch (err) { return { type: "throw", arg: err }; } } exports.wrap = wrap; var ContinueSentinel = {}; function Generator() {} function GeneratorFunction() {} function GeneratorFunctionPrototype() {} var IteratorPrototype = {}; define(IteratorPrototype, iteratorSymbol, function () { return this; }); var getProto = Object.getPrototypeOf, NativeIteratorPrototype = getProto && getProto(getProto(values([]))); NativeIteratorPrototype && NativeIteratorPrototype !== Op && hasOwn.call(NativeIteratorPrototype, iteratorSymbol) && (IteratorPrototype = NativeIteratorPrototype); var Gp = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(IteratorPrototype); function defineIteratorMethods(prototype) { ["next", "throw", "return"].forEach(function (method) { define(prototype, method, function (arg) { return this._invoke(method, arg); }); }); } function AsyncIterator(generator, PromiseImpl) { function invoke(method, arg, resolve, reject) { var record = tryCatch(generator[method], generator, arg); if ("throw" !== record.type) { var result = record.arg, value = result.value; return value && "object" == _typeof(value) && hasOwn.call(value, "__await") ? PromiseImpl.resolve(value.__await).then(function (value) { invoke("next", value, resolve, reject); }, function (err) { invoke("throw", err, resolve, reject); }) : PromiseImpl.resolve(value).then(function (unwrapped) { result.value = unwrapped, resolve(result); }, function (error) { return invoke("throw", error, resolve, reject); }); } reject(record.arg); } var previousPromise; defineProperty(this, "_invoke", { value: function value(method, arg) { function callInvokeWithMethodAndArg() { return new PromiseImpl(function (resolve, reject) { invoke(method, arg, resolve, reject); }); } return previousPromise = previousPromise ? previousPromise.then(callInvokeWithMethodAndArg, callInvokeWithMethodAndArg) : callInvokeWithMethodAndArg(); } }); } function makeInvokeMethod(innerFn, self, context) { var state = "suspendedStart"; return function (method, arg) { if ("executing" === state) throw new Error("Generator is already running"); if ("completed" === state) { if ("throw" === method) throw arg; return doneResult(); } for (context.method = method, context.arg = arg;;) { var delegate = context.delegate; if (delegate) { var delegateResult = maybeInvokeDelegate(delegate, context); if (delegateResult) { if (delegateResult === ContinueSentinel) continue; return delegateResult; } } if ("next" === context.method) context.sent = context._sent = context.arg;else if ("throw" === context.method) { if ("suspendedStart" === state) throw state = "completed", context.arg; context.dispatchException(context.arg); } else "return" === context.method && context.abrupt("return", context.arg); state = "executing"; var record = tryCatch(innerFn, self, context); if ("normal" === record.type) { if (state = context.done ? "completed" : "suspendedYield", record.arg === ContinueSentinel) continue; return { value: record.arg, done: context.done }; } "throw" === record.type && (state = "completed", context.method = "throw", context.arg = record.arg); } }; } function maybeInvokeDelegate(delegate, context) { var methodName = context.method, method = delegate.iterator[methodName]; if (undefined === method) return context.delegate = null, "throw" === methodName && delegate.iterator["return"] && (context.method = "return", context.arg = undefined, maybeInvokeDelegate(delegate, context), "throw" === context.method) || "return" !== methodName && (context.method = "throw", context.arg = new TypeError("The iterator does not provide a '" + methodName + "' method")), ContinueSentinel; var record = tryCatch(method, delegate.iterator, context.arg); if ("throw" === record.type) return context.method = "throw", context.arg = record.arg, context.delegate = null, ContinueSentinel; var info = record.arg; return info ? info.done ? (context[delegate.resultName] = info.value, context.next = delegate.nextLoc, "return" !== context.method && (context.method = "next", context.arg = undefined), context.delegate = null, ContinueSentinel) : info : (context.method = "throw", context.arg = new TypeError("iterator result is not an object"), context.delegate = null, ContinueSentinel); } function pushTryEntry(locs) { var entry = { tryLoc: locs[0] }; 1 in locs && (entry.catchLoc = locs[1]), 2 in locs && (entry.finallyLoc = locs[2], entry.afterLoc = locs[3]), this.tryEntries.push(entry); } function resetTryEntry(entry) { var record = entry.completion || {}; record.type = "normal", delete record.arg, entry.completion = record; } function Context(tryLocsList) { this.tryEntries = [{ tryLoc: "root" }], tryLocsList.forEach(pushTryEntry, this), this.reset(!0); } function values(iterable) { if (iterable) { var iteratorMethod = iterable[iteratorSymbol]; if (iteratorMethod) return iteratorMethod.call(iterable); if ("function" == typeof iterable.next) return iterable; if (!isNaN(iterable.length)) { var i = -1, next = function next() { for (; ++i < iterable.length;) if (hasOwn.call(iterable, i)) return next.value = iterable[i], next.done = !1, next; return next.value = undefined, next.done = !0, next; }; return next.next = next; } } return { next: doneResult }; } function doneResult() { return { value: undefined, done: !0 }; } return GeneratorFunction.prototype = GeneratorFunctionPrototype, defineProperty(Gp, "constructor", { value: GeneratorFunctionPrototype, configurable: !0 }), defineProperty(GeneratorFunctionPrototype, "constructor", { value: GeneratorFunction, configurable: !0 }), GeneratorFunction.displayName = define(GeneratorFunctionPrototype, toStringTagSymbol, "GeneratorFunction"), exports.isGeneratorFunction = function (genFun) { var ctor = "function" == typeof genFun && genFun.constructor; return !!ctor && (ctor === GeneratorFunction || "GeneratorFunction" === (ctor.displayName || ctor.name)); }, exports.mark = function (genFun) { return Object.setPrototypeOf ? Object.setPrototypeOf(genFun, GeneratorFunctionPrototype) : (genFun.__proto__ = GeneratorFunctionPrototype, define(genFun, toStringTagSymbol, "GeneratorFunction")), genFun.prototype = Object.create(Gp), genFun; }, exports.awrap = function (arg) { return { __await: arg }; }, defineIteratorMethods(AsyncIterator.prototype), define(AsyncIterator.prototype, asyncIteratorSymbol, function () { return this; }), exports.AsyncIterator = AsyncIterator, exports.async = function (innerFn, outerFn, self, tryLocsList, PromiseImpl) { void 0 === PromiseImpl && (PromiseImpl = Promise); var iter = new AsyncIterator(wrap(innerFn, outerFn, self, tryLocsList), PromiseImpl); return exports.isGeneratorFunction(outerFn) ? iter : iter.next().then(function (result) { return result.done ? result.value : iter.next(); }); }, defineIteratorMethods(Gp), define(Gp, toStringTagSymbol, "Generator"), define(Gp, iteratorSymbol, function () { return this; }), define(Gp, "toString", function () { return "[object Generator]"; }), exports.keys = function (val) { var object = Object(val), keys = []; for (var key in object) keys.push(key); return keys.reverse(), function next() { for (; keys.length;) { var key = keys.pop(); if (key in object) return next.value = key, next.done = !1, next; } return next.done = !0, next; }; }, exports.values = values, Context.prototype = { constructor: Context, reset: function reset(skipTempReset) { if (this.prev = 0, this.next = 0, this.sent = this._sent = undefined, this.done = !1, this.delegate = null, this.method = "next", this.arg = undefined, this.tryEntries.forEach(resetTryEntry), !skipTempReset) for (var name in this) "t" === name.charAt(0) && hasOwn.call(this, name) && !isNaN(+name.slice(1)) && (this[name] = undefined); }, stop: function stop() { this.done = !0; var rootRecord = this.tryEntries[0].completion; if ("throw" === rootRecord.type) throw rootRecord.arg; return this.rval; }, dispatchException: function dispatchException(exception) { if (this.done) throw exception; var context = this; function handle(loc, caught) { return record.type = "throw", record.arg = exception, context.next = loc, caught && (context.method = "next", context.arg = undefined), !!caught; } for (var i = this.tryEntries.length - 1; i >= 0; --i) { var entry = this.tryEntries[i], record = entry.completion; if ("root" === entry.tryLoc) return handle("end"); if (entry.tryLoc <= this.prev) { var hasCatch = hasOwn.call(entry, "catchLoc"), hasFinally = hasOwn.call(entry, "finallyLoc"); if (hasCatch && hasFinally) { if (this.prev < entry.catchLoc) return handle(entry.catchLoc, !0); if (this.prev < entry.finallyLoc) return handle(entry.finallyLoc); } else if (hasCatch) { if (this.prev < entry.catchLoc) return handle(entry.catchLoc, !0); } else { if (!hasFinally) throw new Error("try statement without catch or finally"); if (this.prev < entry.finallyLoc) return handle(entry.finallyLoc); } } } }, abrupt: function abrupt(type, arg) { for (var i = this.tryEntries.length - 1; i >= 0; --i) { var entry = this.tryEntries[i]; if (entry.tryLoc <= this.prev && hasOwn.call(entry, "finallyLoc") && this.prev < entry.finallyLoc) { var finallyEntry = entry; break; } } finallyEntry && ("break" === type || "continue" === type) && finallyEntry.tryLoc <= arg && arg <= finallyEntry.finallyLoc && (finallyEntry = null); var record = finallyEntry ? finallyEntry.completion : {}; return record.type = type, record.arg = arg, finallyEntry ? (this.method = "next", this.next = finallyEntry.finallyLoc, ContinueSentinel) : this.complete(record); }, complete: function complete(record, afterLoc) { if ("throw" === record.type) throw record.arg; return "break" === record.type || "continue" === record.type ? this.next = record.arg : "return" === record.type ? (this.rval = this.arg = record.arg, this.method = "return", this.next = "end") : "normal" === record.type && afterLoc && (this.next = afterLoc), ContinueSentinel; }, finish: function finish(finallyLoc) { for (var i = this.tryEntries.length - 1; i >= 0; --i) { var entry = this.tryEntries[i]; if (entry.finallyLoc === finallyLoc) return this.complete(entry.completion, entry.afterLoc), resetTryEntry(entry), ContinueSentinel; } }, "catch": function _catch(tryLoc) { for (var i = this.tryEntries.length - 1; i >= 0; --i) { var entry = this.tryEntries[i]; if (entry.tryLoc === tryLoc) { var record = entry.completion; if ("throw" === record.type) { var thrown = record.arg; resetTryEntry(entry); } return thrown; } } throw new Error("illegal catch attempt"); }, delegateYield: function delegateYield(iterable, resultName, nextLoc) { return this.delegate = { iterator: values(iterable), resultName: resultName, nextLoc: nextLoc }, "next" === this.method && (this.arg = undefined), ContinueSentinel; } }, exports; }
 function _extends() { _extends = Object.assign ? Object.assign.bind() : function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
 function src_slicedToArray(arr, i) { return src_arrayWithHoles(arr) || src_iterableToArrayLimit(arr, i) || src_unsupportedIterableToArray(arr, i) || src_nonIterableRest(); }
 function src_nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
 function src_unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return src_arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return src_arrayLikeToArray(o, minLen); }
@@ -4845,10 +4865,15 @@ var src_Date = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_reac
   var SHOW_TOOLS_ENABLED = !(typeof showToolsWhenHover === 'undefined' || showToolsWhenHover === false);
   var HIDE_CLEAR_BTN_ENABLED = !(typeof hideClearButton === 'undefined' || hideClearButton === false);
 
+  //
+  var COM_HAS_DATE = typeof onlyTime === 'undefined' || onlyTime === false;
+  var COM_HAS_TIME = type === 'datetime-local' || type === 'time';
+  var COM_NO_SECONDS = typeof truncateSeconds === 'undefined' || truncateSeconds === false;
+
   // placeholder
   var datePlaceholder = placeholder || placeholder === '' ? placeholder : 'yyyy/MM/dd HH:mm:ss';
   if (typeof placeholder === 'undefined') {
-    datePlaceholder = "".concat(typeof onlyTime === 'undefined' || onlyTime === false ? 'yyyy/MM/dd ' : '').concat(type === 'datetime-local' || type === 'time' ? "HH:mm".concat(typeof truncateSeconds === 'undefined' || truncateSeconds === false ? ':ss' : '') : '');
+    datePlaceholder = "".concat(COM_HAS_DATE ? 'yyyy/MM/dd ' : '').concat(COM_HAS_TIME ? "HH:mm".concat(COM_NO_SECONDS ? ':ss' : '') : '');
   }
   if (typeof localization === 'string') {
     switch (localization) {
@@ -4924,6 +4949,17 @@ var src_Date = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_reac
   // blur for popup window
   var popupBlurEnabled = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useRef)(false); // DO NOT USE 'useState()'
 
+  // effective element movement on keystroke
+  var _useState15 = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)(COM_HAS_DATE ? 'el-year' : 'el-hours'),
+    _useState16 = src_slicedToArray(_useState15, 2),
+    focusableSplitInputId = _useState16[0],
+    setFocusableSplitInputId = _useState16[1];
+  var _useState17 = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)(['el-year', 'el-month', 'el-day', 'el-hours', 'el-minutes', 'el-seconds']),
+    _useState18 = src_slicedToArray(_useState17, 1),
+    splitInputsIds = _useState18[0];
+  var splitInputs = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useRef)(new Map());
+  var splitInputsTabIndex = tabIndex || 0;
+
   //
   var getAllSplittingInputs = function getAllSplittingInputs() {
     return [partedInputYear.current, partedInputMonth.current, partedInputDay.current, partedInputHours.current, partedInputMinutes.current, partedInputSeconds.current];
@@ -4993,15 +5029,6 @@ var src_Date = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_reac
   //     }
   // });
 
-  var eventFire = function eventFire(el, etype) {
-    if (el.fireEvent) {
-      el.fireEvent('on' + etype);
-    } else {
-      var evObj = document.createEvent('Events');
-      evObj.initEvent(etype, true, false);
-      el.dispatchEvent(evObj);
-    }
-  };
   var getFullTimeData = function getFullTimeData(v) {
     var padZeroEnabled = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : true;
     if (typeof v === 'string' && !(0,Utils_dist_cjs.isValidDate)(v)) {
@@ -5190,17 +5217,72 @@ var src_Date = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_reac
     var _full = "".concat(_date, " ").concat(splitVals[3], ":").concat(splitVals[4], ":").concat(splitVals[5]);
     _onChange === null || _onChange === void 0 ? void 0 : _onChange(inputRef.current, valueResConverter(_full), (0,Utils_dist_cjs.isValidDate)(_full), getAllSplittingInputs());
   }
-  function handleKeypress(event) {
-    if (event.code == "Enter") {
-      event.preventDefault();
-      getAllSplittingInputs().forEach(function (el) {
-        if (el !== null) el.blur();
-      });
-      handleBlur(null);
+  function handleKeyPressed(_x2) {
+    return _handleKeyPressed.apply(this, arguments);
+  }
+  function _handleKeyPressed() {
+    _handleKeyPressed = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee(event) {
+      var key;
+      return _regeneratorRuntime().wrap(function _callee$(_context) {
+        while (1) switch (_context.prev = _context.next) {
+          case 0:
+            key = event.code;
+            if (key === 'Enter' || key === 'NumpadEnter') {
+              event.preventDefault();
+              getAllSplittingInputs().forEach(function (el) {
+                if (el !== null) el.blur();
+              });
+              handleBlur(null);
 
-      //
-      onPressEnter === null || onPressEnter === void 0 ? void 0 : onPressEnter(inputRef.current, getAllSplittingInputs());
-    }
+              //
+              onPressEnter === null || onPressEnter === void 0 ? void 0 : onPressEnter(inputRef.current, getAllSplittingInputs());
+            }
+          case 2:
+          case "end":
+            return _context.stop();
+        }
+      }, _callee);
+    }));
+    return _handleKeyPressed.apply(this, arguments);
+  }
+  function handleKeyPressedForSplitInputs(_x3) {
+    return _handleKeyPressedForSplitInputs.apply(this, arguments);
+  }
+  function _handleKeyPressedForSplitInputs() {
+    _handleKeyPressedForSplitInputs = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee2(event) {
+      var key, btnMark, move;
+      return _regeneratorRuntime().wrap(function _callee2$(_context2) {
+        while (1) switch (_context2.prev = _context2.next) {
+          case 0:
+            key = event.code;
+            btnMark = event.target.dataset.mark;
+            move = function move(key) {
+              var currentIndex = splitInputsIds.findIndex(function (s) {
+                return s === btnMark;
+              });
+              var nextIndex = key === 'ArrowLeft' ? currentIndex === splitInputsIds.length - 1 ? 0 : currentIndex - 1 : currentIndex === splitInputsIds.length - 1 ? 0 : currentIndex + 1;
+              var nextOption = splitInputsIds.at(nextIndex);
+              if (nextOption) {
+                setTimeout(function () {
+                  var _splitInputs$current$;
+                  (_splitInputs$current$ = splitInputs.current.get(nextOption)) === null || _splitInputs$current$ === void 0 ? void 0 : _splitInputs$current$.select();
+                }, 0);
+                setFocusableSplitInputId(nextOption);
+              }
+            };
+            if (key === 'ArrowLeft') {
+              move('ArrowLeft');
+            }
+            if (key === 'ArrowRight') {
+              move('ArrowRight');
+            }
+          case 5:
+          case "end":
+            return _context2.stop();
+        }
+      }, _callee2);
+    }));
+    return _handleKeyPressedForSplitInputs.apply(this, arguments);
   }
   function clearAll() {
     setDateDefaultValueExist(false);
@@ -5216,7 +5298,7 @@ var src_Date = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_reac
     var v = (0,Utils_dist_cjs.isValidDate)(inputData) ? inputData : "".concat(getFullTimeData((0,Utils_dist_cjs.getNow)()).date, " ").concat(inputData);
     var _onlyTime = "".concat(getFullTimeData(v).hours, ":").concat(getFullTimeData(v).minutes).concat(truncateSeconds ? "" : ":".concat(getFullTimeData(v).seconds));
     var _date = "".concat(getFullTimeData(v).year).concat(valueUseSlash ? "/" : '-').concat(getFullTimeData(v).month).concat(valueUseSlash ? "/" : '-').concat(getFullTimeData(v).day);
-    var _time = type === 'datetime-local' || type === 'time' ? " ".concat(getFullTimeData(v).hours, ":").concat(getFullTimeData(v).minutes).concat(truncateSeconds ? "" : ":".concat(getFullTimeData(v).seconds)) : '';
+    var _time = COM_HAS_TIME ? " ".concat(getFullTimeData(v).hours, ":").concat(getFullTimeData(v).minutes).concat(truncateSeconds ? "" : ":".concat(getFullTimeData(v).seconds)) : '';
     return onlyTime ? _onlyTime : "".concat(_date).concat(_time);
   }
   function checkDisabledSeconds(curYear, curMonth, curDay, curHours, curMinutes, curSeconds) {
@@ -5398,7 +5480,7 @@ var src_Date = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_reac
     onClick: handleShow,
     onFocus: handleFocus,
     onBlur: handleBlur,
-    onKeyDown: handleKeypress
+    onKeyDown: handleKeyPressed
   }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
     className: "date2d__control"
   }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((cjs_default()), _extends({
@@ -5433,10 +5515,19 @@ var src_Date = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_reac
     required: required,
     appendControl: /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
       className: "date2d__control__inputplaceholder"
-    }, typeof onlyTime === 'undefined' || onlyTime === false ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("input", _extends({
-      ref: partedInputYear,
+    }, COM_HAS_DATE ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("input", _extends({
+      ref: function ref(node) {
+        partedInputYear.current = node;
+        if (node) {
+          splitInputs.current.set(splitInputsIds[0], node);
+        } else {
+          splitInputs.current["delete"](splitInputsIds[0]);
+        }
+      },
+      tabIndex: splitInputsTabIndex,
+      "data-mark": "".concat(splitInputsIds[0]),
+      onKeyDown: handleKeyPressedForSplitInputs,
       inputMode: "numeric",
-      tabIndex: tabIndex || 0,
       className: "date2d__control__inputplaceholder--year",
       value: !dateDefaultValueExist ? "" : splitVals[0],
       maxLength: 4,
@@ -5461,9 +5552,18 @@ var src_Date = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_reac
         setTimeVal([splitVals[3], splitVals[4], splitVals[5]]);
       }
     }, attributes)), dateDefaultValueExist ? DELIMITER_DATE : null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("input", _extends({
-      ref: partedInputMonth,
+      ref: function ref(node) {
+        partedInputMonth.current = node;
+        if (node) {
+          splitInputs.current.set(splitInputsIds[1], node);
+        } else {
+          splitInputs.current["delete"](splitInputsIds[1]);
+        }
+      },
+      tabIndex: splitInputsTabIndex,
+      "data-mark": "".concat(splitInputsIds[1]),
+      onKeyDown: handleKeyPressedForSplitInputs,
       inputMode: "numeric",
-      tabIndex: tabIndex || 0,
       className: "date2d__control__inputplaceholder--month",
       value: !dateDefaultValueExist ? "" : splitVals[1],
       maxLength: 2,
@@ -5491,9 +5591,18 @@ var src_Date = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_reac
         setTimeVal([splitVals[3], splitVals[4], splitVals[5]]);
       }
     }, attributes)), dateDefaultValueExist ? DELIMITER_DATE : null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("input", _extends({
-      ref: partedInputDay,
+      ref: function ref(node) {
+        partedInputDay.current = node;
+        if (node) {
+          splitInputs.current.set(splitInputsIds[2], node);
+        } else {
+          splitInputs.current["delete"](splitInputsIds[2]);
+        }
+      },
+      tabIndex: splitInputsTabIndex,
+      "data-mark": "".concat(splitInputsIds[2]),
+      onKeyDown: handleKeyPressedForSplitInputs,
       inputMode: "numeric",
-      tabIndex: tabIndex || 0,
       className: "date2d__control__inputplaceholder--day",
       value: !dateDefaultValueExist ? "" : splitVals[2],
       maxLength: 2,
@@ -5525,10 +5634,19 @@ var src_Date = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_reac
         setChangedVal(_full);
         setTimeVal([splitVals[3], splitVals[4], splitVals[5]]);
       }
-    }, attributes)), "\xA0") : null, type === 'datetime-local' || type === 'time' ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("input", _extends({
-      ref: partedInputHours,
+    }, attributes)), "\xA0") : null, COM_HAS_TIME ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("input", _extends({
+      ref: function ref(node) {
+        partedInputHours.current = node;
+        if (node) {
+          splitInputs.current.set(splitInputsIds[3], node);
+        } else {
+          splitInputs.current["delete"](splitInputsIds[3]);
+        }
+      },
+      tabIndex: splitInputsTabIndex,
+      "data-mark": "".concat(splitInputsIds[3]),
+      onKeyDown: handleKeyPressedForSplitInputs,
       inputMode: "numeric",
-      tabIndex: tabIndex || 0,
       className: "date2d__control__inputplaceholder--hours",
       value: !dateDefaultValueExist ? "" : splitVals[3],
       maxLength: 2,
@@ -5553,9 +5671,18 @@ var src_Date = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_reac
         setTimeVal([_val, splitVals[4], splitVals[5]]);
       }
     }, attributes)), dateDefaultValueExist ? DELIMITER_TIME : null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("input", _extends({
-      ref: partedInputMinutes,
+      ref: function ref(node) {
+        partedInputMinutes.current = node;
+        if (node) {
+          splitInputs.current.set(splitInputsIds[4], node);
+        } else {
+          splitInputs.current["delete"](splitInputsIds[4]);
+        }
+      },
+      tabIndex: splitInputsTabIndex,
+      "data-mark": "".concat(splitInputsIds[4]),
+      onKeyDown: handleKeyPressedForSplitInputs,
       inputMode: "numeric",
-      tabIndex: tabIndex || 0,
       className: "date2d__control__inputplaceholder--minutes",
       value: !dateDefaultValueExist ? "" : splitVals[4],
       maxLength: 2,
@@ -5579,10 +5706,19 @@ var src_Date = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_reac
         setChangedVal(_full);
         setTimeVal([splitVals[3], _val, splitVals[5]]);
       }
-    }, attributes)), typeof truncateSeconds === 'undefined' || truncateSeconds === false ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, dateDefaultValueExist ? DELIMITER_TIME : null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("input", _extends({
-      ref: partedInputSeconds,
+    }, attributes)), COM_NO_SECONDS ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, dateDefaultValueExist ? DELIMITER_TIME : null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("input", _extends({
+      ref: function ref(node) {
+        partedInputSeconds.current = node;
+        if (node) {
+          splitInputs.current.set(splitInputsIds[5], node);
+        } else {
+          splitInputs.current["delete"](splitInputsIds[5]);
+        }
+      },
+      tabIndex: splitInputsTabIndex,
+      "data-mark": "".concat(splitInputsIds[5]),
+      onKeyDown: handleKeyPressedForSplitInputs,
       inputMode: "numeric",
-      tabIndex: tabIndex || 0,
       className: "date2d__control__inputplaceholder--seconds",
       value: !dateDefaultValueExist ? "" : splitVals[5],
       maxLength: 2,
@@ -5650,7 +5786,7 @@ var src_Date = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_reac
   }, attributes), /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
     ref: listContentRef,
     className: "date2d__tools-container d-flex flex-row"
-  }, typeof onlyTime === 'undefined' || onlyTime === false ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
+  }, COM_HAS_DATE ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
     className: "date2d__calendar"
   }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement(src_Calendar, {
     min: min,
@@ -5736,7 +5872,7 @@ var src_Date = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_reac
       //
       resetPopupBlurStatus();
     }
-  }))) : null, type === 'datetime-local' || type === 'time' ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
+  }))) : null, COM_HAS_TIME ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
     className: "date2d__hourslist border-end"
   }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("h3", null, _langHoursTitle), /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("ul", null, hoursArr.map(function (hour, i) {
     var _curVal = getFullTimeData("".concat(dateVal, " ").concat(timeVal[0], ":").concat(timeVal[1], ":").concat(timeVal[2]));
@@ -5804,7 +5940,7 @@ var src_Date = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_reac
       },
       className: "".concat(timeVal[1] == v ? 'selected' : '', " ").concat(checkDisabledMinutes(_curVal.year, Number(_curVal.month) - 1, _curVal.day, _curVal.hours, v) ? 'disabled' : '')
     }, v));
-  }))), typeof truncateSeconds === 'undefined' || truncateSeconds === false ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
+  }))), COM_NO_SECONDS ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
     className: "date2d__secondslist border-end"
   }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("h3", null, _langSecondsTitle), /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("ul", null, msArr.map(function (v, i) {
     var _curVal = getFullTimeData("".concat(dateVal, " ").concat(timeVal[0], ":").concat(timeVal[1], ":").concat(timeVal[2]));

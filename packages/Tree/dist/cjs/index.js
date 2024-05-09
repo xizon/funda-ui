@@ -458,6 +458,10 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
             return (/* reexport */_isHTMLElement
             );
           },
+          "isInViewport": function isInViewport() {
+            return (/* reexport */_isInViewport
+            );
+          },
           "isJSON": function isJSON() {
             return (/* reexport */_isJSON
             );
@@ -2712,6 +2716,16 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
           return result;
         }
         ;
+        ; // CONCATENATED MODULE: ./src/libs/viewport.ts
+        /**
+         * Check if an element is in the viewport
+         * @param {HTMLElement} elem 
+         * @returns {boolean}
+         */
+        function _isInViewport(elem) {
+          var bounding = elem.getBoundingClientRect();
+          return bounding.top >= 0 && bounding.left >= 0 && bounding.bottom <= (window.innerHeight || document.documentElement.clientHeight) && bounding.right <= (window.innerWidth || document.documentElement.clientWidth);
+        }
 
         // EXTERNAL MODULE: external {"root":"React","commonjs2":"react","commonjs":"react","amd":"react"}
         var external_root_React_commonjs2_react_commonjs_react_amd_react_ = __nested_webpack_require_1471__(787);
@@ -3135,6 +3149,8 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
             keyPressed = _useState2[0],
             setKeyPressed = _useState2[1];
           var multipleKeys = Array.isArray(keyCode);
+
+          // `Escape`, `Enter`, `Alt`, `Control`, `CapsLock`, `Shift`, `ArrowUp`, `ArrowDown`, `ArrowLeft`, `ArrowRight` `w`, `e`, ...
           var eventHandlerDown = function eventHandlerDown(event) {
             var key = event.code;
             if (multipleKeys) {

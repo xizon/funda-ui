@@ -157,65 +157,6 @@ const LiveSearch = forwardRef((props: LiveSearchProps, ref: any) => {
     const [hasErr, setHasErr] = useState<boolean>(false);
     const [componentFirstLoad, setComponentFirstLoad] = useState<boolean>(false);
 
-    // key
-    const multiplePressed = useKeyPress({
-        keyCode: ['ArrowUp', 'ArrowDown', 'Enter', 'NumpadEnter'],
-        handleUp: (key: any, event: any) => { },
-        handleDown: async (key: any, event: any) => {
-            if (!isOpen) return;
-
-
-            let res: any = null;
-            
-            if (key === 'Enter' || key === 'NumpadEnter') {
-                event.preventDefault();
-             
-                // Determine the "active" class name to avoid listening to other unused components of the same type
-                if (listRef.current === null || !rootRef.current.classList.contains('active')) return;
-
-
-                if (listRef.current !== null) {
-                    const currentData = listRef.current.dataset.data;
-
-                    if (typeof currentData !== 'undefined') {
-                        handleSelect(null, currentData);
-
-                        //
-                        const options = [].slice.call(listRef.current.querySelectorAll('.list-group-item:not(.no-match)'));
-                        options.forEach((node: any) => {
-                            node.classList.remove('active');
-                        });
-
-
-                        //
-                        onChange?.(inputRef.current, options.map((node: HTMLElement) => JSON.parse(node.dataset.itemdata as any)), JSON.parse(currentData), listRef.current);
-
-                    }
-                }
-
-            }
-
-            if (key === 'ArrowUp') {
-                res = await optionFocus('decrease');
-
-            }
-
-            if (key === 'ArrowDown') {
-                res = await optionFocus('increase');
-            }
-
-            // temporary data
-            if (res !== null) listRef.current.dataset.data = JSON.stringify({
-                value: res.dataset.value,
-                label: res.dataset.label,
-                queryString: res.dataset.querystring
-            });
-
-        },
-        spyElement: rootRef.current
-    }, [isOpen]);
-
-
 
     //performance
     const handleChangeFetchSafe = useDebounce((e: any) => {
@@ -260,25 +201,6 @@ const LiveSearch = forwardRef((props: LiveSearchProps, ref: any) => {
             popwinPosInit(false);
         }
     });
-
-
-
-    /**
-     * Check if an element is in the viewport
-     * @param {HTMLElement} elem 
-     * @returns {boolean}
-     */
-    function isInViewport(elem: HTMLElement) {
-        const bounding = elem.getBoundingClientRect();
-        return (
-            bounding.top >= 0 &&
-            bounding.left >= 0 &&
-            bounding.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
-            bounding.right <= (window.innerWidth || document.documentElement.clientWidth)
-        );
-    }
-
-
 
 
 
@@ -727,6 +649,58 @@ const LiveSearch = forwardRef((props: LiveSearchProps, ref: any) => {
 
     }
 
+    async function handleKeyPressed(event: KeyboardEvent<HTMLDivElement>) {
+        const key = event.code;
+
+        if (!isOpen) return;
+
+        let res: any = null;
+
+        if (key === 'Enter' || key === 'NumpadEnter') {
+            event.preventDefault();
+
+            // Determine the "active" class name to avoid listening to other unused components of the same type
+            if (listRef.current === null || !rootRef.current.classList.contains('active')) return;
+
+
+            if (listRef.current !== null) {
+                const currentData = listRef.current.dataset.data;
+
+                if (typeof currentData !== 'undefined') {
+                    handleSelect(null, currentData);
+
+                    //
+                    const options = [].slice.call(listRef.current.querySelectorAll('.list-group-item:not(.no-match)'));
+                    options.forEach((node: any) => {
+                        node.classList.remove('active');
+                    });
+
+
+                    //
+                    onChange?.(inputRef.current, options.map((node: HTMLElement) => JSON.parse(node.dataset.itemdata as any)), JSON.parse(currentData), listRef.current);
+
+                }
+            }
+
+        }
+
+        if (key === 'ArrowUp') {
+            res = await optionFocus('decrease');
+
+        }
+
+        if (key === 'ArrowDown') {
+            res = await optionFocus('increase');
+        }
+
+        // temporary data
+        if (res !== null) listRef.current.dataset.data = JSON.stringify({
+            value: res.dataset.value,
+            label: res.dataset.label,
+            queryString: res.dataset.querystring
+        });
+    }
+    
 
     useEffect(() => {
 
@@ -762,7 +736,12 @@ const LiveSearch = forwardRef((props: LiveSearchProps, ref: any) => {
 
             {label ? <><div className="livesearch__wrapper__label">{typeof label === 'string' ? <label htmlFor={`label-${idRes}`} className="form-label" dangerouslySetInnerHTML={{ __html: `${label}` }}></label> : <label htmlFor={`label-${idRes}`} className="form-label">{label}</label>}</div></> : null}
 
-            <div className={`livesearch__wrapper ${wrapperClassName || wrapperClassName === '' ? wrapperClassName : 'mb-3 position-relative'} ${isOpen ? 'active' : ''}`} ref={rootRef} onMouseLeave={handleMouseLeaveTrigger}>
+            <div 
+                ref={rootRef} 
+                className={`livesearch__wrapper ${wrapperClassName || wrapperClassName === '' ? wrapperClassName : 'mb-3 position-relative'} ${isOpen ? 'active' : ''}`} 
+                onMouseLeave={handleMouseLeaveTrigger}
+                onKeyDown={handleKeyPressed}
+            >
 
        
                 <SearchBar

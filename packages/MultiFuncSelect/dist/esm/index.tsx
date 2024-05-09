@@ -1,11 +1,10 @@
-import React, { useId, useEffect, useState, useRef, forwardRef, useImperativeHandle } from 'react';
+import React, { useId, useEffect, useState, useRef, KeyboardEvent, forwardRef, useImperativeHandle } from 'react';
 
 import RootPortal from 'funda-root-portal';
 import { 
     isJSON,
     useDebounce,
     useClickOutside,
-    useKeyPress,
     useWindowScroll,
     extractContentsOfBrackets,
     convertArrToValByBrackets,
@@ -310,97 +309,6 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
     });
 
 
-
-    // keyboard 
-    const multiplePressed = useKeyPress({
-        keyCode: ['ArrowUp', 'ArrowDown', 'Enter', 'NumpadEnter'],
-        handleUp: (key: any, event: any) => { },
-        handleDown: async (key: any, event: any) => {
-  
-            if (!isOpen) return;
-
-            let res: any = null;
-            
-            if (key === 'Enter' || key === 'NumpadEnter') {
-                event.preventDefault();
-                
-                // Determine the "active" class name to avoid listening to other unused components of the same type
-                if (listRef.current === null || !rootRef.current.classList.contains('active')) return;
-
-                // Avoid selecting options that are disabled
-                if (keyboardSelectedItem.current !== null && keyboardSelectedItem.current.classList.contains('disabled')) return;
-                
-                if (listRef.current !== null) {
-                    const currentData = await listRef.current.dataset.data;
-
-                
-                    if (typeof currentData !== 'undefined') {
-
-                        
-                        const currentControlValueArr: any[] = [];
-                        const currentControlLabelArr: any[] = [];
-
-                        const htmlOptions = [].slice.call(listRef.current.querySelectorAll('.list-group-item:not(.hide):not(.no-match)'));
-
-                        htmlOptions.forEach((node: any) => {
-                            node.classList.remove('active');
-            
-                            // multiple options
-                            if (node.classList.contains('item-selected')) {
-                                currentControlValueArr.push(node.dataset.value);
-                                currentControlLabelArr.push(node.dataset.label);
-                            }
-
-                        });
-
-
-                        handleSelect(null, currentData, currentControlValueArr, currentControlLabelArr);
-
-
-                        //
-                        if (typeof (onChange) === 'function') {
-
-                            onChange?.(
-                                selectInputRef.current,
-                                valueInputRef.current,
-                                !MULTI_SEL_VALID ? JSON.parse(currentData) : {
-                                    labels: currentControlLabelArr.map((v: any) => v.toString()),
-                                    values: currentControlValueArr.map((v: any) => v.toString()),
-                                    labelsOfString: VALUE_BY_BRACKETS ? convertArrToValByBrackets(currentControlLabelArr.map((v: any) => v.toString())) : currentControlLabelArr.map((v: any) => v.toString()).join(','),
-                                    valuesOfString: VALUE_BY_BRACKETS ? convertArrToValByBrackets(currentControlValueArr.map((v: any) => v.toString())) : currentControlValueArr.map((v: any) => v.toString()).join(',')
-                                }
-                            );
-
-
-
-                            //
-                            selectInputRef.current.blur();
-                        }
-
-                    }
-                }
-            }
-
-            if (key === 'ArrowUp') {
-                res = await optionFocus('decrease');
-
-            }
-
-            if (key === 'ArrowDown') {
-                res = await optionFocus('increase');
-            }
-
-            
-            // temporary data
-            if (res !== null) listRef.current.dataset.data = res.dataset.itemdata;
-
-        },
-        spyElement: rootRef.current,
-    }, [isOpen]);
-
-
-
-
     //performance
     const handleChangeFetchSafe = useDebounce((val: any) => {
 
@@ -526,23 +434,6 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
         return arrFormat.filter((v: any) => {
             return !valueFormat.includes(v);
         });
-    }
-
-
-    /**
-     * Check if an element is in the viewport
-     * @param {HTMLElement} elem 
-     * @returns {boolean}
-     */
-    function isInViewport(elem: HTMLElement) {
-        const bounding = elem.getBoundingClientRect();
-
-        return (
-            bounding.top >= 0 &&
-            bounding.left >= 0 &&
-            bounding.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
-            bounding.right <= (window.innerWidth || document.documentElement.clientWidth)
-        );
     }
 
 
@@ -1810,7 +1701,88 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
     }
 
 
+    async function handleKeyPressed(event: KeyboardEvent<HTMLDivElement>) {
+        const key = event.code;
 
+        if (!isOpen) return;
+
+        let res: any = null;
+        
+        if (key === 'Enter' || key === 'NumpadEnter') {
+            event.preventDefault();
+            
+            // Determine the "active" class name to avoid listening to other unused components of the same type
+            if (listRef.current === null || !rootRef.current.classList.contains('active')) return;
+
+            // Avoid selecting options that are disabled
+            if (keyboardSelectedItem.current !== null && keyboardSelectedItem.current.classList.contains('disabled')) return;
+            
+            if (listRef.current !== null) {
+                const currentData = await listRef.current.dataset.data;
+
+            
+                if (typeof currentData !== 'undefined') {
+
+                    
+                    const currentControlValueArr: any[] = [];
+                    const currentControlLabelArr: any[] = [];
+
+                    const htmlOptions = [].slice.call(listRef.current.querySelectorAll('.list-group-item:not(.hide):not(.no-match)'));
+
+                    htmlOptions.forEach((node: any) => {
+                        node.classList.remove('active');
+        
+                        // multiple options
+                        if (node.classList.contains('item-selected')) {
+                            currentControlValueArr.push(node.dataset.value);
+                            currentControlLabelArr.push(node.dataset.label);
+                        }
+
+                    });
+
+
+                    handleSelect(null, currentData, currentControlValueArr, currentControlLabelArr);
+
+
+                    //
+                    if (typeof (onChange) === 'function') {
+
+                        onChange?.(
+                            selectInputRef.current,
+                            valueInputRef.current,
+                            !MULTI_SEL_VALID ? JSON.parse(currentData) : {
+                                labels: currentControlLabelArr.map((v: any) => v.toString()),
+                                values: currentControlValueArr.map((v: any) => v.toString()),
+                                labelsOfString: VALUE_BY_BRACKETS ? convertArrToValByBrackets(currentControlLabelArr.map((v: any) => v.toString())) : currentControlLabelArr.map((v: any) => v.toString()).join(','),
+                                valuesOfString: VALUE_BY_BRACKETS ? convertArrToValByBrackets(currentControlValueArr.map((v: any) => v.toString())) : currentControlValueArr.map((v: any) => v.toString()).join(',')
+                            }
+                        );
+
+
+
+                        //
+                        selectInputRef.current.blur();
+                    }
+
+                }
+            }
+        }
+
+        if (key === 'ArrowUp') {
+            res = await optionFocus('decrease');
+
+        }
+
+        if (key === 'ArrowDown') {
+            res = await optionFocus('increase');
+        }
+
+        
+        // temporary data
+        if (res !== null) listRef.current.dataset.data = res.dataset.itemdata;
+
+
+    }
 
     useEffect(() => {
 
@@ -1846,11 +1818,11 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
             {label ? <><div className="mf-select__label">{typeof label === 'string' ? <label htmlFor={`label-${idRes}`} className="form-label" dangerouslySetInnerHTML={{ __html: `${label}` }}></label> : <label htmlFor={`label-${idRes}`} className="form-label">{label}</label>}</div></> : null}
 
             <div 
+                ref={rootRef}
                 data-overlay-id={`mf-select__options-wrapper-${idRes}`}
                 id={`mf-select__wrapper-${idRes}`} 
                 className={`mf-select__wrapper ${wrapperClassName || wrapperClassName === '' ? wrapperClassName : 'mb-3 position-relative'} ${MULTI_SEL_VALID ? 'multiple-selection' : ''} ${isOpen ? 'active focus' : ''}`} 
-                ref={rootRef}
-
+                onKeyDown={handleKeyPressed}
             >
 
 

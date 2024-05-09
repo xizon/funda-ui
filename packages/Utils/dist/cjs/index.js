@@ -165,6 +165,7 @@ __webpack_require__.d(__webpack_exports__, {
   "getYesterdayDate": () => (/* reexport */ getYesterdayDate),
   "isElement": () => (/* reexport */ isElement),
   "isHTMLElement": () => (/* reexport */ isHTMLElement),
+  "isInViewport": () => (/* reexport */ isInViewport),
   "isJSON": () => (/* reexport */ isJSON),
   "isNode": () => (/* reexport */ isNode),
   "isNumeric": () => (/* reexport */ isNumeric),
@@ -1788,6 +1789,17 @@ function flatData(data) {
 }
 ;
 
+;// CONCATENATED MODULE: ./src/libs/viewport.ts
+/**
+ * Check if an element is in the viewport
+ * @param {HTMLElement} elem 
+ * @returns {boolean}
+ */
+function isInViewport(elem) {
+  var bounding = elem.getBoundingClientRect();
+  return bounding.top >= 0 && bounding.left >= 0 && bounding.bottom <= (window.innerHeight || document.documentElement.clientHeight) && bounding.right <= (window.innerWidth || document.documentElement.clientWidth);
+}
+
 // EXTERNAL MODULE: external {"root":"React","commonjs2":"react","commonjs":"react","amd":"react"}
 var external_root_React_commonjs2_react_commonjs_react_amd_react_ = __webpack_require__(787);
 ;// CONCATENATED MODULE: ./src/hooks/useThrottle.tsx
@@ -2102,6 +2114,8 @@ var useKeyPress = function useKeyPress(_ref, deps) {
     keyPressed = _useState2[0],
     setKeyPressed = _useState2[1];
   var multipleKeys = Array.isArray(keyCode);
+
+  // `Escape`, `Enter`, `Alt`, `Control`, `CapsLock`, `Shift`, `ArrowUp`, `ArrowDown`, `ArrowLeft`, `ArrowRight` `w`, `e`, ...
   var eventHandlerDown = function eventHandlerDown(event) {
     var key = event.code;
     if (multipleKeys) {
@@ -2205,6 +2219,7 @@ var useWindowScroll = function useWindowScroll(_ref) {
 };
 /* harmony default export */ const hooks_useWindowScroll = (useWindowScroll);
 ;// CONCATENATED MODULE: ./src/index.tsx
+
 
 
 

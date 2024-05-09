@@ -157,6 +157,9 @@ import {
     flatData
 } from './libs/object';
 
+import {
+    isInViewport
+} from './libs/viewport';
 
 
 
@@ -279,6 +282,7 @@ export {
    setDateMinutes,
    setDateDays,
    timestampToDate,
+   isInViewport,
     
     // hooks
     useThrottle,

@@ -53,6 +53,7 @@ const useKeyPress = ({
     const [keyPressed, setKeyPressed] = useState(false);
     const multipleKeys = Array.isArray(keyCode);
 
+    // `Escape`, `Enter`, `Alt`, `Control`, `CapsLock`, `Shift`, `ArrowUp`, `ArrowDown`, `ArrowLeft`, `ArrowRight` `w`, `e`, ...
     const eventHandlerDown = (event: KeyboardEvent) => {
         const key = event.code;
 

@@ -1,4 +1,4 @@
-import React, { useId, useState, useRef, useEffect, forwardRef, ChangeEvent, FocusEvent, useImperativeHandle } from 'react';
+import React, { useId, useState, useRef, useEffect, forwardRef, KeyboardEvent, ChangeEvent, FocusEvent, useImperativeHandle } from 'react';
 
 import Input from 'funda-input';
 import RootPortal from 'funda-root-portal';
@@ -21,8 +21,6 @@ import {
     getCurrentDay,
     getLastDayInMonth
 } from 'funda-utils';
-
-
 
 import Calendar from './Calendar';
 
@@ -196,13 +194,18 @@ const Date = forwardRef((props: DateProps, ref: any) => {
      const SHOW_TOOLS_ENABLED = !(typeof showToolsWhenHover === 'undefined' || showToolsWhenHover === false);
      const HIDE_CLEAR_BTN_ENABLED = !(typeof hideClearButton === 'undefined' || hideClearButton === false);
 
-     
+    //
+    const COM_HAS_DATE = typeof onlyTime === 'undefined' || onlyTime === false;
+    const COM_HAS_TIME = type === 'datetime-local' || type === 'time';
+    const COM_NO_SECONDS = typeof truncateSeconds === 'undefined' || truncateSeconds === false;
+
+
 
     // placeholder
     let datePlaceholder = placeholder || placeholder === '' ? placeholder : 'yyyy/MM/dd HH:mm:ss';
 
     if (typeof placeholder === 'undefined') {
-        datePlaceholder = `${typeof onlyTime === 'undefined' || onlyTime === false ? 'yyyy/MM/dd ' : ''}${type === 'datetime-local' || type === 'time' ? `HH:mm${typeof truncateSeconds === 'undefined' || truncateSeconds === false ? ':ss' : ''}` : ''}`;
+        datePlaceholder = `${COM_HAS_DATE ? 'yyyy/MM/dd ' : ''}${COM_HAS_TIME ? `HH:mm${COM_NO_SECONDS ? ':ss' : ''}` : ''}`;
     }
 
     if (typeof localization === 'string') {
@@ -246,12 +249,12 @@ const Date = forwardRef((props: DateProps, ref: any) => {
     const inputRef = useRef<any>(null);
     const listContentRef = useRef<any>(null);
 
-    const partedInputYear = useRef<HTMLInputElement>(null);
-    const partedInputMonth = useRef<HTMLInputElement>(null);
-    const partedInputDay = useRef<HTMLInputElement>(null);
-    const partedInputHours = useRef<HTMLInputElement>(null);
-    const partedInputMinutes = useRef<HTMLInputElement>(null);
-    const partedInputSeconds = useRef<HTMLInputElement>(null);
+    const partedInputYear = useRef<HTMLInputElement | null>(null);
+    const partedInputMonth = useRef<HTMLInputElement | null>(null);
+    const partedInputDay = useRef<HTMLInputElement | null>(null);
+    const partedInputHours = useRef<HTMLInputElement | null>(null);
+    const partedInputMinutes = useRef<HTMLInputElement | null>(null);
+    const partedInputSeconds = useRef<HTMLInputElement | null>(null);
 
     const [dateDefaultValueExist, setDateDefaultValueExist] = useState<boolean>(false);
     const [initSplitClickEvOk, setInitSplitClickEvOk] = useState<boolean>(false);
@@ -266,6 +269,15 @@ const Date = forwardRef((props: DateProps, ref: any) => {
 
     // blur for popup window
     const popupBlurEnabled = useRef<boolean>(false);  // DO NOT USE 'useState()'
+
+
+    // effective element movement on keystroke
+    const [focusableSplitInputId, setFocusableSplitInputId] = useState<string>(COM_HAS_DATE ? 'el-year' : 'el-hours');
+    const [splitInputsIds] = useState<string[]>(['el-year', 'el-month', 'el-day', 'el-hours', 'el-minutes', 'el-seconds']);
+    const splitInputs = useRef(new Map<string, HTMLElement>());
+    const splitInputsTabIndex = tabIndex || 0;
+
+    
 
     //
     const getAllSplittingInputs = () => {
@@ -355,16 +367,6 @@ const Date = forwardRef((props: DateProps, ref: any) => {
     //     }
     // });
 
-
-    const eventFire = (el: any, etype: string) => {
-        if (el.fireEvent) {
-            el.fireEvent('on' + etype);
-        } else {
-            var evObj = document.createEvent('Events');
-            evObj.initEvent(etype, true, false);
-            el.dispatchEvent(evObj);
-        }
-    };
 
 
     const getFullTimeData = (v: Date | String, padZeroEnabled: boolean = true) => {
@@ -605,9 +607,10 @@ const Date = forwardRef((props: DateProps, ref: any) => {
 
     }
 
-    function handleKeypress(event: any) {
-        
-        if (event.code == "Enter") {
+    async function handleKeyPressed(event: KeyboardEvent<HTMLDivElement>) {
+        const key = event.code;
+    
+        if (key === 'Enter' || key === 'NumpadEnter') {
             event.preventDefault();
 
             getAllSplittingInputs().forEach((el: any) => {
@@ -621,6 +624,29 @@ const Date = forwardRef((props: DateProps, ref: any) => {
         }
     }
 
+    async function handleKeyPressedForSplitInputs(event: KeyboardEvent<HTMLDivElement>) {
+        const key = event.code;
+        const btnMark = (event.target as any).dataset.mark;
+        const move = (key: string) => {
+            const currentIndex = splitInputsIds.findIndex((s: string) => s === btnMark);
+            const nextIndex = key === 'ArrowLeft' ? currentIndex === splitInputsIds.length - 1 ? 0 : currentIndex - 1 : currentIndex === splitInputsIds.length - 1 ? 0 : currentIndex + 1;
+            const nextOption = splitInputsIds.at(nextIndex);
+            if (nextOption) {
+                setTimeout(() => {
+                    (splitInputs.current.get(nextOption) as HTMLInputElement)?.select();
+                }, 0);
+                setFocusableSplitInputId(nextOption);
+            }
+        };
+      
+        if (key === 'ArrowLeft') {
+            move('ArrowLeft');
+        }
+
+        if (key === 'ArrowRight') {
+            move('ArrowRight');
+        }
+    }
 
 
     function clearAll() {
@@ -644,7 +670,7 @@ const Date = forwardRef((props: DateProps, ref: any) => {
 
         const _onlyTime = `${getFullTimeData(v).hours}:${getFullTimeData(v).minutes}${truncateSeconds ? `` : `:${getFullTimeData(v).seconds}`}`;
         const _date = `${getFullTimeData(v).year}${valueUseSlash ? `/` : '-'}${getFullTimeData(v).month}${valueUseSlash ? `/` : '-'}${getFullTimeData(v).day}`;
-        const _time = type === 'datetime-local' || type === 'time' ? ` ${getFullTimeData(v).hours}:${getFullTimeData(v).minutes}${truncateSeconds ? `` : `:${getFullTimeData(v).seconds}`}` : '';
+        const _time = COM_HAS_TIME ? ` ${getFullTimeData(v).hours}:${getFullTimeData(v).minutes}${truncateSeconds ? `` : `:${getFullTimeData(v).seconds}`}` : '';
 
         return onlyTime ? _onlyTime : `${_date}${_time}`;
     }
@@ -872,7 +898,7 @@ const Date = forwardRef((props: DateProps, ref: any) => {
                 onClick={handleShow}
                 onFocus={handleFocus}
                 onBlur={handleBlur}
-                onKeyDown={handleKeypress}
+                onKeyDown={handleKeyPressed}
 
             >
 
@@ -912,12 +938,25 @@ const Date = forwardRef((props: DateProps, ref: any) => {
                          <div className="date2d__control__inputplaceholder">
 
 
-
-                                {typeof onlyTime === 'undefined' || onlyTime === false ? <>
+                                {/*
+                                ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+                                +++++++++++++++++++ Split Inputs +++++++++++++++++++++++++++++
+                                ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+                                */}
+                                {COM_HAS_DATE ? <>
                                     <input
-                                        ref={partedInputYear}
+                                        ref={(node) => {
+                                            partedInputYear.current = node;
+                                            if (node) {
+                                                splitInputs.current.set(splitInputsIds[0], node);
+                                            } else {
+                                                splitInputs.current.delete(splitInputsIds[0]);
+                                            }
+                                        }}
+                                        tabIndex={splitInputsTabIndex}
+                                        data-mark={`${splitInputsIds[0]}`}
+                                        onKeyDown={handleKeyPressedForSplitInputs}
                                         inputMode="numeric"
-                                        tabIndex={tabIndex || 0}
                                         className="date2d__control__inputplaceholder--year"
                                         value={!dateDefaultValueExist ? `` : splitVals[0]}
                                         maxLength={4}
@@ -952,9 +991,18 @@ const Date = forwardRef((props: DateProps, ref: any) => {
                                     />
                                     {dateDefaultValueExist ? DELIMITER_DATE : null}
                                     <input
-                                        ref={partedInputMonth}
+                                        ref={(node) => {
+                                            partedInputMonth.current = node;
+                                            if (node) {
+                                                splitInputs.current.set(splitInputsIds[1], node);
+                                            } else {
+                                                splitInputs.current.delete(splitInputsIds[1]);
+                                            }
+                                        }}
+                                        tabIndex={splitInputsTabIndex}
+                                        data-mark={`${splitInputsIds[1]}`}
+                                        onKeyDown={handleKeyPressedForSplitInputs}
                                         inputMode="numeric"
-                                        tabIndex={tabIndex || 0}
                                         className="date2d__control__inputplaceholder--month"
                                         value={!dateDefaultValueExist ? `` : splitVals[1]}
                                         maxLength={2}
@@ -992,9 +1040,18 @@ const Date = forwardRef((props: DateProps, ref: any) => {
                                     />
                                     {dateDefaultValueExist ? DELIMITER_DATE : null}
                                     <input
-                                        ref={partedInputDay}
+                                        ref={(node) => {
+                                            partedInputDay.current = node;
+                                            if (node) {
+                                                splitInputs.current.set(splitInputsIds[2], node);
+                                            } else {
+                                                splitInputs.current.delete(splitInputsIds[2]);
+                                            }
+                                        }}
+                                        tabIndex={splitInputsTabIndex}
+                                        data-mark={`${splitInputsIds[2]}`}
+                                        onKeyDown={handleKeyPressedForSplitInputs}
                                         inputMode="numeric"
-                                        tabIndex={tabIndex || 0}
                                         className="date2d__control__inputplaceholder--day"
                                         value={!dateDefaultValueExist ? `` : splitVals[2]}
                                         maxLength={2}
@@ -1043,12 +1100,21 @@ const Date = forwardRef((props: DateProps, ref: any) => {
 
                                 </> : null}
 
-                                {type === 'datetime-local' || type === 'time' ? <>
+                                {COM_HAS_TIME ? <>
                                     {/* TIME CONTROL */}
                                     <input
-                                        ref={partedInputHours}
+                                        ref={(node) => {
+                                            partedInputHours.current = node;
+                                            if (node) {
+                                                splitInputs.current.set(splitInputsIds[3], node);
+                                            } else {
+                                                splitInputs.current.delete(splitInputsIds[3]);
+                                            }
+                                        }}
+                                        tabIndex={splitInputsTabIndex}
+                                        data-mark={`${splitInputsIds[3]}`}
+                                        onKeyDown={handleKeyPressedForSplitInputs}
                                         inputMode="numeric"
-                                        tabIndex={tabIndex || 0}
                                         className="date2d__control__inputplaceholder--hours"
                                         value={!dateDefaultValueExist ? `` : splitVals[3]}
                                         maxLength={2}
@@ -1085,9 +1151,18 @@ const Date = forwardRef((props: DateProps, ref: any) => {
                                     {/* TIME CONTROL */}
                                     {dateDefaultValueExist ? DELIMITER_TIME : null}
                                     <input
-                                        ref={partedInputMinutes}
+                                        ref={(node) => {
+                                            partedInputMinutes.current = node;
+                                            if (node) {
+                                                splitInputs.current.set(splitInputsIds[4], node);
+                                            } else {
+                                                splitInputs.current.delete(splitInputsIds[4]);
+                                            }
+                                        }}
+                                        tabIndex={splitInputsTabIndex}
+                                        data-mark={`${splitInputsIds[4]}`}
+                                        onKeyDown={handleKeyPressedForSplitInputs}
                                         inputMode="numeric"
-                                        tabIndex={tabIndex || 0}
                                         className="date2d__control__inputplaceholder--minutes"
                                         value={!dateDefaultValueExist ? `` : splitVals[4]}
                                         maxLength={2}
@@ -1123,12 +1198,21 @@ const Date = forwardRef((props: DateProps, ref: any) => {
 
 
                                     {/* TIME CONTROL */}
-                                    {(typeof truncateSeconds === 'undefined' || truncateSeconds === false) ? <>
+                                    {(COM_NO_SECONDS) ? <>
                                         {dateDefaultValueExist ? DELIMITER_TIME : null}
                                         <input
-                                            ref={partedInputSeconds}
+                                            ref={(node) => {
+                                                partedInputSeconds.current = node;
+                                                if (node) {
+                                                    splitInputs.current.set(splitInputsIds[5], node);
+                                                } else {
+                                                    splitInputs.current.delete(splitInputsIds[5]);
+                                                }
+                                            }}
+                                            tabIndex={splitInputsTabIndex}
+                                            data-mark={`${splitInputsIds[5]}`}
+                                            onKeyDown={handleKeyPressedForSplitInputs}
                                             inputMode="numeric"
-                                            tabIndex={tabIndex || 0}
                                             className="date2d__control__inputplaceholder--seconds"
                                             value={!dateDefaultValueExist ? `` : splitVals[5]}
                                             maxLength={2}
@@ -1165,6 +1249,11 @@ const Date = forwardRef((props: DateProps, ref: any) => {
                                 </> : null}
 
 
+                                {/*
+                                ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+                                +++++++++++++++++++ /Split Inputs +++++++++++++++++++++++++++++
+                                ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+                                */}
 
                             </div>
                         </>}
@@ -1212,7 +1301,7 @@ const Date = forwardRef((props: DateProps, ref: any) => {
                         className="date2d__tools-container d-flex flex-row"
                     >
                         {/* CALENDAR */}
-                        {typeof onlyTime === 'undefined' || onlyTime === false ? <>
+                        {COM_HAS_DATE ? <>
                             <div className="date2d__calendar">
                                 <Calendar
                                     min={min}
@@ -1311,7 +1400,7 @@ const Date = forwardRef((props: DateProps, ref: any) => {
                         {/* /CALENDAR */}
 
 
-                        {type === 'datetime-local' || type === 'time' ? <>
+                        {COM_HAS_TIME ? <>
 
                             {/* TIME CONTROL */}
                             <div className="date2d__hourslist border-end">
@@ -1417,7 +1506,7 @@ const Date = forwardRef((props: DateProps, ref: any) => {
 
 
                             {/* TIME CONTROL */}
-                            {(typeof truncateSeconds === 'undefined' || truncateSeconds === false) ? <>
+                            {(COM_NO_SECONDS) ? <>
                                 <div className="date2d__secondslist border-end">
                                     <h3>{_langSecondsTitle}</h3>
 

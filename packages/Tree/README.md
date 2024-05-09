@@ -1087,7 +1087,7 @@ const ListLiveSearch = (props: ListLiveSearchProps) => {
 
 
 
-    function handleKeydown(e: any) {
+    function handleKeyPressed(e: any) {
         
         if (inputRef.current === null) return;
         const _val = inputRef.current.value;
@@ -1113,7 +1113,7 @@ const ListLiveSearch = (props: ListLiveSearchProps) => {
                     className="form-control" 
                     placeholder={placeholder || ''} 
                     onChange={handleChange} 
-                    onKeyDown={handleKeydown}
+                    onKeyDown={handleKeyPressed}
                 />
                 <div className="input-group-text">
                     <button tabIndex={-1} type="button" className="btn border-end-0 rounded-pill p-0 m-0" onClick={handleSubmit}>
