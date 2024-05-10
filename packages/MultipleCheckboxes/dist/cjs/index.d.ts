@@ -4,6 +4,9 @@ interface OptionConfig {
 }
 declare type MultipleCheckboxesProps = {
     wrapperClassName?: string;
+    tableLayout?: boolean;
+    tableLayoutClassName?: string;
+    tableLayoutCellClassName?: string;
     groupWrapperClassName?: string;
     groupLabelClassName?: string;
     inline?: boolean;

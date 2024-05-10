@@ -7,33 +7,33 @@
 ```js
 import File from 'funda-ui/File';
 ```
-| Property | Type | Default | Description |
-| --- | --- | --- | --- |
-| `ref` | React.ForwardedRef | - | It is the return element of this component.  |
-| `wrapperClassName` | string | `mb-3 position-relative` | The class name of the control wrapper. |
-| `controlClassName` | string | `form-control` | The class name of the control. |
-| `controlExClassName` | string | - | The extended class name of `controlClassName`. |
-| `labelClassName` | string | `btn btn-outline-secondary` | The class name of the label. |
-| `labelHoverClassName` | string | `btn btn-primary` | The class name of the select button on hover. |
-| `submitLabel` | string \| ReactNode | - | Specifies a label for submit button |
-| `submitClassName` | string | `btn btn-primary mt-2` | The class name of the submit button. |
-| `inline` | boolean | false | If true the group are on the same horizontal row. |
-| `fetchUrl` | string | - | If the URL exists, it is passed using the default fetch method ([Fetch API](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch)). |
-| `fetchMethod` | string | `POST` | The request's method (GET, POST, etc.) <blockquote>Valid when the `fetchUrl` attribute is not empty</blockquote>|
-| `fetchParams` | JSON Object | - | Set of query parameters in the request <blockquote>Valid when the `fetchUrl` attribute is not empty</blockquote> |
-| `multiple` | boolean | false | A file upload field that accepts multiple values |
-| `value` | string | - | Set a default value for this control |
-| `label` | string \| ReactNode | `<svg width="25px" height="25px" viewBox="0 0 1024 1024"><path d="M512 256l144.8 144.8-36.2 36.2-83-83v311.6h-51.2V354l-83 83-36.2-36.2L512 256zM307.2 716.8V768h409.6v-51.2H307.2z" fill="#000000" fillRule="evenodd"/></svg>` | It is used to specify a label for an element of a form. |
-| `name` | string | - | Name is not deprecated when used with form fields. |
-| `disabled` | boolean | false | Whether it is disabled |
-| `required` | boolean | false | When present, it specifies that a field must be filled out before submitting the form. |
-| `data`  <blockquote>You could use [key](https://react.dev/learn/rendering-lists#why-does-react-need-keys) instead of it</blockquote>  | any  | - | Incoming data, you can set the third parameter of `onComplete`. <blockquote>Changes in the `data` value will cause the component to re-render. It will be used when the value or content does not change when switching routes and needs to re-render the component or get the request.</blockquote> |
-| `fetchFuncAsync` | Constructor | - | A method as a string from the constructor.  |
-| `fetchFuncMethod` | string  | - | When the property is *true*, every time the select changes, a data request will be triggered. <br /><blockquote>The methord must be a Promise Object.</blockquote> |
-| `fetchFuncMethodParams` | array  | - | The parameter passed by the method, it is an array. <br />Note: the first element is a query string, the second element is the number of queried data (usually a number), and then you can increase the third, or fourth, and more parameters. <br />Such as `['',0]`, `['',99,'string 1','string 2']` <br /><blockquote>There should be at least one parameter which is the query string.</blockquote> |
-| `onChange` | function  | - | Call a function when the value of an HTML element is changed. It returns three callback values. <br /> <ol><li>The first is the file input (**HTML Element**)</li><li>The second parameter is submit button (**HTML Element**)</li><li> The third is current value (**[An object of FileList](https://developer.mozilla.org/en-US/docs/Web/API/FileList)**)</li></ol> |
-| `onProgress` | function  | - | Call a function when upload is in progress. It returns three callback values. <br /> <ol><li>The first is (**[An object of FileList](https://developer.mozilla.org/en-US/docs/Web/API/FileList)**)</li><li>The second is the file input (**HTML Element**)</li><li>The last parameter is submit button (**HTML Element**)</li></ol> |
-| `onComplete` | function  | - | Call a function when the modal is submitted. It returns four callback values. <br /> <ol><li>The one is the file input (**HTML Element**)</li><li>The second parameter is submit button (**HTML Element**)</li><li>The third parameter is the callback from backend (**JSON Object Literals**)</li><li>The last is incoming data from attribute `data`. (**Any**)</li></ol> |
+| Property | Type | Default | Description | Required |
+| --- | --- | --- | --- | --- |
+| `ref` | React.ForwardedRef | - | It is the return element of this component.  | - |
+| `wrapperClassName` | string | `mb-3 position-relative` | The class name of the control wrapper. | - |
+| `controlClassName` | string | `form-control` | The class name of the control. | - |
+| `controlExClassName` | string | - | The extended class name of `controlClassName`. | - |
+| `labelClassName` | string | `btn btn-outline-secondary` | The class name of the label. | - |
+| `labelHoverClassName` | string | `btn btn-primary` | The class name of the select button on hover. | - |
+| `submitLabel` | string \| ReactNode | - | Specifies a label for submit button | - |
+| `submitClassName` | string | `btn btn-primary mt-2` | The class name of the submit button. | - |
+| `inline` | boolean | false | If true the group are on the same horizontal row. | - |
+| `fetchUrl` | string | - | If the URL exists, it is passed using the default fetch method ([Fetch API](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch)). | - |
+| `fetchMethod` | string | `POST` | The request's method (GET, POST, etc.) <blockquote>Valid when the `fetchUrl` attribute is not empty</blockquote>| - |
+| `fetchParams` | JSON Object | - | Set of query parameters in the request <blockquote>Valid when the `fetchUrl` attribute is not empty</blockquote> | - |
+| `multiple` | boolean | false | A file upload field that accepts multiple values | - |
+| `value` | string | - | Set a default value for this control | - |
+| `label` | string \| ReactNode | `<svg width="25px" height="25px" viewBox="0 0 1024 1024"><path d="M512 256l144.8 144.8-36.2 36.2-83-83v311.6h-51.2V354l-83 83-36.2-36.2L512 256zM307.2 716.8V768h409.6v-51.2H307.2z" fill="#000000" fillRule="evenodd"/></svg>` | It is used to specify a label for an element of a form. | - |
+| `name` | string | - | Name is not deprecated when used with form fields. | - |
+| `disabled` | boolean | false | Whether it is disabled | - |
+| `required` | boolean | false | When present, it specifies that a field must be filled out before submitting the form. | - |
+| `data`  <blockquote>You could use [key](https://react.dev/learn/rendering-lists#why-does-react-need-keys) instead of it</blockquote>  | any  | - | Incoming data, you can set the third parameter of `onComplete`. <blockquote>Changes in the `data` value will cause the component to re-render. It will be used when the value or content does not change when switching routes and needs to re-render the component or get the request.</blockquote> | - |
+| `fetchFuncAsync` | Constructor | - | A method as a string from the constructor.  | - |
+| `fetchFuncMethod` | string  | - | When the property is *true*, every time the select changes, a data request will be triggered. <br /><blockquote>The methord must be a Promise Object.</blockquote> | - |
+| `fetchFuncMethodParams` | array  | - | The parameter passed by the method, it is an array. <br />Note: the first element is a query string, the second element is the number of queried data (usually a number), and then you can increase the third, or fourth, and more parameters. <br />Such as `['',0]`, `['',99,'string 1','string 2']` <br /><blockquote>There should be at least one parameter which is the query string.</blockquote> | - |
+| `onChange` | function  | - | Call a function when the value of an HTML element is changed. It returns three callback values. <br /> <ol><li>The first is the file input (**HTML Element**)</li><li>The second parameter is submit button (**HTML Element**)</li><li> The third is current value (**[An object of FileList](https://developer.mozilla.org/en-US/docs/Web/API/FileList)**)</li></ol> | - |
+| `onProgress` | function  | - | Call a function when upload is in progress. It returns three callback values. <br /> <ol><li>The first is (**[An object of FileList](https://developer.mozilla.org/en-US/docs/Web/API/FileList)**)</li><li>The second is the file input (**HTML Element**)</li><li>The last parameter is submit button (**HTML Element**)</li></ol> | - |
+| `onComplete` | function  | - | Call a function when the modal is submitted. It returns four callback values. <br /> <ol><li>The one is the file input (**HTML Element**)</li><li>The second parameter is submit button (**HTML Element**)</li><li>The third parameter is the callback from backend (**JSON Object Literals**)</li><li>The last is incoming data from attribute `data`. (**Any**)</li></ol> | - |
 
 
 

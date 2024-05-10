@@ -7,50 +7,50 @@
 ```js
 import Table from 'funda-ui/Table';
 ```
-| Property | Type | Default | Description |
-| --- | --- | --- | --- |
-| `tableCheckRef` | React.RefObject | - | It exposes the following methods of the component:  <br /> <ol><li>`tableCheckRef.current.check([{index:1,value:true},{index:3,value:true}], (res) => { console.log(res) })`</li></ol> |
-| `wrapperClassName` | string | `mb-3 position-relative` | The class name of the table wrapper. |
-| `tableClassName` | string | `table` | The class name of the table wrapper. |
-| `bodyClassName` | string | - | The class name of `<tbody>`. |
-| `headClassName` | string | - | The class name of `<thead>`. |
-| `footClassName` | string | - | The class name of `<tfoot>`. |
-| `rowActiveClassName` | string | - | The class name of row actived. |
-| `checkable` | boolean | false | Set TreeNode display Checkbox or not. |
-| `useRadio` | boolean | false | Use radio instead of Checkbox. <blockquote>It is valid when `checkable` is "true"</blockquote> |
-| `draggable` | boolean | false | Indicates whether the per row can be dragged. |
-| `sortable` | boolean | false | Sort by headers. |
-| `data` | JSON Object Literals | - | Specify data of Table as a JSON string format. Such as: <br />**usage 1:**<br />`{"fields":[[{"cols": 1, "content": "01" },{"cols": 1, "content": "David Lin" }],[{"cols": 1, "content": "02" },{"cols": 1, "content": "Tom McFarlin" }]]}` <br />**usage 2:**<br />`{"headers":[{"type":"number","content":"No."},{"type":false,"content":"Name"}],"fields":[[{"cols": 1, "content": "01" },{"cols": 1, "content": "David Lin" }],[{"cols": 1, "content": "02" },{"cols": 1, "content": "Tom McFarlin" }]]};` <br />**usage 3:**<br />`{"fields":[[{"cols": 1, "content": "01" },{"cols": 1, "content": "David Lin" }],[{"cols": 1, "content": "02" },{"cols": 1, "content": "Tom McFarlin" }],[{"cols": 4, "content": <><strong style={{background:"yellow"}}>A table cell that spans <span style={{color:"red"}}>4</span> columns</strong></> }]]}` |
-| `bordered` | boolean  | false | Adds borders on all sides of the table and cells |
-| `colGroup` | boolean  | false | Set the background color of the multiple columns with the `<colgroup>` and `<col>` tags |
-| `responsive` | boolean  | true | For horizontally scrolling tables on the wrapper. |
-| `cellAutoWidth` | boolean  | false | Width does not expand automatically, each cell uses a custom minimum width. <blockquote>If the content is exceeded, there will be a horizontal scrollbar on the table</blockquote> |
-| `enhancedResponsive` | boolean  | false | Create enhanced responsive tables up to a particular breakpoint. <blockquote>Valid when the device width is less than or equal to 768px</blockquote> |
-| `enhancedResponsiveWithScrollBar` | boolean  | false | Create enhanced responsive tables up to a particular breakpoint. This property allows scroll bars to be created automatically in the table with floating header. <blockquote>Valid when the device width is less than or equal to 768px</blockquote> |
-| `onClick` | function  | - | Call a function when the value of an HTML element is changed. It returns two callback values. <br /> <ol><li>The first is the HTML Element Event (**Event**)</li><li>The second is the row data (**Array**)</li></ol> |
-| `onCheck` | function  | - | Call a function when changing the checkbox. It returns three callback values. <br /> <ol><li>The first is the row data (**Array**)</li><li>The second is the checkbox or radio control (**HTML Element**)</li><li>The second is the current value (**Boolean**)</li></ol> <blockquote>It is valid when `checkable` is "true"</blockquote> |
-| `onDrag` | function  | - | As each row is dragged, it returns two functions. dragStart, dragEnd, they represent the callback events of drag start and drag end respectively. For example: `onDrag={(dragStart,dragEnd)=>{if(dragStart!==null)dragStart((el,data,printData)=>{console.log('dragStart: ',data,printData);});if(dragEnd!==null)dragEnd((el,data,printData)=>{console.log('dragEnd: ',data,printData);});}}`. <blockquote>It is valid when `draggable` is "true"</blockquote> |
-| `onRenderFinished` | function  | - | Determine whether the table has been rendered. It returns only one callback value (**Boolean**). <blockquote>It is very practical for large batches of data to be displayed in business.</blockquote>|
-| `onCellMouseEnter` | function  | - | It fires when the mouse pointer enters a cell. It returns only one callback value which is the current cell. |
-| `onCellMouseLeave` | function  | - | It fires when the mouse pointer leaves a cell. It returns only one callback value which is the current cell. |
-| `onCellClick` | function  | - | It fires when the mouse pointer clicks a cell. It returns only one callback value which is the current cell. |
-| `onRowMouseEnter` | function  | - | It fires when the mouse pointer enters a row. It returns only one callback value which is the current row. |
-| `onRowMouseLeave` | function  | - | It fires when the mouse pointer leaves a row. It returns only one callback value which is the current row. |
-| `onRowClick` | function  | - | It fires when the mouse pointer clicks a row. It returns only one callback value which is the current row. |
-| `onHeadCellMouseEnter` | function  | - | It fires when the mouse pointer enters a cell of header. It returns only one callback value which is the current cell. |
-| `onHeadCellMouseLeave` | function  | - | It fires when the mouse pointer leaves a cell of header. It returns only one callback value which is the current cell. |
-| `onHeadCellClick` | function  | - | It fires when the mouse pointer clicks a cell of header. It returns only one callback value which is the current cell. |
+| Property | Type | Default | Description | Required |
+| --- | --- | --- | --- | --- |
+| `tableCheckRef` | React.RefObject | - | It exposes the following methods of the component:  <br /> <ol><li>`tableCheckRef.current.check([{index:1,value:true},{index:3,value:true}], (res) => { console.log(res) })`</li></ol> | - |
+| `wrapperClassName` | string | `mb-3 position-relative` | The class name of the table wrapper. | - |
+| `tableClassName` | string | `table` | The class name of the table wrapper. | - |
+| `bodyClassName` | string | - | The class name of `<tbody>`. | - |
+| `headClassName` | string | - | The class name of `<thead>`. | - |
+| `footClassName` | string | - | The class name of `<tfoot>`. | - |
+| `rowActiveClassName` | string | - | The class name of row actived. | - |
+| `checkable` | boolean | false | Set TreeNode display Checkbox or not. | - |
+| `useRadio` | boolean | false | Use radio instead of Checkbox. <blockquote>It is valid when `checkable` is "true"</blockquote> | - |
+| `draggable` | boolean | false | Indicates whether the per row can be dragged. | - |
+| `sortable` | boolean | false | Sort by headers. | - |
+| `data` | JSON Object Literals | - | Specify data of Table as a JSON string format. Such as: <br />**usage 1:**<br />`{"fields":[[{"cols": 1, "content": "01" },{"cols": 1, "content": "David Lin" }],[{"cols": 1, "content": "02" },{"cols": 1, "content": "Tom McFarlin" }]]}` <br />**usage 2:**<br />`{"headers":[{"type":"number","content":"No."},{"type":false,"content":"Name"}],"fields":[[{"cols": 1, "content": "01" },{"cols": 1, "content": "David Lin" }],[{"cols": 1, "content": "02" },{"cols": 1, "content": "Tom McFarlin" }]]};` <br />**usage 3:**<br />`{"fields":[[{"cols": 1, "content": "01" },{"cols": 1, "content": "David Lin" }],[{"cols": 1, "content": "02" },{"cols": 1, "content": "Tom McFarlin" }],[{"cols": 4, "content": <><strong style={{background:"yellow"}}>A table cell that spans <span style={{color:"red"}}>4</span> columns</strong></> }]]}` | - |
+| `bordered` | boolean  | false | Adds borders on all sides of the table and cells | - |
+| `colGroup` | boolean  | false | Set the background color of the multiple columns with the `<colgroup>` and `<col>` tags | - |
+| `responsive` | boolean  | true | For horizontally scrolling tables on the wrapper. | - |
+| `cellAutoWidth` | boolean  | false | Width does not expand automatically, each cell uses a custom minimum width. <blockquote>If the content is exceeded, there will be a horizontal scrollbar on the table</blockquote> | - |
+| `enhancedResponsive` | boolean  | false | Create enhanced responsive tables up to a particular breakpoint. <blockquote>Valid when the device width is less than or equal to 768px</blockquote> | - |
+| `enhancedResponsiveWithScrollBar` | boolean  | false | Create enhanced responsive tables up to a particular breakpoint. This property allows scroll bars to be created automatically in the table with floating header. <blockquote>Valid when the device width is less than or equal to 768px</blockquote> | - |
+| `onClick` | function  | - | Call a function when the value of an HTML element is changed. It returns two callback values. <br /> <ol><li>The first is the HTML Element Event (**Event**)</li><li>The second is the row data (**Array**)</li></ol> | - |
+| `onCheck` | function  | - | Call a function when changing the checkbox. It returns three callback values. <br /> <ol><li>The first is the row data (**Array**)</li><li>The second is the checkbox or radio control (**HTML Element**)</li><li>The second is the current value (**Boolean**)</li></ol> <blockquote>It is valid when `checkable` is "true"</blockquote> | - |
+| `onDrag` | function  | - | As each row is dragged, it returns two functions. dragStart, dragEnd, they represent the callback events of drag start and drag end respectively. For example: `onDrag={(dragStart,dragEnd)=>{if(dragStart!==null)dragStart((el,data,printData)=>{console.log('dragStart: ',data,printData);});if(dragEnd!==null)dragEnd((el,data,printData)=>{console.log('dragEnd: ',data,printData);});}}`. <blockquote>It is valid when `draggable` is "true"</blockquote> | - |
+| `onRenderFinished` | function  | - | Determine whether the table has been rendered. It returns only one callback value (**Boolean**). <blockquote>It is very practical for large batches of data to be displayed in business.</blockquote>| - |
+| `onCellMouseEnter` | function  | - | It fires when the mouse pointer enters a cell. It returns only one callback value which is the current cell. | - |
+| `onCellMouseLeave` | function  | - | It fires when the mouse pointer leaves a cell. It returns only one callback value which is the current cell. | - |
+| `onCellClick` | function  | - | It fires when the mouse pointer clicks a cell. It returns only one callback value which is the current cell. | - |
+| `onRowMouseEnter` | function  | - | It fires when the mouse pointer enters a row. It returns only one callback value which is the current row. | - |
+| `onRowMouseLeave` | function  | - | It fires when the mouse pointer leaves a row. It returns only one callback value which is the current row. | - |
+| `onRowClick` | function  | - | It fires when the mouse pointer clicks a row. It returns only one callback value which is the current row. | - |
+| `onHeadCellMouseEnter` | function  | - | It fires when the mouse pointer enters a cell of header. It returns only one callback value which is the current cell. | - |
+| `onHeadCellMouseLeave` | function  | - | It fires when the mouse pointer leaves a cell of header. It returns only one callback value which is the current cell. | - |
+| `onHeadCellClick` | function  | - | It fires when the mouse pointer clicks a cell of header. It returns only one callback value which is the current cell. | - |
 
 
 
 JSON configuration properties of the `data`:
 
-| Property | Type | Default | Description |
-| --- | --- | --- | --- |
-| `fields` | array | - | Table rows and columns. Eg. `[[{"cols": 1, "width": "50px", "content": "01" },{"cols": 1, "content": "David Lin" }],[{"cols": 1, "width": "50px","content": "02" },{"cols": 1, "content": "Tom McFarlin" }]]` <blockquote><ol><li>The key `cols` identifies the column (change the value if the column is merged). </li><li>The key `content` to place the content of each cell. </li><li>The key `width` to set the width of each cell. It will fail when the breakpoint is less than or equal to 768px.</li><li>The key `className` to set the classes of each cell.</li><li>The key `style` to set the style which type is *React.CSSProperties*, and it will cover `width`.</li><li>The key `data` to set a `data-use` attribute allows us to store extra information on standard.</li></ol><blockquote>|
-| `headers` | array | - | Defines a header cell in an HTML table. Eg. `[{"type": false, "style": {width: '50px', background: 'black', color: 'white'}, "content": "Index" },{"type": "number", "content": "Money" },{"type": "text", "content": "Name" },{"type": "number", "content": "No." },{"type": "date", "content": "Date1" },{"type": "date", "content": "Date2" }]` <blockquote><ol><li>The key `type` is used to specify the type of sorting for each column (Type of sorted values: `false`, `'number'`, `'text'` or `'date'`). If set to `false` or `0`, sorting is disabled. <hr> *It is valid when `sortable` is true* </li><li>The key `content` is the value of each field.</li><li>The key `width` to set the width of each field. It will fail when the breakpoint is less than or equal to 768px.</li><li>The key `className` to set the classes of each field.</li><li>The key `style` to set the style which type is *React.CSSProperties*, and it will cover `width`.</li><li>The key `data` to set a `data-use` attribute allows us to store extra information on standard.</li></ol><blockquote>|
-| `summaries` | array | - | Insert a summarized table in report footer. Eg. `["Text 1","Text 2"]`|
-| `fieldsChecked` | array | - | Insert a summarized table in report footer. Eg. `[false,true]` <blockquote>It is valid when `checkable` or `useRadio` is "true", It is just passed in as a default value. </blockquote>|
+| Property | Type | Default | Description | Required |
+| --- | --- | --- | --- | --- |
+| `fields` | array | - | Table rows and columns. Eg. `[[{"cols": 1, "width": "50px", "content": "01" },{"cols": 1, "content": "David Lin" }],[{"cols": 1, "width": "50px","content": "02" },{"cols": 1, "content": "Tom McFarlin" }]]` <blockquote><ol><li>The key `cols` identifies the column (change the value if the column is merged). </li><li>The key `content` to place the content of each cell. </li><li>The key `width` to set the width of each cell. It will fail when the breakpoint is less than or equal to 768px.</li><li>The key `className` to set the classes of each cell.</li><li>The key `style` to set the style which type is *React.CSSProperties*, and it will cover `width`.</li><li>The key `data` to set a `data-use` attribute allows us to store extra information on standard.</li></ol><blockquote>| - |
+| `headers` | array | - | Defines a header cell in an HTML table. Eg. `[{"type": false, "style": {width: '50px', background: 'black', color: 'white'}, "content": "Index" },{"type": "number", "content": "Money" },{"type": "text", "content": "Name" },{"type": "number", "content": "No." },{"type": "date", "content": "Date1" },{"type": "date", "content": "Date2" }]` <blockquote><ol><li>The key `type` is used to specify the type of sorting for each column (Type of sorted values: `false`, `'number'`, `'text'` or `'date'`). If set to `false` or `0`, sorting is disabled. <hr> *It is valid when `sortable` is true* </li><li>The key `content` is the value of each field.</li><li>The key `width` to set the width of each field. It will fail when the breakpoint is less than or equal to 768px.</li><li>The key `className` to set the classes of each field.</li><li>The key `style` to set the style which type is *React.CSSProperties*, and it will cover `width`.</li><li>The key `data` to set a `data-use` attribute allows us to store extra information on standard.</li></ol><blockquote>| - |
+| `summaries` | array | - | Insert a summarized table in report footer. Eg. `["Text 1","Text 2"]`| - |
+| `fieldsChecked` | array | - | Insert a summarized table in report footer. Eg. `[false,true]` <blockquote>It is valid when `checkable` or `useRadio` is "true", It is just passed in as a default value. </blockquote>| - |
 
 
 ## Examples

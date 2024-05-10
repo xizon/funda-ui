@@ -23,10 +23,10 @@ It is generally used to create a React element at the root node (`document.body`
 ```js
 import RootPortal from 'funda-ui/RootPortal';
 ```
-| Property | Type | Default | Description |
-| --- | --- | --- | --- |
-| `containerClassName` | string  | - | The class name of container |
-| `show` | boolean  | false | **(required)** Whether the container is visible or not |
+| Property | Type | Default | Description | Required |
+| --- | --- | --- | --- | --- |
+| `containerClassName` | string  | - | The class name of container | - |
+| `show` | boolean  | false | Whether the container is visible or not | ✅ |
 
 
 ## Examples

@@ -7,30 +7,30 @@
 ```js
 import Pagination from 'funda-ui/Pagination';
 ```
-| Property | Type | Default | Description |
-| --- | --- | --- | --- |
-| `ref` | React.RefObject | - | It exposes the following methods of the component (The function supports callback to return a value which is the currently activated page number, like this: `ref.current.next((page) => {console.log(page)})`):  <br /> <ol><li>`ref.current.next()`</li><li>`ref.current.prev()`</li><li>`ref.current.first()`</li><li>`ref.current.last()`</li></ol> |
-| `wrapperClassName` | string | `mb-3 position-relative` | The class name of the navigation wrapper. |
-| `navClassName` | string | `pagination` | The class name of the navigation. |
-| `apiUrl` | string  | - | <strong>(Required)</strong> An API URL Path. Use `{page}` characters to place a placeholder. such as `/mypage/{page}` |
-| `pageRangeDisplayed` | number  | 3 | <strong>(Required)</strong> The range of pages displayed |
-| `activePage` | number  | - | <strong>(Required)</strong> The currently selected page number.  |
-| `totalPages` | number  | - | <strong>(Required)</strong> The total number of pages |
-| `previousLabel` | ReactNode  | - | Label for the previous button |
-| `nextLabel` | ReactNode  | - | Label for the next button |
-| `firstLabel` | ReactNode  | - | Label for the first button |
-| `lastLabel` | ReactNode  | - | Label for the last button |
-| `breakLabel` | ReactNode  | - | Label for ellipsis |
-| `align` | null \| '' \| `left` \| `right` \| `center`  | - | Set the alignment of the control  |
-| `onlyPrevNext` | boolean  | false | Only display the previous and next buttons |
-| `activeClassName` | string  | active | The classname for the active page |
-| `previousClassName` | string  | prev | The classname on tag li of the previous button |
-| `nextClassName` | string  | next | The classname on tag li of the next button |
-| `firstClassName` | string  | first | The classname on tag li of the first button |
-| `lastClassName` | string  | last | The classname on tag li of the last button |
-| `disabledClassName` | string  | disabled | The classname for disabled buttons |
-| `symmetry` | boolean  | false | The activation button is symmetrical on the left and right sides |
-| `onChange` | function  | - | The method to call when a page is clicked. It returns two callback values. <br /> <ol><li>The first is the current page number (**Number**)</li><li>The second is the total pages (**Number**)</li></ol> |
+| Property | Type | Default | Description | Required |
+| --- | --- | --- | --- | --- |
+| `ref` | React.RefObject | - | It exposes the following methods of the component (The function supports callback to return a value which is the currently activated page number, like this: `ref.current.next((page) => {console.log(page)})`):  <br /> <ol><li>`ref.current.next()`</li><li>`ref.current.prev()`</li><li>`ref.current.first()`</li><li>`ref.current.last()`</li></ol> | - |
+| `wrapperClassName` | string | `mb-3 position-relative` | The class name of the navigation wrapper. | - |
+| `navClassName` | string | `pagination` | The class name of the navigation. | - |
+| `apiUrl` | string  | - | An API URL Path. Use `{page}` characters to place a placeholder. such as `/mypage/{page}` | ✅ |
+| `pageRangeDisplayed` | number  | 3 | The range of pages displayed | ✅ |
+| `activePage` | number  | - | The currently selected page number.  | ✅ |
+| `totalPages` | number  | - | The total number of pages | ✅ |
+| `previousLabel` | ReactNode  | - | Label for the previous button | - |
+| `nextLabel` | ReactNode  | - | Label for the next button | - |
+| `firstLabel` | ReactNode  | - | Label for the first button | - |
+| `lastLabel` | ReactNode  | - | Label for the last button | - |
+| `breakLabel` | ReactNode  | - | Label for ellipsis | - |
+| `align` | null \| '' \| `left` \| `right` \| `center`  | - | Set the alignment of the control  | - |
+| `onlyPrevNext` | boolean  | false | Only display the previous and next buttons | - |
+| `activeClassName` | string  | active | The classname for the active page | - |
+| `previousClassName` | string  | prev | The classname on tag li of the previous button | - |
+| `nextClassName` | string  | next | The classname on tag li of the next button | - |
+| `firstClassName` | string  | first | The classname on tag li of the first button | - |
+| `lastClassName` | string  | last | The classname on tag li of the last button | - |
+| `disabledClassName` | string  | disabled | The classname for disabled buttons | - |
+| `symmetry` | boolean  | false | The activation button is symmetrical on the left and right sides | - |
+| `onChange` | function  | - | The method to call when a page is clicked. It returns two callback values. <br /> <ol><li>The first is the current page number (**Number**)</li><li>The second is the total pages (**Number**)</li></ol> | - |
 
 ## Examples
 

@@ -13,6 +13,9 @@ declare type RadioProps = {
     groupWrapperClassName?: string;
     groupLabelClassName?: string;
     itemSelectedClassName?: string;
+    tableLayout?: boolean;
+    tableLayoutClassName?: string;
+    tableLayoutCellClassName?: string;
     value?: string;
     label?: React.ReactNode | string;
     name?: string;

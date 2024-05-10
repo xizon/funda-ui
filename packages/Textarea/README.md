@@ -7,38 +7,37 @@
 ```js
 import Textarea from 'funda-ui/Textarea';
 ```
-| Property | Type | Default | Description |
-| --- | --- | --- | --- |
-| `ref` | React.ForwardedRef | - | It is the return element of this component.  |
-| `contentRef` | React.RefObject | - | It exposes the following methods:  <br /> <ol><li>`contentRef.current.clear(() => { console.log('callback') })`</li><li>`contentRef.current.set('test value', () => { console.log('callback') })`</li></ol> <blockquote>DO NOT USE it in the `onChange` of this component, otherwise it will cause infinite rendering</blockquote> |
-| `wrapperClassName` | string | `mb-3 position-relative` | The class name of the control wrapper. |
-| `controlClassName` | string | `form-control` | The class name of the control. |
-| `controlExClassName` | string | - | The extended class name of `controlClassName`. |
-| `controlGroupWrapperClassName` | string | `input-group` | The class name of the control group wrapper. |
-| `controlGroupTextClassName` | string | `input-group-text` | The class name of the control group text. |
-| `type` | string | text | The type of input. Such as \<input type="text" name="name"\> gives a text box. |
-| `value` | string | - | Set a default value for this control |
-| `autoSize` | boolean | false | Creating a Textarea with dynamic height. <blockquote>**Special note:** If you want to hide the textarea element in advance, please use `{ height: 0; overflow: hidden; }`, do not use `{ display: none }`, this can ensure that the `autoSize` initialization is valid. The parent container cannot also use `{ display: none }`, Otherwise it will cause the scrollHeight of the element inside the child node to be 0
-​</blockquote> |
-| `label` | string \| ReactNode | - | It is used to specify a label for an element of a form.<blockquote>Support html tags</blockquote> |
-| `name` | string | - | Name is not deprecated when used with form fields. |
-| `placeholder` | string | - |  Specifies a short hint that describes. |
-| `maxLength` | number | - | Defines the maximum number of characters |
-| `readOnly` | boolean | false | When present, it specifies that this component field is read-only. |
-| `disabled` | boolean | false | Whether it is disabled |
-| `required` | boolean | false | When present, it specifies that a field must be filled out before submitting the form. |
-| `iconLeft` | ReactNode  | - | Set the left icon of this control |
-| `iconRight` | ReactNode  | - | Set the right icon of this control |
-| `cols` | number  | - | The cols attribute specifies the visible width of a text area. |
-| `rows` | number  | - | The rows attribute specifies the visible height of a text area, in lines. |
-| `onChangeCallback` | function  | - | Return value from `onChangeCallback` property to format the data of the control element, which will match the data structure of the component. It returns two callback values. <br /> <ol><li>The first is the Control Event (**Event**)</li><li>The last is the control (**HTML Element**)</li></ol> <br >At the same time it returns the Control Event, you will use this function and use the `return` keyword to return a new value. <blockquote>It fires when focus is lost. If return is not set, it will not return.</blockquote> |
-| `onInputCallback` | function  | - | Return value from `onInputCallback` property to format the data of the control element, which will match the data structure of the component.  It returns two callback values. <br /> <ol><li>The first is the Control Event (**Event**)</li><li>The last is the control (**HTML Element**)</li></ol><br >At the same time it returns the Control Event, you will use this function and use the `return` keyword to return a new value. <blockquote>It fires in real time as the user enters. If return is not set, it will not return.</blockquote> |
-| `onKeyPressedCallback` | function  | - | Return value from `onKeyPressedCallback` property to format the data of the control element, which will match the data structure of the component.  It returns two callback values. <br /> <ol><li>The first is the Control Event (**Event**)</li><li>The last is the control (**HTML Element**)</li></ol><br >At the same time it returns the Control Event, you will use this function and use the `return` keyword to return a new value. <blockquote>It fires when the keyboard is pressed. If return is not set, it will not return.</blockquote> |
-| `onChange` | function  | - | Call a function when the value of an HTML element is changed. It returns two callback values. <br /> <ol><li>The first is the Control Event (**Event**)</li><li>The last is the control (**HTML Element**)</li></ol>  |
-| `onBlur` | function  | - | Call a function when a user leaves an form field. It returns two callback values. <br /> <ol><li>The first is the Control Event (**Event**)</li><li>The second is the composition event (**Boolean****)</li><li>The last is the control (**HTML Element**)</li></ol> |
-| `onFocus` | function  | - | Call a function when an form field gets focus. It returns two callback values. <br /> <ol><li>The first is the Control Event (**Event**)</li><li>The last is the control (**HTML Element**)</li></ol> |
-| `onPressEnter` | function  | - | The callback function that is triggered when Enter key is pressed. It returns two callback values. <br /> <ol><li>The first is the Control Event (**Event**)</li><li>The last is the control (**HTML Element**)</li></ol> |
-| `onResize` | function  | - | The callback function that is triggered when resize. It returns two callback values. <br /> <ol><li>The first is the control (**HTML Element**)</li><li>The last is an array of width and height (**Array**)</li></ol> |
+| Property | Type | Default | Description | Required |
+| --- | --- | --- | --- | --- |
+| `ref` | React.ForwardedRef | - | It is the return element of this component.  | - |
+| `contentRef` | React.RefObject | - | It exposes the following methods:  <br /> <ol><li>`contentRef.current.clear(() => { console.log('callback') })`</li><li>`contentRef.current.set('test value', () => { console.log('callback') })`</li></ol> <blockquote>DO NOT USE it in the `onChange` of this component, otherwise it will cause infinite rendering</blockquote> | - |
+| `wrapperClassName` | string | `mb-3 position-relative` | The class name of the control wrapper. | - |
+| `controlClassName` | string | `form-control` | The class name of the control. | - |
+| `controlExClassName` | string | - | The extended class name of `controlClassName`. | - |
+| `controlGroupWrapperClassName` | string | `input-group` | The class name of the control group wrapper. | - |
+| `controlGroupTextClassName` | string | `input-group-text` | The class name of the control group text. | - |
+| `type` | string | text | The type of input. Such as \<input type="text" name="name"\> gives a text box. | - |
+| `value` | string | - | Set a default value for this control | - |
+| `autoSize` | boolean | false | Creating a Textarea with dynamic height. <blockquote>**Special note:** If you want to hide the textarea element in advance, please use `{ height: 0; overflow: hidden; }`, do not use `{ display: none }`, this can ensure that the `autoSize` initialization is valid. The parent container cannot also use `{ display: none }`, Otherwise it will cause the scrollHeight of the element inside the child node to be 0​</blockquote> | - |
+| `label` | string \| ReactNode | - | It is used to specify a label for an element of a form.<blockquote>Support html tags</blockquote> | - |
+| `name` | string | - | Name is not deprecated when used with form fields. | - |
+| `placeholder` | string | - |  Specifies a short hint that describes. | - |
+| `maxLength` | number | - | Defines the maximum number of characters | - |
+| `readOnly` | boolean | false | When present, it specifies that this component field is read-only. | - |
+| `disabled` | boolean | false | Whether it is disabled | - |
+| `required` | boolean | false | When present, it specifies that a field must be filled out before submitting the form. | - |
+| `iconLeft` | ReactNode  | - | Set the left icon of this control | - |
+| `iconRight` | ReactNode  | - | Set the right icon of this control | - |
+| `cols` | number  | - | The cols attribute specifies the visible width of a text area. | - |
+| `rows` | number  | - | The rows attribute specifies the visible height of a text area, in lines. | - |
+| `onChangeCallback` | function  | - | Return value from `onChangeCallback` property to format the data of the control element, which will match the data structure of the component. It returns two callback values. <br /> <ol><li>The first is the Control Event (**Event**)</li><li>The last is the control (**HTML Element**)</li></ol> <br >At the same time it returns the Control Event, you will use this function and use the `return` keyword to return a new value. <blockquote>It fires when focus is lost. If return is not set, it will not return.</blockquote> | - |
+| `onInputCallback` | function  | - | Return value from `onInputCallback` property to format the data of the control element, which will match the data structure of the component.  It returns two callback values. <br /> <ol><li>The first is the Control Event (**Event**)</li><li>The last is the control (**HTML Element**)</li></ol><br >At the same time it returns the Control Event, you will use this function and use the `return` keyword to return a new value. <blockquote>It fires in real time as the user enters. If return is not set, it will not return.</blockquote> | - |
+| `onKeyPressedCallback` | function  | - | Return value from `onKeyPressedCallback` property to format the data of the control element, which will match the data structure of the component.  It returns two callback values. <br /> <ol><li>The first is the Control Event (**Event**)</li><li>The last is the control (**HTML Element**)</li></ol><br >At the same time it returns the Control Event, you will use this function and use the `return` keyword to return a new value. <blockquote>It fires when the keyboard is pressed. If return is not set, it will not return.</blockquote> | - |
+| `onChange` | function  | - | Call a function when the value of an HTML element is changed. It returns two callback values. <br /> <ol><li>The first is the Control Event (**Event**)</li><li>The last is the control (**HTML Element**)</li></ol>  | - |
+| `onBlur` | function  | - | Call a function when a user leaves an form field. It returns two callback values. <br /> <ol><li>The first is the Control Event (**Event**)</li><li>The second is the composition event (**Boolean****)</li><li>The last is the control (**HTML Element**)</li></ol> | - |
+| `onFocus` | function  | - | Call a function when an form field gets focus. It returns two callback values. <br /> <ol><li>The first is the Control Event (**Event**)</li><li>The last is the control (**HTML Element**)</li></ol> | - |
+| `onPressEnter` | function  | - | The callback function that is triggered when Enter key is pressed. It returns two callback values. <br /> <ol><li>The first is the Control Event (**Event**)</li><li>The last is the control (**HTML Element**)</li></ol> | - |
+| `onResize` | function  | - | The callback function that is triggered when resize. It returns two callback values. <br /> <ol><li>The first is the control (**HTML Element**)</li><li>The last is an array of width and height (**Array**)</li></ol> | - |
 
 
 

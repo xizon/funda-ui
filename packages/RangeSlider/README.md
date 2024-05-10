@@ -7,21 +7,21 @@
 ```js
 import RangeSlider from 'funda-ui/RangeSlider';
 ```
-| Property | Type | Default | Description |
-| --- | --- | --- | --- |
-| `wrapperClassName` | string | `mb-3 position-relative` | The class name of the control wrapper. |
-| `controlClassName` | string | `form-control` | The class name of the control. |
-| `controlExClassName` | string | - | The extended class name of `controlClassName`. |
-| `onlyOne` | boolean | false | Only one numeric control is allowed. |
-| `value` | JSON Object | - | Set a default value for this control. Such as `{ min: 0, max: 100 }` |
-| `label` | string \| ReactNode | - | It is used to specify a label for an element of a form.<blockquote>Support html tags</blockquote> |
-| `minName` | string | - | Name is not deprecated when used with form fields. Specify the name of minimizing rang control. |
-| `maxName` | string | - | Name is not deprecated when used with form fields. Specify the name of maximizing rang control. |
-| `step` | number \| string | 1 | Specified legal number intervals. |
-| `min` | number \| string | - | The minimum value to accept |
-| `max` | number \| string | - | The maximum value to accept |
-| `disabled` | boolean | false | Whether it is disabled |
-| `onChange` | function  | - | Call a function when the value of an HTML element is changed. It returns two callback values. <br /> <ol><li>The first is the Control Event (**Event**)</li><li>The second is the composition event (**Boolean**)</li></ol> |
+| Property | Type | Default | Description | Required |
+| --- | --- | --- | --- | --- |
+| `wrapperClassName` | string | `mb-3 position-relative` | The class name of the control wrapper. | - |
+| `controlClassName` | string | `form-control` | The class name of the control. | - |
+| `controlExClassName` | string | - | The extended class name of `controlClassName`. | - |
+| `onlyOne` | boolean | false | Only one numeric control is allowed. | - |
+| `value` | JSON Object | - | Set a default value for this control. Such as `{ min: 0, max: 100 }` | - |
+| `label` | string \| ReactNode | - | It is used to specify a label for an element of a form.<blockquote>Support html tags</blockquote> | - |
+| `minName` | string | - | Name is not deprecated when used with form fields. Specify the name of minimizing rang control. | - |
+| `maxName` | string | - | Name is not deprecated when used with form fields. Specify the name of maximizing rang control. | - |
+| `step` | number \| string | 1 | Specified legal number intervals. | - |
+| `min` | number \| string | - | The minimum value to accept | - |
+| `max` | number \| string | - | The maximum value to accept | - |
+| `disabled` | boolean | false | Whether it is disabled | - |
+| `onChange` | function  | - | Call a function when the value of an HTML element is changed. It returns two callback values. <br /> <ol><li>The first is the Control Event (**Event**)</li><li>The second is the composition event (**Boolean**)</li></ol> | - |
 
 
 ## Examples

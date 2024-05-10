@@ -8,26 +8,26 @@
 ```js
 import { Tabs } from 'funda-ui/Tabs';
 ```
-| Property | Type | Default | Description |
-| --- | --- | --- | --- |
-| `wrapperClassName` | string | `mb-3 position-relative` | The class name of the tabs wrapper. |
-| `navClassName` | string | `nav nav-tabs mb-3` | The class name of the navigation wrapper. |
-| `panelClassName` | string | `tab-content` | The class name of the content wrapper. |
-| `expandedActiveClassNameForNav` | string | - | specify an active class name for `<TabList />` |
-| `expandedActiveClassNameForPanel` | string | - | specify an active class name for `<TabPanel />` |
-| `animTransitionDuration` | number | 150 | Transition duration for css activation animation. |
-| `onChange` | function  | - | Call a function when the value of an HTML element is changed. It returns four callback values. <br /> <ol><li>The first is the trigger object</li><li>The second is the target ID of each panel</li><li> The third is the currently active index</li><li> The fourth is the persistent index of item.</li></ol> |
-| `onLoad` | function  | - | Call a function when the component is rendered. It returns only one callback value which is the function of activating item(**Function**). |
+| Property | Type | Default | Description | Required |
+| --- | --- | --- | --- | --- |
+| `wrapperClassName` | string | `mb-3 position-relative` | The class name of the tabs wrapper. | - |
+| `navClassName` | string | `nav nav-tabs mb-3` | The class name of the navigation wrapper. | - |
+| `panelClassName` | string | `tab-content` | The class name of the content wrapper. | - |
+| `expandedActiveClassNameForNav` | string | - | specify an active class name for `<TabList />` | - |
+| `expandedActiveClassNameForPanel` | string | - | specify an active class name for `<TabPanel />` | - |
+| `animTransitionDuration` | number | 150 | Transition duration for css activation animation. | - |
+| `onChange` | function  | - | Call a function when the value of an HTML element is changed. It returns four callback values. <br /> <ol><li>The first is the trigger object</li><li>The second is the target ID of each panel</li><li> The third is the currently active index</li><li> The fourth is the persistent index of item.</li></ol> | - |
+| `onLoad` | function  | - | Call a function when the component is rendered. It returns only one callback value which is the function of activating item(**Function**). | - |
 
 
 ### Tab List
 ```js
 import { TabList } from 'funda-ui/Tabs';
 ```
-| Property | Type | Default | Description |
-| --- | --- | --- | --- |
-| `key` | string \| `tab-list-*` | - |  A “key” is a special string attribute you need to include when creating lists of elements. Let’s assign a key to our list of items. Must contain the string `tab-list` |
-| `defaultActive` | boolean | false | Set an item to activate by default |
+| Property | Type | Default | Description | Required |
+| --- | --- | --- | --- | --- |
+| `key` | string \| `tab-list-*` | - |  A “key” is a special string attribute you need to include when creating lists of elements. Let’s assign a key to our list of items. Must contain the string `tab-list` | - |
+| `defaultActive` | boolean | false | Set an item to activate by default | - |
 
 
 
@@ -35,11 +35,11 @@ import { TabList } from 'funda-ui/Tabs';
 ```js
 import { TabPanel } from 'funda-ui/Tabs';
 ```
-| Property | Type | Default | Description |
-| --- | --- | --- | --- |
-| `key` | string \| `tab-panel-*` | - |  A “key” is a special string attribute you need to include when creating lists of elements. Let’s assign a key to our list of items. Must contain the string `tab-panel` |
-| `defaultActive` | boolean | false | Set an item to activate by default |
-| `tabpanelClass` | string | - | Additional style name, such as `shadow` |
+| Property | Type | Default | Description | Required |
+| --- | --- | --- | --- | --- |
+| `key` | string \| `tab-panel-*` | - |  A “key” is a special string attribute you need to include when creating lists of elements. Let’s assign a key to our list of items. Must contain the string `tab-panel` | - |
+| `defaultActive` | boolean | false | Set an item to activate by default | - |
+| `tabpanelClass` | string | - | Additional style name, such as `shadow` | - |
 
 
 

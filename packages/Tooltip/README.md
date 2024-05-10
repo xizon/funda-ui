@@ -7,16 +7,16 @@
 ```js
 import Tooltip from 'funda-ui/Tooltip';
 ```
-| Property | Type | Default | Description |
-| --- | --- | --- | --- |
-| `wrapperClassName` | string | `d-inline-block` | The class name of the control wrapper. |
-| `direction` | `top` \| `top-right` \| `top-left` \| `bottom` \| `bottom-right` \| `bottom-left` | top | The direction of the tip. Defaults to `top`. |
-| `offset` | number  | 10 | Position offset of top and bottom. |
-| `exceededSidePosOffset` | number | 15 | Offset px that exceeds the far right or left side of the screen |
-| `size` | `auto` \| `large` \| `medium` \| `small`  | auto | The size of the content area. Defaults to `auto`. |
-| `hoverDelay` | number  | 200 | The number of milliseconds to determine hover intent |
-| `mouseOutDelay` | number  | - | The number of milliseconds to determine hover-end intent, defaults to the hoverDelay value |
-| `content` | ReactNode  | - | Set a piece of text or HTML code |
+| Property | Type | Default | Description | Required |
+| --- | --- | --- | --- | --- |
+| `wrapperClassName` | string | `d-inline-block` | The class name of the control wrapper. | - |
+| `direction` | `top` \| `top-right` \| `top-left` \| `bottom` \| `bottom-right` \| `bottom-left` | top | The direction of the tip. Defaults to `top`. | - |
+| `offset` | number  | 10 | Position offset of top and bottom. | - |
+| `exceededSidePosOffset` | number | 15 | Offset px that exceeds the far right or left side of the screen | - |
+| `size` | `auto` \| `large` \| `medium` \| `small`  | auto | The size of the content area. Defaults to `auto`. | - |
+| `hoverDelay` | number  | 200 | The number of milliseconds to determine hover intent | - |
+| `mouseOutDelay` | number  | - | The number of milliseconds to determine hover-end intent, defaults to the hoverDelay value | - |
+| `content` | ReactNode  | - | Set a piece of text or HTML code | - |
 
 
 

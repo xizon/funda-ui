@@ -7,29 +7,32 @@
 ```js
 import Radio from 'funda-ui/Radio';
 ```
-| Property | Type | Default | Description |
-| --- | --- | --- | --- |
-| `wrapperClassName` | string | `mb-3 position-relative` | The class name of the control wrapper. |
-| `groupWrapperClassName` | string | - | The class name of the radio group wrapper. |
-| `groupLabelClassName` | string | - | The class name of the radio group label. |
-| `itemSelectedClassName` | string | `item-selected` | The class name of the item selected. |
-| `inline` | boolean | false | If true the group checkboxes or radios are on the same horizontal row. |
-| `options` | JSON Object Literals \| JSON Object | - | Set the default value using JSON string format for menu of options, like this: `[{"label": "Option 1","value": "value-1"},{"label": "<del style=color:red>deprecate</del>Option 2","value": "value-2"},{"label": "Option 3","value": "value-3","customAttr1": "attr1","customAttr2": "attr2"}]`<blockquote>Note: Use API data if database query exists. That is, the attribute `fetchXXXX`</blockquote> <br /><blockquote>The label string supports html tags</blockquote>|
-| `value` | string | - | Set a default value for this control |
-| `label` | string \| ReactNode | - | It is used to specify a label for an element of a form.<blockquote>Support html tags</blockquote> |
-| `name` | string | - | Name is not deprecated when used with form fields. |
-| `disabled` | boolean | false | Whether it is disabled |
-| `required` | boolean | false | When present, it specifies that a field must be filled out before submitting the form. |
-| `fetchFuncAsync` | Constructor | - | A method as a string from the constructor.  |
-| `fetchFuncMethod` | string  | - | When the property is *true*, every time the select changes, a data request will be triggered. <br /><blockquote>The methord must be a Promise Object.</blockquote> |
-| `fetchFuncMethodParams` | array  | - | The parameter passed by the method, it is an array. <br />Note: the first element is a query string, the second element is the number of queried data (usually a number), and then you can increase the third, or fourth, and more parameters. <br />Such as `['',0]`, `['',99,'string 1','string 2']` <br /><blockquote>There should be at least one parameter which is the query string.</blockquote> |
-| `fetchCallback` | function  | - | Return value from `fetchCallback` property to format the data of the API callback, which will match the data structure of the component. <br >At the same time it returns the original data, you will use this function and use the `return` keyword to return a new value. |
-| `onFetch` | function  | - | Call a function when  data is successfully fetched. It returns one callback value which is the fetched data (**Array**) |
-| `onLoad` | function  | - | Call a function when the component has been rendered completely. It returns three callback values. <br /> <ol><li>The first is the passed data （**Array**）</li><li>The second is the default value (**String** \| **undefined**)</li><li> The third is the component wrapper (**HTMLDivElement**)</li></ol> |
-| `onClick` | function  | - | Call a function when the value of an HTML element is clicked. It returns four callback values. <br /> <ol><li>The first is the Control Event (**Event**)</li><li>The second is the current value (**String**)</li><li>The third is the data (Exposes the JSON format data) about the option.  (**JSON Object**)</li><li>The last is the current index number  (**Number**)</li></ol> |
-| `onChange` | function  | - | Call a function when the value of an HTML element is changed. It returns four callback values. <br /> <ol><li>The first is the Control Event (**Event**)</li><li>The second is the current value (**String**)</li><li>The third is the data (Exposes the JSON format data) about the option.  (**JSON Object**)</li><li>The last is the current index number  (**Number**)</li></ol> |
-| `onBlur` | function  | - | Call a function when a user leaves an form field. It returns only one callback value which is the Control Event (**Event**) |
-| `onFocus` | function  | - | Call a function when an form field gets focus. It returns only one callback value which is the Control Event (**Event**) |
+| Property | Type | Default | Description | Required |
+| --- | --- | --- | --- | --- |
+| `wrapperClassName` | string | `mb-3 position-relative` | The class name of the control wrapper. | - |
+| `groupWrapperClassName` | string | - | The class name of the radio group wrapper. | - |
+| `groupLabelClassName` | string | - | The class name of the radio group label. | - |
+| `itemSelectedClassName` | string | `item-selected` | The class name of the item selected. | - |
+| `tableLayout` | boolean | false | Use **\<table\>** HTML tag to display options. | - |
+| `tableLayoutClassName` | string | - | The class name of HTML tag `<table>`. <blockquote>It is valid when `tableLayout` is "true"</blockquote> | - |
+| `tableLayoutCellClassName` | string | - | The class name of HTML tag `<td>`. <blockquote>It is valid when `tableLayout` is "true"</blockquote> | - |
+| `inline` | boolean | false| If true the group checkboxes or radios are on the same horizontal row. | - |
+| `options` | JSON Object Literals \| JSON Object | - | Set the default value using JSON string format for menu of options, like this: `[{"label": "Option 1","value": "value-1"},{"label": "<del style=color:red>deprecate</del>Option 2","value": "value-2"},{"label": "Option 3","value": "value-3","customAttr1": "attr1","customAttr2": "attr2"}]`<blockquote>Note: Use API data if database query exists. That is, the attribute `fetchXXXX`</blockquote> <br /><blockquote>The label string supports html tags</blockquote>| - |
+| `value` | string | - | Set a default value for this control | - |
+| `label` | string \| ReactNode | - | It is used to specify a label for an element of a form.<blockquote>Support html tags</blockquote> | - |
+| `name` | string | - | Name is not deprecated when used with form fields. | - |
+| `disabled` | boolean | false | Whether it is disabled | - |
+| `required` | boolean | false | When present, it specifies that a field must be filled out before submitting the form. | - |
+| `fetchFuncAsync` | Constructor | - | A method as a string from the constructor.  | - |
+| `fetchFuncMethod` | string  | - | When the property is *true*, every time the select changes, a data request will be triggered. <br /><blockquote>The methord must be a Promise Object.</blockquote> | - |
+| `fetchFuncMethodParams` | array  | - | The parameter passed by the method, it is an array. <br />Note: the first element is a query string, the second element is the number of queried data (usually a number), and then you can increase the third, or fourth, and more parameters. <br />Such as `['',0]`, `['',99,'string 1','string 2']` <br /><blockquote>There should be at least one parameter which is the query string.</blockquote> | - |
+| `fetchCallback` | function  | - | Return value from `fetchCallback` property to format the data of the API callback, which will match the data structure of the component. <br >At the same time it returns the original data, you will use this function and use the `return` keyword to return a new value. | - |
+| `onFetch` | function  | - | Call a function when  data is successfully fetched. It returns one callback value which is the fetched data (**Array**) | - |
+| `onLoad` | function  | - | Call a function when the component has been rendered completely. It returns three callback values. <br /> <ol><li>The first is the passed data （**Array**）</li><li>The second is the default value (**String** \| **undefined**)</li><li> The third is the component wrapper (**HTMLDivElement**)</li></ol> | - |
+| `onClick` | function  | - | Call a function when the value of an HTML element is clicked. It returns four callback values. <br /> <ol><li>The first is the Control Event (**Event**)</li><li>The second is the current value (**String**)</li><li>The third is the data (Exposes the JSON format data) about the option.  (**JSON Object**)</li><li>The last is the current index number  (**Number**)</li></ol> | - |
+| `onChange` | function  | - | Call a function when the value of an HTML element is changed. It returns four callback values. <br /> <ol><li>The first is the Control Event (**Event**)</li><li>The second is the current value (**String**)</li><li>The third is the data (Exposes the JSON format data) about the option.  (**JSON Object**)</li><li>The last is the current index number  (**Number**)</li></ol> | - |
+| `onBlur` | function  | - | Call a function when a user leaves an form field. It returns only one callback value which is the Control Event (**Event**) | - |
+| `onFocus` | function  | - | Call a function when an form field gets focus. It returns only one callback value which is the Control Event (**Event**) | - |
 
 It accepts all props which this control support.
 
@@ -39,14 +42,14 @@ It accepts all props which this control support.
 
 JSON Object Literals configuration properties of the `options` and callback from `fetchCallback`:
 
-| Property | Type | Default | Description |
-| --- | --- | --- | --- |
-| `label` | string | - | Specify the label text for each option. <blockquote>Support html tags</blockquote> |
-| `listItemLabel` | string | - | **(Optional)** Specify the label text for pop-up list items. <blockquote>Support html tags</blockquote> |
-| `value` | string | - | Specify the value for each option |
-| `optgroup` | array | - | **(Optional)** Creates a grouping of options. It will be displayed using the value of `label`. such as `[{"label":"Option 0","value":"value-0"},{"label":"Group 1","value":"","optgroup":[{"label":"Option 1","value":"value-1"},{"label":"Option 2","value":"value-2"}]}]` |
-| `extends` | ReactNode | - | **(Optional)** Append additional content to the end of the Control Event. |
-| `disabled` | boolean | - | **(Optional)** When present, it specifies that an option should be disabled. |
+| Property | Type | Default | Description | Required |
+| --- | --- | --- | --- | --- |
+| `label` | string | - | Specify the label text for each option. <blockquote>Support html tags</blockquote> | - |
+| `listItemLabel` | string | - | **(Optional)** Specify the label text for pop-up list items. <blockquote>Support html tags</blockquote> | - |
+| `value` | string | - | Specify the value for each option | - |
+| `optgroup` | array | - | **(Optional)** Creates a grouping of options. It will be displayed using the value of `label`. such as `[{"label":"Option 0","value":"value-0"},{"label":"Group 1","value":"","optgroup":[{"label":"Option 1","value":"value-1"},{"label":"Option 2","value":"value-2"}]}]` | - |
+| `extends` | ReactNode | - | **(Optional)** Append additional content to the end of the Control Event. | - |
+| `disabled` | boolean | - | **(Optional)** When present, it specifies that an option should be disabled. | - |
 
 
 ### Create Callback 
@@ -145,6 +148,67 @@ export default () => {
              <Radio
                 ...
                 wrapperClassName=""
+                ...
+            />
+
+        </>
+    );
+}
+```
+
+## Use table to display options
+
+The options will be displayed using \<table\> tag.
+
+
+```css
+.app-table-nested {
+    border-collapse: collapse;
+    table-layout: fixed;
+    width: 100%;
+
+    td {
+        display: table-cell !important;
+        border: none;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        padding: .5rem .5rem !important;
+
+        label,
+        .d-inline-block {
+            display: contents !important;
+        }
+
+        [type="checkbox"],
+        [type="radio"] {
+            float: none;
+            margin-left: 0;
+            margin-right: .5rem;
+        }
+
+    }
+    tr td:last-child {
+        border-color: transparent !important;
+    }
+}
+```
+
+```js
+import React from "react";
+import Radio from 'funda-ui/Radio';
+
+export default () => {
+
+
+    return (
+        <>
+
+            <Radio
+                ...
+                tableLayout
+                tableLayoutClassName="table table-bordered mb-0 app-table-nested"
+                tableLayoutCellClassName=""
                 ...
             />
 

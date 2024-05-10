@@ -395,7 +395,7 @@ const ModalDialog = forwardRef((props: ModalDialogProps, ref: React.ForwardedRef
     }, [show, data, modalRef.current]);   // When show`` defaults to true, `modalRef.current` will be null
 
     return (
-        <div>
+        <>
             {triggerContent ? <>
                 <div className={triggerClassName ? triggerClassName : 'd-inline w-auto'} ref={triggerRef} onClick={handleOpenWin}>{triggerContent}</div>
             </> : null}
@@ -497,7 +497,7 @@ const ModalDialog = forwardRef((props: ModalDialogProps, ref: React.ForwardedRef
 
 
 
-        </div>
+        </>
     )
 });
 

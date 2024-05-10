@@ -7,40 +7,40 @@
 ```js
 import EventCalendar from 'funda-ui/EventCalendar';
 ```
-| Property | Type | Default | Description |
-| --- | --- | --- | --- |
-| `customTodayDate` | string  | - | Specify a default today. such as `2023-11-16` |
-| `eventsValue` | array  | - | Specify the default value for all events. Its properties are described below in the documentation. such as `[{id:1,date:'2023-11-20',time:'',data:'event 1'},{id:2,date:'2023-9-22',time:'',data:'event 2'},{id:3,date:'2023-09-12',time:'',data:'<del>very long event string</del> here, event 3',eventStyles:{background:'rgb(255, 240, 227)'}}]` |
-| `langWeek` | array  | `['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN']` | Localization in the component of week sequence. <blockquote>Support html tags. <br />such as `['<small>MON</small>', '<small>TUE</small>', '<small>WED</small>', '<small>THU</small>', '<small>FRI</small>', '<small>SAT</small>', '<small>SUN</small>']`</blockquote> |
-| `langWeekFull` | array  | `['MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY', 'SATURDAY', 'SUNDAY']` | Localization in the component of full week sequence. <blockquote>This attribute is not valid yet</blockquote> |
-| `langMonths` | array  | `['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC']` | Localization in the component of months sequence. |
-| `langMonthsFull` | array  | `['January', 'Febuary', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']` | Localization in the component of full months sequence. |
-| `langToday` | string  | `Today`| Localization in the component of today button. |
-| `iconRemove` | ReactNode  | `<svg width="20px" height="20px" viewBox="0 0 24 24" fill="none"><path fillRule="evenodd" clipRule="evenodd" d="M22 12c0 5.523-4.477 10-10 10S2 17.523 2 12 6.477 2 12 2s10 4.477 10 10ZM8 11a1 1 0 1 0 0 2h8a1 1 0 1 0 0-2H8Z" fill="#000" /></svg>` | The label of the button to delete current item, if it is not set, only the SVG icon will be included |
-| `cellCloseBtnClassName` | string  | - | Specify a class for close button of cell |
-| `cellCloseBtnLabel` | string \| ReactNode  | - | Set a piece of text or HTML code for the close button of cell |
-| `onChangeDate` | function  | - | Call a function when a date area is clicked. It returns two values. <br /> <ol><li>The one is an HTMLElement of this area (**HTMLElement**) </li><li>The second parameter is the current value (**JSON Object**) </li></ol> |
-| `onChangeMonth` | function  | - | Called when the date moves to a new month. The function receives the selected month (0-11). Triggered when the previous, next or month selection button is clicked. It returns only one value which is the current value (**JSON Object**) |
-| `onChangeYear` | function  | - | Called when the date moves to a new year. The function receives the selected year. Triggered when the year selection button is clicked. It returns only one value which is the current value (**JSON Object**) |
-| `onChangeToday` | function  | - | Called when the date moves to today. Triggered when the today selection button is clicked. It returns only one value which is the current value (**JSON Object**) |
-| `modalContent` | ReactNode  | - | **For `<ModalDialog />`** Customize the content in the pop-up window, usually form controls. See the case at the bottom of the document. |
-| `modalDeleteContent` | ReactNode  | - | **For `<ModalDialog />`** Customize the content in the pop-up window (the part used for deletion), usually a form control, see the case at the bottom of the document. |
-| `modalHeading` | ReactNode  | - | **For `<ModalDialog />`** Set a window title |
-| `modalMaskOpacity` | string  | - | **For `<ModalDialog />`** The mask opacity. The value is in the range *0.0* to *1.0* |
-| `modalMaxWidth` | number \| string  | false | **For `<ModalDialog />`** Custom modal max-width whick need a unit string. Such as: `200px` |
-| `modalMinHeight` | number \| string  | false | **For `<ModalDialog />`** Custom modal max-height whick need a unit string. Such as: `auto` |
-| `modalCloseBtnClassName` | string  | - | **For `<ModalDialog />`** Specify a class for close button |
-| `modalCloseBtnLabel` | string \| ReactNode  | - | **For `<ModalDialog />`** Set a piece of text or HTML code for the close button |
-| `modalSubmitBtnClassName` | string  | - | **For `<ModalDialog />`** Specify a class for submit button |
-| `modalSubmitBtnLabel` | string \| ReactNode  | - | **For `<ModalDialog />`** Set a piece of text or HTML code for the submit button |
-| `modalSubmitDeleteBtnClassName` | string  | - | **For `<ModalDialog />`** Specify a class for delete button |
-| `modalSubmitDeleteBtnLabel` | string \| ReactNode  | - | **For `<ModalDialog />`** Set a piece of text or HTML code for the delete button |
-| `onModalEditOpen` | function  | - | **For `<ModalDialog />`** Call a function when the EDIT modal is opened. It returns only one value which is the current value (**JSON Object**). |
-| `onModalEditClose` | function  | - | **For `<ModalDialog />`** Call a function when the EDIT modal is closed. It returns a callback value which is the trigger object It returns only one value which is the current value (**JSON Object**). |
-| `onModalDeleteOpen` | function  | - | **For `<ModalDialog />`** Call a function when the DELETE modal is opened. It returns only one value which is the current value (**JSON Object**). |
-| `onModalDeleteClose` | function  | - | **For `<ModalDialog />`** Call a function when the DELETE modal is closed. It returns a callback value which is the trigger object It returns only one value which is the current value (**JSON Object**). |
-| `onModalEditEvent` | function  | - | **For `<ModalDialog />`** Call a function when the EDIT modal is submitted. It returns two callback values. <br /> <ol><li>The first is the current value (**JSON Object**)</li><li>The second is the closing event (**Function**)</li></ol> |
-| `onModalDeleteEvent` | function  | - | **For `<ModalDialog />`** Call a function when the DELETE modal is submitted. It returns two callback values. <br /> <ol><li>The first is the current value (**JSON Object**)</li><li>The second is the closing event (**Function**)</li></ol> |
+| Property | Type | Default | Description | Required |
+| --- | --- | --- | --- | --- |
+| `customTodayDate` | string  | - | Specify a default today. such as `2023-11-16` | - |
+| `eventsValue` | array  | - | Specify the default value for all events. Its properties are described below in the documentation. such as `[{id:1,date:'2023-11-20',time:'',data:'event 1'},{id:2,date:'2023-9-22',time:'',data:'event 2'},{id:3,date:'2023-09-12',time:'',data:'<del>very long event string</del> here, event 3',eventStyles:{background:'rgb(255, 240, 227)'}}]` | - |
+| `langWeek` | array  | `['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN']` | Localization in the component of week sequence. <blockquote>Support html tags. <br />such as `['<small>MON</small>', '<small>TUE</small>', '<small>WED</small>', '<small>THU</small>', '<small>FRI</small>', '<small>SAT</small>', '<small>SUN</small>']`</blockquote> | - |
+| `langWeekFull` | array  | `['MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY', 'SATURDAY', 'SUNDAY']` | Localization in the component of full week sequence. <blockquote>This attribute is not valid yet</blockquote> | - |
+| `langMonths` | array  | `['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC']` | Localization in the component of months sequence. | - |
+| `langMonthsFull` | array  | `['January', 'Febuary', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']` | Localization in the component of full months sequence. | - |
+| `langToday` | string  | `Today`| Localization in the component of today button. | - |
+| `iconRemove` | ReactNode  | `<svg width="20px" height="20px" viewBox="0 0 24 24" fill="none"><path fillRule="evenodd" clipRule="evenodd" d="M22 12c0 5.523-4.477 10-10 10S2 17.523 2 12 6.477 2 12 2s10 4.477 10 10ZM8 11a1 1 0 1 0 0 2h8a1 1 0 1 0 0-2H8Z" fill="#000" /></svg>` | The label of the button to delete current item, if it is not set, only the SVG icon will be included | - |
+| `cellCloseBtnClassName` | string  | - | Specify a class for close button of cell | - |
+| `cellCloseBtnLabel` | string \| ReactNode  | - | Set a piece of text or HTML code for the close button of cell | - |
+| `onChangeDate` | function  | - | Call a function when a date area is clicked. It returns two values. <br /> <ol><li>The one is an HTMLElement of this area (**HTMLElement**) </li><li>The second parameter is the current value (**JSON Object**) </li></ol> | - |
+| `onChangeMonth` | function  | - | Called when the date moves to a new month. The function receives the selected month (0-11). Triggered when the previous, next or month selection button is clicked. It returns only one value which is the current value (**JSON Object**) | - |
+| `onChangeYear` | function  | - | Called when the date moves to a new year. The function receives the selected year. Triggered when the year selection button is clicked. It returns only one value which is the current value (**JSON Object**) | - |
+| `onChangeToday` | function  | - | Called when the date moves to today. Triggered when the today selection button is clicked. It returns only one value which is the current value (**JSON Object**) | - |
+| `modalContent` | ReactNode  | - | **For `<ModalDialog />`** Customize the content in the pop-up window, usually form controls. See the case at the bottom of the document. | - |
+| `modalDeleteContent` | ReactNode  | - | **For `<ModalDialog />`** Customize the content in the pop-up window (the part used for deletion), usually a form control, see the case at the bottom of the document. | - |
+| `modalHeading` | ReactNode  | - | **For `<ModalDialog />`** Set a window title | - |
+| `modalMaskOpacity` | string  | - | **For `<ModalDialog />`** The mask opacity. The value is in the range *0.0* to *1.0* | - |
+| `modalMaxWidth` | number \| string  | false | **For `<ModalDialog />`** Custom modal max-width whick need a unit string. Such as: `200px` | - |
+| `modalMinHeight` | number \| string  | false | **For `<ModalDialog />`** Custom modal max-height whick need a unit string. Such as: `auto` | - |
+| `modalCloseBtnClassName` | string  | - | **For `<ModalDialog />`** Specify a class for close button | - |
+| `modalCloseBtnLabel` | string \| ReactNode  | - | **For `<ModalDialog />`** Set a piece of text or HTML code for the close button | - |
+| `modalSubmitBtnClassName` | string  | - | **For `<ModalDialog />`** Specify a class for submit button | - |
+| `modalSubmitBtnLabel` | string \| ReactNode  | - | **For `<ModalDialog />`** Set a piece of text or HTML code for the submit button | - |
+| `modalSubmitDeleteBtnClassName` | string  | - | **For `<ModalDialog />`** Specify a class for delete button | - |
+| `modalSubmitDeleteBtnLabel` | string \| ReactNode  | - | **For `<ModalDialog />`** Set a piece of text or HTML code for the delete button | - |
+| `onModalEditOpen` | function  | - | **For `<ModalDialog />`** Call a function when the EDIT modal is opened. It returns only one value which is the current value (**JSON Object**). | - |
+| `onModalEditClose` | function  | - | **For `<ModalDialog />`** Call a function when the EDIT modal is closed. It returns a callback value which is the trigger object It returns only one value which is the current value (**JSON Object**). | - |
+| `onModalDeleteOpen` | function  | - | **For `<ModalDialog />`** Call a function when the DELETE modal is opened. It returns only one value which is the current value (**JSON Object**). | - |
+| `onModalDeleteClose` | function  | - | **For `<ModalDialog />`** Call a function when the DELETE modal is closed. It returns a callback value which is the trigger object It returns only one value which is the current value (**JSON Object**). | - |
+| `onModalEditEvent` | function  | - | **For `<ModalDialog />`** Call a function when the EDIT modal is submitted. It returns two callback values. <br /> <ol><li>The first is the current value (**JSON Object**)</li><li>The second is the closing event (**Function**)</li></ol> | - |
+| `onModalDeleteEvent` | function  | - | **For `<ModalDialog />`** Call a function when the DELETE modal is submitted. It returns two callback values. <br /> <ol><li>The first is the current value (**JSON Object**)</li><li>The second is the closing event (**Function**)</li></ol> | - |
 
 
 
@@ -48,13 +48,13 @@ import EventCalendar from 'funda-ui/EventCalendar';
 
 JSON Object Literals configuration properties of the `eventsValue`:
 
-| Property | Type | Default | Description |
-| --- | --- | --- | --- |
-| `id` | string \| number | - | Item ID. |
-| `date` | string | - | Date of item. such as `2023-11-02` |
-| `time` | string | - | Date of item. such as `25:33:00` |
-| `data` | string | - | Specify the value for event  <blockquote>Support html tags</blockquote> |
-| `eventStyles` | React.CSSProperties | - | **(Optional)**  Use inline styles to event area. such as `{ backgroundColor: "red", fontSize: "12px" }` |
+| Property | Type | Default | Description | Required |
+| --- | --- | --- | --- | --- |
+| `id` | string \| number | - | Item ID. | - |
+| `date` | string | - | Date of item. such as `2023-11-02` | - |
+| `time` | string | - | Date of item. such as `25:33:00` | - |
+| `data` | string | - | Specify the value for event  <blockquote>Support html tags</blockquote> | - |
+| `eventStyles` | React.CSSProperties | - | **(Optional)**  Use inline styles to event area. such as `{ backgroundColor: "red", fontSize: "12px" }` | - |
 
 
 
