@@ -14,7 +14,6 @@ import {
 } from 'funda-utils';
 
 
-
 //Destroys body scroll locking
 import { clearAllBodyScrollLocks, disableBodyScroll, enableBodyScroll } from './plugins/BSL';
 
@@ -1845,7 +1844,6 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
                         // Don't use "name", it's just a container to display the label
                         data-name={name?.match(/(\[.*?\])/gi) ? `${name.split('[')[0]}-label[]` : `${name}-label`}
                         data-select
-                        placeholder={placeholder || ''}
                         className={`${controlClassName || controlClassName === '' ? controlClassName : "form-control"} ${controlExClassName || ''}`}
                         onFocus={handleFocus}
                         onBlur={handleBlur}
@@ -1859,7 +1857,7 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
                         readOnly={INPUT_READONLY}
                         value={controlTempValue || controlTempValue === '' ? controlTempValue : (MULTI_SEL_VALID ? (VALUE_BY_BRACKETS ? convertArrToValByBrackets(formatIndentVal(controlArr.labels).map((v: any) => stripHTML(v))) : formatIndentVal(controlArr.labels).map((v: any) => stripHTML(v)).join(',')) : stripHTML(controlLabel as never))}  // do not use `defaultValue`
 
-                        style={{ cursor: 'pointer', borderBottomWidth: MULTI_SEL_VALID ? '0' : '1px', ...style }}
+                        style={{ cursor: 'pointer', color: 'transparent', borderBottomWidth: MULTI_SEL_VALID ? '0' : '1px', ...style }}
                         autoComplete='off'
                         {...attributes}
                     />
@@ -1889,7 +1887,7 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
 
 
                     {/* PLACEHOLDER */}
-                    <div className="mf-select-single__inputplaceholder-inner">
+                    <div className="mf-select-single__inputplaceholder-inner" style={style}>
                         <input
                             tabIndex={tabIndex || 0}
                             type="text"

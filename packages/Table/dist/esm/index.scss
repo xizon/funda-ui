@@ -75,19 +75,6 @@
             display: block;  /* Key 1 */
             width: max-content;  
             max-width: 100%;
-            overflow: auto;  /* Key 2 */
-
-            &::-webkit-scrollbar {
-                height: var(--table-scrollbar-h);
-            }
-    
-            &::-webkit-scrollbar-thumb {
-                background: var(--table-scrollbar-color);
-            }
-    
-            &::-webkit-scrollbar-track {
-                background: var(--table-scrollbar-track);
-            }
         }
         
 

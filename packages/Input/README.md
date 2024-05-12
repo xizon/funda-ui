@@ -464,3 +464,52 @@ export default () => {
 }
 ```
 
+
+
+
+## Safe Asynchronous Example
+
+When a `useState()` in a child component changes state, it will cause the entire parent component to re-render, resulting in invalidation such as **checkbox**.
+
+At this time, we need to use `useMemo()` to wrap this subcomponent to avoid problems caused when the child component triggers a method of `useState()` of the parent component.
+
+
+
+```js
+import React, { useState, useMemo } from "react";
+import Input from '../Input/src';
+
+// DO NOT move `useMemo` to component
+function MemoInput(props: any) {
+    const {val, callback} = props;
+    return useMemo(() => {
+        return <Input 
+                name="name"
+                value={val}
+                onChange={(e) => {
+                    callback(e.target.value);
+                }}
+            />
+
+    }, []);
+}
+
+export default () => {
+
+    const [myInput, setMyInput] = useState('value-3');  // default value is label value
+
+    return (
+        <>
+          
+            <MemoInput 
+                val={"value-3"} 
+                name="name"
+                callback={setMyInput} 
+            />
+            
+            
+        </>
+    );
+}
+
+```

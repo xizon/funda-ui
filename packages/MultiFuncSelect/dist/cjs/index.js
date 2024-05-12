@@ -5484,7 +5484,6 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
     ,
     "data-name": name !== null && name !== void 0 && name.match(/(\[.*?\])/gi) ? "".concat(name.split('[')[0], "-label[]") : "".concat(name, "-label"),
     "data-select": true,
-    placeholder: placeholder || '',
     className: "".concat(controlClassName || controlClassName === '' ? controlClassName : "form-control", " ").concat(controlExClassName || ''),
     onFocus: handleFocus,
     onBlur: handleBlur,
@@ -5507,6 +5506,7 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
 
     style: _objectSpread({
       cursor: 'pointer',
+      color: 'transparent',
       borderBottomWidth: MULTI_SEL_VALID ? '0' : '1px'
     }, style),
     autoComplete: "off"
@@ -5519,7 +5519,8 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
   }, attributes))), !MULTI_SEL_VALID ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
     className: "mf-select-single__inputplaceholder-wrapper"
   }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
-    className: "mf-select-single__inputplaceholder-inner"
+    className: "mf-select-single__inputplaceholder-inner",
+    style: style
   }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("input", {
     tabIndex: tabIndex || 0,
     type: "text",

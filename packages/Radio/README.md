@@ -44,12 +44,12 @@ JSON Object Literals configuration properties of the `options` and callback from
 
 | Property | Type | Default | Description | Required |
 | --- | --- | --- | --- | --- |
-| `label` | string | - | Specify the label text for each option. <blockquote>Support html tags</blockquote> | - |
-| `listItemLabel` | string | - | **(Optional)** Specify the label text for pop-up list items. <blockquote>Support html tags</blockquote> | - |
-| `value` | string | - | Specify the value for each option | - |
-| `optgroup` | array | - | **(Optional)** Creates a grouping of options. It will be displayed using the value of `label`. such as `[{"label":"Option 0","value":"value-0"},{"label":"Group 1","value":"","optgroup":[{"label":"Option 1","value":"value-1"},{"label":"Option 2","value":"value-2"}]}]` | - |
-| `extends` | ReactNode | - | **(Optional)** Append additional content to the end of the Control Event. | - |
-| `disabled` | boolean | - | **(Optional)** When present, it specifies that an option should be disabled. | - |
+| `label` | string | - | Specify the label text for each option. <blockquote>Support html tags.</blockquote> | ✅ |
+| `listItemLabel` | string | - | Specify the label text for pop-up list items. <blockquote>Support html tags</blockquote> | - |
+| `value` | string | - | Specify the value for each option | ✅ |
+| `optgroup` | array | - | Creates a grouping of options. It will be displayed using the value of `label`. such as `[{"label":"Option 0","value":"value-0"},{"label":"Group 1","value":"","optgroup":[{"label":"Option 1","value":"value-1"},{"label":"Option 2","value":"value-2"}]}]` | - |
+| `extends` | ReactNode | - | Append additional content to the end of the Control Event. | - |
+| `disabled` | boolean | - | When present, it specifies that an option should be disabled. | - |
 
 
 ### Create Callback 
@@ -556,3 +556,59 @@ export default () => {
 }
 ```
 
+
+
+
+
+## Safe Asynchronous Example
+
+When a `useState()` in a child component changes state, it will cause the entire parent component to re-render, resulting in invalidation such as **checkbox**.
+
+At this time, we need to use `useMemo()` to wrap this subcomponent to avoid problems caused when the child component triggers a method of `useState()` of the parent component.
+
+
+
+```js
+import React, { useState, useMemo } from "react";
+import Radio from 'funda-ui/Radio';
+
+
+// DO NOT move `useMemo` to component
+function MemoRadio(props: any) {
+    const {val, callback} = props;
+    return useMemo(() => {
+        return <Radio
+                inline={true}
+                value={val}
+                options={[
+                    { "label": "Option 1", "listItemLabel": "Option 1 (No: 001)", "value": "value-1" },
+                    { "label": "<del style=color:red>deprecate</del>Option 2", "listItemLabel": "<del style=color:red>deprecate</del>Option 2 (No: 002)", "value": "value-2" },
+                    { "label": "Option 3", "listItemLabel": "Option 3 (No: 003)", "value": "value-3" },
+                    { "label": "Option 4", "listItemLabel": "Option 4 (No: 004)", "value": "value-4", "disabled": true, "customAttr1": "attr1","customAttr2": "attr2" }
+                ]}
+                onChange={(e: any, val: string, currentData: any, currentIndex: number) => {
+                    callback(val);
+                }}
+            />
+    }, []);
+}
+
+export default () => {
+
+    const [myRadio, setMyRadio] = useState('value-3');  // default value is label value
+
+    return (
+        <>
+          
+            <MemoRadio 
+                val={"value-3"} 
+                name="name"
+                callback={setMyRadio} 
+            />
+            
+            
+        </>
+    );
+}
+
+```

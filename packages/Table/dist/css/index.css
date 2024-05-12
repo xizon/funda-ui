@@ -58,16 +58,6 @@
   display: block; /* Key 1 */
   width: max-content;
   max-width: 100%;
-  overflow: auto; /* Key 2 */
-}
-.table__wrapper table.cell-autowidth::-webkit-scrollbar {
-  height: var(--table-scrollbar-h);
-}
-.table__wrapper table.cell-autowidth::-webkit-scrollbar-thumb {
-  background: var(--table-scrollbar-color);
-}
-.table__wrapper table.cell-autowidth::-webkit-scrollbar-track {
-  background: var(--table-scrollbar-track);
 }
 .table__wrapper .sort-trigger {
   cursor: pointer;

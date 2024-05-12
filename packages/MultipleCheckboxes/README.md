@@ -44,11 +44,11 @@ JSON Object Literals configuration properties of the `options` and callback from
 
 | Property | Type | Default | Description | Required |
 | --- | --- | --- | --- | --- |
-| `label` | string | - | Specify the label text for each option. | - |
-| `optgroup` | array | - | **(Optional)** Creates a grouping of options. It will be displayed using the value of `label`. such as `[{"label":"Option 0","value":"value-0"},{"label":"Group 1","value":"","optgroup":[{"label":"Option 1","value":"value-1"},{"label":"Option 2","value":"value-2"}]}]` | - |
-| `listItemLabel` | string | - | **(Optional)** Specify the label text for pop-up list items. <blockquote>Support html tags</blockquote> | - |
-| `value` | string | - | Specify the value for each option | - |
-| `disabled` | boolean | - | **(Optional)** When present, it specifies that an option should be disabled. | - |
+| `label` | string | - | Specify the label text for each option. | ✅ |
+| `optgroup` | array | - | Creates a grouping of options. It will be displayed using the value of `label`. such as `[{"label":"Option 0","value":"value-0"},{"label":"Group 1","value":"","optgroup":[{"label":"Option 1","value":"value-1"},{"label":"Option 2","value":"value-2"}]}]` | - |
+| `listItemLabel` | string | - | Specify the label text for pop-up list items. <blockquote>Support html tags</blockquote> | - |
+| `value` | string | - | Specify the value for each option | ✅ |
+| `disabled` | boolean | - | When present, it specifies that an option should be disabled. | - |
 
 
 
@@ -249,7 +249,7 @@ function MemoMultipleCheckboxes(props: any) {
                     callback(value);
                 }}
             />
-    }, [val]);
+    }, []);
 }
 
 export default () => {

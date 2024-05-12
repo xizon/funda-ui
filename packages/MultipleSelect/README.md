@@ -48,13 +48,13 @@ JSON Object Literals configuration properties of the `options` and callback from
 
 | Property | Type | Default | Description | Required |
 | --- | --- | --- | --- | --- |
-| `id` | string \| number | - | **(Optional)** Item ID. <blockquote>Valid when the `hierarchical` is true</blockquote> | - |
-| `parent_id` | string \| number | - | **(Optional)** Parent ID of item. <blockquote>Valid when the `hierarchical` is true</blockquote> | - |
-| `label` | string | - | Specify the label text for each option. <blockquote>Support html tags</blockquote> | - |
-| `listItemLabel` | string | - | **(Optional)** Specify the label text for pop-up list items. <blockquote>Support html tags</blockquote> | - |
-| `value` | string | - | Specify the value for each option | - |
+| `id` | string \| number | - | Item ID. <blockquote>Valid when the `hierarchical` is true</blockquote> | - |
+| `parent_id` | string \| number | - | Parent ID of item. <blockquote>Valid when the `hierarchical` is true</blockquote> | - |
+| `label` | string | - | Specify the label text for each option. <blockquote>Support html tags. But must have at least a string other than the HTML Tag, because the HTML Tag in this field will be sanitized when assigning the value. such as `<small>abc</small>efg`</blockquote> | ✅ |
+| `listItemLabel` | string | - | Specify the label text for pop-up list items. <blockquote>Support html tags</blockquote> | - |
+| `value` | string | - | Specify the value for each option | ✅ |
 | `queryString` | string | - | Quick query string, such as Chinese pinyin or English initials | - |
-| `disabled` | boolean | - | **(Optional)** When present, it specifies that an option should be disabled. | - |
+| `disabled` | boolean | - | When present, it specifies that an option should be disabled. | - |
 
 
 ## Examples
@@ -236,4 +236,69 @@ export default () => {
         </>
     );
 }
+```
+
+
+
+
+## Safe Asynchronous Example
+
+When a `useState()` in a child component changes state, it will cause the entire parent component to re-render, resulting in invalidation such as **checkbox**.
+
+At this time, we need to use `useMemo()` to wrap this subcomponent to avoid problems caused when the child component triggers a method of `useState()` of the parent component.
+
+
+
+```js
+import React, { useState, useMemo } from "react";
+import MultipleSelect from 'funda-ui/MultipleSelect';
+
+// component styles
+import 'funda-ui/MultipleSelect/index.css';
+
+
+// DO NOT move `useMemo` to component
+function MemoMultipleSelect(props: any) {
+    const {val, callback} = props;
+    return useMemo(() => {
+        return <MultipleSelect 
+                name="name"
+                availableHeaderTitle="Select One Item"
+                selectedHeaderTitle="Selected Items"
+                selectedHeaderNote="{items_num} items m-select__selected"
+                value={val}
+                options={
+                    [
+                        {"label": "Option 1","listItemLabel":"Option 1 (No: 001)","value": "value-1","queryString": "option1"},
+                        {"label": "Option 2","listItemLabel":"<del style=color:red>deprecate</del>Option 2 (No: 002)","value": "value-2","queryString": "option2"},
+                        {"label": "Option 3","listItemLabel":"Option 3 (No: 003)","value": "value-3","queryString": "option3"},
+                        {"label": "Option 4","listItemLabel":"Option 4 (No: 004)","value": "value-4","disabled":true}
+                    ]  
+                }
+                onChange={(e, data, dataStr, currentData, type) => {
+                    callback(dataStr);
+                }}
+            />
+
+    }, []);
+}
+
+export default () => {
+
+    const [myMultipleSelect, setMyMultipleSelect] = useState('value-3');  // default value is label value
+
+    return (
+        <>
+          
+            <MemoMultipleSelect 
+                val={"value-3"} 
+                name="name"
+                callback={setMyMultipleSelect} 
+            />
+            
+            
+        </>
+    );
+}
+
 ```

@@ -34,9 +34,9 @@ Array configuration properties of the `options`:
 
 | Property | Type | Default | Description | Required |
 | --- | --- | --- | --- | --- |
-| `label` | string | - | Specify the label text for each option <blockquote>Support html tags</blockquote> | - |
-| `listItemLabel` | string | - | **(Optional)** Specify the label text for pop-up list items. <blockquote>Support html tags</blockquote> | - |
-| `value` | string | - | Specify the value for each option | - |
+| `label` | string | - | Specify the label text for each option <blockquote>Support html tags</blockquote> | ✅ |
+| `listItemLabel` | string | - | Specify the label text for pop-up list items. <blockquote>Support html tags</blockquote> | - |
+| `value` | string | - | Specify the value for each option | ✅ |
 
 
 Among them, `label` and `value` are attributes used by the system, and other attributes can be added freely

@@ -60,13 +60,13 @@ JSON Object Literals configuration properties of the `options` and callback from
 
 | Property | Type | Default | Description | Required |
 | --- | --- | --- | --- | --- |
-| `id` | string \| number | - | **(Optional)** Item ID. <blockquote>Valid when the `hierarchical` is true</blockquote> | - |
-| `parent_id` | string \| number | - | **(Optional)** Parent ID of item. <blockquote>Valid when the `hierarchical` is true</blockquote> | - |
-| `label` | string | - | Specify the label text for each option. <blockquote>Support html tags</blockquote> | - |
-| `listItemLabel` | string | - | **(Optional)** Specify the label text for pop-up list items. <blockquote>Support html tags</blockquote> | - |
-| `value` | string | - | Specify the value for each option | - |
-| `queryString` | string | - | Quick query string, such as Chinese pinyin or English initials | - |
-| `disabled` | boolean | - | **(Optional)** When present, it specifies that an option should be disabled. | - |
+| `id` | string \| number | - | Item ID. <blockquote>Valid when the `hierarchical` is true</blockquote> | - |
+| `parent_id` | string \| number | - | Parent ID of item. <blockquote>Valid when the `hierarchical` is true</blockquote> | - |
+| `label` | string | - | Specify the label text for each option. <blockquote>Support html tags. But must have at least a string other than the HTML Tag, because the HTML Tag in this field will be sanitized when assigning the value. such as `<small>abc</small>efg`</blockquote> | ✅ |
+| `listItemLabel` | string | - | Specify the label text for pop-up list items. <blockquote>Support html tags</blockquote> | - |
+| `value` | string | - | Specify the value for each option | ✅ |
+| `queryString` | string | - | Quick query string, such as Chinese pinyin or English initials | ✅ |
+| `disabled` | boolean | - | When present, it specifies that an option should be disabled. | - |
 
 
 

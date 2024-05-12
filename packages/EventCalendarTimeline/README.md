@@ -61,12 +61,12 @@ JSON Object Literals configuration properties of the `eventsValue`:
 
 | Property | Type | Default | Description | Required |
 | --- | --- | --- | --- | --- |
-| `id` | string \| number | - | Item ID. | - |
-| `date` | string | - | Date of item. such as `2023-11-02` | - |
-| `time` | string | - | Date of item. such as `25:33:00` | - |
-| `data` | string | - | Specify the value for event  <blockquote>Support html tags</blockquote> | - |
-| `dataTooltip` | string | - | **(Optional)**  Specify the value note for event. It will be displayed in the form of Tooltip.  <blockquote>Support html tags</blockquote> | - |
-| `eventStyles` | React.CSSProperties | - | **(Optional)**  Use inline styles to event area. such as `{ backgroundColor: "red", fontSize: "12px" }` | - |
+| `id` | string \| number | - | Item ID. | ✅ |
+| `date` | string | - | Date of item. such as `2023-11-02` | ✅ |
+| `time` | string | - | Date of item. such as `25:33:00` | ✅ |
+| `data` | string | - | Specify the value for event  <blockquote>Support html tags</blockquote> | ✅ |
+| `dataTooltip` | string | - | Specify the value note for event. It will be displayed in the form of Tooltip.  <blockquote>Support html tags</blockquote> | - |
+| `eventStyles` | React.CSSProperties | - | Use inline styles to event area. such as `{ backgroundColor: "red", fontSize: "12px" }` | - |
 
 
 
