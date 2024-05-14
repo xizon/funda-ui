@@ -27,7 +27,8 @@ interface ColorPickerProps extends React.ComponentPropsWithoutRef<"input"> {
     onChange?: (e: any) => void;
     onBlur?: (e: any) => void;
     onFocus?: (e: any) => void;
-
+    onClear?: (e: any) => void;
+    
 };
 
 
@@ -51,6 +52,7 @@ const ColorPicker = forwardRef((props: ColorPickerProps, ref: any) => {
         onChange,
         onBlur,
         onFocus,
+        onClear,
         ...attributes
     } = props;
 
@@ -117,7 +119,6 @@ const ColorPicker = forwardRef((props: ColorPickerProps, ref: any) => {
 
     useEffect(() => {
 
-      
         // update default value
         //--------------
         setChangedVal(value || '');
@@ -146,21 +147,31 @@ const ColorPicker = forwardRef((props: ColorPickerProps, ref: any) => {
                         tabIndex={tabIndex || 0}
                         type='color'
                         className={`${controlClassName || controlClassName === '' ? controlClassName : "form-control custom-colorpicker-control flex-grow-0"} ${controlExClassName || ''}`}
-                        id={idRes}
-                        name={name}
                         value={changedVal}
                         onFocus={handleFocus}
                         onBlur={handleBlur}
                         onChange={handleChange}
                         disabled={disabled || null}
-                        required={required || null}
                         readOnly={readOnly || null}
                         style={style}
                         {...attributes}
                     />
 
-                    {changedVal !== '' ? <><button tabIndex={-1} type="button" className={clearBtnClassName || 'btn btn-link btn-sm'} onClick={() => {
+                    {/* Prevents the color from automatically becoming #000000 when it is empty */}
+                    <input
+                        tabIndex={-1}
+                        type="hidden"
+                        id={idRes}
+                        name={name}
+                        value={changedVal}
+                        required={required || null}
+                        {...attributes}
+                    />
+
+                    {changedVal !== '' ? <><button tabIndex={-1} type="button" className={clearBtnClassName || 'btn btn-link btn-sm'} onClick={(e: React.MouseEvent) => {
                         setChangedVal('');
+                        onChange?.(e);
+                        onClear?.(e);
                     }}>{clearBtnLabel || 'clear'}
                     </button></> : null}
 

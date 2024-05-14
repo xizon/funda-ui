@@ -25,6 +25,7 @@ interface ColorPickerProps extends React.ComponentPropsWithoutRef<"input"> {
     onChange?: (e: any) => void;
     onBlur?: (e: any) => void;
     onFocus?: (e: any) => void;
+    onClear?: (e: any) => void;
 }
 declare const ColorPicker: React.ForwardRefExoticComponent<ColorPickerProps & React.RefAttributes<unknown>>;
 export default ColorPicker;

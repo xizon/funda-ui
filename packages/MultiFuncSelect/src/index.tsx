@@ -256,6 +256,8 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
                     handleCleanValue();
                 }
 
+                selectInputRef.current.blur();
+
                 cb?.();
             },
             /*
@@ -1519,7 +1521,8 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
         }
 
         // update temporary value
-        setControlTempValue('');
+        setControlTempValue(null);
+
     }
 
     

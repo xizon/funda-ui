@@ -96,7 +96,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(787);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-var _excluded = ["wrapperClassName", "controlClassName", "controlExClassName", "clearBtnClassName", "clearBtnLabel", "disabled", "required", "readOnly", "value", "label", "name", "shape", "id", "style", "tabIndex", "onChange", "onBlur", "onFocus"];
+var _excluded = ["wrapperClassName", "controlClassName", "controlExClassName", "clearBtnClassName", "clearBtnLabel", "disabled", "required", "readOnly", "value", "label", "name", "shape", "id", "style", "tabIndex", "onChange", "onBlur", "onFocus", "onClear"];
 function _extends() { _extends = Object.assign ? Object.assign.bind() : function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
 function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
 function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
@@ -127,6 +127,7 @@ var ColorPicker = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)
     onChange = props.onChange,
     onBlur = props.onBlur,
     onFocus = props.onFocus,
+    onClear = props.onClear,
     attributes = _objectWithoutProperties(props, _excluded);
   var uniqueID = (0,react__WEBPACK_IMPORTED_MODULE_0__.useId)();
   var idRes = id || uniqueID;
@@ -213,22 +214,28 @@ var ColorPicker = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)
     tabIndex: tabIndex || 0,
     type: "color",
     className: "".concat(controlClassName || controlClassName === '' ? controlClassName : "form-control custom-colorpicker-control flex-grow-0", " ").concat(controlExClassName || ''),
-    id: idRes,
-    name: name,
     value: changedVal,
     onFocus: handleFocus,
     onBlur: handleBlur,
     onChange: handleChange,
     disabled: disabled || null,
-    required: required || null,
     readOnly: readOnly || null,
     style: style
+  }, attributes)), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("input", _extends({
+    tabIndex: -1,
+    type: "hidden",
+    id: idRes,
+    name: name,
+    value: changedVal,
+    required: required || null
   }, attributes)), changedVal !== '' ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", {
     tabIndex: -1,
     type: "button",
     className: clearBtnClassName || 'btn btn-link btn-sm',
-    onClick: function onClick() {
+    onClick: function onClick(e) {
       setChangedVal('');
+      onChange === null || onChange === void 0 ? void 0 : onChange(e);
+      onClear === null || onClear === void 0 ? void 0 : onClear(e);
     }
   }, clearBtnLabel || 'clear')) : null), required ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
     className: "position-absolute end-0 top-0 my-2 mx-2"

@@ -4054,6 +4054,7 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
         } else {
           handleCleanValue();
         }
+        selectInputRef.current.blur();
         cb === null || cb === void 0 ? void 0 : cb();
       },
       /*
@@ -5150,7 +5151,7 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
     }
 
     // update temporary value
-    setControlTempValue('');
+    setControlTempValue(null);
   }
   function handleMultiControlItemRemove(event) {
     event.preventDefault();

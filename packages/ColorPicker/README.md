@@ -23,6 +23,7 @@ import ColorPicker from 'funda-ui/ColorPicker';
 | `onChange` | function  | - | Call a function when the value of an HTML element is changed. It returns only one callback value which is the Control Event (**Event**) | - |
 | `onBlur` | function  | - | Call a function when a user leaves an form field. It returns only one callback value which is the Control Event (**Event**) | - |
 | `onFocus` | function  | - | Call a function when an form field gets focus. It returns only one callback value which is the Control Event (**Event**) | - |
+| `onClear` | function  | - | Clicking the empty button is triggered. It returns only one callback value which is the Control Event (**Event**) | - |
 
 
 It accepts all props which this control support.
@@ -117,8 +118,13 @@ export default () => {
     return (
         <>
             <ColorPicker
+                clearBtnLabel={'Clear'}
+                shape="circle"
                 value={inputValue}
                 name="name"
+                onChange={(e) => {
+                    setInputValue(e.target.value);
+                }}
             />
 
         </>
