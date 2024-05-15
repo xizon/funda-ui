@@ -14,6 +14,7 @@ All components have undergone complex business verification and provide multiple
 2. Components are compatible with `gRPC`, `REST APIs`, `GraphQL` self-packaging, uniformly use [Classes](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Classes) and their methods to introduce interfaces
 3. Enhanced user interaction, flexible use in asynchronous and synchronous states
 4. Introduce appropriate component `.css` files as needed, only for some components with special needs. Most of them can directly use Bootstrap's official style sheet.
+5. Do not embed css-in-js, directly use external CSS styles to completely change the component style.
 
 
 ## Components List
