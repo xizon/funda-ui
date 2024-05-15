@@ -38,7 +38,7 @@ import File from 'funda-ui/File';
 
 
 
-It accepts all props which this control support.
+It accepts all props which this control support. Such as `style`, `data-*`, `tabIndex`, `id`, and so on.
 
 ## Examples
 

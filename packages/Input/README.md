@@ -45,7 +45,7 @@ import Input from 'funda-ui/Input';
 | `onPressEnter` | function  | - | The callback function that is triggered when Enter key is pressed. It returns two callback values. <br /> <ol><li>The first is the Control Event (**Event**)</li><li>The last is the control (**HTML Element**)</li></ol> | - |
 
 
-It accepts all props which this control support.
+It accepts all props which this control support. Such as `style`, `data-*`, `tabIndex`, `id`, and so on.
 
 ## Examples
 

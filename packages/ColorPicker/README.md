@@ -26,7 +26,7 @@ import ColorPicker from 'funda-ui/ColorPicker';
 | `onClear` | function  | - | Clicking the empty button is triggered. It returns only one callback value which is the Control Event (**Event**) | - |
 
 
-It accepts all props which this control support.
+It accepts all props which this control support. Such as `style`, `data-*`, `tabIndex`, `id`, and so on.
 
 ## Examples
 

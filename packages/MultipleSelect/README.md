@@ -39,7 +39,7 @@ import MultipleSelect from 'funda-ui/MultipleSelect';
 | `onChange` | function  | - | Call a function when the value of an HTML element is changed. It returns five callback values. <br /> <ol><li>The first is the control of current checkbox</li><li>The second is the current value (**Array**)</li><li>The third is the current string value (**String**)</li><li>The fourth is the data (Exposes the JSON format data) about the option. (**JSON Object**)</li><li>The last is Add or delete operation identifier, value is `add` or `remove`. (**String**)</li></ol>  | - |
 
 
-It accepts all props which this control support.
+It accepts all props which this control support. Such as `style`, `data-*`, `tabIndex`, `id`, and so on.
 
 
 ---

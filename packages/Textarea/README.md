@@ -42,7 +42,7 @@ import Textarea from 'funda-ui/Textarea';
 
 
 
-It accepts all props which this control support.
+It accepts all props which this control support. Such as `style`, `data-*`, `tabIndex`, `id`, and so on.
 
 
 

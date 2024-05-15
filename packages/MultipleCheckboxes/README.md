@@ -35,7 +35,7 @@ import MultipleCheckboxes from 'funda-ui/MultipleCheckboxes';
 
 
 
-It accepts all props which this control support.
+It accepts all props which this control support. Such as `style`, `data-*`, `tabIndex`, `id`, and so on.
 
 
 ---

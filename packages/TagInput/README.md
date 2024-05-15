@@ -28,7 +28,7 @@ import TagInput from 'funda-ui/TagInput';
 > Note: Enter or space to add an element
 
 
-It accepts all props which this control support.
+It accepts all props which this control support. Such as `style`, `data-*`, `tabIndex`, `id`, and so on.
 
 
 ## Examples
