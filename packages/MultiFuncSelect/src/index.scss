@@ -69,7 +69,7 @@
     .mf-select-multi__control-blinking-following-cursor {
         position: absolute;
         top: .375rem;
-        margin-left: 1rem;
+        margin-left: 1rem;  /* offset start pixel of input control */
         z-index: 1;
 
         &.animated {

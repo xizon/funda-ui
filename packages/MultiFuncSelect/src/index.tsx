@@ -11,7 +11,7 @@ import {
     getAbsolutePositionOfStage,
     addTreeDepth,
     addTreeIndent,
-    getTextBoundingRect,
+    getTextWidth,
 } from 'funda-utils';
 
 
@@ -209,6 +209,8 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
     // blinking cursor
     const BLINKING_CURSOR_STR = '|';
     const [blinkingPosStart, setBlinkingPosStart] = useState<number>(0);
+    const blinkingPosFauxRef = useRef<any>(null);
+    const blinkingCursorPosDivRef = useRef<any>(null);
     
 
 
@@ -1631,12 +1633,13 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
     }
 
 
+
     function handleChange(event: any) {
 
         const val = event.target.value;
 
         //Calculates the position of the blinking cursor
-        setBlinkingPosStart(getTextBoundingRect(event.target, 0, event.target.selectionStart).width);
+        setBlinkingPosStart(getTextWidth(event.target, blinkingPosFauxRef.current, blinkingCursorPosDivRef.current));
 
         // update temporary value
         setControlTempValue(val);
@@ -1837,6 +1840,8 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
 
             {label ? <><div className="mf-select__label">{typeof label === 'string' ? <label htmlFor={`label-${idRes}`} className="form-label" dangerouslySetInnerHTML={{ __html: `${label}` }}></label> : <label htmlFor={`label-${idRes}`} className="form-label">{label}</label>}</div></> : null}
 
+
+<span ref={blinkingPosFauxRef}></span>
             <div 
                 ref={rootRef}
                 data-overlay-id={`mf-select__options-wrapper-${idRes}`}
@@ -1930,7 +1935,7 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
                             className={`${controlClassName || controlClassName === '' ? controlClassName : "form-control"} ${controlExClassName || ''}`}
                         />
 
-                        <span className={`mf-select-multi__control-blinking-cursor ${generateInputFocusStr() === BLINKING_CURSOR_STR ? 'animated' : ''}`}>
+                        <span ref={blinkingCursorPosDivRef} className={`mf-select-multi__control-blinking-cursor ${generateInputFocusStr() === BLINKING_CURSOR_STR ? 'animated' : ''}`}>
                             {controlTempValue || controlTempValue === '' ? (controlTempValue.length === 0 ? <span className={`${!hideBlinkingCursor() ? 'control-placeholder' : ''}`}>{generateInputFocusStr()}</span> : <span>{controlTempValue}</span>) : (stripHTML(controlLabel as never).length === 0 ? <span className={`${!hideBlinkingCursor() ? 'control-placeholder' : ''}`}>{generateInputFocusStr()}</span> : <span>{stripHTML(controlLabel as never)}</span>)}
                         </span>
 
@@ -2023,7 +2028,7 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
                                     ))}
 
                                     <li className={`mf-select-multi__list-item-placeholder ${typeof placeholder === 'undefined' || placeholder === '' ? 'hide' : ''}`}>
-                                        <span className={`mf-select-multi__control-blinking-cursor ${hideBlinkingCursor() ? 'control-placeholder' : ''} ${generateInputFocusStr() === BLINKING_CURSOR_STR ? 'animated' : ''}`}>
+                                        <span ref={blinkingCursorPosDivRef} className={`mf-select-multi__control-blinking-cursor ${hideBlinkingCursor() ? 'control-placeholder' : ''} ${generateInputFocusStr() === BLINKING_CURSOR_STR ? 'animated' : ''}`}>
                                             {generateInputFocusStr()}
 
                                             {/* BLINKING CURSOR */}

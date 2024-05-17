@@ -162,7 +162,7 @@ import {
 } from './libs/viewport';
 
 import {
-    getTextBoundingRect
+    getTextWidth
 } from './libs/inputs-calculation';
 
 
@@ -288,7 +288,7 @@ export {
    setDateDays,
    timestampToDate,
    isInViewport,
-   getTextBoundingRect,
+   getTextWidth,
     
     // hooks
     useThrottle,
