@@ -4313,7 +4313,7 @@ var TableRow = function TableRow(props) {
         },
         tableRootRef: tableRootRef,
         columnHeader: typeof headerItem.content === 'string' ? headerItem.content.replace(/(<([^>]+)>)/ig, '') : headerItem.content,
-        className: "".concat(el.className, " ").concat(focusableCellId === cellMark(rowIndex, i) ? 'cell-focus' : ''),
+        className: "".concat(el.className || '', " ").concat(focusableCellId === cellMark(rowIndex, i) ? 'cell-focus' : ''),
         dataUse: el.data,
         cols: el.cols,
         content: el.content,

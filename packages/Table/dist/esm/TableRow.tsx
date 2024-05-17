@@ -243,7 +243,7 @@ const TableRow = (props: TableRowProps) => {
                                     }}
                                     tableRootRef={tableRootRef}
                                     columnHeader={typeof headerItem.content === 'string' ? headerItem.content.replace(/(<([^>]+)>)/ig, '') : headerItem.content} 
-                                    className={`${el.className} ${focusableCellId === cellMark(rowIndex, i) ? 'cell-focus' : ''}`}
+                                    className={`${el.className || ''} ${focusableCellId === cellMark(rowIndex, i) ? 'cell-focus' : ''}`}
                                     dataUse={el.data}
                                     cols={el.cols} 
                                     content={el.content} 
