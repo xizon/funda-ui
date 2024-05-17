@@ -8,6 +8,7 @@ declare type DateProps = {
     controlClassName?: string;
     controlGroupWrapperClassName?: string;
     controlGroupTextClassName?: string;
+    enableEntireAreaPopup?: boolean;
     delimiter?: string;
     hideClearButton?: boolean;
     showToolsWhenHover?: boolean;

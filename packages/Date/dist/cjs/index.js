@@ -1168,6 +1168,10 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
             return (/* reexport */_getSpecifiedDate
             );
           },
+          "getTextBoundingRect": function getTextBoundingRect() {
+            return (/* reexport */_getTextBoundingRect
+            );
+          },
           "getTodayDate": function getTodayDate() {
             return (/* reexport */_getTodayDate
             );
@@ -1635,7 +1639,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
         *
         * @param  {Function} fn    - A function to be executed within the time limit.
         * @param  {Number} limit   - Waiting time.
-        * @return {Function}       - Returns a new function.
+        * @return {*}       - Returns a new function.
         */
         function _debounce(fn) {
           var limit = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 300;
@@ -1653,7 +1657,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
         *
         * @param  {Function} fn    - A function to be executed within the time limit.
         * @param  {Number} limit   - Waiting time.
-        * @return {Function}       - Returns a new function.
+        * @return {*}       - Returns a new function.
         */
         function _throttle(fn) {
           var limit = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 300;
@@ -3460,6 +3464,128 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
           var bounding = elem.getBoundingClientRect();
           return bounding.top >= 0 && bounding.left >= 0 && bounding.bottom <= (window.innerHeight || document.documentElement.clientHeight) && bounding.right <= (window.innerWidth || document.documentElement.clientWidth);
         }
+        ; // CONCATENATED MODULE: ./src/libs/inputs-calculation.ts
+        /**
+         * Get cursor or text position in pixels for input element
+         * 
+         * @param {HTMLElement} input  Required HTMLElement with `value` attribute
+         * @param {Number} selectionStart   Optional number: Start offset. Default 0
+         * @param {Number} selectionEnd Optional number: End offset. Default selectionStart
+         * @param {Boolean} debug Optional boolean. If true, the created test layer will not be removed.
+         * @returns {JSON}
+         * such as: 
+        {"x":14,"y":42.5,"width":36.1875,"height":19,"top":42.5,"right":50.1875,"bottom":61.5,"left":14}
+         */
+
+        // Local functions for readability of the previous code
+        function appendPart(text, cssDefaultStyles, fakeClone, start, end) {
+          var span = document.createElement("span"),
+            tmpText = text.substring(start, end);
+          span.style.cssText = cssDefaultStyles; //Force styles to prevent unexpected results
+          // add a space if it ends in a newline
+          if (/[\n\r]$/.test(tmpText)) {
+            tmpText += ' ';
+          }
+          span.textContent = tmpText;
+          fakeClone.appendChild(span);
+          return span;
+        }
+        // Computing offset position
+        function getInputOffset(input) {
+          var body = document.body,
+            win = document.defaultView,
+            docElem = document.documentElement,
+            box = document.createElement('div');
+          box.style.paddingLeft = box.style.width = "1px";
+          body.appendChild(box);
+          var isBoxModel = box.offsetWidth == 2;
+          body.removeChild(box);
+          box = input.getBoundingClientRect();
+          var clientTop = docElem.clientTop || body.clientTop || 0,
+            clientLeft = docElem.clientLeft || body.clientLeft || 0,
+            scrollTop = win.pageYOffset || isBoxModel && docElem.scrollTop || body.scrollTop,
+            scrollLeft = win.pageXOffset || isBoxModel && docElem.scrollLeft || body.scrollLeft;
+          return {
+            top: box.top + scrollTop - clientTop,
+            left: box.left + scrollLeft - clientLeft
+          };
+        }
+        function getInputCSS(input, prop, isnumber) {
+          var _document$defaultView;
+          var val = (_document$defaultView = document.defaultView) === null || _document$defaultView === void 0 ? void 0 : _document$defaultView.getComputedStyle(input, null).getPropertyValue(prop);
+          return isnumber ? parseFloat(val) : val;
+        }
+        function _getTextBoundingRect(input, selectionStart, selectionEnd) {
+          var _fakeClone$parentNode;
+          var debug = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : false;
+          if (input === null) return 0;
+
+          // Basic parameter validation
+          if (!input || !('value' in input)) return input;
+          if (typeof selectionStart == "string") selectionStart = parseFloat(selectionStart);
+          if (typeof selectionStart != "number" || isNaN(selectionStart)) {
+            selectionStart = 0;
+          }
+          if (selectionStart < 0) selectionStart = 0;else selectionStart = Math.min(input.value.length, selectionStart);
+          if (typeof selectionEnd == "string") selectionEnd = parseFloat(selectionEnd);
+          if (typeof selectionEnd != "number" || isNaN(selectionEnd) || selectionEnd < selectionStart) {
+            selectionEnd = selectionStart;
+          }
+          if (selectionEnd < 0) selectionEnd = 0;else selectionEnd = Math.min(input.value.length, selectionEnd);
+
+          // If available (thus IE), use the createTextRange method
+          if (typeof input.createTextRange == "function") {
+            var range = input.createTextRange();
+            range.collapse(true);
+            range.moveStart('character', selectionStart);
+            range.moveEnd('character', selectionEnd - selectionStart);
+            return range.getBoundingClientRect();
+          }
+          // createTextRange is not supported, create a fake text range
+          var offset = getInputOffset(input),
+            topPos = offset.top,
+            leftPos = offset.left,
+            width = getInputCSS(input, 'width', true),
+            height = getInputCSS(input, 'height', true);
+
+          // Styles to simulate a node in an input field
+          // use pre-wrap instead of wrap for white-space to support wrapping in textareas
+          var cssDefaultStyles = "white-space:pre-wrap;padding:0;margin:0;",
+            listOfModifiers = ['direction', 'font-family', 'font-size', 'font-size-adjust', 'font-variant', 'font-weight', 'font-style', 'letter-spacing', 'line-height', 'text-align', 'text-indent', 'text-transform', 'word-wrap', 'word-spacing'];
+          topPos += getInputCSS(input, 'padding-top', true);
+          topPos += getInputCSS(input, 'border-top-width', true);
+          leftPos += getInputCSS(input, 'padding-left', true);
+          leftPos += getInputCSS(input, 'border-left-width', true);
+          leftPos += 1; //Seems to be necessary
+
+          for (var i = 0; i < listOfModifiers.length; i++) {
+            var property = listOfModifiers[i];
+            cssDefaultStyles += property + ':' + getInputCSS(input, property, false) + ';';
+          }
+          // End of CSS variable checks
+
+          var text = input.value,
+            textLen = text.length,
+            fakeClone = document.createElement("div");
+          if (selectionStart > 0) appendPart(text, cssDefaultStyles, fakeClone, 0, selectionStart);
+          var fakeRange = appendPart(text, cssDefaultStyles, fakeClone, selectionStart, selectionEnd);
+          if (textLen > selectionEnd) appendPart(text, cssDefaultStyles, fakeClone, selectionEnd, textLen);
+
+          // Styles to inherit the font styles of the element
+          fakeClone.style.cssText = cssDefaultStyles;
+
+          // Styles to position the text node at the desired position
+          fakeClone.style.position = "absolute";
+          fakeClone.style.top = topPos + "px";
+          fakeClone.style.left = leftPos + "px";
+          fakeClone.style.width = width + "px";
+          fakeClone.style.height = height + "px";
+          document.body.appendChild(fakeClone);
+          var returnValue = fakeRange.getBoundingClientRect(); //Get rect
+
+          if (!debug) (_fakeClone$parentNode = fakeClone.parentNode) === null || _fakeClone$parentNode === void 0 ? void 0 : _fakeClone$parentNode.removeChild(fakeClone); //Remove temp
+          return returnValue;
+        }
 
         // EXTERNAL MODULE: external {"root":"React","commonjs2":"react","commonjs":"react","amd":"react"}
         var external_root_React_commonjs2_react_commonjs_react_amd_react_ = __nested_webpack_require_1471__(787);
@@ -3738,8 +3864,12 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
          * @usage:
         
         const App = () => {
+        
+            const [show, setShow] = useState<boolean>(false);
+            const dropdownRef = useRef<HTMLDivElement>(null);
+        
             useClickOutside({
-                enabled: true,
+                enabled: show && dropdownRef.current,
                 isOutside: (event: any) => {
                     return event.target.closest(`.test__wrapper`) === null && event.target.closest(`.test__wrapper2`) === null;
                 },
@@ -3748,7 +3878,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
                     //...
                 },
                 spyElement: document
-            }, []);
+            }, [show, dropdownRef]);
         };
         
          */
@@ -4765,7 +4895,7 @@ var zh_CN = __webpack_require__(357);
 var zh_CN_default = /*#__PURE__*/__webpack_require__.n(zh_CN);
 ;// CONCATENATED MODULE: ./src/index.tsx
 function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
-var _excluded = ["contentRef", "popupRef", "triggerClassName", "popupClassName", "wrapperClassName", "controlClassName", "controlGroupWrapperClassName", "controlGroupTextClassName", "delimiter", "hideClearButton", "showToolsWhenHover", "offset", "exceededSidePosOffset", "localization", "type", "onlyTime", "truncateSeconds", "valueUseSlash", "disabled", "required", "readOnly", "value", "clickInitValue", "min", "max", "placeholder", "label", "units", "name", "alt", "id", "iconLeft", "iconRight", "autoComplete", "style", "tabIndex", "onLoad", "onChange", "onBlur", "onFocus", "onPressEnter", "onOpenPopup", "onClosePopup", "onChangeDate", "onChangeMonth", "onChangeYear", "onChangeToday", "onChangeHours", "onChangeMinutes", "onChangeSeconds", "langHoursTitle", "langMinutesTitle", "langSecondsTitle", "langWeek", "langWeekFull", "langMonths", "langMonthsFull", "langToday"];
+var _excluded = ["contentRef", "popupRef", "triggerClassName", "popupClassName", "wrapperClassName", "controlClassName", "controlGroupWrapperClassName", "controlGroupTextClassName", "enableEntireAreaPopup", "delimiter", "hideClearButton", "showToolsWhenHover", "offset", "exceededSidePosOffset", "localization", "type", "onlyTime", "truncateSeconds", "valueUseSlash", "disabled", "required", "readOnly", "value", "clickInitValue", "min", "max", "placeholder", "label", "units", "name", "alt", "id", "iconLeft", "iconRight", "autoComplete", "style", "tabIndex", "onLoad", "onChange", "onBlur", "onFocus", "onPressEnter", "onOpenPopup", "onClosePopup", "onChangeDate", "onChangeMonth", "onChangeYear", "onChangeToday", "onChangeHours", "onChangeMinutes", "onChangeSeconds", "langHoursTitle", "langMinutesTitle", "langSecondsTitle", "langWeek", "langWeekFull", "langMonths", "langMonthsFull", "langToday"];
 function _regeneratorRuntime() { "use strict"; /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/facebook/regenerator/blob/main/LICENSE */ _regeneratorRuntime = function _regeneratorRuntime() { return exports; }; var exports = {}, Op = Object.prototype, hasOwn = Op.hasOwnProperty, defineProperty = Object.defineProperty || function (obj, key, desc) { obj[key] = desc.value; }, $Symbol = "function" == typeof Symbol ? Symbol : {}, iteratorSymbol = $Symbol.iterator || "@@iterator", asyncIteratorSymbol = $Symbol.asyncIterator || "@@asyncIterator", toStringTagSymbol = $Symbol.toStringTag || "@@toStringTag"; function define(obj, key, value) { return Object.defineProperty(obj, key, { value: value, enumerable: !0, configurable: !0, writable: !0 }), obj[key]; } try { define({}, ""); } catch (err) { define = function define(obj, key, value) { return obj[key] = value; }; } function wrap(innerFn, outerFn, self, tryLocsList) { var protoGenerator = outerFn && outerFn.prototype instanceof Generator ? outerFn : Generator, generator = Object.create(protoGenerator.prototype), context = new Context(tryLocsList || []); return defineProperty(generator, "_invoke", { value: makeInvokeMethod(innerFn, self, context) }), generator; } function tryCatch(fn, obj, arg) { try { return { type: "normal", arg: fn.call(obj, arg) }; } catch (err) { return { type: "throw", arg: err }; } } exports.wrap = wrap; var ContinueSentinel = {}; function Generator() {} function GeneratorFunction() {} function GeneratorFunctionPrototype() {} var IteratorPrototype = {}; define(IteratorPrototype, iteratorSymbol, function () { return this; }); var getProto = Object.getPrototypeOf, NativeIteratorPrototype = getProto && getProto(getProto(values([]))); NativeIteratorPrototype && NativeIteratorPrototype !== Op && hasOwn.call(NativeIteratorPrototype, iteratorSymbol) && (IteratorPrototype = NativeIteratorPrototype); var Gp = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(IteratorPrototype); function defineIteratorMethods(prototype) { ["next", "throw", "return"].forEach(function (method) { define(prototype, method, function (arg) { return this._invoke(method, arg); }); }); } function AsyncIterator(generator, PromiseImpl) { function invoke(method, arg, resolve, reject) { var record = tryCatch(generator[method], generator, arg); if ("throw" !== record.type) { var result = record.arg, value = result.value; return value && "object" == _typeof(value) && hasOwn.call(value, "__await") ? PromiseImpl.resolve(value.__await).then(function (value) { invoke("next", value, resolve, reject); }, function (err) { invoke("throw", err, resolve, reject); }) : PromiseImpl.resolve(value).then(function (unwrapped) { result.value = unwrapped, resolve(result); }, function (error) { return invoke("throw", error, resolve, reject); }); } reject(record.arg); } var previousPromise; defineProperty(this, "_invoke", { value: function value(method, arg) { function callInvokeWithMethodAndArg() { return new PromiseImpl(function (resolve, reject) { invoke(method, arg, resolve, reject); }); } return previousPromise = previousPromise ? previousPromise.then(callInvokeWithMethodAndArg, callInvokeWithMethodAndArg) : callInvokeWithMethodAndArg(); } }); } function makeInvokeMethod(innerFn, self, context) { var state = "suspendedStart"; return function (method, arg) { if ("executing" === state) throw new Error("Generator is already running"); if ("completed" === state) { if ("throw" === method) throw arg; return doneResult(); } for (context.method = method, context.arg = arg;;) { var delegate = context.delegate; if (delegate) { var delegateResult = maybeInvokeDelegate(delegate, context); if (delegateResult) { if (delegateResult === ContinueSentinel) continue; return delegateResult; } } if ("next" === context.method) context.sent = context._sent = context.arg;else if ("throw" === context.method) { if ("suspendedStart" === state) throw state = "completed", context.arg; context.dispatchException(context.arg); } else "return" === context.method && context.abrupt("return", context.arg); state = "executing"; var record = tryCatch(innerFn, self, context); if ("normal" === record.type) { if (state = context.done ? "completed" : "suspendedYield", record.arg === ContinueSentinel) continue; return { value: record.arg, done: context.done }; } "throw" === record.type && (state = "completed", context.method = "throw", context.arg = record.arg); } }; } function maybeInvokeDelegate(delegate, context) { var methodName = context.method, method = delegate.iterator[methodName]; if (undefined === method) return context.delegate = null, "throw" === methodName && delegate.iterator["return"] && (context.method = "return", context.arg = undefined, maybeInvokeDelegate(delegate, context), "throw" === context.method) || "return" !== methodName && (context.method = "throw", context.arg = new TypeError("The iterator does not provide a '" + methodName + "' method")), ContinueSentinel; var record = tryCatch(method, delegate.iterator, context.arg); if ("throw" === record.type) return context.method = "throw", context.arg = record.arg, context.delegate = null, ContinueSentinel; var info = record.arg; return info ? info.done ? (context[delegate.resultName] = info.value, context.next = delegate.nextLoc, "return" !== context.method && (context.method = "next", context.arg = undefined), context.delegate = null, ContinueSentinel) : info : (context.method = "throw", context.arg = new TypeError("iterator result is not an object"), context.delegate = null, ContinueSentinel); } function pushTryEntry(locs) { var entry = { tryLoc: locs[0] }; 1 in locs && (entry.catchLoc = locs[1]), 2 in locs && (entry.finallyLoc = locs[2], entry.afterLoc = locs[3]), this.tryEntries.push(entry); } function resetTryEntry(entry) { var record = entry.completion || {}; record.type = "normal", delete record.arg, entry.completion = record; } function Context(tryLocsList) { this.tryEntries = [{ tryLoc: "root" }], tryLocsList.forEach(pushTryEntry, this), this.reset(!0); } function values(iterable) { if (iterable) { var iteratorMethod = iterable[iteratorSymbol]; if (iteratorMethod) return iteratorMethod.call(iterable); if ("function" == typeof iterable.next) return iterable; if (!isNaN(iterable.length)) { var i = -1, next = function next() { for (; ++i < iterable.length;) if (hasOwn.call(iterable, i)) return next.value = iterable[i], next.done = !1, next; return next.value = undefined, next.done = !0, next; }; return next.next = next; } } return { next: doneResult }; } function doneResult() { return { value: undefined, done: !0 }; } return GeneratorFunction.prototype = GeneratorFunctionPrototype, defineProperty(Gp, "constructor", { value: GeneratorFunctionPrototype, configurable: !0 }), defineProperty(GeneratorFunctionPrototype, "constructor", { value: GeneratorFunction, configurable: !0 }), GeneratorFunction.displayName = define(GeneratorFunctionPrototype, toStringTagSymbol, "GeneratorFunction"), exports.isGeneratorFunction = function (genFun) { var ctor = "function" == typeof genFun && genFun.constructor; return !!ctor && (ctor === GeneratorFunction || "GeneratorFunction" === (ctor.displayName || ctor.name)); }, exports.mark = function (genFun) { return Object.setPrototypeOf ? Object.setPrototypeOf(genFun, GeneratorFunctionPrototype) : (genFun.__proto__ = GeneratorFunctionPrototype, define(genFun, toStringTagSymbol, "GeneratorFunction")), genFun.prototype = Object.create(Gp), genFun; }, exports.awrap = function (arg) { return { __await: arg }; }, defineIteratorMethods(AsyncIterator.prototype), define(AsyncIterator.prototype, asyncIteratorSymbol, function () { return this; }), exports.AsyncIterator = AsyncIterator, exports.async = function (innerFn, outerFn, self, tryLocsList, PromiseImpl) { void 0 === PromiseImpl && (PromiseImpl = Promise); var iter = new AsyncIterator(wrap(innerFn, outerFn, self, tryLocsList), PromiseImpl); return exports.isGeneratorFunction(outerFn) ? iter : iter.next().then(function (result) { return result.done ? result.value : iter.next(); }); }, defineIteratorMethods(Gp), define(Gp, toStringTagSymbol, "Generator"), define(Gp, iteratorSymbol, function () { return this; }), define(Gp, "toString", function () { return "[object Generator]"; }), exports.keys = function (val) { var object = Object(val), keys = []; for (var key in object) keys.push(key); return keys.reverse(), function next() { for (; keys.length;) { var key = keys.pop(); if (key in object) return next.value = key, next.done = !1, next; } return next.done = !0, next; }; }, exports.values = values, Context.prototype = { constructor: Context, reset: function reset(skipTempReset) { if (this.prev = 0, this.next = 0, this.sent = this._sent = undefined, this.done = !1, this.delegate = null, this.method = "next", this.arg = undefined, this.tryEntries.forEach(resetTryEntry), !skipTempReset) for (var name in this) "t" === name.charAt(0) && hasOwn.call(this, name) && !isNaN(+name.slice(1)) && (this[name] = undefined); }, stop: function stop() { this.done = !0; var rootRecord = this.tryEntries[0].completion; if ("throw" === rootRecord.type) throw rootRecord.arg; return this.rval; }, dispatchException: function dispatchException(exception) { if (this.done) throw exception; var context = this; function handle(loc, caught) { return record.type = "throw", record.arg = exception, context.next = loc, caught && (context.method = "next", context.arg = undefined), !!caught; } for (var i = this.tryEntries.length - 1; i >= 0; --i) { var entry = this.tryEntries[i], record = entry.completion; if ("root" === entry.tryLoc) return handle("end"); if (entry.tryLoc <= this.prev) { var hasCatch = hasOwn.call(entry, "catchLoc"), hasFinally = hasOwn.call(entry, "finallyLoc"); if (hasCatch && hasFinally) { if (this.prev < entry.catchLoc) return handle(entry.catchLoc, !0); if (this.prev < entry.finallyLoc) return handle(entry.finallyLoc); } else if (hasCatch) { if (this.prev < entry.catchLoc) return handle(entry.catchLoc, !0); } else { if (!hasFinally) throw new Error("try statement without catch or finally"); if (this.prev < entry.finallyLoc) return handle(entry.finallyLoc); } } } }, abrupt: function abrupt(type, arg) { for (var i = this.tryEntries.length - 1; i >= 0; --i) { var entry = this.tryEntries[i]; if (entry.tryLoc <= this.prev && hasOwn.call(entry, "finallyLoc") && this.prev < entry.finallyLoc) { var finallyEntry = entry; break; } } finallyEntry && ("break" === type || "continue" === type) && finallyEntry.tryLoc <= arg && arg <= finallyEntry.finallyLoc && (finallyEntry = null); var record = finallyEntry ? finallyEntry.completion : {}; return record.type = type, record.arg = arg, finallyEntry ? (this.method = "next", this.next = finallyEntry.finallyLoc, ContinueSentinel) : this.complete(record); }, complete: function complete(record, afterLoc) { if ("throw" === record.type) throw record.arg; return "break" === record.type || "continue" === record.type ? this.next = record.arg : "return" === record.type ? (this.rval = this.arg = record.arg, this.method = "return", this.next = "end") : "normal" === record.type && afterLoc && (this.next = afterLoc), ContinueSentinel; }, finish: function finish(finallyLoc) { for (var i = this.tryEntries.length - 1; i >= 0; --i) { var entry = this.tryEntries[i]; if (entry.finallyLoc === finallyLoc) return this.complete(entry.completion, entry.afterLoc), resetTryEntry(entry), ContinueSentinel; } }, "catch": function _catch(tryLoc) { for (var i = this.tryEntries.length - 1; i >= 0; --i) { var entry = this.tryEntries[i]; if (entry.tryLoc === tryLoc) { var record = entry.completion; if ("throw" === record.type) { var thrown = record.arg; resetTryEntry(entry); } return thrown; } } throw new Error("illegal catch attempt"); }, delegateYield: function delegateYield(iterable, resultName, nextLoc) { return this.delegate = { iterator: values(iterable), resultName: resultName, nextLoc: nextLoc }, "next" === this.method && (this.arg = undefined), ContinueSentinel; } }, exports; }
 function _extends() { _extends = Object.assign ? Object.assign.bind() : function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
 function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
@@ -4796,6 +4926,7 @@ var src_Date = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_reac
     controlClassName = props.controlClassName,
     controlGroupWrapperClassName = props.controlGroupWrapperClassName,
     controlGroupTextClassName = props.controlGroupTextClassName,
+    enableEntireAreaPopup = props.enableEntireAreaPopup,
     delimiter = props.delimiter,
     hideClearButton = props.hideClearButton,
     showToolsWhenHover = props.showToolsWhenHover,
@@ -5001,9 +5132,8 @@ var src_Date = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_reac
 
   // click outside
   (0,Utils_dist_cjs.useClickOutside)({
-    enabled: true,
+    enabled: isShow && rootRef.current,
     isOutside: function isOutside(event) {
-      if (!isShow) return;
       return event.target.closest(".date2d__wrapper") === null && event.target.closest(".date2d-cal__wrapper") === null;
     },
     handle: function handle(event) {
@@ -5019,7 +5149,7 @@ var src_Date = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_reac
         popupBlurEnabled.current = false;
       }
     }
-  }, [isShow]);
+  }, [isShow, rootRef]);
 
   // Add function to the element that should be used as the scrollable area.
   // const [scrollData, windowScrollUpdate] = useWindowScroll({
@@ -5477,10 +5607,10 @@ var src_Date = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_reac
     ref: rootRef,
     "data-overlay-id": "date2d__wrapper-".concat(idRes),
     className: "date2d__trigger d-inline-block is-".concat(type, " ").concat(triggerClassName || '', " ").concat(SHOW_TOOLS_ENABLED ? 'date2d__trigger--hover-show-tools' : ''),
-    onClick: handleShow,
     onFocus: handleFocus,
     onBlur: handleBlur,
-    onKeyDown: handleKeyPressed
+    onKeyDown: handleKeyPressed,
+    onClick: enableEntireAreaPopup ? handleShow : function () {}
   }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
     className: "date2d__control"
   }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((cjs_default()), _extends({
@@ -5753,6 +5883,7 @@ var src_Date = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_reac
     onClick: function onClick(e) {
       e.preventDefault();
       e.stopPropagation(); // Avoid triggering pop-ups
+
       clearAll();
     }
   }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("svg", {
@@ -5762,7 +5893,17 @@ var src_Date = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_reac
   }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("path", {
     fill: "#000",
     d: "M195.2 195.2a64 64 0 0 1 90.496 0L512 421.504 738.304 195.2a64 64 0 0 1 90.496 90.496L602.496 512 828.8 738.304a64 64 0 0 1-90.496 90.496L512 602.496 285.696 828.8a64 64 0 0 1-90.496-90.496L421.504 512 195.2 285.696a64 64 0 0 1 0-90.496z"
-  }))), /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("svg", {
+  }))), /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("a", {
+    tabIndex: -1,
+    href: "#",
+    className: "date2d__control-tools__trigger",
+    onClick: function onClick(e) {
+      e.preventDefault();
+      e.stopPropagation(); // Avoid triggering pop-ups
+
+      handleShow();
+    }
+  }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("svg", {
     width: "14px",
     height: "14px",
     viewBox: "0 0 24 24",
@@ -5773,7 +5914,7 @@ var src_Date = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_reac
     strokeWidth: "2",
     strokeLinecap: "round",
     strokeLinejoin: "round"
-  }))))), /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((dist_cjs_default()), {
+  })))))), /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((dist_cjs_default()), {
     show: isShow,
     containerClassName: "Date Date--".concat(type)
   }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", _extends({

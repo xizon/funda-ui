@@ -629,6 +629,10 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
             return (/* reexport */_getSpecifiedDate
             );
           },
+          "getTextBoundingRect": function getTextBoundingRect() {
+            return (/* reexport */_getTextBoundingRect
+            );
+          },
           "getTodayDate": function getTodayDate() {
             return (/* reexport */_getTodayDate
             );
@@ -1096,7 +1100,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
         *
         * @param  {Function} fn    - A function to be executed within the time limit.
         * @param  {Number} limit   - Waiting time.
-        * @return {Function}       - Returns a new function.
+        * @return {*}       - Returns a new function.
         */
         function _debounce(fn) {
           var limit = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 300;
@@ -1114,7 +1118,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
         *
         * @param  {Function} fn    - A function to be executed within the time limit.
         * @param  {Number} limit   - Waiting time.
-        * @return {Function}       - Returns a new function.
+        * @return {*}       - Returns a new function.
         */
         function _throttle(fn) {
           var limit = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 300;
@@ -2921,6 +2925,128 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
           var bounding = elem.getBoundingClientRect();
           return bounding.top >= 0 && bounding.left >= 0 && bounding.bottom <= (window.innerHeight || document.documentElement.clientHeight) && bounding.right <= (window.innerWidth || document.documentElement.clientWidth);
         }
+        ; // CONCATENATED MODULE: ./src/libs/inputs-calculation.ts
+        /**
+         * Get cursor or text position in pixels for input element
+         * 
+         * @param {HTMLElement} input  Required HTMLElement with `value` attribute
+         * @param {Number} selectionStart   Optional number: Start offset. Default 0
+         * @param {Number} selectionEnd Optional number: End offset. Default selectionStart
+         * @param {Boolean} debug Optional boolean. If true, the created test layer will not be removed.
+         * @returns {JSON}
+         * such as: 
+        {"x":14,"y":42.5,"width":36.1875,"height":19,"top":42.5,"right":50.1875,"bottom":61.5,"left":14}
+         */
+
+        // Local functions for readability of the previous code
+        function appendPart(text, cssDefaultStyles, fakeClone, start, end) {
+          var span = document.createElement("span"),
+            tmpText = text.substring(start, end);
+          span.style.cssText = cssDefaultStyles; //Force styles to prevent unexpected results
+          // add a space if it ends in a newline
+          if (/[\n\r]$/.test(tmpText)) {
+            tmpText += ' ';
+          }
+          span.textContent = tmpText;
+          fakeClone.appendChild(span);
+          return span;
+        }
+        // Computing offset position
+        function getInputOffset(input) {
+          var body = document.body,
+            win = document.defaultView,
+            docElem = document.documentElement,
+            box = document.createElement('div');
+          box.style.paddingLeft = box.style.width = "1px";
+          body.appendChild(box);
+          var isBoxModel = box.offsetWidth == 2;
+          body.removeChild(box);
+          box = input.getBoundingClientRect();
+          var clientTop = docElem.clientTop || body.clientTop || 0,
+            clientLeft = docElem.clientLeft || body.clientLeft || 0,
+            scrollTop = win.pageYOffset || isBoxModel && docElem.scrollTop || body.scrollTop,
+            scrollLeft = win.pageXOffset || isBoxModel && docElem.scrollLeft || body.scrollLeft;
+          return {
+            top: box.top + scrollTop - clientTop,
+            left: box.left + scrollLeft - clientLeft
+          };
+        }
+        function getInputCSS(input, prop, isnumber) {
+          var _document$defaultView;
+          var val = (_document$defaultView = document.defaultView) === null || _document$defaultView === void 0 ? void 0 : _document$defaultView.getComputedStyle(input, null).getPropertyValue(prop);
+          return isnumber ? parseFloat(val) : val;
+        }
+        function _getTextBoundingRect(input, selectionStart, selectionEnd) {
+          var _fakeClone$parentNode;
+          var debug = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : false;
+          if (input === null) return 0;
+
+          // Basic parameter validation
+          if (!input || !('value' in input)) return input;
+          if (typeof selectionStart == "string") selectionStart = parseFloat(selectionStart);
+          if (typeof selectionStart != "number" || isNaN(selectionStart)) {
+            selectionStart = 0;
+          }
+          if (selectionStart < 0) selectionStart = 0;else selectionStart = Math.min(input.value.length, selectionStart);
+          if (typeof selectionEnd == "string") selectionEnd = parseFloat(selectionEnd);
+          if (typeof selectionEnd != "number" || isNaN(selectionEnd) || selectionEnd < selectionStart) {
+            selectionEnd = selectionStart;
+          }
+          if (selectionEnd < 0) selectionEnd = 0;else selectionEnd = Math.min(input.value.length, selectionEnd);
+
+          // If available (thus IE), use the createTextRange method
+          if (typeof input.createTextRange == "function") {
+            var range = input.createTextRange();
+            range.collapse(true);
+            range.moveStart('character', selectionStart);
+            range.moveEnd('character', selectionEnd - selectionStart);
+            return range.getBoundingClientRect();
+          }
+          // createTextRange is not supported, create a fake text range
+          var offset = getInputOffset(input),
+            topPos = offset.top,
+            leftPos = offset.left,
+            width = getInputCSS(input, 'width', true),
+            height = getInputCSS(input, 'height', true);
+
+          // Styles to simulate a node in an input field
+          // use pre-wrap instead of wrap for white-space to support wrapping in textareas
+          var cssDefaultStyles = "white-space:pre-wrap;padding:0;margin:0;",
+            listOfModifiers = ['direction', 'font-family', 'font-size', 'font-size-adjust', 'font-variant', 'font-weight', 'font-style', 'letter-spacing', 'line-height', 'text-align', 'text-indent', 'text-transform', 'word-wrap', 'word-spacing'];
+          topPos += getInputCSS(input, 'padding-top', true);
+          topPos += getInputCSS(input, 'border-top-width', true);
+          leftPos += getInputCSS(input, 'padding-left', true);
+          leftPos += getInputCSS(input, 'border-left-width', true);
+          leftPos += 1; //Seems to be necessary
+
+          for (var i = 0; i < listOfModifiers.length; i++) {
+            var property = listOfModifiers[i];
+            cssDefaultStyles += property + ':' + getInputCSS(input, property, false) + ';';
+          }
+          // End of CSS variable checks
+
+          var text = input.value,
+            textLen = text.length,
+            fakeClone = document.createElement("div");
+          if (selectionStart > 0) appendPart(text, cssDefaultStyles, fakeClone, 0, selectionStart);
+          var fakeRange = appendPart(text, cssDefaultStyles, fakeClone, selectionStart, selectionEnd);
+          if (textLen > selectionEnd) appendPart(text, cssDefaultStyles, fakeClone, selectionEnd, textLen);
+
+          // Styles to inherit the font styles of the element
+          fakeClone.style.cssText = cssDefaultStyles;
+
+          // Styles to position the text node at the desired position
+          fakeClone.style.position = "absolute";
+          fakeClone.style.top = topPos + "px";
+          fakeClone.style.left = leftPos + "px";
+          fakeClone.style.width = width + "px";
+          fakeClone.style.height = height + "px";
+          document.body.appendChild(fakeClone);
+          var returnValue = fakeRange.getBoundingClientRect(); //Get rect
+
+          if (!debug) (_fakeClone$parentNode = fakeClone.parentNode) === null || _fakeClone$parentNode === void 0 ? void 0 : _fakeClone$parentNode.removeChild(fakeClone); //Remove temp
+          return returnValue;
+        }
 
         // EXTERNAL MODULE: external {"root":"React","commonjs2":"react","commonjs":"react","amd":"react"}
         var external_root_React_commonjs2_react_commonjs_react_amd_react_ = __nested_webpack_require_1471__(787);
@@ -3199,8 +3325,12 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
          * @usage:
         
         const App = () => {
+        
+            const [show, setShow] = useState<boolean>(false);
+            const dropdownRef = useRef<HTMLDivElement>(null);
+        
             useClickOutside({
-                enabled: true,
+                enabled: show && dropdownRef.current,
                 isOutside: (event: any) => {
                     return event.target.closest(`.test__wrapper`) === null && event.target.closest(`.test__wrapper2`) === null;
                 },
@@ -3209,7 +3339,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
                     //...
                 },
                 spyElement: document
-            }, []);
+            }, [show, dropdownRef]);
         };
         
          */
@@ -3691,10 +3821,10 @@ function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableTo
 function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
 function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter); }
 function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
+function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
 function _extends() { _extends = Object.assign ? Object.assign.bind() : function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
 function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
 function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
-function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
 function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
 function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
 function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
@@ -3799,18 +3929,15 @@ var CascadingSelect = function CascadingSelect(props) {
 
   // click outside
   (0,dist_cjs.useClickOutside)({
-    enabled: true,
+    enabled: isShow && rootRef.current && listRef.current,
     isOutside: function isOutside(event) {
-      if (!isShow) return;
-
-      // svg element
-      if (_typeof(event.target.className) === 'object') return false;
-      return event.target.className != '' && event.target.className.indexOf('cas-select__wrapper') < 0 && event.target.className.indexOf('form-control') < 0 && event.target.className.indexOf('cas-select__trigger') < 0 && event.target.className.indexOf('cas-select__items-wrapper') < 0 && event.target.className.indexOf('cas-select__opt') < 0;
+      // close dropdown when other dropdown is opened
+      return rootRef.current !== event.target && !rootRef.current.contains(event.target) && listRef.current !== event.target && !listRef.current.contains(event.target);
     },
     handle: function handle(event) {
       cancel();
     }
-  }, [isShow]);
+  }, [isShow, rootRef, listRef]);
 
   // Add function to the element that should be used as the scrollable area.
   var _useWindowScroll = (0,dist_cjs.useWindowScroll)({

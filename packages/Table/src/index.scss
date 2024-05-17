@@ -15,6 +15,7 @@
     --table-scrollbar-track: rgba(0, 0, 0, 0);
     --table-scrollbar-h: 3px;
     --table-scrollbar-w: 3px;
+    --table-cell-focus-shadow: inset 0px 0px 2px 0px rgba(13, 110, 253, 2.25);
 
     
     
@@ -53,6 +54,10 @@
                 cursor: pointer;
             }
 
+        }
+
+        td.cell-focus {
+            box-shadow: var(--table-cell-focus-shadow);
         }
 
         &.table-colgroup {

@@ -10,7 +10,7 @@ import EventCalendarTimeline from 'funda-ui/EventCalendarTimeline';
 | Property | Type | Default | Description | Required |
 | --- | --- | --- | --- | --- |
 | `customTodayDate` | string  | - | Specify a default today. such as `2023-11-16` | - |
-| `eventsValue` | array  | - | Specify the default value for all events. Its properties are described below in the documentation. such as `[{id:1,date:'2023-11-20',time:'',data:'event 1'},{id:2,date:'2023-9-22',time:'',data:'event 2'},{id:3,date:'2023-09-12',time:'',data:'<del>very long event string</del> here, event 3',eventStyles:{background:'rgb(255, 240, 227)'}}]` | - |
+| `eventsValue` | array  | `[]` | Specify the default value for all events. Its properties are described below in the documentation. such as `[{id:1,date:'2023-11-20',time:'',data:'event 1'},{id:2,date:'2023-9-22',time:'',data:'event 2'},{id:3,date:'2023-09-12',time:'',data:'<del>very long event string</del> here, event 3',eventStyles:{background:'rgb(255, 240, 227)'}}]` | ✅ |
 | `langWeek` | array  | `['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN']` | Localization in the component of week sequence. <blockquote>Support html tags. <br />such as `['<small>MON</small>', '<small>TUE</small>', '<small>WED</small>', '<small>THU</small>', '<small>FRI</small>', '<small>SAT</small>', '<small>SUN</small>']`</blockquote> | - |
 | `langWeekFull` | array  | `['MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY', 'SATURDAY', 'SUNDAY']` | Localization in the component of full week sequence. <blockquote>This attribute is not valid yet</blockquote> | - |
 | `langMonths` | array  | `['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC']` | Localization in the component of months sequence. | - |

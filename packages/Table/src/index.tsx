@@ -1,6 +1,7 @@
 import React, { useId, useEffect, useState, useRef, useCallback } from 'react';
 
 import {
+    useClickOutside,
     debounce,
     getChildren
 } from 'funda-utils';
@@ -12,7 +13,7 @@ import TableSummaries from './TableSummaries';
 import TableColgroup from './TableColgroup';
 
 
-import { formatRowControlVal } from './table-utils';
+import { formatRowControlVal, removeCellFocusClassName } from './table-utils';
 
 
 type TableProps = {
@@ -49,6 +50,7 @@ type TableProps = {
     onCheck?: (val: any, el: any, checked: boolean) => void;
     onDrag?: (dragStart: any, dragEnd: any) => void;
     onRenderFinished?: (res: boolean) => void;
+    onCellArrowKeys?: (classname: any, el: any) => void;
 };
 
 
@@ -85,7 +87,8 @@ const Table = (props: TableProps) => {
         onClick,
         onCheck,
         onDrag,
-        onRenderFinished
+        onRenderFinished,
+        onCellArrowKeys
     } = props;
 
 
@@ -108,6 +111,10 @@ const Table = (props: TableProps) => {
     const _fieldsChecked = data.hasOwnProperty('fieldsChecked') ? data.fieldsChecked : false;
     let windowWidth = typeof window !== 'undefined' ? window.innerWidth : 0;
 
+    // effective element movement on keystroke
+    const [rootDataInfo, setRootDataInfo] = useState<any>(null);
+    const refNode = useRef(new Map<string, HTMLTableElement>());
+    const [focusableCellId, setFocusableCellId] = useState<string>('');
 
     //
 
@@ -145,6 +152,16 @@ const Table = (props: TableProps) => {
     let sortableClasses = '';
     if (sortable) sortableClasses += ' enable-sort';
 
+    // click outside
+    useClickOutside({
+        enabled: true,
+        isOutside: (event: any) => {
+            return event.target.closest(`.table__wrapper`) === null;
+        },
+        handle: (event: any) => {
+            removeCellFocusClassName(rootRef.current);
+        }
+    }, []);
 
 
     // ================================================================
@@ -501,6 +518,14 @@ const Table = (props: TableProps) => {
 
     useEffect(() => {
 
+        // Update cell ids
+        //--------------
+        if (data && data.fields) {
+            setRootDataInfo({
+                totalRow: data.fields.length
+            });
+        }
+       
 
         // Update status of children components
         //--------------
@@ -555,9 +580,15 @@ const Table = (props: TableProps) => {
     return (
         <>
 
-            <div ref={rootRef} id={idRes} className={`table__wrapper ${wrapperClassName || wrapperClassName === '' ? wrapperClassName : `mb-3 position-relative`} ${responsiveClasses} ${enhancedResponsiveClasses} ${checkableClasses} ${radioClasses} ${draggableClasses} ${sortableClasses}`}>
+            <div 
+                ref={rootRef} 
+                id={idRes} 
+                className={`table__wrapper ${wrapperClassName || wrapperClassName === '' ? wrapperClassName : `mb-3 position-relative`} ${responsiveClasses} ${enhancedResponsiveClasses} ${checkableClasses} ${radioClasses} ${draggableClasses} ${sortableClasses}`}
+            >
 
-                <table className={`${tableClassName || tableClassName === '' ? tableClassName : "table"} ${tableClasses} ${typeof cellAutoWidth === 'undefined' || cellAutoWidth === false ? '' : 'cell-autowidth'}`}>
+                <table 
+                    className={`${tableClassName || tableClassName === '' ? tableClassName : "table"} ${tableClasses} ${typeof cellAutoWidth === 'undefined' || cellAutoWidth === false ? '' : 'cell-autowidth'}`}
+                >
 
                     <TableHeaders
                         data={_headers}
@@ -594,6 +625,8 @@ const Table = (props: TableProps) => {
                             return <TableRow
                                 key={i + String(mainUpdate)} // Trigger child component update when prop of parent changes
                                 index={i}
+                                refNode={refNode}
+                                rootDataInfo={rootDataInfo}
                                 tableRootRef={rootRef}
                                 tableCheckRef={tableCheckRef}
                                 rowActiveClassName={rowActiveClassName}
@@ -613,6 +646,7 @@ const Table = (props: TableProps) => {
                                 onCheck={onCheck}
                                 draggable={draggable || false}
                                 useRadio={useRadio || false}
+                                updateFocusableCellId={[focusableCellId, setFocusableCellId]}
                                 evDragEnd={handleDragEnd}
                                 evDragStart={handleDragStart}
                                 evCellMouseEnter={onCellMouseEnter}
@@ -621,6 +655,9 @@ const Table = (props: TableProps) => {
                                 evRowMouseEnter={onRowMouseEnter}
                                 evRowMouseLeave={onRowMouseLeave}
                                 evRowClick={onRowClick}
+                                evCellArrowKeys={onCellArrowKeys}
+
+                                
                             />;
                         }) : ""
                         }

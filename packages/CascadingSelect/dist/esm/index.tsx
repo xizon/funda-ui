@@ -173,32 +173,24 @@ const CascadingSelect = (props: CascadingSelectProps) => {
     const [isShow, setIsShow] = useState<boolean>(false);
 
 
-
-
     // click outside
     useClickOutside({
-        enabled: true,
+        enabled: isShow && rootRef.current && listRef.current,
         isOutside: (event: any) => {
-            if (!isShow) return;
 
-            // svg element
-            if (typeof event.target.className === 'object') return false;
-
-
-            return event.target.className != '' && (
-                event.target.className.indexOf('cas-select__wrapper') < 0 &&
-                event.target.className.indexOf('form-control') < 0 &&
-                event.target.className.indexOf('cas-select__trigger') < 0 &&
-                event.target.className.indexOf('cas-select__items-wrapper') < 0 &&
-                event.target.className.indexOf('cas-select__opt') < 0
-            );
+            // close dropdown when other dropdown is opened
+            return (
+                (rootRef.current !== event.target && !rootRef.current.contains(event.target as HTMLElement)) &&
+                listRef.current !== event.target && !listRef.current.contains(event.target as HTMLElement)
+            )
+              
         },
         handle: (event: any) => {
             cancel();
         }
-    }, [isShow]);
+    }, [isShow, rootRef, listRef]);
 
-
+    
 
     // Add function to the element that should be used as the scrollable area.
     const [scrollData, windowScrollUpdate] = useWindowScroll({

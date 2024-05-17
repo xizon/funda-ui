@@ -14,6 +14,7 @@
   --table-scrollbar-track: rgba(0, 0, 0, 0);
   --table-scrollbar-h: 3px;
   --table-scrollbar-w: 3px;
+  --table-cell-focus-shadow: inset 0px 0px 2px 0px rgba(13, 110, 253, 2.25);
   /*------ active row  ------*/
   /*------ enable sort  ------*/
   /*------ has checkbox  ------*/
@@ -43,6 +44,9 @@
 }
 .table__wrapper table tr.clickable {
   cursor: pointer;
+}
+.table__wrapper table td.cell-focus {
+  box-shadow: var(--table-cell-focus-shadow);
 }
 .table__wrapper table.table-colgroup tbody tr td:first-child,
 .table__wrapper table.table-colgroup tbody tr th:first-child {

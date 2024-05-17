@@ -4,9 +4,9 @@
 *
 * @param  {Function} fn    - A function to be executed within the time limit.
 * @param  {Number} limit   - Waiting time.
-* @return {Function}       - Returns a new function.
+* @return {*}       - Returns a new function.
 */  
-function debounce(fn: Function, limit: number = 300): Function {
+function debounce(fn: Function, limit: number = 300): any {
     let timer: any;
     return function(this: any) {
         clearTimeout(timer);
@@ -25,9 +25,9 @@ function debounce(fn: Function, limit: number = 300): Function {
 *
 * @param  {Function} fn    - A function to be executed within the time limit.
 * @param  {Number} limit   - Waiting time.
-* @return {Function}       - Returns a new function.
+* @return {*}       - Returns a new function.
 */  
-function throttle(fn: Function, limit: number = 300): Function {
+function throttle(fn: Function, limit: number = 300): any {
 	let waiting: boolean = false;                     
 	return function (this: any) {                     
 		if (!waiting) {                 

@@ -6,6 +6,9 @@ import {
     getAbsolutePositionOfStage
 } from 'funda-utils';
 
+
+
+
 type TooltipProps = {
     wrapperClassName?: string;
 	/** The direction of the tip. Defaults to `top`. Possible values are: `top`, `top-right`, `top-left`, `bottom`, `bottom-right`, `bottom-left` */
@@ -90,14 +93,18 @@ const Tooltip = (props: TooltipProps) => {
 
     // click outside
     useClickOutside({
-        enabled: true,
+        enabled: isShow && rootRef.current,
         isOutside: (event: any) => {
-            return true;
+            // close dropdown when other dropdown is opened
+            return (
+                (rootRef.current !== event.target && !rootRef.current.contains(event.target as HTMLElement))
+            )
         },
         handle: (event: any) => {
             hideTip();
         }
-    }, []);
+    }, [isShow, rootRef]);
+
 
 
     //timer hover

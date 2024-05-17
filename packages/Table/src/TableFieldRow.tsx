@@ -328,6 +328,7 @@ const TableFieldRow = (props: TableFieldRowProps) => {
                 colSpan={cols}
                 data-table-text={columnHeader}
                 data-table-col={index}
+                data-table-row={rowIndex}  
                 data-use={dataUse}
                 style={style ? style : (width ? ((typeof window !== 'undefined' && window.innerWidth > 768) ? { width: width } : {}) : {})}
                 className={className || ''}

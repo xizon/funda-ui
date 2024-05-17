@@ -13,6 +13,8 @@ import {
 } from 'funda-utils';
 
 
+
+
 import Group from './Group';
 
 
@@ -205,29 +207,23 @@ const CascadingSelectE2E = (props: CascadingSelectE2EProps) => {
 
 
 
-
     // click outside
     useClickOutside({
-        enabled: true,
+        enabled: isShow && rootRef.current && listRef.current,
         isOutside: (event: any) => {
-            if (!isShow) return;
 
-            // svg element
-            if (typeof event.target.className === 'object') return false;
-
-
-            return event.target.className != '' && (
-                event.target.className.indexOf('cas-select-e2e__wrapper') < 0 &&
-                event.target.className.indexOf('form-control') < 0 &&
-                event.target.className.indexOf('cas-select-e2e__trigger') < 0 &&
-                event.target.className.indexOf('cas-select-e2e__items-wrapper') < 0 &&
-                event.target.className.indexOf('cas-select-e2e__opt') < 0
-            );
+            // close dropdown when other dropdown is opened
+            return (
+                (rootRef.current !== event.target && !rootRef.current.contains(event.target as HTMLElement)) &&
+                listRef.current !== event.target && !listRef.current.contains(event.target as HTMLElement)
+            )
+              
         },
         handle: (event: any) => {
             cancel();
         }
-    }, [isShow]);
+    }, [isShow, rootRef, listRef]);
+
 
 
     // Add function to the element that should be used as the scrollable area.

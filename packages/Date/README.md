@@ -12,6 +12,7 @@ import Date from 'funda-ui/Date';
 | `ref` | React.ForwardedRef | - | It is the return element of this component.  | - |
 | `contentRef` | React.RefObject | - | It exposes the following methods:  <br /> <ol><li>`contentRef.current.clear(() => { console.log('callback') })`</li><li>`contentRef.current.blur(() => { console.log('callback') })`</li><li>`contentRef.current.set('2024-04-25 21:54:18', () => { console.log('callback') })`</li></ol>  <blockquote>DO NOT USE it in the `onChange` and `onChange***` of this component, otherwise it will cause infinite rendering</blockquote> | - |
 | `popupRef` | React.RefObject | - | It exposes the following methods when the component's popup opens or closes:  <br /> <ol><li>`popupRef.current.close()`</li></ol> | - |
+| `enableEntireAreaPopup` | boolean  | false | Enable the entire area popup. If it is false, you need to click the icon to pop up. | - |
 | `delimiter` | string  | `/` | Specify a delimiter from a date string. such as `/`, `-`, ` `, `.` | - |
 | `hideClearButton` | boolean  | false | Hide the Clear button | - |
 | `showToolsWhenHover` | boolean  | false | The tool icon is displayed when hovering over the mouse | - |
@@ -93,6 +94,9 @@ export default () => {
                 }}
                 onLoad={(initValue: string, dateRes: any, allSplittingInputs: any[]) => {
                     console.log(initValue, dateRes, allSplittingInputs)
+                }}
+                onPressEnter={(control: HTMLElement, allControls: HTMLElement[]) => {
+                    // ...
                 }}
             />
 

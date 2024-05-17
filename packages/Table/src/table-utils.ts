@@ -4,6 +4,7 @@ import {
 } from 'funda-utils';
 
 
+
 export const removeItemOnce = (arr: any[], key: string) => {
     return arr.filter((item: any) => {
         return item.key !== key;
@@ -74,4 +75,17 @@ export const getAllCheckboxInput = (el: any) => {
     const _checkboxes = getChildren(el.closest('table').querySelector('tbody'), '[type="checkbox"]');
     return [].slice.call(_checkboxes);
 
+};
+
+
+export const cellMark = (col: number | string | undefined, row: number | string | undefined) => {
+    return `cell-${col}-${row}`;
+};
+
+export const removeCellFocusClassName = (root: any) => {
+    if (root) {
+        [].slice.call(root.querySelectorAll('td')).forEach((el: HTMLTableElement) => {
+            el.classList.remove('cell-focus');
+        });
+    }
 };

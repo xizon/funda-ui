@@ -61,13 +61,22 @@ Here is a table of the components and their status.
 
 ## Usage
 
-First, you need to install it:
+**Step 1**. You need to install it:
 
 ```sh
 $ npm i funda-ui
 ```
 
-Next, import required components as required
+**Step 2**. Using Bootstrap CSS together (recommended)
+
+```html
+<link href="./bootstrap.min.css" rel="stylesheet"/>
+```
+
+
+**Step 3**. import required components as required 
+
+> If the component does not have a CSS file, it can not be imported, or use own CSS.
 
 ```js
 import Input from 'funda-ui/Input';

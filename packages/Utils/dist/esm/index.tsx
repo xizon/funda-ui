@@ -161,6 +161,10 @@ import {
     isInViewport
 } from './libs/viewport';
 
+import {
+    getTextBoundingRect
+} from './libs/inputs-calculation';
+
 
 
 // hooks
@@ -172,6 +176,7 @@ import useInterval from './hooks/useInterval';
 import useClickOutside from './hooks/useClickOutside';
 import useKeyPress from './hooks/useKeyPress';
 import useWindowScroll from './hooks/useWindowScroll';
+
 
 
 
@@ -283,6 +288,7 @@ export {
    setDateDays,
    timestampToDate,
    isInViewport,
+   getTextBoundingRect,
     
     // hooks
     useThrottle,

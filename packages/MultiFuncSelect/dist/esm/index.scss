@@ -63,8 +63,26 @@
         &.control-placeholder {
             color: var(--mf-sel-input-placeholder-color);
         }
-    }
 
+
+    }
+    .mf-select-multi__control-blinking-following-cursor {
+        position: absolute;
+        top: .375rem;
+        margin-left: 0.75rem;
+        z-index: 1;
+
+        &.animated {
+            animation: 1s mf-sel-blink step-end infinite;
+        }
+
+        &.mf-select-multi__control-blinking-following-cursor--puretext {
+            margin-left: auto;
+            position: relative;
+            top: auto;
+            left: 0;
+        }
+    }
 
     @keyframes mf-sel-blink {
         from,

@@ -2,8 +2,6 @@ import React, { useId, useState, useRef, useEffect, forwardRef, useImperativeHan
 
 import RootPortal from 'funda-root-portal';
 
-
-
 //Destroys body scroll locking
 import { clearAllBodyScrollLocks, disableBodyScroll, enableBodyScroll } from './plugins/BSL';
 

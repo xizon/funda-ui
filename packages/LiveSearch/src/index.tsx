@@ -8,7 +8,6 @@ import {
     useWindowScroll,
     useClickOutside,
     useDebounce,
-    useKeyPress,
     getAbsolutePositionOfStage
 } from 'funda-utils';
 
@@ -180,18 +179,25 @@ const LiveSearch = forwardRef((props: LiveSearchProps, ref: any) => {
 
     // click outside
     useClickOutside({
-        enabled: true,
+        enabled: isOpen && rootRef.current && listRef.current,
         isOutside: (event: any) => {
-            if (!isOpen) return;
 
-            return event.target.closest(`.livesearch__wrapper`) === null && event.target.closest(`.livesearch__options-wrapper`) === null;
+            // close dropdown when other dropdown is opened
+            return (
+                (rootRef.current !== event.target && !rootRef.current.contains(event.target as HTMLElement)) &&
+                listRef.current !== event.target && !listRef.current.contains(event.target as HTMLElement)
+            )
+              
         },
         handle: (event: any) => {
             // cancel
             setIsOpen(false);
             cancel();
         }
-    }, [isOpen]);
+    }, [isOpen, rootRef, listRef]);
+
+
+
 
 
     // Add function to the element that should be used as the scrollable area.

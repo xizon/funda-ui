@@ -159,6 +159,7 @@ __webpack_require__.d(__webpack_exports__, {
   "getPrevYearDate": () => (/* reexport */ getPrevYearDate),
   "getPreviousSiblings": () => (/* reexport */ getPreviousSiblings),
   "getSpecifiedDate": () => (/* reexport */ getSpecifiedDate),
+  "getTextBoundingRect": () => (/* reexport */ getTextBoundingRect),
   "getTodayDate": () => (/* reexport */ getTodayDate),
   "getTomorrowDate": () => (/* reexport */ getTomorrowDate),
   "getTransitionDuration": () => (/* reexport */ getTransitionDuration),
@@ -500,7 +501,7 @@ function animateStyles(curElement, config) {
 *
 * @param  {Function} fn    - A function to be executed within the time limit.
 * @param  {Number} limit   - Waiting time.
-* @return {Function}       - Returns a new function.
+* @return {*}       - Returns a new function.
 */
 function debounce(fn) {
   var limit = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 300;
@@ -518,7 +519,7 @@ function debounce(fn) {
 *
 * @param  {Function} fn    - A function to be executed within the time limit.
 * @param  {Number} limit   - Waiting time.
-* @return {Function}       - Returns a new function.
+* @return {*}       - Returns a new function.
 */
 function throttle(fn) {
   var limit = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 300;
@@ -1800,6 +1801,129 @@ function isInViewport(elem) {
   return bounding.top >= 0 && bounding.left >= 0 && bounding.bottom <= (window.innerHeight || document.documentElement.clientHeight) && bounding.right <= (window.innerWidth || document.documentElement.clientWidth);
 }
 
+;// CONCATENATED MODULE: ./src/libs/inputs-calculation.ts
+/**
+ * Get cursor or text position in pixels for input element
+ * 
+ * @param {HTMLElement} input  Required HTMLElement with `value` attribute
+ * @param {Number} selectionStart   Optional number: Start offset. Default 0
+ * @param {Number} selectionEnd Optional number: End offset. Default selectionStart
+ * @param {Boolean} debug Optional boolean. If true, the created test layer will not be removed.
+ * @returns {JSON}
+ * such as: 
+{"x":14,"y":42.5,"width":36.1875,"height":19,"top":42.5,"right":50.1875,"bottom":61.5,"left":14}
+ */
+
+// Local functions for readability of the previous code
+function appendPart(text, cssDefaultStyles, fakeClone, start, end) {
+  var span = document.createElement("span"),
+    tmpText = text.substring(start, end);
+  span.style.cssText = cssDefaultStyles; //Force styles to prevent unexpected results
+  // add a space if it ends in a newline
+  if (/[\n\r]$/.test(tmpText)) {
+    tmpText += ' ';
+  }
+  span.textContent = tmpText;
+  fakeClone.appendChild(span);
+  return span;
+}
+// Computing offset position
+function getInputOffset(input) {
+  var body = document.body,
+    win = document.defaultView,
+    docElem = document.documentElement,
+    box = document.createElement('div');
+  box.style.paddingLeft = box.style.width = "1px";
+  body.appendChild(box);
+  var isBoxModel = box.offsetWidth == 2;
+  body.removeChild(box);
+  box = input.getBoundingClientRect();
+  var clientTop = docElem.clientTop || body.clientTop || 0,
+    clientLeft = docElem.clientLeft || body.clientLeft || 0,
+    scrollTop = win.pageYOffset || isBoxModel && docElem.scrollTop || body.scrollTop,
+    scrollLeft = win.pageXOffset || isBoxModel && docElem.scrollLeft || body.scrollLeft;
+  return {
+    top: box.top + scrollTop - clientTop,
+    left: box.left + scrollLeft - clientLeft
+  };
+}
+function getInputCSS(input, prop, isnumber) {
+  var _document$defaultView;
+  var val = (_document$defaultView = document.defaultView) === null || _document$defaultView === void 0 ? void 0 : _document$defaultView.getComputedStyle(input, null).getPropertyValue(prop);
+  return isnumber ? parseFloat(val) : val;
+}
+function getTextBoundingRect(input, selectionStart, selectionEnd) {
+  var _fakeClone$parentNode;
+  var debug = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : false;
+  if (input === null) return 0;
+
+  // Basic parameter validation
+  if (!input || !('value' in input)) return input;
+  if (typeof selectionStart == "string") selectionStart = parseFloat(selectionStart);
+  if (typeof selectionStart != "number" || isNaN(selectionStart)) {
+    selectionStart = 0;
+  }
+  if (selectionStart < 0) selectionStart = 0;else selectionStart = Math.min(input.value.length, selectionStart);
+  if (typeof selectionEnd == "string") selectionEnd = parseFloat(selectionEnd);
+  if (typeof selectionEnd != "number" || isNaN(selectionEnd) || selectionEnd < selectionStart) {
+    selectionEnd = selectionStart;
+  }
+  if (selectionEnd < 0) selectionEnd = 0;else selectionEnd = Math.min(input.value.length, selectionEnd);
+
+  // If available (thus IE), use the createTextRange method
+  if (typeof input.createTextRange == "function") {
+    var range = input.createTextRange();
+    range.collapse(true);
+    range.moveStart('character', selectionStart);
+    range.moveEnd('character', selectionEnd - selectionStart);
+    return range.getBoundingClientRect();
+  }
+  // createTextRange is not supported, create a fake text range
+  var offset = getInputOffset(input),
+    topPos = offset.top,
+    leftPos = offset.left,
+    width = getInputCSS(input, 'width', true),
+    height = getInputCSS(input, 'height', true);
+
+  // Styles to simulate a node in an input field
+  // use pre-wrap instead of wrap for white-space to support wrapping in textareas
+  var cssDefaultStyles = "white-space:pre-wrap;padding:0;margin:0;",
+    listOfModifiers = ['direction', 'font-family', 'font-size', 'font-size-adjust', 'font-variant', 'font-weight', 'font-style', 'letter-spacing', 'line-height', 'text-align', 'text-indent', 'text-transform', 'word-wrap', 'word-spacing'];
+  topPos += getInputCSS(input, 'padding-top', true);
+  topPos += getInputCSS(input, 'border-top-width', true);
+  leftPos += getInputCSS(input, 'padding-left', true);
+  leftPos += getInputCSS(input, 'border-left-width', true);
+  leftPos += 1; //Seems to be necessary
+
+  for (var i = 0; i < listOfModifiers.length; i++) {
+    var property = listOfModifiers[i];
+    cssDefaultStyles += property + ':' + getInputCSS(input, property, false) + ';';
+  }
+  // End of CSS variable checks
+
+  var text = input.value,
+    textLen = text.length,
+    fakeClone = document.createElement("div");
+  if (selectionStart > 0) appendPart(text, cssDefaultStyles, fakeClone, 0, selectionStart);
+  var fakeRange = appendPart(text, cssDefaultStyles, fakeClone, selectionStart, selectionEnd);
+  if (textLen > selectionEnd) appendPart(text, cssDefaultStyles, fakeClone, selectionEnd, textLen);
+
+  // Styles to inherit the font styles of the element
+  fakeClone.style.cssText = cssDefaultStyles;
+
+  // Styles to position the text node at the desired position
+  fakeClone.style.position = "absolute";
+  fakeClone.style.top = topPos + "px";
+  fakeClone.style.left = leftPos + "px";
+  fakeClone.style.width = width + "px";
+  fakeClone.style.height = height + "px";
+  document.body.appendChild(fakeClone);
+  var returnValue = fakeRange.getBoundingClientRect(); //Get rect
+
+  if (!debug) (_fakeClone$parentNode = fakeClone.parentNode) === null || _fakeClone$parentNode === void 0 ? void 0 : _fakeClone$parentNode.removeChild(fakeClone); //Remove temp
+  return returnValue;
+}
+
 // EXTERNAL MODULE: external {"root":"React","commonjs2":"react","commonjs":"react","amd":"react"}
 var external_root_React_commonjs2_react_commonjs_react_amd_react_ = __webpack_require__(787);
 ;// CONCATENATED MODULE: ./src/hooks/useThrottle.tsx
@@ -2012,8 +2136,12 @@ function useClickOutside_arrayLikeToArray(arr, len) { if (len == null || len > a
  * @usage:
 
 const App = () => {
+
+    const [show, setShow] = useState<boolean>(false);
+    const dropdownRef = useRef<HTMLDivElement>(null);
+
     useClickOutside({
-        enabled: true,
+        enabled: show && dropdownRef.current,
         isOutside: (event: any) => {
             return event.target.closest(`.test__wrapper`) === null && event.target.closest(`.test__wrapper2`) === null;
         },
@@ -2022,7 +2150,7 @@ const App = () => {
             //...
         },
         spyElement: document
-    }, []);
+    }, [show, dropdownRef]);
 };
 
  */
@@ -2219,6 +2347,7 @@ var useWindowScroll = function useWindowScroll(_ref) {
 };
 /* harmony default export */ const hooks_useWindowScroll = (useWindowScroll);
 ;// CONCATENATED MODULE: ./src/index.tsx
+
 
 
 

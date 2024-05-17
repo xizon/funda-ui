@@ -6,6 +6,7 @@ import {
     getAbsolutePositionOfStage
 } from 'funda-utils';
 
+
 import Option from './Option';
 
 
@@ -76,6 +77,7 @@ const DropdownMenu = (props: DropdownMenuProps) => {
     const EXCEEDED_SIDE_POS_OFFSET = Number(exceededSidePosOffset) || 15;
     const uniqueID = useId().replace(/\:/g, "-");
     const idRes = id || uniqueID;
+    const rootRef = useRef<any>(null);
     const modalRef = useRef<any>(null);
     const triggerRef = useRef<any>(null);
     const iconRef = useRef<any>(null);
@@ -97,20 +99,24 @@ const DropdownMenu = (props: DropdownMenuProps) => {
     });
 
 
-
     // click outside
     useClickOutside({
-        enabled: true,
+        enabled: isOpen && rootRef.current && modalRef.current,
         isOutside: (event: any) => {
-            if (!isOpen) return;
 
-            return event.target.closest(`.dd-menu__wrapper`) === null && event.target.closest(`.dd-menu-list__wrapper`) === null;
+            // close dropdown when other dropdown is opened
+            return (
+                (rootRef.current !== event.target && !rootRef.current.contains(event.target as HTMLElement)) &&
+                modalRef.current !== event.target && !modalRef.current.contains(event.target as HTMLElement)
+            )
+              
         },
         handle: (event: any) => {
             setIsOpen(false);
             popwinPosHide();
         }
-    }, [isOpen]);
+    }, [isOpen, rootRef, modalRef]);
+
 
     
     function handleClick(event: React.MouseEvent) {
@@ -272,6 +278,7 @@ const DropdownMenu = (props: DropdownMenuProps) => {
         <>
 
             <div 
+                ref={rootRef}
                 className={`dd-menu__wrapper ${wrapperClassName || wrapperClassName === '' ? wrapperClassName : `dd-menu-default`} ${isOpen ? 'active' : ''}`} 
                 onMouseLeave={handleHoverOff} 
             >

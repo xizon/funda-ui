@@ -1688,6 +1688,10 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
             return (/* reexport */_getSpecifiedDate
             );
           },
+          "getTextBoundingRect": function getTextBoundingRect() {
+            return (/* reexport */_getTextBoundingRect
+            );
+          },
           "getTodayDate": function getTodayDate() {
             return (/* reexport */_getTodayDate
             );
@@ -2155,7 +2159,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
         *
         * @param  {Function} fn    - A function to be executed within the time limit.
         * @param  {Number} limit   - Waiting time.
-        * @return {Function}       - Returns a new function.
+        * @return {*}       - Returns a new function.
         */
         function _debounce(fn) {
           var limit = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 300;
@@ -2173,7 +2177,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
         *
         * @param  {Function} fn    - A function to be executed within the time limit.
         * @param  {Number} limit   - Waiting time.
-        * @return {Function}       - Returns a new function.
+        * @return {*}       - Returns a new function.
         */
         function _throttle(fn) {
           var limit = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 300;
@@ -3980,6 +3984,128 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
           var bounding = elem.getBoundingClientRect();
           return bounding.top >= 0 && bounding.left >= 0 && bounding.bottom <= (window.innerHeight || document.documentElement.clientHeight) && bounding.right <= (window.innerWidth || document.documentElement.clientWidth);
         }
+        ; // CONCATENATED MODULE: ./src/libs/inputs-calculation.ts
+        /**
+         * Get cursor or text position in pixels for input element
+         * 
+         * @param {HTMLElement} input  Required HTMLElement with `value` attribute
+         * @param {Number} selectionStart   Optional number: Start offset. Default 0
+         * @param {Number} selectionEnd Optional number: End offset. Default selectionStart
+         * @param {Boolean} debug Optional boolean. If true, the created test layer will not be removed.
+         * @returns {JSON}
+         * such as: 
+        {"x":14,"y":42.5,"width":36.1875,"height":19,"top":42.5,"right":50.1875,"bottom":61.5,"left":14}
+         */
+
+        // Local functions for readability of the previous code
+        function appendPart(text, cssDefaultStyles, fakeClone, start, end) {
+          var span = document.createElement("span"),
+            tmpText = text.substring(start, end);
+          span.style.cssText = cssDefaultStyles; //Force styles to prevent unexpected results
+          // add a space if it ends in a newline
+          if (/[\n\r]$/.test(tmpText)) {
+            tmpText += ' ';
+          }
+          span.textContent = tmpText;
+          fakeClone.appendChild(span);
+          return span;
+        }
+        // Computing offset position
+        function getInputOffset(input) {
+          var body = document.body,
+            win = document.defaultView,
+            docElem = document.documentElement,
+            box = document.createElement('div');
+          box.style.paddingLeft = box.style.width = "1px";
+          body.appendChild(box);
+          var isBoxModel = box.offsetWidth == 2;
+          body.removeChild(box);
+          box = input.getBoundingClientRect();
+          var clientTop = docElem.clientTop || body.clientTop || 0,
+            clientLeft = docElem.clientLeft || body.clientLeft || 0,
+            scrollTop = win.pageYOffset || isBoxModel && docElem.scrollTop || body.scrollTop,
+            scrollLeft = win.pageXOffset || isBoxModel && docElem.scrollLeft || body.scrollLeft;
+          return {
+            top: box.top + scrollTop - clientTop,
+            left: box.left + scrollLeft - clientLeft
+          };
+        }
+        function getInputCSS(input, prop, isnumber) {
+          var _document$defaultView;
+          var val = (_document$defaultView = document.defaultView) === null || _document$defaultView === void 0 ? void 0 : _document$defaultView.getComputedStyle(input, null).getPropertyValue(prop);
+          return isnumber ? parseFloat(val) : val;
+        }
+        function _getTextBoundingRect(input, selectionStart, selectionEnd) {
+          var _fakeClone$parentNode;
+          var debug = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : false;
+          if (input === null) return 0;
+
+          // Basic parameter validation
+          if (!input || !('value' in input)) return input;
+          if (typeof selectionStart == "string") selectionStart = parseFloat(selectionStart);
+          if (typeof selectionStart != "number" || isNaN(selectionStart)) {
+            selectionStart = 0;
+          }
+          if (selectionStart < 0) selectionStart = 0;else selectionStart = Math.min(input.value.length, selectionStart);
+          if (typeof selectionEnd == "string") selectionEnd = parseFloat(selectionEnd);
+          if (typeof selectionEnd != "number" || isNaN(selectionEnd) || selectionEnd < selectionStart) {
+            selectionEnd = selectionStart;
+          }
+          if (selectionEnd < 0) selectionEnd = 0;else selectionEnd = Math.min(input.value.length, selectionEnd);
+
+          // If available (thus IE), use the createTextRange method
+          if (typeof input.createTextRange == "function") {
+            var range = input.createTextRange();
+            range.collapse(true);
+            range.moveStart('character', selectionStart);
+            range.moveEnd('character', selectionEnd - selectionStart);
+            return range.getBoundingClientRect();
+          }
+          // createTextRange is not supported, create a fake text range
+          var offset = getInputOffset(input),
+            topPos = offset.top,
+            leftPos = offset.left,
+            width = getInputCSS(input, 'width', true),
+            height = getInputCSS(input, 'height', true);
+
+          // Styles to simulate a node in an input field
+          // use pre-wrap instead of wrap for white-space to support wrapping in textareas
+          var cssDefaultStyles = "white-space:pre-wrap;padding:0;margin:0;",
+            listOfModifiers = ['direction', 'font-family', 'font-size', 'font-size-adjust', 'font-variant', 'font-weight', 'font-style', 'letter-spacing', 'line-height', 'text-align', 'text-indent', 'text-transform', 'word-wrap', 'word-spacing'];
+          topPos += getInputCSS(input, 'padding-top', true);
+          topPos += getInputCSS(input, 'border-top-width', true);
+          leftPos += getInputCSS(input, 'padding-left', true);
+          leftPos += getInputCSS(input, 'border-left-width', true);
+          leftPos += 1; //Seems to be necessary
+
+          for (var i = 0; i < listOfModifiers.length; i++) {
+            var property = listOfModifiers[i];
+            cssDefaultStyles += property + ':' + getInputCSS(input, property, false) + ';';
+          }
+          // End of CSS variable checks
+
+          var text = input.value,
+            textLen = text.length,
+            fakeClone = document.createElement("div");
+          if (selectionStart > 0) appendPart(text, cssDefaultStyles, fakeClone, 0, selectionStart);
+          var fakeRange = appendPart(text, cssDefaultStyles, fakeClone, selectionStart, selectionEnd);
+          if (textLen > selectionEnd) appendPart(text, cssDefaultStyles, fakeClone, selectionEnd, textLen);
+
+          // Styles to inherit the font styles of the element
+          fakeClone.style.cssText = cssDefaultStyles;
+
+          // Styles to position the text node at the desired position
+          fakeClone.style.position = "absolute";
+          fakeClone.style.top = topPos + "px";
+          fakeClone.style.left = leftPos + "px";
+          fakeClone.style.width = width + "px";
+          fakeClone.style.height = height + "px";
+          document.body.appendChild(fakeClone);
+          var returnValue = fakeRange.getBoundingClientRect(); //Get rect
+
+          if (!debug) (_fakeClone$parentNode = fakeClone.parentNode) === null || _fakeClone$parentNode === void 0 ? void 0 : _fakeClone$parentNode.removeChild(fakeClone); //Remove temp
+          return returnValue;
+        }
 
         // EXTERNAL MODULE: external {"root":"React","commonjs2":"react","commonjs":"react","amd":"react"}
         var external_root_React_commonjs2_react_commonjs_react_amd_react_ = __nested_webpack_require_1471__(787);
@@ -4258,8 +4384,12 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
          * @usage:
         
         const App = () => {
+        
+            const [show, setShow] = useState<boolean>(false);
+            const dropdownRef = useRef<HTMLDivElement>(null);
+        
             useClickOutside({
-                enabled: true,
+                enabled: show && dropdownRef.current,
                 isOutside: (event: any) => {
                     return event.target.closest(`.test__wrapper`) === null && event.target.closest(`.test__wrapper2`) === null;
                 },
@@ -4268,7 +4398,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
                     //...
                 },
                 spyElement: document
-            }, []);
+            }, [show, dropdownRef]);
         };
         
          */
@@ -4841,14 +4971,15 @@ var EventCalendarTimeline = function EventCalendarTimeline(props) {
 
   // click outside
   (0,funda_utils__WEBPACK_IMPORTED_MODULE_3__.useClickOutside)({
-    enabled: true,
+    enabled: isShowTableTooltip && tableGridRef.current,
     isOutside: function isOutside(event) {
-      return true;
+      // close dropdown when other dropdown is opened
+      return tableGridRef.current !== event.target && !tableGridRef.current.contains(event.target);
     },
     handle: function handle(event) {
       hideTableTooltip();
     }
-  }, []);
+  }, [isShowTableTooltip, tableGridRef]);
   var padZero = function padZero(num) {
     var padZeroEnabled = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : true;
     if (padZeroEnabled) {
@@ -5682,26 +5813,28 @@ var EventCalendarTimeline = function EventCalendarTimeline(props) {
     var colElements = tableGridEl.querySelector('.e-cal-tl-table__datagrid-body__content colgroup').getElementsByTagName('col');
     var tdElements = tableGridEl.querySelector('.e-cal-tl-table__datagrid-body__content tbody').getElementsByTagName('td');
     var tdElementMaxWidth = typeof tdElements[0] === 'undefined' ? 0 : parseFloat(window.getComputedStyle(tdElements[0].querySelector('.e-cal-tl-table__cell-cushion-content')).maxWidth);
-    for (var i = 0; i < headerThElements.length; i++) {
-      var curHeaderThElementMaxWidth = parseFloat(window.getComputedStyle(headerThElements[i].querySelector('.e-cal-tl-table__cell-cushion-headercontent')).width);
-      var targetElement = headerThElements[i].offsetWidth > tdElements[i].offsetWidth ? headerThElements[i] : tdElements[i];
-      var tdOwidth = parseFloat(window.getComputedStyle(targetElement).width);
+    if (Array.isArray(eventsValue) && eventsValue.length > 0) {
+      for (var i = 0; i < headerThElements.length; i++) {
+        var curHeaderThElementMaxWidth = parseFloat(window.getComputedStyle(headerThElements[i].querySelector('.e-cal-tl-table__cell-cushion-headercontent')).width);
+        var targetElement = headerThElements[i].offsetWidth > tdElements[i].offsetWidth ? headerThElements[i] : tdElements[i];
+        var tdOwidth = parseFloat(window.getComputedStyle(targetElement).width);
 
-      // check td max width
-      if (tdElementMaxWidth > 0 && tdOwidth > tdElementMaxWidth) {
-        tdOwidth = tdElementMaxWidth;
+        // check td max width
+        if (tdElementMaxWidth > 0 && tdOwidth > tdElementMaxWidth) {
+          tdOwidth = tdElementMaxWidth;
+        }
+
+        // check header th max width
+        if (tdElementMaxWidth > 0 && tdElementMaxWidth < curHeaderThElementMaxWidth) {
+          tdOwidth = curHeaderThElementMaxWidth;
+        }
+
+        // Prevent the width from being +1 each time it is initialized
+        tdOwidth = tdOwidth - 1;
+        headerThElements[i].querySelector('.e-cal-tl-table__cell-cushion-headercontent').style.width = tdOwidth + 'px';
+        tdElements[i].querySelector('.e-cal-tl-table__cell-cushion-content').style.minWidth = tdOwidth + 'px';
+        colElements[i].style.minWidth = tdOwidth + 'px';
       }
-
-      // check header th max width
-      if (tdElementMaxWidth > 0 && tdElementMaxWidth < curHeaderThElementMaxWidth) {
-        tdOwidth = curHeaderThElementMaxWidth;
-      }
-
-      // Prevent the width from being +1 each time it is initialized
-      tdOwidth = tdOwidth - 1;
-      headerThElements[i].querySelector('.e-cal-tl-table__cell-cushion-headercontent').style.width = tdOwidth + 'px';
-      tdElements[i].querySelector('.e-cal-tl-table__cell-cushion-content').style.minWidth = tdOwidth + 'px';
-      colElements[i].style.minWidth = tdOwidth + 'px';
     }
 
     //****************

@@ -9,6 +9,7 @@ import {
 } from 'funda-utils';
 
 
+
 interface EventsValueConfig {
     id: string | number;
     date: string,

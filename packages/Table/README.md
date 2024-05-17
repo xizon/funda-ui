@@ -40,6 +40,7 @@ import Table from 'funda-ui/Table';
 | `onHeadCellMouseEnter` | function  | - | It fires when the mouse pointer enters a cell of header. It returns only one callback value which is the current cell. | - |
 | `onHeadCellMouseLeave` | function  | - | It fires when the mouse pointer leaves a cell of header. It returns only one callback value which is the current cell. | - |
 | `onHeadCellClick` | function  | - | It fires when the mouse pointer clicks a cell of header. It returns only one callback value which is the current cell. | - |
+| `onCellArrowKeys` | function  | - | It fires when use keyboard arrow keys. It returns two callback values. <br /> <ol><li>The first is the cell classname (**String**)</li><li>The second is the current cell (**HTML Element**)</li></ol> | - |
 
 
 
@@ -468,6 +469,8 @@ export default () => {
 ```
 
 
+
+
 ## Auto width for table
 
 Add a width to `tableClassName` attribute.
@@ -504,6 +507,36 @@ export default () => {
 }
 ```
 
+
+## Navigate a cell `<td>` through arrow keys
+
+Use the arrow keys of your keyboard to locate the cells.
+
+```js
+import React from "react";
+import Table from 'funda-ui/Table';
+
+// component styles
+import 'funda-ui/Table/index.css';
+
+export default () => {
+
+    
+    return (
+        <>
+
+            <Table 
+                onCellArrowKeys={(classname: any, el: any) => {
+                    console.log(classname, el);
+                }}
+                ...
+            />
+
+
+        </>
+    );
+}
+```
 
 
 ## Safe Asynchronous Example

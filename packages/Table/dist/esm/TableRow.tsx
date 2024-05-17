@@ -1,15 +1,18 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useCallback, KeyboardEvent } from 'react';
 
 
 import TableField from './TableField';
 import TableFieldRow from './TableFieldRow';
 
-import { formatPerlineControlVal } from './table-utils';
+import { formatPerlineControlVal, cellMark, removeCellFocusClassName } from './table-utils';
 
 
 /* Table Row
 -------------------------------------------------*/
 type TableRowProps = {
+    updateFocusableCellId: any[];
+    rootDataInfo: any;
+    refNode: React.RefObject<any>;
     tableRootRef: React.RefObject<any>;
     tableCheckRef?: React.RefObject<any>;
     rowActiveClassName?: string;
@@ -38,11 +41,15 @@ type TableRowProps = {
     evRowMouseEnter?: (el: any) => void | undefined;
     evRowMouseLeave?: (el: any) => void | undefined;
     evRowClick?: (el: any) => void | undefined;
+    evCellArrowKeys?: (classname: any, el: any) => void;
 };
 
 const TableRow = (props: TableRowProps) => {
 
     const {
+        updateFocusableCellId,
+        rootDataInfo,
+        refNode,
         tableRootRef,
         tableCheckRef,
         rowActiveClassName = 'active',
@@ -71,6 +78,7 @@ const TableRow = (props: TableRowProps) => {
         evRowMouseEnter,
         evRowMouseLeave,
         evRowClick,
+        evCellArrowKeys
     } = props;
 
     
@@ -81,6 +89,11 @@ const TableRow = (props: TableRowProps) => {
 
     const [firstInitCheckboxesClassName, setFirstInitCheckboxesClassName] = useState<boolean>(false);
  
+
+      
+    // effective element movement on keystroke
+    const [focusableCellId, setFocusableCellId] = updateFocusableCellId;
+
     
     // initialize actived checkboxes
     const latestRowChecked = () => {
@@ -101,7 +114,68 @@ const TableRow = (props: TableRowProps) => {
         onClick?.(event, curVal);
         evRowClick?.(event);
     }
+
+
+
+    const handleKeyPressedForCell = useCallback( async (event: KeyboardEvent<HTMLTableElement>) => {
+        if (typeof data === 'undefined' || data === null || rootDataInfo === null || tableRootRef.current === null) return;
+
+        const key = event.code;
+        const oldCellSignal = focusableCellId?.replace('cell-', '').split('-');
+        let _row = Number(oldCellSignal[0]);
+        let _col = Number(oldCellSignal[1]);
+
+        const move = (key: string) => {
   
+            switch (key) {
+                case 'ArrowLeft':
+                    _col = _col - 1 < 0 ? 0 : _col - 1;
+                break;
+                case 'ArrowRight':
+                    _col = _col + 1 > data.length - 1 ? data.length -1 : _col + 1;
+                break;
+                case 'ArrowUp':
+                    _row =  _row - 1 < 0 ? 0 : _row - 1;
+                break;
+                case 'ArrowDown':
+                    _row = _row + 1 > rootDataInfo.totalRow - 1 ? rootDataInfo.totalRow - 1 : _row + 1;
+                break;
+            }
+
+            const nextCellSignal = cellMark(_row, _col);
+            evCellArrowKeys?.(nextCellSignal, refNode.current.get(nextCellSignal));
+            
+            // focus current cell
+            // removeCellFocusClassName(tableRootRef.current);
+            // tableRootRef.current.querySelector(`td.${nextCellSignal}`)?.classList.add('cell-focus');
+
+            
+            //
+            setFocusableCellId(nextCellSignal);
+
+        };
+      
+        if (key === 'ArrowLeft') {
+            move('ArrowLeft');
+        }
+
+        if (key === 'ArrowRight') {
+            move('ArrowRight');
+        }
+
+      
+        if (key === 'ArrowUp') {
+            move('ArrowUp');
+        }
+
+        if (key === 'ArrowDown') {
+            move('ArrowDown');
+        }
+
+    }, [focusableCellId]);
+
+
+
     return (
         <>
             <tr 
@@ -158,14 +232,27 @@ const TableRow = (props: TableRowProps) => {
                     } else {
                         return <TableField 
                                     key={'td-row' + i} 
+                                    ref={(node: any) => {
+                                        if (node) {
+                                            refNode.current.set(cellMark(rowIndex, i), node);
+                                        } else {
+                                            refNode.current.delete(cellMark(rowIndex, i));
+                                        }
+                                    
+
+                                    }}
+                                    tableRootRef={tableRootRef}
                                     columnHeader={typeof headerItem.content === 'string' ? headerItem.content.replace(/(<([^>]+)>)/ig, '') : headerItem.content} 
-                                    className={el.className}
+                                    className={`${el.className} ${focusableCellId === cellMark(rowIndex, i) ? 'cell-focus' : ''}`}
                                     dataUse={el.data}
                                     cols={el.cols} 
                                     content={el.content} 
                                     width={el.width} 
                                     style={el.style} 
+                                    rowKey={rowKey} 
                                     index={i} 
+                                    onKeyDown={handleKeyPressedForCell}
+                                    updateCellFocusedId={setFocusableCellId}
                                     evCellMouseEnter={evCellMouseEnter}
                                     evCellMouseLeave={evCellMouseLeave}
                                     evCellClick={evCellClick}

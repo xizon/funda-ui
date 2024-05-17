@@ -33,6 +33,7 @@ declare type TableProps = {
     onCheck?: (val: any, el: any, checked: boolean) => void;
     onDrag?: (dragStart: any, dragEnd: any) => void;
     onRenderFinished?: (res: boolean) => void;
+    onCellArrowKeys?: (classname: any, el: any) => void;
 };
 declare const Table: (props: TableProps) => JSX.Element;
 export default Table;

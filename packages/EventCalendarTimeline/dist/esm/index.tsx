@@ -181,7 +181,7 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
     const SHOW_WEEK = showWeek || false;
     const BODY_DRAG = draggable || false;
     const CELL_MIN_W = typeof tableCellMinWidth === 'undefined' ? (SHOW_WEEK ? 100 : 50) : tableCellMinWidth;
-    const tableGridRef = useRef<HTMLDivElement>(null);
+    const tableGridRef = useRef<any>(null);
     const scrollHeaderRef = useRef(null);
     const scrollBodyRef = useRef(null);
     const scrollListRef = useRef(null);
@@ -196,17 +196,21 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
     
 
 
+
     // click outside
     useClickOutside({
-        enabled: true,
+        enabled: isShowTableTooltip && tableGridRef.current,
         isOutside: (event: any) => {
-            return true;
+            // close dropdown when other dropdown is opened
+            return (
+                (tableGridRef.current !== event.target && !tableGridRef.current.contains(event.target as HTMLElement))
+            )
         },
         handle: (event: any) => {
             hideTableTooltip();
         }
-    }, []);
-    
+    }, [isShowTableTooltip, tableGridRef]);
+
 
 
 
@@ -1249,32 +1253,36 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
         const tdElementMaxWidth: number = typeof tdElements[0] === 'undefined' ? 0 : parseFloat(window.getComputedStyle(tdElements[0].querySelector('.e-cal-tl-table__cell-cushion-content')).maxWidth);
 
 
-        for (let i = 0; i < headerThElements.length; i++) {
-        
-            const curHeaderThElementMaxWidth = parseFloat(window.getComputedStyle(headerThElements[i].querySelector('.e-cal-tl-table__cell-cushion-headercontent')).width);
-            const targetElement = headerThElements[i].offsetWidth > tdElements[i].offsetWidth ? headerThElements[i] : tdElements[i];
-            let tdOwidth = parseFloat(window.getComputedStyle(targetElement).width);
+        if (Array.isArray(eventsValue) && eventsValue.length > 0) {
 
-        
-            // check td max width
-            if (tdElementMaxWidth > 0 && tdOwidth > tdElementMaxWidth) {
-                tdOwidth = tdElementMaxWidth;
+            for (let i = 0; i < headerThElements.length; i++) {
+            
+                const curHeaderThElementMaxWidth = parseFloat(window.getComputedStyle(headerThElements[i].querySelector('.e-cal-tl-table__cell-cushion-headercontent')).width);
+                const targetElement = headerThElements[i].offsetWidth > tdElements[i].offsetWidth ? headerThElements[i] : tdElements[i];
+                let tdOwidth = parseFloat(window.getComputedStyle(targetElement).width);
+
+            
+                // check td max width
+                if (tdElementMaxWidth > 0 && tdOwidth > tdElementMaxWidth) {
+                    tdOwidth = tdElementMaxWidth;
+                }
+
+                // check header th max width
+                if (tdElementMaxWidth > 0 && tdElementMaxWidth < curHeaderThElementMaxWidth) {
+                    tdOwidth = curHeaderThElementMaxWidth;
+                }
+
+                // Prevent the width from being +1 each time it is initialized
+                tdOwidth = tdOwidth - 1;
+
+                headerThElements[i].querySelector('.e-cal-tl-table__cell-cushion-headercontent').style.width = tdOwidth + 'px';
+                tdElements[i].querySelector('.e-cal-tl-table__cell-cushion-content').style.minWidth = tdOwidth + 'px';
+                colElements[i].style.minWidth = tdOwidth + 'px';
+
+
             }
-
-            // check header th max width
-            if (tdElementMaxWidth > 0 && tdElementMaxWidth < curHeaderThElementMaxWidth) {
-                tdOwidth = curHeaderThElementMaxWidth;
-            }
-
-            // Prevent the width from being +1 each time it is initialized
-            tdOwidth = tdOwidth - 1;
-
-            headerThElements[i].querySelector('.e-cal-tl-table__cell-cushion-headercontent').style.width = tdOwidth + 'px';
-            tdElements[i].querySelector('.e-cal-tl-table__cell-cushion-content').style.minWidth = tdOwidth + 'px';
-            colElements[i].style.minWidth = tdOwidth + 'px';
-
-
         }
+
 
         //****************
         // STEP 4: 
