@@ -33,6 +33,9 @@ import Radio from 'funda-ui/Radio';
 | `onChange` | function  | - | Call a function when the value of an HTML element is changed. It returns four callback values. <br /> <ol><li>The first is the Control Event (**Event**)</li><li>The second is the current value (**String**)</li><li>The third is the data (Exposes the JSON format data) about the option.  (**JSON Object**)</li><li>The last is the current index number  (**Number**)</li></ol> | - |
 | `onBlur` | function  | - | Call a function when a user leaves an form field. It returns only one callback value which is the Control Event (**Event**) | - |
 | `onFocus` | function  | - | Call a function when an form field gets focus. It returns only one callback value which is the Control Event (**Event**) | - |
+| `onCallbackListItem` | function  | - | This parameter allows developers to customize the options of ReactNode, which returns a JSON object containing system variables (**JSON Object**). Please refer to the [Custom option list](#custom-option-list) for how to use it. | - |
+
+
 
 It accepts all props which this control support. Such as `style`, `data-*`, `tabIndex`, `id`, and so on.
 
@@ -604,6 +607,234 @@ export default () => {
                 val={"value-3"} 
                 name="name"
                 callback={setMyRadio} 
+            />
+            
+            
+        </>
+    );
+}
+
+```
+
+
+
+
+
+## Custom option list
+
+Use `onCallbackListItem` to return the desired style of the list.
+
+```js
+import React, { useState, useMemo } from "react";
+import Radio from 'funda-ui/Radio';
+
+export default () => {
+
+    const [myRadio, setMyRadio] = useState('value-3');  // default value is label value
+
+
+
+    // Generate custom list of options
+    const customRadioOptionsItemsList = ({
+        name,
+        groupLabelClassName,
+        itemSelectedClassName,
+        groupWrapperClassName,
+        tableLayoutCellClassName,
+        tableLayout,
+        dataInit,
+        required,
+        inline,
+        controlValue,
+        tabIndex,
+        uniqueID,
+        disabled,
+        labelRes,
+        handleChange,
+        onClick,
+        handleFocus,
+        handleBlur,
+        attributes,
+        style,
+    }: {
+        name: string | undefined;
+        groupLabelClassName: string | undefined;
+        itemSelectedClassName: string | undefined;
+        groupWrapperClassName: string | undefined;
+        tableLayoutCellClassName: string | undefined;
+        tableLayout: boolean | undefined;
+        dataInit: any[];
+        required: boolean | undefined;
+        inline: boolean | undefined;
+        controlValue: string | undefined;
+        tabIndex: number | undefined;
+        uniqueID: string;
+        disabled: boolean | undefined;
+        labelRes: any;
+        handleChange: any;
+        onClick: any;
+        handleFocus: any;
+        handleBlur: any;
+        attributes: any;
+        style: React.CSSProperties | undefined;
+    }) => {
+
+
+        return Array.isArray(dataInit) ? dataInit.map((item: any, index: number) => {
+            const requiredVal = index === 0 ? required || null : null;
+
+            const _groupEl = () => {
+                return <>
+                    {/* GROUP LABEL */}
+                    <div className={`radio-group__label ${groupLabelClassName || ''}`}>{item.label}</div>
+                    {/* /GROUP LABEL */}
+
+                    {item.optgroup.map((opt: any, optIndex: number) => {
+
+                        return <div key={'option-' + optIndex} className={`${inline ? `form-check form-check-inline` : `form-check`} ${controlValue == opt.value ? (itemSelectedClassName || 'item-selected') : ''}`}>
+                            <div className="d-inline-block">
+                                <input
+                                    tabIndex={tabIndex || 0}
+                                    type="radio"
+                                    className="form-check-input"
+                                    id={`field-${uniqueID}-${index}-${optIndex}`}
+                                    name={name}
+                                    data-index={`${index}-${optIndex}`}
+                                    data-label={opt.label}
+                                    data-list-item-label={`${typeof opt.listItemLabel === 'undefined' ? '' : opt.listItemLabel}`}
+                                    data-value={opt.value}
+                                    data-disabled={disabled || (typeof opt.disabled !== 'undefined' ? `${opt.disabled}` : 'false')}
+                                    data-optiondata={JSON.stringify(opt)}
+                                    value={`${opt.value}`}
+                                    required={requiredVal}
+                                    disabled={disabled || (typeof opt.disabled !== 'undefined' ? opt.disabled : null)}
+                                    onChange={handleChange}
+                                    onClick={typeof (onClick) === 'function' ? handleChange : () => void (0)}
+                                    onFocus={handleFocus}
+                                    onBlur={handleBlur}
+                                    checked={controlValue == opt.value}   // component status will not change if defaultChecked is used
+                                    style={style}
+                                    {...attributes}
+                                />
+                                {labelRes(typeof opt.listItemLabel === 'undefined' ? opt.label : opt.listItemLabel, `field-${uniqueID}-${index}-${optIndex}`)}
+
+                            </div>
+                            <div className="d-inline-block">
+                                <div className="form-control-extends__wrapper">{typeof opt.extends !== 'undefined' ? <>{opt.extends}</> : null}</div>
+                            </div>
+                        </div>;
+
+                    })}
+
+                </>;
+            };
+
+            const _normalEl = () => {
+                return <>
+                    <div className="d-inline-block">
+                        <input
+                            tabIndex={tabIndex || 0}
+                            type="radio"
+                            className="form-check-input"
+                            id={`field-${uniqueID}-${index}`}
+                            name={name}
+                            data-index={index}
+                            data-label={item.label}
+                            data-list-item-label={`${typeof item.listItemLabel === 'undefined' ? '' : item.listItemLabel}`}
+                            data-value={item.value}
+                            data-disabled={disabled || (typeof item.disabled !== 'undefined' ? `${item.disabled}` : 'false')}
+                            data-optiondata={JSON.stringify(item)}
+                            value={`${item.value}`}
+                            required={requiredVal}
+                            disabled={disabled || (typeof item.disabled !== 'undefined' ? item.disabled : null)}
+                            onChange={handleChange}
+                            onClick={typeof (onClick) === 'function' ? handleChange : () => void (0)}
+                            onFocus={handleFocus}
+                            onBlur={handleBlur}
+                            checked={controlValue == item.value}   // component status will not change if defaultChecked is used
+                            style={style}
+                            {...attributes}
+                        />
+                        <label className="form-check-label" htmlFor={`field-${uniqueID}-${index}`} dangerouslySetInnerHTML={{
+                            __html: `${typeof item.listItemLabel === 'undefined' ? item.label : item.listItemLabel}`
+                        }}></label>
+                    </div>
+                    <div className="d-inline-block">
+                        <div className="form-control-extends__wrapper">{typeof item.extends !== 'undefined' ? <>{item.extends}</> : null}</div>
+                    </div>
+
+                </>;
+            };
+
+
+            if (tableLayout) {
+
+                /* TABLE LAYOUT */
+                if (typeof item.optgroup !== 'undefined') {
+                    return <td
+                        colSpan={1}
+                        className={`radio-group__wrapper ${groupWrapperClassName || ''} ${tableLayoutCellClassName || ''}`}
+                        key={'optgroup-' + index}
+                        data-optiondata={JSON.stringify(item)}
+                    >
+                        {_groupEl()}
+                    </td>;
+                } else {
+
+                    return <td
+                        colSpan={1}
+                        className={`${inline ? `form-check form-check-inline` : `form-check`} ${controlValue == item.value ? (itemSelectedClassName || 'item-selected') : ''} ${tableLayoutCellClassName || ''}`}
+                        key={'option-' + index}
+                        data-optiondata={JSON.stringify(item)}
+                    >
+                        {_normalEl()}
+                    </td>;
+                }
+                /* /TABLE LAYOUT */
+            } else {
+                if (typeof item.optgroup !== 'undefined') {
+                    return <div
+                        className={`radio-group__wrapper ${groupWrapperClassName || ''}`}
+                        key={'optgroup-' + index}
+                        data-optiondata={JSON.stringify(item)}
+                    >
+                        {_groupEl()}
+                    </div>;
+                } else {
+
+                    return <div
+                        className={`${inline ? `form-check form-check-inline` : `form-check`} ${controlValue == item.value ? (itemSelectedClassName || 'item-selected') : ''}`}
+                        key={'option-' + index}
+                        data-optiondata={JSON.stringify(item)}
+                    >
+                        {_normalEl()}
+                    </div>;
+                }
+
+            }
+
+
+
+        }) : null;
+    };
+
+    return (
+        <>
+  
+            <Radio
+                inline={true}
+                val="value-3" 
+                name="name"
+                options={[
+                    { "label": "Option 1", "listItemLabel": "Option 1 (No: 001)", "value": "value-1" },
+                    { "label": "<del style=color:red>deprecate</del>Option 2", "listItemLabel": "<del style=color:red>deprecate</del>Option 2 (No: 002)", "value": "value-2" },
+                    { "label": "Option 3", "listItemLabel": "Option 3 (No: 003)", "value": "value-3" },
+                    { "label": "Option 4", "listItemLabel": "Option 4 (No: 004)", "value": "value-4", "disabled": true, "customAttr1": "attr1","customAttr2": "attr2" }
+                ]}
+                onChange={(e: any, val: string, currentData: any, currentIndex: number) => {
+                    console.log(val);
+                }}
+                onCallbackListItem={customRadioOptionsItemsList}
             />
             
             

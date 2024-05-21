@@ -41,6 +41,7 @@ declare type RadioProps = {
     onChange?: RadioOptionChangeFnType | null;
     onBlur?: (e: any) => void;
     onFocus?: (e: any) => void;
+    onCallbackListItem?: (params: any) => void;
 };
 declare const Radio: (props: RadioProps) => JSX.Element;
 export default Radio;

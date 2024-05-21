@@ -53,6 +53,8 @@ type RadioProps = {
     onChange?: RadioOptionChangeFnType | null;
     onBlur?: (e: any) => void;
     onFocus?: (e: any) => void;
+    onCallbackListItem?: (params: any) => void;
+    
 };
 
 const Radio = (props: RadioProps) => {
@@ -84,6 +86,7 @@ const Radio = (props: RadioProps) => {
         onChange,
         onBlur,
         onFocus,
+        onCallbackListItem,
         ...attributes
     } = props;
 
@@ -294,143 +297,176 @@ const Radio = (props: RadioProps) => {
     }
 
     // Generate list of options
-    const itemsList = Array.isArray(dataInit) ? dataInit.map((item: any, index: number) => {
-        const requiredVal = index === 0 ? required || null : null;
+    const itemsList = (fn: any) => {
 
-        const _groupEl = () => {
-            return <>
-                {/* GROUP LABEL */}
-                <div className={`radio-group__label ${groupLabelClassName || ''}`}>{item.label}</div>
-                {/* /GROUP LABEL */}
+        if (typeof fn === 'function') {
+            return fn?.({
+                name,
+                dataInit,
+                required,
+                groupLabelClassName,
+                inline,
+                controlValue,
+                itemSelectedClassName,
+                tabIndex,
+                uniqueID,
+                disabled,
+                handleChange,
+                onClick,
+                handleFocus,
+                handleBlur,
+                attributes,
+                style,
+                labelRes,
+                groupWrapperClassName,
+                tableLayout,
+                tableLayoutClassName,
+                tableLayoutCellClassName,
+            });
+        }
 
-                {item.optgroup.map((opt: any, optIndex: number) => {
+        return Array.isArray(dataInit) ? dataInit.map((item: any, index: number) => {
+            const requiredVal = index === 0 ? required || null : null;
 
-                    return <div key={'option-' + optIndex} className={`${inline ? `form-check form-check-inline` : `form-check`} ${controlValue == opt.value ? (itemSelectedClassName || 'item-selected') : ''}`}>
-                        <div className="d-inline-block">
-                            <input
-                                tabIndex={tabIndex || 0}
-                                type="radio"
-                                className="form-check-input"
-                                id={`field-${uniqueID}-${index}-${optIndex}`}
-                                name={name}
-                                data-index={`${index}-${optIndex}`}
-                                data-label={opt.label}
-                                data-list-item-label={`${typeof opt.listItemLabel === 'undefined' ? '' : opt.listItemLabel}`}
-                                data-value={opt.value}
-                                data-disabled={disabled || (typeof opt.disabled !== 'undefined' ? `${opt.disabled}` : 'false')}
-                                value={`${opt.value}`}
-                                required={requiredVal}
-                                disabled={disabled || (typeof opt.disabled !== 'undefined' ? opt.disabled : null)}
-                                onChange={handleChange}
-                                onClick={typeof (onClick) === 'function' ? handleChange : () => void (0)}
-                                onFocus={handleFocus}
-                                onBlur={handleBlur}
-                                checked={controlValue == opt.value}   // component status will not change if defaultChecked is used
-                                style={style}
-                                {...attributes}
-                            />
-                            {labelRes(typeof opt.listItemLabel === 'undefined' ? opt.label : opt.listItemLabel, `field-${uniqueID}-${index}-${optIndex}`)}
+            const _groupEl = () => {
+                return <>
+                    {/* GROUP LABEL */}
+                    <div className={`radio-group__label ${groupLabelClassName || ''}`}>{item.label}</div>
+                    {/* /GROUP LABEL */}
 
-                        </div>
-                        <div className="d-inline-block">
-                            <div className="form-control-extends__wrapper">{typeof opt.extends !== 'undefined' ? <>{opt.extends}</> : null}</div>
-                        </div>
-                    </div>;
+                    {item.optgroup.map((opt: any, optIndex: number) => {
 
-                })}
+                        return <div key={'option-' + optIndex} className={`${inline ? `form-check form-check-inline` : `form-check`} ${controlValue == opt.value ? (itemSelectedClassName || 'item-selected') : ''}`}>
+                            <div className="d-inline-block">
+                                <input
+                                    tabIndex={tabIndex || 0}
+                                    type="radio"
+                                    className="form-check-input"
+                                    id={`field-${uniqueID}-${index}-${optIndex}`}
+                                    name={name}
+                                    data-index={`${index}-${optIndex}`}
+                                    data-label={opt.label}
+                                    data-list-item-label={`${typeof opt.listItemLabel === 'undefined' ? '' : opt.listItemLabel}`}
+                                    data-value={opt.value}
+                                    data-disabled={disabled || (typeof opt.disabled !== 'undefined' ? `${opt.disabled}` : 'false')}
+                                    data-optiondata={JSON.stringify(opt)}
+                                    value={`${opt.value}`}
+                                    required={requiredVal}
+                                    disabled={disabled || (typeof opt.disabled !== 'undefined' ? opt.disabled : null)}
+                                    onChange={handleChange}
+                                    onClick={typeof (onClick) === 'function' ? handleChange : () => void (0)}
+                                    onFocus={handleFocus}
+                                    onBlur={handleBlur}
+                                    checked={controlValue == opt.value}   // component status will not change if defaultChecked is used
+                                    style={style}
+                                    {...attributes}
+                                />
+                                {labelRes(typeof opt.listItemLabel === 'undefined' ? opt.label : opt.listItemLabel, `field-${uniqueID}-${index}-${optIndex}`)}
 
-            </>;
-        };
+                            </div>
+                            <div className="d-inline-block">
+                                <div className="form-control-extends__wrapper">{typeof opt.extends !== 'undefined' ? <>{opt.extends}</> : null}</div>
+                            </div>
+                        </div>;
 
-        const _normalEl = () => {
-            return <>
-                <div className="d-inline-block">
-                    <input
-                        tabIndex={tabIndex || 0}
-                        type="radio"
-                        className="form-check-input"
-                        id={`field-${uniqueID}-${index}`}
-                        name={name}
-                        data-index={index}
-                        data-label={item.label}
-                        data-list-item-label={`${typeof item.listItemLabel === 'undefined' ? '' : item.listItemLabel}`}
-                        data-value={item.value}
-                        data-disabled={disabled || (typeof item.disabled !== 'undefined' ? `${item.disabled}` : 'false')}
-                        value={`${item.value}`}
-                        required={requiredVal}
-                        disabled={disabled || (typeof item.disabled !== 'undefined' ? item.disabled : null)}
-                        onChange={handleChange}
-                        onClick={typeof (onClick) === 'function' ? handleChange : () => void (0)}
-                        onFocus={handleFocus}
-                        onBlur={handleBlur}
-                        checked={controlValue == item.value}   // component status will not change if defaultChecked is used
-                        style={style}
-                        {...attributes}
-                    />
-                    <label className="form-check-label" htmlFor={`field-${uniqueID}-${index}`} dangerouslySetInnerHTML={{
-                        __html: `${typeof item.listItemLabel === 'undefined' ? item.label : item.listItemLabel}`
-                    }}></label>
-                </div>
-                <div className="d-inline-block">
-                    <div className="form-control-extends__wrapper">{typeof item.extends !== 'undefined' ? <>{item.extends}</> : null}</div>
-                </div>
+                    })}
 
-            </>;
-        };
+                </>;
+            };
+
+            const _normalEl = () => {
+                return <>
+                    <div className="d-inline-block">
+                        <input
+                            tabIndex={tabIndex || 0}
+                            type="radio"
+                            className="form-check-input"
+                            id={`field-${uniqueID}-${index}`}
+                            name={name}
+                            data-index={index}
+                            data-label={item.label}
+                            data-list-item-label={`${typeof item.listItemLabel === 'undefined' ? '' : item.listItemLabel}`}
+                            data-value={item.value}
+                            data-disabled={disabled || (typeof item.disabled !== 'undefined' ? `${item.disabled}` : 'false')}
+                            data-optiondata={JSON.stringify(item)}
+                            value={`${item.value}`}
+                            required={requiredVal}
+                            disabled={disabled || (typeof item.disabled !== 'undefined' ? item.disabled : null)}
+                            onChange={handleChange}
+                            onClick={typeof (onClick) === 'function' ? handleChange : () => void (0)}
+                            onFocus={handleFocus}
+                            onBlur={handleBlur}
+                            checked={controlValue == item.value}   // component status will not change if defaultChecked is used
+                            style={style}
+                            {...attributes}
+                        />
+                        <label className="form-check-label" htmlFor={`field-${uniqueID}-${index}`} dangerouslySetInnerHTML={{
+                            __html: `${typeof item.listItemLabel === 'undefined' ? item.label : item.listItemLabel}`
+                        }}></label>
+                    </div>
+                    <div className="d-inline-block">
+                        <div className="form-control-extends__wrapper">{typeof item.extends !== 'undefined' ? <>{item.extends}</> : null}</div>
+                    </div>
+
+                </>;
+            };
 
 
-        if (tableLayout) {
+            if (tableLayout) {
 
-            /* TABLE LAYOUT */
-            if (typeof item.optgroup !== 'undefined') {
-                return <td 
-                    colSpan={1} 
-                    className={`radio-group__wrapper ${groupWrapperClassName || ''} ${tableLayoutCellClassName || ''}`} 
-                    key={'optgroup-' + index}
-                >
+                /* TABLE LAYOUT */
+                if (typeof item.optgroup !== 'undefined') {
+                    return <td
+                        colSpan={1}
+                        className={`radio-group__wrapper ${groupWrapperClassName || ''} ${tableLayoutCellClassName || ''}`}
+                        key={'optgroup-' + index}
+                        data-optiondata={JSON.stringify(item)}
+                    >
                         {_groupEl()}
                     </td>;
-            } else {
+                } else {
 
-                return <td 
-                    colSpan={1} 
-                    className={`${inline ? `form-check form-check-inline` : `form-check`} ${controlValue == item.value ? (itemSelectedClassName || 'item-selected') : ''} ${tableLayoutCellClassName || ''}`}
-                    key={'option-' + index} 
-                >
+                    return <td
+                        colSpan={1}
+                        className={`${inline ? `form-check form-check-inline` : `form-check`} ${controlValue == item.value ? (itemSelectedClassName || 'item-selected') : ''} ${tableLayoutCellClassName || ''}`}
+                        key={'option-' + index}
+                        data-optiondata={JSON.stringify(item)}
+                    >
                         {_normalEl()}
-                </td>;
-            }
-            /* /TABLE LAYOUT */
-        } else {
-            if (typeof item.optgroup !== 'undefined') {
-                return <div 
-                    className={`radio-group__wrapper ${groupWrapperClassName || ''}`} 
-                    key={'optgroup-' + index}
-                >
+                    </td>;
+                }
+                /* /TABLE LAYOUT */
+            } else {
+                if (typeof item.optgroup !== 'undefined') {
+                    return <div
+                        className={`radio-group__wrapper ${groupWrapperClassName || ''}`}
+                        key={'optgroup-' + index}
+                        data-optiondata={JSON.stringify(item)}
+                    >
                         {_groupEl()}
                     </div>;
-            } else {
+                } else {
 
-                return <div 
-                    className={`${inline ? `form-check form-check-inline` : `form-check`} ${controlValue == item.value ? (itemSelectedClassName || 'item-selected') : ''}`}
-                    key={'option-' + index} 
-                >
+                    return <div
+                        className={`${inline ? `form-check form-check-inline` : `form-check`} ${controlValue == item.value ? (itemSelectedClassName || 'item-selected') : ''}`}
+                        key={'option-' + index}
+                        data-optiondata={JSON.stringify(item)}
+                    >
                         {_normalEl()}
-                </div>;
+                    </div>;
+                }
+
             }
 
-        }
-     
 
 
-      
-
-    }): null;
+        }) : null;
+    };
 
 
 
     useEffect(() => {
-
+   
         // data init
         //--------------
         const _params: any[] = fetchFuncMethodParams || [];
@@ -455,7 +491,7 @@ const Radio = (props: RadioProps) => {
                     {label ? <>{typeof label === 'string' ? <caption dangerouslySetInnerHTML={{ __html: `${label}` }}></caption> : <caption>{label}</caption>}</> : null}
                     <tbody>
                         <tr>
-                            {!hasErr ? itemsList : null}
+                            {!hasErr ? itemsList(onCallbackListItem) : null}
                         </tr>
                     </tbody>
 
@@ -470,7 +506,7 @@ const Radio = (props: RadioProps) => {
                 >
                     {label ? <>{typeof label === 'string' ? <label htmlFor={idRes} className="form-label" dangerouslySetInnerHTML={{ __html: `${label}` }}></label> : <label htmlFor={idRes} className="form-label" >{label}</label>}</> : null}
                     <div id={idRes}>
-                        {!hasErr ? itemsList : null}
+                        {!hasErr ? itemsList(onCallbackListItem) : null}
                     </div>
                 </div>
 

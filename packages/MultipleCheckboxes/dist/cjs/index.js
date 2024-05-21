@@ -3526,7 +3526,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var funda_utils__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(456);
 /* harmony import */ var funda_utils__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(funda_utils__WEBPACK_IMPORTED_MODULE_1__);
-var _excluded = ["wrapperClassName", "tableLayout", "tableLayoutClassName", "tableLayoutCellClassName", "groupWrapperClassName", "groupLabelClassName", "inline", "options", "disabled", "required", "value", "label", "name", "id", "extractValueByBrackets", "style", "fetchFuncAsync", "fetchFuncMethod", "fetchFuncMethodParams", "fetchCallback", "onFetch", "onLoad", "onChange"];
+var _excluded = ["wrapperClassName", "tableLayout", "tableLayoutClassName", "tableLayoutCellClassName", "groupWrapperClassName", "groupLabelClassName", "inline", "options", "disabled", "required", "value", "label", "name", "id", "extractValueByBrackets", "style", "fetchFuncAsync", "fetchFuncMethod", "fetchFuncMethodParams", "fetchCallback", "onFetch", "onLoad", "onChange", "onCallbackListItem"];
 function _regeneratorRuntime() { "use strict"; /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/facebook/regenerator/blob/main/LICENSE */ _regeneratorRuntime = function _regeneratorRuntime() { return exports; }; var exports = {}, Op = Object.prototype, hasOwn = Op.hasOwnProperty, defineProperty = Object.defineProperty || function (obj, key, desc) { obj[key] = desc.value; }, $Symbol = "function" == typeof Symbol ? Symbol : {}, iteratorSymbol = $Symbol.iterator || "@@iterator", asyncIteratorSymbol = $Symbol.asyncIterator || "@@asyncIterator", toStringTagSymbol = $Symbol.toStringTag || "@@toStringTag"; function define(obj, key, value) { return Object.defineProperty(obj, key, { value: value, enumerable: !0, configurable: !0, writable: !0 }), obj[key]; } try { define({}, ""); } catch (err) { define = function define(obj, key, value) { return obj[key] = value; }; } function wrap(innerFn, outerFn, self, tryLocsList) { var protoGenerator = outerFn && outerFn.prototype instanceof Generator ? outerFn : Generator, generator = Object.create(protoGenerator.prototype), context = new Context(tryLocsList || []); return defineProperty(generator, "_invoke", { value: makeInvokeMethod(innerFn, self, context) }), generator; } function tryCatch(fn, obj, arg) { try { return { type: "normal", arg: fn.call(obj, arg) }; } catch (err) { return { type: "throw", arg: err }; } } exports.wrap = wrap; var ContinueSentinel = {}; function Generator() {} function GeneratorFunction() {} function GeneratorFunctionPrototype() {} var IteratorPrototype = {}; define(IteratorPrototype, iteratorSymbol, function () { return this; }); var getProto = Object.getPrototypeOf, NativeIteratorPrototype = getProto && getProto(getProto(values([]))); NativeIteratorPrototype && NativeIteratorPrototype !== Op && hasOwn.call(NativeIteratorPrototype, iteratorSymbol) && (IteratorPrototype = NativeIteratorPrototype); var Gp = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(IteratorPrototype); function defineIteratorMethods(prototype) { ["next", "throw", "return"].forEach(function (method) { define(prototype, method, function (arg) { return this._invoke(method, arg); }); }); } function AsyncIterator(generator, PromiseImpl) { function invoke(method, arg, resolve, reject) { var record = tryCatch(generator[method], generator, arg); if ("throw" !== record.type) { var result = record.arg, value = result.value; return value && "object" == _typeof(value) && hasOwn.call(value, "__await") ? PromiseImpl.resolve(value.__await).then(function (value) { invoke("next", value, resolve, reject); }, function (err) { invoke("throw", err, resolve, reject); }) : PromiseImpl.resolve(value).then(function (unwrapped) { result.value = unwrapped, resolve(result); }, function (error) { return invoke("throw", error, resolve, reject); }); } reject(record.arg); } var previousPromise; defineProperty(this, "_invoke", { value: function value(method, arg) { function callInvokeWithMethodAndArg() { return new PromiseImpl(function (resolve, reject) { invoke(method, arg, resolve, reject); }); } return previousPromise = previousPromise ? previousPromise.then(callInvokeWithMethodAndArg, callInvokeWithMethodAndArg) : callInvokeWithMethodAndArg(); } }); } function makeInvokeMethod(innerFn, self, context) { var state = "suspendedStart"; return function (method, arg) { if ("executing" === state) throw new Error("Generator is already running"); if ("completed" === state) { if ("throw" === method) throw arg; return doneResult(); } for (context.method = method, context.arg = arg;;) { var delegate = context.delegate; if (delegate) { var delegateResult = maybeInvokeDelegate(delegate, context); if (delegateResult) { if (delegateResult === ContinueSentinel) continue; return delegateResult; } } if ("next" === context.method) context.sent = context._sent = context.arg;else if ("throw" === context.method) { if ("suspendedStart" === state) throw state = "completed", context.arg; context.dispatchException(context.arg); } else "return" === context.method && context.abrupt("return", context.arg); state = "executing"; var record = tryCatch(innerFn, self, context); if ("normal" === record.type) { if (state = context.done ? "completed" : "suspendedYield", record.arg === ContinueSentinel) continue; return { value: record.arg, done: context.done }; } "throw" === record.type && (state = "completed", context.method = "throw", context.arg = record.arg); } }; } function maybeInvokeDelegate(delegate, context) { var methodName = context.method, method = delegate.iterator[methodName]; if (undefined === method) return context.delegate = null, "throw" === methodName && delegate.iterator["return"] && (context.method = "return", context.arg = undefined, maybeInvokeDelegate(delegate, context), "throw" === context.method) || "return" !== methodName && (context.method = "throw", context.arg = new TypeError("The iterator does not provide a '" + methodName + "' method")), ContinueSentinel; var record = tryCatch(method, delegate.iterator, context.arg); if ("throw" === record.type) return context.method = "throw", context.arg = record.arg, context.delegate = null, ContinueSentinel; var info = record.arg; return info ? info.done ? (context[delegate.resultName] = info.value, context.next = delegate.nextLoc, "return" !== context.method && (context.method = "next", context.arg = undefined), context.delegate = null, ContinueSentinel) : info : (context.method = "throw", context.arg = new TypeError("iterator result is not an object"), context.delegate = null, ContinueSentinel); } function pushTryEntry(locs) { var entry = { tryLoc: locs[0] }; 1 in locs && (entry.catchLoc = locs[1]), 2 in locs && (entry.finallyLoc = locs[2], entry.afterLoc = locs[3]), this.tryEntries.push(entry); } function resetTryEntry(entry) { var record = entry.completion || {}; record.type = "normal", delete record.arg, entry.completion = record; } function Context(tryLocsList) { this.tryEntries = [{ tryLoc: "root" }], tryLocsList.forEach(pushTryEntry, this), this.reset(!0); } function values(iterable) { if (iterable) { var iteratorMethod = iterable[iteratorSymbol]; if (iteratorMethod) return iteratorMethod.call(iterable); if ("function" == typeof iterable.next) return iterable; if (!isNaN(iterable.length)) { var i = -1, next = function next() { for (; ++i < iterable.length;) if (hasOwn.call(iterable, i)) return next.value = iterable[i], next.done = !1, next; return next.value = undefined, next.done = !0, next; }; return next.next = next; } } return { next: doneResult }; } function doneResult() { return { value: undefined, done: !0 }; } return GeneratorFunction.prototype = GeneratorFunctionPrototype, defineProperty(Gp, "constructor", { value: GeneratorFunctionPrototype, configurable: !0 }), defineProperty(GeneratorFunctionPrototype, "constructor", { value: GeneratorFunction, configurable: !0 }), GeneratorFunction.displayName = define(GeneratorFunctionPrototype, toStringTagSymbol, "GeneratorFunction"), exports.isGeneratorFunction = function (genFun) { var ctor = "function" == typeof genFun && genFun.constructor; return !!ctor && (ctor === GeneratorFunction || "GeneratorFunction" === (ctor.displayName || ctor.name)); }, exports.mark = function (genFun) { return Object.setPrototypeOf ? Object.setPrototypeOf(genFun, GeneratorFunctionPrototype) : (genFun.__proto__ = GeneratorFunctionPrototype, define(genFun, toStringTagSymbol, "GeneratorFunction")), genFun.prototype = Object.create(Gp), genFun; }, exports.awrap = function (arg) { return { __await: arg }; }, defineIteratorMethods(AsyncIterator.prototype), define(AsyncIterator.prototype, asyncIteratorSymbol, function () { return this; }), exports.AsyncIterator = AsyncIterator, exports.async = function (innerFn, outerFn, self, tryLocsList, PromiseImpl) { void 0 === PromiseImpl && (PromiseImpl = Promise); var iter = new AsyncIterator(wrap(innerFn, outerFn, self, tryLocsList), PromiseImpl); return exports.isGeneratorFunction(outerFn) ? iter : iter.next().then(function (result) { return result.done ? result.value : iter.next(); }); }, defineIteratorMethods(Gp), define(Gp, toStringTagSymbol, "Generator"), define(Gp, iteratorSymbol, function () { return this; }), define(Gp, "toString", function () { return "[object Generator]"; }), exports.keys = function (val) { var object = Object(val), keys = []; for (var key in object) keys.push(key); return keys.reverse(), function next() { for (; keys.length;) { var key = keys.pop(); if (key in object) return next.value = key, next.done = !1, next; } return next.done = !0, next; }; }, exports.values = values, Context.prototype = { constructor: Context, reset: function reset(skipTempReset) { if (this.prev = 0, this.next = 0, this.sent = this._sent = undefined, this.done = !1, this.delegate = null, this.method = "next", this.arg = undefined, this.tryEntries.forEach(resetTryEntry), !skipTempReset) for (var name in this) "t" === name.charAt(0) && hasOwn.call(this, name) && !isNaN(+name.slice(1)) && (this[name] = undefined); }, stop: function stop() { this.done = !0; var rootRecord = this.tryEntries[0].completion; if ("throw" === rootRecord.type) throw rootRecord.arg; return this.rval; }, dispatchException: function dispatchException(exception) { if (this.done) throw exception; var context = this; function handle(loc, caught) { return record.type = "throw", record.arg = exception, context.next = loc, caught && (context.method = "next", context.arg = undefined), !!caught; } for (var i = this.tryEntries.length - 1; i >= 0; --i) { var entry = this.tryEntries[i], record = entry.completion; if ("root" === entry.tryLoc) return handle("end"); if (entry.tryLoc <= this.prev) { var hasCatch = hasOwn.call(entry, "catchLoc"), hasFinally = hasOwn.call(entry, "finallyLoc"); if (hasCatch && hasFinally) { if (this.prev < entry.catchLoc) return handle(entry.catchLoc, !0); if (this.prev < entry.finallyLoc) return handle(entry.finallyLoc); } else if (hasCatch) { if (this.prev < entry.catchLoc) return handle(entry.catchLoc, !0); } else { if (!hasFinally) throw new Error("try statement without catch or finally"); if (this.prev < entry.finallyLoc) return handle(entry.finallyLoc); } } } }, abrupt: function abrupt(type, arg) { for (var i = this.tryEntries.length - 1; i >= 0; --i) { var entry = this.tryEntries[i]; if (entry.tryLoc <= this.prev && hasOwn.call(entry, "finallyLoc") && this.prev < entry.finallyLoc) { var finallyEntry = entry; break; } } finallyEntry && ("break" === type || "continue" === type) && finallyEntry.tryLoc <= arg && arg <= finallyEntry.finallyLoc && (finallyEntry = null); var record = finallyEntry ? finallyEntry.completion : {}; return record.type = type, record.arg = arg, finallyEntry ? (this.method = "next", this.next = finallyEntry.finallyLoc, ContinueSentinel) : this.complete(record); }, complete: function complete(record, afterLoc) { if ("throw" === record.type) throw record.arg; return "break" === record.type || "continue" === record.type ? this.next = record.arg : "return" === record.type ? (this.rval = this.arg = record.arg, this.method = "return", this.next = "end") : "normal" === record.type && afterLoc && (this.next = afterLoc), ContinueSentinel; }, finish: function finish(finallyLoc) { for (var i = this.tryEntries.length - 1; i >= 0; --i) { var entry = this.tryEntries[i]; if (entry.finallyLoc === finallyLoc) return this.complete(entry.completion, entry.afterLoc), resetTryEntry(entry), ContinueSentinel; } }, "catch": function _catch(tryLoc) { for (var i = this.tryEntries.length - 1; i >= 0; --i) { var entry = this.tryEntries[i]; if (entry.tryLoc === tryLoc) { var record = entry.completion; if ("throw" === record.type) { var thrown = record.arg; resetTryEntry(entry); } return thrown; } } throw new Error("illegal catch attempt"); }, delegateYield: function delegateYield(iterable, resultName, nextLoc) { return this.delegate = { iterator: values(iterable), resultName: resultName, nextLoc: nextLoc }, "next" === this.method && (this.arg = undefined), ContinueSentinel; } }, exports; }
 function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
 function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
@@ -3570,6 +3570,7 @@ var MultipleCheckboxes = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forw
     onFetch = props.onFetch,
     onLoad = props.onLoad,
     _onChange = props.onChange,
+    onCallbackListItem = props.onCallbackListItem,
     attributes = _objectWithoutProperties(props, _excluded);
   var VALUE_BY_BRACKETS = typeof extractValueByBrackets === 'undefined' ? true : extractValueByBrackets;
   var uniqueID = (0,react__WEBPACK_IMPORTED_MODULE_0__.useId)();
@@ -3744,44 +3745,120 @@ var MultipleCheckboxes = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forw
   }
 
   // Generate list of options
-  var itemsList = Array.isArray(dataInit) ? dataInit.map(function (item, index) {
-    var _groupEl = function _groupEl() {
-      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-        className: "rmultiple-checkboxes-group__label ".concat(groupLabelClassName || '')
-      }, item.label), item.optgroup.map(function (opt, optIndex) {
-        return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-          key: 'checkbox' + optIndex,
-          className: "multiple-checkboxes__control form-check ".concat(_inline ? 'd-inline-block' : '', " pe-3"),
-          "data-index": "".concat(index, "-").concat(optIndex),
-          "data-label": opt.label,
-          "data-list-item-label": "".concat(typeof opt.listItemLabel === 'undefined' ? '' : opt.listItemLabel),
-          "data-value": opt.value,
-          "data-disabled": disabled || (typeof opt.disabled !== 'undefined' ? "".concat(opt.disabled) : 'false')
-        }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("input", _extends({
+  var itemsList = function itemsList(fn) {
+    if (typeof fn === 'function') {
+      return fn === null || fn === void 0 ? void 0 : fn({
+        name: name,
+        groupLabelClassName: groupLabelClassName,
+        groupWrapperClassName: groupWrapperClassName,
+        tableLayoutCellClassName: tableLayoutCellClassName,
+        tableLayout: tableLayout,
+        dataInit: dataInit,
+        valueBrackets: VALUE_BY_BRACKETS,
+        inline: _inline,
+        selectedItems: selectedItems,
+        uniqueID: idRes,
+        disabled: disabled,
+        labelRes: labelRes,
+        valRes: valRes,
+        handleCheckboxChange: handleCheckboxChange,
+        onChange: _onChange,
+        convertArrToValByBrackets: funda_utils__WEBPACK_IMPORTED_MODULE_1__.convertArrToValByBrackets,
+        attributes: attributes
+      });
+    }
+    return Array.isArray(dataInit) ? dataInit.map(function (item, index) {
+      var _groupEl = function _groupEl() {
+        return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+          className: "rmultiple-checkboxes-group__label ".concat(groupLabelClassName || '')
+        }, item.label), item.optgroup.map(function (opt, optIndex) {
+          return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+            key: 'checkbox' + optIndex,
+            className: "multiple-checkboxes__control form-check ".concat(_inline ? 'd-inline-block' : '', " pe-3"),
+            "data-index": "".concat(index, "-").concat(optIndex),
+            "data-label": opt.label,
+            "data-list-item-label": "".concat(typeof opt.listItemLabel === 'undefined' ? '' : opt.listItemLabel),
+            "data-value": opt.value,
+            "data-disabled": disabled || (typeof opt.disabled !== 'undefined' ? "".concat(opt.disabled) : 'false')
+          }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("input", _extends({
+            type: "checkbox",
+            className: "form-check-input",
+            name: "".concat(name, "-checkbox-item"),
+            id: "multiple-checkboxes__control-label-".concat(index, "-").concat(optIndex, "-").concat(idRes),
+            "data-index": "".concat(index, "-").concat(optIndex),
+            "data-label": opt.label,
+            "data-list-item-label": "".concat(typeof opt.listItemLabel === 'undefined' ? '' : opt.listItemLabel),
+            "data-value": opt.value,
+            "data-disabled": disabled || (typeof opt.disabled !== 'undefined' ? "".concat(opt.disabled) : 'false'),
+            "data-optiondata": JSON.stringify(opt),
+            value: opt.value,
+            disabled: disabled || (typeof opt.disabled !== 'undefined' ? opt.disabled : null),
+            checked: selectedItems.has(opt.value),
+            onChange: function onChange(e) {
+              handleCheckboxChange(opt.value);
+              var newSelectedItems = new Set(selectedItems);
+              if (!selectedItems.has(opt.value)) {
+                newSelectedItems.add(opt.value);
+              } else {
+                newSelectedItems["delete"](opt.value);
+              }
+
+              //
+              var _res = valRes(newSelectedItems);
+              var _resLabel = optionsFlat(dataInit).filter(function (v) {
+                return _res.includes(v.value);
+              }).map(function (k) {
+                return k.label;
+              });
+              var _resDataCollection = optionsFlat(dataInit).filter(function (v) {
+                return _res.includes(v.value);
+              }).map(function (k) {
+                return k;
+              });
+
+              //
+              var curData;
+
+              // if group
+              if (typeof item.optgroup !== 'undefined') {
+                var groupItemIndex = optIndex;
+                var groupOpts = item.optgroup;
+                curData = groupOpts[groupItemIndex];
+              } else {
+                curData = item;
+              }
+              _onChange === null || _onChange === void 0 ? void 0 : _onChange(e.target, _res, VALUE_BY_BRACKETS ? (0,funda_utils__WEBPACK_IMPORTED_MODULE_1__.convertArrToValByBrackets)(_res) : _res.join(','), _resLabel, VALUE_BY_BRACKETS ? (0,funda_utils__WEBPACK_IMPORTED_MODULE_1__.convertArrToValByBrackets)(_resLabel) : _resLabel.join(','), curData, _resDataCollection);
+            }
+          }, attributes)), labelRes(typeof opt.listItemLabel === 'undefined' ? opt.label : opt.listItemLabel, "multiple-checkboxes__control-label-".concat(index, "-").concat(optIndex, "-").concat(idRes)));
+        }));
+      };
+      var _normalEl = function _normalEl() {
+        return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("input", _extends({
           type: "checkbox",
           className: "form-check-input",
           name: "".concat(name, "-checkbox-item"),
-          id: "multiple-checkboxes__control-label-".concat(index, "-").concat(optIndex, "-").concat(idRes),
-          "data-index": "".concat(index, "-").concat(optIndex),
-          "data-label": opt.label,
-          "data-list-item-label": "".concat(typeof opt.listItemLabel === 'undefined' ? '' : opt.listItemLabel),
-          "data-value": opt.value,
-          "data-disabled": disabled || (typeof opt.disabled !== 'undefined' ? "".concat(opt.disabled) : 'false'),
-          value: opt.value,
-          disabled: disabled || (typeof opt.disabled !== 'undefined' ? opt.disabled : null),
-          checked: selectedItems.has(opt.value),
+          id: "multiple-checkboxes__control-label-".concat(index, "-").concat(idRes),
+          "data-index": index,
+          "data-label": item.label,
+          "data-list-item-label": "".concat(typeof item.listItemLabel === 'undefined' ? '' : item.listItemLabel),
+          "data-value": item.value,
+          "data-disabled": disabled || (typeof item.disabled !== 'undefined' ? "".concat(item.disabled) : 'false'),
+          "data-optiondata": JSON.stringify(item),
+          value: item.value,
+          disabled: disabled || (typeof item.disabled !== 'undefined' ? item.disabled : null),
+          checked: selectedItems.has(item.value),
           onChange: function onChange(e) {
-            handleCheckboxChange(opt.value);
+            handleCheckboxChange(item.value);
             var newSelectedItems = new Set(selectedItems);
-            if (!selectedItems.has(opt.value)) {
-              newSelectedItems.add(opt.value);
+            if (!selectedItems.has(item.value)) {
+              newSelectedItems.add(item.value);
             } else {
-              newSelectedItems["delete"](opt.value);
+              newSelectedItems["delete"](item.value);
             }
 
             //
             var _res = valRes(newSelectedItems);
-            var _resLabel = optionsFlat(dataInit).filter(function (v) {
+            var _resLabel = dataInit.filter(function (v) {
               return _res.includes(v.value);
             }).map(function (k) {
               return k.label;
@@ -3791,102 +3868,55 @@ var MultipleCheckboxes = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forw
             }).map(function (k) {
               return k;
             });
-
-            //
-            var curData;
-
-            // if group
-            if (typeof item.optgroup !== 'undefined') {
-              var groupItemIndex = optIndex;
-              var groupOpts = item.optgroup;
-              curData = groupOpts[groupItemIndex];
-            } else {
-              curData = item;
-            }
-            _onChange === null || _onChange === void 0 ? void 0 : _onChange(e.target, _res, VALUE_BY_BRACKETS ? (0,funda_utils__WEBPACK_IMPORTED_MODULE_1__.convertArrToValByBrackets)(_res) : _res.join(','), _resLabel, VALUE_BY_BRACKETS ? (0,funda_utils__WEBPACK_IMPORTED_MODULE_1__.convertArrToValByBrackets)(_resLabel) : _resLabel.join(','), curData, _resDataCollection);
+            _onChange === null || _onChange === void 0 ? void 0 : _onChange(e.target, _res, VALUE_BY_BRACKETS ? (0,funda_utils__WEBPACK_IMPORTED_MODULE_1__.convertArrToValByBrackets)(_res) : _res.join(','), _resLabel, VALUE_BY_BRACKETS ? (0,funda_utils__WEBPACK_IMPORTED_MODULE_1__.convertArrToValByBrackets)(_resLabel) : _resLabel.join(','), item, _resDataCollection);
           }
-        }, attributes)), labelRes(typeof opt.listItemLabel === 'undefined' ? opt.label : opt.listItemLabel, "multiple-checkboxes__control-label-".concat(index, "-").concat(optIndex, "-").concat(idRes)));
-      }));
-    };
-    var _normalEl = function _normalEl() {
-      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("input", _extends({
-        type: "checkbox",
-        className: "form-check-input",
-        name: "".concat(name, "-checkbox-item"),
-        id: "multiple-checkboxes__control-label-".concat(index, "-").concat(idRes),
-        "data-index": index,
-        "data-label": item.label,
-        "data-list-item-label": "".concat(typeof item.listItemLabel === 'undefined' ? '' : item.listItemLabel),
-        "data-value": item.value,
-        "data-disabled": disabled || (typeof item.disabled !== 'undefined' ? "".concat(item.disabled) : 'false'),
-        value: item.value,
-        disabled: disabled || (typeof item.disabled !== 'undefined' ? item.disabled : null),
-        checked: selectedItems.has(item.value),
-        onChange: function onChange(e) {
-          handleCheckboxChange(item.value);
-          var newSelectedItems = new Set(selectedItems);
-          if (!selectedItems.has(item.value)) {
-            newSelectedItems.add(item.value);
-          } else {
-            newSelectedItems["delete"](item.value);
-          }
-
-          //
-          var _res = valRes(newSelectedItems);
-          var _resLabel = dataInit.filter(function (v) {
-            return _res.includes(v.value);
-          }).map(function (k) {
-            return k.label;
-          });
-          var _resDataCollection = optionsFlat(dataInit).filter(function (v) {
-            return _res.includes(v.value);
-          }).map(function (k) {
-            return k;
-          });
-          _onChange === null || _onChange === void 0 ? void 0 : _onChange(e.target, _res, VALUE_BY_BRACKETS ? (0,funda_utils__WEBPACK_IMPORTED_MODULE_1__.convertArrToValByBrackets)(_res) : _res.join(','), _resLabel, VALUE_BY_BRACKETS ? (0,funda_utils__WEBPACK_IMPORTED_MODULE_1__.convertArrToValByBrackets)(_resLabel) : _resLabel.join(','), item, _resDataCollection);
+        }, attributes)), labelRes(typeof item.listItemLabel === 'undefined' ? item.label : item.listItemLabel, "multiple-checkboxes__control-label-".concat(index, "-").concat(idRes)));
+      };
+      if (tableLayout) {
+        /* TABLE LAYOUT */
+        if (typeof item.optgroup !== 'undefined') {
+          return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("td", {
+            colSpan: 1,
+            className: "multiple-checkboxes-group__wrapper ".concat(groupWrapperClassName || '', " ").concat(tableLayoutCellClassName || ''),
+            key: 'optgroup-' + index,
+            "data-optiondata": JSON.stringify(item)
+          }, _groupEl());
+        } else {
+          return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("td", {
+            colSpan: 1,
+            className: "multiple-checkboxes__control form-check ".concat(_inline ? 'd-inline-block' : '', " pe-3 ").concat(tableLayoutCellClassName || ''),
+            "data-index": index,
+            "data-label": item.label,
+            "data-list-item-label": "".concat(typeof item.listItemLabel === 'undefined' ? '' : item.listItemLabel),
+            "data-value": item.value,
+            "data-disabled": disabled || (typeof item.disabled !== 'undefined' ? "".concat(item.disabled) : 'false'),
+            key: 'checkbox' + index,
+            "data-optiondata": JSON.stringify(item)
+          }, _normalEl());
         }
-      }, attributes)), labelRes(typeof item.listItemLabel === 'undefined' ? item.label : item.listItemLabel, "multiple-checkboxes__control-label-".concat(index, "-").concat(idRes)));
-    };
-    if (tableLayout) {
-      /* TABLE LAYOUT */
-      if (typeof item.optgroup !== 'undefined') {
-        return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("td", {
-          colSpan: 1,
-          className: "multiple-checkboxes-group__wrapper ".concat(groupWrapperClassName || '', " ").concat(tableLayoutCellClassName || ''),
-          key: 'optgroup-' + index
-        }, _groupEl());
+        /* /TABLE LAYOUT */
       } else {
-        return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("td", {
-          colSpan: 1,
-          className: "multiple-checkboxes__control form-check ".concat(_inline ? 'd-inline-block' : '', " pe-3 ").concat(tableLayoutCellClassName || ''),
-          "data-index": index,
-          "data-label": item.label,
-          "data-list-item-label": "".concat(typeof item.listItemLabel === 'undefined' ? '' : item.listItemLabel),
-          "data-value": item.value,
-          "data-disabled": disabled || (typeof item.disabled !== 'undefined' ? "".concat(item.disabled) : 'false'),
-          key: 'checkbox' + index
-        }, _normalEl());
+        if (typeof item.optgroup !== 'undefined') {
+          return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+            className: "multiple-checkboxes-group__wrapper ".concat(groupWrapperClassName || ''),
+            key: 'optgroup-' + index,
+            "data-optiondata": JSON.stringify(item)
+          }, _groupEl());
+        } else {
+          return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+            className: "multiple-checkboxes__control form-check ".concat(_inline ? 'd-inline-block' : '', " pe-3"),
+            "data-index": index,
+            "data-label": item.label,
+            "data-list-item-label": "".concat(typeof item.listItemLabel === 'undefined' ? '' : item.listItemLabel),
+            "data-value": item.value,
+            "data-disabled": disabled || (typeof item.disabled !== 'undefined' ? "".concat(item.disabled) : 'false'),
+            key: 'checkbox' + index,
+            "data-optiondata": JSON.stringify(item)
+          }, _normalEl());
+        }
       }
-      /* /TABLE LAYOUT */
-    } else {
-      if (typeof item.optgroup !== 'undefined') {
-        return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-          className: "multiple-checkboxes-group__wrapper ".concat(groupWrapperClassName || ''),
-          key: 'optgroup-' + index
-        }, _groupEl());
-      } else {
-        return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-          className: "multiple-checkboxes__control form-check ".concat(_inline ? 'd-inline-block' : '', " pe-3"),
-          "data-index": index,
-          "data-label": item.label,
-          "data-list-item-label": "".concat(typeof item.listItemLabel === 'undefined' ? '' : item.listItemLabel),
-          "data-value": item.value,
-          "data-disabled": disabled || (typeof item.disabled !== 'undefined' ? "".concat(item.disabled) : 'false'),
-          key: 'checkbox' + index
-        }, _normalEl());
-      }
-    }
-  }) : null;
+    }) : null;
+  };
   (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(function () {
     // data init
     //--------------
@@ -3901,7 +3931,7 @@ var MultipleCheckboxes = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forw
     dangerouslySetInnerHTML: {
       __html: "".concat(label)
     }
-  }) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("caption", null, label)) : null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("tbody", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("tr", null, itemsList)), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("tfoot", {
+  }) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("caption", null, label)) : null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("tbody", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("tr", null, itemsList(onCallbackListItem))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("tfoot", {
     style: {
       display: 'none'
     }
@@ -3929,7 +3959,7 @@ var MultipleCheckboxes = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forw
   }, label)) : null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
     className: "multiple-checkboxes__control-wrapper",
     style: style
-  }, itemsList, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("input", _extends({
+  }, itemsList(onCallbackListItem), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("input", _extends({
     ref: inputRef,
     tabIndex: -1,
     type: "hidden",

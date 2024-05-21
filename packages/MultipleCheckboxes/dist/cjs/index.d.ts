@@ -32,6 +32,7 @@ declare type MultipleCheckboxesProps = {
     onFetch?: (data: any) => void;
     onLoad?: (arg1: any, arg2: any, arg3: any) => void;
     onChange?: (e: any, value: any, valueStr: any, label: any, labelStr: any, currentData: any, dataCollection: any) => void;
+    onCallbackListItem?: (optiondata: any) => void;
 };
 declare const MultipleCheckboxes: React.ForwardRefExoticComponent<MultipleCheckboxesProps & React.RefAttributes<unknown>>;
 export default MultipleCheckboxes;
