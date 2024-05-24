@@ -275,17 +275,54 @@ export default () => {
 
 
 
+## Asynchronous Usage
+
+
+```js
+import React, { useEffect, useState } from "react";
+import Textarea from 'funda-ui/Textarea';
+
+
+export default () => {
+
+    const [textareaValue, setTextareaValue] = useState('');
+
+    function handleChange(e) {
+        setTextareaValue(e.target.value);
+    }
+
+    useEffect(() => {
+       setTextareaValue('default');
+    }, []);
+
+
+    return (
+        <>
+            <Textarea
+                value={textareaValue}   // Cannot be null
+                onChange={handleChange}
+                name="String"
+                label="String"
+                rows={4}
+            />
+
+        </>
+    );
+}
+```
+
+
 ## Complex use of popup and default value
 
 Lets you callback the handle exposed as attribute `contentRef`.
 
 
 ```js
- import React, { useState, useRef } from 'react';
+import React, { useState, useRef } from 'react';
 
- // bootstrap components
- import ModalDialog from 'funda-ui/ModalDialog';
- import Textarea from '../Textarea/src';
+// bootstrap components
+import ModalDialog from 'funda-ui/ModalDialog';
+import Textarea from 'funda-ui/Textarea';
 
 export default () => {
 

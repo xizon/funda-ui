@@ -16,6 +16,7 @@ import ModalDialog from 'funda-ui/ModalDialog';
 | `modalBodyClassName` | string  | - | The extended class name of content area | - |
 | `modalFooterClassName` | string  | - | The extended class name of footer area | - |
 | `modalFooterExpandedContentClassName` | string  | - | The extended class name of footer content area | - |
+| `draggable` | boolean  | false | Pop-ups that can be dragged | - |
 | `depth` | number  | 1055 | Set the depth value of the control to control the display of the pop-up layer appear above. Please set it when multiple controls are used at the same time. | - |
 | `show` | boolean  | false | Whether the modal dialog is visible or not, you can use it with the `autoClose` property at the same time | ✅ |
 | `autoClose` | number \| boolean  | false | Specify auto-close time. This function is not enabled when this value is false. If the value is `2000`, it will automatically close after 2 seconds. | - |

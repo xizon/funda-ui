@@ -176,7 +176,7 @@ import useInterval from './hooks/useInterval';
 import useClickOutside from './hooks/useClickOutside';
 import useKeyPress from './hooks/useKeyPress';
 import useWindowScroll from './hooks/useWindowScroll';
-
+import useDraggable from './hooks/useDraggable';
 
 
 
@@ -297,5 +297,6 @@ export {
     useInterval,
     useClickOutside,
     useKeyPress,
-    useWindowScroll
+    useWindowScroll,
+    useDraggable
 };

@@ -572,15 +572,23 @@ const LiveSearch = forwardRef((props: LiveSearchProps, ref: any) => {
 
     function handleClick() {
 
-        if (EMPTY_FOR_FETCH) {
-            setOrginalData(dataInit);
-            setIsOpen(true);
+        if (!isOpen) {
+            if (EMPTY_FOR_FETCH) {
+                setOrginalData(dataInit);
+                setIsOpen(true);
+            }
+
+            // window position
+            setTimeout(() => {
+                popwinPosInit();
+            }, 0);
+        } else {
+            // cancel
+            setIsOpen(false);
+            cancel();
         }
 
-        // window position
-        setTimeout(() => {
-            popwinPosInit();
-        }, 0);
+
 
         onClick?.(inputRef.current, listRef.current)
     }

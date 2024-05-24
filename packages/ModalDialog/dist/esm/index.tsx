@@ -1,6 +1,11 @@
 import React, { useId, useState, useRef, useEffect, forwardRef, useImperativeHandle } from 'react';
 
 import RootPortal from 'funda-root-portal';
+import {
+    useDraggable
+} from 'funda-utils';
+
+
 
 //Destroys body scroll locking
 import { clearAllBodyScrollLocks, disableBodyScroll, enableBodyScroll } from './plugins/BSL';
@@ -33,6 +38,8 @@ type ModalDialogProps = {
     modalBodyClassName?: string;
     modalFooterClassName?: string;
     modalFooterExpandedContentClassName?: string;
+    /** Pop-ups that can be dragged */
+    draggable?: boolean;
     /** Set the depth value of the control to control the display of the pop-up layer appear above. Please set it when multiple controls are used at the same time. */
     depth?: number;
     /** Whether the modal dialog is visible or not, you can use it with the `autoClose` property at the same time */
@@ -89,6 +96,7 @@ const ModalDialog = forwardRef((props: ModalDialogProps, ref: React.ForwardedRef
         modalBodyClassName,
         modalFooterClassName,
         modalFooterExpandedContentClassName,
+        draggable,
         depth,
         show,
         maxWidth,
@@ -128,6 +136,9 @@ const ModalDialog = forwardRef((props: ModalDialogProps, ref: React.ForwardedRef
 
     const [modalShow, setModalShow] = useState<boolean>(false);
     const [incomingData, setIncomingData] = useState<string | null | undefined>(null);
+
+    // drag and drop
+    const [dragContentHandle, dragHandle] = useDraggable(draggable);
     
     // exposes the following methods
     useImperativeHandle(
@@ -413,10 +424,10 @@ const ModalDialog = forwardRef((props: ModalDialogProps, ref: React.ForwardedRef
                     data-mask={`mask-${idRes}`}
                 >
                     <div className="modal-dialog modal-dialog-centered modal-dialog-scrollable" style={M_WIDTH ? { maxWidth: `${M_WIDTH}` } : {}}>
-                        <div className={`${enableVideo ? 'modal-content bg-transparent shadow-none border-0' : 'modal-content'} ${modalContentClassName || ''}`} style={{ overflow: 'inherit', minHeight: M_HEIGHT ? M_HEIGHT : 'auto' }}>
+                        <div ref={dragContentHandle} className={`${enableVideo ? 'modal-content bg-transparent shadow-none border-0' : 'modal-content'} ${modalContentClassName || ''}`} style={{ overflow: 'inherit', minHeight: M_HEIGHT ? M_HEIGHT : 'auto' }}>
                             {(!heading || heading === '') && closeDisabled ? null : <>
 
-                                <div className={`${enableVideo ? 'modal-header border-0 px-0' : 'modal-header'} ${modalHeaderClassName || ''}`}>
+                                <div ref={dragHandle} className={`${enableVideo ? 'modal-header border-0 px-0' : 'modal-header'} ${modalHeaderClassName || ''}`}>
                                     <h5 className={`modal-title ${modalTitleClassName || ''}`}>{heading || ''}</h5>
                                     {!closeDisabled ? <button type="button" className={enableVideo ? 'btn-close btn-close-white' : 'btn-close'} data-close="1" onClick={handleCloseWin}></button> : null}
 

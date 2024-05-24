@@ -15,6 +15,7 @@ import {
 } from 'funda-utils';
 
 
+
 //Destroys body scroll locking
 import { clearAllBodyScrollLocks, disableBodyScroll, enableBodyScroll } from './plugins/BSL';
 
@@ -211,7 +212,7 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
     const [blinkingPosStart, setBlinkingPosStart] = useState<number>(0);
     const blinkingPosFauxRef = useRef<any>(null);
     const blinkingCursorPosDivRef = useRef<any>(null);
-    
+
 
 
     const selectedSign = useRef<boolean>(false);
@@ -283,7 +284,7 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
                     handleSelect(null, (typeof _val === 'object' ? JSON.stringify(_val) : _val), [`${_val.value}`], [`${_val.label}`]);
                 }
 
-                
+
                 cb?.();
             }
         }),
@@ -302,7 +303,7 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
                 (rootRef.current !== event.target && !rootRef.current.contains(event.target as HTMLElement)) &&
                 listRef.current !== event.target && !listRef.current.contains(event.target as HTMLElement)
             )
-              
+
         },
         handle: (event: any) => {
             // cancel
@@ -465,7 +466,7 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
 
         if (typeof fetchFuncAsync === 'object') {
 
-         
+
             const response: any = await fetchFuncAsync[`${fetchFuncMethod}`](...params.split(','));
             let _ORGIN_DATA = response.data;
 
@@ -648,7 +649,7 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
                 addTreeIndent(staticOptionsData, INDENT_PLACEHOLDER, INDENT_LAST_PLACEHOLDER, 'label');
             }
 
-            
+
 
 
             // STEP 3: ===========
@@ -737,7 +738,7 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
 
             }
 
-    
+
             // STEP 5: ===========
             //
             setOptionsData(staticOptionsData); // data must be initialized
@@ -761,7 +762,7 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
 
     function adjustMultiControlContainerHeight() {
         setTimeout(() => {
-           
+
             // Sometimes you may get 0, you need to judge
             if (rootMultiRef.current.clientHeight > 0) {
                 rootSingleRef.current.style.height = rootMultiRef.current.clientHeight + 'px';
@@ -773,9 +774,9 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
             if (MULTI_SEL_VALID && _modalRef !== null && _modalRef.classList.contains('active')) {
                 popwinPosInit();
             }
-            
-            
-        },0);              
+
+
+        }, 0);
     }
 
 
@@ -869,8 +870,8 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
         }
 
 
-  
-        
+
+
 
         // STEP 4:
         //-----------
@@ -1105,7 +1106,7 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
                 // no data label
                 popwinNoMatchInit();
             }, 500);
-    
+
         }
 
 
@@ -1133,20 +1134,10 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
 
     }
 
-    function rootWrapperSwitch() {
-        // remove active styles from the root container and activate current wrapper
-        [].slice.call(document.querySelectorAll('.mf-select__wrapper')).forEach((node: any) => {
-            node.classList.remove('active', 'focus');
-        });
-        rootRef.current?.classList.add('active', 'focus');
-    }
-
-   
-
     async function handleSelect(el: any, dataInput: any = false, valueArr: any[] = [], labelArr: any[] = []) {
 
         if (typeof el === 'undefined') return;
-     
+
 
         const curItem: any = el === null ? JSON.parse(dataInput) : JSON.parse(el.currentTarget.dataset.itemdata);
 
@@ -1172,7 +1163,7 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
 
         // current control of some option
         const curBtn = options.filter((node: HTMLElement) => node.dataset.itemdata == JSON.stringify(curItem))[0];
-      
+
 
         // update value * label
         if (dataInput) {
@@ -1190,7 +1181,7 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
             options.forEach((node: any) => {
                 node.classList.remove('active');
             });
-            
+
 
 
             //
@@ -1214,7 +1205,7 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
 
                 const $el = el === null ? curBtn : el.currentTarget;
 
-                
+
                 // update option checkboxes
                 const _selected = $el.dataset.selected;
                 const _selectedVal = _selected == 'true' ? true : false;
@@ -1327,7 +1318,7 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
             if (typeof incominggetOptionsData !== 'undefined') {
                 valueInputRef.current.dataset.value = _value;
             }
-            
+
 
 
             // ++++++++++++++++++++
@@ -1337,7 +1328,7 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
             let currentControlLabelArr: any[] = JSON.parse(JSON.stringify(controlArr.labels));
 
             if (MULTI_SEL_VALID) {
-                
+
 
                 const $el = el === null ? curBtn : el.currentTarget;
 
@@ -1522,7 +1513,7 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
     function handleCleanValue(event?: any) {
         if (typeof event !== 'undefined') event.preventDefault();
         // It is valid when a single selection
-        const emptyValue: Record<string, string> = {label: '', value: '', queryString: ''};
+        const emptyValue: Record<string, string> = { label: '', value: '', queryString: '' };
         handleSelect(null, JSON.stringify(emptyValue), [], []);
 
         if (typeof (onChange) === 'function') {
@@ -1538,7 +1529,7 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
 
     }
 
-    
+
 
     function handleMultiControlItemRemove(event: any) {
         event.preventDefault();
@@ -1581,7 +1572,7 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
                 {
                     labels: currentControlLabelArr.map((v: any) => v.toString()),
                     values: currentControlValueArr.map((v: any) => v.toString()),
-                    labelsOfString: VALUE_BY_BRACKETS ? convertArrToValByBrackets(currentControlLabelArr.map((v: any) => v.toString())) : currentControlLabelArr.map((v: any) =>     v.toString()).join(','),
+                    labelsOfString: VALUE_BY_BRACKETS ? convertArrToValByBrackets(currentControlLabelArr.map((v: any) => v.toString())) : currentControlLabelArr.map((v: any) => v.toString()).join(','),
                     valuesOfString: VALUE_BY_BRACKETS ? convertArrToValByBrackets(currentControlValueArr.map((v: any) => v.toString())) : currentControlValueArr.map((v: any) => v.toString()).join(',')
                 }
             );
@@ -1598,11 +1589,11 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
     function handleShowList() {
 
         //
-        rootWrapperSwitch();
-
-        //
         if (!isOpen) {
             activate();
+        } else {
+            cancel();
+            if (MULTI_SEL_VALID) popwinPosHide();
         }
 
     }
@@ -1688,8 +1679,8 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
             // Avoid selecting options that are disabled
             const options = [].slice.call(listRef.current.querySelectorAll('.list-group-item:not(.hide):not(.mf-select-multi__control-option-item--select-all):not(.mf-select-multi__control-option-item--clean)'));
             const currentIndex = options.findIndex((e) => e === listRef.current.querySelector('.list-group-item.active'));
-            
-     
+
+
             // get the next element in the list, "%" will loop around to 0
             let nextIndex;
             if (type === 'increase') {
@@ -1730,23 +1721,23 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
         if (!isOpen) return;
 
         let res: any = null;
-        
+
         if (key === 'Enter' || key === 'NumpadEnter') {
             event.preventDefault();
-            
+
             // Determine the "active" class name to avoid listening to other unused components of the same type
             if (listRef.current === null || !rootRef.current.classList.contains('active')) return;
 
             // Avoid selecting options that are disabled
             if (keyboardSelectedItem.current !== null && keyboardSelectedItem.current.classList.contains('disabled')) return;
-            
+
             if (listRef.current !== null) {
                 const currentData = await listRef.current.dataset.data;
 
-            
+
                 if (typeof currentData !== 'undefined') {
 
-                    
+
                     const currentControlValueArr: any[] = [];
                     const currentControlLabelArr: any[] = [];
 
@@ -1754,7 +1745,7 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
 
                     htmlOptions.forEach((node: any) => {
                         node.classList.remove('active');
-        
+
                         // multiple options
                         if (node.classList.contains('item-selected')) {
                             currentControlValueArr.push(node.dataset.value);
@@ -1800,7 +1791,7 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
             res = await optionFocus('increase');
         }
 
-        
+
         // temporary data
         if (res !== null) listRef.current.dataset.data = res.dataset.itemdata;
 
@@ -1841,12 +1832,12 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
             {label ? <><div className="mf-select__label">{typeof label === 'string' ? <label htmlFor={`label-${idRes}`} className="form-label" dangerouslySetInnerHTML={{ __html: `${label}` }}></label> : <label htmlFor={`label-${idRes}`} className="form-label">{label}</label>}</div></> : null}
 
 
-<span ref={blinkingPosFauxRef}></span>
-            <div 
+            <span ref={blinkingPosFauxRef}></span>
+            <div
                 ref={rootRef}
                 data-overlay-id={`mf-select__options-wrapper-${idRes}`}
-                id={`mf-select__wrapper-${idRes}`} 
-                className={`mf-select__wrapper ${wrapperClassName || wrapperClassName === '' ? wrapperClassName : 'mb-3 position-relative'} ${MULTI_SEL_VALID ? 'multiple-selection' : ''} ${isOpen ? 'active focus' : ''}`} 
+                id={`mf-select__wrapper-${idRes}`}
+                className={`mf-select__wrapper ${wrapperClassName || wrapperClassName === '' ? wrapperClassName : 'mb-3 position-relative'} ${MULTI_SEL_VALID ? 'multiple-selection' : ''} ${isOpen ? 'active focus' : ''}`}
                 onKeyDown={handleKeyPressed}
             >
 
@@ -1866,7 +1857,7 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
                         type="text"
                         data-overlay-id={`mf-select__options-wrapper-${idRes}`}
                         id={`label-${idRes}`}
-                        
+
                         // Don't use "name", it's just a container to display the label
                         data-name={name?.match(/(\[.*?\])/gi) ? `${name.split('[')[0]}-label[]` : `${name}-label`}
                         data-select
@@ -1911,7 +1902,7 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
                         </span>
                     </> : null}
                     {/* /BLINKING CURSOR */}
-      
+
 
 
                 </div>
@@ -2006,16 +1997,16 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
                             <ul className="mf-select-multi__list">
 
                                 {typeof multiSelectSelectedItemOnlyStatus !== 'undefined' ? <>
-                                
+
                                     <li className="mf-select-multi__list-item-statusstring">
-                                        {typeof multiSelectSelectedItemOnlyStatus.itemsLabel === 'string' && controlArr.labels.length > 0 && controlArr.labels.length < optionsData.length ? multiSelectSelectedItemOnlyStatus.itemsLabel.replace('{num}', controlArr.labels.length) : null }
-                                        {typeof multiSelectSelectedItemOnlyStatus.noneLabel === 'string' && controlArr.labels.length === 0 ? multiSelectSelectedItemOnlyStatus.noneLabel : null }
-                                        {typeof multiSelectSelectedItemOnlyStatus.allItemsLabel === 'string' && controlArr.labels.length === optionsData.length ? multiSelectSelectedItemOnlyStatus.allItemsLabel : null }
+                                        {typeof multiSelectSelectedItemOnlyStatus.itemsLabel === 'string' && controlArr.labels.length > 0 && controlArr.labels.length < optionsData.length ? multiSelectSelectedItemOnlyStatus.itemsLabel.replace('{num}', controlArr.labels.length) : null}
+                                        {typeof multiSelectSelectedItemOnlyStatus.noneLabel === 'string' && controlArr.labels.length === 0 ? multiSelectSelectedItemOnlyStatus.noneLabel : null}
+                                        {typeof multiSelectSelectedItemOnlyStatus.allItemsLabel === 'string' && controlArr.labels.length === optionsData.length ? multiSelectSelectedItemOnlyStatus.allItemsLabel : null}
 
                                         {/*-----*/}
-                                        {typeof multiSelectSelectedItemOnlyStatus.itemsLabel !== 'string' && controlArr.labels.length > 0 ? MULTI_SEL_SELECTED_STATUS.itemsLabel.replace('{num}', controlArr.labels.length) : null }
-                                        {typeof multiSelectSelectedItemOnlyStatus.noneLabel !== 'string' && controlArr.labels.length === 0 ? MULTI_SEL_SELECTED_STATUS.noneLabel : null }
-                                        {typeof multiSelectSelectedItemOnlyStatus.allItemsLabel !== 'string' && controlArr.labels.length === optionsData.length ? MULTI_SEL_SELECTED_STATUS.allItemsLabel : null }
+                                        {typeof multiSelectSelectedItemOnlyStatus.itemsLabel !== 'string' && controlArr.labels.length > 0 ? MULTI_SEL_SELECTED_STATUS.itemsLabel.replace('{num}', controlArr.labels.length) : null}
+                                        {typeof multiSelectSelectedItemOnlyStatus.noneLabel !== 'string' && controlArr.labels.length === 0 ? MULTI_SEL_SELECTED_STATUS.noneLabel : null}
+                                        {typeof multiSelectSelectedItemOnlyStatus.allItemsLabel !== 'string' && controlArr.labels.length === optionsData.length ? MULTI_SEL_SELECTED_STATUS.allItemsLabel : null}
 
                                     </li>
                                 </> : <>
@@ -2040,12 +2031,12 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
                                             {/* /BLINKING CURSOR */}
 
                                         </span>
-                                                                            
 
-    
+
+
                                     </li>
                                 </>}
-                                
+
                             </ul>
 
                         </div>

@@ -11,9 +11,10 @@
         "test": "echo \"Error: no test specified\" && exit 1"
     },
     "dependencies": {
+        "funda-root-portal": "*",
         "react": "^18.2.0",
         "react-dom": "^18.2.0",
-        "funda-root-portal": "*"
+        "react-draggable": "^4.4.6"
     },
     "devDependencies": {
         "@babel/core": "^7.2.0",
