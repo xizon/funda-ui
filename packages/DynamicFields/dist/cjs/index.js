@@ -233,7 +233,7 @@ var DynamicFields = function DynamicFields(props) {
       }
 
       //
-      onAdd === null || onAdd === void 0 ? void 0 : onAdd(perRow);
+      onAdd === null || onAdd === void 0 ? void 0 : onAdd(perRow, rootRef.current, addBtnRef.current, PER_ROW_DOM_STRING);
     }, 0);
   }
   function handleClickRemove(e) {
@@ -275,7 +275,7 @@ var DynamicFields = function DynamicFields(props) {
         }
 
         //
-        onRemove === null || onRemove === void 0 ? void 0 : onRemove(perRow, curKey, curIndex);
+        onRemove === null || onRemove === void 0 ? void 0 : onRemove(perRow, curKey, curIndex, rootRef.current, e.currentTarget, PER_ROW_DOM_STRING);
       }, 0);
     }
   }
@@ -335,7 +335,9 @@ var DynamicFields = function DynamicFields(props) {
   (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(function () {
     setVal(data ? data.init : []);
     setTmpl(data ? data.tmpl : null);
-    onLoad === null || onLoad === void 0 ? void 0 : onLoad(addBtnIdRef.current);
+
+    //
+    onLoad === null || onLoad === void 0 ? void 0 : onLoad(addBtnIdRef.current, rootRef.current, PER_ROW_DOM_STRING);
   }, [data]);
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
     className: wrapperClassName || wrapperClassName === '' ? wrapperClassName : "mb-3 position-relative",

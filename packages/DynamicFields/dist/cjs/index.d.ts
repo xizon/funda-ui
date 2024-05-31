@@ -36,9 +36,9 @@ declare type DynamicFieldsProps = {
     innerAppendEmptyContent?: React.ReactNode;
     /** -- */
     id?: string;
-    onAdd?: (items: HTMLDivElement[]) => void;
-    onRemove?: (items: HTMLDivElement[], key: number | string, index: number | string) => void;
-    onLoad?: (addbtn: any) => void;
+    onAdd?: (items: HTMLDivElement[], rootNode: HTMLDivElement, btnNode: HTMLAnchorElement, perRowDomClassName: string) => void;
+    onRemove?: (items: HTMLDivElement[], key: number | string, index: number | string, rootNode: HTMLDivElement, btnNode: HTMLAnchorElement, perRowDomClassName: string) => void;
+    onLoad?: (addbtn: any, rootNode: HTMLDivElement, perRowDomClassName: string) => void;
 };
 declare const DynamicFields: (props: DynamicFieldsProps) => JSX.Element;
 export default DynamicFields;

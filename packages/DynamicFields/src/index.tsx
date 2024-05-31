@@ -40,9 +40,9 @@ type DynamicFieldsProps = {
     innerAppendEmptyContent?: React.ReactNode;
     /** -- */
     id?: string;
-    onAdd?: (items: HTMLDivElement[]) => void;
-    onRemove?: (items: HTMLDivElement[], key: number | string, index: number | string) => void;
-    onLoad?: (addbtn: any) => void;
+    onAdd?: (items: HTMLDivElement[], rootNode: HTMLDivElement, btnNode: HTMLAnchorElement, perRowDomClassName: string) => void;
+    onRemove?: (items: HTMLDivElement[], key: number | string, index: number | string, rootNode: HTMLDivElement, btnNode: HTMLAnchorElement, perRowDomClassName: string) => void;
+    onLoad?: (addbtn: any, rootNode: HTMLDivElement, perRowDomClassName: string) => void;
 
 };
 
@@ -179,7 +179,7 @@ const DynamicFields = (props: DynamicFieldsProps) => {
             }
 
             //
-            onAdd?.(perRow);
+            onAdd?.(perRow, rootRef.current, addBtnRef.current, PER_ROW_DOM_STRING);
         }, 0);
     }
 
@@ -232,7 +232,7 @@ const DynamicFields = (props: DynamicFieldsProps) => {
                 
 
                 //
-                onRemove?.(perRow, curKey as never, curIndex as number);
+                onRemove?.(perRow, curKey as never, curIndex as number, rootRef.current, e.currentTarget as HTMLAnchorElement, PER_ROW_DOM_STRING);
             }, 0);
         }
 
@@ -283,8 +283,9 @@ const DynamicFields = (props: DynamicFieldsProps) => {
 
         setVal(data ? data.init : []);
         setTmpl(data ? data.tmpl : null);
-        onLoad?.(addBtnIdRef.current);
-
+    
+        //
+        onLoad?.(addBtnIdRef.current, rootRef.current, PER_ROW_DOM_STRING);
     }, [data]);
 
 
