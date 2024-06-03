@@ -7,7 +7,10 @@
 const App = () => {
     const [dragContentHandle, dragHandle] = useDraggable({
         enabled: true,   // if `false`, drag and drop is disabled
-        preventOutsideScreen: true,
+        preventOutsideScreen: {
+            xAxis: true,
+            yAxis: true
+        },
         onStart: (coordinates: Record<string, number>, handleEl: HTMLElement | null, contentEl: HTMLElement | null) => {
             
         },
@@ -104,10 +107,6 @@ const useDraggable = ({
         // calculates the left and top offsets after the move
         let nLeft = mouseX - (startPos.x);
         let nTop = mouseY - (startPos.y);
-
-        // calculates the right and bottom offsets after the move
-        let nRight = nLeft + childrenWidth;
-        let nBottom = nTop + childrenHight;
 
         // Determine whether the left or right distance is out of bounds
         if (preventOutsideScreen.xAxis) {
