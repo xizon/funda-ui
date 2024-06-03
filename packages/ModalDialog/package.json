@@ -12,9 +12,9 @@
     },
     "dependencies": {
         "funda-root-portal": "*",
+        "funda-utils": "*",
         "react": "^18.2.0",
-        "react-dom": "^18.2.0",
-        "react-draggable": "^4.4.6"
+        "react-dom": "^18.2.0"
     },
     "devDependencies": {
         "@babel/core": "^7.2.0",
@@ -28,12 +28,12 @@
         "@types/react": "18.0.17",
         "@types/react-dom": "18.0.6",
         "babel-loader": "^8.0.4",
+        "css-loader": "^6.7.3",
+        "sass": "^1.58.3",
+        "sass-loader": "^13.2.0",
+        "style-loader": "^3.3.1",
         "typescript": "4.7.4",
         "webpack": "^5.47.1",
-        "webpack-cli": "^4.9.1",
-        "css-loader": "^6.7.3",
-        "style-loader": "^3.3.1",
-        "sass": "^1.58.3",
-        "sass-loader": "^13.2.0"
+        "webpack-cli": "^4.9.1"
     }
 }

@@ -3692,7 +3692,21 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
                   
                   
                   const App = () => {
-                      const [dragContentHandle, dragHandle] = useDraggable(true);  // or Disable drag and drop: `useDraggable(false)`
+                      const [dragContentHandle, dragHandle] = useDraggable({
+                          enabled: true,   // if `false`, drag and drop is disabled
+                          preventOutsideScreen: true,
+                          onStart: (coordinates: Record<string, number>, handleEl: HTMLElement | null, contentEl: HTMLElement | null) => {
+                              
+                          },
+                          onDrag: (coordinates: Record<string, number>, handleEl: HTMLElement | null, contentEl: HTMLElement | null) => {
+                              console.log(coordinates); // {dx: -164, dy: -37}
+                  
+                          },
+                          onStop: (coordinates: Record<string, number>, handleEl: HTMLElement | null, contentEl: HTMLElement | null) => {
+                  
+                          }
+                      });
+                  
                       return (
                           <div className="container" ref={dragContentHandle}>
                               <div ref={dragHandle} className="handle">Drag me</div>
@@ -3706,8 +3720,14 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
                   
                    */
 
-                  var useDraggable = function useDraggable(enabled) {
+                  var useDraggable = function useDraggable(_ref) {
+                    var enabled = _ref.enabled,
+                      preventOutsideScreen = _ref.preventOutsideScreen,
+                      onStart = _ref.onStart,
+                      onStop = _ref.onStop,
+                      onDrag = _ref.onDrag;
                     if (typeof enabled === 'undefined' || enabled === false) return [null, null];
+                    var dragging = false; // DO NOT USE 'useState()'
                     var _useState = (0, external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)(null),
                       _useState2 = useDraggable_slicedToArray(_useState, 2),
                       node = _useState2[0],
@@ -3731,48 +3751,138 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
                     var targetRef = (0, external_root_React_commonjs2_react_commonjs_react_amd_react_.useCallback)(function (nodeEle) {
                       setTargetNode(nodeEle);
                     }, []);
+                    var withoutViewport = function withoutViewport(startPos, e, targetEl) {
+                      if (!targetEl || typeof preventOutsideScreen === 'undefined') return null;
+
+                      // latest mouse coordinates
+                      var mouseX = e.clientX;
+                      var mouseY = e.clientY;
+
+                      // the size of the parent element
+                      var parentWidth = window.innerWidth;
+                      var parentHeight = window.innerHeight;
+
+                      // the size of the child element
+                      var childrenWidth = targetEl.clientWidth;
+                      var childrenHight = targetEl.clientHeight;
+                      var minLeft = -(parentWidth - childrenWidth) / 2;
+                      var maxLeft = (parentWidth - childrenWidth) / 2;
+                      var minTop = -(parentHeight - childrenHight) / 2;
+                      var maxTop = (parentHeight - childrenHight) / 2;
+
+                      // calculates the left and top offsets after the move
+                      var nLeft = mouseX - startPos.x;
+                      var nTop = mouseY - startPos.y;
+
+                      // calculates the right and bottom offsets after the move
+                      var nRight = nLeft + childrenWidth;
+                      var nBottom = nTop + childrenHight;
+
+                      // Determine whether the left or right distance is out of bounds
+                      if (preventOutsideScreen.xAxis) {
+                        nLeft = nLeft <= minLeft ? minLeft : nLeft;
+                        nLeft = nLeft >= maxLeft ? maxLeft : nLeft;
+                      }
+                      if (preventOutsideScreen.yAxis) {
+                        nTop = nTop <= minTop ? minTop : nTop;
+                        nTop = nTop >= maxTop ? maxTop : nTop;
+                      }
+                      return [nLeft, nTop];
+                    };
                     var handleMouseDown = (0, external_root_React_commonjs2_react_commonjs_react_amd_react_.useCallback)(function (e) {
+                      dragging = true;
+                      onStart === null || onStart === void 0 ? void 0 : onStart({
+                        dx: dx,
+                        dy: dy
+                      }, targetNode, node);
                       var startPos = {
                         x: e.clientX - dx,
                         y: e.clientY - dy
                       };
                       var handleMouseMove = function handleMouseMove(e) {
+                        if (!dragging) return;
                         var dx = e.clientX - startPos.x;
                         var dy = e.clientY - startPos.y;
+
+                        // prevent dragged item to be dragged outside of screen
+                        if (preventOutsideScreen && node) {
+                          var _data = withoutViewport(startPos, e, node);
+                          if (_data !== null) {
+                            dx = _data[0];
+                            dy = _data[1];
+                          }
+                        }
                         setOffset({
                           dx: dx,
                           dy: dy
                         });
+                        onDrag === null || onDrag === void 0 ? void 0 : onDrag({
+                          dx: dx,
+                          dy: dy
+                        }, targetNode, node);
+                        e.stopPropagation();
+                        e.preventDefault();
                       };
                       var handleMouseUp = function handleMouseUp() {
+                        dragging = false;
+                        onStop === null || onStop === void 0 ? void 0 : onStop({
+                          dx: dx,
+                          dy: dy
+                        }, targetNode, node);
                         document.removeEventListener('mousemove', handleMouseMove);
                         document.removeEventListener('mouseup', handleMouseUp);
                       };
                       document.addEventListener('mousemove', handleMouseMove);
                       document.addEventListener('mouseup', handleMouseUp);
-                    }, [dx, dy]);
+                    }, [dx, dy, node]);
                     var handleTouchStart = (0, external_root_React_commonjs2_react_commonjs_react_amd_react_.useCallback)(function (e) {
+                      dragging = true;
+                      onStart === null || onStart === void 0 ? void 0 : onStart({
+                        dx: dx,
+                        dy: dy
+                      }, targetNode, node);
                       var touch = e.touches[0];
                       var startPos = {
                         x: touch.clientX - dx,
                         y: touch.clientY - dy
                       };
                       var handleTouchMove = function handleTouchMove(e) {
+                        if (!dragging) return;
                         var touch = e.touches[0];
                         var dx = touch.clientX - startPos.x;
                         var dy = touch.clientY - startPos.y;
+
+                        // prevent dragged item to be dragged outside of screen
+                        if (preventOutsideScreen && node) {
+                          var _data = withoutViewport(startPos, touch, node);
+                          if (_data !== null) {
+                            dx = _data[0];
+                            dy = _data[1];
+                          }
+                        }
                         setOffset({
                           dx: dx,
                           dy: dy
                         });
+                        onDrag === null || onDrag === void 0 ? void 0 : onDrag({
+                          dx: dx,
+                          dy: dy
+                        }, targetNode, node);
+                        e.stopPropagation();
+                        e.preventDefault();
                       };
                       var handleTouchEnd = function handleTouchEnd() {
+                        dragging = false;
+                        onStop === null || onStop === void 0 ? void 0 : onStop({
+                          dx: dx,
+                          dy: dy
+                        }, targetNode, node);
                         document.removeEventListener('touchmove', handleTouchMove);
                         document.removeEventListener('touchend', handleTouchEnd);
                       };
                       document.addEventListener('touchmove', handleTouchMove);
                       document.addEventListener('touchend', handleTouchEnd);
-                    }, [dx, dy]);
+                    }, [dx, dy, node]);
                     (0, external_root_React_commonjs2_react_commonjs_react_amd_react_.useEffect)(function () {
                       if (node) {
                         node.style.transform = "translate3d(".concat(dx, "px, ").concat(dy, "px, 0)");
@@ -3833,7 +3943,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
       /******/
       /******/ // The require function
       /******/
-      function __nested_webpack_require_192675__(moduleId) {
+      function __nested_webpack_require_198120__(moduleId) {
         /******/ // Check if module is in cache
         /******/var cachedModule = __webpack_module_cache__[moduleId];
         /******/
@@ -3852,7 +3962,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
         /******/
         /******/ // Execute the module function
         /******/
-        __webpack_modules__[moduleId].call(module.exports, module, module.exports, __nested_webpack_require_192675__);
+        __webpack_modules__[moduleId].call(module.exports, module, module.exports, __nested_webpack_require_198120__);
         /******/
         /******/ // Flag the module as loaded
         /******/
@@ -3869,14 +3979,14 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
       /******/
       (function () {
         /******/ // getDefaultExport function for compatibility with non-harmony modules
-        /******/__nested_webpack_require_192675__.n = function (module) {
+        /******/__nested_webpack_require_198120__.n = function (module) {
           /******/var getter = module && module.__esModule ? /******/function () {
             return module['default'];
           } : /******/function () {
             return module;
           };
           /******/
-          __nested_webpack_require_192675__.d(getter, {
+          __nested_webpack_require_198120__.d(getter, {
             a: getter
           });
           /******/
@@ -3890,9 +4000,9 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
       /******/
       (function () {
         /******/ // define getter functions for harmony exports
-        /******/__nested_webpack_require_192675__.d = function (exports, definition) {
+        /******/__nested_webpack_require_198120__.d = function (exports, definition) {
           /******/for (var key in definition) {
-            /******/if (__nested_webpack_require_192675__.o(definition, key) && !__nested_webpack_require_192675__.o(exports, key)) {
+            /******/if (__nested_webpack_require_198120__.o(definition, key) && !__nested_webpack_require_198120__.o(exports, key)) {
               /******/Object.defineProperty(exports, key, {
                 enumerable: true,
                 get: definition[key]
@@ -3909,7 +4019,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
       /******/ /* webpack/runtime/hasOwnProperty shorthand */
       /******/
       (function () {
-        /******/__nested_webpack_require_192675__.o = function (obj, prop) {
+        /******/__nested_webpack_require_198120__.o = function (obj, prop) {
           return Object.prototype.hasOwnProperty.call(obj, prop);
         };
         /******/
@@ -3919,7 +4029,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
       /******/
       (function () {
         /******/ // define __esModule on exports
-        /******/__nested_webpack_require_192675__.r = function (exports) {
+        /******/__nested_webpack_require_198120__.r = function (exports) {
           /******/if (typeof Symbol !== 'undefined' && Symbol.toStringTag) {
             /******/Object.defineProperty(exports, Symbol.toStringTag, {
               value: 'Module'
@@ -3938,7 +4048,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
       /******/ /* webpack/runtime/node module decorator */
       /******/
       (function () {
-        /******/__nested_webpack_require_192675__.nmd = function (module) {
+        /******/__nested_webpack_require_198120__.nmd = function (module) {
           /******/module.paths = [];
           /******/
           if (!module.children) module.children = [];
@@ -3956,10 +4066,10 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
         "use strict";
 
         // ESM COMPAT FLAG
-        __nested_webpack_require_192675__.r(__webpack_exports__);
+        __nested_webpack_require_198120__.r(__webpack_exports__);
 
         // EXPORTS
-        __nested_webpack_require_192675__.d(__webpack_exports__, {
+        __nested_webpack_require_198120__.d(__webpack_exports__, {
           "default": function _default() {
             return (/* binding */src
             );
@@ -3967,13 +4077,13 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
         });
 
         // EXTERNAL MODULE: external {"root":"React","commonjs2":"react","commonjs":"react","amd":"react"}
-        var external_root_React_commonjs2_react_commonjs_react_amd_react_ = __nested_webpack_require_192675__(787);
-        var external_root_React_commonjs2_react_commonjs_react_amd_react_default = /*#__PURE__*/__nested_webpack_require_192675__.n(external_root_React_commonjs2_react_commonjs_react_amd_react_);
+        var external_root_React_commonjs2_react_commonjs_react_amd_react_ = __nested_webpack_require_198120__(787);
+        var external_root_React_commonjs2_react_commonjs_react_amd_react_default = /*#__PURE__*/__nested_webpack_require_198120__.n(external_root_React_commonjs2_react_commonjs_react_amd_react_);
         // EXTERNAL MODULE: ../RootPortal/dist/cjs/index.js
-        var cjs = __nested_webpack_require_192675__(909);
-        var cjs_default = /*#__PURE__*/__nested_webpack_require_192675__.n(cjs);
+        var cjs = __nested_webpack_require_198120__(909);
+        var cjs_default = /*#__PURE__*/__nested_webpack_require_198120__.n(cjs);
         // EXTERNAL MODULE: ../Utils/dist/cjs/index.js
-        var dist_cjs = __nested_webpack_require_192675__(456);
+        var dist_cjs = __nested_webpack_require_198120__(456);
         ; // CONCATENATED MODULE: ./src/plugins/BSL/bodyScrollLock.es6.js
         function _toConsumableArray(arr) {
           return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread();
@@ -4308,6 +4418,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
             modalFooterClassName = props.modalFooterClassName,
             modalFooterExpandedContentClassName = props.modalFooterExpandedContentClassName,
             draggable = props.draggable,
+            draggedPreventOutsideScreen = props.draggedPreventOutsideScreen,
             depth = props.depth,
             show = props.show,
             maxWidth = props.maxWidth,
@@ -4350,7 +4461,21 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
             setIncomingData = _useState4[1];
 
           // drag and drop
-          var _useDraggable = (0, dist_cjs.useDraggable)(draggable),
+          var _useState5 = (0, external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)(false),
+            _useState6 = _slicedToArray(_useState5, 2),
+            isDragging = _useState6[0],
+            setIsDragging = _useState6[1];
+          var _useDraggable = (0, dist_cjs.useDraggable)({
+              enabled: draggable,
+              preventOutsideScreen: draggedPreventOutsideScreen,
+              onStart: function onStart(coordinates, handleEl, contentEl) {
+                setIsDragging(true);
+              },
+              onDrag: function onDrag(coordinates, handleEl, contentEl) {},
+              onStop: function onStop(coordinates, handleEl, contentEl) {
+                setIsDragging(false);
+              }
+            }),
             _useDraggable2 = _slicedToArray(_useDraggable, 2),
             dragContentHandle = _useDraggable2[0],
             dragHandle = _useDraggable2[1];
@@ -4587,14 +4712,17 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
             } : {}
           }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
             ref: dragContentHandle,
-            className: "".concat(enableVideo ? 'modal-content bg-transparent shadow-none border-0' : 'modal-content', " ").concat(modalContentClassName || ''),
+            className: "".concat(enableVideo ? 'modal-content bg-transparent shadow-none border-0' : 'modal-content', " ").concat(modalContentClassName || '', " ").concat(isDragging ? 'dragging' : ''),
             style: {
               overflow: 'inherit',
               minHeight: M_HEIGHT ? M_HEIGHT : 'auto'
             }
           }, (!heading || heading === '') && closeDisabled ? null : /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement(external_root_React_commonjs2_react_commonjs_react_amd_react_default().Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
             ref: dragHandle,
-            className: "".concat(enableVideo ? 'modal-header border-0 px-0' : 'modal-header', " ").concat(modalHeaderClassName || '')
+            className: "".concat(enableVideo ? 'modal-header border-0 px-0' : 'modal-header', " ").concat(modalHeaderClassName || ''),
+            style: {
+              cursor: draggable ? 'move' : 'default'
+            }
           }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("h5", {
             className: "modal-title ".concat(modalTitleClassName || '')
           }, heading || ''), !closeDisabled ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("button", {

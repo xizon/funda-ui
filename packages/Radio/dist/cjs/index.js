@@ -3473,7 +3473,21 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
         
         
         const App = () => {
-            const [dragContentHandle, dragHandle] = useDraggable(true);  // or Disable drag and drop: `useDraggable(false)`
+            const [dragContentHandle, dragHandle] = useDraggable({
+                enabled: true,   // if `false`, drag and drop is disabled
+                preventOutsideScreen: true,
+                onStart: (coordinates: Record<string, number>, handleEl: HTMLElement | null, contentEl: HTMLElement | null) => {
+                    
+                },
+                onDrag: (coordinates: Record<string, number>, handleEl: HTMLElement | null, contentEl: HTMLElement | null) => {
+                    console.log(coordinates); // {dx: -164, dy: -37}
+        
+                },
+                onStop: (coordinates: Record<string, number>, handleEl: HTMLElement | null, contentEl: HTMLElement | null) => {
+        
+                }
+            });
+        
             return (
                 <div className="container" ref={dragContentHandle}>
                     <div ref={dragHandle} className="handle">Drag me</div>
@@ -3487,8 +3501,14 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
         
          */
 
-        var useDraggable = function useDraggable(enabled) {
+        var useDraggable = function useDraggable(_ref) {
+          var enabled = _ref.enabled,
+            preventOutsideScreen = _ref.preventOutsideScreen,
+            onStart = _ref.onStart,
+            onStop = _ref.onStop,
+            onDrag = _ref.onDrag;
           if (typeof enabled === 'undefined' || enabled === false) return [null, null];
+          var dragging = false; // DO NOT USE 'useState()'
           var _useState = (0, external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)(null),
             _useState2 = useDraggable_slicedToArray(_useState, 2),
             node = _useState2[0],
@@ -3512,48 +3532,138 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
           var targetRef = (0, external_root_React_commonjs2_react_commonjs_react_amd_react_.useCallback)(function (nodeEle) {
             setTargetNode(nodeEle);
           }, []);
+          var withoutViewport = function withoutViewport(startPos, e, targetEl) {
+            if (!targetEl || typeof preventOutsideScreen === 'undefined') return null;
+
+            // latest mouse coordinates
+            var mouseX = e.clientX;
+            var mouseY = e.clientY;
+
+            // the size of the parent element
+            var parentWidth = window.innerWidth;
+            var parentHeight = window.innerHeight;
+
+            // the size of the child element
+            var childrenWidth = targetEl.clientWidth;
+            var childrenHight = targetEl.clientHeight;
+            var minLeft = -(parentWidth - childrenWidth) / 2;
+            var maxLeft = (parentWidth - childrenWidth) / 2;
+            var minTop = -(parentHeight - childrenHight) / 2;
+            var maxTop = (parentHeight - childrenHight) / 2;
+
+            // calculates the left and top offsets after the move
+            var nLeft = mouseX - startPos.x;
+            var nTop = mouseY - startPos.y;
+
+            // calculates the right and bottom offsets after the move
+            var nRight = nLeft + childrenWidth;
+            var nBottom = nTop + childrenHight;
+
+            // Determine whether the left or right distance is out of bounds
+            if (preventOutsideScreen.xAxis) {
+              nLeft = nLeft <= minLeft ? minLeft : nLeft;
+              nLeft = nLeft >= maxLeft ? maxLeft : nLeft;
+            }
+            if (preventOutsideScreen.yAxis) {
+              nTop = nTop <= minTop ? minTop : nTop;
+              nTop = nTop >= maxTop ? maxTop : nTop;
+            }
+            return [nLeft, nTop];
+          };
           var handleMouseDown = (0, external_root_React_commonjs2_react_commonjs_react_amd_react_.useCallback)(function (e) {
+            dragging = true;
+            onStart === null || onStart === void 0 ? void 0 : onStart({
+              dx: dx,
+              dy: dy
+            }, targetNode, node);
             var startPos = {
               x: e.clientX - dx,
               y: e.clientY - dy
             };
             var handleMouseMove = function handleMouseMove(e) {
+              if (!dragging) return;
               var dx = e.clientX - startPos.x;
               var dy = e.clientY - startPos.y;
+
+              // prevent dragged item to be dragged outside of screen
+              if (preventOutsideScreen && node) {
+                var _data = withoutViewport(startPos, e, node);
+                if (_data !== null) {
+                  dx = _data[0];
+                  dy = _data[1];
+                }
+              }
               setOffset({
                 dx: dx,
                 dy: dy
               });
+              onDrag === null || onDrag === void 0 ? void 0 : onDrag({
+                dx: dx,
+                dy: dy
+              }, targetNode, node);
+              e.stopPropagation();
+              e.preventDefault();
             };
             var handleMouseUp = function handleMouseUp() {
+              dragging = false;
+              onStop === null || onStop === void 0 ? void 0 : onStop({
+                dx: dx,
+                dy: dy
+              }, targetNode, node);
               document.removeEventListener('mousemove', handleMouseMove);
               document.removeEventListener('mouseup', handleMouseUp);
             };
             document.addEventListener('mousemove', handleMouseMove);
             document.addEventListener('mouseup', handleMouseUp);
-          }, [dx, dy]);
+          }, [dx, dy, node]);
           var handleTouchStart = (0, external_root_React_commonjs2_react_commonjs_react_amd_react_.useCallback)(function (e) {
+            dragging = true;
+            onStart === null || onStart === void 0 ? void 0 : onStart({
+              dx: dx,
+              dy: dy
+            }, targetNode, node);
             var touch = e.touches[0];
             var startPos = {
               x: touch.clientX - dx,
               y: touch.clientY - dy
             };
             var handleTouchMove = function handleTouchMove(e) {
+              if (!dragging) return;
               var touch = e.touches[0];
               var dx = touch.clientX - startPos.x;
               var dy = touch.clientY - startPos.y;
+
+              // prevent dragged item to be dragged outside of screen
+              if (preventOutsideScreen && node) {
+                var _data = withoutViewport(startPos, touch, node);
+                if (_data !== null) {
+                  dx = _data[0];
+                  dy = _data[1];
+                }
+              }
               setOffset({
                 dx: dx,
                 dy: dy
               });
+              onDrag === null || onDrag === void 0 ? void 0 : onDrag({
+                dx: dx,
+                dy: dy
+              }, targetNode, node);
+              e.stopPropagation();
+              e.preventDefault();
             };
             var handleTouchEnd = function handleTouchEnd() {
+              dragging = false;
+              onStop === null || onStop === void 0 ? void 0 : onStop({
+                dx: dx,
+                dy: dy
+              }, targetNode, node);
               document.removeEventListener('touchmove', handleTouchMove);
               document.removeEventListener('touchend', handleTouchEnd);
             };
             document.addEventListener('touchmove', handleTouchMove);
             document.addEventListener('touchend', handleTouchEnd);
-          }, [dx, dy]);
+          }, [dx, dy, node]);
           (0, external_root_React_commonjs2_react_commonjs_react_amd_react_.useEffect)(function () {
             if (node) {
               node.style.transform = "translate3d(".concat(dx, "px, ").concat(dy, "px, 0)");

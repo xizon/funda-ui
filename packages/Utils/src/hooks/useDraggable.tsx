@@ -5,7 +5,21 @@
 
 
 const App = () => {
-    const [dragContentHandle, dragHandle] = useDraggable(true);  // or Disable drag and drop: `useDraggable(false)`
+    const [dragContentHandle, dragHandle] = useDraggable({
+        enabled: true,   // if `false`, drag and drop is disabled
+        preventOutsideScreen: true,
+        onStart: (coordinates: Record<string, number>, handleEl: HTMLElement | null, contentEl: HTMLElement | null) => {
+            
+        },
+        onDrag: (coordinates: Record<string, number>, handleEl: HTMLElement | null, contentEl: HTMLElement | null) => {
+            console.log(coordinates); // {dx: -164, dy: -37}
+
+        },
+        onStop: (coordinates: Record<string, number>, handleEl: HTMLElement | null, contentEl: HTMLElement | null) => {
+
+        }
+    });
+
     return (
         <div className="container" ref={dragContentHandle}>
             <div ref={dragHandle} className="handle">Drag me</div>
@@ -21,11 +35,34 @@ const App = () => {
 
 import { useEffect, useState, useCallback, MouseEvent } from "react";
 
-const useDraggable = (enabled: boolean | undefined) => {
+interface PreventOutsideScreenProps {
+    xAxis: boolean;
+    yAxis: boolean;
+}
+
+
+interface UseDraggableProps {
+    enabled?: boolean;
+    preventOutsideScreen?: PreventOutsideScreenProps;
+    onStart?: (coordinates: Record<string, number>, handleEl: HTMLElement | null, contentEl: HTMLElement | null) => void;
+    onStop?: (coordinates: Record<string, number>, handleEl: HTMLElement | null, contentEl: HTMLElement | null) => void;
+    onDrag?: (coordinates: Record<string, number>, handleEl: HTMLElement | null, contentEl: HTMLElement | null) => void;
+}
+    
+
+const useDraggable = ({ 
+    enabled, 
+    preventOutsideScreen, 
+    onStart,
+    onStop,
+    onDrag,
+}: UseDraggableProps) => {
 
     if (typeof enabled === 'undefined' || enabled === false) return [null, null];
 
+    
 
+    let dragging: boolean = false;  // DO NOT USE 'useState()'
     const [node, setNode] = useState<HTMLElement | null>(null);
     const [targetNode, setTargetNode] = useState<HTMLElement | null>(null);
     const [{ dx, dy }, setOffset] = useState({
@@ -41,28 +78,102 @@ const useDraggable = (enabled: boolean | undefined) => {
         setTargetNode(nodeEle);
     }, []);
 
+    const withoutViewport = (startPos: any, e: any, targetEl: HTMLElement | null) => {
+
+        if (!targetEl || typeof preventOutsideScreen === 'undefined') return null;
+
+        // latest mouse coordinates
+        let mouseX = e.clientX;
+        let mouseY = e.clientY;
+
+        // the size of the parent element
+        let parentWidth = window.innerWidth;
+        let parentHeight = window.innerHeight;
+
+        // the size of the child element
+        let childrenWidth = targetEl.clientWidth;
+        let childrenHight = targetEl.clientHeight;
+
+        const minLeft = -(parentWidth - childrenWidth)/2;
+        const maxLeft = (parentWidth - childrenWidth)/2;
+
+        const minTop = -(parentHeight - childrenHight)/2;
+        const maxTop = (parentHeight - childrenHight)/2;
+
+
+        // calculates the left and top offsets after the move
+        let nLeft = mouseX - (startPos.x);
+        let nTop = mouseY - (startPos.y);
+
+        // calculates the right and bottom offsets after the move
+        let nRight = nLeft + childrenWidth;
+        let nBottom = nTop + childrenHight;
+
+        // Determine whether the left or right distance is out of bounds
+        if (preventOutsideScreen.xAxis) {
+            nLeft = nLeft <= minLeft ? minLeft : nLeft;
+            nLeft = nLeft >= maxLeft ? maxLeft : nLeft;
+        }
+
+        if (preventOutsideScreen.yAxis) {
+            nTop = nTop <= minTop ? minTop : nTop;
+            nTop = nTop >= maxTop ? maxTop : nTop;
+        }
+
+        return [nLeft, nTop];
+
+    };
+
     const handleMouseDown = useCallback((e: MouseEvent) => {
+        dragging = true;
+        onStart?.({ dx, dy }, targetNode, node);
+
         const startPos = {
             x: e.clientX - dx,
             y: e.clientY - dy,
         };
 
         const handleMouseMove = (e: MouseEvent) => {
-            const dx = e.clientX - startPos.x;
-            const dy = e.clientY - startPos.y;
+            if (!dragging) return;
+
+            let dx = e.clientX - startPos.x;
+            let dy = e.clientY - startPos.y;
+
+
+            // prevent dragged item to be dragged outside of screen
+            if (preventOutsideScreen && node) {
+                const _data = withoutViewport(startPos, e, node);
+                if (_data !== null) {
+                    dx = _data[0];
+                    dy = _data[1];
+                }
+            }
+
             setOffset({ dx, dy });
+            onDrag?.({ dx, dy }, targetNode, node);
+
+            e.stopPropagation();
+            e.preventDefault();
         };
 
         const handleMouseUp = () => {
+            dragging = false;
+            onStop?.({ dx, dy }, targetNode, node);
+
             document.removeEventListener('mousemove', handleMouseMove as any);
             document.removeEventListener('mouseup', handleMouseUp as any);
         };
 
         document.addEventListener('mousemove', handleMouseMove as any);
         document.addEventListener('mouseup', handleMouseUp as any);
-    }, [dx, dy]);
+    }, [dx, dy, node]);
+
 
     const handleTouchStart = useCallback((e: TouchEvent) => {
+        dragging = true;
+        onStart?.({ dx, dy }, targetNode, node);
+
+
         const touch = e.touches[0];
 
         const startPos = {
@@ -71,20 +182,47 @@ const useDraggable = (enabled: boolean | undefined) => {
         };
 
         const handleTouchMove = (e: TouchEvent) => {
+            if (!dragging) return;
+
+
             const touch = e.touches[0];
-            const dx = touch.clientX - startPos.x;
-            const dy = touch.clientY - startPos.y;
+            let dx = touch.clientX - startPos.x;
+            let dy = touch.clientY - startPos.y;
+
+
+            // prevent dragged item to be dragged outside of screen
+            if (preventOutsideScreen && node) {
+                const _data = withoutViewport(startPos, touch, node);
+                if (_data !== null) {
+                    dx = _data[0];
+                    dy = _data[1];
+                }
+            }
+
+
             setOffset({ dx, dy });
+            onDrag?.({ dx, dy }, targetNode, node);
+
+            e.stopPropagation();
+            e.preventDefault();
+
         };
 
         const handleTouchEnd = () => {
+            dragging = false;
+            onStop?.({ dx, dy }, targetNode, node);
+
             document.removeEventListener('touchmove', handleTouchMove as any);
             document.removeEventListener('touchend', handleTouchEnd as any);
         };
 
         document.addEventListener('touchmove', handleTouchMove as any);
         document.addEventListener('touchend', handleTouchEnd as any);
-    }, [dx, dy]);
+    }, [dx, dy, node]);
+
+
+    
+
 
     useEffect(() => {
         if (node) {

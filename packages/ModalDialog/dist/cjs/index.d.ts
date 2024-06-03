@@ -10,6 +10,10 @@ declare global {
         setCloseModalDialog?: any;
     }
 }
+interface PreventOutsideScreenProps {
+    xAxis: boolean;
+    yAxis: boolean;
+}
 interface ModalDialogRef {
     open: () => void;
     close: () => void;
@@ -24,6 +28,7 @@ declare type ModalDialogProps = {
     modalFooterExpandedContentClassName?: string;
     /** Pop-ups that can be dragged */
     draggable?: boolean;
+    draggedPreventOutsideScreen?: PreventOutsideScreenProps;
     /** Set the depth value of the control to control the display of the pop-up layer appear above. Please set it when multiple controls are used at the same time. */
     depth?: number;
     /** Whether the modal dialog is visible or not, you can use it with the `autoClose` property at the same time */

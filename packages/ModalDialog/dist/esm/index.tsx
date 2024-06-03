@@ -24,6 +24,11 @@ declare global {
     }
 }
 
+interface PreventOutsideScreenProps {
+    xAxis: boolean;
+    yAxis: boolean;
+}
+
 
 interface ModalDialogRef {
     open: () => void;
@@ -40,6 +45,7 @@ type ModalDialogProps = {
     modalFooterExpandedContentClassName?: string;
     /** Pop-ups that can be dragged */
     draggable?: boolean;
+    draggedPreventOutsideScreen?: PreventOutsideScreenProps;
     /** Set the depth value of the control to control the display of the pop-up layer appear above. Please set it when multiple controls are used at the same time. */
     depth?: number;
     /** Whether the modal dialog is visible or not, you can use it with the `autoClose` property at the same time */
@@ -97,6 +103,7 @@ const ModalDialog = forwardRef((props: ModalDialogProps, ref: React.ForwardedRef
         modalFooterClassName,
         modalFooterExpandedContentClassName,
         draggable,
+        draggedPreventOutsideScreen,
         depth,
         show,
         maxWidth,
@@ -138,8 +145,21 @@ const ModalDialog = forwardRef((props: ModalDialogProps, ref: React.ForwardedRef
     const [incomingData, setIncomingData] = useState<string | null | undefined>(null);
 
     // drag and drop
-    const [dragContentHandle, dragHandle] = useDraggable(draggable);
-    
+    const [isDragging, setIsDragging] = useState<boolean>(false);
+    const [dragContentHandle, dragHandle] = useDraggable({
+        enabled: draggable, 
+        preventOutsideScreen: draggedPreventOutsideScreen,
+        onStart: (coordinates: Record<string, number>, handleEl: HTMLElement | null, contentEl: HTMLElement | null) => {
+            setIsDragging(true);
+        },
+        onDrag: (coordinates: Record<string, number>, handleEl: HTMLElement | null, contentEl: HTMLElement | null) => {
+           
+        },
+        onStop: (coordinates: Record<string, number>, handleEl: HTMLElement | null, contentEl: HTMLElement | null) => {
+            setIsDragging(false);
+        }
+    });
+
     // exposes the following methods
     useImperativeHandle(
         ref,
@@ -424,10 +444,23 @@ const ModalDialog = forwardRef((props: ModalDialogProps, ref: React.ForwardedRef
                     data-mask={`mask-${idRes}`}
                 >
                     <div className="modal-dialog modal-dialog-centered modal-dialog-scrollable" style={M_WIDTH ? { maxWidth: `${M_WIDTH}` } : {}}>
-                        <div ref={dragContentHandle} className={`${enableVideo ? 'modal-content bg-transparent shadow-none border-0' : 'modal-content'} ${modalContentClassName || ''}`} style={{ overflow: 'inherit', minHeight: M_HEIGHT ? M_HEIGHT : 'auto' }}>
+                        <div 
+                            ref={dragContentHandle} 
+                            className={`${enableVideo ? 'modal-content bg-transparent shadow-none border-0' : 'modal-content'} ${modalContentClassName || ''} ${isDragging ? 'dragging' : ''}`} 
+                            style={{ 
+                                overflow: 'inherit', 
+                                minHeight: M_HEIGHT ? M_HEIGHT : 'auto' 
+                            }}
+                        >
                             {(!heading || heading === '') && closeDisabled ? null : <>
 
-                                <div ref={dragHandle} className={`${enableVideo ? 'modal-header border-0 px-0' : 'modal-header'} ${modalHeaderClassName || ''}`}>
+                                <div 
+                                    ref={dragHandle} 
+                                    className={`${enableVideo ? 'modal-header border-0 px-0' : 'modal-header'} ${modalHeaderClassName || ''}`}
+                                    style={{ 
+                                        cursor: draggable ? 'move' : 'default'
+                                    }}
+                                >
                                     <h5 className={`modal-title ${modalTitleClassName || ''}`}>{heading || ''}</h5>
                                     {!closeDisabled ? <button type="button" className={enableVideo ? 'btn-close btn-close-white' : 'btn-close'} data-close="1" onClick={handleCloseWin}></button> : null}
 
