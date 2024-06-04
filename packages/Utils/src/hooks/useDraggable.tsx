@@ -69,7 +69,8 @@ const useDraggable = ({
     onDrag,
 }: UseDraggableProps) => {
 
-    if (typeof enabled === 'undefined' || enabled === false) return [null, null];
+    const DRAG_DISABLED = typeof enabled === "undefined" || enabled === false;
+
 
     let dragging: boolean = false;  // DO NOT USE 'useState()'
     const [node, setNode] = useState<HTMLElement | null>(null);
@@ -234,6 +235,10 @@ const useDraggable = ({
     }, [node, dx, dy]);
 
     useEffect(() => {
+        if (DRAG_DISABLED) {
+            return;
+        }
+
         if (!targetNode) {
             return;
         }
@@ -244,6 +249,7 @@ const useDraggable = ({
             targetNode.removeEventListener("touchstart", handleTouchStart as any);
         };
     }, [targetNode, dx, dy]);
+
 
     return {
         dragContentHandle: ref,
