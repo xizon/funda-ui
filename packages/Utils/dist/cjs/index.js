@@ -2392,7 +2392,7 @@ var useDraggable = function useDraggable(_ref) {
     onStart = _ref.onStart,
     onStop = _ref.onStop,
     onDrag = _ref.onDrag;
-  if (typeof enabled === 'undefined' || enabled === false) return [null, null];
+  var DRAG_DISABLED = typeof enabled === "undefined" || enabled === false;
   var dragging = false; // DO NOT USE 'useState()'
   var _useState = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)(null),
     _useState2 = useDraggable_slicedToArray(_useState, 2),
@@ -2551,6 +2551,9 @@ var useDraggable = function useDraggable(_ref) {
     }
   }, [node, dx, dy]);
   (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useEffect)(function () {
+    if (DRAG_DISABLED) {
+      return;
+    }
     if (!targetNode) {
       return;
     }

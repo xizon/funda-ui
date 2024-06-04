@@ -3737,7 +3737,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
                       onStart = _ref.onStart,
                       onStop = _ref.onStop,
                       onDrag = _ref.onDrag;
-                    if (typeof enabled === 'undefined' || enabled === false) return [null, null];
+                    var DRAG_DISABLED = typeof enabled === "undefined" || enabled === false;
                     var dragging = false; // DO NOT USE 'useState()'
                     var _useState = (0, external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)(null),
                       _useState2 = useDraggable_slicedToArray(_useState, 2),
@@ -3896,6 +3896,9 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
                       }
                     }, [node, dx, dy]);
                     (0, external_root_React_commonjs2_react_commonjs_react_amd_react_.useEffect)(function () {
+                      if (DRAG_DISABLED) {
+                        return;
+                      }
                       if (!targetNode) {
                         return;
                       }
@@ -3960,7 +3963,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
       /******/
       /******/ // The require function
       /******/
-      function __nested_webpack_require_198651__(moduleId) {
+      function __nested_webpack_require_198745__(moduleId) {
         /******/ // Check if module is in cache
         /******/var cachedModule = __webpack_module_cache__[moduleId];
         /******/
@@ -3979,7 +3982,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
         /******/
         /******/ // Execute the module function
         /******/
-        __webpack_modules__[moduleId].call(module.exports, module, module.exports, __nested_webpack_require_198651__);
+        __webpack_modules__[moduleId].call(module.exports, module, module.exports, __nested_webpack_require_198745__);
         /******/
         /******/ // Flag the module as loaded
         /******/
@@ -3996,14 +3999,14 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
       /******/
       (function () {
         /******/ // getDefaultExport function for compatibility with non-harmony modules
-        /******/__nested_webpack_require_198651__.n = function (module) {
+        /******/__nested_webpack_require_198745__.n = function (module) {
           /******/var getter = module && module.__esModule ? /******/function () {
             return module['default'];
           } : /******/function () {
             return module;
           };
           /******/
-          __nested_webpack_require_198651__.d(getter, {
+          __nested_webpack_require_198745__.d(getter, {
             a: getter
           });
           /******/
@@ -4017,9 +4020,9 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
       /******/
       (function () {
         /******/ // define getter functions for harmony exports
-        /******/__nested_webpack_require_198651__.d = function (exports, definition) {
+        /******/__nested_webpack_require_198745__.d = function (exports, definition) {
           /******/for (var key in definition) {
-            /******/if (__nested_webpack_require_198651__.o(definition, key) && !__nested_webpack_require_198651__.o(exports, key)) {
+            /******/if (__nested_webpack_require_198745__.o(definition, key) && !__nested_webpack_require_198745__.o(exports, key)) {
               /******/Object.defineProperty(exports, key, {
                 enumerable: true,
                 get: definition[key]
@@ -4036,7 +4039,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
       /******/ /* webpack/runtime/hasOwnProperty shorthand */
       /******/
       (function () {
-        /******/__nested_webpack_require_198651__.o = function (obj, prop) {
+        /******/__nested_webpack_require_198745__.o = function (obj, prop) {
           return Object.prototype.hasOwnProperty.call(obj, prop);
         };
         /******/
@@ -4046,7 +4049,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
       /******/
       (function () {
         /******/ // define __esModule on exports
-        /******/__nested_webpack_require_198651__.r = function (exports) {
+        /******/__nested_webpack_require_198745__.r = function (exports) {
           /******/if (typeof Symbol !== 'undefined' && Symbol.toStringTag) {
             /******/Object.defineProperty(exports, Symbol.toStringTag, {
               value: 'Module'
@@ -4065,7 +4068,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
       /******/ /* webpack/runtime/node module decorator */
       /******/
       (function () {
-        /******/__nested_webpack_require_198651__.nmd = function (module) {
+        /******/__nested_webpack_require_198745__.nmd = function (module) {
           /******/module.paths = [];
           /******/
           if (!module.children) module.children = [];
@@ -4083,10 +4086,10 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
         "use strict";
 
         // ESM COMPAT FLAG
-        __nested_webpack_require_198651__.r(__webpack_exports__);
+        __nested_webpack_require_198745__.r(__webpack_exports__);
 
         // EXPORTS
-        __nested_webpack_require_198651__.d(__webpack_exports__, {
+        __nested_webpack_require_198745__.d(__webpack_exports__, {
           "default": function _default() {
             return (/* binding */src
             );
@@ -4094,13 +4097,13 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
         });
 
         // EXTERNAL MODULE: external {"root":"React","commonjs2":"react","commonjs":"react","amd":"react"}
-        var external_root_React_commonjs2_react_commonjs_react_amd_react_ = __nested_webpack_require_198651__(787);
-        var external_root_React_commonjs2_react_commonjs_react_amd_react_default = /*#__PURE__*/__nested_webpack_require_198651__.n(external_root_React_commonjs2_react_commonjs_react_amd_react_);
+        var external_root_React_commonjs2_react_commonjs_react_amd_react_ = __nested_webpack_require_198745__(787);
+        var external_root_React_commonjs2_react_commonjs_react_amd_react_default = /*#__PURE__*/__nested_webpack_require_198745__.n(external_root_React_commonjs2_react_commonjs_react_amd_react_);
         // EXTERNAL MODULE: ../RootPortal/dist/cjs/index.js
-        var cjs = __nested_webpack_require_198651__(909);
-        var cjs_default = /*#__PURE__*/__nested_webpack_require_198651__.n(cjs);
+        var cjs = __nested_webpack_require_198745__(909);
+        var cjs_default = /*#__PURE__*/__nested_webpack_require_198745__.n(cjs);
         // EXTERNAL MODULE: ../Utils/dist/cjs/index.js
-        var dist_cjs = __nested_webpack_require_198651__(456);
+        var dist_cjs = __nested_webpack_require_198745__(456);
         ; // CONCATENATED MODULE: ./src/plugins/BSL/bodyScrollLock.es6.js
         function _toConsumableArray(arr) {
           return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread();
