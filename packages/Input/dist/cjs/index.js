@@ -165,6 +165,9 @@ var Input = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(funct
   // exposes the following methods
   (0,react__WEBPACK_IMPORTED_MODULE_0__.useImperativeHandle)(contentRef, function () {
     return {
+      control: function control() {
+        return valRef.current;
+      },
       clear: function clear(cb) {
         setChangedVal('');
         cb === null || cb === void 0 ? void 0 : cb();

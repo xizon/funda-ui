@@ -39,6 +39,8 @@ declare type ModalDialogProps = {
     minHeight?: number | string | Function;
     /** Adapt the video to the window */
     enableVideo?: boolean;
+    /** Enable fullscreen modal */
+    fullscreen?: boolean;
     /** Set a window title */
     heading?: React.ReactNode;
     /** Set footer content */

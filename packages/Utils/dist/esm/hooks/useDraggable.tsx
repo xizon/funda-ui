@@ -5,9 +5,16 @@
 
 
 const App = () => {
-    const [dragContentHandle, dragHandle] = useDraggable({
+    const {
+        dragContentHandle, 
+        dragHandle,
+        resetPosition
+    }: any = useDraggable({
         enabled: true,   // if `false`, drag and drop is disabled
-        preventOutsideScreen: true,
+        preventOutsideScreen: {
+            xAxis: true,
+            yAxis: true
+        },
         onStart: (coordinates: Record<string, number>, handleEl: HTMLElement | null, contentEl: HTMLElement | null) => {
             
         },
@@ -19,6 +26,10 @@ const App = () => {
 
         }
     });
+
+    const resetModal = () => {
+        resetPosition?.();
+    };
 
     return (
         <div className="container" ref={dragContentHandle}>
@@ -59,8 +70,6 @@ const useDraggable = ({
 }: UseDraggableProps) => {
 
     if (typeof enabled === 'undefined' || enabled === false) return [null, null];
-
-    
 
     let dragging: boolean = false;  // DO NOT USE 'useState()'
     const [node, setNode] = useState<HTMLElement | null>(null);
@@ -104,10 +113,6 @@ const useDraggable = ({
         // calculates the left and top offsets after the move
         let nLeft = mouseX - (startPos.x);
         let nTop = mouseY - (startPos.y);
-
-        // calculates the right and bottom offsets after the move
-        let nRight = nLeft + childrenWidth;
-        let nBottom = nTop + childrenHight;
 
         // Determine whether the left or right distance is out of bounds
         if (preventOutsideScreen.xAxis) {
@@ -220,9 +225,7 @@ const useDraggable = ({
         document.addEventListener('touchend', handleTouchEnd as any);
     }, [dx, dy, node]);
 
-
-    
-
+ 
 
     useEffect(() => {
         if (node) {
@@ -242,7 +245,14 @@ const useDraggable = ({
         };
     }, [targetNode, dx, dy]);
 
-    return [ref, targetRef];
+    return {
+        dragContentHandle: ref,
+        dragHandle: targetRef,
+        resetPosition: () => {
+            // reset position
+            setOffset({ dx: 0, dy: 0 });
+        }
+    };
 };
 
 export default useDraggable;

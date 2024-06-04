@@ -3692,9 +3692,16 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
                   
                   
                   const App = () => {
-                      const [dragContentHandle, dragHandle] = useDraggable({
+                      const {
+                          dragContentHandle, 
+                          dragHandle,
+                          resetPosition
+                      }: any = useDraggable({
                           enabled: true,   // if `false`, drag and drop is disabled
-                          preventOutsideScreen: true,
+                          preventOutsideScreen: {
+                              xAxis: true,
+                              yAxis: true
+                          },
                           onStart: (coordinates: Record<string, number>, handleEl: HTMLElement | null, contentEl: HTMLElement | null) => {
                               
                           },
@@ -3706,6 +3713,10 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
                   
                           }
                       });
+                  
+                      const resetModal = () => {
+                          resetPosition?.();
+                      };
                   
                       return (
                           <div className="container" ref={dragContentHandle}>
@@ -3773,10 +3784,6 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
                       // calculates the left and top offsets after the move
                       var nLeft = mouseX - startPos.x;
                       var nTop = mouseY - startPos.y;
-
-                      // calculates the right and bottom offsets after the move
-                      var nRight = nLeft + childrenWidth;
-                      var nBottom = nTop + childrenHight;
 
                       // Determine whether the left or right distance is out of bounds
                       if (preventOutsideScreen.xAxis) {
@@ -3899,7 +3906,17 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
                         targetNode.removeEventListener("touchstart", handleTouchStart);
                       };
                     }, [targetNode, dx, dy]);
-                    return [ref, targetRef];
+                    return {
+                      dragContentHandle: ref,
+                      dragHandle: targetRef,
+                      resetPosition: function resetPosition() {
+                        // reset position
+                        setOffset({
+                          dx: 0,
+                          dy: 0
+                        });
+                      }
+                    };
                   };
                   /* harmony default export */
                   var hooks_useDraggable = useDraggable;
@@ -3943,7 +3960,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
       /******/
       /******/ // The require function
       /******/
-      function __nested_webpack_require_198120__(moduleId) {
+      function __nested_webpack_require_198651__(moduleId) {
         /******/ // Check if module is in cache
         /******/var cachedModule = __webpack_module_cache__[moduleId];
         /******/
@@ -3962,7 +3979,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
         /******/
         /******/ // Execute the module function
         /******/
-        __webpack_modules__[moduleId].call(module.exports, module, module.exports, __nested_webpack_require_198120__);
+        __webpack_modules__[moduleId].call(module.exports, module, module.exports, __nested_webpack_require_198651__);
         /******/
         /******/ // Flag the module as loaded
         /******/
@@ -3979,14 +3996,14 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
       /******/
       (function () {
         /******/ // getDefaultExport function for compatibility with non-harmony modules
-        /******/__nested_webpack_require_198120__.n = function (module) {
+        /******/__nested_webpack_require_198651__.n = function (module) {
           /******/var getter = module && module.__esModule ? /******/function () {
             return module['default'];
           } : /******/function () {
             return module;
           };
           /******/
-          __nested_webpack_require_198120__.d(getter, {
+          __nested_webpack_require_198651__.d(getter, {
             a: getter
           });
           /******/
@@ -4000,9 +4017,9 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
       /******/
       (function () {
         /******/ // define getter functions for harmony exports
-        /******/__nested_webpack_require_198120__.d = function (exports, definition) {
+        /******/__nested_webpack_require_198651__.d = function (exports, definition) {
           /******/for (var key in definition) {
-            /******/if (__nested_webpack_require_198120__.o(definition, key) && !__nested_webpack_require_198120__.o(exports, key)) {
+            /******/if (__nested_webpack_require_198651__.o(definition, key) && !__nested_webpack_require_198651__.o(exports, key)) {
               /******/Object.defineProperty(exports, key, {
                 enumerable: true,
                 get: definition[key]
@@ -4019,7 +4036,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
       /******/ /* webpack/runtime/hasOwnProperty shorthand */
       /******/
       (function () {
-        /******/__nested_webpack_require_198120__.o = function (obj, prop) {
+        /******/__nested_webpack_require_198651__.o = function (obj, prop) {
           return Object.prototype.hasOwnProperty.call(obj, prop);
         };
         /******/
@@ -4029,7 +4046,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
       /******/
       (function () {
         /******/ // define __esModule on exports
-        /******/__nested_webpack_require_198120__.r = function (exports) {
+        /******/__nested_webpack_require_198651__.r = function (exports) {
           /******/if (typeof Symbol !== 'undefined' && Symbol.toStringTag) {
             /******/Object.defineProperty(exports, Symbol.toStringTag, {
               value: 'Module'
@@ -4048,7 +4065,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
       /******/ /* webpack/runtime/node module decorator */
       /******/
       (function () {
-        /******/__nested_webpack_require_198120__.nmd = function (module) {
+        /******/__nested_webpack_require_198651__.nmd = function (module) {
           /******/module.paths = [];
           /******/
           if (!module.children) module.children = [];
@@ -4066,10 +4083,10 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
         "use strict";
 
         // ESM COMPAT FLAG
-        __nested_webpack_require_198120__.r(__webpack_exports__);
+        __nested_webpack_require_198651__.r(__webpack_exports__);
 
         // EXPORTS
-        __nested_webpack_require_198120__.d(__webpack_exports__, {
+        __nested_webpack_require_198651__.d(__webpack_exports__, {
           "default": function _default() {
             return (/* binding */src
             );
@@ -4077,13 +4094,13 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
         });
 
         // EXTERNAL MODULE: external {"root":"React","commonjs2":"react","commonjs":"react","amd":"react"}
-        var external_root_React_commonjs2_react_commonjs_react_amd_react_ = __nested_webpack_require_198120__(787);
-        var external_root_React_commonjs2_react_commonjs_react_amd_react_default = /*#__PURE__*/__nested_webpack_require_198120__.n(external_root_React_commonjs2_react_commonjs_react_amd_react_);
+        var external_root_React_commonjs2_react_commonjs_react_amd_react_ = __nested_webpack_require_198651__(787);
+        var external_root_React_commonjs2_react_commonjs_react_amd_react_default = /*#__PURE__*/__nested_webpack_require_198651__.n(external_root_React_commonjs2_react_commonjs_react_amd_react_);
         // EXTERNAL MODULE: ../RootPortal/dist/cjs/index.js
-        var cjs = __nested_webpack_require_198120__(909);
-        var cjs_default = /*#__PURE__*/__nested_webpack_require_198120__.n(cjs);
+        var cjs = __nested_webpack_require_198651__(909);
+        var cjs_default = /*#__PURE__*/__nested_webpack_require_198651__.n(cjs);
         // EXTERNAL MODULE: ../Utils/dist/cjs/index.js
-        var dist_cjs = __nested_webpack_require_198120__(456);
+        var dist_cjs = __nested_webpack_require_198651__(456);
         ; // CONCATENATED MODULE: ./src/plugins/BSL/bodyScrollLock.es6.js
         function _toConsumableArray(arr) {
           return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread();
@@ -4423,6 +4440,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
             show = props.show,
             maxWidth = props.maxWidth,
             minHeight = props.minHeight,
+            fullscreen = props.fullscreen,
             enableVideo = props.enableVideo,
             heading = props.heading,
             footerExpandedContent = props.footerExpandedContent,
@@ -4445,7 +4463,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
             id = props.id,
             children = props.children;
           var DEPTH = depth || 1055; // the default value same as bootstrap
-          var M_WIDTH = typeof maxWidth === 'function' ? maxWidth() : maxWidth ? maxWidth : undefined;
+          var M_WIDTH = fullscreen ? undefined : typeof maxWidth === 'function' ? maxWidth() : maxWidth ? maxWidth : undefined;
           var M_HEIGHT = typeof minHeight === 'function' ? minHeight() : minHeight ? minHeight : undefined;
           var uniqueID = (0, external_root_React_commonjs2_react_commonjs_react_amd_react_.useId)().replace(/\:/g, "-");
           var modalRef = (0, external_root_React_commonjs2_react_commonjs_react_amd_react_.useRef)(null);
@@ -4476,9 +4494,9 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
                 setIsDragging(false);
               }
             }),
-            _useDraggable2 = _slicedToArray(_useDraggable, 2),
-            dragContentHandle = _useDraggable2[0],
-            dragHandle = _useDraggable2[1];
+            dragContentHandle = _useDraggable.dragContentHandle,
+            dragHandle = _useDraggable.dragHandle,
+            resetPosition = _useDraggable.resetPosition;
 
           // exposes the following methods
           (0, external_root_React_commonjs2_react_commonjs_react_amd_react_.useImperativeHandle)(ref, function () {
@@ -4501,6 +4519,11 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
               e.stopPropagation();
             }
             closeAction();
+
+            // reset modal coordinates
+            setTimeout(function () {
+              resetPosition === null || resetPosition === void 0 ? void 0 : resetPosition();
+            }, 300);
 
             //
             onClose === null || onClose === void 0 ? void 0 : onClose(e);
@@ -4706,7 +4729,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
             },
             "data-mask": "mask-".concat(idRes)
           }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
-            className: "modal-dialog modal-dialog-centered modal-dialog-scrollable",
+            className: "modal-dialog modal-dialog-centered modal-dialog-scrollable ".concat(fullscreen ? 'modal-fullscreen' : ''),
             style: M_WIDTH ? {
               maxWidth: "".concat(M_WIDTH)
             } : {}
@@ -8448,9 +8471,16 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
         
         
         const App = () => {
-            const [dragContentHandle, dragHandle] = useDraggable({
+            const {
+                dragContentHandle, 
+                dragHandle,
+                resetPosition
+            }: any = useDraggable({
                 enabled: true,   // if `false`, drag and drop is disabled
-                preventOutsideScreen: true,
+                preventOutsideScreen: {
+                    xAxis: true,
+                    yAxis: true
+                },
                 onStart: (coordinates: Record<string, number>, handleEl: HTMLElement | null, contentEl: HTMLElement | null) => {
                     
                 },
@@ -8462,6 +8492,10 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
         
                 }
             });
+        
+            const resetModal = () => {
+                resetPosition?.();
+            };
         
             return (
                 <div className="container" ref={dragContentHandle}>
@@ -8529,10 +8563,6 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
             // calculates the left and top offsets after the move
             var nLeft = mouseX - startPos.x;
             var nTop = mouseY - startPos.y;
-
-            // calculates the right and bottom offsets after the move
-            var nRight = nLeft + childrenWidth;
-            var nBottom = nTop + childrenHight;
 
             // Determine whether the left or right distance is out of bounds
             if (preventOutsideScreen.xAxis) {
@@ -8655,7 +8685,17 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
               targetNode.removeEventListener("touchstart", handleTouchStart);
             };
           }, [targetNode, dx, dy]);
-          return [ref, targetRef];
+          return {
+            dragContentHandle: ref,
+            dragHandle: targetRef,
+            resetPosition: function resetPosition() {
+              // reset position
+              setOffset({
+                dx: 0,
+                dy: 0
+              });
+            }
+          };
         };
         /* harmony default export */
         var hooks_useDraggable = useDraggable;

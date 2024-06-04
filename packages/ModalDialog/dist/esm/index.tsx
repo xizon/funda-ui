@@ -6,7 +6,6 @@ import {
 } from 'funda-utils';
 
 
-
 //Destroys body scroll locking
 import { clearAllBodyScrollLocks, disableBodyScroll, enableBodyScroll } from './plugins/BSL';
 
@@ -35,6 +34,8 @@ interface ModalDialogRef {
     close: () => void;
 }
 
+
+
 type ModalDialogProps = {
     /** Extended class name */
     modalContentClassName?: string;
@@ -56,6 +57,8 @@ type ModalDialogProps = {
     minHeight?: number | string | Function;
     /** Adapt the video to the window */
     enableVideo?: boolean;
+    /** Enable fullscreen modal */
+    fullscreen?: boolean;
     /** Set a window title */
     heading?: React.ReactNode;
     /** Set footer content */
@@ -108,6 +111,7 @@ const ModalDialog = forwardRef((props: ModalDialogProps, ref: React.ForwardedRef
         show,
         maxWidth,
         minHeight,
+        fullscreen,
         enableVideo,
         heading,
         footerExpandedContent,
@@ -133,7 +137,7 @@ const ModalDialog = forwardRef((props: ModalDialogProps, ref: React.ForwardedRef
 
 
     const DEPTH = depth || 1055;  // the default value same as bootstrap
-    const M_WIDTH = typeof maxWidth === 'function' ? maxWidth() : maxWidth ? maxWidth : undefined;
+    const M_WIDTH = fullscreen ? undefined : (typeof maxWidth === 'function' ? maxWidth() : maxWidth ? maxWidth : undefined);
     const M_HEIGHT = typeof minHeight === 'function' ? minHeight() : minHeight ? minHeight : undefined;
 
     const uniqueID = useId().replace(/\:/g, "-");
@@ -146,7 +150,11 @@ const ModalDialog = forwardRef((props: ModalDialogProps, ref: React.ForwardedRef
 
     // drag and drop
     const [isDragging, setIsDragging] = useState<boolean>(false);
-    const [dragContentHandle, dragHandle] = useDraggable({
+    const {
+        dragContentHandle, 
+        dragHandle,
+        resetPosition
+    }: any = useDraggable({
         enabled: draggable, 
         preventOutsideScreen: draggedPreventOutsideScreen,
         onStart: (coordinates: Record<string, number>, handleEl: HTMLElement | null, contentEl: HTMLElement | null) => {
@@ -185,6 +193,11 @@ const ModalDialog = forwardRef((props: ModalDialogProps, ref: React.ForwardedRef
         }
 
         closeAction();
+
+        // reset modal coordinates
+        setTimeout(() => {
+            resetPosition?.();
+        }, 300);
 
         //
         onClose?.(e);
@@ -443,7 +456,7 @@ const ModalDialog = forwardRef((props: ModalDialogProps, ref: React.ForwardedRef
                     }} 
                     data-mask={`mask-${idRes}`}
                 >
-                    <div className="modal-dialog modal-dialog-centered modal-dialog-scrollable" style={M_WIDTH ? { maxWidth: `${M_WIDTH}` } : {}}>
+                    <div className={`modal-dialog modal-dialog-centered modal-dialog-scrollable ${fullscreen ? 'modal-fullscreen' : ''}`} style={M_WIDTH ? { maxWidth: `${M_WIDTH}` } : {}}>
                         <div 
                             ref={dragContentHandle} 
                             className={`${enableVideo ? 'modal-content bg-transparent shadow-none border-0' : 'modal-content'} ${modalContentClassName || ''} ${isDragging ? 'dragging' : ''}`} 

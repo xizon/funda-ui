@@ -2346,9 +2346,16 @@ function useDraggable_arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; 
 
 
 const App = () => {
-    const [dragContentHandle, dragHandle] = useDraggable({
+    const {
+        dragContentHandle, 
+        dragHandle,
+        resetPosition
+    }: any = useDraggable({
         enabled: true,   // if `false`, drag and drop is disabled
-        preventOutsideScreen: true,
+        preventOutsideScreen: {
+            xAxis: true,
+            yAxis: true
+        },
         onStart: (coordinates: Record<string, number>, handleEl: HTMLElement | null, contentEl: HTMLElement | null) => {
             
         },
@@ -2360,6 +2367,10 @@ const App = () => {
 
         }
     });
+
+    const resetModal = () => {
+        resetPosition?.();
+    };
 
     return (
         <div className="container" ref={dragContentHandle}>
@@ -2428,10 +2439,6 @@ var useDraggable = function useDraggable(_ref) {
     // calculates the left and top offsets after the move
     var nLeft = mouseX - startPos.x;
     var nTop = mouseY - startPos.y;
-
-    // calculates the right and bottom offsets after the move
-    var nRight = nLeft + childrenWidth;
-    var nBottom = nTop + childrenHight;
 
     // Determine whether the left or right distance is out of bounds
     if (preventOutsideScreen.xAxis) {
@@ -2554,7 +2561,17 @@ var useDraggable = function useDraggable(_ref) {
       targetNode.removeEventListener("touchstart", handleTouchStart);
     };
   }, [targetNode, dx, dy]);
-  return [ref, targetRef];
+  return {
+    dragContentHandle: ref,
+    dragHandle: targetRef,
+    resetPosition: function resetPosition() {
+      // reset position
+      setOffset({
+        dx: 0,
+        dy: 0
+      });
+    }
+  };
 };
 /* harmony default export */ const hooks_useDraggable = (useDraggable);
 ;// CONCATENATED MODULE: ./src/index.tsx

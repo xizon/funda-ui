@@ -95,6 +95,9 @@ const Textarea = forwardRef((props: TextareaProps, ref: any) => {
     useImperativeHandle(
         contentRef,
         () => ({
+            control: () => {
+                return valRef.current;
+            },
             clear: (cb?: any) => {
                 setChangedVal('');
                 cb?.();

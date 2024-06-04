@@ -3668,9 +3668,16 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
         
         
         const App = () => {
-            const [dragContentHandle, dragHandle] = useDraggable({
+            const {
+                dragContentHandle, 
+                dragHandle,
+                resetPosition
+            }: any = useDraggable({
                 enabled: true,   // if `false`, drag and drop is disabled
-                preventOutsideScreen: true,
+                preventOutsideScreen: {
+                    xAxis: true,
+                    yAxis: true
+                },
                 onStart: (coordinates: Record<string, number>, handleEl: HTMLElement | null, contentEl: HTMLElement | null) => {
                     
                 },
@@ -3682,6 +3689,10 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
         
                 }
             });
+        
+            const resetModal = () => {
+                resetPosition?.();
+            };
         
             return (
                 <div className="container" ref={dragContentHandle}>
@@ -3749,10 +3760,6 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
             // calculates the left and top offsets after the move
             var nLeft = mouseX - startPos.x;
             var nTop = mouseY - startPos.y;
-
-            // calculates the right and bottom offsets after the move
-            var nRight = nLeft + childrenWidth;
-            var nBottom = nTop + childrenHight;
 
             // Determine whether the left or right distance is out of bounds
             if (preventOutsideScreen.xAxis) {
@@ -3875,7 +3882,17 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
               targetNode.removeEventListener("touchstart", handleTouchStart);
             };
           }, [targetNode, dx, dy]);
-          return [ref, targetRef];
+          return {
+            dragContentHandle: ref,
+            dragHandle: targetRef,
+            resetPosition: function resetPosition() {
+              // reset position
+              setOffset({
+                dx: 0,
+                dy: 0
+              });
+            }
+          };
         };
         /* harmony default export */
         var hooks_useDraggable = useDraggable;

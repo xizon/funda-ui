@@ -4096,9 +4096,16 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
         
         
         const App = () => {
-            const [dragContentHandle, dragHandle] = useDraggable({
+            const {
+                dragContentHandle, 
+                dragHandle,
+                resetPosition
+            }: any = useDraggable({
                 enabled: true,   // if `false`, drag and drop is disabled
-                preventOutsideScreen: true,
+                preventOutsideScreen: {
+                    xAxis: true,
+                    yAxis: true
+                },
                 onStart: (coordinates: Record<string, number>, handleEl: HTMLElement | null, contentEl: HTMLElement | null) => {
                     
                 },
@@ -4110,6 +4117,10 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
         
                 }
             });
+        
+            const resetModal = () => {
+                resetPosition?.();
+            };
         
             return (
                 <div className="container" ref={dragContentHandle}>
@@ -4177,10 +4188,6 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
             // calculates the left and top offsets after the move
             var nLeft = mouseX - startPos.x;
             var nTop = mouseY - startPos.y;
-
-            // calculates the right and bottom offsets after the move
-            var nRight = nLeft + childrenWidth;
-            var nBottom = nTop + childrenHight;
 
             // Determine whether the left or right distance is out of bounds
             if (preventOutsideScreen.xAxis) {
@@ -4303,7 +4310,17 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
               targetNode.removeEventListener("touchstart", handleTouchStart);
             };
           }, [targetNode, dx, dy]);
-          return [ref, targetRef];
+          return {
+            dragContentHandle: ref,
+            dragHandle: targetRef,
+            resetPosition: function resetPosition() {
+              // reset position
+              setOffset({
+                dx: 0,
+                dy: 0
+              });
+            }
+          };
         };
         /* harmony default export */
         var hooks_useDraggable = useDraggable;
@@ -4433,7 +4450,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var funda_searchbar__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(funda_searchbar__WEBPACK_IMPORTED_MODULE_2__);
 /* harmony import */ var funda_utils__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(456);
 /* harmony import */ var funda_utils__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(funda_utils__WEBPACK_IMPORTED_MODULE_3__);
-var _excluded = ["popupRef", "wrapperClassName", "controlClassName", "controlExClassName", "controlGroupWrapperClassName", "controlGroupTextClassName", "exceededSidePosOffset", "appearance", "isSearchInput", "allowSpacingRetrive", "readOnly", "disabled", "required", "placeholder", "noMatchPopup", "options", "value", "label", "name", "units", "iconLeft", "iconRight", "minLength", "maxLength", "id", "icon", "btnId", "fetchTrigger", "hideIcon", "depth", "style", "winWidth", "tabIndex", "data", "autoShowOptions", "fetchNoneInfo", "fetchUpdate", "fetchFuncAsync", "fetchFuncMethod", "fetchFuncMethodParams", "fetchCallback", "onClick", "onFetch", "onChange", "onKeyboardInput", "onBlur", "onPressEnter"];
+var _excluded = ["contentRef", "popupRef", "wrapperClassName", "controlClassName", "controlExClassName", "controlGroupWrapperClassName", "controlGroupTextClassName", "exceededSidePosOffset", "appearance", "isSearchInput", "allowSpacingRetrive", "readOnly", "disabled", "required", "placeholder", "noMatchPopup", "options", "value", "label", "name", "units", "iconLeft", "iconRight", "minLength", "maxLength", "id", "icon", "btnId", "fetchTrigger", "hideIcon", "depth", "style", "winWidth", "tabIndex", "data", "autoShowOptions", "fetchNoneInfo", "fetchUpdate", "fetchFuncAsync", "fetchFuncMethod", "fetchFuncMethodParams", "fetchCallback", "onClick", "onFetch", "onChange", "onKeyboardInput", "onBlur", "onPressEnter"];
 function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
 function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
 function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter); }
@@ -4456,7 +4473,8 @@ function _objectWithoutPropertiesLoose(source, excluded) { if (source == null) r
 
 
 var LiveSearch = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(function (props, _ref) {
-  var popupRef = props.popupRef,
+  var contentRef = props.contentRef,
+    popupRef = props.popupRef,
     wrapperClassName = props.wrapperClassName,
     controlClassName = props.controlClassName,
     controlExClassName = props.controlExClassName,
@@ -4565,6 +4583,23 @@ var LiveSearch = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(
       }
     };
   }, [popupRef]);
+
+  // exposes the following methods
+  (0,react__WEBPACK_IMPORTED_MODULE_0__.useImperativeHandle)(contentRef, function () {
+    return {
+      control: function control() {
+        return inputRef.current;
+      },
+      clear: function clear(cb) {
+        setChangedVal('');
+        cb === null || cb === void 0 ? void 0 : cb();
+      },
+      set: function set(value, cb) {
+        setChangedVal("".concat(value));
+        cb === null || cb === void 0 ? void 0 : cb();
+      }
+    };
+  }, [contentRef]);
 
   // click outside
   (0,funda_utils__WEBPACK_IMPORTED_MODULE_3__.useClickOutside)({

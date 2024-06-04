@@ -10,7 +10,7 @@ import Date from 'funda-ui/Date';
 | Property | Type | Default | Description | Required |
 | --- | --- | --- | --- | --- |
 | `ref` | React.ForwardedRef | - | It is the return element of this component.  | - |
-| `contentRef` | React.RefObject | - | It exposes the following methods:  <br /> <ol><li>`contentRef.current.clear(() => { console.log('callback') })`</li><li>`contentRef.current.blur(() => { console.log('callback') })`</li><li>`contentRef.current.set('2024-04-25 21:54:18', () => { console.log('callback') })`</li></ol>  <blockquote>DO NOT USE it in the `onChange` and `onChange***` of this component, otherwise it will cause infinite rendering</blockquote> | - |
+| `contentRef` | React.RefObject | - | It exposes the following methods:  <br /> <ol><li>`contentRef.current.control()`</li><li>`contentRef.current.clear(() => { console.log('callback') })`</li><li>`contentRef.current.blur(() => { console.log('callback') })`</li><li>`contentRef.current.set('2024-04-25 21:54:18', () => { console.log('callback') })`</li></ol>  <blockquote>DO NOT USE it in the `onChange` and `onChange***` of this component, otherwise it will cause infinite rendering</blockquote> | - |
 | `popupRef` | React.RefObject | - | It exposes the following methods when the component's popup opens or closes:  <br /> <ol><li>`popupRef.current.close()`</li></ol> | - |
 | `enableEntireAreaPopup` | boolean  | false | Enable the entire area popup. If it is false, you need to click the icon to pop up. | - |
 | `delimiter` | string  | `/` | Specify a delimiter from a date string. such as `/`, `-`, ` `, `.` | - |

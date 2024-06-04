@@ -311,6 +311,9 @@ const Date = forwardRef((props: DateProps, ref: any) => {
     useImperativeHandle(
         contentRef,
         () => ({
+            control: () => {
+                return getAllSplittingInputs();
+            },
             clear: (cb?: any) => {
                 clearAll();
                 cb?.();

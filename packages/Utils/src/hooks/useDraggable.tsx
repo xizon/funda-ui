@@ -5,7 +5,11 @@
 
 
 const App = () => {
-    const [dragContentHandle, dragHandle] = useDraggable({
+    const {
+        dragContentHandle, 
+        dragHandle,
+        resetPosition
+    }: any = useDraggable({
         enabled: true,   // if `false`, drag and drop is disabled
         preventOutsideScreen: {
             xAxis: true,
@@ -22,6 +26,10 @@ const App = () => {
 
         }
     });
+
+    const resetModal = () => {
+        resetPosition?.();
+    };
 
     return (
         <div className="container" ref={dragContentHandle}>
@@ -62,8 +70,6 @@ const useDraggable = ({
 }: UseDraggableProps) => {
 
     if (typeof enabled === 'undefined' || enabled === false) return [null, null];
-
-    
 
     let dragging: boolean = false;  // DO NOT USE 'useState()'
     const [node, setNode] = useState<HTMLElement | null>(null);
@@ -219,9 +225,7 @@ const useDraggable = ({
         document.addEventListener('touchend', handleTouchEnd as any);
     }, [dx, dy, node]);
 
-
-    
-
+ 
 
     useEffect(() => {
         if (node) {
@@ -241,7 +245,14 @@ const useDraggable = ({
         };
     }, [targetNode, dx, dy]);
 
-    return [ref, targetRef];
+    return {
+        dragContentHandle: ref,
+        dragHandle: targetRef,
+        resetPosition: () => {
+            // reset position
+            setOffset({ dx: 0, dy: 0 });
+        }
+    };
 };
 
 export default useDraggable;

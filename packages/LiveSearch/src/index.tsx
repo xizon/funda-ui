@@ -23,6 +23,7 @@ interface OptionConfig {
 
 
 type LiveSearchProps = {
+    contentRef?: React.RefObject<any>;
     popupRef?: React.RefObject<any>;
     wrapperClassName?: string;
     controlClassName?: string;
@@ -79,6 +80,7 @@ type LiveSearchProps = {
 
 const LiveSearch = forwardRef((props: LiveSearchProps, ref: any) => {
     const {
+        contentRef,
         popupRef,
         wrapperClassName,
         controlClassName,
@@ -175,7 +177,24 @@ const LiveSearch = forwardRef((props: LiveSearchProps, ref: any) => {
         [popupRef],
     );
 
-
+    // exposes the following methods
+    useImperativeHandle(
+        contentRef,
+        () => ({
+            control: () => {
+                return inputRef.current;
+            },
+            clear: (cb?: any) => {
+                setChangedVal('');
+                cb?.();
+            },
+            set: (value: string, cb?: any) => {
+                setChangedVal(`${value}`);
+                cb?.();
+            }
+        }),
+        [contentRef],
+    );
 
     // click outside
     useClickOutside({

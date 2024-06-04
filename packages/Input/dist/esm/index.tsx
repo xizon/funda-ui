@@ -110,6 +110,9 @@ const Input = forwardRef((props: InputProps, ref: any) => {
     useImperativeHandle(
         contentRef,
         () => ({
+            control: () => {
+                return valRef.current;
+            },
             clear: (cb?: any) => {
                 setChangedVal('');
                 cb?.();
