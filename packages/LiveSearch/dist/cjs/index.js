@@ -4453,7 +4453,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var funda_searchbar__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(funda_searchbar__WEBPACK_IMPORTED_MODULE_2__);
 /* harmony import */ var funda_utils__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(456);
 /* harmony import */ var funda_utils__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(funda_utils__WEBPACK_IMPORTED_MODULE_3__);
-var _excluded = ["contentRef", "popupRef", "wrapperClassName", "controlClassName", "controlExClassName", "controlGroupWrapperClassName", "controlGroupTextClassName", "exceededSidePosOffset", "appearance", "isSearchInput", "allowSpacingRetrive", "readOnly", "disabled", "required", "placeholder", "noMatchPopup", "options", "value", "label", "name", "units", "iconLeft", "iconRight", "minLength", "maxLength", "id", "icon", "btnId", "fetchTrigger", "hideIcon", "depth", "style", "winWidth", "tabIndex", "data", "autoShowOptions", "fetchNoneInfo", "fetchUpdate", "fetchFuncAsync", "fetchFuncMethod", "fetchFuncMethodParams", "fetchCallback", "onClick", "onFetch", "onChange", "onKeyboardInput", "onBlur", "onPressEnter"];
+var _excluded = ["contentRef", "popupRef", "wrapperClassName", "controlClassName", "controlExClassName", "controlGroupWrapperClassName", "controlGroupTextClassName", "exceededSidePosOffset", "appearance", "isSearchInput", "allowSpacingRetrive", "readOnly", "disabled", "required", "placeholder", "noMatchPopup", "options", "value", "label", "name", "units", "iconLeft", "iconRight", "minLength", "maxLength", "id", "autoComplete", "icon", "btnId", "fetchTrigger", "hideIcon", "depth", "style", "winWidth", "tabIndex", "data", "autoShowOptions", "fetchNoneInfo", "fetchUpdate", "fetchFuncAsync", "fetchFuncMethod", "fetchFuncMethodParams", "fetchCallback", "onClick", "onFetch", "onChange", "onKeyboardInput", "onBlur", "onPressEnter"];
 function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
 function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
 function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter); }
@@ -4502,6 +4502,7 @@ var LiveSearch = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(
     minLength = props.minLength,
     maxLength = props.maxLength,
     id = props.id,
+    autoComplete = props.autoComplete,
     icon = props.icon,
     btnId = props.btnId,
     fetchTrigger = props.fetchTrigger,
@@ -5231,7 +5232,7 @@ var LiveSearch = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(
     onClick: handleClick,
     icon: hideIcon ? '' : !fetchTrigger ? '' : icon,
     btnId: btnId,
-    autoComplete: "off",
+    autoComplete: typeof autoComplete === 'undefined' ? 'off' : autoComplete,
     isSearchInput: isSearchInput,
     onKeyPressedCallback: function onKeyPressedCallback(e) {
       onKeyboardInput === null || onKeyboardInput === void 0 ? void 0 : onKeyboardInput(e, inputRef.current, listRef.current);

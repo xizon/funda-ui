@@ -60,6 +60,7 @@ type LiveSearchProps = {
     data?: any;
     /** -- */
     id?: string;
+    autoComplete?: string;
     style?: React.CSSProperties;
     tabIndex?: number;
     [key: `data-${string}`]: string | undefined;
@@ -106,6 +107,7 @@ const LiveSearch = forwardRef((props: LiveSearchProps, ref: any) => {
         minLength,
         maxLength,
         id,
+        autoComplete,
         icon,
         btnId,
         fetchTrigger,
@@ -815,7 +817,7 @@ const LiveSearch = forwardRef((props: LiveSearchProps, ref: any) => {
                     onClick={handleClick}
                     icon={hideIcon ? '' : (!fetchTrigger ? '' : icon)}
                     btnId={btnId}
-                    autoComplete='off'
+                    autoComplete={typeof autoComplete === 'undefined' ? 'off' : autoComplete}
                     isSearchInput={isSearchInput}
                     onKeyPressedCallback={(e: KeyboardEvent<any>) => {
                         onKeyboardInput?.(e, inputRef.current, listRef.current);

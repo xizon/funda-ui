@@ -28,6 +28,7 @@ type TagInputProps = {
     extractValueByBrackets?: boolean;
     /** -- */
     id?: string;
+    autoComplete?: string;
     style?: React.CSSProperties;
     tabIndex?: number;
     [key: `data-${string}`]: string | undefined;
@@ -50,6 +51,7 @@ const TagInput = forwardRef((props: TagInputProps, ref: any) => {
         label,
         name,
         id,
+        autoComplete,
         extractValueByBrackets,
         maxLength,
         style,
@@ -255,7 +257,7 @@ const TagInput = forwardRef((props: TagInputProps, ref: any) => {
                                 // Don't use "name", it's just a container to display the label
                                 data-name={name?.match(/(\[.*?\])/gi) ? `${name.split('[')[0]}-label[]` : `${name}-label`}
                                 data-tag-input
-                                autoComplete="off"
+                                autoComplete={typeof autoComplete === 'undefined' ? 'off' : autoComplete}
                                 placeholder={placeholder || ''}
                                 value={userInput}
                                 maxLength={maxLength || null}

@@ -39,7 +39,7 @@ import DynamicFields from 'funda-ui/DynamicFields';
 | `onLoad` | function  | - | Call a function when the component has been rendered completely. It returns three callback values. <br /> <ol><li>The first is the button ID of add (**String**)</li><li> The second is the root div (**HTMLDivElement**)</li><li> The last is classname of the container for each row that is dynamically added (**String**)</li></ol> | - |
 
 
-
+Element of per row accepts all props which this control support. Such as `style`, `data-*`, `tabIndex`, `id`, and so on.
 
 
 ---
@@ -219,6 +219,33 @@ export default () => {
     );
 }
 ```
+
+
+## Specify a custom HTML attribute for each row
+
+```js
+import React from "react";
+import DynamicFields from 'funda-ui/DynamicFields';
+
+export default () => {
+
+
+    return (
+        <>
+
+            <DynamicFields
+                ...
+                data-my-attr1="1"
+                data-my-attr2="2"
+                style={...}
+                ...
+            />
+
+        </>
+    );
+}
+```
+
 
 
 

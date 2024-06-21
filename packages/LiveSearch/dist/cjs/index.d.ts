@@ -44,6 +44,7 @@ declare type LiveSearchProps = {
     data?: any;
     /** -- */
     id?: string;
+    autoComplete?: string;
     style?: React.CSSProperties;
     tabIndex?: number;
     [key: `data-${string}`]: string | undefined;

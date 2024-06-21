@@ -31,6 +31,7 @@ import MultiFuncSelect from 'funda-ui/MultiFuncSelect';
 | `label` | string \| ReactNode | - | It is used to specify a label for an element of a form.<blockquote>Support html tags</blockquote> | - |
 | `name` | string | - | Name is not deprecated when used with form fields. | - |
 | `placeholder` | string | - |  Specifies a short hint that describes. | - |
+| `autoComplete` | string  | `off` | Turn off autocomplete for input fields. | - |
 | `readOnly` | boolean | false | When present, it specifies that this component field is read-only. | - |
 | `disabled` | boolean | false | Whether it is disabled | - |
 | `required` | boolean | false | When present, it specifies that a field must be filled out before submitting the form. | - |

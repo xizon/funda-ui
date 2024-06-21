@@ -27,6 +27,7 @@ import LiveSearch from 'funda-ui/LiveSearch';
 | `label` | string \| ReactNode | - | It is used to specify a label for an element of a form.<blockquote>Support html tags</blockquote> | - |
 | `name` | string | - | Name is not deprecated when used with form fields. | - |
 | `placeholder` | string | - |  Specifies a short hint that describes. | - |
+| `autoComplete` | string  | `off` | Turn off autocomplete for input fields. | - |
 | `units` | string | - | Specify a unit identification string. Such as `em`, `px`, and so on. | - |
 | `iconLeft` | ReactNode  | - | Set the left icon of this control | - |
 | `iconRight` | ReactNode  | - | Set the right icon of this control | - |

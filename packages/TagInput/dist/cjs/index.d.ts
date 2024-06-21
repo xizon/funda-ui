@@ -19,6 +19,7 @@ declare type TagInputProps = {
     extractValueByBrackets?: boolean;
     /** -- */
     id?: string;
+    autoComplete?: string;
     style?: React.CSSProperties;
     tabIndex?: number;
     [key: `data-${string}`]: string | undefined;

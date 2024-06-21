@@ -67,6 +67,7 @@ declare type MultiFuncSelectProps = {
     extractValueByBrackets?: boolean;
     /** -- */
     id?: string;
+    autoComplete?: string;
     style?: React.CSSProperties;
     tabIndex?: number;
     [key: `data-${string}`]: string | undefined;

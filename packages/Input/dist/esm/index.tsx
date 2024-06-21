@@ -257,7 +257,7 @@ const Input = forwardRef((props: InputProps, ref: any) => {
                                 value={changedVal}
                                 minLength={minLength || null}
                                 maxLength={maxLength || null}
-                                autoComplete={typeof autoComplete === 'undefined' ? 'off' : autoComplete}
+                                autoComplete={typeof autoComplete === 'undefined' ? 'on' : autoComplete}
                                 onFocus={handleFocus}
                                 onBlur={handleBlur}
                                 onChange={handleChange}
@@ -306,7 +306,7 @@ const Input = forwardRef((props: InputProps, ref: any) => {
                             value={changedVal}
                             minLength={minLength || null}
                             maxLength={maxLength || null}
-                            autoComplete={typeof autoComplete === 'undefined' ? 'off' : autoComplete}
+                            autoComplete={typeof autoComplete === 'undefined' ? 'on' : autoComplete}
                             onFocus={handleFocus}
                             onBlur={handleBlur}
                             onChange={handleChange}

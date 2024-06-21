@@ -75,7 +75,8 @@ const DynamicFields = (props: DynamicFieldsProps) => {
         innerAppendEmptyContent,
         onAdd,
         onRemove,
-        onLoad
+        onLoad,
+        ...attributes
     } = props;
 
     const ITEM_LAST_CLASSNAME = innerAppendLastCellClassName || 'last';
@@ -253,7 +254,12 @@ const DynamicFields = (props: DynamicFieldsProps) => {
                     {isNew ? <>
                         {item}
                     </> : <><div key={'tmpl-' + i} className={`dynamic-fields__inner__body ${innerAppendBodyClassName || ''} ${i === _data.length-1 ? ITEM_LAST_CLASSNAME : ''}`} data-body-index={i}>
-                        <div className={`dynamic-fields__data__wrapper position-relative ${innerAppendCellClassName || ''} ${i === _data.length-1 ? ITEM_LAST_CLASSNAME : ''}`} data-key={i} data-index={i}>
+                        <div 
+                            className={`dynamic-fields__data__wrapper position-relative ${innerAppendCellClassName || ''} ${i === _data.length-1 ? ITEM_LAST_CLASSNAME : ''}`} 
+                            data-key={i} 
+                            data-index={i}
+                            {...attributes}
+                        >
                             {item}
                             {removeBtyn}
                         </div>

@@ -101,6 +101,7 @@ type MultiFuncSelectProps = {
     extractValueByBrackets?: boolean;
     /** -- */
     id?: string;
+    autoComplete?: string;
     style?: React.CSSProperties;
     tabIndex?: number;
     [key: `data-${string}`]: string | undefined;
@@ -137,6 +138,7 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
         readOnly,
         placeholder,
         id,
+        autoComplete,
         options,
         cleanTrigger,
         lockBodyScroll,
@@ -1875,7 +1877,7 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
                         value={controlTempValue || controlTempValue === '' ? controlTempValue : (MULTI_SEL_VALID ? (VALUE_BY_BRACKETS ? convertArrToValByBrackets(formatIndentVal(controlArr.labels).map((v: any) => stripHTML(v))) : formatIndentVal(controlArr.labels).map((v: any) => stripHTML(v)).join(',')) : stripHTML(controlLabel as never))}  // do not use `defaultValue`
 
                         style={{ cursor: 'pointer', color: 'transparent', borderBottomWidth: MULTI_SEL_VALID ? '0' : '1px', ...style }}
-                        autoComplete='off'
+                        autoComplete={typeof autoComplete === 'undefined' ? 'off' : autoComplete}
                         {...attributes}
                     />
 

@@ -3818,7 +3818,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var funda_utils__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(456);
 /* harmony import */ var funda_utils__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(funda_utils__WEBPACK_IMPORTED_MODULE_1__);
-var _excluded = ["wrapperClassName", "maxTags", "disabled", "required", "placeholder", "readOnly", "value", "label", "name", "id", "extractValueByBrackets", "maxLength", "style", "tabIndex", "onChange", "onBlur", "onFocus"];
+var _excluded = ["wrapperClassName", "maxTags", "disabled", "required", "placeholder", "readOnly", "value", "label", "name", "id", "autoComplete", "extractValueByBrackets", "maxLength", "style", "tabIndex", "onChange", "onBlur", "onFocus"];
 function _extends() { _extends = Object.assign ? Object.assign.bind() : function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
 function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
 function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
@@ -3841,6 +3841,7 @@ var TagInput = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(fu
     label = props.label,
     name = props.name,
     id = props.id,
+    autoComplete = props.autoComplete,
     extractValueByBrackets = props.extractValueByBrackets,
     maxLength = props.maxLength,
     style = props.style,
@@ -4051,7 +4052,7 @@ var TagInput = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(fu
     ,
     "data-name": name !== null && name !== void 0 && name.match(/(\[.*?\])/gi) ? "".concat(name.split('[')[0], "-label[]") : "".concat(name, "-label"),
     "data-tag-input": true,
-    autoComplete: "off",
+    autoComplete: typeof autoComplete === 'undefined' ? 'off' : autoComplete,
     placeholder: placeholder || '',
     value: userInput,
     maxLength: maxLength || null,
