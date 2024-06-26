@@ -52,7 +52,7 @@ type InputProps = {
 };
 
 
-const Input = forwardRef((props: InputProps, ref: any) => {
+const Input = forwardRef((props: InputProps, externalRef: any) => {
     const {
         contentRef,
         wrapperClassName,
@@ -233,10 +233,10 @@ const Input = forwardRef((props: InputProps, ref: any) => {
                             <input
                                 ref={(node) => {
                                     valRef.current = node;
-                                    if (typeof ref === 'function') {
-                                        ref(node);
-                                    } else if (ref) {
-                                        ref.current = node;
+                                    if (typeof externalRef === 'function') {
+                                        externalRef(node);
+                                    } else if (externalRef) {
+                                        externalRef.current = node;
                                     }
                                 }}
                                 
@@ -282,10 +282,10 @@ const Input = forwardRef((props: InputProps, ref: any) => {
                         <input
                             ref={(node) => {
                                 valRef.current = node;
-                                if (typeof ref === 'function') {
-                                    ref(node);
-                                } else if (ref) {
-                                    ref.current = node;
+                                if (typeof externalRef === 'function') {
+                                    externalRef(node);
+                                } else if (externalRef) {
+                                    externalRef.current = node;
                                 }
                             }}
                             

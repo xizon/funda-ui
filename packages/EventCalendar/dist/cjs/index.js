@@ -4430,7 +4430,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 
         //Destroys body scroll locking
 
-        var ModalDialog = /*#__PURE__*/(0, external_root_React_commonjs2_react_commonjs_react_amd_react_.forwardRef)(function (props, ref) {
+        var ModalDialog = /*#__PURE__*/(0, external_root_React_commonjs2_react_commonjs_react_amd_react_.forwardRef)(function (props, externalRef) {
           var modalContentClassName = props.modalContentClassName,
             modalHeaderClassName = props.modalHeaderClassName,
             modalTitleClassName = props.modalTitleClassName,
@@ -4502,7 +4502,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
             resetPosition = _useDraggable.resetPosition;
 
           // exposes the following methods
-          (0, external_root_React_commonjs2_react_commonjs_react_amd_react_.useImperativeHandle)(ref, function () {
+          (0, external_root_React_commonjs2_react_commonjs_react_amd_react_.useImperativeHandle)(externalRef, function () {
             return {
               open: function open() {
                 handleOpenWin(null);
@@ -4511,7 +4511,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
                 handleCloseWin(null);
               }
             };
-          }, [ref]);
+          }, [externalRef]);
 
           //
           function handleCloseWin(e) {

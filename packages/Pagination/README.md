@@ -563,7 +563,7 @@ Lets you callback the handle exposed as attribute `ref`.
 ```js
 import React, { memo, useState, useEffect, useRef } from "react";
 import axios from 'axios';
-import Pagination from '../../../Pagination/src';
+import Pagination from 'funda-ui/Pagination';
 
 
 const demoData = [

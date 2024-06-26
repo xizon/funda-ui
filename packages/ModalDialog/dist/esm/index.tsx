@@ -97,7 +97,7 @@ type ModalDialogProps = {
     onSubmit?: (e: any, callback: any, incomingData: string | null | undefined) => void;
 };
 
-const ModalDialog = forwardRef((props: ModalDialogProps, ref: React.ForwardedRef<ModalDialogRef>) => {
+const ModalDialog = forwardRef((props: ModalDialogProps, externalRef: React.ForwardedRef<ModalDialogRef>) => {
     const {
         modalContentClassName,
         modalHeaderClassName,
@@ -170,7 +170,7 @@ const ModalDialog = forwardRef((props: ModalDialogProps, ref: React.ForwardedRef
 
     // exposes the following methods
     useImperativeHandle(
-        ref,
+        externalRef,
         () => ({
             open: () => {
                 handleOpenWin(null);
@@ -179,7 +179,7 @@ const ModalDialog = forwardRef((props: ModalDialogProps, ref: React.ForwardedRef
                 handleCloseWin(null);
             },
         }),
-        [ref],
+        [externalRef],
     );
 
 

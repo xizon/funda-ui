@@ -120,7 +120,7 @@ type MultiFuncSelectProps = {
 };
 
 
-const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
+const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, externalRef: any) => {
     const {
         contentRef,
         popupRef,
@@ -1849,10 +1849,10 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, ref: any) => {
                     <input
                         ref={(node) => {
                             selectInputRef.current = node;
-                            if (typeof ref === 'function') {
-                                ref(node);
-                            } else if (ref) {
-                                ref.current = node;
+                            if (typeof externalRef === 'function') {
+                                externalRef(node);
+                            } else if (externalRef) {
+                                externalRef.current = node;
                             }
                         }}
                         tabIndex={tabIndex || 0}

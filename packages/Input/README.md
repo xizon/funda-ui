@@ -381,7 +381,7 @@ Lets you callback the handle exposed as attribute `contentRef`.
 
  // bootstrap components
  import ModalDialog from 'funda-ui/ModalDialog';
- import Input from '../Input/src';
+import Input from 'funda-ui/Input';
 
 export default () => {
 
@@ -477,7 +477,7 @@ At this time, we need to use `useMemo()` to wrap this subcomponent to avoid prob
 
 ```js
 import React, { useState, useMemo } from "react";
-import Input from '../Input/src';
+import Input from 'funda-ui/Input';
 
 // DO NOT move `useMemo` to component
 function MemoInput(props: any) {

@@ -3904,7 +3904,7 @@ var removeCellFocusClassName = function removeCellFocusClassName(root) {
 /* Table Field
 -------------------------------------------------*/
 
-var TableField = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_amd_react_.forwardRef)(function (props, ref) {
+var TableField = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_amd_react_.forwardRef)(function (props, externalRef) {
   var tableRootRef = props.tableRootRef,
     rowKey = props.rowKey,
     cols = props.cols,
@@ -3928,7 +3928,7 @@ var TableField = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_re
     evCellMouseEnter === null || evCellMouseEnter === void 0 ? void 0 : evCellMouseEnter(e);
   }
   return /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("td", {
-    ref: ref,
+    ref: externalRef,
     colSpan: cols,
     "data-table-text": columnHeader,
     "data-table-col": index,

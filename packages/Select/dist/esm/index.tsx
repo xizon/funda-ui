@@ -53,7 +53,7 @@ type SelectProps = {
     onFocus?: (e: any) => void;
 };
 
-const Select = forwardRef((props: SelectProps, ref: any) => {
+const Select = forwardRef((props: SelectProps, externalRef: any) => {
     const {
         wrapperClassName,
         disabled,
@@ -257,10 +257,10 @@ const Select = forwardRef((props: SelectProps, ref: any) => {
                 <select  
                         ref={(node) => {
                             selectRef.current = node;
-                            if (typeof ref === 'function') {
-                                ref(node);
-                            } else if (ref) {
-                                ref.current = node;
+                            if (typeof externalRef === 'function') {
+                                externalRef(node);
+                            } else if (externalRef) {
+                                externalRef.current = node;
                             }
                         }}
                         tabIndex={tabIndex || 0}

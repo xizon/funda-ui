@@ -4313,7 +4313,7 @@ function _objectWithoutPropertiesLoose(source, excluded) { if (source == null) r
 
 //Destroys body scroll locking
 
-var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_amd_react_.forwardRef)(function (props, _ref) {
+var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_amd_react_.forwardRef)(function (props, externalRef) {
   var contentRef = props.contentRef,
     popupRef = props.popupRef,
     wrapperClassName = props.wrapperClassName,
@@ -5887,10 +5887,10 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
   }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("input", _extends({
     ref: function ref(node) {
       selectInputRef.current = node;
-      if (typeof _ref === 'function') {
-        _ref(node);
-      } else if (_ref) {
-        _ref.current = node;
+      if (typeof externalRef === 'function') {
+        externalRef(node);
+      } else if (externalRef) {
+        externalRef.current = node;
       }
     },
     tabIndex: tabIndex || 0,

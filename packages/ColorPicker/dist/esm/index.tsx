@@ -32,7 +32,7 @@ interface ColorPickerProps extends React.ComponentPropsWithoutRef<"input"> {
 };
 
 
-const ColorPicker = forwardRef((props: ColorPickerProps, ref: any) => {
+const ColorPicker = forwardRef((props: ColorPickerProps, externalRef: any) => {
     const {
         wrapperClassName,
         controlClassName,
@@ -136,10 +136,10 @@ const ColorPicker = forwardRef((props: ColorPickerProps, ref: any) => {
                     <input
                         ref={(node) => {
                             valRef.current = node;
-                            if (typeof ref === 'function') {
-                                ref(node);
-                            } else if (ref) {
-                                ref.current = node;
+                            if (typeof externalRef === 'function') {
+                                externalRef(node);
+                            } else if (externalRef) {
+                                externalRef.current = node;
                             }
                         }}
 

@@ -323,7 +323,7 @@ var cjs_default = /*#__PURE__*/__webpack_require__.n(cjs);
 ;// CONCATENATED MODULE: ./src/Item.tsx
 
 ;
-var Item = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_amd_react_.forwardRef)(function (props, ref) {
+var Item = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_amd_react_.forwardRef)(function (props, externalRef) {
   var onlyOne = props.onlyOne,
     index = props.index,
     title = props.title,
@@ -400,7 +400,7 @@ var Item = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_am
     d: "M9.41 8l3.29-3.29c.19-.18.3-.43.3-.71a1.003 1.003 0 00-1.71-.71L8 6.59l-3.29-3.3a1.003 1.003 0 00-1.42 1.42L6.59 8 3.3 11.29c-.19.18-.3.43-.3.71a1.003 1.003 0 001.71.71L8 9.41l3.29 3.29c.18.19.43.3.71.3a1.003 1.003 0 00.71-1.71L9.41 8z",
     fillRule: "evenodd"
   }))) : null) : null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
-    ref: ref,
+    ref: externalRef,
     "data-progress-index": index,
     className: "progress active toast-progress ".concat(autoCloseTime === false ? 'd-none' : ''),
     role: "progressbar"

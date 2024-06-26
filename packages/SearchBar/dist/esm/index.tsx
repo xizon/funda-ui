@@ -44,7 +44,7 @@ type SearchBarProps = {
     onPressEnter?: (e: any, param: any) => void;
 };
 
-const SearchBar = forwardRef((props: SearchBarProps, ref: any) => {
+const SearchBar = forwardRef((props: SearchBarProps, externalRef: any) => {
     const {
         wrapperClassName,
         controlClassName,
@@ -186,7 +186,7 @@ const SearchBar = forwardRef((props: SearchBarProps, ref: any) => {
                     {propExist(iconLeft) ? <><span className={controlGroupTextClassName || "input-group-text"}>{iconLeft}</span></>: null}
 
                     <input
-                        ref={ref}
+                        ref={externalRef}
                         tabIndex={tabIndex || 0}
                         type={isSearchInput ? 'search' : 'text'}
                         className={`${appearance === 'pill' ? `${(controlClassName || controlClassName === '' ? controlClassName : "form-control")} border rounded-pill` : (controlClassName || controlClassName === '' ? controlClassName : "form-control")} ${controlExClassName || ''}`}

@@ -40,7 +40,7 @@ type FileProps = {
 };
 
 
-const File = forwardRef((props: FileProps, ref: any) => {
+const File = forwardRef((props: FileProps, externalRef: any) => {
     const {
         wrapperClassName,
         controlClassName,
@@ -278,10 +278,10 @@ const File = forwardRef((props: FileProps, ref: any) => {
                                 <input
                                     ref={(node) => {
                                         fileInputRef.current = node;
-                                        if (typeof ref === 'function') {
-                                            ref(node);
-                                        } else if (ref) {
-                                            ref.current = node;
+                                        if (typeof externalRef === 'function') {
+                                            externalRef(node);
+                                        } else if (externalRef) {
+                                            externalRef.current = node;
                                         }
                                     }}
                                     

@@ -49,7 +49,7 @@ type TextareaProps = {
 };
 
 
-const Textarea = forwardRef((props: TextareaProps, ref: any) => {
+const Textarea = forwardRef((props: TextareaProps, externalRef: any) => {
     const {
         contentRef,
         wrapperClassName,
@@ -223,10 +223,10 @@ const Textarea = forwardRef((props: TextareaProps, ref: any) => {
                     <textarea  
                         ref={(node) => {
                             valRef.current = node;
-                            if (typeof ref === 'function') {
-                                ref(node);
-                            } else if (ref) {
-                                ref.current = node;
+                            if (typeof externalRef === 'function') {
+                                externalRef(node);
+                            } else if (externalRef) {
+                                externalRef.current = node;
                             }
                         }}
                       tabIndex={tabIndex || 0}

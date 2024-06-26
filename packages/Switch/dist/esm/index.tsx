@@ -30,7 +30,7 @@ type SwitchProps = {
     onFocus?: (e: any) => void;
 };
 
-const Switch = forwardRef((props: SwitchProps, ref: any) => {
+const Switch = forwardRef((props: SwitchProps, externalRef: any) => {
     const {
         wrapperClassName,
         disabled,
@@ -102,7 +102,7 @@ const Switch = forwardRef((props: SwitchProps, ref: any) => {
             <div className={wrapperClassName || wrapperClassName === '' ? wrapperClassName : "mb-3 position-relative"} ref={rootRef}>
                 <div className="form-check form-switch">
                     <input 
-                        ref={ref}
+                        ref={externalRef}
                         tabIndex={tabIndex || 0}
                         type="checkbox"
                         className="form-check-input"

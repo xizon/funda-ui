@@ -10,6 +10,7 @@ import Checkbox from 'funda-ui/Checkbox';
 | Property | Type | Default | Description | Required |
 | --- | --- | --- | --- | --- |
 | `ref` | React.ForwardedRef | - | It is the return element of this component.  | - |
+| `contentRef` | React.RefObject | - | It exposes the following methods:  <br /> <ol><li>`contentRef.current.control()`</li><li>`contentRef.current.clear(() => { console.log('callback') })`</li><li>`contentRef.current.set(false, () => { console.log('callback') })`</li></ol> <blockquote>DO NOT USE it in the `onChange` of this component, otherwise it will cause infinite rendering</blockquote>| - |
 | `wrapperClassName` | string | `mb-3 position-relative` | The class name of the control wrapper. | - |
 | `itemSelectedClassName` | string | `item-selected` | The class name of the item selected. | - |
 | `checked` | boolean | false | Is it selected. | - |
@@ -217,6 +218,62 @@ export default () => {
                 type="text"
                 tabIndex={-1}
                 value={valSelected.join(',')}
+            />
+
+
+        </>
+    )
+}
+```
+
+
+
+## Use the exposed method to assign and empty
+
+Lets you callback the handle exposed as attribute `contentRef`.
+
+
+```js
+ import React, { useState, useRef } from 'react';
+
+ // bootstrap components
+ import ModalDialog from 'funda-ui/ModalDialog';
+import Checkbox from 'funda-ui/Checkbox';
+
+
+export default () => {
+
+
+    const conRef = useRef<any>(null);
+    const [userContent, setUserContent] = useState<boolean>(true);
+
+    return (
+
+
+        <>
+      
+            <a href="#" onClick={(e: React.MouseEvent) => {
+                e.preventDefault();
+                if (conRef.current) conRef.current.clear(() => {
+                    setUserContent(false)
+                });
+            }}>Reset</a>
+            |
+            <a href="#" onClick={(e: React.MouseEvent) => {
+                e.preventDefault();
+                if (conRef.current) conRef.current.set(true, () => {
+                    setUserContent(true);
+                });
+                
+            }}>Change value</a>
+            <p>{userContent}</p>
+
+
+            <Checkbox
+                contentRef={conRef}
+                name="string"
+                value="ok"
+                checked={userContent}
             />
 
 

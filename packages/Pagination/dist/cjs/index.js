@@ -166,7 +166,7 @@ function paginationNavigators(visibleNavigators, totalPages, activePage) {
 ;// CONCATENATED MODULE: ./src/index.tsx
 
 
-var Pagination = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_amd_react_.forwardRef)(function (props, ref) {
+var Pagination = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_amd_react_.forwardRef)(function (props, externalRef) {
   var wrapperClassName = props.wrapperClassName,
     navClassName = props.navClassName,
     apiUrl = props.apiUrl,
@@ -191,7 +191,7 @@ var Pagination = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_re
     onChange = props.onChange;
 
   // exposes the following methods
-  (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useImperativeHandle)(ref, function () {
+  (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useImperativeHandle)(externalRef, function () {
     return {
       next: function next(cb) {
         handleClick('next', function (p) {
@@ -214,7 +214,7 @@ var Pagination = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_re
         });
       }
     };
-  }, [ref, activePage]);
+  }, [externalRef, activePage]);
   var visibleNavigators = pageRangeDisplayed ? pageRangeDisplayed : 3;
   var alignClassName = '';
   switch (align) {

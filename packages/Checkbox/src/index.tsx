@@ -1,4 +1,4 @@
-import React, { useId, useState, useEffect, useRef, forwardRef } from 'react';
+import React, { useImperativeHandle, useId, useState, useEffect, useRef, forwardRef } from 'react';
 
 declare module 'react' {
     interface ReactI18NextChildren<T> {
@@ -10,6 +10,7 @@ type CheckboxOptionChangeFnType = (arg1: any, arg2: any) => void;
 
 
 type CheckboxProps = {
+    contentRef?: React.RefObject<any>;
     wrapperClassName?: string;
     itemSelectedClassName?: string;
     value: string | boolean;
@@ -32,8 +33,9 @@ type CheckboxProps = {
     onFocus?: (e: any) => void;
 };
 
-const Checkbox = forwardRef((props: CheckboxProps, ref: any) => {
+const Checkbox = forwardRef((props: CheckboxProps, externalRef: any) => {
     const {
+        contentRef,
         wrapperClassName,
         itemSelectedClassName,
         disabled,
@@ -57,6 +59,28 @@ const Checkbox = forwardRef((props: CheckboxProps, ref: any) => {
     const rootRef = useRef<any>(null);
     const valRef = useRef<any>(null);
     const [val, setVal] = useState<any>(null || false);  // Avoid the error "react checkbox changing an uncontrolled input to be controlled"
+
+    
+    // exposes the following methods
+    useImperativeHandle(
+        contentRef,
+        () => ({
+            control: () => {
+                return valRef.current;
+            },
+            clear: (cb?: any) => {
+                setVal(false);
+                cb?.();
+            },
+            set: (value: string, cb?: any) => {
+                setVal(value);
+                cb?.();
+            }
+        }),
+        [contentRef],
+    );
+
+
 
     function handleFocus(event: any) {
         rootRef.current?.classList.add('focus');
@@ -117,10 +141,10 @@ const Checkbox = forwardRef((props: CheckboxProps, ref: any) => {
                     <input
                         ref={(node) => {
                             valRef.current = node;
-                            if (typeof ref === 'function') {
-                                ref(node);
-                            } else if (ref) {
-                                ref.current = node;
+                            if (typeof externalRef === 'function') {
+                                externalRef(node);
+                            } else if (externalRef) {
+                                externalRef.current = node;
                             }
                         }}
                         tabIndex={tabIndex || 0}

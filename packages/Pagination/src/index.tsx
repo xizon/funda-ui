@@ -52,7 +52,7 @@ type PaginationProps = {
 };
 
 
-const Pagination = forwardRef((props: PaginationProps, ref: any) => {
+const Pagination = forwardRef((props: PaginationProps, externalRef: any) => {
     const {
         wrapperClassName,
         navClassName,
@@ -82,7 +82,7 @@ const Pagination = forwardRef((props: PaginationProps, ref: any) => {
 
     // exposes the following methods
     useImperativeHandle(
-        ref,
+        externalRef,
         () => ({
             next: (cb: any) => {
                 handleClick('next', (p: number) => {
@@ -105,7 +105,7 @@ const Pagination = forwardRef((props: PaginationProps, ref: any) => {
                 });
             }
         }),
-        [ref, activePage],
+        [externalRef, activePage],
     );
 
 

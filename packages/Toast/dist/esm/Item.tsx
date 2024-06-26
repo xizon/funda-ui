@@ -21,7 +21,7 @@ interface ItemProps extends React.ComponentPropsWithoutRef<any> {
     
 };
 
-const Item = forwardRef((props: ItemProps, ref: any) => {
+const Item = forwardRef((props: ItemProps, externalRef: any) => {
 
     const {
         onlyOne,
@@ -105,7 +105,7 @@ const Item = forwardRef((props: ItemProps, ref: any) => {
 
 
                         {/* PROGRESS */}
-                        <div ref={ref} data-progress-index={index} className={`progress active toast-progress ${autoCloseTime === false ? 'd-none' : ''}`} role="progressbar">
+                        <div ref={externalRef} data-progress-index={index} className={`progress active toast-progress ${autoCloseTime === false ? 'd-none' : ''}`} role="progressbar">
                             <div className="progress-bar"></div>
                         </div>
                         {/* /PROGRESS */}

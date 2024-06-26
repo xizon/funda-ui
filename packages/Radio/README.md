@@ -9,6 +9,8 @@ import Radio from 'funda-ui/Radio';
 ```
 | Property | Type | Default | Description | Required |
 | --- | --- | --- | --- | --- |
+| `ref` | React.ForwardedRef | - | It is the return the **Map** collection of all controls.  | - |
+| `contentRef` | React.RefObject | - | It exposes the following methods:  <br /> <ol><li>`contentRef.current.control()`</li><li>`contentRef.current.clear(() => { console.log('callback') })`</li><li>`contentRef.current.set('test value', () => { console.log('callback') })`</li></ol> <blockquote>DO NOT USE it in the `onChange` of this component, otherwise it will cause infinite rendering</blockquote>| - |
 | `wrapperClassName` | string | `mb-3 position-relative` | The class name of the control wrapper. | - |
 | `groupWrapperClassName` | string | - | The class name of the radio group wrapper. | - |
 | `groupLabelClassName` | string | - | The class name of the radio group label. | - |
@@ -842,4 +844,82 @@ export default () => {
     );
 }
 
+```
+
+
+
+
+## Use the exposed method to assign and empty
+
+Lets you callback the handle exposed as attribute `contentRef`.
+
+
+```js
+ import React, { useMemo, useState, useRef } from 'react';
+
+ // bootstrap components
+ import ModalDialog from 'funda-ui/ModalDialog';
+import Radio from 'funda-ui/Radio';
+
+// DO NOT move `useMemo` to component
+function MemoRadio(props: any) {
+    const {val, contentRef, callback} = props;
+    return useMemo(() => {
+        return <Radio
+                contentRef={contentRef}
+                inline={true}
+                value={val}
+                options={[
+                    { "label": "Option 1", "listItemLabel": "Option 1 (No: 001)", "value": "value-1" },
+                    { "label": "<del style=color:red>deprecate</del>Option 2", "listItemLabel": "<del style=color:red>deprecate</del>Option 2 (No: 002)", "value": "value-2" },
+                    { "label": "Option 3", "listItemLabel": "Option 3 (No: 003)", "value": "value-3" },
+                    { "label": "Option 4", "listItemLabel": "Option 4 (No: 004)", "value": "value-4", "disabled": true, "customAttr1": "attr1","customAttr2": "attr2" }
+                ]}
+                onChange={(e: any, val: string, currentData: any, currentIndex: number) => {
+                    callback(val);
+                }}
+            />
+    }, []);
+}
+
+export default () => {
+
+
+    const conRef = useRef<any>(null);
+    const [userContent, setUserContent] = useState<string>('');
+
+    return (
+
+
+        <>
+      
+            <a href="#" onClick={(e: React.MouseEvent) => {
+                e.preventDefault();
+                if (conRef.current) conRef.current.clear(() => {
+                    setUserContent('')
+                });
+            }}>Clean</a>
+            |
+            <a href="#" onClick={(e: React.MouseEvent) => {
+                e.preventDefault();
+                if (conRef.current) conRef.current.set('value-1', () => {
+                    setUserContent('value-1');
+                });
+                
+            }}>Change value</a>
+            <p>{userContent}</p>
+
+
+
+            <MemoRadio
+                val={"value-3"}
+                name="name"
+                callback={setUserContent}
+                contentRef={conRef}
+            />
+
+
+        </>
+    )
+}
 ```

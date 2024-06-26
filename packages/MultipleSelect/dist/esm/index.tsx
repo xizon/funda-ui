@@ -54,7 +54,7 @@ type MultipleSelectProps = {
 };
 
 
-const MultipleSelect = forwardRef((props: MultipleSelectProps, ref: any) => {
+const MultipleSelect = forwardRef((props: MultipleSelectProps, externalRef: any) => {
     const {
         wrapperClassName,
         wrapperMinHeight,
@@ -405,10 +405,10 @@ const MultipleSelect = forwardRef((props: MultipleSelectProps, ref: any) => {
                 <input
                     ref={(node) => {
                         inputRef.current = node;
-                        if (typeof ref === 'function') {
-                            ref(node);
-                        } else if (ref) {
-                            ref.current = node;
+                        if (typeof externalRef === 'function') {
+                            externalRef(node);
+                        } else if (externalRef) {
+                            externalRef.current = node;
                         }
                     }}
                     tabIndex={-1}

@@ -22,7 +22,7 @@ type TableFieldProps = {
     onKeyDown?: (el: any) => void;
 };
 
-const TableField = forwardRef((props: TableFieldProps, ref: any) => {
+const TableField = forwardRef((props: TableFieldProps, externalRef: any) => {
 
     const {
         tableRootRef,
@@ -55,7 +55,7 @@ const TableField = forwardRef((props: TableFieldProps, ref: any) => {
     return (
         <>
             <td 
-                ref={ref}
+                ref={externalRef}
                 colSpan={cols} 
                 data-table-text={columnHeader} 
                 data-table-col={index}  

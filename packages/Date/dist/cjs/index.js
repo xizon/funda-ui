@@ -283,7 +283,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
           }
           return target;
         }
-        var Input = /*#__PURE__*/(0, react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(function (props, _ref) {
+        var Input = /*#__PURE__*/(0, react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(function (props, externalRef) {
           var contentRef = props.contentRef,
             wrapperClassName = props.wrapperClassName,
             controlClassName = props.controlClassName,
@@ -453,10 +453,10 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
           }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("input", _extends({
             ref: function ref(node) {
               valRef.current = node;
-              if (typeof _ref === 'function') {
-                _ref(node);
-              } else if (_ref) {
-                _ref.current = node;
+              if (typeof externalRef === 'function') {
+                externalRef(node);
+              } else if (externalRef) {
+                externalRef.current = node;
               }
             },
             tabIndex: tabIndex || 0,
@@ -495,10 +495,10 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
           }, iconRight)) : null)) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react__WEBPACK_IMPORTED_MODULE_0___default().Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("input", _extends({
             ref: function ref(node) {
               valRef.current = node;
-              if (typeof _ref === 'function') {
-                _ref(node);
-              } else if (_ref) {
-                _ref.current = node;
+              if (typeof externalRef === 'function') {
+                externalRef(node);
+              } else if (externalRef) {
+                externalRef.current = node;
               }
             },
             tabIndex: tabIndex || 0,
@@ -5197,7 +5197,7 @@ function _objectWithoutPropertiesLoose(source, excluded) { if (source == null) r
 // Localization
 
 
-var src_Date = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_amd_react_.forwardRef)(function (props, _ref) {
+var src_Date = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_amd_react_.forwardRef)(function (props, externalRef) {
   var contentRef = props.contentRef,
     popupRef = props.popupRef,
     triggerClassName = props.triggerClassName,
@@ -5899,10 +5899,10 @@ var src_Date = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_reac
   }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((cjs_default()), _extends({
     ref: function ref(node) {
       inputRef.current = node;
-      if (typeof _ref === 'function') {
-        _ref(node);
-      } else if (_ref) {
-        _ref.current = node;
+      if (typeof externalRef === 'function') {
+        externalRef(node);
+      } else if (externalRef) {
+        externalRef.current = node;
       }
     },
     tabIndex: -1,

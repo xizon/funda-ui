@@ -39,7 +39,7 @@ type TagInputProps = {
 };
 
 
-const TagInput = forwardRef((props: TagInputProps, ref: any) => {
+const TagInput = forwardRef((props: TagInputProps, externalRef: any) => {
     const {
         wrapperClassName,
         maxTags,
@@ -283,10 +283,10 @@ const TagInput = forwardRef((props: TagInputProps, ref: any) => {
                         tabIndex={-1}
                         ref={(node) => {
                             valRef.current = node;
-                            if (typeof ref === 'function') {
-                                ref(node);
-                            } else if (ref) {
-                                ref.current = node;
+                            if (typeof externalRef === 'function') {
+                                externalRef(node);
+                            } else if (externalRef) {
+                                externalRef.current = node;
                             }
                         }}
                         type="hidden"

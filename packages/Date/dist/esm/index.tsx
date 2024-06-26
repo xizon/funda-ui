@@ -107,7 +107,7 @@ type DateProps = {
 };
 
 
-const Date = forwardRef((props: DateProps, ref: any) => {
+const Date = forwardRef((props: DateProps, externalRef: any) => {
     const {
         contentRef,
         popupRef,
@@ -913,10 +913,10 @@ const Date = forwardRef((props: DateProps, ref: any) => {
                     <Input
                         ref={(node) => {
                             inputRef.current = node;
-                            if (typeof ref === 'function') {
-                                ref(node);
-                            } else if (ref) {
-                                ref.current = node;
+                            if (typeof externalRef === 'function') {
+                                externalRef(node);
+                            } else if (externalRef) {
+                                externalRef.current = node;
                             }
                         }}
                         tabIndex={-1}

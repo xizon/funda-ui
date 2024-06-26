@@ -79,7 +79,7 @@ type LiveSearchProps = {
     onPressEnter?: (inputEl: any, popupEl: any) => void;
 };
 
-const LiveSearch = forwardRef((props: LiveSearchProps, ref: any) => {
+const LiveSearch = forwardRef((props: LiveSearchProps, externalRef: any) => {
     const {
         contentRef,
         popupRef,
@@ -787,10 +787,10 @@ const LiveSearch = forwardRef((props: LiveSearchProps, ref: any) => {
                     controlGroupTextClassName={controlGroupTextClassName}  
                     ref={(node) => {
                         inputRef.current = node;
-                        if (typeof ref === 'function') {
-                            ref(node);
-                        } else if (ref) {
-                            ref.current = node;
+                        if (typeof externalRef === 'function') {
+                            externalRef(node);
+                        } else if (externalRef) {
+                            externalRef.current = node;
                         }
                     }}
                     value={changedVal}

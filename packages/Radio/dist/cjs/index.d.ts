@@ -9,6 +9,7 @@ interface OptionConfig {
 }
 declare type RadioOptionChangeFnType = (arg1: any, arg2: any, arg3?: any, arg4?: any) => void;
 declare type RadioProps = {
+    contentRef?: React.RefObject<any>;
     wrapperClassName?: string;
     groupWrapperClassName?: string;
     groupLabelClassName?: string;
@@ -43,5 +44,5 @@ declare type RadioProps = {
     onFocus?: (e: any) => void;
     onCallbackListItem?: (params: any) => void;
 };
-declare const Radio: (props: RadioProps) => JSX.Element;
+declare const Radio: React.ForwardRefExoticComponent<RadioProps & React.RefAttributes<unknown>>;
 export default Radio;

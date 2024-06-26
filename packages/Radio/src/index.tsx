@@ -1,9 +1,10 @@
-import React, { useId, useRef, useState, useEffect } from 'react';
+import React, { useImperativeHandle, forwardRef, useId, useRef, useState, useEffect } from 'react';
 
 
 import {
     isJSON
 } from 'funda-utils';
+
 
 
 declare module 'react' {
@@ -21,6 +22,7 @@ type RadioOptionChangeFnType = (arg1: any, arg2: any, arg3?: any, arg4?: any) =>
 
 
 type RadioProps = {
+    contentRef?: React.RefObject<any>;
     wrapperClassName?: string;
     groupWrapperClassName?: string;
     groupLabelClassName?: string;
@@ -57,8 +59,9 @@ type RadioProps = {
     
 };
 
-const Radio = (props: RadioProps) => {
+const Radio = forwardRef((props: RadioProps, externalRef: any) => {
     const {
+        contentRef,
         wrapperClassName,
         groupWrapperClassName,
         groupLabelClassName,
@@ -90,7 +93,7 @@ const Radio = (props: RadioProps) => {
         ...attributes
     } = props;
 
-
+    
     const uniqueID = useId();
     const idRes = id || uniqueID;
     const rootRef = useRef<any>(null);
@@ -109,7 +112,31 @@ const Radio = (props: RadioProps) => {
         return label ? <>{typeof label === 'string' ? <label htmlFor={id} className="form-check-label" dangerouslySetInnerHTML={{ __html: `${label}` }}></label> : <label htmlFor={id} className="form-check-label">{label}</label>}</> : null;
     };
 
+    const getAllControls = () => {
+        return [].slice.call(rootRef.current.querySelectorAll(`[type="radio"]`));
+    };
+
     
+    // exposes the following methods
+    useImperativeHandle(
+        contentRef,
+        () => ({
+            control: () => {
+                return getAllControls();
+            },
+            clear: (cb?: any) => {
+                setControlValue('');
+                cb?.();
+            },
+            set: (value: string, cb?: any) => {
+                setControlValue(`${value}`);
+                cb?.();
+            }
+        }),
+        [dataInit, contentRef],
+    );
+
+
     function stringlineToHump(str: any) {
         if (typeof str === 'string' && str.length > 0) {
             const re = /-(\w)/g;
@@ -147,7 +174,7 @@ const Radio = (props: RadioProps) => {
 
         if (rootRef.current) {
             const allControlsData: any[] = [];
-            [].slice.call(rootRef.current.querySelectorAll(`[type="radio"]`)).forEach((el: HTMLInputElement, i: number) => {
+            getAllControls().forEach((el: HTMLInputElement, i: number) => {
                 allControlsData.push(getDataAttributes(el));
             });
             rootRef.current.setAttribute('data-controls-cus-attrs', JSON.stringify(allControlsData));
@@ -339,6 +366,9 @@ const Radio = (props: RadioProps) => {
                         return <div key={'option-' + optIndex} className={`${inline ? `form-check form-check-inline` : `form-check`} ${controlValue == opt.value ? (itemSelectedClassName || 'item-selected') : ''}`}>
                             <div className="d-inline-block">
                                 <input
+                                    ref={(node: any) => {
+                                        if (externalRef) externalRef.current = getAllControls();
+                                    }}
                                     tabIndex={tabIndex || 0}
                                     type="radio"
                                     className="form-check-input"
@@ -378,6 +408,9 @@ const Radio = (props: RadioProps) => {
                 return <>
                     <div className="d-inline-block">
                         <input
+                            ref={(node: any) => {
+                                if (externalRef) externalRef.current = getAllControls();
+                            }}
                             tabIndex={tabIndex || 0}
                             type="radio"
                             className="form-check-input"
@@ -516,7 +549,7 @@ const Radio = (props: RadioProps) => {
 
         </>
     )
-};
+});
 
 export default Radio;
 

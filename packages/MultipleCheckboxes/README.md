@@ -10,6 +10,7 @@ import MultipleCheckboxes from 'funda-ui/MultipleCheckboxes';
 | Property | Type | Default | Description | Required |
 | --- | --- | --- | --- | --- |
 | `ref` | React.ForwardedRef | - | It is the return element of this component.  | - |
+| `contentRef` | React.RefObject | - | It exposes the following methods:  <br /> <ol><li>`contentRef.current.control()`</li><li>`contentRef.current.clear(() => { console.log('callback') })`</li><li>`contentRef.current.set([{"label": "Option 1","listItemLabel":"Option 1 (No: 001)","value": "value-1","queryString": "option1"}], () => { console.log('callback') })`</li></ol> <blockquote>DO NOT USE it in the `onChange` of this component, otherwise it will cause infinite rendering</blockquote>| - |
 | `wrapperClassName` | string | `mb-3 position-relative` | The class name of the control wrapper. | - |
 | `tableLayout` | boolean | false | Use **\<table\>** HTML tag to display options. | - |
 | `tableLayoutClassName` | string | - | The class name of HTML tag `<table>`. <blockquote>It is valid when `tableLayout` is "true"</blockquote> | - |
@@ -247,7 +248,7 @@ function MemoMultipleCheckboxes(props: any) {
                     {"label": "Option 4","listItemLabel":"Option 4 (No: 004)","value": "value-4","disabled":true}
                 ]}
                 onChange={(e: any, value: any, valueStr: any, label: any, labelStr: any, currentData: any, dataCollection: any) => {
-                    callback(value);
+                    callback(valueStr);
                 }}
             />
     }, []);
@@ -836,4 +837,84 @@ export default () => {
     );
 }
 
+```
+
+
+
+
+
+
+## Use the exposed method to assign and empty
+
+Lets you callback the handle exposed as attribute `contentRef`.
+
+
+```js
+ import React, { useMemo, useState, useRef } from 'react';
+
+ // bootstrap components
+ import ModalDialog from 'funda-ui/ModalDialog';
+import MultipleCheckboxes from 'funda-ui/MultipleCheckboxes';
+
+// DO NOT move `useMemo` to component
+function MemoMultipleCheckboxes(props: any) {
+    const {val, callback, contentRef} = props;
+    return useMemo(() => {
+        return <MultipleCheckboxes
+                contentRef={contentRef}
+                wrapperClassName=""
+                value={val}
+                options={[
+                    {"label": "Option 1","listItemLabel":"Option 1 (No: 001)","value": "value-1"},
+                    {"label": "Option 2","listItemLabel":"<del style=color:red>deprecate</del>Option 2 (No: 002)","value": "value-2"},
+                    {"label": "Option 3","listItemLabel":"Option 3 (No: 003)","value": "value-3"},
+                    {"label": "Option 4","listItemLabel":"Option 4 (No: 004)","value": "value-4","disabled":true}
+                ]}
+                onChange={(e: any, value: any, valueStr: any, label: any, labelStr: any, currentData: any, dataCollection: any) => {
+                    callback(value);
+                }}
+            />
+    }, []);
+}
+
+export default () => {
+
+
+    const conRef = useRef<any>(null);
+    const [userContent, setUserContent] = useState<string>('');
+    
+    return (
+
+
+        <>
+      
+            <a href="#" onClick={(e: React.MouseEvent) => {
+                e.preventDefault();
+                if (conRef.current) conRef.current.clear(() => {
+                    setUserContent('')
+                });
+            }}>Clean</a>
+            |
+            <a href="#" onClick={(e: React.MouseEvent) => {
+                e.preventDefault();
+                if (conRef.current) conRef.current.set('[value-1][value-2]', () => {
+                    setUserContent('[value-1][value-2]');
+                });
+
+            }}>Change value</a>
+            <p>{userContent}</p>
+
+
+            <MemoMultipleCheckboxes 
+                contentRef={conRef}
+                val="[value-3]"
+                name="name"
+                callback={setUserContent} 
+            />
+            
+            
+
+        </>
+    )
+}
 ```

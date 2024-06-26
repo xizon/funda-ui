@@ -1,4 +1,4 @@
-import React, { useId, useState, useEffect, useRef, forwardRef } from 'react';
+import React, { useImperativeHandle, useId, useState, useEffect, useRef, forwardRef } from 'react';
 
 import {
     isJSON,
@@ -14,6 +14,7 @@ interface OptionConfig {
 
 
 type MultipleCheckboxesProps = {
+    contentRef?: React.RefObject<any>;
     wrapperClassName?: string;
     tableLayout?: boolean;
     tableLayoutClassName?: string;
@@ -48,8 +49,9 @@ type MultipleCheckboxesProps = {
 };
 
 
-const MultipleCheckboxes = forwardRef((props: MultipleCheckboxesProps, ref: any) => {
+const MultipleCheckboxes = forwardRef((props: MultipleCheckboxesProps, externalRef: any) => {
     const {
+        contentRef,
         wrapperClassName,
         tableLayout,
         tableLayoutClassName,
@@ -82,10 +84,8 @@ const MultipleCheckboxes = forwardRef((props: MultipleCheckboxesProps, ref: any)
     const uniqueID = useId();
     const idRes = id || uniqueID;
     const rootRef = useRef<any>(null);
-    const inputRef = useRef<any>(null);
     const optionsRes = options ? isJSON(options) ? JSON.parse(options as string) : options : [];
     const _inline = typeof inline === 'undefined' ? true : inline;
-
 
     // return a array of options
     let optionsDataInit: OptionConfig[] = optionsRes;
@@ -118,6 +118,30 @@ const MultipleCheckboxes = forwardRef((props: MultipleCheckboxesProps, ref: any)
         return label ? <>{typeof label === 'string' ? <label htmlFor={id} className="form-check-label" dangerouslySetInnerHTML={{ __html: `${label}` }}></label> : <label htmlFor={id} className="form-check-label">{label}</label>}</> : null;
     };
 
+    const getAllControls = () => {
+        return [].slice.call(rootRef.current.querySelectorAll(`[type="checkbox"]`));
+    };
+
+    // exposes the following methods
+    useImperativeHandle(
+        contentRef,
+        () => ({
+            control: () => {
+                return getAllControls();
+            },
+            clear: (cb?: any) => {
+                initDefaultValue('', dataInit);
+                cb?.();
+            },
+            set: (value: any, cb?: any) => {
+                initDefaultValue(value, dataInit);
+                cb?.();
+            }
+        }),
+        [dataInit, contentRef],
+    );
+
+
 
     function handleCheckboxChange(itemKey: string) {
         // first, make a copy of the original set rather than mutating the original
@@ -128,6 +152,8 @@ const MultipleCheckboxes = forwardRef((props: MultipleCheckboxesProps, ref: any)
             newSelectedItems.delete(itemKey);
         }
         setSelectedItems(newSelectedItems);
+
+        return newSelectedItems;
     }
 
 
@@ -294,6 +320,9 @@ const MultipleCheckboxes = forwardRef((props: MultipleCheckboxesProps, ref: any)
                             data-disabled={disabled || (typeof opt.disabled !== 'undefined' ? `${opt.disabled}` : 'false')}
                         >
                             <input
+                                ref={(node: any) => {
+                                    if (externalRef) externalRef.current = getAllControls();
+                                }}
                                 type="checkbox"
                                 className="form-check-input"
                                 name={`${name}-checkbox-item`}
@@ -309,18 +338,11 @@ const MultipleCheckboxes = forwardRef((props: MultipleCheckboxesProps, ref: any)
                                 checked={selectedItems.has(opt.value)}
                                 onChange={(e: any) => {
     
-                                    handleCheckboxChange(opt.value)
-    
-                                    const newSelectedItems = new Set(selectedItems);
-                                    if (!selectedItems.has(opt.value)) {
-                                        newSelectedItems.add(opt.value);
-                                    } else {
-                                        newSelectedItems.delete(opt.value);
-                                    }
-    
-    
+
+                                    const _newSelectedItems = handleCheckboxChange(opt.value);
+                                    
                                     //
-                                    const _res = valRes(newSelectedItems);
+                                    const _res = valRes(_newSelectedItems);
                                     const _resLabel = optionsFlat(dataInit).filter((v: any) => _res.includes(v.value)).map((k: any) => k.label);
                                     const _resDataCollection = optionsFlat(dataInit).filter((v: any) => _res.includes(v.value)).map((k: any) => k);
     
@@ -358,6 +380,10 @@ const MultipleCheckboxes = forwardRef((props: MultipleCheckboxesProps, ref: any)
                 return <>
     
                     <input
+                        ref={(node: any) => {
+                            if (externalRef) externalRef.current = getAllControls();
+                            
+                        }}
                         type="checkbox"
                         className="form-check-input"
                         name={`${name}-checkbox-item`}
@@ -373,19 +399,10 @@ const MultipleCheckboxes = forwardRef((props: MultipleCheckboxesProps, ref: any)
                         checked={selectedItems.has(item.value)}
                         onChange={(e: any) => {
     
-    
-                            handleCheckboxChange(item.value)
-    
-                            const newSelectedItems = new Set(selectedItems);
-                            if (!selectedItems.has(item.value)) {
-                                newSelectedItems.add(item.value);
-                            } else {
-                                newSelectedItems.delete(item.value);
-                            }
-    
-    
+                            const _newSelectedItems = handleCheckboxChange(item.value);
+                            
                             //
-                            const _res = valRes(newSelectedItems);
+                            const _res = valRes(_newSelectedItems);
                             const _resLabel = dataInit.filter((v: any) => _res.includes(v.value)).map((k: any) => k.label);
                             const _resDataCollection = optionsFlat(dataInit).filter((v: any) => _res.includes(v.value)).map((k: any) => k);
     
@@ -496,7 +513,6 @@ const MultipleCheckboxes = forwardRef((props: MultipleCheckboxesProps, ref: any)
                     </tbody>
                     <tfoot style={{display: 'none'}}>
                         <input
-                            ref={inputRef}
                             tabIndex={-1}
                             type="hidden"
                             id={idRes}
@@ -525,7 +541,6 @@ const MultipleCheckboxes = forwardRef((props: MultipleCheckboxesProps, ref: any)
                         {itemsList(onCallbackListItem)}
 
                         <input
-                            ref={inputRef}
                             tabIndex={-1}
                             type="hidden"
                             id={idRes}

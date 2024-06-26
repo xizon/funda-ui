@@ -179,7 +179,6 @@ import useWindowScroll from './hooks/useWindowScroll';
 import useDraggable from './hooks/useDraggable';
 
 
-
 export { 
    animateStyles,
    setDefaultOptions,
