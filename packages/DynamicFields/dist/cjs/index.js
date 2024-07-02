@@ -243,45 +243,51 @@ var DynamicFields = function DynamicFields(props) {
   }
   function handleClickRemove(e) {
     if (e !== null && typeof e !== 'undefined') e.preventDefault();
-    var curKey = e.currentTarget.closest('.dynamic-fields__data__wrapper').dataset.key;
+    var $target = e.currentTarget.closest('.dynamic-fields__data__wrapper');
+    if ($target === null) return;
+    var curKey = $target.dataset.key;
     if (window.confirm(confirmText || '')) {
-      //button status
-      if (rootRef.current.querySelectorAll(PER_ROW_DOM_STRING).length <= parseFloat(maxFields)) {
-        addBtnRef.current.style.setProperty('display', 'inline', 'important');
-      }
-      var curItem = rootRef.current.querySelector(".dynamic-fields__append [data-key=\"".concat(curKey, "\"]"));
-      var curIndex = curItem.dataset.index;
-
-      // Do not delete the parent node `innerAppendBodyClassName`, otherwise an error may be reported when 
-      // using routing: DOMException: Failed to execute 'removeChild' on 'Node'
-      if (curItem !== null && !DO_NOT_REMOVE_DOM) {
-        curItem.remove();
-      }
-
-      //
-      setTimeout(function () {
-        var perRow = [].slice.call(rootRef.current.querySelectorAll(PER_ROW_DOM_STRING));
-
-        // update index
-        perRow.forEach(function (el, i) {
-          el.dataset.index = i.toString();
-        });
-
-        // update last element
-        if (perRow.length === 1) {
-          updateLastItemCls(perRow[0], 'add');
-        } else {
-          updateLastItemCls(perRow[perRow.length - 1], 'add');
+      if (rootRef.current && addBtnRef.current) {
+        //button status
+        if (rootRef.current.querySelectorAll(PER_ROW_DOM_STRING).length <= parseFloat(maxFields)) {
+          addBtnRef.current.style.setProperty('display', 'inline', 'important');
         }
+        var curItem = rootRef.current.querySelector(".dynamic-fields__append [data-key=\"".concat(curKey, "\"]"));
+        if (curItem !== null) {
+          var curIndex = curItem.dataset.index;
 
-        // update inner elements
-        if (perRow.length === 0) {
-          if (!emptyContentEnabled('remove')) updateHeadCls('add');
+          // Do not delete the parent node `innerAppendBodyClassName`, otherwise an error may be reported when 
+          // using routing: DOMException: Failed to execute 'removeChild' on 'Node'
+          if (!DO_NOT_REMOVE_DOM) {
+            curItem.remove();
+          }
+
+          //
+          setTimeout(function () {
+            var perRow = [].slice.call(rootRef.current.querySelectorAll(PER_ROW_DOM_STRING));
+
+            // update index
+            perRow.forEach(function (el, i) {
+              el.dataset.index = i.toString();
+            });
+
+            // update last element
+            if (perRow.length === 1) {
+              updateLastItemCls(perRow[0], 'add');
+            } else {
+              updateLastItemCls(perRow[perRow.length - 1], 'add');
+            }
+
+            // update inner elements
+            if (perRow.length === 0) {
+              if (!emptyContentEnabled('remove')) updateHeadCls('add');
+            }
+
+            //
+            onRemove === null || onRemove === void 0 ? void 0 : onRemove(perRow, curKey, curIndex, rootRef.current, e.currentTarget, PER_ROW_DOM_STRING);
+          }, 0);
         }
-
-        //
-        onRemove === null || onRemove === void 0 ? void 0 : onRemove(perRow, curKey, curIndex, rootRef.current, e.currentTarget, PER_ROW_DOM_STRING);
-      }, 0);
+      }
     }
   }
   function generateGroup(inputData) {

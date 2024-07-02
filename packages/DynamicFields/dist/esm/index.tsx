@@ -104,7 +104,7 @@ const DynamicFields = (props: DynamicFieldsProps) => {
                 el.classList.remove(ITEM_LAST_CLASSNAME);
                 (el.firstChild as HTMLDivElement)?.classList.remove(ITEM_LAST_CLASSNAME);
             });
-            
+
             el.classList.add(ITEM_LAST_CLASSNAME);
             el.parentElement?.classList.add(ITEM_LAST_CLASSNAME);
         } else {
@@ -160,8 +160,8 @@ const DynamicFields = (props: DynamicFieldsProps) => {
         //
         setTimeout(() => {
             const perRow = [].slice.call(rootRef.current.querySelectorAll(PER_ROW_DOM_STRING));
-            
-        
+
+
             // update index
             perRow.forEach((el: HTMLDivElement, i: number) => {
                 el.dataset.index = i.toString();
@@ -171,7 +171,7 @@ const DynamicFields = (props: DynamicFieldsProps) => {
             // update last element
             if (perRow.length > 1) {
                 updateLastItemCls(perRow[0], 'remove');
-                updateLastItemCls(perRow[perRow.length-1], 'add');
+                updateLastItemCls(perRow[perRow.length - 1], 'add');
             }
 
             // update inner elements
@@ -186,55 +186,66 @@ const DynamicFields = (props: DynamicFieldsProps) => {
 
 
     function handleClickRemove(e: React.MouseEvent) {
-        if (e !== null && typeof e !== 'undefined')  e.preventDefault();
+        if (e !== null && typeof e !== 'undefined') e.preventDefault();
 
-        const curKey = (e.currentTarget.closest('.dynamic-fields__data__wrapper') as HTMLDivElement).dataset.key;
-        
+        const $target: any = e.currentTarget.closest('.dynamic-fields__data__wrapper');
+        if ($target === null) return;
+
+        const curKey = ($target as HTMLDivElement).dataset.key;
+
 
         if (window.confirm(confirmText || '')) {
 
-            //button status
-            if (rootRef.current.querySelectorAll(PER_ROW_DOM_STRING).length <= parseFloat(maxFields)) {
-                addBtnRef.current.style.setProperty('display', 'inline', 'important');
-            }
-
-            
-            const curItem = rootRef.current.querySelector(`.dynamic-fields__append [data-key="${curKey}"]`);
-            const curIndex = curItem.dataset.index;
-
-
-             // Do not delete the parent node `innerAppendBodyClassName`, otherwise an error may be reported when 
-             // using routing: DOMException: Failed to execute 'removeChild' on 'Node'
-            if (curItem !== null && !DO_NOT_REMOVE_DOM) {
-                curItem.remove();
-            }
-
-       
-            //
-            setTimeout(() => { 
-                const perRow = [].slice.call(rootRef.current.querySelectorAll(PER_ROW_DOM_STRING));
-
-                // update index
-                perRow.forEach((el: HTMLDivElement, i: number) => {
-                    el.dataset.index = i.toString();
-                });
-
-                // update last element
-                if (perRow.length === 1) {
-                    updateLastItemCls(perRow[0], 'add');
-                } else {
-                    updateLastItemCls(perRow[perRow.length-1], 'add');
+            if (rootRef.current && addBtnRef.current) {
+                //button status
+                if (rootRef.current.querySelectorAll(PER_ROW_DOM_STRING).length <= parseFloat(maxFields)) {
+                    addBtnRef.current.style.setProperty('display', 'inline', 'important');
                 }
 
-                // update inner elements
-                if (perRow.length === 0) {
-                    if (!emptyContentEnabled('remove')) updateHeadCls('add');
-                }
-                
 
-                //
-                onRemove?.(perRow, curKey as never, curIndex as number, rootRef.current, e.currentTarget as HTMLAnchorElement, PER_ROW_DOM_STRING);
-            }, 0);
+                const curItem = rootRef.current.querySelector(`.dynamic-fields__append [data-key="${curKey}"]`);
+
+                if (curItem !== null) {
+                    const curIndex = curItem.dataset.index;
+
+
+                    // Do not delete the parent node `innerAppendBodyClassName`, otherwise an error may be reported when 
+                    // using routing: DOMException: Failed to execute 'removeChild' on 'Node'
+                    if (!DO_NOT_REMOVE_DOM) {
+                        curItem.remove();
+                    }
+
+
+                    //
+                    setTimeout(() => {
+                        const perRow = [].slice.call(rootRef.current.querySelectorAll(PER_ROW_DOM_STRING));
+
+                        // update index
+                        perRow.forEach((el: HTMLDivElement, i: number) => {
+                            el.dataset.index = i.toString();
+                        });
+
+                        // update last element
+                        if (perRow.length === 1) {
+                            updateLastItemCls(perRow[0], 'add');
+                        } else {
+                            updateLastItemCls(perRow[perRow.length - 1], 'add');
+                        }
+
+                        // update inner elements
+                        if (perRow.length === 0) {
+                            if (!emptyContentEnabled('remove')) updateHeadCls('add');
+                        }
+
+
+                        //
+                        onRemove?.(perRow, curKey as never, curIndex as number, rootRef.current, e.currentTarget as HTMLAnchorElement, PER_ROW_DOM_STRING);
+                    }, 0);
+                }
+
+            }
+
+
         }
 
     }
@@ -243,29 +254,29 @@ const DynamicFields = (props: DynamicFieldsProps) => {
         const isNew = !Array.isArray(inputData);
         const _data = Array.isArray(inputData) ? inputData : [inputData];
 
-     
+
         return (
             _data.map((item: any, i: number) => {
-                const removeBtyn = <><a href="#" tabIndex={-1} className={`dynamic-fields__removebtn ${btnRemoveWrapperClassName || 'align-middle' }`} onClick={handleClickRemove}>
+                const removeBtyn = <><a href="#" tabIndex={-1} className={`dynamic-fields__removebtn ${btnRemoveWrapperClassName || 'align-middle'}`} onClick={handleClickRemove}>
                     {iconRemove ? <>{iconRemove}</> : <><svg width="20px" height="20px" viewBox="0 0 24 24" fill="none"><path fillRule="evenodd" clipRule="evenodd" d="M22 12c0 5.523-4.477 10-10 10S2 17.523 2 12 6.477 2 12 2s10 4.477 10 10ZM8 11a1 1 0 1 0 0 2h8a1 1 0 1 0 0-2H8Z" fill="#000" /></svg></>}
                 </a></>;
 
                 return <React.Fragment key={'tmpl-' + i}>
                     {isNew ? <>
                         {item}
-                    </> : <><div key={'tmpl-' + i} className={`dynamic-fields__inner__body ${innerAppendBodyClassName || ''} ${i === _data.length-1 ? ITEM_LAST_CLASSNAME : ''}`} data-body-index={i}>
-                        <div 
-                            className={`dynamic-fields__data__wrapper position-relative ${innerAppendCellClassName || ''} ${i === _data.length-1 ? ITEM_LAST_CLASSNAME : ''}`} 
-                            data-key={i} 
+                    </> : <><div key={'tmpl-' + i} className={`dynamic-fields__inner__body ${innerAppendBodyClassName || ''} ${i === _data.length - 1 ? ITEM_LAST_CLASSNAME : ''}`} data-body-index={i}>
+                        <div
+                            className={`dynamic-fields__data__wrapper position-relative ${innerAppendCellClassName || ''} ${i === _data.length - 1 ? ITEM_LAST_CLASSNAME : ''}`}
+                            data-key={i}
                             data-index={i}
                             {...attributes}
                         >
                             {item}
                             {removeBtyn}
                         </div>
-                        </div>
+                    </div>
                     </>}
-                    
+
                 </React.Fragment>
 
             })
@@ -273,11 +284,11 @@ const DynamicFields = (props: DynamicFieldsProps) => {
         )
 
     }
-    
+
     function addButton() {
         return <div className="dynamic-fields__btns dynamic-fields__btns--end">
             {iconAddBefore ? iconAddBefore : null}
-            <a ref={addBtnRef} id={addBtnIdRef.current} href="#" tabIndex={-1} className={`dynamic-fields__addbtn ${btnAddWrapperClassName || 'align-middle' }`} onClick={handleClickAdd}>
+            <a ref={addBtnRef} id={addBtnIdRef.current} href="#" tabIndex={-1} className={`dynamic-fields__addbtn ${btnAddWrapperClassName || 'align-middle'}`} onClick={handleClickAdd}>
                 {iconAdd ? <>{iconAdd}</> : <><svg width="20px" height="20px" viewBox="0 0 24 24" fill="none"><path d="M12 2C6.49 2 2 6.49 2 12C2 17.51 6.49 22 12 22C17.51 22 22 17.51 22 12C22 6.49 17.51 2 12 2ZM16 12.75H12.75V16C12.75 16.41 12.41 16.75 12 16.75C11.59 16.75 11.25 16.41 11.25 16V12.75H8C7.59 12.75 7.25 12.41 7.25 12C7.25 11.59 7.59 11.25 8 11.25H11.25V8C11.25 7.59 11.59 7.25 12 7.25C12.41 7.25 12.75 7.59 12.75 8V11.25H16C16.41 11.25 16.75 11.59 16.75 12C16.75 12.41 16.41 12.75 16 12.75Z" fill="#000" /></svg></>}
             </a>
             {iconAddAfter ? iconAddAfter : null}
@@ -289,7 +300,7 @@ const DynamicFields = (props: DynamicFieldsProps) => {
 
         setVal(data ? data.init : []);
         setTmpl(data ? data.tmpl : null);
-    
+
         //
         onLoad?.(addBtnIdRef.current, rootRef.current, PER_ROW_DOM_STRING);
     }, [data]);
@@ -300,7 +311,7 @@ const DynamicFields = (props: DynamicFieldsProps) => {
 
 
             <div className={wrapperClassName || wrapperClassName === '' ? wrapperClassName : "mb-3 position-relative"} ref={rootRef}>
-                {label ? <>{typeof label === 'string' ? <label className="form-label" dangerouslySetInnerHTML={{__html: `${label}`}}></label> : <label className="form-label">{label}</label>}</> : null}
+                {label ? <>{typeof label === 'string' ? <label className="form-label" dangerouslySetInnerHTML={{ __html: `${label}` }}></label> : <label className="form-label">{label}</label>}</> : null}
 
                 <div ref={fieldsRef} className="dynamic-fields-container" data-max-fields={maxFields || 10} id={idRes}>
 
@@ -310,12 +321,12 @@ const DynamicFields = (props: DynamicFieldsProps) => {
 
 
                     <div className={`dynamic-fields__append ${innerAppendClassName || ''}`}>
-                    
+
                         {/* //////////// head /////////// */}
                         {innerAppendHeadData && Array.isArray(innerAppendHeadData) && (val.length > 0 || innerAppendHeadRowShowFirst) ? <>
                             <div className={`dynamic-fields__inner__head ${innerAppendHeadRowClassName || ''}`}>
-                                {innerAppendHeadData.map((item: any, i:number) => {
-                                    return <div key={'inner-header-row' + i} className={`${innerAppendHeadCellClassName || ''} ${i === innerAppendHeadData.length-1 ? ITEM_LAST_CLASSNAME : ''} ${Array.isArray(innerAppendHeadCellClassName) ? (typeof innerAppendHeadCellClassName[i] !== 'undefined' ? innerAppendHeadCellClassName[i] : '') : ''}`} style={innerAppendHeadCellStyles && typeof innerAppendHeadCellStyles[i] !== 'undefined' ? innerAppendHeadCellStyles[i] : {}}>{item}</div>;
+                                {innerAppendHeadData.map((item: any, i: number) => {
+                                    return <div key={'inner-header-row' + i} className={`${innerAppendHeadCellClassName || ''} ${i === innerAppendHeadData.length - 1 ? ITEM_LAST_CLASSNAME : ''} ${Array.isArray(innerAppendHeadCellClassName) ? (typeof innerAppendHeadCellClassName[i] !== 'undefined' ? innerAppendHeadCellClassName[i] : '') : ''}`} style={innerAppendHeadCellStyles && typeof innerAppendHeadCellStyles[i] !== 'undefined' ? innerAppendHeadCellStyles[i] : {}}>{item}</div>;
                                 })}
                             </div>
                         </> : null}
