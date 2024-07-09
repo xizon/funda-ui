@@ -4143,7 +4143,8 @@ var MultipleSelect = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardR
     type: "hidden",
     id: idRes,
     name: name,
-    value: VALUE_BY_BRACKETS ? (0,funda_utils__WEBPACK_IMPORTED_MODULE_1__.convertArrToValByBrackets)(valSelected) : valSelected.join(','),
+    value: VALUE_BY_BRACKETS ? (0,funda_utils__WEBPACK_IMPORTED_MODULE_1__.convertArrToValByBrackets)(valSelected) : valSelected.join(',') // do not use `defaultValue`
+    ,
     required: required || null
   }, attributes)), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
     className: "m-select-inner"

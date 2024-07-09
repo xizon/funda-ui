@@ -384,8 +384,8 @@ export default () => {
                 }}
             />
 
-            <input name="province" type="hidden" value="" />
-            <input name="city" type="hidden" value="" />
+            <input name="province" type="hidden" defaultValue="" />
+            <input name="city" type="hidden" defaultValue="" />
 
 
 

@@ -172,6 +172,8 @@ const Table = (props: TableProps) => {
     };
 
     const allRows = () => {
+        if (tbodyRef.current === null) return [];
+
         return [].slice.call(tbodyRef.current.children);
     };
 
@@ -267,6 +269,7 @@ const Table = (props: TableProps) => {
     // checkboxes data
     // ================================================================
     function initCheckboxesData() {
+        if (rootRef.current === null) return;
 
         const _checkboxes = getChildren(rootRef.current.querySelector('table').querySelector('tbody'), '[type="checkbox"]');
         const _data: any[] = [];
@@ -577,16 +580,17 @@ const Table = (props: TableProps) => {
     }, []);
 
 
+    
     return (
         <>
 
-            <div 
-                ref={rootRef} 
-                id={idRes} 
+            <div
+                ref={rootRef}
+                id={idRes}
                 className={`table__wrapper ${wrapperClassName || wrapperClassName === '' ? wrapperClassName : `mb-3 position-relative`} ${responsiveClasses} ${enhancedResponsiveClasses} ${checkableClasses} ${radioClasses} ${draggableClasses} ${sortableClasses}`}
             >
 
-                <table 
+                <table
                     className={`${tableClassName || tableClassName === '' ? tableClassName : "table"} ${tableClasses} ${typeof cellAutoWidth === 'undefined' || cellAutoWidth === false ? '' : 'cell-autowidth'}`}
                 >
 
@@ -657,7 +661,7 @@ const Table = (props: TableProps) => {
                                 evRowClick={onRowClick}
                                 evCellArrowKeys={onCellArrowKeys}
 
-                                
+
                             />;
                         }) : ""
                         }

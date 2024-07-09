@@ -163,7 +163,7 @@ const ColorPicker = forwardRef((props: ColorPickerProps, externalRef: any) => {
                         type="hidden"
                         id={idRes}
                         name={name}
-                        value={changedVal}
+                        value={changedVal}  // do not use `defaultValue`
                         required={required || null}
                         {...attributes}
                     />

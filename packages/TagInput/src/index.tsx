@@ -292,7 +292,7 @@ const TagInput = forwardRef((props: TagInputProps, externalRef: any) => {
                         type="hidden"
                         id={idRes}
                         name={name}
-                        value={VALUE_BY_BRACKETS ? convertArrToValByBrackets(items.map((item: any) => item.content)) : items.map((item: any) => item.content).join(',')}
+                        value={VALUE_BY_BRACKETS ? convertArrToValByBrackets(items.map((item: any) => item.content)) : items.map((item: any) => item.content).join(',')} // do not use `defaultValue`
                         required={required || null}
                     />
 

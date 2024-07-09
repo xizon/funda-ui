@@ -3975,7 +3975,7 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 -------------------------------------------------*/
 
 var TableFieldRow = function TableFieldRow(props) {
-  var _latestCheckedData$fi;
+  var _latestCheckedData$fi3;
   var tableRootRef = props.tableRootRef,
     tableCheckRef = props.tableCheckRef,
     _props$rowActiveClass = props.rowActiveClassName,
@@ -4012,6 +4012,10 @@ var TableFieldRow = function TableFieldRow(props) {
     _useState2 = _slicedToArray(_useState, 2),
     firstInitCheckboxes = _useState2[0],
     setFirstInitCheckboxes = _useState2[1];
+  var _useState3 = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)(null),
+    _useState4 = _slicedToArray(_useState3, 2),
+    checkboxDefaultVal = _useState4[0],
+    setCheckboxDefaultVal = _useState4[1];
 
   //
   var _ref = fieldsCheckedAct || [null, null],
@@ -4106,8 +4110,9 @@ var TableFieldRow = function TableFieldRow(props) {
       if (typeof rowKey !== 'undefined' && typeof getCheckedData !== 'undefined') setCheckboxCheckedData(getCheckedData, rowKey, fieldsChecked[Number(rowIndex)]);
       // Update checked data
       updategetCheckedData(_checkedData);
-      setFirstInitCheckboxes(true);
       updateFirstInitCheckboxesClassName(true);
+      //
+      setFirstInitCheckboxes(true);
       return _checkedData;
     } else {
       return getCheckedData;
@@ -4214,6 +4219,14 @@ var TableFieldRow = function TableFieldRow(props) {
     var _e$target$closest;
     (_e$target$closest = e.target.closest('table')) === null || _e$target$closest === void 0 ? void 0 : _e$target$closest.querySelector('tbody').classList.add('drag-trigger-mousedown');
   }
+
+  // to aviod `Warning: Cannot update a component (ComponentName) while rendering a different component`
+  (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useEffect)(function () {
+    var _latestCheckedData$fi;
+    setCheckboxDefaultVal(((_latestCheckedData$fi = latestCheckedData().filter(function (cur) {
+      return cur.key === rowKey;
+    })[0]) === null || _latestCheckedData$fi === void 0 ? void 0 : _latestCheckedData$fi.checked) || false); // Avoid the error "react checkbox changing an uncontrolled input to be controlled"
+  }, []);
   return /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("th", {
     scope: "row",
     colSpan: cols,
@@ -4348,7 +4361,7 @@ var TableFieldRow = function TableFieldRow(props) {
     className: "form-check__wrapper"
   }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
     className: "form-check d-inline-block"
-  }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("input", {
+  }, checkboxDefaultVal === null ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("input", {
     type: "checkbox",
     className: "form-check-input",
     name: "checkbox-".concat(checkboxNamePrefix, "-").concat(rowIndex),
@@ -4357,17 +4370,34 @@ var TableFieldRow = function TableFieldRow(props) {
     "data-index": "".concat(rowIndex),
     "data-key": "".concat(rowKey),
     "data-use": dataUse,
-    value: "".concat(rowKey),
-    checked: (_latestCheckedData$fi = latestCheckedData().filter(function (cur) {
-      return cur.key === rowKey;
-    })[0]) === null || _latestCheckedData$fi === void 0 ? void 0 : _latestCheckedData$fi.checked,
+    defaultValue: "".concat(rowKey),
+    checked: checkboxDefaultVal !== null ? checkboxDefaultVal : false,
     onChange: function onChange(e) {
       var _latestCheckedData$fi2;
       checkedAct(e.target, !((_latestCheckedData$fi2 = latestCheckedData().filter(function (cur) {
         return cur.key === rowKey;
       })[0]) !== null && _latestCheckedData$fi2 !== void 0 && _latestCheckedData$fi2.checked));
     }
-  }))))), /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("span", {
+  })) : /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("input", {
+    type: "checkbox",
+    className: "form-check-input",
+    name: "checkbox-".concat(checkboxNamePrefix, "-").concat(rowIndex),
+    ref: checkboxRef,
+    tabIndex: -1,
+    "data-index": "".concat(rowIndex),
+    "data-key": "".concat(rowKey),
+    "data-use": dataUse,
+    defaultValue: "".concat(rowKey),
+    checked: (_latestCheckedData$fi3 = latestCheckedData().filter(function (cur) {
+      return cur.key === rowKey;
+    })[0]) === null || _latestCheckedData$fi3 === void 0 ? void 0 : _latestCheckedData$fi3.checked,
+    onChange: function onChange(e) {
+      var _latestCheckedData$fi4;
+      checkedAct(e.target, !((_latestCheckedData$fi4 = latestCheckedData().filter(function (cur) {
+        return cur.key === rowKey;
+      })[0]) !== null && _latestCheckedData$fi4 !== void 0 && _latestCheckedData$fi4.checked));
+    }
+  })))))), /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("span", {
     ref: contentRef
   }, content)));
 };
@@ -4735,10 +4765,11 @@ var TableHeaders = function TableHeaders(props) {
       "data-index": -1,
       "data-key": "row-all",
       "data-use": "",
-      value: "row-all",
-      checked: (_filter$ = getCheckedRootData.filter(function (cur) {
+      defaultValue: "row-all",
+      checked: ((_filter$ = getCheckedRootData.filter(function (cur) {
         return cur.key === 'row-all';
-      })[0]) === null || _filter$ === void 0 ? void 0 : _filter$.checked,
+      })[0]) === null || _filter$ === void 0 ? void 0 : _filter$.checked) || false // Avoid the error "react checkbox changing an uncontrolled input to be controlled"
+      ,
       onChange: function onChange(e) {
         var _filter$2;
         checkedAct(e.target, !((_filter$2 = getCheckedRootData.filter(function (cur) {
@@ -4950,6 +4981,7 @@ var Table = function Table(props) {
     existingNode.parentNode.insertBefore(newNode, existingNode.nextSibling);
   };
   var allRows = function allRows() {
+    if (tbodyRef.current === null) return [];
     return [].slice.call(tbodyRef.current.children);
   };
   var printData = function printData(data) {
@@ -5025,6 +5057,7 @@ var Table = function Table(props) {
   // checkboxes data
   // ================================================================
   function initCheckboxesData() {
+    if (rootRef.current === null) return;
     var _checkboxes = (0,cjs.getChildren)(rootRef.current.querySelector('table').querySelector('tbody'), '[type="checkbox"]');
     var _data = [];
     [].slice.call(_checkboxes).forEach(function (node, i) {

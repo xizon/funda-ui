@@ -4087,7 +4087,8 @@ var TagInput = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(fu
       return item.content;
     })) : items.map(function (item) {
       return item.content;
-    }).join(','),
+    }).join(',') // do not use `defaultValue`
+    ,
     required: required || null
   }))));
 });

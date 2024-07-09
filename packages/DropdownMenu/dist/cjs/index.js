@@ -4287,7 +4287,7 @@ var DropdownMenu = function DropdownMenu(props) {
     name: name || '',
     type: "hidden",
     value: selected === null || selected === void 0 ? void 0 : selected.value
-  }), /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((cjs_default()), {
+  }), " ", /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((cjs_default()), {
     show: true,
     containerClassName: "DropdownMenu"
   }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {

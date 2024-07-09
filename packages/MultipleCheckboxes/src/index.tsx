@@ -517,7 +517,7 @@ const MultipleCheckboxes = forwardRef((props: MultipleCheckboxesProps, externalR
                             type="hidden"
                             id={idRes}
                             name={name}
-                            value={VALUE_BY_BRACKETS ? convertArrToValByBrackets(valRes(selectedItems)) : valRes(selectedItems).join(',')}
+                            value={VALUE_BY_BRACKETS ? convertArrToValByBrackets(valRes(selectedItems)) : valRes(selectedItems).join(',')} // do not use `defaultValue`
                             required={required || null}
                             {...attributes}
                         />
@@ -545,7 +545,7 @@ const MultipleCheckboxes = forwardRef((props: MultipleCheckboxesProps, externalR
                             type="hidden"
                             id={idRes}
                             name={name}
-                            value={VALUE_BY_BRACKETS ? convertArrToValByBrackets(valRes(selectedItems)) : valRes(selectedItems).join(',')}
+                            value={VALUE_BY_BRACKETS ? convertArrToValByBrackets(valRes(selectedItems)) : valRes(selectedItems).join(',')} // do not use `defaultValue`
                             required={required || null}
                             {...attributes}
                         />

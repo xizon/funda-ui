@@ -1,4 +1,4 @@
-import React, { useRef, useState, useImperativeHandle } from 'react';
+import React, { useEffect, useRef, useState, useImperativeHandle } from 'react';
 
 // HAS CHECKBOX
 
@@ -82,6 +82,9 @@ const TableFieldRow = (props: TableFieldRowProps) => {
     const contentRef = useRef<any>(null);
     const checkboxRef = useRef<any>(null);
     const [firstInitCheckboxes, setFirstInitCheckboxes] = useState<boolean>(false);
+    const [checkboxDefaultVal, setCheckboxDefaultVal] = useState<null | boolean>(null);
+    
+
     
     //
     const [fieldsCheckedUpdateDataPrint, setFieldsCheckedUpdateDataPrint] = fieldsCheckedAct || [null, null];
@@ -188,8 +191,10 @@ const TableFieldRow = (props: TableFieldRowProps) => {
             if (typeof rowKey !== 'undefined' && typeof getCheckedData !== 'undefined') setCheckboxCheckedData(getCheckedData, rowKey, fieldsChecked[Number(rowIndex)]);
             // Update checked data
             updategetCheckedData(_checkedData);
-            setFirstInitCheckboxes(true);
             updateFirstInitCheckboxesClassName(true);
+            //
+            setFirstInitCheckboxes(true);
+            
 
             return _checkedData;
         } else {
@@ -320,6 +325,11 @@ const TableFieldRow = (props: TableFieldRowProps) => {
     }
 
 
+    // to aviod `Warning: Cannot update a component (ComponentName) while rendering a different component`
+    useEffect(() => {
+        setCheckboxDefaultVal(latestCheckedData().filter((cur: any) => cur.key === rowKey)[0]?.checked || false); // Avoid the error "react checkbox changing an uncontrolled input to be controlled"
+    }, []);
+
 
     return (
         <>
@@ -431,21 +441,40 @@ const TableFieldRow = (props: TableFieldRowProps) => {
 
                         <div className="form-check__wrapper">
                             <div className="form-check d-inline-block">
+                                {checkboxDefaultVal === null ? <>
+                                    <input
+                                        type="checkbox"
+                                        className="form-check-input"
+                                        name={`checkbox-${checkboxNamePrefix}-${rowIndex}`}
+                                        ref={checkboxRef}
+                                        tabIndex={-1}
+                                        data-index={`${rowIndex}`}
+                                        data-key={`${rowKey}`}
+                                        data-use={dataUse}
+                                        defaultValue={`${rowKey}`}
+                                        checked={checkboxDefaultVal !== null ? checkboxDefaultVal : false}
+                                        onChange={(e: any) => {
+                                            checkedAct(e.target, !latestCheckedData().filter((cur: any) => cur.key === rowKey)[0]?.checked);
+                                        }}
+                                    />
+                                </> : <>
                                 <input
-                                    type="checkbox"
-                                    className="form-check-input"
-                                    name={`checkbox-${checkboxNamePrefix}-${rowIndex}`}
-                                    ref={checkboxRef}
-                                    tabIndex={-1}
-                                    data-index={`${rowIndex}`}
-                                    data-key={`${rowKey}`}
-                                    data-use={dataUse}
-                                    value={`${rowKey}`}
-                                    checked={latestCheckedData().filter((cur: any) => cur.key === rowKey)[0]?.checked}
-                                    onChange={(e: any) => {
-                                        checkedAct(e.target, !latestCheckedData().filter((cur: any) => cur.key === rowKey)[0]?.checked);
-                                    }}
-                                />
+                                        type="checkbox"
+                                        className="form-check-input"
+                                        name={`checkbox-${checkboxNamePrefix}-${rowIndex}`}
+                                        ref={checkboxRef}
+                                        tabIndex={-1}
+                                        data-index={`${rowIndex}`}
+                                        data-key={`${rowKey}`}
+                                        data-use={dataUse}
+                                        defaultValue={`${rowKey}`}
+                                        checked={latestCheckedData().filter((cur: any) => cur.key === rowKey)[0]?.checked}
+                                        onChange={(e: any) => {
+                                            checkedAct(e.target, !latestCheckedData().filter((cur: any) => cur.key === rowKey)[0]?.checked);
+                                        }}
+                                    />
+                                </>}
+                              
                             </div>
 
                         </div>

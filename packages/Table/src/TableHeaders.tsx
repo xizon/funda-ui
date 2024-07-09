@@ -152,8 +152,8 @@ const TableHeaders = (props: TableHeadersProps) => {
                                         data-index={-1}
                                         data-key="row-all"
                                         data-use=""
-                                        value={`row-all`}
-                                        checked={getCheckedRootData!.filter((cur: any) => cur.key === 'row-all')[0]?.checked}
+                                        defaultValue={`row-all`}
+                                        checked={getCheckedRootData!.filter((cur: any) => cur.key === 'row-all')[0]?.checked || false}  // Avoid the error "react checkbox changing an uncontrolled input to be controlled"
                                         onChange={(e: any) => {
                                             checkedAct(e.target, !getCheckedRootData!.filter((cur: any) => cur.key === 'row-all')[0]?.checked);
                                         }}
