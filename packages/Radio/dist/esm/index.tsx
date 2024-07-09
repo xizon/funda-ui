@@ -22,7 +22,7 @@ type RadioOptionChangeFnType = (arg1: any, arg2: any, arg3?: any, arg4?: any) =>
 
 
 type RadioProps = {
-    contentRef?: React.RefObject<any>;
+    contentRef?: React.ForwardedRef<any>; // could use "Array" on contentRef.current, such as contentRef.current[0], contentRef.current[1]
     wrapperClassName?: string;
     groupWrapperClassName?: string;
     groupLabelClassName?: string;

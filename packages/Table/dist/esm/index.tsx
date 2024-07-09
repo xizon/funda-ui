@@ -17,7 +17,7 @@ import { formatRowControlVal, removeCellFocusClassName } from './table-utils';
 
 
 type TableProps = {
-    tableCheckRef?: React.RefObject<any>;
+    tableCheckRef?: React.ForwardedRef<any>;
     wrapperClassName?: string;
     tableClassName?: string;
     bodyClassName?: string;

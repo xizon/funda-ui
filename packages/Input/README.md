@@ -371,6 +371,130 @@ export default () => {
 
 
 
+
+## Use the exposed method to assign and empty
+
+Lets you callback the handle exposed as attribute `contentRef`.
+
+
+```js
+import React, { useRef } from 'react';
+import Input from 'funda-ui/Input';
+
+
+export default () => {
+
+    const conRef = useRef<any>(null);
+
+    return (
+
+
+        <>
+
+            <button
+                type="button" 
+                onClick={(e: React.MouseEvent) => {
+                    if (conRef.current) conRef.current.clear();
+                }}
+            >Set Empty Value</button>
+
+            <button
+                type="button" 
+                onClick={(e: React.MouseEvent) => {
+                    if (conRef.current) conRef.current.set('new value', () => { console.log('callback') });
+                }}
+            >Set Custom Value</button>
+
+
+            <Input
+                contentRef={conRef}
+                name="name"
+            />
+
+
+        </>
+    )
+}
+```
+
+
+**Using \<Array\>**
+
+```js
+import React, { useRef } from 'react';
+import Input from 'funda-ui/Input';
+
+
+export default () => {
+
+    const conRef = useRef<any[]>([]);
+
+    return (
+
+
+        <>
+
+            <button
+                type="button" 
+                onClick={(e: React.MouseEvent) => {
+                    if (conRef.current) {
+                        conRef.current.forEach((obj: any) => {
+                            obj.clear();
+                        });
+                    }
+                }}
+            >Set Empty Value</button>
+
+            <button
+                type="button" 
+                onClick={(e: React.MouseEvent) => {
+                    
+                    if (conRef.current) {
+                        conRef.current.forEach((obj: any, i: number) => {
+                            obj.set('new value__' + i);
+                        });
+                    }
+                }}
+            >Set Custom Value</button>
+
+
+            <Input
+                contentRef={(node: any) => {
+                    if (node) {
+                        conRef.current[0] = node;
+                    }
+                }}
+                name="name1"
+            />
+
+            <Input
+                contentRef={(node: any) => {
+                    if (node) {
+                        conRef.current[1] = node;
+                    }
+                }}
+                name="name2"
+            />
+
+
+            <Input
+                contentRef={(node: any) => {
+                    if (node) {
+                        conRef.current[2] = node;
+                    }
+                }}
+                name="name2"
+            />
+
+
+        </>
+    )
+}
+```
+
+
+
+
 ## Complex use of popup and default value
 
 Lets you callback the handle exposed as attribute `contentRef`.

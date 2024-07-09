@@ -14,7 +14,7 @@ type TableRowProps = {
     rootDataInfo: any;
     refNode: React.RefObject<any>;
     tableRootRef: React.RefObject<any>;
-    tableCheckRef?: React.RefObject<any>;
+    tableCheckRef?: React.ForwardedRef<any>;
     rowActiveClassName?: string;
     fieldsChecked?: boolean[] | boolean;
     fieldsCheckedAct?: any[];

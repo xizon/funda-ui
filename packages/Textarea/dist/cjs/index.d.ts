@@ -5,7 +5,7 @@ declare module 'react' {
     }
 }
 declare type TextareaProps = {
-    contentRef?: React.RefObject<any>;
+    contentRef?: React.ForwardedRef<any>;
     wrapperClassName?: string;
     controlClassName?: string;
     controlExClassName?: string;

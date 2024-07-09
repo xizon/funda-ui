@@ -14,7 +14,7 @@ interface OptionConfig {
 
 
 type MultipleCheckboxesProps = {
-    contentRef?: React.RefObject<any>;
+    contentRef?: React.ForwardedRef<any>; // could use "Array" on contentRef.current, such as contentRef.current[0], contentRef.current[1]
     wrapperClassName?: string;
     tableLayout?: boolean;
     tableLayoutClassName?: string;

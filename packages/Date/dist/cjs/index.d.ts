@@ -1,7 +1,7 @@
 import React from 'react';
 declare type DateProps = {
-    contentRef?: React.RefObject<any>;
-    popupRef?: React.RefObject<any>;
+    contentRef?: React.ForwardedRef<any>;
+    popupRef?: React.ForwardedRef<any>;
     popupClassName?: string;
     triggerClassName?: string;
     wrapperClassName?: string;

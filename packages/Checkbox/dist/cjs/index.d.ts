@@ -6,7 +6,7 @@ declare module 'react' {
 }
 declare type CheckboxOptionChangeFnType = (arg1: any, arg2: any) => void;
 declare type CheckboxProps = {
-    contentRef?: React.RefObject<any>;
+    contentRef?: React.ForwardedRef<any>;
     wrapperClassName?: string;
     itemSelectedClassName?: string;
     value: string | boolean;

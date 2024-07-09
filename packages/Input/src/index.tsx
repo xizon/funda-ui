@@ -7,7 +7,7 @@ declare module 'react' {
 }
 
 type InputProps = {
-    contentRef?: React.RefObject<any>;
+    contentRef?: React.ForwardedRef<any>;
     wrapperClassName?: string;
     controlClassName?: string;
     controlExClassName?: string;

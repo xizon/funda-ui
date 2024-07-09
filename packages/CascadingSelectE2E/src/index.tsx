@@ -40,7 +40,7 @@ interface fetchArrayConfig {
 }
 
 type CascadingSelectE2EProps = {
-    popupRef?: React.RefObject<any>;
+    popupRef?: React.ForwardedRef<any>; // could use "Array" on popupRef.current, such as popupRef.current[0], popupRef.current[1]
     wrapperClassName?: string;
     controlClassName?: string;
     controlExClassName?: string;

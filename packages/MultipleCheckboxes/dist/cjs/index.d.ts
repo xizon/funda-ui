@@ -3,7 +3,7 @@ interface OptionConfig {
     [propName: string]: string | number | boolean;
 }
 declare type MultipleCheckboxesProps = {
-    contentRef?: React.RefObject<any>;
+    contentRef?: React.ForwardedRef<any>;
     wrapperClassName?: string;
     tableLayout?: boolean;
     tableLayoutClassName?: string;

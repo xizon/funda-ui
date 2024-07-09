@@ -25,7 +25,7 @@ type CascadingSelectOptionChangeFnType = (input: any, currentData: any, index: a
 
 
 type CascadingSelectProps = {
-    popupRef?: React.RefObject<any>;
+    popupRef?: React.ForwardedRef<any>; // could use "Array" on popupRef.current, such as popupRef.current[0], popupRef.current[1]
     wrapperClassName?: string;
     controlClassName?: string;
     controlExClassName?: string;

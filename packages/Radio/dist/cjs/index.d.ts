@@ -9,7 +9,7 @@ interface OptionConfig {
 }
 declare type RadioOptionChangeFnType = (arg1: any, arg2: any, arg3?: any, arg4?: any) => void;
 declare type RadioProps = {
-    contentRef?: React.RefObject<any>;
+    contentRef?: React.ForwardedRef<any>;
     wrapperClassName?: string;
     groupWrapperClassName?: string;
     groupLabelClassName?: string;

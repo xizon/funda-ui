@@ -15,7 +15,7 @@ import { removeItemOnce, formatCheckboxControlVal, setCheckboxCheckedData, forma
 -------------------------------------------------*/
 type TableFieldRowProps = {
     tableRootRef: React.RefObject<any>;
-    tableCheckRef?: React.RefObject<any>;
+    tableCheckRef?: React.ForwardedRef<any>; // could use "Array" on tableCheckRef.current, such as tableCheckRef.current[0], tableCheckRef.current[1]
     rowActiveClassName?: string;
     fieldsChecked?: boolean[] | boolean;
     fieldsCheckedAct?: any[];

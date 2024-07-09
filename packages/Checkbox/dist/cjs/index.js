@@ -225,7 +225,7 @@ var Checkbox = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(fu
     onFocus: handleFocus,
     onBlur: handleBlur,
     defaultValue: value || '',
-    checked: val // component status will not change if defaultChecked is used
+    checked: val || false // component status will not change if defaultChecked is used,  // Avoid the error "react checkbox changing an uncontrolled input to be controlled"
     ,
     style: _objectSpread({
       cursor: 'pointer'

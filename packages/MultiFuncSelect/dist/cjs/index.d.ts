@@ -33,8 +33,8 @@ interface CleanTriggerConfig {
     cleanValueLabel?: string;
 }
 declare type MultiFuncSelectProps = {
-    contentRef?: React.RefObject<any>;
-    popupRef?: React.RefObject<any>;
+    contentRef?: React.ForwardedRef<any>;
+    popupRef?: React.ForwardedRef<any>;
     wrapperClassName?: string;
     controlClassName?: string;
     controlExClassName?: string;

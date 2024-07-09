@@ -1,6 +1,6 @@
 import React from 'react';
 declare type TableProps = {
-    tableCheckRef?: React.RefObject<any>;
+    tableCheckRef?: React.ForwardedRef<any>;
     wrapperClassName?: string;
     tableClassName?: string;
     bodyClassName?: string;

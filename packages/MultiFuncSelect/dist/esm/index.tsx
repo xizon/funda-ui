@@ -67,8 +67,8 @@ interface CleanTriggerConfig {
 
 
 type MultiFuncSelectProps = {
-    contentRef?: React.RefObject<any>;
-    popupRef?: React.RefObject<any>;
+    contentRef?: React.ForwardedRef<any>; // could use "Array" on contentRef.current, such as contentRef.current[0], contentRef.current[1]
+    popupRef?: React.ForwardedRef<any>; // could use "Array" on popupRef.current, such as popupRef.current[0], popupRef.current[1]
     wrapperClassName?: string;
     controlClassName?: string;
     controlExClassName?: string;

@@ -10,7 +10,7 @@ type CheckboxOptionChangeFnType = (arg1: any, arg2: any) => void;
 
 
 type CheckboxProps = {
-    contentRef?: React.RefObject<any>;
+    contentRef?: React.ForwardedRef<any>; // could use "Array" on contentRef.current, such as contentRef.current[0], contentRef.current[1]
     wrapperClassName?: string;
     itemSelectedClassName?: string;
     value: string | boolean;
@@ -162,7 +162,7 @@ const Checkbox = forwardRef((props: CheckboxProps, externalRef: any) => {
                         onFocus={handleFocus}
                         onBlur={handleBlur}
                         defaultValue={value as string || ''}
-                        checked={val}   // component status will not change if defaultChecked is used
+                        checked={val || false}   // component status will not change if defaultChecked is used,  // Avoid the error "react checkbox changing an uncontrolled input to be controlled"
                         style={{ cursor: 'pointer', ...style }}
                         {...attributes}
                     />
