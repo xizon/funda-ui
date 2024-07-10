@@ -4060,7 +4060,8 @@ function TreeList(props) {
     onCollapse === null || onCollapse === void 0 ? void 0 : onCollapse(e, {
       key: hyperlink.dataset.key,
       slug: hyperlink.dataset.slug,
-      link: hyperlink.dataset.link
+      link: hyperlink.dataset.link,
+      optiondata: hyperlink.dataset.optiondata
     }, fetchFunc);
 
     // hide child if expandedLink doesn't exist, on the contrary
@@ -4101,7 +4102,8 @@ function TreeList(props) {
     onSelect === null || onSelect === void 0 ? void 0 : onSelect(e, {
       key: hyperlink.dataset.key,
       slug: hyperlink.dataset.slug,
-      link: hyperlink.dataset.link
+      link: hyperlink.dataset.link,
+      optiondata: hyperlink.dataset.optiondata
     }, typeof evInitValue !== 'function' ? function () {
       return void 0;
     } : evInitValue);
@@ -4244,7 +4246,8 @@ function TreeList(props) {
         "aria-disabled": "true",
         "data-link": item.link,
         "data-slug": item.slug,
-        "data-key": item.key
+        "data-key": item.key,
+        "data-optiondata": JSON.stringify(item)
       }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("span", null, item.icon ? item.icon.indexOf('</svg>') < 0 ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("i", {
         className: item.icon
       }), " ") : /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("var", {
@@ -4271,7 +4274,8 @@ function TreeList(props) {
         onClick: handleCollapse,
         "data-link": item.link,
         "data-slug": item.slug,
-        "data-key": item.key
+        "data-key": item.key,
+        "data-optiondata": JSON.stringify(item)
       }, arrowGenerator()) : '', /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("span", {
         className: "checkbox-trigger"
       }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
@@ -4307,6 +4311,7 @@ function TreeList(props) {
         "data-link": item.link,
         "data-slug": item.slug,
         "data-key": item.key,
+        "data-optiondata": JSON.stringify(item),
         onMouseEnter: typeof item.itemLinkMouseEnterCallback !== 'undefined' ? item.itemLinkMouseEnterCallback : function () {
           return void 0;
         },

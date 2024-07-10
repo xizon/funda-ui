@@ -195,6 +195,15 @@ export default () => {
             showLine={true}
             onSelect={(e, val) => {
                 console.log(val);
+                /* 
+                {
+                    "key": "2",
+                    "slug": "5",
+                    "link": "#",
+                    "optiondata": "{\"title\":\"xxxxx\",\"link\":\"#\",\"selected\":false,\"slug\":5,\"key\":\"2\",\"show\":true}"
+                } 
+                */
+                  
             }} 
         />
 

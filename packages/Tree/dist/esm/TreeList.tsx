@@ -202,7 +202,8 @@ export default function TreeList(props: TreeListProps) {
         onCollapse?.(e, {
             key: hyperlink.dataset.key,
             slug: hyperlink.dataset.slug,
-            link: hyperlink.dataset.link
+            link: hyperlink.dataset.link,
+            optiondata: hyperlink.dataset.optiondata
         }, fetchFunc);
 
 
@@ -262,7 +263,8 @@ export default function TreeList(props: TreeListProps) {
         onSelect?.(e, {
             key: hyperlink.dataset.key,
             slug: hyperlink.dataset.slug,
-            link: hyperlink.dataset.link
+            link: hyperlink.dataset.link,
+            optiondata: hyperlink.dataset.optiondata
         }, typeof evInitValue !== 'function' ? ()=>void(0) : evInitValue);
 
         if ( disableArrow ) {
@@ -434,6 +436,7 @@ export default function TreeList(props: TreeListProps) {
                                 data-link={item.link} 
                                 data-slug={item.slug} 
                                 data-key={item.key}
+                                data-optiondata={JSON.stringify(item)}
                             >
                                 <span>{item.icon ? item.icon.indexOf('</svg>') < 0 ? <><i className={item.icon}></i> </> : <var dangerouslySetInnerHTML={{ __html: `${item.icon}` }} /> : null}<i dangerouslySetInnerHTML={{ __html: `${item.title}` }}></i></span>
                             </a>
@@ -447,7 +450,7 @@ export default function TreeList(props: TreeListProps) {
                             onMouseLeave={typeof item.itemMouseLeaveCallback !== 'undefined' ? item.itemMouseLeaveCallback : () => void(0)}
                         >
 
-                            {(item.children && item.children.length) || item.childrenAsync ? <span aria-expanded={item.active ? 'true' : 'false'} className={item.active ? `arrow active ${_async} ${_cusIcons}` : `arrow ${_async} ${_cusIcons}`} onClick={handleCollapse} data-link={item.link} data-slug={item.slug} data-key={item.key}>{arrowGenerator()}</span> : ''}
+                            {(item.children && item.children.length) || item.childrenAsync ? <span aria-expanded={item.active ? 'true' : 'false'} className={item.active ? `arrow active ${_async} ${_cusIcons}` : `arrow ${_async} ${_cusIcons}`} onClick={handleCollapse} data-link={item.link} data-slug={item.slug} data-key={item.key} data-optiondata={JSON.stringify(item)}>{arrowGenerator()}</span> : ''}
 
                             <span className="checkbox-trigger">
 
@@ -483,6 +486,7 @@ export default function TreeList(props: TreeListProps) {
                                 data-link={item.link} 
                                 data-slug={item.slug} 
                                 data-key={item.key}
+                                data-optiondata={JSON.stringify(item)}
                                 onMouseEnter={typeof item.itemLinkMouseEnterCallback !== 'undefined' ? item.itemLinkMouseEnterCallback : () => void(0)} 
                                 onMouseLeave={typeof item.itemLinkMouseLeaveCallback !== 'undefined' ? item.itemLinkMouseLeaveCallback : () => void(0)}
                             >
