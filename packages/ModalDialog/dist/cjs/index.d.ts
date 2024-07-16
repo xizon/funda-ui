@@ -26,6 +26,8 @@ declare type ModalDialogProps = {
     modalBodyClassName?: string;
     modalFooterClassName?: string;
     modalFooterExpandedContentClassName?: string;
+    /** Allows you to disable scrolling on your page. */
+    lockBodyScroll?: boolean;
     /** Pop-ups that can be dragged */
     draggable?: boolean;
     draggedPreventOutsideScreen?: PreventOutsideScreenProps;

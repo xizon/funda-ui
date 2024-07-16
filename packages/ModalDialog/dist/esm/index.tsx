@@ -2,12 +2,14 @@ import React, { useId, useState, useRef, useEffect, forwardRef, useImperativeHan
 
 import RootPortal from 'funda-root-portal';
 import {
-    useDraggable
+    useDraggable,
+
+    // Destroys body scroll locking
+    clearAllBodyScrollLocks, 
+    disableBodyScroll, 
+    enableBodyScroll,
 } from 'funda-utils';
 
-
-//Destroys body scroll locking
-import { clearAllBodyScrollLocks, disableBodyScroll, enableBodyScroll } from './plugins/BSL';
 
 
 declare module 'react' {
@@ -44,6 +46,8 @@ type ModalDialogProps = {
     modalBodyClassName?: string;
     modalFooterClassName?: string;
     modalFooterExpandedContentClassName?: string;
+    /** Allows you to disable scrolling on your page. */
+    lockBodyScroll?: boolean;
     /** Pop-ups that can be dragged */
     draggable?: boolean;
     draggedPreventOutsideScreen?: PreventOutsideScreenProps;
@@ -105,6 +109,7 @@ const ModalDialog = forwardRef((props: ModalDialogProps, externalRef: React.Forw
         modalBodyClassName,
         modalFooterClassName,
         modalFooterExpandedContentClassName,
+        lockBodyScroll,
         draggable,
         draggedPreventOutsideScreen,
         depth,
@@ -136,9 +141,11 @@ const ModalDialog = forwardRef((props: ModalDialogProps, externalRef: React.Forw
     } = props;
 
 
+    
     const DEPTH = depth || 1055;  // the default value same as bootstrap
     const M_WIDTH = fullscreen ? undefined : (typeof maxWidth === 'function' ? maxWidth() : maxWidth ? maxWidth : undefined);
     const M_HEIGHT = typeof minHeight === 'function' ? minHeight() : minHeight ? minHeight : undefined;
+    const LOCK_BODY_SCROLL = typeof lockBodyScroll === 'undefined' ? true : lockBodyScroll;
 
     const uniqueID = useId().replace(/\:/g, "-");
     const modalRef = useRef<any>(null);
@@ -245,7 +252,7 @@ const ModalDialog = forwardRef((props: ModalDialogProps, externalRef: React.Forw
 
         // Unlocks the page
         //------------------------------------------
-        enableBodyScroll(document.querySelector('body'));
+        if (LOCK_BODY_SCROLL) enableBodyScroll(document.querySelector('body'));
 
 
         // Cancels a timeout previously established by calling setTimeout().
@@ -347,7 +354,7 @@ const ModalDialog = forwardRef((props: ModalDialogProps, externalRef: React.Forw
         // Get a target element that you want to persist scrolling for (such as a modal/lightbox/flyout/nav).
         // Specifically, the target element is the one we would like to allow scroll on (NOT a parent of that element).
         // This is also the element to apply the CSS '-webkit-overflow-scrolling: touch;' if desired.
-        disableBodyScroll(document.querySelector('body'));
+        if (LOCK_BODY_SCROLL) disableBodyScroll(document.querySelector('body'));
 
 
 
@@ -426,7 +433,7 @@ const ModalDialog = forwardRef((props: ModalDialogProps, externalRef: React.Forw
         //--------------
         return () => {
     
-            clearAllBodyScrollLocks();
+            if (LOCK_BODY_SCROLL) clearAllBodyScrollLocks();
 
             // Cancels a timeout previously established by calling setTimeout().
             clearTimeout(window.setCloseModalDialog);
@@ -449,7 +456,8 @@ const ModalDialog = forwardRef((props: ModalDialogProps, externalRef: React.Forw
                 <div 
                     ref={modalRef} 
                     className={enableVideo ? `modal fade is-video ${modalShow ? 'show' : ''}` : `modal fade ${modalShow ? 'show' : ''}`} 
-                    tabIndex={-1} aria-hidden="true" 
+                    tabIndex={-1} 
+                    aria-hidden="true" 
                     style={{ 
                         pointerEvents: 'none',
                         zIndex: DEPTH

@@ -581,6 +581,8 @@ import Radio from 'funda-ui/Radio';
 // DO NOT move `useMemo` to component
 function MemoRadio(props: any) {
     const {val, callback} = props;
+
+    // !!! Please do not set "options" as dependent
     return useMemo(() => {
         return <Radio
                 inline={true}
@@ -864,6 +866,8 @@ import Radio from 'funda-ui/Radio';
 // DO NOT move `useMemo` to component
 function MemoRadio(props: any) {
     const {val, contentRef, callback} = props;
+
+    // !!! Please do not set "options" as dependent
     return useMemo(() => {
         return <Radio
                 contentRef={contentRef}

@@ -16,6 +16,7 @@ import ModalDialog from 'funda-ui/ModalDialog';
 | `modalBodyClassName` | string  | - | The extended class name of content area | - |
 | `modalFooterClassName` | string  | - | The extended class name of footer area | - |
 | `modalFooterExpandedContentClassName` | string  | - | The extended class name of footer content area | - |
+| `lockBodyScroll` | boolean  | true | Enables body scroll locking (for iOS Mobile and Tablet, Android, desktop Safari/Chrome/Firefox) without breaking scrolling of a target element. | - |
 | `draggable` | boolean  | false | Pop-ups that can be dragged | - |
 | `draggedPreventOutsideScreen` | JSON Object  | - | Prevent dragged item to be dragged outside of screen. You can set the vertical or horizontal direction. such as `{xAxis: true, yAxis: true}` <blockquote>It is valid when `draggable` is "true"</blockquote> | - |
 | `depth` | number  | 1055 | Set the depth value of the control to control the display of the pop-up layer appear above. Please set it when multiple controls are used at the same time. | - |

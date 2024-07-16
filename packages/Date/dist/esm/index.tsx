@@ -24,6 +24,7 @@ import {
 
 
 
+
 import Calendar from './Calendar';
 
 
@@ -39,6 +40,7 @@ import i18n__zh_CN from './localization/zh_CN';
 type DateProps = {
     contentRef?: React.ForwardedRef<any>; // could use "Array" on contentRef.current, such as contentRef.current[0], contentRef.current[1]
     popupRef?: React.ForwardedRef<any>; // could use "Array" on popupRef.current, such as popupRef.current[0], popupRef.current[1]
+    depth?: number;
     popupClassName?: string;
     triggerClassName?: string;
     wrapperClassName?: string;
@@ -111,6 +113,7 @@ const Date = forwardRef((props: DateProps, externalRef: any) => {
     const {
         contentRef,
         popupRef,
+        depth,
         triggerClassName,
         popupClassName,
         wrapperClassName,
@@ -178,6 +181,8 @@ const Date = forwardRef((props: DateProps, externalRef: any) => {
         ...attributes
     } = props;
 
+
+    const DEPTH = depth || 1055;  // the default value same as bootstrap
     const defaultValueIsEmpty= typeof value === 'undefined' || value === null || value === 'null' || value === '';
 
 
@@ -1314,7 +1319,8 @@ const Date = forwardRef((props: DateProps, externalRef: any) => {
                     id={`date2d__wrapper-${idRes}`}
                     className={`date2d__wrapper is-${type} ${popupClassName || ''} active`}
                     style={{
-                        display: 'none'
+                        display: 'none',
+                        zIndex: DEPTH
                     }}
                     {...attributes}
                 >

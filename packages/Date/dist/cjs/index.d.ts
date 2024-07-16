@@ -2,6 +2,7 @@ import React from 'react';
 declare type DateProps = {
     contentRef?: React.ForwardedRef<any>;
     popupRef?: React.ForwardedRef<any>;
+    depth?: number;
     popupClassName?: string;
     triggerClassName?: string;
     wrapperClassName?: string;

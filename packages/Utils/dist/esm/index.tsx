@@ -179,6 +179,10 @@ import useWindowScroll from './hooks/useWindowScroll';
 import useDraggable from './hooks/useDraggable';
 
 
+// plugins
+import { disableBodyScroll, enableBodyScroll, clearAllBodyScrollLocks } from './plugins/BSL/bodyScrollLock';
+
+
 export { 
    animateStyles,
    setDefaultOptions,
@@ -297,5 +301,10 @@ export {
     useClickOutside,
     useKeyPress,
     useWindowScroll,
-    useDraggable
+    useDraggable,
+
+    //
+    disableBodyScroll, 
+    enableBodyScroll, 
+    clearAllBodyScrollLocks
 };

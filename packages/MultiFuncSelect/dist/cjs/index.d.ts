@@ -38,6 +38,7 @@ declare type MultiFuncSelectProps = {
     wrapperClassName?: string;
     controlClassName?: string;
     controlExClassName?: string;
+    lockScrollBar?: boolean;
     exceededSidePosOffset?: number;
     multiSelect?: MultiSelectConfig;
     multiSelectSelectedItemOnlyStatus?: multiSelectSelectedItemOnlyStatusConfig;

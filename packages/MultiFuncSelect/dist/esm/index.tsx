@@ -12,12 +12,12 @@ import {
     addTreeDepth,
     addTreeIndent,
     getTextWidth,
+
+    // Destroys body scroll locking
+    clearAllBodyScrollLocks, 
+    disableBodyScroll, 
+    enableBodyScroll,
 } from 'funda-utils';
-
-
-
-//Destroys body scroll locking
-import { clearAllBodyScrollLocks, disableBodyScroll, enableBodyScroll } from './plugins/BSL';
 
 
 
@@ -72,6 +72,7 @@ type MultiFuncSelectProps = {
     wrapperClassName?: string;
     controlClassName?: string;
     controlExClassName?: string;
+    lockScrollBar?: boolean;
     exceededSidePosOffset?: number;
     multiSelect?: MultiSelectConfig;
     multiSelectSelectedItemOnlyStatus?: multiSelectSelectedItemOnlyStatusConfig;
@@ -127,6 +128,7 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, externalRef: an
         wrapperClassName,
         controlClassName,
         controlExClassName,
+        lockScrollBar,
         exceededSidePosOffset,
         multiSelect,
         multiSelectSelectedItemOnlyStatus,
@@ -170,6 +172,7 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, externalRef: an
     } = props;
 
 
+    const LOCK_SCROLLBAR = typeof lockScrollBar === 'undefined' ? true : lockScrollBar;
     const DEPTH = depth || 1055;  // the default value same as bootstrap
     const LIVE_SEARCH_OK = typeof fetchTrigger !== 'undefined' && fetchTrigger === true ? true : false;
     const LIVE_SEARCH_DISABLED = (typeof fetchTrigger === 'undefined' || fetchTrigger === false) && typeof window !== 'undefined' && typeof (window as any)['funda-ui__MultiFuncSelect-disable-livesearch'] !== 'undefined' ? true : false; // Globally disable real-time search functionality (only valid for non-dynamic requests)

@@ -361,6 +361,10 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
             return (/* reexport */_blobToUint8array
             );
           },
+          "clearAllBodyScrollLocks": function clearAllBodyScrollLocks() {
+            return (/* reexport */_clearAllBodyScrollLocks
+            );
+          },
           "convertArrToValByBraces": function convertArrToValByBraces() {
             return (/* reexport */_convertArrToValByBraces
             );
@@ -395,6 +399,10 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
           },
           "deepClone": function deepClone() {
             return (/* reexport */_deepClone
+            );
+          },
+          "disableBodyScroll": function disableBodyScroll() {
+            return (/* reexport */_disableBodyScroll
             );
           },
           "easeInBack": function easeInBack() {
@@ -507,6 +515,10 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
           },
           "easeOutSine": function easeOutSine() {
             return (/* reexport */_easeOutSine
+            );
+          },
+          "enableBodyScroll": function enableBodyScroll() {
+            return (/* reexport */_enableBodyScroll
             );
           },
           "extractContentsOfBraces": function extractContentsOfBraces() {
@@ -3899,9 +3911,286 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
         };
         /* harmony default export */
         var hooks_useDraggable = useDraggable;
+        ; // CONCATENATED MODULE: ./src/plugins/BSL/bodyScrollLock.ts
+        function bodyScrollLock_toConsumableArray(arr) {
+          return bodyScrollLock_arrayWithoutHoles(arr) || bodyScrollLock_iterableToArray(arr) || bodyScrollLock_unsupportedIterableToArray(arr) || bodyScrollLock_nonIterableSpread();
+        }
+        function bodyScrollLock_nonIterableSpread() {
+          throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
+        }
+        function bodyScrollLock_unsupportedIterableToArray(o, minLen) {
+          if (!o) return;
+          if (typeof o === "string") return bodyScrollLock_arrayLikeToArray(o, minLen);
+          var n = Object.prototype.toString.call(o).slice(8, -1);
+          if (n === "Object" && o.constructor) n = o.constructor.name;
+          if (n === "Map" || n === "Set") return Array.from(o);
+          if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return bodyScrollLock_arrayLikeToArray(o, minLen);
+        }
+        function bodyScrollLock_iterableToArray(iter) {
+          if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter);
+        }
+        function bodyScrollLock_arrayWithoutHoles(arr) {
+          if (Array.isArray(arr)) return bodyScrollLock_arrayLikeToArray(arr);
+        }
+        function bodyScrollLock_arrayLikeToArray(arr, len) {
+          if (len == null || len > arr.length) len = arr.length;
+          for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i];
+          return arr2;
+        }
+        // =================================================================
+        // based on https://github.com/willmcpo/body-scroll-lock
+        // =================================================================
+
+        // @flow
+        // Adopted and modified solution from Bohdan Didukh (2017)
+        // https://stackoverflow.com/questions/41594997/ios-10-safari-prevent-scrolling-behind-a-fixed-overlay-and-maintain-scroll-posi
+
+        // Older browsers don't support event options, feature detect it.
+        var hasPassiveEvents = false;
+        if (typeof window !== 'undefined') {
+          var passiveTestOptions = {
+            get passive() {
+              hasPassiveEvents = true;
+              return undefined;
+            }
+          };
+          window.addEventListener('testPassive', null, passiveTestOptions);
+          window.removeEventListener('testPassive', null, passiveTestOptions);
+        }
+        var isIosDevice = typeof window !== 'undefined' && window.navigator && window.navigator.platform && (/iP(ad|hone|od)/.test(window.navigator.platform) || window.navigator.platform === 'MacIntel' && window.navigator.maxTouchPoints > 1);
+        var locks = [];
+        var documentListenerAdded = false;
+        var initialClientY = -1;
+        var previousBodyOverflowSetting;
+        var previousBodyPosition;
+        var previousBodyPaddingRight;
+
+        // returns true if `el` should be allowed to receive touchmove events.
+        var allowTouchMove = function allowTouchMove(el) {
+          return locks.some(function (lock) {
+            if (lock.options.allowTouchMove && lock.options.allowTouchMove(el)) {
+              return true;
+            }
+            return false;
+          });
+        };
+        var preventDefault = function preventDefault(rawEvent) {
+          var e = rawEvent || window.event;
+
+          // For the case whereby consumers adds a touchmove event listener to document.
+          // Recall that we do document.addEventListener('touchmove', preventDefault, { passive: false })
+          // in disableBodyScroll - so if we provide this opportunity to allowTouchMove, then
+          // the touchmove event on document will break.
+          if (allowTouchMove(e.target)) {
+            return true;
+          }
+
+          // Do not prevent if the event has more than one touch (usually meaning this is a multi touch gesture like pinch to zoom).
+          if (e.touches.length > 1) return true;
+          if (e.preventDefault) e.preventDefault();
+          return false;
+        };
+        var setOverflowHidden = function setOverflowHidden(options) {
+          // If previousBodyPaddingRight is already set, don't set it again.
+          if (previousBodyPaddingRight === undefined) {
+            var reserveScrollBarGap = !!options && options.reserveScrollBarGap === true;
+            var scrollBarGap = window.innerWidth - document.documentElement.clientWidth;
+            if (reserveScrollBarGap && scrollBarGap > 0) {
+              var computedBodyPaddingRight = parseInt(window.getComputedStyle(document.body).getPropertyValue('padding-right'), 10);
+              previousBodyPaddingRight = document.body.style.paddingRight;
+              document.body.style.paddingRight = "".concat(computedBodyPaddingRight + scrollBarGap, "px");
+            }
+          }
+
+          // If previousBodyOverflowSetting is already set, don't set it again.
+          if (previousBodyOverflowSetting === undefined) {
+            previousBodyOverflowSetting = document.body.style.overflow;
+            document.body.style.overflow = 'hidden';
+          }
+        };
+        var restoreOverflowSetting = function restoreOverflowSetting() {
+          if (previousBodyPaddingRight !== undefined) {
+            document.body.style.paddingRight = previousBodyPaddingRight;
+
+            // Restore previousBodyPaddingRight to undefined so setOverflowHidden knows it
+            // can be set again.
+            previousBodyPaddingRight = undefined;
+          }
+          if (previousBodyOverflowSetting !== undefined) {
+            document.body.style.overflow = previousBodyOverflowSetting;
+
+            // Restore previousBodyOverflowSetting to undefined
+            // so setOverflowHidden knows it can be set again.
+            previousBodyOverflowSetting = undefined;
+          }
+        };
+        var setPositionFixed = function setPositionFixed() {
+          return window.requestAnimationFrame(function () {
+            // If previousBodyPosition is already set, don't set it again.
+            if (previousBodyPosition === undefined) {
+              previousBodyPosition = {
+                position: document.body.style.position,
+                top: document.body.style.top,
+                left: document.body.style.left
+              };
+
+              // Update the dom inside an animation frame
+              var _window = window,
+                scrollY = _window.scrollY,
+                scrollX = _window.scrollX,
+                innerHeight = _window.innerHeight;
+              document.body.style.position = 'fixed';
+              document.body.style.top = "".concat(-scrollY, "px");
+              document.body.style.left = "".concat(-scrollX, "px");
+              setTimeout(function () {
+                return window.requestAnimationFrame(function () {
+                  // Attempt to check if the bottom bar appeared due to the position change
+                  var bottomBarHeight = innerHeight - window.innerHeight;
+                  if (bottomBarHeight && scrollY >= innerHeight) {
+                    // Move the content further up so that the bottom bar doesn't hide it
+                    document.body.style.top = "".concat(-(scrollY + bottomBarHeight));
+                  }
+                });
+              }, 300);
+            }
+          });
+        };
+        var restorePositionSetting = function restorePositionSetting() {
+          if (previousBodyPosition !== undefined) {
+            // Convert the position from "px" to Int
+            var y = -parseInt(document.body.style.top, 10);
+            var x = -parseInt(document.body.style.left, 10);
+
+            // Restore styles
+            document.body.style.position = previousBodyPosition.position;
+            document.body.style.top = previousBodyPosition.top;
+            document.body.style.left = previousBodyPosition.left;
+
+            // Restore scroll
+            window.scrollTo(x, y);
+            previousBodyPosition = undefined;
+          }
+        };
+
+        // https://developer.mozilla.org/en-US/docs/Web/API/Element/scrollHeight#Problems_and_solutions
+        var isTargetElementTotallyScrolled = function isTargetElementTotallyScrolled(targetElement) {
+          return targetElement ? targetElement.scrollHeight - targetElement.scrollTop <= targetElement.clientHeight : false;
+        };
+        var handleScroll = function handleScroll(event, targetElement) {
+          var clientY = event.targetTouches[0].clientY - initialClientY;
+          if (allowTouchMove(event.target)) {
+            return false;
+          }
+          if (targetElement && targetElement.scrollTop === 0 && clientY > 0) {
+            // element is at the top of its scroll.
+            return preventDefault(event);
+          }
+          if (isTargetElementTotallyScrolled(targetElement) && clientY < 0) {
+            // element is at the bottom of its scroll.
+            return preventDefault(event);
+          }
+          event.stopPropagation();
+          return true;
+        };
+        var _disableBodyScroll = function disableBodyScroll(targetElement, options) {
+          // targetElement must be provided
+          if (!targetElement) {
+            // eslint-disable-next-line no-console
+            console.error('disableBodyScroll unsuccessful - targetElement must be provided when calling disableBodyScroll on IOS devices.');
+            return;
+          }
+
+          // disableBodyScroll must not have been called on this targetElement before
+          if (locks.some(function (lock) {
+            return lock.targetElement === targetElement;
+          })) {
+            return;
+          }
+          var lock = {
+            targetElement: targetElement,
+            options: options || {}
+          };
+          locks = [].concat(bodyScrollLock_toConsumableArray(locks), [lock]);
+          if (isIosDevice) {
+            setPositionFixed();
+          } else {
+            setOverflowHidden(options);
+          }
+          if (isIosDevice) {
+            targetElement.ontouchstart = function (event) {
+              if (event.targetTouches.length === 1) {
+                // detect single touch.
+                initialClientY = event.targetTouches[0].clientY;
+              }
+            };
+            targetElement.ontouchmove = function (event) {
+              if (event.targetTouches.length === 1) {
+                // detect single touch.
+                handleScroll(event, targetElement);
+              }
+            };
+            if (!documentListenerAdded) {
+              document.addEventListener('touchmove', preventDefault, hasPassiveEvents ? {
+                passive: false
+              } : undefined);
+              documentListenerAdded = true;
+            }
+          }
+        };
+        var _clearAllBodyScrollLocks = function clearAllBodyScrollLocks() {
+          if (isIosDevice) {
+            // Clear all locks ontouchstart/ontouchmove handlers, and the references.
+            locks.forEach(function (lock) {
+              lock.targetElement.ontouchstart = null;
+              lock.targetElement.ontouchmove = null;
+            });
+            if (documentListenerAdded) {
+              document.removeEventListener('touchmove', preventDefault, hasPassiveEvents ? {
+                passive: false
+              } : undefined);
+              documentListenerAdded = false;
+            }
+
+            // Reset initial clientY.
+            initialClientY = -1;
+          }
+          if (isIosDevice) {
+            restorePositionSetting();
+          } else {
+            restoreOverflowSetting();
+          }
+          locks = [];
+        };
+        var _enableBodyScroll = function enableBodyScroll(targetElement) {
+          if (!targetElement) {
+            // eslint-disable-next-line no-console
+            console.error('enableBodyScroll unsuccessful - targetElement must be provided when calling enableBodyScroll on IOS devices.');
+            return;
+          }
+          locks = locks.filter(function (lock) {
+            return lock.targetElement !== targetElement;
+          });
+          if (isIosDevice) {
+            targetElement.ontouchstart = null;
+            targetElement.ontouchmove = null;
+            if (documentListenerAdded && locks.length === 0) {
+              document.removeEventListener('touchmove', preventDefault, hasPassiveEvents ? {
+                passive: false
+              } : undefined);
+              documentListenerAdded = false;
+            }
+          }
+          if (isIosDevice) {
+            restorePositionSetting();
+          } else {
+            restoreOverflowSetting();
+          }
+        };
         ; // CONCATENATED MODULE: ./src/index.tsx
 
         // hooks
+
+        // plugins
       })();
 
       /******/
@@ -4013,283 +4302,22 @@ var __webpack_exports__ = {};
 // This entry need to be wrapped in an IIFE because it need to be in strict mode.
 (() => {
 "use strict";
-// ESM COMPAT FLAG
 __webpack_require__.r(__webpack_exports__);
-
-// EXPORTS
-__webpack_require__.d(__webpack_exports__, {
-  "default": () => (/* binding */ src)
-});
-
-// EXTERNAL MODULE: external {"root":"React","commonjs2":"react","commonjs":"react","amd":"react"}
-var external_root_React_commonjs2_react_commonjs_react_amd_react_ = __webpack_require__(787);
-var external_root_React_commonjs2_react_commonjs_react_amd_react_default = /*#__PURE__*/__webpack_require__.n(external_root_React_commonjs2_react_commonjs_react_amd_react_);
-// EXTERNAL MODULE: ../RootPortal/dist/cjs/index.js
-var cjs = __webpack_require__(909);
-var cjs_default = /*#__PURE__*/__webpack_require__.n(cjs);
-// EXTERNAL MODULE: ../Utils/dist/cjs/index.js
-var dist_cjs = __webpack_require__(456);
-;// CONCATENATED MODULE: ./src/plugins/BSL/bodyScrollLock.es6.js
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(787);
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var funda_root_portal__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(909);
+/* harmony import */ var funda_root_portal__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(funda_root_portal__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var funda_utils__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(456);
+/* harmony import */ var funda_utils__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(funda_utils__WEBPACK_IMPORTED_MODULE_2__);
+var _excluded = ["contentRef", "popupRef", "wrapperClassName", "controlClassName", "controlExClassName", "lockScrollBar", "exceededSidePosOffset", "multiSelect", "multiSelectSelectedItemOnlyStatus", "disabled", "required", "value", "label", "name", "readOnly", "placeholder", "id", "autoComplete", "options", "cleanTrigger", "lockBodyScroll", "hierarchical", "indentation", "doubleIndent", "style", "depth", "controlArrow", "winWidth", "tabIndex", "fetchTrigger", "fetchTriggerForDefaultData", "fetchNoneInfo", "fetchUpdate", "fetchFuncAsync", "fetchFuncMethod", "fetchFuncMethodParams", "data", "extractValueByBrackets", "fetchCallback", "onFetch", "onLoad", "onSelect", "onChange", "onBlur", "onFocus"];
+function _regeneratorRuntime() { "use strict"; /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/facebook/regenerator/blob/main/LICENSE */ _regeneratorRuntime = function _regeneratorRuntime() { return exports; }; var exports = {}, Op = Object.prototype, hasOwn = Op.hasOwnProperty, defineProperty = Object.defineProperty || function (obj, key, desc) { obj[key] = desc.value; }, $Symbol = "function" == typeof Symbol ? Symbol : {}, iteratorSymbol = $Symbol.iterator || "@@iterator", asyncIteratorSymbol = $Symbol.asyncIterator || "@@asyncIterator", toStringTagSymbol = $Symbol.toStringTag || "@@toStringTag"; function define(obj, key, value) { return Object.defineProperty(obj, key, { value: value, enumerable: !0, configurable: !0, writable: !0 }), obj[key]; } try { define({}, ""); } catch (err) { define = function define(obj, key, value) { return obj[key] = value; }; } function wrap(innerFn, outerFn, self, tryLocsList) { var protoGenerator = outerFn && outerFn.prototype instanceof Generator ? outerFn : Generator, generator = Object.create(protoGenerator.prototype), context = new Context(tryLocsList || []); return defineProperty(generator, "_invoke", { value: makeInvokeMethod(innerFn, self, context) }), generator; } function tryCatch(fn, obj, arg) { try { return { type: "normal", arg: fn.call(obj, arg) }; } catch (err) { return { type: "throw", arg: err }; } } exports.wrap = wrap; var ContinueSentinel = {}; function Generator() {} function GeneratorFunction() {} function GeneratorFunctionPrototype() {} var IteratorPrototype = {}; define(IteratorPrototype, iteratorSymbol, function () { return this; }); var getProto = Object.getPrototypeOf, NativeIteratorPrototype = getProto && getProto(getProto(values([]))); NativeIteratorPrototype && NativeIteratorPrototype !== Op && hasOwn.call(NativeIteratorPrototype, iteratorSymbol) && (IteratorPrototype = NativeIteratorPrototype); var Gp = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(IteratorPrototype); function defineIteratorMethods(prototype) { ["next", "throw", "return"].forEach(function (method) { define(prototype, method, function (arg) { return this._invoke(method, arg); }); }); } function AsyncIterator(generator, PromiseImpl) { function invoke(method, arg, resolve, reject) { var record = tryCatch(generator[method], generator, arg); if ("throw" !== record.type) { var result = record.arg, value = result.value; return value && "object" == _typeof(value) && hasOwn.call(value, "__await") ? PromiseImpl.resolve(value.__await).then(function (value) { invoke("next", value, resolve, reject); }, function (err) { invoke("throw", err, resolve, reject); }) : PromiseImpl.resolve(value).then(function (unwrapped) { result.value = unwrapped, resolve(result); }, function (error) { return invoke("throw", error, resolve, reject); }); } reject(record.arg); } var previousPromise; defineProperty(this, "_invoke", { value: function value(method, arg) { function callInvokeWithMethodAndArg() { return new PromiseImpl(function (resolve, reject) { invoke(method, arg, resolve, reject); }); } return previousPromise = previousPromise ? previousPromise.then(callInvokeWithMethodAndArg, callInvokeWithMethodAndArg) : callInvokeWithMethodAndArg(); } }); } function makeInvokeMethod(innerFn, self, context) { var state = "suspendedStart"; return function (method, arg) { if ("executing" === state) throw new Error("Generator is already running"); if ("completed" === state) { if ("throw" === method) throw arg; return doneResult(); } for (context.method = method, context.arg = arg;;) { var delegate = context.delegate; if (delegate) { var delegateResult = maybeInvokeDelegate(delegate, context); if (delegateResult) { if (delegateResult === ContinueSentinel) continue; return delegateResult; } } if ("next" === context.method) context.sent = context._sent = context.arg;else if ("throw" === context.method) { if ("suspendedStart" === state) throw state = "completed", context.arg; context.dispatchException(context.arg); } else "return" === context.method && context.abrupt("return", context.arg); state = "executing"; var record = tryCatch(innerFn, self, context); if ("normal" === record.type) { if (state = context.done ? "completed" : "suspendedYield", record.arg === ContinueSentinel) continue; return { value: record.arg, done: context.done }; } "throw" === record.type && (state = "completed", context.method = "throw", context.arg = record.arg); } }; } function maybeInvokeDelegate(delegate, context) { var methodName = context.method, method = delegate.iterator[methodName]; if (undefined === method) return context.delegate = null, "throw" === methodName && delegate.iterator["return"] && (context.method = "return", context.arg = undefined, maybeInvokeDelegate(delegate, context), "throw" === context.method) || "return" !== methodName && (context.method = "throw", context.arg = new TypeError("The iterator does not provide a '" + methodName + "' method")), ContinueSentinel; var record = tryCatch(method, delegate.iterator, context.arg); if ("throw" === record.type) return context.method = "throw", context.arg = record.arg, context.delegate = null, ContinueSentinel; var info = record.arg; return info ? info.done ? (context[delegate.resultName] = info.value, context.next = delegate.nextLoc, "return" !== context.method && (context.method = "next", context.arg = undefined), context.delegate = null, ContinueSentinel) : info : (context.method = "throw", context.arg = new TypeError("iterator result is not an object"), context.delegate = null, ContinueSentinel); } function pushTryEntry(locs) { var entry = { tryLoc: locs[0] }; 1 in locs && (entry.catchLoc = locs[1]), 2 in locs && (entry.finallyLoc = locs[2], entry.afterLoc = locs[3]), this.tryEntries.push(entry); } function resetTryEntry(entry) { var record = entry.completion || {}; record.type = "normal", delete record.arg, entry.completion = record; } function Context(tryLocsList) { this.tryEntries = [{ tryLoc: "root" }], tryLocsList.forEach(pushTryEntry, this), this.reset(!0); } function values(iterable) { if (iterable) { var iteratorMethod = iterable[iteratorSymbol]; if (iteratorMethod) return iteratorMethod.call(iterable); if ("function" == typeof iterable.next) return iterable; if (!isNaN(iterable.length)) { var i = -1, next = function next() { for (; ++i < iterable.length;) if (hasOwn.call(iterable, i)) return next.value = iterable[i], next.done = !1, next; return next.value = undefined, next.done = !0, next; }; return next.next = next; } } return { next: doneResult }; } function doneResult() { return { value: undefined, done: !0 }; } return GeneratorFunction.prototype = GeneratorFunctionPrototype, defineProperty(Gp, "constructor", { value: GeneratorFunctionPrototype, configurable: !0 }), defineProperty(GeneratorFunctionPrototype, "constructor", { value: GeneratorFunction, configurable: !0 }), GeneratorFunction.displayName = define(GeneratorFunctionPrototype, toStringTagSymbol, "GeneratorFunction"), exports.isGeneratorFunction = function (genFun) { var ctor = "function" == typeof genFun && genFun.constructor; return !!ctor && (ctor === GeneratorFunction || "GeneratorFunction" === (ctor.displayName || ctor.name)); }, exports.mark = function (genFun) { return Object.setPrototypeOf ? Object.setPrototypeOf(genFun, GeneratorFunctionPrototype) : (genFun.__proto__ = GeneratorFunctionPrototype, define(genFun, toStringTagSymbol, "GeneratorFunction")), genFun.prototype = Object.create(Gp), genFun; }, exports.awrap = function (arg) { return { __await: arg }; }, defineIteratorMethods(AsyncIterator.prototype), define(AsyncIterator.prototype, asyncIteratorSymbol, function () { return this; }), exports.AsyncIterator = AsyncIterator, exports.async = function (innerFn, outerFn, self, tryLocsList, PromiseImpl) { void 0 === PromiseImpl && (PromiseImpl = Promise); var iter = new AsyncIterator(wrap(innerFn, outerFn, self, tryLocsList), PromiseImpl); return exports.isGeneratorFunction(outerFn) ? iter : iter.next().then(function (result) { return result.done ? result.value : iter.next(); }); }, defineIteratorMethods(Gp), define(Gp, toStringTagSymbol, "Generator"), define(Gp, iteratorSymbol, function () { return this; }), define(Gp, "toString", function () { return "[object Generator]"; }), exports.keys = function (val) { var object = Object(val), keys = []; for (var key in object) keys.push(key); return keys.reverse(), function next() { for (; keys.length;) { var key = keys.pop(); if (key in object) return next.value = key, next.done = !1, next; } return next.done = !0, next; }; }, exports.values = values, Context.prototype = { constructor: Context, reset: function reset(skipTempReset) { if (this.prev = 0, this.next = 0, this.sent = this._sent = undefined, this.done = !1, this.delegate = null, this.method = "next", this.arg = undefined, this.tryEntries.forEach(resetTryEntry), !skipTempReset) for (var name in this) "t" === name.charAt(0) && hasOwn.call(this, name) && !isNaN(+name.slice(1)) && (this[name] = undefined); }, stop: function stop() { this.done = !0; var rootRecord = this.tryEntries[0].completion; if ("throw" === rootRecord.type) throw rootRecord.arg; return this.rval; }, dispatchException: function dispatchException(exception) { if (this.done) throw exception; var context = this; function handle(loc, caught) { return record.type = "throw", record.arg = exception, context.next = loc, caught && (context.method = "next", context.arg = undefined), !!caught; } for (var i = this.tryEntries.length - 1; i >= 0; --i) { var entry = this.tryEntries[i], record = entry.completion; if ("root" === entry.tryLoc) return handle("end"); if (entry.tryLoc <= this.prev) { var hasCatch = hasOwn.call(entry, "catchLoc"), hasFinally = hasOwn.call(entry, "finallyLoc"); if (hasCatch && hasFinally) { if (this.prev < entry.catchLoc) return handle(entry.catchLoc, !0); if (this.prev < entry.finallyLoc) return handle(entry.finallyLoc); } else if (hasCatch) { if (this.prev < entry.catchLoc) return handle(entry.catchLoc, !0); } else { if (!hasFinally) throw new Error("try statement without catch or finally"); if (this.prev < entry.finallyLoc) return handle(entry.finallyLoc); } } } }, abrupt: function abrupt(type, arg) { for (var i = this.tryEntries.length - 1; i >= 0; --i) { var entry = this.tryEntries[i]; if (entry.tryLoc <= this.prev && hasOwn.call(entry, "finallyLoc") && this.prev < entry.finallyLoc) { var finallyEntry = entry; break; } } finallyEntry && ("break" === type || "continue" === type) && finallyEntry.tryLoc <= arg && arg <= finallyEntry.finallyLoc && (finallyEntry = null); var record = finallyEntry ? finallyEntry.completion : {}; return record.type = type, record.arg = arg, finallyEntry ? (this.method = "next", this.next = finallyEntry.finallyLoc, ContinueSentinel) : this.complete(record); }, complete: function complete(record, afterLoc) { if ("throw" === record.type) throw record.arg; return "break" === record.type || "continue" === record.type ? this.next = record.arg : "return" === record.type ? (this.rval = this.arg = record.arg, this.method = "return", this.next = "end") : "normal" === record.type && afterLoc && (this.next = afterLoc), ContinueSentinel; }, finish: function finish(finallyLoc) { for (var i = this.tryEntries.length - 1; i >= 0; --i) { var entry = this.tryEntries[i]; if (entry.finallyLoc === finallyLoc) return this.complete(entry.completion, entry.afterLoc), resetTryEntry(entry), ContinueSentinel; } }, "catch": function _catch(tryLoc) { for (var i = this.tryEntries.length - 1; i >= 0; --i) { var entry = this.tryEntries[i]; if (entry.tryLoc === tryLoc) { var record = entry.completion; if ("throw" === record.type) { var thrown = record.arg; resetTryEntry(entry); } return thrown; } } throw new Error("illegal catch attempt"); }, delegateYield: function delegateYield(iterable, resultName, nextLoc) { return this.delegate = { iterator: values(iterable), resultName: resultName, nextLoc: nextLoc }, "next" === this.method && (this.arg = undefined), ContinueSentinel; } }, exports; }
 function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
 function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
-function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
 function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter); }
 function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
-function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i]; return arr2; }
-// Older browsers don't support event options, feature detect it.
-
-// Adopted and modified solution from Bohdan Didukh (2017)
-// https://stackoverflow.com/questions/41594997/ios-10-safari-prevent-scrolling-behind-a-fixed-overlay-and-maintain-scroll-posi
-
-var hasPassiveEvents = false;
-if (typeof window !== 'undefined') {
-  var passiveTestOptions = {
-    get passive() {
-      hasPassiveEvents = true;
-      return undefined;
-    }
-  };
-  window.addEventListener('testPassive', null, passiveTestOptions);
-  window.removeEventListener('testPassive', null, passiveTestOptions);
-}
-var isIosDevice = typeof window !== 'undefined' && window.navigator && window.navigator.platform && (/iP(ad|hone|od)/.test(window.navigator.platform) || window.navigator.platform === 'MacIntel' && window.navigator.maxTouchPoints > 1);
-var locks = [];
-var documentListenerAdded = false;
-var initialClientY = -1;
-var previousBodyOverflowSetting;
-var previousBodyPosition;
-var previousBodyPaddingRight;
-
-// returns true if `el` should be allowed to receive touchmove events.
-var allowTouchMove = function allowTouchMove(el) {
-  return locks.some(function (lock) {
-    if (lock.options.allowTouchMove && lock.options.allowTouchMove(el)) {
-      return true;
-    }
-    return false;
-  });
-};
-var preventDefault = function preventDefault(rawEvent) {
-  var e = rawEvent || window.event;
-
-  // For the case whereby consumers adds a touchmove event listener to document.
-  // Recall that we do document.addEventListener('touchmove', preventDefault, { passive: false })
-  // in disableBodyScroll - so if we provide this opportunity to allowTouchMove, then
-  // the touchmove event on document will break.
-  if (allowTouchMove(e.target)) {
-    return true;
-  }
-
-  // Do not prevent if the event has more than one touch (usually meaning this is a multi touch gesture like pinch to zoom).
-  if (e.touches.length > 1) return true;
-  if (e.preventDefault) e.preventDefault();
-  return false;
-};
-var setOverflowHidden = function setOverflowHidden(options) {
-  // If previousBodyPaddingRight is already set, don't set it again.
-  if (previousBodyPaddingRight === undefined) {
-    var reserveScrollBarGap = !!options && options.reserveScrollBarGap === true;
-    var scrollBarGap = window.innerWidth - document.documentElement.clientWidth;
-    if (reserveScrollBarGap && scrollBarGap > 0) {
-      var computedBodyPaddingRight = parseInt(window.getComputedStyle(document.body).getPropertyValue('padding-right'), 10);
-      previousBodyPaddingRight = document.body.style.paddingRight;
-      document.body.style.paddingRight = "".concat(computedBodyPaddingRight + scrollBarGap, "px");
-    }
-  }
-
-  // If previousBodyOverflowSetting is already set, don't set it again.
-  if (previousBodyOverflowSetting === undefined) {
-    previousBodyOverflowSetting = document.body.style.overflow;
-    document.body.style.overflow = 'hidden';
-  }
-};
-var restoreOverflowSetting = function restoreOverflowSetting() {
-  if (previousBodyPaddingRight !== undefined) {
-    document.body.style.paddingRight = previousBodyPaddingRight;
-
-    // Restore previousBodyPaddingRight to undefined so setOverflowHidden knows it
-    // can be set again.
-    previousBodyPaddingRight = undefined;
-  }
-  if (previousBodyOverflowSetting !== undefined) {
-    document.body.style.overflow = previousBodyOverflowSetting;
-
-    // Restore previousBodyOverflowSetting to undefined
-    // so setOverflowHidden knows it can be set again.
-    previousBodyOverflowSetting = undefined;
-  }
-};
-var setPositionFixed = function setPositionFixed() {
-  return window.requestAnimationFrame(function () {
-    // If previousBodyPosition is already set, don't set it again.
-    if (previousBodyPosition === undefined) {
-      previousBodyPosition = {
-        position: document.body.style.position,
-        top: document.body.style.top,
-        left: document.body.style.left
-      };
-
-      // Update the dom inside an animation frame
-      var _window = window,
-        scrollY = _window.scrollY,
-        scrollX = _window.scrollX,
-        innerHeight = _window.innerHeight;
-      document.body.style.position = 'fixed';
-      document.body.style.top = "".concat(-scrollY, "px");
-      document.body.style.left = "".concat(-scrollX, "px");
-      setTimeout(function () {
-        return window.requestAnimationFrame(function () {
-          // Attempt to check if the bottom bar appeared due to the position change
-          var bottomBarHeight = innerHeight - window.innerHeight;
-          if (bottomBarHeight && scrollY >= innerHeight) {
-            // Move the content further up so that the bottom bar doesn't hide it
-            document.body.style.top = -(scrollY + bottomBarHeight);
-          }
-        });
-      }, 300);
-    }
-  });
-};
-var restorePositionSetting = function restorePositionSetting() {
-  if (previousBodyPosition !== undefined) {
-    // Convert the position from "px" to Int
-    var y = -parseInt(document.body.style.top, 10);
-    var x = -parseInt(document.body.style.left, 10);
-
-    // Restore styles
-    document.body.style.position = previousBodyPosition.position;
-    document.body.style.top = previousBodyPosition.top;
-    document.body.style.left = previousBodyPosition.left;
-
-    // Restore scroll
-    window.scrollTo(x, y);
-    previousBodyPosition = undefined;
-  }
-};
-
-// https://developer.mozilla.org/en-US/docs/Web/API/Element/scrollHeight#Problems_and_solutions
-var isTargetElementTotallyScrolled = function isTargetElementTotallyScrolled(targetElement) {
-  return targetElement ? targetElement.scrollHeight - targetElement.scrollTop <= targetElement.clientHeight : false;
-};
-var handleScroll = function handleScroll(event, targetElement) {
-  var clientY = event.targetTouches[0].clientY - initialClientY;
-  if (allowTouchMove(event.target)) {
-    return false;
-  }
-  if (targetElement && targetElement.scrollTop === 0 && clientY > 0) {
-    // element is at the top of its scroll.
-    return preventDefault(event);
-  }
-  if (isTargetElementTotallyScrolled(targetElement) && clientY < 0) {
-    // element is at the bottom of its scroll.
-    return preventDefault(event);
-  }
-  event.stopPropagation();
-  return true;
-};
-var disableBodyScroll = function disableBodyScroll(targetElement, options) {
-  // targetElement must be provided
-  if (!targetElement) {
-    // eslint-disable-next-line no-console
-    console.error('disableBodyScroll unsuccessful - targetElement must be provided when calling disableBodyScroll on IOS devices.');
-    return;
-  }
-
-  // disableBodyScroll must not have been called on this targetElement before
-  if (locks.some(function (lock) {
-    return lock.targetElement === targetElement;
-  })) {
-    return;
-  }
-  var lock = {
-    targetElement: targetElement,
-    options: options || {}
-  };
-  locks = [].concat(_toConsumableArray(locks), [lock]);
-  if (isIosDevice) {
-    setPositionFixed();
-  } else {
-    setOverflowHidden(options);
-  }
-  if (isIosDevice) {
-    targetElement.ontouchstart = function (event) {
-      if (event.targetTouches.length === 1) {
-        // detect single touch.
-        initialClientY = event.targetTouches[0].clientY;
-      }
-    };
-    targetElement.ontouchmove = function (event) {
-      if (event.targetTouches.length === 1) {
-        // detect single touch.
-        handleScroll(event, targetElement);
-      }
-    };
-    if (!documentListenerAdded) {
-      document.addEventListener('touchmove', preventDefault, hasPassiveEvents ? {
-        passive: false
-      } : undefined);
-      documentListenerAdded = true;
-    }
-  }
-};
-var clearAllBodyScrollLocks = function clearAllBodyScrollLocks() {
-  if (isIosDevice) {
-    // Clear all locks ontouchstart/ontouchmove handlers, and the references.
-    locks.forEach(function (lock) {
-      lock.targetElement.ontouchstart = null;
-      lock.targetElement.ontouchmove = null;
-    });
-    if (documentListenerAdded) {
-      document.removeEventListener('touchmove', preventDefault, hasPassiveEvents ? {
-        passive: false
-      } : undefined);
-      documentListenerAdded = false;
-    }
-
-    // Reset initial clientY.
-    initialClientY = -1;
-  }
-  if (isIosDevice) {
-    restorePositionSetting();
-  } else {
-    restoreOverflowSetting();
-  }
-  locks = [];
-};
-var enableBodyScroll = function enableBodyScroll(targetElement) {
-  if (!targetElement) {
-    // eslint-disable-next-line no-console
-    console.error('enableBodyScroll unsuccessful - targetElement must be provided when calling enableBodyScroll on IOS devices.');
-    return;
-  }
-  locks = locks.filter(function (lock) {
-    return lock.targetElement !== targetElement;
-  });
-  if (isIosDevice) {
-    targetElement.ontouchstart = null;
-    targetElement.ontouchmove = null;
-    if (documentListenerAdded && locks.length === 0) {
-      document.removeEventListener('touchmove', preventDefault, hasPassiveEvents ? {
-        passive: false
-      } : undefined);
-      documentListenerAdded = false;
-    }
-  }
-  if (isIosDevice) {
-    restorePositionSetting();
-  } else {
-    restoreOverflowSetting();
-  }
-};
-;// CONCATENATED MODULE: ./src/plugins/BSL/index.ts
-
-;// CONCATENATED MODULE: ./src/index.tsx
-var _excluded = ["contentRef", "popupRef", "wrapperClassName", "controlClassName", "controlExClassName", "exceededSidePosOffset", "multiSelect", "multiSelectSelectedItemOnlyStatus", "disabled", "required", "value", "label", "name", "readOnly", "placeholder", "id", "autoComplete", "options", "cleanTrigger", "lockBodyScroll", "hierarchical", "indentation", "doubleIndent", "style", "depth", "controlArrow", "winWidth", "tabIndex", "fetchTrigger", "fetchTriggerForDefaultData", "fetchNoneInfo", "fetchUpdate", "fetchFuncAsync", "fetchFuncMethod", "fetchFuncMethodParams", "data", "extractValueByBrackets", "fetchCallback", "onFetch", "onLoad", "onSelect", "onChange", "onBlur", "onFocus"];
-function _regeneratorRuntime() { "use strict"; /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/facebook/regenerator/blob/main/LICENSE */ _regeneratorRuntime = function _regeneratorRuntime() { return exports; }; var exports = {}, Op = Object.prototype, hasOwn = Op.hasOwnProperty, defineProperty = Object.defineProperty || function (obj, key, desc) { obj[key] = desc.value; }, $Symbol = "function" == typeof Symbol ? Symbol : {}, iteratorSymbol = $Symbol.iterator || "@@iterator", asyncIteratorSymbol = $Symbol.asyncIterator || "@@asyncIterator", toStringTagSymbol = $Symbol.toStringTag || "@@toStringTag"; function define(obj, key, value) { return Object.defineProperty(obj, key, { value: value, enumerable: !0, configurable: !0, writable: !0 }), obj[key]; } try { define({}, ""); } catch (err) { define = function define(obj, key, value) { return obj[key] = value; }; } function wrap(innerFn, outerFn, self, tryLocsList) { var protoGenerator = outerFn && outerFn.prototype instanceof Generator ? outerFn : Generator, generator = Object.create(protoGenerator.prototype), context = new Context(tryLocsList || []); return defineProperty(generator, "_invoke", { value: makeInvokeMethod(innerFn, self, context) }), generator; } function tryCatch(fn, obj, arg) { try { return { type: "normal", arg: fn.call(obj, arg) }; } catch (err) { return { type: "throw", arg: err }; } } exports.wrap = wrap; var ContinueSentinel = {}; function Generator() {} function GeneratorFunction() {} function GeneratorFunctionPrototype() {} var IteratorPrototype = {}; define(IteratorPrototype, iteratorSymbol, function () { return this; }); var getProto = Object.getPrototypeOf, NativeIteratorPrototype = getProto && getProto(getProto(values([]))); NativeIteratorPrototype && NativeIteratorPrototype !== Op && hasOwn.call(NativeIteratorPrototype, iteratorSymbol) && (IteratorPrototype = NativeIteratorPrototype); var Gp = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(IteratorPrototype); function defineIteratorMethods(prototype) { ["next", "throw", "return"].forEach(function (method) { define(prototype, method, function (arg) { return this._invoke(method, arg); }); }); } function AsyncIterator(generator, PromiseImpl) { function invoke(method, arg, resolve, reject) { var record = tryCatch(generator[method], generator, arg); if ("throw" !== record.type) { var result = record.arg, value = result.value; return value && "object" == _typeof(value) && hasOwn.call(value, "__await") ? PromiseImpl.resolve(value.__await).then(function (value) { invoke("next", value, resolve, reject); }, function (err) { invoke("throw", err, resolve, reject); }) : PromiseImpl.resolve(value).then(function (unwrapped) { result.value = unwrapped, resolve(result); }, function (error) { return invoke("throw", error, resolve, reject); }); } reject(record.arg); } var previousPromise; defineProperty(this, "_invoke", { value: function value(method, arg) { function callInvokeWithMethodAndArg() { return new PromiseImpl(function (resolve, reject) { invoke(method, arg, resolve, reject); }); } return previousPromise = previousPromise ? previousPromise.then(callInvokeWithMethodAndArg, callInvokeWithMethodAndArg) : callInvokeWithMethodAndArg(); } }); } function makeInvokeMethod(innerFn, self, context) { var state = "suspendedStart"; return function (method, arg) { if ("executing" === state) throw new Error("Generator is already running"); if ("completed" === state) { if ("throw" === method) throw arg; return doneResult(); } for (context.method = method, context.arg = arg;;) { var delegate = context.delegate; if (delegate) { var delegateResult = maybeInvokeDelegate(delegate, context); if (delegateResult) { if (delegateResult === ContinueSentinel) continue; return delegateResult; } } if ("next" === context.method) context.sent = context._sent = context.arg;else if ("throw" === context.method) { if ("suspendedStart" === state) throw state = "completed", context.arg; context.dispatchException(context.arg); } else "return" === context.method && context.abrupt("return", context.arg); state = "executing"; var record = tryCatch(innerFn, self, context); if ("normal" === record.type) { if (state = context.done ? "completed" : "suspendedYield", record.arg === ContinueSentinel) continue; return { value: record.arg, done: context.done }; } "throw" === record.type && (state = "completed", context.method = "throw", context.arg = record.arg); } }; } function maybeInvokeDelegate(delegate, context) { var methodName = context.method, method = delegate.iterator[methodName]; if (undefined === method) return context.delegate = null, "throw" === methodName && delegate.iterator["return"] && (context.method = "return", context.arg = undefined, maybeInvokeDelegate(delegate, context), "throw" === context.method) || "return" !== methodName && (context.method = "throw", context.arg = new TypeError("The iterator does not provide a '" + methodName + "' method")), ContinueSentinel; var record = tryCatch(method, delegate.iterator, context.arg); if ("throw" === record.type) return context.method = "throw", context.arg = record.arg, context.delegate = null, ContinueSentinel; var info = record.arg; return info ? info.done ? (context[delegate.resultName] = info.value, context.next = delegate.nextLoc, "return" !== context.method && (context.method = "next", context.arg = undefined), context.delegate = null, ContinueSentinel) : info : (context.method = "throw", context.arg = new TypeError("iterator result is not an object"), context.delegate = null, ContinueSentinel); } function pushTryEntry(locs) { var entry = { tryLoc: locs[0] }; 1 in locs && (entry.catchLoc = locs[1]), 2 in locs && (entry.finallyLoc = locs[2], entry.afterLoc = locs[3]), this.tryEntries.push(entry); } function resetTryEntry(entry) { var record = entry.completion || {}; record.type = "normal", delete record.arg, entry.completion = record; } function Context(tryLocsList) { this.tryEntries = [{ tryLoc: "root" }], tryLocsList.forEach(pushTryEntry, this), this.reset(!0); } function values(iterable) { if (iterable) { var iteratorMethod = iterable[iteratorSymbol]; if (iteratorMethod) return iteratorMethod.call(iterable); if ("function" == typeof iterable.next) return iterable; if (!isNaN(iterable.length)) { var i = -1, next = function next() { for (; ++i < iterable.length;) if (hasOwn.call(iterable, i)) return next.value = iterable[i], next.done = !1, next; return next.value = undefined, next.done = !0, next; }; return next.next = next; } } return { next: doneResult }; } function doneResult() { return { value: undefined, done: !0 }; } return GeneratorFunction.prototype = GeneratorFunctionPrototype, defineProperty(Gp, "constructor", { value: GeneratorFunctionPrototype, configurable: !0 }), defineProperty(GeneratorFunctionPrototype, "constructor", { value: GeneratorFunction, configurable: !0 }), GeneratorFunction.displayName = define(GeneratorFunctionPrototype, toStringTagSymbol, "GeneratorFunction"), exports.isGeneratorFunction = function (genFun) { var ctor = "function" == typeof genFun && genFun.constructor; return !!ctor && (ctor === GeneratorFunction || "GeneratorFunction" === (ctor.displayName || ctor.name)); }, exports.mark = function (genFun) { return Object.setPrototypeOf ? Object.setPrototypeOf(genFun, GeneratorFunctionPrototype) : (genFun.__proto__ = GeneratorFunctionPrototype, define(genFun, toStringTagSymbol, "GeneratorFunction")), genFun.prototype = Object.create(Gp), genFun; }, exports.awrap = function (arg) { return { __await: arg }; }, defineIteratorMethods(AsyncIterator.prototype), define(AsyncIterator.prototype, asyncIteratorSymbol, function () { return this; }), exports.AsyncIterator = AsyncIterator, exports.async = function (innerFn, outerFn, self, tryLocsList, PromiseImpl) { void 0 === PromiseImpl && (PromiseImpl = Promise); var iter = new AsyncIterator(wrap(innerFn, outerFn, self, tryLocsList), PromiseImpl); return exports.isGeneratorFunction(outerFn) ? iter : iter.next().then(function (result) { return result.done ? result.value : iter.next(); }); }, defineIteratorMethods(Gp), define(Gp, toStringTagSymbol, "Generator"), define(Gp, iteratorSymbol, function () { return this; }), define(Gp, "toString", function () { return "[object Generator]"; }), exports.keys = function (val) { var object = Object(val), keys = []; for (var key in object) keys.push(key); return keys.reverse(), function next() { for (; keys.length;) { var key = keys.pop(); if (key in object) return next.value = key, next.done = !1, next; } return next.done = !0, next; }; }, exports.values = values, Context.prototype = { constructor: Context, reset: function reset(skipTempReset) { if (this.prev = 0, this.next = 0, this.sent = this._sent = undefined, this.done = !1, this.delegate = null, this.method = "next", this.arg = undefined, this.tryEntries.forEach(resetTryEntry), !skipTempReset) for (var name in this) "t" === name.charAt(0) && hasOwn.call(this, name) && !isNaN(+name.slice(1)) && (this[name] = undefined); }, stop: function stop() { this.done = !0; var rootRecord = this.tryEntries[0].completion; if ("throw" === rootRecord.type) throw rootRecord.arg; return this.rval; }, dispatchException: function dispatchException(exception) { if (this.done) throw exception; var context = this; function handle(loc, caught) { return record.type = "throw", record.arg = exception, context.next = loc, caught && (context.method = "next", context.arg = undefined), !!caught; } for (var i = this.tryEntries.length - 1; i >= 0; --i) { var entry = this.tryEntries[i], record = entry.completion; if ("root" === entry.tryLoc) return handle("end"); if (entry.tryLoc <= this.prev) { var hasCatch = hasOwn.call(entry, "catchLoc"), hasFinally = hasOwn.call(entry, "finallyLoc"); if (hasCatch && hasFinally) { if (this.prev < entry.catchLoc) return handle(entry.catchLoc, !0); if (this.prev < entry.finallyLoc) return handle(entry.finallyLoc); } else if (hasCatch) { if (this.prev < entry.catchLoc) return handle(entry.catchLoc, !0); } else { if (!hasFinally) throw new Error("try statement without catch or finally"); if (this.prev < entry.finallyLoc) return handle(entry.finallyLoc); } } } }, abrupt: function abrupt(type, arg) { for (var i = this.tryEntries.length - 1; i >= 0; --i) { var entry = this.tryEntries[i]; if (entry.tryLoc <= this.prev && hasOwn.call(entry, "finallyLoc") && this.prev < entry.finallyLoc) { var finallyEntry = entry; break; } } finallyEntry && ("break" === type || "continue" === type) && finallyEntry.tryLoc <= arg && arg <= finallyEntry.finallyLoc && (finallyEntry = null); var record = finallyEntry ? finallyEntry.completion : {}; return record.type = type, record.arg = arg, finallyEntry ? (this.method = "next", this.next = finallyEntry.finallyLoc, ContinueSentinel) : this.complete(record); }, complete: function complete(record, afterLoc) { if ("throw" === record.type) throw record.arg; return "break" === record.type || "continue" === record.type ? this.next = record.arg : "return" === record.type ? (this.rval = this.arg = record.arg, this.method = "return", this.next = "end") : "normal" === record.type && afterLoc && (this.next = afterLoc), ContinueSentinel; }, finish: function finish(finallyLoc) { for (var i = this.tryEntries.length - 1; i >= 0; --i) { var entry = this.tryEntries[i]; if (entry.finallyLoc === finallyLoc) return this.complete(entry.completion, entry.afterLoc), resetTryEntry(entry), ContinueSentinel; } }, "catch": function _catch(tryLoc) { for (var i = this.tryEntries.length - 1; i >= 0; --i) { var entry = this.tryEntries[i]; if (entry.tryLoc === tryLoc) { var record = entry.completion; if ("throw" === record.type) { var thrown = record.arg; resetTryEntry(entry); } return thrown; } } throw new Error("illegal catch attempt"); }, delegateYield: function delegateYield(iterable, resultName, nextLoc) { return this.delegate = { iterator: values(iterable), resultName: resultName, nextLoc: nextLoc }, "next" === this.method && (this.arg = undefined), ContinueSentinel; } }, exports; }
-function src_toConsumableArray(arr) { return src_arrayWithoutHoles(arr) || src_iterableToArray(arr) || src_unsupportedIterableToArray(arr) || src_nonIterableSpread(); }
-function src_nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
-function src_iterableToArray(iter) { if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter); }
-function src_arrayWithoutHoles(arr) { if (Array.isArray(arr)) return src_arrayLikeToArray(arr); }
 function _extends() { _extends = Object.assign ? Object.assign.bind() : function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
 function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys(Object(source), !0).forEach(function (key) { _defineProperty(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
@@ -4299,10 +4327,10 @@ function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input ==
 function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
 function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
 function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
-function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || src_unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
+function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
 function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
-function src_unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return src_arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return src_arrayLikeToArray(o, minLen); }
-function src_arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i]; return arr2; }
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i]; return arr2; }
 function _iterableToArrayLimit(arr, i) { var _i = null == arr ? null : "undefined" != typeof Symbol && arr[Symbol.iterator] || arr["@@iterator"]; if (null != _i) { var _s, _e, _x, _r, _arr = [], _n = !0, _d = !1; try { if (_x = (_i = _i.call(arr)).next, 0 === i) { if (Object(_i) !== _i) return; _n = !1; } else for (; !(_n = (_s = _x.call(_i)).done) && (_arr.push(_s.value), _arr.length !== i); _n = !0); } catch (err) { _d = !0, _e = err; } finally { try { if (!_n && null != _i["return"] && (_r = _i["return"](), Object(_r) !== _r)) return; } finally { if (_d) throw _e; } } return _arr; } }
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 function _objectWithoutProperties(source, excluded) { if (source == null) return {}; var target = _objectWithoutPropertiesLoose(source, excluded); var key, i; if (Object.getOwnPropertySymbols) { var sourceSymbolKeys = Object.getOwnPropertySymbols(source); for (i = 0; i < sourceSymbolKeys.length; i++) { key = sourceSymbolKeys[i]; if (excluded.indexOf(key) >= 0) continue; if (!Object.prototype.propertyIsEnumerable.call(source, key)) continue; target[key] = source[key]; } } return target; }
@@ -4310,15 +4338,13 @@ function _objectWithoutPropertiesLoose(source, excluded) { if (source == null) r
 
 
 
-
-//Destroys body scroll locking
-
-var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_amd_react_.forwardRef)(function (props, externalRef) {
+var MultiFuncSelect = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(function (props, externalRef) {
   var contentRef = props.contentRef,
     popupRef = props.popupRef,
     wrapperClassName = props.wrapperClassName,
     controlClassName = props.controlClassName,
     controlExClassName = props.controlExClassName,
+    lockScrollBar = props.lockScrollBar,
     exceededSidePosOffset = props.exceededSidePosOffset,
     multiSelect = props.multiSelect,
     multiSelectSelectedItemOnlyStatus = props.multiSelectSelectedItemOnlyStatus,
@@ -4359,6 +4385,7 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
     onBlur = props.onBlur,
     onFocus = props.onFocus,
     attributes = _objectWithoutProperties(props, _excluded);
+  var LOCK_SCROLLBAR = typeof lockScrollBar === 'undefined' ? true : lockScrollBar;
   var DEPTH = depth || 1055; // the default value same as bootstrap
   var LIVE_SEARCH_OK = typeof fetchTrigger !== 'undefined' && fetchTrigger === true ? true : false;
   var LIVE_SEARCH_DISABLED = (typeof fetchTrigger === 'undefined' || fetchTrigger === false) && typeof window !== 'undefined' && typeof window['funda-ui__MultiFuncSelect-disable-livesearch'] !== 'undefined' ? true : false; // Globally disable real-time search functionality (only valid for non-dynamic requests)
@@ -4371,64 +4398,64 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
   var INDENT_LAST_PLACEHOLDER = "".concat(typeof indentation !== 'undefined' && indentation !== '' ? "".concat(indentation, "&nbsp;&nbsp;") : '');
   var POS_OFFSET = 0;
   var EXCEEDED_SIDE_POS_OFFSET = Number(exceededSidePosOffset) || 15;
-  var uniqueID = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useId)().replace(/\:/g, "-");
+  var uniqueID = (0,react__WEBPACK_IMPORTED_MODULE_0__.useId)().replace(/\:/g, "-");
   var idRes = id || uniqueID;
-  var rootRef = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useRef)(null);
-  var rootSingleRef = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useRef)(null);
-  var rootMultiRef = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useRef)(null);
-  var selectInputRef = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useRef)(null);
-  var valueInputRef = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useRef)(null);
-  var listRef = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useRef)(null);
-  var listContentRef = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useRef)(null);
-  var optionsRes = options ? (0,dist_cjs.isJSON)(options) ? JSON.parse(options) : options : [];
-  var keyboardSelectedItem = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useRef)(null);
+  var rootRef = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(null);
+  var rootSingleRef = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(null);
+  var rootMultiRef = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(null);
+  var selectInputRef = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(null);
+  var valueInputRef = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(null);
+  var listRef = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(null);
+  var listContentRef = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(null);
+  var optionsRes = options ? (0,funda_utils__WEBPACK_IMPORTED_MODULE_2__.isJSON)(options) ? JSON.parse(options) : options : [];
+  var keyboardSelectedItem = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(null);
 
   // return a array of options
   var staticOptionsData = optionsRes;
 
   //
-  var _useState = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)(staticOptionsData),
+  var _useState = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(staticOptionsData),
     _useState2 = _slicedToArray(_useState, 2),
     orginalData = _useState2[0],
     setOrginalData = _useState2[1];
-  var _useState3 = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)(staticOptionsData),
+  var _useState3 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(staticOptionsData),
     _useState4 = _slicedToArray(_useState3, 2),
     optionsData = _useState4[0],
     setOptionsData = _useState4[1];
-  var _useState5 = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)(false),
+  var _useState5 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(false),
     _useState6 = _slicedToArray(_useState5, 2),
     hasErr = _useState6[0],
     setHasErr = _useState6[1];
-  var _useState7 = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)(''),
+  var _useState7 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(''),
     _useState8 = _slicedToArray(_useState7, 2),
     controlLabel = _useState8[0],
     setControlLabel = _useState8[1];
-  var _useState9 = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)(''),
+  var _useState9 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(''),
     _useState10 = _slicedToArray(_useState9, 2),
     controlValue = _useState10[0],
     setControlValue = _useState10[1];
-  var _useState11 = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)(null),
+  var _useState11 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(null),
     _useState12 = _slicedToArray(_useState11, 2),
     controlTempValue = _useState12[0],
     setControlTempValue = _useState12[1];
-  var _useState13 = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)(false),
+  var _useState13 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(false),
     _useState14 = _slicedToArray(_useState13, 2),
     isOpen = _useState14[0],
     setIsOpen = _useState14[1];
-  var _useState15 = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)(null),
+  var _useState15 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(null),
     _useState16 = _slicedToArray(_useState15, 2),
     incomingData = _useState16[0],
     setIncomingData = _useState16[1];
 
   // blinking cursor
   var BLINKING_CURSOR_STR = '|';
-  var _useState17 = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)(0),
+  var _useState17 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(0),
     _useState18 = _slicedToArray(_useState17, 2),
     blinkingPosStart = _useState18[0],
     setBlinkingPosStart = _useState18[1];
-  var blinkingPosFauxRef = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useRef)(null);
-  var blinkingCursorPosDivRef = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useRef)(null);
-  var selectedSign = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useRef)(false);
+  var blinkingPosFauxRef = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(null);
+  var blinkingCursorPosDivRef = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(null);
+  var selectedSign = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(false);
   var MULTI_SEL_VALID = multiSelect ? multiSelect.valid : false;
   var MULTI_SEL_LABEL = multiSelect ? multiSelect.selectAllLabel : 'Select all options';
   var MULTI_SEL_SELECTED_STATUS = {
@@ -4436,7 +4463,7 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
     allItemsLabel: 'All Content',
     noneLabel: 'No items selected'
   };
-  var _useState19 = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)({
+  var _useState19 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)({
       labels: [],
       values: []
     }),
@@ -4455,7 +4482,7 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
   var CLEAN_TRIGGER_LABEL = cleanTrigger ? cleanTrigger.cleanValueLabel : 'Clean';
 
   // exposes the following methods
-  (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useImperativeHandle)(popupRef, function () {
+  (0,react__WEBPACK_IMPORTED_MODULE_0__.useImperativeHandle)(popupRef, function () {
     return {
       close: function close() {
         cancel();
@@ -4463,7 +4490,7 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
       }
     };
   }, [popupRef]);
-  (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useImperativeHandle)(contentRef, function () {
+  (0,react__WEBPACK_IMPORTED_MODULE_0__.useImperativeHandle)(contentRef, function () {
     return {
       clear: function clear(cb) {
         if (MULTI_SEL_VALID) {
@@ -4497,7 +4524,7 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
   }, [contentRef]);
 
   // click outside
-  (0,dist_cjs.useClickOutside)({
+  (0,funda_utils__WEBPACK_IMPORTED_MODULE_2__.useClickOutside)({
     enabled: isOpen && rootRef.current && listRef.current,
     isOutside: function isOutside(event) {
       // close dropdown when other dropdown is opened
@@ -4511,7 +4538,7 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
   }, [isOpen, rootRef, listRef]);
 
   // Add function to the element that should be used as the scrollable area.
-  var _useWindowScroll = (0,dist_cjs.useWindowScroll)({
+  var _useWindowScroll = (0,funda_utils__WEBPACK_IMPORTED_MODULE_2__.useWindowScroll)({
       performance: ['debounce', 500],
       // "['debounce', 500]" or "['throttle', 500]"
       handle: function handle(scrollData) {
@@ -4524,7 +4551,7 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
     windowScrollUpdate = _useWindowScroll2[1];
 
   //performance
-  var handleChangeFetchSafe = (0,dist_cjs.useDebounce)(function (val) {
+  var handleChangeFetchSafe = (0,funda_utils__WEBPACK_IMPORTED_MODULE_2__.useDebounce)(function (val) {
     var _orginalData = [];
     var update = function update(inputData) {
       var filterRes = function filterRes() {
@@ -4671,7 +4698,7 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
               break;
             }
             _context.next = 6;
-            return fetchFuncAsync["".concat(fetchFuncMethod)].apply(fetchFuncAsync, src_toConsumableArray(params.split(',')));
+            return fetchFuncAsync["".concat(fetchFuncMethod)].apply(fetchFuncAsync, _toConsumableArray(params.split(',')));
           case 6:
             response = _context.sent;
             _ORGIN_DATA = response.data; // reset data structure
@@ -4698,8 +4725,8 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
             // STEP 2: ===========
             // Set hierarchical categories ( with sub-categories )
             if (hierarchical) {
-              _ORGIN_DATA = (0,dist_cjs.addTreeDepth)(_ORGIN_DATA);
-              (0,dist_cjs.addTreeIndent)(_ORGIN_DATA, INDENT_PLACEHOLDER, INDENT_LAST_PLACEHOLDER, 'label');
+              _ORGIN_DATA = (0,funda_utils__WEBPACK_IMPORTED_MODULE_2__.addTreeDepth)(_ORGIN_DATA);
+              (0,funda_utils__WEBPACK_IMPORTED_MODULE_2__.addTreeIndent)(_ORGIN_DATA, INDENT_PLACEHOLDER, INDENT_LAST_PLACEHOLDER, 'label');
             }
 
             // STEP 3: ===========
@@ -4760,7 +4787,7 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
                 });
 
                 //
-                _values = VALUE_BY_BRACKETS ? (0,dist_cjs.extractContentsOfBrackets)(defaultValue) : defaultValue.split(',');
+                _values = VALUE_BY_BRACKETS ? (0,funda_utils__WEBPACK_IMPORTED_MODULE_2__.extractContentsOfBrackets)(defaultValue) : defaultValue.split(',');
                 _values.forEach(function (_value, _index) {
                   if (!multiSelControlOptionExist(_currentData.values, _value) && typeof _currentData.values[_index] !== 'undefined') {
                     var _filterRes2 = [];
@@ -4771,10 +4798,10 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
                     }];
                     setControlArr(function (prevState) {
                       return {
-                        labels: unique([].concat(src_toConsumableArray(prevState.labels), [typeof _filterRes2[0] !== 'undefined' ? _filterRes2[0].label : '']).filter(function (v) {
+                        labels: unique([].concat(_toConsumableArray(prevState.labels), [typeof _filterRes2[0] !== 'undefined' ? _filterRes2[0].label : '']).filter(function (v) {
                           return v !== '';
                         })),
-                        values: unique([].concat(src_toConsumableArray(prevState.values), [typeof _filterRes2[0] !== 'undefined' ? _filterRes2[0].value : '']).filter(function (v) {
+                        values: unique([].concat(_toConsumableArray(prevState.values), [typeof _filterRes2[0] !== 'undefined' ? _filterRes2[0].value : '']).filter(function (v) {
                           return v !== '';
                         }))
                       };
@@ -4818,8 +4845,8 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
             // STEP 2: ===========
             // Set hierarchical categories ( with sub-categories )
             if (hierarchical) {
-              staticOptionsData = (0,dist_cjs.addTreeDepth)(staticOptionsData);
-              (0,dist_cjs.addTreeIndent)(staticOptionsData, INDENT_PLACEHOLDER, INDENT_LAST_PLACEHOLDER, 'label');
+              staticOptionsData = (0,funda_utils__WEBPACK_IMPORTED_MODULE_2__.addTreeDepth)(staticOptionsData);
+              (0,funda_utils__WEBPACK_IMPORTED_MODULE_2__.addTreeIndent)(staticOptionsData, INDENT_PLACEHOLDER, INDENT_LAST_PLACEHOLDER, 'label');
             }
 
             // STEP 3: ===========
@@ -4870,7 +4897,7 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
                 });
 
                 //
-                _values2 = typeof defaultValue !== 'undefined' ? VALUE_BY_BRACKETS ? (0,dist_cjs.extractContentsOfBrackets)(defaultValue) : defaultValue.split(',') : [];
+                _values2 = typeof defaultValue !== 'undefined' ? VALUE_BY_BRACKETS ? (0,funda_utils__WEBPACK_IMPORTED_MODULE_2__.extractContentsOfBrackets)(defaultValue) : defaultValue.split(',') : [];
                 _values2.forEach(function (_value, _index) {
                   if (!multiSelControlOptionExist(_currentData2.values, _value) && typeof _currentData2.values[_index] !== 'undefined') {
                     var _filterRes4 = [];
@@ -4881,10 +4908,10 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
                     }];
                     setControlArr(function (prevState) {
                       return {
-                        labels: unique([].concat(src_toConsumableArray(prevState.labels), [typeof _filterRes4[0] !== 'undefined' ? _filterRes4[0].label : '']).filter(function (v) {
+                        labels: unique([].concat(_toConsumableArray(prevState.labels), [typeof _filterRes4[0] !== 'undefined' ? _filterRes4[0].label : '']).filter(function (v) {
                           return v !== '';
                         })),
-                        values: unique([].concat(src_toConsumableArray(prevState.values), [typeof _filterRes4[0] !== 'undefined' ? _filterRes4[0].value : '']).filter(function (v) {
+                        values: unique([].concat(_toConsumableArray(prevState.values), [typeof _filterRes4[0] !== 'undefined' ? _filterRes4[0].value : '']).filter(function (v) {
                           return v !== '';
                         }))
                       };
@@ -4950,7 +4977,7 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
     // console.log(getAbsolutePositionOfStage(_triggerRef));
 
     if (_modalRef === null) return;
-    var _getAbsolutePositionO = (0,dist_cjs.getAbsolutePositionOfStage)(_triggerRef),
+    var _getAbsolutePositionO = (0,funda_utils__WEBPACK_IMPORTED_MODULE_2__.getAbsolutePositionOfStage)(_triggerRef),
       x = _getAbsolutePositionO.x,
       y = _getAbsolutePositionO.y,
       width = _getAbsolutePositionO.width,
@@ -5170,7 +5197,7 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
     setControlTempValue(null);
 
     // Unlocks the page
-    if (LOCK_BODY_SCROLL) enableBodyScroll(document.querySelector('body'));
+    if (LOCK_BODY_SCROLL) (0,funda_utils__WEBPACK_IMPORTED_MODULE_2__.enableBodyScroll)(document.querySelector('body'));
   }
   function activate() {
     // show list
@@ -5204,7 +5231,7 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
     // Get a target element that you want to persist scrolling for (such as a modal/lightbox/flyout/nav).
     // Specifically, the target element is the one we would like to allow scroll on (NOT a parent of that element).
     // This is also the element to apply the CSS '-webkit-overflow-scrolling: touch;' if desired.
-    if (LOCK_BODY_SCROLL) disableBodyScroll(document.querySelector('body'));
+    if (LOCK_BODY_SCROLL) (0,funda_utils__WEBPACK_IMPORTED_MODULE_2__.disableBodyScroll)(document.querySelector('body'));
   }
   function handleSelect(_x4) {
     return _handleSelect.apply(this, arguments);
@@ -5306,7 +5333,7 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
                   //
                   setControlArr(function (prevState) {
                     // update temporary value
-                    setControlTempValue(prevState.labels.length >= 0 ? null : VALUE_BY_BRACKETS ? (0,dist_cjs.convertArrToValByBrackets)(prevState.labels) : prevState.labels.join(','));
+                    setControlTempValue(prevState.labels.length >= 0 ? null : VALUE_BY_BRACKETS ? (0,funda_utils__WEBPACK_IMPORTED_MODULE_2__.convertArrToValByBrackets)(prevState.labels) : prevState.labels.join(','));
                     return {
                       labels: removeItemOnce(prevState.labels, formatIndentVal(_label)),
                       values: removeItemOnce(prevState.values, _value)
@@ -5325,10 +5352,10 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
                   //
                   setControlArr(function (prevState) {
                     // update temporary value
-                    setControlTempValue(prevState.labels.length >= 0 ? null : VALUE_BY_BRACKETS ? (0,dist_cjs.convertArrToValByBrackets)(prevState.labels) : prevState.labels.join(','));
+                    setControlTempValue(prevState.labels.length >= 0 ? null : VALUE_BY_BRACKETS ? (0,funda_utils__WEBPACK_IMPORTED_MODULE_2__.convertArrToValByBrackets)(prevState.labels) : prevState.labels.join(','));
                     return {
-                      labels: [].concat(src_toConsumableArray(prevState.labels), [formatIndentVal(_label)]),
-                      values: [].concat(src_toConsumableArray(prevState.values), [_value])
+                      labels: [].concat(_toConsumableArray(prevState.labels), [formatIndentVal(_label)]),
+                      values: [].concat(_toConsumableArray(prevState.values), [_value])
                     };
                   });
                   currentControlValueArr.push(_value);
@@ -5353,12 +5380,12 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
                   values: currentControlValueArr.map(function (v) {
                     return v.toString();
                   }),
-                  labelsOfString: VALUE_BY_BRACKETS ? (0,dist_cjs.convertArrToValByBrackets)(currentControlLabelArr.map(function (v) {
+                  labelsOfString: VALUE_BY_BRACKETS ? (0,funda_utils__WEBPACK_IMPORTED_MODULE_2__.convertArrToValByBrackets)(currentControlLabelArr.map(function (v) {
                     return v.toString();
                   })) : currentControlLabelArr.map(function (v) {
                     return v.toString();
                   }).join(','),
-                  valuesOfString: VALUE_BY_BRACKETS ? (0,dist_cjs.convertArrToValByBrackets)(currentControlValueArr.map(function (v) {
+                  valuesOfString: VALUE_BY_BRACKETS ? (0,funda_utils__WEBPACK_IMPORTED_MODULE_2__.convertArrToValByBrackets)(currentControlValueArr.map(function (v) {
                     return v.toString();
                   })) : currentControlValueArr.map(function (v) {
                     return v.toString();
@@ -5408,7 +5435,7 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
                   //
                   setControlArr(function (prevState) {
                     // update temporary value
-                    setControlTempValue(prevState.labels.length >= 0 ? null : VALUE_BY_BRACKETS ? (0,dist_cjs.convertArrToValByBrackets)(prevState.labels) : prevState.labels.join(','));
+                    setControlTempValue(prevState.labels.length >= 0 ? null : VALUE_BY_BRACKETS ? (0,funda_utils__WEBPACK_IMPORTED_MODULE_2__.convertArrToValByBrackets)(prevState.labels) : prevState.labels.join(','));
                     return {
                       labels: removeItemOnce(prevState.labels, formatIndentVal(_label2)),
                       values: removeItemOnce(prevState.values, _value2)
@@ -5428,10 +5455,10 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
                   //
                   setControlArr(function (prevState) {
                     // update temporary value
-                    setControlTempValue(prevState.labels.length >= 0 ? null : VALUE_BY_BRACKETS ? (0,dist_cjs.convertArrToValByBrackets)(prevState.labels) : prevState.labels.join(','));
+                    setControlTempValue(prevState.labels.length >= 0 ? null : VALUE_BY_BRACKETS ? (0,funda_utils__WEBPACK_IMPORTED_MODULE_2__.convertArrToValByBrackets)(prevState.labels) : prevState.labels.join(','));
                     return {
-                      labels: [].concat(src_toConsumableArray(prevState.labels), [formatIndentVal(_label2)]),
-                      values: [].concat(src_toConsumableArray(prevState.values), [_value2])
+                      labels: [].concat(_toConsumableArray(prevState.labels), [formatIndentVal(_label2)]),
+                      values: [].concat(_toConsumableArray(prevState.values), [_value2])
                     };
                   });
                   _currentControlValueArr.push(_value2);
@@ -5456,12 +5483,12 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
                   values: _currentControlValueArr.map(function (v) {
                     return v.toString();
                   }),
-                  labelsOfString: VALUE_BY_BRACKETS ? (0,dist_cjs.convertArrToValByBrackets)(_currentControlLabelArr.map(function (v) {
+                  labelsOfString: VALUE_BY_BRACKETS ? (0,funda_utils__WEBPACK_IMPORTED_MODULE_2__.convertArrToValByBrackets)(_currentControlLabelArr.map(function (v) {
                     return v.toString();
                   })) : _currentControlLabelArr.map(function (v) {
                     return v.toString();
                   }).join(','),
-                  valuesOfString: VALUE_BY_BRACKETS ? (0,dist_cjs.convertArrToValByBrackets)(_currentControlValueArr.map(function (v) {
+                  valuesOfString: VALUE_BY_BRACKETS ? (0,funda_utils__WEBPACK_IMPORTED_MODULE_2__.convertArrToValByBrackets)(_currentControlValueArr.map(function (v) {
                     return v.toString();
                   })) : _currentControlValueArr.map(function (v) {
                     return v.toString();
@@ -5574,7 +5601,7 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
     var _label = controlArr.labels[getCurrentIndex];
     setControlArr(function (prevState) {
       // update temporary value
-      setControlTempValue(prevState.labels.length >= 0 ? null : VALUE_BY_BRACKETS ? (0,dist_cjs.convertArrToValByBrackets)(prevState.labels) : prevState.labels.join(','));
+      setControlTempValue(prevState.labels.length >= 0 ? null : VALUE_BY_BRACKETS ? (0,funda_utils__WEBPACK_IMPORTED_MODULE_2__.convertArrToValByBrackets)(prevState.labels) : prevState.labels.join(','));
       return {
         labels: removeItemOnce(prevState.labels, formatIndentVal(_label)),
         values: removeItemOnce(prevState.values, _value)
@@ -5595,12 +5622,12 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
         values: currentControlValueArr.map(function (v) {
           return v.toString();
         }),
-        labelsOfString: VALUE_BY_BRACKETS ? (0,dist_cjs.convertArrToValByBrackets)(currentControlLabelArr.map(function (v) {
+        labelsOfString: VALUE_BY_BRACKETS ? (0,funda_utils__WEBPACK_IMPORTED_MODULE_2__.convertArrToValByBrackets)(currentControlLabelArr.map(function (v) {
           return v.toString();
         })) : currentControlLabelArr.map(function (v) {
           return v.toString();
         }).join(','),
-        valuesOfString: VALUE_BY_BRACKETS ? (0,dist_cjs.convertArrToValByBrackets)(currentControlValueArr.map(function (v) {
+        valuesOfString: VALUE_BY_BRACKETS ? (0,funda_utils__WEBPACK_IMPORTED_MODULE_2__.convertArrToValByBrackets)(currentControlValueArr.map(function (v) {
           return v.toString();
         })) : currentControlValueArr.map(function (v) {
           return v.toString();
@@ -5664,7 +5691,7 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
     var val = event.target.value;
 
     //Calculates the position of the blinking cursor
-    setBlinkingPosStart((0,dist_cjs.getTextWidth)(event.target, blinkingPosFauxRef.current, blinkingCursorPosDivRef.current));
+    setBlinkingPosStart((0,funda_utils__WEBPACK_IMPORTED_MODULE_2__.getTextWidth)(event.target, blinkingPosFauxRef.current, blinkingCursorPosDivRef.current));
 
     // update temporary value
     setControlTempValue(val);
@@ -5797,12 +5824,12 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
                   values: currentControlValueArr.map(function (v) {
                     return v.toString();
                   }),
-                  labelsOfString: VALUE_BY_BRACKETS ? (0,dist_cjs.convertArrToValByBrackets)(currentControlLabelArr.map(function (v) {
+                  labelsOfString: VALUE_BY_BRACKETS ? (0,funda_utils__WEBPACK_IMPORTED_MODULE_2__.convertArrToValByBrackets)(currentControlLabelArr.map(function (v) {
                     return v.toString();
                   })) : currentControlLabelArr.map(function (v) {
                     return v.toString();
                   }).join(','),
-                  valuesOfString: VALUE_BY_BRACKETS ? (0,dist_cjs.convertArrToValByBrackets)(currentControlValueArr.map(function (v) {
+                  valuesOfString: VALUE_BY_BRACKETS ? (0,funda_utils__WEBPACK_IMPORTED_MODULE_2__.convertArrToValByBrackets)(currentControlValueArr.map(function (v) {
                     return v.toString();
                   })) : currentControlValueArr.map(function (v) {
                     return v.toString();
@@ -5842,7 +5869,7 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
     }));
     return _handleKeyPressed.apply(this, arguments);
   }
-  (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useEffect)(function () {
+  (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(function () {
     // Call a function when the component has been rendered completely
     //--------------
     onLoad === null || onLoad === void 0 ? void 0 : onLoad(selectInputRef.current, valueInputRef.current, value);
@@ -5859,32 +5886,32 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
     });
     fetchData(_params.join(','), value);
     return function () {
-      if (LOCK_BODY_SCROLL) clearAllBodyScrollLocks();
+      if (LOCK_BODY_SCROLL) (0,funda_utils__WEBPACK_IMPORTED_MODULE_2__.clearAllBodyScrollLocks)();
     };
   }, [value, options, data]);
-  return /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, label ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
+  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, label ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
     className: "mf-select__label"
-  }, typeof label === 'string' ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("label", {
+  }, typeof label === 'string' ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("label", {
     htmlFor: "label-".concat(idRes),
     className: "form-label",
     dangerouslySetInnerHTML: {
       __html: "".concat(label)
     }
-  }) : /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("label", {
+  }) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("label", {
     htmlFor: "label-".concat(idRes),
     className: "form-label"
-  }, label))) : null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("span", {
+  }, label))) : null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
     ref: blinkingPosFauxRef
-  }), /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
+  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
     ref: rootRef,
     "data-overlay-id": "mf-select__options-wrapper-".concat(idRes),
     id: "mf-select__wrapper-".concat(idRes),
     className: "mf-select__wrapper ".concat(wrapperClassName || wrapperClassName === '' ? wrapperClassName : 'mb-3 position-relative', " ").concat(MULTI_SEL_VALID ? 'multiple-selection' : '', " ").concat(isOpen ? 'active focus' : ''),
     onKeyDown: handleKeyPressed
-  }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
     ref: rootSingleRef,
     className: "position-relative"
-  }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("input", _extends({
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("input", _extends({
     ref: function ref(node) {
       selectInputRef.current = node;
       if (typeof externalRef === 'function') {
@@ -5915,7 +5942,7 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
     disabled: disabled || null,
     required: required || null,
     readOnly: INPUT_READONLY,
-    value: controlTempValue || controlTempValue === '' ? controlTempValue : MULTI_SEL_VALID ? VALUE_BY_BRACKETS ? (0,dist_cjs.convertArrToValByBrackets)(formatIndentVal(controlArr.labels).map(function (v) {
+    value: controlTempValue || controlTempValue === '' ? controlTempValue : MULTI_SEL_VALID ? VALUE_BY_BRACKETS ? (0,funda_utils__WEBPACK_IMPORTED_MODULE_2__.convertArrToValByBrackets)(formatIndentVal(controlArr.labels).map(function (v) {
       return stripHTML(v);
     })) : formatIndentVal(controlArr.labels).map(function (v) {
       return stripHTML(v);
@@ -5928,34 +5955,34 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
       borderBottomWidth: MULTI_SEL_VALID ? '0' : '1px'
     }, style),
     autoComplete: typeof autoComplete === 'undefined' ? 'off' : autoComplete
-  }, attributes)), /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("input", _extends({
+  }, attributes)), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("input", _extends({
     ref: valueInputRef,
     type: "hidden",
     id: idRes,
     name: name,
-    value: MULTI_SEL_VALID ? VALUE_BY_BRACKETS ? (0,dist_cjs.convertArrToValByBrackets)(controlArr.values) : controlArr.values.join(',') : controlValue // do not use `defaultValue`
-  }, attributes)), !MULTI_SEL_VALID ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("span", {
+    value: MULTI_SEL_VALID ? VALUE_BY_BRACKETS ? (0,funda_utils__WEBPACK_IMPORTED_MODULE_2__.convertArrToValByBrackets)(controlArr.values) : controlArr.values.join(',') : controlValue // do not use `defaultValue`
+  }, attributes)), !MULTI_SEL_VALID ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
     className: "mf-select-multi__control-blinking-following-cursor animated ".concat(hideBlinkingCursor() ? 'd-none' : ''),
     style: {
       left: "".concat(blinkingPosStart, "px")
     }
-  }, BLINKING_CURSOR_STR)) : null), !MULTI_SEL_VALID ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
+  }, BLINKING_CURSOR_STR)) : null), !MULTI_SEL_VALID ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
     className: "mf-select-single__inputplaceholder-wrapper"
-  }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
     className: "mf-select-single__inputplaceholder-inner",
     style: style
-  }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("input", {
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("input", {
     tabIndex: tabIndex || 0,
     type: "text",
     className: "".concat(controlClassName || controlClassName === '' ? controlClassName : "form-control", " ").concat(controlExClassName || '')
-  }), /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("span", {
+  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
     ref: blinkingCursorPosDivRef,
     className: "mf-select-multi__control-blinking-cursor ".concat(generateInputFocusStr() === BLINKING_CURSOR_STR ? 'animated' : '')
-  }, controlTempValue || controlTempValue === '' ? controlTempValue.length === 0 ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("span", {
+  }, controlTempValue || controlTempValue === '' ? controlTempValue.length === 0 ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
     className: "".concat(!hideBlinkingCursor() ? 'control-placeholder' : '')
-  }, generateInputFocusStr()) : /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("span", null, controlTempValue) : stripHTML(controlLabel).length === 0 ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("span", {
+  }, generateInputFocusStr()) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", null, controlTempValue) : stripHTML(controlLabel).length === 0 ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
     className: "".concat(!hideBlinkingCursor() ? 'control-placeholder' : '')
-  }, generateInputFocusStr()) : /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("span", null, stripHTML(controlLabel)))), /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("span", {
+  }, generateInputFocusStr()) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", null, stripHTML(controlLabel)))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
     className: "arrow position-absolute top-0 end-0 me-2 mt-1",
     style: {
       translate: 'all .2s',
@@ -5963,25 +5990,25 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
       pointerEvents: 'none',
       display: fetchTrigger ? 'none' : 'inline-block'
     }
-  }, controlArrow ? controlArrow : /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("svg", {
+  }, controlArrow ? controlArrow : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("svg", {
     width: "10px",
     height: "10px",
     viewBox: "0 -4.5 20 20"
-  }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("g", {
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("g", {
     stroke: "none",
     strokeWidth: "1",
     fill: "none"
-  }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("g", {
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("g", {
     transform: "translate(-180.000000, -6684.000000)",
     className: "arrow-fill-g",
     fill: "#a5a5a5"
-  }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("g", {
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("g", {
     transform: "translate(56.000000, 160.000000)"
-  }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("path", {
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("path", {
     d: "M144,6525.39 L142.594,6524 L133.987,6532.261 L133.069,6531.38 L133.074,6531.385 L125.427,6524.045 L124,6525.414 C126.113,6527.443 132.014,6533.107 133.987,6535 C135.453,6533.594 134.024,6534.965 144,6525.39"
-  })))))), fetchTrigger ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("span", {
+  })))))), fetchTrigger ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
     className: "mf-select-multi__control-searchbtn position-absolute top-0 end-0"
-  }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("button", {
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", {
     tabIndex: -1,
     type: "button",
     className: "btn border-end-0 rounded-pill",
@@ -5994,47 +6021,47 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
         }, 0);
       });
     }
-  }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("svg", {
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("svg", {
     width: "1em",
     height: "1em",
     fill: "#a5a5a5",
     viewBox: "0 0 16 16"
-  }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("path", {
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("path", {
     d: "M12.027 9.92L16 13.95 14 16l-4.075-3.976A6.465 6.465 0 0 1 6.5 13C2.91 13 0 10.083 0 6.5 0 2.91 2.917 0 6.5 0 10.09 0 13 2.917 13 6.5a6.463 6.463 0 0 1-.973 3.42zM1.997 6.452c0 2.48 2.014 4.5 4.5 4.5 2.48 0 4.5-2.015 4.5-4.5 0-2.48-2.015-4.5-4.5-4.5-2.48 0-4.5 2.014-4.5 4.5z",
     fillRule: "evenodd"
-  }))))) : null) : null, MULTI_SEL_VALID ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
+  }))))) : null) : null, MULTI_SEL_VALID ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
     ref: rootMultiRef,
     className: "mf-select-multi__inputplaceholder-wrapper"
-  }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
     className: "mf-select-multi__inputplaceholder-inner"
-  }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("ul", {
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("ul", {
     className: "mf-select-multi__list"
-  }, typeof multiSelectSelectedItemOnlyStatus !== 'undefined' ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("li", {
+  }, typeof multiSelectSelectedItemOnlyStatus !== 'undefined' ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("li", {
     className: "mf-select-multi__list-item-statusstring"
-  }, typeof multiSelectSelectedItemOnlyStatus.itemsLabel === 'string' && controlArr.labels.length > 0 && controlArr.labels.length < optionsData.length ? multiSelectSelectedItemOnlyStatus.itemsLabel.replace('{num}', controlArr.labels.length) : null, typeof multiSelectSelectedItemOnlyStatus.noneLabel === 'string' && controlArr.labels.length === 0 ? multiSelectSelectedItemOnlyStatus.noneLabel : null, typeof multiSelectSelectedItemOnlyStatus.allItemsLabel === 'string' && controlArr.labels.length === optionsData.length ? multiSelectSelectedItemOnlyStatus.allItemsLabel : null, typeof multiSelectSelectedItemOnlyStatus.itemsLabel !== 'string' && controlArr.labels.length > 0 ? MULTI_SEL_SELECTED_STATUS.itemsLabel.replace('{num}', controlArr.labels.length) : null, typeof multiSelectSelectedItemOnlyStatus.noneLabel !== 'string' && controlArr.labels.length === 0 ? MULTI_SEL_SELECTED_STATUS.noneLabel : null, typeof multiSelectSelectedItemOnlyStatus.allItemsLabel !== 'string' && controlArr.labels.length === optionsData.length ? MULTI_SEL_SELECTED_STATUS.allItemsLabel : null)) : /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, controlArr.labels.map(function (item, index) {
-    return /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("li", {
+  }, typeof multiSelectSelectedItemOnlyStatus.itemsLabel === 'string' && controlArr.labels.length > 0 && controlArr.labels.length < optionsData.length ? multiSelectSelectedItemOnlyStatus.itemsLabel.replace('{num}', controlArr.labels.length) : null, typeof multiSelectSelectedItemOnlyStatus.noneLabel === 'string' && controlArr.labels.length === 0 ? multiSelectSelectedItemOnlyStatus.noneLabel : null, typeof multiSelectSelectedItemOnlyStatus.allItemsLabel === 'string' && controlArr.labels.length === optionsData.length ? multiSelectSelectedItemOnlyStatus.allItemsLabel : null, typeof multiSelectSelectedItemOnlyStatus.itemsLabel !== 'string' && controlArr.labels.length > 0 ? MULTI_SEL_SELECTED_STATUS.itemsLabel.replace('{num}', controlArr.labels.length) : null, typeof multiSelectSelectedItemOnlyStatus.noneLabel !== 'string' && controlArr.labels.length === 0 ? MULTI_SEL_SELECTED_STATUS.noneLabel : null, typeof multiSelectSelectedItemOnlyStatus.allItemsLabel !== 'string' && controlArr.labels.length === optionsData.length ? MULTI_SEL_SELECTED_STATUS.allItemsLabel : null)) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, controlArr.labels.map(function (item, index) {
+    return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("li", {
       key: index
-    }, stripHTML(item), /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("a", {
+    }, stripHTML(item), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
       href: "#",
       tabIndex: -1,
       onClick: handleMultiControlItemRemove,
       "data-item": controlArr.values[index]
-    }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("svg", {
+    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("svg", {
       width: "10px",
       height: "10px",
       viewBox: "0 0 1024 1024"
-    }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("path", {
+    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("path", {
       fill: "#000",
       d: "M195.2 195.2a64 64 0 0 1 90.496 0L512 421.504 738.304 195.2a64 64 0 0 1 90.496 90.496L602.496 512 828.8 738.304a64 64 0 0 1-90.496 90.496L512 602.496 285.696 828.8a64 64 0 0 1-90.496-90.496L421.504 512 195.2 285.696a64 64 0 0 1 0-90.496z"
     }))));
-  }), /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("li", {
+  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("li", {
     className: "mf-select-multi__list-item-placeholder ".concat(typeof placeholder === 'undefined' || placeholder === '' ? 'hide' : '')
-  }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("span", {
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
     ref: blinkingCursorPosDivRef,
     className: "mf-select-multi__control-blinking-cursor ".concat(hideBlinkingCursor() ? 'control-placeholder' : '', " ").concat(generateInputFocusStr() === BLINKING_CURSOR_STR ? 'animated' : '')
-  }, generateInputFocusStr(), /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("span", {
+  }, generateInputFocusStr(), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
     className: "mf-select-multi__control-blinking-following-cursor mf-select-multi__control-blinking-following-cursor--puretext animated ".concat(hideBlinkingCursor() ? 'd-none' : '')
-  }, BLINKING_CURSOR_STR))))))), /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("span", {
+  }, BLINKING_CURSOR_STR))))))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
     className: "arrow position-absolute top-0 end-0 me-2 mt-1",
     style: {
       translate: 'all .2s',
@@ -6042,25 +6069,25 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
       pointerEvents: 'none',
       display: fetchTrigger ? 'none' : 'inline-block'
     }
-  }, controlArrow ? controlArrow : /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("svg", {
+  }, controlArrow ? controlArrow : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("svg", {
     width: "10px",
     height: "10px",
     viewBox: "0 -4.5 20 20"
-  }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("g", {
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("g", {
     stroke: "none",
     strokeWidth: "1",
     fill: "none"
-  }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("g", {
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("g", {
     transform: "translate(-180.000000, -6684.000000)",
     className: "arrow-fill-g",
     fill: "#a5a5a5"
-  }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("g", {
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("g", {
     transform: "translate(56.000000, 160.000000)"
-  }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("path", {
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("path", {
     d: "M144,6525.39 L142.594,6524 L133.987,6532.261 L133.069,6531.38 L133.074,6531.385 L125.427,6524.045 L124,6525.414 C126.113,6527.443 132.014,6533.107 133.987,6535 C135.453,6533.594 134.024,6534.965 144,6525.39"
-  })))))), fetchTrigger ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("span", {
+  })))))), fetchTrigger ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
     className: "mf-select-multi__control-searchbtn position-absolute top-0 end-0"
-  }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("button", {
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", {
     tabIndex: -1,
     type: "button",
     className: "btn border-end-0 rounded-pill",
@@ -6073,18 +6100,18 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
         }, 0);
       });
     }
-  }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("svg", {
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("svg", {
     width: "1em",
     height: "1em",
     fill: "#a5a5a5",
     viewBox: "0 0 16 16"
-  }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("path", {
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("path", {
     d: "M12.027 9.92L16 13.95 14 16l-4.075-3.976A6.465 6.465 0 0 1 6.5 13C2.91 13 0 10.083 0 6.5 0 2.91 2.917 0 6.5 0 10.09 0 13 2.917 13 6.5a6.463 6.463 0 0 1-.973 3.42zM1.997 6.452c0 2.48 2.014 4.5 4.5 4.5 2.48 0 4.5-2.015 4.5-4.5 0-2.48-2.015-4.5-4.5-4.5-2.48 0-4.5 2.014-4.5 4.5z",
     fillRule: "evenodd"
-  }))))) : null) : null, optionsData && !hasErr ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((cjs_default()), {
+  }))))) : null) : null, optionsData && !hasErr ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((funda_root_portal__WEBPACK_IMPORTED_MODULE_1___default()), {
     show: true,
     containerClassName: "MultiFuncSelect"
-  }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
     ref: listRef,
     id: "mf-select__options-wrapper-".concat(idRes),
     className: "mf-select__options-wrapper list-group position-absolute border shadow small ".concat(winWidth ? '' : ''),
@@ -6094,40 +6121,40 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
       display: 'none'
     },
     role: "tablist"
-  }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
     className: "mf-select__options-contentlist rounded",
     style: {
       backgroundColor: 'var(--bs-list-group-bg)'
     },
     ref: listContentRef
-  }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
     className: "mf-select__options-contentlist-inner"
-  }, MULTI_SEL_VALID ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("span", {
+  }, MULTI_SEL_VALID ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
     tabIndex: -1,
     className: "list-group-item list-group-item-action border-start-0 border-end-0 text-secondary bg-light mf-select-multi__control-option-item--select-all position-sticky top-0 z-3",
     role: "tab",
     style: {
       display: multiSelect !== null && multiSelect !== void 0 && multiSelect.selectAll ? 'block' : 'none'
     }
-  }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("span", {
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
     tabIndex: -1,
     className: "btn btn-secondary",
     dangerouslySetInnerHTML: {
       __html: "".concat(MULTI_SEL_LABEL)
     },
     onClick: handleSelectAll
-  }))) : null, !MULTI_SEL_VALID ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, CLEAN_TRIGGER_VALID ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("span", {
+  }))) : null, !MULTI_SEL_VALID ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, CLEAN_TRIGGER_VALID ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
     tabIndex: -1,
     className: "list-group-item list-group-item-action border-start-0 border-end-0 text-secondary bg-light mf-select-multi__control-option-item--clean position-sticky top-0 z-3",
     role: "tab"
-  }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("span", {
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
     tabIndex: -1,
     className: "btn btn-secondary",
     dangerouslySetInnerHTML: {
       __html: "".concat(CLEAN_TRIGGER_LABEL)
     },
     onClick: handleCleanValue
-  }))) : null) : null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("button", {
+  }))) : null) : null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", {
     tabIndex: -1,
     type: "button",
     className: "list-group-item list-group-item-action no-match border-0 mf-select-multi__control-option-item--nomatch hide",
@@ -6163,7 +6190,7 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
       // ++++++++++++++++++++
       // Single selection
       // ++++++++++++++++++++
-      return /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("button", {
+      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", {
         tabIndex: -1,
         type: "button",
         "data-index": index,
@@ -6185,7 +6212,7 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
       // Multiple selection
       // ++++++++++++++++++++
       var itemSelected = multiSelControlOptionExist(controlArr.values, item.value) ? true : false;
-      return /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("button", {
+      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", {
         tabIndex: -1,
         type: "button",
         "data-selected": "".concat(itemSelected ? 'true' : 'false'),
@@ -6199,25 +6226,25 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
         "data-itemdata": JSON.stringify(item),
         role: "tab",
         onClick: handleSelect
-      }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("var", {
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("var", {
         className: "me-1 mf-select-multi__control-option-checkbox-selected ".concat(itemSelected ? '' : 'd-none')
-      }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("svg", {
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("svg", {
         width: "1.2em",
         height: "1.2em",
         fill: "#000000",
         viewBox: "0 0 24 24"
-      }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("path", {
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("path", {
         d: "M19 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.11 0 2-.9 2-2V5c0-1.1-.89-2-2-2zm-9 14l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"
-      }))), /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("var", {
+      }))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("var", {
         className: "me-1 mf-select-multi__control-option-checkbox-placeholder ".concat(itemSelected ? 'd-none' : '')
-      }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("svg", {
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("svg", {
         width: "1.2em",
         height: "1.2em",
         fill: "#000000",
         viewBox: "0 0 24 24"
-      }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("path", {
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("path", {
         d: "M4 7.2002V16.8002C4 17.9203 4 18.4801 4.21799 18.9079C4.40973 19.2842 4.71547 19.5905 5.0918 19.7822C5.5192 20 6.07899 20 7.19691 20H16.8031C17.921 20 18.48 20 18.9074 19.7822C19.2837 19.5905 19.5905 19.2842 19.7822 18.9079C20 18.4805 20 17.9215 20 16.8036V7.19691C20 6.07899 20 5.5192 19.7822 5.0918C19.5905 4.71547 19.2837 4.40973 18.9074 4.21799C18.4796 4 17.9203 4 16.8002 4H7.2002C6.08009 4 5.51962 4 5.0918 4.21799C4.71547 4.40973 4.40973 4.71547 4.21799 5.0918C4 5.51962 4 6.08009 4 7.2002Z"
-      }))), /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("span", {
+      }))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
         dangerouslySetInnerHTML: {
           __html: typeof item.listItemLabel === 'undefined' ? item.label : item.listItemLabel
         }
@@ -6225,7 +6252,7 @@ var MultiFuncSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
     }
   }) : null))))) : null));
 });
-/* harmony default export */ const src = (MultiFuncSelect);
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (MultiFuncSelect);
 })();
 
 /******/ 	return __webpack_exports__;
