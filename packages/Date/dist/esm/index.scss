@@ -44,6 +44,10 @@
             height: 1.5rem;
             line-height: 1.5rem;
 
+            /* required */
+            display: flex;
+            align-items: center;
+
             &.date2d__control-tools--hover-show-tools {
                 transform: scale(0);
                 transition: .1s ease-in-out;
@@ -519,6 +523,10 @@
         margin: 0;
         box-shadow: none;
         cursor: pointer;
+
+        /* required */
+        display: inline-flex;
+        align-items: center;
 
         svg {
             path {

@@ -28,6 +28,9 @@
   cursor: pointer;
   height: 1.5rem;
   line-height: 1.5rem;
+  /* required */
+  display: flex;
+  align-items: center;
 }
 .date2d__trigger .date2d__control .date2d__control-tools.date2d__control-tools--hover-show-tools {
   transform: scale(0);
@@ -402,6 +405,9 @@
   margin: 0;
   box-shadow: none;
   cursor: pointer;
+  /* required */
+  display: inline-flex;
+  align-items: center;
 }
 .date2d-cal__wrapper .date2d-cal__btn svg path {
   fill: var(--date2d-cal-header-arrow-bg);
