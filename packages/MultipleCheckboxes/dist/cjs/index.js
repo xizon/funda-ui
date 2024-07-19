@@ -4538,6 +4538,9 @@ var MultipleCheckboxes = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forw
     name: name,
     value: VALUE_BY_BRACKETS ? (0,funda_utils__WEBPACK_IMPORTED_MODULE_1__.convertArrToValByBrackets)(valRes(selectedItems)) : valRes(selectedItems).join(',') // do not use `defaultValue`
     ,
+    onChange: function onChange() {
+      return void 0;
+    },
     required: required || null
   }, attributes))))) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
     id: "multiple-checkboxes__wrapper-".concat(idRes),
@@ -4562,6 +4565,9 @@ var MultipleCheckboxes = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forw
     name: name,
     value: VALUE_BY_BRACKETS ? (0,funda_utils__WEBPACK_IMPORTED_MODULE_1__.convertArrToValByBrackets)(valRes(selectedItems)) : valRes(selectedItems).join(',') // do not use `defaultValue`
     ,
+    onChange: function onChange() {
+      return void 0;
+    },
     required: required || null
   }, attributes))))));
 });

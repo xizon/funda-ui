@@ -5961,6 +5961,10 @@ var MultiFuncSelect = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forward
     id: idRes,
     name: name,
     value: MULTI_SEL_VALID ? VALUE_BY_BRACKETS ? (0,funda_utils__WEBPACK_IMPORTED_MODULE_2__.convertArrToValByBrackets)(controlArr.values) : controlArr.values.join(',') : controlValue // do not use `defaultValue`
+    ,
+    onChange: function onChange() {
+      return void 0;
+    }
   }, attributes)), !MULTI_SEL_VALID ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
     className: "mf-select-multi__control-blinking-following-cursor animated ".concat(hideBlinkingCursor() ? 'd-none' : ''),
     style: {

@@ -1,0 +1,49 @@
+/* ======================================================
+    <!-- Synthetic Table -->
+/* ====================================================== */
+.syntable__wrapper {
+  --syntable-alternant-bg: #f0f0f0;
+  --syntable-dark-bg: #212529;
+  --syntable-row-active-bg: #f0f8ff;
+  --syntable-scrollbar-color: rgba(0, 0, 0, 0.2);
+  --syntable-scrollbar-track: rgba(0, 0, 0, 0);
+  --syntable-scrollbar-h: 3px;
+  --syntable-scrollbar-w: 3px;
+}
+.syntable__wrapper.table-responsive {
+  overflow-x: auto;
+}
+.syntable__wrapper.table-responsive::-webkit-scrollbar {
+  height: var(--syntable-scrollbar-h);
+}
+.syntable__wrapper.table-responsive::-webkit-scrollbar-thumb {
+  background: var(--syntable-scrollbar-color);
+}
+.syntable__wrapper.table-responsive::-webkit-scrollbar-track {
+  background: var(--syntable-scrollbar-track);
+}
+.syntable__wrapper table td,
+.syntable__wrapper table th {
+  position: relative;
+}
+.syntable__wrapper table tr {
+  transition: 0.1s ease-in-out;
+}
+.syntable__wrapper table tr.active {
+  background-color: var(--syntable-row-active-bg);
+}
+.syntable__wrapper table.table-colgroup tbody tr td:first-child,
+.syntable__wrapper table.table-colgroup tbody tr th:first-child {
+  color: #fff;
+}
+.syntable__wrapper table.table-colgroup col:nth-child(odd) {
+  background-color: var(--syntable-alternant-bg);
+}
+.syntable__wrapper table.table-colgroup col:first-child {
+  background-color: var(--syntable-dark-bg);
+}
+.syntable__wrapper table.cell-autowidth {
+  display: block; /* Key 1 */
+  width: max-content;
+  max-width: 100%;
+}

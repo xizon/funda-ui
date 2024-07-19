@@ -235,6 +235,10 @@ var Checkbox = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(fu
     id: idRes,
     name: name,
     value: val ? value || '' : '' // do not use `defaultValue`
+    ,
+    onChange: function onChange() {
+      return void 0;
+    }
   }, attributes)), label ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, typeof label === 'string' ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("label", {
     htmlFor: "label-".concat(idRes),
     className: "form-check-label",

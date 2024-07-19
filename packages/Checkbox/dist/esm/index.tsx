@@ -173,6 +173,7 @@ const Checkbox = forwardRef((props: CheckboxProps, externalRef: any) => {
                         id={idRes}
                         name={name}
                         value={val ? value as string || '' : ''}  // do not use `defaultValue`
+                        onChange={() => void(0)}
                         {...attributes}
                     />
 

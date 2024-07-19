@@ -7,6 +7,7 @@ import {
 } from 'funda-utils';
 
 
+
 import TableRow from './TableRow';
 import TableHeaders from './TableHeaders';
 import TableSummaries from './TableSummaries';

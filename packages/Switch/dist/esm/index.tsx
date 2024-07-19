@@ -128,6 +128,7 @@ const Switch = forwardRef((props: SwitchProps, externalRef: any) => {
                         id={idRes}
                         name={name}
                         value={val ? value as string || '' : ''}  // do not use `defaultValue`
+                        onChange={() => void(0)}
                         {...attributes}
                     />
 

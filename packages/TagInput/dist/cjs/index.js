@@ -4378,6 +4378,9 @@ var TagInput = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(fu
       return item.content;
     }).join(',') // do not use `defaultValue`
     ,
+    onChange: function onChange() {
+      return void 0;
+    },
     required: required || null
   }))));
 });

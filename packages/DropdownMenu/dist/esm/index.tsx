@@ -313,7 +313,12 @@ const DropdownMenu = (props: DropdownMenuProps) => {
                 
 
                 {/* INPUT */}
-                <input name={name || ''} type="hidden" value={selected?.value} /> {/* // do not use `defaultValue` */}
+                <input 
+                    name={name || ''} 
+                    type="hidden" 
+                    value={selected?.value} 
+                    onChange={() => void(0)}
+                /> {/* // do not use `defaultValue` */}
                 {/* /INPUT */}
                 
                 {/* MENU LIST */}

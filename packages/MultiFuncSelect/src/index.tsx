@@ -1891,6 +1891,7 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, externalRef: an
                         id={idRes}
                         name={name}
                         value={MULTI_SEL_VALID ? (VALUE_BY_BRACKETS ? convertArrToValByBrackets(controlArr.values) : controlArr.values.join(',')) : controlValue}  // do not use `defaultValue`
+                        onChange={() => void(0)}
                         {...attributes}
                     />
 

@@ -4575,7 +4575,10 @@ var DropdownMenu = function DropdownMenu(props) {
   }, iconRight)) : null), /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("input", {
     name: name || '',
     type: "hidden",
-    value: selected === null || selected === void 0 ? void 0 : selected.value
+    value: selected === null || selected === void 0 ? void 0 : selected.value,
+    onChange: function onChange() {
+      return void 0;
+    }
   }), " ", /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((cjs_default()), {
     show: true,
     containerClassName: "DropdownMenu"

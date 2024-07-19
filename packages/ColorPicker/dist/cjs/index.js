@@ -228,6 +228,9 @@ var ColorPicker = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)
     name: name,
     value: changedVal // do not use `defaultValue`
     ,
+    onChange: function onChange() {
+      return void 0;
+    },
     required: required || null
   }, attributes)), changedVal !== '' ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", {
     tabIndex: -1,

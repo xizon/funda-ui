@@ -416,6 +416,7 @@ const MultipleSelect = forwardRef((props: MultipleSelectProps, externalRef: any)
                     id={idRes}
                     name={name}
                     value={VALUE_BY_BRACKETS ? convertArrToValByBrackets(valSelected) : valSelected.join(',')} // do not use `defaultValue`
+                    onChange={() => void(0)}
                     required={required || null}
                     {...attributes}
                 />
