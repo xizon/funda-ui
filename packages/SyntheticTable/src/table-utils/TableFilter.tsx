@@ -1,15 +1,15 @@
-import React, { useContext } from "react";
+import React, { forwardRef, useContext } from "react";
 import { TableContext } from '../TableContext';
 
 type TableFilterProps = {
     className?: string;
     placeholder?: string;
     label?: React.ReactNode;
-    onChange?: (value: any) => void;
+    onChange?: (e: any, fetchData: any[]) => void;
 };
 
 
-const TableFilter = (props: TableFilterProps) => {
+const TableFilter = forwardRef((props: TableFilterProps, externalRef: any) => {
     const { 
         className,
         placeholder,
@@ -20,33 +20,37 @@ const TableFilter = (props: TableFilterProps) => {
     const { 
         originData, 
         filterFields, 
-        setInstance 
+        setInstance,
+        onChangeFilter
     } = useContext(TableContext);
 
     const filterFieldsData = filterFields || [];
 
 
     return (
-        <div style={{ marginBottom: "16px" }}>
+        <div className="syntable__filter-container">
             {label || null}
             <input
                 type="text"
+                ref={externalRef}
                 className={className || ''}
-                onChange={e => {
+                onChange={(e: any) => {
                     const filteredData = originData?.filter((item: any) => filterFieldsData.some((s: string) => item[s]?.toLowerCase().includes(e.target.value.toLowerCase())));
                     
                     if (e.target.value.trim() === '') {
                         setInstance(originData);
-                        onChange?.(originData);
+                        onChangeFilter?.(originData);
+                        onChange?.(e, originData);
                     } else {
                         setInstance(filteredData);
-                        onChange?.(filteredData);
+                        onChangeFilter?.(filteredData);
+                        onChange?.(e, filteredData);
                     }
                 }}
                 placeholder={placeholder || ''}
             />
         </div>
     );
-};
+});
 
 export default TableFilter;

@@ -3,10 +3,16 @@ import React, { forwardRef } from 'react';
 
 interface TableCaptionProps extends React.HTMLAttributes<HTMLTableCaptionElement> {
     className?: string;
+    captionSide?: string;
 }
 
 const TableCaption = forwardRef<HTMLTableCaptionElement, TableCaptionProps>((
-    { children, className, ...attributes },
+    { 
+        children, 
+        captionSide,
+        className, 
+        ...attributes 
+    },
     externalRef
 ) => {
 
@@ -16,7 +22,7 @@ const TableCaption = forwardRef<HTMLTableCaptionElement, TableCaptionProps>((
             <caption
                 {...attributes}
                 ref={externalRef}
-                className={className || ''}
+                className={`syntable__caption ${className || ''} syntable__caption--${captionSide || 'top'}`}
             >
                 {children}
             </caption>

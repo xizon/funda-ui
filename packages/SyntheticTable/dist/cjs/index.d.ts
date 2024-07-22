@@ -6,3 +6,5 @@ export { default as TableFoot } from './TableFoot';
 export { default as TableRow } from './TableRow';
 export { default as TableColgroup } from './TableColgroup';
 export { default as TableCaption } from './TableCaption';
+export { default as TableFilter } from './table-utils/TableFilter';
+export { default as ToggleSelection } from './table-utils/ToggleSelection';

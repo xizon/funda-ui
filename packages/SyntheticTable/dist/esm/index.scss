@@ -68,6 +68,16 @@
         
     }
 
+    .syntable__caption {
+        &.syntable__caption--top {
+            caption-side: top;
+        }
+
+        &.syntable__caption--bottom {
+            caption-side: bottom;
+        }
+    }
+
 }
 
 

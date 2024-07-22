@@ -2,6 +2,9 @@ import React, { useContext, forwardRef } from 'react';
 
 import { TableContext } from "./TableContext";
 
+import { valRes } from './table-utils/func';
+
+
 interface TableRowProps extends React.HTMLAttributes<HTMLTableRowElement> {
     active?: boolean;
     activeClassName?: string;
@@ -24,11 +27,16 @@ const TableRow = forwardRef<HTMLTableRowElement, TableRowProps>((
     const { 
         originData,
         filterFields,
+        selectedItems,
         instance
      } = useContext(TableContext);
      
     const filteredData = instance || [];
     const filterFieldsData = filterFields || [];
+
+    // selection
+    const _res = valRes(selectedItems);
+    const _selectedIndex = _res.map((v: any) => Number(v));
 
     return (
         <>
@@ -40,6 +48,7 @@ const TableRow = forwardRef<HTMLTableRowElement, TableRowProps>((
                     ${className || ''} 
                     ${active ? (activeClassName || 'active') : ''} 
                     ${itemData && originData ? (filteredData.every((item: any) => filterFieldsData.some((s: string) => !item[s]?.toLowerCase().includes(itemData[s]?.toLowerCase())) ) ? 'd-none' : '') : ''}
+                    ${itemData && originData ? _selectedIndex.some((rowNum: number) => JSON.stringify(itemData) === JSON.stringify(originData[rowNum]) ? 'selected' : '') : ''}
                 `}
             >
                 {children}

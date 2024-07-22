@@ -14,11 +14,15 @@ interface TableProps extends React.HTMLAttributes<HTMLDivElement> {
     // filter
     data?: any[];
     filterFields?: string[];
-    filterRow?: boolean;
     filterControlClassName?: string;
     filterControlPlaceholder?: string;
     filterLabel?: React.ReactNode;
     onChangeFilter?: (value: any) => void;
+
+    // selection
+    dataSelected?: number[];
+    checkboxSelection?: boolean;
+    onChangeRowSelect?: (fetchData: any[]) => void;
 }
 
 
@@ -35,11 +39,15 @@ const Table = forwardRef<HTMLDivElement, TableProps>((
         // filter
         data,
         filterFields,
-        filterRow,
         filterControlClassName,
         filterControlPlaceholder,
         filterLabel,
         onChangeFilter,
+        
+        // selection
+        dataSelected,
+        checkboxSelection,
+        onChangeRowSelect,
 
         ...attributes
     },
@@ -52,6 +60,8 @@ const Table = forwardRef<HTMLDivElement, TableProps>((
     // context
     const [instance, setInstance] = useState<any>(null);
 
+    // selection
+    const [selectedItems, setSelectedItems] = useState<any>(new Set());
 
     //
     const responsiveClasses = typeof responsive === 'undefined' || responsive === true ? 'table-responsive' : '';
@@ -67,23 +77,38 @@ const Table = forwardRef<HTMLDivElement, TableProps>((
         setInstance(data);
     }, [data]);
 
+    // The items are selected by default
+    useEffect(() => {
+        if (Array.isArray(data) && Array.isArray(dataSelected) && dataSelected.length > 0) {
+            const newSelectedItems = new Set(selectedItems);
+            dataSelected.forEach((s: number) => {
+                newSelectedItems.add(String(s));
+            });
+
+            setSelectedItems(newSelectedItems);
+        }
+    }, [data, dataSelected]);
+
     return (
         <>
 
             <TableProvider value={{
                 originData: data,
+
+                // filter
                 filterFields,
                 instance,
-                setInstance
+                setInstance,
+                onChangeFilter,
+
+                // selection
+                dataSelected,
+                checkboxSelection,
+                selectedItems,
+                setSelectedItems,
+                onChangeRowSelect
             }}>
 
-                {/** Filter Control */}
-                {filterRow ? <TableFilter 
-                    className={filterControlClassName || ''} 
-                    placeholder={filterControlPlaceholder || ''} 
-                    onChange={onChangeFilter}
-                    label={filterLabel}
-                /> : null}
 
                 {/** Main */}
                 <div
