@@ -1,37 +1,31 @@
 /* ======================================================
-    <!-- Table -->
+    <!-- Table (Synthetic) -->
 /* ====================================================== */
-
-.table__wrapper {
-    --table-alternant-bg: #f0f0f0;
-    --table-dark-bg: #212529;
-    --table-padding-x: 1rem;
-    --table-padding-y: 0.5rem;
-    --table-dis-top: 1rem;
-    --table-checkbox-indeterminate-color: #bbbbbb;
-    --table-row-active-bg: #f0f8ff;
-    --table-radio-svg-btn-color: #919191;
-    --table-scrollbar-color: rgba(0, 0, 0, 0.2);
-    --table-scrollbar-track: rgba(0, 0, 0, 0);
-    --table-scrollbar-h: 3px;
-    --table-scrollbar-w: 3px;
-    --table-cell-focus-shadow: inset 0px 0px 2px 0px rgba(13, 110, 253, 2.25);
-
-    
+.syntable__wrapper {
+    --syntable-alternant-bg: #f0f0f0;
+    --syntable-dark-bg: #212529;
+    --syntable-row-active-bg: #f0f8ff;
+    --syntable-scrollbar-color: rgba(0, 0, 0, 0.2);
+    --syntable-scrollbar-track: rgba(0, 0, 0, 0);
+    --syntable-scrollbar-h: 3px;
+    --syntable-scrollbar-w: 3px;
+    --syntable-padding-x: 1rem;
+    --syntable-padding-y: 0.5rem;
+    --syntable-cell-focus-shadow: inset 0px 0px 2px 0px rgba(13, 110, 253, 2.25);
     
     &.table-responsive {
         overflow-x: auto;
 
         &::-webkit-scrollbar {
-            height: var(--table-scrollbar-h);
+            height: var(--syntable-scrollbar-h);
         }
 
         &::-webkit-scrollbar-thumb {
-            background: var(--table-scrollbar-color);
+            background: var(--syntable-scrollbar-color);
         }
 
         &::-webkit-scrollbar-track {
-            background: var(--table-scrollbar-track);
+            background: var(--syntable-scrollbar-track);
         }
     }
 
@@ -41,24 +35,26 @@
         td,
         th {
             position: relative;
+
+            /* focus */
+            &:focus {
+                outline: none;
+            }
+            &.cell-focus {
+                box-shadow: var(--syntable-cell-focus-shadow);
+            }
+
         }
 
         tr {
             transition: 0.1s ease-in-out;
             
             &.active {
-                background-color: var(--table-row-active-bg);
+                background-color: var(--syntable-row-active-bg);
             }
-
-            &.clickable {
-                cursor: pointer;
-            }
-
         }
 
-        td.cell-focus {
-            box-shadow: var(--table-cell-focus-shadow);
-        }
+
 
         &.table-colgroup {
             tbody tr td:first-child,
@@ -67,11 +63,11 @@
             }
 
             col:nth-child(odd) {
-                background-color: var(--table-alternant-bg);
+                background-color: var(--syntable-alternant-bg);
             }
 
             col:first-child {
-                background-color: var(--table-dark-bg);
+                background-color: var(--syntable-dark-bg);
             }
 
         }
@@ -82,7 +78,16 @@
             max-width: 100%;
         }
         
+    }
 
+    .syntable__caption {
+        &.syntable__caption--top {
+            caption-side: top;
+        }
+
+        &.syntable__caption--bottom {
+            caption-side: bottom;
+        }
     }
 
     .sort-trigger {
@@ -100,116 +105,65 @@
         
     }
 
-    .checkbox-trigger {
-        display: none;
-        position: absolute;
-        left: calc(var(--table-padding-x) / 2);
-        z-index: 2;
-
-        > div {
-            display: inline-block;
-
-            .form-check {
-                min-height: auto;
-                margin-bottom: 0;
-
-                [type=checkbox]:indeterminate,
-                [type=checkbox].indeterminate {
-                    background-color: var(--table-checkbox-indeterminate-color);
-                    border-color: var(--table-checkbox-indeterminate-color);
-                    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3e%3cpath fill='none' stroke='%23fff' stroke-linecap='round' stroke-linejoin='round' stroke-width='3' d='M6 10h8'/%3e%3c/svg%3e");
-
-                }
-
+    /*------ allow sort  ------*/
+    &.allow-sort {
+        .sort-trigger {
+            cursor: pointer;
+    
+            svg {
+                transition: 0.1s ease-in-out;
+                opacity: .3;
             }
-        } 
-
-        /* radio svg */
-        .radio-svg-btn {
-            
-            svg,
-            path,
-            circle {
-                fill: var(--table-radio-svg-btn-color);
+    
+            &:hover svg {
+                transform: scale(1.2);
+                opacity: .7;
             }
             
         }
 
-    }
-
-    .drag-trigger {
-        display: none;
-        position: absolute;
-        left: calc(var(--table-padding-x) / 2);
-        z-index: 3;
-        cursor: move;
-        opacity: .5;
-    }
-
-
-    /*------ active row  ------*/
-    table tbody {
-        .row-obj {
-            .checkbox-trigger {
-                /* radio svg */
-                .radio-svg--active {
-                    display: none;
-                }
-            }
-
-            &.active {
-                .radio-svg--default {
-                    display: none;
-                }
-                .radio-svg--active {
-                    display: inline-block;
-                }
+        /* Transition animation */
+        .newsort {
+            animation: table-newsort .5s linear 1 forwards;
+            opacity: 0;
+        }
+        
+        @for $i from 1 to 100 {
+        
+            .newsort:nth-child(#{$i+1}) {
+                animation-delay: #{$i*50}ms;
             }
         }
-    }
-
-
-
-    /*------ enable sort  ------*/
-    .newsort {
-        animation: table-newsort .5s linear 1 forwards;
-        opacity: 0;
-    }
-    
-    @for $i from 1 to 100 {
-    
-        .newsort:nth-child(#{$i+1}) {
-            animation-delay: #{$i*50}ms;
+        
+        @keyframes table-newsort {
+            0%   {
+                opacity: 0;
+                transform: translateX(10px);
+            }
+        
+            100% {
+                opacity: 1;
+                transform: translateX(0);
+            }
         }
-    }
-    
-    
-
-
-    /*------ has checkbox  ------*/
-    &.has-checkbox {
-        .checkbox-trigger {
-            display: inline-block;
-
-            ~span:not(.sort-trigger) {
-                display: inline-block;
-                padding-left: calc(var(--table-padding-x)*1.5);
-            }  
-        }
-
+        
 
     }
-    
+
     
     /*------ allow drag and drop  ------*/
     &.allow-dragdrop {
 
+        .drag-trigger {
+            cursor: move;
+            opacity: .5;
+        }
+    
 
         /* Specify a drag trigger point */
         tbody {
 
             .row-obj-clonelast {
-
                 height: 0 !important;
              
                 td {
@@ -247,7 +201,7 @@
 
             ~span:not(.checkbox-trigger) {
                 display: inline-block;
-                padding-left: calc(var(--table-padding-x)*1.5);
+                padding-left: calc(var(--syntable-padding-x)*1.5);
             }  
         }
     }
@@ -255,40 +209,27 @@
     &.allow-dragdrop.has-checkbox {
         .drag-trigger {
             ~span:not(.checkbox-trigger) {
-                padding-left: calc(var(--table-padding-x)*3);
+                padding-left: calc(var(--syntable-padding-x)*3);
             }  
         }
         
         tbody .checkbox-trigger {
-            padding-left: calc(var(--table-padding-x)*1.5);
+            padding-left: calc(var(--syntable-padding-x)*1.5);
         }
 
     }
 
 
+
 }
-
-
-@keyframes table-newsort {
-    0%   {
-        opacity: 0;
-        transform: translateX(10px);
-    }
-
-    100% {
-        opacity: 1;
-        transform: translateX(0);
-    }
-}
-
 
 
 
 @media all and (max-width: 768px) {
 
-    .table__wrapper {
-        --table-border-color: #dee2e6;
-        --table-per-shadow: 0 2px 4px 0 rgba(0,0,0,.1);
+    .syntable__wrapper {
+        --syntable-border-color: #dee2e6;
+        --syntable-per-shadow: 0 2px 4px 0 rgba(0,0,0,.1);
 
         /*------ Enhanced Responsive ------*/
         &.table-enhanced-responsive {
@@ -302,7 +243,7 @@
                 tbody {
 
                     tr {
-                        box-shadow: var(--table-per-shadow);
+                        box-shadow: var(--syntable-per-shadow);
                         margin-bottom: 1rem;
                         display: block;
                     }
@@ -323,7 +264,7 @@
                             float: left;
                             width: 40%;
                             font-weight: bold;
-                            border-right: 1px solid var(--table-border-color);
+                            border-right: 1px solid var(--syntable-border-color);
                             margin-right: 0.5rem;
                         }
 
@@ -338,18 +279,6 @@
 
 
             }
-
-            &.has-checkbox {
-                .checkbox-trigger {
-                    position: relative;
-                    left: auto;
-                    
-                    ~span {
-                        padding-left: 0;
-                    }  
-                }
-
-            } 
 
 
             table.cell-autowidth {
@@ -375,23 +304,23 @@
                 
 
                 &::-webkit-scrollbar {
-                    height: var(--table-scrollbar-h);
-                    width: var(--table-scrollbar-w);
+                    height: var(--syntable-scrollbar-h);
+                    width: var(--syntable-scrollbar-w);
                 }
         
                 &::-webkit-scrollbar-thumb {
-                    background: var(--table-scrollbar-color);
+                    background: var(--syntable-scrollbar-color);
                 }
         
                 &::-webkit-scrollbar-track {
-                    background: var(--table-scrollbar-track);
+                    background: var(--syntable-scrollbar-track);
                 }
 
                 thead {
                     display: block;
                     float: left;
                     width: 100px;
-                    border-bottom: 1px solid var(--table-border-color);
+                    border-bottom: 1px solid var(--syntable-border-color);
 
                     th {
                         display: block;
@@ -412,20 +341,20 @@
                     display: block;
                     float: left;
                     overflow-x: scroll;
-                    border-bottom: 1px solid var(--table-border-color);
-                    border-right: 1px solid var(--table-border-color);
+                    border-bottom: 1px solid var(--syntable-border-color);
+                    border-right: 1px solid var(--syntable-border-color);
 
 
                     &::-webkit-scrollbar {
-                        height: var(--table-scrollbar-h);
+                        height: var(--syntable-scrollbar-h);
                     }
             
                     &::-webkit-scrollbar-thumb {
-                        background: var(--table-scrollbar-color);
+                        background: var(--syntable-scrollbar-color);
                     }
             
                     &::-webkit-scrollbar-track {
-                        background: var(--table-scrollbar-track);
+                        background: var(--syntable-scrollbar-track);
                     }
 
                 }
@@ -433,7 +362,7 @@
                 thead tr,
                 tbody tr {
                     display: block;
-                    border-color: var(--table-border-color);
+                    border-color: var(--syntable-border-color);
                 }
 
                 th,
@@ -445,15 +374,15 @@
 
 
                     &::-webkit-scrollbar {
-                        width: var(--table-scrollbar-w);
+                        width: var(--syntable-scrollbar-w);
                     }
 
                     &::-webkit-scrollbar-thumb {
-                        background: var(--table-scrollbar-color);
+                        background: var(--syntable-scrollbar-color);
                     }
 
                     &::-webkit-scrollbar-track {
-                        background: var(--table-scrollbar-track);
+                        background: var(--syntable-scrollbar-track);
                     }
 
                     &:first-child {
