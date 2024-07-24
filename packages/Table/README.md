@@ -122,7 +122,7 @@ import { TableColgroup } from 'funda-ui/Table';
 | `ref` | React.ForwardedRef | - | It is the return element of this component.  | - |
 | `className` | string | - | The class name of the table colgroup. | - |
 | `length` | number | - | Specifies how many elements a group has. | - |
-| `captionSide` | `top` \| `bottom` | top | This property puts the content of a table's <caption> on the specified side. | - |
+| `captionSide` | `top` \| `bottom` | top | This property puts the content of a table's `<caption>` on the specified side. | - |
 
 
 
