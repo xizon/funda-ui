@@ -181,6 +181,7 @@ import { DragHandleSprite } from 'funda-ui/Table';
 | --- | --- | --- | --- | --- |
 | `ref` | React.ForwardedRef | - | It is the return element of this component.  | - |
 | `className` | string | `drag-trigger` | The class name of the filter input control. | - |
+| `icon` | ReactNode  | `<svg width="1em" height="1em" viewBox="0 0 24 24" fill="none"><g><path d="M18 14C17.4477 14 17 14.4477 17 15C17 15.5523 17.4477 16 18 16C18.5523 16 19 15.5523 19 15C19 14.4477 18.5523 14 18 14Z" stroke="#000000" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /><path d="M12 14C11.4477 14 11 14.4477 11 15C11 15.5523 11.4477 16 12 16C12.5523 16 13 15.5523 13 15C13 14.4477 12.5523 14 12 14Z" stroke="#000000" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /><path d="M6 14C5.44772 14 5 14.4477 5 15C5 15.5523 5.44772 16 6 16C6.55228 16 7 15.5523 7 15C7 14.4477 6.55228 14 6 14Z" stroke="#000000" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /><path d="M18 8C17.4477 8 17 8.44772 17 9C17 9.55228 17.4477 10 18 10C18.5523 10 19 9.55228 19 9C19 8.44772 18.5523 8 18 8Z" stroke="#000000" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /><path d="M12 8C11.4477 8 11 8.44772 11 9C11 9.55228 11.4477 10 12 10C12.5523 10 13 9.55228 13 9C13 8.44772 12.5523 8 12 8Z" stroke="#000000" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /><path d="M6 8C5.44772 8 5 8.44772 5 9C5 9.55228 5.44772 10 6 10C6.55228 10 7 9.55228 7 9C7 8.44772 6.55228 8 6 8Z" stroke="#000000" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /></g></svg>` | Specify an icon | - |
 
 ### Sort Sprite
 ```js
@@ -191,7 +192,7 @@ import { SortSprite } from 'funda-ui/Table';
 | `ref` | React.ForwardedRef | - | It is the return element of this component.  | - |
 | `className` | string | `sort-trigger` | The class name of the filter input control. | - |
 | `fieldType` | `text` \| `number` \| `date` | `text` | The type of field that is sorted, which ensures the accuracy of sorting. | ✅ |
-
+| `icon` | ReactNode  | `<svg width="1em" height="1em" viewBox="0 0 18 18"><g stroke="none" strokeWidth="1" fill="none" fillRule="evenodd"><path d="M9.5,3 L13,8 L6,8 L9.5,3 L9.5,3 Z M6,11 L13,11 L9.5,16 L6,11 L6,11 Z" id="path" fill="#000000"></path></g></svg>` | Specify an icon | - |
 
 ## Examples
 
@@ -216,7 +217,7 @@ export default () => {
     return (
         <>
             <Table
-                tableClassName="table"
+                tableClassName="table table-hover table-bordered table-striped align-middle"   
             >
                 <TableHead>
                     <TableRow>

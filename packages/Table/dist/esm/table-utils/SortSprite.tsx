@@ -6,6 +6,7 @@ import useTableSort from './hooks/useTableSort';
 type SortSpriteProps = {
     fieldType: 'text' | 'number' | 'date';
     className?: string;
+    icon?: React.ReactNode;
     onClick?: (e: any) => void;
 };
 
@@ -14,6 +15,7 @@ const SortSprite = forwardRef((props: SortSpriteProps, externalRef: any) => {
     const {
         fieldType,
         className,
+        icon,
         onClick
     } = props;
 
@@ -38,12 +40,14 @@ const SortSprite = forwardRef((props: SortSpriteProps, externalRef: any) => {
 
     return (
         <>
-            {colSortable ? <span className={className || 'sort-trigger'} onClick={handleSortList}><svg width="1em" height="1em" viewBox="0 0 18 18">
-                <g stroke="none" strokeWidth="1" fill="none" fillRule="evenodd">
-                    <path d="M9.5,3 L13,8 L6,8 L9.5,3 L9.5,3 Z M6,11 L13,11 L9.5,16 L6,11 L6,11 Z" id="path" fill="#000000">
-                    </path>
-                </g>
-            </svg></span> : null}
+            {colSortable ? <span className={className || 'sort-trigger'} onClick={handleSortList}>
+                {icon || <svg width="1em" height="1em" viewBox="0 0 18 18">
+                    <g stroke="none" strokeWidth="1" fill="none" fillRule="evenodd">
+                        <path d="M9.5,3 L13,8 L6,8 L9.5,3 L9.5,3 Z M6,11 L13,11 L9.5,16 L6,11 L6,11 Z" id="path" fill="#000000"></path>
+                    </g>
+                </svg>}
+
+            </span> : null}
 
         </>
 

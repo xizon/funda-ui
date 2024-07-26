@@ -3,12 +3,14 @@ import { TableContext } from '../TableContext';
 
 type DragHandleSpriteProps = {
     className?: string;
+    icon?: React.ReactNode;
 };
 
 
 const DragHandleSprite = forwardRef((props: DragHandleSpriteProps, externalRef: any) => {
     const {
         className,
+        icon,
     } = props;
 
     const {
@@ -23,7 +25,7 @@ const DragHandleSprite = forwardRef((props: DragHandleSpriteProps, externalRef: 
                 className={className || 'drag-trigger'}
                 onMouseEnter={handleTbodyEnter}
             >
-                <svg width="1em" height="1em" viewBox="0 0 24 24" fill="none">
+                {icon || <svg width="1em" height="1em" viewBox="0 0 24 24" fill="none">
                     <g>
                         <path d="M18 14C17.4477 14 17 14.4477 17 15C17 15.5523 17.4477 16 18 16C18.5523 16 19 15.5523 19 15C19 14.4477 18.5523 14 18 14Z" stroke="#000000" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                         <path d="M12 14C11.4477 14 11 14.4477 11 15C11 15.5523 11.4477 16 12 16C12.5523 16 13 15.5523 13 15C13 14.4477 12.5523 14 12 14Z" stroke="#000000" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
@@ -32,7 +34,8 @@ const DragHandleSprite = forwardRef((props: DragHandleSpriteProps, externalRef: 
                         <path d="M12 8C11.4477 8 11 8.44772 11 9C11 9.55228 11.4477 10 12 10C12.5523 10 13 9.55228 13 9C13 8.44772 12.5523 8 12 8Z" stroke="#000000" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                         <path d="M6 8C5.44772 8 5 8.44772 5 9C5 9.55228 5.44772 10 6 10C6.55228 10 7 9.55228 7 9C7 8.44772 6.55228 8 6 8Z" stroke="#000000" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                     </g>
-                </svg>
+                </svg>}
+                
             </span > : null}
 
         </>

@@ -21,7 +21,7 @@ const App = () => {
 };
 
  */
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 import { getTbody, allRows, sortDataByIndex, initOrderProps, initRowColProps } from '../func';
 
@@ -44,7 +44,7 @@ function useTableSort({
 }: UseTableSortProps, deps: any[]) {
 
    
-    let inverse = false;
+    const [inverse, setInverse] = useState<boolean>(false);
 
     function handleSortList(e: any) {
         if (typeof enabled === 'undefined' || enabled === false) return;
@@ -84,7 +84,7 @@ function useTableSort({
                 node.classList.add('newsort');
             });
 
-            inverse = !inverse;
+            setInverse(!inverse);
 
             return txt2 < txt1 ? -1 : txt2 > txt1 ? 1 : 0;
         }
@@ -92,9 +92,9 @@ function useTableSort({
         targetComparator.sort(sortBy);
 
         //console.log( 'targetComparator:', targetComparator );
-        //console.log( 'inverse:', self.inverse );
+        //console.log( 'inverse:', inverse );
 
-        if (!inverse) targetComparator.reverse();
+        if (inverse) targetComparator.reverse();
 
         allRows(spyElement).forEach((node: any) => {
             node.remove();

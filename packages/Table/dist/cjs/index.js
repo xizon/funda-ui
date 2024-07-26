@@ -1357,7 +1357,8 @@ var ToggleSelection = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
 
 
 var DragHandleSprite = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_amd_react_.forwardRef)(function (props, externalRef) {
-  var className = props.className;
+  var className = props.className,
+    icon = props.icon;
   var _useContext = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useContext)(TableContext),
     rowDraggable = _useContext.rowDraggable,
     handleTbodyEnter = _useContext.handleTbodyEnter;
@@ -1365,7 +1366,7 @@ var DragHandleSprite = /*#__PURE__*/(0,external_root_React_commonjs2_react_commo
     ref: externalRef,
     className: className || 'drag-trigger',
     onMouseEnter: handleTbodyEnter
-  }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("svg", {
+  }, icon || /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("svg", {
     width: "1em",
     height: "1em",
     viewBox: "0 0 24 24",
@@ -1412,10 +1413,14 @@ var DragHandleSprite = /*#__PURE__*/(0,external_root_React_commonjs2_react_commo
 ;// CONCATENATED MODULE: ./src/table-utils/hooks/useTableSort.tsx
 function useTableSort_toConsumableArray(arr) { return useTableSort_arrayWithoutHoles(arr) || useTableSort_iterableToArray(arr) || useTableSort_unsupportedIterableToArray(arr) || useTableSort_nonIterableSpread(); }
 function useTableSort_nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
-function useTableSort_unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return useTableSort_arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return useTableSort_arrayLikeToArray(o, minLen); }
 function useTableSort_iterableToArray(iter) { if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter); }
 function useTableSort_arrayWithoutHoles(arr) { if (Array.isArray(arr)) return useTableSort_arrayLikeToArray(arr); }
+function useTableSort_slicedToArray(arr, i) { return useTableSort_arrayWithHoles(arr) || useTableSort_iterableToArrayLimit(arr, i) || useTableSort_unsupportedIterableToArray(arr, i) || useTableSort_nonIterableRest(); }
+function useTableSort_nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+function useTableSort_unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return useTableSort_arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return useTableSort_arrayLikeToArray(o, minLen); }
 function useTableSort_arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i]; return arr2; }
+function useTableSort_iterableToArrayLimit(arr, i) { var _i = null == arr ? null : "undefined" != typeof Symbol && arr[Symbol.iterator] || arr["@@iterator"]; if (null != _i) { var _s, _e, _x, _r, _arr = [], _n = !0, _d = !1; try { if (_x = (_i = _i.call(arr)).next, 0 === i) { if (Object(_i) !== _i) return; _n = !1; } else for (; !(_n = (_s = _x.call(_i)).done) && (_arr.push(_s.value), _arr.length !== i); _n = !0); } catch (err) { _d = !0, _e = err; } finally { try { if (!_n && null != _i["return"] && (_r = _i["return"](), Object(_r) !== _r)) return; } finally { if (_d) throw _e; } } return _arr; } }
+function useTableSort_arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 /**
  * Handles the event of sortable table
  * 
@@ -1448,7 +1453,10 @@ function useTableSort(_ref, deps) {
     fieldType = _ref.fieldType,
     onColSort = _ref.onColSort,
     onClick = _ref.onClick;
-  var inverse = false;
+  var _useState = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)(false),
+    _useState2 = useTableSort_slicedToArray(_useState, 2),
+    inverse = _useState2[0],
+    setInverse = _useState2[1];
   function handleSortList(e) {
     if (typeof enabled === 'undefined' || enabled === false) return;
     var tbodyRef = getTbody(spyElement);
@@ -1480,15 +1488,15 @@ function useTableSort(_ref, deps) {
       allRows(spyElement).forEach(function (node) {
         node.classList.add('newsort');
       });
-      inverse = !inverse;
+      setInverse(!inverse);
       return txt2 < txt1 ? -1 : txt2 > txt1 ? 1 : 0;
     };
     targetComparator.sort(sortBy);
 
     //console.log( 'targetComparator:', targetComparator );
-    //console.log( 'inverse:', self.inverse );
+    //console.log( 'inverse:', inverse );
 
-    if (!inverse) targetComparator.reverse();
+    if (inverse) targetComparator.reverse();
     allRows(spyElement).forEach(function (node) {
       node.remove();
     });
@@ -1532,6 +1540,7 @@ function useTableSort(_ref, deps) {
 var SortSprite = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_amd_react_.forwardRef)(function (props, externalRef) {
   var fieldType = props.fieldType,
     className = props.className,
+    icon = props.icon,
     onClick = props.onClick;
   var _useContext = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useContext)(TableContext),
     originData = _useContext.originData,
@@ -1552,7 +1561,7 @@ var SortSprite = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_re
   return /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, colSortable ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("span", {
     className: className || 'sort-trigger',
     onClick: handleSortList
-  }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("svg", {
+  }, icon || /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("svg", {
     width: "1em",
     height: "1em",
     viewBox: "0 0 18 18"
