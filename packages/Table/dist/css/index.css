@@ -58,8 +58,7 @@
 }
 .syntable__wrapper table.cell-autowidth {
   display: block; /* Key 1 */
-  width: max-content;
-  max-width: 100%;
+  width: max-content; /* Do not use "max-width", It affects the horizontal scroll length of sticky, and if you exceed it, it will be invalid */
 }
 .syntable__wrapper .syntable__caption.syntable__caption--top {
   caption-side: top;

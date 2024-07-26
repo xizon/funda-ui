@@ -1,3 +1,22 @@
+
+
+/**
+ * Determine whether an extractor is included
+ * @param {string} str    =>  input string. such as 'a[1], b[2]', '{a[1]}'
+ * @returns {boolean} 
+ */
+function extractorExist(str: string | undefined | null): boolean {
+    if (typeof str === 'undefined' || str === null || str === '') {
+        return false;
+    }
+
+    let res: boolean = false;
+    if ( str?.match(/(\[.*?\])/gi) ) {
+        res = true;
+    }
+    return res;
+}
+
 /**
  * Extract the contents of square brackets
  * @param {string} str    =>  input string. such as '[1,2] [f][c]'
@@ -60,6 +79,7 @@ function extractContentsOfParentheses(str: string, commaSeparated: boolean = fal
 
 
 export {
+    extractorExist,
     extractContentsOfBrackets,
     extractContentsOfBraces,
     extractContentsOfParentheses

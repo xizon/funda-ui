@@ -4,10 +4,12 @@ import RootPortal from 'funda-root-portal';
 import {
     useWindowScroll,
     useClickOutside,
+    extractorExist,
     extractContentsOfBraces,
     convertArrToValByBraces,
     getAbsolutePositionOfStage
 } from 'funda-utils';
+
 
 
 import Group from './Group';
@@ -678,26 +680,49 @@ const CascadingSelect = (props: CascadingSelectProps) => {
         setChangedVal('');
     }
 
+
+    function chkValueExist(v: any) {
+        return typeof v !== 'undefined' && v !== '';
+    }
+
+
     function initDefaultValue(defaultValue: any) {
 
+        // STEP 1:
         // change the value to trigger component rendering
-        if (typeof defaultValue === 'undefined' || defaultValue === '') {
+        //--------------------------------  
+        if (!chkValueExist(defaultValue)) {
             cleanValue();
         } else {
             setChangedVal(defaultValue);
         }
 
 
-        //
-
+        // STEP 2:
+        // do fetch
+        //--------------------------------  
         doFetch()?.then((response: any) => {
 
 
             const _data = response[1];
 
-
             // Determine whether the splicing value of the default value is empty
-            if (typeof defaultValue !== 'undefined' && defaultValue !== '') {
+            if (chkValueExist(defaultValue)) {
+
+
+                // if the default value uses the pure string
+                if (!extractorExist(defaultValue)) {
+
+                    //Set a default value
+                    selectedData.current = {
+                        labels: [defaultValue],
+                        values: ['']
+                    };
+                    setChangedVal(defaultValue);
+
+                    return; // required RETURN
+                }
+
 
                 const rowQueryAttr: string = valueType === 'value' ? 'id' : 'name';
                 const targetVal: any = defaultValue.match(/(\[.*?\])/gi)!.map((item: any, i: number) => VALUE_BY_BRACES ? extractContentsOfBraces(defaultValue)[i].replace(item, '') : defaultValue.split(',')[i].replace(item, ''));
@@ -736,6 +761,7 @@ const CascadingSelect = (props: CascadingSelectProps) => {
 
                     if (col > 0) {
 
+
                         const _findNode: any = searchObject(_data, function (v: any) { return v != null && v != undefined && v[rowQueryAttr] == targetVal[col - 1]; });
 
                         const childList = _findNode[0].children;
@@ -747,6 +773,7 @@ const CascadingSelect = (props: CascadingSelectProps) => {
 
                             const newData: any[] = JSON.parse(JSON.stringify(childList));
                             const activedIndex = newData.findIndex((item: any) => {
+                                if (typeof targetVal[col] === 'undefined') return -1;
                                 return item[rowQueryAttr].toString() === targetVal[col].toString();
                             });
 
@@ -767,7 +794,6 @@ const CascadingSelect = (props: CascadingSelectProps) => {
 
 
                 }
-
 
 
 
@@ -1002,13 +1028,20 @@ const CascadingSelect = (props: CascadingSelectProps) => {
     function displayInfo() {
 
         const _data = selectedData.current;
-        const formattedDefaultValue: any = changedVal !== '' ? VALUE_BY_BRACES ? extractContentsOfBraces(changedVal) : changedVal.split(',') : [];
+        let formattedDefaultValue: any = changedVal !== '' ? VALUE_BY_BRACES ? extractContentsOfBraces(changedVal) : changedVal.split(',') : [];
         let _labels = Array.isArray(_data.labels) && _data.labels.length > 0 ? _data.labels : [];
+
+        // Prevent value from being a pure string that does not include "[]"
+        if (formattedDefaultValue === '') formattedDefaultValue = [];
 
         // Sometimes the array may be empty due to rendering speed
         if (_labels.length === 0) {
             _labels = formattedDefaultValue.map((s: string | number) => s.toString().replace(/[\w\s]/gi, '').replace(/\[\]/g, ''));
         }
+
+
+        // Traversing the next level, if there is no match, the last label will be empty
+        _labels = _labels.filter((v: string) => v != '');
 
 
         return _labels.length > 0 ? _labels.map((item: any, i: number, arr: any[]) => {

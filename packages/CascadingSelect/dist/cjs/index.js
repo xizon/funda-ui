@@ -533,6 +533,10 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
             return (/* reexport */_extractContentsOfParentheses
             );
           },
+          "extractorExist": function extractorExist() {
+            return (/* reexport */_extractorExist
+            );
+          },
           "flatData": function flatData() {
             return (/* reexport */_flatData
             );
@@ -2426,6 +2430,22 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
           }).join('');
         }
         ; // CONCATENATED MODULE: ./src/libs/extract.ts
+        /**
+         * Determine whether an extractor is included
+         * @param {string} str    =>  input string. such as 'a[1], b[2]', '{a[1]}'
+         * @returns {boolean} 
+         */
+        function _extractorExist(str) {
+          if (typeof str === 'undefined' || str === null || str === '') {
+            return false;
+          }
+          var res = false;
+          if (str !== null && str !== void 0 && str.match(/(\[.*?\])/gi)) {
+            res = true;
+          }
+          return res;
+        }
+
         /**
          * Extract the contents of square brackets
          * @param {string} str    =>  input string. such as '[1,2] [f][c]'
@@ -4925,22 +4945,39 @@ var CascadingSelect = function CascadingSelect(props) {
     listData.current = [];
     setChangedVal('');
   }
+  function chkValueExist(v) {
+    return typeof v !== 'undefined' && v !== '';
+  }
   function initDefaultValue(defaultValue) {
     var _doFetch;
+    // STEP 1:
     // change the value to trigger component rendering
-    if (typeof defaultValue === 'undefined' || defaultValue === '') {
+    //--------------------------------  
+    if (!chkValueExist(defaultValue)) {
       cleanValue();
     } else {
       setChangedVal(defaultValue);
     }
 
-    //
-
+    // STEP 2:
+    // do fetch
+    //--------------------------------  
     (_doFetch = doFetch()) === null || _doFetch === void 0 ? void 0 : _doFetch.then(function (response) {
       var _data = response[1];
 
       // Determine whether the splicing value of the default value is empty
-      if (typeof defaultValue !== 'undefined' && defaultValue !== '') {
+      if (chkValueExist(defaultValue)) {
+        // if the default value uses the pure string
+        if (!(0,dist_cjs.extractorExist)(defaultValue)) {
+          //Set a default value
+          selectedData.current = {
+            labels: [defaultValue],
+            values: ['']
+          };
+          setChangedVal(defaultValue);
+          return; // required RETURN
+        }
+
         var rowQueryAttr = valueType === 'value' ? 'id' : 'name';
         var targetVal = defaultValue.match(/(\[.*?\])/gi).map(function (item, i) {
           return VALUE_BY_BRACES ? (0,dist_cjs.extractContentsOfBraces)(defaultValue)[i].replace(item, '') : defaultValue.split(',')[i].replace(item, '');
@@ -4983,6 +5020,7 @@ var CascadingSelect = function CascadingSelect(props) {
             if (typeof childList !== 'undefined') {
               var _newData = JSON.parse(JSON.stringify(childList));
               var _activedIndex = _newData.findIndex(function (item) {
+                if (typeof targetVal[col] === 'undefined') return -1;
                 return item[rowQueryAttr].toString() === targetVal[col].toString();
               });
               markAllItems(_newData);
@@ -5178,12 +5216,20 @@ var CascadingSelect = function CascadingSelect(props) {
     var formattedDefaultValue = changedVal !== '' ? VALUE_BY_BRACES ? (0,dist_cjs.extractContentsOfBraces)(changedVal) : changedVal.split(',') : [];
     var _labels = Array.isArray(_data.labels) && _data.labels.length > 0 ? _data.labels : [];
 
+    // Prevent value from being a pure string that does not include "[]"
+    if (formattedDefaultValue === '') formattedDefaultValue = [];
+
     // Sometimes the array may be empty due to rendering speed
     if (_labels.length === 0) {
       _labels = formattedDefaultValue.map(function (s) {
         return s.toString().replace(/[\w\s]/gi, '').replace(/\[\]/g, '');
       });
     }
+
+    // Traversing the next level, if there is no match, the last label will be empty
+    _labels = _labels.filter(function (v) {
+      return v != '';
+    });
     return _labels.length > 0 ? _labels.map(function (item, i, arr) {
       if (arr.length - 1 === i) {
         return /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {

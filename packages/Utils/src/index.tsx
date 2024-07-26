@@ -102,6 +102,7 @@ import {
 
 
 import {
+    extractorExist,
     extractContentsOfBrackets,
     extractContentsOfBraces,
     extractContentsOfParentheses
@@ -227,6 +228,7 @@ export {
    convertArrToValByBrackets,
    convertStringByCommaToValByBraces,
    convertArrToValByBraces,
+   extractorExist,
    extractContentsOfBrackets,
    extractContentsOfBraces,
    extractContentsOfParentheses,

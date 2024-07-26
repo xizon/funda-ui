@@ -4,6 +4,7 @@ import RootPortal from 'funda-root-portal';
 import {
     useWindowScroll,
     useClickOutside,
+    extractorExist,
     extractContentsOfBraces,
     extractContentsOfBrackets,
     convertArrToValByBraces,
@@ -11,7 +12,6 @@ import {
     addTreeDepth,
     addTreeIndent
 } from 'funda-utils';
-
 
 
 
@@ -882,13 +882,43 @@ const CascadingSelectE2E = (props: CascadingSelectE2EProps) => {
 
     }
 
+    function chkValueExist(v: any) {
+        return typeof v !== 'undefined' && v !== '';
+    }
+
+    
     function initDefaultValue(defaultValue: any) {
 
+    
+        // STEP 1:
         // Determine whether the splicing value of the default value is empty
-        if (typeof defaultValue !== 'undefined' && defaultValue !== '') {
+        //--------------------------------  
+        if (chkValueExist(defaultValue)) {
 
+            // if the default value uses the pure string
+            if (!extractorExist(defaultValue)) {
+
+                //Set a default value
+                selectedData.current = {
+                    labels: [defaultValue],
+                    values: [''],
+                    queryIds: ['']
+                };
+
+                selectedDataByClick.current = {
+                    labels: [defaultValue],
+                    values: [''],
+                    queryIds: ['']
+                };
+                setChangedVal(defaultValue);
+
+                return; // required RETURN
+
+            }
+
+
+            //
             const formattedDefaultValue = VALUE_BY_BRACES ? extractContentsOfBraces(defaultValue) : defaultValue.split(',');
-
             const emptyDefaultValueCheck = Array.isArray(formattedDefaultValue) ? formattedDefaultValue.every((item: any, index: number) => {
                 if (item !== '[]') {
                     return false;
@@ -903,9 +933,10 @@ const CascadingSelectE2E = (props: CascadingSelectE2EProps) => {
             }
         }
 
-
+        // STEP 2:
         // change the value to trigger component rendering
-        if (typeof defaultValue === 'undefined' || defaultValue === '') {
+        //--------------------------------  
+        if (!chkValueExist(defaultValue)) {
             cleanValue();
             return; // required RETURN
         } else {
@@ -913,10 +944,15 @@ const CascadingSelectE2E = (props: CascadingSelectE2EProps) => {
         }
 
 
-        //
+        // STEP 3:
+        // update the status of the first fetch
+        //--------------------------------  
         setFirstDataFeched(true);
 
-        //
+
+        // STEP 4:
+        // do fetch
+        //--------------------------------  
         doFetch(false, 0, 0, false)?.then((firstColResponse: any) => {
 
 
@@ -1244,14 +1280,16 @@ const CascadingSelectE2E = (props: CascadingSelectE2EProps) => {
     function displayInfo(destroyParentId: boolean) {
 
         const _data = destroyParentId ? selectedDataByClick.current : selectedData.current;
-        const formattedDefaultValue: any = changedVal !== '' ? VALUE_BY_BRACES ? extractContentsOfBraces(changedVal) : changedVal.split(',') : [];
+        let formattedDefaultValue: any = changedVal !== '' ? VALUE_BY_BRACES ? extractContentsOfBraces(changedVal) : changedVal.split(',') : [];
         let _labels = Array.isArray(_data.labels) && _data.labels.length > 0 ? _data.labels : [];
+
+        // Prevent value from being a pure string that does not include "[]"
+        if (formattedDefaultValue === '') formattedDefaultValue = [];
 
         // Sometimes the array may be empty due to rendering speed
         if (_labels.length === 0) {
             _labels = formattedDefaultValue.map((s: string | number) => s.toString().replace(/[\w\s]/gi, '').replace(/\[\]/g, ''));
         }
-
 
         return _labels.length > 0 ? _labels.map((item: any, i: number, arr: any[]) => {
             if (arr.length - 1 === i) {
@@ -1291,7 +1329,6 @@ const CascadingSelectE2E = (props: CascadingSelectE2EProps) => {
         // Initialize default value (request parameters for each level)
         //--------------
         initDefaultValue(value);
-
 
 
     }, [value]);
@@ -1360,6 +1397,7 @@ const CascadingSelectE2E = (props: CascadingSelectE2EProps) => {
 
                 <div className="cas-select-e2e__val" onClick={handleDisplayOptions}>
 
+                    {/** REVIEW RESULT */}
                     {destroyParentIdMatch ? <>
                         {displayResult ? <div className="cas-select-e2e__result">{displayInfo(true)}</div> : null}
                     </> : <>

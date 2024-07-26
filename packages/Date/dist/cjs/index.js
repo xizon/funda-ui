@@ -1075,6 +1075,10 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
             return (/* reexport */_extractContentsOfParentheses
             );
           },
+          "extractorExist": function extractorExist() {
+            return (/* reexport */_extractorExist
+            );
+          },
           "flatData": function flatData() {
             return (/* reexport */_flatData
             );
@@ -2968,6 +2972,22 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
           }).join('');
         }
         ; // CONCATENATED MODULE: ./src/libs/extract.ts
+        /**
+         * Determine whether an extractor is included
+         * @param {string} str    =>  input string. such as 'a[1], b[2]', '{a[1]}'
+         * @returns {boolean} 
+         */
+        function _extractorExist(str) {
+          if (typeof str === 'undefined' || str === null || str === '') {
+            return false;
+          }
+          var res = false;
+          if (str !== null && str !== void 0 && str.match(/(\[.*?\])/gi)) {
+            res = true;
+          }
+          return res;
+        }
+
         /**
          * Extract the contents of square brackets
          * @param {string} str    =>  input string. such as '[1,2] [f][c]'

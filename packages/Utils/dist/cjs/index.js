@@ -135,6 +135,7 @@ __webpack_require__.d(__webpack_exports__, {
   "extractContentsOfBraces": () => (/* reexport */ extractContentsOfBraces),
   "extractContentsOfBrackets": () => (/* reexport */ extractContentsOfBrackets),
   "extractContentsOfParentheses": () => (/* reexport */ extractContentsOfParentheses),
+  "extractorExist": () => (/* reexport */ extractorExist),
   "flatData": () => (/* reexport */ flatData),
   "flatTree": () => (/* reexport */ flatTree),
   "getAbsoluteCoordinates": () => (/* reexport */ getAbsoluteCoordinates),
@@ -1294,6 +1295,22 @@ function convertArrToValByBraces(arr) {
 }
 
 ;// CONCATENATED MODULE: ./src/libs/extract.ts
+/**
+ * Determine whether an extractor is included
+ * @param {string} str    =>  input string. such as 'a[1], b[2]', '{a[1]}'
+ * @returns {boolean} 
+ */
+function extractorExist(str) {
+  if (typeof str === 'undefined' || str === null || str === '') {
+    return false;
+  }
+  var res = false;
+  if (str !== null && str !== void 0 && str.match(/(\[.*?\])/gi)) {
+    res = true;
+  }
+  return res;
+}
+
 /**
  * Extract the contents of square brackets
  * @param {string} str    =>  input string. such as '[1,2] [f][c]'
