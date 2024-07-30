@@ -29,6 +29,7 @@ type EventCalendarProps = {
     onChangeMonth?: (currentData: any) => void;
     onChangeYear?: (currentData: any) => void;
     onChangeToday?: (currentData: any) => void;
+    onListRenderComplete?: () => void;
 
     // modal dialog
     modalMaskOpacity?: string;
@@ -66,6 +67,7 @@ const EventCalendar = (props: EventCalendarProps) => {
         onChangeMonth,
         onChangeYear,
         onChangeToday,
+        onListRenderComplete,
 
         //
         cellCloseBtnClassName,
@@ -406,6 +408,10 @@ const EventCalendar = (props: EventCalendarProps) => {
             const _customNow = new Date(customTodayDate);
             setTodayDate(_customNow);
         }
+
+        // Call a function when the list has been rendered complately
+        onListRenderComplete?.();
+
     }, [eventsValue, customTodayDate]);
 
 

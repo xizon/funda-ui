@@ -4989,6 +4989,7 @@ var EventCalendar = function EventCalendar(props) {
     onChangeMonth = props.onChangeMonth,
     onChangeYear = props.onChangeYear,
     onChangeToday = props.onChangeToday,
+    onListRenderComplete = props.onListRenderComplete,
     cellCloseBtnClassName = props.cellCloseBtnClassName,
     cellCloseBtnLabel = props.cellCloseBtnLabel,
     modalMaskOpacity = props.modalMaskOpacity,
@@ -5324,6 +5325,9 @@ var EventCalendar = function EventCalendar(props) {
       var _customNow = new Date(customTodayDate);
       setTodayDate(_customNow);
     }
+
+    // Call a function when the list has been rendered complately
+    onListRenderComplete === null || onListRenderComplete === void 0 ? void 0 : onListRenderComplete();
   }, [eventsValue, customTodayDate]);
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
     className: "e-cal__wrapper"

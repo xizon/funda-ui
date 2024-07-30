@@ -9212,6 +9212,7 @@ var EventCalendarTimeline = function EventCalendarTimeline(props) {
     onChangeMonth = props.onChangeMonth,
     onChangeYear = props.onChangeYear,
     onChangeToday = props.onChangeToday,
+    onListRenderComplete = props.onListRenderComplete,
     modalMaskOpacity = props.modalMaskOpacity,
     modalMaxWidth = props.modalMaxWidth,
     modalMinHeight = props.modalMinHeight,
@@ -10301,6 +10302,9 @@ var EventCalendarTimeline = function EventCalendarTimeline(props) {
       var _customNow = new Date(customTodayDate);
       setTodayDate(_customNow);
     }
+
+    // Call a function when the list has been rendered complately
+    onListRenderComplete === null || onListRenderComplete === void 0 ? void 0 : onListRenderComplete();
     return function () {
       // table grid
       tableGridReset();

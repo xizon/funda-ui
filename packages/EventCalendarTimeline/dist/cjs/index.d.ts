@@ -30,6 +30,7 @@ declare type EventCalendarTimelineProps = {
     onChangeMonth?: (currentData: any) => void;
     onChangeYear?: (currentData: any) => void;
     onChangeToday?: (currentData: any) => void;
+    onListRenderComplete?: () => void;
     modalMaskOpacity?: string;
     modalMaxWidth?: number | string;
     modalMinHeight?: number | string;

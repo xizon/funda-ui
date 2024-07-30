@@ -7,9 +7,6 @@ import {
     getAbsolutePositionOfStage
 } from 'funda-utils';
 
-
-
-
 interface EventsValueConfig {
     id: string | number;
     date: string,
@@ -44,6 +41,7 @@ type EventCalendarTimelineProps = {
     onChangeMonth?: (currentData: any) => void;
     onChangeYear?: (currentData: any) => void;
     onChangeToday?: (currentData: any) => void;
+    onListRenderComplete?: () => void;
 
 
 
@@ -66,6 +64,7 @@ type EventCalendarTimelineProps = {
     onModalDeleteClose?: (currentData: any) => void;
     onModalEditEvent?: (currentData: any, closewin: any) => void;
     onModalDeleteEvent?: (currentData: any, closewin: any) => void;
+    
     
 
     // table
@@ -104,6 +103,7 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
         onChangeMonth,
         onChangeYear,
         onChangeToday,
+        onListRenderComplete,
 
         //
         modalMaskOpacity,
@@ -1150,8 +1150,6 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
             //#######################
         }
 
-            
-
     }
 
     function syncTableScrollHeader() {
@@ -1408,6 +1406,9 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
             const _customNow = new Date(customTodayDate);
             setTodayDate(_customNow);
         }
+
+        // Call a function when the list has been rendered complately
+        onListRenderComplete?.();
 
 
         return () => {
