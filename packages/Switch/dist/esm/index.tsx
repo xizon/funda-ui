@@ -1,11 +1,5 @@
 import React, { useId, useState, useEffect, useRef, forwardRef } from 'react';
 
-declare module 'react' {
-    interface ReactI18NextChildren<T> {
-        children?: any;
-    }
-}
-
 type SwitchOptionChangeFnType = (arg1: any, arg2: any) => void;
 
 

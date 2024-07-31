@@ -5326,7 +5326,7 @@ var EventCalendar = function EventCalendar(props) {
       setTodayDate(_customNow);
     }
 
-    // Call a function when the list has been rendered complately
+    // Call a function when the list has been rendered completely
     onListRenderComplete === null || onListRenderComplete === void 0 ? void 0 : onListRenderComplete();
   }, [eventsValue, customTodayDate]);
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {

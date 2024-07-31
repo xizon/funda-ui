@@ -1,4 +1,9 @@
 import React from 'react';
+declare module 'react' {
+    interface ReactI18NextChildren<T> {
+        children?: any;
+    }
+}
 declare type MasonryLayoutProps = {
     columns?: number;
     gap?: number;

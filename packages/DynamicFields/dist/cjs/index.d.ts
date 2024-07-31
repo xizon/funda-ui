@@ -1,9 +1,4 @@
 import React from 'react';
-declare module 'react' {
-    interface ReactI18NextChildren<T> {
-        children?: any;
-    }
-}
 declare type DynamicFieldsValueProps = {
     init: React.ReactNode[];
     tmpl: React.ReactNode;

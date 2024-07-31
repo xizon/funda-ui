@@ -1,12 +1,6 @@
 import React, { useId, useState, useEffect, useRef, ChangeEvent, MouseEvent, CompositionEvent, KeyboardEvent, FocusEvent, forwardRef } from 'react';
 
 
-declare module 'react' {
-    interface ReactI18NextChildren<T> {
-        children?: any;
-    }
-}
-
 type SearchBarProps = {
     wrapperClassName?: string;
     controlClassName?: string;

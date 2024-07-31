@@ -1,10 +1,11 @@
 import React, { useId, useState, useEffect, useRef, forwardRef } from 'react';
 
-declare module 'react' {
-    interface ReactI18NextChildren<T> {
-        children?: any;
-    }
-}
+import {
+    base64ToArrayBuffer,
+    arrayBufferToUint8Array
+} from 'funda-utils';
+
+
 
 type FileProps = {
     wrapperClassName?: string;
@@ -81,6 +82,13 @@ const File = forwardRef((props: FileProps, externalRef: any) => {
     const [forceUpdate, setForceUpdate] = useState<Boolean>(false);
     const [defaultValue, setDefaultValue] = useState<any>(null);
     const [incomingData, setIncomingData] = useState<string | null | undefined>(null);
+
+
+
+    const getExt = (filename: string) => {
+        const ext = /^.+\.([^.]+)$/.exec(filename);
+        return ext == null ? "" : ext[1];
+    };
 
     function handleFileInput(event: any) {
         if (fileInputRef.current.nextSibling.contains(document.activeElement)) {
@@ -168,32 +176,56 @@ const File = forwardRef((props: FileProps, externalRef: any) => {
             });
         } else {
 
-            const streamToText = async (blob: any) => {
-                const readableStream = await blob.getReader();
-                const chunk = await readableStream.read();
-
-                return new TextDecoder('utf-8').decode(chunk.value);
-            };
-
-
+     
             (async () => {
 
-                const allFiles: any[] = [];
-                for (let i = 0; i < curFiles.length; i++) {
 
-                    const file = curFiles[i];
-                    const fileSliceBlob = file.slice(0, file.length);
-                    const fileSliceBlobStream = await fileSliceBlob.stream();
-                    allFiles.push(await streamToText(fileSliceBlobStream));
+                // setFilesData
+                [].slice.call(curFiles).forEach((file: any) => {
 
-                }
+                    const size = file.size;
+                    const mimeType = file.type;
+                    const name = file.name;
+                    const ext = getExt(name);
 
-                //send 
-                Promise.all(allFiles).then((values) => {
-                    const _params: any[] = fetchFuncMethodParams || [];
-                    fetchData((_params).join(','), values);
+
+                    // get file content
+                    const reader = new FileReader();
+                    reader.addEventListener('load', (event) => {
+                        const b64string = (event.currentTarget as any).result;
+                        const arrayBufferData = base64ToArrayBuffer(b64string);
+                        const uint8ArrayData = arrayBufferToUint8Array(arrayBufferData);
+
+                        // console.log('b64string: ', b64string);
+                        // console.log('arrayBufferData: ', arrayBufferData);
+                        // console.log('uint8ArrayData: ', uint8ArrayData);
+
+                        //send 
+                        const jsonData = {
+                            fileData: {
+                                size,
+                                mimeType,
+                                name,
+                                ext
+                            },
+                            b64string,
+                            arrayBufferData,
+                            uint8ArrayData
+                        };
+                        onComplete?.(fileInputRef.current, submitRef.current, jsonData, incomingData);
+
+                        // update default value
+                        setDefaultValue(undefined);
+                        fileInputRef.current.value = '';
+
+
+                    });
+                    reader.readAsDataURL(file);
 
                 });
+
+
+
             })();
 
 

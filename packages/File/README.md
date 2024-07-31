@@ -18,7 +18,7 @@ import File from 'funda-ui/File';
 | `submitLabel` | string \| ReactNode | - | Specifies a label for submit button | - |
 | `submitClassName` | string | `btn btn-primary mt-2` | The class name of the submit button. | - |
 | `inline` | boolean | false | If true the group are on the same horizontal row. | - |
-| `fetchUrl` | string | - | If the URL exists, it is passed using the default fetch method ([Fetch API](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch)). | - |
+| `fetchUrl` | string | - | If the URL exists, it is passed using the default fetch method ([Fetch API](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch)). <blockquote>If it does not exist, the file content is read by [ReadableStream](https://developer.mozilla.org/en-US/docs/Web/API/ReadableStream)</blockquote> | - |
 | `fetchMethod` | string | `POST` | The request's method (GET, POST, etc.) <blockquote>Valid when the `fetchUrl` attribute is not empty</blockquote>| - |
 | `fetchParams` | JSON Object | - | Set of query parameters in the request <blockquote>Valid when the `fetchUrl` attribute is not empty</blockquote> | - |
 | `multiple` | boolean | false | A file upload field that accepts multiple values | - |
@@ -117,7 +117,7 @@ export default () => {
 
 
 
-### Upload controls and buttons are on the same line
+## Upload controls and buttons are on the same line
 
 Use the `inline` attribute.
 
@@ -150,7 +150,7 @@ export default () => {
 
 
 
-### Use a custom API interface:
+## Use a custom API interface:
 
 
 
@@ -221,7 +221,7 @@ export default () => {
 
 
 
-### Access streams of data with this component
+## Access streams of data with this component
 
 
 ```js
@@ -369,6 +369,185 @@ export default () => {
                 multiple
             />
 
+        </>
+    );
+}
+```
+
+
+## Customize the business upload component
+
+
+`Uploader.tsx`:
+```js
+import React from "react";
+import File from 'funda-ui/File';
+
+
+type UploaderProps = {
+    label?: React.ReactNode | string;
+    name?: string;
+    id?: string;
+    wrapperClassName?: string;
+    waitingClassName?: string;
+    support?: string;
+    fetchUrl?: string;
+    fetchMethod?: string;
+    fetchParams?: any;
+    labelClassName?: string;
+    labelHoverClassName?: string;
+    inline?: boolean;
+    multiple?: boolean;
+    submitLabel?: React.ReactNode | string;
+    submitClassName?: string;
+    onSuccess?: (data: any) => void;
+    onChange?: () => void;
+    onEmpty?: () => void;
+    onIncorrectFormat?: () => void;
+};
+
+const Uploader = (props: UploaderProps, externalRef: any) => {
+    const {
+        label,
+        name,
+        id,
+        wrapperClassName,
+        waitingClassName,
+        support,
+        fetchUrl,
+        fetchMethod,
+        fetchParams,
+        labelClassName,
+        labelHoverClassName,
+        inline,
+        multiple,
+        submitLabel,
+        submitClassName,
+        onSuccess,
+        onChange,
+        onEmpty,
+        onIncorrectFormat
+    } = props;
+
+    const WAITING_CLASS = waitingClassName || '';
+
+    // image
+    //----------
+    function handleChange(e: any, submitEl: HTMLElement, value: any) {
+        onChange?.();
+        submitEl.classList.remove(WAITING_CLASS);
+    }
+    function handleComplete(e: any, submitEl: HTMLElement, value: any) {
+        if (typeof value !== 'undefined') {
+
+            submitEl.classList.remove(WAITING_CLASS);
+            onSuccess?.(value);
+
+            
+        }
+    }
+    function handleProgress(files: any[], input: HTMLInputElement, submitEl: HTMLElement) {
+        if (files.length === 0) {
+            onEmpty?.();
+            return;
+        }
+
+        [].slice.call(files).forEach((file: any) => {
+            const re = new RegExp(`\.(${support || 'jpg|jpeg|png|gif|webp'})$`, "i");
+            if (! re.test(file.name)) onIncorrectFormat?.();
+        });
+        submitEl.classList.add(WAITING_CLASS);
+    }
+
+    return (
+        <>
+
+            <div className={wrapperClassName || ''}>
+                
+                <File
+                    label={label}
+                    name={name}
+                    id={id}
+                    fetchUrl={fetchUrl}
+                    fetchMethod={fetchMethod}
+                    fetchParams={fetchParams}
+                    labelClassName={labelClassName}
+                    labelHoverClassName={labelHoverClassName}
+                    inline={inline || false}
+                    multiple={multiple || false}
+                    submitLabel={submitLabel}
+                    submitClassName={submitClassName}
+                    onChange={handleChange}
+                    onComplete={handleComplete}
+                    onProgress={handleProgress}
+                />
+
+            </div>
+            
+
+        </>
+    )
+};
+
+export default Uploader;
+```
+
+
+`index.tsx`:
+```js
+import React, { useState } from "react";
+import Uploader from './Uploader';
+
+
+export default () => {
+
+    const [upInfoProgImgs, setUpInfoProgImgs] = useState<any>(null);
+
+    return (
+        <>
+            <Uploader
+                waitingClassName="app-button-state--waiting"
+                // fetchUrl={"https://api"}
+                // fetchMethod="POST"
+                // fetchParams={{ 'Authorization': 'Bearer xxxx-xxxx-xxxx-xxxx' }}
+                inline
+                labelClassName="btn btn-outline-secondary"
+                labelHoverClassName="btn btn-primary"
+                submitLabel={"Upload"}
+                submitClassName="btn btn-primary ms-2"
+                label={<><svg width="15px" height="15px" viewBox="0 -2 32 32">
+                    <g stroke="none" strokeWidth="1" fill="none" fillRule="evenodd">
+                        <g transform="translate(-258.000000, -467.000000)" fill="#000000">
+                            <path d="M286,471 L283,471 L282,469 C281.411,467.837 281.104,467 280,467 L268,467 C266.896,467 266.53,467.954 266,469 L265,471 L262,471 C259.791,471 258,472.791 258,475 L258,491 C258,493.209 259.791,495 262,495 L286,495 C288.209,495 290,493.209 290,491 L290,475 C290,472.791 288.209,471 286,471 Z M274,491 C269.582,491 266,487.418 266,483 C266,478.582 269.582,475 274,475 C278.418,475 282,478.582 282,483 C282,487.418 278.418,491 274,491 Z M274,477 C270.687,477 268,479.687 268,483 C268,486.313 270.687,489 274,489 C277.313,489 280,486.313 280,483 C280,479.687 277.313,477 274,477 L274,477 Z">
+
+                            </path>
+                        </g>
+                    </g>
+                </svg> Select</>}
+                onSuccess={(data: any) => {
+                    io('BRIDGE_ALERT', { process: 0, info: 'Upload Successfully' });
+
+                    const res = {
+                        imgData: data.b64string,
+                        imgName: data.fileData.name
+                    };
+
+                    //
+                    setUpInfoProgImgs(res);
+
+
+                }}
+                onChange={() => {
+                    setUpInfoProgImgs(null);
+                }}
+                onEmpty={() => {
+                    io('BRIDGE_ALERT', { process: 0, info: 'No files are selected' });
+                }}
+                onIncorrectFormat={() => {
+                    io('BRIDGE_ALERT', { process: 0, info: 'Incorrect file' })
+                }}
+            />
+            {upInfoProgImgs !== null ? <div><img src={upInfoProgImgs.imgData} height={70} /></div> : null}
         </>
     );
 }

@@ -1,10 +1,5 @@
 import React, { useId, useState, useEffect, useRef, forwardRef, ChangeEvent, FocusEvent } from 'react';
 
-declare module 'react' {
-    interface ReactI18NextChildren<T> {
-        children?: any;
-    }
-}
 
 interface ColorPickerProps extends React.ComponentPropsWithoutRef<"input"> {
     wrapperClassName?: string;

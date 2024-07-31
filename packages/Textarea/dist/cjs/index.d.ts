@@ -1,9 +1,4 @@
 import React from 'react';
-declare module 'react' {
-    interface ReactI18NextChildren<T> {
-        children?: any;
-    }
-}
 declare type TextareaProps = {
     contentRef?: React.ForwardedRef<any>;
     wrapperClassName?: string;

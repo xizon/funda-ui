@@ -10303,7 +10303,7 @@ var EventCalendarTimeline = function EventCalendarTimeline(props) {
       setTodayDate(_customNow);
     }
 
-    // Call a function when the list has been rendered complately
+    // Call a function when the list has been rendered completely
     onListRenderComplete === null || onListRenderComplete === void 0 ? void 0 : onListRenderComplete();
     return function () {
       // table grid

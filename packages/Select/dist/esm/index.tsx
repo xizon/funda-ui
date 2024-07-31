@@ -7,12 +7,6 @@ import {
 } from 'funda-utils';
 
 
-declare module 'react' {
-    interface ReactI18NextChildren<T> {
-        children?: any;
-    }
-}
-
 interface ItemConfig {
     [propName: string]: string | number | boolean;
 }

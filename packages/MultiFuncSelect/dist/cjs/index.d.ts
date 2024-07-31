@@ -1,9 +1,4 @@
 import React from 'react';
-declare module 'react' {
-    interface ReactI18NextChildren<T> {
-        children?: any;
-    }
-}
 declare type MultiFuncSelectOptionChangeFnType = (arg1: any, arg2: any, arg3: any) => void;
 interface MultiSelectDataConfig {
     values: string[] | number[];

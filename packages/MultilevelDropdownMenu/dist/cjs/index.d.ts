@@ -1,9 +1,4 @@
 import React from 'react';
-declare module 'react' {
-    interface ReactI18NextChildren<T> {
-        children?: any;
-    }
-}
 declare type MultilevelDropdownMenuProps = {
     /** Mutually exclusive alternate expansion between the first levels */
     alternateCollapse?: boolean;

@@ -1407,7 +1407,7 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
             setTodayDate(_customNow);
         }
 
-        // Call a function when the list has been rendered complately
+        // Call a function when the list has been rendered completely
         onListRenderComplete?.();
 
 

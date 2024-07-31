@@ -1,5 +1,13 @@
 import React from 'react';
 
+
+declare module 'react' {
+    interface ReactI18NextChildren<T> {
+        children?: any;
+    }
+}
+
+
 interface TabListProps extends React.ComponentPropsWithoutRef<any> {
 	defaultActive?: string | boolean | undefined;
     expandedActiveClassNameForNav?: string;

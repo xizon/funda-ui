@@ -1,9 +1,4 @@
 import React from 'react';
-declare module 'react' {
-    interface ReactI18NextChildren<T> {
-        children?: any;
-    }
-}
 declare type SwitchOptionChangeFnType = (arg1: any, arg2: any) => void;
 declare type SwitchProps = {
     wrapperClassName?: string;

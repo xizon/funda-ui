@@ -8,6 +8,12 @@ import {
 
 
 
+declare module 'react' {
+    interface ReactI18NextChildren<T> {
+        children?: any;
+    }
+}
+
 
 type TooltipProps = {
     wrapperClassName?: string;

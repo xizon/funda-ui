@@ -409,7 +409,7 @@ const EventCalendar = (props: EventCalendarProps) => {
             setTodayDate(_customNow);
         }
 
-        // Call a function when the list has been rendered complately
+        // Call a function when the list has been rendered completely
         onListRenderComplete?.();
 
     }, [eventsValue, customTodayDate]);

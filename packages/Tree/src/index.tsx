@@ -11,12 +11,6 @@ import { initUlHeight, initAsyncItems } from './init-height';
 
 
 
-declare module 'react' {
-    interface ReactI18NextChildren<T> {
-        children?: any;
-    }
-}
-
 interface ListSearchDataConfig {
     title: string | number;
 }

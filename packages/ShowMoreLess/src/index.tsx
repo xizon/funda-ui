@@ -1,6 +1,13 @@
 import React, { useId, useState, useRef, useCallback } from 'react';
 
 
+declare module 'react' {
+    interface ReactI18NextChildren<T> {
+        children?: any;
+    }
+}
+
+
 // Adapt the easing parameters of CSS3
 enum EasingList {
     linear = 'linear',

@@ -1,11 +1,5 @@
 import React, { useId, useState, useEffect, useRef, forwardRef, ChangeEvent, CompositionEvent, KeyboardEvent, FocusEvent, useImperativeHandle } from 'react';
 
-declare module 'react' {
-    interface ReactI18NextChildren<T> {
-        children?: any;
-    }
-}
-
 type InputProps = {
     contentRef?: React.ForwardedRef<any>;
     wrapperClassName?: string;

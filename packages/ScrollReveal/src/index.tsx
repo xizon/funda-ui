@@ -1,6 +1,13 @@
 import React, { useId, useState, useRef, useEffect } from 'react';
 
 
+declare module 'react' {
+    interface ReactI18NextChildren<T> {
+        children?: any;
+    }
+}
+
+
 interface viewOffsetConfig {
     x?: string | undefined;
     y?: string | undefined;

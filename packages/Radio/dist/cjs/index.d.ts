@@ -1,9 +1,4 @@
 import React from 'react';
-declare module 'react' {
-    interface ReactI18NextChildren<T> {
-        children?: any;
-    }
-}
 interface OptionConfig {
     [propName: string]: string | number | React.ReactNode | boolean;
 }

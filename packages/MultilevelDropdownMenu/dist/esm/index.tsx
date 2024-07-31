@@ -3,12 +3,6 @@ import React, { useState, useEffect, useId, memo } from 'react';
 import MenuList from './MenuList';
 
 
-declare module 'react' {
-    interface ReactI18NextChildren<T> {
-        children?: any;
-    }
-}
-
 type MultilevelDropdownMenuProps = {
     /** Mutually exclusive alternate expansion between the first levels */
     alternateCollapse?: boolean;
