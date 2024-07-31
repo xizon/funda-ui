@@ -380,9 +380,8 @@ export default () => {
 
 `Uploader.tsx`:
 ```js
-import React from "react";
+import React, { useRef } from 'react';
 import File from 'funda-ui/File';
-
 
 type UploaderProps = {
     label?: React.ReactNode | string;
@@ -430,34 +429,49 @@ const Uploader = (props: UploaderProps, externalRef: any) => {
     } = props;
 
     const WAITING_CLASS = waitingClassName || '';
+    const hasFormatErr = useRef<boolean>(false);
+    const SUPPORT_EXT = support || 'jpg|jpeg|png|gif|webp';
 
-    // image
-    //----------
-    function handleChange(e: any, submitEl: HTMLElement, value: any) {
+
+    const handleChange = (e: any, submitEl: HTMLElement, value: any) => {
         onChange?.();
         submitEl.classList.remove(WAITING_CLASS);
-    }
-    function handleComplete(e: any, submitEl: HTMLElement, value: any) {
-        if (typeof value !== 'undefined') {
+        hasFormatErr.current = false;
+    };
 
+    const handleComplete = (e: any, submitEl: HTMLElement, value: any) => {
+        if (hasFormatErr.current) {
+            return;
+        }
+
+        if (typeof value !== 'undefined') {
             submitEl.classList.remove(WAITING_CLASS);
             onSuccess?.(value);
-
-            
         }
-    }
-    function handleProgress(files: any[], input: HTMLInputElement, submitEl: HTMLElement) {
+    };
+
+    const handleProgress = (files: any[], input: HTMLInputElement, submitEl: HTMLElement) => {
         if (files.length === 0) {
             onEmpty?.();
             return;
         }
 
+        hasFormatErr.current = false;
+        
         [].slice.call(files).forEach((file: any) => {
-            const re = new RegExp(`\.(${support || 'jpg|jpeg|png|gif|webp'})$`, "i");
-            if (! re.test(file.name)) onIncorrectFormat?.();
+      
+            if (typeof support === 'undefined' || support !== '*') {
+                const re = new RegExp(`\.(${SUPPORT_EXT})$`, "i");
+                if (! re.test(file.name)) {
+                    onIncorrectFormat?.();
+                    hasFormatErr.current = true;
+                }
+            }
         });
         submitEl.classList.add(WAITING_CLASS);
-    }
+    };
+
+
 
     return (
         <>
@@ -489,6 +503,7 @@ const Uploader = (props: UploaderProps, externalRef: any) => {
     )
 };
 
+
 export default Uploader;
 ```
 
@@ -511,6 +526,7 @@ export default () => {
                 // fetchMethod="POST"
                 // fetchParams={{ 'Authorization': 'Bearer xxxx-xxxx-xxxx-xxxx' }}
                 inline
+                support="jpg|jpeg|png|gif|webp"  // "*" means all
                 labelClassName="btn btn-outline-secondary"
                 labelHoverClassName="btn btn-primary"
                 submitLabel={"Upload"}
