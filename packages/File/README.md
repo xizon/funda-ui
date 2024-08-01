@@ -513,7 +513,7 @@ const Uploader = forwardRef((props: UploaderProps, externalRef: any) => {
     )
 });
 
-
+Uploader.displayName = 'Uploader';
 export default Uploader;
 ```
 
