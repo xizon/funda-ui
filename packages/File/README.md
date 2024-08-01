@@ -32,9 +32,8 @@ import File from 'funda-ui/File';
 | `fetchFuncMethod` | string  | - | When the property is *true*, every time the select changes, a data request will be triggered. <br /><blockquote>The methord must be a Promise Object.</blockquote> | - |
 | `fetchFuncMethodParams` | array  | - | The parameter passed by the method, it is an array. <br />Note: the first element is a query string, the second element is the number of queried data (usually a number), and then you can increase the third, or fourth, and more parameters. <br />Such as `['',0]`, `['',99,'string 1','string 2']` <br /><blockquote>There should be at least one parameter which is the query string.</blockquote> | - |
 | `onChange` | function  | - | Call a function when the value of an HTML element is changed. It returns three callback values. <br /> <ol><li>The first is the file input (**HTML Element**)</li><li>The second parameter is submit button (**HTML Element**)</li><li> The third is current value (**[An object of FileList](https://developer.mozilla.org/en-US/docs/Web/API/FileList)**)</li></ol> | - |
-| `onProgress` | function  | - | Call a function when upload is in progress. It returns three callback values. <br /> <ol><li>The first is (**[An object of FileList](https://developer.mozilla.org/en-US/docs/Web/API/FileList)**)</li><li>The second is the file input (**HTML Element**)</li><li>The last parameter is submit button (**HTML Element**)</li></ol> | - |
+| `onProgress` | function  | - | Call a function when upload is in progress. It returns three callback values. <br /> <ol><li>The first is (**[An object of FileList](https://developer.mozilla.org/en-US/docs/Web/API/FileList)**)</li><li>The second is the file input (**HTML Element**)</li><li>The last parameter is submit button (**HTML Element**)</li></ol> <blockquote>You can intercept requests or responses before they are handled by then or catch. This function could set a return value (**Boolean**). If "false", the request will be intercepted.</blockquote> | - |
 | `onComplete` | function  | - | Call a function when the modal is submitted. It returns four callback values. <br /> <ol><li>The one is the file input (**HTML Element**)</li><li>The second parameter is submit button (**HTML Element**)</li><li>The third parameter is the callback from backend (**JSON Object Literals**)</li><li>The last is incoming data from attribute `data`. (**Any**)</li></ol> | - |
-
 
 
 
@@ -380,7 +379,7 @@ export default () => {
 
 `Uploader.tsx`:
 ```js
-import React, { useRef } from 'react';
+import React, { forwardRef, useRef } from 'react';
 import File from 'funda-ui/File';
 
 type UploaderProps = {
@@ -399,13 +398,12 @@ type UploaderProps = {
     multiple?: boolean;
     submitLabel?: React.ReactNode | string;
     submitClassName?: string;
-    onSuccess?: (data: any) => void;
+    onSuccess?: (data: any, input: HTMLInputElement, submitEl: HTMLElement) => void;
     onChange?: () => void;
     onEmpty?: () => void;
     onIncorrectFormat?: () => void;
 };
-
-const Uploader = (props: UploaderProps, externalRef: any) => {
+const Uploader = forwardRef((props: UploaderProps, externalRef: any) => {
     const {
         label,
         name,
@@ -425,7 +423,8 @@ const Uploader = (props: UploaderProps, externalRef: any) => {
         onSuccess,
         onChange,
         onEmpty,
-        onIncorrectFormat
+        onIncorrectFormat,
+        ...attributes
     } = props;
 
     const WAITING_CLASS = waitingClassName || '';
@@ -433,31 +432,34 @@ const Uploader = (props: UploaderProps, externalRef: any) => {
     const SUPPORT_EXT = support || 'jpg|jpeg|png|gif|webp';
 
 
-    const handleChange = (e: any, submitEl: HTMLElement, value: any) => {
+    const handleChange = (input: HTMLInputElement, submitEl: HTMLElement, value: any) => {
         onChange?.();
         submitEl.classList.remove(WAITING_CLASS);
         hasFormatErr.current = false;
     };
 
-    const handleComplete = (e: any, submitEl: HTMLElement, value: any) => {
+    const handleComplete = (input: HTMLInputElement, submitEl: HTMLElement, value: any) => {
         if (hasFormatErr.current) {
+            submitEl.classList.remove(WAITING_CLASS);
             return;
         }
 
         if (typeof value !== 'undefined') {
             submitEl.classList.remove(WAITING_CLASS);
-            onSuccess?.(value);
+            onSuccess?.(value, input, submitEl);
         }
     };
 
     const handleProgress = (files: any[], input: HTMLInputElement, submitEl: HTMLElement) => {
         if (files.length === 0) {
             onEmpty?.();
-            return;
+            return false;
         }
 
         hasFormatErr.current = false;
+        submitEl.classList.add(WAITING_CLASS);
         
+        // check format
         [].slice.call(files).forEach((file: any) => {
       
             if (typeof support === 'undefined' || support !== '*') {
@@ -465,10 +467,16 @@ const Uploader = (props: UploaderProps, externalRef: any) => {
                 if (! re.test(file.name)) {
                     onIncorrectFormat?.();
                     hasFormatErr.current = true;
+                    submitEl.classList.remove(WAITING_CLASS);
                 }
             }
         });
-        submitEl.classList.add(WAITING_CLASS);
+
+
+        // You can intercept requests or responses before they are handled by then or catch. 
+        // This function could set a return value (Boolean). If "false", the request will be intercepted.
+        return !hasFormatErr.current;
+        
     };
 
 
@@ -479,6 +487,8 @@ const Uploader = (props: UploaderProps, externalRef: any) => {
             <div className={wrapperClassName || ''}>
                 
                 <File
+                    {...attributes}
+                    ref={externalRef}
                     label={label}
                     name={name}
                     id={id}
@@ -501,7 +511,7 @@ const Uploader = (props: UploaderProps, externalRef: any) => {
 
         </>
     )
-};
+});
 
 
 export default Uploader;

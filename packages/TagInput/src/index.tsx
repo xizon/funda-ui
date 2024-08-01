@@ -23,6 +23,8 @@ type TagInputProps = {
     /** -- */
     id?: string;
     autoComplete?: string;
+    autoCapitalize?: string;
+    spellCheck?: boolean;
     style?: React.CSSProperties;
     tabIndex?: number;
     [key: `data-${string}`]: string | undefined;
@@ -46,6 +48,8 @@ const TagInput = forwardRef((props: TagInputProps, externalRef: any) => {
         name,
         id,
         autoComplete,
+        autoCapitalize,
+        spellCheck,
         extractValueByBrackets,
         maxLength,
         style,
@@ -252,6 +256,8 @@ const TagInput = forwardRef((props: TagInputProps, externalRef: any) => {
                                 data-name={name?.match(/(\[.*?\])/gi) ? `${name.split('[')[0]}-label[]` : `${name}-label`}
                                 data-tag-input
                                 autoComplete={typeof autoComplete === 'undefined' ? 'off' : autoComplete}
+                                autoCapitalize={typeof autoCapitalize === 'undefined' ? 'off' : autoCapitalize}
+                                spellCheck={typeof spellCheck === 'undefined' ? false : spellCheck}
                                 placeholder={placeholder || ''}
                                 value={userInput}
                                 maxLength={maxLength || null}

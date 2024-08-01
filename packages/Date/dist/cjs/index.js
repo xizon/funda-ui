@@ -192,7 +192,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
         var react__WEBPACK_IMPORTED_MODULE_0__ = __nested_webpack_require_1465__(787);
         /* harmony import */
         var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__nested_webpack_require_1465__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-        var _excluded = ["contentRef", "wrapperClassName", "controlClassName", "controlExClassName", "controlGroupWrapperClassName", "controlGroupTextClassName", "type", "disabled", "required", "placeholder", "pattern", "readOnly", "value", "label", "units", "name", "step", "min", "max", "src", "size", "minLength", "maxLength", "alt", "inputMode", "id", "appendControl", "iconLeft", "iconRight", "autoComplete", "style", "tabIndex", "onChangeCallback", "onInputCallback", "onKeyPressedCallback", "onChange", "onBlur", "onFocus", "onPressEnter"];
+        var _excluded = ["contentRef", "wrapperClassName", "controlClassName", "controlExClassName", "controlGroupWrapperClassName", "controlGroupTextClassName", "type", "disabled", "required", "placeholder", "pattern", "readOnly", "value", "label", "units", "name", "step", "min", "max", "src", "size", "minLength", "maxLength", "alt", "inputMode", "id", "appendControl", "iconLeft", "iconRight", "autoComplete", "autoCapitalize", "spellCheck", "style", "tabIndex", "onChangeCallback", "onInputCallback", "onKeyPressedCallback", "onChange", "onBlur", "onFocus", "onPressEnter"];
         function _extends() {
           _extends = Object.assign ? Object.assign.bind() : function (target) {
             for (var i = 1; i < arguments.length; i++) {
@@ -314,6 +314,8 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
             iconLeft = props.iconLeft,
             iconRight = props.iconRight,
             autoComplete = props.autoComplete,
+            autoCapitalize = props.autoCapitalize,
+            spellCheck = props.spellCheck,
             style = props.style,
             tabIndex = props.tabIndex,
             onChangeCallback = props.onChangeCallback,
@@ -477,6 +479,8 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
             minLength: minLength || null,
             maxLength: maxLength || null,
             autoComplete: typeof autoComplete === 'undefined' ? 'on' : autoComplete,
+            autoCapitalize: typeof autoCapitalize === 'undefined' ? 'off' : autoCapitalize,
+            spellCheck: typeof spellCheck === 'undefined' ? false : spellCheck,
             onFocus: handleFocus,
             onBlur: handleBlur,
             onChange: handleChange,
@@ -519,6 +523,8 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
             minLength: minLength || null,
             maxLength: maxLength || null,
             autoComplete: typeof autoComplete === 'undefined' ? 'on' : autoComplete,
+            autoCapitalize: typeof autoCapitalize === 'undefined' ? 'off' : autoCapitalize,
+            spellCheck: typeof spellCheck === 'undefined' ? false : spellCheck,
             onFocus: handleFocus,
             onBlur: handleBlur,
             onChange: handleChange,

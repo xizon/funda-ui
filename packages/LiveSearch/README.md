@@ -27,7 +27,9 @@ import LiveSearch from 'funda-ui/LiveSearch';
 | `label` | string \| ReactNode | - | It is used to specify a label for an element of a form.<blockquote>Support html tags</blockquote> | - |
 | `name` | string | - | Name is not deprecated when used with form fields. | - |
 | `placeholder` | string | - |  Specifies a short hint that describes. | - |
-| `autoComplete` | string  | `off` | Turn off autocomplete for input fields. | - |
+| `autoComplete` | string  | `off` | The autocomplete attribute provides a hint to the user agent specifying how to, or indeed whether to, prefill a form control. | - |
+| `autoCapitalize` | string  | `off` | The autocapitalize property of the HTMLElement interface represents the element's capitalization behavior for user input. | - |
+| `spellCheck` | boolean  | false | The spellcheck global attribute is an enumerated attribute that defines whether the element may be checked for spelling errors. | - |
 | `units` | string | - | Specify a unit identification string. Such as `em`, `px`, and so on. | - |
 | `iconLeft` | ReactNode  | - | Set the left icon of this control | - |
 | `iconRight` | ReactNode  | - | Set the right icon of this control | - |

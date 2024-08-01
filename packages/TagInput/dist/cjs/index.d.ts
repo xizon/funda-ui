@@ -15,6 +15,8 @@ declare type TagInputProps = {
     /** -- */
     id?: string;
     autoComplete?: string;
+    autoCapitalize?: string;
+    spellCheck?: boolean;
     style?: React.CSSProperties;
     tabIndex?: number;
     [key: `data-${string}`]: string | undefined;

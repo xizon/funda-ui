@@ -61,6 +61,8 @@ type LiveSearchProps = {
     /** -- */
     id?: string;
     autoComplete?: string;
+    autoCapitalize?: string;
+    spellCheck?: boolean;
     style?: React.CSSProperties;
     tabIndex?: number;
     [key: `data-${string}`]: string | undefined;
@@ -108,6 +110,8 @@ const LiveSearch = forwardRef((props: LiveSearchProps, externalRef: any) => {
         maxLength,
         id,
         autoComplete,
+        autoCapitalize,
+        spellCheck,
         icon,
         btnId,
         fetchTrigger,
@@ -818,6 +822,8 @@ const LiveSearch = forwardRef((props: LiveSearchProps, externalRef: any) => {
                     icon={hideIcon ? '' : (!fetchTrigger ? '' : icon)}
                     btnId={btnId}
                     autoComplete={typeof autoComplete === 'undefined' ? 'off' : autoComplete}
+                    autoCapitalize={typeof autoCapitalize === 'undefined' ? 'off' : autoCapitalize}
+                    spellCheck={typeof spellCheck === 'undefined' ? false : spellCheck}
                     isSearchInput={isSearchInput}
                     onKeyPressedCallback={(e: KeyboardEvent<any>) => {
                         onKeyboardInput?.(e, inputRef.current, listRef.current);

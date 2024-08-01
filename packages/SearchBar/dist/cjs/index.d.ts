@@ -25,6 +25,8 @@ declare type SearchBarProps = {
     id?: string;
     style?: React.CSSProperties;
     autoComplete?: string;
+    autoCapitalize?: string;
+    spellCheck?: boolean;
     tabIndex?: number;
     [key: `data-${string}`]: string | undefined;
     onClick?: (e: any) => void;

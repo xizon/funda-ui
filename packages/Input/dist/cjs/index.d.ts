@@ -32,6 +32,8 @@ declare type InputProps = {
     id?: string;
     style?: React.CSSProperties;
     autoComplete?: string;
+    autoCapitalize?: string;
+    spellCheck?: boolean;
     tabIndex?: number;
     [key: `data-${string}`]: string | undefined;
     onChangeCallback?: (e: any, el: any) => void;

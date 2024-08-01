@@ -1,5 +1,6 @@
 import React from 'react';
 declare type FileProps = {
+    contentRef?: React.ForwardedRef<any>;
     wrapperClassName?: string;
     controlClassName?: string;
     controlExClassName?: string;

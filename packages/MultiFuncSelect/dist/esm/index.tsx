@@ -97,6 +97,8 @@ type MultiFuncSelectProps = {
     /** -- */
     id?: string;
     autoComplete?: string;
+    autoCapitalize?: string;
+    spellCheck?: boolean;
     style?: React.CSSProperties;
     tabIndex?: number;
     [key: `data-${string}`]: string | undefined;
@@ -135,6 +137,8 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, externalRef: an
         placeholder,
         id,
         autoComplete,
+        autoCapitalize,
+        spellCheck,
         options,
         cleanTrigger,
         lockBodyScroll,
@@ -1875,6 +1879,8 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, externalRef: an
 
                         style={{ cursor: 'pointer', color: 'transparent', borderBottomWidth: MULTI_SEL_VALID ? '0' : '1px', ...style }}
                         autoComplete={typeof autoComplete === 'undefined' ? 'off' : autoComplete}
+                        autoCapitalize={typeof autoCapitalize === 'undefined' ? 'off' : autoCapitalize}
+                        spellCheck={typeof spellCheck === 'undefined' ? false : spellCheck}
                         {...attributes}
                     />
 

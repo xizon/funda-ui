@@ -96,7 +96,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(787);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-var _excluded = ["contentRef", "wrapperClassName", "controlClassName", "controlExClassName", "controlGroupWrapperClassName", "controlGroupTextClassName", "type", "disabled", "required", "placeholder", "pattern", "readOnly", "value", "label", "units", "name", "step", "min", "max", "src", "size", "minLength", "maxLength", "alt", "inputMode", "id", "appendControl", "iconLeft", "iconRight", "autoComplete", "style", "tabIndex", "onChangeCallback", "onInputCallback", "onKeyPressedCallback", "onChange", "onBlur", "onFocus", "onPressEnter"];
+var _excluded = ["contentRef", "wrapperClassName", "controlClassName", "controlExClassName", "controlGroupWrapperClassName", "controlGroupTextClassName", "type", "disabled", "required", "placeholder", "pattern", "readOnly", "value", "label", "units", "name", "step", "min", "max", "src", "size", "minLength", "maxLength", "alt", "inputMode", "id", "appendControl", "iconLeft", "iconRight", "autoComplete", "autoCapitalize", "spellCheck", "style", "tabIndex", "onChangeCallback", "onInputCallback", "onKeyPressedCallback", "onChange", "onBlur", "onFocus", "onPressEnter"];
 function _extends() { _extends = Object.assign ? Object.assign.bind() : function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
 function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
 function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
@@ -138,6 +138,8 @@ var Input = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(funct
     iconLeft = props.iconLeft,
     iconRight = props.iconRight,
     autoComplete = props.autoComplete,
+    autoCapitalize = props.autoCapitalize,
+    spellCheck = props.spellCheck,
     style = props.style,
     tabIndex = props.tabIndex,
     onChangeCallback = props.onChangeCallback,
@@ -301,6 +303,8 @@ var Input = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(funct
     minLength: minLength || null,
     maxLength: maxLength || null,
     autoComplete: typeof autoComplete === 'undefined' ? 'on' : autoComplete,
+    autoCapitalize: typeof autoCapitalize === 'undefined' ? 'off' : autoCapitalize,
+    spellCheck: typeof spellCheck === 'undefined' ? false : spellCheck,
     onFocus: handleFocus,
     onBlur: handleBlur,
     onChange: handleChange,
@@ -343,6 +347,8 @@ var Input = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(funct
     minLength: minLength || null,
     maxLength: maxLength || null,
     autoComplete: typeof autoComplete === 'undefined' ? 'on' : autoComplete,
+    autoCapitalize: typeof autoCapitalize === 'undefined' ? 'off' : autoCapitalize,
+    spellCheck: typeof spellCheck === 'undefined' ? false : spellCheck,
     onFocus: handleFocus,
     onBlur: handleBlur,
     onChange: handleChange,

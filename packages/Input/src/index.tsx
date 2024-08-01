@@ -33,6 +33,8 @@ type InputProps = {
     id?: string;
     style?: React.CSSProperties;
     autoComplete?: string;
+    autoCapitalize?: string;
+    spellCheck?: boolean;
     tabIndex?: number;
     [key: `data-${string}`]: string | undefined;
     onChangeCallback?: (e: any, el: any) => void;
@@ -78,6 +80,8 @@ const Input = forwardRef((props: InputProps, externalRef: any) => {
         iconLeft,
         iconRight,
         autoComplete,
+        autoCapitalize,
+        spellCheck,
         style,
         tabIndex,
         onChangeCallback,
@@ -252,6 +256,8 @@ const Input = forwardRef((props: InputProps, externalRef: any) => {
                                 minLength={minLength || null}
                                 maxLength={maxLength || null}
                                 autoComplete={typeof autoComplete === 'undefined' ? 'on' : autoComplete}
+                                autoCapitalize={typeof autoCapitalize === 'undefined' ? 'off' : autoCapitalize}
+                                spellCheck={typeof spellCheck === 'undefined' ? false : spellCheck}
                                 onFocus={handleFocus}
                                 onBlur={handleBlur}
                                 onChange={handleChange}
@@ -301,6 +307,8 @@ const Input = forwardRef((props: InputProps, externalRef: any) => {
                             minLength={minLength || null}
                             maxLength={maxLength || null}
                             autoComplete={typeof autoComplete === 'undefined' ? 'on' : autoComplete}
+                            autoCapitalize={typeof autoCapitalize === 'undefined' ? 'off' : autoCapitalize}
+                            spellCheck={typeof spellCheck === 'undefined' ? false : spellCheck}
                             onFocus={handleFocus}
                             onBlur={handleBlur}
                             onChange={handleChange}

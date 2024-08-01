@@ -27,6 +27,8 @@ type SearchBarProps = {
     id?: string;
     style?: React.CSSProperties;
     autoComplete?: string;
+    autoCapitalize?: string;
+    spellCheck?: boolean;
     tabIndex?: number;
     [key: `data-${string}`]: string | undefined;
     onClick?: (e: any) => void;
@@ -63,6 +65,8 @@ const SearchBar = forwardRef((props: SearchBarProps, externalRef: any) => {
         id,
         icon,
         autoComplete,
+        autoCapitalize,
+        spellCheck,
         style,
         tabIndex,
         onClick,
@@ -191,6 +195,8 @@ const SearchBar = forwardRef((props: SearchBarProps, externalRef: any) => {
                         minLength={minLength || null}
                         maxLength={maxLength || null}
                         autoComplete={typeof autoComplete === 'undefined' ? 'off' : autoComplete}
+                        autoCapitalize={typeof autoCapitalize === 'undefined' ? 'off' : autoCapitalize}
+                        spellCheck={typeof spellCheck === 'undefined' ? false : spellCheck}
                         onFocus={handleFocus}
                         onBlur={handleBlur}
                         onChange={handleChange}
