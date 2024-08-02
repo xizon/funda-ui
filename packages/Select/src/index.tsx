@@ -1,6 +1,7 @@
-import React, { useId, useEffect, useState, useRef, forwardRef } from 'react';
+import React, { useEffect, useState, useRef, forwardRef } from 'react';
 
 import {
+    useComId,
     isJSON,
     addTreeDepth,
     addTreeIndent
@@ -76,7 +77,7 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
 
     const INDENT_PLACEHOLDER = doubleIndent ? `&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;` : `&nbsp;&nbsp;&nbsp;&nbsp;`;
     const INDENT_LAST_PLACEHOLDER = `${typeof indentation !== 'undefined' && indentation !== '' ? `${indentation}&nbsp;&nbsp;` : ''}`;
-    const uniqueID = useId();
+    const uniqueID = useComId();
     const idRes = id || uniqueID;
     const rootRef = useRef<any>(null);
     const selectRef = useRef<any>(null);

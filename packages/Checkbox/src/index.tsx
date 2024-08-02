@@ -1,4 +1,8 @@
-import React, { useImperativeHandle, useId, useState, useEffect, useRef, forwardRef } from 'react';
+import React, { useImperativeHandle, useState, useEffect, useRef, forwardRef } from 'react';
+
+import {
+    useComId
+} from 'funda-utils';
 
 
 type CheckboxOptionChangeFnType = (arg1: any, arg2: any) => void;
@@ -49,7 +53,7 @@ const Checkbox = forwardRef((props: CheckboxProps, externalRef: any) => {
         ...attributes
     } = props;
 
-    const uniqueID = useId();
+    const uniqueID = useComId();
     const idRes = id || uniqueID;
     const rootRef = useRef<any>(null);
     const valRef = useRef<any>(null);

@@ -1,5 +1,8 @@
-import React, { useId, useState, useEffect, useRef, ChangeEvent, MouseEvent, CompositionEvent, KeyboardEvent, FocusEvent, forwardRef } from 'react';
+import React, { useState, useEffect, useRef, ChangeEvent, MouseEvent, CompositionEvent, KeyboardEvent, FocusEvent, forwardRef } from 'react';
 
+import {
+    useComId
+} from 'funda-utils';
 
 type SearchBarProps = {
     wrapperClassName?: string;
@@ -80,7 +83,7 @@ const SearchBar = forwardRef((props: SearchBarProps, externalRef: any) => {
     } = props;
 
 
-    const uniqueID = useId();
+    const uniqueID = useComId();
     const idRes = id || uniqueID;
     const rootRef = useRef<any>(null);
     const [changedVal, setChangedVal] = useState<string>(value || '');

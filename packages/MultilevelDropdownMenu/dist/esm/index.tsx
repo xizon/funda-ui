@@ -1,4 +1,8 @@
-import React, { useState, useEffect, useId, memo } from 'react';
+import React, { useState, useEffect, memo } from 'react';
+
+import {
+    useComId
+} from 'funda-utils';
 
 import MenuList from './MenuList';
 
@@ -34,7 +38,7 @@ const MultilevelDropdownMenu = (props: MultilevelDropdownMenuProps) => {
         onSelect
     } = props;
 
-    const uniqueID = useId();
+    const uniqueID = useComId();
     const idRes = id || uniqueID;
     const [val, setVal] = useState<any>(null);
 

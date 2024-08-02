@@ -1,9 +1,10 @@
-import React, { forwardRef, useId, useEffect, useState, useRef, KeyboardEvent, useImperativeHandle } from 'react';
+import React, { forwardRef, useEffect, useState, useRef, KeyboardEvent, useImperativeHandle } from 'react';
 
 
 import RootPortal from 'funda-root-portal';
 import SearchBar from 'funda-searchbar';
 import {
+    useComId,
     isJSON,
     useWindowScroll,
     useClickOutside,
@@ -144,7 +145,7 @@ const LiveSearch = forwardRef((props: LiveSearchProps, externalRef: any) => {
     const EMPTY_FOR_FETCH = typeof autoShowOptions === 'undefined' || autoShowOptions === false ? false : true;
     const NO_MATCH_POPUP = typeof noMatchPopup === 'undefined' ? true : noMatchPopup;
     const WIN_WIDTH = typeof winWidth === 'function' ? winWidth() : winWidth ? winWidth : 'auto';
-    const uniqueID = useId().replace(/\:/g, "-");
+    const uniqueID = useComId();
     const idRes = id || uniqueID;
     const rootRef = useRef<any>(null);
     const inputRef = useRef<any>(null);

@@ -1,5 +1,8 @@
-import React, { useId, useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 
+import {
+    useComId
+} from 'funda-utils';
 import Input from 'funda-input';
 
 type RangeSliderProps = {
@@ -44,7 +47,7 @@ const RangeSlider = (props: RangeSliderProps) => {
     } = props;
 
 
-    const uniqueID = useId();
+    const uniqueID = useComId();
     const idRes = id || uniqueID;
     const rootRef = useRef<any>(null);
     const valMinRef = useRef<any>(null);

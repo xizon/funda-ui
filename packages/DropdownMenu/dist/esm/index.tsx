@@ -1,7 +1,8 @@
-import React, { useEffect, useState, useRef, useId } from 'react';
+import React, { useState, useRef } from 'react';
 
 import RootPortal from 'funda-root-portal';
 import {
+    useComId,
     useClickOutside,
     getAbsolutePositionOfStage
 } from 'funda-utils';
@@ -75,7 +76,7 @@ const DropdownMenu = (props: DropdownMenuProps) => {
 
     const POS_OFFSET = 0;
     const EXCEEDED_SIDE_POS_OFFSET = Number(exceededSidePosOffset) || 15;
-    const uniqueID = useId().replace(/\:/g, "-");
+    const uniqueID = useComId();
     const idRes = id || uniqueID;
     const rootRef = useRef<any>(null);
     const modalRef = useRef<any>(null);

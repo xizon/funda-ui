@@ -1,7 +1,8 @@
-import React, { useImperativeHandle, forwardRef, useId, useRef, useState, useEffect } from 'react';
+import React, { useImperativeHandle, forwardRef, useRef, useState, useEffect } from 'react';
 
 
 import {
+    useComId,
     isJSON
 } from 'funda-utils';
 
@@ -87,7 +88,7 @@ const Radio = forwardRef((props: RadioProps, externalRef: any) => {
     } = props;
 
     
-    const uniqueID = useId();
+    const uniqueID = useComId();
     const idRes = id || uniqueID;
     const rootRef = useRef<any>(null);
     const optionsRes = options ? isJSON(options) ? JSON.parse(options as string) : options : '';

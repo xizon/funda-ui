@@ -1,6 +1,6 @@
 
+import guid from './libs/guid';
 import animateStyles from './libs/anim';
-
 
 import { 
     setDefaultOptions,
@@ -169,7 +169,7 @@ import {
 
 
 // hooks
-
+import useComId from './hooks/useComId';
 import useThrottle from './hooks/useThrottle';
 import useDebounce from './hooks/useDebounce';
 import useAutosizeTextArea from './hooks/useAutosizeTextArea';
@@ -180,11 +180,13 @@ import useWindowScroll from './hooks/useWindowScroll';
 import useDraggable from './hooks/useDraggable';
 
 
+
 // plugins
 import { disableBodyScroll, enableBodyScroll, clearAllBodyScrollLocks } from './plugins/BSL/bodyScrollLock';
 
 
 export { 
+   guid,
    animateStyles,
    setDefaultOptions,
    isJSON,
@@ -296,6 +298,7 @@ export {
    getTextWidth,
     
     // hooks
+    useComId,
     useThrottle,
     useDebounce,
     useAutosizeTextArea,

@@ -1,4 +1,8 @@
-import React, { useId, useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
+
+import {
+    useComId
+} from 'funda-utils';
 
 type DynamicFieldsValueProps = {
     init: React.ReactNode[];
@@ -78,7 +82,7 @@ const DynamicFields = (props: DynamicFieldsProps) => {
     const PER_ROW_DOM_STRING = '.dynamic-fields__append .dynamic-fields__data__wrapper';
     const PER_INNER_BODY_DOM_STRING = '.dynamic-fields__append .dynamic-fields__inner__body';
     const DO_NOT_REMOVE_DOM = typeof doNotRemoveDom === 'undefined' ? false : true;
-    const uniqueID = useId().replace(/\:/g, "-");
+    const uniqueID = useComId();
     const idRes = id || uniqueID;
     const rootRef = useRef<any>(null);
     const fieldsRef = useRef<any>(null);

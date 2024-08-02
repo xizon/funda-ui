@@ -665,6 +665,10 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
             return (/* reexport */_getYesterdayDate
             );
           },
+          "guid": function guid() {
+            return (/* reexport */libs_guid
+            );
+          },
           "isElement": function isElement() {
             return (/* reexport */_isElement
             );
@@ -781,6 +785,10 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
             return (/* reexport */hooks_useClickOutside
             );
           },
+          "useComId": function useComId() {
+            return (/* reexport */hooks_useComId
+            );
+          },
           "useDebounce": function useDebounce() {
             return (/* reexport */hooks_useDebounce
             );
@@ -806,6 +814,21 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
             );
           }
         });
+        ; // CONCATENATED MODULE: ./src/libs/guid.ts
+        /**
+         * Create GUID
+         *
+         * @returns {String}   - The globally-unique identifiers.
+         */
+        function guid() {
+          return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+            var r = Math.random() * 16 | 0,
+              v = c == 'x' ? r : r & 0x3 | 0x8;
+            return v.toString(16);
+          }).toLocaleUpperCase();
+        }
+        /* harmony default export */
+        var libs_guid = guid;
         ; // CONCATENATED MODULE: ./src/libs/easing.ts
         /*
          * All easing functions
@@ -3071,6 +3094,17 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 
         // EXTERNAL MODULE: external {"root":"React","commonjs2":"react","commonjs":"react","amd":"react"}
         var external_root_React_commonjs2_react_commonjs_react_amd_react_ = __nested_webpack_require_1471__(787);
+        ; // CONCATENATED MODULE: ./src/hooks/useComId.tsx
+        /**
+         * Create an available ID
+         * 
+        */
+
+        var useComId = function useComId() {
+          return "ID-".concat((0, external_root_React_commonjs2_react_commonjs_react_amd_react_.useId)().replace(/\:/g, "-"));
+        };
+        /* harmony default export */
+        var hooks_useComId = useComId;
         ; // CONCATENATED MODULE: ./src/hooks/useThrottle.tsx
         /**
          * Limiting the rate of execution
@@ -4464,7 +4498,7 @@ var CascadingSelectE2E = function CascadingSelectE2E(props) {
   var POS_OFFSET = 0;
   var EXCEEDED_SIDE_POS_OFFSET = Number(exceededSidePosOffset) || 15;
   var VALUE_BY_BRACES = typeof extractValueByBraces === 'undefined' ? true : extractValueByBraces;
-  var uniqueID = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useId)().replace(/\:/g, "-");
+  var uniqueID = (0,dist_cjs.useComId)();
   var idRes = id || uniqueID;
   var rootRef = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useRef)(null);
   var valRef = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useRef)(null);

@@ -1,7 +1,8 @@
-import React, { useId, useEffect, useState, useRef, useImperativeHandle } from 'react';
+import React, { useEffect, useState, useRef, useImperativeHandle } from 'react';
 
 import RootPortal from 'funda-root-portal';
 import {
+    useComId,
     useWindowScroll,
     useClickOutside,
     extractorExist,
@@ -121,7 +122,7 @@ const CascadingSelect = (props: CascadingSelectProps) => {
     const POS_OFFSET = 0;
     const EXCEEDED_SIDE_POS_OFFSET = Number(exceededSidePosOffset) || 15;
     const VALUE_BY_BRACES = typeof extractValueByBraces === 'undefined' ? true : extractValueByBraces;
-    const uniqueID = useId().replace(/\:/g, "-");
+    const uniqueID = useComId();
     const idRes = id || uniqueID;
     const rootRef = useRef<any>(null);
     const valRef = useRef<any>(null);

@@ -1,6 +1,7 @@
-import React, { useId, useState, useEffect, useRef, useCallback } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 
 import {
+    useComId,
     throttle
 } from 'funda-utils';
 
@@ -44,7 +45,7 @@ const Scrollbar = (props: ScrollbarProps) => {
     } = props;
 
 
-    const uniqueID = useId();
+    const uniqueID = useComId();
     const idRes = id || uniqueID;
     const rootRef = useRef<HTMLDivElement>(null);
     const contentRef = useRef<HTMLDivElement>(null);

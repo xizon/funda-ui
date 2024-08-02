@@ -1,8 +1,9 @@
-import React, { useId, useState, useRef, useEffect, forwardRef, KeyboardEvent, ChangeEvent, FocusEvent, useImperativeHandle } from 'react';
+import React, { useState, useRef, useEffect, forwardRef, KeyboardEvent, ChangeEvent, FocusEvent, useImperativeHandle } from 'react';
 
 import Input from 'funda-input';
 import RootPortal from 'funda-root-portal';
 import {
+    useComId,
     useWindowScroll,
     useClickOutside,
     getAbsolutePositionOfStage,
@@ -251,7 +252,7 @@ const Date = forwardRef((props: DateProps, externalRef: any) => {
     //
     const POS_OFFSET = Number(offset) || 10;
     const EXCEEDED_SIDE_POS_OFFSET = Number(exceededSidePosOffset) || 15;
-    const uniqueID = useId().replace(/\:/g, "-");
+    const uniqueID = useComId();
     const idRes = id || uniqueID;
     const rootRef = useRef<any>(null);
     const modalRef = useRef<any>(null);

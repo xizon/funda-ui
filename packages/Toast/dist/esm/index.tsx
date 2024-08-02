@@ -1,5 +1,8 @@
-import React, { useId, useEffect, useRef, useCallback } from 'react';
+import React, { useEffect, useRef, useCallback } from 'react';
 
+import {
+    useComId
+} from 'funda-utils';
 import RootPortal from 'funda-root-portal';
 
 
@@ -61,7 +64,7 @@ const Toast = (props: ToastProps) => {
 
     const ANIM_SPEED = 300;
     const DEFAULT_AUTO_CLOSE_TIME = 3000;
-    const uniqueID = useId().replace(/\:/g, "-");
+    const uniqueID = useComId();
     const idRes = id || uniqueID;
     const rootRef = useRef<any>(null);
     const depth: number = autoHideMultiple ? data.slice(-2).length + 1 : data.length + 1;

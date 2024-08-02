@@ -1,5 +1,8 @@
-import React, { useId, useState, useRef, useCallback } from 'react';
+import React, { useState, useRef, useCallback } from 'react';
 
+import {
+    useComId
+} from 'funda-utils';
 
 declare module 'react' {
     interface ReactI18NextChildren<T> {
@@ -64,7 +67,7 @@ const ShowMoreLess = (props: ShowMoreLessProps) => {
     } = props;
 
 
-    const uniqueID = useId();
+    const uniqueID = useComId();
     const idRes = id || uniqueID;
     const rootRef = useRef<any>(null);
 

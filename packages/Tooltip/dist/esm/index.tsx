@@ -1,7 +1,8 @@
-import React, { useId, useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 
 import RootPortal from 'funda-root-portal';
 import {
+    useComId,
     useClickOutside,
     getAbsolutePositionOfStage
 } from 'funda-utils';
@@ -81,7 +82,7 @@ const Tooltip = (props: TooltipProps) => {
 
     const POS_OFFSET = Number(offset) || 10;
     const EXCEEDED_SIDE_POS_OFFSET = Number(exceededSidePosOffset) || 15;
-    const uniqueID = useId().replace(/\:/g, "-");
+    const uniqueID = useComId();
     const idRes = id || uniqueID;
     const rootRef = useRef<any>(null);
     const modalRef = useRef<any>(null);

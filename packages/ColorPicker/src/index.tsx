@@ -1,5 +1,8 @@
-import React, { useId, useState, useEffect, useRef, forwardRef, ChangeEvent, FocusEvent } from 'react';
+import React, { useState, useEffect, useRef, forwardRef, ChangeEvent, FocusEvent } from 'react';
 
+import {
+    useComId
+} from 'funda-utils';
 
 interface ColorPickerProps extends React.ComponentPropsWithoutRef<"input"> {
     wrapperClassName?: string;
@@ -52,7 +55,7 @@ const ColorPicker = forwardRef((props: ColorPickerProps, externalRef: any) => {
     } = props;
 
 
-    const uniqueID = useId();
+    const uniqueID = useComId();
     const idRes = id || uniqueID;
     const rootRef = useRef<any>(null);
     const valRef = useRef<any>(null);

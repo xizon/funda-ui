@@ -1,6 +1,7 @@
-import React, { useId, useState, useEffect, useRef, forwardRef, useImperativeHandle } from 'react';
+import React, { useState, useEffect, useRef, forwardRef, useImperativeHandle } from 'react';
 
 import {
+    useComId,
     base64ToArrayBuffer,
     arrayBufferToUint8Array
 } from 'funda-utils';
@@ -78,7 +79,7 @@ const File = forwardRef((props: FileProps, externalRef: any) => {
     } = props;
 
 
-    const uniqueID = useId();
+    const uniqueID = useComId();
     const idRes = id || uniqueID;
     const rootRef = useRef<any>(null);
     const fileInputRef = useRef<any>(null);

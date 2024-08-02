@@ -1,5 +1,8 @@
-import React, { useId, useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 
+import {
+    useComId
+} from 'funda-utils';
 
 declare module 'react' {
     interface ReactI18NextChildren<T> {
@@ -46,7 +49,7 @@ const ScrollReveal = (props: ScrollRevealProps) => {
     } = props;
 
 
-    const uniqueID = useId();
+    const uniqueID = useComId();
     const idRes = id || uniqueID;
     const _viewOffset = viewOffset ? viewOffset : {
         y: '0px',

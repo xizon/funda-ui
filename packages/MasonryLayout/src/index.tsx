@@ -1,6 +1,7 @@
-import React, { useId, useState, useEffect, useRef, useCallback } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 
 import {
+    useComId,
     debounce
 } from 'funda-utils';
 
@@ -33,7 +34,7 @@ const MasonryLayout = (props: MasonryLayoutProps) => {
     } = props;
 
 
-    const uniqueID = useId();
+    const uniqueID = useComId();
     const idRes = id || uniqueID;
     const rootRef = useRef<any>(null);
     const itemWrapperKey = 'column-';

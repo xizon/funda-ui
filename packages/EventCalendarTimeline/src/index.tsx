@@ -1,8 +1,9 @@
-import React, { useId, useState, useEffect, useMemo, useRef, useCallback } from 'react';
+import React, { useState, useEffect, useMemo, useRef, useCallback } from 'react';
 
 import RootPortal from 'funda-root-portal';
 import ModalDialog from 'funda-modaldialog';
 import {
+    useComId,
     useClickOutside,
     getAbsolutePositionOfStage
 } from 'funda-utils';
@@ -140,7 +141,7 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
         id
     } = props;
 
-    const uniqueID = useId().replace(/\:/g, "-");
+    const uniqueID = useComId();
     const idRes = id || uniqueID;
     const DAYS = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
     const DAYS_LEAP = [31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];

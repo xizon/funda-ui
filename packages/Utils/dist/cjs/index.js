@@ -168,6 +168,7 @@ __webpack_require__.d(__webpack_exports__, {
   "getTomorrowDate": () => (/* reexport */ getTomorrowDate),
   "getTransitionDuration": () => (/* reexport */ getTransitionDuration),
   "getYesterdayDate": () => (/* reexport */ getYesterdayDate),
+  "guid": () => (/* reexport */ libs_guid),
   "isElement": () => (/* reexport */ isElement),
   "isHTMLElement": () => (/* reexport */ isHTMLElement),
   "isInViewport": () => (/* reexport */ isInViewport),
@@ -197,6 +198,7 @@ __webpack_require__.d(__webpack_exports__, {
   "uint8arrayToBase64Str": () => (/* reexport */ uint8arrayToBase64Str),
   "useAutosizeTextArea": () => (/* reexport */ hooks_useAutosizeTextArea),
   "useClickOutside": () => (/* reexport */ hooks_useClickOutside),
+  "useComId": () => (/* reexport */ hooks_useComId),
   "useDebounce": () => (/* reexport */ hooks_useDebounce),
   "useDraggable": () => (/* reexport */ hooks_useDraggable),
   "useInterval": () => (/* reexport */ hooks_useInterval),
@@ -205,6 +207,20 @@ __webpack_require__.d(__webpack_exports__, {
   "useWindowScroll": () => (/* reexport */ hooks_useWindowScroll)
 });
 
+;// CONCATENATED MODULE: ./src/libs/guid.ts
+/**
+ * Create GUID
+ *
+ * @returns {String}   - The globally-unique identifiers.
+ */
+function guid() {
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+    var r = Math.random() * 16 | 0,
+      v = c == 'x' ? r : r & 0x3 | 0x8;
+    return v.toString(16);
+  }).toLocaleUpperCase();
+}
+/* harmony default export */ const libs_guid = (guid);
 ;// CONCATENATED MODULE: ./src/libs/easing.ts
 /*
  * All easing functions
@@ -1932,6 +1948,17 @@ function getTextWidth(input, fauxContainer, rawTextContainer) {
 
 // EXTERNAL MODULE: external {"root":"React","commonjs2":"react","commonjs":"react","amd":"react"}
 var external_root_React_commonjs2_react_commonjs_react_amd_react_ = __webpack_require__(787);
+;// CONCATENATED MODULE: ./src/hooks/useComId.tsx
+/**
+ * Create an available ID
+ * 
+*/
+
+
+var useComId = function useComId() {
+  return "ID-".concat((0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useId)().replace(/\:/g, "-"));
+};
+/* harmony default export */ const hooks_useComId = (useComId);
 ;// CONCATENATED MODULE: ./src/hooks/useThrottle.tsx
 /**
  * Limiting the rate of execution
@@ -2854,6 +2881,7 @@ var enableBodyScroll = function enableBodyScroll(targetElement) {
   }
 };
 ;// CONCATENATED MODULE: ./src/index.tsx
+
 
 
 

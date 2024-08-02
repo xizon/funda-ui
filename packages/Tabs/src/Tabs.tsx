@@ -1,5 +1,8 @@
-import React, { useId, useEffect, useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 
+import {
+    useComId
+} from 'funda-utils';
 
 //
 import TabList from './TabList';
@@ -36,7 +39,7 @@ const Tabs = (props: TabsProps) => {
         children // the contents of the TabList and TabPanel in a loop
     } = props;
 
-    const uniqueID = useId().replace(/\:/g, "-");
+    const uniqueID = useComId();
     const rootRef = useRef<any>(null);
     const speed = animTransitionDuration ? animTransitionDuration : 150;
 

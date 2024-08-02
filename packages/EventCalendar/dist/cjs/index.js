@@ -689,6 +689,10 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
                       return (/* reexport */_getYesterdayDate
                       );
                     },
+                    "guid": function guid() {
+                      return (/* reexport */libs_guid
+                      );
+                    },
                     "isElement": function isElement() {
                       return (/* reexport */_isElement
                       );
@@ -805,6 +809,10 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
                       return (/* reexport */hooks_useClickOutside
                       );
                     },
+                    "useComId": function useComId() {
+                      return (/* reexport */hooks_useComId
+                      );
+                    },
                     "useDebounce": function useDebounce() {
                       return (/* reexport */hooks_useDebounce
                       );
@@ -830,6 +838,21 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
                       );
                     }
                   });
+                  ; // CONCATENATED MODULE: ./src/libs/guid.ts
+                  /**
+                   * Create GUID
+                   *
+                   * @returns {String}   - The globally-unique identifiers.
+                   */
+                  function guid() {
+                    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+                      var r = Math.random() * 16 | 0,
+                        v = c == 'x' ? r : r & 0x3 | 0x8;
+                      return v.toString(16);
+                    }).toLocaleUpperCase();
+                  }
+                  /* harmony default export */
+                  var libs_guid = guid;
                   ; // CONCATENATED MODULE: ./src/libs/easing.ts
                   /*
                    * All easing functions
@@ -3095,6 +3118,17 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 
                   // EXTERNAL MODULE: external {"root":"React","commonjs2":"react","commonjs":"react","amd":"react"}
                   var external_root_React_commonjs2_react_commonjs_react_amd_react_ = __nested_webpack_require_1471__(787);
+                  ; // CONCATENATED MODULE: ./src/hooks/useComId.tsx
+                  /**
+                   * Create an available ID
+                   * 
+                  */
+
+                  var useComId = function useComId() {
+                    return "ID-".concat((0, external_root_React_commonjs2_react_commonjs_react_amd_react_.useId)().replace(/\:/g, "-"));
+                  };
+                  /* harmony default export */
+                  var hooks_useComId = useComId;
                   ; // CONCATENATED MODULE: ./src/hooks/useThrottle.tsx
                   /**
                    * Limiting the rate of execution
@@ -4272,7 +4306,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
       /******/
       /******/ // The require function
       /******/
-      function __nested_webpack_require_215579__(moduleId) {
+      function __nested_webpack_require_217055__(moduleId) {
         /******/ // Check if module is in cache
         /******/var cachedModule = __webpack_module_cache__[moduleId];
         /******/
@@ -4291,7 +4325,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
         /******/
         /******/ // Execute the module function
         /******/
-        __webpack_modules__[moduleId].call(module.exports, module, module.exports, __nested_webpack_require_215579__);
+        __webpack_modules__[moduleId].call(module.exports, module, module.exports, __nested_webpack_require_217055__);
         /******/
         /******/ // Flag the module as loaded
         /******/
@@ -4308,14 +4342,14 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
       /******/
       (function () {
         /******/ // getDefaultExport function for compatibility with non-harmony modules
-        /******/__nested_webpack_require_215579__.n = function (module) {
+        /******/__nested_webpack_require_217055__.n = function (module) {
           /******/var getter = module && module.__esModule ? /******/function () {
             return module['default'];
           } : /******/function () {
             return module;
           };
           /******/
-          __nested_webpack_require_215579__.d(getter, {
+          __nested_webpack_require_217055__.d(getter, {
             a: getter
           });
           /******/
@@ -4329,9 +4363,9 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
       /******/
       (function () {
         /******/ // define getter functions for harmony exports
-        /******/__nested_webpack_require_215579__.d = function (exports, definition) {
+        /******/__nested_webpack_require_217055__.d = function (exports, definition) {
           /******/for (var key in definition) {
-            /******/if (__nested_webpack_require_215579__.o(definition, key) && !__nested_webpack_require_215579__.o(exports, key)) {
+            /******/if (__nested_webpack_require_217055__.o(definition, key) && !__nested_webpack_require_217055__.o(exports, key)) {
               /******/Object.defineProperty(exports, key, {
                 enumerable: true,
                 get: definition[key]
@@ -4348,7 +4382,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
       /******/ /* webpack/runtime/hasOwnProperty shorthand */
       /******/
       (function () {
-        /******/__nested_webpack_require_215579__.o = function (obj, prop) {
+        /******/__nested_webpack_require_217055__.o = function (obj, prop) {
           return Object.prototype.hasOwnProperty.call(obj, prop);
         };
         /******/
@@ -4358,7 +4392,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
       /******/
       (function () {
         /******/ // define __esModule on exports
-        /******/__nested_webpack_require_215579__.r = function (exports) {
+        /******/__nested_webpack_require_217055__.r = function (exports) {
           /******/if (typeof Symbol !== 'undefined' && Symbol.toStringTag) {
             /******/Object.defineProperty(exports, Symbol.toStringTag, {
               value: 'Module'
@@ -4377,7 +4411,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
       /******/ /* webpack/runtime/node module decorator */
       /******/
       (function () {
-        /******/__nested_webpack_require_215579__.nmd = function (module) {
+        /******/__nested_webpack_require_217055__.nmd = function (module) {
           /******/module.paths = [];
           /******/
           if (!module.children) module.children = [];
@@ -4394,26 +4428,26 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
       (function () {
         "use strict";
 
-        __nested_webpack_require_215579__.r(__webpack_exports__);
+        __nested_webpack_require_217055__.r(__webpack_exports__);
         /* harmony export */
-        __nested_webpack_require_215579__.d(__webpack_exports__, {
+        __nested_webpack_require_217055__.d(__webpack_exports__, {
           /* harmony export */"default": function _default() {
             return __WEBPACK_DEFAULT_EXPORT__;
           }
           /* harmony export */
         });
         /* harmony import */
-        var react__WEBPACK_IMPORTED_MODULE_0__ = __nested_webpack_require_215579__(787);
+        var react__WEBPACK_IMPORTED_MODULE_0__ = __nested_webpack_require_217055__(787);
         /* harmony import */
-        var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__nested_webpack_require_215579__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+        var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__nested_webpack_require_217055__.n(react__WEBPACK_IMPORTED_MODULE_0__);
         /* harmony import */
-        var funda_root_portal__WEBPACK_IMPORTED_MODULE_1__ = __nested_webpack_require_215579__(909);
+        var funda_root_portal__WEBPACK_IMPORTED_MODULE_1__ = __nested_webpack_require_217055__(909);
         /* harmony import */
-        var funda_root_portal__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__nested_webpack_require_215579__.n(funda_root_portal__WEBPACK_IMPORTED_MODULE_1__);
+        var funda_root_portal__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__nested_webpack_require_217055__.n(funda_root_portal__WEBPACK_IMPORTED_MODULE_1__);
         /* harmony import */
-        var funda_utils__WEBPACK_IMPORTED_MODULE_2__ = __nested_webpack_require_215579__(456);
+        var funda_utils__WEBPACK_IMPORTED_MODULE_2__ = __nested_webpack_require_217055__(456);
         /* harmony import */
-        var funda_utils__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__nested_webpack_require_215579__.n(funda_utils__WEBPACK_IMPORTED_MODULE_2__);
+        var funda_utils__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__nested_webpack_require_217055__.n(funda_utils__WEBPACK_IMPORTED_MODULE_2__);
         function _slicedToArray(arr, i) {
           return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest();
         }
@@ -4503,7 +4537,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
           var M_WIDTH = fullscreen ? undefined : typeof maxWidth === 'function' ? maxWidth() : maxWidth ? maxWidth : undefined;
           var M_HEIGHT = typeof minHeight === 'function' ? minHeight() : minHeight ? minHeight : undefined;
           var LOCK_BODY_SCROLL = typeof lockBodyScroll === 'undefined' ? true : lockBodyScroll;
-          var uniqueID = (0, react__WEBPACK_IMPORTED_MODULE_0__.useId)().replace(/\:/g, "-");
+          var uniqueID = (0, funda_utils__WEBPACK_IMPORTED_MODULE_2__.useComId)();
           var modalRef = (0, react__WEBPACK_IMPORTED_MODULE_0__.useRef)(null);
           var triggerRef = (0, react__WEBPACK_IMPORTED_MODULE_0__.useRef)(null);
           var idRes = id || uniqueID;

@@ -1,5 +1,8 @@
-import React, { useId, useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 
+import {
+    useComId
+} from 'funda-utils';
 
 type HorizontalScrollContentProps = {
     slideOffset?: number;
@@ -27,7 +30,7 @@ const HorizontalScrollContent = (props: HorizontalScrollContentProps) => {
         onMove
     } = props;
 
-    const uniqueID = useId();
+    const uniqueID = useComId();
     const idRes = id || uniqueID;
     const rootRef = useRef<HTMLDivElement>(null);
     

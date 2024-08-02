@@ -1,7 +1,8 @@
-import React, { useId, useEffect, useState, useRef, KeyboardEvent, forwardRef, useImperativeHandle } from 'react';
+import React, { useEffect, useState, useRef, KeyboardEvent, forwardRef, useImperativeHandle } from 'react';
 
 import RootPortal from 'funda-root-portal';
 import { 
+    useComId,
     isJSON,
     useDebounce,
     useClickOutside,
@@ -18,7 +19,6 @@ import {
     disableBodyScroll, 
     enableBodyScroll,
 } from 'funda-utils';
-
 
 
 type MultiFuncSelectOptionChangeFnType = (arg1: any, arg2: any, arg3: any) => void;
@@ -183,7 +183,7 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, externalRef: an
     const INDENT_LAST_PLACEHOLDER = `${typeof indentation !== 'undefined' && indentation !== '' ? `${indentation}&nbsp;&nbsp;` : ''}`;
     const POS_OFFSET = 0;
     const EXCEEDED_SIDE_POS_OFFSET = Number(exceededSidePosOffset) || 15;
-    const uniqueID = useId().replace(/\:/g, "-");
+    const uniqueID = useComId();
     const idRes = id || uniqueID;
     const rootRef = useRef<any>(null);
     const rootSingleRef = useRef<any>(null);

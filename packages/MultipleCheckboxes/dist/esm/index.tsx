@@ -1,6 +1,7 @@
-import React, { useImperativeHandle, useId, useState, useEffect, useRef, forwardRef } from 'react';
+import React, { useImperativeHandle, useState, useEffect, useRef, forwardRef } from 'react';
 
 import {
+    useComId,
     isJSON,
     extractContentsOfBrackets,
     convertArrToValByBrackets
@@ -81,7 +82,7 @@ const MultipleCheckboxes = forwardRef((props: MultipleCheckboxesProps, externalR
 
 
     const VALUE_BY_BRACKETS = typeof extractValueByBrackets === 'undefined' ? true : extractValueByBrackets;
-    const uniqueID = useId();
+    const uniqueID = useComId();
     const idRes = id || uniqueID;
     const rootRef = useRef<any>(null);
     const optionsRes = options ? isJSON(options) ? JSON.parse(options as string) : options : [];

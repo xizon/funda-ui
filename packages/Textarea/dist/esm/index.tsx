@@ -1,7 +1,8 @@
-import React, { useId, useState, useEffect, useRef, forwardRef, KeyboardEvent, useImperativeHandle } from 'react';
+import React, { useState, useEffect, useRef, forwardRef, KeyboardEvent, useImperativeHandle } from 'react';
 
 
 import {
+    useComId,
     useAutosizeTextArea
 } from 'funda-utils';
 
@@ -79,7 +80,7 @@ const Textarea = forwardRef((props: TextareaProps, externalRef: any) => {
     } = props;
 
 
-    const uniqueID = useId();
+    const uniqueID = useComId();
     const idRes = id || uniqueID;
     const rootRef = useRef<any>(null);
     const valRef = useRef<any>(null);

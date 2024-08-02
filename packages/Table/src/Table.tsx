@@ -1,5 +1,8 @@
-import React, { useEffect, useState, forwardRef, useId, useRef } from 'react';
+import React, { useEffect, useState, forwardRef, useRef } from 'react';
 
+import {
+    useComId
+} from 'funda-utils';
 import { TableProvider } from './TableContext';
 import useTableResponsive from './table-utils/hooks/useTableResponsive';
 import useTableDraggable from './table-utils/hooks/useTableDraggable';
@@ -91,7 +94,7 @@ const Table = forwardRef<HTMLDivElement, TableProps>((
     externalRef
 ) => {
 
-    const uniqueID = useId().replace(/\:/g, "-");
+    const uniqueID = useComId();
     const rootRef = useRef<any>(null);
 
     // context

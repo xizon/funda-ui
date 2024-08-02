@@ -1,4 +1,8 @@
-import React, { useId, useState, useEffect, useRef, forwardRef } from 'react';
+import React, { useState, useEffect, useRef, forwardRef } from 'react';
+
+import {
+    useComId
+} from 'funda-utils';
 
 type SwitchOptionChangeFnType = (arg1: any, arg2: any) => void;
 
@@ -42,7 +46,7 @@ const Switch = forwardRef((props: SwitchProps, externalRef: any) => {
         ...attributes
     } = props;
 
-    const uniqueID = useId();
+    const uniqueID = useComId();
     const idRes = id || uniqueID;
     const rootRef = useRef<any>(null);
     const [val, setVal] = useState<any>(null || false);  // Avoid the error "react checkbox changing an uncontrolled input to be controlled"

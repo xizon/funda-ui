@@ -1,7 +1,8 @@
-import React, { useId, useState, useRef, useEffect, forwardRef, useImperativeHandle } from 'react';
+import React, { useState, useRef, useEffect, forwardRef, useImperativeHandle } from 'react';
 
 import RootPortal from 'funda-root-portal';
 import {
+    useComId,
     useDraggable,
 
     // Destroys body scroll locking
@@ -146,7 +147,7 @@ const ModalDialog = forwardRef((props: ModalDialogProps, externalRef: React.Forw
     const M_HEIGHT = typeof minHeight === 'function' ? minHeight() : minHeight ? minHeight : undefined;
     const LOCK_BODY_SCROLL = typeof lockBodyScroll === 'undefined' ? true : lockBodyScroll;
 
-    const uniqueID = useId().replace(/\:/g, "-");
+    const uniqueID = useComId();
     const modalRef = useRef<any>(null);
     const triggerRef = useRef<any>(null);
     const idRes = id || uniqueID;

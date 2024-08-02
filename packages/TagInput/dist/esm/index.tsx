@@ -1,7 +1,8 @@
-import React, { useId, useState, useEffect, useRef, forwardRef, ChangeEvent, MouseEvent, KeyboardEvent, FocusEvent, CompositionEvent } from 'react';
+import React, { useState, useEffect, useRef, forwardRef, ChangeEvent, MouseEvent, KeyboardEvent, FocusEvent, CompositionEvent } from 'react';
 
 
 import {
+    useComId,
     extractContentsOfBrackets,
     convertArrToValByBrackets
 } from 'funda-utils';
@@ -62,7 +63,7 @@ const TagInput = forwardRef((props: TagInputProps, externalRef: any) => {
 
 
     const VALUE_BY_BRACKETS = typeof extractValueByBrackets === 'undefined' ? true : extractValueByBrackets;
-    const uniqueID = useId();
+    const uniqueID = useComId();
     const idRes = id || uniqueID;
     const rootRef = useRef<any>(null);
     const inputRef = useRef<any>(null);

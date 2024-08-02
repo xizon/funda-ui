@@ -1,4 +1,8 @@
-import React, { useId, useState, useEffect, useRef, forwardRef, ChangeEvent, CompositionEvent, KeyboardEvent, FocusEvent, useImperativeHandle } from 'react';
+import React, { useState, useEffect, useRef, forwardRef, ChangeEvent, CompositionEvent, KeyboardEvent, FocusEvent, useImperativeHandle } from 'react';
+
+import {
+    useComId
+} from 'funda-utils';
 
 type InputProps = {
     contentRef?: React.ForwardedRef<any>;
@@ -95,7 +99,7 @@ const Input = forwardRef((props: InputProps, externalRef: any) => {
     } = props;
 
 
-    const uniqueID = useId();
+    const uniqueID = useComId();
     const idRes = id || uniqueID;
     const rootRef = useRef<any>(null);
     const valRef = useRef<any>(null);

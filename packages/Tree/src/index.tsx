@@ -1,6 +1,7 @@
-import React, { useState, useEffect, useRef, useId } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 
 import {
+    useComId,
     deepClone,
     flatData
 } from 'funda-utils';
@@ -98,7 +99,7 @@ const Tree = (props: TreeProps) => {
     } = props;
     
 
-    const uniqueID = useId().replace(/\:/g, "-");
+    const uniqueID = useComId();
     const idRes = id || uniqueID;
     const rootRef = useRef<any>(null);
     const [list, setList] = useState<DataNode[] | null>(null);
