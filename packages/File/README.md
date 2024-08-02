@@ -10,6 +10,7 @@ import File from 'funda-ui/File';
 | Property | Type | Default | Description | Required |
 | --- | --- | --- | --- | --- |
 | `ref` | React.ForwardedRef | - | It is the return element of this component.  | - |
+| `contentRef` | React.RefObject | - | It exposes the following methods:  <br /> <ol><li>`contentRef.current.upload()`</li></ol>| - |
 | `wrapperClassName` | string | `mb-3 position-relative` | The class name of the control wrapper. | - |
 | `controlClassName` | string | `form-control` | The class name of the control. | - |
 | `controlExClassName` | string | - | The extended class name of `controlClassName`. | - |
@@ -18,10 +19,12 @@ import File from 'funda-ui/File';
 | `submitLabel` | string \| ReactNode | - | Specifies a label for submit button | - |
 | `submitClassName` | string | `btn btn-primary mt-2` | The class name of the submit button. | - |
 | `inline` | boolean | false | If true the group are on the same horizontal row. | - |
+| `autoSubmit` | boolean | false | Enable automatic upload, which will hide the upload button. | - |
 | `fetchUrl` | string | - | If the URL exists, it is passed using the default fetch method ([Fetch API](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch)). <blockquote>If it does not exist, the file content is read by [ReadableStream](https://developer.mozilla.org/en-US/docs/Web/API/ReadableStream)</blockquote> | - |
 | `fetchMethod` | string | `POST` | The request's method (GET, POST, etc.) <blockquote>Valid when the `fetchUrl` attribute is not empty</blockquote>| - |
 | `fetchParams` | JSON Object | - | Set of query parameters in the request <blockquote>Valid when the `fetchUrl` attribute is not empty</blockquote> | - |
 | `multiple` | boolean | false | A file upload field that accepts multiple values | - |
+| `accept` | string | - | The accept attribute takes as its value a comma-separated list of one or more file types, or unique file type specifiers, describing which file types to allow. such as `video/*`, `image/*`, `image/png, image/jpeg`, `video/*`, `image/*,.pdf`, `` | - |
 | `value` | string | - | Set a default value for this control | - |
 | `label` | string \| ReactNode | `<svg width="25px" height="25px" viewBox="0 0 1024 1024"><path d="M512 256l144.8 144.8-36.2 36.2-83-83v311.6h-51.2V354l-83 83-36.2-36.2L512 256zM307.2 716.8V768h409.6v-51.2H307.2z" fill="#000000" fillRule="evenodd"/></svg>` | It is used to specify a label for an element of a form. | - |
 | `name` | string | - | Name is not deprecated when used with form fields. | - |
@@ -129,23 +132,42 @@ export default () => {
     return (
         <>
             <File 
-                fetchUrl="http://api"
-                fetchMethod="POST"
-                fetchParams={{
-                    Authorization: `Bearer xxxx-xxxx-xxxx-xxxx`,
-                }}
-                label="Select file" 
-                labelClassName="btn btn-sm btn-outline-secondary px-0 border-0 text-primary"
-                labelHoverClassName="btn btn-sm btn-outline-secondary px-0 border-0 text-primary"
-                submitLabel="Upload" 
-                submitClassName="btn btn-sm btn-primary"
+                ...
                 inline
+                ...
             />
 
         </>
     );
 }
 ```
+
+
+
+## Proactively specify the type of upload
+
+Use the `accept` attribute.
+
+
+```js
+import React from "react";
+import File from 'funda-ui/File';
+
+export default () => {
+    return (
+        <>
+            <File 
+                ...
+                accept="image/*"
+                ...
+            />
+
+        </>
+    );
+}
+```
+
+
 
 
 
@@ -386,6 +408,7 @@ type UploaderProps = {
     label?: React.ReactNode | string;
     name?: string;
     id?: string;
+    accept?: string;
     wrapperClassName?: string;
     waitingClassName?: string;
     support?: string;
@@ -395,6 +418,7 @@ type UploaderProps = {
     labelClassName?: string;
     labelHoverClassName?: string;
     inline?: boolean;
+    autoSubmit?: boolean;
     multiple?: boolean;
     submitLabel?: React.ReactNode | string;
     submitClassName?: string;
@@ -410,6 +434,7 @@ const Uploader = forwardRef((props: UploaderProps, externalRef: any) => {
         id,
         wrapperClassName,
         waitingClassName,
+        accept,
         support,
         fetchUrl,
         fetchMethod,
@@ -417,6 +442,7 @@ const Uploader = forwardRef((props: UploaderProps, externalRef: any) => {
         labelClassName,
         labelHoverClassName,
         inline,
+        autoSubmit,
         multiple,
         submitLabel,
         submitClassName,
@@ -431,6 +457,7 @@ const Uploader = forwardRef((props: UploaderProps, externalRef: any) => {
     const hasFormatErr = useRef<boolean>(false);
     const SUPPORT_EXT = support || 'jpg|jpeg|png|gif|webp';
 
+    const conRef = useRef<any>(null);
 
     const handleChange = (input: HTMLInputElement, submitEl: HTMLElement, value: any) => {
         onChange?.();
@@ -485,13 +512,15 @@ const Uploader = forwardRef((props: UploaderProps, externalRef: any) => {
         <>
 
             <div className={wrapperClassName || ''}>
-                
+
                 <File
                     {...attributes}
+                    contentRef={conRef}
                     ref={externalRef}
                     label={label}
                     name={name}
                     id={id}
+                    accept={accept}
                     fetchUrl={fetchUrl}
                     fetchMethod={fetchMethod}
                     fetchParams={fetchParams}
@@ -504,6 +533,7 @@ const Uploader = forwardRef((props: UploaderProps, externalRef: any) => {
                     onChange={handleChange}
                     onComplete={handleComplete}
                     onProgress={handleProgress}
+                    autoSubmit={autoSubmit}
                 />
 
             </div>
@@ -576,5 +606,66 @@ export default () => {
             {upInfoProgImgs !== null ? <div><img src={upInfoProgImgs.imgData} height={70} /></div> : null}
         </>
     );
+}
+```
+
+
+
+
+
+## Use the exposed method to upload automatically or manually
+
+Lets you callback the handle exposed as attribute `contentRef`. Set the property `autoSubmit` to true and it will be uploaded automatically.
+
+
+```js
+import React, { useRef } from 'react';
+import File from 'funda-ui/File';
+
+
+export default () => {
+
+    const conRef = useRef<any>(null);
+
+    function handleChange(input: HTMLInputElement, submitEl: HTMLElement, value: any) {
+        console.log(input, submitEl, value);
+    }
+
+    function handleComplete(input: HTMLInputElement, submitEl: HTMLElement, value: any) {
+       console.log(input, value);
+    }
+
+    function handleProgress(files: any[], input: HTMLInputElement, submitEl: HTMLElement) {
+        console.log(files);
+    }
+
+
+    return (
+
+
+        <>
+
+            <button
+                type="button" 
+                onClick={(e: React.MouseEvent) => {
+                    if (conRef.current) conRef.current.upload();
+                }}
+            >Upload Manually</button>
+
+            <File 
+                contentRef={conRef}
+                label="Select file" 
+                labelClassName="btn btn-outline-secondary"       
+                labelHoverClassName="btn btn-primary"
+                submitLabel="Upload" 
+                submitClassName="btn btn-primary mt-2"
+                onChange={handleChange}
+                onComplete={handleComplete}
+                onProgress={handleProgress}
+                // autoSubmit  // Enable automatic upload
+            />
+
+        </>
+    )
 }
 ```

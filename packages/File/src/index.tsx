@@ -13,7 +13,9 @@ type FileProps = {
     controlExClassName?: string;
     labelClassName?: string;
     labelHoverClassName?: string;
+    accept?: string;
     inline?: boolean;
+    autoSubmit?: boolean;
     fetchUrl?: string;
     fetchMethod?: string;
     fetchParams?: any;
@@ -49,7 +51,9 @@ const File = forwardRef((props: FileProps, externalRef: any) => {
         controlExClassName,
         labelClassName,
         labelHoverClassName,
+        accept,
         inline,
+        autoSubmit,
         fetchUrl,
         fetchMethod,
         fetchParams,
@@ -83,15 +87,14 @@ const File = forwardRef((props: FileProps, externalRef: any) => {
     const [forceUpdate, setForceUpdate] = useState<Boolean>(false);
     const [defaultValue, setDefaultValue] = useState<any>(null);
     const [incomingData, setIncomingData] = useState<string | null | undefined>(null);
-    const [interceptRequests, setInterceptRequests] = useState<boolean>(false);
 
 
     // exposes the following methods
     useImperativeHandle(
         contentRef,
         () => ({
-            interceptor: (val: boolean) => {
-                setInterceptRequests(val);
+            upload: (val: boolean) => {
+                handleSubmit(null);
             }
         }),
         [contentRef],
@@ -164,7 +167,7 @@ const File = forwardRef((props: FileProps, externalRef: any) => {
 
 
     function handleSubmit(event: any) {
-        event.preventDefault();
+        if (event) event.preventDefault();
 
 
         const curFiles = fileInputRef.current.files;
@@ -311,6 +314,11 @@ const File = forwardRef((props: FileProps, externalRef: any) => {
 
         //
         onChange?.(fileInputRef.current, submitRef.current, fileInputRef.current.files);
+
+        // Enable automatic upload
+        if (autoSubmit) {
+            handleSubmit(null);
+        }
     }
 
     function fileNames() {
@@ -381,6 +389,7 @@ const File = forwardRef((props: FileProps, externalRef: any) => {
                                     className={`${controlClassName || controlClassName === '' ? controlClassName : "form-control"} ${controlExClassName || ''}`}
                                     id={idRes}
                                     type="file"
+                                    accept={accept}
                                     // The onChange should trigger updates whenever
                                     // the value changes?
                                     // Try to select a file, then try selecting another one.
@@ -396,7 +405,7 @@ const File = forwardRef((props: FileProps, externalRef: any) => {
                         </div>
                         {/* /INPUT */}
                     </div>
-                    <div className="upload-control-group__btn">
+                    <div className={`upload-control-group__btn ${autoSubmit ? 'd-none' : ''}`}>
                         {/* BUTTON */}
                         <button ref={submitRef} className={submitClassName ? submitClassName + ` ${disabled ? 'disabled' : ''}` : 'btn btn-primary mt-2' + ` ${disabled ? 'disabled' : ''}`} type="button" onClick={handleSubmit}>{submitLabel ? submitLabel : null}</button>
                         {/* BUTTON */}

@@ -4127,7 +4127,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var funda_utils__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(456);
 /* harmony import */ var funda_utils__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(funda_utils__WEBPACK_IMPORTED_MODULE_1__);
-var _excluded = ["contentRef", "wrapperClassName", "controlClassName", "controlExClassName", "labelClassName", "labelHoverClassName", "inline", "fetchUrl", "fetchMethod", "fetchParams", "multiple", "submitLabel", "submitClassName", "disabled", "required", "value", "label", "name", "id", "data", "tabIndex", "fetchFuncAsync", "fetchFuncMethod", "fetchFuncMethodParams", "onChange", "onComplete", "onProgress"];
+var _excluded = ["contentRef", "wrapperClassName", "controlClassName", "controlExClassName", "labelClassName", "labelHoverClassName", "accept", "inline", "autoSubmit", "fetchUrl", "fetchMethod", "fetchParams", "multiple", "submitLabel", "submitClassName", "disabled", "required", "value", "label", "name", "id", "data", "tabIndex", "fetchFuncAsync", "fetchFuncMethod", "fetchFuncMethodParams", "onChange", "onComplete", "onProgress"];
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
 function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys(Object(source), !0).forEach(function (key) { _defineProperty(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
 function _defineProperty(obj, key, value) { key = _toPropertyKey(key); if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
@@ -4160,7 +4160,9 @@ var File = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(functi
     controlExClassName = props.controlExClassName,
     labelClassName = props.labelClassName,
     labelHoverClassName = props.labelHoverClassName,
+    accept = props.accept,
     inline = props.inline,
+    autoSubmit = props.autoSubmit,
     fetchUrl = props.fetchUrl,
     fetchMethod = props.fetchMethod,
     fetchParams = props.fetchParams,
@@ -4200,16 +4202,12 @@ var File = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(functi
     _useState6 = _slicedToArray(_useState5, 2),
     incomingData = _useState6[0],
     setIncomingData = _useState6[1];
-  var _useState7 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(false),
-    _useState8 = _slicedToArray(_useState7, 2),
-    interceptRequests = _useState8[0],
-    setInterceptRequests = _useState8[1];
 
   // exposes the following methods
   (0,react__WEBPACK_IMPORTED_MODULE_0__.useImperativeHandle)(contentRef, function () {
     return {
-      interceptor: function interceptor(val) {
-        setInterceptRequests(val);
+      upload: function upload(val) {
+        handleSubmit(null);
       }
     };
   }, [contentRef]);
@@ -4322,7 +4320,7 @@ var File = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(functi
     event.currentTarget.getElementsByTagName('button')[0].className = labelClassName ? labelClassName : 'btn btn-outline-secondary';
   }
   function handleSubmit(event) {
-    event.preventDefault();
+    if (event) event.preventDefault();
     var curFiles = fileInputRef.current.files;
     var interceptRequests = onProgress === null || onProgress === void 0 ? void 0 : onProgress(curFiles, fileInputRef.current, submitRef.current);
 
@@ -4489,6 +4487,11 @@ var File = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(functi
 
     //
     onChange === null || onChange === void 0 ? void 0 : onChange(fileInputRef.current, submitRef.current, fileInputRef.current.files);
+
+    // Enable automatic upload
+    if (autoSubmit) {
+      handleSubmit(null);
+    }
   }
   function fileNames() {
     var current = fileInputRef.current;
@@ -4574,7 +4577,8 @@ var File = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(functi
     tabIndex: tabIndex || 0,
     className: "".concat(controlClassName || controlClassName === '' ? controlClassName : "form-control", " ").concat(controlExClassName || ''),
     id: idRes,
-    type: "file"
+    type: "file",
+    accept: accept
     // The onChange should trigger updates whenever
     // the value changes?
     // Try to select a file, then try selecting another one.
@@ -4586,7 +4590,7 @@ var File = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(functi
     disabled: disabled || null,
     required: required || null
   }, attributes))))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-    className: "upload-control-group__btn"
+    className: "upload-control-group__btn ".concat(autoSubmit ? 'd-none' : '')
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", {
     ref: submitRef,
     className: submitClassName ? submitClassName + " ".concat(disabled ? 'disabled' : '') : 'btn btn-primary mt-2' + " ".concat(disabled ? 'disabled' : ''),

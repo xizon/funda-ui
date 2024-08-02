@@ -6,7 +6,9 @@ declare type FileProps = {
     controlExClassName?: string;
     labelClassName?: string;
     labelHoverClassName?: string;
+    accept?: string;
     inline?: boolean;
+    autoSubmit?: boolean;
     fetchUrl?: string;
     fetchMethod?: string;
     fetchParams?: any;
