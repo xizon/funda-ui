@@ -7,6 +7,7 @@ declare type InputProps = {
     controlGroupWrapperClassName?: string;
     controlGroupTextClassName?: string;
     type?: string;
+    defaultValue?: string;
     value?: string;
     label?: React.ReactNode | string;
     units?: React.ReactNode | string;

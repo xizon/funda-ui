@@ -506,6 +506,10 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
             return (/* reexport */_isShadowRoot
             );
           },
+          "isTimeString": function isTimeString() {
+            return (/* reexport */_isTimeString
+            );
+          },
           "isValidDate": function isValidDate() {
             return (/* reexport */_isValidDate
             );
@@ -2331,6 +2335,16 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
           }
         }
         ; // CONCATENATED MODULE: ./src/libs/date.ts
+        /**
+         * The check string contains only hours, minutes, and seconds
+         * @returns {Boolean}  
+         */
+        function _isTimeString(str) {
+          // match "HH:mm:ss"
+          var timePattern = /^([01]\d|2[0-3]):([0-5]\d):([0-5]\d)$/;
+          return timePattern.test(str);
+        }
+
         /**
          * Get now
          * @returns {Date}  // Wed Apr 17 2024 14:31:36 GMT+0800 (China Standard Time)
@@ -4161,7 +4175,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var funda_utils__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(456);
 /* harmony import */ var funda_utils__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(funda_utils__WEBPACK_IMPORTED_MODULE_1__);
-var _excluded = ["contentRef", "wrapperClassName", "controlClassName", "controlExClassName", "controlGroupWrapperClassName", "controlGroupTextClassName", "cols", "rows", "disabled", "required", "placeholder", "autoSize", "iconLeft", "iconRight", "readOnly", "value", "label", "name", "id", "maxLength", "style", "tabIndex", "onChangeCallback", "onInputCallback", "onKeyPressedCallback", "onChange", "onBlur", "onFocus", "onPressEnter", "onResize"];
+var _excluded = ["contentRef", "wrapperClassName", "controlClassName", "controlExClassName", "controlGroupWrapperClassName", "controlGroupTextClassName", "cols", "rows", "disabled", "required", "placeholder", "autoSize", "iconLeft", "iconRight", "readOnly", "defaultValue", "value", "label", "name", "id", "maxLength", "style", "tabIndex", "onChangeCallback", "onInputCallback", "onKeyPressedCallback", "onChange", "onBlur", "onFocus", "onPressEnter", "onResize"];
 function _extends() { _extends = Object.assign ? Object.assign.bind() : function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
 function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
 function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
@@ -4189,6 +4203,7 @@ var Textarea = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(fu
     iconLeft = props.iconLeft,
     iconRight = props.iconRight,
     readOnly = props.readOnly,
+    defaultValue = props.defaultValue,
     value = props.value,
     label = props.label,
     name = props.name,
@@ -4317,6 +4332,25 @@ var Textarea = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(fu
       }
     }
   }, [value]);
+  (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(function () {
+    // update default value (It does not re-render the component because the incoming value changes.)
+    //--------------
+    if (typeof defaultValue !== 'undefined') {
+      //REQUIRED
+
+      if (typeof defaultValue === 'string' && defaultValue.length > 0 && autoSize) {
+        // The value may be NULL
+
+        // Recalculate height if default value exceeds initial height
+        setChangedVal("");
+        setTimeout(function () {
+          setChangedVal("".concat(defaultValue));
+        }, 0);
+      } else {
+        setChangedVal("".concat(defaultValue)); // Avoid displaying the number 0
+      }
+    }
+  }, []);
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
     className: wrapperClassName || wrapperClassName === '' ? wrapperClassName : "mb-3 position-relative",
     ref: rootRef
@@ -4347,6 +4381,7 @@ var Textarea = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(fu
     id: idRes,
     name: name,
     placeholder: placeholder || '',
+    defaultValue: defaultValue,
     value: changedVal,
     maxLength: maxLength || null,
     onFocus: handleFocus,

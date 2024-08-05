@@ -506,6 +506,10 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
             return (/* reexport */_isShadowRoot
             );
           },
+          "isTimeString": function isTimeString() {
+            return (/* reexport */_isTimeString
+            );
+          },
           "isValidDate": function isValidDate() {
             return (/* reexport */_isValidDate
             );
@@ -2331,6 +2335,16 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
           }
         }
         ; // CONCATENATED MODULE: ./src/libs/date.ts
+        /**
+         * The check string contains only hours, minutes, and seconds
+         * @returns {Boolean}  
+         */
+        function _isTimeString(str) {
+          // match "HH:mm:ss"
+          var timePattern = /^([01]\d|2[0-3]):([0-5]\d):([0-5]\d)$/;
+          return timePattern.test(str);
+        }
+
         /**
          * Get now
          * @returns {Date}  // Wed Apr 17 2024 14:31:36 GMT+0800 (China Standard Time)

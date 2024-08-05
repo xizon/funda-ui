@@ -110,6 +110,7 @@ import {
 
 
 import {
+    isTimeString,
     getNow,
     padZero,
     dateFormat,
@@ -264,6 +265,7 @@ export {
    easeInOutBack,
    deepClone,
    flatData,
+   isTimeString,
    getNow,
    padZero,
    dateFormat,

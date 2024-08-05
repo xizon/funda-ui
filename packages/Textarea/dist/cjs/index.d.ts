@@ -7,6 +7,7 @@ declare type TextareaProps = {
     controlGroupWrapperClassName?: string;
     controlGroupTextClassName?: string;
     value?: string;
+    defaultValue?: string;
     label?: React.ReactNode | string;
     name?: string;
     maxLength?: any;

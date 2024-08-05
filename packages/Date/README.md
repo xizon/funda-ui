@@ -39,6 +39,7 @@ import Date from 'funda-ui/Date';
 | `langMonths` | array  | `['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC']` | Localization in the component of months sequence. | - |
 | `langMonthsFull` | array  | `['January', 'Febuary', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']` | Localization in the component of full months sequence. | - |
 | `langToday` | string  | `Today`| Localization in the component of today button. | - |
+| `defaultValue` | string | - | Specifies the default value of the component. It does not re-render the component because the incoming value changes. | - |
 | `value` | string | - | Set a default value for this control | - |
 | `clickInitValue` | string | - | If the default value does not exist, the time is automatically initialized when the input is focused, and if not set, the current time is defaulted. | - |
 | `min` | string | - | The minimum date & time to accept. such as `2024-02-26 08:05:00` | - |
@@ -66,6 +67,7 @@ import Date from 'funda-ui/Date';
 | `onChangeMinutes` | function  | - | Called when the date moves to minutes. Triggered when the minutes selection button is clicked. It returns only one value which is the current value (**JSON Object**) | - |
 | `onChangeSeconds` | function  | - | Called when the date moves to seconds. Triggered when the seconds selection button is clicked. It returns only one value which is the current value (**JSON Object**) | - |
 | `onPressEnter` | function  | - | The callback function that is triggered when Enter key is pressed. It returns two callback values. <br /> <ol><li>The first is the control (**HTML Element**)</li><li>The last is the existing time-splitting inputs (**Array**)</li></ol> | - |
+| `onClear` | function  | - | Clicking the empty button is triggered. It returns only one callback value which is the current value (**JSON Object**) | - |
 
 
 

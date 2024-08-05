@@ -177,6 +177,7 @@ __webpack_require__.d(__webpack_exports__, {
   "isNumeric": () => (/* reexport */ isNumeric),
   "isRootElement": () => (/* reexport */ isRootElement),
   "isShadowRoot": () => (/* reexport */ isShadowRoot),
+  "isTimeString": () => (/* reexport */ isTimeString),
   "isValidDate": () => (/* reexport */ isValidDate),
   "isValidDay": () => (/* reexport */ isValidDay),
   "isValidHours": () => (/* reexport */ isValidHours),
@@ -1385,6 +1386,16 @@ function extractContentsOfParentheses(str) {
 }
 
 ;// CONCATENATED MODULE: ./src/libs/date.ts
+/**
+ * The check string contains only hours, minutes, and seconds
+ * @returns {Boolean}  
+ */
+function isTimeString(str) {
+  // match "HH:mm:ss"
+  var timePattern = /^([01]\d|2[0-3]):([0-5]\d):([0-5]\d)$/;
+  return timePattern.test(str);
+}
+
 /**
  * Get now
  * @returns {Date}  // Wed Apr 17 2024 14:31:36 GMT+0800 (China Standard Time)

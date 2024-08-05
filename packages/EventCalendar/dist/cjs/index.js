@@ -725,6 +725,10 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
                       return (/* reexport */_isShadowRoot
                       );
                     },
+                    "isTimeString": function isTimeString() {
+                      return (/* reexport */_isTimeString
+                      );
+                    },
                     "isValidDate": function isValidDate() {
                       return (/* reexport */_isValidDate
                       );
@@ -2551,6 +2555,16 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
                   }
                   ; // CONCATENATED MODULE: ./src/libs/date.ts
                   /**
+                   * The check string contains only hours, minutes, and seconds
+                   * @returns {Boolean}  
+                   */
+                  function _isTimeString(str) {
+                    // match "HH:mm:ss"
+                    var timePattern = /^([01]\d|2[0-3]):([0-5]\d):([0-5]\d)$/;
+                    return timePattern.test(str);
+                  }
+
+                  /**
                    * Get now
                    * @returns {Date}  // Wed Apr 17 2024 14:31:36 GMT+0800 (China Standard Time)
                    */
@@ -4306,7 +4320,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
       /******/
       /******/ // The require function
       /******/
-      function __nested_webpack_require_217055__(moduleId) {
+      function __nested_webpack_require_217627__(moduleId) {
         /******/ // Check if module is in cache
         /******/var cachedModule = __webpack_module_cache__[moduleId];
         /******/
@@ -4325,7 +4339,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
         /******/
         /******/ // Execute the module function
         /******/
-        __webpack_modules__[moduleId].call(module.exports, module, module.exports, __nested_webpack_require_217055__);
+        __webpack_modules__[moduleId].call(module.exports, module, module.exports, __nested_webpack_require_217627__);
         /******/
         /******/ // Flag the module as loaded
         /******/
@@ -4342,14 +4356,14 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
       /******/
       (function () {
         /******/ // getDefaultExport function for compatibility with non-harmony modules
-        /******/__nested_webpack_require_217055__.n = function (module) {
+        /******/__nested_webpack_require_217627__.n = function (module) {
           /******/var getter = module && module.__esModule ? /******/function () {
             return module['default'];
           } : /******/function () {
             return module;
           };
           /******/
-          __nested_webpack_require_217055__.d(getter, {
+          __nested_webpack_require_217627__.d(getter, {
             a: getter
           });
           /******/
@@ -4363,9 +4377,9 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
       /******/
       (function () {
         /******/ // define getter functions for harmony exports
-        /******/__nested_webpack_require_217055__.d = function (exports, definition) {
+        /******/__nested_webpack_require_217627__.d = function (exports, definition) {
           /******/for (var key in definition) {
-            /******/if (__nested_webpack_require_217055__.o(definition, key) && !__nested_webpack_require_217055__.o(exports, key)) {
+            /******/if (__nested_webpack_require_217627__.o(definition, key) && !__nested_webpack_require_217627__.o(exports, key)) {
               /******/Object.defineProperty(exports, key, {
                 enumerable: true,
                 get: definition[key]
@@ -4382,7 +4396,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
       /******/ /* webpack/runtime/hasOwnProperty shorthand */
       /******/
       (function () {
-        /******/__nested_webpack_require_217055__.o = function (obj, prop) {
+        /******/__nested_webpack_require_217627__.o = function (obj, prop) {
           return Object.prototype.hasOwnProperty.call(obj, prop);
         };
         /******/
@@ -4392,7 +4406,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
       /******/
       (function () {
         /******/ // define __esModule on exports
-        /******/__nested_webpack_require_217055__.r = function (exports) {
+        /******/__nested_webpack_require_217627__.r = function (exports) {
           /******/if (typeof Symbol !== 'undefined' && Symbol.toStringTag) {
             /******/Object.defineProperty(exports, Symbol.toStringTag, {
               value: 'Module'
@@ -4411,7 +4425,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
       /******/ /* webpack/runtime/node module decorator */
       /******/
       (function () {
-        /******/__nested_webpack_require_217055__.nmd = function (module) {
+        /******/__nested_webpack_require_217627__.nmd = function (module) {
           /******/module.paths = [];
           /******/
           if (!module.children) module.children = [];
@@ -4428,26 +4442,26 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
       (function () {
         "use strict";
 
-        __nested_webpack_require_217055__.r(__webpack_exports__);
+        __nested_webpack_require_217627__.r(__webpack_exports__);
         /* harmony export */
-        __nested_webpack_require_217055__.d(__webpack_exports__, {
+        __nested_webpack_require_217627__.d(__webpack_exports__, {
           /* harmony export */"default": function _default() {
             return __WEBPACK_DEFAULT_EXPORT__;
           }
           /* harmony export */
         });
         /* harmony import */
-        var react__WEBPACK_IMPORTED_MODULE_0__ = __nested_webpack_require_217055__(787);
+        var react__WEBPACK_IMPORTED_MODULE_0__ = __nested_webpack_require_217627__(787);
         /* harmony import */
-        var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__nested_webpack_require_217055__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+        var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__nested_webpack_require_217627__.n(react__WEBPACK_IMPORTED_MODULE_0__);
         /* harmony import */
-        var funda_root_portal__WEBPACK_IMPORTED_MODULE_1__ = __nested_webpack_require_217055__(909);
+        var funda_root_portal__WEBPACK_IMPORTED_MODULE_1__ = __nested_webpack_require_217627__(909);
         /* harmony import */
-        var funda_root_portal__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__nested_webpack_require_217055__.n(funda_root_portal__WEBPACK_IMPORTED_MODULE_1__);
+        var funda_root_portal__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__nested_webpack_require_217627__.n(funda_root_portal__WEBPACK_IMPORTED_MODULE_1__);
         /* harmony import */
-        var funda_utils__WEBPACK_IMPORTED_MODULE_2__ = __nested_webpack_require_217055__(456);
+        var funda_utils__WEBPACK_IMPORTED_MODULE_2__ = __nested_webpack_require_217627__(456);
         /* harmony import */
-        var funda_utils__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__nested_webpack_require_217055__.n(funda_utils__WEBPACK_IMPORTED_MODULE_2__);
+        var funda_utils__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__nested_webpack_require_217627__.n(funda_utils__WEBPACK_IMPORTED_MODULE_2__);
         function _slicedToArray(arr, i) {
           return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest();
         }

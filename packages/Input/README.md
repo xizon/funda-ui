@@ -18,6 +18,7 @@ import Input from 'funda-ui/Input';
 | `controlGroupTextClassName` | string | `input-group-text` | The class name of the control group text. | - |
 | `appendControl` | ReactNode  | - | An extension of the same level as \<input \>, usually used to placeholder of some elements | - |
 | `type` | string | text | The type of input. Such as \<input type="text" name="name"\> gives a text box. | - |
+| `defaultValue` | string | - | Specifies the default value of the component. It does not re-render the component because the incoming value changes. | - |
 | `value` | string | - | Set a default value for this control | - |
 | `label` | string \| ReactNode | - | It is used to specify a label for an element of a form.<blockquote>Support html tags</blockquote> | - |
 | `units` | string | - | Specify a unit identification string. Such as `em`, `px`, and so on. | - |

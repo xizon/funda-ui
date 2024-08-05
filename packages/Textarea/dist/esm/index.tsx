@@ -15,6 +15,7 @@ type TextareaProps = {
     controlGroupWrapperClassName?: string;
     controlGroupTextClassName?: string;
 	value?: string;
+    defaultValue?: string;
 	label?: React.ReactNode | string;
 	name?: string;
 	maxLength?: any;
@@ -61,6 +62,7 @@ const Textarea = forwardRef((props: TextareaProps, externalRef: any) => {
         iconLeft,
         iconRight,
         readOnly,
+        defaultValue,
         value,
         label,
         name,
@@ -202,9 +204,32 @@ const Textarea = forwardRef((props: TextareaProps, externalRef: any) => {
             }
 
         }
+        
 
     }, [value]);    
     
+
+
+    useEffect(() => {
+
+        // update default value (It does not re-render the component because the incoming value changes.)
+        //--------------
+        if (typeof defaultValue !== 'undefined') { //REQUIRED
+
+            if (typeof defaultValue === 'string' && defaultValue.length > 0 && autoSize) {  // The value may be NULL
+
+                // Recalculate height if default value exceeds initial height
+                setChangedVal(``);
+                setTimeout(() => {
+                    setChangedVal(`${defaultValue}`);
+                }, 0);
+
+            } else {
+                setChangedVal(`${defaultValue}`);   // Avoid displaying the number 0
+            }
+        }
+
+    }, []);
 
     return (
         <>
@@ -229,6 +254,7 @@ const Textarea = forwardRef((props: TextareaProps, externalRef: any) => {
 			          id={idRes}
 					  name={name}
 					  placeholder={placeholder || ''}
+                      defaultValue={defaultValue}
 					  value={changedVal}
 					  maxLength={maxLength || null}
 			          onFocus={handleFocus}

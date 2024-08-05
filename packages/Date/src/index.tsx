@@ -9,6 +9,7 @@ import {
     getAbsolutePositionOfStage,
     padZero,
     dateFormat,
+    isTimeString,
     getNow,
     isValidDate,
     isNumeric,
@@ -59,6 +60,7 @@ type DateProps = {
     onlyTime?: boolean;
     truncateSeconds?: boolean;
     valueUseSlash?: boolean;
+    defaultValue?: string;
     value?: string;
     clickInitValue?: string;
     min?: string;
@@ -95,6 +97,7 @@ type DateProps = {
     onChangeHours?: (currentData: any) => void;
     onChangeMinutes?: (currentData: any) => void;
     onChangeSeconds?: (currentData: any) => void;
+    onClear?: (currentData: any) => void;
 
 
 
@@ -135,6 +138,7 @@ const Date = forwardRef((props: DateProps, externalRef: any) => {
         disabled,
         required,
         readOnly,
+        defaultValue,
         value,
         clickInitValue,
         min,
@@ -166,6 +170,7 @@ const Date = forwardRef((props: DateProps, externalRef: any) => {
         onChangeHours,
         onChangeMinutes,
         onChangeSeconds,
+        onClear,
 
 
         //calendar
@@ -184,7 +189,10 @@ const Date = forwardRef((props: DateProps, externalRef: any) => {
 
 
     const DEPTH = depth || 1055;  // the default value same as bootstrap
-    const defaultValueIsEmpty= typeof value === 'undefined' || value === null || value === 'null' || value === '';
+    const defaultValueIsEmpty = (s: any) => {
+        return typeof s === 'undefined' || s === null || s === 'null' || s === '';
+    };
+    
 
 
 
@@ -301,6 +309,12 @@ const Date = forwardRef((props: DateProps, externalRef: any) => {
         ];
     };
 
+    const onlyHHmm = (str: string) => {
+        // match HH:mm
+        const timePattern = /^([01]\d|2[0-3]):([0-5]\d)$/;
+        return timePattern.test(str);
+    };
+
 
     // exposes the following methods
     useImperativeHandle(
@@ -337,8 +351,7 @@ const Date = forwardRef((props: DateProps, externalRef: any) => {
             */
             set: (value: any, cb?: any) => {
 
-                const _defaultValueIsEmpty= typeof value === 'undefined' || value === null || value === 'null' || value === '';
-                setDateDefaultValueExist(_defaultValueIsEmpty ? false : true);
+                setDateDefaultValueExist((defaultValueIsEmpty(value)) ? false : true);
                 initValue(value);
                 
                 cb?.();
@@ -430,6 +443,10 @@ const Date = forwardRef((props: DateProps, externalRef: any) => {
         const _v = getFullTimeData(getNow());
         const _nowVal: any = `${_v.date} ${_v.hours}:${_v.minutes}:${_v.seconds}`;
 
+        // expected default value (only HH:mm:ss)
+        const _expectedValue = isTimeString(v) || onlyHHmm(v) ? `${_v.date} ${onlyHHmm(v) ? v + ':00' : v}` : v;
+       
+        
         if (!init) setInitSplitClickEvOk(true);
 
 
@@ -437,12 +454,12 @@ const Date = forwardRef((props: DateProps, externalRef: any) => {
 
 
             let noTargetVal = typeof clickInitValue === 'undefined' || clickInitValue === null || clickInitValue === 'null' || clickInitValue === '';
-            if (!defaultValueIsEmpty) {
+            if (!defaultValueIsEmpty(v)) {
                 noTargetVal = true;
             }
 
             //
-            let targetVal: any = noTargetVal ? (defaultValueIsEmpty ? _nowVal : v) : clickInitValue;
+            let targetVal: any = noTargetVal ? (defaultValueIsEmpty(v) ? _nowVal : _expectedValue) : clickInitValue;
 
             if (typeof v === 'undefined') {
                 targetVal = noTargetVal ? _nowVal : clickInitValue;
@@ -453,7 +470,7 @@ const Date = forwardRef((props: DateProps, externalRef: any) => {
         } else {
 
         
-            let targetVal: any = defaultValueIsEmpty ? _nowVal : v;
+            let targetVal: any = defaultValueIsEmpty(v) ? _nowVal : _expectedValue;
 
             if (typeof v === 'undefined') {
                 targetVal = _nowVal;
@@ -680,6 +697,7 @@ const Date = forwardRef((props: DateProps, externalRef: any) => {
     function valueResConverter(inputData: any) {
         const v = isValidDate(inputData) ? inputData : `${getFullTimeData(getNow()).date} ${inputData}`;
 
+
         const _onlyTime = `${getFullTimeData(v).hours}:${getFullTimeData(v).minutes}${truncateSeconds ? `` : `:${getFullTimeData(v).seconds}`}`;
         const _date = `${getFullTimeData(v).year}${valueUseSlash ? `/` : '-'}${getFullTimeData(v).month}${valueUseSlash ? `/` : '-'}${getFullTimeData(v).day}`;
         const _time = COM_HAS_TIME ? ` ${getFullTimeData(v).hours}:${getFullTimeData(v).minutes}${truncateSeconds ? `` : `:${getFullTimeData(v).seconds}`}` : '';
@@ -858,7 +876,6 @@ const Date = forwardRef((props: DateProps, externalRef: any) => {
     function initValue(v: any) {
         const _res = valueResConverter(v);
 
-
         setChangedVal(_res);
         
         if (isValidDate(v)) {
@@ -890,12 +907,26 @@ const Date = forwardRef((props: DateProps, externalRef: any) => {
         // update default value
         //--------------
         const [curInitSplitClickEvOk, curNoTargetVal, curTargetVal] = getActualDefaultValue(value, true);
-        setDateDefaultValueExist(defaultValueIsEmpty ? false : true);
+        setDateDefaultValueExist(defaultValueIsEmpty(value) ? false : true);
         const [a, b] = initValue(curTargetVal);
         onLoad?.(a, getFullTimeData(b), getAllSplittingInputs());
 
 
     }, [value]);
+
+    useEffect(() => {
+
+        // update default value (It does not re-render the component because the incoming value changes.)
+        //--------------
+        if (typeof defaultValue !== 'undefined') { //REQUIRED
+            const [curInitSplitClickEvOk, curNoTargetVal, curTargetVal] = getActualDefaultValue(defaultValue, true);
+            setDateDefaultValueExist(defaultValueIsEmpty(defaultValue) ? false : true);
+            const [a, b] = initValue(curTargetVal);
+            onLoad?.(a, getFullTimeData(b), getAllSplittingInputs());
+        }
+
+    }, []);
+
 
     return (
         <>
@@ -1284,6 +1315,7 @@ const Date = forwardRef((props: DateProps, externalRef: any) => {
                                 e.stopPropagation();  // Avoid triggering pop-ups
                                 
                                 clearAll();
+                                onClear?.(getFullTimeData(''));
                             }}
                         ><svg width="12px" height="12px" viewBox="0 0 1024 1024"><path fill="#000" d="M195.2 195.2a64 64 0 0 1 90.496 0L512 421.504 738.304 195.2a64 64 0 0 1 90.496 90.496L602.496 512 828.8 738.304a64 64 0 0 1-90.496 90.496L512 602.496 285.696 828.8a64 64 0 0 1-90.496-90.496L421.504 512 195.2 285.696a64 64 0 0 1 0-90.496z" /></svg></a>
                         

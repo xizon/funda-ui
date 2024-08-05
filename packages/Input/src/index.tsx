@@ -4,6 +4,7 @@ import {
     useComId
 } from 'funda-utils';
 
+
 type InputProps = {
     contentRef?: React.ForwardedRef<any>;
     wrapperClassName?: string;
@@ -12,6 +13,7 @@ type InputProps = {
     controlGroupWrapperClassName?: string;
     controlGroupTextClassName?: string;
     type?: string;
+    defaultValue?: string;
     value?: string;
     label?: React.ReactNode | string;
     units?: React.ReactNode | string;
@@ -66,6 +68,7 @@ const Input = forwardRef((props: InputProps, externalRef: any) => {
         placeholder,
         pattern,
         readOnly,
+        defaultValue,
         value,
         label,
         units,
@@ -107,6 +110,7 @@ const Input = forwardRef((props: InputProps, externalRef: any) => {
     const [onComposition, setOnComposition] = useState<boolean>(false);
     const [changedVal, setChangedVal] = useState<string>(value || '');
 
+    
 
     // exposes the following methods
     useImperativeHandle(
@@ -218,7 +222,16 @@ const Input = forwardRef((props: InputProps, externalRef: any) => {
     }, [value]);
 
 
-    
+    useEffect(() => {
+
+        // update default value (It does not re-render the component because the incoming value changes.)
+        //--------------
+        if (typeof defaultValue !== 'undefined') { //REQUIRED
+            setChangedVal(`${defaultValue}`);   // Avoid displaying the number 0
+        }
+
+    }, []);
+
 
     return (
         <>
@@ -256,6 +269,7 @@ const Input = forwardRef((props: InputProps, externalRef: any) => {
                                 inputMode={inputMode || 'text'}
                                 pattern={pattern || null}
                                 placeholder={placeholder || ''}
+                                defaultValue={defaultValue}
                                 value={changedVal}
                                 minLength={minLength || null}
                                 maxLength={maxLength || null}

@@ -20,6 +20,7 @@ declare type DateProps = {
     onlyTime?: boolean;
     truncateSeconds?: boolean;
     valueUseSlash?: boolean;
+    defaultValue?: string;
     value?: string;
     clickInitValue?: string;
     min?: string;
@@ -54,6 +55,7 @@ declare type DateProps = {
     onChangeHours?: (currentData: any) => void;
     onChangeMinutes?: (currentData: any) => void;
     onChangeSeconds?: (currentData: any) => void;
+    onClear?: (currentData: any) => void;
     langHoursTitle?: string;
     langMinutesTitle?: string;
     langSecondsTitle?: string;
