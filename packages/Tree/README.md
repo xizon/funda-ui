@@ -84,7 +84,7 @@ The property list of the last parameter (Function) in the return value of `onCol
 > | `fetchFuncAsync` | Constructor | - | A method as a string from the constructor.  | - |
 > | `fetchFuncMethod` | string  | - | When the property is *true*, every time the select changes, a data request will be triggered. <br /><blockquote>The methord must be a Promise Object.</blockquote> | - |
 > | `fetchFuncMethodParams` | array  | - | The parameter passed by the method, it is an array. <br />Note: the first element is a query string, the second element is the number of queried data (usually a number), and then you can increase the third, or fourth, and more parameters. <br />Such as `['',0]`, `['',99,'string 1','string 2']` <br /><blockquote>There should be at least one parameter which is the query string.</blockquote> | - |
-> | `fetchCallback` | function  | - | Return value from `fetchCallback` property to format the data of the API callback, which will match the data structure of the component. <br >At the same time it returns the original data, you will use this function and use the `return` keyword to return a new value. <blockquote>Among them, `title`, `link` and `slug` are attributes used by the system, and other attributes can be added freely</blockquote> | - |
+> | `fetchCallback` | function  | - | Return value from `fetchCallback` property to format the data of the API callback, which will match the data structure of the component. <br />At the same time it returns the original data, you will use this function and use the `return` keyword to return a new value. <blockquote>Among them, `title`, `link` and `slug` are attributes used by the system, and other attributes can be added freely</blockquote> | - |
 > 
 > 
 
