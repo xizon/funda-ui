@@ -1,5 +1,10 @@
 # Funda UI
 
+<p align="center">
+  <img src="logo.png"  alt="Funda UI"  width="180" >
+</p>
+
+
 React components using pure Bootstrap 5+ which has undergone complex business testing and is easy to integrate with any API. You can load Bootstrap css libraries separately in your project.
 
 All components have undergone complex business verification and provide multiple examples.
