@@ -65,7 +65,15 @@ Here is a table of the components and their status.
 $ npm i funda-ui
 ```
 
+or
+
+```sh
+$ pnpm add funda-ui
+```
+
 **Step 2**. Using Bootstrap CSS together (recommended)
+
+[Download bootstrap](https://github.com/twbs/bootstrap)
 
 ```html
 <link href="./bootstrap.min.css" rel="stylesheet"/>
