@@ -4,6 +4,12 @@
 ## API
 
 
+* [`<Tabs />`](#tabs)
+* [`<TabList />`](#tab-list)
+* [`<TabPanel />`](#tab-panel)
+
+
+
 ### Tabs
 ```js
 import { Tabs } from 'funda-ui/Tabs';
@@ -170,7 +176,7 @@ export default () => {
 
 ## No delay
 
-Set the `animTransitionDuration` of <Tabs> to **0**.
+Set the `animTransitionDuration` of \<Tabs\> to **0**.
 
 
 ```js
