@@ -1,200 +1,7 @@
 # Table (Synthetic)
 
 
-## API
-
-> ❤️ You could specify all remaining properties defined and all synthetic events from React on all components listed below. such as `tabIndex`, `style`, `id`, `data-xxx`, `onClick`, `onMouseEnter`, `onMouseLeave`, and so on.
-
-* [`<Table />`](#table)
-* [`<TableBody />`](#table-body)
-* [`<TableHead />`](#table-head)
-* [`<TableFoot />`](#table-foot)
-* [`<TableRow />`](#table-row)
-* [`<TableColgroup />`](#table-colgroup)
-* [`<TableCaption />`](#table-caption)
-* [`<TableFilter />`](#filter-input)
-* [`<ToggleSelection />`](#toggle-selection)
-* [`<DragHandleSprite />`](#drag-handle-sprite)
-* [`<SortSprite />`](#sort-sprite)
-
-
-
-### Table
-```js
-import { Table } from 'funda-ui/Table';
-```
-| Property | Type | Default | Description | Required |
-| --- | --- | --- | --- | --- |
-| `ref` | React.ForwardedRef | - | It is the return element of this component.  | - |
-| `wrapperClassName` | string | `mb-3 position-relative` | The class name of the table wrapper. | - |
-| `tableClassName` | string | `table` | The class name of the table wrapper. | - |
-| `data` | Array | - | Array of objects, where each object represents one item - row in table. such as `[{name:'David',friend:'Jone',condition:'GOOD'},{name:'Chuckie',friend:'Jone',condition:'BAD'}]` <blockquote>Enable it to enable some special features</blockquote> | - |
-| `dataSelected` | Array | - | Array of numbers, Selected data when rowSelectable is enabled. It's an array of indexed numbers， such as `[1，3]` <blockquote>It is valid when `rowSelectable` is "true"</blockquote> | - |
-| `rowDraggable` | boolean | false | Indicates whether the per row can be dragged. <blockquote>The `data` prop must exist to fire data interaction.</blockquote> | - |
-| `rowSelectable` | boolean | false | Use of Checkboxes and clickable rows for selection. <blockquote>The `data` prop must exist to fire data interaction.</blockquote>| - |
-| `colSortable` | boolean | false | Support sort a column (or columns) when the table is built. The components are used in each column of the head. <blockquote>The `data` prop must exist to fire data interaction.</blockquote> <blockquote>`<TableCell />` must have attribute `data-table-col`.</blockquote> | - |
-| `keyboardFocusable` | boolean | false | Use the arrow keys on your keyboard to focus on each cell. <blockquote>The `data` prop must exist to fire data interaction.</blockquote> | - |
-| `filterFields` | Array | - | Fields used for filtering. such as `['name', 'friend']` <blockquote>The `data` prop must exist to fire data interaction.</blockquote> | - |
-| `bordered` | boolean  | false | Adds borders on all sides of the table and cells | - |
-| `colGroup` | boolean  | false | Set the background color of the multiple columns with the `<colgroup>` and `<col>` tags | - |
-| `cellAutoWidth` | boolean  | false | Width does not expand automatically, each cell uses a custom minimum width. <blockquote>If the content is exceeded, there will be a horizontal scrollbar on the table</blockquote> | - |
-| `responsive` | boolean  | true | For horizontally scrolling tables on the wrapper. | - |
-| `enhancedResponsive` | boolean  | false | Create enhanced responsive tables up to a particular breakpoint. <blockquote>Valid when the device width is less than or equal to 768px. `<TableRow />` and `<TableCell />` must have attribute `data-table-text`.</blockquote> | - |
-| `enhancedResponsiveWithScrollBar` | boolean  | false | Create enhanced responsive tables up to a particular breakpoint. This property allows scroll bars to be created automatically in the table with floating header. <blockquote>Valid when the device width is less than or equal to 768px. `<TableCell />` must have attribute `data-table-col`.</blockquote> | - |
-| `onChangeFilter` | function  | - | Call a function when the value changed. It returns one callback value which is the fetched data (**Array**). | - |
-| `onChangeRowSelect` | function  | - | Call a function when the selection box for the current row is changed. It returns one callback value which is the fetched data (**Array**). <blockquote>It is valid when `rowSelectable` is "true"</blockquote> | - |
-| `onRowDrag` | function  | - | As each row is dragged, it returns two functions. dragStart, dragEnd, they represent the callback events of drag start and drag end respectively. For example: `onRowDrag={(dragStart,dragEnd)=>{if(dragStart!==null)dragStart((el:HTMLTableRowElement,order:number[],data:any[])=>{console.log('dragStart: ',el,order,data);});if(dragEnd!==null)dragEnd((el:HTMLTableRowElement,order:number[],data:any[])=>{console.log('dragEnd: ',el,order,data);});}}`. <blockquote>It is valid when `rowDraggable` is "true"</blockquote> | - |
-| `onColSort` | function  | - | Call a function when the column sorting succeeds. It returns one callback value which is the fetched data (**Array**). <blockquote>It is valid when `colSortable` is "true"</blockquote> | - |
-| `onCellKeyPressed` | function  | - | It fires when use keyboard arrow keys. It returns three callback values. <br /> <ol><li>The first is the cell classname (**String**)</li><li>The second is the current cell (**HTMLTableCellElement**)</li><li>The last is the KeyboardEvent (**KeyboardEvent**)</li></ol> <blockquote>It is valid when `keyboardFocusable` is "true"</blockquote> | - |
-
-
-
-👉🏼 JSON configuration properties of the `data` => It can be any array of objects in JSON format.
-
-
-### Table Body
-```js
-import { TableBody } from 'funda-ui/Table';
-```
-| Property | Type | Default | Description | Required |
-| --- | --- | --- | --- | --- |
-| `ref` | React.ForwardedRef | - | It is the return element of this component.  | - |
-| `className` | string | - | The class name of the table body. | - |
-
-
-
-### Table Cell
-```js
-import { TableCell } from 'funda-ui/Table';
-```
-| Property | Type | Default | Description | Required |
-| --- | --- | --- | --- | --- |
-| `ref` | React.ForwardedRef | - | It is the return element of this component.  | - |
-| `className` | string | - | The class name of the table cell as `<td>` or `<th>`. | - |
-| `active` | boolean | false | Whether to activate the current row. | - |
-| `activeClassName` | string | `active` | The class name of actived. | - |
-| `colSpan` | number | `1` | The value represents the number of columns to span. | - |
-| `scope` | `col` \| `row` \| `colgroup` \| `rowgroup` | - | The scope attribute specifies whether a header cell is a header for a column, row, or group of columns or rows. | - |
-
-
-### Table Head
-```js
-import { TableHead } from 'funda-ui/Table';
-```
-| Property | Type | Default | Description | Required |
-| --- | --- | --- | --- | --- |
-| `ref` | React.ForwardedRef | - | It is the return element of this component.  | - |
-| `className` | string | - | The class name of the table head. | - |
-
-
-
-### Table Foot
-```js
-import { TableFoot } from 'funda-ui/Table';
-```
-| Property | Type | Default | Description | Required |
-| --- | --- | --- | --- | --- |
-| `ref` | React.ForwardedRef | - | It is the return element of this component.  | - |
-| `className` | string | - | The class name of the table foot. | - |
-
-
-
-### Table Row
-```js
-import { TableRow } from 'funda-ui/Table';
-```
-| Property | Type | Default | Description | Required |
-| --- | --- | --- | --- | --- |
-| `ref` | React.ForwardedRef | - | It is the return element of this component.  | - |
-| `className` | string | - | The class name of the table row as `<tr>`. | - |
-| `active` | boolean | false | Whether to activate the current row. | - |
-| `activeClassName` | string | `active` | The class name of actived. | - |
-| `itemData` | JSON Object | - | Data for each row. such as `{name:'David',friend:'Jone',condition:'GOOD'}` | - |
-
-
-
-### Table Colgroup
-```js
-import { TableColgroup } from 'funda-ui/Table';
-```
-| Property | Type | Default | Description | Required |
-| --- | --- | --- | --- | --- |
-| `ref` | React.ForwardedRef | - | It is the return element of this component.  | - |
-| `className` | string | - | The class name of the table colgroup. | - |
-| `length` | number | - | Specifies how many elements a group has. | - |
-| `captionSide` | `top` \| `bottom` | top | This property puts the content of a table's `<caption>` on the specified side. | - |
-
-
-
-### Table Caption
-```js
-import { TableCaption } from 'funda-ui/Table';
-```
-| Property | Type | Default | Description | Required |
-| --- | --- | --- | --- | --- |
-| `ref` | React.ForwardedRef | - | It is the return element of this component.  | - |
-| `className` | string | - | The class name of the table caption. | - |
-
-
-### Filter Input
-```js
-import { TableFilter } from 'funda-ui/Table';
-```
-| Property | Type | Default | Description | Required |
-| --- | --- | --- | --- | --- |
-| `ref` | React.ForwardedRef | - | It is the return element of this component.  | - |
-| `className` | string | - | The class name of the filter input control. | - |
-| `placeholder` | string | - | The placeholder of the filter input control. | - |
-| `label` | ReactNode | null | Label for filter input control. | - |
-| `onChange` | function  | - | Call a function when the value of an HTML element is changed. It returns two callback values. <br /> <ol><li>The first is the Control Event (**Event**)</li><li>The last is the fetched data (**Array**).</li></ol> | - |
-
-
-
-### Toggle Selection
-
-It will be presented in the form of a checkbox.
-
-```js
-import { ToggleSelection } from 'funda-ui/Table';
-```
-| Property | Type | Default | Description | Required |
-| --- | --- | --- | --- | --- |
-| `ref` | React.ForwardedRef | - | It is the return element of this component.  | - |
-| `contentRef` | React.ForwardedRef | - | It exposes the following methods:  <br /> <ol><li>`contentRef.current.control()`</li><li>`contentRef.current.setSelectAll(false)`</li><li>`contentRef.current.indeterminate(false)`</li></ol> <blockquote>DO NOT USE it in the `onChange` of this component, otherwise it will cause infinite rendering</blockquote>| - |
-| `row` | number | - | For the current row, set `-1` if it is the head area. | ✅ |
-| `className` | string | - | The class name of the table caption. | - |
-| `checked` | boolean | false | Is it selected. | - |
-| `useRadio` | boolean | false | Use radio instead of Checkbox. | - |
-| `indeterminate` | boolean | false | Set a checkbox to indeterminate state. | - |
-| `value` | string | - | Set a default value for this control. If unchecked, it will pass an empty value | ✅ |
-| `name` | string | - | Name is not deprecated when used with form fields. | - |
-| `disabled` | boolean | false | Whether it is disabled | - |
-| `onChange` | function  | - | Call a function when the value of an HTML element is changed.  It returns three callback values. <br /> <ol><li>The first is the Control Event (**Event**)</li><li>The second is the current value (**Boolean**) </li><li>The last is the fetched data (**Array**).</li></ol> | - |
-
-
-
-### Drag Handle Sprite
-```js
-import { DragHandleSprite } from 'funda-ui/Table';
-```
-| Property | Type | Default | Description | Required |
-| --- | --- | --- | --- | --- |
-| `ref` | React.ForwardedRef | - | It is the return element of this component.  | - |
-| `className` | string | `drag-trigger` | The class name of the filter input control. | - |
-| `icon` | ReactNode  | `<svg width="1em" height="1em" viewBox="0 0 24 24" fill="none"><g><path d="M18 14C17.4477 14 17 14.4477 17 15C17 15.5523 17.4477 16 18 16C18.5523 16 19 15.5523 19 15C19 14.4477 18.5523 14 18 14Z" stroke="#000000" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /><path d="M12 14C11.4477 14 11 14.4477 11 15C11 15.5523 11.4477 16 12 16C12.5523 16 13 15.5523 13 15C13 14.4477 12.5523 14 12 14Z" stroke="#000000" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /><path d="M6 14C5.44772 14 5 14.4477 5 15C5 15.5523 5.44772 16 6 16C6.55228 16 7 15.5523 7 15C7 14.4477 6.55228 14 6 14Z" stroke="#000000" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /><path d="M18 8C17.4477 8 17 8.44772 17 9C17 9.55228 17.4477 10 18 10C18.5523 10 19 9.55228 19 9C19 8.44772 18.5523 8 18 8Z" stroke="#000000" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /><path d="M12 8C11.4477 8 11 8.44772 11 9C11 9.55228 11.4477 10 12 10C12.5523 10 13 9.55228 13 9C13 8.44772 12.5523 8 12 8Z" stroke="#000000" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /><path d="M6 8C5.44772 8 5 8.44772 5 9C5 9.55228 5.44772 10 6 10C6.55228 10 7 9.55228 7 9C7 8.44772 6.55228 8 6 8Z" stroke="#000000" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /></g></svg>` | Specify an icon | - |
-
-### Sort Sprite
-```js
-import { SortSprite } from 'funda-ui/Table';
-```
-| Property | Type | Default | Description | Required |
-| --- | --- | --- | --- | --- |
-| `ref` | React.ForwardedRef | - | It is the return element of this component.  | - |
-| `className` | string | `sort-trigger` | The class name of the filter input control. | - |
-| `fieldType` | `text` \| `number` \| `date` | `text` | The type of field that is sorted, which ensures the accuracy of sorting. | ✅ |
-| `icon` | ReactNode  | `<svg width="1em" height="1em" viewBox="0 0 18 18"><g stroke="none" strokeWidth="1" fill="none" fillRule="evenodd"><path d="M9.5,3 L13,8 L6,8 L9.5,3 L9.5,3 Z M6,11 L13,11 L9.5,16 L6,11 L6,11 Z" id="path" fill="#000000"></path></g></svg>` | Specify an icon | - |
-
-## Examples
+## General
 
 ### a) Basic
 
@@ -514,7 +321,7 @@ export default () => {
 
 ## Sticky Table Headers (with custom scrollbar)
 
-
+`styles.scss`:
 ```css
 
 /* ---------- Table Scrollable ----------- */
@@ -564,6 +371,8 @@ export default () => {
 }
 ```
 
+
+`index.tsx`:
 ```js
 import React from "react";
 import {
@@ -1750,3 +1559,198 @@ export default () => {
     );
 }
 ```
+
+
+
+## API
+
+> ❤️ You could specify all remaining properties defined and all synthetic events from React on all components listed below. such as `tabIndex`, `style`, `id`, `data-xxx`, `onClick`, `onMouseEnter`, `onMouseLeave`, and so on.
+
+* [`<Table />`](#table)
+* [`<TableBody />`](#table-body)
+* [`<TableHead />`](#table-head)
+* [`<TableFoot />`](#table-foot)
+* [`<TableRow />`](#table-row)
+* [`<TableColgroup />`](#table-colgroup)
+* [`<TableCaption />`](#table-caption)
+* [`<TableFilter />`](#filter-input)
+* [`<ToggleSelection />`](#toggle-selection)
+* [`<DragHandleSprite />`](#drag-handle-sprite)
+* [`<SortSprite />`](#sort-sprite)
+
+
+
+### Table
+```js
+import { Table } from 'funda-ui/Table';
+```
+| Property | Type | Default | Description | Required |
+| --- | --- | --- | --- | --- |
+| `ref` | React.ForwardedRef | - | It is the return element of this component.  | - |
+| `wrapperClassName` | string | `mb-3 position-relative` | The class name of the table wrapper. | - |
+| `tableClassName` | string | `table` | The class name of the table wrapper. | - |
+| `data` | Array | - | Array of objects, where each object represents one item - row in table. such as `[{name:'David',friend:'Jone',condition:'GOOD'},{name:'Chuckie',friend:'Jone',condition:'BAD'}]` <blockquote>Enable it to enable some special features</blockquote> | - |
+| `dataSelected` | Array | - | Array of numbers, Selected data when rowSelectable is enabled. It's an array of indexed numbers， such as `[1，3]` <blockquote>It is valid when `rowSelectable` is "true"</blockquote> | - |
+| `rowDraggable` | boolean | false | Indicates whether the per row can be dragged. <blockquote>The `data` prop must exist to fire data interaction.</blockquote> | - |
+| `rowSelectable` | boolean | false | Use of Checkboxes and clickable rows for selection. <blockquote>The `data` prop must exist to fire data interaction.</blockquote>| - |
+| `colSortable` | boolean | false | Support sort a column (or columns) when the table is built. The components are used in each column of the head. <blockquote>The `data` prop must exist to fire data interaction.</blockquote> <blockquote>`<TableCell />` must have attribute `data-table-col`.</blockquote> | - |
+| `keyboardFocusable` | boolean | false | Use the arrow keys on your keyboard to focus on each cell. <blockquote>The `data` prop must exist to fire data interaction.</blockquote> | - |
+| `filterFields` | Array | - | Fields used for filtering. such as `['name', 'friend']` <blockquote>The `data` prop must exist to fire data interaction.</blockquote> | - |
+| `bordered` | boolean  | false | Adds borders on all sides of the table and cells | - |
+| `colGroup` | boolean  | false | Set the background color of the multiple columns with the `<colgroup>` and `<col>` tags | - |
+| `cellAutoWidth` | boolean  | false | Width does not expand automatically, each cell uses a custom minimum width. <blockquote>If the content is exceeded, there will be a horizontal scrollbar on the table</blockquote> | - |
+| `responsive` | boolean  | true | For horizontally scrolling tables on the wrapper. | - |
+| `enhancedResponsive` | boolean  | false | Create enhanced responsive tables up to a particular breakpoint. <blockquote>Valid when the device width is less than or equal to 768px. `<TableRow />` and `<TableCell />` must have attribute `data-table-text`.</blockquote> | - |
+| `enhancedResponsiveWithScrollBar` | boolean  | false | Create enhanced responsive tables up to a particular breakpoint. This property allows scroll bars to be created automatically in the table with floating header. <blockquote>Valid when the device width is less than or equal to 768px. `<TableCell />` must have attribute `data-table-col`.</blockquote> | - |
+| `onChangeFilter` | function  | - | Call a function when the value changed. It returns one callback value which is the fetched data (**Array**). | - |
+| `onChangeRowSelect` | function  | - | Call a function when the selection box for the current row is changed. It returns one callback value which is the fetched data (**Array**). <blockquote>It is valid when `rowSelectable` is "true"</blockquote> | - |
+| `onRowDrag` | function  | - | As each row is dragged, it returns two functions. dragStart, dragEnd, they represent the callback events of drag start and drag end respectively. For example: `onRowDrag={(dragStart,dragEnd)=>{if(dragStart!==null)dragStart((el:HTMLTableRowElement,order:number[],data:any[])=>{console.log('dragStart: ',el,order,data);});if(dragEnd!==null)dragEnd((el:HTMLTableRowElement,order:number[],data:any[])=>{console.log('dragEnd: ',el,order,data);});}}`. <blockquote>It is valid when `rowDraggable` is "true"</blockquote> | - |
+| `onColSort` | function  | - | Call a function when the column sorting succeeds. It returns one callback value which is the fetched data (**Array**). <blockquote>It is valid when `colSortable` is "true"</blockquote> | - |
+| `onCellKeyPressed` | function  | - | It fires when use keyboard arrow keys. It returns three callback values. <br /> <ol><li>The first is the cell classname (**String**)</li><li>The second is the current cell (**HTMLTableCellElement**)</li><li>The last is the KeyboardEvent (**KeyboardEvent**)</li></ol> <blockquote>It is valid when `keyboardFocusable` is "true"</blockquote> | - |
+
+
+
+👉🏼 JSON configuration properties of the `data` => It can be any array of objects in JSON format.
+
+
+### Table Body
+```js
+import { TableBody } from 'funda-ui/Table';
+```
+| Property | Type | Default | Description | Required |
+| --- | --- | --- | --- | --- |
+| `ref` | React.ForwardedRef | - | It is the return element of this component.  | - |
+| `className` | string | - | The class name of the table body. | - |
+
+
+
+### Table Cell
+```js
+import { TableCell } from 'funda-ui/Table';
+```
+| Property | Type | Default | Description | Required |
+| --- | --- | --- | --- | --- |
+| `ref` | React.ForwardedRef | - | It is the return element of this component.  | - |
+| `className` | string | - | The class name of the table cell as `<td>` or `<th>`. | - |
+| `active` | boolean | false | Whether to activate the current row. | - |
+| `activeClassName` | string | `active` | The class name of actived. | - |
+| `colSpan` | number | `1` | The value represents the number of columns to span. | - |
+| `scope` | `col` \| `row` \| `colgroup` \| `rowgroup` | - | The scope attribute specifies whether a header cell is a header for a column, row, or group of columns or rows. | - |
+
+
+### Table Head
+```js
+import { TableHead } from 'funda-ui/Table';
+```
+| Property | Type | Default | Description | Required |
+| --- | --- | --- | --- | --- |
+| `ref` | React.ForwardedRef | - | It is the return element of this component.  | - |
+| `className` | string | - | The class name of the table head. | - |
+
+
+
+### Table Foot
+```js
+import { TableFoot } from 'funda-ui/Table';
+```
+| Property | Type | Default | Description | Required |
+| --- | --- | --- | --- | --- |
+| `ref` | React.ForwardedRef | - | It is the return element of this component.  | - |
+| `className` | string | - | The class name of the table foot. | - |
+
+
+
+### Table Row
+```js
+import { TableRow } from 'funda-ui/Table';
+```
+| Property | Type | Default | Description | Required |
+| --- | --- | --- | --- | --- |
+| `ref` | React.ForwardedRef | - | It is the return element of this component.  | - |
+| `className` | string | - | The class name of the table row as `<tr>`. | - |
+| `active` | boolean | false | Whether to activate the current row. | - |
+| `activeClassName` | string | `active` | The class name of actived. | - |
+| `itemData` | JSON Object | - | Data for each row. such as `{name:'David',friend:'Jone',condition:'GOOD'}` | - |
+
+
+
+### Table Colgroup
+```js
+import { TableColgroup } from 'funda-ui/Table';
+```
+| Property | Type | Default | Description | Required |
+| --- | --- | --- | --- | --- |
+| `ref` | React.ForwardedRef | - | It is the return element of this component.  | - |
+| `className` | string | - | The class name of the table colgroup. | - |
+| `length` | number | - | Specifies how many elements a group has. | - |
+| `captionSide` | `top` \| `bottom` | top | This property puts the content of a table's `<caption>` on the specified side. | - |
+
+
+
+### Table Caption
+```js
+import { TableCaption } from 'funda-ui/Table';
+```
+| Property | Type | Default | Description | Required |
+| --- | --- | --- | --- | --- |
+| `ref` | React.ForwardedRef | - | It is the return element of this component.  | - |
+| `className` | string | - | The class name of the table caption. | - |
+
+
+### Filter Input
+```js
+import { TableFilter } from 'funda-ui/Table';
+```
+| Property | Type | Default | Description | Required |
+| --- | --- | --- | --- | --- |
+| `ref` | React.ForwardedRef | - | It is the return element of this component.  | - |
+| `className` | string | - | The class name of the filter input control. | - |
+| `placeholder` | string | - | The placeholder of the filter input control. | - |
+| `label` | ReactNode | null | Label for filter input control. | - |
+| `onChange` | function  | - | Call a function when the value of an HTML element is changed. It returns two callback values. <br /> <ol><li>The first is the Control Event (**Event**)</li><li>The last is the fetched data (**Array**).</li></ol> | - |
+
+
+
+### Toggle Selection
+
+It will be presented in the form of a checkbox.
+
+```js
+import { ToggleSelection } from 'funda-ui/Table';
+```
+| Property | Type | Default | Description | Required |
+| --- | --- | --- | --- | --- |
+| `ref` | React.ForwardedRef | - | It is the return element of this component.  | - |
+| `contentRef` | React.ForwardedRef | - | It exposes the following methods:  <br /> <ol><li>`contentRef.current.control()`</li><li>`contentRef.current.setSelectAll(false)`</li><li>`contentRef.current.indeterminate(false)`</li></ol> <blockquote>DO NOT USE it in the `onChange` of this component, otherwise it will cause infinite rendering</blockquote>| - |
+| `row` | number | - | For the current row, set `-1` if it is the head area. | ✅ |
+| `className` | string | - | The class name of the table caption. | - |
+| `checked` | boolean | false | Is it selected. | - |
+| `useRadio` | boolean | false | Use radio instead of Checkbox. | - |
+| `indeterminate` | boolean | false | Set a checkbox to indeterminate state. | - |
+| `value` | string | - | Set a default value for this control. If unchecked, it will pass an empty value | ✅ |
+| `name` | string | - | Name is not deprecated when used with form fields. | - |
+| `disabled` | boolean | false | Whether it is disabled | - |
+| `onChange` | function  | - | Call a function when the value of an HTML element is changed.  It returns three callback values. <br /> <ol><li>The first is the Control Event (**Event**)</li><li>The second is the current value (**Boolean**) </li><li>The last is the fetched data (**Array**).</li></ol> | - |
+
+
+
+### Drag Handle Sprite
+```js
+import { DragHandleSprite } from 'funda-ui/Table';
+```
+| Property | Type | Default | Description | Required |
+| --- | --- | --- | --- | --- |
+| `ref` | React.ForwardedRef | - | It is the return element of this component.  | - |
+| `className` | string | `drag-trigger` | The class name of the filter input control. | - |
+| `icon` | ReactNode  | `<svg width="1em" height="1em" viewBox="0 0 24 24" fill="none"><g><path d="M18 14C17.4477 14 17 14.4477 17 15C17 15.5523 17.4477 16 18 16C18.5523 16 19 15.5523 19 15C19 14.4477 18.5523 14 18 14Z" stroke="#000000" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /><path d="M12 14C11.4477 14 11 14.4477 11 15C11 15.5523 11.4477 16 12 16C12.5523 16 13 15.5523 13 15C13 14.4477 12.5523 14 12 14Z" stroke="#000000" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /><path d="M6 14C5.44772 14 5 14.4477 5 15C5 15.5523 5.44772 16 6 16C6.55228 16 7 15.5523 7 15C7 14.4477 6.55228 14 6 14Z" stroke="#000000" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /><path d="M18 8C17.4477 8 17 8.44772 17 9C17 9.55228 17.4477 10 18 10C18.5523 10 19 9.55228 19 9C19 8.44772 18.5523 8 18 8Z" stroke="#000000" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /><path d="M12 8C11.4477 8 11 8.44772 11 9C11 9.55228 11.4477 10 12 10C12.5523 10 13 9.55228 13 9C13 8.44772 12.5523 8 12 8Z" stroke="#000000" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /><path d="M6 8C5.44772 8 5 8.44772 5 9C5 9.55228 5.44772 10 6 10C6.55228 10 7 9.55228 7 9C7 8.44772 6.55228 8 6 8Z" stroke="#000000" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /></g></svg>` | Specify an icon | - |
+
+### Sort Sprite
+```js
+import { SortSprite } from 'funda-ui/Table';
+```
+| Property | Type | Default | Description | Required |
+| --- | --- | --- | --- | --- |
+| `ref` | React.ForwardedRef | - | It is the return element of this component.  | - |
+| `className` | string | `sort-trigger` | The class name of the filter input control. | - |
+| `fieldType` | `text` \| `number` \| `date` | `text` | The type of field that is sorted, which ensures the accuracy of sorting. | ✅ |
+| `icon` | ReactNode  | `<svg width="1em" height="1em" viewBox="0 0 18 18"><g stroke="none" strokeWidth="1" fill="none" fillRule="evenodd"><path d="M9.5,3 L13,8 L6,8 L9.5,3 L9.5,3 Z M6,11 L13,11 L9.5,16 L6,11 L6,11 Z" id="path" fill="#000000"></path></g></svg>` | Specify an icon | - |

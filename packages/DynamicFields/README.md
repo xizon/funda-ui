@@ -1,63 +1,8 @@
 # Dynamic Fields
 
 
-## API
 
-### Dynamic Fields
-```js
-import DynamicFields from 'funda-ui/DynamicFields';
-```
-| Property | Type | Default | Description | Required |
-| --- | --- | --- | --- | --- |
-| `key` | React.key | - | Trigger child component update when prop of parent changes. <blockquote>Ensure that complex dynamic form components update in real time on the page.</blockquote> | - |
-| `wrapperClassName` | string | `mb-3 position-relative` | The class name of the control wrapper. | - |
-| `btnAddWrapperClassName` | string | `align-middle` | The class name of the add button wrapper. | - |
-| `btnRemoveWrapperClassName` | string | `align-middle` | The class name of the remove button wrapper. | - |
-| `label` | string \| ReactNode | - | It is used to specify a label for an element of a form.<blockquote>Support html tags</blockquote> | - |
-| `data` | JSON Object | - | Control group are dynamically added after the button is triggered | ✅ |
-| `confirmText` | string | - | The text to display in the confirm box. | - |
-| `doNotRemoveDom` | boolean | false | Click the delete button without removing the Dom element. You can customize the status to delete each group. | - |
-| `iconAddBefore` | ReactNode | - | The button before add. | - |
-| `iconAddAfter` | ReactNode | - | The button after add. | - |
-| `iconAdd` | string \| ReactNode  | `<svg width="20px" height="20px" viewBox="0 0 24 24" fill="none"><path d="M12 2C6.49 2 2 6.49 2 12C2 17.51 6.49 22 12 22C17.51 22 22 17.51 22 12C22 6.49 17.51 2 12 2ZM16 12.75H12.75V16C12.75 16.41 12.41 16.75 12 16.75C11.59 16.75 11.25 16.41 11.25 16V12.75H8C7.59 12.75 7.25 12.41 7.25 12C7.25 11.59 7.59 11.25 8 11.25H11.25V8C11.25 7.59 11.59 7.25 12 7.25C12.41 7.25 12.75 7.59 12.75 8V11.25H16C16.41 11.25 16.75 11.59 16.75 12C16.75 12.41 16.41 12.75 16 12.75Z" fill="#000" /></svg>` | The label of the button to add a new item | - |
-| `iconAddPosition` | `start` \| `end` | `end` | Position of Add button. | - |
-| `iconRemove` | string \| ReactNode  | `<svg width="20px" height="20px" viewBox="0 0 24 24" fill="none"><path fillRule="evenodd" clipRule="evenodd" d="M22 12c0 5.523-4.477 10-10 10S2 17.523 2 12 6.477 2 12 2s10 4.477 10 10ZM8 11a1 1 0 1 0 0 2h8a1 1 0 1 0 0-2H8Z" fill="#f00" /></svg>` | The label of the button to delete current item, if it is not set, only the SVG icon will be included | - |
-| `innerAppendClassName` | string | - | Class names of table. <blockquote>Customize the class names of the append area, usually used in table styles</blockquote> | - |
-| `innerAppendCellClassName` | string | - | Class names of table cell. <blockquote>Customize the class names of the append area, usually used in table styles</blockquote> | - |
-| `innerAppendLastCellClassName` | string | - | Class names of table cell.<blockquote>Customize the class names of the append area, usually used in table styles</blockquote> | - |
-| `innerAppendHideClassName` | string | - | Specify a hidden class name.<blockquote>Customize the class names of the append area, usually used in table styles</blockquote> | - |
-| `innerAppendBodyClassName` | string | - | Class names of last table cell.<blockquote>Customize the class names of the append area, usually used in table styles</blockquote> | - |
-| `innerAppendHeadData` | React.ReactNode[] \| string[] | - | The data of group header content in an HTML table. such as `[<>User Name</>,<>Role(ID)</>,<>&nbsp;</>]` <blockquote>Customize the class names of the append area, usually used in table styles</blockquote> | - |
-| `innerAppendHeadRowShowFirst` | boolean | false | The first row of the table head is displayed by default. | - |
-| `innerAppendHeadRowClassName` | string | - | Class names of group header in an HTML table. <blockquote>Customize the class names of the append area, usually used in table styles</blockquote>| - |
-| `innerAppendHeadCellClassName` | string \| string[] | - | Class names of a cell as the header of a group of table cells. If Array it should be equal to the number of `innerAppendHeadData`. <blockquote>Customize the class names of the append area, usually used in table styles</blockquote>| - |
-| `innerAppendHeadCellStyles` | React.CSSProperties[] | false | Use inline styles per cell of table head. It should be equal to the number of `innerAppendHeadData`. such as `[{ background: "#f60" },{ background: "#f60" },{ width: "40px" }]` | - |
-| `innerAppendEmptyContent` | React.ReactNode | - | Content displayed when there are no content. If this property is not set, all content will be automatically hidden. <blockquote>Customize the class names of the append area, usually used in table styles</blockquote>| - |
-| `maxFields` | number | 10 | Maximum number of control group allowed to be added | - |
-| `onAdd` | function  | - | Call a function when add a control. It returns four callback values. <br /> <ol><li>The first is each group of fields (**HTMLDivElement[]**)</li><li> The second is the root div (**HTMLDivElement**)</li><li> The third is the current trigger (**HTMLAnchorElement**)</li><li> The last is classname of the container for each row that is dynamically added (**String**)</li></ol> | - |
-| `onRemove` | function  | - | Call a function when remove a control. It returns six callback values. <br /> <ol><li>The first is each group of fields (**HTMLDivElement[]**)</li><li>The second is the current key of removed item (**number** \| **string**)</li><li> The third is the current index of removed item (**number** \| **string**)</li><li> The fourth is the root div (**HTMLDivElement**)</li><li> The fifth is the current trigger (**HTMLAnchorElement**)</li><li> The last is classname of the container for each row that is dynamically added (**String**)</li></ol> | - |
-| `onLoad` | function  | - | Call a function when the component has been rendered completely. It returns three callback values. <br /> <ol><li>The first is the button ID of add (**String**)</li><li> The second is the root div (**HTMLDivElement**)</li><li> The last is classname of the container for each row that is dynamically added (**String**)</li></ol> | - |
-
-
-Element of per row accepts all props which this control support. Such as `style`, `data-*`, `tabIndex`, `id`, and so on.
-
-
----
-
-Array configuration properties of the `data`:
-
-| Property | Type | Default | Description | Required |
-| --- | --- | --- | --- | --- |
-| `init` | React.ReactNode[] | `[]` | Initial fields group with data. | - |
-| `tmpl` | React.ReactNode | `null` | An empty fields group. | - |
-
-> [!NOTE]
-> You can use the placeholder `%i%` instead of the **key** for your component attributes. <br />It allows you to use Vanilla JS to control the component Dom of each row.
-
-
-
-
-## Examples
+## General
 
 A simple usage, no default value.
 
@@ -925,7 +870,7 @@ export default () => {
 Use the following properties `innerAppend*` to change the layout to an HTML table.
 
 `styles.scss`:
-```scss
+```css
 /* ---------- Table Div  ----------- */
 .app-div-table__wrapper {
 
@@ -1113,7 +1058,7 @@ The current example achieves the following goals:
 
 
 `styles.scss`:
-```scss
+```css
 /* ---------- Table Div  ----------- */
 .app-div-table__wrapper {
 
@@ -1445,3 +1390,60 @@ export default () => {
 }
 
 ```
+
+
+
+## API
+
+### Dynamic Fields
+```js
+import DynamicFields from 'funda-ui/DynamicFields';
+```
+| Property | Type | Default | Description | Required |
+| --- | --- | --- | --- | --- |
+| `key` | React.key | - | Trigger child component update when prop of parent changes. <blockquote>Ensure that complex dynamic form components update in real time on the page.</blockquote> | - |
+| `wrapperClassName` | string | `mb-3 position-relative` | The class name of the control wrapper. | - |
+| `btnAddWrapperClassName` | string | `align-middle` | The class name of the add button wrapper. | - |
+| `btnRemoveWrapperClassName` | string | `align-middle` | The class name of the remove button wrapper. | - |
+| `label` | string \| ReactNode | - | It is used to specify a label for an element of a form.<blockquote>Support html tags</blockquote> | - |
+| `data` | JSON Object | - | Control group are dynamically added after the button is triggered | ✅ |
+| `confirmText` | string | - | The text to display in the confirm box. | - |
+| `doNotRemoveDom` | boolean | false | Click the delete button without removing the Dom element. You can customize the status to delete each group. | - |
+| `iconAddBefore` | ReactNode | - | The button before add. | - |
+| `iconAddAfter` | ReactNode | - | The button after add. | - |
+| `iconAdd` | string \| ReactNode  | `<svg width="20px" height="20px" viewBox="0 0 24 24" fill="none"><path d="M12 2C6.49 2 2 6.49 2 12C2 17.51 6.49 22 12 22C17.51 22 22 17.51 22 12C22 6.49 17.51 2 12 2ZM16 12.75H12.75V16C12.75 16.41 12.41 16.75 12 16.75C11.59 16.75 11.25 16.41 11.25 16V12.75H8C7.59 12.75 7.25 12.41 7.25 12C7.25 11.59 7.59 11.25 8 11.25H11.25V8C11.25 7.59 11.59 7.25 12 7.25C12.41 7.25 12.75 7.59 12.75 8V11.25H16C16.41 11.25 16.75 11.59 16.75 12C16.75 12.41 16.41 12.75 16 12.75Z" fill="#000" /></svg>` | The label of the button to add a new item | - |
+| `iconAddPosition` | `start` \| `end` | `end` | Position of Add button. | - |
+| `iconRemove` | string \| ReactNode  | `<svg width="20px" height="20px" viewBox="0 0 24 24" fill="none"><path fillRule="evenodd" clipRule="evenodd" d="M22 12c0 5.523-4.477 10-10 10S2 17.523 2 12 6.477 2 12 2s10 4.477 10 10ZM8 11a1 1 0 1 0 0 2h8a1 1 0 1 0 0-2H8Z" fill="#f00" /></svg>` | The label of the button to delete current item, if it is not set, only the SVG icon will be included | - |
+| `innerAppendClassName` | string | - | Class names of table. <blockquote>Customize the class names of the append area, usually used in table styles</blockquote> | - |
+| `innerAppendCellClassName` | string | - | Class names of table cell. <blockquote>Customize the class names of the append area, usually used in table styles</blockquote> | - |
+| `innerAppendLastCellClassName` | string | - | Class names of table cell.<blockquote>Customize the class names of the append area, usually used in table styles</blockquote> | - |
+| `innerAppendHideClassName` | string | - | Specify a hidden class name.<blockquote>Customize the class names of the append area, usually used in table styles</blockquote> | - |
+| `innerAppendBodyClassName` | string | - | Class names of last table cell.<blockquote>Customize the class names of the append area, usually used in table styles</blockquote> | - |
+| `innerAppendHeadData` | React.ReactNode[] \| string[] | - | The data of group header content in an HTML table. such as `[<>User Name</>,<>Role(ID)</>,<>&nbsp;</>]` <blockquote>Customize the class names of the append area, usually used in table styles</blockquote> | - |
+| `innerAppendHeadRowShowFirst` | boolean | false | The first row of the table head is displayed by default. | - |
+| `innerAppendHeadRowClassName` | string | - | Class names of group header in an HTML table. <blockquote>Customize the class names of the append area, usually used in table styles</blockquote>| - |
+| `innerAppendHeadCellClassName` | string \| string[] | - | Class names of a cell as the header of a group of table cells. If Array it should be equal to the number of `innerAppendHeadData`. <blockquote>Customize the class names of the append area, usually used in table styles</blockquote>| - |
+| `innerAppendHeadCellStyles` | React.CSSProperties[] | false | Use inline styles per cell of table head. It should be equal to the number of `innerAppendHeadData`. such as `[{ background: "#f60" },{ background: "#f60" },{ width: "40px" }]` | - |
+| `innerAppendEmptyContent` | React.ReactNode | - | Content displayed when there are no content. If this property is not set, all content will be automatically hidden. <blockquote>Customize the class names of the append area, usually used in table styles</blockquote>| - |
+| `maxFields` | number | 10 | Maximum number of control group allowed to be added | - |
+| `onAdd` | function  | - | Call a function when add a control. It returns four callback values. <br /> <ol><li>The first is each group of fields (**HTMLDivElement[]**)</li><li> The second is the root div (**HTMLDivElement**)</li><li> The third is the current trigger (**HTMLAnchorElement**)</li><li> The last is classname of the container for each row that is dynamically added (**String**)</li></ol> | - |
+| `onRemove` | function  | - | Call a function when remove a control. It returns six callback values. <br /> <ol><li>The first is each group of fields (**HTMLDivElement[]**)</li><li>The second is the current key of removed item (**number** \| **string**)</li><li> The third is the current index of removed item (**number** \| **string**)</li><li> The fourth is the root div (**HTMLDivElement**)</li><li> The fifth is the current trigger (**HTMLAnchorElement**)</li><li> The last is classname of the container for each row that is dynamically added (**String**)</li></ol> | - |
+| `onLoad` | function  | - | Call a function when the component has been rendered completely. It returns three callback values. <br /> <ol><li>The first is the button ID of add (**String**)</li><li> The second is the root div (**HTMLDivElement**)</li><li> The last is classname of the container for each row that is dynamically added (**String**)</li></ol> | - |
+
+
+Element of per row accepts all props which this control support. Such as `style`, `data-*`, `tabIndex`, `id`, and so on.
+
+
+---
+
+Array configuration properties of the `data`:
+
+| Property | Type | Default | Description | Required |
+| --- | --- | --- | --- | --- |
+| `init` | React.ReactNode[] | `[]` | Initial fields group with data. | - |
+| `tmpl` | React.ReactNode | `null` | An empty fields group. | - |
+
+> [!NOTE]
+> You can use the placeholder `%i%` instead of the **key** for your component attributes. <br />It allows you to use Vanilla JS to control the component Dom of each row.
+
+

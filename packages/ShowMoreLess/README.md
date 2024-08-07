@@ -1,28 +1,8 @@
 # Show More Less
 
 
-## API
 
-### Show More Less
-```js
-import ShowMoreLess from 'funda-ui/ShowMoreLess';
-```
-| Property | Type | Default | Description | Required |
-| --- | --- | --- | --- | --- |
-| `defaultHeight` | string  | 8.5rem | Set a default height to hide the remaining content. Please include the length unit, such as `em`, `px` | - |
-| `speed` | number  | 500| Speed of scrolling up. Amount of time measured in milliseconds. | - |
-| `easing` | `linear` \| `easeIn` \| `easeOut` \| `easeInOut` | - | Types of easing animation | - |
-| `triggerShowClassName` | string  | `d-inline w-auto` | Specify a class for the show trigger | - |
-| `triggerHideClassName` | string  | `d-inline w-auto` | Specify a class for the hide trigger | - |
-| `triggerShowContent` | ReactNode  | - | Set a piece of text or HTML code for the show trigger | - |
-| `triggerHideContent` | ReactNode  | - | Set a piece of text or HTML code for the hide trigger | - |
-| `maskColor` | string  | `255 255 255` | Specifies the color effect of the mask. It takes the value of rgb. | - |
-| `maskOpacity` | number  | `100` | Set the opacity of the mask. It is a percentage. | - |
-| `maskHeight` | string  | `2em` | Specifies the height of the mask. | - |
-| `tabIndex` | number  | 0 | This attribute allows developers to make HTML elements focusable. | - |
-
-
-## Examples
+## General
 
 ```js
 import React from "react";
@@ -63,3 +43,25 @@ export default () => {
     );
 }
 ```
+
+
+
+## API
+
+### Show More Less
+```js
+import ShowMoreLess from 'funda-ui/ShowMoreLess';
+```
+| Property | Type | Default | Description | Required |
+| --- | --- | --- | --- | --- |
+| `defaultHeight` | string  | 8.5rem | Set a default height to hide the remaining content. Please include the length unit, such as `em`, `px` | - |
+| `speed` | number  | 500| Speed of scrolling up. Amount of time measured in milliseconds. | - |
+| `easing` | `linear` \| `easeIn` \| `easeOut` \| `easeInOut` | - | Types of easing animation | - |
+| `triggerShowClassName` | string  | `d-inline w-auto` | Specify a class for the show trigger | - |
+| `triggerHideClassName` | string  | `d-inline w-auto` | Specify a class for the hide trigger | - |
+| `triggerShowContent` | ReactNode  | - | Set a piece of text or HTML code for the show trigger | - |
+| `triggerHideContent` | ReactNode  | - | Set a piece of text or HTML code for the hide trigger | - |
+| `maskColor` | string  | `255 255 255` | Specifies the color effect of the mask. It takes the value of rgb. | - |
+| `maskOpacity` | number  | `100` | Set the opacity of the mask. It is a percentage. | - |
+| `maskHeight` | string  | `2em` | Specifies the height of the mask. | - |
+| `tabIndex` | number  | 0 | This attribute allows developers to make HTML elements focusable. | - |

@@ -1,54 +1,7 @@
 # Modal Dialog
 
 
-## API
-
-### Modal Dialog
-```js
-import ModalDialog from 'funda-ui/ModalDialog';
-```
-| Property | Type | Default | Description | Required |
-| --- | --- | --- | --- | --- |
-| `ref` | React.ForwardedRef | - | It exposes the following methods of the component:  <br /> <ol><li>`ref.current.open()`</li><li>`ref.current.close()`</li></ol> | - |
-| `modalContentClassName` | string  | - | The extended class name of content wrapper | - |
-| `modalHeaderClassName` | string  | - | The extended class name of header | - |
-| `modalTitleClassName` | string  | - | The extended class name of title | - |
-| `modalBodyClassName` | string  | - | The extended class name of content area | - |
-| `modalFooterClassName` | string  | - | The extended class name of footer area | - |
-| `modalFooterExpandedContentClassName` | string  | - | The extended class name of footer content area | - |
-| `lockBodyScroll` | boolean  | true | Enables body scroll locking (for iOS Mobile and Tablet, Android, desktop Safari/Chrome/Firefox) without breaking scrolling of a target element. | - |
-| `draggable` | boolean  | false | Pop-ups that can be dragged | - |
-| `draggedPreventOutsideScreen` | JSON Object  | - | Prevent dragged item to be dragged outside of screen. You can set the vertical or horizontal direction. such as `{xAxis: true, yAxis: true}` <blockquote>It is valid when `draggable` is "true"</blockquote> | - |
-| `depth` | number  | 1055 | Set the depth value of the control to control the display of the pop-up layer appear above. Please set it when multiple controls are used at the same time. | - |
-| `show` | boolean  | false | Whether the modal dialog is visible or not, you can use it with the `autoClose` property at the same time | ✅ |
-| `autoClose` | number \| boolean  | false | Specify auto-close time. This function is not enabled when this value is false. If the value is `2000`, it will automatically close after 2 seconds. | - |
-| `heading` | ReactNode  | - | Set a window title | - |
-| `footerExpandedContent` | ReactNode  | - | Set footer content expanded | - |
-| `maskDisabled` | boolean  | false | Disable mask | - |
-| `maskOpacity` | string \| number  | - | The mask opacity. The value is in the range *0.0* to *1.0*. Do not want the user to see but also do not want to disable, use `0.001` | - |
-| `maxWidth` | number \| string \| function  | false | Custom modal max-width whick need a unit string. Such as: `500px` or `() => window.innerWidth >= 768 ? window.innerWidth - 100 + 'px' : undefined`| - |
-| `minHeight` | number \| string \| function  | false | Custom modal max-height whick need a unit string. Such as: `auto` or `() => window.innerHeight - 150 + 'px'` | - |
-| `closeOnlyBtn` | boolean  | false | Disable mask to close the window | - |
-| `closeDisabled` | boolean  | false | Disable the close button & mask. | - |
-| `triggerClassName` | string  | - | Specify a class for your trigger | - |
-| `triggerContent` | ReactNode  | - | Set a piece of text or HTML code for the trigger | - |
-| `closeBtnClassName` | string  | - | Specify a class for close button | - |
-| `closeBtnLabel` | string \| ReactNode  | - | Set a piece of text or HTML code for the close button | - |
-| `submitBtnClassName` | string  | - | Specify a class for submit button | - |
-| `submitBtnLabel` | string \| ReactNode  | - | Set a piece of text or HTML code for the submit button | - |
-| `fullscreen` | boolean  | false | Enable fullscreen modal. | - |
-| `enableVideo` | boolean  | false | Adapt the video to the window. For example, the content of the component can be written as: `<iframe width="560" height="315" src="https://www.youtube.com/embed/xxxxxx" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowFullScreen></iframe>` <br /> or <br />`<video playsInline controls poster="/assets/videos/480x270/demo.jpg" src="/assets/videos/480x270/demo.mp4"></video>` | - |
-| `data`  <blockquote>You could use [key](https://react.dev/learn/rendering-lists#why-does-react-need-keys) instead of it</blockquote>  | any  | - | Incoming data, you can set the third parameter of `onSubmit`. <blockquote>Changes in the `data` value will cause the component to re-render. It will be used when the value or content does not change when switching routes and needs to re-render the component or get the request.</blockquote> | - |
-| `onLoad` | function  | - | Call a function when the modal is rendered. It returns two callback values. <br /> <ol><li>The first is the function of open(**Function**)</li><li>The second is the function of close (**Function**)</li></ol>. | - |
-| `onOpen` | function  | - | Call a function when the modal is opened. It returns two callback values, one is the trigger object and the other is the closing event (**Function**). | - |
-| `onClose` | function  | - | Call a function when the modal is closed. It returns a callback value which is the trigger object. | - |
-| `onSubmit` | function  | - | Call a function when the modal is submitted. It returns three callback values. <br /> <ol><li>The first is the trigger object</li><li>The second is the closing event (**Function**)</li><li> The third is a string passed by the `data` attribute</li></ol> | - |
-
-
-
-
-
-## Examples
+## General
 
 ```js
 import React from "react";
@@ -681,3 +634,52 @@ export default () => {
     );
 }
 ```
+
+
+
+
+## API
+
+### Modal Dialog
+```js
+import ModalDialog from 'funda-ui/ModalDialog';
+```
+| Property | Type | Default | Description | Required |
+| --- | --- | --- | --- | --- |
+| `ref` | React.ForwardedRef | - | It exposes the following methods of the component:  <br /> <ol><li>`ref.current.open()`</li><li>`ref.current.close()`</li></ol> | - |
+| `modalContentClassName` | string  | - | The extended class name of content wrapper | - |
+| `modalHeaderClassName` | string  | - | The extended class name of header | - |
+| `modalTitleClassName` | string  | - | The extended class name of title | - |
+| `modalBodyClassName` | string  | - | The extended class name of content area | - |
+| `modalFooterClassName` | string  | - | The extended class name of footer area | - |
+| `modalFooterExpandedContentClassName` | string  | - | The extended class name of footer content area | - |
+| `lockBodyScroll` | boolean  | true | Enables body scroll locking (for iOS Mobile and Tablet, Android, desktop Safari/Chrome/Firefox) without breaking scrolling of a target element. | - |
+| `draggable` | boolean  | false | Pop-ups that can be dragged | - |
+| `draggedPreventOutsideScreen` | JSON Object  | - | Prevent dragged item to be dragged outside of screen. You can set the vertical or horizontal direction. such as `{xAxis: true, yAxis: true}` <blockquote>It is valid when `draggable` is "true"</blockquote> | - |
+| `depth` | number  | 1055 | Set the depth value of the control to control the display of the pop-up layer appear above. Please set it when multiple controls are used at the same time. | - |
+| `show` | boolean  | false | Whether the modal dialog is visible or not, you can use it with the `autoClose` property at the same time | ✅ |
+| `autoClose` | number \| boolean  | false | Specify auto-close time. This function is not enabled when this value is false. If the value is `2000`, it will automatically close after 2 seconds. | - |
+| `heading` | ReactNode  | - | Set a window title | - |
+| `footerExpandedContent` | ReactNode  | - | Set footer content expanded | - |
+| `maskDisabled` | boolean  | false | Disable mask | - |
+| `maskOpacity` | string \| number  | - | The mask opacity. The value is in the range *0.0* to *1.0*. Do not want the user to see but also do not want to disable, use `0.001` | - |
+| `maxWidth` | number \| string \| function  | false | Custom modal max-width whick need a unit string. Such as: `500px` or `() => window.innerWidth >= 768 ? window.innerWidth - 100 + 'px' : undefined`| - |
+| `minHeight` | number \| string \| function  | false | Custom modal max-height whick need a unit string. Such as: `auto` or `() => window.innerHeight - 150 + 'px'` | - |
+| `closeOnlyBtn` | boolean  | false | Disable mask to close the window | - |
+| `closeDisabled` | boolean  | false | Disable the close button & mask. | - |
+| `triggerClassName` | string  | - | Specify a class for your trigger | - |
+| `triggerContent` | ReactNode  | - | Set a piece of text or HTML code for the trigger | - |
+| `closeBtnClassName` | string  | - | Specify a class for close button | - |
+| `closeBtnLabel` | string \| ReactNode  | - | Set a piece of text or HTML code for the close button | - |
+| `submitBtnClassName` | string  | - | Specify a class for submit button | - |
+| `submitBtnLabel` | string \| ReactNode  | - | Set a piece of text or HTML code for the submit button | - |
+| `fullscreen` | boolean  | false | Enable fullscreen modal. | - |
+| `enableVideo` | boolean  | false | Adapt the video to the window. For example, the content of the component can be written as: `<iframe width="560" height="315" src="https://www.youtube.com/embed/xxxxxx" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowFullScreen></iframe>` <br /> or <br />`<video playsInline controls poster="/assets/videos/480x270/demo.jpg" src="/assets/videos/480x270/demo.mp4"></video>` | - |
+| `data`  <blockquote>You could use [key](https://react.dev/learn/rendering-lists#why-does-react-need-keys) instead of it</blockquote>  | any  | - | Incoming data, you can set the third parameter of `onSubmit`. <blockquote>Changes in the `data` value will cause the component to re-render. It will be used when the value or content does not change when switching routes and needs to re-render the component or get the request.</blockquote> | - |
+| `onLoad` | function  | - | Call a function when the modal is rendered. It returns two callback values. <br /> <ol><li>The first is the function of open(**Function**)</li><li>The second is the function of close (**Function**)</li></ol>. | - |
+| `onOpen` | function  | - | Call a function when the modal is opened. It returns two callback values, one is the trigger object and the other is the closing event (**Function**). | - |
+| `onClose` | function  | - | Call a function when the modal is closed. It returns a callback value which is the trigger object. | - |
+| `onSubmit` | function  | - | Call a function when the modal is submitted. It returns three callback values. <br /> <ol><li>The first is the trigger object</li><li>The second is the closing event (**Function**)</li><li> The third is a string passed by the `data` attribute</li></ol> | - |
+
+
+

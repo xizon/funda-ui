@@ -188,6 +188,22 @@
 .mf-select__wrapper .mf-select-multi__inputplaceholder-wrapper ul.mf-select-multi__list li > a:hover path {
   fill: var(--mf-sel-removebtn-hover-fill);
 }
+.mf-select__wrapper .mf-select-multi__inputplaceholder-wrapper ul.mf-select-multi__list li.mf-select-multi__list-item-add {
+  pointer-events: auto;
+  margin: 0;
+  padding: 0;
+  background: transparent;
+}
+.mf-select__wrapper .mf-select-multi__inputplaceholder-wrapper ul.mf-select-multi__list li.mf-select-multi__list-item-add input {
+  border: none;
+  font-size: 0.75rem;
+  transform: translateY(0.25rem);
+}
+.mf-select__wrapper .mf-select-multi__inputplaceholder-wrapper ul.mf-select-multi__list li.mf-select-multi__list-item-add input:focus {
+  border: none;
+  outline: none;
+  box-shadow: none;
+}
 .mf-select__wrapper .mf-select-multi__control-searchbtn {
   z-index: 5;
   pointer-events: auto;

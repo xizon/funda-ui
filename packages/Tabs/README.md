@@ -1,60 +1,7 @@
 # Tabs
 
 
-## API
-
-
-* [`<Tabs />`](#tabs)
-* [`<TabList />`](#tab-list)
-* [`<TabPanel />`](#tab-panel)
-
-
-
-### Tabs
-```js
-import { Tabs } from 'funda-ui/Tabs';
-```
-| Property | Type | Default | Description | Required |
-| --- | --- | --- | --- | --- |
-| `wrapperClassName` | string | `mb-3 position-relative` | The class name of the tabs wrapper. | - |
-| `navClassName` | string | `nav nav-tabs mb-3` | The class name of the navigation wrapper. | - |
-| `panelClassName` | string | `tab-content` | The class name of the content wrapper. | - |
-| `expandedActiveClassNameForNav` | string | - | specify an active class name for `<TabList />` | - |
-| `expandedActiveClassNameForPanel` | string | - | specify an active class name for `<TabPanel />` | - |
-| `animTransitionDuration` | number | 150 | Transition duration for css activation animation. | - |
-| `onChange` | function  | - | Call a function when the value of an HTML element is changed. It returns four callback values. <br /> <ol><li>The first is the trigger object</li><li>The second is the target ID of each panel</li><li> The third is the currently active index</li><li> The fourth is the persistent index of item.</li></ol> | - |
-| `onLoad` | function  | - | Call a function when the component is rendered. It returns only one callback value which is the function of activating item(**Function**). | - |
-
-
-### Tab List
-```js
-import { TabList } from 'funda-ui/Tabs';
-```
-| Property | Type | Default | Description | Required |
-| --- | --- | --- | --- | --- |
-| `key` | string \| `tab-list-*` | - |  A “key” is a special string attribute you need to include when creating lists of elements. Let’s assign a key to our list of items. Must contain the string `tab-list` | - |
-| `defaultActive` | boolean | false | Set an item to activate by default | - |
-
-
-
-### Tab Panel
-```js
-import { TabPanel } from 'funda-ui/Tabs';
-```
-| Property | Type | Default | Description | Required |
-| --- | --- | --- | --- | --- |
-| `key` | string \| `tab-panel-*` | - |  A “key” is a special string attribute you need to include when creating lists of elements. Let’s assign a key to our list of items. Must contain the string `tab-panel` | - |
-| `defaultActive` | boolean | false | Set an item to activate by default | - |
-| `tabpanelClass` | string | - | Additional style name, such as `shadow` | - |
-
-
-
-It accepts all props(include data-* attributes) which native div support.
-
-
-
-
-## Examples
+## General
 
 ```js
 import React from "react";
@@ -232,7 +179,7 @@ export default () => {
                                 if (i > 0) node.style.setProperty("padding-right", "1.5rem", "important");
                                 
                             }
-                        }}><i>{item}</button>
+                        }}>{item}</button>
 
                         {i > 0 ? <>
                             <span tabIndex={-1} onClick={handleRemoveTab} className="d-inline-block position-absolute top-0 end-0 mt-1 mx-1 me-3" style={{cursor: 'pointer', opacity: '.6'}}><svg width="12px" height="12px" viewBox="0 0 16 16"><path fill="inherit" d="M9.41 8l3.29-3.29c.19-.18.3-.43.3-.71a1.003 1.003 0 00-1.71-.71L8 6.59l-3.29-3.3a1.003 1.003 0 00-1.42 1.42L6.59 8 3.3 11.29c-.19.18-.3.43-.3.71a1.003 1.003 0 001.71.71L8 9.41l3.29 3.29c.18.19.43.3.71.3a1.003 1.003 0 00.71-1.71L9.41 8z" fillRule="evenodd"></path></svg></span>
@@ -343,3 +290,58 @@ export default () => {
 }
 
 ```
+
+
+
+## API
+
+
+* [`<Tabs />`](#tabs)
+* [`<TabList />`](#tab-list)
+* [`<TabPanel />`](#tab-panel)
+
+
+
+### Tabs
+```js
+import { Tabs } from 'funda-ui/Tabs';
+```
+| Property | Type | Default | Description | Required |
+| --- | --- | --- | --- | --- |
+| `wrapperClassName` | string | `mb-3 position-relative` | The class name of the tabs wrapper. | - |
+| `navClassName` | string | `nav nav-tabs mb-3` | The class name of the navigation wrapper. | - |
+| `panelClassName` | string | `tab-content` | The class name of the content wrapper. | - |
+| `expandedActiveClassNameForNav` | string | - | specify an active class name for `<TabList />` | - |
+| `expandedActiveClassNameForPanel` | string | - | specify an active class name for `<TabPanel />` | - |
+| `animTransitionDuration` | number | 150 | Transition duration for css activation animation. | - |
+| `onChange` | function  | - | Call a function when the value of an HTML element is changed. It returns four callback values. <br /> <ol><li>The first is the trigger object</li><li>The second is the target ID of each panel</li><li> The third is the currently active index</li><li> The fourth is the persistent index of item.</li></ol> | - |
+| `onLoad` | function  | - | Call a function when the component is rendered. It returns only one callback value which is the function of activating item(**Function**). | - |
+
+
+### Tab List
+```js
+import { TabList } from 'funda-ui/Tabs';
+```
+| Property | Type | Default | Description | Required |
+| --- | --- | --- | --- | --- |
+| `key` | string \| `tab-list-*` | - |  A “key” is a special string attribute you need to include when creating lists of elements. Let’s assign a key to our list of items. Must contain the string `tab-list` | - |
+| `defaultActive` | boolean | false | Set an item to activate by default | - |
+
+
+
+### Tab Panel
+```js
+import { TabPanel } from 'funda-ui/Tabs';
+```
+| Property | Type | Default | Description | Required |
+| --- | --- | --- | --- | --- |
+| `key` | string \| `tab-panel-*` | - |  A “key” is a special string attribute you need to include when creating lists of elements. Let’s assign a key to our list of items. Must contain the string `tab-panel` | - |
+| `defaultActive` | boolean | false | Set an item to activate by default | - |
+| `tabpanelClass` | string | - | Additional style name, such as `shadow` | - |
+
+
+
+It accepts all props(include data-* attributes) which native div support.
+
+
+

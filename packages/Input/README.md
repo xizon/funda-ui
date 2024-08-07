@@ -1,56 +1,8 @@
 # Input
 
 
-## API
 
-### Input
-```js
-import Input from 'funda-ui/Input';
-```
-| Property | Type | Default | Description | Required |
-| --- | --- | --- | --- | --- |
-| `ref` | React.ForwardedRef | - | It is the return element of this component.  | - |
-| `contentRef` | React.RefObject | - | It exposes the following methods:  <br /> <ol><li>`contentRef.current.control()`</li><li>`contentRef.current.clear(() => { console.log('callback') })`</li><li>`contentRef.current.set('test value', () => { console.log('callback') })`</li></ol> <blockquote>DO NOT USE it in the `onChange` of this component, otherwise it will cause infinite rendering</blockquote>| - |
-| `wrapperClassName` | string | `mb-3 position-relative` | The class name of the control wrapper. | - |
-| `controlClassName` | string | `form-control` | The class name of the control. | - |
-| `controlExClassName` | string | - | The extended class name of `controlClassName`. | - |
-| `controlGroupWrapperClassName` | string | `input-group` | The class name of the control group wrapper. | - |
-| `controlGroupTextClassName` | string | `input-group-text` | The class name of the control group text. | - |
-| `appendControl` | ReactNode  | - | An extension of the same level as \<input \>, usually used to placeholder of some elements | - |
-| `type` | string | text | The type of input. Such as \<input type="text" name="name"\> gives a text box. | - |
-| `defaultValue` | string | - | Specifies the default value of the component. It does not re-render the component because the incoming value changes. | - |
-| `value` | string | - | Set a default value for this control | - |
-| `label` | string \| ReactNode | - | It is used to specify a label for an element of a form.<blockquote>Support html tags</blockquote> | - |
-| `units` | string | - | Specify a unit identification string. Such as `em`, `px`, and so on. | - |
-| `name` | string | - | Name is not deprecated when used with form fields. | - |
-| `alt` | string | - | An HTML form with an image that represents the submit button. | - |
-| `inputMode` | `search` \| `text` \| `email` \| `tel` \| `url` \| `none` \| `numeric` \| `decimal` \| undefined | `text` | The inputmode global attribute is an enumerated attribute that hints at the type of data that might be entered by the user while editing the element or its contents. This allows a browser to display an appropriate virtual keyboard. | - |
-| `step` | number | 1 | Specified legal number intervals. | - |
-| `min` | number | - | The minimum value to accept | - |
-| `max` | number | - | The maximum value to accept | - |
-| `pattern` | string | - | The pattern attribute specifies a regular expression that the \<input \> element's value is checked against on form submission. such as `(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}` | - |
-| `placeholder` | string | - |  Specifies a short hint that describes. | - |
-| `maxLength` | number | - | Defines the maximum number of characters | - |
-| `readOnly` | boolean | false | When present, it specifies that this component field is read-only. | - |
-| `disabled` | boolean | false | Whether it is disabled | - |
-| `required` | boolean | false | When present, it specifies that a field must be filled out before submitting the form. | - |
-| `iconLeft` | ReactNode  | - | Set the left icon of this control | - |
-| `iconRight` | ReactNode  | - | Set the right icon of this control | - |
-| `autoComplete` | string  | `on` | The autocomplete attribute provides a hint to the user agent specifying how to, or indeed whether to, prefill a form control. | - |
-| `autoCapitalize` | string  | `off` | The autocapitalize property of the HTMLElement interface represents the element's capitalization behavior for user input. | - |
-| `spellCheck` | boolean  | false | The spellcheck global attribute is an enumerated attribute that defines whether the element may be checked for spelling errors. | - |
-| `onChangeCallback` | function  | - | Return value from `onChangeCallback` property to format the data of the control element, which will match the data structure of the component.  It returns two callback values. <br /> <ol><li>The first is the Control Event (**Event**)</li><li>The last is the control (**HTML Element**)</li></ol><br />At the same time it returns the Control Event, you will use this function and use the `return` keyword to return a new value. <blockquote>It fires when focus is lost. If return is not set, it will not return.</blockquote> | - |
-| `onInputCallback` | function  | - | Return value from `onInputCallback` property to format the data of the control element, which will match the data structure of the component.  It returns two callback values. <br /> <ol><li>The first is the Control Event (**Event**)</li><li>The last is the control (**HTML Element**)</li></ol><br />At the same time it returns the Control Event, you will use this function and use the `return` keyword to return a new value. <blockquote>It fires in real time as the user enters. If return is not set, it will not return.</blockquote> | - |
-| `onKeyPressedCallback` | function  | - | Return value from `onKeyPressedCallback` property to format the data of the control element, which will match the data structure of the component.  It returns two callback values. <br /> <ol><li>The first is the Control Event (**Event**)</li><li>The last is the control (**HTML Element**)</li></ol><br />At the same time it returns the Control Event, you will use this function and use the `return` keyword to return a new value. <blockquote>It fires when the keyboard is pressed. If return is not set, it will not return.</blockquote> | - |
-| `onChange` | function  | - | Call a function when the value of an HTML element is changed. It returns three callback values. <br /> <ol><li>The first is the Control Event (**Event**)</li><li>The second is the composition event (**Boolean**)</li><li>The last is the control (**HTML Element**)</li></ol>  | - |
-| `onBlur` | function  | - | Call a function when a user leaves an form field. It returns three callback values. <br /> <ol><li>The first is the Control Event (**Event**)</li><li>The second is the composition event (**Boolean**)</li><li>The last is the control (**HTML Element**)</li></ol> | - |
-| `onFocus` | function  | - | Call a function when an form field gets focus. It returns three callback values. <br /> <ol><li>The first is the Control Event (**Event**)</li><li>The second is the composition event (**Boolean**)</li><li>The last is the control (**HTML Element**)</li></ol> | - |
-| `onPressEnter` | function  | - | The callback function that is triggered when Enter key is pressed. It returns two callback values. <br /> <ol><li>The first is the Control Event (**Event**)</li><li>The last is the control (**HTML Element**)</li></ol> | - |
-
-
-It accepts all props which this control support. Such as `style`, `data-*`, `tabIndex`, `id`, and so on.
-
-## Examples
+## General
 
 ```js
 import React from "react";
@@ -246,6 +198,8 @@ export default () => {
 
 ## Implement independent time elements
 
+
+`styles.scss`:
 ```css
 .input-group:not(.has-left-content) {
     .demo {
@@ -291,7 +245,7 @@ export default () => {
 
 ```
 
-
+`index.tsx`:
 ```js
 import React from "react";
 import Input from 'funda-ui/Input';
@@ -640,3 +594,54 @@ export default () => {
 }
 
 ```
+
+
+
+## API
+
+### Input
+```js
+import Input from 'funda-ui/Input';
+```
+| Property | Type | Default | Description | Required |
+| --- | --- | --- | --- | --- |
+| `ref` | React.ForwardedRef | - | It is the return element of this component.  | - |
+| `contentRef` | React.RefObject | - | It exposes the following methods:  <br /> <ol><li>`contentRef.current.control()`</li><li>`contentRef.current.clear(() => { console.log('callback') })`</li><li>`contentRef.current.set('test value', () => { console.log('callback') })`</li></ol> <blockquote>DO NOT USE it in the `onChange` of this component, otherwise it will cause infinite rendering</blockquote>| - |
+| `wrapperClassName` | string | `mb-3 position-relative` | The class name of the control wrapper. | - |
+| `controlClassName` | string | `form-control` | The class name of the control. | - |
+| `controlExClassName` | string | - | The extended class name of `controlClassName`. | - |
+| `controlGroupWrapperClassName` | string | `input-group` | The class name of the control group wrapper. | - |
+| `controlGroupTextClassName` | string | `input-group-text` | The class name of the control group text. | - |
+| `appendControl` | ReactNode  | - | An extension of the same level as \<input \>, usually used to placeholder of some elements | - |
+| `type` | string | text | The type of input. Such as \<input type="text" name="name"\> gives a text box. | - |
+| `defaultValue` | string | - | Specifies the default value of the component. It does not re-render the component because the incoming value changes. | - |
+| `value` | string | - | Set a default value for this control | - |
+| `label` | string \| ReactNode | - | It is used to specify a label for an element of a form.<blockquote>Support html tags</blockquote> | - |
+| `units` | string | - | Specify a unit identification string. Such as `em`, `px`, and so on. | - |
+| `name` | string | - | Name is not deprecated when used with form fields. | - |
+| `alt` | string | - | An HTML form with an image that represents the submit button. | - |
+| `inputMode` | `search` \| `text` \| `email` \| `tel` \| `url` \| `none` \| `numeric` \| `decimal` \| undefined | `text` | The inputmode global attribute is an enumerated attribute that hints at the type of data that might be entered by the user while editing the element or its contents. This allows a browser to display an appropriate virtual keyboard. | - |
+| `step` | number | 1 | Specified legal number intervals. | - |
+| `min` | number | - | The minimum value to accept | - |
+| `max` | number | - | The maximum value to accept | - |
+| `pattern` | string | - | The pattern attribute specifies a regular expression that the \<input \> element's value is checked against on form submission. such as `(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}` | - |
+| `placeholder` | string | - |  Specifies a short hint that describes. | - |
+| `maxLength` | number | - | Defines the maximum number of characters | - |
+| `readOnly` | boolean | false | When present, it specifies that this component field is read-only. | - |
+| `disabled` | boolean | false | Whether it is disabled | - |
+| `required` | boolean | false | When present, it specifies that a field must be filled out before submitting the form. | - |
+| `iconLeft` | ReactNode  | - | Set the left icon of this control | - |
+| `iconRight` | ReactNode  | - | Set the right icon of this control | - |
+| `autoComplete` | string  | `on` | The autocomplete attribute provides a hint to the user agent specifying how to, or indeed whether to, prefill a form control. | - |
+| `autoCapitalize` | string  | `off` | The autocapitalize property of the HTMLElement interface represents the element's capitalization behavior for user input. | - |
+| `spellCheck` | boolean  | false | The spellcheck global attribute is an enumerated attribute that defines whether the element may be checked for spelling errors. | - |
+| `onChangeCallback` | function  | - | Return value from `onChangeCallback` property to format the data of the control element, which will match the data structure of the component.  It returns two callback values. <br /> <ol><li>The first is the Control Event (**Event**)</li><li>The last is the control (**HTML Element**)</li></ol><br />At the same time it returns the Control Event, you will use this function and use the `return` keyword to return a new value. <blockquote>It fires when focus is lost. If return is not set, it will not return.</blockquote> | - |
+| `onInputCallback` | function  | - | Return value from `onInputCallback` property to format the data of the control element, which will match the data structure of the component.  It returns two callback values. <br /> <ol><li>The first is the Control Event (**Event**)</li><li>The last is the control (**HTML Element**)</li></ol><br />At the same time it returns the Control Event, you will use this function and use the `return` keyword to return a new value. <blockquote>It fires in real time as the user enters. If return is not set, it will not return.</blockquote> | - |
+| `onKeyPressedCallback` | function  | - | Return value from `onKeyPressedCallback` property to format the data of the control element, which will match the data structure of the component.  It returns two callback values. <br /> <ol><li>The first is the Control Event (**Event**)</li><li>The last is the control (**HTML Element**)</li></ol><br />At the same time it returns the Control Event, you will use this function and use the `return` keyword to return a new value. <blockquote>It fires when the keyboard is pressed. If return is not set, it will not return.</blockquote> | - |
+| `onChange` | function  | - | Call a function when the value of an HTML element is changed. It returns three callback values. <br /> <ol><li>The first is the Control Event (**Event**)</li><li>The second is the composition event (**Boolean**)</li><li>The last is the control (**HTML Element**)</li></ol>  | - |
+| `onBlur` | function  | - | Call a function when a user leaves an form field. It returns three callback values. <br /> <ol><li>The first is the Control Event (**Event**)</li><li>The second is the composition event (**Boolean**)</li><li>The last is the control (**HTML Element**)</li></ol> | - |
+| `onFocus` | function  | - | Call a function when an form field gets focus. It returns three callback values. <br /> <ol><li>The first is the Control Event (**Event**)</li><li>The second is the composition event (**Boolean**)</li><li>The last is the control (**HTML Element**)</li></ol> | - |
+| `onPressEnter` | function  | - | The callback function that is triggered when Enter key is pressed. It returns two callback values. <br /> <ol><li>The first is the Control Event (**Event**)</li><li>The last is the control (**HTML Element**)</li></ol> | - |
+
+
+It accepts all props which this control support. Such as `style`, `data-*`, `tabIndex`, `id`, and so on.

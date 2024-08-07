@@ -1,33 +1,6 @@
 # Checkbox
 
-
-## API
-
-### Checkbox
-```js
-import Checkbox from 'funda-ui/Checkbox';
-```
-| Property | Type | Default | Description | Required |
-| --- | --- | --- | --- | --- |
-| `ref` | React.ForwardedRef | - | It is the return element of this component.  | - |
-| `contentRef` | React.ForwardedRef | - | It exposes the following methods:  <br /> <ol><li>`contentRef.current.control()`</li><li>`contentRef.current.clear(() => { console.log('callback') })`</li><li>`contentRef.current.set(false, () => { console.log('callback') })`</li></ol> <blockquote>DO NOT USE it in the `onChange` of this component, otherwise it will cause infinite rendering</blockquote>| - |
-| `wrapperClassName` | string | `mb-3 position-relative` | The class name of the control wrapper. | - |
-| `itemSelectedClassName` | string | `item-selected` | The class name of the item selected. | - |
-| `checked` | boolean | false | Is it selected. | - |
-| `indeterminate` | boolean | false | Set a checkbox to indeterminate state. | - |
-| `value` | string | - | Set a default value for this control. If unchecked, it will pass an empty value | ✅ |
-| `label` | string \| ReactNode | - | It is used to specify a label for an element of a form.<blockquote>Support html tags</blockquote> | - |
-| `name` | string | - | Name is not deprecated when used with form fields. | - |
-| `disabled` | boolean | false | Whether it is disabled | - |
-| `required` | boolean | false | When present, it specifies that a field must be filled out before submitting the form. | - |
-| `onChange` | function  | - | Call a function when the value of an HTML element is changed.  It returns two callback values. <br /> <ol><li>The first is the Control Event (**Event**)</li><li>The second is the current value (**Boolean**) </li></ol> | - |
-| `onBlur` | function  | - | Call a function when a user leaves a form field. It returns only one callback value which is the Control Event (**Event**)| - |
-| `onFocus` | function  | - | Call a function when an form field gets focus. It returns only one callback value which is the Control Event (**Event**)| - |
-
-
-It accepts all props which this control support. Such as `style`, `data-*`, `tabIndex`, `id`, and so on.
-
-## Examples
+## General
 
 ```js
 import React from "react";
@@ -281,3 +254,32 @@ export default () => {
     )
 }
 ```
+
+
+
+
+## API
+
+### Checkbox
+```js
+import Checkbox from 'funda-ui/Checkbox';
+```
+| Property | Type | Default | Description | Required |
+| --- | --- | --- | --- | --- |
+| `ref` | React.ForwardedRef | - | It is the return element of this component.  | - |
+| `contentRef` | React.ForwardedRef | - | It exposes the following methods:  <br /> <ol><li>`contentRef.current.control()`</li><li>`contentRef.current.clear(() => { console.log('callback') })`</li><li>`contentRef.current.set(false, () => { console.log('callback') })`</li></ol> <blockquote>DO NOT USE it in the `onChange` of this component, otherwise it will cause infinite rendering</blockquote>| - |
+| `wrapperClassName` | string | `mb-3 position-relative` | The class name of the control wrapper. | - |
+| `itemSelectedClassName` | string | `item-selected` | The class name of the item selected. | - |
+| `checked` | boolean | false | Is it selected. | - |
+| `indeterminate` | boolean | false | Set a checkbox to indeterminate state. | - |
+| `value` | string | - | Set a default value for this control. If unchecked, it will pass an empty value | ✅ |
+| `label` | string \| ReactNode | - | It is used to specify a label for an element of a form.<blockquote>Support html tags</blockquote> | - |
+| `name` | string | - | Name is not deprecated when used with form fields. | - |
+| `disabled` | boolean | false | Whether it is disabled | - |
+| `required` | boolean | false | When present, it specifies that a field must be filled out before submitting the form. | - |
+| `onChange` | function  | - | Call a function when the value of an HTML element is changed.  It returns two callback values. <br /> <ol><li>The first is the Control Event (**Event**)</li><li>The second is the current value (**Boolean**) </li></ol> | - |
+| `onBlur` | function  | - | Call a function when a user leaves a form field. It returns only one callback value which is the Control Event (**Event**)| - |
+| `onFocus` | function  | - | Call a function when an form field gets focus. It returns only one callback value which is the Control Event (**Event**)| - |
+
+
+It accepts all props which this control support. Such as `style`, `data-*`, `tabIndex`, `id`, and so on.

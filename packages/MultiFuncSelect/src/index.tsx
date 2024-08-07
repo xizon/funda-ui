@@ -186,7 +186,6 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, externalRef: an
     const uniqueID = useComId();
     const idRes = id || uniqueID;
     const rootRef = useRef<any>(null);
-    const rootSingleRef = useRef<any>(null);
     const rootMultiRef = useRef<any>(null);
     const selectInputRef = useRef<any>(null);
     const valueInputRef = useRef<any>(null);
@@ -766,10 +765,10 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, externalRef: an
     function adjustMultiControlContainerHeight() {
         setTimeout(() => {
 
+
             // Sometimes you may get 0, you need to judge
-            if (rootMultiRef.current.clientHeight > 0) {
-                rootSingleRef.current.style.height = rootMultiRef.current.clientHeight + 'px';
-                selectInputRef.current.style.height = rootMultiRef.current.clientHeight + 'px';
+            if (MULTI_SEL_VALID && rootMultiRef.current.clientHeight > 0) {
+                rootRef.current.style.height = rootMultiRef.current.clientHeight + 'px';
             }
 
             // popwin position update
@@ -1067,6 +1066,10 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, externalRef: an
         // remove data-* attibutes
         listContentRef.current.removeAttribute('data-height');
         listContentRef.current.removeAttribute('data-pos');
+
+        //
+        if (selectInputRef.current) selectInputRef.current.value = '';
+        
 
     }
 
@@ -1845,74 +1848,82 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, externalRef: an
             >
 
 
-                {/* RESULT CONTAINER */}
-                <div ref={rootSingleRef} className="position-relative">
-                    <input
-                        ref={(node) => {
-                            selectInputRef.current = node;
-                            if (typeof externalRef === 'function') {
-                                externalRef(node);
-                            } else if (externalRef) {
-                                externalRef.current = node;
-                            }
-                        }}
-                        tabIndex={tabIndex || 0}
-                        type="text"
-                        data-overlay-id={`mf-select__options-wrapper-${idRes}`}
-                        id={`label-${idRes}`}
 
-                        // Don't use "name", it's just a container to display the label
-                        data-name={name?.match(/(\[.*?\])/gi) ? `${name.split('[')[0]}-label[]` : `${name}-label`}
-                        data-select
-                        className={`${controlClassName || controlClassName === '' ? controlClassName : "form-control"} ${controlExClassName || ''}`}
-                        onFocus={handleFocus}
-                        onBlur={handleBlur}
-                        onClick={typeof readOnly === 'undefined' || !readOnly ? handleShowList : () => void (0)}
-                        onChange={handleChange}
-                        onCompositionStart={handleComposition}
-                        onCompositionUpdate={handleComposition}
-                        onCompositionEnd={handleComposition}
-                        disabled={disabled || null}
-                        required={required || null}
-                        readOnly={INPUT_READONLY}
-                        value={controlTempValue || controlTempValue === '' ? controlTempValue : (MULTI_SEL_VALID ? (VALUE_BY_BRACKETS ? convertArrToValByBrackets(formatIndentVal(controlArr.labels).map((v: any) => stripHTML(v))) : formatIndentVal(controlArr.labels).map((v: any) => stripHTML(v)).join(',')) : stripHTML(controlLabel as never))}  // do not use `defaultValue`
-
-                        style={{ cursor: 'pointer', color: 'transparent', borderBottomWidth: MULTI_SEL_VALID ? '0' : '1px', ...style }}
-                        autoComplete={typeof autoComplete === 'undefined' ? 'off' : autoComplete}
-                        autoCapitalize={typeof autoCapitalize === 'undefined' ? 'off' : autoCapitalize}
-                        spellCheck={typeof spellCheck === 'undefined' ? false : spellCheck}
-                        {...attributes}
-                    />
-
-
-                    <input
-                        ref={valueInputRef}
-                        type="hidden"
-                        id={idRes}
-                        name={name}
-                        value={MULTI_SEL_VALID ? (VALUE_BY_BRACKETS ? convertArrToValByBrackets(controlArr.values) : controlArr.values.join(',')) : controlValue}  // do not use `defaultValue`
-                        onChange={() => void(0)}
-                        {...attributes}
-                    />
-
-
-                    {/* BLINKING CURSOR */}
-                    {!MULTI_SEL_VALID ? <>
-                        <span
-                            className={`mf-select-multi__control-blinking-following-cursor animated ${hideBlinkingCursor() ? 'd-none' : ''}`}
-                            style={{
-                                left: `${blinkingPosStart}px`
+                {!MULTI_SEL_VALID ? <>
+                    <div className="position-relative">
+                        <input
+                            ref={(node) => {
+                                selectInputRef.current = node;
+                                if (typeof externalRef === 'function') {
+                                    externalRef(node);
+                                } else if (externalRef) {
+                                    externalRef.current = node;
+                                }
                             }}
-                        >
-                            {BLINKING_CURSOR_STR}
-                        </span>
-                    </> : null}
-                    {/* /BLINKING CURSOR */}
+                            tabIndex={tabIndex || 0}
+                            type="text"
+                            data-overlay-id={`mf-select__options-wrapper-${idRes}`}
+                            id={`label-${idRes}`}
+
+                            // Don't use "name", it's just a container to display the label
+                            data-name={name?.match(/(\[.*?\])/gi) ? `${name.split('[')[0]}-label[]` : `${name}-label`}
+                            data-select
+                            className={`${controlClassName || controlClassName === '' ? controlClassName : "form-control"} ${controlExClassName || ''}`}
+                            onFocus={handleFocus}
+                            onBlur={handleBlur}
+                            onClick={typeof readOnly === 'undefined' || !readOnly ? handleShowList : () => void (0)}
+                            onChange={handleChange}
+                            onCompositionStart={handleComposition}
+                            onCompositionUpdate={handleComposition}
+                            onCompositionEnd={handleComposition}
+                            disabled={disabled || null}
+                            required={required || null}
+                            readOnly={INPUT_READONLY}
+                            value={controlTempValue || controlTempValue === '' ? controlTempValue : (MULTI_SEL_VALID ? (VALUE_BY_BRACKETS ? convertArrToValByBrackets(formatIndentVal(controlArr.labels).map((v: any) => stripHTML(v))) : formatIndentVal(controlArr.labels).map((v: any) => stripHTML(v)).join(',')) : stripHTML(controlLabel as never))}  // do not use `defaultValue`
+
+                            style={{ 
+                                cursor: 'pointer', 
+                                color: 'transparent', 
+                                borderBottomWidth: MULTI_SEL_VALID ? '0' : '1px', 
+                                ...style 
+                            }}
+                            autoComplete={typeof autoComplete === 'undefined' ? 'off' : autoComplete}
+                            autoCapitalize={typeof autoCapitalize === 'undefined' ? 'off' : autoCapitalize}
+                            spellCheck={typeof spellCheck === 'undefined' ? false : spellCheck}
+                            {...attributes}
+                        />
+
+                    </div>
 
 
+                </> : null}
 
-                </div>
-                {/* /RESULT CONTAINER */}
+                {/* ========== RESULT CONTAINER ========== */}
+                <input
+                    ref={valueInputRef}
+                    type="hidden"
+                    id={idRes}
+                    name={name}
+                    value={MULTI_SEL_VALID ? (VALUE_BY_BRACKETS ? convertArrToValByBrackets(controlArr.values) : controlArr.values.join(',')) : controlValue}  // do not use `defaultValue`
+                    onChange={() => void (0)}
+                    {...attributes}
+                />
+
+
+                {/* BLINKING CURSOR */}
+                {!MULTI_SEL_VALID ? <>
+                    <span
+                        className={`mf-select-multi__control-blinking-following-cursor animated ${hideBlinkingCursor() ? 'd-none' : ''}`}
+                        style={{
+                            left: `${blinkingPosStart}px`
+                        }}
+                    >
+                        {BLINKING_CURSOR_STR}
+                    </span>
+                </> : null}
+                {/* /BLINKING CURSOR */}
+
+                {/* ========== /RESULT CONTAINER ==========  */}
 
 
 
@@ -2024,20 +2035,62 @@ const MultiFuncSelect = forwardRef((props: MultiFuncSelectProps, externalRef: an
                                         </li>
                                     ))}
 
-                                    <li className={`mf-select-multi__list-item-placeholder ${typeof placeholder === 'undefined' || placeholder === '' ? 'hide' : ''}`}>
+                                    {/* <li className={`mf-select-multi__list-item-placeholder ${typeof placeholder === 'undefined' || placeholder === '' ? 'hide' : ''}`}>
                                         <span ref={blinkingCursorPosDivRef} className={`mf-select-multi__control-blinking-cursor ${hideBlinkingCursor() ? 'control-placeholder' : ''} ${generateInputFocusStr() === BLINKING_CURSOR_STR ? 'animated' : ''}`}>
                                             {generateInputFocusStr()}
 
-                                            {/* BLINKING CURSOR */}
                                             <span
                                                 className={`mf-select-multi__control-blinking-following-cursor mf-select-multi__control-blinking-following-cursor--puretext animated ${hideBlinkingCursor() ? 'd-none' : ''}`}
                                             >
                                                 {BLINKING_CURSOR_STR}
                                             </span>
-                                            {/* /BLINKING CURSOR */}
-
+                                      
                                         </span>
 
+                                    </li> */}
+                                    <li  className="mf-select-multi__list-item-add">
+                                        <div className="position-relative">
+                                            {/*
+                                            // DO NOT USE following attributes in " Multiple selection Control":
+                                                a) data-select
+                                                b) value
+                                            */}
+                                            <input
+                                                ref={(node) => {
+                                                    selectInputRef.current = node;
+                                                    if (typeof externalRef === 'function') {
+                                                        externalRef(node);
+                                                    } else if (externalRef) {
+                                                        externalRef.current = node;
+                                                    }
+                                                }}
+                                                tabIndex={tabIndex || 0}
+                                                type="text"
+                                                data-overlay-id={`mf-select__options-wrapper-${idRes}`}
+                                                id={`label-${idRes}`}
+
+                                                // Don't use "name", it's just a container to display the label
+                                                data-name={name?.match(/(\[.*?\])/gi) ? `${name.split('[')[0]}-label[]` : `${name}-label`}
+                                                className={`${controlClassName || controlClassName === '' ? controlClassName : "form-control"} ${controlExClassName || ''}`}
+                                                onFocus={handleFocus}
+                                                onBlur={handleBlur}
+                                                onClick={typeof readOnly === 'undefined' || !readOnly ? handleShowList : () => void (0)}
+                                                onChange={handleChange}
+                                                onCompositionStart={handleComposition}
+                                                onCompositionUpdate={handleComposition}
+                                                onCompositionEnd={handleComposition}
+                                                disabled={disabled || null}
+                                                required={required || null}
+                                                readOnly={INPUT_READONLY}
+                                                placeholder={placeholder}
+                                                style={style}
+                                                autoComplete={typeof autoComplete === 'undefined' ? 'off' : autoComplete}
+                                                autoCapitalize={typeof autoCapitalize === 'undefined' ? 'off' : autoCapitalize}
+                                                spellCheck={typeof spellCheck === 'undefined' ? false : spellCheck}
+                                                {...attributes}
+                                            />
+
+                                        </div>
 
 
                                     </li>

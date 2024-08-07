@@ -17,19 +17,7 @@ It is generally used to create a React element at the root node (`document.body`
 
 
 
-## API
-
-### Root Portal
-```js
-import RootPortal from 'funda-ui/RootPortal';
-```
-| Property | Type | Default | Description | Required |
-| --- | --- | --- | --- | --- |
-| `containerClassName` | string  | - | The class name of container | - |
-| `show` | boolean  | false | Whether the container is visible or not | ✅ |
-
-
-## Examples
+## General
 
 ```js
 import React from "react";
@@ -49,3 +37,17 @@ export default () => {
     );
 }
 ```
+
+
+
+
+## API
+
+### Root Portal
+```js
+import RootPortal from 'funda-ui/RootPortal';
+```
+| Property | Type | Default | Description | Required |
+| --- | --- | --- | --- | --- |
+| `containerClassName` | string  | - | The class name of container | - |
+| `show` | boolean  | false | Whether the container is visible or not | ✅ |

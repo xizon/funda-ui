@@ -1,50 +1,9 @@
 # Dropdown Menu
 
 
-## API
-
-### Dropdown Menu
-```js
-import DropdownMenu from 'funda-ui/DropdownMenu';
-```
-| Property | Type | Default | Description | Required |
-| --- | --- | --- | --- | --- |
-| `wrapperClassName` | string | `dd-menu-default` | The class name of the menu wrapper. | - |
-| `listClassName` | string | `dd-menu-default__inner` | The class name of the list. | - |
-| `hyperlinkClassName` | string | `dd-menu-default__item` | The class name of the hyperlink of each item. | - |
-| `showClassName` | string | `show` | Activates the class name for the display list | - |
-| `exceededSidePosOffset` | number | 15 | Offset px that exceeds the far right or left side of the screen | - |
-| `hoverOn` | boolean | false | Use hover to trigger opening. | - |
-| `hoverOff` | boolean | false | Use hover to trigger closing. | - |
-| `hoverDelay` | number | 150 | This will delay applying the hover effects. | - |
-| `iconLeft` | ReactNode  | - | Set the left icon of this control | - |
-| `iconRight` | ReactNode  | - | Set the right icon of this control | - |
-| `name` | string  | - | Set a name for the form field for this component. Name is not deprecated when used with form fields. | - |
-| `triggerButton` | boolean  | false | Whether to use button style, otherwise use "div" | - |
-| `triggerClassName` | string  | `d-block-inline w-auto` | Specify a class for your trigger | - |
-| `triggerContent` | string  | - | Set a piece of text for the trigger <blockquote>Support html tags</blockquote> | - |
-| `triggerSwitchActive` | boolean  | false | When enabled, the corresponding option content will be displayed after selecting an option | - |
-| `options` | array  | - | Specify data of Dropdown Menu as a JSON string format. Such as: <br /> `[{"label":"Option 1","value":"option-1"},{"label":"Option 2","value":"option-2"}]` <blockquote>Support html tags</blockquote> | - |
-| `onChange` | function  | - | Call a function when the value of an HTML element is changed. It returns two callback values. <br /> <ol><li>The first is the value selected (**String**)</li><li>The last is data about the option as an argument (**JSON Object**).</li></ol> | - |
-| `tabIndex` | number  | -1 | This attribute allows developers to make HTML elements focusable. | - |
 
 
-
-Array configuration properties of the `options`:
-
-| Property | Type | Default | Description | Required |
-| --- | --- | --- | --- | --- |
-| `label` | string | - | Specify the label text for each option <blockquote>Support html tags</blockquote> | ✅ |
-| `listItemLabel` | string | - | Specify the label text for pop-up list items. <blockquote>Support html tags</blockquote> | - |
-| `value` | string | - | Specify the value for each option | ✅ |
-
-
-Among them, `label` and `value` are attributes used by the system, and other attributes can be added freely
-
-
-
-
-## Examples
+## General
 
 ```js
 import React from "react";
@@ -155,3 +114,45 @@ export default () => {
     );
 }
 ```
+
+
+## API
+
+### Dropdown Menu
+```js
+import DropdownMenu from 'funda-ui/DropdownMenu';
+```
+| Property | Type | Default | Description | Required |
+| --- | --- | --- | --- | --- |
+| `wrapperClassName` | string | `dd-menu-default` | The class name of the menu wrapper. | - |
+| `listClassName` | string | `dd-menu-default__inner` | The class name of the list. | - |
+| `hyperlinkClassName` | string | `dd-menu-default__item` | The class name of the hyperlink of each item. | - |
+| `showClassName` | string | `show` | Activates the class name for the display list | - |
+| `exceededSidePosOffset` | number | 15 | Offset px that exceeds the far right or left side of the screen | - |
+| `hoverOn` | boolean | false | Use hover to trigger opening. | - |
+| `hoverOff` | boolean | false | Use hover to trigger closing. | - |
+| `hoverDelay` | number | 150 | This will delay applying the hover effects. | - |
+| `iconLeft` | ReactNode  | - | Set the left icon of this control | - |
+| `iconRight` | ReactNode  | - | Set the right icon of this control | - |
+| `name` | string  | - | Set a name for the form field for this component. Name is not deprecated when used with form fields. | - |
+| `triggerButton` | boolean  | false | Whether to use button style, otherwise use "div" | - |
+| `triggerClassName` | string  | `d-block-inline w-auto` | Specify a class for your trigger | - |
+| `triggerContent` | string  | - | Set a piece of text for the trigger <blockquote>Support html tags</blockquote> | - |
+| `triggerSwitchActive` | boolean  | false | When enabled, the corresponding option content will be displayed after selecting an option | - |
+| `options` | array  | - | Specify data of Dropdown Menu as a JSON string format. Such as: <br /> `[{"label":"Option 1","value":"option-1"},{"label":"Option 2","value":"option-2"}]` <blockquote>Support html tags</blockquote> | - |
+| `onChange` | function  | - | Call a function when the value of an HTML element is changed. It returns two callback values. <br /> <ol><li>The first is the value selected (**String**)</li><li>The last is data about the option as an argument (**JSON Object**).</li></ol> | - |
+| `tabIndex` | number  | -1 | This attribute allows developers to make HTML elements focusable. | - |
+
+
+
+Array configuration properties of the `options`:
+
+| Property | Type | Default | Description | Required |
+| --- | --- | --- | --- | --- |
+| `label` | string | - | Specify the label text for each option <blockquote>Support html tags</blockquote> | ✅ |
+| `listItemLabel` | string | - | Specify the label text for pop-up list items. <blockquote>Support html tags</blockquote> | - |
+| `value` | string | - | Specify the value for each option | ✅ |
+
+
+Among them, `label` and `value` are attributes used by the system, and other attributes can be added freely
+

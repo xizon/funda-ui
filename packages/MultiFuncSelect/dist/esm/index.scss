@@ -257,6 +257,27 @@
                     }
                 }
 
+
+                &.mf-select-multi__list-item-add {
+                    pointer-events: auto;
+                    margin: 0;
+                    padding: 0;
+                    background: transparent;
+
+                    input {
+                        border: none;
+                        font-size: 0.75rem;
+                        transform: translateY(.25rem);
+
+                        &:focus {
+                            border: none;
+                            outline: none;
+                            box-shadow: none;
+                        }
+
+                    }
+                }
+
             }
 
         }

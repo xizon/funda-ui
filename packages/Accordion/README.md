@@ -1,42 +1,7 @@
 # Accordion
 
 
-## API
-
-### Accordion
-```js
-import { Accordion } from 'funda-ui/Accordion';
-```
-| Property | Type | Default | Description | Required |
-| --- | --- | --- | --- | --- |
-| `wrapperClassName` | string | `accordion` | The class name of the accordion wrapper. | - |
-| `displayTheFirstItem` | boolean | false | Display the only first item of a list | - |
-| `displayAllItems` | boolean | false | Display all items. <blockquote>When it is **true**, the `displayTheFirstItem` property is forced to invalid.</blockquote> | - |
-| `triggerType` | `click` \| `mouseover`  | click | One event type | - |
-| `duration` | number | 200 | The number of milliseconds(ms) each iteration of the animation takes to complete | - |
-| `easing` | `linear` \| `easeIn` \| `easeOut` \| `easeInOut` | `linear` | Types of easing animation | - |
-| `onChange` | function  | - | Handling events for collapsing item. It returns two callback values. <br /> <ol><li>The first is current item (**HTMLDivElement**)</li><li>The second is the current index number (**Number**)</li></ol> | - |
-| `alternateCollapse` | boolean | true | Mutually exclusive alternate expansion between the levels. | - |
-
-
-### Accordion Item
-```js
-import { AccordionItem } from 'funda-ui/Accordion';
-```
-| Property | Type | Default | Description | Required |
-| --- | --- | --- | --- | --- |
-| `defaultActive` | boolean | false | Set an item to activate by default | - |
-| `title` | string | - | Set a title for each item | - |
-| `itemClassName` | string | `accordion-item` | The class name of item container. | - |
-| `itemContentWrapperClassName` | string | `accordion-collapse` | The class name of the content container. | - |
-| `itemContentClassName` | string | `accordion-body` | The class name of the content. | - |
-| `itemTriggerClassName` | string | `accordion-button` | The class name of the trigger (button). | - |
-| `itemHeaderClassName` | string | `accordion-header position-relative` | The class name of the item header. | - |
-| `itemStyle` | CSSProperties | - | The styles of item. such as `{color: "red", fontSize: "1rem"}` | - |
-| `itemTriggerIcon` | ReactNode | - | The icon of trigger. | - |
-
-
-## Examples
+## General
 
 Show hidden divs on click.
 
@@ -146,3 +111,40 @@ export default () => {
     );
 }
 ```
+
+
+
+## API
+
+### Accordion
+```js
+import { Accordion } from 'funda-ui/Accordion';
+```
+| Property | Type | Default | Description | Required |
+| --- | --- | --- | --- | --- |
+| `wrapperClassName` | string | `accordion` | The class name of the accordion wrapper. | - |
+| `displayTheFirstItem` | boolean | false | Display the only first item of a list | - |
+| `displayAllItems` | boolean | false | Display all items. <blockquote>When it is **true**, the `displayTheFirstItem` property is forced to invalid.</blockquote> | - |
+| `triggerType` | `click` \| `mouseover`  | click | One event type | - |
+| `duration` | number | 200 | The number of milliseconds(ms) each iteration of the animation takes to complete | - |
+| `easing` | `linear` \| `easeIn` \| `easeOut` \| `easeInOut` | `linear` | Types of easing animation | - |
+| `onChange` | function  | - | Handling events for collapsing item. It returns two callback values. <br /> <ol><li>The first is current item (**HTMLDivElement**)</li><li>The second is the current index number (**Number**)</li></ol> | - |
+| `alternateCollapse` | boolean | true | Mutually exclusive alternate expansion between the levels. | - |
+
+
+### Accordion Item
+```js
+import { AccordionItem } from 'funda-ui/Accordion';
+```
+| Property | Type | Default | Description | Required |
+| --- | --- | --- | --- | --- |
+| `defaultActive` | boolean | false | Set an item to activate by default | - |
+| `title` | string | - | Set a title for each item | - |
+| `itemClassName` | string | `accordion-item` | The class name of item container. | - |
+| `itemContentWrapperClassName` | string | `accordion-collapse` | The class name of the content container. | - |
+| `itemContentClassName` | string | `accordion-body` | The class name of the content. | - |
+| `itemTriggerClassName` | string | `accordion-button` | The class name of the trigger (button). | - |
+| `itemHeaderClassName` | string | `accordion-header position-relative` | The class name of the item header. | - |
+| `itemStyle` | CSSProperties | - | The styles of item. such as `{color: "red", fontSize: "1rem"}` | - |
+| `itemTriggerIcon` | ReactNode | - | The icon of trigger. | - |
+

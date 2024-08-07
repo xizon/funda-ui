@@ -3653,7 +3653,8 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
          */
 
         var useWindowScroll = function useWindowScroll(_ref) {
-          var performance = _ref.performance,
+          var enabled = _ref.enabled,
+            performance = _ref.performance,
             handle = _ref.handle;
           var windowScrollUpdate;
           var _performance = useWindowScroll_slicedToArray(performance, 2),
@@ -4471,7 +4472,6 @@ var MultiFuncSelect = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forward
   var uniqueID = (0,funda_utils__WEBPACK_IMPORTED_MODULE_2__.useComId)();
   var idRes = id || uniqueID;
   var rootRef = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(null);
-  var rootSingleRef = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(null);
   var rootMultiRef = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(null);
   var selectInputRef = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(null);
   var valueInputRef = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(null);
@@ -5023,9 +5023,8 @@ var MultiFuncSelect = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forward
   function adjustMultiControlContainerHeight() {
     setTimeout(function () {
       // Sometimes you may get 0, you need to judge
-      if (rootMultiRef.current.clientHeight > 0) {
-        rootSingleRef.current.style.height = rootMultiRef.current.clientHeight + 'px';
-        selectInputRef.current.style.height = rootMultiRef.current.clientHeight + 'px';
+      if (MULTI_SEL_VALID && rootMultiRef.current.clientHeight > 0) {
+        rootRef.current.style.height = rootMultiRef.current.clientHeight + 'px';
       }
 
       // popwin position update
@@ -5250,6 +5249,9 @@ var MultiFuncSelect = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forward
     // remove data-* attibutes
     listContentRef.current.removeAttribute('data-height');
     listContentRef.current.removeAttribute('data-pos');
+
+    //
+    if (selectInputRef.current) selectInputRef.current.value = '';
   }
   function cancel() {
     // hide list
@@ -5978,8 +5980,7 @@ var MultiFuncSelect = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forward
     id: "mf-select__wrapper-".concat(idRes),
     className: "mf-select__wrapper ".concat(wrapperClassName || wrapperClassName === '' ? wrapperClassName : 'mb-3 position-relative', " ").concat(MULTI_SEL_VALID ? 'multiple-selection' : '', " ").concat(isOpen ? 'active focus' : ''),
     onKeyDown: handleKeyPressed
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-    ref: rootSingleRef,
+  }, !MULTI_SEL_VALID ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
     className: "position-relative"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("input", _extends({
     ref: function ref(node) {
@@ -6027,7 +6028,7 @@ var MultiFuncSelect = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forward
     autoComplete: typeof autoComplete === 'undefined' ? 'off' : autoComplete,
     autoCapitalize: typeof autoCapitalize === 'undefined' ? 'off' : autoCapitalize,
     spellCheck: typeof spellCheck === 'undefined' ? false : spellCheck
-  }, attributes)), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("input", _extends({
+  }, attributes)))) : null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("input", _extends({
     ref: valueInputRef,
     type: "hidden",
     id: idRes,
@@ -6042,7 +6043,7 @@ var MultiFuncSelect = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forward
     style: {
       left: "".concat(blinkingPosStart, "px")
     }
-  }, BLINKING_CURSOR_STR)) : null), !MULTI_SEL_VALID ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+  }, BLINKING_CURSOR_STR)) : null, !MULTI_SEL_VALID ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
     className: "mf-select-single__inputplaceholder-wrapper"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
     className: "mf-select-single__inputplaceholder-inner",
@@ -6131,13 +6132,45 @@ var MultiFuncSelect = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forward
       d: "M195.2 195.2a64 64 0 0 1 90.496 0L512 421.504 738.304 195.2a64 64 0 0 1 90.496 90.496L602.496 512 828.8 738.304a64 64 0 0 1-90.496 90.496L512 602.496 285.696 828.8a64 64 0 0 1-90.496-90.496L421.504 512 195.2 285.696a64 64 0 0 1 0-90.496z"
     }))));
   }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("li", {
-    className: "mf-select-multi__list-item-placeholder ".concat(typeof placeholder === 'undefined' || placeholder === '' ? 'hide' : '')
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
-    ref: blinkingCursorPosDivRef,
-    className: "mf-select-multi__control-blinking-cursor ".concat(hideBlinkingCursor() ? 'control-placeholder' : '', " ").concat(generateInputFocusStr() === BLINKING_CURSOR_STR ? 'animated' : '')
-  }, generateInputFocusStr(), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
-    className: "mf-select-multi__control-blinking-following-cursor mf-select-multi__control-blinking-following-cursor--puretext animated ".concat(hideBlinkingCursor() ? 'd-none' : '')
-  }, BLINKING_CURSOR_STR))))))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
+    className: "mf-select-multi__list-item-add"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+    className: "position-relative"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("input", _extends({
+    ref: function ref(node) {
+      selectInputRef.current = node;
+      if (typeof externalRef === 'function') {
+        externalRef(node);
+      } else if (externalRef) {
+        externalRef.current = node;
+      }
+    },
+    tabIndex: tabIndex || 0,
+    type: "text",
+    "data-overlay-id": "mf-select__options-wrapper-".concat(idRes),
+    id: "label-".concat(idRes)
+
+    // Don't use "name", it's just a container to display the label
+    ,
+    "data-name": name !== null && name !== void 0 && name.match(/(\[.*?\])/gi) ? "".concat(name.split('[')[0], "-label[]") : "".concat(name, "-label"),
+    className: "".concat(controlClassName || controlClassName === '' ? controlClassName : "form-control", " ").concat(controlExClassName || ''),
+    onFocus: handleFocus,
+    onBlur: handleBlur,
+    onClick: typeof readOnly === 'undefined' || !readOnly ? handleShowList : function () {
+      return void 0;
+    },
+    onChange: handleChange,
+    onCompositionStart: handleComposition,
+    onCompositionUpdate: handleComposition,
+    onCompositionEnd: handleComposition,
+    disabled: disabled || null,
+    required: required || null,
+    readOnly: INPUT_READONLY,
+    placeholder: placeholder,
+    style: style,
+    autoComplete: typeof autoComplete === 'undefined' ? 'off' : autoComplete,
+    autoCapitalize: typeof autoCapitalize === 'undefined' ? 'off' : autoCapitalize,
+    spellCheck: typeof spellCheck === 'undefined' ? false : spellCheck
+  }, attributes)))))))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
     className: "arrow position-absolute top-0 end-0 me-2 mt-1",
     style: {
       translate: 'all .2s',

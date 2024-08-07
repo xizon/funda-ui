@@ -2353,7 +2353,8 @@ const App = () => {
 
 
 var useWindowScroll = function useWindowScroll(_ref) {
-  var performance = _ref.performance,
+  var enabled = _ref.enabled,
+    performance = _ref.performance,
     handle = _ref.handle;
   var windowScrollUpdate;
   var _performance = useWindowScroll_slicedToArray(performance, 2),

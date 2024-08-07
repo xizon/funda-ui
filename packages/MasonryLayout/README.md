@@ -1,21 +1,9 @@
 # Masonry Layout
 
 
-## API
-
-### Masonry Layout
-```js
-import MasonryLayout from 'funda-ui/MasonryLayout';
-```
-| Property | Type | Default | Description | Required |
-| --- | --- | --- | --- | --- |
-| `columns` | number  | 2 | Set a default height to hide the remaining content. Please include the length unit, such as `em`, `px` | - |
-| `gap` | number  | 0 | Speed of scrolling up. Amount of time measured in milliseconds. | - |
-| `breakPoints` | JSON Object | - | Keys are breakpoints in px, values are the columns number. such as `{576:1,768:2,1200: 3}` | - |
 
 
-
-## Examples
+## General
 
 ```js
 import React from "react";
@@ -102,3 +90,16 @@ export default () => {
 }
 ```
 
+
+
+## API
+
+### Masonry Layout
+```js
+import MasonryLayout from 'funda-ui/MasonryLayout';
+```
+| Property | Type | Default | Description | Required |
+| --- | --- | --- | --- | --- |
+| `columns` | number  | 2 | Set a default height to hide the remaining content. Please include the length unit, such as `em`, `px` | - |
+| `gap` | number  | 0 | Speed of scrolling up. Amount of time measured in milliseconds. | - |
+| `breakPoints` | JSON Object | - | Keys are breakpoints in px, values are the columns number. such as `{576:1,768:2,1200: 3}` | - |

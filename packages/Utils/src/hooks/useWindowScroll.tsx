@@ -25,11 +25,13 @@ type ScrollData = {
 };
 
 type UseWindowScrollProps = {
+    enabled?: boolean;
     performance: PerformanceType;
     handle?: (scrollData: ScrollData) => void;
 };
 
 const useWindowScroll = ({
+    enabled,
     performance,
     handle
 }: UseWindowScrollProps): [ScrollData, () => void] => {

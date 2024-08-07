@@ -3672,7 +3672,8 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
                    */
 
                   var useWindowScroll = function useWindowScroll(_ref) {
-                    var performance = _ref.performance,
+                    var enabled = _ref.enabled,
+                      performance = _ref.performance,
                       handle = _ref.handle;
                     var windowScrollUpdate;
                     var _performance = useWindowScroll_slicedToArray(performance, 2),
@@ -4307,7 +4308,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
       /******/
       /******/ // The require function
       /******/
-      function __nested_webpack_require_207251__(moduleId) {
+      function __nested_webpack_require_207297__(moduleId) {
         /******/ // Check if module is in cache
         /******/var cachedModule = __webpack_module_cache__[moduleId];
         /******/
@@ -4326,7 +4327,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
         /******/
         /******/ // Execute the module function
         /******/
-        __webpack_modules__[moduleId].call(module.exports, module, module.exports, __nested_webpack_require_207251__);
+        __webpack_modules__[moduleId].call(module.exports, module, module.exports, __nested_webpack_require_207297__);
         /******/
         /******/ // Flag the module as loaded
         /******/
@@ -4343,14 +4344,14 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
       /******/
       (function () {
         /******/ // getDefaultExport function for compatibility with non-harmony modules
-        /******/__nested_webpack_require_207251__.n = function (module) {
+        /******/__nested_webpack_require_207297__.n = function (module) {
           /******/var getter = module && module.__esModule ? /******/function () {
             return module['default'];
           } : /******/function () {
             return module;
           };
           /******/
-          __nested_webpack_require_207251__.d(getter, {
+          __nested_webpack_require_207297__.d(getter, {
             a: getter
           });
           /******/
@@ -4364,9 +4365,9 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
       /******/
       (function () {
         /******/ // define getter functions for harmony exports
-        /******/__nested_webpack_require_207251__.d = function (exports, definition) {
+        /******/__nested_webpack_require_207297__.d = function (exports, definition) {
           /******/for (var key in definition) {
-            /******/if (__nested_webpack_require_207251__.o(definition, key) && !__nested_webpack_require_207251__.o(exports, key)) {
+            /******/if (__nested_webpack_require_207297__.o(definition, key) && !__nested_webpack_require_207297__.o(exports, key)) {
               /******/Object.defineProperty(exports, key, {
                 enumerable: true,
                 get: definition[key]
@@ -4383,7 +4384,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
       /******/ /* webpack/runtime/hasOwnProperty shorthand */
       /******/
       (function () {
-        /******/__nested_webpack_require_207251__.o = function (obj, prop) {
+        /******/__nested_webpack_require_207297__.o = function (obj, prop) {
           return Object.prototype.hasOwnProperty.call(obj, prop);
         };
         /******/
@@ -4393,7 +4394,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
       /******/
       (function () {
         /******/ // define __esModule on exports
-        /******/__nested_webpack_require_207251__.r = function (exports) {
+        /******/__nested_webpack_require_207297__.r = function (exports) {
           /******/if (typeof Symbol !== 'undefined' && Symbol.toStringTag) {
             /******/Object.defineProperty(exports, Symbol.toStringTag, {
               value: 'Module'
@@ -4412,7 +4413,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
       /******/ /* webpack/runtime/node module decorator */
       /******/
       (function () {
-        /******/__nested_webpack_require_207251__.nmd = function (module) {
+        /******/__nested_webpack_require_207297__.nmd = function (module) {
           /******/module.paths = [];
           /******/
           if (!module.children) module.children = [];
@@ -4429,22 +4430,22 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
       (function () {
         "use strict";
 
-        __nested_webpack_require_207251__.r(__webpack_exports__);
+        __nested_webpack_require_207297__.r(__webpack_exports__);
         /* harmony export */
-        __nested_webpack_require_207251__.d(__webpack_exports__, {
+        __nested_webpack_require_207297__.d(__webpack_exports__, {
           /* harmony export */"default": function _default() {
             return __WEBPACK_DEFAULT_EXPORT__;
           }
           /* harmony export */
         });
         /* harmony import */
-        var react__WEBPACK_IMPORTED_MODULE_0__ = __nested_webpack_require_207251__(787);
+        var react__WEBPACK_IMPORTED_MODULE_0__ = __nested_webpack_require_207297__(787);
         /* harmony import */
-        var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__nested_webpack_require_207251__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+        var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__nested_webpack_require_207297__.n(react__WEBPACK_IMPORTED_MODULE_0__);
         /* harmony import */
-        var funda_utils__WEBPACK_IMPORTED_MODULE_1__ = __nested_webpack_require_207251__(456);
+        var funda_utils__WEBPACK_IMPORTED_MODULE_1__ = __nested_webpack_require_207297__(456);
         /* harmony import */
-        var funda_utils__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__nested_webpack_require_207251__.n(funda_utils__WEBPACK_IMPORTED_MODULE_1__);
+        var funda_utils__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__nested_webpack_require_207297__.n(funda_utils__WEBPACK_IMPORTED_MODULE_1__);
         var _excluded = ["wrapperClassName", "controlClassName", "controlExClassName", "controlGroupWrapperClassName", "controlGroupTextClassName", "appearance", "isSearchInput", "readOnly", "disabled", "required", "placeholder", "value", "label", "name", "units", "iconLeft", "iconRight", "minLength", "maxLength", "btnId", "id", "icon", "autoComplete", "autoCapitalize", "spellCheck", "style", "tabIndex", "onClick", "onKeyPressedCallback", "onSubmit", "onChange", "onBlur", "onFocus", "onPressEnter"];
         function _extends() {
           _extends = Object.assign ? Object.assign.bind() : function (target) {
@@ -8177,7 +8178,8 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
          */
 
         var useWindowScroll = function useWindowScroll(_ref) {
-          var performance = _ref.performance,
+          var enabled = _ref.enabled,
+            performance = _ref.performance,
             handle = _ref.handle;
           var windowScrollUpdate;
           var _performance = useWindowScroll_slicedToArray(performance, 2),
