@@ -28,10 +28,10 @@ export default () => {
             >
                 <TableHead>
                     <TableRow>
-                        <TableCell scope="col">#</TableCell>
-                        <TableCell scope="col">Title 1</TableCell>
-                        <TableCell scope="col">Title 2</TableCell>
-                        <TableCell scope="col">Title 3</TableCell>
+                        <TableCell scope="col" nowrap="nowrap">#</TableCell>
+                        <TableCell scope="col" nowrap="nowrap">Title 1</TableCell>
+                        <TableCell scope="col" nowrap="nowrap">Title 2</TableCell>
+                        <TableCell scope="col" nowrap="nowrap">Title 3</TableCell>
                     </TableRow>
                 </TableHead>
                 <TableBody>
@@ -89,10 +89,10 @@ export default () => {
             >
                 <TableHead className="table-light">
                     <TableRow>
-                        <TableCell scope="col">#</TableCell>
-                        <TableCell scope="col">Title 1</TableCell>
-                        <TableCell scope="col">Title 2</TableCell>
-                        <TableCell scope="col">Title 3</TableCell>
+                        <TableCell scope="col" nowrap="nowrap">#</TableCell>
+                        <TableCell scope="col" nowrap="nowrap">Title 1</TableCell>
+                        <TableCell scope="col" nowrap="nowrap">Title 2</TableCell>
+                        <TableCell scope="col" nowrap="nowrap">Title 3</TableCell>
                     </TableRow>
                 </TableHead>
                 <TableBody>
@@ -162,10 +162,10 @@ export default () => {
             >
                 <TableHead>
                     <TableRow>
-                        <TableCell scope="col">#</TableCell>
-                        <TableCell scope="col">Title 1</TableCell>
-                        <TableCell scope="col">Title 2</TableCell>
-                        <TableCell scope="col">Title 3</TableCell>
+                        <TableCell scope="col" nowrap="nowrap">#</TableCell>
+                        <TableCell scope="col" nowrap="nowrap">Title 1</TableCell>
+                        <TableCell scope="col" nowrap="nowrap">Title 2</TableCell>
+                        <TableCell scope="col" nowrap="nowrap">Title 3</TableCell>
                     </TableRow>
                 </TableHead>
                 <TableBody>
@@ -226,10 +226,10 @@ export default () => {
             >
                 <TableHead>
                     <TableRow>
-                        <TableCell scope="col">#</TableCell>
-                        <TableCell scope="col">Title 1</TableCell>
-                        <TableCell scope="col">Title 2</TableCell>
-                        <TableCell scope="col">Title 3</TableCell>
+                        <TableCell scope="col" nowrap="nowrap">#</TableCell>
+                        <TableCell scope="col" nowrap="nowrap">Title 1</TableCell>
+                        <TableCell scope="col" nowrap="nowrap">Title 2</TableCell>
+                        <TableCell scope="col" nowrap="nowrap">Title 3</TableCell>
                     </TableRow>
                 </TableHead>
                 <TableBody>
@@ -283,10 +283,10 @@ export default () => {
             >
                 <TableHead>
                     <TableRow>
-                        <TableCell scope="col">#</TableCell>
-                        <TableCell scope="col">Title 1</TableCell>
-                        <TableCell scope="col">Title 2</TableCell>
-                        <TableCell scope="col">Title 3</TableCell>
+                        <TableCell scope="col" nowrap="nowrap">#</TableCell>
+                        <TableCell scope="col" nowrap="nowrap">Title 1</TableCell>
+                        <TableCell scope="col" nowrap="nowrap">Title 2</TableCell>
+                        <TableCell scope="col" nowrap="nowrap">Title 3</TableCell>
                     </TableRow>
                 </TableHead>
                 <TableBody>
@@ -316,6 +316,19 @@ export default () => {
     );
 }
 ```
+
+
+
+### f) Prevent text in a table cell from wrapping
+
+
+Use the following style:
+```css
+thead th {
+    white-space: nowrap;
+}
+```
+Or using `nowrap="nowrap"` in \<TableCell \/\> in \<TableHead \/\> can also prevent text from wrapping automatically.
 
 
 
@@ -418,7 +431,7 @@ export default () => {
                             {Array.from({ length: tableData[0].length }).fill(0).map((x: any, j: number) => {
                                 return <TableCell
                                     key={`head-col-${j}`}
-                                    scope="col"
+                                    scope="col" nowrap="nowrap"
                                     className="bg-dark text-light"
                                 >
                                    {j === 0 ? <>#</> : <>Title{j}</>}
@@ -490,10 +503,10 @@ export default () => {
                 <TableColgroup length={4} />
                 <TableHead>
                     <TableRow>
-                        <TableCell scope="col">#</TableCell>
-                        <TableCell scope="col">Name</TableCell>
-                        <TableCell scope="col">Friend</TableCell>
-                        <TableCell scope="col">Condition</TableCell>
+                        <TableCell scope="col" nowrap="nowrap">#</TableCell>
+                        <TableCell scope="col" nowrap="nowrap">Name</TableCell>
+                        <TableCell scope="col" nowrap="nowrap">Friend</TableCell>
+                        <TableCell scope="col" nowrap="nowrap">Condition</TableCell>
                     </TableRow>
                 </TableHead>
                 <TableBody>
@@ -577,10 +590,10 @@ export default () => {
 
                 <TableHead>
                     <TableRow>
-                        <TableCell scope="col">#</TableCell>
-                        <TableCell scope="col">Name</TableCell>
-                        <TableCell scope="col">Friend</TableCell>
-                        <TableCell scope="col">Condition</TableCell>
+                        <TableCell scope="col" nowrap="nowrap">#</TableCell>
+                        <TableCell scope="col" nowrap="nowrap">Name</TableCell>
+                        <TableCell scope="col" nowrap="nowrap">Friend</TableCell>
+                        <TableCell scope="col" nowrap="nowrap">Condition</TableCell>
                     </TableRow>
                 </TableHead>
                 <TableBody>
@@ -669,16 +682,16 @@ export default () => {
             >
                 <TableHead>
                     <TableRow>
-                        <TableCell scope="col" style={{width: '25px'}}>
+                        <TableCell scope="col" nowrap="nowrap" style={{width: '25px'}}>
                             {/** Checkbox */}
                             <div className="checkbox-indeterminate">
                                 <ToggleSelection row={-1} contentRef={tableSelectAllRef} />
                             </div>
                         </TableCell>
-                        <TableCell scope="col">#</TableCell>
-                        <TableCell scope="col">Name</TableCell>
-                        <TableCell scope="col">Friend</TableCell>
-                        <TableCell scope="col">Condition</TableCell>
+                        <TableCell scope="col" nowrap="nowrap">#</TableCell>
+                        <TableCell scope="col" nowrap="nowrap">Name</TableCell>
+                        <TableCell scope="col" nowrap="nowrap">Friend</TableCell>
+                        <TableCell scope="col" nowrap="nowrap">Condition</TableCell>
                     </TableRow>
                 </TableHead>
                 <TableBody>
@@ -688,7 +701,7 @@ export default () => {
                             data-key={`row-${index}`}
                             itemData={item}
                         >
-                            <TableCell scope="col">
+                            <TableCell scope="row">
                                 {/** Checkbox */}
                                 <div className="checkbox-indeterminate">
                                     <ToggleSelection 
@@ -775,11 +788,11 @@ export default () => {
             >
                 <TableHead>
                     <TableRow>
-                        <TableCell scope="col" style={{width: '25px'}}></TableCell>
-                        <TableCell scope="col">#</TableCell>
-                        <TableCell scope="col">Name</TableCell>
-                        <TableCell scope="col">Friend</TableCell>
-                        <TableCell scope="col">Condition</TableCell>
+                        <TableCell scope="col" nowrap="nowrap" style={{width: '25px'}}></TableCell>
+                        <TableCell scope="col" nowrap="nowrap">#</TableCell>
+                        <TableCell scope="col" nowrap="nowrap">Name</TableCell>
+                        <TableCell scope="col" nowrap="nowrap">Friend</TableCell>
+                        <TableCell scope="col" nowrap="nowrap">Condition</TableCell>
                     </TableRow>
                 </TableHead>
                 <TableBody>
@@ -789,7 +802,7 @@ export default () => {
                             data-key={`row-${index}`}
                             itemData={item}
                         >
-                            <TableCell scope="col">
+                            <TableCell scope="row">
                                 {/** Checkbox */}
                                 <div className="checkbox-indeterminate">
                                     <ToggleSelection 
@@ -871,10 +884,10 @@ export default () => {
          
                 <TableHead>
                     <TableRow>
-                        <TableCell scope="col">#</TableCell>
-                        <TableCell scope="col">Name</TableCell>
-                        <TableCell scope="col">Friend</TableCell>
-                        <TableCell scope="col">Condition</TableCell>
+                        <TableCell scope="col" nowrap="nowrap">#</TableCell>
+                        <TableCell scope="col" nowrap="nowrap">Name</TableCell>
+                        <TableCell scope="col" nowrap="nowrap">Friend</TableCell>
+                        <TableCell scope="col" nowrap="nowrap">Condition</TableCell>
                     </TableRow>
                 </TableHead>
                 <TableBody>
@@ -952,12 +965,12 @@ export default () => {
 
                     <TableHead>
                         <TableRow>
-                            <TableCell scope="col">#</TableCell>
-                            <TableCell scope="col">Money <SortSprite fieldType="number" /></TableCell>
-                            <TableCell scope="col">Name <SortSprite fieldType="text" /></TableCell>
-                            <TableCell scope="col">No. <SortSprite fieldType="number" /></TableCell>
-                            <TableCell scope="col">Date1 <SortSprite fieldType="date" /></TableCell>
-                            <TableCell scope="col">Date2 <SortSprite fieldType="date" /></TableCell>
+                            <TableCell scope="col" nowrap="nowrap">#</TableCell>
+                            <TableCell scope="col" nowrap="nowrap">Money <SortSprite fieldType="number" /></TableCell>
+                            <TableCell scope="col" nowrap="nowrap">Name <SortSprite fieldType="text" /></TableCell>
+                            <TableCell scope="col" nowrap="nowrap">No. <SortSprite fieldType="number" /></TableCell>
+                            <TableCell scope="col" nowrap="nowrap">Date1 <SortSprite fieldType="date" /></TableCell>
+                            <TableCell scope="col" nowrap="nowrap">Date2 <SortSprite fieldType="date" /></TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
@@ -1029,16 +1042,16 @@ function MemoTable(props: any) {
             >
                 <TableHead>
                     <TableRow>
-                        <TableCell scope="col" style={{width: '25px'}}>
+                        <TableCell scope="col" nowrap="nowrap" style={{width: '25px'}}>
                             {/** Checkbox */}
                             <div className="checkbox-indeterminate">
                                 <ToggleSelection row={-1} contentRef={tableSelectAllRef} />
                             </div>
                         </TableCell>
-                        <TableCell scope="col">#</TableCell>
-                        <TableCell scope="col">Name</TableCell>
-                        <TableCell scope="col">Friend</TableCell>
-                        <TableCell scope="col">Condition</TableCell>
+                        <TableCell scope="col" nowrap="nowrap">#</TableCell>
+                        <TableCell scope="col" nowrap="nowrap">Name</TableCell>
+                        <TableCell scope="col" nowrap="nowrap">Friend</TableCell>
+                        <TableCell scope="col" nowrap="nowrap">Condition</TableCell>
                     </TableRow>
                 </TableHead>
                 <TableBody>
@@ -1048,7 +1061,7 @@ function MemoTable(props: any) {
                             data-key={`row-${index}`}
                             itemData={item}
                         >
-                            <TableCell scope="col">
+                            <TableCell scope="row">
                                 {/** Checkbox */}
                                 <div className="checkbox-indeterminate">
                                     <ToggleSelection 
@@ -1314,12 +1327,12 @@ const Main = (props: any) => {
 
                 <TableHead>
                     <TableRow>
-                        <TableCell scope="col">#</TableCell>
-                        <TableCell scope="col">Money</TableCell>
-                        <TableCell scope="col" style={{ width: '200px' }}>Name</TableCell>
-                        <TableCell scope="col">No.</TableCell>
-                        <TableCell scope="col" style={{ width: '200px' }}>Date1</TableCell>
-                        <TableCell scope="col">Date2</TableCell>
+                        <TableCell scope="col" nowrap="nowrap">#</TableCell>
+                        <TableCell scope="col" nowrap="nowrap">Money</TableCell>
+                        <TableCell scope="col" nowrap="nowrap" style={{ width: '200px' }}>Name</TableCell>
+                        <TableCell scope="col" nowrap="nowrap">No.</TableCell>
+                        <TableCell scope="col" nowrap="nowrap" style={{ width: '200px' }}>Date1</TableCell>
+                        <TableCell scope="col" nowrap="nowrap">Date2</TableCell>
                     </TableRow>
                 </TableHead>
                 <TableBody>
@@ -1432,12 +1445,12 @@ export default () => {
 
                 <TableHead>
                     <TableRow>
-                        <TableCell scope="col">#</TableCell>
-                        <TableCell scope="col">Money</TableCell>
-                        <TableCell scope="col">Name</TableCell>
-                        <TableCell scope="col">No.</TableCell>
-                        <TableCell scope="col">Date1</TableCell>
-                        <TableCell scope="col">Date2</TableCell>
+                        <TableCell scope="col" nowrap="nowrap">#</TableCell>
+                        <TableCell scope="col" nowrap="nowrap">Money</TableCell>
+                        <TableCell scope="col" nowrap="nowrap">Name</TableCell>
+                        <TableCell scope="col" nowrap="nowrap">No.</TableCell>
+                        <TableCell scope="col" nowrap="nowrap">Date1</TableCell>
+                        <TableCell scope="col" nowrap="nowrap">Date2</TableCell>
                     </TableRow>
                 </TableHead>
                 <TableBody>
@@ -1512,12 +1525,12 @@ const MyTable = () => {
 
                 <TableHead>
                     <TableRow>
-                        <TableCell scope="col">#</TableCell>
-                        <TableCell scope="col">Money</TableCell>
-                        <TableCell scope="col">Name</TableCell>
-                        <TableCell scope="col">No.</TableCell>
-                        <TableCell scope="col">Date1</TableCell>
-                        <TableCell scope="col">Date2</TableCell>
+                        <TableCell scope="col" nowrap="nowrap">#</TableCell>
+                        <TableCell scope="col" nowrap="nowrap">Money</TableCell>
+                        <TableCell scope="col" nowrap="nowrap">Name</TableCell>
+                        <TableCell scope="col" nowrap="nowrap">No.</TableCell>
+                        <TableCell scope="col" nowrap="nowrap">Date1</TableCell>
+                        <TableCell scope="col" nowrap="nowrap">Date2</TableCell>
                     </TableRow>
                 </TableHead>
                 <TableBody>
@@ -1598,7 +1611,7 @@ import { Table } from 'funda-ui/Table';
 | `filterFields` | Array | - | Fields used for filtering. such as `['name', 'friend']` <blockquote>The `data` prop must exist to fire data interaction.</blockquote> | - |
 | `bordered` | boolean  | false | Adds borders on all sides of the table and cells | - |
 | `colGroup` | boolean  | false | Set the background color of the multiple columns with the `<colgroup>` and `<col>` tags | - |
-| `cellAutoWidth` | boolean  | false | Width does not expand automatically, each cell uses a custom minimum width. <blockquote>If the content is exceeded, there will be a horizontal scrollbar on the table</blockquote> | - |
+| `cellAutoWidth` | boolean  | false | Width does not expand automatically, each cell uses a custom minimum width. <blockquote>If the content is exceeded, there will be a horizontal scrollbar on the table. And if this attribute exists, the \<TableCell \/\> in the \<TableHead \/\>` does not need to use `nowrap="nowrap"` to avoid automatic text wrapping.</blockquote> | - |
 | `responsive` | boolean  | true | For horizontally scrolling tables on the wrapper. | - |
 | `enhancedResponsive` | boolean  | false | Create enhanced responsive tables up to a particular breakpoint. <blockquote>Valid when the device width is less than or equal to 768px. `<TableRow />` and `<TableCell />` must have attribute `data-table-text`.</blockquote> | - |
 | `enhancedResponsiveWithScrollBar` | boolean  | false | Create enhanced responsive tables up to a particular breakpoint. This property allows scroll bars to be created automatically in the table with floating header. <blockquote>Valid when the device width is less than or equal to 768px. `<TableCell />` must have attribute `data-table-col`.</blockquote> | - |
