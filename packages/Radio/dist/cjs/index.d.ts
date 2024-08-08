@@ -1,5 +1,5 @@
 import React from 'react';
-interface OptionConfig {
+export interface OptionConfig {
     [propName: string]: string | number | React.ReactNode | boolean;
 }
 declare type RadioOptionChangeFnType = (arg1: any, arg2: any, arg3?: any, arg4?: any) => void;

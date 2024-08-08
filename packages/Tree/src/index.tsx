@@ -12,13 +12,13 @@ import { initUlHeight, initAsyncItems } from './init-height';
 
 
 
-interface ListSearchDataConfig {
+export interface ListSearchDataConfig {
     title: string | number;
 }
 
 
 
-interface DataNode {
+export interface DataNode {
     key: React.Key;
     title: string;
     link?: string;
@@ -37,7 +37,7 @@ interface DataNode {
     children?: DataNode[];
 }
 
-interface fetchConfig {
+export interface FetchConfig {
     fetchFuncAsync?: any | undefined;
     fetchFuncMethod?: string | undefined;
     fetchFuncMethodParams?: any[] | undefined;
@@ -130,7 +130,7 @@ const Tree = (props: TreeProps) => {
     }
         
 
-    async function fetchData(fetch: fetchConfig, params: any) {
+    async function fetchData(fetch: FetchConfig, params: any) {
 
         if (typeof fetch.fetchFuncAsync === 'object') {
             const response: any = await fetch.fetchFuncAsync[`${fetch.fetchFuncMethod}`](...params.split(','));
@@ -232,7 +232,7 @@ const Tree = (props: TreeProps) => {
     }
 
 
-    function initDefaultValue(key: React.Key | null, fetch: fetchConfig | null = null, firstRender: boolean = false, retrieveData: ListSearchDataConfig[] = []) {
+    function initDefaultValue(key: React.Key | null, fetch: FetchConfig | null = null, firstRender: boolean = false, retrieveData: ListSearchDataConfig[] = []) {
 
         if ( firstRender ) {
             addKey(data, '', 0);

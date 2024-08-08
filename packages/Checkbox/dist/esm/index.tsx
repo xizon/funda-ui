@@ -169,6 +169,7 @@ const Checkbox = forwardRef((props: CheckboxProps, externalRef: any) => {
 
                     <input
                         type="hidden"
+                        tabIndex={-1}
                         id={idRes}
                         name={name}
                         value={val ? value as string || '' : ''}  // do not use `defaultValue`

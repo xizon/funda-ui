@@ -1,6 +1,6 @@
 import React from 'react';
 
-interface OptionConfig {
+export interface OptionConfig {
     value?: string | undefined;
     label?: string | undefined;
     listItemLabel?: string | undefined;

@@ -155,6 +155,7 @@ import {
 } from './libs/date';
 
 import {
+    removeArrDuplicateItems,
     deepClone,
     flatData
 } from './libs/object';
@@ -263,6 +264,7 @@ export {
    easeInBack, 
    easeOutBack, 
    easeInOutBack,
+   removeArrDuplicateItems,
    deepClone,
    flatData,
    isTimeString,

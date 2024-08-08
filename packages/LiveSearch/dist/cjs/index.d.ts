@@ -1,5 +1,5 @@
 import React from 'react';
-interface OptionConfig {
+export interface OptionConfig {
     disabled?: boolean;
     label: any;
     listItemLabel?: any;

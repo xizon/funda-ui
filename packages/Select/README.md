@@ -103,7 +103,12 @@ export default () => {
                     <input ... value=​"[Option 3]​[Option 2]​[Option 1]​">​ 
                     <input ... value=​"[value-3]​[value-2]​[value-1]​">​ 
                     {
-                        labels: ['Option 3', '<del style=color:red>deprecate</del>Option 2', 'Option 1']labelsOfString: "[Option 3][<del style=color:red>deprecate</del>Option 2][Option 1]", 
+                        items: [
+                            {"label": "Option 3","value": "value-3"},
+                            {"label": "<del style=color:red>deprecate</del>Option 2","value": "value-2"},
+                            {"label": "Option 1","value": "value-1"}
+                        ],
+                        labels: ['Option 3', '<del style=color:red>deprecate</del>Option 2', 'Option 1'],
                         values: ['value-3', 'value-2', 'value-1'], 
                         labelsOfString: '[Option 3][<del style=color:red>deprecate</del>Option 2][Option 1]', 
                         valuesOfString: '[value-3][value-2][value-1]'
@@ -154,6 +159,30 @@ export default () => {
                     console.log(e, e2, val);
                 }}
             />
+
+            <Select
+                value="[1][2][3][4][5][6][7][8][9][10][11][12][13][14][15][16][17][18][19][20]"
+                multiSelect={{
+                    valid: true,
+                    selectAll: true,
+                    selectAllLabel: "Select all options",
+                    data: {
+                        values: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20].map(v => v.toString()),
+                        labels: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20].map(v => v.toString()),
+                        queryStrings: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20].map(v => ''),
+                    }
+                }}
+                placeholder="Select"
+                name="name"
+                options={Array.from({ length: 100 }).fill(0).map((v, i) => {
+                    return { "label": `${i}`, "value": `${i}`, "queryString": "" }
+                })}
+                onChange={(e, e2, val) => {
+                    console.log(e, e2, val);
+                }}
+            />
+
+
 
 
 
@@ -314,6 +343,8 @@ export default () => {
 ```
 
 
+
+
 ## No spacing
 
 ```js
@@ -345,6 +376,73 @@ export default () => {
     );
 }
 ```
+
+
+## Render the selected value for multiple selection
+
+```js
+import React from "react";
+import Select, { MultiSelectControlValConfig } from 'funda-ui/Select';
+
+// component styles
+import 'funda-ui/Select/index.css';
+
+export default () => {
+
+
+    return (
+        <>
+
+            <Select
+                value="[1][2][3][4][5][6][7][8][9][10][11][12][13][14][15][16][17][18][19][20]"
+                multiSelect={{
+                    valid: true,
+                    selectAll: true,
+                    selectAllLabel: "Select all options",
+                    data: {
+                        values: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20].map(v => v.toString()),
+                        labels: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20].map(v => v.toString()),
+                        queryStrings: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20].map(v => ''),
+                    }
+                }}
+                renderSelectedValue={(selectedData: MultiSelectControlValConfig, removeFunc: (e: React.MouseEvent) => void) => (
+                    <>
+                        {selectedData.labels.map((item: string, index: number) => (
+                            <li
+                                key={'selected-item-' + index}
+                                data-value={selectedData.values[index]}
+                                data-label={item}
+                                className="bg-transparent m-0"
+                                style={{padding: '0.1rem 1.2rem .1rem .2rem'}}
+                            >
+                                {item}
+                                <a
+                                    href="#"
+                                    tabIndex={-1}
+                                    onClick={removeFunc}
+                                    data-value={selectedData.values[index]}
+                                ><svg width="10px" height="10px" viewBox="0 0 1024 1024"><path style={{fill: '#f60'}} d="M195.2 195.2a64 64 0 0 1 90.496 0L512 421.504 738.304 195.2a64 64 0 0 1 90.496 90.496L602.496 512 828.8 738.304a64 64 0 0 1-90.496 90.496L512 602.496 285.696 828.8a64 64 0 0 1-90.496-90.496L421.504 512 195.2 285.696a64 64 0 0 1 0-90.496z" /></svg></a>
+                            </li>
+                        ))}
+                    </>
+                )}
+                placeholder="Select"
+                name="name"
+                options={Array.from({ length: 100 }).fill(0).map((v, i) => {
+                    return { "label": `${i}`, "value": `${i}`, "queryString": "" }
+                })}
+                onChange={(e, e2, val) => {
+                    console.log(e, e2, val);
+                }}
+            />
+
+        </>
+    );
+}
+```
+
+
+
 
 
 ## Multi-Level Cascading Select (Implemented using `useState()`)
@@ -1367,7 +1465,8 @@ import Select from 'funda-ui/Select';
 | `fetchFuncMethod` | string  | - | When the property is *true*, every time the select changes, a data request will be triggered. <br /><blockquote>The methord must be a Promise Object.</blockquote> | - |
 | `fetchFuncMethodParams` | array  | - | The parameter passed by the method, it is an array. <br />Note: the first element is a query string, the second element is the number of queried data (usually a number), and then you can increase the third, or fourth, and more parameters. <br />Such as `['',0]`, `['',99,'string 1','string 2']`, `['',99,'string 1','$QUERY_STRING']` <br /><blockquote>There should be at least one parameter which is the query string. <br />`$QUERY_STRING` identifies the ID of the automatic query, and its value depends on the user input string.</blockquote> | - |
 | `fetchCallback` | function  | - | Return value from `fetchCallback` property to format the data of the API callback, which will match the data structure of the component. <br />At the same time it returns the original data, you will use this function and use the `return` keyword to return a new value. | - |
-| `onFetch` | function  | - | Call a function when  data is successfully fetched. It returns five callback values. <br /> <ol><li>The first is the current control</li><li>The second is the control of the value save</li><li> The third is the current value (**String**)</li><li>The fourth is the fetched data (**Array**)</li><li>The last is a string passed by the `data` attribute</li></ol> | - |
+| `renderSelectedValue` | function  | - | Render the selected value. It returns two callback values. <br /> <ol><li>The first is the slected data (**JSON Object**)</li><li>The second is the remove function of item (**Function**)</li></ol> <blockquote>Valid when `multiSelect` parameter exists</blockquote> | - |
+| `onFetch` | function  | - | Call a function when  data is successfully fetched. It returns five callback values. <br /> <ol><li>The first is the current control (**HTML Element**)</li><li>The second is the control of the value save (**HTML Element**)</li><li> The third is the current value (**String**)</li><li>The fourth is the fetched data (**Array**)</li><li>The last is a string passed by the `data` attribute (**Any**)</li></ol> | - |
 | `onLoad` | function  | - | Call a function when the component has been rendered completely. It returns three callback values. <br /> <ol><li>The first is the current control</li><li>The second is the control of the value save</li><li> The third is the current value (**String**)</li></ol> | - |
 | `onChange` | function  | - | Call a function when the value of an HTML element is changed. It returns three callback values. <br /> <ol><li>The first is the current control (**HTML Element**)</li><li>The second is the control of the value save (**HTML Element**)</li><li>The last is the data [Exposes the JSON (Returns an Array Collection when `multiSelect` is enabled) format data] about the option as an argument. (**JSON Object**)</li></ol> | - |
 | `onBlur` | function  | - | Call a function when a user leaves a form field. It returns only one callback value which is the Control Event (**Event**) | - |

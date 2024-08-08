@@ -550,6 +550,10 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
             return (/* reexport */_readStream2
             );
           },
+          "removeArrDuplicateItems": function removeArrDuplicateItems() {
+            return (/* reexport */_removeArrDuplicateItems
+            );
+          },
           "setDateDays": function setDateDays() {
             return (/* reexport */_setDateDays
             );
@@ -2746,6 +2750,22 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
           }, object_typeof(obj);
         }
         /**
+         * Remove Duplicate objects from JSON Array
+         * @param {Array} obj 
+         * @param {String} fieldName 
+         */
+        function _removeArrDuplicateItems(obj, fieldName) {
+          if (!Array.isArray(obj)) return [];
+          var clean = obj.filter(function (item, index, self) {
+            return index === self.findIndex(function (t) {
+              return t[fieldName] === item[fieldName];
+            });
+          });
+          return clean;
+        }
+        ;
+
+        /**
          * Deep clone
          * @param {*} obj 
          */
@@ -2766,7 +2786,6 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
             return obj;
           }
         }
-        ;
 
         /**
          * Flat Data
@@ -2792,7 +2811,6 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
           iterate(data);
           return result;
         }
-        ;
         ; // CONCATENATED MODULE: ./src/libs/viewport.ts
         /**
          * Check if an element is in the viewport
@@ -4312,7 +4330,7 @@ var MultipleCheckboxes = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forw
 
             //
             if (!(_typeof(fetchFuncAsync) === 'object')) {
-              _context.next = 14;
+              _context.next = 15;
               break;
             }
             _context.next = 4;
@@ -4330,6 +4348,9 @@ var MultipleCheckboxes = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forw
               _ORGIN_DATA = [];
             }
 
+            // remove Duplicate objects from JSON Array
+            _ORGIN_DATA = (0,funda_utils__WEBPACK_IMPORTED_MODULE_1__.removeArrDuplicateItems)(_ORGIN_DATA, 'value');
+
             //
             initDefaultValue(value, _ORGIN_DATA); // value must be initialized
 
@@ -4339,7 +4360,10 @@ var MultipleCheckboxes = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forw
             //
             onFetch === null || onFetch === void 0 ? void 0 : onFetch(_ORGIN_DATA);
             return _context.abrupt("return", _ORGIN_DATA);
-          case 14:
+          case 15:
+            // remove Duplicate objects from JSON Array
+            optionsDataInit = (0,funda_utils__WEBPACK_IMPORTED_MODULE_1__.removeArrDuplicateItems)(optionsDataInit, 'value');
+
             //
             initDefaultValue(value, optionsDataInit); // value must be initialized
 
@@ -4349,7 +4373,7 @@ var MultipleCheckboxes = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forw
             //
             onFetch === null || onFetch === void 0 ? void 0 : onFetch(optionsDataInit);
             return _context.abrupt("return", optionsDataInit);
-          case 18:
+          case 20:
           case "end":
             return _context.stop();
         }

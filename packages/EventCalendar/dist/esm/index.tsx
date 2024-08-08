@@ -5,7 +5,7 @@ import ModalDialog from 'funda-modaldialog';
 
 
 
-interface EventsValueConfig {
+export interface EventsValueConfig {
     id: string | number;
     date: string,
     time: string,

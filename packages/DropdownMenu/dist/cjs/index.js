@@ -745,6 +745,10 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
             return (/* reexport */_readStream2
             );
           },
+          "removeArrDuplicateItems": function removeArrDuplicateItems() {
+            return (/* reexport */_removeArrDuplicateItems
+            );
+          },
           "setDateDays": function setDateDays() {
             return (/* reexport */_setDateDays
             );
@@ -2941,6 +2945,22 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
           }, object_typeof(obj);
         }
         /**
+         * Remove Duplicate objects from JSON Array
+         * @param {Array} obj 
+         * @param {String} fieldName 
+         */
+        function _removeArrDuplicateItems(obj, fieldName) {
+          if (!Array.isArray(obj)) return [];
+          var clean = obj.filter(function (item, index, self) {
+            return index === self.findIndex(function (t) {
+              return t[fieldName] === item[fieldName];
+            });
+          });
+          return clean;
+        }
+        ;
+
+        /**
          * Deep clone
          * @param {*} obj 
          */
@@ -2961,7 +2981,6 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
             return obj;
           }
         }
-        ;
 
         /**
          * Flat Data
@@ -2987,7 +3006,6 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
           iterate(data);
           return result;
         }
-        ;
         ; // CONCATENATED MODULE: ./src/libs/viewport.ts
         /**
          * Check if an element is in the viewport
@@ -4644,6 +4662,7 @@ var DropdownMenu = function DropdownMenu(props) {
   }, iconRight)) : null), /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("input", {
     name: name || '',
     type: "hidden",
+    tabIndex: -1,
     value: selected === null || selected === void 0 ? void 0 : selected.value,
     onChange: function onChange() {
       return void 0;

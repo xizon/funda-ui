@@ -1,4 +1,11 @@
 import React from 'react';
+export interface EventsValueConfig {
+    id: string | number;
+    date: string;
+    time: string;
+    data: string;
+    eventStyles?: React.CSSProperties;
+}
 declare type EventCalendarProps = {
     customTodayDate?: string;
     eventsValue?: any[];

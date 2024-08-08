@@ -13,7 +13,7 @@ import {
 import { initUlHeight } from './init-height';
 import { removeItemOnce, activeClass } from './tree-utils';
 
-interface fetchConfig {
+export interface FetchConfig {
     fetchFuncAsync?: any | undefined;
     fetchFuncMethod?: string | undefined;
     fetchFuncMethodParams?: any[] | undefined;
@@ -41,7 +41,7 @@ type TreeListProps = {
     onSelect?: (e: any, val: any, func: Function) => void;
     onCollapse?: (e: any, val: any, func: Function) => void;
     onCheck?: (val: any) => void;
-    evInitValue?: (key: React.Key | null, fetch: fetchConfig | null, firstRender: boolean) => void;
+    evInitValue?: (key: React.Key | null, fetch: FetchConfig | null, firstRender: boolean) => void;
 };
 
 export default function TreeList(props: TreeListProps) {

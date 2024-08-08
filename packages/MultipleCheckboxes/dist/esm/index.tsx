@@ -4,12 +4,13 @@ import {
     useComId,
     isJSON,
     extractContentsOfBrackets,
-    convertArrToValByBrackets
+    convertArrToValByBrackets,
+    removeArrDuplicateItems
 } from 'funda-utils';
 
 
 
-interface OptionConfig {
+export interface OptionConfig {
     [propName: string]: string | number | boolean;
 }
 
@@ -181,6 +182,9 @@ const MultipleCheckboxes = forwardRef((props: MultipleCheckboxesProps, externalR
                 _ORGIN_DATA = [];
             }
 
+            // remove Duplicate objects from JSON Array
+            _ORGIN_DATA = removeArrDuplicateItems(_ORGIN_DATA, 'value');
+
 
             //
             initDefaultValue(value, _ORGIN_DATA); // value must be initialized
@@ -195,6 +199,10 @@ const MultipleCheckboxes = forwardRef((props: MultipleCheckboxesProps, externalR
 
             return _ORGIN_DATA;
         } else {
+
+            
+            // remove Duplicate objects from JSON Array
+            optionsDataInit = removeArrDuplicateItems(optionsDataInit, 'value');
 
             //
             initDefaultValue(value, optionsDataInit); // value must be initialized

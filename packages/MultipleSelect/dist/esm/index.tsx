@@ -7,12 +7,13 @@ import {
     addTreeDepth,
     addTreeIndent,
     extractContentsOfBrackets,
-    convertArrToValByBrackets
+    convertArrToValByBrackets,
+    removeArrDuplicateItems
 } from 'funda-utils';
 
 
 
-interface OptionConfig {
+export interface OptionConfig {
     [propName: string]: string | number | boolean;
 }
 
@@ -152,6 +153,9 @@ const MultipleSelect = forwardRef((props: MultipleSelectProps, externalRef: any)
                 addTreeIndent(_ORGIN_DATA, INDENT_PLACEHOLDER, INDENT_LAST_PLACEHOLDER, 'label');
             }
 
+            
+            // remove Duplicate objects from JSON Array
+            _ORGIN_DATA = removeArrDuplicateItems(_ORGIN_DATA, 'value');
 
             //
             setDataInit(_ORGIN_DATA); // data must be initialized
@@ -166,7 +170,11 @@ const MultipleSelect = forwardRef((props: MultipleSelectProps, externalRef: any)
             return _ORGIN_DATA;
         } else {
 
-   
+               
+            // remove Duplicate objects from JSON Array
+            optionsDataInit = removeArrDuplicateItems(optionsDataInit, 'value');
+
+
             //
             setDataInit(optionsDataInit); // data must be initialized
 

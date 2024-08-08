@@ -3,11 +3,12 @@ import React, { useImperativeHandle, forwardRef, useRef, useState, useEffect } f
 
 import {
     useComId,
-    isJSON
+    isJSON,
+    removeArrDuplicateItems
 } from 'funda-utils';
 
 
-interface OptionConfig {
+export interface OptionConfig {
     [propName: string]: string | number | React.ReactNode | boolean;
 }
 
@@ -208,8 +209,12 @@ const Radio = forwardRef((props: RadioProps, externalRef: any) => {
             }
     
 
-            //
+            // set "<input type="radio">" value
             setControlValue(_realValue); // value must be initialized
+
+
+            // remove Duplicate objects from JSON Array
+            _ORGIN_DATA = removeArrDuplicateItems(_ORGIN_DATA, 'value');
 
 
             //
@@ -242,8 +247,12 @@ const Radio = forwardRef((props: RadioProps, externalRef: any) => {
 
 
 
-            //
+            // set "<input type="radio">" value
             setControlValue(_realValue); // value must be initialized
+
+
+            // remove Duplicate objects from JSON Array
+            optionsDataInit = removeArrDuplicateItems(optionsDataInit, 'value');
 
             //
             setDataInit(optionsDataInit); // data must be initialized

@@ -550,6 +550,10 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
             return (/* reexport */_readStream2
             );
           },
+          "removeArrDuplicateItems": function removeArrDuplicateItems() {
+            return (/* reexport */_removeArrDuplicateItems
+            );
+          },
           "setDateDays": function setDateDays() {
             return (/* reexport */_setDateDays
             );
@@ -2746,6 +2750,22 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
           }, object_typeof(obj);
         }
         /**
+         * Remove Duplicate objects from JSON Array
+         * @param {Array} obj 
+         * @param {String} fieldName 
+         */
+        function _removeArrDuplicateItems(obj, fieldName) {
+          if (!Array.isArray(obj)) return [];
+          var clean = obj.filter(function (item, index, self) {
+            return index === self.findIndex(function (t) {
+              return t[fieldName] === item[fieldName];
+            });
+          });
+          return clean;
+        }
+        ;
+
+        /**
          * Deep clone
          * @param {*} obj 
          */
@@ -2766,7 +2786,6 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
             return obj;
           }
         }
-        ;
 
         /**
          * Flat Data
@@ -2792,7 +2811,6 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
           iterate(data);
           return result;
         }
-        ;
         ; // CONCATENATED MODULE: ./src/libs/viewport.ts
         /**
          * Check if an element is in the viewport
@@ -4313,6 +4331,7 @@ var Checkbox = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(fu
     }, style)
   }, attributes)), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("input", _extends({
     type: "hidden",
+    tabIndex: -1,
     id: idRes,
     name: name,
     value: val ? value || '' : '' // do not use `defaultValue`

@@ -550,6 +550,10 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
             return (/* reexport */_readStream2
             );
           },
+          "removeArrDuplicateItems": function removeArrDuplicateItems() {
+            return (/* reexport */_removeArrDuplicateItems
+            );
+          },
           "setDateDays": function setDateDays() {
             return (/* reexport */_setDateDays
             );
@@ -2746,6 +2750,22 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
           }, object_typeof(obj);
         }
         /**
+         * Remove Duplicate objects from JSON Array
+         * @param {Array} obj 
+         * @param {String} fieldName 
+         */
+        function _removeArrDuplicateItems(obj, fieldName) {
+          if (!Array.isArray(obj)) return [];
+          var clean = obj.filter(function (item, index, self) {
+            return index === self.findIndex(function (t) {
+              return t[fieldName] === item[fieldName];
+            });
+          });
+          return clean;
+        }
+        ;
+
+        /**
          * Deep clone
          * @param {*} obj 
          */
@@ -2766,7 +2786,6 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
             return obj;
           }
         }
-        ;
 
         /**
          * Flat Data
@@ -2792,7 +2811,6 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
           iterate(data);
           return result;
         }
-        ;
         ; // CONCATENATED MODULE: ./src/libs/viewport.ts
         /**
          * Check if an element is in the viewport
@@ -4332,7 +4350,7 @@ var Radio = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(funct
 
             //
             if (!(_typeof(fetchFuncAsync) === 'object')) {
-              _context.next = 21;
+              _context.next = 22;
               break;
             }
             _context.next = 5;
@@ -4366,8 +4384,11 @@ var Radio = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(funct
               if (filterRes.length > 0) _realValue = filterRes[0].value;
             }
 
-            //
+            // set "<input type="radio">" value
             setControlValue(_realValue); // value must be initialized
+
+            // remove Duplicate objects from JSON Array
+            _ORGIN_DATA = (0,funda_utils__WEBPACK_IMPORTED_MODULE_1__.removeArrDuplicateItems)(_ORGIN_DATA, 'value');
 
             //
             setDataInit(_ORGIN_DATA); // data must be initialized
@@ -4378,7 +4399,7 @@ var Radio = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(funct
             //
             onLoad === null || onLoad === void 0 ? void 0 : onLoad(_ORGIN_DATA, _realValue, rootRef.current);
             return _context.abrupt("return", _ORGIN_DATA);
-          case 21:
+          case 22:
             // If the default value is label, match value
             _realValue2 = value;
             _filterRes = [];
@@ -4394,8 +4415,11 @@ var Radio = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(funct
               if (_filterRes.length > 0) _realValue2 = _filterRes[0].value;
             }
 
-            //
+            // set "<input type="radio">" value
             setControlValue(_realValue2); // value must be initialized
+
+            // remove Duplicate objects from JSON Array
+            optionsDataInit = (0,funda_utils__WEBPACK_IMPORTED_MODULE_1__.removeArrDuplicateItems)(optionsDataInit, 'value');
 
             //
             setDataInit(optionsDataInit); // data must be initialized
@@ -4406,7 +4430,7 @@ var Radio = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(funct
             //
             onLoad === null || onLoad === void 0 ? void 0 : onLoad(optionsDataInit, _realValue2, rootRef.current);
             return _context.abrupt("return", optionsDataInit);
-          case 31:
+          case 33:
           case "end":
             return _context.stop();
         }

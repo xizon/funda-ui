@@ -479,7 +479,7 @@ import Date from 'funda-ui/Date';
 | `langMonths` | array  | `['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC']` | Localization in the component of months sequence. | - |
 | `langMonthsFull` | array  | `['January', 'Febuary', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']` | Localization in the component of full months sequence. | - |
 | `langToday` | string  | `Today`| Localization in the component of today button. | - |
-| `defaultValue` | string | - | Specifies the default value of the component. It does not re-render the component because the incoming value changes. | - |
+| `defaultValue` | string | - | Specifies the default value. Use when the component is not controlled. It does not re-render the component because the incoming value changes. | - |
 | `value` | string | - | Set a default value for this control | - |
 | `clickInitValue` | string | - | If the default value does not exist, the time is automatically initialized when the input is focused, and if not set, the current time is defaulted. | - |
 | `min` | string | - | The minimum date & time to accept. such as `2024-02-26 08:05:00` | - |

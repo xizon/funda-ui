@@ -247,9 +247,7 @@ const CascadingSelect = (props: CascadingSelectProps) => {
             _modalRef.style.setProperty('position', 'absolute', 'important');
             _modalRef.classList.remove('pos-top');
         }
-
-
-
+   
 
 
         // STEP 4:

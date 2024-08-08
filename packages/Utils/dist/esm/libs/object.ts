@@ -1,3 +1,17 @@
+
+/**
+ * Remove Duplicate objects from JSON Array
+ * @param {Array} obj 
+ * @param {String} fieldName 
+ */
+function removeArrDuplicateItems(obj: any[], fieldName: string): any[] {
+    if (!Array.isArray(obj)) return [];
+
+    const clean = obj.filter((item, index, self) => index === self.findIndex((t) => (t[fieldName] === item[fieldName])));
+    return clean;
+};
+
+
 /**
  * Deep clone
  * @param {*} obj 
@@ -16,7 +30,7 @@ function deepClone(obj: any): any {
     } else {
         return obj;
     }
-};
+}
 
 
 /**
@@ -44,10 +58,11 @@ function flatData(data: any): any[] {
 
     iterate(data);
     return result;
-};
+}
 
 
 export {
+    removeArrDuplicateItems,
     deepClone,
     flatData
 }

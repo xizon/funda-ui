@@ -381,7 +381,7 @@ import Textarea from 'funda-ui/Textarea';
 | `controlGroupWrapperClassName` | string | `input-group` | The class name of the control group wrapper. | - |
 | `controlGroupTextClassName` | string | `input-group-text` | The class name of the control group text. | - |
 | `type` | string | text | The type of input. Such as \<input type="text" name="name"\> gives a text box. | - |
-| `defaultValue` | string | - | Specifies the default value of the component. It does not re-render the component because the incoming value changes. | - |
+| `defaultValue` | string | - | Specifies the default value. Use when the component is not controlled. It does not re-render the component because the incoming value changes. | - |
 | `value` | string | - | Set a default value for this control | - |
 | `autoSize` | boolean | false | Creating a Textarea with dynamic height. <blockquote>**Special note:** If you want to hide the textarea element in advance, please use `{ height: 0; overflow: hidden; }`, do not use `{ display: none }`, this can ensure that the `autoSize` initialization is valid. The parent container cannot also use `{ display: none }`, Otherwise it will cause the scrollHeight of the element inside the child node to be 0​</blockquote> | - |
 | `label` | string \| ReactNode | - | It is used to specify a label for an element of a form.<blockquote>Support html tags</blockquote> | - |

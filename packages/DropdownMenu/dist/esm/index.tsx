@@ -14,7 +14,7 @@ import Option from './Option';
 
 type OptionChangeFnType = (arg1: any, arg2: any) => void;
 
-interface OptionConfig {
+export interface OptionConfig {
     [propName: string]: string | number;
 }
 
@@ -317,6 +317,7 @@ const DropdownMenu = (props: DropdownMenuProps) => {
                 <input 
                     name={name || ''} 
                     type="hidden" 
+                    tabIndex={-1}
                     value={selected?.value} 
                     onChange={() => void(0)}
                 /> {/* // do not use `defaultValue` */}

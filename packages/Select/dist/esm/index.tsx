@@ -1,5 +1,13 @@
 import React, { useEffect, useState, useRef, KeyboardEvent, forwardRef, useImperativeHandle } from 'react';
 
+import {
+    formatIndentVal,
+    unique,
+    stripHTML,
+    removeItemOnce
+} from './select-utils/func';
+
+
 import RootPortal from 'funda-root-portal';
 import { 
     useComId,
@@ -13,6 +21,7 @@ import {
     addTreeDepth,
     addTreeIndent,
     getTextWidth,
+    removeArrDuplicateItems,
 
     // Destroys body scroll locking
     clearAllBodyScrollLocks, 
@@ -23,13 +32,18 @@ import {
 
 type SelectOptionChangeFnType = (arg1: any, arg2: any, arg3: any) => void;
 
-interface MultiSelectDataConfig {
+export interface MultiSelectDataConfig {
     values: string[] | number[];
     labels: string[] | number[];
     queryStrings: string[] | number[];
 }
 
-interface OptionConfig {
+export interface MultiSelectControlValConfig {
+    values: string[];
+    labels: string[];
+}
+
+export interface OptionConfig {
     disabled?: boolean;
     label: any;
     listItemLabel?: any;
@@ -38,14 +52,14 @@ interface OptionConfig {
 }
 
 
-interface MultiSelectConfig {
+export interface MultiSelectConfig {
     valid: boolean;
     selectAll: boolean;
     selectAllLabel?: string;
     data: MultiSelectDataConfig | null;
 }
 
-interface multiSelectSelectedItemOnlyStatusConfig {
+export interface multiSelectSelectedItemOnlyStatusConfig {
     itemsLabel?: string;
     allItemsLabel?: string;
     noneLabel?: string;
@@ -53,8 +67,7 @@ interface multiSelectSelectedItemOnlyStatusConfig {
 
 
 
-
-interface CleanTriggerConfig {
+export interface CleanTriggerConfig {
     valid: boolean;
     cleanValueLabel?: string;
 }
@@ -66,10 +79,10 @@ type SelectProps = {
     wrapperClassName?: string;
     controlClassName?: string;
     controlExClassName?: string;
-    lockScrollBar?: boolean;
     exceededSidePosOffset?: number;
     multiSelect?: MultiSelectConfig;
     multiSelectSelectedItemOnlyStatus?: multiSelectSelectedItemOnlyStatusConfig;
+    renderSelectedValue?: (selectedData: MultiSelectControlValConfig, removeFunc: (e: React.MouseEvent) => void) => void;
     cleanTrigger?: CleanTriggerConfig;
     value?: string;
     label?: React.ReactNode | string;
@@ -124,10 +137,10 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
         wrapperClassName,
         controlClassName,
         controlExClassName,
-        lockScrollBar,
         exceededSidePosOffset,
         multiSelect,
         multiSelectSelectedItemOnlyStatus,
+        renderSelectedValue,
         disabled,
         required,
         value,
@@ -170,7 +183,6 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
     } = props;
 
 
-    const LOCK_SCROLLBAR = typeof lockScrollBar === 'undefined' ? true : lockScrollBar;
     const DEPTH = depth || 1055;  // the default value same as bootstrap
     const LIVE_SEARCH_OK = typeof fetchTrigger !== 'undefined' && fetchTrigger === true ? true : false;
     const LIVE_SEARCH_DISABLED = (typeof fetchTrigger === 'undefined' || fetchTrigger === false) && typeof window !== 'undefined' && typeof (window as any)['funda-ui__Select-disable-livesearch'] !== 'undefined' ? true : false; // Globally disable real-time search functionality (only valid for non-dynamic requests)
@@ -226,7 +238,7 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
         noneLabel: 'No items selected',
     };
 
-    const [controlArr, setControlArr] = useState<any>({
+    const [controlArr, setControlArr] = useState<MultiSelectControlValConfig>({
         labels: [],
         values: []
     });
@@ -326,6 +338,20 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
     });
 
 
+    // value of multiple selection callback
+    const multipleSelectionCallback = (valuesRes: any[], labelsRes: any[]) => {
+        return {
+            items: valuesRes.map((v: any, i: number) => (
+                {label: labelsRes[i].toString(), value: v.toString()}
+            )),
+            labels: labelsRes.map((v: any) => v.toString()),
+            values: valuesRes.map((v: any) => v.toString()),
+            labelsOfString: VALUE_BY_BRACKETS ? convertArrToValByBrackets(labelsRes.map((v: any) => v.toString())) : labelsRes.map((v: any) => v.toString()).join(','),
+            valuesOfString: VALUE_BY_BRACKETS ? convertArrToValByBrackets(valuesRes.map((v: any) => v.toString())) : valuesRes.map((v: any) => v.toString()).join(',')
+        };
+    };
+
+
     //performance
     const handleChangeFetchSafe = useDebounce((val: any) => {
 
@@ -384,74 +410,6 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
 
 
     }, 350, [optionsData]);
-
-
-
-    /**
-     * Format indent value
-     * @param {String|Array} inputData 
-     * @returns {String|Array}
-     */
-    function formatIndentVal(inputData: any) {
-        const reVar = new RegExp(INDENT_LAST_PLACEHOLDER, 'g');
-        if (Array.isArray(inputData)) {
-            return inputData.map((s: any) => String(s).replace(reVar, '').replace(/\&nbsp;/ig, ''));
-        } else {
-            const _txt: any = typeof inputData === 'string' ? inputData : inputData.toString();
-            return _txt.replace(reVar, '').replace(/\&nbsp;/ig, '');
-        }
-
-    }
-
-
-    /**
-     * Array unique
-     * @param {Array} str 
-     * @returns {Array}
-     */
-    function unique(arr: any[]) {
-        return Array.from(new Set(arr));
-    }
-
-
-    /**
-     * Remove html tag content
-     * @param {string | number} str 
-     * @returns {string}
-     */
-    function stripHTML(str: string | number) {
-        return String(str).replace(/<\/?[^>]+(>|$)(.*?)<\/?[^>]+(>|$)/ig, '');
-    }
-
-
-    /**
-     * Remove a specific item from an array
-     * @param {array} arr 
-     * @param {string} value 
-     * @returns {array}
-     */
-    function removeItemOnce(arr: any[], value: string | number) {
-        const arrFormat = arr.map((v: any) => v.toString());
-        const index = arrFormat.indexOf(value.toString());
-        if (index > -1) {
-            arrFormat.splice(index, 1);
-        }
-        return arrFormat;
-    }
-
-    /**
-     * Remove multiple items from an array
-     * @param {array} arr 
-     * @param {array} value 
-     * @returns {array}
-     */
-    function removeItems(arr: any[], value: any[]) {
-        const arrFormat = arr.map((v: any) => v.toString());
-        const valueFormat = value.map((v: any) => v.toString());
-        return arrFormat.filter((v: any) => {
-            return !valueFormat.includes(v);
-        });
-    }
 
 
 
@@ -544,7 +502,7 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
             } else {
                 if (filterRes.length > 0) {
                     setControlValue(filterRes[0].value);
-                    setControlLabel(formatIndentVal(filterRes[0].label) as string);
+                    setControlLabel(formatIndentVal(filterRes[0].label, INDENT_LAST_PLACEHOLDER) as string);
                 }
 
             }
@@ -612,9 +570,11 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
 
             }
 
-
             // STEP 5: ===========
             //
+            // remove Duplicate objects from JSON Array
+            _ORGIN_DATA = removeArrDuplicateItems(_ORGIN_DATA, 'value');
+
             setOptionsData(_ORGIN_DATA); // data must be initialized
 
             //
@@ -675,7 +635,7 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
             } else {
                 if (filterRes.length > 0) {
                     setControlValue(filterRes[0].value);
-                    setControlLabel(formatIndentVal(filterRes[0].label));
+                    setControlLabel(formatIndentVal(filterRes[0].label, INDENT_LAST_PLACEHOLDER));
                 }
 
             }
@@ -740,9 +700,12 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
 
             }
 
-
             // STEP 5: ===========
             //
+            // remove Duplicate objects from JSON Array
+            staticOptionsData = removeArrDuplicateItems(staticOptionsData, 'value');
+            
+
             setOptionsData(staticOptionsData); // data must be initialized
 
             //
@@ -759,7 +722,6 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
 
 
     }
-
 
 
     function adjustMultiControlContainerHeight() {
@@ -784,14 +746,14 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
 
 
     function popwinPosInit() {
-        if (listContentRef.current === null || selectInputRef.current === null) return;
+        if (listContentRef.current === null || rootRef.current === null) return;
 
         const contentHeightOffset = 80;
         let contentMaxHeight = 0;
 
         // update modal position
         const _modalRef: any = document.querySelector(`#custom-select__options-wrapper-${idRes}`);
-        const _triggerRef: any = selectInputRef.current;
+        const _triggerRef: any = rootRef.current;
 
         // console.log(getAbsolutePositionOfStage(_triggerRef));
 
@@ -894,8 +856,6 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
             _modalRef.style.setProperty('position', 'absolute', 'important');
             _modalRef.classList.remove('pos-top');
         }
-
-
 
 
 
@@ -1192,7 +1152,7 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
 
             //
             setControlValue(_value);
-            setControlLabel(formatIndentVal(_label));
+            setControlLabel(formatIndentVal(_label, INDENT_LAST_PLACEHOLDER));
 
 
             // set value if the attribute `data-options` of component exists, only valid for single selection (it may be an empty array)
@@ -1230,14 +1190,14 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
                         setControlTempValue(prevState.labels.length >= 0 ? null : (VALUE_BY_BRACKETS ? convertArrToValByBrackets(prevState.labels) : prevState.labels.join(',')));
 
                         return {
-                            labels: removeItemOnce(prevState.labels, formatIndentVal(_label)),
+                            labels: removeItemOnce(prevState.labels, formatIndentVal(_label, INDENT_LAST_PLACEHOLDER)),
                             values: removeItemOnce(prevState.values, _value)
                         }
                     });
 
 
                     currentControlValueArr = removeItemOnce(currentControlValueArr, _value);
-                    currentControlLabelArr = removeItemOnce(currentControlLabelArr, formatIndentVal(_label));
+                    currentControlLabelArr = removeItemOnce(currentControlLabelArr, formatIndentVal(_label, INDENT_LAST_PLACEHOLDER));
 
 
                 } else {
@@ -1255,7 +1215,7 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
                         setControlTempValue(prevState.labels.length >= 0 ? null : (VALUE_BY_BRACKETS ? convertArrToValByBrackets(prevState.labels) : prevState.labels.join(',')));
 
                         return {
-                            labels: [...prevState.labels, formatIndentVal(_label)],
+                            labels: [...prevState.labels, formatIndentVal(_label, INDENT_LAST_PLACEHOLDER)],
                             values: [...prevState.values, _value]
                         }
                     });
@@ -1280,16 +1240,12 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
 
             //
             if (typeof (onChange) === 'function') {
+                
 
                 onChange?.(
                     selectInputRef.current,
                     valueInputRef.current,
-                    !MULTI_SEL_VALID ? curItem : {
-                        labels: currentControlLabelArr.map((v: any) => v.toString()),
-                        values: currentControlValueArr.map((v: any) => v.toString()),
-                        labelsOfString: VALUE_BY_BRACKETS ? convertArrToValByBrackets(currentControlLabelArr.map((v: any) => v.toString())) : currentControlLabelArr.map((v: any) => v.toString()).join(','),
-                        valuesOfString: VALUE_BY_BRACKETS ? convertArrToValByBrackets(currentControlValueArr.map((v: any) => v.toString())) : currentControlValueArr.map((v: any) => v.toString()).join(',')
-                    }
+                    !MULTI_SEL_VALID ? curItem : multipleSelectionCallback(currentControlValueArr, currentControlLabelArr)
                 );
 
 
@@ -1318,7 +1274,7 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
 
             //
             setControlValue(_value);
-            setControlLabel(formatIndentVal(_label));
+            setControlLabel(formatIndentVal(_label, INDENT_LAST_PLACEHOLDER));
 
             // set value if the attribute `data-options` of component exists, only valid for single selection (it may be an empty array)
             if (typeof incominggetOptionsData !== 'undefined') {
@@ -1358,13 +1314,13 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
                         setControlTempValue(prevState.labels.length >= 0 ? null : (VALUE_BY_BRACKETS ? convertArrToValByBrackets(prevState.labels) : prevState.labels.join(',')));
 
                         return {
-                            labels: removeItemOnce(prevState.labels, formatIndentVal(_label)),
+                            labels: removeItemOnce(prevState.labels, formatIndentVal(_label, INDENT_LAST_PLACEHOLDER)),
                             values: removeItemOnce(prevState.values, _value)
                         }
                     });
 
                     currentControlValueArr = removeItemOnce(currentControlValueArr, _value);
-                    currentControlLabelArr = removeItemOnce(currentControlLabelArr, formatIndentVal(_label));
+                    currentControlLabelArr = removeItemOnce(currentControlLabelArr, formatIndentVal(_label, INDENT_LAST_PLACEHOLDER));
 
                 } else {
                     //#########
@@ -1383,7 +1339,7 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
                         setControlTempValue(prevState.labels.length >= 0 ? null : (VALUE_BY_BRACKETS ? convertArrToValByBrackets(prevState.labels) : prevState.labels.join(',')));
 
                         return {
-                            labels: [...prevState.labels, formatIndentVal(_label)],
+                            labels: [...prevState.labels, formatIndentVal(_label, INDENT_LAST_PLACEHOLDER)],
                             values: [...prevState.values, _value]
                         }
                     });
@@ -1408,17 +1364,11 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
 
             //
             if (typeof (onChange) === 'function') {
-
-
+            
                 onChange?.(
                     selectInputRef.current,
                     valueInputRef.current,
-                    !MULTI_SEL_VALID ? curItem : {
-                        labels: currentControlLabelArr.map((v: any) => v.toString()),
-                        values: currentControlValueArr.map((v: any) => v.toString()),
-                        labelsOfString: VALUE_BY_BRACKETS ? convertArrToValByBrackets(currentControlLabelArr.map((v: any) => v.toString())) : currentControlLabelArr.map((v: any) => v.toString()).join(','),
-                        valuesOfString: VALUE_BY_BRACKETS ? convertArrToValByBrackets(currentControlValueArr.map((v: any) => v.toString())) : currentControlValueArr.map((v: any) => v.toString()).join(',')
-                    }
+                    !MULTI_SEL_VALID ? curItem : multipleSelectionCallback(currentControlValueArr, currentControlLabelArr)
                 );
 
 
@@ -1540,7 +1490,7 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
     function handleMultiControlItemRemove(event: any) {
         event.preventDefault();
 
-        const valueToRemove = String(event.currentTarget.dataset.item);
+        const valueToRemove = String(event.currentTarget.dataset.value);
         const getCurrentIndex = controlArr.values.findIndex((item: any) => item.toString() === valueToRemove);
 
         let currentControlValueArr: any[] = JSON.parse(JSON.stringify(controlArr.values));
@@ -1556,13 +1506,13 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
             setControlTempValue(prevState.labels.length >= 0 ? null : (VALUE_BY_BRACKETS ? convertArrToValByBrackets(prevState.labels) : prevState.labels.join(',')));
 
             return {
-                labels: removeItemOnce(prevState.labels, formatIndentVal(_label)),
+                labels: removeItemOnce(prevState.labels, formatIndentVal(_label, INDENT_LAST_PLACEHOLDER)),
                 values: removeItemOnce(prevState.values, _value)
             }
         });
 
         currentControlValueArr = removeItemOnce(currentControlValueArr, _value);
-        currentControlLabelArr = removeItemOnce(currentControlLabelArr, formatIndentVal(_label));
+        currentControlLabelArr = removeItemOnce(currentControlLabelArr, formatIndentVal(_label, INDENT_LAST_PLACEHOLDER));
 
 
         // Appropriate multi-item container height
@@ -1572,15 +1522,11 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
         //
         if (typeof (onChange) === 'function') {
 
+  
             onChange?.(
                 selectInputRef.current,
                 valueInputRef.current,
-                {
-                    labels: currentControlLabelArr.map((v: any) => v.toString()),
-                    values: currentControlValueArr.map((v: any) => v.toString()),
-                    labelsOfString: VALUE_BY_BRACKETS ? convertArrToValByBrackets(currentControlLabelArr.map((v: any) => v.toString())) : currentControlLabelArr.map((v: any) => v.toString()).join(','),
-                    valuesOfString: VALUE_BY_BRACKETS ? convertArrToValByBrackets(currentControlValueArr.map((v: any) => v.toString())) : currentControlValueArr.map((v: any) => v.toString()).join(',')
-                }
+                multipleSelectionCallback(currentControlValueArr, currentControlLabelArr)
             );
 
 
@@ -1660,6 +1606,22 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
     }
 
     function handleBlur(event: any) {
+
+        // Fix the focus issue with using the "Tabs" and "Enter" keys
+        //
+        //
+        rootRef.current?.classList.remove('focus');
+
+        if (!MULTI_SEL_VALID) {
+            if (!isOpen) {
+                cancel();
+                if (MULTI_SEL_VALID) popwinPosHide();
+            }
+        } else {
+            if (listContentRef.current) listContentRef.current.focus();
+        }
+
+
         setTimeout(() => {
             onBlur?.(event);
         }, 300);
@@ -1770,12 +1732,7 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
                         onChange?.(
                             selectInputRef.current,
                             valueInputRef.current,
-                            !MULTI_SEL_VALID ? JSON.parse(currentData) : {
-                                labels: currentControlLabelArr.map((v: any) => v.toString()),
-                                values: currentControlValueArr.map((v: any) => v.toString()),
-                                labelsOfString: VALUE_BY_BRACKETS ? convertArrToValByBrackets(currentControlLabelArr.map((v: any) => v.toString())) : currentControlLabelArr.map((v: any) => v.toString()).join(','),
-                                valuesOfString: VALUE_BY_BRACKETS ? convertArrToValByBrackets(currentControlValueArr.map((v: any) => v.toString())) : currentControlValueArr.map((v: any) => v.toString()).join(',')
-                            }
+                            !MULTI_SEL_VALID ? JSON.parse(currentData) : multipleSelectionCallback(currentControlValueArr, currentControlLabelArr)
                         );
 
 
@@ -1837,14 +1794,15 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
 
             {label ? <><div className="custom-select__label">{typeof label === 'string' ? <label htmlFor={`label-${idRes}`} className="form-label" dangerouslySetInnerHTML={{ __html: `${label}` }}></label> : <label htmlFor={`label-${idRes}`} className="form-label">{label}</label>}</div></> : null}
 
-
             <span ref={blinkingPosFauxRef}></span>
+
             <div
                 ref={rootRef}
                 data-overlay-id={`custom-select__options-wrapper-${idRes}`}
                 id={`custom-select__wrapper-${idRes}`}
                 className={`custom-select__wrapper ${wrapperClassName || wrapperClassName === '' ? wrapperClassName : 'mb-3 position-relative'} ${MULTI_SEL_VALID ? 'multiple-selection' : ''} ${isOpen ? 'active focus' : ''}`}
                 onKeyDown={handleKeyPressed}
+                
             >
 
 
@@ -1879,7 +1837,7 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
                             disabled={disabled || null}
                             required={required || null}
                             readOnly={INPUT_READONLY}
-                            value={controlTempValue || controlTempValue === '' ? controlTempValue : (MULTI_SEL_VALID ? (VALUE_BY_BRACKETS ? convertArrToValByBrackets(formatIndentVal(controlArr.labels).map((v: any) => stripHTML(v))) : formatIndentVal(controlArr.labels).map((v: any) => stripHTML(v)).join(',')) : stripHTML(controlLabel as never))}  // do not use `defaultValue`
+                            value={controlTempValue || controlTempValue === '' ? controlTempValue : (MULTI_SEL_VALID ? (VALUE_BY_BRACKETS ? convertArrToValByBrackets(formatIndentVal(controlArr.labels, INDENT_LAST_PLACEHOLDER).map((v: any) => stripHTML(v))) : formatIndentVal(controlArr.labels, INDENT_LAST_PLACEHOLDER).map((v: any) => stripHTML(v)).join(',')) : stripHTML(controlLabel as never))}  // do not use `defaultValue`
 
                             style={{ 
                                 cursor: 'pointer', 
@@ -1901,6 +1859,7 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
                 {/* ========== RESULT CONTAINER ========== */}
                 <input
                     ref={valueInputRef}
+                    tabIndex={-1}
                     type="hidden"
                     id={idRes}
                     name={name}
@@ -1938,7 +1897,7 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
                     {/* PLACEHOLDER */}
                     <div className="custom-select-single__inputplaceholder-inner" style={style}>
                         <input
-                            tabIndex={tabIndex || 0}
+                            tabIndex={-1}
                             type="text"
                             className={`${controlClassName || controlClassName === '' ? controlClassName : "form-control"} ${controlExClassName || ''}`}
                         />
@@ -2016,38 +1975,41 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
                                 {typeof multiSelectSelectedItemOnlyStatus !== 'undefined' ? <>
 
                                     <li className="custom-select-multi__list-item-statusstring">
-                                        {typeof multiSelectSelectedItemOnlyStatus.itemsLabel === 'string' && controlArr.labels.length > 0 && controlArr.labels.length < optionsData.length ? multiSelectSelectedItemOnlyStatus.itemsLabel.replace('{num}', controlArr.labels.length) : null}
+                                        {typeof multiSelectSelectedItemOnlyStatus.itemsLabel === 'string' && controlArr.labels.length > 0 && controlArr.labels.length < optionsData.length ? multiSelectSelectedItemOnlyStatus.itemsLabel.replace('{num}', `${controlArr.labels.length}`) : null}
                                         {typeof multiSelectSelectedItemOnlyStatus.noneLabel === 'string' && controlArr.labels.length === 0 ? multiSelectSelectedItemOnlyStatus.noneLabel : null}
                                         {typeof multiSelectSelectedItemOnlyStatus.allItemsLabel === 'string' && controlArr.labels.length === optionsData.length ? multiSelectSelectedItemOnlyStatus.allItemsLabel : null}
 
                                         {/*-----*/}
-                                        {typeof multiSelectSelectedItemOnlyStatus.itemsLabel !== 'string' && controlArr.labels.length > 0 ? MULTI_SEL_SELECTED_STATUS.itemsLabel.replace('{num}', controlArr.labels.length) : null}
+                                        {typeof multiSelectSelectedItemOnlyStatus.itemsLabel !== 'string' && controlArr.labels.length > 0 ? MULTI_SEL_SELECTED_STATUS.itemsLabel.replace('{num}', `${controlArr.labels.length}`) : null}
                                         {typeof multiSelectSelectedItemOnlyStatus.noneLabel !== 'string' && controlArr.labels.length === 0 ? MULTI_SEL_SELECTED_STATUS.noneLabel : null}
                                         {typeof multiSelectSelectedItemOnlyStatus.allItemsLabel !== 'string' && controlArr.labels.length === optionsData.length ? MULTI_SEL_SELECTED_STATUS.allItemsLabel : null}
 
                                     </li>
                                 </> : <>
-                                    {controlArr.labels.map((item: any, index: number) => (
-                                        <li key={index}>
-                                            {stripHTML(item)}
-
-                                            <a href="#" tabIndex={-1} onClick={handleMultiControlItemRemove} data-item={controlArr.values[index]}><svg width="10px" height="10px" viewBox="0 0 1024 1024"><path fill="#000" d="M195.2 195.2a64 64 0 0 1 90.496 0L512 421.504 738.304 195.2a64 64 0 0 1 90.496 90.496L602.496 512 828.8 738.304a64 64 0 0 1-90.496 90.496L512 602.496 285.696 828.8a64 64 0 0 1-90.496-90.496L421.504 512 195.2 285.696a64 64 0 0 1 0-90.496z" /></svg></a>
-                                        </li>
-                                    ))}
-
-                                    {/* <li className={`custom-select-multi__list-item-placeholder ${typeof placeholder === 'undefined' || placeholder === '' ? 'hide' : ''}`}>
-                                        <span ref={blinkingCursorPosDivRef} className={`custom-select-multi__control-blinking-cursor ${hideBlinkingCursor() ? 'control-placeholder' : ''} ${generateInputFocusStr() === BLINKING_CURSOR_STR ? 'animated' : ''}`}>
-                                            {generateInputFocusStr()}
-
-                                            <span
-                                                className={`custom-select-multi__control-blinking-following-cursor custom-select-multi__control-blinking-following-cursor--puretext animated ${hideBlinkingCursor() ? 'd-none' : ''}`}
+                                
+                                    {/* ITEMS LIST */}
+                                    {typeof renderSelectedValue === 'function' ? <>
+                                        {renderSelectedValue(controlArr, handleMultiControlItemRemove)}
+                                    </> : <>
+                                        {controlArr.labels.map((item: any, index: number) => (
+                                            <li 
+                                                key={'selected-item-' + index}
+                                                data-value={controlArr.values[index]}
+                                                data-label-full={item}
+                                                data-label-text={stripHTML(item)}
                                             >
-                                                {BLINKING_CURSOR_STR}
-                                            </span>
-                                      
-                                        </span>
+                                                {stripHTML(item)}
 
-                                    </li> */}
+                                                <a 
+                                                    href="#" 
+                                                    tabIndex={-1} 
+                                                    onClick={handleMultiControlItemRemove} 
+                                                    data-value={controlArr.values[index]}
+                                                ><svg width="10px" height="10px" viewBox="0 0 1024 1024"><path fill="#000" d="M195.2 195.2a64 64 0 0 1 90.496 0L512 421.504 738.304 195.2a64 64 0 0 1 90.496 90.496L602.496 512 828.8 738.304a64 64 0 0 1-90.496 90.496L512 602.496 285.696 828.8a64 64 0 0 1-90.496-90.496L421.504 512 195.2 285.696a64 64 0 0 1 0-90.496z" /></svg></a>
+                                            </li>
+                                        ))}
+                                    </>} 
+
                                     <li  className="custom-select-multi__list-item-add">
                                         <div className="position-relative">
                                             {/*
@@ -2165,6 +2127,7 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
                             <div
                                 className="custom-select__options-contentlist rounded"
                                 style={{ backgroundColor: 'var(--bs-list-group-bg)' }}
+                                tabIndex={0}
                                 ref={listContentRef}
                             >
                                 <div className="custom-select__options-contentlist-inner">

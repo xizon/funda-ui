@@ -8,7 +8,7 @@ import {
     getAbsolutePositionOfStage
 } from 'funda-utils';
 
-interface EventsValueConfig {
+export interface EventsValueConfig {
     id: string | number;
     date: string,
     time: string,
@@ -17,7 +17,7 @@ interface EventsValueConfig {
     eventStyles?: React.CSSProperties;
 }
 
-interface TimelineValueConfig {
+export interface TimelineValueConfig {
     listSection: string;
     eventSources: EventsValueConfig[]
 }

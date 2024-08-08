@@ -1,8 +1,8 @@
 import React from 'react';
-interface ItemConfig {
+export interface ItemConfig {
     [propName: string]: string | number | boolean;
 }
-interface OptionConfig {
+export interface OptionConfig {
     [propName: string]: string | number | boolean | ItemConfig[];
 }
 declare type NativeSelectOptionChangeFnType = (arg1: any, arg2: any, arg3?: any, arg4?: any) => void;

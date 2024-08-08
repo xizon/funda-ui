@@ -1,6 +1,6 @@
 import React from 'react';
 declare type CascadingSelectE2EOptionChangeFnType = (input: any, currentData: any, index: any, depth: any, value: any, closeFunc: any) => void;
-interface fetchArrayConfig {
+export interface fetchArrayConfig {
     fetchFuncAsync?: any | undefined;
     fetchFuncMethod?: string | undefined;
     fetchFuncMethodParams?: any[] | undefined;

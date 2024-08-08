@@ -23,6 +23,7 @@
   /*------ Multiple selection ------*/
   /*------ Search button ------*/
   /*------------*/
+  /* focus */
 }
 .custom-select__wrapper input::placeholder {
   color: var(--cus-sel-input-placeholder-color);
@@ -223,15 +224,15 @@
 .custom-select__wrapper.active .list-group {
   display: block;
 }
-.custom-select__wrapper.focus .custom-select-single__inputplaceholder-wrapper {
+.custom-select__wrapper.multiple-selection.active .custom-select-single__inputplaceholder-wrapper, .custom-select__wrapper.focus .custom-select-single__inputplaceholder-wrapper {
   box-shadow: var(--cus-sel-focus-box-shadow);
   border-color: var(--cus-sel-focus-border-color);
   outline: 0;
 }
-.custom-select__wrapper.focus .custom-select-single__inputplaceholder-wrapper .custom-select-single__inputplaceholder-inner {
+.custom-select__wrapper.multiple-selection.active .custom-select-single__inputplaceholder-wrapper .custom-select-single__inputplaceholder-inner, .custom-select__wrapper.focus .custom-select-single__inputplaceholder-wrapper .custom-select-single__inputplaceholder-inner {
   border-color: var(--cus-sel-focus-border-color);
 }
-.custom-select__wrapper.focus .custom-select-multi__inputplaceholder-inner > div {
+.custom-select__wrapper.multiple-selection.active .custom-select-multi__inputplaceholder-inner > div, .custom-select__wrapper.focus .custom-select-multi__inputplaceholder-inner > div {
   box-shadow: var(--cus-sel-focus-box-shadow);
   border-color: var(--cus-sel-focus-border-color);
   outline: 0;
@@ -258,6 +259,10 @@
 .custom-select__options-wrapper .custom-select__options-contentlist {
   overflow: hidden;
   overflow-y: auto;
+}
+.custom-select__options-wrapper .custom-select__options-contentlist:focus {
+  outline: none;
+  box-shadow: none;
 }
 .custom-select__options-wrapper .custom-select__options-contentlist.noscroll {
   overflow-y: hidden;

@@ -188,6 +188,7 @@ __webpack_require__.d(__webpack_exports__, {
   "nodeContains": () => (/* reexport */ nodeContains),
   "padZero": () => (/* reexport */ padZero),
   "readStream": () => (/* reexport */ readStream),
+  "removeArrDuplicateItems": () => (/* reexport */ removeArrDuplicateItems),
   "setDateDays": () => (/* reexport */ setDateDays),
   "setDateHours": () => (/* reexport */ setDateHours),
   "setDateMinutes": () => (/* reexport */ setDateMinutes),
@@ -1790,6 +1791,22 @@ function timestampToDate(v) {
 ;// CONCATENATED MODULE: ./src/libs/object.ts
 function object_typeof(obj) { "@babel/helpers - typeof"; return object_typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, object_typeof(obj); }
 /**
+ * Remove Duplicate objects from JSON Array
+ * @param {Array} obj 
+ * @param {String} fieldName 
+ */
+function removeArrDuplicateItems(obj, fieldName) {
+  if (!Array.isArray(obj)) return [];
+  var clean = obj.filter(function (item, index, self) {
+    return index === self.findIndex(function (t) {
+      return t[fieldName] === item[fieldName];
+    });
+  });
+  return clean;
+}
+;
+
+/**
  * Deep clone
  * @param {*} obj 
  */
@@ -1810,7 +1827,6 @@ function deepClone(obj) {
     return obj;
   }
 }
-;
 
 /**
  * Flat Data
@@ -1836,7 +1852,6 @@ function flatData(data) {
   iterate(data);
   return result;
 }
-;
 
 ;// CONCATENATED MODULE: ./src/libs/viewport.ts
 /**

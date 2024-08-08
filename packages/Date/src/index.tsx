@@ -534,9 +534,7 @@ const Date = forwardRef((props: DateProps, externalRef: any) => {
             _modalRef.style.setProperty('position', 'absolute', 'important');
             _modalRef.classList.remove('pos-top');
         }
-
-
-
+ 
         // STEP 3:
         //-----------
         // Determine whether it exceeds the far right or left side of the screen

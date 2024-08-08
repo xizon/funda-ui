@@ -25,13 +25,13 @@ declare global {
     }
 }
 
-interface PreventOutsideScreenProps {
+export interface PreventOutsideScreenProps {
     xAxis: boolean;
     yAxis: boolean;
 }
 
 
-interface ModalDialogRef {
+export interface ModalDialogRef {
     open: () => void;
     close: () => void;
 }

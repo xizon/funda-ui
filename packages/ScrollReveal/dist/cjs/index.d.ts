@@ -4,13 +4,13 @@ declare module 'react' {
         children?: any;
     }
 }
-interface viewOffsetConfig {
+export interface ViewOffsetConfig {
     x?: string | undefined;
     y?: string | undefined;
 }
 declare type ScrollRevealProps = {
     root?: any;
-    viewOffset?: viewOffsetConfig;
+    viewOffset?: ViewOffsetConfig;
     defaultClassName?: string | string[];
     showClassName?: string | string[];
     infinite?: boolean;

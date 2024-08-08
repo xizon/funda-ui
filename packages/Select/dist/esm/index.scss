@@ -320,6 +320,8 @@
     }
 
 
+    /* focus */
+    &.multiple-selection.active,
     &.focus {
 
         .custom-select-single__inputplaceholder-wrapper {
@@ -371,6 +373,11 @@
     .custom-select__options-contentlist {
         overflow: hidden;
         overflow-y: auto;
+
+        &:focus {
+            outline: none;
+            box-shadow: none;
+        }
 
         &.noscroll {
             overflow-y: hidden;

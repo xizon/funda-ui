@@ -1,6 +1,30 @@
 import React from 'react';
-interface ListSearchDataConfig {
+export interface ListSearchDataConfig {
     title: string | number;
+}
+export interface DataNode {
+    key: React.Key;
+    title: string;
+    link?: string;
+    active?: boolean;
+    checked?: boolean;
+    heading?: string;
+    icon?: string;
+    slug?: string;
+    customContentToHyperlink?: React.ReactNode;
+    customContentToLiTag?: React.ReactNode;
+    itemMouseEnterCallback?: () => void;
+    itemMouseLeaveCallback?: () => void;
+    itemLinkMouseEnterCallback?: () => void;
+    itemLinkMouseLeaveCallback?: () => void;
+    childrenAsync?: boolean;
+    children?: DataNode[];
+}
+export interface FetchConfig {
+    fetchFuncAsync?: any | undefined;
+    fetchFuncMethod?: string | undefined;
+    fetchFuncMethodParams?: any[] | undefined;
+    fetchCallback?: (data: any) => void;
 }
 declare type TreeProps = {
     /** Set TreeNode display Checkbox or not */

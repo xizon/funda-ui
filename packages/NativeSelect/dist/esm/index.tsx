@@ -4,16 +4,17 @@ import {
     useComId,
     isJSON,
     addTreeDepth,
-    addTreeIndent
+    addTreeIndent,
+    removeArrDuplicateItems
 } from 'funda-utils';
 
 
-interface ItemConfig {
+export interface ItemConfig {
     [propName: string]: string | number | boolean;
 }
 
 
-interface OptionConfig {
+export interface OptionConfig {
     [propName: string]: string | number | boolean | ItemConfig[];
 }
 
@@ -116,7 +117,7 @@ const NativeSelect = forwardRef((props: NativeSelectProps, externalRef: any) => 
                 _ORGIN_DATA = [];
             }
 
-            //
+            // set "<select>" value
             setControlValue(value); // value must be initialized
 
             // Set hierarchical categories ( with sub-categories )
@@ -125,6 +126,8 @@ const NativeSelect = forwardRef((props: NativeSelectProps, externalRef: any) => 
                 addTreeIndent(_ORGIN_DATA, INDENT_PLACEHOLDER, INDENT_LAST_PLACEHOLDER, 'label');
             }
 
+            // remove Duplicate objects from JSON Array
+            _ORGIN_DATA = removeArrDuplicateItems(_ORGIN_DATA, 'value');
 
             //
             setDataInit(_ORGIN_DATA); // data must be initialized
@@ -135,9 +138,13 @@ const NativeSelect = forwardRef((props: NativeSelectProps, externalRef: any) => 
             return _ORGIN_DATA;
         } else {
 
-            //
+            // set "<select>" value
             setControlValue(value); // value must be initialized
             
+
+            // remove Duplicate objects from JSON Array
+            optionsDataInit = removeArrDuplicateItems(optionsDataInit, 'value');
+
             //
             setDataInit(optionsDataInit); // data must be initialized
 

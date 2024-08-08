@@ -14,7 +14,7 @@ import {
 
 
 
-interface OptionConfig {
+export interface OptionConfig {
     disabled?: boolean;
     label: any;
     listItemLabel?: any;

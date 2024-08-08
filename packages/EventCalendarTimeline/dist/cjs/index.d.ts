@@ -1,5 +1,5 @@
 import React from 'react';
-interface EventsValueConfig {
+export interface EventsValueConfig {
     id: string | number;
     date: string;
     time: string;
@@ -7,7 +7,7 @@ interface EventsValueConfig {
     dataTooltip?: string;
     eventStyles?: React.CSSProperties;
 }
-interface TimelineValueConfig {
+export interface TimelineValueConfig {
     listSection: string;
     eventSources: EventsValueConfig[];
 }

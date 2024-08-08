@@ -1,29 +1,33 @@
 import React from 'react';
 declare type SelectOptionChangeFnType = (arg1: any, arg2: any, arg3: any) => void;
-interface MultiSelectDataConfig {
+export interface MultiSelectDataConfig {
     values: string[] | number[];
     labels: string[] | number[];
     queryStrings: string[] | number[];
 }
-interface OptionConfig {
+export interface MultiSelectControlValConfig {
+    values: string[];
+    labels: string[];
+}
+export interface OptionConfig {
     disabled?: boolean;
     label: any;
     listItemLabel?: any;
     value: any;
     queryString: string | number;
 }
-interface MultiSelectConfig {
+export interface MultiSelectConfig {
     valid: boolean;
     selectAll: boolean;
     selectAllLabel?: string;
     data: MultiSelectDataConfig | null;
 }
-interface multiSelectSelectedItemOnlyStatusConfig {
+export interface multiSelectSelectedItemOnlyStatusConfig {
     itemsLabel?: string;
     allItemsLabel?: string;
     noneLabel?: string;
 }
-interface CleanTriggerConfig {
+export interface CleanTriggerConfig {
     valid: boolean;
     cleanValueLabel?: string;
 }
@@ -33,10 +37,10 @@ declare type SelectProps = {
     wrapperClassName?: string;
     controlClassName?: string;
     controlExClassName?: string;
-    lockScrollBar?: boolean;
     exceededSidePosOffset?: number;
     multiSelect?: MultiSelectConfig;
     multiSelectSelectedItemOnlyStatus?: multiSelectSelectedItemOnlyStatusConfig;
+    renderSelectedValue?: (selectedData: MultiSelectControlValConfig, removeFunc: (e: React.MouseEvent) => void) => void;
     cleanTrigger?: CleanTriggerConfig;
     value?: string;
     label?: React.ReactNode | string;

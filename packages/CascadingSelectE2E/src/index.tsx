@@ -23,7 +23,7 @@ import Group from './Group';
 type CascadingSelectE2EOptionChangeFnType = (input: any, currentData: any, index: any, depth: any, value: any, closeFunc: any) => void;
 
 
-interface fetchArrayConfig {
+export interface fetchArrayConfig {
     fetchFuncAsync?: any | undefined;
     fetchFuncMethod?: string | undefined;
     fetchFuncMethodParams?: any[] | undefined;
@@ -281,8 +281,6 @@ const CascadingSelectE2E = (props: CascadingSelectE2EProps) => {
             _modalRef.style.setProperty('position', 'absolute', 'important');
             _modalRef.classList.remove('pos-top');
         }
-
-
 
 
 
