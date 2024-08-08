@@ -1,0 +1,318 @@
+/* ======================================================
+    <!-- Select -->
+/* ====================================================== */
+.custom-select__wrapper {
+  --cus-sel-focus-border-color:#86b7fe;
+  --cus-sel-focus-box-shadow: 0 0 0 0.25rem rgba(13,110,253,.25);
+  --cus-sel-placeholder-color: rgba(33, 37, 41, 0.75);
+  --cus-sel-input-placeholder-color: #c5c9d1;
+  --cus-sel-control-wrapper-bg: #fff;
+  --cus-sel-control-wrapper-border-color: #dee2e6;
+  --cus-sel-control-list-bg: #efefef;
+  --cus-sel-arrow-fill: #a5a5a5;
+  --cus-sel-searchbtn-fill: #a5a5a5;
+  --cus-sel-searchbtn-hover-fill: #333;
+  --cus-sel-removebtn-fill: #000;
+  --cus-sel-removebtn-hover-fill: #f00;
+  /*------ Placeholder for input ------*/
+  /*------ Arrow ------*/
+  /*------ Clean ------*/
+  /*------ Input ------*/
+  /*------ Blinking cursor ------*/
+  /*------ Single selection ------*/
+  /*------ Multiple selection ------*/
+  /*------ Search button ------*/
+  /*------------*/
+}
+.custom-select__wrapper input::placeholder {
+  color: var(--cus-sel-input-placeholder-color);
+}
+.custom-select__wrapper .arrow svg .arrow-fill-g {
+  fill: var(--cus-sel-arrow-fill);
+}
+.custom-select__wrapper .clean svg .clean-fill-g {
+  fill: var(--cus-sel-arrow-fill);
+}
+.custom-select__wrapper [data-select]:focus {
+  box-shadow: none;
+  border-color: transparent;
+  outline: 0;
+}
+.custom-select__wrapper .custom-select-multi__control-blinking-cursor {
+  display: inline-block;
+  color: var(--cus-sel-placeholder-color);
+}
+.custom-select__wrapper .custom-select-multi__control-blinking-cursor.animated {
+  animation: 1s mf-sel-blink step-end infinite;
+}
+.custom-select__wrapper .custom-select-multi__control-blinking-cursor.control-placeholder {
+  color: var(--cus-sel-input-placeholder-color);
+}
+.custom-select__wrapper .custom-select-multi__control-blinking-following-cursor {
+  position: absolute;
+  top: 0.375rem;
+  margin-left: 1rem; /* offset start pixel of input control */
+  z-index: 1;
+}
+.custom-select__wrapper .custom-select-multi__control-blinking-following-cursor.animated {
+  animation: 1s mf-sel-blink step-end infinite;
+}
+.custom-select__wrapper .custom-select-multi__control-blinking-following-cursor.custom-select-multi__control-blinking-following-cursor--puretext {
+  margin-left: auto;
+  position: relative;
+  top: auto;
+  left: 0;
+}
+@keyframes mf-sel-blink {
+  from, to {
+    color: transparent;
+  }
+  50% {
+    color: var(--cus-sel-placeholder-color);
+  }
+}
+.custom-select__wrapper .custom-select-single__inputplaceholder-wrapper {
+  position: absolute;
+  top: 0;
+  width: 100%;
+  pointer-events: none;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  border-radius: 0.375rem;
+}
+.custom-select__wrapper .custom-select-single__inputplaceholder-wrapper .custom-select-multi__control-blinking-cursor {
+  position: absolute;
+  top: 0.1rem;
+  left: 0;
+  padding: 0.1rem 1.5rem 0.1rem 1rem;
+  font-size: 0.875rem;
+  /* bootstrap style that match ".form-control" */
+  top: 0.375rem;
+}
+.custom-select__wrapper .custom-select-single__inputplaceholder-wrapper .custom-select-multi__control-blinking-cursor .control-placeholder {
+  color: var(--cus-sel-input-placeholder-color);
+}
+.custom-select__wrapper .custom-select-single__inputplaceholder-wrapper .custom-select-single__control-searchbtn {
+  z-index: 5;
+  pointer-events: auto;
+}
+.custom-select__wrapper .custom-select-single__inputplaceholder-wrapper .custom-select-single__control-searchbtn svg,
+.custom-select__wrapper .custom-select-single__inputplaceholder-wrapper .custom-select-single__control-searchbtn path {
+  fill: var(--single-sel-searchbtn-fill);
+}
+.custom-select__wrapper .custom-select-single__inputplaceholder-wrapper .custom-select-single__control-searchbtn:hover svg,
+.custom-select__wrapper .custom-select-single__inputplaceholder-wrapper .custom-select-single__control-searchbtn:hover path {
+  fill: var(--single-sel-searchbtn-hover-fill);
+}
+.custom-select__wrapper .custom-select-single__inputplaceholder-wrapper .custom-select-single__inputplaceholder-inner {
+  display: inline-block;
+  position: relative;
+  width: 100%;
+  /* bootstrap style that match ".form-control" */
+  background-color: var(--cus-sel-control-wrapper-bg);
+  border: 1px solid var(--cus-sel-control-wrapper-border-color);
+  appearance: none;
+  border-radius: inherit;
+  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+.custom-select__wrapper .custom-select-single__inputplaceholder-wrapper .custom-select-single__inputplaceholder-inner > input {
+  padding: 0.32rem 0.75rem;
+  opacity: 0;
+  pointer-events: none;
+}
+.custom-select__wrapper .custom-select-multi__inputplaceholder-wrapper {
+  position: absolute;
+  top: 0;
+  width: 100%;
+  pointer-events: none;
+}
+.custom-select__wrapper .custom-select-multi__inputplaceholder-wrapper ul,
+.custom-select__wrapper .custom-select-multi__inputplaceholder-wrapper li {
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+.custom-select__wrapper .custom-select-multi__inputplaceholder-wrapper .custom-select-multi__inputplaceholder-inner > div {
+  position: relative;
+  /* bootstrap style that match ".form-control" */
+  background-color: var(--cus-sel-control-wrapper-bg);
+  background-clip: padding-box;
+  border: 1px solid var(--cus-sel-control-wrapper-border-color);
+  appearance: none;
+  border-radius: 0.375rem;
+  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+  padding-bottom: 1px;
+}
+.custom-select__wrapper .custom-select-multi__inputplaceholder-wrapper ul.custom-select-multi__list {
+  margin-right: 1rem;
+}
+.custom-select__wrapper .custom-select-multi__inputplaceholder-wrapper ul.custom-select-multi__list li {
+  display: inline-block;
+  margin: 5px;
+  margin-bottom: 0;
+  padding: 0.1rem 1.5rem 0.1rem 1rem;
+  font-size: 0.875rem;
+  background: var(--cus-sel-control-list-bg);
+  border-radius: 30px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  position: relative;
+}
+.custom-select__wrapper .custom-select-multi__inputplaceholder-wrapper ul.custom-select-multi__list li.custom-select-multi__list-item-statusstring {
+  background: transparent;
+}
+.custom-select__wrapper .custom-select-multi__inputplaceholder-wrapper ul.custom-select-multi__list li.custom-select-multi__list-item-placeholder {
+  background: transparent;
+  color: var(--cus-sel-placeholder-color);
+  padding-left: 0.75rem;
+  padding-right: 0;
+  margin-left: 0;
+  white-space: nowrap;
+}
+.custom-select__wrapper .custom-select-multi__inputplaceholder-wrapper ul.custom-select-multi__list li.custom-select-multi__list-item-placeholder.hide {
+  min-width: 100px;
+}
+.custom-select__wrapper .custom-select-multi__inputplaceholder-wrapper ul.custom-select-multi__list li > a {
+  font-weight: 400;
+  opacity: 0.6;
+  font-size: 18px;
+  line-height: 20px;
+  position: absolute;
+  right: 8px;
+  top: 0;
+  pointer-events: auto;
+}
+.custom-select__wrapper .custom-select-multi__inputplaceholder-wrapper ul.custom-select-multi__list li > a path {
+  fill: var(--cus-sel-removebtn-fill);
+}
+.custom-select__wrapper .custom-select-multi__inputplaceholder-wrapper ul.custom-select-multi__list li > a:hover path {
+  fill: var(--cus-sel-removebtn-hover-fill);
+}
+.custom-select__wrapper .custom-select-multi__inputplaceholder-wrapper ul.custom-select-multi__list li.custom-select-multi__list-item-add {
+  pointer-events: auto;
+  margin: 0;
+  padding: 0;
+  background: transparent;
+}
+.custom-select__wrapper .custom-select-multi__inputplaceholder-wrapper ul.custom-select-multi__list li.custom-select-multi__list-item-add input {
+  border: none;
+  font-size: 0.75rem;
+  transform: translateY(0.25rem);
+}
+.custom-select__wrapper .custom-select-multi__inputplaceholder-wrapper ul.custom-select-multi__list li.custom-select-multi__list-item-add input:focus {
+  border: none;
+  outline: none;
+  box-shadow: none;
+}
+.custom-select__wrapper .custom-select-multi__control-searchbtn {
+  z-index: 5;
+  pointer-events: auto;
+}
+.custom-select__wrapper .custom-select-multi__control-searchbtn svg,
+.custom-select__wrapper .custom-select-multi__control-searchbtn path {
+  fill: var(--cus-sel-searchbtn-fill);
+}
+.custom-select__wrapper .custom-select-multi__control-searchbtn:hover svg,
+.custom-select__wrapper .custom-select-multi__control-searchbtn:hover path {
+  fill: var(--cus-sel-searchbtn-hover-fill);
+}
+.custom-select__wrapper [data-select]:focus {
+  cursor: text !important;
+  opacity: 0;
+}
+.custom-select__wrapper.active .list-group {
+  display: block;
+}
+.custom-select__wrapper.focus .custom-select-single__inputplaceholder-wrapper {
+  box-shadow: var(--cus-sel-focus-box-shadow);
+  border-color: var(--cus-sel-focus-border-color);
+  outline: 0;
+}
+.custom-select__wrapper.focus .custom-select-single__inputplaceholder-wrapper .custom-select-single__inputplaceholder-inner {
+  border-color: var(--cus-sel-focus-border-color);
+}
+.custom-select__wrapper.focus .custom-select-multi__inputplaceholder-inner > div {
+  box-shadow: var(--cus-sel-focus-box-shadow);
+  border-color: var(--cus-sel-focus-border-color);
+  outline: 0;
+}
+
+/*------ List ------*/
+.custom-select__options-wrapper {
+  --cus-sel-listgroup-popwin-min-width: 200px;
+  --cus-sel-listgroup-tool-bg: rgb(248,249,250);
+  --cus-sel-listgroup-checkbox: #a5a5a5;
+  --cus-sel-listgroup-item-hover-focus-bg: rgba(0,0,0,.1);
+  --cus-sel-listgroup-content-scrollbar-color: rgba(0, 0, 0, 0.2);
+  --cus-sel-listgroup-content-scrollbar-track: rgba(0, 0, 0, 0);
+  --cus-sel-listgroup-content-scrollbar-w: 3px;
+  display: none;
+  min-width: var(--cus-sel-listgroup-popwin-min-width);
+  z-index: 1055; /* --bs-modal-zindex */
+  /*------ Extended buttons of Multiple selection ------*/
+  /*------ Extended buttons of Single selection ------*/
+}
+.custom-select__options-wrapper.active {
+  display: block !important;
+}
+.custom-select__options-wrapper .custom-select__options-contentlist {
+  overflow: hidden;
+  overflow-y: auto;
+}
+.custom-select__options-wrapper .custom-select__options-contentlist.noscroll {
+  overflow-y: hidden;
+}
+.custom-select__options-wrapper .custom-select__options-contentlist::-webkit-scrollbar {
+  height: var(--cus-sel-listgroup-content-scrollbar-h);
+  width: var(--cus-sel-listgroup-content-scrollbar-w);
+}
+.custom-select__options-wrapper .custom-select__options-contentlist::-webkit-scrollbar-thumb {
+  background: var(--cus-sel-listgroup-content-scrollbar-color);
+}
+.custom-select__options-wrapper .custom-select__options-contentlist::-webkit-scrollbar-track {
+  background: var(--cus-sel-listgroup-content-scrollbar-track);
+}
+.custom-select__options-wrapper .bg-light {
+  background-color: var(--cus-sel-listgroup-tool-bg) !important;
+}
+.custom-select__options-wrapper .list-group-item.hide {
+  display: none;
+}
+.custom-select__options-wrapper .list-group-item .custom-select-multi__control-option-item--nomatch.hide {
+  display: none;
+}
+.custom-select__options-wrapper .list-group-item .custom-select-multi__control-option-checkbox-placeholder {
+  display: inline-block;
+}
+.custom-select__options-wrapper .list-group-item .custom-select-multi__control-option-checkbox-placeholder svg {
+  fill: transparent;
+}
+.custom-select__options-wrapper .list-group-item .custom-select-multi__control-option-checkbox-placeholder svg path {
+  stroke: var(--cus-sel-listgroup-checkbox);
+}
+.custom-select__options-wrapper .list-group-item .custom-select-multi__control-option-checkbox-selected {
+  display: inline-block;
+}
+.custom-select__options-wrapper .list-group-item .custom-select-multi__control-option-checkbox-selected svg {
+  fill: var(--cus-sel-listgroup-checkbox);
+}
+.custom-select__options-wrapper .list-group-item .custom-select-multi__control-option-checkbox-selected svg path {
+  stroke: var(--cus-sel-listgroup-checkbox);
+}
+.custom-select__options-wrapper .list-group-item:hover, .custom-select__options-wrapper .list-group-item:focus {
+  background-color: var(--cus-sel-listgroup-item-hover-focus-bg);
+}
+.custom-select__options-wrapper .custom-select-multi__control-option-item--select-all.hide {
+  display: none !important;
+}
+.custom-select__options-wrapper .custom-select-multi__control-option-item--select-all .btn {
+  font-size: 0.75rem;
+  padding: 0.1rem 0.5rem;
+}
+.custom-select__options-wrapper .custom-select-multi__control-option-item--clean.hide {
+  display: none !important;
+}
+.custom-select__options-wrapper .custom-select-multi__control-option-item--clean .btn {
+  font-size: 0.75rem;
+  padding: 0.1rem 0.5rem;
+}

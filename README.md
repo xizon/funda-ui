@@ -34,12 +34,12 @@ Here is a table of the components and their status.
 | [Back To Top ✅](packages/BackToTop/README.md) | [Merge Input ❏](packages/MergeInput/README.md) | [Mousewheel Interaction ❏](packages/MousewheelInteraction/README.md) | |   |
 | [Button ❏](packages/Button/README.md) | [Tag Input ✅](packages/TagInput/README.md) | [Parallax ❏](packages/Parallax/README.md) |  |   |
 | [Card ❏](packages/Card/README.md) | [Textarea  ✅](packages/Textarea/README.md) | [Scroll Reveal ✅](packages/ScrollReveal/README.md) |  |   |
-| [Content Placeholder ❏](packages/ContentPlaceholder/README.md) | [Select ✅](packages/Select/README.md) | [Sticky Elements ❏](packages/StickyElements/README.md) |  |  |
+| [Content Placeholder ❏](packages/ContentPlaceholder/README.md) | [NativeSelect ✅](packages/NativeSelect/README.md) | [Sticky Elements ❏](packages/StickyElements/README.md) |  |  |
 | [Counter ❏](packages/Counter/README.md) | [Cascading Select ✅](packages/CascadingSelect/README.md) | [Mode Switch ✅](packages/ModeSwitch/README.md) |  |  |
 | [Hybrid Content Slider ❏](packages/HybridContentSlider/README.md) | [Cascading Select End-to-end ✅🔥](packages/CascadingSelectE2E/README.md) | [Custom Scrollbar ✅](packages/Scrollbar/README.md) |  |  |
 | [Image Shapes ❏](packages/ImageShapes/README.md) | [Radio ✅](packages/Radio/README.md) | [Horizontal Scroll Content ✅](packages/HorizontalScrollContent/README.md) |  |  |
 | [Lightbox ❏](packages/Lightbox/README.md) | [Checkbox ✅](packages/Checkbox/README.md) |  |  |  |
-| [List Bulleted ❏](packages/ListBulleted/README.md) | [Multifunction Select ✅🔥](packages/MultiFuncSelect/README.md) |  |  |  |
+| [List Bulleted ❏](packages/ListBulleted/README.md) | [Select ✅🔥](packages/Select/README.md) |  |  |  |
 | [Modal Dialog ✅🔥](packages/ModalDialog/README.md) | [Live Search ✅](packages/LiveSearch/README.md) |  |  |  |
 | [Pagination ✅](packages/Pagination/README.md) | [Number ❏](packages/Number/README.md) |  |  |  |
 | [Table ✅🔥](packages/Table/README.md) | [SearchBar ✅](packages/SearchBar/README.md) |  |  |  |
@@ -84,6 +84,7 @@ $ pnpm add funda-ui
 <link href="./bootstrap.min.css" rel="stylesheet"/>
 ```
 
+> You could remove Bootstrap's styles. All components support setting Bootstrap's default class names through `**ClassName` attributes.
 
 **Step 3**. import required components as required
 

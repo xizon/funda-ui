@@ -1,20 +1,19 @@
 {
     "private": true,
-    "name": "funda-multifunction-select",
+    "name": "funda-native-select",
     "version": "0.0.1",
     "description": "",
     "main": "./dist/cjs/index.js",
     "module": "./dist/esm/index.js",
     "keywords": [],
     "scripts": {
-        "build": "webpack --progress --mode production --config build/config-cjs.js && node build/config-esm.js && tsc --build tsconfig.json && node build/types.js && sass --no-source-map src/index.scss dist/css/index.css",
+        "build": "webpack --progress --mode production --config build/config-cjs.js && node build/config-esm.js && tsc --build tsconfig.json && node build/types.js",
         "test": "echo \"Error: no test specified\" && exit 1"
     },
     "dependencies": {
         "react": "^18.2.0",
         "react-dom": "^18.2.0",
-        "funda-utils": "*",
-        "funda-root-portal": "*"
+        "funda-utils": "*"
     },
     "devDependencies": {
         "@babel/core": "^7.2.0",

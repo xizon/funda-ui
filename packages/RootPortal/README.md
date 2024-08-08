@@ -5,7 +5,7 @@ It is generally used to create a React element at the root node (`document.body`
 **As an abstract component, it is currently the same as the following plugins:**
 
  - ✅ Modal Dialog
- - ✅ Multifunction Select
+ - ✅ Select
  - ✅ Cascading Select 
  - ✅ Cascading Select End-to-end
  - ✅ Dropdown Menu

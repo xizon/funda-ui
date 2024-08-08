@@ -14,10 +14,10 @@ A simple usage, no default value.
 import React from "react";
 import DynamicFields from 'funda-ui/DynamicFields';
 import Input from 'funda-ui/Input';
-import MultiFuncSelect from 'funda-ui/MultiFuncSelect';
+import Select from 'funda-ui/Select';
 
 // component styles
-import 'funda-ui/MultiFuncSelect/index.css';
+import 'funda-ui/Select/index.css';
 
 
 type DynamicFieldsValueProps = {
@@ -74,7 +74,7 @@ export default () => {
                     </div>
                     <div className="col">
                         {/* CONTROL */}
-                        <MultiFuncSelect
+                        <Select
                             value={data.role_id}
                             name="role_id[]"
                             placeholder="Select"
@@ -207,12 +207,12 @@ import { useLocation } from 'react-router-dom';
 import DynamicFields from 'funda-ui/DynamicFields';
 
 import Input from 'funda-ui/Input';
-import MultiFuncSelect from 'funda-ui/MultiFuncSelect';
+import Select from 'funda-ui/Select';
 import Switch from 'funda-ui/Switch';
 import CascadingSelectE2E from 'funda-ui/CascadingSelectE2E';
 
 // component styles
-import 'funda-ui/MultiFuncSelect/index.css';
+import 'funda-ui/Select/index.css';
 import 'funda-ui/CascadingSelectE2E/index.css';
 
 
@@ -364,7 +364,7 @@ export default () => {
                     </div>
                     <div className="col">
                         {/* CONTROL */}
-                        <MultiFuncSelect
+                        <Select
                             value={data.role_id}
                             name="role_id[]"
                             data={location.pathname}
@@ -589,10 +589,10 @@ import React, { useState, useEffect } from "react";
 import DynamicFields from 'funda-ui/DynamicFields';
 
 import Input from 'funda-ui/Input';
-import MultiFuncSelect from 'funda-ui/MultiFuncSelect';
+import Select from 'funda-ui/Select';
 
 // component styles
-import 'funda-ui/MultiFuncSelect/index.css';
+import 'funda-ui/Select/index.css';
 
 
 
@@ -763,7 +763,7 @@ export default () => {
                     </div>
                     <div className="col">
                         {/* CONTROL */}
-                        <MultiFuncSelect
+                        <Select
                             value={data.role_id}
                             name="role_id[]"
                             placeholder="Select"
@@ -919,10 +919,10 @@ Use the following properties `innerAppend*` to change the layout to an HTML tabl
 import React, { useState } from "react";
 import DynamicFields from 'funda-ui/DynamicFields';
 import Input from 'funda-ui/Input';
-import MultiFuncSelect from 'funda-ui/MultiFuncSelect';
+import Select from 'funda-ui/Select';
 
 // component styles
-import 'funda-ui/MultiFuncSelect/index.css';
+import 'funda-ui/Select/index.css';
 
 
 type DynamicFieldsValueProps = {
@@ -970,7 +970,7 @@ export default () => {
             
                 <div className="d-table-cell border py-2 px-2"  style={{width: '150px'}}>
                     {/* CONTROL */}
-                    <MultiFuncSelect
+                    <Select
                         wrapperClassName="position-relative"
                         value={data.role_id}
                         name="role_id[]"
@@ -1109,7 +1109,7 @@ import DynamicFields from 'funda-ui/DynamicFields';
 import Input from 'funda-ui/Input';
 
 // component styles
-import 'funda-ui/MultiFuncSelect/index.css';
+import 'funda-ui/Select/index.css';
 
 
 type DynamicFieldsValueProps = {
