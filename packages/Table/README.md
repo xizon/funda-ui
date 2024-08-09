@@ -339,7 +339,7 @@ Or using `nowrap="nowrap"` in \<TableCell \/\> in \<TableHead \/\> can also prev
 /* ---------- Grid ----------- */
 .demo-columns {
     // display: grid;
-    // grid-template-columns: 448px auto 610px;
+    // grid-template-columns: 250px auto 250px;
     // grid-gap: .5rem;
 
     display: flex;
