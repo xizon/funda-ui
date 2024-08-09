@@ -10,6 +10,11 @@ React components using pure Bootstrap 5+ which has undergone complex business te
 All components have undergone complex business verification and provide multiple examples.
 
 
+<p align="center">
+  <img src="preview.png"  alt="Funda UI" >
+</p>
+
+
 ---
 
 
