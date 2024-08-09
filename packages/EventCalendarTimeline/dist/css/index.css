@@ -132,6 +132,9 @@
   margin: 0;
   box-shadow: none;
   cursor: pointer;
+  /* required */
+  display: inline-flex;
+  align-items: center;
 }
 .e-cal-tl__wrapper .e-cal-tl__btn svg path {
   fill: var(--e-cal-tl-header-arrow-bg);

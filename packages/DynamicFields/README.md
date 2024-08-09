@@ -62,6 +62,7 @@ export default () => {
                     <div className="col">
                         {/* CONTROL */}
                         <Input
+                            wrapperClassName="position-relative"
                             value={data.user_name}
                             tabIndex={-1}
                             name="user_name[]"
@@ -75,6 +76,7 @@ export default () => {
                     <div className="col">
                         {/* CONTROL */}
                         <Select
+                            wrapperClassName="position-relative"
                             value={data.role_id}
                             name="role_id[]"
                             placeholder="Select"

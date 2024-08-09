@@ -113,7 +113,7 @@ const RangeSlider = (props: RangeSliderProps) => {
 
         // update default value
         //--------------
-        if (typeof value.min === 'undefined' || typeof value.max === 'undefined') {
+        if (value && (typeof value.min === 'undefined' || typeof value.max === 'undefined')) {
             initDefaultValue({
                 min,
                 max

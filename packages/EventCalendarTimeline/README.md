@@ -1,65 +1,6 @@
 # Event Calendar Timeline
 
-
-
-## Set max height and width
-
-Just put a **div** on the outermost layer of the `<EventCalendarTimeline />`.
-
-
-```js
-import React from "react";
-import EventCalendarTimeline from 'funda-ui/EventCalendarTimeline';
-
-// component styles
-import 'funda-ui/EventCalendarTimeline/index.css';
-
-export default () => {
-
-    return (
-        <>
-            <div style="height: 100px; width: 600px;">
-                <EventCalendarTimeline />
-            </div>
-            
-                  
-        </>
-    );
-}
-```
-
-
-
-## Change language
-
-```js
-import React from "react";
-import EventCalendarTimeline from 'funda-ui/EventCalendarTimeline';
-
-// component styles
-import 'funda-ui/EventCalendarTimeline/index.css';
-
-export default () => {
-
-    return (
-        <>
-            <EventCalendarTimeline 
-                langWeek={['星期一', '星期二', '星期三', '星期四', '星期五', '星期六', '星期日']}
-                langMonths={['一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月', '十月', '十一月', '十二月']}
-                langMonthsFull={['一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月', '十月', '十一月', '十二月']}
-                langToday="今天"
-            />
-                  
-        </>
-    );
-}
-```
-
-
-
-
-
-## Use of data
+## General
 
 
 ```js
@@ -373,7 +314,7 @@ export default () => {
     return (
         <>
    
-            <div style={{height: '500px', width: '1280px'}}>
+            <div style={{minHeight: '150px', width: '100%'}}>
                 <EventCalendarTimeline
                     customTodayDate={defaultCustomTodayDate}
                     eventsValue={data}
@@ -409,6 +350,59 @@ export default () => {
 ```
 
 
+
+## Set max height and width
+
+Just put a **div** on the outermost layer of the `<EventCalendarTimeline />`.
+
+
+```js
+import React from "react";
+import EventCalendarTimeline from 'funda-ui/EventCalendarTimeline';
+
+// component styles
+import 'funda-ui/EventCalendarTimeline/index.css';
+
+export default () => {
+
+    return (
+        <>
+            <div style={{height: '100px', width: '600px'}}>
+                <EventCalendarTimeline />
+            </div>
+            
+                  
+        </>
+    );
+}
+```
+
+
+
+## Change language
+
+```js
+import React from "react";
+import EventCalendarTimeline from 'funda-ui/EventCalendarTimeline';
+
+// component styles
+import 'funda-ui/EventCalendarTimeline/index.css';
+
+export default () => {
+
+    return (
+        <>
+            <EventCalendarTimeline 
+                langWeek={['星期一', '星期二', '星期三', '星期四', '星期五', '星期六', '星期日']}
+                langMonths={['一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月', '十月', '十一月', '十二月']}
+                langMonthsFull={['一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月', '十月', '十一月', '十二月']}
+                langToday="今天"
+            />
+                  
+        </>
+    );
+}
+```
 
 
 

@@ -4495,6 +4495,12 @@ var Item = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_am
 });
 /* harmony default export */ const src_Item = (Item);
 ;// CONCATENATED MODULE: ./src/index.tsx
+function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i]; return arr2; }
+function _iterableToArrayLimit(arr, i) { var _i = null == arr ? null : "undefined" != typeof Symbol && arr[Symbol.iterator] || arr["@@iterator"]; if (null != _i) { var _s, _e, _x, _r, _arr = [], _n = !0, _d = !1; try { if (_x = (_i = _i.call(arr)).next, 0 === i) { if (Object(_i) !== _i) return; _n = !1; } else for (; !(_n = (_s = _x.call(_i)).done) && (_arr.push(_s.value), _arr.length !== i); _n = !0); } catch (err) { _d = !0, _e = err; } finally { try { if (!_n && null != _i["return"] && (_r = _i["return"](), Object(_r) !== _r)) return; } finally { if (_d) throw _e; } } return _arr; } }
+function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 
 
@@ -4521,6 +4527,12 @@ var Toast = function Toast(props) {
   var rootRef = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useRef)(null);
   var depth = autoHideMultiple ? data.slice(-2).length + 1 : data.length + 1;
   var cascadingEnabled = typeof cascading === 'undefined' ? true : cascading;
+
+  // force display
+  var _useState = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)(false),
+    _useState2 = _slicedToArray(_useState, 2),
+    initPopRoot = _useState2[0],
+    setInitPopRoot = _useState2[1];
 
   // auto close
   var AUTO_CLOSE_TIME = typeof autoCloseTime === 'undefined' || autoCloseTime === false ? false : autoCloseTime;
@@ -4698,23 +4710,28 @@ var Toast = function Toast(props) {
     }, ANIM_SPEED);
   }
   (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useEffect)(function () {
-    // Initialize Toast Item
-    //------------------------------------------
-    init();
+    if (initPopRoot) {
+      // Initialize Toast Item
+      //------------------------------------------
+      init();
 
-    // Initialize Progress
-    //------------------------------------------
-    autoClose();
+      // Initialize Progress
+      //------------------------------------------
+      autoClose();
 
-    // Remove the global list of events, especially as scroll and interval.
-    //--------------
-    return function () {
-      // Stop all animations
-      clearAllProgressTimer();
-    };
-  }, [data]);
+      // Remove the global list of events, especially as scroll and interval.
+      //--------------
+      return function () {
+        // Stop all animations
+        clearAllProgressTimer();
+      };
+    }
+  }, [data, initPopRoot]);
+  (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useEffect)(function () {
+    setInitPopRoot(true);
+  }, []);
   return /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((dist_cjs_default()), {
-    show: true,
+    show: initPopRoot,
     containerClassName: "Toast"
   }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
     id: "toasts__wrapper-".concat(idRes),

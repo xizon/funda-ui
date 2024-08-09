@@ -3,6 +3,9 @@
 /* ====================================================== */
 .navbar-nav a {
   position: relative;
+  /* required */
+  display: inline-flex;
+  align-items: center;
 }
 .navbar-nav .arrow {
   transition: 0.1s ease-in-out;

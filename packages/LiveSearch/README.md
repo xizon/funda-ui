@@ -21,7 +21,7 @@ export default () => {
             <LiveSearch
                 btnId="app-livesearch-btn"
                 name="app-livesearch-name"
-                label="Food List"
+                label="Food List (Enter the search character)"
                 options={`
                 [
                     {"label": "Option 1","value": "value-1","queryString": "option1"},
@@ -37,6 +37,7 @@ export default () => {
             <LiveSearch
                 btnId="app-livesearch-btn"
                 name="app-livesearch-name"
+                label="Food List (Direct display)"
                 hideIcon
                 autoShowOptions
                 options={`
@@ -48,6 +49,7 @@ export default () => {
                 ]  
                 `}
             />
+
 
         </>
     );

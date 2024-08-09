@@ -20,10 +20,19 @@ export default () => {
 
     return (
         <>
+
+            <Input
+                name="name"
+                label="Title"
+                onChange={handleChange}
+            />
+
+
+
             <Input
                 placeholder="String"
                 name="name"
-                label="String"
+                label="Disabled"
                 onChange={handleChange}
                 iconRight={<><i className="fa fa-arrow-up" aria-hidden="true"></i></>}
                 required
@@ -32,7 +41,7 @@ export default () => {
 
             <Input
                 name="name"
-                label="String"
+                label="Only Numeric (realtime)"
                 onInputCallback={(e) => {                                                             
                     // only numeric
                     if (isNaN(e.target.value)) return '0';
@@ -45,6 +54,7 @@ export default () => {
 
             <Input
                 name="name"
+                label="Only Numeric (change)"
                 onChangeCallback={(e) => {
                     // only numeric
                     if (isNaN(e.target.value)) return '0';
@@ -52,8 +62,6 @@ export default () => {
                     return newVal;
                 }}
             />
-
-
 
 
         </>

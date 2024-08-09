@@ -12,14 +12,18 @@ export default () => {
     return (
         <>
           
-            <ModeSwitch 
-                triggerClassName="my-class" 
-                localStorageName="SITE_THEME_MODE"
-                darkClassName="dark-mode"
-                onChange={(e, isDark) => {
-                    console.log(e, isDark);
-                }}
-            />
+
+            <div style={{ width: '50px', background: '#ddd', padding: '10px 10px 5px 10px', textAlign: 'center'}}>
+                <ModeSwitch 
+                    triggerClassName="my-class" 
+                    localStorageName="SITE_THEME_MODE"
+                    darkClassName="dark-mode"
+                    onChange={(e, isDark) => {
+                        console.log(e, isDark);
+                    }}
+                />
+            </div>
+
 
         </>
     );

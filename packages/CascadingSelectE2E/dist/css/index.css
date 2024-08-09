@@ -18,9 +18,12 @@
   font-weight: 400;
   line-height: 1.5;
   color: inherit;
+  /* required */
+  display: flex;
 }
 .cas-select-e2e__wrapper .cas-select-e2e__result div {
-  display: inline;
+  /* required */
+  display: flex;
 }
 .cas-select-e2e__wrapper .cas-select-e2e__result span {
   padding: 3px;
@@ -57,8 +60,8 @@
 }
 .cas-select-e2e__wrapper .cas-select-e2e__val .arrow {
   position: absolute;
-  top: 0;
-  margin-top: 0.3rem;
+  top: 50%;
+  transform: translateY(-50%);
   right: 0.5rem;
 }
 .cas-select-e2e__wrapper .cas-select-e2e__val .arrow svg .arrow-fill-g {

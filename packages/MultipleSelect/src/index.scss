@@ -201,6 +201,10 @@
         .m-select__search__container {
             position: relative;
 
+            /* required */
+            align-items: center;
+            display: flex;
+
             input.m-select__search {
                 height: 14px;
                 padding: .1rem .5rem;
@@ -218,7 +222,6 @@
             i {
                 position: absolute;
                 right: .6em;
-                top: .1em;
 
                 svg {
                     fill: var(--m-select-search-icon-color);

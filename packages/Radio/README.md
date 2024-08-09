@@ -19,8 +19,7 @@ export default () => {
             <Radio
                 inline={true}
                 value="value-2"
-                name="String"
-                label="String"
+                name="name1"
                 options={[
                     {"label": "Option 1","value": "value-1"},
                     {"label": "<del style=color:red>deprecate</del>Option 2","value": "value-2"},
@@ -34,8 +33,7 @@ export default () => {
             <Radio
                 inline={true}
                 value="Option 3"  // default value is label value
-                name="String"
-                label="String"
+                name="name2"
                 options={[
                     {"label": "Option 1","value": "value-1"},
                     {"label": "<del style=color:red>deprecate</del>Option 2","value": "value-2"},
@@ -48,8 +46,7 @@ export default () => {
             <Radio
                 inline={true}
                 value="value-2"
-                name="String"
-                label="String"
+                name="name3"
                 options={[
                     { "label": "Option 1", "listItemLabel": "Option 1 (No: 001)", "value": "value-1" },
                     { "label": "<del style=color:red>deprecate</del>Option 2", "listItemLabel": "<del style=color:red>deprecate</del>Option 2 (No: 002)", "value": "value-2" },

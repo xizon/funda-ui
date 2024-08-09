@@ -198,17 +198,19 @@ const CascadingSelect = (props: CascadingSelectProps) => {
 
 
     function popwinPosInit(showAct: boolean = true) {
-        if (valRef.current === null) return
+        if (rootRef.current === null || valRef.current === null) return
 
         // update modal position
         const _modalRef: any = document.querySelector(`#cas-select__items-wrapper-${idRes}`);
         const _triggerRef: any = valRef.current;
+        const _triggerXaxisRef: any = rootRef.current;
 
         // console.log(getAbsolutePositionOfStage(_triggerRef));
 
         if (_modalRef === null) return;
 
-        const { x, y, width, height } = getAbsolutePositionOfStage(_triggerRef);
+        const { x } = getAbsolutePositionOfStage(_triggerXaxisRef);
+        const { y, width, height } = getAbsolutePositionOfStage(_triggerRef);
         const _triggerBox = _triggerRef.getBoundingClientRect();
         let targetPos = '';
 
@@ -255,7 +257,7 @@ const CascadingSelect = (props: CascadingSelectProps) => {
         // Determine whether it exceeds the far right or left side of the screen
         const _modalContent = _modalRef;
         const _modalBox = _modalContent.getBoundingClientRect();
-        if (typeof _modalContent.dataset.offset === 'undefined') {
+        if (typeof _modalContent.dataset.offset === 'undefined' && _modalBox.left > 0) {
 
             // 10 pixels is used to account for some bias in mobile devices
             if ((_modalBox.right + 10) > window.innerWidth) {
@@ -264,7 +266,6 @@ const CascadingSelect = (props: CascadingSelectProps) => {
                 _modalContent.style.marginLeft = `-${_modalOffsetPosition}px`;
                 // console.log('_modalPosition: ', _modalOffsetPosition)
             }
-
 
             if ((_modalBox.left - 10) < 0) {
                 const _modalOffsetPosition = Math.abs(_modalBox.left) + EXCEEDED_SIDE_POS_OFFSET;

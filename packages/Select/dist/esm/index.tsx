@@ -563,7 +563,10 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
                 }
 
                 // Appropriate multi-item container height
-                adjustMultiControlContainerHeight();
+                setTimeout(() => {
+                    adjustMultiControlContainerHeight();
+                }, 0);
+                
 
                 // hide disabled item
                 _ORGIN_DATA = _ORGIN_DATA.filter((v: any) => typeof v.disabled !== 'undefined' && v.disabled == true ? false : true);
@@ -692,7 +695,9 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
                 }
 
                 // Appropriate multi-item container height
-                adjustMultiControlContainerHeight();
+                setTimeout(() => {
+                    adjustMultiControlContainerHeight();
+                }, 0);
 
 
                 // hide disabled item
@@ -746,22 +751,26 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
 
 
     function popwinPosInit() {
-        if (listContentRef.current === null || rootRef.current === null) return;
+        if (listContentRef.current === null || rootRef.current === null || selectInputRef.current === null) return;
 
         const contentHeightOffset = 80;
         let contentMaxHeight = 0;
 
         // update modal position
         const _modalRef: any = document.querySelector(`#custom-select__options-wrapper-${idRes}`);
-        const _triggerRef: any = rootRef.current;
+        const _triggerRef: any = selectInputRef.current;
+        const _triggerXaxisRef: any = rootRef.current;
 
         // console.log(getAbsolutePositionOfStage(_triggerRef));
 
         if (_modalRef === null) return;
 
-        const { x, y, width, height } = getAbsolutePositionOfStage(_triggerRef);
+        const { x } = getAbsolutePositionOfStage(_triggerXaxisRef);
+        const { y, width, height } = getAbsolutePositionOfStage(_triggerRef);
         const _triggerBox = _triggerRef.getBoundingClientRect();
         let targetPos = '';
+
+        
 
         // STEP 1:
         //-----------
@@ -864,7 +873,7 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
         // Determine whether it exceeds the far right or left side of the screen
         const _modalContent = _modalRef;
         const _modalBox = _modalContent.getBoundingClientRect();
-        if (typeof _modalContent.dataset.offset === 'undefined') {
+        if (typeof _modalContent.dataset.offset === 'undefined' && _modalBox.left > 0) {
 
             // 10 pixels is used to account for some bias in mobile devices
             if ((_modalBox.right + 10) > window.innerWidth) {
@@ -1913,7 +1922,7 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
 
 
                     {/* ARROW */}
-                    <span className="arrow position-absolute top-0 end-0 me-2 mt-1" style={{ translate: 'all .2s', transform: isOpen ? 'rotate(180deg) translateY(-4px)' : 'rotate(0) translateY(0)', pointerEvents: 'none', display: fetchTrigger ? 'none' : 'inline-block' }}>
+                    <span className={`custom-select-arrow ${isOpen ? 'reverse' : ''}`} style={{display: fetchTrigger ? 'none' : 'inline-block' }}>
                         {controlArrow ? controlArrow : <svg width="10px" height="10px" viewBox="0 -4.5 20 20">
                             <g stroke="none" strokeWidth="1" fill="none">
                                 <g transform="translate(-180.000000, -6684.000000)" className="arrow-fill-g" fill="#a5a5a5">
@@ -2069,7 +2078,7 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
 
 
                     {/* ARROW */}
-                    <span className="arrow position-absolute top-0 end-0 me-2 mt-1" style={{ translate: 'all .2s', transform: isOpen ? 'rotate(180deg) translateY(-4px)' : 'rotate(0) translateY(0)', pointerEvents: 'none', display: fetchTrigger ? 'none' : 'inline-block' }}>
+                    <span className={`custom-select-arrow ${isOpen ? 'reverse' : ''}`} style={{display: fetchTrigger ? 'none' : 'inline-block' }}>
                         {controlArrow ? controlArrow : <svg width="10px" height="10px" viewBox="0 -4.5 20 20">
                             <g stroke="none" strokeWidth="1" fill="none">
                                 <g transform="translate(-180.000000, -6684.000000)" className="arrow-fill-g" fill="#a5a5a5">

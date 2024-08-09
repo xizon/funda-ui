@@ -6,6 +6,10 @@
 
     a {
         position: relative;
+        
+        /* required */
+        display: inline-flex;
+        align-items: center;
     }
 
 	.arrow {

@@ -28,11 +28,12 @@ export default () => {
                         const height = heights[i];
                         return (
                             <div 
-                            key={i} 
-                            className="d-inline-block bg-body-tertiary border p-2"
-                            style={{         
-                                height: `${height}px` 
-                            }}>
+                                key={i} 
+                                className="d-inline-block bg-body-tertiary border p-2"
+                                style={{         
+                                    height: `${height}px` 
+                                }}
+                            >
                                 height: {height} <small className="d-inline-block bg-primary text-white px-2 py-1 rounded">{i}</small>
                             </div>
                         )

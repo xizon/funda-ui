@@ -4517,7 +4517,7 @@ var Tooltip = function Tooltip(props) {
     if (_modalRef === null) return;
     var _modalContent = _modalRef.querySelector('.tooltip__content');
     var _modalBox = _modalContent.getBoundingClientRect();
-    if (typeof _modalContent.dataset.offset === 'undefined') {
+    if (typeof _modalContent.dataset.offset === 'undefined' && _modalBox.left > 0) {
       // 10 pixels is used to account for some bias in mobile devices
       if (_modalBox.right + 10 > window.innerWidth) {
         var _modalOffsetPosition = _modalBox.right - window.innerWidth + EXCEEDED_SIDE_POS_OFFSET;

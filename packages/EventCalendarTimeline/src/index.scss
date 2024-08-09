@@ -176,6 +176,10 @@
         box-shadow: none;
         cursor: pointer;
 
+        /* required */
+        display: inline-flex;
+        align-items: center;
+
         svg {
             path {
                 fill: var(--e-cal-tl-header-arrow-bg);

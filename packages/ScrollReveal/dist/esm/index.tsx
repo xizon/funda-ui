@@ -4,6 +4,7 @@ import {
     useComId
 } from 'funda-utils';
 
+
 declare module 'react' {
     interface ReactI18NextChildren<T> {
         children?: any;
@@ -58,7 +59,7 @@ const ScrollReveal = (props: ScrollRevealProps) => {
     const [isIntersecting, setIsIntersecting] = useState(false);
     const rootRef = useRef(null);
     const options = {
-        root: root ? root : document,
+        root: root ? root : (typeof document === 'undefined' ? null : document),  // Prevent document undefined from server-side rendering
         rootMargin: `${_viewOffset.y} ${_viewOffset.x}`,
         threshold: threshold ? threshold : [0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]
     };

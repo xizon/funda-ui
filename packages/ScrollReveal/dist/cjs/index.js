@@ -4226,7 +4226,8 @@ var ScrollReveal = function ScrollReveal(props) {
     setIsIntersecting = _useState2[1];
   var rootRef = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(null);
   var options = {
-    root: root ? root : document,
+    root: root ? root : typeof document === 'undefined' ? null : document,
+    // Prevent document undefined from server-side rendering
     rootMargin: "".concat(_viewOffset.y, " ").concat(_viewOffset.x),
     threshold: threshold ? threshold : [0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]
   };

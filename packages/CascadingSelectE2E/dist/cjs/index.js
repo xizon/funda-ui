@@ -4630,20 +4630,22 @@ var CascadingSelectE2E = function CascadingSelectE2E(props) {
     windowScrollUpdate = _useWindowScroll2[1];
   function popwinPosInit() {
     var showAct = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : true;
-    if (valRef.current === null) return;
+    if (rootRef.current === null || valRef.current === null) return;
 
     // update modal position
     var _modalRef = document.querySelector("#cas-select-e2e__items-wrapper-".concat(idRes));
     var _triggerRef = valRef.current;
+    var _triggerXaxisRef = rootRef.current;
 
     // console.log(getAbsolutePositionOfStage(_triggerRef));
 
     if (_modalRef === null) return;
-    var _getAbsolutePositionO = (0,dist_cjs.getAbsolutePositionOfStage)(_triggerRef),
-      x = _getAbsolutePositionO.x,
-      y = _getAbsolutePositionO.y,
-      width = _getAbsolutePositionO.width,
-      height = _getAbsolutePositionO.height;
+    var _getAbsolutePositionO = (0,dist_cjs.getAbsolutePositionOfStage)(_triggerXaxisRef),
+      x = _getAbsolutePositionO.x;
+    var _getAbsolutePositionO2 = (0,dist_cjs.getAbsolutePositionOfStage)(_triggerRef),
+      y = _getAbsolutePositionO2.y,
+      width = _getAbsolutePositionO2.width,
+      height = _getAbsolutePositionO2.height;
     var _triggerBox = _triggerRef.getBoundingClientRect();
     var targetPos = '';
 
@@ -4685,7 +4687,7 @@ var CascadingSelectE2E = function CascadingSelectE2E(props) {
     // Determine whether it exceeds the far right or left side of the screen
     var _modalContent = _modalRef;
     var _modalBox = _modalContent.getBoundingClientRect();
-    if (typeof _modalContent.dataset.offset === 'undefined') {
+    if (typeof _modalContent.dataset.offset === 'undefined' && _modalBox.left > 0) {
       // 10 pixels is used to account for some bias in mobile devices
       if (_modalBox.right + 10 > window.innerWidth) {
         var _modalOffsetPosition = _modalBox.right - window.innerWidth + EXCEEDED_SIDE_POS_OFFSET;

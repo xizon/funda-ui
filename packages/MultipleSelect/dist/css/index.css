@@ -162,6 +162,9 @@
 }
 .m-select__wrapper .m-select-inner .m-select__search__container {
   position: relative;
+  /* required */
+  align-items: center;
+  display: flex;
 }
 .m-select__wrapper .m-select-inner .m-select__search__container input.m-select__search {
   height: 14px;
@@ -179,7 +182,6 @@
 .m-select__wrapper .m-select-inner .m-select__search__container i {
   position: absolute;
   right: 0.6em;
-  top: 0.1em;
 }
 .m-select__wrapper .m-select-inner .m-select__search__container i svg {
   fill: var(--m-select-search-icon-color);

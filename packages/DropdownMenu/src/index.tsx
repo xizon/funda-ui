@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 
 import RootPortal from 'funda-root-portal';
 import {
@@ -6,6 +6,7 @@ import {
     useClickOutside,
     getAbsolutePositionOfStage
 } from 'funda-utils';
+
 
 
 import Option from './Option';
@@ -100,6 +101,9 @@ const DropdownMenu = (props: DropdownMenuProps) => {
     });
 
 
+    // force display
+    const [initPopRoot, setInitPopRoot] = useState<boolean>(false);
+
     // click outside
     useClickOutside({
         enabled: isOpen && rootRef.current && modalRef.current,
@@ -122,9 +126,10 @@ const DropdownMenu = (props: DropdownMenuProps) => {
     
     function handleClick(event: React.MouseEvent) {
         if (hoverOn) return;
-        
+
         setIsOpen(!isOpen);
         popwinPosInit();
+
 
     }
 
@@ -273,6 +278,9 @@ const DropdownMenu = (props: DropdownMenuProps) => {
 
     }
 
+    useEffect(() => {
+        setInitPopRoot(true);
+    }, []);
 
 
     return (
@@ -324,7 +332,7 @@ const DropdownMenu = (props: DropdownMenuProps) => {
                 {/* /INPUT */}
                 
                 {/* MENU LIST */}
-                <RootPortal show={true} containerClassName="DropdownMenu">
+                <RootPortal show={initPopRoot} containerClassName="DropdownMenu">
                     <div
                         ref={modalRef}
                         className="dd-menu-list__wrapper"

@@ -8923,7 +8923,7 @@ var RangeSlider = function RangeSlider(props) {
   (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(function () {
     // update default value
     //--------------
-    if (typeof value.min === 'undefined' || typeof value.max === 'undefined') {
+    if (value && (typeof value.min === 'undefined' || typeof value.max === 'undefined')) {
       initDefaultValue({
         min: min,
         max: max

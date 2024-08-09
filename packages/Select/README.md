@@ -88,7 +88,7 @@ export default () => {
                 value="value-2"
                 placeholder="Select"
                 name="name"
-                winWidth={() => window.innerWidth/2 + 'px'}
+                winWidth={typeof window === 'undefined' ? undefined : () => window.innerWidth/2 + 'px'}
                 options={`
                 [
                     {"label": "Option 1","value": "value-1","queryString": "option1"},
@@ -122,7 +122,7 @@ export default () => {
                 value="value-2"
                 placeholder="Select"
                 name="name"
-                winWidth={() => window.innerWidth/2 + 'px'}
+                winWidth={typeof window === 'undefined' ? undefined : () => window.innerWidth/2 + 'px'}
                 options={`
                 [
                     {"label": "Option 1","listItemLabel":"Option 1 (No: 001)","value": "value-1","queryString": "option1"},
@@ -1337,7 +1337,7 @@ export default () => {
                 value="value-2"
                 placeholder="Select"
                 name="name"
-                winWidth={() => window.innerWidth/2 + 'px'}
+                winWidth={typeof window === 'undefined' ? undefined : () => window.innerWidth/2 + 'px'}
                 options={`
                 [
                     {"label": "Option 1","value": "value-1","queryString": "option1"},

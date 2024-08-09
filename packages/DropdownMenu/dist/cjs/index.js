@@ -4496,6 +4496,12 @@ var DropdownMenu = function DropdownMenu(props) {
     });
   });
 
+  // force display
+  var _useState5 = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)(false),
+    _useState6 = _slicedToArray(_useState5, 2),
+    initPopRoot = _useState6[0],
+    setInitPopRoot = _useState6[1];
+
   // click outside
   (0,dist_cjs.useClickOutside)({
     enabled: isOpen && rootRef.current && modalRef.current,
@@ -4623,6 +4629,9 @@ var DropdownMenu = function DropdownMenu(props) {
       _modalRef.classList.remove('active');
     }
   }
+  (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useEffect)(function () {
+    setInitPopRoot(true);
+  }, []);
   return /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
     ref: rootRef,
     className: "dd-menu__wrapper ".concat(wrapperClassName || wrapperClassName === '' ? wrapperClassName : "dd-menu-default", " ").concat(isOpen ? 'active' : ''),
@@ -4668,7 +4677,7 @@ var DropdownMenu = function DropdownMenu(props) {
       return void 0;
     }
   }), " ", /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((cjs_default()), {
-    show: true,
+    show: initPopRoot,
     containerClassName: "DropdownMenu"
   }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
     ref: modalRef,

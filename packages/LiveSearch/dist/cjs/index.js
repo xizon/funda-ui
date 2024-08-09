@@ -9125,22 +9125,24 @@ var LiveSearch = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(
     windowScrollUpdate = _useWindowScroll2[1];
   function popwinPosInit() {
     var showAct = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : true;
-    if (listContentRef.current === null || inputRef.current === null) return;
+    if (listContentRef.current === null || rootRef.current === null || inputRef.current === null) return;
     var contentHeightOffset = 80;
     var contentMaxHeight = 0;
 
     // update modal position
     var _modalRef = document.querySelector("#livesearch__options-wrapper-".concat(idRes));
     var _triggerRef = inputRef.current;
+    var _triggerXaxisRef = rootRef.current;
 
     // console.log(getAbsolutePositionOfStage(_triggerRef));
 
     if (_modalRef === null) return;
-    var _getAbsolutePositionO = (0,funda_utils__WEBPACK_IMPORTED_MODULE_3__.getAbsolutePositionOfStage)(_triggerRef),
-      x = _getAbsolutePositionO.x,
-      y = _getAbsolutePositionO.y,
-      width = _getAbsolutePositionO.width,
-      height = _getAbsolutePositionO.height;
+    var _getAbsolutePositionO = (0,funda_utils__WEBPACK_IMPORTED_MODULE_3__.getAbsolutePositionOfStage)(_triggerXaxisRef),
+      x = _getAbsolutePositionO.x;
+    var _getAbsolutePositionO2 = (0,funda_utils__WEBPACK_IMPORTED_MODULE_3__.getAbsolutePositionOfStage)(_triggerRef),
+      y = _getAbsolutePositionO2.y,
+      width = _getAbsolutePositionO2.width,
+      height = _getAbsolutePositionO2.height;
     var _triggerBox = _triggerRef.getBoundingClientRect();
     var targetPos = '';
 
@@ -9213,7 +9215,7 @@ var LiveSearch = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(
     // Determine whether it exceeds the far right or left side of the screen
     var _modalContent = _modalRef;
     var _modalBox = _modalContent.getBoundingClientRect();
-    if (typeof _modalContent.dataset.offset === 'undefined') {
+    if (typeof _modalContent.dataset.offset === 'undefined' && _modalBox.left > 0) {
       // 10 pixels is used to account for some bias in mobile devices
       if (_modalBox.right + 10 > window.innerWidth) {
         var _modalOffsetPosition = _modalBox.right - window.innerWidth + EXCEEDED_SIDE_POS_OFFSET;

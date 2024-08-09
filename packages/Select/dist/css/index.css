@@ -18,6 +18,7 @@
   /*------ Arrow ------*/
   /*------ Clean ------*/
   /*------ Input ------*/
+  /*------ Arrow ------*/
   /*------ Blinking cursor ------*/
   /*------ Single selection ------*/
   /*------ Multiple selection ------*/
@@ -38,6 +39,18 @@
   box-shadow: none;
   border-color: transparent;
   outline: 0;
+}
+.custom-select__wrapper .custom-select-arrow {
+  position: absolute;
+  top: 50%;
+  transform: rotate(0deg) translateY(-50%);
+  transform-origin: top;
+  right: 0.5rem;
+  z-index: 1;
+  pointer-events: none;
+}
+.custom-select__wrapper .custom-select-arrow.reverse {
+  transform: rotate(180deg) translateY(-50%);
 }
 .custom-select__wrapper .custom-select-multi__control-blinking-cursor {
   display: inline-block;
@@ -180,7 +193,8 @@
   line-height: 20px;
   position: absolute;
   right: 8px;
-  top: 0;
+  top: 50%;
+  transform: translateY(-50%);
   pointer-events: auto;
 }
 .custom-select__wrapper .custom-select-multi__inputplaceholder-wrapper ul.custom-select-multi__list li > a path {

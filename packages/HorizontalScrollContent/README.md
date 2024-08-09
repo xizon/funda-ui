@@ -11,16 +11,16 @@ import HorizontalScrollContent from 'funda-ui/HorizontalScrollContent';
 import 'funda-ui/HorizontalScrollContent/index.css';
 
 const data = [
-    <><span>apple</span></>,
-    <><span>apricot</span></>,
-    <><span>avocado</span></>,
-    <><span>banana</span></>,
-    <><span>bell pepper</span></>,
-    <><span>blackberry</span></>,
-    <><span>bilberry</span></>,
-    <><span>black currant</span></>,
-    <><span>coconut</span></>,
-    <><span>cranberry</span></>
+    <><span className="px-3">apple</span></>,
+    <><span className="px-3">apricot</span></>,
+    <><span className="px-3">avocado</span></>,
+    <><span className="px-3">banana</span></>,
+    <><span className="px-3">bell pepper</span></>,
+    <><span className="px-3">blackberry</span></>,
+    <><span className="px-3">bilberry</span></>,
+    <><span className="px-3">black currant</span></>,
+    <><span className="px-3">coconut</span></>,
+    <><span className="px-3">cranberry</span></>
 ];
 
 
@@ -29,6 +29,8 @@ export default () => {
     return (
         <>
           
+        <div style={{ width: '350px'}}>
+          
             <HorizontalScrollContent 
                 data={data}
                 slideOffset={50}
@@ -36,6 +38,8 @@ export default () => {
                     console.log({ dir, wrapperWidth, realContentWidth, moveOffset });
                 }}
             />
+
+        </div>
 
           
         </>

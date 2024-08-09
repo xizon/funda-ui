@@ -541,7 +541,7 @@ const Date = forwardRef((props: DateProps, externalRef: any) => {
         // Determine whether it exceeds the max height of the popup
         const _modalContent = _modalRef;
         const _modalBox = _modalContent.getBoundingClientRect();
-        if (typeof _modalContent.dataset.offset === 'undefined') {
+        if (typeof _modalContent.dataset.offset === 'undefined' && _modalBox.left > 0) {
 
             // 10 pixels is used to account for some bias in mobile devices
             if ((_modalBox.right + 10) > window.innerWidth) {

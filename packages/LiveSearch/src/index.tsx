@@ -237,7 +237,7 @@ const LiveSearch = forwardRef((props: LiveSearchProps, externalRef: any) => {
 
 
     function popwinPosInit(showAct: boolean = true) {
-        if (listContentRef.current === null || inputRef.current === null) return;
+        if (listContentRef.current === null || rootRef.current === null || inputRef.current === null) return;
 
         const contentHeightOffset = 80;
         let contentMaxHeight = 0;
@@ -245,12 +245,14 @@ const LiveSearch = forwardRef((props: LiveSearchProps, externalRef: any) => {
         // update modal position
         const _modalRef: any = document.querySelector(`#livesearch__options-wrapper-${idRes}`);
         const _triggerRef: any = inputRef.current;
+        const _triggerXaxisRef: any = rootRef.current;
 
         // console.log(getAbsolutePositionOfStage(_triggerRef));
 
         if (_modalRef === null) return;
 
-        const { x, y, width, height } = getAbsolutePositionOfStage(_triggerRef);
+        const { x } = getAbsolutePositionOfStage(_triggerXaxisRef);
+        const { y, width, height } = getAbsolutePositionOfStage(_triggerRef);
         const _triggerBox = _triggerRef.getBoundingClientRect();
         let targetPos = '';
 
@@ -341,7 +343,7 @@ const LiveSearch = forwardRef((props: LiveSearchProps, externalRef: any) => {
         // Determine whether it exceeds the far right or left side of the screen
         const _modalContent = _modalRef;
         const _modalBox = _modalContent.getBoundingClientRect();
-        if (typeof _modalContent.dataset.offset === 'undefined') {
+        if (typeof _modalContent.dataset.offset === 'undefined' && _modalBox.left > 0) {
 
             // 10 pixels is used to account for some bias in mobile devices
             if ((_modalBox.right + 10) > window.innerWidth) {

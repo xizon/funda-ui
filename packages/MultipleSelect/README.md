@@ -1,8 +1,9 @@
 # Multiple Select
 
-
+> The components must be wrapped in a container with a height.
 
 ## General
+
 
 ```js
 import React, { useState } from "react";
@@ -17,7 +18,8 @@ export default () => {
 
     return (
         <>
-          
+
+        <div className="mb-3" style={{height: '300px'}}>
             <MultipleSelect 
                 name="name"
                 availableHeaderTitle="Select One Item"
@@ -45,6 +47,9 @@ export default () => {
                     setVal(dataStr);
                 }}
             />
+        </div>
+          
+
 
         </>
     );
@@ -136,8 +141,7 @@ export default () => {
 
     return (
         <>
-
-
+        <div className="mb-3" style={{height: '300px'}}>
             <MultipleSelect 
                 name="name"
                 availableHeaderTitle="Select One Item"
@@ -176,6 +180,9 @@ export default () => {
                     console.log(e, data, dataStr, currentData, type);
                 }}
             />
+
+        </div>
+          
 
 
         </>
@@ -234,13 +241,15 @@ export default () => {
 
     return (
         <>
-          
+        <div className="mb-3" style={{height: '300px'}}>
             <MemoMultipleSelect 
                 val={"value-3"} 
                 name="name"
                 callback={setMyMultipleSelect} 
             />
             
+        </div>
+          
             
         </>
     );

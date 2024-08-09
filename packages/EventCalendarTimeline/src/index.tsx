@@ -397,7 +397,7 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
             // Determine whether it exceeds the far right or left side of the screen
             const _modalContent = _tableTooltipModalRef.querySelector('.e-cal-tl-table__cell-tooltipcontent');
             const _modalBox = _modalContent.getBoundingClientRect();
-            if (typeof _modalContent.dataset.offset === 'undefined') {
+            if (typeof _modalContent.dataset.offset === 'undefined' && _modalBox.left > 0) {
 
             // 10 pixels is used to account for some bias in mobile devices
             if ((_modalBox.right + 10) > window.innerWidth) {

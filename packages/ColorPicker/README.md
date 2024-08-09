@@ -24,8 +24,6 @@ export default () => {
                 name="name"
                 shape="circle"
                 onChange={handleChange}
-                required
-                disabled
             />
 
 

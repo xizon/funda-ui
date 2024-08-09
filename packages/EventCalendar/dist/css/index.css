@@ -217,6 +217,9 @@
   margin: 0;
   box-shadow: none;
   cursor: pointer;
+  /* required */
+  display: inline-flex;
+  align-items: center;
 }
 .e-cal__wrapper .e-cal__btn svg path {
   fill: var(--e-cal-header-arrow-bg);

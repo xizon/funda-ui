@@ -4,6 +4,66 @@
 
 ## General
 
+Scroll the screen to see the transition effect of background color and border.
+
+
+`styles.scss`:
+```css
+.demo-sr-bg1 > div {
+    background-color: rgb(198, 247, 237);
+}
+.demo-sr-bg1-active > div {
+    animation: demo-sr-bg1-anim 1s linear forwards;
+}
+
+.demo-sr-bg2 > div {
+    background-color: rgb(198, 247, 208);
+}
+.demo-sr-bg2-active > div {
+    animation: demo-sr-bg2-anim 1s linear forwards;
+}
+
+.demo-sr-bg3 > div {
+    background-color: rgb(198, 247, 208);
+}
+.demo-sr-bg3-active > div {
+    animation:demo-sr-bg3-anim 1s linear forwards;
+}
+
+
+@keyframes demo-sr-bg1-anim {
+    from {
+        background-color: rgb(198, 247, 237);
+    }
+
+    to {
+        background-color: rgb(250, 181, 212);
+    }
+}
+
+@keyframes demo-sr-bg2-anim {
+    from {
+        background-color: rgb(198, 247, 208);
+    }
+
+    to {
+        background-color: rgb(212, 181, 250);
+    }
+}
+
+@keyframes demo-sr-bg3-anim {
+    from {
+        border: 5px solid #000;
+    }
+
+    to {
+        border: 15px solid rgb(47, 50, 237)
+    }
+}
+```
+
+
+`index.tsx`:
 ```js
 import React from "react";
 import ScrollReveal from 'funda-ui/ScrollReveal';
@@ -19,28 +79,28 @@ export default () => {
                     y: '-50%',
                     x: '0px'
                 }}
-                defaultClassName="opacity-0"
-                showClassName="opacity-100"
+                defaultClassName="demo-sr-bg1"
+                showClassName="demo-sr-bg1-active"
             >
-                <div style={{bavkground: 'orange', height: '300px'}}>Box</div>
+                <div style={{height: '80vh'}}>Box</div>
             </ScrollReveal>
 
 
 
 
             <ScrollReveal 
-                defaultClassName="opacity-0"
-                onChange={(box: any, visiblePct: string) => {
+                defaultClassName="demo-sr-bg2"
+                onChange={(box, visiblePct) => {
                     if (parseFloat(visiblePct) === 100 ) {
-                        box.classList.add('opacity-100');
+                        box.classList.add('demo-sr-bg2-active');
                     }
                     if (parseFloat(visiblePct) === 0 ) {
-                        box.classList.remove('opacity-100');
+                        box.classList.remove('demo-sr-bg2-active');
                     }
                 }}
                 infinite
             >
-                <div style={{bavkground: 'orange', height: '300px'}}>Box</div>
+                <div style={{height: '80vh'}}>Box</div>
             </ScrollReveal>
 
 
@@ -48,7 +108,7 @@ export default () => {
 
 
             <ScrollReveal 
-                showClassName={['shadow-lg', 'active']}
+                showClassName={['shadow-lg', 'demo-sr-bg3', 'demo-sr-bg3-active']}
                 onChange={(box, visiblePct) => {
                     console.log(box, visiblePct);
                 }}
@@ -57,8 +117,8 @@ export default () => {
                 }}
                 infinite 
             >
-                <div style={{bavkground: 'orange', height: '300px'}}>Box</div>
-            </ScrollReveal>          
+                <div style={{height: '300px'}}>Box</div>
+            </ScrollReveal>             
         </>
     );
 }

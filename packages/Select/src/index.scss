@@ -50,6 +50,22 @@
     }
 
     
+
+    /*------ Arrow ------*/
+    .custom-select-arrow {
+        position: absolute;
+        top: 50%;
+        transform: rotate(0deg) translateY(-50%);
+        transform-origin: top;
+        right: .5rem;
+        z-index: 1;
+        pointer-events: none;
+
+        &.reverse {
+            transform: rotate(180deg) translateY(-50%);
+        }
+    }
+
     
     /*------ Blinking cursor ------*/
     .custom-select-multi__control-blinking-cursor {
@@ -243,7 +259,8 @@
                     line-height: 20px;
                     position: absolute;
                     right: 8px;
-                    top: 0;
+                    top: 50%;
+                    transform: translateY(-50%);
                     pointer-events: auto;
 
                     path {

@@ -4,6 +4,8 @@
 
 ## General
 
+Look at the button on the bottom right.
+
 ```js
 import React from "react";
 import BackToTop from 'funda-ui/BackToTop';

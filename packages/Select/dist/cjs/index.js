@@ -4935,7 +4935,9 @@ var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_
               }
 
               // Appropriate multi-item container height
-              adjustMultiControlContainerHeight();
+              setTimeout(function () {
+                adjustMultiControlContainerHeight();
+              }, 0);
 
               // hide disabled item
               _ORGIN_DATA = _ORGIN_DATA.filter(function (v) {
@@ -5047,7 +5049,9 @@ var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_
               }
 
               // Appropriate multi-item container height
-              adjustMultiControlContainerHeight();
+              setTimeout(function () {
+                adjustMultiControlContainerHeight();
+              }, 0);
 
               // hide disabled item
               staticOptionsData = staticOptionsData.filter(function (v) {
@@ -5093,22 +5097,24 @@ var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_
     }, 0);
   }
   function popwinPosInit() {
-    if (listContentRef.current === null || rootRef.current === null) return;
+    if (listContentRef.current === null || rootRef.current === null || selectInputRef.current === null) return;
     var contentHeightOffset = 80;
     var contentMaxHeight = 0;
 
     // update modal position
     var _modalRef = document.querySelector("#custom-select__options-wrapper-".concat(idRes));
-    var _triggerRef = rootRef.current;
+    var _triggerRef = selectInputRef.current;
+    var _triggerXaxisRef = rootRef.current;
 
     // console.log(getAbsolutePositionOfStage(_triggerRef));
 
     if (_modalRef === null) return;
-    var _getAbsolutePositionO = (0,dist_cjs.getAbsolutePositionOfStage)(_triggerRef),
-      x = _getAbsolutePositionO.x,
-      y = _getAbsolutePositionO.y,
-      width = _getAbsolutePositionO.width,
-      height = _getAbsolutePositionO.height;
+    var _getAbsolutePositionO = (0,dist_cjs.getAbsolutePositionOfStage)(_triggerXaxisRef),
+      x = _getAbsolutePositionO.x;
+    var _getAbsolutePositionO2 = (0,dist_cjs.getAbsolutePositionOfStage)(_triggerRef),
+      y = _getAbsolutePositionO2.y,
+      width = _getAbsolutePositionO2.width,
+      height = _getAbsolutePositionO2.height;
     var _triggerBox = _triggerRef.getBoundingClientRect();
     var targetPos = '';
 
@@ -5193,7 +5199,7 @@ var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_
     // Determine whether it exceeds the far right or left side of the screen
     var _modalContent = _modalRef;
     var _modalBox = _modalContent.getBoundingClientRect();
-    if (typeof _modalContent.dataset.offset === 'undefined') {
+    if (typeof _modalContent.dataset.offset === 'undefined' && _modalBox.left > 0) {
       // 10 pixels is used to account for some bias in mobile devices
       if (_modalBox.right + 10 > window.innerWidth) {
         var _modalOffsetPosition = _modalBox.right - window.innerWidth + EXCEEDED_SIDE_POS_OFFSET;
@@ -6064,11 +6070,8 @@ var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_
   }, generateInputFocusStr()) : /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("span", null, controlTempValue) : stripHTML(controlLabel).length === 0 ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("span", {
     className: "".concat(!hideBlinkingCursor() ? 'control-placeholder' : '')
   }, generateInputFocusStr()) : /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("span", null, stripHTML(controlLabel)))), /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("span", {
-    className: "arrow position-absolute top-0 end-0 me-2 mt-1",
+    className: "custom-select-arrow ".concat(isOpen ? 'reverse' : ''),
     style: {
-      translate: 'all .2s',
-      transform: isOpen ? 'rotate(180deg) translateY(-4px)' : 'rotate(0) translateY(0)',
-      pointerEvents: 'none',
       display: fetchTrigger ? 'none' : 'inline-block'
     }
   }, controlArrow ? controlArrow : /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("svg", {
@@ -6178,11 +6181,8 @@ var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_
     autoCapitalize: typeof autoCapitalize === 'undefined' ? 'off' : autoCapitalize,
     spellCheck: typeof spellCheck === 'undefined' ? false : spellCheck
   }, attributes)))))))), /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("span", {
-    className: "arrow position-absolute top-0 end-0 me-2 mt-1",
+    className: "custom-select-arrow ".concat(isOpen ? 'reverse' : ''),
     style: {
-      translate: 'all .2s',
-      transform: isOpen ? 'rotate(180deg) translateY(-4px)' : 'rotate(0) translateY(0)',
-      pointerEvents: 'none',
       display: fetchTrigger ? 'none' : 'inline-block'
     }
   }, controlArrow ? controlArrow : /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("svg", {

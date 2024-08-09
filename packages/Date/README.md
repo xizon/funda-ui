@@ -17,57 +17,58 @@ export default () => {
     return (
         <>
           
-           <Date
-                name="name"
-                label="Date"
-                value="2024-03-13"
-                type="date"
-                placeholder="yyyy/MM/dd"
-                onChange={(input: HTMLInputElement, dateRes: any, isValidDate: boolean, allSplittingInputs: any[]) => {
-                    console.log(isValidDate, input, dateRes, dateRes !== null && typeof dateRes !== 'string' ? dateRes.res : dateRes, allSplittingInputs)
-                }}
-                onLoad={(initValue: string, dateRes: any, allSplittingInputs: any[]) => {
-                    console.log(initValue, dateRes, allSplittingInputs)
-                }}
-                onPressEnter={(control: HTMLElement, allControls: HTMLElement[]) => {
-                    // ...
-                }}
-            />
+             <div style={{ width: '200px'}}>
+                <Date
+                    name="name"
+                    label="Date"
+                    value="2024-03-13"
+                    type="date"
+                    placeholder="yyyy/MM/dd"
+                    onChange={(input: HTMLInputElement, dateRes: any, isValidDate: boolean, allSplittingInputs: any[]) => {
+                        console.log(isValidDate, input, dateRes, dateRes !== null && typeof dateRes !== 'string' ? dateRes.res : dateRes, allSplittingInputs)
+                    }}
+                    onLoad={(initValue: string, dateRes: any, allSplittingInputs: any[]) => {
+                        console.log(initValue, dateRes, allSplittingInputs)
+                    }}
+                    onPressEnter={(control: HTMLElement, allControls: HTMLElement[]) => {
+                        // ...
+                    }}
+                />
 
 
 
-           <Date
-                name="name"
-                label="Date & Time (no seconds)"
-                value="2024-03-14 10:22"
-                type="datetime-local"
-                placeholder="yyyy/MM/dd HH:mm"
-                onChange={(input: HTMLInputElement, dateRes: any, isValidDate: boolean, allSplittingInputs: any[]) => {
-                    console.log(isValidDate, input, dateRes, dateRes !== null && typeof dateRes !== 'string' ? dateRes.res : dateRes, allSplittingInputs)
-                }}
-                onLoad={(initValue: string, dateRes: any, allSplittingInputs: any[]) => {
-                    console.log(initValue, dateRes, allSplittingInputs)
-                }}
-                truncateSeconds
-            />
+                <Date
+                    name="name"
+                    label="Date & Time (no seconds)"
+                    value="2024-03-14 10:22"
+                    type="datetime-local"
+                    placeholder="yyyy/MM/dd HH:mm"
+                    onChange={(input: HTMLInputElement, dateRes: any, isValidDate: boolean, allSplittingInputs: any[]) => {
+                        console.log(isValidDate, input, dateRes, dateRes !== null && typeof dateRes !== 'string' ? dateRes.res : dateRes, allSplittingInputs)
+                    }}
+                    onLoad={(initValue: string, dateRes: any, allSplittingInputs: any[]) => {
+                        console.log(initValue, dateRes, allSplittingInputs)
+                    }}
+                    truncateSeconds
+                />
 
 
-           <Date
-                name="name"
-                label="Time"
-                value="07:30:38"
-                placeholder="HH:mm:ss"
-                type="time"
-                onChange={(input: HTMLInputElement, dateRes: any, isValidDate: boolean, allSplittingInputs: any[]) => {
-                    console.log(isValidDate, input, dateRes, dateRes !== null && typeof dateRes !== 'string' ? dateRes.res : dateRes, allSplittingInputs)
-                }}
-                onLoad={(initValue: string, dateRes: any, allSplittingInputs: any[]) => {
-                    console.log(initValue, dateRes, allSplittingInputs)
-                }}
-                onlyTime
-            />
+                <Date
+                    name="name"
+                    label="Time"
+                    value="07:30:38"
+                    placeholder="HH:mm:ss"
+                    type="time"
+                    onChange={(input: HTMLInputElement, dateRes: any, isValidDate: boolean, allSplittingInputs: any[]) => {
+                        console.log(isValidDate, input, dateRes, dateRes !== null && typeof dateRes !== 'string' ? dateRes.res : dateRes, allSplittingInputs)
+                    }}
+                    onLoad={(initValue: string, dateRes: any, allSplittingInputs: any[]) => {
+                        console.log(initValue, dateRes, allSplittingInputs)
+                    }}
+                    onlyTime
+                />
 
-
+            </div>
           
         </>
     );

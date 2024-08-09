@@ -150,9 +150,9 @@ export default () => {
     return (
         <>
             <Textarea
+                label="Character interception"
+                name="name1"
                 placeholder="String"
-                name="String"
-                label="String"
                 rows={4}
                 onChangeCallback={(e) => {
                     if (e.target.value.length > 20) {
@@ -162,29 +162,24 @@ export default () => {
             />
 
             <Textarea
-                placeholder="String"
-                name="String"
-                label="String"
-                rows={4}
-                onInputCallback={(e) => {
-                    // only numeric
-                    if (isNaN(e.target.value)) return '0';
-                    const newVal = e.target.value.replace(/[^0-9.]/g, '');
-                    return newVal;
+                label="Auto Size"
+                name="name2"
+                rows={1}
+                autoSize
+                onResize={(el: HTMLElement, dimensions: number[]) => {
+                    console.log(el, dimensions);
                 }}
+                
             />
 
 
             <Textarea
-                placeholder="String"
-                name="String"
+                label="Paragraph Formatting"
+                name="name3"
                 rows={4}
                 value={reverseAutop(`<p>a<br />\nb<br />\nc<br />\nd</p>\n`)}
                 onChange={(e) => {
                     console.log(autop(e.target.value));
-                }}
-                onResize={(el: HTMLElement, dimensions: number[]) => {
-                    console.log(el, dimensions);
                 }}
                 
             />
@@ -402,7 +397,7 @@ import Textarea from 'funda-ui/Textarea';
 | `onBlur` | function  | - | Call a function when a user leaves an form field. It returns two callback values. <br /> <ol><li>The first is the Control Event (**Event**)</li><li>The second is the composition event (**Boolean****)</li><li>The last is the control (**HTML Element**)</li></ol> | - |
 | `onFocus` | function  | - | Call a function when an form field gets focus. It returns two callback values. <br /> <ol><li>The first is the Control Event (**Event**)</li><li>The last is the control (**HTML Element**)</li></ol> | - |
 | `onPressEnter` | function  | - | The callback function that is triggered when Enter key is pressed. It returns two callback values. <br /> <ol><li>The first is the Control Event (**Event**)</li><li>The last is the control (**HTML Element**)</li></ol> | - |
-| `onResize` | function  | - | The callback function that is triggered when resize. It returns two callback values. <br /> <ol><li>The first is the control (**HTML Element**)</li><li>The last is an array of width and height (**Array**)</li></ol> | - |
+| `onResize` | function  | - | The callback function that is triggered when resize. It is valid when the `autoSize` is true. It returns two callback values. <br /> <ol><li>The first is the control (**HTML Element**)</li><li>The last is an array of width and height (**Array**)</li></ol> | - |
 
 
 

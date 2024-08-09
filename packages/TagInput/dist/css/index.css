@@ -76,7 +76,8 @@
   line-height: 20px;
   position: absolute;
   right: 8px;
-  top: 0;
+  top: 50%;
+  transform: translateY(-50%);
 }
 .tag-input__wrapper ul.tag-input__list li > a path {
   fill: var(--tag-input-removebtn-fill);

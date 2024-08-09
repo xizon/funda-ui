@@ -1,9 +1,10 @@
-import React, { useEffect, useRef, useCallback } from 'react';
+import React, { useEffect, useState, useRef, useCallback } from 'react';
 
 import {
     useComId
 } from 'funda-utils';
 import RootPortal from 'funda-root-portal';
+
 
 
 import Item from './Item';
@@ -69,6 +70,10 @@ const Toast = (props: ToastProps) => {
     const rootRef = useRef<any>(null);
     const depth: number = autoHideMultiple ? data.slice(-2).length + 1 : data.length + 1;
     const cascadingEnabled = typeof cascading === 'undefined' ? true : cascading;
+
+
+    // force display
+    const [initPopRoot, setInitPopRoot] = useState<boolean>(false);
 
     // auto close
     const AUTO_CLOSE_TIME: any = typeof (autoCloseTime) === 'undefined' || autoCloseTime === false ? false : autoCloseTime;
@@ -290,31 +295,41 @@ const Toast = (props: ToastProps) => {
 
     useEffect(() => {
 
-        // Initialize Toast Item
-        //------------------------------------------
-        init();
+        if (initPopRoot) {
+
+            // Initialize Toast Item
+            //------------------------------------------
+            init();
 
 
-        // Initialize Progress
-        //------------------------------------------
-        autoClose();
+            // Initialize Progress
+            //------------------------------------------
+            autoClose();
 
 
-        // Remove the global list of events, especially as scroll and interval.
-        //--------------
-        return () => {
+            // Remove the global list of events, especially as scroll and interval.
+            //--------------
+            return () => {
 
-            // Stop all animations
-            clearAllProgressTimer();
+                // Stop all animations
+                clearAllProgressTimer();
 
+            }
         }
 
-    }, [data]);
+
+    }, [data, initPopRoot]);
+
+
+    useEffect(() => {
+        setInitPopRoot(true);
+    }, []);
+
+    
 
     return (
         <>
-
-            <RootPortal show={true} containerClassName="Toast">
+            <RootPortal show={initPopRoot} containerClassName="Toast">
 
                 <div 
                     id={`toasts__wrapper-${idRes}`} 

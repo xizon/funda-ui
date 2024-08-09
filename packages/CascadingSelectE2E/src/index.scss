@@ -23,8 +23,12 @@
         line-height: 1.5;
         color: inherit;
 
+        /* required */
+        display: flex;
+
         div {
-            display: inline;
+            /* required */
+            display: flex;
         }
 
         span {
@@ -76,9 +80,10 @@
 
         .arrow {
             position: absolute;
-            top: 0;
-            margin-top: .3rem;
+            top: 50%;
+            transform: translateY(-50%);
             right: .5rem;
+            
 
             svg {
                 .arrow-fill-g {
