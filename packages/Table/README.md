@@ -332,6 +332,184 @@ Or using `nowrap="nowrap"` in \<TableCell \/\> in \<TableHead \/\> can also prev
 
 
 
+## Holy Grail Layout (3 columns)
+
+`styles.scss`:
+```css
+/* ---------- Grid ----------- */
+.demo-columns {
+    // display: grid;
+    // grid-template-columns: 448px auto 610px;
+    // grid-gap: .5rem;
+
+    display: flex;
+    flex-wrap: nowrap;
+    gap: .5rem;
+
+    .main {
+        flex-grow: 1; /*  Adaptive width */
+        overflow: auto; /* Required, enable the scrollbar for content's scrollbar */
+        order: 2;
+        background: #8fe1ff;
+    }
+
+    .sidebar-first {
+        width: 250px;
+        background: #eee;
+        order: 1;
+        flex-shrink: 0; /* Prevent the left and right columns from being compressed */
+    }
+
+    .sidebar-second {
+        width: 250px;
+        order: 3;
+        background: #eee;
+        flex-shrink: 0; /* Prevent the left and right columns from being compressed */
+    }
+  
+}
+
+  
+  
+/* ---------- Table Scrollable ----------- */
+@mixin app-table-scrollbar($size: 10px) {
+    --syntable-scrollable-container-scrollbar-color: rgba(0, 0, 0, 0.2);
+    --syntable-scrollable-container-scrollbar-track: rgba(0, 0, 0, 0);
+    --syntable-scrollable-container-scrollbar-w: 10px;
+    --syntable-scrollable-container-scrollbar-h: 10px;
+    
+    &::-webkit-scrollbar {
+        width: var(--syntable-scrollable-container-scrollbar-w);
+        height: var(--syntable-scrollable-container-scrollbar-h);
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background: var(--syntable-scrollable-container-scrollbar-color);
+    }
+
+    &::-webkit-scrollbar-track {
+        background: var(--syntable-scrollable-container-scrollbar-track);
+    }
+}
+
+.app-table-scrollable-container {
+    
+    .syntable__wrapper {
+        @include app-table-scrollbar();
+
+        position: relative;
+        overflow: auto;
+        width: 100%;
+        height: 200px;
+
+        thead tr > th {
+            position: sticky;
+            z-index: 2;
+            top: 0;
+        }
+
+        tbody > tr > th {
+            position: sticky;
+            left: 0;
+            z-index: 1;
+        }
+
+    }
+}
+```
+
+
+`index.tsx`:
+```js
+import React from "react";
+import {
+    Table,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableRow
+} from 'funda-ui/Table';
+
+// component styles
+import 'funda-ui/Table/index.css';
+
+function generateRandomData(rows: number, columns: number) {
+    const tableData = [];
+
+    for (let i = 0; i < rows; i++) {
+        const row = [];
+        for (let j = 0; j < columns; j++) {
+            row.push(Math.floor(Math.random() * 100)); // Generates a random number between 0 and 99
+        }
+        tableData.push(row);
+    }
+
+    return tableData;
+}
+const tableData = generateRandomData(20, 50);
+
+export default () => {
+
+    return (
+        <>
+            
+            <div className="demo-columns">
+                <div className="main">
+                    <div className="app-table-scrollable-container">
+                        <Table
+                            responsive={false} // to use a custom horizontal scrollbar
+                            cellAutoWidth // optional
+                            tableClassName="table table-bordered table-striped mb-0 "
+                            wrapperClassName=""
+                        >
+
+                            <TableHead>
+                                <TableRow>
+                                    {Array.from({ length: tableData[0].length }).fill(0).map((x: any, j: number) => {
+                                        return <TableCell
+                                            key={`head-col-${j}`}
+                                            scope="col" nowrap="nowrap"
+                                            className="bg-dark text-light"
+                                        >
+                                            {j === 0 ? <>#</> : <>Title{j}</>}
+                                        </TableCell>
+                                    })}
+                                </TableRow>
+                            </TableHead>
+                            <TableBody>
+                                {tableData.map((item: any, index: number) => {
+                                    return <TableRow
+                                        key={`row-${index}`}
+                                        data-key={`row-${index}`}
+                                        itemData={item}
+                                    >
+                                        {Array.from({ length: tableData[0].length }).fill(0).map((x: any, j: number) => {
+                                            return <TableCell
+                                                key={`col-${j}`}
+                                                scope={j === 0 ? 'row' : null}
+                                                className={j === 0 ? 'bg-dark text-light' : null}
+                                            >
+                                                {j === 0 ? 'No.' + index : tableData[index][j]}
+                                            </TableCell>
+                                        })}
+                                    </TableRow>
+
+                                })}
+                            </TableBody>
+                        </Table>
+                    </div>
+                </div>
+                <div className="sidebar-first">Sidebar first: Fixed width</div>
+                <div className="sidebar-second">Sidebar second: Fixed width</div>
+            </div>
+
+        </>
+    );
+}
+```
+
+
+
 ## Sticky Table Headers (with custom scrollbar)
 
 `styles.scss`:
