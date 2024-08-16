@@ -2,6 +2,20 @@
     <!-- Live Search -->
 /* ====================================================== */
 
+.livesearch__wrapper {
+
+    /*------ Search button ------*/
+    .livesearch__wrapper-searchbtn {
+        position: absolute;
+        right: 0;
+        top: 50%;
+        transform: translateY(-50%);
+        z-index: 5;
+        pointer-events: auto;
+    }
+
+}
+
 
 /*------ List ------*/
 .livesearch__options-wrapper  {
@@ -20,7 +34,6 @@
     &.active {
         display: block !important;
     }
-
 
     .livesearch__options-contentlist {
         overflow: hidden;

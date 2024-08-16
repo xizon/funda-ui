@@ -1,8 +1,9 @@
-import React, { useEffect, useRef } from 'react';
+import React, { forwardRef, useEffect, useRef, useImperativeHandle } from 'react';
 
 import {
     useComId
 } from 'funda-utils';
+
 
 //
 import TabList from './TabList';
@@ -24,8 +25,8 @@ type TabsProps = {
     
 };
 
-const Tabs = (props: TabsProps) => {
-    
+const Tabs = forwardRef((props: TabsProps, externalRef: any) => {
+
     const {
         wrapperClassName,
         navClassName,
@@ -42,6 +43,20 @@ const Tabs = (props: TabsProps) => {
     const uniqueID = useComId();
     const rootRef = useRef<any>(null);
     const speed = animTransitionDuration ? animTransitionDuration : 150;
+
+
+    // exposes the following methods
+    useImperativeHandle(
+        externalRef,
+        () => ({
+            go: (index: number) => {
+                const reactDomWrapperEl: any = rootRef.current;
+                const $li = [].slice.call(reactDomWrapperEl.querySelectorAll('ul > li'));
+                itemInit($li[index], false);
+            }
+        }),
+        [externalRef],
+    );
 
 
     
@@ -257,7 +272,7 @@ const Tabs = (props: TabsProps) => {
         </>
     )
 
-}
+});
 
 
 

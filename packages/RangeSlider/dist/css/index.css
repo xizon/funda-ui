@@ -7,6 +7,7 @@
   --range-slider-active-grab-border-color: #86b7fe;
   --range-slider-rail: #e9ecef;
   --range-slider-inner-rail: #0d6efd;
+  position: relative; /* Required */
 }
 .range-slider__wrapper > div:not(.range-slider__control-wrapper) {
   width: 49% !important;

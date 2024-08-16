@@ -188,7 +188,6 @@ export default () => {
             <CascadingSelectE2E
                 value="{Title 2[2]}{Title 5[5]}"
                 name="name"
-                label="String"
                 displayResult={true}
                 valueType="label"
                 columnTitle={['Heading 1','Heading 2','Heading 3']}

@@ -41,7 +41,7 @@ export default () => {
             
             <Checkbox
                 name="string"
-                label='&nbsp;'
+                label='Indeterminate'
                 value="ok"
                 indeterminate
             />
@@ -107,6 +107,7 @@ export default () => {
         <>
 
             <a href="#" onClick={handleClick1}>checked</a>
+            &nbsp;&nbsp;|&nbsp;&nbsp;
             <a href="#" onClick={handleClick2}>unchecked</a>
             
             <Checkbox
@@ -186,12 +187,8 @@ export default () => {
                         checked={valSelected.includes(item.item_name)}
                     /></div>;
             }) : null}
-            <input
-                name="reg_tag"
-                type="text"
-                tabIndex={-1}
-                value={valSelected.join(',')}
-            />
+           
+           <small className="border">{valSelected.join(',')}</small>
 
 
         </>
@@ -231,7 +228,7 @@ export default () => {
                     setUserContent(false)
                 });
             }}>Reset</a>
-            |
+            &nbsp;&nbsp;|&nbsp;&nbsp;
             <a href="#" onClick={(e: React.MouseEvent) => {
                 e.preventDefault();
                 if (conRef.current) conRef.current.set(true, () => {
@@ -239,12 +236,12 @@ export default () => {
                 });
                 
             }}>Change value</a>
-            <p>{userContent}</p>
-
+     
 
             <Checkbox
                 contentRef={conRef}
                 name="string"
+                label='Label'
                 value="ok"
                 checked={userContent}
             />

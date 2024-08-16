@@ -83,7 +83,7 @@ export default () => {
     const [inputValue, setInputValue] = useState('');
 
     useEffect(() => {
-       setInputValue('#f00');
+       setInputValue('#ff6600');
     }, []);
 
 

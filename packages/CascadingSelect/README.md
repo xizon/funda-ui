@@ -184,7 +184,6 @@ export default () => {
             <CascadingSelect
                 value=""
                 name="name"
-                label="String"
                 displayResult={true}
                 valueType="label"
                 columnTitle={['Heading 1', 'Heading 2', 'Heading 3', 'Heading 4']}
@@ -303,7 +302,7 @@ export default () => {
 
 
 
-## General (Use formatted data to match components)
+## Use formatted data to match components
 
 You need to use a `fetchCallback` property to format the data of the API callback, which will match the data structure of the component.
 
@@ -370,7 +369,6 @@ export default () => {
             <CascadingSelect
                 value="{Text 1[1]}{Text 1_1[1_1]}{Text 1_1_2[1_1_2]}"
                 name="name"
-                label="String"
                 displayResult={true}
                 valueType="label"
                 triggerClassName="d-block w-100"

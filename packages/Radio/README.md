@@ -17,7 +17,6 @@ export default () => {
         <>
 
             <Radio
-                inline={true}
                 value="value-2"
                 name="name1"
                 options={[
@@ -27,6 +26,8 @@ export default () => {
                 ]}
                 onChange={handleChange}
             />
+
+            <hr />
 
 
 
@@ -220,7 +221,7 @@ import Radio from 'funda-ui/Radio';
 export default () => {
 
     function handleChange(e: any, val: string, currentData: any, currentIndex: number) {
-        console.log(e.target, val, data, currentIndex);
+        console.log(e.target, val, currentData, currentIndex);
     }
 
     return (
@@ -229,7 +230,7 @@ export default () => {
             <Radio
                 inline={true}
                 value="value-2"
-                name="String"
+                name="name"
                 label="String"
                 options={[
                     {"label": "Option 1","value": "value-1","extends":<><div className="ms-3" id={`radio-1`}></div></>},
@@ -266,7 +267,7 @@ export default () => {
    
     function handleClick1(e: any) {
         e.preventDefault();
-        setVal('value-4');
+        setVal('value-3');
     }
 
     function handleClick2(e: any) {
@@ -281,14 +282,14 @@ export default () => {
         <>
 
             <a href="#" onClick={handleClick1}>change value</a>
+            &nbsp;&nbsp;|&nbsp;&nbsp;
             <a href="#" onClick={handleClick2}>change options</a>
             
 
             <Radio
                 inline={true}
                 value={val}
-                name="String"
-                label="String"
+                name="name"
                 options={JSON.stringify(opt)}
             />
                    
@@ -383,8 +384,7 @@ export default () => {
             <Radio
                 inline={true}
                 value="bar2"
-                name="String"
-                label="String"
+                name="name"
                 fetchFuncAsync={new DataService}
                 fetchFuncMethod="getList"
                 fetchFuncMethodParams={['',0]}
@@ -456,8 +456,7 @@ export default () => {
             <Radio
                 inline={true}
                 value="value-2"
-                name="String"
-                label="String"
+                name="name"
                 data-custom-param="123"
                 options={[
                     {"label": "Option 1","value": "value-1","attr1": false,"extends":<><div className="ms-3" id={`radio-1`}></div></>},
@@ -536,13 +535,13 @@ function MemoRadio(props: any) {
 
 export default () => {
 
-    const [myRadio, setMyRadio] = useState('value-3');  // default value is label value
+    const [myRadio, setMyRadio] = useState('value-3');
 
     return (
         <>
           
             <MemoRadio 
-                val={"value-3"} 
+                val={myRadio} 
                 name="name"
                 callback={setMyRadio} 
             />
@@ -568,7 +567,7 @@ import Radio from 'funda-ui/Radio';
 
 export default () => {
 
-    const [myRadio, setMyRadio] = useState('value-3');  // default value is label value
+    const [myRadio, setMyRadio] = useState('value-3');
 
 
 
@@ -761,7 +760,7 @@ export default () => {
   
             <Radio
                 inline={true}
-                val="value-3" 
+                val={myRadio}
                 name="name"
                 options={[
                     { "label": "Option 1", "listItemLabel": "Option 1 (No: 001)", "value": "value-1" },
@@ -792,9 +791,6 @@ Lets you callback the handle exposed as attribute `contentRef`.
 
 ```js
  import React, { useMemo, useState, useRef } from 'react';
-
- // bootstrap components
- import ModalDialog from 'funda-ui/ModalDialog';
 import Radio from 'funda-ui/Radio';
 
 // DO NOT move `useMemo` to component
@@ -837,7 +833,7 @@ export default () => {
                     setUserContent('')
                 });
             }}>Clean</a>
-            |
+            &nbsp;&nbsp;|&nbsp;&nbsp;
             <a href="#" onClick={(e: React.MouseEvent) => {
                 e.preventDefault();
                 if (conRef.current) conRef.current.set('value-1', () => {

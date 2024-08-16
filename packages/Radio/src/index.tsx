@@ -8,6 +8,7 @@ import {
 } from 'funda-utils';
 
 
+
 export interface OptionConfig {
     [propName: string]: string | number | React.ReactNode | boolean;
 }
@@ -358,6 +359,12 @@ const Radio = forwardRef((props: RadioProps, externalRef: any) => {
         return Array.isArray(dataInit) ? dataInit.map((item: any, index: number) => {
             const requiredVal = index === 0 ? required || null : null;
 
+            const _formatItem = {};
+            Object.keys(item).forEach((key: string) => {
+                if (key !== 'extends') _formatItem[key] = item[key];
+            });
+
+      
             const _groupEl = () => {
                 return <>
                     {/* GROUP LABEL */}
@@ -365,6 +372,12 @@ const Radio = forwardRef((props: RadioProps, externalRef: any) => {
                     {/* /GROUP LABEL */}
 
                     {item.optgroup.map((opt: any, optIndex: number) => {
+
+                        const _formatOpt = {};
+                        Object.keys(item).forEach((key: string) => {
+                            if (key !== 'extends') _formatOpt[key] = item[key];
+                        });
+            
 
                         return <div key={'option-' + optIndex} className={`${inline ? `form-check form-check-inline` : `form-check`} ${controlValue == opt.value ? (itemSelectedClassName || 'item-selected') : ''}`}>
                             <div className="d-inline-block">
@@ -382,7 +395,7 @@ const Radio = forwardRef((props: RadioProps, externalRef: any) => {
                                     data-list-item-label={`${typeof opt.listItemLabel === 'undefined' ? '' : opt.listItemLabel}`}
                                     data-value={opt.value}
                                     data-disabled={disabled || (typeof opt.disabled !== 'undefined' ? `${opt.disabled}` : 'false')}
-                                    data-optiondata={JSON.stringify(opt)}
+                                    data-optiondata={JSON.stringify(_formatOpt)}
                                     value={`${opt.value}`}
                                     required={requiredVal}
                                     disabled={disabled || (typeof opt.disabled !== 'undefined' ? opt.disabled : null)}
@@ -424,7 +437,7 @@ const Radio = forwardRef((props: RadioProps, externalRef: any) => {
                             data-list-item-label={`${typeof item.listItemLabel === 'undefined' ? '' : item.listItemLabel}`}
                             data-value={item.value}
                             data-disabled={disabled || (typeof item.disabled !== 'undefined' ? `${item.disabled}` : 'false')}
-                            data-optiondata={JSON.stringify(item)}
+                            data-optiondata={JSON.stringify(_formatItem)}
                             value={`${item.value}`}
                             required={requiredVal}
                             disabled={disabled || (typeof item.disabled !== 'undefined' ? item.disabled : null)}
@@ -456,7 +469,7 @@ const Radio = forwardRef((props: RadioProps, externalRef: any) => {
                         colSpan={1}
                         className={`radio-group__wrapper ${groupWrapperClassName || ''} ${tableLayoutCellClassName || ''}`}
                         key={'optgroup-' + index}
-                        data-optiondata={JSON.stringify(item)}
+                        data-optiondata={JSON.stringify(_formatItem)}
                     >
                         {_groupEl()}
                     </td>;
@@ -466,7 +479,7 @@ const Radio = forwardRef((props: RadioProps, externalRef: any) => {
                         colSpan={1}
                         className={`${inline ? `form-check form-check-inline` : `form-check`} ${controlValue == item.value ? (itemSelectedClassName || 'item-selected') : ''} ${tableLayoutCellClassName || ''}`}
                         key={'option-' + index}
-                        data-optiondata={JSON.stringify(item)}
+                        data-optiondata={JSON.stringify(_formatItem)}
                     >
                         {_normalEl()}
                     </td>;
@@ -477,7 +490,7 @@ const Radio = forwardRef((props: RadioProps, externalRef: any) => {
                     return <div
                         className={`radio-group__wrapper ${groupWrapperClassName || ''}`}
                         key={'optgroup-' + index}
-                        data-optiondata={JSON.stringify(item)}
+                        data-optiondata={JSON.stringify(_formatItem)}
                     >
                         {_groupEl()}
                     </div>;
@@ -486,7 +499,7 @@ const Radio = forwardRef((props: RadioProps, externalRef: any) => {
                     return <div
                         className={`${inline ? `form-check form-check-inline` : `form-check`} ${controlValue == item.value ? (itemSelectedClassName || 'item-selected') : ''}`}
                         key={'option-' + index}
-                        data-optiondata={JSON.stringify(item)}
+                        data-optiondata={JSON.stringify(_formatItem)}
                     >
                         {_normalEl()}
                     </div>;

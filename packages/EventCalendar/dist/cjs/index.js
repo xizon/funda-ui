@@ -4569,7 +4569,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
           var DEPTH = depth || 1055; // the default value same as bootstrap
           var M_WIDTH = fullscreen ? undefined : typeof maxWidth === 'function' ? maxWidth() : maxWidth ? maxWidth : undefined;
           var M_HEIGHT = typeof minHeight === 'function' ? minHeight() : minHeight ? minHeight : undefined;
-          var LOCK_BODY_SCROLL = typeof lockBodyScroll === 'undefined' ? true : lockBodyScroll;
+          var LOCK_BODY_SCROLL = typeof lockBodyScroll === 'undefined' ? false : lockBodyScroll;
           var uniqueID = (0, funda_utils__WEBPACK_IMPORTED_MODULE_2__.useComId)();
           var modalRef = (0, react__WEBPACK_IMPORTED_MODULE_0__.useRef)(null);
           var triggerRef = (0, react__WEBPACK_IMPORTED_MODULE_0__.useRef)(null);
@@ -5076,7 +5076,10 @@ var EventCalendar = function EventCalendar(props) {
     onModalDeleteOpen = props.onModalDeleteOpen,
     onModalDeleteClose = props.onModalDeleteClose,
     onModalEditEvent = props.onModalEditEvent,
-    onModalDeleteEvent = props.onModalDeleteEvent;
+    onModalDeleteEvent = props.onModalDeleteEvent,
+    onCellMouseEnter = props.onCellMouseEnter,
+    onCellMouseLeave = props.onCellMouseLeave,
+    onCellClick = props.onCellClick;
   var DAYS = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
   var DAYS_LEAP = [31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
   var WEEK = langWeek || ['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN'];
@@ -5506,7 +5509,15 @@ var EventCalendar = function EventCalendar(props) {
         "data-date": getCalendarDate(_dateShow),
         "data-day": padZero(d),
         "data-week": i,
+        onMouseEnter: function onMouseEnter(e) {
+          onCellMouseEnter === null || onCellMouseEnter === void 0 ? void 0 : onCellMouseEnter(e);
+        },
+        onMouseLeave: function onMouseLeave(e) {
+          onCellMouseLeave === null || onCellMouseLeave === void 0 ? void 0 : onCellMouseLeave(e);
+        },
         onClick: function onClick(e) {
+          //
+          onCellClick === null || onCellClick === void 0 ? void 0 : onCellClick(e);
           if (d > 0) {
             handleDayChange(e, d);
             onChangeDate === null || onChangeDate === void 0 ? void 0 : onChangeDate(e, _currentData.length === 0 ? {
@@ -5514,11 +5525,12 @@ var EventCalendar = function EventCalendar(props) {
               date: getCalendarDate("".concat(year, "-").concat(month + 1, "-").concat(d))
             } : _currentData[0]);
             if (EVENTS_ENABLED) {
-              setShowEdit(true);
               onModalEditOpen === null || onModalEditOpen === void 0 ? void 0 : onModalEditOpen(_currentData.length === 0 ? {
                 id: 0,
                 date: getCalendarDate("".concat(year, "-").concat(month + 1, "-").concat(d))
-              } : _currentData[0]);
+              } : _currentData[0], function () {
+                return setShowEdit(true);
+              });
             }
           }
         }

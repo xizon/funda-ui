@@ -19,7 +19,6 @@ export default () => {
     return (
         <>
             <LiveSearch
-                btnId="app-livesearch-btn"
                 name="app-livesearch-name"
                 label="Food List (Enter the search character)"
                 options={`
@@ -35,7 +34,6 @@ export default () => {
 
 
             <LiveSearch
-                btnId="app-livesearch-btn"
                 name="app-livesearch-name"
                 label="Food List (Direct display)"
                 hideIcon
@@ -181,7 +179,7 @@ export default () => {
             <LiveSearch
                 btnId="app-livesearch-btn"
                 name="app-livesearch-name"
-                label="Food List"
+                label="Food List (Enter a,b, or c)"
                 fetchTrigger={false}
                 fetchUpdate={false}
                 fetchNoneInfo="No match yet"
@@ -310,7 +308,7 @@ export default () => {
             <LiveSearch
                 btnId="app-livesearch-btn"
                 name="app-livesearch-name"
-                label="Food List"
+                label="Food List (Enter a,b, or c)"
                 hideIcon
                 autoShowOptions
                 fetchFuncAsync={new DataService}

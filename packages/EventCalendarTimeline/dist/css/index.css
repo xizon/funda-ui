@@ -344,6 +344,9 @@
   background-color: var(--e-cal-tl-table-event-hover-bg);
   box-shadow: var(--e-cal-tl-table-event-hover-shadow);
 }
+.e-cal-tl-table__timeline-table__wrapper .e-cal-tl-table__cell-cushion-content__container:not(.empty):hover .e-cal-tl__day__eventdel {
+  display: block;
+}
 .e-cal-tl-table__timeline-table__wrapper .e-cal-tl-table__cell-cushion-content__container.has-event .e-cal-tl-table__cell-cushion {
   padding: 0;
 }
@@ -351,6 +354,20 @@
   position: absolute;
   width: 100%;
   font-size: var(--e-cal-tl-table-event-font-size);
+}
+.e-cal-tl-table__timeline-table__wrapper .e-cal-tl-table__cell-cushion-content__container .e-cal-tl__day__eventdel {
+  position: absolute;
+  z-index: 1;
+  left: 0;
+  top: 0;
+  display: none;
+  color: var(--e-cal-tl-table-delete-btn-color);
+}
+.e-cal-tl-table__timeline-table__wrapper .e-cal-tl-table__cell-cushion-content__container .e-cal-tl__day__eventdel svg {
+  fill: var(--e-cal-tl-table-delete-btn-color);
+}
+.e-cal-tl-table__timeline-table__wrapper .e-cal-tl-table__cell-cushion-content__container .e-cal-tl__day__eventdel svg path {
+  fill: var(--e-cal-tl-table-delete-btn-color);
 }
 .e-cal-tl-table__timeline-table__wrapper .e-cal-tl-table__cell-cushion-headercontent__container {
   text-align: center;

@@ -1,5 +1,7 @@
 import React, { useEffect, useState, useRef, forwardRef } from 'react';
 
+import { optionsFlat } from './native-select-utils/func';
+
 import {
     useComId,
     isJSON,
@@ -157,23 +159,6 @@ const NativeSelect = forwardRef((props: NativeSelectProps, externalRef: any) => 
 
     }
 
-
-    /**
-     * Format indent value
-     * @param {String|Array} str 
-     * @returns {String|Array}
-     */
-    function formatIndentVal(str: any) {
-        const reVar = new RegExp(INDENT_LAST_PLACEHOLDER, 'g');
-        if (Array.isArray(str)) {
-            return str.map((s: string) => s.replace(reVar,'').replace(/\&nbsp;/ig,''));
-        } else {
-            return str.replace(reVar,'').replace(/\&nbsp;/ig,'');
-        }
-        
-    }
-
-
     //
     function handleFocus(event: any) {
         rootRef.current?.classList.add('focus');
@@ -197,7 +182,8 @@ const NativeSelect = forwardRef((props: NativeSelectProps, externalRef: any) => 
 
         //
 		if ( typeof(onChange) === 'function' ) {
-			onChange(event, dataInit[event.target.selectedIndex].value, dataInit[event.target.selectedIndex], event.target.selectedIndex);
+            console.log('---', event.target.selectedIndex)
+			onChange(event, optionsFlat(dataInit)[event.target.selectedIndex].value, optionsFlat(dataInit)[event.target.selectedIndex], event.target.selectedIndex);
 
             event.target.blur();
 		}

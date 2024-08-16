@@ -27,7 +27,7 @@ export default () => {
             triggerClassName="d-block-inline w-auto"
             triggerContent=""
             triggerSwitchActive={true}
-            iconLeft={<><span className="pe-1 opacity-50">
+            iconLeft={<><span className="pe-1 opacity-50 d-inline-block">
 
                 <svg width="1rem" height="1rem" viewBox="0 0 28 28">
 
@@ -79,7 +79,7 @@ export default () => {
         <h3>Using Bootstrap's styles</h3>
         {/* ================================================================== */}
         <DropdownMenu
-            iconLeft={<><span className="pe-1 opacity-50"><svg width="15px" height="15px" viewBox="-5 0 20 20">
+            iconLeft={<><span className="pe-1 opacity-50 d-inline-block"><svg width="15px" height="15px" viewBox="-5 0 20 20">
                 <g stroke="none" strokeWidth="1" fill="none" fillRule="evenodd">
                     <g transform="translate(-265.000000, -2679.000000)" fill="var(--bs-link-color)">
                         <g transform="translate(56.000000, 160.000000)">

@@ -4517,10 +4517,18 @@ var Radio = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(funct
     }
     return Array.isArray(dataInit) ? dataInit.map(function (item, index) {
       var requiredVal = index === 0 ? required || null : null;
+      var _formatItem = {};
+      Object.keys(item).forEach(function (key) {
+        if (key !== 'extends') _formatItem[key] = item[key];
+      });
       var _groupEl = function _groupEl() {
         return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
           className: "radio-group__label ".concat(groupLabelClassName || '')
         }, item.label), item.optgroup.map(function (opt, optIndex) {
+          var _formatOpt = {};
+          Object.keys(item).forEach(function (key) {
+            if (key !== 'extends') _formatOpt[key] = item[key];
+          });
           return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
             key: 'option-' + optIndex,
             className: "".concat(inline ? "form-check form-check-inline" : "form-check", " ").concat(controlValue == opt.value ? itemSelectedClassName || 'item-selected' : '')
@@ -4540,7 +4548,7 @@ var Radio = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(funct
             "data-list-item-label": "".concat(typeof opt.listItemLabel === 'undefined' ? '' : opt.listItemLabel),
             "data-value": opt.value,
             "data-disabled": disabled || (typeof opt.disabled !== 'undefined' ? "".concat(opt.disabled) : 'false'),
-            "data-optiondata": JSON.stringify(opt),
+            "data-optiondata": JSON.stringify(_formatOpt),
             value: "".concat(opt.value),
             required: requiredVal,
             disabled: disabled || (typeof opt.disabled !== 'undefined' ? opt.disabled : null),
@@ -4577,7 +4585,7 @@ var Radio = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(funct
           "data-list-item-label": "".concat(typeof item.listItemLabel === 'undefined' ? '' : item.listItemLabel),
           "data-value": item.value,
           "data-disabled": disabled || (typeof item.disabled !== 'undefined' ? "".concat(item.disabled) : 'false'),
-          "data-optiondata": JSON.stringify(item),
+          "data-optiondata": JSON.stringify(_formatItem),
           value: "".concat(item.value),
           required: requiredVal,
           disabled: disabled || (typeof item.disabled !== 'undefined' ? item.disabled : null),
@@ -4609,14 +4617,14 @@ var Radio = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(funct
             colSpan: 1,
             className: "radio-group__wrapper ".concat(groupWrapperClassName || '', " ").concat(tableLayoutCellClassName || ''),
             key: 'optgroup-' + index,
-            "data-optiondata": JSON.stringify(item)
+            "data-optiondata": JSON.stringify(_formatItem)
           }, _groupEl());
         } else {
           return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("td", {
             colSpan: 1,
             className: "".concat(inline ? "form-check form-check-inline" : "form-check", " ").concat(controlValue == item.value ? itemSelectedClassName || 'item-selected' : '', " ").concat(tableLayoutCellClassName || ''),
             key: 'option-' + index,
-            "data-optiondata": JSON.stringify(item)
+            "data-optiondata": JSON.stringify(_formatItem)
           }, _normalEl());
         }
         /* /TABLE LAYOUT */
@@ -4625,13 +4633,13 @@ var Radio = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(funct
           return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
             className: "radio-group__wrapper ".concat(groupWrapperClassName || ''),
             key: 'optgroup-' + index,
-            "data-optiondata": JSON.stringify(item)
+            "data-optiondata": JSON.stringify(_formatItem)
           }, _groupEl());
         } else {
           return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
             className: "".concat(inline ? "form-check form-check-inline" : "form-check", " ").concat(controlValue == item.value ? itemSelectedClassName || 'item-selected' : ''),
             key: 'option-' + index,
-            "data-optiondata": JSON.stringify(item)
+            "data-optiondata": JSON.stringify(_formatItem)
           }, _normalEl());
         }
       }

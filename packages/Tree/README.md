@@ -216,7 +216,7 @@ export default () => {
             {
                 title: "(new) Top level 1",
                 link: "#",
-                slug: 'level-1-new'
+                slug: 'level-1-new',
                 children: [
                             {
                                 title: "Sub level 1_1",
@@ -239,7 +239,7 @@ export default () => {
             <a href="#" onClick={handleClick}>change data</a>
             
             <Tree 
-                data={treeData} 
+                data={data} 
                 showLine={true}
                 onSelect={(e, val) => {
                     console.log(val);

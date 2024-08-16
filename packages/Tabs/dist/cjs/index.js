@@ -4267,7 +4267,7 @@ function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input ==
 //
 
 
-var Tabs = function Tabs(props) {
+var Tabs = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_amd_react_.forwardRef)(function (props, externalRef) {
   var wrapperClassName = props.wrapperClassName,
     navClassName = props.navClassName,
     panelClassName = props.panelClassName,
@@ -4281,6 +4281,17 @@ var Tabs = function Tabs(props) {
   var uniqueID = (0,cjs.useComId)();
   var rootRef = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useRef)(null);
   var speed = animTransitionDuration ? animTransitionDuration : 150;
+
+  // exposes the following methods
+  (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useImperativeHandle)(externalRef, function () {
+    return {
+      go: function go(index) {
+        var reactDomWrapperEl = rootRef.current;
+        var $li = [].slice.call(reactDomWrapperEl.querySelectorAll('ul > li'));
+        itemInit($li[index], false);
+      }
+    };
+  }, [externalRef]);
   var elDisplay = function elDisplay(type, node) {
     if (node === null) return;
 
@@ -4439,7 +4450,7 @@ var Tabs = function Tabs(props) {
       });
     }
   }())));
-};
+});
 /* harmony default export */ const src_Tabs = (Tabs);
 ;// CONCATENATED MODULE: ./src/index.tsx
 

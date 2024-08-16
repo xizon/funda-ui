@@ -115,6 +115,9 @@
   display: none;
   color: var(--e-cal-delete-btn-color);
 }
+.e-cal__wrapper .e-cal__row .e-cal__cell .e-cal__day__eventdel svg {
+  fill: var(--e-cal-delete-btn-color);
+}
 .e-cal__wrapper .e-cal__row .e-cal__cell .e-cal__day__eventdel svg path {
   fill: var(--e-cal-delete-btn-color);
 }

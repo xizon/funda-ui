@@ -5,6 +5,8 @@
 
 ## General
 
+Use the parent container to control the width, default 100%
+
 ```js
 import React from "react";
 import Date from 'funda-ui/Date';
@@ -16,60 +18,57 @@ export default () => {
 
     return (
         <>
-          
-             <div style={{ width: '200px'}}>
-                <Date
-                    name="name"
-                    label="Date"
-                    value="2024-03-13"
-                    type="date"
-                    placeholder="yyyy/MM/dd"
-                    onChange={(input: HTMLInputElement, dateRes: any, isValidDate: boolean, allSplittingInputs: any[]) => {
-                        console.log(isValidDate, input, dateRes, dateRes !== null && typeof dateRes !== 'string' ? dateRes.res : dateRes, allSplittingInputs)
-                    }}
-                    onLoad={(initValue: string, dateRes: any, allSplittingInputs: any[]) => {
-                        console.log(initValue, dateRes, allSplittingInputs)
-                    }}
-                    onPressEnter={(control: HTMLElement, allControls: HTMLElement[]) => {
-                        // ...
-                    }}
-                />
+        
+            <Date
+                name="name"
+                label="Date"
+                value="2024-03-13"
+                type="date"
+                placeholder="yyyy/MM/dd"
+                onChange={(input: HTMLInputElement, dateRes: any, isValidDate: boolean, allSplittingInputs: any[]) => {
+                    console.log(isValidDate, input, dateRes, dateRes !== null && typeof dateRes !== 'string' ? dateRes.res : dateRes, allSplittingInputs)
+                }}
+                onLoad={(initValue: string, dateRes: any, allSplittingInputs: any[]) => {
+                    console.log(initValue, dateRes, allSplittingInputs)
+                }}
+                onPressEnter={(control: HTMLElement, allControls: HTMLElement[]) => {
+                    // ...
+                }}
+            />
 
 
 
-                <Date
-                    name="name"
-                    label="Date & Time (no seconds)"
-                    value="2024-03-14 10:22"
-                    type="datetime-local"
-                    placeholder="yyyy/MM/dd HH:mm"
-                    onChange={(input: HTMLInputElement, dateRes: any, isValidDate: boolean, allSplittingInputs: any[]) => {
-                        console.log(isValidDate, input, dateRes, dateRes !== null && typeof dateRes !== 'string' ? dateRes.res : dateRes, allSplittingInputs)
-                    }}
-                    onLoad={(initValue: string, dateRes: any, allSplittingInputs: any[]) => {
-                        console.log(initValue, dateRes, allSplittingInputs)
-                    }}
-                    truncateSeconds
-                />
+            <Date
+                name="name"
+                label="Date & Time (no seconds)"
+                value="2024-03-14 10:22"
+                type="datetime-local"
+                placeholder="yyyy/MM/dd HH:mm"
+                onChange={(input: HTMLInputElement, dateRes: any, isValidDate: boolean, allSplittingInputs: any[]) => {
+                    console.log(isValidDate, input, dateRes, dateRes !== null && typeof dateRes !== 'string' ? dateRes.res : dateRes, allSplittingInputs)
+                }}
+                onLoad={(initValue: string, dateRes: any, allSplittingInputs: any[]) => {
+                    console.log(initValue, dateRes, allSplittingInputs)
+                }}
+                truncateSeconds
+            />
 
 
-                <Date
-                    name="name"
-                    label="Time"
-                    value="07:30:38"
-                    placeholder="HH:mm:ss"
-                    type="time"
-                    onChange={(input: HTMLInputElement, dateRes: any, isValidDate: boolean, allSplittingInputs: any[]) => {
-                        console.log(isValidDate, input, dateRes, dateRes !== null && typeof dateRes !== 'string' ? dateRes.res : dateRes, allSplittingInputs)
-                    }}
-                    onLoad={(initValue: string, dateRes: any, allSplittingInputs: any[]) => {
-                        console.log(initValue, dateRes, allSplittingInputs)
-                    }}
-                    onlyTime
-                />
+            <Date
+                name="name"
+                label="Time"
+                value="07:30:38"
+                placeholder="HH:mm:ss"
+                type="time"
+                onChange={(input: HTMLInputElement, dateRes: any, isValidDate: boolean, allSplittingInputs: any[]) => {
+                    console.log(isValidDate, input, dateRes, dateRes !== null && typeof dateRes !== 'string' ? dateRes.res : dateRes, allSplittingInputs)
+                }}
+                onLoad={(initValue: string, dateRes: any, allSplittingInputs: any[]) => {
+                    console.log(initValue, dateRes, allSplittingInputs)
+                }}
+                onlyTime
+            />
 
-            </div>
-          
         </>
     );
 }
@@ -110,6 +109,44 @@ export default () => {
 
 
 
+
+## Auto/Custom Width
+
+You can also set a parent container to control the width.
+
+```js
+import React from "react";
+import Date from 'funda-ui/Date';
+
+// component styles
+import 'funda-ui/Date/index.css';
+
+export default () => {
+
+    return (
+        <>
+
+            <Date 
+                triggerClassName="w-auto"
+                ...
+            />
+
+
+            <div style={{ width: '300px'}}>
+                <Date
+                    ...
+                />
+            </div>
+
+ 
+        </>
+    );
+}
+```
+
+
+
+
 ## Remove Date Control border and background color
 
 
@@ -126,11 +163,16 @@ export default () => {
     return (
         <>
 
-            <Date
-                ...
-                style={{border: 'none', background: 'transparent', textAlign: 'center', fontSize: '0.75rem'}}
-                ...
-            />
+            <div style={{ background: '#d7fcf7', borderRadius: '0.35rem'}}>
+
+                <Date
+                    ...
+                    style={{border: 'none', background: 'transparent', fontSize: '0.75rem'}}
+                    ...
+                />
+
+            </div>
+
 
  
         </>
@@ -154,17 +196,11 @@ import 'funda-ui/Date/index.css';
 export default () => {
 
     const defaultVal = '2024-03-14 10:22:05';
-
     const [customDate, setCustomDate] = useState<string>('');
-    const [defaultCustomDate, setDefaultCustomDate] = useState<string>('');
 
 
     useEffect(() => {
-
-       // "setDefaultCustomDate" is generally used to assign values after http requests 
-       // (usually used for real business APIs needs)
        setCustomDate(defaultVal);
-       setDefaultCustomDate(defaultVal);  
     }, []);
 
 
@@ -174,7 +210,7 @@ export default () => {
 
            <Date
                 name="name"
-                value={defaultCustomDate} // Don't use customDate assignments directly
+                defaultValue={customDate} // Don't use the "value" attribute to specify a state that changes in real time
                 type="datetime-local"
                 placeholder="yyyy/MM/dd HH:mm:ss"
                 onChange={(input: HTMLInputElement, dateRes: any, isValidDate: boolean, allSplittingInputs: any[]) => {
@@ -182,6 +218,7 @@ export default () => {
                     _valRes = _valRes.split(':').length === 3 ? _valRes : `${_valRes}:00`;
                     if (_valRes === ':00') _valRes = '';
 
+                    console.log(_valRes);
                     setCustomDate(_valRes);
                 }}
             />
@@ -288,34 +325,6 @@ export default () => {
 
 
 
-## Auto Width
-
-```js
-import React from "react";
-import Date from 'funda-ui/Date';
-
-// component styles
-import 'funda-ui/Date/index.css';
-
-export default () => {
-
-    return (
-        <>
-
-            <Date 
-                triggerClassName="w-auto"
-                ...
-            />
-
-
- 
-        </>
-    );
-}
-```
-
-
-
 ## Focus hours's input control when popup opens
 
 ```js
@@ -332,7 +341,7 @@ export default () => {
 
             <Date
                 name="name"
-                value=""
+                value="16:36"
                 type="time" 
                 truncateSeconds
                 onOpenPopup={(allSplittingInputs: any[]) => {

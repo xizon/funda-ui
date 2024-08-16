@@ -21,7 +21,7 @@ export default () => {
                 heading="Title Here"
                 triggerClassName="d-inline w-auto"
                 triggerContent={<>
-                    <a href="#" tabIndex={-1}>Launch demo modal</a>
+                    <a href="#" tabIndex={-1} onClick={(e: React.MouseEvent) => {e.preventDefault()}}>Launch demo modal</a>
                 </>}
                 closeBtnClassName="btn btn-secondary"
                 closeBtnLabel="Close"
@@ -83,10 +83,10 @@ export default () => {
                 maxWidth="1200px"
                 triggerClassName="d-inline w-auto"
                 triggerContent={<>
-                    <a href="#" tabIndex={-1}>Launch demo modal</a>
+                    <a href="#" tabIndex={-1} onClick={(e: React.MouseEvent) => {e.preventDefault()}}>Launch demo modal</a>
                 </>}
             >
-                <video playsInline controls poster="https://uiux.cc:3000/assets/videos/480x270/demo.jpg" src="https://uiux.cc:3000/assets/videos/480x270/demo.mp4"></video>
+                <video playsInline controls poster="https://uiux.cc/uix-kit/assets/videos/480x270/demo.jpg" src="https://uiux.cc/uix-kit/assets/videos/480x270/demo.mp4"></video>
             </ModalDialog>
             
 
@@ -94,79 +94,14 @@ export default () => {
                 show={false}
                 enableVideo={true}
                 maxWidth="1200px"
-                maskOpacity="0"
+                maskOpacity={0.2}
                 triggerClassName="d-inline w-auto"
                 triggerContent={<>
-                    <a href="#" tabIndex={-1}>Launch demo modal</a>
+                    <a href="#" tabIndex={-1} onClick={(e: React.MouseEvent) => {e.preventDefault()}}>Launch demo modal</a>
                 </>}
             >
-                <iframe width="560" height="315" src="https://www.youtube.com/embed/xxxxxx" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowFullScreen></iframe>
+                <iframe width="560" height="315" src="https://www.youtube.com/embed/VYdzttKU5H0?si=K7tXPlPgiuyJaoXp" title="YouTube video player" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerPolicy="strict-origin-when-cross-origin" allowFullScreen></iframe>
             </ModalDialog>
-
-
-            <h3>Adjust depth and matte visibility</h3>
-            {/* ================================================================== */}
-
-            <ModalDialog
-                show={false}
-                enableVideo={true}
-                maxWidth="1200px"
-                maskOpacity="0"
-                triggerClassName="d-inline w-auto"
-                triggerContent={<>
-                    <a href="#" tabIndex={-1}>Launch demo modal</a>
-                </>}
-                maskOpacity={0.001}
-                depth={1040}
-            >
-                <div>Text</div>
-            </ModalDialog>
-
-
-
-
-            <h3>Automatically open&close the pop-up window</h3>
-            {/* ================================================================== */}
-            <ModalDialog
-                show={true}
-                autoClose={3000}
-                triggerClassName="d-inline w-auto"
-                triggerContent={<>
-                    <a href="#" tabIndex={-1}>Launch demo modal</a>
-                </>}
-                maskDisabled
-            >
-                <h4>This window will automatically close after 3 seconds :)</h4>
-                <p>You can click the button on the page to trigger the pop-up window.</p>
-            </ModalDialog>
-
-
-            <h3>Modal that cannot be closed</h3>
-            {/* ================================================================== */}
-            <ModalDialog
-                show={true}
-                closeOnlyBtn
-                closeDisabled
-            >
-                <h4>This is a modal that cannot be closed</h4>
-            </ModalDialog>
-
-
-
-
-            <h3>Draggable</h3>
-            {/* ================================================================== */}
-            <ModalDialog
-                draggable
-                draggedPreventOutsideScreen={{
-                    xAxis: true,
-                    yAxis: true
-                }}
-                ...
-            >
-                ...
-            </ModalDialog>
-
 
 
         </>
@@ -175,7 +110,7 @@ export default () => {
 ```
 
 
-## Display Number of CountDown
+## Display Number of CountDown & Automatically open&close the pop-up window
 
 ```js
 import React, { useEffect, useState, useRef, useCallback  } from "react";
@@ -234,7 +169,7 @@ export default () => {
                 autoClose={6000}
                 triggerClassName="d-inline w-auto"
                 triggerContent={<>
-                    <a href="#" tabIndex={-1}>Launch demo modal</a>
+                    <a href="#" tabIndex={-1} onClick={(e: React.MouseEvent) => {e.preventDefault()}}>Launch demo modal</a>
                 </>}
                 maskDisabled
             >
@@ -273,7 +208,7 @@ export default () => {
                 heading="Title Here"
                 triggerClassName="d-inline w-auto"
                 triggerContent={<>
-                    <a href="#" tabIndex={-1}>Launch demo modal</a>
+                    <a href="#" tabIndex={-1} onClick={(e: React.MouseEvent) => {e.preventDefault()}}>Launch demo modal</a>
                 </>}
                 onOpen={(e, closewin) => {
                     setCloseModalFunc(() => closewin);
@@ -477,46 +412,6 @@ export default () => {
 
 ## Using exposed OPEN and CLOSE methods
 
-
-```js
-import React, { useState } from "react";
-import ModalDialog from 'funda-ui/ModalDialog';
-
-export default () => {
-
-    const [modalOpenFunc, setModalOpenFunc] = useState<any>(null);
-
-    function handleClick(e: any) {
-        e.preventDefault();
-        if ( modalOpenFunc ) modalOpenFunc();
-    }
-
-
-    return (
-        <>
-
-            <a href="#" onClick={handleClick}>click here to use external scripts to trigger Open and Close events</a>
-            <ModalDialog
-                show={false}
-                onLoad={(openFunc, closeFunc) => {
-                    setModalOpenFunc(openFunc);
-                }}
-            >
-                <h4>This is a modal</h4>
-            </ModalDialog>
-
-
-
-        </>
-    );
-}
-```
-
-
-
-
-## Using exposed OPEN and CLOSE methods
-
 Lets you callback the handle exposed as attribute `ref`.
 
 
@@ -544,55 +439,16 @@ export default () => {
         <>
 
             <a href="#" onClick={handleOpen}>open modal</a>
+            &nbsp;&nbsp;|&nbsp;&nbsp;
             <a href="#" onClick={handleClose}>close modal</a>
             <ModalDialog
                 ref={modalHandleRef}
                 show={false}
+                maskDisabled
             >
                 <h4>This is a modal</h4>
             </ModalDialog>
 
-
-        </>
-    );
-}
-```
-
-
-
-## Custom close handler
-
-
-```js
-import React, { useState } from "react";
-import ModalDialog from 'funda-ui/ModalDialog';
-import Switch from 'funda-ui/Switch';
-
-
-export default () => {
-
-    const [closeModalFunc, setCloseModalFunc] = useState<Function | null>(null);
-
-    function handleCloseModal() {
-        closeModalFunc?.();
-    }
-
-    return (
-        <>
-            <ModalDialog
-                show={false}
-                heading="Title Here"
-                triggerClassName="d-inline w-auto"
-                triggerContent={<>
-                    <a href="#" tabIndex={-1}>Launch demo modal</a>
-                </>}
-                onOpen={(e, closewin) => {
-                    setCloseModalFunc(() => closewin);
-                }}
-            >
-
-                xxx
-            </ModalDialog>
 
         </>
     );
@@ -609,9 +465,10 @@ export default () => {
 import React, { useRef } from "react";
 import ModalDialog from 'funda-ui/ModalDialog';
 
-
 // child component
-import Child from "./Child";
+const Child = ({id}) => {
+    return <>ID: {id}</>;
+}
 
 export default () => {
 
@@ -622,10 +479,17 @@ export default () => {
 
             <ModalDialog
                 show={false}
-                ...
+                data="mydata"
+                heading="Title Here"
+                triggerClassName="d-inline w-auto"
+                triggerContent={<>
+                    <a href="#" tabIndex={-1} onClick={(e: React.MouseEvent) => {e.preventDefault()}}>Launch demo modal</a>
+                </>}
+                closeBtnClassName="btn bg-secondary text-white"
+                closeBtnLabel="Close"
             >
                 <div ref={formRef}>
-                    <Child id={xxx} key={Math.random()} /> {/* The child component in the Modal need to use [key] to ensure that they are updated at any time.*/}
+                    <Child id={Math.random()} key={Math.random()} /> {/* The child component in the Modal need to use [key] to ensure that they are updated at any time.*/}
                 </div>
             </ModalDialog>
 
@@ -635,6 +499,105 @@ export default () => {
 }
 ```
 
+
+
+## Fullscreen
+
+
+```js
+import React from "react";
+import ModalDialog from 'funda-ui/ModalDialog';
+
+export default () => {
+    return (
+        <>
+            <ModalDialog
+                ...
+                fullscreen
+                ...
+            >
+                <h4>This is a modal</h4>
+            </ModalDialog>
+        </>
+    );
+}
+```
+
+
+## Modal that cannot be closed
+
+
+```js
+import React from "react";
+import ModalDialog from 'funda-ui/ModalDialog';
+
+export default () => {
+    return (
+        <>
+            <ModalDialog
+                ...
+                closeOnlyBtn
+                closeDisabled
+                ...
+            >
+                <h4>This is a modal</h4>
+            </ModalDialog>
+        </>
+    );
+}
+```
+
+
+
+## Draggable
+
+
+```js
+import React from "react";
+import ModalDialog from 'funda-ui/ModalDialog';
+
+export default () => {
+    return (
+        <>
+            <ModalDialog
+                ...
+                draggable
+                draggedPreventOutsideScreen={{
+                    xAxis: true,
+                    yAxis: true
+                }}
+                ...
+            >
+                <h4>This is a modal</h4>
+            </ModalDialog>
+        </>
+    );
+}
+```
+
+
+## Adjust depth and matte visibility
+
+
+```js
+import React from "react";
+import ModalDialog from 'funda-ui/ModalDialog';
+
+export default () => {
+    return (
+        <>
+            <ModalDialog
+                ...
+                maskOpacity={0.001} // optional opacity
+                depth={1040}
+                ...
+            >
+                <h4>This is a modal</h4>
+            </ModalDialog>
+        </>
+    );
+}
+```
 
 
 
@@ -653,7 +616,7 @@ import ModalDialog from 'funda-ui/ModalDialog';
 | `modalBodyClassName` | string  | - | The extended class name of content area | - |
 | `modalFooterClassName` | string  | - | The extended class name of footer area | - |
 | `modalFooterExpandedContentClassName` | string  | - | The extended class name of footer content area | - |
-| `lockBodyScroll` | boolean  | true | Enables body scroll locking (for iOS Mobile and Tablet, Android, desktop Safari/Chrome/Firefox) without breaking scrolling of a target element. | - |
+| `lockBodyScroll` | boolean  | false | Enables body scroll locking (for iOS Mobile and Tablet, Android, desktop Safari/Chrome/Firefox) without breaking scrolling of a target element. | - |
 | `draggable` | boolean  | false | Pop-ups that can be dragged | - |
 | `draggedPreventOutsideScreen` | JSON Object  | - | Prevent dragged item to be dragged outside of screen. You can set the vertical or horizontal direction. such as `{xAxis: true, yAxis: true}` <blockquote>It is valid when `draggable` is "true"</blockquote> | - |
 | `depth` | number  | 1055 | Set the depth value of the control to control the display of the pop-up layer appear above. Please set it when multiple controls are used at the same time. | - |
@@ -674,12 +637,10 @@ import ModalDialog from 'funda-ui/ModalDialog';
 | `submitBtnClassName` | string  | - | Specify a class for submit button | - |
 | `submitBtnLabel` | string \| ReactNode  | - | Set a piece of text or HTML code for the submit button | - |
 | `fullscreen` | boolean  | false | Enable fullscreen modal. | - |
-| `enableVideo` | boolean  | false | Adapt the video to the window. For example, the content of the component can be written as: `<iframe width="560" height="315" src="https://www.youtube.com/embed/xxxxxx" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowFullScreen></iframe>` <br /> or <br />`<video playsInline controls poster="/assets/videos/480x270/demo.jpg" src="/assets/videos/480x270/demo.mp4"></video>` | - |
+| `enableVideo` | boolean  | false | Adapt the video to the window. For example, the content of the component can be written as: `<iframe width="560" height="315" src="https://www.xxx.com"></iframe>` <br /> or <br />`<video playsInline controls poster="/assets/videos/480x270/demo.jpg" src="/assets/videos/480x270/demo.mp4"></video>` | - |
 | `data`  <blockquote>You could use [key](https://react.dev/learn/rendering-lists#why-does-react-need-keys) instead of it</blockquote>  | any  | - | Incoming data, you can set the third parameter of `onSubmit`. <blockquote>Changes in the `data` value will cause the component to re-render. It will be used when the value or content does not change when switching routes and needs to re-render the component or get the request.</blockquote> | - |
 | `onLoad` | function  | - | Call a function when the modal is rendered. It returns two callback values. <br /> <ol><li>The first is the function of open(**Function**)</li><li>The second is the function of close (**Function**)</li></ol>. | - |
 | `onOpen` | function  | - | Call a function when the modal is opened. It returns two callback values, one is the trigger object and the other is the closing event (**Function**). | - |
 | `onClose` | function  | - | Call a function when the modal is closed. It returns a callback value which is the trigger object. | - |
 | `onSubmit` | function  | - | Call a function when the modal is submitted. It returns three callback values. <br /> <ol><li>The first is the trigger object</li><li>The second is the closing event (**Function**)</li><li> The third is a string passed by the `data` attribute</li></ol> | - |
-
-
 

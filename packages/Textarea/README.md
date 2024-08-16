@@ -256,6 +256,7 @@ export default () => {
                 label="String"
                 rows={4}
             />
+            <p>{textareaValue}</p>
 
         </>
     );
@@ -286,12 +287,13 @@ export default () => {
 
         <>
       
-            <button
-                type="button" 
+            <a 
+                href="#"
                 onClick={(e: React.MouseEvent) => {
+                    e.preventDefault();
                     setShow(true);
                 }}
-            >Open Textarea Popup</button>
+            >Open Textarea Popup</a>
 
 
          

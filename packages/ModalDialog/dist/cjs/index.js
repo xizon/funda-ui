@@ -4447,7 +4447,7 @@ var ModalDialog = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)
   var DEPTH = depth || 1055; // the default value same as bootstrap
   var M_WIDTH = fullscreen ? undefined : typeof maxWidth === 'function' ? maxWidth() : maxWidth ? maxWidth : undefined;
   var M_HEIGHT = typeof minHeight === 'function' ? minHeight() : minHeight ? minHeight : undefined;
-  var LOCK_BODY_SCROLL = typeof lockBodyScroll === 'undefined' ? true : lockBodyScroll;
+  var LOCK_BODY_SCROLL = typeof lockBodyScroll === 'undefined' ? false : lockBodyScroll;
   var uniqueID = (0,funda_utils__WEBPACK_IMPORTED_MODULE_2__.useComId)();
   var modalRef = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(null);
   var triggerRef = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(null);

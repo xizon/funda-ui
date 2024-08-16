@@ -127,6 +127,10 @@ export default () => {
 
 ### c) Enhanced Responsive
 
+Valid when the device width is less than or equal to 768px.
+
+
+
 ```js
 import React from "react";
 import {
@@ -192,6 +196,8 @@ export default () => {
 
 
 ### d) Enhanced Responsive with Scroll Bars
+
+Valid when the device width is less than or equal to 768px.
 
 ```js
 import React from "react";

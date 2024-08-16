@@ -104,6 +104,7 @@ export default () => {
         <>
 
             <a href="#" onClick={handleClick1}>checked</a>
+            &nbsp;&nbsp;|&nbsp;&nbsp;
             <a href="#" onClick={handleClick2}>unchecked</a>
             
             <Switch

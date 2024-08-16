@@ -145,7 +145,7 @@ const ModalDialog = forwardRef((props: ModalDialogProps, externalRef: React.Forw
     const DEPTH = depth || 1055;  // the default value same as bootstrap
     const M_WIDTH = fullscreen ? undefined : (typeof maxWidth === 'function' ? maxWidth() : maxWidth ? maxWidth : undefined);
     const M_HEIGHT = typeof minHeight === 'function' ? minHeight() : minHeight ? minHeight : undefined;
-    const LOCK_BODY_SCROLL = typeof lockBodyScroll === 'undefined' ? true : lockBodyScroll;
+    const LOCK_BODY_SCROLL = typeof lockBodyScroll === 'undefined' ? false : lockBodyScroll;
 
     const uniqueID = useComId();
     const modalRef = useRef<any>(null);

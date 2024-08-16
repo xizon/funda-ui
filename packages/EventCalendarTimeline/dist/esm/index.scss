@@ -251,7 +251,6 @@
     --e-cal-tl-table-event-font-size: 0.75rem;
     --e-cal-tl-table-event-hover-bg: rgba(255, 240, 227, 0);
     --e-cal-tl-table-event-hover-shadow: inset 0px 0px 0px 1px rgba(0,0,0,0.15);
-    
 
 
 
@@ -436,6 +435,13 @@
         }
 
 
+        &:not(.empty):hover {
+            .e-cal-tl__day__eventdel {
+                display: block;
+            }
+        } 
+
+
         &.has-event {
             .e-cal-tl-table__cell-cushion {
                 padding: 0;
@@ -446,6 +452,23 @@
             position: absolute;
             width: 100%;
             font-size: var(--e-cal-tl-table-event-font-size);
+        }
+
+        .e-cal-tl__day__eventdel {
+            position: absolute;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            display: none;
+            color: var(--e-cal-tl-table-delete-btn-color);
+    
+            svg {
+                fill: var(--e-cal-tl-table-delete-btn-color);
+
+                path {
+                    fill: var(--e-cal-tl-table-delete-btn-color);
+                }
+            }
         }
 
     }

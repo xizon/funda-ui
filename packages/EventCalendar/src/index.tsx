@@ -44,12 +44,18 @@ type EventCalendarProps = {
     modalSubmitBtnLabel?: string | React.ReactNode;
     modalSubmitDeleteBtnClassName?: string;
     modalSubmitDeleteBtnLabel?: string | React.ReactNode;
-    onModalEditOpen?: (currentData: any) => void;
+    onModalEditOpen?: (currentData: any, openwin: any) => void;
     onModalEditClose?: (currentData: any) => void;
     onModalDeleteOpen?: (currentData: any) => void;
     onModalDeleteClose?: (currentData: any) => void;
     onModalEditEvent?: (currentData: any, closewin: any) => void;
     onModalDeleteEvent?: (currentData: any, closewin: any) => void;
+    //
+    onCellMouseEnter?: (el: any) => void;
+    onCellMouseLeave?: (el: any) => void;
+    onCellClick?: (el: any) => void;
+    
+
 }
 
 
@@ -91,7 +97,12 @@ const EventCalendar = (props: EventCalendarProps) => {
         onModalDeleteOpen,
         onModalDeleteClose,
         onModalEditEvent,
-        onModalDeleteEvent
+        onModalDeleteEvent,
+
+        //
+        onCellMouseEnter,
+        onCellMouseLeave,
+        onCellClick,
     } = props;
 
     const DAYS = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
@@ -500,8 +511,16 @@ const EventCalendar = (props: EventCalendarProps) => {
                                         data-date={getCalendarDate(_dateShow)}
                                         data-day={padZero(d)}
                                         data-week={i}
+                                        onMouseEnter={(e: React.MouseEvent) => {
+                                            onCellMouseEnter?.(e);
+                                        }}
+                                        onMouseLeave={(e: React.MouseEvent) => {
+                                            onCellMouseLeave?.(e);
+                                        }}
                                         onClick={(e: React.MouseEvent) => {
-
+                                            //
+                                            onCellClick?.(e);
+        
                                             if (d > 0) {
                                                 handleDayChange(e, d);
 
@@ -511,11 +530,10 @@ const EventCalendar = (props: EventCalendarProps) => {
                                                 } : _currentData[0]);
 
                                                 if (EVENTS_ENABLED) {
-                                                    setShowEdit(true);
                                                     onModalEditOpen?.(_currentData.length === 0 ? {
                                                         id: 0,
                                                         date: getCalendarDate(`${year}-${month + 1}-${d}`)
-                                                    } : _currentData[0]);
+                                                    } : _currentData[0], () => setShowEdit(true));
                                                 }
                                             }
                                         }}
@@ -675,7 +693,6 @@ const EventCalendar = (props: EventCalendarProps) => {
                     submitBtnClassName={modalSubmitBtnClassName || 'btn btn-primary'}
                     submitBtnLabel={modalSubmitBtnLabel || <>Save</>}
                     onClose={(e) => {
-
                         setTimeout(() => {
                             setShowEdit(false);
 

@@ -1,5 +1,7 @@
 # Event Calendar Timeline
 
+> There must be at least one div in the outermost layer. such as `<div><EventCalendarTimeline /></div>`
+
 ## General
 
 
@@ -17,7 +19,7 @@ export default () => {
     // default data
     const defaultData = [
         {
-            "listSection": "Smith One",
+            "listSection": {"id": 100, "title":"Smith One"},
             "eventSources": [
                 {
                     "id": 4505,
@@ -212,7 +214,7 @@ export default () => {
             ]
         },
         {
-            "listSection": "David",
+            "listSection": {"id": 101, "title":"Jerry"},
             "eventSources": [
                 {
                     "id": 4509,
@@ -253,7 +255,7 @@ export default () => {
             ]
         },
         {
-            "listSection": "Dony Marketplace",
+            "listSection": {"id": 102, "title":"Dony Marketplace"},
             "eventSources": [
                 {
                     "id": 4574,
@@ -292,6 +294,45 @@ export default () => {
                     }
                 }
             ]
+        },
+        {
+            "listSection": {"id": 103, "title":"David"},
+            "eventSources": [
+                {
+                    "id": 6667,
+                    "date": "2023-12-03",
+                    "time": "",
+                    "data": "<span data-work=\"true\" class=\"text-warning\">Rest </span>",
+                    "dataTooltip": `<span>Rest</span>`,
+                    "eventStyles": {
+                        "background": "rgb(255, 240, 227)"
+                    }
+                }
+            ]
+        },
+        {
+            "listSection": {"id": 104, "title":"Jone"},
+            "eventSources": []
+        },
+        {
+            "listSection": {"id": 105, "title":"Smith"},
+            "eventSources": []
+        },   
+        {
+            "listSection": {"id": 106, "title":"Chuckie"},
+            "eventSources": []
+        },   
+        {
+            "listSection": {"id": 107, "title":"Li Yun"},
+            "eventSources": []
+        },   
+        {
+            "listSection": {"id": 108, "title":"Smash Dom"},
+            "eventSources": []
+        },   
+        {
+            "listSection": {"id": 109, "title":"Cool"},
+            "eventSources": []
         }
     ];
 
@@ -314,13 +355,13 @@ export default () => {
     return (
         <>
    
-            <div style={{minHeight: '150px', width: '100%'}}>
+            <div style={{width: '100%'}}>
                 <EventCalendarTimeline
                     customTodayDate={defaultCustomTodayDate}
                     eventsValue={data}
+                    cellCloseBtnClassName="d-none" // if hidden delete button, set it to `d-none`
                     tableListSectionTitle="Name"
                     langWeek={['<small class="ps-1">MON</small>', '<small class="ps-1">TUE</small>', '<small class="ps-1">WED</small>', '<small class="ps-1">THU</small>', '<small class="ps-1">FRI</small>', '<small class="ps-1">SAT</small>', '<small class="ps-1">SUN</small>']}
-                    cellCloseBtnClassName="d-none"
                     onChangeDate={(e: any, currentData: any) => {
                         console.log(e.currentTarget.dataset.date, e.currentTarget.dataset.week); // 2023-11-22, 2
                         console.log(currentData); // {id: 0, date: '2023-11-22'}  or {id: 1, date: '2023-11-20', time: '', data: 'event 1'}
@@ -365,11 +406,347 @@ import 'funda-ui/EventCalendarTimeline/index.css';
 
 export default () => {
 
+    // default data
+    const defaultData = [
+        {
+            "listSection": {"id": 100, "title":"Smith One"},
+            "eventSources": [
+                {
+                    "id": 4505,
+                    "date": "2024-01-06",
+                    "time": "",
+                    "data": "<span data-work=\"true\" class=\"text-warning\">Rest </span>",
+                    "dataTooltip": `<span>Rest</span>`,
+                    "eventStyles": {
+                        "background": "rgb(255, 240, 227)"
+                    }
+                },
+                {
+                    "id": 4508,
+                    "date": "2023-12-04",
+                    "time": "",
+                    "data": "<span data-work=\"true\" class=\"text-primary\">Night Shift <span class=\"badge rounded-pill bg-primary mx-1\">IM</span></span>",
+                    "dataTooltip": `<span>Night Shift <span class=\"badge rounded-pill bg-primary mx-1\">IM</span></span>`,
+                    "eventStyles": {
+                        "background": "rgb(203, 228, 240)"
+                    }
+                },
+                {
+                    "id": 4510,
+                    "date": "2024-02-20",
+                    "time": "",
+                    "data": "<span data-work=\"true\" class=\"text-primary\"> </span>",
+                    "dataTooltip": `<span>Work Title 1</span>`,
+                    "eventStyles": {
+                        "background": "rgb(203, 228, 240)"
+                    }
+                },
+                {
+                    "id": 4513,
+                    "date": "2024-02-11",
+                    "time": "",
+                    "data": "<span data-work=\"true\" class=\"text-warning\">Rest </span>",
+                    "dataTooltip": `<span>Rest</span>`,
+                    "eventStyles": {
+                        "background": "rgb(255, 240, 227)"
+                    }
+                },
+                {
+                    "id": 4516,
+                    "date": "2023-12-30",
+                    "time": "",
+                    "data": "<span data-work=\"true\" class=\"text-warning\">Rest </span>",
+                    "dataTooltip": `<span>Rest</span>`,
+                    "eventStyles": {
+                        "background": "rgb(255, 240, 227)"
+                    }
+                },
+                {
+                    "id": 4521,
+                    "date": "2024-01-20",
+                    "time": "",
+                    "data": "<span data-work=\"true\" class=\"text-warning\">Rest </span>",
+                    "dataTooltip": `<span>Rest</span>`,
+                    "eventStyles": {
+                        "background": "rgb(255, 240, 227)"
+                    }
+                },
+                {
+                    "id": 4524,
+                    "date": "2023-12-05",
+                    "time": "",
+                    "data": "<span data-work=\"true\" class=\"text-primary\">Work Title 1 </span>",
+                    "dataTooltip": `<span>Work Title 1</span>`,
+                    "eventStyles": {
+                        "background": "rgb(203, 228, 240)"
+                    }
+                },
+                {
+                    "id": 4525,
+                    "date": "2023-12-19",
+                    "time": "",
+                    "data": "<span data-work=\"true\" class=\"text-primary\">Work Title 1 </span>",
+                    "dataTooltip": `<span>Work Title 1</span>`,
+                    "eventStyles": {
+                        "background": "rgb(203, 228, 240)"
+                    }
+                },
+                {
+                    "id": 4527,
+                    "date": "2024-02-18",
+                    "time": "",
+                    "data": "<span data-work=\"true\" class=\"text-warning\">Rest </span>",
+                    "dataTooltip": `<span>Rest</span>`,
+                    "eventStyles": {
+                        "background": "rgb(255, 240, 227)"
+                    }
+                },
+                {
+                    "id": 4528,
+                    "date": "2024-01-23",
+                    "time": "",
+                    "data": "<span data-work=\"true\" class=\"text-primary\">Work Title 1 </span>",
+                    "dataTooltip": `<span>Work Title 1</span>`,
+                    "eventStyles": {
+                        "background": "rgb(203, 228, 240)"
+                    }
+                },
+                {
+                    "id": 4529,
+                    "date": "2023-12-10",
+                    "time": "",
+                    "data": "<span data-work=\"true\" class=\"text-warning\">Rest </span>",
+                    "dataTooltip": `<span>Rest</span>`,
+                    "eventStyles": {
+                        "background": "rgb(255, 240, 227)"
+                    }
+                },
+                {
+                    "id": 4534,
+                    "date": "2023-12-09",
+                    "time": "",
+                    "data": "<span data-work=\"true\" class=\"text-warning\">Rest </span>",
+                    "dataTooltip": `<span>Rest</span>`,
+                    "eventStyles": {
+                        "background": "rgb(255, 240, 227)"
+                    }
+                },
+                {
+                    "id": 4535,
+                    "date": "2024-02-13",
+                    "time": "",
+                    "data": "<span data-work=\"true\" class=\"text-primary\">Work Title 1 </span>",
+                    "dataTooltip": `<span>Work Title 1</span>`,
+                    "eventStyles": {
+                        "background": "rgb(203, 228, 240)"
+                    }
+                },
+                {
+                    "id": 4537,
+                    "date": "2024-01-16",
+                    "time": "",
+                    "data": "<span data-work=\"true\" class=\"text-primary\">Work Title 1 </span>",
+                    "dataTooltip": `<span>Work Title 1</span>`,
+                    "eventStyles": {
+                        "background": "rgb(203, 228, 240)"
+                    }
+                },
+                {
+                    "id": 4538,
+                    "date": "2024-02-03",
+                    "time": "",
+                    "data": "<span data-work=\"true\" class=\"text-warning\">Rest </span>",
+                    "dataTooltip": `<span>Rest</span>`,
+                    "eventStyles": {
+                        "background": "rgb(255, 240, 227)"
+                    }
+                },
+                {
+                    "id": 4541,
+                    "date": "2024-02-25",
+                    "time": "",
+                    "data": "<span data-work=\"true\" class=\"text-warning\">Rest </span>",
+                    "dataTooltip": `<span>Rest</span>`,
+                    "eventStyles": {
+                        "background": "rgb(255, 240, 227)"
+                    }
+                },
+                {
+                    "id": 4543,
+                    "date": "2023-12-26",
+                    "time": "",
+                    "data": "<span data-work=\"true\" class=\"text-primary\">Work Title 1 </span>",
+                    "dataTooltip": `<span>Work Title 1</span>`,
+                    "eventStyles": {
+                        "background": "rgb(203, 228, 240)"
+                    }
+                },
+                {
+                    "id": 4544,
+                    "date": "2024-01-13",
+                    "time": "",
+                    "data": "<span data-work=\"true\" class=\"text-warning\">Rest </span>",
+                    "dataTooltip": `<span>Rest</span>`,
+                    "eventStyles": {
+                        "background": "rgb(255, 240, 227)"
+                    }
+                },
+                {
+                    "id": 4546,
+                    "date": "2023-12-23",
+                    "time": "",
+                    "data": "<span data-work=\"true\" class=\"text-warning\">Rest </span>",
+                    "dataTooltip": `<span>Rest</span>`,
+                    "eventStyles": {
+                        "background": "rgb(255, 240, 227)"
+                    }
+                }
+            ]
+        },
+        {
+            "listSection": {"id": 101, "title":"Jerry"},
+            "eventSources": [
+                {
+                    "id": 4509,
+                    "date": "2024-02-28",
+                    "time": "",
+                    "data": "<span data-work=\"true\" class=\"text-primary\">Night Shift </span>",
+                    "eventStyles": {
+                        "background": "rgb(203, 228, 240)"
+                    }
+                },
+                {
+                    "id": 4512,
+                    "date": "2024-01-15",
+                    "time": "",
+                    "data": "<span data-work=\"true\" class=\"text-primary\">Work Title </span>",
+                    "eventStyles": {
+                        "background": "rgb(203, 228, 240)"
+                    }
+                },
+                {
+                    "id": 4515,
+                    "date": "2024-01-01",
+                    "time": "",
+                    "data": "<span data-work=\"true\" class=\"text-primary\">Work Title </span>",
+                    "eventStyles": {
+                        "background": "rgb(203, 228, 240)"
+                    }
+                },
+                {
+                    "id": 4567,
+                    "date": "2024-01-03",
+                    "time": "",
+                    "data": "<span data-work=\"true\" class=\"text-primary\">Night Shift </span>",
+                    "eventStyles": {
+                        "background": "rgb(203, 228, 240)"
+                    }
+                }
+            ]
+        },
+        {
+            "listSection": {"id": 102, "title":"Dony Marketplace"},
+            "eventSources": [
+                {
+                    "id": 4574,
+                    "date": "2024-01-11",
+                    "time": "",
+                    "data": "<span data-work=\"true\" class=\"text-warning\">Rest </span>",
+                    "eventStyles": {
+                        "background": "rgb(255, 240, 227)"
+                    }
+                },
+                {
+                    "id": 4575,
+                    "date": "2024-01-12",
+                    "time": "",
+                    "data": "<span data-work=\"true\" class=\"text-primary\">Work Title 1 </span>",
+                    "eventStyles": {
+                        "background": "rgb(203, 228, 240)"
+                    }
+                },
+                {
+                    "id": 4576,
+                    "date": "2024-01-09",
+                    "time": "",
+                    "data": "<span data-work=\"true\" class=\"text-primary\">Work Title 1 </span>",
+                    "eventStyles": {
+                        "background": "rgb(203, 228, 240)"
+                    }
+                },
+                {
+                    "id": 4578,
+                    "date": "2024-01-14",
+                    "time": "",
+                    "data": "<span data-work=\"true\" class=\"text-warning\">Rest </span>",
+                    "eventStyles": {
+                        "background": "rgb(255, 240, 227)"
+                    }
+                }
+            ]
+        },
+        {
+            "listSection": {"id": 103, "title":"David"},
+            "eventSources": [
+                {
+                    "id": 6667,
+                    "date": "2023-12-03",
+                    "time": "",
+                    "data": "<span data-work=\"true\" class=\"text-warning\">Rest </span>",
+                    "dataTooltip": `<span>Rest</span>`,
+                    "eventStyles": {
+                        "background": "rgb(255, 240, 227)"
+                    }
+                }
+            ]
+        },
+        {
+            "listSection": {"id": 104, "title":"Jone"},
+            "eventSources": []
+        },
+        {
+            "listSection": {"id": 105, "title":"Smith"},
+            "eventSources": []
+        },   
+        {
+            "listSection": {"id": 106, "title":"Chuckie"},
+            "eventSources": []
+        },   
+        {
+            "listSection": {"id": 107, "title":"Li Yun"},
+            "eventSources": []
+        },   
+        {
+            "listSection": {"id": 108, "title":"Smash Dom"},
+            "eventSources": []
+        },   
+        {
+            "listSection": {"id": 109, "title":"Cool"},
+            "eventSources": []
+        }
+    ];
+
+    const defaultCustomTodayDate = '2023-12-01';
+
     return (
         <>
-            <div style={{height: '100px', width: '600px'}}>
-                <EventCalendarTimeline />
+            <div style={{height: '280px'}}> {/* This layer is the total height of yourself plus the header and date areas */}
+                <div style={{height: '200px', width: '600px'}}>  {/* This layer is the height at which the list is scrollable */}
+                    <EventCalendarTimeline
+                        customTodayDate={defaultCustomTodayDate}
+                        eventsValue={defaultData}
+                        cellCloseBtnClassName="d-none" // if hidden delete button, set it to `d-none`
+                        tableListSectionTitle="Name"
+                        langWeek={['<small class="ps-1">MON</small>', '<small class="ps-1">TUE</small>', '<small class="ps-1">WED</small>', '<small class="ps-1">THU</small>', '<small class="ps-1">FRI</small>', '<small class="ps-1">SAT</small>', '<small class="ps-1">SUN</small>']}
+                        forwardAndBackFillDisabled
+                        draggable
+                        showWeek
+                        autoScroll
+
+                    />
+                </div>
             </div>
+
             
                   
         </>
@@ -414,6 +791,7 @@ The capabilities like multi-day events, responsiveness are supported.
 ```js
 import React, { useState, useEffect, useRef } from "react";
 import EventCalendarTimeline from 'funda-ui/EventCalendarTimeline';
+import Input from 'funda-ui/Input';
 
 // component styles
 import 'funda-ui/EventCalendarTimeline/index.css';
@@ -536,10 +914,11 @@ function validate(form: any, lang: any, callback: any) {
 
 export default () => {
 
+
     // default data
     const defaultData = [
         {
-            "listSection": "Smith One",
+            "listSection": {"id": 100, "title":"Smith One"},
             "eventSources": [
                 {
                     "id": 4505,
@@ -734,7 +1113,7 @@ export default () => {
             ]
         },
         {
-            "listSection": "David",
+            "listSection": {"id": 101, "title":"Jerry"},
             "eventSources": [
                 {
                     "id": 4509,
@@ -775,7 +1154,7 @@ export default () => {
             ]
         },
         {
-            "listSection": "Dony Marketplace",
+            "listSection": {"id": 102, "title":"Dony Marketplace"},
             "eventSources": [
                 {
                     "id": 4574,
@@ -814,6 +1193,45 @@ export default () => {
                     }
                 }
             ]
+        },
+        {
+            "listSection": {"id": 103, "title":"David"},
+            "eventSources": [
+                {
+                    "id": 6667,
+                    "date": "2023-12-03",
+                    "time": "",
+                    "data": "<span data-work=\"true\" class=\"text-warning\">Rest </span>",
+                    "dataTooltip": `<span>Rest</span>`,
+                    "eventStyles": {
+                        "background": "rgb(255, 240, 227)"
+                    }
+                }
+            ]
+        },
+        {
+            "listSection": {"id": 104, "title":"Jone"},
+            "eventSources": []
+        },
+        {
+            "listSection": {"id": 105, "title":"Smith"},
+            "eventSources": []
+        },   
+        {
+            "listSection": {"id": 106, "title":"Chuckie"},
+            "eventSources": []
+        },   
+        {
+            "listSection": {"id": 107, "title":"Li Yun"},
+            "eventSources": []
+        },   
+        {
+            "listSection": {"id": 108, "title":"Smash Dom"},
+            "eventSources": []
+        },   
+        {
+            "listSection": {"id": 109, "title":"Cool"},
+            "eventSources": []
         }
     ];
 
@@ -829,6 +1247,11 @@ export default () => {
     const [updateCalendarData, setUpdateCalendarData] = useState<boolean>(false);
     const [modalFormData, setModalFormData] = useState<any>(null);
 
+    const itemExist = (arr: any[], date: string) => {
+        return arr.some((o) => {
+            return o.date == date
+        });
+    };
 
     useEffect(() => {
 
@@ -844,38 +1267,48 @@ export default () => {
     return (
         <>
    
-            <div style={{ height: '500px', width: '1280px' }}>
+            <div style={{ height: '500px', width: '100%' }}>
                 <EventCalendarTimeline
                     customTodayDate={defaultCustomTodayDate}
                     eventsValue={data}
+                    cellCloseBtnClassName="d-none" // if hidden delete button, set it to `d-none`
                     tableListSectionTitle="Name"
                     langWeek={['<small class="ps-1">MON</small>', '<small class="ps-1">TUE</small>', '<small class="ps-1">WED</small>', '<small class="ps-1">THU</small>', '<small class="ps-1">FRI</small>', '<small class="ps-1">SAT</small>', '<small class="ps-1">SUN</small>']}
-                    cellCloseBtnClassName="d-none"
                     forwardAndBackFillDisabled
                     draggable
                     showWeek
                     autoScroll
 
                     modalMaxWidth="850px"
-                    modalHeading="Settings"
+                    modalHeading={<>Settings</>}
                     modalCloseBtnClassName={'btn btn-secondary'}
-                    modalCloseBtnLabel="Cancel"
                     modalSubmitBtnClassName={'btn btn-primary'}
+                    modalSubmitDeleteBtnClassName={'btn btn-danger'}
                     modalSubmitBtnLabel={<>Confirm</>}
+                    modalCloseBtnLabel={<>Cancel</>}
                     modalSubmitDeleteBtnLabel={<>Delete</>}
                     modalDeleteContent={<>
                     
+                    
                         <div ref={formDeleteRef}>
-    
-                            <input
+
+                            <Input
                                 tabIndex={-1}
+                                wrapperClassName=""
                                 type="hidden"
-                                defaultValue={modalFormData ? modalFormData.id : ''}
+                                value={modalFormData ? modalFormData.id : ''}
                                 name="post_id"
                             />
-                            Are you sure?（ID: {modalFormData ? modalFormData.id : ''}）
+                            <Input
+                                tabIndex={-1}
+                                wrapperClassName=""
+                                type="hidden"
+                                value={modalFormData && modalFormData.rowData ? modalFormData.rowData.title : ''}
+                                name="post_row"
+                            />
+
+                            Are you sure?（ID: {modalFormData ? modalFormData.id : ''}） - {modalFormData && modalFormData.rowData ? modalFormData.rowData.title : ''}
                         </div>
-    
     
                     
                     </>}
@@ -889,11 +1322,12 @@ export default () => {
                                 Row
                                 </div>
                                 <div className="col">
-                                    <input
-                                        className="form-control"
+                                    <Input
+                                        
                                         type="text"
-                                        defaultValue={modalFormData ? modalFormData.rowData : ''}
+                                        value={modalFormData && modalFormData.rowData ? modalFormData.rowData.title : ''}
                                         name="post_row"
+                                        readOnly
                                     />
                                 </div>
                             </div>
@@ -905,10 +1339,10 @@ export default () => {
                                     Content
                                 </div>
                                 <div className="col">
-                                    <input
-                                        className="form-control"
+                                    <Input
+                                        
                                         type="text"
-                                        defaultValue={modalFormData ? modalFormData.content : ''}
+                                        value={modalFormData ? modalFormData.content : ''}
                                         name="post_title"
                                     />
                                 </div>
@@ -922,10 +1356,10 @@ export default () => {
                                     Post Date
                                 </div>
                                 <div className="col">
-                                    <input
-                                        className="form-control"
+                                    <Input
+                                        
                                         type="date"
-                                        defaultValue={modalFormData ? modalFormData.date : ''}
+                                        value={modalFormData ? modalFormData.date : ''}
                                         name="post_date"
                                     />
                                 </div>
@@ -937,7 +1371,12 @@ export default () => {
     
     
                     </>}
-                    onModalEditOpen={(currentData: any) => {
+                    onModalEditOpen={(currentData: any, openwin: any) => {
+                        // open the modal
+                        if (currentData.rowData !== '') openwin();
+                        
+
+                        console.log('onModalEditOpen: ', currentData);
                         setModalFormData({
                             rowData: currentData.rowData,
                             id: currentData.id,
@@ -945,7 +1384,11 @@ export default () => {
                             date: currentData.date
                         })
                     }}
+                    onModalEditClose={(currentData: any) => {
+                        setModalFormData(null);
+                    }}
                     onModalDeleteOpen={(currentData: any) => {
+                        console.log('onModalDeleteOpen: ', currentData);
                         setModalFormData({
                             rowData: currentData.rowData,
                             id: currentData.id,
@@ -959,9 +1402,69 @@ export default () => {
                         validate(formRef.current, {
                             success: 'Successfully',
                             empty: 'Do not empty'
-                        }, (formData: any) => {
+                        }, (formData) => {
                             console.log('submit: ', formData);
     
+                            // update data
+                            const newData = {
+                                id: Math.random(),
+                                date: formData.post_date,
+                                time: '',
+                                data: formData.post_title,
+                                dataTooltip: formData.post_title,
+                                eventStyles: {
+                                    background: 'rgb(203, 240, 207)'
+                                }
+                            };
+        
+                            setData((prevState: any[]) => {
+                                const _data = prevState;
+
+                                // current row
+                                const currentRowIndex = _data.findIndex((o) => o.listSection.title == formData.post_row);
+                                if (currentRowIndex < 0) return _data;
+
+                                // current item from row
+                                _data.forEach((item) => {
+                                    if (item.listSection.title == formData.post_row) {
+                                        
+                                        const _curRowData = JSON.parse(JSON.stringify(item.eventSources));
+
+                                        //-----
+                                        // delete old item
+                                        const currentItemIndex = _curRowData.findIndex((o) => o.date == formData.post_date);
+
+                                        if (itemExist(_curRowData, formData.post_date)) {
+                                            const _oldRowData = _curRowData[currentItemIndex].rowData;
+                                            const _oldEventId = _curRowData[currentItemIndex].id;
+                                            const _oldEventStyles = _curRowData[currentItemIndex].eventStyles;
+                                            const _oldEventTime = _curRowData[currentItemIndex].time;
+
+
+                                            _curRowData.splice(currentItemIndex, 1);
+                                            newData.rowData = _oldRowData;
+                                            newData.id = _oldEventId;
+                                            newData.eventStyles = _oldEventStyles;
+                                            newData.time = _oldEventTime;
+                                        }
+
+                                        // add new item
+                                        _curRowData.push(newData);
+
+                                        // remove Duplicate objects from JSON Array
+                                        const clean = _curRowData.filter((item, index, self) => index === self.findIndex((t) => (t.date === item.date)));
+
+                                        // update current row data
+                                        item.eventSources = clean;
+                                        //-----
+                                    }
+                                });
+                        
+                                return _data;
+                            });
+
+
+
                             // close the modal
                             closewin();
                         });
@@ -972,26 +1475,58 @@ export default () => {
                         validate(formDeleteRef.current, {
                             success: 'Successfully',
                             empty: 'Do not empty'
-                        }, (formData: any) => {
+                        }, (formData) => {
                             console.log('submit: ', formData);
-    
+
+                             setData((prevState: any[]) => {
+                                const _data = prevState;
+
+                                // current row
+                                const currentRowIndex = _data.findIndex((o) => o.listSection.title == formData.post_row);
+                                if (currentRowIndex < 0) return _data;
+
+                                // current item from row
+                                _data.forEach((item) => {
+                                    if (item.listSection.title == formData.post_row) {
+                                        
+                                        const _curRowData = JSON.parse(JSON.stringify(item.eventSources));
+
+                                        //-----
+                                        // delete data
+                                        const currentItemIndex = _curRowData.findIndex((o) => o.id == formData.post_id);
+                                        if (currentItemIndex >= 0) {
+                                            _curRowData.splice(currentItemIndex, 1);
+                                        }
+
+                                        // update current row data
+                                        item.eventSources = _curRowData;
+                                        //-----
+                                    }
+                                });
+                        
+                                return _data;
+                            });
+
+                            //
+                            setModalFormData(null);
+
                             // close the modal
                             closewin();
                         });
     
                     }}
                     onChangeDate={(e: any, currentData: any) => {
-                        console.log(e.currentTarget.dataset.date, e.currentTarget.dataset.week); // 2023-11-22, 2
-                        console.log(currentData); // {rowData: 'Dony Marketplace', id: 0, date: '2023-11-22'}  or {rowData: 'Dony Marketplace', id: 1, date: '2023-11-20', time: '', data: 'event 1'}
+                        console.log('-> onChangeDate: ', e.currentTarget.dataset.date, e.currentTarget.dataset.week); // 2023-11-22, 2
+                        console.log('-> onChangeDate: ', currentData); // {"rowData":{"id":101,"title":"Jerry"},"id":0,"date":"2023-12-02"}  or  {"id":6667,"date":"2023-12-03","time":"","data":"<span data-work=\"true\" class=\"text-warning\">Rest </span>","dataTooltip":"<span>Rest</span>","eventStyles":{"background":"rgb(255, 240, 227)"},"rowData":{"id":103,"title":"David"}}
                     }}
                     onChangeMonth={(currentData: any) => {
-                        console.log(currentData); // {day: 22, month: 10, year: 2024}
+                        console.log('-> onChangeMonth: ', currentData); // {day: 22, month: 10, year: 2024}
                     }}
                     onChangeYear={(currentData: any) => {
-                        console.log(currentData); // {day: 22, month: 10, year: 2030}
+                        console.log('-> onChangeYear: ', currentData); // {day: 22, month: 10, year: 2030}
                     }}
                     onChangeToday={(currentData: any) => {
-                        console.log(currentData); // {day: 22, month: 10, year: 2024}
+                        console.log('-> onChangeToday: ', currentData); // {day: 22, month: 10, year: 2024}
                     }}
 
                 />
@@ -1013,7 +1548,7 @@ import EventCalendarTimeline from 'funda-ui/EventCalendarTimeline';
 | Property | Type | Default | Description | Required |
 | --- | --- | --- | --- | --- |
 | `customTodayDate` | string  | - | Specify a default today. such as `2023-11-16` | - |
-| `eventsValue` | array  | `[]` | Specify the default value for all events. Its properties are described below in the documentation. such as `[{id:1,date:'2023-11-20',time:'',data:'event 1'},{id:2,date:'2023-9-22',time:'',data:'event 2'},{id:3,date:'2023-09-12',time:'',data:'<del>very long event string</del> here, event 3',eventStyles:{background:'rgb(255, 240, 227)'}}]` | ✅ |
+| `eventsValue` | array  | `[]` | Specify the default value for all events. Its properties are described below in the documentation. such as `[{"listSection":{"id": 100, "title":"Smith One"},"eventSources":[{"id":1,"date":"2024-01-06","time":"","data":"<span data-work=\"true\" class=\"text-warning\">Rest </span>","dataTooltip":"<span>Rest</span>","eventStyles":{"background":"rgb(255, 240, 227)"}},{"id":2,"date":"2023-12-04","time":"","data":"<span data-work=\"true\" class=\"text-primary\">Night Shift <span class=\"badge rounded-pill bg-primary mx-1\">IM</span></span>","dataTooltip":"<span>Night Shift</span>","eventStyles":{"background":"rgb(203, 228, 240)"}}]},{"listSection":{"id": 101, "title":"Jerry"},"eventSources":[{"id":3,"date":"2024-02-28","time":"","data":"<span data-work=\"true\" class=\"text-primary\">Night Shift </span>","eventStyles":{"background":"rgb(203, 228, 240)"}}]},{"listSection":{"id": 103, "title":"David"},"eventSources":[]}]` | ✅ |
 | `langWeek` | array  | `['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN']` | Localization in the component of week sequence. <blockquote>Support html tags. <br />such as `['<small>MON</small>', '<small>TUE</small>', '<small>WED</small>', '<small>THU</small>', '<small>FRI</small>', '<small>SAT</small>', '<small>SUN</small>']`</blockquote> | - |
 | `langWeekFull` | array  | `['MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY', 'SATURDAY', 'SUNDAY']` | Localization in the component of full week sequence. <blockquote>This attribute is not valid yet</blockquote> | - |
 | `langMonths` | array  | `['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC']` | Localization in the component of months sequence. | - |
@@ -1050,18 +1585,39 @@ import EventCalendarTimeline from 'funda-ui/EventCalendarTimeline';
 | `modalSubmitBtnLabel` | string \| ReactNode  | - | **For `<ModalDialog />`** Set a piece of text or HTML code for the submit button | - |
 | `modalSubmitDeleteBtnClassName` | string  | - | **For `<ModalDialog />`** Specify a class for delete button | - |
 | `modalSubmitDeleteBtnLabel` | string \| ReactNode  | - | **For `<ModalDialog />`** Set a piece of text or HTML code for the delete button | - |
-| `onModalEditOpen` | function  | - | **For `<ModalDialog />`** Call a function when the EDIT modal is opened. It returns only one value which is the current value (**JSON Object**). | - |
+| `onModalEditOpen` | function  | - | **For `<ModalDialog />`** Call a function when the EDIT modal is opened. It returns two callback values. <br /> <ol><li>The first is the current value (**JSON Object**)</li><li>The second is the opening event (**Function**)</li></ol> | - |
 | `onModalEditClose` | function  | - | **For `<ModalDialog />`** Call a function when the EDIT modal is closed. It returns only one value which is the current value (**JSON Object**). | - |
 | `onModalDeleteOpen` | function  | - | **For `<ModalDialog />`** Call a function when the DELETE modal is opened. It returns only one value which is the current value (**JSON Object**). | - |
 | `onModalDeleteClose` | function  | - | **For `<ModalDialog />`** Call a function when the DELETE modal is closed. It returns only one value which is the current value (**JSON Object**). | - |
 | `onModalEditEvent` | function  | - | **For `<ModalDialog />`** Call a function when the EDIT modal is submitted. It returns two callback values. <br /> <ol><li>The first is the current value (**JSON Object**)</li><li>The second is the closing event (**Function**)</li></ol> | - |
 | `onModalDeleteEvent` | function  | - | **For `<ModalDialog />`** Call a function when the DELETE modal is submitted. It returns two callback values. <br /> <ol><li>The first is the current value (**JSON Object**)</li><li>The second is the closing event (**Function**)</li></ol> | - |
-
+| `onCellMouseEnter` | function  | - | It fires when the mouse pointer enters a cell. It returns only one callback value which is the current cell event (**Event**). | - |
+| `onCellMouseLeave` | function  | - | It fires when the mouse pointer leaves a cell. It returns only one callback value which is the current cell event (**Event**). | - |
+| `onCellClick` | function  | - | It fires when the mouse pointer clicks a cell. It returns only one callback value which is the current cell event (**Event**). | - |
 
 
 ---
 
 JSON Object Literals configuration properties of the `eventsValue`:
+
+
+| Property | Type | Default | Description | Required |
+| --- | --- | --- | --- | --- |
+| `listSection` | JSON Object | - | Each row of data. | ✅ |
+| `eventSources` | array | `[]` | List items for each row. | ✅ |
+
+
+JSON Object Literals configuration properties of the `listSection`:
+
+
+| Property | Type | Default | Description | Required |
+| --- | --- | --- | --- | --- |
+| `id` | string \| number | - | Item ID. | ✅ |
+| `title` | string \| number | - | Title of each line (identification). <blockquote>Support html tags</blockquote> | ✅ |
+
+
+
+Array Object configuration properties of the `eventSources`:
 
 | Property | Type | Default | Description | Required |
 | --- | --- | --- | --- | --- |

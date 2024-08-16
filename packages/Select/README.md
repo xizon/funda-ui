@@ -308,6 +308,7 @@ export default () => {
                         labels: ['foo2'],
                         queryStrings: ['fb2,foobar2']
                     }
+                    // data: null
                 }}
                 name="target_user_id"
                 placeholder="Select"
@@ -318,6 +319,7 @@ export default () => {
                     labels: ['foo2'],
                     queryStrings: ['fb2,foobar2']
                 }}
+                // fetchTriggerForDefaultData={undefined}
                 fetchFuncAsync={new DataService}
                 fetchFuncMethod="getList"
                 fetchFuncMethodParams={['$QUERY_STRING',0]}
@@ -449,7 +451,7 @@ export default () => {
 
 
 ```js
-import React from "react";
+import React, { useState } from "react";
 import Select from 'funda-ui/Select';
 
 // component styles
@@ -689,7 +691,7 @@ It is usually used for complex cascading `<Select />` components
 
 
 ```js
-import React from "react";
+import React, { useState } from "react";
 import Select from 'funda-ui/Select';
 
 // component styles
@@ -1271,7 +1273,7 @@ export default () => {
                 }}
                 multiSelectSelectedItemOnlyStatus={{
                     itemsLabel: '{num} Selected',
-                    allItemsLabel: 'All Content',
+                    allItemsLabel: 'All Content ({num})',
                     noneLabel: 'No items selected',
                 }}
                 placeholder="Select"
@@ -1317,20 +1319,37 @@ export default () => {
 
         <>
 
-            <button
-                type="button" 
+            <a 
+                href="#"
                 onClick={(e: React.MouseEvent) => {
+                    e.preventDefault();
                     if (conRef.current) conRef.current.clear();
                 }}
-            >Set Empty Value</button>
-
-            <button
-                type="button" 
+            >Set Empty Value</a>
+            &nbsp;&nbsp;|&nbsp;&nbsp;
+            <a 
+                href="#"
                 onClick={(e: React.MouseEvent) => {
+                    e.preventDefault();
                     if (conRef.current) conRef.current.set([{"label": "Option 1","listItemLabel":"Option 1 (No: 001)","value": "value-1","queryString": "option1"}], () => { console.log('callback') });
                 }}
-            >Set Custom Value</button>
-
+            >Set Custom Value</a>
+            &nbsp;&nbsp;|&nbsp;&nbsp;
+            <a 
+                href="#"
+                onClick={(e: React.MouseEvent) => {
+                    e.preventDefault();
+                    if (conRef.current) conRef.current.active();
+                }}
+            >Active</a>
+             &nbsp;&nbsp;|&nbsp;&nbsp;
+            <a 
+                href="#"
+                onClick={(e: React.MouseEvent) => {
+                    e.preventDefault();
+                    if (conRef.current) conRef.current.focus();
+                }}
+            >Focus</a>
 
             <Select
                 contentRef={conRef}
@@ -1355,19 +1374,38 @@ export default () => {
             <hr />
 
 
-            <button
-                type="button" 
+            <a 
+                href="#"
                 onClick={(e: React.MouseEvent) => {
+                    e.preventDefault();
                     if (con2Ref.current) con2Ref.current.clear();
                 }}
-            >Set Empty Value (multiple)</button>
-
-            <button
-                type="button" 
+            >Set Empty Value (multiple)</a>
+            &nbsp;&nbsp;|&nbsp;&nbsp;
+            <a 
+                href="#"
                 onClick={(e: React.MouseEvent) => {
+                    e.preventDefault();
                     if (con2Ref.current) con2Ref.current.set([{"label": "15","listItemLabel":"15","value": "15","queryString": ""},{"label": "25","listItemLabel":"25","value": "25","queryString": ""},{"label": "33","listItemLabel":"33","value": "33","queryString": ""}], () => { console.log('callback') });
                 }}
-            >Set Custom Value (multiple)</button>
+            >Set Custom Value (multiple)</a>
+            &nbsp;&nbsp;|&nbsp;&nbsp;
+            <a 
+                href="#"
+                onClick={(e: React.MouseEvent) => {
+                    e.preventDefault();
+                    if (con2Ref.current) con2Ref.current.active();
+                }}
+            >Active (multiple)</a>
+             &nbsp;&nbsp;|&nbsp;&nbsp;
+            <a 
+                href="#"
+                onClick={(e: React.MouseEvent) => {
+                    e.preventDefault();
+                    if (con2Ref.current) con2Ref.current.focus();
+                }}
+            >Focus (multiple)</a>
+
 
 
             <Select
@@ -1428,7 +1466,7 @@ import Select from 'funda-ui/Select';
 | Property | Type | Default | Description | Required |
 | --- | --- | --- | --- | --- |
 | `ref` | React.ForwardedRef | - | It is the return element of this component.  | - |
-| `contentRef` | React.ForwardedRef | - | It exposes the following methods:  <br /> <ol><li>`contentRef.current.clear(() => { console.log('callback') })`</li><li>`contentRef.current.set([{"label": "Option 1","listItemLabel":"Option 1 (No: 001)","value": "value-1","queryString": "option1"}], () => { console.log('callback') })`</li></ol> <blockquote>DO NOT USE it in the `onChange` of this component, otherwise it will cause infinite rendering</blockquote> | - |
+| `contentRef` | React.ForwardedRef | - | It exposes the following methods:  <br /> <ol><li>`contentRef.current.active()`</li><li>`contentRef.current.focus()`</li><li>`contentRef.current.clear(() => { console.log('callback') })`</li><li>`contentRef.current.set([{"label": "Option 1","listItemLabel":"Option 1 (No: 001)","value": "value-1","queryString": "option1"}], () => { console.log('callback') })`</li></ol> <blockquote>DO NOT USE it in the `onChange` of this component, otherwise it will cause infinite rendering</blockquote> | - |
 | `popupRef` | React.ForwardedRef | - | It exposes the following methods when the component's popup opens or closes:  <br /> <ol><li>`popupRef.current.close()`</li></ol> | - |
 | `wrapperClassName` | string | `mb-3 position-relative` | The class name of the control wrapper. | - |
 | `controlClassName` | string | `form-control` | The class name of the control. | - |
@@ -1436,12 +1474,13 @@ import Select from 'funda-ui/Select';
 | `exceededSidePosOffset` | number | 15 | Offset px that exceeds the far right or left side of the screen | - |
 | `options` | JSON Object Literals \| JSON Object | - | Set the default value using JSON string format for menu of options, like this: `[{"label": "Option 1","value": "value-1","queryString": "option1"},{"label": "<del style=color:red>deprecate</del>Option 2","value": "value-2","queryString": "option2"},{"label": "Option 3","value": "value-3","queryString": "option3"},{"label": "Option 4","value": "value-4","queryString": "option4","disabled":true}]` <br /> <blockquote>Note: Use API data if database query exists. That is, the attribute `fetchXXXX`</blockquote> <hr /> <blockquote>When the attribute `hierarchical` is true, you need to use a hierarchical structure to pass data, such as: `[{label:"Top level 1",value:'level-1',queryString:""},{label:"Top level 2",value:'level-2',queryString:""},{label:"Top level 3",value:'level-3',queryString:"",children:[{label:"Sub level 3_1",value:'level-3_1',queryString:""},{label:"Sub level 3_2",value:'level-3_2',queryString:"",children:[{label:"Sub level 3_2_1",value:'level-3_2_1',queryString:""}]},{label:"Sub level 3_3",value:'level-3_3',queryString:""}]}]`</blockquote>| - |
 | `cleanTrigger` | JSON Object | `{"valid": false, "cleanValueLabel": "Clean"}` | Enable cleanTrigger. <blockquote>**Parameters Description:** <br />`valid` -->  *(Boolean)* *(required)* Display this button that clears the existing value. It is valid when a single selection. <br />`cleanValueLabel` -->  *(String)* Sets the clean button label. (Support html tags) </blockquote> | - |
-| `lockBodyScroll` | boolean  | true | Enables body scroll locking (for iOS Mobile and Tablet, Android, desktop Safari/Chrome/Firefox) without breaking scrolling of a target element. | - |
+| `lockBodyScroll` | boolean  | false | Enables body scroll locking (for iOS Mobile and Tablet, Android, desktop Safari/Chrome/Firefox) without breaking scrolling of a target element. | - |
 | `hierarchical` | boolean  | false | Set hierarchical categories ( with sub-categories ) to attribute `options`. | - |
 | `indentation` | string  | - | Set hierarchical indentation placeholders, valid when the `hierarchical` is true. | - |
 | `doubleIndent` | boolean  | false | Set double indent effect, valid when the `hierarchical` is true. | - |
 | `multiSelect` | JSON Object | `{"valid": false, "selectAll": true, "selectAllLabel": "Select all options"}` | Enable multi-select. <blockquote>**Parameters Description:** <br />`valid` -->  *(Boolean)* *(required)* Set component in which multiple options can be selected at once to be valid.  <br />`selectAll` --> *(Boolean)* *(required)* Enables select all button. <br />`selectAllLabel` -->  *(String)* Sets the select all button label. (Support html tags) <br />`data` -->  *(JSON Object \| null)* *(required)* Sets a default data for control's values. (such as `{values: ['value-1','value-3'], labels: ['Option 1','Option 3'], queryStrings: ['','']}`)</blockquote> | - |
-| `multiSelectSelectedItemOnlyStatus` | JSON Object | `{"itemsLabel":"{num} Selected","allItemsLabel":"All Content","noneLabel":"No items selected"}` | Let the selected options only display the status without detailed options. It is not recommended for search to trigger request. <hr /> The `{num}` is a placeholder which will be automatically replaced by a number. <blockquote>Valid when `multiSelect` parameter exists</blockquote> | - |
+| `multiSelectEntireAreaTrigger` | boolean | true | The entire Text box area can be triggered. <blockquote>Valid when `multiSelect` parameter exists</blockquote> | - |
+| `multiSelectSelectedItemOnlyStatus` | JSON Object | `{"itemsLabel":"{num} Selected","allItemsLabel":"All Content ({num})","noneLabel":"No items selected"}` | Let the selected options only display the status without detailed options. It is not recommended for search to trigger request. <hr /> The `{num}` is a placeholder which will be automatically replaced by a number. <blockquote>Valid when `multiSelect` parameter exists</blockquote> | - |
 | `depth` | number  | 1055 | Set the depth value of the control to control the display of the pop-up layer appear above. Please set it when multiple controls are used at the same time. | - |
 | `winWidth` | number \| function  | `auto` | Set the container width of options. Such as: `500px` or `() => window.innerWidth/2 + 'px'`  | - |
 | `extractValueByBrackets` | boolean  | true | Whether to use square brackets to save result and initialize default value. | - |

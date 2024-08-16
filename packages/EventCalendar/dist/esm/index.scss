@@ -144,6 +144,8 @@
                 color: var(--e-cal-delete-btn-color);
         
                 svg {
+                    fill: var(--e-cal-delete-btn-color);
+                    
                     path {
                         fill: var(--e-cal-delete-btn-color);
                     }

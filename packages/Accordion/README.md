@@ -63,7 +63,7 @@ export default () => {
             <Accordion 
                 triggerType="mouseover"
             >
-                <AccordionItem title={<>Item 1</>} itemTriggerClassName="btn btn-primary w-100 px-3 py-1" itemTriggerIcon={<><span className="d-block position-absolute top-0 end-0 me-3 z-1">
+                <AccordionItem title={<>Item 1</>} itemTriggerClassName="btn btn-primary w-100 px-3 py-1" itemTriggerIcon={<><span className="d-block position-absolute me-3 z-1" style={{top: '50%', right: 0, transform: 'translateY(-50%)'}}>
                     <svg width="10px" height="10px" viewBox="0 -4.5 20 20">
                         <g stroke="none" strokeWidth="1" fill="none">
                             <g transform="translate(-180.000000, -6684.000000)" className="arrow-fill-g" fill="#a5a5a5">
@@ -77,7 +77,7 @@ export default () => {
                 </span></>}>
                     <h4>Usage:</h4>Click on an item to open.
                 </AccordionItem>
-                <AccordionItem title={<>Item 2</>} itemTriggerClassName="btn btn-primary w-100 px-3 py-1" itemTriggerIcon={<><span className="d-block position-absolute top-0 end-0 me-3 z-1">
+                <AccordionItem title={<>Item 2</>} itemTriggerClassName="btn btn-primary w-100 px-3 py-1" itemTriggerIcon={<><span className="d-block position-absolute me-3 z-1" style={{top: '50%', right: 0, transform: 'translateY(-50%)'}}>
                     <svg width="10px" height="10px" viewBox="0 -4.5 20 20">
                         <g stroke="none" strokeWidth="1" fill="none">
                             <g transform="translate(-180.000000, -6684.000000)" className="arrow-fill-g" fill="#a5a5a5">
@@ -91,7 +91,7 @@ export default () => {
                 </span></>}>
                     Duis mollis, est non commodo luctus, nisi erat porttitor ligula, eget lacinia odio sem nec elit. Cras mattis consectetur purus sit amet fermentum. Morbi leo risus, porta ac consectetur ac, vestibulum at eros. Praesent commodo cursus magna, vel scelerisque nisl consectetur et.
                 </AccordionItem>
-                <AccordionItem title={<>Item 4</>} itemTriggerClassName="btn btn-primary w-100 px-3 py-1" itemTriggerIcon={<><span className="d-block position-absolute top-0 end-0 me-3 z-1">
+                <AccordionItem title={<>Item 3</>} itemTriggerClassName="btn btn-primary w-100 px-3 py-1" itemTriggerIcon={<><span className="d-block position-absolute me-3 z-1" style={{top: '50%', right: 0, transform: 'translateY(-50%)'}}>
                     <svg width="10px" height="10px" viewBox="0 -4.5 20 20">
                         <g stroke="none" strokeWidth="1" fill="none">
                             <g transform="translate(-180.000000, -6684.000000)" className="arrow-fill-g" fill="#a5a5a5">

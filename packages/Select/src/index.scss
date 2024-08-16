@@ -4,7 +4,6 @@
 
 .custom-select__wrapper {
 
-    
     --cus-sel-focus-border-color:#86b7fe;
     --cus-sel-focus-box-shadow: 0 0 0 0.25rem rgba(13,110,253,.25);
     --cus-sel-placeholder-color: rgba(33, 37, 41, 0.75);
@@ -17,6 +16,8 @@
     --cus-sel-searchbtn-hover-fill: #333;
     --cus-sel-removebtn-fill: #000;
     --cus-sel-removebtn-hover-fill: #f00;
+
+    position: relative; /* Required */
 
 
 
@@ -306,6 +307,10 @@
 
     /*------ Search button ------*/
     .custom-select-multi__control-searchbtn {
+        position: absolute;
+        right: 0;
+        top: 50%;
+        transform: translateY(-50%);
         z-index: 5;
         pointer-events: auto;
 

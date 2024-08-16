@@ -81,6 +81,7 @@ type SelectProps = {
     controlExClassName?: string;
     exceededSidePosOffset?: number;
     multiSelect?: MultiSelectConfig;
+    multiSelectEntireAreaTrigger?: boolean;
     multiSelectSelectedItemOnlyStatus?: multiSelectSelectedItemOnlyStatusConfig;
     renderSelectedValue?: (selectedData: MultiSelectControlValConfig, removeFunc: (e: React.MouseEvent) => void) => void;
     cleanTrigger?: CleanTriggerConfig;
@@ -139,6 +140,7 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
         controlExClassName,
         exceededSidePosOffset,
         multiSelect,
+        multiSelectEntireAreaTrigger,
         multiSelectSelectedItemOnlyStatus,
         renderSelectedValue,
         disabled,
@@ -189,7 +191,7 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
 
     const INPUT_READONLY = LIVE_SEARCH_DISABLED ? true : (typeof readOnly === 'undefined' ? null : readOnly);
     const VALUE_BY_BRACKETS = typeof extractValueByBrackets === 'undefined' ? true : extractValueByBrackets;
-    const LOCK_BODY_SCROLL = typeof lockBodyScroll === 'undefined' ? true : lockBodyScroll;
+    const LOCK_BODY_SCROLL = typeof lockBodyScroll === 'undefined' ? false : lockBodyScroll;
     const WIN_WIDTH = typeof winWidth === 'function' ? winWidth() : winWidth ? winWidth : 'auto';
     const INDENT_PLACEHOLDER = doubleIndent ? `&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;` : `&nbsp;&nbsp;&nbsp;&nbsp;`;
     const INDENT_LAST_PLACEHOLDER = `${typeof indentation !== 'undefined' && indentation !== '' ? `${indentation}&nbsp;&nbsp;` : ''}`;
@@ -231,10 +233,11 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
 
     const selectedSign = useRef<boolean>(false);
     const MULTI_SEL_VALID = multiSelect ? multiSelect.valid : false;
+    const MULTI_SEL_ENTIRE_AREA_TRIGGER = typeof multiSelectEntireAreaTrigger === 'undefined' ? true : multiSelectEntireAreaTrigger;
     const MULTI_SEL_LABEL = multiSelect ? multiSelect.selectAllLabel : 'Select all options';
     const MULTI_SEL_SELECTED_STATUS: Record<string, string> = {
         itemsLabel: '{num} Selected',
-        allItemsLabel: 'All Content',
+        allItemsLabel: 'All Content ({num})',
         noneLabel: 'No items selected',
     };
 
@@ -271,6 +274,12 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
     useImperativeHandle(
         contentRef,
         () => ({
+            active: () => {
+                handleShowList();
+            },
+            focus: () => {
+                selectInputRef.current.select();
+            },
             clear: (cb?: any) => {
 
                 if (MULTI_SEL_VALID) {
@@ -1498,6 +1507,7 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
 
     function handleMultiControlItemRemove(event: any) {
         event.preventDefault();
+        event.stopPropagation();  /* REQUIRED */
 
         const valueToRemove = String(event.currentTarget.dataset.value);
         const getCurrentIndex = controlArr.values.findIndex((item: any) => item.toString() === valueToRemove);
@@ -1817,6 +1827,8 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
 
 
                 {!MULTI_SEL_VALID ? <>
+
+                    {/** INPUT */}
                     <div className="position-relative">
                         <input
                             ref={(node) => {
@@ -1942,7 +1954,7 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
 
                     {/* SEARCH BUTTON */}
                     {fetchTrigger ? <>
-                        <span className="custom-select-multi__control-searchbtn position-absolute top-0 end-0">
+                        <span className="custom-select-multi__control-searchbtn">
                             <button tabIndex={-1} type="button" className="btn border-end-0 rounded-pill" onClick={(e: React.MouseEvent) => {
                                 handleFetch().then((response: any) => {
 
@@ -1974,24 +1986,24 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
                 // ++++++++++++++++++++
                 */}
                 {MULTI_SEL_VALID ? <div ref={rootMultiRef} className="custom-select-multi__inputplaceholder-wrapper">
-
+                
 
                     {/* PLACEHOLDER */}
                     <div className="custom-select-multi__inputplaceholder-inner">
-                        <div>
+                        <div style={MULTI_SEL_ENTIRE_AREA_TRIGGER ? {pointerEvents: 'auto', cursor: 'pointer'} : undefined} onClick={MULTI_SEL_ENTIRE_AREA_TRIGGER ? ( typeof readOnly === 'undefined' || !readOnly ? handleShowList : () => void (0) ) :  () => void (0)}>
                             <ul className="custom-select-multi__list">
 
                                 {typeof multiSelectSelectedItemOnlyStatus !== 'undefined' ? <>
 
-                                    <li className="custom-select-multi__list-item-statusstring">
+                                    <li className="custom-select-multi__list-item-statusstring" >
                                         {typeof multiSelectSelectedItemOnlyStatus.itemsLabel === 'string' && controlArr.labels.length > 0 && controlArr.labels.length < optionsData.length ? multiSelectSelectedItemOnlyStatus.itemsLabel.replace('{num}', `${controlArr.labels.length}`) : null}
                                         {typeof multiSelectSelectedItemOnlyStatus.noneLabel === 'string' && controlArr.labels.length === 0 ? multiSelectSelectedItemOnlyStatus.noneLabel : null}
-                                        {typeof multiSelectSelectedItemOnlyStatus.allItemsLabel === 'string' && controlArr.labels.length === optionsData.length ? multiSelectSelectedItemOnlyStatus.allItemsLabel : null}
+                                        {typeof multiSelectSelectedItemOnlyStatus.allItemsLabel === 'string' && controlArr.labels.length === optionsData.length ? multiSelectSelectedItemOnlyStatus.allItemsLabel.replace('{num}', `${controlArr.labels.length}`) : null}
 
                                         {/*-----*/}
                                         {typeof multiSelectSelectedItemOnlyStatus.itemsLabel !== 'string' && controlArr.labels.length > 0 ? MULTI_SEL_SELECTED_STATUS.itemsLabel.replace('{num}', `${controlArr.labels.length}`) : null}
                                         {typeof multiSelectSelectedItemOnlyStatus.noneLabel !== 'string' && controlArr.labels.length === 0 ? MULTI_SEL_SELECTED_STATUS.noneLabel : null}
-                                        {typeof multiSelectSelectedItemOnlyStatus.allItemsLabel !== 'string' && controlArr.labels.length === optionsData.length ? MULTI_SEL_SELECTED_STATUS.allItemsLabel : null}
+                                        {typeof multiSelectSelectedItemOnlyStatus.allItemsLabel !== 'string' && controlArr.labels.length === optionsData.length ? MULTI_SEL_SELECTED_STATUS.allItemsLabel.replace('{num}', `${controlArr.labels.length}`) : null}
 
                                     </li>
                                 </> : <>
@@ -2005,9 +2017,9 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
                                                 key={'selected-item-' + index}
                                                 data-value={controlArr.values[index]}
                                                 data-label-full={item}
-                                                data-label-text={stripHTML(item)}
+                                                data-label-text={formatIndentVal(stripHTML(item), INDENT_LAST_PLACEHOLDER)}
                                             >
-                                                {stripHTML(item)}
+                                                {formatIndentVal(stripHTML(item), INDENT_LAST_PLACEHOLDER)}
 
                                                 <a 
                                                     href="#" 
@@ -2019,53 +2031,57 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
                                         ))}
                                     </>} 
 
-                                    <li  className="custom-select-multi__list-item-add">
-                                        <div className="position-relative">
-                                            {/*
+                                    
+                                </>}
+
+
+                                {/** INPUT */}
+                                <li className="custom-select-multi__list-item-add">
+                                    <div className="position-relative">
+                                        {/*
                                             // DO NOT USE following attributes in " Multiple selection Control":
                                                 a) data-select
                                                 b) value
                                             */}
-                                            <input
-                                                ref={(node) => {
-                                                    selectInputRef.current = node;
-                                                    if (typeof externalRef === 'function') {
-                                                        externalRef(node);
-                                                    } else if (externalRef) {
-                                                        externalRef.current = node;
-                                                    }
-                                                }}
-                                                tabIndex={tabIndex || 0}
-                                                type="text"
-                                                data-overlay-id={`custom-select__options-wrapper-${idRes}`}
-                                                id={`label-${idRes}`}
+                                        <input
+                                            ref={(node) => {
+                                                selectInputRef.current = node;
+                                                if (typeof externalRef === 'function') {
+                                                    externalRef(node);
+                                                } else if (externalRef) {
+                                                    externalRef.current = node;
+                                                }
+                                            }}
+                                            tabIndex={tabIndex || 0}
+                                            type="text"
+                                            data-overlay-id={`custom-select__options-wrapper-${idRes}`}
+                                            id={`label-${idRes}`}
 
-                                                // Don't use "name", it's just a container to display the label
-                                                data-name={name?.match(/(\[.*?\])/gi) ? `${name.split('[')[0]}-label[]` : `${name}-label`}
-                                                className={`${controlClassName || controlClassName === '' ? controlClassName : "form-control"} ${controlExClassName || ''}`}
-                                                onFocus={handleFocus}
-                                                onBlur={handleBlur}
-                                                onClick={typeof readOnly === 'undefined' || !readOnly ? handleShowList : () => void (0)}
-                                                onChange={handleChange}
-                                                onCompositionStart={handleComposition}
-                                                onCompositionUpdate={handleComposition}
-                                                onCompositionEnd={handleComposition}
-                                                disabled={disabled || null}
-                                                required={required || null}
-                                                readOnly={INPUT_READONLY}
-                                                placeholder={placeholder}
-                                                style={style}
-                                                autoComplete={typeof autoComplete === 'undefined' ? 'off' : autoComplete}
-                                                autoCapitalize={typeof autoCapitalize === 'undefined' ? 'off' : autoCapitalize}
-                                                spellCheck={typeof spellCheck === 'undefined' ? false : spellCheck}
-                                                {...attributes}
-                                            />
+                                            // Don't use "name", it's just a container to display the label
+                                            data-name={name?.match(/(\[.*?\])/gi) ? `${name.split('[')[0]}-label[]` : `${name}-label`}
+                                            className={`${controlClassName || controlClassName === '' ? controlClassName : "form-control"} ${controlExClassName || ''}`}
+                                            onFocus={handleFocus}
+                                            onBlur={handleBlur}
+                                            onClick={typeof readOnly === 'undefined' || !readOnly ? handleShowList : () => void (0)}
+                                            onChange={handleChange}
+                                            onCompositionStart={handleComposition}
+                                            onCompositionUpdate={handleComposition}
+                                            onCompositionEnd={handleComposition}
+                                            disabled={disabled || null}
+                                            required={required || null}
+                                            readOnly={INPUT_READONLY}
+                                            placeholder={placeholder}
+                                            style={style}
+                                            autoComplete={typeof autoComplete === 'undefined' ? 'off' : autoComplete}
+                                            autoCapitalize={typeof autoCapitalize === 'undefined' ? 'off' : autoCapitalize}
+                                            spellCheck={typeof spellCheck === 'undefined' ? false : spellCheck}
+                                            {...attributes}
+                                        />
 
-                                        </div>
+                                    </div>
 
 
-                                    </li>
-                                </>}
+                                </li>
 
                             </ul>
 
@@ -2096,7 +2112,7 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
 
                     {/* SEARCH BUTTON */}
                     {fetchTrigger ? <>
-                        <span className="custom-select-multi__control-searchbtn position-absolute top-0 end-0">
+                        <span className="custom-select-multi__control-searchbtn">
                             <button tabIndex={-1} type="button" className="btn border-end-0 rounded-pill" onClick={(e: React.MouseEvent) => {
                                 handleFetch().then((response: any) => {
 

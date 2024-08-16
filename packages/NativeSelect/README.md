@@ -105,7 +105,7 @@ export default () => {
                 label="String"
                 options={[
                     { "label": "Option 1", "listItemLabel": "Option 1 (No: 001)", "value": "value-1" },
-                    { "label": "<del style=color:red>deprecate</del>Option 2", "listItemLabel": "<del style=color:red>deprecate</del>Option 2 (No: 002)", "value": "value-2" },
+                    { "label": "Option 2", "listItemLabel": "Option 2 (No: 002)", "value": "value-2" },
                     { "label": "Option 3", "listItemLabel": "Option 3 (No: 003)", "value": "value-3" },
                     { "label": "Option 4", "listItemLabel": "Option 4 (No: 004)", "value": "value-4", "disabled": true, "customAttr1": "attr1","customAttr2": "attr2" }
                 ]}
@@ -382,7 +382,7 @@ export default () => {
 
 
 
-## General (Using Vanilla JavaScript to assignment)
+## Using Vanilla JavaScript to assignment
 
 Modify options or value with Vanilla JavaScript, which is generally used for dynamic forms with cascading relationships.
 
@@ -392,7 +392,7 @@ import NativeSelect from 'funda-ui/NativeSelect';
 
 export default () => {
 
-    function addOptions(data: any[], defaultValue = '', node: HTMLElement) {
+    function addOptions(data: any[], defaultValue: string = '', node: HTMLElement) {
         if ( !Array.isArray(data) ) return;
     
         node.innerHTML = '';
@@ -426,7 +426,7 @@ export default () => {
         
         optionsData.unshift({"label": "NativeSelect","value": ""});
 
-        const el = document.queryNativeSelector('#my-select') as HTMLElement;
+        const el = document.querySelector('#my-select') as HTMLElement;
         addOptions(optionsData, 'bar2', el);
 
     }
@@ -443,7 +443,7 @@ export default () => {
         
         optionsData.unshift({"label": "NativeSelect","value": ""});
 
-        const el = document.queryNativeSelector('#my-select2') as HTMLElement;
+        const el = document.querySelector('#my-select2') as HTMLElement;
         addOptions(optionsData, '', el);
 
     }

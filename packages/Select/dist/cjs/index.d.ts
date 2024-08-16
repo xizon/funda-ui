@@ -39,6 +39,7 @@ declare type SelectProps = {
     controlExClassName?: string;
     exceededSidePosOffset?: number;
     multiSelect?: MultiSelectConfig;
+    multiSelectEntireAreaTrigger?: boolean;
     multiSelectSelectedItemOnlyStatus?: multiSelectSelectedItemOnlyStatusConfig;
     renderSelectedValue?: (selectedData: MultiSelectControlValConfig, removeFunc: (e: React.MouseEvent) => void) => void;
     cleanTrigger?: CleanTriggerConfig;

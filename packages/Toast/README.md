@@ -3,6 +3,8 @@
 
 ## General
 
+Please look at the your screen 👀
+
 ```js
 import React from "react";
 import Toast from 'funda-ui/Toast';

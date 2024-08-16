@@ -1,4 +1,4 @@
-import React, { forwardRef, useImperativeHandle } from 'react';
+import React, { useRef, forwardRef, useImperativeHandle } from 'react';
 import { paginationNavigators } from './pagination-navigators';
 
 
@@ -7,6 +7,8 @@ type PaginationProps = {
     wrapperClassName?: string;
     /** The class name of the navigation */
     navClassName?: string;
+    /** The class name of each item */
+    navItemClassName?: string;
     /** An API URL Path. Use `{page}` characters to place a placeholder. such as `/mypage/{page}` */
     apiUrl: string;
     /** The range of pages displayed */
@@ -56,6 +58,7 @@ const Pagination = forwardRef((props: PaginationProps, externalRef: any) => {
     const {
         wrapperClassName,
         navClassName,
+        navItemClassName,
         apiUrl,
         pageRangeDisplayed,
         activePage,
@@ -77,6 +80,11 @@ const Pagination = forwardRef((props: PaginationProps, externalRef: any) => {
         style,
         onChange
     } = props;
+
+
+    const rootRef = useRef<any>(null);
+    const visibleNavigators = pageRangeDisplayed ? pageRangeDisplayed : 3;
+
 
 
 
@@ -105,11 +113,10 @@ const Pagination = forwardRef((props: PaginationProps, externalRef: any) => {
                 });
             }
         }),
-        [externalRef, activePage],
+        [externalRef, totalPages, activePage],
     );
 
 
-    const visibleNavigators = pageRangeDisplayed ? pageRangeDisplayed : 3;
 
     let alignClassName = '';
     switch (align) {
@@ -124,12 +131,13 @@ const Pagination = forwardRef((props: PaginationProps, externalRef: any) => {
             break;
     }
 
-    const _activeClassNameName = activeClassName ? activeClassName : 'active',
-        _previousClassNameName = previousClassName ? previousClassName : 'prev',
-        _nextClassNameName = nextClassName ? nextClassName : 'next',
-        _firstClassNameName = firstClassName ? firstClassName : 'first',
-        _lastClassNameName = lastClassName ? lastClassName : 'last',
-        _disabledClassNameName = disabledClassName ? disabledClassName : 'disabled',
+    const _activeClassName = activeClassName || 'active',
+        _previousClassName = previousClassName || 'prev',
+        _nextClassName = nextClassName || 'next',
+        _firstClassName = firstClassName || 'first',
+        _lastClassName = lastClassName || 'last',
+        _disabledClassName = disabledClassName || 'disabled',
+        _itemClassName = navItemClassName || 'page-item',
         _onlyPrevNextButtons = typeof (onlyPrevNext) === 'undefined' ? false : onlyPrevNext,
         _symmetry = typeof (symmetry) === 'undefined' ? false : symmetry;
 
@@ -158,8 +166,8 @@ const Pagination = forwardRef((props: PaginationProps, externalRef: any) => {
                 _ellipsisEnabled = true;
 
                 return (
-                    <li key={i} className={activePage === item ? `page-item ${_activeClassNameName}` : `page-item`}>
-                        <a className="page-link" data-page={item} href={apiUrl.replace('{page}', item)} onClick={(e) => {
+                    <li key={i} className={activePage === item ? `${_itemClassName} ${_activeClassName}` : `${_itemClassName}`}>
+                        <a className="page-link" data-page={item} href={apiUrl?.replace('{page}', item)} onClick={(e) => {
                             e.preventDefault();
                             onChange?.(Number(item), Number(totalPages));
                         }}>{item}</a>
@@ -203,21 +211,22 @@ const Pagination = forwardRef((props: PaginationProps, externalRef: any) => {
         <>
 
             <nav
+                ref={rootRef}
                 className={wrapperClassName || wrapperClassName === '' ? wrapperClassName : "mb-3 position-relative"}
                 style={style}
             >
                 <ul className={navClassName || navClassName === '' ? `${navClassName} ${alignClassName}` : `pagination ${alignClassName}`}>
                     {firstLabel ? (
-                        <li className={activePage > 1 ? `page-item ${_firstClassNameName}` : `page-item ${_firstClassNameName} ${_disabledClassNameName}`}>
-                            <a tabIndex={activePage > 1 ? 0 : -1} aria-disabled={activePage > 1 ? 'false' : 'true'} className="page-link" data-page={1} href={apiUrl.replace('{page}', '1')} onClick={(e) => { e.preventDefault(); handleClick('first'); }}>
+                        <li className={activePage > 1 ? `${_itemClassName} ${_firstClassName}` : `${_itemClassName} ${_firstClassName} ${_disabledClassName}`}>
+                            <a tabIndex={activePage > 1 ? 0 : -1} aria-disabled={activePage > 1 ? 'false' : 'true'} className="page-link" data-page={1} href={apiUrl?.replace('{page}', '1')} onClick={(e) => { e.preventDefault(); handleClick('first'); }}>
                                 {firstLabel || null}
                             </a>
                         </li>
                     ) : ''}
 
                     {previousLabel ? (
-                        <li className={activePage > 1 ? `page-item ${_previousClassNameName}` : `page-item ${_previousClassNameName} ${_disabledClassNameName}`}>
-                            <a tabIndex={activePage > 1 ? 0 : -1} aria-disabled={activePage > 1 ? 'false' : 'true'} className="page-link" data-page={activePage - 1} href={apiUrl.replace('{page}', (activePage - 1) as any)} onClick={(e) => { e.preventDefault(); handleClick('prev'); }}>
+                        <li className={activePage > 1 ? `${_itemClassName} ${_previousClassName}` : `${_itemClassName} ${_previousClassName} ${_disabledClassName}`}>
+                            <a tabIndex={activePage > 1 ? 0 : -1} aria-disabled={activePage > 1 ? 'false' : 'true'} className="page-link" data-page={activePage - 1} href={apiUrl?.replace('{page}', (activePage - 1) as any)} onClick={(e) => { e.preventDefault(); handleClick('prev'); }}>
                                 {previousLabel || null}
                             </a>
                         </li>
@@ -228,8 +237,8 @@ const Pagination = forwardRef((props: PaginationProps, externalRef: any) => {
                         navArr.map((item: any, i: number) => {
                             if (item > 0 && item <= totalPages && !_onlyPrevNextButtons) {
                                 return (
-                                    <li key={i} className={activePage === item ? `page-item ${_activeClassNameName}` : `page-item`}>
-                                        <a className="page-link" data-page={item} href={apiUrl.replace('{page}', item)} onClick={(e) => {
+                                    <li key={i} className={activePage === item ? `${_itemClassName} ${_activeClassName}` : `${_itemClassName}`}>
+                                        <a className="page-link" data-page={item} href={apiUrl?.replace('{page}', item)} onClick={(e) => {
                                             e.preventDefault();
                                             onChange?.(Number(item), Number(totalPages));
                                         }}>{item}</a>
@@ -241,12 +250,12 @@ const Pagination = forwardRef((props: PaginationProps, externalRef: any) => {
                     }
 
 
-                    {_ellipsis !== '' && _ellipsisEnabled ? <><li className="page-item"><span className="page-link">{_ellipsis}</span></li></> : ''}
+                    {_ellipsis !== '' && _ellipsisEnabled ? <><li className={_itemClassName}><span className="page-link">{_ellipsis}</span></li></> : ''}
                     {_ellipsisElements}
 
                     {nextLabel ? (
-                        <li className={activePage < totalPages ? `page-item ${_nextClassNameName}` : `page-item ${_nextClassNameName} ${_disabledClassNameName}`}>
-                            <a tabIndex={activePage < totalPages ? 0 : -1} aria-disabled={activePage < totalPages ? 'false' : 'true'} className="page-link" data-page={activePage + 1} href={apiUrl.replace('{page}', (activePage + 1) as any)} onClick={(e) => { e.preventDefault(); handleClick('next'); }}>
+                        <li className={activePage < totalPages ? `${_itemClassName} ${_nextClassName}` : `${_itemClassName} ${_nextClassName} ${_disabledClassName}`}>
+                            <a tabIndex={activePage < totalPages ? 0 : -1} aria-disabled={activePage < totalPages ? 'false' : 'true'} className="page-link" data-page={activePage + 1} href={apiUrl?.replace('{page}', (activePage + 1) as any)} onClick={(e) => { e.preventDefault(); handleClick('next'); }}>
                                 {nextLabel || null}
                             </a>
                         </li>
@@ -254,8 +263,8 @@ const Pagination = forwardRef((props: PaginationProps, externalRef: any) => {
 
 
                     {lastLabel ? (
-                        <li className={activePage < totalPages ? `page-item ${_lastClassNameName}` : `page-item ${_lastClassNameName} ${_disabledClassNameName}`}>
-                            <a tabIndex={activePage < totalPages ? 0 : -1} aria-disabled={activePage < totalPages ? 'false' : 'true'} className="page-link" data-page={totalPages} href={apiUrl.replace('{page}', totalPages as any)} onClick={(e) => { e.preventDefault(); handleClick('last'); }}>
+                        <li className={activePage < totalPages ? `${_itemClassName} ${_lastClassName}` : `${_itemClassName} ${_lastClassName} ${_disabledClassName}`}>
+                            <a tabIndex={activePage < totalPages ? 0 : -1} aria-disabled={activePage < totalPages ? 'false' : 'true'} className="page-link" data-page={totalPages} href={apiUrl?.replace('{page}', totalPages as any)} onClick={(e) => { e.preventDefault(); handleClick('last'); }}>
                                 {lastLabel || null}
                             </a>
                         </li>

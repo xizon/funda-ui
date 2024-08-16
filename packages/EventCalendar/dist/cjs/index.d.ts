@@ -34,12 +34,15 @@ declare type EventCalendarProps = {
     modalSubmitBtnLabel?: string | React.ReactNode;
     modalSubmitDeleteBtnClassName?: string;
     modalSubmitDeleteBtnLabel?: string | React.ReactNode;
-    onModalEditOpen?: (currentData: any) => void;
+    onModalEditOpen?: (currentData: any, openwin: any) => void;
     onModalEditClose?: (currentData: any) => void;
     onModalDeleteOpen?: (currentData: any) => void;
     onModalDeleteClose?: (currentData: any) => void;
     onModalEditEvent?: (currentData: any, closewin: any) => void;
     onModalDeleteEvent?: (currentData: any, closewin: any) => void;
+    onCellMouseEnter?: (el: any) => void;
+    onCellMouseLeave?: (el: any) => void;
+    onCellClick?: (el: any) => void;
 };
 declare const EventCalendar: (props: EventCalendarProps) => JSX.Element;
 export default EventCalendar;

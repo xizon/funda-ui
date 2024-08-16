@@ -7,6 +7,7 @@ import {
 } from 'funda-utils';
 
 
+
 import TreeList from './TreeList';
 import { initUlHeight, initAsyncItems } from './init-height';
 
@@ -102,6 +103,7 @@ const Tree = (props: TreeProps) => {
     const uniqueID = useComId();
     const idRes = id || uniqueID;
     const rootRef = useRef<any>(null);
+    const [orginalData, setOrginalData] = useState<DataNode[] | null>(null);
     const [list, setList] = useState<DataNode[] | null>(null);
     const [flatList, setFlatList] = useState<DataNode[]>([]);
     const [checkedPrint, setCheckedPrint] = useState<any[]>([]);
@@ -348,6 +350,7 @@ const Tree = (props: TreeProps) => {
 
     useEffect(() => {
         initDefaultValue(null, null, true, retrieveData);
+        setOrginalData(data);
     }, [data, retrieveData]);
 
 
@@ -367,6 +370,7 @@ const Tree = (props: TreeProps) => {
                     disableCollapse={disableCollapse}
                     arrow={arrow}
                     arrowIcons={arrowIcons}
+                    orginalData={orginalData}
                     data={Array.isArray(retrieveData) && retrieveData.length > 0 ? filterRetriveData(flatList, retrieveData) : list} 
                     childClassName={childClassName || 'tree-diagram-default-nav'} 
                     onSelect={onSelect} 

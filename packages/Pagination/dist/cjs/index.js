@@ -169,6 +169,7 @@ function paginationNavigators(visibleNavigators, totalPages, activePage) {
 var Pagination = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_amd_react_.forwardRef)(function (props, externalRef) {
   var wrapperClassName = props.wrapperClassName,
     navClassName = props.navClassName,
+    navItemClassName = props.navItemClassName,
     apiUrl = props.apiUrl,
     pageRangeDisplayed = props.pageRangeDisplayed,
     activePage = props.activePage,
@@ -189,6 +190,8 @@ var Pagination = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_re
     symmetry = props.symmetry,
     style = props.style,
     onChange = props.onChange;
+  var rootRef = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useRef)(null);
+  var visibleNavigators = pageRangeDisplayed ? pageRangeDisplayed : 3;
 
   // exposes the following methods
   (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useImperativeHandle)(externalRef, function () {
@@ -214,8 +217,7 @@ var Pagination = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_re
         });
       }
     };
-  }, [externalRef, activePage]);
-  var visibleNavigators = pageRangeDisplayed ? pageRangeDisplayed : 3;
+  }, [externalRef, totalPages, activePage]);
   var alignClassName = '';
   switch (align) {
     case 'left':
@@ -228,12 +230,13 @@ var Pagination = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_re
       alignClassName = ' justify-content-center';
       break;
   }
-  var _activeClassNameName = activeClassName ? activeClassName : 'active',
-    _previousClassNameName = previousClassName ? previousClassName : 'prev',
-    _nextClassNameName = nextClassName ? nextClassName : 'next',
-    _firstClassNameName = firstClassName ? firstClassName : 'first',
-    _lastClassNameName = lastClassName ? lastClassName : 'last',
-    _disabledClassNameName = disabledClassName ? disabledClassName : 'disabled',
+  var _activeClassName = activeClassName || 'active',
+    _previousClassName = previousClassName || 'prev',
+    _nextClassName = nextClassName || 'next',
+    _firstClassName = firstClassName || 'first',
+    _lastClassName = lastClassName || 'last',
+    _disabledClassName = disabledClassName || 'disabled',
+    _itemClassName = navItemClassName || 'page-item',
     _onlyPrevNextButtons = typeof onlyPrevNext === 'undefined' ? false : onlyPrevNext,
     _symmetry = typeof symmetry === 'undefined' ? false : symmetry;
 
@@ -258,11 +261,11 @@ var Pagination = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_re
         _ellipsisEnabled = true;
         return /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("li", {
           key: i,
-          className: activePage === item ? "page-item ".concat(_activeClassNameName) : "page-item"
+          className: activePage === item ? "".concat(_itemClassName, " ").concat(_activeClassName) : "".concat(_itemClassName)
         }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("a", {
           className: "page-link",
           "data-page": item,
-          href: apiUrl.replace('{page}', item),
+          href: apiUrl === null || apiUrl === void 0 ? void 0 : apiUrl.replace('{page}', item),
           onClick: function onClick(e) {
             e.preventDefault();
             onChange === null || onChange === void 0 ? void 0 : onChange(Number(item), Number(totalPages));
@@ -296,30 +299,31 @@ var Pagination = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_re
     }
   }
   return /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("nav", {
+    ref: rootRef,
     className: wrapperClassName || wrapperClassName === '' ? wrapperClassName : "mb-3 position-relative",
     style: style
   }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("ul", {
     className: navClassName || navClassName === '' ? "".concat(navClassName, " ").concat(alignClassName) : "pagination ".concat(alignClassName)
   }, firstLabel ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("li", {
-    className: activePage > 1 ? "page-item ".concat(_firstClassNameName) : "page-item ".concat(_firstClassNameName, " ").concat(_disabledClassNameName)
+    className: activePage > 1 ? "".concat(_itemClassName, " ").concat(_firstClassName) : "".concat(_itemClassName, " ").concat(_firstClassName, " ").concat(_disabledClassName)
   }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("a", {
     tabIndex: activePage > 1 ? 0 : -1,
     "aria-disabled": activePage > 1 ? 'false' : 'true',
     className: "page-link",
     "data-page": 1,
-    href: apiUrl.replace('{page}', '1'),
+    href: apiUrl === null || apiUrl === void 0 ? void 0 : apiUrl.replace('{page}', '1'),
     onClick: function onClick(e) {
       e.preventDefault();
       handleClick('first');
     }
   }, firstLabel || null)) : '', previousLabel ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("li", {
-    className: activePage > 1 ? "page-item ".concat(_previousClassNameName) : "page-item ".concat(_previousClassNameName, " ").concat(_disabledClassNameName)
+    className: activePage > 1 ? "".concat(_itemClassName, " ").concat(_previousClassName) : "".concat(_itemClassName, " ").concat(_previousClassName, " ").concat(_disabledClassName)
   }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("a", {
     tabIndex: activePage > 1 ? 0 : -1,
     "aria-disabled": activePage > 1 ? 'false' : 'true',
     className: "page-link",
     "data-page": activePage - 1,
-    href: apiUrl.replace('{page}', activePage - 1),
+    href: apiUrl === null || apiUrl === void 0 ? void 0 : apiUrl.replace('{page}', activePage - 1),
     onClick: function onClick(e) {
       e.preventDefault();
       handleClick('prev');
@@ -328,11 +332,11 @@ var Pagination = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_re
     if (item > 0 && item <= totalPages && !_onlyPrevNextButtons) {
       return /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("li", {
         key: i,
-        className: activePage === item ? "page-item ".concat(_activeClassNameName) : "page-item"
+        className: activePage === item ? "".concat(_itemClassName, " ").concat(_activeClassName) : "".concat(_itemClassName)
       }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("a", {
         className: "page-link",
         "data-page": item,
-        href: apiUrl.replace('{page}', item),
+        href: apiUrl === null || apiUrl === void 0 ? void 0 : apiUrl.replace('{page}', item),
         onClick: function onClick(e) {
           e.preventDefault();
           onChange === null || onChange === void 0 ? void 0 : onChange(Number(item), Number(totalPages));
@@ -340,29 +344,29 @@ var Pagination = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_re
       }, item));
     }
   }), _ellipsis !== '' && _ellipsisEnabled ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("li", {
-    className: "page-item"
+    className: _itemClassName
   }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("span", {
     className: "page-link"
   }, _ellipsis))) : '', _ellipsisElements, nextLabel ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("li", {
-    className: activePage < totalPages ? "page-item ".concat(_nextClassNameName) : "page-item ".concat(_nextClassNameName, " ").concat(_disabledClassNameName)
+    className: activePage < totalPages ? "".concat(_itemClassName, " ").concat(_nextClassName) : "".concat(_itemClassName, " ").concat(_nextClassName, " ").concat(_disabledClassName)
   }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("a", {
     tabIndex: activePage < totalPages ? 0 : -1,
     "aria-disabled": activePage < totalPages ? 'false' : 'true',
     className: "page-link",
     "data-page": activePage + 1,
-    href: apiUrl.replace('{page}', activePage + 1),
+    href: apiUrl === null || apiUrl === void 0 ? void 0 : apiUrl.replace('{page}', activePage + 1),
     onClick: function onClick(e) {
       e.preventDefault();
       handleClick('next');
     }
   }, nextLabel || null)) : '', lastLabel ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("li", {
-    className: activePage < totalPages ? "page-item ".concat(_lastClassNameName) : "page-item ".concat(_lastClassNameName, " ").concat(_disabledClassNameName)
+    className: activePage < totalPages ? "".concat(_itemClassName, " ").concat(_lastClassName) : "".concat(_itemClassName, " ").concat(_lastClassName, " ").concat(_disabledClassName)
   }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("a", {
     tabIndex: activePage < totalPages ? 0 : -1,
     "aria-disabled": activePage < totalPages ? 'false' : 'true',
     className: "page-link",
     "data-page": totalPages,
-    href: apiUrl.replace('{page}', totalPages),
+    href: apiUrl === null || apiUrl === void 0 ? void 0 : apiUrl.replace('{page}', totalPages),
     onClick: function onClick(e) {
       e.preventDefault();
       handleClick('last');

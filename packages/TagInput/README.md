@@ -1,8 +1,10 @@
 # Tag Input
 
+> Note: Enter or space to add an element
 
 
 ## General
+
 
 ```js
 import React from "react";
@@ -117,9 +119,6 @@ import TagInput from 'funda-ui/TagInput';
 | `onChange` | function  | - | Call a function when the value of an HTML element is changed. It returns three callback values. <br /> <ol><li>The first is the control (**HTML Element**)</li><li>The second is the current value (**Array**)</li><li>The third is the current string value (**String**)</li></ol> | - |
 | `onBlur` | function  | - | Call a function when a user leaves a form field. It returns only one callback value which is the Control Event (**Event**) | - |
 | `onFocus` | function  | - | Call a function when an form field gets focus. It returns only one callback value which is the Control Event (**Event**) | - |
-
-
-> Note: Enter or space to add an element
 
 
 It accepts all props which this control support. Such as `style`, `data-*`, `tabIndex`, `id`, and so on.

@@ -23,6 +23,7 @@ export default () => {
       {/* ================================================================== */} 
 
      <Pagination
+        navItemClassName="page-item me-2"
         apiUrl={`/{page}`}
         onChange={gotoPageNumber}
         pageRangeDisplayed={3}
@@ -164,6 +165,7 @@ export default () => {
 
 ## No spacing
 
+
 ```js
 import React from "react";
 import Pagination from 'funda-ui/Pagination';
@@ -194,7 +196,9 @@ export default () => {
 
 
 
-## Implement Data Pagination
+## Implement Data Pagination + Use the exposed method to jump target
+
+Lets you callback the handle exposed as attribute `ref`.
 
 ```js
 import React, { useState, useEffect, useRef } from "react";
@@ -390,21 +394,11 @@ const DataList = (props: any) => {
 
 export default () => {
 
-
-
     const PER = 3;
     const [scrollDistance, setDcrollDistance] = useState<number>(0);
     const windowScrollUpdate = throttle(handleScrollEvent, 5);
     const scrollEl = useRef<HTMLElement | null>();
-
-
-    function handleScrollEvent() {
-        if (scrollEl.current === null) return;
-        const scrollTop = scrollEl.current!.scrollTop;
-        console.log('scrollTop: ', scrollTop);
-        setDcrollDistance(scrollTop);
-      
-    }
+    const pageHandleRef = useRef<any>();
 
 
     // data list
@@ -420,6 +414,14 @@ export default () => {
     const currentRecords = listData.slice(indexOfFirstRecord, indexOfLastRecord);
     const allPages = Math.ceil(listData.length / recordsPerPage);
     
+    function handleScrollEvent() {
+        if (scrollEl.current === null) return;
+        const scrollTop = scrollEl.current!.scrollTop;
+        console.log('scrollTop: ', scrollTop);
+        setDcrollDistance(scrollTop);
+      
+    }
+
 
     useEffect(() => {
 
@@ -459,7 +461,7 @@ export default () => {
 
     return (
         <>
-            <div className="items-container">
+            <div className="items-container mb-3">
                 <div className="content" style={{overflow: 'auto'}}>
                     <div style={{height: '250px'}}>
                         <DataList
@@ -485,6 +487,7 @@ export default () => {
             </div>
 
             <Pagination
+                ref={pageHandleRef}
                 apiUrl={`/{page}`}
                 onChange={( number, total ) => {
                     console.log( total, `page number: ${number}` ); 
@@ -501,13 +504,32 @@ export default () => {
                 
             />	
 
+
+            <div>
+                <a 
+                    href="#"
+                    onClick={(e: React.MouseEvent) => {
+                        e.preventDefault();
+                        setCurrentPage(3);
+                    }}
+                >Goto page 3</a>
+                &nbsp;&nbsp;|&nbsp;&nbsp;
+                <a 
+                    href="#"
+                    onClick={(e: React.MouseEvent) => {
+                        e.preventDefault();
+                        if (pageHandleRef.current) pageHandleRef.current.next();
+                    }}
+                >Goto next page</a>
+
+            </div>
+                        
+
         </>
     );
 
 }
 ```
-
-
 
 
 
@@ -905,7 +927,7 @@ export default (props: any) => {
                                 onlyPrevNext
                             />	
                         </div>
-                        
+
 
                     </div>
                 </div>
@@ -932,6 +954,7 @@ import Pagination from 'funda-ui/Pagination';
 | `ref` | React.ForwardedRef | - | It exposes the following methods of the component (The function supports callback to return a value which is the currently activated page number, like this: `ref.current.next((page) => {console.log(page)})`):  <br /> <ol><li>`ref.current.next()`</li><li>`ref.current.prev()`</li><li>`ref.current.first()`</li><li>`ref.current.last()`</li></ol> | - |
 | `wrapperClassName` | string | `mb-3 position-relative` | The class name of the navigation wrapper. | - |
 | `navClassName` | string | `pagination` | The class name of the navigation. | - |
+| `navItemClassName` | string | `page-item` | The class name of each item. | - |
 | `apiUrl` | string  | - | An API URL Path. Use `{page}` characters to place a placeholder. such as `/mypage/{page}` | ✅ |
 | `pageRangeDisplayed` | number  | 3 | The range of pages displayed | ✅ |
 | `activePage` | number  | - | The currently selected page number.  | ✅ |

@@ -237,13 +237,13 @@ function MemoMultipleSelect(props: any) {
 
 export default () => {
 
-    const [myMultipleSelect, setMyMultipleSelect] = useState('value-3');  // default value is label value
+    const [myMultipleSelect, setMyMultipleSelect] = useState('Option 3');  // default value is label value
 
     return (
         <>
         <div className="mb-3" style={{height: '300px'}}>
             <MemoMultipleSelect 
-                val={"value-3"} 
+                val={myMultipleSelect}
                 name="name"
                 callback={setMyMultipleSelect} 
             />

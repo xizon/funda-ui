@@ -55,7 +55,7 @@ export default () => {
 
         return <React.Fragment key={'tmpl-' + data.index}>
                 {/* ///////////// */}
-                <div className="row">
+                <div className="row align-items-center">
                     <div className="text-end" style={{ width: LABEL_WIDTH }}>
                         User Name
                     </div>
@@ -205,7 +205,6 @@ export default () => {
 
 ```js
 import React, { useState, useEffect } from "react";
-import { useLocation } from 'react-router-dom';
 import DynamicFields from 'funda-ui/DynamicFields';
 
 import Input from 'funda-ui/Input';
@@ -317,7 +316,6 @@ class DataService {
 
 export default () => {
 
-    const location = useLocation();
     const LABEL_WIDTH = '200px';
     const [dynamicFieldsValue, setDynamicFieldsValue] = useState<DynamicFieldsValueProps | null>(null);
     const [dynamicFieldsJsonValue, setDynamicFieldsJsonValue] = useState<any[]>([]);
@@ -347,11 +345,11 @@ export default () => {
         
         return <React.Fragment key={'tmpl-' + data.index}>
                 {/* ///////////// */}
-                <div className="row">
+                <div className="row align-items-center">
                     <div className="text-end" style={{ width: LABEL_WIDTH }}>
                         User Name
                     </div>
-                    <div className="col">
+                    <div className="col-auto">
                         {/* CONTROL */}
                         <Input
                             value={data.user_name}
@@ -364,30 +362,31 @@ export default () => {
                     <div className="text-end" style={{ width: LABEL_WIDTH }}>
                         Role(ID)
                     </div>
-                    <div className="col">
+                    <div className="col-auto">
                         {/* CONTROL */}
-                        <Select
-                            value={data.role_id}
-                            name="role_id[]"
-                            data={location.pathname}
-                            data-id={init ? `role_name-dy-${data.index}` : `role_name-dy-%i%`}
-                            placeholder="Select"
-                            options={`
-                            [
-                                {"label": "Option 1","value": "value-1","queryString": "option1"},
-                                {"label": "Option 2","value": "value-2","queryString": "option2"},
-                                {"label": "Option 3","value": "value-3","queryString": "option3"}
-                            ]  
-                            `}
-                            onChange={(e: any, e2: any, val: any) => {
-                                const targetId = e2.dataset.id;
-                                [].slice.call(document.querySelectorAll(`[name="role_name[]"]`)).forEach((node: any) => {
-                                    if (node.id === targetId) {
-                                        node.value = val.label;
-                                    }
-                                });
-                            }}
-                        />
+                        <div style={{width: '80%'}}>
+                            <Select
+                                value={data.role_id}
+                                name="role_id[]"
+                                data-id={init ? `role_name-dy-${data.index}` : `role_name-dy-%i%`}
+                                placeholder="Select"
+                                options={`
+                                [
+                                    {"label": "Option 1","value": "value-1","queryString": "option1"},
+                                    {"label": "Option 2","value": "value-2","queryString": "option2"},
+                                    {"label": "Option 3","value": "value-3","queryString": "option3"}
+                                ]  
+                                `}
+                                onChange={(e: any, e2: any, val: any) => {
+                                    const targetId = e2.dataset.id;
+                                    [].slice.call(document.querySelectorAll(`[name="role_name[]"]`)).forEach((node: any) => {
+                                        if (node.id === targetId) {
+                                            node.value = val.label;
+                                        }
+                                    });
+                                }}
+                            />
+                        </div>
                         {/* /CONTROL */}
                     </div>
                 
@@ -395,7 +394,7 @@ export default () => {
                     <div className="text-end" style={{ width: LABEL_WIDTH }}>
                         Role Name
                     </div>
-                    <div className="col">
+                    <div className="col-auto">
                         {/* CONTROL */}
                         <Input
                             value={data.role_name}
@@ -528,7 +527,7 @@ export default () => {
             tmpl: tmplData
         });
 
-    }, [location]);
+    }, []);
 
 
 
@@ -729,11 +728,11 @@ export default () => {
         
         return <React.Fragment key={'tmpl-' + data.index}>
                 {/* ///////////// */}
-                <div className="row">
+                <div className="row align-items-center">
                     <div className="text-end" style={{ width: LABEL_WIDTH }}>
                         User Name
                     </div>
-                    <div className="col">
+                    <div className="col-auto">
                         {/* CONTROL */}
                         <Input
                             value={data.user_name}
@@ -763,39 +762,42 @@ export default () => {
                     <div className="text-end" style={{ width: LABEL_WIDTH }}>
                         Role(ID)
                     </div>
-                    <div className="col">
+                    <div className="col-auto">
                         {/* CONTROL */}
-                        <Select
-                            value={data.role_id}
-                            name="role_id[]"
-                            placeholder="Select"
-                            options={`
-                            [
-                                {"label": "Option 1","value": "value-1","queryString": "option1"},
-                                {"label": "Option 2","value": "value-2","queryString": "option2"},
-                                {"label": "Option 3","value": "value-3","queryString": "option3"}
-                            ]  
-                            `}
-                            onChange={(e: any, e2: any, val: any) => {
-                                const curIndex = getRowIndex(e2);
+                        <div style={{width: '80%'}}>
+                            <Select
+                                value={data.role_id}
+                                name="role_id[]"
+                                placeholder="Select"
+                                options={`
+                                [
+                                    {"label": "Option 1","value": "value-1","queryString": "option1"},
+                                    {"label": "Option 2","value": "value-2","queryString": "option2"},
+                                    {"label": "Option 3","value": "value-3","queryString": "option3"}
+                                ]  
+                                `}
+                                onChange={(e: any, e2: any, val: any) => {
+                                    const curIndex = getRowIndex(e2);
 
-                                // updata row data
-                                setRawData((prevState: any[]) => {
+                                    // updata row data
+                                    setRawData((prevState: any[]) => {
 
-                                    const newData = updateJsonNode(prevState, curIndex, {
-                                        role_id: val.value,
-                                        role_name: val.label,
+                                        const newData = updateJsonNode(prevState, curIndex, {
+                                            role_id: val.value,
+                                            role_name: val.label,
+                                        });
+
+                                        // data of Dynamic Fields
+                                        updateComponentData(newData);
+
+                                        return newData;
                                     });
 
-                                    // data of Dynamic Fields
-                                    updateComponentData(newData);
 
-                                    return newData;
-                                });
-
-
-                            }}
-                        />
+                                }}
+                            />
+                        </div>
+                        
                         {/* /CONTROL */}
                     </div>
                 
@@ -803,7 +805,7 @@ export default () => {
                     <div className="text-end" style={{ width: LABEL_WIDTH }}>
                         Role Name
                     </div>
-                    <div className="col">
+                    <div className="col-auto">
                         {/* CONTROL */}
                         <Input
                             value={data.role_name}
@@ -1231,7 +1233,7 @@ export default () => {
                     if (i === dynamicFieldsInnerAppendHeadData.length - 1) {
                         return { width: "40px" };
                     } else {
-                        return { background: "#f60" };
+                        return { background: "#f60", color: '#fff' };
                     }
                 })}
                 innerAppendEmptyContent={<><div className={`app-div-table__body--empty px-2 py-2 border`}>No data.</div></>}
@@ -1253,7 +1255,13 @@ export default () => {
 import React, { useEffect, useState } from "react";
 import Textarea from 'funda-ui/Textarea';
 import DynamicFields from 'funda-ui/DynamicFields';
-import Table from 'funda-ui/Table';
+import {
+    Table,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableRow,
+} from 'funda-ui/Table';
 
 // component styles
 import 'funda-ui/Table/index.css';
@@ -1293,7 +1301,14 @@ export default () => {
 
         return <React.Fragment key={'tmpl-' + data.index}>
             {/* ///////////// */}
-            <div className="row">
+            <div className="row align-items-center">
+               <div className="text-end" style={{ width: '55px' }}>
+                    ID
+                </div>
+                <div className="col-auto text-primary" data-id-show>
+                    {data.index+1}
+                </div>
+
                 <div className="text-end" style={{ width: '150px' }}>
                     Content
                 </div>
@@ -1324,6 +1339,7 @@ export default () => {
         //initialize JSON value
         setDynamicFieldsJsonValue(myData.map((item: any, index: number) => (
             {
+                itemId: index+1,
                 myname: item.myname
             }
         )));
@@ -1361,20 +1377,30 @@ export default () => {
 
 
             {dynamicFieldsJsonValue.length > 0 && !edit ? <><Table
-                headClassName="table-light"
                 tableClassName="table table-hover table-bordered"
-                enhancedResponsive={true}
-                data={{
-                    "headers": [
-                        { "type": false, "content": 'Content' }
-                    ],
-                    "fields": dynamicFieldsJsonValue.map((item: any) => {
-                        return [
-                            { "cols": 1, "style": { fontWeight: 'normal' }, "content": item.myname }
-                        ];
-                    })
-                }}
-            /></> : null}
+            >
+                
+                <TableHead className="table-light">
+                    <TableRow>
+                        <TableCell scope="col">Id</TableCell>
+                        <TableCell scope="col">Content</TableCell>
+                    </TableRow>
+                </TableHead>
+                <TableBody>
+                    {dynamicFieldsJsonValue.map((item: any, index: number) => {
+                        return <TableRow
+                            key={`row-${index}`}
+                            data-key={`row-${index}`}
+                            itemData={item}
+                        >
+                            <TableCell scope="row" style={{fontWeight: 'normal'}}>{item.itemId}</TableCell>
+                            <TableCell>{item.myname}</TableCell>
+                            
+                        </TableRow>
+
+                    })}
+                </TableBody>
+            </Table></> : null}
 
             <div style={edit || dynamicFieldsJsonValue.length === 0 ? {} : {height: '0', overflow: 'hidden'}}>
                 <DynamicFields
@@ -1384,7 +1410,19 @@ export default () => {
                     confirmText="Are you sure?"
                     iconAdd={<><div className="mt-1"><svg width="20px" height="20px" viewBox="0 0 24 24" fill="none"><path d="M12 2C6.49 2 2 6.49 2 12C2 17.51 6.49 22 12 22C17.51 22 22 17.51 22 12C22 6.49 17.51 2 12 2ZM16 12.75H12.75V16C12.75 16.41 12.41 16.75 12 16.75C11.59 16.75 11.25 16.41 11.25 16V12.75H8C7.59 12.75 7.25 12.41 7.25 12C7.25 11.59 7.59 11.25 8 11.25H11.25V8C11.25 7.59 11.59 7.25 12 7.25C12.41 7.25 12.75 7.59 12.75 8V11.25H16C16.41 11.25 16.75 11.59 16.75 12C16.75 12.41 16.41 12.75 16 12.75Z" fill="#000" /></svg></div></>}
                     iconRemove={<><div className="position-absolute top-0 end-0 mx-2" style={{ marginTop: '-10px' }}><svg width="20px" height="20px" viewBox="0 0 24 24" fill="none"><path fillRule="evenodd" clipRule="evenodd" d="M22 12c0 5.523-4.477 10-10 10S2 17.523 2 12 6.477 2 12 2s10 4.477 10 10ZM8 11a1 1 0 1 0 0 2h8a1 1 0 1 0 0-2H8Z" fill="#f00" /></svg></div></>}
+                    onAdd={(items: HTMLDivElement[], rootNode: HTMLDivElement, btnNode: HTMLAnchorElement, perRowDomClassName: string) => {
+                        console.log('add', items);
+                    
+                        //update `data-id` and `id` attributes of control
+                        items.forEach((node) => {
+                            const keyIndex = node.dataset.key;
+                            [].slice.call(node.querySelectorAll(`[data-id-show]`)).forEach((field) => {
+                                field.textContent = parseFloat(Number(keyIndex)+1);
+                            });
+                        });
 
+
+                    }}
                 />
             </div>
         </>

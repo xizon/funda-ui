@@ -4569,7 +4569,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
           var DEPTH = depth || 1055; // the default value same as bootstrap
           var M_WIDTH = fullscreen ? undefined : typeof maxWidth === 'function' ? maxWidth() : maxWidth ? maxWidth : undefined;
           var M_HEIGHT = typeof minHeight === 'function' ? minHeight() : minHeight ? minHeight : undefined;
-          var LOCK_BODY_SCROLL = typeof lockBodyScroll === 'undefined' ? true : lockBodyScroll;
+          var LOCK_BODY_SCROLL = typeof lockBodyScroll === 'undefined' ? false : lockBodyScroll;
           var uniqueID = (0, funda_utils__WEBPACK_IMPORTED_MODULE_2__.useComId)();
           var modalRef = (0, react__WEBPACK_IMPORTED_MODULE_0__.useRef)(null);
           var triggerRef = (0, react__WEBPACK_IMPORTED_MODULE_0__.useRef)(null);
@@ -9365,6 +9365,9 @@ var EventCalendarTimeline = function EventCalendarTimeline(props) {
     onModalDeleteClose = props.onModalDeleteClose,
     onModalEditEvent = props.onModalEditEvent,
     onModalDeleteEvent = props.onModalDeleteEvent,
+    onCellMouseEnter = props.onCellMouseEnter,
+    onCellMouseLeave = props.onCellMouseLeave,
+    onCellClick = props.onCellClick,
     tableListSectionTitle = props.tableListSectionTitle,
     tableCellMinWidth = props.tableCellMinWidth,
     tableTooltipDirection = props.tableTooltipDirection,
@@ -9451,6 +9454,7 @@ var EventCalendarTimeline = function EventCalendarTimeline(props) {
   var BODY_DRAG = draggable || false;
   var CELL_MIN_W = typeof tableCellMinWidth === 'undefined' ? SHOW_WEEK ? 100 : 50 : tableCellMinWidth;
   var tableGridRef = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(null);
+  var tableGridHeaderRef = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(null);
   var scrollHeaderRef = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(null);
   var scrollBodyRef = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(null);
   var scrollListRef = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(null);
@@ -9847,7 +9851,7 @@ var EventCalendarTimeline = function EventCalendarTimeline(props) {
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
         className: "e-cal-tl-table__cell-cushion e-cal-tl-table__cell-cushion-title",
         dangerouslySetInnerHTML: {
-          __html: item.listSection
+          __html: item.listSection.title
         }
       })));
     });
@@ -9905,12 +9909,13 @@ var EventCalendarTimeline = function EventCalendarTimeline(props) {
                     date: getCalendarDate("".concat(year, "-").concat(month + 1, "-").concat(d))
                   } : _currentData[0]);
                   if (EVENTS_ENABLED) {
-                    setShowEdit(true);
                     onModalEditOpen === null || onModalEditOpen === void 0 ? void 0 : onModalEditOpen(_currentData.length === 0 ? {
                       rowData: listSectionData,
                       id: 0,
                       date: getCalendarDate("".concat(year, "-").concat(month + 1, "-").concat(d))
-                    } : _currentData[0]);
+                    } : _currentData[0], function () {
+                      return setShowEdit(true);
+                    });
                   }
                 }
               }
@@ -9951,11 +9956,15 @@ var EventCalendarTimeline = function EventCalendarTimeline(props) {
                 e.preventDefault();
                 e.stopPropagation();
                 setShowDelete(true);
+                var _existsContent = _currentData[0];
+                if (typeof _existsContent !== 'undefined') {
+                  _existsContent.rowData = listSectionData;
+                }
                 onModalDeleteOpen === null || onModalDeleteOpen === void 0 ? void 0 : onModalDeleteOpen(_currentData.length === 0 ? {
                   rowData: listSectionData,
                   id: 0,
                   date: getCalendarDate("".concat(year, "-").concat(month + 1, "-").concat(d))
-                } : _currentData[0]);
+                } : _existsContent);
               }
             }, iconRemove ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, iconRemove) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("svg", {
               width: "20px",
@@ -9978,11 +9987,30 @@ var EventCalendarTimeline = function EventCalendarTimeline(props) {
               "data-day": padZero(d),
               "data-week": i,
               "data-row": rowIndex,
-              onMouseEnter: _eventContentTooltip === '' ? function () {} : tableTooltipDisabled ? function () {} : _eventContent !== '' ? function (e) {
-                handleTableTooltipMouseEnter(e, _eventContentTooltip);
-              } : function () {},
-              onMouseLeave: _eventContentTooltip === '' ? function () {} : tableTooltipDisabled ? function () {} : _eventContent !== '' ? handleTableTooltipMouseLeave : function () {},
+              onMouseEnter: function onMouseEnter(e) {
+                onCellMouseEnter === null || onCellMouseEnter === void 0 ? void 0 : onCellMouseEnter(e);
+                if (_eventContentTooltip !== '') {
+                  if (typeof tableTooltipDisabled === 'undefined' || tableTooltipDisabled === false) {
+                    if (_eventContent !== '') {
+                      handleTableTooltipMouseEnter(e, _eventContentTooltip);
+                    }
+                  }
+                }
+              },
+              onMouseLeave: function onMouseLeave(e) {
+                onCellMouseLeave === null || onCellMouseLeave === void 0 ? void 0 : onCellMouseLeave(e);
+                if (_eventContentTooltip !== '') {
+                  if (typeof tableTooltipDisabled === 'undefined' || tableTooltipDisabled === false) {
+                    if (_eventContent !== '') {
+                      handleTableTooltipMouseLeave();
+                    }
+                  }
+                }
+              },
               onClick: function onClick(e) {
+                //
+                onCellClick === null || onCellClick === void 0 ? void 0 : onCellClick(e);
+
                 // update row data
                 setTableRowNum(rowIndex);
                 if (_currentData.length > 0) {
@@ -9998,12 +10026,13 @@ var EventCalendarTimeline = function EventCalendarTimeline(props) {
                     date: getCalendarDate("".concat(year, "-").concat(month + 1, "-").concat(d))
                   } : _currentData[0]);
                   if (EVENTS_ENABLED) {
-                    setShowEdit(true);
                     onModalEditOpen === null || onModalEditOpen === void 0 ? void 0 : onModalEditOpen(_currentData.length === 0 ? {
                       rowData: listSectionData,
                       id: 0,
                       date: getCalendarDate("".concat(year, "-").concat(month + 1, "-").concat(d))
-                    } : _currentData[0]);
+                    } : _currentData[0], function () {
+                      return setShowEdit(true);
+                    });
                   }
                 }
               }
@@ -10085,12 +10114,13 @@ var EventCalendarTimeline = function EventCalendarTimeline(props) {
                     date: getCalendarDate("".concat(year, "-").concat(month + 1, "-").concat(d))
                   } : _currentData[0]);
                   if (EVENTS_ENABLED) {
-                    setShowEdit(true);
                     onModalEditOpen === null || onModalEditOpen === void 0 ? void 0 : onModalEditOpen(_currentData.length === 0 ? {
                       rowData: listSectionData,
                       id: 0,
                       date: getCalendarDate("".concat(year, "-").concat(month + 1, "-").concat(d))
-                    } : _currentData[0]);
+                    } : _currentData[0], function () {
+                      return setShowEdit(true);
+                    });
                   }
                 }
               }
@@ -10137,11 +10167,15 @@ var EventCalendarTimeline = function EventCalendarTimeline(props) {
                 e.preventDefault();
                 e.stopPropagation();
                 setShowDelete(true);
+                var _existsContent = _currentData[0];
+                if (typeof _existsContent !== 'undefined') {
+                  _existsContent.rowData = listSectionData;
+                }
                 onModalDeleteOpen === null || onModalDeleteOpen === void 0 ? void 0 : onModalDeleteOpen(_currentData.length === 0 ? {
                   rowData: listSectionData,
                   id: 0,
                   date: getCalendarDate("".concat(year, "-").concat(month + 1, "-").concat(d))
-                } : _currentData[0]);
+                } : _existsContent);
               }
             }, iconRemove ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, iconRemove) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("svg", {
               width: "20px",
@@ -10164,11 +10198,30 @@ var EventCalendarTimeline = function EventCalendarTimeline(props) {
               "data-day": padZero(d),
               "data-week": i,
               "data-row": rowIndex,
-              onMouseEnter: _eventContentTooltip === '' ? function () {} : tableTooltipDisabled ? function () {} : _eventContent !== '' ? function (e) {
-                handleTableTooltipMouseEnter(e, _eventContentTooltip);
-              } : function () {},
-              onMouseLeave: _eventContentTooltip === '' ? function () {} : tableTooltipDisabled ? function () {} : _eventContent !== '' ? handleTableTooltipMouseLeave : function () {},
+              onMouseEnter: function onMouseEnter(e) {
+                onCellMouseEnter === null || onCellMouseEnter === void 0 ? void 0 : onCellMouseEnter(e);
+                if (_eventContentTooltip !== '') {
+                  if (typeof tableTooltipDisabled === 'undefined' || tableTooltipDisabled === false) {
+                    if (_eventContent !== '') {
+                      handleTableTooltipMouseEnter(e, _eventContentTooltip);
+                    }
+                  }
+                }
+              },
+              onMouseLeave: function onMouseLeave(e) {
+                onCellMouseLeave === null || onCellMouseLeave === void 0 ? void 0 : onCellMouseLeave(e);
+                if (_eventContentTooltip !== '') {
+                  if (typeof tableTooltipDisabled === 'undefined' || tableTooltipDisabled === false) {
+                    if (_eventContent !== '') {
+                      handleTableTooltipMouseLeave();
+                    }
+                  }
+                }
+              },
               onClick: function onClick(e) {
+                //
+                onCellClick === null || onCellClick === void 0 ? void 0 : onCellClick(e);
+
                 // update row data
                 setTableRowNum(rowIndex);
                 if (_currentData.length > 0) {
@@ -10184,12 +10237,13 @@ var EventCalendarTimeline = function EventCalendarTimeline(props) {
                     date: getCalendarDate("".concat(year, "-").concat(month + 1, "-").concat(d))
                   } : _currentData[0]);
                   if (EVENTS_ENABLED) {
-                    setShowEdit(true);
                     onModalEditOpen === null || onModalEditOpen === void 0 ? void 0 : onModalEditOpen(_currentData.length === 0 ? {
                       rowData: listSectionData,
                       id: 0,
                       date: getCalendarDate("".concat(year, "-").concat(month + 1, "-").concat(d))
-                    } : _currentData[0]);
+                    } : _currentData[0], function () {
+                      return setShowEdit(true);
+                    });
                   }
                 }
               }
@@ -10537,7 +10591,7 @@ var EventCalendarTimeline = function EventCalendarTimeline(props) {
     type: "button",
     className: "e-cal-tl__btn e-cal-tl__btn--today",
     onClick: handleTodayChange
-  }, langToday || 'Today'))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+  }, langToday || 'Today'))), val.length === 0 ? null : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
     ref: tableGridRef,
     className: "e-cal-tl-table__timeline-table__wrapper invisible"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("table", {
@@ -10546,6 +10600,7 @@ var EventCalendarTimeline = function EventCalendarTimeline(props) {
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("colgroup", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("col", {
     className: "e-cal-tl-table__datagrid-header"
   }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("col", null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("col", null)), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("thead", {
+    ref: tableGridHeaderRef,
     role: "rowgroup"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("tr", {
     role: "presentation"
@@ -10623,7 +10678,7 @@ var EventCalendarTimeline = function EventCalendarTimeline(props) {
     return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("tr", {
       key: i
     }, generateDaysUi(item.eventSources, item.listSection, i, true));
-  }))))))))))), EVENTS_ENABLED ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((funda_modaldialog__WEBPACK_IMPORTED_MODULE_2___default()), {
+  })))))))))))), EVENTS_ENABLED ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((funda_modaldialog__WEBPACK_IMPORTED_MODULE_2___default()), {
     show: showDelete,
     maskOpacity: modalMaskOpacity,
     triggerClassName: "",

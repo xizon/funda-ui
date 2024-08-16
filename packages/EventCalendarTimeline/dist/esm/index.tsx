@@ -8,6 +8,8 @@ import {
     getAbsolutePositionOfStage
 } from 'funda-utils';
 
+
+
 export interface EventsValueConfig {
     id: string | number;
     date: string,
@@ -17,9 +19,14 @@ export interface EventsValueConfig {
     eventStyles?: React.CSSProperties;
 }
 
+export interface TimelineRowFieldConfig {
+    id: string | number;
+    title: string;
+}
+
 export interface TimelineValueConfig {
-    listSection: string;
-    eventSources: EventsValueConfig[]
+    listSection: TimelineRowFieldConfig;
+    eventSources: EventsValueConfig[];
 }
 
 
@@ -59,13 +66,17 @@ type EventCalendarTimelineProps = {
     modalSubmitBtnLabel?: string | React.ReactNode;
     modalSubmitDeleteBtnClassName?: string;
     modalSubmitDeleteBtnLabel?: string | React.ReactNode;
-    onModalEditOpen?: (currentData: any) => void;
+    onModalEditOpen?: (currentData: any, openwin: any) => void;
     onModalEditClose?: (currentData: any) => void;
     onModalDeleteOpen?: (currentData: any) => void;
     onModalDeleteClose?: (currentData: any) => void;
     onModalEditEvent?: (currentData: any, closewin: any) => void;
     onModalDeleteEvent?: (currentData: any, closewin: any) => void;
     
+    //
+    onCellMouseEnter?: (el: any) => void;
+    onCellMouseLeave?: (el: any) => void;
+    onCellClick?: (el: any) => void;
     
 
     // table
@@ -127,6 +138,11 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
         onModalDeleteEvent,
 
         //
+        onCellMouseEnter,
+        onCellMouseLeave,
+        onCellClick,
+        
+        //
         tableListSectionTitle,
         tableCellMinWidth,
 
@@ -183,6 +199,7 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
     const BODY_DRAG = draggable || false;
     const CELL_MIN_W = typeof tableCellMinWidth === 'undefined' ? (SHOW_WEEK ? 100 : 50) : tableCellMinWidth;
     const tableGridRef = useRef<any>(null);
+    const tableGridHeaderRef = useRef<any>(null);
     const scrollHeaderRef = useRef(null);
     const scrollBodyRef = useRef(null);
     const scrollListRef = useRef(null);
@@ -636,7 +653,7 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
                 <tr key={i} role="row" data-index={i}>
                     <td role="gridcell" data-resource-index={i} className="e-cal-tl-table__datagrid-cell">
                         <div className="e-cal-tl-table__cell-cushion e-cal-tl-table__cell-cushion-title" dangerouslySetInnerHTML={{
-                            __html: item.listSection
+                            __html: item.listSection.title
                         }} />
                     </td>
                 </tr>
@@ -702,12 +719,11 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
                                         } : _currentData[0]);
         
                                         if (EVENTS_ENABLED) {
-                                            setShowEdit(true);
                                             onModalEditOpen?.(_currentData.length === 0 ? {
                                                 rowData: listSectionData,
                                                 id: 0,
                                                 date: getCalendarDate(`${year}-${month + 1}-${d}`)
-                                            } : _currentData[0]);
+                                            } : _currentData[0], () => setShowEdit(true));
                                         }
                                     }
                                 }}
@@ -762,11 +778,16 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
                                     e.stopPropagation();
                                     setShowDelete(true);
 
+                                    const _existsContent = _currentData[0];
+                                    if (typeof _existsContent !== 'undefined') {
+                                        _existsContent.rowData = listSectionData;
+                                    }
+
                                     onModalDeleteOpen?.(_currentData.length === 0 ? {
                                         rowData: listSectionData,
                                         id: 0,
                                         date: getCalendarDate(`${year}-${month + 1}-${d}`)
-                                    } : _currentData[0]);
+                                    } : _existsContent);
                                 }}>
                                     {iconRemove ? <>{iconRemove}</> : <><svg width="20px" height="20px" viewBox="0 0 24 24" fill="none"><path fillRule="evenodd" clipRule="evenodd" d="M22 12c0 5.523-4.477 10-10 10S2 17.523 2 12 6.477 2 12 2s10 4.477 10 10ZM8 11a1 1 0 1 0 0 2h8a1 1 0 1 0 0-2H8Z" fill="#000" /></svg></>}
                                     {cellCloseBtnLabel || ''}
@@ -792,9 +813,34 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
                                 data-day={padZero(d)}
                                 data-week={i}
                                 data-row={rowIndex}
-                                onMouseEnter={_eventContentTooltip === '' ? () => {} : ( tableTooltipDisabled ? () => {} :  (_eventContent !== '' ? (e: React.MouseEvent) => {handleTableTooltipMouseEnter(e, _eventContentTooltip)} : () => {}) )}
-                                onMouseLeave={_eventContentTooltip === '' ? () => {} : ( tableTooltipDisabled ? () => {} :  (_eventContent !== '' ? handleTableTooltipMouseLeave : () => {}) )}
+                                onMouseEnter={(e: React.MouseEvent) => {
+                                    onCellMouseEnter?.(e);
+                                    
+                                    if (_eventContentTooltip !== '') {
+                                        if (typeof tableTooltipDisabled === 'undefined' || tableTooltipDisabled === false) {
+                                            if (_eventContent !== '') {
+                                                handleTableTooltipMouseEnter(e, _eventContentTooltip);
+                                            }
+                                        }
+                                    }
+                                }}
+                                onMouseLeave={(e: React.MouseEvent) => {
+                                    onCellMouseLeave?.(e);
+
+                                    if (_eventContentTooltip !== '') {
+                                        if (typeof tableTooltipDisabled === 'undefined' || tableTooltipDisabled === false) {
+                                            if (_eventContent !== '') {
+                                                handleTableTooltipMouseLeave();
+                                            }
+                                        }
+                                      
+                                    }
+
+                                }}
                                 onClick={(e: React.MouseEvent) => {
+
+                                    //
+                                    onCellClick?.(e);
 
                                     // update row data
                                     setTableRowNum(rowIndex);
@@ -815,12 +861,11 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
                                         } : _currentData[0]);
         
                                         if (EVENTS_ENABLED) {
-                                            setShowEdit(true);
                                             onModalEditOpen?.(_currentData.length === 0 ? {
                                                 rowData: listSectionData,
                                                 id: 0,
                                                 date: getCalendarDate(`${year}-${month + 1}-${d}`)
-                                            } : _currentData[0]);
+                                            } : _currentData[0], () => setShowEdit(true));
                                         }
                                     }
                                 }}
@@ -929,12 +974,11 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
                                         } : _currentData[0]);
         
                                         if (EVENTS_ENABLED) {
-                                            setShowEdit(true);
                                             onModalEditOpen?.(_currentData.length === 0 ? {
                                                 rowData: listSectionData,
                                                 id: 0,
                                                 date: getCalendarDate(`${year}-${month + 1}-${d}`)
-                                            } : _currentData[0]);
+                                            } : _currentData[0], () => setShowEdit(true));
                                         }
                                     }
                                 }}
@@ -1000,11 +1044,16 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
                                     e.stopPropagation();
                                     setShowDelete(true);
 
+                                    const _existsContent = _currentData[0];
+                                    if (typeof _existsContent !== 'undefined') {
+                                        _existsContent.rowData = listSectionData;
+                                    }
+
                                     onModalDeleteOpen?.(_currentData.length === 0 ? {
                                         rowData: listSectionData,
                                         id: 0,
                                         date: getCalendarDate(`${year}-${month + 1}-${d}`)
-                                    } : _currentData[0]);
+                                    } : _existsContent);
                                 }}>
                                     {iconRemove ? <>{iconRemove}</> : <><svg width="20px" height="20px" viewBox="0 0 24 24" fill="none"><path fillRule="evenodd" clipRule="evenodd" d="M22 12c0 5.523-4.477 10-10 10S2 17.523 2 12 6.477 2 12 2s10 4.477 10 10ZM8 11a1 1 0 1 0 0 2h8a1 1 0 1 0 0-2H8Z" fill="#000" /></svg></>}
                                     {cellCloseBtnLabel || ''}
@@ -1028,9 +1077,34 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
                                 data-day={padZero(d)}
                                 data-week={i}
                                 data-row={rowIndex}
-                                onMouseEnter={_eventContentTooltip === '' ? () => {} : ( tableTooltipDisabled ? () => {} :  (_eventContent !== '' ? (e: React.MouseEvent) => {handleTableTooltipMouseEnter(e, _eventContentTooltip)} : () => {}) )}
-                                onMouseLeave={_eventContentTooltip === '' ? () => {} : ( tableTooltipDisabled ? () => {} :  (_eventContent !== '' ? handleTableTooltipMouseLeave : () => {}) )}
+                                onMouseEnter={(e: React.MouseEvent) => {
+                                    onCellMouseEnter?.(e);
+                                    
+                                    if (_eventContentTooltip !== '') {
+                                        if (typeof tableTooltipDisabled === 'undefined' || tableTooltipDisabled === false) {
+                                            if (_eventContent !== '') {
+                                                handleTableTooltipMouseEnter(e, _eventContentTooltip);
+                                            }
+                                        }
+                                    }
+                                }}
+                                onMouseLeave={(e: React.MouseEvent) => {
+                                    onCellMouseLeave?.(e);
+
+                                    if (_eventContentTooltip !== '') {
+                                        if (typeof tableTooltipDisabled === 'undefined' || tableTooltipDisabled === false) {
+                                            if (_eventContent !== '') {
+                                                handleTableTooltipMouseLeave();
+                                            }
+                                        }
+                                      
+                                    }
+
+                                }}
                                 onClick={(e: React.MouseEvent) => {
+
+                                    //
+                                    onCellClick?.(e);
 
                                     // update row data
                                     setTableRowNum(rowIndex);
@@ -1050,12 +1124,11 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
                                         } : _currentData[0]);
         
                                         if (EVENTS_ENABLED) {
-                                            setShowEdit(true);
                                             onModalEditOpen?.(_currentData.length === 0 ? {
                                                 rowData: listSectionData,
                                                 id: 0,
                                                 date: getCalendarDate(`${year}-${month + 1}-${d}`)
-                                            } : _currentData[0]);
+                                            } : _currentData[0], () => setShowEdit(true));
                                         }
                                     }
                                 }}
@@ -1424,6 +1497,7 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
 
     return (
         <>
+        
             {/*/////////////////////////////////////////////////// */}
             {/*//////////////////// Calendar //////////////////// */}
             {/*////////////////////////////////////////////////// */}
@@ -1520,133 +1594,136 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
             {/*/////////////////////////////////////////////////// */}
             {/*//////////////////// Table Grid //////////////////// */}
             {/*////////////////////////////////////////////////// */}
-            <div ref={tableGridRef} className="e-cal-tl-table__timeline-table__wrapper invisible">
-                <table role="grid" className="e-cal-tl-table__timeline-table">
-                    <colgroup>
-                        <col className="e-cal-tl-table__datagrid-header" />
-                        <col />
-                        <col />
-                    </colgroup>
-                    <thead role="rowgroup">
-                        <tr role="presentation">
-                            <th role="presentation">
-                                {/*<!--///// HEADER LEFT //////-->*/}
-                                <div className="e-cal-tl-table__timeline-header e-cal-tl-table__timeline-headertitle">
+            {val.length === 0 ? null : <>
+                <div ref={tableGridRef} className="e-cal-tl-table__timeline-table__wrapper invisible">
+                    <table role="grid" className="e-cal-tl-table__timeline-table">
+                        <colgroup>
+                            <col className="e-cal-tl-table__datagrid-header" />
+                            <col />
+                            <col />
+                        </colgroup>
+                        <thead ref={tableGridHeaderRef} role="rowgroup">
+                            <tr role="presentation">
+                                <th role="presentation">
+                                    {/*<!--///// HEADER LEFT //////-->*/}
+                                    <div className="e-cal-tl-table__timeline-header e-cal-tl-table__timeline-headertitle">
 
-                                    <table role="presentation" className="e-cal-tl-table__datagrid-header__title">
-                                        <colgroup>
-                                            <col />
-                                        </colgroup>
-                                        <thead role="presentation">
-                                            <tr role="row">
-                                                <th role="columnheader">
-                                                    <div className="e-cal-tl-table__cell-cushion e-cal-tl-table__cell-cushion-headertitle">
-                                                        {tableListSectionTitle || ''}
-                                                    </div>
-                                                </th>
-                                            </tr>
-                                        </thead>
-                                    </table>
-
-                                </div>
-                                {/*<!--///// /HEADER LEFT //////-->*/}
-
-
-
-                            </th>
-                            <td role="presentation" className="e-cal-tl-table__timeline-divider"><div></div></td>
-                            <th role="presentation">
-                                <div ref={scrollHeaderRef} className="e-cal-tl-table__scroller-harness e-cal-tl-table__scroller-harness--hide" data-scroll="header" onScroll={syncTableScrollHeader}>
-                                    <div className="e-cal-tl-table__scroller">
-
-                                        {/*<!--///// HEADER RIGHT //////-->*/}
-                                        <div className="e-cal-tl-table__timeline-header">
-
-                                            <table className="e-cal-tl-table__datagrid-header__content e-cal-tl-table__scrollgrid-sync-table" >
-                                                <tbody>
-                                                    <tr>
-                                                        {generateDaysUi()}
-                                                    </tr>
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                        {/*<!--///// /HEADER RIGHT //////-->*/}
-                                    </div>
-                                </div>
-                            </th>
-                        </tr>
-                    </thead>
-
-
-
-                    <tbody role="rowgroup">
-                        <tr role="presentation" className="e-cal-tl-table__list-section">
-                            <td role="presentation">
-
-                                <div ref={scrollListRef} className={`e-cal-tl-table__scroller-harness ${AUTO_SCROLL ? 'autoscroll' : ''}`} data-scroll="list" onScroll={syncTableScrollList}>
-                                    <div className="e-cal-tl-table__scroller">
-
-                                        {/*<!--///// RESOURCE LEFT //////-->*/}
-                                        <table role="presentation" className="e-cal-tl-table__datagrid-body__title e-cal-tl-table__scrollgrid-sync-table">
+                                        <table role="presentation" className="e-cal-tl-table__datagrid-header__title">
                                             <colgroup>
                                                 <col />
                                             </colgroup>
-                                            <tbody role="presentation">
-
-                                                {/*<!-- per row -->*/}
-                                                {generateListSectionUi()}
-                                                {/*<!-- /per row -->*/}
-
-                                            </tbody>
+                                            <thead role="presentation">
+                                                <tr role="row">
+                                                    <th role="columnheader">
+                                                        <div className="e-cal-tl-table__cell-cushion e-cal-tl-table__cell-cushion-headertitle">
+                                                            {tableListSectionTitle || ''}
+                                                        </div>
+                                                    </th>
+                                                </tr>
+                                            </thead>
                                         </table>
-                                        {/*<!--///// /RESOURCE LEFT //////-->*/}
+
                                     </div>
-                                </div>
+                                    {/*<!--///// /HEADER LEFT //////-->*/}
 
 
-                            </td>
-                            <td role="presentation" className="e-cal-tl-table__timeline-divider"><div></div></td>
-                            <td role="presentation">
- 
 
-                                <div ref={scrollBodyRef} className={`e-cal-tl-table__scroller-harness ${AUTO_SCROLL ? 'autoscroll' : ''}`} data-scroll="body" onScroll={syncTableScrollBody} onMouseMove={BODY_DRAG ? handleTableMove : () =>{}} onMouseDown={BODY_DRAG ? handleTableDragStart : () =>{}} onMouseUp={BODY_DRAG ? handleTableDragEnd : () =>{}} onMouseLeave={BODY_DRAG ? handleTableDragEnd : () =>{}}>
-                                    <div className="e-cal-tl-table__scroller">
-                                        {/*<!--///// RESOURCE RIGHT //////-->*/}
-                                        <div className="e-cal-tl-table__timeline-body">
-                                            <table className="e-cal-tl-table__datagrid-body__content e-cal-tl-table__scrollgrid-sync-table">
+                                </th>
+                                <td role="presentation" className="e-cal-tl-table__timeline-divider"><div></div></td>
+                                <th role="presentation">
+                                    <div ref={scrollHeaderRef} className="e-cal-tl-table__scroller-harness e-cal-tl-table__scroller-harness--hide" data-scroll="header" onScroll={syncTableScrollHeader}>
+                                        <div className="e-cal-tl-table__scroller">
+
+                                            {/*<!--///// HEADER RIGHT //////-->*/}
+                                            <div className="e-cal-tl-table__timeline-header">
+
+                                                <table className="e-cal-tl-table__datagrid-header__content e-cal-tl-table__scrollgrid-sync-table" >
+                                                    <tbody>
+                                                        <tr>
+                                                            {generateDaysUi()}
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                            {/*<!--///// /HEADER RIGHT //////-->*/}
+                                        </div>
+                                    </div>
+                                </th>
+                            </tr>
+                        </thead>
+
+
+
+                        <tbody role="rowgroup">
+                            <tr role="presentation" className="e-cal-tl-table__list-section">
+                                <td role="presentation">
+
+                                    <div ref={scrollListRef} className={`e-cal-tl-table__scroller-harness ${AUTO_SCROLL ? 'autoscroll' : ''}`} data-scroll="list" onScroll={syncTableScrollList}>
+                                        <div className="e-cal-tl-table__scroller">
+
+                                            {/*<!--///// RESOURCE LEFT //////-->*/}
+                                            <table role="presentation" className="e-cal-tl-table__datagrid-body__title e-cal-tl-table__scrollgrid-sync-table">
                                                 <colgroup>
-                                                    {generateColUi()}
+                                                    <col />
                                                 </colgroup>
-                                                <tbody>
+                                                <tbody role="presentation">
+
                                                     {/*<!-- per row -->*/}
-                                                    {val.map((item: any, i: number) => {
-
-                                                        return (
-                                                            <tr key={i}>
-                                                                {generateDaysUi(item.eventSources, item.listSection, i, true)}
-                                                            </tr>
-                                                        )
-
-                                                    })}
+                                                    {generateListSectionUi()}
+                                                    {/*<!-- /per row -->*/}
 
                                                 </tbody>
                                             </table>
+                                            {/*<!--///// /RESOURCE LEFT //////-->*/}
+                                        </div>
+                                    </div>
+
+
+                                </td>
+                                <td role="presentation" className="e-cal-tl-table__timeline-divider"><div></div></td>
+                                <td role="presentation">
+    
+
+                                    <div ref={scrollBodyRef} className={`e-cal-tl-table__scroller-harness ${AUTO_SCROLL ? 'autoscroll' : ''}`} data-scroll="body" onScroll={syncTableScrollBody} onMouseMove={BODY_DRAG ? handleTableMove : () =>{}} onMouseDown={BODY_DRAG ? handleTableDragStart : () =>{}} onMouseUp={BODY_DRAG ? handleTableDragEnd : () =>{}} onMouseLeave={BODY_DRAG ? handleTableDragEnd : () =>{}}>
+                                        <div className="e-cal-tl-table__scroller">
+                                            {/*<!--///// RESOURCE RIGHT //////-->*/}
+                                            <div className="e-cal-tl-table__timeline-body">
+                                                <table className="e-cal-tl-table__datagrid-body__content e-cal-tl-table__scrollgrid-sync-table">
+                                                    <colgroup>
+                                                        {generateColUi()}
+                                                    </colgroup>
+                                                    <tbody>
+                                                        {/*<!-- per row -->*/}
+                                                        {val.map((item: any, i: number) => {
+
+                                                            return (
+                                                                <tr key={i}>
+                                                                    {generateDaysUi(item.eventSources, item.listSection, i, true)}
+                                                                </tr>
+                                                            )
+
+                                                        })}
+
+                                                    </tbody>
+                                                </table>
+
+                                            </div>
+                                            {/*<!--///// /RESOURCE RIGHT //////-->*/}
+
 
                                         </div>
-                                        {/*<!--///// /RESOURCE RIGHT //////-->*/}
-
-
                                     </div>
-                                </div>
 
 
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
 
-            </div>{/* /.e-cal-tl-table__timeline-table__wrapper */}
+                </div>{/* /.e-cal-tl-table__timeline-table__wrapper */}
 
+
+            </>}
 
 
             {/*/////////////////////////////////////////////////// */}

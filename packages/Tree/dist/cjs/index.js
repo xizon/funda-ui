@@ -4255,10 +4255,11 @@ var activeClass = function activeClass(el, mode) {
 ;// CONCATENATED MODULE: ./src/TreeList.tsx
 function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
 function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
-function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
-function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i]; return arr2; }
 function _iterableToArrayLimit(arr, i) { var _i = null == arr ? null : "undefined" != typeof Symbol && arr[Symbol.iterator] || arr["@@iterator"]; if (null != _i) { var _s, _e, _x, _r, _arr = [], _n = !0, _d = !1; try { if (_x = (_i = _i.call(arr)).next, 0 === i) { if (Object(_i) !== _i) return; _n = !1; } else for (; !(_n = (_s = _x.call(_i)).done) && (_arr.push(_s.value), _arr.length !== i); _n = !0); } catch (err) { _d = !0, _e = err; } finally { try { if (!_n && null != _i["return"] && (_r = _i["return"](), Object(_r) !== _r)) return; } finally { if (_d) throw _e; } } return _arr; } }
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+function _createForOfIteratorHelper(o, allowArrayLike) { var it = typeof Symbol !== "undefined" && o[Symbol.iterator] || o["@@iterator"]; if (!it) { if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function (_e2) { function e(_x2) { return _e2.apply(this, arguments); } e.toString = function () { return _e2.toString(); }; return e; }(function (e) { throw e; }), f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = it.call(o); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function (_e3) { function e(_x3) { return _e3.apply(this, arguments); } e.toString = function () { return _e3.toString(); }; return e; }(function (e) { didErr = true; err = e; }), f: function f() { try { if (!normalCompletion && it["return"] != null) it["return"](); } finally { if (didErr) throw err; } } }; }
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i]; return arr2; }
 
 
 // HAS CHECKBOX
@@ -4276,6 +4277,7 @@ function TreeList(props) {
     arrow = props.arrow,
     arrowIcons = props.arrowIcons,
     childClassName = props.childClassName,
+    orginalData = props.orginalData,
     data = props.data,
     getCheckedPrint = props.getCheckedPrint,
     updateCheckedPrint = props.updateCheckedPrint,
@@ -4342,55 +4344,82 @@ function TreeList(props) {
       if (item.key === key) arr[index].checked = val;
     });
   };
-  var setCheckboxIndeterminateData = function setCheckboxIndeterminateData(arr, key, val) {
-    arr.forEach(function (item, index) {
-      if (item.key === key) arr[index].indeterminate = val;
-    });
-  };
-  var setCheckboxIndeterminateStatus = function setCheckboxIndeterminateStatus(checkedData, printData, el) {
-    var _parentsLi = [];
-    if (el !== null) {
-      _parentsLi = [].slice.call((0,cjs.getParents)(el, 'li'));
-      _parentsLi.splice(0, 1);
-    } else {
-      _parentsLi = [].slice.call(document.querySelectorAll("#".concat(checkboxNamePrefix, " li")));
+
+  // check whether the node is in the Indeterminate state
+  var isIndeterminate = function isIndeterminate(node) {
+    if (!node.children || node.children.length === 0) {
+      return false;
     }
-
-    //---
-    _parentsLi.forEach(function (node) {
-      var _checkboxes = (0,cjs.getChildren)(node, '[type="checkbox"]');
-      var parentKey = typeof _checkboxes[0] === 'undefined' ? '' : _checkboxes[0].dataset.key;
-
-      //
-      var _checkedLengthCalcArr = [];
-      checkedData.forEach(function (oitem, oindex) {
-        _checkboxes.forEach(function (el) {
-          if (el.dataset.key === oitem.key) _checkedLengthCalcArr.push(oitem);
-        });
-      });
-      _checkedLengthCalcArr = _checkedLengthCalcArr.filter(function (el) {
-        return el.key !== parentKey;
-      });
-
-      //
-      var _checkedLength = _checkedLengthCalcArr.filter(function (el) {
-        return el.checked === true;
-      }).length;
-      if (_checkedLength === 0) {
-        setCheckboxIndeterminateData(checkedData, parentKey, false);
-      } else {
-        if (_checkedLength === _checkboxes.length - 1) {
-          setCheckboxIndeterminateData(checkedData, parentKey, false);
-          setCheckboxCheckedData(checkedData, parentKey, true);
-          printData.push(formatCheckboxControlVal(_checkboxes[0]));
+    var hasChecked = false;
+    var hasUnchecked = false;
+    var _iterator = _createForOfIteratorHelper(node.children),
+      _step;
+    try {
+      for (_iterator.s(); !(_step = _iterator.n()).done;) {
+        var child = _step.value;
+        if (isIndeterminate(child)) {
+          return true;
         }
-        if (_checkedLength < _checkboxes.length - 1) {
-          setCheckboxIndeterminateData(checkedData, parentKey, true);
-          setCheckboxCheckedData(checkedData, parentKey, false);
-          printData = removeItemOnce(printData, parentKey);
+        if (child.checked) {
+          hasChecked = true;
+        } else {
+          hasUnchecked = true;
+        }
+
+        // If there are some selected and some unchecked, the node is Indeterminate
+        if (hasChecked && hasUnchecked) {
+          return true;
         }
       }
-    });
+
+      // If all child nodes are the same, it is not Indeterminate
+    } catch (err) {
+      _iterator.e(err);
+    } finally {
+      _iterator.f();
+    }
+    return false;
+  };
+  var updateTreeCheckedItems = function updateTreeCheckedItems(arr, flatArr) {
+    if (!Array.isArray(arr)) return;
+    var _loop = function _loop() {
+      var orginalDataKey = arr[i].key;
+      var targetItem = flatArr.find(function (v) {
+        return v.key === orginalDataKey;
+      });
+      if (typeof targetItem !== 'undefined') {
+        // update value of checked
+        arr[i].checked = targetItem.checked;
+      }
+      if (arr[i].children) updateTreeCheckedItems(arr[i].children, flatArr);
+    };
+    for (var i = 0; i < arr.length; i++) {
+      _loop();
+    }
+  };
+  var updateIndeterminateData = function updateIndeterminateData(arr, flatArr) {
+    if (!Array.isArray(arr)) return;
+    var _loop2 = function _loop2() {
+      var orginalDataKey = arr[i].key;
+      var targetItem = flatArr.find(function (v) {
+        return v.key === orginalDataKey;
+      });
+      if (typeof targetItem !== 'undefined') {
+        // update indeterminate of item
+        targetItem.indeterminate = isIndeterminate(arr[i]);
+      }
+      if (arr[i].children) updateIndeterminateData(arr[i].children, flatArr);
+    };
+    for (var i = 0; i < arr.length; i++) {
+      _loop2();
+    }
+  };
+  var setCheckboxIndeterminateStatus = function setCheckboxIndeterminateStatus(checkedData, printData, el) {
+    // update checked items from orginal data
+    updateTreeCheckedItems(orginalData, checkedData);
+
+    // check whether the node is in the Indeterminate state
+    updateIndeterminateData(orginalData, checkedData);
     return [checkedData, printData];
   };
   var closeChild = function closeChild(hyperlink, ul) {
@@ -4512,7 +4541,6 @@ function TreeList(props) {
     //-----------
     if (val === true) {
       _res.push(formatCheckboxControlVal(el));
-      setCheckboxIndeterminateData(_checkedData, _curKey, false);
       setCheckboxCheckedData(_checkedData, _curKey, true);
     } else {
       setCheckboxCheckedData(_checkedData, _curKey, false);
@@ -4525,7 +4553,6 @@ function TreeList(props) {
     [].slice.call((0,cjs.getChildren)(el.closest('li'), '[type="checkbox"]')).forEach(function (node) {
       if (val === true) {
         if (node.dataset.key !== _curKey) {
-          setCheckboxIndeterminateData(_checkedData, node.dataset.key, false);
           setCheckboxCheckedData(_checkedData, node.dataset.key, true);
           _res.push(formatCheckboxControlVal(node));
         }
@@ -4707,6 +4734,7 @@ function TreeList(props) {
       }), titleArrowGenerator()), item.customContentToHyperlink), item.customContentToLiTag, item.children && item.children.length > 0 && /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement(TreeList, {
         rootNode: rootNode,
         checkboxNamePrefix: checkboxNamePrefix,
+        orginalData: orginalData,
         data: item.children,
         first: false,
         arrow: arrow,
@@ -4773,20 +4801,24 @@ var Tree = function Tree(props) {
   var rootRef = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useRef)(null);
   var _useState = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)(null),
     _useState2 = src_slicedToArray(_useState, 2),
-    list = _useState2[0],
-    setList = _useState2[1];
-  var _useState3 = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)([]),
+    orginalData = _useState2[0],
+    setOrginalData = _useState2[1];
+  var _useState3 = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)(null),
     _useState4 = src_slicedToArray(_useState3, 2),
-    flatList = _useState4[0],
-    setFlatList = _useState4[1];
+    list = _useState4[0],
+    setList = _useState4[1];
   var _useState5 = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)([]),
     _useState6 = src_slicedToArray(_useState5, 2),
-    checkedPrint = _useState6[0],
-    setCheckedPrint = _useState6[1];
+    flatList = _useState6[0],
+    setFlatList = _useState6[1];
   var _useState7 = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)([]),
     _useState8 = src_slicedToArray(_useState7, 2),
-    checkedData = _useState8[0],
-    setCheckedData = _useState8[1];
+    checkedPrint = _useState8[0],
+    setCheckedPrint = _useState8[1];
+  var _useState9 = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)([]),
+    _useState10 = src_slicedToArray(_useState9, 2),
+    checkedData = _useState10[0],
+    setCheckedData = _useState10[1];
   var expandClassName = "".concat(showLine ? 'show-line' : '', " ").concat(disableArrow ? 'hide-arrow' : '', " ").concat(disableCollapse ? 'collapse-disabled' : '', " ").concat(lineStyle ? "line--".concat(lineStyle) : '', " ").concat(checkable ? 'has-checkbox' : '');
   var updateTreeData = function updateTreeData(list, key, children) {
     return list ? list.map(function (node) {
@@ -5016,6 +5048,7 @@ var Tree = function Tree(props) {
   }
   (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useEffect)(function () {
     initDefaultValue(null, null, true, retrieveData);
+    setOrginalData(data);
   }, [data, retrieveData]);
   return /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("nav", {
     tabIndex: 0,
@@ -5031,6 +5064,7 @@ var Tree = function Tree(props) {
     disableCollapse: disableCollapse,
     arrow: arrow,
     arrowIcons: arrowIcons,
+    orginalData: orginalData,
     data: Array.isArray(retrieveData) && retrieveData.length > 0 ? filterRetriveData(flatList, retrieveData) : list,
     childClassName: childClassName || 'tree-diagram-default-nav',
     onSelect: onSelect,

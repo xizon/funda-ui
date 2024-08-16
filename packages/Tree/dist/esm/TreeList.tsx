@@ -1,11 +1,9 @@
-import React, { useEffect, useRef, useCallback } from 'react';
+import React, { useEffect, useRef } from 'react';
 
 // HAS CHECKBOX
 
 import {
     getNextSiblings, 
-    getPreviousSiblings, 
-    getParents, 
     getChildren
 } from 'funda-utils';
 
@@ -33,6 +31,7 @@ type TreeListProps = {
     arrow?: React.ReactNode;
     arrowIcons?: React.ReactNode[];
     childClassName?: string;
+    orginalData: any[any];
 	data: any[any];
     getCheckedPrint?: any[];
     updateCheckedPrint?: any;
@@ -56,6 +55,7 @@ export default function TreeList(props: TreeListProps) {
         arrow,
         arrowIcons,
         childClassName,
+        orginalData,
         data,
         getCheckedPrint,
         updateCheckedPrint,
@@ -90,66 +90,74 @@ export default function TreeList(props: TreeListProps) {
         });
     };
 
-    const setCheckboxIndeterminateData = (arr: any[], key: string, val: boolean) => {
-        arr.forEach((item: any, index: number) => {
-            if (item.key === key) arr[index].indeterminate = val;
-        });
+    // check whether the node is in the Indeterminate state
+    const isIndeterminate = (node: any) => {
+        if (!node.children || node.children.length === 0) {
+            return false;
+        }
+
+        let hasChecked = false;
+        let hasUnchecked = false;
+
+        for (let child of node.children) {
+            if (isIndeterminate(child)) {
+                return true;
+            }
+
+            if (child.checked) {
+                hasChecked = true;
+            } else {
+                hasUnchecked = true;
+            }
+
+            // If there are some selected and some unchecked, the node is Indeterminate
+            if (hasChecked && hasUnchecked) {
+                return true;
+            }
+        }
+
+        // If all child nodes are the same, it is not Indeterminate
+        return false;
     };
 
 
-    
-    const setCheckboxIndeterminateStatus = (checkedData: any[], printData: any[], el: HTMLFormElement | null) => {
-        let _parentsLi: any = [];
+    const updateTreeCheckedItems = (arr: any[], flatArr: any[]) => {
+        if (!Array.isArray(arr)) return;
 
-        if ( el !== null ) {
-            _parentsLi = [].slice.call(getParents(el,'li'));
-            _parentsLi.splice(0, 1);
-        } else {
-            _parentsLi = [].slice.call(document.querySelectorAll(`#${checkboxNamePrefix} li`));
-        }
-
-
-        //---
-        _parentsLi.forEach((node: any) => {
-            const _checkboxes = getChildren(node, '[type="checkbox"]');
-            const parentKey = typeof _checkboxes[0] === 'undefined' ? '' : _checkboxes[0].dataset.key;
-
-
-            //
-            let _checkedLengthCalcArr: any[] = [];
-            checkedData.forEach((oitem: any, oindex: number) => {
-                _checkboxes.forEach((el: any) => {
-                    if (el.dataset.key === oitem.key) _checkedLengthCalcArr.push(oitem);
-                });
-            });
-            _checkedLengthCalcArr = _checkedLengthCalcArr.filter((el: any) => {
-                return el.key !== parentKey;
-            })
-
-            //
-            const _checkedLength = _checkedLengthCalcArr.filter((el: any) => {
-                return el.checked === true;
-            }).length;
-
-            if ( _checkedLength === 0 ) {
-                setCheckboxIndeterminateData(checkedData, parentKey, false);
-            } else {
-
-                if ( _checkedLength === _checkboxes.length-1 )  {
-                    setCheckboxIndeterminateData(checkedData, parentKey, false);
-                    setCheckboxCheckedData(checkedData, parentKey, true);
-                    printData.push(formatCheckboxControlVal(_checkboxes[0])); 
-                }
-                
-                if ( _checkedLength < _checkboxes.length-1 )  {
-                    setCheckboxIndeterminateData(checkedData, parentKey, true);
-                    setCheckboxCheckedData(checkedData, parentKey, false);
-                    printData = removeItemOnce(printData, parentKey);  
-                }
-
+        for (let i = 0; i < arr.length; i++) {
+            const orginalDataKey: React.Key = arr[i].key;
+            const targetItem = flatArr.find((v: any) => v.key === orginalDataKey);
+            if (typeof targetItem !== 'undefined') {
+                // update value of checked
+                arr[i].checked = targetItem.checked;
             }
+            
+            if (arr[i].children) updateTreeCheckedItems(arr[i].children, flatArr);
+        }
+    }
+        
+    const updateIndeterminateData = (arr: any[], flatArr: any[]) => {
+        if (!Array.isArray(arr)) return;
 
-        });
+        for (let i = 0; i < arr.length; i++) {
+            const orginalDataKey: React.Key = arr[i].key;
+            const targetItem = flatArr.find((v: any) => v.key === orginalDataKey);
+            if (typeof targetItem !== 'undefined') {
+                // update indeterminate of item
+                targetItem.indeterminate = isIndeterminate(arr[i]);
+            }
+           
+            if (arr[i].children) updateIndeterminateData(arr[i].children, flatArr);
+        }
+    }
+        
+    const setCheckboxIndeterminateStatus = (checkedData: any[], printData: any[], el: HTMLFormElement | null) => {
+
+        // update checked items from orginal data
+        updateTreeCheckedItems(orginalData, checkedData);
+
+        // check whether the node is in the Indeterminate state
+        updateIndeterminateData(orginalData, checkedData);
 
         return [checkedData, printData];
 
@@ -301,7 +309,6 @@ export default function TreeList(props: TreeListProps) {
         //-----------
         if ( val === true ) {
             _res.push(formatCheckboxControlVal(el));
-            setCheckboxIndeterminateData(_checkedData, _curKey, false);
             setCheckboxCheckedData(_checkedData, _curKey, true);
 
         } else {
@@ -317,7 +324,6 @@ export default function TreeList(props: TreeListProps) {
         [].slice.call(getChildren(el.closest('li'), '[type="checkbox"]')).forEach((node: any) => {
             if ( val === true ) {
                 if ( node.dataset.key !== _curKey ) {
-                    setCheckboxIndeterminateData(_checkedData, node.dataset.key, false);
                     setCheckboxCheckedData(_checkedData, node.dataset.key, true);
                     _res.push(formatCheckboxControlVal(node));
                 }
@@ -509,6 +515,7 @@ export default function TreeList(props: TreeListProps) {
                             {item.children && item.children.length > 0 && <TreeList 
                                                 rootNode={rootNode}
                                                 checkboxNamePrefix={checkboxNamePrefix}
+                                                orginalData={orginalData}
                                                 data={item.children} 
                                                 first={false} 
                                                 arrow={arrow} 

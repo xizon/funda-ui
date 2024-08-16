@@ -14,6 +14,7 @@
   --cus-sel-searchbtn-hover-fill: #333;
   --cus-sel-removebtn-fill: #000;
   --cus-sel-removebtn-hover-fill: #f00;
+  position: relative; /* Required */
   /*------ Placeholder for input ------*/
   /*------ Arrow ------*/
   /*------ Clean ------*/
@@ -220,6 +221,10 @@
   box-shadow: none;
 }
 .custom-select__wrapper .custom-select-multi__control-searchbtn {
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
   z-index: 5;
   pointer-events: auto;
 }

@@ -4,6 +4,8 @@ declare type PaginationProps = {
     wrapperClassName?: string;
     /** The class name of the navigation */
     navClassName?: string;
+    /** The class name of each item */
+    navItemClassName?: string;
     /** An API URL Path. Use `{page}` characters to place a placeholder. such as `/mypage/{page}` */
     apiUrl: string;
     /** The range of pages displayed */

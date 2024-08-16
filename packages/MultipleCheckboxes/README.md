@@ -12,7 +12,7 @@ import MultipleCheckboxes from 'funda-ui/MultipleCheckboxes';
 export default () => {
 
     const [val, setVal] = useState('[value-1][value-3]');
-    // const [val, setVal] = useState('[<del style=color:red>deprecate</del>Option 2][Option 4]');  // default value is label value
+    // const [val, setVal] = useState('[Option 2][Option 4]');  // default value is label value
 
     return (
         <>
@@ -177,16 +177,17 @@ function MemoMultipleCheckboxes(props: any) {
 
 export default () => {
 
-    const [myCheckboxes, setMyCheckboxes] = useState('[<del style=color:red>deprecate</del>Option 2][Option 4]');  // default value is label value
+    const [myCheckboxes, setMyCheckboxes] = useState('[Option 2][Option 4]');  // default value is label value
 
     return (
         <>
           
             <MemoMultipleCheckboxes 
-                val={"value-3"} 
+                val={myCheckboxes}
                 name="name"
                 callback={setMyCheckboxes} 
             />
+            <p>{myCheckboxes}</p>
             
             
 
@@ -405,7 +406,7 @@ export default () => {
         <>           
             <MultipleCheckboxes
                 name="name"
-                value="value-2"
+                value="[value-2]"
                 options={[
                     {"label": "Option 1","value": "value-1","attr1": false},
                     {"label": "Option 2","value": "value-2","attr1": true},
@@ -446,7 +447,7 @@ import MultipleCheckboxes from 'funda-ui/MultipleCheckboxes';
 export default () => {
 
     const uniqueID = useId();
-    const [val, setVal] = useState('[<del style=color:red>deprecate</del>Option 2][Option 4]');  // default value is label value
+    const [val, setVal] = useState('[Option 2][Option 4]');  // default value is label value
 
     return (
         <>
@@ -499,8 +500,25 @@ import MultipleCheckboxes from 'funda-ui/MultipleCheckboxes';
 
 export default () => {
 
-    const [val, setVal] = useState('[<del style=color:red>deprecate</del>Option 2][Option 4]');  // default value is label value
+    const [val, setVal] = useState('[Option 2][Option 4]');  // default value is label value
 
+
+    const optionsFlat = (allData: any[]) => {
+
+        const flatItems: any[] = [];
+
+        allData.forEach((item: any) => {
+            if (typeof item.optgroup !== 'undefined') {
+                item.optgroup.forEach((opt: any) => {
+                    flatItems.push(opt);
+                });
+            } else {
+                flatItems.push(item);
+            }
+        });
+
+        return flatItems;
+    };
 
 
     // Generate custom list of options
@@ -772,9 +790,6 @@ Lets you callback the handle exposed as attribute `contentRef`.
 
 ```js
  import React, { useMemo, useState, useRef } from 'react';
-
- // bootstrap components
- import ModalDialog from 'funda-ui/ModalDialog';
 import MultipleCheckboxes from 'funda-ui/MultipleCheckboxes';
 
 // DO NOT move `useMemo` to component
@@ -792,7 +807,7 @@ function MemoMultipleCheckboxes(props: any) {
                     {"label": "Option 4","listItemLabel":"Option 4 (No: 004)","value": "value-4","disabled":true}
                 ]}
                 onChange={(e: any, value: any, valueStr: any, label: any, labelStr: any, currentData: any, dataCollection: any) => {
-                    callback(value);
+                    callback(valueStr);
                 }}
             />
     }, []);
@@ -815,7 +830,7 @@ export default () => {
                     setUserContent('')
                 });
             }}>Clean</a>
-            |
+            &nbsp;&nbsp;|&nbsp;&nbsp;
             <a href="#" onClick={(e: React.MouseEvent) => {
                 e.preventDefault();
                 if (conRef.current) conRef.current.set('[value-1][value-2]', () => {

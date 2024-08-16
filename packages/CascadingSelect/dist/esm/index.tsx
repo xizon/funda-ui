@@ -756,7 +756,7 @@ const CascadingSelect = (props: CascadingSelectProps) => {
 
                         const _findNode: any = searchObject(_data, function (v: any) { return v != null && v != undefined && v[rowQueryAttr] == targetVal[col - 1]; });
 
-                        const childList = _findNode[0].children;
+                        const childList = typeof _findNode[0] !== 'undefined' ? _findNode[0].children : undefined;
 
                         // STEP 1: ===========
                         //active item from current column

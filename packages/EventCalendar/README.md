@@ -57,6 +57,7 @@ The capabilities like multi-day events, responsiveness are supported.
 ```js
 import React, { useState, useEffect, useRef } from "react";
 import EventCalendar from 'funda-ui/EventCalendar';
+import Input from 'funda-ui/Input';
 
 // component styles
 import 'funda-ui/EventCalendar/index.css';
@@ -223,6 +224,11 @@ export default () => {
     const [updateCalendarData, setUpdateCalendarData] = useState<boolean>(false);
     const [modalFormData, setModalFormData] = useState<any>(null);
 
+    const itemExist = (arr: any[], date: string) => {
+        return arr.some((o) => {
+            return o.date == date
+        });
+    };
 
     useEffect(() => {
 
@@ -242,20 +248,23 @@ export default () => {
                 customTodayDate={defaultCustomTodayDate}
                 eventsValue={data}
                 modalMaxWidth="850px"
-                modalHeading="Settings"
+                // cellCloseBtnClassName="d-none" // if hidden delete button, set it to `d-none`
+                modalHeading={<>Settings</>}
                 modalCloseBtnClassName={'btn btn-secondary'}
-                modalCloseBtnLabel="Cancel"
                 modalSubmitBtnClassName={'btn btn-primary'}
+                modalSubmitDeleteBtnClassName={'btn btn-danger'}
                 modalSubmitBtnLabel={<>Confirm</>}
+                modalCloseBtnLabel={<>Cancel</>}
                 modalSubmitDeleteBtnLabel={<>Delete</>}
                 modalDeleteContent={<>
                 
                     <div ref={formDeleteRef}>
 
-                        <input
+                        <Input
                             tabIndex={-1}
+                            wrapperClassName=""
                             type="hidden"
-                            defaultValue={modalFormData ? modalFormData.id : ''}
+                            value={modalFormData ? modalFormData.id : ''}
                             name="post_id"
                         />
                         Are you sure?（ID: {modalFormData ? modalFormData.id : ''}）
@@ -275,10 +284,10 @@ export default () => {
                                 Content
                             </div>
                             <div className="col">
-                                <input
-                                    className="form-control"
+                                <Input
+                                    
                                     type="text"
-                                    defaultValue={modalFormData ? modalFormData.content : ''}
+                                    value={modalFormData ? modalFormData.content : ''}
                                     name="post_title"
                                 />
                             </div>
@@ -292,10 +301,10 @@ export default () => {
                                 Post Date
                             </div>
                             <div className="col">
-                                <input
-                                    className="form-control"
+                                <Input
+                                    
                                     type="date"
-                                    defaultValue={modalFormData ? modalFormData.date : ''}
+                                    value={modalFormData ? modalFormData.date : ''}
                                     name="post_date"
                                 />
                             </div>
@@ -307,12 +316,18 @@ export default () => {
 
 
                 </>}
-                onModalEditOpen={(currentData: any) => {
+                onModalEditOpen={(currentData: any, openwin: any) => {
+                    // open the modal
+                    openwin();
+
                     setModalFormData({
                         id: currentData.id,
                         content: currentData.data,
                         date: currentData.date
                     })
+                }}
+                onModalEditClose={(currentData: any) => {
+                    setModalFormData(null);
                 }}
                 onModalDeleteOpen={(currentData: any) => {
                     setModalFormData({
@@ -330,6 +345,46 @@ export default () => {
                     }, (formData: any) => {
                         console.log('submit: ', formData);
 
+
+       
+                        // update data
+                        const newData = {
+                            id: Math.random(),
+                            date: formData.post_date,
+                            time: '',
+                            data: formData.post_title,
+                            eventStyles: {
+                                background: 'rgb(203, 240, 207)'
+                            }
+                        };
+       
+                        setData((prevState: any[]) => {
+                            const _data = prevState;
+
+                            // delete old item
+                            const currentItemIndex = _data.findIndex((o: any) => o.date == formData.post_date);
+
+                            if (itemExist(_data, formData.post_date)) {
+                                const _oldEventId = _data[currentItemIndex].id;
+                                const _oldEventStyles = _data[currentItemIndex].eventStyles;
+                                const _oldEventTime = _data[currentItemIndex].time;
+
+                                _data.splice(currentItemIndex, 1);
+                                newData.id = _oldEventId;
+                                newData.eventStyles = _oldEventStyles;
+                                newData.time = _oldEventTime;
+                            }
+
+                            // add new item
+                            _data.push(newData);
+
+                            // remove Duplicate objects from JSON Array
+                            const clean = _data.filter((item, index, self) => index === self.findIndex((t) => (t.date === item.date)));
+
+                            return clean;
+                        });
+
+
                         // close the modal
                         closewin();
                     });
@@ -342,6 +397,20 @@ export default () => {
                         empty: 'Do not empty'
                     }, (formData: any) => {
                         console.log('submit: ', formData);
+
+                        // delete data
+                        setData((prevState) => {
+                            const _data = prevState;
+                            const currentItemIndex = _data.findIndex((o) => o.id == formData.post_id);
+                            if (currentItemIndex >= 0) {
+                                _data.splice(currentItemIndex, 1);
+                            }
+
+                            return _data;
+                        });
+
+                        //
+                        setModalFormData(null);
 
                         // close the modal
                         closewin();
@@ -408,13 +477,15 @@ import EventCalendar from 'funda-ui/EventCalendar';
 | `modalSubmitBtnLabel` | string \| ReactNode  | - | **For `<ModalDialog />`** Set a piece of text or HTML code for the submit button | - |
 | `modalSubmitDeleteBtnClassName` | string  | - | **For `<ModalDialog />`** Specify a class for delete button | - |
 | `modalSubmitDeleteBtnLabel` | string \| ReactNode  | - | **For `<ModalDialog />`** Set a piece of text or HTML code for the delete button | - |
-| `onModalEditOpen` | function  | - | **For `<ModalDialog />`** Call a function when the EDIT modal is opened. It returns only one value which is the current value (**JSON Object**). | - |
+| `onModalEditOpen` | function  | - | **For `<ModalDialog />`** Call a function when the EDIT modal is opened.  It returns two callback values. <br /> <ol><li>The first is the current value (**JSON Object**)</li><li>The second is the opening event (**Function**)</li></ol> | - |
 | `onModalEditClose` | function  | - | **For `<ModalDialog />`** Call a function when the EDIT modal is closed. It returns a callback value which is the trigger object It returns only one value which is the current value (**JSON Object**). | - |
 | `onModalDeleteOpen` | function  | - | **For `<ModalDialog />`** Call a function when the DELETE modal is opened. It returns only one value which is the current value (**JSON Object**). | - |
 | `onModalDeleteClose` | function  | - | **For `<ModalDialog />`** Call a function when the DELETE modal is closed. It returns a callback value which is the trigger object It returns only one value which is the current value (**JSON Object**). | - |
 | `onModalEditEvent` | function  | - | **For `<ModalDialog />`** Call a function when the EDIT modal is submitted. It returns two callback values. <br /> <ol><li>The first is the current value (**JSON Object**)</li><li>The second is the closing event (**Function**)</li></ol> | - |
 | `onModalDeleteEvent` | function  | - | **For `<ModalDialog />`** Call a function when the DELETE modal is submitted. It returns two callback values. <br /> <ol><li>The first is the current value (**JSON Object**)</li><li>The second is the closing event (**Function**)</li></ol> | - |
-
+| `onCellMouseEnter` | function  | - | It fires when the mouse pointer enters a cell. It returns only one callback value which is the current cell event (**Event**). | - |
+| `onCellMouseLeave` | function  | - | It fires when the mouse pointer leaves a cell. It returns only one callback value which is the current cell event (**Event**). | - |
+| `onCellClick` | function  | - | It fires when the mouse pointer clicks a cell. It returns only one callback value which is the current cell event (**Event**). | - |
 
 
 ---

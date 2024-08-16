@@ -196,6 +196,7 @@ export default () => {
                 name="name"
                 onChange={handleChange}
             />
+            <p>{inputValue}</p>
 
         </>
     );
@@ -210,12 +211,12 @@ export default () => {
 `styles.scss`:
 ```css
 .input-group:not(.has-left-content) {
-    .demo {
+    .app-input-demo {
         left: 0.5rem;
     }
 }
 
-.demo {
+.app-input-demo {
     display: inline-block;
     position: relative;
     width: 100%;
@@ -243,14 +244,11 @@ export default () => {
         }
     }
 
-    .demo--year {
+    .app-input-demo--year {
         width: 2.5rem;
     }
     
 }
-
-
-
 ```
 
 `index.tsx`:
@@ -259,78 +257,120 @@ import React from "react";
 import Input from 'funda-ui/Input';
 
 export default () => {
+    const [val, setVal] = useState<any>({
+        year: '2024',
+        month: '03',
+        day: '15',
+        hours: '22',
+        minutes: '15',
+        seconds: '00'
+    }as {
+        year: string | number;
+        month: string | number;
+        day: string | number;
+        hours: string | number;
+        minutes: string | number;
+        seconds: string | number;
+    });
 
     return (
         <>
-
             <Input
                 name="name"
                 label="DateTime Custom"
                 type="text"
                 appendControl={<>
-                    <div className="demo">
+                    <div className="app-input-demo">
 
                         <input
                             tabIndex={-1}
-                            className="demo--year"
-                            value="2024"
-                            onChange={(e: any) => {
-
+                            className="app-input-demo--year"
+                            value={val.year}
+                            onChange={(e: React.MouseEvent) => {
+                                setVal((prevState) => {
+                                    return {
+                                        ...prevState,
+                                        year: e.target.value
+                                    }
+                                })
                             }}
                         />
                         -
                         <input
                             tabIndex={-1}
-                            className="demo--month"
-                            value="03"
-                            onChange={(e: any) => {
-
+                            className="app-input-demo--month"
+                            value={val.month}
+                            onChange={(e: React.MouseEvent) => {
+                                setVal((prevState) => {
+                                    return {
+                                        ...prevState,
+                                        month: e.target.value
+                                    }
+                                })
                             }}
                         />
                         -
                         <input
                             tabIndex={-1}
-                            className="demo--day"
-                            value="15"
-                            onChange={(e: any) => {
-
+                            className="app-input-demo--day"
+                            value={val.day}
+                            onChange={(e: React.MouseEvent) => {
+                                setVal((prevState) => {
+                                    return {
+                                        ...prevState,
+                                        day: e.target.value
+                                    }
+                                })
                             }}
                         />
                         &nbsp;
                         <input
                             tabIndex={-1}
-                            className="demo--hours"
-                            value="18"
-                            onChange={(e: any) => {
-
+                            className="app-input-demo--hours"
+                            value={val.hours}
+                            onChange={(e: React.MouseEvent) => {
+                                setVal((prevState) => {
+                                    return {
+                                        ...prevState,
+                                        hours: e.target.value
+                                    }
+                                })
                             }}
                         />
                         :
                         <input
                             tabIndex={-1}
-                            className="demo--minutes"
-                            value="15"
-                            onChange={(e: any) => {
-
+                            className="app-input-demo--minutes"
+                            value={val.minutes}
+                            onChange={(e: React.MouseEvent) => {
+                                setVal((prevState) => {
+                                    return {
+                                        ...prevState,
+                                        minutes: e.target.value
+                                    }
+                                })
                             }}
                         />
                         :
                         <input
                             tabIndex={-1}
-                            className="demo--seconds"
-                            value="00"
-                            onChange={(e: any) => {
-
+                            className="app-input-demo--seconds"
+                            value={val.seconds}
+                            onChange={(e: React.MouseEvent) => {
+                                setVal((prevState) => {
+                                    return {
+                                        ...prevState,
+                                        seconds: e.target.value
+                                    }
+                                })
                             }}
                         />
 
                     </div>
                 </>}
             /> 
-
-
         </>
-    );
+    )
 }
 ```
 
@@ -356,19 +396,22 @@ export default () => {
 
         <>
 
-            <button
-                type="button" 
+            <a 
+                href="#"
                 onClick={(e: React.MouseEvent) => {
+                    e.preventDefault();
                     if (conRef.current) conRef.current.clear();
                 }}
-            >Set Empty Value</button>
-
-            <button
-                type="button" 
+            >Set Empty Value</a>
+            &nbsp;&nbsp;|&nbsp;&nbsp;
+            <a 
+                href="#"
                 onClick={(e: React.MouseEvent) => {
+                    e.preventDefault();
                     if (conRef.current) conRef.current.set('new value', () => { console.log('callback') });
                 }}
-            >Set Custom Value</button>
+            >Set Custom Value</a>
+
 
 
             <Input
@@ -399,28 +442,29 @@ export default () => {
 
         <>
 
-            <button
-                type="button" 
+            <a 
+                href="#"
                 onClick={(e: React.MouseEvent) => {
+                    e.preventDefault();
                     if (conRef.current) {
                         conRef.current.forEach((obj: any) => {
                             obj.clear();
                         });
                     }
                 }}
-            >Set Empty Value</button>
-
-            <button
-                type="button" 
+            >Set Empty Value</a>
+            &nbsp;&nbsp;|&nbsp;&nbsp;
+            <a 
+                href="#"
                 onClick={(e: React.MouseEvent) => {
-                    
+                    e.preventDefault();
                     if (conRef.current) {
                         conRef.current.forEach((obj: any, i: number) => {
                             obj.set('new value__' + i);
                         });
                     }
                 }}
-            >Set Custom Value</button>
+            >Set Custom Value</a>
 
 
             <Input
@@ -468,8 +512,8 @@ Lets you callback the handle exposed as attribute `contentRef`.
 ```js
  import React, { useState, useRef } from 'react';
 
- // bootstrap components
- import ModalDialog from 'funda-ui/ModalDialog';
+// bootstrap components
+import ModalDialog from 'funda-ui/ModalDialog';
 import Input from 'funda-ui/Input';
 
 export default () => {
@@ -483,12 +527,13 @@ export default () => {
 
         <>
       
-            <button
-                type="button" 
+            <a 
+                href="#"
                 onClick={(e: React.MouseEvent) => {
+                    e.preventDefault();
                     setShow(true);
                 }}
-            >Open Input Popup</button>
+            >Open Input Popup</a>
 
 
          
@@ -585,17 +630,17 @@ function MemoInput(props: any) {
 
 export default () => {
 
-    const [myInput, setMyInput] = useState('value-3');  // default value is label value
+    const [myInput, setMyInput] = useState('test');
 
     return (
         <>
           
             <MemoInput 
-                val={"value-3"} 
+                val={myInput} 
                 name="name"
                 callback={setMyInput} 
             />
-            
+            <p>{myInput}</p>
             
         </>
     );

@@ -4,7 +4,7 @@
 
 ## General
 
-### Use the default [fetch](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API) method
+Use the default [fetch](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API) method
 
 ```js
 import React from "react";
@@ -143,11 +143,9 @@ import File from 'funda-ui/File';
 class UploadService {
     
     // `upto()` must be a Promise Object
-    async upto(searchStr = '', limit = 0, otherParam = '') {
+    async upto(param1 = '', limit = 0) {
 
-        console.log('searchStr: ', searchStr);
-        console.log("limit: ", limit);
-        console.log("otherParam (file data with stream): ", otherParam);
+        alert(`searchStr: ${param1} limit: ${limit}`);
 
         // processing stream type via php/java/go/...
         // ...
@@ -527,8 +525,8 @@ export default () => {
                 // fetchParams={{ 'Authorization': 'Bearer xxxx-xxxx-xxxx-xxxx' }}
                 inline
                 support="jpg|jpeg|png|gif|webp"  // "*" means all
-                labelClassName="btn btn-outline-secondary"
-                labelHoverClassName="btn btn-primary"
+                labelClassName="btn btn-outline-secondary d-flex align-items-center"
+                labelHoverClassName="btn btn-primary d-flex align-items-center"
                 submitLabel={"Upload"}
                 submitClassName="btn btn-primary ms-2"
                 label={<><svg width="15px" height="15px" viewBox="0 -2 32 32">
@@ -539,9 +537,9 @@ export default () => {
                             </path>
                         </g>
                     </g>
-                </svg> Select</>}
+                </svg>&nbsp;&nbsp;Select</>}
                 onSuccess={(data: any) => {
-                    io('BRIDGE_ALERT', { process: 0, info: 'Upload Successfully' });
+                    alert('Upload Successfully');
 
                     const res = {
                         imgData: data.b64string,
@@ -557,10 +555,10 @@ export default () => {
                     setUpInfoProgImgs(null);
                 }}
                 onEmpty={() => {
-                    io('BRIDGE_ALERT', { process: 0, info: 'No files are selected' });
+                    alert('No files are selected');
                 }}
                 onIncorrectFormat={() => {
-                    io('BRIDGE_ALERT', { process: 0, info: 'Incorrect file' })
+                    alert('Incorrect file')
                 }}
             />
             {upInfoProgImgs !== null ? <div><img src={upInfoProgImgs.imgData} height={70} /></div> : null}
@@ -607,6 +605,7 @@ export default () => {
 
             <button
                 type="button" 
+                className="btn bg-primary-subtle text-black mb-2"
                 onClick={(e: React.MouseEvent) => {
                     if (conRef.current) conRef.current.upload();
                 }}

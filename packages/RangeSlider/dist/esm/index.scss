@@ -33,7 +33,9 @@ $control-height: 0.75rem;
     --range-slider-rail: #e9ecef;
     --range-slider-inner-rail: #0d6efd;
     
+    position: relative; /* Required */
 
+    
     > div:not(.range-slider__control-wrapper) {
         width: 49% !important;
         display: inline-block !important;
