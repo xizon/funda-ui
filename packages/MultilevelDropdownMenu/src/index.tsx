@@ -1,10 +1,12 @@
-import React, { useState, useEffect, memo } from 'react';
+import React, { useRef, useState, useEffect, memo } from 'react';
 
 import {
     useComId
 } from 'funda-utils';
 
-import MenuList from './MenuList';
+
+
+import ItemList from './ItemList';
 
 
 type MultilevelDropdownMenuProps = {
@@ -38,6 +40,7 @@ const MultilevelDropdownMenu = (props: MultilevelDropdownMenuProps) => {
         onSelect
     } = props;
 
+    const rootRef = useRef<any>(null);
     const uniqueID = useComId();
     const idRes = id || uniqueID;
     const [val, setVal] = useState<any>(null);
@@ -50,8 +53,13 @@ const MultilevelDropdownMenu = (props: MultilevelDropdownMenuProps) => {
     return (
         <>
 
-            <nav id={idRes} className={navbarClassName ? navbarClassName : "navbar"}>
-                <MenuList 
+            <nav 
+                id={idRes} 
+                className={navbarClassName ? navbarClassName : "navbar"}
+                ref={rootRef}
+            >
+                <ItemList 
+                    root={rootRef.current}
                     alternateCollapse={alternateCollapse}
                     first={true}
                     arrow={arrow}

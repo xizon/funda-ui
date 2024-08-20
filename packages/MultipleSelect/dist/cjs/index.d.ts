@@ -4,6 +4,7 @@ export interface OptionConfig {
 }
 declare type MultipleSelectProps = {
     wrapperClassName?: string;
+    childClassName?: string;
     wrapperMinHeight?: string;
     wrapperMinWidth?: string;
     availableHeaderTitle?: string;
@@ -16,6 +17,8 @@ declare type MultipleSelectProps = {
     hierarchical?: boolean;
     indentation?: string;
     doubleIndent?: boolean;
+    alternateCollapse?: boolean;
+    arrow?: React.ReactNode;
     value?: string;
     label?: React.ReactNode | string;
     name?: string;

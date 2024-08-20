@@ -30,6 +30,7 @@
   border-radius: 0.35rem;
   position: relative;
   background: var(--m-select-body-bg);
+  /*-------- Multilevel --------*/
   /*-------- List --------*/
 }
 .m-select__wrapper .m-select-diving-line {
@@ -74,8 +75,7 @@
   cursor: default;
   position: relative;
   font-size: var(--m-select-body-font-size);
-  display: flex;
-  justify-content: space-between;
+  display: block;
   background: var(--m-select-options-item-bg);
   border-bottom: 1px solid var(--m-select-options-item-dividingline-color);
 }
@@ -99,37 +99,34 @@
 .m-select__wrapper .m-select-inner li:last-child {
   border-bottom: none;
 }
-.m-select__wrapper .m-select-inner li > span {
+.m-select__wrapper .m-select-inner li > div {
   padding: 0.35rem 0.75rem;
-  display: inline-block;
-  max-width: 100%;
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
   overflow: hidden;
   text-overflow: ellipsis;
   word-wrap: break-word;
   word-break: break-word;
 }
-.m-select__wrapper .m-select-inner li > strong {
+.m-select__wrapper .m-select-inner li > div > strong {
   font-weight: normal;
+  display: flex;
+  align-items: center;
 }
-.m-select__wrapper .m-select-inner li > i {
+.m-select__wrapper .m-select-inner li > div > strong .arrow {
   display: inline-block;
-  padding: 0.35rem 0.75rem;
+  margin-left: 0.2rem;
+}
+.m-select__wrapper .m-select-inner li > div.active .arrow {
+  transform: rotate(90deg);
+}
+.m-select__wrapper .m-select-inner li > div > i {
+  display: inline-block;
   cursor: pointer;
 }
-.m-select__wrapper .m-select-inner li > i svg path {
+.m-select__wrapper .m-select-inner li > div > i svg path {
   fill: var(--m-select-options-item-icon-color);
-}
-.m-select__wrapper .m-select-inner li a {
-  color: #999;
-  text-decoration: none;
-  padding: 0;
-  display: block;
-  cursor: pointer;
-}
-.m-select__wrapper .m-select-inner li a.m-select__item-action {
-  position: absolute;
-  right: 0.5rem;
-  top: 0.5rem;
 }
 .m-select__wrapper .m-select-inner div.m-select__selected__container .m-select__header {
   border-radius: 0 0.35rem 0 0;
@@ -186,26 +183,38 @@
 .m-select__wrapper .m-select-inner .m-select__search__container i svg {
   fill: var(--m-select-search-icon-color);
 }
-.m-select__wrapper .m-select__options-contentlist {
+.m-select__wrapper ul.m-select__options-contentlist > li ul {
+  transition: max-height 0.25s ease;
+  overflow: hidden;
+  position: relative;
+  padding-left: 1rem;
+}
+.m-select__wrapper ul.m-select__options-contentlist > li:not(.active) ul {
+  max-height: 0;
+}
+.m-select__wrapper ul.m-select__options-contentlist > li ul ul {
+  margin-top: auto;
+}
+.m-select__wrapper ul.m-select__options-contentlist {
   position: relative;
   width: 100%;
   overflow: hidden;
   overflow-y: auto;
   max-height: calc(315px - 1.75rem);
 }
-.m-select__wrapper .m-select__options-contentlist::-webkit-scrollbar {
+.m-select__wrapper ul.m-select__options-contentlist::-webkit-scrollbar {
   width: var(--m-select-scrollbar-w);
 }
-.m-select__wrapper .m-select__options-contentlist::-webkit-scrollbar-thumb {
+.m-select__wrapper ul.m-select__options-contentlist::-webkit-scrollbar-thumb {
   background: var(--m-select-scrollbar-color);
 }
-.m-select__wrapper .m-select__options-contentlist::-webkit-scrollbar-track {
+.m-select__wrapper ul.m-select__options-contentlist::-webkit-scrollbar-track {
   background: var(--m-select-scrollbar-track);
 }
-.m-select__wrapper .m-select__options-contentlist.dragging {
+.m-select__wrapper ul.m-select__options-contentlist.dragging {
   cursor: grab;
 }
-.m-select__wrapper .m-select__options-contentlist--hide {
+.m-select__wrapper ul.m-select__options-contentlist--hide {
   overflow: hidden;
   height: auto;
 }

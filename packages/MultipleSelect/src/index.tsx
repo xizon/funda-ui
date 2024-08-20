@@ -13,6 +13,10 @@ import {
 
 
 
+import { multiSelControlOptionExist } from './multiple-select-utils/func';
+import ItemList from './ItemList';
+
+
 export interface OptionConfig {
     [propName: string]: string | number | boolean;
 }
@@ -20,6 +24,7 @@ export interface OptionConfig {
 
 type MultipleSelectProps = {
     wrapperClassName?: string;
+    childClassName?: string;
     wrapperMinHeight?: string;
     wrapperMinWidth?: string;
     availableHeaderTitle?: string;
@@ -32,6 +37,8 @@ type MultipleSelectProps = {
     hierarchical?: boolean;
     indentation?: string;
     doubleIndent?: boolean;
+    alternateCollapse?: boolean;
+    arrow?: React.ReactNode;
     value?: string;
     label?: React.ReactNode | string;
     name?: string;
@@ -59,6 +66,7 @@ type MultipleSelectProps = {
 const MultipleSelect = forwardRef((props: MultipleSelectProps, externalRef: any) => {
     const {
         wrapperClassName,
+        childClassName,
         wrapperMinHeight,
         wrapperMinWidth,
         availableHeaderTitle,
@@ -71,6 +79,8 @@ const MultipleSelect = forwardRef((props: MultipleSelectProps, externalRef: any)
         hierarchical,
         indentation,
         doubleIndent,
+        alternateCollapse,
+        arrow,
         options,
         disabled,
         required,
@@ -116,12 +126,6 @@ const MultipleSelect = forwardRef((props: MultipleSelectProps, externalRef: any)
     const [dataInit, setDataInit] = useState<OptionConfig[]>(optionsDataInit);
     const [hasErr, setHasErr] = useState<boolean>(false);
 
-
-    const multiSelControlOptionExist = (arr: any[], val: any) => {
-        const _data = arr.filter(Boolean);
-        return _data.map((v: any) => v.toString()).includes(val.toString());
-    };
-    
 
     async function fetchData(params: any) {
         
@@ -169,6 +173,12 @@ const MultipleSelect = forwardRef((props: MultipleSelectProps, externalRef: any)
     
             return _ORGIN_DATA;
         } else {
+
+            // Set hierarchical categories ( with sub-categories )
+            if ( hierarchical ) {
+                optionsDataInit = addTreeDepth(optionsDataInit);
+                addTreeIndent(optionsDataInit, INDENT_PLACEHOLDER, INDENT_LAST_PLACEHOLDER, 'label');
+            }
 
                
             // remove Duplicate objects from JSON Array
@@ -460,49 +470,26 @@ const MultipleSelect = forwardRef((props: MultipleSelectProps, externalRef: any)
 
                             <a href="#" className="m-select__btn--add-all" onClick={handleSelectAll}>{addAllBtnLabel || 'Add all'}</a>
                         </div>
-                        <ul className="m-select__available m-select__options-contentlist" ref={availableListRef}>
 
-                            {/* OPTIONS LIST */}
-                            {dataInit ? dataInit.map((item: any, i: number) => {
 
-                                
-                                return <li
-                                    key={'item' + i}
-                                    className={`${item.disabled ? 'disabled' : ''} ${multiSelControlOptionExist(valSelected, item.value) ? 'hide' : ''}`}
-                                    data-index={i}
-                                    data-value={`${item.value}`} 
-                                    data-label={`${item.label}`}
-                                    data-list-item-label={`${typeof item.listItemLabel === 'undefined' ? '' : item.listItemLabel}`} 
-                                    data-disabled={item.disabled || 'false'}
-                                    data-querystring={`${typeof item.queryString === 'undefined' ? '' : item.queryString}`} 
-                                    data-itemdata={JSON.stringify(item)} 
-                                >
-                                   
-                                    <span>
-                                        <strong dangerouslySetInnerHTML={{
-                                            __html: typeof item.listItemLabel === 'undefined' ? item.label : item.listItemLabel
-                                        }}></strong>
-                                        <a
-                                            href="#"
-                                            className="m-select__item-action"
-                                        ></a>
-                                    </span>
-                                    <i
-                                        onClick={(e: React.MouseEvent) => {
-                                            selectItem((e.target as  any).closest('li'));
-                                        }}>
-                                        {iconAdd ? <>{iconAdd}</> : <><svg width="15px" height="15px" viewBox="0 0 24 24" fill="none"><path d="M12 2C6.49 2 2 6.49 2 12C2 17.51 6.49 22 12 22C17.51 22 22 17.51 22 12C22 6.49 17.51 2 12 2ZM16 12.75H12.75V16C12.75 16.41 12.41 16.75 12 16.75C11.59 16.75 11.25 16.41 11.25 16V12.75H8C7.59 12.75 7.25 12.41 7.25 12C7.25 11.59 7.59 11.25 8 11.25H11.25V8C11.25 7.59 11.59 7.25 12 7.25C12.41 7.25 12.75 7.59 12.75 8V11.25H16C16.41 11.25 16.75 11.59 16.75 12C16.75 12.41 16.41 12.75 16 12.75Z" fill="#000" /></svg></>}
 
-                                        
-                                    </i>
+                        {/* OPTIONS LIST */}
+                        <ItemList
+                            root={rootRef.current}
+                            listContainerClassName="m-select__available m-select__options-contentlist"
+                            ref={availableListRef}
+                            indentStr={INDENT_LAST_PLACEHOLDER}
+                            valSelected={valSelected}
+                            iconAdd={iconAdd}
+                            onSelect={selectItem}
+                            alternateCollapse={alternateCollapse}
+                            first={true}
+                            arrow={arrow}
+                            data={dataInit}
+                            childClassName={childClassName || 'm-select__options-contentlist-custom'}
+                        />
+                        {/* /OPTIONS LIST */}
 
-                                </li>;
-                            }) : null}
-
-                            {/* /OPTIONS LIST */}
-
-                         
-                        </ul>
                     </div>
 
 
@@ -517,44 +504,26 @@ const MultipleSelect = forwardRef((props: MultipleSelectProps, externalRef: any)
                             <span className="m-select__title" dangerouslySetInnerHTML={{__html: `${selectedHeaderTitle || ''}`}}></span>
                             <a href="#" className="m-select__btn--remove-all" onClick={handleRemoveAll}>{removeAllBtnLabel || 'Remove all'}</a>
                         </div>
-                        <ul className="m-select__selected m-select__options-contentlist--sortable m-select__options-contentlist" ref={selectedListRef}>
 
-                            {/* OPTIONS LIST */}
-                            {valSelectedData ? valSelectedData.map((item: any, i: number) => {
-                                return <li
-                                    key={'item-selected' + i}
-                                    className="selected"
-                                    data-index={i}
-                                    data-value={`${item.value}`} 
-                                    data-label={`${item.label}`}
-                                    data-list-item-label={`${typeof item.listItemLabel === 'undefined' ? '' : item.listItemLabel}`} 
-                                    data-disabled={item.disabled || 'false'}
-                                    data-querystring={`${typeof item.queryString === 'undefined' ? '' : item.queryString}`} 
-                                    data-itemdata={JSON.stringify(item)} 
-                                >
-                                   
-                                    <span>
-                                        <strong dangerouslySetInnerHTML={{
-                                            __html: typeof item.listItemLabel === 'undefined' ? item.label : item.listItemLabel
-                                        }}></strong>
-                                        <a
-                                            href="#"
-                                            className="m-select__item-action"
-                                        ></a>
-                                    </span>
-                                    <i
-                                        onClick={(e: React.MouseEvent) => {
-                                            removeItem((e.target as  any).closest('li'));
-                                        }}>
-                                        {iconRemove ? <>{iconRemove}</> : <><svg width="15px" height="15px" viewBox="0 0 24 24" fill="none"><path fillRule="evenodd" clipRule="evenodd" d="M22 12c0 5.523-4.477 10-10 10S2 17.523 2 12 6.477 2 12 2s10 4.477 10 10ZM8 11a1 1 0 1 0 0 2h8a1 1 0 1 0 0-2H8Z" fill="#000" /></svg></>}
-                                        
-                                    </i>
 
-                                </li>;
-                            }) : null}
-                            {/* /OPTIONS LIST */}
+                        {/* OPTIONS LIST */}
+                        <ItemList
+                            root={rootRef.current}
+                            listContainerClassName="m-select__selected m-select__options-contentlist--sortable m-select__options-contentlist"
+                            ref={selectedListRef}
+                            indentStr={INDENT_LAST_PLACEHOLDER}
+                            valSelected={valSelected}
+                            iconRemove={iconRemove}
+                            onSelect={removeItem}
+                            alternateCollapse={alternateCollapse}
+                            first={true}
+                            arrow={arrow}
+                            data={valSelectedData}
+                            childClassName={childClassName || 'm-select__options-contentlist--custom'}
+                            selected
+                        />
+                        {/* /OPTIONS LIST */}
 
-                        </ul>
                     </div>
 
 

@@ -8,7 +8,8 @@ import {
 
 /* Recursively nested components to traverse nodes
 -------------------------------------------------*/		
-type MenuListProps = {
+type ItemListProps = {
+    root: any;
     alternateCollapse?: boolean;
     first?: boolean;
     arrow?: React.ReactNode;
@@ -18,9 +19,10 @@ type MenuListProps = {
     onSelect?: (e: any, val: any) => void;
 };
 
-export default function MenuList(props: MenuListProps) {
+export default function ItemList(props: ItemListProps) {
 
     const {
+        root,
         alternateCollapse,
         first,
         arrow,
@@ -89,6 +91,7 @@ export default function MenuList(props: MenuListProps) {
 
     function handleClick(e: any) {
         e.preventDefault();
+        e.stopPropagation();
         const hyperlink = e.currentTarget;
         const url = hyperlink.getAttribute('href');
         const subElement = getNextSiblings(hyperlink, 'ul');
@@ -153,60 +156,63 @@ export default function MenuList(props: MenuListProps) {
 
     useEffect(() => {
 
+        if (root !== null && data.length > 0) {
+           // Activate current item
+            //=====================
+            const allItems = rootRef.current ? [].slice.call(root.querySelectorAll(`.${childClassName} a`)).map( (item: any) => {
+                return {
+                    href: item.getAttribute('href'),
+                    el: item,
+                    actived: item.parentNode.classList?.contains('active') ? true : false,
+                    expandedLink: document.body.contains(item.parentNode.parentNode.previousSibling) ? item.parentNode.parentNode.previousSibling : false
+                }
+            } ) : [];
 
-        // Activate current item
-        //=====================
-        const allItems = rootRef.current ? [].slice.call(document.querySelectorAll(`.${childClassName} a`)).map( (item: any) => {
-            return {
-                href: item.getAttribute('href'),
-                el: item,
-                actived: item.parentNode.classList?.contains('active') ? true : false,
-                expandedLink: document.body.contains(item.parentNode.parentNode.previousSibling) ? item.parentNode.parentNode.previousSibling : false
-            }
-        } ) : [];
+            
+            allItems.forEach( (hyperlink: any) => {
 
-        
-        allItems.forEach( (hyperlink: any) => {
+                // Expand the currently active item by default
+                if ( hyperlink.actived ) {
 
-            // Expand the currently active item by default
-            if ( hyperlink.actived ) {
+                    hyperlink.el.setAttribute('aria-expanded', 'true');
 
-                hyperlink.el.setAttribute('aria-expanded', 'true');
+                    if ( hyperlink.expandedLink ) {
+                        const expandedLink: any = hyperlink.expandedLink;  // <a>
+                        activeClass(expandedLink.parentNode, 'add');
+                        expandedLink.setAttribute('aria-expanded', true);
+                    }
 
-                if ( hyperlink.expandedLink ) {
-                    const expandedLink: any = hyperlink.expandedLink;  // <a>
-                    activeClass(expandedLink.parentNode, 'add');
-                    expandedLink.setAttribute('aria-expanded', true);
+
+                    // init <ul> height
+                    const ul = getNextSiblings(hyperlink.el, 'ul');
+                    
+                    [].slice.call(ul).forEach(function (_curUl: any) {
+
+                        const allHeight = [].slice.call(_curUl.querySelectorAll('li')).map((_curLi: any) => _curLi.scrollHeight);
+
+                        // Prevent missing height, causing the last element to be clipped
+                        const maxHeight = Math.max(...allHeight);
+                        allHeight.push(maxHeight * 3);
+
+
+                        // 
+                        const totalHeight = allHeight.reduce(
+                            (accumulator: number, currentValue: number) => accumulator + currentValue,
+                            0,
+                        );
+            
+                        // Prevent the use of iframe or other situations where the height is 0
+                        _curUl.style.maxHeight = `${totalHeight == 0 ? 999 : totalHeight}px`;
+                        
+                    });
+                    
                 }
 
+            });
 
-                // init <ul> height
-                const ul = getNextSiblings(hyperlink.el, 'ul');
-                
-                [].slice.call(ul).forEach(function (_curUl: any) {
+        }
 
-                    const allHeight = [].slice.call(_curUl.querySelectorAll('li')).map((_curLi: any) => _curLi.scrollHeight);
-
-                    // Prevent missing height, causing the last element to be clipped
-                    const maxHeight = Math.max(...allHeight);
-                    allHeight.push(maxHeight * 3);
-
-
-                    // 
-                    const totalHeight = allHeight.reduce(
-                        (accumulator: number, currentValue: number) => accumulator + currentValue,
-                        0,
-                    );
-        
-                    // Prevent the use of iframe or other situations where the height is 0
-                    _curUl.style.maxHeight = `${totalHeight == 0 ? 999 : totalHeight}px`;
-                    
-                });
-                
-            }
-
-        });
-
+ 
     }, [data]);
 
 
@@ -232,9 +238,10 @@ export default function MenuList(props: MenuListProps) {
                         <li key={i} className={item.active ? `nav-item active` : (_matchPath ? `nav-item active` : 'nav-item')}>
                             <a tabIndex={-1} title={item.title} className={item.active ? `nav-link active` : (_matchPath ? `nav-link active` : 'nav-link')} href={item.link === '#' ? `${item.link}-${i}` : item.link} onClick={handleClick} data-router={item.link.indexOf('#') >= 0 || item.link.indexOf('http') >= 0 ? 'false' : 'true'} data-link={item.link} data-slug={item.slug}>
                                 {item.icon ? item.icon.indexOf('</svg>') < 0 ? <><i className={item.icon}></i> </> : <var dangerouslySetInnerHTML={{ __html: `${item.icon}` }} /> : null}<i dangerouslySetInnerHTML={{ __html: `${item.title}` }}></i>
-                                {item.children ? <span className="arrow">{arrowGenerator()}</span> : ''}
+                                {item.children && item.children.length > 0 ? <span className="arrow">{arrowGenerator()}</span> : ''}
                             </a>
-                            {item.children && <MenuList 
+                            {item.children && <ItemList 
+                                                root={root}
                                                 data={item.children} 
                                                 first={false} 
                                                 arrow={arrow} 

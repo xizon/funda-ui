@@ -4186,36 +4186,309 @@ var __webpack_exports__ = {};
 // This entry need to be wrapped in an IIFE because it need to be in strict mode.
 (() => {
 "use strict";
+// ESM COMPAT FLAG
 __webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
-/* harmony export */ });
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(787);
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var funda_utils__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(456);
-/* harmony import */ var funda_utils__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(funda_utils__WEBPACK_IMPORTED_MODULE_1__);
-var _excluded = ["wrapperClassName", "wrapperMinHeight", "wrapperMinWidth", "availableHeaderTitle", "selectedHeaderTitle", "selectedHeaderNote", "removeAllBtnLabel", "addAllBtnLabel", "iconAdd", "iconRemove", "hierarchical", "indentation", "doubleIndent", "options", "disabled", "required", "value", "label", "name", "id", "extractValueByBrackets", "style", "data", "fetchFuncAsync", "fetchFuncMethod", "fetchFuncMethodParams", "fetchCallback", "onFetch", "onChange"];
+
+// EXPORTS
+__webpack_require__.d(__webpack_exports__, {
+  "default": () => (/* binding */ src)
+});
+
+// EXTERNAL MODULE: external {"root":"React","commonjs2":"react","commonjs":"react","amd":"react"}
+var external_root_React_commonjs2_react_commonjs_react_amd_react_ = __webpack_require__(787);
+var external_root_React_commonjs2_react_commonjs_react_amd_react_default = /*#__PURE__*/__webpack_require__.n(external_root_React_commonjs2_react_commonjs_react_amd_react_);
+// EXTERNAL MODULE: ../Utils/dist/cjs/index.js
+var cjs = __webpack_require__(456);
+;// CONCATENATED MODULE: ./src/multiple-select-utils/func.ts
+/**
+ * Format indent value
+ * @param {String|Array} inputData 
+ * @param {String} placeholder 
+ * @returns {String|Array}
+ */
+function formatIndentVal(inputData, placeholder) {
+  var reVar = new RegExp(placeholder, 'g');
+  if (Array.isArray(inputData)) {
+    return inputData.map(function (s) {
+      return String(s).replace(reVar, '').replace(/\&nbsp;/ig, '');
+    });
+  } else {
+    var _txt = typeof inputData === 'string' ? inputData : inputData.toString();
+    return _txt.replace(reVar, '').replace(/\&nbsp;/ig, '');
+  }
+}
+
+/**
+ * Determine whether the option exists
+ * @param val 
+ * @returns 
+ */
+function multiSelControlOptionExist(arr, val) {
+  var _data = arr.filter(Boolean);
+  return _data.map(function (v) {
+    return v.toString();
+  }).includes(val.toString());
+}
+;// CONCATENATED MODULE: ./src/ItemList.tsx
+function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter); }
+function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i]; return arr2; }
+
+
+
+
+/* Recursively nested components to traverse nodes
+-------------------------------------------------*/
+
+var ItemList = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_amd_react_.forwardRef)(function (props, externalRef) {
+  var root = props.root,
+    listContainerClassName = props.listContainerClassName,
+    valSelected = props.valSelected,
+    indentStr = props.indentStr,
+    iconAdd = props.iconAdd,
+    iconRemove = props.iconRemove,
+    selected = props.selected,
+    onSelect = props.onSelect,
+    alternateCollapse = props.alternateCollapse,
+    first = props.first,
+    arrow = props.arrow,
+    childClassName = props.childClassName,
+    data = props.data;
+  var listContainerRef = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useRef)(null);
+  var activeClass = function activeClass(el, mode) {
+    var classname = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 'active';
+    if (mode === 'add') {
+      el.classList.add(classname);
+    } else {
+      el.classList.remove(classname);
+    }
+  };
+  var closeChild = function closeChild(hyperlink, ul) {
+    if (ul.length === 0) return;
+    activeClass(hyperlink, 'remove');
+    hyperlink.setAttribute('aria-expanded', 'false');
+    activeClass(hyperlink.parentNode, 'remove');
+
+    //to close
+    [].slice.call(ul).forEach(function (element) {
+      element.style.maxHeight = 0;
+    });
+  };
+  var openChild = function openChild(hyperlink, ul) {
+    if (ul.length === 0) return;
+    activeClass(hyperlink, 'add');
+    hyperlink.setAttribute('aria-expanded', 'true');
+    activeClass(hyperlink.parentNode, 'add');
+
+    // init <ul> height
+    [].slice.call(ul).forEach(function (_curUl) {
+      var allHeight = [].slice.call(_curUl.querySelectorAll('li')).map(function (_curLi) {
+        return _curLi.scrollHeight;
+      });
+
+      // Prevent missing height, causing the last element to be clipped
+      var maxHeight = Math.max.apply(Math, _toConsumableArray(allHeight));
+      allHeight.push(maxHeight * 3);
+
+      //
+      var totalHeight = allHeight.reduce(function (accumulator, currentValue) {
+        return accumulator + currentValue;
+      }, 0);
+
+      // Prevent the use of iframe or other situations where the height is 0
+      _curUl.style.maxHeight = "".concat(totalHeight == 0 ? 999 : totalHeight, "px");
+    });
+  };
+  function handleClick(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    var hyperlink = e.currentTarget.querySelector('div');
+    var subElement = (0,cjs.getNextSiblings)(hyperlink, 'ul');
+
+    // hide child if expandedLink doesn't exist, on the contrary
+    //=====================
+    if (hyperlink.getAttribute('aria-expanded') === 'false' || hyperlink.getAttribute('aria-expanded') === null) {
+      //Hide all other siblings of the selected <ul>
+      if (alternateCollapse) {
+        [].slice.call(listContainerRef.current.children).forEach(function (li) {
+          activeClass(li, 'remove');
+          var _li = li.firstChild;
+          activeClass(_li, 'remove');
+          _li.setAttribute('aria-expanded', false);
+          [].slice.call((0,cjs.getNextSiblings)(_li, 'ul')).forEach(function (element) {
+            element.style.maxHeight = 0;
+          });
+        });
+      }
+
+      //open current
+      openChild(hyperlink, subElement);
+    } else {
+      //close current
+      closeChild(hyperlink, subElement);
+    }
+  }
+  function arrowGenerator() {
+    return arrow ? arrow : /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("svg", {
+      viewBox: "0 0 22 22",
+      width: "8px"
+    }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("path", {
+      d: "m345.44 248.29l-194.29 194.28c-12.359 12.365-32.397 12.365-44.75 0-12.354-12.354-12.354-32.391 0-44.744l171.91-171.91-171.91-171.9c-12.354-12.359-12.354-32.394 0-44.748 12.354-12.359 32.391-12.359 44.75 0l194.29 194.28c6.177 6.18 9.262 14.271 9.262 22.366 0 8.099-3.091 16.196-9.267 22.373",
+      transform: "matrix(.03541-.00013.00013.03541 2.98 3.02)",
+      fill: "#a5a5a5"
+    }));
+  }
+  (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useEffect)(function () {
+    if (root !== null && data.length > 0) {
+      // Activate current item
+      //=====================
+      var allItems = listContainerRef.current ? [].slice.call(root.querySelectorAll(".".concat(childClassName, " div"))).map(function (item) {
+        var _item$parentNode$clas;
+        return {
+          el: item,
+          actived: (_item$parentNode$clas = item.parentNode.classList) !== null && _item$parentNode$clas !== void 0 && _item$parentNode$clas.contains('active') ? true : false,
+          expandedLink: document.body.contains(item.parentNode.parentNode.previousSibling) ? item.parentNode.parentNode.previousSibling : false
+        };
+      }) : [];
+      allItems.forEach(function (hyperlink) {
+        // Expand the currently active item by default
+        if (hyperlink.actived) {
+          hyperlink.el.setAttribute('aria-expanded', 'true');
+          if (hyperlink.expandedLink) {
+            var expandedLink = hyperlink.expandedLink; // <a>
+            activeClass(expandedLink.parentNode, 'add');
+            expandedLink.setAttribute('aria-expanded', true);
+          }
+
+          // init <ul> height
+          var ul = (0,cjs.getNextSiblings)(hyperlink.el, 'ul');
+          [].slice.call(ul).forEach(function (_curUl) {
+            var allHeight = [].slice.call(_curUl.querySelectorAll('li')).map(function (_curLi) {
+              return _curLi.scrollHeight;
+            });
+
+            // Prevent missing height, causing the last element to be clipped
+            var maxHeight = Math.max.apply(Math, _toConsumableArray(allHeight));
+            allHeight.push(maxHeight * 3);
+
+            // 
+            var totalHeight = allHeight.reduce(function (accumulator, currentValue) {
+              return accumulator + currentValue;
+            }, 0);
+
+            // Prevent the use of iframe or other situations where the height is 0
+            _curUl.style.maxHeight = "".concat(totalHeight == 0 ? 999 : totalHeight, "px");
+          });
+        }
+      });
+    }
+  }, [data]);
+  if (data) {
+    return /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("ul", {
+      className: "".concat(listContainerClassName || '', " ").concat(childClassName),
+      style: !first ? {
+        maxHeight: '0px'
+      } : {},
+      ref: function ref(node) {
+        listContainerRef.current = node;
+        if (typeof externalRef === 'function') {
+          externalRef(node);
+        } else if (externalRef) {
+          externalRef.current = node;
+        }
+      }
+    }, data ? data.map(function (item, i) {
+      return /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("li", {
+        key: selected ? 'item-selected' + i : 'item' + i,
+        className: selected ? 'selected' : "".concat(item.disabled ? 'disabled' : '', " ").concat(multiSelControlOptionExist(valSelected, item.value) ? 'hide' : ''),
+        "data-index": i,
+        "data-value": "".concat(item.value),
+        "data-label": "".concat(item.label),
+        "data-list-item-label": "".concat(typeof item.listItemLabel === 'undefined' ? '' : item.listItemLabel),
+        "data-disabled": item.disabled || 'false',
+        "data-querystring": "".concat(typeof item.queryString === 'undefined' ? '' : item.queryString),
+        "data-itemdata": JSON.stringify(item),
+        onClick: selected ? function () {
+          return void 0;
+        } : handleClick
+      }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("strong", null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("span", {
+        dangerouslySetInnerHTML: {
+          __html: selected ? typeof item.listItemLabel === 'undefined' ? formatIndentVal(item.label, indentStr) : formatIndentVal(item.listItemLabel, indentStr) : typeof item.listItemLabel === 'undefined' ? item.label : item.listItemLabel
+        }
+      }), item.children && item.children.length > 0 && !selected ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("span", {
+        className: "arrow"
+      }, arrowGenerator()) : ''), /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("i", {
+        onClick: function onClick(e) {
+          e.stopPropagation();
+          onSelect(e.target.closest('li'));
+        }
+      }, selected ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, iconRemove ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, iconRemove) : /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("svg", {
+        width: "15px",
+        height: "15px",
+        viewBox: "0 0 24 24",
+        fill: "none"
+      }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("path", {
+        fillRule: "evenodd",
+        clipRule: "evenodd",
+        d: "M22 12c0 5.523-4.477 10-10 10S2 17.523 2 12 6.477 2 12 2s10 4.477 10 10ZM8 11a1 1 0 1 0 0 2h8a1 1 0 1 0 0-2H8Z",
+        fill: "#000"
+      })))) : /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, iconAdd ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, iconAdd) : /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("svg", {
+        width: "15px",
+        height: "15px",
+        viewBox: "0 0 24 24",
+        fill: "none"
+      }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("path", {
+        d: "M12 2C6.49 2 2 6.49 2 12C2 17.51 6.49 22 12 22C17.51 22 22 17.51 22 12C22 6.49 17.51 2 12 2ZM16 12.75H12.75V16C12.75 16.41 12.41 16.75 12 16.75C11.59 16.75 11.25 16.41 11.25 16V12.75H8C7.59 12.75 7.25 12.41 7.25 12C7.25 11.59 7.59 11.25 8 11.25H11.25V8C11.25 7.59 11.59 7.25 12 7.25C12.41 7.25 12.75 7.59 12.75 8V11.25H16C16.41 11.25 16.75 11.59 16.75 12C16.75 12.41 16.41 12.75 16 12.75Z",
+        fill: "#000"
+      })))))), item.children && /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement(ItemList, {
+        root: root,
+        listContainerClassName: listContainerClassName,
+        ref: externalRef,
+        indentStr: indentStr,
+        valSelected: valSelected,
+        iconAdd: iconAdd,
+        iconRemove: iconRemove,
+        onSelect: onSelect,
+        first: false,
+        arrow: arrow,
+        data: item.children,
+        childClassName: childClassName
+      }));
+    }) : null));
+  } else {
+    return /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null);
+  }
+});
+/* harmony default export */ const src_ItemList = (ItemList);
+;// CONCATENATED MODULE: ./src/index.tsx
+var _excluded = ["wrapperClassName", "childClassName", "wrapperMinHeight", "wrapperMinWidth", "availableHeaderTitle", "selectedHeaderTitle", "selectedHeaderNote", "removeAllBtnLabel", "addAllBtnLabel", "iconAdd", "iconRemove", "hierarchical", "indentation", "doubleIndent", "alternateCollapse", "arrow", "options", "disabled", "required", "value", "label", "name", "id", "extractValueByBrackets", "style", "data", "fetchFuncAsync", "fetchFuncMethod", "fetchFuncMethodParams", "fetchCallback", "onFetch", "onChange"];
 function _regeneratorRuntime() { "use strict"; /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/facebook/regenerator/blob/main/LICENSE */ _regeneratorRuntime = function _regeneratorRuntime() { return exports; }; var exports = {}, Op = Object.prototype, hasOwn = Op.hasOwnProperty, defineProperty = Object.defineProperty || function (obj, key, desc) { obj[key] = desc.value; }, $Symbol = "function" == typeof Symbol ? Symbol : {}, iteratorSymbol = $Symbol.iterator || "@@iterator", asyncIteratorSymbol = $Symbol.asyncIterator || "@@asyncIterator", toStringTagSymbol = $Symbol.toStringTag || "@@toStringTag"; function define(obj, key, value) { return Object.defineProperty(obj, key, { value: value, enumerable: !0, configurable: !0, writable: !0 }), obj[key]; } try { define({}, ""); } catch (err) { define = function define(obj, key, value) { return obj[key] = value; }; } function wrap(innerFn, outerFn, self, tryLocsList) { var protoGenerator = outerFn && outerFn.prototype instanceof Generator ? outerFn : Generator, generator = Object.create(protoGenerator.prototype), context = new Context(tryLocsList || []); return defineProperty(generator, "_invoke", { value: makeInvokeMethod(innerFn, self, context) }), generator; } function tryCatch(fn, obj, arg) { try { return { type: "normal", arg: fn.call(obj, arg) }; } catch (err) { return { type: "throw", arg: err }; } } exports.wrap = wrap; var ContinueSentinel = {}; function Generator() {} function GeneratorFunction() {} function GeneratorFunctionPrototype() {} var IteratorPrototype = {}; define(IteratorPrototype, iteratorSymbol, function () { return this; }); var getProto = Object.getPrototypeOf, NativeIteratorPrototype = getProto && getProto(getProto(values([]))); NativeIteratorPrototype && NativeIteratorPrototype !== Op && hasOwn.call(NativeIteratorPrototype, iteratorSymbol) && (IteratorPrototype = NativeIteratorPrototype); var Gp = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(IteratorPrototype); function defineIteratorMethods(prototype) { ["next", "throw", "return"].forEach(function (method) { define(prototype, method, function (arg) { return this._invoke(method, arg); }); }); } function AsyncIterator(generator, PromiseImpl) { function invoke(method, arg, resolve, reject) { var record = tryCatch(generator[method], generator, arg); if ("throw" !== record.type) { var result = record.arg, value = result.value; return value && "object" == _typeof(value) && hasOwn.call(value, "__await") ? PromiseImpl.resolve(value.__await).then(function (value) { invoke("next", value, resolve, reject); }, function (err) { invoke("throw", err, resolve, reject); }) : PromiseImpl.resolve(value).then(function (unwrapped) { result.value = unwrapped, resolve(result); }, function (error) { return invoke("throw", error, resolve, reject); }); } reject(record.arg); } var previousPromise; defineProperty(this, "_invoke", { value: function value(method, arg) { function callInvokeWithMethodAndArg() { return new PromiseImpl(function (resolve, reject) { invoke(method, arg, resolve, reject); }); } return previousPromise = previousPromise ? previousPromise.then(callInvokeWithMethodAndArg, callInvokeWithMethodAndArg) : callInvokeWithMethodAndArg(); } }); } function makeInvokeMethod(innerFn, self, context) { var state = "suspendedStart"; return function (method, arg) { if ("executing" === state) throw new Error("Generator is already running"); if ("completed" === state) { if ("throw" === method) throw arg; return doneResult(); } for (context.method = method, context.arg = arg;;) { var delegate = context.delegate; if (delegate) { var delegateResult = maybeInvokeDelegate(delegate, context); if (delegateResult) { if (delegateResult === ContinueSentinel) continue; return delegateResult; } } if ("next" === context.method) context.sent = context._sent = context.arg;else if ("throw" === context.method) { if ("suspendedStart" === state) throw state = "completed", context.arg; context.dispatchException(context.arg); } else "return" === context.method && context.abrupt("return", context.arg); state = "executing"; var record = tryCatch(innerFn, self, context); if ("normal" === record.type) { if (state = context.done ? "completed" : "suspendedYield", record.arg === ContinueSentinel) continue; return { value: record.arg, done: context.done }; } "throw" === record.type && (state = "completed", context.method = "throw", context.arg = record.arg); } }; } function maybeInvokeDelegate(delegate, context) { var methodName = context.method, method = delegate.iterator[methodName]; if (undefined === method) return context.delegate = null, "throw" === methodName && delegate.iterator["return"] && (context.method = "return", context.arg = undefined, maybeInvokeDelegate(delegate, context), "throw" === context.method) || "return" !== methodName && (context.method = "throw", context.arg = new TypeError("The iterator does not provide a '" + methodName + "' method")), ContinueSentinel; var record = tryCatch(method, delegate.iterator, context.arg); if ("throw" === record.type) return context.method = "throw", context.arg = record.arg, context.delegate = null, ContinueSentinel; var info = record.arg; return info ? info.done ? (context[delegate.resultName] = info.value, context.next = delegate.nextLoc, "return" !== context.method && (context.method = "next", context.arg = undefined), context.delegate = null, ContinueSentinel) : info : (context.method = "throw", context.arg = new TypeError("iterator result is not an object"), context.delegate = null, ContinueSentinel); } function pushTryEntry(locs) { var entry = { tryLoc: locs[0] }; 1 in locs && (entry.catchLoc = locs[1]), 2 in locs && (entry.finallyLoc = locs[2], entry.afterLoc = locs[3]), this.tryEntries.push(entry); } function resetTryEntry(entry) { var record = entry.completion || {}; record.type = "normal", delete record.arg, entry.completion = record; } function Context(tryLocsList) { this.tryEntries = [{ tryLoc: "root" }], tryLocsList.forEach(pushTryEntry, this), this.reset(!0); } function values(iterable) { if (iterable) { var iteratorMethod = iterable[iteratorSymbol]; if (iteratorMethod) return iteratorMethod.call(iterable); if ("function" == typeof iterable.next) return iterable; if (!isNaN(iterable.length)) { var i = -1, next = function next() { for (; ++i < iterable.length;) if (hasOwn.call(iterable, i)) return next.value = iterable[i], next.done = !1, next; return next.value = undefined, next.done = !0, next; }; return next.next = next; } } return { next: doneResult }; } function doneResult() { return { value: undefined, done: !0 }; } return GeneratorFunction.prototype = GeneratorFunctionPrototype, defineProperty(Gp, "constructor", { value: GeneratorFunctionPrototype, configurable: !0 }), defineProperty(GeneratorFunctionPrototype, "constructor", { value: GeneratorFunction, configurable: !0 }), GeneratorFunction.displayName = define(GeneratorFunctionPrototype, toStringTagSymbol, "GeneratorFunction"), exports.isGeneratorFunction = function (genFun) { var ctor = "function" == typeof genFun && genFun.constructor; return !!ctor && (ctor === GeneratorFunction || "GeneratorFunction" === (ctor.displayName || ctor.name)); }, exports.mark = function (genFun) { return Object.setPrototypeOf ? Object.setPrototypeOf(genFun, GeneratorFunctionPrototype) : (genFun.__proto__ = GeneratorFunctionPrototype, define(genFun, toStringTagSymbol, "GeneratorFunction")), genFun.prototype = Object.create(Gp), genFun; }, exports.awrap = function (arg) { return { __await: arg }; }, defineIteratorMethods(AsyncIterator.prototype), define(AsyncIterator.prototype, asyncIteratorSymbol, function () { return this; }), exports.AsyncIterator = AsyncIterator, exports.async = function (innerFn, outerFn, self, tryLocsList, PromiseImpl) { void 0 === PromiseImpl && (PromiseImpl = Promise); var iter = new AsyncIterator(wrap(innerFn, outerFn, self, tryLocsList), PromiseImpl); return exports.isGeneratorFunction(outerFn) ? iter : iter.next().then(function (result) { return result.done ? result.value : iter.next(); }); }, defineIteratorMethods(Gp), define(Gp, toStringTagSymbol, "Generator"), define(Gp, iteratorSymbol, function () { return this; }), define(Gp, "toString", function () { return "[object Generator]"; }), exports.keys = function (val) { var object = Object(val), keys = []; for (var key in object) keys.push(key); return keys.reverse(), function next() { for (; keys.length;) { var key = keys.pop(); if (key in object) return next.value = key, next.done = !1, next; } return next.done = !0, next; }; }, exports.values = values, Context.prototype = { constructor: Context, reset: function reset(skipTempReset) { if (this.prev = 0, this.next = 0, this.sent = this._sent = undefined, this.done = !1, this.delegate = null, this.method = "next", this.arg = undefined, this.tryEntries.forEach(resetTryEntry), !skipTempReset) for (var name in this) "t" === name.charAt(0) && hasOwn.call(this, name) && !isNaN(+name.slice(1)) && (this[name] = undefined); }, stop: function stop() { this.done = !0; var rootRecord = this.tryEntries[0].completion; if ("throw" === rootRecord.type) throw rootRecord.arg; return this.rval; }, dispatchException: function dispatchException(exception) { if (this.done) throw exception; var context = this; function handle(loc, caught) { return record.type = "throw", record.arg = exception, context.next = loc, caught && (context.method = "next", context.arg = undefined), !!caught; } for (var i = this.tryEntries.length - 1; i >= 0; --i) { var entry = this.tryEntries[i], record = entry.completion; if ("root" === entry.tryLoc) return handle("end"); if (entry.tryLoc <= this.prev) { var hasCatch = hasOwn.call(entry, "catchLoc"), hasFinally = hasOwn.call(entry, "finallyLoc"); if (hasCatch && hasFinally) { if (this.prev < entry.catchLoc) return handle(entry.catchLoc, !0); if (this.prev < entry.finallyLoc) return handle(entry.finallyLoc); } else if (hasCatch) { if (this.prev < entry.catchLoc) return handle(entry.catchLoc, !0); } else { if (!hasFinally) throw new Error("try statement without catch or finally"); if (this.prev < entry.finallyLoc) return handle(entry.finallyLoc); } } } }, abrupt: function abrupt(type, arg) { for (var i = this.tryEntries.length - 1; i >= 0; --i) { var entry = this.tryEntries[i]; if (entry.tryLoc <= this.prev && hasOwn.call(entry, "finallyLoc") && this.prev < entry.finallyLoc) { var finallyEntry = entry; break; } } finallyEntry && ("break" === type || "continue" === type) && finallyEntry.tryLoc <= arg && arg <= finallyEntry.finallyLoc && (finallyEntry = null); var record = finallyEntry ? finallyEntry.completion : {}; return record.type = type, record.arg = arg, finallyEntry ? (this.method = "next", this.next = finallyEntry.finallyLoc, ContinueSentinel) : this.complete(record); }, complete: function complete(record, afterLoc) { if ("throw" === record.type) throw record.arg; return "break" === record.type || "continue" === record.type ? this.next = record.arg : "return" === record.type ? (this.rval = this.arg = record.arg, this.method = "return", this.next = "end") : "normal" === record.type && afterLoc && (this.next = afterLoc), ContinueSentinel; }, finish: function finish(finallyLoc) { for (var i = this.tryEntries.length - 1; i >= 0; --i) { var entry = this.tryEntries[i]; if (entry.finallyLoc === finallyLoc) return this.complete(entry.completion, entry.afterLoc), resetTryEntry(entry), ContinueSentinel; } }, "catch": function _catch(tryLoc) { for (var i = this.tryEntries.length - 1; i >= 0; --i) { var entry = this.tryEntries[i]; if (entry.tryLoc === tryLoc) { var record = entry.completion; if ("throw" === record.type) { var thrown = record.arg; resetTryEntry(entry); } return thrown; } } throw new Error("illegal catch attempt"); }, delegateYield: function delegateYield(iterable, resultName, nextLoc) { return this.delegate = { iterator: values(iterable), resultName: resultName, nextLoc: nextLoc }, "next" === this.method && (this.arg = undefined), ContinueSentinel; } }, exports; }
 function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
 function _extends() { _extends = Object.assign ? Object.assign.bind() : function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
-function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
-function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
-function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter); }
-function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
+function src_toConsumableArray(arr) { return src_arrayWithoutHoles(arr) || src_iterableToArray(arr) || src_unsupportedIterableToArray(arr) || src_nonIterableSpread(); }
+function src_nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+function src_iterableToArray(iter) { if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter); }
+function src_arrayWithoutHoles(arr) { if (Array.isArray(arr)) return src_arrayLikeToArray(arr); }
 function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
 function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
-function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
+function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || src_unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
 function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
-function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
-function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i]; return arr2; }
+function src_unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return src_arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return src_arrayLikeToArray(o, minLen); }
+function src_arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i]; return arr2; }
 function _iterableToArrayLimit(arr, i) { var _i = null == arr ? null : "undefined" != typeof Symbol && arr[Symbol.iterator] || arr["@@iterator"]; if (null != _i) { var _s, _e, _x, _r, _arr = [], _n = !0, _d = !1; try { if (_x = (_i = _i.call(arr)).next, 0 === i) { if (Object(_i) !== _i) return; _n = !1; } else for (; !(_n = (_s = _x.call(_i)).done) && (_arr.push(_s.value), _arr.length !== i); _n = !0); } catch (err) { _d = !0, _e = err; } finally { try { if (!_n && null != _i["return"] && (_r = _i["return"](), Object(_r) !== _r)) return; } finally { if (_d) throw _e; } } return _arr; } }
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 function _objectWithoutProperties(source, excluded) { if (source == null) return {}; var target = _objectWithoutPropertiesLoose(source, excluded); var key, i; if (Object.getOwnPropertySymbols) { var sourceSymbolKeys = Object.getOwnPropertySymbols(source); for (i = 0; i < sourceSymbolKeys.length; i++) { key = sourceSymbolKeys[i]; if (excluded.indexOf(key) >= 0) continue; if (!Object.prototype.propertyIsEnumerable.call(source, key)) continue; target[key] = source[key]; } } return target; }
 function _objectWithoutPropertiesLoose(source, excluded) { if (source == null) return {}; var target = {}; var sourceKeys = Object.keys(source); var key, i; for (i = 0; i < sourceKeys.length; i++) { key = sourceKeys[i]; if (excluded.indexOf(key) >= 0) continue; target[key] = source[key]; } return target; }
 
 
-var MultipleSelect = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(function (props, externalRef) {
+
+
+var MultipleSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_amd_react_.forwardRef)(function (props, externalRef) {
   var wrapperClassName = props.wrapperClassName,
+    childClassName = props.childClassName,
     wrapperMinHeight = props.wrapperMinHeight,
     wrapperMinWidth = props.wrapperMinWidth,
     availableHeaderTitle = props.availableHeaderTitle,
@@ -4228,6 +4501,8 @@ var MultipleSelect = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardR
     hierarchical = props.hierarchical,
     indentation = props.indentation,
     doubleIndent = props.doubleIndent,
+    alternateCollapse = props.alternateCollapse,
+    arrow = props.arrow,
     options = props.options,
     disabled = props.disabled,
     required = props.required,
@@ -4250,18 +4525,18 @@ var MultipleSelect = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardR
   var INDENT_PLACEHOLDER = doubleIndent ? "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" : "&nbsp;&nbsp;&nbsp;&nbsp;";
   var INDENT_LAST_PLACEHOLDER = "".concat(typeof indentation !== 'undefined' && indentation !== '' ? "".concat(indentation, "&nbsp;&nbsp;") : '');
   var VALUE_BY_BRACKETS = typeof extractValueByBrackets === 'undefined' ? true : extractValueByBrackets;
-  var uniqueID = (0,funda_utils__WEBPACK_IMPORTED_MODULE_1__.useComId)();
+  var uniqueID = (0,cjs.useComId)();
   var idRes = id || uniqueID;
-  var rootRef = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(null);
-  var inputRef = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(null);
-  var availableListRef = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(null);
-  var selectedListRef = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(null);
-  var optionsRes = options ? (0,funda_utils__WEBPACK_IMPORTED_MODULE_1__.isJSON)(options) ? JSON.parse(options) : options : [];
-  var _useState = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)([]),
+  var rootRef = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useRef)(null);
+  var inputRef = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useRef)(null);
+  var availableListRef = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useRef)(null);
+  var selectedListRef = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useRef)(null);
+  var optionsRes = options ? (0,cjs.isJSON)(options) ? JSON.parse(options) : options : [];
+  var _useState = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)([]),
     _useState2 = _slicedToArray(_useState, 2),
     valSelectedData = _useState2[0],
     setValSelectedData = _useState2[1];
-  var _useState3 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)([]),
+  var _useState3 = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)([]),
     _useState4 = _slicedToArray(_useState3, 2),
     valSelected = _useState4[0],
     setValSelected = _useState4[1];
@@ -4270,26 +4545,20 @@ var MultipleSelect = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardR
   var optionsDataInit = optionsRes;
 
   //
-  var _useState5 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(''),
+  var _useState5 = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)(''),
     _useState6 = _slicedToArray(_useState5, 2),
     changedSearchVal = _useState6[0],
     setChangedSearchVal = _useState6[1];
 
   //
-  var _useState7 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(optionsDataInit),
+  var _useState7 = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)(optionsDataInit),
     _useState8 = _slicedToArray(_useState7, 2),
     dataInit = _useState8[0],
     setDataInit = _useState8[1];
-  var _useState9 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(false),
+  var _useState9 = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)(false),
     _useState10 = _slicedToArray(_useState9, 2),
     hasErr = _useState10[0],
     setHasErr = _useState10[1];
-  var multiSelControlOptionExist = function multiSelControlOptionExist(arr, val) {
-    var _data = arr.filter(Boolean);
-    return _data.map(function (v) {
-      return v.toString();
-    }).includes(val.toString());
-  };
   function fetchData(_x2) {
     return _fetchData.apply(this, arguments);
   }
@@ -4308,7 +4577,7 @@ var MultipleSelect = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardR
               break;
             }
             _context.next = 4;
-            return fetchFuncAsync["".concat(fetchFuncMethod)].apply(fetchFuncAsync, _toConsumableArray(params.split(',')));
+            return fetchFuncAsync["".concat(fetchFuncMethod)].apply(fetchFuncAsync, src_toConsumableArray(params.split(',')));
           case 4:
             response = _context.sent;
             _ORGIN_DATA = response.data; // reset data structure
@@ -4325,12 +4594,12 @@ var MultipleSelect = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardR
 
             // Set hierarchical categories ( with sub-categories )
             if (hierarchical) {
-              _ORGIN_DATA = (0,funda_utils__WEBPACK_IMPORTED_MODULE_1__.addTreeDepth)(_ORGIN_DATA);
-              (0,funda_utils__WEBPACK_IMPORTED_MODULE_1__.addTreeIndent)(_ORGIN_DATA, INDENT_PLACEHOLDER, INDENT_LAST_PLACEHOLDER, 'label');
+              _ORGIN_DATA = (0,cjs.addTreeDepth)(_ORGIN_DATA);
+              (0,cjs.addTreeIndent)(_ORGIN_DATA, INDENT_PLACEHOLDER, INDENT_LAST_PLACEHOLDER, 'label');
             }
 
             // remove Duplicate objects from JSON Array
-            _ORGIN_DATA = (0,funda_utils__WEBPACK_IMPORTED_MODULE_1__.removeArrDuplicateItems)(_ORGIN_DATA, 'value');
+            _ORGIN_DATA = (0,cjs.removeArrDuplicateItems)(_ORGIN_DATA, 'value');
 
             //
             setDataInit(_ORGIN_DATA); // data must be initialized
@@ -4342,8 +4611,14 @@ var MultipleSelect = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardR
             onFetch === null || onFetch === void 0 ? void 0 : onFetch(_ORGIN_DATA);
             return _context.abrupt("return", _ORGIN_DATA);
           case 16:
+            // Set hierarchical categories ( with sub-categories )
+            if (hierarchical) {
+              optionsDataInit = (0,cjs.addTreeDepth)(optionsDataInit);
+              (0,cjs.addTreeIndent)(optionsDataInit, INDENT_PLACEHOLDER, INDENT_LAST_PLACEHOLDER, 'label');
+            }
+
             // remove Duplicate objects from JSON Array
-            optionsDataInit = (0,funda_utils__WEBPACK_IMPORTED_MODULE_1__.removeArrDuplicateItems)(optionsDataInit, 'value');
+            optionsDataInit = (0,cjs.removeArrDuplicateItems)(optionsDataInit, 'value');
 
             //
             setDataInit(optionsDataInit); // data must be initialized
@@ -4354,7 +4629,7 @@ var MultipleSelect = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardR
             //
             onFetch === null || onFetch === void 0 ? void 0 : onFetch(optionsDataInit);
             return _context.abrupt("return", optionsDataInit);
-          case 21:
+          case 22:
           case "end":
             return _context.stop();
         }
@@ -4368,7 +4643,7 @@ var MultipleSelect = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardR
       setValSelected([]);
       setValSelectedData([]);
     } else {
-      var _val = VALUE_BY_BRACKETS ? (0,funda_utils__WEBPACK_IMPORTED_MODULE_1__.extractContentsOfBrackets)(defaultValue) : defaultValue.trim().replace(/^\,|\,$/g, '').split(',');
+      var _val = VALUE_BY_BRACKETS ? (0,cjs.extractContentsOfBrackets)(defaultValue) : defaultValue.trim().replace(/^\,|\,$/g, '').split(',');
       if (Array.isArray(_val)) {
         var _initVal = _val.filter(function (v) {
           return v !== '';
@@ -4400,8 +4675,8 @@ var MultipleSelect = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardR
         return item == _val;
       });
       if (index !== -1) newData.splice(index, 1);
-      var _res = _val ? Array.from(new Set([_val].concat(_toConsumableArray(newData)))) : newData;
-      onChange === null || onChange === void 0 ? void 0 : onChange(_li, _res, VALUE_BY_BRACKETS ? (0,funda_utils__WEBPACK_IMPORTED_MODULE_1__.convertArrToValByBrackets)(_res) : _res.join(','), _data, 'add');
+      var _res = _val ? Array.from(new Set([_val].concat(src_toConsumableArray(newData)))) : newData;
+      onChange === null || onChange === void 0 ? void 0 : onChange(_li, _res, VALUE_BY_BRACKETS ? (0,cjs.convertArrToValByBrackets)(_res) : _res.join(','), _data, 'add');
 
       // hide current item
       _li.classList.add('hide');
@@ -4415,7 +4690,7 @@ var MultipleSelect = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardR
         return item.value == _val;
       });
       if (index !== -1) newData.splice(index, 1);
-      var _res = _val ? Array.from(new Set([_data].concat(_toConsumableArray(newData)))) : newData;
+      var _res = _val ? Array.from(new Set([_data].concat(src_toConsumableArray(newData)))) : newData;
       return _res;
     });
   }
@@ -4433,7 +4708,7 @@ var MultipleSelect = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardR
       });
       if (index !== -1) newData.splice(index, 1);
       var _res = newData;
-      onChange === null || onChange === void 0 ? void 0 : onChange(_li, _res, VALUE_BY_BRACKETS ? (0,funda_utils__WEBPACK_IMPORTED_MODULE_1__.convertArrToValByBrackets)(_res) : _res.join(','), _data, 'remove');
+      onChange === null || onChange === void 0 ? void 0 : onChange(_li, _res, VALUE_BY_BRACKETS ? (0,cjs.convertArrToValByBrackets)(_res) : _res.join(','), _data, 'remove');
 
       // show current item
       if (availableListRef.current) {
@@ -4497,22 +4772,22 @@ var MultipleSelect = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardR
       }
     });
   }
-  (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(function () {
+  (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useEffect)(function () {
     // data init
     //--------------
     var _params = fetchFuncMethodParams || [];
     fetchData(_params.join(','));
   }, [value, options, data]);
-  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+  return /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
     className: wrapperClassName || wrapperClassName === '' ? "m-select__wrapper ".concat(wrapperClassName) : "m-select__wrapper mb-3",
     ref: rootRef,
     style: {
       minWidth: WRAPPER_MIN_W === '' ? 'var(--m-select-wrapper-min-w)' : WRAPPER_MIN_W,
       minHeight: WRAPPER_MIN_H === '' ? 'var(--m-select-wrapper-min-h)' : WRAPPER_MIN_H
     }
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+  }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
     className: "m-select-diving-line"
-  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("input", _extends({
+  }), /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("input", _extends({
     ref: function ref(node) {
       inputRef.current = node;
       if (typeof externalRef === 'function') {
@@ -4525,133 +4800,90 @@ var MultipleSelect = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardR
     type: "hidden",
     id: idRes,
     name: name,
-    value: VALUE_BY_BRACKETS ? (0,funda_utils__WEBPACK_IMPORTED_MODULE_1__.convertArrToValByBrackets)(valSelected) : valSelected.join(',') // do not use `defaultValue`
+    value: VALUE_BY_BRACKETS ? (0,cjs.convertArrToValByBrackets)(valSelected) : valSelected.join(',') // do not use `defaultValue`
     ,
     onChange: function onChange() {
       return void 0;
     },
     required: required || null
-  }, attributes)), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+  }, attributes)), /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
     className: "m-select-inner"
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+  }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
     className: "m-select__available__container"
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+  }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
     className: "m-select__m-select__item-actions m-select__header"
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+  }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
     className: "m-select__search__container"
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("input", {
+  }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("input", {
     type: "text",
     value: changedSearchVal,
     className: "m-select__search",
     onChange: handleChangeSearch
-  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("svg", {
+  }), /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("i", null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("svg", {
     width: "0.8em",
     height: "0.8em",
     fill: "#ddd",
     viewBox: "0 0 16 16"
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("path", {
+  }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("path", {
     d: "M12.027 9.92L16 13.95 14 16l-4.075-3.976A6.465 6.465 0 0 1 6.5 13C2.91 13 0 10.083 0 6.5 0 2.91 2.917 0 6.5 0 10.09 0 13 2.917 13 6.5a6.463 6.463 0 0 1-.973 3.42zM1.997 6.452c0 2.48 2.014 4.5 4.5 4.5 2.48 0 4.5-2.015 4.5-4.5 0-2.48-2.015-4.5-4.5-4.5-2.48 0-4.5 2.014-4.5 4.5z",
     fillRule: "evenodd"
-  })))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
+  })))), /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("span", {
     className: "m-select__title",
     dangerouslySetInnerHTML: {
       __html: "".concat(availableHeaderTitle || '')
     }
-  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
+  }), /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("a", {
     href: "#",
     className: "m-select__btn--add-all",
     onClick: handleSelectAll
-  }, addAllBtnLabel || 'Add all')), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("ul", {
-    className: "m-select__available m-select__options-contentlist",
-    ref: availableListRef
-  }, dataInit ? dataInit.map(function (item, i) {
-    return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("li", {
-      key: 'item' + i,
-      className: "".concat(item.disabled ? 'disabled' : '', " ").concat(multiSelControlOptionExist(valSelected, item.value) ? 'hide' : ''),
-      "data-index": i,
-      "data-value": "".concat(item.value),
-      "data-label": "".concat(item.label),
-      "data-list-item-label": "".concat(typeof item.listItemLabel === 'undefined' ? '' : item.listItemLabel),
-      "data-disabled": item.disabled || 'false',
-      "data-querystring": "".concat(typeof item.queryString === 'undefined' ? '' : item.queryString),
-      "data-itemdata": JSON.stringify(item)
-    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("strong", {
-      dangerouslySetInnerHTML: {
-        __html: typeof item.listItemLabel === 'undefined' ? item.label : item.listItemLabel
-      }
-    }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
-      href: "#",
-      className: "m-select__item-action"
-    })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-      onClick: function onClick(e) {
-        selectItem(e.target.closest('li'));
-      }
-    }, iconAdd ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, iconAdd) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("svg", {
-      width: "15px",
-      height: "15px",
-      viewBox: "0 0 24 24",
-      fill: "none"
-    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("path", {
-      d: "M12 2C6.49 2 2 6.49 2 12C2 17.51 6.49 22 12 22C17.51 22 22 17.51 22 12C22 6.49 17.51 2 12 2ZM16 12.75H12.75V16C12.75 16.41 12.41 16.75 12 16.75C11.59 16.75 11.25 16.41 11.25 16V12.75H8C7.59 12.75 7.25 12.41 7.25 12C7.25 11.59 7.59 11.25 8 11.25H11.25V8C11.25 7.59 11.59 7.25 12 7.25C12.41 7.25 12.75 7.59 12.75 8V11.25H16C16.41 11.25 16.75 11.59 16.75 12C16.75 12.41 16.41 12.75 16 12.75Z",
-      fill: "#000"
-    })))));
-  }) : null)), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+  }, addAllBtnLabel || 'Add all')), /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement(src_ItemList, {
+    root: rootRef.current,
+    listContainerClassName: "m-select__available m-select__options-contentlist",
+    ref: availableListRef,
+    indentStr: INDENT_LAST_PLACEHOLDER,
+    valSelected: valSelected,
+    iconAdd: iconAdd,
+    onSelect: selectItem,
+    alternateCollapse: alternateCollapse,
+    first: true,
+    arrow: arrow,
+    data: dataInit,
+    childClassName: childClassName || 'm-select__options-contentlist-custom'
+  })), /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
     className: "m-select__selected__container"
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+  }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
     className: "m-select__m-select__item-actions m-select__header"
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
+  }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("span", {
     className: "m-select__count",
     dangerouslySetInnerHTML: {
       __html: "".concat(typeof selectedHeaderNote !== 'undefined' ? selectedHeaderNote.replace('{items_num}', valSelectedData.length) : '')
     }
-  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
+  }), /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("span", {
     className: "m-select__title",
     dangerouslySetInnerHTML: {
       __html: "".concat(selectedHeaderTitle || '')
     }
-  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
+  }), /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("a", {
     href: "#",
     className: "m-select__btn--remove-all",
     onClick: handleRemoveAll
-  }, removeAllBtnLabel || 'Remove all')), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("ul", {
-    className: "m-select__selected m-select__options-contentlist--sortable m-select__options-contentlist",
-    ref: selectedListRef
-  }, valSelectedData ? valSelectedData.map(function (item, i) {
-    return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("li", {
-      key: 'item-selected' + i,
-      className: "selected",
-      "data-index": i,
-      "data-value": "".concat(item.value),
-      "data-label": "".concat(item.label),
-      "data-list-item-label": "".concat(typeof item.listItemLabel === 'undefined' ? '' : item.listItemLabel),
-      "data-disabled": item.disabled || 'false',
-      "data-querystring": "".concat(typeof item.queryString === 'undefined' ? '' : item.queryString),
-      "data-itemdata": JSON.stringify(item)
-    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("strong", {
-      dangerouslySetInnerHTML: {
-        __html: typeof item.listItemLabel === 'undefined' ? item.label : item.listItemLabel
-      }
-    }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
-      href: "#",
-      className: "m-select__item-action"
-    })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-      onClick: function onClick(e) {
-        removeItem(e.target.closest('li'));
-      }
-    }, iconRemove ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, iconRemove) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("svg", {
-      width: "15px",
-      height: "15px",
-      viewBox: "0 0 24 24",
-      fill: "none"
-    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("path", {
-      fillRule: "evenodd",
-      clipRule: "evenodd",
-      d: "M22 12c0 5.523-4.477 10-10 10S2 17.523 2 12 6.477 2 12 2s10 4.477 10 10ZM8 11a1 1 0 1 0 0 2h8a1 1 0 1 0 0-2H8Z",
-      fill: "#000"
-    })))));
-  }) : null)))));
+  }, removeAllBtnLabel || 'Remove all')), /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement(src_ItemList, {
+    root: rootRef.current,
+    listContainerClassName: "m-select__selected m-select__options-contentlist--sortable m-select__options-contentlist",
+    ref: selectedListRef,
+    indentStr: INDENT_LAST_PLACEHOLDER,
+    valSelected: valSelected,
+    iconRemove: iconRemove,
+    onSelect: removeItem,
+    alternateCollapse: alternateCollapse,
+    first: true,
+    arrow: arrow,
+    data: valSelectedData,
+    childClassName: childClassName || 'm-select__options-contentlist--custom',
+    selected: true
+  })))));
 });
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (MultipleSelect);
+/* harmony default export */ const src = (MultipleSelect);
 })();
 
 /******/ 	return __webpack_exports__;

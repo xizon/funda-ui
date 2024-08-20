@@ -24,7 +24,7 @@ export default () => {
                 name="name"
                 availableHeaderTitle="Select One Item"
                 selectedHeaderTitle="Selected Items"
-                selectedHeaderNote="{items_num} items m-select__selected"
+                selectedHeaderNote="{items_num} items selected"
                 value={val}
                 options={
                     [
@@ -58,13 +58,501 @@ export default () => {
 
 
 
+## Tree Hierarchy
+
+```js
+import React, { useEffect, useState } from "react";
+import MultipleSelect from 'funda-ui/MultipleSelect';
+
+// component styles
+import 'funda-ui/MultipleSelect/index.css';
+
+
+
+class DataService {
+
+    // `getList()` must be a Promise Object
+    async getList(searchStr: string = '', limit: number = 0, otherParam: string = '') {
+
+        const demoData = [
+            // level 1
+            {
+                "parent_id": 0,
+                "id": 1,
+                "item_name": "Title 1",
+                "item_type": "web"
+            },
+            {
+                "parent_id": 0,
+                "id": 2,
+                "item_name": "Title 2",
+                "item_type": "dev"
+            },
+            // level 2
+            {
+                "parent_id": 1,
+                "id": 3,
+                "item_name": "Title 3",
+                "item_type": "web/ui"
+            },
+            {
+                "parent_id": 1,
+                "id": 4,
+                "item_name": "Title 4",
+                "item_type": "web/ui"
+            },
+            {
+                "parent_id": 2,
+                "id": 5,
+                "item_name": "Title 5",
+                "item_type": "dev"
+            },
+            // level 3
+            {
+                "parent_id": 4,
+                "id": 6,
+                "item_name": "Title 6",
+                "item_type": "web/ui/photoshop"
+            },  
+        ];   
+
+        return {
+            code: 0,
+            message: 'OK',
+            data: demoData
+        };
+    }
+
+}
+
+
+export default () => {
+
+    const indentation = "—";
+    const INDENT_PLACEHOLDER = `&nbsp;&nbsp;&nbsp;&nbsp;`;
+    const INDENT_LAST_PLACEHOLDER = `${indentation}&nbsp;&nbsp;`;
+    const [list, setList] = useState<any[]>([]);
+
+    /**
+     * Convert Tree
+     * @param {Array} arr                    - Input array to convert
+     * @param  {?String | ?Number} parentId  - Parent id
+     * @param  {?String} keyId               - Key value of id.
+     * @param  {?String} keyParentId         - Key value of parent id.
+     * @returns Array
+     */
+    function convertTree(arr: any[], parentId: string = '', keyId: string = 'id', keyParentId: string = 'parent_id') {
+        
+        if( !parentId ) {
+            
+            // If there is no parent id (when recursing for the first time), all parents will be queried
+            return arr.filter((item: any) => !item[keyParentId]).map((item: any) => {
+                // Query all child nodes by parent node ID
+                item.children = convertTree(arr, item[keyId], keyId, keyParentId);
+                return item;
+            })
+        } else {
+            return arr.filter((item: any) => item[keyParentId] === parentId).map((item: any) => {
+                // Query all child nodes by parent node ID
+                item.children = convertTree(arr, item[keyId], keyId, keyParentId);
+                return item;
+            })
+        }
+    }
+
+
+    /**
+    * Add depth to each item in the tree
+    * @param {Array} arr       - Hierarchical array
+    * @param  {?string} keyId               - Key value of id.
+    * @param  {?string} keyParentId         - Key value of parent id.
+    * @param  {?number} depth               - Depth of the item.
+    * @returns Number
+    */
+    function addTreeDepth(arr: any[], keyId: string = 'id', parentItem: string = '', depth: number = 0): any[] {
+    return arr.reduce((acc, el) => {
+        const { children, ...otherProps } = el;
+        acc.push({ ...otherProps, parentItem, depth });
+        if (children) {
+            return acc.concat(addTreeDepth(children, keyId, el[keyId], depth + 1));
+        }
+        return acc;
+    }, []);
+    }
+
+
+
+    /**
+     * Add indent placeholder
+     * @param {Array} arr                    - Flat array
+     * @param  {?string} placeholder         - String of placeholder
+     * @param  {?string} lastPlaceholder     - Last String of placeholder
+     * @param  {?string} keyName             - Key value of name.
+     * @returns Array
+     */
+    function addTreeIndent(arr: any[], placeholder: string = '&nbsp;&nbsp;&nbsp;&nbsp;', lastPlaceholder: string = '', keyName: string = 'label'): void {
+
+        arr.forEach((item) => {
+            let indent = ''; 
+            if (item.depth) {
+                Array(item.depth).fill(0).forEach((k, i) => {
+                    indent += placeholder;
+                    if (i === item.depth-1) {
+                        item[keyName] = indent + lastPlaceholder + item[keyName];
+                    }
+                });
+            }
+        });
+    }
+
+
+
+    useEffect(() => {
+        new DataService().getList('', 0, '').then((response: any) => {
+      
+            const _data: any[] = response.data.map((item: any, i: number) => {
+                return {
+                    id: item.id,
+                    parent_id: item.parent_id,
+                    label: item.item_name,
+                    value: item.id,
+                    queryString: ''
+                }
+            });
+         
+            const treeData = convertTree(_data);
+            let resData = addTreeDepth(treeData, 'id');
+            addTreeIndent(resData, INDENT_PLACEHOLDER, INDENT_LAST_PLACEHOLDER, 'label');
+            setList(resData);
+
+        });
+    }, []);
+
+
+
+    return (
+        <>
+
+        <div className="mb-3" style={{height: '300px'}}>
+            <MultipleSelect 
+                name="name"
+                availableHeaderTitle="Select One Item"
+                selectedHeaderTitle="Selected Items"
+                selectedHeaderNote="{items_num} items selected"
+                options={list}
+                onChange={(e, data, dataStr, currentData, type) => {
+                    console.log(e, data, dataStr, currentData, type);
+                }}
+            />
+        </div>
+          
+
+        </>
+    );
+}
+```
+
+
+
+**You could also use these following properties directly: `hierarchical`, `indentation` and `doubleIndent`**
+
+
+```js
+import React, { useEffect, useState } from "react";
+import MultipleSelect from 'funda-ui/MultipleSelect';
+
+// component styles
+import 'funda-ui/MultipleSelect/index.css';
+
+
+
+class DataService {
+
+    // `getList()` must be a Promise Object
+    async getList(searchStr: string = '', limit: number = 0, otherParam: string = '') {
+
+        const demoData = [
+            // level 1
+            {
+                "parent_id": 0,
+                "id": 1,
+                "item_name": "Title 1",
+                "item_type": "web"
+            },
+            {
+                "parent_id": 0,
+                "id": 2,
+                "item_name": "Title 2",
+                "item_type": "dev"
+            },
+            // level 2
+            {
+                "parent_id": 1,
+                "id": 3,
+                "item_name": "Title 3",
+                "item_type": "web/ui"
+            },
+            {
+                "parent_id": 1,
+                "id": 4,
+                "item_name": "Title 4",
+                "item_type": "web/ui"
+            },
+            {
+                "parent_id": 2,
+                "id": 5,
+                "item_name": "Title 5",
+                "item_type": "dev"
+            },
+            // level 3
+            {
+                "parent_id": 4,
+                "id": 6,
+                "item_name": "Title 6",
+                "item_type": "web/ui/photoshop"
+            },  
+        ];   
+
+        return {
+            code: 0,
+            message: 'OK',
+            data: demoData
+        };
+    }
+
+}
+
+
+export default () => {
+
+    const [list, setList] = useState<any[]>([]);
+
+    /**
+     * Convert Tree
+     * @param {Array} arr                    - Input array to convert
+     * @param  {?String | ?Number} parentId  - Parent id
+     * @param  {?String} keyId               - Key value of id.
+     * @param  {?String} keyParentId         - Key value of parent id.
+     * @returns Array
+     */
+    function convertTree(arr: any[], parentId: string = '', keyId: string = 'id', keyParentId: string = 'parent_id') {
+        
+        if( !parentId ) {
+            
+            // If there is no parent id (when recursing for the first time), all parents will be queried
+            return arr.filter((item: any) => !item[keyParentId]).map((item: any) => {
+                // Query all child nodes by parent node ID
+                item.children = convertTree(arr, item[keyId], keyId, keyParentId);
+                return item;
+            })
+        } else {
+            return arr.filter((item: any) => item[keyParentId] === parentId).map((item: any) => {
+                // Query all child nodes by parent node ID
+                item.children = convertTree(arr, item[keyId], keyId, keyParentId);
+                return item;
+            })
+        }
+    }
+
+
+    useEffect(() => {
+        new DataService().getList('', 0, '').then((response: any) => {
+      
+            const _data: any[] = response.data.map((item: any, i: number) => {
+                return {
+                    id: item.id,
+                    parent_id: item.parent_id,
+                    active: false,
+                    title: `${item.item_name}`,
+                    link: "#",
+                    slug: item.id
+                }
+            });
+         
+            const treeData = convertTree(_data);
+            setList(treeData);
+
+        });
+    }, []);
+
+
+
+    return (
+        <>
+
+        <div className="mb-3" style={{height: '300px'}}>
+            <MultipleSelect 
+                name="name"
+                availableHeaderTitle="Select One Item"
+                selectedHeaderTitle="Selected Items"
+                selectedHeaderNote="{items_num} items selected"
+                options={list}
+                onChange={(e, data, dataStr, currentData, type) => {
+                    console.log(e, data, dataStr, currentData, type);
+                }}
+                hierarchical
+                indentation="-"
+                doubleIndent
+            />
+        </div>
+          
+
+        </>
+    );
+}
+```
+
+
+## Collapsible Tree Hierarchy
+
+
+```js
+import React, { useEffect, useState } from "react";
+import MultipleSelect from 'funda-ui/MultipleSelect';
+
+// component styles
+import 'funda-ui/MultipleSelect/index.css';
+
+
+
+class DataService {
+
+    // `getList()` must be a Promise Object
+    async getList(searchStr: string = '', limit: number = 0, otherParam: string = '') {
+
+        const demoData = [
+            // level 1
+            {
+                "parent_id": 0,
+                "id": 1,
+                "item_name": "Title 1",
+                "item_type": "web"
+            },
+            {
+                "parent_id": 0,
+                "id": 2,
+                "item_name": "Title 2",
+                "item_type": "dev"
+            },
+            // level 2
+            {
+                "parent_id": 1,
+                "id": 3,
+                "item_name": "Title 3",
+                "item_type": "web/ui"
+            },
+            {
+                "parent_id": 1,
+                "id": 4,
+                "item_name": "Title 4",
+                "item_type": "web/ui"
+            },
+            {
+                "parent_id": 2,
+                "id": 5,
+                "item_name": "Title 5",
+                "item_type": "dev"
+            },
+            // level 3
+            {
+                "parent_id": 4,
+                "id": 6,
+                "item_name": "Title 6",
+                "item_type": "web/ui/photoshop"
+            },  
+        ];   
+
+        return {
+            code: 0,
+            message: 'OK',
+            data: demoData
+        };
+    }
+
+}
+
+
+export default () => {
+
+    const [list, setList] = useState<any[]>([]);
+
+    /**
+     * Convert Tree
+     * @param {Array} arr                    - Input array to convert
+     * @param  {?String | ?Number} parentId  - Parent id
+     * @param  {?String} keyId               - Key value of id.
+     * @param  {?String} keyParentId         - Key value of parent id.
+     * @returns Array
+     */
+    function convertTree(arr: any[], parentId: string = '', keyId: string = 'id', keyParentId: string = 'parent_id') {
+        
+        if( !parentId ) {
+            
+            // If there is no parent id (when recursing for the first time), all parents will be queried
+            return arr.filter((item: any) => !item[keyParentId]).map((item: any) => {
+                // Query all child nodes by parent node ID
+                item.children = convertTree(arr, item[keyId], keyId, keyParentId);
+                return item;
+            })
+        } else {
+            return arr.filter((item: any) => item[keyParentId] === parentId).map((item: any) => {
+                // Query all child nodes by parent node ID
+                item.children = convertTree(arr, item[keyId], keyId, keyParentId);
+                return item;
+            })
+        }
+    }
+
+
+    useEffect(() => {
+        new DataService().getList('', 0, '').then((response: any) => {
+      
+            const _data: any[] = response.data.map((item: any, i: number) => {
+                return {
+                    id: item.id,
+                    parent_id: item.parent_id,
+                    active: false,
+                    title: `${item.item_name}`,
+                    link: "#",
+                    slug: item.id
+                }
+            });
+         
+            const treeData = convertTree(_data);
+            setList(treeData);
+
+        });
+    }, []);
+
+
+
+    return (
+        <>
+
+        <div className="mb-3" style={{height: '300px'}}>
+            <MultipleSelect 
+                name="name"
+                availableHeaderTitle="Select One Item"
+                selectedHeaderTitle="Selected Items"
+                selectedHeaderNote="{items_num} items selected"
+                options={list}
+                onChange={(e, data, dataStr, currentData, type) => {
+                    console.log(e, data, dataStr, currentData, type);
+                }}
+            />
+        </div>
+          
+
+        </>
+    );
+}
+```
 
 
 
 ## Asynchronous Usage via HTTP Request
 
 You need to use a `fetchCallback` property to format the data of the API callback, which will match the data structure of the component.
-
 
 
 ```js
@@ -146,7 +634,7 @@ export default () => {
                 name="name"
                 availableHeaderTitle="Select One Item"
                 selectedHeaderTitle="Selected Items"
-                selectedHeaderNote="{items_num} items m-select__selected"
+                selectedHeaderNote="{items_num} items selected"
                 value="[bar2]"
                 fetchFuncAsync={new DataService}
                 fetchFuncMethod="getList"
@@ -217,7 +705,7 @@ function MemoMultipleSelect(props: any) {
                 name="name"
                 availableHeaderTitle="Select One Item"
                 selectedHeaderTitle="Selected Items"
-                selectedHeaderNote="{items_num} items m-select__selected"
+                selectedHeaderNote="{items_num} items selected"
                 value={val}
                 options={
                     [
@@ -269,6 +757,7 @@ import MultipleSelect from 'funda-ui/MultipleSelect';
 | --- | --- | --- | --- | --- |
 | `ref` | React.ForwardedRef | - | It is the return element of this component.  | - |
 | `wrapperClassName` | string | `mb-3` | The class name of the control wrapper. | - |
+| `childClassName` | string | - | The additional class name of the child on `<ul>`. | - |
 | `wrapperMinHeight` | string | - | Minimum height of wrapper. If not specified, the default value in css will be used, which is **315px** | - |
 | `wrapperMinWidth` | string | - | Minimum width of wrapper. If not specified, the default value in css will be used, which is **350px** | - |
 | `extractValueByBrackets` | boolean  | true | Whether to use square brackets to save result and initialize default value. | - |
@@ -283,6 +772,8 @@ import MultipleSelect from 'funda-ui/MultipleSelect';
 | `hierarchical` | boolean  | false | Set hierarchical categories ( with sub-categories ) to attribute `options`. | - |
 | `indentation` | string  | - | Set hierarchical indentation placeholders, valid when the `hierarchical` is true. | - |
 | `doubleIndent` | boolean  | false | Set double indent effect, valid when the `hierarchical` is true. | - |
+| `alternateCollapse` | boolean | false | Mutually exclusive alternate expansion between the first levels. | - |
+| `arrow` | ReactNode  | `<svg viewBox="0 0 22 22" width="8px"><path d="m345.44 248.29l-194.29 194.28c-12.359 12.365-32.397 12.365-44.75 0-12.354-12.354-12.354-32.391 0-44.744l171.91-171.91-171.91-171.9c-12.354-12.359-12.354-32.394 0-44.748 12.354-12.359 32.391-12.359 44.75 0l194.29 194.28c6.177 6.18 9.262 14.271 9.262 22.366 0 8.099-3.091 16.196-9.267 22.373" transform="matrix(.03541-.00013.00013.03541 2.98 3.02)" fill="#a5a5a5" /></svg>` | Set an arrow of control | - |
 | `value` | string | - | Set a default value for this control. Please separate multiple values with square brackets. Such as `[tag1][tag2][tag3]` <blockquote>If `extractValueByBrackets` is false, the default value will be separated by comma, such as <br />`tag1,tag2,tag3`</blockquote> | - |
 | `label` | string \| ReactNode | - | It is used to specify a label for an element of a form.<blockquote>Support html tags</blockquote> | - |
 | `name` | string | - | Name is not deprecated when used with form fields. | - |
@@ -313,3 +804,4 @@ JSON Object Literals configuration properties of the `options` and callback from
 | `value` | string | - | Specify the value for each option | ✅ |
 | `queryString` | string | - | Quick query string, such as Chinese pinyin or English initials | - |
 | `disabled` | boolean | - | When present, it specifies that an option should be disabled. | - |
+| `children` | array | - | Specify a set of sub-navigation, Eg. `[{"label": "Option 1","value": "value-1","queryString": "option1"}]` | - |

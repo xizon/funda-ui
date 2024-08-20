@@ -4199,7 +4199,7 @@ var external_root_React_commonjs2_react_commonjs_react_amd_react_ = __webpack_re
 var external_root_React_commonjs2_react_commonjs_react_amd_react_default = /*#__PURE__*/__webpack_require__.n(external_root_React_commonjs2_react_commonjs_react_amd_react_);
 // EXTERNAL MODULE: ../Utils/dist/cjs/index.js
 var cjs = __webpack_require__(456);
-;// CONCATENATED MODULE: ./src/MenuList.tsx
+;// CONCATENATED MODULE: ./src/ItemList.tsx
 function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
 function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
 function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
@@ -4212,8 +4212,9 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
 /* Recursively nested components to traverse nodes
 -------------------------------------------------*/
 
-function MenuList(props) {
-  var alternateCollapse = props.alternateCollapse,
+function ItemList(props) {
+  var root = props.root,
+    alternateCollapse = props.alternateCollapse,
     first = props.first,
     arrow = props.arrow,
     childClassName = props.childClassName,
@@ -4268,6 +4269,7 @@ function MenuList(props) {
   };
   function handleClick(e) {
     e.preventDefault();
+    e.stopPropagation();
     var hyperlink = e.currentTarget;
     var url = hyperlink.getAttribute('href');
     var subElement = (0,cjs.getNextSiblings)(hyperlink, 'ul');
@@ -4321,48 +4323,50 @@ function MenuList(props) {
     }));
   }
   (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useEffect)(function () {
-    // Activate current item
-    //=====================
-    var allItems = rootRef.current ? [].slice.call(document.querySelectorAll(".".concat(childClassName, " a"))).map(function (item) {
-      var _item$parentNode$clas;
-      return {
-        href: item.getAttribute('href'),
-        el: item,
-        actived: (_item$parentNode$clas = item.parentNode.classList) !== null && _item$parentNode$clas !== void 0 && _item$parentNode$clas.contains('active') ? true : false,
-        expandedLink: document.body.contains(item.parentNode.parentNode.previousSibling) ? item.parentNode.parentNode.previousSibling : false
-      };
-    }) : [];
-    allItems.forEach(function (hyperlink) {
-      // Expand the currently active item by default
-      if (hyperlink.actived) {
-        hyperlink.el.setAttribute('aria-expanded', 'true');
-        if (hyperlink.expandedLink) {
-          var expandedLink = hyperlink.expandedLink; // <a>
-          activeClass(expandedLink.parentNode, 'add');
-          expandedLink.setAttribute('aria-expanded', true);
-        }
+    if (root !== null && data.length > 0) {
+      // Activate current item
+      //=====================
+      var allItems = rootRef.current ? [].slice.call(root.querySelectorAll(".".concat(childClassName, " a"))).map(function (item) {
+        var _item$parentNode$clas;
+        return {
+          href: item.getAttribute('href'),
+          el: item,
+          actived: (_item$parentNode$clas = item.parentNode.classList) !== null && _item$parentNode$clas !== void 0 && _item$parentNode$clas.contains('active') ? true : false,
+          expandedLink: document.body.contains(item.parentNode.parentNode.previousSibling) ? item.parentNode.parentNode.previousSibling : false
+        };
+      }) : [];
+      allItems.forEach(function (hyperlink) {
+        // Expand the currently active item by default
+        if (hyperlink.actived) {
+          hyperlink.el.setAttribute('aria-expanded', 'true');
+          if (hyperlink.expandedLink) {
+            var expandedLink = hyperlink.expandedLink; // <a>
+            activeClass(expandedLink.parentNode, 'add');
+            expandedLink.setAttribute('aria-expanded', true);
+          }
 
-        // init <ul> height
-        var ul = (0,cjs.getNextSiblings)(hyperlink.el, 'ul');
-        [].slice.call(ul).forEach(function (_curUl) {
-          var allHeight = [].slice.call(_curUl.querySelectorAll('li')).map(function (_curLi) {
-            return _curLi.scrollHeight;
+          // init <ul> height
+          var ul = (0,cjs.getNextSiblings)(hyperlink.el, 'ul');
+          [].slice.call(ul).forEach(function (_curUl) {
+            var allHeight = [].slice.call(_curUl.querySelectorAll('li')).map(function (_curLi) {
+              return _curLi.scrollHeight;
+            });
+
+            // Prevent missing height, causing the last element to be clipped
+            var maxHeight = Math.max.apply(Math, _toConsumableArray(allHeight));
+            allHeight.push(maxHeight * 3);
+
+            // 
+            var totalHeight = allHeight.reduce(function (accumulator, currentValue) {
+              return accumulator + currentValue;
+            }, 0);
+
+            // Prevent the use of iframe or other situations where the height is 0
+            _curUl.style.maxHeight = "".concat(totalHeight == 0 ? 999 : totalHeight, "px");
           });
-
-          // Prevent missing height, causing the last element to be clipped
-          var maxHeight = Math.max.apply(Math, _toConsumableArray(allHeight));
-          allHeight.push(maxHeight * 3);
-
-          // 
-          var totalHeight = allHeight.reduce(function (accumulator, currentValue) {
-            return accumulator + currentValue;
-          }, 0);
-
-          // Prevent the use of iframe or other situations where the height is 0
-          _curUl.style.maxHeight = "".concat(totalHeight == 0 ? 999 : totalHeight, "px");
-        });
-      }
-    });
+        }
+      });
+    }
   }, [data]);
   if (data) {
     return /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("ul", {
@@ -4417,9 +4421,10 @@ function MenuList(props) {
         dangerouslySetInnerHTML: {
           __html: "".concat(item.title)
         }
-      }), item.children ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("span", {
+      }), item.children && item.children.length > 0 ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("span", {
         className: "arrow"
-      }, arrowGenerator()) : ''), item.children && /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement(MenuList, {
+      }, arrowGenerator()) : ''), item.children && /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement(ItemList, {
+        root: root,
         data: item.children,
         first: false,
         arrow: arrow,
@@ -4450,6 +4455,7 @@ var MultilevelDropdownMenu = function MultilevelDropdownMenu(props) {
     data = props.data,
     id = props.id,
     onSelect = props.onSelect;
+  var rootRef = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useRef)(null);
   var uniqueID = (0,cjs.useComId)();
   var idRes = id || uniqueID;
   var _useState = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)(null),
@@ -4461,8 +4467,10 @@ var MultilevelDropdownMenu = function MultilevelDropdownMenu(props) {
   }, [data]);
   return /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("nav", {
     id: idRes,
-    className: navbarClassName ? navbarClassName : "navbar"
-  }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement(MenuList, {
+    className: navbarClassName ? navbarClassName : "navbar",
+    ref: rootRef
+  }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement(ItemList, {
+    root: rootRef.current,
     alternateCollapse: alternateCollapse,
     first: true,
     arrow: arrow,
