@@ -14,7 +14,14 @@ import 'funda-ui/MultipleSelect/index.css';
 
 export default () => {
 
+    const options = [
+        {"label": "Option 1","listItemLabel":"Option 1 (No: 001)","value": "value-1","queryString": "option1"},
+        {"label": "Option 2","listItemLabel":"<del style=color:red>deprecate</del>Option 2 (No: 002)","value": "value-2","queryString": "option2"},
+        {"label": "Option 3","listItemLabel":"Option 3 (No: 003)","value": "value-3","queryString": "option3"},
+        {"label": "Option 4","listItemLabel":"Option 4 (No: 004)","value": "value-4","disabled":true}
+    ];
     const [val, setVal] = useState('[value-1][value-3]');
+    const [valLabels, setValLabels] = useState<string[]>([]);
 
     return (
         <>
@@ -26,14 +33,7 @@ export default () => {
                 selectedHeaderTitle="Selected Items"
                 selectedHeaderNote="{items_num} items selected"
                 value={val}
-                options={
-                    [
-                        {"label": "Option 1","listItemLabel":"Option 1 (No: 001)","value": "value-1","queryString": "option1"},
-                        {"label": "Option 2","listItemLabel":"<del style=color:red>deprecate</del>Option 2 (No: 002)","value": "value-2","queryString": "option2"},
-                        {"label": "Option 3","listItemLabel":"Option 3 (No: 003)","value": "value-3","queryString": "option3"},
-                        {"label": "Option 4","listItemLabel":"Option 4 (No: 004)","value": "value-4","disabled":true}
-                    ]  
-                }
+                options={options}
                 onChange={(e, data, dataStr, currentData, type) => {
                     console.log(e, data, dataStr, currentData, type);
                     /*
@@ -45,9 +45,23 @@ export default () => {
                     */
 
                     setVal(dataStr);
+
+                    const _labelVal: string[] = [];
+                    data.forEach((v: string) => {
+                        const curItem = options.find((item: any) => item.value == v);
+                        if (typeof curItem !== 'undefined') {
+                            _labelVal.push(curItem.label);
+                        }
+                    });
+                    setValLabels(_labelVal);
+
+
                 }}
             />
         </div>
+   
+        <p>{val}</p>
+        <p>{valLabels.join(',')}</p>
           
 
 
