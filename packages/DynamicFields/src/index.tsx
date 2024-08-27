@@ -77,11 +77,12 @@ const DynamicFields = (props: DynamicFieldsProps) => {
         ...attributes
     } = props;
 
+    
     const ITEM_LAST_CLASSNAME = innerAppendLastCellClassName || 'last';
     const ITEM_HIDE_CLASSNAME = innerAppendHideClassName || 'd-none';
     const PER_ROW_DOM_STRING = '.dynamic-fields__append .dynamic-fields__data__wrapper';
     const PER_INNER_BODY_DOM_STRING = '.dynamic-fields__append .dynamic-fields__inner__body';
-    const DO_NOT_REMOVE_DOM = typeof doNotRemoveDom === 'undefined' ? false : true;
+    const DO_NOT_REMOVE_DOM = typeof doNotRemoveDom === 'undefined' || doNotRemoveDom === false ? false : true;
     const uniqueID = useComId();
     const idRes = id || uniqueID;
     const rootRef = useRef<any>(null);

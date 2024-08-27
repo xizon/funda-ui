@@ -4471,6 +4471,31 @@ function removeItems(arr, value) {
     return !valueFormat.includes(v);
   });
 }
+
+/**
+ * Flat options
+ * @param {Array}allData 
+ * @returns {Array} 
+ */
+function optionsCustomSelectFlat(allData) {
+  var flatItems = [];
+  allData.forEach(function (item, i) {
+    if (typeof item.optgroup !== 'undefined') {
+      // add group item
+      flatItems.push({
+        "label": item.label,
+        "value": 'group-' + i,
+        "group": true
+      });
+      item.optgroup.forEach(function (opt) {
+        flatItems.push(opt);
+      });
+    } else {
+      flatItems.push(item);
+    }
+  });
+  return flatItems;
+}
 // EXTERNAL MODULE: ../RootPortal/dist/cjs/index.js
 var cjs = __webpack_require__(909);
 var cjs_default = /*#__PURE__*/__webpack_require__.n(cjs);
@@ -4826,7 +4851,7 @@ var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_
             incomingOptionsData = valueInputRef.current.dataset.options; // Determine whether the default value is user query input or default input
             defaultValue = init ? inputDefaultValue : '';
             if (!(_typeof(fetchFuncAsync) === 'object')) {
-              _context.next = 23;
+              _context.next = 24;
               break;
             }
             _context.next = 6;
@@ -4862,6 +4887,10 @@ var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_
             }
 
             // STEP 3: ===========
+            // Flatten the group
+            _ORGIN_DATA = optionsCustomSelectFlat(_ORGIN_DATA);
+
+            // STEP 4: ===========
             // value & label must be initialized
             filterRes = [];
             if (fetchTrigger) {
@@ -4885,7 +4914,7 @@ var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_
               if (filterResQueryValue.length === 0) filterRes = filterResQueryLabel;
             }
 
-            // STEP 4: ===========
+            // STEP 5: ===========
             // ++++++++++++++++++++
             // Single selection
             // ++++++++++++++++++++
@@ -4953,7 +4982,7 @@ var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_
               });
             }
 
-            // STEP 5: ===========
+            // STEP 6: ===========
             //
             // remove Duplicate objects from JSON Array
             _ORGIN_DATA = (0,dist_cjs.removeArrDuplicateItems)(_ORGIN_DATA, 'value');
@@ -4962,13 +4991,13 @@ var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_
             //
             setOrginalData(_ORGIN_DATA);
 
-            // STEP 6: ===========
+            // STEP 7: ===========
             //
             onFetch === null || onFetch === void 0 ? void 0 : onFetch(selectInputRef.current, valueInputRef.current, defaultValue, _ORGIN_DATA, incomingData);
 
             //
             return _context.abrupt("return", _ORGIN_DATA);
-          case 23:
+          case 24:
             // STEP 1: ===========
             // get incoming options from `data-options` of component
             if (typeof incomingOptionsData !== 'undefined') {
@@ -4986,6 +5015,10 @@ var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_
             }
 
             // STEP 3: ===========
+            // Flatten the group
+            staticOptionsData = optionsCustomSelectFlat(staticOptionsData);
+
+            // STEP 4: ===========
             // value & label must be initialized
 
             // If the default value is label, match value
@@ -4999,7 +5032,7 @@ var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_
             _filterRes3 = _filterResQueryValue;
             if (_filterResQueryValue.length === 0) _filterRes3 = _filterResQueryLabel;
 
-            // STEP 4: ===========
+            // STEP 5: ===========
             // ++++++++++++++++++++
             // Single selection
             // ++++++++++++++++++++
@@ -5067,7 +5100,7 @@ var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_
               });
             }
 
-            // STEP 5: ===========
+            // STEP 6: ===========
             //
             // remove Duplicate objects from JSON Array
             staticOptionsData = (0,dist_cjs.removeArrDuplicateItems)(staticOptionsData, 'value');
@@ -5076,13 +5109,13 @@ var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_
             //
             setOrginalData(staticOptionsData);
 
-            // STEP 6: ===========
+            // STEP 7: ===========
             //
             onFetch === null || onFetch === void 0 ? void 0 : onFetch(selectInputRef.current, valueInputRef.current, defaultValue, staticOptionsData, incomingData);
 
             //
             return _context.abrupt("return", staticOptionsData);
-          case 37:
+          case 39:
           case "end":
             return _context.stop();
         }
@@ -6332,7 +6365,7 @@ var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_
         type: "button",
         "data-index": index,
         key: index,
-        className: "list-group-item list-group-item-action border-start-0 border-end-0 custom-select-multi__control-option-item ".concat(startItemBorder, " ").concat(endItemBorder, " border-bottom-0 ").concat(typeof item.disabled === 'undefined' ? '' : item.disabled == true ? 'disabled' : '', " ").concat(disabledCurrentOption ? 'active disabled' : ''),
+        className: "list-group-item list-group-item-action border-start-0 border-end-0 custom-select-multi__control-option-item ".concat(startItemBorder, " ").concat(endItemBorder, " border-bottom-0 ").concat(typeof item.disabled === 'undefined' ? '' : item.disabled == true ? 'disabled' : '', " ").concat(disabledCurrentOption ? 'active disabled' : '', " ").concat(item.group ? 'custom-select-grouptitle' : ''),
         "data-value": "".concat(item.value),
         "data-label": "".concat(item.label),
         "data-querystring": "".concat(typeof item.queryString === 'undefined' ? '' : item.queryString),
@@ -6355,7 +6388,7 @@ var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_
         "data-selected": "".concat(itemSelected ? 'true' : 'false'),
         "data-index": index,
         key: index,
-        className: "list-group-item list-group-item-action border-start-0 border-end-0 custom-select-multi__control-option-item ".concat(startItemBorder, " ").concat(endItemBorder, " border-bottom-0 ").concat(itemSelected ? 'list-group-item-secondary item-selected' : '', " ").concat(typeof item.disabled === 'undefined' ? '' : item.disabled == true ? 'disabled' : ''),
+        className: "list-group-item list-group-item-action border-start-0 border-end-0 custom-select-multi__control-option-item ".concat(startItemBorder, " ").concat(endItemBorder, " border-bottom-0 ").concat(itemSelected ? 'list-group-item-secondary item-selected' : '', " ").concat(typeof item.disabled === 'undefined' ? '' : item.disabled == true ? 'disabled' : '', " ").concat(item.group ? 'custom-select-grouptitle' : ''),
         "data-value": "".concat(item.value),
         "data-label": "".concat(item.label),
         "data-querystring": "".concat(typeof item.queryString === 'undefined' ? '' : item.queryString),

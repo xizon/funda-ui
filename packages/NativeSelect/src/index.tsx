@@ -182,7 +182,6 @@ const NativeSelect = forwardRef((props: NativeSelectProps, externalRef: any) => 
 
         //
 		if ( typeof(onChange) === 'function' ) {
-            console.log('---', event.target.selectedIndex)
 			onChange(event, optionsFlat(dataInit)[event.target.selectedIndex].value, optionsFlat(dataInit)[event.target.selectedIndex], event.target.selectedIndex);
 
             event.target.blur();

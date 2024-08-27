@@ -27,3 +27,15 @@ export function multiSelControlOptionExist(arr: any[], val: any) {
     return _data.map((v: any) => v.toString()).includes(val.toString());
 
 }
+
+/**
+ * Remove Duplicate objects from JSON Array
+ * @param {Array} arr 
+ * @returns 
+ */
+export function uniqueArr(arr: any[]) {
+    return arr.filter((item: any, index: number, self: any[]) => index === self.findIndex((t) => (t.value === item.value)));
+}
+
+
+

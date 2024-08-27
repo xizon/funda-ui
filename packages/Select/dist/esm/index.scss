@@ -40,7 +40,6 @@
             fill: var(--cus-sel-arrow-fill);
         }
     }
-        
 
 
     /*------ Input ------*/
@@ -381,6 +380,8 @@
     --cus-sel-listgroup-content-scrollbar-color: rgba(0, 0, 0, 0.2);
     --cus-sel-listgroup-content-scrollbar-track: rgba(0, 0, 0, 0);
     --cus-sel-listgroup-content-scrollbar-w: 3px;
+    --cus-sel-listgroup-grouptitle-color: #a2a2a2;
+    --cus-sel-listgroup-groupborder-color: #d8d8d8;
 
 
     display: none;
@@ -477,6 +478,13 @@
     }
 
 
+    /*------ Group ------*/
+    .custom-select-grouptitle {
+        pointer-events: none;
+        color: var(--cus-sel-listgroup-grouptitle-color);
+        margin-bottom: .3rem;
+        border-bottom: 1px solid var(--cus-sel-listgroup-groupborder-color) !important;
+    }
 
     /*------ Extended buttons of Multiple selection ------*/
     .custom-select-multi__control-option-item--select-all {

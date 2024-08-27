@@ -266,9 +266,12 @@
   --cus-sel-listgroup-content-scrollbar-color: rgba(0, 0, 0, 0.2);
   --cus-sel-listgroup-content-scrollbar-track: rgba(0, 0, 0, 0);
   --cus-sel-listgroup-content-scrollbar-w: 3px;
+  --cus-sel-listgroup-grouptitle-color: #a2a2a2;
+  --cus-sel-listgroup-groupborder-color: #d8d8d8;
   display: none;
   min-width: var(--cus-sel-listgroup-popwin-min-width);
   z-index: 1055; /* --bs-modal-zindex */
+  /*------ Group ------*/
   /*------ Extended buttons of Multiple selection ------*/
   /*------ Extended buttons of Single selection ------*/
 }
@@ -325,6 +328,12 @@
 }
 .custom-select__options-wrapper .list-group-item:hover, .custom-select__options-wrapper .list-group-item:focus {
   background-color: var(--cus-sel-listgroup-item-hover-focus-bg);
+}
+.custom-select__options-wrapper .custom-select-grouptitle {
+  pointer-events: none;
+  color: var(--cus-sel-listgroup-grouptitle-color);
+  margin-bottom: 0.3rem;
+  border-bottom: 1px solid var(--cus-sel-listgroup-groupborder-color) !important;
 }
 .custom-select__options-wrapper .custom-select-multi__control-option-item--select-all.hide {
   display: none !important;

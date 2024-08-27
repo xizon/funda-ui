@@ -14,6 +14,7 @@ declare type MultipleSelectProps = {
     addAllBtnLabel?: string | React.ReactNode;
     iconAdd?: React.ReactNode | string;
     iconRemove?: React.ReactNode | string;
+    unattachedSelect?: boolean;
     hierarchical?: boolean;
     indentation?: string;
     doubleIndent?: boolean;

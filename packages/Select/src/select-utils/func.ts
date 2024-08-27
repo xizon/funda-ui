@@ -66,3 +66,33 @@ export function removeItems(arr: any[], value: any[]) {
     });
 }
 
+
+
+
+/**
+ * Flat options
+ * @param {Array}allData 
+ * @returns {Array} 
+ */
+export function optionsCustomSelectFlat(allData: any[]) {
+
+    const flatItems: any[] = [];
+
+    allData.forEach((item: any, i: number) => {
+        if (typeof item.optgroup !== 'undefined') {
+
+            // add group item
+            flatItems.push({ "label": item.label, "value": 'group-' + i, "group": true });
+
+            item.optgroup.forEach((opt: any) => {
+                flatItems.push(opt);
+            });
+        } else {
+            flatItems.push(item);
+        }
+    });
+
+
+    return flatItems;
+}
+

@@ -4398,7 +4398,6 @@ var NativeSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_
 
     //
     if (typeof onChange === 'function') {
-      console.log('---', event.target.selectedIndex);
       onChange(event, optionsFlat(dataInit)[event.target.selectedIndex].value, optionsFlat(dataInit)[event.target.selectedIndex], event.target.selectedIndex);
       event.target.blur();
     }

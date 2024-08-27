@@ -4244,7 +4244,7 @@ var DynamicFields = function DynamicFields(props) {
   var ITEM_HIDE_CLASSNAME = innerAppendHideClassName || 'd-none';
   var PER_ROW_DOM_STRING = '.dynamic-fields__append .dynamic-fields__data__wrapper';
   var PER_INNER_BODY_DOM_STRING = '.dynamic-fields__append .dynamic-fields__inner__body';
-  var DO_NOT_REMOVE_DOM = typeof doNotRemoveDom === 'undefined' ? false : true;
+  var DO_NOT_REMOVE_DOM = typeof doNotRemoveDom === 'undefined' || doNotRemoveDom === false ? false : true;
   var uniqueID = (0,funda_utils__WEBPACK_IMPORTED_MODULE_1__.useComId)();
   var idRes = id || uniqueID;
   var rootRef = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(null);

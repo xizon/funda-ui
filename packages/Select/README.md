@@ -380,6 +380,55 @@ export default () => {
 ```
 
 
+## The Option Group element
+
+Specify the content in the `optgroup` attribute of `options`.
+
+
+```js
+import React from "react";
+import Select from 'funda-ui/Select';
+
+// component styles
+import 'funda-ui/Select/index.css';
+
+export default () => {
+
+    return (
+        <>         
+            <Select
+                value="value-2"
+                placeholder="Select"
+                name="name"
+                options={[
+                    { "label": "Option 0", "value": "value-0" },
+                    {
+                        "label": "Group 1", "value": "", "optgroup": [
+                            { "label": "Option 1", "value": "value-1" },
+                            { "label": "Option 2", "value": "value-2" }
+                        ]
+                    },
+                    {
+                        "label": "Group 2", "value": "", "optgroup": [
+                            { "label": "Option 3", "value": "value-3" },
+                            { "label": "Option 4", "value": "value-4" },
+                            { "label": "Option 5", "value": "value-5" }
+                        ]
+                    },
+                    { "label": "Option 6", "value": "value-6" },
+
+                ]}
+                onChange={(e, e2, val) => {
+                    console.log(e, e2, val);
+                }}
+            />
+
+        </>
+    );
+}
+```
+
+
 ## Render the selected value for multiple selection
 
 ```js
@@ -1526,6 +1575,7 @@ JSON Object Literals configuration properties of the `options` and callback from
 | `label` | string | - | Specify the label text for each option. <blockquote>Support html tags. But must have at least a string other than the HTML Tag, because the HTML Tag in this field will be sanitized when assigning the value. such as `<small>abc</small>efg`</blockquote> | ✅ |
 | `listItemLabel` | string | - | Specify the label text for pop-up list items. <blockquote>Support html tags</blockquote> | - |
 | `value` | string | - | Specify the value for each option | ✅ |
+| `optgroup` | array | - | Creates a grouping of options. It will be displayed using the value of `label`. such as `[{"label":"Option 0","value":"value-0"},{"label":"Group 1","value":"","optgroup":[{"label":"Option 1","value":"value-1"},{"label":"Option 2","value":"value-2"}]}]` | - |
 | `queryString` | string | - | Quick query string, such as Chinese pinyin or English initials | ✅ |
 | `disabled` | boolean | - | When present, it specifies that an option should be disabled. | - |
 
@@ -1536,6 +1586,6 @@ JSON Object Literals configuration properties of the `options` and callback from
 
 A successful response returns the details of the callback such as Sample Request Body:
 
-Among them, `id`, `parent_id`, `label`, `listItemLabel`, `value`, `queryString` and `disabled` are attributes used by the system, and other attributes can be added freely.
+Among them, `id`, `parent_id`, `label`, `listItemLabel`, `value`, `optgroup`, `queryString` and `disabled` are attributes used by the system, and other attributes can be added freely.
 
 

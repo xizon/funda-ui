@@ -4,7 +4,8 @@ import {
     formatIndentVal,
     unique,
     stripHTML,
-    removeItemOnce
+    removeItemOnce,
+    optionsCustomSelectFlat
 } from './select-utils/func';
 
 
@@ -30,6 +31,7 @@ import {
 } from 'funda-utils';
 
 
+
 type SelectOptionChangeFnType = (arg1: any, arg2: any, arg3: any) => void;
 
 export interface MultiSelectDataConfig {
@@ -45,6 +47,8 @@ export interface MultiSelectControlValConfig {
 
 export interface OptionConfig {
     disabled?: boolean;
+    optgroup?: any[];
+    group?: boolean;
     label: any;
     listItemLabel?: any;
     value: any;
@@ -471,9 +475,14 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
             }
 
 
-
-
             // STEP 3: ===========
+            // Flatten the group
+            _ORGIN_DATA = optionsCustomSelectFlat(_ORGIN_DATA);
+
+
+
+
+            // STEP 4: ===========
             // value & label must be initialized
             let filterRes: any = [];
 
@@ -501,7 +510,7 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
 
 
 
-            // STEP 4: ===========
+            // STEP 5: ===========
             // ++++++++++++++++++++
             // Single selection
             // ++++++++++++++++++++
@@ -582,7 +591,7 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
 
             }
 
-            // STEP 5: ===========
+            // STEP 6: ===========
             //
             // remove Duplicate objects from JSON Array
             _ORGIN_DATA = removeArrDuplicateItems(_ORGIN_DATA, 'value');
@@ -593,7 +602,7 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
             setOrginalData(_ORGIN_DATA);
 
 
-            // STEP 6: ===========
+            // STEP 7: ===========
             //
             onFetch?.(selectInputRef.current, valueInputRef.current, defaultValue, _ORGIN_DATA, incomingData);
 
@@ -624,9 +633,12 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
             }
 
 
-
-
             // STEP 3: ===========
+            // Flatten the group
+            staticOptionsData = optionsCustomSelectFlat(staticOptionsData);
+
+
+            // STEP 4: ===========
             // value & label must be initialized
 
             // If the default value is label, match value
@@ -637,7 +649,7 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
             filterRes = filterResQueryValue;
             if (filterResQueryValue.length === 0) filterRes = filterResQueryLabel;
 
-            // STEP 4: ===========
+            // STEP 5: ===========
             // ++++++++++++++++++++
             // Single selection
             // ++++++++++++++++++++
@@ -714,7 +726,7 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
 
             }
 
-            // STEP 5: ===========
+            // STEP 6: ===========
             //
             // remove Duplicate objects from JSON Array
             staticOptionsData = removeArrDuplicateItems(staticOptionsData, 'value');
@@ -725,7 +737,7 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
             //
             setOrginalData(staticOptionsData);
 
-            // STEP 6: ===========
+            // STEP 7: ===========
             //
             onFetch?.(selectInputRef.current, valueInputRef.current, defaultValue, staticOptionsData, incomingData);
 
@@ -2252,7 +2264,7 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
                                                 type="button"
                                                 data-index={index}
                                                 key={index}
-                                                className={`list-group-item list-group-item-action border-start-0 border-end-0 custom-select-multi__control-option-item ${startItemBorder} ${endItemBorder} border-bottom-0 ${typeof item.disabled === 'undefined' ? '' : (item.disabled == true ? 'disabled' : '')} ${disabledCurrentOption ? 'active disabled' : ''}`}
+                                                className={`list-group-item list-group-item-action border-start-0 border-end-0 custom-select-multi__control-option-item ${startItemBorder} ${endItemBorder} border-bottom-0 ${typeof item.disabled === 'undefined' ? '' : (item.disabled == true ? 'disabled' : '')} ${disabledCurrentOption ? 'active disabled' : ''} ${item.group ? 'custom-select-grouptitle' : ''}`}
                                                 data-value={`${item.value}`}
                                                 data-label={`${item.label}`}
                                                 data-querystring={`${typeof item.queryString === 'undefined' ? '' : item.queryString}`}
@@ -2278,7 +2290,7 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
                                                 data-selected={`${itemSelected ? 'true' : 'false'}`}
                                                 data-index={index}
                                                 key={index}
-                                                className={`list-group-item list-group-item-action border-start-0 border-end-0 custom-select-multi__control-option-item ${startItemBorder} ${endItemBorder} border-bottom-0 ${itemSelected ? 'list-group-item-secondary item-selected' : ''} ${typeof item.disabled === 'undefined' ? '' : (item.disabled == true ? 'disabled' : '')}`}
+                                                className={`list-group-item list-group-item-action border-start-0 border-end-0 custom-select-multi__control-option-item ${startItemBorder} ${endItemBorder} border-bottom-0 ${itemSelected ? 'list-group-item-secondary item-selected' : ''} ${typeof item.disabled === 'undefined' ? '' : (item.disabled == true ? 'disabled' : '')} ${item.group ? 'custom-select-grouptitle' : ''}`}
                                                 data-value={`${item.value}`}
                                                 data-label={`${item.label}`}
                                                 data-querystring={`${typeof item.queryString === 'undefined' ? '' : item.queryString}`}

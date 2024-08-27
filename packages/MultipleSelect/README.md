@@ -20,7 +20,7 @@ export default () => {
         {"label": "Option 3","listItemLabel":"Option 3 (No: 003)","value": "value-3","queryString": "option3"},
         {"label": "Option 4","listItemLabel":"Option 4 (No: 004)","value": "value-4","disabled":true}
     ];
-    const [val, setVal] = useState('[value-1][value-3]');
+    const [val, setVal] = useState<string>('[value-1][value-3]');
     const [valLabels, setValLabels] = useState<string[]>([]);
 
     return (
@@ -49,6 +49,134 @@ export default () => {
                     const _labelVal: string[] = [];
                     data.forEach((v: string) => {
                         const curItem = options.find((item: any) => item.value == v);
+                        if (typeof curItem !== 'undefined') {
+                            _labelVal.push(curItem.label);
+                        }
+                    });
+                    setValLabels(_labelVal);
+
+
+                }}
+            />
+        </div>
+   
+        <p>{val}</p>
+        <p>{valLabels.join(',')}</p>
+          
+
+
+        </>
+    );
+}
+```
+
+
+## Unattached Selected Options
+
+The selected value is not affected by the `options` passed in. Setting the `unattachedSelect` property allows the value on the right to remain unaffected when the left option is updated.
+
+
+
+
+```js
+import React, { useState } from "react";
+import MultipleSelect from 'funda-ui/MultipleSelect';
+
+// component styles
+import 'funda-ui/MultipleSelect/index.css';
+
+export default () => {
+
+    const options = [
+        {"label": "Option 1","listItemLabel":"Option 1 (No: 001)","value": "value-1","queryString": "option1"},
+        {"label": "Option 2","listItemLabel":"<del style=color:red>deprecate</del>Option 2 (No: 002)","value": "value-2","queryString": "option2"},
+        {"label": "Option 3","listItemLabel":"Option 3 (No: 003)","value": "value-3","queryString": "option3"},
+        {"label": "Option 4","listItemLabel":"Option 4 (No: 004)","value": "value-4","disabled":true}
+    ];
+    const [defaultOpt, setDefaultOpt] = useState<any[]>(options);
+    const [val, setVal] = useState<string>('[value-1][value-3]');
+    const [valLabels, setValLabels] = useState<string[]>([]);
+    const [allOptions, setAllOptions] = useState<any[]>(options);
+
+    const uniqueArr = (arr: any[]) => {
+        return arr.filter((item: any, index: number, self: any[]) => index === self.findIndex((t) => (t.value === item.value)));
+    };
+
+
+    return (
+        <>
+
+        <a 
+            href="#"
+            onClick={(e: React.MouseEvent) => {
+                e.preventDefault();
+                const newOpt = [
+                    {"label": "New Option 123","value": "value-123","queryString": ""},
+                    {"label": "New Option 456","value": "value-456","queryString": ""}
+                ];
+
+                setDefaultOpt(newOpt);
+                setAllOptions((prevState: any[]) => {
+                    let _data = [...prevState, ...newOpt];
+                    return uniqueArr(_data);
+                });
+            }}
+        >Change left options(1)</a>
+        &nbsp;&nbsp;|&nbsp;&nbsp;
+        <a 
+            href="#"
+            onClick={(e: React.MouseEvent) => {
+                e.preventDefault();
+                const newOpt = [
+                    {"label": "New Option 789","value": "value-789","queryString": ""},
+                    {"label": "New Option 666","value": "value-666","queryString": ""}
+                ];
+                setDefaultOpt(newOpt);
+                setAllOptions((prevState: any[]) => {
+                    let _data = [...prevState, ...newOpt];
+                    return uniqueArr(_data);
+                });
+            }}
+        >Change left options(2)</a>
+        &nbsp;&nbsp;|&nbsp;&nbsp;
+        <a 
+            href="#"
+            onClick={(e: React.MouseEvent) => {
+                e.preventDefault();
+                setDefaultOpt(options);
+                setAllOptions((prevState: any[]) => {
+                    let _data = [...prevState, ...options];
+                    return uniqueArr(_data);
+                });
+            }}
+        >Change original options</a>
+       
+
+
+        <div className="mb-3" style={{height: '300px'}}>
+            <MultipleSelect 
+                name="name"
+                unattachedSelect
+                availableHeaderTitle="Select One Item"
+                selectedHeaderTitle="Selected Items"
+                selectedHeaderNote="{items_num} items selected"
+                value={val}
+                options={defaultOpt}
+                onChange={(e, data, dataStr, currentData, type) => {
+                    console.log(e, data, dataStr, currentData, type);
+                    /*
+                        <li data-index="0" data-label="Option 1" data-value="value-1">...</li>,
+                        ['value-3', 'value-2'],
+                        '[value-3][value-2]',
+                        {"label": "Option 3","listItemLabel":"Option 3 (No: 003)","value": "value-3","queryString": "option3"},
+                        add
+                    */
+
+                    setVal(dataStr);
+
+                    const _labelVal: string[] = [];
+                    data.forEach((v: string) => {
+                        const curItem = allOptions.find((item: any) => item.value == v);
                         if (typeof curItem !== 'undefined') {
                             _labelVal.push(curItem.label);
                         }
@@ -783,6 +911,7 @@ import MultipleSelect from 'funda-ui/MultipleSelect';
 | `iconAdd` | string \| ReactNode  | `<svg width="15px" height="15px" viewBox="0 0 24 24" fill="none"><path d="M12 2C6.49 2 2 6.49 2 12C2 17.51 6.49 22 12 22C17.51 22 22 17.51 22 12C22 6.49 17.51 2 12 2ZM16 12.75H12.75V16C12.75 16.41 12.41 16.75 12 16.75C11.59 16.75 11.25 16.41 11.25 16V12.75H8C7.59 12.75 7.25 12.41 7.25 12C7.25 11.59 7.59 11.25 8 11.25H11.25V8C11.25 7.59 11.59 7.25 12 7.25C12.41 7.25 12.75 7.59 12.75 8V11.25H16C16.41 11.25 16.75 11.59 16.75 12C16.75 12.41 16.41 12.75 16 12.75Z" fill="#000" /></svg>` | The label of the button to add a new item | - |
 | `iconRemove` | string \| ReactNode  | `<svg width="15px" height="15px" viewBox="0 0 24 24" fill="none"><path fillRule="evenodd" clipRule="evenodd" d="M22 12c0 5.523-4.477 10-10 10S2 17.523 2 12 6.477 2 12 2s10 4.477 10 10ZM8 11a1 1 0 1 0 0 2h8a1 1 0 1 0 0-2H8Z" fill="#000" /></svg>` | The label of the button to delete current item | - |
 | `options` | JSON Object Literals \| JSON Object | - | Set the default value using JSON string format for menu of options, like this: `[{"label": "Option 1","value": "value-1","queryString": "option1"},{"label": "<del style=color:red>deprecate</del>Option 2","value": "value-2","queryString": "option2"},{"label": "Option 3","value": "value-3","queryString": "option3"},{"label": "Option 4","value": "value-4","disabled":true}]` <br /> <blockquote>Note: Use API data if database query exists. That is, the attribute `fetchXXXX`</blockquote> <hr /> <blockquote>When the attribute `hierarchical` is true, you need to use a hierarchical structure to pass data, such as: `[{label:"Top level 1",value:'level-1',queryString:""},{label:"Top level 2",value:'level-2',queryString:""},{label:"Top level 3",value:'level-3',queryString:"",children:[{label:"Sub level 3_1",value:'level-3_1',queryString:""},{label:"Sub level 3_2",value:'level-3_2',queryString:"",children:[{label:"Sub level 3_2_1",value:'level-3_2_1',queryString:""}]},{label:"Sub level 3_3",value:'level-3_3',queryString:""}]}]`</blockquote>| - |
+| `unattachedSelect` | boolean  | false | The selected value is not affected by the `options` passed in. | - |
 | `hierarchical` | boolean  | false | Set hierarchical categories ( with sub-categories ) to attribute `options`. | - |
 | `indentation` | string  | - | Set hierarchical indentation placeholders, valid when the `hierarchical` is true. | - |
 | `doubleIndent` | boolean  | false | Set double indent effect, valid when the `hierarchical` is true. | - |

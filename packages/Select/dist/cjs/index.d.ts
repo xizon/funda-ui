@@ -11,6 +11,8 @@ export interface MultiSelectControlValConfig {
 }
 export interface OptionConfig {
     disabled?: boolean;
+    optgroup?: any[];
+    group?: boolean;
     label: any;
     listItemLabel?: any;
     value: any;

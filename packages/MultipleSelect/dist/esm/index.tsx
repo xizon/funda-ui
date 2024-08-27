@@ -13,7 +13,7 @@ import {
 
 
 
-import { multiSelControlOptionExist } from './multiple-select-utils/func';
+import { multiSelControlOptionExist, uniqueArr } from './multiple-select-utils/func';
 import ItemList from './ItemList';
 
 
@@ -34,6 +34,7 @@ type MultipleSelectProps = {
     addAllBtnLabel?: string | React.ReactNode;
     iconAdd?: React.ReactNode | string;
     iconRemove?: React.ReactNode | string;
+    unattachedSelect?: boolean;
     hierarchical?: boolean;
     indentation?: string;
     doubleIndent?: boolean;
@@ -76,6 +77,7 @@ const MultipleSelect = forwardRef((props: MultipleSelectProps, externalRef: any)
         addAllBtnLabel,
         iconAdd,
         iconRemove,
+        unattachedSelect,
         hierarchical,
         indentation,
         doubleIndent,
@@ -100,6 +102,8 @@ const MultipleSelect = forwardRef((props: MultipleSelectProps, externalRef: any)
         ...attributes
     } = props;
 
+    
+    const UN_ATTACHED_SELECT = typeof unattachedSelect === 'undefined' || unattachedSelect === false ? false : true;
     const WRAPPER_MIN_H = typeof wrapperMinHeight === 'undefined' ? '' : wrapperMinHeight;
     const WRAPPER_MIN_W = typeof wrapperMinWidth === 'undefined' ? '' : wrapperMinWidth;
     const INDENT_PLACEHOLDER = doubleIndent ? `&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;` : `&nbsp;&nbsp;&nbsp;&nbsp;`;
@@ -114,6 +118,7 @@ const MultipleSelect = forwardRef((props: MultipleSelectProps, externalRef: any)
     const optionsRes = options ? isJSON(options) ? JSON.parse(options as string) : options : [];
     const [valSelectedData, setValSelectedData] = useState<any[]>([]);
     const [valSelected, setValSelected] = useState<any[]>([]);
+
 
     // return a array of options
     let optionsDataInit: OptionConfig[] = optionsRes; 
@@ -223,10 +228,21 @@ const MultipleSelect = forwardRef((props: MultipleSelectProps, externalRef: any)
                 setValSelected(_initVal);
 
                 // Initialize selected options
-                setValSelectedData(options.filter((item: any) => {
-                    return multiSelControlOptionExist(_initVal, item.value);
-                }));
-                
+                if (UN_ATTACHED_SELECT) {
+                    setValSelectedData((prevState: OptionConfig[]) => {
+
+                        let _data = [...prevState, ...options.filter((item: any) => {
+                            return multiSelControlOptionExist(_initVal, item.value);
+                        })];
+             
+                        return uniqueArr(_data);
+                    });
+                } else {
+                    setValSelectedData(options.filter((item: any) => {
+                        return multiSelControlOptionExist(_initVal, item.value);
+                    }));
+                }
+
 
             } else {
                 setValSelected([]);
