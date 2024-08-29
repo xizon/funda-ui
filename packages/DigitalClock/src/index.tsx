@@ -32,7 +32,7 @@ const DigitalClock = (props: DigitalClockProps) => {
     let hours: any = time.getHours();
     let amPm = time.getHours() > 12 ? "pm" : "am";
 
-    useInterval(() => {
+    const { startTimer, stopTimer } = useInterval(() => {
         time = new Date();
         minutes = time.getMinutes();
         seconds = time.getSeconds();
