@@ -2,12 +2,12 @@ import React, { useState, useEffect, useMemo, useRef, useCallback } from 'react'
 
 import RootPortal from 'funda-root-portal';
 import ModalDialog from 'funda-modaldialog';
-import {
-    useComId,
-    useClickOutside,
-    getAbsolutePositionOfStage
-} from 'funda-utils';
 
+import useComId from 'funda-utils/dist/cjs/useComId';
+import useClickOutside from 'funda-utils/dist/cjs/useClickOutside';
+import {
+    getAbsolutePositionOfStage
+} from 'funda-utils/dist/cjs/getElementProperty';
 
 
 export interface EventsValueConfig {
@@ -30,7 +30,7 @@ export interface TimelineValueConfig {
 }
 
 
-type EventCalendarTimelineProps = {
+export type EventCalendarTimelineProps = {
     customTodayDate?: string;
     eventsValue?: TimelineValueConfig[];
     langWeek?: string[];

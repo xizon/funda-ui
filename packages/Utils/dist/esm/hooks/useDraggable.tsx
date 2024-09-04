@@ -46,13 +46,13 @@ const App = () => {
 
 import { useEffect, useState, useCallback, MouseEvent } from "react";
 
-interface PreventOutsideScreenProps {
+export interface PreventOutsideScreenProps {
     xAxis: boolean;
     yAxis: boolean;
 }
 
 
-interface UseDraggableProps {
+export interface UseDraggableProps {
     enabled?: boolean;
     preventOutsideScreen?: PreventOutsideScreenProps;
     onStart?: (coordinates: Record<string, number>, handleEl: HTMLElement | null, contentEl: HTMLElement | null) => void;

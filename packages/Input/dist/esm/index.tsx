@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useRef, forwardRef, ChangeEvent, CompositionEvent, KeyboardEvent, FocusEvent, useImperativeHandle } from 'react';
 
-import {
-    useComId
-} from 'funda-utils';
+
+import useComId from 'funda-utils/dist/cjs/useComId';
 
 
-type InputProps = {
+
+export type InputProps = {
     contentRef?: React.ForwardedRef<any>;
     wrapperClassName?: string;
     controlClassName?: string;

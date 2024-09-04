@@ -38,7 +38,7 @@ const App = () => {
  */
 import { useEffect, useState, RefObject } from "react";
 
-interface AutosizeTextAreaProps {
+export interface AutosizeTextAreaProps {
     el: any;
     value: string;
     cb?: (dimensions: [number, number]) => void;

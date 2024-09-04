@@ -2,11 +2,9 @@ import React, { useState, useRef, useEffect, forwardRef, KeyboardEvent, ChangeEv
 
 import Input from 'funda-input';
 import RootPortal from 'funda-root-portal';
+
+import useComId from 'funda-utils/dist/cjs/useComId';
 import {
-    useComId,
-    useWindowScroll,
-    useClickOutside,
-    getAbsolutePositionOfStage,
     padZero,
     dateFormat,
     isTimeString,
@@ -22,8 +20,12 @@ import {
     getCurrentMonth,
     getCurrentDay,
     getLastDayInMonth
-} from 'funda-utils';
-
+} from 'funda-utils/dist/cjs/date';
+import useWindowScroll from 'funda-utils/dist/cjs/useWindowScroll';
+import useClickOutside from 'funda-utils/dist/cjs/useClickOutside';
+import {
+    getAbsolutePositionOfStage
+} from 'funda-utils/dist/cjs/getElementProperty';
 
 
 
@@ -39,7 +41,7 @@ import i18n__zh_CN from './localization/zh_CN';
 
 
 
-type DateProps = {
+export type DateProps = {
     contentRef?: React.ForwardedRef<any>; // could use "Array" on contentRef.current, such as contentRef.current[0], contentRef.current[1]
     popupRef?: React.ForwardedRef<any>; // could use "Array" on popupRef.current, such as popupRef.current[0], popupRef.current[1]
     depth?: number;

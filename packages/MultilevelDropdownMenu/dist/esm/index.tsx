@@ -1,15 +1,15 @@
 import React, { useRef, useState, useEffect, memo } from 'react';
 
-import {
-    useComId
-} from 'funda-utils';
+
+
+import useComId from 'funda-utils/dist/cjs/useComId';
 
 
 
 import ItemList from './ItemList';
 
 
-type MultilevelDropdownMenuProps = {
+export type MultilevelDropdownMenuProps = {
     /** Mutually exclusive alternate expansion between the first levels */
     alternateCollapse?: boolean;
     /** set an arrow */

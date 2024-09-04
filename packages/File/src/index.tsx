@@ -1,13 +1,14 @@
 import React, { useState, useEffect, useRef, forwardRef, useImperativeHandle } from 'react';
 
+
+import useComId from 'funda-utils/dist/cjs/useComId';
 import {
-    useComId,
     base64ToArrayBuffer,
     arrayBufferToUint8Array
-} from 'funda-utils';
+} from 'funda-utils/dist/cjs/buffer';
 
 
-type FileProps = {
+export type FileProps = {
     contentRef?: React.ForwardedRef<any>;
     wrapperClassName?: string;
     controlClassName?: string;

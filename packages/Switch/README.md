@@ -132,6 +132,7 @@ import Switch from 'funda-ui/Switch';
 | --- | --- | --- | --- | --- |
 | `ref` | React.ForwardedRef | - | It is the return element of this component.  | - |
 | `wrapperClassName` | string | `mb-3 position-relative` | The class name of the control wrapper. | - |
+| `controlClassName` | string | `form-check-input` | The class name of the control. | - |
 | `checked` | boolean | false | Is it selected. | - |
 | `value` | string | - | Set a default value for this control. If unchecked, it will pass an empty value | ✅ |
 | `label` | string \| ReactNode | - | It is used to specify a label for an element of a form.<blockquote>Support html tags</blockquote> | - |

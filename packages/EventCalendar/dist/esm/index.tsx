@@ -14,7 +14,7 @@ export interface EventsValueConfig {
 }
 
 
-type EventCalendarProps = {
+export type EventCalendarProps = {
     customTodayDate?: string;
     eventsValue?: any[];
     langWeek?: string[];

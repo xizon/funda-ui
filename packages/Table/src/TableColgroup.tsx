@@ -1,7 +1,7 @@
 import React, { forwardRef } from 'react';
 
 
-interface TableColgroupProps extends React.HTMLAttributes<HTMLTableColElement> {
+export interface TableColgroupProps extends React.HTMLAttributes<HTMLTableColElement> {
     className?: string;
     length?: number;
 }

@@ -1,7 +1,8 @@
 import React from 'react';
-declare type SwitchOptionChangeFnType = (arg1: any, arg2: any) => void;
-declare type SwitchProps = {
+export declare type SwitchOptionChangeFnType = (arg1: any, arg2: any) => void;
+export declare type SwitchProps = {
     wrapperClassName?: string;
+    controlClassName?: string;
     value: string | boolean;
     label?: React.ReactNode | string;
     name?: string;

@@ -1,5 +1,5 @@
 import React from 'react';
-declare type PaginationProps = {
+export declare type PaginationProps = {
     /** The class name of the navigation wrapper */
     wrapperClassName?: string;
     /** The class name of the navigation */

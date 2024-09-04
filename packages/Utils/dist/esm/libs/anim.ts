@@ -8,7 +8,7 @@ import {
     
 import {
     setDefaultOptions
-} from './init-default-options';
+} from './initDefaultOptions';
 
 
 /**

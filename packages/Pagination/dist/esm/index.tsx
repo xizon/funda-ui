@@ -2,7 +2,7 @@ import React, { useRef, forwardRef, useImperativeHandle } from 'react';
 import { paginationNavigators } from './pagination-navigators';
 
 
-type PaginationProps = {
+export type PaginationProps = {
     /** The class name of the navigation wrapper */
     wrapperClassName?: string;
     /** The class name of the navigation */

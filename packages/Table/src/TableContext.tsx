@@ -1,7 +1,7 @@
 import React, { createContext } from 'react';
 
 
-type TableProviderProps = {
+export type TableProviderProps = {
     value?: any;
     children?: React.ReactNode;
 };

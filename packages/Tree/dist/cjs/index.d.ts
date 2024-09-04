@@ -26,7 +26,7 @@ export interface FetchConfig {
     fetchFuncMethodParams?: any[] | undefined;
     fetchCallback?: (data: any) => void;
 }
-declare type TreeProps = {
+export declare type TreeProps = {
     /** Set TreeNode display Checkbox or not */
     checkable?: boolean;
     /** Shows a connecting line */

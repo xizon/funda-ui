@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 
 
-type AccordionItemProps = {
+export type AccordionItemProps = {
     heightObserver?: number;
     index?: number;
     /** Class of items */

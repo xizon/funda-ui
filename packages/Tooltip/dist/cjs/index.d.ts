@@ -1,10 +1,5 @@
 import React from 'react';
-declare module 'react' {
-    interface ReactI18NextChildren<T> {
-        children?: any;
-    }
-}
-declare type TooltipProps = {
+export declare type TooltipProps = {
     wrapperClassName?: string;
     /** The direction of the tip. Defaults to `top`. Possible values are: `top`, `top-right`, `top-left`, `bottom`, `bottom-right`, `bottom-left` */
     direction?: string;

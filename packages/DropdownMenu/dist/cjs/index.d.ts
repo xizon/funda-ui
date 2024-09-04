@@ -1,9 +1,9 @@
 import React from 'react';
-declare type OptionChangeFnType = (arg1: any, arg2: any) => void;
+export declare type OptionChangeFnType = (arg1: any, arg2: any) => void;
 export interface OptionConfig {
     [propName: string]: string | number;
 }
-declare type DropdownMenuProps = {
+export declare type DropdownMenuProps = {
     wrapperClassName?: string;
     listClassName?: string;
     hyperlinkClassName?: string;

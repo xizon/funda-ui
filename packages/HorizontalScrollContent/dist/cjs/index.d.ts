@@ -1,5 +1,5 @@
 import React from 'react';
-declare type HorizontalScrollContentProps = {
+export declare type HorizontalScrollContentProps = {
     slideOffset?: number;
     data?: React.ReactNode[];
     arrowIcons?: React.ReactNode[];

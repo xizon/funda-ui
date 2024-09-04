@@ -2,10 +2,11 @@ import React from 'react';
 export interface OptionConfig {
     [propName: string]: string | number | React.ReactNode | boolean;
 }
-declare type RadioOptionChangeFnType = (arg1: any, arg2: any, arg3?: any, arg4?: any) => void;
-declare type RadioProps = {
+export declare type RadioOptionChangeFnType = (arg1: any, arg2: any, arg3?: any, arg4?: any) => void;
+export declare type RadioProps = {
     contentRef?: React.ForwardedRef<any>;
     wrapperClassName?: string;
+    controlClassName?: string;
     groupWrapperClassName?: string;
     groupLabelClassName?: string;
     itemSelectedClassName?: string;

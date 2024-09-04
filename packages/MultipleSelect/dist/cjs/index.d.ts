@@ -2,7 +2,7 @@ import React from 'react';
 export interface OptionConfig {
     [propName: string]: string | number | boolean;
 }
-declare type MultipleSelectProps = {
+export declare type MultipleSelectProps = {
     wrapperClassName?: string;
     childClassName?: string;
     wrapperMinHeight?: string;

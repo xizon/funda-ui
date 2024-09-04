@@ -1,14 +1,13 @@
 import React, { useEffect, useRef } from 'react';
 
+
 import {
     getNextSiblings
-} from 'funda-utils';
-
-
+} from 'funda-utils/dist/cjs/dom';
 
 /* Recursively nested components to traverse nodes
 -------------------------------------------------*/		
-type ItemListProps = {
+export type ItemListProps = {
     root: any;
     alternateCollapse?: boolean;
     first?: boolean;

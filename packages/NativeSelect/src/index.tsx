@@ -2,13 +2,19 @@ import React, { useEffect, useState, useRef, forwardRef } from 'react';
 
 import { optionsFlat } from './native-select-utils/func';
 
+
+import useComId from 'funda-utils/dist/cjs/useComId';
 import {
-    useComId,
-    isJSON,
+    isJSON
+} from 'funda-utils/dist/cjs/initDefaultOptions';
+import {
     addTreeDepth,
     addTreeIndent,
+} from 'funda-utils/dist/cjs/tree';
+import {
     removeArrDuplicateItems
-} from 'funda-utils';
+} from 'funda-utils/dist/cjs/object';
+
 
 
 export interface ItemConfig {
@@ -22,10 +28,10 @@ export interface OptionConfig {
 
 
 
-type NativeSelectOptionChangeFnType = (arg1: any, arg2: any, arg3?: any, arg4?: any) => void;
+export type NativeSelectOptionChangeFnType = (arg1: any, arg2: any, arg3?: any, arg4?: any) => void;
 
 
-type NativeSelectProps = {
+export type NativeSelectProps = {
     wrapperClassName?: string;
     value?: string;
     label?: React.ReactNode | string;

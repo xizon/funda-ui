@@ -3,16 +3,17 @@ import React, { forwardRef, useEffect, useState, useRef, KeyboardEvent, useImper
 
 import RootPortal from 'funda-root-portal';
 import SearchBar from 'funda-searchbar';
+
+import useComId from 'funda-utils/dist/cjs/useComId';
 import {
-    useComId,
-    isJSON,
-    useWindowScroll,
-    useClickOutside,
-    useDebounce,
+    isJSON
+} from 'funda-utils/dist/cjs/initDefaultOptions';
+import useWindowScroll from 'funda-utils/dist/cjs/useWindowScroll';
+import useClickOutside from 'funda-utils/dist/cjs/useClickOutside';
+import useDebounce from 'funda-utils/dist/cjs/useDebounce';
+import {
     getAbsolutePositionOfStage
-} from 'funda-utils';
-
-
+} from 'funda-utils/dist/cjs/getElementProperty';
 
 export interface OptionConfig {
     disabled?: boolean;
@@ -23,7 +24,7 @@ export interface OptionConfig {
 }
 
 
-type LiveSearchProps = {
+export type LiveSearchProps = {
     contentRef?: React.ForwardedRef<any>; // could use "Array" on contentRef.current, such as contentRef.current[0], contentRef.current[1]
     popupRef?: React.ForwardedRef<any>; // could use "Array" on popupRef.current, such as popupRef.current[0], popupRef.current[1]
     wrapperClassName?: string;

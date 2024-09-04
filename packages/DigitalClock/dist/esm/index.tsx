@@ -1,12 +1,10 @@
 import React, { useState } from 'react';
 
 
-import {
-    useInterval
-} from 'funda-utils';
+import useInterval from 'funda-utils/dist/cjs/useInterval';
 
 
-type DigitalClockProps = {
+export type DigitalClockProps = {
     tmpl?: (date: any) => void;
     militaryTime?: boolean;
 };
@@ -32,7 +30,7 @@ const DigitalClock = (props: DigitalClockProps) => {
     let hours: any = time.getHours();
     let amPm = time.getHours() > 12 ? "pm" : "am";
 
-    useInterval(() => {
+    const { startTimer, stopTimer } = useInterval(() => {
         time = new Date();
         minutes = time.getMinutes();
         seconds = time.getSeconds();

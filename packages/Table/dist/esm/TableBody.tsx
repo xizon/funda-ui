@@ -3,7 +3,7 @@ import React, { useContext, forwardRef } from 'react';
 import { TableContext } from './TableContext';
 
 
-interface TableBodyProps extends React.HTMLAttributes<HTMLTableSectionElement> {
+export interface TableBodyProps extends React.HTMLAttributes<HTMLTableSectionElement> {
     className?: string
 }
 

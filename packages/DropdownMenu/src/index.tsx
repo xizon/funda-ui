@@ -1,11 +1,12 @@
 import React, { useEffect, useState, useRef } from 'react';
 
 import RootPortal from 'funda-root-portal';
+
+import useComId from 'funda-utils/dist/cjs/useComId';
+import useClickOutside from 'funda-utils/dist/cjs/useClickOutside';
 import {
-    useComId,
-    useClickOutside,
     getAbsolutePositionOfStage
-} from 'funda-utils';
+} from 'funda-utils/dist/cjs/getElementProperty';
 
 
 
@@ -13,13 +14,13 @@ import Option from './Option';
 
 
 
-type OptionChangeFnType = (arg1: any, arg2: any) => void;
+export type OptionChangeFnType = (arg1: any, arg2: any) => void;
 
 export interface OptionConfig {
     [propName: string]: string | number;
 }
 
-type DropdownMenuProps = {
+export type DropdownMenuProps = {
     wrapperClassName?: string;
     listClassName?: string;
     hyperlinkClassName?: string;

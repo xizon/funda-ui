@@ -1,13 +1,19 @@
 import React, { useImperativeHandle, useState, useEffect, useRef, forwardRef } from 'react';
 
-import {
-    useComId,
-    isJSON,
-    extractContentsOfBrackets,
-    convertArrToValByBrackets,
-    removeArrDuplicateItems
-} from 'funda-utils';
 
+import useComId from 'funda-utils/dist/cjs/useComId';
+import {
+    isJSON
+} from 'funda-utils/dist/cjs/initDefaultOptions';
+import {
+    extractContentsOfBrackets
+} from 'funda-utils/dist/cjs/extract';
+import {
+    convertArrToValByBrackets
+} from 'funda-utils/dist/cjs/convert';
+import {
+    removeArrDuplicateItems
+} from 'funda-utils/dist/cjs/object';
 
 
 export interface OptionConfig {
@@ -15,9 +21,10 @@ export interface OptionConfig {
 }
 
 
-type MultipleCheckboxesProps = {
+export type MultipleCheckboxesProps = {
     contentRef?: React.ForwardedRef<any>; // could use "Array" on contentRef.current, such as contentRef.current[0], contentRef.current[1]
     wrapperClassName?: string;
+    controlClassName?: string;
     tableLayout?: boolean;
     tableLayoutClassName?: string;
     tableLayoutCellClassName?: string;
@@ -55,6 +62,7 @@ const MultipleCheckboxes = forwardRef((props: MultipleCheckboxesProps, externalR
     const {
         contentRef,
         wrapperClassName,
+        controlClassName,
         tableLayout,
         tableLayoutClassName,
         tableLayoutCellClassName,
@@ -333,7 +341,7 @@ const MultipleCheckboxes = forwardRef((props: MultipleCheckboxesProps, externalR
                                     if (externalRef) externalRef.current = getAllControls();
                                 }}
                                 type="checkbox"
-                                className="form-check-input"
+                                className={`${controlClassName || controlClassName === '' ? `${controlClassName}` : `form-check-input`}`}
                                 name={`${name}-checkbox-item`}
                                 id={`multiple-checkboxes__control-label-${index}-${optIndex}-${idRes}`}
                                 data-index={`${index}-${optIndex}`}
@@ -394,7 +402,7 @@ const MultipleCheckboxes = forwardRef((props: MultipleCheckboxesProps, externalR
                             
                         }}
                         type="checkbox"
-                        className="form-check-input"
+                        className={`${controlClassName || controlClassName === '' ? `${controlClassName}` : `form-check-input`}`}
                         name={`${name}-checkbox-item`}
                         id={`multiple-checkboxes__control-label-${index}-${idRes}`}
                         data-index={index}

@@ -1,0 +1,13 @@
+declare function getNextSiblings(el: HTMLElement, filter?: string): HTMLElement[];
+declare function getPreviousSiblings(el: HTMLElement, filter?: string): HTMLElement[];
+declare function getAllSiblings(el: HTMLElement, filter?: string): HTMLElement[];
+declare function getParents(el: HTMLElement, filter?: string): HTMLElement[];
+declare function getChildren(el: HTMLElement, filter?: string, all?: any[]): any[];
+declare function isRootElement(element: HTMLElement): boolean;
+declare function getDocument(node?: Node): Document;
+declare function isNode(value: any): value is Node;
+declare function isElement(value: any): value is Element;
+declare function isHTMLElement(value: any): value is HTMLElement;
+declare function isShadowRoot(value: any): value is ShadowRoot;
+declare function nodeContains(parent: Node, child: Node): boolean;
+export { getNextSiblings, getPreviousSiblings, getAllSiblings, getParents, getChildren, isRootElement, getDocument, isNode, isElement, isHTMLElement, isShadowRoot, nodeContains };

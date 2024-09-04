@@ -1,18 +1,9 @@
 import React, { useState, useRef, useCallback } from 'react';
 
-import {
-    useComId
-} from 'funda-utils';
-
-declare module 'react' {
-    interface ReactI18NextChildren<T> {
-        children?: any;
-    }
-}
-
+import useComId from 'funda-utils/dist/cjs/useComId';
 
 // Adapt the easing parameters of CSS3
-enum EasingList {
+export enum EasingList {
     linear = 'linear',
     easeIn = 'ease-in',
     easeOut = 'ease-out',
@@ -20,7 +11,7 @@ enum EasingList {
 }
 
 
-type ShowMoreLessProps = {
+export type ShowMoreLessProps = {
     /** Speed of scrolling up. Amount of time measured in milliseconds. */
     speed?: number;
     /** Types of easing animation */

@@ -1,13 +1,12 @@
 import React, { useState, useEffect, useRef, forwardRef, KeyboardEvent, useImperativeHandle } from 'react';
 
 
-import {
-    useComId,
-    useAutosizeTextArea
-} from 'funda-utils';
+
+import useComId from 'funda-utils/dist/cjs/useComId';
+import useAutosizeTextArea from 'funda-utils/dist/cjs/useAutosizeTextArea';
 
 
-type TextareaProps = {
+export type TextareaProps = {
     contentRef?: React.ForwardedRef<any>; // could use "Array" on contentRef.current, such as contentRef.current[0], contentRef.current[1]
     wrapperClassName?: string;
     controlClassName?: string;

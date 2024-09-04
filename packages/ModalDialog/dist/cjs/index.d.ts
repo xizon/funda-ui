@@ -1,9 +1,4 @@
 import React from 'react';
-declare module 'react' {
-    interface ReactI18NextChildren<T> {
-        children?: any;
-    }
-}
 declare global {
     interface Window {
         curVideo?: any;
@@ -18,7 +13,7 @@ export interface ModalDialogRef {
     open: () => void;
     close: () => void;
 }
-declare type ModalDialogProps = {
+export declare type ModalDialogProps = {
     /** Extended class name */
     modalContentClassName?: string;
     modalHeaderClassName?: string;

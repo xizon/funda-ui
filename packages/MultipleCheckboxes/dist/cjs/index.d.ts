@@ -2,9 +2,10 @@ import React from 'react';
 export interface OptionConfig {
     [propName: string]: string | number | boolean;
 }
-declare type MultipleCheckboxesProps = {
+export declare type MultipleCheckboxesProps = {
     contentRef?: React.ForwardedRef<any>;
     wrapperClassName?: string;
+    controlClassName?: string;
     tableLayout?: boolean;
     tableLayoutClassName?: string;
     tableLayoutCellClassName?: string;

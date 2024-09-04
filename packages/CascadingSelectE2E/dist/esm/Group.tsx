@@ -1,8 +1,8 @@
 import React from 'react';
 
-type GroupFnType = (arg1: any, arg2: any, arg3: number) => void;
+export type GroupFnType = (arg1: any, arg2: any, arg3: number) => void;
 
-type GroupProps = {
+export type GroupProps = {
     level: number;
     columnTitle: any[];
     data?: any[any];

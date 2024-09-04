@@ -1,5 +1,5 @@
 import React from 'react';
-interface ColorPickerProps extends React.ComponentPropsWithoutRef<"input"> {
+export interface ColorPickerProps extends React.ComponentPropsWithoutRef<"input"> {
     wrapperClassName?: string;
     controlClassName?: string;
     controlExClassName?: string;

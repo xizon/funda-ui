@@ -6,7 +6,7 @@ export interface OptionConfig {
     value: any;
     queryString: string | number;
 }
-declare type LiveSearchProps = {
+export declare type LiveSearchProps = {
     contentRef?: React.ForwardedRef<any>;
     popupRef?: React.ForwardedRef<any>;
     wrapperClassName?: string;

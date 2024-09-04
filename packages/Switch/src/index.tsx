@@ -1,14 +1,14 @@
 import React, { useState, useEffect, useRef, forwardRef } from 'react';
 
-import {
-    useComId
-} from 'funda-utils';
 
-type SwitchOptionChangeFnType = (arg1: any, arg2: any) => void;
+import useComId from 'funda-utils/dist/cjs/useComId';
+
+export type SwitchOptionChangeFnType = (arg1: any, arg2: any) => void;
 
 
-type SwitchProps = {
+export type SwitchProps = {
     wrapperClassName?: string;
+    controlClassName?: string;
     value: string | boolean;
     label?: React.ReactNode | string;
     name?: string;
@@ -31,6 +31,7 @@ type SwitchProps = {
 const Switch = forwardRef((props: SwitchProps, externalRef: any) => {
     const {
         wrapperClassName,
+        controlClassName,
         disabled,
         required,
         value,
@@ -103,7 +104,7 @@ const Switch = forwardRef((props: SwitchProps, externalRef: any) => {
                         ref={externalRef}
                         tabIndex={tabIndex || 0}
                         type="checkbox"
-                        className="form-check-input"
+                        className={`${controlClassName || controlClassName === '' ? `${controlClassName}` : `form-check-input`}`}
                         id={`label-${idRes}`}
                         
                         // Don't use "name", it's just a container to display the label

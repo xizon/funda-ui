@@ -1,16 +1,14 @@
 import React, { useEffect, useState, forwardRef, useRef } from 'react';
 
-import {
-    useComId
-} from 'funda-utils';
 
+import useComId from 'funda-utils/dist/cjs/useComId';
 
 import { TableProvider } from './TableContext';
 import useTableResponsive from './table-utils/hooks/useTableResponsive';
 import useTableDraggable from './table-utils/hooks/useTableDraggable';
 
 
-interface TableProps extends React.HTMLAttributes<HTMLDivElement> {
+export interface TableProps extends React.HTMLAttributes<HTMLDivElement> {
 
     // basic
     wrapperClassName?: string;

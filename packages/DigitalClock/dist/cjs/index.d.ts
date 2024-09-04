@@ -1,5 +1,5 @@
 /// <reference types="react" />
-declare type DigitalClockProps = {
+export declare type DigitalClockProps = {
     tmpl?: (date: any) => void;
     militaryTime?: boolean;
 };

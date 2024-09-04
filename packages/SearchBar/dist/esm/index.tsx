@@ -1,10 +1,9 @@
 import React, { useState, useEffect, useRef, ChangeEvent, MouseEvent, CompositionEvent, KeyboardEvent, FocusEvent, forwardRef } from 'react';
 
-import {
-    useComId
-} from 'funda-utils';
+import useComId from 'funda-utils/dist/cjs/useComId';
 
-type SearchBarProps = {
+
+export type SearchBarProps = {
     wrapperClassName?: string;
     controlClassName?: string;
     controlExClassName?: string;

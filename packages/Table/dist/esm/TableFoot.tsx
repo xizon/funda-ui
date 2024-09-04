@@ -1,7 +1,7 @@
 import React, { forwardRef } from 'react';
 
 
-interface TableFootProps extends React.HTMLAttributes<HTMLTableSectionElement> {
+export interface TableFootProps extends React.HTMLAttributes<HTMLTableSectionElement> {
     className?: string;
 }
 

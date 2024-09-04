@@ -1,10 +1,11 @@
 import React, { useState, useRef, useEffect } from 'react';
 
-import {
-    useComId
-} from 'funda-utils';
 
-type HorizontalScrollContentProps = {
+import useComId from 'funda-utils/dist/cjs/useComId';
+
+
+
+export type HorizontalScrollContentProps = {
     slideOffset?: number;
     data?: React.ReactNode[];
     arrowIcons?: React.ReactNode[];

@@ -3,7 +3,7 @@ import { TableContext } from '../TableContext';
 
 import useTableSort from './hooks/useTableSort';
 
-type SortSpriteProps = {
+export type SortSpriteProps = {
     fieldType: 'text' | 'number' | 'date';
     className?: string;
     icon?: React.ReactNode;

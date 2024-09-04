@@ -1,12 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react';
 
+
+import useComId from 'funda-utils/dist/cjs/useComId';
 import {
-    useComId,
     deepClone,
     flatData
-} from 'funda-utils';
-
-
+} from 'funda-utils/dist/cjs/object';
 
 import TreeList from './TreeList';
 import { initUlHeight, initAsyncItems } from './init-height';
@@ -47,7 +46,7 @@ export interface FetchConfig {
 
 
 
-type TreeProps = {
+export type TreeProps = {
     /** Set TreeNode display Checkbox or not */
     checkable?: boolean;
     /** Shows a connecting line */

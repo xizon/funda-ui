@@ -1,5 +1,5 @@
 import React from 'react';
-declare type TagInputProps = {
+export declare type TagInputProps = {
     wrapperClassName?: string;
     value?: string;
     maxTags?: number;

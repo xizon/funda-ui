@@ -1,16 +1,14 @@
 import React, { useImperativeHandle, useState, useEffect, useRef, forwardRef } from 'react';
 
-import {
-    useComId
-} from 'funda-utils';
+import useComId from 'funda-utils/dist/cjs/useComId';
+
+export type CheckboxOptionChangeFnType = (arg1: any, arg2: any) => void;
 
 
-type CheckboxOptionChangeFnType = (arg1: any, arg2: any) => void;
-
-
-type CheckboxProps = {
+export type CheckboxProps = {
     contentRef?: React.ForwardedRef<any>; // could use "Array" on contentRef.current, such as contentRef.current[0], contentRef.current[1]
     wrapperClassName?: string;
+    controlClassName?: string;
     itemSelectedClassName?: string;
     value: string | boolean;
     label?: React.ReactNode | string;
@@ -36,6 +34,7 @@ const Checkbox = forwardRef((props: CheckboxProps, externalRef: any) => {
     const {
         contentRef,
         wrapperClassName,
+        controlClassName,
         itemSelectedClassName,
         disabled,
         required,
@@ -59,7 +58,6 @@ const Checkbox = forwardRef((props: CheckboxProps, externalRef: any) => {
     const valRef = useRef<any>(null);
     const [val, setVal] = useState<any>(null || false);  // Avoid the error "react checkbox changing an uncontrolled input to be controlled"
 
-    
     // exposes the following methods
     useImperativeHandle(
         contentRef,
@@ -148,7 +146,7 @@ const Checkbox = forwardRef((props: CheckboxProps, externalRef: any) => {
                         }}
                         tabIndex={tabIndex || 0}
                         type="checkbox"
-                        className="form-check-input"
+                        className={`${controlClassName || controlClassName === '' ? `${controlClassName}` : `form-check-input`}`}
                         id={`label-${idRes}`}
 
                         // Don't use "name", it's just a container to display the label

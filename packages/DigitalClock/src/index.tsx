@@ -1,12 +1,10 @@
 import React, { useState } from 'react';
 
 
-import {
-    useInterval
-} from 'funda-utils';
+import useInterval from 'funda-utils/dist/cjs/useInterval';
 
 
-type DigitalClockProps = {
+export type DigitalClockProps = {
     tmpl?: (date: any) => void;
     militaryTime?: boolean;
 };

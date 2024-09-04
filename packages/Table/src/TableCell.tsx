@@ -5,7 +5,7 @@ import { TableContext } from './TableContext';
 import { cellMark, removeCellFocusClassName } from './table-utils/func';
 import useTableKeyPress from './table-utils/hooks/useTableKeyPress';
 
-interface TableCellProps extends React.HTMLAttributes<HTMLTableCellElement> {
+export interface TableCellProps extends React.HTMLAttributes<HTMLTableCellElement> {
     active?: boolean;
     activeClassName?: string;
     className?: string;

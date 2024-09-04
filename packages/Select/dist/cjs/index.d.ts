@@ -1,5 +1,5 @@
 import React from 'react';
-declare type SelectOptionChangeFnType = (arg1: any, arg2: any, arg3: any) => void;
+export declare type SelectOptionChangeFnType = (arg1: any, arg2: any, arg3: any) => void;
 export interface MultiSelectDataConfig {
     values: string[] | number[];
     labels: string[] | number[];
@@ -33,7 +33,7 @@ export interface CleanTriggerConfig {
     valid: boolean;
     cleanValueLabel?: string;
 }
-declare type SelectProps = {
+export declare type SelectProps = {
     contentRef?: React.ForwardedRef<any>;
     popupRef?: React.ForwardedRef<any>;
     wrapperClassName?: string;

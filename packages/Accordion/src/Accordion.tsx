@@ -2,12 +2,11 @@ import React, { useState, useRef } from 'react';
 
 import Item from './AccordionItem';
 
-import {animateStyles} from 'funda-utils';
-
+import animateStyles from 'funda-utils/dist/cjs/anim';
 
 
 // Adapt the easing parameters of TweenMax
-enum EasingList {
+export enum EasingList {
     linear = 'linear',
     easeIn = 'ease-in',
     easeOut = 'ease-out',
@@ -15,16 +14,10 @@ enum EasingList {
 }
 
 
-declare module 'react' {
-    interface ReactI18NextChildren<T> {
-        children?: any;
-    }
-}
-
-type AccordionOptionChangeFnType = (arg1: any, arg2: any) => void;
+export type AccordionOptionChangeFnType = (arg1: any, arg2: any) => void;
 
 
-type AccordionProps = {
+export type AccordionProps = {
     wrapperClassName?: string;
 	/** One event type, such as `click` or `mouseover` */
 	triggerType?: string;

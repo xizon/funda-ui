@@ -25,7 +25,7 @@ import { useEffect, useState } from 'react';
 
 import { getTbody, allRows, sortDataByIndex, initOrderProps, initRowColProps } from '../func';
 
-interface UseTableSortProps {
+export interface UseTableSortProps {
     enabled: boolean;
     data?: any[];
     spyElement?: any;

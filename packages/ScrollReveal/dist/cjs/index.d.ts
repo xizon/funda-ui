@@ -1,14 +1,9 @@
 import React from 'react';
-declare module 'react' {
-    interface ReactI18NextChildren<T> {
-        children?: any;
-    }
-}
 export interface ViewOffsetConfig {
     x?: string | undefined;
     y?: string | undefined;
 }
-declare type ScrollRevealProps = {
+export declare type ScrollRevealProps = {
     root?: any;
     viewOffset?: ViewOffsetConfig;
     defaultClassName?: string | string[];

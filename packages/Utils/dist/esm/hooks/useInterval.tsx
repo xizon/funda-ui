@@ -5,38 +5,69 @@
 
 const App = () => {
     const [count, setCount] = useState(0);
+    const [list, setList] = useState([]);
 
-    useInterval(() => {
+    const { startTimer, stopTimer } = useInterval(() => {
         setCount(count + 1);
     }, 1000);
 
+    const { startTimer: startTimerGetList, stopTimer: stopTimerGetList } = useInterval(() => {
+        setList((prevState) => {
+            return [...prevState, Math.random()]
+        });
+    }, 1000, false);
+
+    const handleGetList = () => {
+        startTimerGetList();
+    };
+
+    useEffect(() => {
+        handleGetList();
+    }, []);
+
     return (
-        <div className="app"></div>
+        <div className="app">{count}{list.join(',')}</div>
     );
 };
 
  */
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useCallback } from "react";
 
-const useInterval = (fn: () => void, delay: number | null): void => {
+const useInterval = (fn: () => void, delay: number | null, enabled: boolean = true): {
+    startTimer: any,
+    stopTimer: any
+} => {
     const ref = useRef<any>(null);
+  
+    const intervalIdRef = useRef<any>(null);
+    const startTimer = useCallback(() => {
+        intervalIdRef.current = setInterval(() => {
+            ref.current && ref.current();
+        }, delay as number);
+    }, [ref]);
+
+    const stopTimer = useCallback(() => {
+        clearInterval(intervalIdRef.current);
+        intervalIdRef.current = null;
+    }, []);
 
     useEffect(() => {
         ref.current = fn;
     }, [fn]);
 
-    useEffect(() => {
-        function tick() {
-            ref.current && ref.current();
-        }
 
-        if (delay !== null && delay > 0) {
-            let id = setInterval(tick, delay);
-            return () => clearInterval(id);
-        } else {
-            tick();
+    useEffect(() => {
+        if (enabled) {
+            startTimer();
+            return () => stopTimer();
         }
-    }, [delay]);
+    }, [enabled]);
+
+    return {
+        startTimer,
+        stopTimer
+    };
+
 };
 
 export default useInterval;

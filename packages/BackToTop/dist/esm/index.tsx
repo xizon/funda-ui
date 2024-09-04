@@ -1,19 +1,17 @@
 import React, { useEffect, useState, useRef } from 'react';
 
 
+import useWindowScroll from 'funda-utils/dist/cjs/useWindowScroll';
 import {
-    useWindowScroll,
     easeLinear,
     easeInQuad,
     easeOutQuad,
     easeInOutQuad
-} from 'funda-utils';
-
-
+} from 'funda-utils/dist/cjs/easing';
 
 
 // Adapt the easing parameters of TweenMax
-enum EasingList {
+export enum EasingList {
     linear = 'linear',
     easeIn = 'ease-in',
     easeOut = 'ease-out',
@@ -21,7 +19,7 @@ enum EasingList {
 }
 
 
-type BackToTopProps = {
+export type BackToTopProps = {
     /** Speed of scrolling up. Amount of time measured in milliseconds. */
     speed?: number;
     /** Types of easing animation */

@@ -37,7 +37,7 @@ const App = () => {
 
 import { useState, useEffect } from 'react';
 
-interface UseKeyPressProps {
+export interface UseKeyPressProps {
     keyCode: string | string[];
     handleDown?: (key: string, event: KeyboardEvent) => void;
     handleUp?: (key: string, event: KeyboardEvent) => void;

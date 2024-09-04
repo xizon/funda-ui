@@ -26,7 +26,7 @@ import { useEffect } from 'react';
 
 import { tableElemScrolledInit, initOrderProps, initRowColProps } from '../func';
 
-interface UseTableResponsiveProps {
+export interface UseTableResponsiveProps {
     enabled: boolean;
     spyElement?: HTMLElement | null;
 }

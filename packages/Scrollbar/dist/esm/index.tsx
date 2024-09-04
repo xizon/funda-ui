@@ -1,19 +1,14 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 
+
+import useComId from 'funda-utils/dist/cjs/useComId';
 import {
-    useComId,
     throttle
-} from 'funda-utils';
+} from 'funda-utils/dist/cjs/performance';
 
 
-declare module 'react' {
-    interface ReactI18NextChildren<T> {
-        children?: any;
-    }
-}
 
-
-type ScrollbarProps = {
+export type ScrollbarProps = {
     onlyVerticle?: boolean;
     onlyHorizontal?: boolean;
     arrowIcons?: React.ReactNode[];

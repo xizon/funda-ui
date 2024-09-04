@@ -1,5 +1,5 @@
 import React from 'react';
-declare type ModeSwitchProps = {
+export declare type ModeSwitchProps = {
     triggerClassName?: string;
     /** The name of the local storage */
     localStorageName?: string;

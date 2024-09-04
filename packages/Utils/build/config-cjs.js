@@ -1,4 +1,24 @@
 const path = require('path');
+const fs = require('fs');
+
+function getEntries(dir) {
+    let entries = {};
+    const files = fs.readdirSync(dir);
+
+    files.forEach((file) => {
+        const fullPath = path.join(dir, file);
+        const stat = fs.statSync(fullPath);
+
+        if (stat.isDirectory()) {
+            Object.assign(entries, getEntries(fullPath));
+        } else if (stat.isFile() && (path.extname(fullPath) === '.ts' || path.extname(fullPath) === '.tsx')) {
+            const name = path.relative(__dirname, fullPath).replace(/\.ts$/, '').replace(/\.tsx$/, '').replace(/\.\.\/src\/hooks\//, '').replace(/\.\.\/src\/plugins\//, '').replace(/\.\.\/src\/libs\//, '');
+            entries[name] = fullPath;
+        }
+    });
+
+    return entries;
+}
 
 module.exports = {
     resolve: {
@@ -28,10 +48,7 @@ module.exports = {
         },
     },
 
-    entry: {
-        'index': './src/index.tsx'
-    },
-
+    entry: getEntries(path.resolve(__dirname, '../src')),
     output: {
         globalObject: 'this',
         library: "RPB",

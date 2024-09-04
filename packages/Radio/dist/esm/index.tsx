@@ -1,12 +1,13 @@
 import React, { useImperativeHandle, forwardRef, useRef, useState, useEffect } from 'react';
 
 
+import useComId from 'funda-utils/dist/cjs/useComId';
 import {
-    useComId,
-    isJSON,
+    isJSON
+} from 'funda-utils/dist/cjs/initDefaultOptions';
+import {
     removeArrDuplicateItems
-} from 'funda-utils';
-
+} from 'funda-utils/dist/cjs/object';
 
 
 export interface OptionConfig {
@@ -14,12 +15,13 @@ export interface OptionConfig {
 }
 
 
-type RadioOptionChangeFnType = (arg1: any, arg2: any, arg3?: any, arg4?: any) => void;
+export type RadioOptionChangeFnType = (arg1: any, arg2: any, arg3?: any, arg4?: any) => void;
 
 
-type RadioProps = {
+export type RadioProps = {
     contentRef?: React.ForwardedRef<any>; // could use "Array" on contentRef.current, such as contentRef.current[0], contentRef.current[1]
     wrapperClassName?: string;
+    controlClassName?: string;
     groupWrapperClassName?: string;
     groupLabelClassName?: string;
     itemSelectedClassName?: string;
@@ -59,6 +61,7 @@ const Radio = forwardRef((props: RadioProps, externalRef: any) => {
     const {
         contentRef,
         wrapperClassName,
+        controlClassName,
         groupWrapperClassName,
         groupLabelClassName,
         itemSelectedClassName,
@@ -387,7 +390,7 @@ const Radio = forwardRef((props: RadioProps, externalRef: any) => {
                                     }}
                                     tabIndex={tabIndex || 0}
                                     type="radio"
-                                    className="form-check-input"
+                                    className={`${controlClassName || controlClassName === '' ? `${controlClassName}` : `form-check-input`}`}
                                     id={`field-${uniqueID}-${index}-${optIndex}`}
                                     name={name}
                                     data-index={`${index}-${optIndex}`}
@@ -429,7 +432,7 @@ const Radio = forwardRef((props: RadioProps, externalRef: any) => {
                             }}
                             tabIndex={tabIndex || 0}
                             type="radio"
-                            className="form-check-input"
+                            className={`${controlClassName || controlClassName === '' ? `${controlClassName}` : `form-check-input`}`}
                             id={`field-${uniqueID}-${index}`}
                             name={name}
                             data-index={index}

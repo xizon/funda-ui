@@ -1,16 +1,13 @@
 import React, { forwardRef, useEffect, useRef, useImperativeHandle } from 'react';
 
-import {
-    useComId
-} from 'funda-utils';
-
+import useComId from 'funda-utils/dist/cjs/useComId';
 
 //
 import TabList from './TabList';
 import TabPanel from './TabPanel';
 
 
-type TabsProps = {
+export type TabsProps = {
     wrapperClassName?: string;
     navClassName?: string;
     panelClassName?: string;

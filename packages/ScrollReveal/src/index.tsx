@@ -1,15 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 
-import {
-    useComId
-} from 'funda-utils';
-
-
-declare module 'react' {
-    interface ReactI18NextChildren<T> {
-        children?: any;
-    }
-}
+import useComId from 'funda-utils/dist/cjs/useComId';
 
 
 export interface ViewOffsetConfig {
@@ -18,7 +9,7 @@ export interface ViewOffsetConfig {
 }
 
 
-type ScrollRevealProps = {
+export type ScrollRevealProps = {
     root?: any;
     viewOffset?: ViewOffsetConfig;
     defaultClassName?: string | string[];

@@ -6,7 +6,7 @@ import {
     dateFormat,
     isValidDate,
     getTodayDate
-} from 'funda-utils';
+} from 'funda-utils/dist/cjs/date';
 
 
 
@@ -19,7 +19,7 @@ export interface EventsValueConfig {
 }
 
 
-type CalendarProps = {
+export type CalendarProps = {
     min?: string;
     max?: string;
     customTodayDate?: string;

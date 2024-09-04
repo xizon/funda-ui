@@ -40,7 +40,7 @@ import { useEffect, useCallback, KeyboardEvent } from "react";
 
 import { initOrderProps, initRowColProps, cellMark, removeCellFocusClassName } from '../func';
 
-interface UseTableKeyPressProps {
+export interface UseTableKeyPressProps {
     enabled?: boolean;
     data: any[];
     spyElement?: any;

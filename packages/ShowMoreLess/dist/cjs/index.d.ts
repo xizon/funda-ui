@@ -1,10 +1,11 @@
 import React from 'react';
-declare module 'react' {
-    interface ReactI18NextChildren<T> {
-        children?: any;
-    }
+export declare enum EasingList {
+    linear = "linear",
+    easeIn = "ease-in",
+    easeOut = "ease-out",
+    easeInOut = "ease-in-out"
 }
-declare type ShowMoreLessProps = {
+export declare type ShowMoreLessProps = {
     /** Speed of scrolling up. Amount of time measured in milliseconds. */
     speed?: number;
     /** Types of easing animation */

@@ -1,14 +1,17 @@
 import React, { useState, useEffect, useRef, forwardRef, ChangeEvent, MouseEvent, KeyboardEvent, FocusEvent, CompositionEvent } from 'react';
 
 
+
+import useComId from 'funda-utils/dist/cjs/useComId';
 import {
-    useComId,
-    extractContentsOfBrackets,
+    extractContentsOfBrackets
+} from 'funda-utils/dist/cjs/extract';
+import {
     convertArrToValByBrackets
-} from 'funda-utils';
+} from 'funda-utils/dist/cjs/convert';
 
 
-type TagInputProps = {
+export type TagInputProps = {
     wrapperClassName?: string;
     value?: string;
     maxTags?: number;

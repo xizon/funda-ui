@@ -1,7 +1,7 @@
 import React from 'react';
 
 
-interface TabPanelProps extends React.ComponentPropsWithoutRef<"div"> {
+export interface TabPanelProps extends React.ComponentPropsWithoutRef<"div"> {
 	defaultActive?: string | boolean | undefined;
     expandedActiveClassNameForPanel?: string;
 	tabpanelClass?: string;

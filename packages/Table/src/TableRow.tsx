@@ -3,7 +3,7 @@ import React, { useContext, forwardRef } from 'react';
 import { TableContext } from './TableContext';
 import { convertMapToArr } from './table-utils/func';
 
-interface TableRowProps extends React.HTMLAttributes<HTMLTableRowElement> {
+export interface TableRowProps extends React.HTMLAttributes<HTMLTableRowElement> {
     active?: boolean;
     activeClassName?: string;
     className?: string;

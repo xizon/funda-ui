@@ -1,11 +1,12 @@
 import React, { useEffect, useState, useRef } from 'react';
 
-import {
-    useComId
-} from 'funda-utils';
+
+import useComId from 'funda-utils/dist/cjs/useComId';
+
+
 import Input from 'funda-input';
 
-type RangeSliderProps = {
+export type RangeSliderProps = {
     wrapperClassName?: string;
     controlClassName?: string;
     controlExClassName?: string;

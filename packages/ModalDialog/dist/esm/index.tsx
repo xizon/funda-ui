@@ -1,22 +1,17 @@
 import React, { useState, useRef, useEffect, forwardRef, useImperativeHandle } from 'react';
 
 import RootPortal from 'funda-root-portal';
-import {
-    useComId,
-    useDraggable,
 
-    // Destroys body scroll locking
+import useComId from 'funda-utils/dist/cjs/useComId';
+import useDraggable from 'funda-utils/dist/cjs/useDraggable';
+
+// Destroys body scroll locking
+import {
     clearAllBodyScrollLocks, 
     disableBodyScroll, 
     enableBodyScroll,
-} from 'funda-utils';
+} from 'funda-utils/dist/cjs/bodyScrollLock';
 
-
-declare module 'react' {
-    interface ReactI18NextChildren<T> {
-        children?: any;
-    }
-}
 
 declare global {
     interface Window {
@@ -38,7 +33,7 @@ export interface ModalDialogRef {
 
 
 
-type ModalDialogProps = {
+export type ModalDialogProps = {
     /** Extended class name */
     modalContentClassName?: string;
     modalHeaderClassName?: string;
@@ -407,20 +402,10 @@ const ModalDialog = forwardRef((props: ModalDialogProps, externalRef: React.Forw
         setIncomingData(data);
 
 
-        // show
+        // show (ONLY, DO NOT USE `if ... else ...`)
         //--------------
         if (show) {
-            openAction();
-
-
-            //
-            const callback = (e: any) => {
-                return () => {
-                    handleCloseWin(e);
-                }
-            };
-            onOpen?.(null, callback(null));
-
+            handleOpenWin(null);
         }
 
 

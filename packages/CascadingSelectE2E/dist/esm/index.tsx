@@ -1,18 +1,25 @@
 import React, { useEffect, useState, useRef, useImperativeHandle } from 'react';
 
 import RootPortal from 'funda-root-portal';
+
+import useComId from 'funda-utils/dist/cjs/useComId';
+import useWindowScroll from 'funda-utils/dist/cjs/useWindowScroll';
+import useClickOutside from 'funda-utils/dist/cjs/useClickOutside';
 import {
-    useComId,
-    useWindowScroll,
-    useClickOutside,
     extractorExist,
     extractContentsOfBraces,
     extractContentsOfBrackets,
-    convertArrToValByBraces,
-    getAbsolutePositionOfStage,
+} from 'funda-utils/dist/cjs/extract';
+import {
+    convertArrToValByBraces
+} from 'funda-utils/dist/cjs/convert';
+import {
+    getAbsolutePositionOfStage
+} from 'funda-utils/dist/cjs/getElementProperty';
+import {
     addTreeDepth,
     addTreeIndent
-} from 'funda-utils';
+} from 'funda-utils/dist/cjs/tree';
 
 
 
@@ -20,7 +27,7 @@ import Group from './Group';
 
 
 
-type CascadingSelectE2EOptionChangeFnType = (input: any, currentData: any, index: any, depth: any, value: any, closeFunc: any) => void;
+export type CascadingSelectE2EOptionChangeFnType = (input: any, currentData: any, index: any, depth: any, value: any, closeFunc: any) => void;
 
 
 export interface fetchArrayConfig {
@@ -33,7 +40,7 @@ export interface fetchArrayConfig {
     doubleIndent?: boolean;
 }
 
-type CascadingSelectE2EProps = {
+export type CascadingSelectE2EProps = {
     popupRef?: React.ForwardedRef<any>; // could use "Array" on popupRef.current, such as popupRef.current[0], popupRef.current[1]
     wrapperClassName?: string;
     controlClassName?: string;

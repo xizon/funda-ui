@@ -1,9 +1,9 @@
 import React from 'react';
-declare type DynamicFieldsValueProps = {
+export declare type DynamicFieldsValueProps = {
     init: React.ReactNode[];
     tmpl: React.ReactNode;
 };
-declare type DynamicFieldsProps = {
+export declare type DynamicFieldsProps = {
     wrapperClassName?: string;
     btnAddWrapperClassName?: string;
     btnRemoveWrapperClassName?: string;

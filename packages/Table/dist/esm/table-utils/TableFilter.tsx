@@ -1,7 +1,7 @@
 import React, { forwardRef, useContext } from "react";
 import { TableContext } from '../TableContext';
 
-type TableFilterProps = {
+export type TableFilterProps = {
     className?: string;
     placeholder?: string;
     label?: React.ReactNode;

@@ -1,7 +1,7 @@
 import React, { forwardRef } from 'react';
 
 
-interface TableCaptionProps extends React.HTMLAttributes<HTMLTableCaptionElement> {
+export interface TableCaptionProps extends React.HTMLAttributes<HTMLTableCaptionElement> {
     className?: string;
     captionSide?: string;
 }

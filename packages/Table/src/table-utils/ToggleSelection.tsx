@@ -3,7 +3,7 @@ import { TableContext } from '../TableContext';
 
 import { convertMapToArr } from './func';
 
-type ToggleSelectionProps = {
+export type ToggleSelectionProps = {
     contentRef?: React.ForwardedRef<any>;
     row: number;
     className?: string;

@@ -1,7 +1,7 @@
 import React, { forwardRef, useContext } from "react";
 import { TableContext } from '../TableContext';
 
-type DragHandleSpriteProps = {
+export type DragHandleSpriteProps = {
     className?: string;
     icon?: React.ReactNode;
 };

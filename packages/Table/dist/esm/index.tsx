@@ -12,4 +12,3 @@ export { default as TableFilter } from './table-utils/TableFilter';
 export { default as ToggleSelection } from './table-utils/ToggleSelection';
 export { default as DragHandleSprite } from './table-utils/DragHandleSprite';
 export { default as SortSprite } from './table-utils/SortSprite';
-

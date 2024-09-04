@@ -1,16 +1,16 @@
 import React, { useState, useEffect, useRef } from 'react';
 
-import {
-    useComId
-} from 'funda-utils';
 
-type DynamicFieldsValueProps = {
+import useComId from 'funda-utils/dist/cjs/useComId';
+
+
+export type DynamicFieldsValueProps = {
     init: React.ReactNode[];
     tmpl: React.ReactNode;
 };
 
 
-type DynamicFieldsProps = {
+export type DynamicFieldsProps = {
     wrapperClassName?: string;
     btnAddWrapperClassName?: string;
     btnRemoveWrapperClassName?: string;

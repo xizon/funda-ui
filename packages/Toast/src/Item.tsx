@@ -1,6 +1,6 @@
 import React, { useRef, forwardRef } from 'react';
 
-interface ItemProps extends React.ComponentPropsWithoutRef<any> {
+export interface ItemProps extends React.ComponentPropsWithoutRef<any> {
     onlyOne?: boolean;
     index: number;
     title?: string | React.ReactNode | boolean;

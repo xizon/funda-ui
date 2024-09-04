@@ -6,7 +6,7 @@ export interface OptionConfig {
     listItemLabel?: string | undefined;
 }
 
-type OptionProps = {
+export type OptionProps = {
     option?: OptionConfig;
     hyperlinkClassName?: string;
     selectEv?: (value: any, option: any) => void | undefined;

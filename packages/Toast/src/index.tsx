@@ -1,17 +1,15 @@
 import React, { useEffect, useState, useRef, useCallback } from 'react';
 
-import {
-    useComId
-} from 'funda-utils';
-import RootPortal from 'funda-root-portal';
+import useComId from 'funda-utils/dist/cjs/useComId';
 
+import RootPortal from 'funda-root-portal';
 
 
 import Item from './Item';
 
 
 
-type ToastProps = {
+export type ToastProps = {
     /** The class name of the toast wrapper. */
     wrapperClassName?: string;
     /** Specify data of toasts as a JSON string format. */

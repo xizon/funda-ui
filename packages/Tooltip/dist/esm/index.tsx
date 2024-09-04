@@ -1,22 +1,16 @@
 import React, { useState, useRef, useEffect } from 'react';
 
 import RootPortal from 'funda-root-portal';
+
+import useComId from 'funda-utils/dist/cjs/useComId';
+import useClickOutside from 'funda-utils/dist/cjs/useClickOutside';
 import {
-    useComId,
-    useClickOutside,
     getAbsolutePositionOfStage
-} from 'funda-utils';
+} from 'funda-utils/dist/cjs/getElementProperty';
 
 
 
-declare module 'react' {
-    interface ReactI18NextChildren<T> {
-        children?: any;
-    }
-}
-
-
-type TooltipProps = {
+export type TooltipProps = {
     wrapperClassName?: string;
 	/** The direction of the tip. Defaults to `top`. Possible values are: `top`, `top-right`, `top-left`, `bottom`, `bottom-right`, `bottom-left` */
 	direction?: string;

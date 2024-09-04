@@ -1,15 +1,16 @@
 import React, { forwardRef, useEffect, useRef } from 'react';
 
+
 import {
     getNextSiblings
-} from 'funda-utils';
+} from 'funda-utils/dist/cjs/dom';
 
 
 import { formatIndentVal, multiSelControlOptionExist } from './multiple-select-utils/func';
 
 /* Recursively nested components to traverse nodes
 -------------------------------------------------*/
-type ItemListProps = {
+export type ItemListProps = {
     root: any;
     listContainerClassName: string;
     valSelected: any[];

@@ -10,29 +10,44 @@ import {
 
 
 import RootPortal from 'funda-root-portal';
-import { 
-    useComId,
-    isJSON,
-    useDebounce,
-    useClickOutside,
-    useWindowScroll,
-    extractContentsOfBrackets,
-    convertArrToValByBrackets,
-    getAbsolutePositionOfStage,
+
+
+import useComId from 'funda-utils/dist/cjs/useComId';
+import {
+    isJSON
+} from 'funda-utils/dist/cjs/initDefaultOptions';
+import useDebounce from 'funda-utils/dist/cjs/useDebounce';
+import useClickOutside from 'funda-utils/dist/cjs/useClickOutside';
+import useWindowScroll from 'funda-utils/dist/cjs/useWindowScroll';
+import {
+    extractContentsOfBrackets
+} from 'funda-utils/dist/cjs/extract';
+import {
+    convertArrToValByBrackets
+} from 'funda-utils/dist/cjs/convert';
+import {
+    getAbsolutePositionOfStage
+} from 'funda-utils/dist/cjs/getElementProperty';
+import {
     addTreeDepth,
     addTreeIndent,
-    getTextWidth,
-    removeArrDuplicateItems,
+} from 'funda-utils/dist/cjs/tree';
+import {
+    getTextWidth
+} from 'funda-utils/dist/cjs/inputsCalculation';
+import {
+    removeArrDuplicateItems
+} from 'funda-utils/dist/cjs/object';
 
-    // Destroys body scroll locking
+// Destroys body scroll locking
+import {
     clearAllBodyScrollLocks, 
     disableBodyScroll, 
     enableBodyScroll,
-} from 'funda-utils';
+} from 'funda-utils/dist/cjs/bodyScrollLock';
 
 
-
-type SelectOptionChangeFnType = (arg1: any, arg2: any, arg3: any) => void;
+export type SelectOptionChangeFnType = (arg1: any, arg2: any, arg3: any) => void;
 
 export interface MultiSelectDataConfig {
     values: string[] | number[];
@@ -77,7 +92,7 @@ export interface CleanTriggerConfig {
 }
 
 
-type SelectProps = {
+export type SelectProps = {
     contentRef?: React.ForwardedRef<any>; // could use "Array" on contentRef.current, such as contentRef.current[0], contentRef.current[1]
     popupRef?: React.ForwardedRef<any>; // could use "Array" on popupRef.current, such as popupRef.current[0], popupRef.current[1]
     wrapperClassName?: string;

@@ -17,14 +17,14 @@ const App = () => {
 import { useEffect, useState } from "react";
 import { debounce, throttle } from "../libs/performance";
 
-type PerformanceType = ["debounce" | "throttle", number];
+export type PerformanceType = ["debounce" | "throttle", number];
 
-type ScrollData = {
+export type ScrollData = {
     x: number;
     y: number;
 };
 
-type UseWindowScrollProps = {
+export type UseWindowScrollProps = {
     enabled?: boolean;
     performance: PerformanceType;
     handle?: (scrollData: ScrollData) => void;

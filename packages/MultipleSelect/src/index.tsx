@@ -1,15 +1,24 @@
 import React, { useState, useEffect, useRef, forwardRef } from 'react';
 
 
+
+import useComId from 'funda-utils/dist/cjs/useComId';
 import {
-    useComId,
-    isJSON,
+    isJSON
+} from 'funda-utils/dist/cjs/initDefaultOptions';
+import {
     addTreeDepth,
     addTreeIndent,
-    extractContentsOfBrackets,
-    convertArrToValByBrackets,
+} from 'funda-utils/dist/cjs/tree';
+import {
+    extractContentsOfBrackets
+} from 'funda-utils/dist/cjs/extract';
+import {
+    convertArrToValByBrackets
+} from 'funda-utils/dist/cjs/convert';
+import {
     removeArrDuplicateItems
-} from 'funda-utils';
+} from 'funda-utils/dist/cjs/object';
 
 
 
@@ -22,7 +31,7 @@ export interface OptionConfig {
 }
 
 
-type MultipleSelectProps = {
+export type MultipleSelectProps = {
     wrapperClassName?: string;
     childClassName?: string;
     wrapperMinHeight?: string;

@@ -5,8 +5,8 @@ export interface ItemConfig {
 export interface OptionConfig {
     [propName: string]: string | number | boolean | ItemConfig[];
 }
-declare type NativeSelectOptionChangeFnType = (arg1: any, arg2: any, arg3?: any, arg4?: any) => void;
-declare type NativeSelectProps = {
+export declare type NativeSelectOptionChangeFnType = (arg1: any, arg2: any, arg3?: any, arg4?: any) => void;
+export declare type NativeSelectProps = {
     wrapperClassName?: string;
     value?: string;
     label?: React.ReactNode | string;

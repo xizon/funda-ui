@@ -6,7 +6,7 @@ export interface EventsValueConfig {
     data: string;
     eventStyles?: React.CSSProperties;
 }
-declare type EventCalendarProps = {
+export declare type EventCalendarProps = {
     customTodayDate?: string;
     eventsValue?: any[];
     langWeek?: string[];

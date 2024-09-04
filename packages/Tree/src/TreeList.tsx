@@ -2,10 +2,11 @@ import React, { useEffect, useRef } from 'react';
 
 // HAS CHECKBOX
 
+
 import {
-    getNextSiblings, 
+    getNextSiblings,
     getChildren
-} from 'funda-utils';
+} from 'funda-utils/dist/cjs/dom';
 
 
 import { initUlHeight } from './init-height';
@@ -21,7 +22,7 @@ export interface FetchConfig {
 
 /* Recursively nested components to traverse nodes
 -------------------------------------------------*/		
-type TreeListProps = {
+export type TreeListProps = {
     rootNode: React.RefObject<HTMLDivElement>;
     checkboxNamePrefix?: string;
     alternateCollapse?: boolean;

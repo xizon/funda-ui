@@ -7,7 +7,7 @@
 // Adopted and modified solution from Bohdan Didukh (2017)
 // https://stackoverflow.com/questions/41594997/ios-10-safari-prevent-scrolling-behind-a-fixed-overlay-and-maintain-scroll-posi
 
-export interface BodyScrollOptions {
+interface BodyScrollOptions {
     reserveScrollBarGap?: boolean;
     allowTouchMove?: (el: any) => boolean;
 }

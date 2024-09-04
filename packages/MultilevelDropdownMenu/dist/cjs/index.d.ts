@@ -1,5 +1,5 @@
 import React from 'react';
-declare type MultilevelDropdownMenuProps = {
+export declare type MultilevelDropdownMenuProps = {
     /** Mutually exclusive alternate expansion between the first levels */
     alternateCollapse?: boolean;
     /** set an arrow */

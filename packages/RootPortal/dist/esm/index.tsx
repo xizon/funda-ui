@@ -2,7 +2,7 @@ import React, { useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
 
 
-type RootPortalProps = {
+export type RootPortalProps = {
     containerClassName?: string;
     children?: React.ReactNode;
     show?: boolean;

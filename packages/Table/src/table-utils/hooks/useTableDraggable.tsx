@@ -37,7 +37,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { getTbody, allRows, insertAfter, sortDataByIndex, initOrderProps, initRowColProps } from '../func';
 
 
-interface UseTableDraggableProps {
+export interface UseTableDraggableProps {
     enabled: boolean;
     data?: any[];
     spyElement?: any;

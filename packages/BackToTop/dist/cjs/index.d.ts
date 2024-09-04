@@ -1,5 +1,11 @@
 import React from 'react';
-declare type BackToTopProps = {
+export declare enum EasingList {
+    linear = "linear",
+    easeIn = "ease-in",
+    easeOut = "ease-out",
+    easeInOut = "ease-in-out"
+}
+export declare type BackToTopProps = {
     /** Speed of scrolling up. Amount of time measured in milliseconds. */
     speed?: number;
     /** Types of easing animation */

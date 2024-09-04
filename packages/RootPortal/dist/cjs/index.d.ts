@@ -1,5 +1,5 @@
 import React from 'react';
-declare type RootPortalProps = {
+export declare type RootPortalProps = {
     containerClassName?: string;
     children?: React.ReactNode;
     show?: boolean;

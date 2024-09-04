@@ -15,7 +15,7 @@ export interface TimelineValueConfig {
     listSection: TimelineRowFieldConfig;
     eventSources: EventsValueConfig[];
 }
-declare type EventCalendarTimelineProps = {
+export declare type EventCalendarTimelineProps = {
     customTodayDate?: string;
     eventsValue?: TimelineValueConfig[];
     langWeek?: string[];

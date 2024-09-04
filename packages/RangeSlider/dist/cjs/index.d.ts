@@ -1,5 +1,5 @@
 import React from 'react';
-declare type RangeSliderProps = {
+export declare type RangeSliderProps = {
     wrapperClassName?: string;
     controlClassName?: string;
     controlExClassName?: string;

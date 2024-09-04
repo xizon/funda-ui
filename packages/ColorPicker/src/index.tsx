@@ -1,10 +1,10 @@
 import React, { useState, useEffect, useRef, forwardRef, ChangeEvent, FocusEvent } from 'react';
 
-import {
-    useComId
-} from 'funda-utils';
 
-interface ColorPickerProps extends React.ComponentPropsWithoutRef<"input"> {
+import useComId from 'funda-utils/dist/cjs/useComId';
+
+
+export interface ColorPickerProps extends React.ComponentPropsWithoutRef<"input"> {
     wrapperClassName?: string;
     controlClassName?: string;
     controlExClassName?: string;

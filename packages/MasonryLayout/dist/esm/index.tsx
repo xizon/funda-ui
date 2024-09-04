@@ -1,19 +1,13 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 
+
+import useComId from 'funda-utils/dist/cjs/useComId';
 import {
-    useComId,
     debounce
-} from 'funda-utils';
+} from 'funda-utils/dist/cjs/performance';
 
 
-declare module 'react' {
-    interface ReactI18NextChildren<T> {
-        children?: any;
-    }
-}
-
-
-type MasonryLayoutProps = {
+export type MasonryLayoutProps = {
     columns?: number,
     gap?: number,
     breakPoints?: Record<number, number>

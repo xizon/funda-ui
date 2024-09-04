@@ -1,5 +1,5 @@
 import React from 'react';
-declare type SearchBarProps = {
+export declare type SearchBarProps = {
     wrapperClassName?: string;
     controlClassName?: string;
     controlExClassName?: string;

@@ -24,7 +24,7 @@ const App = () => {
  */
 import { useEffect, useRef, PointerEvent } from 'react';
 
-interface UseClickOutsideProps {
+export interface UseClickOutsideProps {
     enabled: boolean;
     isOutside: any;
     handle: (event: PointerEvent) => void;

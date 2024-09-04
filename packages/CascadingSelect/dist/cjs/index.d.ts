@@ -1,6 +1,6 @@
 import React from 'react';
-declare type CascadingSelectOptionChangeFnType = (input: any, currentData: any, index: any, depth: any, value: any, closeFunc: any) => void;
-declare type CascadingSelectProps = {
+export declare type CascadingSelectOptionChangeFnType = (input: any, currentData: any, index: any, depth: any, value: any, closeFunc: any) => void;
+export declare type CascadingSelectProps = {
     popupRef?: React.ForwardedRef<any>;
     wrapperClassName?: string;
     controlClassName?: string;

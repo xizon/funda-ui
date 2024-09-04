@@ -1,5 +1,5 @@
 import React from 'react';
-declare type CascadingSelectE2EOptionChangeFnType = (input: any, currentData: any, index: any, depth: any, value: any, closeFunc: any) => void;
+export declare type CascadingSelectE2EOptionChangeFnType = (input: any, currentData: any, index: any, depth: any, value: any, closeFunc: any) => void;
 export interface fetchArrayConfig {
     fetchFuncAsync?: any | undefined;
     fetchFuncMethod?: string | undefined;
@@ -9,7 +9,7 @@ export interface fetchArrayConfig {
     indentation?: string;
     doubleIndent?: boolean;
 }
-declare type CascadingSelectE2EProps = {
+export declare type CascadingSelectE2EProps = {
     popupRef?: React.ForwardedRef<any>;
     wrapperClassName?: string;
     controlClassName?: string;
