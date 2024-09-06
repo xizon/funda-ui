@@ -3196,8 +3196,13 @@ var src_Date = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_reac
       set('2024-04-18 21:54:09', () => { console.log('callback') }])
       */
       set: function set(value, cb) {
+        var _getActualDefaultValu = getActualDefaultValue(value, true),
+          _getActualDefaultValu2 = src_slicedToArray(_getActualDefaultValu, 3),
+          curInitSplitClickEvOk = _getActualDefaultValu2[0],
+          curNoTargetVal = _getActualDefaultValu2[1],
+          curTargetVal = _getActualDefaultValu2[2];
         setDateDefaultValueExist(defaultValueIsEmpty(value) ? false : true);
-        initValue(value);
+        initValue(curTargetVal);
         cb === null || cb === void 0 ? void 0 : cb();
       }
     };
@@ -3654,11 +3659,11 @@ var src_Date = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_reac
   (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useEffect)(function () {
     // update default value
     //--------------
-    var _getActualDefaultValu = getActualDefaultValue(value, true),
-      _getActualDefaultValu2 = src_slicedToArray(_getActualDefaultValu, 3),
-      curInitSplitClickEvOk = _getActualDefaultValu2[0],
-      curNoTargetVal = _getActualDefaultValu2[1],
-      curTargetVal = _getActualDefaultValu2[2];
+    var _getActualDefaultValu3 = getActualDefaultValue(value, true),
+      _getActualDefaultValu4 = src_slicedToArray(_getActualDefaultValu3, 3),
+      curInitSplitClickEvOk = _getActualDefaultValu4[0],
+      curNoTargetVal = _getActualDefaultValu4[1],
+      curTargetVal = _getActualDefaultValu4[2];
     setDateDefaultValueExist(defaultValueIsEmpty(value) ? false : true);
     var _initValue = initValue(curTargetVal),
       _initValue2 = src_slicedToArray(_initValue, 2),
@@ -3671,11 +3676,11 @@ var src_Date = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_reac
     //--------------
     if (typeof defaultValue !== 'undefined') {
       //REQUIRED
-      var _getActualDefaultValu3 = getActualDefaultValue(defaultValue, true),
-        _getActualDefaultValu4 = src_slicedToArray(_getActualDefaultValu3, 3),
-        curInitSplitClickEvOk = _getActualDefaultValu4[0],
-        curNoTargetVal = _getActualDefaultValu4[1],
-        curTargetVal = _getActualDefaultValu4[2];
+      var _getActualDefaultValu5 = getActualDefaultValue(defaultValue, true),
+        _getActualDefaultValu6 = src_slicedToArray(_getActualDefaultValu5, 3),
+        curInitSplitClickEvOk = _getActualDefaultValu6[0],
+        curNoTargetVal = _getActualDefaultValu6[1],
+        curTargetVal = _getActualDefaultValu6[2];
       setDateDefaultValueExist(defaultValueIsEmpty(defaultValue) ? false : true);
       var _initValue3 = initValue(curTargetVal),
         _initValue4 = src_slicedToArray(_initValue3, 2),

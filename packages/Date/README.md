@@ -451,6 +451,98 @@ export default () => {
 
 
 
+## Use the exposed method to assign and empty
+
+Lets you callback the handle exposed as attribute `contentRef`.
+
+
+```js
+import React, { useRef } from 'react';
+import Date from 'funda-ui/Date';
+
+// component styles
+import 'funda-ui/Date/index.css';
+
+
+
+export default () => {
+
+    const popupRef = useRef<any>();
+    const popupRef2 = useRef<any>();
+    const contentRef = useRef<any>();
+    const contentRef2 = useRef<any>();
+    
+    return (
+
+        <>
+
+            <a 
+                href="#"
+                onClick={(e: React.MouseEvent) => {
+                    e.preventDefault();
+                    if (contentRef.current) contentRef.current.clear();
+                    if (contentRef2.current) contentRef2.current.clear();
+                }}
+            >Set Empty Value</a>
+            &nbsp;&nbsp;|&nbsp;&nbsp;
+            <a 
+                href="#"
+                onClick={(e: React.MouseEvent) => {
+                    e.preventDefault();
+                    if (contentRef.current) contentRef.current.set('17:33:20', () => { console.log('callback') });
+                }}
+            >Set Custom Value (first - 17:33:20)</a>
+            &nbsp;&nbsp;|&nbsp;&nbsp;
+            <a 
+                href="#"
+                onClick={(e: React.MouseEvent) => {
+                    e.preventDefault();
+                    if (contentRef2.current) contentRef2.current.set('2024-09-03 22:10:01', () => { console.log('callback') });
+                }}
+            >Set Custom Value (second - 2024-09-03 22:10:01)</a>
+
+
+            <Date
+                popupRef={popupRef}
+                contentRef={contentRef}
+                name="start_time"
+                value=""
+                type="time"
+                onChangeSeconds={(dateRes: any) => {
+                    // close popup
+                    if (popupRef.current) popupRef.current.close();
+                }}
+                onOpenPopup={(allSplittingInputs: any[]) => {
+
+                    // focus hours input
+                    if (allSplittingInputs[3] !== null) {
+                        allSplittingInputs[3].select();
+                    }
+                }}
+                onlyTime
+
+            />
+
+
+            <Date
+                popupRef={popupRef2}
+                contentRef={contentRef2}
+                name="end_time"
+                value=""
+                type="datetime-local"
+                onChangeSeconds={(dateRes: any) => {
+                    // close popup
+                    if (popupRef2.current) popupRef2.current.close();
+                }}
+            />  
+
+        </>
+    )
+}
+```
+
+
+
 ## API
 
 ### Date

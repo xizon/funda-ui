@@ -197,10 +197,11 @@ export default () => {
                 fetchFuncMethodParams={['',0]}
                 fetchCallback={(res) => {
 
-                    const formattedData = res.map((item) => {
+                    const formattedData = res.map((item, i) => {
                         return {
                             label: item.item_name,
                             value: item.item_code,
+                            myOrder: i,
                             queryString: item.kb_code
                         }
                     }); 
@@ -208,18 +209,48 @@ export default () => {
                     console.log(formattedData);
                     /*
                     [
-                        {"label": "foo","value": "bar","queryString": "fb,foobar"},
-                        {"label": "foo2","value": "bar2","queryString": "fb2,foobar2"},
-                        {"label": "foo3","value": "bar3","queryString": "fb3,foobar3"}
+                        {"label": "foo","value": "bar","queryString": "fb,foobar","myOrder":0},
+                        {"label": "foo2","value": "bar2","queryString": "fb2,foobar2","myOrder":1},
+                        {"label": "foo3","value": "bar3","queryString": "fb3,foobar3","myOrder":2}
                     ]   
                     */
 
                     return formattedData;
                 }}
+                onChange={((e: any, e2: any, val: any) => {
+                    const addValue = (name: string, targetValueField: string = 'label') => {
+                        [].slice.call(document.querySelectorAll(`[name="${name}"]`)).forEach((node: any) => {
+                            node.value = val[targetValueField];
+                        });
+                    };
+
+                    addValue('name-xxxxxx', 'label');
+                    addValue('name-yyyyyy', 'myOrder');
+                    
+
+                })}
                 onFetch={(e, e2, value, res, data) => {
                     console.log('onFetch: ', e, e2, value, res, data);
+
+                    const curItem = res.find((v: any) => v.value == value);
+                    if (typeof curItem !== 'undefined') {
+                        const addValue = (name: string, targetValueField: string = 'label') => {
+                            [].slice.call(document.querySelectorAll(`[name="${name}"]`)).forEach((node: any) => {
+                                if (typeof curItem[targetValueField] !== 'undefined') node.value = curItem[targetValueField];
+                            });
+                        };
+
+                        addValue('name-xxxxxx', 'label');
+                        addValue('name-yyyyyy', 'myOrder');
+                    }
+
+
                 }}
             />
+            Linkage value: 
+            <input name="name-xxxxxx" size={5} type="text" defaultValue="" />
+            <input name="name-yyyyyy" size={5} type="text" defaultValue="" />
+
 
 
             <h3>Single selection (manual trigger request)</h3>

@@ -352,9 +352,10 @@ const Date = forwardRef((props: DateProps, externalRef: any) => {
             set('2024-04-18 21:54:09', () => { console.log('callback') }])
             */
             set: (value: any, cb?: any) => {
-
-                setDateDefaultValueExist((defaultValueIsEmpty(value)) ? false : true);
-                initValue(value);
+                
+                const [curInitSplitClickEvOk, curNoTargetVal, curTargetVal] = getActualDefaultValue(value, true);
+                setDateDefaultValueExist(defaultValueIsEmpty(value) ? false : true);
+                initValue(curTargetVal);
                 
                 cb?.();
             }
