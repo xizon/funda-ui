@@ -14,7 +14,7 @@ export default () => {
         <>
 
 
-            <InputNumber
+            <NumberInput
                 name="name1"
                 value="-22"
                 step={2}
@@ -26,7 +26,7 @@ export default () => {
                 }}
             />
 
-            <InputNumber
+            <NumberInput
                 iconLeft="$"
                 name="name2"
                 step={0.1}
@@ -40,7 +40,7 @@ export default () => {
              
             />
 
-            <InputNumber
+            <NumberInput
                 iconLeft="$"
                 value="-1.245"
                 name="name3"
@@ -54,7 +54,7 @@ export default () => {
             />
 
 
-            <InputNumber
+            <NumberInput
                 placeholder="Price Here"
                 name="name4"
                 disabled
@@ -148,7 +148,7 @@ export default () => {
             >Decrement</a>
 
 
-            <InputNumber
+            <NumberInput
                 contentRef={conRef}
                 name="name1"
                 step={2}
