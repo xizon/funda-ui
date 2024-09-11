@@ -10,7 +10,6 @@ import {
     isTimeString,
     getNow,
     isValidDate,
-    isNumeric,
     isValidHours,
     isValidMinutesAndSeconds,
     isValidYear,
@@ -26,7 +25,7 @@ import useClickOutside from 'funda-utils/dist/cjs/useClickOutside';
 import {
     getAbsolutePositionOfStage
 } from 'funda-utils/dist/cjs/getElementProperty';
-
+import { isNumeric } from 'funda-utils/dist/cjs/math';
 
 
 import Calendar from './Calendar';

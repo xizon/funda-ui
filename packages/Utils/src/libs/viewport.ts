@@ -1,7 +1,7 @@
 /**
  * Check if an element is in the viewport
  * @param {HTMLElement} elem 
- * @returns {boolean}
+ * @returns {Boolean}
  */
 function isInViewport(elem: HTMLElement) {
     const bounding = elem.getBoundingClientRect();

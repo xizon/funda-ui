@@ -2234,8 +2234,8 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
        * Get the absolute position of the stage element
        * 
        * @param {HTMLElement} domElement  - A DOM node
-       * @param {number | string} left     - left offset
-       * @param {number | string} top      - top offset
+       * @param {Number | string} left     - left offset
+       * @param {Number | string} top      - top offset
        * @returns 
        */
       function _getAbsolutePositionOfStage(domElement) {

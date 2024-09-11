@@ -8,6 +8,7 @@ import {
 import {
     removeArrDuplicateItems
 } from 'funda-utils/dist/cjs/object';
+import { clsWrite } from 'funda-utils/dist/cjs/cls';
 
 
 export interface OptionConfig {
@@ -390,7 +391,7 @@ const Radio = forwardRef((props: RadioProps, externalRef: any) => {
                                     }}
                                     tabIndex={tabIndex || 0}
                                     type="radio"
-                                    className={`${controlClassName || controlClassName === '' ? `${controlClassName}` : `form-check-input`}`}
+                                    className={clsWrite(controlClassName, 'form-check-input')}
                                     id={`field-${uniqueID}-${index}-${optIndex}`}
                                     name={name}
                                     data-index={`${index}-${optIndex}`}
@@ -432,7 +433,7 @@ const Radio = forwardRef((props: RadioProps, externalRef: any) => {
                             }}
                             tabIndex={tabIndex || 0}
                             type="radio"
-                            className={`${controlClassName || controlClassName === '' ? `${controlClassName}` : `form-check-input`}`}
+                            className={clsWrite(controlClassName, 'form-check-input')}
                             id={`field-${uniqueID}-${index}`}
                             name={name}
                             data-index={index}
@@ -553,7 +554,7 @@ const Radio = forwardRef((props: RadioProps, externalRef: any) => {
             </> : <>
                 <div
                     id={`radio__wrapper-${idRes}`}
-                    className={`radio__wrapper ${wrapperClassName || wrapperClassName === '' ? wrapperClassName : 'mb-3 position-relative'}`}
+                    className={`radio__wrapper ${clsWrite(wrapperClassName, 'mb-3 position-relative')}`}
                     ref={rootRef}
                 >
                     {label ? <>{typeof label === 'string' ? <label htmlFor={idRes} className="form-label" dangerouslySetInnerHTML={{ __html: `${label}` }}></label> : <label htmlFor={idRes} className="form-label" >{label}</label>}</> : null}

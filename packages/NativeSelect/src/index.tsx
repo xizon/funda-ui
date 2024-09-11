@@ -14,6 +14,7 @@ import {
 import {
     removeArrDuplicateItems
 } from 'funda-utils/dist/cjs/object';
+import { clsWrite } from 'funda-utils/dist/cjs/cls';
 
 
 
@@ -245,7 +246,7 @@ const NativeSelect = forwardRef((props: NativeSelectProps, externalRef: any) => 
     return (
         <>
 
-            <div className={wrapperClassName || wrapperClassName === '' ? wrapperClassName : "mb-3 position-relative"} ref={rootRef}>
+            <div className={clsWrite(wrapperClassName, 'mb-3 position-relative')} ref={rootRef}>
                 {label ? <>{typeof label === 'string' ? <label htmlFor={idRes} className="form-label" dangerouslySetInnerHTML={{__html: `${label}`}}></label> : <label htmlFor={idRes} className="form-label">{label}</label>}</> : null}
                 <select  
                         ref={(node) => {

@@ -669,6 +669,7 @@ import Input from 'funda-ui/Input';
 | `type` | string | text | The type of input. Such as \<input type="text" name="name"\> gives a text box. | - |
 | `defaultValue` | string | - | Specifies the default value. Use when the component is not controlled. It does not re-render the component because the incoming value changes. | - |
 | `value` | string | - | Set a default value for this control | - |
+| `requiredLabel` | string \| ReactNode | `<span className="position-absolute end-0 top-0 my-2 mx-2"><span className="text-danger">*</span></span>` | It is used to specify a label for an element required. | - |
 | `label` | string \| ReactNode | - | It is used to specify a label for an element of a form.<blockquote>Support html tags</blockquote> | - |
 | `units` | string | - | Specify a unit identification string. Such as `em`, `px`, and so on. | - |
 | `name` | string | - | Name is not deprecated when used with form fields. | - |
@@ -679,7 +680,10 @@ import Input from 'funda-ui/Input';
 | `max` | number | - | The maximum value to accept | - |
 | `pattern` | string | - | The pattern attribute specifies a regular expression that the \<input \> element's value is checked against on form submission. such as `(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}` | - |
 | `placeholder` | string | - |  Specifies a short hint that describes. | - |
-| `maxLength` | number | - | Defines the maximum number of characters | - |
+| `src` | string | - | specifies the URL of the image to use as a submit button. The src attribute can only be used with (and is required for) \<input type="image"\>. | - |
+| `size` | number | - | The size attribute specifies the visible width, in characters, of an \<input \> element. <blockquote>It is valid when `controlClassName` is changed.</blockquote> | - |
+| `maxLength` | number | - | Defines the maximum string length that the user can enter into it. | - |
+| `minLength` | number | - | Defines the minimum string length that the user can enter into it. | - |
 | `readOnly` | boolean | false | When present, it specifies that this component field is read-only. | - |
 | `disabled` | boolean | false | Whether it is disabled | - |
 | `required` | boolean | false | When present, it specifies that a field must be filled out before submitting the form. | - |

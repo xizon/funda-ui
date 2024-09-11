@@ -3,8 +3,10 @@ export declare type TagInputProps = {
     wrapperClassName?: string;
     value?: string;
     maxTags?: number;
+    requiredLabel?: React.ReactNode | string;
     label?: React.ReactNode | string;
     name?: string;
+    minLength?: any;
     maxLength?: any;
     disabled?: any;
     required?: any;

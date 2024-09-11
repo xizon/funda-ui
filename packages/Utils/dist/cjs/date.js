@@ -64,7 +64,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "getTodayDate": () => (/* binding */ getTodayDate),
 /* harmony export */   "getTomorrowDate": () => (/* binding */ getTomorrowDate),
 /* harmony export */   "getYesterdayDate": () => (/* binding */ getYesterdayDate),
-/* harmony export */   "isNumeric": () => (/* binding */ isNumeric),
 /* harmony export */   "isTimeString": () => (/* binding */ isTimeString),
 /* harmony export */   "isValidDate": () => (/* binding */ isValidDate),
 /* harmony export */   "isValidDay": () => (/* binding */ isValidDay),
@@ -109,15 +108,6 @@ var padZero = function padZero(num) {
   } else {
     return num.toString();
   }
-};
-
-/**
- * Number validation
- * @param {*} v 
- * @returns {Boolean}  
- */
-var isNumeric = function isNumeric(v) {
-  return !isNaN(parseFloat(v)) && isFinite(v);
 };
 
 /**

@@ -6,6 +6,7 @@ export interface ColorPickerProps extends React.ComponentPropsWithoutRef<"input"
     clearBtnClassName?: string;
     clearBtnLabel?: string;
     value?: string;
+    requiredLabel?: React.ReactNode | string;
     label?: React.ReactNode | string;
     name?: string;
     disabled?: any;

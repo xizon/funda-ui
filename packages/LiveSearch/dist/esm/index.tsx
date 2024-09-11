@@ -14,6 +14,8 @@ import useDebounce from 'funda-utils/dist/cjs/useDebounce';
 import {
     getAbsolutePositionOfStage
 } from 'funda-utils/dist/cjs/getElementProperty';
+import { clsWrite } from 'funda-utils/dist/cjs/cls';
+
 
 export interface OptionConfig {
     disabled?: boolean;
@@ -781,7 +783,7 @@ const LiveSearch = forwardRef((props: LiveSearchProps, externalRef: any) => {
 
             <div 
                 ref={rootRef} 
-                className={`livesearch__wrapper ${wrapperClassName || wrapperClassName === '' ? wrapperClassName : 'mb-3 position-relative'} ${isOpen ? 'active' : ''}`} 
+                className={`livesearch__wrapper ${clsWrite(wrapperClassName, 'mb-3 position-relative')} ${isOpen ? 'active' : ''}`} 
                 onMouseLeave={handleMouseLeaveTrigger}
                 onKeyDown={handleKeyPressed}
             >

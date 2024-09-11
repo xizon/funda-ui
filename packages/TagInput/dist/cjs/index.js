@@ -11,6 +11,108 @@
 return /******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ({
 
+/***/ 188:
+/***/ (function(module, exports, __webpack_require__) {
+
+/* module decorator */ module = __webpack_require__.nmd(module);
+var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
+(function webpackUniversalModuleDefinition(root, factory) {
+  if (( false ? 0 : _typeof(exports)) === 'object' && ( false ? 0 : _typeof(module)) === 'object') module.exports = factory();else if (true) !(__WEBPACK_AMD_DEFINE_ARRAY__ = [], __WEBPACK_AMD_DEFINE_FACTORY__ = (factory),
+		__WEBPACK_AMD_DEFINE_RESULT__ = (typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ?
+		(__WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__)) : __WEBPACK_AMD_DEFINE_FACTORY__),
+		__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));else {}
+})(this, function () {
+  return (/******/function () {
+      // webpackBootstrap
+      /******/
+      "use strict";
+
+      /******/ // The require scope
+      /******/
+      var __nested_webpack_require_987__ = {};
+      /******/
+      /************************************************************************/
+      /******/ /* webpack/runtime/define property getters */
+      /******/
+      (function () {
+        /******/ // define getter functions for harmony exports
+        /******/__nested_webpack_require_987__.d = function (exports, definition) {
+          /******/for (var key in definition) {
+            /******/if (__nested_webpack_require_987__.o(definition, key) && !__nested_webpack_require_987__.o(exports, key)) {
+              /******/Object.defineProperty(exports, key, {
+                enumerable: true,
+                get: definition[key]
+              });
+              /******/
+            }
+            /******/
+          }
+          /******/
+        };
+        /******/
+      })();
+      /******/
+      /******/ /* webpack/runtime/hasOwnProperty shorthand */
+      /******/
+      (function () {
+        /******/__nested_webpack_require_987__.o = function (obj, prop) {
+          return Object.prototype.hasOwnProperty.call(obj, prop);
+        };
+        /******/
+      })();
+      /******/
+      /******/ /* webpack/runtime/make namespace object */
+      /******/
+      (function () {
+        /******/ // define __esModule on exports
+        /******/__nested_webpack_require_987__.r = function (exports) {
+          /******/if (typeof Symbol !== 'undefined' && Symbol.toStringTag) {
+            /******/Object.defineProperty(exports, Symbol.toStringTag, {
+              value: 'Module'
+            });
+            /******/
+          }
+          /******/
+          Object.defineProperty(exports, '__esModule', {
+            value: true
+          });
+          /******/
+        };
+        /******/
+      })();
+      /******/
+      /************************************************************************/
+      var __webpack_exports__ = {};
+      __nested_webpack_require_987__.r(__webpack_exports__);
+      /* harmony export */
+      __nested_webpack_require_987__.d(__webpack_exports__, {
+        /* harmony export */"clsWrite": function clsWrite() {
+          return (/* binding */_clsWrite
+          );
+        }
+        /* harmony export */
+      });
+      /**
+       * Output of class name
+       * @param {*} s      - Any
+       * @param  {String} defaultCls      - Default string
+       * @param  {?*} targetCls      - Any
+       * @returns HtmlElementCollection
+       */
+      function _clsWrite(s, defaultCls) {
+        var targetCls = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : undefined;
+        return s || s === '' ? typeof targetCls === 'undefined' ? s : targetCls : defaultCls;
+      }
+
+      /******/
+      return __webpack_exports__;
+      /******/
+    }()
+  );
+});
+
+/***/ }),
+
 /***/ 79:
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -106,8 +208,8 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
       });
       /**
        * Convert value to string separated by square brackets 
-       * @param {string} str  such as: 1,2,3
-       * @returns {string} such as: [1][2][3]
+       * @param {String} str  such as: 1,2,3
+       * @returns {String} such as: [1][2][3]
        */
       function _convertStringByCommaToValByBrackets(str) {
         if (typeof str === 'undefined' || str === null || str === '') {
@@ -120,8 +222,8 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 
       /**
        * Convert array value to string  separated by square brackets 
-       * @param {string[]} arr  such as: ['1','2','3']
-       * @returns {string} such as: [1][2][3]
+       * @param {String[]} arr  such as: ['1','2','3']
+       * @returns {String} such as: [1][2][3]
        */
       function _convertArrToValByBrackets(arr) {
         if (!Array.isArray(arr)) return '';
@@ -132,8 +234,8 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 
       /**
        * Convert value to string separated by curly braces
-       * @param {string} str  such as: 1,2,3
-       * @returns {string} such as: {1}{2}{3}
+       * @param {String} str  such as: 1,2,3
+       * @returns {String} such as: {1}{2}{3}
        */
       function _convertStringByCommaToValByBraces(str) {
         if (typeof str === 'undefined' || str === null || str === '') {
@@ -146,8 +248,8 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 
       /**
        * Convert array value to string  separated by curly braces
-       * @param {string[]} arr  such as: ['1','2','3']
-       * @returns {string} such as: {1}{2}{3}
+       * @param {String[]} arr  such as: ['1','2','3']
+       * @returns {String} such as: {1}{2}{3}
        */
       function _convertArrToValByBraces(arr) {
         if (!Array.isArray(arr)) return '';
@@ -260,8 +362,8 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
       });
       /**
        * Determine whether an extractor is included
-       * @param {string} str    =>  input string. such as 'a[1], b[2]', '{a[1]}'
-       * @returns {boolean} 
+       * @param {String} str    =>  input string. such as 'a[1], b[2]', '{a[1]}'
+       * @returns {Boolean} 
        */
       function _extractorExist(str) {
         if (typeof str === 'undefined' || str === null || str === '') {
@@ -276,8 +378,8 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 
       /**
        * Extract the contents of square brackets
-       * @param {string} str    =>  input string. such as '[1,2] [f][c]'
-       * @param {boolean} commaSeparated    =>  flag to determine if the result should be comma separated or not
+       * @param {String} str    =>  input string. such as '[1,2] [f][c]'
+       * @param {Boolean} commaSeparated    =>  flag to determine if the result should be comma separated or not
        * @returns {Array<string>|string} such as: ['1,2','f','c']
        */
       function _extractContentsOfBrackets(str) {
@@ -295,8 +397,8 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 
       /**
        * Extract the contents of curly braces
-       * @param {string} str    =>  input string. such as '{1,2} {f}{c}'
-       * @param {boolean} commaSeparated    =>  flag to determine if the result should be comma separated or not
+       * @param {String} str    =>  input string. such as '{1,2} {f}{c}'
+       * @param {Boolean} commaSeparated    =>  flag to determine if the result should be comma separated or not
        * @returns {Array<string>|string} such as: ['1,2','f','c']
        */
       function _extractContentsOfBraces(str) {
@@ -314,8 +416,8 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 
       /**
        * Extract the contents of parentheses
-       * @param {string} str    =>  input string. such as '(1,2) (f)(c)'
-       * @param {boolean} commaSeparated    =>  flag to determine if the result should be comma separated or not
+       * @param {String} str    =>  input string. such as '(1,2) (f)(c)'
+       * @param {Boolean} commaSeparated    =>  flag to determine if the result should be comma separated or not
        * @returns {Array<string>|string} such as: ['1,2','f','c']
        */
       function _extractContentsOfParentheses(str) {
@@ -612,7 +714,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var funda_utils_dist_cjs_extract__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(funda_utils_dist_cjs_extract__WEBPACK_IMPORTED_MODULE_2__);
 /* harmony import */ var funda_utils_dist_cjs_convert__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(79);
 /* harmony import */ var funda_utils_dist_cjs_convert__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(funda_utils_dist_cjs_convert__WEBPACK_IMPORTED_MODULE_3__);
-var _excluded = ["wrapperClassName", "maxTags", "disabled", "required", "placeholder", "readOnly", "value", "label", "name", "id", "autoComplete", "autoCapitalize", "spellCheck", "extractValueByBrackets", "maxLength", "style", "tabIndex", "onChange", "onBlur", "onFocus"];
+/* harmony import */ var funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(188);
+/* harmony import */ var funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_4__);
+var _excluded = ["wrapperClassName", "maxTags", "disabled", "required", "placeholder", "readOnly", "value", "requiredLabel", "label", "name", "id", "autoComplete", "autoCapitalize", "spellCheck", "extractValueByBrackets", "minLength", "maxLength", "style", "tabIndex", "onChange", "onBlur", "onFocus"];
 function _extends() { _extends = Object.assign ? Object.assign.bind() : function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
 function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
 function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
@@ -626,6 +730,7 @@ function _objectWithoutPropertiesLoose(source, excluded) { if (source == null) r
 
 
 
+
 var TagInput = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(function (props, externalRef) {
   var wrapperClassName = props.wrapperClassName,
     maxTags = props.maxTags,
@@ -634,6 +739,7 @@ var TagInput = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(fu
     placeholder = props.placeholder,
     readOnly = props.readOnly,
     value = props.value,
+    requiredLabel = props.requiredLabel,
     label = props.label,
     name = props.name,
     id = props.id,
@@ -641,6 +747,7 @@ var TagInput = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(fu
     autoCapitalize = props.autoCapitalize,
     spellCheck = props.spellCheck,
     extractValueByBrackets = props.extractValueByBrackets,
+    minLength = props.minLength,
     maxLength = props.maxLength,
     style = props.style,
     tabIndex = props.tabIndex,
@@ -804,7 +911,7 @@ var TagInput = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(fu
     initDefaultValue(value);
   }, [value]);
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-    className: wrapperClassName || wrapperClassName === '' ? "tag-input__wrapper ".concat(wrapperClassName) : "tag-input__wrapper mb-3 position-relative",
+    className: (0,funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_4__.clsWrite)(wrapperClassName, 'tag-input__wrapper mb-3 position-relative', "tag-input__wrapper ".concat(wrapperClassName)),
     ref: rootRef
   }, label ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, typeof label === 'string' ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("label", {
     htmlFor: "label-".concat(idRes),
@@ -855,6 +962,7 @@ var TagInput = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(fu
     spellCheck: typeof spellCheck === 'undefined' ? false : spellCheck,
     placeholder: placeholder || '',
     value: userInput,
+    minLength: minLength || null,
     maxLength: maxLength || null,
     disabled: disabled || null,
     readOnly: readOnly || null,
@@ -866,7 +974,7 @@ var TagInput = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(fu
     onFocus: handleFocus,
     onBlur: handleBlur,
     style: style
-  }, attributes))), required ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
+  }, attributes))), required ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, requiredLabel || requiredLabel === '' ? requiredLabel : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
     className: "position-absolute end-0 top-0 my-2 mx-2"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
     className: "text-danger"

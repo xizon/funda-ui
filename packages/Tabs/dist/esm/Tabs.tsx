@@ -1,6 +1,8 @@
 import React, { forwardRef, useEffect, useRef, useImperativeHandle } from 'react';
 
 import useComId from 'funda-utils/dist/cjs/useComId';
+import { clsWrite } from 'funda-utils/dist/cjs/cls';
+
 
 //
 import TabList from './TabList';
@@ -185,7 +187,7 @@ const Tabs = forwardRef((props: TabsProps, externalRef: any) => {
     return (
         <>
 
-            <div className={wrapperClassName || wrapperClassName === '' ? wrapperClassName : "mb-3 position-relative"} ref={rootRef} style={style}>
+            <div className={clsWrite(wrapperClassName, 'mb-3 position-relative')} ref={rootRef} style={style}>
                 <ul className={navClassName ? navClassName : "nav nav-tabs mb-3"} role="tablist">
 
                     {(() => {

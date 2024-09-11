@@ -9,6 +9,7 @@ export declare type InputProps = {
     type?: string;
     defaultValue?: string;
     value?: string;
+    requiredLabel?: React.ReactNode | string;
     label?: React.ReactNode | string;
     units?: React.ReactNode | string;
     name?: string;

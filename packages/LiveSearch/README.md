@@ -374,8 +374,8 @@ import LiveSearch from 'funda-ui/LiveSearch';
 | `units` | string | - | Specify a unit identification string. Such as `em`, `px`, and so on. | - |
 | `iconLeft` | ReactNode  | - | Set the left icon of this control | - |
 | `iconRight` | ReactNode  | - | Set the right icon of this control | - |
-| `maxLength` | number | - | Defines the maximum number of characters | - |
-| `maxLength` | number | - | Defines the maximum number of characters | - |
+| `maxLength` | number | - | Defines the maximum string length that the user can enter into it. | - |
+| `minLength` | number | - | Defines the minimum string length that the user can enter into it. | - |
 | `readOnly` | boolean | false | When present, it specifies that this component field is read-only. | - |
 | `disabled` | boolean | false | Whether it is disabled | - |
 | `required` | boolean | false | When present, it specifies that a field must be filled out before submitting the form. | - |

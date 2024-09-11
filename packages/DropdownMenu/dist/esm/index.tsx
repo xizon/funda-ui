@@ -7,7 +7,7 @@ import useClickOutside from 'funda-utils/dist/cjs/useClickOutside';
 import {
     getAbsolutePositionOfStage
 } from 'funda-utils/dist/cjs/getElementProperty';
-
+import { clsWrite } from 'funda-utils/dist/cjs/cls';
 
 
 import Option from './Option';
@@ -289,7 +289,7 @@ const DropdownMenu = (props: DropdownMenuProps) => {
 
             <div 
                 ref={rootRef}
-                className={`dd-menu__wrapper ${wrapperClassName || wrapperClassName === '' ? wrapperClassName : `dd-menu-default`} ${isOpen ? 'active' : ''}`} 
+                className={`dd-menu__wrapper ${clsWrite(wrapperClassName, 'dd-menu-default')} ${isOpen ? 'active' : ''}`} 
                 onMouseLeave={handleHoverOff} 
             >
 

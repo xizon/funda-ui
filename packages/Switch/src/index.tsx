@@ -2,6 +2,8 @@ import React, { useState, useEffect, useRef, forwardRef } from 'react';
 
 
 import useComId from 'funda-utils/dist/cjs/useComId';
+import { clsWrite } from 'funda-utils/dist/cjs/cls';
+
 
 export type SwitchOptionChangeFnType = (arg1: any, arg2: any) => void;
 
@@ -98,13 +100,13 @@ const Switch = forwardRef((props: SwitchProps, externalRef: any) => {
     return (
         <>
 
-            <div className={wrapperClassName || wrapperClassName === '' ? wrapperClassName : "mb-3 position-relative"} ref={rootRef}>
+            <div className={clsWrite(wrapperClassName, 'mb-3 position-relative')} ref={rootRef}>
                 <div className="form-check form-switch">
                     <input 
                         ref={externalRef}
                         tabIndex={tabIndex || 0}
                         type="checkbox"
-                        className={`${controlClassName || controlClassName === '' ? `${controlClassName}` : `form-check-input`}`}
+                        className={clsWrite(controlClassName, 'form-check-input')}
                         id={`label-${idRes}`}
                         
                         // Don't use "name", it's just a container to display the label

@@ -381,10 +381,12 @@ import Textarea from 'funda-ui/Textarea';
 | `defaultValue` | string | - | Specifies the default value. Use when the component is not controlled. It does not re-render the component because the incoming value changes. | - |
 | `value` | string | - | Set a default value for this control | - |
 | `autoSize` | boolean | false | Creating a Textarea with dynamic height. <blockquote>**Special note:** If you want to hide the textarea element in advance, please use `{ height: 0; overflow: hidden; }`, do not use `{ display: none }`, this can ensure that the `autoSize` initialization is valid. The parent container cannot also use `{ display: none }`, Otherwise it will cause the scrollHeight of the element inside the child node to be 0​</blockquote> | - |
+| `requiredLabel` | string \| ReactNode | `<span className="position-absolute end-0 top-0 my-2 mx-2"><span className="text-danger">*</span></span>` | It is used to specify a label for an element required. | - |
 | `label` | string \| ReactNode | - | It is used to specify a label for an element of a form.<blockquote>Support html tags</blockquote> | - |
 | `name` | string | - | Name is not deprecated when used with form fields. | - |
 | `placeholder` | string | - |  Specifies a short hint that describes. | - |
-| `maxLength` | number | - | Defines the maximum number of characters | - |
+| `maxLength` | number | - | Defines the maximum string length that the user can enter into it. | - |
+| `minLength` | number | - | Defines the minimum string length that the user can enter into it. | - |
 | `readOnly` | boolean | false | When present, it specifies that this component field is read-only. | - |
 | `disabled` | boolean | false | Whether it is disabled | - |
 | `required` | boolean | false | When present, it specifies that a field must be filled out before submitting the form. | - |

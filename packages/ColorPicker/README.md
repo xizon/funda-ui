@@ -120,6 +120,7 @@ import ColorPicker from 'funda-ui/ColorPicker';
 | `clearBtnClassName` | string | `btn btn-link btn-sm` | The class name of the clear button. | - |
 | `clearBtnLabel` | string | `clear` | The label of the clear button. | - |
 | `value` | string | - | Set a default value for this control | - |
+| `requiredLabel` | string \| ReactNode | `<span className="position-absolute end-0 top-0 my-2 mx-2"><span className="text-danger">*</span></span>` | It is used to specify a label for an element required. | - |
 | `label` | string \| ReactNode | - | It is used to specify a label for an element of a form.<blockquote>Support html tags</blockquote> | - |
 | `name` | string | - | Name is not deprecated when used with form fields. | - |
 | `shape` | string | `circle` \| `rounded` | Set shape of this control. | - |

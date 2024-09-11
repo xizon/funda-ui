@@ -14,6 +14,8 @@ import {
 import {
     removeArrDuplicateItems
 } from 'funda-utils/dist/cjs/object';
+import { clsWrite } from 'funda-utils/dist/cjs/cls';
+
 
 
 export interface OptionConfig {
@@ -341,7 +343,7 @@ const MultipleCheckboxes = forwardRef((props: MultipleCheckboxesProps, externalR
                                     if (externalRef) externalRef.current = getAllControls();
                                 }}
                                 type="checkbox"
-                                className={`${controlClassName || controlClassName === '' ? `${controlClassName}` : `form-check-input`}`}
+                                className={clsWrite(controlClassName, 'form-check-input')}
                                 name={`${name}-checkbox-item`}
                                 id={`multiple-checkboxes__control-label-${index}-${optIndex}-${idRes}`}
                                 data-index={`${index}-${optIndex}`}
@@ -402,7 +404,7 @@ const MultipleCheckboxes = forwardRef((props: MultipleCheckboxesProps, externalR
                             
                         }}
                         type="checkbox"
-                        className={`${controlClassName || controlClassName === '' ? `${controlClassName}` : `form-check-input`}`}
+                        className={clsWrite(controlClassName, 'form-check-input')}
                         name={`${name}-checkbox-item`}
                         id={`multiple-checkboxes__control-label-${index}-${idRes}`}
                         data-index={index}
@@ -547,7 +549,7 @@ const MultipleCheckboxes = forwardRef((props: MultipleCheckboxesProps, externalR
             </> : <>
                 <div
                     id={`multiple-checkboxes__wrapper-${idRes}`}
-                    className={`multiple-checkboxes__wrapper ${wrapperClassName || wrapperClassName === '' ? wrapperClassName : 'mb-3 position-relative'}`}
+                    className={`multiple-checkboxes__wrapper ${clsWrite(wrapperClassName, 'mb-3 position-relative')}`}
                     ref={rootRef}
                 >
 

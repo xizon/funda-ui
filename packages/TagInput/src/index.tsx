@@ -9,14 +9,18 @@ import {
 import {
     convertArrToValByBrackets
 } from 'funda-utils/dist/cjs/convert';
+import { clsWrite } from 'funda-utils/dist/cjs/cls';
+
 
 
 export type TagInputProps = {
     wrapperClassName?: string;
     value?: string;
     maxTags?: number;
+    requiredLabel?: React.ReactNode | string;
     label?: React.ReactNode | string;
     name?: string;
+    minLength?: any;
     maxLength?: any;
     disabled?: any;
     required?: any;
@@ -48,6 +52,7 @@ const TagInput = forwardRef((props: TagInputProps, externalRef: any) => {
         placeholder,
         readOnly,
         value,
+        requiredLabel,
         label,
         name,
         id,
@@ -55,6 +60,7 @@ const TagInput = forwardRef((props: TagInputProps, externalRef: any) => {
         autoCapitalize,
         spellCheck,
         extractValueByBrackets,
+        minLength,
         maxLength,
         style,
         tabIndex,
@@ -231,7 +237,7 @@ const TagInput = forwardRef((props: TagInputProps, externalRef: any) => {
     return (
         <>
 
-            <div className={wrapperClassName || wrapperClassName === '' ? `tag-input__wrapper ${wrapperClassName}` : `tag-input__wrapper mb-3 position-relative`} ref={rootRef}>
+            <div className={clsWrite(wrapperClassName, 'tag-input__wrapper mb-3 position-relative', `tag-input__wrapper ${wrapperClassName}`)} ref={rootRef}>
 
                 {label ? <>{typeof label === 'string' ? <label htmlFor={`label-${idRes}`} className="form-label" dangerouslySetInnerHTML={{__html: `${label}`}}></label> : <label htmlFor={`label-${idRes}`} className="form-label">{label}</label>}</> : null}
 
@@ -264,6 +270,7 @@ const TagInput = forwardRef((props: TagInputProps, externalRef: any) => {
                                 spellCheck={typeof spellCheck === 'undefined' ? false : spellCheck}
                                 placeholder={placeholder || ''}
                                 value={userInput}
+                                minLength={minLength || null}
                                 maxLength={maxLength || null}
                                 disabled={disabled || null}
                                 readOnly={readOnly || null}
@@ -280,7 +287,7 @@ const TagInput = forwardRef((props: TagInputProps, externalRef: any) => {
 
                         </div>
 
-                        {required ? <><span className="position-absolute end-0 top-0 my-2 mx-2"><span className="text-danger">*</span></span></> : ''}
+                        {required ? <>{requiredLabel || requiredLabel === '' ? requiredLabel : <span className="position-absolute end-0 top-0 my-2 mx-2"><span className="text-danger">*</span></span>}</> : ''}
                     </div>
 
                     <input

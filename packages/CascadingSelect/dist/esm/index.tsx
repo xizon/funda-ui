@@ -15,7 +15,7 @@ import {
 import {
     getAbsolutePositionOfStage
 } from 'funda-utils/dist/cjs/getElementProperty';
-
+import { clsWrite } from 'funda-utils/dist/cjs/cls';
 
 
 import Group from './Group';
@@ -1081,7 +1081,7 @@ const CascadingSelect = (props: CascadingSelectProps) => {
         <>
 
             <div
-                className={wrapperClassName || wrapperClassName === '' ? `cas-select__wrapper ${wrapperClassName}` : `cas-select__wrapper mb-3 position-relative`}
+                className={clsWrite(wrapperClassName, 'cas-select__wrapper mb-3 position-relative', `cas-select__wrapper ${wrapperClassName}`)}
                 ref={rootRef}
                 data-overlay-id={`cas-select__items-wrapper-${idRes}`}
             >
@@ -1149,7 +1149,7 @@ const CascadingSelect = (props: CascadingSelectProps) => {
                         id={idRes}
                         data-overlay-id={`cas-select__items-wrapper-${idRes}`}
                         name={name}
-                        className={`${controlClassName || controlClassName === '' ? controlClassName : "form-control"} ${controlExClassName || ''}`}
+                        className={`${clsWrite(controlClassName, 'form-control')} ${controlExClassName || ''}`}
                         placeholder={placeholder}
                         value={changedVal} // placeholder will not change if defaultValue is used
                         onFocus={handleFocus}

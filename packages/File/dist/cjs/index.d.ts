@@ -16,6 +16,7 @@ export declare type FileProps = {
     submitLabel?: React.ReactNode | string;
     submitClassName?: string;
     value?: string;
+    requiredLabel?: React.ReactNode | string;
     label?: React.ReactNode | string;
     name?: string;
     disabled?: any;

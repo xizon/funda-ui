@@ -51,7 +51,7 @@ __webpack_require__.r(__webpack_exports__);
 /**
  * Check if an element is in the viewport
  * @param {HTMLElement} elem 
- * @returns {boolean}
+ * @returns {Boolean}
  */
 function isInViewport(elem) {
   var bounding = elem.getBoundingClientRect();

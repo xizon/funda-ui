@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 
+import { clsWrite } from 'funda-utils/dist/cjs/cls';
 
 export type AccordionItemProps = {
     heightObserver?: number;
@@ -91,7 +92,7 @@ const AccordionItem = (props: AccordionItemProps) => {
 
             <div
                 data-index={index}
-                className={`custom-accordion-item ${itemClassName || itemClassName === '' ? itemClassName : "accordion-item"} ${activedClassName}`}
+                className={`custom-accordion-item ${clsWrite(itemClassName, 'accordion-item')} ${activedClassName}`}
                 onClick={triggerType === 'click' ? onToggleEv : () => {}}
                 onMouseOver={triggerType === 'click' ? () => {} : onToggleEv} 
                 onTransitionEnd={typeof onTransitionEnd === 'function' ? onTransitionEnd : () => {}}
@@ -99,19 +100,19 @@ const AccordionItem = (props: AccordionItemProps) => {
                 style={typeof itemStyle !== 'undefined' ? itemStyle : {}}
                 >
 
-                <div className={`custom-accordion-header ${itemHeaderClassName || itemHeaderClassName === '' ? itemHeaderClassName : "accordion-header position-relative"}`} role="presentation">
-                    <button tabIndex={-1} className={`custom-accordion-trigger ${itemTriggerClassName || itemTriggerClassName === '' ? itemTriggerClassName : "accordion-button"} ${activedClassName === '' ? 'collapsed' : 'active'}`}  type="button">
+                <div className={`custom-accordion-header ${clsWrite(itemHeaderClassName, 'accordion-header position-relative')}`} role="presentation">
+                    <button tabIndex={-1} className={`custom-accordion-trigger ${clsWrite(itemTriggerClassName, 'accordion-button')} ${activedClassName === '' ? 'collapsed' : 'active'}`}  type="button">
                         {title}
                     </button>
 
                     {itemTriggerIcon}
                 </div>
-                <div ref={contentWrapperRef} className={`custom-accordion-content__wrapper w-100 ${itemContentWrapperClassName || itemContentWrapperClassName === '' ? itemContentWrapperClassName : "accordion-collapse"}`}
+                <div ref={contentWrapperRef} className={`custom-accordion-content__wrapper w-100 ${clsWrite(itemContentWrapperClassName, 'accordion-collapse')}`}
                     role="tabpanel" style={{
                         height: defaultActive ? 'auto' : '0px',
                         overflow: 'hidden'   // “overflow” affects the width, so add `w-100` to `custom-accordion-content__wrapper`
                     }}>
-                    <div className={`custom-accordion-content ${itemContentClassName || itemContentClassName === '' ? itemContentClassName : "accordion-body"}`} ref={contentRef} >
+                    <div className={`custom-accordion-content ${clsWrite(itemContentClassName, 'accordion-body')}`} ref={contentRef} >
                         {children}
                     </div>
                 </div>

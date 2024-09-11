@@ -53,8 +53,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /**
  * Convert value to string separated by square brackets 
- * @param {string} str  such as: 1,2,3
- * @returns {string} such as: [1][2][3]
+ * @param {String} str  such as: 1,2,3
+ * @returns {String} such as: [1][2][3]
  */
 function convertStringByCommaToValByBrackets(str) {
   if (typeof str === 'undefined' || str === null || str === '') {
@@ -67,8 +67,8 @@ function convertStringByCommaToValByBrackets(str) {
 
 /**
  * Convert array value to string  separated by square brackets 
- * @param {string[]} arr  such as: ['1','2','3']
- * @returns {string} such as: [1][2][3]
+ * @param {String[]} arr  such as: ['1','2','3']
+ * @returns {String} such as: [1][2][3]
  */
 function convertArrToValByBrackets(arr) {
   if (!Array.isArray(arr)) return '';
@@ -79,8 +79,8 @@ function convertArrToValByBrackets(arr) {
 
 /**
  * Convert value to string separated by curly braces
- * @param {string} str  such as: 1,2,3
- * @returns {string} such as: {1}{2}{3}
+ * @param {String} str  such as: 1,2,3
+ * @returns {String} such as: {1}{2}{3}
  */
 function convertStringByCommaToValByBraces(str) {
   if (typeof str === 'undefined' || str === null || str === '') {
@@ -93,8 +93,8 @@ function convertStringByCommaToValByBraces(str) {
 
 /**
  * Convert array value to string  separated by curly braces
- * @param {string[]} arr  such as: ['1','2','3']
- * @returns {string} such as: {1}{2}{3}
+ * @param {String[]} arr  such as: ['1','2','3']
+ * @returns {String} such as: {1}{2}{3}
  */
 function convertArrToValByBraces(arr) {
   if (!Array.isArray(arr)) return '';

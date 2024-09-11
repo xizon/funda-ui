@@ -34,16 +34,6 @@ const padZero = (num: number, padZeroEnabled: boolean = true): string => {
 
 
 /**
- * Number validation
- * @param {*} v 
- * @returns {Boolean}  
- */
-const isNumeric = (v: any): boolean => {
-    return !isNaN(parseFloat(v)) && isFinite(v);
-};
-
-
-/**
  * Hours validation
  * @param {*} v 
  * @returns {Boolean}  
@@ -451,7 +441,6 @@ export {
 
     //
     isValidDate,
-    isNumeric,
     isValidHours,
     isValidMinutesAndSeconds,
     isValidYear,

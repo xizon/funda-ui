@@ -206,6 +206,108 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 
 /***/ }),
 
+/***/ 188:
+/***/ (function(module, exports, __webpack_require__) {
+
+/* module decorator */ module = __webpack_require__.nmd(module);
+var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
+(function webpackUniversalModuleDefinition(root, factory) {
+  if (( false ? 0 : _typeof(exports)) === 'object' && ( false ? 0 : _typeof(module)) === 'object') module.exports = factory();else if (true) !(__WEBPACK_AMD_DEFINE_ARRAY__ = [], __WEBPACK_AMD_DEFINE_FACTORY__ = (factory),
+		__WEBPACK_AMD_DEFINE_RESULT__ = (typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ?
+		(__WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__)) : __WEBPACK_AMD_DEFINE_FACTORY__),
+		__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));else {}
+})(this, function () {
+  return (/******/function () {
+      // webpackBootstrap
+      /******/
+      "use strict";
+
+      /******/ // The require scope
+      /******/
+      var __nested_webpack_require_987__ = {};
+      /******/
+      /************************************************************************/
+      /******/ /* webpack/runtime/define property getters */
+      /******/
+      (function () {
+        /******/ // define getter functions for harmony exports
+        /******/__nested_webpack_require_987__.d = function (exports, definition) {
+          /******/for (var key in definition) {
+            /******/if (__nested_webpack_require_987__.o(definition, key) && !__nested_webpack_require_987__.o(exports, key)) {
+              /******/Object.defineProperty(exports, key, {
+                enumerable: true,
+                get: definition[key]
+              });
+              /******/
+            }
+            /******/
+          }
+          /******/
+        };
+        /******/
+      })();
+      /******/
+      /******/ /* webpack/runtime/hasOwnProperty shorthand */
+      /******/
+      (function () {
+        /******/__nested_webpack_require_987__.o = function (obj, prop) {
+          return Object.prototype.hasOwnProperty.call(obj, prop);
+        };
+        /******/
+      })();
+      /******/
+      /******/ /* webpack/runtime/make namespace object */
+      /******/
+      (function () {
+        /******/ // define __esModule on exports
+        /******/__nested_webpack_require_987__.r = function (exports) {
+          /******/if (typeof Symbol !== 'undefined' && Symbol.toStringTag) {
+            /******/Object.defineProperty(exports, Symbol.toStringTag, {
+              value: 'Module'
+            });
+            /******/
+          }
+          /******/
+          Object.defineProperty(exports, '__esModule', {
+            value: true
+          });
+          /******/
+        };
+        /******/
+      })();
+      /******/
+      /************************************************************************/
+      var __webpack_exports__ = {};
+      __nested_webpack_require_987__.r(__webpack_exports__);
+      /* harmony export */
+      __nested_webpack_require_987__.d(__webpack_exports__, {
+        /* harmony export */"clsWrite": function clsWrite() {
+          return (/* binding */_clsWrite
+          );
+        }
+        /* harmony export */
+      });
+      /**
+       * Output of class name
+       * @param {*} s      - Any
+       * @param  {String} defaultCls      - Default string
+       * @param  {?*} targetCls      - Any
+       * @returns HtmlElementCollection
+       */
+      function _clsWrite(s, defaultCls) {
+        var targetCls = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : undefined;
+        return s || s === '' ? typeof targetCls === 'undefined' ? s : targetCls : defaultCls;
+      }
+
+      /******/
+      return __webpack_exports__;
+      /******/
+    }()
+  );
+});
+
+/***/ }),
+
 /***/ 767:
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -410,8 +512,8 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
        * Get the absolute position of the stage element
        * 
        * @param {HTMLElement} domElement  - A DOM node
-       * @param {number | string} left     - left offset
-       * @param {number | string} top      - top offset
+       * @param {Number | string} left     - left offset
+       * @param {Number | string} top      - top offset
        * @returns 
        */
       function _getAbsolutePositionOfStage(domElement) {
@@ -981,6 +1083,8 @@ var useClickOutside = __webpack_require__(761);
 var useClickOutside_default = /*#__PURE__*/__webpack_require__.n(useClickOutside);
 // EXTERNAL MODULE: ../Utils/dist/cjs/getElementProperty.js
 var getElementProperty = __webpack_require__(767);
+// EXTERNAL MODULE: ../Utils/dist/cjs/cls.js
+var cls = __webpack_require__(188);
 ;// CONCATENATED MODULE: ./src/Option.tsx
 
 function Option(props) {
@@ -1017,6 +1121,7 @@ function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o =
 function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i]; return arr2; }
 function _iterableToArrayLimit(arr, i) { var _i = null == arr ? null : "undefined" != typeof Symbol && arr[Symbol.iterator] || arr["@@iterator"]; if (null != _i) { var _s, _e, _x, _r, _arr = [], _n = !0, _d = !1; try { if (_x = (_i = _i.call(arr)).next, 0 === i) { if (Object(_i) !== _i) return; _n = !1; } else for (; !(_n = (_s = _x.call(_i)).done) && (_arr.push(_s.value), _arr.length !== i); _n = !0); } catch (err) { _d = !0, _e = err; } finally { try { if (!_n && null != _i["return"] && (_r = _i["return"](), Object(_r) !== _r)) return; } finally { if (_d) throw _e; } } return _arr; } }
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+
 
 
 
@@ -1212,7 +1317,7 @@ var DropdownMenu = function DropdownMenu(props) {
   }, []);
   return /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
     ref: rootRef,
-    className: "dd-menu__wrapper ".concat(wrapperClassName || wrapperClassName === '' ? wrapperClassName : "dd-menu-default", " ").concat(isOpen ? 'active' : ''),
+    className: "dd-menu__wrapper ".concat((0,cls.clsWrite)(wrapperClassName, 'dd-menu-default'), " ").concat(isOpen ? 'active' : ''),
     onMouseLeave: handleHoverOff
   }, triggerButton ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("button", {
     ref: triggerRef,

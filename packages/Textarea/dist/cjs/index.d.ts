@@ -8,8 +8,10 @@ export declare type TextareaProps = {
     controlGroupTextClassName?: string;
     value?: string;
     defaultValue?: string;
+    requiredLabel?: React.ReactNode | string;
     label?: React.ReactNode | string;
     name?: string;
+    minLength?: any;
     maxLength?: any;
     cols?: number;
     rows?: number;

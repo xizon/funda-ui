@@ -19,7 +19,7 @@ import {
 import {
     removeArrDuplicateItems
 } from 'funda-utils/dist/cjs/object';
-
+import { clsWrite } from 'funda-utils/dist/cjs/cls';
 
 
 import { multiSelControlOptionExist, uniqueArr } from './multiple-select-utils/func';
@@ -433,7 +433,7 @@ const MultipleSelect = forwardRef((props: MultipleSelectProps, externalRef: any)
         <>
 
             <div 
-                className={wrapperClassName || wrapperClassName === '' ? `m-select__wrapper ${wrapperClassName}` : `m-select__wrapper mb-3`} 
+                className={clsWrite(wrapperClassName, 'm-select__wrapper mb-3', `m-select__wrapper ${wrapperClassName}`)} 
                 ref={rootRef}
                 style={{
                     minWidth: WRAPPER_MIN_W === '' ? 'var(--m-select-wrapper-min-w)' : WRAPPER_MIN_W,

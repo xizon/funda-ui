@@ -45,6 +45,8 @@ import {
     disableBodyScroll, 
     enableBodyScroll,
 } from 'funda-utils/dist/cjs/bodyScrollLock';
+import { clsWrite } from 'funda-utils/dist/cjs/cls';
+
 
 
 export type SelectOptionChangeFnType = (arg1: any, arg2: any, arg3: any) => void;
@@ -1846,7 +1848,7 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
                 ref={rootRef}
                 data-overlay-id={`custom-select__options-wrapper-${idRes}`}
                 id={`custom-select__wrapper-${idRes}`}
-                className={`custom-select__wrapper ${wrapperClassName || wrapperClassName === '' ? wrapperClassName : 'mb-3 position-relative'} ${MULTI_SEL_VALID ? 'multiple-selection' : ''} ${isOpen ? 'active focus' : ''}`}
+                className={`custom-select__wrapper ${clsWrite(wrapperClassName, 'mb-3 position-relative')} ${MULTI_SEL_VALID ? 'multiple-selection' : ''} ${isOpen ? 'active focus' : ''}`}
                 onKeyDown={handleKeyPressed}
                 
             >
@@ -1874,7 +1876,7 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
                             // Don't use "name", it's just a container to display the label
                             data-name={name?.match(/(\[.*?\])/gi) ? `${name.split('[')[0]}-label[]` : `${name}-label`}
                             data-select
-                            className={`${controlClassName || controlClassName === '' ? controlClassName : "form-control"} ${controlExClassName || ''}`}
+                            className={`${clsWrite(controlClassName, 'form-control')} ${controlExClassName || ''}`}
                             onFocus={handleFocus}
                             onBlur={handleBlur}
                             onClick={typeof readOnly === 'undefined' || !readOnly ? handleShowList : () => void (0)}
@@ -1947,7 +1949,7 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
                         <input
                             tabIndex={-1}
                             type="text"
-                            className={`${controlClassName || controlClassName === '' ? controlClassName : "form-control"} ${controlExClassName || ''}`}
+                            className={`${clsWrite(controlClassName, 'form-control')} ${controlExClassName || ''}`}
                         />
 
                         <span ref={blinkingCursorPosDivRef} className={`custom-select-multi__control-blinking-cursor ${generateInputFocusStr() === BLINKING_CURSOR_STR ? 'animated' : ''}`}>
@@ -2086,7 +2088,7 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
 
                                             // Don't use "name", it's just a container to display the label
                                             data-name={name?.match(/(\[.*?\])/gi) ? `${name.split('[')[0]}-label[]` : `${name}-label`}
-                                            className={`${controlClassName || controlClassName === '' ? controlClassName : "form-control"} ${controlExClassName || ''}`}
+                                            className={`${clsWrite(controlClassName, 'form-control')} ${controlExClassName || ''}`}
                                             onFocus={handleFocus}
                                             onBlur={handleBlur}
                                             onClick={typeof readOnly === 'undefined' || !readOnly ? handleShowList : () => void (0)}

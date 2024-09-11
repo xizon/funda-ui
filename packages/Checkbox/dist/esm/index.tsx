@@ -1,6 +1,8 @@
 import React, { useImperativeHandle, useState, useEffect, useRef, forwardRef } from 'react';
 
 import useComId from 'funda-utils/dist/cjs/useComId';
+import { clsWrite } from 'funda-utils/dist/cjs/cls';
+
 
 export type CheckboxOptionChangeFnType = (arg1: any, arg2: any) => void;
 
@@ -133,7 +135,7 @@ const Checkbox = forwardRef((props: CheckboxProps, externalRef: any) => {
     return (
         <>
 
-            <div className={`form-check__wrapper ${wrapperClassName || wrapperClassName === '' ? wrapperClassName : "mb-3 position-relative"} ${val ? (itemSelectedClassName || 'item-selected') : ''}`} ref={rootRef}>
+            <div className={`form-check__wrapper ${clsWrite(wrapperClassName, 'mb-3 position-relative')} ${val ? (itemSelectedClassName || 'item-selected') : ''}`} ref={rootRef}>
                 <div className="form-check">
                     <input
                         ref={(node) => {
@@ -146,7 +148,7 @@ const Checkbox = forwardRef((props: CheckboxProps, externalRef: any) => {
                         }}
                         tabIndex={tabIndex || 0}
                         type="checkbox"
-                        className={`${controlClassName || controlClassName === '' ? `${controlClassName}` : `form-check-input`}`}
+                        className={clsWrite(controlClassName, 'form-check-input')}
                         id={`label-${idRes}`}
 
                         // Don't use "name", it's just a container to display the label

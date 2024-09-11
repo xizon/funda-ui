@@ -16,12 +16,6 @@ declare const getNow: () => Date;
  */
 declare const padZero: (num: number, padZeroEnabled?: boolean) => string;
 /**
- * Number validation
- * @param {*} v
- * @returns {Boolean}
- */
-declare const isNumeric: (v: any) => boolean;
-/**
  * Hours validation
  * @param {*} v
  * @returns {Boolean}
@@ -194,4 +188,4 @@ declare function setDateDays(v: Date | string, offset: number, padZeroEnabled?: 
  * @returns {String}  yyyy-MM-dd HH:mm:ss
  */
 declare function timestampToDate(v: number, padZeroEnabled?: boolean): string;
-export { isTimeString, getNow, padZero, dateFormat, isValidDate, isNumeric, isValidHours, isValidMinutesAndSeconds, isValidYear, isValidMonth, isValidDay, getLastDayInMonth, getFirstAndLastMonthDay, getCalendarDate, getFullTime, getTodayDate, getCurrentMonth, getCurrentYear, getCurrentDay, getCurrentDate, getTomorrowDate, getYesterdayDate, getNextMonthDate, getPrevMonthDate, getNextYearDate, getPrevYearDate, getSpecifiedDate, setDateHours, setDateMinutes, setDateDays, timestampToDate };
+export { isTimeString, getNow, padZero, dateFormat, isValidDate, isValidHours, isValidMinutesAndSeconds, isValidYear, isValidMonth, isValidDay, getLastDayInMonth, getFirstAndLastMonthDay, getCalendarDate, getFullTime, getTodayDate, getCurrentMonth, getCurrentYear, getCurrentDay, getCurrentDate, getTomorrowDate, getYesterdayDate, getNextMonthDate, getPrevMonthDate, getNextYearDate, getPrevYearDate, getSpecifiedDate, setDateHours, setDateMinutes, setDateDays, timestampToDate };

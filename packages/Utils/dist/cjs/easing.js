@@ -78,10 +78,10 @@ __webpack_require__.r(__webpack_exports__);
 /*
  * All easing functions
  * @link: https://easings.net
- * @param {number} t   - time (Amount of time that has passed since the beginning of the animation. Usually starts at 0 and is slowly increased using a game loop or other update function.)
- * @param {number} b   - beginning value (The starting point of the animation. Usually it's a static value, you can start at 0 for example.)
- * @param {number} c   - change in value (The amount of change needed to go from starting point to end point. It's also usually a static value.)
- * @param {number} d   - duration (Amount of time the animation will take. Usually a static value aswell.)
+ * @param {Number} t   - time (Amount of time that has passed since the beginning of the animation. Usually starts at 0 and is slowly increased using a game loop or other update function.)
+ * @param {Number} b   - beginning value (The starting point of the animation. Usually it's a static value, you can start at 0 for example.)
+ * @param {Number} c   - change in value (The amount of change needed to go from starting point to end point. It's also usually a static value.)
+ * @param {Number} d   - duration (Amount of time the animation will take. Usually a static value aswell.)
  * @return {number}
  */
 function easeLinear(t, b, c, d) {

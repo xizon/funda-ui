@@ -2,6 +2,7 @@ import React, { useEffect, useState, useRef } from 'react';
 
 
 import useComId from 'funda-utils/dist/cjs/useComId';
+import { clsWrite } from 'funda-utils/dist/cjs/cls';
 
 
 import Input from 'funda-input';
@@ -131,13 +132,13 @@ const RangeSlider = (props: RangeSliderProps) => {
             {label ? <><div className="range-slider__label">{typeof label === 'string' ? <label htmlFor={`label-${idRes}`} className="form-label" dangerouslySetInnerHTML={{__html: `${label}`}}></label> : <label htmlFor={`label-${idRes}`} className="form-label">{label}</label>}</div></> : null}
 
 
-            <div className={wrapperClassName || wrapperClassName === '' ? `range-slider__wrapper ${onlyOne ? 'only-one' : ''} ${wrapperClassName}` : `range-slider__wrapper ${onlyOne ? 'only-one' : ''} mb-3 position-relative`} ref={rootRef}>
+            <div className={clsWrite(wrapperClassName, `range-slider__wrapper ${onlyOne ? 'only-one' : ''} mb-3 position-relative`, `range-slider__wrapper ${onlyOne ? 'only-one' : ''} ${wrapperClassName}`)} ref={rootRef}>
 
                 {/* The <Input /> component is a placeholder that ensures the same height and alignment as other form components */}
                 <Input
                     ref={valMinRef}
-                    wrapperClassName={wrapperClassName || wrapperClassName === '' ? wrapperClassName : "mb-3 position-relative"}
-                    controlClassName={`${controlClassName || controlClassName === '' ? controlClassName : "form-control"} ${controlExClassName || ''}`} 
+                    wrapperClassName={clsWrite(wrapperClassName, 'mb-3 position-relative')}
+                    controlClassName={`${clsWrite(controlClassName, 'form-control')} ${controlExClassName || ''}`} 
                     required={required || null}
                     type="text"
                     id={idRes + '-min'}
@@ -147,8 +148,8 @@ const RangeSlider = (props: RangeSliderProps) => {
 
                 <Input
                     ref={valMaxRef}
-                    wrapperClassName={wrapperClassName || wrapperClassName === '' ? wrapperClassName : "mb-3 position-relative"}
-                    controlClassName={`${controlClassName || controlClassName === '' ? controlClassName : "form-control"} ${controlExClassName || ''}`} 
+                    wrapperClassName={clsWrite(wrapperClassName, 'mb-3 position-relative')}
+                    controlClassName={`${clsWrite(controlClassName, 'form-control')} ${controlExClassName || ''}`} 
                     required={required || null}
                     type="text"
                     id={idRes + '-max'}

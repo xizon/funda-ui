@@ -4,6 +4,8 @@ import React, { useState, useEffect, useRef, forwardRef, KeyboardEvent, useImper
 
 import useComId from 'funda-utils/dist/cjs/useComId';
 import useAutosizeTextArea from 'funda-utils/dist/cjs/useAutosizeTextArea';
+import { clsWrite } from 'funda-utils/dist/cjs/cls';
+
 
 
 export type TextareaProps = {
@@ -15,8 +17,10 @@ export type TextareaProps = {
     controlGroupTextClassName?: string;
 	value?: string;
     defaultValue?: string;
+    requiredLabel?: React.ReactNode | string;
 	label?: React.ReactNode | string;
 	name?: string;
+    minLength?: any;
 	maxLength?: any;
 	cols?: number;
 	rows?: number;
@@ -63,9 +67,11 @@ const Textarea = forwardRef((props: TextareaProps, externalRef: any) => {
         readOnly,
         defaultValue,
         value,
+        requiredLabel,
         label,
         name,
         id,
+        minLength,
         maxLength,
         style,
         tabIndex,
@@ -233,11 +239,11 @@ const Textarea = forwardRef((props: TextareaProps, externalRef: any) => {
     return (
         <>
 
-            <div className={wrapperClassName || wrapperClassName === '' ? wrapperClassName : "mb-3 position-relative"} ref={rootRef}>
+            <div className={clsWrite(wrapperClassName, 'mb-3 position-relative')} ref={rootRef}>
                 {label ? <>{typeof label === 'string' ? <label htmlFor={idRes} className="form-label" dangerouslySetInnerHTML={{__html: `${label}`}}></label> : <label htmlFor={idRes} className="form-label">{label}</label>}</> : null}
 
-                <div className={controlGroupWrapperClassName || "input-group"}>
-                    {typeof iconLeft !== 'undefined' && iconLeft !== null && iconLeft !== '' ? <><span className={controlGroupTextClassName || "input-group-text"}>{iconLeft}</span></>: null}
+                <div className={clsWrite(controlGroupWrapperClassName, 'input-group')}>
+                    {typeof iconLeft !== 'undefined' && iconLeft !== null && iconLeft !== '' ? <><span className={clsWrite(controlGroupTextClassName, 'input-group-text')}>{iconLeft}</span></>: null}
                     
                     <textarea  
                         ref={(node) => {
@@ -249,12 +255,13 @@ const Textarea = forwardRef((props: TextareaProps, externalRef: any) => {
                             }
                         }}
                       tabIndex={tabIndex || 0}
-					  className={`${controlClassName || controlClassName === '' ? controlClassName : "form-control"} ${controlExClassName || ''}`}
+					  className={`${clsWrite(controlClassName, 'form-control')} ${controlExClassName || ''}`}
 			          id={idRes}
 					  name={name}
 					  placeholder={placeholder || ''}
                       defaultValue={defaultValue}
 					  value={changedVal}
+                      minLength={minLength || null}
 					  maxLength={maxLength || null}
 			          onFocus={handleFocus}
 					  onBlur={handleBlur}
@@ -268,9 +275,9 @@ const Textarea = forwardRef((props: TextareaProps, externalRef: any) => {
                       style={style}
                       {...attributes}
 					/>
-                     {typeof iconRight !== 'undefined' && iconRight !== null && iconRight !== '' ? <><span className={controlGroupTextClassName || "input-group-text"}>{iconRight}</span></>: null}
+                     {typeof iconRight !== 'undefined' && iconRight !== null && iconRight !== '' ? <><span className={clsWrite(controlGroupTextClassName, 'input-group-text')}>{iconRight}</span></>: null}
                 </div>
-                {required ? <><span className="position-absolute end-0 top-0 my-2 mx-2"><span className="text-danger">*</span></span></> : ''}
+                {required ? <>{requiredLabel || requiredLabel === '' ? requiredLabel : <span className="position-absolute end-0 top-0 my-2 mx-2"><span className="text-danger">*</span></span>}</> : ''}
 
             </div>
 

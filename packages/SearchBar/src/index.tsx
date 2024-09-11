@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef, ChangeEvent, MouseEvent, CompositionEvent, KeyboardEvent, FocusEvent, forwardRef } from 'react';
 
 import useComId from 'funda-utils/dist/cjs/useComId';
+import { clsWrite } from 'funda-utils/dist/cjs/cls';
 
 
 export type SearchBarProps = {
@@ -178,18 +179,18 @@ const SearchBar = forwardRef((props: SearchBarProps, externalRef: any) => {
         <>
 
 
-            <div className={wrapperClassName || wrapperClassName === '' ? wrapperClassName : "mb-3 position-relative"} ref={rootRef}>
+            <div className={clsWrite(wrapperClassName, 'mb-3 position-relative')} ref={rootRef}>
                 {label ? <>{typeof label === 'string' ? <label htmlFor={idRes} className="form-label" dangerouslySetInnerHTML={{ __html: `${label}` }}></label> : <label htmlFor={idRes} className="form-label" >{label}</label>}</> : null}
 
-                <div className={`${controlGroupWrapperClassName || "input-group"} position-relative ${propExist(iconLeft) ? 'has-left-content' : ''} ${propExist(iconRight) || propExist(units) ? 'has-right-content' : ''}`}>
+                <div className={`${clsWrite(controlGroupWrapperClassName, 'input-group')} position-relative ${propExist(iconLeft) ? 'has-left-content' : ''} ${propExist(iconRight) || propExist(units) ? 'has-right-content' : ''}`}>
                     
-                    {propExist(iconLeft) ? <><span className={controlGroupTextClassName || "input-group-text"}>{iconLeft}</span></>: null}
+                    {propExist(iconLeft) ? <><span className={clsWrite(controlGroupTextClassName, 'input-group-text')}>{iconLeft}</span></>: null}
 
                     <input
                         ref={externalRef}
                         tabIndex={tabIndex || 0}
                         type={isSearchInput ? 'search' : 'text'}
-                        className={`${appearance === 'pill' ? `${(controlClassName || controlClassName === '' ? controlClassName : "form-control")} border rounded-pill` : (controlClassName || controlClassName === '' ? controlClassName : "form-control")} ${controlExClassName || ''}`}
+                        className={`${appearance === 'pill' ? `${(clsWrite(controlClassName, 'form-control'))} border rounded-pill` : (clsWrite(controlClassName, 'form-control'))} ${controlExClassName || ''}`}
                         id={idRes}
                         name={name}
                         placeholder={placeholder || ''}
@@ -214,8 +215,8 @@ const SearchBar = forwardRef((props: SearchBarProps, externalRef: any) => {
                         {...attributes}
                     />
 
-                    {propExist(units) ? <><span className={controlGroupTextClassName || "input-group-text"}>{units}</span></> : null}
-                    {propExist(iconRight) ? <><span className={controlGroupTextClassName || "input-group-text"}>{iconRight}</span></> : null}
+                    {propExist(units) ? <><span className={clsWrite(controlGroupTextClassName, 'input-group-text')}>{units}</span></> : null}
+                    {propExist(iconRight) ? <><span className={clsWrite(controlGroupTextClassName, 'input-group-text')}>{iconRight}</span></> : null}
 
 
                     {icon || icon !== '' ? <>

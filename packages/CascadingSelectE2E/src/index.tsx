@@ -20,7 +20,7 @@ import {
     addTreeDepth,
     addTreeIndent
 } from 'funda-utils/dist/cjs/tree';
-
+import { clsWrite } from 'funda-utils/dist/cjs/cls';
 
 
 import Group from './Group';
@@ -1339,7 +1339,7 @@ const CascadingSelectE2E = (props: CascadingSelectE2EProps) => {
         <>
 
             <div
-                className={wrapperClassName || wrapperClassName === '' ? `cas-select-e2e__wrapper ${wrapperClassName}` : `cas-select-e2e__wrapper mb-3 position-relative`}
+                className={clsWrite(wrapperClassName, 'cas-select-e2e__wrapper mb-3 position-relative', `cas-select-e2e__wrapper ${wrapperClassName}`)}
                 ref={rootRef}
                 data-overlay-id={`cas-select-e2e__items-wrapper-${idRes}`}
             >
@@ -1412,7 +1412,7 @@ const CascadingSelectE2E = (props: CascadingSelectE2EProps) => {
                         id={idRes}
                         data-overlay-id={`cas-select-e2e__items-wrapper-${idRes}`}
                         name={name}
-                        className={`${controlClassName || controlClassName === '' ? controlClassName : "form-control"} ${controlExClassName || ''}`}
+                        className={`${clsWrite(controlClassName, 'form-control')} ${controlExClassName || ''}`}
                         placeholder={placeholder}
                         value={destroyParentIdMatch
                             ?

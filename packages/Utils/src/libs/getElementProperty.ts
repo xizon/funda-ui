@@ -106,8 +106,8 @@ function getPosition(el: HTMLElement): { top: number, left: number } {
  * Get the absolute position of the stage element
  * 
  * @param {HTMLElement} domElement  - A DOM node
- * @param {number | string} left     - left offset
- * @param {number | string} top      - top offset
+ * @param {Number | string} left     - left offset
+ * @param {Number | string} top      - top offset
  * @returns 
  */
 function getAbsolutePositionOfStage(domElement: HTMLElement, left: number | string = 0, top: number | string = 0): { x: number, y: number, width: number, height: number } {

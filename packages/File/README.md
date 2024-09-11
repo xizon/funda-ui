@@ -656,6 +656,7 @@ import File from 'funda-ui/File';
 | `multiple` | boolean | false | A file upload field that accepts multiple values | - |
 | `accept` | string | - | The accept attribute takes as its value a comma-separated list of one or more file types, or unique file type specifiers, describing which file types to allow. such as `video/*`, `image/*`, `image/png, image/jpeg`, `video/*`, `image/*,.pdf`, `` | - |
 | `value` | string | - | Set a default value for this control | - |
+| `requiredLabel` | string \| ReactNode | `<span className="text-danger">*</span>` | It is used to specify a label for an element required. | - |
 | `label` | string \| ReactNode | `<svg width="25px" height="25px" viewBox="0 0 1024 1024"><path d="M512 256l144.8 144.8-36.2 36.2-83-83v311.6h-51.2V354l-83 83-36.2-36.2L512 256zM307.2 716.8V768h409.6v-51.2H307.2z" fill="#000000" fillRule="evenodd"/></svg>` | It is used to specify a label for an element of a form. | - |
 | `name` | string | - | Name is not deprecated when used with form fields. | - |
 | `disabled` | boolean | false | Whether it is disabled | - |

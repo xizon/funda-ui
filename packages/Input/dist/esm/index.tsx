@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef, forwardRef, ChangeEvent, Compositio
 
 
 import useComId from 'funda-utils/dist/cjs/useComId';
-
+import { clsWrite } from 'funda-utils/dist/cjs/cls';
 
 
 export type InputProps = {
@@ -15,6 +15,7 @@ export type InputProps = {
     type?: string;
     defaultValue?: string;
     value?: string;
+    requiredLabel?: React.ReactNode | string;
     label?: React.ReactNode | string;
     units?: React.ReactNode | string;
     name?: string;
@@ -70,6 +71,7 @@ const Input = forwardRef((props: InputProps, externalRef: any) => {
         readOnly,
         defaultValue,
         value,
+        requiredLabel,
         label,
         units,
         name,
@@ -236,11 +238,11 @@ const Input = forwardRef((props: InputProps, externalRef: any) => {
     return (
         <>
 
-            <div className={wrapperClassName || wrapperClassName === '' ? wrapperClassName : "mb-3 position-relative"} ref={rootRef}>
+            <div className={clsWrite(wrapperClassName, 'mb-3 position-relative')} ref={rootRef}>
                 {label ? <>{typeof label === 'string' ? <label htmlFor={idRes} className="form-label" dangerouslySetInnerHTML={{__html: `${label}`}}></label> : <label htmlFor={idRes} className="form-label">{label}</label>}</> : null}
-
-                <div className={`${controlGroupWrapperClassName || "input-group"} position-relative ${propExist(iconLeft) ? 'has-left-content' : ''} ${propExist(iconRight) || propExist(units) ? 'has-right-content' : ''}`}>
-                    {propExist(iconLeft) ? <><span className={controlGroupTextClassName || "input-group-text"}>{iconLeft}</span></>: null}
+                
+                <div className={`${clsWrite(controlGroupWrapperClassName, 'input-group')} position-relative ${propExist(iconLeft) ? 'has-left-content' : ''} ${propExist(iconRight) || propExist(units) ? 'has-right-content' : ''}`}>
+                    {propExist(iconLeft) ? <><span className={clsWrite(controlGroupTextClassName, 'input-group-text')}>{iconLeft}</span></>: null}
 
                     {appendControl && (propExist(iconLeft)) ? <>
                         <div className="input-group-control-container w-100 position-relative">
@@ -257,7 +259,7 @@ const Input = forwardRef((props: InputProps, externalRef: any) => {
                                 
                                 tabIndex={tabIndex || 0}
                                 type={typeRes}
-                                className={controlClassName || controlClassName === '' ? `${controlClassName} ${propExist(iconLeft) ? 'rounded-start-0' : 'rounded'}` : `form-control ${propExist(iconLeft) ? 'rounded-start-0' : 'rounded'}`}
+                                className={clsWrite(controlClassName, `form-control ${propExist(iconLeft) ? 'rounded-start-0' : 'rounded'}`, `${controlClassName} ${propExist(iconLeft) ? 'rounded-start-0' : 'rounded'}`)}
                                 id={idRes}
                                 name={name}
                                 step={step || null}
@@ -290,8 +292,8 @@ const Input = forwardRef((props: InputProps, externalRef: any) => {
                                 {...attributes}
                             />
                             {appendControl || ''}
-                            {propExist(units) ? <><span className={controlGroupTextClassName || "input-group-text"}>{units}</span></> : null}
-                            {propExist(iconRight) ? <><span className={controlGroupTextClassName || "input-group-text"}>{iconRight}</span></> : null}
+                            {propExist(units) ? <><span className={clsWrite(controlGroupTextClassName, 'input-group-text')}>{units}</span></> : null}
+                            {propExist(iconRight) ? <><span className={clsWrite(controlGroupTextClassName, 'input-group-text')}>{iconRight}</span></> : null}
                         </div>
                     
                     </> : <>
@@ -309,7 +311,7 @@ const Input = forwardRef((props: InputProps, externalRef: any) => {
                             
                             tabIndex={tabIndex || 0}
                             type={typeRes}
-                            className={`${controlClassName || controlClassName === '' ? `${controlClassName} ${propExist(iconLeft) || propExist(iconRight) || propExist(units) ? '' : 'rounded'}` : `form-control ${propExist(iconLeft) || propExist(iconRight) || propExist(units) ? '' : 'rounded'}`} ${controlExClassName || ''}`}
+                            className={`${clsWrite(controlClassName, `form-control ${propExist(iconLeft) || propExist(iconRight) || propExist(units) ? '' : 'rounded'}`, `${controlClassName} ${propExist(iconLeft) || propExist(iconRight) || propExist(units) ? '' : 'rounded'}`)} ${controlExClassName || ''}`}
                             id={idRes}
                             name={name}
                             step={step || null}
@@ -341,15 +343,15 @@ const Input = forwardRef((props: InputProps, externalRef: any) => {
                             {...attributes}
                         />
                         {appendControl || ''}
-                        {propExist(units) ? <><span className={controlGroupTextClassName || "input-group-text"}>{units}</span></> : null}
-                        {propExist(iconRight) ? <><span className={controlGroupTextClassName || "input-group-text"}>{iconRight}</span></> : null}
+                        {propExist(units) ? <><span className={clsWrite(controlGroupTextClassName, 'input-group-text')}>{units}</span></> : null}
+                        {propExist(iconRight) ? <><span className={clsWrite(controlGroupTextClassName, 'input-group-text')}>{iconRight}</span></> : null}
 
                     
                     </>}
 
                    
                 </div>
-                {required ? <><span className="position-absolute end-0 top-0 my-2 mx-2"><span className="text-danger">*</span></span></> : ''}
+                {required ? <>{requiredLabel || requiredLabel === '' ? requiredLabel : <span className="position-absolute end-0 top-0 my-2 mx-2"><span className="text-danger">*</span></span>}</> : ''}
 
             </div>
 

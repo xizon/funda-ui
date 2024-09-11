@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef, forwardRef, ChangeEvent, FocusEvent
 
 
 import useComId from 'funda-utils/dist/cjs/useComId';
+import { clsWrite } from 'funda-utils/dist/cjs/cls';
 
 
 export interface ColorPickerProps extends React.ComponentPropsWithoutRef<"input"> {
@@ -11,6 +12,7 @@ export interface ColorPickerProps extends React.ComponentPropsWithoutRef<"input"
     clearBtnClassName?: string;
     clearBtnLabel?: string;
     value?: string;
+    requiredLabel?: React.ReactNode | string;
     label?: React.ReactNode | string;
     name?: string;
     disabled?: any;
@@ -41,6 +43,7 @@ const ColorPicker = forwardRef((props: ColorPickerProps, externalRef: any) => {
         required,
         readOnly,
         value,
+        requiredLabel,
         label,
         name,
         shape,
@@ -127,7 +130,7 @@ const ColorPicker = forwardRef((props: ColorPickerProps, externalRef: any) => {
     return (
         <>
 
-            <div className={wrapperClassName || wrapperClassName === '' ? `custom-colorpicker__wrapper  ${shapeClassName} ${wrapperClassName}` : `custom-colorpicker__wrapper mb-3 position-relative  ${shapeClassName}`} ref={rootRef}>
+            <div className={clsWrite(wrapperClassName, `custom-colorpicker__wrapper mb-3 position-relative ${shapeClassName}`, `custom-colorpicker__wrapper ${shapeClassName} ${wrapperClassName}`)} ref={rootRef}>
                 {label ? <>{typeof label === 'string' ? <label htmlFor={idRes} className="form-label" dangerouslySetInnerHTML={{ __html: `${label}` }}></label> : <label htmlFor={idRes} className="form-label">{label}</label>}</> : null}
 
                 <div className="input-group">
@@ -144,7 +147,7 @@ const ColorPicker = forwardRef((props: ColorPickerProps, externalRef: any) => {
                         
                         tabIndex={tabIndex || 0}
                         type='color'
-                        className={`${controlClassName || controlClassName === '' ? controlClassName : "form-control custom-colorpicker-control flex-grow-0"} ${controlExClassName || ''}`}
+                        className={`${clsWrite(controlClassName, 'form-control custom-colorpicker-control flex-grow-0')} ${controlExClassName || ''}`}
                         value={changedVal}
                         onFocus={handleFocus}
                         onBlur={handleBlur}
@@ -176,7 +179,7 @@ const ColorPicker = forwardRef((props: ColorPickerProps, externalRef: any) => {
 
 
                 </div>
-                {required ? <><span className="position-absolute end-0 top-0 my-2 mx-2"><span className="text-danger">*</span></span></> : ''}
+                {required ? <>{requiredLabel || requiredLabel === '' ? requiredLabel : <span className="position-absolute end-0 top-0 my-2 mx-2"><span className="text-danger">*</span></span>}</> : ''}
 
                 {changedVal === '' ? <><div className="custom-colorpicker__transparent-placeholder"></div></> : null}
 
