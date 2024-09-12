@@ -15,9 +15,9 @@ return /******/ (() => { // webpackBootstrap
 /***/ (function(module, exports, __webpack_require__) {
 
 /* module decorator */ module = __webpack_require__.nmd(module);
-var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
+var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof2(obj) { "@babel/helpers - typeof"; return _typeof2 = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof2(obj); }
 (function webpackUniversalModuleDefinition(root, factory) {
-  if (( false ? 0 : _typeof(exports)) === 'object' && ( false ? 0 : _typeof(module)) === 'object') module.exports = factory();else if (true) !(__WEBPACK_AMD_DEFINE_ARRAY__ = [], __WEBPACK_AMD_DEFINE_FACTORY__ = (factory),
+  if (( false ? 0 : _typeof2(exports)) === 'object' && ( false ? 0 : _typeof2(module)) === 'object') module.exports = factory();else if (true) !(__WEBPACK_AMD_DEFINE_ARRAY__ = [], __WEBPACK_AMD_DEFINE_FACTORY__ = (factory),
 		__WEBPACK_AMD_DEFINE_RESULT__ = (typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ?
 		(__WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__)) : __WEBPACK_AMD_DEFINE_FACTORY__),
 		__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));else {}
@@ -29,16 +29,16 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 
       /******/ // The require scope
       /******/
-      var __nested_webpack_require_987__ = {};
+      var __nested_webpack_require_993__ = {};
       /******/
       /************************************************************************/
       /******/ /* webpack/runtime/define property getters */
       /******/
       (function () {
         /******/ // define getter functions for harmony exports
-        /******/__nested_webpack_require_987__.d = function (exports, definition) {
+        /******/__nested_webpack_require_993__.d = function (exports, definition) {
           /******/for (var key in definition) {
-            /******/if (__nested_webpack_require_987__.o(definition, key) && !__nested_webpack_require_987__.o(exports, key)) {
+            /******/if (__nested_webpack_require_993__.o(definition, key) && !__nested_webpack_require_993__.o(exports, key)) {
               /******/Object.defineProperty(exports, key, {
                 enumerable: true,
                 get: definition[key]
@@ -55,7 +55,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
       /******/ /* webpack/runtime/hasOwnProperty shorthand */
       /******/
       (function () {
-        /******/__nested_webpack_require_987__.o = function (obj, prop) {
+        /******/__nested_webpack_require_993__.o = function (obj, prop) {
           return Object.prototype.hasOwnProperty.call(obj, prop);
         };
         /******/
@@ -65,7 +65,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
       /******/
       (function () {
         /******/ // define __esModule on exports
-        /******/__nested_webpack_require_987__.r = function (exports) {
+        /******/__nested_webpack_require_993__.r = function (exports) {
           /******/if (typeof Symbol !== 'undefined' && Symbol.toStringTag) {
             /******/Object.defineProperty(exports, Symbol.toStringTag, {
               value: 'Module'
@@ -83,25 +83,137 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
       /******/
       /************************************************************************/
       var __webpack_exports__ = {};
-      __nested_webpack_require_987__.r(__webpack_exports__);
+      __nested_webpack_require_993__.r(__webpack_exports__);
       /* harmony export */
-      __nested_webpack_require_987__.d(__webpack_exports__, {
+      __nested_webpack_require_993__.d(__webpack_exports__, {
         /* harmony export */"clsWrite": function clsWrite() {
           return (/* binding */_clsWrite
+          );
+        },
+        /* harmony export */"combinedCls": function combinedCls() {
+          return (/* binding */_combinedCls
           );
         }
         /* harmony export */
       });
+      function _slicedToArray(arr, i) {
+        return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest();
+      }
+      function _nonIterableRest() {
+        throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
+      }
+      function _unsupportedIterableToArray(o, minLen) {
+        if (!o) return;
+        if (typeof o === "string") return _arrayLikeToArray(o, minLen);
+        var n = Object.prototype.toString.call(o).slice(8, -1);
+        if (n === "Object" && o.constructor) n = o.constructor.name;
+        if (n === "Map" || n === "Set") return Array.from(o);
+        if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen);
+      }
+      function _arrayLikeToArray(arr, len) {
+        if (len == null || len > arr.length) len = arr.length;
+        for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i];
+        return arr2;
+      }
+      function _iterableToArrayLimit(arr, i) {
+        var _i = null == arr ? null : "undefined" != typeof Symbol && arr[Symbol.iterator] || arr["@@iterator"];
+        if (null != _i) {
+          var _s,
+            _e,
+            _x,
+            _r,
+            _arr = [],
+            _n = !0,
+            _d = !1;
+          try {
+            if (_x = (_i = _i.call(arr)).next, 0 === i) {
+              if (Object(_i) !== _i) return;
+              _n = !1;
+            } else for (; !(_n = (_s = _x.call(_i)).done) && (_arr.push(_s.value), _arr.length !== i); _n = !0);
+          } catch (err) {
+            _d = !0, _e = err;
+          } finally {
+            try {
+              if (!_n && null != _i["return"] && (_r = _i["return"](), Object(_r) !== _r)) return;
+            } finally {
+              if (_d) throw _e;
+            }
+          }
+          return _arr;
+        }
+      }
+      function _arrayWithHoles(arr) {
+        if (Array.isArray(arr)) return arr;
+      }
+      function _typeof(obj) {
+        "@babel/helpers - typeof";
+
+        return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) {
+          return typeof obj;
+        } : function (obj) {
+          return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;
+        }, _typeof(obj);
+      }
       /**
        * Output of class name
        * @param {*} s      - Any
        * @param  {String} defaultCls      - Default string
        * @param  {?*} targetCls      - Any
-       * @returns HtmlElementCollection
+       * @returns {*} 
        */
       function _clsWrite(s, defaultCls) {
         var targetCls = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : undefined;
         return s || s === '' ? typeof targetCls === 'undefined' ? s : targetCls : defaultCls;
+      }
+
+      /**
+       * Combined classnames
+       * @param {*} args 
+       * @returns {String|undefined}
+       */
+      /* Usage:
+      
+      console.log(combinedCls('a-1', 'a-2', 'a-3', {
+          'p-1': null,
+          'p-2': undefined,
+          'p-3': true,
+          'p-4': false,
+          'p-5': 'kkk',
+          'p-6': 0,
+          'p-7': 1,
+          'p-8': '',
+          undefined
+      })); // a-1 a-2 a-3 p-3 p-5 p-7
+      */
+      function _combinedCls() {
+        for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
+          args[_key] = arguments[_key];
+        }
+        if (args) {
+          var classes = [];
+          for (var i = 0; i < args.length; i++) {
+            var className = args[i];
+            if (!className) {
+              continue;
+            }
+            var type = _typeof(className);
+            if (type === 'string' || type === 'number') {
+              classes.push(className);
+            } else if (type === 'object') {
+              var _classes = Array.isArray(className) ? className : Object.entries(className).map(function (_ref) {
+                var _ref2 = _slicedToArray(_ref, 2),
+                  key = _ref2[0],
+                  value = _ref2[1];
+                return value ? key : null;
+              });
+              classes = _classes.length ? classes.concat(_classes.filter(function (c) {
+                return !!c;
+              })) : classes;
+            }
+          }
+          return classes.join(' ').trim();
+        }
+        return undefined;
       }
 
       /******/
@@ -976,7 +1088,10 @@ var NumberInput = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)
   }, label)) : null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
     className: "position-relative"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-    className: "".concat((0,funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_2__.clsWrite)(controlGroupWrapperClassName, 'input-group position-relative z-1'), " ").concat(propExist(iconLeft) ? 'has-left-content' : '', " ").concat(propExist(iconRight) || propExist(units) ? 'has-right-content' : '')
+    className: (0,funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_2__.combinedCls)((0,funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_2__.clsWrite)(controlGroupWrapperClassName, 'input-group position-relative z-1'), {
+      'has-left-content': propExist(iconLeft),
+      'has-right-content': propExist(iconRight) || propExist(units)
+    })
   }, propExist(iconLeft) ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
     className: (0,funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_2__.clsWrite)(controlGroupTextClassName, 'input-group-text')
   }, iconLeft)) : null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("input", _extends({
@@ -992,7 +1107,9 @@ var NumberInput = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)
     type: "text",
     inputMode: decimalPlaces > 0 ? 'decimal' : 'numeric' // numeric | decimal
     ,
-    className: (0,funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_2__.clsWrite)(controlClassName, "form-control ".concat(propExist(iconLeft) || propExist(iconRight) || propExist(units) ? '' : 'rounded'), "".concat(controlClassName, " ").concat(propExist(iconLeft) || propExist(iconRight) || propExist(units) ? '' : 'rounded')),
+    className: (0,funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_2__.combinedCls)((0,funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_2__.clsWrite)(controlClassName, 'form-control'), {
+      'rounded': !propExist(iconLeft) && !propExist(iconRight) && !propExist(units)
+    }),
     id: idRes,
     name: name,
     min: min || null,

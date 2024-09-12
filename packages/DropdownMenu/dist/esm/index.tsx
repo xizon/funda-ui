@@ -7,7 +7,7 @@ import useClickOutside from 'funda-utils/dist/cjs/useClickOutside';
 import {
     getAbsolutePositionOfStage
 } from 'funda-utils/dist/cjs/getElementProperty';
-import { clsWrite } from 'funda-utils/dist/cjs/cls';
+import { clsWrite, combinedCls } from 'funda-utils/dist/cjs/cls';
 
 
 import Option from './Option';
@@ -289,7 +289,11 @@ const DropdownMenu = (props: DropdownMenuProps) => {
 
             <div 
                 ref={rootRef}
-                className={`dd-menu__wrapper ${clsWrite(wrapperClassName, 'dd-menu-default')} ${isOpen ? 'active' : ''}`} 
+                className={combinedCls(
+                    'dd-menu__wrapper',
+                    clsWrite(wrapperClassName, 'dd-menu-default'),
+                    isOpen ? 'active' : undefined
+                )} 
                 onMouseLeave={handleHoverOff} 
             >
 
@@ -297,7 +301,7 @@ const DropdownMenu = (props: DropdownMenuProps) => {
                 {triggerButton ? <button 
                     ref={triggerRef}
                     tabIndex={tabIndex || -1} 
-                    className={triggerClassName ? `${triggerClassName}` : `d-block-inline w-auto`} 
+                    className={clsWrite(triggerClassName, 'd-block-inline w-auto')} 
                     type="button" 
                     data-overlay-id={`dd-menu-list__wrapper-${idRes}`}
                     onMouseEnter={handleHoverOn} 
@@ -309,7 +313,7 @@ const DropdownMenu = (props: DropdownMenuProps) => {
 
                 </button> : <div 
                     ref={triggerRef}
-                    className={triggerClassName ? `${triggerClassName}` : `d-block-inline w-auto`} 
+                    className={clsWrite(triggerClassName, 'd-block-inline w-auto')} 
                     data-overlay-id={`dd-menu-list__wrapper-${idRes}`}
                     onMouseEnter={handleHoverOn} 
                     onClick={handleClick} 
@@ -340,11 +344,18 @@ const DropdownMenu = (props: DropdownMenuProps) => {
                         id={`dd-menu-list__wrapper-${idRes}`}
                         style={{ display: 'none'}}
                     >
-                        <span ref={iconRef} className={`dd-menu-list__icon ${isOpen ? 'active' : ''}`}></span>
+                        <span ref={iconRef} className={combinedCls(
+                            'dd-menu-list__icon',
+                            isOpen ? 'active' : undefined
+                        )}></span>
 
                         <ul
                             ref={listRef}
-                            className={`dd-menu-list__inner ${listClassName ? listClassName : 'dd-menu-default__inner'} ${isOpen ? (showClassName ? showClassName : 'show') : ''}`}
+                            className={combinedCls(
+                                'dd-menu-list__inner',
+                                clsWrite(listClassName, 'dd-menu-default__inner'),
+                                isOpen ? clsWrite(showClassName, 'show') : undefined
+                            )}
                         >
                             {selectOptionsListPresentation}
                         </ul>

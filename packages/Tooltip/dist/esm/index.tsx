@@ -7,7 +7,7 @@ import useClickOutside from 'funda-utils/dist/cjs/useClickOutside';
 import {
     getAbsolutePositionOfStage
 } from 'funda-utils/dist/cjs/getElementProperty';
-
+import { clsWrite, combinedCls } from 'funda-utils/dist/cjs/cls';
 
 
 export type TooltipProps = {
@@ -259,7 +259,11 @@ const Tooltip = (props: TooltipProps) => {
                 <div
                     ref={modalRef}
                     id={`tooltip__wrapper-${idRes}`}
-                    className={`tooltip__wrapper ${wrapperClassName || '' } active`}
+                    className={combinedCls(
+                        'tooltip__wrapper',
+                        wrapperClassName,
+                        'active'
+                    )}
                     role="tooltip"
                     data-microtip-position={direction || 'top'}
                     data-microtip-size={size || 'auto'}

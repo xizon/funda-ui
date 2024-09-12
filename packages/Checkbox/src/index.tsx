@@ -1,7 +1,7 @@
 import React, { useImperativeHandle, useState, useEffect, useRef, forwardRef } from 'react';
 
 import useComId from 'funda-utils/dist/cjs/useComId';
-import { clsWrite } from 'funda-utils/dist/cjs/cls';
+import { clsWrite, combinedCls } from 'funda-utils/dist/cjs/cls';
 
 
 export type CheckboxOptionChangeFnType = (arg1: any, arg2: any) => void;
@@ -135,7 +135,11 @@ const Checkbox = forwardRef((props: CheckboxProps, externalRef: any) => {
     return (
         <>
 
-            <div className={`form-check__wrapper ${clsWrite(wrapperClassName, 'mb-3 position-relative')} ${val ? (itemSelectedClassName || 'item-selected') : ''}`} ref={rootRef}>
+            <div className={combinedCls(
+                'form-check__wrapper',
+                clsWrite(wrapperClassName, 'mb-3 position-relative'),
+                val ? clsWrite(itemSelectedClassName, 'item-selected') : undefined
+            )} ref={rootRef}>
                 <div className="form-check">
                     <input
                         ref={(node) => {

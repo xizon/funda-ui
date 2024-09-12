@@ -26,7 +26,7 @@ import {
     getAbsolutePositionOfStage
 } from 'funda-utils/dist/cjs/getElementProperty';
 import { isNumeric } from 'funda-utils/dist/cjs/math';
-
+import { clsWrite, combinedCls } from 'funda-utils/dist/cjs/cls';
 
 import Calendar from './Calendar';
 
@@ -937,7 +937,14 @@ const Date = forwardRef((props: DateProps, externalRef: any) => {
             <div
                 ref={rootRef}
                 data-overlay-id={`date2d__wrapper-${idRes}`}
-                className={`date2d__trigger d-inline-block is-${type} ${triggerClassName || ''} ${SHOW_TOOLS_ENABLED ? 'date2d__trigger--hover-show-tools' : ''}`}
+                className={combinedCls(
+                    'date2d__trigger d-inline-block',
+                    `is-${type}`,
+                    triggerClassName,
+                    {
+                        'date2d__trigger--hover-show-tools': SHOW_TOOLS_ENABLED
+                    }
+                )}
                 onFocus={handleFocus}
                 onBlur={handleBlur}
                 onKeyDown={handleKeyPressed}
@@ -1305,12 +1312,23 @@ const Date = forwardRef((props: DateProps, externalRef: any) => {
                     />
 
                     {/* TOOLS */}
-                    <span className={`date2d__control-tools ${SHOW_TOOLS_ENABLED ? 'date2d__control-tools--hover-show-tools' : ''}`}>
+                    <span className={combinedCls(
+                        'date2d__control-tools',
+                        {
+                            'date2d__control-tools--hover-show-tools': SHOW_TOOLS_ENABLED
+                        }
+
+                    )}>
 
                         <a 
                             tabIndex={-1} 
                             href="#" 
-                            className={`date2d__control-tools__close ${HIDE_CLEAR_BTN_ENABLED ? 'd-none' : ''} ${dateDefaultValueExist ? '' : 'd-none'}`} onClick={(e: React.MouseEvent) => {
+                            className={combinedCls(
+                                'date2d__control-tools__close',
+                                {
+                                    'd-none': HIDE_CLEAR_BTN_ENABLED || !dateDefaultValueExist
+                                }
+                            )} onClick={(e: React.MouseEvent) => {
                                 e.preventDefault();
                                 e.stopPropagation();  // Avoid triggering pop-ups
                                 
@@ -1346,11 +1364,19 @@ const Date = forwardRef((props: DateProps, externalRef: any) => {
             </div>
 
 
-            <RootPortal show={isShow} containerClassName={`Date Date--${type}`}>
+            <RootPortal show={isShow} containerClassName={combinedCls(
+                'Date',
+                `Date--${type}`
+            )}>
                 <div
                     ref={modalRef}
                     id={`date2d__wrapper-${idRes}`}
-                    className={`date2d__wrapper is-${type} ${popupClassName || ''} active`}
+                    className={combinedCls(
+                        'date2d__wrapper',
+                        `is-${type}`,
+                        popupClassName,
+                        'active'
+                    )}
                     style={{
                         display: 'none',
                         zIndex: DEPTH
@@ -1505,7 +1531,12 @@ const Date = forwardRef((props: DateProps, externalRef: any) => {
                                                     resetPopupBlurStatus();
 
                                                 }}
-                                                className={`${timeVal[0] == hour ? 'selected' : ''} ${checkDisabledHours(_curVal.year, Number(_curVal.month)-1, _curVal.day, hour) ? 'disabled' : ''}`}
+                                                className={combinedCls(
+                                                    {
+                                                        'selected': timeVal[0] == hour,
+                                                        'disabled': checkDisabledHours(_curVal.year, Number(_curVal.month)-1, _curVal.day, hour)
+                                                    }
+                                                )}
                                             >
                                                 {hour}
                                             </a>
@@ -1555,7 +1586,12 @@ const Date = forwardRef((props: DateProps, externalRef: any) => {
 
 
                                                 }}
-                                                className={`${timeVal[1] == v ? 'selected' : ''} ${checkDisabledMinutes(_curVal.year, Number(_curVal.month)-1, _curVal.day, _curVal.hours, v) ? 'disabled' : ''}`}
+                                                className={combinedCls(
+                                                    {
+                                                         'selected': timeVal[1] == v,
+                                                         'disabled': checkDisabledMinutes(_curVal.year, Number(_curVal.month)-1, _curVal.day, _curVal.hours, v)
+                                                    }
+                                                )}
                                             >
 
                                                 {v}
@@ -1606,7 +1642,12 @@ const Date = forwardRef((props: DateProps, externalRef: any) => {
                                                         resetPopupBlurStatus();                                                  
 
                                                     }}
-                                                    className={`${timeVal[2] == v ? 'selected' : ''} ${checkDisabledSeconds(_curVal.year, Number(_curVal.month)-1, _curVal.day, _curVal.hours, _curVal.minutes, v) ? 'disabled' : ''}`}
+                                                    className={combinedCls(
+                                                        {
+                                                            'selected': timeVal[2] == v,
+                                                            'disabled': checkDisabledSeconds(_curVal.year, Number(_curVal.month)-1, _curVal.day, _curVal.hours, _curVal.minutes, v)
+                                                        }
+                                                    )}
                                                 >
 
                                                     {v}

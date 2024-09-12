@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef, ChangeEvent, MouseEvent, CompositionEvent, KeyboardEvent, FocusEvent, forwardRef } from 'react';
 
 import useComId from 'funda-utils/dist/cjs/useComId';
-import { clsWrite } from 'funda-utils/dist/cjs/cls';
+import { clsWrite, combinedCls } from 'funda-utils/dist/cjs/cls';
 
 
 export type SearchBarProps = {
@@ -182,7 +182,15 @@ const SearchBar = forwardRef((props: SearchBarProps, externalRef: any) => {
             <div className={clsWrite(wrapperClassName, 'mb-3 position-relative')} ref={rootRef}>
                 {label ? <>{typeof label === 'string' ? <label htmlFor={idRes} className="form-label" dangerouslySetInnerHTML={{ __html: `${label}` }}></label> : <label htmlFor={idRes} className="form-label" >{label}</label>}</> : null}
 
-                <div className={`${clsWrite(controlGroupWrapperClassName, 'input-group')} position-relative ${propExist(iconLeft) ? 'has-left-content' : ''} ${propExist(iconRight) || propExist(units) ? 'has-right-content' : ''}`}>
+                <div className={combinedCls(
+                    'position-relative',
+                    clsWrite(controlGroupWrapperClassName, 'input-group'),
+                    {
+                        'has-left-content': propExist(iconLeft),
+                        'has-right-content': propExist(iconRight) || propExist(units)
+                    }
+
+                )}>
                     
                     {propExist(iconLeft) ? <><span className={clsWrite(controlGroupTextClassName, 'input-group-text')}>{iconLeft}</span></>: null}
 
@@ -190,7 +198,10 @@ const SearchBar = forwardRef((props: SearchBarProps, externalRef: any) => {
                         ref={externalRef}
                         tabIndex={tabIndex || 0}
                         type={isSearchInput ? 'search' : 'text'}
-                        className={`${appearance === 'pill' ? `${(clsWrite(controlClassName, 'form-control'))} border rounded-pill` : (clsWrite(controlClassName, 'form-control'))} ${controlExClassName || ''}`}
+                        className={combinedCls(
+                            appearance === 'pill' ? `${clsWrite(controlClassName, 'form-control')} border rounded-pill` : (clsWrite(controlClassName, 'form-control')),
+                            controlExClassName
+                        )}
                         id={idRes}
                         name={name}
                         placeholder={placeholder || ''}

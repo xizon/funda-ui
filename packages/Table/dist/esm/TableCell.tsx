@@ -1,5 +1,8 @@
 import React, { forwardRef, useContext } from 'react';
 
+import { clsWrite, combinedCls } from 'funda-utils/dist/cjs/cls';
+
+
 import { TableContext } from './TableContext';
 
 import { cellMark, removeCellFocusClassName } from './table-utils/func';
@@ -20,7 +23,7 @@ const TableCell = forwardRef<HTMLTableCellElement, TableCellProps>((
         children, 
         active, 
         activeClassName, 
-        className, 
+        className: myClassName, 
         colSpan,
         scope,
         onClick,
@@ -99,7 +102,10 @@ const TableCell = forwardRef<HTMLTableCellElement, TableCellProps>((
                     // callback
                     onClick?.(e);
                 }}
-                className={`${className || ''} ${active ? (activeClassName || 'active') : ''}`}
+                className={combinedCls(
+                    myClassName,
+                    active ? clsWrite(activeClassName, 'active') : undefined
+                )}
             >
                 {children}
             </CellComponent>

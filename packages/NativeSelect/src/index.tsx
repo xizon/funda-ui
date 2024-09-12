@@ -14,7 +14,7 @@ import {
 import {
     removeArrDuplicateItems
 } from 'funda-utils/dist/cjs/object';
-import { clsWrite } from 'funda-utils/dist/cjs/cls';
+import { clsWrite, combinedCls } from 'funda-utils/dist/cjs/cls';
 
 
 

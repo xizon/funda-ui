@@ -15,7 +15,7 @@ import {
 import {
     getAbsolutePositionOfStage
 } from 'funda-utils/dist/cjs/getElementProperty';
-import { clsWrite } from 'funda-utils/dist/cjs/cls';
+import { clsWrite, combinedCls } from 'funda-utils/dist/cjs/cls';
 
 
 import Group from './Group';
@@ -1088,7 +1088,7 @@ const CascadingSelect = (props: CascadingSelectProps) => {
                 {label ? <>{typeof label === 'string' ? <label htmlFor={idRes} className="form-label" dangerouslySetInnerHTML={{ __html: `${label}` }}></label> : <label htmlFor={idRes} className="form-label" >{label}</label>}</> : null}
 
                 {triggerContent ? <>
-                    <div className={triggerClassName ? `cas-select__trigger ${triggerClassName}` : `cas-select__trigger d-inline w-auto`} onClick={handleDisplayOptions}>{triggerContent}</div>
+                    <div className={clsWrite(wrapperClassName, 'cas-select__trigger d-inline w-auto', `cas-select__trigger ${triggerClassName}`)} onClick={handleDisplayOptions}>{triggerContent}</div>
                 </> : null}
 
 
@@ -1098,7 +1098,7 @@ const CascadingSelect = (props: CascadingSelectProps) => {
                         <div
                             ref={listRef}
                             id={`cas-select__items-wrapper-${idRes}`}
-                            className={`cas-select__items-wrapper position-absolute border shadow small`}
+                            className="cas-select__items-wrapper position-absolute border shadow small"
                             style={{ zIndex: DEPTH, display: 'none' }}
                         >
                             <ul className="cas-select__items-inner">
@@ -1149,7 +1149,10 @@ const CascadingSelect = (props: CascadingSelectProps) => {
                         id={idRes}
                         data-overlay-id={`cas-select__items-wrapper-${idRes}`}
                         name={name}
-                        className={`${clsWrite(controlClassName, 'form-control')} ${controlExClassName || ''}`}
+                        className={combinedCls(
+                            clsWrite(controlClassName, 'form-control'),
+                            controlExClassName
+                        )}
                         placeholder={placeholder}
                         value={changedVal} // placeholder will not change if defaultValue is used
                         onFocus={handleFocus}

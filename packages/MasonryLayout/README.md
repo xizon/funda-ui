@@ -47,6 +47,7 @@ export default () => {
 
 ## Responsive Masonry 
 
+You can resize the window to see the effect.
 
 ```js
 import React from "react";

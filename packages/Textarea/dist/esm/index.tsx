@@ -4,7 +4,7 @@ import React, { useState, useEffect, useRef, forwardRef, KeyboardEvent, useImper
 
 import useComId from 'funda-utils/dist/cjs/useComId';
 import useAutosizeTextArea from 'funda-utils/dist/cjs/useAutosizeTextArea';
-import { clsWrite } from 'funda-utils/dist/cjs/cls';
+import { clsWrite, combinedCls } from 'funda-utils/dist/cjs/cls';
 
 
 
@@ -255,7 +255,10 @@ const Textarea = forwardRef((props: TextareaProps, externalRef: any) => {
                             }
                         }}
                       tabIndex={tabIndex || 0}
-					  className={`${clsWrite(controlClassName, 'form-control')} ${controlExClassName || ''}`}
+					  className={combinedCls(
+                        clsWrite(controlClassName, 'form-control'),
+                        controlExClassName
+                      )}
 			          id={idRes}
 					  name={name}
 					  placeholder={placeholder || ''}

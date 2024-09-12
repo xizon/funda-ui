@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useMemo, useRef, useCallback } from 'react';
 
+
 import RootPortal from 'funda-root-portal';
 import ModalDialog from 'funda-modaldialog';
 
@@ -8,7 +9,7 @@ import useClickOutside from 'funda-utils/dist/cjs/useClickOutside';
 import {
     getAbsolutePositionOfStage
 } from 'funda-utils/dist/cjs/getElementProperty';
-
+import { clsWrite, combinedCls } from 'funda-utils/dist/cjs/cls';
 
 export interface EventsValueConfig {
     id: string | number;
@@ -690,7 +691,15 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
 
                         return d > 0 && d <= days[month] ? (
                             <th
-                                className={`e-cal-tl-table__cell-cushion-headercontent__container ${d > 0 ? '' : 'empty'} ${d === now.getDate() ? 'today' : ''} ${d === day ? 'selected' : ''} ${isLastCol ? 'last-cell' : ''}`}
+                                className={combinedCls(
+                                    'e-cal-tl-table__cell-cushion-headercontent__container',
+                                    {
+                                        'empty': d <= 0,
+                                        'today': d === now.getDate(),
+                                        'selected': d === day,
+                                        'last-cell': isLastCol
+                                    }
+                                )}
                                 key={"col" + i}
                                 data-index={colIndex-1}
                                 data-datagrid-col={colIndex-1}
@@ -804,7 +813,16 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
 
                         return d > 0 && d <= days[month] ? (
                             <td
-                                className={`e-cal-tl-table__cell-cushion-content__container e-cal-tl-table__cell-tooltiptrigger ${eventSourcesData && _currentData.length > 0 ? 'has-event' : ''} ${d > 0 ? '' : 'empty'} ${d === now.getDate() ? 'today' : ''} ${d === day && tableRowNum === rowIndex ? 'selected' : ''} ${isLastCol ? 'last-cell' : ''}`}
+                                className={combinedCls(
+                                    'e-cal-tl-table__cell-cushion-content__container e-cal-tl-table__cell-tooltiptrigger',
+                                    {
+                                        'has-event': eventSourcesData && _currentData.length > 0 ,
+                                        'empty': d <= 0,
+                                        'today': d === now.getDate(),
+                                        'selected': d === day && tableRowNum === rowIndex,
+                                        'last-cell': isLastCol
+                                    }
+                                )}
                                 key={"col" + i}
                                 data-overlay-id={`e-cal-tl-table__cell-tooltipwrapper-${idRes}`}
                                 data-index={colIndex-1}
@@ -945,7 +963,15 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
 
                         return (
                             <th
-                                className={`e-cal-tl-table__cell-cushion-headercontent__container ${d > 0 ? '' : 'empty'} ${d === now.getDate() ? 'today' : ''} ${d === day ? 'selected' : ''} ${isLastCol ? 'last-cell' : ''}`}
+                                className={combinedCls(
+                                    'e-cal-tl-table__cell-cushion-headercontent__container',
+                                    {
+                                        'empty': d <= 0,
+                                        'today': d === now.getDate(),
+                                        'selected': d === day,
+                                        'last-cell': isLastCol
+                                    }
+                                )}
                                 key={"col" + i}
                                 data-index={colIndex-1}
                                 data-datagrid-col={colIndex-1}
@@ -1068,7 +1094,16 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
 
                         return (
                             <td
-                                className={`e-cal-tl-table__cell-cushion-content__container e-cal-tl-table__cell-tooltiptrigger ${_currentData.length > 0 ? 'has-event' : ''} ${d > 0 ? '' : 'empty'} ${d === now.getDate() ? 'today' : ''} ${d === day && tableRowNum === rowIndex ? 'selected' : ''} ${isLastCol ? 'last-cell' : ''}`}
+                                className={combinedCls(
+                                    'e-cal-tl-table__cell-cushion-content__container e-cal-tl-table__cell-tooltiptrigger',
+                                    {
+                                        'has-event': _currentData.length > 0,
+                                        'empty': d <= 0,
+                                        'today': d === now.getDate(),
+                                        'selected': d === day && tableRowNum === rowIndex,
+                                        'last-cell': isLastCol
+                                    }
+                                )}
                                 key={"col" + i}
                                 data-overlay-id={`e-cal-tl-table__cell-tooltipwrapper-${idRes}`}
                                 data-index={colIndex-1}

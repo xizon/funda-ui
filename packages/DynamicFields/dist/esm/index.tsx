@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 
 
 import useComId from 'funda-utils/dist/cjs/useComId';
-import { clsWrite } from 'funda-utils/dist/cjs/cls';
+import { clsWrite, combinedCls } from 'funda-utils/dist/cjs/cls';
 
 
 export type DynamicFieldsValueProps = {
@@ -320,13 +320,22 @@ const DynamicFields = (props: DynamicFieldsProps) => {
                     {/* //////////// /add button /////////// */}
 
 
-                    <div className={`dynamic-fields__append ${innerAppendClassName || ''}`}>
+                    <div className={combinedCls(
+                        'dynamic-fields__append',
+                        innerAppendClassName
+                    )}>
 
                         {/* //////////// head /////////// */}
                         {innerAppendHeadData && Array.isArray(innerAppendHeadData) && (val.length > 0 || innerAppendHeadRowShowFirst) ? <>
                             <div className={`dynamic-fields__inner__head ${innerAppendHeadRowClassName || ''}`}>
                                 {innerAppendHeadData.map((item: any, i: number) => {
-                                    return <div key={'inner-header-row' + i} className={`${innerAppendHeadCellClassName || ''} ${i === innerAppendHeadData.length - 1 ? ITEM_LAST_CLASSNAME : ''} ${Array.isArray(innerAppendHeadCellClassName) ? (typeof innerAppendHeadCellClassName[i] !== 'undefined' ? innerAppendHeadCellClassName[i] : '') : ''}`} style={innerAppendHeadCellStyles && typeof innerAppendHeadCellStyles[i] !== 'undefined' ? innerAppendHeadCellStyles[i] : {}}>{item}</div>;
+                                    return <div key={'inner-header-row' + i} className={combinedCls(
+                                        innerAppendHeadCellClassName,
+                                        Array.isArray(innerAppendHeadCellClassName) ? (typeof innerAppendHeadCellClassName[i] !== 'undefined' ? innerAppendHeadCellClassName[i] : '') : undefined,
+                                        {
+                                            ITEM_LAST_CLASSNAME: i === innerAppendHeadData.length - 1
+                                        }
+                                    )} style={innerAppendHeadCellStyles && typeof innerAppendHeadCellStyles[i] !== 'undefined' ? innerAppendHeadCellStyles[i] : {}}>{item}</div>;
                                 })}
                             </div>
                         </> : null}

@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef, forwardRef, ChangeEvent, FocusEvent
 
 
 import useComId from 'funda-utils/dist/cjs/useComId';
-import { clsWrite } from 'funda-utils/dist/cjs/cls';
+import { clsWrite, combinedCls } from 'funda-utils/dist/cjs/cls';
 
 
 export interface ColorPickerProps extends React.ComponentPropsWithoutRef<"input"> {
@@ -130,7 +130,11 @@ const ColorPicker = forwardRef((props: ColorPickerProps, externalRef: any) => {
     return (
         <>
 
-            <div className={clsWrite(wrapperClassName, `custom-colorpicker__wrapper mb-3 position-relative ${shapeClassName}`, `custom-colorpicker__wrapper ${shapeClassName} ${wrapperClassName}`)} ref={rootRef}>
+            <div className={combinedCls(
+                'custom-colorpicker__wrapper',
+                shapeClassName,
+                clsWrite(wrapperClassName, 'mb-3 position-relative')
+            )} ref={rootRef}>
                 {label ? <>{typeof label === 'string' ? <label htmlFor={idRes} className="form-label" dangerouslySetInnerHTML={{ __html: `${label}` }}></label> : <label htmlFor={idRes} className="form-label">{label}</label>}</> : null}
 
                 <div className="input-group">
@@ -147,7 +151,10 @@ const ColorPicker = forwardRef((props: ColorPickerProps, externalRef: any) => {
                         
                         tabIndex={tabIndex || 0}
                         type='color'
-                        className={`${clsWrite(controlClassName, 'form-control custom-colorpicker-control flex-grow-0')} ${controlExClassName || ''}`}
+                        className={combinedCls(
+                            clsWrite(controlClassName, 'form-control custom-colorpicker-control flex-grow-0'),
+                            controlExClassName
+                        )}
                         value={changedVal}
                         onFocus={handleFocus}
                         onBlur={handleBlur}

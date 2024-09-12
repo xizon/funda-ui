@@ -45,7 +45,7 @@ import {
     disableBodyScroll, 
     enableBodyScroll,
 } from 'funda-utils/dist/cjs/bodyScrollLock';
-import { clsWrite } from 'funda-utils/dist/cjs/cls';
+import { clsWrite, combinedCls } from 'funda-utils/dist/cjs/cls';
 
 
 
@@ -1848,7 +1848,14 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
                 ref={rootRef}
                 data-overlay-id={`custom-select__options-wrapper-${idRes}`}
                 id={`custom-select__wrapper-${idRes}`}
-                className={`custom-select__wrapper ${clsWrite(wrapperClassName, 'mb-3 position-relative')} ${MULTI_SEL_VALID ? 'multiple-selection' : ''} ${isOpen ? 'active focus' : ''}`}
+                className={combinedCls(
+                    'custom-select__wrapper',
+                    clsWrite(wrapperClassName, 'mb-3 position-relative'),
+                    {
+                        'multiple-selection': MULTI_SEL_VALID,
+                        'active focus': isOpen
+                    }
+                )}
                 onKeyDown={handleKeyPressed}
                 
             >
@@ -1876,7 +1883,10 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
                             // Don't use "name", it's just a container to display the label
                             data-name={name?.match(/(\[.*?\])/gi) ? `${name.split('[')[0]}-label[]` : `${name}-label`}
                             data-select
-                            className={`${clsWrite(controlClassName, 'form-control')} ${controlExClassName || ''}`}
+                            className={combinedCls(
+                                clsWrite(controlClassName, 'form-control'),
+                                controlExClassName
+                            )}
                             onFocus={handleFocus}
                             onBlur={handleBlur}
                             onClick={typeof readOnly === 'undefined' || !readOnly ? handleShowList : () => void (0)}
@@ -1922,7 +1932,12 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
                 {/* BLINKING CURSOR */}
                 {!MULTI_SEL_VALID ? <>
                     <span
-                        className={`custom-select-multi__control-blinking-following-cursor animated ${hideBlinkingCursor() ? 'd-none' : ''}`}
+                        className={combinedCls(
+                            'custom-select-multi__control-blinking-following-cursor animated',
+                            {
+                                'd-none': hideBlinkingCursor()
+                            }
+                        )}
                         style={{
                             left: `${blinkingPosStart}px`
                         }}
@@ -1949,10 +1964,18 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
                         <input
                             tabIndex={-1}
                             type="text"
-                            className={`${clsWrite(controlClassName, 'form-control')} ${controlExClassName || ''}`}
+                            className={combinedCls(
+                                clsWrite(controlClassName, 'form-control'),
+                                controlExClassName
+                            )}
                         />
 
-                        <span ref={blinkingCursorPosDivRef} className={`custom-select-multi__control-blinking-cursor ${generateInputFocusStr() === BLINKING_CURSOR_STR ? 'animated' : ''}`}>
+                        <span ref={blinkingCursorPosDivRef} className={combinedCls(
+                            'custom-select-multi__control-blinking-cursor',
+                            {
+                                'animated': generateInputFocusStr() === BLINKING_CURSOR_STR
+                            }
+                        )}>
                             {controlTempValue || controlTempValue === '' ? (controlTempValue.length === 0 ? <span className={`${!hideBlinkingCursor() ? 'control-placeholder' : ''}`}>{generateInputFocusStr()}</span> : <span>{controlTempValue}</span>) : (stripHTML(controlLabel as never).length === 0 ? <span className={`${!hideBlinkingCursor() ? 'control-placeholder' : ''}`}>{generateInputFocusStr()}</span> : <span>{stripHTML(controlLabel as never)}</span>)}
                         </span>
 
@@ -1963,7 +1986,12 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
 
 
                     {/* ARROW */}
-                    <span className={`custom-select-arrow ${isOpen ? 'reverse' : ''}`} style={{display: fetchTrigger ? 'none' : 'inline-block' }}>
+                    <span className={combinedCls(
+                        'custom-select-arrow',
+                        {
+                            'reverse': isOpen
+                        }
+                    )} style={{display: fetchTrigger ? 'none' : 'inline-block' }}>
                         {controlArrow ? controlArrow : <svg width="10px" height="10px" viewBox="0 -4.5 20 20">
                             <g stroke="none" strokeWidth="1" fill="none">
                                 <g transform="translate(-180.000000, -6684.000000)" className="arrow-fill-g" fill="#a5a5a5">
@@ -2088,7 +2116,10 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
 
                                             // Don't use "name", it's just a container to display the label
                                             data-name={name?.match(/(\[.*?\])/gi) ? `${name.split('[')[0]}-label[]` : `${name}-label`}
-                                            className={`${clsWrite(controlClassName, 'form-control')} ${controlExClassName || ''}`}
+                                            className={combinedCls(
+                                                clsWrite(controlClassName, 'form-control'),
+                                                controlExClassName
+                                            )}
                                             onFocus={handleFocus}
                                             onBlur={handleBlur}
                                             onClick={typeof readOnly === 'undefined' || !readOnly ? handleShowList : () => void (0)}
@@ -2123,7 +2154,12 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
 
 
                     {/* ARROW */}
-                    <span className={`custom-select-arrow ${isOpen ? 'reverse' : ''}`} style={{display: fetchTrigger ? 'none' : 'inline-block' }}>
+                    <span className={combinedCls(
+                        'custom-select-arrow',
+                        {
+                            'reverse': isOpen
+                        }
+                    )} style={{display: fetchTrigger ? 'none' : 'inline-block' }}>
                         {controlArrow ? controlArrow : <svg width="10px" height="10px" viewBox="0 -4.5 20 20">
                             <g stroke="none" strokeWidth="1" fill="none">
                                 <g transform="translate(-180.000000, -6684.000000)" className="arrow-fill-g" fill="#a5a5a5">
@@ -2173,7 +2209,7 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
                         <div
                             ref={listRef}
                             id={`custom-select__options-wrapper-${idRes}`}
-                            className={`custom-select__options-wrapper list-group position-absolute border shadow small ${winWidth ? '' : ''}`}
+                            className="custom-select__options-wrapper list-group position-absolute border shadow small"
                             style={{ zIndex: DEPTH, width: WIN_WIDTH, display: 'none' }}
                             role="tablist"
                         >
@@ -2281,7 +2317,17 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
                                                 type="button"
                                                 data-index={index}
                                                 key={index}
-                                                className={`list-group-item list-group-item-action border-start-0 border-end-0 custom-select-multi__control-option-item ${startItemBorder} ${endItemBorder} border-bottom-0 ${typeof item.disabled === 'undefined' ? '' : (item.disabled == true ? 'disabled' : '')} ${disabledCurrentOption ? 'active disabled' : ''} ${item.group ? 'custom-select-grouptitle' : ''}`}
+                                                className={combinedCls(
+                                                    'list-group-item list-group-item-action border-start-0 border-end-0 custom-select-multi__control-option-item border-bottom-0',
+                                                    startItemBorder,
+                                                    endItemBorder,
+                                                    {
+                                                        'disabled': item.disabled,
+                                                        'active disabled': disabledCurrentOption,
+                                                        'custom-select-grouptitle': item.group
+                                                    }
+
+                                                )}
                                                 data-value={`${item.value}`}
                                                 data-label={`${item.label}`}
                                                 data-querystring={`${typeof item.queryString === 'undefined' ? '' : item.queryString}`}
@@ -2307,7 +2353,17 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
                                                 data-selected={`${itemSelected ? 'true' : 'false'}`}
                                                 data-index={index}
                                                 key={index}
-                                                className={`list-group-item list-group-item-action border-start-0 border-end-0 custom-select-multi__control-option-item ${startItemBorder} ${endItemBorder} border-bottom-0 ${itemSelected ? 'list-group-item-secondary item-selected' : ''} ${typeof item.disabled === 'undefined' ? '' : (item.disabled == true ? 'disabled' : '')} ${item.group ? 'custom-select-grouptitle' : ''}`}
+                                                className={combinedCls(
+                                                    'list-group-item list-group-item-action border-start-0 border-end-0 custom-select-multi__control-option-item border-bottom-0',
+                                                    startItemBorder,
+                                                    endItemBorder,
+                                                    {
+                                                        'list-group-item-secondary item-selected': itemSelected,
+                                                        'disabled': item.disabled,
+                                                        'custom-select-grouptitle': item.group
+
+                                                    }
+                                                )}
                                                 data-value={`${item.value}`}
                                                 data-label={`${item.label}`}
                                                 data-querystring={`${typeof item.queryString === 'undefined' ? '' : item.queryString}`}
@@ -2316,12 +2372,23 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
                                                 role="tab"
                                                 onClick={handleSelect}
                                             >
-                                                <var className={`me-1 custom-select-multi__control-option-checkbox-selected ${itemSelected ? '' : 'd-none'}`}>
+                                                <var className={combinedCls(
+                                                    'me-1 custom-select-multi__control-option-checkbox-selected',
+                                                    {
+                                                        'd-none': !itemSelected
+                                                    }
+
+                                                )}>
                                                     <svg width="1.2em" height="1.2em" fill="#000000" viewBox="0 0 24 24"><path d="M19 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.11 0 2-.9 2-2V5c0-1.1-.89-2-2-2zm-9 14l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" /></svg>
 
                                                 </var>
 
-                                                <var className={`me-1 custom-select-multi__control-option-checkbox-placeholder ${itemSelected ? 'd-none' : ''}`}>
+                                                <var className={combinedCls(
+                                                    'me-1 custom-select-multi__control-option-checkbox-placeholder',
+                                                    {
+                                                        'd-none': itemSelected
+                                                    }
+                                                )}>
                                                     <svg width="1.2em" height="1.2em" fill="#000000" viewBox="0 0 24 24"><path d="M4 7.2002V16.8002C4 17.9203 4 18.4801 4.21799 18.9079C4.40973 19.2842 4.71547 19.5905 5.0918 19.7822C5.5192 20 6.07899 20 7.19691 20H16.8031C17.921 20 18.48 20 18.9074 19.7822C19.2837 19.5905 19.5905 19.2842 19.7822 18.9079C20 18.4805 20 17.9215 20 16.8036V7.19691C20 6.07899 20 5.5192 19.7822 5.0918C19.5905 4.71547 19.2837 4.40973 18.9074 4.21799C18.4796 4 17.9203 4 16.8002 4H7.2002C6.08009 4 5.51962 4 5.0918 4.21799C4.71547 4.40973 4.40973 4.71547 4.21799 5.0918C4 5.51962 4 6.08009 4 7.2002Z" /></svg>
                                                 </var>
                                                 <span dangerouslySetInnerHTML={{

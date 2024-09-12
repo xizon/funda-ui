@@ -8,7 +8,7 @@ import {
 import {
     removeArrDuplicateItems
 } from 'funda-utils/dist/cjs/object';
-import { clsWrite } from 'funda-utils/dist/cjs/cls';
+import { clsWrite, combinedCls } from 'funda-utils/dist/cjs/cls';
 
 
 export interface OptionConfig {
@@ -372,7 +372,10 @@ const Radio = forwardRef((props: RadioProps, externalRef: any) => {
             const _groupEl = () => {
                 return <>
                     {/* GROUP LABEL */}
-                    <div className={`radio-group__label ${groupLabelClassName || ''}`}>{item.label}</div>
+                    <div className={combinedCls(
+                        'radio-group__label',
+                        groupLabelClassName
+                    )}>{item.label}</div>
                     {/* /GROUP LABEL */}
 
                     {item.optgroup.map((opt: any, optIndex: number) => {
@@ -383,7 +386,16 @@ const Radio = forwardRef((props: RadioProps, externalRef: any) => {
                         });
             
 
-                        return <div key={'option-' + optIndex} className={`${inline ? `form-check form-check-inline` : `form-check`} ${controlValue == opt.value ? (itemSelectedClassName || 'item-selected') : ''}`}>
+                        return <div 
+                            key={'option-' + optIndex} 
+                            className={combinedCls(
+                                'form-check',
+                                controlValue == opt.value ? clsWrite(itemSelectedClassName, 'item-selected') : undefined,
+                                {
+                                    'form-check-inline': inline
+                                }
+                            )}
+                        >
                             <div className="d-inline-block">
                                 <input
                                     ref={(node: any) => {
@@ -481,7 +493,14 @@ const Radio = forwardRef((props: RadioProps, externalRef: any) => {
 
                     return <td
                         colSpan={1}
-                        className={`${inline ? `form-check form-check-inline` : `form-check`} ${controlValue == item.value ? (itemSelectedClassName || 'item-selected') : ''} ${tableLayoutCellClassName || ''}`}
+                        className={combinedCls(
+                            'form-check',
+                            controlValue == item.value ? clsWrite(itemSelectedClassName, 'item-selected') : undefined,
+                            tableLayoutCellClassName,
+                            {
+                                'form-check-inline': inline
+                            }
+                        )}
                         key={'option-' + index}
                         data-optiondata={JSON.stringify(_formatItem)}
                     >
@@ -492,7 +511,10 @@ const Radio = forwardRef((props: RadioProps, externalRef: any) => {
             } else {
                 if (typeof item.optgroup !== 'undefined') {
                     return <div
-                        className={`radio-group__wrapper ${groupWrapperClassName || ''}`}
+                        className={combinedCls(
+                            'radio-group__wrapper',
+                            groupWrapperClassName
+                        )}
                         key={'optgroup-' + index}
                         data-optiondata={JSON.stringify(_formatItem)}
                     >
@@ -501,7 +523,13 @@ const Radio = forwardRef((props: RadioProps, externalRef: any) => {
                 } else {
 
                     return <div
-                        className={`${inline ? `form-check form-check-inline` : `form-check`} ${controlValue == item.value ? (itemSelectedClassName || 'item-selected') : ''}`}
+                        className={combinedCls(
+                            'form-check',
+                            controlValue == item.value ? clsWrite(itemSelectedClassName, 'item-selected') : undefined,
+                            {
+                                'form-check-inline': inline
+                            }
+                        )}
                         key={'option-' + index}
                         data-optiondata={JSON.stringify(_formatItem)}
                     >
@@ -538,7 +566,10 @@ const Radio = forwardRef((props: RadioProps, externalRef: any) => {
                 {/* TABLE LAYOUT */}
                 <table
                     id={`radio-tablelayout__wrapper-${idRes}`}
-                    className={`radio-tablelayout__wrapper ${tableLayoutClassName || ''}`}
+                    className={combinedCls(
+                        'radio-tablelayout__wrapper',
+                        tableLayoutClassName
+                    )}
                     ref={rootRef}
                 >
                     {label ? <>{typeof label === 'string' ? <caption dangerouslySetInnerHTML={{ __html: `${label}` }}></caption> : <caption>{label}</caption>}</> : null}
@@ -554,7 +585,10 @@ const Radio = forwardRef((props: RadioProps, externalRef: any) => {
             </> : <>
                 <div
                     id={`radio__wrapper-${idRes}`}
-                    className={`radio__wrapper ${clsWrite(wrapperClassName, 'mb-3 position-relative')}`}
+                    className={combinedCls(
+                        'radio__wrapper',
+                        clsWrite(wrapperClassName, 'mb-3 position-relative')
+                    )}
                     ref={rootRef}
                 >
                     {label ? <>{typeof label === 'string' ? <label htmlFor={idRes} className="form-label" dangerouslySetInnerHTML={{ __html: `${label}` }}></label> : <label htmlFor={idRes} className="form-label" >{label}</label>}</> : null}

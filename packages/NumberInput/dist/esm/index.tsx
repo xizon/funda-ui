@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef, forwardRef, ChangeEvent, FocusEvent
 
 
 import useComId from 'funda-utils/dist/cjs/useComId';
-import { clsWrite } from 'funda-utils/dist/cjs/cls';
+import { clsWrite, combinedCls } from 'funda-utils/dist/cjs/cls';
 import {
     calcAdd,
     calcSub,
@@ -282,7 +282,13 @@ const NumberInput = forwardRef((props: NumberInputProps, externalRef: any) => {
                 <div className="position-relative">
 
                     {/* INPUT GROUP*/}
-                    <div className={`${clsWrite(controlGroupWrapperClassName, 'input-group position-relative z-1')} ${propExist(iconLeft) ? 'has-left-content' : ''} ${propExist(iconRight) || propExist(units) ? 'has-right-content' : ''}`}>
+                    <div className={combinedCls(
+                        clsWrite(controlGroupWrapperClassName, 'input-group position-relative z-1'),
+                        {
+                            'has-left-content': propExist(iconLeft),
+                            'has-right-content': propExist(iconRight) || propExist(units)
+                        }
+                    )}>
                         {propExist(iconLeft) ? <><span className={clsWrite(controlGroupTextClassName, 'input-group-text')}>{iconLeft}</span></> : null}
 
                         <input
@@ -298,7 +304,12 @@ const NumberInput = forwardRef((props: NumberInputProps, externalRef: any) => {
                             tabIndex={tabIndex || 0}
                             type="text"
                             inputMode={decimalPlaces > 0 ? 'decimal' : 'numeric' }   // numeric | decimal
-                            className={clsWrite(controlClassName, `form-control ${propExist(iconLeft) || propExist(iconRight) || propExist(units) ? '' : 'rounded'}`, `${controlClassName} ${propExist(iconLeft) || propExist(iconRight) || propExist(units) ? '' : 'rounded'}`)}
+                            className={combinedCls(
+                                clsWrite(controlClassName, 'form-control'),
+                                {
+                                    'rounded': !propExist(iconLeft) && !propExist(iconRight) && !propExist(units)
+                                }
+                            )}
                             id={idRes}
                             name={name}
                             min={min || null}

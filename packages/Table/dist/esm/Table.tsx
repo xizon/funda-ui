@@ -2,7 +2,7 @@ import React, { useEffect, useState, forwardRef, useRef } from 'react';
 
 
 import useComId from 'funda-utils/dist/cjs/useComId';
-import { clsWrite } from 'funda-utils/dist/cjs/cls';
+import { clsWrite, combinedCls } from 'funda-utils/dist/cjs/cls';
 
 
 import { TableProvider } from './TableContext';
@@ -219,11 +219,29 @@ const Table = forwardRef<HTMLDivElement, TableProps>((
                             externalRef.current = node;
                         }
                     }}
-                    className={`syntable__wrapper ${clsWrite(wrapperClassName, 'mb-3 position-relative')} ${responsiveClasses} ${enhancedResponsiveClasses} ${rowSelectable ? 'has-checkbox' : ''} ${rowDraggable ? 'allow-dragdrop' : ''} ${colSortable ? 'allow-sort' : ''}`}
+                    className={combinedCls(
+                        'syntable__wrapper',
+                        clsWrite(wrapperClassName, 'mb-3 position-relative'),
+                        responsiveClasses,
+                        enhancedResponsiveClasses,
+                        {
+                            'has-checkbox': rowSelectable,
+                            'allow-dragdrop': rowDraggable,
+                            'allow-sort': colSortable
+
+                        }
+                    )}
                 >
 
                     <table
-                        className={`${clsWrite(tableClassName, 'table')} ${tableClasses} ${typeof cellAutoWidth === 'undefined' || cellAutoWidth === false ? '' : 'cell-autowidth'}`}
+                        className={combinedCls(
+                            clsWrite(tableClassName, 'table'),
+                            tableClasses,
+                            {
+                                'cell-autowidth': cellAutoWidth
+                            }
+
+                        )}
                     >
                         {children}
                     </table>

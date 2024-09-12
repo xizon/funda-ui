@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef, forwardRef, ChangeEvent, Compositio
 
 
 import useComId from 'funda-utils/dist/cjs/useComId';
-import { clsWrite } from 'funda-utils/dist/cjs/cls';
+import { clsWrite, combinedCls } from 'funda-utils/dist/cjs/cls';
 
 
 export type InputProps = {
@@ -241,7 +241,14 @@ const Input = forwardRef((props: InputProps, externalRef: any) => {
             <div className={clsWrite(wrapperClassName, 'mb-3 position-relative')} ref={rootRef}>
                 {label ? <>{typeof label === 'string' ? <label htmlFor={idRes} className="form-label" dangerouslySetInnerHTML={{__html: `${label}`}}></label> : <label htmlFor={idRes} className="form-label">{label}</label>}</> : null}
                 
-                <div className={`${clsWrite(controlGroupWrapperClassName, 'input-group')} position-relative ${propExist(iconLeft) ? 'has-left-content' : ''} ${propExist(iconRight) || propExist(units) ? 'has-right-content' : ''}`}>
+                <div className={combinedCls(
+                    'position-relative',
+                    clsWrite(controlGroupWrapperClassName, 'input-group'),
+                    {
+                        'has-left-content': propExist(iconLeft),
+                        'has-right-content': propExist(iconRight) || propExist(units)
+                    }
+                )}>
                     {propExist(iconLeft) ? <><span className={clsWrite(controlGroupTextClassName, 'input-group-text')}>{iconLeft}</span></>: null}
 
                     {appendControl && (propExist(iconLeft)) ? <>
@@ -259,7 +266,10 @@ const Input = forwardRef((props: InputProps, externalRef: any) => {
                                 
                                 tabIndex={tabIndex || 0}
                                 type={typeRes}
-                                className={clsWrite(controlClassName, `form-control ${propExist(iconLeft) ? 'rounded-start-0' : 'rounded'}`, `${controlClassName} ${propExist(iconLeft) ? 'rounded-start-0' : 'rounded'}`)}
+                                className={combinedCls(
+                                    propExist(iconLeft) ? 'rounded-start-0' : 'rounded',
+                                    clsWrite(controlClassName, 'form-control ')
+                                )}
                                 id={idRes}
                                 name={name}
                                 step={step || null}
@@ -311,7 +321,13 @@ const Input = forwardRef((props: InputProps, externalRef: any) => {
                             
                             tabIndex={tabIndex || 0}
                             type={typeRes}
-                            className={`${clsWrite(controlClassName, `form-control ${propExist(iconLeft) || propExist(iconRight) || propExist(units) ? '' : 'rounded'}`, `${controlClassName} ${propExist(iconLeft) || propExist(iconRight) || propExist(units) ? '' : 'rounded'}`)} ${controlExClassName || ''}`}
+                            className={combinedCls(
+                                clsWrite(controlClassName, 'form-control'),
+                                controlExClassName,
+                                {
+                                    'rounded': !propExist(iconLeft) && !propExist(iconRight) && !propExist(units)
+                                }
+                            )}
                             id={idRes}
                             name={name}
                             step={step || null}

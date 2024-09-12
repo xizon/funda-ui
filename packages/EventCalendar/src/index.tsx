@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 
-
+import { clsWrite, combinedCls } from 'funda-utils/dist/cjs/cls';
 import ModalDialog from 'funda-modaldialog';
 
 
@@ -458,7 +458,12 @@ const EventCalendar = (props: EventCalendarProps) => {
                      {/* week */}
                      <div className="e-cal__row">
                         {WEEK.map((s: string, i: number) => (
-                            <div className={`e-cal__cell e-cal__day e-cal__day--week e-cal__day--disabled bg-secondary-subtle empty ${i === WEEK.length-1 ? 'last-cell' : ''}`} key={i} data-week={i} dangerouslySetInnerHTML={{
+                            <div className={combinedCls(
+                                'e-cal__cell e-cal__day e-cal__day--week e-cal__day--disabled bg-secondary-subtle empty',
+                                {
+                                    'last-cell': i === WEEK.length-1
+                                }
+                            )} key={i} data-week={i} dangerouslySetInnerHTML={{
                                 __html: s
                             }} />
                         ))}
@@ -506,7 +511,16 @@ const EventCalendar = (props: EventCalendarProps) => {
 
                                 return (
                                     <div
-                                        className={`e-cal__cell e-cal__day ${d > 0 ? '' : 'empty'} ${d === now.getDate() ? 'today' : ''} ${d === day ? 'selected' : ''} ${isLastCol ? 'last-cell' : ''} ${isLastRow ? 'last-row' : ''}`}
+                                        className={combinedCls(
+                                            'e-cal__cell e-cal__day',
+                                            {
+                                                'empty': d <= 0,
+                                                'today': d === now.getDate(),
+                                                'selected': d === day,
+                                                'last-cell': isLastCol,
+                                                'last-row': isLastRow
+                                            }
+                                        )}
                                         key={"col" + i}
                                         data-date={getCalendarDate(_dateShow)}
                                         data-day={padZero(d)}

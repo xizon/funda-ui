@@ -1,7 +1,7 @@
 import React, { useRef, forwardRef, useImperativeHandle } from 'react';
 import { paginationNavigators } from './pagination-navigators';
 
-import { clsWrite } from 'funda-utils/dist/cjs/cls';
+import { clsWrite, combinedCls } from 'funda-utils/dist/cjs/cls';
 
 export type PaginationProps = {
     /** The class name of the navigation wrapper */
@@ -216,7 +216,10 @@ const Pagination = forwardRef((props: PaginationProps, externalRef: any) => {
                 className={clsWrite(wrapperClassName, 'mb-3 position-relative')}
                 style={style}
             >
-                <ul className={clsWrite(navClassName, `pagination ${alignClassName}`, `${navClassName} ${alignClassName}`)}>
+                <ul className={combinedCls(
+                    alignClassName,
+                    clsWrite(navClassName, 'pagination')
+                )}>
                     {firstLabel ? (
                         <li className={activePage > 1 ? `${_itemClassName} ${_firstClassName}` : `${_itemClassName} ${_firstClassName} ${_disabledClassName}`}>
                             <a tabIndex={activePage > 1 ? 0 : -1} aria-disabled={activePage > 1 ? 'false' : 'true'} className="page-link" data-page={1} href={apiUrl?.replace('{page}', '1')} onClick={(e) => { e.preventDefault(); handleClick('first'); }}>

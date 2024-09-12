@@ -5,7 +5,7 @@ import useComId from 'funda-utils/dist/cjs/useComId';
 import {
     throttle
 } from 'funda-utils/dist/cjs/performance';
-
+import { clsWrite, combinedCls } from 'funda-utils/dist/cjs/cls';
 
 
 export type ScrollbarProps = {
@@ -453,7 +453,12 @@ const Scrollbar = (props: ScrollbarProps) => {
                     <button
                         tabIndex={-1}
                         type="button"
-                        className={`custom-scrollbars__button ${disableArrow ? 'disabled' : ''}`}
+                        className={combinedCls(
+                            'custom-scrollbars__button',
+                            {
+                                'disabled': disableArrow
+                            }
+                        )}
                         onClick={() => handleScrollButton('up')}
                     >
                         {icons[0]}
@@ -480,7 +485,12 @@ const Scrollbar = (props: ScrollbarProps) => {
                     <button
                         tabIndex={-1}
                         type="button"
-                        className={`custom-scrollbars__button ${disableArrow ? 'disabled' : ''}`}
+                        className={combinedCls(
+                            'custom-scrollbars__button',
+                            {
+                                'disabled': disableArrow
+                            }
+                        )}
                         onClick={() => handleScrollButton('down')}
                     >
                         {icons[1]}
@@ -496,7 +506,12 @@ const Scrollbar = (props: ScrollbarProps) => {
                     <button
                         tabIndex={-1}
                         type="button"
-                        className={`custom-scrollbars__button ${disableArrow ? 'disabled' : ''}`}
+                        className={combinedCls(
+                            'custom-scrollbars__button',
+                            {
+                                'disabled': disableArrow
+                            }
+                        )}
                         onClick={() => handleHorizontalScrollButton('left')}
                     >
                         {icons[2]}
@@ -523,7 +538,12 @@ const Scrollbar = (props: ScrollbarProps) => {
                     <button
                         tabIndex={-1}
                         type="button"
-                        className={`custom-scrollbars__button ${disableArrow ? 'disabled' : ''}`}
+                        className={combinedCls(
+                            'custom-scrollbars__button',
+                            {
+                                'disabled': disableArrow
+                            }
+                        )}
                         onClick={() => handleHorizontalScrollButton('right')}
                     >
                         {icons[3]}

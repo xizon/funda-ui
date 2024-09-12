@@ -1,7 +1,7 @@
 import React, { forwardRef, useEffect, useRef, useImperativeHandle } from 'react';
 
 import useComId from 'funda-utils/dist/cjs/useComId';
-import { clsWrite } from 'funda-utils/dist/cjs/cls';
+import { clsWrite, combinedCls } from 'funda-utils/dist/cjs/cls';
 
 
 //
@@ -188,7 +188,7 @@ const Tabs = forwardRef((props: TabsProps, externalRef: any) => {
         <>
 
             <div className={clsWrite(wrapperClassName, 'mb-3 position-relative')} ref={rootRef} style={style}>
-                <ul className={navClassName ? navClassName : "nav nav-tabs mb-3"} role="tablist">
+                <ul className={clsWrite(navClassName, 'nav nav-tabs mb-3')} role="tablist">
 
                     {(() => {
                         if (children != null) {
@@ -228,7 +228,7 @@ const Tabs = forwardRef((props: TabsProps, externalRef: any) => {
 
                 </ul>
 
-                <div className={panelClassName ? panelClassName : "tab-content"}>
+                <div className={clsWrite(panelClassName, 'tab-content')}>
                     {(() => {
                         if (children != null) {
                             let tabPanelIndex = 0;

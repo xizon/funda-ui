@@ -9,7 +9,7 @@ import {
 import {
     convertArrToValByBrackets
 } from 'funda-utils/dist/cjs/convert';
-import { clsWrite } from 'funda-utils/dist/cjs/cls';
+import { clsWrite, combinedCls } from 'funda-utils/dist/cjs/cls';
 
 
 
@@ -237,7 +237,10 @@ const TagInput = forwardRef((props: TagInputProps, externalRef: any) => {
     return (
         <>
 
-            <div className={clsWrite(wrapperClassName, 'tag-input__wrapper mb-3 position-relative', `tag-input__wrapper ${wrapperClassName}`)} ref={rootRef}>
+            <div className={combinedCls(
+                'tag-input__wrapper',
+                clsWrite(wrapperClassName, 'mb-3 position-relative')
+            )} ref={rootRef}>
 
                 {label ? <>{typeof label === 'string' ? <label htmlFor={`label-${idRes}`} className="form-label" dangerouslySetInnerHTML={{__html: `${label}`}}></label> : <label htmlFor={`label-${idRes}`} className="form-label">{label}</label>}</> : null}
 
@@ -255,7 +258,12 @@ const TagInput = forwardRef((props: TagInputProps, externalRef: any) => {
                         </ul>
 
 
-                        <div className={`tag-input__control ${disabled ? 'disabled' : ''}`} style={{display: max - 1 < items!.length ? 'none' : 'inherit'}}>
+                        <div className={combinedCls(
+                            'tag-input__control',
+                            {
+                                'disabled': disabled
+                            }
+                        )} style={{display: max - 1 < items!.length ? 'none' : 'inherit'}}>
                             <input
                                 ref={inputRef}
                                 tabIndex={tabIndex || 0}

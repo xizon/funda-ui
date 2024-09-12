@@ -6,7 +6,7 @@ import {
     base64ToArrayBuffer,
     arrayBufferToUint8Array
 } from 'funda-utils/dist/cjs/buffer';
-import { clsWrite } from 'funda-utils/dist/cjs/cls';
+import { clsWrite, combinedCls } from 'funda-utils/dist/cjs/cls';
 
 export type FileProps = {
     contentRef?: React.ForwardedRef<any>;
@@ -361,7 +361,10 @@ const File = forwardRef((props: FileProps, externalRef: any) => {
             <div className={clsWrite(wrapperClassName, 'mb-3 position-relative upload-control')} ref={rootRef}>
                 
 
-                <div className={`upload-control-group d-flex ${typeof inline === 'undefined' || inline === false ? 'flex-column' : 'flex-row' }`}>
+                <div className={combinedCls(
+                    'upload-control-group d-flex',
+                    typeof inline === 'undefined' || inline === false ? 'flex-column' : 'flex-row'
+                )}>
                     <div className="upload-control-group__control">
                         {/* INPUT */}
                         <label
@@ -374,7 +377,7 @@ const File = forwardRef((props: FileProps, externalRef: any) => {
                             data-input-id={idRes}
                             className="form-label d-inline"
                         >
-                            <button className={labelClassName ? labelClassName : 'btn btn-outline-secondary'} type="button" style={{ pointerEvents: 'none' }}>{label ? label : <svg width="25px" height="25px" viewBox="0 0 1024 1024"><path d="M512 256l144.8 144.8-36.2 36.2-83-83v311.6h-51.2V354l-83 83-36.2-36.2L512 256zM307.2 716.8V768h409.6v-51.2H307.2z" fill="#000000" fillRule="evenodd" /></svg>} {required ? <>{requiredLabel || requiredLabel === '' ? requiredLabel : <span className="text-danger">*</span>}</> : ''}</button>
+                            <button className={clsWrite(labelClassName, 'btn btn-outline-secondary')} type="button" style={{ pointerEvents: 'none' }}>{label ? label : <svg width="25px" height="25px" viewBox="0 0 1024 1024"><path d="M512 256l144.8 144.8-36.2 36.2-83-83v311.6h-51.2V354l-83 83-36.2-36.2L512 256zM307.2 716.8V768h409.6v-51.2H307.2z" fill="#000000" fillRule="evenodd" /></svg>} {required ? <>{requiredLabel || requiredLabel === '' ? requiredLabel : <span className="text-danger">*</span>}</> : ''}</button>
                         </label>
                         
                         <div className="input-group">
@@ -390,7 +393,10 @@ const File = forwardRef((props: FileProps, externalRef: any) => {
                                     }}
                                     
                                     tabIndex={tabIndex || 0}
-                                    className={`${clsWrite(controlClassName, 'form-control')} ${controlExClassName || ''}`}
+                                    className={combinedCls(
+                                        clsWrite(controlClassName, 'form-control'),
+                                        controlExClassName
+                                    )}
                                     id={idRes}
                                     type="file"
                                     accept={accept}
@@ -409,9 +415,19 @@ const File = forwardRef((props: FileProps, externalRef: any) => {
                         </div>
                         {/* /INPUT */}
                     </div>
-                    <div className={`upload-control-group__btn ${autoSubmit ? 'd-none' : ''}`}>
+                    <div className={combinedCls(
+                        'upload-control-group__btn',
+                        {
+                            'd-none': autoSubmit
+                        }
+                    )}>
                         {/* BUTTON */}
-                        <button ref={submitRef} className={submitClassName ? submitClassName + ` ${disabled ? 'disabled' : ''}` : 'btn btn-primary mt-2' + ` ${disabled ? 'disabled' : ''}`} type="button" onClick={handleSubmit}>{submitLabel ? submitLabel : null}</button>
+                        <button ref={submitRef} className={combinedCls(
+                            clsWrite(submitClassName, 'btn btn-primary mt-2'),
+                            {
+                                'disabled': disabled
+                            }
+                        )} type="button" onClick={handleSubmit}>{submitLabel ? submitLabel : null}</button>
                         {/* BUTTON */}
                     </div>
                 </div>

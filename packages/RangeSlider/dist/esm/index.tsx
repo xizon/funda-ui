@@ -2,7 +2,7 @@ import React, { useEffect, useState, useRef } from 'react';
 
 
 import useComId from 'funda-utils/dist/cjs/useComId';
-import { clsWrite } from 'funda-utils/dist/cjs/cls';
+import { clsWrite, combinedCls } from 'funda-utils/dist/cjs/cls';
 
 
 import Input from 'funda-input';
@@ -132,13 +132,22 @@ const RangeSlider = (props: RangeSliderProps) => {
             {label ? <><div className="range-slider__label">{typeof label === 'string' ? <label htmlFor={`label-${idRes}`} className="form-label" dangerouslySetInnerHTML={{__html: `${label}`}}></label> : <label htmlFor={`label-${idRes}`} className="form-label">{label}</label>}</div></> : null}
 
 
-            <div className={clsWrite(wrapperClassName, `range-slider__wrapper ${onlyOne ? 'only-one' : ''} mb-3 position-relative`, `range-slider__wrapper ${onlyOne ? 'only-one' : ''} ${wrapperClassName}`)} ref={rootRef}>
+            <div className={combinedCls(
+                'range-slider__wrapper',
+                clsWrite(wrapperClassName, 'mb-3 position-relative'),
+                {
+                    'only-one': onlyOne
+                }
+            )} ref={rootRef}>
 
                 {/* The <Input /> component is a placeholder that ensures the same height and alignment as other form components */}
                 <Input
                     ref={valMinRef}
                     wrapperClassName={clsWrite(wrapperClassName, 'mb-3 position-relative')}
-                    controlClassName={`${clsWrite(controlClassName, 'form-control')} ${controlExClassName || ''}`} 
+                    controlClassName={combinedCls(
+                        clsWrite(controlClassName, 'form-control'),
+                        controlExClassName
+                    )} 
                     required={required || null}
                     type="text"
                     id={idRes + '-min'}
@@ -149,7 +158,10 @@ const RangeSlider = (props: RangeSliderProps) => {
                 <Input
                     ref={valMaxRef}
                     wrapperClassName={clsWrite(wrapperClassName, 'mb-3 position-relative')}
-                    controlClassName={`${clsWrite(controlClassName, 'form-control')} ${controlExClassName || ''}`} 
+                    controlClassName={combinedCls(
+                        clsWrite(controlClassName, 'form-control'),
+                        controlExClassName
+                    )} 
                     required={required || null}
                     type="text"
                     id={idRes + '-max'}
@@ -158,7 +170,13 @@ const RangeSlider = (props: RangeSliderProps) => {
                 />                
 
 
-                <div className={`range-slider__control-wrapper ${disabled ? 'disabled' : ''}`}>
+                <div className={combinedCls(
+                    'range-slider__control-wrapper',
+                    {
+                        'disabled': disabled
+                        
+                    }
+                )}>
 
                     <div className="range-slider__input">
                         <input
@@ -189,14 +207,26 @@ const RangeSlider = (props: RangeSliderProps) => {
                     </div>
 
                     <div className="range-slider__placeholder">
-                        <div className={`range-slider__placeholder-grab ${minActive ? 'active' : ''}`} style={{ left: `${minPos}%` }} />
+                        <div className={combinedCls(
+                            'range-slider__placeholder-grab',
+                            {
+                                'active': minActive
+                            }
+                        )} style={{ left: `${minPos}%` }} />
                         <div className="range-slider__placeholder-rail">
                             <div
                                 className="range-slider__placeholder-inner-rail"
                                 style={{ left: `${minPos}%`, right: `${100 - maxPos}%` }}
                             />
                         </div>
-                        <div className={`range-slider__placeholder-grab ${maxActive ? 'active' : ''} ${onlyOne ? 'inactive' : ''}`} style={{ left: `${maxPos}%` }} />
+                        <div className={combinedCls(
+                            'range-slider__placeholder-grab',
+                            {
+                                'active': maxActive,
+                                'inactive': onlyOne
+                            }
+
+                        )} style={{ left: `${maxPos}%` }} />
                     </div>
 
                 </div>

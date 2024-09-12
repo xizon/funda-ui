@@ -20,7 +20,7 @@ import {
     addTreeDepth,
     addTreeIndent
 } from 'funda-utils/dist/cjs/tree';
-import { clsWrite } from 'funda-utils/dist/cjs/cls';
+import { clsWrite, combinedCls } from 'funda-utils/dist/cjs/cls';
 
 
 import Group from './Group';
@@ -1346,7 +1346,7 @@ const CascadingSelectE2E = (props: CascadingSelectE2EProps) => {
                 {label ? <>{typeof label === 'string' ? <label htmlFor={idRes} className="form-label" dangerouslySetInnerHTML={{ __html: `${label}` }}></label> : <label htmlFor={idRes} className="form-label" >{label}</label>}</> : null}
 
                 {triggerContent ? <>
-                    <div className={triggerClassName ? `cas-select-e2e__trigger ${triggerClassName}` : `cas-select-e2e__trigger d-inline w-auto`} onClick={handleDisplayOptions}>{triggerContent}</div>
+                    <div className={clsWrite(triggerClassName, 'cas-select-e2e__trigger d-inline w-auto', `cas-select-e2e__trigger ${triggerClassName}`)} onClick={handleDisplayOptions}>{triggerContent}</div>
                 </> : null}
 
 
@@ -1355,7 +1355,7 @@ const CascadingSelectE2E = (props: CascadingSelectE2EProps) => {
                         <div
                             ref={listRef}
                             id={`cas-select-e2e__items-wrapper-${idRes}`}
-                            className={`cas-select-e2e__items-wrapper position-absolute border shadow small`}
+                            className="cas-select-e2e__items-wrapper position-absolute border shadow small"
                             style={{ zIndex: DEPTH, display: 'none' }}
                         >
                             <ul className="cas-select-e2e__items-inner">
@@ -1412,7 +1412,10 @@ const CascadingSelectE2E = (props: CascadingSelectE2EProps) => {
                         id={idRes}
                         data-overlay-id={`cas-select-e2e__items-wrapper-${idRes}`}
                         name={name}
-                        className={`${clsWrite(controlClassName, 'form-control')} ${controlExClassName || ''}`}
+                        className={combinedCls(
+                            clsWrite(controlClassName, 'form-control'),
+                            controlExClassName
+                        )}
                         placeholder={placeholder}
                         value={destroyParentIdMatch
                             ?

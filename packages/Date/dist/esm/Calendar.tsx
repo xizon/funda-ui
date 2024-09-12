@@ -7,7 +7,7 @@ import {
     isValidDate,
     getTodayDate
 } from 'funda-utils/dist/cjs/date';
-
+import { clsWrite, combinedCls } from 'funda-utils/dist/cjs/cls';
 
 
 export interface EventsValueConfig {
@@ -500,11 +500,22 @@ const Calendar = (props: CalendarProps) => {
                         </svg>
                     </button>
                     <div className="date2d-cal__header__btns">
-                        <button tabIndex={-1} type="button" className={`date2d-cal__btn ${winMonth ? 'active' : ''}`} onClick={handleShowWinMonth}>
+                        <button tabIndex={-1} type="button" className={combinedCls(
+                            'date2d-cal__btn',
+                            {
+                                'active': winMonth
+                            }
+                        )} onClick={handleShowWinMonth}>
                             {MONTHS[month]}
                             <svg width="12px" height="12px" viewBox="0 0 24 24"><path d="M11.178 19.569a.998.998 0 0 0 1.644 0l9-13A.999.999 0 0 0 21 5H3a1.002 1.002 0 0 0-.822 1.569l9 13z" fill="#000000" /></svg>
                         </button>
-                        <button tabIndex={-1} type="button" className={`date2d-cal__btn ${winYear ? 'active' : ''}`} onClick={handleShowWinYear}>
+                        <button tabIndex={-1} type="button" className={combinedCls(
+                            'date2d-cal__btn',
+                            {
+                                'active': winYear
+                            }
+
+                        )} onClick={handleShowWinYear}>
                             {year}
                             <svg width="12px" height="12px" viewBox="0 0 24 24"><path d="M11.178 19.569a.998.998 0 0 0 1.644 0l9-13A.999.999 0 0 0 21 5H3a1.002 1.002 0 0 0-.822 1.569l9 13z" fill="#000000" /></svg>
                         </button>
@@ -520,7 +531,12 @@ const Calendar = (props: CalendarProps) => {
                      {/* week */}
                      <div className="date2d-cal__row">
                         {WEEK.map((s: string, i: number) => (
-                            <div className={`date2d-cal__cell date2d-cal__day date2d-cal__day--week date2d-cal__day--disabled bg-secondary-subtle empty ${i === WEEK.length-1 ? 'last-cell' : ''}`} key={i} data-week={i} dangerouslySetInnerHTML={{
+                            <div className={combinedCls(
+                                'date2d-cal__cell date2d-cal__day date2d-cal__day--week date2d-cal__day--disabled bg-secondary-subtle empty',
+                                {
+                                    'last-cell': i === WEEK.length-1
+                                }
+                            )} key={i} data-week={i} dangerouslySetInnerHTML={{
                                 __html: s
                             }} />
                         ))}
@@ -569,7 +585,18 @@ const Calendar = (props: CalendarProps) => {
                            
                                 return (
                                     <div
-                                        className={`date2d-cal__cell date2d-cal__day ${d > 0 ? '' : 'empty'} ${d === now.getDate() ? 'today' : ''} ${d === day ? 'selected' : ''} ${isLastCol ? 'last-cell' : ''} ${isLastRow ? 'last-row' : ''} ${checkDisabledDay(year, month, d) ? 'disabled' : ''}`}
+                                        className={combinedCls(
+                                            'date2d-cal__cell date2d-cal__day',
+                                            {
+                                                'empty': d <= 0,
+                                                'today': d === now.getDate(),
+                                                'selected': d === day,
+                                                'last-cell': isLastCol,
+                                                'last-row': isLastRow,
+                                                'disabled': checkDisabledDay(year, month, d)
+
+                                            }
+                                        )}
                                         key={"col" + i}
                                         data-date={getCalendarDate(_dateShow)}
                                         data-day={padZero(d)}
@@ -611,12 +638,23 @@ const Calendar = (props: CalendarProps) => {
 
 
                 {/*++++++++++++++++ MONTH SELECTION TAB ++++++++++++++++*/}
-                <div className={`date2d-cal__month-wrapper shadow p-3 mb-5 bg-body-tertiary rounded ${winMonth ? 'active' : ''}`}>
+                <div className={combinedCls(
+                    'date2d-cal__month-wrapper shadow p-3 mb-5 bg-body-tertiary rounded',
+                    {
+                        'active': winMonth
+                    }
+                )}>
                     <div className="date2d-cal__month-container">
                         {MONTHS_FULL.map((month, index) => {
                             return <div 
                                 data-month={padZero(index+1)}
-                                className={`date2d-cal__month ${selectedMonth === index ? ' selected' : ''} ${checkDisabledMonth(year, index) ? 'disabled' : ''}`} 
+                                className={combinedCls(
+                                    'date2d-cal__month',
+                                    {
+                                        'selected': selectedMonth === index,
+                                        'disabled': checkDisabledMonth(year, index)
+                                    }
+                                )} 
                                 key={month + index} 
                                 onClick={() => { handleMonthChange(index) }}
                             >{month}</div>
@@ -626,12 +664,23 @@ const Calendar = (props: CalendarProps) => {
                 {/*++++++++++++++++ /MONTH SELECTION TAB ++++++++++++++++*/}
 
                 {/*++++++++++++++++ YEAR SELECTION TAB ++++++++++++++++*/}
-                <div className={`date2d-cal__year-wrapper shadow p-3 mb-5 bg-body-tertiary rounded ${winYear ? 'active' : ''}`}>
+                <div className={combinedCls(
+                    'date2d-cal__year-wrapper shadow p-3 mb-5 bg-body-tertiary rounded',
+                    {
+                        'active': winYear
+                    }
+                )}>
                     <div className="date2d-cal__year-container bg-body-tertiary">
                         {yearsArray.map((year, index) => {
                             return <div 
                                 data-year={year}
-                                className={`date2d-cal__year ${selectedYear === year ? ' selected' : ''} ${checkDisabledYear(year) ? 'disabled' : ''}`} 
+                                className={combinedCls(
+                                    'date2d-cal__year',
+                                    {
+                                        'selected': selectedYear === year,
+                                        'disabled': checkDisabledYear(year)
+                                    }
+                                )} 
                                 key={year + index} onClick={() => { handleYearChange(year) }}
                             >{year}</div>
                         })}
@@ -646,7 +695,12 @@ const Calendar = (props: CalendarProps) => {
                     <button 
                         tabIndex={-1} 
                         type="button" 
-                        className={`date2d-cal__btn date2d-cal__btn--today ${currentMaxDateDisabled || currentMinDateDisabled ? 'disabled' : ''}`} 
+                        className={combinedCls(
+                            'date2d-cal__btn date2d-cal__btn--today',
+                            {
+                                'disabled': currentMaxDateDisabled || currentMinDateDisabled
+                            }
+                        )} 
                         onClick={handleTodayChange}
                     >
                         {langToday || 'Today'}

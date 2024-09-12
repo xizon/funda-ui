@@ -3,7 +3,13 @@
  * @param {*} s      - Any
  * @param  {String} defaultCls      - Default string
  * @param  {?*} targetCls      - Any
- * @returns HtmlElementCollection
+ * @returns {*}
  */
 declare function clsWrite(s: any, defaultCls: string, targetCls?: any): any;
-export { clsWrite };
+/**
+ * Combined classnames
+ * @param {*} args
+ * @returns {String|undefined}
+ */
+declare function combinedCls(...args: any[]): string | undefined;
+export { combinedCls, clsWrite };

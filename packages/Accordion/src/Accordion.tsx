@@ -3,7 +3,7 @@ import React, { useState, useRef } from 'react';
 import Item from './AccordionItem';
 
 import animateStyles from 'funda-utils/dist/cjs/anim';
-import { clsWrite } from 'funda-utils/dist/cjs/cls';
+import { clsWrite, combinedCls } from 'funda-utils/dist/cjs/cls';
 
 
 // Adapt the easing parameters of TweenMax
@@ -155,7 +155,10 @@ const Accordion = (props: AccordionProps) => {
     return (
         <>
 
-            <div className={`custom-accordion-item ${clsWrite(wrapperClassName, 'accordion')}`} role="tablist" ref={rootRef}>
+            <div className={combinedCls(
+                'custom-accordion-item',
+                clsWrite(wrapperClassName, 'accordion')
+            )} role="tablist" ref={rootRef}>
                 {(children != null) ? (children as any[]).map((item, i) => {
                     const childProps = { ...item.props };
                     const _defaultActive = i === 0 && displayTheFirstItem ? true : false;

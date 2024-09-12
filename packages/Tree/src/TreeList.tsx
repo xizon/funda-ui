@@ -7,6 +7,7 @@ import {
     getNextSiblings,
     getChildren
 } from 'funda-utils/dist/cjs/dom';
+import { clsWrite, combinedCls } from 'funda-utils/dist/cjs/cls';
 
 
 import { initUlHeight } from './init-height';
@@ -422,7 +423,12 @@ export default function TreeList(props: TreeListProps) {
         
         return (
             <>
-            <ul className={`${typeof childClassName !== 'undefined' ? childClassName : ''} ${first ? 'first' : ''}`}  ref={rootRef} style={!first ? {maxHeight: '0px'} : {}}>
+            <ul className={combinedCls(
+                childClassName,
+                {
+                    'first': first
+                }
+            )}  ref={rootRef} style={!first ? {maxHeight: '0px'} : {}}>
                 
                 {data.map((item: any, i: number) => {
 
@@ -432,7 +438,12 @@ export default function TreeList(props: TreeListProps) {
                     
                     if ( item.heading ) return (
                         <li 
-                            className={`nav-item ${first ? 'first' : ''}`} 
+                            className={combinedCls(
+                                'nav-item',
+                                {
+                                    'first': first
+                                }
+                            )} 
                             key={item.key}
                         >
                             <a 
@@ -451,7 +462,13 @@ export default function TreeList(props: TreeListProps) {
                     );
                     return (
                         <li 
-                            className={`nav-item ${first ? 'first' : ''} ${item.active ? 'active' : ''}`} 
+                            className={combinedCls(
+                                'nav-item',
+                                {
+                                    'first': first,
+                                    'active': item.active
+                                }
+                            )} 
                             key={item.key} 
                             onMouseEnter={typeof item.itemMouseEnterCallback !== 'undefined' ? item.itemMouseEnterCallback : () => void(0)} 
                             onMouseLeave={typeof item.itemMouseLeaveCallback !== 'undefined' ? item.itemMouseLeaveCallback : () => void(0)}
@@ -465,7 +482,12 @@ export default function TreeList(props: TreeListProps) {
                                     <div className="form-check d-inline-block">
                                         <input
                                             type="checkbox"
-                                            className={`form-check-input ${getCheckedData!.filter((cur: any) => cur.key === item.key)[0]?.indeterminate ? 'indeterminate' : ''}`}
+                                            className={combinedCls(
+                                                'form-check-input',
+                                                {
+                                                    'indeterminate': getCheckedData!.filter((cur: any) => cur.key === item.key)[0]?.indeterminate
+                                                }
+                                            )}
                                             name={`checkbox-${checkboxNamePrefix}-${item.key}`}
                                             tabIndex={-1}
                                             data-name={`checkbox-${checkboxNamePrefix}-${item.key}`}
@@ -486,7 +508,14 @@ export default function TreeList(props: TreeListProps) {
               
                             <a 
                                 tabIndex={-1} 
-                                className={`nav-link ${_async} ${item.selected ? 'selected' : ''} ${item.active ? 'active': ''}`}
+                                className={combinedCls(
+                                    'nav-link',
+                                    _async,
+                                    {
+                                        'selected': item.selected,
+                                        'active': item.active
+                                    }
+                                )}
                                 href={item.link === '#' ? `${item.link}-${i}` : item.link} 
                                 aria-expanded="false" 
                                 onClick={handleSelect} 

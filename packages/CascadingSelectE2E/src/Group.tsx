@@ -1,5 +1,7 @@
 import React from 'react';
 
+import { clsWrite, combinedCls } from 'funda-utils/dist/cjs/cls';
+
 export type GroupFnType = (arg1: any, arg2: any, arg3: number) => void;
 
 export type GroupProps = {
@@ -34,7 +36,12 @@ export default function Group(props: GroupProps) {
                         data-value={JSON.stringify(item)} 
                         data-level={level}
                         data-query={item.queryId} 
-                        className={`cas-select-e2e__opt ${item.current ? 'active' : ''}`} 
+                        className={combinedCls(
+                            'cas-select-e2e__opt',
+                            {
+                                'active': item.current
+                            }
+                        )} 
                         dangerouslySetInnerHTML={{
                             __html: typeof item.label !== 'undefined' ? item.label : item.name // "item.label" usually uses hierarchical style
                         }}
@@ -43,7 +50,7 @@ export default function Group(props: GroupProps) {
                 } else {
                     return columnTitle[level] === '' ? null : <h3 
                     key={index} 
-                    className={`cas-select-e2e__opt-header`} 
+                    className="cas-select-e2e__opt-header"
                     >
                         <span dangerouslySetInnerHTML={{
                         __html: columnTitle[level]

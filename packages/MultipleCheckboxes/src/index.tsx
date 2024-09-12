@@ -14,7 +14,7 @@ import {
 import {
     removeArrDuplicateItems
 } from 'funda-utils/dist/cjs/object';
-import { clsWrite } from 'funda-utils/dist/cjs/cls';
+import { clsWrite, combinedCls } from 'funda-utils/dist/cjs/cls';
 
 
 
@@ -331,7 +331,12 @@ const MultipleCheckboxes = forwardRef((props: MultipleCheckboxesProps, externalR
     
                         return <div
                             key={'checkbox' + optIndex}
-                            className={`multiple-checkboxes__control form-check ${_inline ? 'd-inline-block' : ''} pe-3`}
+                            className={combinedCls(
+                                'multiple-checkboxes__control form-check pe-3',
+                                {
+                                    'd-inline-block': _inline
+                                }
+                            )}
                             data-index={`${index}-${optIndex}`}
                             data-label={opt.label}
                             data-list-item-label={`${typeof opt.listItemLabel === 'undefined' ? '' : opt.listItemLabel}`}
@@ -445,7 +450,11 @@ const MultipleCheckboxes = forwardRef((props: MultipleCheckboxesProps, externalR
                 if (typeof item.optgroup !== 'undefined') {
                     return <td 
                         colSpan={1} 
-                        className={`multiple-checkboxes-group__wrapper ${groupWrapperClassName || ''} ${tableLayoutCellClassName || ''}`} 
+                        className={combinedCls(
+                            'multiple-checkboxes-group__wrapper',
+                            groupWrapperClassName,
+                            tableLayoutCellClassName
+                        )} 
                         key={'optgroup-' + index}
                         data-optiondata={JSON.stringify(item)}
                     >
@@ -454,7 +463,14 @@ const MultipleCheckboxes = forwardRef((props: MultipleCheckboxesProps, externalR
                 } else {
     
                     return <td colSpan={1}
-                        className={`multiple-checkboxes__control form-check ${_inline ? 'd-inline-block' : ''} pe-3 ${tableLayoutCellClassName || ''}`}
+                        className={combinedCls(
+                            'multiple-checkboxes__control form-check pe-3',
+                            tableLayoutCellClassName,
+                            {
+                                'd-inline-block': _inline
+                            }
+
+                        )}
                         data-index={index}
                         data-label={item.label}
                         data-list-item-label={`${typeof item.listItemLabel === 'undefined' ? '' : item.listItemLabel}`}
@@ -472,7 +488,10 @@ const MultipleCheckboxes = forwardRef((props: MultipleCheckboxesProps, externalR
     
                 if (typeof item.optgroup !== 'undefined') {
                     return <div 
-                        className={`multiple-checkboxes-group__wrapper ${groupWrapperClassName || ''}`} 
+                        className={combinedCls(
+                            'multiple-checkboxes-group__wrapper',
+                            groupWrapperClassName
+                        )} 
                         key={'optgroup-' + index}
                         data-optiondata={JSON.stringify(item)}
                     >
@@ -481,7 +500,12 @@ const MultipleCheckboxes = forwardRef((props: MultipleCheckboxesProps, externalR
                 } else {
     
                     return <div
-                        className={`multiple-checkboxes__control form-check ${_inline ? 'd-inline-block' : ''} pe-3`}
+                        className={combinedCls(
+                            'multiple-checkboxes__control form-check pe-3',
+                            {
+                                'd-inline-block': _inline
+                            }
+                        )}
                         data-index={index}
                         data-label={item.label}
                         data-list-item-label={`${typeof item.listItemLabel === 'undefined' ? '' : item.listItemLabel}`}
@@ -521,7 +545,10 @@ const MultipleCheckboxes = forwardRef((props: MultipleCheckboxesProps, externalR
                 {/* TABLE LAYOUT */}
                 <table
                     id={`multiple-checkboxes-tablelayout__wrapper-${idRes}`}
-                    className={`multiple-checkboxes-tablelayout__wrapper ${tableLayoutClassName || ''}`}
+                    className={combinedCls(
+                        'multiple-checkboxes-tablelayout__wrapper',
+                        tableLayoutClassName
+                    )}
                     ref={rootRef}
                 >
                     {label ? <>{typeof label === 'string' ? <caption dangerouslySetInnerHTML={{ __html: `${label}` }}></caption> : <caption>{label}</caption>}</> : null}
@@ -549,7 +576,10 @@ const MultipleCheckboxes = forwardRef((props: MultipleCheckboxesProps, externalR
             </> : <>
                 <div
                     id={`multiple-checkboxes__wrapper-${idRes}`}
-                    className={`multiple-checkboxes__wrapper ${clsWrite(wrapperClassName, 'mb-3 position-relative')}`}
+                    className={combinedCls(
+                        'multiple-checkboxes__wrapper',
+                        clsWrite(wrapperClassName, 'mb-3 position-relative')
+                    )}
                     ref={rootRef}
                 >
 

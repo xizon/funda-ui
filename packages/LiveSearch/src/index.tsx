@@ -14,7 +14,7 @@ import useDebounce from 'funda-utils/dist/cjs/useDebounce';
 import {
     getAbsolutePositionOfStage
 } from 'funda-utils/dist/cjs/getElementProperty';
-import { clsWrite } from 'funda-utils/dist/cjs/cls';
+import { clsWrite, combinedCls } from 'funda-utils/dist/cjs/cls';
 
 
 export interface OptionConfig {
@@ -783,7 +783,13 @@ const LiveSearch = forwardRef((props: LiveSearchProps, externalRef: any) => {
 
             <div 
                 ref={rootRef} 
-                className={`livesearch__wrapper ${clsWrite(wrapperClassName, 'mb-3 position-relative')} ${isOpen ? 'active' : ''}`} 
+                className={combinedCls(
+                    'livesearch__wrapper',
+                    clsWrite(wrapperClassName, 'mb-3 position-relative'),
+                    {
+                        'active': isOpen
+                    }
+                )} 
                 onMouseLeave={handleMouseLeaveTrigger}
                 onKeyDown={handleKeyPressed}
             >
@@ -846,12 +852,22 @@ const LiveSearch = forwardRef((props: LiveSearchProps, externalRef: any) => {
                         <div
                             ref={listRef}
                             id={`livesearch__options-wrapper-${idRes}`}
-                            className={`livesearch__options-wrapper list-group position-absolute border shadow small ${winWidth ? '' : ''} ${(orginalData && orginalData.length === 0) && !NO_MATCH_POPUP ? 'shadow-none border-0' : ''}`}
+                            className={combinedCls(
+                                'livesearch__options-wrapper list-group position-absolute border shadow small',
+                                {
+                                    'shadow-none border-0': (orginalData && orginalData.length === 0) && !NO_MATCH_POPUP
+                                }
+                            )}
                             style={{ zIndex: DEPTH, width: WIN_WIDTH, display: 'none' }}
                             role="tablist"
                         >
                             <div
-                                className={`livesearch__options-contentlist rounded ${(orginalData && orginalData.length === 0) && !NO_MATCH_POPUP ? 'd-none' : ''}`}
+                                className={combinedCls(
+                                    'livesearch__options-contentlist rounded',
+                                    {
+                                        'd-none': (orginalData && orginalData.length === 0) && !NO_MATCH_POPUP
+                                    }
+                                )}
                                 style={{ backgroundColor: 'var(--bs-list-group-bg)' }}
                                 ref={listContentRef}
                             >
@@ -879,7 +895,15 @@ const LiveSearch = forwardRef((props: LiveSearchProps, externalRef: any) => {
                                             type="button"
                                             data-index={index}
                                             key={index}
-                                            className={`list-group-item list-group-item-action border-start-0 border-end-0 border-top-0 border-bottom-0 livesearch__control-option-item ${startItemBorder} ${endItemBorder} ${typeof item.disabled === 'undefined' ? '' : (item.disabled == true ? 'disabled' : '')}`}
+                                            className={combinedCls(
+                                                'list-group-item list-group-item-action border-start-0 border-end-0 border-top-0 border-bottom-0 livesearch__control-option-item',
+                                                startItemBorder,
+                                                endItemBorder,
+                                                {
+                                                    'disabled': item.disabled
+                                                }
+
+                                            )}
                                             data-value={`${item.value}`}
                                             data-label={`${item.label}`}
                                             data-querystring={`${typeof item.queryString === 'undefined' ? '' : item.queryString}`}

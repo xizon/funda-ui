@@ -4,7 +4,7 @@ import React, { forwardRef, useEffect, useRef } from 'react';
 import {
     getNextSiblings
 } from 'funda-utils/dist/cjs/dom';
-
+import { clsWrite, combinedCls } from 'funda-utils/dist/cjs/cls';
 
 import { formatIndentVal, multiSelControlOptionExist } from './multiple-select-utils/func';
 
@@ -230,7 +230,12 @@ const ItemList = forwardRef((props: ItemListProps, externalRef: any) => {
 
                         return <li
                             key={selected ? 'item-selected' + i : 'item' + i}
-                            className={selected ? 'selected' : `${item.disabled ? 'disabled' : ''} ${multiSelControlOptionExist(valSelected, item.value) ? 'hide' : ''}`}
+                            className={selected ? 'selected' : combinedCls(
+                                {
+                                    'disabled': item.disabled,
+                                    'hide': multiSelControlOptionExist(valSelected, item.value)
+                                }
+                            )}
                             data-index={i}
                             data-value={`${item.value}`}
                             data-label={`${item.label}`}

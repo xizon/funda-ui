@@ -172,7 +172,7 @@ const MasonryLayout = (props: MasonryLayoutProps) => {
             <div
                 ref={rootRef}
                 id={idRes}
-                className={`masonry__wrapper`}
+                className="masonry__wrapper"
             >
                 <div className="masonry-innner" style={{ display: 'flex' }}>
                     {items}
