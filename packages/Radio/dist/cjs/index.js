@@ -940,6 +940,7 @@ var Radio = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(funct
     }, label)) : null;
   };
   var getAllControls = function getAllControls() {
+    if (rootRef.current === null) return [];
     return [].slice.call(rootRef.current.querySelectorAll("[type=\"radio\"]"));
   };
 

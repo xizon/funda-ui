@@ -15,6 +15,7 @@ export interface EventsValueConfig {
 
 
 export type EventCalendarProps = {
+    calendarWrapperClassName?: string;
     customTodayDate?: string;
     eventsValue?: any[];
     langWeek?: string[];
@@ -61,6 +62,7 @@ export type EventCalendarProps = {
 
 const EventCalendar = (props: EventCalendarProps) => {
     const {
+        calendarWrapperClassName,
         customTodayDate,
         eventsValue,
         langWeek,
@@ -428,7 +430,12 @@ const EventCalendar = (props: EventCalendarProps) => {
 
     return (
         <>
-            <div className="e-cal__wrapper">
+
+            <div className={combinedCls(
+                "e-cal__wrapper",
+                calendarWrapperClassName
+            )}>
+
 
                 {/*++++++++++++++++ MAIN ++++++++++++++++*/}
                 <div className="e-cal__header bg-body-tertiary">

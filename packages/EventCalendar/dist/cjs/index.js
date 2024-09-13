@@ -2177,7 +2177,8 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 
 var EventCalendar = function EventCalendar(props) {
-  var customTodayDate = props.customTodayDate,
+  var calendarWrapperClassName = props.calendarWrapperClassName,
+    customTodayDate = props.customTodayDate,
     eventsValue = props.eventsValue,
     langWeek = props.langWeek,
     langWeekFull = props.langWeekFull,
@@ -2533,7 +2534,7 @@ var EventCalendar = function EventCalendar(props) {
     onListRenderComplete === null || onListRenderComplete === void 0 ? void 0 : onListRenderComplete();
   }, [eventsValue, customTodayDate]);
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-    className: "e-cal__wrapper"
+    className: (0,funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_1__.combinedCls)("e-cal__wrapper", calendarWrapperClassName)
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
     className: "e-cal__header bg-body-tertiary"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", {

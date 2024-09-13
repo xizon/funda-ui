@@ -3037,7 +3037,15 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 
 var EventCalendarTimeline = function EventCalendarTimeline(props) {
-  var customTodayDate = props.customTodayDate,
+  var calendarWrapperClassName = props.calendarWrapperClassName,
+    tableWrapperClassName = props.tableWrapperClassName,
+    tableClassName = props.tableClassName,
+    tableHeadClassName = props.tableHeadClassName,
+    tableBodyClassName = props.tableBodyClassName,
+    tableListStartClassName = props.tableListStartClassName,
+    tableListEndClassName = props.tableListEndClassName,
+    tableListDividerClassName = props.tableListDividerClassName,
+    customTodayDate = props.customTodayDate,
     eventsValue = props.eventsValue,
     langWeek = props.langWeek,
     langWeekFull = props.langWeekFull,
@@ -4230,7 +4238,7 @@ var EventCalendarTimeline = function EventCalendarTimeline(props) {
     };
   }, [eventsValue, customTodayDate]);
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-    className: "e-cal-tl__wrapper"
+    className: (0,funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_6__.combinedCls)("e-cal-tl__wrapper", calendarWrapperClassName)
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
     className: "e-cal-tl__header bg-body-tertiary"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", {
@@ -4324,13 +4332,14 @@ var EventCalendarTimeline = function EventCalendarTimeline(props) {
     onClick: handleTodayChange
   }, langToday || 'Today'))), val.length === 0 ? null : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
     ref: tableGridRef,
-    className: "e-cal-tl-table__timeline-table__wrapper invisible"
+    className: (0,funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_6__.combinedCls)("e-cal-tl-table__timeline-table__wrapper invisible", tableWrapperClassName)
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("table", {
     role: "grid",
-    className: "e-cal-tl-table__timeline-table"
+    className: (0,funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_6__.combinedCls)("e-cal-tl-table__timeline-table", tableClassName)
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("colgroup", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("col", {
     className: "e-cal-tl-table__datagrid-header"
   }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("col", null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("col", null)), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("thead", {
+    className: (0,funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_6__.combinedCls)(tableHeadClassName),
     ref: tableGridHeaderRef,
     role: "rowgroup"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("tr", {
@@ -4367,12 +4376,14 @@ var EventCalendarTimeline = function EventCalendarTimeline(props) {
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("table", {
     className: "e-cal-tl-table__datagrid-header__content e-cal-tl-table__scrollgrid-sync-table"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("tbody", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("tr", null, generateDaysUi()))))))))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("tbody", {
+    className: (0,funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_6__.combinedCls)(tableBodyClassName),
     role: "rowgroup"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("tr", {
     role: "presentation",
     className: "e-cal-tl-table__list-section"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("td", {
-    role: "presentation"
+    role: "presentation",
+    className: (0,funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_6__.combinedCls)(tableListStartClassName)
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
     ref: scrollListRef,
     className: "e-cal-tl-table__scroller-harness ".concat(AUTO_SCROLL ? 'autoscroll' : ''),
@@ -4387,9 +4398,10 @@ var EventCalendarTimeline = function EventCalendarTimeline(props) {
     role: "presentation"
   }, generateListSectionUi()))))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("td", {
     role: "presentation",
-    className: "e-cal-tl-table__timeline-divider"
+    className: (0,funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_6__.combinedCls)('e-cal-tl-table__timeline-divider', tableListDividerClassName)
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null)), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("td", {
-    role: "presentation"
+    role: "presentation",
+    className: (0,funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_6__.combinedCls)(tableListEndClassName)
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
     ref: scrollBodyRef,
     className: "e-cal-tl-table__scroller-harness ".concat(AUTO_SCROLL ? 'autoscroll' : ''),

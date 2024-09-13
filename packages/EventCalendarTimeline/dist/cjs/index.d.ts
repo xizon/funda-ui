@@ -16,6 +16,14 @@ export interface TimelineValueConfig {
     eventSources: EventsValueConfig[];
 }
 export declare type EventCalendarTimelineProps = {
+    calendarWrapperClassName?: string;
+    tableWrapperClassName?: string;
+    tableClassName?: string;
+    tableHeadClassName?: string;
+    tableBodyClassName?: string;
+    tableListStartClassName?: string;
+    tableListEndClassName?: string;
+    tableListDividerClassName?: string;
     customTodayDate?: string;
     eventsValue?: TimelineValueConfig[];
     langWeek?: string[];

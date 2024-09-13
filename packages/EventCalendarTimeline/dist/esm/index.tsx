@@ -32,6 +32,14 @@ export interface TimelineValueConfig {
 
 
 export type EventCalendarTimelineProps = {
+    calendarWrapperClassName?: string;
+    tableWrapperClassName?: string;
+    tableClassName?: string;
+    tableHeadClassName?: string;
+    tableBodyClassName?: string;
+    tableListStartClassName?: string;
+    tableListEndClassName?: string;
+    tableListDividerClassName?: string;
     customTodayDate?: string;
     eventsValue?: TimelineValueConfig[];
     langWeek?: string[];
@@ -98,6 +106,14 @@ export type EventCalendarTimelineProps = {
 
 const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
     const {
+        calendarWrapperClassName,
+        tableWrapperClassName,
+        tableClassName,
+        tableHeadClassName,
+        tableBodyClassName,
+        tableListStartClassName,
+        tableListEndClassName,
+        tableListDividerClassName,
         customTodayDate,
         eventsValue,
         langWeek,
@@ -1537,7 +1553,10 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
             {/*//////////////////// Calendar //////////////////// */}
             {/*////////////////////////////////////////////////// */}
 
-            <div className="e-cal-tl__wrapper">
+            <div className={combinedCls(
+                "e-cal-tl__wrapper",
+                calendarWrapperClassName
+            )}>
 
                 {/*++++++++++++++++ MAIN ++++++++++++++++*/}
                 <div className="e-cal-tl__header bg-body-tertiary">
@@ -1630,14 +1649,25 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
             {/*//////////////////// Table Grid //////////////////// */}
             {/*////////////////////////////////////////////////// */}
             {val.length === 0 ? null : <>
-                <div ref={tableGridRef} className="e-cal-tl-table__timeline-table__wrapper invisible">
-                    <table role="grid" className="e-cal-tl-table__timeline-table">
+                <div ref={tableGridRef} className={combinedCls(
+                    "e-cal-tl-table__timeline-table__wrapper invisible",
+                    tableWrapperClassName
+                )}>
+                    <table role="grid" className={combinedCls(
+                        "e-cal-tl-table__timeline-table",
+                        tableClassName
+                    )}>
                         <colgroup>
                             <col className="e-cal-tl-table__datagrid-header" />
                             <col />
                             <col />
                         </colgroup>
-                        <thead ref={tableGridHeaderRef} role="rowgroup">
+                        <thead className={combinedCls(
+                                tableHeadClassName
+                            )} 
+                            ref={tableGridHeaderRef} 
+                            role="rowgroup"
+                        >
                             <tr role="presentation">
                                 <th role="presentation">
                                     {/*<!--///// HEADER LEFT //////-->*/}
@@ -1689,9 +1719,19 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
 
 
 
-                        <tbody role="rowgroup">
+                        <tbody className={combinedCls(
+                                tableBodyClassName
+                            )}  
+                            role="rowgroup"
+                        >
                             <tr role="presentation" className="e-cal-tl-table__list-section">
-                                <td role="presentation">
+                                <td 
+                                    role="presentation"
+                                    className={combinedCls(
+                                        tableListStartClassName
+                                    )} 
+                                    
+                                >
 
                                     <div ref={scrollListRef} className={`e-cal-tl-table__scroller-harness ${AUTO_SCROLL ? 'autoscroll' : ''}`} data-scroll="list" onScroll={syncTableScrollList}>
                                         <div className="e-cal-tl-table__scroller">
@@ -1715,8 +1755,21 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
 
 
                                 </td>
-                                <td role="presentation" className="e-cal-tl-table__timeline-divider"><div></div></td>
-                                <td role="presentation">
+                                <td 
+                                    role="presentation" 
+                                    className={combinedCls(
+                                        'e-cal-tl-table__timeline-divider',
+                                        tableListDividerClassName
+                                    )} 
+                                >
+                                    <div></div>
+                                </td>
+                                <td 
+                                    role="presentation"
+                                    className={combinedCls(
+                                        tableListEndClassName
+                                    )} 
+                                >
     
 
                                     <div ref={scrollBodyRef} className={`e-cal-tl-table__scroller-harness ${AUTO_SCROLL ? 'autoscroll' : ''}`} data-scroll="body" onScroll={syncTableScrollBody} onMouseMove={BODY_DRAG ? handleTableMove : () =>{}} onMouseDown={BODY_DRAG ? handleTableDragStart : () =>{}} onMouseUp={BODY_DRAG ? handleTableDragEnd : () =>{}} onMouseLeave={BODY_DRAG ? handleTableDragEnd : () =>{}}>

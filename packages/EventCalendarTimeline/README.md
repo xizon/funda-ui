@@ -392,6 +392,56 @@ export default () => {
 
 
 
+## Fixed date selection and table headers from the entire component
+
+Just use a custom style.
+
+
+`styles.scss`:
+```css
+.app-event-tl-calendar-wrapper {
+    position: sticky !important;
+    top: 0;
+    z-index: 3;
+}
+.app-event-tl-table-head {
+    position: sticky !important;
+    top: 2.75rem;
+    z-index: 3;
+}
+```
+
+
+`index.tsx`:
+```js
+import React from "react";
+import EventCalendarTimeline from 'funda-ui/EventCalendarTimeline';
+
+// component styles
+import 'funda-ui/EventCalendarTimeline/index.css';
+
+export default () => {
+
+    return (
+        <>
+
+            <div style={{height: '280px', overflowY: 'scroll'}}>
+                <div style={{height: '600px'}}>
+                    <EventCalendarTimeline
+                        ...
+                        calendarWrapperClassName="app-event-tl-calendar-wrapper"
+                        tableHeadClassName="app-event-tl-table-head"
+                        ...
+                    />
+            
+                </div>
+            </div>     
+        </>
+    );
+}
+```
+
+
 ## Set max height and width
 
 Just put a **div** on the outermost layer of the `<EventCalendarTimeline />`.
@@ -1547,6 +1597,14 @@ import EventCalendarTimeline from 'funda-ui/EventCalendarTimeline';
 ```
 | Property | Type | Default | Description | Required |
 | --- | --- | --- | --- | --- |
+| `calendarWrapperClassName` | string | - | The class name of the calendar wrapper. | - |
+| `tableWrapperClassName` | string | - | The class name of the table wrapper. | - |
+| `tableClassName` | string | - | The class name of the table. | - |
+| `tableHeadClassName` | string | - | The class name of the table head. | - |
+| `tableBodyClassName` | string | - | The class name of the table body. | - |
+| `tableListStartClassName` | string | - | The class name of the start content. | - |
+| `tableListEndClassName` | string | - | The class name of the end content. | - |
+| `tableListDividerClassName` | string | - | The class name of the content divider. | - |
 | `customTodayDate` | string  | - | Specify a default today. such as `2023-11-16` | - |
 | `eventsValue` | array  | `[]` | Specify the default value for all events. Its properties are described below in the documentation. such as `[{"listSection":{"id": 100, "title":"Smith One"},"eventSources":[{"id":1,"date":"2024-01-06","time":"","data":"<span data-work=\"true\" class=\"text-warning\">Rest </span>","dataTooltip":"<span>Rest</span>","eventStyles":{"background":"rgb(255, 240, 227)"}},{"id":2,"date":"2023-12-04","time":"","data":"<span data-work=\"true\" class=\"text-primary\">Night Shift <span class=\"badge rounded-pill bg-primary mx-1\">IM</span></span>","dataTooltip":"<span>Night Shift</span>","eventStyles":{"background":"rgb(203, 228, 240)"}}]},{"listSection":{"id": 101, "title":"Jerry"},"eventSources":[{"id":3,"date":"2024-02-28","time":"","data":"<span data-work=\"true\" class=\"text-primary\">Night Shift </span>","eventStyles":{"background":"rgb(203, 228, 240)"}}]},{"listSection":{"id": 103, "title":"David"},"eventSources":[]}]` | ✅ |
 | `langWeek` | array  | `['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN']` | Localization in the component of week sequence. <blockquote>Support html tags. <br />such as `['<small>MON</small>', '<small>TUE</small>', '<small>WED</small>', '<small>THU</small>', '<small>FRI</small>', '<small>SAT</small>', '<small>SUN</small>']`</blockquote> | - |

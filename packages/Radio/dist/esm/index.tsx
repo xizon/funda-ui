@@ -113,6 +113,7 @@ const Radio = forwardRef((props: RadioProps, externalRef: any) => {
     };
 
     const getAllControls = () => {
+        if (rootRef.current === null) return [];
         return [].slice.call(rootRef.current.querySelectorAll(`[type="radio"]`));
     };
 
