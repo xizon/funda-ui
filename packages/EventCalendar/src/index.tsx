@@ -303,6 +303,7 @@ const EventCalendar = (props: EventCalendarProps) => {
                 year: _date.getFullYear().toString()
             });
 
+
             return _date;
         });
 
@@ -339,13 +340,6 @@ const EventCalendar = (props: EventCalendarProps) => {
 
         // close win
         setWinYear(false);
-
-        //
-        onChangeYear?.({
-            day: padZero(day),
-            month: padZero(month+1),
-            year: currentValue.toString()
-        });
 
     }
 
@@ -403,6 +397,16 @@ const EventCalendar = (props: EventCalendarProps) => {
         }
         setYearsCollection(years);
     }, [selectedYear]);
+
+
+    useEffect(() => {
+        // Guaranteed year change triggered by the front and rear buttons
+        onChangeYear?.({
+            day: padZero(day),
+            month: padZero(month+1),
+            year: year.toString()
+        });
+    }, [year]);
 
 
 

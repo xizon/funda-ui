@@ -3496,13 +3496,6 @@ var EventCalendarTimeline = function EventCalendarTimeline(props) {
     // close win
     setWinYear(false);
 
-    //
-    onChangeYear === null || onChangeYear === void 0 ? void 0 : onChangeYear({
-      day: padZero(day),
-      month: padZero(month + 1),
-      year: currentValue.toString()
-    });
-
     // restore table grid init status
     restoreTableGridInitStatus();
   }
@@ -4220,6 +4213,14 @@ var EventCalendarTimeline = function EventCalendarTimeline(props) {
   (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(function () {
     setTodayDate(date);
   }, [date]);
+  (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(function () {
+    // Guaranteed year change triggered by the front and rear buttons
+    onChangeYear === null || onChangeYear === void 0 ? void 0 : onChangeYear({
+      day: padZero(day),
+      month: padZero(month + 1),
+      year: year.toString()
+    });
+  }, [year]);
   (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(function () {
     // update events value
     if (Array.isArray(eventsValue)) setVal(eventsValue);

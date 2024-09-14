@@ -28,7 +28,7 @@ console.log(combinedCls('a-1', 'a-2', 'a-3', {
     undefined
 })); // a-1 a-2 a-3 p-3 p-5 p-7
 */
-function combinedCls(...args) {
+function combinedCls(...args: any[]): string | undefined {
     if (args) {
         let classes: any[] = [];
 

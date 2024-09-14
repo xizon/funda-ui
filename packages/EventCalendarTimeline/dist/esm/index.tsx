@@ -11,6 +11,8 @@ import {
 } from 'funda-utils/dist/cjs/getElementProperty';
 import { clsWrite, combinedCls } from 'funda-utils/dist/cjs/cls';
 
+
+
 export interface EventsValueConfig {
     id: string | number;
     date: string,
@@ -207,8 +209,6 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
     const EVENTS_ENABLED = typeof modalContent !== 'undefined';
     const [showEdit, setShowEdit] = useState<boolean>(false);
     const [showDelete, setShowDelete] = useState<boolean>(false);
-
-
 
     // table grid
     const AUTO_SCROLL = autoScroll || false;
@@ -547,7 +547,6 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
                 year: _date.getFullYear().toString()
             });
 
-
             // restore table grid init status
             restoreTableGridInitStatus();
 
@@ -595,14 +594,6 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
         // close win
         setWinYear(false);
 
-
-        //
-        onChangeYear?.({
-            day: padZero(day),
-            month: padZero(month+1),
-            year: currentValue.toString()
-        });
-
         // restore table grid init status
         restoreTableGridInitStatus();
 
@@ -624,7 +615,7 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
             month: padZero(currentIndex+1),
             year: year.toString()
         });
-
+        
         // restore table grid init status
         restoreTableGridInitStatus();
         
@@ -1519,6 +1510,16 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
     useEffect(() => {
         setTodayDate(date);
     }, [date]);
+
+
+    useEffect(() => {
+        // Guaranteed year change triggered by the front and rear buttons
+        onChangeYear?.({
+            day: padZero(day),
+            month: padZero(month+1),
+            year: year.toString()
+        });
+    }, [year]);
 
 
     useEffect(() => {
