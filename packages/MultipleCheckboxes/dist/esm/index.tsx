@@ -108,6 +108,13 @@ const MultipleCheckboxes = forwardRef((props: MultipleCheckboxesProps, externalR
     const [dataInit, setDataInit] = useState<OptionConfig[]>(optionsDataInit);
 
 
+    const optionsFormatGroupOpt = (allData: any[]) => {
+        allData.forEach((item: any) => {
+            if (typeof item.optgroup !== 'undefined') {
+                item.value = String(Math.random());
+            }
+        });
+    };
 
     const optionsFlat = (allData: any[]) => {
 
@@ -192,7 +199,10 @@ const MultipleCheckboxes = forwardRef((props: MultipleCheckboxesProps, externalR
                 _ORGIN_DATA = [];
             }
 
+
+
             // remove Duplicate objects from JSON Array
+            optionsFormatGroupOpt(_ORGIN_DATA); // prevent the value from being filtered out
             _ORGIN_DATA = removeArrDuplicateItems(_ORGIN_DATA, 'value');
 
 
@@ -206,12 +216,13 @@ const MultipleCheckboxes = forwardRef((props: MultipleCheckboxesProps, externalR
             //
             onFetch?.(_ORGIN_DATA);
 
-
+            console.log('======', _ORGIN_DATA)
             return _ORGIN_DATA;
         } else {
 
             
             // remove Duplicate objects from JSON Array
+            optionsFormatGroupOpt(optionsDataInit); // prevent the value from being filtered out
             optionsDataInit = removeArrDuplicateItems(optionsDataInit, 'value');
 
             //
@@ -224,6 +235,7 @@ const MultipleCheckboxes = forwardRef((props: MultipleCheckboxesProps, externalR
             onFetch?.(optionsDataInit);
 
 
+            console.log('======', optionsDataInit)
             return optionsDataInit;
         }
 

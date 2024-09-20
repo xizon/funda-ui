@@ -26,6 +26,7 @@
   --e-cal-tl-footer-today-btn-bg: rgba(0, 58, 166, 1);
   --e-cal-tl-footer-today-btn-color: #fff;
   position: relative;
+  z-index: 3;
   min-width: var(--e-cal-tl-wrapper-min-width);
   border: 1px solid var(--e-cal-tl-border-color);
   /* --HEADER --*/
@@ -194,6 +195,8 @@
   height: 100%; /* Required */
   font-size: var(--e-cal-tl-table-bodycell-font-size);
   margin-top: -1px;
+  position: relative;
+  z-index: 2;
   /* list section */
   /* datagrid title */
   /* datagrid content */

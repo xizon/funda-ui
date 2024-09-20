@@ -1322,6 +1322,13 @@ var NativeSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_
     _useState6 = _slicedToArray(_useState5, 2),
     controlValue = _useState6[0],
     setControlValue = _useState6[1];
+  var optionsFormatGroupOpt = function optionsFormatGroupOpt(allData) {
+    allData.forEach(function (item) {
+      if (typeof item.optgroup !== 'undefined') {
+        item.value = String(Math.random());
+      }
+    });
+  };
   function fetchData(_x2) {
     return _fetchData.apply(this, arguments);
   } //
@@ -1336,7 +1343,7 @@ var NativeSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_
 
             //
             if (!(_typeof(fetchFuncAsync) === 'object')) {
-              _context.next = 16;
+              _context.next = 17;
               break;
             }
             _context.next = 4;
@@ -1365,6 +1372,7 @@ var NativeSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_
             }
 
             // remove Duplicate objects from JSON Array
+            optionsFormatGroupOpt(_ORGIN_DATA); // prevent the value from being filtered out
             _ORGIN_DATA = (0,object.removeArrDuplicateItems)(_ORGIN_DATA, 'value');
 
             //
@@ -1373,11 +1381,12 @@ var NativeSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_
             //
             onFetch === null || onFetch === void 0 ? void 0 : onFetch(_ORGIN_DATA);
             return _context.abrupt("return", _ORGIN_DATA);
-          case 16:
+          case 17:
             // set "<select>" value
             setControlValue(value); // value must be initialized
 
             // remove Duplicate objects from JSON Array
+            optionsFormatGroupOpt(optionsDataInit); // prevent the value from being filtered out
             optionsDataInit = (0,object.removeArrDuplicateItems)(optionsDataInit, 'value');
 
             //
@@ -1386,7 +1395,7 @@ var NativeSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_
             //
             onFetch === null || onFetch === void 0 ? void 0 : onFetch(optionsDataInit);
             return _context.abrupt("return", optionsDataInit);
-          case 21:
+          case 23:
           case "end":
             return _context.stop();
         }

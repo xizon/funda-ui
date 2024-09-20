@@ -1255,6 +1255,13 @@ var MultipleCheckboxes = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forw
     _useState4 = _slicedToArray(_useState3, 2),
     dataInit = _useState4[0],
     setDataInit = _useState4[1];
+  var optionsFormatGroupOpt = function optionsFormatGroupOpt(allData) {
+    allData.forEach(function (item) {
+      if (typeof item.optgroup !== 'undefined') {
+        item.value = String(Math.random());
+      }
+    });
+  };
   var optionsFlat = function optionsFlat(allData) {
     var flatItems = [];
     allData.forEach(function (item) {
@@ -1325,7 +1332,7 @@ var MultipleCheckboxes = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forw
 
             //
             if (!(_typeof(fetchFuncAsync) === 'object')) {
-              _context.next = 15;
+              _context.next = 17;
               break;
             }
             _context.next = 4;
@@ -1344,6 +1351,7 @@ var MultipleCheckboxes = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forw
             }
 
             // remove Duplicate objects from JSON Array
+            optionsFormatGroupOpt(_ORGIN_DATA); // prevent the value from being filtered out
             _ORGIN_DATA = (0,funda_utils_dist_cjs_object__WEBPACK_IMPORTED_MODULE_5__.removeArrDuplicateItems)(_ORGIN_DATA, 'value');
 
             //
@@ -1354,9 +1362,11 @@ var MultipleCheckboxes = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forw
 
             //
             onFetch === null || onFetch === void 0 ? void 0 : onFetch(_ORGIN_DATA);
+            console.log('======', _ORGIN_DATA);
             return _context.abrupt("return", _ORGIN_DATA);
-          case 15:
+          case 17:
             // remove Duplicate objects from JSON Array
+            optionsFormatGroupOpt(optionsDataInit); // prevent the value from being filtered out
             optionsDataInit = (0,funda_utils_dist_cjs_object__WEBPACK_IMPORTED_MODULE_5__.removeArrDuplicateItems)(optionsDataInit, 'value');
 
             //
@@ -1367,8 +1377,9 @@ var MultipleCheckboxes = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forw
 
             //
             onFetch === null || onFetch === void 0 ? void 0 : onFetch(optionsDataInit);
+            console.log('======', optionsDataInit);
             return _context.abrupt("return", optionsDataInit);
-          case 20:
+          case 24:
           case "end":
             return _context.stop();
         }

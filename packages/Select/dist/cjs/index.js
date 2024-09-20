@@ -3614,6 +3614,13 @@ var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_
   // clean trigger
   var CLEAN_TRIGGER_VALID = typeof cleanTrigger === 'undefined' ? false : cleanTrigger ? cleanTrigger.valid : false;
   var CLEAN_TRIGGER_LABEL = cleanTrigger ? cleanTrigger.cleanValueLabel : 'Clean';
+  var optionsFormatGroupOpt = function optionsFormatGroupOpt(allData) {
+    allData.forEach(function (item) {
+      if (typeof item.optgroup !== 'undefined') {
+        item.value = String(Math.random());
+      }
+    });
+  };
 
   // exposes the following methods
   (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useImperativeHandle)(popupRef, function () {
@@ -3792,7 +3799,7 @@ var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_
             incomingOptionsData = valueInputRef.current.dataset.options; // Determine whether the default value is user query input or default input
             defaultValue = init ? inputDefaultValue : '';
             if (!(_typeof(fetchFuncAsync) === 'object')) {
-              _context.next = 24;
+              _context.next = 25;
               break;
             }
             _context.next = 6;
@@ -3926,6 +3933,7 @@ var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_
             // STEP 6: ===========
             //
             // remove Duplicate objects from JSON Array
+            optionsFormatGroupOpt(_ORGIN_DATA); // prevent the value from being filtered out
             _ORGIN_DATA = (0,object.removeArrDuplicateItems)(_ORGIN_DATA, 'value');
             setOptionsData(_ORGIN_DATA); // data must be initialized
 
@@ -3938,7 +3946,7 @@ var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_
 
             //
             return _context.abrupt("return", _ORGIN_DATA);
-          case 24:
+          case 25:
             // STEP 1: ===========
             // get incoming options from `data-options` of component
             if (typeof incomingOptionsData !== 'undefined') {
@@ -4044,6 +4052,7 @@ var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_
             // STEP 6: ===========
             //
             // remove Duplicate objects from JSON Array
+            optionsFormatGroupOpt(staticOptionsData); // prevent the value from being filtered out
             staticOptionsData = (0,object.removeArrDuplicateItems)(staticOptionsData, 'value');
             setOptionsData(staticOptionsData); // data must be initialized
 
@@ -4056,7 +4065,7 @@ var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_
 
             //
             return _context.abrupt("return", staticOptionsData);
-          case 39:
+          case 41:
           case "end":
             return _context.stop();
         }

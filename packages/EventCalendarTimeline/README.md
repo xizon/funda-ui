@@ -392,56 +392,6 @@ export default () => {
 
 
 
-## Fixed date selection and table headers from the entire component
-
-Just use a custom style.
-
-
-`styles.scss`:
-```css
-.app-event-tl-calendar-wrapper {
-    position: sticky !important;
-    top: 0;
-    z-index: 3;
-}
-.app-event-tl-table-head {
-    position: sticky !important;
-    top: 2.75rem;
-    z-index: 3;
-}
-```
-
-
-`index.tsx`:
-```js
-import React from "react";
-import EventCalendarTimeline from 'funda-ui/EventCalendarTimeline';
-
-// component styles
-import 'funda-ui/EventCalendarTimeline/index.css';
-
-export default () => {
-
-    return (
-        <>
-
-            <div style={{height: '280px', overflowY: 'scroll'}}>
-                <div style={{height: '600px'}}>
-                    <EventCalendarTimeline
-                        ...
-                        calendarWrapperClassName="app-event-tl-calendar-wrapper"
-                        tableHeadClassName="app-event-tl-table-head"
-                        ...
-                    />
-            
-                </div>
-            </div>     
-        </>
-    );
-}
-```
-
-
 ## Set max height and width
 
 Just put a **div** on the outermost layer of the `<EventCalendarTimeline />`.

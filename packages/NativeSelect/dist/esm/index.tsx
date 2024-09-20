@@ -102,6 +102,15 @@ const NativeSelect = forwardRef((props: NativeSelectProps, externalRef: any) => 
     const [controlValue, setControlValue] = useState<string | undefined>('');
   
 
+    const optionsFormatGroupOpt = (allData: any[]) => {
+        allData.forEach((item: any) => {
+            if (typeof item.optgroup !== 'undefined') {
+                item.value = String(Math.random());
+            }
+        });
+    };
+
+
     
     async function fetchData(params: any) {
         
@@ -136,6 +145,7 @@ const NativeSelect = forwardRef((props: NativeSelectProps, externalRef: any) => 
             }
 
             // remove Duplicate objects from JSON Array
+            optionsFormatGroupOpt(_ORGIN_DATA); // prevent the value from being filtered out
             _ORGIN_DATA = removeArrDuplicateItems(_ORGIN_DATA, 'value');
 
             //
@@ -152,6 +162,7 @@ const NativeSelect = forwardRef((props: NativeSelectProps, externalRef: any) => 
             
 
             // remove Duplicate objects from JSON Array
+            optionsFormatGroupOpt(optionsDataInit); // prevent the value from being filtered out
             optionsDataInit = removeArrDuplicateItems(optionsDataInit, 'value');
 
             //

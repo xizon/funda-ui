@@ -432,21 +432,21 @@ export default () => {
                 placeholder="Select"
                 name="name"
                 options={[
-                    { "label": "Option 0", "value": "value-0" },
+                    { "label": "Option 0", "value": "value-0","queryString":"" },
                     {
-                        "label": "Group 1", "value": "", "optgroup": [
-                            { "label": "Option 1", "value": "value-1" },
-                            { "label": "Option 2", "value": "value-2" }
+                        "label": "Group 1", "value": "", "queryString":"", "optgroup": [
+                            { "label": "Option 1", "value": "value-1","queryString":"" },
+                            { "label": "Option 2", "value": "value-2","queryString":"" }
                         ]
                     },
                     {
-                        "label": "Group 2", "value": "", "optgroup": [
-                            { "label": "Option 3", "value": "value-3" },
-                            { "label": "Option 4", "value": "value-4" },
-                            { "label": "Option 5", "value": "value-5" }
+                        "label": "Group 2", "value": "", "queryString":"", "optgroup": [
+                            { "label": "Option 3", "value": "value-3","queryString":"" },
+                            { "label": "Option 4", "value": "value-4","queryString":"" },
+                            { "label": "Option 5", "value": "value-5","queryString":"" }
                         ]
                     },
-                    { "label": "Option 6", "value": "value-6" },
+                    { "label": "Option 6", "value": "value-6","queryString":"" },
 
                 ]}
                 onChange={(e, e2, val) => {
@@ -1606,7 +1606,7 @@ JSON Object Literals configuration properties of the `options` and callback from
 | `label` | string | - | Specify the label text for each option. <blockquote>Support html tags. But must have at least a string other than the HTML Tag, because the HTML Tag in this field will be sanitized when assigning the value. such as `<small>abc</small>efg`</blockquote> | ✅ |
 | `listItemLabel` | string | - | Specify the label text for pop-up list items. <blockquote>Support html tags</blockquote> | - |
 | `value` | string | - | Specify the value for each option | ✅ |
-| `optgroup` | array | - | Creates a grouping of options. It will be displayed using the value of `label`. such as `[{"label":"Option 0","value":"value-0"},{"label":"Group 1","value":"","optgroup":[{"label":"Option 1","value":"value-1"},{"label":"Option 2","value":"value-2"}]}]` | - |
+| `optgroup` | array | - | Creates a grouping of options. It will be displayed using the value of `label`. such as `[{"label":"Option 0","value":"value-0","queryString":""},{"label":"Group 1","value":"","queryString":"","optgroup":[{"label":"Option 1","value":"value-1","queryString":""},{"label":"Option 2","value":"value-2","queryString":""}]}]` | - |
 | `queryString` | string | - | Quick query string, such as Chinese pinyin or English initials | ✅ |
 | `disabled` | boolean | - | When present, it specifies that an option should be disabled. | - |
 

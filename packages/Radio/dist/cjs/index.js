@@ -913,6 +913,13 @@ var Radio = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(funct
 
   // return a array of options
   var optionsDataInit = optionsRes;
+  var optionsFormatGroupOpt = function optionsFormatGroupOpt(allData) {
+    allData.forEach(function (item) {
+      if (typeof item.optgroup !== 'undefined') {
+        item.value = String(Math.random());
+      }
+    });
+  };
 
   //
   var _useState = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(optionsDataInit),
@@ -1011,7 +1018,7 @@ var Radio = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(funct
 
             //
             if (!(_typeof(fetchFuncAsync) === 'object')) {
-              _context.next = 22;
+              _context.next = 23;
               break;
             }
             _context.next = 5;
@@ -1049,6 +1056,7 @@ var Radio = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(funct
             setControlValue(_realValue); // value must be initialized
 
             // remove Duplicate objects from JSON Array
+            optionsFormatGroupOpt(_ORGIN_DATA); // prevent the value from being filtered out
             _ORGIN_DATA = (0,funda_utils_dist_cjs_object__WEBPACK_IMPORTED_MODULE_3__.removeArrDuplicateItems)(_ORGIN_DATA, 'value');
 
             //
@@ -1060,7 +1068,7 @@ var Radio = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(funct
             //
             onLoad === null || onLoad === void 0 ? void 0 : onLoad(_ORGIN_DATA, _realValue, rootRef.current);
             return _context.abrupt("return", _ORGIN_DATA);
-          case 22:
+          case 23:
             // If the default value is label, match value
             _realValue2 = value;
             _filterRes = [];
@@ -1080,6 +1088,7 @@ var Radio = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(funct
             setControlValue(_realValue2); // value must be initialized
 
             // remove Duplicate objects from JSON Array
+            optionsFormatGroupOpt(optionsDataInit); // prevent the value from being filtered out
             optionsDataInit = (0,funda_utils_dist_cjs_object__WEBPACK_IMPORTED_MODULE_3__.removeArrDuplicateItems)(optionsDataInit, 'value');
 
             //
@@ -1091,7 +1100,7 @@ var Radio = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(funct
             //
             onLoad === null || onLoad === void 0 ? void 0 : onLoad(optionsDataInit, _realValue2, rootRef.current);
             return _context.abrupt("return", optionsDataInit);
-          case 33:
+          case 35:
           case "end":
             return _context.stop();
         }

@@ -278,6 +278,15 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
     const CLEAN_TRIGGER_LABEL = cleanTrigger ? cleanTrigger.cleanValueLabel : 'Clean';
 
 
+    const optionsFormatGroupOpt = (allData: any[]) => {
+        allData.forEach((item: any) => {
+            if (typeof item.optgroup !== 'undefined') {
+                item.value = String(Math.random());
+            }
+        });
+    };
+
+
 
     // exposes the following methods
     useImperativeHandle(
@@ -611,6 +620,7 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
             // STEP 6: ===========
             //
             // remove Duplicate objects from JSON Array
+            optionsFormatGroupOpt(_ORGIN_DATA); // prevent the value from being filtered out
             _ORGIN_DATA = removeArrDuplicateItems(_ORGIN_DATA, 'value');
 
             setOptionsData(_ORGIN_DATA); // data must be initialized
@@ -746,6 +756,7 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
             // STEP 6: ===========
             //
             // remove Duplicate objects from JSON Array
+            optionsFormatGroupOpt(staticOptionsData); // prevent the value from being filtered out
             staticOptionsData = removeArrDuplicateItems(staticOptionsData, 'value');
             
 

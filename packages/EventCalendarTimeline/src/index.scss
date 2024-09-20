@@ -39,6 +39,7 @@
 
 
     position: relative;
+    z-index: 3;
     min-width: var(--e-cal-tl-wrapper-min-width);
     border: 1px solid var(--e-cal-tl-border-color);
 
@@ -257,6 +258,8 @@
     height: 100%; /* Required */
     font-size: var(--e-cal-tl-table-bodycell-font-size);
     margin-top: -1px;
+    position: relative;
+    z-index: 2;
 
     .e-cal-tl-table__timeline-table {
         border: var(--e-cal-tl-table-primary-border);

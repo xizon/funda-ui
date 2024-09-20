@@ -102,6 +102,15 @@ const Radio = forwardRef((props: RadioProps, externalRef: any) => {
     // return a array of options
     let optionsDataInit: OptionConfig[] = optionsRes;
     
+    const optionsFormatGroupOpt = (allData: any[]) => {
+        allData.forEach((item: any) => {
+            if (typeof item.optgroup !== 'undefined') {
+                item.value = String(Math.random());
+            }
+        });
+    };
+
+
 
     //
     const [dataInit, setDataInit] = useState<OptionConfig[]>(optionsDataInit);
@@ -220,6 +229,7 @@ const Radio = forwardRef((props: RadioProps, externalRef: any) => {
 
 
             // remove Duplicate objects from JSON Array
+            optionsFormatGroupOpt(_ORGIN_DATA); // prevent the value from being filtered out
             _ORGIN_DATA = removeArrDuplicateItems(_ORGIN_DATA, 'value');
 
 
@@ -258,6 +268,7 @@ const Radio = forwardRef((props: RadioProps, externalRef: any) => {
 
 
             // remove Duplicate objects from JSON Array
+            optionsFormatGroupOpt(optionsDataInit); // prevent the value from being filtered out
             optionsDataInit = removeArrDuplicateItems(optionsDataInit, 'value');
 
             //
