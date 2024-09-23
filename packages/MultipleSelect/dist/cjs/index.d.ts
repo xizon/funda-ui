@@ -1,6 +1,6 @@
 import React from 'react';
 export interface OptionConfig {
-    [propName: string]: string | number | boolean;
+    [propName: string]: string | number | boolean | Function;
 }
 export declare type MultipleSelectProps = {
     wrapperClassName?: string;
@@ -26,6 +26,7 @@ export declare type MultipleSelectProps = {
     options?: OptionConfig[] | string;
     disabled?: any;
     required?: any;
+    appendControl?: React.ReactNode;
     /** Whether to use square brackets to save result and initialize default value */
     extractValueByBrackets?: boolean;
     /** Incoming data, you can set the third parameter of `onFetch` */

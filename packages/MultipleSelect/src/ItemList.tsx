@@ -6,11 +6,13 @@ import {
 } from 'funda-utils/dist/cjs/dom';
 import { clsWrite, combinedCls } from 'funda-utils/dist/cjs/cls';
 
+
 import { formatIndentVal, multiSelControlOptionExist } from './multiple-select-utils/func';
 
 /* Recursively nested components to traverse nodes
 -------------------------------------------------*/
 export type ItemListProps = {
+    appendControl?: React.ReactNode;
     root: any;
     listContainerClassName: string;
     valSelected: any[];
@@ -18,7 +20,7 @@ export type ItemListProps = {
     iconAdd?: React.ReactNode | string;
     iconRemove?: React.ReactNode | string;
     selected?: boolean;
-    onSelect: (any) => void;
+    onSelect: (v: any, cb?: () => void) => void;
     alternateCollapse?: boolean;
     first?: boolean;
     arrow?: React.ReactNode;
@@ -29,6 +31,7 @@ export type ItemListProps = {
 const ItemList = forwardRef((props: ItemListProps, externalRef: any) => {
 
     const {
+        appendControl,
         root,
         listContainerClassName,
         valSelected,
@@ -104,8 +107,6 @@ const ItemList = forwardRef((props: ItemListProps, externalRef: any) => {
         const hyperlink = e.currentTarget.querySelector('div');
         const subElement = getNextSiblings(hyperlink, 'ul');
 
-
-
         // hide child if expandedLink doesn't exist, on the contrary
         //=====================
         if ( hyperlink.getAttribute('aria-expanded') === 'false' || hyperlink.getAttribute('aria-expanded') === null ) {
@@ -164,7 +165,7 @@ const ItemList = forwardRef((props: ItemListProps, externalRef: any) => {
  
                  // Expand the currently active item by default
                  if ( hyperlink.actived ) {
- 
+
                      hyperlink.el.setAttribute('aria-expanded', 'true');
  
                      if ( hyperlink.expandedLink ) {
@@ -228,6 +229,14 @@ const ItemList = forwardRef((props: ItemListProps, externalRef: any) => {
 
                     {data ? data.map((item: any, i: number) => {
 
+                        // callback from each option
+                        if (typeof item.appendControlCallback === 'function') {
+                            setTimeout(() => {
+                                item.appendControlCallback?.();
+                            }, 0);
+                        }
+
+            
                         return <li
                             key={selected ? 'item-selected' + i : 'item' + i}
                             className={selected ? 'selected' : combinedCls(
@@ -255,10 +264,17 @@ const ItemList = forwardRef((props: ItemListProps, externalRef: any) => {
                                     {item.children && item.children.length > 0 && !selected ? <span className="arrow">{arrowGenerator()}</span> : ''}
                                 </strong>
 
+                                {selected && appendControl ? <>
+                                    <span className="m-select__ext" id={`m-select__ext-${item.value}${selected ? '-selected' : ''}`}>
+                                        {appendControl}
+                                    </span>
+                                </> : null}
+
+
                                 <i
                                     onClick={(e: React.MouseEvent) => {
                                         e.stopPropagation();
-                                        onSelect((e.target as any).closest('li'));
+                                        onSelect((e.target as any).closest('li'),  undefined);
                                     }}>
 
                                     {selected ? <>

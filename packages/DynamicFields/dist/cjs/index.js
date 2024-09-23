@@ -773,9 +773,7 @@ var DynamicFields = function DynamicFields(props) {
   }, innerAppendHeadData.map(function (item, i) {
     return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       key: 'inner-header-row' + i,
-      className: (0,funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_2__.combinedCls)(innerAppendHeadCellClassName, Array.isArray(innerAppendHeadCellClassName) ? typeof innerAppendHeadCellClassName[i] !== 'undefined' ? innerAppendHeadCellClassName[i] : '' : undefined, {
-        ITEM_LAST_CLASSNAME: i === innerAppendHeadData.length - 1
-      }),
+      className: (0,funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_2__.combinedCls)(innerAppendHeadCellClassName, Array.isArray(innerAppendHeadCellClassName) ? typeof innerAppendHeadCellClassName[i] !== 'undefined' ? innerAppendHeadCellClassName[i] : '' : undefined, i === innerAppendHeadData.length - 1 ? ITEM_LAST_CLASSNAME : undefined),
       style: innerAppendHeadCellStyles && typeof innerAppendHeadCellStyles[i] !== 'undefined' ? innerAppendHeadCellStyles[i] : {}
     }, item);
   }))) : null, generateGroup(val)), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {

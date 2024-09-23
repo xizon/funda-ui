@@ -22,12 +22,13 @@ import {
 import { clsWrite, combinedCls } from 'funda-utils/dist/cjs/cls';
 
 
+
 import { multiSelControlOptionExist, uniqueArr } from './multiple-select-utils/func';
 import ItemList from './ItemList';
 
 
 export interface OptionConfig {
-    [propName: string]: string | number | boolean;
+    [propName: string]: string | number | boolean | Function;
 }
 
 
@@ -55,6 +56,7 @@ export type MultipleSelectProps = {
     options?: OptionConfig[] | string;
     disabled?: any;
     required?: any;
+    appendControl?: React.ReactNode;
     /** Whether to use square brackets to save result and initialize default value */
     extractValueByBrackets?: boolean;
     /** Incoming data, you can set the third parameter of `onFetch` */
@@ -95,6 +97,7 @@ const MultipleSelect = forwardRef((props: MultipleSelectProps, externalRef: any)
         options,
         disabled,
         required,
+        appendControl,
         value,
         label,
         name,
@@ -503,6 +506,7 @@ const MultipleSelect = forwardRef((props: MultipleSelectProps, externalRef: any)
 
                         {/* OPTIONS LIST */}
                         <ItemList
+                             appendControl={appendControl}
                             root={rootRef.current}
                             listContainerClassName="m-select__available m-select__options-contentlist"
                             ref={availableListRef}
@@ -536,6 +540,7 @@ const MultipleSelect = forwardRef((props: MultipleSelectProps, externalRef: any)
 
                         {/* OPTIONS LIST */}
                         <ItemList
+                            appendControl={appendControl}
                             root={rootRef.current}
                             listContainerClassName="m-select__selected m-select__options-contentlist--sortable m-select__options-contentlist"
                             ref={selectedListRef}

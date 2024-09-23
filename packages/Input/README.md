@@ -208,6 +208,9 @@ export default () => {
 ## Implement independent time elements
 
 
+Use the `appendControl` property to extend the settings
+
+
 `styles.scss`:
 ```css
 .input-group:not(.has-left-content) {

@@ -216,7 +216,6 @@ const MultipleCheckboxes = forwardRef((props: MultipleCheckboxesProps, externalR
             //
             onFetch?.(_ORGIN_DATA);
 
-            console.log('======', _ORGIN_DATA)
             return _ORGIN_DATA;
         } else {
 
@@ -234,8 +233,6 @@ const MultipleCheckboxes = forwardRef((props: MultipleCheckboxesProps, externalR
             //
             onFetch?.(optionsDataInit);
 
-
-            console.log('======', optionsDataInit)
             return optionsDataInit;
         }
 

@@ -504,10 +504,10 @@ export default () => {
                 return {
                     id: item.id,
                     parent_id: item.parent_id,
-                    active: false,
-                    title: `${item.item_name}`,
-                    link: "#",
-                    slug: item.id
+                    label: item.item_name,
+                    listItemLabel: `${item.item_name}`,
+                    value: item.id,
+                    queryString: ''
                 }
             });
          
@@ -653,10 +653,10 @@ export default () => {
                 return {
                     id: item.id,
                     parent_id: item.parent_id,
-                    active: false,
-                    title: `${item.item_name}`,
-                    link: "#",
-                    slug: item.id
+                    label: item.item_name,
+                    listItemLabel: `${item.item_name}`,
+                    value: item.id,
+                    queryString: ''
                 }
             });
          
@@ -889,6 +889,209 @@ export default () => {
 
 
 
+
+## Implement the option to save other data
+
+Use the `appendControl` property to extend the settings. At the same time, each option adds the attribute `appendControlCallback`.
+
+
+```js
+import React, { useEffect, useState, useRef } from "react";
+import MultipleSelect from 'funda-ui/MultipleSelect';
+
+// component styles
+import 'funda-ui/MultipleSelect/index.css';
+
+
+class DataService {
+
+    // `getList()` must be a Promise Object
+    async getList(searchStr: string = '', limit: number = 0, otherParam: string = '') {
+
+        const demoData = [
+            // level 1
+            {
+                "parent_id": 0,
+                "id": 1,
+                "item_name": "Title 1",
+                "item_type": "web"
+            },
+            {
+                "parent_id": 0,
+                "id": 2,
+                "item_name": "Title 2",
+                "item_type": "dev"
+            },
+            // level 2
+            {
+                "parent_id": 1,
+                "id": 3,
+                "item_name": "Title 3",
+                "item_type": "web/ui"
+            },
+            {
+                "parent_id": 1,
+                "id": 4,
+                "item_name": "Title 4",
+                "item_type": "web/ui"
+            },
+            {
+                "parent_id": 2,
+                "id": 5,
+                "item_name": "Title 5",
+                "item_type": "dev"
+            },
+            // level 3
+            {
+                "parent_id": 4,
+                "id": 6,
+                "item_name": "Title 6",
+                "item_type": "web/ui/photoshop"
+            },
+        ];
+
+        return {
+            code: 0,
+            message: 'OK',
+            data: demoData
+        };
+    }
+
+}
+
+
+export default () => {
+    const [list, setList] = useState<any[]>([]);
+    const formRef = useRef<any>(null);
+    /**
+     * Serialize form values
+     * @param  {Array} types   - An array of field strings.
+     * @param {HTMLFormElement} form      - Element
+     * @returns Array
+     */
+    function serializeArray(form: HTMLFormElement, types = ['input', 'textarea', 'select', 'checkbox', 'progress', 'datalist']) {
+
+        const objects: any = [];
+        const fieldsTypes = types;
+
+        fieldsTypes.map((item, index) => {
+            const fields: any = form.getElementsByTagName(item);
+            for (let i = 0; i < fields.length; i++) {
+
+                const _name = fields[i].getAttribute("name");
+                let _value = fields[i].value;
+
+                // if field is Array
+                if (_name !== null && _name.match(/(\[.*?\])/gi)) {
+                    const inputs = form.querySelectorAll("[name='" + _name + "']");
+                    const _arrFieldValue = [];
+                    for (let j = 0; j < inputs.length; j++) {
+                        const _arrField: any = inputs[j];
+                        _arrFieldValue.push(_arrField.value);
+                    }
+
+                    _value = _arrFieldValue;
+                }
+
+
+                //if checkbox or radio
+                if (fields[i].type === 'radio' || fields[i].type === 'checkbox') {
+                    if (fields[i].checked === true) {
+                        objects[objects.length] = {
+                            name: _name,
+                            value: _value
+                        };
+                    }
+                } else {
+                    objects[objects.length] = {
+                        name: _name,
+                        value: _value
+                    };
+                }
+
+
+            }
+        });
+
+        // remove Duplicate objects from JSON Array
+        const clean = objects.filter((item: any, index: number, self: any[]) => index === self.findIndex((t) => (t.name === item.name)));
+
+        return clean;
+    }
+
+
+    useEffect(() => {
+        new DataService().getList('', 0, '').then((response: any) => {
+
+            const _data: any[] = response.data.map((item: any, i: number) => {
+                return {
+                    id: item.id,
+                    parent_id: item.parent_id,
+                    label: item.item_name,
+                    value: item.id,
+                    queryString: '',
+                    appendControlCallback: () => {
+                        const curInputSelected = document.querySelector('#m-select__ext-' + item.id + '-selected [name="init_txt[]"]');
+                        if (curInputSelected !== null) (curInputSelected as HTMLInputElement).value = `index-${i}`;
+                    }
+                }
+            });
+
+            setList(_data);
+
+        });
+    }, []);
+
+
+
+    return (
+        <>
+
+            <div className="mb-3" style={{ height: '300px' }}>
+
+                <a
+                    href="#"
+                    onClick={(e: React.MouseEvent) => {
+                        e.preventDefault();
+                        const fieldsData: any = serializeArray(formRef.current);
+                        alert(JSON.stringify(fieldsData));
+                    }}
+                >Click here to show Form Data</a>
+
+                <form ref={formRef}>
+                    <input type="text" name="my_text" value={'test'} />
+
+                    <MultipleSelect
+                        name="name"
+                        appendControl={<>
+                            <span>
+                                Index:
+                                <input
+                                    tabIndex={-1}
+                                    type="text"
+                                    name="init_txt[]"
+                                    defaultValue=""
+                                />
+                            </span>
+                        </>}
+                        availableHeaderTitle="Select One Item"
+                        selectedHeaderTitle="Selected Items"
+                        selectedHeaderNote="{items_num} items selected"
+                        options={list}
+                        onChange={(e, data, dataStr, currentData, type) => {
+                            console.log(e, data, dataStr, currentData, type);
+                        }}
+                    />
+                </form>
+
+            </div>
+
+        </>
+    );
+}
+```
+
+
 ## API
 
 ### Multiple Select
@@ -920,8 +1123,9 @@ import MultipleSelect from 'funda-ui/MultipleSelect';
 | `value` | string | - | Set a default value for this control. Please separate multiple values with square brackets. Such as `[tag1][tag2][tag3]` <blockquote>If `extractValueByBrackets` is false, the default value will be separated by comma, such as <br />`tag1,tag2,tag3`</blockquote> | - |
 | `label` | string \| ReactNode | - | It is used to specify a label for an element of a form.<blockquote>Support html tags</blockquote> | - |
 | `name` | string | - | Name is not deprecated when used with form fields. | - |
-| `disabled` | boolean | false | Whether it is disabled | - |
+| `disabled` | boolean | false | Whether it is disabled | - |  
 | `required` | boolean | false | When present, it specifies that a field must be filled out before submitting the form. | - |
+| `appendControl` | ReactNode  | - | An extension of the same level as **SELECTED ITEMS**, \<input \> is often used to extend the data for each option | - |
 | `data`  <blockquote>You could use [key](https://react.dev/learn/rendering-lists#why-does-react-need-keys) instead of it</blockquote>  | any  | - | Incoming data, you can set the third parameter of `onFetch`. <blockquote>Changes in the `data` value will cause the component to re-render. It will be used when the value or content does not change when switching routes and needs to re-render the component or get the request.</blockquote> <hr /> <blockquote>!!!Note: Using `data` and `value` at the same time may cause two different parameter transfers, which will affect the final rendering. Please choose the appropriate usage based on your business.</blockquote>| - |
 | `fetchFuncAsync` | Constructor | - | A method as a string from the constructor.  | - |
 | `fetchFuncMethod` | string  | - | When the property is *true*, every time the select changes, a data request will be triggered. <br /><blockquote>The methord must be a Promise Object.</blockquote> | - |
@@ -948,3 +1152,5 @@ JSON Object Literals configuration properties of the `options` and callback from
 | `queryString` | string | - | Quick query string, such as Chinese pinyin or English initials | - |
 | `disabled` | boolean | - | When present, it specifies that an option should be disabled. | - |
 | `children` | array | - | Specify a set of sub-navigation, Eg. `[{"label": "Option 1","value": "value-1","queryString": "option1"}]` | - |
+| `appendControlCallback` | function | - | Define a function that finds HTML elements in the `appendControl` attribute of the component for flexible assignment. Each option has a unique ID `m-select__ext-{OPTIONVALUE}-selected`, `{OPTIONVALUE}` is the placeholder string, which is the value of the option. for example, `() => {const curInputSelected = document.querySelector('#m-select__ext-1234-selected [name="my_date[]"]');if (curInputSelected !== null) (curInputSelected as HTMLInputElement).value = "test-1234";}`, the corresponding code of the `appendControl` is `<span>Date: <input tabIndex={-1} type="date" name="my_date[]" defaultValue="" /></span>` | - |
+

@@ -5,6 +5,7 @@ import useComId from 'funda-utils/dist/cjs/useComId';
 import { clsWrite, combinedCls } from 'funda-utils/dist/cjs/cls';
 
 
+
 export type DynamicFieldsValueProps = {
     init: React.ReactNode[];
     tmpl: React.ReactNode;
@@ -332,9 +333,7 @@ const DynamicFields = (props: DynamicFieldsProps) => {
                                     return <div key={'inner-header-row' + i} className={combinedCls(
                                         innerAppendHeadCellClassName,
                                         Array.isArray(innerAppendHeadCellClassName) ? (typeof innerAppendHeadCellClassName[i] !== 'undefined' ? innerAppendHeadCellClassName[i] : '') : undefined,
-                                        {
-                                            ITEM_LAST_CLASSNAME: i === innerAppendHeadData.length - 1
-                                        }
+                                        i === innerAppendHeadData.length - 1 ? ITEM_LAST_CLASSNAME : undefined
                                     )} style={innerAppendHeadCellStyles && typeof innerAppendHeadCellStyles[i] !== 'undefined' ? innerAppendHeadCellStyles[i] : {}}>{item}</div>;
                                 })}
                             </div>

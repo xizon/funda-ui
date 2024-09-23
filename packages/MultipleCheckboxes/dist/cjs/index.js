@@ -1332,7 +1332,7 @@ var MultipleCheckboxes = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forw
 
             //
             if (!(_typeof(fetchFuncAsync) === 'object')) {
-              _context.next = 17;
+              _context.next = 16;
               break;
             }
             _context.next = 4;
@@ -1362,9 +1362,8 @@ var MultipleCheckboxes = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forw
 
             //
             onFetch === null || onFetch === void 0 ? void 0 : onFetch(_ORGIN_DATA);
-            console.log('======', _ORGIN_DATA);
             return _context.abrupt("return", _ORGIN_DATA);
-          case 17:
+          case 16:
             // remove Duplicate objects from JSON Array
             optionsFormatGroupOpt(optionsDataInit); // prevent the value from being filtered out
             optionsDataInit = (0,funda_utils_dist_cjs_object__WEBPACK_IMPORTED_MODULE_5__.removeArrDuplicateItems)(optionsDataInit, 'value');
@@ -1377,9 +1376,8 @@ var MultipleCheckboxes = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forw
 
             //
             onFetch === null || onFetch === void 0 ? void 0 : onFetch(optionsDataInit);
-            console.log('======', optionsDataInit);
             return _context.abrupt("return", optionsDataInit);
-          case 24:
+          case 22:
           case "end":
             return _context.stop();
         }
