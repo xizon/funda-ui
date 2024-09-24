@@ -898,6 +898,7 @@ Use the `appendControl` property to extend the settings. At the same time, each 
 ```js
 import React, { useEffect, useState, useRef } from "react";
 import MultipleSelect from 'funda-ui/MultipleSelect';
+import Input from 'funda-ui/Input';
 
 // component styles
 import 'funda-ui/MultipleSelect/index.css';
@@ -959,6 +960,47 @@ class DataService {
 
 }
 
+
+function MemoMultipkeSelect(props: any) {
+    const { list } = props;
+
+    return useMemo(() => {
+        return <MultipleSelect
+            name="name"
+            appendControl={<>
+            <div className="row align-items-center">
+                <div className="col-auto">
+                    Index:
+                </div>
+                <div className="col-auto">
+                    <Input
+                        wrapperClassName=""
+                        tabIndex={-1}
+                        type="text"
+                        name="init_txt[]"
+                        defaultValue=""
+                        style={{
+                            padding: 0,
+                            fontSize: '0.75rem',
+                            background: 'rgba(255, 255, 255, .3)',
+                            borderColor: 'rgba(255, 255, 255, .4)'
+                        }}          
+                        />
+                </div>
+            </div>
+            </>}
+            availableHeaderTitle="Select One Item"
+            selectedHeaderTitle="Selected Items"
+            selectedHeaderNote="{items_num} items selected"
+            options={list}
+            onChange={(e, data, dataStr, currentData, type) => {
+                console.log(e, data, dataStr, currentData, type);
+            }}
+        />
+    }, [list]);
+
+
+}
 
 export default () => {
     const [list, setList] = useState<any[]>([]);
@@ -1059,29 +1101,8 @@ export default () => {
                 >Click here to show Form Data</a>
 
                 <form ref={formRef}>
-                    <input type="text" name="my_text" value={'test'} />
-
-                    <MultipleSelect
-                        name="name"
-                        appendControl={<>
-                            <span>
-                                Index:
-                                <input
-                                    tabIndex={-1}
-                                    type="text"
-                                    name="init_txt[]"
-                                    defaultValue=""
-                                />
-                            </span>
-                        </>}
-                        availableHeaderTitle="Select One Item"
-                        selectedHeaderTitle="Selected Items"
-                        selectedHeaderNote="{items_num} items selected"
-                        options={list}
-                        onChange={(e, data, dataStr, currentData, type) => {
-                            console.log(e, data, dataStr, currentData, type);
-                        }}
-                    />
+                    <Input type="text" name="my_text" value={'test'} />
+                    <MemoMultipkeSelect list={list} />
                 </form>
 
             </div>
