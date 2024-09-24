@@ -1089,23 +1089,24 @@ export default () => {
     return (
         <>
 
-            <div className="mb-3" style={{ height: '300px' }}>
+            <a
+                href="#"
+                onClick={(e: React.MouseEvent) => {
+                    e.preventDefault();
+                    const fieldsData: any = serializeArray(formRef.current);
+                    alert(JSON.stringify(fieldsData));
+                }}
+            >Click here to show Form Data</a>
 
-                <a
-                    href="#"
-                    onClick={(e: React.MouseEvent) => {
-                        e.preventDefault();
-                        const fieldsData: any = serializeArray(formRef.current);
-                        alert(JSON.stringify(fieldsData));
-                    }}
-                >Click here to show Form Data</a>
+            <form ref={formRef}>
+                <Input type="text" name="my_text" value={'test'} />
 
-                <form ref={formRef}>
-                    <Input type="text" name="my_text" value={'test'} />
+                <div className="mb-3" style={{ height: '300px' }}>
                     <MemoMultipkeSelect list={list} />
-                </form>
+                </div>   
+            </form>
 
-            </div>
+
 
         </>
     );
