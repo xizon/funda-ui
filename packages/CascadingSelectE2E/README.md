@@ -638,7 +638,7 @@ A successful response returns the details of the callback such as Sample Request
 
 Among them, `id`, `queryId`, `name` and `label` are attributes used by the system, and other attributes can be added freely. 
 
-> `label` usually uses hierarchical style. (It takes effect when the `hierarchical` attribute is configured in `fetchArray`)
+> `label` usually uses hierarchical style. (Valid when the `hierarchical` attribute is configured in `fetchArray`)
 
 > The "name" attribute supports HTML tags
 

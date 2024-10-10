@@ -38,3 +38,12 @@ export function optionsFlat(allData: any[]) {
     return flatItems;
 }
 
+
+/**
+ * Determine whether it is an object or not
+ * @param value 
+ * @returns 
+ */
+export function isObject(value: any) {
+    return Object.prototype.toString.call(value) === '[object Object]';
+}

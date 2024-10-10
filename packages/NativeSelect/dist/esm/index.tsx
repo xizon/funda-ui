@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef, forwardRef } from 'react';
 
-import { optionsFlat } from './native-select-utils/func';
+import { optionsFlat, isObject } from './native-select-utils/func';
 
 
 import useComId from 'funda-utils/dist/cjs/useComId';
@@ -15,6 +15,7 @@ import {
     removeArrDuplicateItems
 } from 'funda-utils/dist/cjs/object';
 import { clsWrite, combinedCls } from 'funda-utils/dist/cjs/cls';
+
 
 
 
@@ -34,7 +35,8 @@ export type NativeSelectOptionChangeFnType = (arg1: any, arg2: any, arg3?: any, 
 
 export type NativeSelectProps = {
     wrapperClassName?: string;
-    value?: string;
+    defaultValue?: string | OptionConfig;
+    value?: string | OptionConfig;
     label?: React.ReactNode | string;
     name?: string;
     disabled?: any;
@@ -48,6 +50,7 @@ export type NativeSelectProps = {
     style?: React.CSSProperties;
     tabIndex?: number;
     [key: `data-${string}`]: string | undefined;
+    firstRequestAutoExec?: boolean;
     fetchFuncAsync?: any;
     fetchFuncMethod?: string;
     fetchFuncMethodParams?: any[];
@@ -63,6 +66,7 @@ const NativeSelect = forwardRef((props: NativeSelectProps, externalRef: any) => 
         wrapperClassName,
         disabled,
         required,
+        defaultValue,
         value,
         label,
         name,
@@ -73,6 +77,7 @@ const NativeSelect = forwardRef((props: NativeSelectProps, externalRef: any) => 
         doubleIndent,
         style,
         tabIndex,
+        firstRequestAutoExec,
         fetchFuncAsync,
         fetchFuncMethod,
         fetchFuncMethodParams,
@@ -85,6 +90,7 @@ const NativeSelect = forwardRef((props: NativeSelectProps, externalRef: any) => 
     } = props;
 
 
+    const FIRST_REQUEST_AUTO = typeof firstRequestAutoExec === 'undefined' ? true : firstRequestAutoExec;
     const INDENT_PLACEHOLDER = doubleIndent ? `&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;` : `&nbsp;&nbsp;&nbsp;&nbsp;`;
     const INDENT_LAST_PLACEHOLDER = `${typeof indentation !== 'undefined' && indentation !== '' ? `${indentation}&nbsp;&nbsp;` : ''}`;
     const uniqueID = useComId();
@@ -92,6 +98,7 @@ const NativeSelect = forwardRef((props: NativeSelectProps, externalRef: any) => 
     const rootRef = useRef<any>(null);
     const selectRef = useRef<any>(null);
     const optionsRes = options ? isJSON( options ) ? JSON.parse( options as string ) : options : '';
+    
 
     // return a array of options
     let optionsDataInit: OptionConfig[] = optionsRes; 
@@ -100,6 +107,7 @@ const NativeSelect = forwardRef((props: NativeSelectProps, externalRef: any) => 
     const [dataInit, setDataInit] = useState<OptionConfig[]>(optionsDataInit);
     const [hasErr, setHasErr] = useState<boolean>(false);
     const [controlValue, setControlValue] = useState<string | undefined>('');
+    const [firstRequestExecuted, setFirstRequestExecuted] = useState<boolean>(false);
   
 
     const optionsFormatGroupOpt = (allData: any[]) => {
@@ -110,12 +118,71 @@ const NativeSelect = forwardRef((props: NativeSelectProps, externalRef: any) => 
         });
     };
 
+    const finalRes = (val: any) => {
+        return isObject(val) ? val.value : val;
+    };
+
 
     
-    async function fetchData(params: any) {
+    // Generate list of options
+    const selectOptionsList = Array.isArray(dataInit) ? dataInit.map((item: any, index: number) => {
+
+        if (typeof item.optgroup !== 'undefined') {
+            return <optgroup key={'optgroup-' + index} label={item.label}>
+
+                {item.optgroup.map((opt: any, optIndex: number) => {
+                    const _disabled = typeof opt.disabled === 'undefined' ? false : opt.disabled;
+                    return <option key={'option-' + optIndex} value={opt.value as string} dangerouslySetInnerHTML={{
+                        __html: `${typeof opt.listItemLabel === 'undefined' ? opt.label : opt.listItemLabel}`,
+                    }} disabled={_disabled}></option>;
+                })}
+
+            </optgroup>;
+        } else {
+            const _disabled = typeof item.disabled === 'undefined' ? false : item.disabled;
+
+            return <option key={'option-' + index} value={item.value as string} dangerouslySetInnerHTML={{
+                __html: `${typeof item.listItemLabel === 'undefined' ? item.label : item.listItemLabel}`,
+            }} disabled={_disabled}></option>;
+
+        }
+
+    }) : null;
+    
+
+    // If the current value is not one of the options, the default value is displayed
+    const extraSelectOption = () => {
+        if (!Array.isArray(dataInit)) return null;
+
+        let curValue: any = defaultValue;
+        
+        if (typeof curValue === 'undefined') {
+            curValue = value;
+        }
+
+        if (typeof curValue === 'undefined') return null;
+
+        const hasExtraOpt = dataInit.some(option => option.value === finalRes(curValue));
+
+        if (!hasExtraOpt) {
+            const _disabled = typeof curValue.disabled === 'undefined' ? false : curValue.disabled;
+            return <option value={curValue.value as string} dangerouslySetInnerHTML={{
+                __html: `${typeof curValue.listItemLabel === 'undefined' ? curValue.label : curValue.listItemLabel}`,
+            }} disabled={_disabled}></option>;
+
+        } else {
+            return null;
+        }
+    };
+    
+    async function fetchData(params: any, valueToInputDefault: any, inputDefault: any) {
+
+        // Determine whether the default value is user query input or default input
+        const defaultValue = valueToInputDefault;
+
         
         // set default value
-        if (typeof value !== 'undefined' && value !== '') selectRef.current.dataset.value = value;
+        if (typeof defaultValue !== 'undefined' && defaultValue !== '') selectRef.current.dataset.value = defaultValue;
 
         //
         if ( typeof fetchFuncAsync === 'object' ) {
@@ -136,7 +203,7 @@ const NativeSelect = forwardRef((props: NativeSelectProps, externalRef: any) => 
             }
 
             // set "<select>" value
-            setControlValue(value); // value must be initialized
+            setControlValue(defaultValue); // value must be initialized
 
             // Set hierarchical categories ( with sub-categories )
             if ( hierarchical ) {
@@ -157,8 +224,9 @@ const NativeSelect = forwardRef((props: NativeSelectProps, externalRef: any) => 
             return _ORGIN_DATA;
         } else {
 
+
             // set "<select>" value
-            setControlValue(value); // value must be initialized
+            setControlValue(defaultValue); // value must be initialized
             
 
             // remove Duplicate objects from JSON Array
@@ -177,6 +245,15 @@ const NativeSelect = forwardRef((props: NativeSelectProps, externalRef: any) => 
 
     }
 
+    async function handleFirstFetch(inputVal: any = null) {
+        const _params: any[] = fetchFuncMethodParams || [];
+        const res = await fetchData((_params).join(','), finalRes(inputVal), inputVal);
+
+        return res;
+    }
+
+
+
     //
     function handleFocus(event: any) {
         rootRef.current?.classList.add('focus');
@@ -187,6 +264,8 @@ const NativeSelect = forwardRef((props: NativeSelectProps, externalRef: any) => 
 
     function handleChange(event: any) {
         const val = event.target.value;
+        const curIndex = event.target.selectedIndex;
+        const curItem = optionsFlat(dataInit)[curIndex];
 
        
         //----
@@ -195,12 +274,16 @@ const NativeSelect = forwardRef((props: NativeSelectProps, externalRef: any) => 
 
 
         //----
+        // Callback
+        curItem.callback?.();
+
+        //----
         //remove focus style
         rootRef.current?.classList.remove('focus');
 
         //
 		if ( typeof(onChange) === 'function' ) {
-			onChange(event, optionsFlat(dataInit)[event.target.selectedIndex].value, optionsFlat(dataInit)[event.target.selectedIndex], event.target.selectedIndex);
+			onChange(event, curItem.value, curItem, curIndex);
 
             event.target.blur();
 		}
@@ -217,41 +300,51 @@ const NativeSelect = forwardRef((props: NativeSelectProps, externalRef: any) => 
         onBlur?.(event);
     }
 
+    function activate() {
+
+        // trigger the first asynchronous request when the options area is expanded
+        if (!FIRST_REQUEST_AUTO && !firstRequestExecuted) {
+            let curValue: any = defaultValue;
+        
+            if (typeof curValue === 'undefined') {
+                curValue = value;
+            }
     
-    // Generate list of options
-    const selectOptionsList = Array.isArray(dataInit) ? dataInit.map((item: any, index: number) => {
+            handleFirstFetch(curValue);
 
-        if (typeof item.optgroup !== 'undefined') {
-            return <optgroup key={'optgroup-' + index} label={item.label}>
-
-                {item.optgroup.map((opt: any, optIndex: number) => {
-                    const _disabled = typeof opt.disabled === 'undefined' ? false : opt.disabled;
-                    return <option key={'option-' + optIndex} value={opt.value as string} dangerouslySetInnerHTML={{
-                        __html: `${typeof opt.listItemLabel === 'undefined' ? opt.label : opt.listItemLabel}`,
-                    }} disabled={_disabled}></option>;
-                })}
-
-            </optgroup>;
-        } else {
-            const _disabled = typeof item.disabled === 'undefined' ? false : item.disabled;
-            return <option key={'option-' + index} value={item.value as string} dangerouslySetInnerHTML={{
-                __html: `${typeof item.listItemLabel === 'undefined' ? item.label : item.listItemLabel}`,
-            }} disabled={_disabled}></option>;
-
+            //
+            setFirstRequestExecuted(true);
         }
+    }
 
-    }) : null;
-    
 
 
     useEffect(() => {
 
         // data init
         //--------------
-        const _params: any[] = fetchFuncMethodParams || [];
-        fetchData((_params).join(','));
+        if (FIRST_REQUEST_AUTO) {
+            handleFirstFetch(value);
+        }
 
     }, [value, options]);
+
+
+    useEffect(() => {
+
+        // update default value (It does not re-render the component because the incoming value changes.)
+        //--------------
+        if (typeof defaultValue !== 'undefined') { //REQUIRED
+
+            // data init
+            //--------------
+            if (FIRST_REQUEST_AUTO) {
+                handleFirstFetch(defaultValue);
+            }
+        }
+
+    }, []);
+
 
 
     return (
@@ -274,6 +367,7 @@ const NativeSelect = forwardRef((props: NativeSelectProps, externalRef: any) => 
                         name={name}
                         value={controlValue}  // do not use `defaultValue`
                         onFocus={handleFocus}
+                        onClick={activate}
                         onBlur={handleBlur}
                         onChange={handleChange}
                         disabled={disabled || null}
@@ -281,7 +375,8 @@ const NativeSelect = forwardRef((props: NativeSelectProps, externalRef: any) => 
                         style={style}
                         {...attributes}
 					>
-			           {!hasErr ? selectOptionsList : null}
+                        
+			           {!hasErr ? <>{extraSelectOption()}{selectOptionsList}</> : null}
 					</select>
 
             </div>

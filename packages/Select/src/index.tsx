@@ -5,7 +5,8 @@ import {
     unique,
     stripHTML,
     removeItemOnce,
-    optionsCustomSelectFlat
+    optionsCustomSelectFlat,
+    isObject
 } from './select-utils/func';
 
 
@@ -70,6 +71,7 @@ export interface OptionConfig {
     listItemLabel?: any;
     value: any;
     queryString: string | number;
+    callback?: () => void;
 }
 
 
@@ -106,7 +108,8 @@ export type SelectProps = {
     multiSelectSelectedItemOnlyStatus?: multiSelectSelectedItemOnlyStatusConfig;
     renderSelectedValue?: (selectedData: MultiSelectControlValConfig, removeFunc: (e: React.MouseEvent) => void) => void;
     cleanTrigger?: CleanTriggerConfig;
-    value?: string;
+    defaultValue?: string | OptionConfig;
+    value?: string | OptionConfig;
     label?: React.ReactNode | string;
     name?: string;
     disabled?: any;
@@ -120,6 +123,7 @@ export type SelectProps = {
     doubleIndent?: boolean;
     winWidth?: string | Function;
     controlArrow?: React.ReactNode;
+    firstRequestAutoExec?: boolean;
     fetchTrigger?: boolean;
     fetchTriggerForDefaultData?: MultiSelectDataConfig | null;
     /** Set the depth value of the control to control the display of the pop-up layer appear above.
@@ -166,6 +170,7 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
         renderSelectedValue,
         disabled,
         required,
+        defaultValue,
         value,
         label,
         name,
@@ -186,6 +191,7 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
         controlArrow,
         winWidth,
         tabIndex,
+        firstRequestAutoExec,
         fetchTrigger,
         fetchTriggerForDefaultData,
         fetchNoneInfo,
@@ -210,6 +216,8 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
     const LIVE_SEARCH_OK = typeof fetchTrigger !== 'undefined' && fetchTrigger === true ? true : false;
     const LIVE_SEARCH_DISABLED = (typeof fetchTrigger === 'undefined' || fetchTrigger === false) && typeof window !== 'undefined' && typeof (window as any)['funda-ui__Select-disable-livesearch'] !== 'undefined' ? true : false; // Globally disable real-time search functionality (only valid for non-dynamic requests)
 
+    
+    const FIRST_REQUEST_AUTO = typeof firstRequestAutoExec === 'undefined' ? true : firstRequestAutoExec;
     const INPUT_READONLY = LIVE_SEARCH_DISABLED ? true : (typeof readOnly === 'undefined' ? null : readOnly);
     const VALUE_BY_BRACKETS = typeof extractValueByBrackets === 'undefined' ? true : extractValueByBrackets;
     const LOCK_BODY_SCROLL = typeof lockBodyScroll === 'undefined' ? false : lockBodyScroll;
@@ -243,6 +251,8 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
     const [controlTempValue, setControlTempValue] = useState<string | null>(null);
     const [isOpen, setIsOpen] = useState<boolean>(false);
     const [incomingData, setIncomingData] = useState<string | null | undefined>(null);
+    const [firstRequestExecuted, setFirstRequestExecuted] = useState<boolean>(false);
+    
 
     // blinking cursor
     const BLINKING_CURSOR_STR = '|';
@@ -286,7 +296,9 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
         });
     };
 
-
+    const finalRes = (val: any) => {
+        return isObject(val) ? val.value : val;
+    };
 
     // exposes the following methods
     useImperativeHandle(
@@ -452,7 +464,7 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
 
 
 
-    async function fetchData(params: any, inputDefaultValue: any, init: boolean = true) {
+    async function fetchData(params: any, valueToInputDefault: any, inputDefault: any, init: boolean = true) {
 
         // get incoming options from `data-options` of component
         // It is usually used for complex cascading `<Select />` components
@@ -460,7 +472,7 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
 
 
         // Determine whether the default value is user query input or default input
-        const defaultValue = init ? inputDefaultValue : '';
+        const defaultValue = init ? valueToInputDefault : '';
 
 
         if (typeof fetchFuncAsync === 'object') {
@@ -532,9 +544,15 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
 
                 filterRes = filterResQueryValue;
                 if (filterResQueryValue.length === 0) filterRes = filterResQueryLabel;
+
+                // if the default value is Object
+                if (isObject(inputDefault) && filterRes.length === 0) {
+                    filterRes = [inputDefault];
+                }
+
             }
 
-
+    
 
             // STEP 5: ===========
             // ++++++++++++++++++++
@@ -675,6 +693,14 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
 
             filterRes = filterResQueryValue;
             if (filterResQueryValue.length === 0) filterRes = filterResQueryLabel;
+
+   
+            // if the default value is Object
+            if (isObject(inputDefault) && filterRes.length === 0) {
+                filterRes = [inputDefault];
+            }
+
+
 
             // STEP 5: ===========
             // ++++++++++++++++++++
@@ -1115,6 +1141,26 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
 
     function activate() {
 
+        // trigger the first asynchronous request when the options area is expanded
+        if (!FIRST_REQUEST_AUTO && !firstRequestExecuted) {
+            let curValue: any = defaultValue;
+        
+            if (typeof curValue === 'undefined') {
+                curValue = value;
+            }
+    
+            handleFirstFetch(curValue).then((response: any) => {
+                if (response.length > 0) {
+                    // nomatch
+                    const _nodataDiv = listContentRef.current.querySelector('.custom-select-multi__control-option-item--nomatch');
+                    _nodataDiv.classList.add('hide');
+                }
+            });
+
+            //
+            setFirstRequestExecuted(true);
+        }
+
         // show list
         setIsOpen(true);
 
@@ -1163,8 +1209,8 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
         if (typeof el === 'undefined') return;
 
 
-        const curItem: any = el === null ? JSON.parse(dataInput) : JSON.parse(el.currentTarget.dataset.itemdata);
-
+        const curItem: any = el === null ? (isObject(dataInput) ? dataInput : JSON.parse(dataInput)) : optionsData[Number(el.currentTarget.dataset.index)];
+        
 
         // get incoming options from `data-options` of component
         // It is usually used for complex cascading `<Select />` components
@@ -1188,14 +1234,24 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
         // current control of some option
         const curBtn = options.filter((node: HTMLElement) => node.dataset.itemdata == JSON.stringify(curItem))[0];
 
-
+       
         // update value * label
         if (dataInput) {
 
-            // using keyboard
-            const _data = JSON.parse(dataInput);
+            // ==========================================================================
+            // Use the "keyboard" to trigger
+            // ==========================================================================
+
+            const _data = isObject(dataInput) ? dataInput : JSON.parse(dataInput);
             const _value = _data.value;
             const _label = _data.label;
+
+            // ++++++++++++++++++++
+            // Callback
+            // ++++++++++++++++++++
+            _data.callback?.();
+
+
 
             // ++++++++++++++++++++
             // Single selection
@@ -1316,9 +1372,21 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
 
         } else {
 
+            // ==========================================================================
+            // Use the "mouse" to trigger
+            // ==========================================================================
 
             const _value = typeof curItem !== 'undefined' ? curItem.value : '';
             const _label = typeof curItem !== 'undefined' ? curItem.label : '';
+
+
+
+            // ++++++++++++++++++++
+            // Callback
+            // ++++++++++++++++++++
+            curItem.callback?.();
+
+
 
             // ++++++++++++++++++++
             // Single selection
@@ -1618,12 +1686,20 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
         const _params: any[] = _oparams.map((item: any) => item !== '$QUERY_STRING' ? item : searchStr);
 
 
-        const res = await fetchData((_params).join(','), value, false);
+        const res = await fetchData((_params).join(','), '', '', false);
 
 
         return res;
     }
 
+
+    async function handleFirstFetch(inputVal: any = null) {
+        const _oparams: any[] = fetchFuncMethodParams || [];
+        const _params: any[] = _oparams.map((item: any) => item !== '$QUERY_STRING' ? item : (fetchTrigger ? '------' : ''));
+        const res = await fetchData((_params).join(','), finalRes(inputVal), inputVal);
+
+        return res;
+    }
 
 
     function handleComposition(event: any) {
@@ -1759,12 +1835,13 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
             if (keyboardSelectedItem.current !== null && keyboardSelectedItem.current.classList.contains('disabled')) return;
 
             if (listRef.current !== null) {
-                const currentData = await listRef.current.dataset.data;
+                const currentIndex = await listRef.current.dataset.data;
 
 
-                if (typeof currentData !== 'undefined') {
+                if (typeof currentIndex !== 'undefined') {
 
 
+                    const currentData = optionsData[Number(currentIndex)];
                     const currentControlValueArr: any[] = [];
                     const currentControlLabelArr: any[] = [];
 
@@ -1784,14 +1861,13 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
 
                     handleSelect(null, currentData, currentControlValueArr, currentControlLabelArr);
 
-
                     //
                     if (typeof (onChange) === 'function') {
 
                         onChange?.(
                             selectInputRef.current,
                             valueInputRef.current,
-                            !MULTI_SEL_VALID ? JSON.parse(currentData) : multipleSelectionCallback(currentControlValueArr, currentControlLabelArr)
+                            !MULTI_SEL_VALID ? currentData : multipleSelectionCallback(currentControlValueArr, currentControlLabelArr)
                         );
 
 
@@ -1815,7 +1891,7 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
 
 
         // temporary data
-        if (res !== null) listRef.current.dataset.data = res.dataset.itemdata;
+        if (res !== null) listRef.current.dataset.data = res.dataset.index;
 
 
     }
@@ -1823,10 +1899,9 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
     useEffect(() => {
 
 
-
         // Call a function when the component has been rendered completely
         //--------------
-        onLoad?.(selectInputRef.current, valueInputRef.current, value);
+        onLoad?.(selectInputRef.current, valueInputRef.current, finalRes(value));
 
 
         // update incoming data
@@ -1836,9 +1911,10 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
 
         // data init
         //--------------
-        const _oparams: any[] = fetchFuncMethodParams || [];
-        const _params: any[] = _oparams.map((item: any) => item !== '$QUERY_STRING' ? item : (fetchTrigger ? '------' : ''));
-        fetchData((_params).join(','), value);
+        if (FIRST_REQUEST_AUTO) {
+            handleFirstFetch(value);
+        }
+
 
 
         return () => {
@@ -1846,6 +1922,28 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
         }
 
     }, [value, options, data]);
+
+
+    useEffect(() => {
+
+        // update default value (It does not re-render the component because the incoming value changes.)
+        //--------------
+        if (typeof defaultValue !== 'undefined') { //REQUIRED
+
+            // Call a function when the component has been rendered completely
+            //--------------
+            onLoad?.(selectInputRef.current, valueInputRef.current, finalRes(defaultValue));
+
+
+            // data init
+            //--------------
+            if (FIRST_REQUEST_AUTO) {
+                handleFirstFetch(defaultValue);
+            }
+
+        }
+
+    }, []);
 
 
     return (

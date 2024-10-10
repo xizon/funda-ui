@@ -411,6 +411,170 @@ export default () => {
 ```
 
 
+## Use the object as the default 
+
+You can specify an object as the default, and if the default value is not in the list of options, it will be displayed by default.
+
+> Note: Single selection only!!!
+
+
+```js
+import React from "react";
+import Select from 'funda-ui/Select';
+
+// component styles
+import 'funda-ui/Select/index.css';
+
+export default () => {
+
+    return (
+        <>         
+           
+            <Select
+                value={{"label": "Option 3","listItemLabel":"Option 3 (No: 003)","value": "value-3","queryString": "option3"}}
+                placeholder="Select"
+                name="name"
+                winWidth={typeof window === 'undefined' ? undefined : () => window.innerWidth / 2 + 'px'}
+                options={[
+                    {"label": "Option 1","listItemLabel":"Option 1 (No: 001)","value": "value-1","queryString": "option1"},
+                    {"label": "Option 2","listItemLabel":"<del style=color:red>deprecate</del>Option 2 (No: 002)","value": "value-2","queryString": "option2"},
+                    {"label": "Option 3","listItemLabel":"Option 3 (No: 003)","value": "value-3","queryString": "option3"},
+                    {"label": "Option 4","listItemLabel":"Option 4 (No: 004)","value": "value-4","queryString": "option4", "disabled":true}
+                ]}
+
+            />
+
+
+
+            <Select
+                value={{ "label": "Option New", "value": "value-new", "queryString": "" }}
+                placeholder="Select"
+                name="name"
+                winWidth={typeof window === 'undefined' ? undefined : () => window.innerWidth / 2 + 'px'}
+                options={[
+                    {"label": "Option 1","listItemLabel":"Option 1 (No: 001)","value": "value-1","queryString": "option1"},
+                    {"label": "Option 2","listItemLabel":"<del style=color:red>deprecate</del>Option 2 (No: 002)","value": "value-2","queryString": "option2"},
+                    {"label": "Option 3","listItemLabel":"Option 3 (No: 003)","value": "value-3","queryString": "option3"},
+                    {"label": "Option 4","listItemLabel":"Option 4 (No: 004)","value": "value-4","queryString": "option4", "disabled":true}
+                ]}
+
+            />
+
+        </>
+    );
+}
+```
+
+
+## Click on the callback via option
+
+Use the `callback` attribute of the option.
+
+```js
+import React from "react";
+import Select from 'funda-ui/Select';
+
+// component styles
+import 'funda-ui/Select/index.css';
+
+export default () => {
+
+    return (
+        <>         
+           
+
+            <Select
+                placeholder="Select"
+                name="name"
+                winWidth={typeof window === 'undefined' ? undefined : () => window.innerWidth / 2 + 'px'}
+                options={[
+                    {"label": "Option 1","listItemLabel":"Option 1 (No: 001)","value": "value-1","queryString": "option1"},
+                    {"label": "Option 2","listItemLabel":"<del style=color:red>deprecate</del>Option 2 (click on the callback)","value": "value-2","queryString": "option2"},
+                    {"label": "Option 3","listItemLabel":"<span style='background:blue;color:white;padding:.3rem;margin:.5rem 0;border-radius:5px;'>More</span>","value": "value-3","queryString": "option3", "callback": () => {
+                        alert('Option 3');
+                    }},
+                    
+                ]}
+
+            />
+
+        </>
+    );
+}
+```
+
+## Asynchronous requests are not executed by default
+
+Set property `firstRequestAutoExec` to **false**. The first asynchronous request is not executed (saving bandwidth and improving performance). Trigger the first asynchronous request when the options area is expanded. 
+
+
+> Valid when the series attribute `fetchXXXX` is exist
+
+
+```js
+import React from "react";
+import Select from 'funda-ui/Select';
+
+// component styles
+import 'funda-ui/Select/index.css';
+
+
+class DataService {
+    
+    // `getList()` must be a Promise Object
+    async getList(searchStr = '', limit = 0, otherParam = '') {
+
+        console.log('searchStr: ', searchStr);
+        console.log("limit: ", limit);
+        console.log("otherParam: ", otherParam);
+
+        return {
+            code: 0,
+            message: 'OK',
+            data: [
+                {item_name: 'foo', item_code: 'bar', kb_code: 'fb,foobar'},
+                {item_name: 'foo2', item_code: 'bar2', kb_code: 'fb2,foobar2'},
+                {item_name: 'foo3', item_code: 'bar3', kb_code: 'fb3,foobar3'}
+            ]
+        };
+    }
+	
+}
+
+export default () => {
+
+    return (
+        <>         
+            
+            <Select
+                placeholder="Select"
+                name="name"
+                firstRequestAutoExec={false}
+                fetchFuncAsync={new DataService}
+                fetchFuncMethod="getList"
+                fetchFuncMethodParams={['',0]}
+                fetchCallback={(res) => {
+
+                    const formattedData = res.map((item, i) => {
+                        return {
+                            label: item.item_name,
+                            value: item.item_code,
+                            myOrder: i,
+                            queryString: item.kb_code
+                        }
+                    }); 
+                    
+                    return formattedData;
+                }}
+               
+            />
+        </>
+    );
+}
+```
+
+
+
 ## The Option Group element
 
 Specify the content in the `optgroup` attribute of `options`.
@@ -1564,7 +1728,8 @@ import Select from 'funda-ui/Select';
 | `depth` | number  | 1055 | Set the depth value of the control to control the display of the pop-up layer appear above. Please set it when multiple controls are used at the same time. | - |
 | `winWidth` | number \| function  | `auto` | Set the container width of options. Such as: `500px` or `() => window.innerWidth/2 + 'px'`  | - |
 | `extractValueByBrackets` | boolean  | true | Whether to use square brackets to save result and initialize default value. | - |
-| `value` | string | - | Set a default value for this control. If it is a multi-select (the `multiSelect` property exists), the default value will be used like `[value-1][value-2]`. <blockquote>If `extractValueByBrackets` is false and the `multiSelect` property exists, the default value will be separated by comma, such as <br />`value-1,value-2`</blockquote> | - |
+| `defaultValue` | string \| JSON Object | - | Specifies the default value. Use when the component is not controlled. It does not re-render the component because the incoming value changes. If it is a multi-select (the `multiSelect` property exists), the default value will be used like `[value-1][value-2]`. <blockquote>If `extractValueByBrackets` is false and the `multiSelect` property exists, the default value will be separated by comma, such as <br />`value-1,value-2`</blockquote> <hr /> <blockquote>If you use objects, you can default to values that do not exist in the option list. such as `{"label":"Option 0","value":"value-0","queryString":""}` **(Single selection only!!!)**</blockquote> | - |
+| `value` | string \| JSON Object | - | Set a default value for this control. If it is a multi-select (the `multiSelect` property exists), the default value will be used like `[value-1][value-2]`. <blockquote>If `extractValueByBrackets` is false and the `multiSelect` property exists, the default value will be separated by comma, such as <br />`value-1,value-2`</blockquote> <hr /> <blockquote>If you use objects, you can default to values that do not exist in the option list. such as `{"label":"Option 0","value":"value-0","queryString":""}` **(Single selection only!!!)**</blockquote> | - |
 | `label` | string \| ReactNode | - | It is used to specify a label for an element of a form.<blockquote>Support html tags</blockquote> | - |
 | `name` | string | - | Name is not deprecated when used with form fields. | - |
 | `placeholder` | string | - |  Specifies a short hint that describes. | - |
@@ -1576,8 +1741,9 @@ import Select from 'funda-ui/Select';
 | `required` | boolean | false | When present, it specifies that a field must be filled out before submitting the form. | - |
 | `controlArrow` | ReactNode  | `<svg width="10px" height="10px" viewBox="0 -4.5 20 20"><g stroke="none" strokeWidth="1" fill="none"><g transform="translate(-180.000000, -6684.000000)" className="arrow-fill-g" fill="#a5a5a5"><g transform="translate(56.000000, 160.000000)"><path d="M144,6525.39 L142.594,6524 L133.987,6532.261 L133.069,6531.38 L133.074,6531.385 L125.427,6524.045 L124,6525.414 C126.113,6527.443 132.014,6533.107 133.987,6535 C135.453,6533.594 134.024,6534.965 144,6525.39"></path></g></g></g></svg>` | Set an arrow of control | - |
 | `data`  <blockquote>You could use [key](https://react.dev/learn/rendering-lists#why-does-react-need-keys) instead of it</blockquote>  | any  | - | Incoming data, you can set the third parameter of `onFetch`. <blockquote>Changes in the `data` value will cause the component to re-render. It will be used when the value or content does not change when switching routes and needs to re-render the component or get the request.</blockquote> <hr /> <blockquote>!!!Note: Using `data` and `value` at the same time may cause two different parameter transfers, which will affect the final rendering. Please choose the appropriate usage based on your business. Generally speaking, if the `multiSelect` exists, it is not recommended to use the `data`.</blockquote>| - |
+| `firstRequestAutoExec` | boolean  | true | The first asynchronous request is automatically executed. If **false**, trigger the first asynchronous request when the options area is expanded. <blockquote>Valid when the series attribute `fetchXXXX` is exist</blockquote> | - |
 | `fetchTrigger` | boolean  | false | Use buttons to trigger data queries. | - |
-| `fetchTriggerForDefaultData` | JSON Object \| null  | null | Sets a default data for control's values. (such as `{values: ['value-1','value-3'], labels: ['Option 1','Option 3'], queryStrings: ['','']}`) <br />Only takes effect when `fetchTrigger` is *true* and `value` is not empty. | - |
+| `fetchTriggerForDefaultData` | JSON Object \| null  | null | Sets a default data for control's values. (such as `{values: ['value-1','value-3'], labels: ['Option 1','Option 3'], queryStrings: ['','']}`) <br />Valid when `fetchTrigger` is *true* and `value` is not empty. | - |
 | `fetchNoneInfo` | string  | - | The text of the data not fetched. | - |
 | `fetchUpdate` | boolean  | false | When the property is *true*, every time the input changes or the search button is clicked, a data request will be triggered. | - |
 | `fetchFuncAsync` | Constructor | - | A method as a string from the constructor.  | - |
@@ -1609,7 +1775,7 @@ JSON Object Literals configuration properties of the `options` and callback from
 | `optgroup` | array | - | Creates a grouping of options. It will be displayed using the value of `label`. such as `[{"label":"Option 0","value":"value-0","queryString":""},{"label":"Group 1","value":"","queryString":"","optgroup":[{"label":"Option 1","value":"value-1","queryString":""},{"label":"Option 2","value":"value-2","queryString":""}]}]` | - |
 | `queryString` | string | - | Quick query string, such as Chinese pinyin or English initials | ✅ |
 | `disabled` | boolean | - | When present, it specifies that an option should be disabled. | - |
-
+| `callback` | function | - | Click on the callback function for this option. | - |
 
 
 
@@ -1617,6 +1783,6 @@ JSON Object Literals configuration properties of the `options` and callback from
 
 A successful response returns the details of the callback such as Sample Request Body:
 
-Among them, `id`, `parent_id`, `label`, `listItemLabel`, `value`, `optgroup`, `queryString` and `disabled` are attributes used by the system, and other attributes can be added freely.
+Among them, `id`, `parent_id`, `label`, `listItemLabel`, `value`, `optgroup`, `queryString`, `disabled` and `callback` are attributes used by the system, and other attributes can be added freely.
 
 

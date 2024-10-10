@@ -8,7 +8,8 @@ export interface OptionConfig {
 export declare type NativeSelectOptionChangeFnType = (arg1: any, arg2: any, arg3?: any, arg4?: any) => void;
 export declare type NativeSelectProps = {
     wrapperClassName?: string;
-    value?: string;
+    defaultValue?: string | OptionConfig;
+    value?: string | OptionConfig;
     label?: React.ReactNode | string;
     name?: string;
     disabled?: any;
@@ -22,6 +23,7 @@ export declare type NativeSelectProps = {
     style?: React.CSSProperties;
     tabIndex?: number;
     [key: `data-${string}`]: string | undefined;
+    firstRequestAutoExec?: boolean;
     fetchFuncAsync?: any;
     fetchFuncMethod?: string;
     fetchFuncMethodParams?: any[];

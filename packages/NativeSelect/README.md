@@ -187,6 +187,159 @@ export default () => {
 ```
 
 
+
+## Use the object as the default 
+
+You can specify an object as the default, and if the default value is not in the list of options, it will be displayed by default.
+
+
+```js
+import React from "react";
+import NativeSelect from 'funda-ui/NativeSelect';
+
+export default () => {
+
+    return (
+        <>         
+           
+            <NativeSelect
+                value={{ "label": "Option 2", "value": "value-2" }}
+                name="name"
+                label="String"
+                options={[
+                    { "label": "Option 1", "value": "value-1" },
+                    { "label": "Option 2", "value": "value-2" },
+                    { "label": "Option 3", "value": "value-3", "customAttr1": "attr1", "customAttr2": "attr2" },
+                    { "label": "Option 4", "value": "value-4", "disabled": true }
+                ]}
+            />
+
+
+
+            <NativeSelect
+                value={{ "label": "Option New", "value": "value-new", "queryString": "" }}
+                name="name"
+                label="String"
+                options={[
+                    { "label": "Option 1", "value": "value-1" },
+                    { "label": "Option 2", "value": "value-2" },
+                    { "label": "Option 3", "value": "value-3", "customAttr1": "attr1", "customAttr2": "attr2" },
+                    { "label": "Option 4", "value": "value-4", "disabled": true }
+                ]}
+            />
+
+
+        </>
+    );
+}
+```
+
+
+
+## Click on the callback via option
+
+Use the `callback` attribute of the option.
+
+```js
+import React from "react";
+import NativeSelect from 'funda-ui/NativeSelect';
+
+export default () => {
+
+    return (
+        <>         
+           
+
+            <NativeSelect
+                value={"value-3"}
+                name="name"
+                label="String"
+                options={[
+                    { "label": "Option 1", "value": "value-1" },
+                    { "label": "Option 2", "value": "value-2" },
+                    {
+                        "label": "Option 3 (click on the callback)", "value": "value-3", "callback": () => {
+                            alert('Option 3');
+                        }
+                    }
+                ]}
+            />
+
+
+        </>
+    );
+}
+```
+
+
+
+## Asynchronous requests are not executed by default
+
+Set property `firstRequestAutoExec` to **false**. The first asynchronous request is not executed (saving bandwidth and improving performance). Trigger the first asynchronous request when the options area is expanded. 
+
+
+> Valid when the series attribute `fetchXXXX` is exist
+
+
+```js
+import React from "react";
+import NativeSelect from 'funda-ui/NativeSelect';
+
+
+class DataService {
+    
+    // `getList()` must be a Promise Object
+    async getList(searchStr = '', limit = 0, otherParam = '') {
+
+        console.log('searchStr: ', searchStr);
+        console.log("limit: ", limit);
+        console.log("otherParam: ", otherParam);
+
+        return {
+            code: 0,
+            message: 'OK',
+            data: [
+                {item_name: 'foo', item_code: 'bar', kb_code: 'fb,foobar'},
+                {item_name: 'foo2', item_code: 'bar2', kb_code: 'fb2,foobar2'},
+                {item_name: 'foo3', item_code: 'bar3', kb_code: 'fb3,foobar3'}
+            ]
+        };
+    }
+	
+}
+
+export default () => {
+
+    return (
+        <>        
+        
+            <NativeSelect
+                name="name"
+                firstRequestAutoExec={false}
+                fetchFuncAsync={new DataService}
+                fetchFuncMethod="getList"
+                fetchFuncMethodParams={['',0]}
+                fetchCallback={(res) => {
+
+                    const formattedData = res.map((item, index) => {
+                        return {
+                            label: item.item_name,
+                            value: item.item_code,
+                            disabled: index === res.length - 1 ? true : false
+                        }
+                    }); 
+                    return formattedData;
+                }}
+            />
+
+            
+        </>
+    );
+}
+```
+
+
+
 ## The Option Group element
 
 Specify the content in the `optgroup` attribute of `options`.
@@ -489,11 +642,13 @@ import NativeSelect from 'funda-ui/NativeSelect';
 | `hierarchical` | boolean  | false | Set hierarchical categories ( with sub-categories ) to attribute `options`. | - |
 | `indentation` | string  | - | Set hierarchical indentation placeholders, valid when the `hierarchical` is true. | - |
 | `doubleIndent` | boolean  | false | Set double indent effect, valid when the `hierarchical` is true. | - |
-| `value` | string | - | Set a default value for this control | - |
+| `defaultValue` | string \| JSON Object | - | Specifies the default value. Use when the component is not controlled. It does not re-render the component because the incoming value changes. <blockquote>If you use objects, you can default to values that do not exist in the option list. such as `{"label":"Option 0","value":"value-0","queryString":""}` **(Single selection only!!!)**</blockquote> | - |
+| `value` | string \| JSON Object | - | Set a default value for this control. <blockquote>If you use objects, you can default to values that do not exist in the option list. such as `{"label":"Option 0","value":"value-0","queryString":""}` **(Single selection only!!!)**</blockquote> | - |
 | `label` | string \| ReactNode | - | It is used to specify a label for an element of a form.<blockquote>Support html tags</blockquote> | - |
 | `name` | string | - | Name is not deprecated when used with form fields. | - |
 | `disabled` | boolean | false | Whether it is disabled | - |
 | `required` | boolean | false | When present, it specifies that a field must be filled out before submitting the form. | - |
+| `firstRequestAutoExec` | boolean  | true | The first asynchronous request is automatically executed. If **false**, trigger the first asynchronous request when the options area is expanded. <blockquote>Valid when the series attribute `fetchXXXX` is exist</blockquote> | - |
 | `fetchFuncAsync` | Constructor | - | A method as a string from the constructor.  | - |
 | `fetchFuncMethod` | string  | - | When the property is *true*, every time the select changes, a data request will be triggered. <br /><blockquote>The methord must be a Promise Object.</blockquote> | - |
 | `fetchFuncMethodParams` | array  | - | The parameter passed by the method, it is an array. <br />Note: the first element is a query string, the second element is the number of queried data (usually a number), and then you can increase the third, or fourth, and more parameters. <br />Such as `['',0]`, `['',99,'string 1','string 2']` <br /><blockquote>There should be at least one parameter which is the query string.</blockquote> | - |
@@ -519,11 +674,12 @@ JSON Object Literals configuration properties of the `options` and callback from
 | `value` | string | - | Specify the value for each option | ✅ |
 | `optgroup` | array | - | Creates a grouping of options. It will be displayed using the value of `label`. such as `[{"label":"Option 0","value":"value-0"},{"label":"Group 1","value":"","optgroup":[{"label":"Option 1","value":"value-1"},{"label":"Option 2","value":"value-2"}]}]` | - |
 | `disabled` | boolean | - | When present, it specifies that an option should be disabled. | - |
+| `callback` | function | - | Click on the callback function for this option. | - |
 
 
 ### Create Callback 
 
 A successful response returns the details of the callback such as Sample Request Body:
 
-Among them, `label`, `listItemLabel`, `value`, `optgroup` and `disabled` are attributes used by the system, and other attributes can be added freely
+Among them, `label`, `listItemLabel`, `value`, `optgroup`, `disabled` and `callback` are attributes used by the system, and other attributes can be added freely
 

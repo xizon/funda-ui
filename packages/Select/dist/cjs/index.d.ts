@@ -17,6 +17,7 @@ export interface OptionConfig {
     listItemLabel?: any;
     value: any;
     queryString: string | number;
+    callback?: () => void;
 }
 export interface MultiSelectConfig {
     valid: boolean;
@@ -45,7 +46,8 @@ export declare type SelectProps = {
     multiSelectSelectedItemOnlyStatus?: multiSelectSelectedItemOnlyStatusConfig;
     renderSelectedValue?: (selectedData: MultiSelectControlValConfig, removeFunc: (e: React.MouseEvent) => void) => void;
     cleanTrigger?: CleanTriggerConfig;
-    value?: string;
+    defaultValue?: string | OptionConfig;
+    value?: string | OptionConfig;
     label?: React.ReactNode | string;
     name?: string;
     disabled?: any;
@@ -59,6 +61,7 @@ export declare type SelectProps = {
     doubleIndent?: boolean;
     winWidth?: string | Function;
     controlArrow?: React.ReactNode;
+    firstRequestAutoExec?: boolean;
     fetchTrigger?: boolean;
     fetchTriggerForDefaultData?: MultiSelectDataConfig | null;
     /** Set the depth value of the control to control the display of the pop-up layer appear above.
