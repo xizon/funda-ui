@@ -17,8 +17,6 @@ import {
 import { clsWrite, combinedCls } from 'funda-utils/dist/cjs/cls';
 
 
-
-
 export interface ItemConfig {
     [propName: string]: string | number | boolean;
 }
@@ -161,8 +159,12 @@ const NativeSelect = forwardRef((props: NativeSelectProps, externalRef: any) => 
         }
 
         if (typeof curValue === 'undefined') return null;
+        
+        // if the value is not object
+        if (!isObject(curValue)) return null;
+        
 
-        const hasExtraOpt = dataInit.some(option => option.value === finalRes(curValue));
+        const hasExtraOpt = optionsFlat(dataInit).some(option => option.value === finalRes(curValue));
 
         if (!hasExtraOpt) {
             const _disabled = typeof curValue.disabled === 'undefined' ? false : curValue.disabled;
@@ -365,7 +367,10 @@ const NativeSelect = forwardRef((props: NativeSelectProps, externalRef: any) => 
                         className="form-select"
                         id={idRes}
                         name={name}
-                        value={controlValue}  // do not use `defaultValue`
+
+                        // `value` prop on `select` should not be null. Consider using an empty string 
+                        // to clear the component or `undefined` for uncontrolled components.
+                        value={controlValue === null ? undefined : controlValue}  // do not use `defaultValue`
                         onFocus={handleFocus}
                         onClick={activate}
                         onBlur={handleBlur}

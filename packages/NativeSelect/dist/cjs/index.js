@@ -1387,7 +1387,10 @@ var NativeSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_
       curValue = value;
     }
     if (typeof curValue === 'undefined') return null;
-    var hasExtraOpt = dataInit.some(function (option) {
+
+    // if the value is not object
+    if (!isObject(curValue)) return null;
+    var hasExtraOpt = optionsFlat(dataInit).some(function (option) {
       return option.value === finalRes(curValue);
     });
     if (!hasExtraOpt) {
@@ -1602,8 +1605,12 @@ var NativeSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_
     tabIndex: tabIndex || 0,
     className: "form-select",
     id: idRes,
-    name: name,
-    value: controlValue // do not use `defaultValue`
+    name: name
+
+    // `value` prop on `select` should not be null. Consider using an empty string 
+    // to clear the component or `undefined` for uncontrolled components.
+    ,
+    value: controlValue === null ? undefined : controlValue // do not use `defaultValue`
     ,
     onFocus: handleFocus,
     onClick: activate,

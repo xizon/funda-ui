@@ -251,7 +251,6 @@ export default () => {
            
 
             <NativeSelect
-                value={"value-3"}
                 name="name"
                 label="String"
                 options={[
