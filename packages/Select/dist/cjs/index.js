@@ -3607,7 +3607,8 @@ var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_
   var selectedSign = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useRef)(false);
   var MULTI_SEL_VALID = multiSelect ? multiSelect.valid : false;
   var MULTI_SEL_ENTIRE_AREA_TRIGGER = typeof multiSelectEntireAreaTrigger === 'undefined' ? true : multiSelectEntireAreaTrigger;
-  var MULTI_SEL_LABEL = multiSelect ? multiSelect.selectAllLabel : 'Select all options';
+  var MULTI_SEL_LABEL = multiSelect ? multiSelect.selectAllLabel : 'Select all';
+  var MULTI_DESEL_LABEL = multiSelect ? multiSelect.deselectAllLabel : 'Deselect all';
   var MULTI_SEL_SELECTED_STATUS = {
     itemsLabel: '{num} Selected',
     allItemsLabel: 'All Content ({num})',
@@ -3807,7 +3808,7 @@ var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_
         _filterResQueryValue,
         _filterResQueryLabel,
         _currentData2,
-        _values2,
+        _values3,
         _args = arguments;
       return _regeneratorRuntime().wrap(function _callee$(_context) {
         while (1) switch (_context.prev = _context.next) {
@@ -4044,8 +4045,8 @@ var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_
                 });
 
                 //
-                _values2 = typeof defaultValue !== 'undefined' ? VALUE_BY_BRACKETS ? (0,extract.extractContentsOfBrackets)(defaultValue) : defaultValue.split(',') : [];
-                _values2.forEach(function (_value, _index) {
+                _values3 = typeof defaultValue !== 'undefined' ? VALUE_BY_BRACKETS ? (0,extract.extractContentsOfBrackets)(defaultValue) : defaultValue.split(',') : [];
+                _values3.forEach(function (_value, _index) {
                   if (!multiSelControlOptionExist(_currentData2.values, _value) && typeof _currentData2.values[_index] !== 'undefined') {
                     var _filterRes4 = [];
                     _filterRes4 = [{
@@ -4708,6 +4709,10 @@ var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_
 
     // Appropriate multi-item container height
     adjustMultiControlContainerHeight();
+    return {
+      labels: _labels,
+      values: _values
+    };
   }
   ;
   function updateOptionCheckboxesViaAddSingleItem(data) {
@@ -4724,15 +4729,34 @@ var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_
   ;
   function handleSelectAll(event) {
     event.preventDefault();
-    if (selectedSign.current) {
-      updateOptionCheckboxes('remove');
+    event.stopPropagation(); /* REQUIRED */
+
+    var _labels = [];
+    var _values = [];
+    if (controlArr.values.length === optionsData.length) {
+      // selected all items
+      var _updateOptionCheckbox = updateOptionCheckboxes('remove'),
+        labels = _updateOptionCheckbox.labels,
+        values = _updateOptionCheckbox.values;
+      selectedSign.current = false;
+      _labels = labels;
+      _values = values;
     } else {
-      updateOptionCheckboxes('add');
+      var _updateOptionCheckbox2 = updateOptionCheckboxes(selectedSign.current ? 'remove' : 'add'),
+        _labels2 = _updateOptionCheckbox2.labels,
+        _values2 = _updateOptionCheckbox2.values;
+      selectedSign.current = !selectedSign.current;
+      _labels = _labels2;
+      _values = _values2;
     }
-    selectedSign.current = !selectedSign.current;
+    onChange === null || onChange === void 0 ? void 0 : onChange(selectInputRef.current, valueInputRef.current, multipleSelectionCallback(_values, _labels));
   }
   function handleCleanValue(event) {
-    if (typeof event !== 'undefined') event.preventDefault();
+    if (typeof event !== 'undefined') {
+      event.preventDefault();
+      event.stopPropagation(); /* REQUIRED */
+    }
+
     // It is valid when a single selection
     var emptyValue = {
       label: '',
@@ -4740,9 +4764,7 @@ var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_
       queryString: ''
     };
     handleSelect(null, JSON.stringify(emptyValue), [], []);
-    if (typeof onChange === 'function') {
-      onChange === null || onChange === void 0 ? void 0 : onChange(selectInputRef.current, valueInputRef.current, emptyValue);
-    }
+    onChange === null || onChange === void 0 ? void 0 : onChange(selectInputRef.current, valueInputRef.current, emptyValue);
 
     // update temporary value
     setControlTempValue(null);
@@ -5246,7 +5268,7 @@ var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_
     className: "custom-select-multi__list"
   }, typeof multiSelectSelectedItemOnlyStatus !== 'undefined' ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("li", {
     className: "custom-select-multi__list-item-statusstring"
-  }, typeof multiSelectSelectedItemOnlyStatus.itemsLabel === 'string' && controlArr.labels.length > 0 && controlArr.labels.length < optionsData.length ? multiSelectSelectedItemOnlyStatus.itemsLabel.replace('{num}', "".concat(controlArr.labels.length)) : null, typeof multiSelectSelectedItemOnlyStatus.noneLabel === 'string' && controlArr.labels.length === 0 ? multiSelectSelectedItemOnlyStatus.noneLabel : null, typeof multiSelectSelectedItemOnlyStatus.allItemsLabel === 'string' && controlArr.labels.length === optionsData.length ? multiSelectSelectedItemOnlyStatus.allItemsLabel.replace('{num}', "".concat(controlArr.labels.length)) : null, typeof multiSelectSelectedItemOnlyStatus.itemsLabel !== 'string' && controlArr.labels.length > 0 ? MULTI_SEL_SELECTED_STATUS.itemsLabel.replace('{num}', "".concat(controlArr.labels.length)) : null, typeof multiSelectSelectedItemOnlyStatus.noneLabel !== 'string' && controlArr.labels.length === 0 ? MULTI_SEL_SELECTED_STATUS.noneLabel : null, typeof multiSelectSelectedItemOnlyStatus.allItemsLabel !== 'string' && controlArr.labels.length === optionsData.length ? MULTI_SEL_SELECTED_STATUS.allItemsLabel.replace('{num}', "".concat(controlArr.labels.length)) : null)) : /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, typeof renderSelectedValue === 'function' ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, renderSelectedValue(controlArr, handleMultiControlItemRemove)) : /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, controlArr.labels.map(function (item, index) {
+  }, typeof multiSelectSelectedItemOnlyStatus.itemsLabel === 'string' && controlArr.labels.length > 0 && controlArr.labels.length < optionsData.length ? multiSelectSelectedItemOnlyStatus.itemsLabel.replace('{num}', "".concat(controlArr.labels.length)) : null, typeof multiSelectSelectedItemOnlyStatus.noneLabel === 'string' && controlArr.labels.length === 0 ? multiSelectSelectedItemOnlyStatus.noneLabel : null, controlArr.labels.length > 0 ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, typeof multiSelectSelectedItemOnlyStatus.allItemsLabel === 'string' && controlArr.labels.length === optionsData.length ? multiSelectSelectedItemOnlyStatus.allItemsLabel.replace('{num}', "".concat(controlArr.labels.length)) : null) : null, typeof multiSelectSelectedItemOnlyStatus.itemsLabel !== 'string' && controlArr.labels.length > 0 ? MULTI_SEL_SELECTED_STATUS.itemsLabel.replace('{num}', "".concat(controlArr.labels.length)) : null, typeof multiSelectSelectedItemOnlyStatus.noneLabel !== 'string' && controlArr.labels.length === 0 ? MULTI_SEL_SELECTED_STATUS.noneLabel : null, controlArr.labels.length > 0 ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, typeof multiSelectSelectedItemOnlyStatus.allItemsLabel !== 'string' && controlArr.labels.length === optionsData.length ? MULTI_SEL_SELECTED_STATUS.allItemsLabel.replace('{num}', "".concat(controlArr.labels.length)) : null) : null)) : /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, typeof renderSelectedValue === 'function' ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, renderSelectedValue(controlArr, handleMultiControlItemRemove)) : /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, controlArr.labels.map(function (item, index) {
     return /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("li", {
       key: 'selected-item-' + index,
       "data-value": controlArr.values[index],
@@ -5383,7 +5405,7 @@ var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_
     tabIndex: -1,
     className: "btn btn-secondary",
     dangerouslySetInnerHTML: {
-      __html: "".concat(MULTI_SEL_LABEL)
+      __html: controlArr.values.length === optionsData.length ? "".concat(MULTI_DESEL_LABEL) : "".concat(MULTI_SEL_LABEL)
     },
     onClick: handleSelectAll
   }))) : null, !MULTI_SEL_VALID ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, CLEAN_TRIGGER_VALID ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("span", {

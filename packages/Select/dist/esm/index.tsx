@@ -50,6 +50,7 @@ import { clsWrite, combinedCls } from 'funda-utils/dist/cjs/cls';
 
 
 
+
 export type SelectOptionChangeFnType = (arg1: any, arg2: any, arg3: any) => void;
 
 export interface MultiSelectDataConfig {
@@ -79,6 +80,7 @@ export interface MultiSelectConfig {
     valid: boolean;
     selectAll: boolean;
     selectAllLabel?: string;
+    deselectAllLabel?: string;
     data: MultiSelectDataConfig | null;
 }
 
@@ -265,7 +267,8 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
     const selectedSign = useRef<boolean>(false);
     const MULTI_SEL_VALID = multiSelect ? multiSelect.valid : false;
     const MULTI_SEL_ENTIRE_AREA_TRIGGER = typeof multiSelectEntireAreaTrigger === 'undefined' ? true : multiSelectEntireAreaTrigger;
-    const MULTI_SEL_LABEL = multiSelect ? multiSelect.selectAllLabel : 'Select all options';
+    const MULTI_SEL_LABEL = multiSelect ? multiSelect.selectAllLabel : 'Select all';
+    const MULTI_DESEL_LABEL = multiSelect ? multiSelect.deselectAllLabel : 'Deselect all';
     const MULTI_SEL_SELECTED_STATUS: Record<string, string> = {
         itemsLabel: '{num} Selected',
         allItemsLabel: 'All Content ({num})',
@@ -1355,7 +1358,6 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
             //
             if (typeof (onChange) === 'function') {
                 
-
                 onChange?.(
                     selectInputRef.current,
                     valueInputRef.current,
@@ -1558,6 +1560,10 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
         // Appropriate multi-item container height
         adjustMultiControlContainerHeight();
 
+        return {
+            labels: _labels,
+            values: _values
+        }
 
     };
 
@@ -1580,31 +1586,51 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
 
     function handleSelectAll(event: any) {
         event.preventDefault();
-
-        if (selectedSign.current) {
-            updateOptionCheckboxes('remove');
+        event.stopPropagation();  /* REQUIRED */
+        
+        let _labels: any[] = [];
+        let _values: any[] = [];
+        
+        if (controlArr.values.length === optionsData.length) { // selected all items
+            const { labels, values } = updateOptionCheckboxes('remove');
+            selectedSign.current = false;
+            
+            _labels = labels;
+            _values = values;
         } else {
-            updateOptionCheckboxes('add');
+    
+            const { labels, values } = updateOptionCheckboxes(selectedSign.current ? 'remove' : 'add');
+            selectedSign.current = !selectedSign.current;
+
+            _labels = labels;
+            _values = values;
+
         }
 
-        selectedSign.current = !selectedSign.current;
+        onChange?.(
+            selectInputRef.current,
+            valueInputRef.current,
+            multipleSelectionCallback(_values, _labels)
+        );
 
 
     }
 
     function handleCleanValue(event?: any) {
-        if (typeof event !== 'undefined') event.preventDefault();
+        if (typeof event !== 'undefined') {
+            event.preventDefault();
+            event.stopPropagation();  /* REQUIRED */
+        }
+        
         // It is valid when a single selection
         const emptyValue: Record<string, string> = { label: '', value: '', queryString: '' };
         handleSelect(null, JSON.stringify(emptyValue), [], []);
 
-        if (typeof (onChange) === 'function') {
-            onChange?.(
-                selectInputRef.current,
-                valueInputRef.current,
-                emptyValue
-            );
-        }
+        onChange?.(
+            selectInputRef.current,
+            valueInputRef.current,
+            emptyValue
+        );
 
         // update temporary value
         setControlTempValue(null);
@@ -1649,7 +1675,6 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
         //
         if (typeof (onChange) === 'function') {
 
-  
             onChange?.(
                 selectInputRef.current,
                 valueInputRef.current,
@@ -1869,7 +1894,6 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
                             valueInputRef.current,
                             !MULTI_SEL_VALID ? currentData : multipleSelectionCallback(currentControlValueArr, currentControlLabelArr)
                         );
-
 
 
                         //
@@ -2162,14 +2186,25 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
                                 {typeof multiSelectSelectedItemOnlyStatus !== 'undefined' ? <>
 
                                     <li className="custom-select-multi__list-item-statusstring" >
+                             
                                         {typeof multiSelectSelectedItemOnlyStatus.itemsLabel === 'string' && controlArr.labels.length > 0 && controlArr.labels.length < optionsData.length ? multiSelectSelectedItemOnlyStatus.itemsLabel.replace('{num}', `${controlArr.labels.length}`) : null}
                                         {typeof multiSelectSelectedItemOnlyStatus.noneLabel === 'string' && controlArr.labels.length === 0 ? multiSelectSelectedItemOnlyStatus.noneLabel : null}
-                                        {typeof multiSelectSelectedItemOnlyStatus.allItemsLabel === 'string' && controlArr.labels.length === optionsData.length ? multiSelectSelectedItemOnlyStatus.allItemsLabel.replace('{num}', `${controlArr.labels.length}`) : null}
+
+                                        {/* all */}
+                                        {controlArr.labels.length > 0 ? <>
+                                            {typeof multiSelectSelectedItemOnlyStatus.allItemsLabel === 'string' && controlArr.labels.length === optionsData.length ? multiSelectSelectedItemOnlyStatus.allItemsLabel.replace('{num}', `${controlArr.labels.length}`) : null}
+                                        </>: null}
+
 
                                         {/*-----*/}
                                         {typeof multiSelectSelectedItemOnlyStatus.itemsLabel !== 'string' && controlArr.labels.length > 0 ? MULTI_SEL_SELECTED_STATUS.itemsLabel.replace('{num}', `${controlArr.labels.length}`) : null}
                                         {typeof multiSelectSelectedItemOnlyStatus.noneLabel !== 'string' && controlArr.labels.length === 0 ? MULTI_SEL_SELECTED_STATUS.noneLabel : null}
-                                        {typeof multiSelectSelectedItemOnlyStatus.allItemsLabel !== 'string' && controlArr.labels.length === optionsData.length ? MULTI_SEL_SELECTED_STATUS.allItemsLabel.replace('{num}', `${controlArr.labels.length}`) : null}
+
+                                        {/* all */}
+                                        {controlArr.labels.length > 0 ? <>
+                                            {typeof multiSelectSelectedItemOnlyStatus.allItemsLabel !== 'string' && controlArr.labels.length === optionsData.length ? MULTI_SEL_SELECTED_STATUS.allItemsLabel.replace('{num}', `${controlArr.labels.length}`) : null}
+                                        </>: null}
+
 
                                     </li>
                                 </> : <>
@@ -2343,7 +2378,7 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
                                                 tabIndex={-1}
                                                 className="btn btn-secondary"
                                                 dangerouslySetInnerHTML={{
-                                                    __html: `${MULTI_SEL_LABEL}`
+                                                    __html: controlArr.values.length === optionsData.length ? `${MULTI_DESEL_LABEL}` : `${MULTI_SEL_LABEL}`
                                                 }}
                                                 onClick={handleSelectAll}
                                             ></span>

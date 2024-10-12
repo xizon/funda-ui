@@ -143,7 +143,8 @@ export default () => {
                 multiSelect={{
                     valid: true,
                     selectAll: true,
-                    selectAllLabel: "Select all options",
+                    selectAllLabel: "Select all",
+                    deselectAllLabel: "Deselect all",
                     data: {
                         values: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20].map(v => v.toString()),
                         labels: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20].map(v => v.toString()),
@@ -165,7 +166,8 @@ export default () => {
                 multiSelect={{
                     valid: true,
                     selectAll: true,
-                    selectAllLabel: "Select all options",
+                    selectAllLabel: "Select all",
+                    deselectAllLabel: "Deselect all",
                     data: {
                         values: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20].map(v => v.toString()),
                         labels: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20].map(v => v.toString()),
@@ -296,7 +298,8 @@ export default () => {
                 multiSelect={{
                     valid: true,
                     selectAll: true,
-                    selectAllLabel: "Select all options",
+                    selectAllLabel: "Select all",
+                    deselectAllLabel: "Deselect all",
                     data: {
                         values: ['bar2'],
                         labels: ['foo2'],
@@ -333,7 +336,8 @@ export default () => {
                 multiSelect={{
                     valid: true,
                     selectAll: true,
-                    selectAllLabel: "Select all options",
+                    selectAllLabel: "Select all",
+                    deselectAllLabel: "Deselect all",
                     data: {
                         values: ['bar2'],
                         labels: ['foo2'],
@@ -644,7 +648,8 @@ export default () => {
                 multiSelect={{
                     valid: true,
                     selectAll: true,
-                    selectAllLabel: "Select all options",
+                    selectAllLabel: "Select all",
+                    deselectAllLabel: "Deselect all",
                     data: {
                         values: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20].map(v => v.toString()),
                         labels: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20].map(v => v.toString()),
@@ -1295,7 +1300,8 @@ export default () => {
                 multiSelect={{
                     valid: true, 
                     selectAll: true, 
-                    selectAllLabel: "Select all options",
+                    selectAllLabel: "Select all",
+                    deselectAllLabel: "Deselect all",
                     data: {
                         values: ['level-1','level-3_1'],
                         labels: ['Top level 1','Sub level 3_1'],
@@ -1436,7 +1442,8 @@ export default () => {
                 multiSelect={{
                     valid: true, 
                     selectAll: true, 
-                    selectAllLabel: "Select all options",
+                    selectAllLabel: "Select all",
+                    deselectAllLabel: "Deselect all",
                     data: {
                         values: ['level-1','level-3_1'],
                         labels: ['Top level 1','Sub level 3_1'],
@@ -1508,7 +1515,8 @@ export default () => {
                 multiSelect={{
                     valid: true,
                     selectAll: true,
-                    selectAllLabel: "Select all options",
+                    selectAllLabel: "Select all",
+                    deselectAllLabel: "Deselect all",
                     data: {
                         values: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20].map(v => v.toString()),
                         labels: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20].map(v => v.toString()),
@@ -1658,7 +1666,8 @@ export default () => {
                 multiSelect={{
                     valid: true,
                     selectAll: true,
-                    selectAllLabel: "Select all options",
+                    selectAllLabel: "Select all",
+                    deselectAllLabel: "Deselect all",
                     data: {
                         values: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20].map(v => v.toString()),
                         labels: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20].map(v => v.toString()),
@@ -1722,7 +1731,7 @@ import Select from 'funda-ui/Select';
 | `hierarchical` | boolean  | false | Set hierarchical categories ( with sub-categories ) to attribute `options`. | - |
 | `indentation` | string  | - | Set hierarchical indentation placeholders, valid when the `hierarchical` is true. | - |
 | `doubleIndent` | boolean  | false | Set double indent effect, valid when the `hierarchical` is true. | - |
-| `multiSelect` | JSON Object | `{"valid": false, "selectAll": true, "selectAllLabel": "Select all options"}` | Enable multi-select. <blockquote>**Parameters Description:** <br />`valid` -->  *(Boolean)* *(required)* Set component in which multiple options can be selected at once to be valid.  <br />`selectAll` --> *(Boolean)* *(required)* Enables select all button. <br />`selectAllLabel` -->  *(String)* Sets the select all button label. (Support html tags) <br />`data` -->  *(JSON Object \| null)* *(required)* Sets a default data for control's values. (such as `{values: ['value-1','value-3'], labels: ['Option 1','Option 3'], queryStrings: ['','']}`)</blockquote> | - |
+| `multiSelect` | JSON Object | `{"valid": false, "selectAll": true, "selectAllLabel": "Select all", "deselectAllLabel": "Deselect all"}` | Enable multi-select. <blockquote>**Parameters Description:** <br />`valid` -->  *(Boolean)* *(required)* Set component in which multiple options can be selected at once to be valid.  <br />`selectAll` --> *(Boolean)* *(required)* Enables select all button. <br />`selectAllLabel` -->  *(String)* Sets the select all button label. (Support html tags) <br />`deselectAllLabel` -->  *(String)* Deselect all items button label. (Support html tags)<br />`data` -->  *(JSON Object \| null)* *(required)* Sets a default data for control's values. (such as `{values: ['value-1','value-3'], labels: ['Option 1','Option 3'], queryStrings: ['','']}`)</blockquote> | - |
 | `multiSelectEntireAreaTrigger` | boolean | true | The entire Text box area can be triggered. <blockquote>Valid when `multiSelect` parameter exists</blockquote> | - |
 | `multiSelectSelectedItemOnlyStatus` | JSON Object | `{"itemsLabel":"{num} Selected","allItemsLabel":"All Content ({num})","noneLabel":"No items selected"}` | Let the selected options only display the status without detailed options. It is not recommended for search to trigger request. <hr /> The `{num}` is a placeholder which will be automatically replaced by a number. <blockquote>Valid when `multiSelect` parameter exists</blockquote> | - |
 | `depth` | number  | 1055 | Set the depth value of the control to control the display of the pop-up layer appear above. Please set it when multiple controls are used at the same time. | - |

@@ -23,6 +23,7 @@ export interface MultiSelectConfig {
     valid: boolean;
     selectAll: boolean;
     selectAllLabel?: string;
+    deselectAllLabel?: string;
     data: MultiSelectDataConfig | null;
 }
 export interface multiSelectSelectedItemOnlyStatusConfig {
