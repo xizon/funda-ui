@@ -56,11 +56,26 @@ const ToggleSelection = forwardRef((props: ToggleSelectionProps, ref: any) => {
             setSelectAll: (value: boolean) => {
                 setAllChecked(value);
             },
+            set: (check: boolean) => {
+                const s = String(resolvedRef.current?.dataset.row);
+                setSelectedItems((prev: any) => {
+                    const _data = new Set(prev);
+
+                    if (check) {
+                        _data.add(s);
+                    } else {
+                        _data.delete(s);
+                    }
+
+                    return _data;
+                });
+
+            },
             control: () => {
                 return resolvedRef.current;
             }
         }),
-        [contentRef, resolvedRef],
+        [contentRef, resolvedRef, selectedItems],
     );
 
 
@@ -113,7 +128,7 @@ const ToggleSelection = forwardRef((props: ToggleSelectionProps, ref: any) => {
         let filteredData: any[] = [];
         if (!isNaN(row) && Array.isArray(originData)) {
 
-            const newSelectedItems = new Set(new Map());
+            const newSelectedItems = new Set();
             newSelectedItems.add(_val as never);
             setSelectedItems(newSelectedItems);
 

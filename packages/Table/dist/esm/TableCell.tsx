@@ -3,6 +3,7 @@ import React, { forwardRef, useContext } from 'react';
 import { clsWrite, combinedCls } from 'funda-utils/dist/cjs/cls';
 
 
+
 import { TableContext } from './TableContext';
 
 import { cellMark, removeCellFocusClassName } from './table-utils/func';
@@ -10,9 +11,11 @@ import useTableKeyPress from './table-utils/hooks/useTableKeyPress';
 
 export interface TableCellProps extends React.HTMLAttributes<HTMLTableCellElement> {
     active?: boolean;
+    nowrap?: boolean;
     activeClassName?: string;
     className?: string;
     colSpan?: number;
+    style?: React.CSSProperties;
     scope?: `col` | `row` | `colgroup` | `rowgroup`;
     onClick?: (e: any) => void;
     onKeyDown?: (e: any) => void;
@@ -22,9 +25,11 @@ const TableCell = forwardRef<HTMLTableCellElement, TableCellProps>((
     { 
         children, 
         active, 
+        nowrap,
         activeClassName, 
         className: myClassName, 
         colSpan,
+        style,
         scope,
         onClick,
         onKeyDown,
@@ -68,6 +73,7 @@ const TableCell = forwardRef<HTMLTableCellElement, TableCellProps>((
 
             <CellComponent
                 {...attributes}
+                style={typeof nowrap === 'undefined' ? style : { whiteSpace: clsWrite(nowrap, 'normal', 'nowrap'), ...style }}
                 ref={(node) => {
                     if (typeof externalRef === 'function') {
                         externalRef(node);

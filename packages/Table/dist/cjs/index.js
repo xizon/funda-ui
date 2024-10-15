@@ -1337,8 +1337,14 @@ var useTableKeyPress = function useTableKeyPress(_ref, deps) {
 };
 /* harmony default export */ const hooks_useTableKeyPress = (useTableKeyPress);
 ;// CONCATENATED MODULE: ./src/TableCell.tsx
-var TableCell_excluded = ["children", "active", "activeClassName", "className", "colSpan", "scope", "onClick", "onKeyDown"];
+function TableCell_typeof(obj) { "@babel/helpers - typeof"; return TableCell_typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, TableCell_typeof(obj); }
+var TableCell_excluded = ["children", "active", "nowrap", "activeClassName", "className", "colSpan", "style", "scope", "onClick", "onKeyDown"];
 function TableCell_extends() { TableCell_extends = Object.assign ? Object.assign.bind() : function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return TableCell_extends.apply(this, arguments); }
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys(Object(source), !0).forEach(function (key) { _defineProperty(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
+function _defineProperty(obj, key, value) { key = _toPropertyKey(key); if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+function _toPropertyKey(arg) { var key = _toPrimitive(arg, "string"); return TableCell_typeof(key) === "symbol" ? key : String(key); }
+function _toPrimitive(input, hint) { if (TableCell_typeof(input) !== "object" || input === null) return input; var prim = input[Symbol.toPrimitive]; if (prim !== undefined) { var res = prim.call(input, hint || "default"); if (TableCell_typeof(res) !== "object") return res; throw new TypeError("@@toPrimitive must return a primitive value."); } return (hint === "string" ? String : Number)(input); }
 function TableCell_objectWithoutProperties(source, excluded) { if (source == null) return {}; var target = TableCell_objectWithoutPropertiesLoose(source, excluded); var key, i; if (Object.getOwnPropertySymbols) { var sourceSymbolKeys = Object.getOwnPropertySymbols(source); for (i = 0; i < sourceSymbolKeys.length; i++) { key = sourceSymbolKeys[i]; if (excluded.indexOf(key) >= 0) continue; if (!Object.prototype.propertyIsEnumerable.call(source, key)) continue; target[key] = source[key]; } } return target; }
 function TableCell_objectWithoutPropertiesLoose(source, excluded) { if (source == null) return {}; var target = {}; var sourceKeys = Object.keys(source); var key, i; for (i = 0; i < sourceKeys.length; i++) { key = sourceKeys[i]; if (excluded.indexOf(key) >= 0) continue; target[key] = source[key]; } return target; }
 
@@ -1349,9 +1355,11 @@ function TableCell_objectWithoutPropertiesLoose(source, excluded) { if (source =
 var TableCell = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_amd_react_.forwardRef)(function (_ref, externalRef) {
   var children = _ref.children,
     active = _ref.active,
+    nowrap = _ref.nowrap,
     activeClassName = _ref.activeClassName,
     myClassName = _ref.className,
     colSpan = _ref.colSpan,
+    style = _ref.style,
     scope = _ref.scope,
     _onClick = _ref.onClick,
     onKeyDown = _ref.onKeyDown,
@@ -1383,6 +1391,9 @@ var TableCell = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_rea
     }, [rootRef]),
     handleKeyPressed = _useTableKeyPress.handleKeyPressed;
   return /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement(CellComponent, TableCell_extends({}, attributes, {
+    style: typeof nowrap === 'undefined' ? style : _objectSpread({
+      whiteSpace: (0,cls.clsWrite)(nowrap, 'normal', 'nowrap')
+    }, style),
     ref: function ref(node) {
       if (typeof externalRef === 'function') {
         externalRef(node);
@@ -1646,11 +1657,24 @@ var ToggleSelection = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
       setSelectAll: function setSelectAll(value) {
         setAllChecked(value);
       },
+      set: function set(check) {
+        var _resolvedRef$current;
+        var s = String((_resolvedRef$current = resolvedRef.current) === null || _resolvedRef$current === void 0 ? void 0 : _resolvedRef$current.dataset.row);
+        setSelectedItems(function (prev) {
+          var _data = new Set(prev);
+          if (check) {
+            _data.add(s);
+          } else {
+            _data["delete"](s);
+          }
+          return _data;
+        });
+      },
       control: function control() {
         return resolvedRef.current;
       }
     };
-  }, [contentRef, resolvedRef]);
+  }, [contentRef, resolvedRef, selectedItems]);
   function selectTarget(rowIndex) {
     var _val = String(rowIndex);
 
@@ -1697,7 +1721,7 @@ var ToggleSelection = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
     // =================================================================
     var filteredData = [];
     if (!isNaN(row) && Array.isArray(originData)) {
-      var newSelectedItems = new Set(new Map());
+      var newSelectedItems = new Set();
       newSelectedItems.add(_val);
       setSelectedItems(newSelectedItems);
       filteredData = originData.filter(function (v, i) {
