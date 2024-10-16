@@ -117,7 +117,6 @@ export default () => {
                     {"label": "<del style=color:red>deprecate</del>Option 2","value": "value-2"},
                     {"label": "Option 3","value": "value-3","customAttr1": "attr1","customAttr2": "attr2"}
                 ]}
-                onChange={handleChange}
             />
         </>
     );
@@ -891,6 +890,86 @@ export default () => {
 ```
 
 
+
+## Deploy components using pop-ups for safe rendering
+
+If you use the pop-up window, such as `funda-ui/ModalDialog`, the component may not be selected for the first time, and you need to use `useMemo()` to solve it.
+
+
+```js
+import React, { useMemo, useState, useRef } from 'react';
+import Radio from 'funda-ui/Radio';
+import ModalDialog from 'funda-ui/ModalDialog';
+
+// DO NOT move `useMemo` to component
+function MemoRadio(props: any) {
+    const {val, contentRef, callback} = props;
+
+    // !!! Please do not set "options" as dependent
+    return useMemo(() => {
+        return <Radio
+                contentRef={contentRef}
+                inline={true}
+                value={val}
+                options={[
+                    { "label": "Option 1", "listItemLabel": "Option 1 (No: 001)", "value": "value-1" },
+                    { "label": "<del style=color:red>deprecate</del>Option 2", "listItemLabel": "<del style=color:red>deprecate</del>Option 2 (No: 002)", "value": "value-2" },
+                    { "label": "Option 3", "listItemLabel": "Option 3 (No: 003)", "value": "value-3" },
+                    { "label": "Option 4", "listItemLabel": "Option 4 (No: 004)", "value": "value-4", "disabled": true, "customAttr1": "attr1","customAttr2": "attr2" }
+                ]}
+                onChange={(e: any, val: string, currentData: any, currentIndex: number) => {
+                    callback(val);
+                }}
+            />
+    }, []);
+}
+
+export default () => {
+
+
+    const conRef = useRef<any>(null);
+    const [userContent, setUserContent] = useState<string>('');
+    const [show, setShow] = useState<boolean>(false);
+
+    function handleClick(e: any) {
+        e.preventDefault();
+        setShow(true);
+    }
+
+
+    return (
+
+
+        <>
+      
+           <a href="#" onClick={handleClick}>click here to open</a>
+           <small>{userContent}</small>
+
+            <ModalDialog
+                show={show}
+                heading="Choose a block"
+                triggerClassName=""
+                triggerContent=""
+                onClose={(e) => {
+                    setTimeout(() => {
+                        setShow(false);
+                    }, 350);
+                }}
+            >
+                <MemoRadio
+                    contentRef={conRef}
+                    name="name"
+                    callback={setUserContent}
+                />
+
+            </ModalDialog>
+
+            
+
+        </>
+    )
+}
+```
 
 
 ## API

@@ -857,6 +857,89 @@ export default () => {
 
 
 
+
+## Deploy components using pop-ups for safe rendering
+
+If you use the pop-up window, such as `funda-ui/ModalDialog`, the component may not be selected for the first time, and you need to use `useMemo()` to solve it.
+
+
+```js
+import React, { useMemo, useState, useRef } from 'react';
+import MultipleCheckboxes from 'funda-ui/MultipleCheckboxes';
+import ModalDialog from 'funda-ui/ModalDialog';
+
+// DO NOT move `useMemo` to component
+function MemoMultipleCheckboxes(props: any) {
+    const {val, contentRef, callback} = props;
+
+    // !!! Please do not set "options" as dependent
+    return useMemo(() => {
+        return <MultipleCheckboxes
+                contentRef={contentRef}
+                wrapperClassName=""
+                value={val}
+                options={[
+                    {"label": "Option 1","listItemLabel":"Option 1 (No: 001)","value": "value-1"},
+                    {"label": "Option 2","listItemLabel":"<del style=color:red>deprecate</del>Option 2 (No: 002)","value": "value-2"},
+                    {"label": "Option 3","listItemLabel":"Option 3 (No: 003)","value": "value-3"},
+                    {"label": "Option 4","listItemLabel":"Option 4 (No: 004)","value": "value-4","disabled":true}
+                ]}
+                onChange={(e: any, value: any, valueStr: any, label: any, labelStr: any, currentData: any, dataCollection: any) => {
+                    callback(valueStr);
+                }}
+            />
+    }, []);
+}
+
+export default () => {
+
+
+    const conRef = useRef<any>(null);
+    const [userContent, setUserContent] = useState<string>('');
+    const [show, setShow] = useState<boolean>(false);
+
+    function handleClick(e: any) {
+        e.preventDefault();
+        setShow(true);
+    }
+
+
+    return (
+
+
+        <>
+      
+           <a href="#" onClick={handleClick}>click here to open</a>
+           <small>{userContent}</small>
+
+            <ModalDialog
+                show={show}
+                heading="Choose a block"
+                triggerClassName=""
+                triggerContent=""
+                onClose={(e) => {
+                    setTimeout(() => {
+                        setShow(false);
+                    }, 350);
+                }}
+            >
+                <MemoMultipleCheckboxes
+                    contentRef={conRef}
+                    name="name"
+                    callback={setUserContent}
+                />
+
+            </ModalDialog>
+
+            
+
+        </>
+    )
+}
+```
+
+
+
 ## API
 
 ### Multiple Checkboxes
