@@ -322,6 +322,7 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
             active: () => {
                 handleShowList();
             },
+            
             focus: () => {
                 selectInputRef.current.select();
             },
