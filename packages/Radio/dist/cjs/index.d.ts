@@ -13,7 +13,8 @@ export declare type RadioProps = {
     tableLayout?: boolean;
     tableLayoutClassName?: string;
     tableLayoutCellClassName?: string;
-    value?: string;
+    defaultValue?: string | OptionConfig;
+    value?: string | OptionConfig;
     label?: React.ReactNode | string;
     name?: string;
     disabled?: any;

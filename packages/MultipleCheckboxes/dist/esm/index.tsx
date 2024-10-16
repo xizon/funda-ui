@@ -33,6 +33,7 @@ export type MultipleCheckboxesProps = {
     groupWrapperClassName?: string;
     groupLabelClassName?: string;
     inline?: boolean;
+    defaultValue?: string;
     value?: string;
     label?: React.ReactNode | string;
     name?: string;
@@ -74,6 +75,7 @@ const MultipleCheckboxes = forwardRef((props: MultipleCheckboxesProps, externalR
         options,
         disabled,
         required,
+        defaultValue,
         value,
         label,
         name,
@@ -177,10 +179,10 @@ const MultipleCheckboxes = forwardRef((props: MultipleCheckboxesProps, externalR
 
 
 
-    async function fetchData(params: any) {
+    async function fetchData(params: any, inputDefault: any) {
 
         // set default value
-        if (typeof value !== 'undefined' && value !== '') rootRef.current.dataset.value = value;
+        if (typeof inputDefault !== 'undefined' && inputDefault !== '') rootRef.current.dataset.value = inputDefault;
 
         //
         if (typeof fetchFuncAsync === 'object') {
@@ -207,7 +209,7 @@ const MultipleCheckboxes = forwardRef((props: MultipleCheckboxesProps, externalR
 
 
             //
-            initDefaultValue(value, _ORGIN_DATA); // value must be initialized
+            initDefaultValue(inputDefault, _ORGIN_DATA); // value must be initialized
 
 
             //
@@ -225,7 +227,7 @@ const MultipleCheckboxes = forwardRef((props: MultipleCheckboxesProps, externalR
             optionsDataInit = removeArrDuplicateItems(optionsDataInit, 'value');
 
             //
-            initDefaultValue(value, optionsDataInit); // value must be initialized
+            initDefaultValue(inputDefault, optionsDataInit); // value must be initialized
 
             //
             setDataInit(optionsDataInit); // data must be initialized
@@ -540,11 +542,22 @@ const MultipleCheckboxes = forwardRef((props: MultipleCheckboxesProps, externalR
         // data init
         //--------------
         const _params: any[] = fetchFuncMethodParams || [];
-        fetchData((_params).join(','));
+        fetchData((_params).join(','), value);
 
 
     }, [value, options]);
 
+
+    useEffect(() => {
+
+        // update default value (It does not re-render the component because the incoming value changes.)
+        //--------------
+        if (typeof defaultValue !== 'undefined') { //REQUIRED
+            const _params: any[] = fetchFuncMethodParams || [];
+            fetchData((_params).join(','), defaultValue);
+        }
+
+    }, []);
 
     return (
         <>

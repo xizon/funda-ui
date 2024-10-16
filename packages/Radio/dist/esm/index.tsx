@@ -11,6 +11,7 @@ import {
 import { clsWrite, combinedCls } from 'funda-utils/dist/cjs/cls';
 
 
+
 export interface OptionConfig {
     [propName: string]: string | number | React.ReactNode | boolean;
 }
@@ -29,7 +30,8 @@ export type RadioProps = {
     tableLayout?: boolean;
     tableLayoutClassName?: string;
     tableLayoutCellClassName?: string;
-    value?: string;
+    defaultValue?: string | OptionConfig;
+    value?: string | OptionConfig;
     label?: React.ReactNode | string;
     name?: string;
     disabled?: any;
@@ -71,6 +73,7 @@ const Radio = forwardRef((props: RadioProps, externalRef: any) => {
         tableLayoutCellClassName,
         disabled,
         required,
+        defaultValue,
         value,
         label,
         name,
@@ -110,6 +113,32 @@ const Radio = forwardRef((props: RadioProps, externalRef: any) => {
         });
     };
 
+
+    const isObject = (value: any) => {
+        return Object.prototype.toString.call(value) === '[object Object]';
+    };
+
+    const optionsFlat = (allData: any[]) => {
+
+        const flatItems: any[] = [];
+
+        allData.forEach((item: any) => {
+            if (typeof item.optgroup !== 'undefined') {
+                item.optgroup.forEach((opt: any) => {
+                    flatItems.push(opt);
+                });
+            } else {
+                flatItems.push(item);
+            }
+        });
+
+        return flatItems;
+    };
+
+
+    const finalRes = (val: any) => {
+        return isObject(val) ? val.value : val;
+    };
 
 
     //
@@ -176,10 +205,10 @@ const Radio = forwardRef((props: RadioProps, externalRef: any) => {
     }
  
 
-    async function fetchData(params: any) {
+    async function fetchData(params: any, valueToInputDefault: any,  inputDefault: any) {
 
         // set default value
-        if (typeof value !== 'undefined' && value !== '') rootRef.current.dataset.value = value;
+        if (typeof valueToInputDefault !== 'undefined' && valueToInputDefault !== '') rootRef.current.dataset.value = valueToInputDefault;
 
 
         if (rootRef.current) {
@@ -212,15 +241,22 @@ const Radio = forwardRef((props: RadioProps, externalRef: any) => {
 
                   
             // If the default value is label, match value
-            let _realValue = value;
+            let _realValue = valueToInputDefault;
             let filterRes: any = [];
-            const filterResQueryValue = _ORGIN_DATA.filter((item: any) => item.value == value);
-            const filterResQueryLabel = _ORGIN_DATA.filter((item: any) => item.label == value);
+            const filterResQueryValue = _ORGIN_DATA.filter((item: any) => item.value == valueToInputDefault);
+            const filterResQueryLabel = _ORGIN_DATA.filter((item: any) => item.label == valueToInputDefault);
 
             if (filterResQueryValue.length === 0 && filterResQueryLabel.length > 0) {
                 filterRes = filterResQueryValue;
                 if (filterResQueryValue.length === 0) filterRes = filterResQueryLabel;
                 if (filterRes.length > 0) _realValue = filterRes[0].value;
+
+                // if the default value is Object
+                if (isObject(inputDefault) && filterRes.length === 0) {
+                    filterRes = [inputDefault];
+                }
+
+
             }
     
 
@@ -249,15 +285,21 @@ const Radio = forwardRef((props: RadioProps, externalRef: any) => {
 
                   
             // If the default value is label, match value
-            let _realValue = value;
+            let _realValue = valueToInputDefault;
             let filterRes: any = [];
-            const filterResQueryValue = optionsDataInit.filter((item: any) => item.value == value);
-            const filterResQueryLabel = optionsDataInit.filter((item: any) => item.label == value);
+            const filterResQueryValue = optionsDataInit.filter((item: any) => item.value == valueToInputDefault);
+            const filterResQueryLabel = optionsDataInit.filter((item: any) => item.label == valueToInputDefault);
 
             if (filterResQueryValue.length === 0 && filterResQueryLabel.length > 0) {
                 filterRes = filterResQueryValue;
                 if (filterResQueryValue.length === 0) filterRes = filterResQueryLabel;
                 if (filterRes.length > 0) _realValue = filterRes[0].value;
+
+                // if the default value is Object
+                if (isObject(inputDefault) && filterRes.length === 0) {
+                    filterRes = [inputDefault];
+                }
+
             }
 
 
@@ -298,22 +340,10 @@ const Radio = forwardRef((props: RadioProps, externalRef: any) => {
 
     function handleChange(event: any) {
         const val = event.target.value;
-        let curData: any;
-        let currentIndex = event.target.dataset.index;
+        const curData: Record<string, unknown> = optionsFlat(dataInit).find((v: any) => v.value == val);
+        const currentIndex = event.target.dataset.index;
 
-        // if group
-        if (currentIndex.indexOf('-') >= 0) {
-            const groupIdArr = currentIndex.split('-');
-            const groupIndex = groupIdArr[0];
-            const groupItemIndex = groupIdArr[1];
-            const groupOpts: any = dataInit[groupIndex].optgroup;
-
-            curData = groupOpts[groupItemIndex];
-        } else {
-            curData = dataInit[currentIndex];
-        }
-
-
+    
         //----
         // update value
         setControlValue(val);
@@ -375,7 +405,7 @@ const Radio = forwardRef((props: RadioProps, externalRef: any) => {
         return Array.isArray(dataInit) ? dataInit.map((item: any, index: number) => {
             const requiredVal = index === 0 ? required || null : null;
 
-            const _formatItem = {};
+            const _formatItem: Record<string, unknown> = {};
             Object.keys(item).forEach((key: string) => {
                 if (key !== 'extends') _formatItem[key] = item[key];
             });
@@ -392,7 +422,7 @@ const Radio = forwardRef((props: RadioProps, externalRef: any) => {
 
                     {item.optgroup.map((opt: any, optIndex: number) => {
 
-                        const _formatOpt = {};
+                        const _formatOpt: Record<string, unknown> = {};
                         Object.keys(item).forEach((key: string) => {
                             if (key !== 'extends') _formatOpt[key] = item[key];
                         });
@@ -563,12 +593,23 @@ const Radio = forwardRef((props: RadioProps, externalRef: any) => {
         // data init
         //--------------
         const _params: any[] = fetchFuncMethodParams || [];
-        fetchData((_params).join(','));
+        fetchData((_params).join(','), finalRes(value), value);
 
 
 
     }, [value, options]);
 
+
+    useEffect(() => {
+
+        // update default value (It does not re-render the component because the incoming value changes.)
+        //--------------
+        if (typeof defaultValue !== 'undefined') { //REQUIRED
+            const _params: any[] = fetchFuncMethodParams || [];
+            fetchData((_params).join(','), finalRes(defaultValue), defaultValue);
+        }
+
+    }, []);
 
     return (
         <>

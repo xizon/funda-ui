@@ -94,6 +94,38 @@ export default () => {
 }
 ```
 
+
+## Use the object as the default 
+
+You can specify an object as the default.
+
+
+```js
+import React from "react";
+import Radio from 'funda-ui/Radio';
+
+export default () => {
+
+    return (
+        <>         
+           
+            <Radio
+                value={{"label": "<del style=color:red>deprecate</del>Option 2","value": "value-2"}}
+                name="name1"
+                options={[
+                    {"label": "Option 1","value": "value-1"},
+                    {"label": "<del style=color:red>deprecate</del>Option 2","value": "value-2"},
+                    {"label": "Option 3","value": "value-3","customAttr1": "attr1","customAttr2": "attr2"}
+                ]}
+                onChange={handleChange}
+            />
+        </>
+    );
+}
+```
+
+
+
 ## Use table to display options
 
 The options will be displayed using \<table\> tag.
@@ -881,7 +913,8 @@ import Radio from 'funda-ui/Radio';
 | `tableLayoutCellClassName` | string | - | The class name of HTML tag `<td>`. <blockquote>It is valid when `tableLayout` is "true"</blockquote> | - |
 | `inline` | boolean | false| If true the group checkboxes or radios are on the same horizontal row. | - |
 | `options` | JSON Object Literals \| JSON Object | - | Set the default value using JSON string format for menu of options, like this: `[{"label": "Option 1","value": "value-1"},{"label": "<del style=color:red>deprecate</del>Option 2","value": "value-2"},{"label": "Option 3","value": "value-3","customAttr1": "attr1","customAttr2": "attr2"}]`<blockquote>Note: Use API data if database query exists. That is, the attribute `fetchXXXX`</blockquote> <br /><blockquote>The label string supports html tags</blockquote>| - |
-| `value` | string | - | Set a default value for this control | - |
+| `defaultValue` | string \| JSON Object | - | Specifies the default value. Use when the component is not controlled. It does not re-render the component because the incoming value changes. <blockquote>You can specify an object as the default. such as `{"label":"Option 0","value":"value-0","queryString":""}`</blockquote> | - |
+| `value` | string \| JSON Object | - | Set a default value for this control. <blockquote>You can specify an object as the default. such as `{"label":"Option 0","value":"value-0","queryString":""}`</blockquote> | - |
 | `label` | string \| ReactNode | - | It is used to specify a label for an element of a form.<blockquote>Support html tags</blockquote> | - |
 | `name` | string | - | Name is not deprecated when used with form fields. | - |
 | `disabled` | boolean | false | Whether it is disabled | - |

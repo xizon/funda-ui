@@ -12,6 +12,7 @@ export declare type MultipleCheckboxesProps = {
     groupWrapperClassName?: string;
     groupLabelClassName?: string;
     inline?: boolean;
+    defaultValue?: string;
     value?: string;
     label?: React.ReactNode | string;
     name?: string;
