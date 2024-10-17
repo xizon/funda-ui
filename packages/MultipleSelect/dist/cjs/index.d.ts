@@ -3,6 +3,7 @@ export interface OptionConfig {
     [propName: string]: string | number | boolean | Function;
 }
 export declare type MultipleSelectProps = {
+    contentRef?: React.ForwardedRef<any>;
     wrapperClassName?: string;
     childClassName?: string;
     wrapperMinHeight?: string;
@@ -20,6 +21,7 @@ export declare type MultipleSelectProps = {
     doubleIndent?: boolean;
     alternateCollapse?: boolean;
     arrow?: React.ReactNode;
+    defaultValue?: string;
     value?: string;
     label?: React.ReactNode | string;
     name?: string;

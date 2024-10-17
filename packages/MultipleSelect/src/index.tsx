@@ -1,5 +1,4 @@
-import React, { useState, useEffect, useRef, forwardRef } from 'react';
-
+import React, { useState, useEffect, useRef, forwardRef, useImperativeHandle } from 'react';
 
 
 import useComId from 'funda-utils/dist/cjs/useComId';
@@ -33,6 +32,7 @@ export interface OptionConfig {
 
 
 export type MultipleSelectProps = {
+    contentRef?: React.ForwardedRef<any>; // could use "Array" on contentRef.current, such as contentRef.current[0], contentRef.current[1]
     wrapperClassName?: string;
     childClassName?: string;
     wrapperMinHeight?: string;
@@ -50,6 +50,7 @@ export type MultipleSelectProps = {
     doubleIndent?: boolean;
     alternateCollapse?: boolean;
     arrow?: React.ReactNode;
+    defaultValue?: string;
     value?: string;
     label?: React.ReactNode | string;
     name?: string;
@@ -77,6 +78,7 @@ export type MultipleSelectProps = {
 
 const MultipleSelect = forwardRef((props: MultipleSelectProps, externalRef: any) => {
     const {
+        contentRef,
         wrapperClassName,
         childClassName,
         wrapperMinHeight,
@@ -98,6 +100,7 @@ const MultipleSelect = forwardRef((props: MultipleSelectProps, externalRef: any)
         disabled,
         required,
         appendControl,
+        defaultValue,
         value,
         label,
         name,
@@ -114,7 +117,7 @@ const MultipleSelect = forwardRef((props: MultipleSelectProps, externalRef: any)
         ...attributes
     } = props;
 
-    
+
     const UN_ATTACHED_SELECT = typeof unattachedSelect === 'undefined' || unattachedSelect === false ? false : true;
     const WRAPPER_MIN_H = typeof wrapperMinHeight === 'undefined' ? '' : wrapperMinHeight;
     const WRAPPER_MIN_W = typeof wrapperMinWidth === 'undefined' ? '' : wrapperMinWidth;
@@ -133,7 +136,7 @@ const MultipleSelect = forwardRef((props: MultipleSelectProps, externalRef: any)
 
 
     // return a array of options
-    let optionsDataInit: OptionConfig[] = optionsRes; 
+    let optionsDataInit: OptionConfig[] = optionsRes;
 
 
     //
@@ -142,39 +145,63 @@ const MultipleSelect = forwardRef((props: MultipleSelectProps, externalRef: any)
     //
     const [dataInit, setDataInit] = useState<OptionConfig[]>(optionsDataInit);
     const [hasErr, setHasErr] = useState<boolean>(false);
+    
+
+    // exposes the following methods
+
+    useImperativeHandle(
+        contentRef,
+        () => ({
+            clear: (cb?: any) => {
+                initDefaultValue('', dataInit);
+                cb?.();
+            },
+            /*
+            set([{"label": "Option 1","listItemLabel":"Option 1 (No: 001)","value": "value-1","queryString": "option1"}], () => { console.log('callback') }])
+            */
+            set: (inputData: any[], cb?: any) => {
+                if (! Array.isArray(inputData)) return;
+                
+                initDefaultValue(inputData.map((v: any) => `[${v.value}]`).join(''), dataInit);
+
+                cb?.();
+            }
+        }),
+        [contentRef, dataInit],
+    );
 
 
-    async function fetchData(params: any) {
-        
+    async function fetchData(params: any, inputDefault: any) {
+
         // set default value
-        if (typeof value !== 'undefined' && value !== '') inputRef.current.dataset.value = value;
+        if (typeof inputDefault !== 'undefined' && inputDefault !== '') inputRef.current.dataset.value = inputDefault;
 
         //
-        if ( typeof fetchFuncAsync === 'object' ) {
+        if (typeof fetchFuncAsync === 'object') {
 
             const response: any = await fetchFuncAsync[`${fetchFuncMethod}`](...params.split(','));
             let _ORGIN_DATA = response.data;
-  
+
             // reset data structure
             if (typeof (fetchCallback) === 'function') {
                 _ORGIN_DATA = fetchCallback(_ORGIN_DATA);
             }
 
             // Determine whether the data structure matches
-            if ( _ORGIN_DATA.length > 0 && typeof _ORGIN_DATA[0].value === 'undefined' ) {
-                console.warn( 'The data structure does not match, please refer to the example in the component documentation.' );
+            if (_ORGIN_DATA.length > 0 && typeof _ORGIN_DATA[0].value === 'undefined') {
+                console.warn('The data structure does not match, please refer to the example in the component documentation.');
                 setHasErr(true);
                 _ORGIN_DATA = [];
             }
 
-    
+
             // Set hierarchical categories ( with sub-categories )
-            if ( hierarchical ) {
+            if (hierarchical) {
                 _ORGIN_DATA = addTreeDepth(_ORGIN_DATA);
                 addTreeIndent(_ORGIN_DATA, INDENT_PLACEHOLDER, INDENT_LAST_PLACEHOLDER, 'label');
             }
 
-            
+
             // remove Duplicate objects from JSON Array
             _ORGIN_DATA = removeArrDuplicateItems(_ORGIN_DATA, 'value');
 
@@ -182,22 +209,22 @@ const MultipleSelect = forwardRef((props: MultipleSelectProps, externalRef: any)
             setDataInit(_ORGIN_DATA); // data must be initialized
 
             //
-            initDefaultValue(value, _ORGIN_DATA); // value must be initialized
+            initDefaultValue(inputDefault, _ORGIN_DATA); // value must be initialized
 
 
             //
             onFetch?.(_ORGIN_DATA);
-    
+
             return _ORGIN_DATA;
         } else {
 
             // Set hierarchical categories ( with sub-categories )
-            if ( hierarchical ) {
+            if (hierarchical) {
                 optionsDataInit = addTreeDepth(optionsDataInit);
                 addTreeIndent(optionsDataInit, INDENT_PLACEHOLDER, INDENT_LAST_PLACEHOLDER, 'label');
             }
 
-               
+
             // remove Duplicate objects from JSON Array
             optionsDataInit = removeArrDuplicateItems(optionsDataInit, 'value');
 
@@ -207,7 +234,7 @@ const MultipleSelect = forwardRef((props: MultipleSelectProps, externalRef: any)
 
 
             //
-            initDefaultValue(value, optionsDataInit); // value must be initialized
+            initDefaultValue(inputDefault, optionsDataInit); // value must be initialized
 
 
 
@@ -225,7 +252,7 @@ const MultipleSelect = forwardRef((props: MultipleSelectProps, externalRef: any)
 
     function initDefaultValue(defaultValue: any, options: any[]) {
 
-   
+
         // change the value to trigger component rendering
         if (typeof defaultValue === 'undefined' || defaultValue === '') {
             setValSelected([]);
@@ -246,7 +273,7 @@ const MultipleSelect = forwardRef((props: MultipleSelectProps, externalRef: any)
                         let _data = [...prevState, ...options.filter((item: any) => {
                             return multiSelControlOptionExist(_initVal, item.value);
                         })];
-             
+
                         return uniqueArr(_data);
                     });
                 } else {
@@ -276,7 +303,7 @@ const MultipleSelect = forwardRef((props: MultipleSelectProps, externalRef: any)
         const _label = _listItemLabel === '' ? _li.dataset.label : _listItemLabel;
         const _data = typeof _li.dataset.itemdata !== 'undefined' ? JSON.parse(_li.dataset.itemdata) : {};
 
-   
+
         // set selected items
         setValSelected((prevState) => {
             const newData = JSON.parse(JSON.stringify(prevState));
@@ -305,48 +332,48 @@ const MultipleSelect = forwardRef((props: MultipleSelectProps, externalRef: any)
             return _res;
         });
     }
-    
+
     function removeItem(el: HTMLElement) {
         if (el === null) return;
-    
+
         const _li = el;
         const _val = _li.dataset.value;
         const _data = typeof _li.dataset.itemdata !== 'undefined' ? JSON.parse(_li.dataset.itemdata) : {};
-        
-    
+
+
         // set selected items
         setValSelected((prevState) => {
             const newData = JSON.parse(JSON.stringify(prevState));
             const index = newData.findIndex((item: string | number) => item == _val);
             if (index !== -1) newData.splice(index, 1);
-    
+
             const _res = newData;
-    
+
             onChange?.(_li, _res, VALUE_BY_BRACKETS ? convertArrToValByBrackets(_res) : _res.join(','), _data, 'remove');
-    
+
             // show current item
             if (availableListRef.current) {
                 const removedItem = availableListRef.current.querySelector(`li[data-value="${_val}"]`);
                 if (removedItem !== null) removedItem.classList.remove('hide');
             }
-       
-            
+
+
             return _res;
         });
-    
-    
+
+
         // update selected data
         setValSelectedData((prevState) => {
             const newData = JSON.parse(JSON.stringify(prevState));
             const index = newData.findIndex((item: any) => item.value == _val);
             if (index !== -1) newData.splice(index, 1);
-    
+
             const _res = newData;
-    
+
             return _res;
         });
-    
-        
+
+
     }
 
 
@@ -358,11 +385,11 @@ const MultipleSelect = forwardRef((props: MultipleSelectProps, externalRef: any)
 
         const items = [].slice.call(availableListRef.current.querySelectorAll('li[data-value]'));
         items.forEach((item: any) => {
-            
+
             if (!item.classList.contains('disabled')) {
                 selectItem(item);
             }
-            
+
         });
 
 
@@ -388,11 +415,11 @@ const MultipleSelect = forwardRef((props: MultipleSelectProps, externalRef: any)
 
         const items = [].slice.call(availableListRef.current.querySelectorAll('li[data-value]'));
         items.forEach((item: any) => {
-        
+
             // Avoid fatal errors causing page crashes
             const _label = typeof item.dataset.label !== 'undefined' && item.dataset.label !== null ? item.dataset.label : '';
             const _queryString = typeof item.dataset.querystring !== 'undefined' && item.dataset.querystring !== null ? item.dataset.querystring : '';
-   
+
             if (
                 (
                     _queryString.split(',').some((l: any) => l.charAt(0) === inputVal.toLowerCase()) ||
@@ -405,7 +432,7 @@ const MultipleSelect = forwardRef((props: MultipleSelectProps, externalRef: any)
             } else {
                 item.classList.add('hide');
             }
-            
+
         });
 
 
@@ -426,20 +453,30 @@ const MultipleSelect = forwardRef((props: MultipleSelectProps, externalRef: any)
         // data init
         //--------------
         const _params: any[] = fetchFuncMethodParams || [];
-        fetchData((_params).join(','));
+        fetchData((_params).join(','), value);
 
-    
+
     }, [value, options, data]);
 
+    useEffect(() => {
+
+        // update default value (It does not re-render the component because the incoming value changes.)
+        //--------------
+        if (typeof defaultValue !== 'undefined') { //REQUIRED
+            const _params: any[] = fetchFuncMethodParams || [];
+            fetchData((_params).join(','), defaultValue);
+        }
+
+    }, []);
 
     return (
         <>
 
-            <div 
+            <div
                 className={combinedCls(
                     'm-select__wrapper',
                     clsWrite(wrapperClassName, 'mb-3')
-                )} 
+                )}
                 ref={rootRef}
                 style={{
                     minWidth: WRAPPER_MIN_W === '' ? 'var(--m-select-wrapper-min-w)' : WRAPPER_MIN_W,
@@ -466,7 +503,7 @@ const MultipleSelect = forwardRef((props: MultipleSelectProps, externalRef: any)
                     id={idRes}
                     name={name}
                     value={VALUE_BY_BRACKETS ? convertArrToValByBrackets(valSelected) : valSelected.join(',')} // do not use `defaultValue`
-                    onChange={() => void(0)}
+                    onChange={() => void (0)}
                     required={required || null}
                     {...attributes}
                 />
@@ -497,7 +534,7 @@ const MultipleSelect = forwardRef((props: MultipleSelectProps, externalRef: any)
                             </div>
                             {/* /SEARCH */}
 
-                            <span className="m-select__title" dangerouslySetInnerHTML={{__html: `${availableHeaderTitle || ''}`}}></span>
+                            <span className="m-select__title" dangerouslySetInnerHTML={{ __html: `${availableHeaderTitle || ''}` }}></span>
 
                             <a href="#" className="m-select__btn--add-all" onClick={handleSelectAll}>{addAllBtnLabel || 'Add all'}</a>
                         </div>
@@ -506,7 +543,7 @@ const MultipleSelect = forwardRef((props: MultipleSelectProps, externalRef: any)
 
                         {/* OPTIONS LIST */}
                         <ItemList
-                             appendControl={appendControl}
+                            appendControl={appendControl}
                             root={rootRef.current}
                             listContainerClassName="m-select__available m-select__options-contentlist"
                             ref={availableListRef}
@@ -529,11 +566,11 @@ const MultipleSelect = forwardRef((props: MultipleSelectProps, externalRef: any)
                     // ++++++++++++++++++++
                     // Selected  Container
                     // ++++++++++++++++++++
-                    */}                    
+                    */}
                     <div className="m-select__selected__container">
                         <div className="m-select__m-select__item-actions m-select__header">
-                            <span className="m-select__count" dangerouslySetInnerHTML={{__html: `${typeof selectedHeaderNote !== 'undefined' ? selectedHeaderNote.replace('{items_num}', valSelectedData.length as never) : ''}`}}></span>
-                            <span className="m-select__title" dangerouslySetInnerHTML={{__html: `${selectedHeaderTitle || ''}`}}></span>
+                            <span className="m-select__count" dangerouslySetInnerHTML={{ __html: `${typeof selectedHeaderNote !== 'undefined' ? selectedHeaderNote.replace('{items_num}', valSelectedData.length as never) : ''}` }}></span>
+                            <span className="m-select__title" dangerouslySetInnerHTML={{ __html: `${selectedHeaderTitle || ''}` }}></span>
                             <a href="#" className="m-select__btn--remove-all" onClick={handleRemoveAll}>{removeAllBtnLabel || 'Remove all'}</a>
                         </div>
 

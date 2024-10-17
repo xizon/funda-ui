@@ -961,7 +961,7 @@ class DataService {
 }
 
 
-function MemoMultipkeSelect(props: any) {
+function MemoMultipleSelect(props: any) {
     const { list } = props;
 
     return useMemo(() => {
@@ -1102,7 +1102,7 @@ export default () => {
                 <Input type="text" name="my_text" value={'test'} />
 
                 <div className="mb-3" style={{ height: '300px' }}>
-                    <MemoMultipkeSelect list={list} />
+                    <MemoMultipleSelect list={list} />
                 </div>   
             </form>
 
@@ -1114,6 +1114,81 @@ export default () => {
 ```
 
 
+## Use the exposed method to assign and empty
+
+Lets you callback the handle exposed as attribute `contentRef`.
+
+
+```js
+ import React, { useState, useRef } from 'react';
+
+import MultipleSelect from 'funda-ui/MultipleSelect';
+
+// component styles
+import 'funda-ui/MultipleSelect/index.css';
+
+
+export default () => {
+
+    const conRef = useRef<any>(null);
+
+    return (
+
+
+        <>
+
+            <a
+                href="#"
+                onClick={(e: React.MouseEvent) => {
+                    e.preventDefault();
+                    if (conRef.current) conRef.current.clear();
+                }}
+            >Set Empty Value</a>
+            &nbsp;&nbsp;|&nbsp;&nbsp;
+            <a
+                href="#"
+                onClick={(e: React.MouseEvent) => {
+                    e.preventDefault();
+                    if (conRef.current) conRef.current.set([
+                        {"label": "<del style=color:red>deprecate</del>Option 2","value": "value-2","queryString": "option2"},
+                        {"label": "Option 3","value": "value-3","queryString": "option3"}
+                    ], () => { console.log('callback') });
+                }}
+            >Set Custom Value</a>
+
+
+            <div className="mb-3" style={{ height: '300px' }}>
+                <MultipleSelect
+                    contentRef={conRef}
+                    value="value-2"
+                    placeholder="MultipleSelect"
+                    name="name"
+                    winWidth={typeof window === 'undefined' ? undefined : () => window.innerWidth/2 + 'px'}
+                    options={`
+                    [
+                        {"label": "Option 1","value": "value-1","queryString": "option1"},
+                        {"label": "<del style=color:red>deprecate</del>Option 2","value": "value-2","queryString": "option2"},
+                        {"label": "Option 3","value": "value-3","queryString": "option3"},
+                        {"label": "Option 4","value": "value-4","queryString": "option4", "disabled":true}
+                    ]  
+                    `}
+                    onChange={(e, data, dataStr, currentData, type) => {
+                        console.log(e, data, dataStr, currentData, type);
+                    }}
+                />
+            </div>
+                    
+
+
+        </>
+    )
+}
+```
+
+
+
+
+
 ## API
 
 ### Multiple Select
@@ -1123,6 +1198,7 @@ import MultipleSelect from 'funda-ui/MultipleSelect';
 | Property | Type | Default | Description | Required |
 | --- | --- | --- | --- | --- |
 | `ref` | React.ForwardedRef | - | It is the return element of this component.  | - |
+| `contentRef` | React.ForwardedRef | - | It exposes the following methods:  <br /> <ol><li>`contentRef.current.clear(() => { console.log('callback') })`</li><li>`contentRef.current.set([{"label": "Option 1","listItemLabel":"Option 1 (No: 001)","value": "value-1","queryString": "option1"}], () => { console.log('callback') })`</li></ol> <blockquote>DO NOT USE it in the `onChange` of this component, otherwise it will cause infinite rendering</blockquote> | - |
 | `wrapperClassName` | string | `mb-3` | The class name of the control wrapper. | - |
 | `childClassName` | string | - | The additional class name of the child on `<ul>`. | - |
 | `wrapperMinHeight` | string | - | Minimum height of wrapper. If not specified, the default value in css will be used, which is **315px** | - |
@@ -1142,6 +1218,7 @@ import MultipleSelect from 'funda-ui/MultipleSelect';
 | `doubleIndent` | boolean  | false | Set double indent effect, valid when the `hierarchical` is true. | - |
 | `alternateCollapse` | boolean | false | Mutually exclusive alternate expansion between the first levels. | - |
 | `arrow` | ReactNode  | `<svg viewBox="0 0 22 22" width="8px"><path d="m345.44 248.29l-194.29 194.28c-12.359 12.365-32.397 12.365-44.75 0-12.354-12.354-12.354-32.391 0-44.744l171.91-171.91-171.91-171.9c-12.354-12.359-12.354-32.394 0-44.748 12.354-12.359 32.391-12.359 44.75 0l194.29 194.28c6.177 6.18 9.262 14.271 9.262 22.366 0 8.099-3.091 16.196-9.267 22.373" transform="matrix(.03541-.00013.00013.03541 2.98 3.02)" fill="#a5a5a5" /></svg>` | Set an arrow of control | - |
+| `defaultValue` | string | - | Specifies the default value. Use when the component is not controlled. It does not re-render the component because the incoming value changes. | - |
 | `value` | string | - | Set a default value for this control. Please separate multiple values with square brackets. Such as `[tag1][tag2][tag3]` <blockquote>If `extractValueByBrackets` is false, the default value will be separated by comma, such as <br />`tag1,tag2,tag3`</blockquote> | - |
 | `label` | string \| ReactNode | - | It is used to specify a label for an element of a form.<blockquote>Support html tags</blockquote> | - |
 | `name` | string | - | Name is not deprecated when used with form fields. | - |

@@ -1005,15 +1005,15 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
 
 
             // display all filtered items
-            const _items = [].slice.call(listContentRef.current.querySelectorAll('.custom-select__control-option-item'));
+            const _items = [].slice.call(listContentRef.current.querySelectorAll('.custom-select-multi__control-option-item'));
             _items.forEach((node: any) => {
                 node.classList.remove('hide');
             });
 
 
             // nomatch & button of select all 
-            const _nodataDiv = listContentRef.current.querySelector('.custom-select__control-option-item--nomatch');
-            const _btnSelectAll = listContentRef.current.querySelector('.custom-select__control-option-item--select-all');
+            const _nodataDiv = listContentRef.current.querySelector('.custom-select-multi__control-option-item--nomatch');
+            const _btnSelectAll = listContentRef.current.querySelector('.custom-select-multi__control-option-item--select-all');
             _nodataDiv.classList.add('hide');
             if (_btnSelectAll !== null) _btnSelectAll.classList.remove('hide');
 
@@ -1028,7 +1028,7 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
         if (listContentRef.current === null) return;
 
 
-        [].slice.call(listContentRef.current.querySelectorAll('.custom-select__control-option-item')).forEach((node: any) => {
+        [].slice.call(listContentRef.current.querySelectorAll('.custom-select-multi__control-option-item')).forEach((node: any) => {
 
             // Avoid fatal errors causing page crashes
             const _queryString = typeof node.dataset.querystring !== 'undefined' && node.dataset.querystring !== null ? node.dataset.querystring : '';
@@ -1055,10 +1055,10 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
 
 
         // display all filtered items
-        const _btnSelectAll = listContentRef.current.querySelector('.custom-select__control-option-item--select-all');
-        const _nodataDiv = listContentRef.current.querySelector('.custom-select__control-option-item--nomatch');
+        const _btnSelectAll = listContentRef.current.querySelector('.custom-select-multi__control-option-item--select-all');
+        const _nodataDiv = listContentRef.current.querySelector('.custom-select-multi__control-option-item--nomatch');
         if ((val === null ? '' : val).replace(/\s/g, "") === '') {
-            [].slice.call(listContentRef.current.querySelectorAll('.custom-select__control-option-item')).forEach((node: any) => {
+            [].slice.call(listContentRef.current.querySelectorAll('.custom-select-multi__control-option-item')).forEach((node: any) => {
                 node.classList.remove('hide');
             });
             _nodataDiv.classList.add('hide');
@@ -1093,9 +1093,9 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
     function popwinNoMatchInit() {
         if (listContentRef.current === null) return;
 
-        const _btnSelectAll = listContentRef.current.querySelector('.custom-select__control-option-item--select-all');
-        const _nodataDiv = listContentRef.current.querySelector('.custom-select__control-option-item--nomatch');
-        const emptyFieldsCheck = [].slice.call(listContentRef.current.querySelectorAll('.custom-select__control-option-item')).every((node: any) => {
+        const _btnSelectAll = listContentRef.current.querySelector('.custom-select-multi__control-option-item--select-all');
+        const _nodataDiv = listContentRef.current.querySelector('.custom-select-multi__control-option-item--nomatch');
+        const emptyFieldsCheck = [].slice.call(listContentRef.current.querySelectorAll('.custom-select-multi__control-option-item')).every((node: any) => {
             if (!node.classList.contains('hide')) {
                 return false;
             }
@@ -1161,7 +1161,7 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
             handleFirstFetch(curValue).then((response: any) => {
                 if (response.length > 0) {
                     // nomatch
-                    const _nodataDiv = listContentRef.current.querySelector('.custom-select__control-option-item--nomatch');
+                    const _nodataDiv = listContentRef.current.querySelector('.custom-select-multi__control-option-item--nomatch');
                     _nodataDiv.classList.add('hide');
                 }
             });
@@ -1322,8 +1322,8 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
                     // remove item
                     //#########
                     $el.dataset.selected = 'false';
-                    $el.querySelector('.custom-select__control-option-checkbox-selected').classList.add('d-none');
-                    $el.querySelector('.custom-select__control-option-checkbox-placeholder').classList.remove('d-none');
+                    $el.querySelector('.custom-select-multi__control-option-checkbox-selected').classList.add('d-none');
+                    $el.querySelector('.custom-select-multi__control-option-checkbox-placeholder').classList.remove('d-none');
 
                     //
                     setControlArr((prevState: any) => {
@@ -1347,8 +1347,8 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
                     // add item
                     //#########
                     $el.dataset.selected = 'true';
-                    $el.querySelector('.custom-select__control-option-checkbox-selected').classList.remove('d-none');
-                    $el.querySelector('.custom-select__control-option-checkbox-placeholder').classList.add('d-none');
+                    $el.querySelector('.custom-select-multi__control-option-checkbox-selected').classList.remove('d-none');
+                    $el.querySelector('.custom-select-multi__control-option-checkbox-placeholder').classList.add('d-none');
 
                     //
                     setControlArr((prevState: any) => {
@@ -1470,8 +1470,8 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
                     // remove item
                     //#########
                     $el.dataset.selected = 'false';
-                    $el.querySelector('.custom-select__control-option-checkbox-selected').classList.add('d-none');
-                    $el.querySelector('.custom-select__control-option-checkbox-placeholder').classList.remove('d-none');
+                    $el.querySelector('.custom-select-multi__control-option-checkbox-selected').classList.add('d-none');
+                    $el.querySelector('.custom-select-multi__control-option-checkbox-placeholder').classList.remove('d-none');
 
 
                     //
@@ -1495,8 +1495,8 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
                     //#########
 
                     $el.dataset.selected = 'true';
-                    $el.querySelector('.custom-select__control-option-checkbox-selected').classList.remove('d-none');
-                    $el.querySelector('.custom-select__control-option-checkbox-placeholder').classList.add('d-none');
+                    $el.querySelector('.custom-select-multi__control-option-checkbox-selected').classList.remove('d-none');
+                    $el.querySelector('.custom-select-multi__control-option-checkbox-placeholder').classList.add('d-none');
 
 
                     //
@@ -1557,7 +1557,7 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
         const _labels: any[] = [];
         const _values: any[] = [];
 
-        [].slice.call(listContentRef.current.querySelectorAll('.custom-select__control-option-item:not(.hide)')).forEach((node: any) => {
+        [].slice.call(listContentRef.current.querySelectorAll('.custom-select-multi__control-option-item:not(.hide)')).forEach((node: any) => {
 
             const _label = node.dataset.label;
             const _value = node.dataset.value;
@@ -1568,8 +1568,8 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
                 // remove item
                 //#########
                 node.dataset.selected = 'false';
-                node.querySelector('.custom-select__control-option-checkbox-selected').classList.add('d-none');
-                node.querySelector('.custom-select__control-option-checkbox-placeholder').classList.remove('d-none');
+                node.querySelector('.custom-select-multi__control-option-checkbox-selected').classList.add('d-none');
+                node.querySelector('.custom-select-multi__control-option-checkbox-placeholder').classList.remove('d-none');
 
                 //
                 const _indexLable = _labels.findIndex((item: any) => item == _label);
@@ -1583,8 +1583,8 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
                 // add item
                 //#########
                 node.dataset.selected = 'true';
-                node.querySelector('.custom-select__control-option-checkbox-selected').classList.remove('d-none');
-                node.querySelector('.custom-select__control-option-checkbox-placeholder').classList.add('d-none');
+                node.querySelector('.custom-select-multi__control-option-checkbox-selected').classList.remove('d-none');
+                node.querySelector('.custom-select-multi__control-option-checkbox-placeholder').classList.add('d-none');
 
                 //
                 _labels.push(_label);
@@ -1849,7 +1849,7 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
 
 
             // Avoid selecting options that are disabled
-            const options = [].slice.call(listRef.current.querySelectorAll('.list-group-item:not(.hide):not(.custom-select__control-option-item--select-all):not(.custom-select__control-option-item--clean)'));
+            const options = [].slice.call(listRef.current.querySelectorAll('.list-group-item:not(.hide):not(.custom-select-multi__control-option-item--select-all):not(.custom-select-multi__control-option-item--clean)'));
             const currentIndex = options.findIndex((e) => e === listRef.current.querySelector('.list-group-item.active'));
 
 
@@ -2110,7 +2110,7 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
                 {!MULTI_SEL_VALID ? <>
                     <span
                         className={combinedCls(
-                            'custom-select__control-blinking-following-cursor animated',
+                            'custom-select-multi__control-blinking-following-cursor animated',
                             {
                                 'd-none': hideBlinkingCursor()
                             }
@@ -2148,7 +2148,7 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
                         />
 
                         <span ref={blinkingCursorPosDivRef} className={combinedCls(
-                            'custom-select__control-blinking-cursor',
+                            'custom-select-multi__control-blinking-cursor',
                             {
                                 'animated': generateInputFocusStr() === BLINKING_CURSOR_STR
                             }
@@ -2188,7 +2188,7 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
 
                     {/* SEARCH BUTTON */}
                     {fetchTrigger ? <>
-                        <span className="custom-select__control-searchbtn">
+                        <span className="custom-select-multi__control-searchbtn">
                             <button tabIndex={-1} type="button" className="btn border-end-0 rounded-pill" onClick={(e: React.MouseEvent) => {
                                 handleFetch().then((response: any) => {
 
@@ -2219,17 +2219,17 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
                 // Multiple selection Control
                 // ++++++++++++++++++++
                 */}
-                {MULTI_SEL_VALID ? <div ref={rootMultiRef} className="custom-select__inputplaceholder-wrapper">
+                {MULTI_SEL_VALID ? <div ref={rootMultiRef} className="custom-select-multi__inputplaceholder-wrapper">
                 
 
                     {/* PLACEHOLDER */}
-                    <div className="custom-select__inputplaceholder-inner">
+                    <div className="custom-select-multi__inputplaceholder-inner">
                         <div style={MULTI_SEL_ENTIRE_AREA_TRIGGER ? {pointerEvents: 'auto', cursor: 'pointer'} : undefined} onClick={MULTI_SEL_ENTIRE_AREA_TRIGGER ? ( typeof readOnly === 'undefined' || !readOnly ? handleShowList : () => void (0) ) :  () => void (0)}>
-                            <ul className="custom-select__list">
+                            <ul className="custom-select-multi__list">
 
                                 {typeof multiSelectSelectedItemOnlyStatus !== 'undefined' ? <>
 
-                                    <li className="custom-select__list-item-statusstring" >
+                                    <li className="custom-select-multi__list-item-statusstring" >
                              
                                         {typeof multiSelectSelectedItemOnlyStatus.itemsLabel === 'string' && controlArr.labels.length > 0 && controlArr.labels.length < optionsData.length ? multiSelectSelectedItemOnlyStatus.itemsLabel.replace('{num}', `${controlArr.labels.length}`) : null}
                                         {typeof multiSelectSelectedItemOnlyStatus.noneLabel === 'string' && controlArr.labels.length === 0 ? multiSelectSelectedItemOnlyStatus.noneLabel : null}
@@ -2281,7 +2281,7 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
 
 
                                 {/** INPUT */}
-                                <li className="custom-select__list-item-add">
+                                <li className="custom-select-multi__list-item-add">
                                     <div className="position-relative">
                                         {/*
                                             // DO NOT USE following attributes in " Multiple selection Control":
@@ -2365,7 +2365,7 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
 
                     {/* SEARCH BUTTON */}
                     {fetchTrigger ? <>
-                        <span className="custom-select__control-searchbtn">
+                        <span className="custom-select-multi__control-searchbtn">
                             <button tabIndex={-1} type="button" className="btn border-end-0 rounded-pill" onClick={(e: React.MouseEvent) => {
                                 handleFetch().then((response: any) => {
 
@@ -2414,7 +2414,7 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
                                     {MULTI_SEL_VALID ? <>
                                         <span
                                             tabIndex={-1}
-                                            className="list-group-item list-group-item-action border-start-0 border-end-0 text-secondary bg-light custom-select__control-option-item--select-all position-sticky top-0 z-3"
+                                            className="list-group-item list-group-item-action border-start-0 border-end-0 text-secondary bg-light custom-select-multi__control-option-item--select-all position-sticky top-0 z-3"
                                             role="tab"
                                             style={{ display: multiSelect?.selectAll ? 'block' : 'none' }}
                                         >
@@ -2437,7 +2437,7 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
                                         {CLEAN_TRIGGER_VALID ? <>
                                             <span
                                                 tabIndex={-1}
-                                                className="list-group-item list-group-item-action border-start-0 border-end-0 text-secondary bg-light custom-select__control-option-item--clean position-sticky top-0 z-3"
+                                                className="list-group-item list-group-item-action border-start-0 border-end-0 text-secondary bg-light custom-select-multi__control-option-item--clean position-sticky top-0 z-3"
                                                 role="tab"
                                             >
                                                 <span
@@ -2455,7 +2455,7 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
 
 
                                     {/* NO MATCH */}
-                                    <button tabIndex={-1} type="button" className="list-group-item list-group-item-action no-match border-0 custom-select__control-option-item--nomatch hide" disabled>{fetchNoneInfo || 'No match yet'}</button>
+                                    <button tabIndex={-1} type="button" className="list-group-item list-group-item-action no-match border-0 custom-select-multi__control-option-item--nomatch hide" disabled>{fetchNoneInfo || 'No match yet'}</button>
                                     {/* /NO MATCH */}
 
 
@@ -2506,7 +2506,7 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
                                                 data-index={index}
                                                 key={index}
                                                 className={combinedCls(
-                                                    'list-group-item list-group-item-action border-start-0 border-end-0 custom-select__control-option-item border-bottom-0',
+                                                    'list-group-item list-group-item-action border-start-0 border-end-0 custom-select-multi__control-option-item border-bottom-0',
                                                     startItemBorder,
                                                     endItemBorder,
                                                     {
@@ -2542,7 +2542,7 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
                                                 data-index={index}
                                                 key={index}
                                                 className={combinedCls(
-                                                    'list-group-item list-group-item-action border-start-0 border-end-0 custom-select__control-option-item border-bottom-0',
+                                                    'list-group-item list-group-item-action border-start-0 border-end-0 custom-select-multi__control-option-item border-bottom-0',
                                                     startItemBorder,
                                                     endItemBorder,
                                                     {
@@ -2561,7 +2561,7 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
                                                 onClick={handleSelect}
                                             >
                                                 <var className={combinedCls(
-                                                    'me-1 custom-select__control-option-checkbox-selected',
+                                                    'me-1 custom-select-multi__control-option-checkbox-selected',
                                                     {
                                                         'd-none': !itemSelected
                                                     }
@@ -2572,7 +2572,7 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
                                                 </var>
 
                                                 <var className={combinedCls(
-                                                    'me-1 custom-select__control-option-checkbox-placeholder',
+                                                    'me-1 custom-select-multi__control-option-checkbox-placeholder',
                                                     {
                                                         'd-none': itemSelected
                                                     }
