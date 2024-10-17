@@ -53,26 +53,26 @@
 .custom-select__wrapper .custom-select-arrow.reverse {
   transform: rotate(180deg) translateY(-50%);
 }
-.custom-select__wrapper .custom-select-multi__control-blinking-cursor {
+.custom-select__wrapper .custom-select__control-blinking-cursor {
   display: inline-block;
   color: var(--cus-sel-placeholder-color);
 }
-.custom-select__wrapper .custom-select-multi__control-blinking-cursor.animated {
+.custom-select__wrapper .custom-select__control-blinking-cursor.animated {
   animation: 1s mf-sel-blink step-end infinite;
 }
-.custom-select__wrapper .custom-select-multi__control-blinking-cursor.control-placeholder {
+.custom-select__wrapper .custom-select__control-blinking-cursor.control-placeholder {
   color: var(--cus-sel-input-placeholder-color);
 }
-.custom-select__wrapper .custom-select-multi__control-blinking-following-cursor {
+.custom-select__wrapper .custom-select__control-blinking-following-cursor {
   position: absolute;
   top: 0.375rem;
   margin-left: 1rem; /* offset start pixel of input control */
   z-index: 1;
 }
-.custom-select__wrapper .custom-select-multi__control-blinking-following-cursor.animated {
+.custom-select__wrapper .custom-select__control-blinking-following-cursor.animated {
   animation: 1s mf-sel-blink step-end infinite;
 }
-.custom-select__wrapper .custom-select-multi__control-blinking-following-cursor.custom-select-multi__control-blinking-following-cursor--puretext {
+.custom-select__wrapper .custom-select__control-blinking-following-cursor.custom-select__control-blinking-following-cursor--puretext {
   margin-left: auto;
   position: relative;
   top: auto;
@@ -95,7 +95,7 @@
   text-overflow: ellipsis;
   border-radius: 0.375rem;
 }
-.custom-select__wrapper .custom-select-single__inputplaceholder-wrapper .custom-select-multi__control-blinking-cursor {
+.custom-select__wrapper .custom-select-single__inputplaceholder-wrapper .custom-select__control-blinking-cursor {
   position: absolute;
   top: 0.1rem;
   left: 0;
@@ -104,7 +104,7 @@
   /* bootstrap style that match ".form-control" */
   top: 0.375rem;
 }
-.custom-select__wrapper .custom-select-single__inputplaceholder-wrapper .custom-select-multi__control-blinking-cursor .control-placeholder {
+.custom-select__wrapper .custom-select-single__inputplaceholder-wrapper .custom-select__control-blinking-cursor .control-placeholder {
   color: var(--cus-sel-input-placeholder-color);
 }
 .custom-select__wrapper .custom-select-single__inputplaceholder-wrapper .custom-select-single__control-searchbtn {
@@ -135,19 +135,19 @@
   opacity: 0;
   pointer-events: none;
 }
-.custom-select__wrapper .custom-select-multi__inputplaceholder-wrapper {
+.custom-select__wrapper .custom-select__inputplaceholder-wrapper {
   position: absolute;
   top: 0;
   width: 100%;
   pointer-events: none;
 }
-.custom-select__wrapper .custom-select-multi__inputplaceholder-wrapper ul,
-.custom-select__wrapper .custom-select-multi__inputplaceholder-wrapper li {
+.custom-select__wrapper .custom-select__inputplaceholder-wrapper ul,
+.custom-select__wrapper .custom-select__inputplaceholder-wrapper li {
   padding: 0;
   margin: 0;
   list-style: none;
 }
-.custom-select__wrapper .custom-select-multi__inputplaceholder-wrapper .custom-select-multi__inputplaceholder-inner > div {
+.custom-select__wrapper .custom-select__inputplaceholder-wrapper .custom-select__inputplaceholder-inner > div {
   position: relative;
   /* bootstrap style that match ".form-control" */
   background-color: var(--cus-sel-control-wrapper-bg);
@@ -158,10 +158,10 @@
   transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
   padding-bottom: 1px;
 }
-.custom-select__wrapper .custom-select-multi__inputplaceholder-wrapper ul.custom-select-multi__list {
+.custom-select__wrapper .custom-select__inputplaceholder-wrapper ul.custom-select__list {
   margin-right: 1rem;
 }
-.custom-select__wrapper .custom-select-multi__inputplaceholder-wrapper ul.custom-select-multi__list li {
+.custom-select__wrapper .custom-select__inputplaceholder-wrapper ul.custom-select__list li {
   display: inline-block;
   margin: 5px;
   margin-bottom: 0;
@@ -173,10 +173,10 @@
   text-overflow: ellipsis;
   position: relative;
 }
-.custom-select__wrapper .custom-select-multi__inputplaceholder-wrapper ul.custom-select-multi__list li.custom-select-multi__list-item-statusstring {
+.custom-select__wrapper .custom-select__inputplaceholder-wrapper ul.custom-select__list li.custom-select__list-item-statusstring {
   background: transparent;
 }
-.custom-select__wrapper .custom-select-multi__inputplaceholder-wrapper ul.custom-select-multi__list li.custom-select-multi__list-item-placeholder {
+.custom-select__wrapper .custom-select__inputplaceholder-wrapper ul.custom-select__list li.custom-select__list-item-placeholder {
   background: transparent;
   color: var(--cus-sel-placeholder-color);
   padding-left: 0.75rem;
@@ -184,10 +184,10 @@
   margin-left: 0;
   white-space: nowrap;
 }
-.custom-select__wrapper .custom-select-multi__inputplaceholder-wrapper ul.custom-select-multi__list li.custom-select-multi__list-item-placeholder.hide {
+.custom-select__wrapper .custom-select__inputplaceholder-wrapper ul.custom-select__list li.custom-select__list-item-placeholder.hide {
   min-width: 100px;
 }
-.custom-select__wrapper .custom-select-multi__inputplaceholder-wrapper ul.custom-select-multi__list li > a {
+.custom-select__wrapper .custom-select__inputplaceholder-wrapper ul.custom-select__list li > a {
   font-weight: 400;
   opacity: 0.6;
   font-size: 18px;
@@ -198,29 +198,29 @@
   transform: translateY(-50%);
   pointer-events: auto;
 }
-.custom-select__wrapper .custom-select-multi__inputplaceholder-wrapper ul.custom-select-multi__list li > a path {
+.custom-select__wrapper .custom-select__inputplaceholder-wrapper ul.custom-select__list li > a path {
   fill: var(--cus-sel-removebtn-fill);
 }
-.custom-select__wrapper .custom-select-multi__inputplaceholder-wrapper ul.custom-select-multi__list li > a:hover path {
+.custom-select__wrapper .custom-select__inputplaceholder-wrapper ul.custom-select__list li > a:hover path {
   fill: var(--cus-sel-removebtn-hover-fill);
 }
-.custom-select__wrapper .custom-select-multi__inputplaceholder-wrapper ul.custom-select-multi__list li.custom-select-multi__list-item-add {
+.custom-select__wrapper .custom-select__inputplaceholder-wrapper ul.custom-select__list li.custom-select__list-item-add {
   pointer-events: auto;
   margin: 0;
   padding: 0;
   background: transparent;
 }
-.custom-select__wrapper .custom-select-multi__inputplaceholder-wrapper ul.custom-select-multi__list li.custom-select-multi__list-item-add input {
+.custom-select__wrapper .custom-select__inputplaceholder-wrapper ul.custom-select__list li.custom-select__list-item-add input {
   border: none;
   font-size: 0.75rem;
   transform: translateY(0.25rem);
 }
-.custom-select__wrapper .custom-select-multi__inputplaceholder-wrapper ul.custom-select-multi__list li.custom-select-multi__list-item-add input:focus {
+.custom-select__wrapper .custom-select__inputplaceholder-wrapper ul.custom-select__list li.custom-select__list-item-add input:focus {
   border: none;
   outline: none;
   box-shadow: none;
 }
-.custom-select__wrapper .custom-select-multi__control-searchbtn {
+.custom-select__wrapper .custom-select__control-searchbtn {
   position: absolute;
   right: 0;
   top: 50%;
@@ -228,12 +228,12 @@
   z-index: 5;
   pointer-events: auto;
 }
-.custom-select__wrapper .custom-select-multi__control-searchbtn svg,
-.custom-select__wrapper .custom-select-multi__control-searchbtn path {
+.custom-select__wrapper .custom-select__control-searchbtn svg,
+.custom-select__wrapper .custom-select__control-searchbtn path {
   fill: var(--cus-sel-searchbtn-fill);
 }
-.custom-select__wrapper .custom-select-multi__control-searchbtn:hover svg,
-.custom-select__wrapper .custom-select-multi__control-searchbtn:hover path {
+.custom-select__wrapper .custom-select__control-searchbtn:hover svg,
+.custom-select__wrapper .custom-select__control-searchbtn:hover path {
   fill: var(--cus-sel-searchbtn-hover-fill);
 }
 .custom-select__wrapper [data-select]:focus {
@@ -251,7 +251,7 @@
 .custom-select__wrapper.multiple-selection.active .custom-select-single__inputplaceholder-wrapper .custom-select-single__inputplaceholder-inner, .custom-select__wrapper.focus .custom-select-single__inputplaceholder-wrapper .custom-select-single__inputplaceholder-inner {
   border-color: var(--cus-sel-focus-border-color);
 }
-.custom-select__wrapper.multiple-selection.active .custom-select-multi__inputplaceholder-inner > div, .custom-select__wrapper.focus .custom-select-multi__inputplaceholder-inner > div {
+.custom-select__wrapper.multiple-selection.active .custom-select__inputplaceholder-inner > div, .custom-select__wrapper.focus .custom-select__inputplaceholder-inner > div {
   box-shadow: var(--cus-sel-focus-box-shadow);
   border-color: var(--cus-sel-focus-border-color);
   outline: 0;
@@ -305,25 +305,25 @@
 .custom-select__options-wrapper .list-group-item.hide {
   display: none;
 }
-.custom-select__options-wrapper .list-group-item .custom-select-multi__control-option-item--nomatch.hide {
+.custom-select__options-wrapper .list-group-item .custom-select__control-option-item--nomatch.hide {
   display: none;
 }
-.custom-select__options-wrapper .list-group-item .custom-select-multi__control-option-checkbox-placeholder {
+.custom-select__options-wrapper .list-group-item .custom-select__control-option-checkbox-placeholder {
   display: inline-block;
 }
-.custom-select__options-wrapper .list-group-item .custom-select-multi__control-option-checkbox-placeholder svg {
+.custom-select__options-wrapper .list-group-item .custom-select__control-option-checkbox-placeholder svg {
   fill: transparent;
 }
-.custom-select__options-wrapper .list-group-item .custom-select-multi__control-option-checkbox-placeholder svg path {
+.custom-select__options-wrapper .list-group-item .custom-select__control-option-checkbox-placeholder svg path {
   stroke: var(--cus-sel-listgroup-checkbox);
 }
-.custom-select__options-wrapper .list-group-item .custom-select-multi__control-option-checkbox-selected {
+.custom-select__options-wrapper .list-group-item .custom-select__control-option-checkbox-selected {
   display: inline-block;
 }
-.custom-select__options-wrapper .list-group-item .custom-select-multi__control-option-checkbox-selected svg {
+.custom-select__options-wrapper .list-group-item .custom-select__control-option-checkbox-selected svg {
   fill: var(--cus-sel-listgroup-checkbox);
 }
-.custom-select__options-wrapper .list-group-item .custom-select-multi__control-option-checkbox-selected svg path {
+.custom-select__options-wrapper .list-group-item .custom-select__control-option-checkbox-selected svg path {
   stroke: var(--cus-sel-listgroup-checkbox);
 }
 .custom-select__options-wrapper .list-group-item:hover, .custom-select__options-wrapper .list-group-item:focus {
@@ -335,17 +335,17 @@
   margin-bottom: 0.3rem;
   border-bottom: 1px solid var(--cus-sel-listgroup-groupborder-color) !important;
 }
-.custom-select__options-wrapper .custom-select-multi__control-option-item--select-all.hide {
+.custom-select__options-wrapper .custom-select__control-option-item--select-all.hide {
   display: none !important;
 }
-.custom-select__options-wrapper .custom-select-multi__control-option-item--select-all .btn {
+.custom-select__options-wrapper .custom-select__control-option-item--select-all .btn {
   font-size: 0.75rem;
   padding: 0.1rem 0.5rem;
 }
-.custom-select__options-wrapper .custom-select-multi__control-option-item--clean.hide {
+.custom-select__options-wrapper .custom-select__control-option-item--clean.hide {
   display: none !important;
 }
-.custom-select__options-wrapper .custom-select-multi__control-option-item--clean .btn {
+.custom-select__options-wrapper .custom-select__control-option-item--clean .btn {
   font-size: 0.75rem;
   padding: 0.1rem 0.5rem;
 }

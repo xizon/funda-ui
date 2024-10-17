@@ -3648,6 +3648,9 @@ var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_
       close: function close() {
         cancel();
         if (MULTI_SEL_VALID) popwinPosHide();
+      },
+      open: function open() {
+        activate();
       }
     };
   }, [popupRef]);
@@ -3655,6 +3658,7 @@ var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_
     return {
       active: function active() {
         handleShowList();
+        selectInputRef.current.select();
       },
       focus: function focus() {
         selectInputRef.current.select();
@@ -4253,21 +4257,21 @@ var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_
       popwinContainerHeightReset();
 
       // display all filtered items
-      var _items = [].slice.call(listContentRef.current.querySelectorAll('.custom-select-multi__control-option-item'));
+      var _items = [].slice.call(listContentRef.current.querySelectorAll('.custom-select__control-option-item'));
       _items.forEach(function (node) {
         node.classList.remove('hide');
       });
 
       // nomatch & button of select all 
-      var _nodataDiv = listContentRef.current.querySelector('.custom-select-multi__control-option-item--nomatch');
-      var _btnSelectAll = listContentRef.current.querySelector('.custom-select-multi__control-option-item--select-all');
+      var _nodataDiv = listContentRef.current.querySelector('.custom-select__control-option-item--nomatch');
+      var _btnSelectAll = listContentRef.current.querySelector('.custom-select__control-option-item--select-all');
       _nodataDiv.classList.add('hide');
       if (_btnSelectAll !== null) _btnSelectAll.classList.remove('hide');
     }
   }
   function popwinFilterItems(val) {
     if (listContentRef.current === null) return;
-    [].slice.call(listContentRef.current.querySelectorAll('.custom-select-multi__control-option-item')).forEach(function (node) {
+    [].slice.call(listContentRef.current.querySelectorAll('.custom-select__control-option-item')).forEach(function (node) {
       // Avoid fatal errors causing page crashes
       var _queryString = typeof node.dataset.querystring !== 'undefined' && node.dataset.querystring !== null ? node.dataset.querystring : '';
       var _val = typeof val !== 'undefined' && val !== null ? val : '';
@@ -4286,10 +4290,10 @@ var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_
     popwinNoMatchInit();
 
     // display all filtered items
-    var _btnSelectAll = listContentRef.current.querySelector('.custom-select-multi__control-option-item--select-all');
-    var _nodataDiv = listContentRef.current.querySelector('.custom-select-multi__control-option-item--nomatch');
+    var _btnSelectAll = listContentRef.current.querySelector('.custom-select__control-option-item--select-all');
+    var _nodataDiv = listContentRef.current.querySelector('.custom-select__control-option-item--nomatch');
     if ((val === null ? '' : val).replace(/\s/g, "") === '') {
-      [].slice.call(listContentRef.current.querySelectorAll('.custom-select-multi__control-option-item')).forEach(function (node) {
+      [].slice.call(listContentRef.current.querySelectorAll('.custom-select__control-option-item')).forEach(function (node) {
         node.classList.remove('hide');
       });
       _nodataDiv.classList.add('hide');
@@ -4312,9 +4316,9 @@ var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_
   }
   function popwinNoMatchInit() {
     if (listContentRef.current === null) return;
-    var _btnSelectAll = listContentRef.current.querySelector('.custom-select-multi__control-option-item--select-all');
-    var _nodataDiv = listContentRef.current.querySelector('.custom-select-multi__control-option-item--nomatch');
-    var emptyFieldsCheck = [].slice.call(listContentRef.current.querySelectorAll('.custom-select-multi__control-option-item')).every(function (node) {
+    var _btnSelectAll = listContentRef.current.querySelector('.custom-select__control-option-item--select-all');
+    var _nodataDiv = listContentRef.current.querySelector('.custom-select__control-option-item--nomatch');
+    var emptyFieldsCheck = [].slice.call(listContentRef.current.querySelectorAll('.custom-select__control-option-item')).every(function (node) {
       if (!node.classList.contains('hide')) {
         return false;
       }
@@ -4366,7 +4370,7 @@ var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_
       handleFirstFetch(curValue).then(function (response) {
         if (response.length > 0) {
           // nomatch
-          var _nodataDiv = listContentRef.current.querySelector('.custom-select-multi__control-option-item--nomatch');
+          var _nodataDiv = listContentRef.current.querySelector('.custom-select__control-option-item--nomatch');
           _nodataDiv.classList.add('hide');
         }
       });
@@ -4418,9 +4422,10 @@ var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_
         labelArr,
         curItem,
         incominggetOptionsData,
-        _rootRef$current3,
         options,
         curBtn,
+        noCallback,
+        _rootRef$current3,
         _data$callback,
         _data,
         _value,
@@ -4453,21 +4458,27 @@ var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_
           case 5:
             curItem = el === null ? isObject(dataInput) ? dataInput : JSON.parse(dataInput) : optionsData[Number(el.currentTarget.dataset.index)]; // get incoming options from `data-options` of component
             // It is usually used for complex cascading `<Select />` components
-            incominggetOptionsData = valueInputRef.current.dataset.options; // cancel
-            if (!MULTI_SEL_VALID) {
-              cancel();
-            }
-
-            //remove focus style
-            if (!MULTI_SEL_VALID) {
-              (_rootRef$current3 = rootRef.current) === null || _rootRef$current3 === void 0 ? void 0 : _rootRef$current3.classList.remove('focus');
-            }
-
-            // get options
+            incominggetOptionsData = valueInputRef.current.dataset.options; // get options
             options = [].slice.call(listRef.current.querySelectorAll('.list-group-item:not(.hide):not(.no-match)')); // current control of some option
             curBtn = options.filter(function (node) {
               return node.dataset.itemdata == JSON.stringify(curItem);
-            })[0]; // update value * label
+            })[0]; // Determine whether there is a callback
+            noCallback = typeof curItem.callback === 'undefined'; // ==========================================================================
+            // Whether to cancel or not
+            // ==========================================================================
+            if (noCallback) {
+              // cancel
+              if (!MULTI_SEL_VALID) {
+                cancel();
+              }
+
+              //remove focus style
+              if (!MULTI_SEL_VALID) {
+                (_rootRef$current3 = rootRef.current) === null || _rootRef$current3 === void 0 ? void 0 : _rootRef$current3.classList.remove('focus');
+              }
+            }
+
+            // update value * label
             if (dataInput) {
               // ==========================================================================
               // Use the "keyboard" to trigger
@@ -4484,9 +4495,18 @@ var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_
               // ++++++++++++++++++++
               // clear all active classes of options 
               // (Avoid using the keyboard to select and two actives will appear after clicking on a non-selected option.)
-              options.forEach(function (node) {
-                node.classList.remove('active');
-              });
+              if (noCallback) {
+                options.forEach(function (node) {
+                  node.classList.remove('active');
+                });
+              }
+
+              // If there is a callback, delete the activated style
+              if (!noCallback) {
+                setTimeout(function () {
+                  curBtn.classList.remove('active', 'disabled');
+                }, 0);
+              }
 
               //
               setControlValue(_value);
@@ -4511,8 +4531,8 @@ var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_
                   // remove item
                   //#########
                   $el.dataset.selected = 'false';
-                  $el.querySelector('.custom-select-multi__control-option-checkbox-selected').classList.add('d-none');
-                  $el.querySelector('.custom-select-multi__control-option-checkbox-placeholder').classList.remove('d-none');
+                  $el.querySelector('.custom-select__control-option-checkbox-selected').classList.add('d-none');
+                  $el.querySelector('.custom-select__control-option-checkbox-placeholder').classList.remove('d-none');
 
                   //
                   setControlArr(function (prevState) {
@@ -4530,8 +4550,8 @@ var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_
                   // add item
                   //#########
                   $el.dataset.selected = 'true';
-                  $el.querySelector('.custom-select-multi__control-option-checkbox-selected').classList.remove('d-none');
-                  $el.querySelector('.custom-select-multi__control-option-checkbox-placeholder').classList.add('d-none');
+                  $el.querySelector('.custom-select__control-option-checkbox-selected').classList.remove('d-none');
+                  $el.querySelector('.custom-select__control-option-checkbox-placeholder').classList.add('d-none');
 
                   //
                   setControlArr(function (prevState) {
@@ -4550,13 +4570,15 @@ var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_
                 adjustMultiControlContainerHeight();
 
                 // active current option
-                setTimeout(function () {
-                  $el.classList.add('active');
-                }, 0);
+                if (noCallback) {
+                  setTimeout(function () {
+                    $el.classList.add('active');
+                  }, 0);
+                }
               }
 
               //
-              if (typeof onChange === 'function') {
+              if (noCallback && typeof onChange === 'function') {
                 onChange === null || onChange === void 0 ? void 0 : onChange(selectInputRef.current, valueInputRef.current, !MULTI_SEL_VALID ? curItem : multipleSelectionCallback(currentControlValueArr, currentControlLabelArr));
 
                 //
@@ -4578,9 +4600,18 @@ var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_
 
               // clear all active classes of options
               // (Avoid using the keyboard to select and two actives will appear after clicking on a non-selected option.)
-              options.forEach(function (node) {
-                node.classList.remove('active');
-              });
+              if (noCallback) {
+                options.forEach(function (node) {
+                  node.classList.remove('active');
+                });
+              }
+
+              // If there is a callback, delete the activated style
+              if (!noCallback) {
+                setTimeout(function () {
+                  curBtn.classList.remove('active', 'disabled');
+                }, 0);
+              }
 
               //
               setControlValue(_value2);
@@ -4605,8 +4636,8 @@ var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_
                   // remove item
                   //#########
                   _$el.dataset.selected = 'false';
-                  _$el.querySelector('.custom-select-multi__control-option-checkbox-selected').classList.add('d-none');
-                  _$el.querySelector('.custom-select-multi__control-option-checkbox-placeholder').classList.remove('d-none');
+                  _$el.querySelector('.custom-select__control-option-checkbox-selected').classList.add('d-none');
+                  _$el.querySelector('.custom-select__control-option-checkbox-placeholder').classList.remove('d-none');
 
                   //
                   setControlArr(function (prevState) {
@@ -4625,8 +4656,8 @@ var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_
                   //#########
 
                   _$el.dataset.selected = 'true';
-                  _$el.querySelector('.custom-select-multi__control-option-checkbox-selected').classList.remove('d-none');
-                  _$el.querySelector('.custom-select-multi__control-option-checkbox-placeholder').classList.add('d-none');
+                  _$el.querySelector('.custom-select__control-option-checkbox-selected').classList.remove('d-none');
+                  _$el.querySelector('.custom-select__control-option-checkbox-placeholder').classList.add('d-none');
 
                   //
                   setControlArr(function (prevState) {
@@ -4645,13 +4676,15 @@ var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_
                 adjustMultiControlContainerHeight();
 
                 // active current option
-                setTimeout(function () {
-                  _$el.classList.add('active');
-                }, 0);
+                if (noCallback) {
+                  setTimeout(function () {
+                    _$el.classList.add('active');
+                  }, 0);
+                }
               }
 
               //
-              if (typeof onChange === 'function') {
+              if (noCallback && typeof onChange === 'function') {
                 onChange === null || onChange === void 0 ? void 0 : onChange(selectInputRef.current, valueInputRef.current, !MULTI_SEL_VALID ? curItem : multipleSelectionCallback(_currentControlValueArr, _currentControlLabelArr));
 
                 //
@@ -4669,7 +4702,7 @@ var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_
   function updateOptionCheckboxes(type) {
     var _labels = [];
     var _values = [];
-    [].slice.call(listContentRef.current.querySelectorAll('.custom-select-multi__control-option-item:not(.hide)')).forEach(function (node) {
+    [].slice.call(listContentRef.current.querySelectorAll('.custom-select__control-option-item:not(.hide)')).forEach(function (node) {
       var _label = node.dataset.label;
       var _value = node.dataset.value;
       if (type === 'remove') {
@@ -4677,8 +4710,8 @@ var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_
         // remove item
         //#########
         node.dataset.selected = 'false';
-        node.querySelector('.custom-select-multi__control-option-checkbox-selected').classList.add('d-none');
-        node.querySelector('.custom-select-multi__control-option-checkbox-placeholder').classList.remove('d-none');
+        node.querySelector('.custom-select__control-option-checkbox-selected').classList.add('d-none');
+        node.querySelector('.custom-select__control-option-checkbox-placeholder').classList.remove('d-none');
 
         //
         var _indexLable = _labels.findIndex(function (item) {
@@ -4694,8 +4727,8 @@ var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_
         // add item
         //#########
         node.dataset.selected = 'true';
-        node.querySelector('.custom-select-multi__control-option-checkbox-selected').classList.remove('d-none');
-        node.querySelector('.custom-select-multi__control-option-checkbox-placeholder').classList.add('d-none');
+        node.querySelector('.custom-select__control-option-checkbox-selected').classList.remove('d-none');
+        node.querySelector('.custom-select__control-option-checkbox-placeholder').classList.add('d-none');
 
         //
         _labels.push(_label);
@@ -4937,7 +4970,7 @@ var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_
       if (listRef.current === null || !rootRef.current.classList.contains('active')) return;
 
       // Avoid selecting options that are disabled
-      var options = [].slice.call(listRef.current.querySelectorAll('.list-group-item:not(.hide):not(.custom-select-multi__control-option-item--select-all):not(.custom-select-multi__control-option-item--clean)'));
+      var options = [].slice.call(listRef.current.querySelectorAll('.list-group-item:not(.hide):not(.custom-select__control-option-item--select-all):not(.custom-select__control-option-item--clean)'));
       var currentIndex = options.findIndex(function (e) {
         return e === listRef.current.querySelector('.list-group-item.active');
       });
@@ -5179,7 +5212,7 @@ var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_
       return void 0;
     }
   }, attributes)), !MULTI_SEL_VALID ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("span", {
-    className: (0,cls.combinedCls)('custom-select-multi__control-blinking-following-cursor animated', {
+    className: (0,cls.combinedCls)('custom-select__control-blinking-following-cursor animated', {
       'd-none': hideBlinkingCursor()
     }),
     style: {
@@ -5196,7 +5229,7 @@ var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_
     className: (0,cls.combinedCls)((0,cls.clsWrite)(controlClassName, 'form-control'), controlExClassName)
   }), /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("span", {
     ref: blinkingCursorPosDivRef,
-    className: (0,cls.combinedCls)('custom-select-multi__control-blinking-cursor', {
+    className: (0,cls.combinedCls)('custom-select__control-blinking-cursor', {
       'animated': generateInputFocusStr() === BLINKING_CURSOR_STR
     })
   }, controlTempValue || controlTempValue === '' ? controlTempValue.length === 0 ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("span", {
@@ -5227,7 +5260,7 @@ var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_
   }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("path", {
     d: "M144,6525.39 L142.594,6524 L133.987,6532.261 L133.069,6531.38 L133.074,6531.385 L125.427,6524.045 L124,6525.414 C126.113,6527.443 132.014,6533.107 133.987,6535 C135.453,6533.594 134.024,6534.965 144,6525.39"
   })))))), fetchTrigger ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("span", {
-    className: "custom-select-multi__control-searchbtn"
+    className: "custom-select__control-searchbtn"
   }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("button", {
     tabIndex: -1,
     type: "button",
@@ -5251,9 +5284,9 @@ var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_
     fillRule: "evenodd"
   }))))) : null) : null, MULTI_SEL_VALID ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
     ref: rootMultiRef,
-    className: "custom-select-multi__inputplaceholder-wrapper"
+    className: "custom-select__inputplaceholder-wrapper"
   }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
-    className: "custom-select-multi__inputplaceholder-inner"
+    className: "custom-select__inputplaceholder-inner"
   }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
     style: MULTI_SEL_ENTIRE_AREA_TRIGGER ? {
       pointerEvents: 'auto',
@@ -5265,9 +5298,9 @@ var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_
       return void 0;
     }
   }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("ul", {
-    className: "custom-select-multi__list"
+    className: "custom-select__list"
   }, typeof multiSelectSelectedItemOnlyStatus !== 'undefined' ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("li", {
-    className: "custom-select-multi__list-item-statusstring"
+    className: "custom-select__list-item-statusstring"
   }, typeof multiSelectSelectedItemOnlyStatus.itemsLabel === 'string' && controlArr.labels.length > 0 && controlArr.labels.length < optionsData.length ? multiSelectSelectedItemOnlyStatus.itemsLabel.replace('{num}', "".concat(controlArr.labels.length)) : null, typeof multiSelectSelectedItemOnlyStatus.noneLabel === 'string' && controlArr.labels.length === 0 ? multiSelectSelectedItemOnlyStatus.noneLabel : null, controlArr.labels.length > 0 ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, typeof multiSelectSelectedItemOnlyStatus.allItemsLabel === 'string' && controlArr.labels.length === optionsData.length ? multiSelectSelectedItemOnlyStatus.allItemsLabel.replace('{num}', "".concat(controlArr.labels.length)) : null) : null, typeof multiSelectSelectedItemOnlyStatus.itemsLabel !== 'string' && controlArr.labels.length > 0 ? MULTI_SEL_SELECTED_STATUS.itemsLabel.replace('{num}', "".concat(controlArr.labels.length)) : null, typeof multiSelectSelectedItemOnlyStatus.noneLabel !== 'string' && controlArr.labels.length === 0 ? MULTI_SEL_SELECTED_STATUS.noneLabel : null, controlArr.labels.length > 0 ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, typeof multiSelectSelectedItemOnlyStatus.allItemsLabel !== 'string' && controlArr.labels.length === optionsData.length ? MULTI_SEL_SELECTED_STATUS.allItemsLabel.replace('{num}', "".concat(controlArr.labels.length)) : null) : null)) : /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, typeof renderSelectedValue === 'function' ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, renderSelectedValue(controlArr, handleMultiControlItemRemove)) : /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, controlArr.labels.map(function (item, index) {
     return /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("li", {
       key: 'selected-item-' + index,
@@ -5288,7 +5321,7 @@ var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_
       d: "M195.2 195.2a64 64 0 0 1 90.496 0L512 421.504 738.304 195.2a64 64 0 0 1 90.496 90.496L602.496 512 828.8 738.304a64 64 0 0 1-90.496 90.496L512 602.496 285.696 828.8a64 64 0 0 1-90.496-90.496L421.504 512 195.2 285.696a64 64 0 0 1 0-90.496z"
     }))));
   }))), /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("li", {
-    className: "custom-select-multi__list-item-add"
+    className: "custom-select__list-item-add"
   }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
     className: "position-relative"
   }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("input", _extends({
@@ -5350,7 +5383,7 @@ var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_
   }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("path", {
     d: "M144,6525.39 L142.594,6524 L133.987,6532.261 L133.069,6531.38 L133.074,6531.385 L125.427,6524.045 L124,6525.414 C126.113,6527.443 132.014,6533.107 133.987,6535 C135.453,6533.594 134.024,6534.965 144,6525.39"
   })))))), fetchTrigger ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("span", {
-    className: "custom-select-multi__control-searchbtn"
+    className: "custom-select__control-searchbtn"
   }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("button", {
     tabIndex: -1,
     type: "button",
@@ -5396,7 +5429,7 @@ var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_
     className: "custom-select__options-contentlist-inner"
   }, MULTI_SEL_VALID ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("span", {
     tabIndex: -1,
-    className: "list-group-item list-group-item-action border-start-0 border-end-0 text-secondary bg-light custom-select-multi__control-option-item--select-all position-sticky top-0 z-3",
+    className: "list-group-item list-group-item-action border-start-0 border-end-0 text-secondary bg-light custom-select__control-option-item--select-all position-sticky top-0 z-3",
     role: "tab",
     style: {
       display: multiSelect !== null && multiSelect !== void 0 && multiSelect.selectAll ? 'block' : 'none'
@@ -5410,7 +5443,7 @@ var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_
     onClick: handleSelectAll
   }))) : null, !MULTI_SEL_VALID ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, CLEAN_TRIGGER_VALID ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("span", {
     tabIndex: -1,
-    className: "list-group-item list-group-item-action border-start-0 border-end-0 text-secondary bg-light custom-select-multi__control-option-item--clean position-sticky top-0 z-3",
+    className: "list-group-item list-group-item-action border-start-0 border-end-0 text-secondary bg-light custom-select__control-option-item--clean position-sticky top-0 z-3",
     role: "tab"
   }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("span", {
     tabIndex: -1,
@@ -5422,7 +5455,7 @@ var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_
   }))) : null) : null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("button", {
     tabIndex: -1,
     type: "button",
-    className: "list-group-item list-group-item-action no-match border-0 custom-select-multi__control-option-item--nomatch hide",
+    className: "list-group-item list-group-item-action no-match border-0 custom-select__control-option-item--nomatch hide",
     disabled: true
   }, fetchNoneInfo || 'No match yet'), optionsData ? optionsData.map(function (item, index) {
     var startItemBorder = index === 0 ? 'border-top-0' : '';
@@ -5460,7 +5493,7 @@ var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_
         type: "button",
         "data-index": index,
         key: index,
-        className: (0,cls.combinedCls)('list-group-item list-group-item-action border-start-0 border-end-0 custom-select-multi__control-option-item border-bottom-0', startItemBorder, endItemBorder, {
+        className: (0,cls.combinedCls)('list-group-item list-group-item-action border-start-0 border-end-0 custom-select__control-option-item border-bottom-0', startItemBorder, endItemBorder, {
           'disabled': item.disabled,
           'active disabled': disabledCurrentOption,
           'custom-select-grouptitle': item.group
@@ -5487,7 +5520,7 @@ var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_
         "data-selected": "".concat(itemSelected ? 'true' : 'false'),
         "data-index": index,
         key: index,
-        className: (0,cls.combinedCls)('list-group-item list-group-item-action border-start-0 border-end-0 custom-select-multi__control-option-item border-bottom-0', startItemBorder, endItemBorder, {
+        className: (0,cls.combinedCls)('list-group-item list-group-item-action border-start-0 border-end-0 custom-select__control-option-item border-bottom-0', startItemBorder, endItemBorder, {
           'list-group-item-secondary item-selected': itemSelected,
           'disabled': item.disabled,
           'custom-select-grouptitle': item.group
@@ -5500,7 +5533,7 @@ var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_
         role: "tab",
         onClick: handleSelect
       }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("var", {
-        className: (0,cls.combinedCls)('me-1 custom-select-multi__control-option-checkbox-selected', {
+        className: (0,cls.combinedCls)('me-1 custom-select__control-option-checkbox-selected', {
           'd-none': !itemSelected
         })
       }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("svg", {
@@ -5511,7 +5544,7 @@ var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_
       }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("path", {
         d: "M19 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.11 0 2-.9 2-2V5c0-1.1-.89-2-2-2zm-9 14l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"
       }))), /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("var", {
-        className: (0,cls.combinedCls)('me-1 custom-select-multi__control-option-checkbox-placeholder', {
+        className: (0,cls.combinedCls)('me-1 custom-select__control-option-checkbox-placeholder', {
           'd-none': itemSelected
         })
       }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("svg", {

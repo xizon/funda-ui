@@ -1720,7 +1720,7 @@ import Select from 'funda-ui/Select';
 | --- | --- | --- | --- | --- |
 | `ref` | React.ForwardedRef | - | It is the return element of this component.  | - |
 | `contentRef` | React.ForwardedRef | - | It exposes the following methods:  <br /> <ol><li>`contentRef.current.active()`</li><li>`contentRef.current.focus()`</li><li>`contentRef.current.clear(() => { console.log('callback') })`</li><li>`contentRef.current.set([{"label": "Option 1","listItemLabel":"Option 1 (No: 001)","value": "value-1","queryString": "option1"}], () => { console.log('callback') })`</li></ol> <blockquote>DO NOT USE it in the `onChange` of this component, otherwise it will cause infinite rendering</blockquote> | - |
-| `popupRef` | React.ForwardedRef | - | It exposes the following methods when the component's popup opens or closes:  <br /> <ol><li>`popupRef.current.close()`</li></ol> | - |
+| `popupRef` | React.ForwardedRef | - | It exposes the following methods when the component's popup opens or closes:  <br /> <ol><li>`popupRef.current.open()`</li><li>`popupRef.current.close()`</li></ol> | - |
 | `wrapperClassName` | string | `mb-3 position-relative` | The class name of the control wrapper. | - |
 | `controlClassName` | string | `form-control` | The class name of the control. | - |
 | `controlExClassName` | string | - | The extended class name of `controlClassName`. | - |
@@ -1753,7 +1753,7 @@ import Select from 'funda-ui/Select';
 | `firstRequestAutoExec` | boolean  | true | The first asynchronous request is automatically executed. If **false**, trigger the first asynchronous request when the options area is expanded. <blockquote>Valid when the series attribute `fetchXXXX` is exist</blockquote> | - |
 | `fetchTrigger` | boolean  | false | Use buttons to trigger data queries. | - |
 | `fetchTriggerForDefaultData` | JSON Object \| null  | null | Sets a default data for control's values. (such as `{values: ['value-1','value-3'], labels: ['Option 1','Option 3'], queryStrings: ['','']}`) <br />Valid when `fetchTrigger` is *true* and `value` is not empty. | - |
-| `fetchNoneInfo` | string  | - | The text of the data not fetched. | - |
+| `fetchNoneInfo` | string  | `No match yet` | The text of the data not fetched. | - |
 | `fetchUpdate` | boolean  | false | When the property is *true*, every time the input changes or the search button is clicked, a data request will be triggered. | - |
 | `fetchFuncAsync` | Constructor | - | A method as a string from the constructor.  | - |
 | `fetchFuncMethod` | string  | - | When the property is *true*, every time the select changes, a data request will be triggered. <br /><blockquote>The methord must be a Promise Object.</blockquote> | - |
@@ -1784,7 +1784,7 @@ JSON Object Literals configuration properties of the `options` and callback from
 | `optgroup` | array | - | Creates a grouping of options. It will be displayed using the value of `label`. such as `[{"label":"Option 0","value":"value-0","queryString":""},{"label":"Group 1","value":"","queryString":"","optgroup":[{"label":"Option 1","value":"value-1","queryString":""},{"label":"Option 2","value":"value-2","queryString":""}]}]` | - |
 | `queryString` | string | - | Quick query string, such as Chinese pinyin or English initials | ✅ |
 | `disabled` | boolean | - | When present, it specifies that an option should be disabled. | - |
-| `callback` | function | - | Click on the callback function for this option. | - |
+| `callback` | function | - | Click on the callback function for this option. <blockquote>If this field exists, triggering it will not close the pop-up.</blockquote> | - |
 
 
 

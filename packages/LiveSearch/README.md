@@ -387,7 +387,7 @@ import LiveSearch from 'funda-ui/LiveSearch';
 | `allowSpacingRetrive` | boolean | false | Allow Spaces to return all results. <blockquote>The condition is that the database interface can retrieve whitespace data. By default, using spaces will return no results.</blockquote> | - |
 | `autoShowOptions` | boolean  | false | Force display of the option list. | - |
 | `fetchTrigger` | boolean  | false | Use buttons to trigger data queries. | - |
-| `fetchNoneInfo` | string  | - | The text of the data not fetched. <br />Valid when `fetchTrigger` is *true*. | - |
+| `fetchNoneInfo` | string  | `No match yet` | The text of the data not fetched. <br />Valid when `fetchTrigger` is *true*. | - |
 | `fetchUpdate` | boolean  | false | When the property is *true*, every time the input changes or the search button is clicked, a data request will be triggered. | - |
 | `fetchFuncAsync` | Constructor | - | A method as a string from the constructor.  | - |
 | `fetchFuncMethod` | string  | - | When the property is *true*, every time the input changes or the search button is clicked, a data request will be triggered. <br /><blockquote>The methord must be a Promise Object.</blockquote> | - |
