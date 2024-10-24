@@ -4,6 +4,7 @@ export declare type DynamicFieldsValueProps = {
     tmpl: React.ReactNode;
 };
 export declare type DynamicFieldsProps = {
+    contentRef?: React.ForwardedRef<any>;
     wrapperClassName?: string;
     btnAddWrapperClassName?: string;
     btnRemoveWrapperClassName?: string;

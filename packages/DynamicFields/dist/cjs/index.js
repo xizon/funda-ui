@@ -495,7 +495,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var funda_utils_dist_cjs_useComId__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(funda_utils_dist_cjs_useComId__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(188);
 /* harmony import */ var funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_2__);
-var _excluded = ["wrapperClassName", "btnAddWrapperClassName", "btnRemoveWrapperClassName", "label", "data", "maxFields", "iconAddBefore", "iconAddAfter", "iconAdd", "iconAddPosition", "iconRemove", "doNotRemoveDom", "id", "confirmText", "innerAppendClassName", "innerAppendCellClassName", "innerAppendLastCellClassName", "innerAppendHideClassName", "innerAppendBodyClassName", "innerAppendHeadData", "innerAppendHeadRowShowFirst", "innerAppendHeadRowClassName", "innerAppendHeadCellClassName", "innerAppendHeadCellStyles", "innerAppendEmptyContent", "onAdd", "onRemove", "onLoad"];
+var _excluded = ["contentRef", "wrapperClassName", "btnAddWrapperClassName", "btnRemoveWrapperClassName", "label", "data", "maxFields", "iconAddBefore", "iconAddAfter", "iconAdd", "iconAddPosition", "iconRemove", "doNotRemoveDom", "id", "confirmText", "innerAppendClassName", "innerAppendCellClassName", "innerAppendLastCellClassName", "innerAppendHideClassName", "innerAppendBodyClassName", "innerAppendHeadData", "innerAppendHeadRowShowFirst", "innerAppendHeadRowClassName", "innerAppendHeadCellClassName", "innerAppendHeadCellStyles", "innerAppendEmptyContent", "onAdd", "onRemove", "onLoad"];
 function _extends() { _extends = Object.assign ? Object.assign.bind() : function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
 function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
 function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
@@ -513,7 +513,8 @@ function _objectWithoutPropertiesLoose(source, excluded) { if (source == null) r
 
 
 var DynamicFields = function DynamicFields(props) {
-  var wrapperClassName = props.wrapperClassName,
+  var contentRef = props.contentRef,
+    wrapperClassName = props.wrapperClassName,
     btnAddWrapperClassName = props.btnAddWrapperClassName,
     btnRemoveWrapperClassName = props.btnRemoveWrapperClassName,
     label = props.label,
@@ -563,6 +564,21 @@ var DynamicFields = function DynamicFields(props) {
     setTmpl = _useState4[1];
   var addBtnIdRef = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)('');
   addBtnIdRef.current = "dynamic-fields-add-".concat(idRes);
+
+  // exposes the following methods
+  (0,react__WEBPACK_IMPORTED_MODULE_0__.useImperativeHandle)(contentRef, function () {
+    return {
+      showAddBtn: function showAddBtn() {
+        addBtnRef.current.style.setProperty('display', 'inline', 'important');
+      },
+      hideAddBtn: function hideAddBtn() {
+        addBtnRef.current.style.setProperty('display', 'none', 'important');
+      },
+      appendedItemsCounter: function appendedItemsCounter() {
+        return rootRef.current.querySelectorAll(PER_ROW_DOM_STRING).length;
+      }
+    };
+  }, [contentRef]);
   function updateLastItemCls(el, type) {
     if (typeof el === 'undefined') return;
     if (type === 'add') {
@@ -603,7 +619,8 @@ var DynamicFields = function DynamicFields(props) {
   }
   function checkMaxStatus() {
     //button status
-    if (rootRef.current.querySelectorAll(PER_ROW_DOM_STRING).length + 1 >= parseFloat(maxFields)) {
+    var _appendedItems = rootRef.current.querySelectorAll(PER_ROW_DOM_STRING).length;
+    if (_appendedItems + 1 >= parseFloat(maxFields)) {
       addBtnRef.current.style.setProperty('display', 'none', 'important');
     }
   }
@@ -747,6 +764,9 @@ var DynamicFields = function DynamicFields(props) {
   (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(function () {
     setVal(data ? data.init : []);
     setTmpl(data ? data.tmpl : null);
+
+    //
+    checkMaxStatus();
 
     //
     onLoad === null || onLoad === void 0 ? void 0 : onLoad(addBtnIdRef.current, rootRef.current, PER_ROW_DOM_STRING);

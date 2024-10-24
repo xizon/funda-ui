@@ -50,7 +50,6 @@ import { clsWrite, combinedCls } from 'funda-utils/dist/cjs/cls';
 
 
 
-
 export type SelectOptionChangeFnType = (arg1: any, arg2: any, arg3: any) => void;
 
 export interface MultiSelectDataConfig {
@@ -1669,12 +1668,6 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
         // It is valid when a single selection
         const emptyValue: Record<string, string> = { label: '', value: '', queryString: '' };
         handleSelect(null, JSON.stringify(emptyValue), [], []);
-
-        onChange?.(
-            selectInputRef.current,
-            valueInputRef.current,
-            emptyValue
-        );
 
         // update temporary value
         setControlTempValue(null);

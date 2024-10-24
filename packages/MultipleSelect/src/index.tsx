@@ -71,6 +71,8 @@ export type MultipleSelectProps = {
     fetchFuncMethodParams?: any[];
     fetchCallback?: (data: any) => void;
     onFetch?: (data: any) => void;
+    onAddAll?: (e: any, data: any, dataStr: any) => void;
+    onRemoveAll?: (e: any, data: any, dataStr: any) => void;
     onChange?: (e: any, data: any, dataStr: any, currentData: any, type: string) => void;
 
 };
@@ -113,6 +115,8 @@ const MultipleSelect = forwardRef((props: MultipleSelectProps, externalRef: any)
         fetchFuncMethodParams,
         fetchCallback,
         onFetch,
+        onAddAll,
+        onRemoveAll,
         onChange,
         ...attributes
     } = props;
@@ -392,6 +396,11 @@ const MultipleSelect = forwardRef((props: MultipleSelectProps, externalRef: any)
 
         });
 
+        //
+        onAddAll?.(event, dataInit.map((v: any) => `${v.value}`), VALUE_BY_BRACKETS ? dataInit.map((v: any) => `[${v.value}]`).join('') : dataInit.map((v: any) => v.value).join(''));
+
+        
+
 
     }
 
@@ -404,6 +413,11 @@ const MultipleSelect = forwardRef((props: MultipleSelectProps, externalRef: any)
         items.forEach((item: any) => {
             removeItem(item);
         });
+
+        //
+        onRemoveAll?.(event, [], '');
+
+        
 
     }
 

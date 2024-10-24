@@ -4797,7 +4797,6 @@ var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_
       queryString: ''
     };
     handleSelect(null, JSON.stringify(emptyValue), [], []);
-    onChange === null || onChange === void 0 ? void 0 : onChange(selectInputRef.current, valueInputRef.current, emptyValue);
 
     // update temporary value
     setControlTempValue(null);

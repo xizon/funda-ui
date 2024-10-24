@@ -6,16 +6,22 @@ export interface EventsValueConfig {
     data: string;
     dataTooltip?: string;
     eventStyles?: React.CSSProperties;
+    callback?: () => void;
 }
-export interface TimelineRowFieldConfig {
+export interface TimelineRowSectionConfig {
     id: string | number;
     title: string;
 }
-export interface TimelineValueConfig {
-    listSection: TimelineRowFieldConfig;
-    eventSources: EventsValueConfig[];
+export interface TimelineCellListConfig {
+    date: string;
+    list: EventsValueConfig[];
+}
+export interface TimelineRowListConfig {
+    listSection: TimelineRowSectionConfig;
+    eventSources: TimelineCellListConfig[];
 }
 export declare type EventCalendarTimelineProps = {
+    contentRef?: React.ForwardedRef<any>;
     calendarWrapperClassName?: string;
     tableWrapperClassName?: string;
     tableClassName?: string;
@@ -25,15 +31,18 @@ export declare type EventCalendarTimelineProps = {
     tableListEndClassName?: string;
     tableListDividerClassName?: string;
     customTodayDate?: string;
-    eventsValue?: TimelineValueConfig[];
+    eventsValue?: TimelineRowListConfig[];
     langWeek?: string[];
     langWeekFull?: string[];
     langMonths?: string[];
     langMonthsFull?: string[];
     langToday?: string;
     iconRemove?: React.ReactNode | string;
+    iconAdd?: React.ReactNode | string;
     cellCloseBtnClassName?: string;
     cellCloseBtnLabel?: string | React.ReactNode;
+    cellAddBtnClassName?: string;
+    cellAddBtnLabel?: string | React.ReactNode;
     forwardAndBackFillDisabled?: boolean;
     draggable?: boolean;
     showWeek?: boolean;
@@ -55,12 +64,12 @@ export declare type EventCalendarTimelineProps = {
     modalSubmitBtnLabel?: string | React.ReactNode;
     modalSubmitDeleteBtnClassName?: string;
     modalSubmitDeleteBtnLabel?: string | React.ReactNode;
-    onModalEditOpen?: (currentData: any, openwin: any) => void;
+    onModalEditOpen?: (currentData: any, openwin: any, type: 'normal' | 'new') => void;
     onModalEditClose?: (currentData: any) => void;
-    onModalDeleteOpen?: (currentData: any) => void;
+    onModalDeleteOpen?: (currentData: any, openwin: any) => void;
     onModalDeleteClose?: (currentData: any) => void;
-    onModalEditEvent?: (currentData: any, closewin: any) => void;
-    onModalDeleteEvent?: (currentData: any, closewin: any) => void;
+    onModalEditEvent?: (currentData: any, closewin: any, gridInit: Function) => void;
+    onModalDeleteEvent?: (currentData: any, closewin: any, gridInit: Function) => void;
     onCellMouseEnter?: (el: any) => void;
     onCellMouseLeave?: (el: any) => void;
     onCellClick?: (el: any) => void;

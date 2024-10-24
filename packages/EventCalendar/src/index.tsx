@@ -1,5 +1,6 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useImperativeHandle } from 'react';
 
+import { getTodayDate, getCalendarDate, isValidDate, padZero  } from 'funda-utils/dist/cjs/date';
 import { clsWrite, combinedCls } from 'funda-utils/dist/cjs/cls';
 import ModalDialog from 'funda-modaldialog';
 
@@ -11,10 +12,16 @@ export interface EventsValueConfig {
     time: string,
     data: string,
     eventStyles?: React.CSSProperties;
+    callback?: () => void;
 }
 
+export interface TimelineCellListConfig {
+    date: string;
+    list: EventsValueConfig[];
+}
 
 export type EventCalendarProps = {
+    contentRef?: React.ForwardedRef<any>;
     calendarWrapperClassName?: string;
     customTodayDate?: string;
     eventsValue?: any[];
@@ -24,8 +31,11 @@ export type EventCalendarProps = {
     langMonthsFull?: string[];
     langToday?: string;
     iconRemove?: React.ReactNode | string;
+    iconAdd?: React.ReactNode | string;
     cellCloseBtnClassName?: string;
     cellCloseBtnLabel?: string | React.ReactNode;
+    cellAddBtnClassName?: string;
+    cellAddBtnLabel?: string | React.ReactNode;
     onChangeDate?: (e: any, currentData: any) => void;
     onChangeMonth?: (currentData: any) => void;
     onChangeYear?: (currentData: any) => void;
@@ -45,9 +55,9 @@ export type EventCalendarProps = {
     modalSubmitBtnLabel?: string | React.ReactNode;
     modalSubmitDeleteBtnClassName?: string;
     modalSubmitDeleteBtnLabel?: string | React.ReactNode;
-    onModalEditOpen?: (currentData: any, openwin: any) => void;
+    onModalEditOpen?: (currentData: any, openwin: any, type: 'normal' | 'new') => void;
     onModalEditClose?: (currentData: any) => void;
-    onModalDeleteOpen?: (currentData: any) => void;
+    onModalDeleteOpen?: (currentData: any, openwin: any) => void;
     onModalDeleteClose?: (currentData: any) => void;
     onModalEditEvent?: (currentData: any, closewin: any) => void;
     onModalDeleteEvent?: (currentData: any, closewin: any) => void;
@@ -62,6 +72,7 @@ export type EventCalendarProps = {
 
 const EventCalendar = (props: EventCalendarProps) => {
     const {
+        contentRef,
         calendarWrapperClassName,
         customTodayDate,
         eventsValue,
@@ -70,7 +81,6 @@ const EventCalendar = (props: EventCalendarProps) => {
         langMonths,
         langMonthsFull,
         langToday,
-        iconRemove,
         onChangeDate,
         onChangeMonth,
         onChangeYear,
@@ -78,8 +88,12 @@ const EventCalendar = (props: EventCalendarProps) => {
         onListRenderComplete,
 
         //
+        iconRemove,
+        iconAdd,
         cellCloseBtnClassName,
         cellCloseBtnLabel,
+        cellAddBtnClassName,
+        cellAddBtnLabel,
 
         //
         modalMaskOpacity,
@@ -114,7 +128,7 @@ const EventCalendar = (props: EventCalendarProps) => {
     const MONTHS = langMonths || ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'];
     const MONTHS_FULL = langMonthsFull || ['January', 'Febuary', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 
-    const [val, setVal] = useState<EventsValueConfig[]>([]);
+    const [val, setVal] = useState<TimelineCellListConfig[]>([]);
 
     const now = useMemo(() => new Date(), []);
     const [date, setDate] = useState<Date>(now);
@@ -136,31 +150,70 @@ const EventCalendar = (props: EventCalendarProps) => {
 
     // modal dialog
     const EVENTS_ENABLED = typeof modalContent !== 'undefined';
+    const EVENTS_DELETE_ENABLED = typeof modalDeleteContent !== 'undefined';
     const [showEdit, setShowEdit] = useState<boolean>(false);
     const [showDelete, setShowDelete] = useState<boolean>(false);
     
-    const padZero = (num: number, padZeroEnabled: boolean = true) => {
-        if (padZeroEnabled) {
-            return num < 10 ? '0' + num : num.toString();
-        } else {
-            return num.toString();
+    // Open temporary storage for pop-ups
+    const [tableCellId, setTableCellId] = useState<number>(-1);
+
+    // exposes the following methods
+    useImperativeHandle(
+        contentRef,
+        () => ({
+            gridInit: () => {
+         
+            },
+            gridReset: (cb?: any) => {
+            
+            }
+        }),
+        [contentRef],
+    );
+
+
+    // helper buttons
+    const _delBtn = () => <>
+        {iconRemove ? <>{iconRemove}</> : <><svg width="20px" height="20px" viewBox="0 0 24 24" fill="none"><path fillRule="evenodd" clipRule="evenodd" d="M22 12c0 5.523-4.477 10-10 10S2 17.523 2 12 6.477 2 12 2s10 4.477 10 10ZM8 11a1 1 0 1 0 0 2h8a1 1 0 1 0 0-2H8Z" fill="#000" /></svg></>}
+        {cellCloseBtnLabel || ''}
+    </>;
+
+    const _addBtn = () => <>
+        {iconAdd ? <>{iconAdd}</> : <><svg width="20px" height="20px" viewBox="0 0 32 32"><g stroke="none" strokeWidth="1" fill="none" fillRule="evenodd"><g transform="translate(-102.000000, -1037.000000)" fill="#000000"><path d="M124,1054 L119,1054 L119,1059 C119,1059.55 118.552,1060 118,1060 C117.448,1060 117,1059.55 117,1059 L117,1054 L112,1054 C111.448,1054 111,1053.55 111,1053 C111,1052.45 111.448,1052 112,1052 L117,1052 L117,1047 C117,1046.45 117.448,1046 118,1046 C118.552,1046 119,1046.45 119,1047 L119,1052 L124,1052 C124.552,1052 125,1052.45 125,1053 C125,1053.55 124.552,1054 124,1054 L124,1054 Z M130,1037 L106,1037 C103.791,1037 102,1038.79 102,1041 L102,1065 C102,1067.21 103.791,1069 106,1069 L130,1069 C132.209,1069 134,1067.21 134,1065 L134,1041 C134,1038.79 132.209,1037 130,1037 L130,1037 Z"></path></g></g></svg></>}
+        {cellAddBtnLabel || ''}
+    </>;
+
+
+
+    const queryItemObj = () => {
+        const _perData = val.filter((item: any) => getCalendarDate(item.date as string) === getCalendarDate(`${year}-${month + 1}-${day}`));
+
+        let _currentData: any = undefined;
+        if (_perData[0]) {
+            const _items = _perData[0].list;
+
+
+            if (tableCellId === -1) {
+                // add new
+                _currentData = {
+                    id: 0,
+                    date: getCalendarDate(`${year}-${month + 1}-${day}`)
+                };
+            } else {
+                // edit or delete
+                _currentData = _items.filter((item: any) => item.id == tableCellId)[0];
+            }
+
         }
 
+        return _perData[0] ? _currentData : {
+            id: 0,
+            date: getCalendarDate(`${year}-${month + 1}-${day}`)
+        };
     };
 
-    const isValidDate = (v: string) => {
-        return !(String(new window.Date(v) as any).toLowerCase() === 'invalid date');
-    };
-    
-    const dateFormat = (v: Date | String) => {
-        const date = typeof v === 'string' ? new window.Date(v.replace(/-/g, "/")) : v;  // fix "Invalid date in safari"
-        return date;
-    };
 
-    const getTodayDate = () => {
-        return getCalendarDate(new Date() as any);
-    };
-    
+
 
     // cell
     const getCells = (type: 'none' | 'forward' | 'back' = 'none') => {
@@ -237,29 +290,6 @@ const EventCalendar = (props: EventCalendarProps) => {
             return [];
         }
     };
-
-
-    function getCalendarDate(v: string, padZeroEnabled: boolean = true) {
-        if (typeof v === 'undefined') return '';
-        
-        // yyyy-MM-dd
-        const date = typeof v === 'string' ? new Date(v.replace(/-/g, "/")) : v;  // fix "Invalid date in safari"
-        const padZero = (num: number): string => {
-            if (padZeroEnabled) {
-                return num < 10 ? '0' + num : num.toString();
-            } else {
-                return num.toString();
-            }
-
-        };
-        const year = date.getFullYear();
-        const month = padZero(date.getMonth() + 1);
-        const day = padZero(date.getDate());
-        const hours = padZero(date.getHours());
-        const minutes = padZero(date.getMinutes());
-        const res = `${year}-${month}-${day}`;
-        return res;
-    }
 
 
     function setTodayDate(inputDate: Date) {
@@ -436,47 +466,52 @@ const EventCalendar = (props: EventCalendarProps) => {
         <>
 
             <div className={combinedCls(
-                "e-cal__wrapper",
+                "e-cal-normal__wrapper",
                 calendarWrapperClassName
             )}>
 
 
                 {/*++++++++++++++++ MAIN ++++++++++++++++*/}
-                <div className="e-cal__header bg-body-tertiary">
-                    <button tabIndex={-1} type="button" className="e-cal__btn e-cal__btn--prev" onClick={handlePrevChange}>
+                <div className="e-cal-normal__header bg-body-tertiary">
+                    <button tabIndex={-1} type="button" className="e-cal-normal__btn e-cal-normal__btn--prev" onClick={handlePrevChange}>
                         <svg width="20px" height="20px" viewBox="0 0 24 24" fill="none">
                             <path d="M14.2893 5.70708C13.8988 5.31655 13.2657 5.31655 12.8751 5.70708L7.98768 10.5993C7.20729 11.3805 7.2076 12.6463 7.98837 13.427L12.8787 18.3174C13.2693 18.7079 13.9024 18.7079 14.293 18.3174C14.6835 17.9269 14.6835 17.2937 14.293 16.9032L10.1073 12.7175C9.71678 12.327 9.71678 11.6939 10.1073 11.3033L14.2893 7.12129C14.6799 6.73077 14.6799 6.0976 14.2893 5.70708Z" fill="#000" />
                         </svg>
                     </button>
-                    <div className="e-cal__header__btns">
-                        <button tabIndex={-1} type="button" className={`e-cal__btn ${winMonth ? 'active' : ''}`} onClick={handleShowWinMonth}>
+                    <div className="e-cal-normal__header__btns">
+                        <button tabIndex={-1} type="button" className={`e-cal-normal__btn ${winMonth ? 'active' : ''}`} onClick={handleShowWinMonth}>
                             {MONTHS[month]}
                             <svg width="12px" height="12px" viewBox="0 0 24 24"><path d="M11.178 19.569a.998.998 0 0 0 1.644 0l9-13A.999.999 0 0 0 21 5H3a1.002 1.002 0 0 0-.822 1.569l9 13z" fill="#000000" /></svg>
                         </button>
-                        <button tabIndex={-1} type="button" className={`e-cal__btn ${winYear ? 'active' : ''}`} onClick={handleShowWinYear}>
+                        <button tabIndex={-1} type="button" className={`e-cal-normal__btn ${winYear ? 'active' : ''}`} onClick={handleShowWinYear}>
                             {year}
                             <svg width="12px" height="12px" viewBox="0 0 24 24"><path d="M11.178 19.569a.998.998 0 0 0 1.644 0l9-13A.999.999 0 0 0 21 5H3a1.002 1.002 0 0 0-.822 1.569l9 13z" fill="#000000" /></svg>
                         </button>
                     </div>
-                    <button tabIndex={-1} type="button" className="e-cal__btn e-cal__btn--next" onClick={handleNextChange}>
+                    <button tabIndex={-1} type="button" className="e-cal-normal__btn e-cal-normal__btn--next" onClick={handleNextChange}>
                         <svg width="20px" height="20px" viewBox="0 0 24 24" fill="none">
                             <path d="M9.71069 18.2929C10.1012 18.6834 10.7344 18.6834 11.1249 18.2929L16.0123 13.4006C16.7927 12.6195 16.7924 11.3537 16.0117 10.5729L11.1213 5.68254C10.7308 5.29202 10.0976 5.29202 9.70708 5.68254C9.31655 6.07307 9.31655 6.70623 9.70708 7.09676L13.8927 11.2824C14.2833 11.6729 14.2833 12.3061 13.8927 12.6966L9.71069 16.8787C9.32016 17.2692 9.32016 17.9023 9.71069 18.2929Z" fill="#000" />
                         </svg>
                     </button>
                 </div>
-                <div className="e-cal__body">
+                <div className="e-cal-normal__body">
 
                      {/* week */}
-                     <div className="e-cal__row">
+                     <div className="e-cal-normal__row">
                         {WEEK.map((s: string, i: number) => (
-                            <div className={combinedCls(
-                                'e-cal__cell e-cal__day e-cal__day--week e-cal__day--disabled bg-secondary-subtle empty',
-                                {
-                                    'last-cell': i === WEEK.length-1
-                                }
-                            )} key={i} data-week={i} dangerouslySetInnerHTML={{
-                                __html: s
-                            }} />
+                            <div 
+                                className={combinedCls(
+                                    'e-cal-normal__cell e-cal-normal__day e-cal-normal__day--week e-cal-normal__day--disabled bg-secondary-subtle empty',
+                                    {
+                                        'last-cell': i === WEEK.length-1
+                                    }
+                                )} 
+                                key={i} 
+                                data-week={i} 
+                                dangerouslySetInnerHTML={{
+                                    __html: s
+                                }} 
+                            />
                         ))}
                      </div>
                      {/* /week */}
@@ -494,17 +529,21 @@ const EventCalendar = (props: EventCalendarProps) => {
                         const __backFillNum: number[] = getBackFill();
 
 
-                        return <div key={'row' + item.row} className="e-cal__row">
+                        return <div key={'row' + item.row} className="e-cal-normal__row">
                             {item.col.map((dayIndex: number | null, i: number) => {
                                 const d = typeof dayIndex === 'number' ? dayIndex - (startDay - 2) : 0;
                                 const _currentData = val.filter((item: any) => getCalendarDate(item.date as string) === getCalendarDate(`${year}-${month + 1}-${d}`));
                                 const isLastCol = i === item.col.length-1;
 
-
+                                
                                 // date
                                 let _dateShow = d > 0 ? `${year}-${month+1}-${d}` : '';
 
-                                if (isFirstRow && __forwardFillNum && _dateShow === '') {
+                                const isForward = isFirstRow && __forwardFillNum && typeof __forwardFillNum[i] !== 'undefined';
+                                const isBack = isLastRow && __backFillNum && typeof __backFillNum[i - item.col.filter(Boolean).length] !== 'undefined';
+        
+
+                                if (isForward && _dateShow === '') {
                                     if (month + 1 === 1) {
                                         _dateShow = `${year-1}-12-${__forwardFillNum[i]}`;
                                     } else {
@@ -512,18 +551,125 @@ const EventCalendar = (props: EventCalendarProps) => {
                                     }
                                 }
 
-                                if (isLastRow && __backFillNum && _dateShow === '') {
+                                if (isBack && _dateShow === '') {
                                     if (month + 1 === 12) {
                                         _dateShow = `${year+1}-1-${__backFillNum[i-item.col.filter(Boolean).length]}`;
                                     } else {
                                         _dateShow = `${year}-${month + 2}-${__backFillNum[i-item.col.filter(Boolean).length]}`;
                                     }
                                 }        
+ 
+
+                                const _eventContent = () => {
+
+                                    if (
+                                        _currentData.length === 0 ||
+                                        !Array.isArray(_currentData) ||
+                                        typeof _currentData[0].list === 'undefined'
+                                    ) {
+                                        return null;
+                                    }
+            
+                                    //
+                                    const _items = _currentData[0].list;
+            
+                                    return _items.map((cellItem: any, cellItemIndex: number) => {
+            
+                                        return <div
+                                            className={combinedCls(
+                                                `e-cal-normal__cell-item e-cal-normal__cell-item-${cellItemIndex}`,
+                                                {
+                                                    'first': cellItemIndex === 0,
+                                                    'last': cellItemIndex === _items.length-1
+                                                }
+                                            )}
+                                            key={`cell-item-${cellItemIndex}}`}
+                                            data-date={getCalendarDate(_dateShow)}
+                                            data-day={padZero(d)}
+                                            data-week={i}
+                                            onClick={(e: React.MouseEvent) => {
+                                                e.stopPropagation();
+
+                                                // update cell data
+                                                setTableCellId(cellItem.id);
+
+                                                // Callback
+                                                cellItem.callback?.();
+
+            
+                                                if (d > 0) {
+                                                    handleDayChange(e, d); // update current day
+    
+                                                    onChangeDate?.(e, cellItem);
+    
+                                                    if (EVENTS_ENABLED) {
+                                                        onModalEditOpen?.(cellItem, () => setShowEdit(true), 'normal');
+                                                    }
+                                                }
+                                            }}
+                                        >
+            
+                                            {/* ITEM */}
+                                            <div
+                                                className="e-cal-normal__day__event"
+                                                style={typeof cellItem !== 'undefined' && (cellItem as any).eventStyles !== 'undefined' ? cellItem.eventStyles : {}}
+                                                dangerouslySetInnerHTML={{
+                                                    __html: cellItem.data
+                                                }}
+                                            ></div>
+                                            {/* /ITEM */}
+            
+                                            {/* DELETE BUTTON */}
+                                            <div
+                                                className={`e-cal-normal__day__eventdel ${cellCloseBtnClassName || ''}`}
+                                            >
+                                                <a 
+                                                    href="#" 
+                                                    tabIndex={-1} 
+                                                    className="align-middle" 
+                                                    data-date={getCalendarDate(_dateShow)}
+                                                    data-day={padZero(d)}
+                                                    data-week={i}
+                                                    onClick={(e: React.MouseEvent) => {
+                                                        e.preventDefault();
+                                                        e.stopPropagation();
+
+                                                        // update cell data
+                                                        setTableCellId(cellItem.id);
+                                                        
+
+                                                        const _existsContent = cellItem;
+
+                                                        //
+                                                        if (d > 0) {
+                                                            handleDayChange(e, d); // update current day
+
+                                                            onChangeDate?.(e, {
+                                                                id: 0,
+                                                                date: getCalendarDate(`${year}-${month + 1}-${d}`)
+                                                            });
+
+                                                            if (EVENTS_DELETE_ENABLED) {
+                                                                onModalDeleteOpen?.(_existsContent, () => setShowDelete(true));
+                                                            }
+                                                        }
+                                                        
+                                                    }}
+                                                >
+                                                    {_delBtn()}
+                                                </a>
+            
+                                            </div>
+                                            {/* /DELETE BUTTON */}
+                                        </div>
+                                    });
+                                };
+            
 
                                 return (
                                     <div
                                         className={combinedCls(
-                                            'e-cal__cell e-cal__day',
+                                            'e-cal-normal__cell e-cal-normal__day',
                                             {
                                                 'empty': d <= 0,
                                                 'today': d === now.getDate(),
@@ -545,66 +691,73 @@ const EventCalendar = (props: EventCalendarProps) => {
                                         onClick={(e: React.MouseEvent) => {
                                             //
                                             onCellClick?.(e);
-        
+
                                             if (d > 0) {
-                                                handleDayChange(e, d);
-
-                                                onChangeDate?.(e, _currentData.length === 0 ? {
-                                                    id: 0,
-                                                    date: getCalendarDate(`${year}-${month + 1}-${d}`)
-                                                } : _currentData[0]);
-
-                                                if (EVENTS_ENABLED) {
-                                                    onModalEditOpen?.(_currentData.length === 0 ? {
-                                                        id: 0,
-                                                        date: getCalendarDate(`${year}-${month + 1}-${d}`)
-                                                    } : _currentData[0], () => setShowEdit(true));
-                                                }
+                                                handleDayChange(e, d); // update current day
+                                                onChangeDate?.(e, null);
                                             }
                                         }}
+                                        
                                     >
                                         
                                         {/* forward fill */}
-                                        {isFirstRow && __forwardFillNum && typeof __forwardFillNum[i] !== 'undefined' ? <><span className="disabled">{__forwardFillNum[i]}</span></> : null}
+                                        {isForward ? <><span className="disabled">{__forwardFillNum[i]}</span></> : null}
 
                                         {/* day */}
                                         {d > 0 ? <span>{d}</span> : null}
 
                                         {/* back fill */}
-                                        {isLastRow && __backFillNum  && typeof __backFillNum[i-item.col.filter(Boolean).length] !== 'undefined'? <span className="disabled">{__backFillNum[i-item.col.filter(Boolean).length]}</span> : null}
+                                        {isBack? <span className="disabled">{__backFillNum[i-item.col.filter(Boolean).length]}</span> : null}
 
                                         {/*++++++++++++++++ EVENT ++++++++++++++++*/}
-                                        {_currentData.length > 0 ? <>
-                                            <div
-                                                className="e-cal__day__event"
-                                                style={typeof _currentData[0] !== 'undefined' && (_currentData[0] as any).eventStyles !== 'undefined' ? _currentData[0].eventStyles : {}}
-                                                dangerouslySetInnerHTML={{
-                                                    __html: _currentData[0].data
-                                                }}
-                                            ></div>
+                                        {_eventContent()}
+                                        {/*++++++++++++++++ /EVENT ++++++++++++++++*/}
 
+                                        {/* ADD BUTTON */}
+                                        {isForward || isBack ? null : <>
                                             <div
-                                                className={`e-cal__day__eventdel ${cellCloseBtnClassName || ''}`}
+                                                className={`e-cal-normal__day__eventadd ${cellAddBtnClassName || ''}`}
                                             >
-                                                <a href="#" tabIndex={-1} className="align-middle" onClick={(e: React.MouseEvent) => {
-                                                    e.preventDefault();
-                                                    e.stopPropagation();
-                                                    setShowDelete(true);
+                                                <a 
+                                                    href="#" 
+                                                    tabIndex={-1} 
+                                                    className="align-middle" 
+                                                    data-date={getCalendarDate(_dateShow)}
+                                                    data-day={padZero(d)}
+                                                    data-week={i}
+                                                    onClick={(e: React.MouseEvent) => {
+                                                        e.preventDefault();
+                                                        e.stopPropagation();
 
-                                                    onModalDeleteOpen?.(_currentData.length === 0 ? {
-                                                        id: 0,
-                                                        date: getCalendarDate(`${year}-${month + 1}-${d}`)
-                                                    } : _currentData[0]);
-                                                }}>
-                                                    {iconRemove ? <>{iconRemove}</> : <><svg width="20px" height="20px" viewBox="0 0 24 24" fill="none"><path fillRule="evenodd" clipRule="evenodd" d="M22 12c0 5.523-4.477 10-10 10S2 17.523 2 12 6.477 2 12 2s10 4.477 10 10ZM8 11a1 1 0 1 0 0 2h8a1 1 0 1 0 0-2H8Z" fill="#000" /></svg></>}
-                                                    {cellCloseBtnLabel || ''}
+                                                        // update cell data
+                                                        setTableCellId(-1);
+
+                                                        //
+                                                        if (d > 0) {
+                                                            handleDayChange(e, d); // update current day
+
+                                                            onChangeDate?.(e, {
+                                                                id: 0,
+                                                                date: getCalendarDate(`${year}-${month + 1}-${d}`)
+                                                            });
+
+                                                            if (EVENTS_ENABLED) {
+                                                                onModalEditOpen?.({
+                                                                    id: 0,
+                                                                    date: getCalendarDate(`${year}-${month + 1}-${d}`)
+                                                                }, () => setShowEdit(true), 'new');
+                                                            }
+                                                        }
+                                                    }}
+                                                >
+                                                    {_addBtn()}
                                                 </a>
 
                                             </div>
+                                        </>}
+                                        {/* /ADD BUTTON */}
+                                
 
-
-                                        </> : null}
-                                        {/*++++++++++++++++ /EVENT ++++++++++++++++*/}
                                     </div>
                                 );
                             })}
@@ -619,12 +772,12 @@ const EventCalendar = (props: EventCalendarProps) => {
 
 
                 {/*++++++++++++++++ MONTH SELECTION TAB ++++++++++++++++*/}
-                <div className={`e-cal__month-wrapper shadow p-3 mb-5 bg-body-tertiary rounded ${winMonth ? 'active' : ''}`}>
-                    <div className="e-cal__month-container">
+                <div className={`e-cal-normal__month-wrapper shadow p-3 mb-5 bg-body-tertiary rounded ${winMonth ? 'active' : ''}`}>
+                    <div className="e-cal-normal__month-container">
                         {MONTHS_FULL.map((month, index) => {
                             return <div 
                                 data-month={padZero(index+1)}
-                                className={`e-cal__month ${selectedMonth === index ? ' selected' : ''}`} 
+                                className={`e-cal-normal__month ${selectedMonth === index ? ' selected' : ''}`} 
                                 key={month + index} 
                                 onClick={() => { handleMonthChange(index) }}
                             >{month}</div>
@@ -634,12 +787,12 @@ const EventCalendar = (props: EventCalendarProps) => {
                 {/*++++++++++++++++ /MONTH SELECTION TAB ++++++++++++++++*/}
 
                 {/*++++++++++++++++ YEAR SELECTION TAB ++++++++++++++++*/}
-                <div className={`e-cal__year-wrapper shadow p-3 mb-5 bg-body-tertiary rounded ${winYear ? 'active' : ''}`}>
-                    <div className="e-cal__year-container bg-body-tertiary">
+                <div className={`e-cal-normal__year-wrapper shadow p-3 mb-5 bg-body-tertiary rounded ${winYear ? 'active' : ''}`}>
+                    <div className="e-cal-normal__year-container bg-body-tertiary">
                         {yearsArray.map((year, index) => {
                             return <div 
                                 data-year={year}
-                                className={`e-cal__year ${selectedYear === year ? ' selected' : ''}`} 
+                                className={`e-cal-normal__year ${selectedYear === year ? ' selected' : ''}`} 
                                 key={year + index} 
                                 onClick={() => { handleYearChange(year) }}
                             >{year}</div>
@@ -652,8 +805,8 @@ const EventCalendar = (props: EventCalendarProps) => {
 
 
                 {/*++++++++++++++++ TODAY SELECTION TAB ++++++++++++++++*/}
-                <div className="e-cal__today-wrapper p-2 bg-body-tertiary">
-                    <button tabIndex={-1} type="button" className="e-cal__btn e-cal__btn--today" onClick={handleTodayChange}>
+                <div className="e-cal-normal__today-wrapper p-2 bg-body-tertiary">
+                    <button tabIndex={-1} type="button" className="e-cal-normal__btn e-cal-normal__btn--today" onClick={handleTodayChange}>
                         {langToday || 'Today'}
                     </button>
                 </div>
@@ -680,21 +833,11 @@ const EventCalendar = (props: EventCalendarProps) => {
 
                         setTimeout(() => {
                             setShowDelete(false);
-
-                            const _currentData = val.filter((item: any) => getCalendarDate(item.date as string) === getCalendarDate(`${year}-${month + 1}-${day}`));
-                            onModalDeleteClose?.(_currentData.length === 0 ? {
-                                id: 0,
-                                date: getCalendarDate(`${year}-${month + 1}-${day}`)
-                            } : _currentData[0]);
+                            onModalDeleteClose?.(queryItemObj());
                         }, 350);
                     }}
                     onSubmit={async (e: any, closewin: Function, data: any) => {
-
-                        const _currentData = val.filter((item: any) => getCalendarDate(item.date as string) === getCalendarDate(`${year}-${month + 1}-${day}`));
-                        onModalDeleteEvent?.(_currentData.length === 0 ? {
-                            id: 0,
-                            date: getCalendarDate(`${year}-${month + 1}-${day}`)
-                        } : _currentData[0], closewin);
+                        onModalDeleteEvent?.(queryItemObj(), closewin);
 
                     }}
                 >
@@ -720,21 +863,11 @@ const EventCalendar = (props: EventCalendarProps) => {
                     onClose={(e) => {
                         setTimeout(() => {
                             setShowEdit(false);
-
-                            const _currentData = val.filter((item: any) => getCalendarDate(item.date as string) === getCalendarDate(`${year}-${month + 1}-${day}`));
-                            onModalEditClose?.(_currentData.length === 0 ? {
-                                id: 0,
-                                date: getCalendarDate(`${year}-${month + 1}-${day}`)
-                            } : _currentData[0]);
+                            onModalEditClose?.(queryItemObj());
                         }, 350);
                     }}
                     onSubmit={async (e: any, closewin: Function, data: any) => {
-
-                        const _currentData = val.filter((item: any) => getCalendarDate(item.date as string) === getCalendarDate(`${year}-${month + 1}-${day}`));
-                        onModalEditEvent?.(_currentData.length === 0 ? {
-                            id: 0,
-                            date: getCalendarDate(`${year}-${month + 1}-${day}`)
-                        } : _currentData[0], closewin);
+                        onModalEditEvent?.(queryItemObj(), closewin);
 
                     }}
                 >

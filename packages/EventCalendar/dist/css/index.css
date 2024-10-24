@@ -1,72 +1,74 @@
 /* ======================================================
    <!-- Event Calendar -->
 /* ====================================================== */
-.e-cal__wrapper {
-  --e-cal-wrapper-min-width: 400px;
-  --e-cal-body-bg: #fff;
-  --e-cal-border-color: #ddd;
-  --e-cal-border-color-hover: #333;
-  --e-cal-header-fs: 1.125rem;
-  --e-cal-default-border-color: #eee;
-  --e-cal-day-border-color: #ddd;
-  --e-cal-day-hover-bg: #f6f6f6;
-  --e-cal-dayselected-bg: #0b5ed7;
-  --e-cal-dayselected-text-color: #fff;
-  --e-cal-year-month-btn-border-color: #ddd;
-  --e-cal-year-month-btn-hover-bg: rgba(0, 58, 166, .1);
-  --e-cal-year-month-btn-selected-bg: rgba(0, 58, 166, 1);
-  --e-cal-year-month-btn-selected-color: #fff;
-  --e-cal-month-wrapper-w: 18.75rem;
-  --e-cal-year-wrapper-w: 18.75rem;
-  --e-cal-header-arrow-bg: #000;
-  --e-cal-header-text-color: #000;
-  --e-cal-header-prevnext-btn-bg: transparent;
-  --e-cal-header-prevnext-btn-color: #000;
-  --e-cal-header-prevnext-btn-radius: 0.25rem;
-  --e-cal-delete-btn-color: #ee4949;
-  --e-cal-footer-today-btn-bg: rgba(0, 58, 166, 1);
-  --e-cal-footer-today-btn-color: #fff;
-  --e-cal-event-bg: rgb(255, 240, 227);
+.e-cal-normal__wrapper {
+  --e-cal-normal-wrapper-min-width: 400px;
+  --e-cal-normal-body-bg: #fff;
+  --e-cal-normal-border-color: #ddd;
+  --e-cal-normal-border-color-hover: #333;
+  --e-cal-normal-header-fs: 1.125rem;
+  --e-cal-normal-default-border-color: #eee;
+  --e-cal-normal-day-border-color: #ddd;
+  --e-cal-normal-day-hover-bg: #f6f6f6;
+  --e-cal-normal-dayselected-bg: #0b5ed7;
+  --e-cal-normal-dayselected-text-color: #fff;
+  --e-cal-normal-year-month-btn-border-color: #ddd;
+  --e-cal-normal-year-month-btn-hover-bg: rgba(0, 58, 166, .1);
+  --e-cal-normal-year-month-btn-selected-bg: rgba(0, 58, 166, 1);
+  --e-cal-normal-year-month-btn-selected-color: #fff;
+  --e-cal-normal-month-wrapper-w: 18.75rem;
+  --e-cal-normal-year-wrapper-w: 18.75rem;
+  --e-cal-normal-header-arrow-bg: #000;
+  --e-cal-normal-header-text-color: #000;
+  --e-cal-normal-header-prevnext-btn-bg: transparent;
+  --e-cal-normal-header-prevnext-btn-color: #000;
+  --e-cal-normal-header-prevnext-btn-radius: 0.25rem;
+  --e-cal-normal-table-add-btn-color: #0b5ed7;
+  --e-cal-normal-delete-btn-color: #ee4949;
+  --e-cal-normal-footer-today-btn-bg: rgba(0, 58, 166, 1);
+  --e-cal-normal-footer-today-btn-color: #fff;
+  --e-cal-normal-event-default-bg: rgb(255, 240, 227);
+  --e-cal-normal-table-event-font-size: 0.75rem;
   position: relative;
-  min-width: var(--e-cal-wrapper-min-width);
-  border: 1px solid var(--e-cal-border-color);
+  min-width: var(--e-cal-normal-wrapper-min-width);
+  border: 1px solid var(--e-cal-normal-border-color);
   /* --HEADER --*/
   /*-- BODY --*/
   /*-- CELL --*/
   /*-- SELECTION --*/
   /* --BUTTON --*/
 }
-.e-cal__wrapper .e-cal__header {
-  font-size: var(--e-cal-header-fs);
+.e-cal-normal__wrapper .e-cal-normal__header {
+  font-size: var(--e-cal-normal-header-fs);
   font-weight: bold;
   padding: 10px 10px 5px 10px;
   display: flex;
   justify-content: space-between;
 }
-.e-cal__wrapper .e-cal__header .e-cal__header__btns .e-cal__btn {
+.e-cal-normal__wrapper .e-cal-normal__header .e-cal-normal__header__btns .e-cal-normal__btn {
   margin-right: 1rem;
-  color: var(--e-cal-header-text-color);
+  color: var(--e-cal-normal-header-text-color);
 }
-.e-cal__wrapper .e-cal__header .e-cal__header__btns .e-cal__btn svg {
+.e-cal-normal__wrapper .e-cal-normal__header .e-cal-normal__header__btns .e-cal-normal__btn svg {
   margin-left: 0.3rem;
 }
-.e-cal__wrapper .e-cal__header .e-cal__header__btns .e-cal__btn svg path {
-  fill: var(--e-cal-header-arrow-bg);
+.e-cal-normal__wrapper .e-cal-normal__header .e-cal-normal__header__btns .e-cal-normal__btn svg path {
+  fill: var(--e-cal-normal-header-arrow-bg);
 }
-.e-cal__wrapper .e-cal__header .e-cal__header__btns .e-cal__btn.active svg {
+.e-cal-normal__wrapper .e-cal-normal__header .e-cal-normal__header__btns .e-cal-normal__btn.active svg {
   transform: rotate(180deg);
 }
-.e-cal__wrapper .e-cal__body {
-  background: var(--e-cal-body-bg);
+.e-cal-normal__wrapper .e-cal-normal__body {
+  background: var(--e-cal-normal-body-bg);
   width: 100%;
   display: flex;
   flex-wrap: wrap;
 }
-.e-cal__wrapper .e-cal__row {
+.e-cal-normal__wrapper .e-cal-normal__row {
   display: flex;
   width: 100%;
 }
-.e-cal__wrapper .e-cal__row .e-cal__cell {
+.e-cal-normal__wrapper .e-cal-normal__row .e-cal-normal__cell {
   flex: 1;
   position: relative;
   height: auto;
@@ -77,51 +79,95 @@
   flex-direction: column;
   text-align: center;
   border-width: 0;
-  border-color: var(--e-cal-default-border-color);
+  border-color: var(--e-cal-normal-default-border-color);
   border-style: solid;
   border-top-width: 1px;
   border-right-width: 1px;
+  /* Delete button */
+  /* Add button */
+  /* DAY NUMBER */
+  /* ITEMS */
 }
-.e-cal__wrapper .e-cal__row .e-cal__cell.disabled {
+.e-cal-normal__wrapper .e-cal-normal__row .e-cal-normal__cell.disabled {
   opacity: 0.4;
   pointer-events: none;
 }
-.e-cal__wrapper .e-cal__row .e-cal__cell.last-cell {
+.e-cal-normal__wrapper .e-cal-normal__row .e-cal-normal__cell.last-cell {
   border-right-width: 0;
 }
-.e-cal__wrapper .e-cal__row .e-cal__cell.last-row {
+.e-cal-normal__wrapper .e-cal-normal__row .e-cal-normal__cell.last-row {
   border-bottom-width: 1px;
 }
-.e-cal__wrapper .e-cal__row .e-cal__cell.e-cal__day--week {
+.e-cal-normal__wrapper .e-cal-normal__row .e-cal-normal__cell.e-cal-normal__day--week {
   min-height: 2.75em;
   align-items: end;
   padding-inline-end: 0.75rem;
 }
-.e-cal__wrapper .e-cal__row .e-cal__cell .e-cal__day__event {
-  background-color: var(--e-cal-event-bg);
-  width: 100%;
-  padding: 0.1rem 0.5rem;
-  margin: 0.5rem;
-  border-radius: 0;
-  margin-top: 2.5rem;
-  text-align: left;
-  font-size: 0.75rem;
+.e-cal-normal__wrapper .e-cal-normal__row .e-cal-normal__cell:not(.empty):hover {
+  background-color: var(--e-cal-normal-day-hover-bg);
 }
-.e-cal__wrapper .e-cal__row .e-cal__cell .e-cal__day__eventdel {
+.e-cal-normal__wrapper .e-cal-normal__row .e-cal-normal__cell .e-cal-normal__day__event {
+  margin-bottom: 1px;
+  font-size: var(--e-cal-normal-table-event-font-size);
+  background-color: var(--e-cal-normal-event-default-bg);
+  text-align: left;
+}
+.e-cal-normal__wrapper .e-cal-normal__row .e-cal-normal__cell .e-cal-normal__day__event:hover {
+  cursor: pointer;
+  opacity: 0.8;
+}
+.e-cal-normal__wrapper .e-cal-normal__row .e-cal-normal__cell .e-cal-normal__cell-item.first {
+  margin-top: 2.5rem;
+}
+.e-cal-normal__wrapper .e-cal-normal__row .e-cal-normal__cell .e-cal-normal__day__eventdel {
+  position: absolute;
+  z-index: 1;
+  right: -5px;
+  top: 0;
+  display: none;
+  color: var(--e-cal-normal-delete-btn-color);
+}
+.e-cal-normal__wrapper .e-cal-normal__row .e-cal-normal__cell .e-cal-normal__day__eventdel svg {
+  width: 10px;
+  fill: var(--e-cal-normal-delete-btn-color);
+}
+.e-cal-normal__wrapper .e-cal-normal__row .e-cal-normal__cell .e-cal-normal__day__eventdel svg path {
+  fill: var(--e-cal-normal-delete-btn-color);
+}
+.e-cal-normal__wrapper .e-cal-normal__row .e-cal-normal__cell .e-cal-normal__day__eventdel:hover svg {
+  transform: scale(1.2);
+}
+.e-cal-normal__wrapper .e-cal-normal__row .e-cal-normal__cell:not(.empty) .e-cal-normal__cell-item:hover .e-cal-normal__day__eventdel {
+  display: block;
+}
+.e-cal-normal__wrapper .e-cal-normal__row .e-cal-normal__cell .e-cal-normal__day__eventadd {
   position: absolute;
   z-index: 1;
   left: 0;
-  top: 0;
+  bottom: -8.5px;
   display: none;
-  color: var(--e-cal-delete-btn-color);
+  width: 20px;
+  color: var(--e-cal-normal-table-add-btn-color);
+  text-align: left;
+  pointer-events: none;
 }
-.e-cal__wrapper .e-cal__row .e-cal__cell .e-cal__day__eventdel svg {
-  fill: var(--e-cal-delete-btn-color);
+.e-cal-normal__wrapper .e-cal-normal__row .e-cal-normal__cell .e-cal-normal__day__eventadd > a {
+  pointer-events: auto;
 }
-.e-cal__wrapper .e-cal__row .e-cal__cell .e-cal__day__eventdel svg path {
-  fill: var(--e-cal-delete-btn-color);
+.e-cal-normal__wrapper .e-cal-normal__row .e-cal-normal__cell .e-cal-normal__day__eventadd svg {
+  width: 15px;
+  fill: var(--e-cal-normal-table-add-btn-color);
 }
-.e-cal__wrapper .e-cal__row .e-cal__cell > span {
+.e-cal-normal__wrapper .e-cal-normal__row .e-cal-normal__cell .e-cal-normal__day__eventadd svg path {
+  fill: var(--e-cal-normal-table-add-btn-color);
+}
+.e-cal-normal__wrapper .e-cal-normal__row .e-cal-normal__cell .e-cal-normal__day__eventadd:hover svg {
+  transform: scale(1.2);
+}
+.e-cal-normal__wrapper .e-cal-normal__row .e-cal-normal__cell:hover .e-cal-normal__day__eventadd {
+  display: block;
+}
+.e-cal-normal__wrapper .e-cal-normal__row .e-cal-normal__cell > span {
   position: absolute;
   right: 0.25rem;
   top: 0.25rem;
@@ -133,25 +179,23 @@
   line-height: 1.5;
   margin: 0.5rem 0;
 }
-.e-cal__wrapper .e-cal__row .e-cal__cell > span.disabled {
+.e-cal-normal__wrapper .e-cal-normal__row .e-cal-normal__cell > span.disabled {
   opacity: 0.2;
 }
-.e-cal__wrapper .e-cal__row .e-cal__cell:not(.empty) {
+.e-cal-normal__wrapper .e-cal-normal__row .e-cal-normal__cell > div {
+  position: relative;
+  width: 100%;
+}
+.e-cal-normal__wrapper .e-cal-normal__row .e-cal-normal__cell:not(.empty) {
   cursor: pointer;
 }
-.e-cal__wrapper .e-cal__row .e-cal__cell.selected > span {
-  color: var(--e-cal-dayselected-text-color);
-  background-color: var(--e-cal-dayselected-bg);
+.e-cal-normal__wrapper .e-cal-normal__row .e-cal-normal__cell.selected > span {
+  color: var(--e-cal-normal-dayselected-text-color);
+  background-color: var(--e-cal-normal-dayselected-bg);
 }
-.e-cal__wrapper .e-cal__row .e-cal__cell:not(.empty):hover {
-  background-color: var(--e-cal-day-hover-bg);
-}
-.e-cal__wrapper .e-cal__row .e-cal__cell:not(.empty):hover .e-cal__day__eventdel {
-  display: block;
-}
-.e-cal__wrapper .e-cal__month-wrapper {
+.e-cal-normal__wrapper .e-cal-normal__month-wrapper {
   position: absolute;
-  width: var(--e-cal-month-wrapper-w);
+  width: var(--e-cal-normal-month-wrapper-w);
   height: auto;
   z-index: 1;
   top: calc(1rem + 22px);
@@ -159,18 +203,18 @@
   transform: translateX(-50%);
   display: none;
 }
-.e-cal__wrapper .e-cal__month-wrapper.active {
+.e-cal-normal__wrapper .e-cal-normal__month-wrapper.active {
   display: block;
 }
-.e-cal__wrapper .e-cal__month-wrapper .e-cal__month-container {
+.e-cal-normal__wrapper .e-cal-normal__month-wrapper .e-cal-normal__month-container {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   grid-template-rows: repeat(4, 2.5em);
   grid-gap: 10px;
 }
-.e-cal__wrapper .e-cal__year-wrapper {
+.e-cal-normal__wrapper .e-cal-normal__year-wrapper {
   position: absolute;
-  width: var(--e-cal-year-wrapper-w);
+  width: var(--e-cal-normal-year-wrapper-w);
   height: auto;
   z-index: 1;
   top: calc(1rem + 22px);
@@ -178,41 +222,41 @@
   transform: translateX(-50%);
   display: none;
 }
-.e-cal__wrapper .e-cal__year-wrapper.active {
+.e-cal-normal__wrapper .e-cal-normal__year-wrapper.active {
   display: block;
 }
-.e-cal__wrapper .e-cal__year-wrapper .e-cal__year-container {
+.e-cal-normal__wrapper .e-cal-normal__year-wrapper .e-cal-normal__year-container {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   grid-template-rows: repeat(5, 2.5em);
   grid-gap: 5px;
 }
-.e-cal__wrapper .e-cal__year,
-.e-cal__wrapper .e-cal__month {
+.e-cal-normal__wrapper .e-cal-normal__year,
+.e-cal-normal__wrapper .e-cal-normal__month {
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 5px;
   font-size: 0.875em;
-  border: 1px solid var(--e-cal-year-month-btn-border-color);
+  border: 1px solid var(--e-cal-normal-year-month-btn-border-color);
   border-radius: 0.25rem;
   cursor: pointer;
 }
-.e-cal__wrapper .e-cal__year:hover,
-.e-cal__wrapper .e-cal__month:hover {
-  background-color: var(--e-cal-year-month-btn-hover-bg);
+.e-cal-normal__wrapper .e-cal-normal__year:hover,
+.e-cal-normal__wrapper .e-cal-normal__month:hover {
+  background-color: var(--e-cal-normal-year-month-btn-hover-bg);
 }
-.e-cal__wrapper .e-cal__year.selected,
-.e-cal__wrapper .e-cal__month.selected {
-  background-color: var(--e-cal-year-month-btn-selected-bg);
-  color: var(--e-cal-year-month-btn-selected-color);
+.e-cal-normal__wrapper .e-cal-normal__year.selected,
+.e-cal-normal__wrapper .e-cal-normal__month.selected {
+  background-color: var(--e-cal-normal-year-month-btn-selected-bg);
+  color: var(--e-cal-normal-year-month-btn-selected-color);
 }
-.e-cal__wrapper .e-cal__year.disabled,
-.e-cal__wrapper .e-cal__month.disabled {
+.e-cal-normal__wrapper .e-cal-normal__year.disabled,
+.e-cal-normal__wrapper .e-cal-normal__month.disabled {
   opacity: 0.4;
   pointer-events: none;
 }
-.e-cal__wrapper .e-cal__btn {
+.e-cal-normal__wrapper .e-cal-normal__btn {
   border: none;
   outline: none;
   background: none;
@@ -224,26 +268,26 @@
   display: inline-flex;
   align-items: center;
 }
-.e-cal__wrapper .e-cal__btn svg path {
-  fill: var(--e-cal-header-arrow-bg);
+.e-cal-normal__wrapper .e-cal-normal__btn svg path {
+  fill: var(--e-cal-normal-header-arrow-bg);
 }
-.e-cal__wrapper .e-cal__btn.disabled {
+.e-cal-normal__wrapper .e-cal-normal__btn.disabled {
   opacity: 0.4;
   pointer-events: none;
 }
-.e-cal__wrapper .e-cal__btn--prev, .e-cal__wrapper .e-cal__btn--next {
-  border-radius: var(--e-cal-header-prevnext-btn-radius);
-  color: var(--e-cal-header-prevnext-btn-color);
-  background-color: var(--e-cal-header-prevnext-btn-bg);
+.e-cal-normal__wrapper .e-cal-normal__btn--prev, .e-cal-normal__wrapper .e-cal-normal__btn--next {
+  border-radius: var(--e-cal-normal-header-prevnext-btn-radius);
+  color: var(--e-cal-normal-header-prevnext-btn-color);
+  background-color: var(--e-cal-normal-header-prevnext-btn-bg);
 }
-.e-cal__wrapper .e-cal__btn--prev svg path, .e-cal__wrapper .e-cal__btn--next svg path {
-  fill: var(--e-cal-header-prevnext-btn-color);
+.e-cal-normal__wrapper .e-cal-normal__btn--prev svg path, .e-cal-normal__wrapper .e-cal-normal__btn--next svg path {
+  fill: var(--e-cal-normal-header-prevnext-btn-color);
 }
-.e-cal__wrapper .e-cal__btn--today {
-  border: 1px solid var(--e-cal-border-color);
+.e-cal-normal__wrapper .e-cal-normal__btn--today {
+  border: 1px solid var(--e-cal-normal-border-color);
   border-radius: 0.25rem;
   font-size: 0.875em;
   padding: 0.2rem 1rem;
-  color: var(--e-cal-footer-today-btn-color);
-  background-color: var(--e-cal-footer-today-btn-bg);
+  color: var(--e-cal-normal-footer-today-btn-color);
+  background-color: var(--e-cal-normal-footer-today-btn-bg);
 }

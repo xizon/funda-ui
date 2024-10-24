@@ -2049,6 +2049,604 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 
 /***/ }),
 
+/***/ 322:
+/***/ (function(module, exports, __webpack_require__) {
+
+/* module decorator */ module = __webpack_require__.nmd(module);
+var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
+(function webpackUniversalModuleDefinition(root, factory) {
+  if (( false ? 0 : _typeof(exports)) === 'object' && ( false ? 0 : _typeof(module)) === 'object') module.exports = factory();else if (true) !(__WEBPACK_AMD_DEFINE_ARRAY__ = [], __WEBPACK_AMD_DEFINE_FACTORY__ = (factory),
+		__WEBPACK_AMD_DEFINE_RESULT__ = (typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ?
+		(__WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__)) : __WEBPACK_AMD_DEFINE_FACTORY__),
+		__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));else {}
+})(this, function () {
+  return (/******/function () {
+      // webpackBootstrap
+      /******/
+      "use strict";
+
+      /******/ // The require scope
+      /******/
+      var __nested_webpack_require_987__ = {};
+      /******/
+      /************************************************************************/
+      /******/ /* webpack/runtime/define property getters */
+      /******/
+      (function () {
+        /******/ // define getter functions for harmony exports
+        /******/__nested_webpack_require_987__.d = function (exports, definition) {
+          /******/for (var key in definition) {
+            /******/if (__nested_webpack_require_987__.o(definition, key) && !__nested_webpack_require_987__.o(exports, key)) {
+              /******/Object.defineProperty(exports, key, {
+                enumerable: true,
+                get: definition[key]
+              });
+              /******/
+            }
+            /******/
+          }
+          /******/
+        };
+        /******/
+      })();
+      /******/
+      /******/ /* webpack/runtime/hasOwnProperty shorthand */
+      /******/
+      (function () {
+        /******/__nested_webpack_require_987__.o = function (obj, prop) {
+          return Object.prototype.hasOwnProperty.call(obj, prop);
+        };
+        /******/
+      })();
+      /******/
+      /******/ /* webpack/runtime/make namespace object */
+      /******/
+      (function () {
+        /******/ // define __esModule on exports
+        /******/__nested_webpack_require_987__.r = function (exports) {
+          /******/if (typeof Symbol !== 'undefined' && Symbol.toStringTag) {
+            /******/Object.defineProperty(exports, Symbol.toStringTag, {
+              value: 'Module'
+            });
+            /******/
+          }
+          /******/
+          Object.defineProperty(exports, '__esModule', {
+            value: true
+          });
+          /******/
+        };
+        /******/
+      })();
+      /******/
+      /************************************************************************/
+      var __webpack_exports__ = {};
+      __nested_webpack_require_987__.r(__webpack_exports__);
+      /* harmony export */
+      __nested_webpack_require_987__.d(__webpack_exports__, {
+        /* harmony export */"dateFormat": function dateFormat() {
+          return (/* binding */_dateFormat
+          );
+        },
+        /* harmony export */"getCalendarDate": function getCalendarDate() {
+          return (/* binding */_getCalendarDate
+          );
+        },
+        /* harmony export */"getCurrentDate": function getCurrentDate() {
+          return (/* binding */_getCurrentDate
+          );
+        },
+        /* harmony export */"getCurrentDay": function getCurrentDay() {
+          return (/* binding */_getCurrentDay
+          );
+        },
+        /* harmony export */"getCurrentMonth": function getCurrentMonth() {
+          return (/* binding */_getCurrentMonth
+          );
+        },
+        /* harmony export */"getCurrentYear": function getCurrentYear() {
+          return (/* binding */_getCurrentYear
+          );
+        },
+        /* harmony export */"getFirstAndLastMonthDay": function getFirstAndLastMonthDay() {
+          return (/* binding */_getFirstAndLastMonthDay
+          );
+        },
+        /* harmony export */"getFullTime": function getFullTime() {
+          return (/* binding */_getFullTime
+          );
+        },
+        /* harmony export */"getLastDayInMonth": function getLastDayInMonth() {
+          return (/* binding */_getLastDayInMonth
+          );
+        },
+        /* harmony export */"getNextMonthDate": function getNextMonthDate() {
+          return (/* binding */_getNextMonthDate
+          );
+        },
+        /* harmony export */"getNextYearDate": function getNextYearDate() {
+          return (/* binding */_getNextYearDate
+          );
+        },
+        /* harmony export */"getNow": function getNow() {
+          return (/* binding */_getNow
+          );
+        },
+        /* harmony export */"getPrevMonthDate": function getPrevMonthDate() {
+          return (/* binding */_getPrevMonthDate
+          );
+        },
+        /* harmony export */"getPrevYearDate": function getPrevYearDate() {
+          return (/* binding */_getPrevYearDate
+          );
+        },
+        /* harmony export */"getSpecifiedDate": function getSpecifiedDate() {
+          return (/* binding */_getSpecifiedDate
+          );
+        },
+        /* harmony export */"getTodayDate": function getTodayDate() {
+          return (/* binding */_getTodayDate
+          );
+        },
+        /* harmony export */"getTomorrowDate": function getTomorrowDate() {
+          return (/* binding */_getTomorrowDate
+          );
+        },
+        /* harmony export */"getYesterdayDate": function getYesterdayDate() {
+          return (/* binding */_getYesterdayDate
+          );
+        },
+        /* harmony export */"isTimeString": function isTimeString() {
+          return (/* binding */_isTimeString
+          );
+        },
+        /* harmony export */"isValidDate": function isValidDate() {
+          return (/* binding */_isValidDate
+          );
+        },
+        /* harmony export */"isValidDay": function isValidDay() {
+          return (/* binding */_isValidDay
+          );
+        },
+        /* harmony export */"isValidHours": function isValidHours() {
+          return (/* binding */_isValidHours
+          );
+        },
+        /* harmony export */"isValidMinutesAndSeconds": function isValidMinutesAndSeconds() {
+          return (/* binding */_isValidMinutesAndSeconds
+          );
+        },
+        /* harmony export */"isValidMonth": function isValidMonth() {
+          return (/* binding */_isValidMonth
+          );
+        },
+        /* harmony export */"isValidYear": function isValidYear() {
+          return (/* binding */_isValidYear
+          );
+        },
+        /* harmony export */"padZero": function padZero() {
+          return (/* binding */_padZero
+          );
+        },
+        /* harmony export */"setDateDays": function setDateDays() {
+          return (/* binding */_setDateDays
+          );
+        },
+        /* harmony export */"setDateHours": function setDateHours() {
+          return (/* binding */_setDateHours
+          );
+        },
+        /* harmony export */"setDateMinutes": function setDateMinutes() {
+          return (/* binding */_setDateMinutes
+          );
+        },
+        /* harmony export */"timestampToDate": function timestampToDate() {
+          return (/* binding */_timestampToDate
+          );
+        }
+        /* harmony export */
+      });
+      /**
+       * The check string contains only hours, minutes, and seconds
+       * @returns {Boolean}  
+       */
+      function _isTimeString(str) {
+        // match "HH:mm:ss"
+        var timePattern = /^([01]\d|2[0-3]):([0-5]\d):([0-5]\d)$/;
+        return timePattern.test(str);
+      }
+
+      /**
+       * Get now
+       * @returns {Date}  // Wed Apr 17 2024 14:31:36 GMT+0800 (China Standard Time)
+       */
+      var _getNow = function getNow() {
+        return new Date(Date.now());
+      };
+
+      /**
+       * Zero Padding
+       * @param {Number} num
+       * @param {Boolean} padZeroEnabled 
+       * @returns {String}  '01', '05', '12'
+       */
+      var _padZero = function padZero(num) {
+        var padZeroEnabled = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : true;
+        if (padZeroEnabled) {
+          return num < 10 ? '0' + num : num.toString();
+        } else {
+          return num.toString();
+        }
+      };
+
+      /**
+       * Hours validation
+       * @param {*} v 
+       * @returns {Boolean}  
+       */
+      var _isValidHours = function isValidHours(v) {
+        return /^([01]?[0-9]|2[0-3])$/.test(v); //  0～23, 00～23
+      };
+
+      /**
+       * Minutes and Seconds validation
+       * @param {*} v 
+       * @returns {Boolean}  
+       */
+      var _isValidMinutesAndSeconds = function isValidMinutesAndSeconds(v) {
+        return /^([01]?[0-9]|[0-5][0-9])$/.test(v); //  0~59, 00~59
+      };
+
+      /**
+       * Year validation
+       * @param {*} v 
+       * @returns {Boolean}  
+       */
+      var _isValidYear = function isValidYear(v) {
+        return /^([1-9][0-9])\d{2}$/.test(v); //  1000 ～ 9999
+      };
+
+      /**
+       * Month validation
+       * @param {*} v 
+       * @returns {Boolean}  
+       */
+      var _isValidMonth = function isValidMonth(v) {
+        return /^(0?[1-9]|1[0-2])$/.test(v); //  01～12, 1~12
+      };
+
+      /**
+       * Day validation
+       * @param {*} v 
+       * @returns {Boolean}  
+       */
+      var _isValidDay = function isValidDay(v) {
+        return /^(0?[1-9]|[1-2][0-9]|3[0-1])$/.test(v); //  01～31, 1~31
+      };
+
+      /**
+       * Check if the string is legitimate
+       * @param {String} v 
+       * @returns {Boolean}  
+       */
+      var _isValidDate = function isValidDate(v) {
+        return !(String(new Date(v)).toLowerCase() === 'invalid date');
+      };
+
+      /**
+       * Get calendar date
+       * @param {Date | String} v 
+       * @returns {Date | String}  yyyy-MM-dd
+       */
+      function _dateFormat(v) {
+        var date = typeof v === 'string' ? new Date(v.replace(/-/g, "/")) : v; // fix "Invalid date in safari"
+        return date;
+      }
+
+      /**
+       * Get calendar date
+       * @param {Date | String} v 
+       * @param {Boolean} padZeroEnabled 
+       * @returns {String}  yyyy-MM-dd
+       */
+      function _getCalendarDate(v) {
+        var padZeroEnabled = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : true;
+        var date = _dateFormat(v);
+        var year = date.getFullYear();
+        var month = _padZero(date.getMonth() + 1, padZeroEnabled);
+        var day = _padZero(date.getDate(), padZeroEnabled);
+        var hours = _padZero(date.getHours(), padZeroEnabled);
+        var minutes = _padZero(date.getMinutes(), padZeroEnabled);
+        var seconds = _padZero(date.getSeconds(), padZeroEnabled);
+        var res = "".concat(year, "-").concat(month, "-").concat(day);
+        return res;
+      }
+
+      /**
+       * Get today date
+       * @returns {String}  yyyy-MM-dd
+       */
+      function _getTodayDate() {
+        return _getCalendarDate(new Date());
+      }
+
+      /**
+       * Get tomorrow date
+       * @param {Date | String} v 
+       * @returns {String}  yyyy-MM-dd
+       */
+      function _getTomorrowDate(v) {
+        var today = _dateFormat(v);
+        var _tomorrow = today;
+        _tomorrow.setDate(_tomorrow.getDate() + 1);
+        var tomorrow = _getCalendarDate(_tomorrow);
+        return tomorrow;
+      }
+
+      /**
+       * Get yesterday date
+       * @param {Date | String} v 
+       * @returns {String}  yyyy-MM-dd
+       */
+      function _getYesterdayDate(v) {
+        var today = _dateFormat(v);
+        var _yesterday = today;
+        _yesterday.setDate(_yesterday.getDate() - 1);
+        var yesterday = _getCalendarDate(_yesterday);
+        return yesterday;
+      }
+
+      /**
+       * Get specified date
+       * @param {Date | String} v 
+       * @param {Number} days  The number of days forward or backward, which can be a negative number
+       * @returns {String}  yyyy-MM-dd
+       */
+      /* console.log(getSpecifiedDate(getTodayDate(), -180)); // 2023-08-27 (180 days before February 23, 202) */
+      function _getSpecifiedDate(v, days) {
+        var today = _dateFormat(v);
+        var _specifiedDay = today;
+        _specifiedDay.setDate(_specifiedDay.getDate() + days);
+        var specifiedDay = _getCalendarDate(_specifiedDay);
+        return specifiedDay;
+      }
+
+      /**
+       * Get next month date
+       * @param {Date | String} v 
+       * @returns {String}  yyyy-MM-dd
+       */
+      function _getNextMonthDate(v) {
+        var today = _dateFormat(v);
+        today.setMonth(today.getMonth() + 1);
+        return _getCalendarDate(today);
+      }
+
+      /**
+       * Get previous month date
+       * @param {Date | String} v 
+       * @returns {String}  yyyy-MM-dd
+       */
+      function _getPrevMonthDate(v) {
+        var today = _dateFormat(v);
+        today.setMonth(today.getMonth() - 1);
+        return _getCalendarDate(today);
+      }
+
+      /**
+       * Get next year date
+       * @param {Date | String} v 
+       * @returns {String}  yyyy-MM-dd
+       */
+      function _getNextYearDate(v) {
+        var today = _dateFormat(v);
+        var current = new Date(today);
+        current.setFullYear(current.getFullYear() + 1);
+        return _getCalendarDate(current);
+      }
+
+      /**
+       * Get previous year date
+       * @param {Date | String} v 
+       * @returns {String}  yyyy-MM-dd
+       */
+      function _getPrevYearDate(v) {
+        var today = _dateFormat(v);
+        var current = new Date(today);
+        current.setFullYear(current.getFullYear() - 1);
+        return _getCalendarDate(current);
+      }
+
+      /**
+       * Get last day in month
+       * @param {Date | String} v 
+       * @param {?Number}  targetMonth 
+       * @returns {String | Number}  yyyy-MM-dd
+       */
+      /*
+      Example: Get last day in  next month 
+      
+      const _day = '2024-01-01';
+      const y = new Date(getNextMonthDate(_day)).getFullYear();
+      const m = String(new Date(getNextMonthDate(_day)).getMonth() + 1).padStart(2, '0');
+      const d = getLastDayInMonth(getNextMonthDate(_day), new Date(getNextMonthDate(_day)).getMonth() + 1);
+      
+      const lastDayOfNextMonth = `${y}-${m}-${d}`; // 2024-02-29
+      
+      */
+      function _getLastDayInMonth(v) {
+        var targetMonth = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : undefined;
+        var date = _dateFormat(v);
+        return new Date(date.getFullYear(), typeof targetMonth !== 'undefined' ? targetMonth : date.getMonth() - 1, 0).getDate();
+      }
+
+      /**
+       * Get current year
+       * @returns {Number}
+       */
+      function _getCurrentYear() {
+        return new Date().getFullYear();
+      }
+
+      /**
+       * Get current month
+       * @param {Boolean} padZeroEnabled 
+       * @returns {Number}
+       */
+      function _getCurrentMonth() {
+        var padZeroEnabled = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : true;
+        var m = new Date().getMonth() + 1;
+        return padZeroEnabled ? String(m).padStart(2, '0') : m;
+      }
+
+      /**
+       * Get current day
+       * @param {Boolean} padZeroEnabled 
+       * @returns {Number}
+       */
+      function _getCurrentDay() {
+        var padZeroEnabled = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : true;
+        var d = new Date().getDate();
+        return padZeroEnabled ? String(d).padStart(2, '0') : d;
+      }
+
+      /**
+       * Get first and last month day
+       * @param {Number} v 
+       * @param {Boolean} padZeroEnabled 
+       * @returns  {Array}
+       */
+      function _getFirstAndLastMonthDay(year) {
+        var padZeroEnabled = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : true;
+        var theFirst = new Date(year, 0, 1).getDate();
+        var theLast = new Date(year, 11, 31).getDate();
+        var padZero = function padZero(num) {
+          if (padZeroEnabled) {
+            return num < 10 ? '0' + num : num.toString();
+          } else {
+            return num.toString();
+          }
+        };
+        return [padZero(theFirst), padZero(theLast)];
+      }
+
+      /**
+       * Get current date
+       * @param {Boolean} padZeroEnabled 
+       * @typedef {String} JSON
+       */
+      function _getCurrentDate() {
+        var padZeroEnabled = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : true;
+        var date = new Date();
+        var padZero = function padZero(num) {
+          if (padZeroEnabled) {
+            return num < 10 ? '0' + num : num.toString();
+          } else {
+            return num.toString();
+          }
+        };
+        var year = date.getFullYear();
+        var month = padZero(date.getMonth() + 1);
+        var day = padZero(date.getDate());
+        var hours = padZero(date.getHours());
+        var minutes = padZero(date.getMinutes());
+        return {
+          today: "".concat(year, "-").concat(month, "-").concat(day),
+          yearStart: "".concat(year, "-01-01"),
+          yearEnd: "".concat(year, "-12-").concat(_getLastDayInMonth(date, 12))
+        };
+      }
+
+      /**
+       * Get full time
+       * @param {Date | String} v 
+       * @param {Boolean} padZeroEnabled 
+       * @param {Boolean} hasSeconds 
+       * @returns {String}  yyyy-MM-dd HH:mm:ss
+       */
+      function _getFullTime(v) {
+        var padZeroEnabled = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : true;
+        var hasSeconds = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : true;
+        var date = _dateFormat(v);
+        var padZero = function padZero(num) {
+          if (padZeroEnabled) {
+            return num < 10 ? '0' + num : num.toString();
+          } else {
+            return num.toString();
+          }
+        };
+        var year = date.getFullYear();
+        var month = padZero(date.getMonth() + 1);
+        var day = padZero(date.getDate());
+        var hours = padZero(date.getHours());
+        var minutes = padZero(date.getMinutes());
+        var seconds = padZero(date.getSeconds());
+        var res = "".concat(year, "-").concat(month, "-").concat(day, " ").concat(hours, ":").concat(minutes, ":").concat(seconds);
+        var res2 = "".concat(year, "-").concat(month, "-").concat(day, " ").concat(hours, ":").concat(minutes);
+        return hasSeconds ? res : res2;
+      }
+
+      /**
+       * Add hours
+       * @param {Date | String} v 
+       * @param {Number} offset
+       * @param {Boolean} padZeroEnabled 
+       * @returns {String}  yyyy-MM-dd HH:mm:ss
+       */
+      function _setDateHours(v, offset) {
+        var padZeroEnabled = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : true;
+        var date = _dateFormat(v);
+        var _cur = new Date(date).setTime(new Date(date).getTime() + offset * 60 * 60 * 1000);
+        return _getFullTime(new Date(_cur), padZeroEnabled);
+      }
+
+      /**
+       * Add minutes
+       * @param {Date | String} v 
+       * @param {Number} offset
+       * @param {Boolean} padZeroEnabled 
+       * @returns {String}  yyyy-MM-dd HH:mm:ss
+       */
+      function _setDateMinutes(v, offset) {
+        var padZeroEnabled = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : true;
+        var date = _dateFormat(v);
+        var _cur = new Date(date).setTime(new Date(date).getTime() + offset * 60 * 1000);
+        return _getFullTime(new Date(_cur), padZeroEnabled);
+      }
+      /**
+       * Add days
+       * @param {Date | String} v 
+       * @param {Number} offset
+       * @param {Boolean} padZeroEnabled 
+       * @returns {String}  yyyy-MM-dd HH:mm:ss
+       */
+      function _setDateDays(v, offset) {
+        var padZeroEnabled = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : true;
+        var date = _dateFormat(v);
+        var _cur = new Date(date).setTime(new Date(date).getTime() + offset * 24 * 60 * 60 * 1000);
+        return _getFullTime(new Date(_cur), padZeroEnabled);
+      }
+
+      /**
+       * Convert timestamp to date
+       * @param {Number} v 
+       * @param {Boolean} padZeroEnabled 
+       * @returns {String}  yyyy-MM-dd HH:mm:ss
+       */
+      function _timestampToDate(v) {
+        var padZeroEnabled = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : true;
+        return _getFullTime(new Date(v), padZeroEnabled);
+      }
+
+      /******/
+      return __webpack_exports__;
+      /******/
+    }()
+  );
+});
+
+/***/ }),
+
 /***/ 787:
 /***/ ((module) => {
 
@@ -2155,10 +2753,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(787);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(188);
-/* harmony import */ var funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var funda_modaldialog__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(483);
-/* harmony import */ var funda_modaldialog__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(funda_modaldialog__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var funda_utils_dist_cjs_date__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(322);
+/* harmony import */ var funda_utils_dist_cjs_date__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(funda_utils_dist_cjs_date__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(188);
+/* harmony import */ var funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var funda_modaldialog__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(483);
+/* harmony import */ var funda_modaldialog__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(funda_modaldialog__WEBPACK_IMPORTED_MODULE_3__);
 function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
 function _regeneratorRuntime() { "use strict"; /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/facebook/regenerator/blob/main/LICENSE */ _regeneratorRuntime = function _regeneratorRuntime() { return exports; }; var exports = {}, Op = Object.prototype, hasOwn = Op.hasOwnProperty, defineProperty = Object.defineProperty || function (obj, key, desc) { obj[key] = desc.value; }, $Symbol = "function" == typeof Symbol ? Symbol : {}, iteratorSymbol = $Symbol.iterator || "@@iterator", asyncIteratorSymbol = $Symbol.asyncIterator || "@@asyncIterator", toStringTagSymbol = $Symbol.toStringTag || "@@toStringTag"; function define(obj, key, value) { return Object.defineProperty(obj, key, { value: value, enumerable: !0, configurable: !0, writable: !0 }), obj[key]; } try { define({}, ""); } catch (err) { define = function define(obj, key, value) { return obj[key] = value; }; } function wrap(innerFn, outerFn, self, tryLocsList) { var protoGenerator = outerFn && outerFn.prototype instanceof Generator ? outerFn : Generator, generator = Object.create(protoGenerator.prototype), context = new Context(tryLocsList || []); return defineProperty(generator, "_invoke", { value: makeInvokeMethod(innerFn, self, context) }), generator; } function tryCatch(fn, obj, arg) { try { return { type: "normal", arg: fn.call(obj, arg) }; } catch (err) { return { type: "throw", arg: err }; } } exports.wrap = wrap; var ContinueSentinel = {}; function Generator() {} function GeneratorFunction() {} function GeneratorFunctionPrototype() {} var IteratorPrototype = {}; define(IteratorPrototype, iteratorSymbol, function () { return this; }); var getProto = Object.getPrototypeOf, NativeIteratorPrototype = getProto && getProto(getProto(values([]))); NativeIteratorPrototype && NativeIteratorPrototype !== Op && hasOwn.call(NativeIteratorPrototype, iteratorSymbol) && (IteratorPrototype = NativeIteratorPrototype); var Gp = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(IteratorPrototype); function defineIteratorMethods(prototype) { ["next", "throw", "return"].forEach(function (method) { define(prototype, method, function (arg) { return this._invoke(method, arg); }); }); } function AsyncIterator(generator, PromiseImpl) { function invoke(method, arg, resolve, reject) { var record = tryCatch(generator[method], generator, arg); if ("throw" !== record.type) { var result = record.arg, value = result.value; return value && "object" == _typeof(value) && hasOwn.call(value, "__await") ? PromiseImpl.resolve(value.__await).then(function (value) { invoke("next", value, resolve, reject); }, function (err) { invoke("throw", err, resolve, reject); }) : PromiseImpl.resolve(value).then(function (unwrapped) { result.value = unwrapped, resolve(result); }, function (error) { return invoke("throw", error, resolve, reject); }); } reject(record.arg); } var previousPromise; defineProperty(this, "_invoke", { value: function value(method, arg) { function callInvokeWithMethodAndArg() { return new PromiseImpl(function (resolve, reject) { invoke(method, arg, resolve, reject); }); } return previousPromise = previousPromise ? previousPromise.then(callInvokeWithMethodAndArg, callInvokeWithMethodAndArg) : callInvokeWithMethodAndArg(); } }); } function makeInvokeMethod(innerFn, self, context) { var state = "suspendedStart"; return function (method, arg) { if ("executing" === state) throw new Error("Generator is already running"); if ("completed" === state) { if ("throw" === method) throw arg; return doneResult(); } for (context.method = method, context.arg = arg;;) { var delegate = context.delegate; if (delegate) { var delegateResult = maybeInvokeDelegate(delegate, context); if (delegateResult) { if (delegateResult === ContinueSentinel) continue; return delegateResult; } } if ("next" === context.method) context.sent = context._sent = context.arg;else if ("throw" === context.method) { if ("suspendedStart" === state) throw state = "completed", context.arg; context.dispatchException(context.arg); } else "return" === context.method && context.abrupt("return", context.arg); state = "executing"; var record = tryCatch(innerFn, self, context); if ("normal" === record.type) { if (state = context.done ? "completed" : "suspendedYield", record.arg === ContinueSentinel) continue; return { value: record.arg, done: context.done }; } "throw" === record.type && (state = "completed", context.method = "throw", context.arg = record.arg); } }; } function maybeInvokeDelegate(delegate, context) { var methodName = context.method, method = delegate.iterator[methodName]; if (undefined === method) return context.delegate = null, "throw" === methodName && delegate.iterator["return"] && (context.method = "return", context.arg = undefined, maybeInvokeDelegate(delegate, context), "throw" === context.method) || "return" !== methodName && (context.method = "throw", context.arg = new TypeError("The iterator does not provide a '" + methodName + "' method")), ContinueSentinel; var record = tryCatch(method, delegate.iterator, context.arg); if ("throw" === record.type) return context.method = "throw", context.arg = record.arg, context.delegate = null, ContinueSentinel; var info = record.arg; return info ? info.done ? (context[delegate.resultName] = info.value, context.next = delegate.nextLoc, "return" !== context.method && (context.method = "next", context.arg = undefined), context.delegate = null, ContinueSentinel) : info : (context.method = "throw", context.arg = new TypeError("iterator result is not an object"), context.delegate = null, ContinueSentinel); } function pushTryEntry(locs) { var entry = { tryLoc: locs[0] }; 1 in locs && (entry.catchLoc = locs[1]), 2 in locs && (entry.finallyLoc = locs[2], entry.afterLoc = locs[3]), this.tryEntries.push(entry); } function resetTryEntry(entry) { var record = entry.completion || {}; record.type = "normal", delete record.arg, entry.completion = record; } function Context(tryLocsList) { this.tryEntries = [{ tryLoc: "root" }], tryLocsList.forEach(pushTryEntry, this), this.reset(!0); } function values(iterable) { if (iterable) { var iteratorMethod = iterable[iteratorSymbol]; if (iteratorMethod) return iteratorMethod.call(iterable); if ("function" == typeof iterable.next) return iterable; if (!isNaN(iterable.length)) { var i = -1, next = function next() { for (; ++i < iterable.length;) if (hasOwn.call(iterable, i)) return next.value = iterable[i], next.done = !1, next; return next.value = undefined, next.done = !0, next; }; return next.next = next; } } return { next: doneResult }; } function doneResult() { return { value: undefined, done: !0 }; } return GeneratorFunction.prototype = GeneratorFunctionPrototype, defineProperty(Gp, "constructor", { value: GeneratorFunctionPrototype, configurable: !0 }), defineProperty(GeneratorFunctionPrototype, "constructor", { value: GeneratorFunction, configurable: !0 }), GeneratorFunction.displayName = define(GeneratorFunctionPrototype, toStringTagSymbol, "GeneratorFunction"), exports.isGeneratorFunction = function (genFun) { var ctor = "function" == typeof genFun && genFun.constructor; return !!ctor && (ctor === GeneratorFunction || "GeneratorFunction" === (ctor.displayName || ctor.name)); }, exports.mark = function (genFun) { return Object.setPrototypeOf ? Object.setPrototypeOf(genFun, GeneratorFunctionPrototype) : (genFun.__proto__ = GeneratorFunctionPrototype, define(genFun, toStringTagSymbol, "GeneratorFunction")), genFun.prototype = Object.create(Gp), genFun; }, exports.awrap = function (arg) { return { __await: arg }; }, defineIteratorMethods(AsyncIterator.prototype), define(AsyncIterator.prototype, asyncIteratorSymbol, function () { return this; }), exports.AsyncIterator = AsyncIterator, exports.async = function (innerFn, outerFn, self, tryLocsList, PromiseImpl) { void 0 === PromiseImpl && (PromiseImpl = Promise); var iter = new AsyncIterator(wrap(innerFn, outerFn, self, tryLocsList), PromiseImpl); return exports.isGeneratorFunction(outerFn) ? iter : iter.next().then(function (result) { return result.done ? result.value : iter.next(); }); }, defineIteratorMethods(Gp), define(Gp, toStringTagSymbol, "Generator"), define(Gp, iteratorSymbol, function () { return this; }), define(Gp, "toString", function () { return "[object Generator]"; }), exports.keys = function (val) { var object = Object(val), keys = []; for (var key in object) keys.push(key); return keys.reverse(), function next() { for (; keys.length;) { var key = keys.pop(); if (key in object) return next.value = key, next.done = !1, next; } return next.done = !0, next; }; }, exports.values = values, Context.prototype = { constructor: Context, reset: function reset(skipTempReset) { if (this.prev = 0, this.next = 0, this.sent = this._sent = undefined, this.done = !1, this.delegate = null, this.method = "next", this.arg = undefined, this.tryEntries.forEach(resetTryEntry), !skipTempReset) for (var name in this) "t" === name.charAt(0) && hasOwn.call(this, name) && !isNaN(+name.slice(1)) && (this[name] = undefined); }, stop: function stop() { this.done = !0; var rootRecord = this.tryEntries[0].completion; if ("throw" === rootRecord.type) throw rootRecord.arg; return this.rval; }, dispatchException: function dispatchException(exception) { if (this.done) throw exception; var context = this; function handle(loc, caught) { return record.type = "throw", record.arg = exception, context.next = loc, caught && (context.method = "next", context.arg = undefined), !!caught; } for (var i = this.tryEntries.length - 1; i >= 0; --i) { var entry = this.tryEntries[i], record = entry.completion; if ("root" === entry.tryLoc) return handle("end"); if (entry.tryLoc <= this.prev) { var hasCatch = hasOwn.call(entry, "catchLoc"), hasFinally = hasOwn.call(entry, "finallyLoc"); if (hasCatch && hasFinally) { if (this.prev < entry.catchLoc) return handle(entry.catchLoc, !0); if (this.prev < entry.finallyLoc) return handle(entry.finallyLoc); } else if (hasCatch) { if (this.prev < entry.catchLoc) return handle(entry.catchLoc, !0); } else { if (!hasFinally) throw new Error("try statement without catch or finally"); if (this.prev < entry.finallyLoc) return handle(entry.finallyLoc); } } } }, abrupt: function abrupt(type, arg) { for (var i = this.tryEntries.length - 1; i >= 0; --i) { var entry = this.tryEntries[i]; if (entry.tryLoc <= this.prev && hasOwn.call(entry, "finallyLoc") && this.prev < entry.finallyLoc) { var finallyEntry = entry; break; } } finallyEntry && ("break" === type || "continue" === type) && finallyEntry.tryLoc <= arg && arg <= finallyEntry.finallyLoc && (finallyEntry = null); var record = finallyEntry ? finallyEntry.completion : {}; return record.type = type, record.arg = arg, finallyEntry ? (this.method = "next", this.next = finallyEntry.finallyLoc, ContinueSentinel) : this.complete(record); }, complete: function complete(record, afterLoc) { if ("throw" === record.type) throw record.arg; return "break" === record.type || "continue" === record.type ? this.next = record.arg : "return" === record.type ? (this.rval = this.arg = record.arg, this.method = "return", this.next = "end") : "normal" === record.type && afterLoc && (this.next = afterLoc), ContinueSentinel; }, finish: function finish(finallyLoc) { for (var i = this.tryEntries.length - 1; i >= 0; --i) { var entry = this.tryEntries[i]; if (entry.finallyLoc === finallyLoc) return this.complete(entry.completion, entry.afterLoc), resetTryEntry(entry), ContinueSentinel; } }, "catch": function _catch(tryLoc) { for (var i = this.tryEntries.length - 1; i >= 0; --i) { var entry = this.tryEntries[i]; if (entry.tryLoc === tryLoc) { var record = entry.completion; if ("throw" === record.type) { var thrown = record.arg; resetTryEntry(entry); } return thrown; } } throw new Error("illegal catch attempt"); }, delegateYield: function delegateYield(iterable, resultName, nextLoc) { return this.delegate = { iterator: values(iterable), resultName: resultName, nextLoc: nextLoc }, "next" === this.method && (this.arg = undefined), ContinueSentinel; } }, exports; }
 function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
@@ -2176,8 +2776,10 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 
 
+
 var EventCalendar = function EventCalendar(props) {
-  var calendarWrapperClassName = props.calendarWrapperClassName,
+  var contentRef = props.contentRef,
+    calendarWrapperClassName = props.calendarWrapperClassName,
     customTodayDate = props.customTodayDate,
     eventsValue = props.eventsValue,
     langWeek = props.langWeek,
@@ -2185,14 +2787,17 @@ var EventCalendar = function EventCalendar(props) {
     langMonths = props.langMonths,
     langMonthsFull = props.langMonthsFull,
     langToday = props.langToday,
-    iconRemove = props.iconRemove,
     onChangeDate = props.onChangeDate,
     onChangeMonth = props.onChangeMonth,
     onChangeYear = props.onChangeYear,
     onChangeToday = props.onChangeToday,
     onListRenderComplete = props.onListRenderComplete,
+    iconRemove = props.iconRemove,
+    iconAdd = props.iconAdd,
     cellCloseBtnClassName = props.cellCloseBtnClassName,
     cellCloseBtnLabel = props.cellCloseBtnLabel,
+    cellAddBtnClassName = props.cellAddBtnClassName,
+    cellAddBtnLabel = props.cellAddBtnLabel,
     modalMaskOpacity = props.modalMaskOpacity,
     modalMaxWidth = props.modalMaxWidth,
     modalMinHeight = props.modalMinHeight,
@@ -2275,6 +2880,7 @@ var EventCalendar = function EventCalendar(props) {
 
   // modal dialog
   var EVENTS_ENABLED = typeof modalContent !== 'undefined';
+  var EVENTS_DELETE_ENABLED = typeof modalDeleteContent !== 'undefined';
   var _useState23 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(false),
     _useState24 = _slicedToArray(_useState23, 2),
     showEdit = _useState24[0],
@@ -2283,23 +2889,76 @@ var EventCalendar = function EventCalendar(props) {
     _useState26 = _slicedToArray(_useState25, 2),
     showDelete = _useState26[0],
     setShowDelete = _useState26[1];
-  var padZero = function padZero(num) {
-    var padZeroEnabled = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : true;
-    if (padZeroEnabled) {
-      return num < 10 ? '0' + num : num.toString();
-    } else {
-      return num.toString();
+
+  // Open temporary storage for pop-ups
+  var _useState27 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(-1),
+    _useState28 = _slicedToArray(_useState27, 2),
+    tableCellId = _useState28[0],
+    setTableCellId = _useState28[1];
+
+  // exposes the following methods
+  (0,react__WEBPACK_IMPORTED_MODULE_0__.useImperativeHandle)(contentRef, function () {
+    return {
+      gridInit: function gridInit() {},
+      gridReset: function gridReset(cb) {}
+    };
+  }, [contentRef]);
+
+  // helper buttons
+  var _delBtn = function _delBtn() {
+    return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, iconRemove ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, iconRemove) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("svg", {
+      width: "20px",
+      height: "20px",
+      viewBox: "0 0 24 24",
+      fill: "none"
+    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("path", {
+      fillRule: "evenodd",
+      clipRule: "evenodd",
+      d: "M22 12c0 5.523-4.477 10-10 10S2 17.523 2 12 6.477 2 12 2s10 4.477 10 10ZM8 11a1 1 0 1 0 0 2h8a1 1 0 1 0 0-2H8Z",
+      fill: "#000"
+    }))), cellCloseBtnLabel || '');
+  };
+  var _addBtn = function _addBtn() {
+    return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, iconAdd ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, iconAdd) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("svg", {
+      width: "20px",
+      height: "20px",
+      viewBox: "0 0 32 32"
+    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("g", {
+      stroke: "none",
+      strokeWidth: "1",
+      fill: "none",
+      fillRule: "evenodd"
+    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("g", {
+      transform: "translate(-102.000000, -1037.000000)",
+      fill: "#000000"
+    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("path", {
+      d: "M124,1054 L119,1054 L119,1059 C119,1059.55 118.552,1060 118,1060 C117.448,1060 117,1059.55 117,1059 L117,1054 L112,1054 C111.448,1054 111,1053.55 111,1053 C111,1052.45 111.448,1052 112,1052 L117,1052 L117,1047 C117,1046.45 117.448,1046 118,1046 C118.552,1046 119,1046.45 119,1047 L119,1052 L124,1052 C124.552,1052 125,1052.45 125,1053 C125,1053.55 124.552,1054 124,1054 L124,1054 Z M130,1037 L106,1037 C103.791,1037 102,1038.79 102,1041 L102,1065 C102,1067.21 103.791,1069 106,1069 L130,1069 C132.209,1069 134,1067.21 134,1065 L134,1041 C134,1038.79 132.209,1037 130,1037 L130,1037 Z"
+    }))))), cellAddBtnLabel || '');
+  };
+  var queryItemObj = function queryItemObj() {
+    var _perData = val.filter(function (item) {
+      return (0,funda_utils_dist_cjs_date__WEBPACK_IMPORTED_MODULE_1__.getCalendarDate)(item.date) === (0,funda_utils_dist_cjs_date__WEBPACK_IMPORTED_MODULE_1__.getCalendarDate)("".concat(year, "-").concat(month + 1, "-").concat(day));
+    });
+    var _currentData = undefined;
+    if (_perData[0]) {
+      var _items = _perData[0].list;
+      if (tableCellId === -1) {
+        // add new
+        _currentData = {
+          id: 0,
+          date: (0,funda_utils_dist_cjs_date__WEBPACK_IMPORTED_MODULE_1__.getCalendarDate)("".concat(year, "-").concat(month + 1, "-").concat(day))
+        };
+      } else {
+        // edit or delete
+        _currentData = _items.filter(function (item) {
+          return item.id == tableCellId;
+        })[0];
+      }
     }
-  };
-  var isValidDate = function isValidDate(v) {
-    return !(String(new window.Date(v)).toLowerCase() === 'invalid date');
-  };
-  var dateFormat = function dateFormat(v) {
-    var date = typeof v === 'string' ? new window.Date(v.replace(/-/g, "/")) : v; // fix "Invalid date in safari"
-    return date;
-  };
-  var getTodayDate = function getTodayDate() {
-    return getCalendarDate(new Date());
+    return _perData[0] ? _currentData : {
+      id: 0,
+      date: (0,funda_utils_dist_cjs_date__WEBPACK_IMPORTED_MODULE_1__.getCalendarDate)("".concat(year, "-").concat(month + 1, "-").concat(day))
+    };
   };
 
   // cell
@@ -2379,27 +3038,6 @@ var EventCalendar = function EventCalendar(props) {
       return [];
     }
   };
-  function getCalendarDate(v) {
-    var padZeroEnabled = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : true;
-    if (typeof v === 'undefined') return '';
-
-    // yyyy-MM-dd
-    var date = typeof v === 'string' ? new Date(v.replace(/-/g, "/")) : v; // fix "Invalid date in safari"
-    var padZero = function padZero(num) {
-      if (padZeroEnabled) {
-        return num < 10 ? '0' + num : num.toString();
-      } else {
-        return num.toString();
-      }
-    };
-    var year = date.getFullYear();
-    var month = padZero(date.getMonth() + 1);
-    var day = padZero(date.getDate());
-    var hours = padZero(date.getHours());
-    var minutes = padZero(date.getMinutes());
-    var res = "".concat(year, "-").concat(month, "-").concat(day);
-    return res;
-  }
   function setTodayDate(inputDate) {
     setDay(inputDate.getDate());
     setMonth(inputDate.getMonth());
@@ -2428,8 +3066,8 @@ var EventCalendar = function EventCalendar(props) {
 
       //
       onChangeMonth === null || onChangeMonth === void 0 ? void 0 : onChangeMonth({
-        day: padZero(day),
-        month: padZero(_date.getMonth() + 1),
+        day: (0,funda_utils_dist_cjs_date__WEBPACK_IMPORTED_MODULE_1__.padZero)(day),
+        month: (0,funda_utils_dist_cjs_date__WEBPACK_IMPORTED_MODULE_1__.padZero)(_date.getMonth() + 1),
         year: _date.getFullYear().toString()
       });
       return _date;
@@ -2445,8 +3083,8 @@ var EventCalendar = function EventCalendar(props) {
 
       //
       onChangeMonth === null || onChangeMonth === void 0 ? void 0 : onChangeMonth({
-        day: padZero(day),
-        month: padZero(_date.getMonth() + 1),
+        day: (0,funda_utils_dist_cjs_date__WEBPACK_IMPORTED_MODULE_1__.padZero)(day),
+        month: (0,funda_utils_dist_cjs_date__WEBPACK_IMPORTED_MODULE_1__.padZero)(_date.getMonth() + 1),
         year: _date.getFullYear().toString()
       });
       return _date;
@@ -2473,8 +3111,8 @@ var EventCalendar = function EventCalendar(props) {
 
     //
     onChangeMonth === null || onChangeMonth === void 0 ? void 0 : onChangeMonth({
-      day: padZero(day),
-      month: padZero(currentIndex + 1),
+      day: (0,funda_utils_dist_cjs_date__WEBPACK_IMPORTED_MODULE_1__.padZero)(day),
+      month: (0,funda_utils_dist_cjs_date__WEBPACK_IMPORTED_MODULE_1__.padZero)(currentIndex + 1),
       year: year.toString()
     });
   }
@@ -2484,7 +3122,7 @@ var EventCalendar = function EventCalendar(props) {
     setTodayDate(now);
 
     //
-    var _now = getTodayDate().split('-');
+    var _now = (0,funda_utils_dist_cjs_date__WEBPACK_IMPORTED_MODULE_1__.getTodayDate)().split('-');
     onChangeToday === null || onChangeToday === void 0 ? void 0 : onChangeToday({
       day: _now[2],
       month: _now[1],
@@ -2513,8 +3151,8 @@ var EventCalendar = function EventCalendar(props) {
   (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(function () {
     // Guaranteed year change triggered by the front and rear buttons
     onChangeYear === null || onChangeYear === void 0 ? void 0 : onChangeYear({
-      day: padZero(day),
-      month: padZero(month + 1),
+      day: (0,funda_utils_dist_cjs_date__WEBPACK_IMPORTED_MODULE_1__.padZero)(day),
+      month: (0,funda_utils_dist_cjs_date__WEBPACK_IMPORTED_MODULE_1__.padZero)(month + 1),
       year: year.toString()
     });
   }, [year]);
@@ -2526,7 +3164,7 @@ var EventCalendar = function EventCalendar(props) {
     if (Array.isArray(eventsValue)) setVal(eventsValue);
 
     // update current today
-    if (typeof customTodayDate === 'string' && customTodayDate !== '' && isValidDate(customTodayDate)) {
+    if (typeof customTodayDate === 'string' && customTodayDate !== '' && (0,funda_utils_dist_cjs_date__WEBPACK_IMPORTED_MODULE_1__.isValidDate)(customTodayDate)) {
       var _customNow = new Date(customTodayDate);
       setTodayDate(_customNow);
     }
@@ -2535,13 +3173,13 @@ var EventCalendar = function EventCalendar(props) {
     onListRenderComplete === null || onListRenderComplete === void 0 ? void 0 : onListRenderComplete();
   }, [eventsValue, customTodayDate]);
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-    className: (0,funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_1__.combinedCls)("e-cal__wrapper", calendarWrapperClassName)
+    className: (0,funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_2__.combinedCls)("e-cal-normal__wrapper", calendarWrapperClassName)
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-    className: "e-cal__header bg-body-tertiary"
+    className: "e-cal-normal__header bg-body-tertiary"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", {
     tabIndex: -1,
     type: "button",
-    className: "e-cal__btn e-cal__btn--prev",
+    className: "e-cal-normal__btn e-cal-normal__btn--prev",
     onClick: handlePrevChange
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("svg", {
     width: "20px",
@@ -2552,11 +3190,11 @@ var EventCalendar = function EventCalendar(props) {
     d: "M14.2893 5.70708C13.8988 5.31655 13.2657 5.31655 12.8751 5.70708L7.98768 10.5993C7.20729 11.3805 7.2076 12.6463 7.98837 13.427L12.8787 18.3174C13.2693 18.7079 13.9024 18.7079 14.293 18.3174C14.6835 17.9269 14.6835 17.2937 14.293 16.9032L10.1073 12.7175C9.71678 12.327 9.71678 11.6939 10.1073 11.3033L14.2893 7.12129C14.6799 6.73077 14.6799 6.0976 14.2893 5.70708Z",
     fill: "#000"
   }))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-    className: "e-cal__header__btns"
+    className: "e-cal-normal__header__btns"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", {
     tabIndex: -1,
     type: "button",
-    className: "e-cal__btn ".concat(winMonth ? 'active' : ''),
+    className: "e-cal-normal__btn ".concat(winMonth ? 'active' : ''),
     onClick: handleShowWinMonth
   }, MONTHS[month], /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("svg", {
     width: "12px",
@@ -2568,7 +3206,7 @@ var EventCalendar = function EventCalendar(props) {
   }))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", {
     tabIndex: -1,
     type: "button",
-    className: "e-cal__btn ".concat(winYear ? 'active' : ''),
+    className: "e-cal-normal__btn ".concat(winYear ? 'active' : ''),
     onClick: handleShowWinYear
   }, year, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("svg", {
     width: "12px",
@@ -2580,7 +3218,7 @@ var EventCalendar = function EventCalendar(props) {
   })))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", {
     tabIndex: -1,
     type: "button",
-    className: "e-cal__btn e-cal__btn--next",
+    className: "e-cal-normal__btn e-cal-normal__btn--next",
     onClick: handleNextChange
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("svg", {
     width: "20px",
@@ -2591,12 +3229,12 @@ var EventCalendar = function EventCalendar(props) {
     d: "M9.71069 18.2929C10.1012 18.6834 10.7344 18.6834 11.1249 18.2929L16.0123 13.4006C16.7927 12.6195 16.7924 11.3537 16.0117 10.5729L11.1213 5.68254C10.7308 5.29202 10.0976 5.29202 9.70708 5.68254C9.31655 6.07307 9.31655 6.70623 9.70708 7.09676L13.8927 11.2824C14.2833 11.6729 14.2833 12.3061 13.8927 12.6966L9.71069 16.8787C9.32016 17.2692 9.32016 17.9023 9.71069 18.2929Z",
     fill: "#000"
   })))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-    className: "e-cal__body"
+    className: "e-cal-normal__body"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-    className: "e-cal__row"
+    className: "e-cal-normal__row"
   }, WEEK.map(function (s, i) {
     return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: (0,funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_1__.combinedCls)('e-cal__cell e-cal__day e-cal__day--week e-cal__day--disabled bg-secondary-subtle empty', {
+      className: (0,funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_2__.combinedCls)('e-cal-normal__cell e-cal-normal__day e-cal-normal__day--week e-cal-normal__day--disabled bg-secondary-subtle empty', {
         'last-cell': i === WEEK.length - 1
       }),
       key: i,
@@ -2616,32 +3254,112 @@ var EventCalendar = function EventCalendar(props) {
     var __backFillNum = getBackFill();
     return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       key: 'row' + item.row,
-      className: "e-cal__row"
+      className: "e-cal-normal__row"
     }, item.col.map(function (dayIndex, i) {
       var d = typeof dayIndex === 'number' ? dayIndex - (startDay - 2) : 0;
       var _currentData = val.filter(function (item) {
-        return getCalendarDate(item.date) === getCalendarDate("".concat(year, "-").concat(month + 1, "-").concat(d));
+        return (0,funda_utils_dist_cjs_date__WEBPACK_IMPORTED_MODULE_1__.getCalendarDate)(item.date) === (0,funda_utils_dist_cjs_date__WEBPACK_IMPORTED_MODULE_1__.getCalendarDate)("".concat(year, "-").concat(month + 1, "-").concat(d));
       });
       var isLastCol = i === item.col.length - 1;
 
       // date
       var _dateShow = d > 0 ? "".concat(year, "-").concat(month + 1, "-").concat(d) : '';
-      if (isFirstRow && __forwardFillNum && _dateShow === '') {
+      var isForward = isFirstRow && __forwardFillNum && typeof __forwardFillNum[i] !== 'undefined';
+      var isBack = isLastRow && __backFillNum && typeof __backFillNum[i - item.col.filter(Boolean).length] !== 'undefined';
+      if (isForward && _dateShow === '') {
         if (month + 1 === 1) {
           _dateShow = "".concat(year - 1, "-12-").concat(__forwardFillNum[i]);
         } else {
           _dateShow = "".concat(year, "-").concat(month, "-").concat(__forwardFillNum[i]);
         }
       }
-      if (isLastRow && __backFillNum && _dateShow === '') {
+      if (isBack && _dateShow === '') {
         if (month + 1 === 12) {
           _dateShow = "".concat(year + 1, "-1-").concat(__backFillNum[i - item.col.filter(Boolean).length]);
         } else {
           _dateShow = "".concat(year, "-").concat(month + 2, "-").concat(__backFillNum[i - item.col.filter(Boolean).length]);
         }
       }
+      var _eventContent = function _eventContent() {
+        if (_currentData.length === 0 || !Array.isArray(_currentData) || typeof _currentData[0].list === 'undefined') {
+          return null;
+        }
+
+        //
+        var _items = _currentData[0].list;
+        return _items.map(function (cellItem, cellItemIndex) {
+          return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+            className: (0,funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_2__.combinedCls)("e-cal-normal__cell-item e-cal-normal__cell-item-".concat(cellItemIndex), {
+              'first': cellItemIndex === 0,
+              'last': cellItemIndex === _items.length - 1
+            }),
+            key: "cell-item-".concat(cellItemIndex, "}"),
+            "data-date": (0,funda_utils_dist_cjs_date__WEBPACK_IMPORTED_MODULE_1__.getCalendarDate)(_dateShow),
+            "data-day": (0,funda_utils_dist_cjs_date__WEBPACK_IMPORTED_MODULE_1__.padZero)(d),
+            "data-week": i,
+            onClick: function onClick(e) {
+              var _cellItem$callback;
+              e.stopPropagation();
+
+              // update cell data
+              setTableCellId(cellItem.id);
+
+              // Callback
+              (_cellItem$callback = cellItem.callback) === null || _cellItem$callback === void 0 ? void 0 : _cellItem$callback.call(cellItem);
+              if (d > 0) {
+                handleDayChange(e, d); // update current day
+
+                onChangeDate === null || onChangeDate === void 0 ? void 0 : onChangeDate(e, cellItem);
+                if (EVENTS_ENABLED) {
+                  onModalEditOpen === null || onModalEditOpen === void 0 ? void 0 : onModalEditOpen(cellItem, function () {
+                    return setShowEdit(true);
+                  }, 'normal');
+                }
+              }
+            }
+          }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+            className: "e-cal-normal__day__event",
+            style: typeof cellItem !== 'undefined' && cellItem.eventStyles !== 'undefined' ? cellItem.eventStyles : {},
+            dangerouslySetInnerHTML: {
+              __html: cellItem.data
+            }
+          }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+            className: "e-cal-normal__day__eventdel ".concat(cellCloseBtnClassName || '')
+          }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
+            href: "#",
+            tabIndex: -1,
+            className: "align-middle",
+            "data-date": (0,funda_utils_dist_cjs_date__WEBPACK_IMPORTED_MODULE_1__.getCalendarDate)(_dateShow),
+            "data-day": (0,funda_utils_dist_cjs_date__WEBPACK_IMPORTED_MODULE_1__.padZero)(d),
+            "data-week": i,
+            onClick: function onClick(e) {
+              e.preventDefault();
+              e.stopPropagation();
+
+              // update cell data
+              setTableCellId(cellItem.id);
+              var _existsContent = cellItem;
+
+              //
+              if (d > 0) {
+                handleDayChange(e, d); // update current day
+
+                onChangeDate === null || onChangeDate === void 0 ? void 0 : onChangeDate(e, {
+                  id: 0,
+                  date: (0,funda_utils_dist_cjs_date__WEBPACK_IMPORTED_MODULE_1__.getCalendarDate)("".concat(year, "-").concat(month + 1, "-").concat(d))
+                });
+                if (EVENTS_DELETE_ENABLED) {
+                  onModalDeleteOpen === null || onModalDeleteOpen === void 0 ? void 0 : onModalDeleteOpen(_existsContent, function () {
+                    return setShowDelete(true);
+                  });
+                }
+              }
+            }
+          }, _delBtn())));
+        });
+      };
       return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-        className: (0,funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_1__.combinedCls)('e-cal__cell e-cal__day', {
+        className: (0,funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_2__.combinedCls)('e-cal-normal__cell e-cal-normal__day', {
           'empty': d <= 0,
           'today': d === now.getDate(),
           'selected': d === day,
@@ -2649,8 +3367,8 @@ var EventCalendar = function EventCalendar(props) {
           'last-row': isLastRow
         }),
         key: "col" + i,
-        "data-date": getCalendarDate(_dateShow),
-        "data-day": padZero(d),
+        "data-date": (0,funda_utils_dist_cjs_date__WEBPACK_IMPORTED_MODULE_1__.getCalendarDate)(_dateShow),
+        "data-day": (0,funda_utils_dist_cjs_date__WEBPACK_IMPORTED_MODULE_1__.padZero)(d),
         "data-week": i,
         onMouseEnter: function onMouseEnter(e) {
           onCellMouseEnter === null || onCellMouseEnter === void 0 ? void 0 : onCellMouseEnter(e);
@@ -2662,92 +3380,84 @@ var EventCalendar = function EventCalendar(props) {
           //
           onCellClick === null || onCellClick === void 0 ? void 0 : onCellClick(e);
           if (d > 0) {
-            handleDayChange(e, d);
-            onChangeDate === null || onChangeDate === void 0 ? void 0 : onChangeDate(e, _currentData.length === 0 ? {
-              id: 0,
-              date: getCalendarDate("".concat(year, "-").concat(month + 1, "-").concat(d))
-            } : _currentData[0]);
-            if (EVENTS_ENABLED) {
-              onModalEditOpen === null || onModalEditOpen === void 0 ? void 0 : onModalEditOpen(_currentData.length === 0 ? {
-                id: 0,
-                date: getCalendarDate("".concat(year, "-").concat(month + 1, "-").concat(d))
-              } : _currentData[0], function () {
-                return setShowEdit(true);
-              });
-            }
+            handleDayChange(e, d); // update current day
+            onChangeDate === null || onChangeDate === void 0 ? void 0 : onChangeDate(e, null);
           }
         }
-      }, isFirstRow && __forwardFillNum && typeof __forwardFillNum[i] !== 'undefined' ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
+      }, isForward ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
         className: "disabled"
-      }, __forwardFillNum[i])) : null, d > 0 ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", null, d) : null, isLastRow && __backFillNum && typeof __backFillNum[i - item.col.filter(Boolean).length] !== 'undefined' ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
+      }, __forwardFillNum[i])) : null, d > 0 ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", null, d) : null, isBack ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
         className: "disabled"
-      }, __backFillNum[i - item.col.filter(Boolean).length]) : null, _currentData.length > 0 ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-        className: "e-cal__day__event",
-        style: typeof _currentData[0] !== 'undefined' && _currentData[0].eventStyles !== 'undefined' ? _currentData[0].eventStyles : {},
-        dangerouslySetInnerHTML: {
-          __html: _currentData[0].data
-        }
-      }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-        className: "e-cal__day__eventdel ".concat(cellCloseBtnClassName || '')
+      }, __backFillNum[i - item.col.filter(Boolean).length]) : null, _eventContent(), isForward || isBack ? null : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+        className: "e-cal-normal__day__eventadd ".concat(cellAddBtnClassName || '')
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
         href: "#",
         tabIndex: -1,
         className: "align-middle",
+        "data-date": (0,funda_utils_dist_cjs_date__WEBPACK_IMPORTED_MODULE_1__.getCalendarDate)(_dateShow),
+        "data-day": (0,funda_utils_dist_cjs_date__WEBPACK_IMPORTED_MODULE_1__.padZero)(d),
+        "data-week": i,
         onClick: function onClick(e) {
           e.preventDefault();
           e.stopPropagation();
-          setShowDelete(true);
-          onModalDeleteOpen === null || onModalDeleteOpen === void 0 ? void 0 : onModalDeleteOpen(_currentData.length === 0 ? {
-            id: 0,
-            date: getCalendarDate("".concat(year, "-").concat(month + 1, "-").concat(d))
-          } : _currentData[0]);
+
+          // update cell data
+          setTableCellId(-1);
+
+          //
+          if (d > 0) {
+            handleDayChange(e, d); // update current day
+
+            onChangeDate === null || onChangeDate === void 0 ? void 0 : onChangeDate(e, {
+              id: 0,
+              date: (0,funda_utils_dist_cjs_date__WEBPACK_IMPORTED_MODULE_1__.getCalendarDate)("".concat(year, "-").concat(month + 1, "-").concat(d))
+            });
+            if (EVENTS_ENABLED) {
+              onModalEditOpen === null || onModalEditOpen === void 0 ? void 0 : onModalEditOpen({
+                id: 0,
+                date: (0,funda_utils_dist_cjs_date__WEBPACK_IMPORTED_MODULE_1__.getCalendarDate)("".concat(year, "-").concat(month + 1, "-").concat(d))
+              }, function () {
+                return setShowEdit(true);
+              }, 'new');
+            }
+          }
         }
-      }, iconRemove ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, iconRemove) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("svg", {
-        width: "20px",
-        height: "20px",
-        viewBox: "0 0 24 24",
-        fill: "none"
-      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("path", {
-        fillRule: "evenodd",
-        clipRule: "evenodd",
-        d: "M22 12c0 5.523-4.477 10-10 10S2 17.523 2 12 6.477 2 12 2s10 4.477 10 10ZM8 11a1 1 0 1 0 0 2h8a1 1 0 1 0 0-2H8Z",
-        fill: "#000"
-      }))), cellCloseBtnLabel || ''))) : null);
+      }, _addBtn()))));
     }));
   })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-    className: "e-cal__month-wrapper shadow p-3 mb-5 bg-body-tertiary rounded ".concat(winMonth ? 'active' : '')
+    className: "e-cal-normal__month-wrapper shadow p-3 mb-5 bg-body-tertiary rounded ".concat(winMonth ? 'active' : '')
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-    className: "e-cal__month-container"
+    className: "e-cal-normal__month-container"
   }, MONTHS_FULL.map(function (month, index) {
     return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      "data-month": padZero(index + 1),
-      className: "e-cal__month ".concat(selectedMonth === index ? ' selected' : ''),
+      "data-month": (0,funda_utils_dist_cjs_date__WEBPACK_IMPORTED_MODULE_1__.padZero)(index + 1),
+      className: "e-cal-normal__month ".concat(selectedMonth === index ? ' selected' : ''),
       key: month + index,
       onClick: function onClick() {
         handleMonthChange(index);
       }
     }, month);
   }))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-    className: "e-cal__year-wrapper shadow p-3 mb-5 bg-body-tertiary rounded ".concat(winYear ? 'active' : '')
+    className: "e-cal-normal__year-wrapper shadow p-3 mb-5 bg-body-tertiary rounded ".concat(winYear ? 'active' : '')
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-    className: "e-cal__year-container bg-body-tertiary"
+    className: "e-cal-normal__year-container bg-body-tertiary"
   }, yearsArray.map(function (year, index) {
     return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       "data-year": year,
-      className: "e-cal__year ".concat(selectedYear === year ? ' selected' : ''),
+      className: "e-cal-normal__year ".concat(selectedYear === year ? ' selected' : ''),
       key: year + index,
       onClick: function onClick() {
         handleYearChange(year);
       }
     }, year);
   }))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-    className: "e-cal__today-wrapper p-2 bg-body-tertiary"
+    className: "e-cal-normal__today-wrapper p-2 bg-body-tertiary"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", {
     tabIndex: -1,
     type: "button",
-    className: "e-cal__btn e-cal__btn--today",
+    className: "e-cal-normal__btn e-cal-normal__btn--today",
     onClick: handleTodayChange
-  }, langToday || 'Today'))), EVENTS_ENABLED ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((funda_modaldialog__WEBPACK_IMPORTED_MODULE_2___default()), {
+  }, langToday || 'Today'))), EVENTS_ENABLED ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((funda_modaldialog__WEBPACK_IMPORTED_MODULE_3___default()), {
     show: showDelete,
     maskOpacity: modalMaskOpacity,
     triggerClassName: "",
@@ -2759,29 +3469,16 @@ var EventCalendar = function EventCalendar(props) {
     onClose: function onClose(e) {
       setTimeout(function () {
         setShowDelete(false);
-        var _currentData = val.filter(function (item) {
-          return getCalendarDate(item.date) === getCalendarDate("".concat(year, "-").concat(month + 1, "-").concat(day));
-        });
-        onModalDeleteClose === null || onModalDeleteClose === void 0 ? void 0 : onModalDeleteClose(_currentData.length === 0 ? {
-          id: 0,
-          date: getCalendarDate("".concat(year, "-").concat(month + 1, "-").concat(day))
-        } : _currentData[0]);
+        onModalDeleteClose === null || onModalDeleteClose === void 0 ? void 0 : onModalDeleteClose(queryItemObj());
       }, 350);
     },
     onSubmit: /*#__PURE__*/function () {
       var _ref = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee(e, closewin, data) {
-        var _currentData;
         return _regeneratorRuntime().wrap(function _callee$(_context) {
           while (1) switch (_context.prev = _context.next) {
             case 0:
-              _currentData = val.filter(function (item) {
-                return getCalendarDate(item.date) === getCalendarDate("".concat(year, "-").concat(month + 1, "-").concat(day));
-              });
-              onModalDeleteEvent === null || onModalDeleteEvent === void 0 ? void 0 : onModalDeleteEvent(_currentData.length === 0 ? {
-                id: 0,
-                date: getCalendarDate("".concat(year, "-").concat(month + 1, "-").concat(day))
-              } : _currentData[0], closewin);
-            case 2:
+              onModalDeleteEvent === null || onModalDeleteEvent === void 0 ? void 0 : onModalDeleteEvent(queryItemObj(), closewin);
+            case 1:
             case "end":
               return _context.stop();
           }
@@ -2791,7 +3488,7 @@ var EventCalendar = function EventCalendar(props) {
         return _ref.apply(this, arguments);
       };
     }()
-  }, modalDeleteContent || 'Are you sure?'), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((funda_modaldialog__WEBPACK_IMPORTED_MODULE_2___default()), {
+  }, modalDeleteContent || 'Are you sure?'), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((funda_modaldialog__WEBPACK_IMPORTED_MODULE_3___default()), {
     show: showEdit,
     maskOpacity: modalMaskOpacity,
     heading: modalHeading,
@@ -2806,29 +3503,16 @@ var EventCalendar = function EventCalendar(props) {
     onClose: function onClose(e) {
       setTimeout(function () {
         setShowEdit(false);
-        var _currentData = val.filter(function (item) {
-          return getCalendarDate(item.date) === getCalendarDate("".concat(year, "-").concat(month + 1, "-").concat(day));
-        });
-        onModalEditClose === null || onModalEditClose === void 0 ? void 0 : onModalEditClose(_currentData.length === 0 ? {
-          id: 0,
-          date: getCalendarDate("".concat(year, "-").concat(month + 1, "-").concat(day))
-        } : _currentData[0]);
+        onModalEditClose === null || onModalEditClose === void 0 ? void 0 : onModalEditClose(queryItemObj());
       }, 350);
     },
     onSubmit: /*#__PURE__*/function () {
       var _ref2 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee2(e, closewin, data) {
-        var _currentData;
         return _regeneratorRuntime().wrap(function _callee2$(_context2) {
           while (1) switch (_context2.prev = _context2.next) {
             case 0:
-              _currentData = val.filter(function (item) {
-                return getCalendarDate(item.date) === getCalendarDate("".concat(year, "-").concat(month + 1, "-").concat(day));
-              });
-              onModalEditEvent === null || onModalEditEvent === void 0 ? void 0 : onModalEditEvent(_currentData.length === 0 ? {
-                id: 0,
-                date: getCalendarDate("".concat(year, "-").concat(month + 1, "-").concat(day))
-              } : _currentData[0], closewin);
-            case 2:
+              onModalEditEvent === null || onModalEditEvent === void 0 ? void 0 : onModalEditEvent(queryItemObj(), closewin);
+            case 1:
             case "end":
               return _context2.stop();
           }

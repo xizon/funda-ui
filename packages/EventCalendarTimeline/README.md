@@ -1,5 +1,6 @@
 # Event Calendar Timeline
 
+
 > There must be at least one div in the outermost layer. such as `<div><EventCalendarTimeline /></div>`
 
 ## General
@@ -21,293 +22,306 @@ export default () => {
         {
             "listSection": {"id": 100, "title":"Smith One"},
             "eventSources": [
-                {
+                {"date": "2024-01-06", "list": [{
                     "id": 4505,
                     "date": "2024-01-06",
                     "time": "",
-                    "data": "<span data-work=\"true\" class=\"text-warning\">Rest </span>",
+                    "data": "<span class=\"text-warning\">Rest </span>",
                     "dataTooltip": `<span>Rest</span>`,
                     "eventStyles": {
                         "background": "rgb(255, 240, 227)"
                     }
-                },
-                {
+                }]},
+                {"date": "2023-12-04", "list": [{
                     "id": 4508,
                     "date": "2023-12-04",
                     "time": "",
-                    "data": "<span data-work=\"true\" class=\"text-primary\">Night Shift <span class=\"badge rounded-pill bg-primary mx-1\">IM</span></span>",
+                    "data": "<span class=\"text-primary\">Night Shift <span class=\"badge rounded-pill bg-primary mx-1\">IM</span></span>",
                     "dataTooltip": `<span>Night Shift <span class=\"badge rounded-pill bg-primary mx-1\">IM</span></span>`,
                     "eventStyles": {
                         "background": "rgb(203, 228, 240)"
                     }
-                },
-                {
+                }]},
+                {"date": "2024-02-20", "list": [{
                     "id": 4510,
                     "date": "2024-02-20",
                     "time": "",
-                    "data": "<span data-work=\"true\" class=\"text-primary\"> </span>",
+                    "data": "<span class=\"text-primary\"> </span>",
                     "dataTooltip": `<span>Work Title 1</span>`,
                     "eventStyles": {
                         "background": "rgb(203, 228, 240)"
                     }
-                },
-                {
+                }]},
+                {"date": "2024-02-11", "list": [{
                     "id": 4513,
                     "date": "2024-02-11",
                     "time": "",
-                    "data": "<span data-work=\"true\" class=\"text-warning\">Rest </span>",
+                    "data": "<span class=\"text-warning\">Rest </span>",
                     "dataTooltip": `<span>Rest</span>`,
                     "eventStyles": {
                         "background": "rgb(255, 240, 227)"
                     }
-                },
-                {
+                }]},
+                {"date": "2023-12-30", "list": [{
                     "id": 4516,
                     "date": "2023-12-30",
                     "time": "",
-                    "data": "<span data-work=\"true\" class=\"text-warning\">Rest </span>",
+                    "data": "<span class=\"text-warning\">Rest </span>",
                     "dataTooltip": `<span>Rest</span>`,
                     "eventStyles": {
                         "background": "rgb(255, 240, 227)"
                     }
-                },
-                {
+                }]},
+                {"date": "2024-01-20", "list": [{
                     "id": 4521,
                     "date": "2024-01-20",
                     "time": "",
-                    "data": "<span data-work=\"true\" class=\"text-warning\">Rest </span>",
+                    "data": "<span class=\"text-warning\">Rest </span>",
                     "dataTooltip": `<span>Rest</span>`,
                     "eventStyles": {
                         "background": "rgb(255, 240, 227)"
                     }
-                },
-                {
+                }]},
+                {"date": "2023-12-05", "list": [{
                     "id": 4524,
                     "date": "2023-12-05",
                     "time": "",
-                    "data": "<span data-work=\"true\" class=\"text-primary\">Work Title 1 </span>",
+                    "data": "<span class=\"text-primary\">Work Title 1 </span>",
                     "dataTooltip": `<span>Work Title 1</span>`,
                     "eventStyles": {
                         "background": "rgb(203, 228, 240)"
                     }
-                },
-                {
+                }]},
+                {"date": "2023-12-19", "list": [{
                     "id": 4525,
                     "date": "2023-12-19",
                     "time": "",
-                    "data": "<span data-work=\"true\" class=\"text-primary\">Work Title 1 </span>",
+                    "data": "<span class=\"text-primary\">Work Title 1 </span>",
                     "dataTooltip": `<span>Work Title 1</span>`,
                     "eventStyles": {
                         "background": "rgb(203, 228, 240)"
                     }
-                },
-                {
+                }]},
+                {"date": "2024-02-18", "list": [{
                     "id": 4527,
                     "date": "2024-02-18",
                     "time": "",
-                    "data": "<span data-work=\"true\" class=\"text-warning\">Rest </span>",
+                    "data": "<span class=\"text-warning\">Rest </span>",
                     "dataTooltip": `<span>Rest</span>`,
                     "eventStyles": {
                         "background": "rgb(255, 240, 227)"
                     }
-                },
-                {
+                }]},
+                {"date": "2024-01-23", "list": [{
                     "id": 4528,
                     "date": "2024-01-23",
                     "time": "",
-                    "data": "<span data-work=\"true\" class=\"text-primary\">Work Title 1 </span>",
+                    "data": "<span class=\"text-primary\">Work Title 1 </span>",
                     "dataTooltip": `<span>Work Title 1</span>`,
                     "eventStyles": {
                         "background": "rgb(203, 228, 240)"
                     }
-                },
-                {
+                }]},
+                {"date": "2023-12-10", "list": [{
                     "id": 4529,
                     "date": "2023-12-10",
                     "time": "",
-                    "data": "<span data-work=\"true\" class=\"text-warning\">Rest </span>",
+                    "data": "<span class=\"text-warning\">Rest </span>",
                     "dataTooltip": `<span>Rest</span>`,
                     "eventStyles": {
                         "background": "rgb(255, 240, 227)"
                     }
-                },
-                {
+                }]},
+                {"date": "2023-12-09", "list": [{
                     "id": 4534,
                     "date": "2023-12-09",
                     "time": "",
-                    "data": "<span data-work=\"true\" class=\"text-warning\">Rest </span>",
+                    "data": "<span class=\"text-warning\">Rest </span>",
                     "dataTooltip": `<span>Rest</span>`,
                     "eventStyles": {
                         "background": "rgb(255, 240, 227)"
                     }
-                },
-                {
+                }]},
+                {"date": "2024-02-13", "list": [{
                     "id": 4535,
                     "date": "2024-02-13",
                     "time": "",
-                    "data": "<span data-work=\"true\" class=\"text-primary\">Work Title 1 </span>",
+                    "data": "<span class=\"text-primary\">Work Title 1 </span>",
                     "dataTooltip": `<span>Work Title 1</span>`,
                     "eventStyles": {
                         "background": "rgb(203, 228, 240)"
                     }
-                },
-                {
+                }]},
+                {"date": "2024-01-16", "list": [{
                     "id": 4537,
                     "date": "2024-01-16",
                     "time": "",
-                    "data": "<span data-work=\"true\" class=\"text-primary\">Work Title 1 </span>",
+                    "data": "<span class=\"text-primary\">Work Title 1 </span>",
                     "dataTooltip": `<span>Work Title 1</span>`,
                     "eventStyles": {
                         "background": "rgb(203, 228, 240)"
                     }
-                },
-                {
+                }]},
+                {"date": "2024-02-03", "list": [{
                     "id": 4538,
                     "date": "2024-02-03",
                     "time": "",
-                    "data": "<span data-work=\"true\" class=\"text-warning\">Rest </span>",
+                    "data": "<span class=\"text-warning\">Rest </span>",
                     "dataTooltip": `<span>Rest</span>`,
                     "eventStyles": {
                         "background": "rgb(255, 240, 227)"
                     }
-                },
-                {
+                }]},
+                {"date": "2024-02-25", "list": [{
                     "id": 4541,
                     "date": "2024-02-25",
                     "time": "",
-                    "data": "<span data-work=\"true\" class=\"text-warning\">Rest </span>",
+                    "data": "<span class=\"text-warning\">Rest </span>",
                     "dataTooltip": `<span>Rest</span>`,
                     "eventStyles": {
                         "background": "rgb(255, 240, 227)"
                     }
-                },
-                {
+                }]},
+                {"date": "2023-12-26", "list": [{
                     "id": 4543,
                     "date": "2023-12-26",
                     "time": "",
-                    "data": "<span data-work=\"true\" class=\"text-primary\">Work Title 1 </span>",
+                    "data": "<span class=\"text-primary\">Work Title 1 </span>",
                     "dataTooltip": `<span>Work Title 1</span>`,
                     "eventStyles": {
                         "background": "rgb(203, 228, 240)"
                     }
-                },
-                {
+                }]},
+                {"date": "2024-01-13", "list": [{
                     "id": 4544,
                     "date": "2024-01-13",
                     "time": "",
-                    "data": "<span data-work=\"true\" class=\"text-warning\">Rest </span>",
+                    "data": "<span class=\"text-warning\">Rest </span>",
                     "dataTooltip": `<span>Rest</span>`,
                     "eventStyles": {
                         "background": "rgb(255, 240, 227)"
                     }
-                },
-                {
+                }]},
+                {"date": "2023-12-23", "list": [{
                     "id": 4546,
                     "date": "2023-12-23",
                     "time": "",
-                    "data": "<span data-work=\"true\" class=\"text-warning\">Rest </span>",
+                    "data": "<span class=\"text-warning\">Rest </span>",
                     "dataTooltip": `<span>Rest</span>`,
                     "eventStyles": {
                         "background": "rgb(255, 240, 227)"
                     }
-                }
+                }]}
             ]
         },
         {
             "listSection": {"id": 101, "title":"Jerry"},
             "eventSources": [
-                {
+                {"date": "2024-02-28", "list": [{
                     "id": 4509,
                     "date": "2024-02-28",
                     "time": "",
-                    "data": "<span data-work=\"true\" class=\"text-primary\">Night Shift </span>",
+                    "data": "<span class=\"text-primary\">Night Shift </span>",
                     "eventStyles": {
                         "background": "rgb(203, 228, 240)"
                     }
-                },
-                {
+                }]},
+                {"date": "2024-01-15", "list": [{
                     "id": 4512,
                     "date": "2024-01-15",
                     "time": "",
-                    "data": "<span data-work=\"true\" class=\"text-primary\">Work Title </span>",
+                    "data": "<span class=\"text-primary\">Work Title </span>",
                     "eventStyles": {
                         "background": "rgb(203, 228, 240)"
                     }
-                },
-                {
+                }]},
+                {"date": "2024-01-01", "list": [{
                     "id": 4515,
                     "date": "2024-01-01",
                     "time": "",
-                    "data": "<span data-work=\"true\" class=\"text-primary\">Work Title </span>",
+                    "data": "<span class=\"text-primary\">Work Title </span>",
                     "eventStyles": {
                         "background": "rgb(203, 228, 240)"
                     }
-                },
-                {
+                }]},
+                {"date": "2024-01-03", "list": [{
                     "id": 4567,
                     "date": "2024-01-03",
                     "time": "",
-                    "data": "<span data-work=\"true\" class=\"text-primary\">Night Shift </span>",
+                    "data": "<span class=\"text-primary\">Night Shift </span>",
                     "eventStyles": {
                         "background": "rgb(203, 228, 240)"
                     }
-                }
+                }]}
+
             ]
         },
         {
             "listSection": {"id": 102, "title":"Dony Marketplace"},
             "eventSources": [
-                {
+                {"date": "2024-01-11", "list": [{
                     "id": 4574,
                     "date": "2024-01-11",
                     "time": "",
-                    "data": "<span data-work=\"true\" class=\"text-warning\">Rest </span>",
+                    "data": "<span class=\"text-warning\">Rest </span>",
                     "eventStyles": {
                         "background": "rgb(255, 240, 227)"
                     }
-                },
-                {
+                }]},
+                {"date": "2024-01-12", "list": [{
                     "id": 4575,
                     "date": "2024-01-12",
                     "time": "",
-                    "data": "<span data-work=\"true\" class=\"text-primary\">Work Title 1 </span>",
+                    "data": "<span class=\"text-primary\">Work Title 1 </span>",
                     "eventStyles": {
                         "background": "rgb(203, 228, 240)"
                     }
-                },
-                {
+                }]},
+                {"date": "2024-01-09", "list": [{
                     "id": 4576,
                     "date": "2024-01-09",
                     "time": "",
-                    "data": "<span data-work=\"true\" class=\"text-primary\">Work Title 1 </span>",
+                    "data": "<span class=\"text-primary\">Work Title 1 </span>",
                     "eventStyles": {
                         "background": "rgb(203, 228, 240)"
                     }
-                },
-                {
+                }]},
+                {"date": "2024-01-14", "list": [{
                     "id": 4578,
                     "date": "2024-01-14",
                     "time": "",
-                    "data": "<span data-work=\"true\" class=\"text-warning\">Rest </span>",
+                    "data": "<span class=\"text-warning\">Rest </span>",
                     "eventStyles": {
                         "background": "rgb(255, 240, 227)"
                     }
-                }
+                }]}
+
             ]
         },
         {
             "listSection": {"id": 103, "title":"David"},
             "eventSources": [
-                {
+                {"date": "2023-12-03", "list": [{
                     "id": 6667,
                     "date": "2023-12-03",
                     "time": "",
-                    "data": "<span data-work=\"true\" class=\"text-warning\">Rest </span>",
+                    "data": "<span class=\"text-warning\">Rest </span>",
                     "dataTooltip": `<span>Rest</span>`,
                     "eventStyles": {
                         "background": "rgb(255, 240, 227)"
                     }
-                }
+                },
+                {
+                    "id": 6888,
+                    "date": "2023-12-03",
+                    "time": "",
+                    "data": "<span class=\"text-primary\">Work Title 99</span>",
+                    "dataTooltip": `<span>Work Title 99</span>`,
+                    "eventStyles": {
+                        "background": "rgb(203, 228, 240)"
+                    }
+                }]}
+
             ]
         },
         {
@@ -360,6 +374,7 @@ export default () => {
                     customTodayDate={defaultCustomTodayDate}
                     eventsValue={data}
                     cellCloseBtnClassName="d-none" // if hidden delete button, set it to `d-none`
+                    cellAddBtnClassName="d-none" // if hidden add button, set it to `d-none`
                     tableListSectionTitle="Name"
                     langWeek={['<small class="ps-1">MON</small>', '<small class="ps-1">TUE</small>', '<small class="ps-1">WED</small>', '<small class="ps-1">THU</small>', '<small class="ps-1">FRI</small>', '<small class="ps-1">SAT</small>', '<small class="ps-1">SUN</small>']}
                     onChangeDate={(e: any, currentData: any) => {
@@ -375,7 +390,6 @@ export default () => {
                     onChangeToday={(currentData: any) => {
                         console.log(currentData); // {day: '26', month: '03', year: '2024'}
                     }}
-                    forwardAndBackFillDisabled
                     draggable
                     showWeek
                     autoScroll
@@ -406,298 +420,312 @@ import 'funda-ui/EventCalendarTimeline/index.css';
 
 export default () => {
 
+  
     // default data
     const defaultData = [
         {
             "listSection": {"id": 100, "title":"Smith One"},
             "eventSources": [
-                {
+                {"date": "2024-01-06", "list": [{
                     "id": 4505,
                     "date": "2024-01-06",
                     "time": "",
-                    "data": "<span data-work=\"true\" class=\"text-warning\">Rest </span>",
+                    "data": "<span class=\"text-warning\">Rest </span>",
                     "dataTooltip": `<span>Rest</span>`,
                     "eventStyles": {
                         "background": "rgb(255, 240, 227)"
                     }
-                },
-                {
+                }]},
+                {"date": "2023-12-04", "list": [{
                     "id": 4508,
                     "date": "2023-12-04",
                     "time": "",
-                    "data": "<span data-work=\"true\" class=\"text-primary\">Night Shift <span class=\"badge rounded-pill bg-primary mx-1\">IM</span></span>",
+                    "data": "<span class=\"text-primary\">Night Shift <span class=\"badge rounded-pill bg-primary mx-1\">IM</span></span>",
                     "dataTooltip": `<span>Night Shift <span class=\"badge rounded-pill bg-primary mx-1\">IM</span></span>`,
                     "eventStyles": {
                         "background": "rgb(203, 228, 240)"
                     }
-                },
-                {
+                }]},
+                {"date": "2024-02-20", "list": [{
                     "id": 4510,
                     "date": "2024-02-20",
                     "time": "",
-                    "data": "<span data-work=\"true\" class=\"text-primary\"> </span>",
+                    "data": "<span class=\"text-primary\"> </span>",
                     "dataTooltip": `<span>Work Title 1</span>`,
                     "eventStyles": {
                         "background": "rgb(203, 228, 240)"
                     }
-                },
-                {
+                }]},
+                {"date": "2024-02-11", "list": [{
                     "id": 4513,
                     "date": "2024-02-11",
                     "time": "",
-                    "data": "<span data-work=\"true\" class=\"text-warning\">Rest </span>",
+                    "data": "<span class=\"text-warning\">Rest </span>",
                     "dataTooltip": `<span>Rest</span>`,
                     "eventStyles": {
                         "background": "rgb(255, 240, 227)"
                     }
-                },
-                {
+                }]},
+                {"date": "2023-12-30", "list": [{
                     "id": 4516,
                     "date": "2023-12-30",
                     "time": "",
-                    "data": "<span data-work=\"true\" class=\"text-warning\">Rest </span>",
+                    "data": "<span class=\"text-warning\">Rest </span>",
                     "dataTooltip": `<span>Rest</span>`,
                     "eventStyles": {
                         "background": "rgb(255, 240, 227)"
                     }
-                },
-                {
+                }]},
+                {"date": "2024-01-20", "list": [{
                     "id": 4521,
                     "date": "2024-01-20",
                     "time": "",
-                    "data": "<span data-work=\"true\" class=\"text-warning\">Rest </span>",
+                    "data": "<span class=\"text-warning\">Rest </span>",
                     "dataTooltip": `<span>Rest</span>`,
                     "eventStyles": {
                         "background": "rgb(255, 240, 227)"
                     }
-                },
-                {
+                }]},
+                {"date": "2023-12-05", "list": [{
                     "id": 4524,
                     "date": "2023-12-05",
                     "time": "",
-                    "data": "<span data-work=\"true\" class=\"text-primary\">Work Title 1 </span>",
+                    "data": "<span class=\"text-primary\">Work Title 1 </span>",
                     "dataTooltip": `<span>Work Title 1</span>`,
                     "eventStyles": {
                         "background": "rgb(203, 228, 240)"
                     }
-                },
-                {
+                }]},
+                {"date": "2023-12-19", "list": [{
                     "id": 4525,
                     "date": "2023-12-19",
                     "time": "",
-                    "data": "<span data-work=\"true\" class=\"text-primary\">Work Title 1 </span>",
+                    "data": "<span class=\"text-primary\">Work Title 1 </span>",
                     "dataTooltip": `<span>Work Title 1</span>`,
                     "eventStyles": {
                         "background": "rgb(203, 228, 240)"
                     }
-                },
-                {
+                }]},
+                {"date": "2024-02-18", "list": [{
                     "id": 4527,
                     "date": "2024-02-18",
                     "time": "",
-                    "data": "<span data-work=\"true\" class=\"text-warning\">Rest </span>",
+                    "data": "<span class=\"text-warning\">Rest </span>",
                     "dataTooltip": `<span>Rest</span>`,
                     "eventStyles": {
                         "background": "rgb(255, 240, 227)"
                     }
-                },
-                {
+                }]},
+                {"date": "2024-01-23", "list": [{
                     "id": 4528,
                     "date": "2024-01-23",
                     "time": "",
-                    "data": "<span data-work=\"true\" class=\"text-primary\">Work Title 1 </span>",
+                    "data": "<span class=\"text-primary\">Work Title 1 </span>",
                     "dataTooltip": `<span>Work Title 1</span>`,
                     "eventStyles": {
                         "background": "rgb(203, 228, 240)"
                     }
-                },
-                {
+                }]},
+                {"date": "2023-12-10", "list": [{
                     "id": 4529,
                     "date": "2023-12-10",
                     "time": "",
-                    "data": "<span data-work=\"true\" class=\"text-warning\">Rest </span>",
+                    "data": "<span class=\"text-warning\">Rest </span>",
                     "dataTooltip": `<span>Rest</span>`,
                     "eventStyles": {
                         "background": "rgb(255, 240, 227)"
                     }
-                },
-                {
+                }]},
+                {"date": "2023-12-09", "list": [{
                     "id": 4534,
                     "date": "2023-12-09",
                     "time": "",
-                    "data": "<span data-work=\"true\" class=\"text-warning\">Rest </span>",
+                    "data": "<span class=\"text-warning\">Rest </span>",
                     "dataTooltip": `<span>Rest</span>`,
                     "eventStyles": {
                         "background": "rgb(255, 240, 227)"
                     }
-                },
-                {
+                }]},
+                {"date": "2024-02-13", "list": [{
                     "id": 4535,
                     "date": "2024-02-13",
                     "time": "",
-                    "data": "<span data-work=\"true\" class=\"text-primary\">Work Title 1 </span>",
+                    "data": "<span class=\"text-primary\">Work Title 1 </span>",
                     "dataTooltip": `<span>Work Title 1</span>`,
                     "eventStyles": {
                         "background": "rgb(203, 228, 240)"
                     }
-                },
-                {
+                }]},
+                {"date": "2024-01-16", "list": [{
                     "id": 4537,
                     "date": "2024-01-16",
                     "time": "",
-                    "data": "<span data-work=\"true\" class=\"text-primary\">Work Title 1 </span>",
+                    "data": "<span class=\"text-primary\">Work Title 1 </span>",
                     "dataTooltip": `<span>Work Title 1</span>`,
                     "eventStyles": {
                         "background": "rgb(203, 228, 240)"
                     }
-                },
-                {
+                }]},
+                {"date": "2024-02-03", "list": [{
                     "id": 4538,
                     "date": "2024-02-03",
                     "time": "",
-                    "data": "<span data-work=\"true\" class=\"text-warning\">Rest </span>",
+                    "data": "<span class=\"text-warning\">Rest </span>",
                     "dataTooltip": `<span>Rest</span>`,
                     "eventStyles": {
                         "background": "rgb(255, 240, 227)"
                     }
-                },
-                {
+                }]},
+                {"date": "2024-02-25", "list": [{
                     "id": 4541,
                     "date": "2024-02-25",
                     "time": "",
-                    "data": "<span data-work=\"true\" class=\"text-warning\">Rest </span>",
+                    "data": "<span class=\"text-warning\">Rest </span>",
                     "dataTooltip": `<span>Rest</span>`,
                     "eventStyles": {
                         "background": "rgb(255, 240, 227)"
                     }
-                },
-                {
+                }]},
+                {"date": "2023-12-26", "list": [{
                     "id": 4543,
                     "date": "2023-12-26",
                     "time": "",
-                    "data": "<span data-work=\"true\" class=\"text-primary\">Work Title 1 </span>",
+                    "data": "<span class=\"text-primary\">Work Title 1 </span>",
                     "dataTooltip": `<span>Work Title 1</span>`,
                     "eventStyles": {
                         "background": "rgb(203, 228, 240)"
                     }
-                },
-                {
+                }]},
+                {"date": "2024-01-13", "list": [{
                     "id": 4544,
                     "date": "2024-01-13",
                     "time": "",
-                    "data": "<span data-work=\"true\" class=\"text-warning\">Rest </span>",
+                    "data": "<span class=\"text-warning\">Rest </span>",
                     "dataTooltip": `<span>Rest</span>`,
                     "eventStyles": {
                         "background": "rgb(255, 240, 227)"
                     }
-                },
-                {
+                }]},
+                {"date": "2023-12-23", "list": [{
                     "id": 4546,
                     "date": "2023-12-23",
                     "time": "",
-                    "data": "<span data-work=\"true\" class=\"text-warning\">Rest </span>",
+                    "data": "<span class=\"text-warning\">Rest </span>",
                     "dataTooltip": `<span>Rest</span>`,
                     "eventStyles": {
                         "background": "rgb(255, 240, 227)"
                     }
-                }
+                }]}
             ]
         },
         {
             "listSection": {"id": 101, "title":"Jerry"},
             "eventSources": [
-                {
+                {"date": "2024-02-28", "list": [{
                     "id": 4509,
                     "date": "2024-02-28",
                     "time": "",
-                    "data": "<span data-work=\"true\" class=\"text-primary\">Night Shift </span>",
+                    "data": "<span class=\"text-primary\">Night Shift </span>",
                     "eventStyles": {
                         "background": "rgb(203, 228, 240)"
                     }
-                },
-                {
+                }]},
+                {"date": "2024-01-15", "list": [{
                     "id": 4512,
                     "date": "2024-01-15",
                     "time": "",
-                    "data": "<span data-work=\"true\" class=\"text-primary\">Work Title </span>",
+                    "data": "<span class=\"text-primary\">Work Title </span>",
                     "eventStyles": {
                         "background": "rgb(203, 228, 240)"
                     }
-                },
-                {
+                }]},
+                {"date": "2024-01-01", "list": [{
                     "id": 4515,
                     "date": "2024-01-01",
                     "time": "",
-                    "data": "<span data-work=\"true\" class=\"text-primary\">Work Title </span>",
+                    "data": "<span class=\"text-primary\">Work Title </span>",
                     "eventStyles": {
                         "background": "rgb(203, 228, 240)"
                     }
-                },
-                {
+                }]},
+                {"date": "2024-01-03", "list": [{
                     "id": 4567,
                     "date": "2024-01-03",
                     "time": "",
-                    "data": "<span data-work=\"true\" class=\"text-primary\">Night Shift </span>",
+                    "data": "<span class=\"text-primary\">Night Shift </span>",
                     "eventStyles": {
                         "background": "rgb(203, 228, 240)"
                     }
-                }
+                }]}
+
             ]
         },
         {
             "listSection": {"id": 102, "title":"Dony Marketplace"},
             "eventSources": [
-                {
+                {"date": "2024-01-11", "list": [{
                     "id": 4574,
                     "date": "2024-01-11",
                     "time": "",
-                    "data": "<span data-work=\"true\" class=\"text-warning\">Rest </span>",
+                    "data": "<span class=\"text-warning\">Rest </span>",
                     "eventStyles": {
                         "background": "rgb(255, 240, 227)"
                     }
-                },
-                {
+                }]},
+                {"date": "2024-01-12", "list": [{
                     "id": 4575,
                     "date": "2024-01-12",
                     "time": "",
-                    "data": "<span data-work=\"true\" class=\"text-primary\">Work Title 1 </span>",
+                    "data": "<span class=\"text-primary\">Work Title 1 </span>",
                     "eventStyles": {
                         "background": "rgb(203, 228, 240)"
                     }
-                },
-                {
+                }]},
+                {"date": "2024-01-09", "list": [{
                     "id": 4576,
                     "date": "2024-01-09",
                     "time": "",
-                    "data": "<span data-work=\"true\" class=\"text-primary\">Work Title 1 </span>",
+                    "data": "<span class=\"text-primary\">Work Title 1 </span>",
                     "eventStyles": {
                         "background": "rgb(203, 228, 240)"
                     }
-                },
-                {
+                }]},
+                {"date": "2024-01-14", "list": [{
                     "id": 4578,
                     "date": "2024-01-14",
                     "time": "",
-                    "data": "<span data-work=\"true\" class=\"text-warning\">Rest </span>",
+                    "data": "<span class=\"text-warning\">Rest </span>",
                     "eventStyles": {
                         "background": "rgb(255, 240, 227)"
                     }
-                }
+                }]}
+
             ]
         },
         {
             "listSection": {"id": 103, "title":"David"},
             "eventSources": [
-                {
+                {"date": "2023-12-03", "list": [{
                     "id": 6667,
                     "date": "2023-12-03",
                     "time": "",
-                    "data": "<span data-work=\"true\" class=\"text-warning\">Rest </span>",
+                    "data": "<span class=\"text-warning\">Rest </span>",
                     "dataTooltip": `<span>Rest</span>`,
                     "eventStyles": {
                         "background": "rgb(255, 240, 227)"
                     }
-                }
+                },
+                {
+                    "id": 6888,
+                    "date": "2023-12-03",
+                    "time": "",
+                    "data": "<span class=\"text-primary\">Work Title 99</span>",
+                    "dataTooltip": `<span>Work Title 99</span>`,
+                    "eventStyles": {
+                        "background": "rgb(203, 228, 240)"
+                    }
+                }]}
+
             ]
         },
         {
@@ -736,9 +764,9 @@ export default () => {
                         customTodayDate={defaultCustomTodayDate}
                         eventsValue={defaultData}
                         cellCloseBtnClassName="d-none" // if hidden delete button, set it to `d-none`
+                        cellAddBtnClassName="d-none" // if hidden add button, set it to `d-none`
                         tableListSectionTitle="Name"
                         langWeek={['<small class="ps-1">MON</small>', '<small class="ps-1">TUE</small>', '<small class="ps-1">WED</small>', '<small class="ps-1">THU</small>', '<small class="ps-1">FRI</small>', '<small class="ps-1">SAT</small>', '<small class="ps-1">SUN</small>']}
-                        forwardAndBackFillDisabled
                         draggable
                         showWeek
                         autoScroll
@@ -774,6 +802,7 @@ export default () => {
                 langMonths={['一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月', '十月', '十一月', '十二月']}
                 langMonthsFull={['一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月', '十月', '十一月', '十二月']}
                 langToday="今天"
+                ...
             />
                   
         </>
@@ -786,7 +815,11 @@ export default () => {
 
 ## Has Modal Dialog & Event Planning
 
-The capabilities like multi-day events, responsiveness are supported.
+**Features**
+
+ - The capabilities like multi-day events, responsiveness are supported. 
+ - Convert a flat piece of data into what a component needs.
+
 
 ```js
 import React, { useState, useEffect, useRef } from "react";
@@ -915,328 +948,202 @@ function validate(form: any, lang: any, callback: any) {
 export default () => {
 
 
+    const groupByCategory = (data: any[], field: string) => {
+        return data.reduce((acc: any[], item: any) => {
+            const category = item[field];
+
+            // If the classification is not already in the result, it is initialized as an empty array
+            if (!acc[category]) {
+                acc[category] = [];
+            }
+            const { category: _, ...itemWithoutCategory } = item;
+            acc[category].push(itemWithoutCategory);
+
+            return acc;
+        }, {});
+    };
+
+    const convertEventData = (rowData: any[], cellData: any[], rowQueryField: string, cellQueryField: string) => {
+        return rowData.map((item: any) => {
+            const rowEvents: any[] = cellData.filter((v: any) => v[cellQueryField] == item[rowQueryField]);
+            const rowDate: Record<string, any> = groupByCategory(rowEvents, 'date');
+            const eventSourcesData: any[] = [];
+            for (let key in rowDate) {
+                eventSourcesData.push({
+                    date: key,
+                    list: rowDate[key]
+                });
+            }
+
+            return {
+                listSection: { id: item.id, title: item.title },
+                eventSources: eventSourcesData
+            }
+        });
+    };
+
+
     // default data
-    const defaultData = [
+    const rowData: any[] = [
         {
-            "listSection": {"id": 100, "title":"Smith One"},
-            "eventSources": [
-                {
-                    "id": 4505,
-                    "date": "2024-01-06",
-                    "time": "",
-                    "data": "<span data-work=\"true\" class=\"text-warning\">Rest </span>",
-                    "dataTooltip": `<span>Rest</span>`,
-                    "eventStyles": {
-                        "background": "rgb(255, 240, 227)"
-                    }
-                },
-                {
-                    "id": 4508,
-                    "date": "2023-12-04",
-                    "time": "",
-                    "data": "<span data-work=\"true\" class=\"text-primary\">Night Shift <span class=\"badge rounded-pill bg-primary mx-1\">IM</span></span>",
-                    "dataTooltip": `<span>Night Shift <span class=\"badge rounded-pill bg-primary mx-1\">IM</span></span>`,
-                    "eventStyles": {
-                        "background": "rgb(203, 228, 240)"
-                    }
-                },
-                {
-                    "id": 4510,
-                    "date": "2024-02-20",
-                    "time": "",
-                    "data": "<span data-work=\"true\" class=\"text-primary\"> </span>",
-                    "dataTooltip": `<span>Work Title 1</span>`,
-                    "eventStyles": {
-                        "background": "rgb(203, 228, 240)"
-                    }
-                },
-                {
-                    "id": 4513,
-                    "date": "2024-02-11",
-                    "time": "",
-                    "data": "<span data-work=\"true\" class=\"text-warning\">Rest </span>",
-                    "dataTooltip": `<span>Rest</span>`,
-                    "eventStyles": {
-                        "background": "rgb(255, 240, 227)"
-                    }
-                },
-                {
-                    "id": 4516,
-                    "date": "2023-12-30",
-                    "time": "",
-                    "data": "<span data-work=\"true\" class=\"text-warning\">Rest </span>",
-                    "dataTooltip": `<span>Rest</span>`,
-                    "eventStyles": {
-                        "background": "rgb(255, 240, 227)"
-                    }
-                },
-                {
-                    "id": 4521,
-                    "date": "2024-01-20",
-                    "time": "",
-                    "data": "<span data-work=\"true\" class=\"text-warning\">Rest </span>",
-                    "dataTooltip": `<span>Rest</span>`,
-                    "eventStyles": {
-                        "background": "rgb(255, 240, 227)"
-                    }
-                },
-                {
-                    "id": 4524,
-                    "date": "2023-12-05",
-                    "time": "",
-                    "data": "<span data-work=\"true\" class=\"text-primary\">Work Title 1 </span>",
-                    "dataTooltip": `<span>Work Title 1</span>`,
-                    "eventStyles": {
-                        "background": "rgb(203, 228, 240)"
-                    }
-                },
-                {
-                    "id": 4525,
-                    "date": "2023-12-19",
-                    "time": "",
-                    "data": "<span data-work=\"true\" class=\"text-primary\">Work Title 1 </span>",
-                    "dataTooltip": `<span>Work Title 1</span>`,
-                    "eventStyles": {
-                        "background": "rgb(203, 228, 240)"
-                    }
-                },
-                {
-                    "id": 4527,
-                    "date": "2024-02-18",
-                    "time": "",
-                    "data": "<span data-work=\"true\" class=\"text-warning\">Rest </span>",
-                    "dataTooltip": `<span>Rest</span>`,
-                    "eventStyles": {
-                        "background": "rgb(255, 240, 227)"
-                    }
-                },
-                {
-                    "id": 4528,
-                    "date": "2024-01-23",
-                    "time": "",
-                    "data": "<span data-work=\"true\" class=\"text-primary\">Work Title 1 </span>",
-                    "dataTooltip": `<span>Work Title 1</span>`,
-                    "eventStyles": {
-                        "background": "rgb(203, 228, 240)"
-                    }
-                },
-                {
-                    "id": 4529,
-                    "date": "2023-12-10",
-                    "time": "",
-                    "data": "<span data-work=\"true\" class=\"text-warning\">Rest </span>",
-                    "dataTooltip": `<span>Rest</span>`,
-                    "eventStyles": {
-                        "background": "rgb(255, 240, 227)"
-                    }
-                },
-                {
-                    "id": 4534,
-                    "date": "2023-12-09",
-                    "time": "",
-                    "data": "<span data-work=\"true\" class=\"text-warning\">Rest </span>",
-                    "dataTooltip": `<span>Rest</span>`,
-                    "eventStyles": {
-                        "background": "rgb(255, 240, 227)"
-                    }
-                },
-                {
-                    "id": 4535,
-                    "date": "2024-02-13",
-                    "time": "",
-                    "data": "<span data-work=\"true\" class=\"text-primary\">Work Title 1 </span>",
-                    "dataTooltip": `<span>Work Title 1</span>`,
-                    "eventStyles": {
-                        "background": "rgb(203, 228, 240)"
-                    }
-                },
-                {
-                    "id": 4537,
-                    "date": "2024-01-16",
-                    "time": "",
-                    "data": "<span data-work=\"true\" class=\"text-primary\">Work Title 1 </span>",
-                    "dataTooltip": `<span>Work Title 1</span>`,
-                    "eventStyles": {
-                        "background": "rgb(203, 228, 240)"
-                    }
-                },
-                {
-                    "id": 4538,
-                    "date": "2024-02-03",
-                    "time": "",
-                    "data": "<span data-work=\"true\" class=\"text-warning\">Rest </span>",
-                    "dataTooltip": `<span>Rest</span>`,
-                    "eventStyles": {
-                        "background": "rgb(255, 240, 227)"
-                    }
-                },
-                {
-                    "id": 4541,
-                    "date": "2024-02-25",
-                    "time": "",
-                    "data": "<span data-work=\"true\" class=\"text-warning\">Rest </span>",
-                    "dataTooltip": `<span>Rest</span>`,
-                    "eventStyles": {
-                        "background": "rgb(255, 240, 227)"
-                    }
-                },
-                {
-                    "id": 4543,
-                    "date": "2023-12-26",
-                    "time": "",
-                    "data": "<span data-work=\"true\" class=\"text-primary\">Work Title 1 </span>",
-                    "dataTooltip": `<span>Work Title 1</span>`,
-                    "eventStyles": {
-                        "background": "rgb(203, 228, 240)"
-                    }
-                },
-                {
-                    "id": 4544,
-                    "date": "2024-01-13",
-                    "time": "",
-                    "data": "<span data-work=\"true\" class=\"text-warning\">Rest </span>",
-                    "dataTooltip": `<span>Rest</span>`,
-                    "eventStyles": {
-                        "background": "rgb(255, 240, 227)"
-                    }
-                },
-                {
-                    "id": 4546,
-                    "date": "2023-12-23",
-                    "time": "",
-                    "data": "<span data-work=\"true\" class=\"text-warning\">Rest </span>",
-                    "dataTooltip": `<span>Rest</span>`,
-                    "eventStyles": {
-                        "background": "rgb(255, 240, 227)"
-                    }
-                }
-            ]
+            "id": 10001,
+            "title": "Jone Sun (<small>001</small>)"
         },
         {
-            "listSection": {"id": 101, "title":"Jerry"},
-            "eventSources": [
-                {
-                    "id": 4509,
-                    "date": "2024-02-28",
-                    "time": "",
-                    "data": "<span data-work=\"true\" class=\"text-primary\">Night Shift </span>",
-                    "eventStyles": {
-                        "background": "rgb(203, 228, 240)"
-                    }
-                },
-                {
-                    "id": 4512,
-                    "date": "2024-01-15",
-                    "time": "",
-                    "data": "<span data-work=\"true\" class=\"text-primary\">Work Title </span>",
-                    "eventStyles": {
-                        "background": "rgb(203, 228, 240)"
-                    }
-                },
-                {
-                    "id": 4515,
-                    "date": "2024-01-01",
-                    "time": "",
-                    "data": "<span data-work=\"true\" class=\"text-primary\">Work Title </span>",
-                    "eventStyles": {
-                        "background": "rgb(203, 228, 240)"
-                    }
-                },
-                {
-                    "id": 4567,
-                    "date": "2024-01-03",
-                    "time": "",
-                    "data": "<span data-work=\"true\" class=\"text-primary\">Night Shift </span>",
-                    "eventStyles": {
-                        "background": "rgb(203, 228, 240)"
-                    }
-                }
-            ]
+            "id": 10002,
+            "title": "Tina (<small>002</small>)"
         },
         {
-            "listSection": {"id": 102, "title":"Dony Marketplace"},
-            "eventSources": [
-                {
-                    "id": 4574,
-                    "date": "2024-01-11",
-                    "time": "",
-                    "data": "<span data-work=\"true\" class=\"text-warning\">Rest </span>",
-                    "eventStyles": {
-                        "background": "rgb(255, 240, 227)"
-                    }
-                },
-                {
-                    "id": 4575,
-                    "date": "2024-01-12",
-                    "time": "",
-                    "data": "<span data-work=\"true\" class=\"text-primary\">Work Title 1 </span>",
-                    "eventStyles": {
-                        "background": "rgb(203, 228, 240)"
-                    }
-                },
-                {
-                    "id": 4576,
-                    "date": "2024-01-09",
-                    "time": "",
-                    "data": "<span data-work=\"true\" class=\"text-primary\">Work Title 1 </span>",
-                    "eventStyles": {
-                        "background": "rgb(203, 228, 240)"
-                    }
-                },
-                {
-                    "id": 4578,
-                    "date": "2024-01-14",
-                    "time": "",
-                    "data": "<span data-work=\"true\" class=\"text-warning\">Rest </span>",
-                    "eventStyles": {
-                        "background": "rgb(255, 240, 227)"
-                    }
-                }
-            ]
+            "id": 10003,
+            "title": "David (<small>003</small>)"
         },
         {
-            "listSection": {"id": 103, "title":"David"},
-            "eventSources": [
-                {
-                    "id": 6667,
-                    "date": "2023-12-03",
-                    "time": "",
-                    "data": "<span data-work=\"true\" class=\"text-warning\">Rest </span>",
-                    "dataTooltip": `<span>Rest</span>`,
-                    "eventStyles": {
-                        "background": "rgb(255, 240, 227)"
-                    }
-                }
-            ]
+            "id": 10004,
+            "title": "Chuckie (<small>004</small>)"
         },
         {
-            "listSection": {"id": 104, "title":"Jone"},
-            "eventSources": []
+            "id": 10005,
+            "title": "Li Yun (<small>005</small>)"
         },
         {
-            "listSection": {"id": 105, "title":"Smith"},
-            "eventSources": []
-        },   
+            "id": 10006,
+            "title": "Smash Dom (<small>006</small>)"
+        },
         {
-            "listSection": {"id": 106, "title":"Chuckie"},
-            "eventSources": []
-        },   
-        {
-            "listSection": {"id": 107, "title":"Li Yun"},
-            "eventSources": []
-        },   
-        {
-            "listSection": {"id": 108, "title":"Smash Dom"},
-            "eventSources": []
-        },   
-        {
-            "listSection": {"id": 109, "title":"Cool"},
-            "eventSources": []
+            "id": 10007,
+            "title": "Cool (<small>007</small>)"
         }
     ];
+    
+    const cellData: any[] = [
+        {
+            "id": 1,
+            "rowId": 10001,
+            "date": "2024-10-01",
+            "time": "",
+            "data": "<span class=\"text-primary\">Sick </span>",
+            "dataTooltip": "<span>Sick </span>",
+            "eventStyles": {
+                "background": "rgb(246 197 197)"
+            }
+        },
+        {
+            "id": 2,
+            "rowId": 10001,
+            "date": "2024-10-01",
+            "time": "",
+            "data": "<span class=\"text-primary\">Duty </span>",
+            "dataTooltip": "<span>Duty </span>",
+            "eventStyles": {
+                "background": "rgb(203, 228, 240)"
+            }
+        },
+        {
+            "id": 3,
+            "rowId": 10001,
+            "date": "2024-10-01",
+            "time": "",
+            "data": "<span class=\"text-primary\">Study </span>",
+            "dataTooltip": "<span>Study </span>",
+            "eventStyles": {
+                "background": "rgb(203 240 218)"
+            }
+        },
+        {
+            "id": 4,
+            "rowId": 10002,
+            "date": "2024-10-01",
+            "time": "",
+            "data": "<span class=\"text-warning\">Rest </span>",
+            "dataTooltip": "<span>Rest </span>",
+            "eventStyles": {
+                "background": "rgb(255, 240, 227)"
+            }
+        },
+        
+        {
+            "id": 5,
+            "rowId": 10002,
+            "date": "2024-10-02",
+            "time": "",
+            "data": "<span class=\"text-warning\">Rest </span>",
+            "dataTooltip": "<span>Rest </span>",
+            "eventStyles": {
+                "background": "rgb(255, 240, 227)"
+            }
+        },
+        {
+            "id": 6,
+            "rowId": 10002,
+            "date": "2024-10-02",
+            "time": "",
+            "data": "<span class=\"text-primary\">Study </span>",
+            "dataTooltip": "<span>Study </span>",
+            "eventStyles": {
+                "background": "rgb(203 240 218)"
+            }
+        },
+       
+        {
+            "id": 7,
+            "rowId": 10002,
+            "date": "2024-10-04",
+            "time": "",
+            "data": "<span class=\"text-warning\">Rest </span>",
+            "dataTooltip": "<span>Rest </span>",
+            "eventStyles": {
+                "background": "rgb(255, 240, 227)"
+            }
+        },
+       
+        {
+            "id": 8,
+            "rowId": 10003,
+            "date": "2024-10-17",
+            "time": "",
+            "data": "<span class=\"text-primary\">Work </span>",
+            "dataTooltip": "<span>Work </span>",
+            "eventStyles": {
+                "background": "rgb(203, 228, 240)"
+            }
+        },
+         {
+            "id": 9,
+            "rowId": 10005,
+            "date": "2024-10-06",
+            "time": "",
+            "data": "<span class=\"text-warning\">Rest </span>",
+            "dataTooltip": "<span>Rest </span>",
+            "eventStyles": {
+                "background": "rgb(255, 240, 227)"
+            }
+        },
+        {
+            "id": 10,
+            "rowId": 10005,
+            "date": "2024-10-06",
+            "time": "",
+            "data": "<span class=\"text-primary\">Night Shift <span class=\"badge rounded-pill bg-primary mx-1\">IM</span></span>",
+            "dataTooltip": `<span>Night Shift <span class=\"badge rounded-pill bg-primary mx-1\">IM</span></span>`,
+            "eventStyles": {
+                "background": "rgb(203, 228, 240)"
+            }
+        },
+        {
+            "id": 11,
+            "rowId": 10007,
+            "date": "2024-10-15",
+            "time": "",
+            "data": "<span class=\"text-primary\">Duty </span>",
+            "dataTooltip": "<span>Duty </span>",
+            "eventStyles": {
+                "background": "rgb(203, 228, 240)"
+            }
+        }
+    ];
+    const defaultData = convertEventData(rowData, cellData, 'id', 'rowId');
 
-    const defaultCustomTodayDate = '2023-12-01';
-
+    const defaultCustomTodayDate = '2024-10-01';
 
     //----
     const LABEL_WIDTH = '100px';
@@ -1246,17 +1153,102 @@ export default () => {
     const [data, setData] = useState<any>(null);
     const [updateCalendarData, setUpdateCalendarData] = useState<boolean>(false);
     const [modalFormData, setModalFormData] = useState<any>(null);
+    const [modalOpenType, setModalOpenType] = useState<string>(''); // It is used to determine whether it is NEW or EDIT
 
-    const itemExist = (arr: any[], date: string) => {
-        return arr.some((o) => {
-            return o.date == date
-        });
+    const updateOrginalData = (orginalData: any[], currentData: any, rowId: string, date: string, queryId: string, upadteData: Record<string, any>) => {
+
+        const curRowData: any = orginalData.filter((row: any) => row.listSection.id == rowId)[0];
+
+        if (curRowData) {
+            const eventSourcesData = curRowData.eventSources;
+
+            const _rowData = eventSourcesData.filter((item: any) => item.date === date);
+
+
+            //-------------------------
+            // add new item
+            //-------------------------
+            if (modalOpenType === 'new') {
+    
+                if (_rowData.length === 0) {
+       
+                    // update current row data
+                    curRowData.eventSources.push({
+                        date: upadteData.date,
+                        list: [upadteData]
+                    });
+
+                } else {
+
+                    if (_rowData[0]) {
+                        _rowData[0].list.push(upadteData);
+                    }
+                }
+                
+            } else {
+               //-------------------------
+                // update item
+                //-------------------------
+                if (_rowData[0]) {
+                    const _items = _rowData[0].list;
+                    const currentItemObj = _items.find((o: any) => o.id == queryId);
+
+                    if (currentItemObj) {
+                        for (let key in upadteData) {
+                            currentItemObj[key] = upadteData[key];
+                        }
+                    }
+                    
+                    
+                    // remove Duplicate objects from JSON Array
+                    const clean = _items.filter((item: any, index: number, self: any[]) => index === self.findIndex((t) => (t.id === item.id)));
+
+                    // update current row data
+                    _rowData[0].list = clean;
+                }
+
+            }
+
+
+
+            
+        }
     };
+
+
+    const deleteTargetData = (orginalData: any[], currentData: any, rowId: string, date: string, queryId: string) => {
+
+        const curRowData: any = orginalData.filter((row: any) => row.listSection.id == rowId)[0];
+
+        if (curRowData) {
+            const eventSourcesData = curRowData.eventSources;
+
+            const _rowData = eventSourcesData.filter((item: any) => item.date === date);
+            //-------------------------
+            // delete old item
+            //-------------------------
+            if (_rowData[0]) {
+                const _items = _rowData[0].list;
+
+                const currentItemIndex = _items.findIndex((o: any) => o.id == queryId);
+                if (currentItemIndex >= 0) {
+                   _items.splice(currentItemIndex, 1);
+                }
+                
+                // update current row data
+                _rowData[0].list = _items;
+            }
+
+
+        }
+    };
+
 
     useEffect(() => {
 
         // update calendar data
         if (!updateCalendarData && defaultData.length > 0) {
+            console.log(defaultData);
             setData(defaultData);
             setUpdateCalendarData(true);
         }
@@ -1267,14 +1259,14 @@ export default () => {
     return (
         <>
    
-            <div style={{ height: '500px', width: '100%' }}>
+            <div style={{width: '100%'}}>
                 <EventCalendarTimeline
                     customTodayDate={defaultCustomTodayDate}
                     eventsValue={data}
-                    cellCloseBtnClassName="d-none" // if hidden delete button, set it to `d-none`
+                    // cellCloseBtnClassName="d-none" // if hidden delete button, set it to `d-none`
+                    // cellAddBtnClassName="d-none" // if hidden add button, set it to `d-none`
                     tableListSectionTitle="Name"
                     langWeek={['<small class="ps-1">MON</small>', '<small class="ps-1">TUE</small>', '<small class="ps-1">WED</small>', '<small class="ps-1">THU</small>', '<small class="ps-1">FRI</small>', '<small class="ps-1">SAT</small>', '<small class="ps-1">SUN</small>']}
-                    forwardAndBackFillDisabled
                     draggable
                     showWeek
                     autoScroll
@@ -1307,7 +1299,19 @@ export default () => {
                                 name="post_row"
                             />
 
-                            Are you sure?（ID: {modalFormData ? modalFormData.id : ''}） - {modalFormData && modalFormData.rowData ? modalFormData.rowData.title : ''}
+                            <Input
+                                tabIndex={-1}
+                                wrapperClassName=""
+                                type="hidden"
+                                value={modalFormData && modalFormData.rowData ? modalFormData.rowData.id : ''}
+                                name="post_row_id"
+                            />
+
+                            <div dangerouslySetInnerHTML={{
+                                __html: `Are you sure?（ID: ${modalFormData ? modalFormData.id : ''}） - ${modalFormData && modalFormData.rowData ? modalFormData.rowData.title : ''}`
+                            }} />
+
+                            
                         </div>
     
                     
@@ -1316,8 +1320,16 @@ export default () => {
     
                         <div ref={formRef}>
 
-                        
-                            <div className="row mb-3">
+                            <Input
+                                tabIndex={-1}
+                                wrapperClassName=""
+                                type="hidden"
+                                value={modalFormData ? modalFormData.id : ''}
+                                name="post_id"
+                            />
+
+
+                            <div className="row mb-1">
                                 <div className="text-end" style={{ width: LABEL_WIDTH }}>
                                 Row
                                 </div>
@@ -1332,9 +1344,26 @@ export default () => {
                                 </div>
                             </div>
                             {/* ///////////// */}
+
+
+                            <div className="row mb-1">
+                                <div className="text-end" style={{ width: LABEL_WIDTH }}>
+                                Row ID
+                                </div>
+                                <div className="col">
+                                    <Input
+                                        
+                                        type="text"
+                                        value={modalFormData && modalFormData.rowData ? modalFormData.rowData.id : ''}
+                                        name="post_row_id"
+                                        readOnly
+                                    />
+                                </div>
+                            </div>
+                            {/* ///////////// */}
+                        
     
-    
-                            <div className="row mb-3">
+                            <div className="row mb-1">
                                 <div className="text-end" style={{ width: LABEL_WIDTH }}>
                                     Content
                                 </div>
@@ -1351,7 +1380,7 @@ export default () => {
     
     
     
-                            <div className="row mb-3">
+                            <div className="row mb-1">
                                 <div className="text-end" style={{ width: LABEL_WIDTH }}>
                                     Post Date
                                 </div>
@@ -1371,7 +1400,9 @@ export default () => {
     
     
                     </>}
-                    onModalEditOpen={(currentData: any, openwin: any) => {
+                    onModalEditOpen={(currentData: any, openwin: any, type: 'normal' | 'new') => {
+                        setModalOpenType(type);
+
                         // open the modal
                         if (currentData.rowData !== '') openwin();
                         
@@ -1387,8 +1418,12 @@ export default () => {
                     onModalEditClose={(currentData: any) => {
                         setModalFormData(null);
                     }}
-                    onModalDeleteOpen={(currentData: any) => {
+                    onModalDeleteOpen={(currentData: any, openwin: any) => {
                         console.log('onModalDeleteOpen: ', currentData);
+
+                        // open the modal
+                        if (currentData.rowData !== '') openwin();
+
                         setModalFormData({
                             rowData: currentData.rowData,
                             id: currentData.id,
@@ -1396,70 +1431,33 @@ export default () => {
                             date: currentData.date
                         })
                     }}
-                    onModalEditEvent={(currentData: any, closewin: any) => {
-                        console.log('currentData: ', currentData);
+                    onModalEditEvent={(currentData: any, closewin: any, gridInit: Function) => {
+                        console.log('edit event:currentData: ', currentData);
     
                         validate(formRef.current, {
                             success: 'Successfully',
                             empty: 'Do not empty'
-                        }, (formData) => {
+                        }, (formData: any) => {
                             console.log('submit: ', formData);
-    
-                            // update data
-                            const newData = {
-                                id: Math.random(),
+
+                            const newData: Record<string, any> = {
+                                id: modalOpenType === 'new' ? Math.random() : currentData.id,
+                                rowId: currentData.rowData.id,
                                 date: formData.post_date,
-                                time: '',
+                                time: "",
                                 data: formData.post_title,
                                 dataTooltip: formData.post_title,
                                 eventStyles: {
                                     background: 'rgb(203, 240, 207)'
                                 }
                             };
-        
+
+    
                             setData((prevState: any[]) => {
                                 const _data = prevState;
 
-                                // current row
-                                const currentRowIndex = _data.findIndex((o) => o.listSection.title == formData.post_row);
-                                if (currentRowIndex < 0) return _data;
+                                updateOrginalData(_data, currentData, currentData.rowData.id, currentData.date, currentData.id, newData);
 
-                                // current item from row
-                                _data.forEach((item) => {
-                                    if (item.listSection.title == formData.post_row) {
-                                        
-                                        const _curRowData = JSON.parse(JSON.stringify(item.eventSources));
-
-                                        //-----
-                                        // delete old item
-                                        const currentItemIndex = _curRowData.findIndex((o) => o.date == formData.post_date);
-
-                                        if (itemExist(_curRowData, formData.post_date)) {
-                                            const _oldRowData = _curRowData[currentItemIndex].rowData;
-                                            const _oldEventId = _curRowData[currentItemIndex].id;
-                                            const _oldEventStyles = _curRowData[currentItemIndex].eventStyles;
-                                            const _oldEventTime = _curRowData[currentItemIndex].time;
-
-
-                                            _curRowData.splice(currentItemIndex, 1);
-                                            newData.rowData = _oldRowData;
-                                            newData.id = _oldEventId;
-                                            newData.eventStyles = _oldEventStyles;
-                                            newData.time = _oldEventTime;
-                                        }
-
-                                        // add new item
-                                        _curRowData.push(newData);
-
-                                        // remove Duplicate objects from JSON Array
-                                        const clean = _curRowData.filter((item, index, self) => index === self.findIndex((t) => (t.date === item.date)));
-
-                                        // update current row data
-                                        item.eventSources = clean;
-                                        //-----
-                                    }
-                                });
-                        
                                 return _data;
                             });
 
@@ -1467,42 +1465,27 @@ export default () => {
 
                             // close the modal
                             closewin();
+
+                            // initialize table grid
+                            gridInit();
+
                         });
     
     
                     }}
-                    onModalDeleteEvent={(currentData: any, closewin: any) => {
+                    onModalDeleteEvent={(currentData: any, closewin: any, gridInit: Function) => {
+                        console.log('delete event:currentData: ', currentData);
+
                         validate(formDeleteRef.current, {
                             success: 'Successfully',
                             empty: 'Do not empty'
-                        }, (formData) => {
+                        }, (formData: any) => {
                             console.log('submit: ', formData);
 
                              setData((prevState: any[]) => {
                                 const _data = prevState;
 
-                                // current row
-                                const currentRowIndex = _data.findIndex((o) => o.listSection.title == formData.post_row);
-                                if (currentRowIndex < 0) return _data;
-
-                                // current item from row
-                                _data.forEach((item) => {
-                                    if (item.listSection.title == formData.post_row) {
-                                        
-                                        const _curRowData = JSON.parse(JSON.stringify(item.eventSources));
-
-                                        //-----
-                                        // delete data
-                                        const currentItemIndex = _curRowData.findIndex((o) => o.id == formData.post_id);
-                                        if (currentItemIndex >= 0) {
-                                            _curRowData.splice(currentItemIndex, 1);
-                                        }
-
-                                        // update current row data
-                                        item.eventSources = _curRowData;
-                                        //-----
-                                    }
-                                });
+                                deleteTargetData(_data, currentData, currentData.rowData.id, currentData.date, currentData.id);
                         
                                 return _data;
                             });
@@ -1512,12 +1495,16 @@ export default () => {
 
                             // close the modal
                             closewin();
+
+                            // initialize table grid
+                            gridInit();
+
                         });
     
                     }}
                     onChangeDate={(e: any, currentData: any) => {
                         console.log('-> onChangeDate: ', e.currentTarget.dataset.date, e.currentTarget.dataset.week); // 2023-11-22, 2
-                        console.log('-> onChangeDate: ', currentData); // {"rowData":{"id":101,"title":"Jerry"},"id":0,"date":"2023-12-02"}  or  {"id":6667,"date":"2023-12-03","time":"","data":"<span data-work=\"true\" class=\"text-warning\">Rest </span>","dataTooltip":"<span>Rest</span>","eventStyles":{"background":"rgb(255, 240, 227)"},"rowData":{"id":103,"title":"David"}}
+                        console.log('-> onChangeDate: ', currentData); // {"rowData":{"id":101,"title":"Jerry"},"id":0,"date":"2023-12-02"}  or  {"id":6667,"date":"2023-12-03","time":"","data":"<span class=\"text-warning\">Rest </span>","dataTooltip":"<span>Rest</span>","eventStyles":{"background":"rgb(255, 240, 227)"},"rowData":{"id":103,"title":"David"}}
                     }}
                     onChangeMonth={(currentData: any) => {
                         console.log('-> onChangeMonth: ', currentData); // {day: 22, month: 10, year: 2024}
@@ -1529,6 +1516,7 @@ export default () => {
                         console.log('-> onChangeToday: ', currentData); // {day: 22, month: 10, year: 2024}
                     }}
 
+
                 />
             </div>
 
@@ -1539,6 +1527,7 @@ export default () => {
 ```
 
 
+
 ## API
 
 ### Event Calendar Timeline
@@ -1547,6 +1536,7 @@ import EventCalendarTimeline from 'funda-ui/EventCalendarTimeline';
 ```
 | Property | Type | Default | Description | Required |
 | --- | --- | --- | --- | --- |
+| `contentRef` | React.RefObject | - | It exposes the following methods:  <br /> <ol><li>`contentRef.current.gridInit()`</li><li>`contentRef.current.gridReset()`</li></ol> | - |
 | `calendarWrapperClassName` | string | - | The class name of the calendar wrapper. | - |
 | `tableWrapperClassName` | string | - | The class name of the table wrapper. | - |
 | `tableClassName` | string | - | The class name of the table. | - |
@@ -1556,16 +1546,19 @@ import EventCalendarTimeline from 'funda-ui/EventCalendarTimeline';
 | `tableListEndClassName` | string | - | The class name of the end content. | - |
 | `tableListDividerClassName` | string | - | The class name of the content divider. | - |
 | `customTodayDate` | string  | - | Specify a default today. such as `2023-11-16` | - |
-| `eventsValue` | array  | `[]` | Specify the default value for all events. Its properties are described below in the documentation. such as `[{"listSection":{"id": 100, "title":"Smith One"},"eventSources":[{"id":1,"date":"2024-01-06","time":"","data":"<span data-work=\"true\" class=\"text-warning\">Rest </span>","dataTooltip":"<span>Rest</span>","eventStyles":{"background":"rgb(255, 240, 227)"}},{"id":2,"date":"2023-12-04","time":"","data":"<span data-work=\"true\" class=\"text-primary\">Night Shift <span class=\"badge rounded-pill bg-primary mx-1\">IM</span></span>","dataTooltip":"<span>Night Shift</span>","eventStyles":{"background":"rgb(203, 228, 240)"}}]},{"listSection":{"id": 101, "title":"Jerry"},"eventSources":[{"id":3,"date":"2024-02-28","time":"","data":"<span data-work=\"true\" class=\"text-primary\">Night Shift </span>","eventStyles":{"background":"rgb(203, 228, 240)"}}]},{"listSection":{"id": 103, "title":"David"},"eventSources":[]}]` | ✅ |
+| `eventsValue` | array  | `[]` | Specify the default value for all events. Its properties are described below in the documentation. such as `[{"listSection":{"id":100,"title":"Smith One"},"eventSources":[{"date":"2024-02-20","list":[{"id":4510,"date":"2024-02-20","time":"","data":"<span class=\"text-primary\"> </span>","dataTooltip":`<span>Work Title 1</span>`,"eventStyles":{"background":"rgb(203, 228, 240)"}}]},{"date":"2024-02-11","list":[{"id":4513,"date":"2024-02-11","time":"","data":"<span class=\"text-warning\">Rest </span>","dataTooltip":`<span>Rest</span>`,"eventStyles":{"background":"rgb(255, 240, 227)"}}]}]},{"listSection":{"id":101,"title":"Jerry"},"eventSources":[{"date":"2024-01-03","list":[{"id":4567,"date":"2024-01-03","time":"","data":"<span class=\"text-primary\">Night Shift </span>","eventStyles":{"background":"rgb(203, 228, 240)"}}]}]},{"listSection":{"id":103,"title":"David"},"eventSources":[{"date":"2023-12-03","list":[{"id":6667,"date":"2023-12-03","time":"","data":"<span class=\"text-warning\">Rest </span>","dataTooltip":`<span>Rest</span>`,"eventStyles":{"background":"rgb(255, 240, 227)"}},{"id":6888,"date":"2023-12-03","time":"","data":"<span class=\"text-primary\">Work Title 99</span>","dataTooltip":`<span>Work Title 99</span>`,"eventStyles":{"background":"rgb(203, 228, 240)"}}]}]},{"listSection":{"id":104,"title":"Jone"},"eventSources":[]}]` | ✅ |
 | `langWeek` | array  | `['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN']` | Localization in the component of week sequence. <blockquote>Support html tags. <br />such as `['<small>MON</small>', '<small>TUE</small>', '<small>WED</small>', '<small>THU</small>', '<small>FRI</small>', '<small>SAT</small>', '<small>SUN</small>']`</blockquote> | - |
 | `langWeekFull` | array  | `['MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY', 'SATURDAY', 'SUNDAY']` | Localization in the component of full week sequence. <blockquote>This attribute is not valid yet</blockquote> | - |
 | `langMonths` | array  | `['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC']` | Localization in the component of months sequence. | - |
 | `langMonthsFull` | array  | `['January', 'Febuary', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']` | Localization in the component of full months sequence. | - |
 | `langToday` | string  | `Today`| Localization in the component of today button. | - |
 | `iconRemove` | ReactNode  | `<svg width="20px" height="20px" viewBox="0 0 24 24" fill="none"><path fillRule="evenodd" clipRule="evenodd" d="M22 12c0 5.523-4.477 10-10 10S2 17.523 2 12 6.477 2 12 2s10 4.477 10 10ZM8 11a1 1 0 1 0 0 2h8a1 1 0 1 0 0-2H8Z" fill="#000" /></svg>` | The label of the button to delete current item, if it is not set, only the SVG icon will be included | - |
+| `iconAdd` | ReactNode  | `<svg width="20px" height="20px" viewBox="0 0 32 32"><g stroke="none" strokeWidth="1" fill="none" fillRule="evenodd"><g transform="translate(-102.000000, -1037.000000)" fill="#000000"><path d="M124,1054 L119,1054 L119,1059 C119,1059.55 118.552,1060 118,1060 C117.448,1060 117,1059.55 117,1059 L117,1054 L112,1054 C111.448,1054 111,1053.55 111,1053 C111,1052.45 111.448,1052 112,1052 L117,1052 L117,1047 C117,1046.45 117.448,1046 118,1046 C118.552,1046 119,1046.45 119,1047 L119,1052 L124,1052 C124.552,1052 125,1052.45 125,1053 C125,1053.55 124.552,1054 124,1054 L124,1054 Z M130,1037 L106,1037 C103.791,1037 102,1038.79 102,1041 L102,1065 C102,1067.21 103.791,1069 106,1069 L130,1069 C132.209,1069 134,1067.21 134,1065 L134,1041 C134,1038.79 132.209,1037 130,1037 L130,1037 Z"></path></g></g></svg>` | The label of the button to add current item, if it is not set, only the SVG icon will be included | - |
 | `cellCloseBtnClassName` | string  | - | Specify a class for close button of cell | - |
 | `cellCloseBtnLabel` | string \| ReactNode  | - | Set a piece of text or HTML code for the close button of cell | - |
-| `forwardAndBackFillDisabled` | boolean  | false | Disable forward and backfill values in a calendar. | - |
+| `cellAddBtnClassName` | string  | - | Specify a class for add button of cell | - |
+| `cellAddBtnLabel` | string \| ReactNode  | - | Set a piece of text or HTML code for the add button of cell | - |
+| `forwardAndBackFillDisabled` | boolean  | true | Disable forward and backfill values in a calendar. | - |
 | `showWeek` | boolean | false | Show week identifier. | - |
 | `tableListSectionTitle` | string \| ReactNode  | - | Table header title. | - |
 | `tableTooltipDisabled` | boolean  | false | Disable table tooltip | - |
@@ -1593,12 +1586,12 @@ import EventCalendarTimeline from 'funda-ui/EventCalendarTimeline';
 | `modalSubmitBtnLabel` | string \| ReactNode  | - | **For `<ModalDialog />`** Set a piece of text or HTML code for the submit button | - |
 | `modalSubmitDeleteBtnClassName` | string  | - | **For `<ModalDialog />`** Specify a class for delete button | - |
 | `modalSubmitDeleteBtnLabel` | string \| ReactNode  | - | **For `<ModalDialog />`** Set a piece of text or HTML code for the delete button | - |
-| `onModalEditOpen` | function  | - | **For `<ModalDialog />`** Call a function when the EDIT modal is opened. It returns two callback values. <br /> <ol><li>The first is the current value (**JSON Object**)</li><li>The second is the opening event (**Function**)</li></ol> | - |
+| `onModalEditOpen` | function  | - | **For `<ModalDialog />`** Call a function when the EDIT modal is opened. It returns three callback values. <br /> <ol><li>The first is the current value (**JSON Object**)</li><li>The second is the opening event (**Function**)</li><li>The last is the type of operation (**String**), the options are `normal` \| `new`</li></ol> | - |
 | `onModalEditClose` | function  | - | **For `<ModalDialog />`** Call a function when the EDIT modal is closed. It returns only one value which is the current value (**JSON Object**). | - |
-| `onModalDeleteOpen` | function  | - | **For `<ModalDialog />`** Call a function when the DELETE modal is opened. It returns only one value which is the current value (**JSON Object**). | - |
+| `onModalDeleteOpen` | function  | - | **For `<ModalDialog />`** Call a function when the DELETE modal is opened. It returns two callback values. <br /> <ol><li>The first is the current value (**JSON Object**)</li><li>The second is the opening event (**Function**)</li></ol> | - |
 | `onModalDeleteClose` | function  | - | **For `<ModalDialog />`** Call a function when the DELETE modal is closed. It returns only one value which is the current value (**JSON Object**). | - |
-| `onModalEditEvent` | function  | - | **For `<ModalDialog />`** Call a function when the EDIT modal is submitted. It returns two callback values. <br /> <ol><li>The first is the current value (**JSON Object**)</li><li>The second is the closing event (**Function**)</li></ol> | - |
-| `onModalDeleteEvent` | function  | - | **For `<ModalDialog />`** Call a function when the DELETE modal is submitted. It returns two callback values. <br /> <ol><li>The first is the current value (**JSON Object**)</li><li>The second is the closing event (**Function**)</li></ol> | - |
+| `onModalEditEvent` | function  | - | **For `<ModalDialog />`** Call a function when the EDIT modal is submitted. It returns three callback values. <br /> <ol><li>The first is the current value (**JSON Object**)</li><li>The second is the closing event (**Function**)</li><li>The last is A function that initializes a table grid (**Function**)</li></ol> | - |
+| `onModalDeleteEvent` | function  | - | **For `<ModalDialog />`** Call a function when the DELETE modal is submitted. It returns three callback values. <br /> <ol><li>The first is the current value (**JSON Object**)</li><li>The second is the closing event (**Function**)</li><li>The last is A function that initializes a table grid (**Function**)</li></ol> | - |
 | `onCellMouseEnter` | function  | - | It fires when the mouse pointer enters a cell. It returns only one callback value which is the current cell event (**Event**). | - |
 | `onCellMouseLeave` | function  | - | It fires when the mouse pointer leaves a cell. It returns only one callback value which is the current cell event (**Event**). | - |
 | `onCellClick` | function  | - | It fires when the mouse pointer clicks a cell. It returns only one callback value which is the current cell event (**Event**). | - |
@@ -1606,7 +1599,7 @@ import EventCalendarTimeline from 'funda-ui/EventCalendarTimeline';
 
 ---
 
-JSON Object Literals configuration properties of the `eventsValue`:
+Array Object configuration properties of the `eventsValue` (**Array**):
 
 
 | Property | Type | Default | Description | Required |
@@ -1615,7 +1608,7 @@ JSON Object Literals configuration properties of the `eventsValue`:
 | `eventSources` | array | `[]` | List items for each row. | ✅ |
 
 
-JSON Object Literals configuration properties of the `listSection`:
+JSON Object Literals configuration properties of the `eventsValue.listSection` (**JSON Object**):
 
 
 | Property | Type | Default | Description | Required |
@@ -1625,14 +1618,22 @@ JSON Object Literals configuration properties of the `listSection`:
 
 
 
-Array Object configuration properties of the `eventSources`:
+JSON Object Literals configuration properties of the `eventsValue.eventSources` (**JSON Object**):
+
+| Property | Type | Default | Description | Required |
+| --- | --- | --- | --- | --- |
+| `date` | string | - | Date of item. such as `2023-11-02` | ✅ |
+| `list` | string | - | The data at each time point, representing a cell. <blockquote>Each cell can support multiple pieces of data</blockquote> | ✅ |
+
+
+Array Object configuration properties of the `eventsValue.eventSources.list` (**Array**):
 
 | Property | Type | Default | Description | Required |
 | --- | --- | --- | --- | --- |
 | `id` | string \| number | - | Item ID. | ✅ |
-| `date` | string | - | Date of item. such as `2023-11-02` | ✅ |
+| `date` | string | - | Date of item. such as `2023-11-02` <blockquote>Each cell can support multiple pieces of data</blockquote> | ✅ |
 | `time` | string | - | Date of item. such as `25:33:00` | ✅ |
 | `data` | string | - | Specify the value for event  <blockquote>Support html tags</blockquote> | ✅ |
 | `dataTooltip` | string | - | Specify the value note for event. It will be displayed in the form of Tooltip.  <blockquote>Support html tags</blockquote> | - |
 | `eventStyles` | React.CSSProperties | - | Use inline styles to event area. such as `{ backgroundColor: "red", fontSize: "12px" }` | - |
-
+| `callback` | function | - | Click on the callback function for this item. <blockquote>If this field exists, triggering it will not close the pop-up.</blockquote> | - |

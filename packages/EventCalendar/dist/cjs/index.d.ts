@@ -5,8 +5,14 @@ export interface EventsValueConfig {
     time: string;
     data: string;
     eventStyles?: React.CSSProperties;
+    callback?: () => void;
+}
+export interface TimelineCellListConfig {
+    date: string;
+    list: EventsValueConfig[];
 }
 export declare type EventCalendarProps = {
+    contentRef?: React.ForwardedRef<any>;
     calendarWrapperClassName?: string;
     customTodayDate?: string;
     eventsValue?: any[];
@@ -16,8 +22,11 @@ export declare type EventCalendarProps = {
     langMonthsFull?: string[];
     langToday?: string;
     iconRemove?: React.ReactNode | string;
+    iconAdd?: React.ReactNode | string;
     cellCloseBtnClassName?: string;
     cellCloseBtnLabel?: string | React.ReactNode;
+    cellAddBtnClassName?: string;
+    cellAddBtnLabel?: string | React.ReactNode;
     onChangeDate?: (e: any, currentData: any) => void;
     onChangeMonth?: (currentData: any) => void;
     onChangeYear?: (currentData: any) => void;
@@ -35,9 +44,9 @@ export declare type EventCalendarProps = {
     modalSubmitBtnLabel?: string | React.ReactNode;
     modalSubmitDeleteBtnClassName?: string;
     modalSubmitDeleteBtnLabel?: string | React.ReactNode;
-    onModalEditOpen?: (currentData: any, openwin: any) => void;
+    onModalEditOpen?: (currentData: any, openwin: any, type: 'normal' | 'new') => void;
     onModalEditClose?: (currentData: any) => void;
-    onModalDeleteOpen?: (currentData: any) => void;
+    onModalDeleteOpen?: (currentData: any, openwin: any) => void;
     onModalDeleteClose?: (currentData: any) => void;
     onModalEditEvent?: (currentData: any, closewin: any) => void;
     onModalDeleteEvent?: (currentData: any, closewin: any) => void;

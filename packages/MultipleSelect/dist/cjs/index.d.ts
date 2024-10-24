@@ -42,6 +42,8 @@ export declare type MultipleSelectProps = {
     fetchFuncMethodParams?: any[];
     fetchCallback?: (data: any) => void;
     onFetch?: (data: any) => void;
+    onAddAll?: (e: any, data: any, dataStr: any) => void;
+    onRemoveAll?: (e: any, data: any, dataStr: any) => void;
     onChange?: (e: any, data: any, dataStr: any, currentData: any, type: string) => void;
 };
 declare const MultipleSelect: React.ForwardRefExoticComponent<MultipleSelectProps & React.RefAttributes<unknown>>;

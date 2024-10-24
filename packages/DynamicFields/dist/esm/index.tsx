@@ -1,9 +1,8 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useImperativeHandle } from 'react';
 
 
 import useComId from 'funda-utils/dist/cjs/useComId';
 import { clsWrite, combinedCls } from 'funda-utils/dist/cjs/cls';
-
 
 
 export type DynamicFieldsValueProps = {
@@ -13,6 +12,7 @@ export type DynamicFieldsValueProps = {
 
 
 export type DynamicFieldsProps = {
+    contentRef?: React.ForwardedRef<any>;
     wrapperClassName?: string;
     btnAddWrapperClassName?: string;
     btnRemoveWrapperClassName?: string;
@@ -48,6 +48,7 @@ export type DynamicFieldsProps = {
 
 const DynamicFields = (props: DynamicFieldsProps) => {
     const {
+        contentRef,
         wrapperClassName,
         btnAddWrapperClassName,
         btnRemoveWrapperClassName,
@@ -96,6 +97,23 @@ const DynamicFields = (props: DynamicFieldsProps) => {
     const addBtnIdRef = useRef<string>('');
     addBtnIdRef.current = `dynamic-fields-add-${idRes}`;
 
+    // exposes the following methods
+    useImperativeHandle(
+        contentRef,
+        () => ({
+            showAddBtn: () => {
+                addBtnRef.current.style.setProperty('display', 'inline', 'important');
+            },
+            hideAddBtn: () => {
+                addBtnRef.current.style.setProperty('display', 'none', 'important');
+            },
+            appendedItemsCounter: () => {
+                return rootRef.current.querySelectorAll(PER_ROW_DOM_STRING).length;
+            }
+        }),
+        [contentRef],
+    );
+
     function updateLastItemCls(el: HTMLDivElement, type: string) {
         if (typeof el === 'undefined') return;
 
@@ -142,7 +160,8 @@ const DynamicFields = (props: DynamicFieldsProps) => {
 
     function checkMaxStatus() {
         //button status
-        if (rootRef.current.querySelectorAll(PER_ROW_DOM_STRING).length + 1 >= parseFloat(maxFields)) {
+        const _appendedItems = rootRef.current.querySelectorAll(PER_ROW_DOM_STRING).length;
+        if (_appendedItems + 1 >= parseFloat(maxFields)) {
             addBtnRef.current.style.setProperty('display', 'none', 'important');
         }
     }
@@ -303,9 +322,15 @@ const DynamicFields = (props: DynamicFieldsProps) => {
         setTmpl(data ? data.tmpl : null);
 
         //
+        checkMaxStatus();
+
+        //
         onLoad?.(addBtnIdRef.current, rootRef.current, PER_ROW_DOM_STRING);
     }, [data]);
 
+
+
+    
 
     return (
         <>

@@ -1282,6 +1282,7 @@ const myData: any[] = [
 
 export default () => {
 
+    const dfRef = useRef<any>(null);
     const [dynamicFieldsValue, setDynamicFieldsValue] = useState<DynamicFieldsValueProps | null>(null);
     const [dynamicFieldsJsonValue, setDynamicFieldsJsonValue] = useState<any[]>([]);
     const [edit, setEdit] = useState<boolean>(false);
@@ -1370,6 +1371,9 @@ export default () => {
             {dynamicFieldsJsonValue.length > 0 ? <>
                 {!edit ? <button tabIndex={-1} type="button" onClick={(e: any) => {
                     setEdit(true);
+                    if (dfRef.current) {
+                        if (dfRef.current.appendedItemsCounter() === 0) dfRef.current.showAddBtn();
+                    }
                 }} className="btn btn-outline-primary btn-sm mb-2"><i className="fa-solid fa-pen-to-square" aria-hidden="true"></i> Edit</button> : <button tabIndex={-1} type="button" onClick={(e: any) => {
                     setEdit(false);
                 }} className="btn btn-outline-primary btn-sm mb-2"><i className="fa-solid fa-arrow-left" aria-hidden="true"></i> Cancel</button>}
@@ -1404,6 +1408,7 @@ export default () => {
 
             <div style={edit || dynamicFieldsJsonValue.length === 0 ? {} : {height: '0', overflow: 'hidden'}}>
                 <DynamicFields
+                    contentRef={dfRef}
                     key={JSON.stringify(dynamicFieldsJsonValue)}  // Trigger child component update when prop of parent changes
                     data={dynamicFieldsValue}
                     maxFields="10"
@@ -1441,6 +1446,7 @@ import DynamicFields from 'funda-ui/DynamicFields';
 ```
 | Property | Type | Default | Description | Required |
 | --- | --- | --- | --- | --- |
+| `contentRef` | React.RefObject | - | It exposes the following methods:  <br /> <ol><li>`contentRef.current.appendedItemsCounter()`</li><li>`contentRef.current.showAddBtn()`</li><li>`contentRef.current.hideAddBtn()`</li></ol>| - |
 | `key` | React.key | - | Trigger child component update when prop of parent changes. <blockquote>Ensure that complex dynamic form components update in real time on the page.</blockquote> | - |
 | `wrapperClassName` | string | `mb-3 position-relative` | The class name of the control wrapper. | - |
 | `btnAddWrapperClassName` | string | `align-middle` | The class name of the add button wrapper. | - |

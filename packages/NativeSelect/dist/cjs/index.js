@@ -1339,6 +1339,7 @@ var NativeSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_
     firstRequestExecuted = _useState8[0],
     setFirstRequestExecuted = _useState8[1];
   var optionsFormatGroupOpt = function optionsFormatGroupOpt(allData) {
+    if (!Array.isArray(allData)) return;
     allData.forEach(function (item) {
       if (typeof item.optgroup !== 'undefined') {
         item.value = String(Math.random());

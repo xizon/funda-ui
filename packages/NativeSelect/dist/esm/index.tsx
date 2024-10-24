@@ -109,6 +109,8 @@ const NativeSelect = forwardRef((props: NativeSelectProps, externalRef: any) => 
   
 
     const optionsFormatGroupOpt = (allData: any[]) => {
+        if (!Array.isArray(allData)) return;
+
         allData.forEach((item: any) => {
             if (typeof item.optgroup !== 'undefined') {
                 item.value = String(Math.random());
