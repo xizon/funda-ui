@@ -1337,6 +1337,12 @@ export default () => {
     useEffect(() => {
 
 
+        if (dfRef.current && myData.length === 0) {
+            setTimeout(() => {
+                if (dfRef.current.appendedItemsCounter() === 0) dfRef.current.showAddBtn();
+            }, 500);
+        }
+
         //initialize JSON value
         setDynamicFieldsJsonValue(myData.map((item: any, index: number) => (
             {
