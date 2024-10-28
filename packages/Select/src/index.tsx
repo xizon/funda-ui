@@ -49,7 +49,6 @@ import {
 import { clsWrite, combinedCls } from 'funda-utils/dist/cjs/cls';
 
 
-
 export type SelectOptionChangeFnType = (arg1: any, arg2: any, arg3: any) => void;
 
 export interface MultiSelectDataConfig {
@@ -214,8 +213,8 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
 
 
     const DEPTH = depth || 1055;  // the default value same as bootstrap
-    const LIVE_SEARCH_OK = typeof fetchTrigger !== 'undefined' && fetchTrigger === true ? true : false;
-    const LIVE_SEARCH_DISABLED = (typeof fetchTrigger === 'undefined' || fetchTrigger === false) && typeof window !== 'undefined' && typeof (window as any)['funda-ui__Select-disable-livesearch'] !== 'undefined' ? true : false; // Globally disable real-time search functionality (only valid for non-dynamic requests)
+    const MANUAL_REQ = typeof fetchTrigger !== 'undefined' && fetchTrigger === true ? true : false;  // Manual requests
+    const LIVE_SEARCH_DISABLED = !MANUAL_REQ && typeof window !== 'undefined' && typeof (window as any)['funda-ui__Select-disable-livesearch'] !== 'undefined' ? true : false; // Globally disable real-time search functionality (only valid for non-dynamic requests)
 
     
     const FIRST_REQUEST_AUTO = typeof firstRequestAutoExec === 'undefined' ? true : firstRequestAutoExec;
@@ -414,7 +413,6 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
     //performance
     const handleChangeFetchSafe = useDebounce((val: any) => {
 
-
         let _orginalData: OptionConfig[] = [];
         const update = (inputData: any) => {
             const filterRes = () => {
@@ -533,7 +531,7 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
             let filterRes: any = [];
 
 
-            if (fetchTrigger) {
+            if (MANUAL_REQ) {
 
                 // If a manual action is used to trigger the request
                 if (typeof fetchTriggerForDefaultData !== 'undefined' && fetchTriggerForDefaultData !== null && typeof fetchTriggerForDefaultData?.values[0] !== 'undefined') {
@@ -1131,7 +1129,7 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
         if (!MULTI_SEL_VALID) popwinPosHide();
 
 
-        if (LIVE_SEARCH_OK) {
+        if (MANUAL_REQ) {
             // clean data
             setOptionsData([]);
         } else {
@@ -1173,6 +1171,7 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
         setIsOpen(true);
 
 
+
         // pop win initalization
         setTimeout(() => {
             popwinPosInit();
@@ -1189,7 +1188,7 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
 
 
 
-        if (LIVE_SEARCH_OK) {
+        if (MANUAL_REQ) {
             // clean data
             setOptionsData([]);
         } else {
@@ -1197,6 +1196,11 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
             setOptionsData(orginalData);
         }
 
+
+        // When you select multiple times, it automatically focuses on the search input box
+        if (MULTI_SEL_VALID) {
+            selectInputRef.current.select();
+        }
 
         // update temporary value
         setControlTempValue('');
@@ -1210,6 +1214,12 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
         if (LOCK_BODY_SCROLL) disableBodyScroll(document.querySelector('body'));
 
 
+    }
+    
+
+    function fixFocusStatus() {
+        // When selecting multiple times, in order to avoid losing 
+        if (MULTI_SEL_VALID) handleFocus(selectInputRef.current);
     }
 
     async function handleSelect(el: any, dataInput: any = false, valueArr: any[] = [], labelArr: any[] = []) {
@@ -1546,7 +1556,8 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
             }
         }
 
-            
+        // Fixed an out-of-focus issue
+        fixFocusStatus();
 
     }
 
@@ -1656,6 +1667,9 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
             multipleSelectionCallback(_values, _labels)
         );
 
+        // Fixed an out-of-focus issue
+        fixFocusStatus();
+
 
     }
 
@@ -1757,7 +1771,7 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
 
     async function handleFirstFetch(inputVal: any = null) {
         const _oparams: any[] = fetchFuncMethodParams || [];
-        const _params: any[] = _oparams.map((item: any) => item !== '$QUERY_STRING' ? item : (fetchTrigger ? '------' : ''));
+        const _params: any[] = _oparams.map((item: any) => item !== '$QUERY_STRING' ? item : (MANUAL_REQ ? '------' : ''));
         const res = await fetchData((_params).join(','), finalRes(inputVal), inputVal);
 
         return res;
@@ -1787,6 +1801,9 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
         //
         handleChangeFetchSafe(val);
 
+        // Fixed an out-of-focus issue
+        fixFocusStatus();
+        
 
     }
 
@@ -1798,8 +1815,10 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
         // update temporary value
         setControlTempValue('');
 
+
         //
-        onFocus?.(event);
+        onFocus?.(selectInputRef.current);
+        
     }
 
     function handleBlur(event: any) {
@@ -1820,7 +1839,7 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
 
 
         setTimeout(() => {
-            onBlur?.(event);
+            onBlur?.(selectInputRef.current);
         }, 300);
     }
 
@@ -1957,6 +1976,19 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
 
     }
 
+    function handleDocOut(e: any) {
+
+        if (e.target.closest('.custom-select__options-wrapper') === null && e.target.closest('.custom-select__wrapper') === null) {
+            // cancel
+            cancel();
+            if (MULTI_SEL_VALID) popwinPosHide();
+
+            //
+            handleBlur(null);
+        }
+    }
+
+
     useEffect(() => {
 
 
@@ -2005,6 +2037,20 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
         }
 
     }, []);
+
+
+
+    // Fixed an out-of-focus issue
+    //--------------
+    // !!! TIPS:
+    // Fixed: When `fixFocusStatus()` is triggered, the above judgment will be invalidated, and this judgment will be used
+    // Fixed: The pop-up window is not closed due to the mixing of business components
+    useEffect(() => {
+        document.addEventListener('pointerdown', handleDocOut);
+        return () => {
+            document.removeEventListener('pointerdown', handleDocOut);
+        };
+    }, [orginalData]); // Avoid the issue that `setOptionsData(orginalData)` sets the original value to empty on the first entry
 
 
     return (
@@ -2161,7 +2207,7 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
                         {
                             'reverse': isOpen
                         }
-                    )} style={{display: fetchTrigger ? 'none' : 'inline-block' }}>
+                    )} style={{display: MANUAL_REQ ? 'none' : 'inline-block' }}>
                         {controlArrow ? controlArrow : <svg width="10px" height="10px" viewBox="0 -4.5 20 20">
                             <g stroke="none" strokeWidth="1" fill="none">
                                 <g transform="translate(-180.000000, -6684.000000)" className="arrow-fill-g" fill="#a5a5a5">
@@ -2180,7 +2226,7 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
 
 
                     {/* SEARCH BUTTON */}
-                    {fetchTrigger ? <>
+                    {MANUAL_REQ ? <>
                         <span className="custom-select-multi__control-searchbtn">
                             <button tabIndex={-1} type="button" className="btn border-end-0 rounded-pill" onClick={(e: React.MouseEvent) => {
                                 handleFetch().then((response: any) => {
@@ -2223,25 +2269,113 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
                                 {typeof multiSelectSelectedItemOnlyStatus !== 'undefined' ? <>
 
                                     <li className="custom-select-multi__list-item-statusstring" >
-                             
-                                        {typeof multiSelectSelectedItemOnlyStatus.itemsLabel === 'string' && controlArr.labels.length > 0 && controlArr.labels.length < optionsData.length ? multiSelectSelectedItemOnlyStatus.itemsLabel.replace('{num}', `${controlArr.labels.length}`) : null}
-                                        {typeof multiSelectSelectedItemOnlyStatus.noneLabel === 'string' && controlArr.labels.length === 0 ? multiSelectSelectedItemOnlyStatus.noneLabel : null}
+                
+                                        
+                                        {MANUAL_REQ ? <>
+                                            {/* ===================== Manual requests ===================== */}
+                                            {
+                                                typeof multiSelectSelectedItemOnlyStatus.itemsLabel === 'string' && 
+                                                controlArr.labels.length > 0
+                                                ? 
+                                                multiSelectSelectedItemOnlyStatus.itemsLabel.replace('{num}', `${controlArr.labels.length}`) 
+                                                : 
+                                                null
+                                            }
+                                            {
+                                                typeof multiSelectSelectedItemOnlyStatus.noneLabel === 'string' && 
+                                                controlArr.labels.length === 0 
+                                                ? 
+                                                multiSelectSelectedItemOnlyStatus.noneLabel 
+                                                : 
+                                                null
+                                            }
 
-                                        {/* all */}
-                                        {controlArr.labels.length > 0 ? <>
-                                            {typeof multiSelectSelectedItemOnlyStatus.allItemsLabel === 'string' && controlArr.labels.length === optionsData.length ? multiSelectSelectedItemOnlyStatus.allItemsLabel.replace('{num}', `${controlArr.labels.length}`) : null}
-                                        </>: null}
+                                            {/*-- DEFAULT VALUE ---*/}
+                                            {
+                                                typeof multiSelectSelectedItemOnlyStatus.itemsLabel !== 'string' && 
+                                                controlArr.labels.length > 0 
+                                                ? 
+                                                MULTI_SEL_SELECTED_STATUS.itemsLabel.replace('{num}', `${controlArr.labels.length}`) 
+                                                : 
+                                                null
+                                            }
+                                            {
+                                                typeof multiSelectSelectedItemOnlyStatus.noneLabel !== 'string' && 
+                                                controlArr.labels.length === 0 
+                                                ? 
+                                                MULTI_SEL_SELECTED_STATUS.noneLabel 
+                                                : 
+                                                null
+                                            }
+
+                                            {/* ===================== /Manual requests ===================== */}
+
+                                        </> : <>
+                                            {/* ===================== Auto requests ===================== */}
+
+                                            {
+                                                typeof multiSelectSelectedItemOnlyStatus.itemsLabel === 'string' && 
+                                                controlArr.labels.length > 0 && 
+                                                controlArr.labels.length < optionsData.length 
+                                                ? 
+                                                multiSelectSelectedItemOnlyStatus.itemsLabel.replace('{num}', `${controlArr.labels.length}`) 
+                                                : 
+                                                null
+                                            }
+                                            {
+                                                typeof multiSelectSelectedItemOnlyStatus.noneLabel === 'string' && 
+                                                controlArr.labels.length === 0 
+                                                ? 
+                                                multiSelectSelectedItemOnlyStatus.noneLabel 
+                                                : 
+                                                null
+                                            }
+
+                                            {/* all */}
+                                            {controlArr.labels.length > 0 ? <>
+                                                {
+                                                    typeof multiSelectSelectedItemOnlyStatus.allItemsLabel === 'string' && 
+                                                    controlArr.labels.length === optionsData.length 
+                                                    ? 
+                                                    multiSelectSelectedItemOnlyStatus.allItemsLabel.replace('{num}', `${controlArr.labels.length}`) 
+                                                    : 
+                                                    null
+                                                }
+                                            </>: null}
 
 
-                                        {/*-----*/}
-                                        {typeof multiSelectSelectedItemOnlyStatus.itemsLabel !== 'string' && controlArr.labels.length > 0 ? MULTI_SEL_SELECTED_STATUS.itemsLabel.replace('{num}', `${controlArr.labels.length}`) : null}
-                                        {typeof multiSelectSelectedItemOnlyStatus.noneLabel !== 'string' && controlArr.labels.length === 0 ? MULTI_SEL_SELECTED_STATUS.noneLabel : null}
+                                            {/*-- DEFAULT VALUE ---*/}
+                                            {
+                                                typeof multiSelectSelectedItemOnlyStatus.itemsLabel !== 'string' && 
+                                                controlArr.labels.length > 0 
+                                                ? 
+                                                MULTI_SEL_SELECTED_STATUS.itemsLabel.replace('{num}', `${controlArr.labels.length}`) 
+                                                : 
+                                                null
+                                            }
+                                            {
+                                                typeof multiSelectSelectedItemOnlyStatus.noneLabel !== 'string' && 
+                                                controlArr.labels.length === 0 
+                                                ? 
+                                                MULTI_SEL_SELECTED_STATUS.noneLabel 
+                                                : 
+                                                null
+                                            }
 
-                                        {/* all */}
-                                        {controlArr.labels.length > 0 ? <>
-                                            {typeof multiSelectSelectedItemOnlyStatus.allItemsLabel !== 'string' && controlArr.labels.length === optionsData.length ? MULTI_SEL_SELECTED_STATUS.allItemsLabel.replace('{num}', `${controlArr.labels.length}`) : null}
-                                        </>: null}
+                                            {/* all */}
+                                            {controlArr.labels.length > 0 ? <>
+                                                {
+                                                    typeof multiSelectSelectedItemOnlyStatus.allItemsLabel !== 'string' && 
+                                                    controlArr.labels.length === optionsData.length 
+                                                    ? 
+                                                    MULTI_SEL_SELECTED_STATUS.allItemsLabel.replace('{num}', `${controlArr.labels.length}`) 
+                                                    : 
+                                                    null
+                                                }
+                                            </>: null}
+                                            {/* ===================== /Auto requests ===================== */}
 
+                                        </>}
 
                                     </li>
                                 </> : <>
@@ -2340,7 +2474,7 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
                         {
                             'reverse': isOpen
                         }
-                    )} style={{display: fetchTrigger ? 'none' : 'inline-block' }}>
+                    )} style={{display: MANUAL_REQ ? 'none' : 'inline-block' }}>
                         {controlArrow ? controlArrow : <svg width="10px" height="10px" viewBox="0 -4.5 20 20">
                             <g stroke="none" strokeWidth="1" fill="none">
                                 <g transform="translate(-180.000000, -6684.000000)" className="arrow-fill-g" fill="#a5a5a5">
@@ -2357,7 +2491,7 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
 
 
                     {/* SEARCH BUTTON */}
-                    {fetchTrigger ? <>
+                    {MANUAL_REQ ? <>
                         <span className="custom-select-multi__control-searchbtn">
                             <button tabIndex={-1} type="button" className="btn border-end-0 rounded-pill" onClick={(e: React.MouseEvent) => {
                                 handleFetch().then((response: any) => {

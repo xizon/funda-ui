@@ -3532,8 +3532,8 @@ var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_
     onFocus = props.onFocus,
     attributes = _objectWithoutProperties(props, _excluded);
   var DEPTH = depth || 1055; // the default value same as bootstrap
-  var LIVE_SEARCH_OK = typeof fetchTrigger !== 'undefined' && fetchTrigger === true ? true : false;
-  var LIVE_SEARCH_DISABLED = (typeof fetchTrigger === 'undefined' || fetchTrigger === false) && typeof window !== 'undefined' && typeof window['funda-ui__Select-disable-livesearch'] !== 'undefined' ? true : false; // Globally disable real-time search functionality (only valid for non-dynamic requests)
+  var MANUAL_REQ = typeof fetchTrigger !== 'undefined' && fetchTrigger === true ? true : false; // Manual requests
+  var LIVE_SEARCH_DISABLED = !MANUAL_REQ && typeof window !== 'undefined' && typeof window['funda-ui__Select-disable-livesearch'] !== 'undefined' ? true : false; // Globally disable real-time search functionality (only valid for non-dynamic requests)
 
   var FIRST_REQUEST_AUTO = typeof firstRequestAutoExec === 'undefined' ? true : firstRequestAutoExec;
   var INPUT_READONLY = LIVE_SEARCH_DISABLED ? true : typeof readOnly === 'undefined' ? null : readOnly;
@@ -3865,7 +3865,7 @@ var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_
             // STEP 4: ===========
             // value & label must be initialized
             filterRes = [];
-            if (fetchTrigger) {
+            if (MANUAL_REQ) {
               // If a manual action is used to trigger the request
               if (typeof fetchTriggerForDefaultData !== 'undefined' && fetchTriggerForDefaultData !== null && typeof (fetchTriggerForDefaultData === null || fetchTriggerForDefaultData === void 0 ? void 0 : fetchTriggerForDefaultData.values[0]) !== 'undefined') {
                 filterRes = [{
@@ -4346,7 +4346,7 @@ var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_
     // hide list
     setIsOpen(false);
     if (!MULTI_SEL_VALID) popwinPosHide();
-    if (LIVE_SEARCH_OK) {
+    if (MANUAL_REQ) {
       // clean data
       setOptionsData([]);
     } else {
@@ -4394,12 +4394,17 @@ var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_
         popwinNoMatchInit();
       }, 500);
     }
-    if (LIVE_SEARCH_OK) {
+    if (MANUAL_REQ) {
       // clean data
       setOptionsData([]);
     } else {
       // restore data
       setOptionsData(orginalData);
+    }
+
+    // When you select multiple times, it automatically focuses on the search input box
+    if (MULTI_SEL_VALID) {
+      selectInputRef.current.select();
     }
 
     // update temporary value
@@ -4411,6 +4416,10 @@ var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_
     // Specifically, the target element is the one we would like to allow scroll on (NOT a parent of that element).
     // This is also the element to apply the CSS '-webkit-overflow-scrolling: touch;' if desired.
     if (LOCK_BODY_SCROLL) (0,bodyScrollLock.disableBodyScroll)(document.querySelector('body'));
+  }
+  function fixFocusStatus() {
+    // When selecting multiple times, in order to avoid losing 
+    if (MULTI_SEL_VALID) handleFocus(selectInputRef.current);
   }
   function handleSelect(_x5) {
     return _handleSelect.apply(this, arguments);
@@ -4691,7 +4700,10 @@ var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_
                 selectInputRef.current.blur();
               }
             }
-          case 12:
+
+            // Fixed an out-of-focus issue
+            fixFocusStatus();
+          case 13:
           case "end":
             return _context2.stop();
         }
@@ -4783,6 +4795,9 @@ var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_
       _values = _values2;
     }
     onChange === null || onChange === void 0 ? void 0 : onChange(selectInputRef.current, valueInputRef.current, multipleSelectionCallback(_values, _labels));
+
+    // Fixed an out-of-focus issue
+    fixFocusStatus();
   }
   function handleCleanValue(event) {
     if (typeof event !== 'undefined') {
@@ -4894,7 +4909,7 @@ var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_
             inputVal = _args4.length > 0 && _args4[0] !== undefined ? _args4[0] : null;
             _oparams = fetchFuncMethodParams || [];
             _params = _oparams.map(function (item) {
-              return item !== '$QUERY_STRING' ? item : fetchTrigger ? '------' : '';
+              return item !== '$QUERY_STRING' ? item : MANUAL_REQ ? '------' : '';
             });
             _context4.next = 5;
             return fetchData(_params.join(','), finalRes(inputVal), inputVal);
@@ -4926,6 +4941,9 @@ var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_
 
     //
     handleChangeFetchSafe(val);
+
+    // Fixed an out-of-focus issue
+    fixFocusStatus();
   }
 
   //
@@ -4937,7 +4955,7 @@ var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_
     setControlTempValue('');
 
     //
-    onFocus === null || onFocus === void 0 ? void 0 : onFocus(event);
+    onFocus === null || onFocus === void 0 ? void 0 : onFocus(selectInputRef.current);
   }
   function handleBlur(event) {
     var _rootRef$current2;
@@ -4954,7 +4972,7 @@ var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_
       if (listContentRef.current) listContentRef.current.focus();
     }
     setTimeout(function () {
-      onBlur === null || onBlur === void 0 ? void 0 : onBlur(event);
+      onBlur === null || onBlur === void 0 ? void 0 : onBlur(selectInputRef.current);
     }, 300);
   }
   function generateInputFocusStr() {
@@ -5094,6 +5112,16 @@ var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_
     }));
     return _handleKeyPressed.apply(this, arguments);
   }
+  function handleDocOut(e) {
+    if (e.target.closest('.custom-select__options-wrapper') === null && e.target.closest('.custom-select__wrapper') === null) {
+      // cancel
+      cancel();
+      if (MULTI_SEL_VALID) popwinPosHide();
+
+      //
+      handleBlur(null);
+    }
+  }
   (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useEffect)(function () {
     // Call a function when the component has been rendered completely
     //--------------
@@ -5129,6 +5157,19 @@ var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_
       }
     }
   }, []);
+
+  // Fixed an out-of-focus issue
+  //--------------
+  // !!! TIPS:
+  // Fixed: When `fixFocusStatus()` is triggered, the above judgment will be invalidated, and this judgment will be used
+  // Fixed: The pop-up window is not closed due to the mixing of business components
+  (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useEffect)(function () {
+    document.addEventListener('pointerdown', handleDocOut);
+    return function () {
+      document.removeEventListener('pointerdown', handleDocOut);
+    };
+  }, [orginalData]); // // Avoid the issue that `setOptionsData(orginalData)` sets the original value to empty on the first entry
+
   return /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, label ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
     className: "custom-select__label"
   }, typeof label === 'string' ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("label", {
@@ -5240,7 +5281,7 @@ var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_
       'reverse': isOpen
     }),
     style: {
-      display: fetchTrigger ? 'none' : 'inline-block'
+      display: MANUAL_REQ ? 'none' : 'inline-block'
     }
   }, controlArrow ? controlArrow : /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("svg", {
     width: "10px",
@@ -5258,7 +5299,7 @@ var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_
     transform: "translate(56.000000, 160.000000)"
   }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("path", {
     d: "M144,6525.39 L142.594,6524 L133.987,6532.261 L133.069,6531.38 L133.074,6531.385 L125.427,6524.045 L124,6525.414 C126.113,6527.443 132.014,6533.107 133.987,6535 C135.453,6533.594 134.024,6534.965 144,6525.39"
-  })))))), fetchTrigger ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("span", {
+  })))))), MANUAL_REQ ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("span", {
     className: "custom-select-multi__control-searchbtn"
   }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("button", {
     tabIndex: -1,
@@ -5300,7 +5341,7 @@ var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_
     className: "custom-select-multi__list"
   }, typeof multiSelectSelectedItemOnlyStatus !== 'undefined' ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("li", {
     className: "custom-select-multi__list-item-statusstring"
-  }, typeof multiSelectSelectedItemOnlyStatus.itemsLabel === 'string' && controlArr.labels.length > 0 && controlArr.labels.length < optionsData.length ? multiSelectSelectedItemOnlyStatus.itemsLabel.replace('{num}', "".concat(controlArr.labels.length)) : null, typeof multiSelectSelectedItemOnlyStatus.noneLabel === 'string' && controlArr.labels.length === 0 ? multiSelectSelectedItemOnlyStatus.noneLabel : null, controlArr.labels.length > 0 ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, typeof multiSelectSelectedItemOnlyStatus.allItemsLabel === 'string' && controlArr.labels.length === optionsData.length ? multiSelectSelectedItemOnlyStatus.allItemsLabel.replace('{num}', "".concat(controlArr.labels.length)) : null) : null, typeof multiSelectSelectedItemOnlyStatus.itemsLabel !== 'string' && controlArr.labels.length > 0 ? MULTI_SEL_SELECTED_STATUS.itemsLabel.replace('{num}', "".concat(controlArr.labels.length)) : null, typeof multiSelectSelectedItemOnlyStatus.noneLabel !== 'string' && controlArr.labels.length === 0 ? MULTI_SEL_SELECTED_STATUS.noneLabel : null, controlArr.labels.length > 0 ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, typeof multiSelectSelectedItemOnlyStatus.allItemsLabel !== 'string' && controlArr.labels.length === optionsData.length ? MULTI_SEL_SELECTED_STATUS.allItemsLabel.replace('{num}', "".concat(controlArr.labels.length)) : null) : null)) : /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, typeof renderSelectedValue === 'function' ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, renderSelectedValue(controlArr, handleMultiControlItemRemove)) : /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, controlArr.labels.map(function (item, index) {
+  }, MANUAL_REQ ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, typeof multiSelectSelectedItemOnlyStatus.itemsLabel === 'string' && controlArr.labels.length > 0 ? multiSelectSelectedItemOnlyStatus.itemsLabel.replace('{num}', "".concat(controlArr.labels.length)) : null, typeof multiSelectSelectedItemOnlyStatus.noneLabel === 'string' && controlArr.labels.length === 0 ? multiSelectSelectedItemOnlyStatus.noneLabel : null, typeof multiSelectSelectedItemOnlyStatus.itemsLabel !== 'string' && controlArr.labels.length > 0 ? MULTI_SEL_SELECTED_STATUS.itemsLabel.replace('{num}', "".concat(controlArr.labels.length)) : null, typeof multiSelectSelectedItemOnlyStatus.noneLabel !== 'string' && controlArr.labels.length === 0 ? MULTI_SEL_SELECTED_STATUS.noneLabel : null) : /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, typeof multiSelectSelectedItemOnlyStatus.itemsLabel === 'string' && controlArr.labels.length > 0 && controlArr.labels.length < optionsData.length ? multiSelectSelectedItemOnlyStatus.itemsLabel.replace('{num}', "".concat(controlArr.labels.length)) : null, typeof multiSelectSelectedItemOnlyStatus.noneLabel === 'string' && controlArr.labels.length === 0 ? multiSelectSelectedItemOnlyStatus.noneLabel : null, controlArr.labels.length > 0 ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, typeof multiSelectSelectedItemOnlyStatus.allItemsLabel === 'string' && controlArr.labels.length === optionsData.length ? multiSelectSelectedItemOnlyStatus.allItemsLabel.replace('{num}', "".concat(controlArr.labels.length)) : null) : null, typeof multiSelectSelectedItemOnlyStatus.itemsLabel !== 'string' && controlArr.labels.length > 0 ? MULTI_SEL_SELECTED_STATUS.itemsLabel.replace('{num}', "".concat(controlArr.labels.length)) : null, typeof multiSelectSelectedItemOnlyStatus.noneLabel !== 'string' && controlArr.labels.length === 0 ? MULTI_SEL_SELECTED_STATUS.noneLabel : null, controlArr.labels.length > 0 ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, typeof multiSelectSelectedItemOnlyStatus.allItemsLabel !== 'string' && controlArr.labels.length === optionsData.length ? MULTI_SEL_SELECTED_STATUS.allItemsLabel.replace('{num}', "".concat(controlArr.labels.length)) : null) : null))) : /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, typeof renderSelectedValue === 'function' ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, renderSelectedValue(controlArr, handleMultiControlItemRemove)) : /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, controlArr.labels.map(function (item, index) {
     return /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("li", {
       key: 'selected-item-' + index,
       "data-value": controlArr.values[index],
@@ -5363,7 +5404,7 @@ var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_
       'reverse': isOpen
     }),
     style: {
-      display: fetchTrigger ? 'none' : 'inline-block'
+      display: MANUAL_REQ ? 'none' : 'inline-block'
     }
   }, controlArrow ? controlArrow : /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("svg", {
     width: "10px",
@@ -5381,7 +5422,7 @@ var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_
     transform: "translate(56.000000, 160.000000)"
   }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("path", {
     d: "M144,6525.39 L142.594,6524 L133.987,6532.261 L133.069,6531.38 L133.074,6531.385 L125.427,6524.045 L124,6525.414 C126.113,6527.443 132.014,6533.107 133.987,6535 C135.453,6533.594 134.024,6534.965 144,6525.39"
-  })))))), fetchTrigger ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("span", {
+  })))))), MANUAL_REQ ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("span", {
     className: "custom-select-multi__control-searchbtn"
   }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("button", {
     tabIndex: -1,
