@@ -1067,7 +1067,7 @@ var initAsyncItems = /*#__PURE__*/function () {
   };
 }();
 
-;// CONCATENATED MODULE: ./src/tree-utils.ts
+;// CONCATENATED MODULE: ./src/utils/func.ts
 var removeItemOnce = function removeItemOnce(arr, key) {
   return arr.filter(function (item) {
     return item.key !== key;

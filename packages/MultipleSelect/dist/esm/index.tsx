@@ -22,7 +22,7 @@ import { clsWrite, combinedCls } from 'funda-utils/dist/cjs/cls';
 
 
 
-import { multiSelControlOptionExist, uniqueArr } from './multiple-select-utils/func';
+import { multiSelControlOptionExist, uniqueArr } from './utils/func';
 import ItemList from './ItemList';
 
 

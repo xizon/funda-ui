@@ -5,7 +5,6 @@ import { clsWrite, combinedCls } from 'funda-utils/dist/cjs/cls';
 import ModalDialog from 'funda-modaldialog';
 
 
-
 export interface EventsValueConfig {
     id: string | number;
     date: string,
@@ -65,7 +64,8 @@ export type EventCalendarProps = {
     onCellMouseEnter?: (el: any) => void;
     onCellMouseLeave?: (el: any) => void;
     onCellClick?: (el: any) => void;
-    
+    onCellMouseUp?: (el: any) => void;
+    onKeyPressed?: (el: any) => void;
 
 }
 
@@ -119,6 +119,8 @@ const EventCalendar = (props: EventCalendarProps) => {
         onCellMouseEnter,
         onCellMouseLeave,
         onCellClick,
+        onCellMouseUp,
+        onKeyPressed
     } = props;
 
     const DAYS = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
@@ -153,7 +155,7 @@ const EventCalendar = (props: EventCalendarProps) => {
     const EVENTS_DELETE_ENABLED = typeof modalDeleteContent !== 'undefined';
     const [showEdit, setShowEdit] = useState<boolean>(false);
     const [showDelete, setShowDelete] = useState<boolean>(false);
-    
+
     // Open temporary storage for pop-ups
     const [tableCellId, setTableCellId] = useState<number>(-1);
 
@@ -162,10 +164,10 @@ const EventCalendar = (props: EventCalendarProps) => {
         contentRef,
         () => ({
             gridInit: () => {
-         
+
             },
             gridReset: (cb?: any) => {
-            
+
             }
         }),
         [contentRef],
@@ -235,60 +237,112 @@ const EventCalendar = (props: EventCalendarProps) => {
             currentStartDay = getStartDayOfMonth(_date);
         }
 
-             
+
         //
-        const allDays = Array(days[currentMonth] + (currentStartDay - 1)).fill(null).map((_: any, i: number) => i ); // [0,1,..,30,31]
+        const allDays = Array(days[currentMonth] + (currentStartDay - 1)).fill(null).map((_: any, i: number) => i); // [0,1,..,30,31]
         const rows = Math.ceil(allDays.length / 7); // 5
-       
-        return Array.from({length: rows}).fill(null).map((_: any, i: number) => {
-            const _col = allDays.slice(i * 7, (i+1) * 7);
-            
+
+        //
+        const _tempCells: any[] = Array.from({ length: rows }).fill(null);
+
+
+        const _getForwardFill = (_year: number, _month: number) => {
+            // Get the last day of the previous month
+            const lastDayOfLastMonth = new Date(_year, _month - 1, 0);
+            const last7Days: Date[] = [];
+
+            // Rewind 7 days forward from the last day
+            for (let i = 0; i < 7; i++) {
+                last7Days.unshift(new Date(lastDayOfLastMonth));
+                lastDayOfLastMonth.setDate(lastDayOfLastMonth.getDate() - 1);
+            }
+            return last7Days.map((v: Date) => getCalendarDate(v));
+        };
+
+        const _getBackFill = (_year: number, _month: number) => {
+            // Get the first day of the next month
+            const firstDayOfNextMonth = new Date(_year, _month, 1);
+            const first7Days: Date[] = [];
+
+            // Rewind 7 days forward from the first day of the next month
+            for (let i = 0; i < 7; i++) {
+                first7Days.push(new Date(firstDayOfNextMonth));
+                firstDayOfNextMonth.setDate(firstDayOfNextMonth.getDate() + 1);
+            }
+
+            return first7Days.map((v: Date) => getCalendarDate(v));
+        };
+
+
+        return _tempCells.map((_: any, j: number) => {
+            const _col = allDays.slice(j * 7, (j + 1) * 7);
+
+
             // back fill
             const backFillArr: null[] = [];
-            for (let k = 0; k < 7-_col.length; k++) {
+            for (let k = 0; k < 7 - _col.length; k++) {
                 backFillArr.push(null);
             }
             _col.splice(_col.length, 0, ...backFillArr as any);
-            
+
+
+            //
+            const isFirstGroup = j === 0;
+            const isLastGroup = j === _tempCells.length - 1;
+
+
+            // forward fill
+            const __forwardFillDate: string[] = _getForwardFill(year, month + 1);
+
+            // back fill
+            const __backFillDate: string[] = _getBackFill(year, month + 1);
+
+
+            const _getDateShow = (_dayIndex: number, _m: number, _startDay: number, _month: number) => {
+                const currentDay = typeof _dayIndex === 'number' ? _dayIndex - (_startDay - 2) : 0; // ..., -3, -2, -1, 0, 1, 2, 3, 4, 5, 6, 7, ...
+
+                // date
+                let _dateShow: any = currentDay > 0 ? `${year}-${_month + 1}-${currentDay}` : '';
+
+                // forward & back
+                if (isFirstGroup && _dateShow === '') {
+                    _dateShow = __forwardFillDate.at(currentDay - 1);
+                }
+
+                if (isLastGroup && _dateShow === '') {
+                    _dateShow = __backFillDate.at(_m);
+                }
+
+
+                return {
+                    date: getCalendarDate(_dateShow),
+                    firstGroup: isFirstGroup,
+                    lastGroup: isLastGroup,
+                    validDisplayDate: currentDay > 0 && currentDay <= days[month]
+                };
+
+            }
+
+            //
             return {
                 month: currentMonth,
                 startDay: currentStartDay,
-                row: i,
-                col: _col
+                row: j,
+                col: _col,
+                dateInfo: _col.map((k: number, m: number) => {
+                    const _lastWeekDays: number = _col.filter(Boolean).length;
+                    return _getDateShow(k, m - _lastWeekDays, currentStartDay, currentMonth);
+                }),
+                weekDisplay: _col.map((k: number, m: number) => {
+                    return WEEK[m]
+                }),
+                week: _col.map((k: number, m: number) => {
+                    return m
+                }),
+
             }
         });
-    };
 
-    const getForwardFill = () => {
-        const prevMonthStartDay = getCells('forward').at(-1)?.startDay;
-        const prevMonthLastRowNums: any = getCells('forward').at(-1)?.col.filter(Boolean);
-
-        if (prevMonthLastRowNums) {
-            if (prevMonthLastRowNums.length === 7) return [];  // no remaining
-
-            return prevMonthLastRowNums.map((dayIndex: number) => {
-                const d = typeof dayIndex === 'number' ? dayIndex - (prevMonthStartDay - 2) : 0;
-                return d;
-            });
-        } else {
-            return [];
-        }
-    };
-
-    const getBackFill = () => {
-        const prevMonthStartDay = getCells('back').at(0)?.startDay;
-        const prevMonthLastRowNums: any = getCells('back').at(0)?.col.filter(Boolean);
-
-        if (prevMonthLastRowNums) {
-            if (prevMonthLastRowNums.length === 7) return [];  // no remaining
-
-            return prevMonthLastRowNums.map((dayIndex: number) => {
-                const d = typeof dayIndex === 'number' ? dayIndex - (prevMonthStartDay - 2) : 0;
-                return d;
-            }).filter((n: number) => n > 0);
-        } else {
-            return [];
-        }
     };
 
 
@@ -329,7 +383,7 @@ const EventCalendar = (props: EventCalendarProps) => {
             //
             onChangeMonth?.({
                 day: padZero(day),
-                month: padZero(_date.getMonth()+1),
+                month: padZero(_date.getMonth() + 1),
                 year: _date.getFullYear().toString()
             });
 
@@ -351,7 +405,7 @@ const EventCalendar = (props: EventCalendarProps) => {
             //
             onChangeMonth?.({
                 day: padZero(day),
-                month: padZero(_date.getMonth()+1),
+                month: padZero(_date.getMonth() + 1),
                 year: _date.getFullYear().toString()
             });
 
@@ -386,7 +440,7 @@ const EventCalendar = (props: EventCalendarProps) => {
         //
         onChangeMonth?.({
             day: padZero(day),
-            month: padZero(currentIndex+1),
+            month: padZero(currentIndex + 1),
             year: year.toString()
         });
 
@@ -433,7 +487,7 @@ const EventCalendar = (props: EventCalendarProps) => {
         // Guaranteed year change triggered by the front and rear buttons
         onChangeYear?.({
             day: padZero(day),
-            month: padZero(month+1),
+            month: padZero(month + 1),
             year: year.toString()
         });
     }, [year]);
@@ -449,7 +503,7 @@ const EventCalendar = (props: EventCalendarProps) => {
 
         // update events value
         if (Array.isArray(eventsValue)) setVal(eventsValue);
-        
+
         // update current today
         if (typeof customTodayDate === 'string' && customTodayDate !== '' && isValidDate(customTodayDate)) {
             const _customNow = new Date(customTodayDate);
@@ -465,10 +519,16 @@ const EventCalendar = (props: EventCalendarProps) => {
     return (
         <>
 
-            <div className={combinedCls(
-                "e-cal-normal__wrapper",
-                calendarWrapperClassName
-            )}>
+            <div 
+                className={combinedCls(
+                    "e-cal-normal__wrapper",
+                    calendarWrapperClassName
+                )}
+                onKeyDown={(e: React.KeyboardEvent<HTMLDivElement>) => {
+                    onKeyPressed?.(e);
+                }}
+                tabIndex={-1}
+            >
 
 
                 {/*++++++++++++++++ MAIN ++++++++++++++++*/}
@@ -496,69 +556,50 @@ const EventCalendar = (props: EventCalendarProps) => {
                 </div>
                 <div className="e-cal-normal__body">
 
-                     {/* week */}
-                     <div className="e-cal-normal__row">
+                    {/* week */}
+                    <div className="e-cal-normal__row">
                         {WEEK.map((s: string, i: number) => (
-                            <div 
+                            <div
                                 className={combinedCls(
                                     'e-cal-normal__cell e-cal-normal__day e-cal-normal__day--week e-cal-normal__day--disabled bg-secondary-subtle empty',
                                     {
-                                        'last-cell': i === WEEK.length-1
+                                        'last-cell': i === WEEK.length - 1
                                     }
-                                )} 
-                                key={i} 
-                                data-week={i} 
+                                )}
+                                key={i}
+                                data-week={i}
                                 dangerouslySetInnerHTML={{
                                     __html: s
-                                }} 
+                                }}
                             />
                         ))}
-                     </div>
-                     {/* /week */}
+                    </div>
+                    {/* /week */}
 
-                     {/* day */}
+                    {/* day */}
                     {getCells().map((item: any, j: number) => {
 
-                        const isFirstRow = j === 0;
-                        const isLastRow = j === getCells().length-1;
-             
-                        // forward fill
-                        const __forwardFillNum: number[] = getForwardFill();
-
-                        // back fill
-                        const __backFillNum: number[] = getBackFill();
-
+                        const isLastRow = j === getCells().length - 1;
 
                         return <div key={'row' + item.row} className="e-cal-normal__row">
                             {item.col.map((dayIndex: number | null, i: number) => {
-                                const d = typeof dayIndex === 'number' ? dayIndex - (startDay - 2) : 0;
-                                const _currentData = val.filter((item: any) => getCalendarDate(item.date as string) === getCalendarDate(`${year}-${month + 1}-${d}`));
-                                const isLastCol = i === item.col.length-1;
 
-                                
+                                const isLastCell = i === item.col.length - 1;
+
                                 // date
-                                let _dateShow = d > 0 ? `${year}-${month+1}-${d}` : '';
+                                const _dateShow = item.dateInfo[i].date;
+                                const _dateDayShow = _dateShow.split('-').at(-1);
 
-                                const isForward = isFirstRow && __forwardFillNum && typeof __forwardFillNum[i] !== 'undefined';
-                                const isBack = isLastRow && __backFillNum && typeof __backFillNum[i - item.col.filter(Boolean).length] !== 'undefined';
-        
+                                // week day
+                                const weekDay = item.week[i];
 
-                                if (isForward && _dateShow === '') {
-                                    if (month + 1 === 1) {
-                                        _dateShow = `${year-1}-12-${__forwardFillNum[i]}`;
-                                    } else {
-                                        _dateShow = `${year}-${month}-${__forwardFillNum[i]}`;
-                                    }
-                                }
+                                // helper
+                                const d = parseFloat(_dateDayShow);
+                                const _currentData = val.filter((item: any) => getCalendarDate(item.date as string) === _dateShow);
+                                const isInteractive = item.dateInfo[i].validDisplayDate;  // The date on which the user interaction can occur, e.g. click, modify
+                                const isForward = item.dateInfo[i].firstGroup && !isInteractive;
+                                const isBack = item.dateInfo[i].lastGroup && !isInteractive;
 
-                                if (isBack && _dateShow === '') {
-                                    if (month + 1 === 12) {
-                                        _dateShow = `${year+1}-1-${__backFillNum[i-item.col.filter(Boolean).length]}`;
-                                    } else {
-                                        _dateShow = `${year}-${month + 2}-${__backFillNum[i-item.col.filter(Boolean).length]}`;
-                                    }
-                                }        
- 
 
                                 const _eventContent = () => {
 
@@ -569,24 +610,24 @@ const EventCalendar = (props: EventCalendarProps) => {
                                     ) {
                                         return null;
                                     }
-            
+
                                     //
                                     const _items = _currentData[0].list;
-            
+
                                     return _items.map((cellItem: any, cellItemIndex: number) => {
-            
+
                                         return <div
                                             className={combinedCls(
                                                 `e-cal-normal__cell-item e-cal-normal__cell-item-${cellItemIndex}`,
                                                 {
                                                     'first': cellItemIndex === 0,
-                                                    'last': cellItemIndex === _items.length-1
+                                                    'last': cellItemIndex === _items.length - 1
                                                 }
                                             )}
                                             key={`cell-item-${cellItemIndex}}`}
-                                            data-date={getCalendarDate(_dateShow)}
-                                            data-day={padZero(d)}
-                                            data-week={i}
+                                            data-date={_dateShow}
+                                            data-day={_dateDayShow}
+                                            data-week={weekDay}
                                             onClick={(e: React.MouseEvent) => {
                                                 e.stopPropagation();
 
@@ -596,37 +637,39 @@ const EventCalendar = (props: EventCalendarProps) => {
                                                 // Callback
                                                 cellItem.callback?.();
 
-            
-                                                if (d > 0) {
+
+                                                if (isInteractive) {
                                                     handleDayChange(e, d); // update current day
-    
+
                                                     onChangeDate?.(e, cellItem);
-    
+
                                                     if (EVENTS_ENABLED) {
                                                         onModalEditOpen?.(cellItem, () => setShowEdit(true), 'normal');
                                                     }
                                                 }
                                             }}
                                         >
-            
+
                                             {/* ITEM */}
                                             <div
                                                 className="e-cal-normal__day__event"
                                                 style={typeof cellItem !== 'undefined' && (cellItem as any).eventStyles !== 'undefined' ? cellItem.eventStyles : {}}
-                                                dangerouslySetInnerHTML={{
+                                                dangerouslySetInnerHTML={typeof cellItem.data === 'string' ? {
                                                     __html: cellItem.data
-                                                }}
-                                            ></div>
+                                                } : undefined}
+                                            >
+                                                {React.isValidElement(cellItem.data) ? <>{cellItem.data}</> : null}
+                                            </div>
                                             {/* /ITEM */}
-            
+
                                             {/* DELETE BUTTON */}
                                             <div
                                                 className={`e-cal-normal__day__eventdel ${cellCloseBtnClassName || ''}`}
                                             >
-                                                <a 
-                                                    href="#" 
-                                                    tabIndex={-1} 
-                                                    className="align-middle" 
+                                                <a
+                                                    href="#"
+                                                    tabIndex={-1}
+                                                    className="align-middle"
                                                     data-date={getCalendarDate(_dateShow)}
                                                     data-day={padZero(d)}
                                                     data-week={i}
@@ -636,12 +679,12 @@ const EventCalendar = (props: EventCalendarProps) => {
 
                                                         // update cell data
                                                         setTableCellId(cellItem.id);
-                                                        
+
 
                                                         const _existsContent = cellItem;
 
                                                         //
-                                                        if (d > 0) {
+                                                        if (isInteractive) {
                                                             handleDayChange(e, d); // update current day
 
                                                             onChangeDate?.(e, {
@@ -653,29 +696,29 @@ const EventCalendar = (props: EventCalendarProps) => {
                                                                 onModalDeleteOpen?.(_existsContent, () => setShowDelete(true));
                                                             }
                                                         }
-                                                        
+
                                                     }}
                                                 >
                                                     {_delBtn()}
                                                 </a>
-            
+
                                             </div>
                                             {/* /DELETE BUTTON */}
                                         </div>
                                     });
                                 };
-            
+
 
                                 return (
                                     <div
                                         className={combinedCls(
                                             'e-cal-normal__cell e-cal-normal__day',
                                             {
-                                                'empty': d <= 0,
+                                                'empty': !isInteractive,
                                                 'today': d === now.getDate(),
                                                 'selected': d === day,
-                                                'last-cell': isLastCol,
-                                                'last-row': isLastRow
+                                                'last-cell': isLastCell,
+                                                'last-row': isLastRow,
                                             }
                                         )}
                                         key={"col" + i}
@@ -685,29 +728,34 @@ const EventCalendar = (props: EventCalendarProps) => {
                                         onMouseEnter={(e: React.MouseEvent) => {
                                             onCellMouseEnter?.(e);
                                         }}
-                                        onMouseLeave={(e: React.MouseEvent) => {
-                                            onCellMouseLeave?.(e);
-                                        }}
-                                        onClick={(e: React.MouseEvent) => {
+                                        onMouseDown={(e: React.MouseEvent) => {
                                             //
                                             onCellClick?.(e);
 
-                                            if (d > 0) {
+                                            if (isInteractive) {
                                                 handleDayChange(e, d); // update current day
                                                 onChangeDate?.(e, null);
                                             }
                                         }}
-                                        
+                                        onMouseLeave={(e: React.MouseEvent) => {
+                                            onCellMouseLeave?.(e);
+                                        }}
+                                        onMouseUp={(e: React.MouseEvent) => {
+                                            onCellMouseUp?.(e);
+                                        }}
+
                                     >
-                                        
-                                        {/* forward fill */}
-                                        {isForward ? <><span className="disabled">{__forwardFillNum[i]}</span></> : null}
 
-                                        {/* day */}
-                                        {d > 0 ? <span>{d}</span> : null}
-
-                                        {/* back fill */}
-                                        {isBack? <span className="disabled">{__backFillNum[i-item.col.filter(Boolean).length]}</span> : null}
+                                        {/* forward fill & day & back fill */}
+                                        <span
+                                            className={combinedCls(
+                                                {
+                                                    'disabled': !isInteractive
+                                                }
+                                            )}
+                                        >
+                                            {d}
+                                        </span>
 
                                         {/*++++++++++++++++ EVENT ++++++++++++++++*/}
                                         {_eventContent()}
@@ -718,10 +766,10 @@ const EventCalendar = (props: EventCalendarProps) => {
                                             <div
                                                 className={`e-cal-normal__day__eventadd ${cellAddBtnClassName || ''}`}
                                             >
-                                                <a 
-                                                    href="#" 
-                                                    tabIndex={-1} 
-                                                    className="align-middle" 
+                                                <a
+                                                    href="#"
+                                                    tabIndex={-1}
+                                                    className="align-middle"
                                                     data-date={getCalendarDate(_dateShow)}
                                                     data-day={padZero(d)}
                                                     data-week={i}
@@ -733,7 +781,7 @@ const EventCalendar = (props: EventCalendarProps) => {
                                                         setTableCellId(-1);
 
                                                         //
-                                                        if (d > 0) {
+                                                        if (isInteractive) {
                                                             handleDayChange(e, d); // update current day
 
                                                             onChangeDate?.(e, {
@@ -756,7 +804,6 @@ const EventCalendar = (props: EventCalendarProps) => {
                                             </div>
                                         </>}
                                         {/* /ADD BUTTON */}
-                                
 
                                     </div>
                                 );
@@ -765,8 +812,8 @@ const EventCalendar = (props: EventCalendarProps) => {
 
                     })}
 
-                     {/* /day */}
-                    
+                    {/* /day */}
+
                 </div>
                 {/*++++++++++++++++ /MAIN ++++++++++++++++*/}
 
@@ -775,10 +822,10 @@ const EventCalendar = (props: EventCalendarProps) => {
                 <div className={`e-cal-normal__month-wrapper shadow p-3 mb-5 bg-body-tertiary rounded ${winMonth ? 'active' : ''}`}>
                     <div className="e-cal-normal__month-container">
                         {MONTHS_FULL.map((month, index) => {
-                            return <div 
-                                data-month={padZero(index+1)}
-                                className={`e-cal-normal__month ${selectedMonth === index ? ' selected' : ''}`} 
-                                key={month + index} 
+                            return <div
+                                data-month={padZero(index + 1)}
+                                className={`e-cal-normal__month ${selectedMonth === index ? ' selected' : ''}`}
+                                key={month + index}
                                 onClick={() => { handleMonthChange(index) }}
                             >{month}</div>
                         })}
@@ -790,10 +837,10 @@ const EventCalendar = (props: EventCalendarProps) => {
                 <div className={`e-cal-normal__year-wrapper shadow p-3 mb-5 bg-body-tertiary rounded ${winYear ? 'active' : ''}`}>
                     <div className="e-cal-normal__year-container bg-body-tertiary">
                         {yearsArray.map((year, index) => {
-                            return <div 
+                            return <div
                                 data-year={year}
-                                className={`e-cal-normal__year ${selectedYear === year ? ' selected' : ''}`} 
-                                key={year + index} 
+                                className={`e-cal-normal__year ${selectedYear === year ? ' selected' : ''}`}
+                                key={year + index}
                                 onClick={() => { handleYearChange(year) }}
                             >{year}</div>
                         })}
@@ -846,7 +893,7 @@ const EventCalendar = (props: EventCalendarProps) => {
                 </ModalDialog>
                 {/*<!-- /DELETE -->*/}
 
-                
+
                 {/*<!-- EDIT -->*/}
                 <ModalDialog
                     show={showEdit}

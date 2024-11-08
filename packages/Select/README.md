@@ -13,7 +13,7 @@ import Select from 'funda-ui/Select';
 import axios from 'axios';
 
 // component styles
-import 'funda-ui/Select/index.css';
+import '../funda-ui/Select/src/index.scss';
 
 class DataService {
     
@@ -389,7 +389,7 @@ import React from "react";
 import Select from 'funda-ui/Select';
 
 // component styles
-import 'funda-ui/Select/index.css';
+import '../funda-ui/Select/src/index.scss';
 
 export default () => {
 
@@ -427,7 +427,7 @@ import React from "react";
 import Select from 'funda-ui/Select';
 
 // component styles
-import 'funda-ui/Select/index.css';
+import '../funda-ui/Select/src/index.scss';
 
 export default () => {
 
@@ -479,7 +479,7 @@ import React from "react";
 import Select from 'funda-ui/Select';
 
 // component styles
-import 'funda-ui/Select/index.css';
+import '../funda-ui/Select/src/index.scss';
 
 export default () => {
 
@@ -520,7 +520,7 @@ import React from "react";
 import Select from 'funda-ui/Select';
 
 // component styles
-import 'funda-ui/Select/index.css';
+import '../funda-ui/Select/src/index.scss';
 
 
 class DataService {
@@ -589,7 +589,7 @@ import React from "react";
 import Select from 'funda-ui/Select';
 
 // component styles
-import 'funda-ui/Select/index.css';
+import '../funda-ui/Select/src/index.scss';
 
 export default () => {
 
@@ -635,7 +635,7 @@ import React from "react";
 import Select, { MultiSelectControlValConfig } from 'funda-ui/Select';
 
 // component styles
-import 'funda-ui/Select/index.css';
+import '../funda-ui/Select/src/index.scss';
 
 export default () => {
 
@@ -704,7 +704,7 @@ import React, { useState } from "react";
 import Select from 'funda-ui/Select';
 
 // component styles
-import 'funda-ui/Select/index.css';
+import '../funda-ui/Select/src/index.scss';
 
 class DataService {
     
@@ -944,7 +944,7 @@ import React, { useState } from "react";
 import Select from 'funda-ui/Select';
 
 // component styles
-import 'funda-ui/Select/index.css';
+import '../funda-ui/Select/src/index.scss';
 
 class DataService {
     
@@ -1112,7 +1112,7 @@ import React, { useEffect, useState } from "react";
 import Select from 'funda-ui/Select';
 
 // component styles
-import 'funda-ui/Select/index.css';
+import '../funda-ui/Select/src/index.scss';
 
 
 
@@ -1330,7 +1330,7 @@ import React from "react";
 import Select from 'funda-ui/Select';
 
 // component styles
-import 'funda-ui/Select/index.css';
+import '../funda-ui/Select/src/index.scss';
 
 class DataService {
 
@@ -1503,7 +1503,7 @@ import React from "react";
 import Select from 'funda-ui/Select';
 
 // component styles
-import 'funda-ui/Select/index.css';
+import '../funda-ui/Select/src/index.scss';
 
 export default () => {
  
@@ -1558,7 +1558,7 @@ Lets you callback the handle exposed as attribute `contentRef`.
 import Select from 'funda-ui/Select';
 
 // component styles
-import 'funda-ui/Select/index.css';
+import '../funda-ui/Select/src/index.scss';
 
 
 export default () => {
@@ -1692,6 +1692,41 @@ export default () => {
 ```
 
 
+## Use spaces to trigger events
+
+
+```js
+import React from "react";
+import Select from 'funda-ui/Select';
+
+// component styles
+import '../funda-ui/Select/src/index.scss';
+
+export default () => {
+
+
+    return (
+        <>
+
+            <Select
+                ...
+                onKeyPressed={(event: any) => {
+                    if (event.key === ' ') {
+                        // Prevent the page from scrolling
+                        event.preventDefault();
+                        
+                        // do something
+                        alert('You hit the spacebar')
+                    }
+                }}
+                ...
+            />
+
+        </>
+    );
+}
+```
+
 
 
 ## Globally disable real-time search functionality (only valid for non-dynamic requests)
@@ -1765,6 +1800,7 @@ import Select from 'funda-ui/Select';
 | `onChange` | function  | - | Call a function when the value of an HTML element is changed. It returns three callback values. <br /> <ol><li>The first is the current control (**HTML Element**)</li><li>The second is the control of the value save (**HTML Element**)</li><li>The last is the data [Exposes the JSON (Returns an Array Collection when `multiSelect` is enabled) format data] about the option as an argument. (**JSON Object**)</li></ol> | - |
 | `onBlur` | function  | - | Call a function when a user leaves a form field. It returns only one callback value which is the Control (**HTML Element**) | - |
 | `onFocus` | function  | - | Call a function when an form field gets focus. It returns only one callback value which is the Control (**HTML Element**)| - |
+| `onKeyPressed` | function  | - | Call a function when the user presses a key on the keyboard. It returns three callback values. <br /> <ol><li>The first is the current event (**KeyboardEvent**)</li><li>The second is the current control (**HTML Element**)</li><li>The last is the control of the value save (**HTML Element**)</li></ol> | - |
 
 
 It accepts all props which this control support. Such as `style`, `data-*`, `tabIndex`, `id`, and so on.

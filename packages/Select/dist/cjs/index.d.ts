@@ -92,6 +92,7 @@ export declare type SelectProps = {
     onChange?: SelectOptionChangeFnType | null;
     onBlur?: (e: any) => void;
     onFocus?: (e: any) => void;
+    onKeyPressed?: (arg1: any, arg2: any, arg3: any) => void;
 };
 declare const Select: React.ForwardRefExoticComponent<SelectProps & React.RefAttributes<unknown>>;
 export default Select;

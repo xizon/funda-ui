@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef, forwardRef } from 'react';
 
-import { optionsFlat, isObject } from './native-select-utils/func';
+import { optionsFlat, isObject } from './utils/func';
 
 
 import useComId from 'funda-utils/dist/cjs/useComId';

@@ -541,7 +541,7 @@ import EventCalendar from 'funda-ui/EventCalendar';
 | --- | --- | --- | --- | --- |
 | `contentRef` | React.RefObject | - | It exposes the following methods:  <br /> <ol><li>`contentRef.current.gridInit()`</li><li>`contentRef.current.gridReset()`</li></ol> | - |
 | `calendarWrapperClassName` | string | - | The class name of the calendar wrapper. | - |
-| `customTodayDate` | string  | - | Specify a default today. such as `2023-11-16` | - |
+| `customTodayDate` | string  | - | Specify a default today. such as `2023-11-06` | - |
 | `eventsValue` | array  | - | Specify the default value for all events. Its properties are described below in the documentation. such as `[{"date":"2023-11-20","list":[{"id":1,"date":"2023-11-20","time":"","data":"<span class=\"text-warning\">event 1 </span>","eventStyles":{"background":"rgb(255, 240, 227)"}}]},{"date":"2023-09-22","list":[{"id":2,"date":"2023-09-22","time":"","data":"event 2",},{"id":3,"date":"2023-09-22","time":"","data":"event 2_2",}]},{"date":"2023-09-12","list":[{"id":4,"date":"2023-09-12","time":"","data":"event 3","eventStyles":{"background":"rgb(255, 240, 227)"}}]},{"date":"2023-11-24","list":[{"id":5,"date":"2023-11-24","time":"","data":"<del>very long event string</del> here, very long event string here ","eventStyles":{"background":"rgb(203, 228, 240)"}}]}]` | - |
 | `langWeek` | array  | `['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN']` | Localization in the component of week sequence. <blockquote>Support html tags. <br />such as `['<small>MON</small>', '<small>TUE</small>', '<small>WED</small>', '<small>THU</small>', '<small>FRI</small>', '<small>SAT</small>', '<small>SUN</small>']`</blockquote> | - |
 | `langWeekFull` | array  | `['MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY', 'SATURDAY', 'SUNDAY']` | Localization in the component of full week sequence. <blockquote>This attribute is not valid yet</blockquote> | - |
@@ -580,7 +580,8 @@ import EventCalendar from 'funda-ui/EventCalendar';
 | `onCellMouseEnter` | function  | - | It fires when the mouse pointer enters a cell. It returns only one callback value which is the current cell event (**Event**). | - |
 | `onCellMouseLeave` | function  | - | It fires when the mouse pointer leaves a cell. It returns only one callback value which is the current cell event (**Event**). | - |
 | `onCellClick` | function  | - | It fires when the mouse pointer clicks a cell. It returns only one callback value which is the current cell event (**Event**). | - |
-
+| `onCellMouseUp` | function  | - | It fires when the user presses a key on the keyboard in the table. It returns only one callback value which is the current cell event (**Event**) | - |
+| `onKeyPressed` | function  | - | It fires when the user presses a key on the keyboard in the table. It returns only one callback value which is the current cell event (**Event**). | - |
 
 ---
 
@@ -600,7 +601,7 @@ Array Object configuration properties of the `eventsValue.list` (**Array**):
 | `id` | string \| number | - | Item ID. | ✅ |
 | `date` | string | - | Date of item. such as `2023-11-02` <blockquote>Each cell can support multiple pieces of data</blockquote> | ✅ |
 | `time` | string | - | Date of item. such as `25:33:00` | ✅ |
-| `data` | string | - | Specify the value for event  <blockquote>Support html tags</blockquote> | ✅ |
+| `data` | string \| ReactNode | - | Specify the value for event  <blockquote>Support html tags if "string"</blockquote> | ✅ |
 | `dataTooltip` | string | - | Specify the value note for event. It will be displayed in the form of Tooltip.  <blockquote>Support html tags</blockquote> | - |
 | `eventStyles` | React.CSSProperties | - | Use inline styles to event area. such as `{ backgroundColor: "red", fontSize: "12px" }` | - |
 | `callback` | function | - | Click on the callback function for this item. <blockquote>If this field exists, triggering it will not close the pop-up.</blockquote> | - |

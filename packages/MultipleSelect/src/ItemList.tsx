@@ -8,7 +8,7 @@ import { clsWrite, combinedCls } from 'funda-utils/dist/cjs/cls';
 
 
 
-import { formatIndentVal, multiSelControlOptionExist } from './multiple-select-utils/func';
+import { formatIndentVal, multiSelControlOptionExist } from './utils/func';
 
 /* Recursively nested components to traverse nodes
 -------------------------------------------------*/

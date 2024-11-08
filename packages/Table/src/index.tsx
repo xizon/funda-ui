@@ -8,7 +8,7 @@ export { default as TableColgroup } from './TableColgroup';
 export { default as TableCaption } from './TableCaption';
 
 // utils
-export { default as TableFilter } from './table-utils/TableFilter';
-export { default as ToggleSelection } from './table-utils/ToggleSelection';
-export { default as DragHandleSprite } from './table-utils/DragHandleSprite';
-export { default as SortSprite } from './table-utils/SortSprite';
+export { default as TableFilter } from './utils/TableFilter';
+export { default as ToggleSelection } from './utils/ToggleSelection';
+export { default as DragHandleSprite } from './utils/DragHandleSprite';
+export { default as SortSprite } from './utils/SortSprite';

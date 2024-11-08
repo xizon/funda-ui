@@ -262,6 +262,7 @@
   --cus-sel-listgroup-popwin-min-width: 200px;
   --cus-sel-listgroup-tool-bg: rgb(248,249,250);
   --cus-sel-listgroup-checkbox: #a5a5a5;
+  --cus-sel-listgroup-checkbox-active: #3162B2;
   --cus-sel-listgroup-item-hover-focus-bg: rgba(0,0,0,.1);
   --cus-sel-listgroup-content-scrollbar-color: rgba(0, 0, 0, 0.2);
   --cus-sel-listgroup-content-scrollbar-track: rgba(0, 0, 0, 0);
@@ -271,6 +272,7 @@
   display: none;
   min-width: var(--cus-sel-listgroup-popwin-min-width);
   z-index: 1055; /* --bs-modal-zindex */
+  /*------ Multiple selection ------*/
   /*------ Group ------*/
   /*------ Extended buttons of Multiple selection ------*/
   /*------ Extended buttons of Single selection ------*/
@@ -302,6 +304,9 @@
 .custom-select__options-wrapper .bg-light {
   background-color: var(--cus-sel-listgroup-tool-bg) !important;
 }
+.custom-select__options-wrapper .list-group-item {
+  /* ITEM SELECTED */
+}
 .custom-select__options-wrapper .list-group-item.hide {
   display: none;
 }
@@ -326,8 +331,20 @@
 .custom-select__options-wrapper .list-group-item .custom-select-multi__control-option-checkbox-selected svg path {
   stroke: var(--cus-sel-listgroup-checkbox);
 }
+.custom-select__options-wrapper .list-group-item.item-selected .custom-select-multi__control-option-checkbox-placeholder svg path {
+  stroke: var(--cus-sel-listgroup-checkbox-active);
+}
+.custom-select__options-wrapper .list-group-item.item-selected .custom-select-multi__control-option-checkbox-selected svg {
+  fill: var(--cus-sel-listgroup-checkbox-active);
+}
+.custom-select__options-wrapper .list-group-item.item-selected .custom-select-multi__control-option-checkbox-selected svg path {
+  stroke: var(--cus-sel-listgroup-checkbox-active);
+}
 .custom-select__options-wrapper .list-group-item:hover, .custom-select__options-wrapper .list-group-item:focus {
   background-color: var(--cus-sel-listgroup-item-hover-focus-bg);
+}
+.custom-select__options-wrapper.multiple-selection .list-group-item.active {
+  border-top-width: 0;
 }
 .custom-select__options-wrapper .custom-select-grouptitle {
   pointer-events: none;

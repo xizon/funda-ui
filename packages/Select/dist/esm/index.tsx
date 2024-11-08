@@ -7,7 +7,7 @@ import {
     removeItemOnce,
     optionsCustomSelectFlat,
     isObject
-} from './select-utils/func';
+} from './utils/func';
 
 
 import RootPortal from 'funda-root-portal';
@@ -47,6 +47,7 @@ import {
     enableBodyScroll,
 } from 'funda-utils/dist/cjs/bodyScrollLock';
 import { clsWrite, combinedCls } from 'funda-utils/dist/cjs/cls';
+
 
 
 export type SelectOptionChangeFnType = (arg1: any, arg2: any, arg3: any) => void;
@@ -153,6 +154,7 @@ export type SelectProps = {
     onChange?: SelectOptionChangeFnType | null;
     onBlur?: (e: any) => void;
     onFocus?: (e: any) => void;
+    onKeyPressed?: (arg1: any, arg2: any, arg3: any) => void;
 };
 
 
@@ -208,6 +210,7 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
         onChange,
         onBlur,
         onFocus,
+        onKeyPressed,
         ...attributes
     } = props;
 
@@ -1902,6 +1905,14 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
     async function handleKeyPressed(event: KeyboardEvent<HTMLDivElement>) {
         const key = event.code;
 
+        //
+        onKeyPressed?.(
+            event,
+            selectInputRef.current,
+            valueInputRef.current
+        );
+
+
         if (!isOpen) return;
 
         let res: any = null;
@@ -1983,8 +1994,7 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
             cancel();
             if (MULTI_SEL_VALID) popwinPosHide();
 
-            //
-            handleBlur(null);
+            // DO NOT USE "handleBlur(null)"
         }
     }
 
@@ -2524,7 +2534,12 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
                         <div
                             ref={listRef}
                             id={`custom-select__options-wrapper-${idRes}`}
-                            className="custom-select__options-wrapper list-group position-absolute border shadow small"
+                            className={combinedCls(
+                                'custom-select__options-wrapper list-group position-absolute border shadow small',
+                                {
+                                    'multiple-selection': MULTI_SEL_VALID
+                                }
+                            )}
                             style={{ zIndex: DEPTH, width: WIN_WIDTH, display: 'none' }}
                             role="tablist"
                         >

@@ -32,11 +32,15 @@
   position: relative;
   min-width: var(--e-cal-normal-wrapper-min-width);
   border: 1px solid var(--e-cal-normal-border-color);
+  /* Required when using onKeyDown */
   /* --HEADER --*/
   /*-- BODY --*/
   /*-- CELL --*/
   /*-- SELECTION --*/
   /* --BUTTON --*/
+}
+.e-cal-normal__wrapper[tabindex]:focus-visible {
+  outline: none;
 }
 .e-cal-normal__wrapper .e-cal-normal__header {
   font-size: var(--e-cal-normal-header-fs);
@@ -185,6 +189,9 @@
 .e-cal-normal__wrapper .e-cal-normal__row .e-cal-normal__cell > div {
   position: relative;
   width: 100%;
+}
+.e-cal-normal__wrapper .e-cal-normal__row .e-cal-normal__cell.empty > div {
+  opacity: 0.2;
 }
 .e-cal-normal__wrapper .e-cal-normal__row .e-cal-normal__cell:not(.empty) {
   cursor: pointer;

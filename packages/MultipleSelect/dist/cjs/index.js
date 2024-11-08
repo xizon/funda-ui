@@ -1898,7 +1898,7 @@ var convert = __webpack_require__(79);
 var object = __webpack_require__(575);
 // EXTERNAL MODULE: ../Utils/dist/cjs/cls.js
 var cls = __webpack_require__(188);
-;// CONCATENATED MODULE: ./src/multiple-select-utils/func.ts
+;// CONCATENATED MODULE: ./src/utils/func.ts
 /**
  * Format indent value
  * @param {String|Array} inputData 

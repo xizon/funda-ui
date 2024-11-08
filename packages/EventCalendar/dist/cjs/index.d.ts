@@ -53,6 +53,8 @@ export declare type EventCalendarProps = {
     onCellMouseEnter?: (el: any) => void;
     onCellMouseLeave?: (el: any) => void;
     onCellClick?: (el: any) => void;
+    onCellMouseUp?: (el: any) => void;
+    onKeyPressed?: (el: any) => void;
 };
 declare const EventCalendar: (props: EventCalendarProps) => JSX.Element;
 export default EventCalendar;

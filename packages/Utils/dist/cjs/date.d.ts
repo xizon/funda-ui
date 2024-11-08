@@ -58,6 +58,13 @@ declare const isValidDate: (v: string) => boolean;
  */
 declare function dateFormat(v: Date | string): Date | String;
 /**
+ * Get date details
+ * @param {Date | String} v
+ * @param {Boolean} padZeroEnabled
+ * @typedef {Object} JSON
+ */
+declare function getDateDetails(v: Date | string, padZeroEnabled?: boolean): Record<string, string | number>;
+/**
  * Get calendar date
  * @param {Date | String} v
  * @param {Boolean} padZeroEnabled
@@ -188,4 +195,23 @@ declare function setDateDays(v: Date | string, offset: number, padZeroEnabled?: 
  * @returns {String}  yyyy-MM-dd HH:mm:ss
  */
 declare function timestampToDate(v: number, padZeroEnabled?: boolean): string;
-export { isTimeString, getNow, padZero, dateFormat, isValidDate, isValidHours, isValidMinutesAndSeconds, isValidYear, isValidMonth, isValidDay, getLastDayInMonth, getFirstAndLastMonthDay, getCalendarDate, getFullTime, getTodayDate, getCurrentMonth, getCurrentYear, getCurrentDay, getCurrentDate, getTomorrowDate, getYesterdayDate, getNextMonthDate, getPrevMonthDate, getNextYearDate, getPrevYearDate, getSpecifiedDate, setDateHours, setDateMinutes, setDateDays, timestampToDate };
+/**
+ * Get the date of the specified month
+ * @param {Number} year
+ * @param {Number} month
+ * @returns {Array<string>}
+ */
+declare function getMonthDates(year: number, month: number): string[];
+/**
+ * Get the date of the specified week (From Sunday)
+ * @param {Number} weekOffset
+ * @returns {Array<Date>}
+ */
+declare function getWeekDatesFromSun(weekOffset: number): Date[];
+/**
+ * Get the date of the specified week (From Monday)
+ * @param {Number} weekOffset
+ * @returns {Array<Date>}
+ */
+declare function getWeekDatesFromMon(weekOffset: number): Date[];
+export { isTimeString, getNow, padZero, dateFormat, getDateDetails, isValidDate, isValidHours, isValidMinutesAndSeconds, isValidYear, isValidMonth, isValidDay, getLastDayInMonth, getFirstAndLastMonthDay, getCalendarDate, getFullTime, getTodayDate, getCurrentMonth, getCurrentYear, getCurrentDay, getCurrentDate, getTomorrowDate, getYesterdayDate, getNextMonthDate, getPrevMonthDate, getNextYearDate, getPrevYearDate, getSpecifiedDate, setDateHours, setDateMinutes, setDateDays, timestampToDate, getMonthDates, getWeekDatesFromSun, getWeekDatesFromMon };

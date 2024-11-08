@@ -2148,6 +2148,10 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
           return (/* binding */_getCurrentYear
           );
         },
+        /* harmony export */"getDateDetails": function getDateDetails() {
+          return (/* binding */_getDateDetails
+          );
+        },
         /* harmony export */"getFirstAndLastMonthDay": function getFirstAndLastMonthDay() {
           return (/* binding */_getFirstAndLastMonthDay
           );
@@ -2158,6 +2162,10 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
         },
         /* harmony export */"getLastDayInMonth": function getLastDayInMonth() {
           return (/* binding */_getLastDayInMonth
+          );
+        },
+        /* harmony export */"getMonthDates": function getMonthDates() {
+          return (/* binding */_getMonthDates
           );
         },
         /* harmony export */"getNextMonthDate": function getNextMonthDate() {
@@ -2190,6 +2198,14 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
         },
         /* harmony export */"getTomorrowDate": function getTomorrowDate() {
           return (/* binding */_getTomorrowDate
+          );
+        },
+        /* harmony export */"getWeekDatesFromMon": function getWeekDatesFromMon() {
+          return (/* binding */_getWeekDatesFromMon
+          );
+        },
+        /* harmony export */"getWeekDatesFromSun": function getWeekDatesFromSun() {
+          return (/* binding */_getWeekDatesFromSun
           );
         },
         /* harmony export */"getYesterdayDate": function getYesterdayDate() {
@@ -2341,6 +2357,31 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
       function _dateFormat(v) {
         var date = typeof v === 'string' ? new Date(v.replace(/-/g, "/")) : v; // fix "Invalid date in safari"
         return date;
+      }
+
+      /**
+       * Get date details
+       * @param {Date | String} v 
+       * @param {Boolean} padZeroEnabled 
+       * @typedef {Object} JSON
+       */
+      function _getDateDetails(v) {
+        var padZeroEnabled = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : true;
+        var date = _dateFormat(v);
+        var year = date.getFullYear();
+        var month = _padZero(date.getMonth() + 1, padZeroEnabled);
+        var day = _padZero(date.getDate(), padZeroEnabled);
+        var hours = _padZero(date.getHours(), padZeroEnabled);
+        var minutes = _padZero(date.getMinutes(), padZeroEnabled);
+        var seconds = _padZero(date.getSeconds(), padZeroEnabled);
+        return {
+          year: String(year),
+          month: month,
+          day: day,
+          hours: hours,
+          minutes: minutes,
+          seconds: seconds
+        };
       }
 
       /**
@@ -2638,6 +2679,69 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
         return _getFullTime(new Date(v), padZeroEnabled);
       }
 
+      /**
+       * Get the date of the specified month
+       * @param {Number} year 
+       * @param {Number} month 
+       * @returns {Array<string>} 
+       */
+      function _getMonthDates(year, month) {
+        var dates = [];
+
+        // Get the total number of days in the month
+        var daysInMonth = new Date(year, month, 0).getDate();
+        for (var day = 1; day <= daysInMonth; day++) {
+          dates.push("".concat(year, "-").concat(String(month).padStart(2, '0'), "-").concat(String(day).padStart(2, '0'))); // 'YYYY-MM-DD'
+        }
+
+        return dates;
+      }
+
+      /**
+       * Get the date of the specified week (From Sunday)
+       * @param {Number} weekOffset 
+       * @returns {Array<Date>} 
+       */
+      function _getWeekDatesFromSun(weekOffset) {
+        var dates = [];
+        var currentDate = new Date();
+
+        // Calculate the date of Sunday
+        var dayOfWeek = currentDate.getDay(); // 0 is Sunday
+        currentDate.setDate(currentDate.getDate() - dayOfWeek + weekOffset * 7);
+
+        // Get the date of the week
+        for (var i = 0; i < 7; i++) {
+          var date = new Date(currentDate);
+          date.setDate(currentDate.getDate() + i);
+          dates.push(date);
+        }
+        return dates;
+      }
+
+      /**
+       * Get the date of the specified week (From Monday)
+       * @param {Number} weekOffset 
+       * @returns {Array<Date>} 
+       */
+      function _getWeekDatesFromMon(weekOffset) {
+        var dates = [];
+        var currentDate = new Date();
+
+        // Set the date to Monday
+        var dayOfWeek = currentDate.getDay();
+        var diffToMonday = dayOfWeek === 0 ? -6 : 1 - dayOfWeek;
+        currentDate.setDate(currentDate.getDate() + diffToMonday + weekOffset * 7);
+
+        // Get the date of the week
+        for (var i = 0; i < 7; i++) {
+          var date = new Date(currentDate);
+          date.setDate(currentDate.getDate() + i);
+          dates.push(date);
+        }
+        return dates;
+      }
+
       /******/
       return __webpack_exports__;
       /******/
@@ -2818,7 +2922,9 @@ var EventCalendar = function EventCalendar(props) {
     onModalDeleteEvent = props.onModalDeleteEvent,
     onCellMouseEnter = props.onCellMouseEnter,
     onCellMouseLeave = props.onCellMouseLeave,
-    onCellClick = props.onCellClick;
+    onCellClick = props.onCellClick,
+    onCellMouseUp = props.onCellMouseUp,
+    onKeyPressed = props.onKeyPressed;
   var DAYS = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
   var DAYS_LEAP = [31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
   var WEEK = langWeek || ['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN'];
@@ -2987,10 +3093,40 @@ var EventCalendar = function EventCalendar(props) {
     }); // [0,1,..,30,31]
     var rows = Math.ceil(allDays.length / 7); // 5
 
-    return Array.from({
+    //
+    var _tempCells = Array.from({
       length: rows
-    }).fill(null).map(function (_, i) {
-      var _col = allDays.slice(i * 7, (i + 1) * 7);
+    }).fill(null);
+    var _getForwardFill = function _getForwardFill(_year, _month) {
+      // Get the last day of the previous month
+      var lastDayOfLastMonth = new Date(_year, _month - 1, 0);
+      var last7Days = [];
+
+      // Rewind 7 days forward from the last day
+      for (var i = 0; i < 7; i++) {
+        last7Days.unshift(new Date(lastDayOfLastMonth));
+        lastDayOfLastMonth.setDate(lastDayOfLastMonth.getDate() - 1);
+      }
+      return last7Days.map(function (v) {
+        return (0,funda_utils_dist_cjs_date__WEBPACK_IMPORTED_MODULE_1__.getCalendarDate)(v);
+      });
+    };
+    var _getBackFill = function _getBackFill(_year, _month) {
+      // Get the first day of the next month
+      var firstDayOfNextMonth = new Date(_year, _month, 1);
+      var first7Days = [];
+
+      // Rewind 7 days forward from the first day of the next month
+      for (var i = 0; i < 7; i++) {
+        first7Days.push(new Date(firstDayOfNextMonth));
+        firstDayOfNextMonth.setDate(firstDayOfNextMonth.getDate() + 1);
+      }
+      return first7Days.map(function (v) {
+        return (0,funda_utils_dist_cjs_date__WEBPACK_IMPORTED_MODULE_1__.getCalendarDate)(v);
+      });
+    };
+    return _tempCells.map(function (_, j) {
+      var _col = allDays.slice(j * 7, (j + 1) * 7);
 
       // back fill
       var backFillArr = [];
@@ -2998,45 +3134,55 @@ var EventCalendar = function EventCalendar(props) {
         backFillArr.push(null);
       }
       _col.splice.apply(_col, [_col.length, 0].concat(_toConsumableArray(backFillArr)));
+
+      //
+      var isFirstGroup = j === 0;
+      var isLastGroup = j === _tempCells.length - 1;
+
+      // forward fill
+      var __forwardFillDate = _getForwardFill(year, month + 1);
+
+      // back fill
+      var __backFillDate = _getBackFill(year, month + 1);
+      var _getDateShow = function _getDateShow(_dayIndex, _m, _startDay, _month) {
+        var currentDay = typeof _dayIndex === 'number' ? _dayIndex - (_startDay - 2) : 0; // ..., -3, -2, -1, 0, 1, 2, 3, 4, 5, 6, 7, ...
+
+        // date
+        var _dateShow = currentDay > 0 ? "".concat(year, "-").concat(_month + 1, "-").concat(currentDay) : '';
+
+        // forward & back
+        if (isFirstGroup && _dateShow === '') {
+          _dateShow = __forwardFillDate.at(currentDay - 1);
+        }
+        if (isLastGroup && _dateShow === '') {
+          _dateShow = __backFillDate.at(_m);
+        }
+        return {
+          date: (0,funda_utils_dist_cjs_date__WEBPACK_IMPORTED_MODULE_1__.getCalendarDate)(_dateShow),
+          firstGroup: isFirstGroup,
+          lastGroup: isLastGroup,
+          validDisplayDate: currentDay > 0 && currentDay <= days[month]
+        };
+      };
+
+      //
       return {
         month: currentMonth,
         startDay: currentStartDay,
-        row: i,
-        col: _col
+        row: j,
+        col: _col,
+        dateInfo: _col.map(function (k, m) {
+          var _lastWeekDays = _col.filter(Boolean).length;
+          return _getDateShow(k, m - _lastWeekDays, currentStartDay, currentMonth);
+        }),
+        weekDisplay: _col.map(function (k, m) {
+          return WEEK[m];
+        }),
+        week: _col.map(function (k, m) {
+          return m;
+        })
       };
     });
-  };
-  var getForwardFill = function getForwardFill() {
-    var _getCells$at, _getCells$at2;
-    var prevMonthStartDay = (_getCells$at = getCells('forward').at(-1)) === null || _getCells$at === void 0 ? void 0 : _getCells$at.startDay;
-    var prevMonthLastRowNums = (_getCells$at2 = getCells('forward').at(-1)) === null || _getCells$at2 === void 0 ? void 0 : _getCells$at2.col.filter(Boolean);
-    if (prevMonthLastRowNums) {
-      if (prevMonthLastRowNums.length === 7) return []; // no remaining
-
-      return prevMonthLastRowNums.map(function (dayIndex) {
-        var d = typeof dayIndex === 'number' ? dayIndex - (prevMonthStartDay - 2) : 0;
-        return d;
-      });
-    } else {
-      return [];
-    }
-  };
-  var getBackFill = function getBackFill() {
-    var _getCells$at3, _getCells$at4;
-    var prevMonthStartDay = (_getCells$at3 = getCells('back').at(0)) === null || _getCells$at3 === void 0 ? void 0 : _getCells$at3.startDay;
-    var prevMonthLastRowNums = (_getCells$at4 = getCells('back').at(0)) === null || _getCells$at4 === void 0 ? void 0 : _getCells$at4.col.filter(Boolean);
-    if (prevMonthLastRowNums) {
-      if (prevMonthLastRowNums.length === 7) return []; // no remaining
-
-      return prevMonthLastRowNums.map(function (dayIndex) {
-        var d = typeof dayIndex === 'number' ? dayIndex - (prevMonthStartDay - 2) : 0;
-        return d;
-      }).filter(function (n) {
-        return n > 0;
-      });
-    } else {
-      return [];
-    }
   };
   function setTodayDate(inputDate) {
     setDay(inputDate.getDate());
@@ -3173,7 +3319,11 @@ var EventCalendar = function EventCalendar(props) {
     onListRenderComplete === null || onListRenderComplete === void 0 ? void 0 : onListRenderComplete();
   }, [eventsValue, customTodayDate]);
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-    className: (0,funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_2__.combinedCls)("e-cal-normal__wrapper", calendarWrapperClassName)
+    className: (0,funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_2__.combinedCls)("e-cal-normal__wrapper", calendarWrapperClassName),
+    onKeyDown: function onKeyDown(e) {
+      onKeyPressed === null || onKeyPressed === void 0 ? void 0 : onKeyPressed(e);
+    },
+    tabIndex: -1
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
     className: "e-cal-normal__header bg-body-tertiary"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", {
@@ -3244,42 +3394,28 @@ var EventCalendar = function EventCalendar(props) {
       }
     });
   })), getCells().map(function (item, j) {
-    var isFirstRow = j === 0;
     var isLastRow = j === getCells().length - 1;
-
-    // forward fill
-    var __forwardFillNum = getForwardFill();
-
-    // back fill
-    var __backFillNum = getBackFill();
     return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       key: 'row' + item.row,
       className: "e-cal-normal__row"
     }, item.col.map(function (dayIndex, i) {
-      var d = typeof dayIndex === 'number' ? dayIndex - (startDay - 2) : 0;
-      var _currentData = val.filter(function (item) {
-        return (0,funda_utils_dist_cjs_date__WEBPACK_IMPORTED_MODULE_1__.getCalendarDate)(item.date) === (0,funda_utils_dist_cjs_date__WEBPACK_IMPORTED_MODULE_1__.getCalendarDate)("".concat(year, "-").concat(month + 1, "-").concat(d));
-      });
-      var isLastCol = i === item.col.length - 1;
+      var isLastCell = i === item.col.length - 1;
 
       // date
-      var _dateShow = d > 0 ? "".concat(year, "-").concat(month + 1, "-").concat(d) : '';
-      var isForward = isFirstRow && __forwardFillNum && typeof __forwardFillNum[i] !== 'undefined';
-      var isBack = isLastRow && __backFillNum && typeof __backFillNum[i - item.col.filter(Boolean).length] !== 'undefined';
-      if (isForward && _dateShow === '') {
-        if (month + 1 === 1) {
-          _dateShow = "".concat(year - 1, "-12-").concat(__forwardFillNum[i]);
-        } else {
-          _dateShow = "".concat(year, "-").concat(month, "-").concat(__forwardFillNum[i]);
-        }
-      }
-      if (isBack && _dateShow === '') {
-        if (month + 1 === 12) {
-          _dateShow = "".concat(year + 1, "-1-").concat(__backFillNum[i - item.col.filter(Boolean).length]);
-        } else {
-          _dateShow = "".concat(year, "-").concat(month + 2, "-").concat(__backFillNum[i - item.col.filter(Boolean).length]);
-        }
-      }
+      var _dateShow = item.dateInfo[i].date;
+      var _dateDayShow = _dateShow.split('-').at(-1);
+
+      // week day
+      var weekDay = item.week[i];
+
+      // helper
+      var d = parseFloat(_dateDayShow);
+      var _currentData = val.filter(function (item) {
+        return (0,funda_utils_dist_cjs_date__WEBPACK_IMPORTED_MODULE_1__.getCalendarDate)(item.date) === _dateShow;
+      });
+      var isInteractive = item.dateInfo[i].validDisplayDate; // The date on which the user interaction can occur, e.g. click, modify
+      var isForward = item.dateInfo[i].firstGroup && !isInteractive;
+      var isBack = item.dateInfo[i].lastGroup && !isInteractive;
       var _eventContent = function _eventContent() {
         if (_currentData.length === 0 || !Array.isArray(_currentData) || typeof _currentData[0].list === 'undefined') {
           return null;
@@ -3294,9 +3430,9 @@ var EventCalendar = function EventCalendar(props) {
               'last': cellItemIndex === _items.length - 1
             }),
             key: "cell-item-".concat(cellItemIndex, "}"),
-            "data-date": (0,funda_utils_dist_cjs_date__WEBPACK_IMPORTED_MODULE_1__.getCalendarDate)(_dateShow),
-            "data-day": (0,funda_utils_dist_cjs_date__WEBPACK_IMPORTED_MODULE_1__.padZero)(d),
-            "data-week": i,
+            "data-date": _dateShow,
+            "data-day": _dateDayShow,
+            "data-week": weekDay,
             onClick: function onClick(e) {
               var _cellItem$callback;
               e.stopPropagation();
@@ -3306,7 +3442,7 @@ var EventCalendar = function EventCalendar(props) {
 
               // Callback
               (_cellItem$callback = cellItem.callback) === null || _cellItem$callback === void 0 ? void 0 : _cellItem$callback.call(cellItem);
-              if (d > 0) {
+              if (isInteractive) {
                 handleDayChange(e, d); // update current day
 
                 onChangeDate === null || onChangeDate === void 0 ? void 0 : onChangeDate(e, cellItem);
@@ -3320,10 +3456,10 @@ var EventCalendar = function EventCalendar(props) {
           }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
             className: "e-cal-normal__day__event",
             style: typeof cellItem !== 'undefined' && cellItem.eventStyles !== 'undefined' ? cellItem.eventStyles : {},
-            dangerouslySetInnerHTML: {
+            dangerouslySetInnerHTML: typeof cellItem.data === 'string' ? {
               __html: cellItem.data
-            }
-          }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+            } : undefined
+          }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().isValidElement(cellItem.data) ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, cellItem.data) : null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
             className: "e-cal-normal__day__eventdel ".concat(cellCloseBtnClassName || '')
           }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
             href: "#",
@@ -3341,7 +3477,7 @@ var EventCalendar = function EventCalendar(props) {
               var _existsContent = cellItem;
 
               //
-              if (d > 0) {
+              if (isInteractive) {
                 handleDayChange(e, d); // update current day
 
                 onChangeDate === null || onChangeDate === void 0 ? void 0 : onChangeDate(e, {
@@ -3360,10 +3496,10 @@ var EventCalendar = function EventCalendar(props) {
       };
       return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
         className: (0,funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_2__.combinedCls)('e-cal-normal__cell e-cal-normal__day', {
-          'empty': d <= 0,
+          'empty': !isInteractive,
           'today': d === now.getDate(),
           'selected': d === day,
-          'last-cell': isLastCol,
+          'last-cell': isLastCell,
           'last-row': isLastRow
         }),
         key: "col" + i,
@@ -3373,22 +3509,25 @@ var EventCalendar = function EventCalendar(props) {
         onMouseEnter: function onMouseEnter(e) {
           onCellMouseEnter === null || onCellMouseEnter === void 0 ? void 0 : onCellMouseEnter(e);
         },
-        onMouseLeave: function onMouseLeave(e) {
-          onCellMouseLeave === null || onCellMouseLeave === void 0 ? void 0 : onCellMouseLeave(e);
-        },
-        onClick: function onClick(e) {
+        onMouseDown: function onMouseDown(e) {
           //
           onCellClick === null || onCellClick === void 0 ? void 0 : onCellClick(e);
-          if (d > 0) {
+          if (isInteractive) {
             handleDayChange(e, d); // update current day
             onChangeDate === null || onChangeDate === void 0 ? void 0 : onChangeDate(e, null);
           }
+        },
+        onMouseLeave: function onMouseLeave(e) {
+          onCellMouseLeave === null || onCellMouseLeave === void 0 ? void 0 : onCellMouseLeave(e);
+        },
+        onMouseUp: function onMouseUp(e) {
+          onCellMouseUp === null || onCellMouseUp === void 0 ? void 0 : onCellMouseUp(e);
         }
-      }, isForward ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
-        className: "disabled"
-      }, __forwardFillNum[i])) : null, d > 0 ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", null, d) : null, isBack ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
-        className: "disabled"
-      }, __backFillNum[i - item.col.filter(Boolean).length]) : null, _eventContent(), isForward || isBack ? null : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
+        className: (0,funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_2__.combinedCls)({
+          'disabled': !isInteractive
+        })
+      }, d), _eventContent(), isForward || isBack ? null : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
         className: "e-cal-normal__day__eventadd ".concat(cellAddBtnClassName || '')
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
         href: "#",
@@ -3405,7 +3544,7 @@ var EventCalendar = function EventCalendar(props) {
           setTableCellId(-1);
 
           //
-          if (d > 0) {
+          if (isInteractive) {
             handleDayChange(e, d); // update current day
 
             onChangeDate === null || onChangeDate === void 0 ? void 0 : onChangeDate(e, {

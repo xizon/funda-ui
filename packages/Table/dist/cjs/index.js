@@ -490,18 +490,18 @@ __webpack_require__.r(__webpack_exports__);
 
 // EXPORTS
 __webpack_require__.d(__webpack_exports__, {
-  "DragHandleSprite": () => (/* reexport */ table_utils_DragHandleSprite),
-  "SortSprite": () => (/* reexport */ table_utils_SortSprite),
+  "DragHandleSprite": () => (/* reexport */ utils_DragHandleSprite),
+  "SortSprite": () => (/* reexport */ utils_SortSprite),
   "Table": () => (/* reexport */ src_Table),
   "TableBody": () => (/* reexport */ src_TableBody),
   "TableCaption": () => (/* reexport */ src_TableCaption),
   "TableCell": () => (/* reexport */ src_TableCell),
   "TableColgroup": () => (/* reexport */ src_TableColgroup),
-  "TableFilter": () => (/* reexport */ table_utils_TableFilter),
+  "TableFilter": () => (/* reexport */ utils_TableFilter),
   "TableFoot": () => (/* reexport */ src_TableFoot),
   "TableHead": () => (/* reexport */ src_TableHead),
   "TableRow": () => (/* reexport */ src_TableRow),
-  "ToggleSelection": () => (/* reexport */ table_utils_ToggleSelection)
+  "ToggleSelection": () => (/* reexport */ utils_ToggleSelection)
 });
 
 // EXTERNAL MODULE: external {"root":"React","commonjs2":"react","commonjs":"react","amd":"react"}
@@ -523,7 +523,7 @@ var TableProvider = function TableProvider(props) {
   }, children);
 };
 
-;// CONCATENATED MODULE: ./src/table-utils/func.ts
+;// CONCATENATED MODULE: ./src/utils/func.ts
 function convertMapToArr(setData) {
   var res = [];
   var s = setData;
@@ -664,7 +664,7 @@ function removeCellFocusClassName(root) {
     });
   }
 }
-;// CONCATENATED MODULE: ./src/table-utils/hooks/useTableResponsive.tsx
+;// CONCATENATED MODULE: ./src/utils/hooks/useTableResponsive.tsx
 function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
 function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
 function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
@@ -744,7 +744,7 @@ function useTableResponsive(_ref, deps) {
   }, [enabled, spyElement].concat(_toConsumableArray(deps)));
 }
 /* harmony default export */ const hooks_useTableResponsive = (useTableResponsive);
-;// CONCATENATED MODULE: ./src/table-utils/hooks/useTableDraggable.tsx
+;// CONCATENATED MODULE: ./src/utils/hooks/useTableDraggable.tsx
 function useTableDraggable_toConsumableArray(arr) { return useTableDraggable_arrayWithoutHoles(arr) || useTableDraggable_iterableToArray(arr) || useTableDraggable_unsupportedIterableToArray(arr) || useTableDraggable_nonIterableSpread(); }
 function useTableDraggable_nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
 function useTableDraggable_iterableToArray(iter) { if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter); }
@@ -1188,7 +1188,7 @@ var TableBody = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_rea
   }), children));
 });
 /* harmony default export */ const src_TableBody = (TableBody);
-;// CONCATENATED MODULE: ./src/table-utils/hooks/useTableKeyPress.tsx
+;// CONCATENATED MODULE: ./src/utils/hooks/useTableKeyPress.tsx
 function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
 function useTableKeyPress_toConsumableArray(arr) { return useTableKeyPress_arrayWithoutHoles(arr) || useTableKeyPress_iterableToArray(arr) || useTableKeyPress_unsupportedIterableToArray(arr) || useTableKeyPress_nonIterableSpread(); }
 function useTableKeyPress_nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
@@ -1566,7 +1566,7 @@ var TableCaption = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_
   }), children));
 });
 /* harmony default export */ const src_TableCaption = (TableCaption);
-;// CONCATENATED MODULE: ./src/table-utils/TableFilter.tsx
+;// CONCATENATED MODULE: ./src/utils/TableFilter.tsx
 
 
 var TableFilter = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_amd_react_.forwardRef)(function (props, externalRef) {
@@ -1606,8 +1606,8 @@ var TableFilter = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_r
     placeholder: placeholder || ''
   }));
 });
-/* harmony default export */ const table_utils_TableFilter = (TableFilter);
-;// CONCATENATED MODULE: ./src/table-utils/ToggleSelection.tsx
+/* harmony default export */ const utils_TableFilter = (TableFilter);
+;// CONCATENATED MODULE: ./src/utils/ToggleSelection.tsx
 var ToggleSelection_excluded = ["contentRef", "row", "useRadio", "className", "indeterminate", "disabled", "name", "value", "onChange", "checked"];
 function ToggleSelection_extends() { ToggleSelection_extends = Object.assign ? Object.assign.bind() : function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return ToggleSelection_extends.apply(this, arguments); }
 function ToggleSelection_slicedToArray(arr, i) { return ToggleSelection_arrayWithHoles(arr) || ToggleSelection_iterableToArrayLimit(arr, i) || ToggleSelection_unsupportedIterableToArray(arr, i) || ToggleSelection_nonIterableRest(); }
@@ -1785,8 +1785,8 @@ var ToggleSelection = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
     onChange: handleChange
   }, attributes)) : null);
 });
-/* harmony default export */ const table_utils_ToggleSelection = (ToggleSelection);
-;// CONCATENATED MODULE: ./src/table-utils/DragHandleSprite.tsx
+/* harmony default export */ const utils_ToggleSelection = (ToggleSelection);
+;// CONCATENATED MODULE: ./src/utils/DragHandleSprite.tsx
 
 
 var DragHandleSprite = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_amd_react_.forwardRef)(function (props, externalRef) {
@@ -1842,8 +1842,8 @@ var DragHandleSprite = /*#__PURE__*/(0,external_root_React_commonjs2_react_commo
     strokeLinejoin: "round"
   })))) : null);
 });
-/* harmony default export */ const table_utils_DragHandleSprite = (DragHandleSprite);
-;// CONCATENATED MODULE: ./src/table-utils/hooks/useTableSort.tsx
+/* harmony default export */ const utils_DragHandleSprite = (DragHandleSprite);
+;// CONCATENATED MODULE: ./src/utils/hooks/useTableSort.tsx
 function useTableSort_toConsumableArray(arr) { return useTableSort_arrayWithoutHoles(arr) || useTableSort_iterableToArray(arr) || useTableSort_unsupportedIterableToArray(arr) || useTableSort_nonIterableSpread(); }
 function useTableSort_nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
 function useTableSort_iterableToArray(iter) { if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter); }
@@ -1966,7 +1966,7 @@ function useTableSort(_ref, deps) {
   };
 }
 /* harmony default export */ const hooks_useTableSort = (useTableSort);
-;// CONCATENATED MODULE: ./src/table-utils/SortSprite.tsx
+;// CONCATENATED MODULE: ./src/utils/SortSprite.tsx
 
 
 
@@ -2009,7 +2009,7 @@ var SortSprite = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_re
     fill: "#000000"
   })))) : null);
 });
-/* harmony default export */ const table_utils_SortSprite = (SortSprite);
+/* harmony default export */ const utils_SortSprite = (SortSprite);
 ;// CONCATENATED MODULE: ./src/index.tsx
 
 

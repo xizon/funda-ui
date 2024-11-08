@@ -6,8 +6,8 @@ import { clsWrite, combinedCls } from 'funda-utils/dist/cjs/cls';
 
 import { TableContext } from './TableContext';
 
-import { cellMark, removeCellFocusClassName } from './table-utils/func';
-import useTableKeyPress from './table-utils/hooks/useTableKeyPress';
+import { cellMark, removeCellFocusClassName } from './utils/func';
+import useTableKeyPress from './utils/hooks/useTableKeyPress';
 
 export interface TableCellProps extends React.HTMLAttributes<HTMLTableCellElement> {
     active?: boolean;

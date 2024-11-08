@@ -35,6 +35,7 @@
     --e-cal-timeline-header-prevnext-btn-radius: 0.25rem;
     --e-cal-timeline-footer-today-btn-bg: rgba(0, 58, 166, 1);
     --e-cal-timeline-footer-today-btn-color: #fff;
+    --e-cal-timeline-appearance-btn-active-bg: rgb(239, 239, 239);
     
 
 
@@ -51,6 +52,12 @@
         padding: 10px 10px 5px 10px;
         display: flex;
         justify-content: space-between;
+
+        .e-cal-timeline__header__info {
+            font-weight: normal;
+            font-size: 0.875em;
+            margin-bottom: .2rem;
+        }
 
         .e-cal-timeline__header__btns {
             .e-cal-timeline__btn {
@@ -176,6 +183,7 @@
         margin: 0;
         box-shadow: none;
         cursor: pointer;
+        margin-right: .35rem;
 
         /* required */
         display: inline-flex;
@@ -213,9 +221,35 @@
             color: var(--e-cal-timeline-footer-today-btn-color);
             background-color: var(--e-cal-timeline-footer-today-btn-bg);
         }
+
+        &--appearance {
+            border: 1px solid var(--e-cal-timeline-border-color);
+            border-radius: 0.25rem;
+            font-size: 0.875em;
+            padding: .2rem 1rem;
+        }
+
+        &--appearance.active {
+            background-color: var(--e-cal-timeline-appearance-btn-active-bg);
+        }
+
     }
 
 
+
+    /* WEEK MODE --*/
+    &.e-cal-timeline__wrapper--week {
+        .e-cal-timeline__header__info {
+            transform: translateX(-2.5rem);
+        }
+    }
+
+
+}
+
+/* WEEK MODE*/
+.e-cal-timeline__wrapper.e-cal-timeline__wrapper--week {
+    
 }
 
 /*
@@ -252,7 +286,7 @@
     --e-cal-timeline-table-add-btn-color: #0b5ed7;
     --e-cal-timeline-table-event-font-size: 0.75rem;
     --e-cal-timeline-table-event-hover-bg: rgba(255, 240, 227, 0);
-    --e-cal-timeline-table-event-hover-shadow: inset 0px 0px 0px 1px rgba(0,0,0,0.15);
+    --e-cal-timeline-table-event-hover-shadow: inset 0px 0px 0px 1px rgba(21, 21, 240, 0.45);
 
 
 
@@ -261,6 +295,12 @@
     margin-top: -1px;
     position: relative;
     z-index: 2;
+
+
+    /* Required when using onKeyDown */
+    &[tabindex]:focus-visible {
+        outline: none;
+    }
 
     .e-cal-timeline-table__timeline-table {
         border: var(--e-cal-timeline-table-primary-border);
@@ -344,6 +384,7 @@
             padding: 0;
             vertical-align: top;
             line-height: var(--e-cal-timeline-table-cell-line-height);
+            
         }
 
         > tbody > tr {
@@ -608,6 +649,10 @@
     .e-cal-timeline-table__scroller-harness--hide {
         overflow: hidden;
         height: auto;
+    }
+
+    .e-cal-timeline-table__scroller-harness--hideX {
+        overflow-x: hidden !important;
     }
 
     .e-cal-timeline-table__scroller-harness[data-scroll="body"].dragging {

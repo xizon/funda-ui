@@ -1,7 +1,7 @@
 import React, { useContext, forwardRef } from 'react';
 
 import { TableContext } from './TableContext';
-import { convertMapToArr } from './table-utils/func';
+import { convertMapToArr } from './utils/func';
 
 export interface TableRowProps extends React.HTMLAttributes<HTMLTableRowElement> {
     active?: boolean;

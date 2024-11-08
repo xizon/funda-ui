@@ -11,7 +11,7 @@ import { clsWrite, combinedCls } from 'funda-utils/dist/cjs/cls';
 
 
 import { initUlHeight } from './init-height';
-import { removeItemOnce, activeClass } from './tree-utils';
+import { removeItemOnce, activeClass } from './utils/func';
 
 export interface FetchConfig {
     fetchFuncAsync?: any | undefined;

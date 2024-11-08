@@ -46,6 +46,11 @@
     border: 1px solid var(--e-cal-normal-border-color);
 
 
+    /* Required when using onKeyDown */
+    &[tabindex]:focus-visible {
+        outline: none;
+    }
+
     /* --HEADER --*/
     .e-cal-normal__header {
         font-size: var(--e-cal-normal-header-fs);
@@ -245,6 +250,10 @@
             > div {
                 position: relative;
                 width: 100%;
+            }
+            
+            &.empty > div {
+                opacity: .2;
             }
 
 

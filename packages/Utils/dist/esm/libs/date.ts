@@ -102,6 +102,33 @@ function dateFormat(v: Date | string): Date | String {
 
 
 /**
+ * Get date details
+ * @param {Date | String} v 
+ * @param {Boolean} padZeroEnabled 
+ * @typedef {Object} JSON
+ */
+function getDateDetails(v: Date | string, padZeroEnabled: boolean = true): Record<string, string | number> {
+
+    const date: any = dateFormat(v);
+    const year = date.getFullYear();
+    const month = padZero(date.getMonth() + 1, padZeroEnabled);
+    const day = padZero(date.getDate(), padZeroEnabled);
+    const hours = padZero(date.getHours(), padZeroEnabled);
+    const minutes = padZero(date.getMinutes(), padZeroEnabled);
+    const seconds = padZero(date.getSeconds(), padZeroEnabled);
+
+    return {
+        year: String(year),
+        month,
+        day,
+        hours,
+        minutes,
+        seconds
+    };
+}
+
+
+/**
  * Get calendar date
  * @param {Date | String} v 
  * @param {Boolean} padZeroEnabled 
@@ -433,11 +460,79 @@ function timestampToDate(v: number, padZeroEnabled: boolean = true): string {
 }
 
 
+/**
+ * Get the date of the specified month
+ * @param {Number} year 
+ * @param {Number} month 
+ * @returns {Array<string>} 
+ */
+function getMonthDates(year: number, month: number) {
+    const dates: string[] = [];
+
+    // Get the total number of days in the month
+    const daysInMonth = new Date(year, month, 0).getDate();
+
+   
+    for (let day = 1; day <= daysInMonth; day++) {
+        dates.push(`${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`); // 'YYYY-MM-DD'
+    }
+
+    return dates;
+}
+
+/**
+ * Get the date of the specified week (From Sunday)
+ * @param {Number} weekOffset 
+ * @returns {Array<Date>} 
+ */
+function getWeekDatesFromSun(weekOffset: number) {
+    const dates: Array<Date> = [];
+    const currentDate = new Date();
+
+    // Calculate the date of Sunday
+    const dayOfWeek = currentDate.getDay(); // 0 is Sunday
+    currentDate.setDate(currentDate.getDate() - dayOfWeek + weekOffset * 7);
+
+    // Get the date of the week
+    for (let i = 0; i < 7; i++) {
+        const date = new Date(currentDate);
+        date.setDate(currentDate.getDate() + i);
+        dates.push(date);
+    }
+
+    return dates;
+}
+
+/**
+ * Get the date of the specified week (From Monday)
+ * @param {Number} weekOffset 
+ * @returns {Array<Date>} 
+ */
+function getWeekDatesFromMon(weekOffset: number) {
+    const dates: Array<Date> = [];
+    const currentDate = new Date();
+
+    // Set the date to Monday
+    const dayOfWeek = currentDate.getDay();
+    const diffToMonday = dayOfWeek === 0 ? -6 : 1 - dayOfWeek;
+    currentDate.setDate(currentDate.getDate() + diffToMonday + weekOffset * 7);
+
+    // Get the date of the week
+    for (let i = 0; i < 7; i++) {
+        const date = new Date(currentDate);
+        date.setDate(currentDate.getDate() + i);
+        dates.push(date);
+    }
+
+    return dates;
+}
+
 export {
     isTimeString,
     getNow,
     padZero,
     dateFormat,
+    getDateDetails,
 
     //
     isValidDate,
@@ -474,5 +569,10 @@ export {
     setDateHours,
     setDateMinutes,
     setDateDays,
-    timestampToDate
+    timestampToDate,
+
+    // get dates list
+    getMonthDates,
+    getWeekDatesFromSun,
+    getWeekDatesFromMon
 }

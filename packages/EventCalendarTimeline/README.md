@@ -767,6 +767,7 @@ export default () => {
                         cellAddBtnClassName="d-none" // if hidden add button, set it to `d-none`
                         tableListSectionTitle="Name"
                         langWeek={['<small class="ps-1">MON</small>', '<small class="ps-1">TUE</small>', '<small class="ps-1">WED</small>', '<small class="ps-1">THU</small>', '<small class="ps-1">FRI</small>', '<small class="ps-1">SAT</small>', '<small class="ps-1">SUN</small>']}
+                        appearanceToggle={false}
                         draggable
                         showWeek
                         autoScroll
@@ -1515,7 +1516,15 @@ export default () => {
                     onChangeToday={(currentData: any) => {
                         console.log('-> onChangeToday: ', currentData); // {day: 22, month: 10, year: 2024}
                     }}
-
+                    onKeyPressed={(e: React.KeyboardEvent<HTMLDivElement>, selectedCellsData: any[]) => {
+                        console.log('-> onKeyPressed: ', selectedCellsData);
+                    }}
+                    onCellClick={(e: React.MouseEvent, cellData: any) => {
+                        console.log('-> onCellClick: ', cellData);
+                    }}
+                    onCellMouseUp={(e: React.MouseEvent, selectedCellsData: any[]) => {
+                        console.log('-> onCellMouseUp: ', selectedCellsData);
+                    }}
 
                 />
             </div>
@@ -1523,6 +1532,445 @@ export default () => {
                   
         </>
     );
+}
+```
+
+
+
+## Multi Directional operations in cells
+
+Enable the `multipleCells` property. For multi-cell operations, it is recommended not to use `draggable`.
+
+
+```js
+import React, { useState } from "react";
+import EventCalendarTimeline from 'funda-ui/EventCalendarTimeline';
+
+// component styles
+import 'funda-ui/EventCalendarTimeline/index.css';
+
+export default () => {
+
+
+    // default data
+    const defaultData = [
+        {
+            "listSection": { "id": 100, "title": "Smith One" },
+            "eventSources": [
+                {
+                    "date": "2024-01-06", "list": [{
+                        "id": 4505,
+                        "date": "2024-01-06",
+                        "time": "",
+                        "data": "<span class=\"text-warning\">Rest </span>",
+                        "dataTooltip": `<span>Rest</span>`,
+                        "eventStyles": {
+                            "background": "rgb(255, 240, 227)"
+                        }
+                    }]
+                },
+                {
+                    "date": "2023-12-04", "list": [{
+                        "id": 4508,
+                        "date": "2023-12-04",
+                        "time": "",
+                        "data": "<span class=\"text-primary\">Night Shift <span class=\"badge rounded-pill bg-primary mx-1\">IM</span></span>",
+                        "dataTooltip": `<span>Night Shift <span class=\"badge rounded-pill bg-primary mx-1\">IM</span></span>`,
+                        "eventStyles": {
+                            "background": "rgb(203, 228, 240)"
+                        }
+                    }]
+                },
+                {
+                    "date": "2024-02-20", "list": [{
+                        "id": 4510,
+                        "date": "2024-02-20",
+                        "time": "",
+                        "data": "<span class=\"text-primary\"> </span>",
+                        "dataTooltip": `<span>Work Title 1</span>`,
+                        "eventStyles": {
+                            "background": "rgb(203, 228, 240)"
+                        }
+                    }]
+                },
+                {
+                    "date": "2024-02-11", "list": [{
+                        "id": 4513,
+                        "date": "2024-02-11",
+                        "time": "",
+                        "data": "<span class=\"text-warning\">Rest </span>",
+                        "dataTooltip": `<span>Rest</span>`,
+                        "eventStyles": {
+                            "background": "rgb(255, 240, 227)"
+                        }
+                    }]
+                },
+                {
+                    "date": "2023-12-30", "list": [{
+                        "id": 4516,
+                        "date": "2023-12-30",
+                        "time": "",
+                        "data": "<span class=\"text-warning\">Rest </span>",
+                        "dataTooltip": `<span>Rest</span>`,
+                        "eventStyles": {
+                            "background": "rgb(255, 240, 227)"
+                        }
+                    }]
+                },
+                {
+                    "date": "2024-01-20", "list": [{
+                        "id": 4521,
+                        "date": "2024-01-20",
+                        "time": "",
+                        "data": "<span class=\"text-warning\">Rest </span>",
+                        "dataTooltip": `<span>Rest</span>`,
+                        "eventStyles": {
+                            "background": "rgb(255, 240, 227)"
+                        }
+                    }]
+                },
+                {
+                    "date": "2023-12-05", "list": [{
+                        "id": 4524,
+                        "date": "2023-12-05",
+                        "time": "",
+                        "data": "<span class=\"text-primary\">Work Title 1 </span>",
+                        "dataTooltip": `<span>Work Title 1</span>`,
+                        "eventStyles": {
+                            "background": "rgb(203, 228, 240)"
+                        }
+                    }]
+                },
+                {
+                    "date": "2023-12-19", "list": [{
+                        "id": 4525,
+                        "date": "2023-12-19",
+                        "time": "",
+                        "data": "<span class=\"text-primary\">Work Title 1 </span>",
+                        "dataTooltip": `<span>Work Title 1</span>`,
+                        "eventStyles": {
+                            "background": "rgb(203, 228, 240)"
+                        }
+                    }]
+                },
+                {
+                    "date": "2024-02-18", "list": [{
+                        "id": 4527,
+                        "date": "2024-02-18",
+                        "time": "",
+                        "data": "<span class=\"text-warning\">Rest </span>",
+                        "dataTooltip": `<span>Rest</span>`,
+                        "eventStyles": {
+                            "background": "rgb(255, 240, 227)"
+                        }
+                    }]
+                },
+                {
+                    "date": "2024-01-23", "list": [{
+                        "id": 4528,
+                        "date": "2024-01-23",
+                        "time": "",
+                        "data": "<span class=\"text-primary\">Work Title 1 </span>",
+                        "dataTooltip": `<span>Work Title 1</span>`,
+                        "eventStyles": {
+                            "background": "rgb(203, 228, 240)"
+                        }
+                    }]
+                },
+                {
+                    "date": "2023-12-10", "list": [{
+                        "id": 4529,
+                        "date": "2023-12-10",
+                        "time": "",
+                        "data": "<span class=\"text-warning\">Rest </span>",
+                        "dataTooltip": `<span>Rest</span>`,
+                        "eventStyles": {
+                            "background": "rgb(255, 240, 227)"
+                        }
+                    }]
+                },
+                {
+                    "date": "2023-12-09", "list": [{
+                        "id": 4534,
+                        "date": "2023-12-09",
+                        "time": "",
+                        "data": "<span class=\"text-warning\">Rest </span>",
+                        "dataTooltip": `<span>Rest</span>`,
+                        "eventStyles": {
+                            "background": "rgb(255, 240, 227)"
+                        }
+                    }]
+                },
+                {
+                    "date": "2024-02-13", "list": [{
+                        "id": 4535,
+                        "date": "2024-02-13",
+                        "time": "",
+                        "data": "<span class=\"text-primary\">Work Title 1 </span>",
+                        "dataTooltip": `<span>Work Title 1</span>`,
+                        "eventStyles": {
+                            "background": "rgb(203, 228, 240)"
+                        }
+                    }]
+                },
+                {
+                    "date": "2024-01-16", "list": [{
+                        "id": 4537,
+                        "date": "2024-01-16",
+                        "time": "",
+                        "data": "<span class=\"text-primary\">Work Title 1 </span>",
+                        "dataTooltip": `<span>Work Title 1</span>`,
+                        "eventStyles": {
+                            "background": "rgb(203, 228, 240)"
+                        }
+                    }]
+                },
+                {
+                    "date": "2024-02-03", "list": [{
+                        "id": 4538,
+                        "date": "2024-02-03",
+                        "time": "",
+                        "data": "<span class=\"text-warning\">Rest </span>",
+                        "dataTooltip": `<span>Rest</span>`,
+                        "eventStyles": {
+                            "background": "rgb(255, 240, 227)"
+                        }
+                    }]
+                },
+                {
+                    "date": "2024-02-25", "list": [{
+                        "id": 4541,
+                        "date": "2024-02-25",
+                        "time": "",
+                        "data": "<span class=\"text-warning\">Rest </span>",
+                        "dataTooltip": `<span>Rest</span>`,
+                        "eventStyles": {
+                            "background": "rgb(255, 240, 227)"
+                        }
+                    }]
+                },
+                {
+                    "date": "2023-12-26", "list": [{
+                        "id": 4543,
+                        "date": "2023-12-26",
+                        "time": "",
+                        "data": "<span class=\"text-primary\">Work Title 1 </span>",
+                        "dataTooltip": `<span>Work Title 1</span>`,
+                        "eventStyles": {
+                            "background": "rgb(203, 228, 240)"
+                        }
+                    }]
+                },
+                {
+                    "date": "2024-01-13", "list": [{
+                        "id": 4544,
+                        "date": "2024-01-13",
+                        "time": "",
+                        "data": "<span class=\"text-warning\">Rest </span>",
+                        "dataTooltip": `<span>Rest</span>`,
+                        "eventStyles": {
+                            "background": "rgb(255, 240, 227)"
+                        }
+                    }]
+                },
+                {
+                    "date": "2023-12-23", "list": [{
+                        "id": 4546,
+                        "date": "2023-12-23",
+                        "time": "",
+                        "data": "<span class=\"text-warning\">Rest </span>",
+                        "dataTooltip": `<span>Rest</span>`,
+                        "eventStyles": {
+                            "background": "rgb(255, 240, 227)"
+                        }
+                    }]
+                }
+            ]
+        },
+        {
+            "listSection": { "id": 101, "title": "Jerry" },
+            "eventSources": [
+                {
+                    "date": "2024-02-28", "list": [{
+                        "id": 4509,
+                        "date": "2024-02-28",
+                        "time": "",
+                        "data": "<span class=\"text-primary\">Night Shift </span>",
+                        "eventStyles": {
+                            "background": "rgb(203, 228, 240)"
+                        }
+                    }]
+                },
+                {
+                    "date": "2024-01-15", "list": [{
+                        "id": 4512,
+                        "date": "2024-01-15",
+                        "time": "",
+                        "data": "<span class=\"text-primary\">Work Title </span>",
+                        "eventStyles": {
+                            "background": "rgb(203, 228, 240)"
+                        }
+                    }]
+                },
+                {
+                    "date": "2024-01-01", "list": [{
+                        "id": 4515,
+                        "date": "2024-01-01",
+                        "time": "",
+                        "data": "<span class=\"text-primary\">Work Title </span>",
+                        "eventStyles": {
+                            "background": "rgb(203, 228, 240)"
+                        }
+                    }]
+                },
+                {
+                    "date": "2024-01-03", "list": [{
+                        "id": 4567,
+                        "date": "2024-01-03",
+                        "time": "",
+                        "data": "<span class=\"text-primary\">Night Shift </span>",
+                        "eventStyles": {
+                            "background": "rgb(203, 228, 240)"
+                        }
+                    }]
+                }
+
+            ]
+        },
+        {
+            "listSection": { "id": 102, "title": "Dony Marketplace" },
+            "eventSources": [
+                {
+                    "date": "2024-01-11", "list": [{
+                        "id": 4574,
+                        "date": "2024-01-11",
+                        "time": "",
+                        "data": "<span class=\"text-warning\">Rest </span>",
+                        "eventStyles": {
+                            "background": "rgb(255, 240, 227)"
+                        }
+                    }]
+                },
+                {
+                    "date": "2024-01-12", "list": [{
+                        "id": 4575,
+                        "date": "2024-01-12",
+                        "time": "",
+                        "data": "<span class=\"text-primary\">Work Title 1 </span>",
+                        "eventStyles": {
+                            "background": "rgb(203, 228, 240)"
+                        }
+                    }]
+                },
+                {
+                    "date": "2024-01-09", "list": [{
+                        "id": 4576,
+                        "date": "2024-01-09",
+                        "time": "",
+                        "data": "<span class=\"text-primary\">Work Title 1 </span>",
+                        "eventStyles": {
+                            "background": "rgb(203, 228, 240)"
+                        }
+                    }]
+                },
+                {
+                    "date": "2024-01-14", "list": [{
+                        "id": 4578,
+                        "date": "2024-01-14",
+                        "time": "",
+                        "data": "<span class=\"text-warning\">Rest </span>",
+                        "eventStyles": {
+                            "background": "rgb(255, 240, 227)"
+                        }
+                    }]
+                }
+
+            ]
+        },
+        {
+            "listSection": { "id": 103, "title": "David" },
+            "eventSources": [
+                {
+                    "date": "2023-12-03", "list": [{
+                        "id": 6667,
+                        "date": "2023-12-03",
+                        "time": "",
+                        "data": "<span class=\"text-warning\">Rest </span>",
+                        "dataTooltip": `<span>Rest</span>`,
+                        "eventStyles": {
+                            "background": "rgb(255, 240, 227)"
+                        }
+                    },
+                    {
+                        "id": 6888,
+                        "date": "2023-12-03",
+                        "time": "",
+                        "data": "<span class=\"text-primary\">Work Title 99</span>",
+                        "dataTooltip": `<span>Work Title 99</span>`,
+                        "eventStyles": {
+                            "background": "rgb(203, 228, 240)"
+                        }
+                    }]
+                }
+
+            ]
+        },
+        {
+            "listSection": { "id": 104, "title": "Jone" },
+            "eventSources": []
+        },
+        {
+            "listSection": { "id": 105, "title": "Smith" },
+            "eventSources": []
+        },
+        {
+            "listSection": { "id": 106, "title": "Chuckie" },
+            "eventSources": []
+        },
+        {
+            "listSection": { "id": 107, "title": "Li Yun" },
+            "eventSources": []
+        },
+        {
+            "listSection": { "id": 108, "title": "Smash Dom" },
+            "eventSources": []
+        },
+        {
+            "listSection": { "id": 109, "title": "Cool" },
+            "eventSources": []
+        }
+    ];
+
+    const defaultCustomTodayDate = '2023-12-01';
+
+
+    const [selectedCellsData, setSelectedCellsData] = useState<any[]>([]);
+
+    return (
+        <>
+            <strong>Select multiple cells to get the return value</strong>
+            <p>Result: {JSON.stringify(selectedCellsData)}</p>
+            <div style={{ width: '100%' }}>
+                <EventCalendarTimeline
+                    customTodayDate={defaultCustomTodayDate}
+                    eventsValue={defaultData}
+                    cellCloseBtnClassName="d-none" // if hidden delete button, set it to `d-none`
+                    cellAddBtnClassName="d-none" // if hidden add button, set it to `d-none`
+                    tableListSectionTitle="Name"
+                    langWeek={['<small class="ps-1">MON</small>', '<small class="ps-1">TUE</small>', '<small class="ps-1">WED</small>', '<small class="ps-1">THU</small>', '<small class="ps-1">FRI</small>', '<small class="ps-1">SAT</small>', '<small class="ps-1">SUN</small>']}
+                    multipleCells
+                    showWeek
+                    autoScroll
+                    onCellMouseUp={(e: React.MouseEvent, selectedCellsData: any[]) => {
+                        setSelectedCellsData(selectedCellsData);
+                        console.log('-> onCellMouseUp: ', selectedCellsData);
+                    }}
+                />
+            </div>
+
+        </>
+    );
+
 }
 ```
 
@@ -1536,7 +1984,7 @@ import EventCalendarTimeline from 'funda-ui/EventCalendarTimeline';
 ```
 | Property | Type | Default | Description | Required |
 | --- | --- | --- | --- | --- |
-| `contentRef` | React.RefObject | - | It exposes the following methods:  <br /> <ol><li>`contentRef.current.gridInit()`</li><li>`contentRef.current.gridReset()`</li></ol> | - |
+| `contentRef` | React.RefObject | - | It exposes the following methods:  <br /> <ol><li>`contentRef.current.gridInit()`</li><li>`contentRef.current.gridInitHeadertitle()`</li><li>`contentRef.current.gridReset()`</li><li>`contentRef.current.resetSelectedCells()`</li></ol> | - |
 | `calendarWrapperClassName` | string | - | The class name of the calendar wrapper. | - |
 | `tableWrapperClassName` | string | - | The class name of the table wrapper. | - |
 | `tableClassName` | string | - | The class name of the table. | - |
@@ -1545,13 +1993,19 @@ import EventCalendarTimeline from 'funda-ui/EventCalendarTimeline';
 | `tableListStartClassName` | string | - | The class name of the start content. | - |
 | `tableListEndClassName` | string | - | The class name of the end content. | - |
 | `tableListDividerClassName` | string | - | The class name of the content divider. | - |
-| `customTodayDate` | string  | - | Specify a default today. such as `2023-11-16` | - |
+| `appearance` | `week` \| `month` | `month` | The default appearance of the component, using a different calendar interface style. | - |
+| `appearanceToggle` | boolean | true | Whether to display the button for the appearance toggle. | - |
+| `appearanceWeekTmpl` | function  | - | Call a function. You can use this as a template for displaying. eg `(startDate,endDate)=>{const formatToEnglishMonthDay=(date)=>{const months=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];const month=months[date.getMonth()];const day=date.getDate();return month+' '+day;};return<>{formatToEnglishMonthDay(new Date(startDate))}-{formatToEnglishMonthDay(new Date(endDate))}</>}` It returns two dates of header title in weeks. <br /> <ol><li>The first is the start date (**String**)</li><li>The second is the end date (**String**)</li></ol> | - |
+| `customTodayDate` | string  | - | Specify a default today. such as `2023-11-06` | - |
+| `multipleCells` | boolean  | false | Whether to support Multi Directional operations in cells. If enabled, you can select multiple cells. | - |
 | `eventsValue` | array  | `[]` | Specify the default value for all events. Its properties are described below in the documentation. such as `[{"listSection":{"id":100,"title":"Smith One"},"eventSources":[{"date":"2024-02-20","list":[{"id":4510,"date":"2024-02-20","time":"","data":"<span class=\"text-primary\"> </span>","dataTooltip":`<span>Work Title 1</span>`,"eventStyles":{"background":"rgb(203, 228, 240)"}}]},{"date":"2024-02-11","list":[{"id":4513,"date":"2024-02-11","time":"","data":"<span class=\"text-warning\">Rest </span>","dataTooltip":`<span>Rest</span>`,"eventStyles":{"background":"rgb(255, 240, 227)"}}]}]},{"listSection":{"id":101,"title":"Jerry"},"eventSources":[{"date":"2024-01-03","list":[{"id":4567,"date":"2024-01-03","time":"","data":"<span class=\"text-primary\">Night Shift </span>","eventStyles":{"background":"rgb(203, 228, 240)"}}]}]},{"listSection":{"id":103,"title":"David"},"eventSources":[{"date":"2023-12-03","list":[{"id":6667,"date":"2023-12-03","time":"","data":"<span class=\"text-warning\">Rest </span>","dataTooltip":`<span>Rest</span>`,"eventStyles":{"background":"rgb(255, 240, 227)"}},{"id":6888,"date":"2023-12-03","time":"","data":"<span class=\"text-primary\">Work Title 99</span>","dataTooltip":`<span>Work Title 99</span>`,"eventStyles":{"background":"rgb(203, 228, 240)"}}]}]},{"listSection":{"id":104,"title":"Jone"},"eventSources":[]}]` | ✅ |
 | `langWeek` | array  | `['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN']` | Localization in the component of week sequence. <blockquote>Support html tags. <br />such as `['<small>MON</small>', '<small>TUE</small>', '<small>WED</small>', '<small>THU</small>', '<small>FRI</small>', '<small>SAT</small>', '<small>SUN</small>']`</blockquote> | - |
 | `langWeekFull` | array  | `['MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY', 'SATURDAY', 'SUNDAY']` | Localization in the component of full week sequence. <blockquote>This attribute is not valid yet</blockquote> | - |
 | `langMonths` | array  | `['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC']` | Localization in the component of months sequence. | - |
 | `langMonthsFull` | array  | `['January', 'Febuary', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']` | Localization in the component of full months sequence. | - |
-| `langToday` | string  | `Today`| Localization in the component of today button. | - |
+| `langToday` | string  | `Today` | Localization in the component of today button. | - |
+| `langAppearanceLabelMonth` | string  | `Month` | Localization in the appearance of the month toggle button. | - |
+| `langAppearanceLabelWeek` | string  | `Week` | Localization in the appearance of the week toggle button. | - |
 | `iconRemove` | ReactNode  | `<svg width="20px" height="20px" viewBox="0 0 24 24" fill="none"><path fillRule="evenodd" clipRule="evenodd" d="M22 12c0 5.523-4.477 10-10 10S2 17.523 2 12 6.477 2 12 2s10 4.477 10 10ZM8 11a1 1 0 1 0 0 2h8a1 1 0 1 0 0-2H8Z" fill="#000" /></svg>` | The label of the button to delete current item, if it is not set, only the SVG icon will be included | - |
 | `iconAdd` | ReactNode  | `<svg width="20px" height="20px" viewBox="0 0 32 32"><g stroke="none" strokeWidth="1" fill="none" fillRule="evenodd"><g transform="translate(-102.000000, -1037.000000)" fill="#000000"><path d="M124,1054 L119,1054 L119,1059 C119,1059.55 118.552,1060 118,1060 C117.448,1060 117,1059.55 117,1059 L117,1054 L112,1054 C111.448,1054 111,1053.55 111,1053 C111,1052.45 111.448,1052 112,1052 L117,1052 L117,1047 C117,1046.45 117.448,1046 118,1046 C118.552,1046 119,1046.45 119,1047 L119,1052 L124,1052 C124.552,1052 125,1052.45 125,1053 C125,1053.55 124.552,1054 124,1054 L124,1054 Z M130,1037 L106,1037 C103.791,1037 102,1038.79 102,1041 L102,1065 C102,1067.21 103.791,1069 106,1069 L130,1069 C132.209,1069 134,1067.21 134,1065 L134,1041 C134,1038.79 132.209,1037 130,1037 L130,1037 Z"></path></g></g></svg>` | The label of the button to add current item, if it is not set, only the SVG icon will be included | - |
 | `cellCloseBtnClassName` | string  | - | Specify a class for close button of cell | - |
@@ -1573,7 +2027,9 @@ import EventCalendarTimeline from 'funda-ui/EventCalendarTimeline';
 | `onChangeMonth` | function  | - | Called when the date moves to a new month. The function receives the selected month (0-11). Triggered when the previous, next or month selection button is clicked. It returns only one value which is the current value (**JSON Object**) | - |
 | `onChangeYear` | function  | - | Called when the date moves to a new year. The function receives the selected year. Triggered when the year selection button is clicked. It returns only one value which is the current value (**JSON Object**) | - |
 | `onChangeToday` | function  | - | Called when the date moves to today. Triggered when the today selection button is clicked. It returns only one value which is the current value (**JSON Object**) | - |
+| `onChangeWeek` | function  | - | When `appearance` is set to `week`, the PREV and NEXT button is triggered when toggled. It returns two dates. <br /> <ol><li>The first is the start date (**String**)</li><li>The second is the end date (**String**)</li></ol> | - |
 | `onListRenderComplete` | function  | - | Call a function when the list has been rendered completely. It doesn't have any return value | - |
+| `onChangeAppearanceMode` | function  | - | Triggers when appearance mode is switched. It returns only one value. <br /> <ol><li>The first is the appearance mode(**String**)</li></ol> | - |
 | `modalContent` | ReactNode  | - | **For `<ModalDialog />`** Customize the content in the pop-up window, usually form controls. See the case at the bottom of the document. | - |
 | `modalDeleteContent` | ReactNode  | - | **For `<ModalDialog />`** Customize the content in the pop-up window (the part used for deletion), usually a form control, see the case at the bottom of the document. | - |
 | `modalHeading` | ReactNode  | - | **For `<ModalDialog />`** Set a window title | - |
@@ -1594,7 +2050,9 @@ import EventCalendarTimeline from 'funda-ui/EventCalendarTimeline';
 | `onModalDeleteEvent` | function  | - | **For `<ModalDialog />`** Call a function when the DELETE modal is submitted. It returns three callback values. <br /> <ol><li>The first is the current value (**JSON Object**)</li><li>The second is the closing event (**Function**)</li><li>The last is A function that initializes a table grid (**Function**)</li></ol> | - |
 | `onCellMouseEnter` | function  | - | It fires when the mouse pointer enters a cell. It returns only one callback value which is the current cell event (**Event**). | - |
 | `onCellMouseLeave` | function  | - | It fires when the mouse pointer leaves a cell. It returns only one callback value which is the current cell event (**Event**). | - |
-| `onCellClick` | function  | - | It fires when the mouse pointer clicks a cell. It returns only one callback value which is the current cell event (**Event**). | - |
+| `onCellClick` | function  | - | It fires when the mouse pointer clicks a cell. It returns two callback values. <br /> <ol><li>The first is the current cell event (**Event**)</li><li>The second is the current cell data (**JSON Object**)</li>></ol> | - |
+| `onCellMouseUp` | function  | - | It fires when the user presses a key on the keyboard in the table. It returns two callback values. <br /> <ol><li>The first is the current cell event (**Event**)</li><li>The second is the selected cells data (**Array**)</li></ol> | - |
+| `onKeyPressed` | function  | - | It fires when the user presses a key on the keyboard in the table. It returns two callback values. <br /> <ol><li>The first is the event in the core content area (**Event**)</li><li>The second is the selected cells data (**Array**)</li>></ol> | - |
 
 
 ---
@@ -1633,7 +2091,7 @@ Array Object configuration properties of the `eventsValue.eventSources.list` (**
 | `id` | string \| number | - | Item ID. | ✅ |
 | `date` | string | - | Date of item. such as `2023-11-02` <blockquote>Each cell can support multiple pieces of data</blockquote> | ✅ |
 | `time` | string | - | Date of item. such as `25:33:00` | ✅ |
-| `data` | string | - | Specify the value for event  <blockquote>Support html tags</blockquote> | ✅ |
+| `data` | string \| ReactNode | - | Specify the value for event  <blockquote>Support html tags if "string"</blockquote> | ✅ |
 | `dataTooltip` | string | - | Specify the value note for event. It will be displayed in the form of Tooltip.  <blockquote>Support html tags</blockquote> | - |
 | `eventStyles` | React.CSSProperties | - | Use inline styles to event area. such as `{ backgroundColor: "red", fontSize: "12px" }` | - |
 | `callback` | function | - | Click on the callback function for this item. <blockquote>If this field exists, triggering it will not close the pop-up.</blockquote> | - |

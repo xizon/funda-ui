@@ -52,9 +52,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "getCurrentDay": () => (/* binding */ getCurrentDay),
 /* harmony export */   "getCurrentMonth": () => (/* binding */ getCurrentMonth),
 /* harmony export */   "getCurrentYear": () => (/* binding */ getCurrentYear),
+/* harmony export */   "getDateDetails": () => (/* binding */ getDateDetails),
 /* harmony export */   "getFirstAndLastMonthDay": () => (/* binding */ getFirstAndLastMonthDay),
 /* harmony export */   "getFullTime": () => (/* binding */ getFullTime),
 /* harmony export */   "getLastDayInMonth": () => (/* binding */ getLastDayInMonth),
+/* harmony export */   "getMonthDates": () => (/* binding */ getMonthDates),
 /* harmony export */   "getNextMonthDate": () => (/* binding */ getNextMonthDate),
 /* harmony export */   "getNextYearDate": () => (/* binding */ getNextYearDate),
 /* harmony export */   "getNow": () => (/* binding */ getNow),
@@ -63,6 +65,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "getSpecifiedDate": () => (/* binding */ getSpecifiedDate),
 /* harmony export */   "getTodayDate": () => (/* binding */ getTodayDate),
 /* harmony export */   "getTomorrowDate": () => (/* binding */ getTomorrowDate),
+/* harmony export */   "getWeekDatesFromMon": () => (/* binding */ getWeekDatesFromMon),
+/* harmony export */   "getWeekDatesFromSun": () => (/* binding */ getWeekDatesFromSun),
 /* harmony export */   "getYesterdayDate": () => (/* binding */ getYesterdayDate),
 /* harmony export */   "isTimeString": () => (/* binding */ isTimeString),
 /* harmony export */   "isValidDate": () => (/* binding */ isValidDate),
@@ -172,6 +176,31 @@ var isValidDate = function isValidDate(v) {
 function dateFormat(v) {
   var date = typeof v === 'string' ? new Date(v.replace(/-/g, "/")) : v; // fix "Invalid date in safari"
   return date;
+}
+
+/**
+ * Get date details
+ * @param {Date | String} v 
+ * @param {Boolean} padZeroEnabled 
+ * @typedef {Object} JSON
+ */
+function getDateDetails(v) {
+  var padZeroEnabled = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : true;
+  var date = dateFormat(v);
+  var year = date.getFullYear();
+  var month = padZero(date.getMonth() + 1, padZeroEnabled);
+  var day = padZero(date.getDate(), padZeroEnabled);
+  var hours = padZero(date.getHours(), padZeroEnabled);
+  var minutes = padZero(date.getMinutes(), padZeroEnabled);
+  var seconds = padZero(date.getSeconds(), padZeroEnabled);
+  return {
+    year: String(year),
+    month: month,
+    day: day,
+    hours: hours,
+    minutes: minutes,
+    seconds: seconds
+  };
 }
 
 /**
@@ -467,6 +496,69 @@ function setDateDays(v, offset) {
 function timestampToDate(v) {
   var padZeroEnabled = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : true;
   return getFullTime(new Date(v), padZeroEnabled);
+}
+
+/**
+ * Get the date of the specified month
+ * @param {Number} year 
+ * @param {Number} month 
+ * @returns {Array<string>} 
+ */
+function getMonthDates(year, month) {
+  var dates = [];
+
+  // Get the total number of days in the month
+  var daysInMonth = new Date(year, month, 0).getDate();
+  for (var day = 1; day <= daysInMonth; day++) {
+    dates.push("".concat(year, "-").concat(String(month).padStart(2, '0'), "-").concat(String(day).padStart(2, '0'))); // 'YYYY-MM-DD'
+  }
+
+  return dates;
+}
+
+/**
+ * Get the date of the specified week (From Sunday)
+ * @param {Number} weekOffset 
+ * @returns {Array<Date>} 
+ */
+function getWeekDatesFromSun(weekOffset) {
+  var dates = [];
+  var currentDate = new Date();
+
+  // Calculate the date of Sunday
+  var dayOfWeek = currentDate.getDay(); // 0 is Sunday
+  currentDate.setDate(currentDate.getDate() - dayOfWeek + weekOffset * 7);
+
+  // Get the date of the week
+  for (var i = 0; i < 7; i++) {
+    var date = new Date(currentDate);
+    date.setDate(currentDate.getDate() + i);
+    dates.push(date);
+  }
+  return dates;
+}
+
+/**
+ * Get the date of the specified week (From Monday)
+ * @param {Number} weekOffset 
+ * @returns {Array<Date>} 
+ */
+function getWeekDatesFromMon(weekOffset) {
+  var dates = [];
+  var currentDate = new Date();
+
+  // Set the date to Monday
+  var dayOfWeek = currentDate.getDay();
+  var diffToMonday = dayOfWeek === 0 ? -6 : 1 - dayOfWeek;
+  currentDate.setDate(currentDate.getDate() + diffToMonday + weekOffset * 7);
+
+  // Get the date of the week
+  for (var i = 0; i < 7; i++) {
+    var date = new Date(currentDate);
+    date.setDate(currentDate.getDate() + i);
+    dates.push(date);
+  }
+  return dates;
 }
 
 /******/ 	return __webpack_exports__;

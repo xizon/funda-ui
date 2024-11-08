@@ -25,6 +25,7 @@
   --e-cal-timeline-header-prevnext-btn-radius: 0.25rem;
   --e-cal-timeline-footer-today-btn-bg: rgba(0, 58, 166, 1);
   --e-cal-timeline-footer-today-btn-color: #fff;
+  --e-cal-timeline-appearance-btn-active-bg: rgb(239, 239, 239);
   position: relative;
   z-index: 3;
   min-width: var(--e-cal-timeline-wrapper-min-width);
@@ -32,6 +33,7 @@
   /* --HEADER --*/
   /*-- SELECTION --*/
   /* --BUTTON --*/
+  /* WEEK MODE --*/
 }
 .e-cal-timeline__wrapper .e-cal-timeline__header {
   font-size: var(--e-cal-timeline-header-fs);
@@ -39,6 +41,11 @@
   padding: 10px 10px 5px 10px;
   display: flex;
   justify-content: space-between;
+}
+.e-cal-timeline__wrapper .e-cal-timeline__header .e-cal-timeline__header__info {
+  font-weight: normal;
+  font-size: 0.875em;
+  margin-bottom: 0.2rem;
 }
 .e-cal-timeline__wrapper .e-cal-timeline__header .e-cal-timeline__header__btns .e-cal-timeline__btn {
   margin-right: 1rem;
@@ -133,6 +140,7 @@
   margin: 0;
   box-shadow: none;
   cursor: pointer;
+  margin-right: 0.35rem;
   /* required */
   display: inline-flex;
   align-items: center;
@@ -160,7 +168,20 @@
   color: var(--e-cal-timeline-footer-today-btn-color);
   background-color: var(--e-cal-timeline-footer-today-btn-bg);
 }
+.e-cal-timeline__wrapper .e-cal-timeline__btn--appearance {
+  border: 1px solid var(--e-cal-timeline-border-color);
+  border-radius: 0.25rem;
+  font-size: 0.875em;
+  padding: 0.2rem 1rem;
+}
+.e-cal-timeline__wrapper .e-cal-timeline__btn--appearance.active {
+  background-color: var(--e-cal-timeline-appearance-btn-active-bg);
+}
+.e-cal-timeline__wrapper.e-cal-timeline__wrapper--week .e-cal-timeline__header__info {
+  transform: translateX(-2.5rem);
+}
 
+/* WEEK MODE*/
 /*
 ///////////////////////////////////////////////////
 //////////////////// Table Grid  //////////////////
@@ -192,12 +213,13 @@
   --e-cal-timeline-table-add-btn-color: #0b5ed7;
   --e-cal-timeline-table-event-font-size: 0.75rem;
   --e-cal-timeline-table-event-hover-bg: rgba(255, 240, 227, 0);
-  --e-cal-timeline-table-event-hover-shadow: inset 0px 0px 0px 1px rgba(0,0,0,0.15);
+  --e-cal-timeline-table-event-hover-shadow: inset 0px 0px 0px 1px rgba(21, 21, 240, 0.45);
   height: 100%; /* Required */
   font-size: var(--e-cal-timeline-table-bodycell-font-size);
   margin-top: -1px;
   position: relative;
   z-index: 2;
+  /* Required when using onKeyDown */
   /* list section */
   /* datagrid title */
   /* datagrid content */
@@ -219,6 +241,9 @@
   /* divider */
   /* cell */
   /* scroller */
+}
+.e-cal-timeline-table__timeline-table__wrapper[tabindex]:focus-visible {
+  outline: none;
 }
 .e-cal-timeline-table__timeline-table__wrapper .e-cal-timeline-table__timeline-table {
   border: var(--e-cal-timeline-table-primary-border);
@@ -467,6 +492,9 @@
 .e-cal-timeline-table__timeline-table__wrapper .e-cal-timeline-table__scroller-harness--hide {
   overflow: hidden;
   height: auto;
+}
+.e-cal-timeline-table__timeline-table__wrapper .e-cal-timeline-table__scroller-harness--hideX {
+  overflow-x: hidden !important;
 }
 .e-cal-timeline-table__timeline-table__wrapper .e-cal-timeline-table__scroller-harness[data-scroll=body].dragging {
   cursor: grab;

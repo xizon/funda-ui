@@ -7,8 +7,8 @@ import { clsWrite, combinedCls } from 'funda-utils/dist/cjs/cls';
 
 
 import { TableProvider } from './TableContext';
-import useTableResponsive from './table-utils/hooks/useTableResponsive';
-import useTableDraggable from './table-utils/hooks/useTableDraggable';
+import useTableResponsive from './utils/hooks/useTableResponsive';
+import useTableDraggable from './utils/hooks/useTableDraggable';
 
 
 export interface TableProps extends React.HTMLAttributes<HTMLDivElement> {
