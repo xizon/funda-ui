@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, forwardRef, ChangeEvent, MouseEvent, KeyboardEvent, FocusEvent, CompositionEvent } from 'react';
+import React, { useState, useEffect, useRef, forwardRef, useImperativeHandle, ChangeEvent, MouseEvent, KeyboardEvent, FocusEvent, CompositionEvent } from 'react';
 
 
 
@@ -14,6 +14,7 @@ import { clsWrite, combinedCls } from 'funda-utils/dist/cjs/cls';
 
 
 export type TagInputProps = {
+    contentRef?: React.ForwardedRef<any>;
     wrapperClassName?: string;
     value?: string;
     maxTags?: number;
@@ -45,6 +46,7 @@ export type TagInputProps = {
 
 const TagInput = forwardRef((props: TagInputProps, externalRef: any) => {
     const {
+        contentRef,
         wrapperClassName,
         maxTags,
         disabled,
@@ -83,6 +85,26 @@ const TagInput = forwardRef((props: TagInputProps, externalRef: any) => {
     const [items, setItems] = useState<any[]>([]);
     const [alreadyInItems, setAlreadyInItems] = useState<boolean>(false);
     const [onComposition, setOnComposition] = useState<boolean>(false);
+
+
+    // exposes the following methods
+    useImperativeHandle(
+        contentRef,
+        () => ({
+            control: () => {
+                return valRef.current;
+            },
+            clear: (cb?: any) => {
+                initDefaultValue('');
+                cb?.();
+            },
+            set: (value: string, cb?: any) => {
+                initDefaultValue(`${value}`);
+                cb?.();
+            }
+        }),
+        [contentRef],
+    );
 
 
     function initDefaultValue(defaultValue: any) {

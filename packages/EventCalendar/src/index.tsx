@@ -5,6 +5,7 @@ import { clsWrite, combinedCls } from 'funda-utils/dist/cjs/cls';
 import ModalDialog from 'funda-modaldialog';
 
 
+
 export interface EventsValueConfig {
     id: string | number;
     date: string,
@@ -64,6 +65,7 @@ export type EventCalendarProps = {
     onCellMouseEnter?: (el: any) => void;
     onCellMouseLeave?: (el: any) => void;
     onCellClick?: (el: any) => void;
+    onCellDoubleClick?: (el: any) => void;
     onCellMouseUp?: (el: any) => void;
     onKeyPressed?: (el: any) => void;
 
@@ -119,6 +121,7 @@ const EventCalendar = (props: EventCalendarProps) => {
         onCellMouseEnter,
         onCellMouseLeave,
         onCellClick,
+        onCellDoubleClick,
         onCellMouseUp,
         onKeyPressed
     } = props;
@@ -129,8 +132,10 @@ const EventCalendar = (props: EventCalendarProps) => {
     const WEEK_FULL = langWeekFull || ['MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY', 'SATURDAY', 'SUNDAY'];
     const MONTHS = langMonths || ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'];
     const MONTHS_FULL = langMonthsFull || ['January', 'Febuary', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
-
-    const [val, setVal] = useState<TimelineCellListConfig[]>([]);
+    const START_WEEK_ON = 1; // represents "Monday/1" in JavaScript
+    
+    // orginal data
+    const [orginalData, setOrginalData] = useState<TimelineCellListConfig[]>([]);
 
     const now = useMemo(() => new Date(), []);
     const [date, setDate] = useState<Date>(now);
@@ -158,6 +163,23 @@ const EventCalendar = (props: EventCalendarProps) => {
 
     // Open temporary storage for pop-ups
     const [tableCellId, setTableCellId] = useState<number>(-1);
+
+
+    const findMondayAndTruncate = (dates: string[]) => {
+        const _res = dates.map((s: string) => new Date(s));
+        // Find the first Monday in the sequence
+        for (let i = 0; i < _res.length; i++) {
+            const date = _res[i];
+            if (date.getDay() === START_WEEK_ON) { 
+                // Return dates starting from Monday onwards
+                return dates.slice(i);
+            }
+        }
+
+        return [];  // Return empty array if no Monday found
+    }
+
+
 
     // exposes the following methods
     useImperativeHandle(
@@ -188,7 +210,7 @@ const EventCalendar = (props: EventCalendarProps) => {
 
 
     const queryItemObj = () => {
-        const _perData = val.filter((item: any) => getCalendarDate(item.date as string) === getCalendarDate(`${year}-${month + 1}-${day}`));
+        const _perData = orginalData.filter((item: any) => getCalendarDate(item.date as string) === getCalendarDate(`${year}-${month + 1}-${day}`));
 
         let _currentData: any = undefined;
         if (_perData[0]) {
@@ -273,76 +295,88 @@ const EventCalendar = (props: EventCalendarProps) => {
             return first7Days.map((v: Date) => getCalendarDate(v));
         };
 
+       
 
-        return _tempCells.map((_: any, j: number) => {
-            const _col = allDays.slice(j * 7, (j + 1) * 7);
+        // The remaining date of the previous month
+        // If the number is 7, the calendar does not include the date of the previous month
+        const remainPrevDate = findMondayAndTruncate(_getForwardFill(year, month+1));
+        const remainPrevDateTotal = remainPrevDate.length === 7 ? 0 : remainPrevDate.length;
 
-
-            // back fill
-            const backFillArr: null[] = [];
-            for (let k = 0; k < 7 - _col.length; k++) {
-                backFillArr.push(null);
-            }
-            _col.splice(_col.length, 0, ...backFillArr as any);
-
-
-            //
-            const isFirstGroup = j === 0;
-            const isLastGroup = j === _tempCells.length - 1;
-
-
-            // forward fill
-            const __forwardFillDate: string[] = _getForwardFill(year, month + 1);
-
-            // back fill
-            const __backFillDate: string[] = _getBackFill(year, month + 1);
-
-
-            const _getDateShow = (_dayIndex: number, _m: number, _startDay: number, _month: number) => {
-                const currentDay = typeof _dayIndex === 'number' ? _dayIndex - (_startDay - 2) : 0; // ..., -3, -2, -1, 0, 1, 2, 3, 4, 5, 6, 7, ...
-
-                // date
-                let _dateShow: any = currentDay > 0 ? `${year}-${_month + 1}-${currentDay}` : '';
-
-                // forward & back
-                if (isFirstGroup && _dateShow === '') {
-                    _dateShow = __forwardFillDate.at(currentDay - 1);
+        
+        return {
+            rowsTotal: orginalData.length,
+            colsTotal: allDays.length,
+            forwardFillTotal: remainPrevDateTotal,
+            list: _tempCells.map((_: any, j: number) => {
+                const _col = allDays.slice(j * 7, (j + 1) * 7);
+    
+    
+                // back fill
+                const backFillArr: null[] = [];
+                for (let k = 0; k < 7 - _col.length; k++) {
+                    backFillArr.push(null);
                 }
-
-                if (isLastGroup && _dateShow === '') {
-                    _dateShow = __backFillDate.at(_m);
+                _col.splice(_col.length, 0, ...backFillArr as any);
+    
+    
+                //
+                const isFirstGroup = j === 0;
+                const isLastGroup = j === _tempCells.length - 1;
+    
+    
+                // forward fill
+                const __forwardFillDate: string[] = _getForwardFill(year, month + 1);
+    
+                // back fill
+                const __backFillDate: string[] = _getBackFill(year, month + 1);
+    
+    
+                const _getDateShow = (_dayIndex: number, _m: number, _startDay: number, _month: number) => {
+                    const currentDay = typeof _dayIndex === 'number' ? _dayIndex - (_startDay - 2) : 0; // ..., -3, -2, -1, 0, 1, 2, 3, 4, 5, 6, 7, ...
+    
+                    // date
+                    let _dateShow: any = currentDay > 0 ? `${year}-${_month + 1}-${currentDay}` : '';
+    
+                    // forward & back
+                    if (isFirstGroup && _dateShow === '') {
+                        _dateShow = __forwardFillDate.at(currentDay - 1);
+                    }
+    
+                    if (isLastGroup && _dateShow === '') {
+                        _dateShow = __backFillDate.at(_m);
+                    }
+    
+    
+                    return {
+                        date: getCalendarDate(_dateShow),
+                        firstGroup: isFirstGroup,
+                        lastGroup: isLastGroup,
+                        validDisplayDate: currentDay > 0 && currentDay <= days[month]
+                    };
+    
                 }
-
-
+    
+                //
                 return {
-                    date: getCalendarDate(_dateShow),
-                    firstGroup: isFirstGroup,
-                    lastGroup: isLastGroup,
-                    validDisplayDate: currentDay > 0 && currentDay <= days[month]
-                };
-
-            }
-
-            //
-            return {
-                month: currentMonth,
-                startDay: currentStartDay,
-                row: j,
-                col: _col,
-                dateInfo: _col.map((k: number, m: number) => {
-                    const _lastWeekDays: number = _col.filter(Boolean).length;
-                    return _getDateShow(k, m - _lastWeekDays, currentStartDay, currentMonth);
-                }),
-                weekDisplay: _col.map((k: number, m: number) => {
-                    return WEEK[m]
-                }),
-                week: _col.map((k: number, m: number) => {
-                    return m
-                }),
-
-            }
-        });
-
+                    month: currentMonth,
+                    startDay: currentStartDay,
+                    row: j,
+                    col: _col,
+                    dateInfo: _col.map((k: number, m: number) => {
+                        const _lastWeekDays: number = _col.filter(Boolean).length;
+                        return _getDateShow(k, m - _lastWeekDays, currentStartDay, currentMonth);
+                    }),
+                    weekDisplay: _col.map((k: number, m: number) => {
+                        return WEEK[m]
+                    }),
+                    week: _col.map((k: number, m: number) => {
+                        return m
+                    }),
+    
+                }
+            })
+        }
+        
     };
 
 
@@ -502,7 +536,7 @@ const EventCalendar = (props: EventCalendarProps) => {
     useEffect(() => {
 
         // update events value
-        if (Array.isArray(eventsValue)) setVal(eventsValue);
+        if (Array.isArray(eventsValue)) setOrginalData(eventsValue);
 
         // update current today
         if (typeof customTodayDate === 'string' && customTodayDate !== '' && isValidDate(customTodayDate)) {
@@ -521,7 +555,7 @@ const EventCalendar = (props: EventCalendarProps) => {
 
             <div 
                 className={combinedCls(
-                    "e-cal-normal__wrapper",
+                    "custom-event-cal__wrapper",
                     calendarWrapperClassName
                 )}
                 onKeyDown={(e: React.KeyboardEvent<HTMLDivElement>) => {
@@ -532,36 +566,36 @@ const EventCalendar = (props: EventCalendarProps) => {
 
 
                 {/*++++++++++++++++ MAIN ++++++++++++++++*/}
-                <div className="e-cal-normal__header bg-body-tertiary">
-                    <button tabIndex={-1} type="button" className="e-cal-normal__btn e-cal-normal__btn--prev" onClick={handlePrevChange}>
+                <div className="custom-event-cal__header bg-body-tertiary">
+                    <button tabIndex={-1} type="button" className="custom-event-cal__btn custom-event-cal__btn--prev" onClick={handlePrevChange}>
                         <svg width="20px" height="20px" viewBox="0 0 24 24" fill="none">
                             <path d="M14.2893 5.70708C13.8988 5.31655 13.2657 5.31655 12.8751 5.70708L7.98768 10.5993C7.20729 11.3805 7.2076 12.6463 7.98837 13.427L12.8787 18.3174C13.2693 18.7079 13.9024 18.7079 14.293 18.3174C14.6835 17.9269 14.6835 17.2937 14.293 16.9032L10.1073 12.7175C9.71678 12.327 9.71678 11.6939 10.1073 11.3033L14.2893 7.12129C14.6799 6.73077 14.6799 6.0976 14.2893 5.70708Z" fill="#000" />
                         </svg>
                     </button>
-                    <div className="e-cal-normal__header__btns">
-                        <button tabIndex={-1} type="button" className={`e-cal-normal__btn ${winMonth ? 'active' : ''}`} onClick={handleShowWinMonth}>
+                    <div className="custom-event-cal__header__btns">
+                        <button tabIndex={-1} type="button" className={`custom-event-cal__btn ${winMonth ? 'active' : ''}`} onClick={handleShowWinMonth}>
                             {MONTHS[month]}
                             <svg width="12px" height="12px" viewBox="0 0 24 24"><path d="M11.178 19.569a.998.998 0 0 0 1.644 0l9-13A.999.999 0 0 0 21 5H3a1.002 1.002 0 0 0-.822 1.569l9 13z" fill="#000000" /></svg>
                         </button>
-                        <button tabIndex={-1} type="button" className={`e-cal-normal__btn ${winYear ? 'active' : ''}`} onClick={handleShowWinYear}>
+                        <button tabIndex={-1} type="button" className={`custom-event-cal__btn ${winYear ? 'active' : ''}`} onClick={handleShowWinYear}>
                             {year}
                             <svg width="12px" height="12px" viewBox="0 0 24 24"><path d="M11.178 19.569a.998.998 0 0 0 1.644 0l9-13A.999.999 0 0 0 21 5H3a1.002 1.002 0 0 0-.822 1.569l9 13z" fill="#000000" /></svg>
                         </button>
                     </div>
-                    <button tabIndex={-1} type="button" className="e-cal-normal__btn e-cal-normal__btn--next" onClick={handleNextChange}>
+                    <button tabIndex={-1} type="button" className="custom-event-cal__btn custom-event-cal__btn--next" onClick={handleNextChange}>
                         <svg width="20px" height="20px" viewBox="0 0 24 24" fill="none">
                             <path d="M9.71069 18.2929C10.1012 18.6834 10.7344 18.6834 11.1249 18.2929L16.0123 13.4006C16.7927 12.6195 16.7924 11.3537 16.0117 10.5729L11.1213 5.68254C10.7308 5.29202 10.0976 5.29202 9.70708 5.68254C9.31655 6.07307 9.31655 6.70623 9.70708 7.09676L13.8927 11.2824C14.2833 11.6729 14.2833 12.3061 13.8927 12.6966L9.71069 16.8787C9.32016 17.2692 9.32016 17.9023 9.71069 18.2929Z" fill="#000" />
                         </svg>
                     </button>
                 </div>
-                <div className="e-cal-normal__body">
+                <div className="custom-event-cal__body">
 
                     {/* week */}
-                    <div className="e-cal-normal__row">
+                    <div className="custom-event-cal__row">
                         {WEEK.map((s: string, i: number) => (
                             <div
                                 className={combinedCls(
-                                    'e-cal-normal__cell e-cal-normal__day e-cal-normal__day--week e-cal-normal__day--disabled bg-secondary-subtle empty',
+                                    'custom-event-cal__cell custom-event-cal__day custom-event-cal__day--week custom-event-cal__day--disabled bg-secondary-subtle empty',
                                     {
                                         'last-cell': i === WEEK.length - 1
                                     }
@@ -577,11 +611,11 @@ const EventCalendar = (props: EventCalendarProps) => {
                     {/* /week */}
 
                     {/* day */}
-                    {getCells().map((item: any, j: number) => {
+                    {getCells().list.map((item: any, j: number) => {
 
-                        const isLastRow = j === getCells().length - 1;
+                        const isLastRow = j === getCells().list.length - 1;
 
-                        return <div key={'row' + item.row} className="e-cal-normal__row">
+                        return <div key={'row' + item.row} className="custom-event-cal__row">
                             {item.col.map((dayIndex: number | null, i: number) => {
 
                                 const isLastCell = i === item.col.length - 1;
@@ -595,7 +629,7 @@ const EventCalendar = (props: EventCalendarProps) => {
 
                                 // helper
                                 const d = parseFloat(_dateDayShow);
-                                const _currentData = val.filter((item: any) => getCalendarDate(item.date as string) === _dateShow);
+                                const _currentData = orginalData.filter((item: any) => getCalendarDate(item.date as string) === _dateShow);
                                 const isInteractive = item.dateInfo[i].validDisplayDate;  // The date on which the user interaction can occur, e.g. click, modify
                                 const isForward = item.dateInfo[i].firstGroup && !isInteractive;
                                 const isBack = item.dateInfo[i].lastGroup && !isInteractive;
@@ -618,7 +652,7 @@ const EventCalendar = (props: EventCalendarProps) => {
 
                                         return <div
                                             className={combinedCls(
-                                                `e-cal-normal__cell-item e-cal-normal__cell-item-${cellItemIndex}`,
+                                                `custom-event-cal__cell-item custom-event-cal__cell-item-${cellItemIndex}`,
                                                 {
                                                     'first': cellItemIndex === 0,
                                                     'last': cellItemIndex === _items.length - 1
@@ -652,7 +686,7 @@ const EventCalendar = (props: EventCalendarProps) => {
 
                                             {/* ITEM */}
                                             <div
-                                                className="e-cal-normal__day__event"
+                                                className="custom-event-cal__day__event"
                                                 style={typeof cellItem !== 'undefined' && (cellItem as any).eventStyles !== 'undefined' ? cellItem.eventStyles : {}}
                                                 dangerouslySetInnerHTML={typeof cellItem.data === 'string' ? {
                                                     __html: cellItem.data
@@ -664,7 +698,7 @@ const EventCalendar = (props: EventCalendarProps) => {
 
                                             {/* DELETE BUTTON */}
                                             <div
-                                                className={`e-cal-normal__day__eventdel ${cellCloseBtnClassName || ''}`}
+                                                className={`custom-event-cal__day__eventdel ${cellCloseBtnClassName || ''}`}
                                             >
                                                 <a
                                                     href="#"
@@ -712,7 +746,7 @@ const EventCalendar = (props: EventCalendarProps) => {
                                 return (
                                     <div
                                         className={combinedCls(
-                                            'e-cal-normal__cell e-cal-normal__day',
+                                            'custom-event-cal__cell custom-event-cal__day',
                                             {
                                                 'empty': !isInteractive,
                                                 'today': d === now.getDate(),
@@ -736,6 +770,10 @@ const EventCalendar = (props: EventCalendarProps) => {
                                                 handleDayChange(e, d); // update current day
                                                 onChangeDate?.(e, null);
                                             }
+                                        }}
+                                        onDoubleClick={(e: React.MouseEvent) => {
+                                            //
+                                            onCellDoubleClick?.(e);
                                         }}
                                         onMouseLeave={(e: React.MouseEvent) => {
                                             onCellMouseLeave?.(e);
@@ -764,7 +802,7 @@ const EventCalendar = (props: EventCalendarProps) => {
                                         {/* ADD BUTTON */}
                                         {isForward || isBack ? null : <>
                                             <div
-                                                className={`e-cal-normal__day__eventadd ${cellAddBtnClassName || ''}`}
+                                                className={`custom-event-cal__day__eventadd ${cellAddBtnClassName || ''}`}
                                             >
                                                 <a
                                                     href="#"
@@ -819,12 +857,12 @@ const EventCalendar = (props: EventCalendarProps) => {
 
 
                 {/*++++++++++++++++ MONTH SELECTION TAB ++++++++++++++++*/}
-                <div className={`e-cal-normal__month-wrapper shadow p-3 mb-5 bg-body-tertiary rounded ${winMonth ? 'active' : ''}`}>
-                    <div className="e-cal-normal__month-container">
+                <div className={`custom-event-cal__month-wrapper shadow p-3 mb-5 bg-body-tertiary rounded ${winMonth ? 'active' : ''}`}>
+                    <div className="custom-event-cal__month-container">
                         {MONTHS_FULL.map((month, index) => {
                             return <div
                                 data-month={padZero(index + 1)}
-                                className={`e-cal-normal__month ${selectedMonth === index ? ' selected' : ''}`}
+                                className={`custom-event-cal__month ${selectedMonth === index ? ' selected' : ''}`}
                                 key={month + index}
                                 onClick={() => { handleMonthChange(index) }}
                             >{month}</div>
@@ -834,12 +872,12 @@ const EventCalendar = (props: EventCalendarProps) => {
                 {/*++++++++++++++++ /MONTH SELECTION TAB ++++++++++++++++*/}
 
                 {/*++++++++++++++++ YEAR SELECTION TAB ++++++++++++++++*/}
-                <div className={`e-cal-normal__year-wrapper shadow p-3 mb-5 bg-body-tertiary rounded ${winYear ? 'active' : ''}`}>
-                    <div className="e-cal-normal__year-container bg-body-tertiary">
+                <div className={`custom-event-cal__year-wrapper shadow p-3 mb-5 bg-body-tertiary rounded ${winYear ? 'active' : ''}`}>
+                    <div className="custom-event-cal__year-container bg-body-tertiary">
                         {yearsArray.map((year, index) => {
                             return <div
                                 data-year={year}
-                                className={`e-cal-normal__year ${selectedYear === year ? ' selected' : ''}`}
+                                className={`custom-event-cal__year ${selectedYear === year ? ' selected' : ''}`}
                                 key={year + index}
                                 onClick={() => { handleYearChange(year) }}
                             >{year}</div>
@@ -852,8 +890,8 @@ const EventCalendar = (props: EventCalendarProps) => {
 
 
                 {/*++++++++++++++++ TODAY SELECTION TAB ++++++++++++++++*/}
-                <div className="e-cal-normal__today-wrapper p-2 bg-body-tertiary">
-                    <button tabIndex={-1} type="button" className="e-cal-normal__btn e-cal-normal__btn--today" onClick={handleTodayChange}>
+                <div className="custom-event-cal__today-wrapper p-2 bg-body-tertiary">
+                    <button tabIndex={-1} type="button" className="custom-event-cal__btn custom-event-cal__btn--today" onClick={handleTodayChange}>
                         {langToday || 'Today'}
                     </button>
                 </div>

@@ -11,8 +11,7 @@ import {
 } from 'funda-utils/dist/cjs/getElementProperty';
 import { getTodayDate, getCalendarDate, isValidDate, padZero, getDateDetails, getMonthDates, getWeekDatesFromMon  } from 'funda-utils/dist/cjs/date';
 import { clsWrite, combinedCls } from 'funda-utils/dist/cjs/cls';
-
-
+import getOs from 'funda-utils//dist/cjs/os';
 
 
 export interface EventsValueConfig {
@@ -108,8 +107,10 @@ export type EventCalendarTimelineProps = {
     onCellMouseLeave?: (el: any) => void;
     onCellMouseUp?: (el: any, selectedCellsData: any[]) => void;
     onCellClick?: (el: any, cellData: any) => void;
+    onCellDoubleClick?: (el: any, cellData: any) => void;
     onKeyPressed?: (el: any, selectedCellsData: any[]) => void;
-    
+    onKeyCopy?: (el: any, selectedCellsData: any[]) => void;
+    onKeyPaste?: (el: any, selectedCellsData: any[]) => void;
 
     // table
     tableListSectionTitle?: string | React.ReactNode;
@@ -194,7 +195,10 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
         onCellMouseLeave,
         onCellMouseUp,
         onCellClick,
+        onCellDoubleClick,
         onKeyPressed,
+        onKeyCopy,
+        onKeyPaste,
 
         //
         tableListSectionTitle,
@@ -229,9 +233,10 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
         const day = date.getDate();
         return month + ' ' + day;
     };
+    const START_WEEK_ON = 1; // represents "Monday/1" in JavaScript
 
     // orginal data
-    const [val, setVal] = useState<TimelineRowListConfig[]>([]);
+    const [orginalData, setOrginalData] = useState<TimelineRowListConfig[]>([]);
 
     //
     const FILL_BLANK_DATE_DISABLD = typeof forwardAndBackFillDisabled === 'undefined' ? true : forwardAndBackFillDisabled;
@@ -272,6 +277,11 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
     const scrollBodyRef = useRef(null);
     const scrollListRef = useRef(null);
 
+    // Temporary date
+    const [tempDate, setTempDate] = useState<string>('');
+
+
+
     // Open temporary storage for pop-ups
     const [tableRowNum, setTableRowNum] = useState<number>(-1);
     const [tableCellId, setTableCellId] = useState<number>(-1);
@@ -286,6 +296,22 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
 
     // appearance mode
     const [appearanceMode, setAppearanceMode] = useState<string>(appearance);
+
+
+    const findMondayAndTruncate = (dates: string[]) => {
+        const _res = dates.map((s: string) => new Date(s));
+        // Find the first Monday in the sequence
+        for (let i = 0; i < _res.length; i++) {
+            const date = _res[i];
+            if (date.getDay() === START_WEEK_ON) { 
+                // Return dates starting from Monday onwards
+                return dates.slice(i);
+            }
+        }
+
+        return [];  // Return empty array if no Monday found
+    }
+
 
 
     // exposes the following methods
@@ -304,6 +330,7 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
             resetSelectedCells: () => {
                 // reset selection area
                 setSelectedCells([]);
+                setCopiedCells(null);
             }
         }),
         [contentRef],
@@ -342,10 +369,6 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
     const [isSelecting, setIsSelecting] = useState<boolean>(false);
     const [selectedCells, setSelectedCells] = useState<any[]>([]);
     const [startCell, setStartCell] = useState<any>(null);
-    function handleTableMainMouseUp(e: React.MouseEvent) {
-        setIsSelecting(false);
-    }
-
 
     // Determine whether it is a selected cell
     const isCellSelected = (row: number, col: number) => {
@@ -353,9 +376,49 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
     };
 
 
-    // Selecting now
-    function handleTableMainCellMouseEnter(e: React.MouseEvent, row: number, col: number) {
+    // Start selecting
+    const handleTableMainCellMouseDown = (e: React.MouseEvent, row: number, col: number, colsOffset: number) => {
+        const isMultiSelect = e.ctrlKey || e.metaKey; // Check whether the Ctrl or Command key is pressed
+  
+        setIsSelecting(true);
+        setStartCell({ row, col });
+
         const _el: any = e.currentTarget;
+
+        setIsSelecting(true);
+        setStartCell({ row, col });
+
+        setSelectedCells((prevSelectedCells: any[]) => {
+            if (isMultiSelect) {
+                // Multi-select mode: Add or remove cells
+                //++++++++++
+                const cellExists = prevSelectedCells.some(({row: r, col: c}) => r === row && c === col);
+                if (cellExists) {
+                    return prevSelectedCells.filter(({row: r, col: c}) => !(r === row && c === col));
+                } else {
+                    return [...prevSelectedCells, {
+                        rowData: JSON.parse(_el.dataset.rowinfo),
+                        date: _el.dataset.date,
+                        row: row,
+                        col: col
+                    }];
+                }
+            } else {
+                // Radio Mode: Clear the previous selection, select only the current cell
+                //++++++++++
+                return [{
+                    rowData: JSON.parse(_el.dataset.rowinfo),
+                    date: _el.dataset.date,
+                    row: row,
+                    col: col
+                }];
+            }
+        });
+
+    };
+
+    // Selecting now
+    const handleTableMainCellMouseEnter = (e: React.MouseEvent, row: number, col: number, colsOffset: number) => {
 
         if (isSelecting && startCell) {
 
@@ -377,14 +440,15 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
             const [minRow, maxRow] = [startCell.row, row].sort((a, b) => a - b);
             const [minCol, maxCol] = [startCell.col, col].sort((a, b) => a - b);
 
+    
             for (let r = minRow; r <= maxRow; r++) {
                 for (let c = minCol; c <= maxCol; c++) {
 
                     // query date and row data
-                    const curRowData: any = val[r];
+                    const curRowData: any = orginalData[r];
                     newSelectedCells.push({
                         rowData: curRowData?.listSection,
-                        date: curDateList[c],
+                        date: curDateList[c - colsOffset],
                         row: r,
                         col: c
                     });
@@ -392,24 +456,133 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
             }
             setSelectedCells(newSelectedCells);
         }
-    }
+    };
 
     // Stop selecting
-    function handleTableMainCellMouseDown(e: React.MouseEvent, row: number, col: number) {
-        const _el: any = e.currentTarget;
+    const handleTableMainMouseUp = (e: React.MouseEvent) => {
+        setIsSelecting(false);
+    };
 
-        setIsSelecting(true);
-        setStartCell({ row, col });
-        setSelectedCells([{
-            rowData: JSON.parse(_el.dataset.rowinfo),
-            date: _el.dataset.date,
-            row: row,
-            col: col
-        }]);
-    }
-    
+    //================================================================
+    // Copy & Paste
+    //================================================================    
+    const [copiedCells, setCopiedCells] = useState<{
+        structure: {
+            rows: number,
+            cols: number
+        },
+        offset: { row: number, col: number },
+        cells: any[]
+    } | null>(null);
 
-    
+    const handleWrapperKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
+        const isMac = getOs().isOSX;
+
+        //########## MODE: WEEK #############
+        let curDateList: any[] = [];
+        if (appearanceMode === 'week') {
+            curDateList = weekDates.map((v: Date) => getCalendarDate(v));
+        }
+        //########## /MODE: WEEK #############
+
+        //########## MODE: MONTH #############
+        if (appearanceMode === 'month') {
+            curDateList = getMonthDates(year, month + 1);
+        }
+        //########## /MODE: MONTH #############
+
+
+        // Listen for copy
+        if ((isMac && e.metaKey && e.key === 'c') || (!isMac && e.ctrlKey && e.key === 'c')) {
+            
+            if (selectedCells.length > 0) {
+                // Gets the structure of the selected area
+                const _selectedCellsCoordinates = selectedCells.map(({row: r, col: c}) => {
+                    return [r, c];
+                });
+
+                const [minRow, maxRow] = _selectedCellsCoordinates.reduce(
+                    ([min, max], [r]) => [Math.min(min, r), Math.max(max, r)],
+                    [Infinity, -Infinity]
+                );
+                const [minCol, maxCol] = _selectedCellsCoordinates.reduce(
+                    ([min, max], [_, c]) => [Math.min(min, c), Math.max(max, c)],
+                    [Infinity, -Infinity]
+                );
+
+                /*
+                [Be equal to:]
+
+                // Suppose _selectedCellsCoordinates is an array of selected cells, each of which is in the form of [row, col].
+                let minRow = Infinity;
+                let maxRow = -Infinity;
+                let minCol = Infinity;
+                let maxCol = -Infinity;
+
+                for (const [row, col] of _selectedCellsCoordinates) {
+                    if (row < minRow) minRow = row;
+                    if (row > maxRow) maxRow = row;
+                    if (col < minCol) minCol = col;
+                    if (col > maxCol) maxCol = col;
+                }
+                */
+                
+                // Calculate the offset and adjust the cell coordinates
+                const adjustedCells = _selectedCellsCoordinates.map(([r, c]) => [r - minRow, c - minCol]);
+
+                // The copy result is independent of the data
+                setCopiedCells({
+                    structure: {
+                        rows: maxRow - minRow + 1,
+                        cols: maxCol - minCol + 1
+                    },
+                    offset: { row: minRow, col: minCol },
+                    cells: adjustedCells
+                });
+
+
+                //
+                onKeyCopy?.(e, selectedCells);
+
+            }
+
+        }
+
+        // Listen for paste
+        if ((isMac && e.metaKey && e.key === 'v') || (!isMac && e.ctrlKey && e.key === 'v')) {
+            
+
+            if (copiedCells && selectedCells.length > 0) {
+                const {rowsTotal, colsTotal, forwardFillTotal} = getCells();
+                const {row: targetRow, col: targetCol} = selectedCells[0]; // the first position
+                const newSelectedCellsCoordinates = copiedCells.cells.map(([r, c]) => [
+                    targetRow + r,
+                    targetCol + c
+                ]).filter(([r, c]) => r < rowsTotal && c < colsTotal); // Make sure you don't go beyond the scope of the table
+        
+                // query date and row data
+                const newSelectedCells: any[] = [];
+                newSelectedCellsCoordinates.forEach((item: any[]) => {
+                    const [r, c] = item;
+                    const curRowData: any = orginalData[r];
+                    newSelectedCells.push({
+                        rowData: curRowData?.listSection,
+                        date: curDateList[c - forwardFillTotal],
+                        row: r,
+                        col: c
+                    });  
+                });
+
+
+                setSelectedCells(newSelectedCells);
+
+                //
+                onKeyPaste?.(e, newSelectedCells);
+            }
+        }
+    };
+
+
 
     //================================================================
     // Other
@@ -425,9 +598,6 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
         {iconAdd ? <>{iconAdd}</> : <><svg width="20px" height="20px" viewBox="0 0 32 32"><g stroke="none" strokeWidth="1" fill="none" fillRule="evenodd"><g transform="translate(-102.000000, -1037.000000)" fill="#000000"><path d="M124,1054 L119,1054 L119,1059 C119,1059.55 118.552,1060 118,1060 C117.448,1060 117,1059.55 117,1059 L117,1054 L112,1054 C111.448,1054 111,1053.55 111,1053 C111,1052.45 111.448,1052 112,1052 L117,1052 L117,1047 C117,1046.45 117.448,1046 118,1046 C118.552,1046 119,1046.45 119,1047 L119,1052 L124,1052 C124.552,1052 125,1052.45 125,1053 C125,1053.55 124.552,1054 124,1054 L124,1054 Z M130,1037 L106,1037 C103.791,1037 102,1038.79 102,1041 L102,1065 C102,1067.21 103.791,1069 106,1069 L130,1069 C132.209,1069 134,1067.21 134,1065 L134,1041 C134,1038.79 132.209,1037 130,1037 L130,1037 Z"></path></g></g></svg></>}
         {cellAddBtnLabel || ''}
     </>;
-
-
-
 
     // click outside
     useClickOutside({
@@ -489,7 +659,12 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
                 
             });
 
-            return curWeek;
+            return {
+                rowsTotal: orginalData.length,
+                colsTotal: curWeek.length,
+                forwardFillTotal: 0,
+                list: curWeek
+            };
       
         }
         //########## /MODE: WEEK #############
@@ -550,91 +725,110 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
                 return first7Days.map((v: Date) => getCalendarDate(v));
             };
         
-    
-            return _tempCells.map((_: any, j: number) => {
-                const _col = allDays.slice(j * 7, (j + 1) * 7);
-    
-                // back fill
-                const backFillArr: null[] = [];
-                for (let k = 0; k < 7 - _col.length; k++) {
-                    backFillArr.push(null);
-                }
-                _col.splice(_col.length, 0, ...backFillArr as any);
-    
-    
-                //
-                const isFirstGroup = j === 0;
-                const isLastGroup = j === _tempCells.length - 1;
-     
-    
-                // forward fill
-                const __forwardFillDate: string[] = _getForwardFill(year, month+1);
-    
-                // back fill
-                const __backFillDate: string[] = _getBackFill(year, month+1);
-    
-    
-                const _getDateShow = (_dayIndex: number, _m: number, _startDay: number, _month: number) => {
-                    const currentDay = typeof _dayIndex === 'number' ? _dayIndex - (_startDay - 2) : 0; // ..., -3, -2, -1, 0, 1, 2, 3, 4, 5, 6, 7, ...
-    
-                    // date
-                    let _dateShow: any = currentDay > 0 ? `${year}-${_month + 1}-${currentDay}` : '';
-    
-                    // forward & back
-                    if (isFirstGroup &&  _dateShow === '') {
-                        _dateShow = __forwardFillDate.at(currentDay-1);
+       
+
+            // The remaining date of the previous month
+            // If the number is 7, the calendar does not include the date of the previous month
+            const remainPrevDate = findMondayAndTruncate(_getForwardFill(year, month+1));
+            const remainPrevDateTotal = remainPrevDate.length === 7 ? 0 : remainPrevDate.length;
+
+           
+            return {
+                rowsTotal: orginalData.length,
+                colsTotal: allDays.length,
+                forwardFillTotal: remainPrevDateTotal,
+                list: _tempCells.map((_: any, j: number) => {
+                    const _col = allDays.slice(j * 7, (j + 1) * 7);
+        
+                    // back fill
+                    const backFillArr: null[] = [];
+                    for (let k = 0; k < 7 - _col.length; k++) {
+                        backFillArr.push(null);
                     }
-    
-                    if (isLastGroup && _dateShow === '') {
-                        _dateShow = __backFillDate.at(_m);
+                    _col.splice(_col.length, 0, ...backFillArr as any);
+        
+        
+                    //
+                    const isFirstGroup = j === 0;
+                    const isLastGroup = j === _tempCells.length - 1;
+         
+        
+                    // forward fill
+                    const __forwardFillDate: string[] = _getForwardFill(year, month+1);
+        
+                    // back fill
+                    const __backFillDate: string[] = _getBackFill(year, month+1);
+        
+        
+                    const _getDateShow = (_dayIndex: number, _m: number, _startDay: number, _month: number) => {
+                        const currentDay = typeof _dayIndex === 'number' ? _dayIndex - (_startDay - 2) : 0; // ..., -3, -2, -1, 0, 1, 2, 3, 4, 5, 6, 7, ...
+        
+                        // date
+                        let _dateShow: any = currentDay > 0 ? `${year}-${_month + 1}-${currentDay}` : '';
+        
+                        // forward & back
+                        if (isFirstGroup &&  _dateShow === '') {
+                            _dateShow = __forwardFillDate.at(currentDay-1);
+                        }
+        
+                        if (isLastGroup && _dateShow === '') {
+                            _dateShow = __backFillDate.at(_m);
+                        }
+        
+        
+                        return {
+                            date: getCalendarDate(_dateShow),
+                            firstGroup: isFirstGroup,
+                            lastGroup: isLastGroup,
+                            validDisplayDate: currentDay > 0 && currentDay <= days[month]
+                        };
+        
                     }
-    
-    
+        
+                    //
                     return {
-                        date: getCalendarDate(_dateShow),
-                        firstGroup: isFirstGroup,
-                        lastGroup: isLastGroup,
-                        validDisplayDate: currentDay > 0 && currentDay <= days[month]
-                    };
-    
-                }
-    
-                //
-                return {
-                    month: currentMonth,
-                    startDay: currentStartDay,
-                    row: j,
-                    col: _col,
-                    dateInfo: _col.map((k: number, m: number) => {
-                        const _lastWeekDays: number = _col.filter(Boolean).length;
-                        return _getDateShow(k, m - _lastWeekDays, currentStartDay, currentMonth);
-                    }),
-                    weekDisplay: _col.map((k: number, m: number) => {
-                        return WEEK[m]
-                    }),
-                    week: _col.map((k: number, m: number) => {
-                        return m
-                    }),
-                    
-                }
-            });
+                        month: currentMonth,
+                        startDay: currentStartDay,
+                        row: j,
+                        col: _col,
+                        dateInfo: _col.map((k: number, m: number) => {
+                            const _lastWeekDays: number = _col.filter(Boolean).length;
+                            return _getDateShow(k, m - _lastWeekDays, currentStartDay, currentMonth);
+                        }),
+                        weekDisplay: _col.map((k: number, m: number) => {
+                            return WEEK[m]
+                        }),
+                        week: _col.map((k: number, m: number) => {
+                            return m
+                        }),
+                        
+                    }
+                })
+            };
+            
+            
         }
         //########## /MODE: MONTH #############
 
 
-        return [];
+        return {
+            rowsTotal: 0,
+            colsTotal: 0,
+            forwardFillTotal: 0,
+            list: []
+        };
 
 
     };
 
     const queryItemObj = () => {
-        const curRowData: any = val[tableRowNum];
+        const curRowData: any = orginalData[tableRowNum];
+        const curDate: string = tempDate !== '' ? tempDate : `${year}-${month + 1}-${day}`;
 
-   
         if (curRowData) {
             const eventSourcesData = curRowData.eventSources;
 
-            const _rowData = eventSourcesData.filter((item: any) => getCalendarDate(item.date as string) === getCalendarDate(`${year}-${month + 1}-${day}`));
+            const _rowData = eventSourcesData.filter((item: any) => getCalendarDate(item.date as string) === getCalendarDate(curDate));
 
             let _currentData: any = undefined;
             if (_rowData[0]) {
@@ -646,7 +840,7 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
                     _currentData = {
                         rowData: curRowData.listSection,
                         id: 0,
-                        date: getCalendarDate(`${year}-${month + 1}-${day}`)
+                        date: getCalendarDate(curDate)
                     };
                 } else {
                     // edit or delete
@@ -658,7 +852,7 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
             return _rowData[0] ? _currentData: {
                 rowData: curRowData.listSection,
                 id: 0,
-                date: getCalendarDate(`${year}-${month + 1}-${day}`)
+                date: getCalendarDate(curDate)
             };
         }
     };
@@ -743,7 +937,7 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
 
 
             // Determine whether it exceeds the far right or left side of the screen
-            const _modalContent = _tableTooltipModalRef.querySelector('.e-cal-timeline-table__cell-tooltipcontent');
+            const _modalContent = _tableTooltipModalRef.querySelector('.custom-event-tl-table__cell-tooltipcontent');
             const _modalBox = _modalContent.getBoundingClientRect();
             if (typeof _modalContent.dataset.offset === 'undefined' && _modalBox.left > 0) {
 
@@ -992,12 +1186,12 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
     // ================================================================
 
     function generateListSectionUi() {
-        return val.map((item: any, i: number) => {
+        return orginalData.map((item: any, i: number) => {
 
             return (
                 <tr key={i} role="row" data-index={i}>
-                    <td role="gridcell" data-resource-index={i} className="e-cal-timeline-table__datagrid-cell">
-                        <div className="e-cal-timeline-table__cell-cushion e-cal-timeline-table__cell-cushion-title" dangerouslySetInnerHTML={{
+                    <td role="gridcell" data-resource-index={i} className="custom-event-tl-table__datagrid-cell">
+                        <div className="custom-event-tl-table__cell-cushion custom-event-tl-table__cell-cushion-title" dangerouslySetInnerHTML={{
                             __html: item.listSection.title
                         }} />
                     </td>
@@ -1013,7 +1207,8 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
         // colIndex
         let colIndex = 0;
 
-        return getCells().map((item: any, j: number) => {
+        const {forwardFillTotal, list: cellsList} = getCells();
+        return cellsList.map((item: any, j: number) => {
 
 
            
@@ -1035,7 +1230,7 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
                 // helper
                 const d = parseFloat(_dateDayShow);
                 const _currentData = eventSourcesData.filter((item: any) => getCalendarDate(item.date as string) === _dateShow);
-                const isLastCol = colIndex === 7 * getCells().length;
+                const isLastCol = colIndex === 7 * cellsList.length;
                 const isInteractive = item.dateInfo[i].validDisplayDate;  // The date on which the user interaction can occur, e.g. click, modify
                 const isForward = item.dateInfo[i].firstGroup && !isInteractive;
                 const isBack = item.dateInfo[i].lastGroup && !isInteractive;
@@ -1049,7 +1244,7 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
 
                         return <th
                             className={combinedCls(
-                                'e-cal-timeline-table__cell-cushion-headercontent__container',
+                                'custom-event-tl-table__cell-cushion-headercontent__container',
                                 {
                                     'empty': !isInteractive,
                                     'today': d === now.getDate(),
@@ -1081,6 +1276,7 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
 
                                 // reset selection area
                                 setSelectedCells([]);
+                                setCopiedCells(null);
 
 
                                 //
@@ -1099,6 +1295,9 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
                                             id: 0,
                                             date: _dateShow
                                         } : _currentData[0], () => setShowEdit(true), 'normal');
+
+                                        // set temporary date
+                                        setTempDate(_dateShow);
                                     }
                                 }
 
@@ -1115,7 +1314,7 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
                             {/* forward fill & day & back fill */}
                             <div 
                                 className={combinedCls(
-                                    'e-cal-timeline-table__cell-cushion e-cal-timeline-table__cell-cushion-headercontent',
+                                    'custom-event-tl-table__cell-cushion custom-event-tl-table__cell-cushion-headercontent',
                                     {
                                         'disabled': !isInteractive
                                     }
@@ -1163,7 +1362,7 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
 
                             const _eventContentTooltip = typeof cellItem.dataTooltip === 'undefined' ? '' : <>
                                 <div
-                                    className="e-cal-timeline__day__event-tooltipcontent"
+                                    className="custom-event-tl__day__event-tooltipcontent"
                                     dangerouslySetInnerHTML={{
                                         __html: cellItem.dataTooltip
                                     }}
@@ -1172,14 +1371,14 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
 
                             return <div
                                 className={combinedCls(
-                                    `e-cal-timeline-table__cell-cushion-content__item e-cal-timeline-table__cell-cushion-content__item-${cellItemIndex}`,
+                                    `custom-event-tl-table__cell-cushion-content__item custom-event-tl-table__cell-cushion-content__item-${cellItemIndex}`,
                                     {
                                         'first': cellItemIndex === 0,
                                         'last': cellItemIndex === _items.length-1
                                     }
                                 )}
                                 key={`cell-item-${rowIndex}-${cellItemIndex}}`}
-                                data-overlay-id={`e-cal-timeline-table__cell-tooltipwrapper-${idRes}`}
+                                data-overlay-id={`custom-event-tl-table__cell-tooltipwrapper-${idRes}`}
                                 data-cell-item-index={cellItemIndex}
                                 data-date={_dateShow}
                                 data-day={_dateDayShow}
@@ -1230,6 +1429,9 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
 
                                         if (EVENTS_ENABLED) {
                                             onModalEditOpen?.(cellItem, () => setShowEdit(true), 'normal');
+
+                                            // set temporary date
+                                            setTempDate(_dateShow);
                                         }
                                     }
                                 }}
@@ -1239,7 +1441,7 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
 
                                 {/* ITEM */}
                                 <div
-                                    className="e-cal-timeline__day__event"
+                                    className="custom-event-tl__day__event"
                                     style={typeof cellItem !== 'undefined' && (cellItem as any).eventStyles !== 'undefined' ? cellItem.eventStyles : {}}
                                     dangerouslySetInnerHTML={typeof cellItem.data === 'string' ? {
                                         __html: cellItem.data
@@ -1251,7 +1453,7 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
 
                                 {/* DELETE BUTTON */}
                                 <div
-                                    className={`e-cal-timeline__day__eventdel ${cellCloseBtnClassName || ''}`}
+                                    className={`custom-event-tl__day__eventdel ${cellCloseBtnClassName || ''}`}
                                 >
                                     <a 
                                         href="#" 
@@ -1289,6 +1491,9 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
 
                                                 if (EVENTS_DELETE_ENABLED) {
                                                     onModalDeleteOpen?.(_existsContent, () => setShowDelete(true));
+
+                                                    // set temporary date
+                                                    setTempDate(_dateShow);
                                                 }
                                             }
 
@@ -1311,7 +1516,7 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
 
                         return <td
                             className={combinedCls(
-                                'e-cal-timeline-table__cell-cushion-content__container e-cal-timeline-table__cell-tooltiptrigger',
+                                'custom-event-tl-table__cell-cushion-content__container custom-event-tl-table__cell-tooltiptrigger',
                                 {
                                     'has-event': eventSourcesData && _currentData.length > 0,
                                     'empty': !isInteractive,
@@ -1323,7 +1528,7 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
                             key={"col" + i}
                             data-index={colIndex - 1}
                             colSpan={1}
-                            data-rowinfo={JSON.stringify(val[rowIndex]?.listSection)}
+                            data-rowinfo={JSON.stringify(orginalData[rowIndex]?.listSection)}
                             data-date={_dateShow}
                             data-day={_dateDayShow}
                             data-week={weekDay}
@@ -1332,12 +1537,12 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
                                 onCellMouseEnter?.(e);
 
                                 //
-                                if (multipleCells) handleTableMainCellMouseEnter(e, rowIndex, dayIndex);
+                                if (multipleCells) handleTableMainCellMouseEnter(e, rowIndex, dayIndex, forwardFillTotal);
                             }}
                             onMouseDown={(e: React.MouseEvent) => {
                                 //
                                 onCellClick?.(e, {
-                                    rowData: val[rowIndex]?.listSection,
+                                    rowData: orginalData[rowIndex]?.listSection,
                                     date: _dateShow,
                                     row: rowIndex,
                                     col: dayIndex
@@ -1348,7 +1553,18 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
                                     onChangeDate?.(e, null);
                                 }
 
-                                if (multipleCells) handleTableMainCellMouseDown(e, rowIndex, dayIndex);
+                                
+                                if (multipleCells) handleTableMainCellMouseDown(e, rowIndex, dayIndex, forwardFillTotal);
+                            }}
+                            
+                            onDoubleClick={(e: React.MouseEvent) => {
+                                //
+                                onCellDoubleClick?.(e, {
+                                    rowData: orginalData[rowIndex]?.listSection,
+                                    date: _dateShow,
+                                    row: rowIndex,
+                                    col: dayIndex
+                                });
                             }}
                             onMouseLeave={(e: React.MouseEvent) => {
                                 onCellMouseLeave?.(e);
@@ -1362,7 +1578,7 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
                             {/* forward fill & day & back fill */}
                             <div 
                                 className={combinedCls(
-                                    'e-cal-timeline-table__cell-cushion e-cal-timeline-table__cell-cushion-content',
+                                    'custom-event-tl-table__cell-cushion custom-event-tl-table__cell-cushion-content',
                                     {
                                         'disabled': !isInteractive
                                     }
@@ -1377,7 +1593,7 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
                                 {/* ADD BUTTON */}
                                 {isForward || isBack ? null : <>
                                     <div
-                                        className={`e-cal-timeline__day__eventadd ${cellAddBtnClassName || ''}`}
+                                        className={`custom-event-tl__day__eventadd ${cellAddBtnClassName || ''}`}
                                     >
                                         <a 
                                             href="#" 
@@ -1413,6 +1629,10 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
                                                             id: 0,
                                                             date: _dateShow
                                                         }, () => setShowEdit(true), 'new');
+
+                                                        // set temporary date
+                                                        setTempDate(_dateShow);
+
                                                     }
                                                 }
                                             }}
@@ -1485,7 +1705,8 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
                 // colIndex
                 let colIndex = 0;
 
-                return getCells().map((item: any, j: number) => {
+                const {forwardFillTotal, list: cellsList} = getCells();
+                return cellsList.map((item: any, j: number) => {
                     return item.col.map((dayIndex: number | null, i: number) => {
 
                         colIndex++;
@@ -1576,8 +1797,8 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
         const tableGridEl: any = tableGridRef.current;
        
         // initialize cell height
-        const headerTitleTrElements = tableGridEl.querySelector('.e-cal-timeline-table__datagrid-body__title tbody').getElementsByTagName('tr');
-        const trElements = tableGridEl.querySelector('.e-cal-timeline-table__datagrid-body__content tbody').getElementsByTagName('tr');
+        const headerTitleTrElements = tableGridEl.querySelector('.custom-event-tl-table__datagrid-body__title tbody').getElementsByTagName('tr');
+        const trElements = tableGridEl.querySelector('.custom-event-tl-table__datagrid-body__content tbody').getElementsByTagName('tr');
 
         for (let i = 0; i < headerTitleTrElements.length; i++) {
 
@@ -1596,9 +1817,10 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
         //
         if (tableGridRef.current === null) return;
 
+        const {forwardFillTotal, list: cellsList} = getCells();
         const tableGridEl: any = tableGridRef.current;
         let _curCellMinWidth: number = CELL_MIN_W;
-        let _curColCount: number = FILL_BLANK_DATE_DISABLD ? days[month] : 7 * getCells().length;
+        let _curColCount: number = FILL_BLANK_DATE_DISABLD ? days[month] : 7 * cellsList.length;
 
 
         if (appearanceMode === 'week') {
@@ -1613,8 +1835,8 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
         //--------------
         if (appearanceMode === 'week') {
             const tableMaxWidth = tableGridEl.clientWidth;
-            const tableHeaderTitleWidth = tableGridEl.querySelector('.e-cal-timeline-table__cell-cushion-headertitle').clientWidth;
-            const tableDividerWidth = tableGridEl.querySelector('.e-cal-timeline-table__timeline-divider').clientWidth;
+            const tableHeaderTitleWidth = tableGridEl.querySelector('.custom-event-tl-table__cell-cushion-headertitle').clientWidth;
+            const tableDividerWidth = tableGridEl.querySelector('.custom-event-tl-table__timeline-divider').clientWidth;
             const tableBorderWidth = 4;
             const scrollMaxWidth = tableMaxWidth - tableHeaderTitleWidth - tableDividerWidth - tableBorderWidth;
 
@@ -1622,7 +1844,7 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
             _curColCount = 7;
 
             // header
-            tableGridEl.querySelectorAll('.e-cal-timeline-table__cell-cushion-headercontent__container, .e-cal-timeline-table__cell-cushion-content').forEach((node: HTMLDivElement) => {
+            tableGridEl.querySelectorAll('.custom-event-tl-table__cell-cushion-headercontent__container, .custom-event-tl-table__cell-cushion-content').forEach((node: HTMLDivElement) => {
                 node.style.width = _curCellMinWidth + 'px';
             });
 
@@ -1646,20 +1868,20 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
         //****************
         // initialize "header & main" cells
         //--------------
-        const headerThContentContainers: any = tableGridEl.querySelector('.e-cal-timeline-table__datagrid-header__content tbody').getElementsByTagName('th');
+        const headerThContentContainers: any = tableGridEl.querySelector('.custom-event-tl-table__datagrid-header__content tbody').getElementsByTagName('th');
         for (let i = 0; i < headerThContentContainers.length; i++) {
-            const curHeaderThContent = headerThContentContainers[i].querySelector('.e-cal-timeline-table__cell-cushion-headercontent');
+            const curHeaderThContent = headerThContentContainers[i].querySelector('.custom-event-tl-table__cell-cushion-headercontent');
             if (curHeaderThContent !== null) curHeaderThContent.style.width = _curCellMinWidth + 'px';
         }
 
         
-        const mainTdContentContainers: any = tableGridEl.querySelector('.e-cal-timeline-table__datagrid-body__content tbody').getElementsByTagName('td');
+        const mainTdContentContainers: any = tableGridEl.querySelector('.custom-event-tl-table__datagrid-body__content tbody').getElementsByTagName('td');
         for (let i = 0; i < mainTdContentContainers.length; i++) {
-            const curHeaderThContent = mainTdContentContainers[i].querySelector('.e-cal-timeline-table__cell-cushion-content');
+            const curHeaderThContent = mainTdContentContainers[i].querySelector('.custom-event-tl-table__cell-cushion-content');
             if (curHeaderThContent !== null) curHeaderThContent.style.width = _curCellMinWidth + 'px';
         }
         
-        const mainTdContentCols: any = tableGridEl.querySelector('.e-cal-timeline-table__datagrid-body__content colgroup').getElementsByTagName('col')
+        const mainTdContentCols: any = tableGridEl.querySelector('.custom-event-tl-table__datagrid-body__content colgroup').getElementsByTagName('col')
         for (let i = 0; i < mainTdContentCols.length; i++) {
             mainTdContentCols[i].style.minWidth = _curCellMinWidth + 'px';
         }
@@ -1670,22 +1892,22 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
         //****************    
         // initialize scrollable wrapper (width)
         //--------------
-        const _scrollableWrapper: HTMLElement[] = tableGridEl.querySelectorAll('.e-cal-timeline-table__scroller-harness');
+        const _scrollableWrapper: HTMLElement[] = tableGridEl.querySelectorAll('.custom-event-tl-table__scroller-harness');
         [].slice.call(_scrollableWrapper).forEach((el: any) => {
             const scrollType = el.dataset.scroll;
 
             if (appearanceMode === 'week') {
-                el.classList.add('e-cal-timeline-table__scroller-harness--hideX');
+                el.classList.add('custom-event-tl-table__scroller-harness--hideX');
             }
             if (appearanceMode === 'month') {
-                el.classList.remove('e-cal-timeline-table__scroller-harness--hideX');
+                el.classList.remove('custom-event-tl-table__scroller-harness--hideX');
             }
 
             if (scrollType !== 'list') {
-                const _content = el.querySelector('.e-cal-timeline-table__scroller');
+                const _content = el.querySelector('.custom-event-tl-table__scroller');
                 const tableMaxWidth = tableGridEl.clientWidth;
-                const tableHeaderTitleWidth = tableGridEl.querySelector('.e-cal-timeline-table__cell-cushion-headertitle').clientWidth;
-                const tableDividerWidth = tableGridEl.querySelector('.e-cal-timeline-table__timeline-divider').clientWidth;
+                const tableHeaderTitleWidth = tableGridEl.querySelector('.custom-event-tl-table__cell-cushion-headertitle').clientWidth;
+                const tableDividerWidth = tableGridEl.querySelector('.custom-event-tl-table__timeline-divider').clientWidth;
                 const tableBorderWidth = 4;
                 const scrollMaxWidth = tableMaxWidth - tableHeaderTitleWidth - tableDividerWidth - tableBorderWidth;
 
@@ -1702,14 +1924,14 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
         //****************
         // initialize cell width
         //--------------
-        const tdElementMaxWidth: number = typeof mainTdContentContainers[0] === 'undefined' ? 0 : parseFloat(window.getComputedStyle(mainTdContentContainers[0].querySelector('.e-cal-timeline-table__cell-cushion-content')).maxWidth);
+        const tdElementMaxWidth: number = typeof mainTdContentContainers[0] === 'undefined' ? 0 : parseFloat(window.getComputedStyle(mainTdContentContainers[0].querySelector('.custom-event-tl-table__cell-cushion-content')).maxWidth);
 
 
         if (Array.isArray(eventsValue) && eventsValue.length > 0) {
 
             for (let i = 0; i < headerThContentContainers.length; i++) {
 
-                const curHeaderThContent = headerThContentContainers[i].querySelector('.e-cal-timeline-table__cell-cushion-headercontent');
+                const curHeaderThContent = headerThContentContainers[i].querySelector('.custom-event-tl-table__cell-cushion-headercontent');
                 const curHeaderThContentMaxWidth = parseFloat(window.getComputedStyle(curHeaderThContent).width);
                 const targetElement = headerThContentContainers[i].offsetWidth > mainTdContentContainers[i].offsetWidth ? headerThContentContainers[i] : mainTdContentContainers[i];
                 let tdOwidth = parseFloat(window.getComputedStyle(targetElement).width);
@@ -1729,7 +1951,7 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
                 tdOwidth = tdOwidth - 1;
 
 
-                headerThContentContainers[i].querySelector('.e-cal-timeline-table__cell-cushion-headercontent').style.width = tdOwidth + 'px';
+                headerThContentContainers[i].querySelector('.custom-event-tl-table__cell-cushion-headercontent').style.width = tdOwidth + 'px';
                 mainTdContentCols[i].style.minWidth = tdOwidth + 'px';
 
 
@@ -1743,7 +1965,7 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
         // initialize max width of table content
         //--------------
         if (scrollBodyRef.current !== null && scrollHeaderRef.current !== null) {
-            const tableContentWidth = window.getComputedStyle(tableGridEl.querySelector('.e-cal-timeline-table__datagrid-body__content')).width;
+            const tableContentWidth = window.getComputedStyle(tableGridEl.querySelector('.custom-event-tl-table__datagrid-body__content')).width;
             const scrollBodyEl: any = scrollBodyRef.current;
             const scrollHeaderEl: any = scrollHeaderRef.current;
 
@@ -1755,7 +1977,7 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
             //
             const tableWrapperMaxWidthLatest = tableGridEl.clientWidth;
             if (tableWrapperMaxWidthLatest > parseFloat(tableContentWidth)) {
-                tableGridEl.querySelector('.e-cal-timeline-table__timeline-table').style.width = tableContentWidth;
+                tableGridEl.querySelector('.custom-event-tl-table__timeline-table').style.width = tableContentWidth;
             }
 
 
@@ -1804,8 +2026,8 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
         //--------------
         if (appearanceMode === 'week') {
             const tableMaxWidth = tableGridEl.clientWidth;
-            const tableHeaderTitleWidth = tableGridEl.querySelector('.e-cal-timeline-table__cell-cushion-headertitle').clientWidth;
-            const tableDividerWidth = tableGridEl.querySelector('.e-cal-timeline-table__timeline-divider').clientWidth;
+            const tableHeaderTitleWidth = tableGridEl.querySelector('.custom-event-tl-table__cell-cushion-headertitle').clientWidth;
+            const tableDividerWidth = tableGridEl.querySelector('.custom-event-tl-table__timeline-divider').clientWidth;
             const tableBorderWidth = 4;
             const scrollMaxWidth = tableMaxWidth - tableHeaderTitleWidth - tableDividerWidth - tableBorderWidth;
 
@@ -1813,12 +2035,12 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
             _curColCount = 7;
 
             // header content
-            tableGridEl.querySelectorAll('.e-cal-timeline-table__cell-cushion-headercontent__container, .e-cal-timeline-table__cell-cushion-headercontent').forEach((node: HTMLDivElement) => {
+            tableGridEl.querySelectorAll('.custom-event-tl-table__cell-cushion-headercontent__container, .custom-event-tl-table__cell-cushion-headercontent').forEach((node: HTMLDivElement) => {
                 node.style.width = _curCellMinWidth + 'px';
             });
 
             // main content
-            tableGridEl.querySelectorAll('.e-cal-timeline-table__cell-cushion-content').forEach((node: HTMLDivElement) => {
+            tableGridEl.querySelectorAll('.custom-event-tl-table__cell-cushion-content').forEach((node: HTMLDivElement) => {
                 node.style.width = _curCellMinWidth + 'px';
             });
 
@@ -1835,10 +2057,10 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
 
         // initialize scrollable wrapper (width & height)
         //--------------
-        const _scrollableWrapper = tableGridEl.querySelectorAll('.e-cal-timeline-table__scroller-harness');
+        const _scrollableWrapper = tableGridEl.querySelectorAll('.custom-event-tl-table__scroller-harness');
         [].slice.call(_scrollableWrapper).forEach((el: any) => {
             
-            const _content = el.querySelector('.e-cal-timeline-table__scroller');
+            const _content = el.querySelector('.custom-event-tl-table__scroller');
             el.removeAttribute('data-width');
             el.removeAttribute('style');
             _content.removeAttribute('style');
@@ -1847,8 +2069,8 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
 
         // initialize cell height
         //--------------
-        const headerTitleTrElements = tableGridEl.querySelector('.e-cal-timeline-table__datagrid-body__title tbody').getElementsByTagName('tr');
-        const trElements = tableGridEl.querySelector('.e-cal-timeline-table__datagrid-body__content tbody').getElementsByTagName('tr');
+        const headerTitleTrElements = tableGridEl.querySelector('.custom-event-tl-table__datagrid-body__title tbody').getElementsByTagName('tr');
+        const trElements = tableGridEl.querySelector('.custom-event-tl-table__datagrid-body__content tbody').getElementsByTagName('tr');
 
         for (let i = 0; i < headerTitleTrElements.length; i++) {
             headerTitleTrElements[i].removeAttribute('style');
@@ -1891,10 +2113,12 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
 
 
     useEffect(() => {
+
+        const {forwardFillTotal, list: cellsList} = getCells();
         if (typeof appearanceWeekTmpl === 'function') {
-            setDisplayWeekForHeader([getCells().at(0).dateInfo[0].date, getCells().at(-1).dateInfo[0].date]);
+            setDisplayWeekForHeader([cellsList.at(0).dateInfo[0].date, cellsList.at(-1).dateInfo[0].date]);
         } else {
-            setDisplayWeekForHeader([formatToEnglishMonthDay(getCells().at(0).dateInfo[0].date), formatToEnglishMonthDay(getCells().at(-1).dateInfo[0].date)]);
+            setDisplayWeekForHeader([formatToEnglishMonthDay(cellsList.at(0).dateInfo[0].date), formatToEnglishMonthDay(cellsList.at(-1).dateInfo[0].date)]);
         }
 
     }, [weekOffset]);
@@ -1902,7 +2126,7 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
     useEffect(() => {
 
         // update events value
-        if (Array.isArray(eventsValue) && eventsValue.length > 0) setVal(eventsValue);
+        if (Array.isArray(eventsValue) && eventsValue.length > 0) setOrginalData(eventsValue);
 
         // update current today
         if (typeof customTodayDate !== 'undefined' && isValidDate(customTodayDate)) {
@@ -1913,17 +2137,25 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
         // Call a function when the list has been rendered completely
         onListRenderComplete?.();
 
+    }, [eventsValue, customTodayDate, appearanceMode]);
 
+
+    
+    useEffect(() => {
+
+
+        // !!!Please do not use dependencies
         return () => {
 
             // reset table grid
             tableGridReset();
+
+            // reset selection area
+            setSelectedCells([]);
+            setCopiedCells(null);
         }
 
-    }, [eventsValue, customTodayDate, appearanceMode]);
-
-
-
+    }, []);
     return (
         <>
 
@@ -1932,13 +2164,13 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
             {/*////////////////////////////////////////////////// */}
 
             <div className={combinedCls(
-                `e-cal-timeline__wrapper e-cal-timeline__wrapper--${appearanceMode}`,
+                `custom-event-tl__wrapper custom-event-tl__wrapper--${appearanceMode}`,
                 calendarWrapperClassName
             )}>
 
                 {/*++++++++++++++++ MAIN ++++++++++++++++*/}
-                <div className="e-cal-timeline__header bg-body-tertiary">
-                    <button tabIndex={-1} type="button" className="e-cal-timeline__btn e-cal-timeline__btn--prev" onClick={handlePrevChange}>
+                <div className="custom-event-tl__header bg-body-tertiary">
+                    <button tabIndex={-1} type="button" className="custom-event-tl__btn custom-event-tl__btn--prev" onClick={handlePrevChange}>
                         <svg width="20px" height="20px" viewBox="0 0 24 24" fill="none">
                             <path d="M14.2893 5.70708C13.8988 5.31655 13.2657 5.31655 12.8751 5.70708L7.98768 10.5993C7.20729 11.3805 7.2076 12.6463 7.98837 13.427L12.8787 18.3174C13.2693 18.7079 13.9024 18.7079 14.293 18.3174C14.6835 17.9269 14.6835 17.2937 14.293 16.9032L10.1073 12.7175C9.71678 12.327 9.71678 11.6939 10.1073 11.3033L14.2893 7.12129C14.6799 6.73077 14.6799 6.0976 14.2893 5.70708Z" fill="#000" />
                         </svg>
@@ -1946,7 +2178,7 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
 
                     {/* //########## MODE: WEEK ############# */}
                     {appearanceMode === 'week' ? <>
-                        <div className="e-cal-timeline__header__info">
+                        <div className="custom-event-tl__header__info">
                             {typeof appearanceWeekTmpl === 'function' ? <>{appearanceWeekTmpl(displayWeekForHeader[0], displayWeekForHeader[1])}</> : <>{displayWeekForHeader[0]} - {displayWeekForHeader[1]}</>}
                         </div>
                     </> : null}
@@ -1955,12 +2187,12 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
 
                     {/* //########## MODE: MONTH ############# */}
                     {appearanceMode === 'month' ? <>
-                        <div className="e-cal-timeline__header__btns">
-                            <button tabIndex={-1} type="button" className={`e-cal-timeline__btn ${winMonth ? 'active' : ''}`} onClick={handleShowWinMonth}>
+                        <div className="custom-event-tl__header__btns">
+                            <button tabIndex={-1} type="button" className={`custom-event-tl__btn ${winMonth ? 'active' : ''}`} onClick={handleShowWinMonth}>
                                 {MONTHS[month]}
                                 <svg width="12px" height="12px" viewBox="0 0 24 24"><path d="M11.178 19.569a.998.998 0 0 0 1.644 0l9-13A.999.999 0 0 0 21 5H3a1.002 1.002 0 0 0-.822 1.569l9 13z" fill="#000000" /></svg>
                             </button>
-                            <button tabIndex={-1} type="button" className={`e-cal-timeline__btn ${winYear ? 'active' : ''}`} onClick={handleShowWinYear}>
+                            <button tabIndex={-1} type="button" className={`custom-event-tl__btn ${winYear ? 'active' : ''}`} onClick={handleShowWinYear}>
                                 {year}
                                 <svg width="12px" height="12px" viewBox="0 0 24 24"><path d="M11.178 19.569a.998.998 0 0 0 1.644 0l9-13A.999.999 0 0 0 21 5H3a1.002 1.002 0 0 0-.822 1.569l9 13z" fill="#000000" /></svg>
                             </button>
@@ -1970,7 +2202,7 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
 
 
                     
-                    <button tabIndex={-1} type="button" className="e-cal-timeline__btn e-cal-timeline__btn--next" onClick={handleNextChange}>
+                    <button tabIndex={-1} type="button" className="custom-event-tl__btn custom-event-tl__btn--next" onClick={handleNextChange}>
                         <svg width="20px" height="20px" viewBox="0 0 24 24" fill="none">
                             <path d="M9.71069 18.2929C10.1012 18.6834 10.7344 18.6834 11.1249 18.2929L16.0123 13.4006C16.7927 12.6195 16.7924 11.3537 16.0117 10.5729L11.1213 5.68254C10.7308 5.29202 10.0976 5.29202 9.70708 5.68254C9.31655 6.07307 9.31655 6.70623 9.70708 7.09676L13.8927 11.2824C14.2833 11.6729 14.2833 12.3061 13.8927 12.6966L9.71069 16.8787C9.32016 17.2692 9.32016 17.9023 9.71069 18.2929Z" fill="#000" />
                         </svg>
@@ -1979,10 +2211,10 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
 
 
 
-                <div className="e-cal-timeline__body">
+                <div className="custom-event-tl__body">
 
 
-                    <div className="e-cal-timeline__row">
+                    <div className="custom-event-tl__row">
                         {/* day */}
 
                         {/* /day */}
@@ -1993,12 +2225,12 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
 
 
                 {/*++++++++++++++++ MONTH SELECTION TAB ++++++++++++++++*/}
-                <div className={`e-cal-timeline__month-wrapper shadow p-3 mb-5 bg-body-tertiary rounded ${winMonth ? 'active' : ''}`}>
-                    <div className="e-cal-timeline__month-container">
+                <div className={`custom-event-tl__month-wrapper shadow p-3 mb-5 bg-body-tertiary rounded ${winMonth ? 'active' : ''}`}>
+                    <div className="custom-event-tl__month-container">
                         {MONTHS_FULL.map((month, index) => {
                             return <div
                                 data-month={padZero(index + 1)}
-                                className={`e-cal-timeline__month ${selectedMonth === index ? ' selected' : ''}`}
+                                className={`custom-event-tl__month ${selectedMonth === index ? ' selected' : ''}`}
                                 key={month + index}
                                 onClick={() => { handleMonthChange(index) }}
                             >{month}</div>
@@ -2008,12 +2240,12 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
                 {/*++++++++++++++++ /MONTH SELECTION TAB ++++++++++++++++*/}
 
                 {/*++++++++++++++++ YEAR SELECTION TAB ++++++++++++++++*/}
-                <div className={`e-cal-timeline__year-wrapper shadow p-3 mb-5 bg-body-tertiary rounded ${winYear ? 'active' : ''}`}>
-                    <div className="e-cal-timeline__year-container bg-body-tertiary">
+                <div className={`custom-event-tl__year-wrapper shadow p-3 mb-5 bg-body-tertiary rounded ${winYear ? 'active' : ''}`}>
+                    <div className="custom-event-tl__year-container bg-body-tertiary">
                         {yearsArray.map((year, index) => {
                             return <div
                                 data-year={year}
-                                className={`e-cal-timeline__year ${selectedYear === year ? ' selected' : ''}`}
+                                className={`custom-event-tl__year ${selectedYear === year ? ' selected' : ''}`}
                                 key={year + index}
                                 onClick={() => { handleYearChange(year) }}
                             >{year}</div>
@@ -2026,11 +2258,11 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
 
 
                 {/*++++++++++++++++ TODAY SELECTION TAB ++++++++++++++++*/}
-                <div className="e-cal-timeline__today-wrapper p-2">
+                <div className="custom-event-tl__today-wrapper p-2">
                     <button 
                         tabIndex={-1} 
                         type="button" 
-                        className="e-cal-timeline__btn e-cal-timeline__btn--today" 
+                        className="custom-event-tl__btn custom-event-tl__btn--today" 
                         onClick={handleTodayChange}
                     >
                         {langToday || 'Today'}
@@ -2040,7 +2272,7 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
                         <button 
                             tabIndex={-1} 
                             type="button" 
-                            className={`e-cal-timeline__btn e-cal-timeline__btn--appearance ${appearanceMode === 'month' ? 'active' : ''}`}
+                            className={`custom-event-tl__btn custom-event-tl__btn--appearance ${appearanceMode === 'month' ? 'active' : ''}`}
                             data-mode="month" 
                             onClick={handleAppearanceChange}
                         >
@@ -2049,7 +2281,7 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
                         <button 
                             tabIndex={-1} 
                             type="button" 
-                            className={`e-cal-timeline__btn e-cal-timeline__btn--appearance ${appearanceMode === 'week' ? 'active' : ''}`}
+                            className={`custom-event-tl__btn custom-event-tl__btn--appearance ${appearanceMode === 'week' ? 'active' : ''}`}
                             data-mode="week" 
                             onClick={handleAppearanceChange}
                         >
@@ -2061,31 +2293,34 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
                 {/*++++++++++++++++ /TODAY SELECTION TAB ++++++++++++++++*/}
 
 
-            </div>{/* /.e-cal-timeline__wrapper */}
+            </div>{/* /.custom-event-tl__wrapper */}
 
 
 
             {/*/////////////////////////////////////////////////// */}
             {/*//////////////////// Table Grid //////////////////// */}
             {/*////////////////////////////////////////////////// */}
-            {val.length === 0 ? null : <>
+            {orginalData.length === 0 ? null : <>
                 <div 
                     ref={tableGridRef} 
                     className={combinedCls(
-                        `e-cal-timeline-table__timeline-table__wrapper e-cal-timeline-table__timeline-table__wrapper--${appearanceMode} invisible`,
+                        `custom-event-tl-table__timeline-table__wrapper custom-event-tl-table__timeline-table__wrapper--${appearanceMode} invisible`,
                         tableWrapperClassName
                     )}
                     onKeyDown={(e: React.KeyboardEvent<HTMLDivElement>) => {
                         onKeyPressed?.(e, selectedCells);
+
+                        // Copy & Paste
+                        handleWrapperKeyDown(e);
                     }}
                     tabIndex={-1} // require "tabIndex" attribute
                 >
                     <table role="grid" className={combinedCls(
-                        "e-cal-timeline-table__timeline-table",
+                        "custom-event-tl-table__timeline-table",
                         tableClassName
                     )}>
                         <colgroup>
-                            <col className="e-cal-timeline-table__datagrid-header" />
+                            <col className="custom-event-tl-table__datagrid-header" />
                             <col />
                             <col />
                         </colgroup>
@@ -2099,16 +2334,16 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
                             <tr role="presentation">
                                 <th role="presentation">
                                     {/*<!--///// HEADER LEFT //////-->*/}
-                                    <div className="e-cal-timeline-table__timeline-header e-cal-timeline-table__timeline-headertitle">
+                                    <div className="custom-event-tl-table__timeline-header custom-event-tl-table__timeline-headertitle">
 
-                                        <table role="presentation" className="e-cal-timeline-table__datagrid-header__title">
+                                        <table role="presentation" className="custom-event-tl-table__datagrid-header__title">
                                             <colgroup>
                                                 <col />
                                             </colgroup>
                                             <thead role="presentation">
                                                 <tr role="row">
                                                     <th role="columnheader">
-                                                        <div className="e-cal-timeline-table__cell-cushion e-cal-timeline-table__cell-cushion-headertitle">
+                                                        <div className="custom-event-tl-table__cell-cushion custom-event-tl-table__cell-cushion-headertitle">
                                                             {tableListSectionTitle || ''}
                                                         </div>
                                                     </th>
@@ -2122,20 +2357,20 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
 
 
                                 </th>
-                                <th role="presentation" className="e-cal-timeline-table__timeline-divider"><div></div></th>
+                                <th role="presentation" className="custom-event-tl-table__timeline-divider"><div></div></th>
                                 <th role="presentation">
                                     <div 
                                         ref={scrollHeaderRef} 
-                                        className="e-cal-timeline-table__scroller-harness e-cal-timeline-table__scroller-harness--hide" 
+                                        className="custom-event-tl-table__scroller-harness custom-event-tl-table__scroller-harness--hide" 
                                         data-scroll="header" 
                                         onScroll={syncTableScrollHeader}
                                     >
-                                        <div className="e-cal-timeline-table__scroller">
+                                        <div className="custom-event-tl-table__scroller">
 
                                             {/*<!--///// HEADER RIGHT //////-->*/}
-                                            <div className="e-cal-timeline-table__timeline-header">
+                                            <div className="custom-event-tl-table__timeline-header">
 
-                                                <table className="e-cal-timeline-table__datagrid-header__content e-cal-timeline-table__scrollgrid-sync-table" >
+                                                <table className="custom-event-tl-table__datagrid-header__content custom-event-tl-table__scrollgrid-sync-table" >
                                                     <tbody>
                                                         <tr>
                                                             {generateDaysUi()}
@@ -2157,7 +2392,7 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
                         )}
                             role="rowgroup"
                         >
-                            <tr role="presentation" className="e-cal-timeline-table__list-section">
+                            <tr role="presentation" className="custom-event-tl-table__list-section">
                                 <td
                                     role="presentation"
                                     className={combinedCls(
@@ -2169,7 +2404,7 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
                                     <div 
                                         ref={scrollListRef} 
                                         className={combinedCls(
-                                            'e-cal-timeline-table__scroller-harness',
+                                            'custom-event-tl-table__scroller-harness',
                                             {
                                                 'autoscroll': AUTO_SCROLL
                                             }
@@ -2177,10 +2412,10 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
                                         data-scroll="list" 
                                         onScroll={syncTableScrollList}
                                     >
-                                        <div className="e-cal-timeline-table__scroller">
+                                        <div className="custom-event-tl-table__scroller">
 
                                             {/*<!--///// RESOURCE LEFT //////-->*/}
-                                            <table role="presentation" className="e-cal-timeline-table__datagrid-body__title e-cal-timeline-table__scrollgrid-sync-table">
+                                            <table role="presentation" className="custom-event-tl-table__datagrid-body__title custom-event-tl-table__scrollgrid-sync-table">
                                                 <colgroup>
                                                     <col />
                                                 </colgroup>
@@ -2201,7 +2436,7 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
                                 <td
                                     role="presentation"
                                     className={combinedCls(
-                                        'e-cal-timeline-table__timeline-divider',
+                                        'custom-event-tl-table__timeline-divider',
                                         tableListDividerClassName
                                     )}
                                 >
@@ -2218,7 +2453,7 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
                                     <div 
                                         ref={scrollBodyRef} 
                                         className={combinedCls(
-                                            'e-cal-timeline-table__scroller-harness',
+                                            'custom-event-tl-table__scroller-harness',
                                             {
                                                 'autoscroll': AUTO_SCROLL
                                             }
@@ -2230,23 +2465,22 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
                                         onMouseUp={BODY_DRAG ? handleTableDragEnd : () => { }} 
                                         onMouseLeave={BODY_DRAG ? handleTableDragEnd : () => { }}
                                     >
-                                        <div className="e-cal-timeline-table__scroller">
+                                        <div className="custom-event-tl-table__scroller">
                                             {/*<!--///// RESOURCE RIGHT //////-->*/}
-                                            <div className="e-cal-timeline-table__timeline-body">
+                                            <div className="custom-event-tl-table__timeline-body">
                                                 <table 
-                                                    className="e-cal-timeline-table__datagrid-body__content e-cal-timeline-table__scrollgrid-sync-table"
+                                                    className="custom-event-tl-table__datagrid-body__content custom-event-tl-table__scrollgrid-sync-table"
                                                     /* Drag to activate the selection area */
                                                     onMouseLeave={multipleCells ? handleTableMainMouseUp : undefined}
                                                     onMouseUp={multipleCells ? handleTableMainMouseUp : undefined}
 
-                                                    
                                                 >
                                                     <colgroup>
                                                         {generateColUi()}
                                                     </colgroup>
                                                     <tbody>
                                                         {/*<!-- per row -->*/}
-                                                        {val.map((item: any, i: number) => {
+                                                        {orginalData.map((item: any, i: number) => {
 
                                                             return (
                                                                 <tr key={i}>
@@ -2272,7 +2506,7 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
                         </tbody>
                     </table>
 
-                </div>{/* /.e-cal-timeline-table__timeline-table__wrapper */}
+                </div>{/* /.custom-event-tl-table__timeline-table__wrapper */}
 
 
             </>}
@@ -2300,6 +2534,8 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
                         setTimeout(() => {
                             setShowDelete(false);
                             onModalDeleteClose?.(queryItemObj());
+                            // set temporary date
+                            setTempDate('');
                         }, 350);
                     }}
                     onSubmit={async (e: any, closewin: Function, data: any) => {
@@ -2336,6 +2572,8 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
                         setTimeout(() => {
                             setShowEdit(false);
                             onModalEditClose?.(queryItemObj());
+                            // set temporary date
+                            setTempDate('');
                         }, 350);
                     }}
                     onSubmit={async (e: any, closewin: Function, data: any) => {
@@ -2367,14 +2605,14 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
             <RootPortal show={true} containerClassName="EventCalendarTimeline-TooltipModal">
                 <div
                     ref={tableTooltipModalRef}
-                    id={`e-cal-timeline-table__cell-tooltipwrapper-${idRes}`}
-                    className={`e-cal-timeline-table__cell-tooltipwrapper d-inline-block ${isShowTableTooltip ? 'active' : ''}`}
+                    id={`custom-event-tl-table__cell-tooltipwrapper-${idRes}`}
+                    className={`custom-event-tl-table__cell-tooltipwrapper d-inline-block ${isShowTableTooltip ? 'active' : ''}`}
                     role="tooltip"
                     data-microtip-position={tableTooltipDirection || 'bottom'}
                     data-microtip-size={tableTooltipSize || 'auto'}
                     style={{ display: 'none' }}
                 >
-                    <div className="e-cal-timeline-table__cell-tooltipcontent">
+                    <div className="custom-event-tl-table__cell-tooltipcontent">
                         {tableTooltipContent}
                     </div>
                 </div>

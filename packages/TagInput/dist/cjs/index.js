@@ -828,7 +828,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var funda_utils_dist_cjs_convert__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(funda_utils_dist_cjs_convert__WEBPACK_IMPORTED_MODULE_3__);
 /* harmony import */ var funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(188);
 /* harmony import */ var funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_4__);
-var _excluded = ["wrapperClassName", "maxTags", "disabled", "required", "placeholder", "readOnly", "value", "requiredLabel", "label", "name", "id", "autoComplete", "autoCapitalize", "spellCheck", "extractValueByBrackets", "minLength", "maxLength", "style", "tabIndex", "onChange", "onBlur", "onFocus"];
+var _excluded = ["contentRef", "wrapperClassName", "maxTags", "disabled", "required", "placeholder", "readOnly", "value", "requiredLabel", "label", "name", "id", "autoComplete", "autoCapitalize", "spellCheck", "extractValueByBrackets", "minLength", "maxLength", "style", "tabIndex", "onChange", "onBlur", "onFocus"];
 function _extends() { _extends = Object.assign ? Object.assign.bind() : function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
 function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
 function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
@@ -844,7 +844,8 @@ function _objectWithoutPropertiesLoose(source, excluded) { if (source == null) r
 
 
 var TagInput = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(function (props, externalRef) {
-  var wrapperClassName = props.wrapperClassName,
+  var contentRef = props.contentRef,
+    wrapperClassName = props.wrapperClassName,
     maxTags = props.maxTags,
     disabled = props.disabled,
     required = props.required,
@@ -894,6 +895,23 @@ var TagInput = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(fu
     _useState10 = _slicedToArray(_useState9, 2),
     onComposition = _useState10[0],
     setOnComposition = _useState10[1];
+
+  // exposes the following methods
+  (0,react__WEBPACK_IMPORTED_MODULE_0__.useImperativeHandle)(contentRef, function () {
+    return {
+      control: function control() {
+        return valRef.current;
+      },
+      clear: function clear(cb) {
+        initDefaultValue('');
+        cb === null || cb === void 0 ? void 0 : cb();
+      },
+      set: function set(value, cb) {
+        initDefaultValue("".concat(value));
+        cb === null || cb === void 0 ? void 0 : cb();
+      }
+    };
+  }, [contentRef]);
   function initDefaultValue(defaultValue) {
     // change the value to trigger component rendering
     if (typeof defaultValue === 'undefined' || defaultValue === '') {

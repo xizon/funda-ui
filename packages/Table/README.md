@@ -1157,7 +1157,7 @@ It is valid when `rowDraggable` exists. You can set more properties, such as: `o
 
 
 ```js
-import React from "react";
+import React, { useState } from "react";
 import {
     Table,
     TableBody,
@@ -1181,6 +1181,8 @@ const tableData = [
 
 export default () => {
 
+    const [sortedData, setSortedData] = useState<any[]>([]);
+
     return (
         <>
            
@@ -1195,6 +1197,7 @@ export default () => {
 
                     if ( dragEnd !== null ) dragEnd((el: HTMLTableRowElement, order: number[], data: any[])=> {
                         console.log('dragEnd: ', el, order, data);
+                        setSortedData(data);  // DO NOT UPDATE `tableData`
                     });
                 }}
             
@@ -1225,6 +1228,7 @@ export default () => {
                 </TableBody>
             </Table>
 
+            <small>{JSON.stringify(sortedData)}</small>
         </>
     );
 }

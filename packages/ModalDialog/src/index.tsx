@@ -13,7 +13,6 @@ import {
 } from 'funda-utils/dist/cjs/bodyScrollLock';
 
 
-
 declare global {
     interface Window {
         curVideo?: any;

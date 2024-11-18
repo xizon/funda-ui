@@ -17,6 +17,7 @@
 }
 .syntable__wrapper.table-responsive {
   overflow-x: auto;
+  overflow-y: hidden;
 }
 .syntable__wrapper.table-responsive::-webkit-scrollbar {
   height: var(--syntable-scrollbar-h);

@@ -1,5 +1,6 @@
 import React from 'react';
 export declare type TagInputProps = {
+    contentRef?: React.ForwardedRef<any>;
     wrapperClassName?: string;
     value?: string;
     maxTags?: number;

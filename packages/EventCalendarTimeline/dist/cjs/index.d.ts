@@ -82,7 +82,10 @@ export declare type EventCalendarTimelineProps = {
     onCellMouseLeave?: (el: any) => void;
     onCellMouseUp?: (el: any, selectedCellsData: any[]) => void;
     onCellClick?: (el: any, cellData: any) => void;
+    onCellDoubleClick?: (el: any, cellData: any) => void;
     onKeyPressed?: (el: any, selectedCellsData: any[]) => void;
+    onKeyCopy?: (el: any, selectedCellsData: any[]) => void;
+    onKeyPaste?: (el: any, selectedCellsData: any[]) => void;
     tableListSectionTitle?: string | React.ReactNode;
     tableCellMinWidth?: number;
     tableTooltipDirection?: string;

@@ -94,6 +94,58 @@ export default () => {
 
 
 
+## Use the exposed method to assign and empty
+
+Lets you callback the handle exposed as attribute `contentRef`.
+
+
+```js
+import React, { useRef } from 'react';
+import TagInput from 'funda-ui/TagInput';
+
+// component styles
+import 'funda-ui/TagInput/index.css';
+
+
+
+export default () => {
+
+    const conRef = useRef<any>(null);
+
+    return (
+
+
+        <>
+
+            <a 
+                href="#"
+                onClick={(e: React.MouseEvent) => {
+                    e.preventDefault();
+                    if (conRef.current) conRef.current.clear();
+                }}
+            >Set Empty Value</a>
+            &nbsp;&nbsp;|&nbsp;&nbsp;
+            <a 
+                href="#"
+                onClick={(e: React.MouseEvent) => {
+                    e.preventDefault();
+                    if (conRef.current) conRef.current.set('[tag1][tag2]', () => { console.log('callback') });
+                }}
+            >Set Custom Value</a>
+
+
+            <TagInput 
+                contentRef={conRef}
+                name="name"
+            />
+
+
+        </>
+    )
+}
+```
+
+
 ## API
 
 ### Tag Input
@@ -103,6 +155,7 @@ import TagInput from 'funda-ui/TagInput';
 | Property | Type | Default | Description | Required |
 | --- | --- | --- | --- | --- |
 | `ref` | React.ForwardedRef | - | It is the return element of this component.  | - |
+| `contentRef` | React.RefObject | - | It exposes the following methods:  <br /> <ol><li>`contentRef.current.control()`</li><li>`contentRef.current.clear(() => { console.log('callback') })`</li><li>`contentRef.current.set('test value', () => { console.log('callback') })`</li></ol> <blockquote>DO NOT USE it in the `onChange` of this component, otherwise it will cause infinite rendering</blockquote>| - |
 | `wrapperClassName` | string | `mb-3 position-relative` | The class name of the control wrapper. | - |
 | `extractValueByBrackets` | boolean  | true | Whether to use square brackets to save result and initialize default value. | - |
 | `maxTags` | number | 10 | Maximum number of tags that can be added. | - |

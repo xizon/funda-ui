@@ -3191,6 +3191,146 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 
 /***/ }),
 
+/***/ 13:
+/***/ (function(module, exports, __webpack_require__) {
+
+/* module decorator */ module = __webpack_require__.nmd(module);
+var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
+(function webpackUniversalModuleDefinition(root, factory) {
+  if (( false ? 0 : _typeof(exports)) === 'object' && ( false ? 0 : _typeof(module)) === 'object') module.exports = factory();else if (true) !(__WEBPACK_AMD_DEFINE_ARRAY__ = [], __WEBPACK_AMD_DEFINE_FACTORY__ = (factory),
+		__WEBPACK_AMD_DEFINE_RESULT__ = (typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ?
+		(__WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__)) : __WEBPACK_AMD_DEFINE_FACTORY__),
+		__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));else {}
+})(this, function () {
+  return (/******/function () {
+      // webpackBootstrap
+      /******/
+      "use strict";
+
+      /******/ // The require scope
+      /******/
+      var __nested_webpack_require_987__ = {};
+      /******/
+      /************************************************************************/
+      /******/ /* webpack/runtime/define property getters */
+      /******/
+      (function () {
+        /******/ // define getter functions for harmony exports
+        /******/__nested_webpack_require_987__.d = function (exports, definition) {
+          /******/for (var key in definition) {
+            /******/if (__nested_webpack_require_987__.o(definition, key) && !__nested_webpack_require_987__.o(exports, key)) {
+              /******/Object.defineProperty(exports, key, {
+                enumerable: true,
+                get: definition[key]
+              });
+              /******/
+            }
+            /******/
+          }
+          /******/
+        };
+        /******/
+      })();
+      /******/
+      /******/ /* webpack/runtime/hasOwnProperty shorthand */
+      /******/
+      (function () {
+        /******/__nested_webpack_require_987__.o = function (obj, prop) {
+          return Object.prototype.hasOwnProperty.call(obj, prop);
+        };
+        /******/
+      })();
+      /******/
+      /******/ /* webpack/runtime/make namespace object */
+      /******/
+      (function () {
+        /******/ // define __esModule on exports
+        /******/__nested_webpack_require_987__.r = function (exports) {
+          /******/if (typeof Symbol !== 'undefined' && Symbol.toStringTag) {
+            /******/Object.defineProperty(exports, Symbol.toStringTag, {
+              value: 'Module'
+            });
+            /******/
+          }
+          /******/
+          Object.defineProperty(exports, '__esModule', {
+            value: true
+          });
+          /******/
+        };
+        /******/
+      })();
+      /******/
+      /************************************************************************/
+      var __webpack_exports__ = {};
+      __nested_webpack_require_987__.r(__webpack_exports__);
+      /* harmony export */
+      __nested_webpack_require_987__.d(__webpack_exports__, {
+        /* harmony export */"default": function _default() {
+          return __WEBPACK_DEFAULT_EXPORT__;
+        }
+        /* harmony export */
+      });
+      /*
+       * Determine whether it is a special platform
+       *
+       * @private
+       */
+      function getOs() {
+        if (typeof window === 'undefined') return {};
+        var os;
+        if (typeof window !== "undefined") {
+          var _getOs = function _getOs() {
+            var _navigator = window.navigator;
+            var platform = function platform() {
+              // 2022 way of detecting. Note : this userAgentData feature is available only in secure contexts (HTTPS)
+              if (typeof _navigator.userAgentData !== 'undefined' && _navigator.userAgentData != null) {
+                return _navigator.userAgentData.platform;
+              }
+              // Deprecated but still works for most of the browser
+              if (typeof _navigator.platform !== 'undefined') {
+                if (typeof _navigator.userAgent !== 'undefined' && /android/.test(_navigator.userAgent.toLowerCase())) {
+                  // android device’s _navigator.platform is often set as 'linux', so const’s use userAgent for them
+                  return 'android';
+                }
+                return _navigator.platform;
+              }
+              return 'unknown';
+            };
+            var _platform = platform().toLowerCase();
+            var isOSX = /mac/.test(_platform); // Mac desktop
+            var isIOS = ['iphone', 'ipad', 'ipod'].indexOf(_platform) === -1 ? false : true; // Mac iOs
+            var isApple = isOSX || isIOS; // Apple device (desktop or iOS)
+            var isWindows = /win/.test(_platform); // Windows
+            var isAndroid = /android/.test(_platform); // Android
+            var isLinux = /linux/.test(_platform); // Linux
+
+            return {
+              isOSX: isOSX,
+              isIOS: isIOS,
+              isApple: isApple,
+              isWindows: isWindows,
+              isAndroid: isAndroid,
+              isLinux: isLinux
+            };
+          };
+          os = _getOs();
+        } else {
+          os = {};
+        }
+        return os;
+      }
+      /* harmony default export */
+      var __WEBPACK_DEFAULT_EXPORT__ = getOs;
+      /******/
+      return __webpack_exports__;
+      /******/
+    }()
+  );
+});
+
+/***/ }),
+
 /***/ 761:
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -3719,6 +3859,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var funda_utils_dist_cjs_date__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(funda_utils_dist_cjs_date__WEBPACK_IMPORTED_MODULE_6__);
 /* harmony import */ var funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(188);
 /* harmony import */ var funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_7__);
+/* harmony import */ var funda_utils_dist_cjs_os__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(13);
+/* harmony import */ var funda_utils_dist_cjs_os__WEBPACK_IMPORTED_MODULE_8___default = /*#__PURE__*/__webpack_require__.n(funda_utils_dist_cjs_os__WEBPACK_IMPORTED_MODULE_8__);
 function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
 function _regeneratorRuntime() { "use strict"; /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/facebook/regenerator/blob/main/LICENSE */ _regeneratorRuntime = function _regeneratorRuntime() { return exports; }; var exports = {}, Op = Object.prototype, hasOwn = Op.hasOwnProperty, defineProperty = Object.defineProperty || function (obj, key, desc) { obj[key] = desc.value; }, $Symbol = "function" == typeof Symbol ? Symbol : {}, iteratorSymbol = $Symbol.iterator || "@@iterator", asyncIteratorSymbol = $Symbol.asyncIterator || "@@asyncIterator", toStringTagSymbol = $Symbol.toStringTag || "@@toStringTag"; function define(obj, key, value) { return Object.defineProperty(obj, key, { value: value, enumerable: !0, configurable: !0, writable: !0 }), obj[key]; } try { define({}, ""); } catch (err) { define = function define(obj, key, value) { return obj[key] = value; }; } function wrap(innerFn, outerFn, self, tryLocsList) { var protoGenerator = outerFn && outerFn.prototype instanceof Generator ? outerFn : Generator, generator = Object.create(protoGenerator.prototype), context = new Context(tryLocsList || []); return defineProperty(generator, "_invoke", { value: makeInvokeMethod(innerFn, self, context) }), generator; } function tryCatch(fn, obj, arg) { try { return { type: "normal", arg: fn.call(obj, arg) }; } catch (err) { return { type: "throw", arg: err }; } } exports.wrap = wrap; var ContinueSentinel = {}; function Generator() {} function GeneratorFunction() {} function GeneratorFunctionPrototype() {} var IteratorPrototype = {}; define(IteratorPrototype, iteratorSymbol, function () { return this; }); var getProto = Object.getPrototypeOf, NativeIteratorPrototype = getProto && getProto(getProto(values([]))); NativeIteratorPrototype && NativeIteratorPrototype !== Op && hasOwn.call(NativeIteratorPrototype, iteratorSymbol) && (IteratorPrototype = NativeIteratorPrototype); var Gp = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(IteratorPrototype); function defineIteratorMethods(prototype) { ["next", "throw", "return"].forEach(function (method) { define(prototype, method, function (arg) { return this._invoke(method, arg); }); }); } function AsyncIterator(generator, PromiseImpl) { function invoke(method, arg, resolve, reject) { var record = tryCatch(generator[method], generator, arg); if ("throw" !== record.type) { var result = record.arg, value = result.value; return value && "object" == _typeof(value) && hasOwn.call(value, "__await") ? PromiseImpl.resolve(value.__await).then(function (value) { invoke("next", value, resolve, reject); }, function (err) { invoke("throw", err, resolve, reject); }) : PromiseImpl.resolve(value).then(function (unwrapped) { result.value = unwrapped, resolve(result); }, function (error) { return invoke("throw", error, resolve, reject); }); } reject(record.arg); } var previousPromise; defineProperty(this, "_invoke", { value: function value(method, arg) { function callInvokeWithMethodAndArg() { return new PromiseImpl(function (resolve, reject) { invoke(method, arg, resolve, reject); }); } return previousPromise = previousPromise ? previousPromise.then(callInvokeWithMethodAndArg, callInvokeWithMethodAndArg) : callInvokeWithMethodAndArg(); } }); } function makeInvokeMethod(innerFn, self, context) { var state = "suspendedStart"; return function (method, arg) { if ("executing" === state) throw new Error("Generator is already running"); if ("completed" === state) { if ("throw" === method) throw arg; return doneResult(); } for (context.method = method, context.arg = arg;;) { var delegate = context.delegate; if (delegate) { var delegateResult = maybeInvokeDelegate(delegate, context); if (delegateResult) { if (delegateResult === ContinueSentinel) continue; return delegateResult; } } if ("next" === context.method) context.sent = context._sent = context.arg;else if ("throw" === context.method) { if ("suspendedStart" === state) throw state = "completed", context.arg; context.dispatchException(context.arg); } else "return" === context.method && context.abrupt("return", context.arg); state = "executing"; var record = tryCatch(innerFn, self, context); if ("normal" === record.type) { if (state = context.done ? "completed" : "suspendedYield", record.arg === ContinueSentinel) continue; return { value: record.arg, done: context.done }; } "throw" === record.type && (state = "completed", context.method = "throw", context.arg = record.arg); } }; } function maybeInvokeDelegate(delegate, context) { var methodName = context.method, method = delegate.iterator[methodName]; if (undefined === method) return context.delegate = null, "throw" === methodName && delegate.iterator["return"] && (context.method = "return", context.arg = undefined, maybeInvokeDelegate(delegate, context), "throw" === context.method) || "return" !== methodName && (context.method = "throw", context.arg = new TypeError("The iterator does not provide a '" + methodName + "' method")), ContinueSentinel; var record = tryCatch(method, delegate.iterator, context.arg); if ("throw" === record.type) return context.method = "throw", context.arg = record.arg, context.delegate = null, ContinueSentinel; var info = record.arg; return info ? info.done ? (context[delegate.resultName] = info.value, context.next = delegate.nextLoc, "return" !== context.method && (context.method = "next", context.arg = undefined), context.delegate = null, ContinueSentinel) : info : (context.method = "throw", context.arg = new TypeError("iterator result is not an object"), context.delegate = null, ContinueSentinel); } function pushTryEntry(locs) { var entry = { tryLoc: locs[0] }; 1 in locs && (entry.catchLoc = locs[1]), 2 in locs && (entry.finallyLoc = locs[2], entry.afterLoc = locs[3]), this.tryEntries.push(entry); } function resetTryEntry(entry) { var record = entry.completion || {}; record.type = "normal", delete record.arg, entry.completion = record; } function Context(tryLocsList) { this.tryEntries = [{ tryLoc: "root" }], tryLocsList.forEach(pushTryEntry, this), this.reset(!0); } function values(iterable) { if (iterable) { var iteratorMethod = iterable[iteratorSymbol]; if (iteratorMethod) return iteratorMethod.call(iterable); if ("function" == typeof iterable.next) return iterable; if (!isNaN(iterable.length)) { var i = -1, next = function next() { for (; ++i < iterable.length;) if (hasOwn.call(iterable, i)) return next.value = iterable[i], next.done = !1, next; return next.value = undefined, next.done = !0, next; }; return next.next = next; } } return { next: doneResult }; } function doneResult() { return { value: undefined, done: !0 }; } return GeneratorFunction.prototype = GeneratorFunctionPrototype, defineProperty(Gp, "constructor", { value: GeneratorFunctionPrototype, configurable: !0 }), defineProperty(GeneratorFunctionPrototype, "constructor", { value: GeneratorFunction, configurable: !0 }), GeneratorFunction.displayName = define(GeneratorFunctionPrototype, toStringTagSymbol, "GeneratorFunction"), exports.isGeneratorFunction = function (genFun) { var ctor = "function" == typeof genFun && genFun.constructor; return !!ctor && (ctor === GeneratorFunction || "GeneratorFunction" === (ctor.displayName || ctor.name)); }, exports.mark = function (genFun) { return Object.setPrototypeOf ? Object.setPrototypeOf(genFun, GeneratorFunctionPrototype) : (genFun.__proto__ = GeneratorFunctionPrototype, define(genFun, toStringTagSymbol, "GeneratorFunction")), genFun.prototype = Object.create(Gp), genFun; }, exports.awrap = function (arg) { return { __await: arg }; }, defineIteratorMethods(AsyncIterator.prototype), define(AsyncIterator.prototype, asyncIteratorSymbol, function () { return this; }), exports.AsyncIterator = AsyncIterator, exports.async = function (innerFn, outerFn, self, tryLocsList, PromiseImpl) { void 0 === PromiseImpl && (PromiseImpl = Promise); var iter = new AsyncIterator(wrap(innerFn, outerFn, self, tryLocsList), PromiseImpl); return exports.isGeneratorFunction(outerFn) ? iter : iter.next().then(function (result) { return result.done ? result.value : iter.next(); }); }, defineIteratorMethods(Gp), define(Gp, toStringTagSymbol, "Generator"), define(Gp, iteratorSymbol, function () { return this; }), define(Gp, "toString", function () { return "[object Generator]"; }), exports.keys = function (val) { var object = Object(val), keys = []; for (var key in object) keys.push(key); return keys.reverse(), function next() { for (; keys.length;) { var key = keys.pop(); if (key in object) return next.value = key, next.done = !1, next; } return next.done = !0, next; }; }, exports.values = values, Context.prototype = { constructor: Context, reset: function reset(skipTempReset) { if (this.prev = 0, this.next = 0, this.sent = this._sent = undefined, this.done = !1, this.delegate = null, this.method = "next", this.arg = undefined, this.tryEntries.forEach(resetTryEntry), !skipTempReset) for (var name in this) "t" === name.charAt(0) && hasOwn.call(this, name) && !isNaN(+name.slice(1)) && (this[name] = undefined); }, stop: function stop() { this.done = !0; var rootRecord = this.tryEntries[0].completion; if ("throw" === rootRecord.type) throw rootRecord.arg; return this.rval; }, dispatchException: function dispatchException(exception) { if (this.done) throw exception; var context = this; function handle(loc, caught) { return record.type = "throw", record.arg = exception, context.next = loc, caught && (context.method = "next", context.arg = undefined), !!caught; } for (var i = this.tryEntries.length - 1; i >= 0; --i) { var entry = this.tryEntries[i], record = entry.completion; if ("root" === entry.tryLoc) return handle("end"); if (entry.tryLoc <= this.prev) { var hasCatch = hasOwn.call(entry, "catchLoc"), hasFinally = hasOwn.call(entry, "finallyLoc"); if (hasCatch && hasFinally) { if (this.prev < entry.catchLoc) return handle(entry.catchLoc, !0); if (this.prev < entry.finallyLoc) return handle(entry.finallyLoc); } else if (hasCatch) { if (this.prev < entry.catchLoc) return handle(entry.catchLoc, !0); } else { if (!hasFinally) throw new Error("try statement without catch or finally"); if (this.prev < entry.finallyLoc) return handle(entry.finallyLoc); } } } }, abrupt: function abrupt(type, arg) { for (var i = this.tryEntries.length - 1; i >= 0; --i) { var entry = this.tryEntries[i]; if (entry.tryLoc <= this.prev && hasOwn.call(entry, "finallyLoc") && this.prev < entry.finallyLoc) { var finallyEntry = entry; break; } } finallyEntry && ("break" === type || "continue" === type) && finallyEntry.tryLoc <= arg && arg <= finallyEntry.finallyLoc && (finallyEntry = null); var record = finallyEntry ? finallyEntry.completion : {}; return record.type = type, record.arg = arg, finallyEntry ? (this.method = "next", this.next = finallyEntry.finallyLoc, ContinueSentinel) : this.complete(record); }, complete: function complete(record, afterLoc) { if ("throw" === record.type) throw record.arg; return "break" === record.type || "continue" === record.type ? this.next = record.arg : "return" === record.type ? (this.rval = this.arg = record.arg, this.method = "return", this.next = "end") : "normal" === record.type && afterLoc && (this.next = afterLoc), ContinueSentinel; }, finish: function finish(finallyLoc) { for (var i = this.tryEntries.length - 1; i >= 0; --i) { var entry = this.tryEntries[i]; if (entry.finallyLoc === finallyLoc) return this.complete(entry.completion, entry.afterLoc), resetTryEntry(entry), ContinueSentinel; } }, "catch": function _catch(tryLoc) { for (var i = this.tryEntries.length - 1; i >= 0; --i) { var entry = this.tryEntries[i]; if (entry.tryLoc === tryLoc) { var record = entry.completion; if ("throw" === record.type) { var thrown = record.arg; resetTryEntry(entry); } return thrown; } } throw new Error("illegal catch attempt"); }, delegateYield: function delegateYield(iterable, resultName, nextLoc) { return this.delegate = { iterator: values(iterable), resultName: resultName, nextLoc: nextLoc }, "next" === this.method && (this.arg = undefined), ContinueSentinel; } }, exports; }
 function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
@@ -3733,6 +3875,7 @@ function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o =
 function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i]; return arr2; }
 function _iterableToArrayLimit(arr, i) { var _i = null == arr ? null : "undefined" != typeof Symbol && arr[Symbol.iterator] || arr["@@iterator"]; if (null != _i) { var _s, _e, _x, _r, _arr = [], _n = !0, _d = !1; try { if (_x = (_i = _i.call(arr)).next, 0 === i) { if (Object(_i) !== _i) return; _n = !1; } else for (; !(_n = (_s = _x.call(_i)).done) && (_arr.push(_s.value), _arr.length !== i); _n = !0); } catch (err) { _d = !0, _e = err; } finally { try { if (!_n && null != _i["return"] && (_r = _i["return"](), Object(_r) !== _r)) return; } finally { if (_d) throw _e; } } return _arr; } }
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+
 
 
 
@@ -3806,7 +3949,10 @@ var EventCalendarTimeline = function EventCalendarTimeline(props) {
     onCellMouseLeave = props.onCellMouseLeave,
     onCellMouseUp = props.onCellMouseUp,
     onCellClick = props.onCellClick,
+    onCellDoubleClick = props.onCellDoubleClick,
     onKeyPressed = props.onKeyPressed,
+    onKeyCopy = props.onKeyCopy,
+    onKeyPaste = props.onKeyPaste,
     tableListSectionTitle = props.tableListSectionTitle,
     tableCellMinWidth = props.tableCellMinWidth,
     tableTooltipDirection = props.tableTooltipDirection,
@@ -3833,12 +3979,13 @@ var EventCalendarTimeline = function EventCalendarTimeline(props) {
     var day = date.getDate();
     return month + ' ' + day;
   };
+  var START_WEEK_ON = 1; // represents "Monday/1" in JavaScript
 
   // orginal data
   var _useState = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)([]),
     _useState2 = _slicedToArray(_useState, 2),
-    val = _useState2[0],
-    setVal = _useState2[1];
+    orginalData = _useState2[0],
+    setOrginalData = _useState2[1];
 
   //
   var FILL_BLANK_DATE_DISABLD = typeof forwardAndBackFillDisabled === 'undefined' ? true : forwardAndBackFillDisabled;
@@ -3916,34 +4063,54 @@ var EventCalendarTimeline = function EventCalendarTimeline(props) {
   var scrollBodyRef = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(null);
   var scrollListRef = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(null);
 
-  // Open temporary storage for pop-ups
-  var _useState27 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(-1),
+  // Temporary date
+  var _useState27 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(''),
     _useState28 = _slicedToArray(_useState27, 2),
-    tableRowNum = _useState28[0],
-    setTableRowNum = _useState28[1];
+    tempDate = _useState28[0],
+    setTempDate = _useState28[1];
+
+  // Open temporary storage for pop-ups
   var _useState29 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(-1),
     _useState30 = _slicedToArray(_useState29, 2),
-    tableCellId = _useState30[0],
-    setTableCellId = _useState30[1];
+    tableRowNum = _useState30[0],
+    setTableRowNum = _useState30[1];
+  var _useState31 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(-1),
+    _useState32 = _slicedToArray(_useState31, 2),
+    tableCellId = _useState32[0],
+    setTableCellId = _useState32[1];
 
   // table grid tooltip
   var CELL_TOOLTIP_EXCEEDED_SIDE_POS_OFFSET = Number(tableTooltipExceededSidePosOffset) || 15;
   var CELL_TOOLTIP_POS_OFFSET = typeof tableTooltipOffset === 'undefined' ? 10 : tableTooltipOffset;
   var tableTooltipModalRef = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(null);
-  var _useState31 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(false),
-    _useState32 = _slicedToArray(_useState31, 2),
-    isShowTableTooltip = _useState32[0],
-    setIsShowTableTooltip = _useState32[1];
-  var _useState33 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(null),
+  var _useState33 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(false),
     _useState34 = _slicedToArray(_useState33, 2),
-    tableTooltipContent = _useState34[0],
-    setTableTooltipContent = _useState34[1];
+    isShowTableTooltip = _useState34[0],
+    setIsShowTableTooltip = _useState34[1];
+  var _useState35 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(null),
+    _useState36 = _slicedToArray(_useState35, 2),
+    tableTooltipContent = _useState36[0],
+    setTableTooltipContent = _useState36[1];
 
   // appearance mode
-  var _useState35 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(appearance),
-    _useState36 = _slicedToArray(_useState35, 2),
-    appearanceMode = _useState36[0],
-    setAppearanceMode = _useState36[1];
+  var _useState37 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(appearance),
+    _useState38 = _slicedToArray(_useState37, 2),
+    appearanceMode = _useState38[0],
+    setAppearanceMode = _useState38[1];
+  var findMondayAndTruncate = function findMondayAndTruncate(dates) {
+    var _res = dates.map(function (s) {
+      return new Date(s);
+    });
+    // Find the first Monday in the sequence
+    for (var i = 0; i < _res.length; i++) {
+      var _date2 = _res[i];
+      if (_date2.getDay() === START_WEEK_ON) {
+        // Return dates starting from Monday onwards
+        return dates.slice(i);
+      }
+    }
+    return []; // Return empty array if no Monday found
+  };
 
   // exposes the following methods
   (0,react__WEBPACK_IMPORTED_MODULE_0__.useImperativeHandle)(contentRef, function () {
@@ -3960,6 +4127,7 @@ var EventCalendarTimeline = function EventCalendarTimeline(props) {
       resetSelectedCells: function resetSelectedCells() {
         // reset selection area
         setSelectedCells([]);
+        setCopiedCells(null);
       }
     };
   }, [contentRef]);
@@ -3972,10 +4140,10 @@ var EventCalendarTimeline = function EventCalendarTimeline(props) {
   //================================================================
   // Weekly calendar
   //================================================================
-  var _useState37 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(0),
-    _useState38 = _slicedToArray(_useState37, 2),
-    weekOffset = _useState38[0],
-    setWeekOffset = _useState38[1];
+  var _useState39 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(0),
+    _useState40 = _slicedToArray(_useState39, 2),
+    weekOffset = _useState40[0],
+    setWeekOffset = _useState40[1];
   var handleNextWeek = function handleNextWeek() {
     setWeekOffset(weekOffset + 1);
     return weekOffset + 1;
@@ -3985,29 +4153,26 @@ var EventCalendarTimeline = function EventCalendarTimeline(props) {
     return weekOffset - 1;
   };
   var weekDates = (0,funda_utils_dist_cjs_date__WEBPACK_IMPORTED_MODULE_6__.getWeekDatesFromMon)(weekOffset);
-  var _useState39 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)([]),
-    _useState40 = _slicedToArray(_useState39, 2),
-    displayWeekForHeader = _useState40[0],
-    setDisplayWeekForHeader = _useState40[1];
+  var _useState41 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)([]),
+    _useState42 = _slicedToArray(_useState41, 2),
+    displayWeekForHeader = _useState42[0],
+    setDisplayWeekForHeader = _useState42[1];
 
   //================================================================
   // Drag to activate the selection area
   //================================================================    
-  var _useState41 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(false),
-    _useState42 = _slicedToArray(_useState41, 2),
-    isSelecting = _useState42[0],
-    setIsSelecting = _useState42[1];
-  var _useState43 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)([]),
+  var _useState43 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(false),
     _useState44 = _slicedToArray(_useState43, 2),
-    selectedCells = _useState44[0],
-    setSelectedCells = _useState44[1];
-  var _useState45 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(null),
+    isSelecting = _useState44[0],
+    setIsSelecting = _useState44[1];
+  var _useState45 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)([]),
     _useState46 = _slicedToArray(_useState45, 2),
-    startCell = _useState46[0],
-    setStartCell = _useState46[1];
-  function handleTableMainMouseUp(e) {
-    setIsSelecting(false);
-  }
+    selectedCells = _useState46[0],
+    setSelectedCells = _useState46[1];
+  var _useState47 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(null),
+    _useState48 = _slicedToArray(_useState47, 2),
+    startCell = _useState48[0],
+    setStartCell = _useState48[1];
 
   // Determine whether it is a selected cell
   var isCellSelected = function isCellSelected(row, col) {
@@ -4021,9 +4186,59 @@ var EventCalendarTimeline = function EventCalendarTimeline(props) {
     });
   };
 
-  // Selecting now
-  function handleTableMainCellMouseEnter(e, row, col) {
+  // Start selecting
+  var handleTableMainCellMouseDown = function handleTableMainCellMouseDown(e, row, col, colsOffset) {
+    var isMultiSelect = e.ctrlKey || e.metaKey; // Check whether the Ctrl or Command key is pressed
+
+    setIsSelecting(true);
+    setStartCell({
+      row: row,
+      col: col
+    });
     var _el = e.currentTarget;
+    setIsSelecting(true);
+    setStartCell({
+      row: row,
+      col: col
+    });
+    setSelectedCells(function (prevSelectedCells) {
+      if (isMultiSelect) {
+        // Multi-select mode: Add or remove cells
+        //++++++++++
+        var cellExists = prevSelectedCells.some(function (_ref3) {
+          var r = _ref3.row,
+            c = _ref3.col;
+          return r === row && c === col;
+        });
+        if (cellExists) {
+          return prevSelectedCells.filter(function (_ref4) {
+            var r = _ref4.row,
+              c = _ref4.col;
+            return !(r === row && c === col);
+          });
+        } else {
+          return [].concat(_toConsumableArray(prevSelectedCells), [{
+            rowData: JSON.parse(_el.dataset.rowinfo),
+            date: _el.dataset.date,
+            row: row,
+            col: col
+          }]);
+        }
+      } else {
+        // Radio Mode: Clear the previous selection, select only the current cell
+        //++++++++++
+        return [{
+          rowData: JSON.parse(_el.dataset.rowinfo),
+          date: _el.dataset.date,
+          row: row,
+          col: col
+        }];
+      }
+    });
+  };
+
+  // Selecting now
+  var handleTableMainCellMouseEnter = function handleTableMainCellMouseEnter(e, row, col, colsOffset) {
     if (isSelecting && startCell) {
       //########## MODE: WEEK #############
       var curDateList = [];
@@ -4056,10 +4271,10 @@ var EventCalendarTimeline = function EventCalendarTimeline(props) {
       for (var r = minRow; r <= maxRow; r++) {
         for (var c = minCol; c <= maxCol; c++) {
           // query date and row data
-          var curRowData = val[r];
+          var curRowData = orginalData[r];
           newSelectedCells.push({
             rowData: curRowData === null || curRowData === void 0 ? void 0 : curRowData.listSection,
-            date: curDateList[c],
+            date: curDateList[c - colsOffset],
             row: r,
             col: c
           });
@@ -4067,23 +4282,155 @@ var EventCalendarTimeline = function EventCalendarTimeline(props) {
       }
       setSelectedCells(newSelectedCells);
     }
-  }
+  };
 
   // Stop selecting
-  function handleTableMainCellMouseDown(e, row, col) {
-    var _el = e.currentTarget;
-    setIsSelecting(true);
-    setStartCell({
-      row: row,
-      col: col
-    });
-    setSelectedCells([{
-      rowData: JSON.parse(_el.dataset.rowinfo),
-      date: _el.dataset.date,
-      row: row,
-      col: col
-    }]);
-  }
+  var handleTableMainMouseUp = function handleTableMainMouseUp(e) {
+    setIsSelecting(false);
+  };
+
+  //================================================================
+  // Copy & Paste
+  //================================================================    
+  var _useState49 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(null),
+    _useState50 = _slicedToArray(_useState49, 2),
+    copiedCells = _useState50[0],
+    setCopiedCells = _useState50[1];
+  var handleWrapperKeyDown = function handleWrapperKeyDown(e) {
+    var isMac = funda_utils_dist_cjs_os__WEBPACK_IMPORTED_MODULE_8___default()().isOSX;
+
+    //########## MODE: WEEK #############
+    var curDateList = [];
+    if (appearanceMode === 'week') {
+      curDateList = weekDates.map(function (v) {
+        return (0,funda_utils_dist_cjs_date__WEBPACK_IMPORTED_MODULE_6__.getCalendarDate)(v);
+      });
+    }
+    //########## /MODE: WEEK #############
+
+    //########## MODE: MONTH #############
+    if (appearanceMode === 'month') {
+      curDateList = (0,funda_utils_dist_cjs_date__WEBPACK_IMPORTED_MODULE_6__.getMonthDates)(year, month + 1);
+    }
+    //########## /MODE: MONTH #############
+
+    // Listen for copy
+    if (isMac && e.metaKey && e.key === 'c' || !isMac && e.ctrlKey && e.key === 'c') {
+      if (selectedCells.length > 0) {
+        // Gets the structure of the selected area
+        var _selectedCellsCoordinates = selectedCells.map(function (_ref5) {
+          var r = _ref5.row,
+            c = _ref5.col;
+          return [r, c];
+        });
+        var _selectedCellsCoordin = _selectedCellsCoordinates.reduce(function (_ref6, _ref7) {
+            var _ref8 = _slicedToArray(_ref6, 2),
+              min = _ref8[0],
+              max = _ref8[1];
+            var _ref9 = _slicedToArray(_ref7, 1),
+              r = _ref9[0];
+            return [Math.min(min, r), Math.max(max, r)];
+          }, [Infinity, -Infinity]),
+          _selectedCellsCoordin2 = _slicedToArray(_selectedCellsCoordin, 2),
+          minRow = _selectedCellsCoordin2[0],
+          maxRow = _selectedCellsCoordin2[1];
+        var _selectedCellsCoordin3 = _selectedCellsCoordinates.reduce(function (_ref10, _ref11) {
+            var _ref12 = _slicedToArray(_ref10, 2),
+              min = _ref12[0],
+              max = _ref12[1];
+            var _ref13 = _slicedToArray(_ref11, 2),
+              _ = _ref13[0],
+              c = _ref13[1];
+            return [Math.min(min, c), Math.max(max, c)];
+          }, [Infinity, -Infinity]),
+          _selectedCellsCoordin4 = _slicedToArray(_selectedCellsCoordin3, 2),
+          minCol = _selectedCellsCoordin4[0],
+          maxCol = _selectedCellsCoordin4[1];
+
+        /*
+        [Be equal to:]
+         // Suppose _selectedCellsCoordinates is an array of selected cells, each of which is in the form of [row, col].
+        let minRow = Infinity;
+        let maxRow = -Infinity;
+        let minCol = Infinity;
+        let maxCol = -Infinity;
+         for (const [row, col] of _selectedCellsCoordinates) {
+            if (row < minRow) minRow = row;
+            if (row > maxRow) maxRow = row;
+            if (col < minCol) minCol = col;
+            if (col > maxCol) maxCol = col;
+        }
+        */
+
+        // Calculate the offset and adjust the cell coordinates
+        var adjustedCells = _selectedCellsCoordinates.map(function (_ref14) {
+          var _ref15 = _slicedToArray(_ref14, 2),
+            r = _ref15[0],
+            c = _ref15[1];
+          return [r - minRow, c - minCol];
+        });
+
+        // The copy result is independent of the data
+        setCopiedCells({
+          structure: {
+            rows: maxRow - minRow + 1,
+            cols: maxCol - minCol + 1
+          },
+          offset: {
+            row: minRow,
+            col: minCol
+          },
+          cells: adjustedCells
+        });
+
+        //
+        onKeyCopy === null || onKeyCopy === void 0 ? void 0 : onKeyCopy(e, selectedCells);
+      }
+    }
+
+    // Listen for paste
+    if (isMac && e.metaKey && e.key === 'v' || !isMac && e.ctrlKey && e.key === 'v') {
+      if (copiedCells && selectedCells.length > 0) {
+        var _getCells = getCells(),
+          rowsTotal = _getCells.rowsTotal,
+          colsTotal = _getCells.colsTotal,
+          forwardFillTotal = _getCells.forwardFillTotal;
+        var _selectedCells$ = selectedCells[0],
+          targetRow = _selectedCells$.row,
+          targetCol = _selectedCells$.col; // the first position
+        var newSelectedCellsCoordinates = copiedCells.cells.map(function (_ref16) {
+          var _ref17 = _slicedToArray(_ref16, 2),
+            r = _ref17[0],
+            c = _ref17[1];
+          return [targetRow + r, targetCol + c];
+        }).filter(function (_ref18) {
+          var _ref19 = _slicedToArray(_ref18, 2),
+            r = _ref19[0],
+            c = _ref19[1];
+          return r < rowsTotal && c < colsTotal;
+        }); // Make sure you don't go beyond the scope of the table
+
+        // query date and row data
+        var newSelectedCells = [];
+        newSelectedCellsCoordinates.forEach(function (item) {
+          var _item = _slicedToArray(item, 2),
+            r = _item[0],
+            c = _item[1];
+          var curRowData = orginalData[r];
+          newSelectedCells.push({
+            rowData: curRowData === null || curRowData === void 0 ? void 0 : curRowData.listSection,
+            date: curDateList[c - forwardFillTotal],
+            row: r,
+            col: c
+          });
+        });
+        setSelectedCells(newSelectedCells);
+
+        //
+        onKeyPaste === null || onKeyPaste === void 0 ? void 0 : onKeyPaste(e, newSelectedCells);
+      }
+    }
+  };
 
   //================================================================
   // Other
@@ -4162,7 +4509,12 @@ var EventCalendarTimeline = function EventCalendarTimeline(props) {
           week: [_daysIndicator[_dayOfWeek] - 1]
         });
       });
-      return curWeek;
+      return {
+        rowsTotal: orginalData.length,
+        colsTotal: curWeek.length,
+        forwardFillTotal: 0,
+        list: curWeek
+      };
     }
     //########## /MODE: WEEK #############
 
@@ -4180,9 +4532,9 @@ var EventCalendarTimeline = function EventCalendarTimeline(props) {
 
       // next month
       if (type === 'back') {
-        var _date2 = new Date(year, currentMonth + 1, day);
-        currentMonth = _date2.getMonth();
-        currentStartDay = getStartDayOfMonth(_date2);
+        var _date3 = new Date(year, currentMonth + 1, day);
+        currentMonth = _date3.getMonth();
+        currentStartDay = getStartDayOfMonth(_date3);
       }
 
       //
@@ -4223,75 +4575,91 @@ var EventCalendarTimeline = function EventCalendarTimeline(props) {
           return (0,funda_utils_dist_cjs_date__WEBPACK_IMPORTED_MODULE_6__.getCalendarDate)(v);
         });
       };
-      return _tempCells.map(function (_, j) {
-        var _col = allDays.slice(j * 7, (j + 1) * 7);
 
-        // back fill
-        var backFillArr = [];
-        for (var k = 0; k < 7 - _col.length; k++) {
-          backFillArr.push(null);
-        }
-        _col.splice.apply(_col, [_col.length, 0].concat(_toConsumableArray(backFillArr)));
+      // The remaining date of the previous month
+      // If the number is 7, the calendar does not include the date of the previous month
+      var remainPrevDate = findMondayAndTruncate(_getForwardFill(year, month + 1));
+      var remainPrevDateTotal = remainPrevDate.length === 7 ? 0 : remainPrevDate.length;
+      return {
+        rowsTotal: orginalData.length,
+        colsTotal: allDays.length,
+        forwardFillTotal: remainPrevDateTotal,
+        list: _tempCells.map(function (_, j) {
+          var _col = allDays.slice(j * 7, (j + 1) * 7);
 
-        //
-        var isFirstGroup = j === 0;
-        var isLastGroup = j === _tempCells.length - 1;
-
-        // forward fill
-        var __forwardFillDate = _getForwardFill(year, month + 1);
-
-        // back fill
-        var __backFillDate = _getBackFill(year, month + 1);
-        var _getDateShow = function _getDateShow(_dayIndex, _m, _startDay, _month) {
-          var currentDay = typeof _dayIndex === 'number' ? _dayIndex - (_startDay - 2) : 0; // ..., -3, -2, -1, 0, 1, 2, 3, 4, 5, 6, 7, ...
-
-          // date
-          var _dateShow = currentDay > 0 ? "".concat(year, "-").concat(_month + 1, "-").concat(currentDay) : '';
-
-          // forward & back
-          if (isFirstGroup && _dateShow === '') {
-            _dateShow = __forwardFillDate.at(currentDay - 1);
+          // back fill
+          var backFillArr = [];
+          for (var k = 0; k < 7 - _col.length; k++) {
+            backFillArr.push(null);
           }
-          if (isLastGroup && _dateShow === '') {
-            _dateShow = __backFillDate.at(_m);
-          }
-          return {
-            date: (0,funda_utils_dist_cjs_date__WEBPACK_IMPORTED_MODULE_6__.getCalendarDate)(_dateShow),
-            firstGroup: isFirstGroup,
-            lastGroup: isLastGroup,
-            validDisplayDate: currentDay > 0 && currentDay <= days[month]
+          _col.splice.apply(_col, [_col.length, 0].concat(_toConsumableArray(backFillArr)));
+
+          //
+          var isFirstGroup = j === 0;
+          var isLastGroup = j === _tempCells.length - 1;
+
+          // forward fill
+          var __forwardFillDate = _getForwardFill(year, month + 1);
+
+          // back fill
+          var __backFillDate = _getBackFill(year, month + 1);
+          var _getDateShow = function _getDateShow(_dayIndex, _m, _startDay, _month) {
+            var currentDay = typeof _dayIndex === 'number' ? _dayIndex - (_startDay - 2) : 0; // ..., -3, -2, -1, 0, 1, 2, 3, 4, 5, 6, 7, ...
+
+            // date
+            var _dateShow = currentDay > 0 ? "".concat(year, "-").concat(_month + 1, "-").concat(currentDay) : '';
+
+            // forward & back
+            if (isFirstGroup && _dateShow === '') {
+              _dateShow = __forwardFillDate.at(currentDay - 1);
+            }
+            if (isLastGroup && _dateShow === '') {
+              _dateShow = __backFillDate.at(_m);
+            }
+            return {
+              date: (0,funda_utils_dist_cjs_date__WEBPACK_IMPORTED_MODULE_6__.getCalendarDate)(_dateShow),
+              firstGroup: isFirstGroup,
+              lastGroup: isLastGroup,
+              validDisplayDate: currentDay > 0 && currentDay <= days[month]
+            };
           };
-        };
 
-        //
-        return {
-          month: currentMonth,
-          startDay: currentStartDay,
-          row: j,
-          col: _col,
-          dateInfo: _col.map(function (k, m) {
-            var _lastWeekDays = _col.filter(Boolean).length;
-            return _getDateShow(k, m - _lastWeekDays, currentStartDay, currentMonth);
-          }),
-          weekDisplay: _col.map(function (k, m) {
-            return WEEK[m];
-          }),
-          week: _col.map(function (k, m) {
-            return m;
-          })
-        };
-      });
+          //
+          return {
+            month: currentMonth,
+            startDay: currentStartDay,
+            row: j,
+            col: _col,
+            dateInfo: _col.map(function (k, m) {
+              var _lastWeekDays = _col.filter(Boolean).length;
+              return _getDateShow(k, m - _lastWeekDays, currentStartDay, currentMonth);
+            }),
+            weekDisplay: _col.map(function (k, m) {
+              return WEEK[m];
+            }),
+            week: _col.map(function (k, m) {
+              return m;
+            })
+          };
+        })
+      };
     }
     //########## /MODE: MONTH #############
 
-    return [];
+    return {
+      rowsTotal: 0,
+      colsTotal: 0,
+      forwardFillTotal: 0,
+      list: []
+    };
   };
   var queryItemObj = function queryItemObj() {
-    var curRowData = val[tableRowNum];
+    var curRowData = orginalData[tableRowNum];
+    var curDate = tempDate !== '' ? tempDate : "".concat(year, "-").concat(month + 1, "-").concat(day);
     if (curRowData) {
       var eventSourcesData = curRowData.eventSources;
       var _rowData = eventSourcesData.filter(function (item) {
-        return (0,funda_utils_dist_cjs_date__WEBPACK_IMPORTED_MODULE_6__.getCalendarDate)(item.date) === (0,funda_utils_dist_cjs_date__WEBPACK_IMPORTED_MODULE_6__.getCalendarDate)("".concat(year, "-").concat(month + 1, "-").concat(day));
+        return (0,funda_utils_dist_cjs_date__WEBPACK_IMPORTED_MODULE_6__.getCalendarDate)(item.date) === (0,funda_utils_dist_cjs_date__WEBPACK_IMPORTED_MODULE_6__.getCalendarDate)(curDate);
       });
       var _currentData = undefined;
       if (_rowData[0]) {
@@ -4301,7 +4669,7 @@ var EventCalendarTimeline = function EventCalendarTimeline(props) {
           _currentData = {
             rowData: curRowData.listSection,
             id: 0,
-            date: (0,funda_utils_dist_cjs_date__WEBPACK_IMPORTED_MODULE_6__.getCalendarDate)("".concat(year, "-").concat(month + 1, "-").concat(day))
+            date: (0,funda_utils_dist_cjs_date__WEBPACK_IMPORTED_MODULE_6__.getCalendarDate)(curDate)
           };
         } else {
           // edit or delete
@@ -4313,7 +4681,7 @@ var EventCalendarTimeline = function EventCalendarTimeline(props) {
       return _rowData[0] ? _currentData : {
         rowData: curRowData.listSection,
         id: 0,
-        date: (0,funda_utils_dist_cjs_date__WEBPACK_IMPORTED_MODULE_6__.getCalendarDate)("".concat(year, "-").concat(month + 1, "-").concat(day))
+        date: (0,funda_utils_dist_cjs_date__WEBPACK_IMPORTED_MODULE_6__.getCalendarDate)(curDate)
       };
     }
   };
@@ -4386,7 +4754,7 @@ var EventCalendarTimeline = function EventCalendarTimeline(props) {
       }
 
       // Determine whether it exceeds the far right or left side of the screen
-      var _modalContent = _tableTooltipModalRef.querySelector('.e-cal-timeline-table__cell-tooltipcontent');
+      var _modalContent = _tableTooltipModalRef.querySelector('.custom-event-tl-table__cell-tooltipcontent');
       var _modalBox = _modalContent.getBoundingClientRect();
       if (typeof _modalContent.dataset.offset === 'undefined' && _modalBox.left > 0) {
         // 10 pixels is used to account for some bias in mobile devices
@@ -4582,7 +4950,7 @@ var EventCalendarTimeline = function EventCalendarTimeline(props) {
   // ================================================================
 
   function generateListSectionUi() {
-    return val.map(function (item, i) {
+    return orginalData.map(function (item, i) {
       return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("tr", {
         key: i,
         role: "row",
@@ -4590,9 +4958,9 @@ var EventCalendarTimeline = function EventCalendarTimeline(props) {
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("td", {
         role: "gridcell",
         "data-resource-index": i,
-        className: "e-cal-timeline-table__datagrid-cell"
+        className: "custom-event-tl-table__datagrid-cell"
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-        className: "e-cal-timeline-table__cell-cushion e-cal-timeline-table__cell-cushion-title",
+        className: "custom-event-tl-table__cell-cushion custom-event-tl-table__cell-cushion-title",
         dangerouslySetInnerHTML: {
           __html: item.listSection.title
         }
@@ -4606,7 +4974,10 @@ var EventCalendarTimeline = function EventCalendarTimeline(props) {
     var showEvents = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : false;
     // colIndex
     var colIndex = 0;
-    return getCells().map(function (item, j) {
+    var _getCells2 = getCells(),
+      forwardFillTotal = _getCells2.forwardFillTotal,
+      cellsList = _getCells2.list;
+    return cellsList.map(function (item, j) {
       return item.col.map(function (dayIndex, i) {
         colIndex++;
 
@@ -4627,7 +4998,7 @@ var EventCalendarTimeline = function EventCalendarTimeline(props) {
         var _currentData = eventSourcesData.filter(function (item) {
           return (0,funda_utils_dist_cjs_date__WEBPACK_IMPORTED_MODULE_6__.getCalendarDate)(item.date) === _dateShow;
         });
-        var isLastCol = colIndex === 7 * getCells().length;
+        var isLastCol = colIndex === 7 * cellsList.length;
         var isInteractive = item.dateInfo[i].validDisplayDate; // The date on which the user interaction can occur, e.g. click, modify
         var isForward = item.dateInfo[i].firstGroup && !isInteractive;
         var isBack = item.dateInfo[i].lastGroup && !isInteractive;
@@ -4637,7 +5008,7 @@ var EventCalendarTimeline = function EventCalendarTimeline(props) {
         if (!showEvents) {
           var _thContent = function _thContent() {
             return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("th", {
-              className: (0,funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_7__.combinedCls)('e-cal-timeline-table__cell-cushion-headercontent__container', {
+              className: (0,funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_7__.combinedCls)('custom-event-tl-table__cell-cushion-headercontent__container', {
                 'empty': !isInteractive,
                 'today': d === now.getDate(),
                 'selected': d === day,
@@ -4668,6 +5039,7 @@ var EventCalendarTimeline = function EventCalendarTimeline(props) {
 
                 // reset selection area
                 setSelectedCells([]);
+                setCopiedCells(null);
 
                 //
                 if (isInteractive) {
@@ -4686,6 +5058,9 @@ var EventCalendarTimeline = function EventCalendarTimeline(props) {
                     } : _currentData[0], function () {
                       return setShowEdit(true);
                     }, 'normal');
+
+                    // set temporary date
+                    setTempDate(_dateShow);
                   }
                 }
               },
@@ -4696,7 +5071,7 @@ var EventCalendarTimeline = function EventCalendarTimeline(props) {
                 onCellMouseUp === null || onCellMouseUp === void 0 ? void 0 : onCellMouseUp(e, selectedCells);
               }
             }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-              className: (0,funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_7__.combinedCls)('e-cal-timeline-table__cell-cushion e-cal-timeline-table__cell-cushion-headercontent', {
+              className: (0,funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_7__.combinedCls)('custom-event-tl-table__cell-cushion custom-event-tl-table__cell-cushion-headercontent', {
                 'disabled': !isInteractive
               }),
               style: {
@@ -4723,18 +5098,18 @@ var EventCalendarTimeline = function EventCalendarTimeline(props) {
             var _items = _currentData[0].list;
             return _items.map(function (cellItem, cellItemIndex) {
               var _eventContentTooltip = typeof cellItem.dataTooltip === 'undefined' ? '' : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-                className: "e-cal-timeline__day__event-tooltipcontent",
+                className: "custom-event-tl__day__event-tooltipcontent",
                 dangerouslySetInnerHTML: {
                   __html: cellItem.dataTooltip
                 }
               }));
               return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-                className: (0,funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_7__.combinedCls)("e-cal-timeline-table__cell-cushion-content__item e-cal-timeline-table__cell-cushion-content__item-".concat(cellItemIndex), {
+                className: (0,funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_7__.combinedCls)("custom-event-tl-table__cell-cushion-content__item custom-event-tl-table__cell-cushion-content__item-".concat(cellItemIndex), {
                   'first': cellItemIndex === 0,
                   'last': cellItemIndex === _items.length - 1
                 }),
                 key: "cell-item-".concat(rowIndex, "-").concat(cellItemIndex, "}"),
-                "data-overlay-id": "e-cal-timeline-table__cell-tooltipwrapper-".concat(idRes),
+                "data-overlay-id": "custom-event-tl-table__cell-tooltipwrapper-".concat(idRes),
                 "data-cell-item-index": cellItemIndex,
                 "data-date": _dateShow,
                 "data-day": _dateDayShow,
@@ -4779,17 +5154,20 @@ var EventCalendarTimeline = function EventCalendarTimeline(props) {
                       onModalEditOpen === null || onModalEditOpen === void 0 ? void 0 : onModalEditOpen(cellItem, function () {
                         return setShowEdit(true);
                       }, 'normal');
+
+                      // set temporary date
+                      setTempDate(_dateShow);
                     }
                   }
                 }
               }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-                className: "e-cal-timeline__day__event",
+                className: "custom-event-tl__day__event",
                 style: typeof cellItem !== 'undefined' && cellItem.eventStyles !== 'undefined' ? cellItem.eventStyles : {},
                 dangerouslySetInnerHTML: typeof cellItem.data === 'string' ? {
                   __html: cellItem.data
                 } : undefined
               }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().isValidElement(cellItem.data) ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, cellItem.data) : null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-                className: "e-cal-timeline__day__eventdel ".concat(cellCloseBtnClassName || '')
+                className: "custom-event-tl__day__eventdel ".concat(cellCloseBtnClassName || '')
               }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
                 href: "#",
                 tabIndex: -1,
@@ -4825,6 +5203,9 @@ var EventCalendarTimeline = function EventCalendarTimeline(props) {
                       onModalDeleteOpen === null || onModalDeleteOpen === void 0 ? void 0 : onModalDeleteOpen(_existsContent, function () {
                         return setShowDelete(true);
                       });
+
+                      // set temporary date
+                      setTempDate(_dateShow);
                     }
                   }
                 }
@@ -4832,9 +5213,9 @@ var EventCalendarTimeline = function EventCalendarTimeline(props) {
             });
           };
           var _tdContent = function _tdContent() {
-            var _val$rowIndex;
+            var _orginalData$rowIndex;
             return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("td", {
-              className: (0,funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_7__.combinedCls)('e-cal-timeline-table__cell-cushion-content__container e-cal-timeline-table__cell-tooltiptrigger', {
+              className: (0,funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_7__.combinedCls)('custom-event-tl-table__cell-cushion-content__container custom-event-tl-table__cell-tooltiptrigger', {
                 'has-event': eventSourcesData && _currentData.length > 0,
                 'empty': !isInteractive,
                 'today': d === now.getDate(),
@@ -4844,7 +5225,7 @@ var EventCalendarTimeline = function EventCalendarTimeline(props) {
               key: "col" + i,
               "data-index": colIndex - 1,
               colSpan: 1,
-              "data-rowinfo": JSON.stringify((_val$rowIndex = val[rowIndex]) === null || _val$rowIndex === void 0 ? void 0 : _val$rowIndex.listSection),
+              "data-rowinfo": JSON.stringify((_orginalData$rowIndex = orginalData[rowIndex]) === null || _orginalData$rowIndex === void 0 ? void 0 : _orginalData$rowIndex.listSection),
               "data-date": _dateShow,
               "data-day": _dateDayShow,
               "data-week": weekDay,
@@ -4853,13 +5234,13 @@ var EventCalendarTimeline = function EventCalendarTimeline(props) {
                 onCellMouseEnter === null || onCellMouseEnter === void 0 ? void 0 : onCellMouseEnter(e);
 
                 //
-                if (multipleCells) handleTableMainCellMouseEnter(e, rowIndex, dayIndex);
+                if (multipleCells) handleTableMainCellMouseEnter(e, rowIndex, dayIndex, forwardFillTotal);
               },
               onMouseDown: function onMouseDown(e) {
-                var _val$rowIndex2;
+                var _orginalData$rowIndex2;
                 //
                 onCellClick === null || onCellClick === void 0 ? void 0 : onCellClick(e, {
-                  rowData: (_val$rowIndex2 = val[rowIndex]) === null || _val$rowIndex2 === void 0 ? void 0 : _val$rowIndex2.listSection,
+                  rowData: (_orginalData$rowIndex2 = orginalData[rowIndex]) === null || _orginalData$rowIndex2 === void 0 ? void 0 : _orginalData$rowIndex2.listSection,
                   date: _dateShow,
                   row: rowIndex,
                   col: dayIndex
@@ -4868,7 +5249,17 @@ var EventCalendarTimeline = function EventCalendarTimeline(props) {
                   handleDayChange(e, d); // update current day
                   onChangeDate === null || onChangeDate === void 0 ? void 0 : onChangeDate(e, null);
                 }
-                if (multipleCells) handleTableMainCellMouseDown(e, rowIndex, dayIndex);
+                if (multipleCells) handleTableMainCellMouseDown(e, rowIndex, dayIndex, forwardFillTotal);
+              },
+              onDoubleClick: function onDoubleClick(e) {
+                var _orginalData$rowIndex3;
+                //
+                onCellDoubleClick === null || onCellDoubleClick === void 0 ? void 0 : onCellDoubleClick(e, {
+                  rowData: (_orginalData$rowIndex3 = orginalData[rowIndex]) === null || _orginalData$rowIndex3 === void 0 ? void 0 : _orginalData$rowIndex3.listSection,
+                  date: _dateShow,
+                  row: rowIndex,
+                  col: dayIndex
+                });
               },
               onMouseLeave: function onMouseLeave(e) {
                 onCellMouseLeave === null || onCellMouseLeave === void 0 ? void 0 : onCellMouseLeave(e);
@@ -4877,7 +5268,7 @@ var EventCalendarTimeline = function EventCalendarTimeline(props) {
                 onCellMouseUp === null || onCellMouseUp === void 0 ? void 0 : onCellMouseUp(e, selectedCells);
               }
             }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-              className: (0,funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_7__.combinedCls)('e-cal-timeline-table__cell-cushion e-cal-timeline-table__cell-cushion-content', {
+              className: (0,funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_7__.combinedCls)('custom-event-tl-table__cell-cushion custom-event-tl-table__cell-cushion-content', {
                 'disabled': !isInteractive
               }),
               style: {
@@ -4888,7 +5279,7 @@ var EventCalendarTimeline = function EventCalendarTimeline(props) {
                 userSelect: 'none'
               }
             }, "\xA0")), isForward || isBack ? null : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-              className: "e-cal-timeline__day__eventadd ".concat(cellAddBtnClassName || '')
+              className: "custom-event-tl__day__eventadd ".concat(cellAddBtnClassName || '')
             }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
               href: "#",
               tabIndex: -1,
@@ -4924,6 +5315,9 @@ var EventCalendarTimeline = function EventCalendarTimeline(props) {
                     }, function () {
                       return setShowEdit(true);
                     }, 'new');
+
+                    // set temporary date
+                    setTempDate(_dateShow);
                   }
                 }
               }
@@ -4973,7 +5367,10 @@ var EventCalendarTimeline = function EventCalendarTimeline(props) {
       } else {
         // colIndex
         var colIndex = 0;
-        return getCells().map(function (item, j) {
+        var _getCells3 = getCells(),
+          forwardFillTotal = _getCells3.forwardFillTotal,
+          cellsList = _getCells3.list;
+        return cellsList.map(function (item, j) {
           return item.col.map(function (dayIndex, i) {
             colIndex++;
 
@@ -5028,8 +5425,8 @@ var EventCalendarTimeline = function EventCalendarTimeline(props) {
     var tableGridEl = tableGridRef.current;
 
     // initialize cell height
-    var headerTitleTrElements = tableGridEl.querySelector('.e-cal-timeline-table__datagrid-body__title tbody').getElementsByTagName('tr');
-    var trElements = tableGridEl.querySelector('.e-cal-timeline-table__datagrid-body__content tbody').getElementsByTagName('tr');
+    var headerTitleTrElements = tableGridEl.querySelector('.custom-event-tl-table__datagrid-body__title tbody').getElementsByTagName('tr');
+    var trElements = tableGridEl.querySelector('.custom-event-tl-table__datagrid-body__content tbody').getElementsByTagName('tr');
     for (var i = 0; i < headerTitleTrElements.length; i++) {
       var targetElement = headerTitleTrElements[i].offsetHeight > trElements[i].offsetHeight ? headerTitleTrElements[i] : trElements[i];
       var tdOHeight = window.getComputedStyle(targetElement).height;
@@ -5040,9 +5437,12 @@ var EventCalendarTimeline = function EventCalendarTimeline(props) {
   function tableGridInit() {
     //
     if (tableGridRef.current === null) return;
+    var _getCells4 = getCells(),
+      forwardFillTotal = _getCells4.forwardFillTotal,
+      cellsList = _getCells4.list;
     var tableGridEl = tableGridRef.current;
     var _curCellMinWidth = CELL_MIN_W;
-    var _curColCount = FILL_BLANK_DATE_DISABLD ? days[month] : 7 * getCells().length;
+    var _curColCount = FILL_BLANK_DATE_DISABLD ? days[month] : 7 * cellsList.length;
     if (appearanceMode === 'week') {
       _curColCount = 7;
     }
@@ -5054,15 +5454,15 @@ var EventCalendarTimeline = function EventCalendarTimeline(props) {
     //--------------
     if (appearanceMode === 'week') {
       var tableMaxWidth = tableGridEl.clientWidth;
-      var tableHeaderTitleWidth = tableGridEl.querySelector('.e-cal-timeline-table__cell-cushion-headertitle').clientWidth;
-      var tableDividerWidth = tableGridEl.querySelector('.e-cal-timeline-table__timeline-divider').clientWidth;
+      var tableHeaderTitleWidth = tableGridEl.querySelector('.custom-event-tl-table__cell-cushion-headertitle').clientWidth;
+      var tableDividerWidth = tableGridEl.querySelector('.custom-event-tl-table__timeline-divider').clientWidth;
       var tableBorderWidth = 4;
       var scrollMaxWidth = tableMaxWidth - tableHeaderTitleWidth - tableDividerWidth - tableBorderWidth;
       _curCellMinWidth = scrollMaxWidth / 7;
       _curColCount = 7;
 
       // header
-      tableGridEl.querySelectorAll('.e-cal-timeline-table__cell-cushion-headercontent__container, .e-cal-timeline-table__cell-cushion-content').forEach(function (node) {
+      tableGridEl.querySelectorAll('.custom-event-tl-table__cell-cushion-headercontent__container, .custom-event-tl-table__cell-cushion-content').forEach(function (node) {
         node.style.width = _curCellMinWidth + 'px';
       });
     }
@@ -5081,17 +5481,17 @@ var EventCalendarTimeline = function EventCalendarTimeline(props) {
     //****************
     // initialize "header & main" cells
     //--------------
-    var headerThContentContainers = tableGridEl.querySelector('.e-cal-timeline-table__datagrid-header__content tbody').getElementsByTagName('th');
+    var headerThContentContainers = tableGridEl.querySelector('.custom-event-tl-table__datagrid-header__content tbody').getElementsByTagName('th');
     for (var i = 0; i < headerThContentContainers.length; i++) {
-      var curHeaderThContent = headerThContentContainers[i].querySelector('.e-cal-timeline-table__cell-cushion-headercontent');
+      var curHeaderThContent = headerThContentContainers[i].querySelector('.custom-event-tl-table__cell-cushion-headercontent');
       if (curHeaderThContent !== null) curHeaderThContent.style.width = _curCellMinWidth + 'px';
     }
-    var mainTdContentContainers = tableGridEl.querySelector('.e-cal-timeline-table__datagrid-body__content tbody').getElementsByTagName('td');
+    var mainTdContentContainers = tableGridEl.querySelector('.custom-event-tl-table__datagrid-body__content tbody').getElementsByTagName('td');
     for (var _i2 = 0; _i2 < mainTdContentContainers.length; _i2++) {
-      var _curHeaderThContent = mainTdContentContainers[_i2].querySelector('.e-cal-timeline-table__cell-cushion-content');
+      var _curHeaderThContent = mainTdContentContainers[_i2].querySelector('.custom-event-tl-table__cell-cushion-content');
       if (_curHeaderThContent !== null) _curHeaderThContent.style.width = _curCellMinWidth + 'px';
     }
-    var mainTdContentCols = tableGridEl.querySelector('.e-cal-timeline-table__datagrid-body__content colgroup').getElementsByTagName('col');
+    var mainTdContentCols = tableGridEl.querySelector('.custom-event-tl-table__datagrid-body__content colgroup').getElementsByTagName('col');
     for (var _i3 = 0; _i3 < mainTdContentCols.length; _i3++) {
       mainTdContentCols[_i3].style.minWidth = _curCellMinWidth + 'px';
     }
@@ -5101,20 +5501,20 @@ var EventCalendarTimeline = function EventCalendarTimeline(props) {
     //****************    
     // initialize scrollable wrapper (width)
     //--------------
-    var _scrollableWrapper = tableGridEl.querySelectorAll('.e-cal-timeline-table__scroller-harness');
+    var _scrollableWrapper = tableGridEl.querySelectorAll('.custom-event-tl-table__scroller-harness');
     [].slice.call(_scrollableWrapper).forEach(function (el) {
       var scrollType = el.dataset.scroll;
       if (appearanceMode === 'week') {
-        el.classList.add('e-cal-timeline-table__scroller-harness--hideX');
+        el.classList.add('custom-event-tl-table__scroller-harness--hideX');
       }
       if (appearanceMode === 'month') {
-        el.classList.remove('e-cal-timeline-table__scroller-harness--hideX');
+        el.classList.remove('custom-event-tl-table__scroller-harness--hideX');
       }
       if (scrollType !== 'list') {
-        var _content = el.querySelector('.e-cal-timeline-table__scroller');
+        var _content = el.querySelector('.custom-event-tl-table__scroller');
         var _tableMaxWidth = tableGridEl.clientWidth;
-        var _tableHeaderTitleWidth = tableGridEl.querySelector('.e-cal-timeline-table__cell-cushion-headertitle').clientWidth;
-        var _tableDividerWidth = tableGridEl.querySelector('.e-cal-timeline-table__timeline-divider').clientWidth;
+        var _tableHeaderTitleWidth = tableGridEl.querySelector('.custom-event-tl-table__cell-cushion-headertitle').clientWidth;
+        var _tableDividerWidth = tableGridEl.querySelector('.custom-event-tl-table__timeline-divider').clientWidth;
         var _tableBorderWidth = 4;
         var _scrollMaxWidth = _tableMaxWidth - _tableHeaderTitleWidth - _tableDividerWidth - _tableBorderWidth;
         el.dataset.width = _scrollMaxWidth;
@@ -5128,10 +5528,10 @@ var EventCalendarTimeline = function EventCalendarTimeline(props) {
     //****************
     // initialize cell width
     //--------------
-    var tdElementMaxWidth = typeof mainTdContentContainers[0] === 'undefined' ? 0 : parseFloat(window.getComputedStyle(mainTdContentContainers[0].querySelector('.e-cal-timeline-table__cell-cushion-content')).maxWidth);
+    var tdElementMaxWidth = typeof mainTdContentContainers[0] === 'undefined' ? 0 : parseFloat(window.getComputedStyle(mainTdContentContainers[0].querySelector('.custom-event-tl-table__cell-cushion-content')).maxWidth);
     if (Array.isArray(eventsValue) && eventsValue.length > 0) {
       for (var _i4 = 0; _i4 < headerThContentContainers.length; _i4++) {
-        var _curHeaderThContent2 = headerThContentContainers[_i4].querySelector('.e-cal-timeline-table__cell-cushion-headercontent');
+        var _curHeaderThContent2 = headerThContentContainers[_i4].querySelector('.custom-event-tl-table__cell-cushion-headercontent');
         var curHeaderThContentMaxWidth = parseFloat(window.getComputedStyle(_curHeaderThContent2).width);
         var targetElement = headerThContentContainers[_i4].offsetWidth > mainTdContentContainers[_i4].offsetWidth ? headerThContentContainers[_i4] : mainTdContentContainers[_i4];
         var tdOwidth = parseFloat(window.getComputedStyle(targetElement).width);
@@ -5148,7 +5548,7 @@ var EventCalendarTimeline = function EventCalendarTimeline(props) {
 
         // Prevent the width from being +1 each time it is initialized
         tdOwidth = tdOwidth - 1;
-        headerThContentContainers[_i4].querySelector('.e-cal-timeline-table__cell-cushion-headercontent').style.width = tdOwidth + 'px';
+        headerThContentContainers[_i4].querySelector('.custom-event-tl-table__cell-cushion-headercontent').style.width = tdOwidth + 'px';
         mainTdContentCols[_i4].style.minWidth = tdOwidth + 'px';
       }
     }
@@ -5159,7 +5559,7 @@ var EventCalendarTimeline = function EventCalendarTimeline(props) {
     // initialize max width of table content
     //--------------
     if (scrollBodyRef.current !== null && scrollHeaderRef.current !== null) {
-      var tableContentWidth = window.getComputedStyle(tableGridEl.querySelector('.e-cal-timeline-table__datagrid-body__content')).width;
+      var tableContentWidth = window.getComputedStyle(tableGridEl.querySelector('.custom-event-tl-table__datagrid-body__content')).width;
       var scrollBodyEl = scrollBodyRef.current;
       var scrollHeaderEl = scrollHeaderRef.current;
       scrollBodyEl.style.width = tableContentWidth;
@@ -5170,7 +5570,7 @@ var EventCalendarTimeline = function EventCalendarTimeline(props) {
       //
       var tableWrapperMaxWidthLatest = tableGridEl.clientWidth;
       if (tableWrapperMaxWidthLatest > parseFloat(tableContentWidth)) {
-        tableGridEl.querySelector('.e-cal-timeline-table__timeline-table').style.width = tableContentWidth;
+        tableGridEl.querySelector('.custom-event-tl-table__timeline-table').style.width = tableContentWidth;
       }
     }
 
@@ -5211,20 +5611,20 @@ var EventCalendarTimeline = function EventCalendarTimeline(props) {
     //--------------
     if (appearanceMode === 'week') {
       var _tableMaxWidth2 = tableGridEl.clientWidth;
-      var _tableHeaderTitleWidth2 = tableGridEl.querySelector('.e-cal-timeline-table__cell-cushion-headertitle').clientWidth;
-      var _tableDividerWidth2 = tableGridEl.querySelector('.e-cal-timeline-table__timeline-divider').clientWidth;
+      var _tableHeaderTitleWidth2 = tableGridEl.querySelector('.custom-event-tl-table__cell-cushion-headertitle').clientWidth;
+      var _tableDividerWidth2 = tableGridEl.querySelector('.custom-event-tl-table__timeline-divider').clientWidth;
       var _tableBorderWidth2 = 4;
       var _scrollMaxWidth2 = _tableMaxWidth2 - _tableHeaderTitleWidth2 - _tableDividerWidth2 - _tableBorderWidth2;
       _curCellMinWidth = _scrollMaxWidth2 / 7;
       _curColCount = 7;
 
       // header content
-      tableGridEl.querySelectorAll('.e-cal-timeline-table__cell-cushion-headercontent__container, .e-cal-timeline-table__cell-cushion-headercontent').forEach(function (node) {
+      tableGridEl.querySelectorAll('.custom-event-tl-table__cell-cushion-headercontent__container, .custom-event-tl-table__cell-cushion-headercontent').forEach(function (node) {
         node.style.width = _curCellMinWidth + 'px';
       });
 
       // main content
-      tableGridEl.querySelectorAll('.e-cal-timeline-table__cell-cushion-content').forEach(function (node) {
+      tableGridEl.querySelectorAll('.custom-event-tl-table__cell-cushion-content').forEach(function (node) {
         node.style.width = _curCellMinWidth + 'px';
       });
     }
@@ -5235,9 +5635,9 @@ var EventCalendarTimeline = function EventCalendarTimeline(props) {
 
     // initialize scrollable wrapper (width & height)
     //--------------
-    var _scrollableWrapper = tableGridEl.querySelectorAll('.e-cal-timeline-table__scroller-harness');
+    var _scrollableWrapper = tableGridEl.querySelectorAll('.custom-event-tl-table__scroller-harness');
     [].slice.call(_scrollableWrapper).forEach(function (el) {
-      var _content = el.querySelector('.e-cal-timeline-table__scroller');
+      var _content = el.querySelector('.custom-event-tl-table__scroller');
       el.removeAttribute('data-width');
       el.removeAttribute('style');
       _content.removeAttribute('style');
@@ -5245,8 +5645,8 @@ var EventCalendarTimeline = function EventCalendarTimeline(props) {
 
     // initialize cell height
     //--------------
-    var headerTitleTrElements = tableGridEl.querySelector('.e-cal-timeline-table__datagrid-body__title tbody').getElementsByTagName('tr');
-    var trElements = tableGridEl.querySelector('.e-cal-timeline-table__datagrid-body__content tbody').getElementsByTagName('tr');
+    var headerTitleTrElements = tableGridEl.querySelector('.custom-event-tl-table__datagrid-body__title tbody').getElementsByTagName('tr');
+    var trElements = tableGridEl.querySelector('.custom-event-tl-table__datagrid-body__content tbody').getElementsByTagName('tr');
     for (var i = 0; i < headerTitleTrElements.length; i++) {
       headerTitleTrElements[i].removeAttribute('style');
       trElements[i].removeAttribute('style');
@@ -5276,15 +5676,18 @@ var EventCalendarTimeline = function EventCalendarTimeline(props) {
     });
   }, [year]);
   (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(function () {
+    var _getCells5 = getCells(),
+      forwardFillTotal = _getCells5.forwardFillTotal,
+      cellsList = _getCells5.list;
     if (typeof appearanceWeekTmpl === 'function') {
-      setDisplayWeekForHeader([getCells().at(0).dateInfo[0].date, getCells().at(-1).dateInfo[0].date]);
+      setDisplayWeekForHeader([cellsList.at(0).dateInfo[0].date, cellsList.at(-1).dateInfo[0].date]);
     } else {
-      setDisplayWeekForHeader([formatToEnglishMonthDay(getCells().at(0).dateInfo[0].date), formatToEnglishMonthDay(getCells().at(-1).dateInfo[0].date)]);
+      setDisplayWeekForHeader([formatToEnglishMonthDay(cellsList.at(0).dateInfo[0].date), formatToEnglishMonthDay(cellsList.at(-1).dateInfo[0].date)]);
     }
   }, [weekOffset]);
   (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(function () {
     // update events value
-    if (Array.isArray(eventsValue) && eventsValue.length > 0) setVal(eventsValue);
+    if (Array.isArray(eventsValue) && eventsValue.length > 0) setOrginalData(eventsValue);
 
     // update current today
     if (typeof customTodayDate !== 'undefined' && (0,funda_utils_dist_cjs_date__WEBPACK_IMPORTED_MODULE_6__.isValidDate)(customTodayDate)) {
@@ -5294,19 +5697,26 @@ var EventCalendarTimeline = function EventCalendarTimeline(props) {
 
     // Call a function when the list has been rendered completely
     onListRenderComplete === null || onListRenderComplete === void 0 ? void 0 : onListRenderComplete();
+  }, [eventsValue, customTodayDate, appearanceMode]);
+  (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(function () {
+    // !!!Please do not use dependencies
     return function () {
       // reset table grid
       tableGridReset();
+
+      // reset selection area
+      setSelectedCells([]);
+      setCopiedCells(null);
     };
-  }, [eventsValue, customTodayDate, appearanceMode]);
+  }, []);
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-    className: (0,funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_7__.combinedCls)("e-cal-timeline__wrapper e-cal-timeline__wrapper--".concat(appearanceMode), calendarWrapperClassName)
+    className: (0,funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_7__.combinedCls)("custom-event-tl__wrapper custom-event-tl__wrapper--".concat(appearanceMode), calendarWrapperClassName)
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-    className: "e-cal-timeline__header bg-body-tertiary"
+    className: "custom-event-tl__header bg-body-tertiary"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", {
     tabIndex: -1,
     type: "button",
-    className: "e-cal-timeline__btn e-cal-timeline__btn--prev",
+    className: "custom-event-tl__btn custom-event-tl__btn--prev",
     onClick: handlePrevChange
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("svg", {
     width: "20px",
@@ -5317,13 +5727,13 @@ var EventCalendarTimeline = function EventCalendarTimeline(props) {
     d: "M14.2893 5.70708C13.8988 5.31655 13.2657 5.31655 12.8751 5.70708L7.98768 10.5993C7.20729 11.3805 7.2076 12.6463 7.98837 13.427L12.8787 18.3174C13.2693 18.7079 13.9024 18.7079 14.293 18.3174C14.6835 17.9269 14.6835 17.2937 14.293 16.9032L10.1073 12.7175C9.71678 12.327 9.71678 11.6939 10.1073 11.3033L14.2893 7.12129C14.6799 6.73077 14.6799 6.0976 14.2893 5.70708Z",
     fill: "#000"
   }))), appearanceMode === 'week' ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-    className: "e-cal-timeline__header__info"
+    className: "custom-event-tl__header__info"
   }, typeof appearanceWeekTmpl === 'function' ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, appearanceWeekTmpl(displayWeekForHeader[0], displayWeekForHeader[1])) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, displayWeekForHeader[0], " - ", displayWeekForHeader[1]))) : null, appearanceMode === 'month' ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-    className: "e-cal-timeline__header__btns"
+    className: "custom-event-tl__header__btns"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", {
     tabIndex: -1,
     type: "button",
-    className: "e-cal-timeline__btn ".concat(winMonth ? 'active' : ''),
+    className: "custom-event-tl__btn ".concat(winMonth ? 'active' : ''),
     onClick: handleShowWinMonth
   }, MONTHS[month], /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("svg", {
     width: "12px",
@@ -5335,7 +5745,7 @@ var EventCalendarTimeline = function EventCalendarTimeline(props) {
   }))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", {
     tabIndex: -1,
     type: "button",
-    className: "e-cal-timeline__btn ".concat(winYear ? 'active' : ''),
+    className: "custom-event-tl__btn ".concat(winYear ? 'active' : ''),
     onClick: handleShowWinYear
   }, year, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("svg", {
     width: "12px",
@@ -5347,7 +5757,7 @@ var EventCalendarTimeline = function EventCalendarTimeline(props) {
   }))))) : null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", {
     tabIndex: -1,
     type: "button",
-    className: "e-cal-timeline__btn e-cal-timeline__btn--next",
+    className: "custom-event-tl__btn custom-event-tl__btn--next",
     onClick: handleNextChange
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("svg", {
     width: "20px",
@@ -5358,66 +5768,69 @@ var EventCalendarTimeline = function EventCalendarTimeline(props) {
     d: "M9.71069 18.2929C10.1012 18.6834 10.7344 18.6834 11.1249 18.2929L16.0123 13.4006C16.7927 12.6195 16.7924 11.3537 16.0117 10.5729L11.1213 5.68254C10.7308 5.29202 10.0976 5.29202 9.70708 5.68254C9.31655 6.07307 9.31655 6.70623 9.70708 7.09676L13.8927 11.2824C14.2833 11.6729 14.2833 12.3061 13.8927 12.6966L9.71069 16.8787C9.32016 17.2692 9.32016 17.9023 9.71069 18.2929Z",
     fill: "#000"
   })))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-    className: "e-cal-timeline__body"
+    className: "custom-event-tl__body"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-    className: "e-cal-timeline__row"
+    className: "custom-event-tl__row"
   })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-    className: "e-cal-timeline__month-wrapper shadow p-3 mb-5 bg-body-tertiary rounded ".concat(winMonth ? 'active' : '')
+    className: "custom-event-tl__month-wrapper shadow p-3 mb-5 bg-body-tertiary rounded ".concat(winMonth ? 'active' : '')
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-    className: "e-cal-timeline__month-container"
+    className: "custom-event-tl__month-container"
   }, MONTHS_FULL.map(function (month, index) {
     return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       "data-month": (0,funda_utils_dist_cjs_date__WEBPACK_IMPORTED_MODULE_6__.padZero)(index + 1),
-      className: "e-cal-timeline__month ".concat(selectedMonth === index ? ' selected' : ''),
+      className: "custom-event-tl__month ".concat(selectedMonth === index ? ' selected' : ''),
       key: month + index,
       onClick: function onClick() {
         handleMonthChange(index);
       }
     }, month);
   }))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-    className: "e-cal-timeline__year-wrapper shadow p-3 mb-5 bg-body-tertiary rounded ".concat(winYear ? 'active' : '')
+    className: "custom-event-tl__year-wrapper shadow p-3 mb-5 bg-body-tertiary rounded ".concat(winYear ? 'active' : '')
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-    className: "e-cal-timeline__year-container bg-body-tertiary"
+    className: "custom-event-tl__year-container bg-body-tertiary"
   }, yearsArray.map(function (year, index) {
     return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       "data-year": year,
-      className: "e-cal-timeline__year ".concat(selectedYear === year ? ' selected' : ''),
+      className: "custom-event-tl__year ".concat(selectedYear === year ? ' selected' : ''),
       key: year + index,
       onClick: function onClick() {
         handleYearChange(year);
       }
     }, year);
   }))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-    className: "e-cal-timeline__today-wrapper p-2"
+    className: "custom-event-tl__today-wrapper p-2"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", {
     tabIndex: -1,
     type: "button",
-    className: "e-cal-timeline__btn e-cal-timeline__btn--today",
+    className: "custom-event-tl__btn custom-event-tl__btn--today",
     onClick: handleTodayChange
   }, langToday || 'Today'), appearanceToggle ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", {
     tabIndex: -1,
     type: "button",
-    className: "e-cal-timeline__btn e-cal-timeline__btn--appearance ".concat(appearanceMode === 'month' ? 'active' : ''),
+    className: "custom-event-tl__btn custom-event-tl__btn--appearance ".concat(appearanceMode === 'month' ? 'active' : ''),
     "data-mode": "month",
     onClick: handleAppearanceChange
   }, langAppearanceLabelMonth || 'Month'), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", {
     tabIndex: -1,
     type: "button",
-    className: "e-cal-timeline__btn e-cal-timeline__btn--appearance ".concat(appearanceMode === 'week' ? 'active' : ''),
+    className: "custom-event-tl__btn custom-event-tl__btn--appearance ".concat(appearanceMode === 'week' ? 'active' : ''),
     "data-mode": "week",
     onClick: handleAppearanceChange
-  }, langAppearanceLabelWeek || 'Week')) : null)), val.length === 0 ? null : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+  }, langAppearanceLabelWeek || 'Week')) : null)), orginalData.length === 0 ? null : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
     ref: tableGridRef,
-    className: (0,funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_7__.combinedCls)("e-cal-timeline-table__timeline-table__wrapper e-cal-timeline-table__timeline-table__wrapper--".concat(appearanceMode, " invisible"), tableWrapperClassName),
+    className: (0,funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_7__.combinedCls)("custom-event-tl-table__timeline-table__wrapper custom-event-tl-table__timeline-table__wrapper--".concat(appearanceMode, " invisible"), tableWrapperClassName),
     onKeyDown: function onKeyDown(e) {
       onKeyPressed === null || onKeyPressed === void 0 ? void 0 : onKeyPressed(e, selectedCells);
+
+      // Copy & Paste
+      handleWrapperKeyDown(e);
     },
     tabIndex: -1 // require "tabIndex" attribute
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("table", {
     role: "grid",
-    className: (0,funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_7__.combinedCls)("e-cal-timeline-table__timeline-table", tableClassName)
+    className: (0,funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_7__.combinedCls)("custom-event-tl-table__timeline-table", tableClassName)
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("colgroup", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("col", {
-    className: "e-cal-timeline-table__datagrid-header"
+    className: "custom-event-tl-table__datagrid-header"
   }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("col", null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("col", null)), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("thead", {
     className: (0,funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_7__.combinedCls)(tableHeadClassName),
     ref: tableGridHeaderRef,
@@ -5427,10 +5840,10 @@ var EventCalendarTimeline = function EventCalendarTimeline(props) {
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("th", {
     role: "presentation"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-    className: "e-cal-timeline-table__timeline-header e-cal-timeline-table__timeline-headertitle"
+    className: "custom-event-tl-table__timeline-header custom-event-tl-table__timeline-headertitle"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("table", {
     role: "presentation",
-    className: "e-cal-timeline-table__datagrid-header__title"
+    className: "custom-event-tl-table__datagrid-header__title"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("colgroup", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("col", null)), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("thead", {
     role: "presentation"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("tr", {
@@ -5438,55 +5851,55 @@ var EventCalendarTimeline = function EventCalendarTimeline(props) {
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("th", {
     role: "columnheader"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-    className: "e-cal-timeline-table__cell-cushion e-cal-timeline-table__cell-cushion-headertitle"
+    className: "custom-event-tl-table__cell-cushion custom-event-tl-table__cell-cushion-headertitle"
   }, tableListSectionTitle || ''))))))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("th", {
     role: "presentation",
-    className: "e-cal-timeline-table__timeline-divider"
+    className: "custom-event-tl-table__timeline-divider"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null)), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("th", {
     role: "presentation"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
     ref: scrollHeaderRef,
-    className: "e-cal-timeline-table__scroller-harness e-cal-timeline-table__scroller-harness--hide",
+    className: "custom-event-tl-table__scroller-harness custom-event-tl-table__scroller-harness--hide",
     "data-scroll": "header",
     onScroll: syncTableScrollHeader
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-    className: "e-cal-timeline-table__scroller"
+    className: "custom-event-tl-table__scroller"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-    className: "e-cal-timeline-table__timeline-header"
+    className: "custom-event-tl-table__timeline-header"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("table", {
-    className: "e-cal-timeline-table__datagrid-header__content e-cal-timeline-table__scrollgrid-sync-table"
+    className: "custom-event-tl-table__datagrid-header__content custom-event-tl-table__scrollgrid-sync-table"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("tbody", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("tr", null, generateDaysUi()))))))))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("tbody", {
     className: (0,funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_7__.combinedCls)(tableBodyClassName),
     role: "rowgroup"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("tr", {
     role: "presentation",
-    className: "e-cal-timeline-table__list-section"
+    className: "custom-event-tl-table__list-section"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("td", {
     role: "presentation",
     className: (0,funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_7__.combinedCls)(tableListStartClassName)
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
     ref: scrollListRef,
-    className: (0,funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_7__.combinedCls)('e-cal-timeline-table__scroller-harness', {
+    className: (0,funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_7__.combinedCls)('custom-event-tl-table__scroller-harness', {
       'autoscroll': AUTO_SCROLL
     }),
     "data-scroll": "list",
     onScroll: syncTableScrollList
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-    className: "e-cal-timeline-table__scroller"
+    className: "custom-event-tl-table__scroller"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("table", {
     role: "presentation",
-    className: "e-cal-timeline-table__datagrid-body__title e-cal-timeline-table__scrollgrid-sync-table"
+    className: "custom-event-tl-table__datagrid-body__title custom-event-tl-table__scrollgrid-sync-table"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("colgroup", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("col", null)), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("tbody", {
     role: "presentation"
   }, generateListSectionUi()))))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("td", {
     role: "presentation",
-    className: (0,funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_7__.combinedCls)('e-cal-timeline-table__timeline-divider', tableListDividerClassName)
+    className: (0,funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_7__.combinedCls)('custom-event-tl-table__timeline-divider', tableListDividerClassName)
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null)), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("td", {
     role: "presentation",
     className: (0,funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_7__.combinedCls)(tableListEndClassName)
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
     ref: scrollBodyRef,
-    className: (0,funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_7__.combinedCls)('e-cal-timeline-table__scroller-harness', {
+    className: (0,funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_7__.combinedCls)('custom-event-tl-table__scroller-harness', {
       'autoscroll': AUTO_SCROLL
     }),
     "data-scroll": "body",
@@ -5496,15 +5909,15 @@ var EventCalendarTimeline = function EventCalendarTimeline(props) {
     onMouseUp: BODY_DRAG ? handleTableDragEnd : function () {},
     onMouseLeave: BODY_DRAG ? handleTableDragEnd : function () {}
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-    className: "e-cal-timeline-table__scroller"
+    className: "custom-event-tl-table__scroller"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-    className: "e-cal-timeline-table__timeline-body"
+    className: "custom-event-tl-table__timeline-body"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("table", {
-    className: "e-cal-timeline-table__datagrid-body__content e-cal-timeline-table__scrollgrid-sync-table"
+    className: "custom-event-tl-table__datagrid-body__content custom-event-tl-table__scrollgrid-sync-table"
     /* Drag to activate the selection area */,
     onMouseLeave: multipleCells ? handleTableMainMouseUp : undefined,
     onMouseUp: multipleCells ? handleTableMainMouseUp : undefined
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("colgroup", null, generateColUi()), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("tbody", null, val.map(function (item, i) {
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("colgroup", null, generateColUi()), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("tbody", null, orginalData.map(function (item, i) {
     return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("tr", {
       key: i
     }, generateDaysUi(item.eventSources, item.listSection, i, true));
@@ -5521,10 +5934,12 @@ var EventCalendarTimeline = function EventCalendarTimeline(props) {
       setTimeout(function () {
         setShowDelete(false);
         onModalDeleteClose === null || onModalDeleteClose === void 0 ? void 0 : onModalDeleteClose(queryItemObj());
+        // set temporary date
+        setTempDate('');
       }, 350);
     },
     onSubmit: /*#__PURE__*/function () {
-      var _ref3 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee(e, closewin, data) {
+      var _ref20 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee(e, closewin, data) {
         return _regeneratorRuntime().wrap(function _callee$(_context) {
           while (1) switch (_context.prev = _context.next) {
             case 0:
@@ -5541,7 +5956,7 @@ var EventCalendarTimeline = function EventCalendarTimeline(props) {
         }, _callee);
       }));
       return function (_x2, _x3, _x4) {
-        return _ref3.apply(this, arguments);
+        return _ref20.apply(this, arguments);
       };
     }()
   }, modalDeleteContent || 'Are you sure?'), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((funda_modaldialog__WEBPACK_IMPORTED_MODULE_2___default()), {
@@ -5560,10 +5975,12 @@ var EventCalendarTimeline = function EventCalendarTimeline(props) {
       setTimeout(function () {
         setShowEdit(false);
         onModalEditClose === null || onModalEditClose === void 0 ? void 0 : onModalEditClose(queryItemObj());
+        // set temporary date
+        setTempDate('');
       }, 350);
     },
     onSubmit: /*#__PURE__*/function () {
-      var _ref4 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee2(e, closewin, data) {
+      var _ref21 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee2(e, closewin, data) {
         return _regeneratorRuntime().wrap(function _callee2$(_context2) {
           while (1) switch (_context2.prev = _context2.next) {
             case 0:
@@ -5580,7 +5997,7 @@ var EventCalendarTimeline = function EventCalendarTimeline(props) {
         }, _callee2);
       }));
       return function (_x5, _x6, _x7) {
-        return _ref4.apply(this, arguments);
+        return _ref21.apply(this, arguments);
       };
     }()
   }, modalContent)) : null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((funda_root_portal__WEBPACK_IMPORTED_MODULE_1___default()), {
@@ -5588,8 +6005,8 @@ var EventCalendarTimeline = function EventCalendarTimeline(props) {
     containerClassName: "EventCalendarTimeline-TooltipModal"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
     ref: tableTooltipModalRef,
-    id: "e-cal-timeline-table__cell-tooltipwrapper-".concat(idRes),
-    className: "e-cal-timeline-table__cell-tooltipwrapper d-inline-block ".concat(isShowTableTooltip ? 'active' : ''),
+    id: "custom-event-tl-table__cell-tooltipwrapper-".concat(idRes),
+    className: "custom-event-tl-table__cell-tooltipwrapper d-inline-block ".concat(isShowTableTooltip ? 'active' : ''),
     role: "tooltip",
     "data-microtip-position": tableTooltipDirection || 'bottom',
     "data-microtip-size": tableTooltipSize || 'auto',
@@ -5597,7 +6014,7 @@ var EventCalendarTimeline = function EventCalendarTimeline(props) {
       display: 'none'
     }
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-    className: "e-cal-timeline-table__cell-tooltipcontent"
+    className: "custom-event-tl-table__cell-tooltipcontent"
   }, tableTooltipContent))));
 };
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (EventCalendarTimeline);

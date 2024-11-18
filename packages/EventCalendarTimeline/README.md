@@ -1516,11 +1516,11 @@ export default () => {
                     onChangeToday={(currentData: any) => {
                         console.log('-> onChangeToday: ', currentData); // {day: 22, month: 10, year: 2024}
                     }}
-                    onKeyPressed={(e: React.KeyboardEvent<HTMLDivElement>, selectedCellsData: any[]) => {
-                        console.log('-> onKeyPressed: ', selectedCellsData);
-                    }}
                     onCellClick={(e: React.MouseEvent, cellData: any) => {
                         console.log('-> onCellClick: ', cellData);
+                    }}
+                    onCellDoubleClick={(e: React.MouseEvent, cellData: any) => {
+                        console.log('-> onCellDoubleClick: ', cellData);
                     }}
                     onCellMouseUp={(e: React.MouseEvent, selectedCellsData: any[]) => {
                         console.log('-> onCellMouseUp: ', selectedCellsData);
@@ -1965,6 +1965,12 @@ export default () => {
                         setSelectedCellsData(selectedCellsData);
                         console.log('-> onCellMouseUp: ', selectedCellsData);
                     }}
+                                        onKeyCopy={(e: React.KeyboardEvent<HTMLDivElement>, selectedCellsData: any[]) => {
+                        console.log('-> onKeyCopy:', selectedCellsData);
+                    }}
+                    onKeyPaste={(e: React.KeyboardEvent<HTMLDivElement>, selectedCellsData: any[]) => {
+                        console.log('-> onKeyPaste:', selectedCellsData);
+                    }}
                 />
             </div>
 
@@ -2051,8 +2057,13 @@ import EventCalendarTimeline from 'funda-ui/EventCalendarTimeline';
 | `onCellMouseEnter` | function  | - | It fires when the mouse pointer enters a cell. It returns only one callback value which is the current cell event (**Event**). | - |
 | `onCellMouseLeave` | function  | - | It fires when the mouse pointer leaves a cell. It returns only one callback value which is the current cell event (**Event**). | - |
 | `onCellClick` | function  | - | It fires when the mouse pointer clicks a cell. It returns two callback values. <br /> <ol><li>The first is the current cell event (**Event**)</li><li>The second is the current cell data (**JSON Object**)</li>></ol> | - |
+| `onCellDoubleClick` | function  | - | It fires when the mouse pointer double clicks a cell. It returns two callback values. <br /> <ol><li>The first is the current cell event (**Event**)</li><li>The second is the current cell data (**JSON Object**)</li>></ol> | - |
 | `onCellMouseUp` | function  | - | It fires when the user presses a key on the keyboard in the table. It returns two callback values. <br /> <ol><li>The first is the current cell event (**Event**)</li><li>The second is the selected cells data (**Array**)</li></ol> | - |
 | `onKeyPressed` | function  | - | It fires when the user presses a key on the keyboard in the table. It returns two callback values. <br /> <ol><li>The first is the event in the core content area (**Event**)</li><li>The second is the selected cells data (**Array**)</li>></ol> | - |
+| `onKeyCopy` | function  | - | Triggers when using the keyboard's **Ctrl+C** combination in the table. It returns two callback values. <br /> <ol><li>The first is the event in the core content area (**Event**)</li><li>The second is the selected cells data (**Array**)</li>></ol> | - |
+| `onKeyPaste` | function  | - | Triggers when using the keyboard's **Ctrl+V** combination in the table. It returns two callback values. <br /> <ol><li>The first is the event in the core content area (**Event**)</li><li>The second is the selected cells data (**Array**)</li>></ol> | - |
+
+
 
 
 ---

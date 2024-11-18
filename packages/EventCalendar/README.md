@@ -580,6 +580,7 @@ import EventCalendar from 'funda-ui/EventCalendar';
 | `onCellMouseEnter` | function  | - | It fires when the mouse pointer enters a cell. It returns only one callback value which is the current cell event (**Event**). | - |
 | `onCellMouseLeave` | function  | - | It fires when the mouse pointer leaves a cell. It returns only one callback value which is the current cell event (**Event**). | - |
 | `onCellClick` | function  | - | It fires when the mouse pointer clicks a cell. It returns only one callback value which is the current cell event (**Event**). | - |
+| `onCellDoubleClick` | function  | - | It fires when the mouse pointer double clicks a cell. It returns only one callback value which is the current cell event (**Event**). | - |
 | `onCellMouseUp` | function  | - | It fires when the user presses a key on the keyboard in the table. It returns only one callback value which is the current cell event (**Event**) | - |
 | `onKeyPressed` | function  | - | It fires when the user presses a key on the keyboard in the table. It returns only one callback value which is the current cell event (**Event**). | - |
 

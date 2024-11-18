@@ -15,6 +15,7 @@
     
     &.table-responsive {
         overflow-x: auto;
+        overflow-y: hidden;
 
         &::-webkit-scrollbar {
             height: var(--syntable-scrollbar-h);
@@ -164,6 +165,7 @@
 
             .row-obj-clonelast {
                 height: 0 !important;
+
              
                 td {
                     border: none;

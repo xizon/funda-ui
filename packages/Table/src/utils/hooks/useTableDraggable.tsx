@@ -64,7 +64,7 @@ function useTableDraggable({
 
     const placeholderGenerator = (trHeight: number) => {
         const tbodyRef: any = getTbody(spyElement);
-        if (tbodyRef === null) return;
+        if (tbodyRef === null || tbodyRef.querySelector('tr') === null) return;
 
         // Insert a row at the "index" of the table
         const newRow = document.createElement('tr');
@@ -85,7 +85,11 @@ function useTableDraggable({
 
     const lastRowGenerator = (trHeight: number) => {
         const tbodyRef: any = getTbody(spyElement);
-        if (tbodyRef === null) return;
+        if (tbodyRef === null || tbodyRef.querySelector('tr') === null) return;
+
+        const cloneEl = tbodyRef.querySelector('.row-obj-clonelast');
+        if (cloneEl !== null) return;
+
 
         // Insert a row at the "index" of the table
         const newRow = document.createElement('tr');
@@ -93,6 +97,7 @@ function useTableDraggable({
         newRow.dataset.order = allRows(spyElement).length.toString();
         newRow.style.height = trHeight + 'px';
         newRow.style.display = 'none';
+        
 
         // Insert a cell in the row at index
         const newCell = newRow.insertCell(0);
@@ -134,7 +139,14 @@ function useTableDraggable({
         setSortData(listIndexes);
 
         //last placeholder
-        insertAfter(lastRowGenerator((_allRows.at(-1) as any).clientHeight), _allRows.at(-1));
+        if (_allRows.length > 0) {
+            const lastEl: any = lastRowGenerator((_allRows.at(-1) as any).clientHeight);
+            if (typeof _allRows.at(-1) !== 'undefined') {
+                insertAfter(lastEl, _allRows.at(-1));
+            }
+        }
+
+        
     };
 
     const handleTbodyEnter = (e: any) => {
@@ -182,6 +194,9 @@ function useTableDraggable({
 
 
     const handleDragStart = useCallback((e: any) => {
+        const tbodyRef: any = getTbody(spyElement);
+        if (tbodyRef === null) return;
+
         draggedObj = e.currentTarget;
         e.dataTransfer.effectAllowed = 'move';
         e.dataTransfer.setData('text/html', draggedObj);
@@ -195,6 +210,15 @@ function useTableDraggable({
             callback.call(null, draggedObj, sortData, sortDataByIndex(sortData as never, data as never));
         };
         onRowDrag?.(dragStart, null);
+
+
+        // init clone <tr>
+        // !!! It needs to be put at the end of the code to fix the location of the clone element
+        const cloneEl = tbodyRef.querySelector('.row-obj-clonelast');
+        if (cloneEl !== null) {
+            cloneEl.style.display = 'none';
+        }
+
 
     }, [handledragOver]);
 
@@ -250,9 +274,12 @@ function useTableDraggable({
         // sort elements
         const categoryItemsArray = allRows(spyElement);
         const sorter = (a: any, b: any) => {
-            return a.dataset.order.localeCompare(b.dataset.order); // sorts based on alphabetical order
+            let txt1 = Number(a.dataset.order),
+                txt2 = Number(b.dataset.order);
+
+            return txt2 < txt1 ? -1 : txt2 > txt1 ? 1 : 0;
         }
-        const sorted = categoryItemsArray.sort(sorter);
+        const sorted = categoryItemsArray.sort(sorter).reverse();
         sorted.forEach(e => spyElement.querySelector('table').querySelector('tbody').appendChild(e));
 
 
@@ -264,13 +291,27 @@ function useTableDraggable({
 
 
 
+        // init clone <tr>
+        // !!! It needs to be put at the end of the code to fix the location of the clone element
+        const _allRows = allRows(spyElement);
+        const cloneEl = tbodyRef.querySelector('.row-obj-clonelast');
+        if (cloneEl !== null) {
+            if (typeof _allRows.at(-1) !== 'undefined') {
+                insertAfter(cloneEl, _allRows.at(-1));
+                cloneEl.style.display = 'none';
+            }
+        }
+   
+
+
     }, [sortData]);
 
 
 
     useEffect(() => {
         if (enabled) {
-            if (Array.isArray(data)) {
+            if (Array.isArray(data) && data.length > 0) {  
+                // !!! REQUIRED "data.length > 0" to avoid data-order cannot be assigned when asynchronous data is empty
                 data.forEach((item: any, i: number) => {
                     item.order = i;
                 });

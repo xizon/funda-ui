@@ -2923,6 +2923,7 @@ var EventCalendar = function EventCalendar(props) {
     onCellMouseEnter = props.onCellMouseEnter,
     onCellMouseLeave = props.onCellMouseLeave,
     onCellClick = props.onCellClick,
+    onCellDoubleClick = props.onCellDoubleClick,
     onCellMouseUp = props.onCellMouseUp,
     onKeyPressed = props.onKeyPressed;
   var DAYS = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
@@ -2931,10 +2932,13 @@ var EventCalendar = function EventCalendar(props) {
   var WEEK_FULL = langWeekFull || ['MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY', 'SATURDAY', 'SUNDAY'];
   var MONTHS = langMonths || ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'];
   var MONTHS_FULL = langMonthsFull || ['January', 'Febuary', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+  var START_WEEK_ON = 1; // represents "Monday/1" in JavaScript
+
+  // orginal data
   var _useState = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)([]),
     _useState2 = _slicedToArray(_useState, 2),
-    val = _useState2[0],
-    setVal = _useState2[1];
+    orginalData = _useState2[0],
+    setOrginalData = _useState2[1];
   var now = (0,react__WEBPACK_IMPORTED_MODULE_0__.useMemo)(function () {
     return new Date();
   }, []);
@@ -3001,6 +3005,20 @@ var EventCalendar = function EventCalendar(props) {
     _useState28 = _slicedToArray(_useState27, 2),
     tableCellId = _useState28[0],
     setTableCellId = _useState28[1];
+  var findMondayAndTruncate = function findMondayAndTruncate(dates) {
+    var _res = dates.map(function (s) {
+      return new Date(s);
+    });
+    // Find the first Monday in the sequence
+    for (var i = 0; i < _res.length; i++) {
+      var _date2 = _res[i];
+      if (_date2.getDay() === START_WEEK_ON) {
+        // Return dates starting from Monday onwards
+        return dates.slice(i);
+      }
+    }
+    return []; // Return empty array if no Monday found
+  };
 
   // exposes the following methods
   (0,react__WEBPACK_IMPORTED_MODULE_0__.useImperativeHandle)(contentRef, function () {
@@ -3042,7 +3060,7 @@ var EventCalendar = function EventCalendar(props) {
     }))))), cellAddBtnLabel || '');
   };
   var queryItemObj = function queryItemObj() {
-    var _perData = val.filter(function (item) {
+    var _perData = orginalData.filter(function (item) {
       return (0,funda_utils_dist_cjs_date__WEBPACK_IMPORTED_MODULE_1__.getCalendarDate)(item.date) === (0,funda_utils_dist_cjs_date__WEBPACK_IMPORTED_MODULE_1__.getCalendarDate)("".concat(year, "-").concat(month + 1, "-").concat(day));
     });
     var _currentData = undefined;
@@ -3082,9 +3100,9 @@ var EventCalendar = function EventCalendar(props) {
 
     // next month
     if (type === 'back') {
-      var _date2 = new Date(year, currentMonth + 1, day);
-      currentMonth = _date2.getMonth();
-      currentStartDay = getStartDayOfMonth(_date2);
+      var _date3 = new Date(year, currentMonth + 1, day);
+      currentMonth = _date3.getMonth();
+      currentStartDay = getStartDayOfMonth(_date3);
     }
 
     //
@@ -3125,64 +3143,74 @@ var EventCalendar = function EventCalendar(props) {
         return (0,funda_utils_dist_cjs_date__WEBPACK_IMPORTED_MODULE_1__.getCalendarDate)(v);
       });
     };
-    return _tempCells.map(function (_, j) {
-      var _col = allDays.slice(j * 7, (j + 1) * 7);
 
-      // back fill
-      var backFillArr = [];
-      for (var k = 0; k < 7 - _col.length; k++) {
-        backFillArr.push(null);
-      }
-      _col.splice.apply(_col, [_col.length, 0].concat(_toConsumableArray(backFillArr)));
+    // The remaining date of the previous month
+    // If the number is 7, the calendar does not include the date of the previous month
+    var remainPrevDate = findMondayAndTruncate(_getForwardFill(year, month + 1));
+    var remainPrevDateTotal = remainPrevDate.length === 7 ? 0 : remainPrevDate.length;
+    return {
+      rowsTotal: orginalData.length,
+      colsTotal: allDays.length,
+      forwardFillTotal: remainPrevDateTotal,
+      list: _tempCells.map(function (_, j) {
+        var _col = allDays.slice(j * 7, (j + 1) * 7);
 
-      //
-      var isFirstGroup = j === 0;
-      var isLastGroup = j === _tempCells.length - 1;
-
-      // forward fill
-      var __forwardFillDate = _getForwardFill(year, month + 1);
-
-      // back fill
-      var __backFillDate = _getBackFill(year, month + 1);
-      var _getDateShow = function _getDateShow(_dayIndex, _m, _startDay, _month) {
-        var currentDay = typeof _dayIndex === 'number' ? _dayIndex - (_startDay - 2) : 0; // ..., -3, -2, -1, 0, 1, 2, 3, 4, 5, 6, 7, ...
-
-        // date
-        var _dateShow = currentDay > 0 ? "".concat(year, "-").concat(_month + 1, "-").concat(currentDay) : '';
-
-        // forward & back
-        if (isFirstGroup && _dateShow === '') {
-          _dateShow = __forwardFillDate.at(currentDay - 1);
+        // back fill
+        var backFillArr = [];
+        for (var k = 0; k < 7 - _col.length; k++) {
+          backFillArr.push(null);
         }
-        if (isLastGroup && _dateShow === '') {
-          _dateShow = __backFillDate.at(_m);
-        }
-        return {
-          date: (0,funda_utils_dist_cjs_date__WEBPACK_IMPORTED_MODULE_1__.getCalendarDate)(_dateShow),
-          firstGroup: isFirstGroup,
-          lastGroup: isLastGroup,
-          validDisplayDate: currentDay > 0 && currentDay <= days[month]
+        _col.splice.apply(_col, [_col.length, 0].concat(_toConsumableArray(backFillArr)));
+
+        //
+        var isFirstGroup = j === 0;
+        var isLastGroup = j === _tempCells.length - 1;
+
+        // forward fill
+        var __forwardFillDate = _getForwardFill(year, month + 1);
+
+        // back fill
+        var __backFillDate = _getBackFill(year, month + 1);
+        var _getDateShow = function _getDateShow(_dayIndex, _m, _startDay, _month) {
+          var currentDay = typeof _dayIndex === 'number' ? _dayIndex - (_startDay - 2) : 0; // ..., -3, -2, -1, 0, 1, 2, 3, 4, 5, 6, 7, ...
+
+          // date
+          var _dateShow = currentDay > 0 ? "".concat(year, "-").concat(_month + 1, "-").concat(currentDay) : '';
+
+          // forward & back
+          if (isFirstGroup && _dateShow === '') {
+            _dateShow = __forwardFillDate.at(currentDay - 1);
+          }
+          if (isLastGroup && _dateShow === '') {
+            _dateShow = __backFillDate.at(_m);
+          }
+          return {
+            date: (0,funda_utils_dist_cjs_date__WEBPACK_IMPORTED_MODULE_1__.getCalendarDate)(_dateShow),
+            firstGroup: isFirstGroup,
+            lastGroup: isLastGroup,
+            validDisplayDate: currentDay > 0 && currentDay <= days[month]
+          };
         };
-      };
 
-      //
-      return {
-        month: currentMonth,
-        startDay: currentStartDay,
-        row: j,
-        col: _col,
-        dateInfo: _col.map(function (k, m) {
-          var _lastWeekDays = _col.filter(Boolean).length;
-          return _getDateShow(k, m - _lastWeekDays, currentStartDay, currentMonth);
-        }),
-        weekDisplay: _col.map(function (k, m) {
-          return WEEK[m];
-        }),
-        week: _col.map(function (k, m) {
-          return m;
-        })
-      };
-    });
+        //
+        return {
+          month: currentMonth,
+          startDay: currentStartDay,
+          row: j,
+          col: _col,
+          dateInfo: _col.map(function (k, m) {
+            var _lastWeekDays = _col.filter(Boolean).length;
+            return _getDateShow(k, m - _lastWeekDays, currentStartDay, currentMonth);
+          }),
+          weekDisplay: _col.map(function (k, m) {
+            return WEEK[m];
+          }),
+          week: _col.map(function (k, m) {
+            return m;
+          })
+        };
+      })
+    };
   };
   function setTodayDate(inputDate) {
     setDay(inputDate.getDate());
@@ -3307,7 +3335,7 @@ var EventCalendar = function EventCalendar(props) {
   }, [date]);
   (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(function () {
     // update events value
-    if (Array.isArray(eventsValue)) setVal(eventsValue);
+    if (Array.isArray(eventsValue)) setOrginalData(eventsValue);
 
     // update current today
     if (typeof customTodayDate === 'string' && customTodayDate !== '' && (0,funda_utils_dist_cjs_date__WEBPACK_IMPORTED_MODULE_1__.isValidDate)(customTodayDate)) {
@@ -3319,17 +3347,17 @@ var EventCalendar = function EventCalendar(props) {
     onListRenderComplete === null || onListRenderComplete === void 0 ? void 0 : onListRenderComplete();
   }, [eventsValue, customTodayDate]);
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-    className: (0,funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_2__.combinedCls)("e-cal-normal__wrapper", calendarWrapperClassName),
+    className: (0,funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_2__.combinedCls)("custom-event-cal__wrapper", calendarWrapperClassName),
     onKeyDown: function onKeyDown(e) {
       onKeyPressed === null || onKeyPressed === void 0 ? void 0 : onKeyPressed(e);
     },
     tabIndex: -1
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-    className: "e-cal-normal__header bg-body-tertiary"
+    className: "custom-event-cal__header bg-body-tertiary"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", {
     tabIndex: -1,
     type: "button",
-    className: "e-cal-normal__btn e-cal-normal__btn--prev",
+    className: "custom-event-cal__btn custom-event-cal__btn--prev",
     onClick: handlePrevChange
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("svg", {
     width: "20px",
@@ -3340,11 +3368,11 @@ var EventCalendar = function EventCalendar(props) {
     d: "M14.2893 5.70708C13.8988 5.31655 13.2657 5.31655 12.8751 5.70708L7.98768 10.5993C7.20729 11.3805 7.2076 12.6463 7.98837 13.427L12.8787 18.3174C13.2693 18.7079 13.9024 18.7079 14.293 18.3174C14.6835 17.9269 14.6835 17.2937 14.293 16.9032L10.1073 12.7175C9.71678 12.327 9.71678 11.6939 10.1073 11.3033L14.2893 7.12129C14.6799 6.73077 14.6799 6.0976 14.2893 5.70708Z",
     fill: "#000"
   }))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-    className: "e-cal-normal__header__btns"
+    className: "custom-event-cal__header__btns"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", {
     tabIndex: -1,
     type: "button",
-    className: "e-cal-normal__btn ".concat(winMonth ? 'active' : ''),
+    className: "custom-event-cal__btn ".concat(winMonth ? 'active' : ''),
     onClick: handleShowWinMonth
   }, MONTHS[month], /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("svg", {
     width: "12px",
@@ -3356,7 +3384,7 @@ var EventCalendar = function EventCalendar(props) {
   }))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", {
     tabIndex: -1,
     type: "button",
-    className: "e-cal-normal__btn ".concat(winYear ? 'active' : ''),
+    className: "custom-event-cal__btn ".concat(winYear ? 'active' : ''),
     onClick: handleShowWinYear
   }, year, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("svg", {
     width: "12px",
@@ -3368,7 +3396,7 @@ var EventCalendar = function EventCalendar(props) {
   })))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", {
     tabIndex: -1,
     type: "button",
-    className: "e-cal-normal__btn e-cal-normal__btn--next",
+    className: "custom-event-cal__btn custom-event-cal__btn--next",
     onClick: handleNextChange
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("svg", {
     width: "20px",
@@ -3379,12 +3407,12 @@ var EventCalendar = function EventCalendar(props) {
     d: "M9.71069 18.2929C10.1012 18.6834 10.7344 18.6834 11.1249 18.2929L16.0123 13.4006C16.7927 12.6195 16.7924 11.3537 16.0117 10.5729L11.1213 5.68254C10.7308 5.29202 10.0976 5.29202 9.70708 5.68254C9.31655 6.07307 9.31655 6.70623 9.70708 7.09676L13.8927 11.2824C14.2833 11.6729 14.2833 12.3061 13.8927 12.6966L9.71069 16.8787C9.32016 17.2692 9.32016 17.9023 9.71069 18.2929Z",
     fill: "#000"
   })))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-    className: "e-cal-normal__body"
+    className: "custom-event-cal__body"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-    className: "e-cal-normal__row"
+    className: "custom-event-cal__row"
   }, WEEK.map(function (s, i) {
     return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: (0,funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_2__.combinedCls)('e-cal-normal__cell e-cal-normal__day e-cal-normal__day--week e-cal-normal__day--disabled bg-secondary-subtle empty', {
+      className: (0,funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_2__.combinedCls)('custom-event-cal__cell custom-event-cal__day custom-event-cal__day--week custom-event-cal__day--disabled bg-secondary-subtle empty', {
         'last-cell': i === WEEK.length - 1
       }),
       key: i,
@@ -3393,11 +3421,11 @@ var EventCalendar = function EventCalendar(props) {
         __html: s
       }
     });
-  })), getCells().map(function (item, j) {
-    var isLastRow = j === getCells().length - 1;
+  })), getCells().list.map(function (item, j) {
+    var isLastRow = j === getCells().list.length - 1;
     return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       key: 'row' + item.row,
-      className: "e-cal-normal__row"
+      className: "custom-event-cal__row"
     }, item.col.map(function (dayIndex, i) {
       var isLastCell = i === item.col.length - 1;
 
@@ -3410,7 +3438,7 @@ var EventCalendar = function EventCalendar(props) {
 
       // helper
       var d = parseFloat(_dateDayShow);
-      var _currentData = val.filter(function (item) {
+      var _currentData = orginalData.filter(function (item) {
         return (0,funda_utils_dist_cjs_date__WEBPACK_IMPORTED_MODULE_1__.getCalendarDate)(item.date) === _dateShow;
       });
       var isInteractive = item.dateInfo[i].validDisplayDate; // The date on which the user interaction can occur, e.g. click, modify
@@ -3425,7 +3453,7 @@ var EventCalendar = function EventCalendar(props) {
         var _items = _currentData[0].list;
         return _items.map(function (cellItem, cellItemIndex) {
           return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-            className: (0,funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_2__.combinedCls)("e-cal-normal__cell-item e-cal-normal__cell-item-".concat(cellItemIndex), {
+            className: (0,funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_2__.combinedCls)("custom-event-cal__cell-item custom-event-cal__cell-item-".concat(cellItemIndex), {
               'first': cellItemIndex === 0,
               'last': cellItemIndex === _items.length - 1
             }),
@@ -3454,13 +3482,13 @@ var EventCalendar = function EventCalendar(props) {
               }
             }
           }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-            className: "e-cal-normal__day__event",
+            className: "custom-event-cal__day__event",
             style: typeof cellItem !== 'undefined' && cellItem.eventStyles !== 'undefined' ? cellItem.eventStyles : {},
             dangerouslySetInnerHTML: typeof cellItem.data === 'string' ? {
               __html: cellItem.data
             } : undefined
           }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().isValidElement(cellItem.data) ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, cellItem.data) : null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-            className: "e-cal-normal__day__eventdel ".concat(cellCloseBtnClassName || '')
+            className: "custom-event-cal__day__eventdel ".concat(cellCloseBtnClassName || '')
           }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
             href: "#",
             tabIndex: -1,
@@ -3495,7 +3523,7 @@ var EventCalendar = function EventCalendar(props) {
         });
       };
       return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-        className: (0,funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_2__.combinedCls)('e-cal-normal__cell e-cal-normal__day', {
+        className: (0,funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_2__.combinedCls)('custom-event-cal__cell custom-event-cal__day', {
           'empty': !isInteractive,
           'today': d === now.getDate(),
           'selected': d === day,
@@ -3517,6 +3545,10 @@ var EventCalendar = function EventCalendar(props) {
             onChangeDate === null || onChangeDate === void 0 ? void 0 : onChangeDate(e, null);
           }
         },
+        onDoubleClick: function onDoubleClick(e) {
+          //
+          onCellDoubleClick === null || onCellDoubleClick === void 0 ? void 0 : onCellDoubleClick(e);
+        },
         onMouseLeave: function onMouseLeave(e) {
           onCellMouseLeave === null || onCellMouseLeave === void 0 ? void 0 : onCellMouseLeave(e);
         },
@@ -3528,7 +3560,7 @@ var EventCalendar = function EventCalendar(props) {
           'disabled': !isInteractive
         })
       }, d), _eventContent(), isForward || isBack ? null : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-        className: "e-cal-normal__day__eventadd ".concat(cellAddBtnClassName || '')
+        className: "custom-event-cal__day__eventadd ".concat(cellAddBtnClassName || '')
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
         href: "#",
         tabIndex: -1,
@@ -3564,37 +3596,37 @@ var EventCalendar = function EventCalendar(props) {
       }, _addBtn()))));
     }));
   })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-    className: "e-cal-normal__month-wrapper shadow p-3 mb-5 bg-body-tertiary rounded ".concat(winMonth ? 'active' : '')
+    className: "custom-event-cal__month-wrapper shadow p-3 mb-5 bg-body-tertiary rounded ".concat(winMonth ? 'active' : '')
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-    className: "e-cal-normal__month-container"
+    className: "custom-event-cal__month-container"
   }, MONTHS_FULL.map(function (month, index) {
     return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       "data-month": (0,funda_utils_dist_cjs_date__WEBPACK_IMPORTED_MODULE_1__.padZero)(index + 1),
-      className: "e-cal-normal__month ".concat(selectedMonth === index ? ' selected' : ''),
+      className: "custom-event-cal__month ".concat(selectedMonth === index ? ' selected' : ''),
       key: month + index,
       onClick: function onClick() {
         handleMonthChange(index);
       }
     }, month);
   }))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-    className: "e-cal-normal__year-wrapper shadow p-3 mb-5 bg-body-tertiary rounded ".concat(winYear ? 'active' : '')
+    className: "custom-event-cal__year-wrapper shadow p-3 mb-5 bg-body-tertiary rounded ".concat(winYear ? 'active' : '')
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-    className: "e-cal-normal__year-container bg-body-tertiary"
+    className: "custom-event-cal__year-container bg-body-tertiary"
   }, yearsArray.map(function (year, index) {
     return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       "data-year": year,
-      className: "e-cal-normal__year ".concat(selectedYear === year ? ' selected' : ''),
+      className: "custom-event-cal__year ".concat(selectedYear === year ? ' selected' : ''),
       key: year + index,
       onClick: function onClick() {
         handleYearChange(year);
       }
     }, year);
   }))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-    className: "e-cal-normal__today-wrapper p-2 bg-body-tertiary"
+    className: "custom-event-cal__today-wrapper p-2 bg-body-tertiary"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", {
     tabIndex: -1,
     type: "button",
-    className: "e-cal-normal__btn e-cal-normal__btn--today",
+    className: "custom-event-cal__btn custom-event-cal__btn--today",
     onClick: handleTodayChange
   }, langToday || 'Today'))), EVENTS_ENABLED ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((funda_modaldialog__WEBPACK_IMPORTED_MODULE_3___default()), {
     show: showDelete,
