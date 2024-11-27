@@ -1,4 +1,10 @@
 /**
+ * Gets the relative upside of the text
+ * @param {Element} el    - A DOM node containing one selector to match against.
+ * @returns {Number}      - Returns a pure number.
+ */
+declare function getTextTop(el: HTMLElement): number;
+/**
 * Get the actual value with user specific methed
 * it can be 'width', 'height', 'outerWidth', 'outerHeight'
 * @private
@@ -18,4 +24,4 @@ declare function actualPropertyValue(el: any, prop: string, config?: any): any;
  * @returns {Number}
  */
 declare function getTextWidth(input: HTMLInputElement, fauxContainer: HTMLSpanElement, rawTextContainer: HTMLElement): any;
-export { actualPropertyValue, getTextWidth };
+export { getTextTop, actualPropertyValue, getTextWidth };

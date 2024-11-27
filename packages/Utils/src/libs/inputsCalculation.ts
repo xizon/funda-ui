@@ -1,4 +1,21 @@
 
+
+/**
+ * Gets the relative upside of the text
+ * @param {Element} el    - A DOM node containing one selector to match against.
+ * @returns {Number}      - Returns a pure number.
+ */
+function getTextTop(el: HTMLElement) {
+    const styles = window.getComputedStyle(el);
+    const fontSize = parseFloat(styles.fontSize);
+    const lineHeight = parseFloat(styles.lineHeight) || fontSize;
+    const paddingTop = parseFloat(styles.paddingTop);
+    const borderWidth = parseFloat(styles.borderWidth);
+
+    const textTop = paddingTop + (lineHeight - fontSize) / 2 - borderWidth*2;
+    return textTop;
+}
+
 /**
 * Get the actual value with user specific methed
 * it can be 'width', 'height', 'outerWidth', 'outerHeight'
@@ -134,6 +151,7 @@ function getTextWidth(input: HTMLInputElement, fauxContainer: HTMLSpanElement, r
 
 
 export {
+    getTextTop,
     actualPropertyValue,
     getTextWidth
 };

@@ -3,8 +3,9 @@ import React, { useState, useEffect, useRef, forwardRef, ChangeEvent, Compositio
 
 import useComId from 'funda-utils/dist/cjs/useComId';
 import { clsWrite, combinedCls } from 'funda-utils/dist/cjs/cls';
-import { actualPropertyValue } from 'funda-utils/dist/cjs/inputsCalculation';
+import { actualPropertyValue, getTextTop } from 'funda-utils/dist/cjs/inputsCalculation';
 import useDebounce from 'funda-utils/dist/cjs/useDebounce';
+
 
 
 export type InputProps = {
@@ -128,9 +129,6 @@ const Input = forwardRef((props: InputProps, externalRef: any) => {
     const [onComposition, setOnComposition] = useState<boolean>(false);
     const [changedVal, setChangedVal] = useState<string>(value || '');
 
-    const isNotPureWhitespace =(str: string): boolean  =>{
-        return str.trim().length > 0;
-    };
 
     //================================================================
     // AI Predict
@@ -139,6 +137,12 @@ const Input = forwardRef((props: InputProps, externalRef: any) => {
     const [tempMatchedSuggestion, setTempMatchedSuggestion] = useState<string[]>([]);
     const [textWidth, setTextWidth] = useState<number>(0);
     const aiInputRef = useRef<any>(null);
+    const originInputComputedStyle = useRef<Record<string, any>>({
+        fontSize: 16,
+        fontFamily: 'inherit',
+        letterSpacing: 'normal',
+        textTop: 10
+    });
     const [hasErr, setHasErr] = useState<boolean>(false);
     const currentSuggestionIndex = useRef<number>(0);
 
@@ -197,8 +201,7 @@ const Input = forwardRef((props: InputProps, externalRef: any) => {
         if (valRef.current) {
             const canvas = document.createElement('canvas');
             const context: any = canvas.getContext('2d');
-            const computedStyle = window.getComputedStyle(valRef.current);
-            context.font = computedStyle.font;
+            context.font = `${originInputComputedStyle.current.fontSize}px ${originInputComputedStyle.current.fontFamily}`;
             return context.measureText(text).width;
         }
         return 0;
@@ -396,7 +399,7 @@ const Input = forwardRef((props: InputProps, externalRef: any) => {
 
         // AI Predict
         //----
-        if (aiPredict && suggestions.length > 0) {
+        if (aiPredict && currentSuggestion !== '') {
             const keyBindings: Array<string[]> = aiPredictConfirmKey;
             // The parameter 'registerKeyEvents' is an array, and each element is an object
             // eg. { keys: ["Control", "S"], action: () => { console.log("Ctrl+S"); } }
@@ -463,11 +466,15 @@ const Input = forwardRef((props: InputProps, externalRef: any) => {
 
         // AI Predict initalization
         //--------------
-        if (aiPredict && valRef.current !== null && aiInputRef.current !== null) {
-            aiInputRef.current.style.fontSize = actualPropertyValue(valRef.current as HTMLInputElement, 'fontSize');
-            aiInputRef.current.style.fontFamily = actualPropertyValue(valRef.current as HTMLInputElement, 'fontFamily');
-            aiInputRef.current.style.letterSpacing = actualPropertyValue(valRef.current as HTMLInputElement, 'letterSpacing');
+        if (aiPredict && valRef.current !== null) {
+            originInputComputedStyle.current = {
+                fontSize: actualPropertyValue(valRef.current as HTMLInputElement, 'fontSize'),
+                fontFamily: actualPropertyValue(valRef.current as HTMLInputElement, 'fontFamily'),
+                letterSpacing: actualPropertyValue(valRef.current as HTMLInputElement, 'letterSpacing'),
+                textTop: getTextTop(valRef.current)
+            };
         }
+
 
     }, []);
 
@@ -488,176 +495,100 @@ const Input = forwardRef((props: InputProps, externalRef: any) => {
                 )}>
                     {propExist(iconLeft) ? <><span className={clsWrite(controlGroupTextClassName, 'input-group-text')}>{iconLeft}</span></> : null}
 
-                    {appendControl && (propExist(iconLeft)) ? <>
-                        <div className="input-group-control-container w-100 position-relative">
+                    <div className="input-group-control-container flex-fill position-relative">
+                        <input
+                            ref={(node) => {
+                                valRef.current = node;
+                                if (typeof externalRef === 'function') {
+                                    externalRef(node);
+                                } else if (externalRef) {
+                                    externalRef.current = node;
+                                }
+                            }}
 
-                            <input
-                                ref={(node) => {
-                                    valRef.current = node;
-                                    if (typeof externalRef === 'function') {
-                                        externalRef(node);
-                                    } else if (externalRef) {
-                                        externalRef.current = node;
-                                    }
-                                }}
-
-                                tabIndex={tabIndex || 0}
-                                type={typeRes}
-                                className={combinedCls(
-                                    propExist(iconLeft) ? 'rounded-start-0' : 'rounded',
-                                    clsWrite(controlClassName, 'form-control ')
-                                )}
-                                id={idRes}
-                                name={name}
-                                step={step || null}
-                                min={min || null}
-                                max={max || null}
-                                src={src || null}
-                                size={size || null}
-                                alt={alt || null}
-                                inputMode={inputMode || 'text'}
-                                pattern={pattern || null}
-                                placeholder={placeholder || ''}
-                                defaultValue={defaultValue}
-                                value={changedVal}
-                                minLength={minLength || null}
-                                maxLength={maxLength || null}
-                                autoComplete={typeof autoComplete === 'undefined' ? 'on' : autoComplete}
-                                autoCapitalize={typeof autoCapitalize === 'undefined' ? 'off' : autoCapitalize}
-                                spellCheck={typeof spellCheck === 'undefined' ? false : spellCheck}
-                                onFocus={handleFocus}
-                                onBlur={handleBlur}
-                                onChange={(e: any) => {
-                                    handleChange(e);
-
-                                    // AI Predict
-                                    if (aiPredict) {
-                                        handleChangeSuggestionsFetchSafe(e, e.target.value);
-                                    }
-                                }}
-                                onKeyDown={handleKeyPressed}
-                                onCompositionStart={handleComposition}
-                                onCompositionUpdate={handleComposition}
-                                onCompositionEnd={handleComposition}
-                                disabled={disabled || null}
-                                required={required || null}
-                                readOnly={readOnly || null}
-                                style={style}
-                                {...attributes}
-                            />
-                            {appendControl || ''}
-                            {propExist(units) ? <><span className={clsWrite(controlGroupTextClassName, 'input-group-text')}>{units}</span></> : null}
-                            {propExist(iconRight) ? <><span className={clsWrite(controlGroupTextClassName, 'input-group-text')}>{iconRight}</span></> : null}
-
-
-                            {/* AI Predict */}
-                            {aiPredict && remainingText && (
-                                <div
-                                    ref={aiInputRef}
-                                    className="position-absolute z-1"
-                                    style={{
-                                        left: `${8 + textWidth}px`,
-                                        top: '8px',
-                                        color: `rgba(${aiPredictRemainingTextRGB[0]}, ${aiPredictRemainingTextRGB[1]}, ${aiPredictRemainingTextRGB[2]}, ${calculateOpacity()})`,
-                                        pointerEvents: 'none'
-                                    }}
-                                >
-                                    {remainingText}
-                                </div>
+                            tabIndex={tabIndex || 0}
+                            type={typeRes}
+                            className={combinedCls(
+                                clsWrite(controlClassName, 'form-control'),
+                                controlExClassName,
+                                {
+                                    'rounded': !propExist(iconLeft) && !propExist(iconRight) && !propExist(units),
+                                    'rounded-start-0': propExist(iconLeft),
+                                    'rounded-end-0': propExist(iconRight) || propExist(units)
+                                }
                             )}
+                            id={idRes}
+                            name={name}
+                            step={step || null}
+                            min={min || null}
+                            max={max || null}
+                            src={src || null}
+                            size={size || null}
+                            alt={alt || null}
+                            inputMode={inputMode || 'text'}
+                            pattern={pattern || null}
+                            placeholder={placeholder || ''}
+                            value={changedVal}
+                            minLength={minLength || null}
+                            maxLength={maxLength || null}
+                            autoComplete={typeof autoComplete === 'undefined' ? 'on' : autoComplete}
+                            autoCapitalize={typeof autoCapitalize === 'undefined' ? 'off' : autoCapitalize}
+                            spellCheck={typeof spellCheck === 'undefined' ? false : spellCheck}
+                            onFocus={handleFocus}
+                            onBlur={handleBlur}
+                            onChange={(e: any) => {
+                                handleChange(e);
 
-                        </div>
+                                // AI Predict
+                                if (aiPredict) {
+                                    handleChangeSuggestionsFetchSafe(e, e.target.value);
+                                }
 
-                    </> : <>
-
-                        <div className="position-relative w-100">
-                            <input
-                                ref={(node) => {
-                                    valRef.current = node;
-                                    if (typeof externalRef === 'function') {
-                                        externalRef(node);
-                                    } else if (externalRef) {
-                                        externalRef.current = node;
-                                    }
+                            }}
+                            onKeyDown={handleKeyPressed}
+                            onCompositionStart={handleComposition}
+                            onCompositionUpdate={handleComposition}
+                            onCompositionEnd={handleComposition}
+                            disabled={disabled || null}
+                            required={required || null}
+                            readOnly={readOnly || null}
+                            style={style}
+                            {...attributes}
+                        />
+                        
+                        {appendControl || ''}
+    
+                        {/* AI Predict */}
+                        {aiPredict && remainingText && (
+                            <div
+                                ref={aiInputRef}
+                                className="position-absolute z-1"
+                                style={{
+                                    left: `${originInputComputedStyle.current.fontSize + textWidth}px`,
+                                    top: originInputComputedStyle.current.textTop + 'px',
+                                    color: `rgba(${aiPredictRemainingTextRGB[0]}, ${aiPredictRemainingTextRGB[1]}, ${aiPredictRemainingTextRGB[2]}, ${calculateOpacity()})`,
+                                    pointerEvents: 'none',
+                                    fontSize: originInputComputedStyle.current.fontSize + 'px',
+                                    fontFamily: originInputComputedStyle.current.fontFamily,
+                                    letterSpacing: originInputComputedStyle.current.letterSpacing
                                 }}
+                            >
+                                {remainingText}
+                            </div>
+                        )}
 
-                                tabIndex={tabIndex || 0}
-                                type={typeRes}
-                                className={combinedCls(
-                                    clsWrite(controlClassName, 'form-control'),
-                                    controlExClassName,
-                                    {
-                                        'rounded': !propExist(iconLeft) && !propExist(iconRight) && !propExist(units)
-                                    }
-                                )}
-                                id={idRes}
-                                name={name}
-                                step={step || null}
-                                min={min || null}
-                                max={max || null}
-                                src={src || null}
-                                size={size || null}
-                                alt={alt || null}
-                                inputMode={inputMode || 'text'}
-                                pattern={pattern || null}
-                                placeholder={placeholder || ''}
-                                value={changedVal}
-                                minLength={minLength || null}
-                                maxLength={maxLength || null}
-                                autoComplete={typeof autoComplete === 'undefined' ? 'on' : autoComplete}
-                                autoCapitalize={typeof autoCapitalize === 'undefined' ? 'off' : autoCapitalize}
-                                spellCheck={typeof spellCheck === 'undefined' ? false : spellCheck}
-                                onFocus={handleFocus}
-                                onBlur={handleBlur}
-                                onChange={(e: any) => {
-                                    handleChange(e);
+                        {/* Required marking */}
+                        {required ? <>{requiredLabel || requiredLabel === '' ? requiredLabel : <span className="position-absolute end-0 top-0 my-2 mx-2"><span className="text-danger">*</span></span>}</> : ''}
 
-                                    // AI Predict
-                                    if (aiPredict) {
-                                        handleChangeSuggestionsFetchSafe(e, e.target.value);
-                                    }
+                    </div>
 
-                                }}
-                                onKeyDown={handleKeyPressed}
-                                onCompositionStart={handleComposition}
-                                onCompositionUpdate={handleComposition}
-                                onCompositionEnd={handleComposition}
-                                disabled={disabled || null}
-                                required={required || null}
-                                readOnly={readOnly || null}
-                                style={style}
-                                {...attributes}
-                            />
-                            {appendControl || ''}
-                            {propExist(units) ? <><span className={clsWrite(controlGroupTextClassName, 'input-group-text')}>{units}</span></> : null}
-                            {propExist(iconRight) ? <><span className={clsWrite(controlGroupTextClassName, 'input-group-text')}>{iconRight}</span></> : null}
-
-                            {/* AI Predict */}
-                            {aiPredict && remainingText && (
-                                <div
-                                    ref={aiInputRef}
-                                    className="position-absolute z-1"
-                                    style={{
-                                        left: `${8 + textWidth}px`,
-                                        top: '8px',
-                                        color: `rgba(${aiPredictRemainingTextRGB[0]}, ${aiPredictRemainingTextRGB[1]}, ${aiPredictRemainingTextRGB[2]}, ${calculateOpacity()})`,
-                                        pointerEvents: 'none'
-                                    }}
-                                >
-                                    {remainingText}
-                                </div>
-                            )}
-
-
-                        </div>
-
-
-                    </>}
+                    
+                    {propExist(units) ? <><span className={clsWrite(controlGroupTextClassName, 'input-group-text')}>{units}</span></> : null}
+                    {propExist(iconRight) ? <><span className={clsWrite(controlGroupTextClassName, 'input-group-text')}>{iconRight}</span></> : null}
 
 
                 </div>
-                {required ? <>{requiredLabel || requiredLabel === '' ? requiredLabel : <span className="position-absolute end-0 top-0 my-2 mx-2"><span className="text-danger">*</span></span>}</> : ''}
-
+                
 
 
             </div>

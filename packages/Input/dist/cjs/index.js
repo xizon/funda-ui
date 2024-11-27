@@ -304,12 +304,31 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
           return (/* binding */_actualPropertyValue
           );
         },
+        /* harmony export */"getTextTop": function getTextTop() {
+          return (/* binding */_getTextTop
+          );
+        },
         /* harmony export */"getTextWidth": function getTextWidth() {
           return (/* binding */_getTextWidth
           );
         }
         /* harmony export */
       });
+      /**
+       * Gets the relative upside of the text
+       * @param {Element} el    - A DOM node containing one selector to match against.
+       * @returns {Number}      - Returns a pure number.
+       */
+      function _getTextTop(el) {
+        var styles = window.getComputedStyle(el);
+        var fontSize = parseFloat(styles.fontSize);
+        var lineHeight = parseFloat(styles.lineHeight) || fontSize;
+        var paddingTop = parseFloat(styles.paddingTop);
+        var borderWidth = parseFloat(styles.borderWidth);
+        var textTop = paddingTop + (lineHeight - fontSize) / 2 - borderWidth * 2;
+        return textTop;
+      }
+
       /**
       * Get the actual value with user specific methed
       * it can be 'width', 'height', 'outerWidth', 'outerHeight'
@@ -992,9 +1011,6 @@ var Input = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(funct
     _useState4 = _slicedToArray(_useState3, 2),
     changedVal = _useState4[0],
     setChangedVal = _useState4[1];
-  var isNotPureWhitespace = function isNotPureWhitespace(str) {
-    return str.trim().length > 0;
-  };
 
   //================================================================
   // AI Predict
@@ -1012,6 +1028,12 @@ var Input = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(funct
     textWidth = _useState10[0],
     setTextWidth = _useState10[1];
   var aiInputRef = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(null);
+  var originInputComputedStyle = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)({
+    fontSize: 16,
+    fontFamily: 'inherit',
+    letterSpacing: 'normal',
+    textTop: 10
+  });
   var _useState11 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(false),
     _useState12 = _slicedToArray(_useState11, 2),
     hasErr = _useState12[0],
@@ -1082,8 +1104,7 @@ var Input = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(funct
     if (valRef.current) {
       var canvas = document.createElement('canvas');
       var context = canvas.getContext('2d');
-      var computedStyle = window.getComputedStyle(valRef.current);
-      context.font = computedStyle.font;
+      context.font = "".concat(originInputComputedStyle.current.fontSize, "px ").concat(originInputComputedStyle.current.fontFamily);
       return context.measureText(text).width;
     }
     return 0;
@@ -1257,7 +1278,7 @@ var Input = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(funct
 
     // AI Predict
     //----
-    if (aiPredict && suggestions.length > 0) {
+    if (aiPredict && currentSuggestion !== '') {
       var keyBindings = aiPredictConfirmKey;
       // The parameter 'registerKeyEvents' is an array, and each element is an object
       // eg. { keys: ["Control", "S"], action: () => { console.log("Ctrl+S"); } }
@@ -1305,10 +1326,13 @@ var Input = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(funct
 
     // AI Predict initalization
     //--------------
-    if (aiPredict && valRef.current !== null && aiInputRef.current !== null) {
-      aiInputRef.current.style.fontSize = (0,funda_utils_dist_cjs_inputsCalculation__WEBPACK_IMPORTED_MODULE_3__.actualPropertyValue)(valRef.current, 'fontSize');
-      aiInputRef.current.style.fontFamily = (0,funda_utils_dist_cjs_inputsCalculation__WEBPACK_IMPORTED_MODULE_3__.actualPropertyValue)(valRef.current, 'fontFamily');
-      aiInputRef.current.style.letterSpacing = (0,funda_utils_dist_cjs_inputsCalculation__WEBPACK_IMPORTED_MODULE_3__.actualPropertyValue)(valRef.current, 'letterSpacing');
+    if (aiPredict && valRef.current !== null) {
+      originInputComputedStyle.current = {
+        fontSize: (0,funda_utils_dist_cjs_inputsCalculation__WEBPACK_IMPORTED_MODULE_3__.actualPropertyValue)(valRef.current, 'fontSize'),
+        fontFamily: (0,funda_utils_dist_cjs_inputsCalculation__WEBPACK_IMPORTED_MODULE_3__.actualPropertyValue)(valRef.current, 'fontFamily'),
+        letterSpacing: (0,funda_utils_dist_cjs_inputsCalculation__WEBPACK_IMPORTED_MODULE_3__.actualPropertyValue)(valRef.current, 'letterSpacing'),
+        textTop: (0,funda_utils_dist_cjs_inputsCalculation__WEBPACK_IMPORTED_MODULE_3__.getTextTop)(valRef.current)
+      };
     }
   }, []);
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
@@ -1330,71 +1354,8 @@ var Input = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(funct
     })
   }, propExist(iconLeft) ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
     className: (0,funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_2__.clsWrite)(controlGroupTextClassName, 'input-group-text')
-  }, iconLeft)) : null, appendControl && propExist(iconLeft) ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-    className: "input-group-control-container w-100 position-relative"
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("input", _extends({
-    ref: function ref(node) {
-      valRef.current = node;
-      if (typeof externalRef === 'function') {
-        externalRef(node);
-      } else if (externalRef) {
-        externalRef.current = node;
-      }
-    },
-    tabIndex: tabIndex || 0,
-    type: typeRes,
-    className: (0,funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_2__.combinedCls)(propExist(iconLeft) ? 'rounded-start-0' : 'rounded', (0,funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_2__.clsWrite)(controlClassName, 'form-control ')),
-    id: idRes,
-    name: name,
-    step: step || null,
-    min: min || null,
-    max: max || null,
-    src: src || null,
-    size: size || null,
-    alt: alt || null,
-    inputMode: inputMode || 'text',
-    pattern: pattern || null,
-    placeholder: placeholder || '',
-    defaultValue: defaultValue,
-    value: changedVal,
-    minLength: minLength || null,
-    maxLength: maxLength || null,
-    autoComplete: typeof autoComplete === 'undefined' ? 'on' : autoComplete,
-    autoCapitalize: typeof autoCapitalize === 'undefined' ? 'off' : autoCapitalize,
-    spellCheck: typeof spellCheck === 'undefined' ? false : spellCheck,
-    onFocus: handleFocus,
-    onBlur: handleBlur,
-    onChange: function onChange(e) {
-      handleChange(e);
-
-      // AI Predict
-      if (aiPredict) {
-        handleChangeSuggestionsFetchSafe(e, e.target.value);
-      }
-    },
-    onKeyDown: handleKeyPressed,
-    onCompositionStart: handleComposition,
-    onCompositionUpdate: handleComposition,
-    onCompositionEnd: handleComposition,
-    disabled: disabled || null,
-    required: required || null,
-    readOnly: readOnly || null,
-    style: style
-  }, attributes)), appendControl || '', propExist(units) ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
-    className: (0,funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_2__.clsWrite)(controlGroupTextClassName, 'input-group-text')
-  }, units)) : null, propExist(iconRight) ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
-    className: (0,funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_2__.clsWrite)(controlGroupTextClassName, 'input-group-text')
-  }, iconRight)) : null, aiPredict && remainingText && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-    ref: aiInputRef,
-    className: "position-absolute z-1",
-    style: {
-      left: "".concat(8 + textWidth, "px"),
-      top: '8px',
-      color: "rgba(".concat(aiPredictRemainingTextRGB[0], ", ").concat(aiPredictRemainingTextRGB[1], ", ").concat(aiPredictRemainingTextRGB[2], ", ").concat(calculateOpacity(), ")"),
-      pointerEvents: 'none'
-    }
-  }, remainingText))) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-    className: "position-relative w-100"
+  }, iconLeft)) : null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+    className: "input-group-control-container flex-fill position-relative"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("input", _extends({
     ref: function ref(node) {
       valRef.current = node;
@@ -1407,7 +1368,9 @@ var Input = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(funct
     tabIndex: tabIndex || 0,
     type: typeRes,
     className: (0,funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_2__.combinedCls)((0,funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_2__.clsWrite)(controlClassName, 'form-control'), controlExClassName, {
-      'rounded': !propExist(iconLeft) && !propExist(iconRight) && !propExist(units)
+      'rounded': !propExist(iconLeft) && !propExist(iconRight) && !propExist(units),
+      'rounded-start-0': propExist(iconLeft),
+      'rounded-end-0': propExist(iconRight) || propExist(units)
     }),
     id: idRes,
     name: name,
@@ -1444,24 +1407,27 @@ var Input = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(funct
     required: required || null,
     readOnly: readOnly || null,
     style: style
-  }, attributes)), appendControl || '', propExist(units) ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
-    className: (0,funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_2__.clsWrite)(controlGroupTextClassName, 'input-group-text')
-  }, units)) : null, propExist(iconRight) ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
-    className: (0,funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_2__.clsWrite)(controlGroupTextClassName, 'input-group-text')
-  }, iconRight)) : null, aiPredict && remainingText && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+  }, attributes)), appendControl || '', aiPredict && remainingText && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
     ref: aiInputRef,
     className: "position-absolute z-1",
     style: {
-      left: "".concat(8 + textWidth, "px"),
-      top: '8px',
+      left: "".concat(originInputComputedStyle.current.fontSize + textWidth, "px"),
+      top: originInputComputedStyle.current.textTop + 'px',
       color: "rgba(".concat(aiPredictRemainingTextRGB[0], ", ").concat(aiPredictRemainingTextRGB[1], ", ").concat(aiPredictRemainingTextRGB[2], ", ").concat(calculateOpacity(), ")"),
-      pointerEvents: 'none'
+      pointerEvents: 'none',
+      fontSize: originInputComputedStyle.current.fontSize + 'px',
+      fontFamily: originInputComputedStyle.current.fontFamily,
+      letterSpacing: originInputComputedStyle.current.letterSpacing
     }
-  }, remainingText)))), required ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, requiredLabel || requiredLabel === '' ? requiredLabel : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
+  }, remainingText), required ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, requiredLabel || requiredLabel === '' ? requiredLabel : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
     className: "position-absolute end-0 top-0 my-2 mx-2"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
     className: "text-danger"
-  }, "*"))) : ''));
+  }, "*"))) : ''), propExist(units) ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
+    className: (0,funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_2__.clsWrite)(controlGroupTextClassName, 'input-group-text')
+  }, units)) : null, propExist(iconRight) ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
+    className: (0,funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_2__.clsWrite)(controlGroupTextClassName, 'input-group-text')
+  }, iconRight)) : null)));
 });
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Input);
 })();

@@ -1626,12 +1626,31 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
           return (/* binding */_actualPropertyValue
           );
         },
+        /* harmony export */"getTextTop": function getTextTop() {
+          return (/* binding */_getTextTop
+          );
+        },
         /* harmony export */"getTextWidth": function getTextWidth() {
           return (/* binding */_getTextWidth
           );
         }
         /* harmony export */
       });
+      /**
+       * Gets the relative upside of the text
+       * @param {Element} el    - A DOM node containing one selector to match against.
+       * @returns {Number}      - Returns a pure number.
+       */
+      function _getTextTop(el) {
+        var styles = window.getComputedStyle(el);
+        var fontSize = parseFloat(styles.fontSize);
+        var lineHeight = parseFloat(styles.lineHeight) || fontSize;
+        var paddingTop = parseFloat(styles.paddingTop);
+        var borderWidth = parseFloat(styles.borderWidth);
+        var textTop = paddingTop + (lineHeight - fontSize) / 2 - borderWidth * 2;
+        return textTop;
+      }
+
       /**
       * Get the actual value with user specific methed
       * it can be 'width', 'height', 'outerWidth', 'outerHeight'

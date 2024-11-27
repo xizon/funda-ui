@@ -1,12 +1,12 @@
 import React, { useState, useEffect, useRef, forwardRef, KeyboardEvent, useImperativeHandle } from 'react';
 
 
-
 import useComId from 'funda-utils/dist/cjs/useComId';
 import useAutosizeTextArea from 'funda-utils/dist/cjs/useAutosizeTextArea';
 import { clsWrite, combinedCls } from 'funda-utils/dist/cjs/cls';
-import { actualPropertyValue } from 'funda-utils/dist/cjs/inputsCalculation';
+import { actualPropertyValue, getTextTop } from 'funda-utils/dist/cjs/inputsCalculation';
 import useDebounce from 'funda-utils/dist/cjs/useDebounce';
+
 
 export type TextareaProps = {
     contentRef?: React.ForwardedRef<any>; // could use "Array" on contentRef.current, such as contentRef.current[0], contentRef.current[1]
@@ -107,9 +107,6 @@ const Textarea = forwardRef((props: TextareaProps, externalRef: any) => {
     const valRef = useRef<any>(null);
     const [changedVal, setChangedVal] = useState<string>(value || '');
 
-    const isNotPureWhitespace =(str: string): boolean  =>{
-        return str.trim().length > 0;
-    };
 
     //================================================================
     // AI Predict
@@ -118,9 +115,16 @@ const Textarea = forwardRef((props: TextareaProps, externalRef: any) => {
     const [tempMatchedSuggestion, setTempMatchedSuggestion] = useState<string[]>([]);
     const [textWidth, setTextWidth] = useState<number>(0);
     const aiInputRef = useRef<any>(null);
+    const originInputComputedStyle = useRef<Record<string, any>>({
+        fontSize: 16,
+        fontFamily: 'inherit',
+        letterSpacing: 'normal',
+        textTop: 10
+    });
     const [hasErr, setHasErr] = useState<boolean>(false);
     const currentSuggestionIndex = useRef<number>(0);
 
+    
     
     // A list of suggestions
     //----------------
@@ -154,7 +158,6 @@ const Textarea = forwardRef((props: TextareaProps, externalRef: any) => {
                 _ORGIN_DATA = [];
             }
 
-    
             //
             setSuggestions(_ORGIN_DATA);
         
@@ -174,12 +177,12 @@ const Textarea = forwardRef((props: TextareaProps, externalRef: any) => {
         if (valRef.current) {
             const canvas = document.createElement('canvas');
             const context: any = canvas.getContext('2d');
-            const computedStyle = window.getComputedStyle(valRef.current);
-            context.font = computedStyle.font;
+            context.font = `${originInputComputedStyle.current.fontSize}px ${originInputComputedStyle.current.fontFamily}`;
             return context.measureText(text).width;
         }
         return 0;
     };
+
 
 
     // Get the rest of the suggested text
@@ -299,6 +302,12 @@ const Textarea = forwardRef((props: TextareaProps, externalRef: any) => {
             onResize?.(valRef.current, res);
         }
     });
+    
+
+    const propExist = (p: any) => {
+        return typeof p !== 'undefined' && p !== null && p !== '';
+    };
+
 
     function handleFocus(event: any) {
         const el = event.target;
@@ -308,6 +317,7 @@ const Textarea = forwardRef((props: TextareaProps, externalRef: any) => {
         onFocus?.(event, valRef.current);     
     }
 
+    
     function handleChange(event: any) {
         const val = event.target.value;
 
@@ -366,7 +376,7 @@ const Textarea = forwardRef((props: TextareaProps, externalRef: any) => {
 
         // AI Predict
         //----
-        if (aiPredict && suggestions.length > 0) {
+        if (aiPredict && currentSuggestion !== '') {
             const keyBindings: Array<string[]> = aiPredictConfirmKey;
             // The parameter 'registerKeyEvents' is an array, and each element is an object
             // eg. { keys: ["Control", "S"], action: () => { console.log("Ctrl+S"); } }
@@ -455,15 +465,17 @@ const Textarea = forwardRef((props: TextareaProps, externalRef: any) => {
             }
         }
 
-
-
         // AI Predict initalization
         //--------------
-        if (aiPredict && valRef.current !== null && aiInputRef.current !== null) {
-            aiInputRef.current.style.fontSize = actualPropertyValue(valRef.current as HTMLInputElement, 'fontSize');
-            aiInputRef.current.style.fontFamily = actualPropertyValue(valRef.current as HTMLInputElement, 'fontFamily');
-            aiInputRef.current.style.letterSpacing = actualPropertyValue(valRef.current as HTMLInputElement, 'letterSpacing');
+        if (aiPredict && valRef.current !== null) {
+            originInputComputedStyle.current = {
+                fontSize: actualPropertyValue(valRef.current as HTMLInputElement, 'fontSize'),
+                fontFamily: actualPropertyValue(valRef.current as HTMLInputElement, 'fontFamily'),
+                letterSpacing: actualPropertyValue(valRef.current as HTMLInputElement, 'letterSpacing'),
+                textTop: getTextTop(valRef.current)
+            };
         }
+
 
 
     }, []);
@@ -474,11 +486,19 @@ const Textarea = forwardRef((props: TextareaProps, externalRef: any) => {
             <div className={clsWrite(wrapperClassName, 'mb-3 position-relative')} ref={rootRef}>
                 {label ? <>{typeof label === 'string' ? <label htmlFor={idRes} className="form-label" dangerouslySetInnerHTML={{__html: `${label}`}}></label> : <label htmlFor={idRes} className="form-label">{label}</label>}</> : null}
 
-                <div className={clsWrite(controlGroupWrapperClassName, 'input-group')}>
-                    {typeof iconLeft !== 'undefined' && iconLeft !== null && iconLeft !== '' ? <><span className={clsWrite(controlGroupTextClassName, 'input-group-text')}>{iconLeft}</span></>: null}
-                    
-                    <div className="position-relative w-100">
-                        <textarea  
+
+                <div className={combinedCls(
+                    'position-relative z-1',
+                    clsWrite(controlGroupWrapperClassName, 'input-group'),
+                    {
+                        'has-left-content': propExist(iconLeft),
+                        'has-right-content': propExist(iconRight)
+                    }
+                )}>
+                    {propExist(iconLeft) ? <><span className={clsWrite(controlGroupTextClassName, 'input-group-text')}>{iconLeft}</span></> : null}
+
+                    <div className="input-group-control-container flex-fill position-relative">
+                    <textarea  
                             ref={(node) => {
                                 valRef.current = node;
                                 if (typeof externalRef === 'function') {
@@ -490,7 +510,12 @@ const Textarea = forwardRef((props: TextareaProps, externalRef: any) => {
                             tabIndex={tabIndex || 0}
                             className={combinedCls(
                                 clsWrite(controlClassName, 'form-control'),
-                                controlExClassName
+                                controlExClassName,
+                                {
+                                    'rounded': !propExist(iconLeft) && !propExist(iconRight),
+                                    'rounded-start-0': propExist(iconLeft),
+                                    'rounded-end-0': propExist(iconRight)
+                                }
                             )}
                             id={idRes}
                             name={name}
@@ -518,32 +543,37 @@ const Textarea = forwardRef((props: TextareaProps, externalRef: any) => {
                             style={style}
                             {...attributes}
                         />
-
+    
                         {/* AI Predict */}
                         {aiPredict && remainingText && (
                             <div
                                 ref={aiInputRef}
                                 className="position-absolute z-1"
                                 style={{
-                                    left: `${8 + textWidth}px`,
-                                    top: '8px',
+                                    left: `${originInputComputedStyle.current.fontSize + textWidth}px`,
+                                    top: originInputComputedStyle.current.textTop + 'px',
                                     color: `rgba(${aiPredictRemainingTextRGB[0]}, ${aiPredictRemainingTextRGB[1]}, ${aiPredictRemainingTextRGB[2]}, ${calculateOpacity()})`,
-                                    pointerEvents: 'none'
+                                    pointerEvents: 'none',
+                                    fontSize: originInputComputedStyle.current.fontSize + 'px',
+                                    fontFamily: originInputComputedStyle.current.fontFamily,
+                                    letterSpacing: originInputComputedStyle.current.letterSpacing
                                 }}
                             >
                                 {remainingText}
                             </div>
                         )}
 
+                        {/* Required marking */}
+                        {required ? <>{requiredLabel || requiredLabel === '' ? requiredLabel : <span className="position-absolute end-0 top-0 my-2 mx-2"><span className="text-danger">*</span></span>}</> : ''}
 
                     </div>
 
+                    
+                    {propExist(iconRight) ? <><span className={clsWrite(controlGroupTextClassName, 'input-group-text')}>{iconRight}</span></> : null}
 
-                     {typeof iconRight !== 'undefined' && iconRight !== null && iconRight !== '' ? <><span className={clsWrite(controlGroupTextClassName, 'input-group-text')}>{iconRight}</span></>: null}
+
                 </div>
-                {required ? <>{requiredLabel || requiredLabel === '' ? requiredLabel : <span className="position-absolute end-0 top-0 my-2 mx-2"><span className="text-danger">*</span></span>}</> : ''}
-
-
+                
 
             </div>
 

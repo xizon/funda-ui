@@ -363,12 +363,31 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
                     return (/* binding */_actualPropertyValue
                     );
                   },
+                  /* harmony export */"getTextTop": function getTextTop() {
+                    return (/* binding */_getTextTop
+                    );
+                  },
                   /* harmony export */"getTextWidth": function getTextWidth() {
                     return (/* binding */_getTextWidth
                     );
                   }
                   /* harmony export */
                 });
+                /**
+                 * Gets the relative upside of the text
+                 * @param {Element} el    - A DOM node containing one selector to match against.
+                 * @returns {Number}      - Returns a pure number.
+                 */
+                function _getTextTop(el) {
+                  var styles = window.getComputedStyle(el);
+                  var fontSize = parseFloat(styles.fontSize);
+                  var lineHeight = parseFloat(styles.lineHeight) || fontSize;
+                  var paddingTop = parseFloat(styles.paddingTop);
+                  var borderWidth = parseFloat(styles.borderWidth);
+                  var textTop = paddingTop + (lineHeight - fontSize) / 2 - borderWidth * 2;
+                  return textTop;
+                }
+
                 /**
                 * Get the actual value with user specific methed
                 * it can be 'width', 'height', 'outerWidth', 'outerHeight'
@@ -495,8 +514,8 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
           /***/
         },
 
-        /***/85: /***/function _(module, exports, __nested_webpack_require_22539__) {
-          /* module decorator */module = __nested_webpack_require_22539__.nmd(module);
+        /***/85: /***/function _(module, exports, __nested_webpack_require_23494__) {
+          /* module decorator */module = __nested_webpack_require_23494__.nmd(module);
           var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;
           function _typeof(obj) {
             "@babel/helpers - typeof";
@@ -508,7 +527,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
             }, _typeof(obj);
           }
           (function webpackUniversalModuleDefinition(root, factory) {
-            if (( false ? 0 : _typeof(exports)) === 'object' && ( false ? 0 : _typeof(module)) === 'object') module.exports = factory(__nested_webpack_require_22539__(787));else if (true) !(__WEBPACK_AMD_DEFINE_ARRAY__ = [__nested_webpack_require_22539__(787)], __WEBPACK_AMD_DEFINE_FACTORY__ = factory, __WEBPACK_AMD_DEFINE_RESULT__ = typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ? __WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__) : __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));else {}
+            if (( false ? 0 : _typeof(exports)) === 'object' && ( false ? 0 : _typeof(module)) === 'object') module.exports = factory(__nested_webpack_require_23494__(787));else if (true) !(__WEBPACK_AMD_DEFINE_ARRAY__ = [__nested_webpack_require_23494__(787)], __WEBPACK_AMD_DEFINE_FACTORY__ = factory, __WEBPACK_AMD_DEFINE_RESULT__ = typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ? __WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__) : __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));else {}
           })(this, function (__WEBPACK_EXTERNAL_MODULE__787__) {
             return (/******/function () {
                 // webpackBootstrap
@@ -668,8 +687,8 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
           /***/
         },
 
-        /***/702: /***/function _(module, exports, __nested_webpack_require_30627__) {
-          /* module decorator */module = __nested_webpack_require_30627__.nmd(module);
+        /***/702: /***/function _(module, exports, __nested_webpack_require_31582__) {
+          /* module decorator */module = __nested_webpack_require_31582__.nmd(module);
           var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;
           function _typeof(obj) {
             "@babel/helpers - typeof";
@@ -681,7 +700,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
             }, _typeof(obj);
           }
           (function webpackUniversalModuleDefinition(root, factory) {
-            if (( false ? 0 : _typeof(exports)) === 'object' && ( false ? 0 : _typeof(module)) === 'object') module.exports = factory(__nested_webpack_require_30627__(787));else if (true) !(__WEBPACK_AMD_DEFINE_ARRAY__ = [__nested_webpack_require_30627__(787)], __WEBPACK_AMD_DEFINE_FACTORY__ = factory, __WEBPACK_AMD_DEFINE_RESULT__ = typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ? __WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__) : __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));else {}
+            if (( false ? 0 : _typeof(exports)) === 'object' && ( false ? 0 : _typeof(module)) === 'object') module.exports = factory(__nested_webpack_require_31582__(787));else if (true) !(__WEBPACK_AMD_DEFINE_ARRAY__ = [__nested_webpack_require_31582__(787)], __WEBPACK_AMD_DEFINE_FACTORY__ = factory, __WEBPACK_AMD_DEFINE_RESULT__ = typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ? __WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__) : __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));else {}
           })(this, function (__WEBPACK_EXTERNAL_MODULE__787__) {
             return (/******/function () {
                 // webpackBootstrap
@@ -882,7 +901,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
       /******/
       /******/ // The require function
       /******/
-      function __nested_webpack_require_40248__(moduleId) {
+      function __nested_webpack_require_41203__(moduleId) {
         /******/ // Check if module is in cache
         /******/var cachedModule = __webpack_module_cache__[moduleId];
         /******/
@@ -901,7 +920,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
         /******/
         /******/ // Execute the module function
         /******/
-        __webpack_modules__[moduleId].call(module.exports, module, module.exports, __nested_webpack_require_40248__);
+        __webpack_modules__[moduleId].call(module.exports, module, module.exports, __nested_webpack_require_41203__);
         /******/
         /******/ // Flag the module as loaded
         /******/
@@ -918,14 +937,14 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
       /******/
       (function () {
         /******/ // getDefaultExport function for compatibility with non-harmony modules
-        /******/__nested_webpack_require_40248__.n = function (module) {
+        /******/__nested_webpack_require_41203__.n = function (module) {
           /******/var getter = module && module.__esModule ? /******/function () {
             return module['default'];
           } : /******/function () {
             return module;
           };
           /******/
-          __nested_webpack_require_40248__.d(getter, {
+          __nested_webpack_require_41203__.d(getter, {
             a: getter
           });
           /******/
@@ -939,9 +958,9 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
       /******/
       (function () {
         /******/ // define getter functions for harmony exports
-        /******/__nested_webpack_require_40248__.d = function (exports, definition) {
+        /******/__nested_webpack_require_41203__.d = function (exports, definition) {
           /******/for (var key in definition) {
-            /******/if (__nested_webpack_require_40248__.o(definition, key) && !__nested_webpack_require_40248__.o(exports, key)) {
+            /******/if (__nested_webpack_require_41203__.o(definition, key) && !__nested_webpack_require_41203__.o(exports, key)) {
               /******/Object.defineProperty(exports, key, {
                 enumerable: true,
                 get: definition[key]
@@ -958,7 +977,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
       /******/ /* webpack/runtime/hasOwnProperty shorthand */
       /******/
       (function () {
-        /******/__nested_webpack_require_40248__.o = function (obj, prop) {
+        /******/__nested_webpack_require_41203__.o = function (obj, prop) {
           return Object.prototype.hasOwnProperty.call(obj, prop);
         };
         /******/
@@ -968,7 +987,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
       /******/
       (function () {
         /******/ // define __esModule on exports
-        /******/__nested_webpack_require_40248__.r = function (exports) {
+        /******/__nested_webpack_require_41203__.r = function (exports) {
           /******/if (typeof Symbol !== 'undefined' && Symbol.toStringTag) {
             /******/Object.defineProperty(exports, Symbol.toStringTag, {
               value: 'Module'
@@ -987,7 +1006,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
       /******/ /* webpack/runtime/node module decorator */
       /******/
       (function () {
-        /******/__nested_webpack_require_40248__.nmd = function (module) {
+        /******/__nested_webpack_require_41203__.nmd = function (module) {
           /******/module.paths = [];
           /******/
           if (!module.children) module.children = [];
@@ -1004,34 +1023,34 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
       (function () {
         "use strict";
 
-        __nested_webpack_require_40248__.r(__webpack_exports__);
+        __nested_webpack_require_41203__.r(__webpack_exports__);
         /* harmony export */
-        __nested_webpack_require_40248__.d(__webpack_exports__, {
+        __nested_webpack_require_41203__.d(__webpack_exports__, {
           /* harmony export */"default": function _default() {
             return __WEBPACK_DEFAULT_EXPORT__;
           }
           /* harmony export */
         });
         /* harmony import */
-        var react__WEBPACK_IMPORTED_MODULE_0__ = __nested_webpack_require_40248__(787);
+        var react__WEBPACK_IMPORTED_MODULE_0__ = __nested_webpack_require_41203__(787);
         /* harmony import */
-        var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__nested_webpack_require_40248__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+        var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__nested_webpack_require_41203__.n(react__WEBPACK_IMPORTED_MODULE_0__);
         /* harmony import */
-        var funda_utils_dist_cjs_useComId__WEBPACK_IMPORTED_MODULE_1__ = __nested_webpack_require_40248__(85);
+        var funda_utils_dist_cjs_useComId__WEBPACK_IMPORTED_MODULE_1__ = __nested_webpack_require_41203__(85);
         /* harmony import */
-        var funda_utils_dist_cjs_useComId__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__nested_webpack_require_40248__.n(funda_utils_dist_cjs_useComId__WEBPACK_IMPORTED_MODULE_1__);
+        var funda_utils_dist_cjs_useComId__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__nested_webpack_require_41203__.n(funda_utils_dist_cjs_useComId__WEBPACK_IMPORTED_MODULE_1__);
         /* harmony import */
-        var funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_2__ = __nested_webpack_require_40248__(188);
+        var funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_2__ = __nested_webpack_require_41203__(188);
         /* harmony import */
-        var funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__nested_webpack_require_40248__.n(funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_2__);
+        var funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__nested_webpack_require_41203__.n(funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_2__);
         /* harmony import */
-        var funda_utils_dist_cjs_inputsCalculation__WEBPACK_IMPORTED_MODULE_3__ = __nested_webpack_require_40248__(954);
+        var funda_utils_dist_cjs_inputsCalculation__WEBPACK_IMPORTED_MODULE_3__ = __nested_webpack_require_41203__(954);
         /* harmony import */
-        var funda_utils_dist_cjs_inputsCalculation__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__nested_webpack_require_40248__.n(funda_utils_dist_cjs_inputsCalculation__WEBPACK_IMPORTED_MODULE_3__);
+        var funda_utils_dist_cjs_inputsCalculation__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__nested_webpack_require_41203__.n(funda_utils_dist_cjs_inputsCalculation__WEBPACK_IMPORTED_MODULE_3__);
         /* harmony import */
-        var funda_utils_dist_cjs_useDebounce__WEBPACK_IMPORTED_MODULE_4__ = __nested_webpack_require_40248__(702);
+        var funda_utils_dist_cjs_useDebounce__WEBPACK_IMPORTED_MODULE_4__ = __nested_webpack_require_41203__(702);
         /* harmony import */
-        var funda_utils_dist_cjs_useDebounce__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__nested_webpack_require_40248__.n(funda_utils_dist_cjs_useDebounce__WEBPACK_IMPORTED_MODULE_4__);
+        var funda_utils_dist_cjs_useDebounce__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__nested_webpack_require_41203__.n(funda_utils_dist_cjs_useDebounce__WEBPACK_IMPORTED_MODULE_4__);
         var _excluded = ["contentRef", "wrapperClassName", "controlClassName", "controlExClassName", "controlGroupWrapperClassName", "controlGroupTextClassName", "type", "disabled", "required", "placeholder", "pattern", "readOnly", "defaultValue", "value", "requiredLabel", "label", "units", "name", "step", "min", "max", "src", "size", "minLength", "maxLength", "alt", "inputMode", "id", "appendControl", "aiPredict", "aiPredictRemainingTextRGB", "aiPredictConfirmKey", "aiPredictFetchFuncAsync", "aiPredictFetchFuncMethod", "aiPredictFetchFuncMethodParams", "aiPredictFetchCallback", "iconLeft", "iconRight", "autoComplete", "autoCapitalize", "spellCheck", "style", "tabIndex", "onChangeCallback", "onInputCallback", "onKeyPressedCallback", "onChange", "onBlur", "onFocus", "onPressEnter"];
         function _regeneratorRuntime() {
           "use strict";
@@ -1546,9 +1565,6 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
             _useState4 = _slicedToArray(_useState3, 2),
             changedVal = _useState4[0],
             setChangedVal = _useState4[1];
-          var isNotPureWhitespace = function isNotPureWhitespace(str) {
-            return str.trim().length > 0;
-          };
 
           //================================================================
           // AI Predict
@@ -1566,6 +1582,12 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
             textWidth = _useState10[0],
             setTextWidth = _useState10[1];
           var aiInputRef = (0, react__WEBPACK_IMPORTED_MODULE_0__.useRef)(null);
+          var originInputComputedStyle = (0, react__WEBPACK_IMPORTED_MODULE_0__.useRef)({
+            fontSize: 16,
+            fontFamily: 'inherit',
+            letterSpacing: 'normal',
+            textTop: 10
+          });
           var _useState11 = (0, react__WEBPACK_IMPORTED_MODULE_0__.useState)(false),
             _useState12 = _slicedToArray(_useState11, 2),
             hasErr = _useState12[0],
@@ -1636,8 +1658,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
             if (valRef.current) {
               var canvas = document.createElement('canvas');
               var context = canvas.getContext('2d');
-              var computedStyle = window.getComputedStyle(valRef.current);
-              context.font = computedStyle.font;
+              context.font = "".concat(originInputComputedStyle.current.fontSize, "px ").concat(originInputComputedStyle.current.fontFamily);
               return context.measureText(text).width;
             }
             return 0;
@@ -1811,7 +1832,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 
             // AI Predict
             //----
-            if (aiPredict && suggestions.length > 0) {
+            if (aiPredict && currentSuggestion !== '') {
               var keyBindings = aiPredictConfirmKey;
               // The parameter 'registerKeyEvents' is an array, and each element is an object
               // eg. { keys: ["Control", "S"], action: () => { console.log("Ctrl+S"); } }
@@ -1859,10 +1880,13 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 
             // AI Predict initalization
             //--------------
-            if (aiPredict && valRef.current !== null && aiInputRef.current !== null) {
-              aiInputRef.current.style.fontSize = (0, funda_utils_dist_cjs_inputsCalculation__WEBPACK_IMPORTED_MODULE_3__.actualPropertyValue)(valRef.current, 'fontSize');
-              aiInputRef.current.style.fontFamily = (0, funda_utils_dist_cjs_inputsCalculation__WEBPACK_IMPORTED_MODULE_3__.actualPropertyValue)(valRef.current, 'fontFamily');
-              aiInputRef.current.style.letterSpacing = (0, funda_utils_dist_cjs_inputsCalculation__WEBPACK_IMPORTED_MODULE_3__.actualPropertyValue)(valRef.current, 'letterSpacing');
+            if (aiPredict && valRef.current !== null) {
+              originInputComputedStyle.current = {
+                fontSize: (0, funda_utils_dist_cjs_inputsCalculation__WEBPACK_IMPORTED_MODULE_3__.actualPropertyValue)(valRef.current, 'fontSize'),
+                fontFamily: (0, funda_utils_dist_cjs_inputsCalculation__WEBPACK_IMPORTED_MODULE_3__.actualPropertyValue)(valRef.current, 'fontFamily'),
+                letterSpacing: (0, funda_utils_dist_cjs_inputsCalculation__WEBPACK_IMPORTED_MODULE_3__.actualPropertyValue)(valRef.current, 'letterSpacing'),
+                textTop: (0, funda_utils_dist_cjs_inputsCalculation__WEBPACK_IMPORTED_MODULE_3__.getTextTop)(valRef.current)
+              };
             }
           }, []);
           return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react__WEBPACK_IMPORTED_MODULE_0___default().Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
@@ -1884,71 +1908,8 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
             })
           }, propExist(iconLeft) ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react__WEBPACK_IMPORTED_MODULE_0___default().Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
             className: (0, funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_2__.clsWrite)(controlGroupTextClassName, 'input-group-text')
-          }, iconLeft)) : null, appendControl && propExist(iconLeft) ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react__WEBPACK_IMPORTED_MODULE_0___default().Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-            className: "input-group-control-container w-100 position-relative"
-          }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("input", _extends({
-            ref: function ref(node) {
-              valRef.current = node;
-              if (typeof externalRef === 'function') {
-                externalRef(node);
-              } else if (externalRef) {
-                externalRef.current = node;
-              }
-            },
-            tabIndex: tabIndex || 0,
-            type: typeRes,
-            className: (0, funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_2__.combinedCls)(propExist(iconLeft) ? 'rounded-start-0' : 'rounded', (0, funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_2__.clsWrite)(controlClassName, 'form-control ')),
-            id: idRes,
-            name: name,
-            step: step || null,
-            min: min || null,
-            max: max || null,
-            src: src || null,
-            size: size || null,
-            alt: alt || null,
-            inputMode: inputMode || 'text',
-            pattern: pattern || null,
-            placeholder: placeholder || '',
-            defaultValue: defaultValue,
-            value: changedVal,
-            minLength: minLength || null,
-            maxLength: maxLength || null,
-            autoComplete: typeof autoComplete === 'undefined' ? 'on' : autoComplete,
-            autoCapitalize: typeof autoCapitalize === 'undefined' ? 'off' : autoCapitalize,
-            spellCheck: typeof spellCheck === 'undefined' ? false : spellCheck,
-            onFocus: handleFocus,
-            onBlur: handleBlur,
-            onChange: function onChange(e) {
-              handleChange(e);
-
-              // AI Predict
-              if (aiPredict) {
-                handleChangeSuggestionsFetchSafe(e, e.target.value);
-              }
-            },
-            onKeyDown: handleKeyPressed,
-            onCompositionStart: handleComposition,
-            onCompositionUpdate: handleComposition,
-            onCompositionEnd: handleComposition,
-            disabled: disabled || null,
-            required: required || null,
-            readOnly: readOnly || null,
-            style: style
-          }, attributes)), appendControl || '', propExist(units) ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react__WEBPACK_IMPORTED_MODULE_0___default().Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
-            className: (0, funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_2__.clsWrite)(controlGroupTextClassName, 'input-group-text')
-          }, units)) : null, propExist(iconRight) ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react__WEBPACK_IMPORTED_MODULE_0___default().Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
-            className: (0, funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_2__.clsWrite)(controlGroupTextClassName, 'input-group-text')
-          }, iconRight)) : null, aiPredict && remainingText && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-            ref: aiInputRef,
-            className: "position-absolute z-1",
-            style: {
-              left: "".concat(8 + textWidth, "px"),
-              top: '8px',
-              color: "rgba(".concat(aiPredictRemainingTextRGB[0], ", ").concat(aiPredictRemainingTextRGB[1], ", ").concat(aiPredictRemainingTextRGB[2], ", ").concat(calculateOpacity(), ")"),
-              pointerEvents: 'none'
-            }
-          }, remainingText))) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react__WEBPACK_IMPORTED_MODULE_0___default().Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-            className: "position-relative w-100"
+          }, iconLeft)) : null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+            className: "input-group-control-container flex-fill position-relative"
           }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("input", _extends({
             ref: function ref(node) {
               valRef.current = node;
@@ -1961,7 +1922,9 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
             tabIndex: tabIndex || 0,
             type: typeRes,
             className: (0, funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_2__.combinedCls)((0, funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_2__.clsWrite)(controlClassName, 'form-control'), controlExClassName, {
-              'rounded': !propExist(iconLeft) && !propExist(iconRight) && !propExist(units)
+              'rounded': !propExist(iconLeft) && !propExist(iconRight) && !propExist(units),
+              'rounded-start-0': propExist(iconLeft),
+              'rounded-end-0': propExist(iconRight) || propExist(units)
             }),
             id: idRes,
             name: name,
@@ -1998,24 +1961,27 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
             required: required || null,
             readOnly: readOnly || null,
             style: style
-          }, attributes)), appendControl || '', propExist(units) ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react__WEBPACK_IMPORTED_MODULE_0___default().Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
-            className: (0, funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_2__.clsWrite)(controlGroupTextClassName, 'input-group-text')
-          }, units)) : null, propExist(iconRight) ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react__WEBPACK_IMPORTED_MODULE_0___default().Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
-            className: (0, funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_2__.clsWrite)(controlGroupTextClassName, 'input-group-text')
-          }, iconRight)) : null, aiPredict && remainingText && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+          }, attributes)), appendControl || '', aiPredict && remainingText && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
             ref: aiInputRef,
             className: "position-absolute z-1",
             style: {
-              left: "".concat(8 + textWidth, "px"),
-              top: '8px',
+              left: "".concat(originInputComputedStyle.current.fontSize + textWidth, "px"),
+              top: originInputComputedStyle.current.textTop + 'px',
               color: "rgba(".concat(aiPredictRemainingTextRGB[0], ", ").concat(aiPredictRemainingTextRGB[1], ", ").concat(aiPredictRemainingTextRGB[2], ", ").concat(calculateOpacity(), ")"),
-              pointerEvents: 'none'
+              pointerEvents: 'none',
+              fontSize: originInputComputedStyle.current.fontSize + 'px',
+              fontFamily: originInputComputedStyle.current.fontFamily,
+              letterSpacing: originInputComputedStyle.current.letterSpacing
             }
-          }, remainingText)))), required ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react__WEBPACK_IMPORTED_MODULE_0___default().Fragment, null, requiredLabel || requiredLabel === '' ? requiredLabel : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
+          }, remainingText), required ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react__WEBPACK_IMPORTED_MODULE_0___default().Fragment, null, requiredLabel || requiredLabel === '' ? requiredLabel : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
             className: "position-absolute end-0 top-0 my-2 mx-2"
           }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
             className: "text-danger"
-          }, "*"))) : ''));
+          }, "*"))) : ''), propExist(units) ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react__WEBPACK_IMPORTED_MODULE_0___default().Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
+            className: (0, funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_2__.clsWrite)(controlGroupTextClassName, 'input-group-text')
+          }, units)) : null, propExist(iconRight) ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react__WEBPACK_IMPORTED_MODULE_0___default().Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
+            className: (0, funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_2__.clsWrite)(controlGroupTextClassName, 'input-group-text')
+          }, iconRight)) : null)));
         });
         /* harmony default export */
         var __WEBPACK_DEFAULT_EXPORT__ = Input;

@@ -47,8 +47,24 @@ var __webpack_exports__ = {};
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "actualPropertyValue": () => (/* binding */ actualPropertyValue),
+/* harmony export */   "getTextTop": () => (/* binding */ getTextTop),
 /* harmony export */   "getTextWidth": () => (/* binding */ getTextWidth)
 /* harmony export */ });
+/**
+ * Gets the relative upside of the text
+ * @param {Element} el    - A DOM node containing one selector to match against.
+ * @returns {Number}      - Returns a pure number.
+ */
+function getTextTop(el) {
+  var styles = window.getComputedStyle(el);
+  var fontSize = parseFloat(styles.fontSize);
+  var lineHeight = parseFloat(styles.lineHeight) || fontSize;
+  var paddingTop = parseFloat(styles.paddingTop);
+  var borderWidth = parseFloat(styles.borderWidth);
+  var textTop = paddingTop + (lineHeight - fontSize) / 2 - borderWidth * 2;
+  return textTop;
+}
+
 /**
 * Get the actual value with user specific methed
 * it can be 'width', 'height', 'outerWidth', 'outerHeight'

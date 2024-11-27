@@ -304,12 +304,31 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
           return (/* binding */_actualPropertyValue
           );
         },
+        /* harmony export */"getTextTop": function getTextTop() {
+          return (/* binding */_getTextTop
+          );
+        },
         /* harmony export */"getTextWidth": function getTextWidth() {
           return (/* binding */_getTextWidth
           );
         }
         /* harmony export */
       });
+      /**
+       * Gets the relative upside of the text
+       * @param {Element} el    - A DOM node containing one selector to match against.
+       * @returns {Number}      - Returns a pure number.
+       */
+      function _getTextTop(el) {
+        var styles = window.getComputedStyle(el);
+        var fontSize = parseFloat(styles.fontSize);
+        var lineHeight = parseFloat(styles.lineHeight) || fontSize;
+        var paddingTop = parseFloat(styles.paddingTop);
+        var borderWidth = parseFloat(styles.borderWidth);
+        var textTop = paddingTop + (lineHeight - fontSize) / 2 - borderWidth * 2;
+        return textTop;
+      }
+
       /**
       * Get the actual value with user specific methed
       * it can be 'width', 'height', 'outerWidth', 'outerHeight'
@@ -1270,9 +1289,6 @@ var Textarea = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(fu
     _useState2 = _slicedToArray(_useState, 2),
     changedVal = _useState2[0],
     setChangedVal = _useState2[1];
-  var isNotPureWhitespace = function isNotPureWhitespace(str) {
-    return str.trim().length > 0;
-  };
 
   //================================================================
   // AI Predict
@@ -1290,6 +1306,12 @@ var Textarea = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(fu
     textWidth = _useState8[0],
     setTextWidth = _useState8[1];
   var aiInputRef = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(null);
+  var originInputComputedStyle = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)({
+    fontSize: 16,
+    fontFamily: 'inherit',
+    letterSpacing: 'normal',
+    textTop: 10
+  });
   var _useState9 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(false),
     _useState10 = _slicedToArray(_useState9, 2),
     hasErr = _useState10[0],
@@ -1360,8 +1382,7 @@ var Textarea = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(fu
     if (valRef.current) {
       var canvas = document.createElement('canvas');
       var context = canvas.getContext('2d');
-      var computedStyle = window.getComputedStyle(valRef.current);
-      context.font = computedStyle.font;
+      context.font = "".concat(originInputComputedStyle.current.fontSize, "px ").concat(originInputComputedStyle.current.fontFamily);
       return context.measureText(text).width;
     }
     return 0;
@@ -1471,6 +1492,9 @@ var Textarea = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(fu
       onResize === null || onResize === void 0 ? void 0 : onResize(valRef.current, res);
     }
   });
+  var propExist = function propExist(p) {
+    return typeof p !== 'undefined' && p !== null && p !== '';
+  };
   function handleFocus(event) {
     var _rootRef$current;
     var el = event.target;
@@ -1534,7 +1558,7 @@ var Textarea = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(fu
 
     // AI Predict
     //----
-    if (aiPredict && suggestions.length > 0) {
+    if (aiPredict && currentSuggestion !== '') {
       var keyBindings = aiPredictConfirmKey;
       // The parameter 'registerKeyEvents' is an array, and each element is an object
       // eg. { keys: ["Control", "S"], action: () => { console.log("Ctrl+S"); } }
@@ -1603,10 +1627,13 @@ var Textarea = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(fu
 
     // AI Predict initalization
     //--------------
-    if (aiPredict && valRef.current !== null && aiInputRef.current !== null) {
-      aiInputRef.current.style.fontSize = (0,funda_utils_dist_cjs_inputsCalculation__WEBPACK_IMPORTED_MODULE_4__.actualPropertyValue)(valRef.current, 'fontSize');
-      aiInputRef.current.style.fontFamily = (0,funda_utils_dist_cjs_inputsCalculation__WEBPACK_IMPORTED_MODULE_4__.actualPropertyValue)(valRef.current, 'fontFamily');
-      aiInputRef.current.style.letterSpacing = (0,funda_utils_dist_cjs_inputsCalculation__WEBPACK_IMPORTED_MODULE_4__.actualPropertyValue)(valRef.current, 'letterSpacing');
+    if (aiPredict && valRef.current !== null) {
+      originInputComputedStyle.current = {
+        fontSize: (0,funda_utils_dist_cjs_inputsCalculation__WEBPACK_IMPORTED_MODULE_4__.actualPropertyValue)(valRef.current, 'fontSize'),
+        fontFamily: (0,funda_utils_dist_cjs_inputsCalculation__WEBPACK_IMPORTED_MODULE_4__.actualPropertyValue)(valRef.current, 'fontFamily'),
+        letterSpacing: (0,funda_utils_dist_cjs_inputsCalculation__WEBPACK_IMPORTED_MODULE_4__.actualPropertyValue)(valRef.current, 'letterSpacing'),
+        textTop: (0,funda_utils_dist_cjs_inputsCalculation__WEBPACK_IMPORTED_MODULE_4__.getTextTop)(valRef.current)
+      };
     }
   }, []);
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
@@ -1622,11 +1649,14 @@ var Textarea = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(fu
     htmlFor: idRes,
     className: "form-label"
   }, label)) : null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-    className: (0,funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_3__.clsWrite)(controlGroupWrapperClassName, 'input-group')
-  }, typeof iconLeft !== 'undefined' && iconLeft !== null && iconLeft !== '' ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
+    className: (0,funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_3__.combinedCls)('position-relative z-1', (0,funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_3__.clsWrite)(controlGroupWrapperClassName, 'input-group'), {
+      'has-left-content': propExist(iconLeft),
+      'has-right-content': propExist(iconRight)
+    })
+  }, propExist(iconLeft) ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
     className: (0,funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_3__.clsWrite)(controlGroupTextClassName, 'input-group-text')
   }, iconLeft)) : null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-    className: "position-relative w-100"
+    className: "input-group-control-container flex-fill position-relative"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("textarea", _extends({
     ref: function ref(node) {
       valRef.current = node;
@@ -1637,7 +1667,11 @@ var Textarea = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(fu
       }
     },
     tabIndex: tabIndex || 0,
-    className: (0,funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_3__.combinedCls)((0,funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_3__.clsWrite)(controlClassName, 'form-control'), controlExClassName),
+    className: (0,funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_3__.combinedCls)((0,funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_3__.clsWrite)(controlClassName, 'form-control'), controlExClassName, {
+      'rounded': !propExist(iconLeft) && !propExist(iconRight),
+      'rounded-start-0': propExist(iconLeft),
+      'rounded-end-0': propExist(iconRight)
+    }),
     id: idRes,
     name: name,
     placeholder: placeholder || '',
@@ -1666,18 +1700,21 @@ var Textarea = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(fu
     ref: aiInputRef,
     className: "position-absolute z-1",
     style: {
-      left: "".concat(8 + textWidth, "px"),
-      top: '8px',
+      left: "".concat(originInputComputedStyle.current.fontSize + textWidth, "px"),
+      top: originInputComputedStyle.current.textTop + 'px',
       color: "rgba(".concat(aiPredictRemainingTextRGB[0], ", ").concat(aiPredictRemainingTextRGB[1], ", ").concat(aiPredictRemainingTextRGB[2], ", ").concat(calculateOpacity(), ")"),
-      pointerEvents: 'none'
+      pointerEvents: 'none',
+      fontSize: originInputComputedStyle.current.fontSize + 'px',
+      fontFamily: originInputComputedStyle.current.fontFamily,
+      letterSpacing: originInputComputedStyle.current.letterSpacing
     }
-  }, remainingText)), typeof iconRight !== 'undefined' && iconRight !== null && iconRight !== '' ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
-    className: (0,funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_3__.clsWrite)(controlGroupTextClassName, 'input-group-text')
-  }, iconRight)) : null), required ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, requiredLabel || requiredLabel === '' ? requiredLabel : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
+  }, remainingText), required ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, requiredLabel || requiredLabel === '' ? requiredLabel : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
     className: "position-absolute end-0 top-0 my-2 mx-2"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
     className: "text-danger"
-  }, "*"))) : ''));
+  }, "*"))) : ''), propExist(iconRight) ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
+    className: (0,funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_3__.clsWrite)(controlGroupTextClassName, 'input-group-text')
+  }, iconRight)) : null)));
 });
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Textarea);
 })();

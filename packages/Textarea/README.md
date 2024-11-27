@@ -162,6 +162,23 @@ export default () => {
             />
 
             <Textarea
+                placeholder="String"
+                name="name"
+                label="Disabled"
+                iconLeft={<><i className="fa fa-arrow-up" aria-hidden="true"></i></>}
+                required
+                disabled
+            />
+
+            <Textarea
+                placeholder="String"
+                name="name"
+                iconRight={<><i className="fa fa-arrow-up" aria-hidden="true"></i></>}
+                required
+                disabled
+            />
+
+            <Textarea
                 label="Auto Size"
                 name="name2"
                 rows={1}
@@ -392,7 +409,9 @@ class DataService {
                 'Using React can simplify complex data operations! ',
                 'What is the difference between front-end development and back-end development? ',
                 'I don\'t know how to learn math, can you teach me?',
-                'How can I upgrade my system to the latest version? '
+                'How can I upgrade my system to the latest version? ',
+                '数据的复杂操作！',
+                '前后端开发的一些基本框架'
             ]: []
         };
     }
@@ -441,10 +460,11 @@ export default () => {
     return (
         <>
 
-            <p><small>Type "React" or "learn" to see the effect</small></p>
+            <p><small>Type "how can" or "what is the f" to see the effect</small></p>
 
             <Textarea
                 name="name"
+                rows={5}
 
                 // AI
                 aiPredict
