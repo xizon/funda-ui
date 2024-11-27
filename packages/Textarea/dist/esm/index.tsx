@@ -5,8 +5,8 @@ import React, { useState, useEffect, useRef, forwardRef, KeyboardEvent, useImper
 import useComId from 'funda-utils/dist/cjs/useComId';
 import useAutosizeTextArea from 'funda-utils/dist/cjs/useAutosizeTextArea';
 import { clsWrite, combinedCls } from 'funda-utils/dist/cjs/cls';
-
-
+import { actualPropertyValue } from 'funda-utils/dist/cjs/inputsCalculation';
+import useDebounce from 'funda-utils/dist/cjs/useDebounce';
 
 export type TextareaProps = {
     contentRef?: React.ForwardedRef<any>; // could use "Array" on contentRef.current, such as contentRef.current[0], contentRef.current[1]
@@ -31,6 +31,13 @@ export type TextareaProps = {
     autoSize?: boolean;
     iconLeft?: React.ReactNode | string;
     iconRight?: React.ReactNode | string;
+    aiPredict?: boolean;
+    aiPredictRemainingTextRGB?: number[];
+    aiPredictConfirmKey?: Array<string[]>;
+    aiPredictFetchFuncAsync?: any;
+    aiPredictFetchFuncMethod?: string;
+    aiPredictFetchFuncMethodParams?: any[];
+    aiPredictFetchCallback?: (data: any) => void;
 	/** -- */
 	id?: string;
     style?: React.CSSProperties;
@@ -64,6 +71,13 @@ const Textarea = forwardRef((props: TextareaProps, externalRef: any) => {
         autoSize,
         iconLeft,
         iconRight,
+        aiPredict = false,
+        aiPredictRemainingTextRGB = [153, 153, 153],
+        aiPredictConfirmKey = [['Enter'],['Tab'],['Shift', ' ']],
+        aiPredictFetchFuncAsync,
+        aiPredictFetchFuncMethod,
+        aiPredictFetchFuncMethodParams,
+        aiPredictFetchCallback,
         readOnly,
         defaultValue,
         value,
@@ -93,6 +107,170 @@ const Textarea = forwardRef((props: TextareaProps, externalRef: any) => {
     const valRef = useRef<any>(null);
     const [changedVal, setChangedVal] = useState<string>(value || '');
 
+    const isNotPureWhitespace =(str: string): boolean  =>{
+        return str.trim().length > 0;
+    };
+
+    //================================================================
+    // AI Predict
+    //================================================================    
+    const [currentSuggestion, setCurrentSuggestion] = useState<string>('');
+    const [tempMatchedSuggestion, setTempMatchedSuggestion] = useState<string[]>([]);
+    const [textWidth, setTextWidth] = useState<number>(0);
+    const aiInputRef = useRef<any>(null);
+    const [hasErr, setHasErr] = useState<boolean>(false);
+    const currentSuggestionIndex = useRef<number>(0);
+
+    
+    // A list of suggestions
+    //----------------
+    const [suggestions, setSuggestions] = useState<string[]>([]);
+    
+    //performance
+    const handleChangeSuggestionsFetchSafe = useDebounce((e: any, curVal: string) => {
+        const _oparams: any[] = aiPredictFetchFuncMethodParams || [];
+        const _params: any[] = _oparams.map((item: any) => item !== '$QUERY_STRING' ? item : curVal);
+        fetchSuggestionsData((_params).join(',')).then((resSuggestions: string[]) => {
+            handleInputAiPredictChange(curVal, resSuggestions);
+        });
+    }, 350, []);
+
+    async function fetchSuggestionsData(params: any) {
+
+        if (typeof aiPredictFetchFuncAsync === 'object') {
+
+            const response: any = await aiPredictFetchFuncAsync[`${aiPredictFetchFuncMethod}`](...params.split(','));
+            let _ORGIN_DATA = response.data;
+
+            // reset data structure
+            if (typeof (aiPredictFetchCallback) === 'function') {
+                _ORGIN_DATA = aiPredictFetchCallback(_ORGIN_DATA);
+            }
+
+            // Determine whether the data structure matches
+            if (!Array.isArray(_ORGIN_DATA)) {
+                console.warn('The data structure does not match, please refer to the example in the component documentation.');
+                setHasErr(true);
+                _ORGIN_DATA = [];
+            }
+
+    
+            //
+            setSuggestions(_ORGIN_DATA);
+        
+            return _ORGIN_DATA;
+        } else {
+            return [];
+        }
+
+
+    }
+
+
+
+    // Calculates the width of the input text
+    //----------------
+    const calculateTextWidth = (text: string) => {
+        if (valRef.current) {
+            const canvas = document.createElement('canvas');
+            const context: any = canvas.getContext('2d');
+            const computedStyle = window.getComputedStyle(valRef.current);
+            context.font = computedStyle.font;
+            return context.measureText(text).width;
+        }
+        return 0;
+    };
+
+
+    // Get the rest of the suggested text
+    //----------------
+    const getRemainingText = (fullSuggestion: string) => {
+        if (!changedVal || !fullSuggestion) return '';
+       
+
+        // Only the parts of the suggested text that were not entered are returned
+        const lastInputChar = changedVal[changedVal.length - 1];
+        const lastCharIndex = fullSuggestion.toLowerCase().lastIndexOf(lastInputChar.toLowerCase());
+        return fullSuggestion.slice(lastCharIndex + 1);
+
+    };
+
+    // Match exactly from the start
+    //----------------
+    const preciseMatch = (input: any, suggestions: string[]) => {
+        if (!input) return '';
+
+        const filtered = suggestions.filter(s =>
+            s.toLowerCase().startsWith(input.toLowerCase())
+        );
+
+        setTempMatchedSuggestion(filtered);
+        return filtered;
+    };
+
+
+    // Fuzzy matching
+    //----------------
+    const fuzzyMatch = (input: any, suggestions: string[]) => {
+        if (!input) return '';
+
+        // Convert input to a regular expression pattern with support for arbitrary position matching
+        const pattern = input.split('').map((char: string) =>
+            char.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+        ).join('.*');
+        const regex = new RegExp(pattern, 'i');
+
+        // Find the first matching suggestion (multiple matches)
+        const filtered = suggestions.filter((suggestion: string) => regex.test(suggestion));
+        setTempMatchedSuggestion(filtered);
+        return filtered;
+    };
+
+    // Handle input variations
+    //----------------
+    const handleInputAiPredictChange = (newValue: string, curSuggestions: string[]) => {
+        setTextWidth(calculateTextWidth(newValue));
+
+        // Match results
+        const matchedSuggestion = fuzzyMatch(newValue, curSuggestions);
+        setCurrentSuggestion(matchedSuggestion[0] || '');
+
+    };
+
+
+
+
+    // Calculate the color shade of the prompt text
+    //----------------
+    const calculateOpacity = () => {
+        // Transparency is calculated based on the input length
+        const baseOpacity = 0.5;
+        const inputLength = changedVal.length;
+        return Math.max(0.2, baseOpacity - (inputLength * 0.05));
+    };
+
+    
+    // Confirm
+    //----------------
+    const handleAiPredictKeyDown = (e: KeyboardEvent<HTMLTextAreaElement>) => {
+        // Prevents the default behavior of the enter key
+        e.preventDefault();
+
+        const remainingText = getRemainingText(currentSuggestion);
+        if (remainingText) {
+            // Only the second half of the text is added
+            setChangedVal(changedVal + remainingText);
+            setCurrentSuggestion('');
+        }
+    };
+
+    //
+    const remainingText = getRemainingText(currentSuggestion);
+
+
+    //================================================================
+    // General
+    //================================================================  
     // exposes the following methods
     useImperativeHandle(
         contentRef,
@@ -186,6 +364,49 @@ const Textarea = forwardRef((props: TextareaProps, externalRef: any) => {
             onPressEnter?.(event, valRef.current);
         }
 
+        // AI Predict
+        //----
+        if (aiPredict && suggestions.length > 0) {
+            const keyBindings: Array<string[]> = aiPredictConfirmKey;
+            // The parameter 'registerKeyEvents' is an array, and each element is an object
+            // eg. { keys: ["Control", "S"], action: () => { console.log("Ctrl+S"); } }
+            const registerKeyEvents: Record<string, any>[] = keyBindings.map((s: string[]) => {
+                return {
+                    keys: s,
+                    action: () => {
+                        handleAiPredictKeyDown(event);
+                    },
+                };
+            });
+
+            registerKeyEvents.forEach((binding: Record<string, any>) => {
+                const keysPressed = binding.keys.every((key: string) =>
+                    key === "Shift" ? event.shiftKey :
+                        key === "Control" ? event.ctrlKey :
+                            key === "Alt" ? event.altKey :
+                                key === "Meta" ? event.metaKey :
+                                    event.key === key
+                );
+
+                if (keysPressed) {
+                    binding.action();
+                }
+            });
+
+      
+            // switch result of suggestions
+            if (event.code === 'ArrowUp') {
+                currentSuggestionIndex.current = (currentSuggestionIndex.current - 1 + tempMatchedSuggestion.length) % tempMatchedSuggestion.length;
+            }
+    
+            if (event.code === 'ArrowDown') {
+                currentSuggestionIndex.current = (currentSuggestionIndex.current + 1) % tempMatchedSuggestion.length;
+            } 
+            setCurrentSuggestion(tempMatchedSuggestion[currentSuggestionIndex.current] || '');
+
+        }
+
+
     }
 
 
@@ -234,6 +455,17 @@ const Textarea = forwardRef((props: TextareaProps, externalRef: any) => {
             }
         }
 
+
+
+        // AI Predict initalization
+        //--------------
+        if (aiPredict && valRef.current !== null && aiInputRef.current !== null) {
+            aiInputRef.current.style.fontSize = actualPropertyValue(valRef.current as HTMLInputElement, 'fontSize');
+            aiInputRef.current.style.fontFamily = actualPropertyValue(valRef.current as HTMLInputElement, 'fontFamily');
+            aiInputRef.current.style.letterSpacing = actualPropertyValue(valRef.current as HTMLInputElement, 'letterSpacing');
+        }
+
+
     }, []);
 
     return (
@@ -245,42 +477,73 @@ const Textarea = forwardRef((props: TextareaProps, externalRef: any) => {
                 <div className={clsWrite(controlGroupWrapperClassName, 'input-group')}>
                     {typeof iconLeft !== 'undefined' && iconLeft !== null && iconLeft !== '' ? <><span className={clsWrite(controlGroupTextClassName, 'input-group-text')}>{iconLeft}</span></>: null}
                     
-                    <textarea  
-                        ref={(node) => {
-                            valRef.current = node;
-                            if (typeof externalRef === 'function') {
-                                externalRef(node);
-                            } else if (externalRef) {
-                                externalRef.current = node;
-                            }
-                        }}
-                      tabIndex={tabIndex || 0}
-					  className={combinedCls(
-                        clsWrite(controlClassName, 'form-control'),
-                        controlExClassName
-                      )}
-			          id={idRes}
-					  name={name}
-					  placeholder={placeholder || ''}
-                      defaultValue={defaultValue}
-					  value={changedVal}
-                      minLength={minLength || null}
-					  maxLength={maxLength || null}
-			          onFocus={handleFocus}
-					  onBlur={handleBlur}
-			          onChange={handleChange}
-                      onKeyDown={handleKeyPressed}
-			          disabled={disabled || null}
-					  required={required || null}
-                      readOnly={readOnly || null}
-					  cols={cols || 20}
-					  rows={rows || 2}
-                      style={style}
-                      {...attributes}
-					/>
+                    <div className="position-relative w-100">
+                        <textarea  
+                            ref={(node) => {
+                                valRef.current = node;
+                                if (typeof externalRef === 'function') {
+                                    externalRef(node);
+                                } else if (externalRef) {
+                                    externalRef.current = node;
+                                }
+                            }}
+                            tabIndex={tabIndex || 0}
+                            className={combinedCls(
+                                clsWrite(controlClassName, 'form-control'),
+                                controlExClassName
+                            )}
+                            id={idRes}
+                            name={name}
+                            placeholder={placeholder || ''}
+                            defaultValue={defaultValue}
+                            value={changedVal}
+                            minLength={minLength || null}
+                            maxLength={maxLength || null}
+                            onFocus={handleFocus}
+                            onBlur={handleBlur}
+                            onChange={(e: any) => {
+                                handleChange(e);
+
+                                // AI Predict
+                                if (aiPredict) {
+                                    handleChangeSuggestionsFetchSafe(e, e.target.value);
+                                }
+                            }}
+                            onKeyDown={handleKeyPressed}
+                            disabled={disabled || null}
+                            required={required || null}
+                            readOnly={readOnly || null}
+                            cols={cols || 20}
+                            rows={rows || 2}
+                            style={style}
+                            {...attributes}
+                        />
+
+                        {/* AI Predict */}
+                        {aiPredict && remainingText && (
+                            <div
+                                ref={aiInputRef}
+                                className="position-absolute z-1"
+                                style={{
+                                    left: `${8 + textWidth}px`,
+                                    top: '8px',
+                                    color: `rgba(${aiPredictRemainingTextRGB[0]}, ${aiPredictRemainingTextRGB[1]}, ${aiPredictRemainingTextRGB[2]}, ${calculateOpacity()})`,
+                                    pointerEvents: 'none'
+                                }}
+                            >
+                                {remainingText}
+                            </div>
+                        )}
+
+
+                    </div>
+
+
                      {typeof iconRight !== 'undefined' && iconRight !== null && iconRight !== '' ? <><span className={clsWrite(controlGroupTextClassName, 'input-group-text')}>{iconRight}</span></>: null}
                 </div>
                 {required ? <>{requiredLabel || requiredLabel === '' ? requiredLabel : <span className="position-absolute end-0 top-0 my-2 mx-2"><span className="text-danger">*</span></span>}</> : ''}
+
+
 
             </div>
 

@@ -2989,6 +2989,8 @@ var EventCalendar = function EventCalendar(props) {
     setWinMonth = _useState22[1];
 
   // modal dialog
+  var modalEditHandleRef = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)();
+  var modalDeleteHandleRef = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)();
   var EVENTS_ENABLED = typeof modalContent !== 'undefined';
   var EVENTS_DELETE_ENABLED = typeof modalDeleteContent !== 'undefined';
   var _useState23 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(false),
@@ -3023,8 +3025,10 @@ var EventCalendar = function EventCalendar(props) {
   // exposes the following methods
   (0,react__WEBPACK_IMPORTED_MODULE_0__.useImperativeHandle)(contentRef, function () {
     return {
-      gridInit: function gridInit() {},
-      gridReset: function gridReset(cb) {}
+      closeModal: function closeModal() {
+        if (modalEditHandleRef.current) modalEditHandleRef.current.close();
+        if (modalDeleteHandleRef.current) modalDeleteHandleRef.current.close();
+      }
     };
   }, [contentRef]);
 
@@ -3629,6 +3633,7 @@ var EventCalendar = function EventCalendar(props) {
     className: "custom-event-cal__btn custom-event-cal__btn--today",
     onClick: handleTodayChange
   }, langToday || 'Today'))), EVENTS_ENABLED ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((funda_modaldialog__WEBPACK_IMPORTED_MODULE_3___default()), {
+    ref: modalDeleteHandleRef,
     show: showDelete,
     maskOpacity: modalMaskOpacity,
     triggerClassName: "",
@@ -3660,6 +3665,7 @@ var EventCalendar = function EventCalendar(props) {
       };
     }()
   }, modalDeleteContent || 'Are you sure?'), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((funda_modaldialog__WEBPACK_IMPORTED_MODULE_3___default()), {
+    ref: modalEditHandleRef,
     show: showEdit,
     maskOpacity: modalMaskOpacity,
     heading: modalHeading,

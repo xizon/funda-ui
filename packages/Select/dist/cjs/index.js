@@ -1622,6 +1622,10 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
       __nested_webpack_require_987__.r(__webpack_exports__);
       /* harmony export */
       __nested_webpack_require_987__.d(__webpack_exports__, {
+        /* harmony export */"actualPropertyValue": function actualPropertyValue() {
+          return (/* binding */_actualPropertyValue
+          );
+        },
         /* harmony export */"getTextWidth": function getTextWidth() {
           return (/* binding */_getTextWidth
           );
@@ -1638,7 +1642,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
                                           takes effect when set to true
       * @return {Number}              - Returns a pure number.
       */
-      function actualPropertyValue(el, prop) {
+      function _actualPropertyValue(el, prop) {
         var config = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : undefined;
         if (el === null) return 0;
         var style = window.getComputedStyle ? window.getComputedStyle(el) : el.currentStyle,
@@ -1652,6 +1656,15 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
         if (config && config.includeMargin === true) {
           marginWidth = parseFloat(style.marginLeft) + parseFloat(style.marginRight);
           marginHeight = parseFloat(style.marginTop) + parseFloat(style.marginBottom);
+        }
+        if (prop === 'fontSize') {
+          actualVal = parseFloat(style.fontSize);
+        }
+        if (prop === 'fontFamily') {
+          actualVal = style.fontFamily;
+        }
+        if (prop === 'letterSpacing') {
+          actualVal = style.letterSpacing;
         }
         if (prop === 'width') {
           maxVal = parseFloat(style.maxWidth);
@@ -1731,7 +1744,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
             _faux.style.setProperty(listOfModifiers[i], propertyValue);
           }
           _faux.textContent = input.value.substring(0, _off).replace(/\s/g, "\xA0");
-          return actualPropertyValue(_faux, 'outerWidth');
+          return _actualPropertyValue(_faux, 'outerWidth');
         }
       }
 

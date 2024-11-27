@@ -522,7 +522,7 @@ import CascadingSelect from 'funda-ui/CascadingSelect';
 
 
 
-### Create Callback 
+### Create Callback via `fetchCallback` 
 
 A successful response returns the details of the callback such as Sample Request Body:
 

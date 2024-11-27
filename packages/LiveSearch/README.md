@@ -420,9 +420,29 @@ JSON Object Literals configuration properties of the `options` and callback from
 
 
 
-### Create Callback 
+### Create Callback via `fetchCallback` 
 
 A successful response returns the details of the callback such as Sample Request Body:
 
 Among them, `label`, `listItemLabel`, `value`, `queryString` and `disabled` are attributes used by the system, and other attributes can be added freely.
 
+
+```json
+[
+    {
+        "label": "banana",
+        "listItemLabel": "banana (No. 0)",
+        "value": "b",
+        "queryString": "banana,xiangjiao,xj",
+        "disabled": false
+    },
+    {
+        "label": "apple",
+        "listItemLabel": "apple (No. 1)",
+        "value": "a",
+        "queryString": "apple,pingguo,pg",
+        "disabled": false
+    },
+    ...
+]
+```

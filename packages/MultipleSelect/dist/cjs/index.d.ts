@@ -11,6 +11,7 @@ export declare type MultipleSelectProps = {
     availableHeaderTitle?: string;
     selectedHeaderTitle?: string;
     selectedHeaderNote?: string;
+    selectedResultReverse?: boolean;
     removeAllBtnLabel?: string | React.ReactNode;
     addAllBtnLabel?: string | React.ReactNode;
     iconAdd?: React.ReactNode | string;

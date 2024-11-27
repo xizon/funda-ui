@@ -1207,6 +1207,7 @@ import MultipleSelect from 'funda-ui/MultipleSelect';
 | `availableHeaderTitle` | string  | - | Header title for available areas. <blockquote>Support html tags</blockquote> | - |
 | `selectedHeaderTitle` | string  | - | Header title for selected areas. <blockquote>Support html tags</blockquote> | - |
 | `selectedHeaderNote` | string  | - | Identification text for the selected item area, using `{items_num}` as placeholder. <blockquote>Support html tags</blockquote> | - |
+| `selectedResultReverse` | boolean | false | The results of the selection are displayed in reverse. | - |
 | `removeAllBtnLabel` | string \| ReactNode  | `Remove all` | Label of remove all button | - |
 | `addAllBtnLabel` | string \| ReactNode  | `Add all` | Label of add all button | - |
 | `iconAdd` | string \| ReactNode  | `<svg width="15px" height="15px" viewBox="0 0 24 24" fill="none"><path d="M12 2C6.49 2 2 6.49 2 12C2 17.51 6.49 22 12 22C17.51 22 22 17.51 22 12C22 6.49 17.51 2 12 2ZM16 12.75H12.75V16C12.75 16.41 12.41 16.75 12 16.75C11.59 16.75 11.25 16.41 11.25 16V12.75H8C7.59 12.75 7.25 12.41 7.25 12C7.25 11.59 7.59 11.25 8 11.25H11.25V8C11.25 7.59 11.59 7.25 12 7.25C12.41 7.25 12.75 7.59 12.75 8V11.25H16C16.41 11.25 16.75 11.59 16.75 12C16.75 12.41 16.41 12.75 16 12.75Z" fill="#000" /></svg>` | The label of the button to add a new item | - |

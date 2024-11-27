@@ -361,6 +361,106 @@ export default () => {
 ```
 
 
+## AI Predict
+
+Set `aiPredict` to true, and you need to use a `aiPredictFetchCallback` property to format the data of the API callback, which will match the data structure of the component.
+
+
+
+```js
+import React from "react";
+import Textarea from 'funda-ui/Textarea';
+
+
+class DataService {
+    
+    // `getSuggestionsList()` must be a Promise Object
+    async getSuggestionsList(searchStr = '', limit = 0, otherParam = '') {
+
+        console.log('searchStr: ', searchStr);
+        console.log("limit: ", limit);
+        console.log("otherParam: ", otherParam);
+
+        const isNotPureWhitespace =(str: string): boolean  =>{
+            return str.trim().length > 0;
+        };
+
+        return {
+            code: 0,
+            message: 'OK',
+            data: isNotPureWhitespace(searchStr) ? [
+                'Using React can simplify complex data operations! ',
+                'What is the difference between front-end development and back-end development? ',
+                'I don\'t know how to learn math, can you teach me?',
+                'How can I upgrade my system to the latest version? '
+            ]: []
+        };
+    }
+
+
+    async getSuggestionsListUseAxios(searchStr = '', limit = 0) {
+        let _data = null;
+        const res = await axios.get(`https://api`, {
+            params: {
+                s: searchStr,
+                limit: limit
+            },
+            headers: {
+                'Authorization': 'Bearer xxxx-xxxxxxxx-xxxxxxxx'
+                'Content-Type': 'application/json'
+            }
+        }).catch(function (error) {
+            console.log(error);
+        });
+
+        if (res && res.status == 200) _data = res.data;
+
+
+        // result
+        if (_data === null) {
+            return {
+                code: 0,
+                message: 'OK',
+                data: []
+            };
+        } else {
+            return {
+                code: 0,
+                message: 'OK',
+                data: _data
+            };
+        }
+
+    }
+    	
+}
+
+
+export default () => {
+
+    return (
+        <>
+
+            <p><small>Type "React" or "learn" to see the effect</small></p>
+
+            <Textarea
+                name="name"
+
+                // AI
+                aiPredict
+                aiPredictFetchFuncAsync={new DataService}
+                aiPredictFetchFuncMethod="getSuggestionsList"
+                aiPredictFetchFuncMethodParams={['$QUERY_STRING',0]}
+                aiPredictFetchCallback={(res) => {
+                    return res;
+                }}
+            />
+      
+        </>
+    );
+}
+```
+
 
 ## API
 
@@ -394,6 +494,13 @@ import Textarea from 'funda-ui/Textarea';
 | `iconRight` | ReactNode  | - | Set the right icon of this control | - |
 | `cols` | number  | - | The cols attribute specifies the visible width of a text area. | - |
 | `rows` | number  | - | The rows attribute specifies the visible height of a text area, in lines. | - |
+| `aiPredict` | boolean | false | Whether to enable AI prediction | - |
+| `aiPredictRemainingTextRGB` | Array | `[153, 153, 153]` | Define a color value for the remaining characters, passed using an RGB array. | - |
+| `aiPredictConfirmKey` | Array | `[['Enter'],['Tab'],['Shift', ' ']]` | Confirm the value of the key pressed. check out [Key values for keyboard events](https://developer.mozilla.org/en-US/docs/Web/API/UI_Events/Keyboard_event_key_values) | - |
+| `aiPredictFetchFuncAsync` | Constructor | - | (**valid when the `aiPredict` is true**) A method as a string from the constructor. | - |
+| `aiPredictFetchFuncMethod` | string  | - | (**valid when the `aiPredict` is true**) When the property is *true*, every time the select changes, a data request will be triggered. <br /><blockquote>The methord must be a Promise Object.</blockquote> | - |
+| `aiPredictFetchFuncMethodParams` | array  | - | (**valid when the `aiPredict` is true**) The parameter passed by the method, it is an array. <br />Note: the first element is a query string, the second element is the number of queried data (usually a number), and then you can increase the third, or fourth, and more parameters. <br />Such as `['',0]`, `['',99,'string 1','string 2']`, `['',99,'string 1','$QUERY_STRING']` <br /><blockquote>There should be at least one parameter which is the query string.  <br />`$QUERY_STRING` identifies the ID of the automatic query, and its value depends on the user input string.</blockquote> | - |
+| `aiPredictFetchCallback` | function  | - | (**valid when the `aiPredict` is true**) Return value from `fetchCallback` property to format the data of the API callback, which will match the data structure of the component. <br />At the same time it returns the original data, you will use this function and use the `return` keyword to return a new value. | - |
 | `onChangeCallback` | function  | - | Return value from `onChangeCallback` property to format the data of the control element, which will match the data structure of the component. It returns two callback values. <br /> <ol><li>The first is the Control Event (**Event**)</li><li>The last is the control (**HTML Element**)</li></ol> <br />At the same time it returns the Control Event, you will use this function and use the `return` keyword to return a new value. <blockquote>It fires when focus is lost. If return is not set, it will not return.</blockquote> | - |
 | `onInputCallback` | function  | - | Return value from `onInputCallback` property to format the data of the control element, which will match the data structure of the component.  It returns two callback values. <br /> <ol><li>The first is the Control Event (**Event**)</li><li>The last is the control (**HTML Element**)</li></ol><br />At the same time it returns the Control Event, you will use this function and use the `return` keyword to return a new value. <blockquote>It fires in real time as the user enters. If return is not set, it will not return.</blockquote> | - |
 | `onKeyPressedCallback` | function  | - | Return value from `onKeyPressedCallback` property to format the data of the control element, which will match the data structure of the component.  It returns two callback values. <br /> <ol><li>The first is the Control Event (**Event**)</li><li>The last is the control (**HTML Element**)</li></ol><br />At the same time it returns the Control Event, you will use this function and use the `return` keyword to return a new value. <blockquote>It fires when the keyboard is pressed. If return is not set, it will not return.</blockquote> | - |
@@ -408,3 +515,21 @@ import Textarea from 'funda-ui/Textarea';
 
 It accepts all props which this control support. Such as `style`, `data-*`, `tabIndex`, `id`, and so on.
 
+
+
+
+
+### Create Callback via `aiPredictFetchCallback` 
+
+A successful response returns the details of the callback such as Sample Request Body:
+
+The return value is an array of strings. such as `[]`
+
+
+```json
+[
+    "String 1",
+    "String 2",
+    ...
+]
+```

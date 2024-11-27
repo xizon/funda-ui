@@ -194,8 +194,9 @@ export default function TreeList(props: TreeListProps) {
     function handleCollapse(e: any) {
         if ( disableCollapse ) return;
 
-        
         e.preventDefault();
+        e.stopPropagation();
+        
         const hyperlink = e.currentTarget;
         const url = hyperlink.getAttribute('href');
         const subElement = getNextSiblings(hyperlink, 'ul');
@@ -258,6 +259,8 @@ export default function TreeList(props: TreeListProps) {
 
     function handleSelect(e: any) {
         e.preventDefault();
+        e.stopPropagation();
+        
         const hyperlink = e.currentTarget;
 
         if ( hyperlink.classList.contains('selected') ) {

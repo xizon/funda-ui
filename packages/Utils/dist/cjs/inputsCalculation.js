@@ -46,6 +46,7 @@ return /******/ (() => { // webpackBootstrap
 var __webpack_exports__ = {};
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "actualPropertyValue": () => (/* binding */ actualPropertyValue),
 /* harmony export */   "getTextWidth": () => (/* binding */ getTextWidth)
 /* harmony export */ });
 /**
@@ -72,6 +73,15 @@ function actualPropertyValue(el, prop) {
   if (config && config.includeMargin === true) {
     marginWidth = parseFloat(style.marginLeft) + parseFloat(style.marginRight);
     marginHeight = parseFloat(style.marginTop) + parseFloat(style.marginBottom);
+  }
+  if (prop === 'fontSize') {
+    actualVal = parseFloat(style.fontSize);
+  }
+  if (prop === 'fontFamily') {
+    actualVal = style.fontFamily;
+  }
+  if (prop === 'letterSpacing') {
+    actualVal = style.letterSpacing;
   }
   if (prop === 'width') {
     maxVal = parseFloat(style.maxWidth);

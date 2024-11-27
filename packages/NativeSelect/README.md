@@ -676,9 +676,27 @@ JSON Object Literals configuration properties of the `options` and callback from
 | `callback` | function | - | Click on the callback function for this option. | - |
 
 
-### Create Callback 
+### Create Callback via `fetchCallback` 
 
 A successful response returns the details of the callback such as Sample Request Body:
 
 Among them, `label`, `listItemLabel`, `value`, `optgroup`, `disabled` and `callback` are attributes used by the system, and other attributes can be added freely
 
+
+```json
+[
+    {
+        "label": "banana",
+        "listItemLabel": "banana (No. 0)",
+        "value": "b",
+        "disabled": false
+    },
+    {
+        "label": "apple",
+        "listItemLabel": "apple (No. 1)",
+        "value": "a",
+        "disabled": false
+    },
+    ...
+]
+```

@@ -442,6 +442,7 @@ var MasonryLayout = function MasonryLayout(props) {
   var windowResizeUpdate = (0,funda_utils_dist_cjs_performance__WEBPACK_IMPORTED_MODULE_2__.debounce)(handleWindowUpdate, 50);
   var windowWidth = typeof window !== 'undefined' ? window.innerWidth : 0;
   var calcInit = (0,react__WEBPACK_IMPORTED_MODULE_0__.useCallback)(function (w) {
+    var _rootRef$current;
     var colCount = COLS;
     var columnWrapper = {};
     var result = [];
@@ -483,6 +484,11 @@ var MasonryLayout = function MasonryLayout(props) {
     if (children && Array.isArray(children)) {
       items = children;
     }
+
+    // get wrapper width
+    var wrapperWidth = ((_rootRef$current = rootRef.current) === null || _rootRef$current === void 0 ? void 0 : _rootRef$current.offsetWidth) || 0;
+    var perBrickWidth = wrapperWidth / colCount; // Prevent the width of the internal elements from overflowing
+
     items.forEach(function (el, i) {
       var columnIndex = i % colCount;
       columnWrapper["".concat(itemWrapperKey).concat(columnIndex)].push( /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
@@ -491,7 +497,11 @@ var MasonryLayout = function MasonryLayout(props) {
         style: {
           marginBottom: "".concat(GAP, "px")
         }
-      }, el));
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+        style: perBrickWidth > 0 ? {
+          maxWidth: perBrickWidth + 'px'
+        } : undefined
+      }, el)));
     });
 
     // STEP 4:

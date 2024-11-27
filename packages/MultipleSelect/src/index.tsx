@@ -40,6 +40,7 @@ export type MultipleSelectProps = {
     availableHeaderTitle?: string;
     selectedHeaderTitle?: string;
     selectedHeaderNote?: string;
+    selectedResultReverse?: boolean;
     removeAllBtnLabel?: string | React.ReactNode;
     addAllBtnLabel?: string | React.ReactNode;
     iconAdd?: React.ReactNode | string;
@@ -88,6 +89,7 @@ const MultipleSelect = forwardRef((props: MultipleSelectProps, externalRef: any)
         availableHeaderTitle,
         selectedHeaderTitle,
         selectedHeaderNote,
+        selectedResultReverse = false,
         removeAllBtnLabel,
         addAllBtnLabel,
         iconAdd,
@@ -314,7 +316,7 @@ const MultipleSelect = forwardRef((props: MultipleSelectProps, externalRef: any)
             const index = newData.findIndex((item: string | number) => item == _val);
             if (index !== -1) newData.splice(index, 1);
 
-            const _res = (_val) ? Array.from(new Set([_val, ...newData])) : newData;
+            const _res = (_val) ? Array.from(new Set([...newData, _val])) : newData;
             onChange?.(_li, _res, VALUE_BY_BRACKETS ? convertArrToValByBrackets(_res) : _res.join(','), _data, 'add');
 
             // hide current item
@@ -330,7 +332,7 @@ const MultipleSelect = forwardRef((props: MultipleSelectProps, externalRef: any)
             const index = newData.findIndex((item: any) => item.value == _val);
             if (index !== -1) newData.splice(index, 1);
 
-            const _res = (_val) ? Array.from(new Set([_data, ...newData])) : newData;
+            const _res = (_val) ? Array.from(new Set([...newData, _data])) : newData;
 
 
             return _res;
@@ -596,13 +598,13 @@ const MultipleSelect = forwardRef((props: MultipleSelectProps, externalRef: any)
                             listContainerClassName="m-select__selected m-select__options-contentlist--sortable m-select__options-contentlist"
                             ref={selectedListRef}
                             indentStr={INDENT_LAST_PLACEHOLDER}
-                            valSelected={valSelected}
+                            valSelected={selectedResultReverse ? valSelected.reverse() : valSelected}
                             iconRemove={iconRemove}
                             onSelect={removeItem}
                             alternateCollapse={alternateCollapse}
                             first={true}
                             arrow={arrow}
-                            data={valSelectedData}
+                            data={selectedResultReverse ? valSelectedData.reverse() : valSelectedData}
                             childClassName={clsWrite(childClassName, 'm-select__options-contentlist--custom')}
                             selected
                         />

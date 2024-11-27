@@ -87,15 +87,22 @@ const MasonryLayout = (props: MasonryLayoutProps) => {
             items = children;
         }
 
+        // get wrapper width
+        const wrapperWidth = rootRef.current?.offsetWidth || 0;
+        const perBrickWidth = wrapperWidth/colCount; // Prevent the width of the internal elements from overflowing
+
+
         items.forEach((el: React.ReactNode, i: number) => {
             const columnIndex = i % colCount;
             columnWrapper[`${itemWrapperKey}${columnIndex}`].push(
                 <div 
                     key={i} 
                     className="masonry-item"
-                    style={{ marginBottom: `${GAP}px` }}
+                    style={{ 
+                        marginBottom: `${GAP}px`
+                    }}
                 >
-                    {el}
+                    <div style={perBrickWidth > 0 ? {maxWidth: perBrickWidth + 'px'} : undefined}>{el}</div>
                 </div>
             );
         });

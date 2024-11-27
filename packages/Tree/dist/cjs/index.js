@@ -1275,6 +1275,7 @@ function TreeList(props) {
   function handleCollapse(e) {
     if (disableCollapse) return;
     e.preventDefault();
+    e.stopPropagation();
     var hyperlink = e.currentTarget;
     var url = hyperlink.getAttribute('href');
     var subElement = (0,dom.getNextSiblings)(hyperlink, 'ul');
@@ -1325,6 +1326,7 @@ function TreeList(props) {
   }
   function handleSelect(e) {
     e.preventDefault();
+    e.stopPropagation();
     var hyperlink = e.currentTarget;
     if (hyperlink.classList.contains('selected')) {
       activeClass(hyperlink, 'remove', 'selected');

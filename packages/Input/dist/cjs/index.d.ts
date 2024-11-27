@@ -30,6 +30,13 @@ export declare type InputProps = {
     iconLeft?: React.ReactNode | string;
     iconRight?: React.ReactNode | string;
     appendControl?: React.ReactNode;
+    aiPredict?: boolean;
+    aiPredictRemainingTextRGB?: number[];
+    aiPredictConfirmKey?: Array<string[]>;
+    aiPredictFetchFuncAsync?: any;
+    aiPredictFetchFuncMethod?: string;
+    aiPredictFetchFuncMethodParams?: any[];
+    aiPredictFetchCallback?: (data: any) => void;
     /** -- */
     id?: string;
     style?: React.CSSProperties;

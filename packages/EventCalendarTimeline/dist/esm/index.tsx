@@ -14,6 +14,7 @@ import { clsWrite, combinedCls } from 'funda-utils/dist/cjs/cls';
 import getOs from 'funda-utils//dist/cjs/os';
 
 
+
 export interface EventsValueConfig {
     id: string | number;
     date: string,
@@ -241,6 +242,10 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
     //
     const FILL_BLANK_DATE_DISABLD = typeof forwardAndBackFillDisabled === 'undefined' ? true : forwardAndBackFillDisabled;
 
+    // root
+    const rootRef = useRef<any>(null);
+    const rootWidth = useRef<number>(0);
+
     //
     const now = useMemo(() => new Date(), []);
     const [date, setDate] = useState<Date>(now);
@@ -261,6 +266,8 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
     const [winMonth, setWinMonth] = useState<boolean>(false);
 
     // modal dialog
+    const modalEditHandleRef = useRef<any>();
+    const modalDeleteHandleRef = useRef<any>();
     const EVENTS_ENABLED = typeof modalContent !== 'undefined';
     const EVENTS_DELETE_ENABLED = typeof modalDeleteContent !== 'undefined';
     const [showEdit, setShowEdit] = useState<boolean>(false);
@@ -303,7 +310,7 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
         // Find the first Monday in the sequence
         for (let i = 0; i < _res.length; i++) {
             const date = _res[i];
-            if (date.getDay() === START_WEEK_ON) { 
+            if (date.getDay() === START_WEEK_ON) {
                 // Return dates starting from Monday onwards
                 return dates.slice(i);
             }
@@ -331,12 +338,16 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
                 // reset selection area
                 setSelectedCells([]);
                 setCopiedCells(null);
+            },
+            closeModal: () => {
+                if (modalEditHandleRef.current) modalEditHandleRef.current.close();
+                if (modalDeleteHandleRef.current) modalDeleteHandleRef.current.close();
             }
         }),
         [contentRef],
     );
 
-    
+
 
     //================================================================
     // Monthly calendar
@@ -379,7 +390,7 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
     // Start selecting
     const handleTableMainCellMouseDown = (e: React.MouseEvent, row: number, col: number, colsOffset: number) => {
         const isMultiSelect = e.ctrlKey || e.metaKey; // Check whether the Ctrl or Command key is pressed
-  
+
         setIsSelecting(true);
         setStartCell({ row, col });
 
@@ -392,9 +403,9 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
             if (isMultiSelect) {
                 // Multi-select mode: Add or remove cells
                 //++++++++++
-                const cellExists = prevSelectedCells.some(({row: r, col: c}) => r === row && c === col);
+                const cellExists = prevSelectedCells.some(({ row: r, col: c }) => r === row && c === col);
                 if (cellExists) {
-                    return prevSelectedCells.filter(({row: r, col: c}) => !(r === row && c === col));
+                    return prevSelectedCells.filter(({ row: r, col: c }) => !(r === row && c === col));
                 } else {
                     return [...prevSelectedCells, {
                         rowData: JSON.parse(_el.dataset.rowinfo),
@@ -440,7 +451,7 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
             const [minRow, maxRow] = [startCell.row, row].sort((a, b) => a - b);
             const [minCol, maxCol] = [startCell.col, col].sort((a, b) => a - b);
 
-    
+
             for (let r = minRow; r <= maxRow; r++) {
                 for (let c = minCol; c <= maxCol; c++) {
 
@@ -494,10 +505,10 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
 
         // Listen for copy
         if ((isMac && e.metaKey && e.key === 'c') || (!isMac && e.ctrlKey && e.key === 'c')) {
-            
+
             if (selectedCells.length > 0) {
                 // Gets the structure of the selected area
-                const _selectedCellsCoordinates = selectedCells.map(({row: r, col: c}) => {
+                const _selectedCellsCoordinates = selectedCells.map(({ row: r, col: c }) => {
                     return [r, c];
                 });
 
@@ -526,7 +537,7 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
                     if (col > maxCol) maxCol = col;
                 }
                 */
-                
+
                 // Calculate the offset and adjust the cell coordinates
                 const adjustedCells = _selectedCellsCoordinates.map(([r, c]) => [r - minRow, c - minCol]);
 
@@ -550,16 +561,16 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
 
         // Listen for paste
         if ((isMac && e.metaKey && e.key === 'v') || (!isMac && e.ctrlKey && e.key === 'v')) {
-            
+
 
             if (copiedCells && selectedCells.length > 0) {
-                const {rowsTotal, colsTotal, forwardFillTotal} = getCells();
-                const {row: targetRow, col: targetCol} = selectedCells[0]; // the first position
+                const { rowsTotal, colsTotal, forwardFillTotal } = getCells();
+                const { row: targetRow, col: targetCol } = selectedCells[0]; // the first position
                 const newSelectedCellsCoordinates = copiedCells.cells.map(([r, c]) => [
                     targetRow + r,
                     targetCol + c
                 ]).filter(([r, c]) => r < rowsTotal && c < colsTotal); // Make sure you don't go beyond the scope of the table
-        
+
                 // query date and row data
                 const newSelectedCells: any[] = [];
                 newSelectedCellsCoordinates.forEach((item: any[]) => {
@@ -570,7 +581,7 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
                         date: curDateList[c - forwardFillTotal],
                         row: r,
                         col: c
-                    });  
+                    });
                 });
 
 
@@ -618,7 +629,7 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
 
     // cell
     const getCells = (type: 'none' | 'forward' | 'back' = 'none') => {
-        
+
 
         //########## MODE: WEEK #############
         if (appearanceMode === 'week') {
@@ -626,14 +637,14 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
             weekDates.forEach((date: Date, dayIndex: number) => {
                 const _dayOfWeek = new Date(date).getDay();
                 //                     ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
-                const _daysIndicator = [7, 1, 2, 3, 4, 5, 6]; 
+                const _daysIndicator = [7, 1, 2, 3, 4, 5, 6];
                 const _detail = getDateDetails(date);
                 const {
                     year: _temp_year,
                     month: _temp_month,
                     day: _temp_day
                 } = _detail;
-    
+
                 curWeek.push({
                     month: Number(_temp_month) - 1,
                     startDay: _daysIndicator[_dayOfWeek],
@@ -650,13 +661,13 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
                         }
                     ],
                     weekDisplay: [
-                        WEEK[_daysIndicator[_dayOfWeek]-1]
+                        WEEK[_daysIndicator[_dayOfWeek] - 1]
                     ],
                     week: [
-                        _daysIndicator[_dayOfWeek]-1
+                        _daysIndicator[_dayOfWeek] - 1
                     ]
                 });
-                
+
             });
 
             return {
@@ -665,44 +676,44 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
                 forwardFillTotal: 0,
                 list: curWeek
             };
-      
+
         }
         //########## /MODE: WEEK #############
 
-    
+
 
         //########## MODE: MONTH #############
         if (appearanceMode === 'month') {
             let currentMonth: any = month;
             let currentStartDay: any = startDay;
-    
+
             // previous month
             if (type === 'forward') {
                 const _date = new Date(year, currentMonth - 1, day);
                 currentMonth = _date.getMonth();
                 currentStartDay = getStartDayOfMonth(_date);
             }
-    
+
             // next month
             if (type === 'back') {
                 const _date = new Date(year, currentMonth + 1, day);
                 currentMonth = _date.getMonth();
                 currentStartDay = getStartDayOfMonth(_date);
             }
-    
-    
+
+
             //
             const allDays = Array(days[currentMonth] + (currentStartDay - 1)).fill(null).map((_: any, i: number) => i); // [0,1,..,30,31]
             const rows = Math.ceil(allDays.length / 7); // 5
-    
+
             //
             const _tempCells: any[] = Array.from({ length: rows }).fill(null);
-    
+
             const _getForwardFill = (_year: number, _month: number) => {
                 // Get the last day of the previous month
                 const lastDayOfLastMonth = new Date(_year, _month - 1, 0);
                 const last7Days: Date[] = [];
-    
+
                 // Rewind 7 days forward from the last day
                 for (let i = 0; i < 7; i++) {
                     last7Days.unshift(new Date(lastDayOfLastMonth));
@@ -710,81 +721,81 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
                 }
                 return last7Days.map((v: Date) => getCalendarDate(v));
             };
-    
+
             const _getBackFill = (_year: number, _month: number) => {
                 // Get the first day of the next month
                 const firstDayOfNextMonth = new Date(_year, _month, 1);
                 const first7Days: Date[] = [];
-    
+
                 // Rewind 7 days forward from the first day of the next month
                 for (let i = 0; i < 7; i++) {
                     first7Days.push(new Date(firstDayOfNextMonth));
                     firstDayOfNextMonth.setDate(firstDayOfNextMonth.getDate() + 1);
                 }
-    
+
                 return first7Days.map((v: Date) => getCalendarDate(v));
             };
-        
-       
+
+
 
             // The remaining date of the previous month
             // If the number is 7, the calendar does not include the date of the previous month
-            const remainPrevDate = findMondayAndTruncate(_getForwardFill(year, month+1));
+            const remainPrevDate = findMondayAndTruncate(_getForwardFill(year, month + 1));
             const remainPrevDateTotal = remainPrevDate.length === 7 ? 0 : remainPrevDate.length;
 
-           
+
             return {
                 rowsTotal: orginalData.length,
                 colsTotal: allDays.length,
                 forwardFillTotal: remainPrevDateTotal,
                 list: _tempCells.map((_: any, j: number) => {
                     const _col = allDays.slice(j * 7, (j + 1) * 7);
-        
+
                     // back fill
                     const backFillArr: null[] = [];
                     for (let k = 0; k < 7 - _col.length; k++) {
                         backFillArr.push(null);
                     }
                     _col.splice(_col.length, 0, ...backFillArr as any);
-        
-        
+
+
                     //
                     const isFirstGroup = j === 0;
                     const isLastGroup = j === _tempCells.length - 1;
-         
-        
+
+
                     // forward fill
-                    const __forwardFillDate: string[] = _getForwardFill(year, month+1);
-        
+                    const __forwardFillDate: string[] = _getForwardFill(year, month + 1);
+
                     // back fill
-                    const __backFillDate: string[] = _getBackFill(year, month+1);
-        
-        
+                    const __backFillDate: string[] = _getBackFill(year, month + 1);
+
+
                     const _getDateShow = (_dayIndex: number, _m: number, _startDay: number, _month: number) => {
                         const currentDay = typeof _dayIndex === 'number' ? _dayIndex - (_startDay - 2) : 0; // ..., -3, -2, -1, 0, 1, 2, 3, 4, 5, 6, 7, ...
-        
+
                         // date
                         let _dateShow: any = currentDay > 0 ? `${year}-${_month + 1}-${currentDay}` : '';
-        
+
                         // forward & back
-                        if (isFirstGroup &&  _dateShow === '') {
-                            _dateShow = __forwardFillDate.at(currentDay-1);
+                        if (isFirstGroup && _dateShow === '') {
+                            _dateShow = __forwardFillDate.at(currentDay - 1);
                         }
-        
+
                         if (isLastGroup && _dateShow === '') {
                             _dateShow = __backFillDate.at(_m);
                         }
-        
-        
+
+
                         return {
                             date: getCalendarDate(_dateShow),
                             firstGroup: isFirstGroup,
                             lastGroup: isLastGroup,
                             validDisplayDate: currentDay > 0 && currentDay <= days[month]
                         };
-        
+
                     }
-        
+
                     //
                     return {
                         month: currentMonth,
@@ -801,12 +812,12 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
                         week: _col.map((k: number, m: number) => {
                             return m
                         }),
-                        
+
                     }
                 })
             };
-            
-            
+
+
         }
         //########## /MODE: MONTH #############
 
@@ -834,7 +845,7 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
             if (_rowData[0]) {
                 const _items = _rowData[0].list;
 
-                
+
                 if (tableCellId === -1) {
                     // add new
                     _currentData = {
@@ -849,7 +860,7 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
 
             }
 
-            return _rowData[0] ? _currentData: {
+            return _rowData[0] ? _currentData : {
                 rowData: curRowData.listSection,
                 id: 0,
                 date: getCalendarDate(curDate)
@@ -1052,7 +1063,7 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
 
         }
         //########## /MODE: MONTH #############
-                
+
 
     }
 
@@ -1093,8 +1104,8 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
             });
         }
         //########## /MODE: MONTH #############
-                
-        
+
+
     }
     function handleDayChange(e: React.MouseEvent, currentDay: number) {
         setDate(new Date(year, month, currentDay));
@@ -1169,7 +1180,7 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
         onChangeAppearanceMode?.(_mode);
     }
 
-    
+
 
 
     function handleShowWinYear() {
@@ -1207,11 +1218,11 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
         // colIndex
         let colIndex = 0;
 
-        const {forwardFillTotal, list: cellsList} = getCells();
+        const { forwardFillTotal, list: cellsList } = getCells();
         return cellsList.map((item: any, j: number) => {
 
 
-           
+
             return item.col.map((dayIndex: number, i: number) => {
 
                 colIndex++;
@@ -1234,8 +1245,8 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
                 const isInteractive = item.dateInfo[i].validDisplayDate;  // The date on which the user interaction can occur, e.g. click, modify
                 const isForward = item.dateInfo[i].firstGroup && !isInteractive;
                 const isBack = item.dateInfo[i].lastGroup && !isInteractive;
-                
-                
+
+
                 // days
                 //------
                 if (!showEvents) {
@@ -1310,9 +1321,9 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
                             }}
                         >
 
-                            
+
                             {/* forward fill & day & back fill */}
-                            <div 
+                            <div
                                 className={combinedCls(
                                     'custom-event-tl-table__cell-cushion custom-event-tl-table__cell-cushion-headercontent',
                                     {
@@ -1374,7 +1385,7 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
                                     `custom-event-tl-table__cell-cushion-content__item custom-event-tl-table__cell-cushion-content__item-${cellItemIndex}`,
                                     {
                                         'first': cellItemIndex === 0,
-                                        'last': cellItemIndex === _items.length-1
+                                        'last': cellItemIndex === _items.length - 1
                                     }
                                 )}
                                 key={`cell-item-${rowIndex}-${cellItemIndex}}`}
@@ -1455,10 +1466,10 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
                                 <div
                                     className={`custom-event-tl__day__eventdel ${cellCloseBtnClassName || ''}`}
                                 >
-                                    <a 
-                                        href="#" 
-                                        tabIndex={-1} 
-                                        className="align-middle" 
+                                    <a
+                                        href="#"
+                                        tabIndex={-1}
+                                        className="align-middle"
                                         data-date={_dateShow}
                                         data-day={_dateDayShow}
                                         data-week={weekDay}
@@ -1498,7 +1509,7 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
                                             }
 
 
-                                            
+
                                         }}
                                     >
                                         {_delBtn()}
@@ -1510,7 +1521,7 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
                         });
                     };
 
-                    
+
 
                     const _tdContent = () => {
 
@@ -1553,10 +1564,10 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
                                     onChangeDate?.(e, null);
                                 }
 
-                                
+
                                 if (multipleCells) handleTableMainCellMouseDown(e, rowIndex, dayIndex, forwardFillTotal);
                             }}
-                            
+
                             onDoubleClick={(e: React.MouseEvent) => {
                                 //
                                 onCellDoubleClick?.(e, {
@@ -1576,7 +1587,7 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
 
 
                             {/* forward fill & day & back fill */}
-                            <div 
+                            <div
                                 className={combinedCls(
                                     'custom-event-tl-table__cell-cushion custom-event-tl-table__cell-cushion-content',
                                     {
@@ -1585,9 +1596,9 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
                                 )}
                                 style={{ width: (CELL_MIN_W - 1) + 'px' }}
                             >
-                        
+
                                 {/*++++++++++++++++ EVENT ++++++++++++++++*/}
-                                {_eventContent() || <><i style={{userSelect: 'none'}}>&nbsp;</i></>}
+                                {_eventContent() || <><i style={{ userSelect: 'none' }}>&nbsp;</i></>}
                                 {/*++++++++++++++++ /EVENT ++++++++++++++++*/}
 
                                 {/* ADD BUTTON */}
@@ -1595,10 +1606,10 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
                                     <div
                                         className={`custom-event-tl__day__eventadd ${cellAddBtnClassName || ''}`}
                                     >
-                                        <a 
-                                            href="#" 
-                                            tabIndex={-1} 
-                                            className="align-middle" 
+                                        <a
+                                            href="#"
+                                            tabIndex={-1}
+                                            className="align-middle"
                                             data-date={_dateShow}
                                             data-day={_dateDayShow}
                                             data-week={weekDay}
@@ -1644,7 +1655,7 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
                                 </>}
                                 {/* /ADD BUTTON */}
                             </div>
-                            
+
 
                         </td>;
                     };
@@ -1668,7 +1679,7 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
 
     function generateColUi() {
 
-        {/* //########## MODE: WEEK ############# */}
+        {/* //########## MODE: WEEK ############# */ }
         if (appearanceMode === 'week') {
             return Array.from({ length: 7 }).fill(0).map((item: any, i: number) => {
                 return (
@@ -1683,10 +1694,10 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
             })
         }
 
-        {/* //########## /MODE: WEEK ############# */}
+        {/* //########## /MODE: WEEK ############# */ }
 
 
-        {/* //########## MODE: MONTH ############# */}
+        {/* //########## MODE: MONTH ############# */ }
         if (appearanceMode === 'month') {
             if (FILL_BLANK_DATE_DISABLD) {
                 return Array.from({ length: days[month] }).fill(0).map((item: any, i: number) => {
@@ -1705,7 +1716,7 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
                 // colIndex
                 let colIndex = 0;
 
-                const {forwardFillTotal, list: cellsList} = getCells();
+                const { forwardFillTotal, list: cellsList } = getCells();
                 return cellsList.map((item: any, j: number) => {
                     return item.col.map((dayIndex: number | null, i: number) => {
 
@@ -1713,7 +1724,7 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
 
                         // helper
                         const isInteractive = item.dateInfo[i].validDisplayDate;  // The date on which the user interaction can occur, e.g. click, modify
-                
+
                         return (
                             <col
                                 className={combinedCls(
@@ -1733,9 +1744,9 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
 
 
                 })
-            } 
+            }
         }
-        {/* //########## /MODE: MONTH ############# */}
+        {/* //########## /MODE: MONTH ############# */ }
 
 
 
@@ -1795,7 +1806,7 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
         if (tableGridRef.current === null) return;
 
         const tableGridEl: any = tableGridRef.current;
-       
+
         // initialize cell height
         const headerTitleTrElements = tableGridEl.querySelector('.custom-event-tl-table__datagrid-body__title tbody').getElementsByTagName('tr');
         const trElements = tableGridEl.querySelector('.custom-event-tl-table__datagrid-body__content tbody').getElementsByTagName('tr');
@@ -1810,14 +1821,26 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
         }
 
     }
+   
 
-    
+    function outerWrapperInit() {
+        if (rootRef.current === null) return;
+
+        // calculate wrapper width 
+        const wrapperWidth = rootRef.current.parentElement?.offsetWidth || 0;
+        if (rootRef.current && wrapperWidth > 0 && rootWidth.current === 0) {
+            rootWidth.current = wrapperWidth;
+            rootRef.current.style.width = wrapperWidth + 'px';
+        }
+    }
+
+
     function tableGridInit() {
 
         //
         if (tableGridRef.current === null) return;
 
-        const {forwardFillTotal, list: cellsList} = getCells();
+        const { forwardFillTotal, list: cellsList } = getCells();
         const tableGridEl: any = tableGridRef.current;
         let _curCellMinWidth: number = CELL_MIN_W;
         let _curColCount: number = FILL_BLANK_DATE_DISABLD ? days[month] : 7 * cellsList.length;
@@ -1826,7 +1849,6 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
         if (appearanceMode === 'week') {
             _curColCount = 7;
         }
-        
 
         //****************
         // STEP 1-1: 
@@ -1840,7 +1862,7 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
             const tableBorderWidth = 4;
             const scrollMaxWidth = tableMaxWidth - tableHeaderTitleWidth - tableDividerWidth - tableBorderWidth;
 
-            _curCellMinWidth = scrollMaxWidth/7;
+            _curCellMinWidth = scrollMaxWidth / 7;
             _curColCount = 7;
 
             // header
@@ -1848,10 +1870,10 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
                 node.style.width = _curCellMinWidth + 'px';
             });
 
-            
+
         }
-        
-        
+
+
 
         //****************
         // STEP 1-2: 
@@ -1874,18 +1896,18 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
             if (curHeaderThContent !== null) curHeaderThContent.style.width = _curCellMinWidth + 'px';
         }
 
-        
+
         const mainTdContentContainers: any = tableGridEl.querySelector('.custom-event-tl-table__datagrid-body__content tbody').getElementsByTagName('td');
         for (let i = 0; i < mainTdContentContainers.length; i++) {
             const curHeaderThContent = mainTdContentContainers[i].querySelector('.custom-event-tl-table__cell-cushion-content');
             if (curHeaderThContent !== null) curHeaderThContent.style.width = _curCellMinWidth + 'px';
         }
-        
+
         const mainTdContentCols: any = tableGridEl.querySelector('.custom-event-tl-table__datagrid-body__content colgroup').getElementsByTagName('col')
         for (let i = 0; i < mainTdContentCols.length; i++) {
             mainTdContentCols[i].style.minWidth = _curCellMinWidth + 'px';
         }
-   
+
 
         //****************
         // STEP 2: 
@@ -1917,7 +1939,7 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
 
             }
         });
-    
+
 
         //****************
         // STEP 3: 
@@ -2009,7 +2031,7 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
             }
 
         });
-      
+
 
 
         //****************
@@ -2031,7 +2053,7 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
             const tableBorderWidth = 4;
             const scrollMaxWidth = tableMaxWidth - tableHeaderTitleWidth - tableDividerWidth - tableBorderWidth;
 
-            _curCellMinWidth = scrollMaxWidth/7;
+            _curCellMinWidth = scrollMaxWidth / 7;
             _curColCount = 7;
 
             // header content
@@ -2059,13 +2081,13 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
         //--------------
         const _scrollableWrapper = tableGridEl.querySelectorAll('.custom-event-tl-table__scroller-harness');
         [].slice.call(_scrollableWrapper).forEach((el: any) => {
-            
+
             const _content = el.querySelector('.custom-event-tl-table__scroller');
             el.removeAttribute('data-width');
             el.removeAttribute('style');
             _content.removeAttribute('style');
         });
-    
+
 
         // initialize cell height
         //--------------
@@ -2114,7 +2136,7 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
 
     useEffect(() => {
 
-        const {forwardFillTotal, list: cellsList} = getCells();
+        const { forwardFillTotal, list: cellsList } = getCells();
         if (typeof appearanceWeekTmpl === 'function') {
             setDisplayWeekForHeader([cellsList.at(0).dateInfo[0].date, cellsList.at(-1).dateInfo[0].date]);
         } else {
@@ -2140,11 +2162,16 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
     }, [eventsValue, customTodayDate, appearanceMode]);
 
 
-    
+
     useEffect(() => {
 
 
+        // calculate wrapper width (!!!FIRST!!!)
+        //--------------
+        outerWrapperInit();
+
         // !!!Please do not use dependencies
+        //--------------
         return () => {
 
             // reset table grid
@@ -2159,357 +2186,364 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
     return (
         <>
 
-            {/*/////////////////////////////////////////////////// */}
-            {/*//////////////////// Calendar //////////////////// */}
-            {/*////////////////////////////////////////////////// */}
+            <div
+                ref={rootRef}
+                className="custom-event-tl__outerwrapper"
+            >
 
-            <div className={combinedCls(
-                `custom-event-tl__wrapper custom-event-tl__wrapper--${appearanceMode}`,
-                calendarWrapperClassName
-            )}>
+                {/*/////////////////////////////////////////////////// */}
+                {/*//////////////////// Calendar //////////////////// */}
+                {/*////////////////////////////////////////////////// */}
 
-                {/*++++++++++++++++ MAIN ++++++++++++++++*/}
-                <div className="custom-event-tl__header bg-body-tertiary">
-                    <button tabIndex={-1} type="button" className="custom-event-tl__btn custom-event-tl__btn--prev" onClick={handlePrevChange}>
-                        <svg width="20px" height="20px" viewBox="0 0 24 24" fill="none">
-                            <path d="M14.2893 5.70708C13.8988 5.31655 13.2657 5.31655 12.8751 5.70708L7.98768 10.5993C7.20729 11.3805 7.2076 12.6463 7.98837 13.427L12.8787 18.3174C13.2693 18.7079 13.9024 18.7079 14.293 18.3174C14.6835 17.9269 14.6835 17.2937 14.293 16.9032L10.1073 12.7175C9.71678 12.327 9.71678 11.6939 10.1073 11.3033L14.2893 7.12129C14.6799 6.73077 14.6799 6.0976 14.2893 5.70708Z" fill="#000" />
-                        </svg>
-                    </button>
+                <div className={combinedCls(
+                    `custom-event-tl__wrapper custom-event-tl__wrapper--${appearanceMode}`,
+                    calendarWrapperClassName
+                )}>
 
-                    {/* //########## MODE: WEEK ############# */}
-                    {appearanceMode === 'week' ? <>
-                        <div className="custom-event-tl__header__info">
-                            {typeof appearanceWeekTmpl === 'function' ? <>{appearanceWeekTmpl(displayWeekForHeader[0], displayWeekForHeader[1])}</> : <>{displayWeekForHeader[0]} - {displayWeekForHeader[1]}</>}
+                    {/*++++++++++++++++ MAIN ++++++++++++++++*/}
+                    <div className="custom-event-tl__header bg-body-tertiary">
+                        <button tabIndex={-1} type="button" className="custom-event-tl__btn custom-event-tl__btn--prev" onClick={handlePrevChange}>
+                            <svg width="20px" height="20px" viewBox="0 0 24 24" fill="none">
+                                <path d="M14.2893 5.70708C13.8988 5.31655 13.2657 5.31655 12.8751 5.70708L7.98768 10.5993C7.20729 11.3805 7.2076 12.6463 7.98837 13.427L12.8787 18.3174C13.2693 18.7079 13.9024 18.7079 14.293 18.3174C14.6835 17.9269 14.6835 17.2937 14.293 16.9032L10.1073 12.7175C9.71678 12.327 9.71678 11.6939 10.1073 11.3033L14.2893 7.12129C14.6799 6.73077 14.6799 6.0976 14.2893 5.70708Z" fill="#000" />
+                            </svg>
+                        </button>
+
+                        {/* //########## MODE: WEEK ############# */}
+                        {appearanceMode === 'week' ? <>
+                            <div className="custom-event-tl__header__info">
+                                {typeof appearanceWeekTmpl === 'function' ? <>{appearanceWeekTmpl(displayWeekForHeader[0], displayWeekForHeader[1])}</> : <>{displayWeekForHeader[0]} - {displayWeekForHeader[1]}</>}
+                            </div>
+                        </> : null}
+                        {/* //########## /MODE: WEEK ############# */}
+
+
+                        {/* //########## MODE: MONTH ############# */}
+                        {appearanceMode === 'month' ? <>
+                            <div className="custom-event-tl__header__btns">
+                                <button tabIndex={-1} type="button" className={`custom-event-tl__btn ${winMonth ? 'active' : ''}`} onClick={handleShowWinMonth}>
+                                    {MONTHS[month]}
+                                    <svg width="12px" height="12px" viewBox="0 0 24 24"><path d="M11.178 19.569a.998.998 0 0 0 1.644 0l9-13A.999.999 0 0 0 21 5H3a1.002 1.002 0 0 0-.822 1.569l9 13z" fill="#000000" /></svg>
+                                </button>
+                                <button tabIndex={-1} type="button" className={`custom-event-tl__btn ${winYear ? 'active' : ''}`} onClick={handleShowWinYear}>
+                                    {year}
+                                    <svg width="12px" height="12px" viewBox="0 0 24 24"><path d="M11.178 19.569a.998.998 0 0 0 1.644 0l9-13A.999.999 0 0 0 21 5H3a1.002 1.002 0 0 0-.822 1.569l9 13z" fill="#000000" /></svg>
+                                </button>
+                            </div>
+                        </> : null}
+                        {/* //########## /MODE: MONTH ############# */}
+
+
+
+                        <button tabIndex={-1} type="button" className="custom-event-tl__btn custom-event-tl__btn--next" onClick={handleNextChange}>
+                            <svg width="20px" height="20px" viewBox="0 0 24 24" fill="none">
+                                <path d="M9.71069 18.2929C10.1012 18.6834 10.7344 18.6834 11.1249 18.2929L16.0123 13.4006C16.7927 12.6195 16.7924 11.3537 16.0117 10.5729L11.1213 5.68254C10.7308 5.29202 10.0976 5.29202 9.70708 5.68254C9.31655 6.07307 9.31655 6.70623 9.70708 7.09676L13.8927 11.2824C14.2833 11.6729 14.2833 12.3061 13.8927 12.6966L9.71069 16.8787C9.32016 17.2692 9.32016 17.9023 9.71069 18.2929Z" fill="#000" />
+                            </svg>
+                        </button>
+                    </div>
+
+
+
+                    <div className="custom-event-tl__body">
+
+
+                        <div className="custom-event-tl__row">
+                            {/* day */}
+
+                            {/* /day */}
                         </div>
-                    </> : null}
-                    {/* //########## /MODE: WEEK ############# */}
+
+                    </div>
+                    {/*++++++++++++++++ /MAIN ++++++++++++++++*/}
 
 
-                    {/* //########## MODE: MONTH ############# */}
-                    {appearanceMode === 'month' ? <>
-                        <div className="custom-event-tl__header__btns">
-                            <button tabIndex={-1} type="button" className={`custom-event-tl__btn ${winMonth ? 'active' : ''}`} onClick={handleShowWinMonth}>
-                                {MONTHS[month]}
-                                <svg width="12px" height="12px" viewBox="0 0 24 24"><path d="M11.178 19.569a.998.998 0 0 0 1.644 0l9-13A.999.999 0 0 0 21 5H3a1.002 1.002 0 0 0-.822 1.569l9 13z" fill="#000000" /></svg>
-                            </button>
-                            <button tabIndex={-1} type="button" className={`custom-event-tl__btn ${winYear ? 'active' : ''}`} onClick={handleShowWinYear}>
-                                {year}
-                                <svg width="12px" height="12px" viewBox="0 0 24 24"><path d="M11.178 19.569a.998.998 0 0 0 1.644 0l9-13A.999.999 0 0 0 21 5H3a1.002 1.002 0 0 0-.822 1.569l9 13z" fill="#000000" /></svg>
-                            </button>
+                    {/*++++++++++++++++ MONTH SELECTION TAB ++++++++++++++++*/}
+                    <div className={`custom-event-tl__month-wrapper shadow p-3 mb-5 bg-body-tertiary rounded ${winMonth ? 'active' : ''}`}>
+                        <div className="custom-event-tl__month-container">
+                            {MONTHS_FULL.map((month, index) => {
+                                return <div
+                                    data-month={padZero(index + 1)}
+                                    className={`custom-event-tl__month ${selectedMonth === index ? ' selected' : ''}`}
+                                    key={month + index}
+                                    onClick={() => { handleMonthChange(index) }}
+                                >{month}</div>
+                            })}
                         </div>
-                    </> : null}
-                    {/* //########## /MODE: MONTH ############# */}
-
-
-                    
-                    <button tabIndex={-1} type="button" className="custom-event-tl__btn custom-event-tl__btn--next" onClick={handleNextChange}>
-                        <svg width="20px" height="20px" viewBox="0 0 24 24" fill="none">
-                            <path d="M9.71069 18.2929C10.1012 18.6834 10.7344 18.6834 11.1249 18.2929L16.0123 13.4006C16.7927 12.6195 16.7924 11.3537 16.0117 10.5729L11.1213 5.68254C10.7308 5.29202 10.0976 5.29202 9.70708 5.68254C9.31655 6.07307 9.31655 6.70623 9.70708 7.09676L13.8927 11.2824C14.2833 11.6729 14.2833 12.3061 13.8927 12.6966L9.71069 16.8787C9.32016 17.2692 9.32016 17.9023 9.71069 18.2929Z" fill="#000" />
-                        </svg>
-                    </button>
-                </div>
-
-
-
-                <div className="custom-event-tl__body">
-
-
-                    <div className="custom-event-tl__row">
-                        {/* day */}
-
-                        {/* /day */}
                     </div>
+                    {/*++++++++++++++++ /MONTH SELECTION TAB ++++++++++++++++*/}
 
-                </div>
-                {/*++++++++++++++++ /MAIN ++++++++++++++++*/}
+                    {/*++++++++++++++++ YEAR SELECTION TAB ++++++++++++++++*/}
+                    <div className={`custom-event-tl__year-wrapper shadow p-3 mb-5 bg-body-tertiary rounded ${winYear ? 'active' : ''}`}>
+                        <div className="custom-event-tl__year-container bg-body-tertiary">
+                            {yearsArray.map((year, index) => {
+                                return <div
+                                    data-year={year}
+                                    className={`custom-event-tl__year ${selectedYear === year ? ' selected' : ''}`}
+                                    key={year + index}
+                                    onClick={() => { handleYearChange(year) }}
+                                >{year}</div>
+                            })}
+                        </div>
 
-
-                {/*++++++++++++++++ MONTH SELECTION TAB ++++++++++++++++*/}
-                <div className={`custom-event-tl__month-wrapper shadow p-3 mb-5 bg-body-tertiary rounded ${winMonth ? 'active' : ''}`}>
-                    <div className="custom-event-tl__month-container">
-                        {MONTHS_FULL.map((month, index) => {
-                            return <div
-                                data-month={padZero(index + 1)}
-                                className={`custom-event-tl__month ${selectedMonth === index ? ' selected' : ''}`}
-                                key={month + index}
-                                onClick={() => { handleMonthChange(index) }}
-                            >{month}</div>
-                        })}
                     </div>
-                </div>
-                {/*++++++++++++++++ /MONTH SELECTION TAB ++++++++++++++++*/}
+                    {/*++++++++++++++++ /YEAR SELECTION TAB ++++++++++++++++*/}
 
-                {/*++++++++++++++++ YEAR SELECTION TAB ++++++++++++++++*/}
-                <div className={`custom-event-tl__year-wrapper shadow p-3 mb-5 bg-body-tertiary rounded ${winYear ? 'active' : ''}`}>
-                    <div className="custom-event-tl__year-container bg-body-tertiary">
-                        {yearsArray.map((year, index) => {
-                            return <div
-                                data-year={year}
-                                className={`custom-event-tl__year ${selectedYear === year ? ' selected' : ''}`}
-                                key={year + index}
-                                onClick={() => { handleYearChange(year) }}
-                            >{year}</div>
-                        })}
+
+
+                    {/*++++++++++++++++ TODAY SELECTION TAB ++++++++++++++++*/}
+                    <div className="custom-event-tl__today-wrapper p-2">
+                        <button
+                            tabIndex={-1}
+                            type="button"
+                            className="custom-event-tl__btn custom-event-tl__btn--today"
+                            onClick={handleTodayChange}
+                        >
+                            {langToday || 'Today'}
+                        </button>
+
+                        {appearanceToggle ? <>
+                            <button
+                                tabIndex={-1}
+                                type="button"
+                                className={`custom-event-tl__btn custom-event-tl__btn--appearance ${appearanceMode === 'month' ? 'active' : ''}`}
+                                data-mode="month"
+                                onClick={handleAppearanceChange}
+                            >
+                                {langAppearanceLabelMonth || 'Month'}
+                            </button>
+                            <button
+                                tabIndex={-1}
+                                type="button"
+                                className={`custom-event-tl__btn custom-event-tl__btn--appearance ${appearanceMode === 'week' ? 'active' : ''}`}
+                                data-mode="week"
+                                onClick={handleAppearanceChange}
+                            >
+                                {langAppearanceLabelWeek || 'Week'}
+                            </button>
+                        </> : null}
+
                     </div>
-
-                </div>
-                {/*++++++++++++++++ /YEAR SELECTION TAB ++++++++++++++++*/}
+                    {/*++++++++++++++++ /TODAY SELECTION TAB ++++++++++++++++*/}
 
 
+                </div>{/* /.custom-event-tl__wrapper */}
 
-                {/*++++++++++++++++ TODAY SELECTION TAB ++++++++++++++++*/}
-                <div className="custom-event-tl__today-wrapper p-2">
-                    <button 
-                        tabIndex={-1} 
-                        type="button" 
-                        className="custom-event-tl__btn custom-event-tl__btn--today" 
-                        onClick={handleTodayChange}
+
+
+                {/*/////////////////////////////////////////////////// */}
+                {/*//////////////////// Table Grid //////////////////// */}
+                {/*////////////////////////////////////////////////// */}
+                {orginalData.length === 0 ? null : <>
+                    <div
+                        ref={tableGridRef}
+                        className={combinedCls(
+                            `custom-event-tl-table__timeline-table__wrapper custom-event-tl-table__timeline-table__wrapper--${appearanceMode} invisible`,
+                            tableWrapperClassName
+                        )}
+                        onKeyDown={(e: React.KeyboardEvent<HTMLDivElement>) => {
+                            onKeyPressed?.(e, selectedCells);
+
+                            // Copy & Paste
+                            handleWrapperKeyDown(e);
+                        }}
+                        tabIndex={-1} // require "tabIndex" attribute
                     >
-                        {langToday || 'Today'}
-                    </button>
+                        <table role="grid" className={combinedCls(
+                            "custom-event-tl-table__timeline-table",
+                            tableClassName
+                        )}>
+                            <colgroup>
+                                <col className="custom-event-tl-table__datagrid-header" />
+                                <col />
+                                <col />
+                            </colgroup>
 
-                    {appearanceToggle ? <>
-                        <button 
-                            tabIndex={-1} 
-                            type="button" 
-                            className={`custom-event-tl__btn custom-event-tl__btn--appearance ${appearanceMode === 'month' ? 'active' : ''}`}
-                            data-mode="month" 
-                            onClick={handleAppearanceChange}
-                        >
-                            {langAppearanceLabelMonth || 'Month'}
-                        </button>
-                        <button 
-                            tabIndex={-1} 
-                            type="button" 
-                            className={`custom-event-tl__btn custom-event-tl__btn--appearance ${appearanceMode === 'week' ? 'active' : ''}`}
-                            data-mode="week" 
-                            onClick={handleAppearanceChange}
-                        >
-                            {langAppearanceLabelWeek || 'Week'}
-                        </button>
-                    </> : null}
-                    
-                </div>
-                {/*++++++++++++++++ /TODAY SELECTION TAB ++++++++++++++++*/}
+                            <thead className={combinedCls(
+                                tableHeadClassName
+                            )}
+                                ref={tableGridHeaderRef}
+                                role="rowgroup"
+                            >
+                                <tr role="presentation">
+                                    <th role="presentation">
+                                        {/*<!--///// HEADER LEFT //////-->*/}
+                                        <div className="custom-event-tl-table__timeline-header custom-event-tl-table__timeline-headertitle">
 
-
-            </div>{/* /.custom-event-tl__wrapper */}
-
-
-
-            {/*/////////////////////////////////////////////////// */}
-            {/*//////////////////// Table Grid //////////////////// */}
-            {/*////////////////////////////////////////////////// */}
-            {orginalData.length === 0 ? null : <>
-                <div 
-                    ref={tableGridRef} 
-                    className={combinedCls(
-                        `custom-event-tl-table__timeline-table__wrapper custom-event-tl-table__timeline-table__wrapper--${appearanceMode} invisible`,
-                        tableWrapperClassName
-                    )}
-                    onKeyDown={(e: React.KeyboardEvent<HTMLDivElement>) => {
-                        onKeyPressed?.(e, selectedCells);
-
-                        // Copy & Paste
-                        handleWrapperKeyDown(e);
-                    }}
-                    tabIndex={-1} // require "tabIndex" attribute
-                >
-                    <table role="grid" className={combinedCls(
-                        "custom-event-tl-table__timeline-table",
-                        tableClassName
-                    )}>
-                        <colgroup>
-                            <col className="custom-event-tl-table__datagrid-header" />
-                            <col />
-                            <col />
-                        </colgroup>
-                        
-                        <thead className={combinedCls(
-                            tableHeadClassName
-                        )}
-                            ref={tableGridHeaderRef}
-                            role="rowgroup"
-                        >
-                            <tr role="presentation">
-                                <th role="presentation">
-                                    {/*<!--///// HEADER LEFT //////-->*/}
-                                    <div className="custom-event-tl-table__timeline-header custom-event-tl-table__timeline-headertitle">
-
-                                        <table role="presentation" className="custom-event-tl-table__datagrid-header__title">
-                                            <colgroup>
-                                                <col />
-                                            </colgroup>
-                                            <thead role="presentation">
-                                                <tr role="row">
-                                                    <th role="columnheader">
-                                                        <div className="custom-event-tl-table__cell-cushion custom-event-tl-table__cell-cushion-headertitle">
-                                                            {tableListSectionTitle || ''}
-                                                        </div>
-                                                    </th>
-                                                </tr>
-                                            </thead>
-                                        </table>
-
-                                    </div>
-                                    {/*<!--///// /HEADER LEFT //////-->*/}
-
-
-
-                                </th>
-                                <th role="presentation" className="custom-event-tl-table__timeline-divider"><div></div></th>
-                                <th role="presentation">
-                                    <div 
-                                        ref={scrollHeaderRef} 
-                                        className="custom-event-tl-table__scroller-harness custom-event-tl-table__scroller-harness--hide" 
-                                        data-scroll="header" 
-                                        onScroll={syncTableScrollHeader}
-                                    >
-                                        <div className="custom-event-tl-table__scroller">
-
-                                            {/*<!--///// HEADER RIGHT //////-->*/}
-                                            <div className="custom-event-tl-table__timeline-header">
-
-                                                <table className="custom-event-tl-table__datagrid-header__content custom-event-tl-table__scrollgrid-sync-table" >
-                                                    <tbody>
-                                                        <tr>
-                                                            {generateDaysUi()}
-                                                        </tr>
-                                                    </tbody>
-                                                </table>
-                                            </div>
-                                            {/*<!--///// /HEADER RIGHT //////-->*/}
-                                        </div>
-                                    </div>
-                                </th>
-                            </tr>
-                        </thead>
-
-
-
-                        <tbody className={combinedCls(
-                            tableBodyClassName
-                        )}
-                            role="rowgroup"
-                        >
-                            <tr role="presentation" className="custom-event-tl-table__list-section">
-                                <td
-                                    role="presentation"
-                                    className={combinedCls(
-                                        tableListStartClassName
-                                    )}
-
-                                >
-
-                                    <div 
-                                        ref={scrollListRef} 
-                                        className={combinedCls(
-                                            'custom-event-tl-table__scroller-harness',
-                                            {
-                                                'autoscroll': AUTO_SCROLL
-                                            }
-                                        )}
-                                        data-scroll="list" 
-                                        onScroll={syncTableScrollList}
-                                    >
-                                        <div className="custom-event-tl-table__scroller">
-
-                                            {/*<!--///// RESOURCE LEFT //////-->*/}
-                                            <table role="presentation" className="custom-event-tl-table__datagrid-body__title custom-event-tl-table__scrollgrid-sync-table">
+                                            <table role="presentation" className="custom-event-tl-table__datagrid-header__title">
                                                 <colgroup>
                                                     <col />
                                                 </colgroup>
-                                                <tbody role="presentation">
-
-                                                    {/*<!-- per row -->*/}
-                                                    {generateListSectionUi()}
-                                                    {/*<!-- /per row -->*/}
-
-                                                </tbody>
+                                                <thead role="presentation">
+                                                    <tr role="row">
+                                                        <th role="columnheader">
+                                                            <div className="custom-event-tl-table__cell-cushion custom-event-tl-table__cell-cushion-headertitle">
+                                                                {tableListSectionTitle || ''}
+                                                            </div>
+                                                        </th>
+                                                    </tr>
+                                                </thead>
                                             </table>
-                                            {/*<!--///// /RESOURCE LEFT //////-->*/}
+
                                         </div>
-                                    </div>
+                                        {/*<!--///// /HEADER LEFT //////-->*/}
 
 
-                                </td>
-                                <td
-                                    role="presentation"
-                                    className={combinedCls(
-                                        'custom-event-tl-table__timeline-divider',
-                                        tableListDividerClassName
-                                    )}
-                                >
-                                    <div></div>
-                                </td>
-                                <td
-                                    role="presentation"
-                                    className={combinedCls(
-                                        tableListEndClassName
-                                    )}
-                                >
+
+                                    </th>
+                                    <th role="presentation" className="custom-event-tl-table__timeline-divider"><div></div></th>
+                                    <th role="presentation">
+                                        <div
+                                            ref={scrollHeaderRef}
+                                            className="custom-event-tl-table__scroller-harness custom-event-tl-table__scroller-harness--hide"
+                                            data-scroll="header"
+                                            onScroll={syncTableScrollHeader}
+                                        >
+                                            <div className="custom-event-tl-table__scroller">
+
+                                                {/*<!--///// HEADER RIGHT //////-->*/}
+                                                <div className="custom-event-tl-table__timeline-header">
+
+                                                    <table className="custom-event-tl-table__datagrid-header__content custom-event-tl-table__scrollgrid-sync-table" >
+                                                        <tbody>
+                                                            <tr>
+                                                                {generateDaysUi()}
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                                {/*<!--///// /HEADER RIGHT //////-->*/}
+                                            </div>
+                                        </div>
+                                    </th>
+                                </tr>
+                            </thead>
 
 
-                                    <div 
-                                        ref={scrollBodyRef} 
+
+                            <tbody className={combinedCls(
+                                tableBodyClassName
+                            )}
+                                role="rowgroup"
+                            >
+                                <tr role="presentation" className="custom-event-tl-table__list-section">
+                                    <td
+                                        role="presentation"
                                         className={combinedCls(
-                                            'custom-event-tl-table__scroller-harness',
-                                            {
-                                                'autoscroll': AUTO_SCROLL
-                                            }
+                                            tableListStartClassName
                                         )}
-                                        data-scroll="body" 
-                                        onScroll={syncTableScrollBody} 
-                                        onMouseMove={BODY_DRAG ? handleTableMove : () => { }} 
-                                        onMouseDown={BODY_DRAG ? handleTableDragStart : () => { }} 
-                                        onMouseUp={BODY_DRAG ? handleTableDragEnd : () => { }} 
-                                        onMouseLeave={BODY_DRAG ? handleTableDragEnd : () => { }}
+
                                     >
-                                        <div className="custom-event-tl-table__scroller">
-                                            {/*<!--///// RESOURCE RIGHT //////-->*/}
-                                            <div className="custom-event-tl-table__timeline-body">
-                                                <table 
-                                                    className="custom-event-tl-table__datagrid-body__content custom-event-tl-table__scrollgrid-sync-table"
-                                                    /* Drag to activate the selection area */
-                                                    onMouseLeave={multipleCells ? handleTableMainMouseUp : undefined}
-                                                    onMouseUp={multipleCells ? handleTableMainMouseUp : undefined}
 
-                                                >
+                                        <div
+                                            ref={scrollListRef}
+                                            className={combinedCls(
+                                                'custom-event-tl-table__scroller-harness',
+                                                {
+                                                    'autoscroll': AUTO_SCROLL
+                                                }
+                                            )}
+                                            data-scroll="list"
+                                            onScroll={syncTableScrollList}
+                                        >
+                                            <div className="custom-event-tl-table__scroller">
+
+                                                {/*<!--///// RESOURCE LEFT //////-->*/}
+                                                <table role="presentation" className="custom-event-tl-table__datagrid-body__title custom-event-tl-table__scrollgrid-sync-table">
                                                     <colgroup>
-                                                        {generateColUi()}
+                                                        <col />
                                                     </colgroup>
-                                                    <tbody>
+                                                    <tbody role="presentation">
+
                                                         {/*<!-- per row -->*/}
-                                                        {orginalData.map((item: any, i: number) => {
-
-                                                            return (
-                                                                <tr key={i}>
-                                                                    {generateDaysUi(item.eventSources, item.listSection, i, true)}
-                                                                </tr>
-                                                            )
-
-                                                        })}
+                                                        {generateListSectionUi()}
+                                                        {/*<!-- /per row -->*/}
 
                                                     </tbody>
                                                 </table>
+                                                {/*<!--///// /RESOURCE LEFT //////-->*/}
+                                            </div>
+                                        </div>
+
+
+                                    </td>
+                                    <td
+                                        role="presentation"
+                                        className={combinedCls(
+                                            'custom-event-tl-table__timeline-divider',
+                                            tableListDividerClassName
+                                        )}
+                                    >
+                                        <div></div>
+                                    </td>
+                                    <td
+                                        role="presentation"
+                                        className={combinedCls(
+                                            tableListEndClassName
+                                        )}
+                                    >
+
+
+                                        <div
+                                            ref={scrollBodyRef}
+                                            className={combinedCls(
+                                                'custom-event-tl-table__scroller-harness',
+                                                {
+                                                    'autoscroll': AUTO_SCROLL
+                                                }
+                                            )}
+                                            data-scroll="body"
+                                            onScroll={syncTableScrollBody}
+                                            onMouseMove={BODY_DRAG ? handleTableMove : () => { }}
+                                            onMouseDown={BODY_DRAG ? handleTableDragStart : () => { }}
+                                            onMouseUp={BODY_DRAG ? handleTableDragEnd : () => { }}
+                                            onMouseLeave={BODY_DRAG ? handleTableDragEnd : () => { }}
+                                        >
+                                            <div className="custom-event-tl-table__scroller">
+                                                {/*<!--///// RESOURCE RIGHT //////-->*/}
+                                                <div className="custom-event-tl-table__timeline-body">
+                                                    <table
+                                                        className="custom-event-tl-table__datagrid-body__content custom-event-tl-table__scrollgrid-sync-table"
+                                                        /* Drag to activate the selection area */
+                                                        onMouseLeave={multipleCells ? handleTableMainMouseUp : undefined}
+                                                        onMouseUp={multipleCells ? handleTableMainMouseUp : undefined}
+
+                                                    >
+                                                        <colgroup>
+                                                            {generateColUi()}
+                                                        </colgroup>
+                                                        <tbody>
+                                                            {/*<!-- per row -->*/}
+                                                            {orginalData.map((item: any, i: number) => {
+
+                                                                return (
+                                                                    <tr key={i}>
+                                                                        {generateDaysUi(item.eventSources, item.listSection, i, true)}
+                                                                    </tr>
+                                                                )
+
+                                                            })}
+
+                                                        </tbody>
+                                                    </table>
+
+                                                </div>
+                                                {/*<!--///// /RESOURCE RIGHT //////-->*/}
+
 
                                             </div>
-                                            {/*<!--///// /RESOURCE RIGHT //////-->*/}
-
-
                                         </div>
-                                    </div>
 
 
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
 
-                </div>{/* /.custom-event-tl-table__timeline-table__wrapper */}
+                    </div>{/* /.custom-event-tl-table__timeline-table__wrapper */}
 
 
-            </>}
+                </>}
+            </div>
+
 
 
             {/*/////////////////////////////////////////////////// */}
@@ -2521,6 +2555,7 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
 
                 {/*<!-- DELETE -->*/}
                 <ModalDialog
+                    ref={modalDeleteHandleRef}
                     show={showDelete}
                     maskOpacity={modalMaskOpacity}
                     triggerClassName=""
@@ -2556,6 +2591,7 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
 
                 {/*<!-- EDIT -->*/}
                 <ModalDialog
+                    ref={modalEditHandleRef}
                     show={showEdit}
                     maskOpacity={modalMaskOpacity}
                     heading={modalHeading}

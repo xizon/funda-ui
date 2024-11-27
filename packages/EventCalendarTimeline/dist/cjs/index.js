@@ -3990,6 +3990,10 @@ var EventCalendarTimeline = function EventCalendarTimeline(props) {
   //
   var FILL_BLANK_DATE_DISABLD = typeof forwardAndBackFillDisabled === 'undefined' ? true : forwardAndBackFillDisabled;
 
+  // root
+  var rootRef = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(null);
+  var rootWidth = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(0);
+
   //
   var now = (0,react__WEBPACK_IMPORTED_MODULE_0__.useMemo)(function () {
     return new Date();
@@ -4041,6 +4045,8 @@ var EventCalendarTimeline = function EventCalendarTimeline(props) {
     setWinMonth = _useState22[1];
 
   // modal dialog
+  var modalEditHandleRef = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)();
+  var modalDeleteHandleRef = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)();
   var EVENTS_ENABLED = typeof modalContent !== 'undefined';
   var EVENTS_DELETE_ENABLED = typeof modalDeleteContent !== 'undefined';
   var _useState23 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(false),
@@ -4128,6 +4134,10 @@ var EventCalendarTimeline = function EventCalendarTimeline(props) {
         // reset selection area
         setSelectedCells([]);
         setCopiedCells(null);
+      },
+      closeModal: function closeModal() {
+        if (modalEditHandleRef.current) modalEditHandleRef.current.close();
+        if (modalDeleteHandleRef.current) modalDeleteHandleRef.current.close();
       }
     };
   }, [contentRef]);
@@ -5434,6 +5444,17 @@ var EventCalendarTimeline = function EventCalendarTimeline(props) {
       trElements[i].style.height = tdOHeight;
     }
   }
+  function outerWrapperInit() {
+    var _rootRef$current$pare;
+    if (rootRef.current === null) return;
+
+    // calculate wrapper width 
+    var wrapperWidth = ((_rootRef$current$pare = rootRef.current.parentElement) === null || _rootRef$current$pare === void 0 ? void 0 : _rootRef$current$pare.offsetWidth) || 0;
+    if (rootRef.current && wrapperWidth > 0 && rootWidth.current === 0) {
+      rootWidth.current = wrapperWidth;
+      rootRef.current.style.width = wrapperWidth + 'px';
+    }
+  }
   function tableGridInit() {
     //
     if (tableGridRef.current === null) return;
@@ -5699,7 +5720,12 @@ var EventCalendarTimeline = function EventCalendarTimeline(props) {
     onListRenderComplete === null || onListRenderComplete === void 0 ? void 0 : onListRenderComplete();
   }, [eventsValue, customTodayDate, appearanceMode]);
   (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(function () {
+    // calculate wrapper width (!!!FIRST!!!)
+    //--------------
+    outerWrapperInit();
+
     // !!!Please do not use dependencies
+    //--------------
     return function () {
       // reset table grid
       tableGridReset();
@@ -5710,6 +5736,9 @@ var EventCalendarTimeline = function EventCalendarTimeline(props) {
     };
   }, []);
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+    ref: rootRef,
+    className: "custom-event-tl__outerwrapper"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
     className: (0,funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_7__.combinedCls)("custom-event-tl__wrapper custom-event-tl__wrapper--".concat(appearanceMode), calendarWrapperClassName)
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
     className: "custom-event-tl__header bg-body-tertiary"
@@ -5921,7 +5950,8 @@ var EventCalendarTimeline = function EventCalendarTimeline(props) {
     return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("tr", {
       key: i
     }, generateDaysUi(item.eventSources, item.listSection, i, true));
-  })))))))))))), EVENTS_ENABLED ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((funda_modaldialog__WEBPACK_IMPORTED_MODULE_2___default()), {
+  }))))))))))))), EVENTS_ENABLED ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((funda_modaldialog__WEBPACK_IMPORTED_MODULE_2___default()), {
+    ref: modalDeleteHandleRef,
     show: showDelete,
     maskOpacity: modalMaskOpacity,
     triggerClassName: "",
@@ -5960,6 +5990,7 @@ var EventCalendarTimeline = function EventCalendarTimeline(props) {
       };
     }()
   }, modalDeleteContent || 'Are you sure?'), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((funda_modaldialog__WEBPACK_IMPORTED_MODULE_2___default()), {
+    ref: modalEditHandleRef,
     show: showEdit,
     maskOpacity: modalMaskOpacity,
     heading: modalHeading,

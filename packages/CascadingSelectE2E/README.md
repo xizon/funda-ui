@@ -632,7 +632,7 @@ Array configuration properties of the `fetchArray`:
 | `doubleIndent` | boolean  | false | Set double indent effect, valid when the `hierarchical` is true. | - |
 
 
-### Create Callback 
+### Create Callback via `fetchCallback` 
 
 A successful response returns the details of the callback such as Sample Request Body:
 

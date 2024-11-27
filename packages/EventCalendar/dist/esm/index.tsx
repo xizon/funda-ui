@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo, useImperativeHandle } from 'react';
+import React, { useState, useRef, useEffect, useMemo, useImperativeHandle } from 'react';
 
 import { getTodayDate, getCalendarDate, isValidDate, padZero  } from 'funda-utils/dist/cjs/date';
 import { clsWrite, combinedCls } from 'funda-utils/dist/cjs/cls';
@@ -156,6 +156,8 @@ const EventCalendar = (props: EventCalendarProps) => {
     const [winMonth, setWinMonth] = useState<boolean>(false);
 
     // modal dialog
+    const modalEditHandleRef = useRef<any>();
+    const modalDeleteHandleRef = useRef<any>();
     const EVENTS_ENABLED = typeof modalContent !== 'undefined';
     const EVENTS_DELETE_ENABLED = typeof modalDeleteContent !== 'undefined';
     const [showEdit, setShowEdit] = useState<boolean>(false);
@@ -185,11 +187,9 @@ const EventCalendar = (props: EventCalendarProps) => {
     useImperativeHandle(
         contentRef,
         () => ({
-            gridInit: () => {
-
-            },
-            gridReset: (cb?: any) => {
-
+            closeModal: () => {
+                if (modalEditHandleRef.current) modalEditHandleRef.current.close();
+                if (modalDeleteHandleRef.current) modalDeleteHandleRef.current.close();
             }
         }),
         [contentRef],
@@ -906,6 +906,7 @@ const EventCalendar = (props: EventCalendarProps) => {
 
                 {/*<!-- DELETE -->*/}
                 <ModalDialog
+                    ref={modalDeleteHandleRef}
                     show={showDelete}
                     maskOpacity={modalMaskOpacity}
                     triggerClassName=""
@@ -934,6 +935,7 @@ const EventCalendar = (props: EventCalendarProps) => {
 
                 {/*<!-- EDIT -->*/}
                 <ModalDialog
+                    ref={modalEditHandleRef}
                     show={showEdit}
                     maskOpacity={modalMaskOpacity}
                     heading={modalHeading}

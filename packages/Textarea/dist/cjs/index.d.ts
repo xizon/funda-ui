@@ -22,6 +22,13 @@ export declare type TextareaProps = {
     autoSize?: boolean;
     iconLeft?: React.ReactNode | string;
     iconRight?: React.ReactNode | string;
+    aiPredict?: boolean;
+    aiPredictRemainingTextRGB?: number[];
+    aiPredictConfirmKey?: Array<string[]>;
+    aiPredictFetchFuncAsync?: any;
+    aiPredictFetchFuncMethod?: string;
+    aiPredictFetchFuncMethodParams?: any[];
+    aiPredictFetchCallback?: (data: any) => void;
     /** -- */
     id?: string;
     style?: React.CSSProperties;
