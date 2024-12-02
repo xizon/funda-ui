@@ -47,6 +47,7 @@ var __webpack_exports__ = {};
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "actualPropertyValue": () => (/* binding */ actualPropertyValue),
+/* harmony export */   "getElCSS": () => (/* binding */ getElCSS),
 /* harmony export */   "getTextTop": () => (/* binding */ getTextTop),
 /* harmony export */   "getTextWidth": () => (/* binding */ getTextWidth)
 /* harmony export */ });

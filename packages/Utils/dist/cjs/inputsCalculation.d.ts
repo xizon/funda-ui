@@ -15,6 +15,7 @@ declare function getTextTop(el: HTMLElement): number;
 * @return {Number}              - Returns a pure number.
 */
 declare function actualPropertyValue(el: any, prop: string, config?: any): any;
+declare function getElCSS(input: HTMLElement, prop: any, isNumber: boolean): any;
 /**
  * Get cursor or text position in pixels for input element
  *
@@ -24,4 +25,4 @@ declare function actualPropertyValue(el: any, prop: string, config?: any): any;
  * @returns {Number}
  */
 declare function getTextWidth(input: HTMLInputElement, fauxContainer: HTMLSpanElement, rawTextContainer: HTMLElement): any;
-export { getTextTop, actualPropertyValue, getTextWidth };
+export { getElCSS, getTextTop, actualPropertyValue, getTextWidth };

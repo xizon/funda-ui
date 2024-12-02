@@ -645,18 +645,22 @@ var Tabs = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_am
 
     //
     Array.prototype.forEach.call($li, function (node) {
-      node.classList.remove('active');
-      node.firstChild.classList.remove('active');
-      runExClassName(node, _classNameNav, 'remove');
-      runExClassName(node.firstChild, _classNameNav, 'remove');
+      if (node !== null) {
+        node.classList.remove('active');
+        node.firstChild.classList.remove('active');
+        runExClassName(node, _classNameNav, 'remove');
+        runExClassName(node.firstChild, _classNameNav, 'remove');
+      }
     });
     $allContent.forEach(function (node) {
-      // 
-      elDisplay('hide', node);
-      setTimeout(function () {
-        node.classList.remove('active');
-        runExClassName(node, _classNamePanel, 'remove');
-      }, speed);
+      if (node !== null) {
+        // 
+        elDisplay('hide', node);
+        setTimeout(function () {
+          node.classList.remove('active');
+          runExClassName(node, _classNamePanel, 'remove');
+        }, speed);
+      }
     });
 
     // currently active

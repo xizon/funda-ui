@@ -665,6 +665,239 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 
 /***/ }),
 
+/***/ 954:
+/***/ (function(module, exports, __webpack_require__) {
+
+/* module decorator */ module = __webpack_require__.nmd(module);
+var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
+(function webpackUniversalModuleDefinition(root, factory) {
+  if (( false ? 0 : _typeof(exports)) === 'object' && ( false ? 0 : _typeof(module)) === 'object') module.exports = factory();else if (true) !(__WEBPACK_AMD_DEFINE_ARRAY__ = [], __WEBPACK_AMD_DEFINE_FACTORY__ = (factory),
+		__WEBPACK_AMD_DEFINE_RESULT__ = (typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ?
+		(__WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__)) : __WEBPACK_AMD_DEFINE_FACTORY__),
+		__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));else {}
+})(this, function () {
+  return (/******/function () {
+      // webpackBootstrap
+      /******/
+      "use strict";
+
+      /******/ // The require scope
+      /******/
+      var __nested_webpack_require_987__ = {};
+      /******/
+      /************************************************************************/
+      /******/ /* webpack/runtime/define property getters */
+      /******/
+      (function () {
+        /******/ // define getter functions for harmony exports
+        /******/__nested_webpack_require_987__.d = function (exports, definition) {
+          /******/for (var key in definition) {
+            /******/if (__nested_webpack_require_987__.o(definition, key) && !__nested_webpack_require_987__.o(exports, key)) {
+              /******/Object.defineProperty(exports, key, {
+                enumerable: true,
+                get: definition[key]
+              });
+              /******/
+            }
+            /******/
+          }
+          /******/
+        };
+        /******/
+      })();
+      /******/
+      /******/ /* webpack/runtime/hasOwnProperty shorthand */
+      /******/
+      (function () {
+        /******/__nested_webpack_require_987__.o = function (obj, prop) {
+          return Object.prototype.hasOwnProperty.call(obj, prop);
+        };
+        /******/
+      })();
+      /******/
+      /******/ /* webpack/runtime/make namespace object */
+      /******/
+      (function () {
+        /******/ // define __esModule on exports
+        /******/__nested_webpack_require_987__.r = function (exports) {
+          /******/if (typeof Symbol !== 'undefined' && Symbol.toStringTag) {
+            /******/Object.defineProperty(exports, Symbol.toStringTag, {
+              value: 'Module'
+            });
+            /******/
+          }
+          /******/
+          Object.defineProperty(exports, '__esModule', {
+            value: true
+          });
+          /******/
+        };
+        /******/
+      })();
+      /******/
+      /************************************************************************/
+      var __webpack_exports__ = {};
+      __nested_webpack_require_987__.r(__webpack_exports__);
+      /* harmony export */
+      __nested_webpack_require_987__.d(__webpack_exports__, {
+        /* harmony export */"actualPropertyValue": function actualPropertyValue() {
+          return (/* binding */_actualPropertyValue
+          );
+        },
+        /* harmony export */"getElCSS": function getElCSS() {
+          return (/* binding */_getElCSS
+          );
+        },
+        /* harmony export */"getTextTop": function getTextTop() {
+          return (/* binding */_getTextTop
+          );
+        },
+        /* harmony export */"getTextWidth": function getTextWidth() {
+          return (/* binding */_getTextWidth
+          );
+        }
+        /* harmony export */
+      });
+      /**
+       * Gets the relative upside of the text
+       * @param {Element} el    - A DOM node containing one selector to match against.
+       * @returns {Number}      - Returns a pure number.
+       */
+      function _getTextTop(el) {
+        var styles = window.getComputedStyle(el);
+        var fontSize = parseFloat(styles.fontSize);
+        var lineHeight = parseFloat(styles.lineHeight) || fontSize;
+        var paddingTop = parseFloat(styles.paddingTop);
+        var borderWidth = parseFloat(styles.borderWidth);
+        var textTop = paddingTop + (lineHeight - fontSize) / 2 - borderWidth * 2;
+        return textTop;
+      }
+
+      /**
+      * Get the actual value with user specific methed
+      * it can be 'width', 'height', 'outerWidth', 'outerHeight'
+      * @private
+      * @param {Element} el           - A DOM node containing one selector to match against.
+      * @param {String} prop          - A string naming the property of style.
+      * @param {?Json} config         - Whether or not margin is included. The key `includeMargin` 
+                                          takes effect when set to true
+      * @return {Number}              - Returns a pure number.
+      */
+      function _actualPropertyValue(el, prop) {
+        var config = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : undefined;
+        if (el === null) return 0;
+        var style = window.getComputedStyle ? window.getComputedStyle(el) : el.currentStyle,
+          display = style.display,
+          position = style.position,
+          visibility = style.visibility;
+        var marginWidth = 0;
+        var marginHeight = 0;
+        var maxVal;
+        var actualVal;
+        if (config && config.includeMargin === true) {
+          marginWidth = parseFloat(style.marginLeft) + parseFloat(style.marginRight);
+          marginHeight = parseFloat(style.marginTop) + parseFloat(style.marginBottom);
+        }
+        if (prop === 'fontSize') {
+          actualVal = parseFloat(style.fontSize);
+        }
+        if (prop === 'fontFamily') {
+          actualVal = style.fontFamily;
+        }
+        if (prop === 'letterSpacing') {
+          actualVal = style.letterSpacing;
+        }
+        if (prop === 'width') {
+          maxVal = parseFloat(style.maxWidth);
+
+          // if its not hidden we just return normal height
+          if (display !== 'none' && maxVal !== 0) {
+            return el.clientWidth;
+          }
+        }
+        if (prop === 'height') {
+          maxVal = parseFloat(style.maxHeight);
+          if (display !== 'none' && maxVal !== 0) {
+            return el.clientHeight;
+          }
+        }
+        if (prop === 'outerWidth') {
+          maxVal = parseFloat(style.maxWidth);
+          if (display !== 'none' && maxVal !== 0) {
+            return el.offsetWidth + marginWidth;
+          }
+        }
+        if (prop === 'outerHeight') {
+          maxVal = parseFloat(style.maxHeight);
+          if (display !== 'none' && maxVal !== 0) {
+            return el.offsetHeight + marginHeight;
+          }
+        }
+
+        // the element is hidden so:
+        // making the el block so we can meassure its height but still be hidden
+        el.style.position = 'absolute';
+        el.style.visibility = 'hidden';
+        el.style.display = 'block';
+        if (prop === 'width') actualVal = el.clientWidth;
+        if (prop === 'height') actualVal = el.clientHeight;
+        if (prop === 'outerWidth') actualVal = el.offsetWidth + marginWidth;
+        if (prop === 'outerHeight') actualVal = el.offsetHeight + marginHeight;
+
+        // reverting to the original values
+        el.style.display = display;
+        el.style.position = position;
+        el.style.visibility = visibility;
+        return actualVal;
+      }
+      function _getElCSS(input, prop, isNumber) {
+        var _document$defaultView;
+        var val = (_document$defaultView = document.defaultView) === null || _document$defaultView === void 0 ? void 0 : _document$defaultView.getComputedStyle(input, null).getPropertyValue(prop);
+        return isNumber ? isNaN(parseFloat(val)) ? 0 : parseFloat(val) : val;
+      }
+
+      /**
+       * Get cursor or text position in pixels for input element
+       * 
+       * @param {HTMLInputElement} input  Required HTMLElement with `value` attribute
+       * @param {HTMLSpanElement} fauxContainer  Container of faux.
+           * @param {HTMLElement} rawTextContainer  The raw text container for the comparison
+       * @returns {Number}
+       */
+
+      function _getTextWidth(input, fauxContainer, rawTextContainer) {
+        if (input === null || fauxContainer === null || rawTextContainer === null) return 0;
+        var _off = input.selectionStart;
+        var _faux = fauxContainer;
+        var _fauxContainer = rawTextContainer;
+        if (_faux && _fauxContainer) {
+          // Styles to simulate a node in an input field
+          // use pre-wrap instead of wrap for white-space to support wrapping in textareas
+          var listOfModifiers = ['direction', 'font-family', 'font-size', 'font-size-adjust', 'font-variant', 'font-weight', 'font-style', 'letter-spacing', 'line-height', 'text-align', 'text-indent', 'text-transform', 'word-wrap', 'word-spacing'];
+
+          // default styles
+          _faux.style.setProperty('white-space', 'pre-wrap');
+          _faux.style.setProperty('padding', '0');
+          _faux.style.setProperty('margin', '0');
+          _faux.style.setProperty('display', 'none');
+          for (var i = 0; i < listOfModifiers.length; i++) {
+            var propertyValue = _getElCSS(_fauxContainer, listOfModifiers[i], false);
+            _faux.style.setProperty(listOfModifiers[i], propertyValue);
+          }
+          _faux.textContent = input.value.substring(0, _off).replace(/\s/g, "\xA0");
+          return _actualPropertyValue(_faux, 'outerWidth');
+        }
+      }
+
+      /******/
+      return __webpack_exports__;
+      /******/
+    }()
+  );
+});
+
+/***/ }),
+
 /***/ 761:
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -1189,12 +1422,15 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var funda_utils_dist_cjs_getElementProperty__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(funda_utils_dist_cjs_getElementProperty__WEBPACK_IMPORTED_MODULE_4__);
 /* harmony import */ var funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(188);
 /* harmony import */ var funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_5__);
+/* harmony import */ var funda_utils_dist_cjs_inputsCalculation__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(954);
+/* harmony import */ var funda_utils_dist_cjs_inputsCalculation__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(funda_utils_dist_cjs_inputsCalculation__WEBPACK_IMPORTED_MODULE_6__);
 function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
 function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
 function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
 function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i]; return arr2; }
 function _iterableToArrayLimit(arr, i) { var _i = null == arr ? null : "undefined" != typeof Symbol && arr[Symbol.iterator] || arr["@@iterator"]; if (null != _i) { var _s, _e, _x, _r, _arr = [], _n = !0, _d = !1; try { if (_x = (_i = _i.call(arr)).next, 0 === i) { if (Object(_i) !== _i) return; _n = !1; } else for (; !(_n = (_s = _x.call(_i)).done) && (_arr.push(_s.value), _arr.length !== i); _n = !0); } catch (err) { _d = !0, _e = err; } finally { try { if (!_n && null != _i["return"] && (_r = _i["return"](), Object(_r) !== _r)) return; } finally { if (_d) throw _e; } } return _arr; } }
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+
 
 
 
@@ -1240,7 +1476,7 @@ var Tooltip = function Tooltip(props) {
     content = props.content,
     id = props.id,
     children = props.children;
-  var POS_OFFSET = Number(offset) || 10;
+  var POS_OFFSET = Number(offset) || 4;
   var EXCEEDED_SIDE_POS_OFFSET = Number(exceededSidePosOffset) || 15;
   var uniqueID = funda_utils_dist_cjs_useComId__WEBPACK_IMPORTED_MODULE_2___default()();
   var idRes = id || uniqueID;
@@ -1311,7 +1547,23 @@ var Tooltip = function Tooltip(props) {
     var _modalContent = _modalRef.querySelector('.tooltip__content');
     var _modalBox = _modalContent.getBoundingClientRect();
     if (typeof _modalContent.dataset.offset === 'undefined' && _modalBox.left > 0) {
+      // Adjust the coordinates due to height
+      //------------------
+      var triggerEl = document.querySelector("[data-overlay-id=\"".concat(_modalRef.id, "\"]"));
+      if (triggerEl !== null) {
+        var pos = triggerEl.dataset.microtipPosition;
+        if (typeof pos === 'undefined') pos = 'top';
+        var _offsetY = _modalBox.height - (0,funda_utils_dist_cjs_inputsCalculation__WEBPACK_IMPORTED_MODULE_6__.getElCSS)(_modalContent, 'font-size', true) - (0,funda_utils_dist_cjs_inputsCalculation__WEBPACK_IMPORTED_MODULE_6__.getElCSS)(_modalContent, 'padding-top', true) - (0,funda_utils_dist_cjs_inputsCalculation__WEBPACK_IMPORTED_MODULE_6__.getElCSS)(_modalContent, 'padding-bottom', true);
+
+        // TOP
+        //
+        if (pos.indexOf('top') >= 0) {
+          _modalRef.style.transform = "translateY(-".concat(_offsetY, "px)");
+        }
+      }
+
       // 10 pixels is used to account for some bias in mobile devices
+      //------------------
       if (_modalBox.right + 10 > window.innerWidth) {
         var _modalOffsetPosition = _modalBox.right - window.innerWidth + EXCEEDED_SIDE_POS_OFFSET;
         _modalContent.dataset.offset = _modalOffsetPosition;

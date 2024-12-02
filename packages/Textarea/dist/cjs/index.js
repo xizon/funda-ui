@@ -304,6 +304,10 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
           return (/* binding */_actualPropertyValue
           );
         },
+        /* harmony export */"getElCSS": function getElCSS() {
+          return (/* binding */_getElCSS
+          );
+        },
         /* harmony export */"getTextTop": function getTextTop() {
           return (/* binding */_getTextTop
           );
@@ -406,7 +410,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
         el.style.visibility = visibility;
         return actualVal;
       }
-      function getElCSS(input, prop, isNumber) {
+      function _getElCSS(input, prop, isNumber) {
         var _document$defaultView;
         var val = (_document$defaultView = document.defaultView) === null || _document$defaultView === void 0 ? void 0 : _document$defaultView.getComputedStyle(input, null).getPropertyValue(prop);
         return isNumber ? isNaN(parseFloat(val)) ? 0 : parseFloat(val) : val;
@@ -437,7 +441,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
           _faux.style.setProperty('margin', '0');
           _faux.style.setProperty('display', 'none');
           for (var i = 0; i < listOfModifiers.length; i++) {
-            var propertyValue = getElCSS(_fauxContainer, listOfModifiers[i], false);
+            var propertyValue = _getElCSS(_fauxContainer, listOfModifiers[i], false);
             _faux.style.setProperty(listOfModifiers[i], propertyValue);
           }
           _faux.textContent = input.value.substring(0, _off).replace(/\s/g, "\xA0");

@@ -329,6 +329,10 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
                     return (/* binding */_actualPropertyValue
                     );
                   },
+                  /* harmony export */"getElCSS": function getElCSS() {
+                    return (/* binding */_getElCSS
+                    );
+                  },
                   /* harmony export */"getTextTop": function getTextTop() {
                     return (/* binding */_getTextTop
                     );
@@ -431,7 +435,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
                   el.style.visibility = visibility;
                   return actualVal;
                 }
-                function getElCSS(input, prop, isNumber) {
+                function _getElCSS(input, prop, isNumber) {
                   var _document$defaultView;
                   var val = (_document$defaultView = document.defaultView) === null || _document$defaultView === void 0 ? void 0 : _document$defaultView.getComputedStyle(input, null).getPropertyValue(prop);
                   return isNumber ? isNaN(parseFloat(val)) ? 0 : parseFloat(val) : val;
@@ -462,7 +466,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
                     _faux.style.setProperty('margin', '0');
                     _faux.style.setProperty('display', 'none');
                     for (var i = 0; i < listOfModifiers.length; i++) {
-                      var propertyValue = getElCSS(_fauxContainer, listOfModifiers[i], false);
+                      var propertyValue = _getElCSS(_fauxContainer, listOfModifiers[i], false);
                       _faux.style.setProperty(listOfModifiers[i], propertyValue);
                     }
                     _faux.textContent = input.value.substring(0, _off).replace(/\s/g, "\xA0");
@@ -480,8 +484,8 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
           /***/
         },
 
-        /***/85: /***/function _(module, exports, __nested_webpack_require_23494__) {
-          /* module decorator */module = __nested_webpack_require_23494__.nmd(module);
+        /***/85: /***/function _(module, exports, __nested_webpack_require_23663__) {
+          /* module decorator */module = __nested_webpack_require_23663__.nmd(module);
           var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;
           function _typeof(obj) {
             "@babel/helpers - typeof";
@@ -493,7 +497,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
             }, _typeof(obj);
           }
           (function webpackUniversalModuleDefinition(root, factory) {
-            if (( false ? 0 : _typeof(exports)) === 'object' && ( false ? 0 : _typeof(module)) === 'object') module.exports = factory(__nested_webpack_require_23494__(787));else if (true) !(__WEBPACK_AMD_DEFINE_ARRAY__ = [__nested_webpack_require_23494__(787)], __WEBPACK_AMD_DEFINE_FACTORY__ = factory, __WEBPACK_AMD_DEFINE_RESULT__ = typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ? __WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__) : __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));else {}
+            if (( false ? 0 : _typeof(exports)) === 'object' && ( false ? 0 : _typeof(module)) === 'object') module.exports = factory(__nested_webpack_require_23663__(787));else if (true) !(__WEBPACK_AMD_DEFINE_ARRAY__ = [__nested_webpack_require_23663__(787)], __WEBPACK_AMD_DEFINE_FACTORY__ = factory, __WEBPACK_AMD_DEFINE_RESULT__ = typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ? __WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__) : __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));else {}
           })(this, function (__WEBPACK_EXTERNAL_MODULE__787__) {
             return (/******/function () {
                 // webpackBootstrap
@@ -653,8 +657,8 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
           /***/
         },
 
-        /***/702: /***/function _(module, exports, __nested_webpack_require_31582__) {
-          /* module decorator */module = __nested_webpack_require_31582__.nmd(module);
+        /***/702: /***/function _(module, exports, __nested_webpack_require_31751__) {
+          /* module decorator */module = __nested_webpack_require_31751__.nmd(module);
           var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;
           function _typeof(obj) {
             "@babel/helpers - typeof";
@@ -666,7 +670,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
             }, _typeof(obj);
           }
           (function webpackUniversalModuleDefinition(root, factory) {
-            if (( false ? 0 : _typeof(exports)) === 'object' && ( false ? 0 : _typeof(module)) === 'object') module.exports = factory(__nested_webpack_require_31582__(787));else if (true) !(__WEBPACK_AMD_DEFINE_ARRAY__ = [__nested_webpack_require_31582__(787)], __WEBPACK_AMD_DEFINE_FACTORY__ = factory, __WEBPACK_AMD_DEFINE_RESULT__ = typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ? __WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__) : __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));else {}
+            if (( false ? 0 : _typeof(exports)) === 'object' && ( false ? 0 : _typeof(module)) === 'object') module.exports = factory(__nested_webpack_require_31751__(787));else if (true) !(__WEBPACK_AMD_DEFINE_ARRAY__ = [__nested_webpack_require_31751__(787)], __WEBPACK_AMD_DEFINE_FACTORY__ = factory, __WEBPACK_AMD_DEFINE_RESULT__ = typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ? __WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__) : __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));else {}
           })(this, function (__WEBPACK_EXTERNAL_MODULE__787__) {
             return (/******/function () {
                 // webpackBootstrap
@@ -867,7 +871,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
       /******/
       /******/ // The require function
       /******/
-      function __nested_webpack_require_41203__(moduleId) {
+      function __nested_webpack_require_41372__(moduleId) {
         /******/ // Check if module is in cache
         /******/var cachedModule = __webpack_module_cache__[moduleId];
         /******/
@@ -886,7 +890,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
         /******/
         /******/ // Execute the module function
         /******/
-        __webpack_modules__[moduleId].call(module.exports, module, module.exports, __nested_webpack_require_41203__);
+        __webpack_modules__[moduleId].call(module.exports, module, module.exports, __nested_webpack_require_41372__);
         /******/
         /******/ // Flag the module as loaded
         /******/
@@ -903,14 +907,14 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
       /******/
       (function () {
         /******/ // getDefaultExport function for compatibility with non-harmony modules
-        /******/__nested_webpack_require_41203__.n = function (module) {
+        /******/__nested_webpack_require_41372__.n = function (module) {
           /******/var getter = module && module.__esModule ? /******/function () {
             return module['default'];
           } : /******/function () {
             return module;
           };
           /******/
-          __nested_webpack_require_41203__.d(getter, {
+          __nested_webpack_require_41372__.d(getter, {
             a: getter
           });
           /******/
@@ -924,9 +928,9 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
       /******/
       (function () {
         /******/ // define getter functions for harmony exports
-        /******/__nested_webpack_require_41203__.d = function (exports, definition) {
+        /******/__nested_webpack_require_41372__.d = function (exports, definition) {
           /******/for (var key in definition) {
-            /******/if (__nested_webpack_require_41203__.o(definition, key) && !__nested_webpack_require_41203__.o(exports, key)) {
+            /******/if (__nested_webpack_require_41372__.o(definition, key) && !__nested_webpack_require_41372__.o(exports, key)) {
               /******/Object.defineProperty(exports, key, {
                 enumerable: true,
                 get: definition[key]
@@ -943,7 +947,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
       /******/ /* webpack/runtime/hasOwnProperty shorthand */
       /******/
       (function () {
-        /******/__nested_webpack_require_41203__.o = function (obj, prop) {
+        /******/__nested_webpack_require_41372__.o = function (obj, prop) {
           return Object.prototype.hasOwnProperty.call(obj, prop);
         };
         /******/
@@ -953,7 +957,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
       /******/
       (function () {
         /******/ // define __esModule on exports
-        /******/__nested_webpack_require_41203__.r = function (exports) {
+        /******/__nested_webpack_require_41372__.r = function (exports) {
           /******/if (typeof Symbol !== 'undefined' && Symbol.toStringTag) {
             /******/Object.defineProperty(exports, Symbol.toStringTag, {
               value: 'Module'
@@ -972,7 +976,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
       /******/ /* webpack/runtime/node module decorator */
       /******/
       (function () {
-        /******/__nested_webpack_require_41203__.nmd = function (module) {
+        /******/__nested_webpack_require_41372__.nmd = function (module) {
           /******/module.paths = [];
           /******/
           if (!module.children) module.children = [];
@@ -989,34 +993,34 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
       (function () {
         "use strict";
 
-        __nested_webpack_require_41203__.r(__webpack_exports__);
+        __nested_webpack_require_41372__.r(__webpack_exports__);
         /* harmony export */
-        __nested_webpack_require_41203__.d(__webpack_exports__, {
+        __nested_webpack_require_41372__.d(__webpack_exports__, {
           /* harmony export */"default": function _default() {
             return __WEBPACK_DEFAULT_EXPORT__;
           }
           /* harmony export */
         });
         /* harmony import */
-        var react__WEBPACK_IMPORTED_MODULE_0__ = __nested_webpack_require_41203__(787);
+        var react__WEBPACK_IMPORTED_MODULE_0__ = __nested_webpack_require_41372__(787);
         /* harmony import */
-        var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__nested_webpack_require_41203__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+        var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__nested_webpack_require_41372__.n(react__WEBPACK_IMPORTED_MODULE_0__);
         /* harmony import */
-        var funda_utils_dist_cjs_useComId__WEBPACK_IMPORTED_MODULE_1__ = __nested_webpack_require_41203__(85);
+        var funda_utils_dist_cjs_useComId__WEBPACK_IMPORTED_MODULE_1__ = __nested_webpack_require_41372__(85);
         /* harmony import */
-        var funda_utils_dist_cjs_useComId__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__nested_webpack_require_41203__.n(funda_utils_dist_cjs_useComId__WEBPACK_IMPORTED_MODULE_1__);
+        var funda_utils_dist_cjs_useComId__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__nested_webpack_require_41372__.n(funda_utils_dist_cjs_useComId__WEBPACK_IMPORTED_MODULE_1__);
         /* harmony import */
-        var funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_2__ = __nested_webpack_require_41203__(188);
+        var funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_2__ = __nested_webpack_require_41372__(188);
         /* harmony import */
-        var funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__nested_webpack_require_41203__.n(funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_2__);
+        var funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__nested_webpack_require_41372__.n(funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_2__);
         /* harmony import */
-        var funda_utils_dist_cjs_inputsCalculation__WEBPACK_IMPORTED_MODULE_3__ = __nested_webpack_require_41203__(954);
+        var funda_utils_dist_cjs_inputsCalculation__WEBPACK_IMPORTED_MODULE_3__ = __nested_webpack_require_41372__(954);
         /* harmony import */
-        var funda_utils_dist_cjs_inputsCalculation__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__nested_webpack_require_41203__.n(funda_utils_dist_cjs_inputsCalculation__WEBPACK_IMPORTED_MODULE_3__);
+        var funda_utils_dist_cjs_inputsCalculation__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__nested_webpack_require_41372__.n(funda_utils_dist_cjs_inputsCalculation__WEBPACK_IMPORTED_MODULE_3__);
         /* harmony import */
-        var funda_utils_dist_cjs_useDebounce__WEBPACK_IMPORTED_MODULE_4__ = __nested_webpack_require_41203__(702);
+        var funda_utils_dist_cjs_useDebounce__WEBPACK_IMPORTED_MODULE_4__ = __nested_webpack_require_41372__(702);
         /* harmony import */
-        var funda_utils_dist_cjs_useDebounce__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__nested_webpack_require_41203__.n(funda_utils_dist_cjs_useDebounce__WEBPACK_IMPORTED_MODULE_4__);
+        var funda_utils_dist_cjs_useDebounce__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__nested_webpack_require_41372__.n(funda_utils_dist_cjs_useDebounce__WEBPACK_IMPORTED_MODULE_4__);
         var _excluded = ["contentRef", "wrapperClassName", "controlClassName", "controlExClassName", "controlGroupWrapperClassName", "controlGroupTextClassName", "type", "disabled", "required", "placeholder", "pattern", "readOnly", "defaultValue", "value", "requiredLabel", "label", "units", "name", "step", "min", "max", "src", "size", "minLength", "maxLength", "alt", "inputMode", "id", "appendControl", "aiPredict", "aiPredictRemainingTextRGB", "aiPredictConfirmKey", "aiPredictFetchFuncAsync", "aiPredictFetchFuncMethod", "aiPredictFetchFuncMethodParams", "aiPredictFetchCallback", "iconLeft", "iconRight", "autoComplete", "autoCapitalize", "spellCheck", "style", "tabIndex", "onChangeCallback", "onInputCallback", "onKeyPressedCallback", "onChange", "onBlur", "onFocus", "onPressEnter"];
         function _regeneratorRuntime() {
           "use strict";

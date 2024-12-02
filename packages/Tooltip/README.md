@@ -19,7 +19,7 @@ export default () => {
                 hoverDelay={300}
                 direction="top"
                 size="auto"
-                content={<><div className="text-center">Hi, there. I am here.</div></>}
+                content={<><div className="text-center">Hi, there. I am here.</div><div>Cool!!!!!!!</div></>}
             >
                 Any Content [top]
             </Tooltip>
@@ -134,7 +134,7 @@ import Tooltip from 'funda-ui/Tooltip';
 | --- | --- | --- | --- | --- |
 | `wrapperClassName` | string | `d-inline-block` | The class name of the control wrapper. | - |
 | `direction` | `top` \| `top-right` \| `top-left` \| `bottom` \| `bottom-right` \| `bottom-left` | top | The direction of the tip. Defaults to `top`. | - |
-| `offset` | number  | 10 | Position offset of top and bottom. | - |
+| `offset` | number  | 4 | Position offset of top and bottom. | - |
 | `exceededSidePosOffset` | number | 15 | Offset px that exceeds the far right or left side of the screen | - |
 | `size` | `auto` \| `large` \| `medium` \| `small`  | auto | The size of the content area. Defaults to `auto`. | - |
 | `hoverDelay` | number  | 200 | The number of milliseconds to determine hover intent | - |

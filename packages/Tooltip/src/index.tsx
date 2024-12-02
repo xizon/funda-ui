@@ -8,6 +8,9 @@ import {
     getAbsolutePositionOfStage
 } from 'funda-utils/dist/cjs/getElementProperty';
 import { clsWrite, combinedCls } from 'funda-utils/dist/cjs/cls';
+import { getElCSS } from 'funda-utils/dist/cjs/inputsCalculation';
+
+
 
 
 export type TooltipProps = {
@@ -74,7 +77,7 @@ const Tooltip = (props: TooltipProps) => {
     } = props;
 
 
-    const POS_OFFSET = Number(offset) || 10;
+    const POS_OFFSET = Number(offset) || 4;
     const EXCEEDED_SIDE_POS_OFFSET = Number(exceededSidePosOffset) || 15;
     const uniqueID = useComId();
     const idRes = id || uniqueID;
@@ -152,7 +155,26 @@ const Tooltip = (props: TooltipProps) => {
         const _modalBox = _modalContent.getBoundingClientRect();
         if (typeof _modalContent.dataset.offset === 'undefined' && _modalBox.left > 0) {
 
+            // Adjust the coordinates due to height
+            //------------------
+            const triggerEl: any = document.querySelector(`[data-overlay-id="${_modalRef.id}"]`);
+            if (triggerEl !== null) {
+                let pos = triggerEl.dataset.microtipPosition;
+                if (typeof pos === 'undefined') pos = 'top';
+
+                const _offsetY = _modalBox.height - getElCSS(_modalContent, 'font-size', true) - getElCSS(_modalContent, 'padding-top', true) - getElCSS(_modalContent, 'padding-bottom', true);
+
+                // TOP
+                //
+                if (pos.indexOf('top') >= 0) {
+                    _modalRef.style.transform = `translateY(-${_offsetY}px)`;
+                }
+
+            }
+
+     
             // 10 pixels is used to account for some bias in mobile devices
+            //------------------
             if ((_modalBox.right + 10) > window.innerWidth) {
                 const _modalOffsetPosition = _modalBox.right - window.innerWidth + EXCEEDED_SIDE_POS_OFFSET;
                 _modalContent.dataset.offset = _modalOffsetPosition;

@@ -151,6 +151,7 @@ function getTextWidth(input: HTMLInputElement, fauxContainer: HTMLSpanElement, r
 
 
 export {
+    getElCSS,
     getTextTop,
     actualPropertyValue,
     getTextWidth

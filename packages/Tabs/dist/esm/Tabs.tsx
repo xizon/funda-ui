@@ -122,24 +122,27 @@ const Tabs = forwardRef((props: TabsProps, externalRef: any) => {
     
         //
         Array.prototype.forEach.call($li, (node) => {
-            node.classList.remove('active');
-            node.firstChild.classList.remove('active');
+            if (node !== null) {
+                node.classList.remove('active');
+                node.firstChild.classList.remove('active');
 
-            runExClassName(node, _classNameNav, 'remove');
-            runExClassName(node.firstChild, _classNameNav, 'remove');
+                runExClassName(node, _classNameNav, 'remove');
+                runExClassName(node.firstChild, _classNameNav, 'remove');
+            }
         });
 
         
 
-        $allContent.forEach( (node) => {
-            // 
-            elDisplay('hide', node);
+        $allContent.forEach((node) => {
+            if (node !== null) {
+                // 
+                elDisplay('hide', node);
 
-
-            setTimeout(() => {
-                node.classList.remove('active');
-                runExClassName(node, _classNamePanel, 'remove');
-            }, speed); 
+                setTimeout(() => {
+                    node.classList.remove('active');
+                    runExClassName(node, _classNamePanel, 'remove');
+                }, speed);
+            }
         });
 
         // currently active
