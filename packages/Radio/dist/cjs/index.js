@@ -1254,11 +1254,11 @@ var Radio = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(funct
             checked: controlValue == opt.value // component status will not change if defaultChecked is used
             ,
             style: style
-          }, attributes)), labelRes(typeof opt.listItemLabel === 'undefined' ? opt.label : opt.listItemLabel, "field-".concat(uniqueID, "-").concat(index, "-").concat(optIndex))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+          }, attributes)), labelRes(typeof opt.listItemLabel === 'undefined' ? opt.label : opt.listItemLabel, "field-".concat(uniqueID, "-").concat(index, "-").concat(optIndex))), typeof opt["extends"] !== 'undefined' ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
             className: "d-inline-block"
           }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
             className: "form-control-extends__wrapper"
-          }, typeof opt["extends"] !== 'undefined' ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, opt["extends"]) : null)));
+          }, opt["extends"]))) : null);
         }));
       };
       var _normalEl = function _normalEl() {
@@ -1297,11 +1297,11 @@ var Radio = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(funct
           dangerouslySetInnerHTML: {
             __html: "".concat(typeof item.listItemLabel === 'undefined' ? item.label : item.listItemLabel)
           }
-        })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+        })), typeof item["extends"] !== 'undefined' ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
           className: "d-inline-block"
         }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
           className: "form-control-extends__wrapper"
-        }, typeof item["extends"] !== 'undefined' ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, item["extends"]) : null)));
+        }, item["extends"]))) : null);
       };
       if (tableLayout) {
         /* TABLE LAYOUT */

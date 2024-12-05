@@ -992,4 +992,4 @@ JSON Object Literals configuration properties of the `options` and callback from
 | `listItemLabel` | string | - | Specify the label text for pop-up list items. <blockquote>Support html tags</blockquote> | - |
 | `value` | string | - | Specify the value for each option | ✅ |
 | `disabled` | boolean | - | When present, it specifies that an option should be disabled. | - |
-
+| `extends` | ReactNode | - | Append additional content to the end of the Control Event. | - |

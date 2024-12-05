@@ -1468,10 +1468,28 @@ var MultipleCheckboxes = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forw
       });
     }
     return Array.isArray(dataInit) ? dataInit.map(function (item, index) {
+      var _optiondata = {};
+      Object.entries(item).forEach(function (_ref) {
+        var _ref2 = _slicedToArray(_ref, 2),
+          key = _ref2[0],
+          value = _ref2[1];
+        if (key !== 'extends') {
+          _optiondata[key] = value;
+        }
+      });
       var _groupEl = function _groupEl() {
         return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
           className: "rmultiple-checkboxes-group__label ".concat(groupLabelClassName || '')
         }, item.label), item.optgroup.map(function (opt, optIndex) {
+          var _optiondata2 = {};
+          Object.entries(item).forEach(function (_ref3) {
+            var _ref4 = _slicedToArray(_ref3, 2),
+              key = _ref4[0],
+              value = _ref4[1];
+            if (key !== 'extends') {
+              _optiondata2[key] = value;
+            }
+          });
           return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
             key: 'checkbox' + optIndex,
             className: (0,funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_6__.combinedCls)('multiple-checkboxes__control form-check pe-3', {
@@ -1495,7 +1513,7 @@ var MultipleCheckboxes = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forw
             "data-list-item-label": "".concat(typeof opt.listItemLabel === 'undefined' ? '' : opt.listItemLabel),
             "data-value": opt.value,
             "data-disabled": disabled || (typeof opt.disabled !== 'undefined' ? "".concat(opt.disabled) : 'false'),
-            "data-optiondata": JSON.stringify(opt),
+            "data-optiondata": JSON.stringify(_optiondata2),
             value: opt.value,
             disabled: disabled || (typeof opt.disabled !== 'undefined' ? opt.disabled : null),
             checked: selectedItems.has(opt.value),
@@ -1528,7 +1546,11 @@ var MultipleCheckboxes = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forw
               }
               _onChange === null || _onChange === void 0 ? void 0 : _onChange(e.target, _res, VALUE_BY_BRACKETS ? (0,funda_utils_dist_cjs_convert__WEBPACK_IMPORTED_MODULE_4__.convertArrToValByBrackets)(_res) : _res.join(','), _resLabel, VALUE_BY_BRACKETS ? (0,funda_utils_dist_cjs_convert__WEBPACK_IMPORTED_MODULE_4__.convertArrToValByBrackets)(_resLabel) : _resLabel.join(','), curData, _resDataCollection);
             }
-          }, attributes)), labelRes(typeof opt.listItemLabel === 'undefined' ? opt.label : opt.listItemLabel, "multiple-checkboxes__control-label-".concat(index, "-").concat(optIndex, "-").concat(idRes)));
+          }, attributes)), labelRes(typeof opt.listItemLabel === 'undefined' ? opt.label : opt.listItemLabel, "multiple-checkboxes__control-label-".concat(index, "-").concat(optIndex, "-").concat(idRes)), typeof opt["extends"] !== 'undefined' ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+            className: "d-inline-block"
+          }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+            className: "form-control-extends__wrapper"
+          }, opt["extends"]))) : null);
         }));
       };
       var _normalEl = function _normalEl() {
@@ -1545,7 +1567,7 @@ var MultipleCheckboxes = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forw
           "data-list-item-label": "".concat(typeof item.listItemLabel === 'undefined' ? '' : item.listItemLabel),
           "data-value": item.value,
           "data-disabled": disabled || (typeof item.disabled !== 'undefined' ? "".concat(item.disabled) : 'false'),
-          "data-optiondata": JSON.stringify(item),
+          "data-optiondata": JSON.stringify(_optiondata),
           value: item.value,
           disabled: disabled || (typeof item.disabled !== 'undefined' ? item.disabled : null),
           checked: selectedItems.has(item.value),
@@ -1566,7 +1588,11 @@ var MultipleCheckboxes = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forw
             });
             _onChange === null || _onChange === void 0 ? void 0 : _onChange(e.target, _res, VALUE_BY_BRACKETS ? (0,funda_utils_dist_cjs_convert__WEBPACK_IMPORTED_MODULE_4__.convertArrToValByBrackets)(_res) : _res.join(','), _resLabel, VALUE_BY_BRACKETS ? (0,funda_utils_dist_cjs_convert__WEBPACK_IMPORTED_MODULE_4__.convertArrToValByBrackets)(_resLabel) : _resLabel.join(','), item, _resDataCollection);
           }
-        }, attributes)), labelRes(typeof item.listItemLabel === 'undefined' ? item.label : item.listItemLabel, "multiple-checkboxes__control-label-".concat(index, "-").concat(idRes)));
+        }, attributes)), labelRes(typeof item.listItemLabel === 'undefined' ? item.label : item.listItemLabel, "multiple-checkboxes__control-label-".concat(index, "-").concat(idRes)), typeof item["extends"] !== 'undefined' ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+          className: "d-inline-block"
+        }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+          className: "form-control-extends__wrapper"
+        }, item["extends"]))) : null);
       };
       if (tableLayout) {
         /* TABLE LAYOUT */
@@ -1574,8 +1600,7 @@ var MultipleCheckboxes = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forw
           return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("td", {
             colSpan: 1,
             className: (0,funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_6__.combinedCls)('multiple-checkboxes-group__wrapper', groupWrapperClassName, tableLayoutCellClassName),
-            key: 'optgroup-' + index,
-            "data-optiondata": JSON.stringify(item)
+            key: 'optgroup-' + index
           }, _groupEl());
         } else {
           return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("td", {
@@ -1589,7 +1614,7 @@ var MultipleCheckboxes = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forw
             "data-value": item.value,
             "data-disabled": disabled || (typeof item.disabled !== 'undefined' ? "".concat(item.disabled) : 'false'),
             key: 'checkbox' + index,
-            "data-optiondata": JSON.stringify(item)
+            "data-optiondata": JSON.stringify(_optiondata)
           }, _normalEl());
         }
         /* /TABLE LAYOUT */
@@ -1597,8 +1622,7 @@ var MultipleCheckboxes = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forw
         if (typeof item.optgroup !== 'undefined') {
           return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
             className: (0,funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_6__.combinedCls)('multiple-checkboxes-group__wrapper', groupWrapperClassName),
-            key: 'optgroup-' + index,
-            "data-optiondata": JSON.stringify(item)
+            key: 'optgroup-' + index
           }, _groupEl());
         } else {
           return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
@@ -1611,7 +1635,7 @@ var MultipleCheckboxes = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forw
             "data-value": item.value,
             "data-disabled": disabled || (typeof item.disabled !== 'undefined' ? "".concat(item.disabled) : 'false'),
             key: 'checkbox' + index,
-            "data-optiondata": JSON.stringify(item)
+            "data-optiondata": JSON.stringify(_optiondata)
           }, _normalEl());
         }
       }

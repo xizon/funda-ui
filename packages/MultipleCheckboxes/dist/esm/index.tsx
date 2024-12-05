@@ -331,6 +331,13 @@ const MultipleCheckboxes = forwardRef((props: MultipleCheckboxesProps, externalR
         
         return Array.isArray(dataInit) ? dataInit.map((item: any, index: number) => {
 
+            const _optiondata: any = {};
+            Object.entries(item).forEach(([key, value]) => {
+                if (key !== 'extends') {
+                    _optiondata[key] = value;
+                }
+            });
+
             const _groupEl = () => {
                 return <>
     
@@ -339,7 +346,14 @@ const MultipleCheckboxes = forwardRef((props: MultipleCheckboxesProps, externalR
                     {/* /GROUP LABEL */}
     
                     {item.optgroup.map((opt: any, optIndex: number) => {
-    
+
+                        const _optiondata2: any = {};
+                        Object.entries(item).forEach(([key, value]) => {
+                            if (key !== 'extends') {
+                                _optiondata2[key] = value;
+                            }
+                        });
+
                         return <div
                             key={'checkbox' + optIndex}
                             className={combinedCls(
@@ -367,7 +381,7 @@ const MultipleCheckboxes = forwardRef((props: MultipleCheckboxesProps, externalR
                                 data-list-item-label={`${typeof opt.listItemLabel === 'undefined' ? '' : opt.listItemLabel}`}
                                 data-value={opt.value}
                                 data-disabled={disabled || (typeof opt.disabled !== 'undefined' ? `${opt.disabled}` : 'false')}
-                                data-optiondata={JSON.stringify(opt)}
+                                data-optiondata={JSON.stringify(_optiondata2)}
                                 value={opt.value}
                                 disabled={disabled || (typeof opt.disabled !== 'undefined' ? opt.disabled : null)}
                                 checked={selectedItems.has(opt.value)}
@@ -404,6 +418,14 @@ const MultipleCheckboxes = forwardRef((props: MultipleCheckboxesProps, externalR
                             />
     
                             {labelRes(typeof opt.listItemLabel === 'undefined' ? opt.label : opt.listItemLabel, `multiple-checkboxes__control-label-${index}-${optIndex}-${idRes}`)}
+
+                            {/* EXTENDS */}
+                            {typeof opt.extends !== 'undefined' ? <>
+                                <div className="d-inline-block">
+                                    <div className="form-control-extends__wrapper">{opt.extends}</div>
+                                </div>
+                            </> : null}
+
     
                         </div>;
     
@@ -428,7 +450,7 @@ const MultipleCheckboxes = forwardRef((props: MultipleCheckboxesProps, externalR
                         data-list-item-label={`${typeof item.listItemLabel === 'undefined' ? '' : item.listItemLabel}`}
                         data-value={item.value}
                         data-disabled={disabled || (typeof item.disabled !== 'undefined' ? `${item.disabled}` : 'false')}
-                        data-optiondata={JSON.stringify(item)}
+                        data-optiondata={JSON.stringify(_optiondata)}
                         value={item.value}
                         disabled={disabled || (typeof item.disabled !== 'undefined' ? item.disabled : null)}
                         checked={selectedItems.has(item.value)}
@@ -451,6 +473,14 @@ const MultipleCheckboxes = forwardRef((props: MultipleCheckboxesProps, externalR
                     />
     
                     {labelRes(typeof item.listItemLabel === 'undefined' ? item.label : item.listItemLabel, `multiple-checkboxes__control-label-${index}-${idRes}`)}
+
+                    {/* EXTENDS */}
+                    {typeof item.extends !== 'undefined' ? <>
+                        <div className="d-inline-block">
+                            <div className="form-control-extends__wrapper">{item.extends}</div>
+                        </div>
+                    </> : null}
+
                 </>;
             };
     
@@ -467,7 +497,6 @@ const MultipleCheckboxes = forwardRef((props: MultipleCheckboxesProps, externalR
                             tableLayoutCellClassName
                         )} 
                         key={'optgroup-' + index}
-                        data-optiondata={JSON.stringify(item)}
                     >
                         {_groupEl()}
                     </td>;
@@ -488,7 +517,7 @@ const MultipleCheckboxes = forwardRef((props: MultipleCheckboxesProps, externalR
                         data-value={item.value}
                         data-disabled={disabled || (typeof item.disabled !== 'undefined' ? `${item.disabled}` : 'false')}
                         key={'checkbox' + index}
-                        data-optiondata={JSON.stringify(item)}
+                        data-optiondata={JSON.stringify(_optiondata)}
                     >
                         {_normalEl()}
                     </td>;
@@ -504,7 +533,6 @@ const MultipleCheckboxes = forwardRef((props: MultipleCheckboxesProps, externalR
                             groupWrapperClassName
                         )} 
                         key={'optgroup-' + index}
-                        data-optiondata={JSON.stringify(item)}
                     >
                         {_groupEl()}
                     </div>;
@@ -523,7 +551,7 @@ const MultipleCheckboxes = forwardRef((props: MultipleCheckboxesProps, externalR
                         data-value={item.value}
                         data-disabled={disabled || (typeof item.disabled !== 'undefined' ? `${item.disabled}` : 'false')}
                         key={'checkbox' + index}
-                        data-optiondata={JSON.stringify(item)}
+                        data-optiondata={JSON.stringify(_optiondata)}
                     >
                         {_normalEl()}
                     </div>;

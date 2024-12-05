@@ -11,7 +11,6 @@ import {
 import { clsWrite, combinedCls } from 'funda-utils/dist/cjs/cls';
 
 
-
 export interface OptionConfig {
     [propName: string]: string | number | React.ReactNode | boolean;
 }
@@ -468,9 +467,14 @@ const Radio = forwardRef((props: RadioProps, externalRef: any) => {
                                 {labelRes(typeof opt.listItemLabel === 'undefined' ? opt.label : opt.listItemLabel, `field-${uniqueID}-${index}-${optIndex}`)}
 
                             </div>
-                            <div className="d-inline-block">
-                                <div className="form-control-extends__wrapper">{typeof opt.extends !== 'undefined' ? <>{opt.extends}</> : null}</div>
-                            </div>
+                            
+                            {/* EXTENDS */}
+                            {typeof opt.extends !== 'undefined' ? <>
+                                <div className="d-inline-block">
+                                    <div className="form-control-extends__wrapper">{opt.extends}</div>
+                                </div>
+                            </> : null}
+
                         </div>;
 
                     })}
@@ -511,9 +515,13 @@ const Radio = forwardRef((props: RadioProps, externalRef: any) => {
                             __html: `${typeof item.listItemLabel === 'undefined' ? item.label : item.listItemLabel}`
                         }}></label>
                     </div>
-                    <div className="d-inline-block">
-                        <div className="form-control-extends__wrapper">{typeof item.extends !== 'undefined' ? <>{item.extends}</> : null}</div>
-                    </div>
+
+                    {/* EXTENDS */}
+                    {typeof item.extends !== 'undefined' ? <>
+                        <div className="d-inline-block">
+                            <div className="form-control-extends__wrapper">{item.extends}</div>
+                        </div>
+                    </> : null}
 
                 </>;
             };
