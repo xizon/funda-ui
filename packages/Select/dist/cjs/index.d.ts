@@ -41,6 +41,7 @@ export declare type SelectProps = {
     wrapperClassName?: string;
     controlClassName?: string;
     controlExClassName?: string;
+    optionsExClassName?: string;
     exceededSidePosOffset?: number;
     multiSelect?: MultiSelectConfig;
     multiSelectEntireAreaTrigger?: boolean;

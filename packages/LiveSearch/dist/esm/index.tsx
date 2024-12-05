@@ -32,6 +32,7 @@ export type LiveSearchProps = {
     wrapperClassName?: string;
     controlClassName?: string;
     controlExClassName?: string;
+    optionsExClassName?: string;
     controlGroupWrapperClassName?: string;
     controlGroupTextClassName?: string;
     exceededSidePosOffset?: number;
@@ -92,6 +93,7 @@ const LiveSearch = forwardRef((props: LiveSearchProps, externalRef: any) => {
         wrapperClassName,
         controlClassName,
         controlExClassName,
+        optionsExClassName,
         controlGroupWrapperClassName,
         controlGroupTextClassName,
         exceededSidePosOffset,
@@ -854,6 +856,7 @@ const LiveSearch = forwardRef((props: LiveSearchProps, externalRef: any) => {
                             id={`livesearch__options-wrapper-${idRes}`}
                             className={combinedCls(
                                 'livesearch__options-wrapper list-group position-absolute border shadow small',
+                                optionsExClassName,
                                 {
                                     'shadow-none border-0': (orginalData && orginalData.length === 0) && !NO_MATCH_POPUP
                                 }

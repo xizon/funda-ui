@@ -12,6 +12,7 @@ export declare type LiveSearchProps = {
     wrapperClassName?: string;
     controlClassName?: string;
     controlExClassName?: string;
+    optionsExClassName?: string;
     controlGroupWrapperClassName?: string;
     controlGroupTextClassName?: string;
     exceededSidePosOffset?: number;

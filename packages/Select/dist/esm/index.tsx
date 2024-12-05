@@ -103,6 +103,7 @@ export type SelectProps = {
     wrapperClassName?: string;
     controlClassName?: string;
     controlExClassName?: string;
+    optionsExClassName?: string;
     exceededSidePosOffset?: number;
     multiSelect?: MultiSelectConfig;
     multiSelectEntireAreaTrigger?: boolean;
@@ -165,6 +166,7 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
         wrapperClassName,
         controlClassName,
         controlExClassName,
+        optionsExClassName,
         exceededSidePosOffset,
         multiSelect,
         multiSelectEntireAreaTrigger,
@@ -2536,6 +2538,7 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
                             id={`custom-select__options-wrapper-${idRes}`}
                             className={combinedCls(
                                 'custom-select__options-wrapper list-group position-absolute border shadow small',
+                                optionsExClassName,
                                 {
                                     'multiple-selection': MULTI_SEL_VALID
                                 }

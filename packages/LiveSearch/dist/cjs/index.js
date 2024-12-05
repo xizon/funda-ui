@@ -2745,7 +2745,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var funda_utils_dist_cjs_getElementProperty__WEBPACK_IMPORTED_MODULE_8___default = /*#__PURE__*/__webpack_require__.n(funda_utils_dist_cjs_getElementProperty__WEBPACK_IMPORTED_MODULE_8__);
 /* harmony import */ var funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(188);
 /* harmony import */ var funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_9___default = /*#__PURE__*/__webpack_require__.n(funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_9__);
-var _excluded = ["contentRef", "popupRef", "wrapperClassName", "controlClassName", "controlExClassName", "controlGroupWrapperClassName", "controlGroupTextClassName", "exceededSidePosOffset", "appearance", "isSearchInput", "allowSpacingRetrive", "readOnly", "disabled", "required", "placeholder", "noMatchPopup", "options", "value", "label", "name", "units", "iconLeft", "iconRight", "minLength", "maxLength", "id", "autoComplete", "autoCapitalize", "spellCheck", "icon", "btnId", "fetchTrigger", "hideIcon", "depth", "style", "winWidth", "tabIndex", "data", "autoShowOptions", "fetchNoneInfo", "fetchUpdate", "fetchFuncAsync", "fetchFuncMethod", "fetchFuncMethodParams", "fetchCallback", "onClick", "onFetch", "onChange", "onKeyboardInput", "onBlur", "onPressEnter"];
+var _excluded = ["contentRef", "popupRef", "wrapperClassName", "controlClassName", "controlExClassName", "optionsExClassName", "controlGroupWrapperClassName", "controlGroupTextClassName", "exceededSidePosOffset", "appearance", "isSearchInput", "allowSpacingRetrive", "readOnly", "disabled", "required", "placeholder", "noMatchPopup", "options", "value", "label", "name", "units", "iconLeft", "iconRight", "minLength", "maxLength", "id", "autoComplete", "autoCapitalize", "spellCheck", "icon", "btnId", "fetchTrigger", "hideIcon", "depth", "style", "winWidth", "tabIndex", "data", "autoShowOptions", "fetchNoneInfo", "fetchUpdate", "fetchFuncAsync", "fetchFuncMethod", "fetchFuncMethodParams", "fetchCallback", "onClick", "onFetch", "onChange", "onKeyboardInput", "onBlur", "onPressEnter"];
 function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
 function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
 function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter); }
@@ -2779,6 +2779,7 @@ var LiveSearch = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(
     wrapperClassName = props.wrapperClassName,
     controlClassName = props.controlClassName,
     controlExClassName = props.controlExClassName,
+    optionsExClassName = props.optionsExClassName,
     controlGroupWrapperClassName = props.controlGroupWrapperClassName,
     controlGroupTextClassName = props.controlGroupTextClassName,
     exceededSidePosOffset = props.exceededSidePosOffset,
@@ -3552,7 +3553,7 @@ var LiveSearch = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
     ref: listRef,
     id: "livesearch__options-wrapper-".concat(idRes),
-    className: (0,funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_9__.combinedCls)('livesearch__options-wrapper list-group position-absolute border shadow small', {
+    className: (0,funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_9__.combinedCls)('livesearch__options-wrapper list-group position-absolute border shadow small', optionsExClassName, {
       'shadow-none border-0': orginalData && orginalData.length === 0 && !NO_MATCH_POPUP
     }),
     style: {
