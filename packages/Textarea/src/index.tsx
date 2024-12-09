@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, forwardRef, KeyboardEvent, useImperativeHandle } from 'react';
+import React, { useState, useEffect, useRef, forwardRef, ChangeEvent, KeyboardEvent, useImperativeHandle } from 'react';
 
 
 import useComId from 'funda-utils/dist/cjs/useComId';
@@ -46,7 +46,7 @@ export type TextareaProps = {
     onChangeCallback?: (e: any, el: any) => void;
     onInputCallback?: (e: any, el: any) => void;
     onKeyPressedCallback?: (e: any, el: any) => void;
-    onChange?: (e: any, el: any) => void;
+    onChange?: (e: any, el: any, value: string) => void;
     onBlur?: (e: any, el: any) => void;
     onFocus?: (e: any, el: any) => void;
     onPressEnter?: (e: any, el: any) => void;
@@ -262,7 +262,7 @@ const Textarea = forwardRef((props: TextareaProps, externalRef: any) => {
         const remainingText = getRemainingText(currentSuggestion);
         if (remainingText) {
             // Only the second half of the text is added
-            setChangedVal(changedVal + remainingText);
+            handleChange(e, changedVal + remainingText);
             setCurrentSuggestion('');
         }
     };
@@ -318,19 +318,18 @@ const Textarea = forwardRef((props: TextareaProps, externalRef: any) => {
     }
 
     
-    function handleChange(event: any) {
-        const val = event.target.value;
+    function handleChange(event: ChangeEvent<HTMLTextAreaElement> | KeyboardEvent<HTMLTextAreaElement> | null, curVal: string) {
 
-        setChangedVal(val);
+        setChangedVal(curVal);
 
         //----
         //remove focus style
-        if (val === '') {
+        if (curVal === '') {
             rootRef.current?.classList.remove('focus');
         }
 
         //
-        onChange?.(event, valRef.current);
+        onChange?.(event, valRef.current, curVal);
 
         // It fires in real time as the user enters
         if (typeof (onInputCallback) === 'function') {
@@ -527,7 +526,7 @@ const Textarea = forwardRef((props: TextareaProps, externalRef: any) => {
                             onFocus={handleFocus}
                             onBlur={handleBlur}
                             onChange={(e: any) => {
-                                handleChange(e);
+                                handleChange(e, e.target.value);
 
                                 // AI Predict
                                 if (aiPredict) {

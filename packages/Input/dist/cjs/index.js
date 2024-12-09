@@ -1182,7 +1182,7 @@ var Input = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(funct
     var remainingText = getRemainingText(currentSuggestion);
     if (remainingText) {
       // Only the second half of the text is added
-      setChangedVal(changedVal + remainingText);
+      handleChange(e, changedVal + remainingText);
       setCurrentSuggestion('');
     }
   };
@@ -1227,19 +1227,18 @@ var Input = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(funct
     //
     onFocus === null || onFocus === void 0 ? void 0 : onFocus(event, onComposition, valRef.current);
   }
-  function handleChange(event) {
-    var val = event.target.value;
-    setChangedVal(val);
+  function handleChange(event, curVal) {
+    setChangedVal(curVal);
 
     //----
     //remove focus style
-    if (val === '') {
+    if (curVal === '') {
       var _rootRef$current2;
       (_rootRef$current2 = rootRef.current) === null || _rootRef$current2 === void 0 ? void 0 : _rootRef$current2.classList.remove('focus');
     }
 
     //
-    onChange === null || onChange === void 0 ? void 0 : onChange(event, onComposition, valRef.current);
+    onChange === null || onChange === void 0 ? void 0 : onChange(event, onComposition, valRef.current, curVal);
 
     // It fires in real time as the user enters
     if (typeof onInputCallback === 'function') {
@@ -1396,7 +1395,7 @@ var Input = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(funct
     onFocus: handleFocus,
     onBlur: handleBlur,
     onChange: function onChange(e) {
-      handleChange(e);
+      handleChange(e, e.target.value);
 
       // AI Predict
       if (aiPredict) {

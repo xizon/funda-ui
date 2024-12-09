@@ -57,7 +57,7 @@ export type InputProps = {
     onChangeCallback?: (e: any, el: any) => void;
     onInputCallback?: (e: any, el: any) => void;
     onKeyPressedCallback?: (e: any, el: any) => void;
-    onChange?: (e: any, param: any, el: any) => void;
+    onChange?: (e: any, param: any, el: any, value: string) => void;
     onBlur?: (e: any, param: any, el: any) => void;
     onFocus?: (e: any, param: any, el: any) => void;
     onPressEnter?: (e: any, el: any) => void;
@@ -286,7 +286,7 @@ const Input = forwardRef((props: InputProps, externalRef: any) => {
         const remainingText = getRemainingText(currentSuggestion);
         if (remainingText) {
             // Only the second half of the text is added
-            setChangedVal(changedVal + remainingText);
+            handleChange(e, changedVal + remainingText);
             setCurrentSuggestion('');
         }
     };
@@ -338,20 +338,18 @@ const Input = forwardRef((props: InputProps, externalRef: any) => {
         onFocus?.(event, onComposition, valRef.current);
     }
 
-    function handleChange(event: ChangeEvent<HTMLInputElement>) {
-        const val = event.target.value;
+    function handleChange(event: ChangeEvent<HTMLInputElement> | KeyboardEvent<HTMLInputElement> | null, curVal: string) {
+        setChangedVal(curVal);
 
-        setChangedVal(val);
-
-     
+   
         //----
         //remove focus style
-        if (val === '') {
+        if (curVal === '') {
             rootRef.current?.classList.remove('focus');
         }
 
         //
-        onChange?.(event, onComposition, valRef.current);
+        onChange?.(event, onComposition, valRef.current, curVal);
 
         // It fires in real time as the user enters
         if (typeof (onInputCallback) === 'function') {
@@ -537,7 +535,7 @@ const Input = forwardRef((props: InputProps, externalRef: any) => {
                             onFocus={handleFocus}
                             onBlur={handleBlur}
                             onChange={(e: any) => {
-                                handleChange(e);
+                                handleChange(e, e.target.value);
 
                                 // AI Predict
                                 if (aiPredict) {
