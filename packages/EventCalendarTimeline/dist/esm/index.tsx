@@ -1826,11 +1826,23 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
     function outerWrapperInit() {
         if (rootRef.current === null) return;
 
-        // calculate wrapper width 
+        const hasInlineHeightOrMaxHeight = (element: HTMLElement) => {
+            if (!element) return false;
+            return element.style.height !== '' || element.style.maxHeight !== '';
+        };
+
+        // calculate wrapper width & height
         const wrapperWidth = rootRef.current.parentElement?.offsetWidth || 0;
         if (rootRef.current && wrapperWidth > 0 && rootWidth.current === 0) {
             rootWidth.current = wrapperWidth;
             rootRef.current.style.width = wrapperWidth + 'px';
+ 
+            // height
+            const wrapperHeight = rootRef.current.parentElement?.offsetHeight || 0;
+            if (hasInlineHeightOrMaxHeight(rootRef.current.parentElement) && wrapperHeight > 0) {
+                rootRef.current.style.height = wrapperHeight + 'px';
+            }
+            
         }
     }
 

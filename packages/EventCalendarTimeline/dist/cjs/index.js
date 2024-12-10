@@ -5447,12 +5447,23 @@ var EventCalendarTimeline = function EventCalendarTimeline(props) {
   function outerWrapperInit() {
     var _rootRef$current$pare;
     if (rootRef.current === null) return;
+    var hasInlineHeightOrMaxHeight = function hasInlineHeightOrMaxHeight(element) {
+      if (!element) return false;
+      return element.style.height !== '' || element.style.maxHeight !== '';
+    };
 
-    // calculate wrapper width 
+    // calculate wrapper width & height
     var wrapperWidth = ((_rootRef$current$pare = rootRef.current.parentElement) === null || _rootRef$current$pare === void 0 ? void 0 : _rootRef$current$pare.offsetWidth) || 0;
     if (rootRef.current && wrapperWidth > 0 && rootWidth.current === 0) {
+      var _rootRef$current$pare2;
       rootWidth.current = wrapperWidth;
       rootRef.current.style.width = wrapperWidth + 'px';
+
+      // height
+      var wrapperHeight = ((_rootRef$current$pare2 = rootRef.current.parentElement) === null || _rootRef$current$pare2 === void 0 ? void 0 : _rootRef$current$pare2.offsetHeight) || 0;
+      if (hasInlineHeightOrMaxHeight(rootRef.current.parentElement) && wrapperHeight > 0) {
+        rootRef.current.style.height = wrapperHeight + 'px';
+      }
     }
   }
   function tableGridInit() {

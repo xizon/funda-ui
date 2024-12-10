@@ -758,8 +758,8 @@ export default () => {
 
     return (
         <>
-            <div style={{height: '500px'}}> {/* This layer is the total height of yourself plus the header and date areas */}
-                <div style={{height: '420px', width: '600px'}}>  {/* This layer is the height at which the list is scrollable */}
+            <div style={{height: '350px'}}> {/* This layer is the total height of yourself plus the header and date areas */}
+                <div style={{height: '270px', width: '600px'}}>  {/* This layer is the height at which the list is scrollable */}
                     <EventCalendarTimeline
                         customTodayDate={defaultCustomTodayDate}
                         eventsValue={defaultData}
