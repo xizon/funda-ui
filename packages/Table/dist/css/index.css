@@ -8,7 +8,7 @@
   --syntable-scrollbar-color: rgba(0, 0, 0, 0.2);
   --syntable-scrollbar-track: rgba(0, 0, 0, 0);
   --syntable-scrollbar-h: 3px;
-  --syntable-scrollbar-w: 3px;
+  --syntable-scrollbar-w: 10px;
   --syntable-padding-x: 1rem;
   --syntable-padding-y: 0.5rem;
   --syntable-cell-focus-shadow: inset 0px 0px 2px 0px rgba(13, 110, 253, 2.25);

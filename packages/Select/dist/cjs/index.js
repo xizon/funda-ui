@@ -3591,6 +3591,7 @@ var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_
   var listRef = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useRef)(null);
   var listContentRef = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useRef)(null);
   var optionsRes = options ? (0,initDefaultOptions.isJSON)(options) ? JSON.parse(options) : options : [];
+  var LIST_CONTAINER_MAX_HEIGHT = 350;
   var keyboardSelectedItem = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useRef)(null);
 
   // return a array of options
@@ -3659,6 +3660,14 @@ var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_
     _useState22 = _slicedToArray(_useState21, 2),
     controlArr = _useState22[0],
     setControlArr = _useState22[1];
+  var listContainerHeightLimit = function listContainerHeightLimit(num) {
+    var res = num;
+    if (res > LIST_CONTAINER_MAX_HEIGHT) res = LIST_CONTAINER_MAX_HEIGHT;
+
+    // Avoid the height of the child div containing decimal points and scrollbars
+    res = res + 1;
+    return res;
+  };
   var multiSelControlOptionExist = function multiSelControlOptionExist(arr, val) {
     var _data = arr.filter(Boolean);
     return _data.map(function (v) {
@@ -4188,8 +4197,16 @@ var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_
 
     // STEP 2:
     //-----------
-    // Detect position
-    if (window.innerHeight - _triggerBox.top > 100) {
+    // Detect content MAX HEIGHT and ACTUAL HEIGHT
+    var _contentBox = listContentRef.current.getBoundingClientRect();
+    var _contentOldHeight = listContentRef.current.clientHeight;
+
+    // height restrictions
+    _contentOldHeight = listContainerHeightLimit(_contentOldHeight);
+
+    // You need to wait for the height of the pop-up container to be set
+    // Detect position、
+    if (window.innerHeight - _triggerBox.top > _contentOldHeight) {
       targetPos = 'bottom';
     } else {
       targetPos = 'top';
@@ -4198,11 +4215,12 @@ var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_
 
     // STEP 3:
     //-----------
-    // Detect content height
-    var _contentBox = listContentRef.current.getBoundingClientRect();
-    var _contentOldHeight = listContentRef.current.clientHeight;
+    // Set the pop-up height
     if (targetPos === 'top') {
       contentMaxHeight = _triggerBox.top;
+
+      // height restrictions
+      contentMaxHeight = listContainerHeightLimit(contentMaxHeight);
       if (_contentBox.height > contentMaxHeight) {
         listContentRef.current.style.height = contentMaxHeight - contentHeightOffset + 'px';
         if (typeof listContentRef.current.dataset.height === 'undefined') listContentRef.current.dataset.height = contentMaxHeight - contentHeightOffset;
@@ -4221,6 +4239,9 @@ var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_
     }
     if (targetPos === 'bottom') {
       contentMaxHeight = window.innerHeight - _triggerBox.bottom;
+
+      // height restrictions
+      contentMaxHeight = listContainerHeightLimit(contentMaxHeight);
       if (_contentBox.height > contentMaxHeight) {
         listContentRef.current.style.height = contentMaxHeight - 10 + 'px';
         if (typeof listContentRef.current.dataset.height === 'undefined') listContentRef.current.dataset.height = contentMaxHeight - 10;
@@ -4346,6 +4367,10 @@ var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_
     var oldHeight = listContentRef.current.dataset.height;
     var pos = listContentRef.current.dataset.pos;
     var filteredHeight = listContentRef.current.firstChild.clientHeight;
+
+    // height restrictions
+    oldHeight = listContainerHeightLimit(oldHeight);
+    filteredHeight = listContainerHeightLimit(filteredHeight);
     if (parseFloat(oldHeight) > filteredHeight) {
       listContentRef.current.style.height = filteredHeight + 'px';
     } else {

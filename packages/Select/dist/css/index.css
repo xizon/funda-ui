@@ -266,7 +266,7 @@
   --cus-sel-listgroup-item-hover-focus-bg: rgba(0,0,0,.1);
   --cus-sel-listgroup-content-scrollbar-color: rgba(0, 0, 0, 0.2);
   --cus-sel-listgroup-content-scrollbar-track: rgba(0, 0, 0, 0);
-  --cus-sel-listgroup-content-scrollbar-w: 3px;
+  --cus-sel-listgroup-content-scrollbar-w: 10px;
   --cus-sel-listgroup-grouptitle-color: #a2a2a2;
   --cus-sel-listgroup-groupborder-color: #d8d8d8;
   display: none;

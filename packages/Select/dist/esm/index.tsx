@@ -50,6 +50,7 @@ import { clsWrite, combinedCls } from 'funda-utils/dist/cjs/cls';
 
 
 
+
 export type SelectOptionChangeFnType = (arg1: any, arg2: any, arg3: any) => void;
 
 export interface MultiSelectDataConfig {
@@ -240,6 +241,7 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
     const listRef = useRef<any>(null);
     const listContentRef = useRef<any>(null);
     const optionsRes = options ? (isJSON(options) ? JSON.parse(options as string) : options) : [];
+    const LIST_CONTAINER_MAX_HEIGHT = 350;
 
     const keyboardSelectedItem = useRef<any>(null);
 
@@ -283,6 +285,16 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
         values: []
     });
 
+
+    const listContainerHeightLimit = (num: number) => {
+        let res = num;
+        if (res > LIST_CONTAINER_MAX_HEIGHT) res = LIST_CONTAINER_MAX_HEIGHT;
+
+        // Avoid the height of the child div containing decimal points and scrollbars
+        res = res + 1;
+
+        return res;
+    };
 
     const multiSelControlOptionExist = (arr: any[], val: any) => {
         const _data = arr.filter(Boolean);
@@ -864,10 +876,20 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
         _modalRef.classList.add('active');
 
 
+
+
         // STEP 2:
         //-----------
-        // Detect position
-        if (window.innerHeight - _triggerBox.top > 100) {
+        // Detect content MAX HEIGHT and ACTUAL HEIGHT
+        const _contentBox = listContentRef.current.getBoundingClientRect();
+        let _contentOldHeight = listContentRef.current.clientHeight;
+
+        // height restrictions
+        _contentOldHeight = listContainerHeightLimit(_contentOldHeight);
+
+        // You need to wait for the height of the pop-up container to be set
+        // Detect position、
+        if (window.innerHeight - _triggerBox.top > _contentOldHeight) {
             targetPos = 'bottom';
         } else {
             targetPos = 'top';
@@ -879,12 +901,13 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
 
         // STEP 3:
         //-----------
-        // Detect content height
-        const _contentBox = listContentRef.current.getBoundingClientRect();
-        const _contentOldHeight = listContentRef.current.clientHeight;
-
+        // Set the pop-up height
         if (targetPos === 'top') {
             contentMaxHeight = _triggerBox.top;
+
+            // height restrictions
+            contentMaxHeight = listContainerHeightLimit(contentMaxHeight);
+
 
             if (_contentBox.height > contentMaxHeight) {
                 listContentRef.current.style.height = contentMaxHeight - contentHeightOffset + 'px';
@@ -907,6 +930,11 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
 
         if (targetPos === 'bottom') {
             contentMaxHeight = window.innerHeight - _triggerBox.bottom;
+
+
+            // height restrictions
+            contentMaxHeight = listContainerHeightLimit(contentMaxHeight);
+
 
             if (_contentBox.height > contentMaxHeight) {
                 listContentRef.current.style.height = contentMaxHeight - 10 + 'px';
@@ -987,6 +1015,7 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
         //-----------
         // no data label
         popwinNoMatchInit();
+
 
     }
 
@@ -1077,9 +1106,14 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
     function popwinContainerHeightAdjust() {
         if (listContentRef.current === null) return;
 
-        const oldHeight = listContentRef.current.dataset.height;
+        let oldHeight = listContentRef.current.dataset.height;
         const pos = listContentRef.current.dataset.pos;
-        const filteredHeight = listContentRef.current.firstChild.clientHeight;
+        let filteredHeight = listContentRef.current.firstChild.clientHeight;
+
+        // height restrictions
+        oldHeight = listContainerHeightLimit(oldHeight);
+        filteredHeight = listContainerHeightLimit(filteredHeight);
+
 
         if (parseFloat(oldHeight) > filteredHeight) {
             listContentRef.current.style.height = filteredHeight + 'px';
