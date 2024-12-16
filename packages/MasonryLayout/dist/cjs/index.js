@@ -476,6 +476,17 @@ var MasonryLayout = function MasonryLayout(props) {
 
     // STEP 3:
     //=================
+    // Calculate the wrapper width based on the gap
+    var wrapperTotalGap = 0;
+    for (var _i2 = 0; _i2 < colCount; _i2++) {
+      if (_i2 > 0) {
+        wrapperTotalGap += GAP;
+      }
+    }
+    if (rootRef.current) rootRef.current.style.width = "calc(100% - ".concat(wrapperTotalGap, "px)");
+
+    // STEP 4:
+    //=================
     // Divide the children into columns
     var items = [];
     if (children && !Array.isArray(children)) {
@@ -493,32 +504,31 @@ var MasonryLayout = function MasonryLayout(props) {
       var columnIndex = i % colCount;
       columnWrapper["".concat(itemWrapperKey).concat(columnIndex)].push( /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
         key: i,
-        className: "masonry-item",
         style: {
           marginBottom: "".concat(GAP, "px")
         }
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
         style: perBrickWidth > 0 ? {
-          maxWidth: perBrickWidth + 'px'
+          width: perBrickWidth + 'px'
         } : undefined
       }, el)));
     });
 
-    // STEP 4:
+    // STEP 5:
     //=================
     // Wrapping the items in each column with a div and pushing it into the result array
-    for (var _i2 = 0; _i2 < colCount; _i2++) {
+    for (var _i3 = 0; _i3 < colCount; _i3++) {
       result.push( /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-        key: _i2,
+        key: _i3,
         className: "masonry-item",
         style: {
-          marginLeft: "".concat(_i2 > 0 ? GAP : 0, "px"),
-          flex: 1
+          marginLeft: "".concat(_i3 > 0 ? GAP : 0, "px"),
+          flex: '0 1 auto'
         }
-      }, columnWrapper["".concat(itemWrapperKey).concat(_i2)]));
+      }, columnWrapper["".concat(itemWrapperKey).concat(_i3)]));
     }
 
-    // STEP 5:
+    // STEP 6:
     //=================
     setItems(result);
   }, [children]);

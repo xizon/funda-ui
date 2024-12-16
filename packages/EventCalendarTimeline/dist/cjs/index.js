@@ -3990,10 +3990,6 @@ var EventCalendarTimeline = function EventCalendarTimeline(props) {
   //
   var FILL_BLANK_DATE_DISABLD = typeof forwardAndBackFillDisabled === 'undefined' ? true : forwardAndBackFillDisabled;
 
-  // root
-  var rootRef = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(null);
-  var rootWidth = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(0);
-
   //
   var now = (0,react__WEBPACK_IMPORTED_MODULE_0__.useMemo)(function () {
     return new Date();
@@ -4121,6 +4117,15 @@ var EventCalendarTimeline = function EventCalendarTimeline(props) {
   // exposes the following methods
   (0,react__WEBPACK_IMPORTED_MODULE_0__.useImperativeHandle)(contentRef, function () {
     return {
+      today: function today() {
+        handleTodayChange();
+      },
+      next: function next() {
+        handleNextChange();
+      },
+      prev: function prev() {
+        handlePrevChange();
+      },
       gridInit: function gridInit() {
         tableGridInit();
       },
@@ -4936,6 +4941,16 @@ var EventCalendarTimeline = function EventCalendarTimeline(props) {
 
     // restore table grid init status
     restoreTableGridInitStatus();
+
+    // The scrollbar position is horizontal
+    setTimeout(function () {
+      if (scrollBodyRef.current && tableGridRef.current) {
+        var targetPos = tableGridRef.current.querySelector('.custom-event-tl-table__datagrid-header__content tbody .today.selected');
+        if (targetPos !== null) {
+          scrollBodyRef.current.scrollLeft = targetPos.offsetLeft;
+        }
+      }
+    }, 0);
   }
   function handleAppearanceChange(e) {
     var _mode = e.target.dataset.mode;
@@ -5021,7 +5036,7 @@ var EventCalendarTimeline = function EventCalendarTimeline(props) {
               className: (0,funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_7__.combinedCls)('custom-event-tl-table__cell-cushion-headercontent__container', {
                 'empty': !isInteractive,
                 'today': d === now.getDate(),
-                'selected': d === day,
+                'selected': "".concat(year, "-").concat((0,funda_utils_dist_cjs_date__WEBPACK_IMPORTED_MODULE_6__.padZero)(month + 1), "-").concat((0,funda_utils_dist_cjs_date__WEBPACK_IMPORTED_MODULE_6__.padZero)(day)) === "".concat(year, "-").concat((0,funda_utils_dist_cjs_date__WEBPACK_IMPORTED_MODULE_6__.padZero)(month + 1), "-").concat((0,funda_utils_dist_cjs_date__WEBPACK_IMPORTED_MODULE_6__.padZero)(d)),
                 'last-cell': isLastCol
               }),
               key: "col" + i,
@@ -5444,28 +5459,6 @@ var EventCalendarTimeline = function EventCalendarTimeline(props) {
       trElements[i].style.height = tdOHeight;
     }
   }
-  function outerWrapperInit() {
-    var _rootRef$current$pare;
-    if (rootRef.current === null) return;
-    var hasInlineHeightOrMaxHeight = function hasInlineHeightOrMaxHeight(element) {
-      if (!element) return false;
-      return element.style.height !== '' || element.style.maxHeight !== '';
-    };
-
-    // calculate wrapper width & height
-    var wrapperWidth = ((_rootRef$current$pare = rootRef.current.parentElement) === null || _rootRef$current$pare === void 0 ? void 0 : _rootRef$current$pare.offsetWidth) || 0;
-    if (rootRef.current && wrapperWidth > 0 && rootWidth.current === 0) {
-      var _rootRef$current$pare2;
-      rootWidth.current = wrapperWidth;
-      rootRef.current.style.width = wrapperWidth + 'px';
-
-      // height
-      var wrapperHeight = ((_rootRef$current$pare2 = rootRef.current.parentElement) === null || _rootRef$current$pare2 === void 0 ? void 0 : _rootRef$current$pare2.offsetHeight) || 0;
-      if (hasInlineHeightOrMaxHeight(rootRef.current.parentElement) && wrapperHeight > 0) {
-        rootRef.current.style.height = wrapperHeight + 'px';
-      }
-    }
-  }
   function tableGridInit() {
     //
     if (tableGridRef.current === null) return;
@@ -5731,10 +5724,6 @@ var EventCalendarTimeline = function EventCalendarTimeline(props) {
     onListRenderComplete === null || onListRenderComplete === void 0 ? void 0 : onListRenderComplete();
   }, [eventsValue, customTodayDate, appearanceMode]);
   (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(function () {
-    // calculate wrapper width (!!!FIRST!!!)
-    //--------------
-    outerWrapperInit();
-
     // !!!Please do not use dependencies
     //--------------
     return function () {
@@ -5747,9 +5736,6 @@ var EventCalendarTimeline = function EventCalendarTimeline(props) {
     };
   }, []);
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-    ref: rootRef,
-    className: "custom-event-tl__outerwrapper"
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
     className: (0,funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_7__.combinedCls)("custom-event-tl__wrapper custom-event-tl__wrapper--".concat(appearanceMode), calendarWrapperClassName)
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
     className: "custom-event-tl__header bg-body-tertiary"
@@ -5961,7 +5947,7 @@ var EventCalendarTimeline = function EventCalendarTimeline(props) {
     return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("tr", {
       key: i
     }, generateDaysUi(item.eventSources, item.listSection, i, true));
-  }))))))))))))), EVENTS_ENABLED ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((funda_modaldialog__WEBPACK_IMPORTED_MODULE_2___default()), {
+  })))))))))))), EVENTS_ENABLED ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((funda_modaldialog__WEBPACK_IMPORTED_MODULE_2___default()), {
     ref: modalDeleteHandleRef,
     show: showDelete,
     maskOpacity: modalMaskOpacity,

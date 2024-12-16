@@ -8,9 +8,9 @@ import {
 
 
 export type MasonryLayoutProps = {
-    columns?: number,
-    gap?: number,
-    breakPoints?: Record<number, number>
+    columns?: number;
+    gap?: number;
+    breakPoints?: Record<number, number>;
     /** -- */
     id?: string;
     tabIndex?: number;
@@ -75,7 +75,20 @@ const MasonryLayout = (props: MasonryLayoutProps) => {
             columnWrapper[`${itemWrapperKey}${i}`] = [];
         }
 
+
         // STEP 3:
+        //=================
+        // Calculate the wrapper width based on the gap
+        let wrapperTotalGap: number = 0;
+        for (let i = 0; i < colCount; i++) {
+            if (i > 0) {
+                wrapperTotalGap += GAP;
+            }
+        }
+        if (rootRef.current) rootRef.current.style.width = `calc(100% - ${wrapperTotalGap}px)`;
+
+
+        // STEP 4:
         //=================
         // Divide the children into columns
         let items: React.ReactNode[] = [];
@@ -94,21 +107,21 @@ const MasonryLayout = (props: MasonryLayoutProps) => {
 
         items.forEach((el: React.ReactNode, i: number) => {
             const columnIndex = i % colCount;
+  
             columnWrapper[`${itemWrapperKey}${columnIndex}`].push(
                 <div 
                     key={i} 
-                    className="masonry-item"
                     style={{ 
                         marginBottom: `${GAP}px`
                     }}
                 >
-                    <div style={perBrickWidth > 0 ? {maxWidth: perBrickWidth + 'px'} : undefined}>{el}</div>
+                    <div style={perBrickWidth > 0 ? {width: perBrickWidth + 'px'} : undefined}>{el}</div>
                 </div>
             );
         });
 
 
-        // STEP 4:
+        // STEP 5:
         //=================
         // Wrapping the items in each column with a div and pushing it into the result array
         for (let i = 0; i < colCount; i++) {
@@ -118,14 +131,14 @@ const MasonryLayout = (props: MasonryLayoutProps) => {
                     className="masonry-item"
                     style={{
                         marginLeft: `${i > 0 ? GAP : 0}px`,
-                        flex: 1
+                        flex: '0 1 auto'
                     }}>
                     {columnWrapper[`${itemWrapperKey}${i}`]}
                 </div>
             );
         }
         
-        // STEP 5:
+        // STEP 6:
         //=================
         setItems(result);
         

@@ -539,7 +539,7 @@ import EventCalendar from 'funda-ui/EventCalendar';
 ```
 | Property | Type | Default | Description | Required |
 | --- | --- | --- | --- | --- |
-| `contentRef` | React.RefObject | - | It exposes the following methods:  <br /> <ol><li>`contentRef.current.closeModal()`</li></ol> | - |
+| `contentRef` | React.RefObject | - | It exposes the following methods:  <br /> <ol><li>`contentRef.current.today()`</li><li>`contentRef.current.next()`</li><li>`contentRef.current.prev()`</li><li>`contentRef.current.closeModal()`</li></ol> | - |
 | `calendarWrapperClassName` | string | - | The class name of the calendar wrapper. | - |
 | `customTodayDate` | string  | - | Specify a default today. such as `2023-11-06` | - |
 | `eventsValue` | array  | - | Specify the default value for all events. Its properties are described below in the documentation. such as `[{"date":"2023-11-20","list":[{"id":1,"date":"2023-11-20","time":"","data":"<span class=\"text-warning\">event 1 </span>","eventStyles":{"background":"rgb(255, 240, 227)"}}]},{"date":"2023-09-22","list":[{"id":2,"date":"2023-09-22","time":"","data":"event 2",},{"id":3,"date":"2023-09-22","time":"","data":"event 2_2",}]},{"date":"2023-09-12","list":[{"id":4,"date":"2023-09-12","time":"","data":"event 3","eventStyles":{"background":"rgb(255, 240, 227)"}}]},{"date":"2023-11-24","list":[{"id":5,"date":"2023-11-24","time":"","data":"<del>very long event string</del> here, very long event string here ","eventStyles":{"background":"rgb(203, 228, 240)"}}]}]` | - |

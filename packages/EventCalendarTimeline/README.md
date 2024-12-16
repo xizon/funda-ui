@@ -350,7 +350,7 @@ export default () => {
         }
     ];
 
-    const defaultCustomTodayDate = '2023-12-01';
+    const defaultCustomTodayDate = '2023-12-04';
 
     const [data, setData] = useState<any>(null);
     const [updateCalendarData, setUpdateCalendarData] = useState<boolean>(false);
@@ -754,7 +754,7 @@ export default () => {
         }
     ];
 
-    const defaultCustomTodayDate = '2023-12-01';
+    const defaultCustomTodayDate = '2023-12-04';
 
     return (
         <>
@@ -1941,7 +1941,7 @@ export default () => {
         }
     ];
 
-    const defaultCustomTodayDate = '2023-12-01';
+    const defaultCustomTodayDate = '2023-12-04';
 
 
     const [selectedCellsData, setSelectedCellsData] = useState<any[]>([]);
@@ -1990,7 +1990,7 @@ import EventCalendarTimeline from 'funda-ui/EventCalendarTimeline';
 ```
 | Property | Type | Default | Description | Required |
 | --- | --- | --- | --- | --- |
-| `contentRef` | React.RefObject | - | It exposes the following methods:  <br /> <ol><li>`contentRef.current.gridInit()`</li><li>`contentRef.current.gridInitHeadertitle()`</li><li>`contentRef.current.gridReset()`</li><li>`contentRef.current.resetSelectedCells()`</li><li>`contentRef.current.closeModal()`</li></ol> | - |
+| `contentRef` | React.RefObject | - | It exposes the following methods:  <br /> <ol><li>`contentRef.current.today()`</li><li>`contentRef.current.next()`</li><li>`contentRef.current.prev()`</li><li>`contentRef.current.gridInit()`</li><li>`contentRef.current.gridInitHeadertitle()`</li><li>`contentRef.current.gridReset()`</li><li>`contentRef.current.resetSelectedCells()`</li><li>`contentRef.current.closeModal()`</li></ol> | - |
 | `calendarWrapperClassName` | string | - | The class name of the calendar wrapper. | - |
 | `tableWrapperClassName` | string | - | The class name of the table wrapper. | - |
 | `tableClassName` | string | - | The class name of the table. | - |

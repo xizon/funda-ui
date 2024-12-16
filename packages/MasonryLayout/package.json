@@ -7,7 +7,7 @@
     "module": "./dist/esm/index.js",
     "keywords": [],
     "scripts": {
-        "build": "webpack --progress --mode production --config build/config-cjs.js && node build/config-esm.js && tsc --build tsconfig.json && node build/types.js && sass --no-source-map src/index.scss dist/css/index.css",
+        "build": "webpack --progress --mode production --config build/config-cjs.js && node build/config-esm.js && tsc --build tsconfig.json && node build/types.js",
         "test": "echo \"Error: no test specified\" && exit 1"
     },
     "dependencies": {

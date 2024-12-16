@@ -3025,6 +3025,15 @@ var EventCalendar = function EventCalendar(props) {
   // exposes the following methods
   (0,react__WEBPACK_IMPORTED_MODULE_0__.useImperativeHandle)(contentRef, function () {
     return {
+      today: function today() {
+        handleTodayChange();
+      },
+      next: function next() {
+        handleNextChange();
+      },
+      prev: function prev() {
+        handlePrevChange();
+      },
       closeModal: function closeModal() {
         if (modalEditHandleRef.current) modalEditHandleRef.current.close();
         if (modalDeleteHandleRef.current) modalDeleteHandleRef.current.close();

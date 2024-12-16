@@ -9,9 +9,6 @@
 import React from "react";
 import MasonryLayout from 'funda-ui/MasonryLayout';
 
-// component styles
-import 'funda-ui/MasonryLayout/index.css';
-
 export default () => {
 
     const heights = [100, 120, 200, 150, 75, 120, 180, 100, 100, 90, 150, 130, 88, 80, 110];
@@ -29,12 +26,12 @@ export default () => {
                         return (
                             <div 
                                 key={i} 
-                                className="d-inline-block bg-body-tertiary border p-2"
+                                className="bg-body-tertiary border p-2"
                                 style={{         
                                     height: `${height}px` 
                                 }}
                             >
-                                height: {height} <small className="d-inline-block bg-primary text-white px-2 py-1 rounded">{i}</small>
+                                height: {height} <small className="bg-primary text-white px-2 py-1 rounded">{i}</small>
                             </div>
                         )
                     })
@@ -52,9 +49,6 @@ You can resize the window to see the effect.
 ```js
 import React from "react";
 import MasonryLayout from 'funda-ui/MasonryLayout';
-
-// component styles
-import 'funda-ui/MasonryLayout/index.css';
 
 export default () => {
 
@@ -77,11 +71,11 @@ export default () => {
                         return (
                             <div 
                             key={i} 
-                            className="d-inline-block bg-body-tertiary border p-2"
+                            className="bg-body-tertiary border p-2"
                             style={{         
                                 height: `${height}px` 
                             }}>
-                                height: {height} <small className="d-inline-block bg-primary text-white px-2 py-1 rounded">{i}</small>
+                                height: {height} <small className="bg-primary text-white px-2 py-1 rounded">{i}</small>
                             </div>
                         )
                     })

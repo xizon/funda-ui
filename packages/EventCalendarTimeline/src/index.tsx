@@ -242,9 +242,6 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
     //
     const FILL_BLANK_DATE_DISABLD = typeof forwardAndBackFillDisabled === 'undefined' ? true : forwardAndBackFillDisabled;
 
-    // root
-    const rootRef = useRef<any>(null);
-    const rootWidth = useRef<number>(0);
 
     //
     const now = useMemo(() => new Date(), []);
@@ -325,6 +322,15 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
     useImperativeHandle(
         contentRef,
         () => ({
+            today: () => {
+                handleTodayChange();
+            },
+            next: () => {
+                handleNextChange();
+            },
+            prev: () => {
+                handlePrevChange();
+            },
             gridInit: () => {
                 tableGridInit();
             },
@@ -1170,6 +1176,18 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
         // restore table grid init status
         restoreTableGridInitStatus();
 
+        // The scrollbar position is horizontal
+        setTimeout(() => {
+            if (scrollBodyRef.current && tableGridRef.current) {
+                const targetPos = tableGridRef.current.querySelector('.custom-event-tl-table__datagrid-header__content tbody .today.selected');
+                if (targetPos !== null) {
+                    (scrollBodyRef.current as any).scrollLeft = targetPos.offsetLeft;
+                }
+            }
+        }, 0);
+
+
+
     }
 
     function handleAppearanceChange(e: React.MouseEvent) {
@@ -1259,7 +1277,7 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
                                 {
                                     'empty': !isInteractive,
                                     'today': d === now.getDate(),
-                                    'selected': d === day,
+                                    'selected': `${year}-${padZero(month + 1)}-${padZero(day)}` === `${year}-${padZero(month + 1)}-${padZero(d)}`,
                                     'last-cell': isLastCol
                                 }
                             )}
@@ -1320,8 +1338,6 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
                                 onCellMouseUp?.(e, selectedCells);
                             }}
                         >
-
-
                             {/* forward fill & day & back fill */}
                             <div
                                 className={combinedCls(
@@ -1332,6 +1348,7 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
                                 )}
                                 style={{ width: (CELL_MIN_W - 1) + 'px' }}
                             >
+                                
                                 {d}
                                 {_weekDayStr}
                             </div>
@@ -1822,31 +1839,6 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
 
     }
    
-
-    function outerWrapperInit() {
-        if (rootRef.current === null) return;
-
-        const hasInlineHeightOrMaxHeight = (element: HTMLElement) => {
-            if (!element) return false;
-            return element.style.height !== '' || element.style.maxHeight !== '';
-        };
-
-        // calculate wrapper width & height
-        const wrapperWidth = rootRef.current.parentElement?.offsetWidth || 0;
-        if (rootRef.current && wrapperWidth > 0 && rootWidth.current === 0) {
-            rootWidth.current = wrapperWidth;
-            rootRef.current.style.width = wrapperWidth + 'px';
- 
-            // height
-            const wrapperHeight = rootRef.current.parentElement?.offsetHeight || 0;
-            if (hasInlineHeightOrMaxHeight(rootRef.current.parentElement) && wrapperHeight > 0) {
-                rootRef.current.style.height = wrapperHeight + 'px';
-            }
-            
-        }
-    }
-
-
     function tableGridInit() {
 
         //
@@ -2177,11 +2169,6 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
 
     useEffect(() => {
 
-
-        // calculate wrapper width (!!!FIRST!!!)
-        //--------------
-        outerWrapperInit();
-
         // !!!Please do not use dependencies
         //--------------
         return () => {
@@ -2198,364 +2185,357 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
     return (
         <>
 
-            <div
-                ref={rootRef}
-                className="custom-event-tl__outerwrapper"
-            >
+            {/*/////////////////////////////////////////////////// */}
+            {/*//////////////////// Calendar //////////////////// */}
+            {/*////////////////////////////////////////////////// */}
 
-                {/*/////////////////////////////////////////////////// */}
-                {/*//////////////////// Calendar //////////////////// */}
-                {/*////////////////////////////////////////////////// */}
+            <div className={combinedCls(
+                `custom-event-tl__wrapper custom-event-tl__wrapper--${appearanceMode}`,
+                calendarWrapperClassName
+            )}>
 
-                <div className={combinedCls(
-                    `custom-event-tl__wrapper custom-event-tl__wrapper--${appearanceMode}`,
-                    calendarWrapperClassName
-                )}>
+                {/*++++++++++++++++ MAIN ++++++++++++++++*/}
+                <div className="custom-event-tl__header bg-body-tertiary">
+                    <button tabIndex={-1} type="button" className="custom-event-tl__btn custom-event-tl__btn--prev" onClick={handlePrevChange}>
+                        <svg width="20px" height="20px" viewBox="0 0 24 24" fill="none">
+                            <path d="M14.2893 5.70708C13.8988 5.31655 13.2657 5.31655 12.8751 5.70708L7.98768 10.5993C7.20729 11.3805 7.2076 12.6463 7.98837 13.427L12.8787 18.3174C13.2693 18.7079 13.9024 18.7079 14.293 18.3174C14.6835 17.9269 14.6835 17.2937 14.293 16.9032L10.1073 12.7175C9.71678 12.327 9.71678 11.6939 10.1073 11.3033L14.2893 7.12129C14.6799 6.73077 14.6799 6.0976 14.2893 5.70708Z" fill="#000" />
+                        </svg>
+                    </button>
 
-                    {/*++++++++++++++++ MAIN ++++++++++++++++*/}
-                    <div className="custom-event-tl__header bg-body-tertiary">
-                        <button tabIndex={-1} type="button" className="custom-event-tl__btn custom-event-tl__btn--prev" onClick={handlePrevChange}>
-                            <svg width="20px" height="20px" viewBox="0 0 24 24" fill="none">
-                                <path d="M14.2893 5.70708C13.8988 5.31655 13.2657 5.31655 12.8751 5.70708L7.98768 10.5993C7.20729 11.3805 7.2076 12.6463 7.98837 13.427L12.8787 18.3174C13.2693 18.7079 13.9024 18.7079 14.293 18.3174C14.6835 17.9269 14.6835 17.2937 14.293 16.9032L10.1073 12.7175C9.71678 12.327 9.71678 11.6939 10.1073 11.3033L14.2893 7.12129C14.6799 6.73077 14.6799 6.0976 14.2893 5.70708Z" fill="#000" />
-                            </svg>
-                        </button>
-
-                        {/* //########## MODE: WEEK ############# */}
-                        {appearanceMode === 'week' ? <>
-                            <div className="custom-event-tl__header__info">
-                                {typeof appearanceWeekTmpl === 'function' ? <>{appearanceWeekTmpl(displayWeekForHeader[0], displayWeekForHeader[1])}</> : <>{displayWeekForHeader[0]} - {displayWeekForHeader[1]}</>}
-                            </div>
-                        </> : null}
-                        {/* //########## /MODE: WEEK ############# */}
-
-
-                        {/* //########## MODE: MONTH ############# */}
-                        {appearanceMode === 'month' ? <>
-                            <div className="custom-event-tl__header__btns">
-                                <button tabIndex={-1} type="button" className={`custom-event-tl__btn ${winMonth ? 'active' : ''}`} onClick={handleShowWinMonth}>
-                                    {MONTHS[month]}
-                                    <svg width="12px" height="12px" viewBox="0 0 24 24"><path d="M11.178 19.569a.998.998 0 0 0 1.644 0l9-13A.999.999 0 0 0 21 5H3a1.002 1.002 0 0 0-.822 1.569l9 13z" fill="#000000" /></svg>
-                                </button>
-                                <button tabIndex={-1} type="button" className={`custom-event-tl__btn ${winYear ? 'active' : ''}`} onClick={handleShowWinYear}>
-                                    {year}
-                                    <svg width="12px" height="12px" viewBox="0 0 24 24"><path d="M11.178 19.569a.998.998 0 0 0 1.644 0l9-13A.999.999 0 0 0 21 5H3a1.002 1.002 0 0 0-.822 1.569l9 13z" fill="#000000" /></svg>
-                                </button>
-                            </div>
-                        </> : null}
-                        {/* //########## /MODE: MONTH ############# */}
-
-
-
-                        <button tabIndex={-1} type="button" className="custom-event-tl__btn custom-event-tl__btn--next" onClick={handleNextChange}>
-                            <svg width="20px" height="20px" viewBox="0 0 24 24" fill="none">
-                                <path d="M9.71069 18.2929C10.1012 18.6834 10.7344 18.6834 11.1249 18.2929L16.0123 13.4006C16.7927 12.6195 16.7924 11.3537 16.0117 10.5729L11.1213 5.68254C10.7308 5.29202 10.0976 5.29202 9.70708 5.68254C9.31655 6.07307 9.31655 6.70623 9.70708 7.09676L13.8927 11.2824C14.2833 11.6729 14.2833 12.3061 13.8927 12.6966L9.71069 16.8787C9.32016 17.2692 9.32016 17.9023 9.71069 18.2929Z" fill="#000" />
-                            </svg>
-                        </button>
-                    </div>
-
-
-
-                    <div className="custom-event-tl__body">
-
-
-                        <div className="custom-event-tl__row">
-                            {/* day */}
-
-                            {/* /day */}
+                    {/* //########## MODE: WEEK ############# */}
+                    {appearanceMode === 'week' ? <>
+                        <div className="custom-event-tl__header__info">
+                            {typeof appearanceWeekTmpl === 'function' ? <>{appearanceWeekTmpl(displayWeekForHeader[0], displayWeekForHeader[1])}</> : <>{displayWeekForHeader[0]} - {displayWeekForHeader[1]}</>}
                         </div>
+                    </> : null}
+                    {/* //########## /MODE: WEEK ############# */}
 
-                    </div>
-                    {/*++++++++++++++++ /MAIN ++++++++++++++++*/}
 
-
-                    {/*++++++++++++++++ MONTH SELECTION TAB ++++++++++++++++*/}
-                    <div className={`custom-event-tl__month-wrapper shadow p-3 mb-5 bg-body-tertiary rounded ${winMonth ? 'active' : ''}`}>
-                        <div className="custom-event-tl__month-container">
-                            {MONTHS_FULL.map((month, index) => {
-                                return <div
-                                    data-month={padZero(index + 1)}
-                                    className={`custom-event-tl__month ${selectedMonth === index ? ' selected' : ''}`}
-                                    key={month + index}
-                                    onClick={() => { handleMonthChange(index) }}
-                                >{month}</div>
-                            })}
+                    {/* //########## MODE: MONTH ############# */}
+                    {appearanceMode === 'month' ? <>
+                        <div className="custom-event-tl__header__btns">
+                            <button tabIndex={-1} type="button" className={`custom-event-tl__btn ${winMonth ? 'active' : ''}`} onClick={handleShowWinMonth}>
+                                {MONTHS[month]}
+                                <svg width="12px" height="12px" viewBox="0 0 24 24"><path d="M11.178 19.569a.998.998 0 0 0 1.644 0l9-13A.999.999 0 0 0 21 5H3a1.002 1.002 0 0 0-.822 1.569l9 13z" fill="#000000" /></svg>
+                            </button>
+                            <button tabIndex={-1} type="button" className={`custom-event-tl__btn ${winYear ? 'active' : ''}`} onClick={handleShowWinYear}>
+                                {year}
+                                <svg width="12px" height="12px" viewBox="0 0 24 24"><path d="M11.178 19.569a.998.998 0 0 0 1.644 0l9-13A.999.999 0 0 0 21 5H3a1.002 1.002 0 0 0-.822 1.569l9 13z" fill="#000000" /></svg>
+                            </button>
                         </div>
+                    </> : null}
+                    {/* //########## /MODE: MONTH ############# */}
+
+
+
+                    <button tabIndex={-1} type="button" className="custom-event-tl__btn custom-event-tl__btn--next" onClick={handleNextChange}>
+                        <svg width="20px" height="20px" viewBox="0 0 24 24" fill="none">
+                            <path d="M9.71069 18.2929C10.1012 18.6834 10.7344 18.6834 11.1249 18.2929L16.0123 13.4006C16.7927 12.6195 16.7924 11.3537 16.0117 10.5729L11.1213 5.68254C10.7308 5.29202 10.0976 5.29202 9.70708 5.68254C9.31655 6.07307 9.31655 6.70623 9.70708 7.09676L13.8927 11.2824C14.2833 11.6729 14.2833 12.3061 13.8927 12.6966L9.71069 16.8787C9.32016 17.2692 9.32016 17.9023 9.71069 18.2929Z" fill="#000" />
+                        </svg>
+                    </button>
+                </div>
+
+
+
+                <div className="custom-event-tl__body">
+
+
+                    <div className="custom-event-tl__row">
+                        {/* day */}
+
+                        {/* /day */}
                     </div>
-                    {/*++++++++++++++++ /MONTH SELECTION TAB ++++++++++++++++*/}
 
-                    {/*++++++++++++++++ YEAR SELECTION TAB ++++++++++++++++*/}
-                    <div className={`custom-event-tl__year-wrapper shadow p-3 mb-5 bg-body-tertiary rounded ${winYear ? 'active' : ''}`}>
-                        <div className="custom-event-tl__year-container bg-body-tertiary">
-                            {yearsArray.map((year, index) => {
-                                return <div
-                                    data-year={year}
-                                    className={`custom-event-tl__year ${selectedYear === year ? ' selected' : ''}`}
-                                    key={year + index}
-                                    onClick={() => { handleYearChange(year) }}
-                                >{year}</div>
-                            })}
-                        </div>
+                </div>
+                {/*++++++++++++++++ /MAIN ++++++++++++++++*/}
 
+
+                {/*++++++++++++++++ MONTH SELECTION TAB ++++++++++++++++*/}
+                <div className={`custom-event-tl__month-wrapper shadow p-3 mb-5 bg-body-tertiary rounded ${winMonth ? 'active' : ''}`}>
+                    <div className="custom-event-tl__month-container">
+                        {MONTHS_FULL.map((month, index) => {
+                            return <div
+                                data-month={padZero(index + 1)}
+                                className={`custom-event-tl__month ${selectedMonth === index ? ' selected' : ''}`}
+                                key={month + index}
+                                onClick={() => { handleMonthChange(index) }}
+                            >{month}</div>
+                        })}
                     </div>
-                    {/*++++++++++++++++ /YEAR SELECTION TAB ++++++++++++++++*/}
+                </div>
+                {/*++++++++++++++++ /MONTH SELECTION TAB ++++++++++++++++*/}
+
+                {/*++++++++++++++++ YEAR SELECTION TAB ++++++++++++++++*/}
+                <div className={`custom-event-tl__year-wrapper shadow p-3 mb-5 bg-body-tertiary rounded ${winYear ? 'active' : ''}`}>
+                    <div className="custom-event-tl__year-container bg-body-tertiary">
+                        {yearsArray.map((year, index) => {
+                            return <div
+                                data-year={year}
+                                className={`custom-event-tl__year ${selectedYear === year ? ' selected' : ''}`}
+                                key={year + index}
+                                onClick={() => { handleYearChange(year) }}
+                            >{year}</div>
+                        })}
+                    </div>
+
+                </div>
+                {/*++++++++++++++++ /YEAR SELECTION TAB ++++++++++++++++*/}
 
 
 
-                    {/*++++++++++++++++ TODAY SELECTION TAB ++++++++++++++++*/}
-                    <div className="custom-event-tl__today-wrapper p-2">
+                {/*++++++++++++++++ TODAY SELECTION TAB ++++++++++++++++*/}
+                <div className="custom-event-tl__today-wrapper p-2">
+                    <button
+                        tabIndex={-1}
+                        type="button"
+                        className="custom-event-tl__btn custom-event-tl__btn--today"
+                        onClick={handleTodayChange}
+                    >
+                        {langToday || 'Today'}
+                    </button>
+
+                    {appearanceToggle ? <>
                         <button
                             tabIndex={-1}
                             type="button"
-                            className="custom-event-tl__btn custom-event-tl__btn--today"
-                            onClick={handleTodayChange}
+                            className={`custom-event-tl__btn custom-event-tl__btn--appearance ${appearanceMode === 'month' ? 'active' : ''}`}
+                            data-mode="month"
+                            onClick={handleAppearanceChange}
                         >
-                            {langToday || 'Today'}
+                            {langAppearanceLabelMonth || 'Month'}
                         </button>
+                        <button
+                            tabIndex={-1}
+                            type="button"
+                            className={`custom-event-tl__btn custom-event-tl__btn--appearance ${appearanceMode === 'week' ? 'active' : ''}`}
+                            data-mode="week"
+                            onClick={handleAppearanceChange}
+                        >
+                            {langAppearanceLabelWeek || 'Week'}
+                        </button>
+                    </> : null}
 
-                        {appearanceToggle ? <>
-                            <button
-                                tabIndex={-1}
-                                type="button"
-                                className={`custom-event-tl__btn custom-event-tl__btn--appearance ${appearanceMode === 'month' ? 'active' : ''}`}
-                                data-mode="month"
-                                onClick={handleAppearanceChange}
-                            >
-                                {langAppearanceLabelMonth || 'Month'}
-                            </button>
-                            <button
-                                tabIndex={-1}
-                                type="button"
-                                className={`custom-event-tl__btn custom-event-tl__btn--appearance ${appearanceMode === 'week' ? 'active' : ''}`}
-                                data-mode="week"
-                                onClick={handleAppearanceChange}
-                            >
-                                {langAppearanceLabelWeek || 'Week'}
-                            </button>
-                        </> : null}
-
-                    </div>
-                    {/*++++++++++++++++ /TODAY SELECTION TAB ++++++++++++++++*/}
+                </div>
+                {/*++++++++++++++++ /TODAY SELECTION TAB ++++++++++++++++*/}
 
 
-                </div>{/* /.custom-event-tl__wrapper */}
+            </div>{/* /.custom-event-tl__wrapper */}
 
 
 
-                {/*/////////////////////////////////////////////////// */}
-                {/*//////////////////// Table Grid //////////////////// */}
-                {/*////////////////////////////////////////////////// */}
-                {orginalData.length === 0 ? null : <>
-                    <div
-                        ref={tableGridRef}
-                        className={combinedCls(
-                            `custom-event-tl-table__timeline-table__wrapper custom-event-tl-table__timeline-table__wrapper--${appearanceMode} invisible`,
-                            tableWrapperClassName
+            {/*/////////////////////////////////////////////////// */}
+            {/*//////////////////// Table Grid //////////////////// */}
+            {/*////////////////////////////////////////////////// */}
+            {orginalData.length === 0 ? null : <>
+                <div
+                    ref={tableGridRef}
+                    className={combinedCls(
+                        `custom-event-tl-table__timeline-table__wrapper custom-event-tl-table__timeline-table__wrapper--${appearanceMode} invisible`,
+                        tableWrapperClassName
+                    )}
+                    onKeyDown={(e: React.KeyboardEvent<HTMLDivElement>) => {
+                        onKeyPressed?.(e, selectedCells);
+
+                        // Copy & Paste
+                        handleWrapperKeyDown(e);
+                    }}
+                    tabIndex={-1} // require "tabIndex" attribute
+                >
+                    <table role="grid" className={combinedCls(
+                        "custom-event-tl-table__timeline-table",
+                        tableClassName
+                    )}>
+                        <colgroup>
+                            <col className="custom-event-tl-table__datagrid-header" />
+                            <col />
+                            <col />
+                        </colgroup>
+
+                        <thead className={combinedCls(
+                            tableHeadClassName
                         )}
-                        onKeyDown={(e: React.KeyboardEvent<HTMLDivElement>) => {
-                            onKeyPressed?.(e, selectedCells);
+                            ref={tableGridHeaderRef}
+                            role="rowgroup"
+                        >
+                            <tr role="presentation">
+                                <th role="presentation">
+                                    {/*<!--///// HEADER LEFT //////-->*/}
+                                    <div className="custom-event-tl-table__timeline-header custom-event-tl-table__timeline-headertitle">
 
-                            // Copy & Paste
-                            handleWrapperKeyDown(e);
-                        }}
-                        tabIndex={-1} // require "tabIndex" attribute
-                    >
-                        <table role="grid" className={combinedCls(
-                            "custom-event-tl-table__timeline-table",
-                            tableClassName
-                        )}>
-                            <colgroup>
-                                <col className="custom-event-tl-table__datagrid-header" />
-                                <col />
-                                <col />
-                            </colgroup>
+                                        <table role="presentation" className="custom-event-tl-table__datagrid-header__title">
+                                            <colgroup>
+                                                <col />
+                                            </colgroup>
+                                            <thead role="presentation">
+                                                <tr role="row">
+                                                    <th role="columnheader">
+                                                        <div className="custom-event-tl-table__cell-cushion custom-event-tl-table__cell-cushion-headertitle">
+                                                            {tableListSectionTitle || ''}
+                                                        </div>
+                                                    </th>
+                                                </tr>
+                                            </thead>
+                                        </table>
 
-                            <thead className={combinedCls(
-                                tableHeadClassName
-                            )}
-                                ref={tableGridHeaderRef}
-                                role="rowgroup"
-                            >
-                                <tr role="presentation">
-                                    <th role="presentation">
-                                        {/*<!--///// HEADER LEFT //////-->*/}
-                                        <div className="custom-event-tl-table__timeline-header custom-event-tl-table__timeline-headertitle">
+                                    </div>
+                                    {/*<!--///// /HEADER LEFT //////-->*/}
 
-                                            <table role="presentation" className="custom-event-tl-table__datagrid-header__title">
+
+
+                                </th>
+                                <th role="presentation" className="custom-event-tl-table__timeline-divider"><div></div></th>
+                                <th role="presentation">
+                                    <div
+                                        ref={scrollHeaderRef}
+                                        className="custom-event-tl-table__scroller-harness custom-event-tl-table__scroller-harness--hide"
+                                        data-scroll="header"
+                                        onScroll={syncTableScrollHeader}
+                                    >
+                                        <div className="custom-event-tl-table__scroller">
+
+                                            {/*<!--///// HEADER RIGHT //////-->*/}
+                                            <div className="custom-event-tl-table__timeline-header">
+
+                                                <table className="custom-event-tl-table__datagrid-header__content custom-event-tl-table__scrollgrid-sync-table" >
+                                                    <tbody>
+                                                        <tr>
+                                                            {generateDaysUi()}
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                            {/*<!--///// /HEADER RIGHT //////-->*/}
+                                        </div>
+                                    </div>
+                                </th>
+                            </tr>
+                        </thead>
+
+
+
+                        <tbody className={combinedCls(
+                            tableBodyClassName
+                        )}
+                            role="rowgroup"
+                        >
+                            <tr role="presentation" className="custom-event-tl-table__list-section">
+                                <td
+                                    role="presentation"
+                                    className={combinedCls(
+                                        tableListStartClassName
+                                    )}
+
+                                >
+
+                                    <div
+                                        ref={scrollListRef}
+                                        className={combinedCls(
+                                            'custom-event-tl-table__scroller-harness',
+                                            {
+                                                'autoscroll': AUTO_SCROLL
+                                            }
+                                        )}
+                                        data-scroll="list"
+                                        onScroll={syncTableScrollList}
+                                    >
+                                        <div className="custom-event-tl-table__scroller">
+
+                                            {/*<!--///// RESOURCE LEFT //////-->*/}
+                                            <table role="presentation" className="custom-event-tl-table__datagrid-body__title custom-event-tl-table__scrollgrid-sync-table">
                                                 <colgroup>
                                                     <col />
                                                 </colgroup>
-                                                <thead role="presentation">
-                                                    <tr role="row">
-                                                        <th role="columnheader">
-                                                            <div className="custom-event-tl-table__cell-cushion custom-event-tl-table__cell-cushion-headertitle">
-                                                                {tableListSectionTitle || ''}
-                                                            </div>
-                                                        </th>
-                                                    </tr>
-                                                </thead>
+                                                <tbody role="presentation">
+
+                                                    {/*<!-- per row -->*/}
+                                                    {generateListSectionUi()}
+                                                    {/*<!-- /per row -->*/}
+
+                                                </tbody>
                                             </table>
-
+                                            {/*<!--///// /RESOURCE LEFT //////-->*/}
                                         </div>
-                                        {/*<!--///// /HEADER LEFT //////-->*/}
+                                    </div>
 
 
-
-                                    </th>
-                                    <th role="presentation" className="custom-event-tl-table__timeline-divider"><div></div></th>
-                                    <th role="presentation">
-                                        <div
-                                            ref={scrollHeaderRef}
-                                            className="custom-event-tl-table__scroller-harness custom-event-tl-table__scroller-harness--hide"
-                                            data-scroll="header"
-                                            onScroll={syncTableScrollHeader}
-                                        >
-                                            <div className="custom-event-tl-table__scroller">
-
-                                                {/*<!--///// HEADER RIGHT //////-->*/}
-                                                <div className="custom-event-tl-table__timeline-header">
-
-                                                    <table className="custom-event-tl-table__datagrid-header__content custom-event-tl-table__scrollgrid-sync-table" >
-                                                        <tbody>
-                                                            <tr>
-                                                                {generateDaysUi()}
-                                                            </tr>
-                                                        </tbody>
-                                                    </table>
-                                                </div>
-                                                {/*<!--///// /HEADER RIGHT //////-->*/}
-                                            </div>
-                                        </div>
-                                    </th>
-                                </tr>
-                            </thead>
+                                </td>
+                                <td
+                                    role="presentation"
+                                    className={combinedCls(
+                                        'custom-event-tl-table__timeline-divider',
+                                        tableListDividerClassName
+                                    )}
+                                >
+                                    <div></div>
+                                </td>
+                                <td
+                                    role="presentation"
+                                    className={combinedCls(
+                                        tableListEndClassName
+                                    )}
+                                >
 
 
-
-                            <tbody className={combinedCls(
-                                tableBodyClassName
-                            )}
-                                role="rowgroup"
-                            >
-                                <tr role="presentation" className="custom-event-tl-table__list-section">
-                                    <td
-                                        role="presentation"
+                                    <div
+                                        ref={scrollBodyRef}
                                         className={combinedCls(
-                                            tableListStartClassName
+                                            'custom-event-tl-table__scroller-harness',
+                                            {
+                                                'autoscroll': AUTO_SCROLL
+                                            }
                                         )}
-
+                                        data-scroll="body"
+                                        onScroll={syncTableScrollBody}
+                                        onMouseMove={BODY_DRAG ? handleTableMove : () => { }}
+                                        onMouseDown={BODY_DRAG ? handleTableDragStart : () => { }}
+                                        onMouseUp={BODY_DRAG ? handleTableDragEnd : () => { }}
+                                        onMouseLeave={BODY_DRAG ? handleTableDragEnd : () => { }}
                                     >
+                                        <div className="custom-event-tl-table__scroller">
+                                            {/*<!--///// RESOURCE RIGHT //////-->*/}
+                                            <div className="custom-event-tl-table__timeline-body">
+                                                <table
+                                                    className="custom-event-tl-table__datagrid-body__content custom-event-tl-table__scrollgrid-sync-table"
+                                                    /* Drag to activate the selection area */
+                                                    onMouseLeave={multipleCells ? handleTableMainMouseUp : undefined}
+                                                    onMouseUp={multipleCells ? handleTableMainMouseUp : undefined}
 
-                                        <div
-                                            ref={scrollListRef}
-                                            className={combinedCls(
-                                                'custom-event-tl-table__scroller-harness',
-                                                {
-                                                    'autoscroll': AUTO_SCROLL
-                                                }
-                                            )}
-                                            data-scroll="list"
-                                            onScroll={syncTableScrollList}
-                                        >
-                                            <div className="custom-event-tl-table__scroller">
-
-                                                {/*<!--///// RESOURCE LEFT //////-->*/}
-                                                <table role="presentation" className="custom-event-tl-table__datagrid-body__title custom-event-tl-table__scrollgrid-sync-table">
+                                                >
                                                     <colgroup>
-                                                        <col />
+                                                        {generateColUi()}
                                                     </colgroup>
-                                                    <tbody role="presentation">
-
+                                                    <tbody>
                                                         {/*<!-- per row -->*/}
-                                                        {generateListSectionUi()}
-                                                        {/*<!-- /per row -->*/}
+                                                        {orginalData.map((item: any, i: number) => {
+
+                                                            return (
+                                                                <tr key={i}>
+                                                                    {generateDaysUi(item.eventSources, item.listSection, i, true)}
+                                                                </tr>
+                                                            )
+
+                                                        })}
 
                                                     </tbody>
                                                 </table>
-                                                {/*<!--///// /RESOURCE LEFT //////-->*/}
-                                            </div>
-                                        </div>
-
-
-                                    </td>
-                                    <td
-                                        role="presentation"
-                                        className={combinedCls(
-                                            'custom-event-tl-table__timeline-divider',
-                                            tableListDividerClassName
-                                        )}
-                                    >
-                                        <div></div>
-                                    </td>
-                                    <td
-                                        role="presentation"
-                                        className={combinedCls(
-                                            tableListEndClassName
-                                        )}
-                                    >
-
-
-                                        <div
-                                            ref={scrollBodyRef}
-                                            className={combinedCls(
-                                                'custom-event-tl-table__scroller-harness',
-                                                {
-                                                    'autoscroll': AUTO_SCROLL
-                                                }
-                                            )}
-                                            data-scroll="body"
-                                            onScroll={syncTableScrollBody}
-                                            onMouseMove={BODY_DRAG ? handleTableMove : () => { }}
-                                            onMouseDown={BODY_DRAG ? handleTableDragStart : () => { }}
-                                            onMouseUp={BODY_DRAG ? handleTableDragEnd : () => { }}
-                                            onMouseLeave={BODY_DRAG ? handleTableDragEnd : () => { }}
-                                        >
-                                            <div className="custom-event-tl-table__scroller">
-                                                {/*<!--///// RESOURCE RIGHT //////-->*/}
-                                                <div className="custom-event-tl-table__timeline-body">
-                                                    <table
-                                                        className="custom-event-tl-table__datagrid-body__content custom-event-tl-table__scrollgrid-sync-table"
-                                                        /* Drag to activate the selection area */
-                                                        onMouseLeave={multipleCells ? handleTableMainMouseUp : undefined}
-                                                        onMouseUp={multipleCells ? handleTableMainMouseUp : undefined}
-
-                                                    >
-                                                        <colgroup>
-                                                            {generateColUi()}
-                                                        </colgroup>
-                                                        <tbody>
-                                                            {/*<!-- per row -->*/}
-                                                            {orginalData.map((item: any, i: number) => {
-
-                                                                return (
-                                                                    <tr key={i}>
-                                                                        {generateDaysUi(item.eventSources, item.listSection, i, true)}
-                                                                    </tr>
-                                                                )
-
-                                                            })}
-
-                                                        </tbody>
-                                                    </table>
-
-                                                </div>
-                                                {/*<!--///// /RESOURCE RIGHT //////-->*/}
-
 
                                             </div>
+                                            {/*<!--///// /RESOURCE RIGHT //////-->*/}
+
+
                                         </div>
+                                    </div>
 
 
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
 
-                    </div>{/* /.custom-event-tl-table__timeline-table__wrapper */}
+                </div>{/* /.custom-event-tl-table__timeline-table__wrapper */}
 
 
-                </>}
-            </div>
-
+            </>}
 
 
             {/*/////////////////////////////////////////////////// */}

@@ -187,6 +187,15 @@ const EventCalendar = (props: EventCalendarProps) => {
     useImperativeHandle(
         contentRef,
         () => ({
+            today: () => {
+                handleTodayChange();
+            },
+            next: () => {
+                handleNextChange();
+            },
+            prev: () => {
+                handlePrevChange();
+            },
             closeModal: () => {
                 if (modalEditHandleRef.current) modalEditHandleRef.current.close();
                 if (modalDeleteHandleRef.current) modalDeleteHandleRef.current.close();
