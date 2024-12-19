@@ -380,8 +380,11 @@ type UploaderProps = {
     multiple?: boolean;
     submitLabel?: React.ReactNode | string;
     submitClassName?: string;
+    progressLabel?: React.ReactNode | string;
+    progressClassName?: string;
     onSuccess?: (data: any, input: HTMLInputElement, submitEl: HTMLElement) => void;
     onChange?: () => void;
+    onProgress?: () => void;
     onEmpty?: () => void;
     onIncorrectFormat?: () => void;
 };
@@ -404,7 +407,10 @@ const Uploader = forwardRef((props: UploaderProps, externalRef: any) => {
         multiple,
         submitLabel,
         submitClassName,
+        progressLabel,
+        progressClassName,
         onSuccess,
+        onProgress,
         onChange,
         onEmpty,
         onIncorrectFormat,
@@ -443,6 +449,8 @@ const Uploader = forwardRef((props: UploaderProps, externalRef: any) => {
 
         hasFormatErr.current = false;
         submitEl.classList.add(WAITING_CLASS);
+
+        onProgress?.();
         
         // check format
         [].slice.call(files).forEach((file: any) => {
@@ -488,6 +496,8 @@ const Uploader = forwardRef((props: UploaderProps, externalRef: any) => {
                     multiple={multiple || false}
                     submitLabel={submitLabel}
                     submitClassName={submitClassName}
+                    progressLabel={progressLabel}
+                    progressClassName={progressClassName}
                     onChange={handleChange}
                     onComplete={handleComplete}
                     onProgress={handleProgress}
@@ -502,6 +512,7 @@ const Uploader = forwardRef((props: UploaderProps, externalRef: any) => {
 });
 
 Uploader.displayName = 'Uploader';
+
 export default Uploader;
 ```
 
@@ -527,7 +538,8 @@ export default () => {
                 support="jpg|jpeg|png|gif|webp"  // "*" means all
                 labelClassName="btn btn-outline-secondary d-flex align-items-center"
                 labelHoverClassName="btn btn-primary d-flex align-items-center"
-                submitLabel={"Upload"}
+                submitLabel="Upload"
+                progressLabel="Uploading..."
                 submitClassName="btn btn-primary ms-2"
                 label={<><svg width="15px" height="15px" viewBox="0 -2 32 32">
                     <g stroke="none" strokeWidth="1" fill="none" fillRule="evenodd">
@@ -648,6 +660,8 @@ import File from 'funda-ui/File';
 | `labelHoverClassName` | string | `btn btn-primary` | The class name of the select button on hover. | - |
 | `submitLabel` | string \| ReactNode | - | Specifies a label for submit button | - |
 | `submitClassName` | string | `btn btn-primary mt-2` | The class name of the submit button. | - |
+| `progressLabel` | string \| ReactNode | same as `submitLabel` | Specifies a label for submit button in progress | - |
+| `progressClassName` | string | same as `submitClassName` | The class name of the submit button in progress. | - |
 | `inline` | boolean | false | If true the group are on the same horizontal row. | - |
 | `autoSubmit` | boolean | false | Enable automatic upload, which will hide the upload button. | - |
 | `fetchUrl` | string | - | If the URL exists, it is passed using the default fetch method ([Fetch API](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch)). <blockquote>If it does not exist, the file content is read by [ReadableStream](https://developer.mozilla.org/en-US/docs/Web/API/ReadableStream)</blockquote> | - |

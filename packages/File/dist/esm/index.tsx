@@ -24,6 +24,8 @@ export type FileProps = {
     multiple?: boolean;
     submitLabel?: React.ReactNode | string;
     submitClassName?: string;
+    progressLabel?: React.ReactNode | string;
+    progressClassName?: string;
     value?: string;
     requiredLabel?: React.ReactNode | string;
     label?: React.ReactNode | string;
@@ -63,6 +65,8 @@ const File = forwardRef((props: FileProps, externalRef: any) => {
         multiple,
         submitLabel,
         submitClassName,
+        progressLabel,
+        progressClassName,
         disabled,
         required,
         value,
@@ -91,6 +95,8 @@ const File = forwardRef((props: FileProps, externalRef: any) => {
     const [forceUpdate, setForceUpdate] = useState<Boolean>(false);
     const [defaultValue, setDefaultValue] = useState<any>(null);
     const [incomingData, setIncomingData] = useState<string | null | undefined>(null);
+
+    const [progressing, setProgressing] = useState<boolean>(false);
 
 
     // exposes the following methods
@@ -177,10 +183,13 @@ const File = forwardRef((props: FileProps, externalRef: any) => {
         const curFiles = fileInputRef.current.files;
 
         const interceptRequests: any = onProgress?.(curFiles, fileInputRef.current, submitRef.current);
+        
 
          // interceptor
         //----------------------------------------------------------------
         if (interceptRequests === false) return;
+
+        setProgressing(true);
 
 
         if (fetchUrl) {
@@ -197,6 +206,7 @@ const File = forwardRef((props: FileProps, externalRef: any) => {
             }).then(function (response: any) {
                 const jsonData = response.data;
                 onComplete?.(fileInputRef.current, submitRef.current, jsonData, incomingData);
+                setProgressing(false);
 
                 // update default value
                 resetDefaultVal();
@@ -233,6 +243,7 @@ const File = forwardRef((props: FileProps, externalRef: any) => {
                         const _params: any[] = fetchFuncMethodParams || [];
                         fetchData((_params).join(','), values).then((res: any) => {
                             onComplete?.(fileInputRef.current, submitRef.current, res, incomingData);
+                            setProgressing(false);
 
                             // update default value
                             resetDefaultVal();
@@ -280,6 +291,7 @@ const File = forwardRef((props: FileProps, externalRef: any) => {
                                 uint8ArrayData
                             };
                             onComplete?.(fileInputRef.current, submitRef.current, jsonData, incomingData);
+                            setProgressing(false);
 
                             // update default value
                             resetDefaultVal();
@@ -422,12 +434,22 @@ const File = forwardRef((props: FileProps, externalRef: any) => {
                         }
                     )}>
                         {/* BUTTON */}
-                        <button ref={submitRef} className={combinedCls(
-                            clsWrite(submitClassName, 'btn btn-primary mt-2'),
-                            {
-                                'disabled': disabled
-                            }
-                        )} type="button" onClick={handleSubmit}>{submitLabel ? submitLabel : null}</button>
+                        {progressing ? <>
+                            <button ref={submitRef} className={combinedCls(
+                                clsWrite(progressClassName, clsWrite(submitClassName, 'btn btn-primary mt-2')),
+                                {
+                                    'disabled': disabled
+                                }
+                            )} type="button" onClick={handleSubmit}>{progressLabel ? progressLabel : submitLabel}</button>
+                        </> : <>
+                            <button ref={submitRef} className={combinedCls(
+                                clsWrite(submitClassName, 'btn btn-primary mt-2'),
+                                {
+                                    'disabled': disabled
+                                }
+                            )} type="button" onClick={handleSubmit}>{submitLabel ? submitLabel : null}</button>
+                        </>}
+
                         {/* BUTTON */}
                     </div>
                 </div>

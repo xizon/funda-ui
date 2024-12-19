@@ -15,6 +15,8 @@ export declare type FileProps = {
     multiple?: boolean;
     submitLabel?: React.ReactNode | string;
     submitClassName?: string;
+    progressLabel?: React.ReactNode | string;
+    progressClassName?: string;
     value?: string;
     requiredLabel?: React.ReactNode | string;
     label?: React.ReactNode | string;

@@ -1245,7 +1245,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var funda_utils_dist_cjs_buffer__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(funda_utils_dist_cjs_buffer__WEBPACK_IMPORTED_MODULE_2__);
 /* harmony import */ var funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(188);
 /* harmony import */ var funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_3__);
-var _excluded = ["contentRef", "wrapperClassName", "controlClassName", "controlExClassName", "labelClassName", "labelHoverClassName", "accept", "inline", "autoSubmit", "fetchUrl", "fetchMethod", "fetchParams", "multiple", "submitLabel", "submitClassName", "disabled", "required", "value", "requiredLabel", "label", "name", "id", "data", "tabIndex", "fetchFuncAsync", "fetchFuncMethod", "fetchFuncMethodParams", "onChange", "onComplete", "onProgress"];
+var _excluded = ["contentRef", "wrapperClassName", "controlClassName", "controlExClassName", "labelClassName", "labelHoverClassName", "accept", "inline", "autoSubmit", "fetchUrl", "fetchMethod", "fetchParams", "multiple", "submitLabel", "submitClassName", "progressLabel", "progressClassName", "disabled", "required", "value", "requiredLabel", "label", "name", "id", "data", "tabIndex", "fetchFuncAsync", "fetchFuncMethod", "fetchFuncMethodParams", "onChange", "onComplete", "onProgress"];
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
 function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys(Object(source), !0).forEach(function (key) { _defineProperty(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
 function _defineProperty(obj, key, value) { key = _toPropertyKey(key); if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
@@ -1289,6 +1289,8 @@ var File = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(functi
     multiple = props.multiple,
     submitLabel = props.submitLabel,
     submitClassName = props.submitClassName,
+    progressLabel = props.progressLabel,
+    progressClassName = props.progressClassName,
     disabled = props.disabled,
     required = props.required,
     value = props.value,
@@ -1323,6 +1325,10 @@ var File = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(functi
     _useState6 = _slicedToArray(_useState5, 2),
     incomingData = _useState6[0],
     setIncomingData = _useState6[1];
+  var _useState7 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(false),
+    _useState8 = _slicedToArray(_useState7, 2),
+    progressing = _useState8[0],
+    setProgressing = _useState8[1];
 
   // exposes the following methods
   (0,react__WEBPACK_IMPORTED_MODULE_0__.useImperativeHandle)(contentRef, function () {
@@ -1448,6 +1454,7 @@ var File = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(functi
     // interceptor
     //----------------------------------------------------------------
     if (interceptRequests === false) return;
+    setProgressing(true);
     if (fetchUrl) {
       var formData = new FormData();
       formData.append('action', 'upload_plug_action');
@@ -1461,6 +1468,7 @@ var File = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(functi
       }).then(function (response) {
         var jsonData = response.data;
         onComplete === null || onComplete === void 0 ? void 0 : onComplete(fileInputRef.current, submitRef.current, jsonData, incomingData);
+        setProgressing(false);
 
         // update default value
         resetDefaultVal();
@@ -1528,6 +1536,7 @@ var File = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(functi
                   var _params = fetchFuncMethodParams || [];
                   fetchData(_params.join(','), values).then(function (res) {
                     onComplete === null || onComplete === void 0 ? void 0 : onComplete(fileInputRef.current, submitRef.current, res, incomingData);
+                    setProgressing(false);
 
                     // update default value
                     resetDefaultVal();
@@ -1577,6 +1586,7 @@ var File = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(functi
                       uint8ArrayData: uint8ArrayData
                     };
                     onComplete === null || onComplete === void 0 ? void 0 : onComplete(fileInputRef.current, submitRef.current, jsonData, incomingData);
+                    setProgressing(false);
 
                     // update default value
                     resetDefaultVal();
@@ -1714,14 +1724,21 @@ var File = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(functi
     className: (0,funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_3__.combinedCls)('upload-control-group__btn', {
       'd-none': autoSubmit
     })
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", {
+  }, progressing ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", {
+    ref: submitRef,
+    className: (0,funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_3__.combinedCls)((0,funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_3__.clsWrite)(progressClassName, (0,funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_3__.clsWrite)(submitClassName, 'btn btn-primary mt-2')), {
+      'disabled': disabled
+    }),
+    type: "button",
+    onClick: handleSubmit
+  }, progressLabel ? progressLabel : submitLabel)) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", {
     ref: submitRef,
     className: (0,funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_3__.combinedCls)((0,funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_3__.clsWrite)(submitClassName, 'btn btn-primary mt-2'), {
       'disabled': disabled
     }),
     type: "button",
     onClick: handleSubmit
-  }, submitLabel ? submitLabel : null))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+  }, submitLabel ? submitLabel : null)))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
     className: "pload-control-result"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("small", null, typeof defaultValue !== 'undefined' ? fileNames() : null, defaultValue))));
 });
