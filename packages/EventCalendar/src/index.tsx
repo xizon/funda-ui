@@ -389,7 +389,7 @@ const EventCalendar = (props: EventCalendarProps) => {
     };
 
 
-    function setTodayDate(inputDate: Date) {
+    function updateTodayDate(inputDate: Date) {
         setDay(inputDate.getDate());
         setMonth(inputDate.getMonth());
         setYear(inputDate.getFullYear());
@@ -493,7 +493,7 @@ const EventCalendar = (props: EventCalendarProps) => {
     function handleTodayChange() {
         setSelectedMonth(now.getMonth());
         setSelectedYear(now.getFullYear());
-        setTodayDate(now);
+        updateTodayDate(now);
 
         //
         const _now = getTodayDate().split('-');
@@ -538,7 +538,7 @@ const EventCalendar = (props: EventCalendarProps) => {
 
 
     useEffect(() => {
-        setTodayDate(date);
+        updateTodayDate(date);
     }, [date]);
 
 
@@ -550,7 +550,7 @@ const EventCalendar = (props: EventCalendarProps) => {
         // update current today
         if (typeof customTodayDate === 'string' && customTodayDate !== '' && isValidDate(customTodayDate)) {
             const _customNow = new Date(customTodayDate);
-            setTodayDate(_customNow);
+            updateTodayDate(_customNow);
         }
 
         // Call a function when the list has been rendered completely
@@ -684,7 +684,14 @@ const EventCalendar = (props: EventCalendarProps) => {
                                                 if (isInteractive) {
                                                     handleDayChange(e, d); // update current day
 
-                                                    onChangeDate?.(e, cellItem);
+                                                    //
+                                                    const _now = cellItem.date.split('-');
+                                                    onChangeDate?.(e, {
+                                                        ...cellItem,
+                                                        day: _now[2],
+                                                        month: _now[1],
+                                                        year: _now[0]
+                                                    });
 
                                                     if (EVENTS_ENABLED) {
                                                         onModalEditOpen?.(cellItem, () => setShowEdit(true), 'normal');
@@ -730,9 +737,15 @@ const EventCalendar = (props: EventCalendarProps) => {
                                                         if (isInteractive) {
                                                             handleDayChange(e, d); // update current day
 
+
+                                                            //
+                                                            const _now = getCalendarDate(`${year}-${month + 1}-${d}`).split('-');
                                                             onChangeDate?.(e, {
                                                                 id: 0,
-                                                                date: getCalendarDate(`${year}-${month + 1}-${d}`)
+                                                                date: getCalendarDate(`${year}-${month + 1}-${d}`),
+                                                                day: _now[2],
+                                                                month: _now[1],
+                                                                year: _now[0]
                                                             });
 
                                                             if (EVENTS_DELETE_ENABLED) {
@@ -831,9 +844,15 @@ const EventCalendar = (props: EventCalendarProps) => {
                                                         if (isInteractive) {
                                                             handleDayChange(e, d); // update current day
 
+
+                                                            //
+                                                            const _now = getCalendarDate(`${year}-${month + 1}-${d}`).split('-');
                                                             onChangeDate?.(e, {
                                                                 id: 0,
-                                                                date: getCalendarDate(`${year}-${month + 1}-${d}`)
+                                                                date: getCalendarDate(`${year}-${month + 1}-${d}`),
+                                                                day: _now[2],
+                                                                month: _now[1],
+                                                                year: _now[0]
                                                             });
 
                                                             if (EVENTS_ENABLED) {

@@ -1990,7 +1990,7 @@ import EventCalendarTimeline from 'funda-ui/EventCalendarTimeline';
 ```
 | Property | Type | Default | Description | Required |
 | --- | --- | --- | --- | --- |
-| `contentRef` | React.RefObject | - | It exposes the following methods:  <br /> <ol><li>`contentRef.current.today()`</li><li>`contentRef.current.next()`</li><li>`contentRef.current.prev()`</li><li>`contentRef.current.gridInit()`</li><li>`contentRef.current.gridInitHeadertitle()`</li><li>`contentRef.current.gridReset()`</li><li>`contentRef.current.resetSelectedCells()`</li><li>`contentRef.current.closeModal()`</li></ol> | - |
+| `contentRef` | React.RefObject | - | It exposes the following methods:  <br /> <ol><li>`contentRef.current.today()`</li><li>`contentRef.current.next()`</li><li>`contentRef.current.prev()`</li><li>`contentRef.current.bodyScrollbarInit()`</li><li>`contentRef.current.gridInit()`</li><li>`contentRef.current.gridInitHeadertitle()`</li><li>`contentRef.current.gridReset()`</li><li>`contentRef.current.resetSelectedCells()`</li><li>`contentRef.current.closeModal()`</li></ol> | - |
 | `calendarWrapperClassName` | string | - | The class name of the calendar wrapper. | - |
 | `tableWrapperClassName` | string | - | The class name of the table wrapper. | - |
 | `tableClassName` | string | - | The class name of the table. | - |

@@ -331,6 +331,9 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
             prev: () => {
                 handlePrevChange();
             },
+            bodyScrollbarInit: () => {
+                bodyScrollbarInit();
+            },
             gridInit: () => {
                 tableGridInit();
             },
@@ -1000,7 +1003,7 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
     // ================================================================
     // Calendar
     // ================================================================
-    function setTodayDate(inputDate: Date) {
+    function updateTodayDate(inputDate: Date) {
         setDay(inputDate.getDate());
         setMonth(inputDate.getMonth());
         setYear(inputDate.getFullYear());
@@ -1010,11 +1013,14 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
         setSelectedMonth(inputDate.getMonth());
         setSelectedYear(inputDate.getFullYear());
 
-        // initialize table grid
+        
         setTimeout(() => {
+            // initialize table grid
             tableGridInit();
-        }, 500);
 
+            // The scrollbar position is horizontal
+            bodyScrollbarInit();
+        }, 500);
 
     }
 
@@ -1157,7 +1163,7 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
     function handleTodayChange() {
         setSelectedMonth(now.getMonth());
         setSelectedYear(now.getFullYear());
-        setTodayDate(now);
+        updateTodayDate(now);
 
         //
         const _now = getTodayDate().split('-');
@@ -1175,18 +1181,6 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
 
         // restore table grid init status
         restoreTableGridInitStatus();
-
-        // The scrollbar position is horizontal
-        setTimeout(() => {
-            if (scrollBodyRef.current && tableGridRef.current) {
-                const targetPos = tableGridRef.current.querySelector('.custom-event-tl-table__datagrid-header__content tbody .today.selected');
-                if (targetPos !== null) {
-                    (scrollBodyRef.current as any).scrollLeft = targetPos.offsetLeft;
-                }
-            }
-        }, 0);
-
-
 
     }
 
@@ -1312,10 +1306,15 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
                                 if (isInteractive) {
                                     handleDayChange(e, d); // update current day
 
+                                    //
+                                    const _now = _dateShow.split('-');
                                     onChangeDate?.(e, _currentData.length === 0 ? {
                                         rowData: listSectionData,
                                         id: 0,
-                                        date: _dateShow
+                                        date: _dateShow,
+                                        day: _now[2],
+                                        month: _now[1],
+                                        year: _now[0]
                                     } : _currentData[0]);
 
                                     if (EVENTS_ENABLED) {
@@ -1452,8 +1451,14 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
                                     if (isInteractive) {
                                         handleDayChange(e, d); // update current day
 
-
-                                        onChangeDate?.(e, cellItem);
+                                        //
+                                        const _now = cellItem.date.split('-');
+                                        onChangeDate?.(e, {
+                                            ...cellItem,
+                                            day: _now[2],
+                                            month: _now[1],
+                                            year: _now[0]
+                                        });
 
                                         if (EVENTS_ENABLED) {
                                             onModalEditOpen?.(cellItem, () => setShowEdit(true), 'normal');
@@ -1511,10 +1516,15 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
                                             if (isInteractive) {
                                                 handleDayChange(e, d); // update current day
 
+                                                //
+                                                const _now = _dateShow.split('-');
                                                 onChangeDate?.(e, {
                                                     rowData: listSectionData,
                                                     id: 0,
-                                                    date: _dateShow
+                                                    date: _dateShow,
+                                                    day: _now[2],
+                                                    month: _now[1],
+                                                    year: _now[0]
                                                 });
 
                                                 if (EVENTS_DELETE_ENABLED) {
@@ -1645,10 +1655,15 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
                                                 if (isInteractive) {
                                                     handleDayChange(e, d); // update current day
 
+                                                    //
+                                                    const _now = _dateShow.split('-');
                                                     onChangeDate?.(e, {
                                                         rowData: listSectionData,
                                                         id: 0,
-                                                        date: _dateShow
+                                                        date: _dateShow,
+                                                        day: _now[2],
+                                                        month: _now[1],
+                                                        year: _now[0]
                                                     });
 
                                                     if (EVENTS_ENABLED) {
@@ -1814,6 +1829,19 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
         // restore table grid init status
         if (scrollListRef.current) (scrollListRef.current as any).scrollTop = 0;
         if (scrollBodyRef.current) (scrollBodyRef.current as any).scrollLeft = 0;
+
+    }
+
+
+    function bodyScrollbarInit() {
+        if (scrollBodyRef.current === null || tableGridRef.current === null) return;
+
+        // The scrollbar position is horizontal
+        const targetPos = tableGridRef.current.querySelector('.custom-event-tl-table__datagrid-header__content tbody .today.selected');
+        if (targetPos !== null) {
+            (scrollBodyRef.current as any).scrollLeft = targetPos.offsetLeft;
+        }
+
 
     }
 
@@ -2124,7 +2152,7 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
 
 
     useEffect(() => {
-        setTodayDate(date);
+        updateTodayDate(date);
     }, [date]);
 
 
@@ -2157,7 +2185,7 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
         // update current today
         if (typeof customTodayDate !== 'undefined' && isValidDate(customTodayDate)) {
             const _customNow = new Date(customTodayDate);
-            setTodayDate(_customNow);
+            updateTodayDate(_customNow);
         }
 
         // Call a function when the list has been rendered completely
