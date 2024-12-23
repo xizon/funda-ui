@@ -2933,19 +2933,18 @@ var LiveSearch = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(
     windowScrollUpdate = _useWindowScroll2[1];
   function popwinPosInit() {
     var showAct = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : true;
-    if (listContentRef.current === null || rootRef.current === null || inputRef.current === null) return;
+    if (listContentRef.current === null || inputRef.current === null) return;
     var contentHeightOffset = 80;
     var contentMaxHeight = 0;
 
     // update modal position
     var _modalRef = document.querySelector("#livesearch__options-wrapper-".concat(idRes));
     var _triggerRef = inputRef.current;
-    var _triggerXaxisRef = rootRef.current;
 
     // console.log(getAbsolutePositionOfStage(_triggerRef));
 
     if (_modalRef === null) return;
-    var _getAbsolutePositionO = (0,funda_utils_dist_cjs_getElementProperty__WEBPACK_IMPORTED_MODULE_8__.getAbsolutePositionOfStage)(_triggerXaxisRef),
+    var _getAbsolutePositionO = (0,funda_utils_dist_cjs_getElementProperty__WEBPACK_IMPORTED_MODULE_8__.getAbsolutePositionOfStage)(_triggerRef),
       x = _getAbsolutePositionO.x;
     var _getAbsolutePositionO2 = (0,funda_utils_dist_cjs_getElementProperty__WEBPACK_IMPORTED_MODULE_8__.getAbsolutePositionOfStage)(_triggerRef),
       y = _getAbsolutePositionO2.y,

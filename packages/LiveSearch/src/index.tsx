@@ -242,7 +242,7 @@ const LiveSearch = forwardRef((props: LiveSearchProps, externalRef: any) => {
 
 
     function popwinPosInit(showAct: boolean = true) {
-        if (listContentRef.current === null || rootRef.current === null || inputRef.current === null) return;
+        if (listContentRef.current === null || inputRef.current === null) return;
 
         const contentHeightOffset = 80;
         let contentMaxHeight = 0;
@@ -250,13 +250,12 @@ const LiveSearch = forwardRef((props: LiveSearchProps, externalRef: any) => {
         // update modal position
         const _modalRef: any = document.querySelector(`#livesearch__options-wrapper-${idRes}`);
         const _triggerRef: any = inputRef.current;
-        const _triggerXaxisRef: any = rootRef.current;
 
         // console.log(getAbsolutePositionOfStage(_triggerRef));
 
         if (_modalRef === null) return;
 
-        const { x } = getAbsolutePositionOfStage(_triggerXaxisRef);
+        const { x } = getAbsolutePositionOfStage(_triggerRef);
         const { y, width, height } = getAbsolutePositionOfStage(_triggerRef);
         const _triggerBox = _triggerRef.getBoundingClientRect();
         let targetPos = '';
