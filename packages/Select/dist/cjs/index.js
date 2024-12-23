@@ -4168,6 +4168,17 @@ var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_
       }
     }, 0);
   }
+  function syncListContentScrollBody() {
+    var el = listContentRef.current;
+    if (el === null) return;
+    var activedItem = el.querySelectorAll(".list-group-item.".concat(!MULTI_SEL_VALID ? 'active' : 'item-selected'))[0];
+    if (typeof activedItem !== 'undefined') {
+      var cleanItem = el.querySelector(".list-group-item.".concat(!MULTI_SEL_VALID ? 'custom-select-multi__control-option-item--clean' : 'custom-select-multi__control-option-item--select-all'));
+      var cleanItemHeight = cleanItem === null ? 0 : cleanItem.clientHeight;
+      var _latestScrollTop = activedItem.offsetTop - cleanItemHeight;
+      el.scrollTop = _latestScrollTop;
+    }
+  }
   function popwinPosInit() {
     if (listContentRef.current === null || rootRef.current === null || selectInputRef.current === null) return;
     var contentHeightOffset = 80;
@@ -4304,6 +4315,11 @@ var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_
     //-----------
     // no data label
     popwinNoMatchInit();
+
+    // STEP 7:
+    //-----------
+    // Scrollbar position synchronization
+    syncListContentScrollBody();
   }
   function popwinPosHide() {
     var _modalRef = document.querySelector("#custom-select__options-wrapper-".concat(idRes));

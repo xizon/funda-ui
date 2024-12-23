@@ -1933,6 +1933,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
           }, attributes)), appendControl || '', aiPredict && remainingText && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
             ref: aiInputRef,
             className: "position-absolute z-1",
+            "data-ai": "predict",
             style: {
               left: "".concat(originInputComputedStyle.current.fontSize + textWidth, "px"),
               top: originInputComputedStyle.current.textTop + 'px',

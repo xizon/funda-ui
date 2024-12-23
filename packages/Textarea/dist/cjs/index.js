@@ -1702,6 +1702,7 @@ var Textarea = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(fu
   }, attributes)), aiPredict && remainingText && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
     ref: aiInputRef,
     className: "position-absolute z-1",
+    "data-ai": "predict",
     style: {
       left: "".concat(originInputComputedStyle.current.fontSize + textWidth, "px"),
       top: originInputComputedStyle.current.textTop + 'px',

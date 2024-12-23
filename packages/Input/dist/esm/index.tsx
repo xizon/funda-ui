@@ -561,6 +561,7 @@ const Input = forwardRef((props: InputProps, externalRef: any) => {
                             <div
                                 ref={aiInputRef}
                                 className="position-absolute z-1"
+                                data-ai="predict"
                                 style={{
                                     left: `${originInputComputedStyle.current.fontSize + textWidth}px`,
                                     top: originInputComputedStyle.current.textTop + 'px',

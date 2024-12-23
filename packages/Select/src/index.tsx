@@ -49,8 +49,6 @@ import {
 import { clsWrite, combinedCls } from 'funda-utils/dist/cjs/cls';
 
 
-
-
 export type SelectOptionChangeFnType = (arg1: any, arg2: any, arg3: any) => void;
 
 export interface MultiSelectDataConfig {
@@ -284,7 +282,6 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
         labels: [],
         values: []
     });
-
 
     const listContainerHeightLimit = (num: number) => {
         let res = num;
@@ -675,6 +672,7 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
             onFetch?.(selectInputRef.current, valueInputRef.current, defaultValue, _ORGIN_DATA, incomingData);
 
 
+
             //
             return _ORGIN_DATA;
 
@@ -847,6 +845,22 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
     }
 
 
+    function syncListContentScrollBody() {
+        const el: any = listContentRef.current;
+        if (el === null) return;
+
+        const activedItem = el.querySelectorAll(`.list-group-item.${!MULTI_SEL_VALID ? 'active' : 'item-selected'}`)[0];
+        if (typeof activedItem !== 'undefined') {
+            
+            const cleanItem = el.querySelector(`.list-group-item.${!MULTI_SEL_VALID ? 'custom-select-multi__control-option-item--clean' : 'custom-select-multi__control-option-item--select-all'}`);
+            const cleanItemHeight = cleanItem === null ? 0 : cleanItem.clientHeight;
+            const _latestScrollTop = activedItem.offsetTop - cleanItemHeight;
+            
+            el.scrollTop = _latestScrollTop;
+        }
+
+    }
+
 
     function popwinPosInit() {
         if (listContentRef.current === null || rootRef.current === null || selectInputRef.current === null) return;
@@ -915,6 +929,7 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
 
                 // has scrollbar
                 listContentRef.current.dataset.hasScrollbar = 'true';
+                
 
             } else {
                 if (_contentOldHeight > 50) {
@@ -1015,6 +1030,13 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
         //-----------
         // no data label
         popwinNoMatchInit();
+
+
+
+        // STEP 7:
+        //-----------
+        // Scrollbar position synchronization
+        syncListContentScrollBody();
 
 
     }
@@ -1209,8 +1231,6 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
         // show list
         setIsOpen(true);
 
-
-
         // pop win initalization
         setTimeout(() => {
             popwinPosInit();
@@ -1224,7 +1244,6 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
             }, 500);
 
         }
-
 
 
         if (MANUAL_REQ) {
