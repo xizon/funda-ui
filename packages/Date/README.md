@@ -109,6 +109,63 @@ export default () => {
 
 
 
+## Use asynchronous to specify a value
+
+When you make asynchronous changes, the time widget is rendered in real time, so you need to update the action when you lose focus. If you only need the default value to be loaded once, you can use `defaultValue`.
+
+
+```js
+import React, { useState } from 'react';
+import Date from 'funda-ui/Date';
+
+// component styles
+import 'funda-ui/Date/index.css';
+
+
+
+export default () => {
+
+    const [myValue, setMyValue] = useState<string>('2024-12-23');
+    
+    /**
+     * Zero Padding
+     * @param {Number} num
+     * @param {Boolean} padZeroEnabled 
+     * @returns {String}  '01', '05', '12'
+     */
+    const padZero = (num, padZeroEnabled = true) => {
+        if (padZeroEnabled) {
+            return num < 10 ? '0' + num : num.toString();
+        } else {
+            return num.toString();
+        }
+
+    };
+
+    return (
+
+        <>
+
+             <Date
+                value={myValue}
+                // defaultValue={myValue}
+                type="date"
+                placeholder="yyyy/MM/dd"
+                onBlur={(e: any, allSplittingInputs: any[]) => {
+                    const _curDate = `${allSplittingInputs[0].value}-${padZero(Number(allSplittingInputs[1].value))}-${padZero(Number(allSplittingInputs[2].value))}`;
+                    setMyValue(_curDate);
+                    console.log('current value is ', _curDate);
+                    // location.hash = xxxxxxx;
+                }}
+            />
+
+            <small>{myValue}</small>
+
+        </>
+    )
+}
+```
+
 
 ## Auto/Custom Width
 
