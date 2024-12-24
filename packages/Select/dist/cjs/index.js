@@ -4155,6 +4155,7 @@ var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_
     return _fetchData.apply(this, arguments);
   }
   function adjustMultiControlContainerHeight() {
+    var scrollbarInit = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : true;
     setTimeout(function () {
       // Sometimes you may get 0, you need to judge
       if (MULTI_SEL_VALID && rootMultiRef.current.clientHeight > 0) {
@@ -4164,7 +4165,7 @@ var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_
       // popwin position update
       var _modalRef = document.querySelector("#custom-select__options-wrapper-".concat(idRes));
       if (MULTI_SEL_VALID && _modalRef !== null && _modalRef.classList.contains('active')) {
-        popwinPosInit();
+        popwinPosInit(scrollbarInit);
       }
     }, 0);
   }
@@ -4180,6 +4181,7 @@ var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_
     }
   }
   function popwinPosInit() {
+    var scrollbarInit = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : true;
     if (listContentRef.current === null || rootRef.current === null || selectInputRef.current === null) return;
     var contentHeightOffset = 80;
     var contentMaxHeight = 0;
@@ -4319,7 +4321,7 @@ var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_
     // STEP 7:
     //-----------
     // Scrollbar position synchronization
-    syncListContentScrollBody();
+    if (scrollbarInit) syncListContentScrollBody();
   }
   function popwinPosHide() {
     var _modalRef = document.querySelector("#custom-select__options-wrapper-".concat(idRes));
@@ -4655,7 +4657,8 @@ var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_
                 }
 
                 // Appropriate multi-item container height
-                adjustMultiControlContainerHeight();
+                // ！！！set `false` to prevents the scrollbar position from changing when multi-selecting the option is clicked
+                adjustMultiControlContainerHeight(false);
 
                 // active current option
                 if (noCallback) {
@@ -4761,7 +4764,8 @@ var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_
                 }
 
                 // Appropriate multi-item container height
-                adjustMultiControlContainerHeight();
+                // ！！！set `false` to prevents the scrollbar position from changing when multi-selecting the option is clicked
+                adjustMultiControlContainerHeight(false);
 
                 // active current option
                 if (noCallback) {

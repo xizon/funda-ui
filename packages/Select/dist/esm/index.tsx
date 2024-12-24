@@ -49,6 +49,8 @@ import {
 import { clsWrite, combinedCls } from 'funda-utils/dist/cjs/cls';
 
 
+
+
 export type SelectOptionChangeFnType = (arg1: any, arg2: any, arg3: any) => void;
 
 export interface MultiSelectDataConfig {
@@ -825,7 +827,7 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
     }
 
 
-    function adjustMultiControlContainerHeight() {
+    function adjustMultiControlContainerHeight(scrollbarInit: boolean = true) {
         setTimeout(() => {
 
 
@@ -837,7 +839,7 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
             // popwin position update
             const _modalRef: any = document.querySelector(`#custom-select__options-wrapper-${idRes}`);
             if (MULTI_SEL_VALID && _modalRef !== null && _modalRef.classList.contains('active')) {
-                popwinPosInit();
+                popwinPosInit(scrollbarInit);
             }
 
 
@@ -862,7 +864,7 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
     }
 
 
-    function popwinPosInit() {
+    function popwinPosInit(scrollbarInit: boolean = true) {
         if (listContentRef.current === null || rootRef.current === null || selectInputRef.current === null) return;
 
         const contentHeightOffset = 80;
@@ -1036,7 +1038,8 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
         // STEP 7:
         //-----------
         // Scrollbar position synchronization
-        syncListContentScrollBody();
+        if (scrollbarInit) syncListContentScrollBody();
+        
 
 
     }
@@ -1435,7 +1438,8 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
                 }
 
                 // Appropriate multi-item container height
-                adjustMultiControlContainerHeight();
+                // ！！！set `false` to prevents the scrollbar position from changing when multi-selecting the option is clicked
+                adjustMultiControlContainerHeight(false);
 
 
                 // active current option
@@ -1586,7 +1590,8 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
 
 
                 // Appropriate multi-item container height
-                adjustMultiControlContainerHeight();
+                // ！！！set `false` to prevents the scrollbar position from changing when multi-selecting the option is clicked
+                adjustMultiControlContainerHeight(false);
 
                 // active current option
                 if (noCallback) {
