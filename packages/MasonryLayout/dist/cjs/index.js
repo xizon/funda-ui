@@ -414,6 +414,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var funda_utils_dist_cjs_useComId__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(funda_utils_dist_cjs_useComId__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var funda_utils_dist_cjs_performance__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(840);
 /* harmony import */ var funda_utils_dist_cjs_performance__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(funda_utils_dist_cjs_performance__WEBPACK_IMPORTED_MODULE_2__);
+function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter); }
+function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
 function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
 function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
 function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
@@ -427,8 +431,11 @@ var MasonryLayout = function MasonryLayout(props) {
   var columns = props.columns,
     gap = props.gap,
     breakPoints = props.breakPoints,
+    _props$balanceColumnH = props.balanceColumnHeights,
+    balanceColumnHeights = _props$balanceColumnH === void 0 ? true : _props$balanceColumnH,
     id = props.id,
-    children = props.children;
+    children = props.children,
+    onResize = props.onResize;
   var uniqueID = funda_utils_dist_cjs_useComId__WEBPACK_IMPORTED_MODULE_1___default()();
   var idRes = id || uniqueID;
   var rootRef = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(null);
@@ -437,12 +444,19 @@ var MasonryLayout = function MasonryLayout(props) {
     _useState2 = _slicedToArray(_useState, 2),
     items = _useState2[0],
     setItems = _useState2[1];
+  var _useState3 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)([]),
+    _useState4 = _slicedToArray(_useState3, 2),
+    orginalItems = _useState4[0],
+    setOrginalItems = _useState4[1];
   var COLS = typeof columns !== 'undefined' ? parseFloat(columns) : 2;
   var GAP = typeof gap !== 'undefined' ? parseFloat(gap) : 15;
+  var colsRef = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(new Map());
   var windowResizeUpdate = (0,funda_utils_dist_cjs_performance__WEBPACK_IMPORTED_MODULE_2__.debounce)(handleWindowUpdate, 50);
   var windowWidth = typeof window !== 'undefined' ? window.innerWidth : 0;
   var calcInit = (0,react__WEBPACK_IMPORTED_MODULE_0__.useCallback)(function (w) {
     var _rootRef$current;
+    var minColIndex = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : undefined;
+    var maxColIndex = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : undefined;
     var colCount = COLS;
     var columnWrapper = {};
     var result = [];
@@ -500,10 +514,22 @@ var MasonryLayout = function MasonryLayout(props) {
     var wrapperWidth = ((_rootRef$current = rootRef.current) === null || _rootRef$current === void 0 ? void 0 : _rootRef$current.offsetWidth) || 0;
     var perBrickWidth = wrapperWidth / colCount; // Prevent the width of the internal elements from overflowing
 
-    items.forEach(function (el, i) {
+    // return wrapper width
+    onResize === null || onResize === void 0 ? void 0 : onResize(wrapperWidth);
+
+    //
+    react__WEBPACK_IMPORTED_MODULE_0___default().Children.forEach(children, function (child, i) {
+      if (!child) return;
       var columnIndex = i % colCount;
+      var itemRow = Math.floor(i / colCount);
+      var itemIndex = itemRow * colCount + columnIndex;
+
+      //
       columnWrapper["".concat(itemWrapperKey).concat(columnIndex)].push( /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
         key: i,
+        "data-row": itemRow,
+        "data-col": columnIndex,
+        "data-index": itemIndex,
         style: {
           marginBottom: "".concat(GAP, "px")
         }
@@ -511,13 +537,19 @@ var MasonryLayout = function MasonryLayout(props) {
         style: perBrickWidth > 0 ? {
           width: perBrickWidth + 'px'
         } : undefined
-      }, el)));
+      }, child)));
     });
+
+    // Add the item to the shortest column
+    if (balanceColumnHeights && typeof minColIndex !== 'undefined' && typeof maxColIndex !== 'undefined' && items.length > COLS) {
+      var maxColLastElement = columnWrapper["".concat(itemWrapperKey).concat(maxColIndex)].pop();
+      columnWrapper["".concat(itemWrapperKey).concat(minColIndex)].push(maxColLastElement);
+    }
 
     // STEP 5:
     //=================
     // Wrapping the items in each column with a div and pushing it into the result array
-    for (var _i3 = 0; _i3 < colCount; _i3++) {
+    var _loop = function _loop(_i3) {
       result.push( /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
         key: _i3,
         className: "masonry-item",
@@ -525,12 +557,31 @@ var MasonryLayout = function MasonryLayout(props) {
           marginLeft: "".concat(_i3 > 0 ? GAP : 0, "px"),
           flex: '0 1 auto'
         }
-      }, columnWrapper["".concat(itemWrapperKey).concat(_i3)]));
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+        className: "masonry-item-inner",
+        "data-inner-col": _i3,
+        ref: function ref(el) {
+          if (el) {
+            colsRef.current.set("col-".concat(_i3), el);
+          } else {
+            colsRef.current["delete"]("col-".concat(_i3));
+          }
+        }
+      }, columnWrapper["".concat(itemWrapperKey).concat(_i3)])));
+    };
+    for (var _i3 = 0; _i3 < colCount; _i3++) {
+      _loop(_i3);
     }
 
     // STEP 6:
     //=================
+    // update items
     setItems(result);
+
+    // update orginal items
+    if (typeof minColIndex === 'undefined' && typeof maxColIndex === 'undefined') {
+      setOrginalItems(result);
+    }
   }, [children]);
   function handleWindowUpdate() {
     // Check window width has actually changed and it's not just iOS triggering a resize event on scroll
@@ -542,6 +593,65 @@ var MasonryLayout = function MasonryLayout(props) {
       calcInit(windowWidth);
     }
   }
+  function adjustPosition() {
+    if (rootRef.current === null) return;
+
+    // Adjust the position of the element
+    var initCols = function initCols() {
+      var columnHeights = new Array(COLS).fill(0);
+      react__WEBPACK_IMPORTED_MODULE_0___default().Children.forEach(items, function (child, i) {
+        if (!child) return;
+        var columnIndex = i % COLS;
+
+        // update column height
+        var columnInner = colsRef.current.get("col-".concat(columnIndex));
+        if (columnInner) {
+          var height = columnInner.offsetHeight;
+          columnHeights[columnIndex] = height;
+        }
+      });
+
+      // Find the shortest height column
+      var minHeight = Math.min.apply(Math, _toConsumableArray(columnHeights));
+      var maxHeight = Math.max.apply(Math, _toConsumableArray(columnHeights));
+      if (minHeight > 0 && maxHeight > 0 && maxHeight / 2 > minHeight) {
+        var columnMinHeightIndex = columnHeights.indexOf(minHeight);
+        var columnMaxHeightIndex = columnHeights.indexOf(maxHeight);
+        calcInit(windowWidth, columnMinHeightIndex, columnMaxHeightIndex);
+      }
+    };
+    var images = rootRef.current.querySelectorAll('img');
+    var imagePromises = [];
+    images.forEach(function (img) {
+      var imgPromise = new Promise(function (resolve, reject) {
+        if (img.complete) {
+          resolve();
+        } else {
+          img.onload = function () {
+            return resolve();
+          };
+          img.onerror = function () {
+            return resolve();
+          };
+        }
+      });
+      imagePromises.push(imgPromise);
+    });
+
+    // Wait for all images to load
+    if (images.length > 0) {
+      Promise.all(imagePromises).then(function () {
+        initCols();
+      })["catch"](function (error) {
+        console.error(error);
+      });
+    } else {
+      initCols();
+    }
+  }
+  (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(function () {
+    adjustPosition();
+  }, [orginalItems]);
   (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(function () {
     // Initialize items
     //--------------

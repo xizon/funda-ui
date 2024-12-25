@@ -645,6 +645,7 @@ import Date from 'funda-ui/Date';
 | `max` | string | - | The maximum date & time to accept. such as `2024-02-26 09:25:45` | - |
 | `placeholder` | string | `yyyy/MM/dd HH:mm:ss` |  Specifies a short hint that describes. | - |
 | `label` | string \| ReactNode | - | It is used to specify a label for an element of a form.<blockquote>Support html tags</blockquote> | - |
+| `requiredLabel` | string \| ReactNode | `<span className="position-absolute end-0 top-0 my-2 mx-2"><span className="text-danger">*</span></span>` | It is used to specify a label for an element required. | - |
 | `units` | string | - | Specify a unit identification string. Such as `em`, `px`, and so on. | - |
 | `name` | string | - | Name is not deprecated when used with form fields. | - |
 | `readOnly` | boolean | false | When present, it specifies that this component field is read-only. | - |

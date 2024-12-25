@@ -72,6 +72,7 @@ export type DateProps = {
     name?: string;
     alt?: any;
     disabled?: any;
+    requiredLabel?: React.ReactNode | string;
     required?: any;
     readOnly?: any;
     iconLeft?: React.ReactNode | string;
@@ -137,6 +138,7 @@ const Date = forwardRef((props: DateProps, externalRef: any) => {
         truncateSeconds,
         valueUseSlash,
         disabled,
+        requiredLabel,
         required,
         readOnly,
         defaultValue,
@@ -983,6 +985,7 @@ const Date = forwardRef((props: DateProps, externalRef: any) => {
                         units={units}
                         iconLeft={iconLeft}
                         iconRight={iconRight}
+                        requiredLabel={requiredLabel}
                         required={required}
                         appendControl={<>
                          <div className="date2d__control__inputplaceholder">

@@ -11,10 +11,12 @@ export type MasonryLayoutProps = {
     columns?: number;
     gap?: number;
     breakPoints?: Record<number, number>;
+    balanceColumnHeights?: boolean;
     /** -- */
     id?: string;
     tabIndex?: number;
     children: React.ReactNode;
+    onResize?: (wrapperWidth: number) => void;
 };
 
 
@@ -23,8 +25,10 @@ const MasonryLayout = (props: MasonryLayoutProps) => {
         columns,
         gap,
         breakPoints,
+        balanceColumnHeights = true,
         id,
-        children
+        children,
+        onResize
     } = props;
 
 
@@ -33,13 +37,15 @@ const MasonryLayout = (props: MasonryLayoutProps) => {
     const rootRef = useRef<any>(null);
     const itemWrapperKey = 'column-';
     const [items, setItems] = useState<React.ReactNode[]>([]);
+    const [orginalItems, setOrginalItems] = useState<React.ReactNode[]>([]);
     const COLS = typeof columns !== 'undefined' ? parseFloat(columns as any) : 2;
     const GAP = typeof gap !== 'undefined' ? parseFloat(gap as any) : 15;
+    const colsRef = useRef<Record<string, any>>(new Map());
 
     const windowResizeUpdate = debounce(handleWindowUpdate, 50);
     let windowWidth = typeof window !== 'undefined' ? window.innerWidth : 0;
     
-    const calcInit = useCallback((w: number) => {
+    const calcInit = useCallback((w: number, minColIndex: number | undefined = undefined, maxColIndex: number | undefined = undefined) => {
 
         let colCount = COLS;
         const columnWrapper: any = {};
@@ -100,25 +106,50 @@ const MasonryLayout = (props: MasonryLayoutProps) => {
             items = children;
         }
 
+
         // get wrapper width
         const wrapperWidth = rootRef.current?.offsetWidth || 0;
-        const perBrickWidth = wrapperWidth/colCount; // Prevent the width of the internal elements from overflowing
+        let perBrickWidth = wrapperWidth/colCount; // Prevent the width of the internal elements from overflowing
 
 
-        items.forEach((el: React.ReactNode, i: number) => {
+        // return wrapper width
+        onResize?.(wrapperWidth);
+
+
+        //
+        React.Children.forEach(children, (child: any, i: number) => {
+            if (!child) return;
+            
             const columnIndex = i % colCount;
-  
+            const itemRow = Math.floor(i / colCount);
+            const itemIndex = itemRow * colCount + columnIndex;
+
+            //
             columnWrapper[`${itemWrapperKey}${columnIndex}`].push(
                 <div 
                     key={i} 
+                    data-row={itemRow}
+                    data-col={columnIndex}
+                    data-index={itemIndex}
                     style={{ 
                         marginBottom: `${GAP}px`
                     }}
                 >
-                    <div style={perBrickWidth > 0 ? {width: perBrickWidth + 'px'} : undefined}>{el}</div>
+                    <div style={perBrickWidth > 0 ? {width: perBrickWidth + 'px'} : undefined}>{child}</div>
                 </div>
             );
         });
+
+
+        // Add the item to the shortest column
+        if (
+            balanceColumnHeights && 
+            (typeof minColIndex !== 'undefined' && typeof maxColIndex !== 'undefined') &&
+            items.length > COLS
+        ) {
+            const maxColLastElement = columnWrapper[`${itemWrapperKey}${maxColIndex}`].pop();
+            columnWrapper[`${itemWrapperKey}${minColIndex}`].push(maxColLastElement);
+        }
 
 
         // STEP 5:
@@ -133,15 +164,35 @@ const MasonryLayout = (props: MasonryLayoutProps) => {
                         marginLeft: `${i > 0 ? GAP : 0}px`,
                         flex: '0 1 auto'
                     }}>
-                    {columnWrapper[`${itemWrapperKey}${i}`]}
+                    <div 
+                        className="masonry-item-inner"
+                        data-inner-col={i}
+                        ref={el => {
+                            if (el) {
+                                colsRef.current.set(`col-${i}`, el);
+                            } else {
+                                colsRef.current.delete(`col-${i}`);
+                            }
+                        }}
+                    >
+                        {columnWrapper[`${itemWrapperKey}${i}`]}
+                    </div>
                 </div>
             );
         }
         
         // STEP 6:
         //=================
+        // update items
         setItems(result);
+
+        // update orginal items
+        if (typeof minColIndex === 'undefined' && typeof maxColIndex === 'undefined') {
+            setOrginalItems(result);
+        }
+
         
+
     }, [children]);
 
 
@@ -159,6 +210,73 @@ const MasonryLayout = (props: MasonryLayoutProps) => {
 
         }
     }
+
+    function adjustPosition() {
+        if (rootRef.current === null) return;
+
+        // Adjust the position of the element
+        const initCols  = () => {
+            
+            const columnHeights = new Array(COLS).fill(0);
+            React.Children.forEach(items, (child: any, i: number) => {
+                if (!child) return;
+                
+                const columnIndex = i % COLS;
+
+                // update column height
+                const columnInner = colsRef.current.get(`col-${columnIndex}`);
+                if (columnInner) {
+                    const height = columnInner.offsetHeight;
+                    columnHeights[columnIndex] = height;
+                }
+    
+            });
+
+            // Find the shortest height column
+            const minHeight = Math.min(...columnHeights);
+            const maxHeight = Math.max(...columnHeights);
+            if (minHeight > 0 && maxHeight > 0 && maxHeight/2 > minHeight) {
+                const columnMinHeightIndex = columnHeights.indexOf(minHeight);
+                const columnMaxHeightIndex = columnHeights.indexOf(maxHeight);
+                calcInit(windowWidth, columnMinHeightIndex, columnMaxHeightIndex);
+            }
+            
+
+        };
+        
+        const images: NodeListOf<HTMLImageElement> = rootRef.current.querySelectorAll('img');
+        const imagePromises: Promise<void>[] = [];
+        images.forEach((img: HTMLImageElement) => {
+            const imgPromise: Promise<void> = new Promise((resolve, reject) => {
+                if (img.complete) {
+                    resolve();
+                } else {
+                    img.onload = () => resolve();
+                    img.onerror = () => resolve();
+                }
+            });
+            imagePromises.push(imgPromise);
+        });
+
+        // Wait for all images to load
+        if (images.length > 0) {
+            Promise.all(imagePromises)
+                .then(() => {
+                    initCols();
+                })
+                .catch((error: Error) => {
+                    console.error(error);
+                });
+        } else {
+            initCols();
+        }
+    }
+
+
+    useEffect(() => {
+        adjustPosition();
+    }, [orginalItems]);
+
 
     useEffect(() => {
 

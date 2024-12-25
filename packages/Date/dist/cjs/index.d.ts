@@ -31,6 +31,7 @@ export declare type DateProps = {
     name?: string;
     alt?: any;
     disabled?: any;
+    requiredLabel?: React.ReactNode | string;
     required?: any;
     readOnly?: any;
     iconLeft?: React.ReactNode | string;
