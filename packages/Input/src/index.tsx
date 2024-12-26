@@ -61,6 +61,8 @@ export type InputProps = {
     onBlur?: (e: any, param: any, el: any) => void;
     onFocus?: (e: any, param: any, el: any) => void;
     onPressEnter?: (e: any, el: any) => void;
+    onKeyDown?: (e: any, el: any) => void;
+    onKeyUp?: (e: any, el: any) => void;
 
 };
 
@@ -117,6 +119,8 @@ const Input = forwardRef((props: InputProps, externalRef: any) => {
         onBlur,
         onFocus,
         onPressEnter,
+        onKeyDown,
+        onKeyUp,
         ...attributes
     } = props;
 
@@ -383,6 +387,9 @@ const Input = forwardRef((props: InputProps, externalRef: any) => {
 
 
     function handleKeyPressed(event: KeyboardEvent<HTMLInputElement>) {
+
+        onKeyDown?.(event, valRef.current);
+
         if (typeof (onKeyPressedCallback) === 'function') {
             const newData: any = onKeyPressedCallback(event, valRef.current);
             if (newData) setChangedVal(newData);  // Avoid the error "react checkbox changing an uncontrolled input to be controlled"
@@ -440,6 +447,9 @@ const Input = forwardRef((props: InputProps, externalRef: any) => {
 
     }
 
+    function handleKeyUp(event: KeyboardEvent<HTMLInputElement>) {
+        onKeyUp?.(event, valRef.current);
+    }
 
     useEffect(() => {
 
@@ -544,6 +554,7 @@ const Input = forwardRef((props: InputProps, externalRef: any) => {
 
                             }}
                             onKeyDown={handleKeyPressed}
+                            onKeyUp={handleKeyUp}
                             onCompositionStart={handleComposition}
                             onCompositionUpdate={handleComposition}
                             onCompositionEnd={handleComposition}

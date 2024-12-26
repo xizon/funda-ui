@@ -50,6 +50,8 @@ export type TextareaProps = {
     onBlur?: (e: any, el: any) => void;
     onFocus?: (e: any, el: any) => void;
     onPressEnter?: (e: any, el: any) => void;
+    onKeyDown?: (e: any, el: any) => void;
+    onKeyUp?: (e: any, el: any) => void;
     onResize?: (el: any, params: number[]) => void;
     
 };
@@ -96,6 +98,8 @@ const Textarea = forwardRef((props: TextareaProps, externalRef: any) => {
         onBlur,
         onFocus,
         onPressEnter,
+        onKeyDown,
+        onKeyUp,
         onResize,
         ...attributes
     } = props;
@@ -363,6 +367,10 @@ const Textarea = forwardRef((props: TextareaProps, externalRef: any) => {
     }
 
     function handleKeyPressed(event: KeyboardEvent<HTMLTextAreaElement>) {
+
+        onKeyDown?.(event, valRef.current);
+
+
         if (typeof (onKeyPressedCallback) === 'function') {
             const newData: any = onKeyPressedCallback(event, valRef.current);
             if (newData) setChangedVal(newData);  // Avoid the error "react checkbox changing an uncontrolled input to be controlled"
@@ -418,6 +426,9 @@ const Textarea = forwardRef((props: TextareaProps, externalRef: any) => {
 
     }
 
+    function handleKeyUp(event: KeyboardEvent<HTMLTextAreaElement>) {
+        onKeyUp?.(event, valRef.current);
+    }
 
     useEffect(() => {
 
@@ -534,6 +545,7 @@ const Textarea = forwardRef((props: TextareaProps, externalRef: any) => {
                                 }
                             }}
                             onKeyDown={handleKeyPressed}
+                            onKeyUp={handleKeyUp}
                             disabled={disabled || null}
                             required={required || null}
                             readOnly={readOnly || null}

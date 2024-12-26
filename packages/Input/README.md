@@ -770,6 +770,61 @@ export default () => {
 
 
 
+
+## Double Ctrl Pressed
+
+
+```js
+import React, { useEffect, useState } from "react";
+import Input from 'funda-ui/Input';
+import getOs from 'funda-ui/Utils/os';
+
+export default () => {
+
+    const [ctrlPressed, setCtrlPressed] = useState<boolean>(false);
+    const [lastPressTime, setLastPressTime] = useState<number>(0);
+
+    return (
+        <>
+            <Input
+                name="name"
+                onKeyDown={(event: React.KeyboardEvent<HTMLInputElement>, el: HTMLElement) => {
+                    const isMac = getOs().isOSX;
+                    const currentTime = new window.Date().getTime();
+                    const isCtrlKey = isMac ? event.metaKey : event.ctrlKey;
+
+                 
+                    if (isCtrlKey) {
+                        if (ctrlPressed && currentTime - lastPressTime < 500) {
+                            // Double Ctrl pressed
+                            alert('Double Ctrl pressed!');
+                        } else {
+                            setCtrlPressed(true);
+                            setLastPressTime(currentTime);
+                        }
+                    } else {
+                        setCtrlPressed(false);
+                    }
+
+                }}
+                onKeyUp={(event: React.KeyboardEvent<HTMLInputElement>, el: HTMLElement) => {
+                    const isMac = getOs().isOSX;
+                    const isCtrlKey = isMac ? event.metaKey : event.ctrlKey;
+                    if (isCtrlKey) {
+                        setCtrlPressed(false);
+                    }
+                }}
+            />
+     
+        </>
+    );
+}
+```
+
+
+
+
+
 ## API
 
 ### Input
@@ -825,8 +880,9 @@ import Input from 'funda-ui/Input';
 | `onChange` | function  | - | Call a function when the value of an HTML element is changed. It returns four callback values. <br /> <ol><li>The first is the Control Event (**Event**)</li><li>The second is the composition event (**Boolean**)</li><li>The third is the control (**HTML Element**)</li><li>The last is the current value (**String**)</li></ol>  | - |
 | `onBlur` | function  | - | Call a function when a user leaves an form field. It returns three callback values. <br /> <ol><li>The first is the Control Event (**Event**)</li><li>The second is the composition event (**Boolean**)</li><li>The last is the control (**HTML Element**)</li></ol> | - |
 | `onFocus` | function  | - | Call a function when an form field gets focus. It returns three callback values. <br /> <ol><li>The first is the Control Event (**Event**)</li><li>The second is the composition event (**Boolean**)</li><li>The last is the control (**HTML Element**)</li></ol> | - |
-| `onPressEnter` | function  | - | The callback function that is triggered when Enter key is pressed. It returns two callback values. <br /> <ol><li>The first is the Control Event (**Event**)</li><li>The last is the control (**HTML Element**)</li></ol> | - |
-
+| `onPressEnter` | function  | - | The callback function that is triggered when Enter key is pressed. It returns two callback values. <br /> <ol><li>The first is the Control Event (**KeyboardEvent**)</li><li>The last is the control (**HTML Element**)</li></ol> | - |
+| `onKeyDown` | function  | - | The callback function that is triggered when the user presses a key on the keyboard. It returns two callback values. <br /> <ol><li>The first is the Control Event (**KeyboardEvent**)</li><li>The last is the control (**HTML Element**)</li></ol> | - |
+| `onKeyUp` | function  | - | The callback function that is triggered when the user releases a key. It returns two callback values. <br /> <ol><li>The first is the Control Event (**KeyboardEvent**)</li><li>The last is the control (**HTML Element**)</li></ol> | - |
 
 It accepts all props which this control support. Such as `style`, `data-*`, `tabIndex`, `id`, and so on.
 

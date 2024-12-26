@@ -1021,7 +1021,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
         var funda_utils_dist_cjs_useDebounce__WEBPACK_IMPORTED_MODULE_4__ = __nested_webpack_require_41372__(702);
         /* harmony import */
         var funda_utils_dist_cjs_useDebounce__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__nested_webpack_require_41372__.n(funda_utils_dist_cjs_useDebounce__WEBPACK_IMPORTED_MODULE_4__);
-        var _excluded = ["contentRef", "wrapperClassName", "controlClassName", "controlExClassName", "controlGroupWrapperClassName", "controlGroupTextClassName", "type", "disabled", "required", "placeholder", "pattern", "readOnly", "defaultValue", "value", "requiredLabel", "label", "units", "name", "step", "min", "max", "src", "size", "minLength", "maxLength", "alt", "inputMode", "id", "appendControl", "aiPredict", "aiPredictRemainingTextRGB", "aiPredictConfirmKey", "aiPredictFetchFuncAsync", "aiPredictFetchFuncMethod", "aiPredictFetchFuncMethodParams", "aiPredictFetchCallback", "iconLeft", "iconRight", "autoComplete", "autoCapitalize", "spellCheck", "style", "tabIndex", "onChangeCallback", "onInputCallback", "onKeyPressedCallback", "onChange", "onBlur", "onFocus", "onPressEnter"];
+        var _excluded = ["contentRef", "wrapperClassName", "controlClassName", "controlExClassName", "controlGroupWrapperClassName", "controlGroupTextClassName", "type", "disabled", "required", "placeholder", "pattern", "readOnly", "defaultValue", "value", "requiredLabel", "label", "units", "name", "step", "min", "max", "src", "size", "minLength", "maxLength", "alt", "inputMode", "id", "appendControl", "aiPredict", "aiPredictRemainingTextRGB", "aiPredictConfirmKey", "aiPredictFetchFuncAsync", "aiPredictFetchFuncMethod", "aiPredictFetchFuncMethodParams", "aiPredictFetchCallback", "iconLeft", "iconRight", "autoComplete", "autoCapitalize", "spellCheck", "style", "tabIndex", "onChangeCallback", "onInputCallback", "onKeyPressedCallback", "onChange", "onBlur", "onFocus", "onPressEnter", "onKeyDown", "onKeyUp"];
         function _regeneratorRuntime() {
           "use strict";
 
@@ -1521,6 +1521,8 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
             onBlur = props.onBlur,
             onFocus = props.onFocus,
             onPressEnter = props.onPressEnter,
+            onKeyDown = props.onKeyDown,
+            onKeyUp = props.onKeyUp,
             attributes = _objectWithoutProperties(props, _excluded);
           var uniqueID = funda_utils_dist_cjs_useComId__WEBPACK_IMPORTED_MODULE_1___default()();
           var idRes = id || uniqueID;
@@ -1789,6 +1791,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
           }
 
           function handleKeyPressed(event) {
+            onKeyDown === null || onKeyDown === void 0 ? void 0 : onKeyDown(event, valRef.current);
             if (typeof onKeyPressedCallback === 'function') {
               var newData = onKeyPressedCallback(event, valRef.current);
               if (newData) setChangedVal(newData); // Avoid the error "react checkbox changing an uncontrolled input to be controlled"
@@ -1831,6 +1834,9 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
               }
               setCurrentSuggestion(tempMatchedSuggestion[currentSuggestionIndex.current] || '');
             }
+          }
+          function handleKeyUp(event) {
+            onKeyUp === null || onKeyUp === void 0 ? void 0 : onKeyUp(event, valRef.current);
           }
           (0, react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(function () {
             // update default value
@@ -1923,6 +1929,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
               }
             },
             onKeyDown: handleKeyPressed,
+            onKeyUp: handleKeyUp,
             onCompositionStart: handleComposition,
             onCompositionUpdate: handleComposition,
             onCompositionEnd: handleComposition,

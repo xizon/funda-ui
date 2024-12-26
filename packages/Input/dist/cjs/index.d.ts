@@ -52,6 +52,8 @@ export declare type InputProps = {
     onBlur?: (e: any, param: any, el: any) => void;
     onFocus?: (e: any, param: any, el: any) => void;
     onPressEnter?: (e: any, el: any) => void;
+    onKeyDown?: (e: any, el: any) => void;
+    onKeyUp?: (e: any, el: any) => void;
 };
 declare const Input: React.ForwardRefExoticComponent<InputProps & React.RefAttributes<unknown>>;
 export default Input;

@@ -117,7 +117,7 @@ import SearchBar from 'funda-ui/SearchBar';
 | `onChange` | function  | - | Call a function when the value of an HTML element is changed. It returns two callback values. <br /> <ol><li>The first is the  Control Event (**Event**)</li><li>The second is the composition event (**Boolean**)</li></ol> | - |
 | `onBlur` | function  | - | Call a function when a user leaves an form field. It returns two callback values. <br /> <ol><li>The first is the  Control Event (**Event**)</li><li>The second is the composition event (**Boolean**)</li></ol> | - |
 | `onFocus` | function  | - | Call a function when an form field gets focus. It returns two callback values. <br /> <ol><li>The first is the  Control Event (**Event**)</li><li>The second is the composition event (**Boolean**)</li></ol> | - |
-| `onPressEnter` | function  | - | The callback function that is triggered when Enter key is pressed. It returns two callback values. <br /> <ol><li>The first is the Control Event (**Event**)</li><li>The last is the composition event (**Boolean**)</li></ol> | - |
+| `onPressEnter` | function  | - | The callback function that is triggered when Enter key is pressed. It returns two callback values. <br /> <ol><li>The first is the Control Event (**KeyboardEvent**)</li><li>The last is the composition event (**Boolean**)</li></ol> | - |
 
 
 
