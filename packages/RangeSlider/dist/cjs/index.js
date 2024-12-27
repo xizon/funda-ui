@@ -1728,6 +1728,12 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
               set: function set(value, cb) {
                 setChangedVal("".concat(value));
                 cb === null || cb === void 0 ? void 0 : cb();
+              },
+              aiPredictReset: function aiPredictReset() {
+                setTimeout(function () {
+                  // Avoid conflicts with other asynchronous states, resulting in invalid clearing
+                  setCurrentSuggestion('');
+                }, 0);
               }
             };
           }, [contentRef]);

@@ -292,7 +292,12 @@ const Textarea = forwardRef((props: TextareaProps, externalRef: any) => {
             set: (value: string, cb?: any) => {
                 setChangedVal(`${value}`);
                 cb?.();
-            }
+            },
+            aiPredictReset: () => {
+                setTimeout(() => { // Avoid conflicts with other asynchronous states, resulting in invalid clearing
+                    setCurrentSuggestion('');
+                }, 0);
+            },
         }),
         [contentRef]
     );

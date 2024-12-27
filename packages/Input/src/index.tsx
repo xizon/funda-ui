@@ -6,8 +6,6 @@ import { clsWrite, combinedCls } from 'funda-utils/dist/cjs/cls';
 import { actualPropertyValue, getTextTop } from 'funda-utils/dist/cjs/inputsCalculation';
 import useDebounce from 'funda-utils/dist/cjs/useDebounce';
 
-
-
 export type InputProps = {
     contentRef?: React.ForwardedRef<any>;
     wrapperClassName?: string;
@@ -316,7 +314,12 @@ const Input = forwardRef((props: InputProps, externalRef: any) => {
             set: (value: string, cb?: any) => {
                 setChangedVal(`${value}`);
                 cb?.();
-            }
+            },
+            aiPredictReset: () => {
+                setTimeout(() => { // Avoid conflicts with other asynchronous states, resulting in invalid clearing
+                    setCurrentSuggestion('');
+                }, 0);
+            },
         }),
         [contentRef],
     );

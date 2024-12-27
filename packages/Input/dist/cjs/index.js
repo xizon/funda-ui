@@ -1208,6 +1208,12 @@ var Input = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(funct
       set: function set(value, cb) {
         setChangedVal("".concat(value));
         cb === null || cb === void 0 ? void 0 : cb();
+      },
+      aiPredictReset: function aiPredictReset() {
+        setTimeout(function () {
+          // Avoid conflicts with other asynchronous states, resulting in invalid clearing
+          setCurrentSuggestion('');
+        }, 0);
       }
     };
   }, [contentRef]);
