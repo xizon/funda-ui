@@ -10,7 +10,7 @@ import { Tabs, TabList, TabPanel } from 'funda-ui/Tabs';
 
 export default () => {
 
-    function handleChange(nav, targetId, index, persistentIndex) {
+    function handleChange(nav: HTMLElement, targetId: string, index: number, persistentIndex: number) {
         console.log(nav, targetId, index, persistentIndex);
     }
 
@@ -291,7 +291,7 @@ import { Tabs } from 'funda-ui/Tabs';
 | `expandedActiveClassNameForNav` | string | - | specify an active class name for `<TabList />` | - |
 | `expandedActiveClassNameForPanel` | string | - | specify an active class name for `<TabPanel />` | - |
 | `animTransitionDuration` | number | 150 | Transition duration for css activation animation. | - |
-| `onChange` | function  | - | Call a function when the value of an HTML element is changed. It returns four callback values. <br /> <ol><li>The first is the trigger object</li><li>The second is the target ID of each panel</li><li> The third is the currently active index</li><li> The fourth is the persistent index of item.</li></ol> | - |
+| `onChange` | function  | - | Call a function when the value of an HTML element is changed. It returns four callback values. <br /> <ol><li>The first is the trigger object (**HTMLElement**)</li><li>The second is the target ID of each panel (**String**)</li><li> The third is the currently active index (**Number**)</li><li> The fourth is the persistent index of item. (**Number**)</li></ol> | - |
 | `onLoad` | function  | - | Call a function when the component is rendered. It returns only one callback value which is the function of activating item(**Function**). | - |
 
 
