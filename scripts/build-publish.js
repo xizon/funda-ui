@@ -18,7 +18,6 @@ const copyRecursiveSync = (src, dest) => {
 };
 
 
-
 // copy `lib/` to `publish/` directory
 // ----------------------------------
 const pubPath = path.resolve(__dirname, `../publish`);
@@ -56,6 +55,16 @@ if (fs.existsSync(pubPath)){
     fs.writeFileSync(path.resolve(__dirname, `../publish/package.json`), JSON.stringify(json));
     console.log('\x1b[36m%s\x1b[0m', `--> The "publish/" directory is ready!`);
 
+}
+
+
+
+// copy `LICENSE` to `publish/` directory
+// ----------------------------------
+const licensePath = path.resolve(__dirname, `../LICENSE`);
+if (fs.existsSync(licensePath)){
+    fs.copyFileSync(licensePath, path.resolve(__dirname, `../publish/LICENSE`));
+    console.log('\x1b[36m%s\x1b[0m', `--> The "publish/LICENSE" is ready!`);
 }
 
 
