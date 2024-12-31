@@ -34,6 +34,7 @@ export default () => {
                 label="Disabled"
                 onChange={handleChange}
                 iconLeft={<><i className="fa fa-arrow-up" aria-hidden="true"></i></>}
+                controlGroupWrapperClassName="input-group flex-nowrap"
                 required
                 disabled
             />
@@ -44,6 +45,7 @@ export default () => {
                 name="name"
                 onChange={handleChange}
                 iconRight={<><i className="fa fa-arrow-up" aria-hidden="true"></i></>}
+                controlGroupWrapperClassName="input-group flex-nowrap"
                 required
                 disabled
             />
