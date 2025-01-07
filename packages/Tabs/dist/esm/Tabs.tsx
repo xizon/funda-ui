@@ -18,7 +18,7 @@ export type TabsProps = {
     animTransitionDuration?: number;
     /** -- */
     style?: React.CSSProperties;
-    onChange?: (nav: any, targetId: any, index: number, persistentIndex: number) => void;
+    onChange?: (nav: HTMLElement, targetId: string, index: number, persistentIndex: number) => void;
     onLoad?: (func: Function) => void;
 	children: React.ReactNode | React.ReactNode[];
     

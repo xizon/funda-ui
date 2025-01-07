@@ -137,59 +137,63 @@ const ColorPicker = forwardRef((props: ColorPickerProps, externalRef: any) => {
             )} ref={rootRef}>
                 {label ? <>{typeof label === 'string' ? <label htmlFor={idRes} className="form-label" dangerouslySetInnerHTML={{ __html: `${label}` }}></label> : <label htmlFor={idRes} className="form-label">{label}</label>}</> : null}
 
+                <div className="position-relative">
                 <div className="input-group">
-                    <input
-                        ref={(node) => {
-                            valRef.current = node;
-                            if (typeof externalRef === 'function') {
-                                externalRef(node);
-                            } else if (externalRef) {
-                                externalRef.current = node;
-                            }
-                        }}
+                        <input
+                            ref={(node) => {
+                                valRef.current = node;
+                                if (typeof externalRef === 'function') {
+                                    externalRef(node);
+                                } else if (externalRef) {
+                                    externalRef.current = node;
+                                }
+                            }}
 
-                        
-                        tabIndex={tabIndex || 0}
-                        type='color'
-                        className={combinedCls(
-                            clsWrite(controlClassName, 'form-control custom-colorpicker-control flex-grow-0'),
-                            controlExClassName
-                        )}
-                        value={changedVal}
-                        onFocus={handleFocus}
-                        onBlur={handleBlur}
-                        onChange={handleChange}
-                        disabled={disabled || null}
-                        readOnly={readOnly || null}
-                        style={style}
-                        {...attributes}
-                    />
+                            
+                            tabIndex={tabIndex || 0}
+                            type='color'
+                            className={combinedCls(
+                                clsWrite(controlClassName, 'form-control custom-colorpicker-control flex-grow-0'),
+                                controlExClassName
+                            )}
+                            value={changedVal}
+                            onFocus={handleFocus}
+                            onBlur={handleBlur}
+                            onChange={handleChange}
+                            disabled={disabled || null}
+                            readOnly={readOnly || null}
+                            style={style}
+                            {...attributes}
+                        />
 
-                    {/* Prevents the color from automatically becoming #000000 when it is empty */}
-                    <input
-                        tabIndex={-1}
-                        type="hidden"
-                        id={idRes}
-                        name={name}
-                        value={changedVal}  // do not use `defaultValue`
-                        onChange={() => void(0)}
-                        required={required || null}
-                        {...attributes}
-                    />
+                        {/* Prevents the color from automatically becoming #000000 when it is empty */}
+                        <input
+                            tabIndex={-1}
+                            type="hidden"
+                            id={idRes}
+                            name={name}
+                            value={changedVal}  // do not use `defaultValue`
+                            onChange={() => void(0)}
+                            required={required || null}
+                            {...attributes}
+                        />
 
-                    {changedVal !== '' ? <><button tabIndex={-1} type="button" className={clearBtnClassName || 'btn btn-link btn-sm'} onClick={(e: React.MouseEvent) => {
-                        setChangedVal('');
-                        onChange?.(e);
-                        onClear?.(e);
-                    }}>{clearBtnLabel || 'clear'}
-                    </button></> : null}
+                        {changedVal !== '' ? <><button tabIndex={-1} type="button" className={clearBtnClassName || 'btn btn-link btn-sm'} onClick={(e: React.MouseEvent) => {
+                            setChangedVal('');
+                            onChange?.(e);
+                            onClear?.(e);
+                        }}>{clearBtnLabel || 'clear'}
+                        </button></> : null}
 
+
+                    </div>
+                    {required ? <>{requiredLabel || requiredLabel === '' ? requiredLabel : <span className="position-absolute end-0 top-0 my-2 mx-2"><span className="text-danger">*</span></span>}</> : ''}
+
+                    {changedVal === '' ? <><div className="custom-colorpicker__transparent-placeholder"></div></> : null}
 
                 </div>
-                {required ? <>{requiredLabel || requiredLabel === '' ? requiredLabel : <span className="position-absolute end-0 top-0 my-2 mx-2"><span className="text-danger">*</span></span>}</> : ''}
 
-                {changedVal === '' ? <><div className="custom-colorpicker__transparent-placeholder"></div></> : null}
-
+                
             </div>
 
 
