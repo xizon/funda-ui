@@ -45,7 +45,7 @@ export default () => {
                 availableHeaderTitle="Select One Item"
                 selectedHeaderTitle="Selected Items (Support drag sorting)"
                 selectedHeaderNote="{items_num} items selected"
-                value={val}
+                value={'[value-1][value-3]'}
                 options={options}
                 onChange={(e: HTMLElement | null, data: any[], dataStr: string, currentData: any, type: string, res: any[]) => {
                     console.log(e, data, dataStr, currentData, type, res);
