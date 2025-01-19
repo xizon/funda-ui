@@ -19,6 +19,7 @@ export interface ListItem {
     children?: ListItem[];
     disabled?: boolean;
     appendControl?: React.ReactNode;
+    [key: string]: any;
 }
 
 
