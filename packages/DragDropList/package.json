@@ -1,6 +1,6 @@
 {
     "private": true,
-    "name": "funda-multiple-select",
+    "name": "funda-dragdrop-list",
     "version": "0.0.1",
     "description": "",
     "main": "./dist/cjs/index.js",
@@ -13,8 +13,7 @@
     "dependencies": {
         "react": "^18.2.0",
         "react-dom": "^18.2.0",
-        "funda-utils": "*",
-        "funda-dragdrop-list": "*"
+        "funda-utils": "*"
     },
     "devDependencies": {
         "@babel/core": "^7.2.0",

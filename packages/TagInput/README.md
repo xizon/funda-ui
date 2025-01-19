@@ -1,5 +1,7 @@
 # Tag Input
 
+> ✌🏻 You can find the final value of this component by setting the `name` property, similar to **document.querySelector('[name="custom-control-name"]').value**
+
 > Note: Enter or space to add an element
 
 

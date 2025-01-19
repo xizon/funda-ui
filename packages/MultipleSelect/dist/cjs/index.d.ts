@@ -1,6 +1,15 @@
 import React from 'react';
 export interface OptionConfig {
-    [propName: string]: string | number | boolean | Function;
+    id: number;
+    parentId?: number;
+    label: string;
+    listItemLabel: string;
+    value: string;
+    queryString: string;
+    depth?: number;
+    children?: OptionConfig[];
+    disabled?: boolean;
+    extendedContent?: React.ReactNode;
 }
 export declare type MultipleSelectProps = {
     contentRef?: React.ForwardedRef<any>;
@@ -17,11 +26,6 @@ export declare type MultipleSelectProps = {
     iconAdd?: React.ReactNode | string;
     iconRemove?: React.ReactNode | string;
     unattachedSelect?: boolean;
-    hierarchical?: boolean;
-    indentation?: string;
-    doubleIndent?: boolean;
-    alternateCollapse?: boolean;
-    arrow?: React.ReactNode;
     defaultValue?: string;
     value?: string;
     label?: React.ReactNode | string;
@@ -29,7 +33,16 @@ export declare type MultipleSelectProps = {
     options?: OptionConfig[] | string;
     disabled?: any;
     required?: any;
-    appendControl?: React.ReactNode;
+    /** DragDrop List */
+    draggable?: boolean;
+    handleHide?: boolean;
+    handleIcon?: string;
+    handlePos?: 'left' | 'right';
+    dragMode?: 'handle' | 'block';
+    indentation?: string;
+    doubleIndent?: boolean;
+    alternateCollapse?: boolean;
+    arrow?: React.ReactNode;
     /** Whether to use square brackets to save result and initialize default value */
     extractValueByBrackets?: boolean;
     /** Incoming data, you can set the third parameter of `onFetch` */
@@ -43,9 +56,9 @@ export declare type MultipleSelectProps = {
     fetchFuncMethodParams?: any[];
     fetchCallback?: (data: any) => void;
     onFetch?: (data: any) => void;
-    onAddAll?: (e: any, data: any, dataStr: any) => void;
-    onRemoveAll?: (e: any, data: any, dataStr: any) => void;
-    onChange?: (e: any, data: any, dataStr: any, currentData: any, type: string) => void;
+    onAddAll?: (e: HTMLElement | null, data: any[], dataStr: string, res: any[]) => void;
+    onRemoveAll?: (e: HTMLElement | null, data: any[], dataStr: string, res: any[]) => void;
+    onChange?: (e: HTMLElement | null, data: any[], dataStr: string, currentData: any, type: string, res: any[]) => void;
 };
 declare const MultipleSelect: React.ForwardRefExoticComponent<MultipleSelectProps & React.RefAttributes<unknown>>;
 export default MultipleSelect;

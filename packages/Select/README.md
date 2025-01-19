@@ -1,6 +1,6 @@
 # Select
 
-
+> ✌🏻 You can find the final value of this component by setting the `name` property, similar to **document.querySelector('[name="custom-control-name"]').value**
 
 ## General
 
@@ -1813,8 +1813,6 @@ JSON Object Literals configuration properties of the `options` and callback from
 
 | Property | Type | Default | Description | Required |
 | --- | --- | --- | --- | --- |
-| `id` | string \| number | - | Item ID. <blockquote>Valid when the `hierarchical` is true</blockquote> | - |
-| `parent_id` | string \| number | - | Parent ID of item. <blockquote>Valid when the `hierarchical` is true</blockquote> | - |
 | `label` | string | - | Specify the label text for each option. <blockquote>Support html tags. But must have at least a string other than the HTML Tag, because the HTML Tag in this field will be sanitized when assigning the value. such as `<small>abc</small>efg`</blockquote> | ✅ |
 | `listItemLabel` | string | - | Specify the label text for pop-up list items. <blockquote>Support html tags</blockquote> | - |
 | `value` | string | - | Specify the value for each option | ✅ |
@@ -1829,7 +1827,7 @@ JSON Object Literals configuration properties of the `options` and callback from
 
 A successful response returns the details of the callback such as Sample Request Body:
 
-Among them, `id`, `parent_id`, `label`, `listItemLabel`, `value`, `optgroup`, `queryString`, `disabled` and `callback` are attributes used by the system, and other attributes can be added freely.
+Among them, `label`, `listItemLabel`, `value`, `optgroup`, `queryString`, `disabled` and `callback` are attributes used by the system, and other attributes can be added freely.
 
 
 

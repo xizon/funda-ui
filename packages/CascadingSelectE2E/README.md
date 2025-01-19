@@ -1,6 +1,6 @@
 # Cascading Select End-to-end
 
-
+> ✌🏻 You can find the final value of this component by setting the `name` property, similar to **document.querySelector('[name="custom-control-name"]').value**
 
 ## General
 

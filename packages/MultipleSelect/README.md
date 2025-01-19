@@ -1,12 +1,19 @@
 # Multiple Select
 
+> ✌🏻 You can find the final value of this component by setting the `name` property, similar to **document.querySelector('[name="custom-control-name"]').value**
+
 > The components must be wrapped in a container with a height.
 
 ## General
 
+If **useState** is used, dragging and sorting will not work:
+
+ - a) use **useMemo** to solve this problem, refer to [Safe Asynchronous Example](#safe-asynchronous-example)
+ - b) Or add the property `unattachedSelect` to support right-side dragging without being affected by **useState**, refer to [Unattached Selected Options](#unattached-selected-options)
+
 
 ```js
-import React, { useState } from "react";
+import React, { useEffect } from "react";
 import MultipleSelect from 'funda-ui/MultipleSelect';
 
 // component styles
@@ -15,13 +22,16 @@ import 'funda-ui/MultipleSelect/index.css';
 export default () => {
 
     const options = [
-        {"label": "Option 1","listItemLabel":"Option 1 (No: 001)","value": "value-1","queryString": "option1"},
-        {"label": "Option 2","listItemLabel":"<del style=color:red>deprecate</del>Option 2 (No: 002)","value": "value-2","queryString": "option2"},
-        {"label": "Option 3","listItemLabel":"Option 3 (No: 003)","value": "value-3","queryString": "option3"},
-        {"label": "Option 4","listItemLabel":"Option 4 (No: 004)","value": "value-4","disabled":true}
+        {"id": 1, "label": "Option 1","listItemLabel":"Option 1 (No: 001)","value": "value-1","queryString": "option1"},
+        {"id": 2, "label": "Option 2","listItemLabel":"<del style=color:red>deprecate</del>Option 2 (No: 002)","value": "value-2","queryString": "option2"},
+        {"id": 3, "label": "Option 3","listItemLabel":"Option 3 (No: 003)","value": "value-3","queryString": "option3"},
+        {"id": 4, "label": "Option 4","listItemLabel":"Option 4 (No: 004)","value": "value-4","queryString": "option4","disabled":true}
     ];
-    const [val, setVal] = useState<string>('[value-1][value-3]');
-    const [valLabels, setValLabels] = useState<string[]>([]);
+
+    useEffect(() => { 
+        document.getElementById('demo-res-1').innerHTML = 'value-1, value-3';
+        document.getElementById('demo-res-2').innerHTML = 'Option 1, Option 3';
+    }, []);
 
     return (
         <>
@@ -29,41 +39,33 @@ export default () => {
         <div className="mb-3" style={{height: '300px'}}>
             <MultipleSelect 
                 name="name"
+                draggable
+                handleHide
+                dragMode="block"
                 availableHeaderTitle="Select One Item"
-                selectedHeaderTitle="Selected Items"
+                selectedHeaderTitle="Selected Items (Support drag sorting)"
                 selectedHeaderNote="{items_num} items selected"
                 value={val}
                 options={options}
-                onChange={(e, data, dataStr, currentData, type) => {
-                    console.log(e, data, dataStr, currentData, type);
+                onChange={(e: HTMLElement | null, data: any[], dataStr: string, currentData: any, type: string, res: any[]) => {
+                    console.log(e, data, dataStr, currentData, type, res);
                     /*
                         <li data-index="0" data-label="Option 1" data-value="value-1">...</li>,
                         ['value-3', 'value-2'],
                         '[value-3][value-2]',
-                        {"label": "Option 3","listItemLabel":"Option 3 (No: 003)","value": "value-3","queryString": "option3"},
+                        {"id": 3, "label": "Option 3","listItemLabel":"Option 3 (No: 003)","value": "value-3","queryString": "option3"},
                         add
-                    */
-
-                    setVal(dataStr);
-
-                    const _labelVal: string[] = [];
-                    data.forEach((v: string) => {
-                        const curItem = options.find((item: any) => item.value == v);
-                        if (typeof curItem !== 'undefined') {
-                            _labelVal.push(curItem.label);
-                        }
-                    });
-                    setValLabels(_labelVal);
-
+                */
+                    document.getElementById('demo-res-1').innerHTML = res.map((v) => v.value).join(',');
+                    document.getElementById('demo-res-2').innerHTML = res.map((v) => v.label).join(',');
 
                 }}
-            />
-        </div>
-   
-        <p>{val}</p>
-        <p>{valLabels.join(',')}</p>
-          
-
+                />
+            </div>
+                
+            <small className="border" id="demo-res-1"></small>
+            <br />
+            <small className="border" id="demo-res-2"></small>
 
         </>
     );
@@ -88,10 +90,10 @@ import 'funda-ui/MultipleSelect/index.css';
 export default () => {
 
     const options = [
-        {"label": "Option 1","listItemLabel":"Option 1 (No: 001)","value": "value-1","queryString": "option1"},
-        {"label": "Option 2","listItemLabel":"<del style=color:red>deprecate</del>Option 2 (No: 002)","value": "value-2","queryString": "option2"},
-        {"label": "Option 3","listItemLabel":"Option 3 (No: 003)","value": "value-3","queryString": "option3"},
-        {"label": "Option 4","listItemLabel":"Option 4 (No: 004)","value": "value-4","disabled":true}
+        {"id": 1, "label": "Option 1","listItemLabel":"Option 1 (No: 001)","value": "value-1","queryString": "option1"},
+        {"id": 2, "label": "Option 2","listItemLabel":"<del style=color:red>deprecate</del>Option 2 (No: 002)","value": "value-2","queryString": "option2"},
+        {"id": 3, "label": "Option 3","listItemLabel":"Option 3 (No: 003)","value": "value-3","queryString": "option3"},
+        {"id": 4, "label": "Option 4","listItemLabel":"Option 4 (No: 004)","value": "value-4","queryString": "option4","disabled":true}
     ];
     const [defaultOpt, setDefaultOpt] = useState<any[]>(options);
     const [val, setVal] = useState<string>('[value-1][value-3]');
@@ -111,8 +113,8 @@ export default () => {
             onClick={(e: React.MouseEvent) => {
                 e.preventDefault();
                 const newOpt = [
-                    {"label": "New Option 123","value": "value-123","queryString": ""},
-                    {"label": "New Option 456","value": "value-456","queryString": ""}
+                    {"id": 10, "label": "New Option 123","value": "value-123","queryString": ""},
+                    {"id": 11, "label": "New Option 456","value": "value-456","queryString": ""}
                 ];
 
                 setDefaultOpt(newOpt);
@@ -128,8 +130,8 @@ export default () => {
             onClick={(e: React.MouseEvent) => {
                 e.preventDefault();
                 const newOpt = [
-                    {"label": "New Option 789","value": "value-789","queryString": ""},
-                    {"label": "New Option 666","value": "value-666","queryString": ""}
+                    {"id": 12, "label": "New Option 789","value": "value-789","queryString": ""},
+                    {"id": 13, "label": "New Option 666","value": "value-666","queryString": ""}
                 ];
                 setDefaultOpt(newOpt);
                 setAllOptions((prevState: any[]) => {
@@ -156,20 +158,24 @@ export default () => {
         <div className="mb-3" style={{height: '300px'}}>
             <MultipleSelect 
                 name="name"
+                draggable
+                handleHide
+                dragMode="block"
                 unattachedSelect
                 availableHeaderTitle="Select One Item"
-                selectedHeaderTitle="Selected Items"
+                selectedHeaderTitle="Selected Items (Support drag sorting)"
                 selectedHeaderNote="{items_num} items selected"
                 value={val}
                 options={defaultOpt}
-                onChange={(e, data, dataStr, currentData, type) => {
-                    console.log(e, data, dataStr, currentData, type);
+                onChange={(e: HTMLElement | null, data: any[], dataStr: string, currentData: any, type: string, res: any[]) => {
+                    console.log(e, data, dataStr, currentData, type, res);
                     /*
                         <li data-index="0" data-label="Option 1" data-value="value-1">...</li>,
                         ['value-3', 'value-2'],
                         '[value-3][value-2]',
-                        {"label": "Option 3","listItemLabel":"Option 3 (No: 003)","value": "value-3","queryString": "option3"},
-                        add
+                        {"id": 3, "label": "Option 3","listItemLabel":"Option 3 (No: 003)","value": "value-3","queryString": "option3"},
+                        add,
+                        [{...},{...}]
                     */
 
                     setVal(dataStr);
@@ -219,43 +225,61 @@ class DataService {
         const demoData = [
             // level 1
             {
-                "parent_id": 0,
+                "parentId": 0,
                 "id": 1,
-                "item_name": "Title 1",
-                "item_type": "web"
+                "label": "Title 1",
+                "listItemLabel": "Title 1",
+                "value": "1",
+                "queryString": "",
+                "typeName": "web"
             },
             {
-                "parent_id": 0,
+                "parentId": 0,
                 "id": 2,
-                "item_name": "Title 2",
-                "item_type": "dev"
+                "label": "Title 2",
+                "listItemLabel": "Title 2",
+                "value": "2",
+                "queryString": "",
+                "typeName": "dev"
             },
             // level 2
             {
-                "parent_id": 1,
+                "parentId": 1,
                 "id": 3,
-                "item_name": "Title 3",
-                "item_type": "web/ui"
+                "label": "Title 3",
+                "listItemLabel": "Title 3",
+                "value": "3",
+                "queryString": "",
+                "typeName": "web/ui"
             },
             {
-                "parent_id": 1,
+                "parentId": 1,
                 "id": 4,
-                "item_name": "Title 4",
-                "item_type": "web/ui"
+                "label": "Title 4",
+                "listItemLabel": "Title 4",
+                "value": "4",
+                "queryString": "",
+                "typeName": "web/ui"
             },
             {
-                "parent_id": 2,
+                "parentId": 2,
                 "id": 5,
-                "item_name": "Title 5",
-                "item_type": "dev"
+                "label": "Title 5",
+                "listItemLabel": "Title 5",
+                "value": "5",
+                "queryString": "",
+                "typeName": "dev"
             },
             // level 3
             {
-                "parent_id": 4,
+                "parentId": 4,
                 "id": 6,
-                "item_name": "Title 6",
-                "item_type": "web/ui/photoshop"
-            },  
+                "label": "Title 6",
+                "listItemLabel": "Title 6",
+                "value": "6",
+                "queryString": "",
+                "typeName": "web/ui/photoshop"
+            }
         ];   
 
         return {
@@ -270,84 +294,7 @@ class DataService {
 
 export default () => {
 
-    const indentation = "—";
-    const INDENT_PLACEHOLDER = `&nbsp;&nbsp;&nbsp;&nbsp;`;
-    const INDENT_LAST_PLACEHOLDER = `${indentation}&nbsp;&nbsp;`;
     const [list, setList] = useState<any[]>([]);
-
-    /**
-     * Convert Tree
-     * @param {Array} arr                    - Input array to convert
-     * @param  {?String | ?Number} parentId  - Parent id
-     * @param  {?String} keyId               - Key value of id.
-     * @param  {?String} keyParentId         - Key value of parent id.
-     * @returns Array
-     */
-    function convertTree(arr: any[], parentId: string = '', keyId: string = 'id', keyParentId: string = 'parent_id') {
-        
-        if( !parentId ) {
-            
-            // If there is no parent id (when recursing for the first time), all parents will be queried
-            return arr.filter((item: any) => !item[keyParentId]).map((item: any) => {
-                // Query all child nodes by parent node ID
-                item.children = convertTree(arr, item[keyId], keyId, keyParentId);
-                return item;
-            })
-        } else {
-            return arr.filter((item: any) => item[keyParentId] === parentId).map((item: any) => {
-                // Query all child nodes by parent node ID
-                item.children = convertTree(arr, item[keyId], keyId, keyParentId);
-                return item;
-            })
-        }
-    }
-
-
-    /**
-    * Add depth to each item in the tree
-    * @param {Array} arr       - Hierarchical array
-    * @param  {?string} keyId               - Key value of id.
-    * @param  {?string} keyParentId         - Key value of parent id.
-    * @param  {?number} depth               - Depth of the item.
-    * @returns Number
-    */
-    function addTreeDepth(arr: any[], keyId: string = 'id', parentItem: string = '', depth: number = 0): any[] {
-    return arr.reduce((acc, el) => {
-        const { children, ...otherProps } = el;
-        acc.push({ ...otherProps, parentItem, depth });
-        if (children) {
-            return acc.concat(addTreeDepth(children, keyId, el[keyId], depth + 1));
-        }
-        return acc;
-    }, []);
-    }
-
-
-
-    /**
-     * Add indent placeholder
-     * @param {Array} arr                    - Flat array
-     * @param  {?string} placeholder         - String of placeholder
-     * @param  {?string} lastPlaceholder     - Last String of placeholder
-     * @param  {?string} keyName             - Key value of name.
-     * @returns Array
-     */
-    function addTreeIndent(arr: any[], placeholder: string = '&nbsp;&nbsp;&nbsp;&nbsp;', lastPlaceholder: string = '', keyName: string = 'label'): void {
-
-        arr.forEach((item) => {
-            let indent = ''; 
-            if (item.depth) {
-                Array(item.depth).fill(0).forEach((k, i) => {
-                    indent += placeholder;
-                    if (i === item.depth-1) {
-                        item[keyName] = indent + lastPlaceholder + item[keyName];
-                    }
-                });
-            }
-        });
-    }
-
-
 
     useEffect(() => {
         new DataService().getList('', 0, '').then((response: any) => {
@@ -355,17 +302,14 @@ export default () => {
             const _data: any[] = response.data.map((item: any, i: number) => {
                 return {
                     id: item.id,
-                    parent_id: item.parent_id,
-                    label: item.item_name,
-                    value: item.id,
-                    queryString: ''
+                    parentId: item.parentId,
+                    label: item.label,
+                    value: String(item.id),
+                    queryString: '',
+                    otherAttr: item.typeName
                 }
             });
-         
-            const treeData = convertTree(_data);
-            let resData = addTreeDepth(treeData, 'id');
-            addTreeIndent(resData, INDENT_PLACEHOLDER, INDENT_LAST_PLACEHOLDER, 'label');
-            setList(resData);
+            setList(_data);
 
         });
     }, []);
@@ -378,12 +322,15 @@ export default () => {
         <div className="mb-3" style={{height: '300px'}}>
             <MultipleSelect 
                 name="name"
+                draggable
+                handleHide
+                dragMode="block"
                 availableHeaderTitle="Select One Item"
-                selectedHeaderTitle="Selected Items"
+                selectedHeaderTitle="Selected Items (Support drag sorting)"
                 selectedHeaderNote="{items_num} items selected"
                 options={list}
-                onChange={(e, data, dataStr, currentData, type) => {
-                    console.log(e, data, dataStr, currentData, type);
+                onChange={(e: HTMLElement | null, data: any[], dataStr: string, currentData: any, type: string, res: any[]) => {
+                    console.log(e, data, dataStr, currentData, type, res);
                 }}
             />
         </div>
@@ -396,7 +343,7 @@ export default () => {
 
 
 
-**You could also use these following properties directly: `hierarchical`, `indentation` and `doubleIndent`**
+**You could also use these following properties directly: `indentation` and `doubleIndent`**
 
 
 ```js
@@ -416,43 +363,61 @@ class DataService {
         const demoData = [
             // level 1
             {
-                "parent_id": 0,
+                "parentId": 0,
                 "id": 1,
-                "item_name": "Title 1",
-                "item_type": "web"
+                "label": "Title 1",
+                "listItemLabel": "Title 1",
+                "value": "1",
+                "queryString": "",
+                "typeName": "web"
             },
             {
-                "parent_id": 0,
+                "parentId": 0,
                 "id": 2,
-                "item_name": "Title 2",
-                "item_type": "dev"
+                "label": "Title 2",
+                "listItemLabel": "Title 2",
+                "value": "2",
+                "queryString": "",
+                "typeName": "dev"
             },
             // level 2
             {
-                "parent_id": 1,
+                "parentId": 1,
                 "id": 3,
-                "item_name": "Title 3",
-                "item_type": "web/ui"
+                "label": "Title 3",
+                "listItemLabel": "Title 3",
+                "value": "3",
+                "queryString": "",
+                "typeName": "web/ui"
             },
             {
-                "parent_id": 1,
+                "parentId": 1,
                 "id": 4,
-                "item_name": "Title 4",
-                "item_type": "web/ui"
+                "label": "Title 4",
+                "listItemLabel": "Title 4",
+                "value": "4",
+                "queryString": "",
+                "typeName": "web/ui"
             },
             {
-                "parent_id": 2,
+                "parentId": 2,
                 "id": 5,
-                "item_name": "Title 5",
-                "item_type": "dev"
+                "label": "Title 5",
+                "listItemLabel": "Title 5",
+                "value": "5",
+                "queryString": "",
+                "typeName": "dev"
             },
             // level 3
             {
-                "parent_id": 4,
+                "parentId": 4,
                 "id": 6,
-                "item_name": "Title 6",
-                "item_type": "web/ui/photoshop"
-            },  
+                "label": "Title 6",
+                "listItemLabel": "Title 6",
+                "value": "6",
+                "queryString": "",
+                "typeName": "web/ui/photoshop"
+            }
         ];   
 
         return {
@@ -469,33 +434,6 @@ export default () => {
 
     const [list, setList] = useState<any[]>([]);
 
-    /**
-     * Convert Tree
-     * @param {Array} arr                    - Input array to convert
-     * @param  {?String | ?Number} parentId  - Parent id
-     * @param  {?String} keyId               - Key value of id.
-     * @param  {?String} keyParentId         - Key value of parent id.
-     * @returns Array
-     */
-    function convertTree(arr: any[], parentId: string = '', keyId: string = 'id', keyParentId: string = 'parent_id') {
-        
-        if( !parentId ) {
-            
-            // If there is no parent id (when recursing for the first time), all parents will be queried
-            return arr.filter((item: any) => !item[keyParentId]).map((item: any) => {
-                // Query all child nodes by parent node ID
-                item.children = convertTree(arr, item[keyId], keyId, keyParentId);
-                return item;
-            })
-        } else {
-            return arr.filter((item: any) => item[keyParentId] === parentId).map((item: any) => {
-                // Query all child nodes by parent node ID
-                item.children = convertTree(arr, item[keyId], keyId, keyParentId);
-                return item;
-            })
-        }
-    }
-
 
     useEffect(() => {
         new DataService().getList('', 0, '').then((response: any) => {
@@ -503,16 +441,15 @@ export default () => {
             const _data: any[] = response.data.map((item: any, i: number) => {
                 return {
                     id: item.id,
-                    parent_id: item.parent_id,
-                    label: item.item_name,
-                    listItemLabel: `${item.item_name}`,
-                    value: item.id,
+                    parentId: item.parentId,
+                    label: item.label,
+                    listItemLabel: `${item.listItemLabel}`,
+                    value: String(item.id),
                     queryString: ''
                 }
             });
          
-            const treeData = convertTree(_data);
-            setList(treeData);
+            setList(_data);
 
         });
     }, []);
@@ -525,14 +462,16 @@ export default () => {
         <div className="mb-3" style={{height: '300px'}}>
             <MultipleSelect 
                 name="name"
+                draggable
+                handleHide
+                dragMode="block"
                 availableHeaderTitle="Select One Item"
-                selectedHeaderTitle="Selected Items"
+                selectedHeaderTitle="Selected Items (Support drag sorting)"
                 selectedHeaderNote="{items_num} items selected"
                 options={list}
-                onChange={(e, data, dataStr, currentData, type) => {
-                    console.log(e, data, dataStr, currentData, type);
+                onChange={(e: HTMLElement | null, data: any[], dataStr: string, currentData: any, type: string, res: any[]) => {
+                    console.log(e, data, dataStr, currentData, type, res);
                 }}
-                hierarchical
                 indentation="-"
                 doubleIndent
             />
@@ -565,43 +504,61 @@ class DataService {
         const demoData = [
             // level 1
             {
-                "parent_id": 0,
+                "parentId": 0,
                 "id": 1,
-                "item_name": "Title 1",
-                "item_type": "web"
+                "label": "Title 1",
+                "listItemLabel": "Title 1",
+                "value": "1",
+                "queryString": "",
+                "typeName": "web"
             },
             {
-                "parent_id": 0,
+                "parentId": 0,
                 "id": 2,
-                "item_name": "Title 2",
-                "item_type": "dev"
+                "label": "Title 2",
+                "listItemLabel": "Title 2",
+                "value": "2",
+                "queryString": "",
+                "typeName": "dev"
             },
             // level 2
             {
-                "parent_id": 1,
+                "parentId": 1,
                 "id": 3,
-                "item_name": "Title 3",
-                "item_type": "web/ui"
+                "label": "Title 3",
+                "listItemLabel": "Title 3",
+                "value": "3",
+                "queryString": "",
+                "typeName": "web/ui"
             },
             {
-                "parent_id": 1,
+                "parentId": 1,
                 "id": 4,
-                "item_name": "Title 4",
-                "item_type": "web/ui"
+                "label": "Title 4",
+                "listItemLabel": "Title 4",
+                "value": "4",
+                "queryString": "",
+                "typeName": "web/ui"
             },
             {
-                "parent_id": 2,
+                "parentId": 2,
                 "id": 5,
-                "item_name": "Title 5",
-                "item_type": "dev"
+                "label": "Title 5",
+                "listItemLabel": "Title 5",
+                "value": "5",
+                "queryString": "",
+                "typeName": "dev"
             },
             // level 3
             {
-                "parent_id": 4,
+                "parentId": 4,
                 "id": 6,
-                "item_name": "Title 6",
-                "item_type": "web/ui/photoshop"
-            },  
+                "label": "Title 6",
+                "listItemLabel": "Title 6",
+                "value": "6",
+                "queryString": "",
+                "typeName": "web/ui/photoshop"
+            }
         ];   
 
         return {
@@ -618,33 +575,6 @@ export default () => {
 
     const [list, setList] = useState<any[]>([]);
 
-    /**
-     * Convert Tree
-     * @param {Array} arr                    - Input array to convert
-     * @param  {?String | ?Number} parentId  - Parent id
-     * @param  {?String} keyId               - Key value of id.
-     * @param  {?String} keyParentId         - Key value of parent id.
-     * @returns Array
-     */
-    function convertTree(arr: any[], parentId: string = '', keyId: string = 'id', keyParentId: string = 'parent_id') {
-        
-        if( !parentId ) {
-            
-            // If there is no parent id (when recursing for the first time), all parents will be queried
-            return arr.filter((item: any) => !item[keyParentId]).map((item: any) => {
-                // Query all child nodes by parent node ID
-                item.children = convertTree(arr, item[keyId], keyId, keyParentId);
-                return item;
-            })
-        } else {
-            return arr.filter((item: any) => item[keyParentId] === parentId).map((item: any) => {
-                // Query all child nodes by parent node ID
-                item.children = convertTree(arr, item[keyId], keyId, keyParentId);
-                return item;
-            })
-        }
-    }
-
 
     useEffect(() => {
         new DataService().getList('', 0, '').then((response: any) => {
@@ -652,16 +582,15 @@ export default () => {
             const _data: any[] = response.data.map((item: any, i: number) => {
                 return {
                     id: item.id,
-                    parent_id: item.parent_id,
-                    label: item.item_name,
-                    listItemLabel: `${item.item_name}`,
-                    value: item.id,
+                    parentId: item.parentId,
+                    label: item.label,
+                    listItemLabel: `${item.listItemLabel}`,
+                    value: String(item.id),
                     queryString: ''
                 }
             });
          
-            const treeData = convertTree(_data);
-            setList(treeData);
+            setList(_data);
 
         });
     }, []);
@@ -674,12 +603,18 @@ export default () => {
         <div className="mb-3" style={{height: '300px'}}>
             <MultipleSelect 
                 name="name"
+                draggable
+                handleHide
+                dragMode="block"
+
+                //
+                alternateCollapse
                 availableHeaderTitle="Select One Item"
-                selectedHeaderTitle="Selected Items"
+                selectedHeaderTitle="Selected Items (Support drag sorting)"
                 selectedHeaderNote="{items_num} items selected"
                 options={list}
-                onChange={(e, data, dataStr, currentData, type) => {
-                    console.log(e, data, dataStr, currentData, type);
+                onChange={(e: HTMLElement | null, data: any[], dataStr: string, currentData: any, type: string, res: any[]) => {
+                    console.log(e, data, dataStr, currentData, type, res);
                 }}
             />
         </div>
@@ -720,9 +655,9 @@ class DataService {
             code: 0,
             message: 'OK',
             data: [
-                {item_name: 'foo', item_code: 'bar'},
-                {item_name: 'foo2', item_code: 'bar2'},
-                {item_name: 'foo3', item_code: 'bar3'}
+                {id: 1, item_name: 'foo', item_code: 'bar'},
+                {id: 2, item_name: 'foo2', item_code: 'bar2'},
+                {id: 3, item_name: 'foo3', item_code: 'bar3'}
             ]
         };
     }
@@ -774,8 +709,11 @@ export default () => {
         <div className="mb-3" style={{height: '300px'}}>
             <MultipleSelect 
                 name="name"
+                draggable
+                handleHide
+                dragMode="block"
                 availableHeaderTitle="Select One Item"
-                selectedHeaderTitle="Selected Items"
+                selectedHeaderTitle="Selected Items (Support drag sorting)"
                 selectedHeaderNote="{items_num} items selected"
                 value="[bar2]"
                 fetchFuncAsync={new DataService}
@@ -785,8 +723,10 @@ export default () => {
 
                     const formattedData = res.map((item: any, index: number) => {
                         return {
+                            id: item.id,
                             label: item.item_name,
                             value: item.item_code,
+                            queryString: "",
                             disabled: index === res.length - 1 ? true : false
                         }
                     }); 
@@ -807,7 +747,7 @@ export default () => {
 
                 }}
                 onChange={(e: any, data: any[], dataStr: string, currentData: any, type: string) => {
-                    console.log(e, data, dataStr, currentData, type);
+                    console.log(e, data, dataStr, currentData, type, res);
                 }}
             />
 
@@ -845,19 +785,22 @@ function MemoMultipleSelect(props: any) {
     return useMemo(() => {
         return <MultipleSelect 
                 name="name"
+                draggable
+                handleHide
+                dragMode="block"
                 availableHeaderTitle="Select One Item"
-                selectedHeaderTitle="Selected Items"
+                selectedHeaderTitle="Selected Items (Support drag sorting)"
                 selectedHeaderNote="{items_num} items selected"
                 value={val}
                 options={
                     [
-                        {"label": "Option 1","listItemLabel":"Option 1 (No: 001)","value": "value-1","queryString": "option1"},
-                        {"label": "Option 2","listItemLabel":"<del style=color:red>deprecate</del>Option 2 (No: 002)","value": "value-2","queryString": "option2"},
-                        {"label": "Option 3","listItemLabel":"Option 3 (No: 003)","value": "value-3","queryString": "option3"},
-                        {"label": "Option 4","listItemLabel":"Option 4 (No: 004)","value": "value-4","disabled":true}
+                        {"id": 1, "label": "Option 1","listItemLabel":"Option 1 (No: 001)","value": "value-1","queryString": "option1"},
+                        {"id": 2, "label": "Option 2","listItemLabel":"<del style=color:red>deprecate</del>Option 2 (No: 002)","value": "value-2","queryString": "option2"},
+                        {"id": 3, "label": "Option 3","listItemLabel":"Option 3 (No: 003)","value": "value-3","queryString": "option3"},
+                        {"id": 4, "label": "Option 4","listItemLabel":"Option 4 (No: 004)","value": "value-4","queryString": "option4","disabled":true}
                     ]  
                 }
-                onChange={(e, data, dataStr, currentData, type) => {
+                onChange={(e: HTMLElement | null, data: any[], dataStr: string, currentData: any, type: string, res: any[]) => {
                     callback(dataStr);
                 }}
             />
@@ -892,7 +835,7 @@ export default () => {
 
 ## Implement the option to save other data
 
-Use the `appendControl` property to extend the settings. At the same time, each option adds the attribute `appendControlCallback`.
+Use the `extendedContent` field to extend the options.
 
 
 ```js
@@ -912,44 +855,62 @@ class DataService {
         const demoData = [
             // level 1
             {
-                "parent_id": 0,
+                "parentId": 0,
                 "id": 1,
-                "item_name": "Title 1",
-                "item_type": "web"
+                "label": "Title 1",
+                "listItemLabel": "Title 1",
+                "value": "1",
+                "queryString": "",
+                "typeName": "web"
             },
             {
-                "parent_id": 0,
+                "parentId": 0,
                 "id": 2,
-                "item_name": "Title 2",
-                "item_type": "dev"
+                "label": "Title 2",
+                "listItemLabel": "Title 2",
+                "value": "2",
+                "queryString": "",
+                "typeName": "dev"
             },
             // level 2
             {
-                "parent_id": 1,
+                "parentId": 1,
                 "id": 3,
-                "item_name": "Title 3",
-                "item_type": "web/ui"
+                "label": "Title 3",
+                "listItemLabel": "Title 3",
+                "value": "3",
+                "queryString": "",
+                "typeName": "web/ui"
             },
             {
-                "parent_id": 1,
+                "parentId": 1,
                 "id": 4,
-                "item_name": "Title 4",
-                "item_type": "web/ui"
+                "label": "Title 4",
+                "listItemLabel": "Title 4",
+                "value": "4",
+                "queryString": "",
+                "typeName": "web/ui"
             },
             {
-                "parent_id": 2,
+                "parentId": 2,
                 "id": 5,
-                "item_name": "Title 5",
-                "item_type": "dev"
+                "label": "Title 5",
+                "listItemLabel": "Title 5",
+                "value": "5",
+                "queryString": "",
+                "typeName": "dev"
             },
             // level 3
             {
-                "parent_id": 4,
+                "parentId": 4,
                 "id": 6,
-                "item_name": "Title 6",
-                "item_type": "web/ui/photoshop"
-            },
-        ];
+                "label": "Title 6",
+                "listItemLabel": "Title 6",
+                "value": "6",
+                "queryString": "",
+                "typeName": "web/ui/photoshop"
+            }
+        ];   
 
         return {
             code: 0,
@@ -962,39 +923,22 @@ class DataService {
 
 
 function MemoMultipleSelect(props: any) {
-    const { list } = props;
+    const { list, callback } = props;
 
     return useMemo(() => {
         return <MultipleSelect
             name="name"
-            appendControl={<>
-            <div className="row align-items-center">
-                <div className="col-auto">
-                    Index:
-                </div>
-                <div className="col-auto">
-                    <Input
-                        wrapperClassName=""
-                        tabIndex={-1}
-                        type="text"
-                        name="init_txt[]"
-                        defaultValue=""
-                        style={{
-                            padding: 0,
-                            fontSize: '0.75rem',
-                            background: 'rgba(255, 255, 255, .3)',
-                            borderColor: 'rgba(255, 255, 255, .4)'
-                        }}          
-                        />
-                </div>
-            </div>
-            </>}
+            draggable
+            handleHide
+            dragMode="block"
             availableHeaderTitle="Select One Item"
-            selectedHeaderTitle="Selected Items"
+            selectedHeaderTitle="Selected Items (Support drag sorting)"
             selectedHeaderNote="{items_num} items selected"
             options={list}
-            onChange={(e, data, dataStr, currentData, type) => {
-                console.log(e, data, dataStr, currentData, type);
+            onChange={(e: HTMLElement | null, data: any[], dataStr: string, currentData: any, type: string, res: any[]) => {
+                console.log(e, data, dataStr, currentData, type, res);
+                callback(res);
+                
             }}
         />
     }, [list]);
@@ -1003,6 +947,7 @@ function MemoMultipleSelect(props: any) {
 }
 
 export default () => {
+    const [selected, setSelected] = useState<any[]>([]);
     const [list, setList] = useState<any[]>([]);
     const formRef = useRef<any>(null);
     /**
@@ -1068,14 +1013,35 @@ export default () => {
             const _data: any[] = response.data.map((item: any, i: number) => {
                 return {
                     id: item.id,
-                    parent_id: item.parent_id,
-                    label: item.item_name,
-                    value: item.id,
+                    parentId: item.parentId,
+                    label: item.label,
+                    value: String(item.id),
                     queryString: '',
-                    appendControlCallback: () => {
-                        const curInputSelected = document.querySelector('#m-select__ext-' + item.id + '-selected [name="init_txt[]"]');
-                        if (curInputSelected !== null) (curInputSelected as HTMLInputElement).value = `index-${i}`;
-                    }
+                    extendedContent: <>
+                        <div className="row g-0 align-items-center">
+                            <div className="col-auto">
+                                Index:
+                            </div>
+                            <div className="col-auto">
+                                <Input
+                                    wrapperClassName=""
+                                    tabIndex={-1}
+                                    type="text"
+                                    name="init_txt[]"
+                                    defaultValue=""
+                                    size={5}
+                                    style={{
+                                        padding: 0,
+                                        fontSize: '0.75rem',
+                                        marginRight: '.5rem',
+                                        background: '#ededed',
+                                        borderColor: 'rgba(255, 255, 255, .4)'
+                                    }}          
+                                    />
+                            </div>
+                        </div>
+                    </>
+                  
                 }
             });
 
@@ -1097,12 +1063,28 @@ export default () => {
                     alert(JSON.stringify(fieldsData));
                 }}
             >Click here to show Form Data</a>
+            &nbsp;|&nbsp;
+            <a
+                href="#"
+                onClick={(e: React.MouseEvent) => {
+                    e.preventDefault();
+                    const ids = selected.map((v: any) => v.id);
+                    ids.forEach((val: number, key: number) => {
+                        const curInputSortSelected = document.querySelector('#m-select-v2__ext-' + val + '-selected [name="init_txt[]"]');
+                        if (curInputSortSelected !== null) (curInputSortSelected as HTMLInputElement).value = (key + 1).toString().padStart(3, '0');
+                    });
+                }}
+            >Bulk Indexing</a>
+
+            
 
             <form ref={formRef}>
                 <Input type="text" name="my_text" value={'test'} />
 
                 <div className="mb-3" style={{ height: '300px' }}>
-                    <MemoMultipleSelect list={list} />
+                    <MemoMultipleSelect list={list} callback={(res: any[]) => {
+                        setSelected(res);
+                    }} />
                 </div>   
             </form>
 
@@ -1150,8 +1132,8 @@ export default () => {
                 onClick={(e: React.MouseEvent) => {
                     e.preventDefault();
                     if (conRef.current) conRef.current.set([
-                        {"label": "<del style=color:red>deprecate</del>Option 2","value": "value-2","queryString": "option2"},
-                        {"label": "Option 3","value": "value-3","queryString": "option3"}
+                        {"id": 2, "label": "<del style=color:red>deprecate</del>Option 2","value": "value-2","queryString": "option2"},
+                        {"id": 3, "label": "Option 3","value": "value-3","queryString": "option3"}
                     ], () => { console.log('callback') });
                 }}
             >Set Custom Value</a>
@@ -1160,20 +1142,22 @@ export default () => {
             <div className="mb-3" style={{ height: '300px' }}>
                 <MultipleSelect
                     contentRef={conRef}
-                    value="value-2"
+                    value="[value-2]"
                     placeholder="MultipleSelect"
                     name="name"
-                    winWidth={typeof window === 'undefined' ? undefined : () => window.innerWidth/2 + 'px'}
+                    draggable
+                    handleHide
+                    dragMode="block"
                     options={`
                     [
-                        {"label": "Option 1","value": "value-1","queryString": "option1"},
-                        {"label": "<del style=color:red>deprecate</del>Option 2","value": "value-2","queryString": "option2"},
-                        {"label": "Option 3","value": "value-3","queryString": "option3"},
-                        {"label": "Option 4","value": "value-4","queryString": "option4", "disabled":true}
+                        {"id": 1, "label": "Option 1","value": "value-1","queryString": "option1"},
+                        {"id": 2, "label": "<del style=color:red>deprecate</del>Option 2","value": "value-2","queryString": "option2"},
+                        {"id": 3, "label": "Option 3","value": "value-3","queryString": "option3"},
+                        {"id": 4, "label": "Option 4","value": "value-4","queryString": "option4", "disabled":true}
                     ]  
                     `}
-                    onChange={(e, data, dataStr, currentData, type) => {
-                        console.log(e, data, dataStr, currentData, type);
+                    onChange={(e: HTMLElement | null, data: any[], dataStr: string, currentData: any, type: string, res: any[]) => {
+                        console.log(e, data, dataStr, currentData, type, res);
                     }}
                 />
             </div>
@@ -1186,6 +1170,27 @@ export default () => {
 ```
 
 
+## Drag and Drop Sort
+
+It is valid when `draggable` exists. You can set more properties, such as: `onDrag`.
+
+
+```js
+
+export default () => {
+
+    const [sortedData, setSortedData] = useState<any[]>([]);
+
+    return (
+        <>
+           
+   
+
+            <small>{JSON.stringify(sortedData)}</small>
+        </>
+    );
+}
+```
 
 
 
@@ -1198,7 +1203,7 @@ import MultipleSelect from 'funda-ui/MultipleSelect';
 | Property | Type | Default | Description | Required |
 | --- | --- | --- | --- | --- |
 | `ref` | React.ForwardedRef | - | It is the return element of this component.  | - |
-| `contentRef` | React.ForwardedRef | - | It exposes the following methods:  <br /> <ol><li>`contentRef.current.clear(() => { console.log('callback') })`</li><li>`contentRef.current.set([{"label": "Option 1","listItemLabel":"Option 1 (No: 001)","value": "value-1","queryString": "option1"}], () => { console.log('callback') })`</li></ol> <blockquote>DO NOT USE it in the `onChange` of this component, otherwise it will cause infinite rendering</blockquote> | - |
+| `contentRef` | React.ForwardedRef | - | It exposes the following methods:  <br /> <ol><li>`contentRef.current.clear(() => { console.log('callback') })`</li><li>`contentRef.current.set([{"id": 1, "label": "Option 1","listItemLabel":"Option 1 (No: 001)","value": "value-1","queryString": "option1"}], () => { console.log('callback') })`</li></ol> <blockquote>DO NOT USE it in the `onChange` of this component, otherwise it will cause infinite rendering</blockquote> | - |
 | `wrapperClassName` | string | `mb-3` | The class name of the control wrapper. | - |
 | `childClassName` | string | - | The additional class name of the child on `<ul>`. | - |
 | `wrapperMinHeight` | string | - | Minimum height of wrapper. If not specified, the default value in css will be used, which is **315px** | - |
@@ -1212,30 +1217,32 @@ import MultipleSelect from 'funda-ui/MultipleSelect';
 | `addAllBtnLabel` | string \| ReactNode  | `Add all` | Label of add all button | - |
 | `iconAdd` | string \| ReactNode  | `<svg width="15px" height="15px" viewBox="0 0 24 24" fill="none"><path d="M12 2C6.49 2 2 6.49 2 12C2 17.51 6.49 22 12 22C17.51 22 22 17.51 22 12C22 6.49 17.51 2 12 2ZM16 12.75H12.75V16C12.75 16.41 12.41 16.75 12 16.75C11.59 16.75 11.25 16.41 11.25 16V12.75H8C7.59 12.75 7.25 12.41 7.25 12C7.25 11.59 7.59 11.25 8 11.25H11.25V8C11.25 7.59 11.59 7.25 12 7.25C12.41 7.25 12.75 7.59 12.75 8V11.25H16C16.41 11.25 16.75 11.59 16.75 12C16.75 12.41 16.41 12.75 16 12.75Z" fill="#000" /></svg>` | The label of the button to add a new item | - |
 | `iconRemove` | string \| ReactNode  | `<svg width="15px" height="15px" viewBox="0 0 24 24" fill="none"><path fillRule="evenodd" clipRule="evenodd" d="M22 12c0 5.523-4.477 10-10 10S2 17.523 2 12 6.477 2 12 2s10 4.477 10 10ZM8 11a1 1 0 1 0 0 2h8a1 1 0 1 0 0-2H8Z" fill="#000" /></svg>` | The label of the button to delete current item | - |
-| `options` | JSON Object Literals \| JSON Object | - | Set the default value using JSON string format for menu of options, like this: `[{"label": "Option 1","value": "value-1","queryString": "option1"},{"label": "<del style=color:red>deprecate</del>Option 2","value": "value-2","queryString": "option2"},{"label": "Option 3","value": "value-3","queryString": "option3"},{"label": "Option 4","value": "value-4","disabled":true}]` <br /> <blockquote>Note: Use API data if database query exists. That is, the attribute `fetchXXXX`</blockquote> <hr /> <blockquote>When the attribute `hierarchical` is true, you need to use a hierarchical structure to pass data, such as: `[{label:"Top level 1",value:'level-1',queryString:""},{label:"Top level 2",value:'level-2',queryString:""},{label:"Top level 3",value:'level-3',queryString:"",children:[{label:"Sub level 3_1",value:'level-3_1',queryString:""},{label:"Sub level 3_2",value:'level-3_2',queryString:"",children:[{label:"Sub level 3_2_1",value:'level-3_2_1',queryString:""}]},{label:"Sub level 3_3",value:'level-3_3',queryString:""}]}]`</blockquote>| - |
+| `options` | JSON Object Literals \| JSON Object | - | Set the default value using JSON string format for menu of options, like this: `[{"id":1,"label":"Title 1","listItemLabel":"Title 1","value":1,"queryString":"","disabled":true},{"id":2,"label":"Title 2","listItemLabel":"Title 2","value":2,"queryString":"","otherAttr":"web/ui"}]`| - |
 | `unattachedSelect` | boolean  | false | The selected value is not affected by the `options` passed in. | - |
-| `hierarchical` | boolean  | false | Set hierarchical categories ( with sub-categories ) to attribute `options`. | - |
-| `indentation` | string  | - | Set hierarchical indentation placeholders, valid when the `hierarchical` is true. | - |
-| `doubleIndent` | boolean  | false | Set double indent effect, valid when the `hierarchical` is true. | - |
-| `alternateCollapse` | boolean | false | Mutually exclusive alternate expansion between the first levels. | - |
-| `arrow` | ReactNode  | `<svg viewBox="0 0 22 22" width="8px"><path d="m345.44 248.29l-194.29 194.28c-12.359 12.365-32.397 12.365-44.75 0-12.354-12.354-12.354-32.391 0-44.744l171.91-171.91-171.91-171.9c-12.354-12.359-12.354-32.394 0-44.748 12.354-12.359 32.391-12.359 44.75 0l194.29 194.28c6.177 6.18 9.262 14.271 9.262 22.366 0 8.099-3.091 16.196-9.267 22.373" transform="matrix(.03541-.00013.00013.03541 2.98 3.02)" fill="#a5a5a5" /></svg>` | Set an arrow of control | - |
 | `defaultValue` | string | - | Specifies the default value. Use when the component is not controlled. It does not re-render the component because the incoming value changes. | - |
-| `value` | string | - | Set a default value for this control. Please separate multiple values with square brackets. Such as `[tag1][tag2][tag3]` <blockquote>If `extractValueByBrackets` is false, the default value will be separated by comma, such as <br />`tag1,tag2,tag3`</blockquote> | - |
+| `value` | string | - | Set a default value for this control. Please separate multiple values with square brackets. Such as `[value1][value2][value3]` <blockquote>If `extractValueByBrackets` is false, the default value will be separated by comma, such as <br />`tag1,tag2,tag3`</blockquote> | - |
 | `label` | string \| ReactNode | - | It is used to specify a label for an element of a form.<blockquote>Support html tags</blockquote> | - |
 | `name` | string | - | Name is not deprecated when used with form fields. | - |
 | `disabled` | boolean | false | Whether it is disabled | - |  
 | `required` | boolean | false | When present, it specifies that a field must be filled out before submitting the form. | - |
-| `appendControl` | ReactNode  | - | An extension of the same level as **SELECTED ITEMS**, \<input \> is often used to extend the data for each option | - |
 | `data`  <blockquote>You could use [key](https://react.dev/learn/rendering-lists#why-does-react-need-keys) instead of it</blockquote>  | any  | - | Incoming data, you can set the third parameter of `onFetch`. <blockquote>Changes in the `data` value will cause the component to re-render. It will be used when the value or content does not change when switching routes and needs to re-render the component or get the request.</blockquote> <hr /> <blockquote>!!!Note: Using `data` and `value` at the same time may cause two different parameter transfers, which will affect the final rendering. Please choose the appropriate usage based on your business.</blockquote>| - |
+| `dragMode` | `handle` | `handle` \| `block` | Whether it is triggered using a handle or a whole area. | - |
+| `draggable` | boolean | true | Indicates whether the content area can be dragged. | - |
+| `handleHide` | boolean | false | Hide the drag handle. | - |
+| `handlePos` | `left` | `left` \| `right` | The drag handle position. | - |
+| `handleIcon` | string  | `☰` | Specify an icon of drag handle. | - |
+| `indentation` | string  | - | Set hierarchical indentation placeholders. | - |
+| `doubleIndent` | boolean  | false | Set double indent effect. | - |
+| `alternateCollapse` | boolean | false | Mutually exclusive alternate expansion between the first levels. | - |
+| `arrow` | ReactNode  | `<svg viewBox="0 0 22 22" width="8px"><path d="m345.44 248.29l-194.29 194.28c-12.359 12.365-32.397 12.365-44.75 0-12.354-12.354-12.354-32.391 0-44.744l171.91-171.91-171.91-171.9c-12.354-12.359-12.354-32.394 0-44.748 12.354-12.359 32.391-12.359 44.75 0l194.29 194.28c6.177 6.18 9.262 14.271 9.262 22.366 0 8.099-3.091 16.196-9.267 22.373" transform="matrix(.03541-.00013.00013.03541 2.98 3.02)" fill="#a5a5a5" /></svg>` | Set an arrow of control | - |
 | `fetchFuncAsync` | Constructor | - | A method as a string from the constructor.  | - |
 | `fetchFuncMethod` | string  | - | When the property is *true*, every time the select changes, a data request will be triggered. <br /><blockquote>The methord must be a Promise Object.</blockquote> | - |
 | `fetchFuncMethodParams` | array  | - | The parameter passed by the method, it is an array. <br />Note: the first element is a query string, the second element is the number of queried data (usually a number), and then you can increase the third, or fourth, and more parameters. <br />Such as `['',0]`, `['',99,'string 1','string 2']` <br /><blockquote>There should be at least one parameter which is the query string.</blockquote> | - |
 | `fetchCallback` | function  | - | Return value from `fetchCallback` property to format the data of the API callback, which will match the data structure of the component. <br />At the same time it returns the original data, you will use this function and use the `return` keyword to return a new value. | - |
 | `onFetch` | function  | - | Call a function when  data is successfully fetched. It returns one callback value which is the fetched data (**Array**) | - |
-| `onChange` | function  | - | Call a function when the value of an HTML element is changed. It returns five callback values. <br /> <ol><li>The first is the control of current checkbox</li><li>The second is the current value (**Array**)</li><li>The third is the current string value (**String**)</li><li>The fourth is the data (Exposes the JSON format data) about the option. (**JSON Object**)</li><li>The last is Add or delete operation identifier, value is `add` or `remove`. (**String**)</li></ol>  | - |
-| `onAddAll` | function  | - | Triggers when all items are added. It returns three callback values. <br /> <ol><li>The first is the Button Event (**Event**)</li><li>The second is the current value (**Array**)</li><li>The third is the current string value (**String**)</li></ol>  | - |
-| `onRemoveAll` | function  | - | Triggers when all items are removed. It returns three callback values. <br /> <ol><li>The first is the Button Event (**Event**)</li><li>The second is the current value (**Array**)</li><li>The third is the current string value (**String**)</li></ol>  | - |
-
+| `onChange` | function  | - | Call a function when the value of an HTML element is changed. It returns six callback values. <br /> <ol><li>The first is the control of current checkbox</li><li>The second is the current value (**Array**)</li><li>The third is the current string value (**String**)</li><li>The fourth is the data (Exposes the JSON format data) about the option. (**JSON Object**)</li><li>The fifth is Add or delete operation identifier, value is `add` or `remove`. (**String**)</li><li>The last is the result of full data (**Array**)</li></ol>  | - |
+| `onAddAll` | function  | - | Triggers when all items are added. It returns four callback values. <br /> <ol><li>The first is the Button Event (**Event**)</li><li>The second is the current value (**Array**)</li><li>The third is the current string value (**String**)</li><li>The last is the result of full data (**Array**)</li></ol>  | - |
+| `onRemoveAll` | function  | - | Triggers when all items are removed. It returns four callback values. <br /> <ol><li>The first is the Button Event (**Event**)</li><li>The second is the current value (**Array**)</li><li>The third is the current string value (**String**)</li><li>The last is the result of full data (**Array**)</li></ol>  | - |
 
 
 
@@ -1246,15 +1253,52 @@ It accepts all props which this control support. Such as `style`, `data-*`, `tab
 
 JSON Object Literals configuration properties of the `options` and callback from `fetchCallback`:
 
+
 | Property | Type | Default | Description | Required |
 | --- | --- | --- | --- | --- |
-| `id` | string \| number | - | Item ID. <blockquote>Valid when the `hierarchical` is true</blockquote> | - |
-| `parent_id` | string \| number | - | Parent ID of item. <blockquote>Valid when the `hierarchical` is true</blockquote> | - |
+| `id` | string \| number | - | Item ID. | ✅ |
+| `parentId` | string \| number | - | Parent ID of item. <blockquote>`parentId` and `id` can be used to build a tree structure and achieve hierarchical relationships. </blockquote> | - |
 | `label` | string | - | Specify the label text for each option. <blockquote>Support html tags. But must have at least a string other than the HTML Tag, because the HTML Tag in this field will be sanitized when assigning the value. such as `<small>abc</small>efg`</blockquote> | ✅ |
 | `listItemLabel` | string | - | Specify the label text for pop-up list items. <blockquote>Support html tags</blockquote> | - |
 | `value` | string | - | Specify the value for each option | ✅ |
-| `queryString` | string | - | Quick query string, such as Chinese pinyin or English initials | - |
+| `queryString` | string | - | Quick query string, such as Chinese pinyin or English initials | ✅ |
 | `disabled` | boolean | - | When present, it specifies that an option should be disabled. | - |
-| `children` | array | - | Specify a set of sub-navigation, Eg. `[{"label": "Option 1","value": "value-1","queryString": "option1"}]` | - |
-| `appendControlCallback` | function | - | Define a function that finds HTML elements in the `appendControl` attribute of the component for flexible assignment. Each option has a unique ID `m-select__ext-{OPTIONVALUE}-selected`, `{OPTIONVALUE}` is the placeholder string, which is the value of the option. for example, `() => {const curInputSelected = document.querySelector('#m-select__ext-1234-selected [name="my_date[]"]');if (curInputSelected !== null) (curInputSelected as HTMLInputElement).value = "test-1234";}`, the corresponding code of the `appendControl` is `<span>Date: <input tabIndex={-1} type="date" name="my_date[]" defaultValue="" /></span>` | - |
+| `extendedContent` | ReactNode  | - | An extension of the same level, It can usually be used for complex content, such as \<input \> | - |
 
+
+> Among them, `id`, `parentId`, `label`, `listItemLabel`, `value`, `queryString`, `disabled` and `extendedContent` are attributes used by the system, and other attributes can be added freely.
+
+
+
+```json
+[
+    {
+        "parentId": 0,
+        "id": 1,
+        "label": "banana",
+        "listItemLabel": "banana (No. 0)",
+        "value": "b",
+        "queryString": "banana,xiangjiao,xj",
+        "disabled": false
+    },
+    {
+        "parentId": 0,
+        "id": 2,
+        "label": "apple",
+        "listItemLabel": "apple (No. 1)",
+        "value": "a",
+        "queryString": "apple,pingguo,pg",
+        "disabled": false
+    },
+    {
+        "parentId": 1,
+        "id": 3,
+        "label": "lemon",
+        "listItemLabel": "lemon (No. 3)",
+        "value": "a",
+        "queryString": "lemon,lingmeng,lm",
+        "disabled": false
+    },
+    ...
+]
+```

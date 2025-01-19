@@ -34,8 +34,28 @@ export function multiSelControlOptionExist(arr: any[], val: any) {
  * @returns 
  */
 export function uniqueArr(arr: any[]) {
-    return arr.filter((item: any, index: number, self: any[]) => index === self.findIndex((t) => (t.value === item.value)));
+    return arr.filter((item: any, index: number, self: any[]) => index === self.findIndex((t) => (t.id == item.id)));
+}
+
+/**
+ * Remove Duplicate objects from Options
+ * @param {Array} arr 
+ * @returns 
+ */
+export function uniqueOpt(arr: any[]) {
+    return arr.flat().filter((item: any, index: number, self: any[]) => index === self.findIndex((t) => (t.id === item.id)));
 }
 
 
-
+/**
+ * Sort JSON arrays according to the order of the numeric arrays
+ * @param {Array<Number>|Array<String>} orderArray 
+ * @param {Array<*>} arr 
+ * @param {String} field 
+ * @returns 
+ */
+export function sortedJsonArray(orderArray: number[] | string[], arr: any[], field: string = 'value') {
+    return orderArray.map((orderId: number | string) =>
+        arr.find(item => item[field] === orderId)
+    );
+}

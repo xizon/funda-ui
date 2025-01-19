@@ -1,0 +1,188 @@
+/* ======================================================
+    <!-- DragDrop List -->
+/* ====================================================== */
+.custom-draggable-list {
+  --custom-draggable-content-bg: transparent;
+  --custom-draggable-content-color: inherit;
+  --custom-draggable-border-color: #ddd;
+  --custom-draggable-wrapper-radius: 0.25rem;
+  --custom-draggable-control-radius: 0.25rem;
+  --custom-draggable-primary-color: #ffa940;
+  --custom-draggable-content-diff-bg: #fafafa;
+  --custom-draggable-content-diff-border-color: #d9d9d9;
+  --custom-draggable-control-fs: 0.75rem;
+  --custom-draggable-control-w: 100px;
+  --custom-draggable-btn-confirm-bg: #52c41a;
+  --custom-draggable-btn-cancel-bg: #ff4d4f;
+  --custom-draggable-btn-color: #fff;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  width: 100%;
+  position: relative;
+  border: 1px solid var(--custom-draggable-border-color);
+  border-radius: var(--custom-draggable-wrapper-radius);
+  /* Fix the problem that mobile terminals cannot be touched, DO NOT USE "<svg>" */
+  /* FORM */
+}
+.custom-draggable-list li {
+  margin: 0;
+  padding: 0;
+}
+.custom-draggable-list .custom-draggable-list__item {
+  padding: 0;
+  position: relative;
+  transition: transform 0.15s ease;
+  position: relative;
+}
+.custom-draggable-list .custom-draggable-list__item .custom-draggable-list__itemcontent {
+  padding: 10px 15px;
+  background: var(--custom-draggable-content-bg);
+  color: var(--custom-draggable-content-color);
+  border-bottom: 1px solid var(--custom-draggable-border-color);
+  display: flex;
+  align-items: center;
+  user-select: none;
+  transition: all 0.15s ease;
+}
+.custom-draggable-list .custom-draggable-list__item .custom-draggable-list__itemcontent .custom-draggable-list__itemcontent-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+.custom-draggable-list .custom-draggable-list__item:last-child .custom-draggable-list__itemcontent {
+  border-bottom: none;
+}
+.custom-draggable-list .custom-draggable-list__item.disabled {
+  pointer-events: none !important;
+  opacity: 0.4 !important;
+}
+.custom-draggable-list.alternate-collapse .custom-draggable-list__collapse-arrow {
+  cursor: pointer;
+  display: inline-block;
+  width: 20px;
+  text-align: center;
+  user-select: none;
+  margin-left: 0.2rem;
+}
+.custom-draggable-list.alternate-collapse .custom-draggable-list__collapse-arrow svg {
+  transition: all 0.15s ease;
+}
+.custom-draggable-list.alternate-collapse .custom-draggable-list__collapse-arrow:hover {
+  opacity: 0.7;
+}
+.custom-draggable-list.alternate-collapse .custom-draggable-list__item.has-children {
+  position: relative;
+}
+.custom-draggable-list.alternate-collapse .custom-draggable-list__item.collapsed .custom-draggable-list__collapse-arrow svg {
+  transform: rotate(-90deg);
+}
+.custom-draggable-list .custom-draggable-list__item.draggable .custom-draggable-list__itemcontent {
+  padding-left: 1.5em;
+}
+.custom-draggable-list.handle-pos-right .custom-draggable-list__item.draggable .custom-draggable-list__itemcontent, .custom-draggable-list.icon-hide .custom-draggable-list__item.draggable .custom-draggable-list__itemcontent {
+  padding-left: 0.5rem;
+}
+.custom-draggable-list .custom-draggable-list__item.block.draggable {
+  cursor: move;
+}
+.custom-draggable-list .custom-draggable-list__item.dragging .custom-draggable-list__itemcontent {
+  background: #fff9e6;
+  border: 1px dashed #ffd591;
+  opacity: 0.8;
+}
+.custom-draggable-list .custom-draggable-list__item.drag-over .custom-draggable-list__itemcontent {
+  background: #fff9e6;
+  border: 2px solid #ffd591;
+}
+.custom-draggable-list .custom-draggable-list__item.drag-over-top::before {
+  content: "";
+  position: absolute;
+  top: -3px;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: var(--custom-draggable-primary-color);
+  border-radius: 1px;
+}
+.custom-draggable-list .custom-draggable-list__item.drag-over-bottom::after {
+  content: "";
+  position: absolute;
+  bottom: -3px;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: var(--custom-draggable-primary-color);
+  border-radius: 1px;
+}
+.custom-draggable-list .custom-draggable-list__handle {
+  color: #999;
+  padding: 5px;
+  cursor: move;
+  transition: color 0.15s ease;
+  position: absolute;
+  width: 1em;
+  height: 1em;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  font-size: 0.75rem;
+}
+.custom-draggable-list .custom-draggable-list__handle.left {
+  left: 0;
+}
+.custom-draggable-list .custom-draggable-list__handle.right {
+  right: 1em;
+}
+.custom-draggable-list .custom-draggable-list__item,
+.custom-draggable-list .custom-draggable-list__itemcontent {
+  transition: all 0.15s ease;
+}
+.custom-draggable-list .custom-draggable-list__item.editing .custom-draggable-list__itemcontent, .custom-draggable-list .custom-draggable-list__item:hover .custom-draggable-list__itemcontent {
+  background: var(--custom-draggable-content-diff-bg);
+  border-color: var(--custom-draggable-content-diff-border-color);
+}
+.custom-draggable-list .custom-draggable-list__item.block:hover .custom-draggable-list__handle {
+  color: var(--custom-draggable-primary-color);
+}
+.custom-draggable-list.handle .custom-draggable-list__handle:hover {
+  color: var(--custom-draggable-primary-color);
+}
+.custom-draggable-list .custom-draggable-list__edit-form {
+  display: flex;
+  flex: 1;
+  gap: 10px;
+  align-items: center;
+}
+.custom-draggable-list .custom-draggable-list__edit-form input {
+  padding: 4px 8px;
+  border: 1px solid var(--custom-draggable-border-color);
+  border-radius: var(--custom-draggable-control-radius);
+  font-size: var(--custom-draggable-control-fs);
+  width: var(--custom-draggable-control-w);
+}
+.custom-draggable-list .custom-draggable-list__edit-buttons {
+  display: flex;
+  gap: 5px;
+}
+.custom-draggable-list .custom-draggable-list__edit-buttons button {
+  padding: 0.2rem 0.5rem;
+  border: none;
+  font-size: 0.75rem;
+  border-radius: var(--custom-draggable-control-radius);
+  cursor: pointer;
+}
+.custom-draggable-list .custom-draggable-list__edit-buttons button:first-child {
+  background: var(--custom-draggable-btn-confirm-bg);
+  color: var(--custom-draggable-btn-color);
+}
+.custom-draggable-list .custom-draggable-list__edit-buttons button:last-child {
+  background: var(--custom-draggable-btn-cancel-bg);
+  color: var(--custom-draggable-btn-color);
+}
+.custom-draggable-list .custom-draggable-list__edit-buttons button:hover {
+  opacity: 0.8;
+}
