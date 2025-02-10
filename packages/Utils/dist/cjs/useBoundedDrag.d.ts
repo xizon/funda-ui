@@ -99,8 +99,6 @@ const App = () => {
         ))}
     </ul>
 );
-};
-
 
  */
 export interface TouchOffset {

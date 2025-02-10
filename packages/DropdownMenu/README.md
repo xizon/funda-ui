@@ -116,6 +116,63 @@ export default () => {
 ```
 
 
+
+## Combine drop-down input
+
+
+```js
+import React, { useRef } from "react";
+import DropdownMenu from 'funda-ui/DropdownMenu';
+
+// component styles
+import 'funda-ui/DropdownMenu/index.css';
+
+export default () => {
+
+    const onFoucsInputRef = useRef<HTMLInputElement>(null);
+
+    return (
+        <>
+            
+            <div className="input-group">
+                <span className="input-group-text">
+                    <DropdownMenu
+                        hoverOn={true}
+                        hoverOff={true}
+                        wrapperClassName="dropdown"
+                        listClassName="dropdown-menu"
+                        hyperlinkClassName="dropdown-item"
+                        triggerButton={true}
+                        triggerClassName="btn btn-sm p-0"
+                        triggerContent={`Text 1 <i class="fa-solid fa-caret-down"></i>`}
+                        name="app-ddmenu-2"
+                        options={[
+                            { label: `Text 1 <i class="fa-solid fa-caret-down"></i>`, value: 'value-1' },
+                            { label: `Text 2 <i class="fa-solid fa-caret-down"></i>`, value: 'value-2' }
+                        ]}
+                        onChange={(res: any, currentData: any) => {
+                            console.log(currentData)
+                        }}
+
+                    />
+
+                </span>
+                <input
+                    ref={onFoucsInputRef}
+                    placeholder="Enter..."
+                    onChange={(e) => {
+                        
+                    }}
+                    type="text" className="form-control" />
+            </div>
+        </>
+    );
+}
+```
+
+
+
+
 ## API
 
 ### Dropdown Menu
