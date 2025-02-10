@@ -71,7 +71,9 @@ var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefau
 exports.__esModule = true;
 `;
 componentsList.forEach(function (component) {
-    cjsEntryFileContent += `exports.${component} = _interopRequireDefault(require("./${component}")).default;` + "\n";
+    if (component !== 'Utils') {
+        cjsEntryFileContent += `exports.${component} = _interopRequireDefault(require("./${component}")).default;` + "\n";
+    }
 });
 fs.writeFileSync(cjsEntryPath, cjsEntryFileContent);
 console.log('\x1b[36m%s\x1b[0m', `--> Created "lib/cjs/index.js" successfully`);
