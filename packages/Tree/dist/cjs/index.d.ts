@@ -54,6 +54,7 @@ export declare type TreeProps = {
     /** -- */
     id?: string;
     onSelect?: (e: any, val: any, func: Function) => void;
+    onDoubleSelect?: (e: any, val: any, func: Function) => void;
     onCollapse?: (e: any, val: any, func: Function) => void;
     onCheck?: (val: any) => void;
 };

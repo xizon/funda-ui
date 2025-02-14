@@ -1114,6 +1114,7 @@ function TreeList(props) {
     getCheckedData = props.getCheckedData,
     updategetCheckedData = props.updategetCheckedData,
     onSelect = props.onSelect,
+    onDoubleSelect = props.onDoubleSelect,
     onCollapse = props.onCollapse,
     onCheck = props.onCheck,
     evInitValue = props.evInitValue;
@@ -1348,6 +1349,30 @@ function TreeList(props) {
       handleCollapse(e);
     }
   }
+  function handleDoubleSelect(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    var hyperlink = e.currentTarget;
+    if (hyperlink.classList.contains('selected')) {
+      activeClass(hyperlink, 'remove', 'selected');
+    } else {
+      [].slice.call(hyperlink.closest('.tree-diagram__wrapper').querySelectorAll('li > a')).forEach(function (node) {
+        activeClass(node, 'remove', 'selected');
+      });
+      activeClass(hyperlink, 'add', 'selected');
+    }
+    onDoubleSelect === null || onDoubleSelect === void 0 ? void 0 : onDoubleSelect(e, {
+      key: hyperlink.dataset.key,
+      slug: hyperlink.dataset.slug,
+      link: hyperlink.dataset.link,
+      optiondata: hyperlink.dataset.optiondata
+    }, typeof evInitValue !== 'function' ? function () {
+      return void 0;
+    } : evInitValue);
+    if (disableArrow) {
+      handleCollapse(e);
+    }
+  }
   function titleArrowGenerator() {
     return disableArrow ? loadingIcon : null;
   }
@@ -1555,6 +1580,7 @@ function TreeList(props) {
         href: item.link === '#' ? "".concat(item.link, "-").concat(i) : item.link,
         "aria-expanded": "false",
         onClick: handleSelect,
+        onDoubleClick: handleDoubleSelect,
         "data-link": item.link,
         "data-slug": item.slug,
         "data-key": item.key,
@@ -1583,6 +1609,7 @@ function TreeList(props) {
         first: false,
         arrow: arrow,
         onSelect: onSelect,
+        onDoubleSelect: onDoubleSelect,
         onCollapse: onCollapse,
         onCheck: onCheck,
         disableArrow: disableArrow,
@@ -1639,6 +1666,7 @@ var Tree = function Tree(props) {
     data = props.data,
     retrieveData = props.retrieveData,
     onSelect = props.onSelect,
+    onDoubleSelect = props.onDoubleSelect,
     onCollapse = props.onCollapse,
     onCheck = props.onCheck;
   var uniqueID = useComId_default()();
@@ -1913,6 +1941,7 @@ var Tree = function Tree(props) {
     data: Array.isArray(retrieveData) && retrieveData.length > 0 ? filterRetriveData(flatList, retrieveData) : list,
     childClassName: childClassName || 'tree-diagram-default-nav',
     onSelect: onSelect,
+    onDoubleSelect: onDoubleSelect,
     onCollapse: onCollapse,
     onCheck: onCheck,
     evInitValue: initDefaultValue,

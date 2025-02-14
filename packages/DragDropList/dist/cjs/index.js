@@ -880,8 +880,6 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
                 ))}
             </ul>
         );
-        };
-        
         
          */
 
@@ -1274,11 +1272,11 @@ var DragDropList = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef
 
     // Handle object
     var clonedObj = {};
-    for (var key in obj) {
-      if (key === 'appendControl') {
-        clonedObj[key] = obj[key];
+    for (var _key in obj) {
+      if (_key === 'appendControl') {
+        clonedObj[_key] = obj[_key];
       } else {
-        clonedObj[key] = deepCloneWithReactNode(obj[key]);
+        clonedObj[_key] = deepCloneWithReactNode(obj[_key]);
       }
     }
     return clonedObj;

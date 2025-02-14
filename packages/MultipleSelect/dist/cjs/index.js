@@ -911,8 +911,6 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
                           ))}
                       </ul>
                   );
-                  };
-                  
                   
                    */
 
@@ -1110,7 +1108,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
       /******/
       /******/ // The require function
       /******/
-      function __nested_webpack_require_54674__(moduleId) {
+      function __nested_webpack_require_54634__(moduleId) {
         /******/ // Check if module is in cache
         /******/var cachedModule = __webpack_module_cache__[moduleId];
         /******/
@@ -1129,7 +1127,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
         /******/
         /******/ // Execute the module function
         /******/
-        __webpack_modules__[moduleId].call(module.exports, module, module.exports, __nested_webpack_require_54674__);
+        __webpack_modules__[moduleId].call(module.exports, module, module.exports, __nested_webpack_require_54634__);
         /******/
         /******/ // Flag the module as loaded
         /******/
@@ -1146,14 +1144,14 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
       /******/
       (function () {
         /******/ // getDefaultExport function for compatibility with non-harmony modules
-        /******/__nested_webpack_require_54674__.n = function (module) {
+        /******/__nested_webpack_require_54634__.n = function (module) {
           /******/var getter = module && module.__esModule ? /******/function () {
             return module['default'];
           } : /******/function () {
             return module;
           };
           /******/
-          __nested_webpack_require_54674__.d(getter, {
+          __nested_webpack_require_54634__.d(getter, {
             a: getter
           });
           /******/
@@ -1167,9 +1165,9 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
       /******/
       (function () {
         /******/ // define getter functions for harmony exports
-        /******/__nested_webpack_require_54674__.d = function (exports, definition) {
+        /******/__nested_webpack_require_54634__.d = function (exports, definition) {
           /******/for (var key in definition) {
-            /******/if (__nested_webpack_require_54674__.o(definition, key) && !__nested_webpack_require_54674__.o(exports, key)) {
+            /******/if (__nested_webpack_require_54634__.o(definition, key) && !__nested_webpack_require_54634__.o(exports, key)) {
               /******/Object.defineProperty(exports, key, {
                 enumerable: true,
                 get: definition[key]
@@ -1186,7 +1184,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
       /******/ /* webpack/runtime/hasOwnProperty shorthand */
       /******/
       (function () {
-        /******/__nested_webpack_require_54674__.o = function (obj, prop) {
+        /******/__nested_webpack_require_54634__.o = function (obj, prop) {
           return Object.prototype.hasOwnProperty.call(obj, prop);
         };
         /******/
@@ -1196,7 +1194,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
       /******/
       (function () {
         /******/ // define __esModule on exports
-        /******/__nested_webpack_require_54674__.r = function (exports) {
+        /******/__nested_webpack_require_54634__.r = function (exports) {
           /******/if (typeof Symbol !== 'undefined' && Symbol.toStringTag) {
             /******/Object.defineProperty(exports, Symbol.toStringTag, {
               value: 'Module'
@@ -1215,7 +1213,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
       /******/ /* webpack/runtime/node module decorator */
       /******/
       (function () {
-        /******/__nested_webpack_require_54674__.nmd = function (module) {
+        /******/__nested_webpack_require_54634__.nmd = function (module) {
           /******/module.paths = [];
           /******/
           if (!module.children) module.children = [];
@@ -1232,30 +1230,30 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
       (function () {
         "use strict";
 
-        __nested_webpack_require_54674__.r(__webpack_exports__);
+        __nested_webpack_require_54634__.r(__webpack_exports__);
         /* harmony export */
-        __nested_webpack_require_54674__.d(__webpack_exports__, {
+        __nested_webpack_require_54634__.d(__webpack_exports__, {
           /* harmony export */"default": function _default() {
             return __WEBPACK_DEFAULT_EXPORT__;
           }
           /* harmony export */
         });
         /* harmony import */
-        var react__WEBPACK_IMPORTED_MODULE_0__ = __nested_webpack_require_54674__(787);
+        var react__WEBPACK_IMPORTED_MODULE_0__ = __nested_webpack_require_54634__(787);
         /* harmony import */
-        var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__nested_webpack_require_54674__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+        var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__nested_webpack_require_54634__.n(react__WEBPACK_IMPORTED_MODULE_0__);
         /* harmony import */
-        var funda_utils_dist_cjs_tree__WEBPACK_IMPORTED_MODULE_1__ = __nested_webpack_require_54674__(438);
+        var funda_utils_dist_cjs_tree__WEBPACK_IMPORTED_MODULE_1__ = __nested_webpack_require_54634__(438);
         /* harmony import */
-        var funda_utils_dist_cjs_tree__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__nested_webpack_require_54674__.n(funda_utils_dist_cjs_tree__WEBPACK_IMPORTED_MODULE_1__);
+        var funda_utils_dist_cjs_tree__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__nested_webpack_require_54634__.n(funda_utils_dist_cjs_tree__WEBPACK_IMPORTED_MODULE_1__);
         /* harmony import */
-        var funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_2__ = __nested_webpack_require_54674__(188);
+        var funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_2__ = __nested_webpack_require_54634__(188);
         /* harmony import */
-        var funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__nested_webpack_require_54674__.n(funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_2__);
+        var funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__nested_webpack_require_54634__.n(funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_2__);
         /* harmony import */
-        var funda_utils_dist_cjs_useBoundedDrag__WEBPACK_IMPORTED_MODULE_3__ = __nested_webpack_require_54674__(759);
+        var funda_utils_dist_cjs_useBoundedDrag__WEBPACK_IMPORTED_MODULE_3__ = __nested_webpack_require_54634__(759);
         /* harmony import */
-        var funda_utils_dist_cjs_useBoundedDrag__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__nested_webpack_require_54674__.n(funda_utils_dist_cjs_useBoundedDrag__WEBPACK_IMPORTED_MODULE_3__);
+        var funda_utils_dist_cjs_useBoundedDrag__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__nested_webpack_require_54634__.n(funda_utils_dist_cjs_useBoundedDrag__WEBPACK_IMPORTED_MODULE_3__);
         var _excluded = ["wrapperClassName", "prefix", "data", "draggable", "handleHide", "handleIcon", "handlePos", "dragMode", "editable", "itemStyle", "hierarchical", "indentation", "doubleIndent", "alternateCollapse", "arrow", "onUpdate"];
         function _extends() {
           _extends = Object.assign ? Object.assign.bind() : function (target) {
@@ -1502,11 +1500,11 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 
             // Handle object
             var clonedObj = {};
-            for (var key in obj) {
-              if (key === 'appendControl') {
-                clonedObj[key] = obj[key];
+            for (var _key in obj) {
+              if (_key === 'appendControl') {
+                clonedObj[_key] = obj[_key];
               } else {
-                clonedObj[key] = deepCloneWithReactNode(obj[key]);
+                clonedObj[_key] = deepCloneWithReactNode(obj[_key]);
               }
             }
             return clonedObj;

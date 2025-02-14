@@ -75,6 +75,7 @@ export type TreeProps = {
     /** -- */
     id?: string;
     onSelect?: (e: any, val: any, func: Function) => void;
+    onDoubleSelect?: (e: any, val: any, func: Function) => void;
     onCollapse?: (e: any, val: any, func: Function) => void;
     onCheck?: (val: any) => void;
 };
@@ -95,6 +96,7 @@ const Tree = (props: TreeProps) => {
         data,
         retrieveData,
         onSelect,
+        onDoubleSelect,
         onCollapse,
         onCheck
     } = props;
@@ -374,6 +376,7 @@ const Tree = (props: TreeProps) => {
                     data={Array.isArray(retrieveData) && retrieveData.length > 0 ? filterRetriveData(flatList, retrieveData) : list} 
                     childClassName={childClassName || 'tree-diagram-default-nav'} 
                     onSelect={onSelect} 
+                    onDoubleSelect={onDoubleSelect}
                     onCollapse={onCollapse}
                     onCheck={onCheck}
                     evInitValue={initDefaultValue}

@@ -40,6 +40,7 @@ export type TreeListProps = {
     getCheckedData?: any[];
     updategetCheckedData?: any;
     onSelect?: (e: any, val: any, func: Function) => void;
+    onDoubleSelect?: (e: any, val: any, func: Function) => void;
     onCollapse?: (e: any, val: any, func: Function) => void;
     onCheck?: (val: any) => void;
     evInitValue?: (key: React.Key | null, fetch: FetchConfig | null, firstRender: boolean) => void;
@@ -64,6 +65,7 @@ export default function TreeList(props: TreeListProps) {
         getCheckedData,
         updategetCheckedData,
         onSelect,
+        onDoubleSelect,
         onCollapse,
         onCheck,
         evInitValue
@@ -274,6 +276,34 @@ export default function TreeList(props: TreeListProps) {
 
      
         onSelect?.(e, {
+            key: hyperlink.dataset.key,
+            slug: hyperlink.dataset.slug,
+            link: hyperlink.dataset.link,
+            optiondata: hyperlink.dataset.optiondata
+        }, typeof evInitValue !== 'function' ? ()=>void(0) : evInitValue);
+
+        if ( disableArrow ) {
+            handleCollapse(e);
+        }
+    }
+    
+    function handleDoubleSelect(e: any) {
+        e.preventDefault();
+        e.stopPropagation();
+        
+        const hyperlink = e.currentTarget;
+
+        if ( hyperlink.classList.contains('selected') ) {
+            activeClass(hyperlink, 'remove', 'selected');
+        } else {
+            [].slice.call(hyperlink.closest('.tree-diagram__wrapper').querySelectorAll('li > a')).forEach((node: any) => {
+                activeClass(node, 'remove', 'selected');
+            });
+            activeClass(hyperlink, 'add', 'selected');
+        }
+
+     
+        onDoubleSelect?.(e, {
             key: hyperlink.dataset.key,
             slug: hyperlink.dataset.slug,
             link: hyperlink.dataset.link,
@@ -522,6 +552,7 @@ export default function TreeList(props: TreeListProps) {
                                 href={item.link === '#' ? `${item.link}-${i}` : item.link} 
                                 aria-expanded="false" 
                                 onClick={handleSelect} 
+                                onDoubleClick={handleDoubleSelect} 
                                 data-link={item.link} 
                                 data-slug={item.slug} 
                                 data-key={item.key}
@@ -553,6 +584,7 @@ export default function TreeList(props: TreeListProps) {
                                                 first={false} 
                                                 arrow={arrow} 
                                                 onSelect={onSelect} 
+                                                onDoubleSelect={onDoubleSelect}
                                                 onCollapse={onCollapse} 
                                                 onCheck={onCheck}
                                                 disableArrow={disableArrow} 

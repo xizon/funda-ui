@@ -10,6 +10,7 @@ export interface OptionConfig {
     children?: OptionConfig[];
     disabled?: boolean;
     extendedContent?: React.ReactNode;
+    [key: string]: any;
 }
 export declare type MultipleSelectProps = {
     contentRef?: React.ForwardedRef<any>;

@@ -34,6 +34,7 @@ export interface OptionConfig {
     children?: OptionConfig[];
     disabled?: boolean;
     extendedContent?: React.ReactNode;
+    [key: string]: any;
 }
 
 
