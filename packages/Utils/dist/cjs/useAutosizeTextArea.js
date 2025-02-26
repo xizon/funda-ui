@@ -112,7 +112,7 @@ const App = () => {
     const [value, setValue] = useState("");
     const el = useRef<HTMLTextAreaElement>(null);
 
-    useAutosizeTextArea({
+    const { reset } = useAutosizeTextArea({
         el: el.current, 
         value: value,
         cb: (res) => {
@@ -120,9 +120,23 @@ const App = () => {
         }
     });
 
+    useImperativeHandle(
+        contentRef,
+        () => ({
+            resetHeight: () => {
+                reset();
+            },
+        }),
+        [contentRef, reset]
+    );
+
     const handleChange = (evt: React.ChangeEvent<HTMLTextAreaElement>) => {
         const val = evt.target?.value;
         setValue(val);
+    };
+
+    const handleReset = () => {
+        reset();
     };
 
     return (
@@ -144,6 +158,8 @@ const App = () => {
 var useAutosizeTextArea = function useAutosizeTextArea(_ref) {
   var el = _ref.el,
     value = _ref.value,
+    _ref$maxHeight = _ref.maxHeight,
+    maxHeight = _ref$maxHeight === void 0 ? 0 : _ref$maxHeight,
     cb = _ref.cb;
   var _useState = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(0),
     _useState2 = _slicedToArray(_useState, 2),
@@ -153,6 +169,18 @@ var useAutosizeTextArea = function useAutosizeTextArea(_ref) {
     _useState4 = _slicedToArray(_useState3, 2),
     defaultRowHeightInit = _useState4[0],
     setDefaultRowHeightInit = _useState4[1];
+
+  // Reset function to restore default height
+  var reset = (0,react__WEBPACK_IMPORTED_MODULE_0__.useCallback)(function () {
+    if (el && defaultRowHeight > 0) {
+      el.style.height = defaultRowHeight + "px";
+
+      // Get current dimensions after reset
+      var style = el.currentStyle || window.getComputedStyle(el);
+      var _controlWidth = el.scrollWidth + parseInt(style.borderLeftWidth) + parseInt(style.borderRightWidth);
+      cb === null || cb === void 0 ? void 0 : cb([_controlWidth, defaultRowHeight]);
+    }
+  }, [el, defaultRowHeight, cb]);
   (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(function () {
     if (el) {
       var style = el.currentStyle || window.getComputedStyle(el);
@@ -177,11 +205,18 @@ var useAutosizeTextArea = function useAutosizeTextArea(_ref) {
 
       // !!! Compare initial height and changed height
       if (scrollHeight > defaultRowHeight && defaultRowHeight > 0) {
-        el.style.height = scrollHeight + "px";
+        if (maxHeight != 0 && scrollHeight >= maxHeight) {
+          el.style.height = maxHeight + "px";
+        } else {
+          el.style.height = scrollHeight + "px";
+        }
       }
       cb === null || cb === void 0 ? void 0 : cb([_controlWidth, scrollHeight]);
     }
   }, [el, value]);
+  return {
+    reset: reset
+  };
 };
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (useAutosizeTextArea);
 })();

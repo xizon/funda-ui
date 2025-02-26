@@ -29,6 +29,7 @@ export type TextareaProps = {
     readOnly?: any;
 	placeholder?: string;
     autoSize?: boolean;
+    autoSizeMaxHeight?: number;
     iconLeft?: React.ReactNode | string;
     iconRight?: React.ReactNode | string;
     aiPredict?: boolean;
@@ -71,6 +72,7 @@ const Textarea = forwardRef((props: TextareaProps, externalRef: any) => {
         required,
         placeholder,
         autoSize,
+        autoSizeMaxHeight = 0,
         iconLeft,
         iconRight,
         aiPredict = false,
@@ -275,6 +277,16 @@ const Textarea = forwardRef((props: TextareaProps, externalRef: any) => {
     const remainingText = getRemainingText(currentSuggestion);
 
 
+    // auto size
+    const { reset } = useAutosizeTextArea({
+        el: autoSize ? valRef.current : null,
+        value: autoSize ? changedVal : '',
+        maxHeight: autoSizeMaxHeight,
+        cb: (res: any[]) => {
+            onResize?.(valRef.current, res);
+        }
+    });
+
     //================================================================
     // General
     //================================================================  
@@ -293,29 +305,22 @@ const Textarea = forwardRef((props: TextareaProps, externalRef: any) => {
                 setChangedVal(`${value}`);
                 cb?.();
             },
+            resetHeight: () => {
+                reset();
+            },
             aiPredictReset: () => {
                 setTimeout(() => { // Avoid conflicts with other asynchronous states, resulting in invalid clearing
                     setCurrentSuggestion('');
                 }, 0);
             },
         }),
-        [contentRef]
+        [contentRef, reset]
     );
-
-
-    // auto size
-    useAutosizeTextArea({
-        el: autoSize ? valRef.current : null,
-        value: autoSize ? changedVal : '',
-        cb: (res: any[]) => {
-            onResize?.(valRef.current, res);
-        }
-    });
-    
 
     const propExist = (p: any) => {
         return typeof p !== 'undefined' && p !== null && p !== '';
     };
+
 
 
     function handleFocus(event: any) {

@@ -20,6 +20,7 @@ export declare type TextareaProps = {
     readOnly?: any;
     placeholder?: string;
     autoSize?: boolean;
+    autoSizeMaxHeight?: number;
     iconLeft?: React.ReactNode | string;
     iconRight?: React.ReactNode | string;
     aiPredict?: boolean;

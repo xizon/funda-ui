@@ -8,7 +8,7 @@ const App = () => {
     const [value, setValue] = useState("");
     const el = useRef<HTMLTextAreaElement>(null);
 
-    useAutosizeTextArea({
+    const { reset } = useAutosizeTextArea({
         el: el.current, 
         value: value,
         cb: (res) => {
@@ -16,9 +16,23 @@ const App = () => {
         }
     });
 
+    useImperativeHandle(
+        contentRef,
+        () => ({
+            resetHeight: () => {
+                reset();
+            },
+        }),
+        [contentRef, reset]
+    );
+
     const handleChange = (evt: React.ChangeEvent<HTMLTextAreaElement>) => {
         const val = evt.target?.value;
         setValue(val);
+    };
+
+    const handleReset = () => {
+        reset();
     };
 
     return (
@@ -36,22 +50,36 @@ const App = () => {
 
 
  */
-import { useEffect, useState, RefObject } from "react";
+import { useEffect, useState, useCallback } from "react";
 
 export interface AutosizeTextAreaProps {
     el: any;
     value: string;
+    maxHeight?: number;
     cb?: (dimensions: [number, number]) => void;
 }
 
 const useAutosizeTextArea = ({
     el,
     value,
+    maxHeight = 0,
     cb
-}: AutosizeTextAreaProps): void => {
+}: AutosizeTextAreaProps): { reset: () => void } => {
 
     const [defaultRowHeight, setDefaultRowHeight] = useState(0);
     const [defaultRowHeightInit, setDefaultRowHeightInit] = useState(false);
+
+    // Reset function to restore default height
+    const reset = useCallback(() => {
+        if (el && defaultRowHeight > 0) {
+            el.style.height = defaultRowHeight + "px";
+            
+            // Get current dimensions after reset
+            const style = (el as any).currentStyle || window.getComputedStyle(el);
+            const _controlWidth = el.scrollWidth + parseInt(style.borderLeftWidth) + parseInt(style.borderRightWidth);
+            cb?.([_controlWidth, defaultRowHeight]);
+        }
+    }, [el, defaultRowHeight, cb]);
 
     useEffect(() => {
         if (el) {
@@ -78,12 +106,19 @@ const useAutosizeTextArea = ({
 
             // !!! Compare initial height and changed height
             if (scrollHeight > defaultRowHeight && defaultRowHeight > 0) {
-                el.style.height = scrollHeight + "px";
+                if (maxHeight != 0 && scrollHeight >= maxHeight) {
+                    el.style.height = maxHeight + "px";
+                } else {
+                    el.style.height = scrollHeight + "px";
+                }
+                
             }
 
             cb?.([_controlWidth, scrollHeight]);
         }
     }, [el, value]);
+
+    return { reset };
 };
 
 export default useAutosizeTextArea;
