@@ -134,8 +134,6 @@ export default () => {
 
     useEffect(() => {
      
-        // 获取 AI 配置
-        //-----
         getAiConfig().then((response) => {
             setAiConfig(response);
         });
