@@ -1,0 +1,45 @@
+import React from "react";
+
+
+type PureLoaderProps = {
+    txt?: React.ReactNode;
+    center?: boolean;
+    customClassName?: string;
+};
+
+
+
+const PureLoader = (props: PureLoaderProps) => {
+
+    const {
+        txt,
+        center,
+        customClassName
+    } = props;
+
+   
+    return (
+        <>
+
+            <div className={`app-chatbox-loader-container ${customClassName || ''}`}>
+                <div className="row g-0 align-items-center">
+                    <div className={center ? 'text-center' : ''}><small>{txt || txt === '' ? txt : 'Loading...'}</small></div>
+                    <div>
+                        <div className="app-chatbox-loader"></div>
+                    </div>
+                </div>
+            </div>
+
+
+
+
+        </>
+    );
+
+}
+
+
+
+export default PureLoader;
+
+

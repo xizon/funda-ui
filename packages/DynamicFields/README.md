@@ -1488,7 +1488,7 @@ Element of per row accepts all props which this control support. Such as `style`
 
 ---
 
-Array configuration properties of the `data`:
+Array Object configuration properties of the `data` (**Array**):
 
 | Property | Type | Default | Description | Required |
 | --- | --- | --- | --- | --- |

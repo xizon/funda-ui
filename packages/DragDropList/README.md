@@ -912,8 +912,7 @@ import DragDropList from 'funda-ui/DragDropList';
 
 ---
 
-JSON Object Literals configuration properties of the `data`:
-
+Array Object configuration properties of the `data` (**Array**):
 
 | Property | Type | Default | Description | Required |
 | --- | --- | --- | --- | --- |

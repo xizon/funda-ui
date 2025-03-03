@@ -202,7 +202,7 @@ import DropdownMenu from 'funda-ui/DropdownMenu';
 
 
 
-Array configuration properties of the `options`:
+Array Object configuration properties of the `options` (**Array**):
 
 | Property | Type | Default | Description | Required |
 | --- | --- | --- | --- | --- |

@@ -618,8 +618,7 @@ import CascadingSelectE2E from 'funda-ui/CascadingSelectE2E';
 | `onFocus` | function  | - | Call a function when an form field gets focus. It returns only one callback value which is the Control Event (**Event**)| - |
 
 
-
-Array configuration properties of the `fetchArray`:
+Array Object configuration properties of the `fetchArray` (**Array**):
 
 | Property | Type | Default | Description | Required |
 | --- | --- | --- | --- | --- |
