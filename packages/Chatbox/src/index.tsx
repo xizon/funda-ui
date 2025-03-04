@@ -154,6 +154,9 @@ const Chatbox = (props: ChatboxProps) => {
             setVal: (v: string) => {
                 if (inputContentRef.current) inputContentRef.current.set(v);
             },
+            getContextData: () => {
+                return contextDataRef.current;
+            },
             setContextData: (v: Record<string, any>) => {
                 contextDataRef.current = v;
             },

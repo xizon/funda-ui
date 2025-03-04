@@ -3846,6 +3846,9 @@ var Chatbox = function Chatbox(props) {
       setVal: function setVal(v) {
         if (inputContentRef.current) inputContentRef.current.set(v);
       },
+      getContextData: function getContextData() {
+        return contextDataRef.current;
+      },
       setContextData: function setContextData(v) {
         contextDataRef.current = v;
       }

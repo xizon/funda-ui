@@ -169,6 +169,9 @@
   font-size: 13px;
   margin-right: 0;
 }
+.custom-chatbox-container .messages img, .custom-chatbox-container .messages svg, .custom-chatbox-container .messages video, .custom-chatbox-container .messages canvas, .custom-chatbox-container .messages audio, .custom-chatbox-container .messages iframe, .custom-chatbox-container .messages embed, .custom-chatbox-container .messages object {
+  display: inline;
+}
 .custom-chatbox-container .messages::-webkit-scrollbar {
   width: 3px;
 }
@@ -286,6 +289,9 @@
   z-index: 1;
   width: calc(100% - 40px);
 }
+.custom-chatbox-container .msgcontrol img, .custom-chatbox-container .msgcontrol svg, .custom-chatbox-container .msgcontrol video, .custom-chatbox-container .msgcontrol canvas, .custom-chatbox-container .msgcontrol audio, .custom-chatbox-container .msgcontrol iframe, .custom-chatbox-container .msgcontrol embed, .custom-chatbox-container .msgcontrol object {
+  display: inline;
+}
 .custom-chatbox-container .msgcontrol .messageInput {
   width: 100%;
   border: 1px solid var(--custom-chatbox-msg-border);
@@ -305,7 +311,7 @@
   color: var(--custom-chatbox-default-txt-color);
   resize: none;
   max-height: 50vh;
-  border-color: var(--custom-chatbox-gray-color);
+  border: 1px solid var(--custom-chatbox-gray-color);
 }
 .custom-chatbox-container .msgcontrol .messageInput .messageInput-control::-webkit-scrollbar {
   width: 3px;
@@ -370,6 +376,9 @@
   font-size: 0.8125rem;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
+.custom-chatbox-container .newchat-btn > button img, .custom-chatbox-container .newchat-btn > button svg, .custom-chatbox-container .newchat-btn > button video, .custom-chatbox-container .newchat-btn > button canvas, .custom-chatbox-container .newchat-btn > button audio, .custom-chatbox-container .newchat-btn > button iframe, .custom-chatbox-container .newchat-btn > button embed, .custom-chatbox-container .newchat-btn > button object {
+  display: inline;
+}
 .custom-chatbox-container .newchat-btn > button:hover {
   transform: translateY(-2px);
 }
@@ -391,6 +400,9 @@
   cursor: pointer;
   transition: all 0.3s ease;
   font-size: 0.75rem;
+}
+.custom-chatbox-container .toolkit-btns > button img, .custom-chatbox-container .toolkit-btns > button svg, .custom-chatbox-container .toolkit-btns > button video, .custom-chatbox-container .toolkit-btns > button canvas, .custom-chatbox-container .toolkit-btns > button audio, .custom-chatbox-container .toolkit-btns > button iframe, .custom-chatbox-container .toolkit-btns > button embed, .custom-chatbox-container .toolkit-btns > button object {
+  display: inline;
 }
 .custom-chatbox-container .toolkit-btns > button:hover {
   background-color: var(--custom-chatbox-toolkit-btn-border-color);

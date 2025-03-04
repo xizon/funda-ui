@@ -48,6 +48,7 @@ Chat and conversational UI, which can be used to interface models similarly to t
 - getHistory(): get conversation history
 - trimHistory(length?: number): trim conversation history
 - setVal(v: string): set input value
+- getContextData(): Get current context data
 - setContextData(v: Record<string, any>): set context data
 ```
 
@@ -79,10 +80,7 @@ export default () => {
 
     const aichatRef = useRef<any>(null);
     const [aiConfig, setAiConfig] = useState<any>({});
-    const [contextData, setContextData] = useState<any>({
-        systemPrompt: "Please keep your answer within 100 words",
-        citation: "Analyze this sentence: The patient's name is Liu, 25 years old, and he has had a cold for 7 consecutive days.",
-    });
+    const [contextData, setContextData] = useState<Record<string, any>>({});
 
     async function getAiConfig() {
         // const res = await axios({
@@ -96,7 +94,7 @@ export default () => {
             "reasoningSwitchLabel": "Idea",
             "maxHistoryLength": 10,
             "newChatButton": "{\"label\":\"<svg width='16' height='16' viewBox='0 0 24 24'><path fill='currentColor' d='M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z'/></svg> New Chat\",\"value\":\"new\",\"onClick\":\"method.setVal(''); method.clearData();\"}",
-            "toolkitButtons": "[{\"label\":\"<svg fill='currentColor' width='12' height='12' viewBox='0 0 24 24'><path d='M19 2H5c-1.103 0-2 .897-2 2v12c0 1.103.897 2 2 2h3.586L12 21.414 15.414 18H19c1.103 0 2-.897 2-2V4c0-1.103-.897-2-2-2zm0 14h-4.414L12 18.586 9.414 16H5V4h14v12z'/></svg> Brief\",\"value\":\"brief\",\"onClick\":\"console.log(button); console.log(isActive); if(isActive) { method.setContextData({systemPrompt: 'Please keep your answer within 77 words'}) } else { method.setContextData({}) }\"}]",
+            "toolkitButtons": "[{\"label\":\"<svg fill='currentColor' width='12' height='12' viewBox='0 0 24 24'><path d='M19 2H5c-1.103 0-2 .897-2 2v12c0 1.103.897 2 2 2h3.586L12 21.414 15.414 18H19c1.103 0 2-.897 2-2V4c0-1.103-.897-2-2-2zm0 14h-4.414L12 18.586 9.414 16H5V4h14v12z'/></svg> Brief\",\"value\":\"brief\",\"onClick\":\"console.log(button); console.log(isActive, method.getContextData()); if(isActive) { method.setContextData({systemPrompt: 'Please keep your answer within 77 words',mergedText: method.getContextData().mergedText}); } else { method.setContextData({mergedText: method.getContextData().mergedText}); }\"}]",
             "apiUrl": "{baseUrl}/v1/chat/completions",
             "requestBody": "{'model':'{model}','messages':[{'role':'user','content':'{message}'}],'stream': true}",
             "responseBody": "data.choices.0.delta.content",
@@ -152,14 +150,7 @@ export default () => {
            <a href="#" onClick={(e: React.MouseEvent) => {
                 e.preventDefault();
 
-                const randomPrompts = [
-                    "Please keep your answer within 50 words",
-                    "Please keep your answer within 150 words",
-                    "Please answer in a professional tone",
-                    "Please answer like a friend",
-                ];
-
-                const randomCitations = [
+                const randomMergedText = [
                     "Analyze this sentence: The patient's name is Zhang, 30 years old, with fever for 3 days.",
                     "Analyze this sentence: The patient's name is Wang, 45 years old, experiencing headaches for 5 days.",
                     "Analyze this sentence: The patient's name is Li, 28 years old, reporting chest pain for 2 days.",
@@ -167,18 +158,25 @@ export default () => {
                 ];
 
                 const timestamp = new Date().toLocaleString();
-                const randomPrompt = randomPrompts[Math.floor(Math.random() * randomPrompts.length)];
-                const randomCitation = randomCitations[Math.floor(Math.random() * randomCitations.length)];
+                const _mergedText = randomMergedText[Math.floor(Math.random() * randomMergedText.length)];
 
-                setContextData(prev => {
-                    const newData = {
-                        systemPrompt: randomPrompt,
-                        citation: randomCitation,
-                    };
+                if (aichatRef.current) {
+                    const _oldData = aichatRef.current.getContextData();
+                    const { systemPrompt } = _oldData;
+                 
+                    setContextData({
+                        systemPrompt: systemPrompt,
+                        mergedText: _mergedText
+                    });
+                    
+                    alert('The "mergedText" field of the setting context succeeded: ' + JSON.stringify({
+                        systemPrompt: systemPrompt,
+                        mergedText: _mergedText
+                    }));                    
+                }
 
-                    return newData;
-                });
-            }}>Random Context</a>
+
+            }}>Random Merged Text (set Context)</a>
 
             
 
@@ -255,6 +253,16 @@ export default () => {
                             }
                         });
                         /*++++++++++++++++ /Contextual reasoning ++++++++++++++++++++++ */
+
+
+                        // custom merged text
+                        if (context.mergedText) {
+                            modifiedMessages.unshift({
+                                role: "assistant",
+                                content: `${context.mergedText}`
+                            });  
+                        }
+
 
                         // Add a certain style to your answers
                         if (context.systemPrompt) {
@@ -378,7 +386,7 @@ import Chatbox from 'funda-ui/Chatbox';
 ```
 | Property | Type | Default | Description | Required |
 | --- | --- | --- | --- | --- |
-| `contentRef` | React.RefObject | - | It exposes the following methods:  <br /> <ol><li>`contentRef.current.chatOpen()`</li><li>`contentRef.current.chatClose()`</li><li>`contentRef.current.clearData()`</li><li>`contentRef.current.sendMsg()`</li><li>`contentRef.current.getHistory()`</li><li>`contentRef.current.trimHistory(10)`</li><li>`contentRef.current.setVal('new value')`</li><li>`contentRef.current.setContextData({systemPrompt: "Please keep your answer within 77 words"})`</li></ol>| - |
+| `contentRef` | React.RefObject | - | It exposes the following methods:  <br /> <ol><li>`contentRef.current.chatOpen()`</li><li>`contentRef.current.chatClose()`</li><li>`contentRef.current.clearData()`</li><li>`contentRef.current.sendMsg()`</li><li>`contentRef.current.getHistory()`</li><li>`contentRef.current.trimHistory(10)`</li><li>`contentRef.current.setVal('new value')`</li><li>`contentRef.current.getContextData()`</li><li>`contentRef.current.setContextData({systemPrompt: "Please keep your answer within 77 words"})`</li></ol>| - |
 | `debug` | boolean | false | Enable debug mode to output console information | - |
 | `prefix` | string | `custom-` | Prefix for component wrapper class name | - |
 | `model` | string | - | The model name to use | - |
@@ -403,7 +411,7 @@ import Chatbox from 'funda-ui/Chatbox';
 | `requestConfig` | JSON Object | - | Configuration for API requests | ✅ |
 | `headerConfig` | any | - | Configuration for request headers. <blockquote>**Placeholder string**<ul><li>`{apiKey}` -> Your Secret API key on the API key page, It will use the incoming `apiKey` instead</li></ul></blockquote> | - |
 | `contextData` | JSON Object | - | Dynamic JSON data for request formatting | - |
-| `toolkitButtons` | Array | - | JSON string for toolkit buttons configuration. Each button can have label, value and **onClick** properties. The onClick function can access `contentRef` methods. Example: <br />`[{label:"Clear",value:"clear",onClick:"alert('new'); method.clearData();"},{label:"Send",value:"send",onClick:"method.sendMsg();"},{label:"Change Context",value:"changecontext",onClick:"method.setContextData({systemPrompt: "Please keep your answer within 77 words"});"}]` <br />Available methods in **onClick**: <br /><ol><li>`method.chatOpen()`: Open the dialog box</li><li>`method.chatClose()`: Close the dialog box</li><li>`method.clearData()`: Clear the data</li><li>`method.sendMsg()`: Send a message</li><li>`method.getHistory()`: Get the history</li><li>`method.trimHistory(10)`: Trim the history</li><li>`method.setVal('new value')`: Set the default value of the input box</li><li>`method.setContextData({systemPrompt: "Please keep your answer within 77 words"})`: Modify the context data</li></ol> <br />Additional parameters available in **onClick**: <br /><ul><li>**isActive**: The activation status of the current button</li><li>**button**: HTML object for the current button</li></ul> | - |
+| `toolkitButtons` | Array | - | JSON string for toolkit buttons configuration. Each button can have label, value and **onClick** properties. The onClick function can access `contentRef` methods. Example: <br />`[{label:"Clear",value:"clear",onClick:"alert('new'); method.clearData();"},{label:"Send",value:"send",onClick:"method.sendMsg();"},{label:"Change Context",value:"changecontext",onClick:"method.setContextData({systemPrompt: "Please keep your answer within 77 words"});"}]` <br />Available methods in **onClick**: <br /><ol><li>`method.chatOpen()`: Open the dialog box</li><li>`method.chatClose()`: Close the dialog box</li><li>`method.clearData()`: Clear the data</li><li>`method.sendMsg()`: Send a message</li><li>`method.getHistory()`: Get the history</li><li>`method.trimHistory(10)`: Trim the history</li><li>`method.setVal('new value')`: Set the default value of the input box</li><li>`method.getContextData()`: Get current context data</li><li>`method.setContextData({systemPrompt: "Please keep your answer within 77 words"})`: Modify the context data</li></ol> <br />Additional parameters available in **onClick**: <br /><ul><li>**isActive**: The activation status of the current button</li><li>**button**: HTML object for the current button</li></ul> | - |
 | `newChatButton` | JSON Object | - | JSON string for new chat button configuration. Similar to `toolkitButtons` but for a single button that appears when chat has messages. Example: <br /> `{label:"New Chat",value:"new",onClick:"method.clearData(); method.setVal('');"}` | - | 
 | `renderParser` | Function | - | **(It must return a "Promise\<string\>" object)** Custom parser for rendering messages. such as `async(input:string)=>{const res=await markedParse(input);return res;}` | - |
 | `requestBodyFormatter` | Function | - | Function to format request body. such as `(body:any,context:Record<string,any>,conversationHistory:any[])=>{if(body.messages&&Array.isArray(body.messages)){const modifiedMessages=body.messages.map(msg=>{if(msg.role==='user'){return{...msg,content:msg.content};}return msg;});conversationHistory.forEach((item:any,index:number)=>{if(index<conversationHistory.length-1){modifiedMessages.unshift({role:"assistant",content:item.content});}});return{...body,messages:modifiedMessages};}return body;}` | - |
