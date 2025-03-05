@@ -15,6 +15,16 @@ export interface RequestConfig {
     requestBody: string;
     responseExtractor: string;
 }
+declare type CustomRequestConfig = {
+    requestBody: any;
+    apiUrl: string;
+    headers: any;
+};
+declare type CustomRequestResponse = {
+    content: string | Response | null;
+    isStream: boolean;
+};
+declare type CustomRequestFunction = (message: string, config: CustomRequestConfig) => Promise<CustomRequestResponse>;
 export declare type ChatboxProps = {
     debug?: boolean;
     prefix?: string;
@@ -43,8 +53,9 @@ export declare type ChatboxProps = {
     contextData?: Record<string, any>;
     toolkitButtons?: FloatingButton[];
     newChatButton?: FloatingButton;
+    customRequest?: CustomRequestFunction;
     renderParser?: (input: string) => Promise<string>;
-    requestBodyFormatter?: (body: any, contextData: Record<string, any>, conversationHistory: MessageDetail[]) => any;
+    requestBodyFormatter?: (body: any, contextData: Record<string, any>, conversationHistory: MessageDetail[]) => Promise<Record<string, any>>;
     nameFormatter?: (input: string) => string;
     onInputChange?: (controlRef: React.RefObject<any>, val: string) => any;
     onChunk?: (controlRef: React.RefObject<any>, lastContent: string, conversationHistory: MessageDetail[]) => any;

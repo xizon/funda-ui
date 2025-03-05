@@ -3212,10 +3212,10 @@ function _iterableToArrayLimit(arr, i) { var _i = null == arr ? null : "undefine
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 var TypingEffect = function TypingEffect(_ref) {
-  var messagesDiv = _ref.messagesDiv,
-    content = _ref.content,
+  var content = _ref.content,
     speed = _ref.speed,
-    onComplete = _ref.onComplete;
+    onComplete = _ref.onComplete,
+    onUpdate = _ref.onUpdate;
   var _useState = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)(''),
     _useState2 = _slicedToArray(_useState, 2),
     displayedContent = _useState2[0],
@@ -3224,25 +3224,82 @@ var TypingEffect = function TypingEffect(_ref) {
     _useState4 = _slicedToArray(_useState3, 2),
     index = _useState4[0],
     setIndex = _useState4[1];
+  var _useState5 = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)([]),
+    _useState6 = _slicedToArray(_useState5, 2),
+    imagePlaceholders = _useState6[0],
+    setImagePlaceholders = _useState6[1];
+  var _useState7 = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)(''),
+    _useState8 = _slicedToArray(_useState7, 2),
+    processedContent = _useState8[0],
+    setProcessedContent = _useState8[1];
+
+  // Extract and replace image tags
+  (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useEffect)(function () {
+    var extractImages = function extractImages(html) {
+      var placeholders = [];
+      var processedHtml = html;
+
+      // <img>
+      processedHtml = processedHtml.replace(/<img[^>]*>/g, function (match) {
+        var placeholder = "[IMG_".concat(placeholders.length, "]");
+        placeholders.push({
+          original: match,
+          placeholder: placeholder,
+          type: 'img'
+        });
+        return placeholder;
+      });
+
+      // <svg>
+      processedHtml = processedHtml.replace(/<svg[^>]*>[\s\S]*?<\/svg>/g, function (match) {
+        var placeholder = "[SVG_".concat(placeholders.length, "]");
+        placeholders.push({
+          original: match,
+          placeholder: placeholder,
+          type: 'svg'
+        });
+        return placeholder;
+      });
+      return {
+        processedHtml: processedHtml,
+        placeholders: placeholders
+      };
+    };
+    var _extractImages = extractImages(content),
+      processedHtml = _extractImages.processedHtml,
+      placeholders = _extractImages.placeholders;
+    setProcessedContent(processedHtml);
+    setImagePlaceholders(placeholders);
+  }, [content]);
+
+  // Handle typing effects
   (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useEffect)(function () {
     var timer = setInterval(function () {
-      if (index < content.length) {
-        setDisplayedContent(function (prev) {
-          return prev + content[index];
+      if (index < processedContent.length) {
+        var newContent = processedContent.substring(0, index + 1);
+
+        // Replace the completed placeholder
+        imagePlaceholders.forEach(function (_ref2) {
+          var original = _ref2.original,
+            placeholder = _ref2.placeholder;
+          if (newContent.includes(placeholder)) {
+            newContent = newContent.replace(placeholder, original);
+          }
         });
+        setDisplayedContent(newContent);
         setIndex(function (prev) {
           return prev + 1;
         });
-        if (messagesDiv !== null) messagesDiv.scrollTop = messagesDiv.scrollHeight; // Scroll to the bottom
+        onUpdate === null || onUpdate === void 0 ? void 0 : onUpdate();
       } else {
         clearInterval(timer);
-        onComplete === null || onComplete === void 0 ? void 0 : onComplete(); // Call the onComplete callback if provided
+        onComplete === null || onComplete === void 0 ? void 0 : onComplete();
       }
     }, speed);
     return function () {
       return clearInterval(timer);
-    }; // Cleanup on unmount
-  }, [content, index, speed, onComplete]);
+    };
+  }, [processedContent, index, speed, onComplete, onUpdate, imagePlaceholders]);
   return /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("span", {
     dangerouslySetInnerHTML: {
       __html: displayedContent
@@ -3336,6 +3393,23 @@ function fixHtmlTags(html, withReasoning, reasoningSwitchLabel) {
   // Replace with a valid label
   return html.replace('<think>', "<details class=\"think\" ".concat(withReasoning ? 'open' : '', "><summary>").concat(reasoningSwitchLabel, "</summary><div class=\"think-content\">")).replace('</think>', '</div></details> ');
 }
+function isStreamResponse(response) {
+  // Method 1: Check Content-Type
+  var contentType = response.headers.get('Content-Type');
+  if (contentType) {
+    return contentType.includes('text/event-stream') || contentType.includes('application/x-ndjson') || contentType.includes('application/stream+json');
+  }
+
+  // Method 2: Check Transfer-Encoding
+  var transferEncoding = response.headers.get('Transfer-Encoding');
+  if (transferEncoding) {
+    return transferEncoding.includes('chunked');
+  }
+
+  // Method 3: Check if response.body is ReadableStream
+  return response.body instanceof ReadableStream;
+}
+;
 ;// CONCATENATED MODULE: ./src/useStreamController.tsx
 function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
 function _regeneratorRuntime() { "use strict"; /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/facebook/regenerator/blob/main/LICENSE */ _regeneratorRuntime = function _regeneratorRuntime() { return exports; }; var exports = {}, Op = Object.prototype, hasOwn = Op.hasOwnProperty, defineProperty = Object.defineProperty || function (obj, key, desc) { obj[key] = desc.value; }, $Symbol = "function" == typeof Symbol ? Symbol : {}, iteratorSymbol = $Symbol.iterator || "@@iterator", asyncIteratorSymbol = $Symbol.asyncIterator || "@@asyncIterator", toStringTagSymbol = $Symbol.toStringTag || "@@toStringTag"; function define(obj, key, value) { return Object.defineProperty(obj, key, { value: value, enumerable: !0, configurable: !0, writable: !0 }), obj[key]; } try { define({}, ""); } catch (err) { define = function define(obj, key, value) { return obj[key] = value; }; } function wrap(innerFn, outerFn, self, tryLocsList) { var protoGenerator = outerFn && outerFn.prototype instanceof Generator ? outerFn : Generator, generator = Object.create(protoGenerator.prototype), context = new Context(tryLocsList || []); return defineProperty(generator, "_invoke", { value: makeInvokeMethod(innerFn, self, context) }), generator; } function tryCatch(fn, obj, arg) { try { return { type: "normal", arg: fn.call(obj, arg) }; } catch (err) { return { type: "throw", arg: err }; } } exports.wrap = wrap; var ContinueSentinel = {}; function Generator() {} function GeneratorFunction() {} function GeneratorFunctionPrototype() {} var IteratorPrototype = {}; define(IteratorPrototype, iteratorSymbol, function () { return this; }); var getProto = Object.getPrototypeOf, NativeIteratorPrototype = getProto && getProto(getProto(values([]))); NativeIteratorPrototype && NativeIteratorPrototype !== Op && hasOwn.call(NativeIteratorPrototype, iteratorSymbol) && (IteratorPrototype = NativeIteratorPrototype); var Gp = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(IteratorPrototype); function defineIteratorMethods(prototype) { ["next", "throw", "return"].forEach(function (method) { define(prototype, method, function (arg) { return this._invoke(method, arg); }); }); } function AsyncIterator(generator, PromiseImpl) { function invoke(method, arg, resolve, reject) { var record = tryCatch(generator[method], generator, arg); if ("throw" !== record.type) { var result = record.arg, value = result.value; return value && "object" == _typeof(value) && hasOwn.call(value, "__await") ? PromiseImpl.resolve(value.__await).then(function (value) { invoke("next", value, resolve, reject); }, function (err) { invoke("throw", err, resolve, reject); }) : PromiseImpl.resolve(value).then(function (unwrapped) { result.value = unwrapped, resolve(result); }, function (error) { return invoke("throw", error, resolve, reject); }); } reject(record.arg); } var previousPromise; defineProperty(this, "_invoke", { value: function value(method, arg) { function callInvokeWithMethodAndArg() { return new PromiseImpl(function (resolve, reject) { invoke(method, arg, resolve, reject); }); } return previousPromise = previousPromise ? previousPromise.then(callInvokeWithMethodAndArg, callInvokeWithMethodAndArg) : callInvokeWithMethodAndArg(); } }); } function makeInvokeMethod(innerFn, self, context) { var state = "suspendedStart"; return function (method, arg) { if ("executing" === state) throw new Error("Generator is already running"); if ("completed" === state) { if ("throw" === method) throw arg; return doneResult(); } for (context.method = method, context.arg = arg;;) { var delegate = context.delegate; if (delegate) { var delegateResult = maybeInvokeDelegate(delegate, context); if (delegateResult) { if (delegateResult === ContinueSentinel) continue; return delegateResult; } } if ("next" === context.method) context.sent = context._sent = context.arg;else if ("throw" === context.method) { if ("suspendedStart" === state) throw state = "completed", context.arg; context.dispatchException(context.arg); } else "return" === context.method && context.abrupt("return", context.arg); state = "executing"; var record = tryCatch(innerFn, self, context); if ("normal" === record.type) { if (state = context.done ? "completed" : "suspendedYield", record.arg === ContinueSentinel) continue; return { value: record.arg, done: context.done }; } "throw" === record.type && (state = "completed", context.method = "throw", context.arg = record.arg); } }; } function maybeInvokeDelegate(delegate, context) { var methodName = context.method, method = delegate.iterator[methodName]; if (undefined === method) return context.delegate = null, "throw" === methodName && delegate.iterator["return"] && (context.method = "return", context.arg = undefined, maybeInvokeDelegate(delegate, context), "throw" === context.method) || "return" !== methodName && (context.method = "throw", context.arg = new TypeError("The iterator does not provide a '" + methodName + "' method")), ContinueSentinel; var record = tryCatch(method, delegate.iterator, context.arg); if ("throw" === record.type) return context.method = "throw", context.arg = record.arg, context.delegate = null, ContinueSentinel; var info = record.arg; return info ? info.done ? (context[delegate.resultName] = info.value, context.next = delegate.nextLoc, "return" !== context.method && (context.method = "next", context.arg = undefined), context.delegate = null, ContinueSentinel) : info : (context.method = "throw", context.arg = new TypeError("iterator result is not an object"), context.delegate = null, ContinueSentinel); } function pushTryEntry(locs) { var entry = { tryLoc: locs[0] }; 1 in locs && (entry.catchLoc = locs[1]), 2 in locs && (entry.finallyLoc = locs[2], entry.afterLoc = locs[3]), this.tryEntries.push(entry); } function resetTryEntry(entry) { var record = entry.completion || {}; record.type = "normal", delete record.arg, entry.completion = record; } function Context(tryLocsList) { this.tryEntries = [{ tryLoc: "root" }], tryLocsList.forEach(pushTryEntry, this), this.reset(!0); } function values(iterable) { if (iterable) { var iteratorMethod = iterable[iteratorSymbol]; if (iteratorMethod) return iteratorMethod.call(iterable); if ("function" == typeof iterable.next) return iterable; if (!isNaN(iterable.length)) { var i = -1, next = function next() { for (; ++i < iterable.length;) if (hasOwn.call(iterable, i)) return next.value = iterable[i], next.done = !1, next; return next.value = undefined, next.done = !0, next; }; return next.next = next; } } return { next: doneResult }; } function doneResult() { return { value: undefined, done: !0 }; } return GeneratorFunction.prototype = GeneratorFunctionPrototype, defineProperty(Gp, "constructor", { value: GeneratorFunctionPrototype, configurable: !0 }), defineProperty(GeneratorFunctionPrototype, "constructor", { value: GeneratorFunction, configurable: !0 }), GeneratorFunction.displayName = define(GeneratorFunctionPrototype, toStringTagSymbol, "GeneratorFunction"), exports.isGeneratorFunction = function (genFun) { var ctor = "function" == typeof genFun && genFun.constructor; return !!ctor && (ctor === GeneratorFunction || "GeneratorFunction" === (ctor.displayName || ctor.name)); }, exports.mark = function (genFun) { return Object.setPrototypeOf ? Object.setPrototypeOf(genFun, GeneratorFunctionPrototype) : (genFun.__proto__ = GeneratorFunctionPrototype, define(genFun, toStringTagSymbol, "GeneratorFunction")), genFun.prototype = Object.create(Gp), genFun; }, exports.awrap = function (arg) { return { __await: arg }; }, defineIteratorMethods(AsyncIterator.prototype), define(AsyncIterator.prototype, asyncIteratorSymbol, function () { return this; }), exports.AsyncIterator = AsyncIterator, exports.async = function (innerFn, outerFn, self, tryLocsList, PromiseImpl) { void 0 === PromiseImpl && (PromiseImpl = Promise); var iter = new AsyncIterator(wrap(innerFn, outerFn, self, tryLocsList), PromiseImpl); return exports.isGeneratorFunction(outerFn) ? iter : iter.next().then(function (result) { return result.done ? result.value : iter.next(); }); }, defineIteratorMethods(Gp), define(Gp, toStringTagSymbol, "Generator"), define(Gp, iteratorSymbol, function () { return this; }), define(Gp, "toString", function () { return "[object Generator]"; }), exports.keys = function (val) { var object = Object(val), keys = []; for (var key in object) keys.push(key); return keys.reverse(), function next() { for (; keys.length;) { var key = keys.pop(); if (key in object) return next.value = key, next.done = !1, next; } return next.done = !0, next; }; }, exports.values = values, Context.prototype = { constructor: Context, reset: function reset(skipTempReset) { if (this.prev = 0, this.next = 0, this.sent = this._sent = undefined, this.done = !1, this.delegate = null, this.method = "next", this.arg = undefined, this.tryEntries.forEach(resetTryEntry), !skipTempReset) for (var name in this) "t" === name.charAt(0) && hasOwn.call(this, name) && !isNaN(+name.slice(1)) && (this[name] = undefined); }, stop: function stop() { this.done = !0; var rootRecord = this.tryEntries[0].completion; if ("throw" === rootRecord.type) throw rootRecord.arg; return this.rval; }, dispatchException: function dispatchException(exception) { if (this.done) throw exception; var context = this; function handle(loc, caught) { return record.type = "throw", record.arg = exception, context.next = loc, caught && (context.method = "next", context.arg = undefined), !!caught; } for (var i = this.tryEntries.length - 1; i >= 0; --i) { var entry = this.tryEntries[i], record = entry.completion; if ("root" === entry.tryLoc) return handle("end"); if (entry.tryLoc <= this.prev) { var hasCatch = hasOwn.call(entry, "catchLoc"), hasFinally = hasOwn.call(entry, "finallyLoc"); if (hasCatch && hasFinally) { if (this.prev < entry.catchLoc) return handle(entry.catchLoc, !0); if (this.prev < entry.finallyLoc) return handle(entry.finallyLoc); } else if (hasCatch) { if (this.prev < entry.catchLoc) return handle(entry.catchLoc, !0); } else { if (!hasFinally) throw new Error("try statement without catch or finally"); if (this.prev < entry.finallyLoc) return handle(entry.finallyLoc); } } } }, abrupt: function abrupt(type, arg) { for (var i = this.tryEntries.length - 1; i >= 0; --i) { var entry = this.tryEntries[i]; if (entry.tryLoc <= this.prev && hasOwn.call(entry, "finallyLoc") && this.prev < entry.finallyLoc) { var finallyEntry = entry; break; } } finallyEntry && ("break" === type || "continue" === type) && finallyEntry.tryLoc <= arg && arg <= finallyEntry.finallyLoc && (finallyEntry = null); var record = finallyEntry ? finallyEntry.completion : {}; return record.type = type, record.arg = arg, finallyEntry ? (this.method = "next", this.next = finallyEntry.finallyLoc, ContinueSentinel) : this.complete(record); }, complete: function complete(record, afterLoc) { if ("throw" === record.type) throw record.arg; return "break" === record.type || "continue" === record.type ? this.next = record.arg : "return" === record.type ? (this.rval = this.arg = record.arg, this.method = "return", this.next = "end") : "normal" === record.type && afterLoc && (this.next = afterLoc), ContinueSentinel; }, finish: function finish(finallyLoc) { for (var i = this.tryEntries.length - 1; i >= 0; --i) { var entry = this.tryEntries[i]; if (entry.finallyLoc === finallyLoc) return this.complete(entry.completion, entry.afterLoc), resetTryEntry(entry), ContinueSentinel; } }, "catch": function _catch(tryLoc) { for (var i = this.tryEntries.length - 1; i >= 0; --i) { var entry = this.tryEntries[i]; if (entry.tryLoc === tryLoc) { var record = entry.completion; if ("throw" === record.type) { var thrown = record.arg; resetTryEntry(entry); } return thrown; } } throw new Error("illegal catch attempt"); }, delegateYield: function delegateYield(iterable, resultName, nextLoc) { return this.delegate = { iterator: values(iterable), resultName: resultName, nextLoc: nextLoc }, "next" === this.method && (this.arg = undefined), ContinueSentinel; } }, exports; }
@@ -3809,6 +3883,11 @@ var Chatbox = function Chatbox(props) {
     _useState14 = src_slicedToArray(_useState13, 2),
     tempAnimText = _useState14[0],
     setTempAnimText = _useState14[1];
+  var _useState15 = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)(true),
+    _useState16 = src_slicedToArray(_useState15, 2),
+    enableStreamMode = _useState16[0],
+    setEnableStreamMode = _useState16[1];
+  var animatedMessagesRef = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useRef)(new Set()); // Add a ref to keep track of messages that have already been animated
 
   //
   var timer = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useRef)(null);
@@ -3851,6 +3930,12 @@ var Chatbox = function Chatbox(props) {
       },
       setContextData: function setContextData(v) {
         contextDataRef.current = v;
+      },
+      getMessages: function getMessages() {
+        return msgList;
+      },
+      setMessages: function setMessages(v) {
+        setMsgList(v);
       }
     };
   };
@@ -3887,6 +3972,7 @@ var Chatbox = function Chatbox(props) {
       toolkitButtons = currentProps.toolkitButtons,
       newChatButton = currentProps.newChatButton,
       maxHistoryLength = currentProps.maxHistoryLength,
+      customRequest = currentProps.customRequest,
       renderParser = currentProps.renderParser,
       requestBodyFormatter = currentProps.requestBodyFormatter,
       nameFormatter = currentProps.nameFormatter,
@@ -3949,6 +4035,7 @@ var Chatbox = function Chatbox(props) {
       maxHistoryLength: maxHistoryLength,
       toolkitButtons: toolkitButtons,
       newChatButton: newChatButton,
+      customRequest: customRequest,
       renderParser: renderParser,
       requestBodyFormatter: requestBodyFormatter,
       nameFormatter: nameFormatter,
@@ -3971,10 +4058,10 @@ var Chatbox = function Chatbox(props) {
   //================================================================
   // Custom buttons
   //================================================================
-  var _useState15 = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)({}),
-    _useState16 = src_slicedToArray(_useState15, 2),
-    activeButtons = _useState16[0],
-    setActiveButtons = _useState16[1];
+  var _useState17 = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)({}),
+    _useState18 = src_slicedToArray(_useState17, 2),
+    activeButtons = _useState18[0],
+    setActiveButtons = _useState18[1];
   var executeButtonAction = function executeButtonAction(actionStr, buttonId, buttonElement) {
     try {
       // Create a new function to execute
@@ -4391,7 +4478,7 @@ var Chatbox = function Chatbox(props) {
             return mainRequest(message);
           case 20:
             res = _context4.sent;
-            if (args().isStream) {
+            if (res.useStreamRender) {
               _context4.next = 32;
               break;
             }
@@ -4457,37 +4544,95 @@ var Chatbox = function Chatbox(props) {
   };
   var mainRequest = /*#__PURE__*/function () {
     var _ref3 = src_asyncToGenerator( /*#__PURE__*/src_regeneratorRuntime().mark(function _callee5(msg) {
-      var requestBodyRes, response, _errInfo, _args$responseExtract2, extractPath, _response, _errInfo2, jsonResponse, result, _iterator3, _step3, path, content, _err;
+      var currentStreamMode, requestBodyRes, customResponse, content, isStream, contentRes, response, _errInfo, _args$responseExtract2, extractPath, _response, _errInfo2, jsonResponse, result, _iterator3, _step3, path, _content2, _err;
       return src_regeneratorRuntime().wrap(function _callee5$(_context5) {
         while (1) switch (_context5.prev = _context5.next) {
           case 0:
-            _context5.prev = 0;
+            currentStreamMode = args().isStream; // Update stream mode
+            setEnableStreamMode(currentStreamMode);
+            _context5.prev = 2;
             // Parse and interpolate request body template
             requestBodyRes = JSON.parse((args().requestBodyTmpl || '{}').replace(/\{model\}/g, args().model).replace(/\{message\}/g, msg).replace(/\{token\}/g, chatId)); // 
             // If a formatter function exists, it is used to process the request body
-            if (typeof args().requestBodyFormatter === 'function') {
-              requestBodyRes = args().requestBodyFormatter(requestBodyRes, args().latestContextData, conversationHistory.current);
+            if (!(typeof args().requestBodyFormatter === 'function')) {
+              _context5.next = 8;
+              break;
             }
-
+            _context5.next = 7;
+            return args().requestBodyFormatter(requestBodyRes, args().latestContextData, conversationHistory.current);
+          case 7:
+            requestBodyRes = _context5.sent;
+          case 8:
             // Scroll to the bottom
             setTimeout(function () {
               // Scroll to the bottom
               scrollToBottom();
             }, 500);
-            if (!args().isStream) {
-              _context5.next = 18;
+            if (!(typeof args().customRequest === 'function')) {
+              _context5.next = 25;
               break;
             }
-            _context5.next = 7;
+            // Update stream mode
+            setEnableStreamMode(false);
+            _context5.next = 13;
+            return args().customRequest(msg, {
+              requestBody: requestBodyRes,
+              apiUrl: args().requestApiUrl || '',
+              headers: args().headerConfigRes
+            });
+          case 13:
+            customResponse = _context5.sent;
+            content = customResponse.content, isStream = customResponse.isStream;
+            contentRes = content; // Update stream mode
+            setEnableStreamMode(isStream);
+
+            // NORMAL
+            //++++++++++++++++++++++++++++++++++++++++++++++++
+            if (!(!isStream && typeof contentRes === 'string' && contentRes.trim() !== '')) {
+              _context5.next = 20;
+              break;
+            }
+            // Replace with a valid label 
+            contentRes = fixHtmlTags(contentRes, args().withReasoning, args().reasoningSwitchLabel);
+            return _context5.abrupt("return", {
+              reply: formatLatestDisplayContent(contentRes),
+              useStreamRender: false
+            });
+          case 20:
+            if (!(isStream && isStreamResponse(contentRes))) {
+              _context5.next = 24;
+              break;
+            }
+            _context5.next = 23;
+            return streamController.start(contentRes);
+          case 23:
+            return _context5.abrupt("return", {
+              reply: tempAnimText,
+              // The final content will be in tempAnimText
+              useStreamRender: true
+            });
+          case 24:
+            // DEFAULT
+            //++++++++++++++++++++++++++++++++++++++++++++++++
+            if (contentRes === null) {
+              // Update stream mode
+              setEnableStreamMode(currentStreamMode);
+            }
+          case 25:
+            if (!currentStreamMode) {
+              _context5.next = 39;
+              break;
+            }
+            _context5.next = 28;
             return fetch(args().requestApiUrl || '', {
               method: "POST",
               body: JSON.stringify(requestBodyRes),
               headers: args().headerConfigRes
             });
-          case 7:
+          case 28:
             response = _context5.sent;
             if (response.ok) {
-              _context5.next = 13;
+              _context5.next = 34;
               break;
             }
             _errInfo = "[ERROR] HTTP Error ".concat(response.status, ": ").concat(response.statusText);
@@ -4496,40 +4641,44 @@ var Chatbox = function Chatbox(props) {
             // hide loader
             setLoaderDisplay(false);
             return _context5.abrupt("return", {
-              reply: _errInfo
+              reply: _errInfo,
+              useStreamRender: false
             });
-          case 13:
-            _context5.next = 15;
+          case 34:
+            _context5.next = 36;
             return streamController.start(response);
-          case 15:
+          case 36:
             return _context5.abrupt("return", {
-              reply: tempAnimText // The final content will be in tempAnimText
+              reply: tempAnimText,
+              // The final content will be in tempAnimText
+              useStreamRender: true
             });
-          case 18:
+          case 39:
             // Extract response using the path
             extractPath = (_args$responseExtract2 = args().responseExtractPath) === null || _args$responseExtract2 === void 0 ? void 0 : _args$responseExtract2.slice(1);
-            _context5.next = 21;
+            _context5.next = 42;
             return fetch(args().requestApiUrl || '', {
               method: "POST",
               headers: args().headerConfigRes,
               body: JSON.stringify(requestBodyRes),
               signal: abortController.current.signal
             });
-          case 21:
+          case 42:
             _response = _context5.sent;
             if (_response.ok) {
-              _context5.next = 26;
+              _context5.next = 47;
               break;
             }
             _errInfo2 = "[ERROR] HTTP Error ".concat(_response.status, ": ").concat(_response.statusText); // hide loader
             setLoaderDisplay(false);
             return _context5.abrupt("return", {
-              reply: _errInfo2
+              reply: _errInfo2,
+              useStreamRender: false
             });
-          case 26:
-            _context5.next = 28;
+          case 47:
+            _context5.next = 49;
             return _response.json();
-          case 28:
+          case 49:
             jsonResponse = _context5.sent;
             // hide loader
             setLoaderDisplay(false);
@@ -4547,30 +4696,32 @@ var Chatbox = function Chatbox(props) {
                 _iterator3.f();
               }
             }
-            content = result; // Replace with a valid label
-            content = fixHtmlTags(content, args().withReasoning, args().reasoningSwitchLabel);
+            _content2 = result; // Replace with a valid label
+            _content2 = fixHtmlTags(_content2, args().withReasoning, args().reasoningSwitchLabel);
             return _context5.abrupt("return", {
-              reply: formatLatestDisplayContent(content)
+              reply: formatLatestDisplayContent(_content2),
+              useStreamRender: false
             });
-          case 35:
-            _context5.next = 43;
+          case 56:
+            _context5.next = 64;
             break;
-          case 37:
-            _context5.prev = 37;
-            _context5.t0 = _context5["catch"](0);
+          case 58:
+            _context5.prev = 58;
+            _context5.t0 = _context5["catch"](2);
             _err = "--> Error in mainRequest: ".concat(_context5.t0);
             console.error(_err);
 
             //reset SSE
             closeSSE();
             return _context5.abrupt("return", {
-              reply: _err
+              reply: _err,
+              useStreamRender: false
             });
-          case 43:
+          case 64:
           case "end":
             return _context5.stop();
         }
-      }, _callee5, null, [[0, 37]]);
+      }, _callee5, null, [[2, 58]]);
     }));
     return function mainRequest(_x8) {
       return _ref3.apply(this, arguments);
@@ -4580,7 +4731,7 @@ var Chatbox = function Chatbox(props) {
   // exposes the following methods
   (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useImperativeHandle)(propsRef.current.contentRef, function () {
     return exposedMethods();
-  }, [propsRef.current.contentRef, inputContentRef, msInput]);
+  }, [propsRef.current.contentRef, inputContentRef, msInput, msgList]);
 
   // Update ref when props change
   (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useEffect)(function () {
@@ -4594,6 +4745,12 @@ var Chatbox = function Chatbox(props) {
   (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useEffect)(function () {
     contextDataRef.current = props.contextData;
   }, [props.contextData]);
+  (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useEffect)(function () {
+    if (Array.isArray(props.defaultMessages) && props.defaultMessages.length > 0) {
+      // Update the default messages
+      setMsgList(props.defaultMessages);
+    }
+  }, [props.defaultMessages]);
   (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useEffect)(function () {
     if (Array.isArray(props.defaultMessages) && props.defaultMessages.length > 0) {
       // Update the default messages
@@ -4672,6 +4829,10 @@ var Chatbox = function Chatbox(props) {
   }, msgList.map(function (msg, index) {
     var _msg$tag;
     var isAnimProgress = tempAnimText !== '' && msg.sender !== args().questionNameRes && index === msgList.length - 1 && loading;
+    var hasAnimated = animatedMessagesRef.current.has(index);
+
+    // Mark the message as animated;
+    animatedMessagesRef.current.add(index);
     return /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
       key: index,
       className: ((_msg$tag = msg.tag) === null || _msg$tag === void 0 ? void 0 : _msg$tag.indexOf('[reply]')) < 0 ? 'request' : 'reply',
@@ -4688,19 +4849,25 @@ var Chatbox = function Chatbox(props) {
       dangerouslySetInnerHTML: {
         __html: "".concat(msg.content, " <span class=\"qa-timestamp\">").concat(msg.timestamp, "</span>")
       }
-    })) : /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, args().isStream ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
+    })) : /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, enableStreamMode ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
       className: "qa-content",
       dangerouslySetInnerHTML: {
         __html: "".concat(msg.content, " <span class=\"qa-timestamp\">").concat(msg.timestamp, "</span>")
       }
     })) : /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
       className: "qa-content"
-    }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement(src_TypingEffect, {
-      messagesDiv: msgContainerRef.current,
+    }, hasAnimated ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
+      dangerouslySetInnerHTML: {
+        __html: "".concat(msg.content, " <span class=\"qa-timestamp\">").concat(msg.timestamp, "</span>")
+      }
+    }) : /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement(src_TypingEffect, {
+      onUpdate: function onUpdate() {
+        scrollToBottom();
+      },
       content: "".concat(msg.content, " <span class=\"qa-timestamp\">").concat(msg.timestamp, "</span>"),
       speed: 10
     })))));
-  }), args().isStream ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, args().verbose ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, tempAnimText !== '' && loading ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
+  }), enableStreamMode ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, args().verbose ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, tempAnimText !== '' && loading ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
     className: "reply reply-waiting"
   }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
     className: "qa-name"
@@ -4742,7 +4909,7 @@ var Chatbox = function Chatbox(props) {
     dangerouslySetInnerHTML: {
       __html: "".concat(tempAnimText)
     }
-  }))) : null)) : null)) : null, !args().isStream ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, loading ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
+  }))) : null)) : null)) : null, !enableStreamMode ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, loading ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
     className: "reply reply-waiting"
   }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
     className: "qa-name"
@@ -4766,6 +4933,7 @@ var Chatbox = function Chatbox(props) {
   }))) : null)) : null) : null, args().newChatButton && msgList.length > 0 && /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
     className: "newchat-btn"
   }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("button", {
+    id: "".concat(args().prefix || 'custom-', "chatbox-btn-new-").concat(chatId),
     onClick: function onClick(e) {
       return executeButtonAction(args().newChatButton.onClick, "".concat(args().prefix || 'custom-', "chatbox-btn-new-").concat(chatId), e.currentTarget);
     }
@@ -4799,7 +4967,7 @@ var Chatbox = function Chatbox(props) {
     onClick: function onClick(e) {
       e.preventDefault();
       e.stopPropagation();
-      if (!args().isStream) {
+      if (!enableStreamMode) {
         // normal request
         abortNormalRequest();
       } else {
@@ -4820,7 +4988,7 @@ var Chatbox = function Chatbox(props) {
       e.stopPropagation();
 
       // normal request
-      if (!args().isStream) {
+      if (!enableStreamMode) {
         if (abortController.current.signal.aborted) {
           reconnectNormalRequest();
         }
@@ -4846,6 +5014,7 @@ var Chatbox = function Chatbox(props) {
     var isActive = activeButtons[_id];
     return /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("button", {
       key: index,
+      id: _id,
       className: "".concat(btn.value || '', " ").concat(isActive ? 'active' : ''),
       onClick: function onClick(e) {
         return executeButtonAction(btn.onClick, _id, e.currentTarget);

@@ -19,10 +19,12 @@ import {
     isValidJSON,
     formatLatestDisplayContent,
     formatName,
-    fixHtmlTags
+    fixHtmlTags,
+    isStreamResponse
 } from './utils/func';
 
 import useStreamController from './useStreamController';
+
 
 export type MessageDetail = {
     sender: string; // Sender's name
@@ -42,6 +44,23 @@ export interface RequestConfig {
     requestBody: string;  // JSON string for request body template
     responseExtractor: string;  // JSON path to extract response
 }
+
+type CustomRequestConfig = {
+    requestBody: any;
+    apiUrl: string;
+    headers: any;
+};
+
+type CustomRequestResponse = {
+    content: string | Response | null;
+    isStream: boolean;
+};
+
+type CustomRequestFunction = (
+    message: string,
+    config: CustomRequestConfig
+) => Promise<CustomRequestResponse>;
+
 
 export type ChatboxProps = {
     debug?: boolean;
@@ -71,8 +90,9 @@ export type ChatboxProps = {
     contextData?: Record<string, any>;  // Dynamic JSON data
     toolkitButtons?: FloatingButton[];
     newChatButton?: FloatingButton;
+    customRequest?: CustomRequestFunction;
     renderParser?: (input: string) => Promise<string>;
-    requestBodyFormatter?: (body: any, contextData: Record<string, any>, conversationHistory: MessageDetail[]) => any;
+    requestBodyFormatter?: (body: any, contextData: Record<string, any>, conversationHistory: MessageDetail[]) => Promise<Record<string, any>>;
     nameFormatter?: (input: string) => string;
     onInputChange?: (controlRef: React.RefObject<any>, val: string) => any;
     onChunk?: (controlRef: React.RefObject<any>, lastContent: string, conversationHistory: MessageDetail[]) => any;
@@ -118,6 +138,8 @@ const Chatbox = (props: ChatboxProps) => {
     const [msgList, setMsgList] = useState<MessageDetail[]>([]);
     const [elapsedTime, setElapsedTime] = useState<number>(0);
     const [tempAnimText, setTempAnimText] = useState<string>('');
+    const [enableStreamMode, setEnableStreamMode] = useState<boolean>(true);
+    const animatedMessagesRef = useRef<Set<number>>(new Set()); // Add a ref to keep track of messages that have already been animated
 
     //
     const timer = useRef<any>(null);
@@ -160,6 +182,12 @@ const Chatbox = (props: ChatboxProps) => {
             setContextData: (v: Record<string, any>) => {
                 contextDataRef.current = v;
             },
+            getMessages: () => {
+                return msgList;
+            },
+            setMessages: (v: MessageDetail[]) => {
+                setMsgList(v);
+            }
             
         };
     };
@@ -200,6 +228,7 @@ const Chatbox = (props: ChatboxProps) => {
             toolkitButtons,
             newChatButton,
             maxHistoryLength,
+            customRequest,
             renderParser,
             requestBodyFormatter,
             nameFormatter,
@@ -270,6 +299,7 @@ const Chatbox = (props: ChatboxProps) => {
             maxHistoryLength,
             toolkitButtons,
             newChatButton,
+            customRequest,
             renderParser,
             requestBodyFormatter,
             nameFormatter,
@@ -643,7 +673,7 @@ const Chatbox = (props: ChatboxProps) => {
 
             // reply (normal)
             //======================
-            if (!args().isStream) {
+            if (!res.useStreamRender) {
                 const reply = res.reply;
                 let replyRes = `${reply}`;
 
@@ -661,7 +691,6 @@ const Chatbox = (props: ChatboxProps) => {
 
                 //reset SSE
                 closeSSE();
-
             }
 
 
@@ -704,8 +733,12 @@ const Chatbox = (props: ChatboxProps) => {
 
     const mainRequest = async (msg: string) => {
 
-        // Use vLLM's API
-        //======================
+        const currentStreamMode: boolean | undefined = args().isStream;
+
+        // Update stream mode
+        setEnableStreamMode(currentStreamMode as boolean);
+
+
         try {
             // Parse and interpolate request body template
             let requestBodyRes = JSON.parse(
@@ -718,7 +751,7 @@ const Chatbox = (props: ChatboxProps) => {
             // 
             // If a formatter function exists, it is used to process the request body
             if (typeof args().requestBodyFormatter === 'function') {
-                requestBodyRes = args().requestBodyFormatter(requestBodyRes, args().latestContextData, conversationHistory.current);
+                requestBodyRes = await args().requestBodyFormatter(requestBodyRes, args().latestContextData, conversationHistory.current);
             } 
 
             // Scroll to the bottom
@@ -727,8 +760,63 @@ const Chatbox = (props: ChatboxProps) => {
                 scrollToBottom();
             }, 500);
 
+            {/* ======================================================== */}
+            {/* ===================== CUSTOM REQUEST  ================== */}
+            {/* ======================================================== */}
+            // Check if customRequest exists and use it
+            if (typeof args().customRequest === 'function') {
 
-            if (args().isStream) {
+                // Update stream mode
+                setEnableStreamMode(false);
+
+                let customResponse: any = await args().customRequest(msg, {
+                    requestBody: requestBodyRes,
+                    apiUrl: args().requestApiUrl || '',
+                    headers: args().headerConfigRes
+                });
+
+                const { content, isStream } = customResponse;
+                let contentRes: any = content;
+
+                // Update stream mode
+                setEnableStreamMode(isStream);
+
+                // NORMAL
+                //++++++++++++++++++++++++++++++++++++++++++++++++
+                if (!isStream && typeof contentRes === 'string' && contentRes.trim() !== '') {
+                    // Replace with a valid label 
+                    contentRes = fixHtmlTags(contentRes as string, args().withReasoning, args().reasoningSwitchLabel);
+
+                    return {
+                        reply: formatLatestDisplayContent(contentRes),
+                        useStreamRender: false
+                    };
+                }
+                
+                // STREAM
+                //++++++++++++++++++++++++++++++++++++++++++++++++
+                if (isStream && isStreamResponse(contentRes as never)) {
+                    // Start streaming
+                    await streamController.start(contentRes as never);
+
+                    return {
+                        reply: tempAnimText, // The final content will be in tempAnimText
+                        useStreamRender: true
+                    };
+                }
+
+
+                // DEFAULT
+                //++++++++++++++++++++++++++++++++++++++++++++++++
+                if (contentRes === null) {
+                    // Update stream mode
+                    setEnableStreamMode(currentStreamMode as boolean);
+                }
+
+            }
+
+
+            if (currentStreamMode) {
                 {/* ======================================================== */}
                 {/* ======================== STREAM  ====================== */}
                 {/* ======================================================== */}
@@ -749,7 +837,8 @@ const Chatbox = (props: ChatboxProps) => {
 
 
                     return {
-                        reply: _errInfo
+                        reply: _errInfo,
+                        useStreamRender: false
                     };
                 }
                 
@@ -757,7 +846,8 @@ const Chatbox = (props: ChatboxProps) => {
                 await streamController.start(response);
 
                 return {
-                    reply: tempAnimText // The final content will be in tempAnimText
+                    reply: tempAnimText, // The final content will be in tempAnimText
+                    useStreamRender: true
                 };
 
 
@@ -783,7 +873,8 @@ const Chatbox = (props: ChatboxProps) => {
                     setLoaderDisplay(false);
 
                     return {
-                        reply: _errInfo
+                        reply: _errInfo,
+                        useStreamRender: false
                     };
                 }
                
@@ -806,13 +897,11 @@ const Chatbox = (props: ChatboxProps) => {
                 content = fixHtmlTags(content, args().withReasoning, args().reasoningSwitchLabel);
 
                 return {
-                    reply: formatLatestDisplayContent(content)
+                    reply: formatLatestDisplayContent(content),
+                    useStreamRender: false
                 };
 
             }
-
-
-
 
 
 
@@ -824,7 +913,8 @@ const Chatbox = (props: ChatboxProps) => {
             closeSSE();
             
             return {
-                reply: _err
+                reply: _err,
+                useStreamRender: false
             };
         }
 
@@ -835,7 +925,7 @@ const Chatbox = (props: ChatboxProps) => {
     useImperativeHandle(
         propsRef.current.contentRef,
         () => exposedMethods(),
-        [propsRef.current.contentRef, inputContentRef, msInput],
+        [propsRef.current.contentRef, inputContentRef, msInput, msgList],
     );
 
 
@@ -854,6 +944,13 @@ const Chatbox = (props: ChatboxProps) => {
     useEffect(() => {
         contextDataRef.current = props.contextData;
     }, [props.contextData]);
+
+    useEffect(() => {
+        if (Array.isArray(props.defaultMessages) && props.defaultMessages.length > 0) {
+            // Update the default messages
+            setMsgList(props.defaultMessages);
+        }
+    }, [props.defaultMessages]);
 
     useEffect(() => {
         if (Array.isArray(props.defaultMessages) && props.defaultMessages.length > 0) {
@@ -917,7 +1014,10 @@ const Chatbox = (props: ChatboxProps) => {
                     {msgList.map((msg, index) => {
 
                         const isAnimProgress = tempAnimText !== '' && msg.sender !== args().questionNameRes && index === msgList.length - 1 && loading;
-
+                        const hasAnimated = animatedMessagesRef.current.has(index);
+                        
+                        // Mark the message as animated;
+                        animatedMessagesRef.current.add(index);
 
                         return <div key={index} className={msg.tag?.indexOf('[reply]') < 0 ? 'request' : 'reply'} style={{ display: isAnimProgress ? 'none' : '' }}>
                             <div className="qa-name" dangerouslySetInnerHTML={{ __html: `${msg.sender}` }}></div>
@@ -926,15 +1026,22 @@ const Chatbox = (props: ChatboxProps) => {
                                 <div className="qa-content" dangerouslySetInnerHTML={{ __html: `${msg.content} <span class="qa-timestamp">${msg.timestamp}</span>` }}></div>
                             </> : <>
 
-                                {args().isStream ? <>
+                                {enableStreamMode ? <>
                                     <div className="qa-content" dangerouslySetInnerHTML={{ __html: `${msg.content} <span class="qa-timestamp">${msg.timestamp}</span>` }}></div>
                                 </> : <>
                                     <div className="qa-content">
-                                        <TypingEffect
-                                            messagesDiv={msgContainerRef.current}
-                                            content={`${msg.content} <span class="qa-timestamp">${msg.timestamp}</span>`}
-                                            speed={10}
-                                        />
+                                        {hasAnimated ? (
+                                            <div dangerouslySetInnerHTML={{ __html: `${msg.content} <span class="qa-timestamp">${msg.timestamp}</span>` }}></div>
+                                        ) : (
+                                            <TypingEffect
+                                                onUpdate={() => {
+                                                    scrollToBottom();
+                                                }}
+                                                content={`${msg.content} <span class="qa-timestamp">${msg.timestamp}</span>`}
+                                                speed={10}
+                                            />
+                                        )}
+                                        
                                     </div>
                                 </>}
                             </>}
@@ -948,7 +1055,7 @@ const Chatbox = (props: ChatboxProps) => {
                     {/* ======================================================== */}
                     {/* ====================== STREAM  begin ==================== */}
                     {/* ======================================================== */}
-                    {args().isStream ? <>
+                    {enableStreamMode ? <>
                         {args().verbose ? <>
                             {/* +++++++++++++++ With reasoning ++++++++++++++++++++ */}
 
@@ -1013,7 +1120,7 @@ const Chatbox = (props: ChatboxProps) => {
                     {/* ======================================================== */}
                     {/* ====================== NORMAL  begin ==================== */}
                     {/* ======================================================== */}
-                    {!args().isStream ? <>
+                    {!enableStreamMode ? <>
                         {/** ANIM TEXT (has loading) */}
                         {loading ? <>
                             <div className="reply reply-waiting">
@@ -1045,6 +1152,7 @@ const Chatbox = (props: ChatboxProps) => {
                     {args().newChatButton && msgList.length > 0 && (
                         <div className="newchat-btn">
                             <button 
+                                id={`${args().prefix || 'custom-'}chatbox-btn-new-${chatId}`}
                                 onClick={(e: React.MouseEvent<HTMLButtonElement>) => executeButtonAction(args().newChatButton.onClick, `${args().prefix || 'custom-'}chatbox-btn-new-${chatId}`, e.currentTarget)}
                             >
                                 <span dangerouslySetInnerHTML={{ __html: args().newChatButton?.label || '' }}></span>
@@ -1093,7 +1201,7 @@ const Chatbox = (props: ChatboxProps) => {
                                 e.preventDefault();
                                 e.stopPropagation();
 
-                                if (!args().isStream) {
+                                if (!enableStreamMode) {
                                     // normal request
                                     abortNormalRequest();
                                 } else {
@@ -1114,7 +1222,7 @@ const Chatbox = (props: ChatboxProps) => {
                                 e.stopPropagation();
 
                                 // normal request
-                                if (!args().isStream) {
+                                if (!enableStreamMode) {
                                     if (abortController.current.signal.aborted) {
                                         reconnectNormalRequest();
                                     }
@@ -1145,6 +1253,7 @@ const Chatbox = (props: ChatboxProps) => {
                             const isActive = activeButtons[_id];
                             return <button
                                 key={index}
+                                id={_id}
                                 className={`${btn.value || ''} ${isActive ? 'active' : ''}`}
                                 onClick={(e: React.MouseEvent<HTMLButtonElement>) => executeButtonAction(btn.onClick, _id, e.currentTarget)}
                             >

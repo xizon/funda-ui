@@ -105,3 +105,21 @@ export function fixHtmlTags(html: string, withReasoning: boolean, reasoningSwitc
     .replace('</think>', '</div></details> ');
 }
 
+export function isStreamResponse(response: Response): boolean {
+    // Method 1: Check Content-Type
+    const contentType = response.headers.get('Content-Type');
+    if (contentType) {
+        return contentType.includes('text/event-stream') || 
+               contentType.includes('application/x-ndjson') ||
+               contentType.includes('application/stream+json');
+    }
+
+    // Method 2: Check Transfer-Encoding
+    const transferEncoding = response.headers.get('Transfer-Encoding');
+    if (transferEncoding) {
+        return transferEncoding.includes('chunked');
+    }
+
+    // Method 3: Check if response.body is ReadableStream
+    return response.body instanceof ReadableStream;
+};
