@@ -965,7 +965,11 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 
                         // initialize default row height
                         if (el.scrollHeight > 0 && !defaultRowHeightInit) {
-                          setDefaultRowHeight(el.scrollHeight + parseInt(style.borderTopWidth) + parseInt(style.borderBottomWidth));
+                          var _defaultRowHeight = el.scrollHeight + parseInt(style.borderTopWidth) + parseInt(style.borderBottomWidth);
+                          if (maxHeight != 0 && _defaultRowHeight >= maxHeight) {
+                            _defaultRowHeight = maxHeight;
+                          }
+                          setDefaultRowHeight(_defaultRowHeight);
                           setDefaultRowHeightInit(true);
                         }
 
@@ -982,11 +986,11 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 
                         // !!! Compare initial height and changed height
                         if (scrollHeight > defaultRowHeight && defaultRowHeight > 0) {
-                          if (maxHeight != 0 && scrollHeight >= maxHeight) {
-                            el.style.height = maxHeight + "px";
-                          } else {
-                            el.style.height = scrollHeight + "px";
+                          var _scrollHeight = scrollHeight;
+                          if (maxHeight != 0 && _scrollHeight >= maxHeight) {
+                            _scrollHeight = maxHeight;
                           }
+                          el.style.height = _scrollHeight + "px";
                         }
                         cb === null || cb === void 0 ? void 0 : cb([_controlWidth, scrollHeight]);
                       }
@@ -1009,8 +1013,8 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
           /***/
         },
 
-        /***/85: /***/function _(module, exports, __nested_webpack_require_39618__) {
-          /* module decorator */module = __nested_webpack_require_39618__.nmd(module);
+        /***/85: /***/function _(module, exports, __nested_webpack_require_39872__) {
+          /* module decorator */module = __nested_webpack_require_39872__.nmd(module);
           var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;
           function _typeof(obj) {
             "@babel/helpers - typeof";
@@ -1022,7 +1026,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
             }, _typeof(obj);
           }
           (function webpackUniversalModuleDefinition(root, factory) {
-            if (( false ? 0 : _typeof(exports)) === 'object' && ( false ? 0 : _typeof(module)) === 'object') module.exports = factory(__nested_webpack_require_39618__(787));else if (true) !(__WEBPACK_AMD_DEFINE_ARRAY__ = [__nested_webpack_require_39618__(787)], __WEBPACK_AMD_DEFINE_FACTORY__ = factory, __WEBPACK_AMD_DEFINE_RESULT__ = typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ? __WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__) : __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));else {}
+            if (( false ? 0 : _typeof(exports)) === 'object' && ( false ? 0 : _typeof(module)) === 'object') module.exports = factory(__nested_webpack_require_39872__(787));else if (true) !(__WEBPACK_AMD_DEFINE_ARRAY__ = [__nested_webpack_require_39872__(787)], __WEBPACK_AMD_DEFINE_FACTORY__ = factory, __WEBPACK_AMD_DEFINE_RESULT__ = typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ? __WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__) : __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));else {}
           })(this, function (__WEBPACK_EXTERNAL_MODULE__787__) {
             return (/******/function () {
                 // webpackBootstrap
@@ -1182,8 +1186,8 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
           /***/
         },
 
-        /***/702: /***/function _(module, exports, __nested_webpack_require_47706__) {
-          /* module decorator */module = __nested_webpack_require_47706__.nmd(module);
+        /***/702: /***/function _(module, exports, __nested_webpack_require_47960__) {
+          /* module decorator */module = __nested_webpack_require_47960__.nmd(module);
           var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;
           function _typeof(obj) {
             "@babel/helpers - typeof";
@@ -1195,7 +1199,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
             }, _typeof(obj);
           }
           (function webpackUniversalModuleDefinition(root, factory) {
-            if (( false ? 0 : _typeof(exports)) === 'object' && ( false ? 0 : _typeof(module)) === 'object') module.exports = factory(__nested_webpack_require_47706__(787));else if (true) !(__WEBPACK_AMD_DEFINE_ARRAY__ = [__nested_webpack_require_47706__(787)], __WEBPACK_AMD_DEFINE_FACTORY__ = factory, __WEBPACK_AMD_DEFINE_RESULT__ = typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ? __WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__) : __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));else {}
+            if (( false ? 0 : _typeof(exports)) === 'object' && ( false ? 0 : _typeof(module)) === 'object') module.exports = factory(__nested_webpack_require_47960__(787));else if (true) !(__WEBPACK_AMD_DEFINE_ARRAY__ = [__nested_webpack_require_47960__(787)], __WEBPACK_AMD_DEFINE_FACTORY__ = factory, __WEBPACK_AMD_DEFINE_RESULT__ = typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ? __WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__) : __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));else {}
           })(this, function (__WEBPACK_EXTERNAL_MODULE__787__) {
             return (/******/function () {
                 // webpackBootstrap
@@ -1396,7 +1400,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
       /******/
       /******/ // The require function
       /******/
-      function __nested_webpack_require_57327__(moduleId) {
+      function __nested_webpack_require_57581__(moduleId) {
         /******/ // Check if module is in cache
         /******/var cachedModule = __webpack_module_cache__[moduleId];
         /******/
@@ -1415,7 +1419,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
         /******/
         /******/ // Execute the module function
         /******/
-        __webpack_modules__[moduleId].call(module.exports, module, module.exports, __nested_webpack_require_57327__);
+        __webpack_modules__[moduleId].call(module.exports, module, module.exports, __nested_webpack_require_57581__);
         /******/
         /******/ // Flag the module as loaded
         /******/
@@ -1432,14 +1436,14 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
       /******/
       (function () {
         /******/ // getDefaultExport function for compatibility with non-harmony modules
-        /******/__nested_webpack_require_57327__.n = function (module) {
+        /******/__nested_webpack_require_57581__.n = function (module) {
           /******/var getter = module && module.__esModule ? /******/function () {
             return module['default'];
           } : /******/function () {
             return module;
           };
           /******/
-          __nested_webpack_require_57327__.d(getter, {
+          __nested_webpack_require_57581__.d(getter, {
             a: getter
           });
           /******/
@@ -1453,9 +1457,9 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
       /******/
       (function () {
         /******/ // define getter functions for harmony exports
-        /******/__nested_webpack_require_57327__.d = function (exports, definition) {
+        /******/__nested_webpack_require_57581__.d = function (exports, definition) {
           /******/for (var key in definition) {
-            /******/if (__nested_webpack_require_57327__.o(definition, key) && !__nested_webpack_require_57327__.o(exports, key)) {
+            /******/if (__nested_webpack_require_57581__.o(definition, key) && !__nested_webpack_require_57581__.o(exports, key)) {
               /******/Object.defineProperty(exports, key, {
                 enumerable: true,
                 get: definition[key]
@@ -1472,7 +1476,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
       /******/ /* webpack/runtime/hasOwnProperty shorthand */
       /******/
       (function () {
-        /******/__nested_webpack_require_57327__.o = function (obj, prop) {
+        /******/__nested_webpack_require_57581__.o = function (obj, prop) {
           return Object.prototype.hasOwnProperty.call(obj, prop);
         };
         /******/
@@ -1482,7 +1486,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
       /******/
       (function () {
         /******/ // define __esModule on exports
-        /******/__nested_webpack_require_57327__.r = function (exports) {
+        /******/__nested_webpack_require_57581__.r = function (exports) {
           /******/if (typeof Symbol !== 'undefined' && Symbol.toStringTag) {
             /******/Object.defineProperty(exports, Symbol.toStringTag, {
               value: 'Module'
@@ -1501,7 +1505,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
       /******/ /* webpack/runtime/node module decorator */
       /******/
       (function () {
-        /******/__nested_webpack_require_57327__.nmd = function (module) {
+        /******/__nested_webpack_require_57581__.nmd = function (module) {
           /******/module.paths = [];
           /******/
           if (!module.children) module.children = [];
@@ -1518,38 +1522,38 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
       (function () {
         "use strict";
 
-        __nested_webpack_require_57327__.r(__webpack_exports__);
+        __nested_webpack_require_57581__.r(__webpack_exports__);
         /* harmony export */
-        __nested_webpack_require_57327__.d(__webpack_exports__, {
+        __nested_webpack_require_57581__.d(__webpack_exports__, {
           /* harmony export */"default": function _default() {
             return __WEBPACK_DEFAULT_EXPORT__;
           }
           /* harmony export */
         });
         /* harmony import */
-        var react__WEBPACK_IMPORTED_MODULE_0__ = __nested_webpack_require_57327__(787);
+        var react__WEBPACK_IMPORTED_MODULE_0__ = __nested_webpack_require_57581__(787);
         /* harmony import */
-        var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__nested_webpack_require_57327__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+        var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__nested_webpack_require_57581__.n(react__WEBPACK_IMPORTED_MODULE_0__);
         /* harmony import */
-        var funda_utils_dist_cjs_useComId__WEBPACK_IMPORTED_MODULE_1__ = __nested_webpack_require_57327__(85);
+        var funda_utils_dist_cjs_useComId__WEBPACK_IMPORTED_MODULE_1__ = __nested_webpack_require_57581__(85);
         /* harmony import */
-        var funda_utils_dist_cjs_useComId__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__nested_webpack_require_57327__.n(funda_utils_dist_cjs_useComId__WEBPACK_IMPORTED_MODULE_1__);
+        var funda_utils_dist_cjs_useComId__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__nested_webpack_require_57581__.n(funda_utils_dist_cjs_useComId__WEBPACK_IMPORTED_MODULE_1__);
         /* harmony import */
-        var funda_utils_dist_cjs_useAutosizeTextArea__WEBPACK_IMPORTED_MODULE_2__ = __nested_webpack_require_57327__(372);
+        var funda_utils_dist_cjs_useAutosizeTextArea__WEBPACK_IMPORTED_MODULE_2__ = __nested_webpack_require_57581__(372);
         /* harmony import */
-        var funda_utils_dist_cjs_useAutosizeTextArea__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__nested_webpack_require_57327__.n(funda_utils_dist_cjs_useAutosizeTextArea__WEBPACK_IMPORTED_MODULE_2__);
+        var funda_utils_dist_cjs_useAutosizeTextArea__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__nested_webpack_require_57581__.n(funda_utils_dist_cjs_useAutosizeTextArea__WEBPACK_IMPORTED_MODULE_2__);
         /* harmony import */
-        var funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_3__ = __nested_webpack_require_57327__(188);
+        var funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_3__ = __nested_webpack_require_57581__(188);
         /* harmony import */
-        var funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__nested_webpack_require_57327__.n(funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_3__);
+        var funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__nested_webpack_require_57581__.n(funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_3__);
         /* harmony import */
-        var funda_utils_dist_cjs_inputsCalculation__WEBPACK_IMPORTED_MODULE_4__ = __nested_webpack_require_57327__(954);
+        var funda_utils_dist_cjs_inputsCalculation__WEBPACK_IMPORTED_MODULE_4__ = __nested_webpack_require_57581__(954);
         /* harmony import */
-        var funda_utils_dist_cjs_inputsCalculation__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__nested_webpack_require_57327__.n(funda_utils_dist_cjs_inputsCalculation__WEBPACK_IMPORTED_MODULE_4__);
+        var funda_utils_dist_cjs_inputsCalculation__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__nested_webpack_require_57581__.n(funda_utils_dist_cjs_inputsCalculation__WEBPACK_IMPORTED_MODULE_4__);
         /* harmony import */
-        var funda_utils_dist_cjs_useDebounce__WEBPACK_IMPORTED_MODULE_5__ = __nested_webpack_require_57327__(702);
+        var funda_utils_dist_cjs_useDebounce__WEBPACK_IMPORTED_MODULE_5__ = __nested_webpack_require_57581__(702);
         /* harmony import */
-        var funda_utils_dist_cjs_useDebounce__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__nested_webpack_require_57327__.n(funda_utils_dist_cjs_useDebounce__WEBPACK_IMPORTED_MODULE_5__);
+        var funda_utils_dist_cjs_useDebounce__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__nested_webpack_require_57581__.n(funda_utils_dist_cjs_useDebounce__WEBPACK_IMPORTED_MODULE_5__);
         var _excluded = ["contentRef", "wrapperClassName", "controlClassName", "controlExClassName", "controlGroupWrapperClassName", "controlGroupTextClassName", "cols", "rows", "disabled", "required", "placeholder", "autoSize", "autoSizeMaxHeight", "iconLeft", "iconRight", "aiPredict", "aiPredictRemainingTextRGB", "aiPredictConfirmKey", "aiPredictFetchFuncAsync", "aiPredictFetchFuncMethod", "aiPredictFetchFuncMethodParams", "aiPredictFetchCallback", "readOnly", "defaultValue", "value", "requiredLabel", "label", "name", "id", "minLength", "maxLength", "style", "tabIndex", "onChangeCallback", "onInputCallback", "onKeyPressedCallback", "onChange", "onBlur", "onFocus", "onPressEnter", "onKeyDown", "onKeyUp", "onResize"];
         function _regeneratorRuntime() {
           "use strict";
@@ -2509,6 +2513,246 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 
 /***/ }),
 
+/***/ 761:
+/***/ (function(module, exports, __webpack_require__) {
+
+/* module decorator */ module = __webpack_require__.nmd(module);
+var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
+(function webpackUniversalModuleDefinition(root, factory) {
+  if (( false ? 0 : _typeof(exports)) === 'object' && ( false ? 0 : _typeof(module)) === 'object') module.exports = factory(__webpack_require__(787));else if (true) !(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(787)], __WEBPACK_AMD_DEFINE_FACTORY__ = (factory),
+		__WEBPACK_AMD_DEFINE_RESULT__ = (typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ?
+		(__WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__)) : __WEBPACK_AMD_DEFINE_FACTORY__),
+		__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));else {}
+})(this, function (__WEBPACK_EXTERNAL_MODULE__787__) {
+  return (/******/function () {
+      // webpackBootstrap
+      /******/
+      "use strict";
+
+      /******/
+      var __webpack_modules__ = {
+        /***/787: /***/function _(module) {
+          module.exports = __WEBPACK_EXTERNAL_MODULE__787__;
+
+          /***/
+        }
+
+        /******/
+      };
+      /************************************************************************/
+      /******/ // The module cache
+      /******/
+      var __webpack_module_cache__ = {};
+      /******/
+      /******/ // The require function
+      /******/
+      function __nested_webpack_require_1465__(moduleId) {
+        /******/ // Check if module is in cache
+        /******/var cachedModule = __webpack_module_cache__[moduleId];
+        /******/
+        if (cachedModule !== undefined) {
+          /******/return cachedModule.exports;
+          /******/
+        }
+        /******/ // Create a new module (and put it into the cache)
+        /******/
+        var module = __webpack_module_cache__[moduleId] = {
+          /******/ // no module.id needed
+          /******/ // no module.loaded needed
+          /******/exports: {}
+          /******/
+        };
+        /******/
+        /******/ // Execute the module function
+        /******/
+        __webpack_modules__[moduleId](module, module.exports, __nested_webpack_require_1465__);
+        /******/
+        /******/ // Return the exports of the module
+        /******/
+        return module.exports;
+        /******/
+      }
+      /******/
+      /************************************************************************/
+      /******/ /* webpack/runtime/compat get default export */
+      /******/
+      (function () {
+        /******/ // getDefaultExport function for compatibility with non-harmony modules
+        /******/__nested_webpack_require_1465__.n = function (module) {
+          /******/var getter = module && module.__esModule ? /******/function () {
+            return module['default'];
+          } : /******/function () {
+            return module;
+          };
+          /******/
+          __nested_webpack_require_1465__.d(getter, {
+            a: getter
+          });
+          /******/
+          return getter;
+          /******/
+        };
+        /******/
+      })();
+      /******/
+      /******/ /* webpack/runtime/define property getters */
+      /******/
+      (function () {
+        /******/ // define getter functions for harmony exports
+        /******/__nested_webpack_require_1465__.d = function (exports, definition) {
+          /******/for (var key in definition) {
+            /******/if (__nested_webpack_require_1465__.o(definition, key) && !__nested_webpack_require_1465__.o(exports, key)) {
+              /******/Object.defineProperty(exports, key, {
+                enumerable: true,
+                get: definition[key]
+              });
+              /******/
+            }
+            /******/
+          }
+          /******/
+        };
+        /******/
+      })();
+      /******/
+      /******/ /* webpack/runtime/hasOwnProperty shorthand */
+      /******/
+      (function () {
+        /******/__nested_webpack_require_1465__.o = function (obj, prop) {
+          return Object.prototype.hasOwnProperty.call(obj, prop);
+        };
+        /******/
+      })();
+      /******/
+      /******/ /* webpack/runtime/make namespace object */
+      /******/
+      (function () {
+        /******/ // define __esModule on exports
+        /******/__nested_webpack_require_1465__.r = function (exports) {
+          /******/if (typeof Symbol !== 'undefined' && Symbol.toStringTag) {
+            /******/Object.defineProperty(exports, Symbol.toStringTag, {
+              value: 'Module'
+            });
+            /******/
+          }
+          /******/
+          Object.defineProperty(exports, '__esModule', {
+            value: true
+          });
+          /******/
+        };
+        /******/
+      })();
+      /******/
+      /************************************************************************/
+      var __webpack_exports__ = {};
+      // This entry need to be wrapped in an IIFE because it need to be isolated against other modules in the chunk.
+      (function () {
+        __nested_webpack_require_1465__.r(__webpack_exports__);
+        /* harmony export */
+        __nested_webpack_require_1465__.d(__webpack_exports__, {
+          /* harmony export */"default": function _default() {
+            return __WEBPACK_DEFAULT_EXPORT__;
+          }
+          /* harmony export */
+        });
+        /* harmony import */
+        var react__WEBPACK_IMPORTED_MODULE_0__ = __nested_webpack_require_1465__(787);
+        /* harmony import */
+        var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__nested_webpack_require_1465__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+        function _toConsumableArray(arr) {
+          return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread();
+        }
+        function _nonIterableSpread() {
+          throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
+        }
+        function _unsupportedIterableToArray(o, minLen) {
+          if (!o) return;
+          if (typeof o === "string") return _arrayLikeToArray(o, minLen);
+          var n = Object.prototype.toString.call(o).slice(8, -1);
+          if (n === "Object" && o.constructor) n = o.constructor.name;
+          if (n === "Map" || n === "Set") return Array.from(o);
+          if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen);
+        }
+        function _iterableToArray(iter) {
+          if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter);
+        }
+        function _arrayWithoutHoles(arr) {
+          if (Array.isArray(arr)) return _arrayLikeToArray(arr);
+        }
+        function _arrayLikeToArray(arr, len) {
+          if (len == null || len > arr.length) len = arr.length;
+          for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i];
+          return arr2;
+        }
+        /**
+         * Handles the event of clicking outside of the wrapped component
+         * 
+         * @usage:
+        
+        const App = () => {
+        
+            const [show, setShow] = useState<boolean>(false);
+            const dropdownRef = useRef<HTMLDivElement>(null);
+        
+            useClickOutside({
+                enabled: show && dropdownRef.current,
+                isOutside: (event: any) => {
+                    return event.target.closest(`.test__wrapper`) === null && event.target.closest(`.test__wrapper2`) === null;
+                },
+                handle: (event: any) => {
+                    // do something
+                    //...
+                },
+                spyElement: document
+            }, [show, dropdownRef]);
+        };
+        
+         */
+
+        function useClickOutside(_ref, deps) {
+          var enabled = _ref.enabled,
+            isOutside = _ref.isOutside,
+            handle = _ref.handle,
+            _ref$spyElement = _ref.spyElement,
+            spyElement = _ref$spyElement === void 0 ? typeof document === 'undefined' ? null : document : _ref$spyElement;
+          var isOutsideRef = (0, react__WEBPACK_IMPORTED_MODULE_0__.useRef)(isOutside);
+          var handleRef = (0, react__WEBPACK_IMPORTED_MODULE_0__.useRef)(handle);
+          (0, react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(function () {
+            isOutsideRef.current = isOutside;
+
+            // fix possible issue if clicking on a focusable element
+            handleRef.current = handle;
+          }, [isOutside, handle]);
+          (0, react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(function () {
+            if (enabled) {
+              var eventHandler = function eventHandler(event) {
+                var _isOutsideRef$current;
+                if ((_isOutsideRef$current = isOutsideRef.current) !== null && _isOutsideRef$current !== void 0 && _isOutsideRef$current.call(isOutsideRef, event)) {
+                  var _handleRef$current;
+                  (_handleRef$current = handleRef.current) === null || _handleRef$current === void 0 ? void 0 : _handleRef$current.call(handleRef, event);
+                }
+              };
+              spyElement === null || spyElement === void 0 ? void 0 : spyElement.addEventListener('pointerdown', eventHandler);
+              return function () {
+                spyElement === null || spyElement === void 0 ? void 0 : spyElement.removeEventListener('pointerdown', eventHandler);
+              };
+            }
+          }, [enabled].concat(_toConsumableArray(deps)));
+        }
+        /* harmony default export */
+        var __WEBPACK_DEFAULT_EXPORT__ = useClickOutside;
+      })();
+
+      /******/
+      return __webpack_exports__;
+      /******/
+    }()
+  );
+});
+
+/***/ }),
+
 /***/ 85:
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -3186,6 +3430,9 @@ var useDebounce_default = /*#__PURE__*/__webpack_require__.n(useDebounce);
 // EXTERNAL MODULE: ../Utils/dist/cjs/useThrottle.js
 var useThrottle = __webpack_require__(195);
 var useThrottle_default = /*#__PURE__*/__webpack_require__.n(useThrottle);
+// EXTERNAL MODULE: ../Utils/dist/cjs/useClickOutside.js
+var useClickOutside = __webpack_require__(761);
+var useClickOutside_default = /*#__PURE__*/__webpack_require__.n(useClickOutside);
 ;// CONCATENATED MODULE: ./src/PureLoader.tsx
 
 var PureLoader = function PureLoader(props) {
@@ -3342,11 +3589,12 @@ function formatName(str, isAnswer, props) {
   var questionNameIcon = props.questionNameIcon,
     answerNameIcon = props.answerNameIcon,
     nameFormatter = props.nameFormatter;
+  var res = str.replace(/\{icon\}/g, "".concat(isAnswer ? answerNameIcon : questionNameIcon));
   if (typeof nameFormatter === 'function') {
-    return nameFormatter(str.replace(/\{icon\}/g, "".concat(isAnswer ? answerNameIcon : questionNameIcon)));
-  } else {
-    return str.replace(/\{icon\}/g, "".concat(isAnswer ? answerNameIcon : questionNameIcon));
+    var newVal = nameFormatter(res);
+    return newVal;
   }
+  return res;
 }
 function typewriterEffect(messagesDiv, element, str) {
   var speed = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : 50;
@@ -3410,6 +3658,40 @@ function isStreamResponse(response) {
   return response.body instanceof ReadableStream;
 }
 ;
+
+/**
+ * HTML entities encode
+ *
+ * @param {String} str Input text
+ * @return {String} Filtered text
+ */
+function htmlEncode(str) {
+  return str.replace(/[&<>'"]/g, function (tag) {
+    return {
+      '&': '&amp;',
+      '<': '&lt;',
+      '>': '&gt;',
+      "'": '&#39;',
+      '"': '&quot;'
+    }[tag];
+  });
+}
+
+/**
+ * HTML entities decode
+ *
+ * @param {String} str Input text
+ * @return {String} Filtered text
+ */
+function htmlDecode(str) {
+  var res = '';
+  var entities = [['amp', '&'], ['apos', '\''], ['#x27', '\''], ['#x2F', '/'], ['#39', '\''], ['#47', '/'], ['lt', '<'], ['gt', '>'], ['nbsp', ' '], ['quot', '"'], ['#60', '<'], ['#62', '>']];
+  for (var i = 0, max = entities.length; i < max; i++) {
+    str = str.replace(new RegExp('&' + entities[i][0] + ';', 'g'), entities[i][1]);
+  }
+  res = str;
+  return res;
+}
 ;// CONCATENATED MODULE: ./src/useStreamController.tsx
 function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
 function _regeneratorRuntime() { "use strict"; /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/facebook/regenerator/blob/main/LICENSE */ _regeneratorRuntime = function _regeneratorRuntime() { return exports; }; var exports = {}, Op = Object.prototype, hasOwn = Op.hasOwnProperty, defineProperty = Object.defineProperty || function (obj, key, desc) { obj[key] = desc.value; }, $Symbol = "function" == typeof Symbol ? Symbol : {}, iteratorSymbol = $Symbol.iterator || "@@iterator", asyncIteratorSymbol = $Symbol.asyncIterator || "@@asyncIterator", toStringTagSymbol = $Symbol.toStringTag || "@@toStringTag"; function define(obj, key, value) { return Object.defineProperty(obj, key, { value: value, enumerable: !0, configurable: !0, writable: !0 }), obj[key]; } try { define({}, ""); } catch (err) { define = function define(obj, key, value) { return obj[key] = value; }; } function wrap(innerFn, outerFn, self, tryLocsList) { var protoGenerator = outerFn && outerFn.prototype instanceof Generator ? outerFn : Generator, generator = Object.create(protoGenerator.prototype), context = new Context(tryLocsList || []); return defineProperty(generator, "_invoke", { value: makeInvokeMethod(innerFn, self, context) }), generator; } function tryCatch(fn, obj, arg) { try { return { type: "normal", arg: fn.call(obj, arg) }; } catch (err) { return { type: "throw", arg: err }; } } exports.wrap = wrap; var ContinueSentinel = {}; function Generator() {} function GeneratorFunction() {} function GeneratorFunctionPrototype() {} var IteratorPrototype = {}; define(IteratorPrototype, iteratorSymbol, function () { return this; }); var getProto = Object.getPrototypeOf, NativeIteratorPrototype = getProto && getProto(getProto(values([]))); NativeIteratorPrototype && NativeIteratorPrototype !== Op && hasOwn.call(NativeIteratorPrototype, iteratorSymbol) && (IteratorPrototype = NativeIteratorPrototype); var Gp = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(IteratorPrototype); function defineIteratorMethods(prototype) { ["next", "throw", "return"].forEach(function (method) { define(prototype, method, function (arg) { return this._invoke(method, arg); }); }); } function AsyncIterator(generator, PromiseImpl) { function invoke(method, arg, resolve, reject) { var record = tryCatch(generator[method], generator, arg); if ("throw" !== record.type) { var result = record.arg, value = result.value; return value && "object" == _typeof(value) && hasOwn.call(value, "__await") ? PromiseImpl.resolve(value.__await).then(function (value) { invoke("next", value, resolve, reject); }, function (err) { invoke("throw", err, resolve, reject); }) : PromiseImpl.resolve(value).then(function (unwrapped) { result.value = unwrapped, resolve(result); }, function (error) { return invoke("throw", error, resolve, reject); }); } reject(record.arg); } var previousPromise; defineProperty(this, "_invoke", { value: function value(method, arg) { function callInvokeWithMethodAndArg() { return new PromiseImpl(function (resolve, reject) { invoke(method, arg, resolve, reject); }); } return previousPromise = previousPromise ? previousPromise.then(callInvokeWithMethodAndArg, callInvokeWithMethodAndArg) : callInvokeWithMethodAndArg(); } }); } function makeInvokeMethod(innerFn, self, context) { var state = "suspendedStart"; return function (method, arg) { if ("executing" === state) throw new Error("Generator is already running"); if ("completed" === state) { if ("throw" === method) throw arg; return doneResult(); } for (context.method = method, context.arg = arg;;) { var delegate = context.delegate; if (delegate) { var delegateResult = maybeInvokeDelegate(delegate, context); if (delegateResult) { if (delegateResult === ContinueSentinel) continue; return delegateResult; } } if ("next" === context.method) context.sent = context._sent = context.arg;else if ("throw" === context.method) { if ("suspendedStart" === state) throw state = "completed", context.arg; context.dispatchException(context.arg); } else "return" === context.method && context.abrupt("return", context.arg); state = "executing"; var record = tryCatch(innerFn, self, context); if ("normal" === record.type) { if (state = context.done ? "completed" : "suspendedYield", record.arg === ContinueSentinel) continue; return { value: record.arg, done: context.done }; } "throw" === record.type && (state = "completed", context.method = "throw", context.arg = record.arg); } }; } function maybeInvokeDelegate(delegate, context) { var methodName = context.method, method = delegate.iterator[methodName]; if (undefined === method) return context.delegate = null, "throw" === methodName && delegate.iterator["return"] && (context.method = "return", context.arg = undefined, maybeInvokeDelegate(delegate, context), "throw" === context.method) || "return" !== methodName && (context.method = "throw", context.arg = new TypeError("The iterator does not provide a '" + methodName + "' method")), ContinueSentinel; var record = tryCatch(method, delegate.iterator, context.arg); if ("throw" === record.type) return context.method = "throw", context.arg = record.arg, context.delegate = null, ContinueSentinel; var info = record.arg; return info ? info.done ? (context[delegate.resultName] = info.value, context.next = delegate.nextLoc, "return" !== context.method && (context.method = "next", context.arg = undefined), context.delegate = null, ContinueSentinel) : info : (context.method = "throw", context.arg = new TypeError("iterator result is not an object"), context.delegate = null, ContinueSentinel); } function pushTryEntry(locs) { var entry = { tryLoc: locs[0] }; 1 in locs && (entry.catchLoc = locs[1]), 2 in locs && (entry.finallyLoc = locs[2], entry.afterLoc = locs[3]), this.tryEntries.push(entry); } function resetTryEntry(entry) { var record = entry.completion || {}; record.type = "normal", delete record.arg, entry.completion = record; } function Context(tryLocsList) { this.tryEntries = [{ tryLoc: "root" }], tryLocsList.forEach(pushTryEntry, this), this.reset(!0); } function values(iterable) { if (iterable) { var iteratorMethod = iterable[iteratorSymbol]; if (iteratorMethod) return iteratorMethod.call(iterable); if ("function" == typeof iterable.next) return iterable; if (!isNaN(iterable.length)) { var i = -1, next = function next() { for (; ++i < iterable.length;) if (hasOwn.call(iterable, i)) return next.value = iterable[i], next.done = !1, next; return next.value = undefined, next.done = !0, next; }; return next.next = next; } } return { next: doneResult }; } function doneResult() { return { value: undefined, done: !0 }; } return GeneratorFunction.prototype = GeneratorFunctionPrototype, defineProperty(Gp, "constructor", { value: GeneratorFunctionPrototype, configurable: !0 }), defineProperty(GeneratorFunctionPrototype, "constructor", { value: GeneratorFunction, configurable: !0 }), GeneratorFunction.displayName = define(GeneratorFunctionPrototype, toStringTagSymbol, "GeneratorFunction"), exports.isGeneratorFunction = function (genFun) { var ctor = "function" == typeof genFun && genFun.constructor; return !!ctor && (ctor === GeneratorFunction || "GeneratorFunction" === (ctor.displayName || ctor.name)); }, exports.mark = function (genFun) { return Object.setPrototypeOf ? Object.setPrototypeOf(genFun, GeneratorFunctionPrototype) : (genFun.__proto__ = GeneratorFunctionPrototype, define(genFun, toStringTagSymbol, "GeneratorFunction")), genFun.prototype = Object.create(Gp), genFun; }, exports.awrap = function (arg) { return { __await: arg }; }, defineIteratorMethods(AsyncIterator.prototype), define(AsyncIterator.prototype, asyncIteratorSymbol, function () { return this; }), exports.AsyncIterator = AsyncIterator, exports.async = function (innerFn, outerFn, self, tryLocsList, PromiseImpl) { void 0 === PromiseImpl && (PromiseImpl = Promise); var iter = new AsyncIterator(wrap(innerFn, outerFn, self, tryLocsList), PromiseImpl); return exports.isGeneratorFunction(outerFn) ? iter : iter.next().then(function (result) { return result.done ? result.value : iter.next(); }); }, defineIteratorMethods(Gp), define(Gp, toStringTagSymbol, "Generator"), define(Gp, iteratorSymbol, function () { return this; }), define(Gp, "toString", function () { return "[object Generator]"; }), exports.keys = function (val) { var object = Object(val), keys = []; for (var key in object) keys.push(key); return keys.reverse(), function next() { for (; keys.length;) { var key = keys.pop(); if (key in object) return next.value = key, next.done = !1, next; } return next.done = !0, next; }; }, exports.values = values, Context.prototype = { constructor: Context, reset: function reset(skipTempReset) { if (this.prev = 0, this.next = 0, this.sent = this._sent = undefined, this.done = !1, this.delegate = null, this.method = "next", this.arg = undefined, this.tryEntries.forEach(resetTryEntry), !skipTempReset) for (var name in this) "t" === name.charAt(0) && hasOwn.call(this, name) && !isNaN(+name.slice(1)) && (this[name] = undefined); }, stop: function stop() { this.done = !0; var rootRecord = this.tryEntries[0].completion; if ("throw" === rootRecord.type) throw rootRecord.arg; return this.rval; }, dispatchException: function dispatchException(exception) { if (this.done) throw exception; var context = this; function handle(loc, caught) { return record.type = "throw", record.arg = exception, context.next = loc, caught && (context.method = "next", context.arg = undefined), !!caught; } for (var i = this.tryEntries.length - 1; i >= 0; --i) { var entry = this.tryEntries[i], record = entry.completion; if ("root" === entry.tryLoc) return handle("end"); if (entry.tryLoc <= this.prev) { var hasCatch = hasOwn.call(entry, "catchLoc"), hasFinally = hasOwn.call(entry, "finallyLoc"); if (hasCatch && hasFinally) { if (this.prev < entry.catchLoc) return handle(entry.catchLoc, !0); if (this.prev < entry.finallyLoc) return handle(entry.finallyLoc); } else if (hasCatch) { if (this.prev < entry.catchLoc) return handle(entry.catchLoc, !0); } else { if (!hasFinally) throw new Error("try statement without catch or finally"); if (this.prev < entry.finallyLoc) return handle(entry.finallyLoc); } } } }, abrupt: function abrupt(type, arg) { for (var i = this.tryEntries.length - 1; i >= 0; --i) { var entry = this.tryEntries[i]; if (entry.tryLoc <= this.prev && hasOwn.call(entry, "finallyLoc") && this.prev < entry.finallyLoc) { var finallyEntry = entry; break; } } finallyEntry && ("break" === type || "continue" === type) && finallyEntry.tryLoc <= arg && arg <= finallyEntry.finallyLoc && (finallyEntry = null); var record = finallyEntry ? finallyEntry.completion : {}; return record.type = type, record.arg = arg, finallyEntry ? (this.method = "next", this.next = finallyEntry.finallyLoc, ContinueSentinel) : this.complete(record); }, complete: function complete(record, afterLoc) { if ("throw" === record.type) throw record.arg; return "break" === record.type || "continue" === record.type ? this.next = record.arg : "return" === record.type ? (this.rval = this.arg = record.arg, this.method = "return", this.next = "end") : "normal" === record.type && afterLoc && (this.next = afterLoc), ContinueSentinel; }, finish: function finish(finallyLoc) { for (var i = this.tryEntries.length - 1; i >= 0; --i) { var entry = this.tryEntries[i]; if (entry.finallyLoc === finallyLoc) return this.complete(entry.completion, entry.afterLoc), resetTryEntry(entry), ContinueSentinel; } }, "catch": function _catch(tryLoc) { for (var i = this.tryEntries.length - 1; i >= 0; --i) { var entry = this.tryEntries[i]; if (entry.tryLoc === tryLoc) { var record = entry.completion; if ("throw" === record.type) { var thrown = record.arg; resetTryEntry(entry); } return thrown; } } throw new Error("illegal catch attempt"); }, delegateYield: function delegateYield(iterable, resultName, nextLoc) { return this.delegate = { iterator: values(iterable), resultName: resultName, nextLoc: nextLoc }, "next" === this.method && (this.arg = undefined), ContinueSentinel; } }, exports; }
@@ -3828,6 +4110,7 @@ function src_arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 
 
+
 // loader
 
 
@@ -3895,6 +4178,18 @@ var Chatbox = function Chatbox(props) {
   //================================================================
   // helper
   //================================================================
+  var customMethodsRef = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useRef)({});
+  (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useEffect)(function () {
+    if (props.customMethods && Array.isArray(props.customMethods)) {
+      var methodsMap = {};
+      props.customMethods.forEach(function (method) {
+        if (typeof method.func === 'function') {
+          methodsMap[method.name] = method.func;
+        }
+      });
+      customMethodsRef.current = methodsMap;
+    }
+  }, [props.customMethods]);
   var exposedMethods = function exposedMethods() {
     return {
       chatOpen: function chatOpen() {
@@ -3936,6 +4231,27 @@ var Chatbox = function Chatbox(props) {
       },
       setMessages: function setMessages(v) {
         setMsgList(v);
+      },
+      // 
+      getCustomMethods: function getCustomMethods() {
+        return Object.keys(customMethodsRef.current);
+      },
+      executeCustomMethod: function executeCustomMethod(methodName) {
+        if (methodName in customMethodsRef.current) {
+          try {
+            var _customMethodsRef$cur;
+            for (var _len = arguments.length, args = new Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
+              args[_key - 1] = arguments[_key];
+            }
+            return (_customMethodsRef$cur = customMethodsRef.current)[methodName].apply(_customMethodsRef$cur, args);
+          } catch (error) {
+            console.error("Error executing custom method ".concat(methodName, ":"), error);
+            return null;
+          }
+        } else {
+          console.warn("Custom method ".concat(methodName, " not found"));
+          return null;
+        }
       }
     };
   };
@@ -3977,6 +4293,7 @@ var Chatbox = function Chatbox(props) {
       requestBodyFormatter = currentProps.requestBodyFormatter,
       nameFormatter = currentProps.nameFormatter,
       onInputChange = currentProps.onInputChange,
+      onInputCallback = currentProps.onInputCallback,
       onChunk = currentProps.onChunk,
       onComplete = currentProps.onComplete;
     var _configRef$current = configRef.current,
@@ -4040,6 +4357,7 @@ var Chatbox = function Chatbox(props) {
       requestBodyFormatter: requestBodyFormatter,
       nameFormatter: nameFormatter,
       onInputChange: onInputChange,
+      onInputCallback: onInputCallback,
       onChunk: onChunk,
       onComplete: onComplete,
       // 
@@ -4058,10 +4376,25 @@ var Chatbox = function Chatbox(props) {
   //================================================================
   // Custom buttons
   //================================================================
+  var toolkitBtnsRef = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useRef)(null);
   var _useState17 = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)({}),
     _useState18 = src_slicedToArray(_useState17, 2),
     activeButtons = _useState18[0],
     setActiveButtons = _useState18[1];
+  var closeDropdowns = function closeDropdowns() {
+    setActiveButtons(function (prev) {
+      var _args$toolkitButtons;
+      var newState = _objectSpread({}, prev);
+      // Turn off only buttons with "isSelect"
+      (_args$toolkitButtons = args().toolkitButtons) === null || _args$toolkitButtons === void 0 ? void 0 : _args$toolkitButtons.forEach(function (btn, index) {
+        if (btn.isSelect) {
+          var _id = "".concat(args().prefix || 'custom-', "chatbox-btn-tools-").concat(chatId).concat(index);
+          newState[_id] = false;
+        }
+      });
+      return newState;
+    });
+  };
   var executeButtonAction = function executeButtonAction(actionStr, buttonId, buttonElement) {
     try {
       // Create a new function to execute
@@ -4083,6 +4416,68 @@ var Chatbox = function Chatbox(props) {
       console.error('Error executing button action:', error);
     }
   };
+
+  // options
+  var _useState19 = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)({}),
+    _useState20 = src_slicedToArray(_useState19, 2),
+    selectedOpt = _useState20[0],
+    setSelectedOpt = _useState20[1];
+  var getButtonOptions = function getButtonOptions(btn) {
+    var options = [];
+    var index = 1;
+    while (true) {
+      var optionKey = "onSelect__".concat(index);
+      if (!(optionKey in btn)) break;
+      var _btn$optionKey$split$ = btn[optionKey].split('{#}').map(function (s) {
+          return s.trim();
+        }),
+        _btn$optionKey$split$2 = src_slicedToArray(_btn$optionKey$split$, 3),
+        label = _btn$optionKey$split$2[0],
+        value = _btn$optionKey$split$2[1],
+        onClick = _btn$optionKey$split$2[2];
+      options.push({
+        label: label,
+        value: value,
+        onClick: onClick
+      });
+      index++;
+    }
+    return options;
+  };
+  var handleExecuteButtonSelect = function handleExecuteButtonSelect(buttonId, option, index, value) {
+    if (option.value === "cancel") {
+      setSelectedOpt(function (prev) {
+        var newLabels = _objectSpread({}, prev);
+        delete newLabels[buttonId]; // Deletes the saved selected label, which displays the default label
+        return _objectSpread(_objectSpread({}, newLabels), {}, {
+          curIndex: index,
+          curValue: value
+        });
+      });
+    } else {
+      setSelectedOpt(function (prev) {
+        var _objectSpread3;
+        return _objectSpread(_objectSpread({}, prev), {}, (_objectSpread3 = {}, _defineProperty(_objectSpread3, buttonId, option.label), _defineProperty(_objectSpread3, "curIndex", index), _defineProperty(_objectSpread3, "curValue", value), _objectSpread3));
+      });
+    }
+    executeButtonAction(option.onClick, buttonId, document.getElementById(buttonId));
+
+    // Close the drop-down
+    closeDropdowns();
+  };
+
+  // click outside
+  useClickOutside_default()({
+    enabled: Object.values(activeButtons).some(function (isActive) {
+      return isActive;
+    }),
+    isOutside: function isOutside(event) {
+      return event.target.closest('.toolkit-select-wrapper') === null;
+    },
+    handle: function handle(event) {
+      closeDropdowns();
+    }
+  }, [toolkitBtnsRef, activeButtons]);
 
   //================================================================
   // Conversation History
@@ -4437,13 +4832,23 @@ var Chatbox = function Chatbox(props) {
             return _context4.abrupt("return");
           case 2:
             messageInput = msInput.current;
-            message = messageInput.value;
+            message = htmlEncode(messageInput.value); // It fires in real time as the user enters
+            // Sanitizing input is the process of securing/cleaning/filtering input data.
+            if (!(typeof args().onInputCallback === 'function')) {
+              _context4.next = 8;
+              break;
+            }
+            _context4.next = 7;
+            return args().onInputCallback(message);
+          case 7:
+            message = _context4.sent;
+          case 8:
             if (!(message.trim() === '')) {
-              _context4.next = 6;
+              _context4.next = 10;
               break;
             }
             return _context4.abrupt("return");
-          case 6:
+          case 10:
             // Start the timer
             setElapsedTime(0); // Reset elapsed time
             timer.current = setInterval(function () {
@@ -4455,14 +4860,14 @@ var Chatbox = function Chatbox(props) {
             // user message
             inputMsg = "".concat(message); // If a render parser exists, it is used to process the string
             if (!(typeof args().renderParser === 'function')) {
-              _context4.next = 13;
+              _context4.next = 17;
               break;
             }
-            _context4.next = 12;
+            _context4.next = 16;
             return args().renderParser(inputMsg);
-          case 12:
+          case 16:
             inputMsg = _context4.sent;
-          case 13:
+          case 17:
             displayMessage(args().questionNameRes, inputMsg); // Display user message
 
             // loading
@@ -4473,26 +4878,26 @@ var Chatbox = function Chatbox(props) {
 
             // clear
             if (inputContentRef.current) inputContentRef.current.clear();
-            _context4.prev = 17;
-            _context4.next = 20;
+            _context4.prev = 21;
+            _context4.next = 24;
             return mainRequest(message);
-          case 20:
+          case 24:
             res = _context4.sent;
             if (res.useStreamRender) {
-              _context4.next = 32;
+              _context4.next = 36;
               break;
             }
             reply = res.reply;
             replyRes = "".concat(reply); // If a render parser exists, it is used to process the string
             if (!(typeof args().renderParser === 'function')) {
-              _context4.next = 28;
+              _context4.next = 32;
               break;
             }
-            _context4.next = 27;
+            _context4.next = 31;
             return args().renderParser(replyRes);
-          case 27:
+          case 31:
             replyRes = _context4.sent;
-          case 28:
+          case 32:
             displayMessage(args().answerNameRes, replyRes); // Display AI reply
 
             //
@@ -4501,12 +4906,12 @@ var Chatbox = function Chatbox(props) {
 
             //reset SSE
             closeSSE();
-          case 32:
-            _context4.next = 41;
+          case 36:
+            _context4.next = 45;
             break;
-          case 34:
-            _context4.prev = 34;
-            _context4.t0 = _context4["catch"](17);
+          case 38:
+            _context4.prev = 38;
+            _context4.t0 = _context4["catch"](21);
             // loading
             setLoading(false);
 
@@ -4515,7 +4920,7 @@ var Chatbox = function Chatbox(props) {
             timer.current = null;
             console.error('--> Error sending message:', _context4.t0);
             displayMessage(args().answerNameRes, "Error: Unable to send message: ".concat(String(_context4.t0))); // Display AI reply
-          case 41:
+          case 45:
             // clear
             messageInput.value = '';
 
@@ -4524,11 +4929,11 @@ var Chatbox = function Chatbox(props) {
 
             // Scroll to the bottom
             scrollToBottom();
-          case 44:
+          case 48:
           case "end":
             return _context4.stop();
         }
-      }, _callee4, null, [[17, 34]]);
+      }, _callee4, null, [[21, 38]]);
     }));
     return function sendMessage() {
       return _ref2.apply(this, arguments);
@@ -5008,10 +5413,65 @@ var Chatbox = function Chatbox(props) {
     customClassName: "w-100",
     txt: ""
   }))) : null, args().toolkitButtons && args().toolkitButtons.length > 0 && /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
-    className: "toolkit-btns"
+    className: "toolkit-btns",
+    ref: toolkitBtnsRef
   }, args().toolkitButtons.map(function (btn, index) {
     var _id = "".concat(args().prefix || 'custom-', "chatbox-btn-tools-").concat(chatId).concat(index);
     var isActive = activeButtons[_id];
+    if (btn.isSelect) {
+      var options = getButtonOptions(btn);
+      return /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
+        key: index,
+        className: "toolkit-select-wrapper"
+      }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("button", {
+        id: _id,
+        className: "toolkit-select-btn ".concat(btn.value || '', " ").concat(isActive ? 'active' : '', " ").concat(selectedOpt.curValue !== 'cancel' && typeof selectedOpt.curValue !== 'undefined' && selectedOpt.curValue !== '' ? 'opt-active' : ''),
+        onClick: function onClick(e) {
+          e.preventDefault();
+          setActiveButtons(function (prev) {
+            return _objectSpread(_objectSpread({}, prev), {}, _defineProperty({}, _id, !prev[_id]));
+          });
+        }
+      }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("span", {
+        dangerouslySetInnerHTML: {
+          __html: selectedOpt[_id] || btn.label
+        }
+      }), /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("span", {
+        className: "toolkit-select-arrow"
+      }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("svg", {
+        width: "5px",
+        height: "5px",
+        viewBox: "0 -4.5 20 20"
+      }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("g", {
+        stroke: "none",
+        strokeWidth: "1",
+        fill: "none"
+      }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("g", {
+        transform: "translate(-180.000000, -6684.000000)",
+        className: "arrow-fill-g",
+        fill: "currentColor"
+      }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("g", {
+        transform: "translate(56.000000, 160.000000)"
+      }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("path", {
+        d: "M144,6525.39 L142.594,6524 L133.987,6532.261 L133.069,6531.38 L133.074,6531.385 L125.427,6524.045 L124,6525.414 C126.113,6527.443 132.014,6533.107 133.987,6535 C135.453,6533.594 134.024,6534.965 144,6525.39"
+      }))))))), /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
+        className: "toolkit-select-options ".concat(isActive ? 'active' : '')
+      }, options.map(function (option, optIndex) {
+        return /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
+          key: optIndex,
+          className: "toolkit-select-option ".concat(option.value || '', " ").concat(selectedOpt.curIndex === optIndex ? 'selected' : ''),
+          onClick: function onClick() {
+            return handleExecuteButtonSelect(_id, option, optIndex, option.value);
+          }
+        }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("span", {
+          dangerouslySetInnerHTML: {
+            __html: option.label
+          }
+        }));
+      })));
+    }
+
+    // The rendering of the normal button
     return /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("button", {
       key: index,
       id: _id,

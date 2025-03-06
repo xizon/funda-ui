@@ -45,7 +45,7 @@
 
 
 
-/*=================== Chatbox (Core) =================*/
+/*===================  Chatbox (Core) =================*/
 
 .custom-chatbox-circle {
     --custom-chatbox-circle-color: #5A5EB9;
@@ -138,7 +138,12 @@
     --custom-chatbox-toolkit-btn-active-color: #c2dfff;
     --custom-chatbox-newchat-btn-color: #f8f9fa;
     --custom-chatbox-newchat-btn-border-color: #e9ecef;
+    --custom-chatbox-toolkit-opt-color: #f8f9fa;
+    --custom-chatbox-toolkit-opt-border-color: #e9ecef;
+    --custom-chatbox-toolkit-opt-active-color: #c2dfff;
+    --custom-chatbox-toolkit-btn-radius: 20px;
 
+    
     
     min-width: var(--custom-chatbox-w);
     max-width: var(--custom-chatbox-w);
@@ -204,7 +209,7 @@
         img, svg, video, canvas, audio, iframe, embed, object {
             display: inline;
         }
-        
+
         &::-webkit-scrollbar {
             width: 3px;
         }
@@ -351,6 +356,7 @@
             display: inline;
         }
 
+
         .messageInput {
             width: 100%;
             border: 1px solid var(--custom-chatbox-msg-border);
@@ -485,25 +491,27 @@
         justify-content: center;
 
 
-        > button {
+        button {
             padding: 3px 6px;
             background-color: var(--custom-chatbox-toolkit-btn-color);
             border: 1px solid var(--custom-chatbox-toolkit-btn-border-color);
-            border-radius: 20px;
+            border-radius: var(--custom-chatbox-toolkit-btn-radius);
             cursor: pointer;
             transition: all 0.3s ease;
             font-size: 0.75rem;
 
-
+            
             img, svg, video, canvas, audio, iframe, embed, object {
                 display: inline;
             }
+
 
             &:hover {
                 background-color: var(--custom-chatbox-toolkit-btn-border-color);
                 transform: translateY(-2px);
             }
 
+            &.opt-active,
             &.active {
                 background-color: var(--custom-chatbox-toolkit-btn-active-color);
             }
@@ -512,6 +520,99 @@
         }
    
     }
+
+    /* toolkit options */
+    @keyframes dropupAnimation {
+        from {
+            opacity: 0;
+            transform: translateY(10px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .toolkit-select-wrapper {
+        position: relative;
+        display: inline-block;
+
+        .toolkit-select-btn {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border: 1px solid #ddd;
+            border-radius: var(--custom-chatbox-toolkit-btn-radius);
+            cursor: pointer;
+        }
+
+        .toolkit-select-arrow {
+            margin-left: 8px;
+            font-size: 10px;
+            transition: transform 0.2s ease;
+        }
+
+        .toolkit-select-arrow.active {
+            transform: rotate(180deg);
+        }
+
+        .toolkit-select-options-container {
+            z-index: 1000;
+            width: 100%;
+            min-width: 120px;
+            transform: translateY(-100%);
+        }
+
+        .toolkit-select-options {
+            background-color: var(--custom-chatbox-toolkit-opt-color);
+            border: 1px solid var(--custom-chatbox-toolkit-opt-border-color);
+            border-radius: 4px;
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 10px;
+            max-height: 300px;
+            overflow-y: auto;
+            animation: dropupAnimation 0.2s ease;
+
+            position: absolute;
+            bottom: 1rem;
+            left: 0;
+            right: 0;
+            display: none;
+            z-index: 1000;
+
+            &.active {
+                display: block;
+            }
+
+
+            &::-webkit-scrollbar {
+                width: 3px;
+            }
+        
+            &::-webkit-scrollbar-thumb {
+                background: rgba(0, 0, 0, 0.2);
+            }
+        }
+
+        .toolkit-select-option {
+            padding: 3px 6px;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+            font-size: 0.75rem;
+
+            &.cancel {
+                color: var(--custom-chatbox-gray-color);
+            }
+
+            &:hover {
+                background-color: var(--custom-chatbox-toolkit-opt-active-color);
+            }
+        }
+
+    }
+
+
 
 
 

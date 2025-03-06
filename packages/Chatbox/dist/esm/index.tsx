@@ -8,7 +8,7 @@ import RootPortal from 'funda-root-portal';
 import useComId from 'funda-utils/dist/cjs/useComId';
 import useDebounce from 'funda-utils/dist/cjs/useDebounce';
 import useThrottle from 'funda-utils/dist/cjs/useThrottle';
-
+import useClickOutside from 'funda-utils/dist/cjs/useClickOutside';
 
 
 // loader
@@ -20,11 +20,16 @@ import {
     formatLatestDisplayContent,
     formatName,
     fixHtmlTags,
-    isStreamResponse
+    isStreamResponse,
+    htmlEncode
 } from './utils/func';
 
 import useStreamController from './useStreamController';
 
+export interface CustomMethod {
+    name: string;
+    func: (...args: any[]) => any;
+}
 
 export type MessageDetail = {
     sender: string; // Sender's name
@@ -37,6 +42,14 @@ export interface FloatingButton {
     label: string;  // HTML string
     value: string;
     onClick: string;
+    isSelect?: boolean;  // Mark whether it is a drop-down selection button
+    [key: string]: any;  // Allows dynamic `onSelect__<number>` attributes, such as `onSelect__1`, `onSelect__2`, ...
+}
+
+export interface FloatingButtonSelectOption {
+    label: string;
+    value: string;
+    onClick: string;
 }
 
 export interface RequestConfig {
@@ -45,18 +58,18 @@ export interface RequestConfig {
     responseExtractor: string;  // JSON path to extract response
 }
 
-type CustomRequestConfig = {
+export type CustomRequestConfig = {
     requestBody: any;
     apiUrl: string;
     headers: any;
 };
 
-type CustomRequestResponse = {
+export type CustomRequestResponse = {
     content: string | Response | null;
     isStream: boolean;
 };
 
-type CustomRequestFunction = (
+export type CustomRequestFunction = (
     message: string,
     config: CustomRequestConfig
 ) => Promise<CustomRequestResponse>;
@@ -90,11 +103,13 @@ export type ChatboxProps = {
     contextData?: Record<string, any>;  // Dynamic JSON data
     toolkitButtons?: FloatingButton[];
     newChatButton?: FloatingButton;
+    customMethods?: CustomMethod[]; // [{"name": "method1", "func": "() => { console.log('test'); }"}, ...]
     customRequest?: CustomRequestFunction;
     renderParser?: (input: string) => Promise<string>;
     requestBodyFormatter?: (body: any, contextData: Record<string, any>, conversationHistory: MessageDetail[]) => Promise<Record<string, any>>;
     nameFormatter?: (input: string) => string;
     onInputChange?: (controlRef: React.RefObject<any>, val: string) => any;
+    onInputCallback?: (input: string) => Promise<string>;
     onChunk?: (controlRef: React.RefObject<any>, lastContent: string, conversationHistory: MessageDetail[]) => any;
     onComplete?: (controlRef: React.RefObject<any>, lastContent: string, conversationHistory: MessageDetail[]) => any;
 };
@@ -148,6 +163,21 @@ const Chatbox = (props: ChatboxProps) => {
     //================================================================
     // helper
     //================================================================
+    const customMethodsRef = useRef<Record<string, Function>>({});
+    useEffect(() => {
+        if (props.customMethods && Array.isArray(props.customMethods)) {
+            const methodsMap: Record<string, Function> = {};
+            
+            props.customMethods.forEach(method => {
+                if (typeof method.func === 'function') {
+                    methodsMap[method.name] = method.func;
+                }
+            });
+
+            customMethodsRef.current = methodsMap;
+        }
+    }, [props.customMethods]);
+
     const exposedMethods = () => {
         return {
             chatOpen: () => {
@@ -187,7 +217,24 @@ const Chatbox = (props: ChatboxProps) => {
             },
             setMessages: (v: MessageDetail[]) => {
                 setMsgList(v);
-            }
+            },
+            // 
+            getCustomMethods: () => {
+                return Object.keys(customMethodsRef.current);
+            },
+            executeCustomMethod: (methodName: string, ...args: any[]) => {
+                if (methodName in customMethodsRef.current) {
+                    try {
+                        return customMethodsRef.current[methodName](...args);
+                    } catch (error) {
+                        console.error(`Error executing custom method ${methodName}:`, error);
+                        return null;
+                    }
+                } else {
+                    console.warn(`Custom method ${methodName} not found`);
+                    return null;
+                }
+            },
             
         };
     };
@@ -233,6 +280,7 @@ const Chatbox = (props: ChatboxProps) => {
             requestBodyFormatter,
             nameFormatter,
             onInputChange,
+            onInputCallback,
             onChunk,
             onComplete,
         } = currentProps;
@@ -304,6 +352,7 @@ const Chatbox = (props: ChatboxProps) => {
             requestBodyFormatter,
             nameFormatter,
             onInputChange,
+            onInputCallback,
             onChunk,
             onComplete,
 
@@ -325,7 +374,21 @@ const Chatbox = (props: ChatboxProps) => {
     //================================================================
     // Custom buttons
     //================================================================
+    const toolkitBtnsRef = useRef<any>(null);
     const [activeButtons, setActiveButtons] = useState<Record<string, boolean>>({});
+    const closeDropdowns = () => {
+        setActiveButtons(prev => {
+            const newState = { ...prev };
+            // Turn off only buttons with "isSelect"
+            args().toolkitButtons?.forEach((btn, index) => {
+                if (btn.isSelect) {
+                    const _id = `${args().prefix || 'custom-'}chatbox-btn-tools-${chatId}${index}`;
+                    newState[_id] = false;
+                }
+            });
+            return newState;
+        });
+    };
     const executeButtonAction = (actionStr: string, buttonId: string, buttonElement: HTMLButtonElement) => {
         try {
             // Create a new function to execute
@@ -352,6 +415,66 @@ const Chatbox = (props: ChatboxProps) => {
         }
     };
 
+    // options
+    const [selectedOpt, setSelectedOpt] = useState<Record<string, string | number>>({});
+    const getButtonOptions = (btn: FloatingButton): FloatingButtonSelectOption[] => {
+        const options: FloatingButtonSelectOption[] = [];
+        let index = 1;
+        
+        while (true) {
+            const optionKey = `onSelect__${index}`;
+            if (!(optionKey in btn)) break;
+            
+            const [label, value, onClick] = btn[optionKey].split('{#}').map((s: string) => s.trim());
+            options.push({ label, value, onClick });
+            index++;
+        }
+
+        return options;
+    };
+
+    const handleExecuteButtonSelect = (buttonId: string, option: FloatingButtonSelectOption, index: number, value: string) => {
+
+        if (option.value === "cancel") {
+            setSelectedOpt(prev => {
+                const newLabels = { ...prev };
+                delete newLabels[buttonId]; // Deletes the saved selected label, which displays the default label
+                return {
+                    ...newLabels,
+                    curIndex: index,
+                    curValue: value
+                };
+            });
+
+        } else {
+            setSelectedOpt(prev => ({
+                ...prev,
+                [buttonId]: option.label,
+                curIndex: index,
+                curValue: value
+            }));
+        }
+
+
+        executeButtonAction(option.onClick, buttonId, document.getElementById(buttonId) as HTMLButtonElement);
+        
+        // Close the drop-down
+        closeDropdowns();
+    };
+
+    // click outside
+    useClickOutside({
+        enabled: Object.values(activeButtons).some(isActive => isActive),
+        isOutside: (event: any) => {
+            return event.target.closest('.toolkit-select-wrapper') === null;
+        },
+        handle: (event: any) => {
+            closeDropdowns();
+        }
+    }, [toolkitBtnsRef, activeButtons]);
+
+ 
+    
     //================================================================
     // Conversation History
     //================================================================
@@ -635,12 +758,17 @@ const Chatbox = (props: ChatboxProps) => {
         if (rootRef.current === null || msgContainerRef.current === null || msInput.current === null) return;
 
         const messageInput: any = msInput.current;
-        const message = messageInput.value;
+        let message = htmlEncode(messageInput.value);
+
+        // It fires in real time as the user enters
+        // Sanitizing input is the process of securing/cleaning/filtering input data.
+        if (typeof args().onInputCallback === 'function') {
+            message = await args().onInputCallback(message);
+        }
 
         if (message.trim() === '') {
             return;
         }
-
 
         // Start the timer
         setElapsedTime(0); // Reset elapsed time
@@ -1247,18 +1375,72 @@ const Chatbox = (props: ChatboxProps) => {
 
                 {/**------------- TOOLKIT BUTTONS -------------*/}
                 {args().toolkitButtons && args().toolkitButtons.length > 0 && (
-                    <div className="toolkit-btns">
+                    <div className="toolkit-btns" ref={toolkitBtnsRef}>
                         {args().toolkitButtons.map((btn: FloatingButton, index: number) => {
                             const _id = `${args().prefix || 'custom-'}chatbox-btn-tools-${chatId}${index}`;
                             const isActive = activeButtons[_id];
-                            return <button
-                                key={index}
-                                id={_id}
-                                className={`${btn.value || ''} ${isActive ? 'active' : ''}`}
-                                onClick={(e: React.MouseEvent<HTMLButtonElement>) => executeButtonAction(btn.onClick, _id, e.currentTarget)}
-                            >
-                                <span dangerouslySetInnerHTML={{ __html: btn.label }}></span>
-                            </button>
+
+                            if (btn.isSelect) {
+                                const options = getButtonOptions(btn);
+
+                                return (
+                                    <div key={index} className="toolkit-select-wrapper">
+                                        <button
+                                            id={_id}
+                                            className={`toolkit-select-btn ${btn.value || ''} ${isActive ? 'active' : ''} ${selectedOpt.curValue !== 'cancel' && typeof selectedOpt.curValue !== 'undefined' && selectedOpt.curValue !== '' ? 'opt-active' : ''}`}
+                                            onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
+                                                e.preventDefault();
+                                                setActiveButtons(prev => ({
+                                                    ...prev,
+                                                    [_id]: !prev[_id]
+                                                }));
+                                            }}
+                                        >
+                                            <span dangerouslySetInnerHTML={{
+                                                __html: selectedOpt[_id] as string || btn.label
+                                            }}></span>
+                                            
+                                            <span className="toolkit-select-arrow"><svg width="5px" height="5px" viewBox="0 -4.5 20 20">
+                                                <g stroke="none" strokeWidth="1" fill="none">
+                                                    <g transform="translate(-180.000000, -6684.000000)" className="arrow-fill-g" fill="currentColor">
+                                                        <g transform="translate(56.000000, 160.000000)">
+                                                            <path d="M144,6525.39 L142.594,6524 L133.987,6532.261 L133.069,6531.38 L133.074,6531.385 L125.427,6524.045 L124,6525.414 C126.113,6527.443 132.014,6533.107 133.987,6535 C135.453,6533.594 134.024,6534.965 144,6525.39">
+                                                            </path>
+                                                        </g>
+                                                    </g>
+                                                </g>
+                                            </svg></span>
+                                        </button>
+
+                                        
+
+                                        <div className={`toolkit-select-options ${isActive ? 'active' : ''}`}>
+                                            {options.map((option: FloatingButtonSelectOption, optIndex: number) => (
+                                                <div
+                                                    key={optIndex}
+                                                    className={`toolkit-select-option ${option.value || ''} ${selectedOpt.curIndex === optIndex ? 'selected' : ''}`}
+                                                    onClick={() => handleExecuteButtonSelect(_id, option, optIndex, option.value)}
+                                                >
+                                                    <span dangerouslySetInnerHTML={{ __html: option.label }}></span>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    </div>
+                                );
+                            }
+
+                            // The rendering of the normal button
+                            return (
+                                <button
+                                    key={index}
+                                    id={_id}
+                                    className={`${btn.value || ''} ${isActive ? 'active' : ''}`}
+                                    onClick={(e: React.MouseEvent<HTMLButtonElement>) =>
+                                        executeButtonAction(btn.onClick, _id, e.currentTarget)}
+                                >
+                                    <span dangerouslySetInnerHTML={{ __html: btn.label }}></span>
+                                </button>
+                            );
                         })}
                     </div>
                 )}

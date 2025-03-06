@@ -41,10 +41,21 @@ Chat and conversational UI, which can be used to interface models similarly to t
             content: string | Response | null;
             isStream: boolean;
         }>
+
+- Custom Methods: customMethods?: {
+        name: string;
+        func: (...args: any[]) => any;
+    }[]
 ```
+
+
+
+| `customMethods` | Array | - | Array of custom methods that can be called via `contentRef`.
+
 
 ### 5. Event callback
 ```typescript
+- Input callback: onInputCallback?: (input: string) => Promise<string>
 - Input change: onInputChange?: (controlRef: React.RefObject<any>, val: string) => any
 - Data block reception: onChunk?: (controlRef: React.RefObject<any>, lastContent: string, conversationHistory: MessageDetail[]) => any
 - Completion callback: onComplete?: (controlRef: React.RefObject<any>, lastContent: string, conversationHistory: MessageDetail[]) => any
@@ -63,7 +74,10 @@ Chat and conversational UI, which can be used to interface models similarly to t
 - setContextData(v: Record<string, any>): set context data
 - getMessages(): Get messages list
 - setMessages(v: Record<string, any>): Set messages list
+- getCustomMethods(): Get all available custom method names
+- executeCustomMethod(methodName: string, ...args: any[]): A function that executes a custom method
 ```
+
 
 ### 7. Configuration items
 ```typescript
@@ -73,7 +87,9 @@ Chat and conversational UI, which can be used to interface models similarly to t
 - Request configuration: requestConfig, headerConfig
 - Context data: contextData
 - History control: maxHistoryLength
+- Custom buttons: newChatButton, toolkitButtons
 ```
+
 
 ## General
 
@@ -107,6 +123,26 @@ export default () => {
         }>
     ) | undefined>();
     
+    const customMethods: {
+        name: string;
+        func: (...args: any[]) => any;
+    }[] = [
+        {
+            name: "sayHello",
+            func: (name: string) => {
+                console.log(`Hello, ${name}!`);
+            }
+        },
+        {
+            name: "updateUI",
+            func: (data: any) => {
+                console.log('Updating UI with:', data);
+                // setSomeState(data);
+            }
+        }
+    ];
+
+
     async function getAiConfig() {
         // const res = await axios({
         //     method: 'post',
@@ -119,7 +155,7 @@ export default () => {
             "reasoningSwitchLabel": "Idea",
             "maxHistoryLength": 10,
             "newChatButton": "{\"label\":\"<svg width='16' height='16' viewBox='0 0 24 24'><path fill='currentColor' d='M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z'/></svg> New Chat\",\"value\":\"new\",\"onClick\":\"method.setVal(''); method.clearData();\"}",
-            "toolkitButtons": "[{\"label\":\"<svg fill='currentColor' width='12' height='12' viewBox='0 0 24 24'><path d='M19 2H5c-1.103 0-2 .897-2 2v12c0 1.103.897 2 2 2h3.586L12 21.414 15.414 18H19c1.103 0 2-.897 2-2V4c0-1.103-.897-2-2-2zm0 14h-4.414L12 18.586 9.414 16H5V4h14v12z'/></svg> Brief\",\"value\":\"brief\",\"onClick\":\"console.log(button); console.log(isActive, method.getContextData()); if(isActive) { method.setContextData({systemPrompt: 'Please keep your answer within 77 words',mergedText: method.getContextData().mergedText}); } else { method.setContextData({mergedText: method.getContextData().mergedText}); }\"}]",
+            "toolkitButtons": "[{\"label\":\"<svg fill='currentColor' width='12' height='12' viewBox='0 0 24 24'><path d='M19 2H5c-1.103 0-2 .897-2 2v12c0 1.103.897 2 2 2h3.586L12 21.414 15.414 18H19c1.103 0 2-.897 2-2V4c0-1.103-.897-2-2-2zm0 14h-4.414L12 18.586 9.414 16H5V4h14v12z'/></svg> Brief\",\"value\":\"brief\",\"onClick\":\"console.log(button); console.log(isActive, method.getContextData()); if(isActive) { method.setContextData({systemPrompt: 'Please keep your answer within 77 words',mergedText: method.getContextData().mergedText}); } else { method.setContextData({mergedText: method.getContextData().mergedText}); }\"},{\"label\":\"<svg width='12' height='12' viewBox='0 0 32 32'><path fill='currentColor' d='M26.4,23.9l-6.9-9.4c-0.4-0.5-0.6-1.1-0.6-1.8V8c1.1,0,2-0.9,2-2V4c0-1.1-0.9-2-2-2h-6c-1.1,0-2,0.9-2,2v2c0,1.1,0.9,2,2,2v4.7c0,0.6-0.2,1.2-0.6,1.8l-6.9,9.4C5.2,24.4,5,25,5,25.7V27c0,1.7,1.3,3,3,3h16c1.7,0,3-1.3,3-3v-1.3C27,25,26.8,24.4,26.4,23.9zM14,15.6c0.6-0.9,1-1.9,1-2.9V8c0-1.1-0.9-2-2-2V4h6v2c-1.1,0-2,0.9-2,2v4.7c0,1.1,0.3,2.1,1,2.9l4.6,6.4H9.4L14,15.6z'/></svg> Drop-Down\",\"value\":\"lab\",\"isSelect\":true, \"onSelect__1\":\"None {#} cancel {#} method.setContextData({});method.executeCustomMethod('sayHello', 'John');\",\"onSelect__2\":\"Create image {#} create-img-a {#} method.setContextData({systemPrompt:'please create a image'});\"}]",
             "apiUrl": "{baseUrl}/v1/chat/completions",
             "requestBody": "{'model':'{model}','messages':[{'role':'user','content':'{message}'}],'stream': true}",
             "responseBody": "data.choices.0.delta.content",
@@ -269,6 +305,7 @@ export default () => {
                 verbose={aiConfig.verbose}
                 baseUrl={"http://localhost:11434"}
                 apiKey={aiConfig.APIKey}
+                customMethods={customMethods}
                 renderParser={async (input: string) => {
                     const res = await markedParse(input);
                     return res;
@@ -462,6 +499,7 @@ export default () => {
 
 
 
+
 ## API
 
 ### Chatbox
@@ -470,7 +508,7 @@ import Chatbox from 'funda-ui/Chatbox';
 ```
 | Property | Type | Default | Description | Required |
 | --- | --- | --- | --- | --- |
-| `contentRef` | React.RefObject | - | It exposes the following methods:  <br /> <ol><li>`contentRef.current.chatOpen()`</li><li>`contentRef.current.chatClose()`</li><li>`contentRef.current.clearData()`</li><li>`contentRef.current.sendMsg()`</li><li>`contentRef.current.getHistory()`</li><li>`contentRef.current.trimHistory(10)`</li><li>`contentRef.current.setVal('new value')`</li><li>`contentRef.current.getContextData()`</li><li>`contentRef.current.setContextData({systemPrompt: "Please keep your answer within 77 words"})`</li><li>`contentRef.current.getMessages()`</li><li>`contentRef.current.setMessages([{"sender":"Sender","timestamp":"4:19:50 PM","content":"My custom new message\n","tag":"[reply]"}])`</li></ol>| - |
+| `contentRef` | React.RefObject | - | It exposes the following methods:  <br /> <ol><li>`contentRef.current.chatOpen()`</li><li>`contentRef.current.chatClose()`</li><li>`contentRef.current.clearData()`</li><li>`contentRef.current.sendMsg()`</li><li>`contentRef.current.getHistory()`</li><li>`contentRef.current.trimHistory(10)`</li><li>`contentRef.current.setVal('new value')`</li><li>`contentRef.current.getContextData()`</li><li>`contentRef.current.setContextData({systemPrompt: "Please keep your answer within 77 words"})`</li><li>`contentRef.current.getMessages()`</li><li>`contentRef.current.setMessages([{"sender":"Sender","timestamp":"4:19:50 PM","content":"My custom new message\n","tag":"[reply]"}])`</li><li>`contentRef.current.getCustomMethods()`</li><li>`contentRef.current.executeCustomMethod('sayHello', 'your name')`</li></ol>| - |
 | `debug` | boolean | false | Enable debug mode to output console information | - |
 | `prefix` | string | `custom-` | Prefix for component wrapper class name | - |
 | `model` | string | - | The model name to use | - |
@@ -495,13 +533,15 @@ import Chatbox from 'funda-ui/Chatbox';
 | `requestConfig` | JSON Object | - | Configuration for API requests | ✅ |
 | `headerConfig` | any | - | Configuration for request headers. <blockquote>**Placeholder string**<ul><li>`{apiKey}` -> Your Secret API key on the API key page, It will use the incoming `apiKey` instead</li></ul></blockquote> | - |
 | `contextData` | JSON Object | - | Dynamic JSON data for request formatting | - |
-| `toolkitButtons` | Array | - | JSON string for toolkit buttons configuration. Each button can have label, value and **onClick** properties. The onClick function can access `contentRef` methods. Example: <br />`[{label:"Clear",value:"clear",onClick:"alert('new'); method.clearData();"},{label:"Send",value:"send",onClick:"method.sendMsg();"},{label:"Change Context",value:"changecontext",onClick:"method.setContextData({systemPrompt: "Please keep your answer within 77 words"});"}]` <br />Available methods in **onClick**: <br /><ol><li>`method.chatOpen()`: Open the dialog box</li><li>`method.chatClose()`: Close the dialog box</li><li>`method.clearData()`: Clear the data</li><li>`method.sendMsg()`: Send a message</li><li>`method.getHistory()`: Get the history</li><li>`method.trimHistory(10)`: Trim the history</li><li>`method.setVal('new value')`: Set the default value of the input box</li><li>`method.getContextData()`: Get current context data</li><li>`method.setContextData({systemPrompt: "Please keep your answer within 77 words"})`: Modify the context data</li><li>`contentRef.current.getMessages()`: Get messages list</li><li>`contentRef.current.setMessages([{"sender":"Sender","timestamp":"4:19:50 PM","content":"My custom new message\n","tag":"[reply]"}])`: Set messages list</li></ol> <br />Additional parameters available in **onClick**: <br /><ul><li>**isActive**: The activation status of the current button</li><li>**button**: HTML object for the current button</li></ul> | - |
+| `customMethods` | Array | - | Array of custom methods that can be called via `contentRef`. Each method object contains: <br /><ol><li>`name`: Method name (string)</li><li>`func`: Function to execute</li></ol><br/>**Example:**<br/>`[{name:"sayHello",func:(name:string)=>{console.log("Hello, " + name + "!");}},{name:"updateUI",func:(data:any)=>{console.log('Updating UI with:',data);}}]`<br/>These methods can be accessed through:<br/><ol><li>`contentRef.current.executeCustomMethod('methodName', ...args)`: Execute a specific custom method</li><li>`contentRef.current.getCustomMethods()`: Get list of available custom method names</li></ol><br/>**Usage Example:**<br/>`contentRef.current.executeCustomMethod('sayHello', 'your name');`<br/>`contentRef.current.getCustomMethods();` | - |
+| `toolkitButtons` | Array | - | JSON string for toolkit buttons configuration. Each button can have label, value and **onClick** properties. The onClick function can access `contentRef` methods. Example: <br />`[{"label":"Clear","value":"clear","onClick":"alert('new'); method.clearData();"},{"label":"Send","value":"send","onClick":"method.sendMsg();"},{"label":"Change Context","value":"changecontext","onClick":"method.setContextData({systemPrompt: "Please keep your answer within 77 words"});"}]` <br />Available methods in **onClick**: <br /><ol><li>`method.chatOpen()`: Open the dialog box</li><li>`method.chatClose()`: Close the dialog box</li><li>`method.clearData()`: Clear the data</li><li>`method.sendMsg()`: Send a message</li><li>`method.getHistory()`: Get the history</li><li>`method.trimHistory(10)`: Trim the history</li><li>`method.setVal('new value')`: Set the default value of the input box</li><li>`method.getContextData()`: Get current context data</li><li>`method.setContextData({systemPrompt: "Please keep your answer within 77 words"})`: Modify the context data</li><li>`contentRef.current.getMessages()`: Get messages list</li><li>`contentRef.current.setMessages([{"sender":"Sender","timestamp":"4:19:50 PM","content":"My custom new message\n","tag":"[reply]"}])`: Set messages list</li><li>`method.getCustomMethods()`: Get all available custom method names</li><li>`method.executeCustomMethod('sayHello', 'your name')`: A function that executes a custom method</li></ol> <br />Additional parameters available in **onClick**: <br /><ul><li>**isActive**: The activation status of the current button</li><li>**button**: HTML object for the current button</li></ul> | - |
 | `newChatButton` | JSON Object | - | JSON string for new chat button configuration. Similar to `toolkitButtons` but for a single button that appears when chat has messages. Example: <br /> `{label:"New Chat",value:"new",onClick:"method.clearData(); method.setVal('');"}` | - | 
 | `customRequest` | async Function | - | **(It must return a "Promise\<string\>" object)** Custom request handler function that allows overriding the default request behavior. The function must return a Promise\<string\>. <br/><br/>**Parameters:**<br/><ol><li>`message`: The user's input message (string)</li><li>`config`: Configuration object containing:<ul><li>`requestBody`: The parsed request body object</li><li>`apiUrl`: The API endpoint URL</li><li>`headers`: The request headers object</li></ul></li></ol><br/>**Return Value:**<br/>`Promise<{content: string \| Response \| null;isStream: boolean;}>` - The response to display<br/><br/>**Example:**<br/>`()=>{return async(message,config)=>{if(typeof message==='string'&&(message.includes('image')\|\|message.includes('img'))){config.requestBody.stream=false;const response=await fetch(config.apiUrl,{method:'POST',headers:config.headers,body:JSON.stringify(config.requestBody),});if(!response.ok){const _errInfo="[ERROR] HTTP Error"+response.status+":"+response.statusText;return{content:_errInfo,isStream:false};}const jsonResponse=await response.json();let result=jsonResponse.choices[0].message.content;return{content:result,isStream:false};}return{content:null,isStream:false};}}` | - |
 | `renderParser` | async Function | - | **(It must return a "Promise\<string\>" object)** Custom parser for rendering messages. such as `async(input:string)=>{const res=await markedParse(input);return res;}` | - |
 | `requestBodyFormatter` | async Function | - |  **(It must return a "Promise\<Record\<string, any\>\>" object)** Function to format request body. such as `(body:any,context:Record<string,any>,conversationHistory:any[])=>{if(body.messages&&Array.isArray(body.messages)){const modifiedMessages=body.messages.map(msg=>{if(msg.role==='user'){return{...msg,content:msg.content};}return msg;});conversationHistory.forEach((item:any,index:number)=>{if(index<conversationHistory.length-1){modifiedMessages.unshift({role:"assistant",content:item.content});}});return{...body,messages:modifiedMessages};}return body;}` | - |
-| `nameFormatter` | Function | - | Function to format display names. such as `(input:string)=>{return input}` | - |
+| `nameFormatter` | Function | - | Function to format display names. such as `(input:string)=>{return input}`  <br />At the same time it returns the Control Event, you will use this function and use the `return` keyword to return a new value.| - |
 | `onInputChange` | Function | - | Callback when input changes. It returns only two values. <br /> <ol><li>The one is method reference of the input HTMLElement (**React.RefObject**) </li><li>The second parameter is the current value (**String**) </li></ol> | - |
+| `onInputCallback` | async function  | - | **(It must return a "Promise\<string\>" object)** Return value from `onInputCallback` property to format the data of the control element, which will sanitize input is the process of securing/cleaning/filtering input data. such as `async (input:string)=>{return input}`<br />At the same time it returns the Control Event, you will use this function and use the `return` keyword to return a new value. <blockquote>It fires in real time as the user enters. If return is not set, it will not return.</blockquote> | - |
 | `onChunk` | Function | - | Callback when data processing. It returns three values. <br /> <ol><li>The one is method reference of the input HTMLElement (**React.RefObject**) </li><li>The second parameter is the current value (**String**) </li><li>The third parameter is the conversation history (**Array**) </li></ol> | - |
 | `onComplete` | Function | - | Callback when message sending completes. It returns three values. <br /> <ol><li>The one is method reference of the input HTMLElement (**React.RefObject**) </li><li>The second parameter is the current value (**String**) </li><li>The third parameter is the conversation history (**Array**) </li></ol> | - |
 
@@ -516,6 +556,7 @@ JSON Object Literals configuration properties of the `toolkitButtons` and `newCh
 | `label` | string | - | The text displayed by the button <blockquote>HTML tags are supported</blockquote> | ✅ |
 | `value` | string | - | Button identification | ✅ |
 | `onClick` | string | - | Function expression in character format <blockquote>**onClick** uses a string to fully customize the configuration in the business</blockquote> | ✅ |
+| `isSelect` | boolean | - | Mark whether it is a drop-down selection button. If enabled, the **onSelect__\<number\>** attribute is supported to be dynamically added as a different option, such as `onSelect__1`, `onSelect__2`, ... <blockquote>Label, value and onClick methods are separated by `{#}`, eg. `{"label":"Drop-Down","value":"lab","isSelect":true, "onSelect__1":"None {#} cancel {#} method.setContextData({});method.executeCustomMethod('sayHello', 'John');","onSelect__2":"Create image {#} create-img-a {#} method.setContextData({systemPrompt:'please create a image'});"}`</blockquote><hr /><blockquote>When the value of **onSelect__\<number\>** is `cancel`, it will restore the default label</blockquote> | - |
 
 
 

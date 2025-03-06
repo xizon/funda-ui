@@ -1,4 +1,8 @@
 import React from "react";
+export interface CustomMethod {
+    name: string;
+    func: (...args: any[]) => any;
+}
 export declare type MessageDetail = {
     sender: string;
     timestamp: string;
@@ -9,22 +13,29 @@ export interface FloatingButton {
     label: string;
     value: string;
     onClick: string;
+    isSelect?: boolean;
+    [key: string]: any;
+}
+export interface FloatingButtonSelectOption {
+    label: string;
+    value: string;
+    onClick: string;
 }
 export interface RequestConfig {
     apiUrl: string;
     requestBody: string;
     responseExtractor: string;
 }
-declare type CustomRequestConfig = {
+export declare type CustomRequestConfig = {
     requestBody: any;
     apiUrl: string;
     headers: any;
 };
-declare type CustomRequestResponse = {
+export declare type CustomRequestResponse = {
     content: string | Response | null;
     isStream: boolean;
 };
-declare type CustomRequestFunction = (message: string, config: CustomRequestConfig) => Promise<CustomRequestResponse>;
+export declare type CustomRequestFunction = (message: string, config: CustomRequestConfig) => Promise<CustomRequestResponse>;
 export declare type ChatboxProps = {
     debug?: boolean;
     prefix?: string;
@@ -53,11 +64,13 @@ export declare type ChatboxProps = {
     contextData?: Record<string, any>;
     toolkitButtons?: FloatingButton[];
     newChatButton?: FloatingButton;
+    customMethods?: CustomMethod[];
     customRequest?: CustomRequestFunction;
     renderParser?: (input: string) => Promise<string>;
     requestBodyFormatter?: (body: any, contextData: Record<string, any>, conversationHistory: MessageDetail[]) => Promise<Record<string, any>>;
     nameFormatter?: (input: string) => string;
     onInputChange?: (controlRef: React.RefObject<any>, val: string) => any;
+    onInputCallback?: (input: string) => Promise<string>;
     onChunk?: (controlRef: React.RefObject<any>, lastContent: string, conversationHistory: MessageDetail[]) => any;
     onComplete?: (controlRef: React.RefObject<any>, lastContent: string, conversationHistory: MessageDetail[]) => any;
 };

@@ -1,5 +1,5 @@
 /**
- * Session StorageListener
+ * Session Storage Listener
  * 
  * @usage:
 

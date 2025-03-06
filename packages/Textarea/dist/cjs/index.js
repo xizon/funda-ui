@@ -740,7 +740,11 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 
               // initialize default row height
               if (el.scrollHeight > 0 && !defaultRowHeightInit) {
-                setDefaultRowHeight(el.scrollHeight + parseInt(style.borderTopWidth) + parseInt(style.borderBottomWidth));
+                var _defaultRowHeight = el.scrollHeight + parseInt(style.borderTopWidth) + parseInt(style.borderBottomWidth);
+                if (maxHeight != 0 && _defaultRowHeight >= maxHeight) {
+                  _defaultRowHeight = maxHeight;
+                }
+                setDefaultRowHeight(_defaultRowHeight);
                 setDefaultRowHeightInit(true);
               }
 
@@ -757,11 +761,11 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 
               // !!! Compare initial height and changed height
               if (scrollHeight > defaultRowHeight && defaultRowHeight > 0) {
-                if (maxHeight != 0 && scrollHeight >= maxHeight) {
-                  el.style.height = maxHeight + "px";
-                } else {
-                  el.style.height = scrollHeight + "px";
+                var _scrollHeight = scrollHeight;
+                if (maxHeight != 0 && _scrollHeight >= maxHeight) {
+                  _scrollHeight = maxHeight;
                 }
+                el.style.height = _scrollHeight + "px";
               }
               cb === null || cb === void 0 ? void 0 : cb([_controlWidth, scrollHeight]);
             }

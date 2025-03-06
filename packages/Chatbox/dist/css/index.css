@@ -29,7 +29,7 @@
     background-position: 250% 0, 250% 0;
   }
 }
-/*=================== Chatbox (Core) =================*/
+/*===================  Chatbox (Core) =================*/
 .custom-chatbox-circle {
   --custom-chatbox-circle-color: #5A5EB9;
   --custom-chatbox-circle-text: #fff;
@@ -109,6 +109,10 @@
   --custom-chatbox-toolkit-btn-active-color: #c2dfff;
   --custom-chatbox-newchat-btn-color: #f8f9fa;
   --custom-chatbox-newchat-btn-border-color: #e9ecef;
+  --custom-chatbox-toolkit-opt-color: #f8f9fa;
+  --custom-chatbox-toolkit-opt-border-color: #e9ecef;
+  --custom-chatbox-toolkit-opt-active-color: #c2dfff;
+  --custom-chatbox-toolkit-btn-radius: 20px;
   min-width: var(--custom-chatbox-w);
   max-width: var(--custom-chatbox-w);
   margin: auto;
@@ -127,6 +131,7 @@
   /* loading */
   /* new chat button */
   /* toolkit buttons */
+  /* toolkit options */
 }
 .custom-chatbox-container details {
   font-style: italic;
@@ -392,22 +397,95 @@
   gap: 8px;
   justify-content: center;
 }
-.custom-chatbox-container .toolkit-btns > button {
+.custom-chatbox-container .toolkit-btns button {
   padding: 3px 6px;
   background-color: var(--custom-chatbox-toolkit-btn-color);
   border: 1px solid var(--custom-chatbox-toolkit-btn-border-color);
-  border-radius: 20px;
+  border-radius: var(--custom-chatbox-toolkit-btn-radius);
   cursor: pointer;
   transition: all 0.3s ease;
   font-size: 0.75rem;
 }
-.custom-chatbox-container .toolkit-btns > button img, .custom-chatbox-container .toolkit-btns > button svg, .custom-chatbox-container .toolkit-btns > button video, .custom-chatbox-container .toolkit-btns > button canvas, .custom-chatbox-container .toolkit-btns > button audio, .custom-chatbox-container .toolkit-btns > button iframe, .custom-chatbox-container .toolkit-btns > button embed, .custom-chatbox-container .toolkit-btns > button object {
+.custom-chatbox-container .toolkit-btns button img, .custom-chatbox-container .toolkit-btns button svg, .custom-chatbox-container .toolkit-btns button video, .custom-chatbox-container .toolkit-btns button canvas, .custom-chatbox-container .toolkit-btns button audio, .custom-chatbox-container .toolkit-btns button iframe, .custom-chatbox-container .toolkit-btns button embed, .custom-chatbox-container .toolkit-btns button object {
   display: inline;
 }
-.custom-chatbox-container .toolkit-btns > button:hover {
+.custom-chatbox-container .toolkit-btns button:hover {
   background-color: var(--custom-chatbox-toolkit-btn-border-color);
   transform: translateY(-2px);
 }
-.custom-chatbox-container .toolkit-btns > button.active {
+.custom-chatbox-container .toolkit-btns button.opt-active, .custom-chatbox-container .toolkit-btns button.active {
   background-color: var(--custom-chatbox-toolkit-btn-active-color);
+}
+@keyframes dropupAnimation {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.custom-chatbox-container .toolkit-select-wrapper {
+  position: relative;
+  display: inline-block;
+}
+.custom-chatbox-container .toolkit-select-wrapper .toolkit-select-btn {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border: 1px solid #ddd;
+  border-radius: var(--custom-chatbox-toolkit-btn-radius);
+  cursor: pointer;
+}
+.custom-chatbox-container .toolkit-select-wrapper .toolkit-select-arrow {
+  margin-left: 8px;
+  font-size: 10px;
+  transition: transform 0.2s ease;
+}
+.custom-chatbox-container .toolkit-select-wrapper .toolkit-select-arrow.active {
+  transform: rotate(180deg);
+}
+.custom-chatbox-container .toolkit-select-wrapper .toolkit-select-options-container {
+  z-index: 1000;
+  width: 100%;
+  min-width: 120px;
+  transform: translateY(-100%);
+}
+.custom-chatbox-container .toolkit-select-wrapper .toolkit-select-options {
+  background-color: var(--custom-chatbox-toolkit-opt-color);
+  border: 1px solid var(--custom-chatbox-toolkit-opt-border-color);
+  border-radius: 4px;
+  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+  margin-bottom: 10px;
+  max-height: 300px;
+  overflow-y: auto;
+  animation: dropupAnimation 0.2s ease;
+  position: absolute;
+  bottom: 1rem;
+  left: 0;
+  right: 0;
+  display: none;
+  z-index: 1000;
+}
+.custom-chatbox-container .toolkit-select-wrapper .toolkit-select-options.active {
+  display: block;
+}
+.custom-chatbox-container .toolkit-select-wrapper .toolkit-select-options::-webkit-scrollbar {
+  width: 3px;
+}
+.custom-chatbox-container .toolkit-select-wrapper .toolkit-select-options::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.2);
+}
+.custom-chatbox-container .toolkit-select-wrapper .toolkit-select-option {
+  padding: 3px 6px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  font-size: 0.75rem;
+}
+.custom-chatbox-container .toolkit-select-wrapper .toolkit-select-option.cancel {
+  color: var(--custom-chatbox-gray-color);
+}
+.custom-chatbox-container .toolkit-select-wrapper .toolkit-select-option:hover {
+  background-color: var(--custom-chatbox-toolkit-opt-active-color);
 }
