@@ -182,7 +182,7 @@ import NumberInput from 'funda-ui/NumberInput';
 | `contentRef` | React.RefObject | - | It exposes the following methods:  <br /> <ol><li>`contentRef.current.control()`</li><li>`contentRef.current.clear(() => { console.log('callback') })`</li><li>`contentRef.current.set('test value', () => { console.log('callback') })`</li><li>`contentRef.current.increment(() => { console.log('callback') })`</li><li>`contentRef.current.decrement(() => { console.log('callback') })`</li></ol> <blockquote>DO NOT USE it in the `onChange` of this component, otherwise it will cause infinite rendering</blockquote>| - |
 | `wrapperClassName` | string | `mb-3 position-relative` | The class name of the control wrapper. | - |
 | `controlClassName` | string | `form-control` | The class name of the control. | - |
-| `controlGroupWrapperClassName` | string | `input-group position-relative z-1` | The class name of the control group wrapper. | - |
+| `controlGroupWrapperClassName` | string | `input-group position-relative z-1` | The class name of the control group wrapper. If you want not to wrap lines when crowded, you can change it to `input-group position-relative z-1 flex-nowrap` | - |
 | `controlGroupTextClassName` | string | `input-group-text` | The class name of the control group text. | - |
 | `arrowBtnClassName` | string[] | `['btn btn-sm border-0 border-bottom py-0 lh-1 flex-fill','btn btn-sm border-0 py-0 lh-1 flex-fill']` | The class name of the increase and decrease buttons. | - |
 | `arrowBtnContainerClassName` | string | `btn-group-vertical position-absolute top-0 end-0 h-100 z-3 border-start` | The class name of the buttons's container. | - |

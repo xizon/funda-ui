@@ -82,7 +82,7 @@ Chat and conversational UI, which can be used to interface models similarly to t
 ### 7. Configuration items
 ```typescript
 - Model configuration: model, baseUrl, apiKey
-- UI configuration: prefix, bubble, verbose
+- UI configuration: prefix, bubble, verbose, defaultRows
 - Display text: placeholder, noDataPlaceholder, sendLabel
 - Request configuration: requestConfig, headerConfig
 - Context data: contextData
@@ -510,6 +510,7 @@ import Chatbox from 'funda-ui/Chatbox';
 | --- | --- | --- | --- | --- |
 | `contentRef` | React.RefObject | - | It exposes the following methods:  <br /> <ol><li>`contentRef.current.chatOpen()`</li><li>`contentRef.current.chatClose()`</li><li>`contentRef.current.clearData()`</li><li>`contentRef.current.sendMsg()`</li><li>`contentRef.current.getHistory()`</li><li>`contentRef.current.trimHistory(10)`</li><li>`contentRef.current.setVal('new value')`</li><li>`contentRef.current.getContextData()`</li><li>`contentRef.current.setContextData({systemPrompt: "Please keep your answer within 77 words"})`</li><li>`contentRef.current.getMessages()`</li><li>`contentRef.current.setMessages([{"sender":"Sender","timestamp":"4:19:50 PM","content":"My custom new message\n","tag":"[reply]"}])`</li><li>`contentRef.current.getCustomMethods()`</li><li>`contentRef.current.executeCustomMethod('sayHello', 'your name')`</li></ol>| - |
 | `debug` | boolean | false | Enable debug mode to output console information | - |
+| `defaultRows` | number  | 3 | The rows attribute specifies the visible height of a text area, in lines. | - |
 | `prefix` | string | `custom-` | Prefix for component wrapper class name | - |
 | `model` | string | - | The model name to use | - |
 | `baseUrl` | string | - | The base URL for API requests | - |

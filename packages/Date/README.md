@@ -622,7 +622,7 @@ import Date from 'funda-ui/Date';
 | `triggerClassName` | string | - | The class name of the date trigger. | - |
 | `wrapperClassName` | string | `mb-3 position-relative` | The class name of the control wrapper. | - |
 | `controlClassName` | string | `form-control` | The class name of the control. | - |
-| `controlGroupWrapperClassName` | string | `input-group` | The class name of the control group wrapper. | - |
+| `controlGroupWrapperClassName` | string | `input-group` | The class name of the control group wrapper. If you want not to wrap lines when crowded, you can change it to `input-group flex-nowrap` | - |
 | `controlGroupTextClassName` | string | `input-group-text` | The class name of the control group text. | - |
 | `localization` | `en_US` \| `zh_CN` | en_US | Localization in the component of all. You could also use `lang*` to set the language individually. | - |
 | `type` | `date` \| `datetime-local` \| `time` | date | The type of date control.| - |

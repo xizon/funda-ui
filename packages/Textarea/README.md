@@ -484,6 +484,48 @@ export default () => {
 }
 ```
 
+## Use Hotkeys
+
+- Press **Enter**: Send message
+- Press **Ctrl/Command + Enter**: Insert line break
+- Press **Shift + Enter**: Also insert line break (if you need)
+
+```js
+import React, { useState, useRef } from 'react';
+
+// bootstrap components
+import Textarea from 'funda-ui/Textarea';
+
+export default () => {
+
+    return (
+        <>
+            <Textarea
+                rows={4}
+                autoSize
+                onKeyDown={(event: React.KeyboardEvent) => {
+                    // line breaks
+                    if (event.key === 'Enter' && (event.ctrlKey || event.metaKey)) {
+                        return;
+                    }
+                    
+                    if (event.key === 'Enter' && !event.shiftKey && !event.ctrlKey && !event.metaKey) {
+                        event.preventDefault(); // Prevent line breaks
+                        
+                        // submit actions
+                        //...
+                        alert('submit')
+                    }
+
+                }}
+            />
+        </>
+    )
+}
+```
+
+
+
 
 ## API
 
@@ -498,7 +540,7 @@ import Textarea from 'funda-ui/Textarea';
 | `wrapperClassName` | string | `mb-3 position-relative` | The class name of the control wrapper. | - |
 | `controlClassName` | string | `form-control` | The class name of the control. | - |
 | `controlExClassName` | string | - | The extended class name of `controlClassName`. | - |
-| `controlGroupWrapperClassName` | string | `input-group` | The class name of the control group wrapper. | - |
+| `controlGroupWrapperClassName` | string | `input-group` | The class name of the control group wrapper. If you want not to wrap lines when crowded, you can change it to `input-group flex-nowrap` | - |
 | `controlGroupTextClassName` | string | `input-group-text` | The class name of the control group text. | - |
 | `type` | string | text | The type of input. Such as \<input type="text" name="name"\> gives a text box. | - |
 | `defaultValue` | string | - | Specifies the default value. Use when the component is not controlled. It does not re-render the component because the incoming value changes. | - |

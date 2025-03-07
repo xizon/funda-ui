@@ -9,6 +9,8 @@ import useComId from 'funda-utils/dist/cjs/useComId';
 import useDebounce from 'funda-utils/dist/cjs/useDebounce';
 import useThrottle from 'funda-utils/dist/cjs/useThrottle';
 import useClickOutside from 'funda-utils/dist/cjs/useClickOutside';
+import { htmlEncode } from 'funda-utils/dist/cjs/sanitize';
+
 
 
 // loader
@@ -20,8 +22,7 @@ import {
     formatLatestDisplayContent,
     formatName,
     fixHtmlTags,
-    isStreamResponse,
-    htmlEncode
+    isStreamResponse
 } from './utils/func';
 
 import useStreamController from './useStreamController';
@@ -77,6 +78,7 @@ export type CustomRequestFunction = (
 
 export type ChatboxProps = {
     debug?: boolean;
+    defaultRows?: number;
     prefix?: string;
     contentRef?: React.RefObject<any>;
     model?: string;
@@ -253,6 +255,7 @@ const Chatbox = (props: ChatboxProps) => {
   
         const {
             debug,
+            defaultRows,
             prefix,
             contentRef,
             model,
@@ -328,6 +331,7 @@ const Chatbox = (props: ChatboxProps) => {
   
         return {
             debug,
+            defaultRows,
             prefix,
             contentRef,
             model,
@@ -380,7 +384,7 @@ const Chatbox = (props: ChatboxProps) => {
         setActiveButtons(prev => {
             const newState = { ...prev };
             // Turn off only buttons with "isSelect"
-            args().toolkitButtons?.forEach((btn, index) => {
+            args().toolkitButtons?.forEach((btn: FloatingButton, index: number) => {
                 if (btn.isSelect) {
                     const _id = `${args().prefix || 'custom-'}chatbox-btn-tools-${chatId}${index}`;
                     newState[_id] = false;
@@ -1300,7 +1304,6 @@ const Chatbox = (props: ChatboxProps) => {
                 {/**------------- CONTROL AREA -------------*/}
                 <div className="msgcontrol">
 
-
                     <Textarea
                         ref={msInput}
                         contentRef={inputContentRef}
@@ -1309,15 +1312,21 @@ const Chatbox = (props: ChatboxProps) => {
                         placeholder={args().placeholder}
                         disabled={loading ? true : false}
                         onKeyDown={(event: React.KeyboardEvent) => {
-                            if (event.key === 'Enter') {
-                                event.preventDefault();
+                            // line breaks
+                            if (event.key === 'Enter' && (event.ctrlKey || event.metaKey)) {
+                                return;
+                            }
+                            
+                            if (event.key === 'Enter' && !event.shiftKey && !event.ctrlKey && !event.metaKey) {
+                                event.preventDefault(); // Prevent line breaks
                                 handleClickSafe();
                             }
+
                         }}
                         onChange={(e) => {
                             args().onInputChange?.(inputContentRef.current, e.target.value);
                         }}
-                        rows={3}
+                        rows={args().defaultRows || 3}
                         autoSize
                         autoSizeMaxHeight={200}
                     />

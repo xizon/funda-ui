@@ -840,7 +840,7 @@ import Input from 'funda-ui/Input';
 | `wrapperClassName` | string | `mb-3 position-relative` | The class name of the control wrapper. | - |
 | `controlClassName` | string | `form-control` | The class name of the control. | - |
 | `controlExClassName` | string | - | The extended class name of `controlClassName`. | - |
-| `controlGroupWrapperClassName` | string | `input-group` | The class name of the control group wrapper. | - |
+| `controlGroupWrapperClassName` | string | `input-group` | The class name of the control group wrapper. If you want not to wrap lines when crowded, you can change it to `input-group flex-nowrap` | - |
 | `controlGroupTextClassName` | string | `input-group-text` | The class name of the control group text. | - |
 | `appendControl` | ReactNode  | - | An extension of the same level as \<input \>, usually used to placeholder of some elements | - |
 | `type` | string | text | The type of input. Such as \<input type="text" name="name"\> gives a text box. | - |

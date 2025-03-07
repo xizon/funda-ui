@@ -38,6 +38,7 @@ export declare type CustomRequestResponse = {
 export declare type CustomRequestFunction = (message: string, config: CustomRequestConfig) => Promise<CustomRequestResponse>;
 export declare type ChatboxProps = {
     debug?: boolean;
+    defaultRows?: number;
     prefix?: string;
     contentRef?: React.RefObject<any>;
     model?: string;

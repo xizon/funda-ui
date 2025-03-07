@@ -90,7 +90,7 @@ import SearchBar from 'funda-ui/SearchBar';
 | `wrapperClassName` | string | `mb-3 position-relative` | The class name of the control wrapper. | - |
 | `controlClassName` | string | `form-control` | The class name of the control. | - |
 | `controlExClassName` | string | - | The extended class name of `controlClassName`. | - |
-| `controlGroupWrapperClassName` | string | `input-group` | The class name of the control group wrapper. | - |
+| `controlGroupWrapperClassName` | string | `input-group` | The class name of the control group wrapper. If you want not to wrap lines when crowded, you can change it to `input-group flex-nowrap` | - |
 | `controlGroupTextClassName` | string | `input-group-text` | The class name of the control group text. | - |
 | `btnId` | string  | - | ID of the specified button. | - |
 | `appearance` | string | - | The overlay style of the control. The optional values are:<br />**corners:**<br />`pill` | - |
