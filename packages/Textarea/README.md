@@ -491,7 +491,7 @@ export default () => {
 - Press **Shift + Enter**: Also insert line break (if you need)
 
 ```js
-import React, { useState, useRef } from 'react';
+import React from 'react';
 
 // bootstrap components
 import Textarea from 'funda-ui/Textarea';
@@ -523,7 +523,6 @@ export default () => {
     )
 }
 ```
-
 
 
 

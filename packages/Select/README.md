@@ -630,6 +630,8 @@ export default () => {
 
 ## Render the selected value for multiple selection
 
+Customize the UI style displayed on the output of the control.
+
 ```js
 import React from "react";
 import Select, { MultiSelectControlValConfig } from 'funda-ui/Select';
@@ -651,9 +653,9 @@ export default () => {
                     selectAllLabel: "Select all",
                     deselectAllLabel: "Deselect all",
                     data: {
-                        values: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20].map(v => v.toString()),
-                        labels: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20].map(v => v.toString()),
-                        queryStrings: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20].map(v => ''),
+                        values: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map(v => v.toString()),
+                        labels: ['1/(ID: 1)', '2/(ID: 2)', '3/(ID: 3)', '4/(ID: 4)', '5/(ID: 5)', '6/(ID: 6)', '7/(ID: 7)', '8/(ID: 8)', '9/(ID: 9)', '10/(ID: 10)', '11/(ID: 11)', '12/(ID: 12)'],
+                        queryStrings: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map(v => ''),
                     }
                 }}
                 renderSelectedValue={(selectedData: MultiSelectControlValConfig, removeFunc: (e: React.MouseEvent) => void) => (
@@ -680,7 +682,7 @@ export default () => {
                 placeholder="Select"
                 name="name"
                 options={Array.from({ length: 100 }).fill(0).map((v, i) => {
-                    return { "label": `${i}`, "value": `${i}`, "queryString": "" }
+                    return { "label": `${i}/(ID: ${i})`, "value": `${i}`, "queryString": ""}
                 })}
                 onChange={(e, e2, val) => {
                     console.log(e, e2, val);

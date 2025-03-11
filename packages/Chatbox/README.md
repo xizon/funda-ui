@@ -50,11 +50,9 @@ Chat and conversational UI, which can be used to interface models similarly to t
 
 
 
-| `customMethods` | Array | - | Array of custom methods that can be called via `contentRef`.
-
-
 ### 5. Event callback
 ```typescript
+- Question Click callback: onQuestionClick?: (text: string, methods: Record<string, Function>) => void
 - Input callback: onInputCallback?: (input: string) => Promise<string>
 - Input change: onInputChange?: (controlRef: React.RefObject<any>, val: string) => any
 - Data block reception: onChunk?: (controlRef: React.RefObject<any>, lastContent: string, conversationHistory: MessageDetail[]) => any
@@ -88,6 +86,7 @@ Chat and conversational UI, which can be used to interface models similarly to t
 - Context data: contextData
 - History control: maxHistoryLength
 - Custom buttons: newChatButton, toolkitButtons
+- Premade questions: defaultQuestions
 ```
 
 
@@ -499,6 +498,57 @@ export default () => {
 
 
 
+## Set the default question
+
+
+```js
+import React, { useState, useEffect } from 'react';
+
+import Chatbox from 'funda-ui/Chatbox';
+
+// component styles
+import 'funda-ui/Chatbox/index.css';
+
+export default () => {
+
+    const [customQuestion, setCustomQuestion] = useState<undefined | {
+        title: string;
+        list: Array<string>;
+    }>(undefined);
+
+    useEffect(() => {
+        setCustomQuestion({
+            title: '<strong>FAQ: </strong>',
+            list: [
+                "What is <strong>React</strong>?",
+                "How to use <em>useState</em> hook?",
+                "Explain <code>useEffect</code> hook"
+            ]
+        });
+    }, []);
+    
+
+    return (
+        <>
+            <Chatbox
+                ...
+                defaultQuestions={customQuestion}
+                onQuestionClick={(text: string, methods: Record<string, Function>) => {
+                    console.log('Question clicked:', text);
+                    
+                    // send message
+                    methods.sendMsg();
+                  
+                }}
+            }}
+            />
+        </>
+    )
+}
+```
+
+
+
 
 ## API
 
@@ -534,6 +584,7 @@ import Chatbox from 'funda-ui/Chatbox';
 | `requestConfig` | JSON Object | - | Configuration for API requests | ✅ |
 | `headerConfig` | any | - | Configuration for request headers. <blockquote>**Placeholder string**<ul><li>`{apiKey}` -> Your Secret API key on the API key page, It will use the incoming `apiKey` instead</li></ul></blockquote> | - |
 | `contextData` | JSON Object | - | Dynamic JSON data for request formatting | - |
+| `defaultQuestions` | JSON Object | - | Configuration for default questions to display when chat is empty. Object contains: <br /><ol><li>`title`: Title text to show above questions (string)</li><li>`list`: Array of question strings to display</li></ol><br/>**Example:**<br/>`{title:"Suggested questions:",list:["What is React?","How do I use hooks?","Explain props vs state"]}`<br/>These questions will be displayed as clickable options when the chat has no messages. | - |
 | `customMethods` | Array | - | Array of custom methods that can be called via `contentRef`. Each method object contains: <br /><ol><li>`name`: Method name (string)</li><li>`func`: Function to execute</li></ol><br/>**Example:**<br/>`[{name:"sayHello",func:(name:string)=>{console.log("Hello, " + name + "!");}},{name:"updateUI",func:(data:any)=>{console.log('Updating UI with:',data);}}]`<br/>These methods can be accessed through:<br/><ol><li>`contentRef.current.executeCustomMethod('methodName', ...args)`: Execute a specific custom method</li><li>`contentRef.current.getCustomMethods()`: Get list of available custom method names</li></ol><br/>**Usage Example:**<br/>`contentRef.current.executeCustomMethod('sayHello', 'your name');`<br/>`contentRef.current.getCustomMethods();` | - |
 | `toolkitButtons` | Array | - | JSON string for toolkit buttons configuration. Each button can have label, value and **onClick** properties. The onClick function can access `contentRef` methods. Example: <br />`[{"label":"Clear","value":"clear","onClick":"alert('new'); method.clearData();"},{"label":"Send","value":"send","onClick":"method.sendMsg();"},{"label":"Change Context","value":"changecontext","onClick":"method.setContextData({systemPrompt: "Please keep your answer within 77 words"});"}]` <br />Available methods in **onClick**: <br /><ol><li>`method.chatOpen()`: Open the dialog box</li><li>`method.chatClose()`: Close the dialog box</li><li>`method.clearData()`: Clear the data</li><li>`method.sendMsg()`: Send a message</li><li>`method.getHistory()`: Get the history</li><li>`method.trimHistory(10)`: Trim the history</li><li>`method.setVal('new value')`: Set the default value of the input box</li><li>`method.getContextData()`: Get current context data</li><li>`method.setContextData({systemPrompt: "Please keep your answer within 77 words"})`: Modify the context data</li><li>`contentRef.current.getMessages()`: Get messages list</li><li>`contentRef.current.setMessages([{"sender":"Sender","timestamp":"4:19:50 PM","content":"My custom new message\n","tag":"[reply]"}])`: Set messages list</li><li>`method.getCustomMethods()`: Get all available custom method names</li><li>`method.executeCustomMethod('sayHello', 'your name')`: A function that executes a custom method</li></ol> <br />Additional parameters available in **onClick**: <br /><ul><li>**isActive**: The activation status of the current button</li><li>**button**: HTML object for the current button</li></ul> | - |
 | `newChatButton` | JSON Object | - | JSON string for new chat button configuration. Similar to `toolkitButtons` but for a single button that appears when chat has messages. Example: <br /> `{label:"New Chat",value:"new",onClick:"method.clearData(); method.setVal('');"}` | - | 
@@ -541,6 +592,7 @@ import Chatbox from 'funda-ui/Chatbox';
 | `renderParser` | async Function | - | **(It must return a "Promise\<string\>" object)** Custom parser for rendering messages. such as `async(input:string)=>{const res=await markedParse(input);return res;}` | - |
 | `requestBodyFormatter` | async Function | - |  **(It must return a "Promise\<Record\<string, any\>\>" object)** Function to format request body. such as `(body:any,context:Record<string,any>,conversationHistory:any[])=>{if(body.messages&&Array.isArray(body.messages)){const modifiedMessages=body.messages.map(msg=>{if(msg.role==='user'){return{...msg,content:msg.content};}return msg;});conversationHistory.forEach((item:any,index:number)=>{if(index<conversationHistory.length-1){modifiedMessages.unshift({role:"assistant",content:item.content});}});return{...body,messages:modifiedMessages};}return body;}` | - |
 | `nameFormatter` | Function | - | Function to format display names. such as `(input:string)=>{return input}`  <br />At the same time it returns the Control Event, you will use this function and use the `return` keyword to return a new value.| - |
+| `onQuestionClick` | Function | - | Callback when a default question is clicked. Receives two parameters. <br /><ol><li>The one is the question text that was clicked (**String**) </li><li>The second parameter is Object containing all exposed methods from `contentRef` (**React.RefObject**) </li></ol><br/>**Example:**<br/>`(text: string, methods: Record<string, Function>) => {console.log('Question clicked:', text); methods.sendMsg(); }` | - |
 | `onInputChange` | Function | - | Callback when input changes. It returns only two values. <br /> <ol><li>The one is method reference of the input HTMLElement (**React.RefObject**) </li><li>The second parameter is the current value (**String**) </li></ol> | - |
 | `onInputCallback` | async function  | - | **(It must return a "Promise\<string\>" object)** Return value from `onInputCallback` property to format the data of the control element, which will sanitize input is the process of securing/cleaning/filtering input data. such as `async (input:string)=>{return input}`<br />At the same time it returns the Control Event, you will use this function and use the `return` keyword to return a new value. <blockquote>It fires in real time as the user enters. If return is not set, it will not return.</blockquote> | - |
 | `onChunk` | Function | - | Callback when data processing. It returns three values. <br /> <ol><li>The one is method reference of the input HTMLElement (**React.RefObject**) </li><li>The second parameter is the current value (**String**) </li><li>The third parameter is the conversation history (**Array**) </li></ol> | - |

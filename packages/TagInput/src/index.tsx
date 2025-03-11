@@ -13,6 +13,12 @@ import { clsWrite, combinedCls } from 'funda-utils/dist/cjs/cls';
 
 
 
+export interface TagValConfig {
+    content: string;
+    id: number;
+    [key: string]: string | boolean | number; // Allows dynamic attributes
+}
+
 export type TagInputProps = {
     contentRef?: React.ForwardedRef<any>;
     wrapperClassName?: string;
@@ -27,6 +33,7 @@ export type TagInputProps = {
     required?: any;
     readOnly?: any;
     placeholder?: string;
+    renderSelectedValue?: (selectedData: TagValConfig[], removeFunc: (e: React.MouseEvent) => void) => React.ReactNode;
     /** Whether to use square brackets to save result and initialize default value */
     extractValueByBrackets?: boolean;
     /** -- */
@@ -52,6 +59,7 @@ const TagInput = forwardRef((props: TagInputProps, externalRef: any) => {
         disabled,
         required,
         placeholder,
+        renderSelectedValue,
         readOnly,
         value,
         requiredLabel,
@@ -82,7 +90,7 @@ const TagInput = forwardRef((props: TagInputProps, externalRef: any) => {
     const max = maxTags ? maxTags : 10;
     const [lastId, setLastId] = useState<number>(-1);
     const [userInput, setUserInput] = useState<string>('');
-    const [items, setItems] = useState<any[]>([]);
+    const [items, setItems] = useState<TagValConfig[]>([]);
     const [alreadyInItems, setAlreadyInItems] = useState<boolean>(false);
     const [onComposition, setOnComposition] = useState<boolean>(false);
 
@@ -115,7 +123,7 @@ const TagInput = forwardRef((props: TagInputProps, externalRef: any) => {
         } else {
             const _val = VALUE_BY_BRACKETS ? extractContentsOfBrackets(defaultValue) : defaultValue.trim().replace(/^\,|\,$/g, '').split(',');
             if (Array.isArray(_val)) {
-                setItems(_val.map((item: any, index: number) => {
+                setItems(_val.map((item: string, index: number) => {
                     return {
                         content: item,
                         id: index
@@ -129,12 +137,14 @@ const TagInput = forwardRef((props: TagInputProps, externalRef: any) => {
     }
 
 
-    function handleRemove(e: MouseEvent<HTMLAnchorElement>) {
+    function handleRemove(e: any) {
         e.preventDefault();
+        e.stopPropagation();  /* REQUIRED */
 
         const idToRemove = Number(e.currentTarget.dataset.item);
         const newArray = items!.filter((item: any) => item.id !== idToRemove);
         setItems(newArray);
+
 
         //
         onChange?.(inputRef.current, newArray, VALUE_BY_BRACKETS ? convertArrToValByBrackets(newArray.map(v => v.content)) : newArray.map(v => v.content).join(','));
@@ -270,13 +280,23 @@ const TagInput = forwardRef((props: TagInputProps, externalRef: any) => {
                 <div className="tag-input__control-wrapper">
                     <div>
                         <ul className="tag-input__list">
-                            {items ? items.map((item: any, index: number) => (
-                                <li key={index}>
-                                    {item.content}
-                                    
-                                    <a href="#" tabIndex={-1} onClick={handleRemove} data-item={item.id}><svg width="10px" height="10px" viewBox="0 0 1024 1024"><path fill="#000"  d="M195.2 195.2a64 64 0 0 1 90.496 0L512 421.504 738.304 195.2a64 64 0 0 1 90.496 90.496L602.496 512 828.8 738.304a64 64 0 0 1-90.496 90.496L512 602.496 285.696 828.8a64 64 0 0 1-90.496-90.496L421.504 512 195.2 285.696a64 64 0 0 1 0-90.496z"/></svg></a>
-                                </li>
-                            )) : null}
+
+                             {/* ITEMS LIST */}
+                            {typeof renderSelectedValue === 'function' ? <>
+                                {renderSelectedValue(items, handleRemove)}
+                            </> : <>
+                                {items ? items.map((item: any, index: number) => (
+                                    <li key={index}>
+                                        {item.content}
+                                        
+                                        <a href="#" tabIndex={-1} onClick={handleRemove} data-item={item.id}><svg width="10px" height="10px" viewBox="0 0 1024 1024"><path fill="#000"  d="M195.2 195.2a64 64 0 0 1 90.496 0L512 421.504 738.304 195.2a64 64 0 0 1 90.496 90.496L602.496 512 828.8 738.304a64 64 0 0 1-90.496 90.496L512 602.496 285.696 828.8a64 64 0 0 1-90.496-90.496L421.504 512 195.2 285.696a64 64 0 0 1 0-90.496z"/></svg></a>
+                                    </li>
+                                )) : null}
+                            </>}
+
+
+
+
                         </ul>
 
 

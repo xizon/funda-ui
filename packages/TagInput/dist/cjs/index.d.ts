@@ -1,4 +1,9 @@
 import React from 'react';
+export interface TagValConfig {
+    content: string;
+    id: number;
+    [key: string]: string | boolean | number;
+}
 export declare type TagInputProps = {
     contentRef?: React.ForwardedRef<any>;
     wrapperClassName?: string;
@@ -13,6 +18,7 @@ export declare type TagInputProps = {
     required?: any;
     readOnly?: any;
     placeholder?: string;
+    renderSelectedValue?: (selectedData: TagValConfig[], removeFunc: (e: React.MouseEvent) => void) => React.ReactNode;
     /** Whether to use square brackets to save result and initialize default value */
     extractValueByBrackets?: boolean;
     /** -- */

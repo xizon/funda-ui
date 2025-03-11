@@ -69,6 +69,14 @@ export default () => {
                 onlyTime
             />
 
+           <Date
+                name="name"
+                placeholder="HH:mm:ss"
+                iconLeft="Left Label"
+                iconRight="Right Label"
+            />
+
+
         </>
     );
 }

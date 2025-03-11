@@ -828,7 +828,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var funda_utils_dist_cjs_convert__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(funda_utils_dist_cjs_convert__WEBPACK_IMPORTED_MODULE_3__);
 /* harmony import */ var funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(188);
 /* harmony import */ var funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_4__);
-var _excluded = ["contentRef", "wrapperClassName", "maxTags", "disabled", "required", "placeholder", "readOnly", "value", "requiredLabel", "label", "name", "id", "autoComplete", "autoCapitalize", "spellCheck", "extractValueByBrackets", "minLength", "maxLength", "style", "tabIndex", "onChange", "onBlur", "onFocus"];
+var _excluded = ["contentRef", "wrapperClassName", "maxTags", "disabled", "required", "placeholder", "renderSelectedValue", "readOnly", "value", "requiredLabel", "label", "name", "id", "autoComplete", "autoCapitalize", "spellCheck", "extractValueByBrackets", "minLength", "maxLength", "style", "tabIndex", "onChange", "onBlur", "onFocus"];
 function _extends() { _extends = Object.assign ? Object.assign.bind() : function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
 function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
 function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
@@ -850,6 +850,7 @@ var TagInput = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(fu
     disabled = props.disabled,
     required = props.required,
     placeholder = props.placeholder,
+    renderSelectedValue = props.renderSelectedValue,
     readOnly = props.readOnly,
     value = props.value,
     requiredLabel = props.requiredLabel,
@@ -932,6 +933,8 @@ var TagInput = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(fu
   }
   function handleRemove(e) {
     e.preventDefault();
+    e.stopPropagation(); /* REQUIRED */
+
     var idToRemove = Number(e.currentTarget.dataset.item);
     var newArray = items.filter(function (item) {
       return item.id !== idToRemove;
@@ -1056,7 +1059,7 @@ var TagInput = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(fu
     className: "tag-input__control-wrapper"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("ul", {
     className: "tag-input__list"
-  }, items ? items.map(function (item, index) {
+  }, typeof renderSelectedValue === 'function' ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, renderSelectedValue(items, handleRemove)) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, items ? items.map(function (item, index) {
     return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("li", {
       key: index
     }, item.content, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
@@ -1072,7 +1075,7 @@ var TagInput = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(fu
       fill: "#000",
       d: "M195.2 195.2a64 64 0 0 1 90.496 0L512 421.504 738.304 195.2a64 64 0 0 1 90.496 90.496L602.496 512 828.8 738.304a64 64 0 0 1-90.496 90.496L512 602.496 285.696 828.8a64 64 0 0 1-90.496-90.496L421.504 512 195.2 285.696a64 64 0 0 1 0-90.496z"
     }))));
-  }) : null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+  }) : null)), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
     className: (0,funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_4__.combinedCls)('tag-input__control', {
       'disabled': disabled
     }),

@@ -39,6 +39,13 @@ export type MessageDetail = {
     tag: string; // such as '[reply]'
 };
 
+
+export type QuestionData = {
+    title: string;
+    list: Array<string>;
+};
+
+
 export interface FloatingButton {
     label: string;  // HTML string
     value: string;
@@ -106,10 +113,12 @@ export type ChatboxProps = {
     toolkitButtons?: FloatingButton[];
     newChatButton?: FloatingButton;
     customMethods?: CustomMethod[]; // [{"name": "method1", "func": "() => { console.log('test'); }"}, ...]
+    defaultQuestions?: QuestionData;
     customRequest?: CustomRequestFunction;
     renderParser?: (input: string) => Promise<string>;
     requestBodyFormatter?: (body: any, contextData: Record<string, any>, conversationHistory: MessageDetail[]) => Promise<Record<string, any>>;
     nameFormatter?: (input: string) => string;
+    onQuestionClick?: (text: string, methods: Record<string, Function>) => void;
     onInputChange?: (controlRef: React.RefObject<any>, val: string) => any;
     onInputCallback?: (input: string) => Promise<string>;
     onChunk?: (controlRef: React.RefObject<any>, lastContent: string, conversationHistory: MessageDetail[]) => any;
@@ -279,6 +288,7 @@ const Chatbox = (props: ChatboxProps) => {
             newChatButton,
             maxHistoryLength,
             customRequest,
+            onQuestionClick,
             renderParser,
             requestBodyFormatter,
             nameFormatter,
@@ -352,6 +362,7 @@ const Chatbox = (props: ChatboxProps) => {
             toolkitButtons,
             newChatButton,
             customRequest,
+            onQuestionClick,
             renderParser,
             requestBodyFormatter,
             nameFormatter,
@@ -361,6 +372,7 @@ const Chatbox = (props: ChatboxProps) => {
             onComplete,
 
             // 
+            defaultQuestionsRes: questions, 
             latestContextData,
             questionNameRes: _questionName,
             answerNameRes: _answerName,
@@ -373,6 +385,28 @@ const Chatbox = (props: ChatboxProps) => {
         }
 
     }
+
+
+
+    //================================================================
+    // Custom Questions
+    //================================================================
+    const [questions, setQuestions] = useState<QuestionData | undefined>(props.defaultQuestions);
+    useEffect(() => {
+        if (props.defaultQuestions) {
+            setQuestions(props.defaultQuestions);
+        }
+    }, [props.defaultQuestions]);
+    const hasQuestion = () => {
+        return args().defaultQuestionsRes && (args().defaultQuestionsRes as QuestionData).list.length > 0;
+    };
+    const handleQuestionClick = (text: string) => {
+        if (inputContentRef.current) {
+            inputContentRef.current.set(text);
+        }
+
+        args().onQuestionClick?.(text, exposedMethods());
+    };
 
 
     //================================================================
@@ -1124,7 +1158,7 @@ const Chatbox = (props: ChatboxProps) => {
                 {/**------------- NO DATA -------------*/}
                 {msgList.length === 0 ? <>
 
-                    <div className="d-flex flex-column align-items-center justify-content-center h-50">
+                    <div className={`d-flex flex-column align-items-center justify-content-center ${hasQuestion() ? '' : 'h-50'}`}>
                         <p>
                             <svg width="70px" height="70px" viewBox="0 0 24 24" fill="none">
                                 <path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 13.5997 2.37562 15.1116 3.04346 16.4525C3.22094 16.8088 3.28001 17.2161 3.17712 17.6006L2.58151 19.8267C2.32295 20.793 3.20701 21.677 4.17335 21.4185L6.39939 20.8229C6.78393 20.72 7.19121 20.7791 7.54753 20.9565C8.88837 21.6244 10.4003 22 12 22Z" stroke="#858297" strokeWidth="1.5" />
@@ -1134,7 +1168,26 @@ const Chatbox = (props: ChatboxProps) => {
 
                         </p>
                         <p className="text-primary" dangerouslySetInnerHTML={{ __html: `${args().noDataPlaceholder}` }}></p>
+
+                        {/** DEFAULT QUESTIONS */}
+                        {hasQuestion() && (
+                            <div className="default-questions">
+                                <div className="default-questions-title" dangerouslySetInnerHTML={{ __html: `${(args().defaultQuestionsRes as QuestionData).title}` }}></div>
+                                {(args().defaultQuestionsRes as QuestionData).list?.map((question: string, index: number) => (
+                                    <div 
+                                        key={index}
+                                        className="default-question-item"
+                                        onClick={() => handleQuestionClick(question)}
+                                        dangerouslySetInnerHTML={{ __html: `${question}` }}
+                                    />
+                                ))}
+                            </div>
+                        )}
+                        {/** /DEFAULT QUESTIONS */}
+
                     </div>
+
+
                 </> : null}
                 {/**------------- /NO DATA -------------*/}
 

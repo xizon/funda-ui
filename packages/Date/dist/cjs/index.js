@@ -5002,6 +5002,9 @@ var src_Date = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_reac
   var defaultValueIsEmpty = function defaultValueIsEmpty(s) {
     return typeof s === 'undefined' || s === null || s === 'null' || s === '';
   };
+  var propExist = function propExist(p) {
+    return typeof p !== 'undefined' && p !== null && p !== '';
+  };
 
   // Localization
   var _langHoursTitle = langHoursTitle || 'Hours';
@@ -5613,6 +5616,54 @@ var src_Date = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_reac
     }
     return [_res, v];
   }
+  function tools() {
+    return /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("span", {
+      className: (0,cls.combinedCls)('date2d__control-tools', {
+        'date2d__control-tools--hover-show-tools': SHOW_TOOLS_ENABLED
+      })
+    }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("a", {
+      tabIndex: -1,
+      href: "#",
+      className: (0,cls.combinedCls)('date2d__control-tools__close', {
+        'd-none': HIDE_CLEAR_BTN_ENABLED || !dateDefaultValueExist
+      }),
+      onClick: function onClick(e) {
+        e.preventDefault();
+        e.stopPropagation(); // Avoid triggering pop-ups
+
+        clearAll();
+        onClear === null || onClear === void 0 ? void 0 : onClear(getFullTimeData(''));
+      }
+    }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("svg", {
+      width: "12px",
+      height: "12px",
+      viewBox: "0 0 1024 1024"
+    }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("path", {
+      fill: "#000",
+      d: "M195.2 195.2a64 64 0 0 1 90.496 0L512 421.504 738.304 195.2a64 64 0 0 1 90.496 90.496L602.496 512 828.8 738.304a64 64 0 0 1-90.496 90.496L512 602.496 285.696 828.8a64 64 0 0 1-90.496-90.496L421.504 512 195.2 285.696a64 64 0 0 1 0-90.496z"
+    }))), /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("a", {
+      tabIndex: -1,
+      href: "#",
+      className: "date2d__control-tools__trigger",
+      onClick: function onClick(e) {
+        e.preventDefault();
+        e.stopPropagation(); // Avoid triggering pop-ups
+
+        handleShow();
+      }
+    }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("svg", {
+      width: "14px",
+      height: "14px",
+      viewBox: "0 0 24 24",
+      fill: "none"
+    }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("path", {
+      d: "M3 9H21M9 15L11 17L15 13M7 3V5M17 3V5M6.2 21H17.8C18.9201 21 19.4802 21 19.908 20.782C20.2843 20.5903 20.5903 20.2843 20.782 19.908C21 19.4802 21 18.9201 21 17.8V8.2C21 7.07989 21 6.51984 20.782 6.09202C20.5903 5.71569 20.2843 5.40973 19.908 5.21799C19.4802 5 18.9201 5 17.8 5H6.2C5.0799 5 4.51984 5 4.09202 5.21799C3.71569 5.40973 3.40973 5.71569 3.21799 6.09202C3 6.51984 3 7.07989 3 8.2V17.8C3 18.9201 3 19.4802 3.21799 19.908C3.40973 20.2843 3.71569 20.5903 4.09202 20.782C4.51984 21 5.07989 21 6.2 21Z",
+      stroke: "#000000",
+      strokeWidth: "2",
+      strokeLinecap: "round",
+      strokeLinejoin: "round"
+    }))));
+  }
   (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useEffect)(function () {
     // update default value
     //--------------
@@ -5931,54 +5982,9 @@ var src_Date = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_reac
         setChangedVal(_full);
         setTimeVal([splitVals[3], splitVals[4], _val]);
       }
-    }, attributes))) : null) : null)),
+    }, attributes))) : null) : null), propExist(iconRight) ? tools() : null),
     style: style
-  }, attributes)), /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("span", {
-    className: (0,cls.combinedCls)('date2d__control-tools', {
-      'date2d__control-tools--hover-show-tools': SHOW_TOOLS_ENABLED
-    })
-  }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("a", {
-    tabIndex: -1,
-    href: "#",
-    className: (0,cls.combinedCls)('date2d__control-tools__close', {
-      'd-none': HIDE_CLEAR_BTN_ENABLED || !dateDefaultValueExist
-    }),
-    onClick: function onClick(e) {
-      e.preventDefault();
-      e.stopPropagation(); // Avoid triggering pop-ups
-
-      clearAll();
-      onClear === null || onClear === void 0 ? void 0 : onClear(getFullTimeData(''));
-    }
-  }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("svg", {
-    width: "12px",
-    height: "12px",
-    viewBox: "0 0 1024 1024"
-  }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("path", {
-    fill: "#000",
-    d: "M195.2 195.2a64 64 0 0 1 90.496 0L512 421.504 738.304 195.2a64 64 0 0 1 90.496 90.496L602.496 512 828.8 738.304a64 64 0 0 1-90.496 90.496L512 602.496 285.696 828.8a64 64 0 0 1-90.496-90.496L421.504 512 195.2 285.696a64 64 0 0 1 0-90.496z"
-  }))), /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("a", {
-    tabIndex: -1,
-    href: "#",
-    className: "date2d__control-tools__trigger",
-    onClick: function onClick(e) {
-      e.preventDefault();
-      e.stopPropagation(); // Avoid triggering pop-ups
-
-      handleShow();
-    }
-  }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("svg", {
-    width: "14px",
-    height: "14px",
-    viewBox: "0 0 24 24",
-    fill: "none"
-  }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("path", {
-    d: "M3 9H21M9 15L11 17L15 13M7 3V5M17 3V5M6.2 21H17.8C18.9201 21 19.4802 21 19.908 20.782C20.2843 20.5903 20.5903 20.2843 20.782 19.908C21 19.4802 21 18.9201 21 17.8V8.2C21 7.07989 21 6.51984 20.782 6.09202C20.5903 5.71569 20.2843 5.40973 19.908 5.21799C19.4802 5 18.9201 5 17.8 5H6.2C5.0799 5 4.51984 5 4.09202 5.21799C3.71569 5.40973 3.40973 5.71569 3.21799 6.09202C3 6.51984 3 7.07989 3 8.2V17.8C3 18.9201 3 19.4802 3.21799 19.908C3.40973 20.2843 3.71569 20.5903 4.09202 20.782C4.51984 21 5.07989 21 6.2 21Z",
-    stroke: "#000000",
-    strokeWidth: "2",
-    strokeLinecap: "round",
-    strokeLinejoin: "round"
-  })))))), /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((dist_cjs_default()), {
+  }, attributes)), !propExist(iconRight) ? tools() : null)), /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((dist_cjs_default()), {
     show: isShow,
     containerClassName: (0,cls.combinedCls)('Date', "Date--".concat(type))
   }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", _extends({

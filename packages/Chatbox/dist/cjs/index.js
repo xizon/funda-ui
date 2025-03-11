@@ -4213,7 +4213,7 @@ function src_arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 
 var Chatbox = function Chatbox(props) {
-  var _args$newChatButton;
+  var _list, _args$newChatButton;
   var chatId = useComId_default()().replace(/\-/g, '_');
 
   // Store latest props in refs
@@ -4386,6 +4386,7 @@ var Chatbox = function Chatbox(props) {
       newChatButton = currentProps.newChatButton,
       maxHistoryLength = currentProps.maxHistoryLength,
       customRequest = currentProps.customRequest,
+      onQuestionClick = currentProps.onQuestionClick,
       renderParser = currentProps.renderParser,
       requestBodyFormatter = currentProps.requestBodyFormatter,
       nameFormatter = currentProps.nameFormatter,
@@ -4451,6 +4452,7 @@ var Chatbox = function Chatbox(props) {
       toolkitButtons: toolkitButtons,
       newChatButton: newChatButton,
       customRequest: customRequest,
+      onQuestionClick: onQuestionClick,
       renderParser: renderParser,
       requestBodyFormatter: requestBodyFormatter,
       nameFormatter: nameFormatter,
@@ -4459,6 +4461,7 @@ var Chatbox = function Chatbox(props) {
       onChunk: onChunk,
       onComplete: onComplete,
       // 
+      defaultQuestionsRes: questions,
       latestContextData: latestContextData,
       questionNameRes: _questionName,
       answerNameRes: _answerName,
@@ -4472,13 +4475,36 @@ var Chatbox = function Chatbox(props) {
   };
 
   //================================================================
+  // Custom Questions
+  //================================================================
+  var _useState17 = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)(props.defaultQuestions),
+    _useState18 = src_slicedToArray(_useState17, 2),
+    questions = _useState18[0],
+    setQuestions = _useState18[1];
+  (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useEffect)(function () {
+    if (props.defaultQuestions) {
+      setQuestions(props.defaultQuestions);
+    }
+  }, [props.defaultQuestions]);
+  var hasQuestion = function hasQuestion() {
+    return args().defaultQuestionsRes && args().defaultQuestionsRes.list.length > 0;
+  };
+  var handleQuestionClick = function handleQuestionClick(text) {
+    var _args$onQuestionClick, _args;
+    if (inputContentRef.current) {
+      inputContentRef.current.set(text);
+    }
+    (_args$onQuestionClick = (_args = args()).onQuestionClick) === null || _args$onQuestionClick === void 0 ? void 0 : _args$onQuestionClick.call(_args, text, exposedMethods());
+  };
+
+  //================================================================
   // Custom buttons
   //================================================================
   var toolkitBtnsRef = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useRef)(null);
-  var _useState17 = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)({}),
-    _useState18 = src_slicedToArray(_useState17, 2),
-    activeButtons = _useState18[0],
-    setActiveButtons = _useState18[1];
+  var _useState19 = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)({}),
+    _useState20 = src_slicedToArray(_useState19, 2),
+    activeButtons = _useState20[0],
+    setActiveButtons = _useState20[1];
   var closeDropdowns = function closeDropdowns() {
     setActiveButtons(function (prev) {
       var _args$toolkitButtons;
@@ -4516,10 +4542,10 @@ var Chatbox = function Chatbox(props) {
   };
 
   // options
-  var _useState19 = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)({}),
-    _useState20 = src_slicedToArray(_useState19, 2),
-    selectedOpt = _useState20[0],
-    setSelectedOpt = _useState20[1];
+  var _useState21 = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)({}),
+    _useState22 = src_slicedToArray(_useState21, 2),
+    selectedOpt = _useState22[0],
+    setSelectedOpt = _useState22[1];
   var getButtonOptions = function getButtonOptions(btn) {
     var options = [];
     var index = 1;
@@ -4814,7 +4840,7 @@ var Chatbox = function Chatbox(props) {
   var streamController = src_useStreamController({
     onChunk: function () {
       var _onChunk = src_asyncToGenerator( /*#__PURE__*/src_regeneratorRuntime().mark(function _callee2(chunk, index) {
-        var _args$onChunk, _args2;
+        var _args$onChunk, _args3;
         var res;
         return src_regeneratorRuntime().wrap(function _callee2$(_context2) {
           while (1) switch (_context2.prev = _context2.next) {
@@ -4831,7 +4857,7 @@ var Chatbox = function Chatbox(props) {
             case 3:
               res = _context2.sent;
               //
-              (_args$onChunk = (_args2 = args()).onChunk) === null || _args$onChunk === void 0 ? void 0 : _args$onChunk.call(_args2, inputContentRef.current, res, conversationHistory.current);
+              (_args$onChunk = (_args3 = args()).onChunk) === null || _args$onChunk === void 0 ? void 0 : _args$onChunk.call(_args3, inputContentRef.current, res, conversationHistory.current);
             case 5:
             case "end":
               return _context2.stop();
@@ -4845,7 +4871,7 @@ var Chatbox = function Chatbox(props) {
     }(),
     onComplete: function () {
       var _onComplete = src_asyncToGenerator( /*#__PURE__*/src_regeneratorRuntime().mark(function _callee3(lastContent) {
-        var _args$onComplete, _args4;
+        var _args$onComplete, _args5;
         var res;
         return src_regeneratorRuntime().wrap(function _callee3$(_context3) {
           while (1) switch (_context3.prev = _context3.next) {
@@ -4859,7 +4885,7 @@ var Chatbox = function Chatbox(props) {
               displayMessage(args().answerNameRes, res);
 
               //
-              (_args$onComplete = (_args4 = args()).onComplete) === null || _args$onComplete === void 0 ? void 0 : _args$onComplete.call(_args4, inputContentRef.current, res, conversationHistory.current);
+              (_args$onComplete = (_args5 = args()).onComplete) === null || _args$onComplete === void 0 ? void 0 : _args$onComplete.call(_args5, inputContentRef.current, res, conversationHistory.current);
 
               //
               closeSSE();
@@ -4919,7 +4945,7 @@ var Chatbox = function Chatbox(props) {
   };
   var sendMessage = /*#__PURE__*/function () {
     var _ref2 = src_asyncToGenerator( /*#__PURE__*/src_regeneratorRuntime().mark(function _callee4() {
-      var messageInput, message, inputMsg, res, _args$onChunk2, _args6, _args$onComplete2, _args7, reply, replyRes;
+      var messageInput, message, inputMsg, res, _args$onChunk2, _args7, _args$onComplete2, _args8, reply, replyRes;
       return src_regeneratorRuntime().wrap(function _callee4$(_context4) {
         while (1) switch (_context4.prev = _context4.next) {
           case 0:
@@ -4999,8 +5025,8 @@ var Chatbox = function Chatbox(props) {
             displayMessage(args().answerNameRes, replyRes); // Display AI reply
 
             //
-            (_args$onChunk2 = (_args6 = args()).onChunk) === null || _args$onChunk2 === void 0 ? void 0 : _args$onChunk2.call(_args6, inputContentRef.current, replyRes, conversationHistory.current);
-            (_args$onComplete2 = (_args7 = args()).onComplete) === null || _args$onComplete2 === void 0 ? void 0 : _args$onComplete2.call(_args7, inputContentRef.current, replyRes, conversationHistory.current);
+            (_args$onChunk2 = (_args7 = args()).onChunk) === null || _args$onChunk2 === void 0 ? void 0 : _args$onChunk2.call(_args7, inputContentRef.current, replyRes, conversationHistory.current);
+            (_args$onComplete2 = (_args8 = args()).onComplete) === null || _args$onComplete2 === void 0 ? void 0 : _args$onComplete2.call(_args8, inputContentRef.current, replyRes, conversationHistory.current);
 
             //reset SSE
             closeSSE();
@@ -5299,7 +5325,7 @@ var Chatbox = function Chatbox(props) {
     className: "".concat(args().prefix || 'custom-', "chatbox-container"),
     ref: rootRef
   }, msgList.length === 0 ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
-    className: "d-flex flex-column align-items-center justify-content-center h-50"
+    className: "d-flex flex-column align-items-center justify-content-center ".concat(hasQuestion() ? '' : 'h-50')
   }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("p", null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("svg", {
     width: "70px",
     height: "70px",
@@ -5326,7 +5352,25 @@ var Chatbox = function Chatbox(props) {
     dangerouslySetInnerHTML: {
       __html: "".concat(args().noDataPlaceholder)
     }
-  }))) : null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
+  }), hasQuestion() && /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
+    className: "default-questions"
+  }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
+    className: "default-questions-title",
+    dangerouslySetInnerHTML: {
+      __html: "".concat(args().defaultQuestionsRes.title)
+    }
+  }), (_list = args().defaultQuestionsRes.list) === null || _list === void 0 ? void 0 : _list.map(function (question, index) {
+    return /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
+      key: index,
+      className: "default-question-item",
+      onClick: function onClick() {
+        return handleQuestionClick(question);
+      },
+      dangerouslySetInnerHTML: {
+        __html: "".concat(question)
+      }
+    });
+  })))) : null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
     className: "messages",
     ref: msgContainerRef
   }, msgList.map(function (msg, index) {
@@ -5464,8 +5508,8 @@ var Chatbox = function Chatbox(props) {
       }
     },
     onChange: function onChange(e) {
-      var _args$onInputChange, _args10;
-      (_args$onInputChange = (_args10 = args()).onInputChange) === null || _args$onInputChange === void 0 ? void 0 : _args$onInputChange.call(_args10, inputContentRef.current, e.target.value);
+      var _args$onInputChange, _args11;
+      (_args$onInputChange = (_args11 = args()).onInputChange) === null || _args$onInputChange === void 0 ? void 0 : _args$onInputChange.call(_args11, inputContentRef.current, e.target.value);
     },
     rows: args().defaultRows || 3,
     autoSize: true,

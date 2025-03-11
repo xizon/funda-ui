@@ -9,6 +9,10 @@ export declare type MessageDetail = {
     content: string;
     tag: string;
 };
+export declare type QuestionData = {
+    title: string;
+    list: Array<string>;
+};
 export interface FloatingButton {
     label: string;
     value: string;
@@ -66,10 +70,12 @@ export declare type ChatboxProps = {
     toolkitButtons?: FloatingButton[];
     newChatButton?: FloatingButton;
     customMethods?: CustomMethod[];
+    defaultQuestions?: QuestionData;
     customRequest?: CustomRequestFunction;
     renderParser?: (input: string) => Promise<string>;
     requestBodyFormatter?: (body: any, contextData: Record<string, any>, conversationHistory: MessageDetail[]) => Promise<Record<string, any>>;
     nameFormatter?: (input: string) => string;
+    onQuestionClick?: (text: string, methods: Record<string, Function>) => void;
     onInputChange?: (controlRef: React.RefObject<any>, val: string) => any;
     onInputCallback?: (input: string) => Promise<string>;
     onChunk?: (controlRef: React.RefObject<any>, lastContent: string, conversationHistory: MessageDetail[]) => any;

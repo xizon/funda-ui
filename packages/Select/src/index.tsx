@@ -50,7 +50,6 @@ import { clsWrite, combinedCls } from 'funda-utils/dist/cjs/cls';
 
 
 
-
 export type SelectOptionChangeFnType = (arg1: any, arg2: any, arg3: any) => void;
 
 export interface MultiSelectDataConfig {
@@ -68,9 +67,9 @@ export interface OptionConfig {
     disabled?: boolean;
     optgroup?: any[];
     group?: boolean;
-    label: any;
-    listItemLabel?: any;
-    value: any;
+    label: string;
+    listItemLabel?: string;
+    value: string | number | boolean;
     queryString: string | number;
     callback?: () => void;
 }
@@ -109,7 +108,7 @@ export type SelectProps = {
     multiSelect?: MultiSelectConfig;
     multiSelectEntireAreaTrigger?: boolean;
     multiSelectSelectedItemOnlyStatus?: multiSelectSelectedItemOnlyStatusConfig;
-    renderSelectedValue?: (selectedData: MultiSelectControlValConfig, removeFunc: (e: React.MouseEvent) => void) => void;
+    renderSelectedValue?: (selectedData: MultiSelectControlValConfig, removeFunc: (e: React.MouseEvent) => void) => React.ReactNode;
     cleanTrigger?: CleanTriggerConfig;
     defaultValue?: string | OptionConfig;
     value?: string | OptionConfig;

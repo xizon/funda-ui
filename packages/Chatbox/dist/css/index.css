@@ -113,6 +113,8 @@
   --custom-chatbox-toolkit-opt-border-color: #e9ecef;
   --custom-chatbox-toolkit-opt-active-color: #c2dfff;
   --custom-chatbox-toolkit-btn-radius: 20px;
+  --custom-chatbox-questions-bg: #f5f5f5;
+  --custom-chatbox-questions-hover-bg: #e9e9e9;
   min-width: var(--custom-chatbox-w);
   max-width: var(--custom-chatbox-w);
   margin: auto;
@@ -132,6 +134,7 @@
   /* new chat button */
   /* toolkit buttons */
   /* toolkit options */
+  /* default questions */
 }
 .custom-chatbox-container details {
   font-style: italic;
@@ -434,7 +437,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  border: 1px solid #ddd;
+  border: 1px solid var(--custom-chatbox-gray-color);
   border-radius: var(--custom-chatbox-toolkit-btn-radius);
   cursor: pointer;
 }
@@ -488,4 +491,25 @@
 }
 .custom-chatbox-container .toolkit-select-wrapper .toolkit-select-option:hover {
   background-color: var(--custom-chatbox-toolkit-opt-active-color);
+}
+.custom-chatbox-container .default-questions-title {
+  margin-bottom: 0.5rem;
+}
+.custom-chatbox-container .default-questions {
+  padding: 15px;
+  width: 100%;
+}
+.custom-chatbox-container .default-question-item {
+  padding: 0.3rem 1rem;
+  margin-bottom: 0.2rem;
+  background-color: var(--custom-chatbox-questions-bg);
+  border-radius: 0.35rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+.custom-chatbox-container .default-question-item:hover {
+  background-color: var(--custom-chatbox-questions-hover-bg);
+}
+.custom-chatbox-container .default-question-item:last-child {
+  margin-bottom: 0;
 }
