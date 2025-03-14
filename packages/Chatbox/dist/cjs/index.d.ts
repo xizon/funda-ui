@@ -18,6 +18,7 @@ export interface FloatingButton {
     value: string;
     onClick: string;
     isSelect?: boolean;
+    dynamicOptions?: boolean;
     [key: string]: any;
 }
 export interface FloatingButtonSelectOption {

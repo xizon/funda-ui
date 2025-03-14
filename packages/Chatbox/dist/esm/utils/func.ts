@@ -1,6 +1,11 @@
 // app.ts
 import type { ChatboxProps } from '../index';
 
+export interface HtmlTagPlaceholder {
+    original: string;
+    placeholder: string;
+    type: 'table' | 'img' | 'svg';
+}
 
 export function isValidJSON(str: string){
     try {
@@ -13,7 +18,7 @@ export function isValidJSON(str: string){
 
 export function formatLatestDisplayContent(str: string) {
     // Regular expression to match <details> tags and their content
-    const output = str.replace(/<details class="think"[^>]*>([\s\S]*?)<\/details>/g, (match, content) => {
+    let output = str.replace(/<details class="think"[^>]*>([\s\S]*?)<\/details>/g, (match, content) => {
         // Use regex to match the content inside the "div.think-content"
         const thinkContentMatch = content.match(/<div class="think-content">([\s\S]*?)<\/div>/);
         
@@ -27,6 +32,12 @@ export function formatLatestDisplayContent(str: string) {
         }
         
         return match; // If not empty, return the original matched content
+    });
+
+    // Then handle tables without is-init class
+    output = output.replace(/<table(?![^>]*\bis-init\b)([^>]*)>([\s\S]*?)<\/table>/g, (match, attributes, content) => {
+        // Add is-init class to table and wrap it in container div
+        return `<div class="table-container"><table class="is-init"${attributes}>${content}</table></div>`;
     });
             
     return output;
@@ -127,3 +138,43 @@ export function isStreamResponse(response: Response): boolean {
     return response.body instanceof ReadableStream;
 };
 
+
+export function extractHtmlTags(html: string): { processedHtml: string; placeholders: HtmlTagPlaceholder[] } {
+    const placeholders: HtmlTagPlaceholder[] = [];
+    let processedHtml = html;
+
+    // <table>
+    processedHtml = processedHtml.replace(/<table[^>]*>[\s\S]*?<\/table>/g, (match) => {
+        const placeholder = `[TABLE_${placeholders.length}]`;
+        placeholders.push({
+            original: `<div class="table-container">${match?.replace('<table', '<table class="is-init"')}</div>`,
+            placeholder,
+            type: 'table'
+        });
+        return placeholder;
+    });
+    
+    // <img>
+    processedHtml = processedHtml.replace(/<img[^>]*>/g, (match) => {
+        const placeholder = `[IMG_${placeholders.length}]`;
+        placeholders.push({
+            original: match,
+            placeholder,
+            type: 'img'
+        });
+        return placeholder;
+    });
+
+    // <svg>
+    processedHtml = processedHtml.replace(/<svg[^>]*>[\s\S]*?<\/svg>/g, (match) => {
+        const placeholder = `[SVG_${placeholders.length}]`;
+        placeholders.push({
+            original: match,
+            placeholder,
+            type: 'svg'
+        });
+        return placeholder;
+    });
+
+    return { processedHtml, placeholders };
+};

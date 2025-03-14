@@ -12,7 +12,6 @@ import useClickOutside from 'funda-utils/dist/cjs/useClickOutside';
 import { htmlEncode } from 'funda-utils/dist/cjs/sanitize';
 
 
-
 // loader
 import PureLoader from './PureLoader';
 import TypingEffect from "./TypingEffect";
@@ -51,6 +50,7 @@ export interface FloatingButton {
     value: string;
     onClick: string;
     isSelect?: boolean;  // Mark whether it is a drop-down selection button
+    dynamicOptions?: boolean; // Mark whether to use dynamic options
     [key: string]: any;  // Allows dynamic `onSelect__<number>` attributes, such as `onSelect__1`, `onSelect__2`, ...
 }
 
@@ -201,8 +201,10 @@ const Chatbox = (props: ChatboxProps) => {
                 setShow(false);
             },
             clearData: () => {
-                setMsgList([]);
+                // Update both the conversation history and displayed messages
                 conversationHistory.current = [];
+                setMsgList([]);
+                
             },
             sendMsg: () => {
                 handleClickSafe();
@@ -213,6 +215,11 @@ const Chatbox = (props: ChatboxProps) => {
                 if (conversationHistory.current.length > maxLength) {
                     conversationHistory.current = conversationHistory.current.slice(-maxLength);
                 }
+            },
+            setHistory: (messages: MessageDetail[]) => {
+                // Update both the conversation history and displayed messages
+                conversationHistory.current = [...messages];
+                setMsgList([...messages]);
             },
             setVal: (v: string) => {
                 if (inputContentRef.current) inputContentRef.current.set(v);
@@ -427,16 +434,28 @@ const Chatbox = (props: ChatboxProps) => {
             return newState;
         });
     };
-    const executeButtonAction = (actionStr: string, buttonId: string, buttonElement: HTMLButtonElement) => {
+    const executeButtonAction = async (actionStr: string, buttonId: string, buttonElement: HTMLButtonElement) => {
         try {
-            // Create a new function to execute
             const actionFn = new Function('method', 'isActive', 'button', actionStr);
-            /*
-            function (method, isActive, button) {
-                console.log('Clearing chat');
-                method.clearData();
+
+            // !!!REQUIRED "await"
+            // "customMethods" may be asynchronous
+            const result = await actionFn(exposedMethods(), !activeButtons[buttonId], buttonElement);  
+
+            // If the returned result is an array, it is a dynamic option
+            if (Array.isArray(result) && Object.keys(dynamicOptions).length === 0) {
+                const options: FloatingButtonSelectOption[] = result.map(item => {
+                    const [key, value] = Object.entries(item)[0];
+                    const [label, val, onClick] = (value as string).split('{#}').map((s: string) => s.trim());
+                    return { label, value: val, onClick };
+                });
+
+                // Update dynamic options
+                setDynamicOptions(prev => ({
+                    ...prev,
+                    [buttonId]: options
+                }));
             }
-            */
 
             // Update the button status
             const newState = !activeButtons[buttonId];
@@ -445,17 +464,28 @@ const Chatbox = (props: ChatboxProps) => {
                 [buttonId]: newState
             }));
 
-            return actionFn(exposedMethods(), newState, buttonElement);
-
-           
+            return result;
         } catch (error) {
             console.error('Error executing button action:', error);
         }
     };
+    
+   
 
     // options
     const [selectedOpt, setSelectedOpt] = useState<Record<string, string | number>>({});
-    const getButtonOptions = (btn: FloatingButton): FloatingButtonSelectOption[] => {
+    // Store dynamic options
+    const [dynamicOptions, setDynamicOptions] = useState<Record<string, FloatingButtonSelectOption[]>>({});
+    
+    const getButtonOptions = (btn: FloatingButton, buttonId: string): FloatingButtonSelectOption[] => {
+        // If you are using the dynamic option and already have a cache, return the option for caching
+        //---------
+        if (btn.dynamicOptions && dynamicOptions[buttonId]) {
+            return dynamicOptions[buttonId];
+        }
+
+        // Use the static option from "props"
+        //---------
         const options: FloatingButtonSelectOption[] = [];
         let index = 1;
         
@@ -1431,7 +1461,7 @@ const Chatbox = (props: ChatboxProps) => {
 
 
                 {/**------------- SEND LOADING -------------*/}
-                {args().sendLoading ? <div className="loading"><div style={{ display: loading ? 'block' : 'none' }}><PureLoader customClassName="w-100" txt="" /></div></div> : null}
+                {args().sendLoading ? <div className="loading"><div style={{ display: loading ? 'block' : 'none' }}><PureLoader prefix={args().prefix} customClassName="w-100" txt="" /></div></div> : null}
                 {/**------------- /SEND LOADING -------------*/}
 
 
@@ -1443,8 +1473,8 @@ const Chatbox = (props: ChatboxProps) => {
                             const isActive = activeButtons[_id];
 
                             if (btn.isSelect) {
-                                const options = getButtonOptions(btn);
-
+                                const options = getButtonOptions(btn, _id);
+                                
                                 return (
                                     <div key={index} className="toolkit-select-wrapper">
                                         <button
@@ -1456,6 +1486,9 @@ const Chatbox = (props: ChatboxProps) => {
                                                     ...prev,
                                                     [_id]: !prev[_id]
                                                 }));
+
+                                                //
+                                                executeButtonAction(btn.onClick, _id, e.currentTarget);
                                             }}
                                         >
                                             <span dangerouslySetInnerHTML={{
@@ -1474,18 +1507,23 @@ const Chatbox = (props: ChatboxProps) => {
                                             </svg></span>
                                         </button>
 
-                                        
-
+                                        {/* OPTIONS */}
                                         <div className={`toolkit-select-options ${isActive ? 'active' : ''}`}>
-                                            {options.map((option: FloatingButtonSelectOption, optIndex: number) => (
-                                                <div
-                                                    key={optIndex}
-                                                    className={`toolkit-select-option ${option.value || ''} ${selectedOpt.curIndex === optIndex ? 'selected' : ''}`}
-                                                    onClick={() => handleExecuteButtonSelect(_id, option, optIndex, option.value)}
-                                                >
-                                                    <span dangerouslySetInnerHTML={{ __html: option.label }}></span>
-                                                </div>
-                                            ))}
+
+                                            {options.length > 0 ? <>
+                                                {options.map((option: FloatingButtonSelectOption, optIndex: number) => (
+                                                    <div
+                                                        key={optIndex}
+                                                        className={`toolkit-select-option ${option.value || ''} ${selectedOpt.curIndex === optIndex ? 'selected' : ''}`}
+                                                        onClick={() => handleExecuteButtonSelect(_id, option, optIndex, option.value)}
+                                                    >
+                                                        <span dangerouslySetInnerHTML={{ __html: option.label }}></span>
+                                                    </div>
+                                                ))}
+                                            </> : <>
+                                                <div className={`${args().prefix || 'custom-'}chatbox-mini-loader`}></div>
+                                            </>}
+                                            
                                         </div>
                                     </div>
                                 );
@@ -1497,8 +1535,7 @@ const Chatbox = (props: ChatboxProps) => {
                                     key={index}
                                     id={_id}
                                     className={`${btn.value || ''} ${isActive ? 'active' : ''}`}
-                                    onClick={(e: React.MouseEvent<HTMLButtonElement>) =>
-                                        executeButtonAction(btn.onClick, _id, e.currentTarget)}
+                                    onClick={(e: React.MouseEvent<HTMLButtonElement>) => executeButtonAction(btn.onClick, _id, e.currentTarget)}
                                 >
                                     <span dangerouslySetInnerHTML={{ __html: btn.label }}></span>
                                 </button>

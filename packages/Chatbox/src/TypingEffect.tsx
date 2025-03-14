@@ -1,57 +1,28 @@
 import React, { useEffect, useState } from 'react';
 
-interface TypingEffectProps {
+// extract
+import { extractHtmlTags } from './utils/func';
+import type { HtmlTagPlaceholder } from './utils/func';
+
+export interface TypingEffectProps {
     content: string; // The content to display
     speed: number; // Speed of typing in milliseconds
     onComplete?: () => void; // Callback when typing is complete
     onUpdate?: () => void; // Callback when typing
 }
 
-interface ImagePlaceholder {
-    original: string;
-    placeholder: string;
-    type: 'img' | 'svg';
-}
+
 const TypingEffect: React.FC<TypingEffectProps> = ({ content, speed, onComplete, onUpdate }) => {
     const [displayedContent, setDisplayedContent] = useState<string>('');
     const [index, setIndex] = useState<number>(0);
-    const [imagePlaceholders, setImagePlaceholders] = useState<ImagePlaceholder[]>([]);
+    const [htmlTagPlaceholder, setHtmlTagPlaceholders] = useState<HtmlTagPlaceholder[]>([]);
     const [processedContent, setProcessedContent] = useState<string>('');
 
     // Extract and replace image tags
     useEffect(() => {
-        const extractImages = (html: string): { processedHtml: string; placeholders: ImagePlaceholder[] } => {
-            const placeholders: ImagePlaceholder[] = [];
-            let processedHtml = html;
-
-            // <img>
-            processedHtml = processedHtml.replace(/<img[^>]*>/g, (match) => {
-                const placeholder = `[IMG_${placeholders.length}]`;
-                placeholders.push({
-                    original: match,
-                    placeholder,
-                    type: 'img'
-                });
-                return placeholder;
-            });
-
-            // <svg>
-            processedHtml = processedHtml.replace(/<svg[^>]*>[\s\S]*?<\/svg>/g, (match) => {
-                const placeholder = `[SVG_${placeholders.length}]`;
-                placeholders.push({
-                    original: match,
-                    placeholder,
-                    type: 'svg'
-                });
-                return placeholder;
-            });
-
-            return { processedHtml, placeholders };
-        };
-
-        const { processedHtml, placeholders } = extractImages(content);
+        const { processedHtml, placeholders } = extractHtmlTags(content);
         setProcessedContent(processedHtml);
-        setImagePlaceholders(placeholders);
+        setHtmlTagPlaceholders(placeholders);
     }, [content]);
 
     // Handle typing effects
@@ -61,7 +32,7 @@ const TypingEffect: React.FC<TypingEffectProps> = ({ content, speed, onComplete,
                 let newContent = processedContent.substring(0, index + 1);
                 
                 // Replace the completed placeholder
-                imagePlaceholders.forEach(({ original, placeholder }) => {
+                htmlTagPlaceholder.forEach(({ original, placeholder }) => {
                     if (newContent.includes(placeholder)) {
                         newContent = newContent.replace(placeholder, original);
                     }
@@ -77,9 +48,9 @@ const TypingEffect: React.FC<TypingEffectProps> = ({ content, speed, onComplete,
         }, speed);
 
         return () => clearInterval(timer);
-    }, [processedContent, index, speed, onComplete, onUpdate, imagePlaceholders]);
+    }, [processedContent, index, speed, onComplete, onUpdate, htmlTagPlaceholder]);
 
-    return <span dangerouslySetInnerHTML={{ __html: displayedContent }} />;
+    return <div dangerouslySetInnerHTML={{ __html: displayedContent }} />;
 };
 
 export default TypingEffect;

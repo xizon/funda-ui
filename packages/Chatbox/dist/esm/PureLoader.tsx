@@ -2,6 +2,7 @@ import React from "react";
 
 
 type PureLoaderProps = {
+    prefix?: string;
     txt?: React.ReactNode;
     center?: boolean;
     customClassName?: string;
@@ -12,6 +13,7 @@ type PureLoaderProps = {
 const PureLoader = (props: PureLoaderProps) => {
 
     const {
+        prefix = 'custom-',
         txt,
         center,
         customClassName
@@ -21,11 +23,11 @@ const PureLoader = (props: PureLoaderProps) => {
     return (
         <>
 
-            <div className={`app-chatbox-loader-container ${customClassName || ''}`}>
+            <div className={`${prefix}chatbox-loader-container ${customClassName || ''}`}>
                 <div className="row g-0 align-items-center">
                     <div className={center ? 'text-center' : ''}><small>{txt || txt === '' ? txt : 'Loading...'}</small></div>
                     <div>
-                        <div className="app-chatbox-loader"></div>
+                        <div className="${prefix}chatbox-loader"></div>
                     </div>
                 </div>
             </div>
