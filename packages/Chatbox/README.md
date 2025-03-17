@@ -9,6 +9,7 @@ Chat and conversational UI, which can be used to interface models similarly to t
 - Support streaming response (Stream) and normal request modes
 - Maintain conversation history and support context association
 - Support custom message rendering and formatting
+- Customization capabilities
 
 ### 2. Interface features
 - Support floating bubble mode (bubble)
@@ -25,41 +26,8 @@ Chat and conversational UI, which can be used to interface models similarly to t
 - Request error handling and retry mechanism
 - Custom request header and request body configuration
 
-### 4. Customization capabilities
-```typescript
-- Message formatting: renderParser?: (input: string) => Promise<string>
-- Request body processing: requestBodyFormatter?: (body: any, contextData: Record<string, any>, conversationHistory: Record<string, any>[]) => Promise<Record<string, any>>
-- Name formatter: nameFormatter?: (input: string) => string
-- Custom Request: customRequest?: (
-        message: string, 
-        config: {
-            requestBody: any,
-            apiUrl: string,
-            headers: any
-        }
-    ) => Promise<{
-            content: string | Response | null;
-            isStream: boolean;
-        }>
 
-- Custom Methods: customMethods?: {
-        name: string;
-        func: (...args: any[]) => any;
-    }[]
-```
-
-
-
-### 5. Event callback
-```typescript
-- Question Click callback: onQuestionClick?: (text: string, methods: Record<string, Function>) => void
-- Input callback: onInputCallback?: (input: string) => Promise<string>
-- Input change: onInputChange?: (controlRef: React.RefObject<any>, val: string) => any
-- Data block reception: onChunk?: (controlRef: React.RefObject<any>, lastContent: string, conversationHistory: Record<string, any>[]) => any
-- Completion callback: onComplete?: (controlRef: React.RefObject<any>, lastContent: string, conversationHistory: Record<string, any>[]) => any
-```
-
-### 6. External method (accessed through ref)
+### 4. External method (accessed through `contentRef`)
 ```typescript
 - chatOpen(): Open dialog box
 - chatClose(): Close dialog box
@@ -75,19 +43,6 @@ Chat and conversational UI, which can be used to interface models similarly to t
 - setMessages(v: Record<string, any>[]): Set messages list
 - getCustomMethods(): Get all available custom method names
 - executeCustomMethod(methodName: string, ...args: any[]): A function that executes a custom method
-```
-
-
-### 7. Configuration items
-```typescript
-- Model configuration: model, baseUrl, apiKey
-- UI configuration: prefix, bubble, verbose, defaultRows
-- Display text: placeholder, noDataPlaceholder, sendLabel
-- Request configuration: requestConfig, headerConfig
-- Context data: contextData
-- History control: maxHistoryLength
-- Custom buttons: newChatButton, toolkitButtons
-- Premade questions: defaultQuestions
 ```
 
 
@@ -122,7 +77,7 @@ export default () => {
             isStream: boolean;
         }>
     ) | undefined>();
-    
+
     const customMethods: {
         name: string;
         func: (...args: any[]) => any;
@@ -140,7 +95,6 @@ export default () => {
                 // setSomeState(data);
             }
         },
-
         /* Usage: {"label":"Drop-Down","value":"lab","onClick":"return method.executeCustomMethod('getMenuList')","isSelect":true,"dynamicOptions":true}*/
         {
             name: "getMenuList",
@@ -163,9 +117,8 @@ export default () => {
                 return newOpts;
             }
         }
-    ];
-
-
+    ]; 
+    
     async function getAiConfig() {
         // const res = await axios({
         //     method: 'post',
@@ -178,7 +131,7 @@ export default () => {
             "reasoningSwitchLabel": "Idea",
             "maxHistoryLength": 10,
             "newChatButton": "{\"label\":\"<svg width='16' height='16' viewBox='0 0 24 24'><path fill='currentColor' d='M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z'/></svg> New Chat\",\"value\":\"new\",\"onClick\":\"method.setVal(''); method.clearData();\"}",
-            "toolkitButtons": "[{\"label\":\"<svg fill='currentColor' width='12' height='12' viewBox='0 0 24 24'><path d='M19 2H5c-1.103 0-2 .897-2 2v12c0 1.103.897 2 2 2h3.586L12 21.414 15.414 18H19c1.103 0 2-.897 2-2V4c0-1.103-.897-2-2-2zm0 14h-4.414L12 18.586 9.414 16H5V4h14v12z'/></svg> Brief\",\"value\":\"brief\",\"onClick\":\"console.log(button); console.log(isActive, method.getContextData()); if(isActive) { method.setContextData({systemPrompt: 'Please keep your answer within 77 words',mergedText: method.getContextData().mergedText}); } else { method.setContextData({mergedText: method.getContextData().mergedText}); }\"},{\"label\":\"<svg width='12' height='12' viewBox='0 0 32 32'><path fill='currentColor' d='M26.4,23.9l-6.9-9.4c-0.4-0.5-0.6-1.1-0.6-1.8V8c1.1,0,2-0.9,2-2V4c0-1.1-0.9-2-2-2h-6c-1.1,0-2,0.9-2,2v2c0,1.1,0.9,2,2,2v4.7c0,0.6-0.2,1.2-0.6,1.8l-6.9,9.4C5.2,24.4,5,25,5,25.7V27c0,1.7,1.3,3,3,3h16c1.7,0,3-1.3,3-3v-1.3C27,25,26.8,24.4,26.4,23.9zM14,15.6c0.6-0.9,1-1.9,1-2.9V8c0-1.1-0.9-2-2-2V4h6v2c-1.1,0-2,0.9-2,2v4.7c0,1.1,0.3,2.1,1,2.9l4.6,6.4H9.4L14,15.6z'/></svg> Drop-Down\",\"value\":\"lab\",\"onClick\":\"method.executeCustomMethod('sayHello', 'John');\", \"isSelect\":true, \"onSelect__1\":\"None {#} cancel {#} method.setContextData({});method.executeCustomMethod('sayHello', 'John');\",\"onSelect__2\":\"Create image {#} create-img-a {#} method.setContextData({systemPrompt:'please create a image'});\"}]",
+            "toolkitButtons": "[{\"label\":\"<svg fill='currentColor' width='12' height='12' viewBox='0 0 24 24'><path d='M19 2H5c-1.103 0-2 .897-2 2v12c0 1.103.897 2 2 2h3.586L12 21.414 15.414 18H19c1.103 0 2-.897 2-2V4c0-1.103-.897-2-2-2zm0 14h-4.414L12 18.586 9.414 16H5V4h14v12z'/></svg> Brief\",\"value\":\"brief\",\"onClick\":\"console.log(button); console.log(isActive, method.getContextData()); if(isActive) { method.setContextData({systemPrompt: 'Please keep your answer within 77 words',mergedText: method.getContextData().mergedText}); } else { method.setContextData({mergedText: method.getContextData().mergedText}); }\"},{\"label\":\"<svg width='12' height='12' viewBox='0 0 32 32'><path fill='currentColor' d='M26.4,23.9l-6.9-9.4c-0.4-0.5-0.6-1.1-0.6-1.8V8c1.1,0,2-0.9,2-2V4c0-1.1-0.9-2-2-2h-6c-1.1,0-2,0.9-2,2v2c0,1.1,0.9,2,2,2v4.7c0,0.6-0.2,1.2-0.6,1.8l-6.9,9.4C5.2,24.4,5,25,5,25.7V27c0,1.7,1.3,3,3,3h16c1.7,0,3-1.3,3-3v-1.3C27,25,26.8,24.4,26.4,23.9zM14,15.6c0.6-0.9,1-1.9,1-2.9V8c0-1.1-0.9-2-2-2V4h6v2c-1.1,0-2,0.9-2,2v4.7c0,1.1,0.3,2.1,1,2.9l4.6,6.4H9.4L14,15.6z'/></svg> Drop-Down\",\"value\":\"lab\",\"onClick\":\"method.executeCustomMethod('sayHello', 'John');\",\"isSelect\":true, \"onSelect__1\":\"None {#} cancel {#} method.setContextData({});method.executeCustomMethod('sayHello', 'John');\",\"onSelect__2\":\"Create image {#} create-img-a {#} method.setContextData({systemPrompt:'please create a image'});\"}]",
             "apiUrl": "{baseUrl}/v1/chat/completions",
             "requestBody": "{'model':'{model}','messages':[{'role':'user','content':'{message}'}],'stream': true}",
             "responseBody": "data.choices.0.delta.content",
@@ -238,7 +191,6 @@ export default () => {
                 content: string | Response | null;
                 isStream: boolean;
             }> => {
-
                 // or using "typeof aichatRef.current.getContextData().xxxxx !== 'undefined'"
                 if (typeof message === 'string' && (message.includes('image') || message.includes('img'))) {
 
@@ -573,6 +525,46 @@ export default () => {
 
 
 
+## Copy the content to the clipboard
+
+
+```js
+import React from 'react';
+import Chatbox from 'funda-ui/Chatbox';
+
+// component styles
+import 'funda-ui/Chatbox/index.css';
+
+export default () => {
+
+    return (
+        <>
+            <Chatbox
+                ...
+                showCopyBtn={true}
+                autoCopyReply={false}
+                copiedContentFormatter={(input: string) => {
+                    // Convert HTML text to plain text
+                    return input.replace(/(<([^>]+)>)/ig, '');
+                }}
+                onCopyCallback={(res: Record<string, any>) => {
+                    if (res.success) {
+                        // Text copied to clipboard
+                        console.log(res.message);
+                    } else {
+                        // Failed to copy text
+                        console.log(res.message);
+                    }
+                }}
+            }}
+            />
+        </>
+    )
+}
+```
+
+
+
 ## API
 
 ### Chatbox
@@ -590,6 +582,8 @@ import Chatbox from 'funda-ui/Chatbox';
 | `apiKey` | string | - | API key for authentication | - |
 | `defaultMessages` | Array | - | Initial messages to display in the chat | - |
 | `verbose` | boolean | true | Whether to show reasoning details | - |
+| `showCopyBtn` | boolean | false | Whether to show copy button for each reply | - |
+| `autoCopyReply` | boolean | false | Whether to automatically copy reply to clipboard | - |
 | `reasoningSwitchLabel` | string | - | Label for the reasoning toggle button <blockquote>HTML tags are supported</blockquote>| - |
 | `stopLabel` | React.ReactNode | - | Label for the stop button <blockquote>HTML tags are supported</blockquote>| - |
 | `questionName` | React.ReactNode | - | Name to display for user messages <blockquote>HTML tags are supported</blockquote>| - |
@@ -615,6 +609,7 @@ import Chatbox from 'funda-ui/Chatbox';
 | `renderParser` | async Function | - | **(It must return a "Promise\<string\>" object)** Custom parser for rendering messages. such as `async(input:string)=>{const res=await markedParse(input);return res;}` | - |
 | `requestBodyFormatter` | async Function | - |  **(It must return a "Promise\<Record\<string, any\>\>" object)** Function to format request body. such as `(body:any,context:Record<string,any>,conversationHistory:any[])=>{if(body.messages&&Array.isArray(body.messages)){const modifiedMessages=body.messages.map(msg=>{if(msg.role==='user'){return{...msg,content:msg.content};}return msg;});conversationHistory.forEach((item:any,index:number)=>{if(index<conversationHistory.length-1){modifiedMessages.unshift({role:"assistant",content:item.content});}});return{...body,messages:modifiedMessages};}return body;}` | - |
 | `nameFormatter` | Function | - | Function to format display names. such as `(input:string)=>{return input}`  <br />At the same time it returns the Control Event, you will use this function and use the `return` keyword to return a new value.| - |
+| `copiedContentFormatter` | Function | - | Function to format the copied content. such as `(input:string)=>{return input}`  <br />At the same time it returns the Control Event, you will use this function and use the `return` keyword to return a new value. Valid when `showCopyBtn` or `autoCopyReply` is enabled | - |
 | `onQuestionClick` | Function | - | Callback when a default question is clicked. Receives two parameters. <br /><ol><li>The one is the question text that was clicked (**String**) </li><li>The second parameter is Object containing all exposed methods from `contentRef` (**React.RefObject**) </li></ol><br/>**Example:**<br/>`(text: string, methods: Record<string, Function>) => {console.log('Question clicked:', text); methods.sendMsg(); }` | - |
 | `onInputChange` | Function | - | Callback when input changes. It returns only two values. <br /> <ol><li>The one is method reference of the input HTMLElement (**React.RefObject**) </li><li>The second parameter is the current value (**String**) </li></ol> | - |
 | `onInputCallback` | async function  | - | **(It must return a "Promise\<string\>" object)** Return value from `onInputCallback` property to format the data of the control element, which will sanitize input is the process of securing/cleaning/filtering input data. such as `async (input:string)=>{return input}`<br />At the same time it returns the Control Event, you will use this function and use the `return` keyword to return a new value. <blockquote>It fires in real time as the user enters. If return is not set, it will not return.</blockquote> | - |

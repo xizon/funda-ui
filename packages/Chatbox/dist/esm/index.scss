@@ -167,6 +167,8 @@
     --custom-chatbox-content-html-elem-border-color: #ddd;
     --custom-chatbox-content-html-elem-bg: rgba(0,0,0,.05);
     
+    
+    
     min-width: var(--custom-chatbox-w);
     max-width: var(--custom-chatbox-w);
     margin: auto;
@@ -243,10 +245,11 @@
         }
     
 
-        > div {
+        > div:not(.newchat-btn) {
             margin: 5px 0;
             padding: 3px 5px;
             border-radius: 0.35rem;
+            position: relative;
         }
 
         p {
@@ -298,6 +301,7 @@
                     border-radius: 0.35rem;
                     
 
+
                     thead {
                         background: var(--custom-chatbox-content-html-elem-bg);
                         
@@ -313,6 +317,7 @@
                     }
                 }
             }
+            
 
         }
 
@@ -345,6 +350,26 @@
                 
             }
         }
+
+        
+        /* copy button */
+        .copy-btn {
+            position: absolute;
+            left: calc(var(--custom-chatbox-content-w) - .7rem);
+            bottom: 0.5rem;
+            z-index: 1;
+            background: transparent;
+            border: none;
+            padding: 4px;
+            cursor: pointer;
+            opacity: 0.6;
+            transition: opacity 0.2s;
+
+            &:hover {
+                opacity: 1;
+            }
+        }
+        
     }
 
     /* dot loading */
@@ -523,7 +548,7 @@
         left: 50%;
         transform: translateX(-50%);
         z-index: 1;
-   
+        
         > button {
             padding: 3px 6px;
             background-color: var(--custom-chatbox-newchat-btn-color);
@@ -683,8 +708,6 @@
     }
 
 
-
-
     /* default questions */
     .default-questions-title {
         margin-bottom: .5rem;
@@ -712,8 +735,6 @@
         } 
 
     }
-    
-
 
 
 }

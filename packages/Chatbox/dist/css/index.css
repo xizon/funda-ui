@@ -198,6 +198,7 @@
   margin-bottom: 10px;
   font-size: 13px;
   margin-right: 0;
+  /* copy button */
 }
 .custom-chatbox-container .messages img, .custom-chatbox-container .messages svg, .custom-chatbox-container .messages video, .custom-chatbox-container .messages canvas, .custom-chatbox-container .messages audio, .custom-chatbox-container .messages iframe, .custom-chatbox-container .messages embed, .custom-chatbox-container .messages object {
   display: inline;
@@ -208,10 +209,11 @@
 .custom-chatbox-container .messages::-webkit-scrollbar-thumb {
   background: rgba(0, 0, 0, 0.2);
 }
-.custom-chatbox-container .messages > div {
+.custom-chatbox-container .messages > div:not(.newchat-btn) {
   margin: 5px 0;
   padding: 3px 5px;
   border-radius: 0.35rem;
+  position: relative;
 }
 .custom-chatbox-container .messages p {
   margin: 3px 0;
@@ -283,6 +285,21 @@
   width: var(--custom-chatbox-content-w);
   background: transparent;
   padding-top: 0;
+}
+.custom-chatbox-container .messages .copy-btn {
+  position: absolute;
+  left: calc(var(--custom-chatbox-content-w) - 0.7rem);
+  bottom: 0.5rem;
+  z-index: 1;
+  background: transparent;
+  border: none;
+  padding: 4px;
+  cursor: pointer;
+  opacity: 0.6;
+  transition: opacity 0.2s;
+}
+.custom-chatbox-container .messages .copy-btn:hover {
+  opacity: 1;
 }
 .custom-chatbox-container .msg-dotted-loader-container {
   font-weight: normal;

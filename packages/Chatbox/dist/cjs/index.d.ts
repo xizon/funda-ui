@@ -72,10 +72,14 @@ export declare type ChatboxProps = {
     newChatButton?: FloatingButton;
     customMethods?: CustomMethod[];
     defaultQuestions?: QuestionData;
+    showCopyBtn?: boolean;
+    autoCopyReply?: boolean;
     customRequest?: CustomRequestFunction;
     renderParser?: (input: string) => Promise<string>;
     requestBodyFormatter?: (body: any, contextData: Record<string, any>, conversationHistory: MessageDetail[]) => Promise<Record<string, any>>;
+    copiedContentFormatter?: (string: string) => string;
     nameFormatter?: (input: string) => string;
+    onCopyCallback?: (res: Record<string, any>) => void;
     onQuestionClick?: (text: string, methods: Record<string, Function>) => void;
     onInputChange?: (controlRef: React.RefObject<any>, val: string) => any;
     onInputCallback?: (input: string) => Promise<string>;

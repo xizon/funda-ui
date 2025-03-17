@@ -12,6 +12,7 @@ import useClickOutside from 'funda-utils/dist/cjs/useClickOutside';
 import { htmlEncode } from 'funda-utils/dist/cjs/sanitize';
 
 
+
 // loader
 import PureLoader from './PureLoader';
 import TypingEffect from "./TypingEffect";
@@ -114,10 +115,14 @@ export type ChatboxProps = {
     newChatButton?: FloatingButton;
     customMethods?: CustomMethod[]; // [{"name": "method1", "func": "() => { console.log('test'); }"}, ...]
     defaultQuestions?: QuestionData;
+    showCopyBtn?: boolean;  // Whether to show copy button for each reply
+    autoCopyReply?: boolean;  // Whether to automatically copy reply to clipboard
     customRequest?: CustomRequestFunction;
     renderParser?: (input: string) => Promise<string>;
     requestBodyFormatter?: (body: any, contextData: Record<string, any>, conversationHistory: MessageDetail[]) => Promise<Record<string, any>>;
+    copiedContentFormatter?: (string: string) => string;
     nameFormatter?: (input: string) => string;
+    onCopyCallback?: (res: Record<string, any>) => void;
     onQuestionClick?: (text: string, methods: Record<string, Function>) => void;
     onInputChange?: (controlRef: React.RefObject<any>, val: string) => any;
     onInputCallback?: (input: string) => Promise<string>;
@@ -296,9 +301,13 @@ const Chatbox = (props: ChatboxProps) => {
             maxHistoryLength,
             customRequest,
             onQuestionClick,
+            onCopyCallback,
             renderParser,
             requestBodyFormatter,
+            copiedContentFormatter,
             nameFormatter,
+            showCopyBtn,
+            autoCopyReply,
             onInputChange,
             onInputCallback,
             onChunk,
@@ -370,9 +379,13 @@ const Chatbox = (props: ChatboxProps) => {
             newChatButton,
             customRequest,
             onQuestionClick,
+            onCopyCallback,
             renderParser,
             requestBodyFormatter,
+            copiedContentFormatter,
             nameFormatter,
+            showCopyBtn,
+            autoCopyReply,
             onInputChange,
             onInputCallback,
             onChunk,
@@ -393,6 +406,57 @@ const Chatbox = (props: ChatboxProps) => {
 
     }
 
+    //================================================================
+    // Clipboard
+    //================================================================
+    const chatboxCopyToClipboard = async (text: string) => {
+
+        let _content: string = text;
+        if (typeof args().copiedContentFormatter === 'function') {
+            _content = args().copiedContentFormatter(text);
+        } 
+        
+        try {
+            // Try using the modern Clipboard API first
+            if (navigator.clipboard && window.isSecureContext) {
+                await navigator.clipboard.writeText(_content);
+                args().onCopyCallback?.({
+                    success: true,
+                    message: 'Text copied to clipboard',
+                });
+                return true;
+            }
+
+            // Fallback for older browsers
+            const textArea = document.createElement('textarea');
+            textArea.value = _content;
+            textArea.style.position = 'fixed';
+            textArea.style.left = '-999999px';
+            textArea.style.top = '-999999px';
+            document.body.appendChild(textArea);
+            textArea.focus();
+            textArea.select();
+            
+            try {
+                document.execCommand('copy');
+                textArea.remove();
+                args().onCopyCallback?.({
+                    success: true,
+                    message: 'Text copied to clipboard',
+                });
+                return true;
+            } catch (err) {
+                textArea.remove();
+                return false;
+            }
+        } catch (err) {
+            args().onCopyCallback?.({
+                success: false,
+                message: `Failed to copy text: ${err}`,
+            });
+            return false;
+        }
+    };
 
 
     //================================================================
@@ -820,6 +884,11 @@ const Chatbox = (props: ChatboxProps) => {
         // Update the message list state
         setMsgList((prevMessages) => [...prevMessages, newMessage]);
 
+        // Auto copy reply if enabled
+        if (args().autoCopyReply && sender === args().answerNameRes) {
+            chatboxCopyToClipboard(content);
+        }
+
     };
 
     const sendMessage = async () => {
@@ -1155,7 +1224,10 @@ const Chatbox = (props: ChatboxProps) => {
         }
     }, [props.defaultMessages]);
 
-
+    useEffect(() => {
+        // Bind chatboxCopyToClipboard to window so it can be called in HTML code
+        (window as any).chatboxCopyToClipboard = chatboxCopyToClipboard;
+      }, []);
 
     return (
         <>
@@ -1220,39 +1292,42 @@ const Chatbox = (props: ChatboxProps) => {
 
                 </> : null}
                 {/**------------- /NO DATA -------------*/}
-
-
+          
 
                 {/**------------- MESSAGES LIST -------------*/}
                 <div className="messages" ref={msgContainerRef}>
 
                     {msgList.map((msg, index) => {
 
+                        const copyTargetId = `${args().prefix || 'custom-'}chatbox-content--${chatId}${index}`;
                         const isAnimProgress = tempAnimText !== '' && msg.sender !== args().questionNameRes && index === msgList.length - 1 && loading;
                         const hasAnimated = animatedMessagesRef.current.has(index);
                         
                         // Mark the message as animated;
                         animatedMessagesRef.current.add(index);
 
+                        const timeShow = `<span class="qa-timestamp">${msg.timestamp}</span>${args().showCopyBtn && msg.tag?.indexOf('[reply]') >= 0 ?(`<button class="copy-btn" onclick="window.chatboxCopyToClipboard(document.querySelector('#${copyTargetId} .qa-content-inner').innerHTML)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M8 4v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V7.242a2 2 0 0 0-.602-1.43L16.083 2.57A2 2 0 0 0 14.685 2H10a2 2 0 0 0-2 2z"/><path d="M16 18v2a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2h2"/></svg></button>`) : ''}`;
+
                         return <div key={index} className={msg.tag?.indexOf('[reply]') < 0 ? 'request' : 'reply'} style={{ display: isAnimProgress ? 'none' : '' }}>
                             <div className="qa-name" dangerouslySetInnerHTML={{ __html: `${msg.sender}` }}></div>
 
+
                             {msg.sender === args().questionNameRes ? <>
-                                <div className="qa-content" dangerouslySetInnerHTML={{ __html: `${msg.content} <span class="qa-timestamp">${msg.timestamp}</span>` }}></div>
+                                <div className="qa-content" id={copyTargetId} dangerouslySetInnerHTML={{ __html: `<div class="qa-content-inner">${msg.content}</div> ${timeShow}` }}></div>
                             </> : <>
 
                                 {enableStreamMode ? <>
-                                    <div className="qa-content" dangerouslySetInnerHTML={{ __html: `${msg.content} <span class="qa-timestamp">${msg.timestamp}</span>` }}></div>
+                                    <div className="qa-content" id={copyTargetId} dangerouslySetInnerHTML={{ __html: `<div class="qa-content-inner">${msg.content}</div> ${timeShow}` }}></div>
                                 </> : <>
-                                    <div className="qa-content">
+                                    <div className="qa-content" id={copyTargetId}>
                                         {hasAnimated ? (
-                                            <div dangerouslySetInnerHTML={{ __html: `${msg.content} <span class="qa-timestamp">${msg.timestamp}</span>` }}></div>
+                                            <div dangerouslySetInnerHTML={{ __html: `<div class="qa-content-inner">${msg.content}</div> ${timeShow}` }}></div>
                                         ) : (
                                             <TypingEffect
                                                 onUpdate={() => {
                                                     scrollToBottom();
                                                 }}
-                                                content={`${msg.content} <span class="qa-timestamp">${msg.timestamp}</span>`}
+                                                content={`<div class="qa-content-inner">${msg.content}</div> ${timeShow}`}
                                                 speed={10}
                                             />
                                         )}
