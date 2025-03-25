@@ -1439,7 +1439,7 @@ const Chatbox = (props: ChatboxProps) => {
 
 
                     {/**------------- NEW CHAT BUTTON -------------*/}
-                    {args().newChatButton && msgList.length > 0 && (
+                    {args().newChatButton && msgList.length > 0 && !loading && (
                         <div className="newchat-btn">
                             <button 
                                 id={`${args().prefix || 'custom-'}chatbox-btn-new-${chatId}`}

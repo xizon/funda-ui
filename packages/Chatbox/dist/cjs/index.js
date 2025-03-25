@@ -5647,7 +5647,7 @@ var Chatbox = function Chatbox(props) {
     dangerouslySetInnerHTML: {
       __html: "".concat(tempAnimText)
     }
-  }))) : null)) : null) : null, args().newChatButton && msgList.length > 0 && /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
+  }))) : null)) : null) : null, args().newChatButton && msgList.length > 0 && !loading && /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
     className: "newchat-btn"
   }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("button", {
     id: "".concat(args().prefix || 'custom-', "chatbox-btn-new-").concat(chatId),
