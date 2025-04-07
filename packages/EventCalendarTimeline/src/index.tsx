@@ -2233,7 +2233,7 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
                     {/* //########## MODE: WEEK ############# */}
                     {appearanceMode === 'week' ? <>
                         <div className="custom-event-tl__header__info">
-                            {typeof appearanceWeekTmpl === 'function' ? <>{appearanceWeekTmpl(displayWeekForHeader[0], displayWeekForHeader[1])}</> : <>{displayWeekForHeader[0]} - {displayWeekForHeader[1]}</>}
+                            {typeof appearanceWeekTmpl === 'function' ? <>{appearanceWeekTmpl(displayWeekForHeader[0], displayWeekForHeader[1]) as never}</> : <>{displayWeekForHeader[0]} - {displayWeekForHeader[1]}</>}
                         </div>
                     </> : null}
                     {/* //########## /MODE: WEEK ############# */}
