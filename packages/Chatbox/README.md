@@ -575,7 +575,7 @@ import Chatbox from 'funda-ui/Chatbox';
 | --- | --- | --- | --- | --- |
 | `contentRef` | React.RefObject | - | It exposes the following methods:  <br /> <ol><li>`contentRef.current.chatOpen()`</li><li>`contentRef.current.chatClose()`</li><li>`contentRef.current.clearData()`</li><li>`contentRef.current.sendMsg()`</li><li>`contentRef.current.getHistory()`</li><li>`contentRef.current.trimHistory(10)`</li><li>`contentRef.current.setHistory([{sender:"User",timestamp:"12:00:00",content:"Hello",tag:""},{sender:"AI",timestamp:"12:00:01",content:"Hi there!",tag:"[reply]"}])`</li><li>`contentRef.current.setVal('new value')`</li><li>`contentRef.current.getContextData()`</li><li>`contentRef.current.setContextData({systemPrompt: "Please keep your answer within 77 words"})`</li><li>`contentRef.current.getMessages()`</li><li>`contentRef.current.setMessages([{"sender":"Sender","timestamp":"4:19:50 PM","content":"My custom new message\n","tag":"[reply]"}])`</li><li>`contentRef.current.getCustomMethods()`</li><li>`contentRef.current.executeCustomMethod('sayHello', 'your name')`</li></ol>| - |
 | `debug` | boolean | false | Enable debug mode to output console information | - |
-| `defaultRows` | number  | 3 | The rows attribute specifies the visible height of a text area, in lines. | - |
+| `defaultRows` | number  | 2 | The rows attribute specifies the visible height of a text area, in lines. | - |
 | `prefix` | string | `custom-` | Prefix for component wrapper class name | - |
 | `model` | string | - | The model name to use | - |
 | `baseUrl` | string | - | The base URL for API requests | - |

@@ -4258,36 +4258,40 @@ var Chatbox = function Chatbox(props) {
   var inputContentRef = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useRef)(null);
   var _useState = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)(false),
     _useState2 = src_slicedToArray(_useState, 2),
-    loaderDisplay = _useState2[0],
-    setLoaderDisplay = _useState2[1];
+    focused = _useState2[0],
+    setFocused = _useState2[1];
   var _useState3 = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)(false),
     _useState4 = src_slicedToArray(_useState3, 2),
-    loading = _useState4[0],
-    setLoading = _useState4[1];
+    loaderDisplay = _useState4[0],
+    setLoaderDisplay = _useState4[1];
   var _useState5 = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)(false),
     _useState6 = src_slicedToArray(_useState5, 2),
-    thinking = _useState6[0],
-    setThinking = _useState6[1];
+    loading = _useState6[0],
+    setLoading = _useState6[1];
   var _useState7 = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)(false),
     _useState8 = src_slicedToArray(_useState7, 2),
-    show = _useState8[0],
-    setShow = _useState8[1];
-  var _useState9 = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)([]),
+    thinking = _useState8[0],
+    setThinking = _useState8[1];
+  var _useState9 = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)(false),
     _useState10 = src_slicedToArray(_useState9, 2),
-    msgList = _useState10[0],
-    setMsgList = _useState10[1];
-  var _useState11 = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)(0),
+    show = _useState10[0],
+    setShow = _useState10[1];
+  var _useState11 = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)([]),
     _useState12 = src_slicedToArray(_useState11, 2),
-    elapsedTime = _useState12[0],
-    setElapsedTime = _useState12[1];
-  var _useState13 = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)(''),
+    msgList = _useState12[0],
+    setMsgList = _useState12[1];
+  var _useState13 = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)(0),
     _useState14 = src_slicedToArray(_useState13, 2),
-    tempAnimText = _useState14[0],
-    setTempAnimText = _useState14[1];
-  var _useState15 = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)(true),
+    elapsedTime = _useState14[0],
+    setElapsedTime = _useState14[1];
+  var _useState15 = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)(''),
     _useState16 = src_slicedToArray(_useState15, 2),
-    enableStreamMode = _useState16[0],
-    setEnableStreamMode = _useState16[1];
+    tempAnimText = _useState16[0],
+    setTempAnimText = _useState16[1];
+  var _useState17 = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)(true),
+    _useState18 = src_slicedToArray(_useState17, 2),
+    enableStreamMode = _useState18[0],
+    setEnableStreamMode = _useState18[1];
   var animatedMessagesRef = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useRef)(new Set()); // Add a ref to keep track of messages that have already been animated
 
   //
@@ -4584,10 +4588,10 @@ var Chatbox = function Chatbox(props) {
   //================================================================
   // Custom Questions
   //================================================================
-  var _useState17 = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)(props.defaultQuestions),
-    _useState18 = src_slicedToArray(_useState17, 2),
-    questions = _useState18[0],
-    setQuestions = _useState18[1];
+  var _useState19 = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)(props.defaultQuestions),
+    _useState20 = src_slicedToArray(_useState19, 2),
+    questions = _useState20[0],
+    setQuestions = _useState20[1];
   (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useEffect)(function () {
     if (props.defaultQuestions) {
       setQuestions(props.defaultQuestions);
@@ -4608,10 +4612,10 @@ var Chatbox = function Chatbox(props) {
   // Custom buttons
   //================================================================
   var toolkitBtnsRef = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useRef)(null);
-  var _useState19 = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)({}),
-    _useState20 = src_slicedToArray(_useState19, 2),
-    activeButtons = _useState20[0],
-    setActiveButtons = _useState20[1];
+  var _useState21 = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)({}),
+    _useState22 = src_slicedToArray(_useState21, 2),
+    activeButtons = _useState22[0],
+    setActiveButtons = _useState22[1];
   var closeDropdowns = function closeDropdowns() {
     setActiveButtons(function (prev) {
       var _args$toolkitButtons;
@@ -4685,15 +4689,15 @@ var Chatbox = function Chatbox(props) {
   }();
 
   // options
-  var _useState21 = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)({}),
-    _useState22 = src_slicedToArray(_useState21, 2),
-    selectedOpt = _useState22[0],
-    setSelectedOpt = _useState22[1];
-  // Store dynamic options
   var _useState23 = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)({}),
     _useState24 = src_slicedToArray(_useState23, 2),
-    dynamicOptions = _useState24[0],
-    setDynamicOptions = _useState24[1];
+    selectedOpt = _useState24[0],
+    setSelectedOpt = _useState24[1];
+  // Store dynamic options
+  var _useState25 = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)({}),
+    _useState26 = src_slicedToArray(_useState25, 2),
+    dynamicOptions = _useState26[0],
+    setDynamicOptions = _useState26[1];
   var getButtonOptions = function getButtonOptions(btn, buttonId) {
     // If you are using the dynamic option and already have a cache, return the option for caching
     //---------
@@ -5659,7 +5663,7 @@ var Chatbox = function Chatbox(props) {
       __html: ((_args$newChatButton = args().newChatButton) === null || _args$newChatButton === void 0 ? void 0 : _args$newChatButton.label) || ''
     }
   })))), /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
-    className: "msgcontrol"
+    className: "msgcontrol ".concat(focused ? 'focus' : '')
   }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((cjs_default()), {
     ref: msInput,
     contentRef: inputContentRef,
@@ -5681,7 +5685,13 @@ var Chatbox = function Chatbox(props) {
       var _args$onInputChange, _args16;
       (_args$onInputChange = (_args16 = args()).onInputChange) === null || _args$onInputChange === void 0 ? void 0 : _args$onInputChange.call(_args16, inputContentRef.current, e.target.value);
     },
-    rows: args().defaultRows || 3,
+    onFocus: function onFocus() {
+      setFocused(true);
+    },
+    onBlur: function onBlur() {
+      setFocused(false);
+    },
+    rows: args().defaultRows || 2,
     autoSize: true,
     autoSizeMaxHeight: 200
   }), loading ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("button", {

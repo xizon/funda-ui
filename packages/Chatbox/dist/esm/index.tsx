@@ -161,6 +161,7 @@ const Chatbox = (props: ChatboxProps) => {
     const msgContainerRef = useRef<HTMLDivElement>(null);
     const msInput = useRef<HTMLTextAreaElement>(null);
     const inputContentRef = useRef<any>(null);
+    const [focused, setFocused] = useState(false);
 
     const [loaderDisplay, setLoaderDisplay] = useState<boolean>(false);
     const [loading, setLoading] = useState<boolean>(false);
@@ -1460,7 +1461,7 @@ const Chatbox = (props: ChatboxProps) => {
 
 
                 {/**------------- CONTROL AREA -------------*/}
-                <div className="msgcontrol">
+                <div className={`msgcontrol ${focused ? 'focus' : ''}`}>
 
                     <Textarea
                         ref={msInput}
@@ -1484,7 +1485,13 @@ const Chatbox = (props: ChatboxProps) => {
                         onChange={(e) => {
                             args().onInputChange?.(inputContentRef.current, e.target.value);
                         }}
-                        rows={args().defaultRows || 3}
+                        onFocus={() => {
+                            setFocused(true);
+                        }}
+                        onBlur={() => {
+                            setFocused(false);
+                        }}
+                        rows={args().defaultRows || 2}
                         autoSize
                         autoSizeMaxHeight={200}
                     />

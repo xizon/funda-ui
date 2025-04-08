@@ -364,20 +364,27 @@
   bottom: 10px;
   z-index: 1;
   width: calc(100% - 40px);
+  border: 1px solid var(--custom-chatbox-gray-color);
+  border-radius: 0.35rem;
+  transition: all 0.3s ease;
 }
 .custom-chatbox-container .msgcontrol img, .custom-chatbox-container .msgcontrol svg, .custom-chatbox-container .msgcontrol video, .custom-chatbox-container .msgcontrol canvas, .custom-chatbox-container .msgcontrol audio, .custom-chatbox-container .msgcontrol iframe, .custom-chatbox-container .msgcontrol embed, .custom-chatbox-container .msgcontrol object {
   display: inline;
 }
+.custom-chatbox-container .msgcontrol.focus {
+  border-color: var(--app-chatbox-primary-color);
+}
 .custom-chatbox-container .msgcontrol .messageInput {
   width: 100%;
-  border: 1px solid var(--custom-chatbox-msg-border);
   border-radius: 4px;
   font-size: 0.875rem;
   border: none;
   outline: none;
+  margin-bottom: 2.2rem;
 }
 .custom-chatbox-container .msgcontrol .messageInput:focus, .custom-chatbox-container .msgcontrol .messageInput:focus-visible {
   outline: none;
+  box-shadow: none;
 }
 .custom-chatbox-container .msgcontrol .messageInput .messageInput-control {
   background: var(--custom-chatbox-input-bg);
@@ -387,7 +394,7 @@
   color: var(--custom-chatbox-default-txt-color);
   resize: none;
   max-height: 50vh;
-  border: 1px solid var(--custom-chatbox-gray-color);
+  border: none;
 }
 .custom-chatbox-container .msgcontrol .messageInput .messageInput-control::-webkit-scrollbar {
   width: 3px;
@@ -397,7 +404,8 @@
 }
 .custom-chatbox-container .msgcontrol .messageInput .messageInput-control:focus, .custom-chatbox-container .msgcontrol .messageInput .messageInput-control:focus-visible {
   border-color: transparent;
-  outline: 1px solid var(--custom-chatbox-primary-color);
+  outline: none;
+  box-shadow: none;
 }
 .custom-chatbox-container .msgcontrol button {
   padding: 6px;
@@ -413,7 +421,7 @@
   font-size: 0.875rem;
   z-index: 2;
   right: 0.4rem;
-  bottom: 0.7rem;
+  bottom: 0.3rem;
   width: 40px;
   height: 40px;
   padding: 0;
@@ -466,7 +474,7 @@
 .custom-chatbox-container .toolkit-btns {
   display: flex;
   position: absolute;
-  bottom: 20px;
+  bottom: 15px;
   margin-left: 5px;
   z-index: 1;
   flex-wrap: wrap;

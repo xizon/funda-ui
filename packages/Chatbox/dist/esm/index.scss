@@ -166,7 +166,7 @@
     --custom-chatbox-questions-hover-bg: #e9e9e9;
     --custom-chatbox-content-html-elem-border-color: #ddd;
     --custom-chatbox-content-html-elem-bg: rgba(0,0,0,.05);
-    
+
     
     
     min-width: var(--custom-chatbox-w);
@@ -439,25 +439,32 @@
         bottom: 10px;
         z-index: 1;
         width: calc(100% - 40px);
+        border: 1px solid var(--custom-chatbox-gray-color);
+        border-radius: 0.35rem;
+        transition: all 0.3s ease;
 
         img, svg, video, canvas, audio, iframe, embed, object {
             display: inline;
         }
 
+        &.focus {
+            border-color: var(--app-chatbox-primary-color);
+        }
+
 
         .messageInput {
             width: 100%;
-            border: 1px solid var(--custom-chatbox-msg-border);
             border-radius: 4px;
             font-size: 0.875rem;
             border: none;
             outline: none;
+            margin-bottom: 2.2rem;
 
             &:focus,
             &:focus-visible {
                 outline: none;
+                box-shadow: none;
             }
-
 
             .messageInput-control {
                 background: var(--custom-chatbox-input-bg);
@@ -467,7 +474,8 @@
                 color: var(--custom-chatbox-default-txt-color);
                 resize: none;
                 max-height: 50vh;
-                border: 1px solid var(--custom-chatbox-gray-color);
+                border: none;
+                
 
                 &::-webkit-scrollbar {
                     width: 3px;
@@ -480,7 +488,8 @@
                 &:focus,
                 &:focus-visible {
                     border-color: transparent;
-                    outline: 1px solid var(--custom-chatbox-primary-color);
+                    outline: none;
+                    box-shadow: none;
                 }
             
 
@@ -502,7 +511,7 @@
             font-size: 0.875rem;
             z-index: 2;
             right: .4rem;
-            bottom: .7rem;
+            bottom: .3rem;
             width: 40px;
             height: 40px;
             padding: 0;
@@ -576,7 +585,7 @@
     .toolkit-btns {
         display: flex;
         position: absolute;
-        bottom: 20px;
+        bottom: 15px;
         margin-left: 5px;
         z-index: 1;
         flex-wrap: wrap;
@@ -735,6 +744,6 @@
         } 
 
     }
-
+    
 
 }
