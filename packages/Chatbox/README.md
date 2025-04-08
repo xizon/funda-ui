@@ -406,6 +406,23 @@ export default () => {
                 ]))}
                 */
 
+                // Clipboard
+                showCopyBtn={true}
+                autoCopyReply={false}
+                copiedContentFormatter={(input: string) => {
+                    // Convert HTML text to plain text
+                    return input.replace(/(<([^>]+)>)/ig, '');
+                }}
+                onCopyCallback={(res: Record<string, any>) => {
+                    if (res.success) {
+                        // Text copied to clipboard
+                        alert(res.message);
+                    } else {
+                        // Failed to copy text
+                        alert(res.message);
+                    }
+                }}
+
             />
         </>
     );
@@ -550,10 +567,10 @@ export default () => {
                 onCopyCallback={(res: Record<string, any>) => {
                     if (res.success) {
                         // Text copied to clipboard
-                        console.log(res.message);
+                        alert(res.message);
                     } else {
                         // Failed to copy text
-                        console.log(res.message);
+                        alert(res.message);
                     }
                 }}
             }}
@@ -595,6 +612,8 @@ import Chatbox from 'funda-ui/Chatbox';
 | `sendLabel` | string | - | Label for the send button <blockquote>HTML tags are supported</blockquote>| - |
 | `sendLoading` | boolean | false | Whether to show loading indicator when sending | - |
 | `sendLoadingLabel` | string | - | Label to show during loading | - |
+| `copyLabel` | string | `Copy` |  Label text of the copy button | - |
+| `closeLabel` | string | `Close` |  Label text of the close button | - |
 | `placeholder` | string | - | Placeholder text for input field | - |
 | `noDataPlaceholder` | string | - | Text to show when no messages exist <blockquote>HTML tags are supported</blockquote>| - |
 | `maxHistoryLength` | number | 20 | Controls the length of the history | - |

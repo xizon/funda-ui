@@ -4410,6 +4410,8 @@ var Chatbox = function Chatbox(props) {
       sendLabel = currentProps.sendLabel,
       sendLoading = currentProps.sendLoading,
       sendLoadingLabel = currentProps.sendLoadingLabel,
+      copyLabel = currentProps.copyLabel,
+      closeLabel = currentProps.closeLabel,
       placeholder = currentProps.placeholder,
       noDataPlaceholder = currentProps.noDataPlaceholder,
       requestConfig = currentProps.requestConfig,
@@ -4481,6 +4483,8 @@ var Chatbox = function Chatbox(props) {
       sendLabel: sendLabel,
       sendLoading: sendLoading,
       sendLoadingLabel: sendLoadingLabel,
+      copyLabel: copyLabel,
+      closeLabel: closeLabel,
       placeholder: placeholder,
       noDataPlaceholder: noDataPlaceholder,
       requestConfig: requestConfig,
@@ -5474,6 +5478,8 @@ var Chatbox = function Chatbox(props) {
       display: show ? 'block' : 'none'
     },
     className: "".concat(args().prefix || 'custom-', "chatbox-close"),
+    "aria-label": "".concat(args().closeLabel || 'Close'),
+    "data-balloon-pos": "left",
     tabIndex: -1,
     onClick: handleClose
   }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("svg", {
@@ -5550,7 +5556,7 @@ var Chatbox = function Chatbox(props) {
 
     // Mark the message as animated;
     animatedMessagesRef.current.add(index);
-    var timeShow = "<span class=\"qa-timestamp\">".concat(msg.timestamp, "</span>").concat(args().showCopyBtn && ((_msg$tag = msg.tag) === null || _msg$tag === void 0 ? void 0 : _msg$tag.indexOf('[reply]')) >= 0 ? "<button class=\"copy-btn\" onclick=\"window.chatboxCopyToClipboard(document.querySelector('#".concat(copyTargetId, " .qa-content-inner').innerHTML)\"><svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" strokeWidth=\"2\"><path d=\"M8 4v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V7.242a2 2 0 0 0-.602-1.43L16.083 2.57A2 2 0 0 0 14.685 2H10a2 2 0 0 0-2 2z\"/><path d=\"M16 18v2a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2h2\"/></svg></button>") : '');
+    var timeShow = "<span class=\"qa-timestamp\">".concat(msg.timestamp, "</span>").concat(args().showCopyBtn && ((_msg$tag = msg.tag) === null || _msg$tag === void 0 ? void 0 : _msg$tag.indexOf('[reply]')) >= 0 ? "<button class=\"copy-btn\" aria-label=\"".concat(args().copyLabel || 'Copy', "\" data-balloon-pos=\"up\" onclick=\"window.chatboxCopyToClipboard(document.querySelector('#").concat(copyTargetId, " .qa-content-inner').innerHTML)\"><svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" strokeWidth=\"2\"><path d=\"M8 4v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V7.242a2 2 0 0 0-.602-1.43L16.083 2.57A2 2 0 0 0 14.685 2H10a2 2 0 0 0-2 2z\"/><path d=\"M16 18v2a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2h2\"/></svg></button>") : '');
     return /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
       key: index,
       className: ((_msg$tag2 = msg.tag) === null || _msg$tag2 === void 0 ? void 0 : _msg$tag2.indexOf('[reply]')) < 0 ? 'request' : 'reply',

@@ -62,6 +62,8 @@ export declare type ChatboxProps = {
     sendLabel?: string;
     sendLoading?: boolean;
     sendLoadingLabel?: string;
+    copyLabel?: string;
+    closeLabel?: string;
     placeholder?: string;
     noDataPlaceholder?: string;
     requestConfig: RequestConfig;

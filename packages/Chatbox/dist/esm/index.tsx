@@ -105,6 +105,8 @@ export type ChatboxProps = {
     sendLabel?: string;
     sendLoading?: boolean;
     sendLoadingLabel?: string;
+    copyLabel?: string;
+    closeLabel?: string;
     placeholder?: string;
     noDataPlaceholder?: string;
     requestConfig: RequestConfig;
@@ -293,6 +295,8 @@ const Chatbox = (props: ChatboxProps) => {
             sendLabel,
             sendLoading,
             sendLoadingLabel,
+            copyLabel,
+            closeLabel,
             placeholder,
             noDataPlaceholder,
             requestConfig,
@@ -372,6 +376,8 @@ const Chatbox = (props: ChatboxProps) => {
             sendLabel,
             sendLoading,
             sendLoadingLabel,
+            copyLabel,
+            closeLabel,
             placeholder,
             noDataPlaceholder,
             requestConfig,
@@ -1249,7 +1255,7 @@ const Chatbox = (props: ChatboxProps) => {
             {/**------------- BUBBLE -------------*/}
 
             {/**------------- CLOSE BUTTON -------------*/}
-            <button style={{ display: show ? 'block' : 'none' }} className={`${args().prefix || 'custom-'}chatbox-close`} tabIndex={-1} onClick={handleClose}>
+            <button style={{ display: show ? 'block' : 'none' }} className={`${args().prefix || 'custom-'}chatbox-close`} aria-label={`${args().closeLabel || 'Close'}`} data-balloon-pos="left"  tabIndex={-1} onClick={handleClose}>
                 <svg width="30px" height="30px" viewBox="0 0 1024 1024" fill="#000000"><path d="M707.872 329.392L348.096 689.16l-31.68-31.68 359.776-359.768z" fill="#000" /><path d="M328 340.8l32-31.2 348 348-32 32z" fill="#000" /></svg>
 
             </button>
@@ -1307,7 +1313,7 @@ const Chatbox = (props: ChatboxProps) => {
                         // Mark the message as animated;
                         animatedMessagesRef.current.add(index);
 
-                        const timeShow = `<span class="qa-timestamp">${msg.timestamp}</span>${args().showCopyBtn && msg.tag?.indexOf('[reply]') >= 0 ?(`<button class="copy-btn" onclick="window.chatboxCopyToClipboard(document.querySelector('#${copyTargetId} .qa-content-inner').innerHTML)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M8 4v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V7.242a2 2 0 0 0-.602-1.43L16.083 2.57A2 2 0 0 0 14.685 2H10a2 2 0 0 0-2 2z"/><path d="M16 18v2a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2h2"/></svg></button>`) : ''}`;
+                        const timeShow = `<span class="qa-timestamp">${msg.timestamp}</span>${args().showCopyBtn && msg.tag?.indexOf('[reply]') >= 0 ?(`<button class="copy-btn" aria-label="${args().copyLabel || 'Copy'}" data-balloon-pos="up" onclick="window.chatboxCopyToClipboard(document.querySelector('#${copyTargetId} .qa-content-inner').innerHTML)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M8 4v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V7.242a2 2 0 0 0-.602-1.43L16.083 2.57A2 2 0 0 0 14.685 2H10a2 2 0 0 0-2 2z"/><path d="M16 18v2a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2h2"/></svg></button>`) : ''}`;
 
                         return <div key={index} className={msg.tag?.indexOf('[reply]') < 0 ? 'request' : 'reply'} style={{ display: isAnimProgress ? 'none' : '' }}>
                             <div className="qa-name" dangerouslySetInnerHTML={{ __html: `${msg.sender}` }}></div>

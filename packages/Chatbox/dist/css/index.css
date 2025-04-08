@@ -135,6 +135,11 @@
   --custom-chatbox-questions-hover-bg: #e9e9e9;
   --custom-chatbox-content-html-elem-border-color: #ddd;
   --custom-chatbox-content-html-elem-bg: rgba(0,0,0,.05);
+  --custom-balloon-border-radius: 0.35rem;
+  --custom-balloon-color: rgba(16, 16, 16, 0.95);
+  --custom-balloon-text-color: #fff;
+  --custom-balloon-font-size: 12px;
+  --custom-balloon-move: 4px;
   min-width: var(--custom-chatbox-w);
   max-width: var(--custom-chatbox-w);
   margin: auto;
@@ -155,6 +160,7 @@
   /* toolkit buttons */
   /* toolkit options */
   /* default questions */
+  /* Tooltip */
 }
 .custom-chatbox-container details {
   font-style: italic;
@@ -193,7 +199,7 @@
   font-size: 0.75rem;
 }
 .custom-chatbox-container .messages {
-  height: calc(100% - 110px);
+  height: calc(100% - 125px);
   overflow-y: auto;
   margin-bottom: 10px;
   font-size: 13px;
@@ -450,7 +456,7 @@
 .custom-chatbox-container .newchat-btn {
   text-align: center;
   position: absolute;
-  bottom: 95px;
+  bottom: 115px;
   left: 50%;
   transform: translateX(-50%);
   z-index: 1;
@@ -594,4 +600,165 @@
 }
 .custom-chatbox-container .default-question-item:last-child {
   margin-bottom: 0;
+}
+.custom-chatbox-container button[aria-label][data-balloon-pos] {
+  overflow: visible;
+}
+.custom-chatbox-container [aria-label][data-balloon-pos] {
+  cursor: pointer;
+}
+.custom-chatbox-container [aria-label][data-balloon-pos]:after {
+  opacity: 0;
+  pointer-events: none;
+  transition: all 0.18s ease-out 0.18s;
+  text-indent: 0;
+  font-weight: normal;
+  font-style: normal;
+  text-shadow: none;
+  font-size: var(--custom-balloon-font-size);
+  background: var(--custom-balloon-color);
+  border-radius: 2px;
+  color: var(--custom-balloon-text-color);
+  border-radius: var(--custom-balloon-border-radius);
+  content: attr(aria-label);
+  padding: 0.5em 1em;
+  position: absolute;
+  white-space: nowrap;
+  z-index: 10;
+}
+.custom-chatbox-container [aria-label][data-balloon-pos]:before {
+  width: 0;
+  height: 0;
+  border: 5px solid transparent;
+  border-top-color: var(--custom-balloon-color);
+  opacity: 0;
+  pointer-events: none;
+  transition: all 0.18s ease-out 0.18s;
+  content: "";
+  position: absolute;
+  z-index: 10;
+}
+.custom-chatbox-container [aria-label][data-balloon-pos]:hover:before, .custom-chatbox-container [aria-label][data-balloon-pos]:hover:after, .custom-chatbox-container [aria-label][data-balloon-pos][data-balloon-visible]:before, .custom-chatbox-container [aria-label][data-balloon-pos][data-balloon-visible]:after, .custom-chatbox-container [aria-label][data-balloon-pos]:not([data-balloon-nofocus]):focus:before, .custom-chatbox-container [aria-label][data-balloon-pos]:not([data-balloon-nofocus]):focus:after {
+  opacity: 1;
+  pointer-events: none;
+}
+.custom-chatbox-container [aria-label][data-balloon-pos][data-balloon-break]:after {
+  white-space: pre;
+}
+.custom-chatbox-container [aria-label][data-balloon-pos][data-balloon-break][data-balloon-length]:after {
+  white-space: pre-line;
+  word-break: break-word;
+}
+.custom-chatbox-container [aria-label][data-balloon-pos][data-balloon-blunt]:before, .custom-chatbox-container [aria-label][data-balloon-pos][data-balloon-blunt]:after {
+  transition: none;
+}
+.custom-chatbox-container [aria-label][data-balloon-pos][data-balloon-pos=up]:hover:after, .custom-chatbox-container [aria-label][data-balloon-pos][data-balloon-pos=up][data-balloon-visible]:after, .custom-chatbox-container [aria-label][data-balloon-pos][data-balloon-pos=down]:hover:after, .custom-chatbox-container [aria-label][data-balloon-pos][data-balloon-pos=down][data-balloon-visible]:after {
+  transform: translate(-50%, 0);
+}
+.custom-chatbox-container [aria-label][data-balloon-pos][data-balloon-pos=up]:hover:before, .custom-chatbox-container [aria-label][data-balloon-pos][data-balloon-pos=up][data-balloon-visible]:before, .custom-chatbox-container [aria-label][data-balloon-pos][data-balloon-pos=down]:hover:before, .custom-chatbox-container [aria-label][data-balloon-pos][data-balloon-pos=down][data-balloon-visible]:before {
+  transform: translate(-50%, 0);
+}
+.custom-chatbox-container [aria-label][data-balloon-pos][data-balloon-pos*=-left]:after {
+  left: 0;
+}
+.custom-chatbox-container [aria-label][data-balloon-pos][data-balloon-pos*=-left]:before {
+  left: 5px;
+}
+.custom-chatbox-container [aria-label][data-balloon-pos][data-balloon-pos*=-right]:after {
+  right: 0;
+}
+.custom-chatbox-container [aria-label][data-balloon-pos][data-balloon-pos*=-right]:before {
+  right: 5px;
+}
+.custom-chatbox-container [aria-label][data-balloon-pos][data-balloon-po*=-left]:hover:after, .custom-chatbox-container [aria-label][data-balloon-pos][data-balloon-po*=-left][data-balloon-visible]:after, .custom-chatbox-container [aria-label][data-balloon-pos][data-balloon-pos*=-right]:hover:after, .custom-chatbox-container [aria-label][data-balloon-pos][data-balloon-pos*=-right][data-balloon-visible]:after {
+  transform: translate(0, 0);
+}
+.custom-chatbox-container [aria-label][data-balloon-pos][data-balloon-po*=-left]:hover:before, .custom-chatbox-container [aria-label][data-balloon-pos][data-balloon-po*=-left][data-balloon-visible]:before, .custom-chatbox-container [aria-label][data-balloon-pos][data-balloon-pos*=-right]:hover:before, .custom-chatbox-container [aria-label][data-balloon-pos][data-balloon-pos*=-right][data-balloon-visible]:before {
+  transform: translate(0, 0);
+}
+.custom-chatbox-container [aria-label][data-balloon-pos][data-balloon-pos^=up]:before, .custom-chatbox-container [aria-label][data-balloon-pos][data-balloon-pos^=up]:after {
+  bottom: 100%;
+  transform-origin: top;
+  transform: translate(0, var(--custom-balloon-move));
+}
+.custom-chatbox-container [aria-label][data-balloon-pos][data-balloon-pos^=up]:after {
+  margin-bottom: 10px;
+}
+.custom-chatbox-container [aria-label][data-balloon-pos][data-balloon-pos=up]:before, .custom-chatbox-container [aria-label][data-balloon-pos][data-balloon-pos=up]:after {
+  left: 50%;
+  transform: translate(-50%, var(--custom-balloon-move));
+}
+.custom-chatbox-container [aria-label][data-balloon-pos][data-balloon-pos^=down]:before, .custom-chatbox-container [aria-label][data-balloon-pos][data-balloon-pos^=down]:after {
+  top: 100%;
+  transform: translate(0, calc(var(--custom-balloon-move) * -1));
+}
+.custom-chatbox-container [aria-label][data-balloon-pos][data-balloon-pos^=down]:after {
+  margin-top: 10px;
+}
+.custom-chatbox-container [aria-label][data-balloon-pos][data-balloon-pos^=down]:before {
+  width: 0;
+  height: 0;
+  border: 5px solid transparent;
+  border-bottom-color: var(--custom-balloon-color);
+}
+.custom-chatbox-container [aria-label][data-balloon-pos][data-balloon-pos=down]:after, .custom-chatbox-container [aria-label][data-balloon-pos][data-balloon-pos=down]:before {
+  left: 50%;
+  transform: translate(-50%, calc(var(--custom-balloon-move) * -1));
+}
+.custom-chatbox-container [aria-label][data-balloon-pos][data-balloon-pos=left]:hover:after, .custom-chatbox-container [aria-label][data-balloon-pos][data-balloon-pos=left][data-balloon-visible]:after, .custom-chatbox-container [aria-label][data-balloon-pos][data-balloon-pos=right]:hover:after, .custom-chatbox-container [aria-label][data-balloon-pos][data-balloon-pos=right][data-balloon-visible]:after {
+  transform: translate(0, -50%);
+}
+.custom-chatbox-container [aria-label][data-balloon-pos][data-balloon-pos=left]:hover:before, .custom-chatbox-container [aria-label][data-balloon-pos][data-balloon-pos=left][data-balloon-visible]:before, .custom-chatbox-container [aria-label][data-balloon-pos][data-balloon-pos=right]:hover:before, .custom-chatbox-container [aria-label][data-balloon-pos][data-balloon-pos=right][data-balloon-visible]:before {
+  transform: translate(0, -50%);
+}
+.custom-chatbox-container [aria-label][data-balloon-pos][data-balloon-pos=left]:after, .custom-chatbox-container [aria-label][data-balloon-pos][data-balloon-pos=left]:before {
+  right: 100%;
+  top: 50%;
+  transform: translate(var(--custom-balloon-move), -50%);
+}
+.custom-chatbox-container [aria-label][data-balloon-pos][data-balloon-pos=left]:after {
+  margin-right: 10px;
+}
+.custom-chatbox-container [aria-label][data-balloon-pos][data-balloon-pos=left]:before {
+  width: 0;
+  height: 0;
+  border: 5px solid transparent;
+  border-left-color: var(--custom-balloon-color);
+}
+.custom-chatbox-container [aria-label][data-balloon-pos][data-balloon-pos=right]:after, .custom-chatbox-container [aria-label][data-balloon-pos][data-balloon-pos=right]:before {
+  left: 100%;
+  top: 50%;
+  transform: translate(calc(var(--custom-balloon-move) * -1), -50%);
+}
+.custom-chatbox-container [aria-label][data-balloon-pos][data-balloon-pos=right]:after {
+  margin-left: 10px;
+}
+.custom-chatbox-container [aria-label][data-balloon-pos][data-balloon-pos=right]:before {
+  width: 0;
+  height: 0;
+  border: 5px solid transparent;
+  border-right-color: var(--custom-balloon-color);
+}
+.custom-chatbox-container [aria-label][data-balloon-pos][data-balloon-length]:after {
+  white-space: normal;
+}
+.custom-chatbox-container [aria-label][data-balloon-pos][data-balloon-length=small]:after {
+  width: 80px;
+}
+.custom-chatbox-container [aria-label][data-balloon-pos][data-balloon-length=medium]:after {
+  width: 150px;
+}
+.custom-chatbox-container [aria-label][data-balloon-pos][data-balloon-length=large]:after {
+  width: 260px;
+}
+.custom-chatbox-container [aria-label][data-balloon-pos][data-balloon-length=xlarge]:after {
+  width: 380px;
+}
+@media screen and (max-width: 768px) {
+  .custom-chatbox-container [aria-label][data-balloon-pos][data-balloon-length=xlarge]:after {
+    width: 90vw;
+  }
+}
+.custom-chatbox-container [aria-label][data-balloon-pos][data-balloon-length=fit]:after {
+  width: 100%;
 }
