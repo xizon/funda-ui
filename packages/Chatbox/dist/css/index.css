@@ -372,7 +372,7 @@
   display: inline;
 }
 .custom-chatbox-container .msgcontrol.focus {
-  border-color: var(--app-chatbox-primary-color);
+  border-color: var(--custom-chatbox-primary-color);
 }
 .custom-chatbox-container .msgcontrol .messageInput {
   width: 100%;
