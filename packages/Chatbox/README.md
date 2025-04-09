@@ -281,6 +281,9 @@ export default () => {
                 baseUrl={"http://localhost:11434"}
                 apiKey={aiConfig.APIKey}
                 customMethods={customMethods}
+                onInputCallback={async (input:string)=> {
+                    return input.replace(/(\r\n|\r|\n)/g, '<br />');
+                }}
                 renderParser={async (input: string) => {
                     const res = await markedParse(input);
                     return res;
@@ -631,7 +634,7 @@ import Chatbox from 'funda-ui/Chatbox';
 | `copiedContentFormatter` | Function | - | Function to format the copied content. such as `(input:string)=>{return input}`  <br />At the same time it returns the Control Event, you will use this function and use the `return` keyword to return a new value. Valid when `showCopyBtn` or `autoCopyReply` is enabled | - |
 | `onQuestionClick` | Function | - | Callback when a default question is clicked. Receives two parameters. <br /><ol><li>The one is the question text that was clicked (**String**) </li><li>The second parameter is Object containing all exposed methods from `contentRef` (**React.RefObject**) </li></ol><br/>**Example:**<br/>`(text: string, methods: Record<string, Function>) => {console.log('Question clicked:', text); methods.sendMsg(); }` | - |
 | `onInputChange` | Function | - | Callback when input changes. It returns only two values. <br /> <ol><li>The one is method reference of the input HTMLElement (**React.RefObject**) </li><li>The second parameter is the current value (**String**) </li></ol> | - |
-| `onInputCallback` | async function  | - | **(It must return a "Promise\<string\>" object)** Return value from `onInputCallback` property to format the data of the control element, which will sanitize input is the process of securing/cleaning/filtering input data. such as `async (input:string)=>{return input}`<br />At the same time it returns the Control Event, you will use this function and use the `return` keyword to return a new value. <blockquote>It fires in real time as the user enters. If return is not set, it will not return.</blockquote> | - |
+| `onInputCallback` | async function  | - | **(It must return a "Promise\<string\>" object)** Return value from `onInputCallback` property to format the data of the control element, which will sanitize input is the process of securing/cleaning/filtering input data. such as `async (input:string)=>{return input.replace(/(\r\n\|\r\|\n)/g, '<br />');}` <br />At the same time it returns the Control Event, you will use this function and use the `return` keyword to return a new value. <blockquote>It fires in real time as the user enters. If return is not set, it will not return.</blockquote> | - |
 | `onChunk` | Function | - | Callback when data processing. It returns three values. <br /> <ol><li>The one is method reference of the input HTMLElement (**React.RefObject**) </li><li>The second parameter is the current value (**String**) </li><li>The third parameter is the conversation history (**Array**) </li></ol> | - |
 | `onComplete` | Function | - | Callback when message sending completes. It returns three values. <br /> <ol><li>The one is method reference of the input HTMLElement (**React.RefObject**) </li><li>The second parameter is the current value (**String**) </li><li>The third parameter is the conversation history (**Array**) </li></ol> | - |
 
