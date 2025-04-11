@@ -13,6 +13,7 @@ import { htmlEncode } from 'funda-utils/dist/cjs/sanitize';
 
 
 
+
 // loader
 import PureLoader from './PureLoader';
 import TypingEffect from "./TypingEffect";
@@ -80,7 +81,9 @@ export type CustomRequestResponse = {
 
 export type CustomRequestFunction = (
     message: string,
-    config: CustomRequestConfig
+    config: CustomRequestConfig,
+    customMethods: CustomMethod[],
+    conversationHistory: MessageDetail[],
 ) => Promise<CustomRequestResponse>;
 
 
@@ -1041,11 +1044,16 @@ const Chatbox = (props: ChatboxProps) => {
                 // Update stream mode
                 setEnableStreamMode(false);
 
-                let customResponse: any = await args().customRequest(msg, {
-                    requestBody: requestBodyRes,
-                    apiUrl: args().requestApiUrl || '',
-                    headers: args().headerConfigRes
-                });
+                let customResponse: any = await args().customRequest(
+                    msg, 
+                    {
+                        requestBody: requestBodyRes,
+                        apiUrl: args().requestApiUrl || '',
+                        headers: args().headerConfigRes
+                    },
+                    customMethodsRef.current,
+                    conversationHistory.current
+                );
 
                 const { content, isStream } = customResponse;
                 let contentRes: any = content;

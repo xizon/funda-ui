@@ -140,6 +140,8 @@
   --custom-balloon-text-color: #fff;
   --custom-balloon-font-size: 12px;
   --custom-balloon-move: 4px;
+  --custom-toolkit-select-options-container-min-w: 135px;
+  --custom-toolkit-select-options-container-max-h: 300px;
   min-width: var(--custom-chatbox-w);
   max-width: var(--custom-chatbox-w);
   margin: auto;
@@ -539,7 +541,7 @@
 .custom-chatbox-container .toolkit-select-wrapper .toolkit-select-options-container {
   z-index: 1000;
   width: 100%;
-  min-width: 120px;
+  min-width: var(--custom-toolkit-select-options-container-min-w);
   transform: translateY(-100%);
 }
 .custom-chatbox-container .toolkit-select-wrapper .toolkit-select-options {
@@ -548,8 +550,8 @@
   border-radius: 4px;
   box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
   margin-bottom: 10px;
-  max-height: 300px;
-  min-width: 120px;
+  max-height: var(--custom-toolkit-select-options-container-max-h);
+  min-width: var(--custom-toolkit-select-options-container-min-w);
   overflow-y: auto;
   animation: dropupAnimation 0.2s ease;
   position: absolute;

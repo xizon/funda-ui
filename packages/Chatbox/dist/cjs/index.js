@@ -5277,7 +5277,7 @@ var Chatbox = function Chatbox(props) {
               requestBody: requestBodyRes,
               apiUrl: args().requestApiUrl || '',
               headers: args().headerConfigRes
-            });
+            }, customMethodsRef.current, conversationHistory.current);
           case 13:
             customResponse = _context7.sent;
             content = customResponse.content, isStream = customResponse.isStream;

@@ -171,6 +171,9 @@
     --custom-balloon-text-color: #fff;
     --custom-balloon-font-size: 12px;
     --custom-balloon-move: 4px; 
+    --custom-toolkit-select-options-container-min-w: 135px; 
+    --custom-toolkit-select-options-container-max-h: 300px; 
+
     
     
     min-width: var(--custom-chatbox-w);
@@ -662,22 +665,22 @@
         .toolkit-select-arrow.active {
             transform: rotate(180deg);
         }
-
+        
         .toolkit-select-options-container {
             z-index: 1000;
             width: 100%;
-            min-width: 120px;
+            min-width: var(--custom-toolkit-select-options-container-min-w);
             transform: translateY(-100%);
         }
-
+    
         .toolkit-select-options {
             background-color: var(--custom-chatbox-toolkit-opt-color);
             border: 1px solid var(--custom-chatbox-toolkit-opt-border-color);
             border-radius: 4px;
             box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
             margin-bottom: 10px;
-            max-height: 300px;
-            min-width: 120px;
+            max-height: var(--custom-toolkit-select-options-container-max-h);
+            min-width: var(--custom-toolkit-select-options-container-min-w);
             overflow-y: auto;
             animation: dropupAnimation 0.2s ease;
 

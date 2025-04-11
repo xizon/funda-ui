@@ -40,7 +40,7 @@ export declare type CustomRequestResponse = {
     content: string | Response | null;
     isStream: boolean;
 };
-export declare type CustomRequestFunction = (message: string, config: CustomRequestConfig) => Promise<CustomRequestResponse>;
+export declare type CustomRequestFunction = (message: string, config: CustomRequestConfig, customMethods: CustomMethod[], conversationHistory: MessageDetail[]) => Promise<CustomRequestResponse>;
 export declare type ChatboxProps = {
     debug?: boolean;
     defaultRows?: number;

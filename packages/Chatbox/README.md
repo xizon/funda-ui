@@ -71,7 +71,17 @@ export default () => {
             requestBody: any,
             apiUrl: string,
             headers: any
-        }
+        },
+        customMethods: {
+            name: string;
+            func: (...args: any[]) => any;
+        }[],
+        conversationHistory: {
+            sender: string;
+            timestamp: string;
+            content: string;
+            tag: string;
+        }[],
     ) => Promise<{
             content: string | Response | null;
             isStream: boolean;
@@ -93,6 +103,12 @@ export default () => {
             func: (data: any) => {
                 console.log('Updating UI with:', data);
                 // setSomeState(data);
+            }
+        },
+        {
+            name: "getUI",
+            func: () => {
+                // getSomeState;
             }
         },
         /* Usage: {"label":"Drop-Down","value":"lab","onClick":"return method.executeCustomMethod('getMenuList')","isSelect":true,"dynamicOptions":true}*/
@@ -186,7 +202,17 @@ export default () => {
                     requestBody: any,
                     apiUrl: string,
                     headers: any
-                }
+                },
+                customMethods: {
+                    name: string;
+                    func: (...args: any[]) => any;
+                }[],
+                conversationHistory: {
+                    sender: string;
+                    timestamp: string;
+                    content: string;
+                    tag: string;
+                }[],
             ): Promise<{
                 content: string | Response | null;
                 isStream: boolean;
@@ -310,7 +336,12 @@ export default () => {
                 sendLabel={aiConfig.sendLabel}
                 bubbleLabel={aiConfig.bubbleLabel}
                 contextData={contextData}
-                requestBodyFormatter={async (body: any, context: Record<string, any>, conversationHistory: any[]) => {
+                requestBodyFormatter={async (body: any, context: Record<string, any>, conversationHistory: {
+                    sender: string;
+                    timestamp: string;
+                    content: string;
+                    tag: string;
+                }[]) => {
                     /*
                     Target:
                     {
@@ -385,10 +416,20 @@ export default () => {
                 onInputChange={(controlRef: React.RefObject<any>, val: string) => {
                     console.log('onInputChange: ', val);
                 }}
-                onChunk={(controlRef: React.RefObject<any>, lastContent: string, conversationHistory: any[]) => {
+                onChunk={(controlRef: React.RefObject<any>, lastContent: string, conversationHistory: {
+                    sender: string;
+                    timestamp: string;
+                    content: string;
+                    tag: string;
+                }[]) => {
                     console.log('onChunk: ', lastContent, conversationHistory);
                 }}
-                onComplete={(controlRef: React.RefObject<any>, lastContent: string, conversationHistory: any[]) => {
+                onComplete={(controlRef: React.RefObject<any>, lastContent: string, conversationHistory: {
+                    sender: string;
+                    timestamp: string;
+                    content: string;
+                    tag: string;
+                }[]) => {
                     console.log('onComplete: ', lastContent, conversationHistory);
                 }}
                 newChatButton={aiConfig.newChatButton ? JSON.parse(aiConfig.newChatButton) : undefined}
@@ -627,7 +668,7 @@ import Chatbox from 'funda-ui/Chatbox';
 | `customMethods` | Array | - | Array of custom methods that can be called via `contentRef`. Each method object contains: <br /><ol><li>`name`: Method name (string)</li><li>`func`: Function to execute</li></ol><br/>**Example:**<br/>`[{name:"sayHello",func:(name:string)=>{console.log("Hello, " + name + "!");}},{name:"updateUI",func:(data:any)=>{console.log('Updating UI with:',data);}}]`<br/>These methods can be accessed through:<br/><ol><li>`contentRef.current.executeCustomMethod('methodName', ...args)`: Execute a specific custom method</li><li>`contentRef.current.getCustomMethods()`: Get list of available custom method names</li></ol><br/>**Usage Example:**<br/>`contentRef.current.executeCustomMethod('sayHello', 'your name');`<br/>`contentRef.current.getCustomMethods();` | - |
 | `toolkitButtons` | Array | - | JSON string for toolkit buttons configuration. Each button can have label, value and **onClick** properties. The onClick function can access `contentRef` methods. Example: <br />`[{"label":"Clear","value":"clear","onClick":"alert('new'); method.clearData();"},{"label":"Send","value":"send","onClick":"method.sendMsg();"},{"label":"Change Context","value":"changecontext","onClick":"method.setContextData({systemPrompt: "Please keep your answer within 77 words"});"}]` <br />Available methods in **onClick**: <br /><ol><li>`method.chatOpen()`: Open the dialog box</li><li>`method.chatClose()`: Close the dialog box</li><li>`method.clearData()`: Clear the data</li><li>`method.sendMsg()`: Send a message</li><li>`method.getHistory()`: Get the history</li><li>`method.trimHistory(10)`: Trim the history</li><li>`method.setHistory([{sender:"User",timestamp:"12:00:00",content:"Hello",tag:""},{sender:"AI",timestamp:"12:00:01",content:"Hi there!",tag:"[reply]"}])`: Set list of conversation history</li><li>`method.setVal('new value')`: Set the default value of the input box</li><li>`method.getContextData()`: Get current context data</li><li>`method.setContextData({systemPrompt: "Please keep your answer within 77 words"})`: Modify the context data</li><li>`contentRef.current.getMessages()`: Get messages list</li><li>`contentRef.current.setMessages([{"sender":"Sender","timestamp":"4:19:50 PM","content":"My custom new message\n","tag":"[reply]"}])`: Set messages list</li><li>`method.getCustomMethods()`: Get all available custom method names</li><li>`method.executeCustomMethod('sayHello', 'your name')`: A function that executes a custom method</li></ol> <br />Additional parameters available in **onClick**: <br /><ul><li>**isActive**: The activation status of the current button</li><li>**button**: HTML object for the current button</li></ul> | - |
 | `newChatButton` | JSON Object | - | JSON string for new chat button configuration. Similar to `toolkitButtons` but for a single button that appears when chat has messages. Example: <br /> `{label:"New Chat",value:"new",onClick:"method.clearData(); method.setVal('');"}` | - | 
-| `customRequest` | async Function | - | **(It must return a "Promise\<string\>" object)** Custom request handler function that allows overriding the default request behavior. The function must return a Promise\<string\>. <br/><br/>**Parameters:**<br/><ol><li>`message`: The user's input message (string)</li><li>`config`: Configuration object containing:<ul><li>`requestBody`: The parsed request body object</li><li>`apiUrl`: The API endpoint URL</li><li>`headers`: The request headers object</li></ul></li></ol><br/>**Return Value:**<br/>`Promise<{content: string \| Response \| null;isStream: boolean;}>` - The response to display<br/><br/>**Example:**<br/>`()=>{return async(message,config)=>{if(typeof message==='string'&&(message.includes('image')\|\|message.includes('img'))){config.requestBody.stream=false;const response=await fetch(config.apiUrl,{method:'POST',headers:config.headers,body:JSON.stringify(config.requestBody),});if(!response.ok){const _errInfo="[ERROR] HTTP Error"+response.status+":"+response.statusText;return{content:_errInfo,isStream:false};}const jsonResponse=await response.json();let result=jsonResponse.choices[0].message.content;return{content:result,isStream:false};}return{content:null,isStream:false};}}` | - |
+| `customRequest` | async Function | - | **(It must return a "Promise\<string\>" object)** Custom request handler function that allows overriding the default request behavior. The function must return a Promise\<string\>. <br/><br/>**Parameters:**<br/><ol><li>`message`: The user's input message (string)</li><li>`config`: Configuration object containing:<ul><li>`requestBody`: The parsed request body object</li><li>`apiUrl`: The API endpoint URL</li><li>`headers`: The request headers object</li></ul></li><li>`customMethods`: Array of custom methods. It's the value of the `customMethods` property. (array)</li><li>`conversationHistory`: Array of conversation history. (array)</li></ol><br/>**Return Value:**<br/>`Promise<{content: string \| Response \| null;isStream: boolean;}>` - The response to display<br/><br/>**Example:**<br/>`()=>{return async(message,config)=>{if(typeof message==='string'&&(message.includes('image')\|\|message.includes('img'))){config.requestBody.stream=false;const response=await fetch(config.apiUrl,{method:'POST',headers:config.headers,body:JSON.stringify(config.requestBody),});if(!response.ok){const _errInfo="[ERROR] HTTP Error"+response.status+":"+response.statusText;return{content:_errInfo,isStream:false};}const jsonResponse=await response.json();let result=jsonResponse.choices[0].message.content;return{content:result,isStream:false};}return{content:null,isStream:false};}}` | - |
 | `renderParser` | async Function | - | **(It must return a "Promise\<string\>" object)** Custom parser for rendering messages. such as `async(input:string)=>{const res=await markedParse(input);return res;}` | - |
 | `requestBodyFormatter` | async Function | - |  **(It must return a "Promise\<Record\<string, any\>\>" object)** Function to format request body. such as `(body:any,context:Record<string,any>,conversationHistory:any[])=>{if(body.messages&&Array.isArray(body.messages)){const modifiedMessages=body.messages.map(msg=>{if(msg.role==='user'){return{...msg,content:msg.content};}return msg;});conversationHistory.forEach((item:any,index:number)=>{if(index<conversationHistory.length-1){modifiedMessages.unshift({role:"assistant",content:item.content});}});return{...body,messages:modifiedMessages};}return body;}` | - |
 | `nameFormatter` | Function | - | Function to format display names. such as `(input:string)=>{return input}`  <br />At the same time it returns the Control Event, you will use this function and use the `return` keyword to return a new value.| - |
