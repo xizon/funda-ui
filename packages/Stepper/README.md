@@ -5,6 +5,14 @@ Indicator effects in workflows.
 
 ## General
 
+You could specify the `wrapperClassName` property to control the width of the progress area. such as:
+
+```css
+.my-stepper-container .stepper-header {
+    width: 350px;
+}
+```
+
 
 ```js
 import React, { useRef, useState } from "react";
@@ -88,7 +96,13 @@ export default () => {
 
 ## Vertical
 
-Change the layout to vertical with the `layout` property.
+Change the layout to vertical with the `layout` property. You could specify the `wrapperClassName` property to control the width of the progress area. such as:
+
+```css
+.my-stepper-container.stepper-container--vertical {
+    gap: 50px;
+}
+```
 
 
 ```js

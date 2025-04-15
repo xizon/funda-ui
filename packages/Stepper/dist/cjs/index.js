@@ -326,6 +326,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(188);
 /* harmony import */ var funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_1__);
+function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys(Object(source), !0).forEach(function (key) { _defineProperty(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
+function _defineProperty(obj, key, value) { key = _toPropertyKey(key); if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+function _toPropertyKey(arg) { var key = _toPrimitive(arg, "string"); return _typeof(key) === "symbol" ? key : String(key); }
+function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input === null) return input; var prim = input[Symbol.toPrimitive]; if (prim !== undefined) { var res = prim.call(input, hint || "default"); if (_typeof(res) !== "object") return res; throw new TypeError("@@toPrimitive must return a primitive value."); } return (hint === "string" ? String : Number)(input); }
 function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
 function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
 function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
@@ -373,6 +379,7 @@ var Stepper = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(fun
     disableCompleteIcon = _props$disableComplet === void 0 ? true : _props$disableComplet,
     onChange = props.onChange,
     children = props.children;
+  var rootRef = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(null);
   var _useState = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(false),
     _useState2 = _slicedToArray(_useState, 2),
     isLastStepComplete = _useState2[0],
@@ -485,6 +492,34 @@ var Stepper = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(fun
       }, panels[activeIndex]));
     }));
   };
+
+  // Calculate the width/height of the progress line
+  var calculateProgressStyle = function calculateProgressStyle() {
+    if (!panels.length || rootRef.current === null) return {};
+    var stepItems = rootRef.current.querySelectorAll('.step-item');
+    if (!stepItems.length) return {};
+    if (isVertical) {
+      var totalHeight = stepItems[0].clientHeight * (panels.length - 1);
+      var progress = activeIndex / (panels.length - 1) * 100;
+      return {
+        '--stepper-progress-height': "".concat(progress, "%")
+      };
+    } else {
+      var firstItem = stepItems[0];
+      var lastItem = stepItems[stepItems.length - 1];
+      if (!firstItem || !lastItem) return {};
+      var firstCenter = firstItem.offsetLeft + firstItem.clientWidth / 2;
+      var lastCenter = lastItem.offsetLeft + lastItem.clientWidth / 2;
+      var totalWidth = lastCenter - firstCenter;
+      var currentItem = stepItems[activeIndex];
+      if (!currentItem) return {};
+      var currentCenter = currentItem.offsetLeft + currentItem.clientWidth / 2;
+      var _progress = (currentCenter - firstCenter) / totalWidth * 100;
+      return {
+        '--stepper-progress-width': "".concat(_progress, "%")
+      };
+    }
+  };
   (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(function () {
     // Only trigger onChange if values actually changed from previous values
     if (prevActiveIndexRef.current !== activeIndex || prevIsLastStepCompleteRef.current !== isLastStepComplete) {
@@ -493,11 +528,23 @@ var Stepper = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(fun
       onChange === null || onChange === void 0 ? void 0 : onChange(activeIndex, isLastStepComplete);
     }
   }, [activeIndex, isLastStepComplete]);
+  (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(function () {
+    // Force a recalculation of the progress line
+    var timer = setTimeout(function () {
+      setActiveIndex(function (prev) {
+        return prev;
+      });
+    }, 0);
+    return function () {
+      return clearTimeout(timer);
+    };
+  }, []);
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+    ref: rootRef,
     className: (0,funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_1__.combinedCls)('stepper-container', (0,funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_1__.clsWrite)(wrapperClassName, ''), {
       'stepper-container--vertical': isVertical
     }),
-    style: style
+    style: _objectSpread(_objectSpread({}, style), calculateProgressStyle())
   }, !isVertical && horizontalPanelsGenerator(), isVertical && verticalPanelsGenerator());
 });
 

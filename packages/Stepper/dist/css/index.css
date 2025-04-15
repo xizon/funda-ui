@@ -5,19 +5,23 @@
   --stepper-color-default: #333;
   --stepper-color-active: white;
   --stepper-color-complete: #2563eb;
-  --stepper-bg-default: white;
-  --stepper-bg-active: #2563eb;
-  --stepper-bg-complete: #22c55e;
+  --stepper-indicator-default: white;
+  --stepper-indicator-active: #2563eb;
+  --stepper-indicator-complete: #22c55e;
   --stepper-border-default: #ccc;
   --stepper-border-active: #2563eb;
   --stepper-border-complete: #22c55e;
+  --stepper-line-default: #dfdfdf;
+  --stepper-line-active: #2563eb;
+  --stepper-line-complete: #22c55e;
   --stepper-indicator-size: 0.875rem;
+  --stepper-indicator-offset: 100px;
   --stepper-title-size: 0.875rem;
   position: relative;
-  /* NAvigation Header (only horizontal) */
-  /* Main Navigation */
-  /* Each step item (with circle + title)  */
-  /* Step Indicator */
+  /* Navigation Header (only horizontal) */
+  /* Main Navigation - Each step item (with circle + title) */
+  /* Line */
+  /* Indicator */
   /* Title */
   /* Panels Area */
   /* Buttons */
@@ -28,15 +32,43 @@
   align-items: center;
   margin-bottom: 1.5rem;
   flex-wrap: nowrap;
+  position: relative;
+  /* background line */
+}
+.stepper-container .stepper-header::before {
+  content: "";
+  position: absolute;
+  top: calc(50% - 0.875rem); /* Subtract the height of the title */
+  left: 14px;
+  right: 0;
+  height: 2px;
+  background-color: var(--stepper-line-default);
+  z-index: 1;
+  width: calc(100% - var(--stepper-indicator-offset) / 2);
+}
+.stepper-container .stepper-header::after {
+  content: "";
+  position: absolute;
+  top: calc(50% - 0.875rem); /* Subtract the height of the title */
+  left: 14px;
+  height: 2px;
+  background-color: var(--stepper-line-complete);
+  z-index: 2;
+  transition: width 0.3s ease-in-out;
+  width: 0;
+}
+.stepper-container .stepper-header::after {
+  width: var(--stepper-progress-width, 0%);
+  max-width: calc(100% - var(--stepper-indicator-offset) / 2);
 }
 .stepper-container .step-item {
   flex: none;
   display: flex;
   flex-direction: column;
   align-items: center;
-  max-width: 100px;
+  max-width: var(--stepper-indicator-offset);
   position: relative;
-  z-index: 1;
+  z-index: 3;
 }
 .stepper-container .step-item.step-item--clickable {
   cursor: pointer;
@@ -44,17 +76,34 @@
 .stepper-container .step-line {
   flex: 1;
   height: 2px;
-  background-color: #ddd;
+  background-color: var(--stepper-line-default);
   margin: 0 4px;
   position: relative;
   top: -10px;
   z-index: 0;
-}
-.stepper-container .step-line--complete {
-  background-color: var(--stepper-bg-complete);
+  overflow: hidden;
+  opacity: 0;
 }
 .stepper-container .step-line--active {
-  background-color: var(--stepper-bg-complete);
+  background-color: var(--stepper-line-default);
+}
+.stepper-container .step-line--complete {
+  background-color: var(--stepper-line-default);
+}
+.stepper-container .step-line::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: var(--stepper-line-complete);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.3s ease-in-out;
+}
+.stepper-container .step-line--active::after, .stepper-container .step-line--complete::after {
+  transform: scaleX(1);
 }
 .stepper-container .step-indicator {
   width: 32px;
@@ -67,17 +116,17 @@
   border: 2px solid #ccc;
   font-size: var(--stepper-indicator-size);
   /* default */
-  background-color: var(--stepper-bg-default);
+  background-color: var(--stepper-indicator-default);
   color: var(--stepper-color-default);
   border-color: var(--stepper-border-default);
 }
 .stepper-container .step-indicator--active {
-  background-color: var(--stepper-bg-active);
+  background-color: var(--stepper-indicator-active);
   color: var(--stepper-color-active);
   border-color: var(--stepper-border-active);
 }
 .stepper-container .step-indicator--complete {
-  background-color: var(--stepper-bg-complete);
+  background-color: var(--stepper-indicator-complete);
   color: var(--stepper-color-active);
   border-color: var(--stepper-border-complete);
 }
@@ -109,19 +158,51 @@
 
 /*------ Verticle ------*/
 .stepper-container.stepper-container--vertical {
+  --stepper-indicator-offset: 50px;
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: 1rem; /* line length */
+  /* background line */
+  /* Layout */
+  /* Title */
+  /* Panel */
+  /* Line */
+}
+.stepper-container.stepper-container--vertical::before {
+  content: "";
+  position: absolute;
+  top: 20px;
+  left: 24px;
+  width: 2px;
+  height: calc(100% - var(--stepper-indicator-offset));
+  background-color: var(--stepper-line-default);
+  z-index: 1;
+}
+.stepper-container.stepper-container--vertical::after {
+  content: "";
+  position: absolute;
+  top: 20px;
+  left: 24px;
+  width: 2px;
+  background-color: var(--stepper-line-complete);
+  z-index: 2;
+  transition: height 0.3s ease-in-out;
+  height: 0;
+}
+.stepper-container.stepper-container--vertical::after {
+  height: var(--stepper-progress-height, 0%);
+  max-height: calc(100% - var(--stepper-indicator-offset));
 }
 .stepper-container.stepper-container--vertical .vertical-step-row {
   display: flex;
   align-items: flex-start;
-  margin-bottom: 1rem;
 }
 .stepper-container.stepper-container--vertical .vertical-step-left {
   flex-shrink: 0;
-  width: 50px;
+  width: var(--stepper-indicator-offset);
   position: relative;
+  /* Main Navigation - Each step item (with circle + title) */
+  /* Line */
 }
 .stepper-container.stepper-container--vertical .vertical-step-left .step-item {
   margin-top: 20px;
@@ -129,6 +210,7 @@
 .stepper-container.stepper-container--vertical .vertical-step-left .step-line {
   position: absolute;
   left: 20px;
+  opacity: 0;
 }
 .stepper-container.stepper-container--vertical .vertical-step-right {
   flex: 1;
@@ -144,19 +226,6 @@
 .stepper-container.stepper-container--vertical .stepper-panel-header {
   display: block;
 }
-.stepper-container.stepper-container--vertical .stepper-header {
-  display: flex;
-  flex-direction: column;
-  position: relative;
-  padding-left: 2rem;
-}
-.stepper-container.stepper-container--vertical .stepper-header .step-item {
-  flex-direction: row;
-  max-width: 150px;
-}
-.stepper-container.stepper-container--vertical .stepper-header .step-item:not(:first-child) {
-  margin-top: 8px;
-}
 .stepper-container.stepper-container--vertical .step-line {
   flex: auto;
   width: 2px;
@@ -164,4 +233,11 @@
   margin-top: 4px;
   top: auto;
   left: -24px;
+}
+.stepper-container.stepper-container--vertical .step-line::after {
+  transform-origin: top;
+  transform: scaleY(0);
+}
+.stepper-container.stepper-container--vertical .step-line--active::after, .stepper-container.stepper-container--vertical .step-line--complete::after {
+  transform: scaleY(1);
 }

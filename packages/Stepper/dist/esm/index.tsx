@@ -2,6 +2,7 @@ import React, { useRef, useEffect, forwardRef, useImperativeHandle, useState } f
 
 import { clsWrite, combinedCls } from 'funda-utils/dist/cjs/cls';
 
+
 interface StepperPanelProps {
     header: React.ReactNode;
     children?: React.ReactNode;
@@ -55,6 +56,7 @@ const Stepper = forwardRef<StepperRef, StepperProps>((props, ref) => {
     } = props;
 
 
+    const rootRef = useRef<HTMLDivElement>(null);
     const [isLastStepComplete, setIsLastStepComplete] = useState<boolean>(false);
     const [activeIndex, setActiveIndex] = useState<number>(initialStep);
     const panels = React.Children.toArray(children) as React.ReactElement<StepperPanelProps>[];
@@ -230,6 +232,39 @@ const Stepper = forwardRef<StepperRef, StepperProps>((props, ref) => {
         </>;
     };
 
+    // Calculate the width/height of the progress line
+    const calculateProgressStyle = () => {
+        if (!panels.length || rootRef.current === null) return {};
+        
+        const stepItems = rootRef.current.querySelectorAll('.step-item');
+        if (!stepItems.length) return {};
+
+        if (isVertical) {
+            const totalHeight = stepItems[0].clientHeight * (panels.length - 1);
+            const progress = (activeIndex / (panels.length - 1)) * 100;
+            return {
+                '--stepper-progress-height': `${progress}%`
+            } as React.CSSProperties;
+        } else {
+            const firstItem = stepItems[0] as HTMLDivElement;
+            const lastItem = stepItems[stepItems.length - 1] as HTMLDivElement;
+            if (!firstItem || !lastItem) return {};
+
+            const firstCenter = firstItem.offsetLeft + (firstItem.clientWidth / 2);
+            const lastCenter = lastItem.offsetLeft + (lastItem.clientWidth / 2);
+            const totalWidth = lastCenter - firstCenter;
+
+            const currentItem = stepItems[activeIndex] as HTMLDivElement;
+            if (!currentItem) return {};
+
+            const currentCenter = currentItem.offsetLeft + (currentItem.clientWidth / 2);
+            const progress = ((currentCenter - firstCenter) / totalWidth) * 100;
+
+            return {
+                '--stepper-progress-width': `${progress}%`
+            } as React.CSSProperties;
+        }
+    };
 
     useEffect(() => {
         // Only trigger onChange if values actually changed from previous values
@@ -243,8 +278,18 @@ const Stepper = forwardRef<StepperRef, StepperProps>((props, ref) => {
         }
     }, [activeIndex, isLastStepComplete]);
 
+
+    useEffect(() => {
+        // Force a recalculation of the progress line
+        const timer = setTimeout(() => {
+            setActiveIndex(prev => prev);
+        }, 0);
+        return () => clearTimeout(timer);
+    }, []);
+
     return (
         <div 
+            ref={rootRef}
             className={combinedCls(
                 'stepper-container',
                 clsWrite(wrapperClassName, ''),
@@ -252,7 +297,10 @@ const Stepper = forwardRef<StepperRef, StepperProps>((props, ref) => {
                     'stepper-container--vertical': isVertical
                 }
             )} 
-            style={style}
+            style={{
+                ...style,
+                ...calculateProgressStyle()
+            }}
         >
             {!isVertical && horizontalPanelsGenerator()}
             {isVertical && verticalPanelsGenerator()}
