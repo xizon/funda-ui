@@ -516,7 +516,7 @@
     min-width: auto !important;
     width: auto !important;
   }
-  .syntable__wrapper.table-enhanced-responsive-scrolled table thead th:not(last-child) {
+  .syntable__wrapper.table-enhanced-responsive-scrolled table thead th:not(:last-child) {
     border-bottom: 0;
   }
   .syntable__wrapper.table-enhanced-responsive-scrolled table tbody {
@@ -568,9 +568,9 @@
   .syntable__wrapper.table-enhanced-responsive-scrolled table tbody th:first-child {
     border-top: 0;
   }
-  .syntable__wrapper.table-enhanced-responsive-scrolled table th:not(last-child),
-  .syntable__wrapper.table-enhanced-responsive-scrolled table tbody td:not(last-child),
-  .syntable__wrapper.table-enhanced-responsive-scrolled table tbody th:not(last-child) {
+  .syntable__wrapper.table-enhanced-responsive-scrolled table th:not(:last-child),
+  .syntable__wrapper.table-enhanced-responsive-scrolled table tbody td:not(:last-child),
+  .syntable__wrapper.table-enhanced-responsive-scrolled table tbody th:not(:last-child) {
     border-bottom: 0;
     border-right: 0;
   }

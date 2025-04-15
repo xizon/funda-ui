@@ -59,8 +59,7 @@ Here is a table of the components and their status.
 | [Event Calendar ✅🔥](packages/EventCalendar/README.md) |  |  |  |  |
 | [Event Calendar Timeline ✅🔥](packages/EventCalendarTimeline/README.md) |  |  |  |  |
 | [Chatbox ✅🔥🤖](packages/Chatbox/README.md) |  |  |  |  |
-
-
+| [Stepper ✅](packages/Stepper/README.md) |  |  |  |  |
 
 
 

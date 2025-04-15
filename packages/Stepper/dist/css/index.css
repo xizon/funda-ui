@@ -1,0 +1,167 @@
+/* ======================================================
+   <!-- Stepper -->
+/* ====================================================== */
+.stepper-container {
+  --stepper-color-default: #333;
+  --stepper-color-active: white;
+  --stepper-color-complete: #2563eb;
+  --stepper-bg-default: white;
+  --stepper-bg-active: #2563eb;
+  --stepper-bg-complete: #22c55e;
+  --stepper-border-default: #ccc;
+  --stepper-border-active: #2563eb;
+  --stepper-border-complete: #22c55e;
+  --stepper-indicator-size: 0.875rem;
+  --stepper-title-size: 0.875rem;
+  position: relative;
+  /* NAvigation Header (only horizontal) */
+  /* Main Navigation */
+  /* Each step item (with circle + title)  */
+  /* Step Indicator */
+  /* Title */
+  /* Panels Area */
+  /* Buttons */
+  /* Panel */
+}
+.stepper-container .stepper-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  flex-wrap: nowrap;
+}
+.stepper-container .step-item {
+  flex: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 100px;
+  position: relative;
+  z-index: 1;
+}
+.stepper-container .step-item.step-item--clickable {
+  cursor: pointer;
+}
+.stepper-container .step-line {
+  flex: 1;
+  height: 2px;
+  background-color: #ddd;
+  margin: 0 4px;
+  position: relative;
+  top: -10px;
+  z-index: 0;
+}
+.stepper-container .step-line--complete {
+  background-color: var(--stepper-bg-complete);
+}
+.stepper-container .step-line--active {
+  background-color: var(--stepper-bg-complete);
+}
+.stepper-container .step-indicator {
+  width: 32px;
+  height: 32px;
+  margin: 0 auto 0.25rem;
+  border-radius: 9999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid #ccc;
+  font-size: var(--stepper-indicator-size);
+  /* default */
+  background-color: var(--stepper-bg-default);
+  color: var(--stepper-color-default);
+  border-color: var(--stepper-border-default);
+}
+.stepper-container .step-indicator--active {
+  background-color: var(--stepper-bg-active);
+  color: var(--stepper-color-active);
+  border-color: var(--stepper-border-active);
+}
+.stepper-container .step-indicator--complete {
+  background-color: var(--stepper-bg-complete);
+  color: var(--stepper-color-active);
+  border-color: var(--stepper-border-complete);
+}
+.stepper-container .step-title {
+  font-size: var(--stepper-title-size);
+  /* default */
+  color: var(--stepper-color-default);
+}
+.stepper-container .step-title--active {
+  font-weight: bold;
+}
+.stepper-container .stepper-buttons {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 1rem;
+}
+.stepper-container .stepper-panel {
+  width: 100%;
+}
+.stepper-container .stepper-panel-header {
+  font-size: 1.25rem;
+  font-weight: bold;
+  margin-bottom: 1rem;
+  display: none;
+}
+.stepper-container .stepper-panel-content {
+  width: 100%;
+}
+
+/*------ Verticle ------*/
+.stepper-container.stepper-container--vertical {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+.stepper-container.stepper-container--vertical .vertical-step-row {
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: 1rem;
+}
+.stepper-container.stepper-container--vertical .vertical-step-left {
+  flex-shrink: 0;
+  width: 50px;
+  position: relative;
+}
+.stepper-container.stepper-container--vertical .vertical-step-left .step-item {
+  margin-top: 20px;
+}
+.stepper-container.stepper-container--vertical .vertical-step-left .step-line {
+  position: absolute;
+  left: 20px;
+}
+.stepper-container.stepper-container--vertical .vertical-step-right {
+  flex: 1;
+  left: 70px;
+  width: calc(100% - 70px);
+  position: absolute;
+  top: 1.5rem;
+}
+.stepper-container.stepper-container--vertical .step-title {
+  display: none;
+  margin-left: 0.3rem;
+}
+.stepper-container.stepper-container--vertical .stepper-panel-header {
+  display: block;
+}
+.stepper-container.stepper-container--vertical .stepper-header {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  padding-left: 2rem;
+}
+.stepper-container.stepper-container--vertical .stepper-header .step-item {
+  flex-direction: row;
+  max-width: 150px;
+}
+.stepper-container.stepper-container--vertical .stepper-header .step-item:not(:first-child) {
+  margin-top: 8px;
+}
+.stepper-container.stepper-container--vertical .step-line {
+  flex: auto;
+  width: 2px;
+  height: 40px;
+  margin-top: 4px;
+  top: auto;
+  left: -24px;
+}
