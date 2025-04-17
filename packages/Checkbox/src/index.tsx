@@ -67,16 +67,27 @@ const Checkbox = forwardRef((props: CheckboxProps, externalRef: any) => {
             control: () => {
                 return valRef.current;
             },
+            getLatestVal: () => {
+                return val;
+            },
             clear: (cb?: any) => {
                 setVal(false);
                 cb?.();
+
+                if (typeof (onChange) === 'function') {
+                    onChange(null, false);
+                }
             },
             set: (value: string, cb?: any) => {
                 setVal(value);
                 cb?.();
+
+                if (typeof (onChange) === 'function') {
+                    onChange(null, value);
+                }
             }
         }),
-        [contentRef],
+        [contentRef, val],
     );
 
 

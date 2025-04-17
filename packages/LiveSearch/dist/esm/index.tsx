@@ -196,13 +196,20 @@ const LiveSearch = forwardRef((props: LiveSearchProps, externalRef: any) => {
             control: () => {
                 return inputRef.current;
             },
+            getLatestVal: () => {
+                return changedVal || '';
+            },
             clear: (cb?: any) => {
                 setChangedVal('');
                 cb?.();
+
+                onChange?.(inputRef.current, [], '', listRef.current);
             },
             set: (value: string, cb?: any) => {
                 setChangedVal(`${value}`);
                 cb?.();
+
+                onChange?.(inputRef.current, [], '', listRef.current);
             }
         }),
         [contentRef],

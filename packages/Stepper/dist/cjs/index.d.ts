@@ -1,6 +1,6 @@
 import React from 'react';
 interface StepperPanelProps {
-    header: React.ReactNode;
+    header?: React.ReactNode;
     children?: React.ReactNode;
     style?: React.CSSProperties;
 }

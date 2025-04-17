@@ -29,8 +29,7 @@
 }
 .stepper-container .stepper-header {
   display: flex;
-  align-items: center;
-  margin-bottom: 1.5rem;
+  align-items: flex-start;
   flex-wrap: nowrap;
   position: relative;
   /* background line */
@@ -38,18 +37,18 @@
 .stepper-container .stepper-header::before {
   content: "";
   position: absolute;
-  top: calc(50% - 0.875rem); /* Subtract the height of the title */
+  top: 16px; /* Subtract the height of the title */
   left: 14px;
   right: 0;
   height: 2px;
   background-color: var(--stepper-line-default);
   z-index: 1;
-  width: calc(100% - var(--stepper-indicator-offset) / 2);
+  width: calc(100% - 32px);
 }
 .stepper-container .stepper-header::after {
   content: "";
   position: absolute;
-  top: calc(50% - 0.875rem); /* Subtract the height of the title */
+  top: 16px; /* Subtract the height of the title */
   left: 14px;
   height: 2px;
   background-color: var(--stepper-line-complete);
@@ -59,7 +58,7 @@
 }
 .stepper-container .stepper-header::after {
   width: var(--stepper-progress-width, 0%);
-  max-width: calc(100% - var(--stepper-indicator-offset) / 2);
+  max-width: calc(100% - 32px);
 }
 .stepper-container .step-item {
   flex: none;
@@ -174,7 +173,7 @@
   top: 20px;
   left: 24px;
   width: 2px;
-  height: calc(100% - var(--stepper-indicator-offset));
+  height: calc(100% - 32px);
   background-color: var(--stepper-line-default);
   z-index: 1;
 }
@@ -191,7 +190,7 @@
 }
 .stepper-container.stepper-container--vertical::after {
   height: var(--stepper-progress-height, 0%);
-  max-height: calc(100% - var(--stepper-indicator-offset));
+  max-height: calc(100% - 32px);
 }
 .stepper-container.stepper-container--vertical .vertical-step-row {
   display: flex;

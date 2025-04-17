@@ -548,16 +548,25 @@ var Checkbox = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(fu
       control: function control() {
         return valRef.current;
       },
+      getLatestVal: function getLatestVal() {
+        return val;
+      },
       clear: function clear(cb) {
         setVal(false);
         cb === null || cb === void 0 ? void 0 : cb();
+        if (typeof onChange === 'function') {
+          onChange(null, false);
+        }
       },
       set: function set(value, cb) {
         setVal(value);
         cb === null || cb === void 0 ? void 0 : cb();
+        if (typeof onChange === 'function') {
+          onChange(null, value);
+        }
       }
     };
-  }, [contentRef]);
+  }, [contentRef, val]);
   function handleFocus(event) {
     var _rootRef$current;
     (_rootRef$current = rootRef.current) === null || _rootRef$current === void 0 ? void 0 : _rootRef$current.classList.add('focus');

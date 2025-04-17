@@ -162,16 +162,32 @@ const Radio = forwardRef((props: RadioProps, externalRef: any) => {
             control: () => {
                 return getAllControls();
             },
+            getLatestVal: () => {
+                return controlValue || '';
+            },
             clear: (cb?: any) => {
                 setControlValue('');
                 cb?.();
+
+                if (typeof (onChange) === 'function') {
+                    const curData: Record<string, unknown> = optionsFlat(dataInit).find((v: any) => v.value == value);
+                    const currentIndex: number = optionsFlat(dataInit).findIndex((v: any) => v.value == value);
+                    onChange(null, '', null, null);
+                }
+
             },
             set: (value: string, cb?: any) => {
                 setControlValue(`${value}`);
                 cb?.();
+
+                if (typeof (onChange) === 'function') {
+                    const curData: Record<string, unknown> = optionsFlat(dataInit).find((v: any) => v.value == value);
+                    const currentIndex: number = optionsFlat(dataInit).findIndex((v: any) => v.value == value);
+                    onChange(null, `${value}`, curData, currentIndex);
+                }
             }
         }),
-        [dataInit, contentRef],
+        [dataInit, contentRef, controlValue],
     );
 
 

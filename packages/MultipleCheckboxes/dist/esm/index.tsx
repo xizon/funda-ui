@@ -150,16 +150,34 @@ const MultipleCheckboxes = forwardRef((props: MultipleCheckboxesProps, externalR
             control: () => {
                 return getAllControls();
             },
+            getLatestVal: () => {
+                return VALUE_BY_BRACKETS ? convertArrToValByBrackets(valRes(selectedItems)) : valRes(selectedItems).join(',');
+            },
             clear: (cb?: any) => {
                 initDefaultValue('', dataInit);
                 cb?.();
+
+                onChange?.(null, null, '', null, null, null, null);
             },
             set: (value: any, cb?: any) => {
                 initDefaultValue(value, dataInit);
                 cb?.();
+
+                if (Array.isArray(value)) {
+                    const _resDataCollection = value;
+                    const _value = value.map((k: any) => k.value);
+                    const _valueStr = VALUE_BY_BRACKETS ? value.map((k: any) => `[${k.value}]`).join('') : value.map((k: any) => k.value).join(',');
+                    const _label = value.map((k: any) => k.label);
+                    const _labelStr = VALUE_BY_BRACKETS ? value.map((k: any) => `[${k.label}]`).join('') : value.map((k: any) => k.label).join(',');
+
+                    onChange?.(null, _value, _valueStr, _label, _labelStr, null, _resDataCollection);
+                } else {
+                    onChange?.(null, null, value, null, null, null, null);
+                }
+                
             }
         }),
-        [dataInit, contentRef],
+        [dataInit, contentRef, selectedItems],
     );
 
 

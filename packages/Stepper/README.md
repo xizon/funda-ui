@@ -37,7 +37,7 @@ export default () => {
                 indicatorClickAllowed
             >
                 <StepperPanel header="Header I">
-                    <div className="shadow-sm p-3 mb-3 bg-body-tertiary rounded">Content I</div>
+                    <div className="shadow-sm p-3 mb-3 bg-body-tertiary rounded mt-3">Content I</div>
                     <div>
                         <button className="btn btn-sm btn-outline-primary" onClick={() => stepperRef.current.next()}>
                             Next
@@ -45,7 +45,7 @@ export default () => {
                     </div>
                 </StepperPanel>
                 <StepperPanel header="Header II">
-                    <div className="shadow-sm p-3 mb-3 bg-body-tertiary rounded">Content II</div>
+                    <div className="shadow-sm p-3 mb-3 bg-body-tertiary rounded mt-3">Content II</div>
                     <div>
                         <button className="btn btn-sm btn-outline-primary me-2" onClick={() => stepperRef.current.next()}>
                             Next
@@ -56,7 +56,7 @@ export default () => {
                     </div>
                 </StepperPanel>
                 <StepperPanel header="Header III">
-                    <div className="shadow-sm p-3 mb-3 bg-body-tertiary rounded">Content IIII</div>
+                    <div className="shadow-sm p-3 mb-3 bg-body-tertiary rounded mt-3">Content IIII</div>
                     {!processesCompleted ? <div>
                         <button 
                             className="btn btn-sm btn-outline-primary me-2" 
@@ -130,7 +130,7 @@ export default () => {
                 disableCompleteIcon={false}
             >
                 <StepperPanel header="Header I">
-                    <div className="shadow-sm p-3 mb-3 bg-body-tertiary rounded">Content I</div>
+                    <div className="shadow-sm p-3 mb-3 bg-body-tertiary rounded mt-3">Content I</div>
                     <div>
                         <button className="btn btn-sm btn-outline-primary" onClick={() => stepperRef.current.next()}>
                             Next
@@ -138,7 +138,7 @@ export default () => {
                     </div>
                 </StepperPanel>
                 <StepperPanel header="Header II">
-                    <div className="shadow-sm p-3 mb-3 bg-body-tertiary rounded">Content II</div>
+                    <div className="shadow-sm p-3 mb-3 bg-body-tertiary rounded mt-3">Content II</div>
                     <div>
                         <button className="btn btn-sm btn-outline-primary me-2" onClick={() => stepperRef.current.next()}>
                             Next
@@ -149,7 +149,7 @@ export default () => {
                     </div>
                 </StepperPanel>
                 <StepperPanel header="Header III">
-                    <div className="shadow-sm p-3 mb-3 bg-body-tertiary rounded">Content IIII</div>
+                    <div className="shadow-sm p-3 mb-3 bg-body-tertiary rounded mt-3">Content IIII</div>
                     {!processesCompleted ? <div>
                         <button 
                             className="btn btn-sm btn-outline-primary me-2" 
@@ -209,7 +209,7 @@ import { StepperPanel } from 'funda-ui/Stepper';
 ```
 | Property | Type | Default | Description | Required |
 | --- | --- | --- | --- | --- |
-| `header` | ReactNode | - | Content to display in the step header | ✅ |
+| `header` | ReactNode | `<svg width="1rem" height="1rem"><rect fill="none"/></svg>` | Content to display in the step header | - |
 | `children` | ReactNode | - | Content to display in the step panel | - |
 | `style` | React.CSSProperties | - | Inline styles for the panel | - |
 

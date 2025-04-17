@@ -2252,13 +2252,18 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
               control: function control() {
                 return valRef.current;
               },
+              getLatestVal: function getLatestVal() {
+                return changedVal || '';
+              },
               clear: function clear(cb) {
                 setChangedVal('');
                 cb === null || cb === void 0 ? void 0 : cb();
+                onChange === null || onChange === void 0 ? void 0 : onChange(null, valRef.current, '');
               },
               set: function set(value, cb) {
                 setChangedVal("".concat(value));
                 cb === null || cb === void 0 ? void 0 : cb();
+                onChange === null || onChange === void 0 ? void 0 : onChange(null, valRef.current, "".concat(value));
               },
               resetHeight: function resetHeight() {
                 reset();
@@ -2270,7 +2275,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
                 }, 0);
               }
             };
-          }, [contentRef, reset]);
+          }, [contentRef, reset, changedVal]);
           var propExist = function propExist(p) {
             return typeof p !== 'undefined' && p !== null && p !== '';
           };

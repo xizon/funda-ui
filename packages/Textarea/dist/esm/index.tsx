@@ -297,13 +297,20 @@ const Textarea = forwardRef((props: TextareaProps, externalRef: any) => {
             control: () => {
                 return valRef.current;
             },
+            getLatestVal: () => {
+                return changedVal || '';
+            },
             clear: (cb?: any) => {
                 setChangedVal('');
                 cb?.();
+
+                onChange?.(null, valRef.current, '');
             },
             set: (value: string, cb?: any) => {
                 setChangedVal(`${value}`);
                 cb?.();
+
+                onChange?.(null, valRef.current, `${value}`);
             },
             resetHeight: () => {
                 reset();
@@ -314,7 +321,7 @@ const Textarea = forwardRef((props: TextareaProps, externalRef: any) => {
                 }, 0);
             },
         }),
-        [contentRef, reset]
+        [contentRef, reset, changedVal]
     );
 
     const propExist = (p: any) => {

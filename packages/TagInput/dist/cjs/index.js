@@ -903,16 +903,25 @@ var TagInput = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(fu
       control: function control() {
         return valRef.current;
       },
+      getLatestVal: function getLatestVal() {
+        return VALUE_BY_BRACKETS ? (0,funda_utils_dist_cjs_convert__WEBPACK_IMPORTED_MODULE_3__.convertArrToValByBrackets)(items.map(function (item) {
+          return item.content;
+        })) : items.map(function (item) {
+          return item.content;
+        }).join(',');
+      },
       clear: function clear(cb) {
         initDefaultValue('');
         cb === null || cb === void 0 ? void 0 : cb();
+        onChange === null || onChange === void 0 ? void 0 : onChange(inputRef.current, items, '');
       },
       set: function set(value, cb) {
         initDefaultValue("".concat(value));
         cb === null || cb === void 0 ? void 0 : cb();
+        onChange === null || onChange === void 0 ? void 0 : onChange(inputRef.current, items, "".concat(value));
       }
     };
-  }, [contentRef]);
+  }, [contentRef, items]);
   function initDefaultValue(defaultValue) {
     // change the value to trigger component rendering
     if (typeof defaultValue === 'undefined' || defaultValue === '') {

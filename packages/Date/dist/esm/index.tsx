@@ -342,9 +342,14 @@ const Date = forwardRef((props: DateProps, externalRef: any) => {
             control: () => {
                 return getAllSplittingInputs();
             },
+            getLatestVal: () => {
+                return !dateDefaultValueExist ? `` : valueResConverter(changedVal);
+            },
             clear: (cb?: any) => {
                 clearAll();
                 cb?.();
+
+                onChange?.(inputRef.current, '', false, getAllSplittingInputs());
             },
             blur: (cb?: any) => {
                 getAllSplittingInputs().forEach((el: any) => {
@@ -364,9 +369,11 @@ const Date = forwardRef((props: DateProps, externalRef: any) => {
                 initValue(curTargetVal);
                 
                 cb?.();
+
+                onChange?.(inputRef.current, value, isValidDate(value), getAllSplittingInputs());
             }
         }),
-        [contentRef],
+        [contentRef, dateDefaultValueExist, changedVal],
     );
 
 

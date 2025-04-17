@@ -977,16 +977,37 @@ var Radio = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(funct
       control: function control() {
         return getAllControls();
       },
+      getLatestVal: function getLatestVal() {
+        return controlValue || '';
+      },
       clear: function clear(cb) {
         setControlValue('');
         cb === null || cb === void 0 ? void 0 : cb();
+        if (typeof onChange === 'function') {
+          var curData = optionsFlat(dataInit).find(function (v) {
+            return v.value == value;
+          });
+          var currentIndex = optionsFlat(dataInit).findIndex(function (v) {
+            return v.value == value;
+          });
+          onChange(null, '', null, null);
+        }
       },
       set: function set(value, cb) {
         setControlValue("".concat(value));
         cb === null || cb === void 0 ? void 0 : cb();
+        if (typeof onChange === 'function') {
+          var curData = optionsFlat(dataInit).find(function (v) {
+            return v.value == value;
+          });
+          var currentIndex = optionsFlat(dataInit).findIndex(function (v) {
+            return v.value == value;
+          });
+          onChange(null, "".concat(value), curData, currentIndex);
+        }
       }
     };
-  }, [dataInit, contentRef]);
+  }, [dataInit, contentRef, controlValue]);
   function stringlineToHump(str) {
     if (typeof str === 'string' && str.length > 0) {
       var re = /-(\w)/g;

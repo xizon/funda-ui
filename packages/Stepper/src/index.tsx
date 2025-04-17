@@ -4,7 +4,7 @@ import { clsWrite, combinedCls } from 'funda-utils/dist/cjs/cls';
 
 
 interface StepperPanelProps {
-    header: React.ReactNode;
+    header?: React.ReactNode;
     children?: React.ReactNode;
     style?: React.CSSProperties;
 }
@@ -29,7 +29,7 @@ interface StepperRef {
 
 const StepperPanel: React.FC<StepperPanelProps> = (props) => {
     const {
-        header, 
+        header = <><svg width="1rem" height="1rem"><rect fill="none"/></svg></>, 
         children, 
         style
     } = props;

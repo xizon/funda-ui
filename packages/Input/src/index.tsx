@@ -308,13 +308,20 @@ const Input = forwardRef((props: InputProps, externalRef: any) => {
             control: () => {
                 return valRef.current;
             },
+            getLatestVal: () => {
+                return changedVal || '';
+            },
             clear: (cb?: any) => {
                 setChangedVal('');
                 cb?.();
+
+                onChange?.(null, onComposition, valRef.current, '');
             },
             set: (value: string, cb?: any) => {
                 setChangedVal(`${value}`);
                 cb?.();
+
+                onChange?.(null, onComposition, valRef.current, `${value}`);
             },
             aiPredictReset: () => {
                 setTimeout(() => { // Avoid conflicts with other asynchronous states, resulting in invalid clearing
@@ -322,7 +329,7 @@ const Input = forwardRef((props: InputProps, externalRef: any) => {
                 }, 0);
             },
         }),
-        [contentRef],
+        [contentRef, onComposition, changedVal],
     );
 
     const propExist = (p: any) => {

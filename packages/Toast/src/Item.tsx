@@ -1,13 +1,20 @@
 import React, { useRef, forwardRef } from 'react';
 
+import { clsWrite, combinedCls } from 'funda-utils/dist/cjs/cls';
+
+
 export interface ItemProps extends React.ComponentPropsWithoutRef<any> {
-    onlyOne?: boolean;
+    depth: number;
     index: number;
+    isNew: boolean;
+    uniqueID: string;
+
+    //
+    onlyOne?: boolean;
     title?: string | React.ReactNode | boolean;
     note?: string | React.ReactNode | boolean;
     theme?: string | undefined;
     message?: string | React.ReactNode;
-    depth: number;
     schemeBody?: string;
     schemeHeader?: string;
     closeBtnColor?: string;
@@ -24,13 +31,17 @@ export interface ItemProps extends React.ComponentPropsWithoutRef<any> {
 const Item = forwardRef((props: ItemProps, externalRef: any) => {
 
     const {
-        onlyOne,
+        depth,
         index,
+        isNew,
+        uniqueID,
+
+        //
+        onlyOne,
         title,
         note,
         theme,
         message,
-        depth,
         lock,
         cascading,
         schemeBody,
@@ -43,16 +54,25 @@ const Item = forwardRef((props: ItemProps, externalRef: any) => {
         evClose
     } = props;
 
-
+    
     const containerRef = useRef<HTMLDivElement>(null);
+    const hideTitle: boolean = (title === '' || title === false) && (note === '' || note === false);
 
     return (
         <>
 
             <div
                 ref={containerRef}
-                className={`toast-container ${onlyOne ? 'only-one' : ''}`}
+                id={`toast-${uniqueID}`}
+                data-toast-id={uniqueID}
+                data-new={isNew}
                 data-index={index}
+                className={combinedCls(
+                    'toast-container',
+                    {
+                        'only-one': onlyOne
+                    }
+                )} 
                 style={cascading ? {
                     transform: `perspective(100px) translateZ(-${2 * index}px) translateY(${35 * index}px)`,
                     zIndex: depth
@@ -64,9 +84,20 @@ const Item = forwardRef((props: ItemProps, externalRef: any) => {
             >
 
                 {/* Bootstrap toast */}
-                <div className={`toast fade show ${schemeBody ? schemeBody : ''} ${theme ? `bg-${theme}` : ''}`} role="alert">
-                    {(title === '' || title === false) && (note === '' || note === false) ? null : <>
-                        <div className={`toast-header ${schemeHeader ? schemeHeader : ''}`}>
+                <div 
+                    className={combinedCls(
+                        `toast fade show ${theme ? `bg-${theme}` : ''}`,
+                        clsWrite(schemeBody, '')
+                    )} 
+                    role="alert"
+                >
+                    {hideTitle ? null : <>
+                        <div 
+                            className={combinedCls(
+                                'toast-header',
+                                clsWrite(schemeHeader, '')
+                            )}
+                        >
                             <strong className="me-auto">{title === '' || title === false ? '' : <>{title}</>}</strong>
                             <small className="text-muted">{note === '' || note === false ? '' : <>{note}</>}</small>
                             {!lock ? <>{!closeDisabled ? <button 
@@ -88,7 +119,7 @@ const Item = forwardRef((props: ItemProps, externalRef: any) => {
                     <div className="toast-body">
                         {message}
 
-                        {(title === '' || title === false) && (note === '' || note === false) ? <>
+                        {hideTitle ? <>
                             {!closeDisabled ? <button 
                                 data-close="1" 
                                 data-index={index} 
@@ -105,7 +136,17 @@ const Item = forwardRef((props: ItemProps, externalRef: any) => {
 
 
                         {/* PROGRESS */}
-                        <div ref={externalRef} data-progress-index={index} className={`progress active toast-progress ${autoCloseTime === false ? 'd-none' : ''}`} role="progressbar">
+                        <div 
+                            ref={externalRef} 
+                            data-progress-index={index} 
+                            className={combinedCls(
+                                'progress active toast-progress',
+                                {
+                                    'd-none': autoCloseTime === false
+                                }
+                            )}
+                            role="progressbar"
+                        >
                             <div className="progress-bar"></div>
                         </div>
                         {/* /PROGRESS */}

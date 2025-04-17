@@ -1755,13 +1755,18 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
               control: function control() {
                 return valRef.current;
               },
+              getLatestVal: function getLatestVal() {
+                return changedVal || '';
+              },
               clear: function clear(cb) {
                 setChangedVal('');
                 cb === null || cb === void 0 ? void 0 : cb();
+                onChange === null || onChange === void 0 ? void 0 : onChange(null, onComposition, valRef.current, '');
               },
               set: function set(value, cb) {
                 setChangedVal("".concat(value));
                 cb === null || cb === void 0 ? void 0 : cb();
+                onChange === null || onChange === void 0 ? void 0 : onChange(null, onComposition, valRef.current, "".concat(value));
               },
               aiPredictReset: function aiPredictReset() {
                 setTimeout(function () {
@@ -1770,7 +1775,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
                 }, 0);
               }
             };
-          }, [contentRef]);
+          }, [contentRef, onComposition, changedVal]);
           var propExist = function propExist(p) {
             return typeof p !== 'undefined' && p !== null && p !== '';
           };
@@ -5141,9 +5146,13 @@ var src_Date = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_reac
       control: function control() {
         return getAllSplittingInputs();
       },
+      getLatestVal: function getLatestVal() {
+        return !dateDefaultValueExist ? "" : valueResConverter(changedVal);
+      },
       clear: function clear(cb) {
         clearAll();
         cb === null || cb === void 0 ? void 0 : cb();
+        _onChange === null || _onChange === void 0 ? void 0 : _onChange(inputRef.current, '', false, getAllSplittingInputs());
       },
       blur: function blur(cb) {
         getAllSplittingInputs().forEach(function (el) {
@@ -5164,9 +5173,10 @@ var src_Date = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_reac
         setDateDefaultValueExist(defaultValueIsEmpty(value) ? false : true);
         initValue(curTargetVal);
         cb === null || cb === void 0 ? void 0 : cb();
+        _onChange === null || _onChange === void 0 ? void 0 : _onChange(inputRef.current, value, (0,cjs_date.isValidDate)(value), getAllSplittingInputs());
       }
     };
-  }, [contentRef]);
+  }, [contentRef, dateDefaultValueExist, changedVal]);
 
   // click outside
   useClickOutside_default()({

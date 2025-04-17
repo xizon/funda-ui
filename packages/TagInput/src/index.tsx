@@ -102,16 +102,23 @@ const TagInput = forwardRef((props: TagInputProps, externalRef: any) => {
             control: () => {
                 return valRef.current;
             },
+            getLatestVal: () => {
+                return VALUE_BY_BRACKETS ? convertArrToValByBrackets(items.map((item: any) => item.content)) : items.map((item: any) => item.content).join(',');
+            },
             clear: (cb?: any) => {
                 initDefaultValue('');
                 cb?.();
+
+                onChange?.(inputRef.current, items, '');
             },
             set: (value: string, cb?: any) => {
                 initDefaultValue(`${value}`);
                 cb?.();
+
+                onChange?.(inputRef.current, items, `${value}`);
             }
         }),
-        [contentRef],
+        [contentRef, items],
     );
 
 

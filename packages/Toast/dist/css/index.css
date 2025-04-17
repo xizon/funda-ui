@@ -9,8 +9,8 @@
   --toasts-offset-bothsides: 15px;
   --toasts-container-gap: 0.5rem;
   --toasts-container-width: 350px;
-  --toasts-progress-height: 5px;
-  --toasts-progress-bg: rgba(255,255,255,.6);
+  --toasts-progress-height: 3px;
+  --toasts-progress-bg: rgba(228, 228, 228, 0.6);
   width: var(--toasts-container-width);
   position: fixed;
   left: 50%;
@@ -72,34 +72,28 @@
 }
 .toasts__wrapper .toast-container {
   margin-bottom: var(--toasts-container-gap);
+  /* Use clip-path instead of opacity to achieve a fade effect, avoiding the problem of transparency overlay */
+  clip-path: inset(0 0 0 0);
+  transform: translateY(0);
+  /* Rendering of 3D transformations */
+  backface-visibility: hidden;
+  transform-style: preserve-3d;
+  /* init animation */
+  /* enter animation */
+  /* exit animation */
 }
-.toasts__wrapper .toast-container.auto-anim-switch--initfirst {
-  transform: translateY(-20px);
-  opacity: 0;
+.toasts__wrapper .toast-container.animate-ready {
+  pointer-events: none;
+  clip-path: inset(0 0 100% 0);
+  transform: translateY(10px);
 }
-.toasts__wrapper .toast-container.auto-anim-switch--first {
-  animation-name: toast-anim-show-first;
-  animation-duration: 0.3s;
-  animation-timing-function: linear;
-  animation-delay: 0;
-  animation-iteration-count: 1;
-  animation-fill-mode: forwards;
+.toasts__wrapper .toast-container.animate-in {
+  clip-path: inset(0 0 0 0);
+  transform: translateY(0);
 }
-.toasts__wrapper .toast-container.auto-anim-switch:not(.only-one) {
-  animation-name: toast-anim-hide;
-  animation-duration: 0.3s;
-  animation-timing-function: linear;
-  animation-delay: 0;
-  animation-iteration-count: 1;
-  animation-fill-mode: forwards;
-}
-.toasts__wrapper .toast-container.only-one.auto-anim-switch {
-  animation-name: toast-anim-hide--onlyone;
-  animation-duration: 0.3s;
-  animation-timing-function: linear;
-  animation-delay: 0;
-  animation-iteration-count: 1;
-  animation-fill-mode: forwards;
+.toasts__wrapper .toast-container.hide-start {
+  clip-path: inset(0 0 100% 0);
+  transform: translateY(-10px);
 }
 .toasts__wrapper.toasts__wrapper--cascading .toast-container {
   margin-bottom: 0;
@@ -120,6 +114,7 @@
 .toasts__wrapper .toast-progress .progress-bar {
   background: var(--toasts-progress-bg);
   width: 100%;
+  height: 100%;
   transition: all 0.1s;
 }
 
@@ -151,51 +146,4 @@
 }
 .toast-container.hide-end {
   display: none;
-}
-
-@keyframes toast-anim-initfirst {
-  0% {
-    transform: translateY(-20px);
-    opacity: 1;
-  }
-  100% {
-    transform: translateY(20px);
-    opacity: 0;
-  }
-}
-@keyframes toast-anim-show-first {
-  0% {
-    transform: translateY(-20px);
-    opacity: 0;
-  }
-  100% {
-    transform: translateY(0);
-    opacity: 1;
-  }
-}
-@keyframes toast-anim-hide {
-  0% {
-    transform: translateY(-100%);
-    opacity: 1;
-  }
-  100% {
-    transform: translateY(10px);
-    opacity: 0;
-    /* prevent auto-close's item */
-    display: block;
-  }
-}
-@keyframes toast-anim-hide--onlyone {
-  0% {
-    transform: translateY(-100%);
-    opacity: 1;
-    /* prevent auto-close's item */
-    display: block;
-  }
-  100% {
-    transform: translateY(10px);
-    opacity: 0;
-    /* prevent auto-close's item */
-    display: block;
-  }
 }

@@ -105,13 +105,20 @@ const NumberInput = forwardRef((props: NumberInputProps, externalRef: any) => {
             control: () => {
                 return valRef.current;
             },
+            getLatestVal: () => {
+                return changedVal || '';
+            },
             clear: (cb?: any) => {
                 setChangedVal('');
                 cb?.();
+
+                onChange?.(null, valRef.current, Number(''));
             },
             set: (value: string, cb?: any) => {
                 setChangedVal(`${value}`);
                 cb?.();
+
+                onChange?.(null, valRef.current, Number(formatValue(`${value}`)));
             },
             increment: (cb?: any) => {
                 handleIncrement(null);
@@ -123,7 +130,7 @@ const NumberInput = forwardRef((props: NumberInputProps, externalRef: any) => {
             }
 
         }),
-        [contentRef],
+        [contentRef, changedVal],
     );
 
     const propExist = (p: any) => {

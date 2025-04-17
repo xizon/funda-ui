@@ -2895,13 +2895,18 @@ var LiveSearch = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(
       control: function control() {
         return inputRef.current;
       },
+      getLatestVal: function getLatestVal() {
+        return changedVal || '';
+      },
       clear: function clear(cb) {
         setChangedVal('');
         cb === null || cb === void 0 ? void 0 : cb();
+        onChange === null || onChange === void 0 ? void 0 : onChange(inputRef.current, [], '', listRef.current);
       },
       set: function set(value, cb) {
         setChangedVal("".concat(value));
         cb === null || cb === void 0 ? void 0 : cb();
+        onChange === null || onChange === void 0 ? void 0 : onChange(inputRef.current, [], '', listRef.current);
       }
     };
   }, [contentRef]);

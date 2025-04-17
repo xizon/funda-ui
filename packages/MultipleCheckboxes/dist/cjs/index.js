@@ -1298,16 +1298,42 @@ var MultipleCheckboxes = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forw
       control: function control() {
         return getAllControls();
       },
+      getLatestVal: function getLatestVal() {
+        return VALUE_BY_BRACKETS ? (0,funda_utils_dist_cjs_convert__WEBPACK_IMPORTED_MODULE_4__.convertArrToValByBrackets)(valRes(selectedItems)) : valRes(selectedItems).join(',');
+      },
       clear: function clear(cb) {
         initDefaultValue('', dataInit);
         cb === null || cb === void 0 ? void 0 : cb();
+        _onChange === null || _onChange === void 0 ? void 0 : _onChange(null, null, '', null, null, null, null);
       },
       set: function set(value, cb) {
         initDefaultValue(value, dataInit);
         cb === null || cb === void 0 ? void 0 : cb();
+        if (Array.isArray(value)) {
+          var _resDataCollection = value;
+          var _value = value.map(function (k) {
+            return k.value;
+          });
+          var _valueStr = VALUE_BY_BRACKETS ? value.map(function (k) {
+            return "[".concat(k.value, "]");
+          }).join('') : value.map(function (k) {
+            return k.value;
+          }).join(',');
+          var _label = value.map(function (k) {
+            return k.label;
+          });
+          var _labelStr = VALUE_BY_BRACKETS ? value.map(function (k) {
+            return "[".concat(k.label, "]");
+          }).join('') : value.map(function (k) {
+            return k.label;
+          }).join(',');
+          _onChange === null || _onChange === void 0 ? void 0 : _onChange(null, _value, _valueStr, _label, _labelStr, null, _resDataCollection);
+        } else {
+          _onChange === null || _onChange === void 0 ? void 0 : _onChange(null, null, value, null, null, null, null);
+        }
       }
     };
-  }, [dataInit, contentRef]);
+  }, [dataInit, contentRef, selectedItems]);
   function handleCheckboxChange(itemKey) {
     // first, make a copy of the original set rather than mutating the original
     var newSelectedItems = new Set(selectedItems);
