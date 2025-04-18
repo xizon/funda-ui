@@ -1496,8 +1496,8 @@ const Chatbox = (props: ChatboxProps) => {
                             }
 
                         }}
-                        onChange={(e) => {
-                            args().onInputChange?.(inputContentRef.current, e.target.value);
+                        onChange={(e: React.MouseEvent, el: any, value: string) => {
+                            args().onInputChange?.(inputContentRef.current, value);
                         }}
                         onFocus={() => {
                             setFocused(true);

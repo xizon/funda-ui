@@ -5692,9 +5692,9 @@ var Chatbox = function Chatbox(props) {
         handleClickSafe();
       }
     },
-    onChange: function onChange(e) {
+    onChange: function onChange(e, el, value) {
       var _args$onInputChange, _args16;
-      (_args$onInputChange = (_args16 = args()).onInputChange) === null || _args$onInputChange === void 0 ? void 0 : _args$onInputChange.call(_args16, inputContentRef.current, e.target.value);
+      (_args$onInputChange = (_args16 = args()).onInputChange) === null || _args$onInputChange === void 0 ? void 0 : _args$onInputChange.call(_args16, inputContentRef.current, value);
     },
     onFocus: function onFocus() {
       setFocused(true);
