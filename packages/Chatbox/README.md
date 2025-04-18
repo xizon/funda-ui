@@ -269,6 +269,12 @@ export default () => {
 
            <a href="#" onClick={(e: React.MouseEvent) => {
                 e.preventDefault();
+                if (aichatRef.current) aichatRef.current.setVal('default text here...');   
+            }}>Set Default Value</a>
+            <br />
+
+           <a href="#" onClick={(e: React.MouseEvent) => {
+                e.preventDefault();
 
                 const randomMergedText = [
                     "Analyze this sentence: The patient's name is Zhang, 30 years old, with fever for 3 days.",
