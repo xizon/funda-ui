@@ -201,7 +201,7 @@ import MultilevelDropdownMenu from 'funda-ui/MultilevelDropdownMenu';
 | `arrow` | ReactNode  | `<svg viewBox="0 0 22 22" width="8px"><path d="m345.44 248.29l-194.29 194.28c-12.359 12.365-32.397 12.365-44.75 0-12.354-12.354-12.354-32.391 0-44.744l171.91-171.91-171.91-171.9c-12.354-12.359-12.354-32.394 0-44.748 12.354-12.359 32.391-12.359 44.75 0l194.29 194.28c6.177 6.18 9.262 14.271 9.262 22.366 0 8.099-3.091 16.196-9.267 22.373" transform="matrix(.03541-.00013.00013.03541 2.98 3.02)" fill="#a5a5a5" /></svg>` | Set an arrow of control | - |
 | `data` | array | - | Specify data of Cascading DropDown List as a JSON string format. Such as: <br />`[{title:"Top level 1",link:"#",slug:'level-1'},{title:"Top level 2",link:"/s",slug:'level-2',},{title:"Top level 3",link:"https://example.com",slug:'level-3',active:true,children:[{title:"Sub level 3_1",link:"#3-1",slug:'level-3_1'},{title:"Sub level 3_2",link:"#3-2",slug:'level-3_2'},{title:"Sub level 3_3",link:"#3-3",slug:'level-3_3'}]},{title:"Top level 4 (heading)",link:"#",slug:'level-4',}]` | - |
 | `routerPath` | string  | - | Pass the current routing path into. It is used to determine whether to activate | - |
-| `onSelect` | function  | - | Call a function when clicking an item. It returns two callback values. <br /> <ol><li>The first is the current item</li><li>The second is the data (**JSON Object**)</li></ol> | - |
+| `onSelect` | function  | - | Call a function when clicking an item. It returns two callback values. <br /> <ol><li>The first is the current item Event (**Event**)</li><li>The second is the data (**JSON Object**)</li></ol> | - |
 
 
 Array configuration properties of the `data`:

@@ -642,5 +642,5 @@ import ModalDialog from 'funda-ui/ModalDialog';
 | `onLoad` | function  | - | Call a function when the modal is rendered. It returns two callback values. <br /> <ol><li>The first is the function of open(**Function**)</li><li>The second is the function of close (**Function**)</li></ol>. | - |
 | `onOpen` | function  | - | Call a function when the modal is opened. It returns two callback values, one is the trigger object and the other is the closing event (**Function**). | - |
 | `onClose` | function  | - | Call a function when the modal is closed. It returns a callback value which is the trigger object. | - |
-| `onSubmit` | function  | - | Call a function when the modal is submitted. It returns three callback values. <br /> <ol><li>The first is the trigger object</li><li>The second is the closing event (**Function**)</li><li> The third is a string passed by the `data` attribute</li></ol> | - |
+| `onSubmit` | function  | - | Call a function when the modal is submitted. It returns three callback values. <br /> <ol><li>The first is the trigger Event (**Event**)</li><li>The second is the closing event (**Function**)</li><li> The third is a string passed by the `data` attribute</li></ol> | - |
 
