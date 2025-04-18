@@ -195,8 +195,8 @@ export default () => {
                 name="name3"
                 rows={4}
                 value={reverseAutop(`<p>a<br />\nb<br />\nc<br />\nd</p>\n`)}
-                onChange={(e) => {
-                    console.log(autop(e.target.value));
+                onChange={(e: React.MouseEvent, el: any, value: string) => {
+                    console.log(autop(value));
                 }}
                 
             />
@@ -255,8 +255,8 @@ export default () => {
 
     const [textareaValue, setTextareaValue] = useState('');
 
-    function handleChange(e) {
-        setTextareaValue(e.target.value);
+    function handleChange(e: React.MouseEvent, el: any, value: string) {
+        setTextareaValue(value);
     }
 
     useEffect(() => {
@@ -359,8 +359,8 @@ export default () => {
                     name="name"
                     rows={3}
                     autoSize
-                    onChange={(e) => {
-                        setUserContent(e.target.value);
+                    onChange={(e: React.MouseEvent, el: any, value: string) => {
+                        setUserContent(value);
                     }}
                     
                 />

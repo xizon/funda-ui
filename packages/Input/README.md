@@ -10,11 +10,11 @@ import Input from 'funda-ui/Input';
 
 export default () => {
 
-    function handleChange(e, onComposition) {
+    function handleChange(e: React.MouseEvent, onComposition: any, el: any, value: string) {
 
         let temp = e.target.value;
         if (!onComposition) {
-            console.log(temp);
+            console.log(temp, value);
         }
     }
 
@@ -191,8 +191,8 @@ export default () => {
 
     const [inputValue, setInputValue] = useState('');
 
-    function handleChange(e) {
-        setInputValue(e.target.value);
+    function handleChange(e: React.MouseEvent, onComposition: any, el: any, value: string) {
+        setInputValue(e.target.value, value);
     }
 
     useEffect(() => {
@@ -300,11 +300,11 @@ export default () => {
                             tabIndex={-1}
                             className="app-input-demo--year"
                             value={val.year}
-                            onChange={(e: React.MouseEvent) => {
+                            onChange={(e: React.MouseEvent, onComposition: any, el: any, value: string) => {
                                 setVal((prevState) => {
                                     return {
                                         ...prevState,
-                                        year: e.target.value
+                                        year: value
                                     }
                                 })
                             }}
@@ -314,11 +314,11 @@ export default () => {
                             tabIndex={-1}
                             className="app-input-demo--month"
                             value={val.month}
-                            onChange={(e: React.MouseEvent) => {
+                            onChange={(e: React.MouseEvent, onComposition: any, el: any, value: string) => {
                                 setVal((prevState) => {
                                     return {
                                         ...prevState,
-                                        month: e.target.value
+                                        month: value
                                     }
                                 })
                             }}
@@ -328,11 +328,11 @@ export default () => {
                             tabIndex={-1}
                             className="app-input-demo--day"
                             value={val.day}
-                            onChange={(e: React.MouseEvent) => {
+                            onChange={(e: React.MouseEvent, onComposition: any, el: any, value: string) => {
                                 setVal((prevState) => {
                                     return {
                                         ...prevState,
-                                        day: e.target.value
+                                        day: value
                                     }
                                 })
                             }}
@@ -342,11 +342,11 @@ export default () => {
                             tabIndex={-1}
                             className="app-input-demo--hours"
                             value={val.hours}
-                            onChange={(e: React.MouseEvent) => {
+                            onChange={(e: React.MouseEvent, onComposition: any, el: any, value: string) => {
                                 setVal((prevState) => {
                                     return {
                                         ...prevState,
-                                        hours: e.target.value
+                                        hours: value
                                     }
                                 })
                             }}
@@ -356,11 +356,11 @@ export default () => {
                             tabIndex={-1}
                             className="app-input-demo--minutes"
                             value={val.minutes}
-                            onChange={(e: React.MouseEvent) => {
+                            onChange={(e: React.MouseEvent, onComposition: any, el: any, value: string) => {
                                 setVal((prevState) => {
                                     return {
                                         ...prevState,
-                                        minutes: e.target.value
+                                        minutes: value
                                     }
                                 })
                             }}
@@ -370,11 +370,11 @@ export default () => {
                             tabIndex={-1}
                             className="app-input-demo--seconds"
                             value={val.seconds}
-                            onChange={(e: React.MouseEvent) => {
+                            onChange={(e: React.MouseEvent, onComposition: any, el: any, value: string) => {
                                 setVal((prevState) => {
                                     return {
                                         ...prevState,
-                                        seconds: e.target.value
+                                        seconds: value
                                     }
                                 })
                             }}
@@ -595,8 +595,8 @@ export default () => {
                 <Input
                     contentRef={conRef}
                     name="name"
-                    onChange={(e) => {
-                        setUserContent(e.target.value);
+                    onChange={(e: React.MouseEvent, onComposition: any, el: any, value: string) => {
+                        setUserContent(value);
                     }}
                 />
                 
@@ -634,8 +634,8 @@ function MemoInput(props: any) {
         return <Input 
                 name="name"
                 value={val}
-                onChange={(e) => {
-                    callback(e.target.value);
+                onChange={(e: React.MouseEvent, onComposition: any, el: any, value: string) => {
+                    callback(value);
                 }}
             />
 
