@@ -3282,13 +3282,15 @@ var MultipleSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonj
   var dragdropListDataInit = function dragdropListDataInit(data) {
     // Add appendControl to list
     data.forEach(function (item, index) {
-      item.appendControl = getExtControll(index, item.id, item.value, item.extendedContent, tempDefaultValue);
+      var _extendedContent = typeof item.extendedContent === 'function' ? item.extendedContent(true) : item.extendedContent;
+      item.appendControl = getExtControll(index, item.id, item.value, _extendedContent, tempDefaultValue);
     });
     return data;
   };
   var dragdropListDefaultDataInit = function dragdropListDefaultDataInit(data) {
     // Update appendControl to list
     data.forEach(function (item, index) {
+      var _extendedContent = typeof item.extendedContent === 'function' ? item.extendedContent(false) : item.extendedContent;
       item.appendControl = getExtControll(index, item.id, item.value, item.extendedContent, tempDefaultValue, false);
     });
     return data;

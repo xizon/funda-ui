@@ -33,7 +33,7 @@ export interface OptionConfig {
     depth?: number;
     children?: OptionConfig[];
     disabled?: boolean;
-    extendedContent?: React.ReactNode;
+    extendedContent?: (isSelected: boolean) => React.ReactNode | React.ReactNode;
     [key: string]: any;
 }
 
@@ -253,15 +253,18 @@ const MultipleSelect = forwardRef((props: MultipleSelectProps, externalRef: any)
     const dragdropListDataInit = (data: any[]) => {
         // Add appendControl to list
         data.forEach((item: any, index: number) => {
-            item.appendControl = getExtControll(index, item.id, item.value, item.extendedContent, tempDefaultValue);
+            const _extendedContent = typeof item.extendedContent === 'function' ? item.extendedContent(true) : item.extendedContent;
+            item.appendControl = getExtControll(index, item.id, item.value, _extendedContent, tempDefaultValue);
         });
 
+        
 
         return data;
     };
     const dragdropListDefaultDataInit = (data: any[]) => {
         // Update appendControl to list
         data.forEach((item: any, index: number) => {
+            const _extendedContent = typeof item.extendedContent === 'function' ? item.extendedContent(false) : item.extendedContent;
             item.appendControl = getExtControll(index, item.id, item.value, item.extendedContent, tempDefaultValue, false);
         });
 

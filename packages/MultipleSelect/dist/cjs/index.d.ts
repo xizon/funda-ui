@@ -9,7 +9,7 @@ export interface OptionConfig {
     depth?: number;
     children?: OptionConfig[];
     disabled?: boolean;
-    extendedContent?: React.ReactNode;
+    extendedContent?: (isSelected: boolean) => React.ReactNode | React.ReactNode;
     [key: string]: any;
 }
 export declare type MultipleSelectProps = {

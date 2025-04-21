@@ -838,6 +838,7 @@ export default () => {
 Use the `extendedContent` field to extend the options.
 
 
+
 ```js
 import React, { useEffect, useState, useRef } from "react";
 import MultipleSelect from 'funda-ui/MultipleSelect';
@@ -1017,7 +1018,8 @@ export default () => {
                     label: item.label,
                     value: String(item.id),
                     queryString: '',
-                    extendedContent: <>
+                    // Appears only in the selected column
+                    extendedContent: (isSelected: boolean) => isSelected ? <>
                         <div className="row g-0 align-items-center">
                             <div className="col-auto">
                                 Index:
@@ -1040,7 +1042,7 @@ export default () => {
                                     />
                             </div>
                         </div>
-                    </>
+                    </> : null
                   
                 }
             });
@@ -1263,11 +1265,10 @@ JSON Object Literals configuration properties of the `options` and callback from
 | `value` | string | - | Specify the value for each option | ✅ |
 | `queryString` | string | - | Quick query string, such as Chinese pinyin or English initials | ✅ |
 | `disabled` | boolean | - | When present, it specifies that an option should be disabled. | - |
-| `extendedContent` | ReactNode  | - | An extension of the same level, It can usually be used for complex content, such as \<input \> | - |
+| `extendedContent` |  (isSelected: boolean) => React.ReactNode \| React.ReactNode  | - | An extension of the same level, It can usually be used for complex content, such as `(isSelected: boolean) => isSelected ? <input /> : null` | - |
 
 
 > Among them, `id`, `parentId`, `label`, `listItemLabel`, `value`, `queryString`, `disabled` and `extendedContent` are attributes used by the system, and other attributes can be added freely.
-
 
 
 ```json
