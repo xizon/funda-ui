@@ -448,7 +448,8 @@ var Stepper = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(fun
         })
       }, isCompleted ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, disableCompleteIcon ? index + 1 : completeIcon) : index + 1), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
         className: (0,funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_1__.combinedCls)('step-title', {
-          'step-title--active': isActive
+          'step-title--active': isActive,
+          'step-title--complete': isCompleted
         })
       }, header)), index < panels.length - 1 && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
         className: (0,funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_1__.combinedCls)('step-line', {
@@ -467,7 +468,10 @@ var Stepper = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(fun
       var isCompleted = index < activeIndex || index === panels.length - 1 && isLastStepComplete;
       return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
         key: index,
-        className: "vertical-step-row"
+        className: (0,funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_1__.combinedCls)('vertical-step-row', {
+          'vertical-step-row--active': isActive,
+          'vertical-step-row--complete': isCompleted
+        })
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
         className: "vertical-step-left"
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
@@ -486,7 +490,8 @@ var Stepper = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(fun
         })
       }, isCompleted ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, disableCompleteIcon ? index + 1 : completeIcon) : index + 1), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
         className: (0,funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_1__.combinedCls)('step-title', {
-          'step-title--active': isActive
+          'step-title--active': isActive,
+          'step-title--complete': isCompleted
         })
       }, header)), index < panels.length - 1 && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
         className: (0,funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_1__.combinedCls)('step-line', {

@@ -1,5 +1,4 @@
 
-
 /* ======================================================
    <!-- Stepper -->
 /* ====================================================== */
@@ -18,9 +17,11 @@
     --stepper-line-default: #dfdfdf;
     --stepper-line-active: #2563eb;
     --stepper-line-complete: #22c55e;
-    --stepper-indicator-size: 0.875rem;
-    --stepper-indicator-offset: 100px;
+    --stepper-indicator-font-size: 0.875rem;
+    --stepper-indicator-offset: 60px;
     --stepper-title-size: 0.875rem;
+    --stepper-indicator-size: 32px;
+    
 
 
     position: relative;
@@ -31,25 +32,27 @@
         align-items: flex-start;
         flex-wrap: nowrap;
         position: relative;
+        max-width: calc(100% - var(--stepper-indicator-size));
 
         /* background line */
         &::before {
             content: '';
             position: absolute;
             top: 16px;  /* Subtract the height of the title */
-            left: 14px;
+            left: 0;
             right: 0;
             height: 2px;
             background-color: var(--stepper-line-default);
             z-index: 1;
-            width: calc(100% - 32px);
+            width: 100%;
+            
         }
 
         &::after {
             content: '';
             position: absolute;
             top: 16px; /* Subtract the height of the title */
-            left: 14px;
+            left: 0;
             height: 2px;
             background-color: var(--stepper-line-complete);
             z-index: 2;
@@ -59,7 +62,7 @@
 
         &::after {
             width: var(--stepper-progress-width, 0%);
-            max-width: calc(100% - 32px);
+            max-width: 100%;
         }
     }
 
@@ -69,7 +72,7 @@
         display: flex;
         flex-direction: column;
         align-items: center;
-        max-width: var(--stepper-indicator-offset);
+        max-width: 0;
         position: relative;
         z-index: 3;
 
@@ -123,15 +126,15 @@
 
     /* Indicator */
     .step-indicator {
-        width: 32px;
-        height: 32px;
+        width: var(--stepper-indicator-size);
+        height: var(--stepper-indicator-size);
         margin: 0 auto 0.25rem;
         border-radius: 9999px;
         display: flex;
         align-items: center;
         justify-content: center;
         border: 2px solid #ccc;
-        font-size: var(--stepper-indicator-size);
+        font-size: var(--stepper-indicator-font-size);
 
         /* default */
         background-color: var(--stepper-indicator-default);
@@ -155,13 +158,19 @@
 
     /* Title */
     .step-title {
+        white-space: nowrap;
         font-size: var(--stepper-title-size);
+        margin-left: calc(var(--stepper-indicator-offset) / 2);
 
         /* default */
         color: var(--stepper-color-default);
 
         &--active {
-            font-weight: bold;
+            color: var(--stepper-indicator-active);
+        }
+
+        &--complete {
+            color: var(--stepper-indicator-complete);
         }
     }
 
@@ -201,20 +210,20 @@
 /*------ Verticle ------*/
 .stepper-container.stepper-container--vertical {
 
-    --stepper-indicator-offset: 50px;
 
     display: flex;
     flex-direction: column;
-    gap: 1rem; /* line length */
+    gap: 2.5rem; /* line length */
+    max-height: calc(100% - var(--stepper-indicator-size));
 
     /* background line */
     &::before {
         content: '';
         position: absolute;
-        top: 20px;
-        left: 24px;
+        top: 0;
+        left: calc(var(--stepper-indicator-size) / 2);
         width: 2px;
-        height: calc(100% - 32px);
+        height: 100%;
         background-color: var(--stepper-line-default);
         z-index: 1;
     }
@@ -222,8 +231,8 @@
     &::after {
         content: '';
         position: absolute;
-        top: 20px;
-        left: 24px;
+        top: 0;
+        left: calc(var(--stepper-indicator-size) / 2);
         width: 2px;
         background-color: var(--stepper-line-complete);
         z-index: 2;
@@ -233,7 +242,7 @@
 
     &::after {
         height: var(--stepper-progress-height, 0%);
-        max-height: calc(100% - 32px);
+        max-height: 100%;
     }
 
 
@@ -244,12 +253,13 @@
     }
     .vertical-step-left {
         flex-shrink: 0;
-        width: var(--stepper-indicator-offset);
+        width: var(--stepper-indicator-size);
+        height: var(--stepper-indicator-size);
         position: relative;
         
         /* Main Navigation - Each step item (with circle + title) */
         .step-item {
-            margin-top: 20px;
+            margin-top: 0;
         }
 
         /* Line */
@@ -266,7 +276,7 @@
         left: 70px;
         width: calc(100% - 70px);
         position: absolute;
-        top: 1.5rem;
+        top: 0; /* required */
     }
 
     /* Title */

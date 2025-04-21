@@ -131,7 +131,8 @@ const Stepper = forwardRef<StepperRef, StepperProps>((props, ref) => {
                                     className={combinedCls(
                                         'step-title',
                                         {
-                                            'step-title--active': isActive
+                                            'step-title--active': isActive,
+                                            'step-title--complete': isCompleted
                                         }
                                     )} 
                                 >
@@ -168,7 +169,16 @@ const Stepper = forwardRef<StepperRef, StepperProps>((props, ref) => {
                 const isCompleted = index < activeIndex || (index === panels.length - 1 && isLastStepComplete);
 
                 return (
-                    <div key={index} className="vertical-step-row">
+                    <div 
+                        key={index} 
+                        className={combinedCls(
+                            'vertical-step-row',
+                            {
+                                'vertical-step-row--active': isActive,
+                                'vertical-step-row--complete': isCompleted
+                            }
+                        )} 
+                    >
                         {/* Left */}
                         <div className="vertical-step-left">
                             <div
@@ -199,7 +209,8 @@ const Stepper = forwardRef<StepperRef, StepperProps>((props, ref) => {
                                     className={combinedCls(
                                         'step-title',
                                         {
-                                            'step-title--active': isActive
+                                            'step-title--active': isActive,
+                                            'step-title--complete': isCompleted
                                         }
                                     )} 
                                 >
