@@ -257,6 +257,8 @@ const Stepper = forwardRef<StepperRef, StepperProps>((props, ref) => {
                 '--stepper-progress-height': `${progress}%`
             } as React.CSSProperties;
         } else {
+            
+            const defaultProgress = (activeIndex / (panels.length - 1)) * 100;
             const firstItem = stepItems[0] as HTMLDivElement;
             const lastItem = stepItems[stepItems.length - 1] as HTMLDivElement;
             if (!firstItem || !lastItem) return {};
@@ -269,10 +271,10 @@ const Stepper = forwardRef<StepperRef, StepperProps>((props, ref) => {
             if (!currentItem) return {};
 
             const currentCenter = currentItem.offsetLeft + (currentItem.clientWidth / 2);
-            const progress = ((currentCenter - firstCenter) / totalWidth) * 100;
+            const progress = defaultProgress !== 0 && activeIndex > 0 ? defaultProgress : ((currentCenter - firstCenter) / totalWidth) * 100;
 
             return {
-                '--stepper-progress-width': `${progress}%`
+                '--stepper-progress-width': `${isNaN(progress) ? 0 : progress}%`
             } as React.CSSProperties;
         }
     };

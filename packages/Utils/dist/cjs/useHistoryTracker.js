@@ -225,7 +225,6 @@ const App = () => {
 
  */
 
-
 // Create a secure version of useLayoutEffect that is downgraded to useEffect when SSR
 var useIsomorphicLayoutEffect = typeof window !== 'undefined' ? react__WEBPACK_IMPORTED_MODULE_0__.useLayoutEffect : react__WEBPACK_IMPORTED_MODULE_0__.useEffect;
 var useHistoryTracker = function useHistoryTracker(props) {

@@ -118,10 +118,25 @@ const App = () => {
  */
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 
+export type UseHistoryTrackerChangeFnType = (args: {
+    isReady: boolean;
+    history: string[];
+    forwardHistory: string[],
+    currentUrl: string;
+    firstUrl: string;
+    canGoBack: boolean;
+    canGoForward: boolean;
+}) => void;
+
+
+export type UseHistoryTrackerProps = {
+    onChange?: UseHistoryTrackerChangeFnType | null;
+};
+
 // Create a secure version of useLayoutEffect that is downgraded to useEffect when SSR
 const useIsomorphicLayoutEffect = typeof window !== 'undefined' ? useLayoutEffect : useEffect;
 
-const useHistoryTracker = (props) => {
+const useHistoryTracker = (props: UseHistoryTrackerProps) => {
     const {
         onChange
     } = props;
@@ -183,7 +198,7 @@ const useHistoryTracker = (props) => {
         });
     }, [onChange]); // only "onChange"
 
-    const goToHistory = useCallback((index) => {
+    const goToHistory = useCallback((index: number) => {
         if (typeof window === 'undefined') return;
         if (index < 0 || index >= historyRef.current.length) return;
         

@@ -516,6 +516,7 @@ var Stepper = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(fun
         '--stepper-progress-height': "".concat(progress, "%")
       };
     } else {
+      var defaultProgress = activeIndex / (panels.length - 1) * 100;
       var firstItem = stepItems[0];
       var lastItem = stepItems[stepItems.length - 1];
       if (!firstItem || !lastItem) return {};
@@ -525,9 +526,9 @@ var Stepper = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(fun
       var currentItem = stepItems[activeIndex];
       if (!currentItem) return {};
       var currentCenter = currentItem.offsetLeft + currentItem.clientWidth / 2;
-      var _progress = (currentCenter - firstCenter) / totalWidth * 100;
+      var _progress = defaultProgress !== 0 && activeIndex > 0 ? defaultProgress : (currentCenter - firstCenter) / totalWidth * 100;
       return {
-        '--stepper-progress-width': "".concat(_progress, "%")
+        '--stepper-progress-width': "".concat(isNaN(_progress) ? 0 : _progress, "%")
       };
     }
   };
