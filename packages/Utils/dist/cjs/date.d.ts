@@ -106,20 +106,6 @@ declare function getSpecifiedDate(v: Date | string, days: number): string;
  */
 declare function getDaysInLastMonths(monthsAgo?: number): number;
 /**
- * Generates timeslots between a start and end time.
- *
- * @param {string} start - The start time in "HH:mm" format (24-hour).
- * @param {string} end - The end time in "HH:mm" format (24-hour).
- * @param {number} interval - The interval in minutes for each slot (e.g., 60).
- * @param {boolean} [formatRange=false] - If true, returns slots as time ranges like "10:00 - 11:00".
- * @returns {string[]} An array of timeslots, either as time strings or time ranges.
- *
- * @example
- * console.log(getTimeslots("10:00", "14:00", 60, true)); //['10:00 - 11:00', '11:00 - 12:00', '12:00 - 13:00', '13:00 - 14:00']
- * console.log(getTimeslots("10:00", "14:00", 60));   // ['10:00', '11:00', '12:00', '13:00']
- */
-declare function getTimeslots(start: string, end: string, interval?: number, formatRange?: boolean): string[];
-/**
  * Get next month date
  * @param {Date | String} v
  * @returns {String}  yyyy-MM-dd
@@ -238,4 +224,4 @@ declare function getWeekDatesFromSun(weekOffset: number): Date[];
  * @returns {Array<Date>}
  */
 declare function getWeekDatesFromMon(weekOffset: number): Date[];
-export { isTimeString, getNow, padZero, dateFormat, getDateDetails, isValidDate, isValidHours, isValidMinutesAndSeconds, isValidYear, isValidMonth, isValidDay, getLastDayInMonth, getFirstAndLastMonthDay, getCalendarDate, getFullTime, getTodayDate, getCurrentMonth, getCurrentYear, getCurrentDay, getCurrentDate, getTomorrowDate, getYesterdayDate, getNextMonthDate, getPrevMonthDate, getNextYearDate, getPrevYearDate, getSpecifiedDate, getDaysInLastMonths, getTimeslots, setDateHours, setDateMinutes, setDateDays, timestampToDate, getMonthDates, getWeekDatesFromSun, getWeekDatesFromMon };
+export { isTimeString, getNow, padZero, dateFormat, getDateDetails, isValidDate, isValidHours, isValidMinutesAndSeconds, isValidYear, isValidMonth, isValidDay, getLastDayInMonth, getFirstAndLastMonthDay, getCalendarDate, getFullTime, getTodayDate, getCurrentMonth, getCurrentYear, getCurrentDay, getCurrentDate, getTomorrowDate, getYesterdayDate, getNextMonthDate, getPrevMonthDate, getNextYearDate, getPrevYearDate, getSpecifiedDate, getDaysInLastMonths, setDateHours, setDateMinutes, setDateDays, timestampToDate, getMonthDates, getWeekDatesFromSun, getWeekDatesFromMon };
