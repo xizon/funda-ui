@@ -53,6 +53,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "getCurrentMonth": () => (/* binding */ getCurrentMonth),
 /* harmony export */   "getCurrentYear": () => (/* binding */ getCurrentYear),
 /* harmony export */   "getDateDetails": () => (/* binding */ getDateDetails),
+/* harmony export */   "getDaysInLastMonths": () => (/* binding */ getDaysInLastMonths),
 /* harmony export */   "getFirstAndLastMonthDay": () => (/* binding */ getFirstAndLastMonthDay),
 /* harmony export */   "getFullTime": () => (/* binding */ getFullTime),
 /* harmony export */   "getLastDayInMonth": () => (/* binding */ getLastDayInMonth),
@@ -63,6 +64,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "getPrevMonthDate": () => (/* binding */ getPrevMonthDate),
 /* harmony export */   "getPrevYearDate": () => (/* binding */ getPrevYearDate),
 /* harmony export */   "getSpecifiedDate": () => (/* binding */ getSpecifiedDate),
+/* harmony export */   "getTimeslots": () => (/* binding */ getTimeslots),
 /* harmony export */   "getTodayDate": () => (/* binding */ getTodayDate),
 /* harmony export */   "getTomorrowDate": () => (/* binding */ getTomorrowDate),
 /* harmony export */   "getWeekDatesFromMon": () => (/* binding */ getWeekDatesFromMon),
@@ -81,6 +83,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "setDateMinutes": () => (/* binding */ setDateMinutes),
 /* harmony export */   "timestampToDate": () => (/* binding */ timestampToDate)
 /* harmony export */ });
+function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i]; return arr2; }
+function _iterableToArrayLimit(arr, i) { var _i = null == arr ? null : "undefined" != typeof Symbol && arr[Symbol.iterator] || arr["@@iterator"]; if (null != _i) { var _s, _e, _x, _r, _arr = [], _n = !0, _d = !1; try { if (_x = (_i = _i.call(arr)).next, 0 === i) { if (Object(_i) !== _i) return; _n = !1; } else for (; !(_n = (_s = _x.call(_i)).done) && (_arr.push(_s.value), _arr.length !== i); _n = !0); } catch (err) { _d = !0, _e = err; } finally { try { if (!_n && null != _i["return"] && (_r = _i["return"](), Object(_r) !== _r)) return; } finally { if (_d) throw _e; } } return _arr; } }
+function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 /**
  * The check string contains only hours, minutes, and seconds
  * @returns {Boolean}  
@@ -272,6 +280,73 @@ function getSpecifiedDate(v, days) {
 }
 
 /**
+ * Calculates the total number of days from today going back a specified number of months.
+ *
+ * @param {number} monthsAgo - The number of months to go back (e.g., 3 means the past 3 months).
+ * @returns {number} The total number of days between the calculated past date and today.
+ *
+ * @example
+ * getDaysInLastMonths(3); // Returns number of days in the past 3 months
+ */
+function getDaysInLastMonths() {
+  var monthsAgo = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 3;
+  var today = new Date();
+  var pastDate = new Date();
+  pastDate.setMonth(today.getMonth() - monthsAgo);
+  var diffInMs = today.getTime() - pastDate.getTime();
+  var diffInDays = Math.round(diffInMs / (1000 * 60 * 60 * 24));
+  return diffInDays;
+}
+
+/**
+ * Generates timeslots between a start and end time.
+ *
+ * @param {string} start - The start time in "HH:mm" format (24-hour).
+ * @param {string} end - The end time in "HH:mm" format (24-hour).
+ * @param {number} interval - The interval in minutes for each slot (e.g., 60).
+ * @param {boolean} [formatRange=false] - If true, returns slots as time ranges like "10:00 - 11:00".
+ * @returns {string[]} An array of timeslots, either as time strings or time ranges.
+ *
+ * @example
+ * console.log(getTimeslots("10:00", "14:00", 60, true)); //['10:00 - 11:00', '11:00 - 12:00', '12:00 - 13:00', '13:00 - 14:00']
+ * console.log(getTimeslots("10:00", "14:00", 60));   // ['10:00', '11:00', '12:00', '13:00']
+ */
+function getTimeslots(start, end) {
+  var interval = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 30;
+  var formatRange = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : false;
+  var timeslots = [];
+  var _start$split$map = start.split(':').map(Number),
+    _start$split$map2 = _slicedToArray(_start$split$map, 2),
+    startHour = _start$split$map2[0],
+    startMinute = _start$split$map2[1];
+  var _end$split$map = end.split(':').map(Number),
+    _end$split$map2 = _slicedToArray(_end$split$map, 2),
+    endHour = _end$split$map2[0],
+    endMinute = _end$split$map2[1];
+  var startDate = new Date();
+  startDate.setHours(startHour, startMinute, 0, 0);
+  var endDate = new Date();
+  endDate.setHours(endHour, endMinute, 0, 0);
+  var current = new Date(startDate);
+  while (current < endDate) {
+    var from = new Date(current);
+    current.setMinutes(current.getMinutes() + interval);
+    var to = new Date(current);
+    var formatTime = function formatTime(date) {
+      return "".concat(String(date.getHours()).padStart(2, '0'), ":").concat(String(date.getMinutes()).padStart(2, '0'));
+    };
+    if (current <= endDate) {
+      if (formatRange) {
+        timeslots.push("".concat(formatTime(from), " - ").concat(formatTime(to)));
+      } else {
+        timeslots.push(formatTime(from));
+      }
+    }
+  }
+  return timeslots;
+}
+
+/**
  * Get next month date
  * @param {Date | String} v 
  * @returns {String}  yyyy-MM-dd
@@ -351,7 +426,7 @@ function getCurrentYear() {
 /**
  * Get current month
  * @param {Boolean} padZeroEnabled 
- * @returns {Number}
+ * @returns {Number|String}
  */
 function getCurrentMonth() {
   var padZeroEnabled = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : true;
@@ -362,7 +437,7 @@ function getCurrentMonth() {
 /**
  * Get current day
  * @param {Boolean} padZeroEnabled 
- * @returns {Number}
+ * @returns {Number|String}
  */
 function getCurrentDay() {
   var padZeroEnabled = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : true;
