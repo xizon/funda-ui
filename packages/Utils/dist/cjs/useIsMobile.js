@@ -140,10 +140,10 @@ var useIsMobile = function useIsMobile() {
     // Set the mounted state to true after the component has mounted
     setIsMounted(true);
     var handleResize = function handleResize() {
-      if (window) {
+      if (typeof window !== 'undefined') {
         var detectDeviceType = function detectDeviceType() {
           // 1. First check if window and navigator are available (SSR compatibility)
-          if (typeof window === 'undefined' || !navigator) {
+          if (typeof window === 'undefined' || typeof navigator === 'undefined') {
             return 'desktop'; // Default to desktop
           }
 
@@ -151,7 +151,7 @@ var useIsMobile = function useIsMobile() {
           var ua = navigator.userAgent.toLowerCase();
 
           // 3. Get platform info
-          var platform = navigator.platform.toLowerCase();
+          var platform = navigator.platform ? navigator.platform.toLowerCase() : '';
 
           // 4. Check screen characteristics using window.matchMedia
           var isTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;

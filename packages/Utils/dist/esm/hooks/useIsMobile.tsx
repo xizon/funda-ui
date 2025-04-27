@@ -23,23 +23,20 @@ const App = () => {
  */
 import { useEffect, useState } from 'react';
 
-
-const useIsMobile = (breakpoint = 600) => {
-    const [isMobile, setIsMobile] = useState(false);
-    const [isMounted, setIsMounted] = useState(false);
-    
+const useIsMobile = (breakpoint: number = 600): boolean => {
+    const [isMobile, setIsMobile] = useState<boolean>(false);
+    const [isMounted, setIsMounted] = useState<boolean>(false);
 
     useEffect(() => {
         // Set the mounted state to true after the component has mounted
         setIsMounted(true);
 
         const handleResize = () => {
-            if (window) {
+            if (typeof window !== 'undefined') {
 
-
-                const detectDeviceType = () => {
+                const detectDeviceType = (): 'mobile' | 'tablet' | 'desktop' => {
                     // 1. First check if window and navigator are available (SSR compatibility)
-                    if (typeof window === 'undefined' || !navigator) {
+                    if (typeof window === 'undefined' || typeof navigator === 'undefined') {
                         return 'desktop'; // Default to desktop
                     }
                 
@@ -47,10 +44,10 @@ const useIsMobile = (breakpoint = 600) => {
                     const ua = navigator.userAgent.toLowerCase();
                     
                     // 3. Get platform info
-                    const platform = navigator.platform.toLowerCase();
+                    const platform = navigator.platform ? navigator.platform.toLowerCase() : '';
                     
                     // 4. Check screen characteristics using window.matchMedia
-                    const isTouch = ('ontouchstart' in window) || navigator.maxTouchPoints > 0;
+                    const isTouch = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
                                    
                     const isPortrait = window.matchMedia('(orientation: portrait)').matches;
                     const isLandscape = window.matchMedia('(orientation: landscape)').matches;
