@@ -311,6 +311,33 @@ export default () => {
 
 
 
+## No Heading
+
+```js
+import React from "react";
+import CascadingSelectE2E from 'funda-ui/CascadingSelectE2E';
+
+// component styles
+import 'funda-ui/CascadingSelectE2E/index.css';
+
+export default () => {
+
+
+    return (
+        <>
+
+            <CascadingSelectE2E
+                ...
+                perColumnHeadersShow={false}
+                ...
+            />
+
+        </>
+    );
+}
+```
+
+
 ## No spacing
 
 ```js
@@ -590,6 +617,7 @@ import CascadingSelectE2E from 'funda-ui/CascadingSelectE2E';
 | `wrapperClassName` | string | `mb-3 position-relative` | The class name of the control wrapper. | - |
 | `controlClassName` | string | `form-control` | The class name of the control. | - |
 | `controlExClassName` | string | - | The extended class name of `controlClassName`. | - |
+| `perColumnHeadersShow` | boolean | true | Per column headers can be displayed to options interface. | - |
 | `exceededSidePosOffset` | number | 15 | Offset px that exceeds the far right or left side of the screen | - |
 | `extractValueByBraces` | boolean  | true | Whether to use curly braces to save result and initialize default value. | - |
 | `destroyParentIdMatch` | boolean  | false | Instead of using `parent_id` of response to match child and parent data (very useful for multiple fetch requests with no directly related fields), this operation will directly use the click event to modify the result. | - |

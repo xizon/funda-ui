@@ -5,6 +5,7 @@ export declare type CascadingSelectProps = {
     wrapperClassName?: string;
     controlClassName?: string;
     controlExClassName?: string;
+    perColumnHeadersShow?: boolean;
     exceededSidePosOffset?: number;
     value?: string;
     label?: React.ReactNode | string;

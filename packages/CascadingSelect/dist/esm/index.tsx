@@ -29,6 +29,7 @@ export type CascadingSelectProps = {
     wrapperClassName?: string;
     controlClassName?: string;
     controlExClassName?: string;
+    perColumnHeadersShow?: boolean;
     exceededSidePosOffset?: number;
     value?: string;
     label?: React.ReactNode | string;
@@ -88,6 +89,7 @@ const CascadingSelect = (props: CascadingSelectProps) => {
         wrapperClassName,
         controlClassName,
         controlExClassName,
+        perColumnHeadersShow = true,
         exceededSidePosOffset,
         disabled,
         required,
@@ -1116,6 +1118,7 @@ const CascadingSelect = (props: CascadingSelectProps) => {
                                         return (
                                             <li key={level} data-col={level} className="cas-select__items-col">
                                                 <Group
+                                                    perColumnHeadersShow={perColumnHeadersShow}
                                                     level={level}
                                                     columnTitle={columnTitleData}
                                                     data={item}

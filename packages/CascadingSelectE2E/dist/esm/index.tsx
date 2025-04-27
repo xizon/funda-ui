@@ -45,6 +45,7 @@ export type CascadingSelectE2EProps = {
     wrapperClassName?: string;
     controlClassName?: string;
     controlExClassName?: string;
+    perColumnHeadersShow?: boolean;
     exceededSidePosOffset?: number;
     value?: string;
     label?: React.ReactNode | string;
@@ -106,6 +107,7 @@ const CascadingSelectE2E = (props: CascadingSelectE2EProps) => {
         wrapperClassName,
         controlClassName,
         controlExClassName,
+        perColumnHeadersShow = true,
         exceededSidePosOffset,
         disabled,
         required,
@@ -1373,6 +1375,7 @@ const CascadingSelectE2E = (props: CascadingSelectE2EProps) => {
                                         return (
                                             <li key={level} data-col={level} className="cas-select-e2e__items-col">
                                                 <Group
+                                                    perColumnHeadersShow={perColumnHeadersShow}
                                                     level={level}
                                                     columnTitle={columnTitleData}
                                                     data={item}

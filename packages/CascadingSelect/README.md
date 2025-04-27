@@ -268,6 +268,33 @@ export default () => {
 ```
 
 
+## No Heading
+
+```js
+import React from "react";
+import CascadingSelect from 'funda-ui/CascadingSelect';
+
+// component styles
+import 'funda-ui/CascadingSelect/index.css';
+
+export default () => {
+
+
+    return (
+        <>
+
+            <CascadingSelect
+                ...
+                perColumnHeadersShow={false}
+                ...
+            />
+
+        </>
+    );
+}
+```
+
+
 ## No spacing
 
 ```js
@@ -489,6 +516,7 @@ import CascadingSelect from 'funda-ui/CascadingSelect';
 | `wrapperClassName` | string | `mb-3 position-relative` | The class name of the control wrapper. | - |
 | `controlClassName` | string | `form-control` | The class name of the control. | - |
 | `controlExClassName` | string | - | The extended class name of `controlClassName`. | - |
+| `perColumnHeadersShow` | boolean | true | Per column headers can be displayed to options interface. | - |
 | `exceededSidePosOffset` | number | 15 | Offset px that exceeds the far right or left side of the screen | - |
 | `extractValueByBraces` | boolean  | true | Whether to use curly braces to save result and initialize default value. | - |
 | `columnTitle` | array  | - | Set headers for each column group. Such as <br /> `['Heading 1', 'Heading 2', 'Heading 3', 'Heading 4']` <blockquote>Support html tags</blockquote> | - |

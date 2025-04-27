@@ -1,10 +1,11 @@
 import React from 'react';
 
-import { clsWrite, combinedCls } from 'funda-utils/dist/cjs/cls';
+import { combinedCls } from 'funda-utils/dist/cjs/cls';
 
 export type GroupFnType = (arg1: any, arg2: any, arg3: number) => void;
 
 export type GroupProps = {
+    perColumnHeadersShow?: boolean;
     level: number;
     columnTitle: any[];
     data?: any[any];
@@ -16,6 +17,7 @@ export type GroupProps = {
 export default function Group(props: GroupProps) {
 
     const {
+        perColumnHeadersShow,
         level,
         columnTitle,
         data,
@@ -48,7 +50,7 @@ export default function Group(props: GroupProps) {
                         onClick={(e) => selectEv?.(e, item, index)} 
                     ></div>
                 } else {
-                    return columnTitle[level] === '' ? null : <h3 
+                    return columnTitle[level] === '' || perColumnHeadersShow === false ? null : <h3 
                     key={index} 
                     className="cas-select-e2e__opt-header"
                     >

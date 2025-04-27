@@ -32,27 +32,27 @@ Here is a table of the components and their status.
 | --- | --- | --- | --- | --- |
 | [Accordion ✅](packages/Accordion/README.md) | [Input ✅](packages/Input/README.md) | [Infinite Scroll ❏](packages/InfiniteScroll/README.md) |[Multilevel Dropdown Menu ✅](packages/MultilevelDropdownMenu/README.md)  | [MasonryLayout ✅](packages/MasonryLayout/README.md) |
 | [Accordion Slider ❏](packages/AccordionSlider/README.md) | [Number Input ✅](packages/NumberInput/README.md) | [Image Perspective Hover ❏](packages/ImagePerspectiveHover/README.md) | [Dropdown Menu ✅](packages/DropdownMenu/README.md)  | [RootPortal ✅](packages/RootPortal/README.md)  |
-| [Back To Top ✅](packages/BackToTop/README.md) | [Merge Input ❏](packages/MergeInput/README.md) | [Mousewheel Interaction ❏](packages/MousewheelInteraction/README.md) | |   |
+| [Back To Top ✅](packages/BackToTop/README.md) | [Date ✅🔥](packages/Date/README.md) | [Mousewheel Interaction ❏](packages/MousewheelInteraction/README.md) | | [Splitter Panel  ✅](packages/SplitterPanel/README.md) |
 | [Button ❏](packages/Button/README.md) | [Tag Input ✅](packages/TagInput/README.md) | [Parallax ❏](packages/Parallax/README.md) |  |   |
 | [Card ❏](packages/Card/README.md) | [Textarea  ✅](packages/Textarea/README.md) | [Scroll Reveal ✅](packages/ScrollReveal/README.md) |  |   |
-| [Content Placeholder ❏](packages/ContentPlaceholder/README.md) | [NativeSelect ✅](packages/NativeSelect/README.md) | [Sticky Elements ❏](packages/StickyElements/README.md) |  |  |
+| [Content Placeholder ❏](packages/ContentPlaceholder/README.md) | [NativeSelect ✅](packages/NativeSelect/README.md) |  [DragDrop List ✅🔥](packages/DragDropList/README.md)  |  |  |
 | [Counter ❏](packages/Counter/README.md) | [Cascading Select ✅](packages/CascadingSelect/README.md) | [Mode Switch ✅](packages/ModeSwitch/README.md) |  |  |
 | [Hybrid Content Slider ❏](packages/HybridContentSlider/README.md) | [Cascading Select End-to-end ✅🔥](packages/CascadingSelectE2E/README.md) | [Custom Scrollbar ✅](packages/Scrollbar/README.md) |  |  |
 | [Image Shapes ❏](packages/ImageShapes/README.md) | [Radio ✅](packages/Radio/README.md) | [Horizontal Scroll Content ✅](packages/HorizontalScrollContent/README.md) |  |  |
-| [Lightbox ❏](packages/Lightbox/README.md) | [Checkbox ✅](packages/Checkbox/README.md) | [DragDrop List ✅🔥](packages/DragDropList/README.md)  |  |  |
+| [Lightbox ❏](packages/Lightbox/README.md) | [Checkbox ✅](packages/Checkbox/README.md) | |  |  |
 | [List Bulleted ❏](packages/ListBulleted/README.md) | [Select ✅🔥](packages/Select/README.md) |  |  |  |
 | [Modal Dialog ✅🔥](packages/ModalDialog/README.md) | [Live Search ✅](packages/LiveSearch/README.md) |  |  |  |
-| [Pagination ✅](packages/Pagination/README.md) | [Number ❏](packages/Number/README.md) |  |  |  |
+| [Pagination ✅](packages/Pagination/README.md) |  [File ✅](packages/File/README.md) |  |  |  |
 | [Table ✅🔥](packages/Table/README.md) | [SearchBar ✅](packages/SearchBar/README.md) |  |  |  |
 | [Periodical Scroll ❏](packages/PeriodicalScroll/README.md) | [Switch ✅](packages/Switch/README.md) |  |  |  |
 | [Progress Bar ❏](packages/ProgressBar/README.md) | [Dynamic Fields ✅🔥](packages/DynamicFields/README.md) |  |  |  |
-| [Rating ❏](packages/Rating/README.md) | [File ✅](packages/File/README.md) |  |  |  |
-| [Seamless Scrolling Element ❏](packages/SeamlessScrollingElement/README.md) | [File Field ❏](packages/FileField/README.md) |  |  |  |
+| [Rating ❏](packages/Rating/README.md) | [MultipleCheckboxes ✅](packages/MultipleCheckboxes/README.md) |  |  |  |
+| [Seamless Scrolling Element ❏](packages/SeamlessScrollingElement/README.md) | [MultipleSelect ✅🔥](packages/MultipleSelect/README.md)  |  |  |  |
 | [Show More Less ✅](packages/ShowMoreLess/README.md) | [Range Slider ✅](packages/RangeSlider/README.md) | |  |  |
 | [Slideshow ❏](packages/Slideshow/README.md) | [Color Picker ✅](packages/ColorPicker/README.md) |  |  |  |
-| [Tabs ✅](packages/Tabs/README.md) | [MultipleCheckboxes ✅](packages/MultipleCheckboxes/README.md) |  |  |  |
-| [Timeline ❏](packages/Timeline/README.md) | [MultipleSelect ✅🔥](packages/MultipleSelect/README.md) |  |  |  |
-| [Toast ✅](packages/Toast/README.md) | [Date ✅🔥](packages/Date/README.md) |  |  |  |
+| [Tabs ✅](packages/Tabs/README.md) |  |  |  |  |
+| [Timeline ❏](packages/Timeline/README.md) | |  |  |  |
+| [Toast ✅](packages/Toast/README.md) |  |  |  |  |
 | [Tooltip ✅](packages/Tooltip/README.md) |  |  |  |  |
 | [Digital Clock ✅](packages/DigitalClock/README.md) |  |  |  |  |
 | [Tree ✅🔥](packages/Tree/README.md) |  |  |  |  |
@@ -60,7 +60,6 @@ Here is a table of the components and their status.
 | [Event Calendar Timeline ✅🔥](packages/EventCalendarTimeline/README.md) |  |  |  |  |
 | [Chatbox ✅🔥🤖](packages/Chatbox/README.md) |  |  |  |  |
 | [Stepper ✅](packages/Stepper/README.md) |  |  |  |  |
-
 
 
 

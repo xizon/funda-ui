@@ -1,0 +1,82 @@
+
+  /* ======================================================
+    <!-- Splitter Panel -->
+/* ====================================================== */
+.splitter-panel {
+
+    --splitter-panel-divider-color: rgba(0, 0, 0, 0.15);
+    --splitter-panel-divider-hover-color: rgba(210, 253, 253, .86);
+
+    display: flex;
+    position: relative;
+
+    .splitter-panel-left {
+        width: var(--splitter-panel-left-w, 0);
+    }
+
+    .splitter-panel-divider {
+        position: relative;
+        width: 1px;
+        cursor: col-resize;
+        padding: 0 2px;
+        transition: all 0.25s;
+        z-index: 1;
+
+        &::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 1px;
+            height: 100%;
+            background: var(--splitter-panel-divider-color);
+        }
+
+        &::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -2px;
+            width: 5px;
+            height: 100%;
+        }
+
+
+        &:hover::after {
+            background: var(--splitter-panel-divider-hover-color);
+        }
+    }
+
+
+    .splitter-panel-right {
+        flex: 1;
+    }
+
+
+}
+
+
+
+.splitter-panel-vertical {
+    display: flex;
+    flex-direction: column;
+
+    .splitter-panel-top,
+    .splitter-panel-bottom {
+        min-height: 50px;
+    }
+
+}
+
+
+@media (max-width: 767px) {
+    .splitter-panel {
+        display: none !important;
+    }
+}
+
+@media (min-width: 768px) {
+    .splitter-panel-vertical {
+        display: none !important;
+    }
+}

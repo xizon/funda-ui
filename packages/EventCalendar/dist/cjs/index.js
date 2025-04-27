@@ -2152,6 +2152,10 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
           return (/* binding */_getDateDetails
           );
         },
+        /* harmony export */"getDaysInLastMonths": function getDaysInLastMonths() {
+          return (/* binding */_getDaysInLastMonths
+          );
+        },
         /* harmony export */"getFirstAndLastMonthDay": function getFirstAndLastMonthDay() {
           return (/* binding */_getFirstAndLastMonthDay
           );
@@ -2453,6 +2457,25 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
       }
 
       /**
+       * Calculates the total number of days from today going back a specified number of months.
+       *
+       * @param {number} monthsAgo - The number of months to go back (e.g., 3 means the past 3 months).
+       * @returns {number} The total number of days between the calculated past date and today.
+       *
+       * @example
+       * getDaysInLastMonths(3); // Returns number of days in the past 3 months
+       */
+      function _getDaysInLastMonths() {
+        var monthsAgo = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 3;
+        var today = new Date();
+        var pastDate = new Date();
+        pastDate.setMonth(today.getMonth() - monthsAgo);
+        var diffInMs = today.getTime() - pastDate.getTime();
+        var diffInDays = Math.round(diffInMs / (1000 * 60 * 60 * 24));
+        return diffInDays;
+      }
+
+      /**
        * Get next month date
        * @param {Date | String} v 
        * @returns {String}  yyyy-MM-dd
@@ -2532,7 +2555,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
       /**
        * Get current month
        * @param {Boolean} padZeroEnabled 
-       * @returns {Number}
+       * @returns {Number|String}
        */
       function _getCurrentMonth() {
         var padZeroEnabled = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : true;
@@ -2543,7 +2566,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
       /**
        * Get current day
        * @param {Boolean} padZeroEnabled 
-       * @returns {Number}
+       * @returns {Number|String}
        */
       function _getCurrentDay() {
         var padZeroEnabled = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : true;

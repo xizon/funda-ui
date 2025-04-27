@@ -14,6 +14,7 @@ export declare type CascadingSelectE2EProps = {
     wrapperClassName?: string;
     controlClassName?: string;
     controlExClassName?: string;
+    perColumnHeadersShow?: boolean;
     exceededSidePosOffset?: number;
     value?: string;
     label?: React.ReactNode | string;
