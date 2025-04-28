@@ -813,7 +813,6 @@ export default () => {
 
 
 
-
 ## Has Modal Dialog & Event Planning
 
 **Features**
@@ -1980,6 +1979,48 @@ export default () => {
 }
 ```
 
+
+
+## Customize the width and text effect of the list on the left
+
+
+`styles.scss`:
+```css
+.my-custom-event-tl {
+
+    .custom-event-tl-table__timeline-table__wrapper {
+        --custom-event-tl-table-header-w: 200px;
+
+        .custom-event-tl-table__cell-cushion-title {
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            max-width: calc(var(--custom-event-tl-table-header-w) - 20px);
+            overflow: hidden;
+        }
+    }
+}
+```
+
+`index.tsx`:
+```js
+import React from "react";
+import EventCalendarTimeline from 'funda-ui/EventCalendarTimeline';
+
+// component styles
+import 'funda-ui/EventCalendarTimeline/index.css';
+
+export default () => {
+    return (
+        <>
+            <div className="my-custom-event-tl">
+                <EventCalendarTimeline
+                        ...
+                    />
+            </div>  
+        </>
+    );
+}
+```
 
 
 ## API
