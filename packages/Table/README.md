@@ -411,11 +411,18 @@ Or using `nowrap` in \<TableCell \/\> in \<TableHead \/\> can also prevent text 
         thead tr > th {
             position: sticky;
             z-index: 2;
+            /* Stick the top and the left side */
             top: 0;
+            left: 0;
+
+            &:first-child {
+                z-index: 3;
+            }
         }
 
         tbody > tr > th {
             position: sticky;
+            /* Stick the left side */
             left: 0;
             z-index: 1;
         }
@@ -552,14 +559,22 @@ export default () => {
         width: 100%;
         height: 200px;
 
+
         thead tr > th {
             position: sticky;
             z-index: 2;
+            /* Stick the top and the left side */
             top: 0;
+            left: 0;
+
+            &:first-child {
+                z-index: 3;
+            }
         }
 
         tbody > tr > th {
             position: sticky;
+            /* Stick the left side */
             left: 0;
             z-index: 1;
         }
