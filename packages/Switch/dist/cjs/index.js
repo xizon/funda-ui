@@ -533,7 +533,7 @@ var Switch = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(func
   var uniqueID = funda_utils_dist_cjs_useComId__WEBPACK_IMPORTED_MODULE_1___default()();
   var idRes = id || uniqueID;
   var rootRef = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(null);
-  var _useState = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)( false || false),
+  var _useState = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(false),
     _useState2 = _slicedToArray(_useState, 2),
     val = _useState2[0],
     setVal = _useState2[1]; // Avoid the error "react checkbox changing an uncontrolled input to be controlled"
@@ -569,7 +569,9 @@ var Switch = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(func
     onBlur === null || onBlur === void 0 ? void 0 : onBlur(event);
   }
   (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(function () {
-    setVal(checked);
+    if (typeof checked === 'boolean') {
+      setVal(checked);
+    }
   }, [checked]);
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
     className: (0,funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_2__.clsWrite)(wrapperClassName, 'mb-3 position-relative'),

@@ -58,7 +58,7 @@ const Checkbox = forwardRef((props: CheckboxProps, externalRef: any) => {
     const idRes = id || uniqueID;
     const rootRef = useRef<any>(null);
     const valRef = useRef<any>(null);
-    const [val, setVal] = useState<any>(null || false);  // Avoid the error "react checkbox changing an uncontrolled input to be controlled"
+    const [val, setVal] = useState<boolean>(false);  // Avoid the error "react checkbox changing an uncontrolled input to be controlled"
 
     // exposes the following methods
     useImperativeHandle(
@@ -78,7 +78,7 @@ const Checkbox = forwardRef((props: CheckboxProps, externalRef: any) => {
                     onChange(null, false);
                 }
             },
-            set: (value: string, cb?: any) => {
+            set: (value: boolean, cb?: any) => {
                 setVal(value);
                 cb?.();
 
@@ -133,7 +133,9 @@ const Checkbox = forwardRef((props: CheckboxProps, externalRef: any) => {
     useEffect(() => {
 
         // default value
-        setVal(checked);
+        if (typeof checked === 'boolean') {
+            setVal(checked);
+        }
 
         // Set a checkbox to indeterminate state
         if (typeof indeterminate !== 'undefined') {

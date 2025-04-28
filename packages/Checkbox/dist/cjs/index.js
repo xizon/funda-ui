@@ -537,7 +537,7 @@ var Checkbox = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(fu
   var idRes = id || uniqueID;
   var rootRef = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(null);
   var valRef = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(null);
-  var _useState = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)( false || false),
+  var _useState = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(false),
     _useState2 = _slicedToArray(_useState, 2),
     val = _useState2[0],
     setVal = _useState2[1]; // Avoid the error "react checkbox changing an uncontrolled input to be controlled"
@@ -599,7 +599,9 @@ var Checkbox = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(fu
   }
   (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(function () {
     // default value
-    setVal(checked);
+    if (typeof checked === 'boolean') {
+      setVal(checked);
+    }
 
     // Set a checkbox to indeterminate state
     if (typeof indeterminate !== 'undefined') {
