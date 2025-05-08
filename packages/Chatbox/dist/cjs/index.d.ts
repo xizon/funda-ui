@@ -13,12 +13,19 @@ export declare type QuestionData = {
     title: string;
     list: Array<string>;
 };
+export declare type SelectedOption = {
+    [key: string]: string | number;
+    curIndex: number;
+    curValue: string;
+};
 export interface FloatingButton {
     label: string;
     value: string;
     onClick: string;
+    active?: boolean;
     isSelect?: boolean;
     dynamicOptions?: boolean;
+    defaultSelected?: number;
     [key: string]: any;
 }
 export interface FloatingButtonSelectOption {

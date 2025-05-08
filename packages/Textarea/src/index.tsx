@@ -7,7 +7,6 @@ import { clsWrite, combinedCls } from 'funda-utils/dist/cjs/cls';
 import { actualPropertyValue, getTextTop } from 'funda-utils/dist/cjs/inputsCalculation';
 import useDebounce from 'funda-utils/dist/cjs/useDebounce';
 
-
 export type TextareaProps = {
     contentRef?: React.ForwardedRef<any>; // could use "Array" on contentRef.current, such as contentRef.current[0], contentRef.current[1]
     wrapperClassName?: string;

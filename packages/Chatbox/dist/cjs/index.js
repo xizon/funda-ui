@@ -4299,6 +4299,12 @@ var Chatbox = function Chatbox(props) {
     setEnableStreamMode = _useState18[1];
   var animatedMessagesRef = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useRef)(new Set()); // Add a ref to keep track of messages that have already been animated
 
+  // Keep track of whether the default values have been initialized
+  var _useState19 = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)({}),
+    _useState20 = src_slicedToArray(_useState19, 2),
+    initializedDefaults = _useState20[0],
+    setInitializedDefaults = _useState20[1];
+
   //
   var timer = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useRef)(null);
 
@@ -4597,10 +4603,10 @@ var Chatbox = function Chatbox(props) {
   //================================================================
   // Custom Questions
   //================================================================
-  var _useState19 = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)(props.defaultQuestions),
-    _useState20 = src_slicedToArray(_useState19, 2),
-    questions = _useState20[0],
-    setQuestions = _useState20[1];
+  var _useState21 = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)(props.defaultQuestions),
+    _useState22 = src_slicedToArray(_useState21, 2),
+    questions = _useState22[0],
+    setQuestions = _useState22[1];
   (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useEffect)(function () {
     if (props.defaultQuestions) {
       setQuestions(props.defaultQuestions);
@@ -4621,10 +4627,10 @@ var Chatbox = function Chatbox(props) {
   // Custom buttons
   //================================================================
   var toolkitBtnsRef = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useRef)(null);
-  var _useState21 = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)({}),
-    _useState22 = src_slicedToArray(_useState21, 2),
-    activeButtons = _useState22[0],
-    setActiveButtons = _useState22[1];
+  var _useState23 = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)({}),
+    _useState24 = src_slicedToArray(_useState23, 2),
+    activeButtons = _useState24[0],
+    setActiveButtons = _useState24[1];
   var closeDropdowns = function closeDropdowns() {
     setActiveButtons(function (prev) {
       var _args$toolkitButtons;
@@ -4639,19 +4645,48 @@ var Chatbox = function Chatbox(props) {
       return newState;
     });
   };
-  var executeButtonAction = /*#__PURE__*/function () {
-    var _ref2 = src_asyncToGenerator( /*#__PURE__*/src_regeneratorRuntime().mark(function _callee2(actionStr, buttonId, buttonElement) {
-      var actionFn, result, options, newState;
+
+  // The onClick action specifically used to perform the default options
+  var executeDefaultOptionAction = /*#__PURE__*/function () {
+    var _ref2 = src_asyncToGenerator( /*#__PURE__*/src_regeneratorRuntime().mark(function _callee2(actionStr, buttonId) {
+      var actionFn;
       return src_regeneratorRuntime().wrap(function _callee2$(_context2) {
         while (1) switch (_context2.prev = _context2.next) {
           case 0:
             _context2.prev = 0;
+            actionFn = new Function('method', 'isActive', 'button', actionStr); // To perform the action, pass false as the "isActive" parameter, as this is the default option
+            _context2.next = 4;
+            return actionFn(exposedMethods(), false, document.getElementById(buttonId));
+          case 4:
+            _context2.next = 9;
+            break;
+          case 6:
+            _context2.prev = 6;
+            _context2.t0 = _context2["catch"](0);
+            console.error('Error executing default option action:', _context2.t0);
+          case 9:
+          case "end":
+            return _context2.stop();
+        }
+      }, _callee2, null, [[0, 6]]);
+    }));
+    return function executeDefaultOptionAction(_x3, _x4) {
+      return _ref2.apply(this, arguments);
+    };
+  }();
+  var executeButtonAction = /*#__PURE__*/function () {
+    var _ref3 = src_asyncToGenerator( /*#__PURE__*/src_regeneratorRuntime().mark(function _callee3(actionStr, buttonId, buttonElement) {
+      var actionFn, result, options, newState;
+      return src_regeneratorRuntime().wrap(function _callee3$(_context3) {
+        while (1) switch (_context3.prev = _context3.next) {
+          case 0:
+            _context3.prev = 0;
             actionFn = new Function('method', 'isActive', 'button', actionStr); // !!!REQUIRED "await"
             // "customMethods" may be asynchronous
-            _context2.next = 4;
+            _context3.next = 4;
             return actionFn(exposedMethods(), !activeButtons[buttonId], buttonElement);
           case 4:
-            result = _context2.sent;
+            result = _context3.sent;
             // If the returned result is an array, it is a dynamic option
             if (Array.isArray(result) && Object.keys(dynamicOptions).length === 0) {
               options = result.map(function (item) {
@@ -4681,32 +4716,36 @@ var Chatbox = function Chatbox(props) {
             setActiveButtons(function (prev) {
               return _objectSpread(_objectSpread({}, prev), {}, _defineProperty({}, buttonId, newState));
             });
-            return _context2.abrupt("return", result);
+            return _context3.abrupt("return", result);
           case 11:
-            _context2.prev = 11;
-            _context2.t0 = _context2["catch"](0);
-            console.error('Error executing button action:', _context2.t0);
+            _context3.prev = 11;
+            _context3.t0 = _context3["catch"](0);
+            console.error('Error executing button action:', _context3.t0);
           case 14:
           case "end":
-            return _context2.stop();
+            return _context3.stop();
         }
-      }, _callee2, null, [[0, 11]]);
+      }, _callee3, null, [[0, 11]]);
     }));
-    return function executeButtonAction(_x3, _x4, _x5) {
-      return _ref2.apply(this, arguments);
+    return function executeButtonAction(_x5, _x6, _x7) {
+      return _ref3.apply(this, arguments);
     };
   }();
 
   // options
-  var _useState23 = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)({}),
-    _useState24 = src_slicedToArray(_useState23, 2),
-    selectedOpt = _useState24[0],
-    setSelectedOpt = _useState24[1];
-  // Store dynamic options
-  var _useState25 = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)({}),
+  var _useState25 = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)({
+      curIndex: -1,
+      curValue: ''
+    }),
     _useState26 = src_slicedToArray(_useState25, 2),
-    dynamicOptions = _useState26[0],
-    setDynamicOptions = _useState26[1];
+    selectedOpt = _useState26[0],
+    setSelectedOpt = _useState26[1];
+
+  // Store dynamic options
+  var _useState27 = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)({}),
+    _useState28 = src_slicedToArray(_useState27, 2),
+    dynamicOptions = _useState28[0],
+    setDynamicOptions = _useState28[1];
   var getButtonOptions = function getButtonOptions(btn, buttonId) {
     // If you are using the dynamic option and already have a cache, return the option for caching
     //---------
@@ -4738,6 +4777,7 @@ var Chatbox = function Chatbox(props) {
     return options;
   };
   var handleExecuteButtonSelect = function handleExecuteButtonSelect(buttonId, option, index, value) {
+    var isDefaultSelection = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : false;
     if (option.value === "cancel") {
       setSelectedOpt(function (prev) {
         var newLabels = _objectSpread({}, prev);
@@ -4753,10 +4793,14 @@ var Chatbox = function Chatbox(props) {
         return _objectSpread(_objectSpread({}, prev), {}, (_objectSpread4 = {}, _defineProperty(_objectSpread4, buttonId, option.label), _defineProperty(_objectSpread4, "curIndex", index), _defineProperty(_objectSpread4, "curValue", value), _objectSpread4));
       });
     }
-    executeButtonAction(option.onClick, buttonId, document.getElementById(buttonId));
 
-    // Close the drop-down
-    closeDropdowns();
+    // The button action is performed and the drop-down menu is closed only when it is not the default selection
+    if (!isDefaultSelection) {
+      executeButtonAction(option.onClick, buttonId, document.getElementById(buttonId));
+
+      // Close the drop-down
+      closeDropdowns();
+    }
   };
 
   // click outside
@@ -4813,25 +4857,25 @@ var Chatbox = function Chatbox(props) {
 
   // parse chunk data
   var parseChunkData = /*#__PURE__*/function () {
-    var _ref3 = src_asyncToGenerator( /*#__PURE__*/src_regeneratorRuntime().mark(function _callee3(chunk, index, complete) {
+    var _ref4 = src_asyncToGenerator( /*#__PURE__*/src_regeneratorRuntime().mark(function _callee4(chunk, index, complete) {
       var lastContent, _args$responseExtract, extractPath, lines, _iterator, _step, line, _content, result, _iterator2, _step2, path, content, parsedContent, latestRes;
-      return src_regeneratorRuntime().wrap(function _callee3$(_context3) {
-        while (1) switch (_context3.prev = _context3.next) {
+      return src_regeneratorRuntime().wrap(function _callee4$(_context4) {
+        while (1) switch (_context4.prev = _context4.next) {
           case 0:
             // Store the final content and bind it to loading
             lastContent = '';
-            _context3.prev = 1;
+            _context4.prev = 1;
             // Extract response using the path
             extractPath = (_args$responseExtract = args().responseExtractPath) === null || _args$responseExtract === void 0 ? void 0 : _args$responseExtract.slice(1); // Streaming data is JSON split by rows
             lines = chunk.split("\n").filter(function (line) {
               return line.trim() !== "";
             });
             _iterator = _createForOfIteratorHelper(lines);
-            _context3.prev = 5;
+            _context4.prev = 5;
             _iterator.s();
           case 7:
             if ((_step = _iterator.n()).done) {
-              _context3.next = 45;
+              _context4.next = 45;
               break;
             }
             line = _step.value;
@@ -4842,7 +4886,7 @@ var Chatbox = function Chatbox(props) {
 
             // Send the streamed data to the front end
             if (!(line.indexOf('[DONE]') < 0)) {
-              _context3.next = 40;
+              _context4.next = 40;
               break;
             }
             // STEP 1: 
@@ -4850,14 +4894,14 @@ var Chatbox = function Chatbox(props) {
             // Create a JSON string
             _content = "".concat(line.replace(/^data:\s*/, '')); // Determine whether it is in JSON format
             if (isValidJSON(_content)) {
-              _context3.next = 16;
+              _context4.next = 16;
               break;
             }
             console.log('--> [ERROR] Wrong JSON format');
 
             //reset SSE
             closeSSE();
-            return _context3.abrupt("break", 45);
+            return _context4.abrupt("break", 45);
           case 16:
             // STEP 2: 
             // ------
@@ -4866,18 +4910,18 @@ var Chatbox = function Chatbox(props) {
             // for Ollama API (STREAM END)
             //*******
             if (!(typeof result.done !== 'undefined')) {
-              _context3.next = 22;
+              _context4.next = 22;
               break;
             }
             if (!(result.done === true)) {
-              _context3.next = 22;
+              _context4.next = 22;
               break;
             }
             console.log('--> [DONE]');
 
             //reset SSE
             closeSSE();
-            return _context3.abrupt("break", 45);
+            return _context4.abrupt("break", 45);
           case 22:
             //*******
             // for OpenAI API
@@ -4899,10 +4943,10 @@ var Chatbox = function Chatbox(props) {
             // ------
             // 🚀 !! IMPORTANT: Skip the error content
             if (!(typeof content === 'undefined')) {
-              _context3.next = 26;
+              _context4.next = 26;
               break;
             }
-            return _context3.abrupt("continue", 43);
+            return _context4.abrupt("continue", 43);
           case 26:
             // STEP 4: 
             // ------
@@ -4929,13 +4973,13 @@ var Chatbox = function Chatbox(props) {
             // ------
             parsedContent = tempLastContent.current; // If a render parser exists, it is used to process the string
             if (!(typeof args().renderParser === 'function')) {
-              _context3.next = 36;
+              _context4.next = 36;
               break;
             }
-            _context3.next = 35;
+            _context4.next = 35;
             return args().renderParser(parsedContent);
           case 35:
-            parsedContent = _context3.sent;
+            parsedContent = _context4.sent;
           case 36:
             // STEP 8: 
             // ------
@@ -4952,55 +4996,55 @@ var Chatbox = function Chatbox(props) {
             // ------
             // Scroll to the bottom
             scrollToBottom();
-            _context3.next = 43;
+            _context4.next = 43;
             break;
           case 40:
             console.log('--> [DONE]');
 
             //reset SSE
             closeSSE();
-            return _context3.abrupt("break", 45);
+            return _context4.abrupt("break", 45);
           case 43:
-            _context3.next = 7;
+            _context4.next = 7;
             break;
           case 45:
-            _context3.next = 50;
+            _context4.next = 50;
             break;
           case 47:
-            _context3.prev = 47;
-            _context3.t0 = _context3["catch"](5);
-            _iterator.e(_context3.t0);
+            _context4.prev = 47;
+            _context4.t0 = _context4["catch"](5);
+            _iterator.e(_context4.t0);
           case 50:
-            _context3.prev = 50;
+            _context4.prev = 50;
             _iterator.f();
-            return _context3.finish(50);
+            return _context4.finish(50);
           case 53:
-            _context3.next = 58;
+            _context4.next = 58;
             break;
           case 55:
-            _context3.prev = 55;
-            _context3.t1 = _context3["catch"](1);
-            console.error('--> Error processing chunk:', _context3.t1);
+            _context4.prev = 55;
+            _context4.t1 = _context4["catch"](1);
+            console.error('--> Error processing chunk:', _context4.t1);
           case 58:
             latestRes = complete ? lastContent : tempLastContent.current; // If a render parser exists, it is used to process the string
             if (!(typeof args().renderParser === 'function')) {
-              _context3.next = 63;
+              _context4.next = 63;
               break;
             }
-            _context3.next = 62;
+            _context4.next = 62;
             return args().renderParser(latestRes);
           case 62:
-            latestRes = _context3.sent;
+            latestRes = _context4.sent;
           case 63:
-            return _context3.abrupt("return", formatLatestDisplayContent(latestRes));
+            return _context4.abrupt("return", formatLatestDisplayContent(latestRes));
           case 64:
           case "end":
-            return _context3.stop();
+            return _context4.stop();
         }
-      }, _callee3, null, [[1, 55], [5, 47, 50, 53]]);
+      }, _callee4, null, [[1, 55], [5, 47, 50, 53]]);
     }));
-    return function parseChunkData(_x6, _x7, _x8) {
-      return _ref3.apply(this, arguments);
+    return function parseChunkData(_x8, _x9, _x10) {
+      return _ref4.apply(this, arguments);
     };
   }();
 
@@ -5008,11 +5052,11 @@ var Chatbox = function Chatbox(props) {
   var tempLastContent = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useRef)('');
   var streamController = src_useStreamController({
     onChunk: function () {
-      var _onChunk = src_asyncToGenerator( /*#__PURE__*/src_regeneratorRuntime().mark(function _callee4(chunk, index) {
-        var _args$onChunk, _args8;
+      var _onChunk = src_asyncToGenerator( /*#__PURE__*/src_regeneratorRuntime().mark(function _callee5(chunk, index) {
+        var _args$onChunk, _args9;
         var res;
-        return src_regeneratorRuntime().wrap(function _callee4$(_context4) {
-          while (1) switch (_context4.prev = _context4.next) {
+        return src_regeneratorRuntime().wrap(function _callee5$(_context5) {
+          while (1) switch (_context5.prev = _context5.next) {
             case 0:
               // start (Execute it only once)
               if (index === 0) {
@@ -5021,50 +5065,50 @@ var Chatbox = function Chatbox(props) {
               }
 
               //
-              _context4.next = 3;
+              _context5.next = 3;
               return parseChunkData(chunk, index, false);
             case 3:
-              res = _context4.sent;
-              //
-              (_args$onChunk = (_args8 = args()).onChunk) === null || _args$onChunk === void 0 ? void 0 : _args$onChunk.call(_args8, inputContentRef.current, res, conversationHistory.current);
-            case 5:
-            case "end":
-              return _context4.stop();
-          }
-        }, _callee4);
-      }));
-      function onChunk(_x9, _x10) {
-        return _onChunk.apply(this, arguments);
-      }
-      return onChunk;
-    }(),
-    onComplete: function () {
-      var _onComplete = src_asyncToGenerator( /*#__PURE__*/src_regeneratorRuntime().mark(function _callee5(lastContent) {
-        var _args$onComplete, _args10;
-        var res;
-        return src_regeneratorRuntime().wrap(function _callee5$(_context5) {
-          while (1) switch (_context5.prev = _context5.next) {
-            case 0:
-              console.log('--> Stream complete');
-              _context5.next = 3;
-              return parseChunkData(lastContent, 0, true);
-            case 3:
               res = _context5.sent;
-              // Display AI reply
-              displayMessage(args().answerNameRes, res);
-
               //
-              (_args$onComplete = (_args10 = args()).onComplete) === null || _args$onComplete === void 0 ? void 0 : _args$onComplete.call(_args10, inputContentRef.current, res, conversationHistory.current);
-
-              //
-              closeSSE();
-            case 7:
+              (_args$onChunk = (_args9 = args()).onChunk) === null || _args$onChunk === void 0 ? void 0 : _args$onChunk.call(_args9, inputContentRef.current, res, conversationHistory.current);
+            case 5:
             case "end":
               return _context5.stop();
           }
         }, _callee5);
       }));
-      function onComplete(_x11) {
+      function onChunk(_x11, _x12) {
+        return _onChunk.apply(this, arguments);
+      }
+      return onChunk;
+    }(),
+    onComplete: function () {
+      var _onComplete = src_asyncToGenerator( /*#__PURE__*/src_regeneratorRuntime().mark(function _callee6(lastContent) {
+        var _args$onComplete, _args11;
+        var res;
+        return src_regeneratorRuntime().wrap(function _callee6$(_context6) {
+          while (1) switch (_context6.prev = _context6.next) {
+            case 0:
+              console.log('--> Stream complete');
+              _context6.next = 3;
+              return parseChunkData(lastContent, 0, true);
+            case 3:
+              res = _context6.sent;
+              // Display AI reply
+              displayMessage(args().answerNameRes, res);
+
+              //
+              (_args$onComplete = (_args11 = args()).onComplete) === null || _args$onComplete === void 0 ? void 0 : _args$onComplete.call(_args11, inputContentRef.current, res, conversationHistory.current);
+
+              //
+              closeSSE();
+            case 7:
+            case "end":
+              return _context6.stop();
+          }
+        }, _callee6);
+      }));
+      function onComplete(_x13) {
         return _onComplete.apply(this, arguments);
       }
       return onComplete;
@@ -5118,34 +5162,34 @@ var Chatbox = function Chatbox(props) {
     }
   };
   var sendMessage = /*#__PURE__*/function () {
-    var _ref4 = src_asyncToGenerator( /*#__PURE__*/src_regeneratorRuntime().mark(function _callee6() {
-      var messageInput, message, inputMsg, _res, _args$onChunk2, _args12, _args$onComplete2, _args13, reply, replyRes;
-      return src_regeneratorRuntime().wrap(function _callee6$(_context6) {
-        while (1) switch (_context6.prev = _context6.next) {
+    var _ref5 = src_asyncToGenerator( /*#__PURE__*/src_regeneratorRuntime().mark(function _callee7() {
+      var messageInput, message, inputMsg, _res, _args$onChunk2, _args13, _args$onComplete2, _args14, reply, replyRes;
+      return src_regeneratorRuntime().wrap(function _callee7$(_context7) {
+        while (1) switch (_context7.prev = _context7.next) {
           case 0:
             if (!(rootRef.current === null || msgContainerRef.current === null || msInput.current === null)) {
-              _context6.next = 2;
+              _context7.next = 2;
               break;
             }
-            return _context6.abrupt("return");
+            return _context7.abrupt("return");
           case 2:
             messageInput = msInput.current;
             message = (0,sanitize.htmlEncode)(messageInput.value); // It fires in real time as the user enters
             // Sanitizing input is the process of securing/cleaning/filtering input data.
             if (!(typeof args().onInputCallback === 'function')) {
-              _context6.next = 8;
+              _context7.next = 8;
               break;
             }
-            _context6.next = 7;
+            _context7.next = 7;
             return args().onInputCallback(message);
           case 7:
-            message = _context6.sent;
+            message = _context7.sent;
           case 8:
             if (!(message.trim() === '')) {
-              _context6.next = 10;
+              _context7.next = 10;
               break;
             }
-            return _context6.abrupt("return");
+            return _context7.abrupt("return");
           case 10:
             // Start the timer
             setElapsedTime(0); // Reset elapsed time
@@ -5158,13 +5202,13 @@ var Chatbox = function Chatbox(props) {
             // user message
             inputMsg = "".concat(message); // If a render parser exists, it is used to process the string
             if (!(typeof args().renderParser === 'function')) {
-              _context6.next = 17;
+              _context7.next = 17;
               break;
             }
-            _context6.next = 16;
+            _context7.next = 16;
             return args().renderParser(inputMsg);
           case 16:
-            inputMsg = _context6.sent;
+            inputMsg = _context7.sent;
           case 17:
             displayMessage(args().questionNameRes, inputMsg); // Display user message
 
@@ -5176,48 +5220,48 @@ var Chatbox = function Chatbox(props) {
 
             // clear
             if (inputContentRef.current) inputContentRef.current.clear();
-            _context6.prev = 21;
-            _context6.next = 24;
+            _context7.prev = 21;
+            _context7.next = 24;
             return mainRequest(message);
           case 24:
-            _res = _context6.sent;
+            _res = _context7.sent;
             if (_res.useStreamRender) {
-              _context6.next = 36;
+              _context7.next = 36;
               break;
             }
             reply = _res.reply;
             replyRes = "".concat(reply); // If a render parser exists, it is used to process the string
             if (!(typeof args().renderParser === 'function')) {
-              _context6.next = 32;
+              _context7.next = 32;
               break;
             }
-            _context6.next = 31;
+            _context7.next = 31;
             return args().renderParser(replyRes);
           case 31:
-            replyRes = _context6.sent;
+            replyRes = _context7.sent;
           case 32:
             displayMessage(args().answerNameRes, replyRes); // Display AI reply
 
             //
-            (_args$onChunk2 = (_args12 = args()).onChunk) === null || _args$onChunk2 === void 0 ? void 0 : _args$onChunk2.call(_args12, inputContentRef.current, replyRes, conversationHistory.current);
-            (_args$onComplete2 = (_args13 = args()).onComplete) === null || _args$onComplete2 === void 0 ? void 0 : _args$onComplete2.call(_args13, inputContentRef.current, replyRes, conversationHistory.current);
+            (_args$onChunk2 = (_args13 = args()).onChunk) === null || _args$onChunk2 === void 0 ? void 0 : _args$onChunk2.call(_args13, inputContentRef.current, replyRes, conversationHistory.current);
+            (_args$onComplete2 = (_args14 = args()).onComplete) === null || _args$onComplete2 === void 0 ? void 0 : _args$onComplete2.call(_args14, inputContentRef.current, replyRes, conversationHistory.current);
 
             //reset SSE
             closeSSE();
           case 36:
-            _context6.next = 45;
+            _context7.next = 45;
             break;
           case 38:
-            _context6.prev = 38;
-            _context6.t0 = _context6["catch"](21);
+            _context7.prev = 38;
+            _context7.t0 = _context7["catch"](21);
             // loading
             setLoading(false);
 
             // Stop the timer
             clearInterval(timer.current);
             timer.current = null;
-            console.error('--> Error sending message:', _context6.t0);
-            displayMessage(args().answerNameRes, "Error: Unable to send message: ".concat(String(_context6.t0))); // Display AI reply
+            console.error('--> Error sending message:', _context7.t0);
+            displayMessage(args().answerNameRes, "Error: Unable to send message: ".concat(String(_context7.t0))); // Display AI reply
           case 45:
             // clear
             messageInput.value = '';
@@ -5229,12 +5273,12 @@ var Chatbox = function Chatbox(props) {
             scrollToBottom();
           case 48:
           case "end":
-            return _context6.stop();
+            return _context7.stop();
         }
-      }, _callee6, null, [[21, 38]]);
+      }, _callee7, null, [[21, 38]]);
     }));
     return function sendMessage() {
-      return _ref4.apply(this, arguments);
+      return _ref5.apply(this, arguments);
     };
   }();
   var handleClickSafe = useDebounce_default()(function () {
@@ -5246,25 +5290,25 @@ var Chatbox = function Chatbox(props) {
     setShow(false);
   };
   var mainRequest = /*#__PURE__*/function () {
-    var _ref5 = src_asyncToGenerator( /*#__PURE__*/src_regeneratorRuntime().mark(function _callee7(msg) {
+    var _ref6 = src_asyncToGenerator( /*#__PURE__*/src_regeneratorRuntime().mark(function _callee8(msg) {
       var currentStreamMode, requestBodyRes, customResponse, content, isStream, contentRes, response, _errInfo, _args$responseExtract2, extractPath, _response, _errInfo2, jsonResponse, result, _iterator3, _step3, path, _content2, _err;
-      return src_regeneratorRuntime().wrap(function _callee7$(_context7) {
-        while (1) switch (_context7.prev = _context7.next) {
+      return src_regeneratorRuntime().wrap(function _callee8$(_context8) {
+        while (1) switch (_context8.prev = _context8.next) {
           case 0:
             currentStreamMode = args().isStream; // Update stream mode
             setEnableStreamMode(currentStreamMode);
-            _context7.prev = 2;
+            _context8.prev = 2;
             // Parse and interpolate request body template
             requestBodyRes = JSON.parse((args().requestBodyTmpl || '{}').replace(/\{model\}/g, args().model).replace(/\{message\}/g, msg).replace(/\{token\}/g, chatId)); // 
             // If a formatter function exists, it is used to process the request body
             if (!(typeof args().requestBodyFormatter === 'function')) {
-              _context7.next = 8;
+              _context8.next = 8;
               break;
             }
-            _context7.next = 7;
+            _context8.next = 7;
             return args().requestBodyFormatter(requestBodyRes, args().latestContextData, conversationHistory.current);
           case 7:
-            requestBodyRes = _context7.sent;
+            requestBodyRes = _context8.sent;
           case 8:
             // Scroll to the bottom
             setTimeout(function () {
@@ -5272,19 +5316,19 @@ var Chatbox = function Chatbox(props) {
               scrollToBottom();
             }, 500);
             if (!(typeof args().customRequest === 'function')) {
-              _context7.next = 25;
+              _context8.next = 25;
               break;
             }
             // Update stream mode
             setEnableStreamMode(false);
-            _context7.next = 13;
+            _context8.next = 13;
             return args().customRequest(msg, {
               requestBody: requestBodyRes,
               apiUrl: args().requestApiUrl || '',
               headers: args().headerConfigRes
             }, customMethodsRef.current, conversationHistory.current);
           case 13:
-            customResponse = _context7.sent;
+            customResponse = _context8.sent;
             content = customResponse.content, isStream = customResponse.isStream;
             contentRes = content; // Update stream mode
             setEnableStreamMode(isStream);
@@ -5292,24 +5336,24 @@ var Chatbox = function Chatbox(props) {
             // NORMAL
             //++++++++++++++++++++++++++++++++++++++++++++++++
             if (!(!isStream && typeof contentRes === 'string' && contentRes.trim() !== '')) {
-              _context7.next = 20;
+              _context8.next = 20;
               break;
             }
             // Replace with a valid label 
             contentRes = fixHtmlTags(contentRes, args().withReasoning, args().reasoningSwitchLabel);
-            return _context7.abrupt("return", {
+            return _context8.abrupt("return", {
               reply: formatLatestDisplayContent(contentRes),
               useStreamRender: false
             });
           case 20:
             if (!(isStream && isStreamResponse(contentRes))) {
-              _context7.next = 24;
+              _context8.next = 24;
               break;
             }
-            _context7.next = 23;
+            _context8.next = 23;
             return streamController.start(contentRes);
           case 23:
-            return _context7.abrupt("return", {
+            return _context8.abrupt("return", {
               reply: tempAnimText,
               // The final content will be in tempAnimText
               useStreamRender: true
@@ -5323,19 +5367,19 @@ var Chatbox = function Chatbox(props) {
             }
           case 25:
             if (!currentStreamMode) {
-              _context7.next = 39;
+              _context8.next = 39;
               break;
             }
-            _context7.next = 28;
+            _context8.next = 28;
             return fetch(args().requestApiUrl || '', {
               method: "POST",
               body: JSON.stringify(requestBodyRes),
               headers: args().headerConfigRes
             });
           case 28:
-            response = _context7.sent;
+            response = _context8.sent;
             if (response.ok) {
-              _context7.next = 34;
+              _context8.next = 34;
               break;
             }
             _errInfo = "[ERROR] HTTP Error ".concat(response.status, ": ").concat(response.statusText);
@@ -5343,15 +5387,15 @@ var Chatbox = function Chatbox(props) {
 
             // hide loader
             setLoaderDisplay(false);
-            return _context7.abrupt("return", {
+            return _context8.abrupt("return", {
               reply: _errInfo,
               useStreamRender: false
             });
           case 34:
-            _context7.next = 36;
+            _context8.next = 36;
             return streamController.start(response);
           case 36:
-            return _context7.abrupt("return", {
+            return _context8.abrupt("return", {
               reply: tempAnimText,
               // The final content will be in tempAnimText
               useStreamRender: true
@@ -5359,7 +5403,7 @@ var Chatbox = function Chatbox(props) {
           case 39:
             // Extract response using the path
             extractPath = (_args$responseExtract2 = args().responseExtractPath) === null || _args$responseExtract2 === void 0 ? void 0 : _args$responseExtract2.slice(1);
-            _context7.next = 42;
+            _context8.next = 42;
             return fetch(args().requestApiUrl || '', {
               method: "POST",
               headers: args().headerConfigRes,
@@ -5367,22 +5411,22 @@ var Chatbox = function Chatbox(props) {
               signal: abortController.current.signal
             });
           case 42:
-            _response = _context7.sent;
+            _response = _context8.sent;
             if (_response.ok) {
-              _context7.next = 47;
+              _context8.next = 47;
               break;
             }
             _errInfo2 = "[ERROR] HTTP Error ".concat(_response.status, ": ").concat(_response.statusText); // hide loader
             setLoaderDisplay(false);
-            return _context7.abrupt("return", {
+            return _context8.abrupt("return", {
               reply: _errInfo2,
               useStreamRender: false
             });
           case 47:
-            _context7.next = 49;
+            _context8.next = 49;
             return _response.json();
           case 49:
-            jsonResponse = _context7.sent;
+            jsonResponse = _context8.sent;
             // hide loader
             setLoaderDisplay(false);
             result = jsonResponse;
@@ -5401,33 +5445,33 @@ var Chatbox = function Chatbox(props) {
             }
             _content2 = result; // Replace with a valid label
             _content2 = fixHtmlTags(_content2, args().withReasoning, args().reasoningSwitchLabel);
-            return _context7.abrupt("return", {
+            return _context8.abrupt("return", {
               reply: formatLatestDisplayContent(_content2),
               useStreamRender: false
             });
           case 56:
-            _context7.next = 64;
+            _context8.next = 64;
             break;
           case 58:
-            _context7.prev = 58;
-            _context7.t0 = _context7["catch"](2);
-            _err = "--> Error in mainRequest: ".concat(_context7.t0);
+            _context8.prev = 58;
+            _context8.t0 = _context8["catch"](2);
+            _err = "--> Error in mainRequest: ".concat(_context8.t0);
             console.error(_err);
 
             //reset SSE
             closeSSE();
-            return _context7.abrupt("return", {
+            return _context8.abrupt("return", {
               reply: _err,
               useStreamRender: false
             });
           case 64:
           case "end":
-            return _context7.stop();
+            return _context8.stop();
         }
-      }, _callee7, null, [[2, 58]]);
+      }, _callee8, null, [[2, 58]]);
     }));
-    return function mainRequest(_x12) {
-      return _ref5.apply(this, arguments);
+    return function mainRequest(_x14) {
+      return _ref6.apply(this, arguments);
     };
   }();
 
@@ -5464,6 +5508,44 @@ var Chatbox = function Chatbox(props) {
     // Bind chatboxCopyToClipboard to window so it can be called in HTML code
     window.chatboxCopyToClipboard = chatboxCopyToClipboard;
   }, []);
+
+  // Initialize the default value of toolkit buttons
+  (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useEffect)(function () {
+    if (args().toolkitButtons) {
+      args().toolkitButtons.forEach(function (btn, index) {
+        var _id = "".concat(args().prefix || 'custom-', "chatbox-btn-tools-").concat(chatId).concat(index);
+        if (btn.isSelect) {
+          if (!initializedDefaults[_id] && typeof btn.defaultSelected === 'number') {
+            var options = getButtonOptions(btn, _id);
+
+            // If there is a default selected item, initialize the selected state
+            if (btn.defaultSelected >= 0 && btn.defaultSelected < options.length) {
+              var defaultOption = options[btn.defaultSelected];
+              if (defaultOption) {
+                // Update the selected status
+                // console.log('--> defaultOption: ', defaultOption);
+
+                // Pass the "isDefaultSelection" parameter as true
+                handleExecuteButtonSelect(_id, defaultOption, btn.defaultSelected, defaultOption.value, true);
+
+                // Perform the onClick action alone
+                executeDefaultOptionAction(defaultOption.onClick, _id);
+
+                // Mark this button with the default value initialized
+                setInitializedDefaults(function (prev) {
+                  return _objectSpread(_objectSpread({}, prev), {}, _defineProperty({}, _id, true));
+                });
+              }
+            }
+          }
+        } else if (btn.active) {
+          // For non-select buttons, if defaultActive is true, execute the onClick action
+          executeButtonAction(btn.onClick, _id, document.getElementById(_id));
+        }
+      });
+    }
+  }, [chatId, args().toolkitButtons]); // It is only executed when the component is first rendered and when toolkitButtons changes
+
   return /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((dist_cjs_default()), {
     show: true,
     containerClassName: "Chatbox"
@@ -5693,8 +5775,8 @@ var Chatbox = function Chatbox(props) {
       }
     },
     onChange: function onChange(e, el, value) {
-      var _args$onInputChange, _args16;
-      (_args$onInputChange = (_args16 = args()).onInputChange) === null || _args$onInputChange === void 0 ? void 0 : _args$onInputChange.call(_args16, inputContentRef.current, value);
+      var _args$onInputChange, _args17;
+      (_args$onInputChange = (_args17 = args()).onInputChange) === null || _args$onInputChange === void 0 ? void 0 : _args$onInputChange.call(_args17, inputContentRef.current, value);
     },
     onFocus: function onFocus() {
       setFocused(true);
@@ -5763,7 +5845,8 @@ var Chatbox = function Chatbox(props) {
         className: "toolkit-select-wrapper"
       }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("button", {
         id: _id,
-        className: "toolkit-select-btn ".concat(btn.value || '', " ").concat(isActive ? 'active' : '', " ").concat(selectedOpt.curValue !== 'cancel' && typeof selectedOpt.curValue !== 'undefined' && selectedOpt.curValue !== '' ? 'opt-active' : ''),
+        "data-value": btn.value || '',
+        className: "toolkit-select-btn ".concat(isActive ? 'active' : '', " ").concat(selectedOpt.curValue !== 'cancel' && typeof selectedOpt.curValue !== 'undefined' && selectedOpt.curValue !== '' ? 'opt-active' : ''),
         onClick: function onClick(e) {
           e.preventDefault();
           setActiveButtons(function (prev) {
@@ -5800,7 +5883,8 @@ var Chatbox = function Chatbox(props) {
       }, options.length > 0 ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, options.map(function (option, optIndex) {
         return /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
           key: optIndex,
-          className: "toolkit-select-option ".concat(option.value || '', " ").concat(selectedOpt.curIndex === optIndex ? 'selected' : ''),
+          "data-value": option.value || '',
+          className: "toolkit-select-option ".concat(selectedOpt.curIndex === optIndex ? 'selected' : ''),
           onClick: function onClick() {
             return handleExecuteButtonSelect(_id, option, optIndex, option.value);
           }

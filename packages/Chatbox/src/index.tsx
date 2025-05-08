@@ -13,7 +13,6 @@ import { htmlEncode } from 'funda-utils/dist/cjs/sanitize';
 
 
 
-
 // loader
 import PureLoader from './PureLoader';
 import TypingEffect from "./TypingEffect";
@@ -46,15 +45,23 @@ export type QuestionData = {
     list: Array<string>;
 };
 
+export type SelectedOption = {
+    [key: string]: string | number;
+    curIndex: number;
+    curValue: string;
+};
 
 export interface FloatingButton {
     label: string;  // HTML string
     value: string;
     onClick: string;
+    active?: boolean; // Specify if the button should be active by default
     isSelect?: boolean;  // Mark whether it is a drop-down selection button
     dynamicOptions?: boolean; // Mark whether to use dynamic options
+    defaultSelected?: number; // Specify default selected option index
     [key: string]: any;  // Allows dynamic `onSelect__<number>` attributes, such as `onSelect__1`, `onSelect__2`, ...
 }
+
 
 export interface FloatingButtonSelectOption {
     label: string;
@@ -177,6 +184,11 @@ const Chatbox = (props: ChatboxProps) => {
     const [tempAnimText, setTempAnimText] = useState<string>('');
     const [enableStreamMode, setEnableStreamMode] = useState<boolean>(true);
     const animatedMessagesRef = useRef<Set<number>>(new Set()); // Add a ref to keep track of messages that have already been animated
+
+    // Keep track of whether the default values have been initialized
+    const [initializedDefaults, setInitializedDefaults] = useState<Record<string, boolean>>({});
+
+
 
     //
     const timer = useRef<any>(null);
@@ -508,6 +520,19 @@ const Chatbox = (props: ChatboxProps) => {
             return newState;
         });
     };
+
+    // The onClick action specifically used to perform the default options
+    const executeDefaultOptionAction = async (actionStr: string, buttonId: string) => {
+        try {
+            const actionFn = new Function('method', 'isActive', 'button', actionStr);
+            // To perform the action, pass false as the "isActive" parameter, as this is the default option
+            await actionFn(exposedMethods(), false, document.getElementById(buttonId));
+        } catch (error) {
+            console.error('Error executing default option action:', error);
+        }
+    };
+
+
     const executeButtonAction = async (actionStr: string, buttonId: string, buttonElement: HTMLButtonElement) => {
         try {
             const actionFn = new Function('method', 'isActive', 'button', actionStr);
@@ -547,7 +572,11 @@ const Chatbox = (props: ChatboxProps) => {
    
 
     // options
-    const [selectedOpt, setSelectedOpt] = useState<Record<string, string | number>>({});
+    const [selectedOpt, setSelectedOpt] = useState<SelectedOption>({
+        curIndex: -1,
+        curValue: ''
+    });
+    
     // Store dynamic options
     const [dynamicOptions, setDynamicOptions] = useState<Record<string, FloatingButtonSelectOption[]>>({});
     
@@ -575,7 +604,7 @@ const Chatbox = (props: ChatboxProps) => {
         return options;
     };
 
-    const handleExecuteButtonSelect = (buttonId: string, option: FloatingButtonSelectOption, index: number, value: string) => {
+    const handleExecuteButtonSelect = (buttonId: string, option: FloatingButtonSelectOption, index: number, value: string, isDefaultSelection: boolean = false) => {
 
         if (option.value === "cancel") {
             setSelectedOpt(prev => {
@@ -597,11 +626,15 @@ const Chatbox = (props: ChatboxProps) => {
             }));
         }
 
+            
+        // The button action is performed and the drop-down menu is closed only when it is not the default selection
+        if (!isDefaultSelection) {
+            executeButtonAction(option.onClick, buttonId, document.getElementById(buttonId) as HTMLButtonElement);
+            
+            // Close the drop-down
+            closeDropdowns();
+        }
 
-        executeButtonAction(option.onClick, buttonId, document.getElementById(buttonId) as HTMLButtonElement);
-        
-        // Close the drop-down
-        closeDropdowns();
     };
 
     // click outside
@@ -1054,9 +1087,10 @@ const Chatbox = (props: ChatboxProps) => {
                     customMethodsRef.current,
                     conversationHistory.current
                 );
-
                 const { content, isStream } = customResponse;
                 let contentRes: any = content;
+
+
 
                 // Update stream mode
                 setEnableStreamMode(isStream);
@@ -1164,6 +1198,7 @@ const Chatbox = (props: ChatboxProps) => {
                 // hide loader
                 setLoaderDisplay(false);
 
+                
                 let result: any = jsonResponse;
                 if (extractPath) {
                     for (const path of extractPath) {
@@ -1176,6 +1211,7 @@ const Chatbox = (props: ChatboxProps) => {
                 // Replace with a valid label
                 content = fixHtmlTags(content, args().withReasoning, args().reasoningSwitchLabel);
 
+                
                 return {
                     reply: formatLatestDisplayContent(content),
                     useStreamRender: false
@@ -1243,6 +1279,53 @@ const Chatbox = (props: ChatboxProps) => {
         // Bind chatboxCopyToClipboard to window so it can be called in HTML code
         (window as any).chatboxCopyToClipboard = chatboxCopyToClipboard;
       }, []);
+
+
+
+    // Initialize the default value of toolkit buttons
+    useEffect(() => {
+        if (args().toolkitButtons) {
+            args().toolkitButtons.forEach((btn: FloatingButton, index: number) => {
+                const _id = `${args().prefix || 'custom-'}chatbox-btn-tools-${chatId}${index}`;
+
+                if (btn.isSelect) {
+                    
+                    if (!initializedDefaults[_id] && typeof btn.defaultSelected === 'number') {
+                        const options = getButtonOptions(btn, _id);
+
+                        // If there is a default selected item, initialize the selected state
+                        if (btn.defaultSelected >= 0 && btn.defaultSelected < options.length) {
+                            const defaultOption = options[btn.defaultSelected];
+                            if (defaultOption) {
+                                // Update the selected status
+                                // console.log('--> defaultOption: ', defaultOption);
+                    
+                                // Pass the "isDefaultSelection" parameter as true
+                                handleExecuteButtonSelect(_id, defaultOption, btn.defaultSelected, defaultOption.value, true);
+
+                                // Perform the onClick action alone
+                                executeDefaultOptionAction(defaultOption.onClick, _id);
+                                    
+
+                                // Mark this button with the default value initialized
+                                setInitializedDefaults(prev => ({
+                                    ...prev,
+                                    [_id]: true
+                                }));
+
+                            }
+                        }
+                    }
+                } else if (btn.active) {
+                    // For non-select buttons, if defaultActive is true, execute the onClick action
+                    executeButtonAction(btn.onClick, _id, document.getElementById(_id) as HTMLButtonElement);
+                }
+
+             
+            })
+        }
+    }, [chatId, args().toolkitButtons]); // It is only executed when the component is first rendered and when toolkitButtons changes
+
 
     return (
         <>
@@ -1570,12 +1653,13 @@ const Chatbox = (props: ChatboxProps) => {
 
                             if (btn.isSelect) {
                                 const options = getButtonOptions(btn, _id);
-                                
+
                                 return (
                                     <div key={index} className="toolkit-select-wrapper">
                                         <button
                                             id={_id}
-                                            className={`toolkit-select-btn ${btn.value || ''} ${isActive ? 'active' : ''} ${selectedOpt.curValue !== 'cancel' && typeof selectedOpt.curValue !== 'undefined' && selectedOpt.curValue !== '' ? 'opt-active' : ''}`}
+                                            data-value={btn.value || ''}
+                                            className={`toolkit-select-btn ${isActive ? 'active' : ''} ${selectedOpt.curValue !== 'cancel' && typeof selectedOpt.curValue !== 'undefined' && selectedOpt.curValue !== '' ? 'opt-active' : ''}`}
                                             onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
                                                 e.preventDefault();
                                                 setActiveButtons(prev => ({
@@ -1610,7 +1694,8 @@ const Chatbox = (props: ChatboxProps) => {
                                                 {options.map((option: FloatingButtonSelectOption, optIndex: number) => (
                                                     <div
                                                         key={optIndex}
-                                                        className={`toolkit-select-option ${option.value || ''} ${selectedOpt.curIndex === optIndex ? 'selected' : ''}`}
+                                                        data-value={option.value || ''}
+                                                        className={`toolkit-select-option ${selectedOpt.curIndex === optIndex ? 'selected' : ''}`}
                                                         onClick={() => handleExecuteButtonSelect(_id, option, optIndex, option.value)}
                                                     >
                                                         <span dangerouslySetInnerHTML={{ __html: option.label }}></span>

@@ -632,6 +632,31 @@ export default () => {
 
 
 
+
+## Set the active button of toolkit buttons or the default option of the "Select" in toolkit buttons
+
+
+```js
+const toolkitButtons = [
+    {
+        label: "Normal Button",
+        value: "normal",
+        onClick: "() => { console.log('normal button clicked'); }",
+        defaultActive: true  // This button will be active by default
+    },
+    {
+        label: "Select Button",
+        value: "select",
+        isSelect: true,
+        defaultSelected: 0,  // This select button will have its first option selected by default
+        onSelect__1: "Option 1{#}value1{#}() => { console.log('option 1 selected'); }",
+        onSelect__2: "Option 2{#}value2{#}() => { console.log('option 2 selected'); }"
+    }
+];
+```
+
+
+
 ## API
 
 ### Chatbox
@@ -696,10 +721,11 @@ JSON Object Literals configuration properties of the `toolkitButtons` and `newCh
 | `label` | string | - | The text displayed by the button <blockquote>HTML tags are supported</blockquote> | ✅ |
 | `value` | string | - | Button identification | ✅ |
 | `onClick` | string | - | Function expression in character format <blockquote>**onClick** uses a string to fully customize the configuration in the business</blockquote> | ✅ |
+| `active` | boolean | false | Specify if the button should be active by default | - |
 | `isSelect` | boolean | - | Mark whether it is a drop-down selection button. If enabled, the **onSelect__\<number\>** attribute is supported to be dynamically added as a different option, such as `onSelect__1`, `onSelect__2`, ... <blockquote>Label, value and onClick methods are separated by `{#}`, eg. `{"label":"Drop-Down","value":"lab","onClick":"method.executeCustomMethod('sayHello', 'John');","isSelect":true, "onSelect__1":"None {#} cancel {#} method.setContextData({});method.executeCustomMethod('sayHello', 'John');","onSelect__2":"Create image {#} create-img-a {#} method.setContextData({systemPrompt:'please create a image'});"}`</blockquote><hr /><blockquote>When the value of **onSelect__\<number\>** is `cancel`, it will restore the default label</blockquote> | - |
 | `onSelect__<number>` | string | - | Function expression in character format <blockquote>**onSelect__\<number\>** uses a string to fully customize the configuration in the business</blockquote> | - |
 | `dynamicOptions` | boolean | - | Mark whether to use dynamic options. such as `{"label":"Drop-Down","value":"lab","onClick":"return method.executeCustomMethod('getMenuList')","isSelect":true,"dynamicOptions":true}` <blockquote>**Custom functions:** <br /> `const customMethods=[{name:"getMenuList",func:async()=>{const newOpts=[{"name":"Option 1","id":"opt-1"},{"name":"Option 2","id":"opt-2"}].map((v,i)=>{const obj={};obj["onSelect__"+(i+2)]=v.name+" {#} "+v.id+" {#} method.executeCustomMethod('sayHello', '"+v.name+"');";return obj;});newOpts.unshift({"onSelect__1":"None {#} cancel {#} method.setContextData({});"});return newOpts;}}];`</blockquote> | - |
-
+| `defaultSelected` | number | - | Specify default selected option index. <blockquote>Valid when **onSelect__\<number\>** is used</blockquote>| - |
 
 
 ---
