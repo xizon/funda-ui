@@ -67,7 +67,7 @@ __webpack_require__.r(__webpack_exports__);
  * @returns {string} The processed string
  */
 function rmSpec(input) {
-  return input.replace(/[^a-zA-Z0-9 \u4E00-\u9FFF]/g, "");
+  return input === null || input === void 0 ? void 0 : input.replace(/[^a-zA-Z0-9 \u4E00-\u9FFF]/g, "");
 }
 
 /**
@@ -76,7 +76,7 @@ function rmSpec(input) {
  * @returns {string} The processed string
  */
 function onlyNumAndLetter(input) {
-  return input.replace(/[^a-zA-Z0-9 ]/g, "");
+  return input === null || input === void 0 ? void 0 : input.replace(/[^a-zA-Z0-9 ]/g, "");
 }
 
 /**
@@ -85,7 +85,7 @@ function onlyNumAndLetter(input) {
  * @returns {string} The processed string
  */
 function rmAllSpace(input) {
-  return input.replace(/\s/g, "");
+  return input === null || input === void 0 ? void 0 : input.replace(/\s/g, "");
 }
 
 /**
@@ -94,7 +94,7 @@ function rmAllSpace(input) {
  * @returns {string} The processed string
  */
 function trimAll(input) {
-  return input.replace(/(^\s+)|(\s+$)/g, "");
+  return input === null || input === void 0 ? void 0 : input.replace(/(^\s+)|(\s+$)/g, "");
 }
 
 /**
@@ -103,25 +103,35 @@ function trimAll(input) {
  * @returns {string} The processed string
  */
 function multiSpacesToSingle(input) {
-  return input.replace(/\s+(\W)/g, ' ');
+  return input === null || input === void 0 ? void 0 : input.replace(/\s+(\W)/g, ' ');
 }
 
 /**
- * Convert HTML text to plain text
+ * Convert HTML text to plain text (Remove html tag content)
  * @param {string} input - The input string to process
  * @returns {string} The processed string
  */
+/*
+Examples:
+console.log(htmlToPlain("<p>Hello <b>World</b></p>"));   // Hello World
+*/
 function htmlToPlain(input) {
-  return input.replace(/(<([^>]+)>)/ig, '');
+  return input === null || input === void 0 ? void 0 : input.replace(/(<([^>]+)>)/ig, '');
 }
 
 /**
- * Strip HTML tags and their content
+ * Strip HTML tags and their content 
+ * !!!Important: It will remove nested tags
  * @param {string} input - The input string to process
  * @returns {string} The processed string
  */
+/*
+Examples:
+console.log(stripTagsAndContent("<p>Hello <b>World</b></p>"));  // World
+console.log(stripTagsAndContent("Hello <b>World</b>"));  // Hello
+*/
 function stripTagsAndContent(input) {
-  return input.replace(/<\/?[^>]+(>|$)(.*?)<\/?[^>]+(>|$)/ig, '');
+  return input === null || input === void 0 ? void 0 : input.replace(/<\/?[^>]+(>|$)(.*?)<\/?[^>]+(>|$)/ig, '');
 }
 
 /**
@@ -130,7 +140,7 @@ function stripTagsAndContent(input) {
  * @returns {string} The processed URL
  */
 function removeFirstLastSlash(input) {
-  return input.replace(/^\/|\/$/g, '');
+  return input === null || input === void 0 ? void 0 : input.replace(/^\/|\/$/g, '');
 }
 
 /**
@@ -139,7 +149,7 @@ function removeFirstLastSlash(input) {
  * @returns {string} The processed URL
  */
 function removeTrailingSlash(input) {
-  return input.replace(/\/+$/, '');
+  return input === null || input === void 0 ? void 0 : input.replace(/\/+$/, '');
 }
 
 /**
@@ -148,7 +158,7 @@ function removeTrailingSlash(input) {
  * @returns {string} The processed URL
  */
 function removeFirstSlash(input) {
-  return input.replace(/\//, '');
+  return input === null || input === void 0 ? void 0 : input.replace(/\//, '');
 }
 
 /******/ 	return __webpack_exports__;

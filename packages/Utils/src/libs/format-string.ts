@@ -8,7 +8,7 @@
  * @returns {string} The processed string
  */
 function rmSpec(input: string): string {
-    return input.replace(/[^a-zA-Z0-9 \u4E00-\u9FFF]/g, "");
+    return input?.replace(/[^a-zA-Z0-9 \u4E00-\u9FFF]/g, "");
 }
 
 /**
@@ -17,7 +17,7 @@ function rmSpec(input: string): string {
  * @returns {string} The processed string
  */
 function onlyNumAndLetter(input: string): string {
-    return input.replace(/[^a-zA-Z0-9 ]/g, "");
+    return input?.replace(/[^a-zA-Z0-9 ]/g, "");
 }
 
 /**
@@ -26,7 +26,7 @@ function onlyNumAndLetter(input: string): string {
  * @returns {string} The processed string
  */
 function rmAllSpace(input: string): string {
-    return input.replace(/\s/g, "");
+    return input?.replace(/\s/g, "");
 }
 
 /**
@@ -35,7 +35,7 @@ function rmAllSpace(input: string): string {
  * @returns {string} The processed string
  */
 function trimAll(input: string): string {
-    return input.replace(/(^\s+)|(\s+$)/g, "");
+    return input?.replace(/(^\s+)|(\s+$)/g, "");
 }
 
 /**
@@ -44,25 +44,35 @@ function trimAll(input: string): string {
  * @returns {string} The processed string
  */
 function multiSpacesToSingle(input: string): string {
-    return input.replace(/\s+(\W)/g, ' ');
+    return input?.replace(/\s+(\W)/g, ' ');
 }
 
 /**
- * Convert HTML text to plain text
+ * Convert HTML text to plain text (Remove html tag content)
  * @param {string} input - The input string to process
  * @returns {string} The processed string
  */
+/*
+Examples:
+console.log(htmlToPlain("<p>Hello <b>World</b></p>"));   // Hello World
+*/
 function htmlToPlain(input: string): string {
-    return input.replace(/(<([^>]+)>)/ig, '');
+    return input?.replace(/(<([^>]+)>)/ig, '');
 }
 
 /**
- * Strip HTML tags and their content
+ * Strip HTML tags and their content 
+ * !!!Important: It will remove nested tags
  * @param {string} input - The input string to process
  * @returns {string} The processed string
  */
+/*
+Examples:
+console.log(stripTagsAndContent("<p>Hello <b>World</b></p>"));  // World
+console.log(stripTagsAndContent("Hello <b>World</b>"));  // Hello
+*/
 function stripTagsAndContent(input: string): string {
-    return input.replace(/<\/?[^>]+(>|$)(.*?)<\/?[^>]+(>|$)/ig, '');
+    return input?.replace(/<\/?[^>]+(>|$)(.*?)<\/?[^>]+(>|$)/ig, '');
 }
 
 /**
@@ -71,7 +81,7 @@ function stripTagsAndContent(input: string): string {
  * @returns {string} The processed URL
  */
 function removeFirstLastSlash(input: string): string {
-    return input.replace(/^\/|\/$/g, '');
+    return input?.replace(/^\/|\/$/g, '');
 }
 
 /**
@@ -80,7 +90,7 @@ function removeFirstLastSlash(input: string): string {
  * @returns {string} The processed URL
  */
 function removeTrailingSlash(input: string): string {
-    return input.replace(/\/+$/, '');
+    return input?.replace(/\/+$/, '');
 }
 
 /**
@@ -89,7 +99,7 @@ function removeTrailingSlash(input: string): string {
  * @returns {string} The processed URL
  */
 function removeFirstSlash(input: string): string {
-    return input.replace(/\//, '');
+    return input?.replace(/\//, '');
 }
 
 export {

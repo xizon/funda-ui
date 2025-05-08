@@ -111,8 +111,9 @@ class DataService {
         console.log("limit: ", limit);
         console.log("otherParam: ", otherParam);
 
+        const QUERY_STRING_PLACEHOLDER = '------';  // Invalid parameters for the first automatic request
 
-        if ( searchStr === '------') return {
+        if ( searchStr === QUERY_STRING_PLACEHOLDER) return {
             code: 0,
             message: 'OK',
             data: []
@@ -387,7 +388,7 @@ import LiveSearch from 'funda-ui/LiveSearch';
 | `data`  <blockquote>You could use [key](https://react.dev/learn/rendering-lists#why-does-react-need-keys) instead of it</blockquote>  | any  | - | Incoming data, you can set the third parameter of `onFetch`. <blockquote>Changes in the `data` value will cause the component to re-render. It will be used when the value or content does not change when switching routes and needs to re-render the component or get the request.</blockquote> <hr /> <blockquote>!!!Note: Using `data` and `value` at the same time may cause two different parameter transfers, which will affect the final rendering. Please choose the appropriate usage based on your business. Generally speaking, if the `multiSelect` exists, it is not recommended to use the `data`.</blockquote>| - |
 | `allowSpacingRetrive` | boolean | false | Allow Spaces to return all results. <blockquote>The condition is that the database interface can retrieve whitespace data. By default, using spaces will return no results.</blockquote> | - |
 | `autoShowOptions` | boolean  | false | Force display of the option list. | - |
-| `fetchTrigger` | boolean  | false | Use buttons to trigger data queries. | - |
+| `fetchTrigger` | boolean  | false | Use search button to trigger data queries. | - |
 | `fetchNoneInfo` | string  | `No match yet` | The text of the data not fetched. <br />Valid when `fetchTrigger` is *true*. | - |
 | `fetchUpdate` | boolean  | false | When the property is *true*, every time the input changes or the search button is clicked, a data request will be triggered. | - |
 | `fetchFuncAsync` | Constructor | - | A method as a string from the constructor.  | - |

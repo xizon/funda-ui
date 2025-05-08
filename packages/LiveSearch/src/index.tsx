@@ -144,6 +144,7 @@ const LiveSearch = forwardRef((props: LiveSearchProps, externalRef: any) => {
     } = props;
 
 
+    const QUERY_STRING_PLACEHOLDER = '------';  // Invalid parameters for the first automatic request
     const DEPTH = depth || 1055;  // the default value same as bootstrap
     const POS_OFFSET = 0;
     const EXCEEDED_SIDE_POS_OFFSET = Number(exceededSidePosOffset) || 15;
@@ -773,7 +774,7 @@ const LiveSearch = forwardRef((props: LiveSearchProps, externalRef: any) => {
         // data init
         //--------------
         const _oparams: any[] = fetchFuncMethodParams || [];
-        const _params: any[] = _oparams.map((item: any) => item !== '$QUERY_STRING' ? item : (fetchTrigger && !fetchUpdate) ? '' : (fetchUpdate ? '------' : (fetchTrigger ? '------' : '')));
+        const _params: any[] = _oparams.map((item: any) => item !== '$QUERY_STRING' ? item : (fetchTrigger && !fetchUpdate) ? '' : (fetchUpdate ? QUERY_STRING_PLACEHOLDER : (fetchTrigger ? QUERY_STRING_PLACEHOLDER : '')));
         if (!firstFetch) {
             fetchData((_params).join(','));
             setFirstFetch(true);  // avoid triggering two data requests if the input value has not changed

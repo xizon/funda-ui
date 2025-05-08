@@ -17,9 +17,11 @@
     --cus-sel-removebtn-fill: #000;
     --cus-sel-removebtn-hover-fill: #f00;
 
+        
     position: relative; /* Required */
 
 
+    
 
     /*------ Placeholder for input ------*/
     input::placeholder {
@@ -33,7 +35,6 @@
             fill: var(--cus-sel-arrow-fill);
         }
     }
-        
     /*------ Clean ------*/
     .clean {
         svg .clean-fill-g {
@@ -71,6 +72,7 @@
     .custom-select-multi__control-blinking-cursor {
         display: inline-block;
         color: var(--cus-sel-placeholder-color);
+        width: 100%;
 
         &.animated {
             animation: 1s mf-sel-blink step-end infinite;
@@ -78,6 +80,15 @@
 
         &.control-placeholder {
             color: var(--cus-sel-input-placeholder-color);
+        }
+
+        /* Text preview */
+        > span {
+            display: inline-block;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            overflow: hidden;
+            max-width: 100%;
         }
 
 
@@ -383,7 +394,7 @@
     --cus-sel-listgroup-content-scrollbar-w: 10px;
     --cus-sel-listgroup-grouptitle-color: #a2a2a2;
     --cus-sel-listgroup-groupborder-color: #d8d8d8;
-
+    --cus-sel-loader-color: #000000;
 
 
 
@@ -391,11 +402,41 @@
     min-width: var(--cus-sel-listgroup-popwin-min-width);
     z-index: 1055;  /* --bs-modal-zindex */
 
+    
     &.active {
         display: block !important;
     }
 
+    
 
+    /*------ Loader ------*/
+    .cus-select-loader {
+        pointer-events: none;
+        z-index: 1;
+        width: 12px;
+        height: 12px;
+        text-align: center;
+        transform-origin: center;
+        transform: translate(-5px, 0) rotate(0);
+        animation: 1s linear infinite cus-select__spinner;
+
+        svg {
+            vertical-align: top;
+
+            path {
+                fill: var(--cus-sel-loader-color);
+            }
+        }
+    }
+
+    @keyframes cus-select__spinner {
+        to {
+            transform: translate(-5px, 0) rotate(-360deg);
+        }
+    }
+
+ 
+    /*------ Options ------*/
     .custom-select__options-contentlist {
         overflow: hidden;
         overflow-y: auto;

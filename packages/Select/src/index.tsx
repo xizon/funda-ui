@@ -3,7 +3,6 @@ import React, { useEffect, useState, useRef, KeyboardEvent, forwardRef, useImper
 import {
     formatIndentVal,
     unique,
-    stripHTML,
     removeItemOnce,
     optionsCustomSelectFlat,
     isObject
@@ -46,8 +45,10 @@ import {
     disableBodyScroll, 
     enableBodyScroll,
 } from 'funda-utils/dist/cjs/bodyScrollLock';
+import {
+    stripTagsAndContent
+} from 'funda-utils/dist/cjs/format-string';
 import { clsWrite, combinedCls } from 'funda-utils/dist/cjs/cls';
-
 
 
 export type SelectOptionChangeFnType = (arg1: any, arg2: any, arg3: any) => void;
@@ -120,6 +121,7 @@ export type SelectProps = {
     placeholder?: string;
     options?: OptionConfig[] | string;
     lockBodyScroll?: boolean;
+    loader?: React.ReactNode;
     hierarchical?: boolean;
     indentation?: string;
     doubleIndent?: boolean;
@@ -186,6 +188,7 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
         spellCheck,
         options,
         cleanTrigger,
+        loader,
         lockBodyScroll,
         hierarchical,
         indentation,
@@ -217,6 +220,7 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
     } = props;
 
 
+    const QUERY_STRING_PLACEHOLDER = '------';  // Invalid parameters for the first automatic request
     const DEPTH = depth || 1055;  // the default value same as bootstrap
     const MANUAL_REQ = typeof fetchTrigger !== 'undefined' && fetchTrigger === true ? true : false;  // Manual requests
     const LIVE_SEARCH_DISABLED = !MANUAL_REQ && typeof window !== 'undefined' && typeof (window as any)['funda-ui__Select-disable-livesearch'] !== 'undefined' ? true : false; // Globally disable real-time search functionality (only valid for non-dynamic requests)
@@ -240,7 +244,7 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
     const listRef = useRef<any>(null);
     const listContentRef = useRef<any>(null);
     const optionsRes = options ? (isJSON(options) ? JSON.parse(options as string) : options) : [];
-    const LIST_CONTAINER_MAX_HEIGHT = 350;
+    const LIST_CONTAINER_MAX_HEIGHT = 300;
 
     const keyboardSelectedItem = useRef<any>(null);
 
@@ -252,12 +256,20 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
     const [orginalData, setOrginalData] = useState<OptionConfig[]>(staticOptionsData);
     const [optionsData, setOptionsData] = useState<OptionConfig[]>(staticOptionsData);
     const [hasErr, setHasErr] = useState<boolean>(false);
+
+    // Set the final result
     const [controlLabel, setControlLabel] = useState<string | undefined>('');
     const [controlValue, setControlValue] = useState<string | undefined>('');
+
+    //
     const [controlTempValue, setControlTempValue] = useState<string | null>(null);
     const [isOpen, setIsOpen] = useState<boolean>(false);
     const [incomingData, setIncomingData] = useState<string | null | undefined>(null);
     const [firstRequestExecuted, setFirstRequestExecuted] = useState<boolean>(false);
+    const [handleFirstFetchCompleted, setHandleFirstFetchCompleted] = useState<boolean>(false);
+
+    // filter status
+    const [filterItemsHasNoMatchData, setFilterItemsHasNoMatchData] = useState<boolean>(false);
     
 
     // blinking cursor
@@ -458,6 +470,11 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
 
         if (fetchUpdate) {
 
+            // update filter status
+            setFilterItemsHasNoMatchData(false); 
+
+
+            // Make a request
             handleFetch(val).then((response: any) => {
                 _orginalData = response;
                 const _filterRes = update(_orginalData);
@@ -827,6 +844,8 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
 
 
     function adjustMultiControlContainerHeight(scrollbarInit: boolean = true) {
+        if (rootMultiRef.current === null) return;
+        
         setTimeout(() => {
 
 
@@ -904,7 +923,7 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
 
         // You need to wait for the height of the pop-up container to be set
         // Detect position、
-        if (window.innerHeight - _triggerBox.top > _contentOldHeight) {
+        if (window.innerHeight - _triggerBox.top > 100) {
             targetPos = 'bottom';
         } else {
             targetPos = 'top';
@@ -971,9 +990,6 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
             }
 
         }
-
-
-
 
 
         // STEP 4:
@@ -1067,9 +1083,9 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
 
 
             // nomatch & button of select all 
-            const _nodataDiv = listContentRef.current.querySelector('.custom-select-multi__control-option-item--nomatch');
+            const _noDataDiv = listContentRef.current.querySelector('.custom-select-multi__control-option-item--nomatch');
             const _btnSelectAll = listContentRef.current.querySelector('.custom-select-multi__control-option-item--select-all');
-            _nodataDiv.classList.add('hide');
+            _noDataDiv.classList.add('hide');
             if (_btnSelectAll !== null) _btnSelectAll.classList.remove('hide');
 
 
@@ -1083,6 +1099,7 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
         if (listContentRef.current === null) return;
 
 
+        let invisibleItems: number = 0;
         [].slice.call(listContentRef.current.querySelectorAll('.custom-select-multi__control-option-item')).forEach((node: any) => {
 
             // Avoid fatal errors causing page crashes
@@ -1104,21 +1121,28 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
 
         });
 
+        // Determine if all options are hidden
+        const allHidden = [].slice.call(listContentRef.current.querySelectorAll('.custom-select-multi__control-option-item'))
+            .every((node: any) => node.classList.contains('hide'));
 
+   
         // no data label
         popwinNoMatchInit();
 
 
         // display all filtered items
         const _btnSelectAll = listContentRef.current.querySelector('.custom-select-multi__control-option-item--select-all');
-        const _nodataDiv = listContentRef.current.querySelector('.custom-select-multi__control-option-item--nomatch');
+        const _noDataDiv = listContentRef.current.querySelector('.custom-select-multi__control-option-item--nomatch');
         if ((val === null ? '' : val).replace(/\s/g, "") === '') {
             [].slice.call(listContentRef.current.querySelectorAll('.custom-select-multi__control-option-item')).forEach((node: any) => {
                 node.classList.remove('hide');
             });
-            _nodataDiv.classList.add('hide');
+            _noDataDiv.classList.add('hide');
             if (_btnSelectAll !== null) _btnSelectAll.classList.remove('hide');
         }
+
+        // filter status
+        setFilterItemsHasNoMatchData(allHidden);
 
 
         // Appropriate list container height
@@ -1154,7 +1178,7 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
         if (listContentRef.current === null) return;
 
         const _btnSelectAll = listContentRef.current.querySelector('.custom-select-multi__control-option-item--select-all');
-        const _nodataDiv = listContentRef.current.querySelector('.custom-select-multi__control-option-item--nomatch');
+        const _noDataDiv = listContentRef.current.querySelector('.custom-select-multi__control-option-item--nomatch');
         const emptyFieldsCheck = [].slice.call(listContentRef.current.querySelectorAll('.custom-select-multi__control-option-item')).every((node: any) => {
             if (!node.classList.contains('hide')) {
                 return false;
@@ -1163,10 +1187,10 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
         });
 
         if (emptyFieldsCheck) {
-            _nodataDiv.classList.remove('hide');
+            _noDataDiv.classList.remove('hide');
             if (_btnSelectAll !== null) _btnSelectAll.classList.add('hide');
         } else {
-            _nodataDiv.classList.add('hide');
+            _noDataDiv.classList.add('hide');
             if (_btnSelectAll !== null) _btnSelectAll.classList.remove('hide');
         }
 
@@ -1203,6 +1227,9 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
         // update temporary value
         setControlTempValue(null);
 
+        // update filter status
+        setFilterItemsHasNoMatchData(false);
+
 
         // Unlocks the page
         if (LOCK_BODY_SCROLL) enableBodyScroll(document.querySelector('body'));
@@ -1221,8 +1248,14 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
             handleFirstFetch(curValue).then((response: any) => {
                 if (response.length > 0) {
                     // nomatch
-                    const _nodataDiv = listContentRef.current.querySelector('.custom-select-multi__control-option-item--nomatch');
-                    _nodataDiv.classList.add('hide');
+                    const _noDataDiv = listContentRef.current.querySelector('.custom-select-multi__control-option-item--nomatch');
+                    _noDataDiv.classList.add('hide');
+
+                    // After the data is loaded, reinitialize the pop-up window position and height
+                    setTimeout(() => {
+                        popwinPosInit();
+                    }, 0);
+
                 }
             });
 
@@ -1748,6 +1781,9 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
         // update temporary value
         setControlTempValue(null);
 
+        // update filter status
+        setFilterItemsHasNoMatchData(false); 
+
     }
 
 
@@ -1833,8 +1869,11 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
 
     async function handleFirstFetch(inputVal: any = null) {
         const _oparams: any[] = fetchFuncMethodParams || [];
-        const _params: any[] = _oparams.map((item: any) => item !== '$QUERY_STRING' ? item : (MANUAL_REQ ? '------' : ''));
+        const _params: any[] = _oparams.map((item: any) => item !== '$QUERY_STRING' ? item : (MANUAL_REQ ? QUERY_STRING_PLACEHOLDER : ''));
         const res = await fetchData((_params).join(','), finalRes(inputVal), inputVal);
+
+        // Set an identifier indicating that the first request has been completed
+        if (!handleFirstFetchCompleted) setHandleFirstFetchCompleted(true);
 
         return res;
     }
@@ -2077,8 +2116,16 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
             handleFirstFetch(value);
         }
 
+        // Forced assignment does not depend on "fetch" or "firstRequestAutoExe"
+        // Don't use "value.value && value.label" directly, if it is empty, it will be treated as FALSE
+        if ( value && typeof value === 'object' ) {
+            if (typeof value.value !== 'undefined' && value.value !== null) setControlValue(value.value as string);
+            if (typeof value.label !== 'undefined' && value.label !== null) setControlLabel(formatIndentVal(value.label, INDENT_LAST_PLACEHOLDER));
+        }
 
 
+        //
+        //--------------
         return () => {
             if (LOCK_BODY_SCROLL) clearAllBodyScrollLocks();
         }
@@ -2120,6 +2167,7 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
             document.removeEventListener('pointerdown', handleDocOut);
         };
     }, [orginalData]); // Avoid the issue that `setOptionsData(orginalData)` sets the original value to empty on the first entry
+
 
 
     return (
@@ -2182,7 +2230,7 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
                             disabled={disabled || null}
                             required={required || null}
                             readOnly={INPUT_READONLY}
-                            value={controlTempValue || controlTempValue === '' ? controlTempValue : (MULTI_SEL_VALID ? (VALUE_BY_BRACKETS ? convertArrToValByBrackets(formatIndentVal(controlArr.labels, INDENT_LAST_PLACEHOLDER).map((v: any) => stripHTML(v))) : formatIndentVal(controlArr.labels, INDENT_LAST_PLACEHOLDER).map((v: any) => stripHTML(v)).join(',')) : stripHTML(controlLabel as never))}  // do not use `defaultValue`
+                            value={controlTempValue || controlTempValue === '' ? controlTempValue : (MULTI_SEL_VALID ? (VALUE_BY_BRACKETS ? convertArrToValByBrackets(formatIndentVal(controlArr.labels, INDENT_LAST_PLACEHOLDER).map((v: any) => stripTagsAndContent(v))) : formatIndentVal(controlArr.labels, INDENT_LAST_PLACEHOLDER).map((v: any) => stripTagsAndContent(v)).join(',')) : stripTagsAndContent(controlLabel as never))}  // do not use `defaultValue`
       
                             style={{ 
                                 cursor: 'pointer', 
@@ -2261,7 +2309,7 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
                                 'animated': generateInputFocusStr() === BLINKING_CURSOR_STR
                             }
                         )}>
-                            {controlTempValue || controlTempValue === '' ? (controlTempValue.length === 0 ? <span className={`${!hideBlinkingCursor() ? 'control-placeholder' : ''}`}>{generateInputFocusStr()}</span> : <span>{controlTempValue}</span>) : (stripHTML(controlLabel as never).length === 0 ? <span className={`${!hideBlinkingCursor() ? 'control-placeholder' : ''}`}>{generateInputFocusStr()}</span> : <span>{stripHTML(controlLabel as never)}</span>)}
+                            {controlTempValue || controlTempValue === '' ? (controlTempValue.length === 0 ? <span className={`${!hideBlinkingCursor() ? 'control-placeholder' : ''}`}>{generateInputFocusStr()}</span> : <span>{controlTempValue}</span>) : (stripTagsAndContent(controlLabel as never).length === 0 ? <span className={`${!hideBlinkingCursor() ? 'control-placeholder' : ''}`}>{generateInputFocusStr()}</span> : <span>{stripTagsAndContent(controlLabel as never)}</span>)}
                         </span>
 
                     </div>
@@ -2458,9 +2506,9 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
                                                 key={'selected-item-' + index}
                                                 data-value={controlArr.values[index]}
                                                 data-label-full={item}
-                                                data-label-text={formatIndentVal(stripHTML(item), INDENT_LAST_PLACEHOLDER)}
+                                                data-label-text={formatIndentVal(stripTagsAndContent(item), INDENT_LAST_PLACEHOLDER)}
                                             >
-                                                {formatIndentVal(stripHTML(item), INDENT_LAST_PLACEHOLDER)}
+                                                {formatIndentVal(stripTagsAndContent(item), INDENT_LAST_PLACEHOLDER)}
 
                                                 <a 
                                                     href="#" 
@@ -2656,9 +2704,18 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
                                     {/* /CLEAN BUTTON (Only Single selection) */}
 
 
-                                    {/* NO MATCH */}
-                                    <button tabIndex={-1} type="button" className="list-group-item list-group-item-action no-match border-0 custom-select-multi__control-option-item--nomatch hide" disabled>{fetchNoneInfo || 'No match yet'}</button>
-                                    {/* /NO MATCH */}
+                                    {/* NO MATCH & LOADER */}
+                                    <button tabIndex={-1} type="button" className="list-group-item list-group-item-action no-match border-0 custom-select-multi__control-option-item--nomatch hide" disabled>
+                                        {
+                                            // (1) Handling async data with the click event
+                                            (!FIRST_REQUEST_AUTO && !handleFirstFetchCompleted) ||
+
+                                            // (2) Every time the input changes or the search button is clicked, a data request will be triggered
+                                            (fetchUpdate && !filterItemsHasNoMatchData && controlTempValue !== '')
+                                        ? <><div className="cus-select-loader">{loader || <svg height="12px" width="12px" viewBox="0 0 512 512"><g><path fill="inherit" d="M256,0c-23.357,0-42.297,18.932-42.297,42.288c0,23.358,18.94,42.288,42.297,42.288c23.357,0,42.279-18.93,42.279-42.288C298.279,18.932,279.357,0,256,0z" /><path fill="inherit" d="M256,427.424c-23.357,0-42.297,18.931-42.297,42.288C213.703,493.07,232.643,512,256,512c23.357,0,42.279-18.93,42.279-42.288C298.279,446.355,279.357,427.424,256,427.424z" /><path fill="inherit" d="M74.974,74.983c-16.52,16.511-16.52,43.286,0,59.806c16.52,16.52,43.287,16.52,59.806,0c16.52-16.511,16.52-43.286,0-59.806C118.261,58.463,91.494,58.463,74.974,74.983z" /><path fill="inherit" d="M377.203,377.211c-16.503,16.52-16.503,43.296,0,59.815c16.519,16.52,43.304,16.52,59.806,0c16.52-16.51,16.52-43.295,0-59.815C420.489,360.692,393.722,360.7,377.203,377.211z" /><path fill="inherit" d="M84.567,256c0.018-23.348-18.922-42.279-42.279-42.279c-23.357-0.009-42.297,18.932-42.279,42.288c-0.018,23.348,18.904,42.279,42.279,42.279C65.645,298.288,84.567,279.358,84.567,256z" /><path fill="inherit" d="M469.712,213.712c-23.357,0-42.279,18.941-42.297,42.288c0,23.358,18.94,42.288,42.297,42.297c23.357,0,42.297-18.94,42.279-42.297C512.009,232.652,493.069,213.712,469.712,213.712z" /><path fill="inherit" d="M74.991,377.22c-16.519,16.511-16.519,43.296,0,59.806c16.503,16.52,43.27,16.52,59.789,0c16.52-16.519,16.52-43.295,0-59.815C118.278,360.692,91.511,360.692,74.991,377.22z" /><path fill="inherit" d="M437.026,134.798c16.52-16.52,16.52-43.304,0-59.824c-16.519-16.511-43.304-16.52-59.823,0c-16.52,16.52-16.503,43.295,0,59.815C393.722,151.309,420.507,151.309,437.026,134.798z" /></g></svg>}</div></> : <>{fetchNoneInfo || 'No match yet'}</>}
+                                    </button>
+                                    {/* /NO MATCH & LOADER */}
+
 
 
                                     {/* OPTIONS LIST */}

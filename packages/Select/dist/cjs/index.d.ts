@@ -58,6 +58,7 @@ export declare type SelectProps = {
     placeholder?: string;
     options?: OptionConfig[] | string;
     lockBodyScroll?: boolean;
+    loader?: React.ReactNode;
     hierarchical?: boolean;
     indentation?: string;
     doubleIndent?: boolean;

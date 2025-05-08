@@ -17,18 +17,18 @@ declare function getTimeslots(startTime: string, endTime: string, timeInterval: 
  * @param  {Date} endDate  -  ebd date
  * @returns Number
  */
-declare function getMinutesBetweenDates(startDate: any, endDate: any): number;
+declare function getMinutesBetweenDates(startDate: Date, endDate: Date): number;
 /**
  * Get minutes between two time
  * @param  {String} startTime  -  start time
  * @param  {String} endTime  -  ebd time
  * @returns Number
  */
-declare function getMinutesBetweenTime(startTime: any, endTime: any): string;
+declare function getMinutesBetweenTime(startTime: string, endTime: string): string;
 /**
  * Convert HH:MM:SS into minute
  * @param  {String} timeStr  -  time string
  * @returns Number
  */
-declare function convertTimeToMin(timeStr: any): number;
+declare function convertTimeToMin(timeStr: string): number;
 export { getTimeslots, getMinutesBetweenDates, getMinutesBetweenTime, convertTimeToMin };

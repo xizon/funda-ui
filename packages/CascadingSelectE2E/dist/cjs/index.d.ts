@@ -14,6 +14,8 @@ export declare type CascadingSelectE2EProps = {
     wrapperClassName?: string;
     controlClassName?: string;
     controlExClassName?: string;
+    searchable?: boolean;
+    searchPlaceholder?: string;
     perColumnHeadersShow?: boolean;
     exceededSidePosOffset?: number;
     value?: string;

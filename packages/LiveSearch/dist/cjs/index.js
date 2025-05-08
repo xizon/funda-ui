@@ -2827,6 +2827,7 @@ var LiveSearch = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(
     onBlur = props.onBlur,
     _onPressEnter = props.onPressEnter,
     attributes = _objectWithoutProperties(props, _excluded);
+  var QUERY_STRING_PLACEHOLDER = '------'; // Invalid parameters for the first automatic request
   var DEPTH = depth || 1055; // the default value same as bootstrap
   var POS_OFFSET = 0;
   var EXCEEDED_SIDE_POS_OFFSET = Number(exceededSidePosOffset) || 15;
@@ -3478,7 +3479,7 @@ var LiveSearch = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(
     //--------------
     var _oparams = fetchFuncMethodParams || [];
     var _params = _oparams.map(function (item) {
-      return item !== '$QUERY_STRING' ? item : fetchTrigger && !fetchUpdate ? '' : fetchUpdate ? '------' : fetchTrigger ? '------' : '';
+      return item !== '$QUERY_STRING' ? item : fetchTrigger && !fetchUpdate ? '' : fetchUpdate ? QUERY_STRING_PLACEHOLDER : fetchTrigger ? QUERY_STRING_PLACEHOLDER : '';
     });
     if (!firstFetch) {
       fetchData(_params.join(','));

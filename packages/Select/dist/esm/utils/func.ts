@@ -36,16 +36,6 @@ export function unique(arr: any[]) {
 
 
 /**
- * Remove html tag content
- * @param {string | number} str 
- * @returns {string}
- */
-export function stripHTML(str: string | number) {
-    return String(str).replace(/<\/?[^>]+(>|$)(.*?)<\/?[^>]+(>|$)/ig, '');
-}
-
-
-/**
  * Remove a specific item from an array
  * @param {array} arr 
  * @param {string} value 

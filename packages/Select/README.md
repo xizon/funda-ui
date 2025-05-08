@@ -16,6 +16,34 @@ import axios from 'axios';
 import '../funda-ui/Select/src/index.scss';
 
 class DataService {
+
+    // `getListAwait()` must be a Promise Object
+    async getListAwait(searchStr = '', limit = 0, otherParam = '') {
+
+        console.log('(getListAwait) searchStr: ', searchStr);
+        console.log("(getListAwait) limit: ", limit);
+        console.log("(getListAwait) otherParam: ", otherParam);
+
+        const QUERY_STRING_PLACEHOLDER = '------';  // Invalid parameters for the first automatic request
+
+        if ( searchStr === QUERY_STRING_PLACEHOLDER) return {
+            code: 0,
+            message: 'OK',
+            data: []
+        };
+
+        // Simulate request latency
+        await new Promise(resolve => setTimeout(resolve, 1500));
+
+        return {
+            code: 0,
+            message: 'OK',
+            data: Array.from({length: 50}).fill(null).map((v, i) => {
+                return {item_name: 'foo' + i, item_code: 'bar' + i, kb_code: ''}
+            })
+        };
+    }	
+
     
     // `getList()` must be a Promise Object
     async getList(searchStr = '', limit = 0, otherParam = '') {
@@ -271,7 +299,7 @@ export default () => {
                     queryStrings: ['fb2,foobar2']
                 }}
                 fetchFuncAsync={new DataService}
-                fetchFuncMethod="getList"
+                fetchFuncMethod="getListAwait"
                 fetchFuncMethodParams={['$QUERY_STRING',0]}
                 fetchCallback={(res) => {
 
@@ -356,7 +384,7 @@ export default () => {
                 }}
                 // fetchTriggerForDefaultData={undefined}
                 fetchFuncAsync={new DataService}
-                fetchFuncMethod="getList"
+                fetchFuncMethod="getListAwait"
                 fetchFuncMethodParams={['$QUERY_STRING',0]}
                 fetchCallback={(res) => {
 
@@ -417,7 +445,7 @@ export default () => {
 
 ## Use the object as the default 
 
-You can specify an object as the default, and if the default value is not in the list of options, it will be displayed by default.
+You can specify an object as the default, and if the default value is not in the list of options, it will be displayed by default. (Important: An object like `{"label":"Option 0","value":"value-0","queryString":""}` must be passed in as a value.)
 
 > Note: Single selection only!!!
 
@@ -524,26 +552,37 @@ import '../funda-ui/Select/src/index.scss';
 
 
 class DataService {
-    
-    // `getList()` must be a Promise Object
-    async getList(searchStr = '', limit = 0, otherParam = '') {
 
-        console.log('searchStr: ', searchStr);
-        console.log("limit: ", limit);
-        console.log("otherParam: ", otherParam);
+    // `getListAwait()` must be a Promise Object
+    async getListAwait(searchStr = '', limit = 0, otherParam = '') {
+
+        console.log('(getListAwait) searchStr: ', searchStr);
+        console.log("(getListAwait) limit: ", limit);
+        console.log("(getListAwait) otherParam: ", otherParam);
+
+        const QUERY_STRING_PLACEHOLDER = '------';  // Invalid parameters for the first automatic request
+
+        if ( searchStr === QUERY_STRING_PLACEHOLDER) return {
+            code: 0,
+            message: 'OK',
+            data: []
+        };
+
+
+        // Simulate request latency
+        await new Promise(resolve => setTimeout(resolve, 1500));
 
         return {
             code: 0,
             message: 'OK',
-            data: [
-                {item_name: 'foo', item_code: 'bar', kb_code: 'fb,foobar'},
-                {item_name: 'foo2', item_code: 'bar2', kb_code: 'fb2,foobar2'},
-                {item_name: 'foo3', item_code: 'bar3', kb_code: 'fb3,foobar3'}
-            ]
+            data: Array.from({length: 50}).fill(null).map((v, i) => {
+                return {item_name: 'foo' + i, item_code: 'bar' + i, kb_code: ''}
+            })
         };
-    }
-	
+    }	
+
 }
+
 
 export default () => {
 
@@ -555,7 +594,7 @@ export default () => {
                 name="name"
                 firstRequestAutoExec={false}
                 fetchFuncAsync={new DataService}
-                fetchFuncMethod="getList"
+                fetchFuncMethod="getListAwait"
                 fetchFuncMethodParams={['',0]}
                 fetchCallback={(res) => {
 
@@ -1766,6 +1805,7 @@ import Select from 'funda-ui/Select';
 | `options` | JSON Object Literals \| JSON Object | - | Set the default value using JSON string format for menu of options, like this: `[{"label": "Option 1","value": "value-1","queryString": "option1"},{"label": "<del style=color:red>deprecate</del>Option 2","value": "value-2","queryString": "option2"},{"label": "Option 3","value": "value-3","queryString": "option3"},{"label": "Option 4","value": "value-4","queryString": "option4","disabled":true}]` <br /> <blockquote>Note: Use API data if database query exists. That is, the attribute `fetchXXXX`</blockquote> <hr /> <blockquote>When the attribute `hierarchical` is true, you need to use a hierarchical structure to pass data, such as: `[{label:"Top level 1",value:'level-1',queryString:""},{label:"Top level 2",value:'level-2',queryString:""},{label:"Top level 3",value:'level-3',queryString:"",children:[{label:"Sub level 3_1",value:'level-3_1',queryString:""},{label:"Sub level 3_2",value:'level-3_2',queryString:"",children:[{label:"Sub level 3_2_1",value:'level-3_2_1',queryString:""}]},{label:"Sub level 3_3",value:'level-3_3',queryString:""}]}]`</blockquote>| - |
 | `cleanTrigger` | JSON Object | `{"valid": false, "cleanValueLabel": "Clean"}` | Enable cleanTrigger. <blockquote>**Parameters Description:** <br />`valid` -->  *(Boolean)* *(required)* Display this button that clears the existing value. It is valid when a single selection. <br />`cleanValueLabel` -->  *(String)* Sets the clean button label. (Support html tags) </blockquote> | - |
 | `lockBodyScroll` | boolean  | false | Enables body scroll locking (for iOS Mobile and Tablet, Android, desktop Safari/Chrome/Firefox) without breaking scrolling of a target element. | - |
+| `loader` | ReactNode  | `<svg height="12px" width="12px" viewBox="0 0 512 512"><g><path fill="inherit" d="M256,0c-23.357,0-42.297,18.932-42.297,42.288c0,23.358,18.94,42.288,42.297,42.288c23.357,0,42.279-18.93,42.279-42.288C298.279,18.932,279.357,0,256,0z"/><path fill="inherit" d="M256,427.424c-23.357,0-42.297,18.931-42.297,42.288C213.703,493.07,232.643,512,256,512c23.357,0,42.279-18.93,42.279-42.288C298.279,446.355,279.357,427.424,256,427.424z"/><path fill="inherit" d="M74.974,74.983c-16.52,16.511-16.52,43.286,0,59.806c16.52,16.52,43.287,16.52,59.806,0c16.52-16.511,16.52-43.286,0-59.806C118.261,58.463,91.494,58.463,74.974,74.983z"/><path fill="inherit" d="M377.203,377.211c-16.503,16.52-16.503,43.296,0,59.815c16.519,16.52,43.304,16.52,59.806,0c16.52-16.51,16.52-43.295,0-59.815C420.489,360.692,393.722,360.7,377.203,377.211z"/><path fill="inherit" d="M84.567,256c0.018-23.348-18.922-42.279-42.279-42.279c-23.357-0.009-42.297,18.932-42.279,42.288c-0.018,23.348,18.904,42.279,42.279,42.279C65.645,298.288,84.567,279.358,84.567,256z"/><path fill="inherit" d="M469.712,213.712c-23.357,0-42.279,18.941-42.297,42.288c0,23.358,18.94,42.288,42.297,42.297c23.357,0,42.297-18.94,42.279-42.297C512.009,232.652,493.069,213.712,469.712,213.712z"/><path fill="inherit" d="M74.991,377.22c-16.519,16.511-16.519,43.296,0,59.806c16.503,16.52,43.27,16.52,59.789,0c16.52-16.519,16.52-43.295,0-59.815C118.278,360.692,91.511,360.692,74.991,377.22z"/><path fill="inherit" d="M437.026,134.798c16.52-16.52,16.52-43.304,0-59.824c-16.519-16.511-43.304-16.52-59.823,0c-16.52,16.52-16.503,43.295,0,59.815C393.722,151.309,420.507,151.309,437.026,134.798z"/></g></svg>` | Set a loader component to show while the component waits for the next load of data. e.g. `<span><i className="fa fa-spinner fa-spin fa-fw"></i></span>` | - |
 | `hierarchical` | boolean  | false | Set hierarchical categories ( with sub-categories ) to attribute `options`. | - |
 | `indentation` | string  | - | Set hierarchical indentation placeholders, valid when the `hierarchical` is true. | - |
 | `doubleIndent` | boolean  | false | Set double indent effect, valid when the `hierarchical` is true. | - |
@@ -1788,8 +1828,8 @@ import Select from 'funda-ui/Select';
 | `required` | boolean | false | When present, it specifies that a field must be filled out before submitting the form. | - |
 | `controlArrow` | ReactNode  | `<svg width="10px" height="10px" viewBox="0 -4.5 20 20"><g stroke="none" strokeWidth="1" fill="none"><g transform="translate(-180.000000, -6684.000000)" className="arrow-fill-g" fill="#a5a5a5"><g transform="translate(56.000000, 160.000000)"><path d="M144,6525.39 L142.594,6524 L133.987,6532.261 L133.069,6531.38 L133.074,6531.385 L125.427,6524.045 L124,6525.414 C126.113,6527.443 132.014,6533.107 133.987,6535 C135.453,6533.594 134.024,6534.965 144,6525.39"></path></g></g></g></svg>` | Set an arrow of control | - |
 | `data`  <blockquote>You could use [key](https://react.dev/learn/rendering-lists#why-does-react-need-keys) instead of it</blockquote>  | any  | - | Incoming data, you can set the third parameter of `onFetch`. <blockquote>Changes in the `data` value will cause the component to re-render. It will be used when the value or content does not change when switching routes and needs to re-render the component or get the request.</blockquote> <hr /> <blockquote>!!!Note: Using `data` and `value` at the same time may cause two different parameter transfers, which will affect the final rendering. Please choose the appropriate usage based on your business. Generally speaking, if the `multiSelect` exists, it is not recommended to use the `data`.</blockquote>| - |
-| `firstRequestAutoExec` | boolean  | true | The first asynchronous request is automatically executed. If **false**, trigger the first asynchronous request when the options area is expanded. <blockquote>Valid when the series attribute `fetchXXXX` is exist</blockquote> | - |
-| `fetchTrigger` | boolean  | false | Use buttons to trigger data queries. | - |
+| `firstRequestAutoExec` | boolean  | true | Handling async data with the click event. When the control is clicked, the interface request is automatically triggered, which can avoid the request when the page is loaded.  <blockquote>Valid when the series attribute `fetchXXXX` is exist</blockquote> | - |
+| `fetchTrigger` | boolean  | false | Use search button to trigger data queries. | - |
 | `fetchTriggerForDefaultData` | JSON Object \| null  | null | Sets a default data for control's values. (such as `{values: ['value-1','value-3'], labels: ['Option 1','Option 3'], queryStrings: ['','']}`) <br />Valid when `fetchTrigger` is *true* and `value` is not empty. | - |
 | `fetchNoneInfo` | string  | `No match yet` | The text of the data not fetched. | - |
 | `fetchUpdate` | boolean  | false | When the property is *true*, every time the input changes or the search button is clicked, a data request will be triggered. | - |

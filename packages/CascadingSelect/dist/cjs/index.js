@@ -749,6 +749,236 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 
 /***/ }),
 
+/***/ 933:
+/***/ (function(module, exports, __webpack_require__) {
+
+/* module decorator */ module = __webpack_require__.nmd(module);
+var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
+(function webpackUniversalModuleDefinition(root, factory) {
+  if (( false ? 0 : _typeof(exports)) === 'object' && ( false ? 0 : _typeof(module)) === 'object') module.exports = factory();else if (true) !(__WEBPACK_AMD_DEFINE_ARRAY__ = [], __WEBPACK_AMD_DEFINE_FACTORY__ = (factory),
+		__WEBPACK_AMD_DEFINE_RESULT__ = (typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ?
+		(__WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__)) : __WEBPACK_AMD_DEFINE_FACTORY__),
+		__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));else {}
+})(this, function () {
+  return (/******/function () {
+      // webpackBootstrap
+      /******/
+      "use strict";
+
+      /******/ // The require scope
+      /******/
+      var __nested_webpack_require_987__ = {};
+      /******/
+      /************************************************************************/
+      /******/ /* webpack/runtime/define property getters */
+      /******/
+      (function () {
+        /******/ // define getter functions for harmony exports
+        /******/__nested_webpack_require_987__.d = function (exports, definition) {
+          /******/for (var key in definition) {
+            /******/if (__nested_webpack_require_987__.o(definition, key) && !__nested_webpack_require_987__.o(exports, key)) {
+              /******/Object.defineProperty(exports, key, {
+                enumerable: true,
+                get: definition[key]
+              });
+              /******/
+            }
+            /******/
+          }
+          /******/
+        };
+        /******/
+      })();
+      /******/
+      /******/ /* webpack/runtime/hasOwnProperty shorthand */
+      /******/
+      (function () {
+        /******/__nested_webpack_require_987__.o = function (obj, prop) {
+          return Object.prototype.hasOwnProperty.call(obj, prop);
+        };
+        /******/
+      })();
+      /******/
+      /******/ /* webpack/runtime/make namespace object */
+      /******/
+      (function () {
+        /******/ // define __esModule on exports
+        /******/__nested_webpack_require_987__.r = function (exports) {
+          /******/if (typeof Symbol !== 'undefined' && Symbol.toStringTag) {
+            /******/Object.defineProperty(exports, Symbol.toStringTag, {
+              value: 'Module'
+            });
+            /******/
+          }
+          /******/
+          Object.defineProperty(exports, '__esModule', {
+            value: true
+          });
+          /******/
+        };
+        /******/
+      })();
+      /******/
+      /************************************************************************/
+      var __webpack_exports__ = {};
+      __nested_webpack_require_987__.r(__webpack_exports__);
+      /* harmony export */
+      __nested_webpack_require_987__.d(__webpack_exports__, {
+        /* harmony export */"htmlToPlain": function htmlToPlain() {
+          return (/* binding */_htmlToPlain
+          );
+        },
+        /* harmony export */"multiSpacesToSingle": function multiSpacesToSingle() {
+          return (/* binding */_multiSpacesToSingle
+          );
+        },
+        /* harmony export */"onlyNumAndLetter": function onlyNumAndLetter() {
+          return (/* binding */_onlyNumAndLetter
+          );
+        },
+        /* harmony export */"removeFirstLastSlash": function removeFirstLastSlash() {
+          return (/* binding */_removeFirstLastSlash
+          );
+        },
+        /* harmony export */"removeFirstSlash": function removeFirstSlash() {
+          return (/* binding */_removeFirstSlash
+          );
+        },
+        /* harmony export */"removeTrailingSlash": function removeTrailingSlash() {
+          return (/* binding */_removeTrailingSlash
+          );
+        },
+        /* harmony export */"rmAllSpace": function rmAllSpace() {
+          return (/* binding */_rmAllSpace
+          );
+        },
+        /* harmony export */"rmSpec": function rmSpec() {
+          return (/* binding */_rmSpec
+          );
+        },
+        /* harmony export */"stripTagsAndContent": function stripTagsAndContent() {
+          return (/* binding */_stripTagsAndContent
+          );
+        },
+        /* harmony export */"trimAll": function trimAll() {
+          return (/* binding */_trimAll
+          );
+        }
+        /* harmony export */
+      });
+      /**
+       * String formatting utility functions
+       */
+
+      /**
+       * Remove all special characters except space from a string
+       * @param {string} input - The input string to process
+       * @returns {string} The processed string
+       */
+      function _rmSpec(input) {
+        return input === null || input === void 0 ? void 0 : input.replace(/[^a-zA-Z0-9 \u4E00-\u9FFF]/g, "");
+      }
+
+      /**
+       * Allow only numbers and letters in a string
+       * @param {string} input - The input string to process
+       * @returns {string} The processed string
+       */
+      function _onlyNumAndLetter(input) {
+        return input === null || input === void 0 ? void 0 : input.replace(/[^a-zA-Z0-9 ]/g, "");
+      }
+
+      /**
+       * Remove all spaces including those in the middle
+       * @param {string} input - The input string to process
+       * @returns {string} The processed string
+       */
+      function _rmAllSpace(input) {
+        return input === null || input === void 0 ? void 0 : input.replace(/\s/g, "");
+      }
+
+      /**
+       * Remove whitespace from both sides of a string
+       * @param {string} input - The input string to process
+       * @returns {string} The processed string
+       */
+      function _trimAll(input) {
+        return input === null || input === void 0 ? void 0 : input.replace(/(^\s+)|(\s+$)/g, "");
+      }
+
+      /**
+       * Replace multiple spaces with a single space
+       * @param {string} input - The input string to process
+       * @returns {string} The processed string
+       */
+      function _multiSpacesToSingle(input) {
+        return input === null || input === void 0 ? void 0 : input.replace(/\s+(\W)/g, ' ');
+      }
+
+      /**
+       * Convert HTML text to plain text (Remove html tag content)
+       * @param {string} input - The input string to process
+       * @returns {string} The processed string
+       */
+      /*
+      Examples:
+      console.log(htmlToPlain("<p>Hello <b>World</b></p>"));   // Hello World
+      */
+      function _htmlToPlain(input) {
+        return input === null || input === void 0 ? void 0 : input.replace(/(<([^>]+)>)/ig, '');
+      }
+
+      /**
+       * Strip HTML tags and their content 
+       * !!!Important: It will remove nested tags
+       * @param {string} input - The input string to process
+       * @returns {string} The processed string
+       */
+      /*
+      Examples:
+      console.log(stripTagsAndContent("<p>Hello <b>World</b></p>"));  // World
+      console.log(stripTagsAndContent("Hello <b>World</b>"));  // Hello
+      */
+      function _stripTagsAndContent(input) {
+        return input === null || input === void 0 ? void 0 : input.replace(/<\/?[^>]+(>|$)(.*?)<\/?[^>]+(>|$)/ig, '');
+      }
+
+      /**
+       * Remove first and last slash from a URL
+       * @param {string} input - The input URL to process
+       * @returns {string} The processed URL
+       */
+      function _removeFirstLastSlash(input) {
+        return input === null || input === void 0 ? void 0 : input.replace(/^\/|\/$/g, '');
+      }
+
+      /**
+       * Remove trailing slash from a URL
+       * @param {string} input - The input URL to process
+       * @returns {string} The processed URL
+       */
+      function _removeTrailingSlash(input) {
+        return input === null || input === void 0 ? void 0 : input.replace(/\/+$/, '');
+      }
+
+      /**
+       * Remove first slash from a URL
+       * @param {string} input - The input URL to process
+       * @returns {string} The processed URL
+       */
+      function _removeFirstSlash(input) {
+        return input === null || input === void 0 ? void 0 : input.replace(/\//, '');
+      }
+
+      /******/
+      return __webpack_exports__;
+      /******/
+    }()
+  );
+});
+
+/***/ }),
+
 /***/ 767:
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -1851,6 +2081,8 @@ var extract = __webpack_require__(135);
 var convert = __webpack_require__(79);
 // EXTERNAL MODULE: ../Utils/dist/cjs/getElementProperty.js
 var getElementProperty = __webpack_require__(767);
+// EXTERNAL MODULE: ../Utils/dist/cjs/format-string.js
+var format_string = __webpack_require__(933);
 // EXTERNAL MODULE: ../Utils/dist/cjs/cls.js
 var cls = __webpack_require__(188);
 ;// CONCATENATED MODULE: ./src/Group.tsx
@@ -1920,14 +2152,14 @@ function Group(props) {
   }));
 }
 ;// CONCATENATED MODULE: ./src/index.tsx
-var _excluded = ["popupRef", "wrapperClassName", "controlClassName", "controlExClassName", "perColumnHeadersShow", "exceededSidePosOffset", "disabled", "required", "value", "label", "placeholder", "name", "id", "extractValueByBraces", "columnTitle", "depth", "loader", "displayResult", "displayResultArrow", "controlArrow", "valueType", "showCloseBtn", "style", "tabIndex", "triggerClassName", "triggerContent", "cleanNodeBtnClassName", "cleanNodeBtnContent", "fetchFuncAsync", "fetchFuncMethod", "fetchFuncMethodParams", "fetchCallback", "onFetch", "onChange", "onBlur", "onFocus"];
+var _excluded = ["popupRef", "wrapperClassName", "controlClassName", "controlExClassName", "searchable", "searchPlaceholder", "perColumnHeadersShow", "exceededSidePosOffset", "disabled", "required", "value", "label", "placeholder", "name", "id", "extractValueByBraces", "columnTitle", "depth", "loader", "displayResult", "displayResultArrow", "controlArrow", "valueType", "showCloseBtn", "style", "tabIndex", "triggerClassName", "triggerContent", "cleanNodeBtnClassName", "cleanNodeBtnContent", "fetchFuncAsync", "fetchFuncMethod", "fetchFuncMethodParams", "fetchCallback", "onFetch", "onChange", "onBlur", "onFocus"];
 function _regeneratorRuntime() { "use strict"; /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/facebook/regenerator/blob/main/LICENSE */ _regeneratorRuntime = function _regeneratorRuntime() { return exports; }; var exports = {}, Op = Object.prototype, hasOwn = Op.hasOwnProperty, defineProperty = Object.defineProperty || function (obj, key, desc) { obj[key] = desc.value; }, $Symbol = "function" == typeof Symbol ? Symbol : {}, iteratorSymbol = $Symbol.iterator || "@@iterator", asyncIteratorSymbol = $Symbol.asyncIterator || "@@asyncIterator", toStringTagSymbol = $Symbol.toStringTag || "@@toStringTag"; function define(obj, key, value) { return Object.defineProperty(obj, key, { value: value, enumerable: !0, configurable: !0, writable: !0 }), obj[key]; } try { define({}, ""); } catch (err) { define = function define(obj, key, value) { return obj[key] = value; }; } function wrap(innerFn, outerFn, self, tryLocsList) { var protoGenerator = outerFn && outerFn.prototype instanceof Generator ? outerFn : Generator, generator = Object.create(protoGenerator.prototype), context = new Context(tryLocsList || []); return defineProperty(generator, "_invoke", { value: makeInvokeMethod(innerFn, self, context) }), generator; } function tryCatch(fn, obj, arg) { try { return { type: "normal", arg: fn.call(obj, arg) }; } catch (err) { return { type: "throw", arg: err }; } } exports.wrap = wrap; var ContinueSentinel = {}; function Generator() {} function GeneratorFunction() {} function GeneratorFunctionPrototype() {} var IteratorPrototype = {}; define(IteratorPrototype, iteratorSymbol, function () { return this; }); var getProto = Object.getPrototypeOf, NativeIteratorPrototype = getProto && getProto(getProto(values([]))); NativeIteratorPrototype && NativeIteratorPrototype !== Op && hasOwn.call(NativeIteratorPrototype, iteratorSymbol) && (IteratorPrototype = NativeIteratorPrototype); var Gp = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(IteratorPrototype); function defineIteratorMethods(prototype) { ["next", "throw", "return"].forEach(function (method) { define(prototype, method, function (arg) { return this._invoke(method, arg); }); }); } function AsyncIterator(generator, PromiseImpl) { function invoke(method, arg, resolve, reject) { var record = tryCatch(generator[method], generator, arg); if ("throw" !== record.type) { var result = record.arg, value = result.value; return value && "object" == _typeof(value) && hasOwn.call(value, "__await") ? PromiseImpl.resolve(value.__await).then(function (value) { invoke("next", value, resolve, reject); }, function (err) { invoke("throw", err, resolve, reject); }) : PromiseImpl.resolve(value).then(function (unwrapped) { result.value = unwrapped, resolve(result); }, function (error) { return invoke("throw", error, resolve, reject); }); } reject(record.arg); } var previousPromise; defineProperty(this, "_invoke", { value: function value(method, arg) { function callInvokeWithMethodAndArg() { return new PromiseImpl(function (resolve, reject) { invoke(method, arg, resolve, reject); }); } return previousPromise = previousPromise ? previousPromise.then(callInvokeWithMethodAndArg, callInvokeWithMethodAndArg) : callInvokeWithMethodAndArg(); } }); } function makeInvokeMethod(innerFn, self, context) { var state = "suspendedStart"; return function (method, arg) { if ("executing" === state) throw new Error("Generator is already running"); if ("completed" === state) { if ("throw" === method) throw arg; return doneResult(); } for (context.method = method, context.arg = arg;;) { var delegate = context.delegate; if (delegate) { var delegateResult = maybeInvokeDelegate(delegate, context); if (delegateResult) { if (delegateResult === ContinueSentinel) continue; return delegateResult; } } if ("next" === context.method) context.sent = context._sent = context.arg;else if ("throw" === context.method) { if ("suspendedStart" === state) throw state = "completed", context.arg; context.dispatchException(context.arg); } else "return" === context.method && context.abrupt("return", context.arg); state = "executing"; var record = tryCatch(innerFn, self, context); if ("normal" === record.type) { if (state = context.done ? "completed" : "suspendedYield", record.arg === ContinueSentinel) continue; return { value: record.arg, done: context.done }; } "throw" === record.type && (state = "completed", context.method = "throw", context.arg = record.arg); } }; } function maybeInvokeDelegate(delegate, context) { var methodName = context.method, method = delegate.iterator[methodName]; if (undefined === method) return context.delegate = null, "throw" === methodName && delegate.iterator["return"] && (context.method = "return", context.arg = undefined, maybeInvokeDelegate(delegate, context), "throw" === context.method) || "return" !== methodName && (context.method = "throw", context.arg = new TypeError("The iterator does not provide a '" + methodName + "' method")), ContinueSentinel; var record = tryCatch(method, delegate.iterator, context.arg); if ("throw" === record.type) return context.method = "throw", context.arg = record.arg, context.delegate = null, ContinueSentinel; var info = record.arg; return info ? info.done ? (context[delegate.resultName] = info.value, context.next = delegate.nextLoc, "return" !== context.method && (context.method = "next", context.arg = undefined), context.delegate = null, ContinueSentinel) : info : (context.method = "throw", context.arg = new TypeError("iterator result is not an object"), context.delegate = null, ContinueSentinel); } function pushTryEntry(locs) { var entry = { tryLoc: locs[0] }; 1 in locs && (entry.catchLoc = locs[1]), 2 in locs && (entry.finallyLoc = locs[2], entry.afterLoc = locs[3]), this.tryEntries.push(entry); } function resetTryEntry(entry) { var record = entry.completion || {}; record.type = "normal", delete record.arg, entry.completion = record; } function Context(tryLocsList) { this.tryEntries = [{ tryLoc: "root" }], tryLocsList.forEach(pushTryEntry, this), this.reset(!0); } function values(iterable) { if (iterable) { var iteratorMethod = iterable[iteratorSymbol]; if (iteratorMethod) return iteratorMethod.call(iterable); if ("function" == typeof iterable.next) return iterable; if (!isNaN(iterable.length)) { var i = -1, next = function next() { for (; ++i < iterable.length;) if (hasOwn.call(iterable, i)) return next.value = iterable[i], next.done = !1, next; return next.value = undefined, next.done = !0, next; }; return next.next = next; } } return { next: doneResult }; } function doneResult() { return { value: undefined, done: !0 }; } return GeneratorFunction.prototype = GeneratorFunctionPrototype, defineProperty(Gp, "constructor", { value: GeneratorFunctionPrototype, configurable: !0 }), defineProperty(GeneratorFunctionPrototype, "constructor", { value: GeneratorFunction, configurable: !0 }), GeneratorFunction.displayName = define(GeneratorFunctionPrototype, toStringTagSymbol, "GeneratorFunction"), exports.isGeneratorFunction = function (genFun) { var ctor = "function" == typeof genFun && genFun.constructor; return !!ctor && (ctor === GeneratorFunction || "GeneratorFunction" === (ctor.displayName || ctor.name)); }, exports.mark = function (genFun) { return Object.setPrototypeOf ? Object.setPrototypeOf(genFun, GeneratorFunctionPrototype) : (genFun.__proto__ = GeneratorFunctionPrototype, define(genFun, toStringTagSymbol, "GeneratorFunction")), genFun.prototype = Object.create(Gp), genFun; }, exports.awrap = function (arg) { return { __await: arg }; }, defineIteratorMethods(AsyncIterator.prototype), define(AsyncIterator.prototype, asyncIteratorSymbol, function () { return this; }), exports.AsyncIterator = AsyncIterator, exports.async = function (innerFn, outerFn, self, tryLocsList, PromiseImpl) { void 0 === PromiseImpl && (PromiseImpl = Promise); var iter = new AsyncIterator(wrap(innerFn, outerFn, self, tryLocsList), PromiseImpl); return exports.isGeneratorFunction(outerFn) ? iter : iter.next().then(function (result) { return result.done ? result.value : iter.next(); }); }, defineIteratorMethods(Gp), define(Gp, toStringTagSymbol, "Generator"), define(Gp, iteratorSymbol, function () { return this; }), define(Gp, "toString", function () { return "[object Generator]"; }), exports.keys = function (val) { var object = Object(val), keys = []; for (var key in object) keys.push(key); return keys.reverse(), function next() { for (; keys.length;) { var key = keys.pop(); if (key in object) return next.value = key, next.done = !1, next; } return next.done = !0, next; }; }, exports.values = values, Context.prototype = { constructor: Context, reset: function reset(skipTempReset) { if (this.prev = 0, this.next = 0, this.sent = this._sent = undefined, this.done = !1, this.delegate = null, this.method = "next", this.arg = undefined, this.tryEntries.forEach(resetTryEntry), !skipTempReset) for (var name in this) "t" === name.charAt(0) && hasOwn.call(this, name) && !isNaN(+name.slice(1)) && (this[name] = undefined); }, stop: function stop() { this.done = !0; var rootRecord = this.tryEntries[0].completion; if ("throw" === rootRecord.type) throw rootRecord.arg; return this.rval; }, dispatchException: function dispatchException(exception) { if (this.done) throw exception; var context = this; function handle(loc, caught) { return record.type = "throw", record.arg = exception, context.next = loc, caught && (context.method = "next", context.arg = undefined), !!caught; } for (var i = this.tryEntries.length - 1; i >= 0; --i) { var entry = this.tryEntries[i], record = entry.completion; if ("root" === entry.tryLoc) return handle("end"); if (entry.tryLoc <= this.prev) { var hasCatch = hasOwn.call(entry, "catchLoc"), hasFinally = hasOwn.call(entry, "finallyLoc"); if (hasCatch && hasFinally) { if (this.prev < entry.catchLoc) return handle(entry.catchLoc, !0); if (this.prev < entry.finallyLoc) return handle(entry.finallyLoc); } else if (hasCatch) { if (this.prev < entry.catchLoc) return handle(entry.catchLoc, !0); } else { if (!hasFinally) throw new Error("try statement without catch or finally"); if (this.prev < entry.finallyLoc) return handle(entry.finallyLoc); } } } }, abrupt: function abrupt(type, arg) { for (var i = this.tryEntries.length - 1; i >= 0; --i) { var entry = this.tryEntries[i]; if (entry.tryLoc <= this.prev && hasOwn.call(entry, "finallyLoc") && this.prev < entry.finallyLoc) { var finallyEntry = entry; break; } } finallyEntry && ("break" === type || "continue" === type) && finallyEntry.tryLoc <= arg && arg <= finallyEntry.finallyLoc && (finallyEntry = null); var record = finallyEntry ? finallyEntry.completion : {}; return record.type = type, record.arg = arg, finallyEntry ? (this.method = "next", this.next = finallyEntry.finallyLoc, ContinueSentinel) : this.complete(record); }, complete: function complete(record, afterLoc) { if ("throw" === record.type) throw record.arg; return "break" === record.type || "continue" === record.type ? this.next = record.arg : "return" === record.type ? (this.rval = this.arg = record.arg, this.method = "return", this.next = "end") : "normal" === record.type && afterLoc && (this.next = afterLoc), ContinueSentinel; }, finish: function finish(finallyLoc) { for (var i = this.tryEntries.length - 1; i >= 0; --i) { var entry = this.tryEntries[i]; if (entry.finallyLoc === finallyLoc) return this.complete(entry.completion, entry.afterLoc), resetTryEntry(entry), ContinueSentinel; } }, "catch": function _catch(tryLoc) { for (var i = this.tryEntries.length - 1; i >= 0; --i) { var entry = this.tryEntries[i]; if (entry.tryLoc === tryLoc) { var record = entry.completion; if ("throw" === record.type) { var thrown = record.arg; resetTryEntry(entry); } return thrown; } } throw new Error("illegal catch attempt"); }, delegateYield: function delegateYield(iterable, resultName, nextLoc) { return this.delegate = { iterator: values(iterable), resultName: resultName, nextLoc: nextLoc }, "next" === this.method && (this.arg = undefined), ContinueSentinel; } }, exports; }
+function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
+function _extends() { _extends = Object.assign ? Object.assign.bind() : function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
 function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
 function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
 function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter); }
 function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
-function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
-function _extends() { _extends = Object.assign ? Object.assign.bind() : function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
 function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
 function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
 function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
@@ -1948,11 +2180,16 @@ function _objectWithoutPropertiesLoose(source, excluded) { if (source == null) r
 
 
 
+
 var CascadingSelect = function CascadingSelect(props) {
   var popupRef = props.popupRef,
     wrapperClassName = props.wrapperClassName,
     controlClassName = props.controlClassName,
     controlExClassName = props.controlExClassName,
+    _props$searchable = props.searchable,
+    searchable = _props$searchable === void 0 ? false : _props$searchable,
+    _props$searchPlacehol = props.searchPlaceholder,
+    searchPlaceholder = _props$searchPlacehol === void 0 ? '' : _props$searchPlacehol,
     _props$perColumnHeade = props.perColumnHeadersShow,
     perColumnHeadersShow = _props$perColumnHeade === void 0 ? true : _props$perColumnHeade,
     exceededSidePosOffset = props.exceededSidePosOffset,
@@ -1997,6 +2234,12 @@ var CascadingSelect = function CascadingSelect(props) {
   var valRef = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useRef)(null);
   var listRef = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useRef)(null);
 
+  // searchable
+  var _useState = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)([]),
+    _useState2 = _slicedToArray(_useState, 2),
+    columnSearchKeywords = _useState2[0],
+    setColumnSearchKeywords = _useState2[1];
+
   // exposes the following methods
   (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useImperativeHandle)(popupRef, function () {
     return {
@@ -2012,22 +2255,22 @@ var CascadingSelect = function CascadingSelect(props) {
   // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
   var dictionaryData = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useRef)([]);
-  var _useState = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)(false),
-    _useState2 = _slicedToArray(_useState, 2),
-    loading = _useState2[0],
-    setLoading = _useState2[1];
-  var _useState3 = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)([]),
+  var _useState3 = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)(false),
     _useState4 = _slicedToArray(_useState3, 2),
-    columnTitleData = _useState4[0],
-    setColumnTitleData = _useState4[1];
-  var _useState5 = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)(false),
+    loading = _useState4[0],
+    setLoading = _useState4[1];
+  var _useState5 = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)([]),
     _useState6 = _slicedToArray(_useState5, 2),
-    hasErr = _useState6[0],
-    setHasErr = _useState6[1];
-  var _useState7 = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)(value || ''),
+    columnTitleData = _useState6[0],
+    setColumnTitleData = _useState6[1];
+  var _useState7 = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)(false),
     _useState8 = _slicedToArray(_useState7, 2),
-    changedVal = _useState8[0],
-    setChangedVal = _useState8[1];
+    hasErr = _useState8[0],
+    setHasErr = _useState8[1];
+  var _useState9 = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)(value || ''),
+    _useState10 = _slicedToArray(_useState9, 2),
+    changedVal = _useState10[0],
+    setChangedVal = _useState10[1];
 
   //for variable 
   var listData = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useRef)([]);
@@ -2035,10 +2278,10 @@ var CascadingSelect = function CascadingSelect(props) {
     labels: [],
     values: []
   });
-  var _useState9 = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)(false),
-    _useState10 = _slicedToArray(_useState9, 2),
-    isShow = _useState10[0],
-    setIsShow = _useState10[1];
+  var _useState11 = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)(false),
+    _useState12 = _slicedToArray(_useState11, 2),
+    isShow = _useState12[0],
+    setIsShow = _useState12[1];
 
   // click outside
   useClickOutside_default()({
@@ -2794,6 +3037,15 @@ var CascadingSelect = function CascadingSelect(props) {
     //--------------
     initDefaultValue(value);
   }, [value]);
+
+  // Automatically complete and truncate column Search Keywords each time the number of columns changes
+  (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useEffect)(function () {
+    if (listData.current.length !== columnSearchKeywords.length) {
+      setColumnSearchKeywords(Array(listData.current.length).fill('').map(function (v, i) {
+        return columnSearchKeywords[i] || '';
+      }));
+    }
+  }, [listData.current.length]);
   return /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
     className: (0,cls.clsWrite)(wrapperClassName, 'cas-select__wrapper mb-3 position-relative', "cas-select__wrapper ".concat(wrapperClassName)),
     ref: rootRef,
@@ -2870,15 +3122,35 @@ var CascadingSelect = function CascadingSelect(props) {
     d: "M195.2 195.2a64 64 0 0 1 90.496 0L512 421.504 738.304 195.2a64 64 0 0 1 90.496 90.496L602.496 512 828.8 738.304a64 64 0 0 1-90.496 90.496L512 602.496 285.696 828.8a64 64 0 0 1-90.496-90.496L421.504 512 195.2 285.696a64 64 0 0 1 0-90.496z"
   }))) : null, listData.current.map(function (item, level) {
     if (item.length > 0) {
+      // filter data
+      var filteredItem = item;
+      if (searchable && columnSearchKeywords[level]) {
+        var keyword = columnSearchKeywords[level].toLowerCase();
+        filteredItem = item.filter(function (opt) {
+          return ((0,format_string.htmlToPlain)(opt.name) || '').toLowerCase().includes(keyword);
+        });
+      }
       return /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("li", {
         key: level,
         "data-col": level,
         className: "cas-select__items-col"
-      }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement(Group, {
+      }, searchable && /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
+        className: "cas-select__items-col-searchbox"
+      }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("input", {
+        type: "text",
+        placeholder: searchPlaceholder,
+        value: columnSearchKeywords[level] || '',
+        onChange: function onChange(e) {
+          var newKeywords = _toConsumableArray(columnSearchKeywords);
+          newKeywords[level] = e.target.value;
+          setColumnSearchKeywords(newKeywords);
+        }
+      })), /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement(Group, {
         perColumnHeadersShow: perColumnHeadersShow,
         level: level,
         columnTitle: columnTitleData,
-        data: item,
+        data: filteredItem // filter result
+        ,
         cleanNodeBtnClassName: cleanNodeBtnClassName,
         cleanNodeBtnContent: cleanNodeBtnContent,
         selectEv: function selectEv(e, value, index) {

@@ -329,10 +329,9 @@ export default () => {
 
 
 
-## Use formatted data to match components
+## Searchable
 
-You need to use a `fetchCallback` property to format the data of the API callback, which will match the data structure of the component.
-
+You can set the `searchable` and `searchPlaceholder` properties.
 
 
 ```js
@@ -342,156 +341,15 @@ import CascadingSelect from 'funda-ui/CascadingSelect';
 // component styles
 import 'funda-ui/CascadingSelect/index.css';
 
-
-class DataService {
-    
-    // `getList()` must be a Promise Object
-    async getList(searchStr = '', limit = 0, otherParam = '') {
-
-        console.log('searchStr: ', searchStr);
-        console.log("limit: ", limit);
-        console.log("otherParam: ", otherParam);
-
-        const demoData = [
-            {
-                "item_code": "01",
-                "item_name": "Title 1",
-                "item_type": "web"
-            },
-            {
-                "item_code": "02",
-                "item_name": "Title 2",
-                "item_type": "web/ui"
-            },
-            {
-                "item_code": "03",
-                "item_name": "Title 3",
-                "item_type": "web/ui"
-            },
-            {
-                "item_code": "04",
-                "item_name": "Title 4",
-                "item_type": "dev"
-            }
-        ];   
-
-        return {
-            code: 0,
-            message: 'OK',
-            data: demoData
-        };
-    }
-
-}
-
 export default () => {
-
-    function handleChange(e, val) {
-        console.log(e.target, val);
-    }
 
     return (
         <>
 
             <CascadingSelect
-                value="{Text 1[1]}{Text 1_1[1_1]}{Text 1_1_2[1_1_2]}"
-                name="name"
-                displayResult={true}
-                valueType="label"
-                triggerClassName="d-block w-100"
-                triggerContent={<>
-                    <a href="#" tabIndex={-1}>Select</a>
-                </>}
-                fetchFuncAsync={new DataService}
-                fetchFuncMethod="getList"
-                fetchFuncMethodParams={['',0]}
-                fetchCallback={(res) => {
-
-                    /*
-                    // prevent orginal data
-                    let placesMap: Record<string, unknown[]> = {};
-                    for (const val of res) {
-                        placesMap[val.item_code] = [val.item_name, val.item_type];
-                    }
-
-                    //
-                    const data = [];
-                    for (const key in placesMap) {
-                        data.push({
-                            id: key,
-                            name: placesMap[key][0],   // The "name" attribute supports HTML tags
-                            type: placesMap[key][1]
-                        });
-                    }
-
-                    return data;
-                    */
-                   
-                    const coreData = res.filter( (item) => item.item_type !== 'web/ui' );
-                    const formattedData = [];
-                    const webUiData = res.filter( (item) => item.item_type === 'web/ui' );
-                    const formattedWebUiData = [];
-                    for (const val of webUiData) {
-                        formattedWebUiData.push({
-                            id: val.item_code,
-                            name: val.item_name,
-                            type: val.item_type
-                        });
-                    }
-
-                    for (const val of coreData) {
-                        if ( val.item_type === 'web' ) {
-                            formattedData.push({
-                                id: val.item_code,
-                                name: val.item_name,
-                                type: val.item_type,
-                                children: formattedWebUiData
-                            });
-                        } else {
-                            formattedData.push({
-                                id: val.item_code,
-                                name: val.item_name,
-                                type: val.item_type
-                            });    
-                        }
-                    }
-                    
-                    console.log(formattedData);
-                    /*
-                        [
-                        {
-                            "id": "01",
-                            "name": "Title 1",
-                            "type": "web",
-                            "children": [
-                                {
-                                    "id": "02",
-                                    "name": "Title 2",
-                                    "type": "web/ui"
-                                },
-                                {
-                                    "id": "03",
-                                    "name": "Title 3",
-                                    "type": "web/ui"
-                                }
-                            ]
-                        },
-                        {
-                            "id": "04",
-                            "name": "Title 4",
-                            "type": "dev"
-                        }
-                    ]  
-                    */
-
-                    return formattedData;
-                }}
-                onFetch={(res) => {
-                    console.log('onFetch: ', res);
-                }}
-                onChange={(input, currentData, index, depth, value, closeFunc) => {
-                    console.log('currentData: ', currentData);
-                }}
+                searchable
+                searchPlaceholder="Search..."
+                ...
             />
 
 
@@ -500,8 +358,6 @@ export default () => {
     );
 }
 ```
-
-
 
 
 ## API
@@ -516,6 +372,8 @@ import CascadingSelect from 'funda-ui/CascadingSelect';
 | `wrapperClassName` | string | `mb-3 position-relative` | The class name of the control wrapper. | - |
 | `controlClassName` | string | `form-control` | The class name of the control. | - |
 | `controlExClassName` | string | - | The extended class name of `controlClassName`. | - |
+| `searchable` | boolean  | false | Allows you to make per columns searchable. | - |
+| `searchPlaceholder` | string  | - | Search box placeholder | - |
 | `perColumnHeadersShow` | boolean | true | Per column headers can be displayed to options interface. | - |
 | `exceededSidePosOffset` | number | 15 | Offset px that exceeds the far right or left side of the screen | - |
 | `extractValueByBraces` | boolean  | true | Whether to use curly braces to save result and initialize default value. | - |

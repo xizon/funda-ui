@@ -2,6 +2,7 @@ import React from 'react';
 
 import { combinedCls } from 'funda-utils/dist/cjs/cls';
 
+
 export type GroupFnType = (arg1: any, arg2: any, arg3: number) => void;
 
 export type GroupProps = {

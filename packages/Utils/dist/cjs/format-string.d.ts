@@ -32,13 +32,14 @@ declare function trimAll(input: string): string;
  */
 declare function multiSpacesToSingle(input: string): string;
 /**
- * Convert HTML text to plain text
+ * Convert HTML text to plain text (Remove html tag content)
  * @param {string} input - The input string to process
  * @returns {string} The processed string
  */
 declare function htmlToPlain(input: string): string;
 /**
  * Strip HTML tags and their content
+ * !!!Important: It will remove nested tags
  * @param {string} input - The input string to process
  * @returns {string} The processed string
  */

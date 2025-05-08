@@ -20,7 +20,11 @@ import {
     addTreeDepth,
     addTreeIndent
 } from 'funda-utils/dist/cjs/tree';
+import {
+    htmlToPlain
+} from 'funda-utils/dist/cjs/format-string';
 import { clsWrite, combinedCls } from 'funda-utils/dist/cjs/cls';
+
 
 
 import Group from './Group';
@@ -45,6 +49,8 @@ export type CascadingSelectE2EProps = {
     wrapperClassName?: string;
     controlClassName?: string;
     controlExClassName?: string;
+    searchable?: boolean;
+    searchPlaceholder?: string;
     perColumnHeadersShow?: boolean;
     exceededSidePosOffset?: number;
     value?: string;
@@ -107,6 +113,8 @@ const CascadingSelectE2E = (props: CascadingSelectE2EProps) => {
         wrapperClassName,
         controlClassName,
         controlExClassName,
+        searchable = false,
+        searchPlaceholder = '',
         perColumnHeadersShow = true,
         exceededSidePosOffset,
         disabled,
@@ -150,6 +158,9 @@ const CascadingSelectE2E = (props: CascadingSelectE2EProps) => {
     const rootRef = useRef<any>(null);
     const valRef = useRef<any>(null);
     const listRef = useRef<any>(null);
+
+    // searchable
+    const [columnSearchKeywords, setColumnSearchKeywords] = useState<string[]>([]);
 
 
     // exposes the following methods
@@ -1337,6 +1348,17 @@ const CascadingSelectE2E = (props: CascadingSelectE2EProps) => {
 
     }, [value]);
 
+
+    // Automatically complete and truncate column Search Keywords each time the number of columns changes
+    useEffect(() => {
+        if (listData.current.length !== columnSearchKeywords.length) {
+            setColumnSearchKeywords(
+                Array(listData.current.length).fill('').map((v, i) => columnSearchKeywords[i] || '')
+            );
+        }
+    }, [listData.current.length]);
+
+
     return (
         <>
 
@@ -1372,13 +1394,43 @@ const CascadingSelectE2E = (props: CascadingSelectE2EProps) => {
                                 {listData.current.map((item: any, level: number) => {
 
                                     if (item.length > 0) {
+
+                                        // filter data
+                                        let filteredItem = item;
+                                        if (searchable && columnSearchKeywords[level]) {
+                                            const keyword = columnSearchKeywords[level].toLowerCase();
+                                            filteredItem = item.filter((opt: any) =>
+                                                (htmlToPlain(opt.name) || '').toLowerCase().includes(keyword)
+                                            );
+                                        }
+
+
                                         return (
                                             <li key={level} data-col={level} className="cas-select-e2e__items-col">
+
+                                 
+                                                {/* SEARCH BOX */}
+                                                {searchable && (
+                                                    <div className="cas-select-e2e__items-col-searchbox">
+                                                        <input
+                                                            type="text"
+                                                            placeholder={searchPlaceholder}
+                                                            value={columnSearchKeywords[level] || ''}
+                                                            onChange={e => {
+                                                                const newKeywords = [...columnSearchKeywords];
+                                                                newKeywords[level] = e.target.value;
+                                                                setColumnSearchKeywords(newKeywords);
+                                                            }}
+                                                        />
+                                                    </div>
+                                                )}
+                                                {/* /SEARCH BOX */}
+
                                                 <Group
                                                     perColumnHeadersShow={perColumnHeadersShow}
                                                     level={level}
                                                     columnTitle={columnTitleData}
-                                                    data={item}
+                                                    data={filteredItem}  // filter result
                                                     cleanNodeBtnClassName={cleanNodeBtnClassName}
                                                     cleanNodeBtnContent={cleanNodeBtnContent}
                                                     selectEv={(e, value, index) => handleClickItem(e, value, index, level, listData.current)}

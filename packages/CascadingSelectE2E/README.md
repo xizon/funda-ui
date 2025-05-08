@@ -26,6 +26,9 @@ class DataService {
         console.log("limit: ", limit);
         console.log("otherParam: ", otherParam);
 
+        // Simulate request latency
+        await new Promise(resolve => setTimeout(resolve, 1500));
+
         const demoData = [
             {
                 "parent_id": 0,
@@ -59,6 +62,9 @@ class DataService {
     async getListSecond(searchStr = '', limit = 0, parentId = 0) {
 
         console.log("parentId: ", parentId);
+
+        // Simulate request latency
+        await new Promise(resolve => setTimeout(resolve, 1500));
 
         const demoData = [
             {
@@ -397,6 +403,9 @@ class DataService {
         // console.log("limit: ", limit);
         // console.log("otherParam: ", otherParam);
 
+        // Simulate request latency
+        await new Promise(resolve => setTimeout(resolve, 1500));
+
         const demoData = [
             {
 
@@ -431,6 +440,9 @@ class DataService {
     async getListSecond(searchStr = '', limit = 0, searchId = 0) {
 
         console.log("searchId: ", searchId);
+
+        // Simulate request latency
+        await new Promise(resolve => setTimeout(resolve, 1500));
 
         let demoData1: any = [
             {
@@ -605,6 +617,61 @@ export default (props: any) => {
 
 
 
+## Searchable
+
+You can set the `searchable` and `searchPlaceholder` properties.
+
+
+```js
+import React from "react";
+import CascadingSelectE2E from 'funda-ui/CascadingSelectE2E';
+
+// component styles
+import 'funda-ui/CascadingSelectE2E/index.css';
+
+export default () => {
+
+    return (
+        <>
+
+            <CascadingSelectE2E
+                searchable
+                searchPlaceholder="Search..."
+                fetchArray={[
+                    {
+                        "fetchFuncAsync": new DataService,
+                        "fetchFuncMethod": "getListFirst",
+                        "fetchFuncMethodParams": ['', 0, 1],
+                        "fetchCallback": (res) => {
+
+                            const formattedData = res.map((item: any, i: number) => {
+                                return {
+                                    id: item.id,
+                                    queryId: item.id,
+                                    // @—　-—@
+                                    // You can add a hidden span tag to expand the string of the search
+                                    name: `${item.item_name}<span style="display: none">(${item.item_code})</span>`,
+                                }
+                            });
+                        
+                            return formattedData;
+
+                        }
+                    },
+                    ...
+                ]}
+                ...
+            />
+
+
+
+        </>
+    );
+}
+```
+
+
+
 ## API
 
 ### Cascading Select End-to-end
@@ -617,6 +684,8 @@ import CascadingSelectE2E from 'funda-ui/CascadingSelectE2E';
 | `wrapperClassName` | string | `mb-3 position-relative` | The class name of the control wrapper. | - |
 | `controlClassName` | string | `form-control` | The class name of the control. | - |
 | `controlExClassName` | string | - | The extended class name of `controlClassName`. | - |
+| `searchable` | boolean  | false | Allows you to make per columns searchable. | - |
+| `searchPlaceholder` | string  | - | Search box placeholder | - |
 | `perColumnHeadersShow` | boolean | true | Per column headers can be displayed to options interface. | - |
 | `exceededSidePosOffset` | number | 15 | Offset px that exceeds the far right or left side of the screen | - |
 | `extractValueByBraces` | boolean  | true | Whether to use curly braces to save result and initialize default value. | - |

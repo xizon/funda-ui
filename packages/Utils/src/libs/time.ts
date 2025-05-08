@@ -69,7 +69,7 @@ function getTimeslots(
  * @param  {Date} endDate  -  ebd date
  * @returns Number
  */
-function getMinutesBetweenDates(startDate, endDate) {
+function getMinutesBetweenDates(startDate: Date, endDate: Date) {
     const diff = endDate.getTime() - startDate.getTime();
     return (diff / 60000);
 }
@@ -81,12 +81,12 @@ function getMinutesBetweenDates(startDate, endDate) {
  * @param  {String} endTime  -  ebd time
  * @returns Number
  */
-function getMinutesBetweenTime(startTime, endTime) {
-    const pad = (num) => {
+function getMinutesBetweenTime(startTime: string, endTime: string) {
+    const pad = (num: string | number) => {
         return ("0" + num).slice(-2);
     };
-    let s = startTime.split(":"), sMin = +s[1] + s[0] * 60,
-        e = endTime.split(":"), eMin = +e[1] + e[0] * 60,
+    let s: any = startTime.split(":"), sMin = +s[1] + s[0] * 60,
+        e: any = endTime.split(":"), eMin = +e[1] + e[0] * 60,
         diff = eMin - sMin;
         
     if (diff < 0) { sMin -= 12 * 60; diff = eMin - sMin }
@@ -102,7 +102,7 @@ function getMinutesBetweenTime(startTime, endTime) {
  * @param  {String} timeStr  -  time string
  * @returns Number
  */
-function convertTimeToMin(timeStr) {
+function convertTimeToMin(timeStr: string) {
     const _time = timeStr.split(':').length === 3 ?  `${timeStr}` : `${timeStr}:00`;
 
     const res = _time.split(':'); // split it at the colons
