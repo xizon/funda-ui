@@ -83,6 +83,7 @@ export declare type ChatboxProps = {
     defaultQuestions?: QuestionData;
     showCopyBtn?: boolean;
     autoCopyReply?: boolean;
+    usePopUp?: boolean;
     customRequest?: CustomRequestFunction;
     renderParser?: (input: string) => Promise<string>;
     requestBodyFormatter?: (body: any, contextData: Record<string, any>, conversationHistory: MessageDetail[]) => Promise<Record<string, any>>;

@@ -12,7 +12,6 @@ import useClickOutside from 'funda-utils/dist/cjs/useClickOutside';
 import { htmlEncode } from 'funda-utils/dist/cjs/sanitize';
 
 
-
 // loader
 import PureLoader from './PureLoader';
 import TypingEffect from "./TypingEffect";
@@ -129,6 +128,7 @@ export type ChatboxProps = {
     defaultQuestions?: QuestionData;
     showCopyBtn?: boolean;  // Whether to show copy button for each reply
     autoCopyReply?: boolean;  // Whether to automatically copy reply to clipboard
+    usePopUp?: boolean;
     customRequest?: CustomRequestFunction;
     renderParser?: (input: string) => Promise<string>;
     requestBodyFormatter?: (body: any, contextData: Record<string, any>, conversationHistory: MessageDetail[]) => Promise<Record<string, any>>;
@@ -319,6 +319,7 @@ const Chatbox = (props: ChatboxProps) => {
             toolkitButtons,
             newChatButton,
             maxHistoryLength,
+            usePopUp,
             customRequest,
             onQuestionClick,
             onCopyCallback,
@@ -399,6 +400,7 @@ const Chatbox = (props: ChatboxProps) => {
             maxHistoryLength,
             toolkitButtons,
             newChatButton,
+            usePopUp,
             customRequest,
             onQuestionClick,
             onCopyCallback,
@@ -1330,7 +1332,7 @@ const Chatbox = (props: ChatboxProps) => {
     return (
         <>
 
-        <RootPortal show={true} containerClassName="Chatbox">
+        <RootPortal show={true} usePortal={args().usePopUp} containerClassName="Chatbox">
 
             {/**------------- BUBBLE -------------*/}
             {args().bubble ? <>
@@ -1353,7 +1355,7 @@ const Chatbox = (props: ChatboxProps) => {
             {/**------------- CLOSE BUTTON------------- */}
 
 
-            <div style={{ display: show ? 'block' : 'none' }} className={`${args().prefix || 'custom-'}chatbox-container`} ref={rootRef}>
+            <div style={{ display: show ? 'block' : 'none' }} className={`${args().prefix || 'custom-'}chatbox-container ${typeof args().usePopUp !== 'undefined' && args().usePopUp === false ? 'popup-none' : ''}`} ref={rootRef}>
 
                 {/**------------- NO DATA -------------*/}
                 {msgList.length === 0 ? <>
@@ -1393,7 +1395,8 @@ const Chatbox = (props: ChatboxProps) => {
           
 
                 {/**------------- MESSAGES LIST -------------*/}
-                <div className="messages" ref={msgContainerRef}>
+                {/** Prevent excessive height overflow */}
+                <div className={`messages ${msgList.length === 0 ? 'd-none' : ''}`} ref={msgContainerRef}>
 
                     {msgList.map((msg, index) => {
 

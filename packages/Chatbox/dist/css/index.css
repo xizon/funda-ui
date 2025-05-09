@@ -154,6 +154,7 @@
   right: 0;
   z-index: 1031;
   height: var(--custom-chatbox-h);
+  /* disable popup */
   /* message list */
   /* dot loading */
   /* control area */
@@ -163,6 +164,12 @@
   /* toolkit options */
   /* default questions */
   /* Tooltip */
+}
+.custom-chatbox-container.popup-none {
+  position: relative;
+  bottom: auto;
+  right: auto;
+  box-shadow: none;
 }
 .custom-chatbox-container details {
   font-style: italic;
@@ -375,6 +382,7 @@
   border: 1px solid var(--custom-chatbox-gray-color);
   border-radius: 0.35rem;
   transition: all 0.3s ease;
+  background: var(--custom-chatbox-input-bg);
 }
 .custom-chatbox-container .msgcontrol img, .custom-chatbox-container .msgcontrol svg, .custom-chatbox-container .msgcontrol video, .custom-chatbox-container .msgcontrol canvas, .custom-chatbox-container .msgcontrol audio, .custom-chatbox-container .msgcontrol iframe, .custom-chatbox-container .msgcontrol embed, .custom-chatbox-container .msgcontrol object {
   display: inline;

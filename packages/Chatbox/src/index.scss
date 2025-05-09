@@ -189,6 +189,14 @@
     z-index: 1031;
     height: var(--custom-chatbox-h);
 
+    /* disable popup */
+    &.popup-none {
+        position: relative;
+        bottom: auto;
+        right: auto;
+        box-shadow: none;
+    }
+
     details {
         font-style: italic;
         margin: 0;
@@ -449,6 +457,7 @@
         border: 1px solid var(--custom-chatbox-gray-color);
         border-radius: 0.35rem;
         transition: all 0.3s ease;
+        background: var(--custom-chatbox-input-bg);
 
         img, svg, video, canvas, audio, iframe, embed, object {
             display: inline;

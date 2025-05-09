@@ -2178,7 +2178,9 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
         var RootPortal = function RootPortal(props) {
           var containerClassName = props.containerClassName,
             show = props.show,
-            children = props.children;
+            children = props.children,
+            _props$usePortal = props.usePortal,
+            usePortal = _props$usePortal === void 0 ? true : _props$usePortal;
           var containerRef = (0, react__WEBPACK_IMPORTED_MODULE_0__.useRef)();
 
           // Move HTML templates to tag end body </body>
@@ -2189,15 +2191,20 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
           // Use `containerRef.current` to ensure the correctness of the nextjs framework. It may report an error document as undefined
 
           (0, react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(function () {
-            containerRef.current = document.createElement('div');
-            containerRef.current.className = "root-portal-container ".concat(containerClassName || '');
-            document.body.appendChild(containerRef.current);
+            if (usePortal) {
+              containerRef.current = document.createElement('div');
+              containerRef.current.className = "root-portal-container ".concat(containerClassName || '');
+              document.body.appendChild(containerRef.current);
+            }
             return function () {
-              if (containerRef.current) {
+              if (usePortal && containerRef.current) {
                 containerRef.current.remove();
               }
             };
-          }, []);
+          }, [usePortal]);
+          if (!usePortal) {
+            return show ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react__WEBPACK_IMPORTED_MODULE_0___default().Fragment, null, children) : null;
+          }
           return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react__WEBPACK_IMPORTED_MODULE_0___default().Fragment, null, containerRef.current && show && /*#__PURE__*/(0, react_dom__WEBPACK_IMPORTED_MODULE_1__.createPortal)(children, containerRef.current));
         };
         /* harmony default export */

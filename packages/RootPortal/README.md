@@ -51,3 +51,5 @@ import RootPortal from 'funda-ui/RootPortal';
 | --- | --- | --- | --- | --- |
 | `containerClassName` | string  | - | The class name of container | - |
 | `show` | boolean  | false | Whether the container is visible or not | ✅ |
+| `usePortal` | boolean | true | Whether to use Portal rendering. When set to false, content will be rendered directly at the component's position instead of being rendered to the end of body via Portal | - |
+| `children` | ReactNode | - | Child elements to be rendered | - |

@@ -669,6 +669,7 @@ import Chatbox from 'funda-ui/Chatbox';
 | `debug` | boolean | false | Enable debug mode to output console information | - |
 | `defaultRows` | number  | 2 | The rows attribute specifies the visible height of a text area, in lines. | - |
 | `prefix` | string | `custom-` | Prefix for component wrapper class name | - |
+| `usePopUp` | boolean | true | Whether to use the pop-up window, if false, will be directly embedded with html | - |
 | `model` | string | - | The model name to use | - |
 | `baseUrl` | string | - | The base URL for API requests | - |
 | `apiKey` | string | - | API key for authentication | - |

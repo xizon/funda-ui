@@ -190,7 +190,9 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
                   var RootPortal = function RootPortal(props) {
                     var containerClassName = props.containerClassName,
                       show = props.show,
-                      children = props.children;
+                      children = props.children,
+                      _props$usePortal = props.usePortal,
+                      usePortal = _props$usePortal === void 0 ? true : _props$usePortal;
                     var containerRef = (0, react__WEBPACK_IMPORTED_MODULE_0__.useRef)();
 
                     // Move HTML templates to tag end body </body>
@@ -201,15 +203,20 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
                     // Use `containerRef.current` to ensure the correctness of the nextjs framework. It may report an error document as undefined
 
                     (0, react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(function () {
-                      containerRef.current = document.createElement('div');
-                      containerRef.current.className = "root-portal-container ".concat(containerClassName || '');
-                      document.body.appendChild(containerRef.current);
+                      if (usePortal) {
+                        containerRef.current = document.createElement('div');
+                        containerRef.current.className = "root-portal-container ".concat(containerClassName || '');
+                        document.body.appendChild(containerRef.current);
+                      }
                       return function () {
-                        if (containerRef.current) {
+                        if (usePortal && containerRef.current) {
                           containerRef.current.remove();
                         }
                       };
-                    }, []);
+                    }, [usePortal]);
+                    if (!usePortal) {
+                      return show ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react__WEBPACK_IMPORTED_MODULE_0___default().Fragment, null, children) : null;
+                    }
                     return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react__WEBPACK_IMPORTED_MODULE_0___default().Fragment, null, containerRef.current && show && /*#__PURE__*/(0, react_dom__WEBPACK_IMPORTED_MODULE_1__.createPortal)(children, containerRef.current));
                   };
                   /* harmony default export */
@@ -226,8 +233,8 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
           /***/
         },
 
-        /***/70: /***/function _(module, exports, __nested_webpack_require_11296__) {
-          /* module decorator */module = __nested_webpack_require_11296__.nmd(module);
+        /***/70: /***/function _(module, exports, __nested_webpack_require_11781__) {
+          /* module decorator */module = __nested_webpack_require_11781__.nmd(module);
           var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;
           function _typeof(obj) {
             "@babel/helpers - typeof";
@@ -604,8 +611,8 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
           /***/
         },
 
-        /***/85: /***/function _(module, exports, __nested_webpack_require_30872__) {
-          /* module decorator */module = __nested_webpack_require_30872__.nmd(module);
+        /***/85: /***/function _(module, exports, __nested_webpack_require_31357__) {
+          /* module decorator */module = __nested_webpack_require_31357__.nmd(module);
           var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;
           function _typeof(obj) {
             "@babel/helpers - typeof";
@@ -617,7 +624,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
             }, _typeof(obj);
           }
           (function webpackUniversalModuleDefinition(root, factory) {
-            if (( false ? 0 : _typeof(exports)) === 'object' && ( false ? 0 : _typeof(module)) === 'object') module.exports = factory(__nested_webpack_require_30872__(787));else if (true) !(__WEBPACK_AMD_DEFINE_ARRAY__ = [__nested_webpack_require_30872__(787)], __WEBPACK_AMD_DEFINE_FACTORY__ = factory, __WEBPACK_AMD_DEFINE_RESULT__ = typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ? __WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__) : __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));else {}
+            if (( false ? 0 : _typeof(exports)) === 'object' && ( false ? 0 : _typeof(module)) === 'object') module.exports = factory(__nested_webpack_require_31357__(787));else if (true) !(__WEBPACK_AMD_DEFINE_ARRAY__ = [__nested_webpack_require_31357__(787)], __WEBPACK_AMD_DEFINE_FACTORY__ = factory, __WEBPACK_AMD_DEFINE_RESULT__ = typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ? __WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__) : __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));else {}
           })(this, function (__WEBPACK_EXTERNAL_MODULE__787__) {
             return (/******/function () {
                 // webpackBootstrap
@@ -777,8 +784,8 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
           /***/
         },
 
-        /***/771: /***/function _(module, exports, __nested_webpack_require_38960__) {
-          /* module decorator */module = __nested_webpack_require_38960__.nmd(module);
+        /***/771: /***/function _(module, exports, __nested_webpack_require_39445__) {
+          /* module decorator */module = __nested_webpack_require_39445__.nmd(module);
           var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;
           function _typeof(obj) {
             "@babel/helpers - typeof";
@@ -790,7 +797,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
             }, _typeof(obj);
           }
           (function webpackUniversalModuleDefinition(root, factory) {
-            if (( false ? 0 : _typeof(exports)) === 'object' && ( false ? 0 : _typeof(module)) === 'object') module.exports = factory(__nested_webpack_require_38960__(787));else if (true) !(__WEBPACK_AMD_DEFINE_ARRAY__ = [__nested_webpack_require_38960__(787)], __WEBPACK_AMD_DEFINE_FACTORY__ = factory, __WEBPACK_AMD_DEFINE_RESULT__ = typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ? __WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__) : __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));else {}
+            if (( false ? 0 : _typeof(exports)) === 'object' && ( false ? 0 : _typeof(module)) === 'object') module.exports = factory(__nested_webpack_require_39445__(787));else if (true) !(__WEBPACK_AMD_DEFINE_ARRAY__ = [__nested_webpack_require_39445__(787)], __WEBPACK_AMD_DEFINE_FACTORY__ = factory, __WEBPACK_AMD_DEFINE_RESULT__ = typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ? __WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__) : __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));else {}
           })(this, function (__WEBPACK_EXTERNAL_MODULE__787__) {
             return (/******/function () {
                 // webpackBootstrap
@@ -1252,7 +1259,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
       /******/
       /******/ // The require function
       /******/
-      function __nested_webpack_require_61476__(moduleId) {
+      function __nested_webpack_require_61961__(moduleId) {
         /******/ // Check if module is in cache
         /******/var cachedModule = __webpack_module_cache__[moduleId];
         /******/
@@ -1271,7 +1278,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
         /******/
         /******/ // Execute the module function
         /******/
-        __webpack_modules__[moduleId].call(module.exports, module, module.exports, __nested_webpack_require_61476__);
+        __webpack_modules__[moduleId].call(module.exports, module, module.exports, __nested_webpack_require_61961__);
         /******/
         /******/ // Flag the module as loaded
         /******/
@@ -1288,14 +1295,14 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
       /******/
       (function () {
         /******/ // getDefaultExport function for compatibility with non-harmony modules
-        /******/__nested_webpack_require_61476__.n = function (module) {
+        /******/__nested_webpack_require_61961__.n = function (module) {
           /******/var getter = module && module.__esModule ? /******/function () {
             return module['default'];
           } : /******/function () {
             return module;
           };
           /******/
-          __nested_webpack_require_61476__.d(getter, {
+          __nested_webpack_require_61961__.d(getter, {
             a: getter
           });
           /******/
@@ -1309,9 +1316,9 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
       /******/
       (function () {
         /******/ // define getter functions for harmony exports
-        /******/__nested_webpack_require_61476__.d = function (exports, definition) {
+        /******/__nested_webpack_require_61961__.d = function (exports, definition) {
           /******/for (var key in definition) {
-            /******/if (__nested_webpack_require_61476__.o(definition, key) && !__nested_webpack_require_61476__.o(exports, key)) {
+            /******/if (__nested_webpack_require_61961__.o(definition, key) && !__nested_webpack_require_61961__.o(exports, key)) {
               /******/Object.defineProperty(exports, key, {
                 enumerable: true,
                 get: definition[key]
@@ -1328,7 +1335,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
       /******/ /* webpack/runtime/hasOwnProperty shorthand */
       /******/
       (function () {
-        /******/__nested_webpack_require_61476__.o = function (obj, prop) {
+        /******/__nested_webpack_require_61961__.o = function (obj, prop) {
           return Object.prototype.hasOwnProperty.call(obj, prop);
         };
         /******/
@@ -1338,7 +1345,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
       /******/
       (function () {
         /******/ // define __esModule on exports
-        /******/__nested_webpack_require_61476__.r = function (exports) {
+        /******/__nested_webpack_require_61961__.r = function (exports) {
           /******/if (typeof Symbol !== 'undefined' && Symbol.toStringTag) {
             /******/Object.defineProperty(exports, Symbol.toStringTag, {
               value: 'Module'
@@ -1357,7 +1364,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
       /******/ /* webpack/runtime/node module decorator */
       /******/
       (function () {
-        /******/__nested_webpack_require_61476__.nmd = function (module) {
+        /******/__nested_webpack_require_61961__.nmd = function (module) {
           /******/module.paths = [];
           /******/
           if (!module.children) module.children = [];
@@ -1374,34 +1381,34 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
       (function () {
         "use strict";
 
-        __nested_webpack_require_61476__.r(__webpack_exports__);
+        __nested_webpack_require_61961__.r(__webpack_exports__);
         /* harmony export */
-        __nested_webpack_require_61476__.d(__webpack_exports__, {
+        __nested_webpack_require_61961__.d(__webpack_exports__, {
           /* harmony export */"default": function _default() {
             return __WEBPACK_DEFAULT_EXPORT__;
           }
           /* harmony export */
         });
         /* harmony import */
-        var react__WEBPACK_IMPORTED_MODULE_0__ = __nested_webpack_require_61476__(787);
+        var react__WEBPACK_IMPORTED_MODULE_0__ = __nested_webpack_require_61961__(787);
         /* harmony import */
-        var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__nested_webpack_require_61476__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+        var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__nested_webpack_require_61961__.n(react__WEBPACK_IMPORTED_MODULE_0__);
         /* harmony import */
-        var funda_root_portal__WEBPACK_IMPORTED_MODULE_1__ = __nested_webpack_require_61476__(909);
+        var funda_root_portal__WEBPACK_IMPORTED_MODULE_1__ = __nested_webpack_require_61961__(909);
         /* harmony import */
-        var funda_root_portal__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__nested_webpack_require_61476__.n(funda_root_portal__WEBPACK_IMPORTED_MODULE_1__);
+        var funda_root_portal__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__nested_webpack_require_61961__.n(funda_root_portal__WEBPACK_IMPORTED_MODULE_1__);
         /* harmony import */
-        var funda_utils_dist_cjs_useComId__WEBPACK_IMPORTED_MODULE_2__ = __nested_webpack_require_61476__(85);
+        var funda_utils_dist_cjs_useComId__WEBPACK_IMPORTED_MODULE_2__ = __nested_webpack_require_61961__(85);
         /* harmony import */
-        var funda_utils_dist_cjs_useComId__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__nested_webpack_require_61476__.n(funda_utils_dist_cjs_useComId__WEBPACK_IMPORTED_MODULE_2__);
+        var funda_utils_dist_cjs_useComId__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__nested_webpack_require_61961__.n(funda_utils_dist_cjs_useComId__WEBPACK_IMPORTED_MODULE_2__);
         /* harmony import */
-        var funda_utils_dist_cjs_useDraggable__WEBPACK_IMPORTED_MODULE_3__ = __nested_webpack_require_61476__(771);
+        var funda_utils_dist_cjs_useDraggable__WEBPACK_IMPORTED_MODULE_3__ = __nested_webpack_require_61961__(771);
         /* harmony import */
-        var funda_utils_dist_cjs_useDraggable__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__nested_webpack_require_61476__.n(funda_utils_dist_cjs_useDraggable__WEBPACK_IMPORTED_MODULE_3__);
+        var funda_utils_dist_cjs_useDraggable__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__nested_webpack_require_61961__.n(funda_utils_dist_cjs_useDraggable__WEBPACK_IMPORTED_MODULE_3__);
         /* harmony import */
-        var funda_utils_dist_cjs_bodyScrollLock__WEBPACK_IMPORTED_MODULE_4__ = __nested_webpack_require_61476__(70);
+        var funda_utils_dist_cjs_bodyScrollLock__WEBPACK_IMPORTED_MODULE_4__ = __nested_webpack_require_61961__(70);
         /* harmony import */
-        var funda_utils_dist_cjs_bodyScrollLock__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__nested_webpack_require_61476__.n(funda_utils_dist_cjs_bodyScrollLock__WEBPACK_IMPORTED_MODULE_4__);
+        var funda_utils_dist_cjs_bodyScrollLock__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__nested_webpack_require_61961__.n(funda_utils_dist_cjs_bodyScrollLock__WEBPACK_IMPORTED_MODULE_4__);
         function _slicedToArray(arr, i) {
           return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest();
         }
@@ -1995,7 +2002,9 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
         var RootPortal = function RootPortal(props) {
           var containerClassName = props.containerClassName,
             show = props.show,
-            children = props.children;
+            children = props.children,
+            _props$usePortal = props.usePortal,
+            usePortal = _props$usePortal === void 0 ? true : _props$usePortal;
           var containerRef = (0, react__WEBPACK_IMPORTED_MODULE_0__.useRef)();
 
           // Move HTML templates to tag end body </body>
@@ -2006,15 +2015,20 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
           // Use `containerRef.current` to ensure the correctness of the nextjs framework. It may report an error document as undefined
 
           (0, react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(function () {
-            containerRef.current = document.createElement('div');
-            containerRef.current.className = "root-portal-container ".concat(containerClassName || '');
-            document.body.appendChild(containerRef.current);
+            if (usePortal) {
+              containerRef.current = document.createElement('div');
+              containerRef.current.className = "root-portal-container ".concat(containerClassName || '');
+              document.body.appendChild(containerRef.current);
+            }
             return function () {
-              if (containerRef.current) {
+              if (usePortal && containerRef.current) {
                 containerRef.current.remove();
               }
             };
-          }, []);
+          }, [usePortal]);
+          if (!usePortal) {
+            return show ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react__WEBPACK_IMPORTED_MODULE_0___default().Fragment, null, children) : null;
+          }
           return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react__WEBPACK_IMPORTED_MODULE_0___default().Fragment, null, containerRef.current && show && /*#__PURE__*/(0, react_dom__WEBPACK_IMPORTED_MODULE_1__.createPortal)(children, containerRef.current));
         };
         /* harmony default export */

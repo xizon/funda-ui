@@ -6,13 +6,15 @@ export type RootPortalProps = {
     containerClassName?: string;
     children?: React.ReactNode;
     show?: boolean;
+    usePortal?: boolean;
 };
 
 const RootPortal = (props: RootPortalProps) => {
     const {
         containerClassName,
         show,
-        children
+        children,
+        usePortal = true
     } = props;
 
     const containerRef = useRef<HTMLElement>();
@@ -25,19 +27,23 @@ const RootPortal = (props: RootPortalProps) => {
     // Use `containerRef.current` to ensure the correctness of the nextjs framework. It may report an error document as undefined
 
     useEffect(() => {
-
-        containerRef.current = document.createElement('div');
-        containerRef.current.className = `root-portal-container ${containerClassName || ''}`;
-        document.body.appendChild(containerRef.current);
-        
+        if (usePortal) {
+            containerRef.current = document.createElement('div');
+            containerRef.current.className = `root-portal-container ${containerClassName || ''}`;
+            document.body.appendChild(containerRef.current);
+        }
 
         return () => {
-            if (containerRef.current) {
+            if (usePortal && containerRef.current) {
                 containerRef.current.remove();
             }
         };
-    }, []);
+    }, [usePortal]);
 
+    if (!usePortal) {
+        return show ? <>{children}</> : null;
+    }
+    
     return (
         <>
             {containerRef.current && show && createPortal(
