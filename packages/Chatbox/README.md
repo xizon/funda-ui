@@ -656,6 +656,44 @@ const toolkitButtons = [
 ```
 
 
+## Disable pop-up mode
+
+This makes it possible to embed the chat window into normal HTML code
+
+
+`styles.scss`:
+```css
+/* disable popup */
+.custom-chatbox-container.popup-none {
+    --custom-chatbox-w: 100%;
+    --custom-chatbox-h: calc(100vh - 2.625rem); /* custom height */
+    --custom-chatbox-bg: transparent;  /* custom background */
+}
+```
+
+
+`index.tsx`:
+```js
+import React from 'react';
+import Chatbox from 'funda-ui/Chatbox';
+
+// component styles
+import 'funda-ui/Chatbox/index.css';
+
+export default () => {
+
+    return (
+        <>
+            <Chatbox
+                ...
+                usePopUp={false}
+            }}
+            />
+        </>
+    )
+}
+```
+
 
 ## API
 
