@@ -1,10 +1,10 @@
 # Live Search
 
+The input can be entered arbitrarily and can be searched in real time.
 
+> ✌🏻 You can find the final value of this component by setting the `name` property, similar to **document.querySelector('[name="custom-control-name"]').value**
 
 ## General
-
-You need to use a `fetchCallback` property to format the data of the API callback, which will match the data structure of the component.
 
 
 ```js
@@ -20,7 +20,7 @@ export default () => {
         <>
             <LiveSearch
                 name="app-livesearch-name"
-                label="Food List (Enter the search character)"
+                label="Food List (Enter the search character. You can enter 1 or 2)"
                 options={`
                 [
                     {"label": "Option 1","value": "value-1","queryString": "option1"},
@@ -91,7 +91,12 @@ export default () => {
 
 ## Asynchronous loading option
 
-You need to use a `fetchCallback` property to format the data of the API callback, which will match the data structure of the component.
+You need to use the series property `fetch<METHOD_NAME>` to format the data of the API callback, which will match the data structure of the component.
+
+> Using `fetchTrigger`, `fetchUpdate` and `fetchTriggerForDefaultData` properties. In general, `fetchUpdate` is also set to **true**. 
+>
+> If `fetchUpdate` is **false**, each request needs to be triggered by clicking the search button.
+
 
 
 ```js
@@ -119,6 +124,8 @@ class DataService {
             data: []
         };
 
+        // Simulate request latency
+        await new Promise(resolve => setTimeout(resolve, 1500));
 
         return {
             code: 0,
@@ -181,8 +188,9 @@ export default () => {
                 btnId="app-livesearch-btn"
                 name="app-livesearch-name"
                 label="Food List (Enter a,b, or c)"
+                placeholder="type your search string"
                 fetchTrigger={false}
-                fetchUpdate={false}
+                fetchUpdate={true}
                 fetchNoneInfo="No match yet"
                 fetchFuncAsync={new DataService}
                 fetchFuncMethod="getList"
@@ -343,6 +351,66 @@ export default () => {
 
 
 
+
+
+
+## Use the exposed method to assign and empty
+
+Lets you callback the handle exposed as attribute `contentRef`.
+
+
+```js
+import React, { useRef } from "react";
+
+import LiveSearch from 'funda-ui/LiveSearch';
+
+// component styles
+import 'funda-ui/LiveSearch/index.css';
+
+
+export default () => {
+
+    const conRef = useRef<any>(null);
+
+    return (
+
+
+        <>
+            <a 
+                href="#"
+                onClick={(e: React.MouseEvent) => {
+                    e.preventDefault();
+                    if (conRef.current) conRef.current.clear();
+                }}
+            >Set Empty Value</a>
+            &nbsp;&nbsp;|&nbsp;&nbsp;
+            <a 
+                href="#"
+                onClick={(e: React.MouseEvent) => {
+                    e.preventDefault();
+                    if (conRef.current) conRef.current.set('new string', () => { console.log('callback') });
+                }}
+            >Set Custom Value</a>
+    
+
+            <LiveSearch
+                contentRef={conRef}
+                name="app-livesearch-name"
+                options={`
+                [
+                    {"label": "Option 1","value": "value-1","queryString": "option1"},
+                    {"label": "<del style=color:red>deprecate</del>Option 2","value": "value-2","queryString": "option2"},
+                    {"label": "Option 3","value": "value-3","queryString": "option3"},
+                    {"label": "Option 4","value": "value-4","queryString": "option4", "disabled":true}
+                ]  
+                `}
+            />
+
+        </>
+    )
+}
+```
+
 ## API
 
 ### Live Search
@@ -353,7 +421,7 @@ import LiveSearch from 'funda-ui/LiveSearch';
 | --- | --- | --- | --- | --- |
 | `ref` | React.ForwardedRef | - | It is the return element of this component.  | - |
 | `contentRef` | React.ForwardedRef | - | It exposes the following methods:  <br /> <ol><li>`contentRef.current.control()`</li><li>`contentRef.current.getLatestVal()`</li><li>`contentRef.current.clear(() => { console.log('callback') })`</li><li>`contentRef.current.set('test value', () => { console.log('callback') })`</li></ol> <blockquote>DO NOT USE it in the `onChange` of this component, otherwise it will cause infinite rendering</blockquote>| - |
-| `popupRef` | React.ForwardedRef | - | It exposes the following methods when the component's popup opens or closes:  <br /> <ol><li>`popupRef.current.close()`</li></ol> | - |
+| `popupRef` | React.ForwardedRef | - | It exposes the following methods when the component's popup opens or closes:  <br /> <ol><li>`popupRef.current.open()`</li><li>`popupRef.current.close()`</li></ol> | - |
 | `wrapperClassName` | string | `mb-3 position-relative` | The class name of the control wrapper. | - |
 | `controlClassName` | string | `form-control` | The class name of the control. | - |
 | `controlExClassName` | string | - | The extended class name of `controlClassName`. | - |
@@ -362,6 +430,7 @@ import LiveSearch from 'funda-ui/LiveSearch';
 | `controlGroupTextClassName` | string | `input-group-text` | The class name of the control group text. | - |
 | `exceededSidePosOffset` | number | 15 | Offset px that exceeds the far right or left side of the screen | - |
 | `options` | JSON Object Literals \| JSON Object | - | Set the default value using JSON string format for menu of options, like this: `[{"label": "Option 1","value": "value-1","queryString": "option1"},{"label": "<del style=color:red>deprecate</del>Option 2","value": "value-2","queryString": "option2"},{"label": "Option 3","value": "value-3","queryString": "option3"},{"label": "Option 4","value": "value-4","queryString": "option4","disabled":true}]` <br /> <blockquote>Note: Use API data if database query exists. That is, the attribute `fetchXXXX`</blockquote> <hr /> <blockquote>When the attribute `hierarchical` is true, you need to use a hierarchical structure to pass data, such as: `[{label:"Top level 1",value:'level-1',queryString:""},{label:"Top level 2",value:'level-2',queryString:""},{label:"Top level 3",value:'level-3',queryString:"",children:[{label:"Sub level 3_1",value:'level-3_1',queryString:""},{label:"Sub level 3_2",value:'level-3_2',queryString:"",children:[{label:"Sub level 3_2_1",value:'level-3_2_1',queryString:""}]},{label:"Sub level 3_3",value:'level-3_3',queryString:""}]}]`</blockquote>| - |
+| `loader` | ReactNode  | `<svg height="12px" width="12px" viewBox="0 0 512 512"><g><path fill="inherit" d="M256,0c-23.357,0-42.297,18.932-42.297,42.288c0,23.358,18.94,42.288,42.297,42.288c23.357,0,42.279-18.93,42.279-42.288C298.279,18.932,279.357,0,256,0z"/><path fill="inherit" d="M256,427.424c-23.357,0-42.297,18.931-42.297,42.288C213.703,493.07,232.643,512,256,512c23.357,0,42.279-18.93,42.279-42.288C298.279,446.355,279.357,427.424,256,427.424z"/><path fill="inherit" d="M74.974,74.983c-16.52,16.511-16.52,43.286,0,59.806c16.52,16.52,43.287,16.52,59.806,0c16.52-16.511,16.52-43.286,0-59.806C118.261,58.463,91.494,58.463,74.974,74.983z"/><path fill="inherit" d="M377.203,377.211c-16.503,16.52-16.503,43.296,0,59.815c16.519,16.52,43.304,16.52,59.806,0c16.52-16.51,16.52-43.295,0-59.815C420.489,360.692,393.722,360.7,377.203,377.211z"/><path fill="inherit" d="M84.567,256c0.018-23.348-18.922-42.279-42.279-42.279c-23.357-0.009-42.297,18.932-42.279,42.288c-0.018,23.348,18.904,42.279,42.279,42.279C65.645,298.288,84.567,279.358,84.567,256z"/><path fill="inherit" d="M469.712,213.712c-23.357,0-42.279,18.941-42.297,42.288c0,23.358,18.94,42.288,42.297,42.297c23.357,0,42.297-18.94,42.279-42.297C512.009,232.652,493.069,213.712,469.712,213.712z"/><path fill="inherit" d="M74.991,377.22c-16.519,16.511-16.519,43.296,0,59.806c16.503,16.52,43.27,16.52,59.789,0c16.52-16.519,16.52-43.295,0-59.815C118.278,360.692,91.511,360.692,74.991,377.22z"/><path fill="inherit" d="M437.026,134.798c16.52-16.52,16.52-43.304,0-59.824c-16.519-16.511-43.304-16.52-59.823,0c-16.52,16.52-16.503,43.295,0,59.815C393.722,151.309,420.507,151.309,437.026,134.798z"/></g></svg>` | Set a loader component to show while the component waits for the next load of data. e.g. `<span><i className="fa fa-spinner fa-spin fa-fw"></i></span>` | - |
 | `btnId` | string  | - | ID of the specified button. | - |
 | `appearance` | string | - | The overlay style of the control. The optional values are:<br />**corners:**<br />`pill` | - |
 | `isSearchInput` | boolean | false | Whether to enable the search input, it will have an clear button | - |

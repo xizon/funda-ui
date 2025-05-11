@@ -2,9 +2,115 @@
 
 > ✌🏻 You can find the final value of this component by setting the `name` property, similar to **document.querySelector('[name="custom-control-name"]').value**
 
+
+
+
 ## General
 
-You need to use a `fetchCallback` property to format the data of the API callback, which will match the data structure of the component.
+```js
+import React from "react";
+import Select from 'funda-ui/Select';
+import axios from 'axios';
+
+// component styles
+import 'funda-ui/Select/index.css';
+
+export default () => {
+ 
+    return (
+        <>
+
+            <div style={{width: '250px'}}>
+                <Select
+                    cleanTrigger={{valid: true, cleanValueLabel: 'Clean'}}
+                    placeholder="Select"
+                    name="name"
+                    winWidth={typeof window === 'undefined' ? undefined : () => window.innerWidth/2 + 'px'}
+                    options={`
+                    [
+                        {"label": "Option 1","value": "value-1","queryString": "option1"},
+                        {"label": "<del style=color:red>deprecate</del>Option 2","value": "value-2","queryString": "option2"},
+                        {"label": "Option 3","value": "value-3","queryString": "option3"},
+                        {"label": "Option 4","value": "value-4","queryString": "option4", "disabled":true}
+                    ]  
+                    `}
+                    onChange={(e, e2, val) => {
+                        console.log(e, e2, val);
+                        /*
+                        <input ... value=​"[Option 3]​[Option 2]​[Option 1]​">​ 
+                        <input ... value=​"[value-3]​[value-2]​[value-1]​">​ 
+                        {
+                            items: [
+                                {"label": "Option 3","value": "value-3"},
+                                {"label": "<del style=color:red>deprecate</del>Option 2","value": "value-2"},
+                                {"label": "Option 1","value": "value-1"}
+                            ],
+                            labels: ['Option 3', '<del style=color:red>deprecate</del>Option 2', 'Option 1'],
+                            values: ['value-3', 'value-2', 'value-1'], 
+                            labelsOfString: '[Option 3][<del style=color:red>deprecate</del>Option 2][Option 1]', 
+                            valuesOfString: '[value-3][value-2][value-1]'
+                        }
+                        */
+                    }}
+                />
+            </div>
+
+
+            <Select
+                value="value-2"
+                placeholder="Select"
+                name="name"
+                winWidth={typeof window === 'undefined' ? undefined : () => window.innerWidth/2 + 'px'}
+                options={`
+                [
+                    {"label": "Option 1","listItemLabel":"Option 1 (No: 001)","value": "value-1","queryString": "option1"},
+                    {"label": "Option 2","listItemLabel":"<del style=color:red>deprecate</del>Option 2 (No: 002)","value": "value-2","queryString": "option2"},
+                    {"label": "Option 3","listItemLabel":"Option 3 (No: 003)","value": "value-3","queryString": "option3"},
+                    {"label": "Option 4","listItemLabel":"Option 4 (No: 004)","value": "value-4","queryString": "option4", "disabled":true}
+                ]  
+                `}
+                onChange={(e, e2, val) => {
+                    console.log(e, e2, val);
+                }}
+            />
+
+
+
+            <Select
+                value="[1][2][3][4][5][6][7][8][9][10][11][12][13][14][15][16][17][18][19][20]"
+                multiSelect={{
+                    valid: true,
+                    selectAll: true,
+                    selectAllLabel: "Select all",
+                    deselectAllLabel: "Deselect all",
+                    data: {
+                        values: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20].map(v => v.toString()),
+                        labels: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20].map(v => v.toString()),
+                        queryStrings: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20].map(v => ''),
+                    }
+                }}
+                placeholder="Select"
+                name="name"
+                options={Array.from({ length: 100 }).fill(0).map((v, i) => {
+                    return { "label": `${i}`, "value": `${i}`, "queryString": "" }
+                })}
+                onChange={(e, e2, val) => {
+                    console.log(e, e2, val);
+                }}
+            />
+
+
+
+
+        </>
+    );
+}
+```
+
+
+## Automatically trigger request
+
+You need to use the series property `fetch<METHOD_NAME>` to format the data of the API callback, which will match the data structure of the component.
 
 
 ```js
@@ -13,7 +119,7 @@ import Select from 'funda-ui/Select';
 import axios from 'axios';
 
 // component styles
-import '../funda-ui/Select/src/index.scss';
+import 'funda-ui/Select/index.css';
 
 class DataService {
 
@@ -43,7 +149,6 @@ class DataService {
             })
         };
     }	
-
     
     // `getList()` must be a Promise Object
     async getList(searchStr = '', limit = 0, otherParam = '') {
@@ -107,116 +212,8 @@ export default () => {
     return (
         <>
 
-
-
-            <h3>Normal (Single selection and Multiple selection)</h3>
-            {/* ================================================================== */}
-            <Select
-                cleanTrigger={{valid: true, cleanValueLabel: 'Clean'}}
-                value="value-2"
-                placeholder="Select"
-                name="name"
-                winWidth={typeof window === 'undefined' ? undefined : () => window.innerWidth/2 + 'px'}
-                options={`
-                [
-                    {"label": "Option 1","value": "value-1","queryString": "option1"},
-                    {"label": "<del style=color:red>deprecate</del>Option 2","value": "value-2","queryString": "option2"},
-                    {"label": "Option 3","value": "value-3","queryString": "option3"},
-                    {"label": "Option 4","value": "value-4","queryString": "option4", "disabled":true}
-                ]  
-                `}
-                onChange={(e, e2, val) => {
-                    console.log(e, e2, val);
-                    /*
-                    <input ... value=​"[Option 3]​[Option 2]​[Option 1]​">​ 
-                    <input ... value=​"[value-3]​[value-2]​[value-1]​">​ 
-                    {
-                        items: [
-                            {"label": "Option 3","value": "value-3"},
-                            {"label": "<del style=color:red>deprecate</del>Option 2","value": "value-2"},
-                            {"label": "Option 1","value": "value-1"}
-                        ],
-                        labels: ['Option 3', '<del style=color:red>deprecate</del>Option 2', 'Option 1'],
-                        values: ['value-3', 'value-2', 'value-1'], 
-                        labelsOfString: '[Option 3][<del style=color:red>deprecate</del>Option 2][Option 1]', 
-                        valuesOfString: '[value-3][value-2][value-1]'
-                    }
-                    */
-                }}
-            />
-
-
-            <Select
-                value="value-2"
-                placeholder="Select"
-                name="name"
-                winWidth={typeof window === 'undefined' ? undefined : () => window.innerWidth/2 + 'px'}
-                options={`
-                [
-                    {"label": "Option 1","listItemLabel":"Option 1 (No: 001)","value": "value-1","queryString": "option1"},
-                    {"label": "Option 2","listItemLabel":"<del style=color:red>deprecate</del>Option 2 (No: 002)","value": "value-2","queryString": "option2"},
-                    {"label": "Option 3","listItemLabel":"Option 3 (No: 003)","value": "value-3","queryString": "option3"},
-                    {"label": "Option 4","listItemLabel":"Option 4 (No: 004)","value": "value-4","queryString": "option4", "disabled":true}
-                ]  
-                `}
-                onChange={(e, e2, val) => {
-                    console.log(e, e2, val);
-                }}
-            />
-
-
-
-            <Select
-                value="[1][2][3][4][5][6][7][8][9][10][11][12][13][14][15][16][17][18][19][20]"
-                multiSelect={{
-                    valid: true,
-                    selectAll: true,
-                    selectAllLabel: "Select all",
-                    deselectAllLabel: "Deselect all",
-                    data: {
-                        values: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20].map(v => v.toString()),
-                        labels: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20].map(v => v.toString()),
-                        queryStrings: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20].map(v => ''),
-                    }
-                }}
-                placeholder="Select"
-                name="name"
-                options={Array.from({ length: 100 }).fill(0).map((v, i) => {
-                    return { "label": `${i}`, "value": `${i}`, "queryString": "" }
-                })}
-                onChange={(e, e2, val) => {
-                    console.log(e, e2, val);
-                }}
-            />
-
-            <Select
-                value="[1][2][3][4][5][6][7][8][9][10][11][12][13][14][15][16][17][18][19][20]"
-                multiSelect={{
-                    valid: true,
-                    selectAll: true,
-                    selectAllLabel: "Select all",
-                    deselectAllLabel: "Deselect all",
-                    data: {
-                        values: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20].map(v => v.toString()),
-                        labels: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20].map(v => v.toString()),
-                        queryStrings: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20].map(v => ''),
-                    }
-                }}
-                placeholder="Select"
-                name="name"
-                options={Array.from({ length: 100 }).fill(0).map((v, i) => {
-                    return { "label": `${i}`, "value": `${i}`, "queryString": "" }
-                })}
-                onChange={(e, e2, val) => {
-                    console.log(e, e2, val);
-                }}
-            />
-
-
-
-
-
-            <h3>Single selection (automatically trigger request)</h3>
+            
+            <h3>Single selection</h3>
             {/* ================================================================== */}
             <Select
                 value="bar2"
@@ -282,44 +279,7 @@ export default () => {
             <input name="name-yyyyyy" size={5} type="text" defaultValue="" />
 
 
-
-            <h3>Single selection (manual trigger request)</h3>
-            <p>Using "fetchTrigger" and "fetchTriggerForDefaultData" parameters</p>
-            {/* ================================================================== */}
-            <Select
-                value="bar2"
-                placeholder="Search Options"
-                name="name"
-                data="mydata"
-                fetchUpdate={true}
-                fetchTrigger={true}
-                fetchTriggerForDefaultData={{
-                    values: ['bar2'],
-                    labels: ['foo2'],
-                    queryStrings: ['fb2,foobar2']
-                }}
-                fetchFuncAsync={new DataService}
-                fetchFuncMethod="getListAwait"
-                fetchFuncMethodParams={['$QUERY_STRING',0]}
-                fetchCallback={(res) => {
-
-                    const formattedData = res.map((item) => {
-                        return {
-                            label: item.item_name,
-                            value: item.item_code,
-                            queryString: item.kb_code
-                        }
-                    }); 
-                    return formattedData;
-                }}
-                onFetch={(e, e2, value, res, data) => {
-                    console.log('onFetch: ', e, e2, value, res, data);
-                }}
-            />
-
-
-
-            <h3>Multiple selection (automatically trigger request)</h3>
+            <h3>Multiple selection</h3>
             {/* ================================================================== */}
             <Select
                 value="[bar2]"
@@ -356,8 +316,159 @@ export default () => {
             />
            
 
-            <h3>Multiple selection (manual trigger request)</h3>
-            <p>Using "fetchTrigger" and "fetchTriggerForDefaultData" parameters</p>
+         
+        </>
+    );
+}
+```
+
+
+## Manual trigger request
+
+You need to use the series property `fetch<METHOD_NAME>` to format the data of the API callback, which will match the data structure of the component.
+
+> Using `fetchTrigger`, `fetchUpdate` and `fetchTriggerForDefaultData` properties. In general, `fetchUpdate` is also set to **true**. 
+>
+> If `fetchUpdate` is **false**, each request needs to be triggered by clicking the search button.
+
+
+```js
+import React from "react";
+import Select from 'funda-ui/Select';
+import axios from 'axios';
+
+// component styles
+import 'funda-ui/Select/index.css';
+
+class DataService {
+
+    // `getListAwait()` must be a Promise Object
+    async getListAwait(searchStr = '', limit = 0, otherParam = '') {
+
+        console.log('(getListAwait) searchStr: ', searchStr);
+        console.log("(getListAwait) limit: ", limit);
+        console.log("(getListAwait) otherParam: ", otherParam);
+
+        const QUERY_STRING_PLACEHOLDER = '------';  // Invalid parameters for the first automatic request
+
+        if ( searchStr === QUERY_STRING_PLACEHOLDER) return {
+            code: 0,
+            message: 'OK',
+            data: []
+        };
+
+        // Simulate request latency
+        await new Promise(resolve => setTimeout(resolve, 1500));
+
+        return {
+            code: 0,
+            message: 'OK',
+            data: Array.from({length: 50}).fill(null).map((v, i) => {
+                return {item_name: 'foo' + i, item_code: 'bar' + i, kb_code: ''}
+            })
+        };
+    }	
+    
+    // `getList()` must be a Promise Object
+    async getList(searchStr = '', limit = 0, otherParam = '') {
+
+        console.log('searchStr: ', searchStr);
+        console.log("limit: ", limit);
+        console.log("otherParam: ", otherParam);
+
+        return {
+            code: 0,
+            message: 'OK',
+            data: [
+                {item_name: 'foo', item_code: 'bar', kb_code: 'fb,foobar'},
+                {item_name: 'foo2', item_code: 'bar2', kb_code: 'fb2,foobar2'},
+                {item_name: 'foo3', item_code: 'bar3', kb_code: 'fb3,foobar3'}
+            ]
+        };
+    }
+
+
+    async getListUseAxios(searchStr = '', limit = 0) {
+        let _data = null;
+        const res = await axios.get(`https://api`, {
+            params: {
+                s: searchStr,
+                limit: limit
+            },
+            headers: {
+                'Authorization': 'Bearer xxxx-xxxxxxxx-xxxxxxxx'
+                'Content-Type': 'application/json'
+            }
+        }).catch(function (error) {
+            console.log(error);
+        });
+
+        if (res && res.status == 200) _data = res.data;
+
+
+        // result
+        if (_data === null) {
+            return {
+                code: 0,
+                message: 'OK',
+                data: []
+            };
+        } else {
+            return {
+                code: 0,
+                message: 'OK',
+                data: _data
+            };
+        }
+
+    }
+
+    	
+}
+
+export default () => {
+ 
+    return (
+        <>
+
+         
+            <h3>Single selection (Enter the search character. You can enter 1 or 2)</h3>
+            {/* ================================================================== */}
+            <Select
+                value="bar2"
+                placeholder="Search Options"
+                name="name"
+                data="mydata"
+                fetchUpdate={true}
+                fetchTrigger={true}
+                fetchTriggerForDefaultData={{
+                    values: ['bar2'],
+                    labels: ['foo2'],
+                    queryStrings: ['fb2,foobar2']
+                }}
+                fetchFuncAsync={new DataService}
+                fetchFuncMethod="getListAwait"
+                fetchFuncMethodParams={['$QUERY_STRING',0]}
+                fetchCallback={(res) => {
+
+                    const formattedData = res.map((item) => {
+                        return {
+                            label: item.item_name,
+                            value: item.item_code,
+                            queryString: item.kb_code
+                        }
+                    }); 
+                    return formattedData;
+                }}
+                onFetch={(e, e2, value, res, data) => {
+                    console.log('onFetch: ', e, e2, value, res, data);
+                }}
+            />
+
+
+
+
+            <h3>Multiple selection (Enter the search character. You can enter 1 or 2)</h3>
             {/* ================================================================== */}  
             <Select
                 value="[bar2]"
@@ -540,7 +651,7 @@ export default () => {
 Set property `firstRequestAutoExec` to **false**. The first asynchronous request is not executed (saving bandwidth and improving performance). Trigger the first asynchronous request when the options area is expanded. 
 
 
-> Valid when the series attribute `fetchXXXX` is exist
+> Valid when the series attribute `fetch<METHOD_NAME>` is exist
 
 
 ```js
@@ -972,174 +1083,6 @@ export default () => {
     );
 }
 ```
-
-
-
-## Multi-Level Cascading Select (Implemented using `data-options` of component)
-
-It is usually used for complex cascading `<Select />` components
-
-
-```js
-import React, { useState } from "react";
-import Select from 'funda-ui/Select';
-
-// component styles
-import '../funda-ui/Select/src/index.scss';
-
-class DataService {
-    
-    // `getListFirst()` must be a Promise Object
-    async getListFirst(searchStr = '', limit = 0, otherParam = '') {
-
-        console.log('searchStr: ', searchStr);
-        console.log("limit: ", limit);
-        console.log("otherParam: ", otherParam);
-
-        const demoData = [
-            {
-                "parent_id": 0,
-                "item_code": 1,
-                "item_name": "Title 1",
-                "item_type": "web"
-            },
-            {
-                "parent_id": 0,
-                "item_code": 2,
-                "item_name": "Title 2",
-                "item_type": "dev"
-            }
-        ];   
-
-        return {
-            code: 0,
-            message: 'OK',
-            data: demoData
-        };
-    }
-
-
-    // `getListSecond()` must be a Promise Object
-    async getListSecond(searchStr = '', limit = 0, parentId = 0) {
-
-        console.log("parentId: ", parentId);
-
-        const demoData = [
-            {
-                "parent_id": 1,
-                "item_code": 3,
-                "item_name": "Title 3",
-                "item_type": "web/ui"
-            },
-            {
-                "parent_id": 1,
-                "item_code": 4,
-                "item_name": "Title 4",
-                "item_type": "web/ui"
-            },
-            {
-                "parent_id": 2,
-                "item_code": 5,
-                "item_name": "Title 5",
-                "item_type": "dev"
-            }
-        ];   
-
-        const res = demoData.filter( item => {
-            return item.parent_id == parentId;
-        } );
-
-        return {
-            code: 0,
-            message: 'OK',
-            data: res
-        };
-    }
-
-}
-
-
-export default () => {
-
-    const service = new DataService;
-    const [dynamicData, setDynamicData] = useState<string>('');
-
-    function toSlug(str: string) {
-
-        return str
-            .toString()
-            .replace(/[^\w\s\-！￥【】\u4e00-\u9eff]/gi, '')
-            .replace(/\s/g, '-')
-            .replace(/(\-){2,}/g, '-')
-            .replace(/\-\s*$/, '')
-            .toLowerCase();
-    };
-    
-    return (
-        <>
-
-            <Select
-                placeholder="Select"
-                name="name-1"
-                label="Level 1"
-                fetchFuncAsync={service}
-                fetchFuncMethod="getListFirst"
-                fetchFuncMethodParams={['', 0, 1]}
-                fetchCallback={(res) => {
-                    const formattedData = res.map((item: any) => {
-                        return {
-                            label: item.item_name,
-                            value: toSlug(item.item_name),
-                            queryString: '',
-                            queryId: item.item_code
-                        }
-                    }); 
-                    return formattedData;
-                }}
-                onChange={(e: any, e2: any, val: any) => {
-                    const queryId = val.queryId;
-
-
-                    // options of "name-2"
-                    service.getListSecond('', 0, queryId).then((res: any) => {
-                        const formattedData = res.data.map((item: any) => {
-                            return {
-                                label: item.item_name,
-                                value: toSlug(item.item_name),
-                                queryString: '',
-                                queryId: item.item_code
-                            }
-                        }); 
-
-                        setDynamicData(queryId);
-                        document.querySelector(`#select-level-2`).dataset.options = JSON.stringify(formattedData);
-
-                    });
-                  
-                }}
-            />
-
-
-            <Select
-                id="select-level-2"
-                value={''}
-                data={dynamicData}  // `data` attribute will trigger component update
-                placeholder="Select"
-                name="name-2"
-                label="Level 2"
-                options={''}
-                
-            />
-
-        </>
-    );
-
-}
-```
-
-
-
-
 
 
 
@@ -1594,7 +1537,7 @@ Lets you callback the handle exposed as attribute `contentRef`.
 
 
 ```js
- import React, { useState, useRef } from 'react';
+import React, { useRef } from "react";
 
 import Select from 'funda-ui/Select';
 
@@ -1802,7 +1745,7 @@ import Select from 'funda-ui/Select';
 | `controlExClassName` | string | - | The extended class name of `controlClassName`. | - |
 | `optionsExClassName` | string | - | The extended class name of options from popup. | - |
 | `exceededSidePosOffset` | number | 15 | Offset px that exceeds the far right or left side of the screen | - |
-| `options` | JSON Object Literals \| JSON Object | - | Set the default value using JSON string format for menu of options, like this: `[{"label": "Option 1","value": "value-1","queryString": "option1"},{"label": "<del style=color:red>deprecate</del>Option 2","value": "value-2","queryString": "option2"},{"label": "Option 3","value": "value-3","queryString": "option3"},{"label": "Option 4","value": "value-4","queryString": "option4","disabled":true}]` <br /> <blockquote>Note: Use API data if database query exists. That is, the attribute `fetchXXXX`</blockquote> <hr /> <blockquote>When the attribute `hierarchical` is true, you need to use a hierarchical structure to pass data, such as: `[{label:"Top level 1",value:'level-1',queryString:""},{label:"Top level 2",value:'level-2',queryString:""},{label:"Top level 3",value:'level-3',queryString:"",children:[{label:"Sub level 3_1",value:'level-3_1',queryString:""},{label:"Sub level 3_2",value:'level-3_2',queryString:"",children:[{label:"Sub level 3_2_1",value:'level-3_2_1',queryString:""}]},{label:"Sub level 3_3",value:'level-3_3',queryString:""}]}]`</blockquote>| - |
+| `options` | JSON Object Literals \| JSON Object | - | Set the default value using JSON string format for menu of options, like this: `[{"label": "Option 1","value": "value-1","queryString": "option1"},{"label": "<del style=color:red>deprecate</del>Option 2","value": "value-2","queryString": "option2"},{"label": "Option 3","value": "value-3","queryString": "option3"},{"label": "Option 4","value": "value-4","queryString": "option4","disabled":true}]` <br /> <blockquote>Note: Use API data if database query exists. That is, the attribute `fetch<METHOD_NAME>`</blockquote> <hr /> <blockquote>When the attribute `hierarchical` is true, you need to use a hierarchical structure to pass data, such as: `[{label:"Top level 1",value:'level-1',queryString:""},{label:"Top level 2",value:'level-2',queryString:""},{label:"Top level 3",value:'level-3',queryString:"",children:[{label:"Sub level 3_1",value:'level-3_1',queryString:""},{label:"Sub level 3_2",value:'level-3_2',queryString:"",children:[{label:"Sub level 3_2_1",value:'level-3_2_1',queryString:""}]},{label:"Sub level 3_3",value:'level-3_3',queryString:""}]}]`</blockquote>| - |
 | `cleanTrigger` | JSON Object | `{"valid": false, "cleanValueLabel": "Clean"}` | Enable cleanTrigger. <blockquote>**Parameters Description:** <br />`valid` -->  *(Boolean)* *(required)* Display this button that clears the existing value. It is valid when a single selection. <br />`cleanValueLabel` -->  *(String)* Sets the clean button label. (Support html tags) </blockquote> | - |
 | `lockBodyScroll` | boolean  | false | Enables body scroll locking (for iOS Mobile and Tablet, Android, desktop Safari/Chrome/Firefox) without breaking scrolling of a target element. | - |
 | `loader` | ReactNode  | `<svg height="12px" width="12px" viewBox="0 0 512 512"><g><path fill="inherit" d="M256,0c-23.357,0-42.297,18.932-42.297,42.288c0,23.358,18.94,42.288,42.297,42.288c23.357,0,42.279-18.93,42.279-42.288C298.279,18.932,279.357,0,256,0z"/><path fill="inherit" d="M256,427.424c-23.357,0-42.297,18.931-42.297,42.288C213.703,493.07,232.643,512,256,512c23.357,0,42.279-18.93,42.279-42.288C298.279,446.355,279.357,427.424,256,427.424z"/><path fill="inherit" d="M74.974,74.983c-16.52,16.511-16.52,43.286,0,59.806c16.52,16.52,43.287,16.52,59.806,0c16.52-16.511,16.52-43.286,0-59.806C118.261,58.463,91.494,58.463,74.974,74.983z"/><path fill="inherit" d="M377.203,377.211c-16.503,16.52-16.503,43.296,0,59.815c16.519,16.52,43.304,16.52,59.806,0c16.52-16.51,16.52-43.295,0-59.815C420.489,360.692,393.722,360.7,377.203,377.211z"/><path fill="inherit" d="M84.567,256c0.018-23.348-18.922-42.279-42.279-42.279c-23.357-0.009-42.297,18.932-42.279,42.288c-0.018,23.348,18.904,42.279,42.279,42.279C65.645,298.288,84.567,279.358,84.567,256z"/><path fill="inherit" d="M469.712,213.712c-23.357,0-42.279,18.941-42.297,42.288c0,23.358,18.94,42.288,42.297,42.297c23.357,0,42.297-18.94,42.279-42.297C512.009,232.652,493.069,213.712,469.712,213.712z"/><path fill="inherit" d="M74.991,377.22c-16.519,16.511-16.519,43.296,0,59.806c16.503,16.52,43.27,16.52,59.789,0c16.52-16.519,16.52-43.295,0-59.815C118.278,360.692,91.511,360.692,74.991,377.22z"/><path fill="inherit" d="M437.026,134.798c16.52-16.52,16.52-43.304,0-59.824c-16.519-16.511-43.304-16.52-59.823,0c-16.52,16.52-16.503,43.295,0,59.815C393.722,151.309,420.507,151.309,437.026,134.798z"/></g></svg>` | Set a loader component to show while the component waits for the next load of data. e.g. `<span><i className="fa fa-spinner fa-spin fa-fw"></i></span>` | - |
@@ -1828,7 +1771,7 @@ import Select from 'funda-ui/Select';
 | `required` | boolean | false | When present, it specifies that a field must be filled out before submitting the form. | - |
 | `controlArrow` | ReactNode  | `<svg width="10px" height="10px" viewBox="0 -4.5 20 20"><g stroke="none" strokeWidth="1" fill="none"><g transform="translate(-180.000000, -6684.000000)" className="arrow-fill-g" fill="#a5a5a5"><g transform="translate(56.000000, 160.000000)"><path d="M144,6525.39 L142.594,6524 L133.987,6532.261 L133.069,6531.38 L133.074,6531.385 L125.427,6524.045 L124,6525.414 C126.113,6527.443 132.014,6533.107 133.987,6535 C135.453,6533.594 134.024,6534.965 144,6525.39"></path></g></g></g></svg>` | Set an arrow of control | - |
 | `data`  <blockquote>You could use [key](https://react.dev/learn/rendering-lists#why-does-react-need-keys) instead of it</blockquote>  | any  | - | Incoming data, you can set the third parameter of `onFetch`. <blockquote>Changes in the `data` value will cause the component to re-render. It will be used when the value or content does not change when switching routes and needs to re-render the component or get the request.</blockquote> <hr /> <blockquote>!!!Note: Using `data` and `value` at the same time may cause two different parameter transfers, which will affect the final rendering. Please choose the appropriate usage based on your business. Generally speaking, if the `multiSelect` exists, it is not recommended to use the `data`.</blockquote>| - |
-| `firstRequestAutoExec` | boolean  | true | Handling async data with the click event. When the control is clicked, the interface request is automatically triggered, which can avoid the request when the page is loaded.  <blockquote>Valid when the series attribute `fetchXXXX` is exist</blockquote> | - |
+| `firstRequestAutoExec` | boolean  | true | Handling async data with the click event. When the control is clicked, the interface request is automatically triggered, which can avoid the request when the page is loaded.  <blockquote>Valid when the series attribute `fetch<METHOD_NAME>` is exist</blockquote> | - |
 | `fetchTrigger` | boolean  | false | Use search button to trigger data queries. | - |
 | `fetchTriggerForDefaultData` | JSON Object \| null  | null | Sets a default data for control's values. (such as `{values: ['value-1','value-3'], labels: ['Option 1','Option 3'], queryStrings: ['','']}`) <br />Valid when `fetchTrigger` is *true* and `value` is not empty. | - |
 | `fetchNoneInfo` | string  | `No match yet` | The text of the data not fetched. | - |

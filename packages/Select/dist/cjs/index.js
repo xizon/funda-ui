@@ -3785,7 +3785,8 @@ var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_
     firstRequestAutoExec = props.firstRequestAutoExec,
     fetchTrigger = props.fetchTrigger,
     fetchTriggerForDefaultData = props.fetchTriggerForDefaultData,
-    fetchNoneInfo = props.fetchNoneInfo,
+    _props$fetchNoneInfo = props.fetchNoneInfo,
+    fetchNoneInfo = _props$fetchNoneInfo === void 0 ? 'No match yet' : _props$fetchNoneInfo,
     fetchUpdate = props.fetchUpdate,
     fetchFuncAsync = props.fetchFuncAsync,
     fetchFuncMethod = props.fetchFuncMethod,
@@ -3858,7 +3859,7 @@ var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_
   var _useState11 = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)(null),
     _useState12 = _slicedToArray(_useState11, 2),
     controlTempValue = _useState12[0],
-    setControlTempValue = _useState12[1];
+    setControlTempValue = _useState12[1]; // Storage for temporary input
   var _useState13 = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)(false),
     _useState14 = _slicedToArray(_useState13, 2),
     isOpen = _useState14[0],
@@ -3875,6 +3876,11 @@ var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_
     _useState20 = _slicedToArray(_useState19, 2),
     handleFirstFetchCompleted = _useState20[0],
     setHandleFirstFetchCompleted = _useState20[1];
+
+  // Mark whether it is out of focus
+  // Fixed the issue that caused the pop-up window to still display due to 
+  // the delayed close in handleBlur and the timing of the call to popwinPosInit
+  var isBlurringRef = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useRef)(false);
 
   // filter status
   var _useState21 = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)(false),
@@ -4097,7 +4103,6 @@ var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_
   function _fetchData() {
     _fetchData = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee(params, valueToInputDefault, inputDefault) {
       var init,
-        incomingOptionsData,
         defaultValue,
         response,
         _ORGIN_DATA,
@@ -4116,17 +4121,15 @@ var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_
         while (1) switch (_context.prev = _context.next) {
           case 0:
             init = _args.length > 3 && _args[3] !== undefined ? _args[3] : true;
-            // get incoming options from `data-options` of component
-            // It is usually used for complex cascading `<Select />` components
-            incomingOptionsData = valueInputRef.current.dataset.options; // Determine whether the default value is user query input or default input
+            // Determine whether the default value is user query input or default input
             defaultValue = init ? valueToInputDefault : '';
             if (!(_typeof(fetchFuncAsync) === 'object')) {
-              _context.next = 25;
+              _context.next = 23;
               break;
             }
-            _context.next = 6;
+            _context.next = 5;
             return fetchFuncAsync["".concat(fetchFuncMethod)].apply(fetchFuncAsync, _toConsumableArray(params.split(',')));
-          case 6:
+          case 5:
             response = _context.sent;
             _ORGIN_DATA = response.data; // reset data structure
             if (typeof fetchCallback === 'function') {
@@ -4141,26 +4144,17 @@ var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_
             }
 
             // STEP 1: ===========
-            // get incoming options from `data-options` of component
-            if (typeof incomingOptionsData !== 'undefined') {
-              _ORGIN_DATA = JSON.parse(incomingOptionsData);
-
-              // set value if the attribute `data-options` of component exists, only valid for single selection (it may be an empty array)
-              if (typeof defaultValue !== 'undefined' && defaultValue !== '') valueInputRef.current.dataset.value = defaultValue;
-            }
-
-            // STEP 2: ===========
             // Set hierarchical categories ( with sub-categories )
             if (hierarchical) {
               _ORGIN_DATA = (0,tree.addTreeDepth)(_ORGIN_DATA);
               (0,tree.addTreeIndent)(_ORGIN_DATA, INDENT_PLACEHOLDER, INDENT_LAST_PLACEHOLDER, 'label');
             }
 
-            // STEP 3: ===========
+            // STEP 2: ===========
             // Flatten the group
             _ORGIN_DATA = optionsCustomSelectFlat(_ORGIN_DATA);
 
-            // STEP 4: ===========
+            // STEP 3: ===========
             // value & label must be initialized
             filterRes = [];
             if (MANUAL_REQ) {
@@ -4189,7 +4183,7 @@ var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_
               }
             }
 
-            // STEP 5: ===========
+            // STEP 4: ===========
             // ++++++++++++++++++++
             // Single selection
             // ++++++++++++++++++++
@@ -4257,7 +4251,7 @@ var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_
               });
             }
 
-            // STEP 6: ===========
+            // STEP 5: ===========
             //
             // remove Duplicate objects from JSON Array
             optionsFormatGroupOpt(_ORGIN_DATA); // prevent the value from being filtered out
@@ -4267,34 +4261,25 @@ var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_
             //
             setOrginalData(_ORGIN_DATA);
 
-            // STEP 7: ===========
+            // STEP 6: ===========
             //
             onFetch === null || onFetch === void 0 ? void 0 : onFetch(selectInputRef.current, valueInputRef.current, defaultValue, _ORGIN_DATA, incomingData);
 
             //
             return _context.abrupt("return", _ORGIN_DATA);
-          case 25:
+          case 23:
             // STEP 1: ===========
-            // get incoming options from `data-options` of component
-            if (typeof incomingOptionsData !== 'undefined') {
-              staticOptionsData = JSON.parse(incomingOptionsData);
-
-              // set value if the attribute `data-options` of component exists, only valid for single selection (it may be an empty array)
-              if (typeof defaultValue !== 'undefined' && defaultValue !== '') valueInputRef.current.dataset.value = defaultValue;
-            }
-
-            // STEP 2: ===========
             // Set hierarchical categories ( with sub-categories )
             if (hierarchical) {
               staticOptionsData = (0,tree.addTreeDepth)(staticOptionsData);
               (0,tree.addTreeIndent)(staticOptionsData, INDENT_PLACEHOLDER, INDENT_LAST_PLACEHOLDER, 'label');
             }
 
-            // STEP 3: ===========
+            // STEP 2: ===========
             // Flatten the group
             staticOptionsData = optionsCustomSelectFlat(staticOptionsData);
 
-            // STEP 4: ===========
+            // STEP 3: ===========
             // value & label must be initialized
 
             // If the default value is label, match value
@@ -4313,7 +4298,7 @@ var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_
               _filterRes3 = [inputDefault];
             }
 
-            // STEP 5: ===========
+            // STEP 4: ===========
             // ++++++++++++++++++++
             // Single selection
             // ++++++++++++++++++++
@@ -4381,7 +4366,7 @@ var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_
               });
             }
 
-            // STEP 6: ===========
+            // STEP 5: ===========
             //
             // remove Duplicate objects from JSON Array
             optionsFormatGroupOpt(staticOptionsData); // prevent the value from being filtered out
@@ -4391,13 +4376,13 @@ var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_
             //
             setOrginalData(staticOptionsData);
 
-            // STEP 7: ===========
+            // STEP 6: ===========
             //
             onFetch === null || onFetch === void 0 ? void 0 : onFetch(selectInputRef.current, valueInputRef.current, defaultValue, staticOptionsData, incomingData);
 
             //
             return _context.abrupt("return", staticOptionsData);
-          case 42:
+          case 39:
           case "end":
             return _context.stop();
         }
@@ -4435,6 +4420,11 @@ var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_
   function popwinPosInit() {
     var scrollbarInit = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : true;
     if (listContentRef.current === null || rootRef.current === null || selectInputRef.current === null) return;
+
+    // If it is out of focus, do not perform position initialization
+    if (isBlurringRef.current) return;
+
+    //
     var contentHeightOffset = 80;
     var contentMaxHeight = 0;
 
@@ -4600,7 +4590,6 @@ var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_
   }
   function popwinFilterItems(val) {
     if (listContentRef.current === null) return;
-    var invisibleItems = 0;
     [].slice.call(listContentRef.current.querySelectorAll('.custom-select-multi__control-option-item')).forEach(function (node) {
       // Avoid fatal errors causing page crashes
       var _queryString = typeof node.dataset.querystring !== 'undefined' && node.dataset.querystring !== null ? node.dataset.querystring : '';
@@ -4757,6 +4746,13 @@ var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_
       selectInputRef.current.select();
     }
 
+    // Every time the input changes or the search button is clicked, a data request will be triggered
+    if (MANUAL_REQ && (controlTempValue === '' || controlTempValue === null)) {
+      setTimeout(function () {
+        popwinPosHide();
+      }, 0);
+    }
+
     // update temporary value
     setControlTempValue('');
 
@@ -4780,7 +4776,6 @@ var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_
         valueArr,
         labelArr,
         curItem,
-        incominggetOptionsData,
         options,
         curBtn,
         noCallback,
@@ -4815,9 +4810,7 @@ var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_
             }
             return _context2.abrupt("return");
           case 5:
-            curItem = el === null ? isObject(dataInput) ? dataInput : JSON.parse(dataInput) : optionsData[Number(el.currentTarget.dataset.index)]; // get incoming options from `data-options` of component
-            // It is usually used for complex cascading `<Select />` components
-            incominggetOptionsData = valueInputRef.current.dataset.options; // get options
+            curItem = el === null ? isObject(dataInput) ? dataInput : JSON.parse(dataInput) : optionsData[Number(el.currentTarget.dataset.index)]; // get options
             options = [].slice.call(listRef.current.querySelectorAll('.list-group-item:not(.hide):not(.no-match)')); // current control of some option
             curBtn = options.filter(function (node) {
               return node.dataset.itemdata == JSON.stringify(curItem);
@@ -4870,11 +4863,6 @@ var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_
               //
               setControlValue(_value);
               setControlLabel(formatIndentVal(_label, INDENT_LAST_PLACEHOLDER));
-
-              // set value if the attribute `data-options` of component exists, only valid for single selection (it may be an empty array)
-              if (typeof incominggetOptionsData !== 'undefined') {
-                valueInputRef.current.dataset.value = _value;
-              }
 
               // ++++++++++++++++++++
               // Multiple selection
@@ -4977,11 +4965,6 @@ var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_
               setControlValue(_value2);
               setControlLabel(formatIndentVal(_label2, INDENT_LAST_PLACEHOLDER));
 
-              // set value if the attribute `data-options` of component exists, only valid for single selection (it may be an empty array)
-              if (typeof incominggetOptionsData !== 'undefined') {
-                valueInputRef.current.dataset.value = _value2;
-              }
-
               // ++++++++++++++++++++
               // Multiple selection
               // ++++++++++++++++++++
@@ -5055,7 +5038,7 @@ var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_
 
             // Fixed an out-of-focus issue
             fixFocusStatus();
-          case 13:
+          case 12:
           case "end":
             return _context2.stop();
         }
@@ -5206,6 +5189,9 @@ var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_
     }
   }
   function handleShowList() {
+    // Reset the out-of-focus marker
+    isBlurringRef.current = false;
+
     //
     if (!isOpen) {
       activate();
@@ -5262,18 +5248,25 @@ var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_
         while (1) switch (_context4.prev = _context4.next) {
           case 0:
             inputVal = _args4.length > 0 && _args4[0] !== undefined ? _args4[0] : null;
+            if (!MANUAL_REQ) {
+              _context4.next = 3;
+              break;
+            }
+            return _context4.abrupt("return", []);
+          case 3:
+            //
             _oparams = fetchFuncMethodParams || [];
             _params = _oparams.map(function (item) {
               return item !== '$QUERY_STRING' ? item : MANUAL_REQ ? QUERY_STRING_PLACEHOLDER : '';
             });
-            _context4.next = 5;
+            _context4.next = 7;
             return fetchData(_params.join(','), finalRes(inputVal), inputVal);
-          case 5:
+          case 7:
             res = _context4.sent;
             // Set an identifier indicating that the first request has been completed
             if (!handleFirstFetchCompleted) setHandleFirstFetchCompleted(true);
             return _context4.abrupt("return", res);
-          case 8:
+          case 10:
           case "end":
             return _context4.stop();
         }
@@ -5301,6 +5294,11 @@ var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_
 
     // Fixed an out-of-focus issue
     fixFocusStatus();
+
+    // Every time the input changes or the search button is clicked, a data request will be triggered
+    if (MANUAL_REQ && val !== '') {
+      popwinPosInit();
+    }
   }
 
   //
@@ -5308,14 +5306,14 @@ var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_
     var _rootRef$current;
     (_rootRef$current = rootRef.current) === null || _rootRef$current === void 0 ? void 0 : _rootRef$current.classList.add('focus');
 
-    // update temporary value
-    setControlTempValue('');
-
     //
     onFocus === null || onFocus === void 0 ? void 0 : onFocus(selectInputRef.current);
   }
   function handleBlur(event) {
     var _rootRef$current2;
+    // Set the out-of-focus marker
+    isBlurringRef.current = true;
+
     // Fix the focus issue with using the "Tabs" and "Enter" keys
     //
     //
@@ -5674,6 +5672,8 @@ var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_
     type: "button",
     className: "btn border-end-0 rounded-pill",
     onClick: function onClick(e) {
+      e.preventDefault();
+      e.stopPropagation();
       handleFetch().then(function (response) {
         // pop win initalization
         setTimeout(function () {
@@ -5700,10 +5700,10 @@ var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_
       pointerEvents: 'auto',
       cursor: 'pointer'
     } : undefined,
-    onClick: MULTI_SEL_ENTIRE_AREA_TRIGGER ? typeof readOnly === 'undefined' || !readOnly ? handleShowList : function () {
-      return void 0;
-    } : function () {
-      return void 0;
+    onClick: function onClick(e) {
+      if (MULTI_SEL_ENTIRE_AREA_TRIGGER) {
+        if (typeof readOnly === 'undefined' || !readOnly) handleShowList();
+      }
     }
   }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("ul", {
     className: "custom-select-multi__list"
@@ -5797,6 +5797,8 @@ var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_
     type: "button",
     className: "btn border-end-0 rounded-pill",
     onClick: function onClick(e) {
+      e.preventDefault();
+      e.stopPropagation();
       handleFetch().then(function (response) {
         // pop win initalization
         setTimeout(function () {
@@ -5901,7 +5903,7 @@ var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_
   }), /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("path", {
     fill: "inherit",
     d: "M437.026,134.798c16.52-16.52,16.52-43.304,0-59.824c-16.519-16.511-43.304-16.52-59.823,0c-16.52,16.52-16.503,43.295,0,59.815C393.722,151.309,420.507,151.309,437.026,134.798z"
-  }))))) : /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, fetchNoneInfo || 'No match yet')), optionsData ? optionsData.map(function (item, index) {
+  }))))) : /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, fetchNoneInfo)), optionsData ? optionsData.map(function (item, index) {
     var startItemBorder = index === 0 ? 'border-top-0' : '';
     var endItemBorder = index === optionsData.length - 1 ? 'border-bottom-0' : '';
 

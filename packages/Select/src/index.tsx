@@ -51,6 +51,8 @@ import {
 import { clsWrite, combinedCls } from 'funda-utils/dist/cjs/cls';
 
 
+
+
 export type SelectOptionChangeFnType = (arg1: any, arg2: any, arg3: any) => void;
 
 export interface MultiSelectDataConfig {
@@ -201,7 +203,7 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
         firstRequestAutoExec,
         fetchTrigger,
         fetchTriggerForDefaultData,
-        fetchNoneInfo,
+        fetchNoneInfo = 'No match yet',
         fetchUpdate,
         fetchFuncAsync,
         fetchFuncMethod,
@@ -262,11 +264,16 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
     const [controlValue, setControlValue] = useState<string | undefined>('');
 
     //
-    const [controlTempValue, setControlTempValue] = useState<string | null>(null);
+    const [controlTempValue, setControlTempValue] = useState<string | null>(null); // Storage for temporary input
     const [isOpen, setIsOpen] = useState<boolean>(false);
     const [incomingData, setIncomingData] = useState<string | null | undefined>(null);
     const [firstRequestExecuted, setFirstRequestExecuted] = useState<boolean>(false);
     const [handleFirstFetchCompleted, setHandleFirstFetchCompleted] = useState<boolean>(false);
+
+    // Mark whether it is out of focus
+    // Fixed the issue that caused the pop-up window to still display due to 
+    // the delayed close in handleBlur and the timing of the call to popwinPosInit
+    const isBlurringRef = useRef<boolean>(false);
 
     // filter status
     const [filterItemsHasNoMatchData, setFilterItemsHasNoMatchData] = useState<boolean>(false);
@@ -504,10 +511,6 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
 
     async function fetchData(params: any, valueToInputDefault: any, inputDefault: any, init: boolean = true) {
 
-        // get incoming options from `data-options` of component
-        // It is usually used for complex cascading `<Select />` components
-        const incomingOptionsData = valueInputRef.current.dataset.options;
-
 
         // Determine whether the default value is user query input or default input
         const defaultValue = init ? valueToInputDefault : '';
@@ -534,16 +537,6 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
 
 
             // STEP 1: ===========
-            // get incoming options from `data-options` of component
-            if (typeof incomingOptionsData !== 'undefined') {
-                _ORGIN_DATA = JSON.parse(incomingOptionsData);
-
-                // set value if the attribute `data-options` of component exists, only valid for single selection (it may be an empty array)
-                if (typeof defaultValue !== 'undefined' && defaultValue !== '') valueInputRef.current.dataset.value = defaultValue;
-            }
-
-
-            // STEP 2: ===========
             // Set hierarchical categories ( with sub-categories )
             if (hierarchical) {
                 _ORGIN_DATA = addTreeDepth(_ORGIN_DATA);
@@ -551,14 +544,14 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
             }
 
 
-            // STEP 3: ===========
+            // STEP 2: ===========
             // Flatten the group
             _ORGIN_DATA = optionsCustomSelectFlat(_ORGIN_DATA);
 
 
 
 
-            // STEP 4: ===========
+            // STEP 3: ===========
             // value & label must be initialized
             let filterRes: any = [];
 
@@ -592,7 +585,7 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
 
     
 
-            // STEP 5: ===========
+            // STEP 4: ===========
             // ++++++++++++++++++++
             // Single selection
             // ++++++++++++++++++++
@@ -673,7 +666,7 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
 
             }
 
-            // STEP 6: ===========
+            // STEP 5: ===========
             //
             // remove Duplicate objects from JSON Array
             optionsFormatGroupOpt(_ORGIN_DATA); // prevent the value from being filtered out
@@ -685,7 +678,7 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
             setOrginalData(_ORGIN_DATA);
 
 
-            // STEP 7: ===========
+            // STEP 6: ===========
             //
             onFetch?.(selectInputRef.current, valueInputRef.current, defaultValue, _ORGIN_DATA, incomingData);
 
@@ -699,17 +692,6 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
 
 
             // STEP 1: ===========
-            // get incoming options from `data-options` of component
-            if (typeof incomingOptionsData !== 'undefined') {
-                staticOptionsData = JSON.parse(incomingOptionsData);
-
-                // set value if the attribute `data-options` of component exists, only valid for single selection (it may be an empty array)
-                if (typeof defaultValue !== 'undefined' && defaultValue !== '') valueInputRef.current.dataset.value = defaultValue;
-
-            }
-
-
-            // STEP 2: ===========
             // Set hierarchical categories ( with sub-categories )
             if (hierarchical) {
                 staticOptionsData = addTreeDepth(staticOptionsData);
@@ -717,12 +699,12 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
             }
 
 
-            // STEP 3: ===========
+            // STEP 2: ===========
             // Flatten the group
             staticOptionsData = optionsCustomSelectFlat(staticOptionsData);
 
 
-            // STEP 4: ===========
+            // STEP 3: ===========
             // value & label must be initialized
 
             // If the default value is label, match value
@@ -741,7 +723,7 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
 
 
 
-            // STEP 5: ===========
+            // STEP 4: ===========
             // ++++++++++++++++++++
             // Single selection
             // ++++++++++++++++++++
@@ -818,7 +800,7 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
 
             }
 
-            // STEP 6: ===========
+            // STEP 5: ===========
             //
             // remove Duplicate objects from JSON Array
             optionsFormatGroupOpt(staticOptionsData); // prevent the value from being filtered out
@@ -830,7 +812,7 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
             //
             setOrginalData(staticOptionsData);
 
-            // STEP 7: ===========
+            // STEP 6: ===========
             //
             onFetch?.(selectInputRef.current, valueInputRef.current, defaultValue, staticOptionsData, incomingData);
 
@@ -864,7 +846,6 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
         }, 0);
     }
 
-
     function syncListContentScrollBody() {
         const el: any = listContentRef.current;
         if (el === null) return;
@@ -885,6 +866,10 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
     function popwinPosInit(scrollbarInit: boolean = true) {
         if (listContentRef.current === null || rootRef.current === null || selectInputRef.current === null) return;
 
+        // If it is out of focus, do not perform position initialization
+        if (isBlurringRef.current) return;
+
+        //
         const contentHeightOffset = 80;
         let contentMaxHeight = 0;
 
@@ -1098,8 +1083,6 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
     function popwinFilterItems(val: any) {
         if (listContentRef.current === null) return;
 
-
-        let invisibleItems: number = 0;
         [].slice.call(listContentRef.current.querySelectorAll('.custom-select-multi__control-option-item')).forEach((node: any) => {
 
             // Avoid fatal errors causing page crashes
@@ -1255,7 +1238,6 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
                     setTimeout(() => {
                         popwinPosInit();
                     }, 0);
-
                 }
             });
 
@@ -1295,8 +1277,19 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
             selectInputRef.current.select();
         }
 
+
+        // Every time the input changes or the search button is clicked, a data request will be triggered
+        if (MANUAL_REQ && (controlTempValue === '' || controlTempValue === null)) {
+            setTimeout(() => {
+                popwinPosHide();
+            }, 0);
+        }
+        
+
         // update temporary value
         setControlTempValue('');
+
+        
 
 
         // Locks the page
@@ -1322,11 +1315,6 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
 
         const curItem: any = el === null ? (isObject(dataInput) ? dataInput : JSON.parse(dataInput)) : optionsData[Number(el.currentTarget.dataset.index)];
         
-
-        // get incoming options from `data-options` of component
-        // It is usually used for complex cascading `<Select />` components
-        const incominggetOptionsData = valueInputRef.current.dataset.options;
-
 
         // get options
         const options = [].slice.call(listRef.current.querySelectorAll('.list-group-item:not(.hide):not(.no-match)'));
@@ -1397,13 +1385,6 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
             setControlValue(_value);
             setControlLabel(formatIndentVal(_label, INDENT_LAST_PLACEHOLDER));
 
-
-            // set value if the attribute `data-options` of component exists, only valid for single selection (it may be an empty array)
-            if (typeof incominggetOptionsData !== 'undefined') {
-                valueInputRef.current.dataset.value = _value;
-            }
-
- 
 
             // ++++++++++++++++++++
             // Multiple selection
@@ -1546,11 +1527,6 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
             //
             setControlValue(_value);
             setControlLabel(formatIndentVal(_label, INDENT_LAST_PLACEHOLDER));
-
-            // set value if the attribute `data-options` of component exists, only valid for single selection (it may be an empty array)
-            if (typeof incominggetOptionsData !== 'undefined') {
-                valueInputRef.current.dataset.value = _value;
-            }
 
 
             // ++++++++++++++++++++
@@ -1841,6 +1817,9 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
 
     function handleShowList() {
 
+        // Reset the out-of-focus marker
+        isBlurringRef.current = false;
+
         //
         if (!isOpen) {
             activate();
@@ -1868,6 +1847,11 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
 
 
     async function handleFirstFetch(inputVal: any = null) {
+
+        // If manual requests are enabled, do not send them for the first time
+        if (MANUAL_REQ) return [];
+
+        //
         const _oparams: any[] = fetchFuncMethodParams || [];
         const _params: any[] = _oparams.map((item: any) => item !== '$QUERY_STRING' ? item : (MANUAL_REQ ? QUERY_STRING_PLACEHOLDER : ''));
         const res = await fetchData((_params).join(','), finalRes(inputVal), inputVal);
@@ -1905,6 +1889,11 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
         // Fixed an out-of-focus issue
         fixFocusStatus();
         
+        // Every time the input changes or the search button is clicked, a data request will be triggered
+        if (MANUAL_REQ && val !== '') {
+            popwinPosInit();
+        }
+        
 
     }
 
@@ -1913,16 +1902,16 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
 
         rootRef.current?.classList.add('focus');
 
-        // update temporary value
-        setControlTempValue('');
-
-
         //
         onFocus?.(selectInputRef.current);
         
     }
 
     function handleBlur(event: any) {
+
+        // Set the out-of-focus marker
+        isBlurringRef.current = true;
+
 
         // Fix the focus issue with using the "Tabs" and "Enter" keys
         //
@@ -2346,6 +2335,9 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
                     {MANUAL_REQ ? <>
                         <span className="custom-select-multi__control-searchbtn">
                             <button tabIndex={-1} type="button" className="btn border-end-0 rounded-pill" onClick={(e: React.MouseEvent) => {
+                                e.preventDefault();
+                                e.stopPropagation();
+                                
                                 handleFetch().then((response: any) => {
 
                                     // pop win initalization
@@ -2354,6 +2346,7 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
                                         popwinFilterItems(controlTempValue);
                                     }, 0);
                                 });
+                                
                             }}>
                                 <svg width="1em" height="1em" fill="#a5a5a5" viewBox="0 0 16 16">
                                     <path d="M12.027 9.92L16 13.95 14 16l-4.075-3.976A6.465 6.465 0 0 1 6.5 13C2.91 13 0 10.083 0 6.5 0 2.91 2.917 0 6.5 0 10.09 0 13 2.917 13 6.5a6.463 6.463 0 0 1-.973 3.42zM1.997 6.452c0 2.48 2.014 4.5 4.5 4.5 2.48 0 4.5-2.015 4.5-4.5 0-2.48-2.015-4.5-4.5-4.5-2.48 0-4.5 2.014-4.5 4.5z" fillRule="evenodd" />
@@ -2378,9 +2371,14 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
                 {MULTI_SEL_VALID ? <div ref={rootMultiRef} className="custom-select-multi__inputplaceholder-wrapper">
                 
 
+        
                     {/* PLACEHOLDER */}
                     <div className="custom-select-multi__inputplaceholder-inner">
-                        <div style={MULTI_SEL_ENTIRE_AREA_TRIGGER ? {pointerEvents: 'auto', cursor: 'pointer'} : undefined} onClick={MULTI_SEL_ENTIRE_AREA_TRIGGER ? ( typeof readOnly === 'undefined' || !readOnly ? handleShowList : () => void (0) ) :  () => void (0)}>
+                        <div style={MULTI_SEL_ENTIRE_AREA_TRIGGER ? {pointerEvents: 'auto', cursor: 'pointer'} : undefined} onClick={(e: React.MouseEvent) => {
+                            if (MULTI_SEL_ENTIRE_AREA_TRIGGER) {
+                                if (typeof readOnly === 'undefined' || !readOnly) handleShowList();
+                            }
+                        }}>
                             <ul className="custom-select-multi__list">
 
                                 {typeof multiSelectSelectedItemOnlyStatus !== 'undefined' ? <>
@@ -2611,6 +2609,9 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
                     {MANUAL_REQ ? <>
                         <span className="custom-select-multi__control-searchbtn">
                             <button tabIndex={-1} type="button" className="btn border-end-0 rounded-pill" onClick={(e: React.MouseEvent) => {
+                                e.preventDefault();
+                                e.stopPropagation();
+
                                 handleFetch().then((response: any) => {
 
                                     // pop win initalization
@@ -2712,7 +2713,7 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
 
                                             // (2) Every time the input changes or the search button is clicked, a data request will be triggered
                                             (fetchUpdate && !filterItemsHasNoMatchData && controlTempValue !== '')
-                                        ? <><div className="cus-select-loader">{loader || <svg height="12px" width="12px" viewBox="0 0 512 512"><g><path fill="inherit" d="M256,0c-23.357,0-42.297,18.932-42.297,42.288c0,23.358,18.94,42.288,42.297,42.288c23.357,0,42.279-18.93,42.279-42.288C298.279,18.932,279.357,0,256,0z" /><path fill="inherit" d="M256,427.424c-23.357,0-42.297,18.931-42.297,42.288C213.703,493.07,232.643,512,256,512c23.357,0,42.279-18.93,42.279-42.288C298.279,446.355,279.357,427.424,256,427.424z" /><path fill="inherit" d="M74.974,74.983c-16.52,16.511-16.52,43.286,0,59.806c16.52,16.52,43.287,16.52,59.806,0c16.52-16.511,16.52-43.286,0-59.806C118.261,58.463,91.494,58.463,74.974,74.983z" /><path fill="inherit" d="M377.203,377.211c-16.503,16.52-16.503,43.296,0,59.815c16.519,16.52,43.304,16.52,59.806,0c16.52-16.51,16.52-43.295,0-59.815C420.489,360.692,393.722,360.7,377.203,377.211z" /><path fill="inherit" d="M84.567,256c0.018-23.348-18.922-42.279-42.279-42.279c-23.357-0.009-42.297,18.932-42.279,42.288c-0.018,23.348,18.904,42.279,42.279,42.279C65.645,298.288,84.567,279.358,84.567,256z" /><path fill="inherit" d="M469.712,213.712c-23.357,0-42.279,18.941-42.297,42.288c0,23.358,18.94,42.288,42.297,42.297c23.357,0,42.297-18.94,42.279-42.297C512.009,232.652,493.069,213.712,469.712,213.712z" /><path fill="inherit" d="M74.991,377.22c-16.519,16.511-16.519,43.296,0,59.806c16.503,16.52,43.27,16.52,59.789,0c16.52-16.519,16.52-43.295,0-59.815C118.278,360.692,91.511,360.692,74.991,377.22z" /><path fill="inherit" d="M437.026,134.798c16.52-16.52,16.52-43.304,0-59.824c-16.519-16.511-43.304-16.52-59.823,0c-16.52,16.52-16.503,43.295,0,59.815C393.722,151.309,420.507,151.309,437.026,134.798z" /></g></svg>}</div></> : <>{fetchNoneInfo || 'No match yet'}</>}
+                                        ? <><div className="cus-select-loader">{loader || <svg height="12px" width="12px" viewBox="0 0 512 512"><g><path fill="inherit" d="M256,0c-23.357,0-42.297,18.932-42.297,42.288c0,23.358,18.94,42.288,42.297,42.288c23.357,0,42.279-18.93,42.279-42.288C298.279,18.932,279.357,0,256,0z" /><path fill="inherit" d="M256,427.424c-23.357,0-42.297,18.931-42.297,42.288C213.703,493.07,232.643,512,256,512c23.357,0,42.279-18.93,42.279-42.288C298.279,446.355,279.357,427.424,256,427.424z" /><path fill="inherit" d="M74.974,74.983c-16.52,16.511-16.52,43.286,0,59.806c16.52,16.52,43.287,16.52,59.806,0c16.52-16.511,16.52-43.286,0-59.806C118.261,58.463,91.494,58.463,74.974,74.983z" /><path fill="inherit" d="M377.203,377.211c-16.503,16.52-16.503,43.296,0,59.815c16.519,16.52,43.304,16.52,59.806,0c16.52-16.51,16.52-43.295,0-59.815C420.489,360.692,393.722,360.7,377.203,377.211z" /><path fill="inherit" d="M84.567,256c0.018-23.348-18.922-42.279-42.279-42.279c-23.357-0.009-42.297,18.932-42.279,42.288c-0.018,23.348,18.904,42.279,42.279,42.279C65.645,298.288,84.567,279.358,84.567,256z" /><path fill="inherit" d="M469.712,213.712c-23.357,0-42.279,18.941-42.297,42.288c0,23.358,18.94,42.288,42.297,42.297c23.357,0,42.297-18.94,42.279-42.297C512.009,232.652,493.069,213.712,469.712,213.712z" /><path fill="inherit" d="M74.991,377.22c-16.519,16.511-16.519,43.296,0,59.806c16.503,16.52,43.27,16.52,59.789,0c16.52-16.519,16.52-43.295,0-59.815C118.278,360.692,91.511,360.692,74.991,377.22z" /><path fill="inherit" d="M437.026,134.798c16.52-16.52,16.52-43.304,0-59.824c-16.519-16.511-43.304-16.52-59.823,0c-16.52,16.52-16.503,43.295,0,59.815C393.722,151.309,420.507,151.309,437.026,134.798z" /></g></svg>}</div></> : <>{fetchNoneInfo}</>}
                                     </button>
                                     {/* /NO MATCH & LOADER */}
 

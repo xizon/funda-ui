@@ -2752,7 +2752,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var funda_utils_dist_cjs_getElementProperty__WEBPACK_IMPORTED_MODULE_8___default = /*#__PURE__*/__webpack_require__.n(funda_utils_dist_cjs_getElementProperty__WEBPACK_IMPORTED_MODULE_8__);
 /* harmony import */ var funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(188);
 /* harmony import */ var funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_9___default = /*#__PURE__*/__webpack_require__.n(funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_9__);
-var _excluded = ["contentRef", "popupRef", "wrapperClassName", "controlClassName", "controlExClassName", "optionsExClassName", "controlGroupWrapperClassName", "controlGroupTextClassName", "exceededSidePosOffset", "appearance", "isSearchInput", "allowSpacingRetrive", "readOnly", "disabled", "required", "placeholder", "noMatchPopup", "options", "value", "label", "name", "units", "iconLeft", "iconRight", "minLength", "maxLength", "id", "autoComplete", "autoCapitalize", "spellCheck", "icon", "btnId", "fetchTrigger", "hideIcon", "depth", "style", "winWidth", "tabIndex", "data", "autoShowOptions", "fetchNoneInfo", "fetchUpdate", "fetchFuncAsync", "fetchFuncMethod", "fetchFuncMethodParams", "fetchCallback", "onClick", "onFetch", "onChange", "onKeyboardInput", "onBlur", "onPressEnter"];
+var _excluded = ["contentRef", "popupRef", "wrapperClassName", "controlClassName", "controlExClassName", "optionsExClassName", "controlGroupWrapperClassName", "controlGroupTextClassName", "exceededSidePosOffset", "appearance", "isSearchInput", "allowSpacingRetrive", "loader", "readOnly", "disabled", "required", "placeholder", "noMatchPopup", "options", "value", "label", "name", "units", "iconLeft", "iconRight", "minLength", "maxLength", "id", "autoComplete", "autoCapitalize", "spellCheck", "icon", "btnId", "fetchTrigger", "hideIcon", "depth", "style", "winWidth", "tabIndex", "data", "autoShowOptions", "fetchNoneInfo", "fetchUpdate", "fetchFuncAsync", "fetchFuncMethod", "fetchFuncMethodParams", "fetchCallback", "onClick", "onFetch", "onChange", "onKeyboardInput", "onBlur", "onPressEnter"];
 function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
 function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
 function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter); }
@@ -2793,6 +2793,7 @@ var LiveSearch = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(
     appearance = props.appearance,
     isSearchInput = props.isSearchInput,
     allowSpacingRetrive = props.allowSpacingRetrive,
+    loader = props.loader,
     readOnly = props.readOnly,
     disabled = props.disabled,
     required = props.required,
@@ -2821,7 +2822,8 @@ var LiveSearch = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(
     tabIndex = props.tabIndex,
     data = props.data,
     autoShowOptions = props.autoShowOptions,
-    fetchNoneInfo = props.fetchNoneInfo,
+    _props$fetchNoneInfo = props.fetchNoneInfo,
+    fetchNoneInfo = _props$fetchNoneInfo === void 0 ? 'No match yet' : _props$fetchNoneInfo,
     fetchUpdate = props.fetchUpdate,
     fetchFuncAsync = props.fetchFuncAsync,
     fetchFuncMethod = props.fetchFuncMethod,
@@ -2838,7 +2840,9 @@ var LiveSearch = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(
   var DEPTH = depth || 1055; // the default value same as bootstrap
   var POS_OFFSET = 0;
   var EXCEEDED_SIDE_POS_OFFSET = Number(exceededSidePosOffset) || 15;
-  var EMPTY_FOR_FETCH = typeof autoShowOptions === 'undefined' || autoShowOptions === false ? false : true;
+  var AUTO_SHOW_OPTIONS = typeof autoShowOptions !== 'undefined' && autoShowOptions === true ? true : false;
+  var MANUAL_REQ = typeof fetchTrigger !== 'undefined' && fetchTrigger === true ? true : false; // Manual requests
+
   var NO_MATCH_POPUP = typeof noMatchPopup === 'undefined' ? true : noMatchPopup;
   var WIN_WIDTH = typeof winWidth === 'function' ? winWidth() : winWidth ? winWidth : 'auto';
   var uniqueID = funda_utils_dist_cjs_useComId__WEBPACK_IMPORTED_MODULE_3___default()();
@@ -2853,34 +2857,47 @@ var LiveSearch = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(
   var staticOptionsData = optionsRes;
 
   //
-  var _useState = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(false),
+  var _useState = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(null),
     _useState2 = _slicedToArray(_useState, 2),
-    firstFetch = _useState2[0],
-    setFirstFetch = _useState2[1];
-  var _useState3 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(staticOptionsData),
+    controlTempValue = _useState2[0],
+    setControlTempValue = _useState2[1]; // Storage for temporary input
+  var _useState3 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(false),
     _useState4 = _slicedToArray(_useState3, 2),
-    dataInit = _useState4[0],
-    setOrginalDataInit = _useState4[1];
-  var _useState5 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)([]),
+    firstFetch = _useState4[0],
+    setFirstFetch = _useState4[1];
+  var _useState5 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(staticOptionsData),
     _useState6 = _slicedToArray(_useState5, 2),
-    orginalData = _useState6[0],
-    setOrginalData = _useState6[1];
-  var _useState7 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(value || ''),
+    dataInit = _useState6[0],
+    setOrginalDataInit = _useState6[1];
+  var _useState7 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)([]),
     _useState8 = _slicedToArray(_useState7, 2),
-    changedVal = _useState8[0],
-    setChangedVal = _useState8[1];
-  var _useState9 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(false),
+    orginalData = _useState8[0],
+    setOrginalData = _useState8[1];
+  var _useState9 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(value || ''),
     _useState10 = _slicedToArray(_useState9, 2),
-    isOpen = _useState10[0],
-    setIsOpen = _useState10[1];
+    changedVal = _useState10[0],
+    setChangedVal = _useState10[1];
   var _useState11 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(false),
     _useState12 = _slicedToArray(_useState11, 2),
-    hasErr = _useState12[0],
-    setHasErr = _useState12[1];
+    isOpen = _useState12[0],
+    setIsOpen = _useState12[1];
   var _useState13 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(false),
     _useState14 = _slicedToArray(_useState13, 2),
-    componentFirstLoad = _useState14[0],
-    setComponentFirstLoad = _useState14[1];
+    hasErr = _useState14[0],
+    setHasErr = _useState14[1];
+  var _useState15 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(false),
+    _useState16 = _slicedToArray(_useState15, 2),
+    componentFirstLoad = _useState16[0],
+    setComponentFirstLoad = _useState16[1];
+  var _useState17 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(false),
+    _useState18 = _slicedToArray(_useState17, 2),
+    reqProgress = _useState18[0],
+    setReqProgress = _useState18[1];
+
+  // Mark whether it is out of focus
+  // Fixed the issue that caused the pop-up window to still display due to 
+  // the delayed close in handleBlur and the timing of the call to popwinPosInit
+  var isBlurringRef = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(false);
 
   //performance
   var handleChangeFetchSafe = funda_utils_dist_cjs_useDebounce__WEBPACK_IMPORTED_MODULE_7___default()(function (e) {
@@ -2891,8 +2908,10 @@ var LiveSearch = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(
   (0,react__WEBPACK_IMPORTED_MODULE_0__.useImperativeHandle)(popupRef, function () {
     return {
       close: function close() {
-        setIsOpen(false);
         cancel();
+      },
+      open: function open() {
+        activate();
       }
     };
   }, [popupRef]);
@@ -2928,7 +2947,6 @@ var LiveSearch = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(
     },
     handle: function handle(event) {
       // cancel
-      setIsOpen(false);
       cancel();
     }
   }, [isOpen, rootRef, listRef]);
@@ -2947,6 +2965,11 @@ var LiveSearch = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(
   function popwinPosInit() {
     var showAct = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : true;
     if (listContentRef.current === null || inputRef.current === null) return;
+
+    // If it is out of focus, do not perform position initialization
+    if (isBlurringRef.current && !MANUAL_REQ) return;
+
+    //
     var contentHeightOffset = 80;
     var contentMaxHeight = 0;
 
@@ -3145,9 +3168,12 @@ var LiveSearch = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(
     var val = e.target.value;
     setChangedVal(val);
 
+    // update temporary value
+    setControlTempValue(val);
+
     //
-    if (!fetchTrigger) {
-      matchData(val, fetchUpdate, EMPTY_FOR_FETCH).then(function (response) {
+    if (!MANUAL_REQ) {
+      matchData(val, fetchUpdate, AUTO_SHOW_OPTIONS).then(function (response) {
         setOrginalData(response);
 
         //
@@ -3172,8 +3198,15 @@ var LiveSearch = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(
     }
   }
   function cancel() {
+    // hide list
+    setIsOpen(false);
+
+    //
     setOrginalData([]);
     popwinPosHide();
+
+    // update temporary value
+    setControlTempValue(null);
   }
   function fetchData(_x2) {
     return _fetchData.apply(this, arguments);
@@ -3184,13 +3217,17 @@ var LiveSearch = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(
       return _regeneratorRuntime().wrap(function _callee2$(_context2) {
         while (1) switch (_context2.prev = _context2.next) {
           case 0:
+            // update request process
+            setReqProgress(true);
+
+            //
             if (!(_typeof(fetchFuncAsync) === 'object')) {
-              _context2.next = 13;
+              _context2.next = 15;
               break;
             }
-            _context2.next = 3;
+            _context2.next = 4;
             return fetchFuncAsync["".concat(fetchFuncMethod)].apply(fetchFuncAsync, _toConsumableArray(params.split(',')));
-          case 3:
+          case 4:
             response = _context2.sent;
             _ORGIN_DATA = response.data; // reset data structure
             if (typeof fetchCallback === 'function') {
@@ -3217,10 +3254,15 @@ var LiveSearch = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(
                 popwinPosInit();
               }, 500);
             }
+
+            // update request process
+            setReqProgress(false);
             return _context2.abrupt("return", _ORGIN_DATA);
-          case 13:
+          case 15:
+            // update request process
+            setReqProgress(false);
             return _context2.abrupt("return", []);
-          case 14:
+          case 17:
           case "end":
             return _context2.stop();
         }
@@ -3256,32 +3298,37 @@ var LiveSearch = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(
             _data = JSON.parse(dataInput);
             onChange === null || onChange === void 0 ? void 0 : onChange(inputRef.current, orginalData, _data, listRef.current);
             setChangedVal(_data.label);
-            _context3.next = 21;
+            _context3.next = 23;
             break;
           case 9:
             _curData = typeof el.target !== 'undefined' ? el.target.dataset.itemdata : el.dataset.itemdata;
-            _data2 = JSON.parse(_curData);
-            res = [];
-            if (EMPTY_FOR_FETCH) {
-              _context3.next = 18;
+            if (!(typeof _curData === 'undefined')) {
+              _context3.next = 12;
               break;
             }
-            _context3.next = 15;
-            return matchData(inputRef.current.value, false, EMPTY_FOR_FETCH);
-          case 15:
+            return _context3.abrupt("return");
+          case 12:
+            _data2 = JSON.parse(_curData);
+            res = [];
+            if (AUTO_SHOW_OPTIONS) {
+              _context3.next = 20;
+              break;
+            }
+            _context3.next = 17;
+            return matchData(inputRef.current.value, false, AUTO_SHOW_OPTIONS);
+          case 17:
             res = _context3.sent;
-            _context3.next = 19;
+            _context3.next = 21;
             break;
-          case 18:
+          case 20:
             res = dataInit;
-          case 19:
+          case 21:
             onChange === null || onChange === void 0 ? void 0 : onChange(inputRef.current, res, _data2, listRef.current);
             setChangedVal(_data2.label);
-          case 21:
-            // cancel
-            setIsOpen(false);
-            cancel();
           case 23:
+            // cancel
+            cancel();
+          case 24:
           case "end":
             return _context3.stop();
         }
@@ -3298,12 +3345,12 @@ var LiveSearch = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(
       return _regeneratorRuntime().wrap(function _callee4$(_context4) {
         while (1) switch (_context4.prev = _context4.next) {
           case 0:
-            if (!fetchTrigger) {
+            if (!MANUAL_REQ) {
               _context4.next = 7;
               break;
             }
             _context4.next = 3;
-            return matchData(changedVal, fetchUpdate, EMPTY_FOR_FETCH);
+            return matchData(changedVal, true, true);
           case 3:
             res = _context4.sent;
             setOrginalData(res);
@@ -3323,38 +3370,45 @@ var LiveSearch = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(
     }));
     return _handleFetch.apply(this, arguments);
   }
-  function handleClick() {
-    if (!isOpen) {
-      if (EMPTY_FOR_FETCH) {
-        setOrginalData(dataInit);
-        setIsOpen(true);
-      }
+  function activate() {
+    if (AUTO_SHOW_OPTIONS) {
+      setOrginalData(dataInit);
+      setIsOpen(true);
+    }
 
-      // window position
-      setTimeout(function () {
-        popwinPosInit();
-      }, 0);
+    // window position
+    setTimeout(function () {
+      popwinPosInit();
+    }, 0);
+  }
+  function handleShowList() {
+    // Reset the out-of-focus marker
+    isBlurringRef.current = false;
+    if (!isOpen) {
+      activate();
     } else {
       // cancel
-      setIsOpen(false);
       cancel();
+    }
+
+    // Every time the input changes or the search button is clicked, a data request will be triggered
+    if (!AUTO_SHOW_OPTIONS && (controlTempValue === '' || controlTempValue === null) || MANUAL_REQ) {
+      setTimeout(function () {
+        popwinPosHide();
+      }, 0);
     }
     onClick === null || onClick === void 0 ? void 0 : onClick(inputRef.current, listRef.current);
   }
   function handleBlur(e) {
-    setIsOpen(false);
-    if (!fetchTrigger) {
-      setTimeout(function () {
-        //
-        onBlur === null || onBlur === void 0 ? void 0 : onBlur(inputRef.current, listRef.current);
+    // Set the out-of-focus marker
+    isBlurringRef.current = true;
+    setTimeout(function () {
+      // cancel
+      cancel(); // The delay is to avoid losing focus and not being able to click on the option
 
-        //
-        cancel();
-      }, 300);
-    }
-  }
-  function handleMouseLeaveTrigger() {
-    setIsOpen(false);
+      //
+      onBlur === null || onBlur === void 0 ? void 0 : onBlur(inputRef.current, listRef.current);
+    }, 300);
   }
   function optionFocus(type) {
     return new Promise(function (resolve) {
@@ -3484,13 +3538,16 @@ var LiveSearch = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(
 
     // data init
     //--------------
-    var _oparams = fetchFuncMethodParams || [];
-    var _params = _oparams.map(function (item) {
-      return item !== '$QUERY_STRING' ? item : fetchTrigger && !fetchUpdate ? '' : fetchUpdate ? QUERY_STRING_PLACEHOLDER : fetchTrigger ? QUERY_STRING_PLACEHOLDER : '';
-    });
-    if (!firstFetch) {
-      fetchData(_params.join(','));
-      setFirstFetch(true); // avoid triggering two data requests if the input value has not changed
+    // If automatic request enabled, do not send them for the first time
+    if (AUTO_SHOW_OPTIONS) {
+      var _oparams = fetchFuncMethodParams || [];
+      var _params = _oparams.map(function (item) {
+        return item !== '$QUERY_STRING' ? item : MANUAL_REQ && !fetchUpdate ? '' : fetchUpdate ? QUERY_STRING_PLACEHOLDER : MANUAL_REQ ? QUERY_STRING_PLACEHOLDER : '';
+      });
+      if (!firstFetch) {
+        fetchData(_params.join(','));
+        setFirstFetch(true); // avoid triggering two data requests if the input value has not changed
+      }
     }
   }, [value, data]);
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, label ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
@@ -3509,7 +3566,6 @@ var LiveSearch = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(
     className: (0,funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_9__.combinedCls)('livesearch__wrapper', (0,funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_9__.clsWrite)(wrapperClassName, 'mb-3 position-relative'), {
       'active': isOpen
     }),
-    onMouseLeave: handleMouseLeaveTrigger,
     onKeyDown: handleKeyPressed
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((funda_searchbar__WEBPACK_IMPORTED_MODULE_2___default()), _extends({
     wrapperClassName: "",
@@ -3546,8 +3602,8 @@ var LiveSearch = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(
     },
     onBlur: handleBlur,
     onSubmit: handleFetch,
-    onClick: handleClick,
-    icon: hideIcon ? '' : !fetchTrigger ? '' : icon,
+    onClick: handleShowList,
+    icon: hideIcon ? '' : !MANUAL_REQ ? '' : icon,
     btnId: btnId,
     autoComplete: typeof autoComplete === 'undefined' ? 'off' : autoComplete,
     autoCapitalize: typeof autoCapitalize === 'undefined' ? 'off' : autoCapitalize,
@@ -3578,9 +3634,6 @@ var LiveSearch = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(
     className: (0,funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_9__.combinedCls)('livesearch__options-contentlist rounded', {
       'd-none': orginalData && orginalData.length === 0 && !NO_MATCH_POPUP
     }),
-    style: {
-      backgroundColor: 'var(--bs-list-group-bg)'
-    },
     ref: listContentRef
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
     className: "livesearch__options-contentlist-inner"
@@ -3589,7 +3642,7 @@ var LiveSearch = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(
     type: "button",
     className: "list-group-item list-group-item-action border-top-0 border-bottom-0 no-match livesearch__control-option-item--nomatch",
     disabled: true
-  }, fetchNoneInfo || 'No match yet')) : null, orginalData ? orginalData.map(function (item, index) {
+  }, fetchNoneInfo)) : null, orginalData ? orginalData.map(function (item, index) {
     var startItemBorder = index === 0 ? 'border-top-0' : '';
     var endItemBorder = index === orginalData.length - 1 ? 'border-bottom-0' : '';
     return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", {
@@ -3611,14 +3664,49 @@ var LiveSearch = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(
       },
       onClick: handleSelect
     });
-  }) : null))))) : null, hideIcon ? null : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, !fetchTrigger ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
+  }) : null))))) : null, reqProgress ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+    className: "livesearch-loader ".concat(!hideIcon ? 'pos-offset' : '')
+  }, loader || /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("svg", {
+    height: "12px",
+    width: "12px",
+    viewBox: "0 0 512 512"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("g", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("path", {
+    fill: "inherit",
+    d: "M256,0c-23.357,0-42.297,18.932-42.297,42.288c0,23.358,18.94,42.288,42.297,42.288c23.357,0,42.279-18.93,42.279-42.288C298.279,18.932,279.357,0,256,0z"
+  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("path", {
+    fill: "inherit",
+    d: "M256,427.424c-23.357,0-42.297,18.931-42.297,42.288C213.703,493.07,232.643,512,256,512c23.357,0,42.279-18.93,42.279-42.288C298.279,446.355,279.357,427.424,256,427.424z"
+  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("path", {
+    fill: "inherit",
+    d: "M74.974,74.983c-16.52,16.511-16.52,43.286,0,59.806c16.52,16.52,43.287,16.52,59.806,0c16.52-16.511,16.52-43.286,0-59.806C118.261,58.463,91.494,58.463,74.974,74.983z"
+  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("path", {
+    fill: "inherit",
+    d: "M377.203,377.211c-16.503,16.52-16.503,43.296,0,59.815c16.519,16.52,43.304,16.52,59.806,0c16.52-16.51,16.52-43.295,0-59.815C420.489,360.692,393.722,360.7,377.203,377.211z"
+  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("path", {
+    fill: "inherit",
+    d: "M84.567,256c0.018-23.348-18.922-42.279-42.279-42.279c-23.357-0.009-42.297,18.932-42.279,42.288c-0.018,23.348,18.904,42.279,42.279,42.279C65.645,298.288,84.567,279.358,84.567,256z"
+  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("path", {
+    fill: "inherit",
+    d: "M469.712,213.712c-23.357,0-42.279,18.941-42.297,42.288c0,23.358,18.94,42.288,42.297,42.297c23.357,0,42.297-18.94,42.279-42.297C512.009,232.652,493.069,213.712,469.712,213.712z"
+  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("path", {
+    fill: "inherit",
+    d: "M74.991,377.22c-16.519,16.511-16.519,43.296,0,59.806c16.503,16.52,43.27,16.52,59.789,0c16.52-16.519,16.52-43.295,0-59.815C118.278,360.692,91.511,360.692,74.991,377.22z"
+  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("path", {
+    fill: "inherit",
+    d: "M437.026,134.798c16.52-16.52,16.52-43.304,0-59.824c-16.519-16.511-43.304-16.52-59.823,0c-16.52,16.52-16.503,43.295,0,59.815C393.722,151.309,420.507,151.309,437.026,134.798z"
+  }))))) : null, hideIcon ? null : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
     className: "livesearch__wrapper-searchbtn"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", {
     tabIndex: -1,
     type: "button",
     className: "btn border-end-0 rounded-pill",
-    style: {
+    style: MANUAL_REQ ? undefined : {
       pointerEvents: 'none'
+    },
+    onClick: function onClick(e) {
+      e.preventDefault();
+      e.stopPropagation();
+      handleFetch();
     }
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("svg", {
     width: "1em",
@@ -3628,7 +3716,7 @@ var LiveSearch = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("path", {
     d: "M12.027 9.92L16 13.95 14 16l-4.075-3.976A6.465 6.465 0 0 1 6.5 13C2.91 13 0 10.083 0 6.5 0 2.91 2.917 0 6.5 0 10.09 0 13 2.917 13 6.5a6.463 6.463 0 0 1-.973 3.42zM1.997 6.452c0 2.48 2.014 4.5 4.5 4.5 2.48 0 4.5-2.015 4.5-4.5 0-2.48-2.015-4.5-4.5-4.5-2.48 0-4.5 2.014-4.5 4.5z",
     fillRule: "evenodd"
-  }))))) : null)));
+  })))))));
 });
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (LiveSearch);
 })();

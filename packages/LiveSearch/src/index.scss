@@ -1,8 +1,12 @@
+
+
+
 /* ======================================================
     <!-- Live Search -->
 /* ====================================================== */
 
 .livesearch__wrapper {
+    position: relative;
 
     /*------ Search button ------*/
     .livesearch__wrapper-searchbtn {
@@ -13,6 +17,46 @@
         z-index: 5;
         pointer-events: auto;
     }
+
+
+
+
+    /*------ Loader ------*/
+    .livesearch-loader {
+        position: absolute;
+        right: 0;
+        top: 50%;
+        margin-top: -6px;
+        pointer-events: none;
+        pointer-events: none;
+        z-index: 5;
+        width: 12px;
+        height: 12px;
+        text-align: center;
+        transform-origin: center;
+        transform: translate(-5px, 0) rotate(0);
+        animation: 1s linear infinite livesearch__spinner;
+
+        &.pos-offset {
+            right: 2rem;
+        }
+
+        svg {
+            vertical-align: top;
+
+            path {
+                fill: var(--cus-sel-loader-color);
+            }
+        }
+    }
+
+    @keyframes livesearch__spinner {
+        to {
+            transform: translate(-5px, 0) rotate(-360deg);
+        }
+    }
+
+
 
 }
 
@@ -35,9 +79,12 @@
         display: block !important;
     }
 
+ 
+    /*------ Options ------*/
     .livesearch__options-contentlist {
         overflow: hidden;
         overflow-y: auto;
+        background-color: var(--bs-list-group-bg);
 
         &.noscroll {
             overflow-y: hidden;

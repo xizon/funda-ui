@@ -4,7 +4,7 @@
 
 ## General
 
-You need to use a `fetchCallback` property to format the data of the API callback, which will match the data structure of the component.
+You need to use the series property `fetch<METHOD_NAME>` to format the data of the API callback, which will match the data structure of the component.
 
 
 

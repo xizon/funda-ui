@@ -2,7 +2,9 @@
     <!-- Live Search -->
 /* ====================================================== */
 .livesearch__wrapper {
+  position: relative;
   /*------ Search button ------*/
+  /*------ Loader ------*/
 }
 .livesearch__wrapper .livesearch__wrapper-searchbtn {
   position: absolute;
@@ -11,6 +13,35 @@
   transform: translateY(-50%);
   z-index: 5;
   pointer-events: auto;
+}
+.livesearch__wrapper .livesearch-loader {
+  position: absolute;
+  right: 0;
+  top: 50%;
+  margin-top: -6px;
+  pointer-events: none;
+  pointer-events: none;
+  z-index: 5;
+  width: 12px;
+  height: 12px;
+  text-align: center;
+  transform-origin: center;
+  transform: translate(-5px, 0) rotate(0);
+  animation: 1s linear infinite livesearch__spinner;
+}
+.livesearch__wrapper .livesearch-loader.pos-offset {
+  right: 2rem;
+}
+.livesearch__wrapper .livesearch-loader svg {
+  vertical-align: top;
+}
+.livesearch__wrapper .livesearch-loader svg path {
+  fill: var(--cus-sel-loader-color);
+}
+@keyframes livesearch__spinner {
+  to {
+    transform: translate(-5px, 0) rotate(-360deg);
+  }
 }
 
 /*------ List ------*/
@@ -23,6 +54,7 @@
   display: none;
   min-width: var(--livesearch-listgroup-popwin-min-width);
   z-index: 1055; /* --bs-modal-zindex */
+  /*------ Options ------*/
 }
 .livesearch__options-wrapper.active {
   display: block !important;
@@ -30,6 +62,7 @@
 .livesearch__options-wrapper .livesearch__options-contentlist {
   overflow: hidden;
   overflow-y: auto;
+  background-color: var(--bs-list-group-bg);
 }
 .livesearch__options-wrapper .livesearch__options-contentlist.noscroll {
   overflow-y: hidden;
