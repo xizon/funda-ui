@@ -303,6 +303,11 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
         values: []
     });
 
+    function chkValueExist(v: any) {
+        return typeof v !== 'undefined' && v !== '';
+    }
+
+
     const listContainerHeightLimit = (num: number) => {
         let res = num;
         if (res > LIST_CONTAINER_MAX_HEIGHT) res = LIST_CONTAINER_MAX_HEIGHT;
@@ -515,7 +520,6 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
         // Determine whether the default value is user query input or default input
         const defaultValue = init ? valueToInputDefault : '';
 
-
         if (typeof fetchFuncAsync === 'object') {
 
 
@@ -555,7 +559,6 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
             // value & label must be initialized
             let filterRes: any = [];
 
-
             if (MANUAL_REQ) {
 
                 // If a manual action is used to trigger the request
@@ -583,13 +586,12 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
 
             }
 
-    
 
             // STEP 4: ===========
             // ++++++++++++++++++++
             // Single selection
             // ++++++++++++++++++++
-            if (typeof defaultValue === 'undefined' || defaultValue === '') {  // Do not use `init`, otherwise the query will revert to the default value if there is no value
+            if (!chkValueExist(defaultValue)) {  // Do not use `init`, otherwise the query will revert to the default value if there is no value
                 setControlValue('');
                 setControlLabel('');
             } else {
@@ -607,7 +609,7 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
             if (MULTI_SEL_VALID) {
 
 
-                if ((typeof defaultValue === 'undefined' || defaultValue === '') && init) {
+                if (!chkValueExist(defaultValue) && init) {
                     setControlArr({
                         labels: [],
                         values: []
@@ -616,42 +618,30 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
 
 
 
-                if (typeof defaultValue !== 'undefined' && defaultValue !== '' && multiSelect?.data !== null) {
+                if (chkValueExist(defaultValue) && multiSelect?.data !== null) {
 
                     // initialize default values of Multiple selection
                     const _currentData: any = multiSelect?.data;
 
-                    setControlArr({
-                        labels: _currentData.labels,
-                        values: _currentData.values,
-                    });
+                    let _tempLabels = [..._currentData.labels];
+                    let _tempValues = [..._currentData.values];
 
-                    //
                     const _values: string[] = VALUE_BY_BRACKETS ? extractContentsOfBrackets(defaultValue) : defaultValue.split(',');
 
-
                     _values.forEach((_value: string, _index: number) => {
-
                         if (!multiSelControlOptionExist(_currentData.values, _value) && typeof _currentData.values[_index] !== 'undefined') {
-
-                            let filterRes: any = [];
-                            filterRes = [{
-                                value: _currentData.values[_index],
-                                label: _currentData.labels[_index],
-                                queryString: _currentData.queryStrings[_index]
-                            }];
-
-                            setControlArr((prevState: any) => {
-                                return {
-                                    labels: unique([...prevState.labels, typeof filterRes[0] !== 'undefined' ? filterRes[0].label : ''].filter((v: any) => v !== '')),
-                                    values: unique([...prevState.values, typeof filterRes[0] !== 'undefined' ? filterRes[0].value : ''].filter((v: any) => v !== ''))
-                                }
-                            });
-
+                            _tempLabels.push(_currentData.labels[_index]);
+                            _tempValues.push(_currentData.values[_index]);
                         }
-
                     });
 
+                    _tempLabels = unique(_tempLabels.filter((v: any) => v !== ''));
+                    _tempValues = unique(_tempValues.filter((v: any) => v !== ''));
+
+                    setControlArr({
+                        labels: _tempLabels,
+                        values: _tempValues,
+                    });
 
                 }
 
@@ -727,7 +717,7 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
             // ++++++++++++++++++++
             // Single selection
             // ++++++++++++++++++++
-            if (typeof defaultValue === 'undefined' || defaultValue === '') {  // Do not use `init`, otherwise the query will revert to the default value if there is no value
+            if (!chkValueExist(defaultValue)) {  // Do not use `init`, otherwise the query will revert to the default value if there is no value
                 setControlValue('');
                 setControlLabel('');
             } else {
@@ -746,46 +736,36 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
             if (MULTI_SEL_VALID) {
 
 
-                if ((typeof defaultValue === 'undefined' || defaultValue === '') && init) {
+                if (!chkValueExist(defaultValue) && init) {
                     setControlArr({
                         labels: [],
                         values: []
                     });
                 }
 
-                if (typeof defaultValue !== 'undefined' && defaultValue !== '' && multiSelect?.data !== null) {
+                if (chkValueExist(defaultValue) && multiSelect?.data !== null) {
 
                     // initialize default values of Multiple selection
                     const _currentData: any = multiSelect?.data;
 
-                    setControlArr({
-                        labels: _currentData.labels,
-                        values: _currentData.values,
+                    let _tempLabels = [..._currentData.labels];
+                    let _tempValues = [..._currentData.values];
+
+                    const _values: string[] = VALUE_BY_BRACKETS ? extractContentsOfBrackets(defaultValue) : defaultValue.split(',');
+
+                    _values.forEach((_value: string, _index: number) => {
+                        if (!multiSelControlOptionExist(_currentData.values, _value) && typeof _currentData.values[_index] !== 'undefined') {
+                            _tempLabels.push(_currentData.labels[_index]);
+                            _tempValues.push(_currentData.values[_index]);
+                        }
                     });
 
-                    //
-                    const _values: string[] = typeof defaultValue !== 'undefined' ? (VALUE_BY_BRACKETS ? extractContentsOfBrackets(defaultValue) : defaultValue.split(',')) : [];
-                    _values.forEach((_value: string, _index: number) => {
+                    _tempLabels = unique(_tempLabels.filter((v: any) => v !== ''));
+                    _tempValues = unique(_tempValues.filter((v: any) => v !== ''));
 
-                        if (!multiSelControlOptionExist(_currentData.values, _value) && typeof _currentData.values[_index] !== 'undefined') {
-
-
-                            let filterRes: any = [];
-                            filterRes = [{
-                                value: _currentData.values[_index],
-                                label: _currentData.labels[_index],
-                                queryString: _currentData.queryStrings[_index]
-                            }];
-
-                            setControlArr((prevState: any) => {
-                                return {
-                                    labels: unique([...prevState.labels, typeof filterRes[0] !== 'undefined' ? filterRes[0].label : ''].filter((v: any) => v !== '')),
-                                    values: unique([...prevState.values, typeof filterRes[0] !== 'undefined' ? filterRes[0].value : ''].filter((v: any) => v !== ''))
-                                }
-                            });
-
-
-                        }
+                    setControlArr({
+                        labels: _tempLabels,
+                        values: _tempValues,
                     });
                 }
 
@@ -1848,10 +1828,6 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
 
     async function handleFirstFetch(inputVal: any = null) {
 
-        // If manual requests are enabled, do not send them for the first time
-        if (MANUAL_REQ) return [];
-
-        //
         const _oparams: any[] = fetchFuncMethodParams || [];
         const _params: any[] = _oparams.map((item: any) => item !== '$QUERY_STRING' ? item : (MANUAL_REQ ? QUERY_STRING_PLACEHOLDER : ''));
         const res = await fetchData((_params).join(','), finalRes(inputVal), inputVal);
@@ -2103,14 +2079,49 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
         //--------------
         if (FIRST_REQUEST_AUTO) {
             handleFirstFetch(value);
+        } else {
+            if (MULTI_SEL_VALID) {
+                // Appropriate multi-item container height
+                setTimeout(() => {
+                    adjustMultiControlContainerHeight();
+                }, 0);
+            }
         }
 
         // Forced assignment does not depend on "fetch" or "firstRequestAutoExe"
         // Don't use "value.value && value.label" directly, if it is empty, it will be treated as FALSE
-        if ( value && typeof value === 'object' ) {
-            if (typeof value.value !== 'undefined' && value.value !== null) setControlValue(value.value as string);
-            if (typeof value.label !== 'undefined' && value.label !== null) setControlLabel(formatIndentVal(value.label, INDENT_LAST_PLACEHOLDER));
+        if (chkValueExist(value)) {
+            if (typeof value === 'object') { // Single selection
+                if (typeof value.value !== 'undefined' && value.value !== null) setControlValue(value.value as string);
+                if (typeof value.label !== 'undefined' && value.label !== null) setControlLabel(formatIndentVal(value.label, INDENT_LAST_PLACEHOLDER));
+            }
+            
+            if ( typeof multiSelect?.data === 'object' && MULTI_SEL_VALID) {  // Multiple selection
+                if (chkValueExist(value) && multiSelect?.data !== null) {
+
+                    // initialize default values of Multiple selection
+                    const _currentData: any = multiSelect?.data;
+
+                    setControlArr({
+                        labels: _currentData.labels,
+                        values: _currentData.values,
+                    });
+                }
+            }
+
+        } else {
+            if (!FIRST_REQUEST_AUTO) {
+                setControlValue('');
+                setControlLabel('');
+                setControlArr({
+                    labels: [],
+                    values: []
+                });
+            }
         }
+
+
+
 
 
         //
@@ -2137,12 +2148,18 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
             //--------------
             if (FIRST_REQUEST_AUTO) {
                 handleFirstFetch(defaultValue);
+            } else {
+               if (MULTI_SEL_VALID) {
+                    // Appropriate multi-item container height
+                    setTimeout(() => {
+                        adjustMultiControlContainerHeight();
+                    }, 0);
+               }
             }
 
         }
 
     }, []);
-
 
 
     // Fixed an out-of-focus issue

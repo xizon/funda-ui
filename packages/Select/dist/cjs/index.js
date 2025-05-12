@@ -3913,6 +3913,9 @@ var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_
     _useState26 = _slicedToArray(_useState25, 2),
     controlArr = _useState26[0],
     setControlArr = _useState26[1];
+  function chkValueExist(v) {
+    return typeof v !== 'undefined' && v !== '';
+  }
   var listContainerHeightLimit = function listContainerHeightLimit(num) {
     var res = num;
     if (res > LIST_CONTAINER_MAX_HEIGHT) res = LIST_CONTAINER_MAX_HEIGHT;
@@ -4110,11 +4113,15 @@ var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_
         filterResQueryValue,
         filterResQueryLabel,
         _currentData,
+        _tempLabels,
+        _tempValues,
         _values,
-        _filterRes3,
+        _filterRes2,
         _filterResQueryValue,
         _filterResQueryLabel,
         _currentData2,
+        _tempLabels2,
+        _tempValues2,
         _values3,
         _args = arguments;
       return _regeneratorRuntime().wrap(function _callee$(_context) {
@@ -4187,7 +4194,7 @@ var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_
             // ++++++++++++++++++++
             // Single selection
             // ++++++++++++++++++++
-            if (typeof defaultValue === 'undefined' || defaultValue === '') {
+            if (!chkValueExist(defaultValue)) {
               // Do not use `init`, otherwise the query will revert to the default value if there is no value
               setControlValue('');
               setControlLabel('');
@@ -4202,41 +4209,33 @@ var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_
             // Multiple selection
             // ++++++++++++++++++++
             if (MULTI_SEL_VALID) {
-              if ((typeof defaultValue === 'undefined' || defaultValue === '') && init) {
+              if (!chkValueExist(defaultValue) && init) {
                 setControlArr({
                   labels: [],
                   values: []
                 });
               }
-              if (typeof defaultValue !== 'undefined' && defaultValue !== '' && (multiSelect === null || multiSelect === void 0 ? void 0 : multiSelect.data) !== null) {
+              if (chkValueExist(defaultValue) && (multiSelect === null || multiSelect === void 0 ? void 0 : multiSelect.data) !== null) {
                 // initialize default values of Multiple selection
                 _currentData = multiSelect === null || multiSelect === void 0 ? void 0 : multiSelect.data;
-                setControlArr({
-                  labels: _currentData.labels,
-                  values: _currentData.values
-                });
-
-                //
+                _tempLabels = _toConsumableArray(_currentData.labels);
+                _tempValues = _toConsumableArray(_currentData.values);
                 _values = VALUE_BY_BRACKETS ? (0,extract.extractContentsOfBrackets)(defaultValue) : defaultValue.split(',');
                 _values.forEach(function (_value, _index) {
                   if (!multiSelControlOptionExist(_currentData.values, _value) && typeof _currentData.values[_index] !== 'undefined') {
-                    var _filterRes2 = [];
-                    _filterRes2 = [{
-                      value: _currentData.values[_index],
-                      label: _currentData.labels[_index],
-                      queryString: _currentData.queryStrings[_index]
-                    }];
-                    setControlArr(function (prevState) {
-                      return {
-                        labels: unique([].concat(_toConsumableArray(prevState.labels), [typeof _filterRes2[0] !== 'undefined' ? _filterRes2[0].label : '']).filter(function (v) {
-                          return v !== '';
-                        })),
-                        values: unique([].concat(_toConsumableArray(prevState.values), [typeof _filterRes2[0] !== 'undefined' ? _filterRes2[0].value : '']).filter(function (v) {
-                          return v !== '';
-                        }))
-                      };
-                    });
+                    _tempLabels.push(_currentData.labels[_index]);
+                    _tempValues.push(_currentData.values[_index]);
                   }
+                });
+                _tempLabels = unique(_tempLabels.filter(function (v) {
+                  return v !== '';
+                }));
+                _tempValues = unique(_tempValues.filter(function (v) {
+                  return v !== '';
+                }));
+                setControlArr({
+                  labels: _tempLabels,
+                  values: _tempValues
                 });
               }
 
@@ -4283,33 +4282,33 @@ var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_
             // value & label must be initialized
 
             // If the default value is label, match value
-            _filterRes3 = [];
+            _filterRes2 = [];
             _filterResQueryValue = staticOptionsData.filter(function (item) {
               return item.value == defaultValue;
             });
             _filterResQueryLabel = staticOptionsData.filter(function (item) {
               return item.label == defaultValue;
             });
-            _filterRes3 = _filterResQueryValue;
-            if (_filterResQueryValue.length === 0) _filterRes3 = _filterResQueryLabel;
+            _filterRes2 = _filterResQueryValue;
+            if (_filterResQueryValue.length === 0) _filterRes2 = _filterResQueryLabel;
 
             // if the default value is Object
-            if (isObject(inputDefault) && _filterRes3.length === 0) {
-              _filterRes3 = [inputDefault];
+            if (isObject(inputDefault) && _filterRes2.length === 0) {
+              _filterRes2 = [inputDefault];
             }
 
             // STEP 4: ===========
             // ++++++++++++++++++++
             // Single selection
             // ++++++++++++++++++++
-            if (typeof defaultValue === 'undefined' || defaultValue === '') {
+            if (!chkValueExist(defaultValue)) {
               // Do not use `init`, otherwise the query will revert to the default value if there is no value
               setControlValue('');
               setControlLabel('');
             } else {
-              if (_filterRes3.length > 0) {
-                setControlValue(_filterRes3[0].value);
-                setControlLabel(formatIndentVal(_filterRes3[0].label, INDENT_LAST_PLACEHOLDER));
+              if (_filterRes2.length > 0) {
+                setControlValue(_filterRes2[0].value);
+                setControlLabel(formatIndentVal(_filterRes2[0].label, INDENT_LAST_PLACEHOLDER));
               }
             }
 
@@ -4317,41 +4316,33 @@ var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_
             // Multiple selection
             // ++++++++++++++++++++
             if (MULTI_SEL_VALID) {
-              if ((typeof defaultValue === 'undefined' || defaultValue === '') && init) {
+              if (!chkValueExist(defaultValue) && init) {
                 setControlArr({
                   labels: [],
                   values: []
                 });
               }
-              if (typeof defaultValue !== 'undefined' && defaultValue !== '' && (multiSelect === null || multiSelect === void 0 ? void 0 : multiSelect.data) !== null) {
+              if (chkValueExist(defaultValue) && (multiSelect === null || multiSelect === void 0 ? void 0 : multiSelect.data) !== null) {
                 // initialize default values of Multiple selection
                 _currentData2 = multiSelect === null || multiSelect === void 0 ? void 0 : multiSelect.data;
-                setControlArr({
-                  labels: _currentData2.labels,
-                  values: _currentData2.values
-                });
-
-                //
-                _values3 = typeof defaultValue !== 'undefined' ? VALUE_BY_BRACKETS ? (0,extract.extractContentsOfBrackets)(defaultValue) : defaultValue.split(',') : [];
+                _tempLabels2 = _toConsumableArray(_currentData2.labels);
+                _tempValues2 = _toConsumableArray(_currentData2.values);
+                _values3 = VALUE_BY_BRACKETS ? (0,extract.extractContentsOfBrackets)(defaultValue) : defaultValue.split(',');
                 _values3.forEach(function (_value, _index) {
                   if (!multiSelControlOptionExist(_currentData2.values, _value) && typeof _currentData2.values[_index] !== 'undefined') {
-                    var _filterRes4 = [];
-                    _filterRes4 = [{
-                      value: _currentData2.values[_index],
-                      label: _currentData2.labels[_index],
-                      queryString: _currentData2.queryStrings[_index]
-                    }];
-                    setControlArr(function (prevState) {
-                      return {
-                        labels: unique([].concat(_toConsumableArray(prevState.labels), [typeof _filterRes4[0] !== 'undefined' ? _filterRes4[0].label : '']).filter(function (v) {
-                          return v !== '';
-                        })),
-                        values: unique([].concat(_toConsumableArray(prevState.values), [typeof _filterRes4[0] !== 'undefined' ? _filterRes4[0].value : '']).filter(function (v) {
-                          return v !== '';
-                        }))
-                      };
-                    });
+                    _tempLabels2.push(_currentData2.labels[_index]);
+                    _tempValues2.push(_currentData2.values[_index]);
                   }
+                });
+                _tempLabels2 = unique(_tempLabels2.filter(function (v) {
+                  return v !== '';
+                }));
+                _tempValues2 = unique(_tempValues2.filter(function (v) {
+                  return v !== '';
+                }));
+                setControlArr({
+                  labels: _tempLabels2,
+                  values: _tempValues2
                 });
               }
 
@@ -5248,25 +5239,18 @@ var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_
         while (1) switch (_context4.prev = _context4.next) {
           case 0:
             inputVal = _args4.length > 0 && _args4[0] !== undefined ? _args4[0] : null;
-            if (!MANUAL_REQ) {
-              _context4.next = 3;
-              break;
-            }
-            return _context4.abrupt("return", []);
-          case 3:
-            //
             _oparams = fetchFuncMethodParams || [];
             _params = _oparams.map(function (item) {
               return item !== '$QUERY_STRING' ? item : MANUAL_REQ ? QUERY_STRING_PLACEHOLDER : '';
             });
-            _context4.next = 7;
+            _context4.next = 5;
             return fetchData(_params.join(','), finalRes(inputVal), inputVal);
-          case 7:
+          case 5:
             res = _context4.sent;
             // Set an identifier indicating that the first request has been completed
             if (!handleFirstFetchCompleted) setHandleFirstFetchCompleted(true);
             return _context4.abrupt("return", res);
-          case 10:
+          case 8:
           case "end":
             return _context4.stop();
         }
@@ -5491,13 +5475,43 @@ var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_
     //--------------
     if (FIRST_REQUEST_AUTO) {
       handleFirstFetch(value);
+    } else {
+      if (MULTI_SEL_VALID) {
+        // Appropriate multi-item container height
+        setTimeout(function () {
+          adjustMultiControlContainerHeight();
+        }, 0);
+      }
     }
 
     // Forced assignment does not depend on "fetch" or "firstRequestAutoExe"
     // Don't use "value.value && value.label" directly, if it is empty, it will be treated as FALSE
-    if (value && _typeof(value) === 'object') {
-      if (typeof value.value !== 'undefined' && value.value !== null) setControlValue(value.value);
-      if (typeof value.label !== 'undefined' && value.label !== null) setControlLabel(formatIndentVal(value.label, INDENT_LAST_PLACEHOLDER));
+    if (chkValueExist(value)) {
+      if (_typeof(value) === 'object') {
+        // Single selection
+        if (typeof value.value !== 'undefined' && value.value !== null) setControlValue(value.value);
+        if (typeof value.label !== 'undefined' && value.label !== null) setControlLabel(formatIndentVal(value.label, INDENT_LAST_PLACEHOLDER));
+      }
+      if (_typeof(multiSelect === null || multiSelect === void 0 ? void 0 : multiSelect.data) === 'object' && MULTI_SEL_VALID) {
+        // Multiple selection
+        if (chkValueExist(value) && (multiSelect === null || multiSelect === void 0 ? void 0 : multiSelect.data) !== null) {
+          // initialize default values of Multiple selection
+          var _currentData = multiSelect === null || multiSelect === void 0 ? void 0 : multiSelect.data;
+          setControlArr({
+            labels: _currentData.labels,
+            values: _currentData.values
+          });
+        }
+      }
+    } else {
+      if (!FIRST_REQUEST_AUTO) {
+        setControlValue('');
+        setControlLabel('');
+        setControlArr({
+          labels: [],
+          values: []
+        });
+      }
     }
 
     //
@@ -5520,6 +5534,13 @@ var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_
       //--------------
       if (FIRST_REQUEST_AUTO) {
         handleFirstFetch(defaultValue);
+      } else {
+        if (MULTI_SEL_VALID) {
+          // Appropriate multi-item container height
+          setTimeout(function () {
+            adjustMultiControlContainerHeight();
+          }, 0);
+        }
       }
     }
   }, []);
