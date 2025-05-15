@@ -953,181 +953,6 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 
 /***/ }),
 
-/***/ 135:
-/***/ (function(module, exports, __webpack_require__) {
-
-/* module decorator */ module = __webpack_require__.nmd(module);
-var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
-(function webpackUniversalModuleDefinition(root, factory) {
-  if (( false ? 0 : _typeof(exports)) === 'object' && ( false ? 0 : _typeof(module)) === 'object') module.exports = factory();else if (true) !(__WEBPACK_AMD_DEFINE_ARRAY__ = [], __WEBPACK_AMD_DEFINE_FACTORY__ = (factory),
-		__WEBPACK_AMD_DEFINE_RESULT__ = (typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ?
-		(__WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__)) : __WEBPACK_AMD_DEFINE_FACTORY__),
-		__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));else {}
-})(this, function () {
-  return (/******/function () {
-      // webpackBootstrap
-      /******/
-      "use strict";
-
-      /******/ // The require scope
-      /******/
-      var __nested_webpack_require_987__ = {};
-      /******/
-      /************************************************************************/
-      /******/ /* webpack/runtime/define property getters */
-      /******/
-      (function () {
-        /******/ // define getter functions for harmony exports
-        /******/__nested_webpack_require_987__.d = function (exports, definition) {
-          /******/for (var key in definition) {
-            /******/if (__nested_webpack_require_987__.o(definition, key) && !__nested_webpack_require_987__.o(exports, key)) {
-              /******/Object.defineProperty(exports, key, {
-                enumerable: true,
-                get: definition[key]
-              });
-              /******/
-            }
-            /******/
-          }
-          /******/
-        };
-        /******/
-      })();
-      /******/
-      /******/ /* webpack/runtime/hasOwnProperty shorthand */
-      /******/
-      (function () {
-        /******/__nested_webpack_require_987__.o = function (obj, prop) {
-          return Object.prototype.hasOwnProperty.call(obj, prop);
-        };
-        /******/
-      })();
-      /******/
-      /******/ /* webpack/runtime/make namespace object */
-      /******/
-      (function () {
-        /******/ // define __esModule on exports
-        /******/__nested_webpack_require_987__.r = function (exports) {
-          /******/if (typeof Symbol !== 'undefined' && Symbol.toStringTag) {
-            /******/Object.defineProperty(exports, Symbol.toStringTag, {
-              value: 'Module'
-            });
-            /******/
-          }
-          /******/
-          Object.defineProperty(exports, '__esModule', {
-            value: true
-          });
-          /******/
-        };
-        /******/
-      })();
-      /******/
-      /************************************************************************/
-      var __webpack_exports__ = {};
-      __nested_webpack_require_987__.r(__webpack_exports__);
-      /* harmony export */
-      __nested_webpack_require_987__.d(__webpack_exports__, {
-        /* harmony export */"extractContentsOfBraces": function extractContentsOfBraces() {
-          return (/* binding */_extractContentsOfBraces
-          );
-        },
-        /* harmony export */"extractContentsOfBrackets": function extractContentsOfBrackets() {
-          return (/* binding */_extractContentsOfBrackets
-          );
-        },
-        /* harmony export */"extractContentsOfParentheses": function extractContentsOfParentheses() {
-          return (/* binding */_extractContentsOfParentheses
-          );
-        },
-        /* harmony export */"extractorExist": function extractorExist() {
-          return (/* binding */_extractorExist
-          );
-        }
-        /* harmony export */
-      });
-      /**
-       * Determine whether an extractor is included
-       * @param {String} str    =>  input string. such as 'a[1], b[2]', '{a[1]}'
-       * @returns {Boolean} 
-       */
-      function _extractorExist(str) {
-        if (typeof str === 'undefined' || str === null || str === '') {
-          return false;
-        }
-        var res = false;
-        if (str !== null && str !== void 0 && str.match(/(\[.*?\])/gi)) {
-          res = true;
-        }
-        return res;
-      }
-
-      /**
-       * Extract the contents of square brackets
-       * @param {String} str    =>  input string. such as '[1,2] [f][c]'
-       * @param {Boolean} commaSeparated    =>  flag to determine if the result should be comma separated or not
-       * @returns {Array<string>|string} such as: ['1,2','f','c']
-       */
-      function _extractContentsOfBrackets(str) {
-        var commaSeparated = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
-        if (typeof str === 'undefined' || str === null || str === '') {
-          return !commaSeparated ? [] : '';
-        }
-        var res = str.match(/[^\[]+(?=(\[ \])|\])/g);
-        if (commaSeparated) {
-          return res === null ? '' : res.join(',').replace(/\,+$/, '');
-        } else {
-          return res === null ? '' : res;
-        }
-      }
-
-      /**
-       * Extract the contents of curly braces
-       * @param {String} str    =>  input string. such as '{1,2} {f}{c}'
-       * @param {Boolean} commaSeparated    =>  flag to determine if the result should be comma separated or not
-       * @returns {Array<string>|string} such as: ['1,2','f','c']
-       */
-      function _extractContentsOfBraces(str) {
-        var commaSeparated = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
-        if (typeof str === 'undefined' || str === null || str === '') {
-          return !commaSeparated ? [] : '';
-        }
-        var res = str.match(/[^\{]+(?=(\{ \})|\})/g);
-        if (commaSeparated) {
-          return res === null ? '' : res.join(',').replace(/\,+$/, '');
-        } else {
-          return res === null ? '' : res;
-        }
-      }
-
-      /**
-       * Extract the contents of parentheses
-       * @param {String} str    =>  input string. such as '(1,2) (f)(c)'
-       * @param {Boolean} commaSeparated    =>  flag to determine if the result should be comma separated or not
-       * @returns {Array<string>|string} such as: ['1,2','f','c']
-       */
-      function _extractContentsOfParentheses(str) {
-        var commaSeparated = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
-        if (typeof str === 'undefined' || str === null || str === '') {
-          return !commaSeparated ? [] : '';
-        }
-        var res = str.match(/[^\(]+(?=(\( \))|\))/g);
-        if (commaSeparated) {
-          return res === null ? '' : res.join(',').replace(/\,+$/, '');
-        } else {
-          return res === null ? '' : res;
-        }
-      }
-
-      /******/
-      return __webpack_exports__;
-      /******/
-    }()
-  );
-});
-
-/***/ }),
-
 /***/ 933:
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -3685,8 +3510,6 @@ var useClickOutside_default = /*#__PURE__*/__webpack_require__.n(useClickOutside
 // EXTERNAL MODULE: ../Utils/dist/cjs/useWindowScroll.js
 var useWindowScroll = __webpack_require__(499);
 var useWindowScroll_default = /*#__PURE__*/__webpack_require__.n(useWindowScroll);
-// EXTERNAL MODULE: ../Utils/dist/cjs/extract.js
-var extract = __webpack_require__(135);
 // EXTERNAL MODULE: ../Utils/dist/cjs/convert.js
 var convert = __webpack_require__(79);
 // EXTERNAL MODULE: ../Utils/dist/cjs/getElementProperty.js
@@ -3704,7 +3527,7 @@ var format_string = __webpack_require__(933);
 // EXTERNAL MODULE: ../Utils/dist/cjs/cls.js
 var cls = __webpack_require__(188);
 ;// CONCATENATED MODULE: ./src/index.tsx
-var _excluded = ["contentRef", "popupRef", "wrapperClassName", "controlClassName", "controlExClassName", "optionsExClassName", "exceededSidePosOffset", "multiSelect", "multiSelectEntireAreaTrigger", "multiSelectSelectedItemOnlyStatus", "renderSelectedValue", "disabled", "required", "defaultValue", "value", "label", "name", "readOnly", "placeholder", "id", "autoComplete", "autoCapitalize", "spellCheck", "options", "cleanTrigger", "loader", "lockBodyScroll", "hierarchical", "indentation", "doubleIndent", "style", "depth", "controlArrow", "winWidth", "tabIndex", "firstRequestAutoExec", "fetchTrigger", "fetchTriggerForDefaultData", "fetchNoneInfo", "fetchUpdate", "fetchFuncAsync", "fetchFuncMethod", "fetchFuncMethodParams", "data", "extractValueByBrackets", "fetchCallback", "onFetch", "onLoad", "onSelect", "onChange", "onBlur", "onFocus", "onKeyPressed"];
+var _excluded = ["contentRef", "popupRef", "wrapperClassName", "controlClassName", "controlExClassName", "optionsExClassName", "exceededSidePosOffset", "clearIcon", "multiSelect", "multiSelectEntireAreaTrigger", "multiSelectSelectedItemOnlyStatus", "renderSelectedValue", "disabled", "required", "defaultValue", "value", "label", "name", "readOnly", "placeholder", "id", "autoComplete", "autoCapitalize", "spellCheck", "options", "clearTrigger", "loader", "lockBodyScroll", "hierarchical", "indentation", "doubleIndent", "style", "depth", "controlArrow", "winWidth", "tabIndex", "firstRequestAutoExec", "fetchTrigger", "fetchNoneInfo", "fetchUpdate", "fetchFuncAsync", "fetchFuncMethod", "fetchFuncMethodParams", "data", "extractValueByBrackets", "fetchCallback", "onFetch", "onLoad", "onSelect", "onChange", "onBlur", "onFocus", "onKeyPressed"];
 function _regeneratorRuntime() { "use strict"; /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/facebook/regenerator/blob/main/LICENSE */ _regeneratorRuntime = function _regeneratorRuntime() { return exports; }; var exports = {}, Op = Object.prototype, hasOwn = Op.hasOwnProperty, defineProperty = Object.defineProperty || function (obj, key, desc) { obj[key] = desc.value; }, $Symbol = "function" == typeof Symbol ? Symbol : {}, iteratorSymbol = $Symbol.iterator || "@@iterator", asyncIteratorSymbol = $Symbol.asyncIterator || "@@asyncIterator", toStringTagSymbol = $Symbol.toStringTag || "@@toStringTag"; function define(obj, key, value) { return Object.defineProperty(obj, key, { value: value, enumerable: !0, configurable: !0, writable: !0 }), obj[key]; } try { define({}, ""); } catch (err) { define = function define(obj, key, value) { return obj[key] = value; }; } function wrap(innerFn, outerFn, self, tryLocsList) { var protoGenerator = outerFn && outerFn.prototype instanceof Generator ? outerFn : Generator, generator = Object.create(protoGenerator.prototype), context = new Context(tryLocsList || []); return defineProperty(generator, "_invoke", { value: makeInvokeMethod(innerFn, self, context) }), generator; } function tryCatch(fn, obj, arg) { try { return { type: "normal", arg: fn.call(obj, arg) }; } catch (err) { return { type: "throw", arg: err }; } } exports.wrap = wrap; var ContinueSentinel = {}; function Generator() {} function GeneratorFunction() {} function GeneratorFunctionPrototype() {} var IteratorPrototype = {}; define(IteratorPrototype, iteratorSymbol, function () { return this; }); var getProto = Object.getPrototypeOf, NativeIteratorPrototype = getProto && getProto(getProto(values([]))); NativeIteratorPrototype && NativeIteratorPrototype !== Op && hasOwn.call(NativeIteratorPrototype, iteratorSymbol) && (IteratorPrototype = NativeIteratorPrototype); var Gp = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(IteratorPrototype); function defineIteratorMethods(prototype) { ["next", "throw", "return"].forEach(function (method) { define(prototype, method, function (arg) { return this._invoke(method, arg); }); }); } function AsyncIterator(generator, PromiseImpl) { function invoke(method, arg, resolve, reject) { var record = tryCatch(generator[method], generator, arg); if ("throw" !== record.type) { var result = record.arg, value = result.value; return value && "object" == _typeof(value) && hasOwn.call(value, "__await") ? PromiseImpl.resolve(value.__await).then(function (value) { invoke("next", value, resolve, reject); }, function (err) { invoke("throw", err, resolve, reject); }) : PromiseImpl.resolve(value).then(function (unwrapped) { result.value = unwrapped, resolve(result); }, function (error) { return invoke("throw", error, resolve, reject); }); } reject(record.arg); } var previousPromise; defineProperty(this, "_invoke", { value: function value(method, arg) { function callInvokeWithMethodAndArg() { return new PromiseImpl(function (resolve, reject) { invoke(method, arg, resolve, reject); }); } return previousPromise = previousPromise ? previousPromise.then(callInvokeWithMethodAndArg, callInvokeWithMethodAndArg) : callInvokeWithMethodAndArg(); } }); } function makeInvokeMethod(innerFn, self, context) { var state = "suspendedStart"; return function (method, arg) { if ("executing" === state) throw new Error("Generator is already running"); if ("completed" === state) { if ("throw" === method) throw arg; return doneResult(); } for (context.method = method, context.arg = arg;;) { var delegate = context.delegate; if (delegate) { var delegateResult = maybeInvokeDelegate(delegate, context); if (delegateResult) { if (delegateResult === ContinueSentinel) continue; return delegateResult; } } if ("next" === context.method) context.sent = context._sent = context.arg;else if ("throw" === context.method) { if ("suspendedStart" === state) throw state = "completed", context.arg; context.dispatchException(context.arg); } else "return" === context.method && context.abrupt("return", context.arg); state = "executing"; var record = tryCatch(innerFn, self, context); if ("normal" === record.type) { if (state = context.done ? "completed" : "suspendedYield", record.arg === ContinueSentinel) continue; return { value: record.arg, done: context.done }; } "throw" === record.type && (state = "completed", context.method = "throw", context.arg = record.arg); } }; } function maybeInvokeDelegate(delegate, context) { var methodName = context.method, method = delegate.iterator[methodName]; if (undefined === method) return context.delegate = null, "throw" === methodName && delegate.iterator["return"] && (context.method = "return", context.arg = undefined, maybeInvokeDelegate(delegate, context), "throw" === context.method) || "return" !== methodName && (context.method = "throw", context.arg = new TypeError("The iterator does not provide a '" + methodName + "' method")), ContinueSentinel; var record = tryCatch(method, delegate.iterator, context.arg); if ("throw" === record.type) return context.method = "throw", context.arg = record.arg, context.delegate = null, ContinueSentinel; var info = record.arg; return info ? info.done ? (context[delegate.resultName] = info.value, context.next = delegate.nextLoc, "return" !== context.method && (context.method = "next", context.arg = undefined), context.delegate = null, ContinueSentinel) : info : (context.method = "throw", context.arg = new TypeError("iterator result is not an object"), context.delegate = null, ContinueSentinel); } function pushTryEntry(locs) { var entry = { tryLoc: locs[0] }; 1 in locs && (entry.catchLoc = locs[1]), 2 in locs && (entry.finallyLoc = locs[2], entry.afterLoc = locs[3]), this.tryEntries.push(entry); } function resetTryEntry(entry) { var record = entry.completion || {}; record.type = "normal", delete record.arg, entry.completion = record; } function Context(tryLocsList) { this.tryEntries = [{ tryLoc: "root" }], tryLocsList.forEach(pushTryEntry, this), this.reset(!0); } function values(iterable) { if (iterable) { var iteratorMethod = iterable[iteratorSymbol]; if (iteratorMethod) return iteratorMethod.call(iterable); if ("function" == typeof iterable.next) return iterable; if (!isNaN(iterable.length)) { var i = -1, next = function next() { for (; ++i < iterable.length;) if (hasOwn.call(iterable, i)) return next.value = iterable[i], next.done = !1, next; return next.value = undefined, next.done = !0, next; }; return next.next = next; } } return { next: doneResult }; } function doneResult() { return { value: undefined, done: !0 }; } return GeneratorFunction.prototype = GeneratorFunctionPrototype, defineProperty(Gp, "constructor", { value: GeneratorFunctionPrototype, configurable: !0 }), defineProperty(GeneratorFunctionPrototype, "constructor", { value: GeneratorFunction, configurable: !0 }), GeneratorFunction.displayName = define(GeneratorFunctionPrototype, toStringTagSymbol, "GeneratorFunction"), exports.isGeneratorFunction = function (genFun) { var ctor = "function" == typeof genFun && genFun.constructor; return !!ctor && (ctor === GeneratorFunction || "GeneratorFunction" === (ctor.displayName || ctor.name)); }, exports.mark = function (genFun) { return Object.setPrototypeOf ? Object.setPrototypeOf(genFun, GeneratorFunctionPrototype) : (genFun.__proto__ = GeneratorFunctionPrototype, define(genFun, toStringTagSymbol, "GeneratorFunction")), genFun.prototype = Object.create(Gp), genFun; }, exports.awrap = function (arg) { return { __await: arg }; }, defineIteratorMethods(AsyncIterator.prototype), define(AsyncIterator.prototype, asyncIteratorSymbol, function () { return this; }), exports.AsyncIterator = AsyncIterator, exports.async = function (innerFn, outerFn, self, tryLocsList, PromiseImpl) { void 0 === PromiseImpl && (PromiseImpl = Promise); var iter = new AsyncIterator(wrap(innerFn, outerFn, self, tryLocsList), PromiseImpl); return exports.isGeneratorFunction(outerFn) ? iter : iter.next().then(function (result) { return result.done ? result.value : iter.next(); }); }, defineIteratorMethods(Gp), define(Gp, toStringTagSymbol, "Generator"), define(Gp, iteratorSymbol, function () { return this; }), define(Gp, "toString", function () { return "[object Generator]"; }), exports.keys = function (val) { var object = Object(val), keys = []; for (var key in object) keys.push(key); return keys.reverse(), function next() { for (; keys.length;) { var key = keys.pop(); if (key in object) return next.value = key, next.done = !1, next; } return next.done = !0, next; }; }, exports.values = values, Context.prototype = { constructor: Context, reset: function reset(skipTempReset) { if (this.prev = 0, this.next = 0, this.sent = this._sent = undefined, this.done = !1, this.delegate = null, this.method = "next", this.arg = undefined, this.tryEntries.forEach(resetTryEntry), !skipTempReset) for (var name in this) "t" === name.charAt(0) && hasOwn.call(this, name) && !isNaN(+name.slice(1)) && (this[name] = undefined); }, stop: function stop() { this.done = !0; var rootRecord = this.tryEntries[0].completion; if ("throw" === rootRecord.type) throw rootRecord.arg; return this.rval; }, dispatchException: function dispatchException(exception) { if (this.done) throw exception; var context = this; function handle(loc, caught) { return record.type = "throw", record.arg = exception, context.next = loc, caught && (context.method = "next", context.arg = undefined), !!caught; } for (var i = this.tryEntries.length - 1; i >= 0; --i) { var entry = this.tryEntries[i], record = entry.completion; if ("root" === entry.tryLoc) return handle("end"); if (entry.tryLoc <= this.prev) { var hasCatch = hasOwn.call(entry, "catchLoc"), hasFinally = hasOwn.call(entry, "finallyLoc"); if (hasCatch && hasFinally) { if (this.prev < entry.catchLoc) return handle(entry.catchLoc, !0); if (this.prev < entry.finallyLoc) return handle(entry.finallyLoc); } else if (hasCatch) { if (this.prev < entry.catchLoc) return handle(entry.catchLoc, !0); } else { if (!hasFinally) throw new Error("try statement without catch or finally"); if (this.prev < entry.finallyLoc) return handle(entry.finallyLoc); } } } }, abrupt: function abrupt(type, arg) { for (var i = this.tryEntries.length - 1; i >= 0; --i) { var entry = this.tryEntries[i]; if (entry.tryLoc <= this.prev && hasOwn.call(entry, "finallyLoc") && this.prev < entry.finallyLoc) { var finallyEntry = entry; break; } } finallyEntry && ("break" === type || "continue" === type) && finallyEntry.tryLoc <= arg && arg <= finallyEntry.finallyLoc && (finallyEntry = null); var record = finallyEntry ? finallyEntry.completion : {}; return record.type = type, record.arg = arg, finallyEntry ? (this.method = "next", this.next = finallyEntry.finallyLoc, ContinueSentinel) : this.complete(record); }, complete: function complete(record, afterLoc) { if ("throw" === record.type) throw record.arg; return "break" === record.type || "continue" === record.type ? this.next = record.arg : "return" === record.type ? (this.rval = this.arg = record.arg, this.method = "return", this.next = "end") : "normal" === record.type && afterLoc && (this.next = afterLoc), ContinueSentinel; }, finish: function finish(finallyLoc) { for (var i = this.tryEntries.length - 1; i >= 0; --i) { var entry = this.tryEntries[i]; if (entry.finallyLoc === finallyLoc) return this.complete(entry.completion, entry.afterLoc), resetTryEntry(entry), ContinueSentinel; } }, "catch": function _catch(tryLoc) { for (var i = this.tryEntries.length - 1; i >= 0; --i) { var entry = this.tryEntries[i]; if (entry.tryLoc === tryLoc) { var record = entry.completion; if ("throw" === record.type) { var thrown = record.arg; resetTryEntry(entry); } return thrown; } } throw new Error("illegal catch attempt"); }, delegateYield: function delegateYield(iterable, resultName, nextLoc) { return this.delegate = { iterator: values(iterable), resultName: resultName, nextLoc: nextLoc }, "next" === this.method && (this.arg = undefined), ContinueSentinel; } }, exports; }
 function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
 function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
@@ -3741,7 +3564,6 @@ function _objectWithoutPropertiesLoose(source, excluded) { if (source == null) r
 
 
 
-
 // Destroys body scroll locking
 
 
@@ -3754,6 +3576,7 @@ var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_
     controlExClassName = props.controlExClassName,
     optionsExClassName = props.optionsExClassName,
     exceededSidePosOffset = props.exceededSidePosOffset,
+    clearIcon = props.clearIcon,
     multiSelect = props.multiSelect,
     multiSelectEntireAreaTrigger = props.multiSelectEntireAreaTrigger,
     multiSelectSelectedItemOnlyStatus = props.multiSelectSelectedItemOnlyStatus,
@@ -3771,7 +3594,7 @@ var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_
     autoCapitalize = props.autoCapitalize,
     spellCheck = props.spellCheck,
     options = props.options,
-    cleanTrigger = props.cleanTrigger,
+    clearTrigger = props.clearTrigger,
     loader = props.loader,
     lockBodyScroll = props.lockBodyScroll,
     hierarchical = props.hierarchical,
@@ -3784,7 +3607,6 @@ var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_
     tabIndex = props.tabIndex,
     firstRequestAutoExec = props.firstRequestAutoExec,
     fetchTrigger = props.fetchTrigger,
-    fetchTriggerForDefaultData = props.fetchTriggerForDefaultData,
     _props$fetchNoneInfo = props.fetchNoneInfo,
     fetchNoneInfo = _props$fetchNoneInfo === void 0 ? 'No match yet' : _props$fetchNoneInfo,
     fetchUpdate = props.fetchUpdate,
@@ -3807,6 +3629,7 @@ var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_
   var MANUAL_REQ = typeof fetchTrigger !== 'undefined' && fetchTrigger === true ? true : false; // Manual requests
   var LIVE_SEARCH_DISABLED = !MANUAL_REQ && typeof window !== 'undefined' && typeof window['funda-ui__Select-disable-livesearch'] !== 'undefined' ? true : false; // Globally disable real-time search functionality (only valid for non-dynamic requests)
 
+  var CLEAR_ICON = typeof clearIcon === 'undefined' ? true : clearIcon;
   var FIRST_REQUEST_AUTO = typeof firstRequestAutoExec === 'undefined' ? true : firstRequestAutoExec;
   var INPUT_READONLY = LIVE_SEARCH_DISABLED ? true : typeof readOnly === 'undefined' ? null : readOnly;
   var VALUE_BY_BRACKETS = typeof extractValueByBrackets === 'undefined' ? true : extractValueByBrackets;
@@ -3931,9 +3754,9 @@ var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_
     }).includes(val.toString());
   };
 
-  // clean trigger
-  var CLEAN_TRIGGER_VALID = typeof cleanTrigger === 'undefined' ? false : cleanTrigger ? cleanTrigger.valid : false;
-  var CLEAN_TRIGGER_LABEL = cleanTrigger ? cleanTrigger.cleanValueLabel : 'Clean';
+  // clear trigger
+  var CLEAR_TRIGGER_VALID = typeof clearTrigger === 'undefined' ? false : clearTrigger ? clearTrigger.valid : false;
+  var CLEAR_TRIGGER_LABEL = clearTrigger ? clearTrigger.clearValueLabel : 'Clear';
   var optionsFormatGroupOpt = function optionsFormatGroupOpt(allData) {
     allData.forEach(function (item) {
       if (typeof item.optgroup !== 'undefined') {
@@ -3970,7 +3793,7 @@ var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_
         if (MULTI_SEL_VALID) {
           updateOptionCheckboxes('remove');
         } else {
-          handleCleanValue();
+          handleClearValue();
         }
         selectInputRef.current.blur();
         cb === null || cb === void 0 ? void 0 : cb();
@@ -4113,16 +3936,14 @@ var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_
         filterResQueryValue,
         filterResQueryLabel,
         _currentData,
-        _tempLabels,
-        _tempValues,
-        _values,
+        _defaultValues,
+        _defaultLabels,
         _filterRes2,
         _filterResQueryValue,
         _filterResQueryLabel,
         _currentData2,
-        _tempLabels2,
-        _tempValues2,
-        _values3,
+        _defaultValues2,
+        _defaultLabels2,
         _args = arguments;
       return _regeneratorRuntime().wrap(function _callee$(_context) {
         while (1) switch (_context.prev = _context.next) {
@@ -4131,7 +3952,7 @@ var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_
             // Determine whether the default value is user query input or default input
             defaultValue = init ? valueToInputDefault : '';
             if (!(_typeof(fetchFuncAsync) === 'object')) {
-              _context.next = 23;
+              _context.next = 27;
               break;
             }
             _context.next = 5;
@@ -4163,31 +3984,19 @@ var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_
 
             // STEP 3: ===========
             // value & label must be initialized
-            filterRes = [];
-            if (MANUAL_REQ) {
-              // If a manual action is used to trigger the request
-              if (typeof fetchTriggerForDefaultData !== 'undefined' && fetchTriggerForDefaultData !== null && typeof (fetchTriggerForDefaultData === null || fetchTriggerForDefaultData === void 0 ? void 0 : fetchTriggerForDefaultData.values[0]) !== 'undefined') {
-                filterRes = [{
-                  value: fetchTriggerForDefaultData === null || fetchTriggerForDefaultData === void 0 ? void 0 : fetchTriggerForDefaultData.values[0],
-                  label: fetchTriggerForDefaultData === null || fetchTriggerForDefaultData === void 0 ? void 0 : fetchTriggerForDefaultData.labels[0],
-                  queryString: fetchTriggerForDefaultData === null || fetchTriggerForDefaultData === void 0 ? void 0 : fetchTriggerForDefaultData.queryStrings[0]
-                }];
-              }
-            } else {
-              // If the default value is label, match value
-              filterResQueryValue = _ORGIN_DATA.filter(function (item) {
-                return item.value == defaultValue;
-              });
-              filterResQueryLabel = _ORGIN_DATA.filter(function (item) {
-                return item.label == defaultValue;
-              });
-              filterRes = filterResQueryValue;
-              if (filterResQueryValue.length === 0) filterRes = filterResQueryLabel;
+            filterRes = []; // If the default value is label, match value
+            filterResQueryValue = _ORGIN_DATA.filter(function (item) {
+              return item.value == defaultValue;
+            });
+            filterResQueryLabel = _ORGIN_DATA.filter(function (item) {
+              return item.label == defaultValue;
+            });
+            filterRes = filterResQueryValue;
+            if (filterResQueryValue.length === 0) filterRes = filterResQueryLabel;
 
-              // if the default value is Object
-              if (isObject(inputDefault) && filterRes.length === 0) {
-                filterRes = [inputDefault];
-              }
+            // if the default value is Object
+            if (isObject(inputDefault) && filterRes.length === 0) {
+              filterRes = [inputDefault];
             }
 
             // STEP 4: ===========
@@ -4215,27 +4024,18 @@ var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_
                   values: []
                 });
               }
-              if (chkValueExist(defaultValue) && (multiSelect === null || multiSelect === void 0 ? void 0 : multiSelect.data) !== null) {
+              if (chkValueExist(defaultValue) && Array.isArray(defaultValue)) {
                 // initialize default values of Multiple selection
-                _currentData = multiSelect === null || multiSelect === void 0 ? void 0 : multiSelect.data;
-                _tempLabels = _toConsumableArray(_currentData.labels);
-                _tempValues = _toConsumableArray(_currentData.values);
-                _values = VALUE_BY_BRACKETS ? (0,extract.extractContentsOfBrackets)(defaultValue) : defaultValue.split(',');
-                _values.forEach(function (_value, _index) {
-                  if (!multiSelControlOptionExist(_currentData.values, _value) && typeof _currentData.values[_index] !== 'undefined') {
-                    _tempLabels.push(_currentData.labels[_index]);
-                    _tempValues.push(_currentData.values[_index]);
-                  }
+                _currentData = defaultValue;
+                _defaultValues = _currentData.map(function (v) {
+                  return v.value;
                 });
-                _tempLabels = unique(_tempLabels.filter(function (v) {
-                  return v !== '';
-                }));
-                _tempValues = unique(_tempValues.filter(function (v) {
-                  return v !== '';
-                }));
+                _defaultLabels = _currentData.map(function (v) {
+                  return v.label;
+                });
                 setControlArr({
-                  labels: _tempLabels,
-                  values: _tempValues
+                  labels: _defaultLabels,
+                  values: _defaultValues
                 });
               }
 
@@ -4266,7 +4066,7 @@ var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_
 
             //
             return _context.abrupt("return", _ORGIN_DATA);
-          case 23:
+          case 27:
             // STEP 1: ===========
             // Set hierarchical categories ( with sub-categories )
             if (hierarchical) {
@@ -4279,8 +4079,6 @@ var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_
             staticOptionsData = optionsCustomSelectFlat(staticOptionsData);
 
             // STEP 3: ===========
-            // value & label must be initialized
-
             // If the default value is label, match value
             _filterRes2 = [];
             _filterResQueryValue = staticOptionsData.filter(function (item) {
@@ -4322,27 +4120,18 @@ var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_
                   values: []
                 });
               }
-              if (chkValueExist(defaultValue) && (multiSelect === null || multiSelect === void 0 ? void 0 : multiSelect.data) !== null) {
+              if (chkValueExist(defaultValue) && Array.isArray(defaultValue)) {
                 // initialize default values of Multiple selection
-                _currentData2 = multiSelect === null || multiSelect === void 0 ? void 0 : multiSelect.data;
-                _tempLabels2 = _toConsumableArray(_currentData2.labels);
-                _tempValues2 = _toConsumableArray(_currentData2.values);
-                _values3 = VALUE_BY_BRACKETS ? (0,extract.extractContentsOfBrackets)(defaultValue) : defaultValue.split(',');
-                _values3.forEach(function (_value, _index) {
-                  if (!multiSelControlOptionExist(_currentData2.values, _value) && typeof _currentData2.values[_index] !== 'undefined') {
-                    _tempLabels2.push(_currentData2.labels[_index]);
-                    _tempValues2.push(_currentData2.values[_index]);
-                  }
+                _currentData2 = defaultValue;
+                _defaultValues2 = _currentData2.map(function (v) {
+                  return v.value;
                 });
-                _tempLabels2 = unique(_tempLabels2.filter(function (v) {
-                  return v !== '';
-                }));
-                _tempValues2 = unique(_tempValues2.filter(function (v) {
-                  return v !== '';
-                }));
+                _defaultLabels2 = _currentData2.map(function (v) {
+                  return v.label;
+                });
                 setControlArr({
-                  labels: _tempLabels2,
-                  values: _tempValues2
+                  labels: _defaultLabels2,
+                  values: _defaultValues2
                 });
               }
 
@@ -4373,7 +4162,7 @@ var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_
 
             //
             return _context.abrupt("return", staticOptionsData);
-          case 39:
+          case 43:
           case "end":
             return _context.stop();
         }
@@ -4402,9 +4191,9 @@ var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_
     if (el === null) return;
     var activedItem = el.querySelectorAll(".list-group-item.".concat(!MULTI_SEL_VALID ? 'active' : 'item-selected'))[0];
     if (typeof activedItem !== 'undefined') {
-      var cleanItem = el.querySelector(".list-group-item.".concat(!MULTI_SEL_VALID ? 'custom-select-multi__control-option-item--clean' : 'custom-select-multi__control-option-item--select-all'));
-      var cleanItemHeight = cleanItem === null ? 0 : cleanItem.clientHeight;
-      var _latestScrollTop = activedItem.offsetTop - cleanItemHeight;
+      var clearItem = el.querySelector(".list-group-item.".concat(!MULTI_SEL_VALID ? 'custom-select-multi__control-option-item--clear' : 'custom-select-multi__control-option-item--select-all'));
+      var clearItemHeight = clearItem === null ? 0 : clearItem.clientHeight;
+      var _latestScrollTop = activedItem.offsetTop - clearItemHeight;
       el.scrollTop = _latestScrollTop;
     }
   }
@@ -4669,7 +4458,7 @@ var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_
     setIsOpen(false);
     if (!MULTI_SEL_VALID) popwinPosHide();
     if (MANUAL_REQ) {
-      // clean data
+      // clear data
       setOptionsData([]);
     } else {
       // restore data
@@ -4725,7 +4514,7 @@ var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_
       }, 500);
     }
     if (MANUAL_REQ) {
-      // clean data
+      // clear data
       setOptionsData([]);
     } else {
       // restore data
@@ -5125,7 +4914,7 @@ var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_
     // Fixed an out-of-focus issue
     fixFocusStatus();
   }
-  function handleCleanValue(event) {
+  function handleClearValue(event) {
     if (typeof event !== 'undefined') {
       event.preventDefault();
       event.stopPropagation(); /* REQUIRED */
@@ -5326,7 +5115,7 @@ var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_
       if (listRef.current === null || !rootRef.current.classList.contains('active')) return;
 
       // Avoid selecting options that are disabled
-      var options = [].slice.call(listRef.current.querySelectorAll('.list-group-item:not(.hide):not(.custom-select-multi__control-option-item--select-all):not(.custom-select-multi__control-option-item--clean)'));
+      var options = [].slice.call(listRef.current.querySelectorAll('.list-group-item:not(.hide):not(.custom-select-multi__control-option-item--select-all):not(.custom-select-multi__control-option-item--clear)'));
       var currentIndex = options.findIndex(function (e) {
         return e === listRef.current.querySelector('.list-group-item.active');
       });
@@ -5487,23 +5276,36 @@ var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_
     // Forced assignment does not depend on "fetch" or "firstRequestAutoExe"
     // Don't use "value.value && value.label" directly, if it is empty, it will be treated as FALSE
     if (chkValueExist(value)) {
-      if (_typeof(value) === 'object') {
-        // Single selection
+      // ++++++++++++++++++++
+      // Single selection
+      // ++++++++++++++++++++
+      if (_typeof(value) === 'object' && !Array.isArray(value)) {
         if (typeof value.value !== 'undefined' && value.value !== null) setControlValue(value.value);
         if (typeof value.label !== 'undefined' && value.label !== null) setControlLabel(formatIndentVal(value.label, INDENT_LAST_PLACEHOLDER));
       }
-      if (_typeof(multiSelect === null || multiSelect === void 0 ? void 0 : multiSelect.data) === 'object' && MULTI_SEL_VALID) {
-        // Multiple selection
-        if (chkValueExist(value) && (multiSelect === null || multiSelect === void 0 ? void 0 : multiSelect.data) !== null) {
-          // initialize default values of Multiple selection
-          var _currentData = multiSelect === null || multiSelect === void 0 ? void 0 : multiSelect.data;
+
+      // ++++++++++++++++++++
+      // Multiple selection
+      // ++++++++++++++++++++
+      if (MULTI_SEL_VALID) {
+        if (chkValueExist(value) && Array.isArray(value)) {
+          var _currentData = value;
+          var _defaultValues = _currentData.map(function (v) {
+            return v.value;
+          });
+          var _defaultLabels = _currentData.map(function (v) {
+            return v.label;
+          });
           setControlArr({
-            labels: _currentData.labels,
-            values: _currentData.values
+            labels: _defaultLabels,
+            values: _defaultValues
           });
         }
       }
     } else {
+      // ++++++++++++++++++++
+      // Single selection & Multiple selection
+      // ++++++++++++++++++++
       if (!FIRST_REQUEST_AUTO) {
         setControlValue('');
         setControlLabel('');
@@ -5540,6 +5342,49 @@ var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_
           setTimeout(function () {
             adjustMultiControlContainerHeight();
           }, 0);
+        }
+      }
+
+      // Forced assignment does not depend on "fetch" or "firstRequestAutoExe"
+      // Don't use "value.value && value.label" directly, if it is empty, it will be treated as FALSE
+      if (chkValueExist(defaultValue)) {
+        // ++++++++++++++++++++
+        // Single selection
+        // ++++++++++++++++++++
+        if (_typeof(defaultValue) === 'object' && !Array.isArray(defaultValue)) {
+          if (typeof defaultValue.value !== 'undefined' && defaultValue.value !== null) setControlValue(defaultValue.value);
+          if (typeof defaultValue.label !== 'undefined' && defaultValue.label !== null) setControlLabel(formatIndentVal(defaultValue.label, INDENT_LAST_PLACEHOLDER));
+        }
+
+        // ++++++++++++++++++++
+        // Multiple selection
+        // ++++++++++++++++++++
+        if (MULTI_SEL_VALID) {
+          if (chkValueExist(defaultValue) && Array.isArray(defaultValue)) {
+            var _currentData = defaultValue;
+            var _defaultValues = _currentData.map(function (v) {
+              return v.value;
+            });
+            var _defaultLabels = _currentData.map(function (v) {
+              return v.label;
+            });
+            setControlArr({
+              labels: _defaultLabels,
+              values: _defaultValues
+            });
+          }
+        }
+      } else {
+        // ++++++++++++++++++++
+        // Single selection & Multiple selection
+        // ++++++++++++++++++++
+        if (!FIRST_REQUEST_AUTO) {
+          setControlValue('');
+          setControlLabel('');
+          setControlArr({
+            labels: [],
+            values: []
+          });
         }
       }
     }
@@ -5579,7 +5424,32 @@ var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_
       'active focus': isOpen
     }),
     onKeyDown: handleKeyPressed
-  }, !MULTI_SEL_VALID ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
+  }, CLEAR_ICON && (!MULTI_SEL_VALID && controlValue ||
+  // Single selection Control
+  MULTI_SEL_VALID && controlArr.values.length > 0 // Multiple selection Control
+  ) ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("span", {
+    className: "custom-select-clear-icon ".concat(MANUAL_REQ ? 'pos-offset' : '')
+  }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("button", {
+    tabIndex: -1,
+    type: "button",
+    onClick: function onClick(e) {
+      e.preventDefault();
+      e.stopPropagation();
+      if (MULTI_SEL_VALID) {
+        updateOptionCheckboxes('remove');
+        onChange === null || onChange === void 0 ? void 0 : onChange(selectInputRef.current, valueInputRef.current, multipleSelectionCallback([], []));
+      } else {
+        handleClearValue();
+      }
+    }
+  }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("svg", {
+    width: "12px",
+    height: "12px",
+    viewBox: "0 0 1024 1024"
+  }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("path", {
+    fill: "#000",
+    d: "M195.2 195.2a64 64 0 0 1 90.496 0L512 421.504 738.304 195.2a64 64 0 0 1 90.496 90.496L602.496 512 828.8 738.304a64 64 0 0 1-90.496 90.496L512 602.496 285.696 828.8a64 64 0 0 1-90.496-90.496L421.504 512 195.2 285.696a64 64 0 0 1 0-90.496z"
+  })))) : null, !MULTI_SEL_VALID ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
     className: "position-relative"
   }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("input", _extends({
     ref: function ref(node) {
@@ -5874,17 +5744,17 @@ var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_
       __html: controlArr.values.length === optionsData.length ? "".concat(MULTI_DESEL_LABEL) : "".concat(MULTI_SEL_LABEL)
     },
     onClick: handleSelectAll
-  }))) : null, !MULTI_SEL_VALID ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, CLEAN_TRIGGER_VALID ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("span", {
+  }))) : null, !MULTI_SEL_VALID ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, CLEAR_TRIGGER_VALID ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("span", {
     tabIndex: -1,
-    className: "list-group-item list-group-item-action border-start-0 border-end-0 text-secondary bg-light custom-select-multi__control-option-item--clean position-sticky top-0 z-3",
+    className: "list-group-item list-group-item-action border-start-0 border-end-0 text-secondary bg-light custom-select-multi__control-option-item--clear position-sticky top-0 z-3",
     role: "tab"
   }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("span", {
     tabIndex: -1,
     className: "btn btn-secondary",
     dangerouslySetInnerHTML: {
-      __html: "".concat(CLEAN_TRIGGER_LABEL)
+      __html: "".concat(CLEAR_TRIGGER_LABEL)
     },
-    onClick: handleCleanValue
+    onClick: handleClearValue
   }))) : null) : null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("button", {
     tabIndex: -1,
     type: "button",

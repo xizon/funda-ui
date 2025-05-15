@@ -11,6 +11,8 @@
     --cus-sel-control-wrapper-bg: #fff;
     --cus-sel-control-wrapper-border-color: #dee2e6;
     --cus-sel-control-list-bg: #efefef;
+    --cus-sel-clear-fill: #a5a5a5;
+    --cus-sel-clear-hover-fill: #000;
     --cus-sel-arrow-fill: #a5a5a5;
     --cus-sel-searchbtn-fill: #a5a5a5;
     --cus-sel-searchbtn-hover-fill: #333;
@@ -35,9 +37,44 @@
             fill: var(--cus-sel-arrow-fill);
         }
     }
-    /*------ Clean ------*/
-    .clean {
-        svg .clean-fill-g {
+
+    /*------ Clear Icon ------*/
+    .custom-select-clear-icon {
+        position: absolute;
+        top: 50%;
+        transform: rotate(0deg) translateY(-50%);
+        transform-origin: top;
+        right: 1.5rem;
+        z-index: 2;
+        pointer-events: all;
+
+        button {
+            border: none;
+            box-shadow: none;
+            margin: 0;
+            padding: 0;
+            background: none;
+        }
+
+        
+        &.pos-offset {
+            right: 2.25rem;
+        }
+
+        svg path {
+            fill: var(--cus-sel-clear-fill);
+        }
+
+        &:hover {
+            svg path {
+                fill: var(--cus-sel-clear-hover-fill);
+            }
+        }
+    }
+
+    /*------ Clear Trigger ------*/
+    .clear {
+        svg .clear-fill-g {
             fill: var(--cus-sel-arrow-fill);
         }
     }
@@ -576,7 +613,7 @@
     }
 
     /*------ Extended buttons of Single selection ------*/
-    .custom-select-multi__control-option-item--clean {
+    .custom-select-multi__control-option-item--clear {
 
         &.hide {
             display: none !important;

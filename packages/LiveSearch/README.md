@@ -93,7 +93,7 @@ export default () => {
 
 You need to use the series property `fetch<METHOD_NAME>` to format the data of the API callback, which will match the data structure of the component.
 
-> Using `fetchTrigger`, `fetchUpdate` and `fetchTriggerForDefaultData` properties. In general, `fetchUpdate` is also set to **true**. 
+> Using `fetchTrigger` and `fetchUpdate` properties. In general, `fetchUpdate` is also set to **true**. 
 >
 > If `fetchUpdate` is **false**, each request needs to be triggered by clicking the search button.
 

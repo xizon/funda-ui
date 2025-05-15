@@ -52,14 +52,8 @@ import { clsWrite, combinedCls } from 'funda-utils/dist/cjs/cls';
 
 
 
-
 export type SelectOptionChangeFnType = (arg1: any, arg2: any, arg3: any) => void;
 
-export interface MultiSelectDataConfig {
-    values: string[] | number[];
-    labels: string[] | number[];
-    queryStrings: string[] | number[];
-}
 
 export interface MultiSelectControlValConfig {
     values: string[];
@@ -83,7 +77,6 @@ export interface MultiSelectConfig {
     selectAll: boolean;
     selectAllLabel?: string;
     deselectAllLabel?: string;
-    data: MultiSelectDataConfig | null;
 }
 
 export interface multiSelectSelectedItemOnlyStatusConfig {
@@ -94,9 +87,9 @@ export interface multiSelectSelectedItemOnlyStatusConfig {
 
 
 
-export interface CleanTriggerConfig {
+export interface ClearTriggerConfig {
     valid: boolean;
-    cleanValueLabel?: string;
+    clearValueLabel?: string;
 }
 
 
@@ -108,13 +101,14 @@ export type SelectProps = {
     controlExClassName?: string;
     optionsExClassName?: string;
     exceededSidePosOffset?: number;
+    clearIcon?: boolean; 
     multiSelect?: MultiSelectConfig;
     multiSelectEntireAreaTrigger?: boolean;
     multiSelectSelectedItemOnlyStatus?: multiSelectSelectedItemOnlyStatusConfig;
     renderSelectedValue?: (selectedData: MultiSelectControlValConfig, removeFunc: (e: React.MouseEvent) => void) => React.ReactNode;
-    cleanTrigger?: CleanTriggerConfig;
-    defaultValue?: string | OptionConfig;
-    value?: string | OptionConfig;
+    clearTrigger?: ClearTriggerConfig;
+    defaultValue?: string | OptionConfig | OptionConfig[];
+    value?: string | OptionConfig | OptionConfig[];
     label?: React.ReactNode | string;
     name?: string;
     disabled?: any;
@@ -131,7 +125,6 @@ export type SelectProps = {
     controlArrow?: React.ReactNode;
     firstRequestAutoExec?: boolean;
     fetchTrigger?: boolean;
-    fetchTriggerForDefaultData?: MultiSelectDataConfig | null;
     /** Set the depth value of the control to control the display of the pop-up layer appear above.
      * Please set it when multiple controls are used at the same time. */
     depth?: number;
@@ -172,6 +165,7 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
         controlExClassName,
         optionsExClassName,
         exceededSidePosOffset,
+        clearIcon,
         multiSelect,
         multiSelectEntireAreaTrigger,
         multiSelectSelectedItemOnlyStatus,
@@ -189,7 +183,7 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
         autoCapitalize,
         spellCheck,
         options,
-        cleanTrigger,
+        clearTrigger,
         loader,
         lockBodyScroll,
         hierarchical,
@@ -202,7 +196,6 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
         tabIndex,
         firstRequestAutoExec,
         fetchTrigger,
-        fetchTriggerForDefaultData,
         fetchNoneInfo = 'No match yet',
         fetchUpdate,
         fetchFuncAsync,
@@ -227,7 +220,7 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
     const MANUAL_REQ = typeof fetchTrigger !== 'undefined' && fetchTrigger === true ? true : false;  // Manual requests
     const LIVE_SEARCH_DISABLED = !MANUAL_REQ && typeof window !== 'undefined' && typeof (window as any)['funda-ui__Select-disable-livesearch'] !== 'undefined' ? true : false; // Globally disable real-time search functionality (only valid for non-dynamic requests)
 
-    
+    const CLEAR_ICON = typeof clearIcon === 'undefined' ? true : clearIcon;
     const FIRST_REQUEST_AUTO = typeof firstRequestAutoExec === 'undefined' ? true : firstRequestAutoExec;
     const INPUT_READONLY = LIVE_SEARCH_DISABLED ? true : (typeof readOnly === 'undefined' ? null : readOnly);
     const VALUE_BY_BRACKETS = typeof extractValueByBrackets === 'undefined' ? true : extractValueByBrackets;
@@ -323,9 +316,9 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
         return _data.map((v: any) => v.toString()).includes(val.toString());
     };
 
-    // clean trigger
-    const CLEAN_TRIGGER_VALID = typeof cleanTrigger === 'undefined' ? false : (cleanTrigger ? cleanTrigger.valid : false);
-    const CLEAN_TRIGGER_LABEL = cleanTrigger ? cleanTrigger.cleanValueLabel : 'Clean';
+    // clear trigger
+    const CLEAR_TRIGGER_VALID = typeof clearTrigger === 'undefined' ? false : (clearTrigger ? clearTrigger.valid : false);
+    const CLEAR_TRIGGER_LABEL = clearTrigger ? clearTrigger.clearValueLabel : 'Clear';
 
 
     const optionsFormatGroupOpt = (allData: any[]) => {
@@ -373,7 +366,7 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
                 if (MULTI_SEL_VALID) {
                     updateOptionCheckboxes('remove');
                 } else {
-                    handleCleanValue();
+                    handleClearValue();
                 }
 
                 selectInputRef.current.blur();
@@ -558,32 +551,16 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
             // STEP 3: ===========
             // value & label must be initialized
             let filterRes: any = [];
+            // If the default value is label, match value
+            const filterResQueryValue = _ORGIN_DATA.filter((item: any) => item.value == defaultValue);
+            const filterResQueryLabel = _ORGIN_DATA.filter((item: any) => item.label == defaultValue);
 
-            if (MANUAL_REQ) {
+            filterRes = filterResQueryValue;
+            if (filterResQueryValue.length === 0) filterRes = filterResQueryLabel;
 
-                // If a manual action is used to trigger the request
-                if (typeof fetchTriggerForDefaultData !== 'undefined' && fetchTriggerForDefaultData !== null && typeof fetchTriggerForDefaultData?.values[0] !== 'undefined') {
-                    filterRes = [{
-                        value: fetchTriggerForDefaultData?.values[0],
-                        label: fetchTriggerForDefaultData?.labels[0],
-                        queryString: fetchTriggerForDefaultData?.queryStrings[0]
-                    }];
-                }
-
-            } else {
-
-                // If the default value is label, match value
-                const filterResQueryValue = _ORGIN_DATA.filter((item: any) => item.value == defaultValue);
-                const filterResQueryLabel = _ORGIN_DATA.filter((item: any) => item.label == defaultValue);
-
-                filterRes = filterResQueryValue;
-                if (filterResQueryValue.length === 0) filterRes = filterResQueryLabel;
-
-                // if the default value is Object
-                if (isObject(inputDefault) && filterRes.length === 0) {
-                    filterRes = [inputDefault];
-                }
-
+            // if the default value is Object
+            if (isObject(inputDefault) && filterRes.length === 0) {
+                filterRes = [inputDefault];
             }
 
 
@@ -618,29 +595,16 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
 
 
 
-                if (chkValueExist(defaultValue) && multiSelect?.data !== null) {
+                if (chkValueExist(defaultValue) && Array.isArray(defaultValue)) {
 
                     // initialize default values of Multiple selection
-                    const _currentData: any = multiSelect?.data;
-
-                    let _tempLabels = [..._currentData.labels];
-                    let _tempValues = [..._currentData.values];
-
-                    const _values: string[] = VALUE_BY_BRACKETS ? extractContentsOfBrackets(defaultValue) : defaultValue.split(',');
-
-                    _values.forEach((_value: string, _index: number) => {
-                        if (!multiSelControlOptionExist(_currentData.values, _value) && typeof _currentData.values[_index] !== 'undefined') {
-                            _tempLabels.push(_currentData.labels[_index]);
-                            _tempValues.push(_currentData.values[_index]);
-                        }
-                    });
-
-                    _tempLabels = unique(_tempLabels.filter((v: any) => v !== ''));
-                    _tempValues = unique(_tempValues.filter((v: any) => v !== ''));
+                    const _currentData: OptionConfig[] = defaultValue;
+                    const _defaultValues = _currentData.map((v: OptionConfig) => v.value as string);
+                    const _defaultLabels = _currentData.map((v: OptionConfig) => v.label as string);
 
                     setControlArr({
-                        labels: _tempLabels,
-                        values: _tempValues,
+                        labels: _defaultLabels,
+                        values: _defaultValues,
                     });
 
                 }
@@ -695,8 +659,6 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
 
 
             // STEP 3: ===========
-            // value & label must be initialized
-
             // If the default value is label, match value
             let filterRes: any = [];
             const filterResQueryValue = staticOptionsData.filter((item: any) => item.value == defaultValue);
@@ -743,29 +705,16 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
                     });
                 }
 
-                if (chkValueExist(defaultValue) && multiSelect?.data !== null) {
+                if (chkValueExist(defaultValue) && Array.isArray(defaultValue)) {
 
                     // initialize default values of Multiple selection
-                    const _currentData: any = multiSelect?.data;
-
-                    let _tempLabels = [..._currentData.labels];
-                    let _tempValues = [..._currentData.values];
-
-                    const _values: string[] = VALUE_BY_BRACKETS ? extractContentsOfBrackets(defaultValue) : defaultValue.split(',');
-
-                    _values.forEach((_value: string, _index: number) => {
-                        if (!multiSelControlOptionExist(_currentData.values, _value) && typeof _currentData.values[_index] !== 'undefined') {
-                            _tempLabels.push(_currentData.labels[_index]);
-                            _tempValues.push(_currentData.values[_index]);
-                        }
-                    });
-
-                    _tempLabels = unique(_tempLabels.filter((v: any) => v !== ''));
-                    _tempValues = unique(_tempValues.filter((v: any) => v !== ''));
-
+                    const _currentData: OptionConfig[] = defaultValue;
+                    const _defaultValues = _currentData.map((v: OptionConfig) => v.value as string);
+                    const _defaultLabels = _currentData.map((v: OptionConfig) => v.label as string);
+                    
                     setControlArr({
-                        labels: _tempLabels,
-                        values: _tempValues,
+                        labels: _defaultLabels,
+                        values: _defaultValues,
                     });
                 }
 
@@ -833,9 +782,9 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
         const activedItem = el.querySelectorAll(`.list-group-item.${!MULTI_SEL_VALID ? 'active' : 'item-selected'}`)[0];
         if (typeof activedItem !== 'undefined') {
             
-            const cleanItem = el.querySelector(`.list-group-item.${!MULTI_SEL_VALID ? 'custom-select-multi__control-option-item--clean' : 'custom-select-multi__control-option-item--select-all'}`);
-            const cleanItemHeight = cleanItem === null ? 0 : cleanItem.clientHeight;
-            const _latestScrollTop = activedItem.offsetTop - cleanItemHeight;
+            const clearItem = el.querySelector(`.list-group-item.${!MULTI_SEL_VALID ? 'custom-select-multi__control-option-item--clear' : 'custom-select-multi__control-option-item--select-all'}`);
+            const clearItemHeight = clearItem === null ? 0 : clearItem.clientHeight;
+            const _latestScrollTop = activedItem.offsetTop - clearItemHeight;
             
             el.scrollTop = _latestScrollTop;
         }
@@ -1180,7 +1129,7 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
 
 
         if (MANUAL_REQ) {
-            // clean data
+            // clear data
             setOptionsData([]);
         } else {
             // restore data
@@ -1244,7 +1193,7 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
 
 
         if (MANUAL_REQ) {
-            // clean data
+            // clear data
             setOptionsData([]);
         } else {
             // restore data
@@ -1724,7 +1673,7 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
 
     }
 
-    function handleCleanValue(event?: any) {
+    function handleClearValue(event?: any) {
         if (typeof event !== 'undefined') {
             event.preventDefault();
             event.stopPropagation();  /* REQUIRED */
@@ -1927,7 +1876,7 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
 
 
             // Avoid selecting options that are disabled
-            const options = [].slice.call(listRef.current.querySelectorAll('.list-group-item:not(.hide):not(.custom-select-multi__control-option-item--select-all):not(.custom-select-multi__control-option-item--clean)'));
+            const options = [].slice.call(listRef.current.querySelectorAll('.list-group-item:not(.hide):not(.custom-select-multi__control-option-item--select-all):not(.custom-select-multi__control-option-item--clear)'));
             const currentIndex = options.findIndex((e) => e === listRef.current.querySelector('.list-group-item.active'));
 
 
@@ -2064,7 +2013,6 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
 
     useEffect(() => {
 
-
         // Call a function when the component has been rendered completely
         //--------------
         onLoad?.(selectInputRef.current, valueInputRef.current, finalRes(value));
@@ -2091,25 +2039,35 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
         // Forced assignment does not depend on "fetch" or "firstRequestAutoExe"
         // Don't use "value.value && value.label" directly, if it is empty, it will be treated as FALSE
         if (chkValueExist(value)) {
-            if (typeof value === 'object') { // Single selection
+            // ++++++++++++++++++++
+            // Single selection
+            // ++++++++++++++++++++
+            if (typeof value === 'object' && !Array.isArray(value)) {
                 if (typeof value.value !== 'undefined' && value.value !== null) setControlValue(value.value as string);
                 if (typeof value.label !== 'undefined' && value.label !== null) setControlLabel(formatIndentVal(value.label, INDENT_LAST_PLACEHOLDER));
             }
             
-            if ( typeof multiSelect?.data === 'object' && MULTI_SEL_VALID) {  // Multiple selection
-                if (chkValueExist(value) && multiSelect?.data !== null) {
+            // ++++++++++++++++++++
+            // Multiple selection
+            // ++++++++++++++++++++
+            if (MULTI_SEL_VALID) {
+                if (chkValueExist(value) && Array.isArray(value)) {
 
-                    // initialize default values of Multiple selection
-                    const _currentData: any = multiSelect?.data;
+                    const _currentData: OptionConfig[] = value;
+                    const _defaultValues = _currentData.map((v: OptionConfig) => v.value as string);
+                    const _defaultLabels = _currentData.map((v: OptionConfig) => v.label as string);
 
                     setControlArr({
-                        labels: _currentData.labels,
-                        values: _currentData.values,
+                        labels: _defaultLabels,
+                        values: _defaultValues,
                     });
                 }
             }
 
         } else {
+            // ++++++++++++++++++++
+            // Single selection & Multiple selection
+            // ++++++++++++++++++++
             if (!FIRST_REQUEST_AUTO) {
                 setControlValue('');
                 setControlLabel('');
@@ -2157,6 +2115,50 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
                }
             }
 
+
+            // Forced assignment does not depend on "fetch" or "firstRequestAutoExe"
+            // Don't use "value.value && value.label" directly, if it is empty, it will be treated as FALSE
+            if (chkValueExist(defaultValue)) {
+                // ++++++++++++++++++++
+                // Single selection
+                // ++++++++++++++++++++
+                if (typeof defaultValue === 'object' && !Array.isArray(defaultValue)) {
+                    if (typeof defaultValue.value !== 'undefined' && defaultValue.value !== null) setControlValue(defaultValue.value as string);
+                    if (typeof defaultValue.label !== 'undefined' && defaultValue.label !== null) setControlLabel(formatIndentVal(defaultValue.label, INDENT_LAST_PLACEHOLDER));
+                }
+
+                // ++++++++++++++++++++
+                // Multiple selection
+                // ++++++++++++++++++++
+                if (MULTI_SEL_VALID) {
+                    if (chkValueExist(defaultValue) && Array.isArray(defaultValue)) {
+
+                        const _currentData: OptionConfig[] = defaultValue;
+                        const _defaultValues = _currentData.map((v: OptionConfig) => v.value as string);
+                        const _defaultLabels = _currentData.map((v: OptionConfig) => v.label as string);
+
+                        setControlArr({
+                            labels: _defaultLabels,
+                            values: _defaultValues,
+                        });
+                    }
+                }
+
+            } else {
+                // ++++++++++++++++++++
+                // Single selection & Multiple selection
+                // ++++++++++++++++++++
+                if (!FIRST_REQUEST_AUTO) {
+                    setControlValue('');
+                    setControlLabel('');
+                    setControlArr({
+                        labels: [],
+                        values: []
+                    });
+                }
+            }
+
+
         }
 
     }, []);
@@ -2199,6 +2201,42 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
                 
             >
 
+
+                {/* CLEAR ICON */}
+                {CLEAR_ICON && ( 
+                    (!MULTI_SEL_VALID && controlValue) ||   // Single selection Control
+                    (MULTI_SEL_VALID && controlArr.values.length > 0 ) // Multiple selection Control
+                ) ? (
+                    <span className={`custom-select-clear-icon ${MANUAL_REQ ? 'pos-offset' : ''}`}>
+                        <button
+                            tabIndex={-1}
+                            type="button"
+                            onClick={(e: React.MouseEvent) => {
+                                e.preventDefault();
+                                e.stopPropagation();
+
+                                if (MULTI_SEL_VALID) {
+                                    updateOptionCheckboxes('remove');
+
+                                    onChange?.(
+                                        selectInputRef.current,
+                                        valueInputRef.current,
+                                        multipleSelectionCallback([], [])
+                                    );
+
+                                } else {
+                                    handleClearValue();
+                                }
+
+                            }}
+                        >
+                            <svg width="12px" height="12px" viewBox="0 0 1024 1024">
+                                <path fill="#000" d="M195.2 195.2a64 64 0 0 1 90.496 0L512 421.504 738.304 195.2a64 64 0 0 1 90.496 90.496L602.496 512 828.8 738.304a64 64 0 0 1-90.496 90.496L512 602.496 285.696 828.8a64 64 0 0 1-90.496-90.496L421.504 512 195.2 285.696a64 64 0 0 1 0-90.496z" />
+                            </svg>
+                        </button>
+                    </span>
+                ) : null}
+                {/* CLEAR ICON */}
 
 
                 {!MULTI_SEL_VALID ? <>
@@ -2251,8 +2289,6 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
                         />
 
                     </div>
-
-
                 </> : null}
 
                 {/* ========== RESULT CONTAINER ========== */}
@@ -2296,7 +2332,6 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
                 // ++++++++++++++++++++
                 */}
                 {!MULTI_SEL_VALID ? <div className="custom-select-single__inputplaceholder-wrapper">
-
 
                     {/* PLACEHOLDER */}
                     <div className="custom-select-single__inputplaceholder-inner" style={style}>
@@ -2386,9 +2421,7 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
                 // ++++++++++++++++++++
                 */}
                 {MULTI_SEL_VALID ? <div ref={rootMultiRef} className="custom-select-multi__inputplaceholder-wrapper">
-                
-
-        
+      
                     {/* PLACEHOLDER */}
                     <div className="custom-select-multi__inputplaceholder-inner">
                         <div style={MULTI_SEL_ENTIRE_AREA_TRIGGER ? {pointerEvents: 'auto', cursor: 'pointer'} : undefined} onClick={(e: React.MouseEvent) => {
@@ -2700,26 +2733,26 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
 
 
 
-                                    {/* CLEAN BUTTON (Only Single selection) */}
+                                    {/* CLEAR BUTTON (Only Single selection) */}
                                     {!MULTI_SEL_VALID ? <>
-                                        {CLEAN_TRIGGER_VALID ? <>
+                                        {CLEAR_TRIGGER_VALID ? <>
                                             <span
                                                 tabIndex={-1}
-                                                className="list-group-item list-group-item-action border-start-0 border-end-0 text-secondary bg-light custom-select-multi__control-option-item--clean position-sticky top-0 z-3"
+                                                className="list-group-item list-group-item-action border-start-0 border-end-0 text-secondary bg-light custom-select-multi__control-option-item--clear position-sticky top-0 z-3"
                                                 role="tab"
                                             >
                                                 <span
                                                     tabIndex={-1}
                                                     className="btn btn-secondary"
                                                     dangerouslySetInnerHTML={{
-                                                        __html: `${CLEAN_TRIGGER_LABEL}`
+                                                        __html: `${CLEAR_TRIGGER_LABEL}`
                                                     }}
-                                                    onClick={handleCleanValue}
+                                                    onClick={handleClearValue}
                                                 ></span>
                                             </span>
                                         </> : null}
                                     </> : null}
-                                    {/* /CLEAN BUTTON (Only Single selection) */}
+                                    {/* /CLEAR BUTTON (Only Single selection) */}
 
 
                                     {/* NO MATCH & LOADER */}

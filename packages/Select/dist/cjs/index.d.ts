@@ -1,10 +1,5 @@
 import React from 'react';
 export declare type SelectOptionChangeFnType = (arg1: any, arg2: any, arg3: any) => void;
-export interface MultiSelectDataConfig {
-    values: string[] | number[];
-    labels: string[] | number[];
-    queryStrings: string[] | number[];
-}
 export interface MultiSelectControlValConfig {
     values: string[];
     labels: string[];
@@ -24,16 +19,15 @@ export interface MultiSelectConfig {
     selectAll: boolean;
     selectAllLabel?: string;
     deselectAllLabel?: string;
-    data: MultiSelectDataConfig | null;
 }
 export interface multiSelectSelectedItemOnlyStatusConfig {
     itemsLabel?: string;
     allItemsLabel?: string;
     noneLabel?: string;
 }
-export interface CleanTriggerConfig {
+export interface ClearTriggerConfig {
     valid: boolean;
-    cleanValueLabel?: string;
+    clearValueLabel?: string;
 }
 export declare type SelectProps = {
     contentRef?: React.ForwardedRef<any>;
@@ -43,13 +37,14 @@ export declare type SelectProps = {
     controlExClassName?: string;
     optionsExClassName?: string;
     exceededSidePosOffset?: number;
+    clearIcon?: boolean;
     multiSelect?: MultiSelectConfig;
     multiSelectEntireAreaTrigger?: boolean;
     multiSelectSelectedItemOnlyStatus?: multiSelectSelectedItemOnlyStatusConfig;
     renderSelectedValue?: (selectedData: MultiSelectControlValConfig, removeFunc: (e: React.MouseEvent) => void) => React.ReactNode;
-    cleanTrigger?: CleanTriggerConfig;
-    defaultValue?: string | OptionConfig;
-    value?: string | OptionConfig;
+    clearTrigger?: ClearTriggerConfig;
+    defaultValue?: string | OptionConfig | OptionConfig[];
+    value?: string | OptionConfig | OptionConfig[];
     label?: React.ReactNode | string;
     name?: string;
     disabled?: any;
@@ -66,7 +61,6 @@ export declare type SelectProps = {
     controlArrow?: React.ReactNode;
     firstRequestAutoExec?: boolean;
     fetchTrigger?: boolean;
-    fetchTriggerForDefaultData?: MultiSelectDataConfig | null;
     /** Set the depth value of the control to control the display of the pop-up layer appear above.
      * Please set it when multiple controls are used at the same time. */
     depth?: number;

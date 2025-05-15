@@ -1336,12 +1336,21 @@ export default () => {
 ```
 
 
+## FAQ
 
-## Safe Asynchronous Example
+State changes in the page, causing other `<Table />` components to re-render and value to reset.
 
-When a `useState()` in a child component changes state, it will cause the entire parent component to re-render.
+### Solution:
 
-At this time, we need to use `useMemo()` to wrap this subcomponent to avoid problems caused when the child component triggers a method of `useState()` of the parent component.
+> The `data` property of the controlled component must be **stable references** so that the initial values ​​are not reset due to re-rendering caused by changes in the state (using `useState()`) of the page.
+
+
+### Example:
+
+
+**👍 Good**
+
+Use `useMemo()` to return the entire component
 
 
 ```js
@@ -1458,7 +1467,6 @@ export default () => {
     );
 }
 ```
-
 
 
 

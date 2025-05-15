@@ -9,6 +9,8 @@
   --cus-sel-control-wrapper-bg: #fff;
   --cus-sel-control-wrapper-border-color: #dee2e6;
   --cus-sel-control-list-bg: #efefef;
+  --cus-sel-clear-fill: #a5a5a5;
+  --cus-sel-clear-hover-fill: #000;
   --cus-sel-arrow-fill: #a5a5a5;
   --cus-sel-searchbtn-fill: #a5a5a5;
   --cus-sel-searchbtn-hover-fill: #333;
@@ -17,7 +19,8 @@
   position: relative; /* Required */
   /*------ Placeholder for input ------*/
   /*------ Arrow ------*/
-  /*------ Clean ------*/
+  /*------ Clear Icon ------*/
+  /*------ Clear Trigger ------*/
   /*------ Input ------*/
   /*------ Arrow ------*/
   /*------ Blinking cursor ------*/
@@ -33,7 +36,32 @@
 .custom-select__wrapper .arrow svg .arrow-fill-g {
   fill: var(--cus-sel-arrow-fill);
 }
-.custom-select__wrapper .clean svg .clean-fill-g {
+.custom-select__wrapper .custom-select-clear-icon {
+  position: absolute;
+  top: 50%;
+  transform: rotate(0deg) translateY(-50%);
+  transform-origin: top;
+  right: 1.5rem;
+  z-index: 2;
+  pointer-events: all;
+}
+.custom-select__wrapper .custom-select-clear-icon button {
+  border: none;
+  box-shadow: none;
+  margin: 0;
+  padding: 0;
+  background: none;
+}
+.custom-select__wrapper .custom-select-clear-icon.pos-offset {
+  right: 2.25rem;
+}
+.custom-select__wrapper .custom-select-clear-icon svg path {
+  fill: var(--cus-sel-clear-fill);
+}
+.custom-select__wrapper .custom-select-clear-icon:hover svg path {
+  fill: var(--cus-sel-clear-hover-fill);
+}
+.custom-select__wrapper .clear svg .clear-fill-g {
   fill: var(--cus-sel-arrow-fill);
 }
 .custom-select__wrapper [data-select]:focus {
@@ -392,10 +420,10 @@
   font-size: 0.75rem;
   padding: 0.1rem 0.5rem;
 }
-.custom-select__options-wrapper .custom-select-multi__control-option-item--clean.hide {
+.custom-select__options-wrapper .custom-select-multi__control-option-item--clear.hide {
   display: none !important;
 }
-.custom-select__options-wrapper .custom-select-multi__control-option-item--clean .btn {
+.custom-select__options-wrapper .custom-select-multi__control-option-item--clear .btn {
   font-size: 0.75rem;
   padding: 0.1rem 0.5rem;
 }

@@ -527,14 +527,21 @@ export default () => {
 
 
 
+## FAQ
+
+State changes in the page, causing other `<Radio />` components to re-render and value to reset.
+
+### Solution:
+
+> The `value` and `options` properties of the controlled component must be **stable references** so that the initial values ​​are not reset due to re-rendering caused by changes in the state (using `useState()`) of the page.
 
 
-## Safe Asynchronous Example
+### Example:
 
-When a `useState()` in a child component changes state, it will cause the entire parent component to re-render, resulting in invalidation such as **checkbox**.
 
-At this time, we need to use `useMemo()` to wrap this subcomponent to avoid problems caused when the child component triggers a method of `useState()` of the parent component.
+**👍 Good**
 
+Use `useMemo()` to return the entire component
 
 
 ```js
@@ -581,10 +588,7 @@ export default () => {
         </>
     );
 }
-
 ```
-
-
 
 
 
@@ -863,7 +867,7 @@ export default () => {
                 if (conRef.current) conRef.current.clear(() => {
                     setUserContent('')
                 });
-            }}>Clean</a>
+            }}>Clear</a>
             &nbsp;&nbsp;|&nbsp;&nbsp;
             <a href="#" onClick={(e: React.MouseEvent) => {
                 e.preventDefault();
@@ -992,7 +996,7 @@ import Radio from 'funda-ui/Radio';
 | `tableLayoutCellClassName` | string | - | The class name of HTML tag `<td>`. <blockquote>It is valid when `tableLayout` is "true"</blockquote> | - |
 | `inline` | boolean | false| If true the group checkboxes or radios are on the same horizontal row. | - |
 | `options` | JSON Object Literals \| JSON Object | - | Set the default value using JSON string format for menu of options, like this: `[{"label": "Option 1","value": "value-1"},{"label": "<del style=color:red>deprecate</del>Option 2","value": "value-2"},{"label": "Option 3","value": "value-3","customAttr1": "attr1","customAttr2": "attr2"}]`<blockquote>Note: Use API data if database query exists. That is, the attribute `fetch<METHOD_NAME>`</blockquote> <br /><blockquote>The label string supports html tags</blockquote>| - |
-| `defaultValue` | string \| JSON Object | - | Specifies the default value. Use when the component is not controlled. It does not re-render the component because the incoming value changes. <blockquote>You can specify an object as the default. such as `{"label":"Option 0","value":"value-0","queryString":""}`</blockquote> | - |
+| `defaultValue` | string \| JSON Object | - | Specifies the default value. Use when the component is not controlled. It does not re-render the component because the incoming value changes. | - |
 | `value` | string \| JSON Object | - | Set a default value for this control. <blockquote>You can specify an object as the default. such as `{"label":"Option 0","value":"value-0","queryString":""}`</blockquote> | - |
 | `label` | string \| ReactNode | - | It is used to specify a label for an element of a form.<blockquote>Support html tags</blockquote> | - |
 | `name` | string | - | Name is not deprecated when used with form fields. | - |

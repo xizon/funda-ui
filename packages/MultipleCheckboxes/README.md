@@ -142,12 +142,22 @@ export default () => {
 }
 ```
 
-## Safe Asynchronous Example
 
-When a `useState()` in a child component changes state, it will cause the entire parent component to re-render, resulting in invalidation such as **checkbox**.
+## FAQ
 
-At this time, we need to use `useMemo()` to wrap this subcomponent to avoid problems caused when the child component triggers a method of `useState()` of the parent component.
+State changes in the page, causing other `<MultipleCheckboxes />` components to re-render and value to reset.
 
+### Solution:
+
+> The `value` and `options` properties of the controlled component must be **stable references** so that the initial values ​​are not reset due to re-rendering caused by changes in the state (using `useState()`) of the page.
+
+
+### Example:
+
+
+**👍 Good**
+
+Use `useMemo()` to return the entire component
 
 
 ```js
@@ -195,7 +205,6 @@ export default () => {
         </>
     );
 }
-
 ```
 
 
@@ -829,7 +838,7 @@ export default () => {
                 if (conRef.current) conRef.current.clear(() => {
                     setUserContent('')
                 });
-            }}>Clean</a>
+            }}>Clear</a>
             &nbsp;&nbsp;|&nbsp;&nbsp;
             <a href="#" onClick={(e: React.MouseEvent) => {
                 e.preventDefault();

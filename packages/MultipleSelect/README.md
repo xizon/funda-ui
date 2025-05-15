@@ -8,7 +8,7 @@
 
 If **useState** is used, dragging and sorting will not work:
 
- - a) use **useMemo** to solve this problem, refer to [Safe Asynchronous Example](#safe-asynchronous-example)
+ - a) use **useMemo** to solve this problem, refer to [FAQ](#faq)
  - b) Or add the property `unattachedSelect` to support right-side dragging without being affected by **useState**, refer to [Unattached Selected Options](#unattached-selected-options)
 
 
@@ -761,14 +761,21 @@ export default () => {
 ```
 
 
+## FAQ
+
+State changes in the page, causing other `<MultipleSelect />` components to re-render and value to reset.
+
+### Solution:
+
+> The `value` and `options` properties of the controlled component must be **stable references** so that the initial values ​​are not reset due to re-rendering caused by changes in the state (using `useState()`) of the page.
 
 
-## Safe Asynchronous Example
+### Example:
 
-When a `useState()` in a child component changes state, it will cause the entire parent component to re-render, resulting in invalidation such as **checkbox**.
 
-At this time, we need to use `useMemo()` to wrap this subcomponent to avoid problems caused when the child component triggers a method of `useState()` of the parent component.
+**👍 Good**
 
+Use `useMemo()` to return the entire component
 
 
 ```js
@@ -827,10 +834,7 @@ export default () => {
         </>
     );
 }
-
 ```
-
-
 
 
 ## Implement the option to save other data
