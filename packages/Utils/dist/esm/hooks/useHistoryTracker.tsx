@@ -1,16 +1,18 @@
 /**
  * History Tracker
+ * @since 20250515
  * 
  * @usage:
 
 const App = () => {
     const { 
-        history, 
-        forwardHistory,
-        currentUrl, 
-        firstUrl, 
+        getReady,
         clearHistory,
-        goBack
+        goBack,
+        getFirstUrl,
+        getCurrentUrl,
+        getForwardHistory,
+        getHistory,
     } = useHistoryTracker({
         onChange: ({ 
             isReady,
@@ -41,32 +43,50 @@ const App = () => {
         }
     });
 
+    // useEffect(() => {
+    //     console.log(getReady(), getFirstUrl(), getCurrentUrl(), getForwardHistory(), getHistory());
+    // }, [getReady, getFirstUrl, getCurrentUrl]);
+
+  
+    // useEffect(() => {
+    //     setTimeout(async () => {
+    //         console.log('--> clean history within 2m');
+    //         await clearHistory();
+    //     }, 2000);
+    // }, []);
+
+  
     return (
         <div>
 
             <div>
+                <h3>isReady:</h3>
+                <p>{String(getReady())}</p>
+            </div>
+
+            <div>
                 <h3>First URL:</h3>
-                <p>{firstUrl}</p>
+                <p>{getFirstUrl()}</p>
             </div>
 
             <div>
                 <h3>Current URL:</h3>
-                <p>{currentUrl}</p>
+                <p>{getCurrentUrl()}</p>
             </div>
 
             <div>
-                <h3>History ({history.length}):</h3>
+                <h3>History ({getHistory().length}):</h3>
                 <ul>
-                    {history.map((url, index) => (
+                    {getHistory().map((url, index) => (
                         <li key={index}>{url}</li>
                     ))}
                 </ul>
             </div>
 
             <div>
-                <h3>Forward History ({forwardHistory.length}):</h3>
+                <h3>Forward History ({getForwardHistory().length}):</h3>
                 <ul>
-                    {forwardHistory.map((url, index) => (
+                    {getForwardHistory().map((url, index) => (
                         <li key={index}>{url}</li>
                     ))}
                 </ul>
@@ -116,42 +136,65 @@ const App = () => {
 };
 
  */
+
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 
-export type UseHistoryTrackerChangeFnType = (args: {
+export interface HistoryTrackerChange {
     isReady: boolean;
     history: string[];
-    forwardHistory: string[],
+    forwardHistory: string[];
     currentUrl: string;
     firstUrl: string;
     canGoBack: boolean;
     canGoForward: boolean;
-}) => void;
+}
 
+export interface UseHistoryTrackerProps {
+    onChange?: (data: HistoryTrackerChange) => void;
+}
 
-export type UseHistoryTrackerProps = {
-    onChange?: UseHistoryTrackerChangeFnType | null;
-};
+export interface UseHistoryTrackerReturn {
+    getReady: () => boolean;
+    getHistory: () => string[];
+    getForwardHistory: () => string[];
+    getCurrentUrl: () => string;
+    getFirstUrl: () => string;
+    clearHistory: () => Promise<HistoryTrackerChange>;
+    goToHistory: (index: number) => void;
+    goBack: () => Promise<HistoryTrackerChange>;
+    goForward: () => Promise<HistoryTrackerChange>;
+    canGoBack: () => boolean;
+    canGoForward: () => boolean;
+    addHistoryToFirst: (url: string) => Promise<HistoryTrackerChange>;
+}
 
 // Create a secure version of useLayoutEffect that is downgraded to useEffect when SSR
 const useIsomorphicLayoutEffect = typeof window !== 'undefined' ? useLayoutEffect : useEffect;
 
-const useHistoryTracker = (props: UseHistoryTrackerProps) => {
+const useHistoryTracker = (props: UseHistoryTrackerProps): UseHistoryTrackerReturn => {
     const {
         onChange
     } = props;
 
-    const [isReady, setIsReady] = useState<boolean>(false);
+    const [isReady, setIsReady] = useState(false);
     const historyRef = useRef<string[]>([]);
     const forwardHistoryRef = useRef<string[]>([]);
     const firstUrlRef = useRef<string>('');
     const [currentUrl, setCurrentUrl] = useState<string>('');
     
-    const initialize = useCallback(() => {
+    const canGoBack = useCallback(() => {
+        return historyRef.current.length > 1;
+    }, []);
+
+    const canGoForward = useCallback(() => {
+        return forwardHistoryRef.current.length > 0;
+    }, []);
+
+    const initialize = useCallback((ready = false) => {
         if (typeof window === 'undefined') return;
         
-        const currentLocation = window.location.href as string;
-        
+        const currentLocation = window.location.href;
+
         // If the history is empty, set the first record
         if (historyRef.current.length === 0) {
             firstUrlRef.current = currentLocation;
@@ -159,44 +202,23 @@ const useHistoryTracker = (props: UseHistoryTrackerProps) => {
             setCurrentUrl(currentLocation);
 
             onChange?.({
-                isReady: false,
+                isReady: ready,
                 history: [currentLocation],
                 forwardHistory: [],
                 currentUrl: currentLocation,
                 firstUrl: currentLocation,
                 canGoBack: false,
-                canGoForward: false
+                canGoForward: false,
             });
 
         }
         
         setIsReady(true);
-    }, []);
+    }, [onChange]);
 
     useIsomorphicLayoutEffect(() => {
         initialize();
     }, [initialize]);
-
-
-    const clearHistory = useCallback(() => {
-        if (typeof window === 'undefined') return;
-    
-        historyRef.current = [];
-        forwardHistoryRef.current = [];
-        firstUrlRef.current = '';
-        setCurrentUrl('');
-        
-        onChange?.({
-            isReady: true,
-            history: [],
-            forwardHistory: [],
-            currentUrl: '',
-            firstUrl: '',
-            canGoBack: false,
-            canGoForward: false
-
-        });
-    }, [onChange]); // only "onChange"
 
     const goToHistory = useCallback((index: number) => {
         if (typeof window === 'undefined') return;
@@ -208,20 +230,22 @@ const useHistoryTracker = (props: UseHistoryTrackerProps) => {
         }
     }, []);
 
-    const goBack = useCallback(() => {
+    const goBack = useCallback((): Promise<HistoryTrackerChange> => {
         if (typeof window === 'undefined') return Promise.reject('Window is undefined');
-        if (historyRef.current.length <= 1) return Promise.reject('Cannot go back');
+        if (historyRef.current.length <= 1) return Promise.reject('History does not meet the criteria (total records are less than 2), cannot go back');
         
         return new Promise((resolve) => {
             // Moves the current URL into the forward history
-            const removedUrl = historyRef.current.pop() as string;
-            forwardHistoryRef.current.push(removedUrl);
+            const removedUrl = historyRef.current.pop();
+            if (removedUrl) {
+                forwardHistoryRef.current.push(removedUrl);
+            }
             
             const newCurrentUrl = historyRef.current[historyRef.current.length - 1];
             setCurrentUrl(newCurrentUrl);
     
             // Create initial data object
-            const data = {
+            const data: HistoryTrackerChange = {
                 isReady: true,
                 history: [...historyRef.current],
                 forwardHistory: [...forwardHistoryRef.current],
@@ -240,7 +264,7 @@ const useHistoryTracker = (props: UseHistoryTrackerProps) => {
                 window.removeEventListener('popstate', handlePopState);
                 
                 // Get the final data after URL has changed
-                const finalData = {
+                const finalData: HistoryTrackerChange = {
                     isReady: true,
                     history: [...historyRef.current],
                     forwardHistory: [...forwardHistoryRef.current],
@@ -259,24 +283,26 @@ const useHistoryTracker = (props: UseHistoryTrackerProps) => {
             // Trigger the navigation
             window.history.go(-1);
         });
-    }, [onChange]);
+    }, [onChange, canGoBack, canGoForward]);
     
-    const goForward = useCallback(() => {
+    const goForward = useCallback((): Promise<HistoryTrackerChange> => {
         if (typeof window === 'undefined') return Promise.reject('Window is undefined');
-        if (forwardHistoryRef.current.length === 0) return Promise.reject('Cannot go forward');
+        if (forwardHistoryRef.current.length === 0) return Promise.reject('Forward history does not meet the criteria (total 0 records), cannot go forward');
         
         return new Promise((resolve) => {
             // Take the URL from the forward history and add it to the main history
-            const nextUrl = forwardHistoryRef.current.pop() as string;
-            historyRef.current.push(nextUrl);
-            setCurrentUrl(nextUrl);
+            const nextUrl = forwardHistoryRef.current.pop();
+            if (nextUrl) {
+                historyRef.current.push(nextUrl);
+                setCurrentUrl(nextUrl);
+            }
             
             // Create initial data object
-            const data = {
+            const data: HistoryTrackerChange = {
                 isReady: true,
                 history: [...historyRef.current],
                 forwardHistory: [...forwardHistoryRef.current],
-                currentUrl: nextUrl,
+                currentUrl: nextUrl || '',
                 firstUrl: firstUrlRef.current,
                 canGoBack: canGoBack(),
                 canGoForward: canGoForward()
@@ -290,7 +316,7 @@ const useHistoryTracker = (props: UseHistoryTrackerProps) => {
                 window.removeEventListener('popstate', handlePopState);
                 
                 // Get the final data after URL has changed
-                const finalData = {
+                const finalData: HistoryTrackerChange = {
                     isReady: true,
                     history: [...historyRef.current],
                     forwardHistory: [...forwardHistoryRef.current],
@@ -309,22 +335,13 @@ const useHistoryTracker = (props: UseHistoryTrackerProps) => {
             // Trigger the navigation
             window.history.go(1);
         });
-    }, [onChange]);
-
-    const canGoBack = useCallback(() => {
-        return historyRef.current.length > 1;
-    }, []);
-
-    const canGoForward = useCallback(() => {
-        return forwardHistoryRef.current.length > 0;
-    }, []);
-
+    }, [onChange, canGoBack, canGoForward]);
 
     const handleUrlChange = useCallback(() => {
         if (typeof window === 'undefined') return;
 
         const newUrl = window.location.href;
-        
+
         // If the history is empty, set to the first URL
         if (historyRef.current.length === 0) {
             firstUrlRef.current = newUrl;
@@ -348,8 +365,86 @@ const useHistoryTracker = (props: UseHistoryTrackerProps) => {
                 canGoForward: canGoForward()
             });
         }
-    }, [onChange]); // only "onChange"
+    }, [onChange, canGoBack, canGoForward]); // only "onChange"
 
+    const getFirstUrl = useCallback((): string => {
+        return firstUrlRef.current;
+    }, []);
+
+    const getCurrentUrl = useCallback((): string => {
+        return currentUrl;
+    }, [currentUrl]);
+    
+    const getForwardHistory = useCallback((): string[] => {
+        return forwardHistoryRef.current;
+    }, []);
+    
+    const getHistory = useCallback((): string[] => {
+        return historyRef.current;
+    }, []);
+
+    const getReady = useCallback((): boolean => {
+        return isReady;
+    }, [isReady]);
+
+    const addHistoryToFirst = useCallback(async (url: string): Promise<HistoryTrackerChange> => {
+        if (typeof window === 'undefined') return Promise.reject('Window is undefined');
+        if (!url) return Promise.reject('URL does not exist');
+
+        return new Promise((resolve) => {
+            if (historyRef.current.length === 0) {
+                firstUrlRef.current = url;
+                historyRef.current = [url];
+                setCurrentUrl(url);
+            } else {
+                // Insert at the front
+                historyRef.current = [url, ...historyRef.current];
+                firstUrlRef.current = url;
+            }
+
+            const result: HistoryTrackerChange = {
+                isReady: true,
+                history: [...historyRef.current],
+                forwardHistory: [...forwardHistoryRef.current],
+                currentUrl: currentUrl || url,
+                firstUrl: firstUrlRef.current,
+                canGoBack: canGoBack(),
+                canGoForward: canGoForward()
+            };
+
+            onChange?.(result);
+            resolve(result);
+        });
+    }, [onChange, currentUrl, canGoBack, canGoForward]);
+
+    const clearHistory = useCallback(async (): Promise<HistoryTrackerChange> => {
+        if (typeof window === 'undefined') return Promise.reject('Window is undefined');
+
+        return new Promise((resolve) => {
+            historyRef.current = [];
+            forwardHistoryRef.current = [];
+            firstUrlRef.current = '';
+            setCurrentUrl('');
+
+            const result: HistoryTrackerChange = {
+                isReady: true,
+                history: [],
+                forwardHistory: [],
+                currentUrl: '',
+                firstUrl: '',
+                canGoBack: false,
+                canGoForward: false
+            };
+            onChange?.(result);
+
+            // After clearHistory(), immediately take the current url as the first history
+            // !!!Fixed: "There is still only 1 record of goBack(), and there is no cumulative forward record"
+            setTimeout(() => {
+                initialize(true);
+                resolve(result);
+            }, 0);
+        });
+    }, [onChange, initialize]);
 
     useEffect(() => {
         if (typeof window === 'undefined') return;
@@ -360,6 +455,20 @@ const useHistoryTracker = (props: UseHistoryTrackerProps) => {
         // Listen for hashchange events
         window.addEventListener('hashchange', handleUrlChange);
 
+        // !!!Fixed: "Reinitialize the history, but this will not cause the URL to change either"
+        // hijack pushState/replaceState
+        const rawPushState = window.history.pushState;
+        const rawReplaceState = window.history.replaceState;
+
+        window.history.pushState = function (...args) {
+            rawPushState.apply(this, args);
+            handleUrlChange();
+        };
+        window.history.replaceState = function (...args) {
+            rawReplaceState.apply(this, args);
+            handleUrlChange();
+        };
+
         // Listen for DOM and property changes
         const observer = new MutationObserver((mutations) => {
             mutations.forEach((mutation) => {
@@ -369,7 +478,6 @@ const useHistoryTracker = (props: UseHistoryTrackerProps) => {
             });
         });
 
-    
         observer.observe(document.body, {
             childList: true, // monitor the addition and deletion of child nodes
             subtree: true, // monitor all descendant nodes
@@ -380,23 +488,25 @@ const useHistoryTracker = (props: UseHistoryTrackerProps) => {
         return () => {
             window.removeEventListener('popstate', handleUrlChange);
             window.removeEventListener('hashchange', handleUrlChange);
+            window.history.pushState = rawPushState;
+            window.history.replaceState = rawReplaceState;
             observer.disconnect();
         };
     }, [handleUrlChange]);
 
-
     return {
-        isReady,
-        history: historyRef.current,
-        forwardHistory: forwardHistoryRef.current,
-        currentUrl,
-        firstUrl: firstUrlRef.current,
+        getReady,
+        getHistory,
+        getForwardHistory,
+        getCurrentUrl,
+        getFirstUrl,
         clearHistory,
         goToHistory,
         goBack,
         goForward,
         canGoBack,
-        canGoForward
+        canGoForward,
+        addHistoryToFirst
     };
 };
 
