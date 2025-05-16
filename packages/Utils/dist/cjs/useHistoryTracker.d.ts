@@ -162,5 +162,5 @@ export interface UseHistoryTrackerReturn {
     canGoForward: () => boolean;
     addHistoryToFirst: (url: string) => Promise<HistoryTrackerChange>;
 }
-declare const useHistoryTracker: (props: UseHistoryTrackerProps) => UseHistoryTrackerReturn;
+declare const useHistoryTracker: (props?: UseHistoryTrackerProps) => UseHistoryTrackerReturn;
 export default useHistoryTracker;

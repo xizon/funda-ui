@@ -171,26 +171,26 @@ export interface UseHistoryTrackerReturn {
 // Create a secure version of useLayoutEffect that is downgraded to useEffect when SSR
 const useIsomorphicLayoutEffect = typeof window !== 'undefined' ? useLayoutEffect : useEffect;
 
-const useHistoryTracker = (props: UseHistoryTrackerProps): UseHistoryTrackerReturn => {
+const useHistoryTracker = (props?: UseHistoryTrackerProps): UseHistoryTrackerReturn => {
     const {
         onChange
-    } = props;
+    } = props || {};
 
-    const [isReady, setIsReady] = useState(false);
+    const [isReady, setIsReady] = useState<boolean>(false);
     const historyRef = useRef<string[]>([]);
     const forwardHistoryRef = useRef<string[]>([]);
     const firstUrlRef = useRef<string>('');
     const [currentUrl, setCurrentUrl] = useState<string>('');
-    
-    const canGoBack = useCallback(() => {
+
+    const canGoBack = useCallback((): boolean => {
         return historyRef.current.length > 1;
     }, []);
 
-    const canGoForward = useCallback(() => {
+    const canGoForward = useCallback((): boolean => {
         return forwardHistoryRef.current.length > 0;
     }, []);
 
-    const initialize = useCallback((ready = false) => {
+    const initialize = useCallback((ready: boolean = false): void => {
         if (typeof window === 'undefined') return;
         
         const currentLocation = window.location.href;
@@ -201,7 +201,7 @@ const useHistoryTracker = (props: UseHistoryTrackerProps): UseHistoryTrackerRetu
             historyRef.current = [currentLocation];
             setCurrentUrl(currentLocation);
 
-            onChange?.({
+            onChange && onChange({
                 isReady: ready,
                 history: [currentLocation],
                 forwardHistory: [],
@@ -220,7 +220,7 @@ const useHistoryTracker = (props: UseHistoryTrackerProps): UseHistoryTrackerRetu
         initialize();
     }, [initialize]);
 
-    const goToHistory = useCallback((index: number) => {
+    const goToHistory = useCallback((index: number): void => {
         if (typeof window === 'undefined') return;
         if (index < 0 || index >= historyRef.current.length) return;
         
@@ -240,7 +240,6 @@ const useHistoryTracker = (props: UseHistoryTrackerProps): UseHistoryTrackerRetu
             if (removedUrl) {
                 forwardHistoryRef.current.push(removedUrl);
             }
-            
             const newCurrentUrl = historyRef.current[historyRef.current.length - 1];
             setCurrentUrl(newCurrentUrl);
     
@@ -256,7 +255,7 @@ const useHistoryTracker = (props: UseHistoryTrackerProps): UseHistoryTrackerRetu
             };
             
             // Notify about the history change
-            onChange?.(data);
+            onChange && onChange(data);
             
             // Create one-time listener for popstate
             const handlePopState = () => {
@@ -308,7 +307,7 @@ const useHistoryTracker = (props: UseHistoryTrackerProps): UseHistoryTrackerRetu
                 canGoForward: canGoForward()
             };
             
-            onChange?.(data);
+            onChange && onChange(data);
             
             // Create one-time listener for popstate
             const handlePopState = () => {
@@ -337,35 +336,63 @@ const useHistoryTracker = (props: UseHistoryTrackerProps): UseHistoryTrackerRetu
         });
     }, [onChange, canGoBack, canGoForward]);
 
-    const handleUrlChange = useCallback(() => {
+    const handleUrlChange = useCallback((): void => {
         if (typeof window === 'undefined') return;
 
         const newUrl = window.location.href;
 
-        // If the history is empty, set to the first URL
+        // If the history is empty, set the first record
         if (historyRef.current.length === 0) {
             firstUrlRef.current = newUrl;
         }
         
-        // Avoid recording the same URL
-        if (historyRef.current[historyRef.current.length - 1] !== newUrl) {
+        // Check whether it is back
+        const isBackOperation = historyRef.current.length > 1 && 
+            historyRef.current[historyRef.current.length - 2] === newUrl;
+        
+        // Check whether it is forward
+        const isForwardOperation = forwardHistoryRef.current.length > 0 && 
+            forwardHistoryRef.current[forwardHistoryRef.current.length - 1] === newUrl;
+
+        if (isBackOperation) {
+            // If it is a rollback, remove the last URL and add it to forwardHistory
+            const removedUrl = historyRef.current.pop();
+            if (removedUrl) {
+                forwardHistoryRef.current.push(removedUrl);
+            }
+        } else if (isForwardOperation) {
+            // If it is a forward operation, take out the URL from forwardHistory and add it to history
+            const nextUrl = forwardHistoryRef.current.pop();
+            if (nextUrl) {
+                historyRef.current.push(nextUrl);
+            }
+        } else if (historyRef.current[historyRef.current.length - 1] !== newUrl) {
+            // If it's a new navigation, add to history and clear forwardHistory
             historyRef.current.push(newUrl);
-            
-            // Clear the advance history, as new navigation invalidates the advance history
             forwardHistoryRef.current = [];
-            setCurrentUrl(newUrl);
-            
-            onChange?.({
-                isReady: true,
-                history: [...historyRef.current],
-                forwardHistory: [...forwardHistoryRef.current],
-                currentUrl: newUrl,
-                firstUrl: firstUrlRef.current || newUrl, // Make sure there is always a value
-                canGoBack: canGoBack(),
-                canGoForward: canGoForward()
-            });
         }
-    }, [onChange, canGoBack, canGoForward]); // only "onChange"
+        
+        setCurrentUrl(newUrl);
+        
+        onChange && onChange({
+            isReady: true,
+            history: [...historyRef.current],
+            forwardHistory: [...forwardHistoryRef.current],
+            currentUrl: newUrl,
+            firstUrl: firstUrlRef.current || newUrl,
+            canGoBack: canGoBack(),
+            canGoForward: canGoForward()
+        });
+    }, [onChange, canGoBack, canGoForward]);
+
+    // Create a wrapper for history methods
+    const createHistoryWrapper = useCallback(<T extends (...args: any[]) => any>(originalMethod: T): T => {
+        return function(this: History, ...args: Parameters<T>): ReturnType<T> {
+            const result = originalMethod.apply(this, args);
+            handleUrlChange();
+            return result;
+        } as T;
+    }, [handleUrlChange]);
 
     const getFirstUrl = useCallback((): string => {
         return firstUrlRef.current;
@@ -412,7 +439,7 @@ const useHistoryTracker = (props: UseHistoryTrackerProps): UseHistoryTrackerRetu
                 canGoForward: canGoForward()
             };
 
-            onChange?.(result);
+            onChange && onChange(result);
             resolve(result);
         });
     }, [onChange, currentUrl, canGoBack, canGoForward]);
@@ -435,7 +462,7 @@ const useHistoryTracker = (props: UseHistoryTrackerProps): UseHistoryTrackerRetu
                 canGoBack: false,
                 canGoForward: false
             };
-            onChange?.(result);
+            onChange && onChange(result);
 
             // After clearHistory(), immediately take the current url as the first history
             // !!!Fixed: "There is still only 1 record of goBack(), and there is no cumulative forward record"
@@ -456,43 +483,57 @@ const useHistoryTracker = (props: UseHistoryTrackerProps): UseHistoryTrackerRetu
         window.addEventListener('hashchange', handleUrlChange);
 
         // !!!Fixed: "Reinitialize the history, but this will not cause the URL to change either"
-        // hijack pushState/replaceState
-        const rawPushState = window.history.pushState;
-        const rawReplaceState = window.history.replaceState;
 
-        window.history.pushState = function (...args) {
-            rawPushState.apply(this, args);
-            handleUrlChange();
-        };
-        window.history.replaceState = function (...args) {
-            rawReplaceState.apply(this, args);
-            handleUrlChange();
-        };
+        // Store original methods (Just save the reference, don't modify the global)
+        const originalPushState = window.history.pushState.bind(window.history);
+        const originalReplaceState = window.history.replaceState.bind(window.history);
+        const originalGo = window.history.go.bind(window.history);
 
-        // Listen for DOM and property changes
-        const observer = new MutationObserver((mutations) => {
-            mutations.forEach((mutation) => {
-                if (mutation.type === 'childList' || mutation.type === 'attributes') {
-                    handleUrlChange();
+        // Create wrapped versions of history methods
+        const wrappedPushState = createHistoryWrapper(originalPushState);
+        const wrappedReplaceState = createHistoryWrapper(originalReplaceState);
+        const wrappedGo = createHistoryWrapper(originalGo);
+
+        // Create a proxy for history object
+        const historyProxy = new Proxy(window.history, {
+            get: function(target, prop) {
+                if (prop === 'pushState') {
+                    return wrappedPushState;
                 }
-            });
+                if (prop === 'replaceState') {
+                    return wrappedReplaceState;
+                }
+                if (prop === 'go') {
+                    return wrappedGo;
+                }
+                return target[prop];
+            }
         });
 
-        observer.observe(document.body, {
-            childList: true, // monitor the addition and deletion of child nodes
-            subtree: true, // monitor all descendant nodes
-            attributes: true, // monitor attribute changes
-            attributeFilter: ['href'] // only monitor changes in the href attribute
+        // Replace window.history with our proxy
+        Object.defineProperty(window, 'history', {
+            value: historyProxy,
+            writable: true,
+            configurable: true
         });
 
         return () => {
             window.removeEventListener('popstate', handleUrlChange);
             window.removeEventListener('hashchange', handleUrlChange);
-            window.history.pushState = rawPushState;
-            window.history.replaceState = rawReplaceState;
-            observer.disconnect();
+            
+            // Restore original history methods
+            Object.defineProperty(window, 'history', {
+                value: {
+                    ...window.history,
+                    pushState: originalPushState,
+                    replaceState: originalReplaceState,
+                    go: originalGo
+                },
+                writable: true,
+                configurable: true
+            });
         };
-    }, [handleUrlChange]);
+    }, [handleUrlChange, createHistoryWrapper]);
 
     return {
         getReady,
