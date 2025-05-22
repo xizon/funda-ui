@@ -496,7 +496,7 @@ const useHistoryTracker = (props?: UseHistoryTrackerProps): UseHistoryTrackerRet
 
         // Create a proxy for history object
         const historyProxy = new Proxy(window.history, {
-            get: function(target, prop) {
+            get: function(target: History, prop: string | symbol) {
                 if (prop === 'pushState') {
                     return wrappedPushState;
                 }
@@ -506,7 +506,7 @@ const useHistoryTracker = (props?: UseHistoryTrackerProps): UseHistoryTrackerRet
                 if (prop === 'go') {
                     return wrappedGo;
                 }
-                return target[prop];
+                return target[prop as keyof History];
             }
         });
 

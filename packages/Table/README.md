@@ -338,6 +338,149 @@ Or using `nowrap` in \<TableCell \/\> in \<TableHead \/\> can also prevent text 
 
 
 
+
+## Header Group 
+
+
+```js
+import React from "react";
+import {
+    Table,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableRow,
+} from 'funda-ui/Table';
+
+// component styles
+import 'funda-ui/Table/index.css';
+
+
+export default () => {
+    const data = [
+        {
+            designation: "Salary 1",
+            headOffice: [246, 38.80, 0.16, 245, 35.04, 0.14, 208, 32.22, 0.15],
+        },
+        {
+            designation: "Salary 2",
+            headOffice: [286, 41.80, 0.22, 235, 32.04, 0.11, 238, 35.22, 0.17],
+        }
+    ];
+    return (
+        <>
+            
+            <Table tableClassName="table table-bordered table-striped align-middle">
+                <TableHead>
+                    {/* First row: Large grouping */}
+                    <TableRow>
+                        <TableCell rowSpan={2} className="bg-dark text-light" nowrap>Designation</TableCell>
+                        <TableCell colSpan={3} className="bg-dark text-light" align="center">Apr-20</TableCell>
+                        <TableCell colSpan={3} className="bg-dark text-light" align="center">May-20</TableCell>
+                        <TableCell colSpan={3} className="bg-dark text-light" align="center">Jun-20</TableCell>
+                    </TableRow>
+                    {/* Second row: Small groupings */}
+                    <TableRow>
+                        <TableCell className="bg-secondary text-light" nowrap>Str</TableCell>
+                        <TableCell className="bg-secondary text-light" nowrap>Slry</TableCell>
+                        <TableCell className="bg-secondary text-light" nowrap>Avg./month</TableCell>
+                        <TableCell className="bg-secondary text-light" nowrap>Str</TableCell>
+                        <TableCell className="bg-secondary text-light" nowrap>Slry</TableCell>
+                        <TableCell className="bg-secondary text-light" nowrap>Avg./month</TableCell>
+                        <TableCell className="bg-secondary text-light" nowrap>Str</TableCell>
+                        <TableCell className="bg-secondary text-light" nowrap>Slry</TableCell>
+                        <TableCell className="bg-secondary text-light" nowrap>Avg./month</TableCell>
+                    </TableRow>
+                </TableHead>
+                <TableBody>
+                    {data.map((row, idx) => (
+                        <TableRow key={idx}>
+                            <TableCell>{row.designation}</TableCell>
+                            {row.headOffice.map((val, i) => (
+                                <TableCell key={i}>{val}</TableCell>
+                            ))}
+                        </TableRow>
+                    ))}
+                </TableBody>
+            </Table>
+
+        </>
+    );
+}
+```
+
+
+```js
+import React from "react";
+import {
+    Table,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableRow,
+} from 'funda-ui/Table';
+
+// component styles
+import 'funda-ui/Table/index.css';
+
+
+export default () => {
+    const data = [
+        { firstName: "tanner", lastName: "linsley", age: 24, visits: 100, status: "In Relationship", progress: 50 },
+        { firstName: "tandy", lastName: "miller", age: 40, visits: 40, status: "Single", progress: 80 },
+        { firstName: "joe", lastName: "dirte", age: 45, visits: 20, status: "Complicated", progress: 10 },
+    ];
+    return (
+        <>
+            
+            <Table tableClassName="table table-bordered table-striped align-middle">
+                <TableHead>
+                    {/* First row: Large grouping */}
+                    <TableRow>
+                        <TableCell colSpan={3} align="center" className="bg-dark text-light">Hello</TableCell>
+                        <TableCell colSpan={3} align="center" className="bg-dark text-light">Info</TableCell>
+                    </TableRow>
+                    {/* Second row: Medium grouping */}
+                    <TableRow>
+                        <TableCell rowSpan={2} align="center" className="bg-secondary text-light align-middle">
+                            FirstName
+                        </TableCell>
+                        <TableCell rowSpan={2} align="center" className="bg-secondary text-light align-middle">
+                            Last Name
+                        </TableCell>
+                        <TableCell rowSpan={2} align="center" className="bg-secondary text-light align-middle">
+                            Age
+                        </TableCell>
+                        <TableCell colSpan={3} align="center" className="bg-info text-dark">More Info</TableCell>
+                    </TableRow>
+                    {/* Third row: Bottommost level */}
+                    <TableRow>
+                        <TableCell align="center" className="bg-light text-dark">Visits</TableCell>
+                        <TableCell align="center" className="bg-light text-dark">Status</TableCell>
+                        <TableCell align="center" className="bg-light text-dark">Profile Progress</TableCell>
+                    </TableRow>
+                </TableHead>
+                <TableBody>
+                    {data.map((row, idx) => (
+                        <TableRow key={idx}>
+                            <TableCell>{row.firstName}</TableCell>
+                            <TableCell>{row.lastName}</TableCell>
+                            <TableCell>{row.age}</TableCell>
+                            <TableCell>{row.visits}</TableCell>
+                            <TableCell>{row.status}</TableCell>
+                            <TableCell>{row.progress}</TableCell>
+                        </TableRow>
+                    ))}
+                </TableBody>
+            </Table>
+
+        </>
+    );
+}
+```
+
+
+
 ## Holy Grail Layout (3 columns)
 
 `styles.scss`:
