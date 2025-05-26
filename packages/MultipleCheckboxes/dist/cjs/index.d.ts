@@ -2,6 +2,28 @@ import React from 'react';
 export interface OptionConfig {
     [propName: string]: string | number | boolean;
 }
+export interface CustomOptionsItemsListParams {
+    name?: string;
+    groupLabelClassName?: string;
+    groupWrapperClassName?: string;
+    tableLayoutCellClassName?: string;
+    tableLayout?: boolean;
+    dataInit: OptionConfig[];
+    required?: boolean;
+    inline?: boolean;
+    selectedItems: Set<any>;
+    uniqueID: string;
+    valueBrackets?: boolean;
+    disabled?: boolean;
+    labelRes: (label: any, id: any) => React.ReactNode;
+    valRes: (setData: any) => any[];
+    handleCheckboxChange: (itemKey: string) => Set<any>;
+    convertArrToValByBrackets: (arr: string[]) => string;
+    isAllSelected: boolean;
+    handleSelectAll: () => void;
+    onChange?: (e: any, value: any, valueStr: any, label: any, labelStr: any, currentData: any, dataCollection: any) => void;
+    attributes: React.HTMLAttributes<HTMLInputElement>;
+}
 export declare type MultipleCheckboxesProps = {
     contentRef?: React.ForwardedRef<any>;
     wrapperClassName?: string;
@@ -19,6 +41,8 @@ export declare type MultipleCheckboxesProps = {
     options?: OptionConfig[] | string | unknown;
     disabled?: any;
     required?: any;
+    showSelectAll?: boolean;
+    selectAllLabel?: string;
     /** Whether to use square brackets to save result and initialize default value */
     extractValueByBrackets?: boolean;
     /** -- */

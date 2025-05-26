@@ -41,6 +41,21 @@ export default () => {
 
 
 
+            <MultipleCheckboxes 
+                showSelectAll={true}
+                selectAllLabel="Select all"
+                options={[
+                    {"label": "Item 1","value": "value-1"},
+                    {"label": "Item 2","value": "value-2"},
+                    {"label": "Item 3","value": "value-3"},
+                    {"label": "Item 4","value": "value-4","disabled":true}
+                ]}
+                onChange={(e: any, value: any, valueStr: any, label: any, labelStr: any, currentData: any, dataCollection: any) => {
+                    console.log(e, value, valueStr, label, labelStr, currentData, dataCollection);
+                }}
+            />
+
+
     
         </>
     );
@@ -506,10 +521,11 @@ Use `onCallbackListItem` to return the desired style of the list.
 ```js
 import React, { useState, useMemo } from "react";
 import MultipleCheckboxes from 'funda-ui/MultipleCheckboxes';
+import type { CustomOptionsItemsListParams, OptionConfig } from 'funda-ui/MultipleCheckboxes';
 
 export default () => {
 
-    const [val, setVal] = useState('[Option 2][Option 4]');  // default value is label value
+    const [val, setVal] = useState('[Option 2][Option 3]');  // default value is label value
 
 
     const optionsFlat = (allData: any[]) => {
@@ -546,241 +562,252 @@ export default () => {
         labelRes,
         valRes,
         handleCheckboxChange,
-        onChange,
         convertArrToValByBrackets,
+        isAllSelected,
+        handleSelectAll,
+        onChange,
         attributes,
-    }: {
-        name: string | undefined;
-        groupLabelClassName: string | undefined;
-        groupWrapperClassName: string | undefined;
-        tableLayoutCellClassName: string | undefined;
-        tableLayout: boolean | undefined;
-        dataInit: any[];
-        required: boolean | undefined;
-        inline: boolean | undefined;
-        selectedItems: any;
-        uniqueID: string;
-        valueBrackets: boolean | undefined;
-        disabled: boolean | undefined;
-        labelRes: any;
-        valRes: any;
-        handleCheckboxChange: any;
-        onChange: any;
-        convertArrToValByBrackets: any;
-        attributes: any;
-    }) => {
+    }: CustomOptionsItemsListParams) => {
 
-        return Array.isArray(dataInit) ? dataInit.map((item: any, index: number) => {
+        const allOptions = optionsFlat(dataInit);
 
-            const _groupEl = () => {
-                return <>
-    
-                    {/* GROUP LABEL */}
-                    <div className={`rmultiple-checkboxes-group__label ${groupLabelClassName || ''}`}>{item.label}</div>
-                    {/* /GROUP LABEL */}
-    
-                    {item.optgroup.map((opt: any, optIndex: number) => {
-    
-                        return <div
-                            key={'checkbox' + optIndex}
-                            className={`multiple-checkboxes__control form-check ${inline ? 'd-inline-block' : ''} pe-3`}
-                            data-index={`${index}-${optIndex}`}
-                            data-label={opt.label}
-                            data-list-item-label={`${typeof opt.listItemLabel === 'undefined' ? '' : opt.listItemLabel}`}
-                            data-value={opt.value}
-                            data-disabled={disabled || (typeof opt.disabled !== 'undefined' ? `${opt.disabled}` : 'false')}
-                        >
-                            <input
-                                type="checkbox"
-                                className="form-check-input"
-                                name={`${name}-checkbox-item`}
-                                id={`multiple-checkboxes__control-label-${index}-${optIndex}-${uniqueID}`}
-                                data-index={`${index}-${optIndex}`}
-                                data-label={opt.label}
-                                data-list-item-label={`${typeof opt.listItemLabel === 'undefined' ? '' : opt.listItemLabel}`}
-                                data-value={opt.value}
-                                data-disabled={disabled || (typeof opt.disabled !== 'undefined' ? `${opt.disabled}` : 'false')}
-                                data-optiondata={JSON.stringify(opt)}
-                                value={opt.value}
-                                disabled={disabled || (typeof opt.disabled !== 'undefined' ? opt.disabled : null)}
-                                checked={selectedItems.has(opt.value)}
-                                onChange={(e: any) => {
-    
-                                    handleCheckboxChange(opt.value)
-    
-                                    const newSelectedItems = new Set(selectedItems);
-                                    if (!selectedItems.has(opt.value)) {
-                                        newSelectedItems.add(opt.value);
-                                    } else {
-                                        newSelectedItems.delete(opt.value);
-                                    }
-    
-    
-                                    //
-                                    const _res = valRes(newSelectedItems);
-                                    const _resLabel = optionsFlat(dataInit).filter((v: any) => _res.includes(v.value)).map((k: any) => k.label);
-                                    const _resDataCollection = optionsFlat(dataInit).filter((v: any) => _res.includes(v.value)).map((k: any) => k);
-    
-    
-                                    //
-                                    let curData: any;
-    
-                                    // if group
-                                    if (typeof item.optgroup !== 'undefined') {
-                                        const groupItemIndex = optIndex;
-                                        const groupOpts: any = item.optgroup;
-    
-                                        curData = groupOpts[groupItemIndex];
-                                    } else {
-                                        curData = item;
-                                    }
-    
-                                    onChange?.(e.target, _res, valueBrackets ? convertArrToValByBrackets(_res) : _res.join(','), _resLabel, valueBrackets ? convertArrToValByBrackets(_resLabel) : _resLabel.join(','), curData, _resDataCollection);
-    
-    
-                                }}
-                                {...attributes}
-    
-                            />
-    
-                            {labelRes(typeof opt.listItemLabel === 'undefined' ? opt.label : opt.listItemLabel, `multiple-checkboxes__control-label-${index}-${optIndex}-${uniqueID}`)}
-    
-                        </div>;
-    
-                    })}
-                </>;
-            };
-    
-            const _normalEl = () => {
-                return <>
-    
-                    <input
-                        type="checkbox"
-                        className="form-check-input"
-                        name={`${name}-checkbox-item`}
-                        id={`multiple-checkboxes__control-label-${index}-${uniqueID}`}
-                        data-index={index}
-                        data-label={item.label}
-                        data-list-item-label={`${typeof item.listItemLabel === 'undefined' ? '' : item.listItemLabel}`}
-                        data-value={item.value}
-                        data-disabled={disabled || (typeof item.disabled !== 'undefined' ? `${item.disabled}` : 'false')}
-                        data-optiondata={JSON.stringify(item)}
-                        value={item.value}
-                        disabled={disabled || (typeof item.disabled !== 'undefined' ? item.disabled : null)}
-                        checked={selectedItems.has(item.value)}
-                        onChange={(e: any) => {
-    
-    
-                            handleCheckboxChange(item.value)
-    
-                            const newSelectedItems = new Set(selectedItems);
-                            if (!selectedItems.has(item.value)) {
-                                newSelectedItems.add(item.value);
+        return (
+            <>
+
+                {/* SELECT ALL */}
+                {allOptions.length > 0 && (
+                    <div className="multiple-checkboxes__control form-check pe-3 d-inline-block">
+                        <input
+                            type="checkbox"
+                            className="form-check-input"
+                            name={`${name}-select-all`}
+                            checked={isAllSelected}
+                            onChange={handleSelectAll}
+                            disabled={disabled}
+                        />
+                        <strong>Select all</strong>
+                    </div>
+                )}
+
+                {/* LIST */}
+                {
+                    Array.isArray(dataInit) ? dataInit.map((item: OptionConfig, index: number) => {
+
+                        const _groupEl = () => {
+                            return <>
+
+                                {/* GROUP LABEL */}
+                                <div className={`rmultiple-checkboxes-group__label ${groupLabelClassName || ''}`}>{item.label}</div>
+                                {/* /GROUP LABEL */}
+
+                                {Array.isArray(item.optgroup) && item.optgroup.map((opt: OptionConfig, optIndex: number) => {
+
+                                    return <div
+                                        key={'checkbox' + optIndex}
+                                        className={`multiple-checkboxes__control form-check ${inline ? 'd-inline-block' : ''} pe-3`}
+                                        data-index={`${index}-${optIndex}`}
+                                        data-label={opt.label}
+                                        data-list-item-label={`${typeof opt.listItemLabel === 'undefined' ? '' : opt.listItemLabel}`}
+                                        data-value={opt.value}
+                                        data-disabled={disabled || (typeof opt.disabled !== 'undefined' ? `${opt.disabled}` : 'false')}
+                                    >
+                                        <input
+                                            type="checkbox"
+                                            className="form-check-input"
+                                            name={`${name}-checkbox-item`}
+                                            id={`multiple-checkboxes__control-label-${index}-${optIndex}-${uniqueID}`}
+                                            data-index={`${index}-${optIndex}`}
+                                            data-label={opt.label}
+                                            data-list-item-label={`${typeof opt.listItemLabel === 'undefined' ? '' : opt.listItemLabel}`}
+                                            data-value={opt.value}
+                                            data-disabled={disabled || (typeof opt.disabled !== 'undefined' ? `${opt.disabled}` : 'false')}
+                                            data-optiondata={JSON.stringify(opt)}
+                                            value={opt.value as string}
+                                            disabled={disabled as never || (typeof opt.disabled !== 'undefined' ? opt.disabled : null)}
+                                            checked={selectedItems.has(opt.value)}
+                                            onChange={(e: any) => {
+
+                                                handleCheckboxChange(opt.value as string)
+
+                                                const newSelectedItems = new Set(selectedItems);
+                                                if (!selectedItems.has(opt.value)) {
+                                                    newSelectedItems.add(opt.value);
+                                                } else {
+                                                    newSelectedItems.delete(opt.value);
+                                                }
+
+
+                                                //
+                                                const _res = valRes(newSelectedItems);
+                                                const _resLabel = optionsFlat(dataInit).filter((v: any) => _res.includes(v.value)).map((k: any) => k.label);
+                                                const _resDataCollection = optionsFlat(dataInit).filter((v: any) => _res.includes(v.value)).map((k: any) => k);
+
+
+                                                //
+                                                let curData: any;
+
+                                                // if group
+                                                if (typeof item.optgroup !== 'undefined') {
+                                                    const groupItemIndex = optIndex;
+                                                    const groupOpts: any = item.optgroup;
+
+                                                    curData = groupOpts[groupItemIndex];
+                                                } else {
+                                                    curData = item;
+                                                }
+
+                                                onChange?.(e.target, _res, valueBrackets ? convertArrToValByBrackets(_res) : _res.join(','), _resLabel, valueBrackets ? convertArrToValByBrackets(_resLabel) : _resLabel.join(','), curData, _resDataCollection);
+
+
+                                            }}
+                                            {...attributes}
+
+                                        />
+
+                                        {labelRes(typeof opt.listItemLabel === 'undefined' ? opt.label : opt.listItemLabel, `multiple-checkboxes__control-label-${index}-${optIndex}-${uniqueID}`)}
+
+                                    </div>;
+
+                                })}
+                            </>;
+                        };
+
+                        const _normalEl = () => {
+                            return <>
+
+                                <input
+                                    type="checkbox"
+                                    className="form-check-input"
+                                    name={`${name}-checkbox-item`}
+                                    id={`multiple-checkboxes__control-label-${index}-${uniqueID}`}
+                                    data-index={index}
+                                    data-label={item.label}
+                                    data-list-item-label={`${typeof item.listItemLabel === 'undefined' ? '' : item.listItemLabel}`}
+                                    data-value={item.value}
+                                    data-disabled={disabled || (typeof item.disabled !== 'undefined' ? `${item.disabled}` : 'false')}
+                                    data-optiondata={JSON.stringify(item)}
+                                    value={item.value as string}
+                                    disabled={disabled as never || (typeof item.disabled !== 'undefined' ? item.disabled : null)}
+                                    checked={selectedItems.has(item.value)}
+                                    onChange={(e: any) => {
+
+
+                                        handleCheckboxChange(item.value as string)
+
+                                        const newSelectedItems = new Set(selectedItems);
+                                        if (!selectedItems.has(item.value)) {
+                                            newSelectedItems.add(item.value);
+                                        } else {
+                                            newSelectedItems.delete(item.value);
+                                        }
+
+
+                                        //
+                                        const _res = valRes(newSelectedItems);
+                                        const _resLabel = dataInit.filter((v: any) => _res.includes(v.value)).map((k: any) => k.label);
+                                        const _resDataCollection = optionsFlat(dataInit).filter((v: any) => _res.includes(v.value)).map((k: any) => k);
+
+
+                                        onChange?.(e.target, _res, valueBrackets ? convertArrToValByBrackets(_res) : _res.join(','), _resLabel, valueBrackets ? convertArrToValByBrackets(_resLabel) : _resLabel.join(','), item, _resDataCollection);
+
+
+                                    }}
+                                    {...attributes}
+
+                                />
+
+                                {labelRes(typeof item.listItemLabel === 'undefined' ? item.label : item.listItemLabel, `multiple-checkboxes__control-label-${index}-${uniqueID}`)}
+                            </>;
+                        };
+
+
+                        if (tableLayout) {
+
+                            /* TABLE LAYOUT */
+                            if (typeof item.optgroup !== 'undefined') {
+                                return <td
+                                    colSpan={1}
+                                    className={`multiple-checkboxes-group__wrapper ${groupWrapperClassName || ''} ${tableLayoutCellClassName || ''}`}
+                                    key={'optgroup-' + index}
+                                    data-optiondata={JSON.stringify(item)}
+                                >
+                                    {_groupEl()}
+                                </td>;
                             } else {
-                                newSelectedItems.delete(item.value);
+
+                                return <td colSpan={1}
+                                    className={`multiple-checkboxes__control form-check ${inline ? 'd-inline-block' : ''} pe-3 ${tableLayoutCellClassName || ''}`}
+                                    data-index={index}
+                                    data-label={item.label}
+                                    data-list-item-label={`${typeof item.listItemLabel === 'undefined' ? '' : item.listItemLabel}`}
+                                    data-value={item.value}
+                                    data-disabled={disabled || (typeof item.disabled !== 'undefined' ? `${item.disabled}` : 'false')}
+                                    key={'checkbox' + index}
+                                    data-optiondata={JSON.stringify(item)}
+                                >
+                                    {_normalEl()}
+                                </td>;
+
                             }
-    
-    
-                            //
-                            const _res = valRes(newSelectedItems);
-                            const _resLabel = dataInit.filter((v: any) => _res.includes(v.value)).map((k: any) => k.label);
-                            const _resDataCollection = optionsFlat(dataInit).filter((v: any) => _res.includes(v.value)).map((k: any) => k);
-    
-    
-                            onChange?.(e.target, _res, valueBrackets ? convertArrToValByBrackets(_res) : _res.join(','), _resLabel, valueBrackets ? convertArrToValByBrackets(_resLabel) : _resLabel.join(','), item, _resDataCollection);
-    
-    
-                        }}
-                        {...attributes}
-    
-                    />
-    
-                    {labelRes(typeof item.listItemLabel === 'undefined' ? item.label : item.listItemLabel, `multiple-checkboxes__control-label-${index}-${uniqueID}`)}
-                </>;
-            };
-    
-            
-            if (tableLayout) {
-    
-                /* TABLE LAYOUT */
-                if (typeof item.optgroup !== 'undefined') {
-                    return <td 
-                        colSpan={1} 
-                        className={`multiple-checkboxes-group__wrapper ${groupWrapperClassName || ''} ${tableLayoutCellClassName || ''}`} 
-                        key={'optgroup-' + index}
-                        data-optiondata={JSON.stringify(item)}
-                    >
-                        {_groupEl()}
-                    </td>;
-                } else {
-    
-                    return <td colSpan={1}
-                        className={`multiple-checkboxes__control form-check ${inline ? 'd-inline-block' : ''} pe-3 ${tableLayoutCellClassName || ''}`}
-                        data-index={index}
-                        data-label={item.label}
-                        data-list-item-label={`${typeof item.listItemLabel === 'undefined' ? '' : item.listItemLabel}`}
-                        data-value={item.value}
-                        data-disabled={disabled || (typeof item.disabled !== 'undefined' ? `${item.disabled}` : 'false')}
-                        key={'checkbox' + index}
-                        data-optiondata={JSON.stringify(item)}
-                    >
-                        {_normalEl()}
-                    </td>;
-    
-                }
-                /* /TABLE LAYOUT */
-            } else {
-    
-                if (typeof item.optgroup !== 'undefined') {
-                    return <div 
-                        className={`multiple-checkboxes-group__wrapper ${groupWrapperClassName || ''}`} 
-                        key={'optgroup-' + index}
-                        data-optiondata={JSON.stringify(item)}
-                    >
-                        {_groupEl()}
-                    </div>;
-                } else {
-    
-                    return <div
-                        className={`multiple-checkboxes__control form-check ${inline ? 'd-inline-block' : ''} pe-3`}
-                        data-index={index}
-                        data-label={item.label}
-                        data-list-item-label={`${typeof item.listItemLabel === 'undefined' ? '' : item.listItemLabel}`}
-                        data-value={item.value}
-                        data-disabled={disabled || (typeof item.disabled !== 'undefined' ? `${item.disabled}` : 'false')}
-                        key={'checkbox' + index}
-                        data-optiondata={JSON.stringify(item)}
-                    >
-                        {_normalEl()}
-                    </div>;
-    
-                }
-    
-            }
-    
-        }) : null
+                            /* /TABLE LAYOUT */
+                        } else {
+
+                            if (typeof item.optgroup !== 'undefined') {
+                                return <div
+                                    className={`multiple-checkboxes-group__wrapper ${groupWrapperClassName || ''}`}
+                                    key={'optgroup-' + index}
+                                    data-optiondata={JSON.stringify(item)}
+                                >
+                                    {_groupEl()}
+                                </div>;
+                            } else {
+
+                                return <div
+                                    className={`multiple-checkboxes__control form-check ${inline ? 'd-inline-block' : ''} pe-3`}
+                                    data-index={index}
+                                    data-label={item.label}
+                                    data-list-item-label={`${typeof item.listItemLabel === 'undefined' ? '' : item.listItemLabel}`}
+                                    data-value={item.value}
+                                    data-disabled={disabled || (typeof item.disabled !== 'undefined' ? `${item.disabled}` : 'false')}
+                                    key={'checkbox' + index}
+                                    data-optiondata={JSON.stringify(item)}
+                                >
+                                    {_normalEl()}
+                                </div>;
+
+                            }
+
+                        }
+
+                    }) : null}
+            </>
+        );
+
+
+
+
 
     };
 
     return (
         <>
-          
-            <MultipleCheckboxes 
+
+            <MultipleCheckboxes
                 name="name"
                 value={val}
                 options={[
-                    {"label": "Option 1","listItemLabel":"Option 1 (No: 001)","value": "value-1"},
-                    {"label": "Option 2","listItemLabel":"<del style=color:red>deprecate</del>Option 2 (No: 002)","value": "value-2"},
-                    {"label": "Option 3","listItemLabel":"Option 3 (No: 003)","value": "value-3"},
-                    {"label": "Option 4","listItemLabel":"Option 4 (No: 004)","value": "value-4","disabled":true}
+                    { "label": "Option 1", "listItemLabel": "Option 1 (No: 001)", "value": "value-1" },
+                    { "label": "Option 2", "listItemLabel": "<del style=color:red>deprecate</del>Option 2 (No: 002)", "value": "value-2" },
+                    { "label": "Option 3", "listItemLabel": "Option 3 (No: 003)", "value": "value-3" },
+                    { "label": "Option 4", "listItemLabel": "Option 4 (No: 004)", "value": "value-4", "disabled": true }
                 ]}
                 onChange={(e: any, value: any, valueStr: any, label: any, labelStr: any, currentData: any, dataCollection: any) => {
                     console.log(value);
                 }}
                 onCallbackListItem={customMultipleCheckboxesOptionsItemsList}
             />
-         
-            
+
+
         </>
     );
 }
@@ -847,6 +874,28 @@ export default () => {
                 });
 
             }}>Change value</a>
+            &nbsp;&nbsp;|&nbsp;&nbsp;
+            <a href="#" onClick={(e: React.MouseEvent) => {
+                e.preventDefault();
+                if (conRef.current) {
+                    conRef.current.selectAll();
+                    setTimeout(() => {
+                        alert(conRef.current.isAllSelected());
+                    }, 0);
+                }
+                
+            }}>Select all</a>
+            &nbsp;&nbsp;|&nbsp;&nbsp;
+           <a href="#" onClick={(e: React.MouseEvent) => {
+                e.preventDefault();
+                if (conRef.current) {
+                    conRef.current.deselectAll();
+                    setTimeout(() => {
+                        alert(conRef.current.isAllSelected());
+                    }, 0);
+                }
+            }}>Deselect all</a>
+
             <p>{userContent}</p>
 
 
@@ -947,6 +996,7 @@ export default () => {
 }
 ```
 
+  
 
 
 ## API
@@ -958,7 +1008,7 @@ import MultipleCheckboxes from 'funda-ui/MultipleCheckboxes';
 | Property | Type | Default | Description | Required |
 | --- | --- | --- | --- | --- |
 | `ref` | React.ForwardedRef | - | It is the return element of this component.  | - |
-| `contentRef` | React.ForwardedRef | - | It exposes the following methods:  <br /> <ol><li>`contentRef.current.control()`</li><li>`contentRef.current.getLatestVal()`</li><li>`contentRef.current.clear(() => { console.log('callback') })`</li><li>`contentRef.current.set([{"label": "Option 1","listItemLabel":"Option 1 (No: 001)","value": "value-1","queryString": "option1"}], () => { console.log('callback') })`</li></ol> <blockquote>DO NOT USE it in the `onChange` of this component, otherwise it will cause infinite rendering</blockquote>| - |
+| `contentRef` | React.ForwardedRef | - | It exposes the following methods:  <br /> <ol><li>`contentRef.current.control()`</li><li>`contentRef.current.getLatestVal()`</li><li>`contentRef.current.clear(() => { console.log('callback') })`</li><li>`contentRef.current.set([{"label": "Option 1","listItemLabel":"Option 1 (No: 001)","value": "value-1","queryString": "option1"}], () => { console.log('callback') })`</li><li>`contentRef.current.selectAll()`</li><li>`contentRef.current.deselectAll()`</li><li>`contentRef.current.isAllSelected()`</li></ol> <blockquote>DO NOT USE it in the `onChange` of this component, otherwise it will cause infinite rendering</blockquote>| - |
 | `wrapperClassName` | string | `mb-3 position-relative` | The class name of the control wrapper. | - |
 | `controlClassName` | string | `form-check-input` | The class name of the control. | - |
 | `tableLayout` | boolean | false | Use **\<table\>** HTML tag to display options. | - |
@@ -967,6 +1017,8 @@ import MultipleCheckboxes from 'funda-ui/MultipleCheckboxes';
 | `groupWrapperClassName` | string | - | The class name of the radio group wrapper. | - |
 | `groupLabelClassName` | string | - | The class name of the radio group label. | - |
 | `extractValueByBrackets` | boolean  | true | Whether to use square brackets to save result and initialize default value. | - |
+| `showSelectAll` | boolean  | false | Whether to display the Select All option. | - |
+| `selectAllLabel` | string  | `Select all` | Label of the option "Select All". | - |
 | `inline` | boolean | true | If true the group checkboxes or radios are on the same horizontal row. | - |
 | `options` | JSON Object Literals | - | Set the default value using JSON string format for menu of options, like this: `[{"label": "Option 1","value": "value-1"},{"label": "<del style=color:red>deprecate</del>Option 2","value": "value-2"},{"label": "Option 3","value": "value-3"}]`| - |
 | `defaultValue` | string | - | Specifies the default value. Use when the component is not controlled. It does not re-render the component because the incoming value changes. | - |

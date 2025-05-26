@@ -959,6 +959,10 @@ Set property `firstRequestAutoExec` to **false**. The first asynchronous request
 
 > Valid when the series attribute `fetch<METHOD_NAME>` is exist
 
+> If you want to trigger the entire component every time the route changes, you can use `<Select key={<YOUR_PARAM>} ... />`;
+
+
+
 
 ```js
 import React from "react";
