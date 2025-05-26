@@ -1018,7 +1018,7 @@ import MultipleCheckboxes from 'funda-ui/MultipleCheckboxes';
 | `groupLabelClassName` | string | - | The class name of the radio group label. | - |
 | `extractValueByBrackets` | boolean  | true | Whether to use square brackets to save result and initialize default value. | - |
 | `showSelectAll` | boolean  | false | Whether to display the Select All option. | - |
-| `selectAllLabel` | string  | `Select all` | Label of the option "Select All". | - |
+| `selectAllLabel` | string  | `Select all` | Label of the option "Select All". <blockquote>HTML tags are supported</blockquote> | - |
 | `inline` | boolean | true | If true the group checkboxes or radios are on the same horizontal row. | - |
 | `options` | JSON Object Literals | - | Set the default value using JSON string format for menu of options, like this: `[{"label": "Option 1","value": "value-1"},{"label": "<del style=color:red>deprecate</del>Option 2","value": "value-2"},{"label": "Option 3","value": "value-3"}]`| - |
 | `defaultValue` | string | - | Specifies the default value. Use when the component is not controlled. It does not re-render the component because the incoming value changes. | - |
