@@ -7,18 +7,14 @@ import {
     getNextSiblings,
     getChildren
 } from 'funda-utils/dist/cjs/dom';
-import { clsWrite, combinedCls } from 'funda-utils/dist/cjs/cls';
+import { combinedCls } from 'funda-utils/dist/cjs/cls';
+
 
 
 import { initUlHeight } from './init-height';
 import { removeItemOnce, activeClass } from './utils/func';
 
-export interface FetchConfig {
-    fetchFuncAsync?: any | undefined;
-    fetchFuncMethod?: string | undefined;
-    fetchFuncMethodParams?: any[] | undefined;
-    fetchCallback?: (data: any) => void;
-}
+import type {ItemConfig, UpdateDataFunction, DataNode} from './index';
 
 
 /* Recursively nested components to traverse nodes
@@ -30,20 +26,30 @@ export type TreeListProps = {
     first?: boolean;
     disableArrow?: boolean;
     disableCollapse?: boolean;
+    renderOption?: (optionData: DataNode, key: React.Key) => React.ReactNode;
     arrow?: React.ReactNode;
     arrowIcons?: React.ReactNode[];
     childClassName?: string;
     orginalData: any[any];
 	data: any[any];
-    getCheckedPrint?: any[];
-    updateCheckedPrint?: any;
-    getCheckedData?: any[];
-    updategetCheckedData?: any;
-    onSelect?: (e: any, val: any, func: Function) => void;
-    onDoubleSelect?: (e: any, val: any, func: Function) => void;
-    onCollapse?: (e: any, val: any, func: Function) => void;
+    getCheckedPrint: any[];
+    updateCheckedPrint: React.Dispatch<React.SetStateAction<any[]>>;
+    getCheckedData: any[];
+    updategetCheckedData: React.Dispatch<React.SetStateAction<any[]>>;
+    expandedMap: Record<string, boolean>;
+    onSelect?: (
+        e: React.MouseEvent<HTMLElement>, 
+        val: ItemConfig, 
+        updateData: UpdateDataFunction
+    ) => void;
+    onDoubleSelect?: (
+        e: React.MouseEvent<HTMLElement>, 
+        val: ItemConfig, 
+        updateData: UpdateDataFunction
+    ) => void;
+    onCollapse?: (e: React.MouseEvent<HTMLElement>) => void;
     onCheck?: (val: any) => void;
-    evInitValue?: (key: React.Key | null, fetch: FetchConfig | null, firstRender: boolean) => void;
+    evInitValue?: UpdateDataFunction;
 };
 
 export default function TreeList(props: TreeListProps) {
@@ -52,6 +58,7 @@ export default function TreeList(props: TreeListProps) {
         rootNode,
         checkboxNamePrefix,
         alternateCollapse,
+        renderOption,
         first,
         disableArrow,
         disableCollapse,
@@ -64,6 +71,7 @@ export default function TreeList(props: TreeListProps) {
         updateCheckedPrint,
         getCheckedData,
         updategetCheckedData,
+        expandedMap,
         onSelect,
         onDoubleSelect,
         onCollapse,
@@ -73,6 +81,16 @@ export default function TreeList(props: TreeListProps) {
     } = props;
 
     const rootRef = useRef<any>(null);
+        
+
+    const mergedData = data === null ? [] : data.map((item: ItemConfig) => {
+        const itemData = typeof item === 'string' ? JSON.parse(item) : item;
+
+        return {
+            ...itemData,
+            isExpanded: expandedMap?.[itemData.key] ?? false
+        };
+    });
 
     const customIcon: React.ReactNode = <var className="default-icon"><svg width="0.75em" height="0.75em" viewBox="0 0 20 20" fill="none"><path d="M15.795 11.272L7.795 16.272C6.79593 16.8964 5.5 16.1782 5.5 15L5.5 5.00002C5.5 3.82186 6.79593 3.1036 7.795 3.72802L15.795 8.72802C16.735 9.31552 16.735 10.6845 15.795 11.272Z" fill="currentColor"/></svg></var>;
 
@@ -168,122 +186,41 @@ export default function TreeList(props: TreeListProps) {
     };
 
 
-    const closeChild = (hyperlink: HTMLElement, ul: HTMLAllCollection) => {
-        if ( ul.length === 0 ) return;
-
-        activeClass(hyperlink, 'remove');
-        hyperlink.setAttribute('aria-expanded', 'false');
-        activeClass(hyperlink.parentNode, 'remove');
-
-        //to close
-        [].slice.call(ul).forEach(function(element: any){
-            element.style.maxHeight = 0;
-        });
-    };
-
-    const openChild = (hyperlink: HTMLElement, ul: HTMLAllCollection) => {
-        if ( ul.length === 0 ) return;
-
-        activeClass(hyperlink, 'add');
-        hyperlink.setAttribute('aria-expanded', 'true');
-        activeClass(hyperlink.parentNode, 'add');
-
-        // init <ul> height
-        initUlHeight(ul);
-
-    };
-
-    function handleCollapse(e: any) {
-        if ( disableCollapse ) return;
-
+    function handleSelect(e: React.MouseEvent<HTMLDivElement>) {
         e.preventDefault();
         e.stopPropagation();
         
         const hyperlink = e.currentTarget;
-        const url = hyperlink.getAttribute('href');
-        const subElement = getNextSiblings(hyperlink, 'ul');
-
-        // loading
-        //=====================       
-        if ( hyperlink.classList.contains('async-ready') ) {
-            activeClass(hyperlink, 'add', 'loading');
-        }
-
-        // calback
-        //=====================
-        const fetchFunc: Function = hyperlink.classList.contains('async-ready') ? (typeof evInitValue !== 'function' ? ()=>void(0) : evInitValue) : ()=>void(0);
-        onCollapse?.(e, {
-            key: hyperlink.dataset.key,
-            slug: hyperlink.dataset.slug,
-            link: hyperlink.dataset.link,
-            optiondata: hyperlink.dataset.optiondata
-        }, fetchFunc);
-
-
-
-        // hide child if expandedLink doesn't exist, on the contrary
-        //=====================
-        if ( hyperlink.classList.contains('loading') ) return;
-
-        if ( hyperlink.getAttribute('aria-expanded') === 'false' || hyperlink.getAttribute('aria-expanded') === null ) {
-
-
-            //Hide all other siblings of the selected <ul>
-            if ( alternateCollapse ) {
-                [].slice.call(rootRef.current.children).forEach(function(li: any){
-
-                    activeClass(li, 'remove');
         
-                    const _li = li.firstChild;
-                    activeClass(_li, 'remove');
-                    _li.setAttribute('aria-expanded', false);
-        
-                    [].slice.call(getNextSiblings(_li, 'ul')).forEach(function(element: any){
-                        element.style.maxHeight = 0;
-                    });
-                });
-            }
-
-            //open current
-            openChild(hyperlink, subElement as never);
-            
-            
-
-        } else {
-
-            //close current
-            closeChild(hyperlink, subElement as never);
-
-        }
-
-
-    }
-
-    function handleSelect(e: any) {
-        e.preventDefault();
-        e.stopPropagation();
-        
-        const hyperlink = e.currentTarget;
 
         if ( hyperlink.classList.contains('selected') ) {
             activeClass(hyperlink, 'remove', 'selected');
         } else {
-            [].slice.call(hyperlink.closest('.tree-diagram__wrapper').querySelectorAll('li > a')).forEach((node: any) => {
-                activeClass(node, 'remove', 'selected');
-            });
+            const wrapper = hyperlink.closest('.tree-diagram__wrapper');
+            if (wrapper) {
+                [].slice.call(wrapper.querySelectorAll('li > div.nav-link')).forEach((node: any) => {
+                    activeClass(node, 'remove', 'selected');
+                });
+            }
             activeClass(hyperlink, 'add', 'selected');
         }
 
      
+        
         onSelect?.(e, {
-            key: hyperlink.dataset.key,
-            slug: hyperlink.dataset.slug,
-            link: hyperlink.dataset.link,
-            optiondata: hyperlink.dataset.optiondata
-        }, typeof evInitValue !== 'function' ? ()=>void(0) : evInitValue);
+            key: hyperlink.dataset.key as string,
+            slug: hyperlink.dataset.slug as string,
+            link: hyperlink.dataset.link as string,
+            optiondata: hyperlink.dataset.optiondata as string
+        }, async () => {
+            if (typeof evInitValue === 'function') {
+                await evInitValue(hyperlink.dataset.key as string, null);
+            }
+        });
 
         if ( disableArrow ) {
-            handleCollapse(e);
+            onCollapse?.(e);
+
         }
     }
     
@@ -296,7 +233,7 @@ export default function TreeList(props: TreeListProps) {
         if ( hyperlink.classList.contains('selected') ) {
             activeClass(hyperlink, 'remove', 'selected');
         } else {
-            [].slice.call(hyperlink.closest('.tree-diagram__wrapper').querySelectorAll('li > a')).forEach((node: any) => {
+            [].slice.call(hyperlink.closest('.tree-diagram__wrapper').querySelectorAll('li > div.nav-link')).forEach((node: any) => {
                 activeClass(node, 'remove', 'selected');
             });
             activeClass(hyperlink, 'add', 'selected');
@@ -308,10 +245,14 @@ export default function TreeList(props: TreeListProps) {
             slug: hyperlink.dataset.slug,
             link: hyperlink.dataset.link,
             optiondata: hyperlink.dataset.optiondata
-        }, typeof evInitValue !== 'function' ? ()=>void(0) : evInitValue);
+        }, async () => {
+            if (typeof evInitValue === 'function') {
+                await evInitValue(hyperlink.dataset.key as string, null);
+            }
+        });
 
-        if ( disableArrow ) {
-            handleCollapse(e);
+        if (disableArrow) {
+            onCollapse?.(e);
         }
     }
     
@@ -411,9 +352,9 @@ export default function TreeList(props: TreeListProps) {
 
         // Activate current item
         //=====================
-        const allItems = rootRef.current ? [].slice.call(document.querySelectorAll(`.${childClassName} a`)).map( (item: any) => {
+        const allItems = rootRef.current ? [].slice.call(document.querySelectorAll(`.${childClassName} div.nav-link`)).map( (item: any) => {
             return {
-                href: item.getAttribute('href'),
+                href: item.dataset.href,
                 el: item,
                 actived: item.parentNode.classList?.contains('active') ? true : false,
                 expandedLink: document.body.contains(item.parentNode.parentNode.previousSibling) ? item.parentNode.parentNode.previousSibling : false
@@ -463,11 +404,12 @@ export default function TreeList(props: TreeListProps) {
                 }
             )}  ref={rootRef} style={!first ? {maxHeight: '0px'} : {}}>
                 
-                {data.map((item: any, i: number) => {
+                {mergedData.map((item: any, i: number) => {
 
                     const _async = item.childrenAsync ? 'async-ready' : '';
                     const _cusIcons = arrowIcons ? 'custom-icons' : '';
                 
+                    const optiondata = typeof item.optiondata !== 'undefined' ? item.optiondata : '{}';
                     
                     if ( item.heading ) return (
                         <li 
@@ -489,7 +431,19 @@ export default function TreeList(props: TreeListProps) {
                                 data-key={item.key}
                                 data-optiondata={JSON.stringify(item)}
                             >
-                                <span>{item.icon ? item.icon.indexOf('</svg>') < 0 ? <><i className={item.icon}></i> </> : <var dangerouslySetInnerHTML={{ __html: `${item.icon}` }} /> : null}<i dangerouslySetInnerHTML={{ __html: `${item.title}` }}></i></span>
+                                <span>
+                                    {/* ICON */}
+                                    {item.icon ? item.icon.indexOf('</svg>') < 0 ? <><i className={item.icon}></i> </> : <var dangerouslySetInnerHTML={{ __html: `${item.icon}` }} /> : null}
+
+                                    {/* TITLE */}
+                                    {typeof renderOption === 'function' ? <>
+                                        {renderOption(item, item.key)}
+                                    </> : <>
+                                        <i dangerouslySetInnerHTML={{
+                                            __html: `${item.title}`
+                                        }}></i>
+                                    </>}
+                                </span>
                             </a>
                         </li>
                     );
@@ -507,7 +461,15 @@ export default function TreeList(props: TreeListProps) {
                             onMouseLeave={typeof item.itemMouseLeaveCallback !== 'undefined' ? item.itemMouseLeaveCallback : () => void(0)}
                         >
 
-                            {(item.children && item.children.length) || item.childrenAsync ? <span aria-expanded={item.active ? 'true' : 'false'} className={item.active ? `arrow active ${_async} ${_cusIcons}` : `arrow ${_async} ${_cusIcons}`} onClick={handleCollapse} data-link={item.link} data-slug={item.slug} data-key={item.key} data-optiondata={JSON.stringify(item)}>{arrowGenerator()}</span> : ''}
+                            {(item.children && item.children.length) || item.childrenAsync ? <span 
+                                aria-expanded={JSON.parse(optiondata as string).isExpanded || item.active ? 'true' : 'false'}
+                                className={item.active ? `arrow active ${_async} ${_cusIcons}` : `arrow ${_async} ${_cusIcons}`} 
+                                onClick={onCollapse} 
+                                data-link={item.link} 
+                                data-slug={item.slug} 
+                                data-key={item.key} 
+                                data-optiondata={JSON.stringify(item)}
+                            >{arrowGenerator()}</span> : ''}
 
                             <span className="checkbox-trigger">
 
@@ -539,17 +501,18 @@ export default function TreeList(props: TreeListProps) {
 
                             </span>
               
-                            <a 
+                            <div 
                                 tabIndex={-1} 
                                 className={combinedCls(
                                     'nav-link',
                                     _async,
                                     {
                                         'selected': item.selected,
-                                        'active': item.active
+                                        'active': item.active,
+                                        'disabled': item.disabled
                                     }
                                 )}
-                                href={item.link === '#' ? `${item.link}-${i}` : item.link} 
+                                data-href={item.link === '#' ? `${item.link}-${i}` : item.link} 
                                 aria-expanded="false" 
                                 onClick={handleSelect} 
                                 onDoubleClick={handleDoubleSelect} 
@@ -560,7 +523,23 @@ export default function TreeList(props: TreeListProps) {
                                 onMouseEnter={typeof item.itemLinkMouseEnterCallback !== 'undefined' ? item.itemLinkMouseEnterCallback : () => void(0)} 
                                 onMouseLeave={typeof item.itemLinkMouseLeaveCallback !== 'undefined' ? item.itemLinkMouseLeaveCallback : () => void(0)}
                             >
-                                <span>{item.icon ? item.icon.indexOf('</svg>') < 0 ? <><i className={item.icon}></i> </> : <var dangerouslySetInnerHTML={{ __html: `${item.icon}` }} /> : null}<i dangerouslySetInnerHTML={{ __html: `${item.title}` }}></i>{titleArrowGenerator()}</span>
+                                <span>
+                                    
+                                    {/* ICON */}
+                                    {item.icon ? item.icon.indexOf('</svg>') < 0 ? <><i className={item.icon}></i> </> : <var dangerouslySetInnerHTML={{ __html: `${item.icon}` }} /> : null}
+
+                                    {/* TITLE */}
+                                    {typeof renderOption === 'function' ? <>
+                                        {renderOption(item, item.key)}
+                                    </> : <>
+                                        <i dangerouslySetInnerHTML={{
+                                            __html: `${item.title}`
+                                        }}></i>
+                                    </>}
+
+                                    {/* ARROW */}
+                                    {titleArrowGenerator()}
+                                </span>
 
 
                                 {/*<!-- CUSTOM CONTENT -->*/}
@@ -568,7 +547,7 @@ export default function TreeList(props: TreeListProps) {
                                 {item.customContentToHyperlink}
                                 {/*<!-- /CUSTOM CONTENT -->*/}
 
-                            </a>
+                            </div>
 
 
                             {/*<!-- CUSTOM CONTENT -->*/}
@@ -578,6 +557,7 @@ export default function TreeList(props: TreeListProps) {
 
                             {item.children && item.children.length > 0 && <TreeList 
                                                 rootNode={rootNode}
+                                                renderOption={renderOption}
                                                 checkboxNamePrefix={checkboxNamePrefix}
                                                 orginalData={orginalData}
                                                 data={item.children} 
@@ -585,7 +565,6 @@ export default function TreeList(props: TreeListProps) {
                                                 arrow={arrow} 
                                                 onSelect={onSelect} 
                                                 onDoubleSelect={onDoubleSelect}
-                                                onCollapse={onCollapse} 
                                                 onCheck={onCheck}
                                                 disableArrow={disableArrow} 
                                                 disableCollapse={disableCollapse}
@@ -595,6 +574,11 @@ export default function TreeList(props: TreeListProps) {
                                                 updateCheckedPrint={updateCheckedPrint}
                                                 getCheckedData={getCheckedData}
                                                 updategetCheckedData={updategetCheckedData}
+
+                                                // Collapse
+                                                expandedMap={expandedMap}
+                                                onCollapse={onCollapse} 
+                                                                                                
 
                                             />}
                         </li>

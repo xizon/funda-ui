@@ -18,7 +18,7 @@ const treeData = [
         active: true,
         children: [
             {
-                title: "Sub level 1_1",
+                title: "<span style='color:red;'>Sub level 1_1</span>",
                 link: "#1-1",
                 slug: 'level-1_1',
                 active: true,
@@ -63,7 +63,8 @@ const treeData = [
             {
                 title: "Sub level 3_3",
                 link: "#",
-                slug: 'level-3_3'
+                slug: 'level-3_3',
+                disabled: true
             }]
     },
     {
@@ -104,7 +105,15 @@ export default () => {
         <Tree 
             data={treeData} 
             showLine={true}
-            onSelect={(e, val) => {
+            onSelect={(
+                e: React.MouseEvent<HTMLElement>,
+                val: {
+                    key?: string;
+                    slug?: string;
+                    link?: string;
+                    optiondata?: string;
+                }
+            ) => {
                 console.log(val);
                 /* 
                 {
@@ -118,11 +127,22 @@ export default () => {
             }} 
         />
 
+
+        <blockquote>Clicking on the node has an expansion effect.</blockquote>
+        
         <Tree 
             data={treeData} 
             showLine={false}
             disableArrow={true}
-            onSelect={(e, val) => {
+            onSelect={(
+                e: React.MouseEvent<HTMLElement>,
+                val: {
+                    key?: string;
+                    slug?: string;
+                    link?: string;
+                    optiondata?: string;
+                }
+            ) => {
                 console.log(val);
             }} 
         />
@@ -132,7 +152,15 @@ export default () => {
             showLine={false}
             disableArrow={true}
             disableCollapse={true}
-            onSelect={(e, val) => {
+            onSelect={(
+                e: React.MouseEvent<HTMLElement>,
+                val: {
+                    key?: string;
+                    slug?: string;
+                    link?: string;
+                    optiondata?: string;
+                }
+            ) => {
                 console.log(val);
             }} 
         />
@@ -146,7 +174,15 @@ export default () => {
                 <><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none">
                 <path d="M17.8031 20L19.793 20C20.2255 20 20.4419 20 20.6236 19.9258C20.784 19.8603 20.9251 19.7538 21.0322 19.6175C21.1535 19.4631 21.2132 19.2555 21.332 18.8395L22.4177 15.0396C22.6156 14.3472 22.714 14.0009 22.6363 13.7271C22.5682 13.4871 22.4131 13.2813 22.2011 13.15C21.9731 13.0087 21.64 13.0005 21.0002 13M17.8031 20H6.19691M17.8031 20C18.921 20 19.48 20 19.9074 19.7822C20.2837 19.5905 20.5905 19.2841 20.7822 18.9078C21.0002 18.48 21.0002 17.9199 21.0002 16.7998V13M6.19691 20H5.12109C4.40152 20 4.04075 20 3.79883 19.8501C3.58683 19.7187 3.43144 19.5129 3.36338 19.2729C3.34904 19.2224 3.34073 19.1694 3.33796 19.1122M6.19691 20C5.07899 20 4.5192 20 4.0918 19.7822C3.78624 19.6265 3.52721 19.3952 3.33796 19.1122M21.0002 13C20.9608 13 20.9203 13 20.8786 13H5.00028L3.58301 17.9604L3.58096 17.9674C3.42083 18.5278 3.32578 18.8605 3.33796 19.1122M21.0002 13L21.0002 9.19978C21.0002 8.07967 21.0002 7.51962 20.7822 7.0918C20.5905 6.71547 20.2839 6.40973 19.9076 6.21799C19.4798 6 18.9201 6 17.8 6H12M3.33796 19.1122C3.29413 19.0467 3.25404 18.9784 3.21799 18.9076C3 18.4798 3 17.9201 3 16.8V6M3 6H12M3 6C3 4.89543 3.89543 4 5 4H8.67452C9.1637 4 9.40886 4 9.63904 4.05526C9.84311 4.10425 10.0379 4.18526 10.2168 4.29492C10.4186 4.41857 10.5918 4.59182 10.9375 4.9375L12 6" stroke="#000000" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg></>
             ]}
-            onSelect={(e, val) => {
+            onSelect={(
+                e: React.MouseEvent<HTMLElement>,
+                val: {
+                    key?: string;
+                    slug?: string;
+                    link?: string;
+                    optiondata?: string;
+                }
+            ) => {
                 console.log(val);
             }} 
         />
@@ -241,7 +277,15 @@ export default () => {
             <Tree 
                 data={data} 
                 showLine={true}
-                onSelect={(e, val) => {
+                onSelect={(
+                    e: React.MouseEvent<HTMLElement>,
+                    val: {
+                        key?: string;
+                        slug?: string;
+                        link?: string;
+                        optiondata?: string;
+                    }
+                ) => {
                     console.log(val);
                 }}  
             />
@@ -265,6 +309,7 @@ import React from "react";
 import axios from "axios";
 
 import Tree from 'funda-ui/Tree';
+import type { UpdateDataFunction } from 'funda-ui/Tree';
 
 // component styles
 import 'funda-ui/Tree/index.css';
@@ -280,7 +325,21 @@ class DataService {
 
         let demoData = [];
 
+        // Simulate request latency
+        await new Promise(resolve => setTimeout(resolve, 500));
+
         // query from "slug"
+        if ( otherParam === 'level-1' ) {
+            demoData = [{
+                    "parent_id": 0,
+                    "id": 999,
+                    "item_name": "Title 999",
+                    "item_type": "web"
+                }];   
+        }
+
+
+
         if ( otherParam === 'level-2' ) {
 
             demoData = [
@@ -305,20 +364,19 @@ class DataService {
             demoData = [
                 {
                     "parent_id": 0,
-                    "id": 1,
+                    "id": 3,
                     "item_name": "Title 3",
                     "item_type": "web"
                 },
                 {
                     "parent_id": 0,
-                    "id": 2,
+                    "id": 4,
                     "item_name": "Title 4",
                     "item_type": "dev"
                 }
             ];   
             
         }
-
 
         return {
             code: 0,
@@ -412,13 +470,31 @@ export default () => {
             <Tree 
                 data={treeData} 
                 showLine={true}
-                onSelect={(e, val) => {
+                onSelect={(
+                    e: React.MouseEvent<HTMLElement>,
+                    val: {
+                        key?: string;
+                        slug?: string;
+                        link?: string;
+                        optiondata?: string;
+                    }
+                ) => {
                     console.log(val);
                 }} 
-                onCollapse={(e, val, updateData) => {
+                onCollapse={async (
+                    e: React.MouseEvent<HTMLElement>,
+                    val: {
+                        key?: string;
+                        slug?: string;
+                        link?: string;
+                        optiondata?: string;
+                    },
+                    updateData: UpdateDataFunction, 
+                    isExpanded: boolean
+                ) => {
                     console.log(val);
 
-                    updateData(val.key, {
+                    const updatedList = await updateData(val.key, {
                         "fetchFuncAsync": new DataService,
                         "fetchFuncMethod": "getList",
                         "fetchFuncMethodParams": ['', 0, val.slug],
@@ -444,6 +520,10 @@ export default () => {
 
                         }
                     });
+
+                    if (typeof updatedList !== 'undefined') {
+                        // do something...
+                    }
                 }} 
             />
 
@@ -536,7 +616,15 @@ export default () => {
                 onCheck={(val) => {
                     console.log(val);
                 }} 
-                onSelect={(e, val) => {
+                onSelect={(
+                    e: React.MouseEvent<HTMLElement>,
+                    val: {
+                        key?: string;
+                        slug?: string;
+                        link?: string;
+                        optiondata?: string;
+                    }
+                ) => {
                     console.log(val);
                 }}  
             />
@@ -684,7 +772,15 @@ export default () => {
                 onCheck={(val) => {
                     console.log(val);
                 }} 
-                onSelect={(e, val) => {
+                onSelect={(
+                    e: React.MouseEvent<HTMLElement>,
+                    val: {
+                        key?: string;
+                        slug?: string;
+                        link?: string;
+                        optiondata?: string;
+                    }
+                ) => {
                     console.log(val);
                 }}  
             />
@@ -909,7 +1005,15 @@ export default () => {
                 <Tree
                     data={data}
                     showLine={true}
-                    onSelect={(e, val) => {
+                    onSelect={(
+                        e: React.MouseEvent<HTMLElement>,
+                        val: {
+                            key?: string;
+                            slug?: string;
+                            link?: string;
+                            optiondata?: string;
+                        }
+                    ) => {
                         console.log(val);
                     }}
                 />
@@ -1197,7 +1301,15 @@ export default () => {
                 onCheck={(val) => {
                     console.log(val);
                 }} 
-                onSelect={(e, val) => {
+                onSelect={(
+                    e: React.MouseEvent<HTMLElement>,
+                    val: {
+                        key?: string;
+                        slug?: string;
+                        link?: string;
+                        optiondata?: string;
+                    }
+                ) => {
                     console.log(val);
                 }}  
             />
@@ -1209,6 +1321,48 @@ export default () => {
 }
 ```
 
+
+
+## Customize option rendering
+
+`renderOption` callback allows you to customize the UI style for the output of each option.
+
+
+```js
+import React from "react";
+import Tree, { DataNode } from 'funda-ui/Tree';
+
+// component styles
+import 'funda-ui/Tree/index.css';
+
+export default () => {
+
+
+    return (
+        <>
+     
+            <Tree 
+                data={treeData} 
+                showLine={true}
+                onSelect={(e, val) => {
+                    console.log(val);    
+                }} 
+                renderOption={(optionData: DataNode, key: React.Key) => {
+                    return <div style={optionData.disabled ? {pointerEvents: 'none', opacity: .3} : undefined}>
+                        <em>{key}. </em>
+                        <strong dangerouslySetInnerHTML={{
+                                    __html: `${optionData.title}`
+                        }}></strong>
+                        <div><small style={{color: 'gray'}}>value: {optionData.slug}</small></div>
+                    </div>;
+                }}
+            />
+
+
+        </>
+    );
+}
+```
 
 
 
@@ -1226,18 +1380,17 @@ import Tree from 'funda-ui/Tree';
 | `showLine` | boolean | false | Shows a connecting line. | - |
 | `lineStyle` | string | `dotted` \| `dashed` \| `solid` \| `double`| Specifies what kind of line to display. By default it is "solid".| - |
 | `alternateCollapse` | boolean | false | Mutually exclusive alternate expansion between the first levels. | - |
+| `renderOption` | function  | - | A function to render content of the option, replaces the default content of the option. It passes two parameters. <br /> <ol><li>The first is the option data (**JSON Object**)</li><li>The second is the key of the current option (**React.Key**)</li></ol>| - |
 | `arrow` | ReactNode  | `<svg width="0.75em" height="0.75em" viewBox="0 0 20 20" fill="none"><path d="M15.795 11.272L7.795 16.272C6.79593 16.8964 5.5 16.1782 5.5 15L5.5 5.00002C5.5 3.82186 6.79593 3.1036 7.795 3.72802L15.795 8.72802C16.735 9.31552 16.735 10.6845 15.795 11.272Z" fill="currentColor"/></svg>` | Set an arrow of control | - |
 | `arrowIcons` | React.ReactNode[] | - | Set collapse/expand icon. Use an array to set two icons, if only one is set, the icon animation is activated, and if two are set, the animation is canceled. <br /> such as: `[<><svg width="1em" height="1em" viewBox="0 0 24 24">...</svg></>,<><svg width="1em" height="1em" viewBox="0 0 24 24">...</svg></>]` <blockquote>`arrow` will have no effect when using this attribute.</blockquote> | - |
 | `disableArrow` | boolean | false | Disable arrow. | - |
 | `disableCollapse` | boolean | false | Disable the collapse effect. | - |
 | `data` | array | - | Specify data of Cascading List as a JSON string format. Such as: <br />`[{title:"Top level 1",link:"#",slug:'level-1'},{title:"Top level 2",link:"/s",slug:'level-2',},{title:"Top level 3",link:"https://example.com",slug:'level-3',active:true,children:[{title:"Sub level 3_1",link:"#3-1",slug:'level-3_1'},{title:"Sub level 3_2",link:"#3-2",slug:'level-3_2'},{title:"Sub level 3_3",link:"#3-3",slug:'level-3_3'}]},{title:"Top level 4 (heading)",link:"#",slug:'level-4',}]` | - |
 | `retrieveData` | array | - | Specify data of showing items from `data`. Such as: <br />`[{title:"Top level 1",},{title:"Sub level 2_2"},{title:"Sub level 3_3"}]` <blockquote>It will filter out other options that don't exist, usually used for real-time searches</blockquote> | - |
-| `onSelect` | function  | - | Call a function when clicking an item. It returns three callback values. <br /> <ol><li>The first is the current hyperlink Event (**Event**)</li><li>The second is the data (**JSON Object**)</li><li> The third is a callback function, which can initiate an asynchronous request to load children (usage: Please refer to the documentation example)</li></ol> | - |
-| `onDoubleSelect` | function  | - | It fires when the mouse pointer double clicks a cell. It returns three callback values. <br /> <ol><li>The first is the current hyperlink Event (**Event**)</li><li>The second is the data (**JSON Object**)</li><li> The third is a callback function, which can initiate an asynchronous request to load children (usage: Please refer to the documentation example)</li></ol> | - |
-| `onCollapse` | function  | - | Call a function when collapsing/expanding. The return value is same with `onSelect`. <blockquote>When `disableArrow` is "true", click on the content to trigger it</blockquote> | - |
+| `onSelect` | function  | - | Call a function when clicking an item. It returns three callback values. <br /> <ol><li>The first is the current hyperlink Event (**Event**)</li><li>The second is the data (**JSON Object**)</li><li> The third is a callback function, which can initiate an asynchronous request to load children (usage: Please refer to the documentation [example](#load-data-asynchronously)) (**async Function**)</li></ol> | - |
+| `onDoubleSelect` | function  | - | It fires when the mouse pointer double clicks a cell. It returns three callback values. <br /> <ol><li>The first is the current hyperlink Event (**Event**)</li><li>The second is the data (**JSON Object**)</li><li> The third is a callback function, which can initiate an asynchronous request to load children (usage: Please refer to the documentation [example](#load-data-asynchronously)) (**async Function**)</li></ol> | - |
+| `onCollapse` | function  | - | Call a function when collapsing/expanding. It returns four callback values. <br /> <ol><li>The first is the current hyperlink Event (**Event**)</li><li>The second is the data (**JSON Object**)</li><li> The third is a callback function, which can initiate an asynchronous request to load children (usage: Please refer to the documentation [example](#load-data-asynchronously)) (**async Function**) </li><li>The last parameter is the state for determining whether to expand (**Boolean**)</li></ol>. <blockquote>When `disableArrow` is "true", click on the content to trigger it</blockquote> | - |
 | `onCheck` | function  | - | Call a function when changing the checkbox. It returns only one callback value (**Array**). <blockquote>It is valid when `checkable` is "true"</blockquote> | - |
-
-
 
 
 
@@ -1248,9 +1401,10 @@ Array configuration properties of the `data`:
 | --- | --- | --- | --- | --- |
 | `title` | string | - | The title attribute is used to provide the label text of the hyperlink. <blockquote>Support html tags</blockquote> | - |
 | `link` | string | - | Specify a URL address. | - |
-| `active` | boolean | - | Activate current item. | - |
+| `active` | boolean | - | Activate current item. If true, it will be expanded by default (Non-asynchronous mode). | - |
 | `selected` | boolean | - | Selected current item. | - |
 | `checked` | boolean | - | Whether the checkbox of the current item is selected. | - |
+| `disabled` | boolean | - | When present, it specifies that an option should be disabled. | - |
 | `heading` | string | - | Is it just plain text. Usually used as a separator. | - |
 | `icon` | string | - | Specify an icon string, which can be svg or classname. | - |
 | `slug` | string | - | specify a slug. It can be used for data query parameters | - |

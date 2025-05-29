@@ -38,6 +38,7 @@ export declare type SelectProps = {
     optionsExClassName?: string;
     exceededSidePosOffset?: number;
     clearIcon?: boolean;
+    renderOption?: (optionData: OptionConfig, index: number) => React.ReactNode;
     multiSelect?: MultiSelectConfig;
     multiSelectEntireAreaTrigger?: boolean;
     multiSelectSelectedItemOnlyStatus?: multiSelectSelectedItemOnlyStatusConfig;

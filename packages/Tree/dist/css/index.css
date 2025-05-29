@@ -41,6 +41,7 @@
 .tree-diagram-default .tree-diagram-default-nav .nav-link {
   position: relative;
   display: block;
+  cursor: pointer;
   min-width: var(--tree-link-min-width);
   padding: var(--tree-padding-y) var(--tree-padding-x);
   font-size: var(--tree-font-size);
@@ -50,6 +51,10 @@
   transition: 0.1s ease-in-out;
   padding-left: calc(var(--tree-padding-x) * 2);
   z-index: 1;
+}
+.tree-diagram-default .tree-diagram-default-nav .nav-link.disabled {
+  opacity: 0.5;
+  pointer-events: none;
 }
 .tree-diagram-default .tree-diagram-default-nav .nav-link > span {
   transition: 0.1s ease-in-out;

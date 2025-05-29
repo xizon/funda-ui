@@ -1,3 +1,5 @@
+
+
 /* ======================================================
     <!-- Tree -->
 /* ====================================================== */
@@ -42,6 +44,7 @@
         .nav-link {
             position: relative;
             display: block;
+            cursor: pointer;
             min-width: var(--tree-link-min-width);
             padding: var(--tree-padding-y) var(--tree-padding-x);
             font-size: var(--tree-font-size);
@@ -51,6 +54,11 @@
             transition: .1s ease-in-out;
             padding-left: calc(var(--tree-padding-x)*2);
             z-index: 1;
+
+            &.disabled {
+                opacity: .5;
+                pointer-events: none;
+            }
 
             > span {
                 transition: .1s ease-in-out;
@@ -184,14 +192,7 @@
             i {
                 font-style: normal;
             }
-            
-            > a {
-        
-                &:hover {
-                    
-                }
-            }
-
+ 
 
             &.active {
 
@@ -212,10 +213,7 @@
                 }                
             }
 
-            &.active > a {
-
-            }        
-
+    
         }
 
         > li {

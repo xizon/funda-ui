@@ -2752,7 +2752,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var funda_utils_dist_cjs_getElementProperty__WEBPACK_IMPORTED_MODULE_8___default = /*#__PURE__*/__webpack_require__.n(funda_utils_dist_cjs_getElementProperty__WEBPACK_IMPORTED_MODULE_8__);
 /* harmony import */ var funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(188);
 /* harmony import */ var funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_9___default = /*#__PURE__*/__webpack_require__.n(funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_9__);
-var _excluded = ["contentRef", "popupRef", "wrapperClassName", "controlClassName", "controlExClassName", "optionsExClassName", "controlGroupWrapperClassName", "controlGroupTextClassName", "exceededSidePosOffset", "appearance", "isSearchInput", "allowSpacingRetrive", "loader", "readOnly", "disabled", "required", "placeholder", "noMatchPopup", "options", "value", "label", "name", "units", "iconLeft", "iconRight", "minLength", "maxLength", "id", "autoComplete", "autoCapitalize", "spellCheck", "icon", "btnId", "fetchTrigger", "hideIcon", "depth", "style", "winWidth", "tabIndex", "data", "autoShowOptions", "fetchNoneInfo", "fetchUpdate", "fetchFuncAsync", "fetchFuncMethod", "fetchFuncMethodParams", "fetchCallback", "onClick", "onFetch", "onChange", "onKeyboardInput", "onBlur", "onPressEnter"];
+var _excluded = ["contentRef", "popupRef", "wrapperClassName", "controlClassName", "controlExClassName", "optionsExClassName", "controlGroupWrapperClassName", "controlGroupTextClassName", "exceededSidePosOffset", "appearance", "isSearchInput", "allowSpacingRetrive", "loader", "readOnly", "disabled", "required", "placeholder", "noMatchPopup", "options", "value", "label", "name", "units", "iconLeft", "iconRight", "minLength", "maxLength", "id", "autoComplete", "autoCapitalize", "spellCheck", "icon", "btnId", "fetchTrigger", "hideIcon", "renderOption", "depth", "style", "winWidth", "tabIndex", "data", "autoShowOptions", "fetchNoneInfo", "fetchUpdate", "fetchFuncAsync", "fetchFuncMethod", "fetchFuncMethodParams", "fetchCallback", "onClick", "onFetch", "onChange", "onKeyboardInput", "onBlur", "onPressEnter"];
 function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
 function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
 function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter); }
@@ -2816,6 +2816,7 @@ var LiveSearch = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(
     btnId = props.btnId,
     fetchTrigger = props.fetchTrigger,
     hideIcon = props.hideIcon,
+    renderOption = props.renderOption,
     depth = props.depth,
     style = props.style,
     winWidth = props.winWidth,
@@ -3301,7 +3302,7 @@ var LiveSearch = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(
             _context3.next = 23;
             break;
           case 9:
-            _curData = typeof el.target !== 'undefined' ? el.target.dataset.itemdata : el.dataset.itemdata;
+            _curData = typeof el.currentTarget !== 'undefined' ? el.currentTarget.dataset.itemdata : el.dataset.itemdata;
             if (!(typeof _curData === 'undefined')) {
               _context3.next = 12;
               break;
@@ -3659,11 +3660,12 @@ var LiveSearch = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(
       "data-itemdata": JSON.stringify(item),
       "data-list-item-label": "".concat(typeof item.listItemLabel === 'undefined' ? '' : item.listItemLabel),
       role: "tab",
+      onClick: handleSelect
+    }, typeof renderOption === 'function' ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, renderOption(item, index)) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
       dangerouslySetInnerHTML: {
         __html: typeof item.listItemLabel === 'undefined' ? item.label : item.listItemLabel
-      },
-      onClick: handleSelect
-    });
+      }
+    })));
   }) : null))))) : null, reqProgress ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
     className: "livesearch-loader ".concat(!hideIcon ? 'pos-offset' : '')
   }, loader || /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("svg", {

@@ -17,7 +17,6 @@ import {
 import { clsWrite, combinedCls } from 'funda-utils/dist/cjs/cls';
 
 
-
 export interface OptionConfig {
     disabled?: boolean;
     label: any;
@@ -60,6 +59,7 @@ export type LiveSearchProps = {
     btnId?: string;
     fetchTrigger?: boolean;
     hideIcon?: boolean;
+    renderOption?: (optionData: OptionConfig, index: number) => React.ReactNode;
     /** Set the depth value of the control to control the display of the pop-up layer appear above.
      * Please set it when multiple controls are used at the same time. */
     depth?: number;
@@ -125,6 +125,7 @@ const LiveSearch = forwardRef((props: LiveSearchProps, externalRef: any) => {
         btnId,
         fetchTrigger,
         hideIcon,
+        renderOption,
         depth,
         style,
         winWidth,
@@ -610,7 +611,7 @@ const LiveSearch = forwardRef((props: LiveSearchProps, externalRef: any) => {
             setChangedVal(_data.label);
 
         } else {
-            const _curData = typeof el.target !== 'undefined' ? el.target.dataset.itemdata : el.dataset.itemdata;
+            const _curData = typeof el.currentTarget !== 'undefined' ? el.currentTarget.dataset.itemdata : el.dataset.itemdata;
             if (typeof _curData === 'undefined') return;
     
             const _data = JSON.parse(_curData);
@@ -969,11 +970,18 @@ const LiveSearch = forwardRef((props: LiveSearchProps, externalRef: any) => {
                                             data-itemdata={JSON.stringify(item)}
                                             data-list-item-label={`${typeof item.listItemLabel === 'undefined' ? '' : item.listItemLabel}`}
                                             role="tab"
-                                            dangerouslySetInnerHTML={{
-                                                __html: typeof item.listItemLabel === 'undefined' ? item.label : item.listItemLabel
-                                            }}
                                             onClick={handleSelect}
-                                        ></button>
+                                        >
+
+                                            {typeof renderOption === 'function' ? <>
+                                                {renderOption(item, index)}
+                                            </> : <>
+                                                <span dangerouslySetInnerHTML={{
+                                                    __html: typeof item.listItemLabel === 'undefined' ? item.label : item.listItemLabel
+                                                }}></span>
+                                            </>}
+
+                                        </button>
                                     }) : null}
 
                                 </div>

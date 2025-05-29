@@ -1088,9 +1088,79 @@ export default () => {
 ```
 
 
+## Customize option rendering
+
+`renderOption` callback allows you to customize the UI style for the output of each option.
+
+```js
+import React from "react";
+import Select, { OptionConfig } from 'funda-ui/Select';
+
+// component styles
+import 'funda-ui/Select/index.css';
+
+export default () => {
+
+
+    return (
+        <>
+     
+            <Select
+                placeholder="Select"
+                name="name"
+                options={[
+                    {"label": "Option 1","value": "value-1","queryString": "option1"},
+                    {"label": "Option 2","value": "value-2","queryString": "option2"},
+                    {"label": "Option 3","value": "value-3","queryString": "option3"},
+                    {"label": "Option 4","value": "value-4","queryString": "option4", "disabled":true}
+                ]}
+                renderOption={(optionData: OptionConfig, index: number) => {
+                    return <div style={optionData.disabled ? {pointerEvents: 'none', opacity: .3} : undefined}>
+                        <em>{index}. </em>
+                        <strong>{optionData.label}</strong>
+                        <div><small style={{color: 'gray'}}>value: {optionData.value}</small></div>
+                    </div>;
+                }}
+                onChange={(e: any, e2: any, val: any) => {
+                    console.log(e, e2, val);
+                }}
+            />
+
+            <Select
+                multiSelect={{
+                    valid: true,
+                    selectAll: true,
+                    selectAllLabel: "Select all",
+                    deselectAllLabel: "Deselect all"
+                }}
+                placeholder="Select"
+                name="name2"
+                options={Array.from({ length: 100 }).fill(0).map((v, i) => ({
+                    label: `Title ${i}`,
+                    value: `${i}`,
+                    queryString: ""
+                }))}
+                renderOption={(optionData: OptionConfig, index: number) => {
+                    return <div style={optionData.disabled ? {pointerEvents: 'none', opacity: .3} : undefined}>
+                        <strong>{optionData.label}</strong>
+                        <div><small style={{color: 'gray'}}>value: {optionData.value}</small></div>
+                    </div>;
+                }}
+                onChange={(e: any, e2: any, val: any) => {
+                    console.log(e, e2, val);
+                }}
+            />
+
+        </>
+    );
+}
+```
+
+
+
 ## Render the selected value for multiple selection
 
-Customize the UI style displayed on the output of the control.
+`renderSelectedValue` callback allows you to customize the UI style displayed on the output of the control.
 
 ```js
 import React from "react";
@@ -2077,7 +2147,8 @@ import Select from 'funda-ui/Select';
 | `fetchFuncMethod` | string  | - | When the property is *true*, every time the select changes, a data request will be triggered. <br /><blockquote>The methord must be a Promise Object.</blockquote> | - |
 | `fetchFuncMethodParams` | array  | - | The parameter passed by the method, it is an array. <br />Note: the first element is a query string, the second element is the number of queried data (usually a number), and then you can increase the third, or fourth, and more parameters. <br />Such as `['',0]`, `['',99,'string 1','string 2']`, `['',99,'string 1','$QUERY_STRING']` <br /><blockquote>There should be at least one parameter which is the query string. <br />`$QUERY_STRING` identifies the ID of the automatic query, and its value depends on the user input string. In general, `$QUERY_STRING` is only used when `fetchTrigger` is true</blockquote> | - |
 | `fetchCallback` | function  | - | Return value from `fetchCallback` property to format the data of the API callback, which will match the data structure of the component. <br />At the same time it returns the original data, you will use this function and use the `return` keyword to return a new value. | - |
-| `renderSelectedValue` | function  | - | Render the selected value. It returns two callback values. <br /> <ol><li>The first is the slected data (**JSON Object**)</li><li>The second is the remove function of item (**Function**)</li></ol> <blockquote>Valid when `multiSelect` parameter exists</blockquote> | - |
+| `renderOption` | function  | - | A function to render content of the option, replaces the default content of the option. It passes two parameters. <br /> <ol><li>The first is the option data (**JSON Object**)</li><li>The second is the index of the current option (**Number**)</li></ol>| - |
+| `renderSelectedValue` | function  | - | Render the selected value. It passes two parameters. <br /> <ol><li>The first is the slected data (**JSON Object**)</li><li>The second is the remove function of item (**Function**)</li></ol> <blockquote>Valid when `multiSelect` parameter exists</blockquote> | - |
 | `onFetch` | function  | - | Call a function when  data is successfully fetched. It returns five callback values. <br /> <ol><li>The first is the current control (**HTML Element**)</li><li>The second is the control of the value save (**HTML Element**)</li><li> The third is the current value (**String**)</li><li>The fourth is the fetched data (**Array**)</li><li>The last is a string passed by the `data` attribute (**Any**)</li></ol> | - |
 | `onLoad` | function  | - | Call a function when the component has been rendered completely. It returns three callback values. <br /> <ol><li>The first is the current control</li><li>The second is the control of the value save</li><li> The third is the current value (**String**)</li></ol> | - |
 | `onChange` | function  | - | Call a function when the value of an HTML element is changed. It returns three callback values. <br /> <ol><li>The first is the current control (**HTML Element**)</li><li>The second is the control of the value save (**HTML Element**)</li><li>The last is the data [Exposes the JSON (Returns an Array Collection when `multiSelect` is enabled) format data] about the option as an argument. (**JSON Object**)</li></ol> | - |

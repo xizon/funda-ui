@@ -2,12 +2,22 @@ import React from 'react';
 export interface ListSearchDataConfig {
     title: string | number;
 }
+export interface ItemConfig {
+    key: string;
+    slug: string;
+    link: string;
+    optiondata: string;
+}
+export interface UpdateDataFunction {
+    (key: React.Key | null, fetch: FetchConfig | null): Promise<void>;
+}
 export interface DataNode {
     key: React.Key;
     title: string;
     link?: string;
     active?: boolean;
     checked?: boolean;
+    disabled?: boolean;
     heading?: string;
     icon?: string;
     slug?: string;
@@ -35,6 +45,8 @@ export declare type TreeProps = {
     lineStyle?: string;
     /** Mutually exclusive alternate expansion between the first levels */
     alternateCollapse?: boolean;
+    /** A function to render content of the option, replaces the default content of the option. */
+    renderOption?: (optionData: DataNode, key: React.Key) => React.ReactNode;
     /** set an arrow */
     arrow?: React.ReactNode;
     /** Set collapse/expand icon */
@@ -53,9 +65,9 @@ export declare type TreeProps = {
     retrieveData?: ListSearchDataConfig[];
     /** -- */
     id?: string;
-    onSelect?: (e: any, val: any, func: Function) => void;
-    onDoubleSelect?: (e: any, val: any, func: Function) => void;
-    onCollapse?: (e: any, val: any, func: Function) => void;
+    onSelect?: (e: React.MouseEvent<HTMLElement>, val: ItemConfig, updateData: UpdateDataFunction) => void;
+    onDoubleSelect?: (e: React.MouseEvent<HTMLElement>, val: ItemConfig, updateData: UpdateDataFunction) => void;
+    onCollapse?: (e: React.MouseEvent<HTMLElement>, val: ItemConfig, updateData: UpdateDataFunction, isExpanded: boolean) => void;
     onCheck?: (val: any) => void;
 };
 declare const Tree: (props: TreeProps) => JSX.Element;

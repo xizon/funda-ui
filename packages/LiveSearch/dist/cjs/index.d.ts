@@ -39,6 +39,7 @@ export declare type LiveSearchProps = {
     btnId?: string;
     fetchTrigger?: boolean;
     hideIcon?: boolean;
+    renderOption?: (optionData: OptionConfig, index: number) => React.ReactNode;
     /** Set the depth value of the control to control the display of the pop-up layer appear above.
      * Please set it when multiple controls are used at the same time. */
     depth?: number;
