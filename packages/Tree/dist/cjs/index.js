@@ -1139,8 +1139,8 @@ function TreeList(props) {
     expandedMap = props.expandedMap,
     onSelect = props.onSelect,
     onDoubleSelect = props.onDoubleSelect,
-    onCollapse = props.onCollapse,
     onCheck = props.onCheck,
+    evCollapse = props.evCollapse,
     evInitValue = props.evInitValue;
   var rootRef = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useRef)(null);
   var mergedData = data === null ? [] : data.map(function (item) {
@@ -1321,7 +1321,7 @@ function TreeList(props) {
       }, _callee);
     })));
     if (disableArrow) {
-      onCollapse === null || onCollapse === void 0 ? void 0 : onCollapse(e);
+      evCollapse === null || evCollapse === void 0 ? void 0 : evCollapse(e);
     }
   }
   function handleDoubleSelect(e) {
@@ -1358,7 +1358,7 @@ function TreeList(props) {
       }, _callee2);
     })));
     if (disableArrow) {
-      onCollapse === null || onCollapse === void 0 ? void 0 : onCollapse(e);
+      evCollapse === null || evCollapse === void 0 ? void 0 : evCollapse(e);
     }
   }
   function titleArrowGenerator() {
@@ -1527,7 +1527,7 @@ function TreeList(props) {
       }, item.children && item.children.length || item.childrenAsync ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("span", {
         "aria-expanded": JSON.parse(optiondata).isExpanded || item.active ? 'true' : 'false',
         className: item.active ? "arrow active ".concat(_async, " ").concat(_cusIcons) : "arrow ".concat(_async, " ").concat(_cusIcons),
-        onClick: onCollapse,
+        onClick: evCollapse,
         "data-link": item.link,
         "data-slug": item.slug,
         "data-key": item.key,
@@ -1614,7 +1614,7 @@ function TreeList(props) {
         // Collapse
         ,
         expandedMap: expandedMap,
-        onCollapse: onCollapse
+        evCollapse: evCollapse
       }));
     })));
   } else {
@@ -1622,7 +1622,7 @@ function TreeList(props) {
   }
 }
 ;// CONCATENATED MODULE: ./src/index.tsx
-function src_createForOfIteratorHelper(o, allowArrayLike) { var it = typeof Symbol !== "undefined" && o[Symbol.iterator] || o["@@iterator"]; if (!it) { if (Array.isArray(o) || (it = src_unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function (_e2) { function e(_x9) { return _e2.apply(this, arguments); } e.toString = function () { return _e2.toString(); }; return e; }(function (e) { throw e; }), f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = it.call(o); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function (_e3) { function e(_x10) { return _e3.apply(this, arguments); } e.toString = function () { return _e3.toString(); }; return e; }(function (e) { didErr = true; err = e; }), f: function f() { try { if (!normalCompletion && it["return"] != null) it["return"](); } finally { if (didErr) throw err; } } }; }
+function src_createForOfIteratorHelper(o, allowArrayLike) { var it = typeof Symbol !== "undefined" && o[Symbol.iterator] || o["@@iterator"]; if (!it) { if (Array.isArray(o) || (it = src_unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function (_e2) { function e(_x10) { return _e2.apply(this, arguments); } e.toString = function () { return _e2.toString(); }; return e; }(function (e) { throw e; }), f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = it.call(o); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function (_e3) { function e(_x11) { return _e3.apply(this, arguments); } e.toString = function () { return _e3.toString(); }; return e; }(function (e) { didErr = true; err = e; }), f: function f() { try { if (!normalCompletion && it["return"] != null) it["return"](); } finally { if (didErr) throw err; } } }; }
 function src_typeof(obj) { "@babel/helpers - typeof"; return src_typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, src_typeof(obj); }
 function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || src_unsupportedIterableToArray(arr) || _nonIterableSpread(); }
 function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
@@ -1649,7 +1649,7 @@ function src_arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 
 
-var Tree = function Tree(props) {
+var Tree = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_amd_react_.forwardRef)(function (props, ref) {
   var id = props.id,
     checkable = props.checkable,
     showLine = props.showLine,
@@ -1719,6 +1719,7 @@ var Tree = function Tree(props) {
     if (!rootRef.current) return;
     var observer = new MutationObserver(function (mutations) {
       // Check whether any new ul elements have been added
+      // Changes of <li> are captured by changes in their parent <ul>
       var hasNewUL = mutations.some(function (mutation) {
         return Array.from(mutation.addedNodes).some(function (node) {
           return node.nodeName === 'UL';
@@ -1731,9 +1732,15 @@ var Tree = function Tree(props) {
     });
     observer.observe(rootRef.current, {
       childList: true,
-      subtree: true
+      // Observe the addition or deletion of child nodes
+      subtree: true,
+      // Observe all descendant nodes
+      attributes: false,
+      // Do not observe attribute changes
+      characterData: false // Do not observe text content changes
     });
   };
+
   var updateTreeData = /*#__PURE__*/function () {
     var _ref = src_asyncToGenerator( /*#__PURE__*/src_regeneratorRuntime().mark(function _callee2(list, key, children) {
       var updatedList;
@@ -1820,11 +1827,23 @@ var Tree = function Tree(props) {
     // init <ul> height
     initUlHeight(ul);
   };
-  function handleCollapse(e) {
+  function handleCollapse(e, slug) {
     if (disableCollapse) return;
-    e.preventDefault();
-    e.stopPropagation();
-    var hyperlink = e.currentTarget;
+    if (e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+    var hyperlink;
+    if (e) {
+      hyperlink = e.currentTarget;
+    } else if (slug && rootRef.current) {
+      // Find the hyperlink element by slug
+      var linkElement = rootRef.current.querySelector("[data-slug=\"".concat(slug, "\"]"));
+      if (!linkElement) return;
+      hyperlink = linkElement;
+    } else {
+      return;
+    }
     var url = hyperlink.dataset.href;
     var subElement = (0,dom.getNextSiblings)(hyperlink, 'ul');
     var asyncReqReady = hyperlink.classList.contains('async-ready');
@@ -1897,26 +1916,102 @@ var Tree = function Tree(props) {
       closeChild(hyperlink, subElement);
     }
   }
-  function fetchData(_x6, _x7) {
+  var observeElement = function observeElement(ancestorNode) {
+    return new Promise(function (resolve) {
+      var observer = new MutationObserver(function (mutations) {
+        // Check whether any new ul elements have been added
+        // It is necessary to listen for <li> because <li> may be added dynamically in the business
+        var hasNewUL = mutations.some(function (mutation) {
+          return Array.from(mutation.addedNodes).some(function (node) {
+            return node.nodeName === 'UL' || node.nodeName === 'LI';
+          });
+        });
+        if (hasNewUL) {
+          observer.disconnect();
+          var ul = [].slice.call(ancestorNode.querySelectorAll('ul'));
+          initAsyncItems(ul).then(function () {
+            initUlHeight(ul);
+          });
+          resolve();
+        }
+      });
+      observer.observe(ancestorNode, {
+        childList: true,
+        // Observe the addition or deletion of child nodes
+        subtree: true,
+        // Observe all descendant nodes
+        attributes: false,
+        // Do not observe attribute changes
+        characterData: false // Do not observe text content changes
+      });
+    });
+  };
+
+  // exposes the following methods
+  (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useImperativeHandle)(ref, function () {
+    return {
+      collapse: function collapse(slug) {
+        handleCollapse(undefined, slug);
+      },
+      updateParentTreeHeights: function () {
+        var _updateParentTreeHeights = src_asyncToGenerator( /*#__PURE__*/src_regeneratorRuntime().mark(function _callee5(targetElement) {
+          var _ancestorNode;
+          return src_regeneratorRuntime().wrap(function _callee5$(_context5) {
+            while (1) switch (_context5.prev = _context5.next) {
+              case 0:
+                if (!(targetElement !== null)) {
+                  _context5.next = 11;
+                  break;
+                }
+                // Find the topmost node, in order to fix the subtree height under this node
+                _ancestorNode = targetElement.closest('.nav-item.first');
+                if (!(_ancestorNode !== null)) {
+                  _context5.next = 11;
+                  break;
+                }
+                _context5.prev = 3;
+                _context5.next = 6;
+                return observeElement(_ancestorNode);
+              case 6:
+                _context5.next = 11;
+                break;
+              case 8:
+                _context5.prev = 8;
+                _context5.t0 = _context5["catch"](3);
+                console.warn('Failed to update ul height:', _context5.t0);
+              case 11:
+              case "end":
+                return _context5.stop();
+            }
+          }, _callee5, null, [[3, 8]]);
+        }));
+        function updateParentTreeHeights(_x6) {
+          return _updateParentTreeHeights.apply(this, arguments);
+        }
+        return updateParentTreeHeights;
+      }()
+    };
+  }, [rootRef.current, onCollapse]); // !Required "onCollapse"
+  function fetchData(_x7, _x8) {
     return _fetchData.apply(this, arguments);
   }
   function _fetchData() {
-    _fetchData = src_asyncToGenerator( /*#__PURE__*/src_regeneratorRuntime().mark(function _callee5(fetch, params) {
+    _fetchData = src_asyncToGenerator( /*#__PURE__*/src_regeneratorRuntime().mark(function _callee6(fetch, params) {
       var _fetch$fetchFuncAsync, response, _ORGIN_DATA;
-      return src_regeneratorRuntime().wrap(function _callee5$(_context5) {
-        while (1) switch (_context5.prev = _context5.next) {
+      return src_regeneratorRuntime().wrap(function _callee6$(_context6) {
+        while (1) switch (_context6.prev = _context6.next) {
           case 0:
             if (!(src_typeof(fetch.fetchFuncAsync) === 'object')) {
-              _context5.next = 14;
+              _context6.next = 14;
               break;
             }
-            _context5.next = 3;
+            _context6.next = 3;
             return (_fetch$fetchFuncAsync = fetch.fetchFuncAsync)["".concat(fetch.fetchFuncMethod)].apply(_fetch$fetchFuncAsync, _toConsumableArray(params.split(',')));
           case 3:
-            response = _context5.sent;
+            response = _context6.sent;
             _ORGIN_DATA = response.data;
             if (!(Array.isArray(_ORGIN_DATA) && _ORGIN_DATA.length > 0)) {
-              _context5.next = 11;
+              _context6.next = 11;
               break;
             }
             // reset data structure
@@ -1929,19 +2024,19 @@ var Tree = function Tree(props) {
               console.warn('The data structure does not match, please refer to the example in the component documentation.');
               _ORGIN_DATA = [];
             }
-            return _context5.abrupt("return", _ORGIN_DATA);
+            return _context6.abrupt("return", _ORGIN_DATA);
           case 11:
-            return _context5.abrupt("return", []);
+            return _context6.abrupt("return", []);
           case 12:
-            _context5.next = 15;
+            _context6.next = 15;
             break;
           case 14:
-            return _context5.abrupt("return", []);
+            return _context6.abrupt("return", []);
           case 15:
           case "end":
-            return _context5.stop();
+            return _context6.stop();
         }
-      }, _callee5);
+      }, _callee6);
     }));
     return _fetchData.apply(this, arguments);
   }
@@ -2010,11 +2105,11 @@ var Tree = function Tree(props) {
       }
     });
   }
-  function initDefaultValue(_x8) {
+  function initDefaultValue(_x9) {
     return _initDefaultValue.apply(this, arguments);
   }
   function _initDefaultValue() {
-    _initDefaultValue = src_asyncToGenerator( /*#__PURE__*/src_regeneratorRuntime().mark(function _callee6(key) {
+    _initDefaultValue = src_asyncToGenerator( /*#__PURE__*/src_regeneratorRuntime().mark(function _callee7(key) {
       var fetch,
         firstRender,
         retrieveData,
@@ -2025,15 +2120,16 @@ var Tree = function Tree(props) {
         _childrenData,
         findAndUpdateNode,
         _clone2,
-        _args6 = arguments;
-      return src_regeneratorRuntime().wrap(function _callee6$(_context6) {
-        while (1) switch (_context6.prev = _context6.next) {
+        _findAndUpdateNode,
+        _args7 = arguments;
+      return src_regeneratorRuntime().wrap(function _callee7$(_context7) {
+        while (1) switch (_context7.prev = _context7.next) {
           case 0:
-            fetch = _args6.length > 1 && _args6[1] !== undefined ? _args6[1] : null;
-            firstRender = _args6.length > 2 && _args6[2] !== undefined ? _args6[2] : false;
-            retrieveData = _args6.length > 3 && _args6[3] !== undefined ? _args6[3] : [];
+            fetch = _args7.length > 1 && _args7[1] !== undefined ? _args7[1] : null;
+            firstRender = _args7.length > 2 && _args7[2] !== undefined ? _args7[2] : false;
+            retrieveData = _args7.length > 3 && _args7[3] !== undefined ? _args7[3] : [];
             if (!firstRender) {
-              _context6.next = 11;
+              _context7.next = 11;
               break;
             }
             addKey(data, '', 0);
@@ -2057,27 +2153,27 @@ var Tree = function Tree(props) {
             // update retrive list
             _clone = (0,object.deepClone)(data);
             setFlatList((0,object.flatData)(_clone));
-            return _context6.abrupt("return", data);
+            return _context7.abrupt("return", data);
           case 11:
             if (!(fetch && src_typeof(fetch.fetchFuncAsync) === 'object')) {
-              _context6.next = 31;
+              _context7.next = 34;
               break;
             }
             _newData = list; //
             _params = fetch.fetchFuncMethodParams || [];
-            _context6.next = 16;
+            _context7.next = 16;
             return fetchData(fetch, _params.join(','));
           case 16:
-            response = _context6.sent;
+            response = _context7.sent;
             _childrenData = response;
             if (!(_childrenData.length > 0)) {
-              _context6.next = 29;
+              _context7.next = 31;
               break;
             }
-            _context6.next = 21;
+            _context7.next = 21;
             return updateTreeData(list, key ? key : '', _childrenData);
           case 21:
-            _newData = _context6.sent;
+            _newData = _context7.sent;
             // set its childrenAsync property to false and active to true since we've successfully loaded its children
             if (key) {
               findAndUpdateNode = function findAndUpdateNode(nodes) {
@@ -2134,15 +2230,48 @@ var Tree = function Tree(props) {
             // update retrive list
             _clone2 = (0,object.deepClone)(_newData);
             setFlatList((0,object.flatData)(_clone2));
-          case 29:
+            _context7.next = 32;
+            break;
+          case 31:
+            // If empty response, remove loading state and set childrenAsync to false
+            if (key) {
+              _findAndUpdateNode = function _findAndUpdateNode(nodes) {
+                var _iterator2 = src_createForOfIteratorHelper(nodes),
+                  _step2;
+                try {
+                  for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {
+                    var node = _step2.value;
+                    if (node.key === key) {
+                      var _rootRef$current;
+                      node.childrenAsync = false;
+                      // Remove loading class from the hyperlink element
+                      var linkElement = (_rootRef$current = rootRef.current) === null || _rootRef$current === void 0 ? void 0 : _rootRef$current.querySelector("[data-key=\"".concat(key, "\"]"));
+                      if (linkElement) {
+                        activeClass(linkElement, 'remove', 'loading');
+                      }
+                      break;
+                    }
+                    if (node.children) {
+                      _findAndUpdateNode(node.children);
+                    }
+                  }
+                } catch (err) {
+                  _iterator2.e(err);
+                } finally {
+                  _iterator2.f();
+                }
+              };
+              _findAndUpdateNode(_newData);
+            }
+          case 32:
             // dom init
             observeDOMChanges();
-            return _context6.abrupt("return", _newData);
-          case 31:
+            return _context7.abrupt("return", _newData);
+          case 34:
           case "end":
-            return _context6.stop();
+            return _context7.stop();
         }
-      }, _callee6);
+      }, _callee7);
     }));
     return _initDefaultValue.apply(this, arguments);
   }
@@ -2189,9 +2318,9 @@ var Tree = function Tree(props) {
     // Collapse
     ,
     expandedMap: expandedMap,
-    onCollapse: handleCollapse
+    evCollapse: handleCollapse
   })));
-};
+});
 /* harmony default export */ const src = (Tree);
 })();
 

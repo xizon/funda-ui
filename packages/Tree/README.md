@@ -1366,6 +1366,162 @@ export default () => {
 
 
 
+## Use the exposed method to expand or update the subtree height
+
+Lets you callback the handle exposed as attribute `ref`.
+
+```js
+import React, { useRef } from 'react';
+import Tree, { TreeRef } from 'funda-ui/Tree';
+
+// component styles
+import 'funda-ui/Tree/index.css';
+
+const treeData = [
+    {
+        title: "Top level 1",
+        link: "#",
+        slug: 'level-1',
+        active: true,
+        children: [
+            {
+                title: "<span style='color:red;'>Sub level 1_1</span>",
+                link: "#1-1",
+                slug: 'level-1_1',
+                active: true,
+                children: [{
+                    title: "Sub Sub Level 1_1",
+                    link: "#1-1-1",
+                    slug: 'level-1_1_1',
+                    children: [{
+                        title: "Sub Sub Sub Level 1_1",
+                        link: "#1-1-1-1"
+                    }]
+                }]
+            },
+            {
+                title: "Sub level 1_2",
+                link: "#1-2",
+                slug: 'level-1_2',
+            }]
+    },
+    {
+        title: "Top level 2 (heading)",
+        heading: true,
+        link: "https://example.com",
+        slug: 'level-2',
+    },
+    {
+        title: "Top level 3",
+        icon: `<svg height="15px" width="15px" viewBox="0 0 32 32"><path fill="#000" d="M16,1C9.925,1,5,5.925,5,12c0,10,10,19,11,19s11-9,11-19C27,5.925,22.075,1,16,1z M16,16c-2.209,0-4-1.791-4-4c0-2.209,1.791-4,4-4s4,1.791,4,4C20,14.209,18.209,16,16,16z"/></svg>`,
+        link: "#",
+        slug: 'level-3',
+        children: [
+            {
+                title: "Sub level 3_1",
+                link: "#",
+                slug: 'level-3_1'
+            },
+            {
+                title: "Sub level 3_2",
+                link: "#",
+                slug: 'level-3_2'
+            },
+            {
+                title: "Sub level 3_3",
+                link: "#",
+                slug: 'level-3_3',
+                disabled: true
+            }]
+    },
+    {
+        title: "Top level 4",
+        link: "/s",
+        slug: 'level-4'
+    },
+    {
+        title: "Top level 5",
+        link: "/k",
+        slug: 'level-5',
+        active: true,
+        children: [
+            {
+                title: "Sub level 5_1",
+                link: "/u",
+                slug: 'level-5_1'
+            }]
+    },
+    {
+        title: "Top level 6",
+        link: "/k",
+        slug: 'level-6'
+    },
+    {
+        title: "Top level 7",
+        link: "#",
+        slug: 'level-7'
+    }
+];
+
+export default () => {
+
+    const treeRef = useRef<TreeRef>(null);
+    
+    return (
+
+        <>
+
+            <a 
+                href="#"
+                onClick={(e: React.MouseEvent) => {
+                    e.preventDefault();
+                    treeRef.current?.collapse('level-3');
+                }}
+            >Expand "Top level 3"</a>
+            <br />
+            <a 
+                href="#"
+                onClick={(e: React.MouseEvent) => {
+                    e.preventDefault();
+
+                    const _anyEl = document.querySelector('#demo-7-tree [data-slug="level-1_2"]');
+                    if (_anyEl !== null) {
+                        // insert a new <li>
+                        const targetLi = _anyEl.closest('.nav-item');
+                        const newLi = document.createElement("li");
+                        newLi.className = 'nav-item';
+                        newLi.innerHTML = '<div tabindex="-1" class="nav-link" data-href="#new-item-here" aria-expanded="false" data-link="#new-item-here" data-slug="level-new-item-here" data-key="0-new-item-here" data-optiondata="{}"><span><i style="color:blue">New Item Here</i></span></div>';
+                        targetLi.parentNode.insertBefore(newLi, targetLi.nextSibling);
+                    }
+                  
+                    treeRef.current?.updateParentTreeHeights(_anyEl);
+                }}
+            >Update the heights of all subtrees of "Top level 1" (Click repeatedly to view the effect) </a>
+           
+
+            <Tree 
+                ref={treeRef}
+                data={treeData} 
+                showLine={true}
+                onSelect={(
+                    e: React.MouseEvent<HTMLElement>,
+                    val: {
+                        key?: string;
+                        slug?: string;
+                        link?: string;
+                        optiondata?: string;
+                    }
+                ) => {
+                    console.log(val);
+                }}  
+            />
+
+        </>
+    )
+}
+```
+
+
 ## API
 
 ### Tree
@@ -1374,6 +1530,7 @@ import Tree from 'funda-ui/Tree';
 ```
 | Property | Type | Default | Description | Required |
 | --- | --- | --- | --- | --- |
+| `ref` | React.ForwardedRef | - | It exposes the following methods of the component:  <br /> <ol><li>`ref.current.collapse(slug: string);`: Expand the current item based on slug</li><li>`ref.current.updateParentTreeHeights(targetElement: HTMLElement);`: Pass in a target HTMLElement and it will find the top-level parent element. This function updates the heights of all nested \<ul\> elements within a tree structure by finding the topmost parent node and observing its DOM changes to ensure proper tree expansion/collapse animations.</li></ol> | - |
 | `treeClassName` | string | `tree-diagram-default` | The class name of the tree. | - |
 | `childClassName` | string | `tree-diagram` | The class name of the child on `<ul>`. | - |
 | `checkable` | boolean | false | Set TreeNode display Checkbox or not. | - |

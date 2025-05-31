@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, forwardRef, useImperativeHandle } from 'react';
 
 
 import useComId from 'funda-utils/dist/cjs/useComId';
@@ -108,7 +108,12 @@ export type TreeProps = {
     onCheck?: (val: any) => void;
 };
 
-const Tree = (props: TreeProps) => {
+export interface TreeRef {
+    collapse: (slug: string) => void;
+    updateParentTreeHeights: (targetElement: HTMLElement) => Promise<void>;
+}
+
+const Tree = forwardRef<TreeRef, TreeProps>((props, ref) => {
     const {
         id,
         checkable,
@@ -168,6 +173,7 @@ const Tree = (props: TreeProps) => {
 
         const observer = new MutationObserver((mutations) => {
             // Check whether any new ul elements have been added
+            // Changes of <li> are captured by changes in their parent <ul>
             const hasNewUL = mutations.some(mutation => 
                 Array.from(mutation.addedNodes).some(node => 
                     node.nodeName === 'UL'
@@ -181,8 +187,10 @@ const Tree = (props: TreeProps) => {
         });
 
         observer.observe(rootRef.current, {
-            childList: true,
-            subtree: true
+            childList: true, // Observe the addition or deletion of child nodes
+            subtree: true, // Observe all descendant nodes
+            attributes: false, // Do not observe attribute changes
+            characterData: false // Do not observe text content changes
         });
     };
 
@@ -234,37 +242,50 @@ const Tree = (props: TreeProps) => {
 
     };
 
-    function handleCollapse(e: React.MouseEvent<HTMLElement>) {
+    function handleCollapse(e?: React.MouseEvent<HTMLElement>, slug?: string) {
+        if (disableCollapse) return;
 
-        if ( disableCollapse ) return;
+        if (e) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
 
-        e.preventDefault();
-        e.stopPropagation();
+        let hyperlink: HTMLElement;
         
-        const hyperlink = e.currentTarget;
+        if (e) {
+            hyperlink = e.currentTarget;
+        } else if (slug && rootRef.current) {
+            // Find the hyperlink element by slug
+            const linkElement = rootRef.current.querySelector(`[data-slug="${slug}"]`);
+            if (!linkElement) return;
+            hyperlink = linkElement as HTMLElement;
+        } else {
+            return;
+        }
+
+
         const url = hyperlink.dataset.href;
         const subElement = getNextSiblings(hyperlink, 'ul');
         const asyncReqReady = hyperlink.classList.contains('async-ready');
 
         // loading
         //=====================       
-        if ( asyncReqReady ) {
+        if (asyncReqReady) {
             activeClass(hyperlink, 'add', 'loading');
         }
 
-        
         // calback
         //=====================
         const fetchFunc: UpdateDataFunction = asyncReqReady ? (typeof initDefaultValue !== 'function' ? async () => void(0) : initDefaultValue) : async () => void(0);
-      
+
+
         const optiondata = typeof hyperlink.dataset.optiondata !== 'undefined' ? hyperlink.dataset.optiondata : '{}';
-        onCollapse?.(e, {
+        onCollapse?.(e as React.MouseEvent<HTMLElement>, {
             key: hyperlink.dataset.key as string,
             slug: hyperlink.dataset.slug as string,
             link: hyperlink.dataset.link as string,
             optiondata: optiondata as string
         }, fetchFunc, JSON.parse(optiondata as string).isExpanded);
-
 
         // update expanded status
         //=====================
@@ -274,18 +295,14 @@ const Tree = (props: TreeProps) => {
             [hyperlink.dataset.key as string]: !isExpanded
         }));
 
-
         // hide child if expandedLink doesn't exist, on the contrary
         //=====================
-        if ( hyperlink.classList.contains('loading') ) return;
+        if (hyperlink.classList.contains('loading')) return;
 
-        if ( hyperlink.getAttribute('aria-expanded') === 'false' || hyperlink.getAttribute('aria-expanded') === null ) {
-
-
+        if (hyperlink.getAttribute('aria-expanded') === 'false' || hyperlink.getAttribute('aria-expanded') === null) {
             //Hide all other siblings of the selected <ul>
             if (alternateCollapse) {
                 [].slice.call(rootRef.current.firstChild.children).forEach(function (li: any) {
-
                     activeClass(li, 'remove');
 
                     const _li = li.firstChild;
@@ -298,22 +315,64 @@ const Tree = (props: TreeProps) => {
                 });
             }
 
-
             //open current
             openChild(hyperlink, subElement as never);
-            
-            
-
         } else {
-
             //close current
             closeChild(hyperlink, subElement as never);
-
         }
-
-
     }
 
+    const observeElement = (ancestorNode: HTMLElement) => {
+        return new Promise<void>((resolve) => {
+            const observer = new MutationObserver((mutations) => {
+                // Check whether any new ul elements have been added
+                // It is necessary to listen for <li> because <li> may be added dynamically in the business
+                const hasNewUL = mutations.some(mutation => 
+                    Array.from(mutation.addedNodes).some(node => 
+                        (node.nodeName === 'UL' || node.nodeName === 'LI')
+                    )
+                );
+
+                if (hasNewUL) {
+                    observer.disconnect();
+                    const ul: any = [].slice.call(ancestorNode.querySelectorAll('ul'));
+                    initAsyncItems(ul as never).then(() => {
+                        initUlHeight(ul);
+                    });
+                    resolve();
+                }
+            });
+
+            observer.observe(ancestorNode, {
+                childList: true, // Observe the addition or deletion of child nodes
+                subtree: true, // Observe all descendant nodes
+                attributes: false, // Do not observe attribute changes
+                characterData: false // Do not observe text content changes
+            });
+        });
+    };
+
+    // exposes the following methods
+    useImperativeHandle(ref, () => ({
+        collapse: (slug: string) => {
+            handleCollapse(undefined, slug);
+        },
+        updateParentTreeHeights: async (targetElement: HTMLElement) => {
+            
+            if (targetElement !== null) {
+                // Find the topmost node, in order to fix the subtree height under this node
+                const _ancestorNode = targetElement.closest('.nav-item.first') as HTMLElement;
+                if (_ancestorNode !== null) {
+                    try {
+                        await observeElement(_ancestorNode);
+                    } catch (error) {
+                        console.warn('Failed to update ul height:', error);
+                    }
+                }
+            }
+        }
+    }), [rootRef.current, onCollapse]); // !Required "onCollapse"
 
     async function fetchData(fetch: FetchConfig, params: any) {
 
@@ -512,6 +571,27 @@ const Tree = (props: TreeProps) => {
                 setFlatList(flatData(_clone));
                 
 
+            } else {
+                // If empty response, remove loading state and set childrenAsync to false
+                if (key) {
+                    const findAndUpdateNode = (nodes: DataNode[]) => {
+                        for (let node of nodes) {
+                            if (node.key === key) {
+                                node.childrenAsync = false;
+                                // Remove loading class from the hyperlink element
+                                const linkElement = rootRef.current?.querySelector(`[data-key="${key}"]`);
+                                if (linkElement) {
+                                    activeClass(linkElement, 'remove', 'loading');
+                                }
+                                break;
+                            }
+                            if (node.children) {
+                                findAndUpdateNode(node.children);
+                            }
+                        }
+                    };
+                    findAndUpdateNode(_newData as DataNode[]);
+                }
             }
 
             // dom init
@@ -568,7 +648,7 @@ const Tree = (props: TreeProps) => {
 
                     // Collapse
                     expandedMap={expandedMap}
-                    onCollapse={handleCollapse}
+                    evCollapse={handleCollapse}
                     
                 />
                 
@@ -576,6 +656,6 @@ const Tree = (props: TreeProps) => {
 
         </>
     )
-};
+});
 
 export default Tree;

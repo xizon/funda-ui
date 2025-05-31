@@ -70,5 +70,9 @@ export declare type TreeProps = {
     onCollapse?: (e: React.MouseEvent<HTMLElement>, val: ItemConfig, updateData: UpdateDataFunction, isExpanded: boolean) => void;
     onCheck?: (val: any) => void;
 };
-declare const Tree: (props: TreeProps) => JSX.Element;
+export interface TreeRef {
+    collapse: (slug: string) => void;
+    updateParentTreeHeights: (targetElement: HTMLElement) => Promise<void>;
+}
+declare const Tree: React.ForwardRefExoticComponent<TreeProps & React.RefAttributes<TreeRef>>;
 export default Tree;

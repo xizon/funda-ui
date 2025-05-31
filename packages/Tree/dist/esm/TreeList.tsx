@@ -47,8 +47,8 @@ export type TreeListProps = {
         val: ItemConfig, 
         updateData: UpdateDataFunction
     ) => void;
-    onCollapse?: (e: React.MouseEvent<HTMLElement>) => void;
     onCheck?: (val: any) => void;
+    evCollapse?: (e: React.MouseEvent<HTMLElement>) => void;
     evInitValue?: UpdateDataFunction;
 };
 
@@ -74,8 +74,8 @@ export default function TreeList(props: TreeListProps) {
         expandedMap,
         onSelect,
         onDoubleSelect,
-        onCollapse,
         onCheck,
+        evCollapse,
         evInitValue
         
     } = props;
@@ -219,7 +219,7 @@ export default function TreeList(props: TreeListProps) {
         });
 
         if ( disableArrow ) {
-            onCollapse?.(e);
+            evCollapse?.(e);
 
         }
     }
@@ -252,7 +252,7 @@ export default function TreeList(props: TreeListProps) {
         });
 
         if (disableArrow) {
-            onCollapse?.(e);
+            evCollapse?.(e);
         }
     }
     
@@ -464,7 +464,7 @@ export default function TreeList(props: TreeListProps) {
                             {(item.children && item.children.length) || item.childrenAsync ? <span 
                                 aria-expanded={JSON.parse(optiondata as string).isExpanded || item.active ? 'true' : 'false'}
                                 className={item.active ? `arrow active ${_async} ${_cusIcons}` : `arrow ${_async} ${_cusIcons}`} 
-                                onClick={onCollapse} 
+                                onClick={evCollapse} 
                                 data-link={item.link} 
                                 data-slug={item.slug} 
                                 data-key={item.key} 
@@ -577,7 +577,7 @@ export default function TreeList(props: TreeListProps) {
 
                                                 // Collapse
                                                 expandedMap={expandedMap}
-                                                onCollapse={onCollapse} 
+                                                evCollapse={evCollapse} 
                                                                                                 
 
                                             />}
