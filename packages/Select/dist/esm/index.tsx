@@ -53,7 +53,6 @@ import { clsWrite, combinedCls } from 'funda-utils/dist/cjs/cls';
 
 
 
-
 export type SelectOptionChangeFnType = (arg1: any, arg2: any, arg3: any) => void;
 
 
@@ -2046,7 +2045,7 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
             // ++++++++++++++++++++
             // Single selection
             // ++++++++++++++++++++
-            if (typeof value === 'object' && !Array.isArray(value)) {
+            if (typeof value === 'object' && !Array.isArray(value) && value !== null) {
                 if (typeof value.value !== 'undefined' && value.value !== null) setControlValue(value.value as string);
                 if (typeof value.label !== 'undefined' && value.label !== null) setControlLabel(formatIndentVal(value.label, INDENT_LAST_PLACEHOLDER));
             }
@@ -2126,7 +2125,7 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
                 // ++++++++++++++++++++
                 // Single selection
                 // ++++++++++++++++++++
-                if (typeof defaultValue === 'object' && !Array.isArray(defaultValue)) {
+                if (typeof defaultValue === 'object' && !Array.isArray(defaultValue) && defaultValue !== null) {
                     if (typeof defaultValue.value !== 'undefined' && defaultValue.value !== null) setControlValue(defaultValue.value as string);
                     if (typeof defaultValue.label !== 'undefined' && defaultValue.label !== null) setControlLabel(formatIndentVal(defaultValue.label, INDENT_LAST_PLACEHOLDER));
                 }

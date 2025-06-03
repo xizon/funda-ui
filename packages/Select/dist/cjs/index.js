@@ -5280,7 +5280,7 @@ var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_
       // ++++++++++++++++++++
       // Single selection
       // ++++++++++++++++++++
-      if (_typeof(value) === 'object' && !Array.isArray(value)) {
+      if (_typeof(value) === 'object' && !Array.isArray(value) && value !== null) {
         if (typeof value.value !== 'undefined' && value.value !== null) setControlValue(value.value);
         if (typeof value.label !== 'undefined' && value.label !== null) setControlLabel(formatIndentVal(value.label, INDENT_LAST_PLACEHOLDER));
       }
@@ -5352,7 +5352,7 @@ var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_
         // ++++++++++++++++++++
         // Single selection
         // ++++++++++++++++++++
-        if (_typeof(defaultValue) === 'object' && !Array.isArray(defaultValue)) {
+        if (_typeof(defaultValue) === 'object' && !Array.isArray(defaultValue) && defaultValue !== null) {
           if (typeof defaultValue.value !== 'undefined' && defaultValue.value !== null) setControlValue(defaultValue.value);
           if (typeof defaultValue.label !== 'undefined' && defaultValue.label !== null) setControlLabel(formatIndentVal(defaultValue.label, INDENT_LAST_PLACEHOLDER));
         }
