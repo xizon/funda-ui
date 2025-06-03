@@ -6,7 +6,7 @@
 
 ```js
 import React, { useState } from "react";
-import MultipleCheckboxes from 'funda-ui/MultipleCheckboxes';
+import MultipleCheckboxes, { OptionConfig } from 'funda-ui/MultipleCheckboxes';
 
 
 export default () => {
@@ -26,7 +26,15 @@ export default () => {
                     {"label": "Option 3","listItemLabel":"Option 3 (No: 003)","value": "value-3"},
                     {"label": "Option 4","listItemLabel":"Option 4 (No: 004)","value": "value-4","disabled":true}
                 ]}
-                onChange={(e: any, value: any, valueStr: any, label: any, labelStr: any, currentData: any, dataCollection: any) => {
+                onChange={(
+                    e: React.ChangeEvent<HTMLInputElement> | null,
+                    value: string[] | null,
+                    valueStr: string,
+                    label: string[] | null,
+                    labelStr: string,
+                    currentData: OptionConfig | null,
+                    dataCollection: OptionConfig[]
+                ) => {
                     console.log(e, value, valueStr, label, labelStr, currentData, dataCollection);
                     /*
                     <input type="checkbox" ... value="value-1">,
@@ -50,7 +58,15 @@ export default () => {
                     {"label": "Item 3","value": "value-3"},
                     {"label": "Item 4","value": "value-4","disabled":true}
                 ]}
-                onChange={(e: any, value: any, valueStr: any, label: any, labelStr: any, currentData: any, dataCollection: any) => {
+                onChange={(
+                    e: React.ChangeEvent<HTMLInputElement> | null,
+                    value: string[] | null,
+                    valueStr: string,
+                    label: string[] | null,
+                    labelStr: string,
+                    currentData: OptionConfig | null,
+                    dataCollection: OptionConfig[]
+                ) => {
                     console.log(e, value, valueStr, label, labelStr, currentData, dataCollection);
                 }}
             />
@@ -68,7 +84,7 @@ export default () => {
 
 ```js
 import React from "react";
-import MultipleCheckboxes from 'funda-ui/MultipleCheckboxes';
+import MultipleCheckboxes, { OptionConfig } from 'funda-ui/MultipleCheckboxes';
 
 export default () => {
 
@@ -136,7 +152,7 @@ The options will be displayed using \<table\> tag.
 `index.tsx`:
 ```js
 import React from "react";
-import MultipleCheckboxes from 'funda-ui/MultipleCheckboxes';
+import MultipleCheckboxes, { OptionConfig } from 'funda-ui/MultipleCheckboxes';
 
 export default () => {
 
@@ -177,7 +193,7 @@ Use `useMemo()` to return the entire component
 
 ```js
 import React, { useState, useMemo } from "react";
-import MultipleCheckboxes from 'funda-ui/MultipleCheckboxes';
+import MultipleCheckboxes, { OptionConfig } from 'funda-ui/MultipleCheckboxes';
 
 
 // DO NOT move `useMemo` to component
@@ -193,7 +209,15 @@ function MemoMultipleCheckboxes(props: any) {
                     {"label": "Option 3","listItemLabel":"Option 3 (No: 003)","value": "value-3"},
                     {"label": "Option 4","listItemLabel":"Option 4 (No: 004)","value": "value-4","disabled":true}
                 ]}
-                onChange={(e: any, value: any, valueStr: any, label: any, labelStr: any, currentData: any, dataCollection: any) => {
+                onChange={(
+                    e: React.ChangeEvent<HTMLInputElement> | null,
+                    value: string[] | null,
+                    valueStr: string,
+                    label: string[] | null,
+                    labelStr: string,
+                    currentData: OptionConfig | null,
+                    dataCollection: OptionConfig[]
+                ) => {
                     callback(valueStr);
                 }}
             />
@@ -231,7 +255,7 @@ Specify the content in the `optgroup` attribute of `options`.
 
 ```js
 import React, { useState } from "react";
-import MultipleCheckboxes from 'funda-ui/MultipleCheckboxes';
+import MultipleCheckboxes, { OptionConfig } from 'funda-ui/MultipleCheckboxes';
 
 
 export default () => {
@@ -262,7 +286,15 @@ export default () => {
                         ]
                     }
                 ]}
-                onChange={(e: any, value: any, valueStr: any, label: any, labelStr: any, currentData: any, dataCollection: any) => {
+                onChange={(
+                    e: React.ChangeEvent<HTMLInputElement> | null,
+                    value: string[] | null,
+                    valueStr: string,
+                    label: string[] | null,
+                    labelStr: string,
+                    currentData: OptionConfig | null,
+                    dataCollection: OptionConfig[]
+                ) => {
                     console.log(e, value, valueStr, label, labelStr, currentData, dataCollection);
                 }}
             />
@@ -284,7 +316,7 @@ You need to use the series property `fetch<METHOD_NAME>` to format the data of t
 
 ```js
 import React, { useState } from "react";
-import MultipleCheckboxes from 'funda-ui/MultipleCheckboxes';
+import MultipleCheckboxes, { OptionConfig } from 'funda-ui/MultipleCheckboxes';
 import axios from 'axios';
 
 class DataService {
@@ -361,7 +393,7 @@ export default () => {
                 fetchFuncAsync={new DataService}
                 fetchFuncMethod="getList"
                 fetchFuncMethodParams={['',0]}
-                fetchCallback={(res) => {
+                fetchCallback={(res: OptionConfig[]) => {
 
                     const formattedData = res.map((item, index) => {
                         return {
@@ -382,10 +414,18 @@ export default () => {
 
                     return formattedData;
                 }}
-                onFetch={(res) => {
+                onFetch={(res: OptionConfig[]) => {
                     console.log('onFetch: ', res);
                 }}
-                onChange={(e: any, value: any, valueStr: any, label: any, labelStr: any, currentData: any, dataCollection: any) => {
+                onChange={(
+                    e: React.ChangeEvent<HTMLInputElement> | null,
+                    value: string[] | null,
+                    valueStr: string,
+                    label: string[] | null,
+                    labelStr: string,
+                    currentData: OptionConfig | null,
+                    dataCollection: OptionConfig[]
+                ) => {
                     console.log(e, value, valueStr, label, labelStr, currentData, dataCollection);
                 }}
             />
@@ -404,7 +444,7 @@ export default () => {
 
 ```js
 import React from "react";
-import MultipleCheckboxes from 'funda-ui/MultipleCheckboxes';
+import MultipleCheckboxes, { OptionConfig } from 'funda-ui/MultipleCheckboxes';
 
 export default () => {
 
@@ -435,7 +475,11 @@ export default () => {
                     {"label": "Option 1","value": "value-1","attr1": false},
                     {"label": "Option 2","value": "value-2","attr1": true},
                 ]}
-                onLoad={(data: any, defaultVal: any, root: any) => {
+                onLoad={(
+                    latestData: OptionConfig[],
+                    defaultValue: string | string[],
+                    rootElement: HTMLDivElement | HTMLTableElement | null
+                ) => {
                               
                     const _flatData = optionsFlat(data);
                 
@@ -465,7 +509,7 @@ Sometimes `onChange` requires a new result to satisfy the business. Please do no
 
 ```js
 import React, { useId, useState } from "react";
-import MultipleCheckboxes from 'funda-ui/MultipleCheckboxes';
+import MultipleCheckboxes, { OptionConfig } from 'funda-ui/MultipleCheckboxes';
 
 
 export default () => {
@@ -485,7 +529,15 @@ export default () => {
                     {"label": "Option 3","listItemLabel":"Option 3 (No: 003)","value": "value-3"},
                     {"label": "Option 4","listItemLabel":"Option 4 (No: 004)","value": "value-4","disabled":true}
                 ]}
-                onChange={(e: any, value: any, valueStr: any, label: any, labelStr: any, currentData: any, dataCollection: any) => {
+                onChange={(
+                    e: React.ChangeEvent<HTMLInputElement> | null,
+                    value: string[] | null,
+                    valueStr: string,
+                    label: string[] | null,
+                    labelStr: string,
+                    currentData: OptionConfig | null,
+                    dataCollection: OptionConfig[]
+                ) => {
 
 
                     // Exclude the value of "Option 3"
@@ -520,7 +572,7 @@ Use `onCallbackListItem` to return the desired style of the list.
 
 ```js
 import React, { useState, useMemo } from "react";
-import MultipleCheckboxes from 'funda-ui/MultipleCheckboxes';
+import MultipleCheckboxes, { OptionConfig } from 'funda-ui/MultipleCheckboxes';
 import type { CustomOptionsItemsListParams, OptionConfig } from 'funda-ui/MultipleCheckboxes';
 
 export default () => {
@@ -801,7 +853,15 @@ export default () => {
                     { "label": "Option 3", "listItemLabel": "Option 3 (No: 003)", "value": "value-3" },
                     { "label": "Option 4", "listItemLabel": "Option 4 (No: 004)", "value": "value-4", "disabled": true }
                 ]}
-                onChange={(e: any, value: any, valueStr: any, label: any, labelStr: any, currentData: any, dataCollection: any) => {
+                onChange={(
+                    e: React.ChangeEvent<HTMLInputElement> | null,
+                    value: string[] | null,
+                    valueStr: string,
+                    label: string[] | null,
+                    labelStr: string,
+                    currentData: OptionConfig | null,
+                    dataCollection: OptionConfig[]
+                ) => {
                     console.log(value);
                 }}
                 onCallbackListItem={customMultipleCheckboxesOptionsItemsList}
@@ -826,7 +886,7 @@ Lets you callback the handle exposed as attribute `contentRef`.
 
 ```js
  import React, { useMemo, useState, useRef } from 'react';
-import MultipleCheckboxes from 'funda-ui/MultipleCheckboxes';
+import MultipleCheckboxes, { OptionConfig } from 'funda-ui/MultipleCheckboxes';
 
 // DO NOT move `useMemo` to component
 function MemoMultipleCheckboxes(props: any) {
@@ -842,7 +902,15 @@ function MemoMultipleCheckboxes(props: any) {
                     {"label": "Option 3","listItemLabel":"Option 3 (No: 003)","value": "value-3"},
                     {"label": "Option 4","listItemLabel":"Option 4 (No: 004)","value": "value-4","disabled":true}
                 ]}
-                onChange={(e: any, value: any, valueStr: any, label: any, labelStr: any, currentData: any, dataCollection: any) => {
+                onChange={(
+                    e: React.ChangeEvent<HTMLInputElement> | null,
+                    value: string[] | null,
+                    valueStr: string,
+                    label: string[] | null,
+                    labelStr: string,
+                    currentData: OptionConfig | null,
+                    dataCollection: OptionConfig[]
+                ) => {
                     callback(valueStr);
                 }}
             />
@@ -923,7 +991,7 @@ If you use the pop-up window, such as `funda-ui/ModalDialog`, the component may 
 
 ```js
 import React, { useMemo, useState, useRef } from 'react';
-import MultipleCheckboxes from 'funda-ui/MultipleCheckboxes';
+import MultipleCheckboxes, { OptionConfig } from 'funda-ui/MultipleCheckboxes';
 import ModalDialog from 'funda-ui/ModalDialog';
 
 // DO NOT move `useMemo` to component
@@ -942,7 +1010,15 @@ function MemoMultipleCheckboxes(props: any) {
                     {"label": "Option 3","listItemLabel":"Option 3 (No: 003)","value": "value-3"},
                     {"label": "Option 4","listItemLabel":"Option 4 (No: 004)","value": "value-4","disabled":true}
                 ]}
-                onChange={(e: any, value: any, valueStr: any, label: any, labelStr: any, currentData: any, dataCollection: any) => {
+                onChange={(
+                    e: React.ChangeEvent<HTMLInputElement> | null,
+                    value: string[] | null,
+                    valueStr: string,
+                    label: string[] | null,
+                    labelStr: string,
+                    currentData: OptionConfig | null,
+                    dataCollection: OptionConfig[]
+                ) => {
                     callback(valueStr);
                 }}
             />
@@ -998,6 +1074,44 @@ export default () => {
 
   
 
+## Simulate cancelable radio
+
+The `singleSelect` property allows the component to select up to 1 option
+
+```js
+import React, { useState } from "react";
+import MultipleCheckboxes, { OptionConfig } from 'funda-ui/MultipleCheckboxes';
+
+
+export default () => {
+
+    return (
+        <>
+            <MultipleCheckboxes 
+                singleSelect
+                options={[
+                    {"label": "Item 1","value": "value-1"},
+                    {"label": "Item 2","value": "value-2"},
+                    {"label": "Item 3","value": "value-3"}
+                ]}
+                onChange={(
+                    e: React.ChangeEvent<HTMLInputElement> | null,
+                    value: string[] | null,
+                    valueStr: string,
+                    label: string[] | null,
+                    labelStr: string,
+                    currentData: OptionConfig | null,
+                    dataCollection: OptionConfig[]
+                ) => {
+
+                    console.log(e, value, valueStr, label, labelStr, currentData, dataCollection);
+                }}
+            />
+    
+        </>
+    );
+}
+```
 
 ## API
 
@@ -1019,6 +1133,7 @@ import MultipleCheckboxes from 'funda-ui/MultipleCheckboxes';
 | `extractValueByBrackets` | boolean  | true | Whether to use square brackets to save result and initialize default value. | - |
 | `showSelectAll` | boolean  | false | Whether to display the Select All option. | - |
 | `selectAllLabel` | string  | `Select all` | Label of the option "Select All". <blockquote>HTML tags are supported</blockquote> | - |
+| `singleSelect` | boolean  | false |  Whether to allow only one selection at a time (like radio buttons but with ability to deselect). | - |
 | `inline` | boolean | true | If true the group checkboxes or radios are on the same horizontal row. | - |
 | `options` | JSON Object Literals | - | Set the default value using JSON string format for menu of options, like this: `[{"label": "Option 1","value": "value-1"},{"label": "<del style=color:red>deprecate</del>Option 2","value": "value-2"},{"label": "Option 3","value": "value-3"}]`| - |
 | `defaultValue` | string | - | Specifies the default value. Use when the component is not controlled. It does not re-render the component because the incoming value changes. | - |

@@ -21,7 +21,7 @@ export interface CustomOptionsItemsListParams {
     convertArrToValByBrackets: (arr: string[]) => string;
     isAllSelected: boolean;
     handleSelectAll: () => void;
-    onChange?: (e: any, value: any, valueStr: any, label: any, labelStr: any, currentData: any, dataCollection: any) => void;
+    onChange?: (e: React.ChangeEvent<HTMLInputElement> | null, value: string[] | null, valueStr: string, label: string[] | null, labelStr: string, currentData: OptionConfig | null, dataCollection: OptionConfig[]) => void;
     attributes: React.HTMLAttributes<HTMLInputElement>;
 }
 export declare type MultipleCheckboxesProps = {
@@ -43,6 +43,7 @@ export declare type MultipleCheckboxesProps = {
     required?: any;
     showSelectAll?: boolean;
     selectAllLabel?: string;
+    singleSelect?: boolean;
     /** Whether to use square brackets to save result and initialize default value */
     extractValueByBrackets?: boolean;
     /** -- */
@@ -55,10 +56,10 @@ export declare type MultipleCheckboxesProps = {
     fetchFuncAsync?: any;
     fetchFuncMethod?: string;
     fetchFuncMethodParams?: any[];
-    fetchCallback?: (data: any) => void;
-    onFetch?: (data: any) => void;
-    onLoad?: (arg1: any, arg2: any, arg3: any) => void;
-    onChange?: (e: any, value: any, valueStr: any, label: any, labelStr: any, currentData: any, dataCollection: any) => void;
+    fetchCallback?: (data: OptionConfig[]) => OptionConfig[];
+    onFetch?: (data: OptionConfig[]) => void;
+    onLoad?: (latestData: OptionConfig[], defaultValue: string | string[], rootElement: HTMLDivElement | HTMLTableElement | null) => void;
+    onChange?: (e: React.ChangeEvent<HTMLInputElement> | null, value: string[] | null, valueStr: string, label: string[] | null, labelStr: string, currentData: OptionConfig | null, dataCollection: OptionConfig[]) => void;
     onCallbackListItem?: (optiondata: any) => void;
 };
 declare const MultipleCheckboxes: React.ForwardRefExoticComponent<MultipleCheckboxesProps & React.RefAttributes<unknown>>;

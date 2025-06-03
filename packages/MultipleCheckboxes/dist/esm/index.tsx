@@ -42,13 +42,13 @@ export interface CustomOptionsItemsListParams {
     isAllSelected: boolean;
     handleSelectAll: () => void;
     onChange?: (
-        e: any,
-        value: any,
-        valueStr: any,
-        label: any,
-        labelStr: any,
-        currentData: any,
-        dataCollection: any
+        e: React.ChangeEvent<HTMLInputElement> | null,
+        value: string[] | null,
+        valueStr: string,
+        label: string[] | null,
+        labelStr: string,
+        currentData: OptionConfig | null,
+        dataCollection: OptionConfig[]
     ) => void;
     attributes: React.HTMLAttributes<HTMLInputElement>;
 }
@@ -72,6 +72,7 @@ export type MultipleCheckboxesProps = {
     required?: any;
     showSelectAll?: boolean;
     selectAllLabel?: string; 
+    singleSelect?: boolean;
     /** Whether to use square brackets to save result and initialize default value */
     extractValueByBrackets?: boolean;
     /** -- */
@@ -84,10 +85,22 @@ export type MultipleCheckboxesProps = {
     fetchFuncAsync?: any;
     fetchFuncMethod?: string;
     fetchFuncMethodParams?: any[];
-    fetchCallback?: (data: any) => void;
-    onFetch?: (data: any) => void;
-    onLoad?: (arg1: any, arg2: any, arg3: any) => void;
-    onChange?: (e: any, value: any, valueStr: any, label: any, labelStr: any, currentData: any, dataCollection: any) => void;
+    fetchCallback?: (data: OptionConfig[]) => OptionConfig[];
+    onFetch?: (data: OptionConfig[]) => void;
+    onLoad?: (
+        latestData: OptionConfig[],
+        defaultValue: string | string[],
+        rootElement: HTMLDivElement | HTMLTableElement | null
+    ) => void;
+    onChange?: (
+        e: React.ChangeEvent<HTMLInputElement> | null,
+        value: string[] | null,
+        valueStr: string,
+        label: string[] | null,
+        labelStr: string,
+        currentData: OptionConfig | null,
+        dataCollection: OptionConfig[]
+    ) => void;
     onCallbackListItem?: (optiondata: any) => void;
 
 };
@@ -114,6 +127,7 @@ const MultipleCheckboxes = forwardRef((props: MultipleCheckboxesProps, externalR
         id,
         showSelectAll = false,
         selectAllLabel = 'Select all',
+        singleSelect = false,
         extractValueByBrackets,
         style,
         fetchFuncAsync,
@@ -226,7 +240,7 @@ const MultipleCheckboxes = forwardRef((props: MultipleCheckboxesProps, externalR
                 initDefaultValue('', dataInit);
                 cb?.();
 
-                onChange?.(null, null, '', null, null, null, null);
+                onChange?.(null, null, '', null, '', null, []);
             },
             set: (value: any, cb?: any) => {
                 initDefaultValue(value, dataInit);
@@ -241,7 +255,7 @@ const MultipleCheckboxes = forwardRef((props: MultipleCheckboxesProps, externalR
 
                     onChange?.(null, _value, _valueStr, _label, _labelStr, null, _resDataCollection);
                 } else {
-                    onChange?.(null, null, value, null, null, null, null);
+                    onChange?.(null, null, value ?? '', null, '', null, []);
                 }
                 
             },
@@ -281,11 +295,24 @@ const MultipleCheckboxes = forwardRef((props: MultipleCheckboxesProps, externalR
     function handleCheckboxChange(itemKey: string) {
         // first, make a copy of the original set rather than mutating the original
         const newSelectedItems = new Set(selectedItems);
-        if (!newSelectedItems.has(itemKey)) {
-            newSelectedItems.add(itemKey);
+
+
+        if (singleSelect) {
+            // If singleSelect is true, clear all selections first
+            newSelectedItems.clear();
+            // Only add the new selection if it wasn't already selected
+            if (!selectedItems.has(itemKey)) {
+                newSelectedItems.add(itemKey);
+            }
         } else {
-            newSelectedItems.delete(itemKey);
+            // Original multi-select behavior
+            if (!newSelectedItems.has(itemKey)) {
+                newSelectedItems.add(itemKey);
+            } else {
+                newSelectedItems.delete(itemKey);
+            }
         }
+
         setSelectedItems(newSelectedItems);
 
         return newSelectedItems;
