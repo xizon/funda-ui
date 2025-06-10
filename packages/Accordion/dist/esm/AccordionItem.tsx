@@ -47,7 +47,8 @@ const AccordionItem = (props: AccordionItemProps) => {
         onToggleEv,
         onTransitionEnd,
         triggerType,
-        children
+        children,
+        ...attributes
     } = props;
     
 
@@ -91,6 +92,7 @@ const AccordionItem = (props: AccordionItemProps) => {
         <>
 
             <div
+                {...attributes}
                 data-index={index}
                 className={combinedCls(
                     'custom-accordion-item',

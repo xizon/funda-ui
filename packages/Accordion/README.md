@@ -148,3 +148,6 @@ import { AccordionItem } from 'funda-ui/Accordion';
 | `itemStyle` | CSSProperties | - | The styles of item. such as `{color: "red", fontSize: "1rem"}` | - |
 | `itemTriggerIcon` | ReactNode | - | The icon of trigger. | - |
 
+`AccordionItem` accepts all props which this control support. Such as `style`, `data-*`, `tabIndex`, `id`, and so on.
+
+

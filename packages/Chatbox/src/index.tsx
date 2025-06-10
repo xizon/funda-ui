@@ -1572,11 +1572,11 @@ const Chatbox = (props: ChatboxProps) => {
                         disabled={loading ? true : false}
                         onKeyDown={(event: React.KeyboardEvent) => {
                             // line breaks
-                            if (event.key === 'Enter' && (event.ctrlKey || event.metaKey)) {
+                            if ((event.key === 'Enter' || event.key === 'NumpadEnter') && (event.ctrlKey || event.metaKey)) {
                                 return;
                             }
                             
-                            if (event.key === 'Enter' && !event.shiftKey && !event.ctrlKey && !event.metaKey) {
+                            if ((event.key === 'Enter' || event.key === 'NumpadEnter') && !event.shiftKey && !event.ctrlKey && !event.metaKey) {
                                 event.preventDefault(); // Prevent line breaks
                                 handleClickSafe();
                             }

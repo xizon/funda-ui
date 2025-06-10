@@ -77,7 +77,7 @@ const Textarea = forwardRef((props: TextareaProps, externalRef: any) => {
         iconRight,
         aiPredict = false,
         aiPredictRemainingTextRGB = [153, 153, 153],
-        aiPredictConfirmKey = [['Enter'],['Tab'],['Shift', ' ']],
+        aiPredictConfirmKey = [['Enter', 'NumpadEnter'],['Tab'],['Shift', ' ']],
         aiPredictFetchFuncAsync,
         aiPredictFetchFuncMethod,
         aiPredictFetchFuncMethodParams,
@@ -393,7 +393,7 @@ const Textarea = forwardRef((props: TextareaProps, externalRef: any) => {
             if (newData) setChangedVal(newData);  // Avoid the error "react checkbox changing an uncontrolled input to be controlled"
         }
 
-        if (event.code == "Enter") {
+        if (event.key === 'Enter' || event.key === 'NumpadEnter') {
             // DO NOT USE "preventDefault()"
             onPressEnter?.(event, valRef.current);
         }

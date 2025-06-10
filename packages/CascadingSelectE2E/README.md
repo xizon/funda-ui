@@ -732,7 +732,7 @@ Array Object configuration properties of the `fetchArray` (**Array**):
 
 A successful response returns the details of the callback such as Sample Request Body:
 
-Among them, `id`, `queryId`, `name` and `label` are attributes used by the system, and other attributes can be added freely. 
+Among them, `id`, `queryId` and `name` are attributes used by the system, and other attributes can be added freely. 
 
 > `label` usually uses hierarchical style. (Valid when the `hierarchical` attribute is configured in `fetchArray`)
 

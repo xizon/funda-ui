@@ -163,7 +163,7 @@ const TagInput = forwardRef((props: TagInputProps, externalRef: any) => {
         if ( onComposition ) return;
         
 
-        if (event.code == "Enter" || event.code == "Space") {
+        if ((event.key === 'Enter' || event.key === 'NumpadEnter') || event.code === "Space") {
             event.preventDefault();
 
             if (alreadyInItems) return false;

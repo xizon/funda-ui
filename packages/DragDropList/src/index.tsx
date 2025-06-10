@@ -319,7 +319,7 @@ const DragDropList = forwardRef((props: DragDropListProps, externalRef: any) => 
 
 
     const handleKeyDown = (e: any, itemId: number) => {
-        if (e.key === 'Enter') {
+        if (e.key === 'Enter' || e.key === 'NumpadEnter') {
             handleEditSave(itemId);
         } else if (e.key === 'Escape') {
             handleEditCancel();

@@ -613,7 +613,7 @@ var SearchBar = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(f
       if (newData) setChangedVal(newData); // Avoid the error "react checkbox changing an uncontrolled input to be controlled"
     }
 
-    if (event.code == "Enter") {
+    if (event.key === 'Enter' || event.key === 'NumpadEnter') {
       // DO NOT USE "preventDefault()"
       onPressEnter === null || onPressEnter === void 0 ? void 0 : onPressEnter(event, onComposition);
     }

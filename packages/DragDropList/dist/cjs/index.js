@@ -1453,7 +1453,7 @@ var DragDropList = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef
     });
   };
   var handleKeyDown = function handleKeyDown(e, itemId) {
-    if (e.key === 'Enter') {
+    if (e.key === 'Enter' || e.key === 'NumpadEnter') {
       handleEditSave(itemId);
     } else if (e.key === 'Escape') {
       handleEditCancel();

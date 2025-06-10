@@ -806,6 +806,10 @@ var external_root_React_commonjs2_react_commonjs_react_amd_react_default = /*#__
 // EXTERNAL MODULE: ../Utils/dist/cjs/cls.js
 var cls = __webpack_require__(188);
 ;// CONCATENATED MODULE: ./src/AccordionItem.tsx
+var _excluded = ["heightObserver", "index", "itemClassName", "itemContentWrapperClassName", "itemContentClassName", "itemTriggerClassName", "itemHeaderClassName", "itemTriggerIcon", "itemStyle", "defaultActive", "title", "onToggleEv", "onTransitionEnd", "triggerType", "children"];
+function _extends() { _extends = Object.assign ? Object.assign.bind() : function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
+function _objectWithoutProperties(source, excluded) { if (source == null) return {}; var target = _objectWithoutPropertiesLoose(source, excluded); var key, i; if (Object.getOwnPropertySymbols) { var sourceSymbolKeys = Object.getOwnPropertySymbols(source); for (i = 0; i < sourceSymbolKeys.length; i++) { key = sourceSymbolKeys[i]; if (excluded.indexOf(key) >= 0) continue; if (!Object.prototype.propertyIsEnumerable.call(source, key)) continue; target[key] = source[key]; } } return target; }
+function _objectWithoutPropertiesLoose(source, excluded) { if (source == null) return {}; var target = {}; var sourceKeys = Object.keys(source); var key, i; for (i = 0; i < sourceKeys.length; i++) { key = sourceKeys[i]; if (excluded.indexOf(key) >= 0) continue; target[key] = source[key]; } return target; }
 
 
 var AccordionItem = function AccordionItem(props) {
@@ -823,7 +827,8 @@ var AccordionItem = function AccordionItem(props) {
     onToggleEv = props.onToggleEv,
     onTransitionEnd = props.onTransitionEnd,
     triggerType = props.triggerType,
-    children = props.children;
+    children = props.children,
+    attributes = _objectWithoutProperties(props, _excluded);
   var activedClassName = typeof defaultActive !== 'undefined' && defaultActive !== false ? ' active' : '';
   var observer = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useRef)(null);
   var contentWrapperRef = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useRef)(null);
@@ -849,7 +854,7 @@ var AccordionItem = function AccordionItem(props) {
       if (contentRef.current) (_observer$current = observer.current) === null || _observer$current === void 0 ? void 0 : _observer$current.unobserve(contentRef.current);
     };
   }, [heightObserver]);
-  return /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
+  return /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", _extends({}, attributes, {
     "data-index": index,
     className: (0,cls.combinedCls)('custom-accordion-item', (0,cls.clsWrite)(itemClassName, 'accordion-item'), activedClassName),
     onClick: triggerType === 'click' ? onToggleEv : function () {},
@@ -857,7 +862,7 @@ var AccordionItem = function AccordionItem(props) {
     onTransitionEnd: typeof onTransitionEnd === 'function' ? onTransitionEnd : function () {},
     "aria-expanded": defaultActive ? 'true' : 'false',
     style: typeof itemStyle !== 'undefined' ? itemStyle : {}
-  }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
+  }), /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
     className: (0,cls.combinedCls)('custom-accordion-header', (0,cls.clsWrite)(itemHeaderClassName, 'accordion-header position-relative')),
     role: "presentation"
   }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("button", {
@@ -883,7 +888,7 @@ var anim = __webpack_require__(993);
 var anim_default = /*#__PURE__*/__webpack_require__.n(anim);
 ;// CONCATENATED MODULE: ./src/Accordion.tsx
 function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
-function _extends() { _extends = Object.assign ? Object.assign.bind() : function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
+function Accordion_extends() { Accordion_extends = Object.assign ? Object.assign.bind() : function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return Accordion_extends.apply(this, arguments); }
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
 function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys(Object(source), !0).forEach(function (key) { _defineProperty(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
 function _defineProperty(obj, key, value) { key = _toPropertyKey(key); if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
@@ -1013,7 +1018,7 @@ var Accordion = function Accordion(props) {
   }, children != null ? children.map(function (item, i) {
     var childProps = _objectSpread({}, item.props);
     var _defaultActive = i === 0 && displayTheFirstItem ? true : false;
-    return /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement(src_AccordionItem, _extends({
+    return /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement(src_AccordionItem, Accordion_extends({
       key: "item" + i,
       index: i,
       heightObserver: heightObserver,

@@ -160,7 +160,7 @@ const SearchBar = forwardRef((props: SearchBarProps, externalRef: any) => {
         }
 
 
-        if (event.code == "Enter") {
+        if (event.key === 'Enter' || event.key === 'NumpadEnter') {
             // DO NOT USE "preventDefault()"
             onPressEnter?.(event, onComposition);
         }

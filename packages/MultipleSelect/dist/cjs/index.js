@@ -1681,7 +1681,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
             });
           };
           var handleKeyDown = function handleKeyDown(e, itemId) {
-            if (e.key === 'Enter') {
+            if (e.key === 'Enter' || e.key === 'NumpadEnter') {
               handleEditSave(itemId);
             } else if (e.key === 'Escape') {
               handleEditCancel();

@@ -1502,7 +1502,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
             _props$aiPredictRemai = props.aiPredictRemainingTextRGB,
             aiPredictRemainingTextRGB = _props$aiPredictRemai === void 0 ? [153, 153, 153] : _props$aiPredictRemai,
             _props$aiPredictConfi = props.aiPredictConfirmKey,
-            aiPredictConfirmKey = _props$aiPredictConfi === void 0 ? [['Enter'], ['Tab'], ['Shift', ' ']] : _props$aiPredictConfi,
+            aiPredictConfirmKey = _props$aiPredictConfi === void 0 ? [['Enter', 'NumpadEnter'], ['Tab'], ['Shift', ' ']] : _props$aiPredictConfi,
             aiPredictFetchFuncAsync = props.aiPredictFetchFuncAsync,
             aiPredictFetchFuncMethod = props.aiPredictFetchFuncMethod,
             aiPredictFetchFuncMethodParams = props.aiPredictFetchFuncMethodParams,
@@ -1808,7 +1808,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
               if (newData) setChangedVal(newData); // Avoid the error "react checkbox changing an uncontrolled input to be controlled"
             }
 
-            if (event.code == "Enter") {
+            if (event.key === 'Enter' || event.key === 'NumpadEnter') {
               // DO NOT USE "preventDefault()"
               onPressEnter === null || onPressEnter === void 0 ? void 0 : onPressEnter(event, valRef.current);
             }

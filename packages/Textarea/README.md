@@ -505,11 +505,11 @@ export default () => {
                 autoSize
                 onKeyDown={(event: React.KeyboardEvent) => {
                     // line breaks
-                    if (event.key === 'Enter' && (event.ctrlKey || event.metaKey)) {
+                    if ((event.key === 'Enter' || event.key === 'NumpadEnter') && (event.ctrlKey || event.metaKey)) {
                         return;
                     }
                     
-                    if (event.key === 'Enter' && !event.shiftKey && !event.ctrlKey && !event.metaKey) {
+                    if ((event.key === 'Enter' || event.key === 'NumpadEnter') && !event.shiftKey && !event.ctrlKey && !event.metaKey) {
                         event.preventDefault(); // Prevent line breaks
                         
                         // submit actions
@@ -561,7 +561,7 @@ import Textarea from 'funda-ui/Textarea';
 | `rows` | number  | - | The rows attribute specifies the visible height of a text area, in lines. | - |
 | `aiPredict` | boolean | false | Whether to enable AI prediction | - |
 | `aiPredictRemainingTextRGB` | Array | `[153, 153, 153]` | Define a color value for the remaining characters, passed using an RGB array. | - |
-| `aiPredictConfirmKey` | Array | `[['Enter'],['Tab'],['Shift', ' ']]` | Confirm the value of the key pressed. check out [Key values for keyboard events](https://developer.mozilla.org/en-US/docs/Web/API/UI_Events/Keyboard_event_key_values) | - |
+| `aiPredictConfirmKey` | Array | `[['Enter', 'NumpadEnter'],['Tab'],['Shift', ' ']]` | Confirm the value of the key pressed. check out [Key values for keyboard events](https://developer.mozilla.org/en-US/docs/Web/API/UI_Events/Keyboard_event_key_values) | - |
 | `aiPredictFetchFuncAsync` | Constructor | - | (**valid when the `aiPredict` is true**) A method as a string from the constructor. | - |
 | `aiPredictFetchFuncMethod` | string  | - | (**valid when the `aiPredict` is true**) When the property is *true*, every time the select changes, a data request will be triggered. <br /><blockquote>The methord must be a Promise Object.</blockquote> | - |
 | `aiPredictFetchFuncMethodParams` | array  | - | (**valid when the `aiPredict` is true**) The parameter passed by the method, it is an array. <br />Note: the first element is a query string, the second element is the number of queried data (usually a number), and then you can increase the third, or fourth, and more parameters. <br />Such as `['',0]`, `['',99,'string 1','string 2']`, `['',99,'string 1','$QUERY_STRING']` <br /><blockquote>There should be at least one parameter which is the query string.  <br />`$QUERY_STRING` identifies the ID of the automatic query, and its value depends on the user input string.</blockquote> | - |

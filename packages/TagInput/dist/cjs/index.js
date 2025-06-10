@@ -960,7 +960,7 @@ var TagInput = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(fu
   function handleKeypress(event) {
     // Avoid adding results before when the user enters text is not complete
     if (onComposition) return;
-    if (event.code == "Enter" || event.code == "Space") {
+    if (event.key === 'Enter' || event.key === 'NumpadEnter' || event.code === "Space") {
       event.preventDefault();
       if (alreadyInItems) return false;
 
