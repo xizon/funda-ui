@@ -222,6 +222,13 @@ $ npm run build:publish
 - [React](https://react.dev/)
 
 
+## Inspiration and References
+
+This component library is inspired by several open-source projects such as [react-bootstrap](https://react-bootstrap.netlify.app), [Ant Design](https://ant.design), [MUI](https://mui.com), and [shadcn/ui](https://ui.shadcn.com). It is an open-source plugin library designed as a learning-to-practice project.
+
+The library does **not** contain any personal or company-specific business logic. It serves purely as an auxiliary tool to help efficiently and reliably develop company applications.
+
+
 ## Licensing
 
 Licensed under the [MIT](https://opensource.org/licenses/MIT).
