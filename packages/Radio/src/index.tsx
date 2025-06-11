@@ -4,7 +4,7 @@ import React, { useImperativeHandle, forwardRef, useRef, useState, useEffect } f
 import useComId from 'funda-utils/dist/cjs/useComId';
 import {
     isJSON
-} from 'funda-utils/dist/cjs/initDefaultOptions';
+} from 'funda-utils/dist/cjs/validate';
 import {
     removeArrDuplicateItems
 } from 'funda-utils/dist/cjs/object';

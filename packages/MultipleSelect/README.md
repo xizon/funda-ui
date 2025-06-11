@@ -958,7 +958,7 @@ export default () => {
     /**
      * Serialize form values
      * @param  {Array} types   - An array of field strings.
-     * @param {HTMLFormElement} form      - Element
+     * @param {HTMLFormElement | HTMLDivElement} form      - Element
      * @returns Array
      */
     function serializeArray(form: HTMLFormElement, types = ['input', 'textarea', 'select', 'checkbox', 'progress', 'datalist']) {

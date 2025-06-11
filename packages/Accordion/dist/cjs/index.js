@@ -201,7 +201,8 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
             }
             /* harmony export */
           });
-          /* unused harmony exports isJSON, isValidNumeric */
+          /* harmony import */
+          var _validate__WEBPACK_IMPORTED_MODULE_0__ = __nested_webpack_require_8432__(258);
           function _typeof(obj) {
             "@babel/helpers - typeof";
 
@@ -211,6 +212,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
               return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;
             }, _typeof(obj);
           }
+
           /**
            *  Set a default JSON format configuration
            *
@@ -221,7 +223,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
           function _setDefaultOptions(props, options) {
             if (_typeof(options) === ( true ? "undefined" : 0) || options === null || options === false) options = {};
             //Set a default configuration
-            if (isJSON(props)) {
+            if ((0, _validate__WEBPACK_IMPORTED_MODULE_0__.isJSON)(props)) {
               var defaultConfigValues = Object.values(props);
               Object.keys(props).forEach(function (prop, index) {
                 // Well-formed string type
@@ -230,8 +232,8 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
                     var _v = options[prop2];
                     if (_v == 'true') _v = true;
                     if (_v == 'false') _v = false;
-                    if (isValidNumeric(_v)) _v = parseFloat(_v);
-                    if (isJSON(_v)) _v = Object.prototype.toString.call(_v) === '[object Object]' ? _v : JSON.parse(_v);
+                    if ((0, _validate__WEBPACK_IMPORTED_MODULE_0__.isValidNumeric)(_v)) _v = parseFloat(_v);
+                    if ((0, _validate__WEBPACK_IMPORTED_MODULE_0__.isJSON)(_v)) _v = Object.prototype.toString.call(_v) === '[object Object]' ? _v : JSON.parse(_v);
                     options[prop2] = _v;
                   }
                 });
@@ -243,46 +245,133 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
             return options;
           }
 
+          /***/
+        },
+
+        /***/258: /***/function _(__unused_webpack_module, __webpack_exports__, __nested_webpack_require_11060__) {
+          /* harmony export */__nested_webpack_require_11060__.d(__webpack_exports__, {
+            /* harmony export */"isJSON": function isJSON() {
+              return (/* binding */_isJSON
+              );
+            },
+            /* harmony export */"isValidNumeric": function isValidNumeric() {
+              return (/* binding */_isValidNumeric
+              );
+            }
+            /* harmony export */
+          });
+          /* unused harmony exports isEmpty, isNumber, isInt, isEmail, isTel, isMobile */
+          function _typeof(obj) {
+            "@babel/helpers - typeof";
+
+            return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) {
+              return typeof obj;
+            } : function (obj) {
+              return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;
+            }, _typeof(obj);
+          }
           /**
-          * Check if a string is a valid number
-           * @param {*} str 
-           * @returns 
-          */
-          function isValidNumeric(str) {
-            if (typeof str != "string") return false; // we only process strings!  
+           * Check if a string is a valid number
+           * @param str - The string to check
+           * @returns boolean indicating if the string is a valid number
+           */
+          function _isValidNumeric(str) {
+            if (typeof str !== "string") return false; // we only process strings!
             if (!isNaN(Number(str)) &&
-            // use type coercion to parse the _entirety_ of the string (`parseFloat` alone does not do this)
+            // use type coercion to parse the _entirety_ of the string
             !isNaN(parseFloat(str)) // ensure strings of whitespace fail
             ) {
               return true;
-            } else {
-              return false;
             }
+            return false;
           }
 
           /**
            * Determine whether it is in JSON format
-           * @param {*} str 
-           * @returns 
+           * @param str - The value to check
+           * @returns boolean indicating if the value is valid JSON
            */
-          function isJSON(str) {
+          function _isJSON(str) {
             if (typeof str === 'string' && str.length > 0) {
-              if (str.replace(/\"\"/g, '').replace(/\,/g, '') == '[{}]') {
+              if (str.replace(/\"\"/g, '').replace(/\,/g, '') === '[{}]') {
                 return false;
-              } else {
-                if (/^[\],:{}\s]*$/.test(str.replace(/\\["\\\/bfnrtu]/g, '@').replace(/"[^"\\\n\r]*"|true|false|null|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?/g, ']').replace(/(?:^|:|,)(?:\s*\[)+/g, ''))) {
-                  return true;
-                } else {
-                  return false;
-                }
               }
-            } else {
-              if (_typeof(str) === 'object' && Object.prototype.toString.call(str) === '[object Object]' && !str.length) {
+              if (/^[\],:{}\s]*$/.test(str.replace(/\\["\\\/bfnrtu]/g, '@').replace(/"[^"\\\n\r]*"|true|false|null|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?/g, ']').replace(/(?:^|:|,)(?:\s*\[)+/g, ''))) {
                 return true;
-              } else {
-                return false;
               }
+              return false;
             }
+            if (_typeof(str) === 'object' && Object.prototype.toString.call(str) === '[object Object]' && !str.length) {
+              return true;
+            }
+            return false;
+          }
+
+          /**
+           * Check if input is empty
+           * @param input - The input to check (string or array of strings)
+           * @returns boolean indicating if the input is empty
+           */
+          function isEmpty(input) {
+            if (Array.isArray(input)) {
+              return input.some(function (str) {
+                return !str.replace(/\s/g, '').length === true;
+              });
+            }
+            return !input.replace(/\s/g, '').length === true;
+          }
+
+          /**
+           * Check if input is a valid number
+           * @param input - The input to check
+           * @returns boolean indicating if the input is a valid number
+           */
+          function isNumber(input) {
+            var reg = /^[\d|\.|,]+$/;
+            return reg.test(input);
+          }
+
+          /**
+           * Check if input is a valid integer
+           * @param input - The input to check
+           * @returns boolean indicating if the input is a valid integer
+           */
+          function isInt(input) {
+            if (input === "") {
+              return false;
+            }
+            var reg = /\D+/;
+            return !reg.test(input);
+          }
+
+          /**
+           * Check if input is a valid email address
+           * @param input - The input to check
+           * @returns boolean indicating if the input is a valid email
+           */
+          function isEmail(input) {
+            var reg = /^\s*([A-Za-z0-9_-]+(\.\w+)*@(\w+\.)+\w{2,3})\s*$/;
+            return reg.test(input);
+          }
+
+          /**
+           * Check if input is a valid telephone number
+           * @param input - The input to check
+           * @returns boolean indicating if the input is a valid telephone number
+           */
+          function isTel(input) {
+            var reg = /^[0-9- ]{7,20}$/;
+            return reg.test(input);
+          }
+
+          /**
+           * Check if input is a valid mobile number
+           * @param input - The input to check
+           * @returns boolean indicating if the input is a valid mobile number
+           */
+          function isMobile(input) {
+            var reg = /^1[0-9]{10}$/;
+            return reg.test(input);
           }
 
           /***/
@@ -297,7 +386,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
       /******/
       /******/ // The require function
       /******/
-      function __nested_webpack_require_12605__(moduleId) {
+      function __nested_webpack_require_16046__(moduleId) {
         /******/ // Check if module is in cache
         /******/var cachedModule = __webpack_module_cache__[moduleId];
         /******/
@@ -316,7 +405,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
         /******/
         /******/ // Execute the module function
         /******/
-        __webpack_modules__[moduleId](module, module.exports, __nested_webpack_require_12605__);
+        __webpack_modules__[moduleId](module, module.exports, __nested_webpack_require_16046__);
         /******/
         /******/ // Return the exports of the module
         /******/
@@ -329,9 +418,9 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
       /******/
       (function () {
         /******/ // define getter functions for harmony exports
-        /******/__nested_webpack_require_12605__.d = function (exports, definition) {
+        /******/__nested_webpack_require_16046__.d = function (exports, definition) {
           /******/for (var key in definition) {
-            /******/if (__nested_webpack_require_12605__.o(definition, key) && !__nested_webpack_require_12605__.o(exports, key)) {
+            /******/if (__nested_webpack_require_16046__.o(definition, key) && !__nested_webpack_require_16046__.o(exports, key)) {
               /******/Object.defineProperty(exports, key, {
                 enumerable: true,
                 get: definition[key]
@@ -348,7 +437,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
       /******/ /* webpack/runtime/hasOwnProperty shorthand */
       /******/
       (function () {
-        /******/__nested_webpack_require_12605__.o = function (obj, prop) {
+        /******/__nested_webpack_require_16046__.o = function (obj, prop) {
           return Object.prototype.hasOwnProperty.call(obj, prop);
         };
         /******/
@@ -358,7 +447,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
       /******/
       (function () {
         /******/ // define __esModule on exports
-        /******/__nested_webpack_require_12605__.r = function (exports) {
+        /******/__nested_webpack_require_16046__.r = function (exports) {
           /******/if (typeof Symbol !== 'undefined' && Symbol.toStringTag) {
             /******/Object.defineProperty(exports, Symbol.toStringTag, {
               value: 'Module'
@@ -378,18 +467,18 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
       var __webpack_exports__ = {};
       // This entry need to be wrapped in an IIFE because it need to be isolated against other modules in the chunk.
       (function () {
-        __nested_webpack_require_12605__.r(__webpack_exports__);
+        __nested_webpack_require_16046__.r(__webpack_exports__);
         /* harmony export */
-        __nested_webpack_require_12605__.d(__webpack_exports__, {
+        __nested_webpack_require_16046__.d(__webpack_exports__, {
           /* harmony export */"default": function _default() {
             return __WEBPACK_DEFAULT_EXPORT__;
           }
           /* harmony export */
         });
         /* harmony import */
-        var _easing__WEBPACK_IMPORTED_MODULE_1__ = __nested_webpack_require_12605__(357);
+        var _easing__WEBPACK_IMPORTED_MODULE_1__ = __nested_webpack_require_16046__(357);
         /* harmony import */
-        var _initDefaultOptions__WEBPACK_IMPORTED_MODULE_0__ = __nested_webpack_require_12605__(65);
+        var _initDefaultOptions__WEBPACK_IMPORTED_MODULE_0__ = __nested_webpack_require_16046__(65);
         function _typeof(obj) {
           "@babel/helpers - typeof";
 

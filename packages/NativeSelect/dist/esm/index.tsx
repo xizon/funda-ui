@@ -6,7 +6,7 @@ import { optionsFlat, isObject } from './utils/func';
 import useComId from 'funda-utils/dist/cjs/useComId';
 import {
     isJSON
-} from 'funda-utils/dist/cjs/initDefaultOptions';
+} from 'funda-utils/dist/cjs/validate';
 import {
     addTreeDepth,
     addTreeIndent,

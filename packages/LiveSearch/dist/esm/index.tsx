@@ -7,7 +7,7 @@ import SearchBar from 'funda-searchbar';
 import useComId from 'funda-utils/dist/cjs/useComId';
 import {
     isJSON
-} from 'funda-utils/dist/cjs/initDefaultOptions';
+} from 'funda-utils/dist/cjs/validate';
 import useWindowScroll from 'funda-utils/dist/cjs/useWindowScroll';
 import useClickOutside from 'funda-utils/dist/cjs/useClickOutside';
 import useDebounce from 'funda-utils/dist/cjs/useDebounce';

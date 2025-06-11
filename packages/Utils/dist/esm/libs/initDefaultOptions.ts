@@ -1,4 +1,4 @@
-
+import { isJSON, isValidNumeric } from "./validate";
 
 /**
  *  Set a default JSON format configuration
@@ -35,67 +35,6 @@ function setDefaultOptions(props: any, options: any): any {
     }
     return options;
 }
-
-
-/**
-* Check if a string is a valid number
- * @param {*} str 
- * @returns 
-*/
-function isValidNumeric(str: any): boolean {
-    if (typeof str != "string") return false // we only process strings!  
-    if ( 
-        !isNaN(Number(str)) && // use type coercion to parse the _entirety_ of the string (`parseFloat` alone does not do this)
-        !isNaN(parseFloat(str)) // ensure strings of whitespace fail
-    ) {
-        return true;
-    } else {
-        return false;
-    }
-}
-
-/**
- * Determine whether it is in JSON format
- * @param {*} str 
- * @returns 
- */
-function isJSON(str: any): boolean {
-
-    if (typeof (str) === 'string' && str.length > 0) {
-
-        if (str.replace(/\"\"/g, '').replace(/\,/g, '') == '[{}]') {
-            return false;
-        } else {
-
-            if (/^[\],:{}\s]*$/.test(str.replace(/\\["\\\/bfnrtu]/g, '@').
-                replace(/"[^"\\\n\r]*"|true|false|null|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?/g, ']').
-                replace(/(?:^|:|,)(?:\s*\[)+/g, ''))) {
-
-                return true;
-
-            } else {
-                return false;
-            }
-
-        }
-
-    } else {
-
-        if (
-            typeof (str) === 'object' &&
-            Object.prototype.toString.call(str) === '[object Object]' &&
-            !str.length
-        ) {
-            return true;
-        } else {
-            return false;
-        }
-
-    }
-
-}
-
-
 
 export {
     setDefaultOptions,

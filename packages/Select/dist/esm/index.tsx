@@ -15,7 +15,7 @@ import RootPortal from 'funda-root-portal';
 import useComId from 'funda-utils/dist/cjs/useComId';
 import {
     isJSON
-} from 'funda-utils/dist/cjs/initDefaultOptions';
+} from 'funda-utils/dist/cjs/validate';
 import useDebounce from 'funda-utils/dist/cjs/useDebounce';
 import useClickOutside from 'funda-utils/dist/cjs/useClickOutside';
 import useWindowScroll from 'funda-utils/dist/cjs/useWindowScroll';

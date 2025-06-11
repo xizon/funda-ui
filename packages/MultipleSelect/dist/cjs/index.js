@@ -2362,187 +2362,6 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 
 /***/ }),
 
-/***/ 186:
-/***/ (function(module, exports, __webpack_require__) {
-
-/* module decorator */ module = __webpack_require__.nmd(module);
-var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof2(obj) { "@babel/helpers - typeof"; return _typeof2 = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof2(obj); }
-(function webpackUniversalModuleDefinition(root, factory) {
-  if (( false ? 0 : _typeof2(exports)) === 'object' && ( false ? 0 : _typeof2(module)) === 'object') module.exports = factory();else if (true) !(__WEBPACK_AMD_DEFINE_ARRAY__ = [], __WEBPACK_AMD_DEFINE_FACTORY__ = (factory),
-		__WEBPACK_AMD_DEFINE_RESULT__ = (typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ?
-		(__WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__)) : __WEBPACK_AMD_DEFINE_FACTORY__),
-		__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));else {}
-})(this, function () {
-  return (/******/function () {
-      // webpackBootstrap
-      /******/
-      "use strict";
-
-      /******/ // The require scope
-      /******/
-      var __nested_webpack_require_993__ = {};
-      /******/
-      /************************************************************************/
-      /******/ /* webpack/runtime/define property getters */
-      /******/
-      (function () {
-        /******/ // define getter functions for harmony exports
-        /******/__nested_webpack_require_993__.d = function (exports, definition) {
-          /******/for (var key in definition) {
-            /******/if (__nested_webpack_require_993__.o(definition, key) && !__nested_webpack_require_993__.o(exports, key)) {
-              /******/Object.defineProperty(exports, key, {
-                enumerable: true,
-                get: definition[key]
-              });
-              /******/
-            }
-            /******/
-          }
-          /******/
-        };
-        /******/
-      })();
-      /******/
-      /******/ /* webpack/runtime/hasOwnProperty shorthand */
-      /******/
-      (function () {
-        /******/__nested_webpack_require_993__.o = function (obj, prop) {
-          return Object.prototype.hasOwnProperty.call(obj, prop);
-        };
-        /******/
-      })();
-      /******/
-      /******/ /* webpack/runtime/make namespace object */
-      /******/
-      (function () {
-        /******/ // define __esModule on exports
-        /******/__nested_webpack_require_993__.r = function (exports) {
-          /******/if (typeof Symbol !== 'undefined' && Symbol.toStringTag) {
-            /******/Object.defineProperty(exports, Symbol.toStringTag, {
-              value: 'Module'
-            });
-            /******/
-          }
-          /******/
-          Object.defineProperty(exports, '__esModule', {
-            value: true
-          });
-          /******/
-        };
-        /******/
-      })();
-      /******/
-      /************************************************************************/
-      var __webpack_exports__ = {};
-      __nested_webpack_require_993__.r(__webpack_exports__);
-      /* harmony export */
-      __nested_webpack_require_993__.d(__webpack_exports__, {
-        /* harmony export */"isJSON": function isJSON() {
-          return (/* binding */_isJSON
-          );
-        },
-        /* harmony export */"isValidNumeric": function isValidNumeric() {
-          return (/* binding */_isValidNumeric
-          );
-        },
-        /* harmony export */"setDefaultOptions": function setDefaultOptions() {
-          return (/* binding */_setDefaultOptions
-          );
-        }
-        /* harmony export */
-      });
-      function _typeof(obj) {
-        "@babel/helpers - typeof";
-
-        return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) {
-          return typeof obj;
-        } : function (obj) {
-          return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;
-        }, _typeof(obj);
-      }
-      /**
-       *  Set a default JSON format configuration
-       *
-       * @param  {*} props         - Set some default keys and values.
-       * @param  {*} options       - A JSON variable passed in from outside, including key and value.
-       * @return {JSON}            - Merge the new and old values.
-       */
-      function _setDefaultOptions(props, options) {
-        if (_typeof(options) === ( true ? "undefined" : 0) || options === null || options === false) options = {};
-        //Set a default configuration
-        if (_isJSON(props)) {
-          var defaultConfigValues = Object.values(props);
-          Object.keys(props).forEach(function (prop, index) {
-            // Well-formed string type
-            Object.keys(options).forEach(function (prop2, index2) {
-              if (prop2 === prop) {
-                var _v = options[prop2];
-                if (_v == 'true') _v = true;
-                if (_v == 'false') _v = false;
-                if (_isValidNumeric(_v)) _v = parseFloat(_v);
-                if (_isJSON(_v)) _v = Object.prototype.toString.call(_v) === '[object Object]' ? _v : JSON.parse(_v);
-                options[prop2] = _v;
-              }
-            });
-
-            //
-            if (_typeof(options[prop]) === ( true ? "undefined" : 0) || options[prop] === null) options[prop] = defaultConfigValues[index];
-          });
-        }
-        return options;
-      }
-
-      /**
-      * Check if a string is a valid number
-       * @param {*} str 
-       * @returns 
-      */
-      function _isValidNumeric(str) {
-        if (typeof str != "string") return false; // we only process strings!  
-        if (!isNaN(Number(str)) &&
-        // use type coercion to parse the _entirety_ of the string (`parseFloat` alone does not do this)
-        !isNaN(parseFloat(str)) // ensure strings of whitespace fail
-        ) {
-          return true;
-        } else {
-          return false;
-        }
-      }
-
-      /**
-       * Determine whether it is in JSON format
-       * @param {*} str 
-       * @returns 
-       */
-      function _isJSON(str) {
-        if (typeof str === 'string' && str.length > 0) {
-          if (str.replace(/\"\"/g, '').replace(/\,/g, '') == '[{}]') {
-            return false;
-          } else {
-            if (/^[\],:{}\s]*$/.test(str.replace(/\\["\\\/bfnrtu]/g, '@').replace(/"[^"\\\n\r]*"|true|false|null|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?/g, ']').replace(/(?:^|:|,)(?:\s*\[)+/g, ''))) {
-              return true;
-            } else {
-              return false;
-            }
-          }
-        } else {
-          if (_typeof(str) === 'object' && Object.prototype.toString.call(str) === '[object Object]' && !str.length) {
-            return true;
-          } else {
-            return false;
-          }
-        }
-      }
-
-      /******/
-      return __webpack_exports__;
-      /******/
-    }()
-  );
-});
-
-/***/ }),
-
 /***/ 575:
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -2881,6 +2700,237 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 
 /***/ }),
 
+/***/ 455:
+/***/ (function(module, exports, __webpack_require__) {
+
+/* module decorator */ module = __webpack_require__.nmd(module);
+var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof2(obj) { "@babel/helpers - typeof"; return _typeof2 = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof2(obj); }
+(function webpackUniversalModuleDefinition(root, factory) {
+  if (( false ? 0 : _typeof2(exports)) === 'object' && ( false ? 0 : _typeof2(module)) === 'object') module.exports = factory();else if (true) !(__WEBPACK_AMD_DEFINE_ARRAY__ = [], __WEBPACK_AMD_DEFINE_FACTORY__ = (factory),
+		__WEBPACK_AMD_DEFINE_RESULT__ = (typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ?
+		(__WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__)) : __WEBPACK_AMD_DEFINE_FACTORY__),
+		__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));else {}
+})(this, function () {
+  return (/******/function () {
+      // webpackBootstrap
+      /******/
+      "use strict";
+
+      /******/ // The require scope
+      /******/
+      var __nested_webpack_require_993__ = {};
+      /******/
+      /************************************************************************/
+      /******/ /* webpack/runtime/define property getters */
+      /******/
+      (function () {
+        /******/ // define getter functions for harmony exports
+        /******/__nested_webpack_require_993__.d = function (exports, definition) {
+          /******/for (var key in definition) {
+            /******/if (__nested_webpack_require_993__.o(definition, key) && !__nested_webpack_require_993__.o(exports, key)) {
+              /******/Object.defineProperty(exports, key, {
+                enumerable: true,
+                get: definition[key]
+              });
+              /******/
+            }
+            /******/
+          }
+          /******/
+        };
+        /******/
+      })();
+      /******/
+      /******/ /* webpack/runtime/hasOwnProperty shorthand */
+      /******/
+      (function () {
+        /******/__nested_webpack_require_993__.o = function (obj, prop) {
+          return Object.prototype.hasOwnProperty.call(obj, prop);
+        };
+        /******/
+      })();
+      /******/
+      /******/ /* webpack/runtime/make namespace object */
+      /******/
+      (function () {
+        /******/ // define __esModule on exports
+        /******/__nested_webpack_require_993__.r = function (exports) {
+          /******/if (typeof Symbol !== 'undefined' && Symbol.toStringTag) {
+            /******/Object.defineProperty(exports, Symbol.toStringTag, {
+              value: 'Module'
+            });
+            /******/
+          }
+          /******/
+          Object.defineProperty(exports, '__esModule', {
+            value: true
+          });
+          /******/
+        };
+        /******/
+      })();
+      /******/
+      /************************************************************************/
+      var __webpack_exports__ = {};
+      __nested_webpack_require_993__.r(__webpack_exports__);
+      /* harmony export */
+      __nested_webpack_require_993__.d(__webpack_exports__, {
+        /* harmony export */"isEmail": function isEmail() {
+          return (/* binding */_isEmail
+          );
+        },
+        /* harmony export */"isEmpty": function isEmpty() {
+          return (/* binding */_isEmpty
+          );
+        },
+        /* harmony export */"isInt": function isInt() {
+          return (/* binding */_isInt
+          );
+        },
+        /* harmony export */"isJSON": function isJSON() {
+          return (/* binding */_isJSON
+          );
+        },
+        /* harmony export */"isMobile": function isMobile() {
+          return (/* binding */_isMobile
+          );
+        },
+        /* harmony export */"isNumber": function isNumber() {
+          return (/* binding */_isNumber
+          );
+        },
+        /* harmony export */"isTel": function isTel() {
+          return (/* binding */_isTel
+          );
+        },
+        /* harmony export */"isValidNumeric": function isValidNumeric() {
+          return (/* binding */_isValidNumeric
+          );
+        }
+        /* harmony export */
+      });
+      function _typeof(obj) {
+        "@babel/helpers - typeof";
+
+        return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) {
+          return typeof obj;
+        } : function (obj) {
+          return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;
+        }, _typeof(obj);
+      }
+      /**
+       * Check if a string is a valid number
+       * @param str - The string to check
+       * @returns boolean indicating if the string is a valid number
+       */
+      function _isValidNumeric(str) {
+        if (typeof str !== "string") return false; // we only process strings!
+        if (!isNaN(Number(str)) &&
+        // use type coercion to parse the _entirety_ of the string
+        !isNaN(parseFloat(str)) // ensure strings of whitespace fail
+        ) {
+          return true;
+        }
+        return false;
+      }
+
+      /**
+       * Determine whether it is in JSON format
+       * @param str - The value to check
+       * @returns boolean indicating if the value is valid JSON
+       */
+      function _isJSON(str) {
+        if (typeof str === 'string' && str.length > 0) {
+          if (str.replace(/\"\"/g, '').replace(/\,/g, '') === '[{}]') {
+            return false;
+          }
+          if (/^[\],:{}\s]*$/.test(str.replace(/\\["\\\/bfnrtu]/g, '@').replace(/"[^"\\\n\r]*"|true|false|null|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?/g, ']').replace(/(?:^|:|,)(?:\s*\[)+/g, ''))) {
+            return true;
+          }
+          return false;
+        }
+        if (_typeof(str) === 'object' && Object.prototype.toString.call(str) === '[object Object]' && !str.length) {
+          return true;
+        }
+        return false;
+      }
+
+      /**
+       * Check if input is empty
+       * @param input - The input to check (string or array of strings)
+       * @returns boolean indicating if the input is empty
+       */
+      function _isEmpty(input) {
+        if (Array.isArray(input)) {
+          return input.some(function (str) {
+            return !str.replace(/\s/g, '').length === true;
+          });
+        }
+        return !input.replace(/\s/g, '').length === true;
+      }
+
+      /**
+       * Check if input is a valid number
+       * @param input - The input to check
+       * @returns boolean indicating if the input is a valid number
+       */
+      function _isNumber(input) {
+        var reg = /^[\d|\.|,]+$/;
+        return reg.test(input);
+      }
+
+      /**
+       * Check if input is a valid integer
+       * @param input - The input to check
+       * @returns boolean indicating if the input is a valid integer
+       */
+      function _isInt(input) {
+        if (input === "") {
+          return false;
+        }
+        var reg = /\D+/;
+        return !reg.test(input);
+      }
+
+      /**
+       * Check if input is a valid email address
+       * @param input - The input to check
+       * @returns boolean indicating if the input is a valid email
+       */
+      function _isEmail(input) {
+        var reg = /^\s*([A-Za-z0-9_-]+(\.\w+)*@(\w+\.)+\w{2,3})\s*$/;
+        return reg.test(input);
+      }
+
+      /**
+       * Check if input is a valid telephone number
+       * @param input - The input to check
+       * @returns boolean indicating if the input is a valid telephone number
+       */
+      function _isTel(input) {
+        var reg = /^[0-9- ]{7,20}$/;
+        return reg.test(input);
+      }
+
+      /**
+       * Check if input is a valid mobile number
+       * @param input - The input to check
+       * @returns boolean indicating if the input is a valid mobile number
+       */
+      function _isMobile(input) {
+        var reg = /^1[0-9]{10}$/;
+        return reg.test(input);
+      }
+
+      /******/
+      return __webpack_exports__;
+      /******/
+    }()
+  );
+});
+
+/***/ }),
+
 /***/ 787:
 /***/ ((module) => {
 
@@ -2990,8 +3040,8 @@ var cjs_default = /*#__PURE__*/__webpack_require__.n(cjs);
 // EXTERNAL MODULE: ../Utils/dist/cjs/useComId.js
 var useComId = __webpack_require__(85);
 var useComId_default = /*#__PURE__*/__webpack_require__.n(useComId);
-// EXTERNAL MODULE: ../Utils/dist/cjs/initDefaultOptions.js
-var initDefaultOptions = __webpack_require__(186);
+// EXTERNAL MODULE: ../Utils/dist/cjs/validate.js
+var validate = __webpack_require__(455);
 // EXTERNAL MODULE: ../Utils/dist/cjs/extract.js
 var extract = __webpack_require__(135);
 // EXTERNAL MODULE: ../Utils/dist/cjs/convert.js
@@ -3167,7 +3217,7 @@ var MultipleSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonj
   var rootRef = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useRef)(null);
   var inputRef = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useRef)(null);
   var availableListRef = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useRef)(null);
-  var optionsRes = options ? (0,initDefaultOptions.isJSON)(options) ? JSON.parse(options) : options : [];
+  var optionsRes = options ? (0,validate.isJSON)(options) ? JSON.parse(options) : options : [];
   var _useState = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)([]),
     _useState2 = _slicedToArray(_useState, 2),
     valSelectedData = _useState2[0],

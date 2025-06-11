@@ -1,3 +1,4 @@
+import { isJSON, isValidNumeric } from "./validate";
 /**
  *  Set a default JSON format configuration
  *
@@ -6,16 +7,4 @@
  * @return {JSON}            - Merge the new and old values.
  */
 declare function setDefaultOptions(props: any, options: any): any;
-/**
-* Check if a string is a valid number
- * @param {*} str
- * @returns
-*/
-declare function isValidNumeric(str: any): boolean;
-/**
- * Determine whether it is in JSON format
- * @param {*} str
- * @returns
- */
-declare function isJSON(str: any): boolean;
 export { setDefaultOptions, isJSON, isValidNumeric };

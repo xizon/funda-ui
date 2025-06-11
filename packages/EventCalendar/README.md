@@ -78,7 +78,7 @@ import 'funda-ui/EventCalendar/index.css';
 /**
  * Serialize form values
  * @param  {Array} types   - An array of field strings.
- * @param {HTMLFormElement} form      - Element
+ * @param {HTMLFormElement | HTMLDivElement} form      - Element
  * @returns Array
  */
 function serializeArray(form: HTMLFormElement, types: string[] = ['input', 'textarea', 'select', 'checkbox', 'progress', 'datalist']) {

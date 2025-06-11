@@ -4,7 +4,7 @@ import React, { useImperativeHandle, useState, useEffect, useRef, forwardRef } f
 import useComId from 'funda-utils/dist/cjs/useComId';
 import {
     isJSON
-} from 'funda-utils/dist/cjs/initDefaultOptions';
+} from 'funda-utils/dist/cjs/validate';
 import {
     extractContentsOfBrackets
 } from 'funda-utils/dist/cjs/extract';
