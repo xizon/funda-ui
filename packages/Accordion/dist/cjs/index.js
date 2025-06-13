@@ -895,8 +895,14 @@ var external_root_React_commonjs2_react_commonjs_react_amd_react_default = /*#__
 // EXTERNAL MODULE: ../Utils/dist/cjs/cls.js
 var cls = __webpack_require__(188);
 ;// CONCATENATED MODULE: ./src/AccordionItem.tsx
-var _excluded = ["heightObserver", "index", "itemClassName", "itemContentWrapperClassName", "itemContentClassName", "itemTriggerClassName", "itemHeaderClassName", "itemTriggerIcon", "itemStyle", "defaultActive", "title", "onToggleEv", "onTransitionEnd", "triggerType", "children"];
+var _excluded = ["heightObserver", "index", "animSpeed", "easeType", "arrowOnly", "itemClassName", "itemContentWrapperClassName", "itemContentClassName", "itemTriggerClassName", "itemHeaderClassName", "itemTriggerIcon", "itemStyle", "defaultActive", "title", "onToggleEv", "onTransitionEnd", "onItemCollapse", "isExpanded", "children"];
 function _extends() { _extends = Object.assign ? Object.assign.bind() : function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
+function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i]; return arr2; }
+function _iterableToArrayLimit(arr, i) { var _i = null == arr ? null : "undefined" != typeof Symbol && arr[Symbol.iterator] || arr["@@iterator"]; if (null != _i) { var _s, _e, _x, _r, _arr = [], _n = !0, _d = !1; try { if (_x = (_i = _i.call(arr)).next, 0 === i) { if (Object(_i) !== _i) return; _n = !1; } else for (; !(_n = (_s = _x.call(_i)).done) && (_arr.push(_s.value), _arr.length !== i); _n = !0); } catch (err) { _d = !0, _e = err; } finally { try { if (!_n && null != _i["return"] && (_r = _i["return"](), Object(_r) !== _r)) return; } finally { if (_d) throw _e; } } return _arr; } }
+function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 function _objectWithoutProperties(source, excluded) { if (source == null) return {}; var target = _objectWithoutPropertiesLoose(source, excluded); var key, i; if (Object.getOwnPropertySymbols) { var sourceSymbolKeys = Object.getOwnPropertySymbols(source); for (i = 0; i < sourceSymbolKeys.length; i++) { key = sourceSymbolKeys[i]; if (excluded.indexOf(key) >= 0) continue; if (!Object.prototype.propertyIsEnumerable.call(source, key)) continue; target[key] = source[key]; } } return target; }
 function _objectWithoutPropertiesLoose(source, excluded) { if (source == null) return {}; var target = {}; var sourceKeys = Object.keys(source); var key, i; for (i = 0; i < sourceKeys.length; i++) { key = sourceKeys[i]; if (excluded.indexOf(key) >= 0) continue; target[key] = source[key]; } return target; }
 
@@ -904,6 +910,9 @@ function _objectWithoutPropertiesLoose(source, excluded) { if (source == null) r
 var AccordionItem = function AccordionItem(props) {
   var heightObserver = props.heightObserver,
     index = props.index,
+    animSpeed = props.animSpeed,
+    easeType = props.easeType,
+    arrowOnly = props.arrowOnly,
     itemClassName = props.itemClassName,
     itemContentWrapperClassName = props.itemContentWrapperClassName,
     itemContentClassName = props.itemContentClassName,
@@ -915,13 +924,58 @@ var AccordionItem = function AccordionItem(props) {
     title = props.title,
     onToggleEv = props.onToggleEv,
     onTransitionEnd = props.onTransitionEnd,
-    triggerType = props.triggerType,
+    onItemCollapse = props.onItemCollapse,
+    controlledExpanded = props.isExpanded,
     children = props.children,
     attributes = _objectWithoutProperties(props, _excluded);
-  var activedClassName = typeof defaultActive !== 'undefined' && defaultActive !== false ? ' active' : '';
+  var _useState = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)(false),
+    _useState2 = _slicedToArray(_useState, 2),
+    internalExpanded = _useState2[0],
+    setInternalExpanded = _useState2[1];
+  var isFirstRender = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useRef)(true);
+  var initialHeightSet = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useRef)(false);
+
+  // Use controlled or uncontrolled expanded state
+  var isExpanded = controlledExpanded !== undefined ? controlledExpanded : internalExpanded;
   var observer = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useRef)(null);
   var contentWrapperRef = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useRef)(null);
   var contentRef = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useRef)(null);
+  var triggerRef = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useRef)(null);
+  var iconRef = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useRef)(null);
+  var handleToggle = function handleToggle(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    if (controlledExpanded === undefined) {
+      setInternalExpanded(function (prev) {
+        return !prev;
+      });
+    }
+    onToggleEv === null || onToggleEv === void 0 ? void 0 : onToggleEv(e);
+  };
+  (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useEffect)(function () {
+    if (triggerRef.current && typeof onItemCollapse === 'function') {
+      if (isFirstRender.current) {
+        isFirstRender.current = false;
+        return;
+      }
+      onItemCollapse(triggerRef.current, iconRef.current, isExpanded);
+    }
+  }, [isExpanded, onItemCollapse]);
+  (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useEffect)(function () {
+    if (contentWrapperRef.current && !initialHeightSet.current) {
+      initialHeightSet.current = true;
+      var shouldBeExpanded = typeof defaultActive !== 'undefined' && defaultActive !== false;
+      if (controlledExpanded === undefined) {
+        setInternalExpanded(shouldBeExpanded);
+      }
+
+      // Set initial height when defaultActive is true
+      if (shouldBeExpanded && contentRef.current) {
+        var contentHeight = contentRef.current.offsetHeight;
+        contentWrapperRef.current.style.height = "".concat(contentHeight, "px");
+      }
+    }
+  }, [defaultActive, controlledExpanded]);
   (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useEffect)(function () {
     if (parseFloat(heightObserver) !== index) return;
 
@@ -945,26 +999,39 @@ var AccordionItem = function AccordionItem(props) {
   }, [heightObserver]);
   return /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", _extends({}, attributes, {
     "data-index": index,
-    className: (0,cls.combinedCls)('custom-accordion-item', (0,cls.clsWrite)(itemClassName, 'accordion-item'), activedClassName),
-    onClick: triggerType === 'click' ? onToggleEv : function () {},
-    onMouseOver: triggerType === 'click' ? function () {} : onToggleEv,
-    onTransitionEnd: typeof onTransitionEnd === 'function' ? onTransitionEnd : function () {},
-    "aria-expanded": defaultActive ? 'true' : 'false',
+    className: (0,cls.combinedCls)('custom-accordion-item', (0,cls.clsWrite)(itemClassName, 'accordion-item'), isExpanded ? ' active' : ''),
+    onClick: arrowOnly ? undefined : handleToggle,
+    onTransitionEnd: typeof onTransitionEnd === 'function' ? onTransitionEnd : undefined,
+    "aria-expanded": isExpanded ? 'true' : 'false',
     style: typeof itemStyle !== 'undefined' ? itemStyle : {}
   }), /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
     className: (0,cls.combinedCls)('custom-accordion-header', (0,cls.clsWrite)(itemHeaderClassName, 'accordion-header position-relative')),
     role: "presentation"
-  }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("button", {
+  }, arrowOnly ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
+    ref: triggerRef,
     tabIndex: -1,
-    className: (0,cls.combinedCls)('custom-accordion-trigger', (0,cls.clsWrite)(itemTriggerClassName, 'accordion-button'), activedClassName === '' ? 'collapsed' : 'active'),
+    className: (0,cls.combinedCls)('custom-accordion-trigger', (0,cls.clsWrite)(itemTriggerClassName, 'accordion-button'), isExpanded ? 'active' : 'collapsed')
+  }, title) : /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("button", {
+    ref: triggerRef,
+    tabIndex: -1,
+    className: (0,cls.combinedCls)('custom-accordion-trigger', (0,cls.clsWrite)(itemTriggerClassName, 'accordion-button'), isExpanded ? 'active' : 'collapsed'),
     type: "button"
-  }, title), itemTriggerIcon), /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
+  }, title), /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("span", {
+    ref: iconRef,
+    onClick: !arrowOnly ? undefined : handleToggle,
+    className: "custom-accordion-trigger__icon",
+    style: !arrowOnly ? {
+      pointerEvents: 'none'
+    } : {
+      cursor: 'pointer'
+    }
+  }, itemTriggerIcon)), /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
     ref: contentWrapperRef,
     className: (0,cls.combinedCls)('custom-accordion-content__wrapper w-100', (0,cls.clsWrite)(itemContentWrapperClassName, 'accordion-collapse')),
     role: "tabpanel",
     style: {
-      height: defaultActive ? 'auto' : '0px',
-      overflow: 'hidden' // “overflow” affects the width, so add `w-100` to `custom-accordion-content__wrapper`
+      height: '0',
+      overflow: 'hidden' // "overflow" affects the width, so add `w-100` to `custom-accordion-content__wrapper`
     }
   }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
     className: (0,cls.combinedCls)('custom-accordion-content', (0,cls.clsWrite)(itemContentClassName, 'accordion-body')),
@@ -983,12 +1050,16 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
 function _defineProperty(obj, key, value) { key = _toPropertyKey(key); if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 function _toPropertyKey(arg) { var key = _toPrimitive(arg, "string"); return _typeof(key) === "symbol" ? key : String(key); }
 function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input === null) return input; var prim = input[Symbol.toPrimitive]; if (prim !== undefined) { var res = prim.call(input, hint || "default"); if (_typeof(res) !== "object") return res; throw new TypeError("@@toPrimitive must return a primitive value."); } return (hint === "string" ? String : Number)(input); }
-function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
-function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
-function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
-function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i]; return arr2; }
-function _iterableToArrayLimit(arr, i) { var _i = null == arr ? null : "undefined" != typeof Symbol && arr[Symbol.iterator] || arr["@@iterator"]; if (null != _i) { var _s, _e, _x, _r, _arr = [], _n = !0, _d = !1; try { if (_x = (_i = _i.call(arr)).next, 0 === i) { if (Object(_i) !== _i) return; _n = !1; } else for (; !(_n = (_s = _x.call(_i)).done) && (_arr.push(_s.value), _arr.length !== i); _n = !0); } catch (err) { _d = !0, _e = err; } finally { try { if (!_n && null != _i["return"] && (_r = _i["return"](), Object(_r) !== _r)) return; } finally { if (_d) throw _e; } } return _arr; } }
-function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || Accordion_unsupportedIterableToArray(arr) || _nonIterableSpread(); }
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter); }
+function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return Accordion_arrayLikeToArray(arr); }
+function Accordion_slicedToArray(arr, i) { return Accordion_arrayWithHoles(arr) || Accordion_iterableToArrayLimit(arr, i) || Accordion_unsupportedIterableToArray(arr, i) || Accordion_nonIterableRest(); }
+function Accordion_nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+function Accordion_unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return Accordion_arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return Accordion_arrayLikeToArray(o, minLen); }
+function Accordion_arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i]; return arr2; }
+function Accordion_iterableToArrayLimit(arr, i) { var _i = null == arr ? null : "undefined" != typeof Symbol && arr[Symbol.iterator] || arr["@@iterator"]; if (null != _i) { var _s, _e, _x, _r, _arr = [], _n = !0, _d = !1; try { if (_x = (_i = _i.call(arr)).next, 0 === i) { if (Object(_i) !== _i) return; _n = !1; } else for (; !(_n = (_s = _x.call(_i)).done) && (_arr.push(_s.value), _arr.length !== i); _n = !0); } catch (err) { _d = !0, _e = err; } finally { try { if (!_n && null != _i["return"] && (_r = _i["return"](), Object(_r) !== _r)) return; } finally { if (_d) throw _e; } } return _arr; } }
+function Accordion_arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 
 
@@ -1004,116 +1075,182 @@ var EasingList = /*#__PURE__*/function (EasingList) {
 }({});
 var Accordion = function Accordion(props) {
   var wrapperClassName = props.wrapperClassName,
-    triggerType = props.triggerType,
-    displayTheFirstItem = props.displayTheFirstItem,
-    displayAllItems = props.displayAllItems,
+    defaultActiveIndex = props.defaultActiveIndex,
+    _props$defaultActiveA = props.defaultActiveAll,
+    defaultActiveAll = _props$defaultActiveA === void 0 ? false : _props$defaultActiveA,
     duration = props.duration,
     easing = props.easing,
-    alternateCollapse = props.alternateCollapse,
+    _props$alternateColla = props.alternateCollapse,
+    alternateCollapse = _props$alternateColla === void 0 ? true : _props$alternateColla,
+    _props$arrowOnly = props.arrowOnly,
+    arrowOnly = _props$arrowOnly === void 0 ? false : _props$arrowOnly,
     onChange = props.onChange,
     children = props.children;
+  var animSpeed = duration || 200;
   var easeType = typeof alternateCollapse === 'undefined' ? EasingList['linear'] : EasingList[easing];
-  var ALTER = typeof alternateCollapse === 'undefined' ? true : alternateCollapse;
   var rootRef = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useRef)(null);
   var _useState = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)(false),
-    _useState2 = _slicedToArray(_useState, 2),
+    _useState2 = Accordion_slicedToArray(_useState, 2),
     animOK = _useState2[0],
     setAnimOK = _useState2[1];
   var _useState3 = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)(-1),
-    _useState4 = _slicedToArray(_useState3, 2),
+    _useState4 = Accordion_slicedToArray(_useState3, 2),
     heightObserver = _useState4[0],
     setHeightObserver = _useState4[1];
+  var _useState5 = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)(new Set()),
+    _useState6 = Accordion_slicedToArray(_useState5, 2),
+    expandedItems = _useState6[0],
+    setExpandedItems = _useState6[1]; // Keep track of all expanded items
+  var animationInProgress = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useRef)(false);
   function handleClickItem(e) {
+    if (animationInProgress.current) return;
     if (e.target.closest('.custom-accordion-header') === null) return;
     if (animOK) return;
-
-    // DO NOT place it before the above code, otherwise it will cause the checkbox and radio controls to fail.
-    e.preventDefault();
-
-    //Prevents further propagation of the current event in the capturing and bubbling phases(if use `e.target`).
-    e.stopPropagation();
-
-    //
-    var reactDomEl = e.currentTarget;
-    var curIndex = reactDomEl.dataset.index;
+    animationInProgress.current = true;
+    var reactDomEl = arrowOnly ? e.currentTarget.closest('.custom-accordion-item') : e.currentTarget;
+    var curIndex = parseInt(reactDomEl.dataset.index);
     var reactDomWrapperEl = rootRef.current;
-    var animSpeed = duration || 200;
     var $li = reactDomWrapperEl.querySelectorAll('.custom-accordion-item');
     var $allContent = reactDomWrapperEl.querySelectorAll('.custom-accordion-content__wrapper');
     var $curContent = reactDomEl.querySelector('.custom-accordion-content__wrapper');
+    var $trigger = reactDomEl.querySelector('.custom-accordion-trigger');
     if (reactDomEl.getAttribute('aria-expanded') === 'false' || reactDomEl.getAttribute('aria-expanded') === null) {
-      var _reactDomEl$querySele, _reactDomEl$querySele2;
+      var _curIndex;
       setAnimOK(true);
       setTimeout(function () {
         setAnimOK(false);
       }, animSpeed);
-      if (ALTER) {
-        //Hide other all sibling <dt> of the selected element
+      if (alternateCollapse) {
+        // Hide other all sibling content
         Array.prototype.forEach.call($allContent, function (node) {
           if (node.clientHeight > 0) {
             anim_default()(node, {
               startHeight: node.scrollHeight,
               endHeight: 0,
               speed: animSpeed
-            }, easeType);
+            }, easeType, function () {
+              animationInProgress.current = false;
+            });
           }
         });
 
-        //to open
+        // Update all items to collapsed state
         Array.prototype.forEach.call($li, function (node) {
-          var _node$querySelector, _node$querySelector2;
-          node.classList.remove('active');
-          (_node$querySelector = node.querySelector('.custom-accordion-trigger')) === null || _node$querySelector === void 0 ? void 0 : _node$querySelector.classList.remove('active');
-          (_node$querySelector2 = node.querySelector('.custom-accordion-trigger')) === null || _node$querySelector2 === void 0 ? void 0 : _node$querySelector2.classList.add('collapsed');
-          node.setAttribute('aria-expanded', false);
+          node.setAttribute('aria-expanded', 'false');
+        });
+
+        // Update expanded items state
+        setExpandedItems(new Set([curIndex]));
+      } else {
+        // Add current item to expanded items
+        setExpandedItems(function (prev) {
+          return new Set([].concat(_toConsumableArray(prev), [curIndex]));
         });
       }
-      reactDomEl.classList.add('active');
-      (_reactDomEl$querySele = reactDomEl.querySelector('.custom-accordion-trigger')) === null || _reactDomEl$querySele === void 0 ? void 0 : _reactDomEl$querySele.classList.add('active');
-      (_reactDomEl$querySele2 = reactDomEl.querySelector('.custom-accordion-trigger')) === null || _reactDomEl$querySele2 === void 0 ? void 0 : _reactDomEl$querySele2.classList.remove('collapsed');
-      reactDomEl.setAttribute('aria-expanded', true);
-      // When the height of the element is 0, the value of `offsetHeight` and `clientHeight` will be 0
+      reactDomEl.setAttribute('aria-expanded', 'true');
+
+      // Call onTriggerChange if it exists in the child props
+      var childProps = (_curIndex = children[curIndex]) === null || _curIndex === void 0 ? void 0 : _curIndex.props;
+      if (typeof (childProps === null || childProps === void 0 ? void 0 : childProps.onTriggerChange) === 'function' && $trigger) {
+        childProps.onTriggerChange($trigger, true);
+      }
       anim_default()($curContent, {
         startHeight: 0,
         endHeight: $curContent.scrollHeight,
         speed: animSpeed
       }, easeType, function () {
-        // content height observer
         setHeightObserver(curIndex);
+        animationInProgress.current = false;
       });
     } else {
-      if (e.type == 'click') {
-        var _reactDomEl$querySele3, _reactDomEl$querySele4;
-        //to close
-        reactDomEl.classList.remove('active');
-        (_reactDomEl$querySele3 = reactDomEl.querySelector('.custom-accordion-trigger')) === null || _reactDomEl$querySele3 === void 0 ? void 0 : _reactDomEl$querySele3.classList.remove('active');
-        (_reactDomEl$querySele4 = reactDomEl.querySelector('.custom-accordion-trigger')) === null || _reactDomEl$querySele4 === void 0 ? void 0 : _reactDomEl$querySele4.classList.add('collapsed');
-        reactDomEl.setAttribute('aria-expanded', false);
-        anim_default()($curContent, {
-          startHeight: $curContent.scrollHeight,
-          endHeight: 0,
-          speed: animSpeed
-        }, easeType);
+      var _curIndex2;
+      reactDomEl.setAttribute('aria-expanded', 'false');
+
+      // Call onTriggerChange if it exists in the child props
+      var _childProps = (_curIndex2 = children[curIndex]) === null || _curIndex2 === void 0 ? void 0 : _curIndex2.props;
+      if (typeof (_childProps === null || _childProps === void 0 ? void 0 : _childProps.onTriggerChange) === 'function' && $trigger) {
+        _childProps.onTriggerChange($trigger, false);
       }
+
+      // Remove current item from expanded items
+      setExpandedItems(function (prev) {
+        var newSet = new Set(prev);
+        newSet["delete"](curIndex);
+        return newSet;
+      });
+      anim_default()($curContent, {
+        startHeight: $curContent.scrollHeight,
+        endHeight: 0,
+        speed: animSpeed
+      }, easeType, function () {
+        animationInProgress.current = false;
+      });
     }
-    if (typeof onChange === 'function') {
-      onChange(reactDomEl, Number(curIndex));
-    }
+    onChange === null || onChange === void 0 ? void 0 : onChange(reactDomEl, curIndex);
   }
+
+  // Initialize expanded items based on defaultActiveIndex or defaultActiveAll
+  (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useEffect)(function () {
+    if (defaultActiveAll && children && rootRef.current) {
+      var allIndices = Array.from({
+        length: children.length
+      }, function (_, i) {
+        return i;
+      });
+      setExpandedItems(new Set(allIndices));
+
+      // Actually expand all items without animation
+      var $allItems = rootRef.current.querySelectorAll('.custom-accordion-item');
+      Array.prototype.forEach.call($allItems, function (node, index) {
+        var _index;
+        node.setAttribute('aria-expanded', 'true');
+        var $curContent = node.querySelector('.custom-accordion-content__wrapper');
+        var $trigger = node.querySelector('.custom-accordion-trigger');
+
+        // Call onTriggerChange if it exists in the child props
+        var childProps = (_index = children[index]) === null || _index === void 0 ? void 0 : _index.props;
+        if (typeof (childProps === null || childProps === void 0 ? void 0 : childProps.onTriggerChange) === 'function' && $trigger) {
+          childProps.onTriggerChange($trigger, true);
+        }
+
+        // Directly set height without animation
+        if ($curContent) {
+          $curContent.style.height = "".concat($curContent.scrollHeight, "px");
+        }
+      });
+    } else if (defaultActiveIndex !== undefined) {
+      var initialExpanded = new Set();
+      if (Array.isArray(defaultActiveIndex)) {
+        defaultActiveIndex.forEach(function (index) {
+          return initialExpanded.add(index);
+        });
+      } else if (typeof defaultActiveIndex === 'number') {
+        initialExpanded.add(defaultActiveIndex);
+      }
+      setExpandedItems(initialExpanded);
+    }
+  }, [defaultActiveIndex, defaultActiveAll, children]);
   return /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
     className: (0,cls.combinedCls)('custom-accordion-item', (0,cls.clsWrite)(wrapperClassName, 'accordion')),
     role: "tablist",
     ref: rootRef
   }, children != null ? children.map(function (item, i) {
     var childProps = _objectSpread({}, item.props);
-    var _defaultActive = i === 0 && displayTheFirstItem ? true : false;
+    var _defaultActive = false;
+    if (Array.isArray(defaultActiveIndex)) {
+      _defaultActive = defaultActiveIndex.includes(i);
+    } else if (typeof defaultActiveIndex === 'number') {
+      _defaultActive = defaultActiveIndex === i;
+    }
     return /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement(src_AccordionItem, Accordion_extends({
       key: "item" + i,
       index: i,
+      animSpeed: animSpeed,
+      arrowOnly: arrowOnly,
       heightObserver: heightObserver,
-      defaultActive: typeof displayAllItems === 'undefined' ? _defaultActive : displayAllItems,
-      triggerType: triggerType || 'click',
-      onToggleEv: handleClickItem
+      defaultActive: _defaultActive,
+      onToggleEv: handleClickItem,
+      isExpanded: expandedItems.has(i) // Both controlled and uncontrolled modes are implemented
     }, childProps));
   }) : null));
 };

@@ -28,6 +28,7 @@ export interface DragDropListProps {
     doubleIndent?: boolean;
     alternateCollapse?: boolean;
     arrow?: React.ReactNode;
+    renderOption?: (item: ListItem, dragHandleClassName: string, index: number) => React.ReactNode;
     onUpdate?: (items: ListItem[], curId: number) => void;
 }
 export interface EditValue {

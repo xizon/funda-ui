@@ -5,6 +5,9 @@ import { clsWrite, combinedCls } from 'funda-utils/dist/cjs/cls';
 export type AccordionItemProps = {
     heightObserver?: number;
     index?: number;
+    arrowOnly?: boolean;
+    animSpeed?: number;
+    easeType?: string;
     /** Class of items */
     itemClassName?: string;
     itemContentWrapperClassName?: string;
@@ -21,8 +24,10 @@ export type AccordionItemProps = {
 	onToggleEv?: React.MouseEventHandler<HTMLElement>;
 	/** Handling events when the animation execution is complete */
 	onTransitionEnd?: React.TransitionEventHandler<HTMLElement>;
-	/** One event type, such as `click` or `mouseover` */
-	triggerType?: string;
+    /** Callback when trigger state changes, provides trigger element and expanded state */
+    onItemCollapse?: (trigger: HTMLElement,  icon: HTMLElement, isExpanded: boolean) => void;
+	/** Control expanded state from parent */
+	isExpanded?: boolean;
 	/** -- */
 	children: React.ReactNode;
 };
@@ -31,10 +36,12 @@ export type AccordionItemProps = {
 
 
 const AccordionItem = (props: AccordionItemProps) => {
-	
     const { 
         heightObserver,
         index,
+        animSpeed,
+        easeType,
+        arrowOnly,
         itemClassName,
         itemContentWrapperClassName,
         itemContentClassName,
@@ -46,18 +53,60 @@ const AccordionItem = (props: AccordionItemProps) => {
         title,
         onToggleEv,
         onTransitionEnd,
-        triggerType,
+        onItemCollapse,
+        isExpanded: controlledExpanded,
         children,
         ...attributes
     } = props;
     
+    const [internalExpanded, setInternalExpanded] = useState<boolean>(false);
+    const isFirstRender = useRef<boolean>(true);
+    const initialHeightSet = useRef<boolean>(false);
 
-    
-    const activedClassName = typeof(defaultActive) !== 'undefined' && defaultActive !== false ? ' active' : '';
+    // Use controlled or uncontrolled expanded state
+    const isExpanded = controlledExpanded !== undefined ? controlledExpanded : internalExpanded;
+
     const observer = useRef<ResizeObserver | null>(null);
     const contentWrapperRef = useRef<HTMLDivElement | null>(null);
     const contentRef = useRef<HTMLDivElement | null>(null);
-    
+    const triggerRef = useRef<HTMLDivElement | HTMLButtonElement | null>(null);
+    const iconRef = useRef<HTMLSpanElement | null>(null);
+
+    const handleToggle = (e: React.MouseEvent<HTMLElement>) => {
+        e.preventDefault();
+        e.stopPropagation();
+
+        if (controlledExpanded === undefined) {
+            setInternalExpanded(prev => !prev);
+        }
+        onToggleEv?.(e);
+    };
+
+    useEffect(() => {
+        if (triggerRef.current && typeof onItemCollapse === 'function') {
+            if (isFirstRender.current) {
+                isFirstRender.current = false;
+                return;
+            }
+            onItemCollapse(triggerRef.current, iconRef.current as HTMLElement, isExpanded);
+        }
+    }, [isExpanded, onItemCollapse]);
+
+    useEffect(() => {
+        if (contentWrapperRef.current && !initialHeightSet.current) {
+            initialHeightSet.current = true;
+            const shouldBeExpanded = typeof defaultActive !== 'undefined' && defaultActive !== false;
+            if (controlledExpanded === undefined) {
+                setInternalExpanded(shouldBeExpanded);
+            }
+            
+            // Set initial height when defaultActive is true
+            if (shouldBeExpanded && contentRef.current) {
+                const contentHeight = contentRef.current.offsetHeight;
+                contentWrapperRef.current.style.height = `${contentHeight}px`;
+            }
+        }
+    }, [defaultActive, controlledExpanded]);
 
     useEffect(() => {
 
@@ -88,6 +137,7 @@ const AccordionItem = (props: AccordionItemProps) => {
 
     }, [heightObserver]);
 
+
     return (
         <>
 
@@ -97,36 +147,72 @@ const AccordionItem = (props: AccordionItemProps) => {
                 className={combinedCls(
                     'custom-accordion-item',
                     clsWrite(itemClassName, 'accordion-item'),
-                    activedClassName
+                    isExpanded ? ' active' : ''
                 )}
-                onClick={triggerType === 'click' ? onToggleEv : () => {}}
-                onMouseOver={triggerType === 'click' ? () => {} : onToggleEv} 
-                onTransitionEnd={typeof onTransitionEnd === 'function' ? onTransitionEnd : () => {}}
-                aria-expanded={defaultActive ? 'true' : 'false'}
+                onClick={arrowOnly ? undefined : handleToggle}
+                onTransitionEnd={typeof onTransitionEnd === 'function' ? onTransitionEnd : undefined}
+                aria-expanded={isExpanded ? 'true' : 'false'}
                 style={typeof itemStyle !== 'undefined' ? itemStyle : {}}
+            >
+
+                <div 
+                    className={combinedCls(
+                        'custom-accordion-header',
+                        clsWrite(itemHeaderClassName, 'accordion-header position-relative')
+                    )} 
+                    role="presentation"
                 >
 
-                <div className={combinedCls(
-                    'custom-accordion-header',
-                    clsWrite(itemHeaderClassName, 'accordion-header position-relative')
-                )} role="presentation">
-                    <button tabIndex={-1} className={combinedCls(
-                        'custom-accordion-trigger',
-                        clsWrite(itemTriggerClassName, 'accordion-button'),
-                        activedClassName === '' ? 'collapsed' : 'active'
-                    )}  type="button">
-                        {title}
-                    </button>
+                    {arrowOnly ? (
+                        <div 
+                            ref={triggerRef as React.RefObject<HTMLDivElement>}
+                            tabIndex={-1} 
+                            className={combinedCls(
+                                'custom-accordion-trigger',
+                                clsWrite(itemTriggerClassName, 'accordion-button'),
+                                isExpanded ? 'active' : 'collapsed'
+                            )}  
+                        >
+                            {title}
+                        </div>
+                    ) : (
+                        <button 
+                            ref={triggerRef as React.RefObject<HTMLButtonElement>}
+                            tabIndex={-1} 
+                            className={combinedCls(
+                                'custom-accordion-trigger',
+                                clsWrite(itemTriggerClassName, 'accordion-button'),
+                                isExpanded ? 'active' : 'collapsed'
+                            )}  
+                            type="button"
+                        >
+                            {title}
+                        </button>
+                    )}
+                    
 
-                    {itemTriggerIcon}
+                
+                    <span 
+                        ref={iconRef}
+                        onClick={!arrowOnly ? undefined : handleToggle}
+                        className="custom-accordion-trigger__icon"
+                        style={!arrowOnly ? {pointerEvents: 'none'} : {cursor: 'pointer'}}
+                    >
+                        {itemTriggerIcon}
+                    </span>
+        
+                    
                 </div>
-                <div ref={contentWrapperRef} className={combinedCls(
-                    'custom-accordion-content__wrapper w-100',
-                    clsWrite(itemContentWrapperClassName, 'accordion-collapse')
-                )}
-                    role="tabpanel" style={{
-                        height: defaultActive ? 'auto' : '0px',
-                        overflow: 'hidden'   // “overflow” affects the width, so add `w-100` to `custom-accordion-content__wrapper`
+                <div 
+                    ref={contentWrapperRef} 
+                    className={combinedCls(
+                        'custom-accordion-content__wrapper w-100',
+                        clsWrite(itemContentWrapperClassName, 'accordion-collapse')
+                    )}
+                    role="tabpanel" 
+                    style={{
+                        height: '0',
+                        overflow: 'hidden'   // "overflow" affects the width, so add `w-100` to `custom-accordion-content__wrapper`
                     }}>
                     <div className={combinedCls(
                         'custom-accordion-content',
@@ -136,10 +222,8 @@ const AccordionItem = (props: AccordionItemProps) => {
                     </div>
                 </div>
             </div>
-
         </>
     )
-    
 }
 
 export default AccordionItem;

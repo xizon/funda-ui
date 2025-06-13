@@ -884,6 +884,107 @@ export default () => {
 
 
 
+## Customize option rendering
+
+`renderOption` callback allows you to customize the UI style for the output of each option.
+
+```js
+import React, { useState } from "react";
+import DragDropList, { ListItem } from 'funda-ui/DragDropList';
+
+// component styles
+import 'funda-ui/DragDropList/index.css';
+
+export default () => {
+
+    
+    const demoListFlat = [
+        {
+            "id": 1,
+            "label": "Title 1",
+            "listItemLabel": "Title 1",
+            "value": "1",
+            "queryString": "",
+            "otherAttr": "dev"
+        },
+        {
+            "id": 2,
+            "label": "Title 2",
+            "listItemLabel": "Title 2",
+            "value": "2",
+            "queryString": "",
+            "otherAttr": "web/ui"
+        },
+        {
+            "id": 3,
+            "label": "Title 3",
+            "listItemLabel": "Title 3",
+            "value": "3",
+            "queryString": ""
+        },
+        {
+            "id": 4,
+            "label": "Title 4",
+            "listItemLabel": "Title 4",
+            "value": "4",
+            "queryString": ""
+        },
+        {
+            "id": 5,
+            "label": "Title 5",
+            "listItemLabel": "Title 5",
+            "value": "5",
+            "queryString": ""
+        },
+        {
+            "id": 6,
+            "label": "Title 6",
+            "listItemLabel": "Title 6",
+            "value": "6",
+            "queryString": ""
+        }
+    ];
+
+
+    const [data, setData] = useState<any[]>(demoListFlat);
+
+    const handleUpdate = (newData: any, curId: number) => {
+        setData(newData);
+        console.log('Updated data2:', newData, curId);
+    };
+
+    return (
+        <DragDropList
+            data={data}
+            onUpdate={handleUpdate}
+            dragMode="handle"
+            renderOption={(item: ListItem, dragHandleClassName: string, index: number) => {
+                return <div style={item.disabled ? {pointerEvents: 'none', opacity: .3} : undefined}>
+                    <em>{index}. </em>
+                    <strong style={{position: 'relative'}}>
+                        {item.label} 
+                        {/* Use dragHandle to reference a custom element */}
+                        <span 
+                            style={{marginLeft: '10px', cursor: 'move', display: 'inline-block'}} 
+                            className={dragHandleClassName}
+                            draggable={true}
+                        >
+                            <svg width="15px" height="15px" viewBox="0 0 16 16" fill="none">
+                                <path d="M8 0L2 6V7H14V6L8 0Z" fill="#f60"/>
+                                <path d="M8 16L2 10V9H14V10L8 16Z" fill="#f60"/>
+                            </svg>
+                        </span>
+                    </strong>
+                    <div><small style={{color: 'gray'}}>value: {item.value}</small></div>
+                </div>;
+            }}
+        />
+    );
+}
+```
+
+
+
 ## API
 
 ### DragDrop List
@@ -894,12 +995,12 @@ import DragDropList from 'funda-ui/DragDropList';
 | --- | --- | --- | --- | --- |
 | `wrapperClassName` | string | `mb-3` | The class name of the control wrapper. | - |
 | `prefix` | string | `custom` | Add the appropriate prefix to the component style, the default style is similar `custom-draggable-list`. This is done in order to customize the style when embedding other components | - |
-| `dragMode` | `handle` | `handle` \| `block` | Whether it is triggered using a handle or a whole area. | - |
+| `dragMode` | `handle` \| `block` | `handle` | Whether it is triggered using a handle or a whole area. | - |
 | `editable` | boolean  | false | Double-click the editable field. | - |
 | `itemStyle` | CSSProperties  | - | Custom styles for each item. | - |
 | `draggable` | boolean | true | Indicates whether the content area can be dragged. | - |
 | `handleHide` | boolean | false | Hide the drag handle. | - |
-| `handlePos` | `left` | `left` \| `right` | The drag handle position. | - |
+| `handlePos` | `left` \| `right`| `left` | The drag handle position. | - |
 | `handleIcon` | string  | `☰` | Specify an icon of drag handle. | - |
 | `hierarchical` | boolean  | true | Whether the parent ID and ID of each item are displayed as hierarchical relationships. | - |
 | `indentation` | string  | - | Set hierarchical indentation placeholders. | - |
@@ -908,11 +1009,12 @@ import DragDropList from 'funda-ui/DragDropList';
 | `arrow` | ReactNode  | `<svg viewBox="0 0 22 22" width="8px"><path d="m345.44 248.29l-194.29 194.28c-12.359 12.365-32.397 12.365-44.75 0-12.354-12.354-12.354-32.391 0-44.744l171.91-171.91-171.91-171.9c-12.354-12.359-12.354-32.394 0-44.748 12.354-12.359 32.391-12.359 44.75 0l194.29 194.28c6.177 6.18 9.262 14.271 9.262 22.366 0 8.099-3.091 16.196-9.267 22.373" transform="matrix(.03541-.00013.00013.03541 2.98 3.02)" fill="#a5a5a5" /></svg>` | Set an arrow of control | - |
 | `data` | JSON Object | - | Set the default value using JSON string format for menu of options, like this: `[{"id":1,"label":"Title 1","listItemLabel":"Title 1","value":1,"queryString":"","disabled":true},{"id":2,"label":"Title 2","listItemLabel":"Title 2","value":2,"queryString":"","otherAttr":"web/ui"}]`| - |
 | `onUpdate` | function  | - |  Call a function when  data is updated. It returns two callback values. <br /> <ol><li>The first is the updated data (**Array**)</li><li>The second is the current item id (**Number**)</li></ol>| - |
-
+| `renderOption` | function  | - | A function to render content of the option, replaces the default content of the option. It passes two parameters. <br /> <ol><li>The first is the option data (**JSON Object**)</li><li>The second is the classname of drag handle (**String**)</li><li>The third is the index of the current option (**Number**)</li></ol>| - |
 
 ---
 
 Array Object configuration properties of the `data` (**Array**):
+
 
 | Property | Type | Default | Description | Required |
 | --- | --- | --- | --- | --- |

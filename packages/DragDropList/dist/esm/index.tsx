@@ -8,6 +8,7 @@ import { clsWrite, combinedCls } from 'funda-utils/dist/cjs/cls';
 import useBoundedDrag from 'funda-utils/dist/cjs/useBoundedDrag';
 
 
+
 export interface ListItem {
     id: number;
     parentId?: number;
@@ -39,6 +40,7 @@ export interface DragDropListProps {
     doubleIndent?: boolean;
     alternateCollapse?: boolean;
     arrow?: React.ReactNode;
+    renderOption?: (item: ListItem, dragHandleClassName: string, index: number) => React.ReactNode;
     onUpdate?: (items: ListItem[], curId: number) => void;
 }
 
@@ -71,6 +73,7 @@ const DragDropList = forwardRef((props: DragDropListProps, externalRef: any) => 
         doubleIndent,
         alternateCollapse,
         arrow = <><svg viewBox="0 0 22 22" width="8px"><path d="m345.44 248.29l-194.29 194.28c-12.359 12.365-32.397 12.365-44.75 0-12.354-12.354-12.354-32.391 0-44.744l171.91-171.91-171.91-171.9c-12.354-12.359-12.354-32.394 0-44.748 12.354-12.359 32.391-12.359 44.75 0l194.29 194.28c6.177 6.18 9.262 14.271 9.262 22.366 0 8.099-3.091 16.196-9.267 22.373" transform="matrix(.03541-.00013.00013.03541 2.98 3.02)" fill="#a5a5a5" /></svg></>,
+        renderOption,
         onUpdate,
         ...attributes
     } = props;
@@ -82,8 +85,6 @@ const DragDropList = forwardRef((props: DragDropListProps, externalRef: any) => 
     const rootRef = useRef<any>(null);
     const [items, setItems] = useState<ListItem[]>([]);
     const [editingItem, setEditingItem] = useState<number | null>(null);
-
-    const dragHandle = useRef<HTMLSpanElement | null>(null);
 
 
     // Edit
@@ -433,55 +434,64 @@ const DragDropList = forwardRef((props: DragDropListProps, externalRef: any) => 
                     onDoubleClick={() => handleDoubleClick(item)}
                 >
                     <div className={`${prefix}-draggable-list__itemcontent`}>
-
-                        {/** DRAG HANDLE */}
-                        {/* Fix the problem that mobile terminals cannot be touched, DO NOT USE "<svg>" */}
-                        {draggable && !handleHide ? <span ref={dragHandle} className={`${prefix}-draggable-list__handle ${handlePos ?? 'left'}`} draggable={dragMode === 'handle'} dangerouslySetInnerHTML={{
-                            __html: `${handleIcon}`
-                        }}></span> : null}
-                        {/** /DRAG HANDLE */}
-
-                        {editingItem === item.id ? (
-                            renderEditForm(item)
+                        {renderOption ? (
+                            renderOption(
+                                item,
+                                `${prefix}-draggable-list__handle`,
+                                index
+                            )
                         ) : (
-                            <div className={`${prefix}-draggable-list__itemcontent-inner`}>
+                            <>
+                                {/** DRAG HANDLE */}
+                                {/* Fix the problem that mobile terminals cannot be touched, DO NOT USE "<svg>" */}
+                                {draggable && !handleHide ? <span className={`${prefix}-draggable-list__handle ${handlePos ?? 'left'}`} draggable={dragMode === 'handle'} dangerouslySetInnerHTML={{
+                                    __html: `${handleIcon}`
+                                }}></span> : null}
+                                {/** /DRAG HANDLE */}
 
-                                <div className={`${prefix}-draggable-list__itemlabel`}>
+                                {editingItem === item.id ? (
+                                    renderEditForm(item)
+                                ) : (
+                                    <div className={`${prefix}-draggable-list__itemcontent-inner`}>
 
-
-                                    {/** LABEL */}
-
-                                    <span dangerouslySetInnerHTML={{
-                                        __html: `${getIndentStr(item)}${typeof item.listItemLabel === 'undefined' ? item.label : item.listItemLabel}`
-                                    }} />
-                                    {/** /LABEL */}
-
-
-
-
-                                    {/** COLLOPSE */}
-                                    {alternateCollapse && hasChildItems && (
-                                        <span
-                                            className={`${prefix}-draggable-list__collapse-arrow`}
-                                            onClick={(e) => handleCollapse(item.id, e)}
-                                        >
-                                            {arrow || (isCollapsed ? '▶' : '▼')}
-                                        </span>
-                                    )}
-                                    {/** /COLLOPSE */}
-
-                                </div>
+                                        <div className={`${prefix}-draggable-list__itemlabel`}>
 
 
-                                {/** EXTENDS */}
-                                {item.appendControl ? <>
-                                    <div className={`${prefix}-draggable-list__itemext`} id={`${prefix}-draggable-list__itemext-${item.value}`}>
-                                        {item.appendControl}
+                                            {/** LABEL */}
+
+                                            <span dangerouslySetInnerHTML={{
+                                                __html: `${getIndentStr(item)}${typeof item.listItemLabel === 'undefined' ? item.label : item.listItemLabel}`
+                                            }} />
+                                            {/** /LABEL */}
+
+
+
+
+                                            {/** COLLOPSE */}
+                                            {alternateCollapse && hasChildItems && (
+                                                <span
+                                                    className={`${prefix}-draggable-list__collapse-arrow`}
+                                                    onClick={(e) => handleCollapse(item.id, e)}
+                                                >
+                                                    {arrow || (isCollapsed ? '▶' : '▼')}
+                                                </span>
+                                            )}
+                                            {/** /COLLOPSE */}
+
+                                        </div>
+
+
+                                        {/** EXTENDS */}
+                                        {item.appendControl ? <>
+                                            <div className={`${prefix}-draggable-list__itemext`} id={`${prefix}-draggable-list__itemext-${item.value}`}>
+                                                {item.appendControl}
+                                            </div>
+                                        </> : null}
+                                        {/** /EXTENDS */}
+
                                     </div>
-                                </> : null}
-                                {/** /EXTENDS */}
-
-                            </div>
+                                )}
+                            </>
                         )}
                     </div>
                 </li>

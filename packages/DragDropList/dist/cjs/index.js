@@ -1163,7 +1163,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_2__);
 /* harmony import */ var funda_utils_dist_cjs_useBoundedDrag__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(759);
 /* harmony import */ var funda_utils_dist_cjs_useBoundedDrag__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(funda_utils_dist_cjs_useBoundedDrag__WEBPACK_IMPORTED_MODULE_3__);
-var _excluded = ["wrapperClassName", "prefix", "data", "draggable", "handleHide", "handleIcon", "handlePos", "dragMode", "editable", "itemStyle", "hierarchical", "indentation", "doubleIndent", "alternateCollapse", "arrow", "onUpdate"];
+var _excluded = ["wrapperClassName", "prefix", "data", "draggable", "handleHide", "handleIcon", "handlePos", "dragMode", "editable", "itemStyle", "hierarchical", "indentation", "doubleIndent", "alternateCollapse", "arrow", "renderOption", "onUpdate"];
 function _extends() { _extends = Object.assign ? Object.assign.bind() : function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
 function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys(Object(source), !0).forEach(function (key) { _defineProperty(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
@@ -1219,6 +1219,7 @@ var DragDropList = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef
       transform: "matrix(.03541-.00013.00013.03541 2.98 3.02)",
       fill: "#a5a5a5"
     }))) : _props$arrow,
+    renderOption = props.renderOption,
     onUpdate = props.onUpdate,
     attributes = _objectWithoutProperties(props, _excluded);
   var INDENT_PLACEHOLDER = doubleIndent ? "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" : "&nbsp;&nbsp;&nbsp;&nbsp;";
@@ -1232,7 +1233,6 @@ var DragDropList = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef
     _useState4 = _slicedToArray(_useState3, 2),
     editingItem = _useState4[0],
     setEditingItem = _useState4[1];
-  var dragHandle = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(null);
 
   // Edit
   var _useState5 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)({}),
@@ -1552,8 +1552,7 @@ var DragDropList = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef
       }
     }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "".concat(prefix, "-draggable-list__itemcontent")
-    }, draggable && !handleHide ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
-      ref: dragHandle,
+    }, renderOption ? renderOption(item, "".concat(prefix, "-draggable-list__handle"), index) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, draggable && !handleHide ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
       className: "".concat(prefix, "-draggable-list__handle ").concat(handlePos !== null && handlePos !== void 0 ? handlePos : 'left'),
       draggable: dragMode === 'handle',
       dangerouslySetInnerHTML: {
@@ -1575,7 +1574,7 @@ var DragDropList = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef
     }, arrow || (isCollapsed ? '▶' : '▼'))), item.appendControl ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "".concat(prefix, "-draggable-list__itemext"),
       id: "".concat(prefix, "-draggable-list__itemext-").concat(item.value)
-    }, item.appendControl)) : null)));
+    }, item.appendControl)) : null))));
   }));
 });
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (DragDropList);
