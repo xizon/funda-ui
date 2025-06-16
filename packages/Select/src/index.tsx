@@ -53,7 +53,19 @@ import { clsWrite, combinedCls } from 'funda-utils/dist/cjs/cls';
 
 
 
-export type SelectOptionChangeFnType = (arg1: any, arg2: any, arg3: any) => void;
+export interface MultiSelectValue {
+    items: { label: string; value: string }[];
+    labels: string[];
+    values: string[];
+    labelsOfString: string;
+    valuesOfString: string;
+}
+
+export type SelectOptionChangeFnType = (
+    event: React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>,
+    element: HTMLElement,
+    value: OptionConfig | MultiSelectValue
+) => void | Promise<void>;
 
 
 export interface MultiSelectControlValConfig {
@@ -69,7 +81,8 @@ export interface OptionConfig {
     listItemLabel?: string;
     value: string | number | boolean;
     queryString: string | number;
-    callback?: () => void;
+    callback?: () => void | Promise<void>;
+    [key: string]: string | number | boolean | any[] | (() => void | Promise<void>) | undefined;
 }
 
 
@@ -147,14 +160,28 @@ export type SelectProps = {
     fetchFuncAsync?: any;
     fetchFuncMethod?: string;
     fetchFuncMethodParams?: any[];
-    fetchCallback?: (data: any) => void;
-    onFetch?: (e: any, e2: any, value: string, data: any, incomingData: string | null | undefined) => void;
-    onLoad?: (e: any, e2: any, value: string | null | undefined) => void;
-    onSelect?: (data: any) => void;
+    fetchCallback?: (data: OptionConfig[]) => OptionConfig[];
+    onFetch?: (
+        event: React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>,
+        element: HTMLElement,
+        value: string,
+        data: OptionConfig[],
+        incomingData: string | null | undefined
+    ) => void;
+    onLoad?: (
+        event: React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>,
+        element: HTMLElement,
+        value: string | null | undefined
+    ) => void;
+    onSelect?: (data: OptionConfig) => void | Promise<void>;
     onChange?: SelectOptionChangeFnType | null;
-    onBlur?: (e: any) => void;
-    onFocus?: (e: any) => void;
-    onKeyPressed?: (arg1: any, arg2: any, arg3: any) => void;
+    onBlur?: (event: React.FocusEvent<HTMLElement>) => void;
+    onFocus?: (event: React.FocusEvent<HTMLElement>) => void;
+    onKeyPressed?: (
+        event: React.KeyboardEvent<HTMLElement>,
+        element: HTMLElement,
+        value: string
+    ) => void;
 };
 
 
@@ -1402,7 +1429,7 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
             //
             if (noCallback && typeof (onChange) === 'function') {
                 
-                onChange?.(
+                await onChange?.(
                     selectInputRef.current,
                     valueInputRef.current,
                     !MULTI_SEL_VALID ? curItem : multipleSelectionCallback(currentControlValueArr, currentControlLabelArr)
@@ -1547,7 +1574,7 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
             //
             if (noCallback && typeof (onChange) === 'function') {
             
-                onChange?.(
+                await onChange?.(
                     selectInputRef.current,
                     valueInputRef.current,
                     !MULTI_SEL_VALID ? curItem : multipleSelectionCallback(currentControlValueArr, currentControlLabelArr)
@@ -1641,7 +1668,7 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
 
 
 
-    function handleSelectAll(event: any) {
+    async function handleSelectAll(event: any) {
         event.preventDefault();
         event.stopPropagation();  /* REQUIRED */
         
@@ -1664,7 +1691,7 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
 
         }
 
-        onChange?.(
+        await onChange?.(
             selectInputRef.current,
             valueInputRef.current,
             multipleSelectionCallback(_values, _labels)
@@ -1696,7 +1723,7 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
 
 
 
-    function handleMultiControlItemRemove(event: any) {
+    async function handleMultiControlItemRemove(event: any) {
         event.preventDefault();
         event.stopPropagation();  /* REQUIRED */
 
@@ -1732,7 +1759,7 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
         //
         if (typeof (onChange) === 'function') {
 
-            onChange?.(
+            await onChange?.(
                 selectInputRef.current,
                 valueInputRef.current,
                 multipleSelectionCallback(currentControlValueArr, currentControlLabelArr)
@@ -1971,7 +1998,7 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
                     //
                     if (typeof (onChange) === 'function') {
 
-                        onChange?.(
+                        await onChange?.(
                             selectInputRef.current,
                             valueInputRef.current,
                             !MULTI_SEL_VALID ? currentData : multipleSelectionCallback(currentControlValueArr, currentControlLabelArr)
@@ -2214,14 +2241,14 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
                         <button
                             tabIndex={-1}
                             type="button"
-                            onClick={(e: React.MouseEvent) => {
+                            onClick={async (e: React.MouseEvent) => {
                                 e.preventDefault();
                                 e.stopPropagation();
 
                                 if (MULTI_SEL_VALID) {
                                     updateOptionCheckboxes('remove');
 
-                                    onChange?.(
+                                    await onChange?.(
                                         selectInputRef.current,
                                         valueInputRef.current,
                                         multipleSelectionCallback([], [])

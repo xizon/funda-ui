@@ -14,7 +14,7 @@ A simple usage, no default value.
 import React from "react";
 import DynamicFields from 'funda-ui/DynamicFields';
 import Input from 'funda-ui/Input';
-import Select from 'funda-ui/Select';
+import Select, { OptionConfig, MultiSelectValue } from 'funda-ui/Select';
 
 // component styles
 import 'funda-ui/Select/index.css';
@@ -87,11 +87,11 @@ export default () => {
                                 {"label": "Option 3","value": "value-3","queryString": "option3"}
                             ]  
                             `}
-                            onChange={(e: any, e2: any, val: any) => {
+                            onChange={(e: React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>, e2: HTMLElement, val: OptionConfig | MultiSelectValue): void => {
                                 const targetId = e2.dataset.id;
                                 [].slice.call(document.querySelectorAll(`[name="role_name[]"]`)).forEach((node: any) => {
                                     if (node.id === targetId) {
-                                        node.value = val.label;
+                                        node.value = (val as OptionConfig).label;
                                     }
                                 });
                             }}
@@ -208,7 +208,7 @@ import React, { useState, useEffect } from "react";
 import DynamicFields from 'funda-ui/DynamicFields';
 
 import Input from 'funda-ui/Input';
-import Select from 'funda-ui/Select';
+import Select, { OptionConfig, MultiSelectValue } from 'funda-ui/Select';
 import Switch from 'funda-ui/Switch';
 import CascadingSelectE2E from 'funda-ui/CascadingSelectE2E';
 
@@ -377,11 +377,11 @@ export default () => {
                                     {"label": "Option 3","value": "value-3","queryString": "option3"}
                                 ]  
                                 `}
-                                onChange={(e: any, e2: any, val: any) => {
+                                onChange={(e: React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>, e2: HTMLElement, val: OptionConfig | MultiSelectValue): void => {
                                     const targetId = e2.dataset.id;
                                     [].slice.call(document.querySelectorAll(`[name="role_name[]"]`)).forEach((node: any) => {
                                         if (node.id === targetId) {
-                                            node.value = val.label;
+                                            node.value = (val as OptionConfig).label;
                                         }
                                     });
                                 }}
@@ -590,7 +590,7 @@ import React, { useState, useEffect } from "react";
 import DynamicFields from 'funda-ui/DynamicFields';
 
 import Input from 'funda-ui/Input';
-import Select from 'funda-ui/Select';
+import Select, { OptionConfig, MultiSelectValue } from 'funda-ui/Select';
 
 // component styles
 import 'funda-ui/Select/index.css';
@@ -776,15 +776,15 @@ export default () => {
                                     {"label": "Option 3","value": "value-3","queryString": "option3"}
                                 ]  
                                 `}
-                                onChange={(e: any, e2: any, val: any) => {
+                                onChange={(e: React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>, e2: HTMLElement, val: OptionConfig | MultiSelectValue): void => {
                                     const curIndex = getRowIndex(e2);
 
                                     // updata row data
                                     setRawData((prevState: any[]) => {
 
                                         const newData = updateJsonNode(prevState, curIndex, {
-                                            role_id: val.value,
-                                            role_name: val.label,
+                                            role_id: (val as OptionConfig).value,
+                                            role_name: (val as OptionConfig).label,
                                         });
 
                                         // data of Dynamic Fields
@@ -923,7 +923,7 @@ Use the following properties `innerAppend*` to change the layout to an HTML tabl
 import React, { useState } from "react";
 import DynamicFields from 'funda-ui/DynamicFields';
 import Input from 'funda-ui/Input';
-import Select from 'funda-ui/Select';
+import Select, { OptionConfig, MultiSelectValue } from 'funda-ui/Select';
 
 // component styles
 import 'funda-ui/Select/index.css';
@@ -986,11 +986,11 @@ export default () => {
                             {"label": "Option 3","value": "value-3","queryString": "option3"}
                         ]  
                         `}
-                        onChange={(e: any, e2: any, val: any) => {
+                        onChange={(e: React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>, e2: HTMLElement, val: OptionConfig | MultiSelectValue): void => {
                             const targetId = e2.dataset.id;
                             [].slice.call(document.querySelectorAll(`[name="role_name[]"]`)).forEach((node: any) => {
                                 if (node.id === targetId) {
-                                    node.value = val.label;
+                                    node.value = (val as OptionConfig).label;
                                 }
                             });
                         }}

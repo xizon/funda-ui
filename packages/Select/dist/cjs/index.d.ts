@@ -1,5 +1,15 @@
 import React from 'react';
-export declare type SelectOptionChangeFnType = (arg1: any, arg2: any, arg3: any) => void;
+export interface MultiSelectValue {
+    items: {
+        label: string;
+        value: string;
+    }[];
+    labels: string[];
+    values: string[];
+    labelsOfString: string;
+    valuesOfString: string;
+}
+export declare type SelectOptionChangeFnType = (event: React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>, element: HTMLElement, value: OptionConfig | MultiSelectValue) => void | Promise<void>;
 export interface MultiSelectControlValConfig {
     values: string[];
     labels: string[];
@@ -12,7 +22,8 @@ export interface OptionConfig {
     listItemLabel?: string;
     value: string | number | boolean;
     queryString: string | number;
-    callback?: () => void;
+    callback?: () => void | Promise<void>;
+    [key: string]: string | number | boolean | any[] | (() => void | Promise<void>) | undefined;
 }
 export interface MultiSelectConfig {
     valid: boolean;
@@ -82,14 +93,14 @@ export declare type SelectProps = {
     fetchFuncAsync?: any;
     fetchFuncMethod?: string;
     fetchFuncMethodParams?: any[];
-    fetchCallback?: (data: any) => void;
-    onFetch?: (e: any, e2: any, value: string, data: any, incomingData: string | null | undefined) => void;
-    onLoad?: (e: any, e2: any, value: string | null | undefined) => void;
-    onSelect?: (data: any) => void;
+    fetchCallback?: (data: OptionConfig[]) => OptionConfig[];
+    onFetch?: (event: React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>, element: HTMLElement, value: string, data: OptionConfig[], incomingData: string | null | undefined) => void;
+    onLoad?: (event: React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>, element: HTMLElement, value: string | null | undefined) => void;
+    onSelect?: (data: OptionConfig) => void | Promise<void>;
     onChange?: SelectOptionChangeFnType | null;
-    onBlur?: (e: any) => void;
-    onFocus?: (e: any) => void;
-    onKeyPressed?: (arg1: any, arg2: any, arg3: any) => void;
+    onBlur?: (event: React.FocusEvent<HTMLElement>) => void;
+    onFocus?: (event: React.FocusEvent<HTMLElement>) => void;
+    onKeyPressed?: (event: React.KeyboardEvent<HTMLElement>, element: HTMLElement, value: string) => void;
 };
 declare const Select: React.ForwardRefExoticComponent<SelectProps & React.RefAttributes<unknown>>;
 export default Select;

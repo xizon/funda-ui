@@ -3,23 +3,41 @@
 > ✌🏻 You can find the final value of this component by setting the `name` property, similar to **document.querySelector('[name="custom-control-name"]').value**
 
 
-
-
 ## General
 
-```js
+```tsx
 import React from "react";
-import Select from 'funda-ui/Select';
-import axios from 'axios';
+import Select, { OptionConfig, MultiSelectValue } from 'funda-ui/Select';
 
 // component styles
 import 'funda-ui/Select/index.css';
 
 export default () => {
+    const handleChange: SelectOptionChangeFnType = (
+        e: React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>, 
+        e2: HTMLElement, 
+        val: OptionConfig | MultiSelectValue
+    ): void => {
+        console.log(event, element, value);
+        /*
+        <input ... value=​"[Option 3]​[Option 2]​[Option 1]​">​ 
+        <input ... value=​"[value-3]​[value-2]​[value-1]​">​ 
+        {
+            items: [
+                {"label": "Option 3","value": "value-3"},
+                {"label": "<del style=color:red>deprecate</del>Option 2","value": "value-2"},
+                {"label": "Option 1","value": "value-1"}
+            ],
+            labels: ['Option 3', '<del style=color:red>deprecate</del>Option 2', 'Option 1'],
+            values: ['value-3', 'value-2', 'value-1'], 
+            labelsOfString: '[Option 3][<del style=color:red>deprecate</del>Option 2][Option 1]', 
+            valuesOfString: '[value-3][value-2][value-1]'
+        }
+        */
+    };
  
     return (
         <>
-
             <div style={{width: '250px'}}>
                 <Select
                     clearIcon={false}  // Hide the clear icon
@@ -34,24 +52,7 @@ export default () => {
                         {"label": "Option 4","value": "value-4","queryString": "option4", "disabled":true}
                     ]  
                     `}
-                    onChange={(e: any, e2: any, val: any) => {
-                        console.log(e, e2, val);
-                        /*
-                        <input ... value=​"[Option 3]​[Option 2]​[Option 1]​">​ 
-                        <input ... value=​"[value-3]​[value-2]​[value-1]​">​ 
-                        {
-                            items: [
-                                {"label": "Option 3","value": "value-3"},
-                                {"label": "<del style=color:red>deprecate</del>Option 2","value": "value-2"},
-                                {"label": "Option 1","value": "value-1"}
-                            ],
-                            labels: ['Option 3', '<del style=color:red>deprecate</del>Option 2', 'Option 1'],
-                            values: ['value-3', 'value-2', 'value-1'], 
-                            labelsOfString: '[Option 3][<del style=color:red>deprecate</del>Option 2][Option 1]', 
-                            valuesOfString: '[value-3][value-2][value-1]'
-                        }
-                        */
-                    }}
+                    onChange={handleChange}
                 />
             </div>
 
@@ -69,12 +70,9 @@ export default () => {
                         {"label": "Option 4","value": "value-4","queryString": "option4", "disabled":true}
                     ]  
                     `}
-                    onChange={(e: any, e2: any, val: any) => {
-                        console.log(e, e2, val);
-                    }}
+                    onChange={handleChange}
                 />
             </div>
-
 
             <Select
                 value="value-2"
@@ -89,17 +87,15 @@ export default () => {
                     {"label": "Option 4","listItemLabel":"Option 4 (No: 004)","value": "value-4","queryString": "option4", "disabled":true}
                 ]  
                 `}
-                onChange={(e: any, e2: any, val: any) => {
-                    console.log(e, e2, val);
-                }}
+                onChange={handleChange}
             />
 
-
-
             <Select
-                value={Array.from({ length: 20 }).fill(0).map((v, i) => {
-                        return { label: `${i}`, value: `${i}`, queryString: "" }
-                    })}
+                value={Array.from({ length: 20 }).fill(0).map((v, i) => ({
+                    label: `${i}`,
+                    value: `${i}`,
+                    queryString: ""
+                }))}
                 multiSelect={{
                     valid: true,
                     selectAll: true,
@@ -108,21 +104,18 @@ export default () => {
                 }}
                 placeholder="Select"
                 name="name"
-                options={Array.from({ length: 100 }).fill(0).map((v, i) => {
-                    return { label: `${i}`, value: `${i}`, queryString: "" }
-                })}
-                onChange={(e: any, e2: any, val: any) => {
-                    console.log(e, e2, val);
-                }}
+                options={Array.from({ length: 100 }).fill(0).map((v, i) => ({
+                    label: `${i}`,
+                    value: `${i}`,
+                    queryString: ""
+                }))}
+                onChange={handleChange}
             />
-
-
-
-
         </>
     );
 }
 ```
+
 
 
 ## FAQ
@@ -142,7 +135,7 @@ When you change the value of the second controlled component, observe the defaul
 **❌ Bad**
 ```js
 import React, { useState } from "react";
-import Select from 'funda-ui/Select';
+import Select, { OptionConfig, MultiSelectValue } from 'funda-ui/Select';
 
 // component styles
 import '../funda-ui/Select/src/index.scss';
@@ -170,7 +163,7 @@ export default () => {
                 options={Array.from({ length: 100 }).fill(0).map((v, i) => {
                     return { label: `${i}`, value: `${i}`, queryString: "" }
                 })}
-                onChange={(e: any, e2: any, val: any) => {
+                onChange={(e: React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>, e2: HTMLElement, val: OptionConfig | MultiSelectValue): void => {
                     console.log(e, e2, val);
                 }}
             />
@@ -189,8 +182,8 @@ export default () => {
                     {"label": "Option 4","listItemLabel":"Option 4 (No: 004)","value": "value-4","queryString": "option4", "disabled":true}
                 ]  
                 `}
-                onChange={(e: any, e2: any, val: any) => {
-                    setOneSelectChanged(val.label);
+                onChange={(e: React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>, e2: HTMLElement, val: OptionConfig | MultiSelectValue): void => {
+                    setOneSelectChanged((val as OptionConfig).label);
                 }}
             />
 
@@ -207,7 +200,7 @@ Use `useMemo()` and `useState()` to control `options` and `value` respectively.
 
 ```js
 import React, { useState, useEffect, useMemo } from "react";
-import Select from 'funda-ui/Select';
+import Select, { OptionConfig, MultiSelectValue } from 'funda-ui/Select';
 
 // component styles
 import '../funda-ui/Select/src/index.scss';
@@ -248,7 +241,7 @@ export default () => {
                 placeholder="Select"
                 name="name2"
                 options={selectOptions}
-                onChange={(e: any, e2: any, val: any) => {
+                onChange={(e: React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>, e2: HTMLElement, val: OptionConfig | MultiSelectValue): void => {
                     console.log(e, e2, val);
                 }}
             />
@@ -266,8 +259,8 @@ export default () => {
                     {"label": "Option 4","listItemLabel":"Option 4 (No: 004)","value": "value-4","queryString": "option4", "disabled":true}
                 ]  
                 `}
-                onChange={(e: any, e2: any, val: any) => {
-                    setOneSelectChanged(val.label);
+                onChange={(e: React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>, e2: HTMLElement, val: OptionConfig | MultiSelectValue): void => {
+                    setOneSelectChanged((val as OptionConfig).label);
                 }}
             />
 
@@ -287,7 +280,7 @@ Use `useMemo()` to return the entire component
 
 ```js
 import React, { useState, useMemo } from "react";
-import Select from 'funda-ui/Select';
+import Select, { OptionConfig, MultiSelectValue } from 'funda-ui/Select';
 
 // component styles
 import '../funda-ui/Select/src/index.scss';
@@ -308,7 +301,7 @@ function SelectOneMemo(props) {
                 placeholder="Select"
                 name={name}
                 options={options}
-                onChange={(e: any, e2: any, val: any) => {
+                onChange={(e: React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>, e2: HTMLElement, val: OptionConfig | MultiSelectValue): void => {
                     callback(val);
                 }}
             />
@@ -356,8 +349,8 @@ export default () => {
                     {"label": "Option 4","listItemLabel":"Option 4 (No: 004)","value": "value-4","queryString": "option4", "disabled":true}
                 ]  
                 `}
-                onChange={(e: any, e2: any, val: any) => {
-                    setOneSelectChanged(val.label);
+                onChange={(e: React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>, e2: HTMLElement, val: OptionConfig | MultiSelectValue): void => {
+                    setOneSelectChanged((val as OptionConfig).label);
                 }}
             />
 
@@ -376,7 +369,7 @@ Use `defaultValue` property.
 
 ```js
 import React, { useState } from "react";
-import Select from 'funda-ui/Select';
+import Select, { OptionConfig, MultiSelectValue } from 'funda-ui/Select';
 
 // component styles
 import '../funda-ui/Select/src/index.scss';
@@ -406,7 +399,7 @@ export default () => {
                 options={Array.from({ length: 100 }).fill(0).map((v, i) => {
                     return { label: `${i}`, value: `${i}`, queryString: "" }
                 })}
-                onChange={(e: any, e2: any, val: any) => {
+                onChange={(e: React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>, e2: HTMLElement, val: OptionConfig | MultiSelectValue): void => {
                     console.log(e, e2, val);
                 }}
             />
@@ -424,8 +417,8 @@ export default () => {
                     {"label": "Option 4","listItemLabel":"Option 4 (No: 004)","value": "value-4","queryString": "option4", "disabled":true}
                 ]  
                 `}
-                onChange={(e: any, e2: any, val: any) => {
-                    setOneSelectChanged(val.label);
+                onChange={(e: React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>, e2: HTMLElement, val: OptionConfig | MultiSelectValue): void => {
+                    setOneSelectChanged((val as OptionConfig).label);
                 }}
             />
 
@@ -443,7 +436,7 @@ You need to use the series property `fetch<METHOD_NAME>` to format the data of t
 
 ```js
 import React from "react";
-import Select from 'funda-ui/Select';
+import Select, { OptionConfig, MultiSelectValue } from 'funda-ui/Select';
 import axios from 'axios';
 
 // component styles
@@ -572,7 +565,7 @@ export default () => {
 
                     return formattedData;
                 }}
-                onChange={((e: any, e2: any, val: any) => {
+                onChange={(e: React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>, e2: HTMLElement, val: OptionConfig | MultiSelectValue): void => {
                     const addValue = (name: string, targetValueField: string = 'label') => {
                         [].slice.call(document.querySelectorAll(`[name="${name}"]`)).forEach((node: any) => {
                             node.value = val[targetValueField];
@@ -657,7 +650,7 @@ You need to use the series property `fetch<METHOD_NAME>` to format the data of t
 
 ```js
 import React from "react";
-import Select from 'funda-ui/Select';
+import Select, { OptionConfig, MultiSelectValue } from 'funda-ui/Select';
 import axios from 'axios';
 
 // component styles
@@ -831,7 +824,7 @@ export default () => {
 
 ```js
 import React from "react";
-import Select from 'funda-ui/Select';
+import Select, { OptionConfig, MultiSelectValue } from 'funda-ui/Select';
 
 // component styles
 import '../funda-ui/Select/src/index.scss';
@@ -869,7 +862,7 @@ You can specify an object as the default, and if the default value is not in the
 
 ```js
 import React from "react";
-import Select from 'funda-ui/Select';
+import Select, { OptionConfig, MultiSelectValue } from 'funda-ui/Select';
 
 // component styles
 import '../funda-ui/Select/src/index.scss';
@@ -921,7 +914,7 @@ Use the `callback` attribute of the option.
 
 ```js
 import React from "react";
-import Select from 'funda-ui/Select';
+import Select, { OptionConfig, MultiSelectValue } from 'funda-ui/Select';
 
 // component styles
 import '../funda-ui/Select/src/index.scss';
@@ -966,7 +959,7 @@ Set property `firstRequestAutoExec` to **false**. The first asynchronous request
 
 ```js
 import React from "react";
-import Select from 'funda-ui/Select';
+import Select, { OptionConfig, MultiSelectValue } from 'funda-ui/Select';
 
 // component styles
 import '../funda-ui/Select/src/index.scss';
@@ -1046,7 +1039,7 @@ Specify the content in the `optgroup` attribute of `options`.
 
 ```js
 import React from "react";
-import Select from 'funda-ui/Select';
+import Select, { OptionConfig, MultiSelectValue } from 'funda-ui/Select';
 
 // component styles
 import '../funda-ui/Select/src/index.scss';
@@ -1077,7 +1070,7 @@ export default () => {
                     { "label": "Option 6", "value": "value-6","queryString":"" },
 
                 ]}
-                onChange={(e: any, e2: any, val: any) => {
+                onChange={(e: React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>, e2: HTMLElement, val: OptionConfig | MultiSelectValue): void => {
                     console.log(e, e2, val);
                 }}
             />
@@ -1094,7 +1087,7 @@ export default () => {
 
 ```js
 import React from "react";
-import Select, { OptionConfig } from 'funda-ui/Select';
+import Select, { OptionConfig, MultiSelectValue } from 'funda-ui/Select';
 
 // component styles
 import 'funda-ui/Select/index.css';
@@ -1121,7 +1114,7 @@ export default () => {
                         <div><small style={{color: 'gray'}}>value: {optionData.value}</small></div>
                     </div>;
                 }}
-                onChange={(e: any, e2: any, val: any) => {
+                onChange={(e: React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>, e2: HTMLElement, val: OptionConfig | MultiSelectValue): void => {
                     console.log(e, e2, val);
                 }}
             />
@@ -1146,7 +1139,7 @@ export default () => {
                         <div><small style={{color: 'gray'}}>value: {optionData.value}</small></div>
                     </div>;
                 }}
-                onChange={(e: any, e2: any, val: any) => {
+                onChange={(e: React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>, e2: HTMLElement, val: OptionConfig | MultiSelectValue): void => {
                     console.log(e, e2, val);
                 }}
             />
@@ -1211,7 +1204,7 @@ export default () => {
                 options={Array.from({ length: 100 }).fill(0).map((v, i) => {
                     return { label: `${i}/(ID: ${i})`, value: `${i}`, queryString: ""}
                 })}
-                onChange={(e: any, e2: any, val: any) => {
+                onChange={(e: React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>, e2: HTMLElement, val: OptionConfig | MultiSelectValue): void => {
                     console.log(e, e2, val);
                 }}
             />
@@ -1230,7 +1223,7 @@ export default () => {
 
 ```js
 import React, { useState } from "react";
-import Select from 'funda-ui/Select';
+import Select, { OptionConfig, MultiSelectValue } from 'funda-ui/Select';
 
 // component styles
 import '../funda-ui/Select/src/index.scss';
@@ -1387,7 +1380,7 @@ export default () => {
                     }); 
                     return formattedData;
                 }}
-                onChange={(e: any, e2: any, val: any) => {
+                onChange={(e: React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>, e2: HTMLElement, val: OptionConfig | MultiSelectValue): void => {
                     const queryId = val.queryId;
 
                     // value of "name-2" and "name-3"
@@ -1421,7 +1414,7 @@ export default () => {
                 name="name-2"
                 label="Level 2"
                 options={secondOptions}
-                onChange={(e: any, e2: any, val: any) => {
+                onChange={(e: React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>, e2: HTMLElement, val: OptionConfig | MultiSelectValue): void => {
                     const queryId = val.queryId;
                 
                     // value of "name-3"
@@ -1470,7 +1463,7 @@ Set hierarchical categories ( with sub-categories ) to attribute `options`.
 
 ```js
 import React, { useEffect, useState } from "react";
-import Select from 'funda-ui/Select';
+import Select, { OptionConfig, MultiSelectValue } from 'funda-ui/Select';
 
 // component styles
 import '../funda-ui/Select/src/index.scss';
@@ -1650,7 +1643,7 @@ export default () => {
                 placeholder="Select"
                 name="name"
                 options={JSON.stringify(data)}
-                onChange={(e: any, e2: any, val: any) => {
+                onChange={(e: React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>, e2: HTMLElement, val: OptionConfig | MultiSelectValue): void => {
                     console.log(e, e2, val);
                 }}
             />
@@ -1670,7 +1663,7 @@ export default () => {
                 placeholder="Select"
                 name="name"
                 options={JSON.stringify(data)}
-                onChange={(e: any, e2: any, val: any) => {
+                onChange={(e: React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>, e2: HTMLElement, val: OptionConfig | MultiSelectValue): void => {
                     console.log(e, e2, val);
                 }}
             />
@@ -1686,7 +1679,7 @@ Automatic fetch request:
 
 ```js
 import React from "react";
-import Select from 'funda-ui/Select';
+import Select, { OptionConfig, MultiSelectValue } from 'funda-ui/Select';
 
 // component styles
 import '../funda-ui/Select/src/index.scss';
@@ -1836,7 +1829,7 @@ export default () => {
 
                     return treeData;
                 }}
-                onChange={(e: any, e2: any, val: any) => {
+                onChange={(e: React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>, e2: HTMLElement, val: OptionConfig | MultiSelectValue): void => {
                     console.log(e, e2, val);
                 }}
             />
@@ -1857,7 +1850,7 @@ Set `multiSelectSelectedItemOnlyStatus` parameter.
 
 ```js
 import React from "react";
-import Select from 'funda-ui/Select';
+import Select, { OptionConfig, MultiSelectValue } from 'funda-ui/Select';
 
 // component styles
 import '../funda-ui/Select/src/index.scss';
@@ -1887,7 +1880,7 @@ export default () => {
                 options={Array.from({ length: 100 }).fill(0).map((v, i) => {
                     return { label: `${i}`, value: `${i}`, queryString: "" }
                 })}
-                onChange={(e: any, e2: any, val: any) => {
+                onChange={(e: React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>, e2: HTMLElement, val: OptionConfig | MultiSelectValue): void => {
                     console.log(e, e2, val);
                 }}
             />
@@ -1909,7 +1902,7 @@ Lets you callback the handle exposed as attribute `contentRef`.
 ```js
 import React, { useRef } from "react";
 
-import Select from 'funda-ui/Select';
+import Select, { OptionConfig, MultiSelectValue } from 'funda-ui/Select';
 
 // component styles
 import '../funda-ui/Select/src/index.scss';
@@ -1971,7 +1964,7 @@ export default () => {
                     {"label": "Option 4","value": "value-4","queryString": "option4", "disabled":true}
                 ]  
                 `}
-                onChange={(e: any, e2: any, val: any) => {
+                onChange={(e: React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>, e2: HTMLElement, val: OptionConfig | MultiSelectValue): void => {
                     console.log(e, e2, val);
                 }}
             />
@@ -2030,7 +2023,7 @@ export default () => {
                 options={Array.from({ length: 100 }).fill(0).map((v, i) => {
                     return { label: `${i}`, value: `${i}`, queryString: "" }
                 })}
-                onChange={(e: any, e2: any, val: any) => {
+                onChange={(e: React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>, e2: HTMLElement, val: OptionConfig | MultiSelectValue): void => {
                     console.log(e, e2, val);
                 }}
             />
@@ -2048,7 +2041,7 @@ export default () => {
 
 ```js
 import React from "react";
-import Select from 'funda-ui/Select';
+import Select, { OptionConfig, MultiSelectValue } from 'funda-ui/Select';
 
 // component styles
 import '../funda-ui/Select/src/index.scss';
@@ -2100,7 +2093,7 @@ window['funda-ui__Select-disable-livesearch'] = 1;
 
 ### Select
 ```js
-import Select from 'funda-ui/Select';
+import Select, { OptionConfig, MultiSelectValue } from 'funda-ui/Select';
 ```
 | Property | Type | Default | Description | Required |
 | --- | --- | --- | --- | --- |
@@ -2202,4 +2195,35 @@ Among them, `label`, `listItemLabel`, `value`, `optgroup`, `queryString`, `disab
     },
     ...
 ]
+```
+
+
+## Types
+
+```typescript
+interface OptionConfig {
+    disabled?: boolean;
+    optgroup?: any[];
+    group?: boolean;
+    label: string;
+    listItemLabel?: string;
+    value: string | number | boolean;
+    queryString: string | number;
+    callback?: () => void | Promise<void>;
+    [key: string]: string | number | boolean | any[] | (() => void | Promise<void>) | undefined;
+}
+
+interface MultiSelectValue {
+    items: { label: string; value: string }[];
+    labels: string[];
+    values: string[];
+    labelsOfString: string;
+    valuesOfString: string;
+}
+
+type SelectOptionChangeFnType = (
+    event: React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>,
+    element: HTMLElement,
+    value: OptionConfig | MultiSelectValue
+) => void | Promise<void>;
 ```

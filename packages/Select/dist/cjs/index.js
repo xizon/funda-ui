@@ -3578,7 +3578,6 @@ var format_string = __webpack_require__(933);
 var cls = __webpack_require__(188);
 ;// CONCATENATED MODULE: ./src/index.tsx
 var _excluded = ["contentRef", "popupRef", "wrapperClassName", "controlClassName", "controlExClassName", "optionsExClassName", "exceededSidePosOffset", "clearIcon", "renderOption", "multiSelect", "multiSelectEntireAreaTrigger", "multiSelectSelectedItemOnlyStatus", "renderSelectedValue", "disabled", "required", "defaultValue", "value", "label", "name", "readOnly", "placeholder", "id", "autoComplete", "autoCapitalize", "spellCheck", "options", "clearTrigger", "loader", "lockBodyScroll", "hierarchical", "indentation", "doubleIndent", "style", "depth", "controlArrow", "winWidth", "tabIndex", "firstRequestAutoExec", "fetchTrigger", "fetchNoneInfo", "fetchUpdate", "fetchFuncAsync", "fetchFuncMethod", "fetchFuncMethodParams", "data", "extractValueByBrackets", "fetchCallback", "onFetch", "onLoad", "onSelect", "onChange", "onBlur", "onFocus", "onKeyPressed"];
-function _regeneratorRuntime() { "use strict"; /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/facebook/regenerator/blob/main/LICENSE */ _regeneratorRuntime = function _regeneratorRuntime() { return exports; }; var exports = {}, Op = Object.prototype, hasOwn = Op.hasOwnProperty, defineProperty = Object.defineProperty || function (obj, key, desc) { obj[key] = desc.value; }, $Symbol = "function" == typeof Symbol ? Symbol : {}, iteratorSymbol = $Symbol.iterator || "@@iterator", asyncIteratorSymbol = $Symbol.asyncIterator || "@@asyncIterator", toStringTagSymbol = $Symbol.toStringTag || "@@toStringTag"; function define(obj, key, value) { return Object.defineProperty(obj, key, { value: value, enumerable: !0, configurable: !0, writable: !0 }), obj[key]; } try { define({}, ""); } catch (err) { define = function define(obj, key, value) { return obj[key] = value; }; } function wrap(innerFn, outerFn, self, tryLocsList) { var protoGenerator = outerFn && outerFn.prototype instanceof Generator ? outerFn : Generator, generator = Object.create(protoGenerator.prototype), context = new Context(tryLocsList || []); return defineProperty(generator, "_invoke", { value: makeInvokeMethod(innerFn, self, context) }), generator; } function tryCatch(fn, obj, arg) { try { return { type: "normal", arg: fn.call(obj, arg) }; } catch (err) { return { type: "throw", arg: err }; } } exports.wrap = wrap; var ContinueSentinel = {}; function Generator() {} function GeneratorFunction() {} function GeneratorFunctionPrototype() {} var IteratorPrototype = {}; define(IteratorPrototype, iteratorSymbol, function () { return this; }); var getProto = Object.getPrototypeOf, NativeIteratorPrototype = getProto && getProto(getProto(values([]))); NativeIteratorPrototype && NativeIteratorPrototype !== Op && hasOwn.call(NativeIteratorPrototype, iteratorSymbol) && (IteratorPrototype = NativeIteratorPrototype); var Gp = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(IteratorPrototype); function defineIteratorMethods(prototype) { ["next", "throw", "return"].forEach(function (method) { define(prototype, method, function (arg) { return this._invoke(method, arg); }); }); } function AsyncIterator(generator, PromiseImpl) { function invoke(method, arg, resolve, reject) { var record = tryCatch(generator[method], generator, arg); if ("throw" !== record.type) { var result = record.arg, value = result.value; return value && "object" == _typeof(value) && hasOwn.call(value, "__await") ? PromiseImpl.resolve(value.__await).then(function (value) { invoke("next", value, resolve, reject); }, function (err) { invoke("throw", err, resolve, reject); }) : PromiseImpl.resolve(value).then(function (unwrapped) { result.value = unwrapped, resolve(result); }, function (error) { return invoke("throw", error, resolve, reject); }); } reject(record.arg); } var previousPromise; defineProperty(this, "_invoke", { value: function value(method, arg) { function callInvokeWithMethodAndArg() { return new PromiseImpl(function (resolve, reject) { invoke(method, arg, resolve, reject); }); } return previousPromise = previousPromise ? previousPromise.then(callInvokeWithMethodAndArg, callInvokeWithMethodAndArg) : callInvokeWithMethodAndArg(); } }); } function makeInvokeMethod(innerFn, self, context) { var state = "suspendedStart"; return function (method, arg) { if ("executing" === state) throw new Error("Generator is already running"); if ("completed" === state) { if ("throw" === method) throw arg; return doneResult(); } for (context.method = method, context.arg = arg;;) { var delegate = context.delegate; if (delegate) { var delegateResult = maybeInvokeDelegate(delegate, context); if (delegateResult) { if (delegateResult === ContinueSentinel) continue; return delegateResult; } } if ("next" === context.method) context.sent = context._sent = context.arg;else if ("throw" === context.method) { if ("suspendedStart" === state) throw state = "completed", context.arg; context.dispatchException(context.arg); } else "return" === context.method && context.abrupt("return", context.arg); state = "executing"; var record = tryCatch(innerFn, self, context); if ("normal" === record.type) { if (state = context.done ? "completed" : "suspendedYield", record.arg === ContinueSentinel) continue; return { value: record.arg, done: context.done }; } "throw" === record.type && (state = "completed", context.method = "throw", context.arg = record.arg); } }; } function maybeInvokeDelegate(delegate, context) { var methodName = context.method, method = delegate.iterator[methodName]; if (undefined === method) return context.delegate = null, "throw" === methodName && delegate.iterator["return"] && (context.method = "return", context.arg = undefined, maybeInvokeDelegate(delegate, context), "throw" === context.method) || "return" !== methodName && (context.method = "throw", context.arg = new TypeError("The iterator does not provide a '" + methodName + "' method")), ContinueSentinel; var record = tryCatch(method, delegate.iterator, context.arg); if ("throw" === record.type) return context.method = "throw", context.arg = record.arg, context.delegate = null, ContinueSentinel; var info = record.arg; return info ? info.done ? (context[delegate.resultName] = info.value, context.next = delegate.nextLoc, "return" !== context.method && (context.method = "next", context.arg = undefined), context.delegate = null, ContinueSentinel) : info : (context.method = "throw", context.arg = new TypeError("iterator result is not an object"), context.delegate = null, ContinueSentinel); } function pushTryEntry(locs) { var entry = { tryLoc: locs[0] }; 1 in locs && (entry.catchLoc = locs[1]), 2 in locs && (entry.finallyLoc = locs[2], entry.afterLoc = locs[3]), this.tryEntries.push(entry); } function resetTryEntry(entry) { var record = entry.completion || {}; record.type = "normal", delete record.arg, entry.completion = record; } function Context(tryLocsList) { this.tryEntries = [{ tryLoc: "root" }], tryLocsList.forEach(pushTryEntry, this), this.reset(!0); } function values(iterable) { if (iterable) { var iteratorMethod = iterable[iteratorSymbol]; if (iteratorMethod) return iteratorMethod.call(iterable); if ("function" == typeof iterable.next) return iterable; if (!isNaN(iterable.length)) { var i = -1, next = function next() { for (; ++i < iterable.length;) if (hasOwn.call(iterable, i)) return next.value = iterable[i], next.done = !1, next; return next.value = undefined, next.done = !0, next; }; return next.next = next; } } return { next: doneResult }; } function doneResult() { return { value: undefined, done: !0 }; } return GeneratorFunction.prototype = GeneratorFunctionPrototype, defineProperty(Gp, "constructor", { value: GeneratorFunctionPrototype, configurable: !0 }), defineProperty(GeneratorFunctionPrototype, "constructor", { value: GeneratorFunction, configurable: !0 }), GeneratorFunction.displayName = define(GeneratorFunctionPrototype, toStringTagSymbol, "GeneratorFunction"), exports.isGeneratorFunction = function (genFun) { var ctor = "function" == typeof genFun && genFun.constructor; return !!ctor && (ctor === GeneratorFunction || "GeneratorFunction" === (ctor.displayName || ctor.name)); }, exports.mark = function (genFun) { return Object.setPrototypeOf ? Object.setPrototypeOf(genFun, GeneratorFunctionPrototype) : (genFun.__proto__ = GeneratorFunctionPrototype, define(genFun, toStringTagSymbol, "GeneratorFunction")), genFun.prototype = Object.create(Gp), genFun; }, exports.awrap = function (arg) { return { __await: arg }; }, defineIteratorMethods(AsyncIterator.prototype), define(AsyncIterator.prototype, asyncIteratorSymbol, function () { return this; }), exports.AsyncIterator = AsyncIterator, exports.async = function (innerFn, outerFn, self, tryLocsList, PromiseImpl) { void 0 === PromiseImpl && (PromiseImpl = Promise); var iter = new AsyncIterator(wrap(innerFn, outerFn, self, tryLocsList), PromiseImpl); return exports.isGeneratorFunction(outerFn) ? iter : iter.next().then(function (result) { return result.done ? result.value : iter.next(); }); }, defineIteratorMethods(Gp), define(Gp, toStringTagSymbol, "Generator"), define(Gp, iteratorSymbol, function () { return this; }), define(Gp, "toString", function () { return "[object Generator]"; }), exports.keys = function (val) { var object = Object(val), keys = []; for (var key in object) keys.push(key); return keys.reverse(), function next() { for (; keys.length;) { var key = keys.pop(); if (key in object) return next.value = key, next.done = !1, next; } return next.done = !0, next; }; }, exports.values = values, Context.prototype = { constructor: Context, reset: function reset(skipTempReset) { if (this.prev = 0, this.next = 0, this.sent = this._sent = undefined, this.done = !1, this.delegate = null, this.method = "next", this.arg = undefined, this.tryEntries.forEach(resetTryEntry), !skipTempReset) for (var name in this) "t" === name.charAt(0) && hasOwn.call(this, name) && !isNaN(+name.slice(1)) && (this[name] = undefined); }, stop: function stop() { this.done = !0; var rootRecord = this.tryEntries[0].completion; if ("throw" === rootRecord.type) throw rootRecord.arg; return this.rval; }, dispatchException: function dispatchException(exception) { if (this.done) throw exception; var context = this; function handle(loc, caught) { return record.type = "throw", record.arg = exception, context.next = loc, caught && (context.method = "next", context.arg = undefined), !!caught; } for (var i = this.tryEntries.length - 1; i >= 0; --i) { var entry = this.tryEntries[i], record = entry.completion; if ("root" === entry.tryLoc) return handle("end"); if (entry.tryLoc <= this.prev) { var hasCatch = hasOwn.call(entry, "catchLoc"), hasFinally = hasOwn.call(entry, "finallyLoc"); if (hasCatch && hasFinally) { if (this.prev < entry.catchLoc) return handle(entry.catchLoc, !0); if (this.prev < entry.finallyLoc) return handle(entry.finallyLoc); } else if (hasCatch) { if (this.prev < entry.catchLoc) return handle(entry.catchLoc, !0); } else { if (!hasFinally) throw new Error("try statement without catch or finally"); if (this.prev < entry.finallyLoc) return handle(entry.finallyLoc); } } } }, abrupt: function abrupt(type, arg) { for (var i = this.tryEntries.length - 1; i >= 0; --i) { var entry = this.tryEntries[i]; if (entry.tryLoc <= this.prev && hasOwn.call(entry, "finallyLoc") && this.prev < entry.finallyLoc) { var finallyEntry = entry; break; } } finallyEntry && ("break" === type || "continue" === type) && finallyEntry.tryLoc <= arg && arg <= finallyEntry.finallyLoc && (finallyEntry = null); var record = finallyEntry ? finallyEntry.completion : {}; return record.type = type, record.arg = arg, finallyEntry ? (this.method = "next", this.next = finallyEntry.finallyLoc, ContinueSentinel) : this.complete(record); }, complete: function complete(record, afterLoc) { if ("throw" === record.type) throw record.arg; return "break" === record.type || "continue" === record.type ? this.next = record.arg : "return" === record.type ? (this.rval = this.arg = record.arg, this.method = "return", this.next = "end") : "normal" === record.type && afterLoc && (this.next = afterLoc), ContinueSentinel; }, finish: function finish(finallyLoc) { for (var i = this.tryEntries.length - 1; i >= 0; --i) { var entry = this.tryEntries[i]; if (entry.finallyLoc === finallyLoc) return this.complete(entry.completion, entry.afterLoc), resetTryEntry(entry), ContinueSentinel; } }, "catch": function _catch(tryLoc) { for (var i = this.tryEntries.length - 1; i >= 0; --i) { var entry = this.tryEntries[i]; if (entry.tryLoc === tryLoc) { var record = entry.completion; if ("throw" === record.type) { var thrown = record.arg; resetTryEntry(entry); } return thrown; } } throw new Error("illegal catch attempt"); }, delegateYield: function delegateYield(iterable, resultName, nextLoc) { return this.delegate = { iterator: values(iterable), resultName: resultName, nextLoc: nextLoc }, "next" === this.method && (this.arg = undefined), ContinueSentinel; } }, exports; }
 function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
 function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
 function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter); }
@@ -3589,6 +3588,7 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
 function _defineProperty(obj, key, value) { key = _toPropertyKey(key); if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 function _toPropertyKey(arg) { var key = _toPrimitive(arg, "string"); return _typeof(key) === "symbol" ? key : String(key); }
 function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input === null) return input; var prim = input[Symbol.toPrimitive]; if (prim !== undefined) { var res = prim.call(input, hint || "default"); if (_typeof(res) !== "object") return res; throw new TypeError("@@toPrimitive must return a primitive value."); } return (hint === "string" ? String : Number)(input); }
+function _regeneratorRuntime() { "use strict"; /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/facebook/regenerator/blob/main/LICENSE */ _regeneratorRuntime = function _regeneratorRuntime() { return exports; }; var exports = {}, Op = Object.prototype, hasOwn = Op.hasOwnProperty, defineProperty = Object.defineProperty || function (obj, key, desc) { obj[key] = desc.value; }, $Symbol = "function" == typeof Symbol ? Symbol : {}, iteratorSymbol = $Symbol.iterator || "@@iterator", asyncIteratorSymbol = $Symbol.asyncIterator || "@@asyncIterator", toStringTagSymbol = $Symbol.toStringTag || "@@toStringTag"; function define(obj, key, value) { return Object.defineProperty(obj, key, { value: value, enumerable: !0, configurable: !0, writable: !0 }), obj[key]; } try { define({}, ""); } catch (err) { define = function define(obj, key, value) { return obj[key] = value; }; } function wrap(innerFn, outerFn, self, tryLocsList) { var protoGenerator = outerFn && outerFn.prototype instanceof Generator ? outerFn : Generator, generator = Object.create(protoGenerator.prototype), context = new Context(tryLocsList || []); return defineProperty(generator, "_invoke", { value: makeInvokeMethod(innerFn, self, context) }), generator; } function tryCatch(fn, obj, arg) { try { return { type: "normal", arg: fn.call(obj, arg) }; } catch (err) { return { type: "throw", arg: err }; } } exports.wrap = wrap; var ContinueSentinel = {}; function Generator() {} function GeneratorFunction() {} function GeneratorFunctionPrototype() {} var IteratorPrototype = {}; define(IteratorPrototype, iteratorSymbol, function () { return this; }); var getProto = Object.getPrototypeOf, NativeIteratorPrototype = getProto && getProto(getProto(values([]))); NativeIteratorPrototype && NativeIteratorPrototype !== Op && hasOwn.call(NativeIteratorPrototype, iteratorSymbol) && (IteratorPrototype = NativeIteratorPrototype); var Gp = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(IteratorPrototype); function defineIteratorMethods(prototype) { ["next", "throw", "return"].forEach(function (method) { define(prototype, method, function (arg) { return this._invoke(method, arg); }); }); } function AsyncIterator(generator, PromiseImpl) { function invoke(method, arg, resolve, reject) { var record = tryCatch(generator[method], generator, arg); if ("throw" !== record.type) { var result = record.arg, value = result.value; return value && "object" == _typeof(value) && hasOwn.call(value, "__await") ? PromiseImpl.resolve(value.__await).then(function (value) { invoke("next", value, resolve, reject); }, function (err) { invoke("throw", err, resolve, reject); }) : PromiseImpl.resolve(value).then(function (unwrapped) { result.value = unwrapped, resolve(result); }, function (error) { return invoke("throw", error, resolve, reject); }); } reject(record.arg); } var previousPromise; defineProperty(this, "_invoke", { value: function value(method, arg) { function callInvokeWithMethodAndArg() { return new PromiseImpl(function (resolve, reject) { invoke(method, arg, resolve, reject); }); } return previousPromise = previousPromise ? previousPromise.then(callInvokeWithMethodAndArg, callInvokeWithMethodAndArg) : callInvokeWithMethodAndArg(); } }); } function makeInvokeMethod(innerFn, self, context) { var state = "suspendedStart"; return function (method, arg) { if ("executing" === state) throw new Error("Generator is already running"); if ("completed" === state) { if ("throw" === method) throw arg; return doneResult(); } for (context.method = method, context.arg = arg;;) { var delegate = context.delegate; if (delegate) { var delegateResult = maybeInvokeDelegate(delegate, context); if (delegateResult) { if (delegateResult === ContinueSentinel) continue; return delegateResult; } } if ("next" === context.method) context.sent = context._sent = context.arg;else if ("throw" === context.method) { if ("suspendedStart" === state) throw state = "completed", context.arg; context.dispatchException(context.arg); } else "return" === context.method && context.abrupt("return", context.arg); state = "executing"; var record = tryCatch(innerFn, self, context); if ("normal" === record.type) { if (state = context.done ? "completed" : "suspendedYield", record.arg === ContinueSentinel) continue; return { value: record.arg, done: context.done }; } "throw" === record.type && (state = "completed", context.method = "throw", context.arg = record.arg); } }; } function maybeInvokeDelegate(delegate, context) { var methodName = context.method, method = delegate.iterator[methodName]; if (undefined === method) return context.delegate = null, "throw" === methodName && delegate.iterator["return"] && (context.method = "return", context.arg = undefined, maybeInvokeDelegate(delegate, context), "throw" === context.method) || "return" !== methodName && (context.method = "throw", context.arg = new TypeError("The iterator does not provide a '" + methodName + "' method")), ContinueSentinel; var record = tryCatch(method, delegate.iterator, context.arg); if ("throw" === record.type) return context.method = "throw", context.arg = record.arg, context.delegate = null, ContinueSentinel; var info = record.arg; return info ? info.done ? (context[delegate.resultName] = info.value, context.next = delegate.nextLoc, "return" !== context.method && (context.method = "next", context.arg = undefined), context.delegate = null, ContinueSentinel) : info : (context.method = "throw", context.arg = new TypeError("iterator result is not an object"), context.delegate = null, ContinueSentinel); } function pushTryEntry(locs) { var entry = { tryLoc: locs[0] }; 1 in locs && (entry.catchLoc = locs[1]), 2 in locs && (entry.finallyLoc = locs[2], entry.afterLoc = locs[3]), this.tryEntries.push(entry); } function resetTryEntry(entry) { var record = entry.completion || {}; record.type = "normal", delete record.arg, entry.completion = record; } function Context(tryLocsList) { this.tryEntries = [{ tryLoc: "root" }], tryLocsList.forEach(pushTryEntry, this), this.reset(!0); } function values(iterable) { if (iterable) { var iteratorMethod = iterable[iteratorSymbol]; if (iteratorMethod) return iteratorMethod.call(iterable); if ("function" == typeof iterable.next) return iterable; if (!isNaN(iterable.length)) { var i = -1, next = function next() { for (; ++i < iterable.length;) if (hasOwn.call(iterable, i)) return next.value = iterable[i], next.done = !1, next; return next.value = undefined, next.done = !0, next; }; return next.next = next; } } return { next: doneResult }; } function doneResult() { return { value: undefined, done: !0 }; } return GeneratorFunction.prototype = GeneratorFunctionPrototype, defineProperty(Gp, "constructor", { value: GeneratorFunctionPrototype, configurable: !0 }), defineProperty(GeneratorFunctionPrototype, "constructor", { value: GeneratorFunction, configurable: !0 }), GeneratorFunction.displayName = define(GeneratorFunctionPrototype, toStringTagSymbol, "GeneratorFunction"), exports.isGeneratorFunction = function (genFun) { var ctor = "function" == typeof genFun && genFun.constructor; return !!ctor && (ctor === GeneratorFunction || "GeneratorFunction" === (ctor.displayName || ctor.name)); }, exports.mark = function (genFun) { return Object.setPrototypeOf ? Object.setPrototypeOf(genFun, GeneratorFunctionPrototype) : (genFun.__proto__ = GeneratorFunctionPrototype, define(genFun, toStringTagSymbol, "GeneratorFunction")), genFun.prototype = Object.create(Gp), genFun; }, exports.awrap = function (arg) { return { __await: arg }; }, defineIteratorMethods(AsyncIterator.prototype), define(AsyncIterator.prototype, asyncIteratorSymbol, function () { return this; }), exports.AsyncIterator = AsyncIterator, exports.async = function (innerFn, outerFn, self, tryLocsList, PromiseImpl) { void 0 === PromiseImpl && (PromiseImpl = Promise); var iter = new AsyncIterator(wrap(innerFn, outerFn, self, tryLocsList), PromiseImpl); return exports.isGeneratorFunction(outerFn) ? iter : iter.next().then(function (result) { return result.done ? result.value : iter.next(); }); }, defineIteratorMethods(Gp), define(Gp, toStringTagSymbol, "Generator"), define(Gp, iteratorSymbol, function () { return this; }), define(Gp, "toString", function () { return "[object Generator]"; }), exports.keys = function (val) { var object = Object(val), keys = []; for (var key in object) keys.push(key); return keys.reverse(), function next() { for (; keys.length;) { var key = keys.pop(); if (key in object) return next.value = key, next.done = !1, next; } return next.done = !0, next; }; }, exports.values = values, Context.prototype = { constructor: Context, reset: function reset(skipTempReset) { if (this.prev = 0, this.next = 0, this.sent = this._sent = undefined, this.done = !1, this.delegate = null, this.method = "next", this.arg = undefined, this.tryEntries.forEach(resetTryEntry), !skipTempReset) for (var name in this) "t" === name.charAt(0) && hasOwn.call(this, name) && !isNaN(+name.slice(1)) && (this[name] = undefined); }, stop: function stop() { this.done = !0; var rootRecord = this.tryEntries[0].completion; if ("throw" === rootRecord.type) throw rootRecord.arg; return this.rval; }, dispatchException: function dispatchException(exception) { if (this.done) throw exception; var context = this; function handle(loc, caught) { return record.type = "throw", record.arg = exception, context.next = loc, caught && (context.method = "next", context.arg = undefined), !!caught; } for (var i = this.tryEntries.length - 1; i >= 0; --i) { var entry = this.tryEntries[i], record = entry.completion; if ("root" === entry.tryLoc) return handle("end"); if (entry.tryLoc <= this.prev) { var hasCatch = hasOwn.call(entry, "catchLoc"), hasFinally = hasOwn.call(entry, "finallyLoc"); if (hasCatch && hasFinally) { if (this.prev < entry.catchLoc) return handle(entry.catchLoc, !0); if (this.prev < entry.finallyLoc) return handle(entry.finallyLoc); } else if (hasCatch) { if (this.prev < entry.catchLoc) return handle(entry.catchLoc, !0); } else { if (!hasFinally) throw new Error("try statement without catch or finally"); if (this.prev < entry.finallyLoc) return handle(entry.finallyLoc); } } } }, abrupt: function abrupt(type, arg) { for (var i = this.tryEntries.length - 1; i >= 0; --i) { var entry = this.tryEntries[i]; if (entry.tryLoc <= this.prev && hasOwn.call(entry, "finallyLoc") && this.prev < entry.finallyLoc) { var finallyEntry = entry; break; } } finallyEntry && ("break" === type || "continue" === type) && finallyEntry.tryLoc <= arg && arg <= finallyEntry.finallyLoc && (finallyEntry = null); var record = finallyEntry ? finallyEntry.completion : {}; return record.type = type, record.arg = arg, finallyEntry ? (this.method = "next", this.next = finallyEntry.finallyLoc, ContinueSentinel) : this.complete(record); }, complete: function complete(record, afterLoc) { if ("throw" === record.type) throw record.arg; return "break" === record.type || "continue" === record.type ? this.next = record.arg : "return" === record.type ? (this.rval = this.arg = record.arg, this.method = "return", this.next = "end") : "normal" === record.type && afterLoc && (this.next = afterLoc), ContinueSentinel; }, finish: function finish(finallyLoc) { for (var i = this.tryEntries.length - 1; i >= 0; --i) { var entry = this.tryEntries[i]; if (entry.finallyLoc === finallyLoc) return this.complete(entry.completion, entry.afterLoc), resetTryEntry(entry), ContinueSentinel; } }, "catch": function _catch(tryLoc) { for (var i = this.tryEntries.length - 1; i >= 0; --i) { var entry = this.tryEntries[i]; if (entry.tryLoc === tryLoc) { var record = entry.completion; if ("throw" === record.type) { var thrown = record.arg; resetTryEntry(entry); } return thrown; } } throw new Error("illegal catch attempt"); }, delegateYield: function delegateYield(iterable, resultName, nextLoc) { return this.delegate = { iterator: values(iterable), resultName: resultName, nextLoc: nextLoc }, "next" === this.method && (this.arg = undefined), ContinueSentinel; } }, exports; }
 function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
 function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
 function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
@@ -3978,7 +3978,7 @@ var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_
     return _fetchData.apply(this, arguments);
   }
   function _fetchData() {
-    _fetchData = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee(params, valueToInputDefault, inputDefault) {
+    _fetchData = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee2(params, valueToInputDefault, inputDefault) {
       var init,
         defaultValue,
         response,
@@ -3995,21 +3995,21 @@ var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_
         _currentData2,
         _defaultValues2,
         _defaultLabels2,
-        _args = arguments;
-      return _regeneratorRuntime().wrap(function _callee$(_context) {
-        while (1) switch (_context.prev = _context.next) {
+        _args2 = arguments;
+      return _regeneratorRuntime().wrap(function _callee2$(_context2) {
+        while (1) switch (_context2.prev = _context2.next) {
           case 0:
-            init = _args.length > 3 && _args[3] !== undefined ? _args[3] : true;
+            init = _args2.length > 3 && _args2[3] !== undefined ? _args2[3] : true;
             // Determine whether the default value is user query input or default input
             defaultValue = init ? valueToInputDefault : '';
             if (!(_typeof(fetchFuncAsync) === 'object')) {
-              _context.next = 27;
+              _context2.next = 27;
               break;
             }
-            _context.next = 5;
+            _context2.next = 5;
             return fetchFuncAsync["".concat(fetchFuncMethod)].apply(fetchFuncAsync, _toConsumableArray(params.split(',')));
           case 5:
-            response = _context.sent;
+            response = _context2.sent;
             _ORGIN_DATA = response.data; // reset data structure
             if (typeof fetchCallback === 'function') {
               _ORGIN_DATA = fetchCallback(_ORGIN_DATA);
@@ -4116,7 +4116,7 @@ var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_
             onFetch === null || onFetch === void 0 ? void 0 : onFetch(selectInputRef.current, valueInputRef.current, defaultValue, _ORGIN_DATA, incomingData);
 
             //
-            return _context.abrupt("return", _ORGIN_DATA);
+            return _context2.abrupt("return", _ORGIN_DATA);
           case 27:
             // STEP 1: ===========
             // Set hierarchical categories ( with sub-categories )
@@ -4212,12 +4212,12 @@ var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_
             onFetch === null || onFetch === void 0 ? void 0 : onFetch(selectInputRef.current, valueInputRef.current, defaultValue, staticOptionsData, incomingData);
 
             //
-            return _context.abrupt("return", staticOptionsData);
+            return _context2.abrupt("return", staticOptionsData);
           case 43:
           case "end":
-            return _context.stop();
+            return _context2.stop();
         }
-      }, _callee);
+      }, _callee2);
     }));
     return _fetchData.apply(this, arguments);
   }
@@ -4602,7 +4602,7 @@ var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_
     return _handleSelect.apply(this, arguments);
   }
   function _handleSelect() {
-    _handleSelect = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee2(el) {
+    _handleSelect = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee3(el) {
       var dataInput,
         valueArr,
         labelArr,
@@ -4628,18 +4628,18 @@ var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_
         _$el,
         _selected2,
         _selectedVal2,
-        _args2 = arguments;
-      return _regeneratorRuntime().wrap(function _callee2$(_context2) {
-        while (1) switch (_context2.prev = _context2.next) {
+        _args3 = arguments;
+      return _regeneratorRuntime().wrap(function _callee3$(_context3) {
+        while (1) switch (_context3.prev = _context3.next) {
           case 0:
-            dataInput = _args2.length > 1 && _args2[1] !== undefined ? _args2[1] : false;
-            valueArr = _args2.length > 2 && _args2[2] !== undefined ? _args2[2] : [];
-            labelArr = _args2.length > 3 && _args2[3] !== undefined ? _args2[3] : [];
+            dataInput = _args3.length > 1 && _args3[1] !== undefined ? _args3[1] : false;
+            valueArr = _args3.length > 2 && _args3[2] !== undefined ? _args3[2] : [];
+            labelArr = _args3.length > 3 && _args3[3] !== undefined ? _args3[3] : [];
             if (!(typeof el === 'undefined')) {
-              _context2.next = 5;
+              _context3.next = 5;
               break;
             }
-            return _context2.abrupt("return");
+            return _context3.abrupt("return");
           case 5:
             curItem = el === null ? isObject(dataInput) ? dataInput : JSON.parse(dataInput) : optionsData[Number(el.currentTarget.dataset.index)]; // get options
             options = [].slice.call(listRef.current.querySelectorAll('.list-group-item:not(.hide):not(.no-match)')); // current control of some option
@@ -4662,218 +4662,229 @@ var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_
             }
 
             // update value * label
-            if (dataInput) {
-              // ==========================================================================
-              // Use the "keyboard" to trigger
-              // ==========================================================================
-              _data = isObject(dataInput) ? dataInput : JSON.parse(dataInput);
-              _value = _data.value;
-              _label = _data.label; // ++++++++++++++++++++
-              // Callback
-              // ++++++++++++++++++++
-              (_data$callback = _data.callback) === null || _data$callback === void 0 ? void 0 : _data$callback.call(_data);
+            if (!dataInput) {
+              _context3.next = 28;
+              break;
+            }
+            // ==========================================================================
+            // Use the "keyboard" to trigger
+            // ==========================================================================
+            _data = isObject(dataInput) ? dataInput : JSON.parse(dataInput);
+            _value = _data.value;
+            _label = _data.label; // ++++++++++++++++++++
+            // Callback
+            // ++++++++++++++++++++
+            (_data$callback = _data.callback) === null || _data$callback === void 0 ? void 0 : _data$callback.call(_data);
 
-              // ++++++++++++++++++++
-              // Single selection
-              // ++++++++++++++++++++
-              // clear all active classes of options 
-              // (Avoid using the keyboard to select and two actives will appear after clicking on a non-selected option.)
-              if (noCallback) {
-                options.forEach(function (node) {
-                  node.classList.remove('active');
-                });
-              }
+            // ++++++++++++++++++++
+            // Single selection
+            // ++++++++++++++++++++
+            // clear all active classes of options 
+            // (Avoid using the keyboard to select and two actives will appear after clicking on a non-selected option.)
+            if (noCallback) {
+              options.forEach(function (node) {
+                node.classList.remove('active');
+              });
+            }
 
-              // If there is a callback, delete the activated style
-              if (!noCallback) {
-                setTimeout(function () {
-                  curBtn.classList.remove('active', 'disabled');
-                }, 0);
-              }
+            // If there is a callback, delete the activated style
+            if (!noCallback) {
+              setTimeout(function () {
+                curBtn.classList.remove('active', 'disabled');
+              }, 0);
+            }
 
-              //
-              setControlValue(_value);
-              setControlLabel(formatIndentVal(_label, INDENT_LAST_PLACEHOLDER));
+            //
+            setControlValue(_value);
+            setControlLabel(formatIndentVal(_label, INDENT_LAST_PLACEHOLDER));
 
-              // ++++++++++++++++++++
-              // Multiple selection
-              // ++++++++++++++++++++
-              currentControlValueArr = JSON.parse(JSON.stringify(valueArr));
-              currentControlLabelArr = JSON.parse(JSON.stringify(labelArr));
-              if (MULTI_SEL_VALID) {
-                $el = el === null ? curBtn : el.currentTarget; // update option checkboxes
-                _selected = $el.dataset.selected;
-                _selectedVal = _selected == 'true' ? true : false;
-                if (_selectedVal) {
-                  //#########
-                  // remove item
-                  //#########
-                  $el.dataset.selected = 'false';
-                  $el.querySelector('.custom-select-multi__control-option-checkbox-selected').classList.add('d-none');
-                  $el.querySelector('.custom-select-multi__control-option-checkbox-placeholder').classList.remove('d-none');
-
-                  //
-                  setControlArr(function (prevState) {
-                    // update temporary value
-                    setControlTempValue(prevState.labels.length >= 0 ? null : VALUE_BY_BRACKETS ? (0,convert.convertArrToValByBrackets)(prevState.labels) : prevState.labels.join(','));
-                    return {
-                      labels: removeItemOnce(prevState.labels, formatIndentVal(_label, INDENT_LAST_PLACEHOLDER)),
-                      values: removeItemOnce(prevState.values, _value)
-                    };
-                  });
-                  currentControlValueArr = removeItemOnce(currentControlValueArr, _value);
-                  currentControlLabelArr = removeItemOnce(currentControlLabelArr, formatIndentVal(_label, INDENT_LAST_PLACEHOLDER));
-                } else {
-                  //#########
-                  // add item
-                  //#########
-                  $el.dataset.selected = 'true';
-                  $el.querySelector('.custom-select-multi__control-option-checkbox-selected').classList.remove('d-none');
-                  $el.querySelector('.custom-select-multi__control-option-checkbox-placeholder').classList.add('d-none');
-
-                  //
-                  setControlArr(function (prevState) {
-                    // update temporary value
-                    setControlTempValue(prevState.labels.length >= 0 ? null : VALUE_BY_BRACKETS ? (0,convert.convertArrToValByBrackets)(prevState.labels) : prevState.labels.join(','));
-                    return {
-                      labels: [].concat(_toConsumableArray(prevState.labels), [formatIndentVal(_label, INDENT_LAST_PLACEHOLDER)]),
-                      values: [].concat(_toConsumableArray(prevState.values), [_value])
-                    };
-                  });
-                  currentControlValueArr.push(_value);
-                  currentControlLabelArr.push(_label);
-                }
-
-                // Appropriate multi-item container height
-                // ！！！set `false` to prevents the scrollbar position from changing when multi-selecting the option is clicked
-                adjustMultiControlContainerHeight(false);
-
-                // active current option
-                if (noCallback) {
-                  setTimeout(function () {
-                    $el.classList.add('active');
-                  }, 0);
-                }
-              }
-
-              //
-              if (noCallback && typeof onChange === 'function') {
-                onChange === null || onChange === void 0 ? void 0 : onChange(selectInputRef.current, valueInputRef.current, !MULTI_SEL_VALID ? curItem : multipleSelectionCallback(currentControlValueArr, currentControlLabelArr));
+            // ++++++++++++++++++++
+            // Multiple selection
+            // ++++++++++++++++++++
+            currentControlValueArr = JSON.parse(JSON.stringify(valueArr));
+            currentControlLabelArr = JSON.parse(JSON.stringify(labelArr));
+            if (MULTI_SEL_VALID) {
+              $el = el === null ? curBtn : el.currentTarget; // update option checkboxes
+              _selected = $el.dataset.selected;
+              _selectedVal = _selected == 'true' ? true : false;
+              if (_selectedVal) {
+                //#########
+                // remove item
+                //#########
+                $el.dataset.selected = 'false';
+                $el.querySelector('.custom-select-multi__control-option-checkbox-selected').classList.add('d-none');
+                $el.querySelector('.custom-select-multi__control-option-checkbox-placeholder').classList.remove('d-none');
 
                 //
-                selectInputRef.current.blur();
-              }
-            } else {
-              // ==========================================================================
-              // Use the "mouse" to trigger
-              // ==========================================================================
-              _value2 = typeof curItem !== 'undefined' ? curItem.value : '';
-              _label2 = typeof curItem !== 'undefined' ? curItem.label : ''; // ++++++++++++++++++++
-              // Callback
-              // ++++++++++++++++++++
-              (_curItem$callback = curItem.callback) === null || _curItem$callback === void 0 ? void 0 : _curItem$callback.call(curItem);
-
-              // ++++++++++++++++++++
-              // Single selection
-              // ++++++++++++++++++++
-
-              // clear all active classes of options
-              // (Avoid using the keyboard to select and two actives will appear after clicking on a non-selected option.)
-              if (noCallback) {
-                options.forEach(function (node) {
-                  node.classList.remove('active');
+                setControlArr(function (prevState) {
+                  // update temporary value
+                  setControlTempValue(prevState.labels.length >= 0 ? null : VALUE_BY_BRACKETS ? (0,convert.convertArrToValByBrackets)(prevState.labels) : prevState.labels.join(','));
+                  return {
+                    labels: removeItemOnce(prevState.labels, formatIndentVal(_label, INDENT_LAST_PLACEHOLDER)),
+                    values: removeItemOnce(prevState.values, _value)
+                  };
                 });
-              }
-
-              // If there is a callback, delete the activated style
-              if (!noCallback) {
-                setTimeout(function () {
-                  curBtn.classList.remove('active', 'disabled');
-                }, 0);
-              }
-
-              //
-              setControlValue(_value2);
-              setControlLabel(formatIndentVal(_label2, INDENT_LAST_PLACEHOLDER));
-
-              // ++++++++++++++++++++
-              // Multiple selection
-              // ++++++++++++++++++++
-              _currentControlValueArr = JSON.parse(JSON.stringify(controlArr.values));
-              _currentControlLabelArr = JSON.parse(JSON.stringify(controlArr.labels));
-              if (MULTI_SEL_VALID) {
-                _$el = el === null ? curBtn : el.currentTarget; // update option checkboxes
-                _selected2 = _$el.dataset.selected;
-                _selectedVal2 = _selected2 == 'true' ? true : false;
-                if (_selectedVal2) {
-                  //#########
-                  // remove item
-                  //#########
-                  _$el.dataset.selected = 'false';
-                  _$el.querySelector('.custom-select-multi__control-option-checkbox-selected').classList.add('d-none');
-                  _$el.querySelector('.custom-select-multi__control-option-checkbox-placeholder').classList.remove('d-none');
-
-                  //
-                  setControlArr(function (prevState) {
-                    // update temporary value
-                    setControlTempValue(prevState.labels.length >= 0 ? null : VALUE_BY_BRACKETS ? (0,convert.convertArrToValByBrackets)(prevState.labels) : prevState.labels.join(','));
-                    return {
-                      labels: removeItemOnce(prevState.labels, formatIndentVal(_label2, INDENT_LAST_PLACEHOLDER)),
-                      values: removeItemOnce(prevState.values, _value2)
-                    };
-                  });
-                  _currentControlValueArr = removeItemOnce(_currentControlValueArr, _value2);
-                  _currentControlLabelArr = removeItemOnce(_currentControlLabelArr, formatIndentVal(_label2, INDENT_LAST_PLACEHOLDER));
-                } else {
-                  //#########
-                  // add item
-                  //#########
-
-                  _$el.dataset.selected = 'true';
-                  _$el.querySelector('.custom-select-multi__control-option-checkbox-selected').classList.remove('d-none');
-                  _$el.querySelector('.custom-select-multi__control-option-checkbox-placeholder').classList.add('d-none');
-
-                  //
-                  setControlArr(function (prevState) {
-                    // update temporary value
-                    setControlTempValue(prevState.labels.length >= 0 ? null : VALUE_BY_BRACKETS ? (0,convert.convertArrToValByBrackets)(prevState.labels) : prevState.labels.join(','));
-                    return {
-                      labels: [].concat(_toConsumableArray(prevState.labels), [formatIndentVal(_label2, INDENT_LAST_PLACEHOLDER)]),
-                      values: [].concat(_toConsumableArray(prevState.values), [_value2])
-                    };
-                  });
-                  _currentControlValueArr.push(_value2);
-                  _currentControlLabelArr.push(_label2);
-                }
-
-                // Appropriate multi-item container height
-                // ！！！set `false` to prevents the scrollbar position from changing when multi-selecting the option is clicked
-                adjustMultiControlContainerHeight(false);
-
-                // active current option
-                if (noCallback) {
-                  setTimeout(function () {
-                    _$el.classList.add('active');
-                  }, 0);
-                }
-              }
-
-              //
-              if (noCallback && typeof onChange === 'function') {
-                onChange === null || onChange === void 0 ? void 0 : onChange(selectInputRef.current, valueInputRef.current, !MULTI_SEL_VALID ? curItem : multipleSelectionCallback(_currentControlValueArr, _currentControlLabelArr));
+                currentControlValueArr = removeItemOnce(currentControlValueArr, _value);
+                currentControlLabelArr = removeItemOnce(currentControlLabelArr, formatIndentVal(_label, INDENT_LAST_PLACEHOLDER));
+              } else {
+                //#########
+                // add item
+                //#########
+                $el.dataset.selected = 'true';
+                $el.querySelector('.custom-select-multi__control-option-checkbox-selected').classList.remove('d-none');
+                $el.querySelector('.custom-select-multi__control-option-checkbox-placeholder').classList.add('d-none');
 
                 //
-                selectInputRef.current.blur();
+                setControlArr(function (prevState) {
+                  // update temporary value
+                  setControlTempValue(prevState.labels.length >= 0 ? null : VALUE_BY_BRACKETS ? (0,convert.convertArrToValByBrackets)(prevState.labels) : prevState.labels.join(','));
+                  return {
+                    labels: [].concat(_toConsumableArray(prevState.labels), [formatIndentVal(_label, INDENT_LAST_PLACEHOLDER)]),
+                    values: [].concat(_toConsumableArray(prevState.values), [_value])
+                  };
+                });
+                currentControlValueArr.push(_value);
+                currentControlLabelArr.push(_label);
+              }
+
+              // Appropriate multi-item container height
+              // ！！！set `false` to prevents the scrollbar position from changing when multi-selecting the option is clicked
+              adjustMultiControlContainerHeight(false);
+
+              // active current option
+              if (noCallback) {
+                setTimeout(function () {
+                  $el.classList.add('active');
+                }, 0);
               }
             }
 
+            //
+            if (!(noCallback && typeof onChange === 'function')) {
+              _context3.next = 26;
+              break;
+            }
+            _context3.next = 25;
+            return onChange === null || onChange === void 0 ? void 0 : onChange(selectInputRef.current, valueInputRef.current, !MULTI_SEL_VALID ? curItem : multipleSelectionCallback(currentControlValueArr, currentControlLabelArr));
+          case 25:
+            //
+            selectInputRef.current.blur();
+          case 26:
+            _context3.next = 42;
+            break;
+          case 28:
+            // ==========================================================================
+            // Use the "mouse" to trigger
+            // ==========================================================================
+            _value2 = typeof curItem !== 'undefined' ? curItem.value : '';
+            _label2 = typeof curItem !== 'undefined' ? curItem.label : ''; // ++++++++++++++++++++
+            // Callback
+            // ++++++++++++++++++++
+            (_curItem$callback = curItem.callback) === null || _curItem$callback === void 0 ? void 0 : _curItem$callback.call(curItem);
+
+            // ++++++++++++++++++++
+            // Single selection
+            // ++++++++++++++++++++
+
+            // clear all active classes of options
+            // (Avoid using the keyboard to select and two actives will appear after clicking on a non-selected option.)
+            if (noCallback) {
+              options.forEach(function (node) {
+                node.classList.remove('active');
+              });
+            }
+
+            // If there is a callback, delete the activated style
+            if (!noCallback) {
+              setTimeout(function () {
+                curBtn.classList.remove('active', 'disabled');
+              }, 0);
+            }
+
+            //
+            setControlValue(_value2);
+            setControlLabel(formatIndentVal(_label2, INDENT_LAST_PLACEHOLDER));
+
+            // ++++++++++++++++++++
+            // Multiple selection
+            // ++++++++++++++++++++
+            _currentControlValueArr = JSON.parse(JSON.stringify(controlArr.values));
+            _currentControlLabelArr = JSON.parse(JSON.stringify(controlArr.labels));
+            if (MULTI_SEL_VALID) {
+              _$el = el === null ? curBtn : el.currentTarget; // update option checkboxes
+              _selected2 = _$el.dataset.selected;
+              _selectedVal2 = _selected2 == 'true' ? true : false;
+              if (_selectedVal2) {
+                //#########
+                // remove item
+                //#########
+                _$el.dataset.selected = 'false';
+                _$el.querySelector('.custom-select-multi__control-option-checkbox-selected').classList.add('d-none');
+                _$el.querySelector('.custom-select-multi__control-option-checkbox-placeholder').classList.remove('d-none');
+
+                //
+                setControlArr(function (prevState) {
+                  // update temporary value
+                  setControlTempValue(prevState.labels.length >= 0 ? null : VALUE_BY_BRACKETS ? (0,convert.convertArrToValByBrackets)(prevState.labels) : prevState.labels.join(','));
+                  return {
+                    labels: removeItemOnce(prevState.labels, formatIndentVal(_label2, INDENT_LAST_PLACEHOLDER)),
+                    values: removeItemOnce(prevState.values, _value2)
+                  };
+                });
+                _currentControlValueArr = removeItemOnce(_currentControlValueArr, _value2);
+                _currentControlLabelArr = removeItemOnce(_currentControlLabelArr, formatIndentVal(_label2, INDENT_LAST_PLACEHOLDER));
+              } else {
+                //#########
+                // add item
+                //#########
+
+                _$el.dataset.selected = 'true';
+                _$el.querySelector('.custom-select-multi__control-option-checkbox-selected').classList.remove('d-none');
+                _$el.querySelector('.custom-select-multi__control-option-checkbox-placeholder').classList.add('d-none');
+
+                //
+                setControlArr(function (prevState) {
+                  // update temporary value
+                  setControlTempValue(prevState.labels.length >= 0 ? null : VALUE_BY_BRACKETS ? (0,convert.convertArrToValByBrackets)(prevState.labels) : prevState.labels.join(','));
+                  return {
+                    labels: [].concat(_toConsumableArray(prevState.labels), [formatIndentVal(_label2, INDENT_LAST_PLACEHOLDER)]),
+                    values: [].concat(_toConsumableArray(prevState.values), [_value2])
+                  };
+                });
+                _currentControlValueArr.push(_value2);
+                _currentControlLabelArr.push(_label2);
+              }
+
+              // Appropriate multi-item container height
+              // ！！！set `false` to prevents the scrollbar position from changing when multi-selecting the option is clicked
+              adjustMultiControlContainerHeight(false);
+
+              // active current option
+              if (noCallback) {
+                setTimeout(function () {
+                  _$el.classList.add('active');
+                }, 0);
+              }
+            }
+
+            //
+            if (!(noCallback && typeof onChange === 'function')) {
+              _context3.next = 42;
+              break;
+            }
+            _context3.next = 41;
+            return onChange === null || onChange === void 0 ? void 0 : onChange(selectInputRef.current, valueInputRef.current, !MULTI_SEL_VALID ? curItem : multipleSelectionCallback(_currentControlValueArr, _currentControlLabelArr));
+          case 41:
+            //
+            selectInputRef.current.blur();
+          case 42:
             // Fixed an out-of-focus issue
             fixFocusStatus();
-          case 12:
+          case 43:
           case "end":
-            return _context2.stop();
+            return _context3.stop();
         }
-      }, _callee2);
+      }, _callee3);
     }));
     return _handleSelect.apply(this, arguments);
   }
@@ -4938,32 +4949,43 @@ var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_
     adjustMultiControlContainerHeight();
   }
   ;
-  function handleSelectAll(event) {
-    event.preventDefault();
-    event.stopPropagation(); /* REQUIRED */
-
-    var _labels = [];
-    var _values = [];
-    if (controlArr.values.length === optionsData.length) {
-      // selected all items
-      var _updateOptionCheckbox = updateOptionCheckboxes('remove'),
-        labels = _updateOptionCheckbox.labels,
-        values = _updateOptionCheckbox.values;
-      selectedSign.current = false;
-      _labels = labels;
-      _values = values;
-    } else {
-      var _updateOptionCheckbox2 = updateOptionCheckboxes(selectedSign.current ? 'remove' : 'add'),
-        _labels2 = _updateOptionCheckbox2.labels,
-        _values2 = _updateOptionCheckbox2.values;
-      selectedSign.current = !selectedSign.current;
-      _labels = _labels2;
-      _values = _values2;
-    }
-    onChange === null || onChange === void 0 ? void 0 : onChange(selectInputRef.current, valueInputRef.current, multipleSelectionCallback(_values, _labels));
-
-    // Fixed an out-of-focus issue
-    fixFocusStatus();
+  function handleSelectAll(_x6) {
+    return _handleSelectAll.apply(this, arguments);
+  }
+  function _handleSelectAll() {
+    _handleSelectAll = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee4(event) {
+      var _labels, _values, _updateOptionCheckbox, labels, values, _updateOptionCheckbox2, _labels2, _values2;
+      return _regeneratorRuntime().wrap(function _callee4$(_context4) {
+        while (1) switch (_context4.prev = _context4.next) {
+          case 0:
+            event.preventDefault();
+            event.stopPropagation(); /* REQUIRED */
+            _labels = [];
+            _values = [];
+            if (controlArr.values.length === optionsData.length) {
+              // selected all items
+              _updateOptionCheckbox = updateOptionCheckboxes('remove'), labels = _updateOptionCheckbox.labels, values = _updateOptionCheckbox.values;
+              selectedSign.current = false;
+              _labels = labels;
+              _values = values;
+            } else {
+              _updateOptionCheckbox2 = updateOptionCheckboxes(selectedSign.current ? 'remove' : 'add'), _labels2 = _updateOptionCheckbox2.labels, _values2 = _updateOptionCheckbox2.values;
+              selectedSign.current = !selectedSign.current;
+              _labels = _labels2;
+              _values = _values2;
+            }
+            _context4.next = 7;
+            return onChange === null || onChange === void 0 ? void 0 : onChange(selectInputRef.current, valueInputRef.current, multipleSelectionCallback(_values, _labels));
+          case 7:
+            // Fixed an out-of-focus issue
+            fixFocusStatus();
+          case 8:
+          case "end":
+            return _context4.stop();
+        }
+      }, _callee4);
+    }));
+    return _handleSelectAll.apply(this, arguments);
   }
   function handleClearValue(event) {
     if (typeof event !== 'undefined') {
@@ -4985,39 +5007,56 @@ var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_
     // update filter status
     setFilterItemsHasNoMatchData(false);
   }
-  function handleMultiControlItemRemove(event) {
-    event.preventDefault();
-    event.stopPropagation(); /* REQUIRED */
+  function handleMultiControlItemRemove(_x7) {
+    return _handleMultiControlItemRemove.apply(this, arguments);
+  }
+  function _handleMultiControlItemRemove() {
+    _handleMultiControlItemRemove = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee5(event) {
+      var valueToRemove, getCurrentIndex, currentControlValueArr, currentControlLabelArr, _value, _label;
+      return _regeneratorRuntime().wrap(function _callee5$(_context5) {
+        while (1) switch (_context5.prev = _context5.next) {
+          case 0:
+            event.preventDefault();
+            event.stopPropagation(); /* REQUIRED */
+            valueToRemove = String(event.currentTarget.dataset.value);
+            getCurrentIndex = controlArr.values.findIndex(function (item) {
+              return item.toString() === valueToRemove;
+            });
+            currentControlValueArr = JSON.parse(JSON.stringify(controlArr.values));
+            currentControlLabelArr = JSON.parse(JSON.stringify(controlArr.labels));
+            _value = valueToRemove;
+            _label = controlArr.labels[getCurrentIndex];
+            setControlArr(function (prevState) {
+              // update temporary value
+              setControlTempValue(prevState.labels.length >= 0 ? null : VALUE_BY_BRACKETS ? (0,convert.convertArrToValByBrackets)(prevState.labels) : prevState.labels.join(','));
+              return {
+                labels: removeItemOnce(prevState.labels, formatIndentVal(_label, INDENT_LAST_PLACEHOLDER)),
+                values: removeItemOnce(prevState.values, _value)
+              };
+            });
+            currentControlValueArr = removeItemOnce(currentControlValueArr, _value);
+            currentControlLabelArr = removeItemOnce(currentControlLabelArr, formatIndentVal(_label, INDENT_LAST_PLACEHOLDER));
 
-    var valueToRemove = String(event.currentTarget.dataset.value);
-    var getCurrentIndex = controlArr.values.findIndex(function (item) {
-      return item.toString() === valueToRemove;
-    });
-    var currentControlValueArr = JSON.parse(JSON.stringify(controlArr.values));
-    var currentControlLabelArr = JSON.parse(JSON.stringify(controlArr.labels));
-    var _value = valueToRemove;
-    var _label = controlArr.labels[getCurrentIndex];
-    setControlArr(function (prevState) {
-      // update temporary value
-      setControlTempValue(prevState.labels.length >= 0 ? null : VALUE_BY_BRACKETS ? (0,convert.convertArrToValByBrackets)(prevState.labels) : prevState.labels.join(','));
-      return {
-        labels: removeItemOnce(prevState.labels, formatIndentVal(_label, INDENT_LAST_PLACEHOLDER)),
-        values: removeItemOnce(prevState.values, _value)
-      };
-    });
-    currentControlValueArr = removeItemOnce(currentControlValueArr, _value);
-    currentControlLabelArr = removeItemOnce(currentControlLabelArr, formatIndentVal(_label, INDENT_LAST_PLACEHOLDER));
+            // Appropriate multi-item container height
+            adjustMultiControlContainerHeight();
 
-    // Appropriate multi-item container height
-    adjustMultiControlContainerHeight();
-
-    //
-    if (typeof onChange === 'function') {
-      onChange === null || onChange === void 0 ? void 0 : onChange(selectInputRef.current, valueInputRef.current, multipleSelectionCallback(currentControlValueArr, currentControlLabelArr));
-
-      //
-      selectInputRef.current.blur();
-    }
+            //
+            if (!(typeof onChange === 'function')) {
+              _context5.next = 16;
+              break;
+            }
+            _context5.next = 15;
+            return onChange === null || onChange === void 0 ? void 0 : onChange(selectInputRef.current, valueInputRef.current, multipleSelectionCallback(currentControlValueArr, currentControlLabelArr));
+          case 15:
+            //
+            selectInputRef.current.blur();
+          case 16:
+          case "end":
+            return _context5.stop();
+        }
+      }, _callee5);
+    }));
+    return _handleMultiControlItemRemove.apply(this, arguments);
   }
   function handleShowList() {
     // Reset the out-of-focus marker
@@ -5035,33 +5074,33 @@ var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_
     return _handleFetch.apply(this, arguments);
   }
   function _handleFetch() {
-    _handleFetch = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee3() {
+    _handleFetch = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee6() {
       var inputVal,
         searchStr,
         _oparams,
         _params,
         res,
-        _args3 = arguments;
-      return _regeneratorRuntime().wrap(function _callee3$(_context3) {
-        while (1) switch (_context3.prev = _context3.next) {
+        _args6 = arguments;
+      return _regeneratorRuntime().wrap(function _callee6$(_context6) {
+        while (1) switch (_context6.prev = _context6.next) {
           case 0:
-            inputVal = _args3.length > 0 && _args3[0] !== undefined ? _args3[0] : null;
+            inputVal = _args6.length > 0 && _args6[0] !== undefined ? _args6[0] : null;
             // data init
             searchStr = typeof inputVal === 'string' ? inputVal : controlTempValue || controlTempValue === '' ? controlTempValue : '';
             _oparams = fetchFuncMethodParams || [];
             _params = _oparams.map(function (item) {
               return item !== '$QUERY_STRING' ? item : searchStr;
             });
-            _context3.next = 6;
+            _context6.next = 6;
             return fetchData(_params.join(','), '', '', false);
           case 6:
-            res = _context3.sent;
-            return _context3.abrupt("return", res);
+            res = _context6.sent;
+            return _context6.abrupt("return", res);
           case 8:
           case "end":
-            return _context3.stop();
+            return _context6.stop();
         }
-      }, _callee3);
+      }, _callee6);
     }));
     return _handleFetch.apply(this, arguments);
   }
@@ -5069,32 +5108,32 @@ var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_
     return _handleFirstFetch.apply(this, arguments);
   }
   function _handleFirstFetch() {
-    _handleFirstFetch = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee4() {
+    _handleFirstFetch = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee7() {
       var inputVal,
         _oparams,
         _params,
         res,
-        _args4 = arguments;
-      return _regeneratorRuntime().wrap(function _callee4$(_context4) {
-        while (1) switch (_context4.prev = _context4.next) {
+        _args7 = arguments;
+      return _regeneratorRuntime().wrap(function _callee7$(_context7) {
+        while (1) switch (_context7.prev = _context7.next) {
           case 0:
-            inputVal = _args4.length > 0 && _args4[0] !== undefined ? _args4[0] : null;
+            inputVal = _args7.length > 0 && _args7[0] !== undefined ? _args7[0] : null;
             _oparams = fetchFuncMethodParams || [];
             _params = _oparams.map(function (item) {
               return item !== '$QUERY_STRING' ? item : MANUAL_REQ ? QUERY_STRING_PLACEHOLDER : '';
             });
-            _context4.next = 5;
+            _context7.next = 5;
             return fetchData(_params.join(','), finalRes(inputVal), inputVal);
           case 5:
-            res = _context4.sent;
+            res = _context7.sent;
             // Set an identifier indicating that the first request has been completed
             if (!handleFirstFetchCompleted) setHandleFirstFetchCompleted(true);
-            return _context4.abrupt("return", res);
+            return _context7.abrupt("return", res);
           case 8:
           case "end":
-            return _context4.stop();
+            return _context7.stop();
         }
-      }, _callee4);
+      }, _callee7);
     }));
     return _handleFirstFetch.apply(this, arguments);
   }
@@ -5194,101 +5233,106 @@ var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_
       }
     });
   }
-  function handleKeyPressed(_x6) {
+  function handleKeyPressed(_x8) {
     return _handleKeyPressed.apply(this, arguments);
   }
   function _handleKeyPressed() {
-    _handleKeyPressed = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee5(event) {
+    _handleKeyPressed = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee8(event) {
       var key, res, currentIndex, currentData, currentControlValueArr, currentControlLabelArr, htmlOptions;
-      return _regeneratorRuntime().wrap(function _callee5$(_context5) {
-        while (1) switch (_context5.prev = _context5.next) {
+      return _regeneratorRuntime().wrap(function _callee8$(_context8) {
+        while (1) switch (_context8.prev = _context8.next) {
           case 0:
             key = event.code; //
             onKeyPressed === null || onKeyPressed === void 0 ? void 0 : onKeyPressed(event, selectInputRef.current, valueInputRef.current);
             if (isOpen) {
-              _context5.next = 4;
+              _context8.next = 4;
               break;
             }
-            return _context5.abrupt("return");
+            return _context8.abrupt("return");
           case 4:
             res = null;
             if (!(key === 'Enter' || key === 'NumpadEnter')) {
-              _context5.next = 16;
+              _context8.next = 26;
               break;
             }
             event.preventDefault();
 
             // Determine the "active" class name to avoid listening to other unused components of the same type
             if (!(listRef.current === null || !rootRef.current.classList.contains('active'))) {
-              _context5.next = 9;
+              _context8.next = 9;
               break;
             }
-            return _context5.abrupt("return");
+            return _context8.abrupt("return");
           case 9:
             if (!(keyboardSelectedItem.current !== null && keyboardSelectedItem.current.classList.contains('disabled'))) {
-              _context5.next = 11;
+              _context8.next = 11;
               break;
             }
-            return _context5.abrupt("return");
+            return _context8.abrupt("return");
           case 11:
             if (!(listRef.current !== null)) {
-              _context5.next = 16;
+              _context8.next = 26;
               break;
             }
-            _context5.next = 14;
+            _context8.next = 14;
             return listRef.current.dataset.data;
           case 14:
-            currentIndex = _context5.sent;
-            if (typeof currentIndex !== 'undefined') {
-              currentData = optionsData[Number(currentIndex)];
-              currentControlValueArr = [];
-              currentControlLabelArr = [];
-              htmlOptions = [].slice.call(listRef.current.querySelectorAll('.list-group-item:not(.hide):not(.no-match)'));
-              htmlOptions.forEach(function (node) {
-                node.classList.remove('active');
+            currentIndex = _context8.sent;
+            if (!(typeof currentIndex !== 'undefined')) {
+              _context8.next = 26;
+              break;
+            }
+            currentData = optionsData[Number(currentIndex)];
+            currentControlValueArr = [];
+            currentControlLabelArr = [];
+            htmlOptions = [].slice.call(listRef.current.querySelectorAll('.list-group-item:not(.hide):not(.no-match)'));
+            htmlOptions.forEach(function (node) {
+              node.classList.remove('active');
 
-                // multiple options
-                if (node.classList.contains('item-selected')) {
-                  currentControlValueArr.push(node.dataset.value);
-                  currentControlLabelArr.push(node.dataset.label);
-                }
-              });
-              handleSelect(null, currentData, currentControlValueArr, currentControlLabelArr);
-
-              //
-              if (typeof onChange === 'function') {
-                onChange === null || onChange === void 0 ? void 0 : onChange(selectInputRef.current, valueInputRef.current, !MULTI_SEL_VALID ? currentData : multipleSelectionCallback(currentControlValueArr, currentControlLabelArr));
-
-                //
-                selectInputRef.current.blur();
+              // multiple options
+              if (node.classList.contains('item-selected')) {
+                currentControlValueArr.push(node.dataset.value);
+                currentControlLabelArr.push(node.dataset.label);
               }
+            });
+            handleSelect(null, currentData, currentControlValueArr, currentControlLabelArr);
+
+            //
+            if (!(typeof onChange === 'function')) {
+              _context8.next = 26;
+              break;
             }
-          case 16:
+            _context8.next = 25;
+            return onChange === null || onChange === void 0 ? void 0 : onChange(selectInputRef.current, valueInputRef.current, !MULTI_SEL_VALID ? currentData : multipleSelectionCallback(currentControlValueArr, currentControlLabelArr));
+          case 25:
+            //
+            selectInputRef.current.blur();
+          case 26:
             if (!(key === 'ArrowUp')) {
-              _context5.next = 20;
+              _context8.next = 30;
               break;
             }
-            _context5.next = 19;
+            _context8.next = 29;
             return optionFocus('decrease');
-          case 19:
-            res = _context5.sent;
-          case 20:
+          case 29:
+            res = _context8.sent;
+          case 30:
             if (!(key === 'ArrowDown')) {
-              _context5.next = 24;
+              _context8.next = 34;
               break;
             }
-            _context5.next = 23;
+            _context8.next = 33;
             return optionFocus('increase');
-          case 23:
-            res = _context5.sent;
-          case 24:
+          case 33:
+            res = _context8.sent;
+          case 34:
             // temporary data
             if (res !== null) listRef.current.dataset.data = res.dataset.index;
-          case 25:
+          case 35:
           case "end":
-            return _context5.stop();
+            return _context8.stop();
         }
-      }, _callee5);
+      }, _callee8);
     }));
     return _handleKeyPressed.apply(this, arguments);
   }
@@ -5483,16 +5527,35 @@ var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_
   }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("button", {
     tabIndex: -1,
     type: "button",
-    onClick: function onClick(e) {
-      e.preventDefault();
-      e.stopPropagation();
-      if (MULTI_SEL_VALID) {
-        updateOptionCheckboxes('remove');
-        onChange === null || onChange === void 0 ? void 0 : onChange(selectInputRef.current, valueInputRef.current, multipleSelectionCallback([], []));
-      } else {
-        handleClearValue();
-      }
-    }
+    onClick: /*#__PURE__*/function () {
+      var _ref = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee(e) {
+        return _regeneratorRuntime().wrap(function _callee$(_context) {
+          while (1) switch (_context.prev = _context.next) {
+            case 0:
+              e.preventDefault();
+              e.stopPropagation();
+              if (!MULTI_SEL_VALID) {
+                _context.next = 8;
+                break;
+              }
+              updateOptionCheckboxes('remove');
+              _context.next = 6;
+              return onChange === null || onChange === void 0 ? void 0 : onChange(selectInputRef.current, valueInputRef.current, multipleSelectionCallback([], []));
+            case 6:
+              _context.next = 9;
+              break;
+            case 8:
+              handleClearValue();
+            case 9:
+            case "end":
+              return _context.stop();
+          }
+        }, _callee);
+      }));
+      return function (_x9) {
+        return _ref.apply(this, arguments);
+      };
+    }()
   }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("svg", {
     width: "12px",
     height: "12px",

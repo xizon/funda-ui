@@ -138,6 +138,213 @@ import 'funda-ui/CascadingSelect/index.css';
 ```
 
 
+
+## Collecting Data
+
+### Basic
+
+Use `useState()` to store data.
+
+```js
+import React, { useState } from 'react';
+import Input from 'funda-ui/Input';
+import Select, { OptionConfig, MultiSelectValue } from 'funda-ui/Select';
+
+// component styles
+import 'funda-ui/Select/index.css';
+
+
+interface Config {
+    name: string;
+    role: boolean;
+}
+
+
+export default () => {
+    // Consolidated config state
+    const [config, setConfig] = useState<Config>({
+        name: '',
+        role: '',
+    });
+
+    const updateConfig = (newConfig: Partial<Config>) => {
+        setConfig(prev => ({ ...prev, ...newConfig }));
+    };
+    
+
+    const handleSubmit = (e: React.MouseEvent<HTMLButtonElement>) => {
+        e.preventDefault();
+        alert(`Name: ${config.name}, Role: ${config.role}`);
+    };
+
+    return (
+        <form onSubmit={handleSubmit}>
+            <div>
+
+                <Input
+                    name="name"
+                    label="Name"
+                    onChange={(e: React.MouseEvent, onComposition: any, el: any, value: string) => {
+                        updateConfig({ name: value });
+                    }}
+                />
+            </div>
+
+            <div>
+        
+                <Select
+                    label="Role"
+                    placeholder="Select"
+                    name="role"
+                    options={[
+                        {"label": "Admin","value": "admin","queryString": ""},
+                        {"label": "User","value": "user","queryString": ""}
+                    ]}
+                    onChange={(e: React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>, e2: HTMLElement, val: OptionConfig | MultiSelectValue): void => {
+                        updateConfig({ role: (val as OptionConfig).value });
+                    }}
+                />
+
+            </div>
+
+            <button className="btn btn-outline-primary btn-sm mb-2" type="submit">Submit</button>
+        </form>
+    );
+
+}
+```
+
+
+
+
+### Advanced
+
+Using vanilla JS to collect the value of name is faster and easier.
+
+
+```js
+import React, { useRef } from "react";
+import Input from 'funda-ui/Input';
+import Select, { OptionConfig, MultiSelectValue } from 'funda-ui/Select';
+
+// component styles
+import 'funda-ui/Select/index.css';
+
+// utils
+import { serializeArray } from 'funda-ui/Utils/formdata';
+import { isEmpty } from "funda-ui/Utils/validate";
+
+interface FormField {
+    name: string;
+    value: string;
+}
+
+interface FormData {
+    [key: string]: string;
+}
+
+type CallbackFunction = (formData: FormData) => void;
+type ErrorCallbackFunction = () => void;
+
+function customValidate(
+    form: HTMLFormElement | HTMLDivElement | null,
+    callback?: CallbackFunction,
+    errCallback?: ErrorCallbackFunction
+): void {
+    if (form === null) return;
+
+    const formData: FormData = {};
+    const fieldsData: FormField[] = serializeArray(form);
+    let fieldsCheck: boolean = true;
+    let customFieldsCheck: boolean = true;
+
+    // Step 1: everything is ok  
+    //-------------
+    // required fields
+    const emptyFieldsCheck = fieldsData.every((item: FormField) => {
+        if (item.name !== null && item.name !== '') {
+            formData[item.name] = item.value;
+
+            const _field = form.querySelector<HTMLElement>(`[name="${item.name}"]`);
+            if (!_field) return true;
+
+            const fieldRequired = _field.getAttribute('required');
+            if (fieldRequired !== null && fieldRequired !== 'false') {
+                if (item.value === '' || isEmpty(item.value)) {
+                    const _label = _field.dataset.requiredTitle;
+                    alert(`${_label} cannot be empty!`);
+                    return false;
+                }
+            }
+        }
+
+        errCallback?.();
+
+        return true;
+    });
+
+    //  merged result
+    fieldsCheck = [emptyFieldsCheck, customFieldsCheck].every((item: boolean) => {
+        return item;
+    });
+
+    // Step 2: everything is ok  
+    //-------------
+    if (fieldsCheck) {
+        callback?.(formData);
+    }
+}
+
+
+
+export default () => {
+    const formRef = useRef<HTMLDivElement>(null);
+
+    const handleSubmit = (e: React.MouseEvent<HTMLButtonElement>) => {
+        e.preventDefault();
+   
+        customValidate(
+            formRef.current, 
+            (formData: any[]) => {
+                alert(JSON.stringify(formData));
+            },
+            () => { }
+        );
+
+    };
+
+    return (
+        <div ref={formRef}>
+            <div>
+
+                <Input
+                    name="name"
+                    label="Name"
+                />
+            </div>
+
+            <div>
+        
+                <Select
+                    label="Role"
+                    placeholder="Select"
+                    name="role"
+                    options={[
+                        {"label": "Admin","value": "admin","queryString": ""},
+                        {"label": "User","value": "user","queryString": ""}
+                    ]}
+                />
+
+            </div>
+
+            <button className="btn btn-outline-primary btn-sm mb-2" type="button" onClick={handleSubmit}>Submit</button>
+        </div>
+    );
+
+}
+```
+
+
 ## Getting Started
 
 Make sure if Node 14+ is installed on your computer.
