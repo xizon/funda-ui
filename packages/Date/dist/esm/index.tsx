@@ -641,12 +641,17 @@ const Date = forwardRef((props: DateProps, externalRef: any) => {
 
         e.target.select();
 
+        
         resetDefauleValueExist();
 
+        // If there is no valid default value in the input field, 
+        // onChange should be triggered only after the resetDefauleValueExist() function is processed
+        if (!dateDefaultValueExist) {
+            const _date = `${splitVals[0]}-${splitVals[1]}-${splitVals[2]}`;
+            const _full = `${_date} ${splitVals[3]}:${splitVals[4]}:${splitVals[5]}`;
+            onChange?.(inputRef.current, valueResConverter(_full), isValidDate(_full), getAllSplittingInputs());
+        }
 
-        const _date = `${splitVals[0]}-${splitVals[1]}-${splitVals[2]}`;
-        const _full = `${_date} ${splitVals[3]}:${splitVals[4]}:${splitVals[5]}`;
-        onChange?.(inputRef.current, valueResConverter(_full), isValidDate(_full), getAllSplittingInputs());
 
     }
 
@@ -670,9 +675,17 @@ const Date = forwardRef((props: DateProps, externalRef: any) => {
     async function handleKeyPressedForSplitInputs(event: KeyboardEvent<HTMLDivElement>) {
         const key = event.code;
         const btnMark = (event.target as any).dataset.mark;
-        const move = (key: string) => {
+        
+        // Check for both regular arrow keys and numpad arrow keys
+        const isLeftArrow = key === 'ArrowLeft' || key === 'Numpad4';
+        const isRightArrow = key === 'ArrowRight' || key === 'Numpad6';
+        
+        const move = (direction: 'left' | 'right') => {
             const currentIndex = splitInputsIds.findIndex((s: string) => s === btnMark);
-            const nextIndex = key === 'ArrowLeft' ? currentIndex === splitInputsIds.length - 1 ? 0 : currentIndex - 1 : currentIndex === splitInputsIds.length - 1 ? 0 : currentIndex + 1;
+            const nextIndex = direction === 'left' 
+                ? currentIndex === 0 ? splitInputsIds.length - 1 : currentIndex - 1 
+                : currentIndex === splitInputsIds.length - 1 ? 0 : currentIndex + 1;
+                
             const nextOption = splitInputsIds.at(nextIndex);
             if (nextOption) {
                 setTimeout(() => {
@@ -681,13 +694,13 @@ const Date = forwardRef((props: DateProps, externalRef: any) => {
                 setFocusableSplitInputId(nextOption);
             }
         };
-      
-        if (key === 'ArrowLeft') {
-            move('ArrowLeft');
+
+        if (isLeftArrow) {
+            move('left');
         }
 
-        if (key === 'ArrowRight') {
-            move('ArrowRight');
+        if (isRightArrow) {
+            move('right');
         }
     }
 
@@ -700,6 +713,7 @@ const Date = forwardRef((props: DateProps, externalRef: any) => {
 
 
     function resetDefauleValueExist() {
+        // Does the current input box have a "valid default value"?
         if (!dateDefaultValueExist) setDateDefaultValueExist(true);
     }
 

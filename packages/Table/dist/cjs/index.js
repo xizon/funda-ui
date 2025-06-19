@@ -654,8 +654,8 @@ function tableElemScrolledInit(root, w) {
     });
   }
 }
-function cellMark(col, row) {
-  return "cell-".concat(col, "-").concat(row);
+function cellMark(row, col) {
+  return "cell-".concat(row, "-").concat(col);
 }
 function removeCellFocusClassName(root) {
   if (root) {
@@ -1027,7 +1027,7 @@ function useTableDraggable(_ref, deps) {
 }
 /* harmony default export */ const hooks_useTableDraggable = (useTableDraggable);
 ;// CONCATENATED MODULE: ./src/Table.tsx
-var _excluded = ["children", "wrapperClassName", "tableClassName", "bordered", "colGroup", "cellAutoWidth", "colSortable", "onColSort", "rowDraggable", "onRowDrag", "responsive", "enhancedResponsive", "enhancedResponsiveWithScrollBar", "data", "filterFields", "filterControlClassName", "filterControlPlaceholder", "filterLabel", "onChangeFilter", "dataSelected", "rowSelectable", "onChangeRowSelect", "keyboardFocusable", "onCellKeyPressed"];
+var _excluded = ["contentRef", "children", "wrapperClassName", "tableClassName", "bordered", "colGroup", "cellAutoWidth", "colSortable", "onColSort", "rowDraggable", "onRowDrag", "responsive", "enhancedResponsive", "enhancedResponsiveWithScrollBar", "data", "filterFields", "filterControlClassName", "filterControlPlaceholder", "filterLabel", "onChangeFilter", "dataSelected", "rowSelectable", "onChangeRowSelect", "keyboardFocusable", "onCellKeyPressed", "onCellPressEnter"];
 function _extends() { _extends = Object.assign ? Object.assign.bind() : function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
 function Table_slicedToArray(arr, i) { return Table_arrayWithHoles(arr) || Table_iterableToArrayLimit(arr, i) || Table_unsupportedIterableToArray(arr, i) || Table_nonIterableRest(); }
 function Table_nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
@@ -1043,8 +1043,10 @@ function _objectWithoutPropertiesLoose(source, excluded) { if (source == null) r
 
 
 
+
 var Table = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_amd_react_.forwardRef)(function (_ref, externalRef) {
-  var children = _ref.children,
+  var contentRef = _ref.contentRef,
+    children = _ref.children,
     wrapperClassName = _ref.wrapperClassName,
     tableClassName = _ref.tableClassName,
     bordered = _ref.bordered,
@@ -1068,6 +1070,7 @@ var Table = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_a
     onChangeRowSelect = _ref.onChangeRowSelect,
     keyboardFocusable = _ref.keyboardFocusable,
     onCellKeyPressed = _ref.onCellKeyPressed,
+    onCellPressEnter = _ref.onCellPressEnter,
     attributes = _objectWithoutProperties(_ref, _excluded);
   var uniqueID = useComId_default()();
   var rootRef = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useRef)(null);
@@ -1139,6 +1142,32 @@ var Table = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_a
       setSelectedItems(newSelectedItems);
     }
   }, [data, dataSelected]);
+
+  // Synchronous execution, which blocks rendering
+  (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useLayoutEffect)(function () {
+    if (rootRef.current) {
+      // Initialize custom props of table elements
+      initRowColProps(rootRef.current);
+    }
+  }, [data]); // Re-run when data changes
+
+  // exposes the following methods
+  (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useImperativeHandle)(contentRef, function () {
+    return {
+      setFocusableCell: function setFocusableCell(row, col) {
+        var _rootRef$current;
+        setFocusableCellId(cellMark(row, col));
+
+        // Find and focus the cell element
+        var cellElement = (_rootRef$current = rootRef.current) === null || _rootRef$current === void 0 ? void 0 : _rootRef$current.querySelector(".".concat(cellMark(row, col)));
+        if (cellElement) {
+          removeCellFocusClassName(rootRef.current);
+          cellElement.focus(); // !!!Required
+          cellElement.classList.add('cell-focus');
+        }
+      }
+    };
+  }, [rootRef]);
   return /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement(TableProvider, {
     value: {
       originData: data,
@@ -1170,7 +1199,8 @@ var Table = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_a
       refNode: refNode,
       focusableCellId: focusableCellId,
       setFocusableCellId: setFocusableCellId,
-      onCellKeyPressed: onCellKeyPressed
+      onCellKeyPressed: onCellKeyPressed,
+      onCellPressEnter: onCellPressEnter
     }
   }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", _extends({}, attributes, {
     id: uniqueID,
@@ -1252,7 +1282,8 @@ const App = () => {
         refNode,
         focusableCellId,
         setFocusableCellId,
-        onCellKeyPressed
+        onCellKeyPressed,
+        onCellPressEnter,
     }, [rootRef]);
     
 
@@ -1278,20 +1309,32 @@ var useTableKeyPress = function useTableKeyPress(_ref, deps) {
     focusableCellId = _ref.focusableCellId,
     setFocusableCellId = _ref.setFocusableCellId,
     onCellKeyPressed = _ref.onCellKeyPressed,
+    onCellPressEnter = _ref.onCellPressEnter,
     onKeyDown = _ref.onKeyDown;
   var handleKeyPressed = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useCallback)( /*#__PURE__*/function () {
     var _ref2 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee(event) {
-      var key, oldCellSignal, _row, _col, move;
+      var key, currentCell, row, col, nextCellSignal, oldCellSignal, _row, _col, move, _nextCellSignal;
       return _regeneratorRuntime().wrap(function _callee$(_context) {
         while (1) switch (_context.prev = _context.next) {
           case 0:
+            key = event.code;
+            if (!((key === 'Enter' || key === 'NumpadEnter') && !enabled)) {
+              _context.next = 8;
+              break;
+            }
+            currentCell = event.target;
+            row = Number(currentCell.getAttribute('data-table-row'));
+            col = Number(currentCell.getAttribute('data-table-col'));
+            nextCellSignal = cellMark(row, col);
+            onCellPressEnter === null || onCellPressEnter === void 0 ? void 0 : onCellPressEnter(nextCellSignal, refNode.current.get(nextCellSignal), event);
+            return _context.abrupt("return");
+          case 8:
             if (!(!Array.isArray(data) || rootDataInfo === null || spyElement === null || typeof enabled === 'undefined' || enabled === false)) {
-              _context.next = 2;
+              _context.next = 10;
               break;
             }
             return _context.abrupt("return");
-          case 2:
-            key = event.code;
+          case 10:
             oldCellSignal = focusableCellId === null || focusableCellId === void 0 ? void 0 : focusableCellId.replace('cell-', '').split('-');
             _row = Number(oldCellSignal[0]);
             _col = Number(oldCellSignal[1]);
@@ -1299,15 +1342,19 @@ var useTableKeyPress = function useTableKeyPress(_ref, deps) {
               var _spyElement$querySele;
               switch (key) {
                 case 'ArrowLeft':
+                case 'Numpad4':
                   _col = _col - 1 < 0 ? 0 : _col - 1;
                   break;
                 case 'ArrowRight':
+                case 'Numpad6':
                   _col = _col + 1 > data.length - 1 ? data.length - 1 : _col + 1;
                   break;
                 case 'ArrowUp':
+                case 'Numpad8':
                   _row = _row - 1 < 0 ? 0 : _row - 1;
                   break;
                 case 'ArrowDown':
+                case 'Numpad2':
                   _row = _row + 1 > rootDataInfo.totalRow - 1 ? rootDataInfo.totalRow - 1 : _row + 1;
                   break;
               }
@@ -1324,19 +1371,23 @@ var useTableKeyPress = function useTableKeyPress(_ref, deps) {
               onCellKeyPressed === null || onCellKeyPressed === void 0 ? void 0 : onCellKeyPressed(nextCellSignal, refNode.current.get(nextCellSignal), event);
               onKeyDown === null || onKeyDown === void 0 ? void 0 : onKeyDown(event);
             };
-            if (key === 'ArrowLeft') {
+            if (key === 'ArrowLeft' || key === 'Numpad4') {
               move('ArrowLeft');
             }
-            if (key === 'ArrowRight') {
+            if (key === 'ArrowRight' || key === 'Numpad6') {
               move('ArrowRight');
             }
-            if (key === 'ArrowUp') {
+            if (key === 'ArrowUp' || key === 'Numpad8') {
               move('ArrowUp');
             }
-            if (key === 'ArrowDown') {
+            if (key === 'ArrowDown' || key === 'Numpad2') {
               move('ArrowDown');
             }
-          case 11:
+            if (key === 'Enter' || key === 'NumpadEnter') {
+              _nextCellSignal = cellMark(_row, _col);
+              onCellPressEnter === null || onCellPressEnter === void 0 ? void 0 : onCellPressEnter(_nextCellSignal, refNode.current.get(_nextCellSignal), event);
+            }
+          case 19:
           case "end":
             return _context.stop();
         }
@@ -1402,7 +1453,8 @@ var TableCell = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_rea
     focusableCellId = _useContext.focusableCellId,
     setFocusableCellId = _useContext.setFocusableCellId,
     keyboardFocusable = _useContext.keyboardFocusable,
-    onCellKeyPressed = _useContext.onCellKeyPressed;
+    onCellKeyPressed = _useContext.onCellKeyPressed,
+    onCellPressEnter = _useContext.onCellPressEnter;
   var CellComponent = scope ? 'th' : 'td';
 
   // key press initialization
@@ -1416,6 +1468,7 @@ var TableCell = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_rea
       focusableCellId: focusableCellId,
       setFocusableCellId: setFocusableCellId,
       onCellKeyPressed: onCellKeyPressed,
+      onCellPressEnter: onCellPressEnter,
       onKeyDown: onKeyDown
     }, [rootRef]),
     handleKeyPressed = _useTableKeyPress.handleKeyPressed;

@@ -1,4 +1,4 @@
-import React, { useEffect, useState, forwardRef, useRef } from 'react';
+import React, { useEffect, useState, forwardRef, useRef, useLayoutEffect, useImperativeHandle } from 'react';
 
 
 import useComId from 'funda-utils/dist/cjs/useComId';
@@ -8,9 +8,11 @@ import { clsWrite, combinedCls } from 'funda-utils/dist/cjs/cls';
 import { TableProvider } from './TableContext';
 import useTableResponsive from './utils/hooks/useTableResponsive';
 import useTableDraggable from './utils/hooks/useTableDraggable';
-
+import { cellMark, removeCellFocusClassName, initRowColProps } from './utils/func';
 
 export interface TableProps extends React.HTMLAttributes<HTMLDivElement> {
+    // content ref
+    contentRef?: React.ForwardedRef<any>; // could use "Array" on contentRef.current, such as contentRef.current[0], contentRef.current[1]
 
     // basic
     wrapperClassName?: string;
@@ -48,11 +50,15 @@ export interface TableProps extends React.HTMLAttributes<HTMLDivElement> {
     // key press
     keyboardFocusable?: boolean;
     onCellKeyPressed?: (classname: string, elem: HTMLTableCellElement, event: KeyboardEvent) => void;
+    onCellPressEnter?: (classname: string, elem: HTMLTableCellElement, event: KeyboardEvent) => void;
+    
 }
 
 
 const Table = forwardRef<HTMLDivElement, TableProps>((
     {
+        contentRef,
+        
         // basic
         children,
         wrapperClassName,
@@ -90,6 +96,7 @@ const Table = forwardRef<HTMLDivElement, TableProps>((
         // key press
         keyboardFocusable,
         onCellKeyPressed,
+        onCellPressEnter,
 
         ...attributes
     },
@@ -162,6 +169,33 @@ const Table = forwardRef<HTMLDivElement, TableProps>((
         }
     }, [data, dataSelected]);
 
+    // Synchronous execution, which blocks rendering
+    useLayoutEffect(() => {
+        if (rootRef.current) {
+            // Initialize custom props of table elements
+            initRowColProps(rootRef.current);
+        }
+    }, [data]); // Re-run when data changes
+
+
+    // exposes the following methods
+    useImperativeHandle(contentRef, () => ({
+        setFocusableCell: (row: number, col: number) => {
+            
+            setFocusableCellId(cellMark(row, col));
+
+            // Find and focus the cell element
+            const cellElement = rootRef.current?.querySelector(`.${cellMark(row, col)}`);
+            if (cellElement) {
+                removeCellFocusClassName(rootRef.current);
+                cellElement.focus(); // !!!Required
+                cellElement.classList.add('cell-focus');
+            }
+
+
+        },
+    }), [rootRef]);
+
     return (
         <>
 
@@ -202,6 +236,7 @@ const Table = forwardRef<HTMLDivElement, TableProps>((
                 focusableCellId,
                 setFocusableCellId,
                 onCellKeyPressed,
+                onCellPressEnter,
 
 
             }}>

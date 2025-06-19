@@ -9,6 +9,8 @@
 
 console.log(getTimeslots("10:00", "14:00", 60, true)); //['10:00 - 11:00', '11:00 - 12:00', '12:00 - 13:00', '13:00 - 14:00']
 console.log(getTimeslots("10:00", "14:00", 60));   // ['10:00', '11:00', '12:00', '13:00']
+console.log(getTimeslots("08:00:00", "08:02:00", 0.4));   // ['08:00:00', '08:00:24', '08:00:48', '08:01:12', '08:01:36', '08:02:00']
+
 */
 
 function getTimeslots(
@@ -17,49 +19,49 @@ function getTimeslots(
     timeInterval: number,
     formatRange: boolean = false
 ): string[] {
+    // Parse time string to seconds
     const parseTime = (s: string): number => {
-        const c = s.split(':');
-        return parseInt(c[0]) * 60 + parseInt(c[1]);
+        const c = s.split(":").map(Number);
+        // Support HH:mm or HH:mm:ss
+        return c[0] * 3600 + c[1] * 60 + (c[2] || 0);
     }
 
-    const convertHours = (mins: number): string => {
-        const hour = Math.floor(mins / 60);
-        mins = Math.trunc(mins % 60);
-        const converted = pad(hour, 2) + ':' + pad(mins, 2);
-        return converted;
-    }
-
+    // Pad with zeros
     const pad = (str: string | number, max: number): string => {
         str = str.toString();
         return str.length < max ? pad("0" + str, max) : str;
     }
 
-    // calculate time slot
+    // Convert seconds to HH:mm:ss
+    const convertTime = (secs: number): string => {
+        const hour = Math.floor(secs / 3600);
+        const min = Math.floor((secs % 3600) / 60);
+        const sec = secs % 60;
+        return pad(hour, 2) + ":" + pad(min, 2) + ":" + pad(sec, 2);
+    }
+
+    // Calculate time slots
     const calculateTimeSlot = (_startTime: number, _endTime: number, _timeInterval: number): string[] => {
         const timeSlots: string[] = [];
-        // Round start and end times to next 30 min interval
-        _startTime = Math.ceil(_startTime / 30) * 30;
-        _endTime = Math.ceil(_endTime / 30) * 30;
-
-        // Start and end of interval in the loop
         let currentTime = _startTime;
-        while (currentTime < _endTime) {
+        while (currentTime <= _endTime) {
             if (formatRange) {
-                const t = convertHours(currentTime) + ' - ' + convertHours(currentTime + _timeInterval);
+                const t = convertTime(currentTime) + ' - ' + convertTime(Math.min(currentTime + _timeInterval, _endTime));
                 timeSlots.push(t);
             } else {
-                timeSlots.push(convertHours(currentTime));
+                timeSlots.push(convertTime(currentTime));
             }
             currentTime += _timeInterval;
         }
         return timeSlots;
     }
 
-    const inputEndTime = parseTime(endTime);
     const inputStartTime = parseTime(startTime);
-    const timeSegment = calculateTimeSlot(inputStartTime, inputEndTime, timeInterval);
-
-    return timeSegment;
+    const inputEndTime = parseTime(endTime);
+    // If timeInterval is not an integer, treat as minutes with decimals, convert to seconds
+    const isDecimal = !Number.isInteger(timeInterval);
+    const intervalInSeconds = isDecimal ? Math.round(timeInterval * 60) : timeInterval * 60;
+    return calculateTimeSlot(inputStartTime, inputEndTime, intervalInSeconds);
 }
 
 

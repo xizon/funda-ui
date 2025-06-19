@@ -158,8 +158,8 @@ export function tableElemScrolledInit(root: HTMLDivElement, w: number) {
 }
 
 
-export function cellMark(col: number | string | undefined, row: number | string | undefined) {
-    return `cell-${col}-${row}`;
+export function cellMark(row: number | string | undefined, col: number | string | undefined) {
+    return `cell-${row}-${col}`;
 }
 
 export function removeCellFocusClassName(root: any) {

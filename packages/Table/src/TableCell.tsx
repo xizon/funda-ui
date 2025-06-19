@@ -2,8 +2,6 @@ import React, { forwardRef, useContext } from 'react';
 
 import { clsWrite, combinedCls } from 'funda-utils/dist/cjs/cls';
 
-
-
 import { TableContext } from './TableContext';
 
 import { cellMark, removeCellFocusClassName } from './utils/func';
@@ -48,6 +46,7 @@ const TableCell = forwardRef<HTMLTableCellElement, TableCellProps>((
         setFocusableCellId,
         keyboardFocusable,
         onCellKeyPressed,
+        onCellPressEnter,
      } = useContext(TableContext);
 
 
@@ -64,6 +63,7 @@ const TableCell = forwardRef<HTMLTableCellElement, TableCellProps>((
         focusableCellId,
         setFocusableCellId,
         onCellKeyPressed,
+        onCellPressEnter,
         onKeyDown
     }, [rootRef]);
     

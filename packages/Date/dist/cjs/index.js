@@ -5424,9 +5424,14 @@ var src_Date = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_reac
 
     e.target.select();
     resetDefauleValueExist();
-    var _date = "".concat(splitVals[0], "-").concat(splitVals[1], "-").concat(splitVals[2]);
-    var _full = "".concat(_date, " ").concat(splitVals[3], ":").concat(splitVals[4], ":").concat(splitVals[5]);
-    _onChange === null || _onChange === void 0 ? void 0 : _onChange(inputRef.current, valueResConverter(_full), (0,cjs_date.isValidDate)(_full), getAllSplittingInputs());
+
+    // If there is no valid default value in the input field, 
+    // onChange should be triggered only after the resetDefauleValueExist() function is processed
+    if (!dateDefaultValueExist) {
+      var _date = "".concat(splitVals[0], "-").concat(splitVals[1], "-").concat(splitVals[2]);
+      var _full = "".concat(_date, " ").concat(splitVals[3], ":").concat(splitVals[4], ":").concat(splitVals[5]);
+      _onChange === null || _onChange === void 0 ? void 0 : _onChange(inputRef.current, valueResConverter(_full), (0,cjs_date.isValidDate)(_full), getAllSplittingInputs());
+    }
   }
   function handleKeyPressed(_x2) {
     return _handleKeyPressed.apply(this, arguments);
@@ -5461,17 +5466,19 @@ var src_Date = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_reac
   }
   function _handleKeyPressedForSplitInputs() {
     _handleKeyPressedForSplitInputs = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee2(event) {
-      var key, btnMark, move;
+      var key, btnMark, isLeftArrow, isRightArrow, move;
       return _regeneratorRuntime().wrap(function _callee2$(_context2) {
         while (1) switch (_context2.prev = _context2.next) {
           case 0:
             key = event.code;
-            btnMark = event.target.dataset.mark;
-            move = function move(key) {
+            btnMark = event.target.dataset.mark; // Check for both regular arrow keys and numpad arrow keys
+            isLeftArrow = key === 'ArrowLeft' || key === 'Numpad4';
+            isRightArrow = key === 'ArrowRight' || key === 'Numpad6';
+            move = function move(direction) {
               var currentIndex = splitInputsIds.findIndex(function (s) {
                 return s === btnMark;
               });
-              var nextIndex = key === 'ArrowLeft' ? currentIndex === splitInputsIds.length - 1 ? 0 : currentIndex - 1 : currentIndex === splitInputsIds.length - 1 ? 0 : currentIndex + 1;
+              var nextIndex = direction === 'left' ? currentIndex === 0 ? splitInputsIds.length - 1 : currentIndex - 1 : currentIndex === splitInputsIds.length - 1 ? 0 : currentIndex + 1;
               var nextOption = splitInputsIds.at(nextIndex);
               if (nextOption) {
                 setTimeout(function () {
@@ -5481,13 +5488,13 @@ var src_Date = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_reac
                 setFocusableSplitInputId(nextOption);
               }
             };
-            if (key === 'ArrowLeft') {
-              move('ArrowLeft');
+            if (isLeftArrow) {
+              move('left');
             }
-            if (key === 'ArrowRight') {
-              move('ArrowRight');
+            if (isRightArrow) {
+              move('right');
             }
-          case 5:
+          case 7:
           case "end":
             return _context2.stop();
         }
@@ -5500,6 +5507,7 @@ var src_Date = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_reac
     _onChange === null || _onChange === void 0 ? void 0 : _onChange(inputRef.current, '', false, getAllSplittingInputs());
   }
   function resetDefauleValueExist() {
+    // Does the current input box have a "valid default value"?
     if (!dateDefaultValueExist) setDateDefaultValueExist(true);
   }
   function resetPopupBlurStatus() {
