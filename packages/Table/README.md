@@ -2091,7 +2091,7 @@ import { Table } from 'funda-ui/Table';
 | Property | Type | Default | Description | Required |
 | --- | --- | --- | --- | --- |
 | `ref` | React.ForwardedRef | - | It is the return element of this component.  | - |
-| `contentRef` | React.ForwardedRef | - | It exposes the following methods of the component:  <br /> <ol><li>`ref.current.setFocusableCell(row: number, col: number);`: Sets the focus of a cell, typically when `keyboardFocusable` is enabled</li></ol> | - |
+| `contentRef` | React.ForwardedRef | - | It exposes the following methods of the component:  <br /> <ol><li>`ref.current.setFocusableCell(row: number, col: number);`: Sets the focus of a cell, typically when `keyboardFocusable` is enabled</li><li>`ref.current.clearAllCellFocus();`: Remove the focus status of all cells</li></ol> | - |
 | `wrapperClassName` | string | `mb-3 position-relative` | The class name of the table wrapper. | - |
 | `tableClassName` | string | `table` | The class name of the table wrapper. | - |
 | `data` | Array | - | Array of objects, where each object represents one item - row in table. such as `[{name:'David',friend:'Jone',condition:'GOOD'},{name:'Chuckie',friend:'Jone',condition:'BAD'}]` <blockquote>Enable it to enable some special features</blockquote> | - |

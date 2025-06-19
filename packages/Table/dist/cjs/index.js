@@ -1165,6 +1165,16 @@ var Table = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_a
           cellElement.focus(); // !!!Required
           cellElement.classList.add('cell-focus');
         }
+      },
+      clearAllCellFocus: function clearAllCellFocus() {
+        if (rootRef.current) {
+          removeCellFocusClassName(rootRef.current);
+          var focusedCells = rootRef.current.querySelectorAll('td:focus, th:focus');
+          focusedCells.forEach(function (cell) {
+            if (typeof cell.blur === 'function') cell.blur();
+            if (cell.classList) cell.classList.remove('cell-focus');
+          });
+        }
       }
     };
   }, [rootRef]);

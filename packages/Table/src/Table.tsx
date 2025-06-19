@@ -191,8 +191,17 @@ const Table = forwardRef<HTMLDivElement, TableProps>((
                 cellElement.focus(); // !!!Required
                 cellElement.classList.add('cell-focus');
             }
-
-
+        },
+        clearAllCellFocus: () => {
+            if (rootRef.current) {
+                removeCellFocusClassName(rootRef.current);
+                
+                const focusedCells = rootRef.current.querySelectorAll('td:focus, th:focus');
+                focusedCells.forEach((cell: any) => {
+                    if (typeof cell.blur === 'function') cell.blur();
+                    if (cell.classList) cell.classList.remove('cell-focus');
+                });
+            }
         },
     }), [rootRef]);
 
